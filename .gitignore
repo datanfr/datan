@@ -30,6 +30,7 @@ main.scss
 composer.json
 Gruntfile.js
 .gitattributes
+ressources
 
 #script folder
 scripts/*.zip
