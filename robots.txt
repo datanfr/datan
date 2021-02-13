@@ -1,0 +1,12 @@
+#
+# robots.txt
+#
+User-agent: *
+# CSS, JS, Images
+# Directories
+# Paths
+Disallow: /admin
+Disallow: /login
+Disallow: /register
+#Sitemap
+Sitemap: https://datan.fr/sitemap.xml

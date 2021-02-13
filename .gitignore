@@ -1,0 +1,44 @@
+*/config/development
+*/logs/log-*.php
+!*/logs/index.html
+*/cache/*
+!*/cache/index.html
+!*/cache/.htaccess
+
+user_guide_src/build/*
+user_guide_src/cilexer/build/*
+user_guide_src/cilexer/dist/*
+user_guide_src/cilexer/pycilexer.egg-info/*
+
+#codeigniter 3
+application/logs/*
+!application/logs/index.html
+!application/logs/.htaccess
+/vendor/
+
+#root folder
+node_modules
+test
+.sass-cache
+manifest.json
+sw.js
+package-lock.json
+package.json
+main.css
+main.css.map
+main.scss
+composer.json
+Gruntfile.js
+.gitattributes
+
+#script folder
+scripts/*.zip
+scripts/votes_individual/*.zip
+scripts/architecture
+
+#assets folder
+assets/opendata
+assets/imgs/deputes
+assets/imgs/deputes_original
+assets/imgs/deputes_ogp
+assets/imgs/deputes_webp
