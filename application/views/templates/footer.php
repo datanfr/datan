@@ -22,7 +22,7 @@
           </div>
           -->
           <div class="col-md-4 d-flex flex-column justify-content-center">
-            <p>© Datan 2020 - Tous droits réservés</p>
+            <p>© Datan 2021 - Tous droits réservés</p>
             <p>Nous contacter : <a href="mailto:contact@datan.fr" class="no-decoration underline">contact@datan.fr</a></p>
             <div class="social-media">
               <a href="https://www.facebook.com/datanFR/" target="_blank" class="no-decoration" rel="noopener">
@@ -62,8 +62,15 @@
     <div class="container-fluid footer-data">
       <div class="container">
         <div class="row py-3">
-          <div class="col-12 text-center">
+          <div class="col-md-6 text-center">
             Nos données sont disponibles sur le site <a href="https://www.data.gouv.fr/fr/organizations/datan/" target="_blank" rel="noopener">data.gouv.fr</a>
+          </div>
+          <div class="col-md-6">
+            Notre projet est disponible sur
+            <a href="https://github.com/awenig/datan" target="_blank" class="no-decoration underline">
+              <img src="<?= asset_url() ?>imgs/logos/GitHub-Mark.png" style="width: 25px" alt="Logo GitHub">
+              GitHub
+            </a>
           </div>
         </div>
       </div>
