@@ -76,7 +76,7 @@
           SELECT @s:=@s+1 AS "classement", A.*
           FROM (
             SELECT v.mpId, ROUND(AVG(v.participation),2) AS score, COUNT(v.participation) AS votesN, ROUND(COUNT(v.participation)/100) AS "index"
-            FROM votes_participation v
+            FROM votes_participation_commission v
             WHERE v.participation IS NOT NULL
             GROUP BY v.mpId
             ORDER BY ROUND(COUNT(v.participation)/100) DESC, AVG(v.participation) DESC

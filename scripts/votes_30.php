@@ -16,7 +16,7 @@
   </head>
   <!--
 
-  This script creates the table 'history_per_mps_average'
+  This script creates the file for opendata (MPs)'
 
   -->
   <body>
@@ -80,12 +80,14 @@
               dc.website,
               h.mandatesN AS nombreMandats,
               h.lengthEdited AS experienceDepute,
-          	cp.score AS scoreParticipation,
+              cp.score AS scoreParticipation,
+              cpm.score AS scoreParticipationSpecialite,
               cl.score AS scoreLoyaute,
               cm.score AS scoreMajorite,
               da.dateMaj
           FROM deputes_actifs da
           LEFT JOIN class_participation_all cp ON da.mpId = cp.mpId
+          LEFT JOIN class_participation_commission_all cpm ON da.mpId = cpm.mpId
           LEFT JOIN class_loyaute_all cl ON da.mpId = cl.mpId
           LEFT JOIN class_majorite_all cm ON da.mpId = cm.mpId
           LEFT JOIN deputes_contacts_cleaned dc ON da.mpId = dc.mpId
