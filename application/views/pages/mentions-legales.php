@@ -37,7 +37,7 @@
       Contact : <a href="mailto:awenig@datan.fr">awenig@datan.fr</a><br />
       Le responsable de la publication est une<strong> personne physique</strong><br />
       <br />
-      Hebergeur : <strong>OVH 2 rue Kellermann 59100 Roubaix</strong><br />
+      Hebergeur : <strong>o2switch o2switch 222-224 Boulevard Gustave Flaubert 63000 Clermont-Ferrand</strong><br />
 
       <p>En cas de réclamation, il est recommandé de nous adresser un email à <a href="mailto:contact@datan.fr" target="_blank">contact@datan.fr</a></p>
 
