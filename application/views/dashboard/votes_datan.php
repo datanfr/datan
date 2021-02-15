@@ -50,7 +50,8 @@
                       <td><?= $vote['modified_at'] ?></td>
                       <td><?= $vote['modified_by_name'] ?></td>
                       <td>
-                        <?php if ($vote['state'] != "published"): ?>
+                        <?php if ($vote['state'] == "published" && $usernameType != "admin"): ?>
+                          <?php else: ?>
                           <a href="<?= base_url() ?>admin/votes/modify/<?= $vote['id'] ?>" ?>modifier</a>
                         <?php endif; ?>
                       </td>
