@@ -54,38 +54,42 @@
 
     // LOGIN //
     public function login(){
-      $data['title'] = 'Connectez-vous à votre compte';
-      $data['title_meta'] = 'Datan : Se connecter';
-      $this->form_validation->set_rules('username', 'Username', 'required');
-      $this->form_validation->set_rules('password', 'Password', 'required');
-
-      if ($this->form_validation->run() === FALSE) {
-        $this->load->view('templates/header_no_navbar', $data);
-        $this->load->view('users/login', $data);
-        $this->load->view('templates/footer_no_navbar');
+      if ($this->session->userdata('logged_in')) {
+      redirect();
       } else {
-        // Get the Username
-        $username = $this->input->post('username');
-        // Get the password
-        $password = $this->input->post('password');
-        // Login user
-        $user = $this->user_model->login($username);
+        $data['title'] = 'Connectez-vous à votre compte';
+        $data['title_meta'] = 'Datan : Se connecter';
+        $this->form_validation->set_rules('username', 'Username', 'required');
+        $this->form_validation->set_rules('password', 'Password', 'required');
 
-        if (password_verify($password, $user->password)) {
-          // Create session
-          $user_data = array(
-            'user_id' => $user->id,
-            'username' => $username,
-            'logged_in' => true,
-            'type' => $user->type
-          );
-
-          $this->session->set_userdata($user_data);
-          //$this->session->set_flashdata('user_loggedin', 'Vous êtes maintenant connecté');
-          redirect('');
+        if ($this->form_validation->run() === FALSE) {
+          $this->load->view('templates/header_no_navbar', $data);
+          $this->load->view('users/login', $data);
+          $this->load->view('templates/footer_no_navbar');
         } else {
-          //$this->session->set_flashdata('login_failed', 'La connexion a échoué');
-          redirect('users/login');
+          // Get the Username
+          $username = $this->input->post('username');
+          // Get the password
+          $password = $this->input->post('password');
+          // Login user
+          $user = $this->user_model->login($username);
+
+          if (password_verify($password, $user->password)) {
+            // Create session
+            $user_data = array(
+              'user_id' => $user->id,
+              'username' => $username,
+              'logged_in' => true,
+              'type' => $user->type
+            );
+
+            $this->session->set_userdata($user_data);
+            //$this->session->set_flashdata('user_loggedin', 'Vous êtes maintenant connecté');
+            redirect('');
+          } else {
+            //$this->session->set_flashdata('login_failed', 'La connexion a échoué');
+            redirect('users/login');
+          }
         }
       }
     }
@@ -99,8 +103,7 @@
       $this->session->unset_userdata('type');
 
       // Set message
-      $this->session->set_flashdata('user_loggedout', 'Vous êtes déconnecté');
-      redirect('login');
+      redirect();
     }
 
   }
