@@ -10,7 +10,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
   <meta http-equiv="x-ua-compatible" content="ie=edge">
   <meta name="robots" content="noindex,nofollow">
 
-  <title>AdminLTE 3 | Starter</title>
+  <title>Dashboard | Datan</title>
 
   <!-- Font Awesome Icons -->
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.0/css/all.css" integrity="sha384-lKuwvrZot6UHsBSfcMvOkWwlCMgc0TaWr+30HWe3a4ltaBwTZhyTEggF5tJv8tbt" crossorigin="anonymous">
@@ -39,7 +39,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
           <a href="<?= base_url() ?>admin" class="nav-link">Admin</a>
         </li>
         <li class="nav-item d-none d-sm-inline-block">
-          <a href="<?= base_url () ?>" class="nav-link">DATAN</a>
+          <a href="<?= base_url () ?>" class="nav-link">Datan</a>
         </li>
       </ul>
 
