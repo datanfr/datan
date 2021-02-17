@@ -140,6 +140,8 @@
       $data['depute']['circo_abbrev'] = $this->functions_datan->abbrev_n($data['depute']['circo'], TRUE);
       // Commission parlementaire
       $data['commission_parlementaire'] = $this->deputes_act_model->get_commission_parlementaire($depute_uid);
+      // Political party
+      $data['politicalParty'] = $this->deputes_act_model->get_political_party($depute_uid);
       // Electoral results
       $data['election_result'] = $this->deputes_act_model->get_electoral_result_mp($data['depute']['departementCode'], $data['depute']['circo'], $nameLast);
       // Groupe if inactive MP

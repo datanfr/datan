@@ -101,7 +101,7 @@
             <?php endif; ?>
             <p>
               <?php if ($depute['libelleAbrev'] != "NI"): ?>
-                <?= ucfirst($gender['pronom']) ?> <?= $active == TRUE ? 'siège' : 'siégeait' ?> avec le groupe <a href="<?= base_url() ?>groupes/<?= mb_strtolower($depute['libelleAbrev']) ?>"><?= $depute['libelle'] ?></a> (<?= $depute["libelleAbrev"] ?>), groupe <b>classé <?= $infos_groupes[$depute['libelleAbrev']] ?></b> de l'échiquier politique.
+                À l'Assemblée nationale, <?= $gender['pronom'] ?> <?= $active == TRUE ? 'siège' : 'siégeait' ?> avec le groupe <a href="<?= base_url() ?>groupes/<?= mb_strtolower($depute['libelleAbrev']) ?>"><?= $depute['libelle'] ?></a> (<?= $depute["libelleAbrev"] ?>), groupe <b>classé <?= $infos_groupes[$depute['libelleAbrev']] ?></b> de l'échiquier politique.
                 <?php if ($active == TRUE && $depute['codeQualite'] == "Président"): ?>
                   <?= $title ?> est le <b>président<?= $gender['e'] ?> du groupe</b>.
                 <?php endif; ?>
@@ -109,6 +109,9 @@
                 <?= ucfirst($gender['pronom']) ?> n'est pas membre d'un groupe parlementaire, et siège donc en non-inscrit<?= $gender['e'] ?>.
               <?php endif; ?>
             </p>
+            <?php if ($politicalParty['libelle'] != ""): ?>
+              <p><?= $title ?> est membre du parti politique <?= $politicalParty['libelle'] ?> (<?= $politicalParty['libelleAbrev'] ?>).</p>
+            <?php endif; ?>
             <?php if ($active == TRUE && !empty($commission_parlementaire)): ?>
               <p><?= $title ?> est <?= mb_strtolower($commission_parlementaire['commissionCodeQualiteGender']) ?> de la <?= $commission_parlementaire['commissionLibelle'] ?>.</p>
             <?php endif; ?>
