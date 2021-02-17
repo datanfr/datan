@@ -46,19 +46,6 @@
                     </script>
                   </div>
                   <div class="form-group">
-                    <label>Contexte</label>
-                    <textarea id="editor2" name="contexte" class="form-control"><?= $vote['contexte'] ?></textarea>
-                    <script>
-                      CKEDITOR.replace('editor2', {
-                        entities: false,
-                        basicEntities: false,
-                        entities_greek: false,
-                        entities_latin: false
-                      });
-                      CKEDITOR.add;
-                    </script>
-                  </div>
-                  <div class="form-group">
                     <label for="">Categorie</label>
                     <select class="form-control" name="category">
                       <option value="<?= $vote['category'] ?>" selected="selected">Selected: <?= $vote['category_name'] ?></option>
