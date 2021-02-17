@@ -198,6 +198,22 @@
       return $query->row_array();
     }
 
+    public function get_political_party($depute_uid){
+      $where = array(
+        'ms.mpId' => $depute_uid,
+        'ms.typeOrgane' => 'PARPOL',
+        'ms.dateFin' => NULL
+      );
+
+      $this->db->select('o.libelle, o.libelleAbrev');
+      $this->db->from('mandat_secondaire ms');
+      $this->db->join('organes o', 'ms.organeRef = o.uid');
+      $this->db->where($where);
+      $query = $this->db->get();
+
+      return $query->row_array();
+    }
+
     public function get_electoral_result_mp($dpt, $circo, $nom){
       if (in_array($dpt, ['01','02'], true)) {
         $dpt = substr($dpt, 1);
