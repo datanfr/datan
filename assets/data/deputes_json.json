@@ -900,12 +900,6 @@
         "dpt": "loiret-45"
     },
     {
-        "id": "PA331567",
-        "name": "Laure de La Raudière",
-        "slug": "laure-delaraudiere",
-        "dpt": "eure-et-loir-28"
-    },
-    {
         "id": "PA1012",
         "name": "Charles de la Verpillière",
         "slug": "charles-delaverpilliere",
@@ -922,12 +916,6 @@
         "name": "François de Rugy",
         "slug": "francois-derugy",
         "dpt": "loire-atlantique-44"
-    },
-    {
-        "id": "PA717151",
-        "name": "Marielle de Sarnez",
-        "slug": "marielle-desarnez",
-        "dpt": "paris-75"
     },
     {
         "id": "PA720538",
@@ -954,16 +942,16 @@
         "dpt": "savoie-73"
     },
     {
-        "id": "PA718694",
-        "name": "Marc Delatte",
-        "slug": "marc-delatte",
-        "dpt": "aisne-02"
-    },
-    {
         "id": "PA267450",
         "name": "Rémi Delatte",
         "slug": "remi-delatte",
         "dpt": "cote-dor-21"
+    },
+    {
+        "id": "PA718694",
+        "name": "Marc Delatte",
+        "slug": "marc-delatte",
+        "dpt": "aisne-02"
     },
     {
         "id": "PA722218",
@@ -1116,28 +1104,28 @@
         "dpt": "allier-03"
     },
     {
-        "id": "PA721194",
-        "name": "Frédérique Dumas",
-        "slug": "frederique-dumas",
-        "dpt": "hauts-de-seine-92"
-    },
-    {
         "id": "PA606202",
         "name": "Françoise Dumas",
         "slug": "francoise-dumas",
         "dpt": "gard-30"
     },
     {
-        "id": "PA720684",
-        "name": "Pierre-Henri Dumont",
-        "slug": "pierrehenri-dumont",
-        "dpt": "pas-de-calais-62"
+        "id": "PA721194",
+        "name": "Frédérique Dumas",
+        "slug": "frederique-dumas",
+        "dpt": "hauts-de-seine-92"
     },
     {
         "id": "PA1198",
         "name": "Laurence Dumont",
         "slug": "laurence-dumont",
         "dpt": "calvados-14"
+    },
+    {
+        "id": "PA720684",
+        "name": "Pierre-Henri Dumont",
+        "slug": "pierrehenri-dumont",
+        "dpt": "pas-de-calais-62"
     },
     {
         "id": "PA721094",
@@ -1243,7 +1231,7 @@
     },
     {
         "id": "PA267042",
-        "name": "Yannick Favennec Becot",
+        "name": "Yannick Favennec-Bécot ",
         "slug": "yannick-favennecbecot",
         "dpt": "mayenne-53"
     },
@@ -1354,6 +1342,12 @@
         "name": "Thomas Gassilloud",
         "slug": "thomas-gassilloud",
         "dpt": "rhone-69"
+    },
+    {
+        "id": "PA721760",
+        "name": "Maud Gatel",
+        "slug": "maud-gatel",
+        "dpt": "paris-75"
     },
     {
         "id": "PA267324",
@@ -1836,16 +1830,22 @@
         "dpt": "francais-de-letranger"
     },
     {
+        "id": "PA1809",
+        "name": "Jérôme Lambert",
+        "slug": "jerome-lambert",
+        "dpt": "charente-16"
+    },
+    {
         "id": "PA605518",
         "name": "François-Michel Lambert",
         "slug": "francoismichel-lambert",
         "dpt": "bouches-du-rhone-13"
     },
     {
-        "id": "PA1809",
-        "name": "Jérôme Lambert",
-        "slug": "jerome-lambert",
-        "dpt": "charente-16"
+        "id": "PA719382",
+        "name": "Luc Lamirault",
+        "slug": "luc-lamirault",
+        "dpt": "eure-et-loir-28"
     },
     {
         "id": "PA643205",
@@ -1990,12 +1990,6 @@
         "name": "Jean-Claude Leclabart",
         "slug": "jeanclaude-leclabart",
         "dpt": "somme-80"
-    },
-    {
-        "id": "PA720480",
-        "name": "Charlotte Lecocq",
-        "slug": "charlotte-lecocq",
-        "dpt": "nord-59"
     },
     {
         "id": "PA335612",
@@ -2154,16 +2148,16 @@
         "dpt": "martinique-972"
     },
     {
-        "id": "PA346054",
-        "name": "Emmanuel Maquet",
-        "slug": "emmanuel-maquet",
-        "dpt": "somme-80"
-    },
-    {
         "id": "PA334116",
         "name": "Jacqueline Maquet",
         "slug": "jacqueline-maquet",
         "dpt": "pas-de-calais-62"
+    },
+    {
+        "id": "PA346054",
+        "name": "Emmanuel Maquet",
+        "slug": "emmanuel-maquet",
+        "dpt": "somme-80"
     },
     {
         "id": "PA721946",
@@ -2514,10 +2508,10 @@
         "dpt": "val-doise-95"
     },
     {
-        "id": "PA335532",
-        "name": "George Pau-Langevin",
-        "slug": "george-paulangevin",
-        "dpt": "paris-75"
+        "id": "PA720480",
+        "name": "Charlotte Parmentier-Lecocq",
+        "slug": "charlotte-parmentierlecocq",
+        "dpt": "nord-59"
     },
     {
         "id": "PA718784",
@@ -2574,16 +2568,16 @@
         "dpt": "hauts-de-seine-92"
     },
     {
-        "id": "PA721182",
-        "name": "Frédéric Petit",
-        "slug": "frederic-petit",
-        "dpt": "francais-de-letranger"
-    },
-    {
         "id": "PA720500",
         "name": "Valérie Petit",
         "slug": "valerie-petit",
         "dpt": "nord-59"
+    },
+    {
+        "id": "PA721182",
+        "name": "Frédéric Petit",
+        "slug": "frederic-petit",
+        "dpt": "francais-de-letranger"
     },
     {
         "id": "PA721234",
@@ -2922,16 +2916,16 @@
         "dpt": "morbihan-56"
     },
     {
-        "id": "PA720692",
-        "name": "Fabien Roussel",
-        "slug": "fabien-roussel",
-        "dpt": "nord-59"
-    },
-    {
         "id": "PA718902",
         "name": "Cédric Roussel",
         "slug": "cedric-roussel",
         "dpt": "alpes-maritimes-06"
+    },
+    {
+        "id": "PA720692",
+        "name": "Fabien Roussel",
+        "slug": "fabien-roussel",
+        "dpt": "nord-59"
     },
     {
         "id": "PA721226",
@@ -3354,16 +3348,16 @@
         "dpt": "seine-maritime-76"
     },
     {
-        "id": "PA607090",
-        "name": "Jean-Pierre Vigier",
-        "slug": "jeanpierre-vigier",
-        "dpt": "haute-loire-43"
-    },
-    {
         "id": "PA331582",
         "name": "Philippe Vigier",
         "slug": "philippe-vigier",
         "dpt": "eure-et-loir-28"
+    },
+    {
+        "id": "PA607090",
+        "name": "Jean-Pierre Vigier",
+        "slug": "jeanpierre-vigier",
+        "dpt": "haute-loire-43"
     },
     {
         "id": "PA606639",
@@ -3504,6 +3498,12 @@
         "dpt": "bouches-du-rhone-13"
     },
     {
+        "id": "PA335532",
+        "name": "George Pau-Langevin",
+        "slug": "george-paulangevin",
+        "dpt": "paris-75"
+    },
+    {
         "id": "PA267241",
         "name": "Stéphane Demilly",
         "slug": "stephane-demilly",
@@ -3532,6 +3532,12 @@
         "name": "Laurent Pietraszewski",
         "slug": "laurent-pietraszewski",
         "dpt": "nord-59"
+    },
+    {
+        "id": "PA717151",
+        "name": "Marielle de Sarnez",
+        "slug": "marielle-desarnez",
+        "dpt": "paris-75"
     },
     {
         "id": "PA719914",
@@ -3624,6 +3630,12 @@
         "dpt": "haute-vienne-87"
     },
     {
+        "id": "PA331567",
+        "name": "Laure de La Raudière",
+        "slug": "laure-delaraudiere",
+        "dpt": "eure-et-loir-28"
+    },
+    {
         "id": "PA334843",
         "name": "Patrice Verchère",
         "slug": "patrice-verchere",
@@ -3637,7 +3649,7 @@
     },
     {
         "id": "PA721764",
-        "name": "Olivia Gregoire",
+        "name": "Olivia Grégoire",
         "slug": "olivia-gregoire",
         "dpt": "paris-75"
     },
