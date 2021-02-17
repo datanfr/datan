@@ -42,7 +42,7 @@
       $this->form_validation->set_rules('vote_id', 'Vote_id', 'required');
       $this->form_validation->set_rules('title', 'Title', 'required');
       $this->form_validation->set_rules('category', 'Category', 'required');
-      $this->form_validation->set_rules('description', 'Description', 'required');
+      //$this->form_validation->set_rules('description', 'Description', 'required');
 
       if ($this->form_validation->run() === FALSE) {
         $this->load->view('dashboard/header', $data);
@@ -72,10 +72,9 @@
         $data['categories'] = $this->fields_model->get_fields();
 
         //Form valiation
-        //$this->form_validation->set_rules('vote_id', 'Vote_id', 'required');
         $this->form_validation->set_rules('title', 'Title', 'required');
         $this->form_validation->set_rules('category', 'Category', 'required');
-        $this->form_validation->set_rules('description', 'Description', 'required');
+        //$this->form_validation->set_rules('description', 'Description', 'required');
 
         if ($this->form_validation->run() === FALSE) {
           $this->load->view('dashboard/header', $data);
