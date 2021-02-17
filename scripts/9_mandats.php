@@ -88,7 +88,7 @@
 
                       foreach ($xml->mandats->mandat as $mandat) {
 
-                        if (($mandat->typeOrgane == "COMPER") || ($mandat->typeOrgane == "DELEGBUREAU")) {
+                        if (($mandat->typeOrgane == "COMPER") || ($mandat->typeOrgane == "DELEGBUREAU") || ($mandat->typeOrgane == "PARPOL")) {
                           $mandatId = $mandat->uid;
                           $legislature = $mandat->legislature;
                           $typeOrgane = $mandat->typeOrgane;
@@ -110,7 +110,7 @@
                           ?>
 
                           <tr>
-                            <td><?= $file ?></td>
+                            <td><?= $filename ?></td>
                             <td><?= $mandatId ?></td>
                             <td><?= $mpId ?></td>
                             <td><?= $legislature ?></td>
