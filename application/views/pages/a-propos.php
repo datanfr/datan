@@ -171,9 +171,9 @@
       <div class="row mt-3">
         <!-- Team 1 -->
         <div class="col-lg-3 col-md-4 col-6">
-          <div class="card card-team">
+          <div class="card my-2 card-team">
             <div class="img-profile">
-              <img class="card-img-top" src="<?= asset_url() ?>imgs/team/awenig.jpg" alt="Card image cap">
+              <img class="card-img-top" src="<?= asset_url() ?>imgs/team/awenig.jpg" alt="Photo Awenig">
               <div class="overlay"></div>
             </div>
             <div class="card-body d-flex flex-column align-items-center">
@@ -192,9 +192,9 @@
         </div>
         <!-- Team 2 -->
         <div class="col-lg-3 col-md-4 col-6">
-          <div class="card card-team">
+          <div class="card my-2 card-team">
             <div class="img-profile">
-              <img class="card-img-top" src="<?= asset_url() ?>imgs/team/gwenneg.jpg" alt="Card image cap">
+              <img class="card-img-top" src="<?= asset_url() ?>imgs/team/gwenneg.jpg" alt="Photo Gwenneg">
               <div class="overlay"></div>
             </div>
             <div class="card-body d-flex flex-column align-items-center">
@@ -210,9 +210,9 @@
         </div>
         <!-- Team 3 -->
         <div class="col-lg-3 col-md-4 col-6 mt-3 mt-md-0">
-          <div class="card card-team">
+          <div class="card my-2 card-team">
             <div class="img-profile">
-              <img class="card-img-top" src="<?= asset_url() ?>imgs/team/chloe.jpg" alt="Card image cap">
+              <img class="card-img-top" src="<?= asset_url() ?>imgs/team/chloe.jpg" alt="Photo Chloë">
               <div class="overlay"></div>
             </div>
             <div class="card-body d-flex flex-column align-items-center">
@@ -228,9 +228,9 @@
         </div>
         <!-- Team 4 -->
         <div class="col-lg-3 col-md-4 col-6 mt-3 mt-md-0">
-          <div class="card card-team">
+          <div class="card my-2 card-team">
             <div class="img-profile">
-              <img class="card-img-top" src="<?= asset_url() ?>imgs/team/hugo.jpg" alt="Card image cap">
+              <img class="card-img-top" src="<?= asset_url() ?>imgs/team/hugo.jpg" alt="Photo Hugo">
               <div class="overlay"></div>
             </div>
             <div class="card-body d-flex flex-column align-items-center">
@@ -239,6 +239,24 @@
               <div class="social-media">
                 <a href="https://www.linkedin.com/in/hugo-stephan/" target="_blank">
                   <img src="<?= asset_url() ?>imgs/logos/linkedin.png" alt="Logo Twitter">
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Team 5 -->
+        <div class="col-lg-3 col-md-4 col-6 mt-3 mt-md-0">
+          <div class="card my-2 card-team">
+            <div class="img-profile">
+              <img class="card-img-top" src="<?= asset_url() ?>imgs/team/brewalan.jpg" alt="Photo Brewalan">
+              <div class="overlay"></div>
+            </div>
+            <div class="card-body d-flex flex-column align-items-center">
+              <h3 class="card-title">Brewalan</h3>
+              <p class="card-text text-center">Analyse et contenu</p>
+              <div class="social-media">
+                <a href="https://twitter.com/BrewalanM" target="_blank">
+                  <img src="<?= asset_url() ?>imgs/logos/twitter.png" alt="Logo Twitter">
                 </a>
               </div>
             </div>
