@@ -67,6 +67,33 @@
       $this->db->delete('votes_datan');
     }
 
+    public function get_votes_datan_user($user, $published){
+      if ($published == FALSE) {
+        $queryWhere = array(
+          'created_by' => $user,
+          'state' => 'draft'
+        );
+        $queryLimit = NULL;
+      } else {
+        $queryWhere = array(
+          'created_by' => $user,
+          'state' => 'published'
+        );
+        $queryLimit = 3;
+      }
+
+      $this->db->select('vd.*, vi.voteNumero, f.name AS categoryName');
+      $this->db->from('votes_datan vd');
+      $this->db->join('votes_info vi', 'vi.voteId = vd.vote_id', 'left');
+      $this->db->join('fields f', 'f.id = vd.category', 'left');
+      $this->db->where($queryWhere);
+      $this->db->order_by('id', 'DESC');
+      $this->db->limit($queryLimit);
+      $query = $this->db->get();
+
+      return $query->result_array();
+    }
+
     public function get_votes_an_position(){
       $query = $this->db->query("
       SELECT B.*,

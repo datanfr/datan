@@ -26,13 +26,40 @@
         <div class="row">
           <div class="col-lg-6">
             <div class="card card-primary card-outline">
+              <div class="card-header">
+                <h5 class="m-0">Mes votes non publiés</h5>
+              </div>
               <div class="card-body">
-                <h5 class="card-title">La homepage du Dashboard est en construction</h5>
-                <p class="card-text">
-                  Merci d'attendre :)
-                </p>
-                <a href="#" class="card-link">Card link</a>
-                <a href="#" class="card-link">Another link</a>
+                <?php if (empty($votesUnpublished)): ?>
+                  <p class="card-text">Aucun vote en brouillon.</p>
+                  <?php else: ?>
+                  <table class="table">
+                    <thead>
+                      <tr>
+                        <th>id</th>
+                        <th>numero</th>
+                        <th>titre</th>
+                        <th>catégorie</th>
+                        <th></th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <?php foreach ($votesUnpublished as $vote): ?>
+                        <tr>
+                          <td><?= $vote['id'] ?></td>
+                          <td><?= $vote['voteNumero'] ?></td>
+                          <td><?= $vote['title'] ?></td>
+                          <td><?= $vote['categoryName'] ?></td>
+                          <td><a href="<?= base_url() ?>admin/votes/modify/<?= $vote['id'] ?>" class="btn btn-primary">Modifier</a></td>
+                        </tr>
+                      <?php endforeach; ?>
+                    </tbody>
+                  </table>
+                <?php endif; ?>
+              </div>
+              <div class="card-footer d-flex justify-content-around">
+                <a href="<?= base_url() ?>admin/votes/create" class="btn btn-primary">Créer un vote</a>
+                <a href="<?= base_url() ?>admin/votes" class="btn btn-primary">Tous les votes</a>
               </div>
             </div><!-- /.card -->
           </div>
@@ -40,13 +67,35 @@
           <div class="col-lg-6">
             <div class="card card-primary card-outline">
               <div class="card-header">
-                <h5 class="m-0">Featured</h5>
+                <h5 class="m-0">Mes derniers votes publiés</h5>
               </div>
               <div class="card-body">
-                <h6 class="card-title">Special title treatment</h6>
-
-                <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-                <a href="#" class="btn btn-primary">Go somewhere</a>
+                <?php if (empty($votesLast)): ?>
+                  <p>Aucun vote.</p>
+                  <?php else: ?>
+                    <table class="table">
+                      <thead>
+                        <tr>
+                          <th>id</th>
+                          <th>numero</th>
+                          <th>titre</th>
+                          <th>catégorie</th>
+                          <th></th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <?php foreach ($votesLast as $vote): ?>
+                          <tr>
+                            <td><?= $vote['id'] ?></td>
+                            <td><?= $vote['voteNumero'] ?></td>
+                            <td><?= $vote['title'] ?></td>
+                            <td><?= $vote['categoryName'] ?></td>
+                            <td><a href="<?= base_url() ?>votes/vote_<?= $vote['voteNumero'] ?>" class="btn btn-primary">Voir</a></td>
+                          </tr>
+                        <?php endforeach; ?>
+                      </tbody>
+                    </table>
+                <?php endif; ?>
               </div>
             </div>
           </div>

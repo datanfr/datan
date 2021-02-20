@@ -13,7 +13,11 @@
 
     // Dashboard homepage
     public function index(){
-      $data["username"] = $this->session->userdata('username');
+      $data['username'] = $this->session->userdata('username');
+      $user_id = $this->session->userdata('user_id');
+
+      $data['votesUnpublished'] = $this->admin_model->get_votes_datan_user($user_id, $published = FALSE);
+      $data['votesLast'] = $this->admin_model->get_votes_datan_user($user_id, $published = TRUE);
 
       $this->load->view('dashboard/header', $data);
       $this->load->view('dashboard/index', $data);
