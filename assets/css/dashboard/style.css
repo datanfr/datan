@@ -2,3 +2,6 @@
   font-weight: bold;
   color: red;
 }
+.card-footer::after{
+  content: none;
+}
