@@ -110,7 +110,7 @@
               <?php endif; ?>
             </p>
             <?php if ($politicalParty['libelle'] != ""): ?>
-              <p><?= $title ?> est rattaché<?= $gender['e'] ?> financièrement au parti politique <b><?= $politicalParty['libelle'] ?></b> (<?= $politicalParty['libelleAbrev'] ?>). Le rattachement permet aux partis politiques de recevoir, pour chaque député, une subvention publique.</p>
+              <p><?= $title ?> est rattaché<?= $gender['e'] ?> financièrement au parti politique <a href="<?= base_url() ?>partis-politiques/<?= mb_strtolower($politicalParty['libelleAbrev']) ?>"><?= $politicalParty['libelle'] ?> (<?= $politicalParty['libelleAbrev'] ?>)</a>. Le rattachement permet aux partis politiques de recevoir, pour chaque député, une subvention publique.</p>
             <?php endif; ?>
             <?php if ($active == TRUE && !empty($commission_parlementaire)): ?>
               <p><?= $title ?> est <?= mb_strtolower($commission_parlementaire['commissionCodeQualiteGender']) ?> de la <?= $commission_parlementaire['commissionLibelle'] ?>.</p>
