@@ -73,6 +73,7 @@ $route['sitemap-localites-v-1.xml'] = "sitemap/communes";
 $route['sitemap-structure-1.xml'] = "sitemap/structure";
 $route['sitemap-categories-1.xml'] = "sitemap/categories";
 $route['sitemap-posts-1.xml'] = "sitemap/posts";
+$route['sitemap-partis-politiques-1.xml'] = "sitemap/parties";
 // COMMISSION
 $route['commissions'] = 'commissions_act/index';
 // CLASSEMENT
@@ -85,6 +86,9 @@ $route['groupes/(:any)/votes/all'] = 'groupes_act/individual_votes_all/$1';
 $route['groupes/(:any)/votes/(:any)'] = 'groupes_act/individual_votes_datan_field/$1/$2';
 $route['groupes/(:any)'] = 'groupes_act/individual/$1';
 $route['groupes'] = 'groupes_act/actifs';
+// PARTIS POLITIQUES
+$route['partis-politiques/(:any)'] = 'parties/individual/$1';
+$route['partis-politiques'] = 'parties/index';
 // DEPUTES
 $route['deputes/inactifs'] = 'deputes_act/inactifs';
 $route['deputes/(:any)'] = 'departement_act/view/$1';
