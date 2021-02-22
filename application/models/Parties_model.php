@@ -106,7 +106,7 @@
       CASE WHEN circo = 1 THEN CONCAT("re") WHEN circo = 2 THEN CONCAT("de") ELSE CONCAT("e") END AS electionCircoAbbrev
       FROM mandat_secondaire ms
       JOIN deputes_actifs da ON ms.mpId = da.mpId
-      WHERE ms.organeRef = "PO710396" AND ms.dateFin IS NULL
+      WHERE ms.organeRef = "'.$organeRef.'" AND ms.dateFin IS NULL
       ');
 
       return $query->result_array();
