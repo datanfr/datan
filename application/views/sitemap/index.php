@@ -14,6 +14,9 @@
 		<loc><?= base_url() ?>sitemap-groupes-inactifs-1.xml</loc>
 	</sitemap>
 	<sitemap>
+		<loc><?= base_url() ?>sitemap-partis-politiques-1.xml</loc>
+	</sitemap>
+	<sitemap>
 		<loc><?= base_url() ?>sitemap-votes-1.xml</loc>
 	</sitemap>
 	<sitemap>
