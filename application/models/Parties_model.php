@@ -107,6 +107,7 @@
       FROM mandat_secondaire ms
       JOIN deputes_actifs da ON ms.mpId = da.mpId
       WHERE ms.organeRef = "'.$organeRef.'" AND ms.dateFin IS NULL
+      ORDER BY da.nameLast ASC
       ');
 
       return $query->result_array();
