@@ -274,6 +274,36 @@
           </div>
         </div>
       </div> <!-- // END BLOC STATS -->
+      <!-- BLOC ILS PARLENT DE NOUS -->
+      <div class="row">
+        <div class="container py-3">
+          <div class="row">
+            <div class="col-12">
+              <h2 class="text-center">Ils parlent de nous</h2>
+            </div>
+            <div class="col-12 my-5 d-flex flex-wrap justify-content-around align-items-center">
+              <a href="https://www.leparisien.fr/info-paris-ile-de-france-oise/vote-assiduite-loyaute-comment-se-comportent-vos-deputes-franciliens-et-oisiens-21-01-2021-8420482.php" target="_blank" rel="nofollow noopener">
+                <img class="mx-2 my-3 img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" data-src="<?= asset_url() ?>imgs/media/le_parisien.png" alt="Le Parisien">
+              </a>
+              <a href="https://theconversation.com/reintroduction-des-pesticides-neonicotino-des-comment-nos-deputes-ont-ils-vote-et-pourquoi-155158" target="_blank" rel="noopener">
+                <img class="mx-2 my-3 img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" data-src="<?= asset_url() ?>imgs/media/the_conversation.png" alt="The Conversation">
+              </a>
+              <a href="https://www.sudouest.fr/redaction/le-cercle-sud-ouest-des-idees/reintroduction-des-pesticides-neonicotinoides-comment-nos-deputes-ont-ils-vote-et-pourquoi-1400279.php" target="_blank" rel="nofollow noopener">
+                <img class="mx-2 my-3 img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" data-src="<?= asset_url() ?>imgs/media/sud_ouest.png" alt="Sud Ouest">
+              </a>
+              <a href="https://www.tv78.com/78-journal-info-yvelines-actu-edition-25-janvier-2021/" target="_blank" rel="nofollow noopener">
+                <img class="mx-2 my-3 img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" data-src="<?= asset_url() ?>imgs/media/tv78.png" alt="TV 78">
+              </a>
+              <a href="https://www.ladepeche.fr/2021/01/23/comment-votent-vos-deputes-a-lassemblee-nationale-9328626.php" target="_blank" rel="nofollow noopener">
+                <img class="mx-2 my-3 img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" data-src="<?= asset_url() ?>imgs/media/depeche.png" alt="La Dépêche Ouest">
+              </a>
+              <a href="https://www.latribune.fr/opinions/tribunes/apres-trois-votes-de-confiance-la-majorite-presidentielle-s-erode-t-elle-a-l-assemblee-nationale-853748.html" target="_blank" rel="noopener">
+                <img class="mx-2 my-3 img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" data-src="<?= asset_url() ?>imgs/media/la_tribune.png" alt="La Tribune">
+              </a>
+            </div>
+          </div>
+        </div>
+      </div> <!-- // END BLOC ILS PARLENT DE NOUS -->
       <div class="row bloc-pie" id="pattern_background">
         <div class="container py-3">
           <div class="row pt-5">
@@ -364,7 +394,7 @@
             </div>
           </div>
         </div>
-      </div>
+      </div> <!-- // END MAP -->
     </div>
 
     <script type="text/javascript">
