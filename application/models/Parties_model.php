@@ -101,15 +101,13 @@
     }
 
     public function get_mps_active($organeRef){
-      $this->db->select('da.nameFirst, da.nameLast, da.couleurAssociee, da.mpId, da.dptSlug, da.nameUrl, da.circo AS electionCirco, da.libelle');
-      $this->db->select('CASE WHEN circo = 1 THEN CONCAT("re") WHEN circo = 2 THEN CONCAT("de") ELSE CONCAT("e") END AS electionCircoAbbrev');
-      $this->db->from('deputes_actifs da');
-      $this->db->join('mandat_secondaire ms', 'da.mpId = ms.mpId', 'left');
-      $this->db->where('ms.dateFin IS NULL');
-      $this->db->where_in('ms.typeOrgane', 'PARPOL');
-      $this->db->where_in('ms.organeRef', $organeRef);
-      $this->db->order_by('da.nameLast', 'ASC');
-      $query = $this->db->get();
+      $query = $this->db->query('
+      SELECT da.nameFirst, da.nameLast, da.couleurAssociee, da.mpId, da.dptSlug, da.nameUrl, da.circo AS electionCirco, da.libelle,
+      CASE WHEN circo = 1 THEN CONCAT("re") WHEN circo = 2 THEN CONCAT("de") ELSE CONCAT("e") END AS electionCircoAbbrev
+      FROM mandat_secondaire ms
+      JOIN deputes_actifs da ON ms.mpId = da.mpId
+      WHERE ms.organeRef = "PO710396" AND ms.dateFin IS NULL
+      ');
 
       return $query->result_array();
     }
