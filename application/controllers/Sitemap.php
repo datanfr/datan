@@ -12,6 +12,7 @@ class Sitemap extends CI_Controller {
     $this->load->model('category_model');
     $this->load->model('post_model');
     $this->load->model('fields_model');
+    $this->load->model('parties_model');
   }
 
   /* 1. Index */
@@ -82,7 +83,6 @@ class Sitemap extends CI_Controller {
   /* 5. sitemap-groupes-inactifs-1.xml */
   function groupes_inactifs(){
     $results = $this->groupes_act_model->get_groupes_all(FALSE, FALSE);
-    //print_r($results);
 
     $urls = array();
     foreach ($results as $result) {
@@ -179,6 +179,7 @@ class Sitemap extends CI_Controller {
     $urls[]["url"] = base_url()."deputes";
     $urls[]["url"] = base_url()."groupes";
     $urls[]["url"] = base_url()."votes";
+    $urls[]["url"] = base_url()."partis-politiques";
     $urls[]["url"] = base_url()."votes/decryptes";
     foreach ($fields as $field) {
       $urls[]["url"] = base_url()."votes/decryptes/".$field["slug"];
@@ -257,8 +258,31 @@ class Sitemap extends CI_Controller {
 
     $this->load->view('sitemap/posts', $data);
 
+  }
 
+  function parties(){
+    $resultsActive = $this->parties_model->get_parties_active();
+    $resultsOther = $this->parties_model->get_parties_other();
+    //print_r($results);
 
+    $urls = array();
+    foreach ($resultsActive as $result) {
+      $libelleAbrev = mb_strtolower($result['libelleAbrev']);
+      $urls[]["url"] = base_url()."partis-politiques/".$libelleAbrev;
+    }
+
+    foreach ($resultsOther as $result) {
+      $libelleAbrev = mb_strtolower($result['libelleAbrev']);
+      $urls[]["url"] = base_url()."partis-politiques/".$libelleAbrev;
+    }
+
+    $urls[]["url"] = base_url()."partis-politiques/nd"; // Add non déclarés
+    $urls[]["url"] = base_url()."partis-politiques/nr"; // Add non ratachés
+
+    $data['urls'] = $urls;
+    $data['nbUrl'] = count($data['urls']);
+
+    $this->load->view('sitemap/page', $data);
   }
 
 }
