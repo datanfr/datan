@@ -244,7 +244,10 @@
                   <a class="nav-link no-decoration" href="<?= base_url() ?>classements">En chiffres</a>
                 </li>
                 <li class="nav-item">
-                  <a class="nav-link no-decoration" href="<?= base_url() ?>blog">Actualités</a>
+                  <a class="nav-link no-decoration" href="<?= base_url() ?>partis-politiques">Partis politiques</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link no-decoration" href="<?= base_url() ?>blog">Blog</a>
                 </li>
                 <li class="nav-item">
                   <a class="nav-link no-decoration" href="<?= base_url(); ?>a-propos">À propos</a>
