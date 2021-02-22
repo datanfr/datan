@@ -25,6 +25,11 @@
     return 15;
   }
 
+  function get_months(){
+    $months = array('janvier', 'février', 'mars', 'avril', 'mai', 'juin', 'juillet', 'août', 'septembre', 'octobre', 'novembre', 'decembre');
+    return $months;
+  }
+
   function localhost(){
     $array = array(
       '127.0.0.1',
