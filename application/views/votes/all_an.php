@@ -64,11 +64,11 @@
                 <div class="my-2 d-flex justify-content-center align-items-center">
                   <?php if ($year == $y_index && $m_index == NULL): ?>
                     <div class="current d-flex justify-content-center align-items-center">
-                      <span><a href="<?= base_url() ?>votes/all/<?= $year?>"><?= $year ?></a></span>
+                      <span><a href="<?= base_url() ?>votes/legislature-<?= legislature_current() ?>/<?= $year?>"><?= $year ?></a></span>
                     </div>
                     <?php else: ?>
                       <div class="d-flex justify-content-center align-items-center">
-                        <span><a href="<?= base_url() ?>votes/all/<?= $year?>" class="no-decoration underline-blue"><?= $year ?></a></span>
+                        <span><a href="<?= base_url() ?>votes/legislature-<?= legislature_current() ?>/<?= $year?>" class="no-decoration underline-blue"><?= $year ?></a></span>
                       </div>
                   <?php endif; ?>
                 </div>
@@ -78,7 +78,7 @@
                   <?php if ($month['years'] == $year): ?>
                     <div class="my-2 d-flex justify-content-center align-items-center">
                       <div class="<?= ($month['months'] == $m_index) && ($year == $y_index) ? "current" : "" ?> d-flex justify-content-center align-items-center">
-                        <a href="<?= base_url() ?>votes/all/<?= $year?>/<?= $month['index'] ?>" class="no-decoration underline-blue"><?= ucfirst($month["month"]) ?></a>
+                        <a href="<?= base_url() ?>votes/legislature-<?= legislature_current() ?>/<?= $year?>/<?= $month['index'] ?>" class="no-decoration underline-blue"><?= ucfirst($month["month"]) ?></a>
                       </div>
                     </div>
                   <?php endif; ?>
