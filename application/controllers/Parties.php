@@ -8,7 +8,7 @@
       //$this->password_model->security_password(); Former login protection
     }
 
-    //INDEX - Homepage with all groups//
+    //INDEX - Homepage with all parties//
     public function index(){
       // Get parties
       $data['partiesActive'] = $this->parties_model->get_parties_active();
@@ -120,6 +120,7 @@
       );
       // Load Views
       $this->load->view('templates/header', $data);
+      $this->load->view('templates/button_up');
       $this->load->view('parties/individual', $data);
       $this->load->view('templates/breadcrumb', $data);
       $this->load->view('templates/footer');
