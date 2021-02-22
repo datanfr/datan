@@ -9,7 +9,7 @@
   </head>
   <!--
 
-  This script creates the JSON with all MPs.
+  This script creates the table organes_stats
 
   -->
   <body>
@@ -31,7 +31,7 @@
 					<a class="btn btn-outline-secondary" href="http://<?php echo $_SERVER['SERVER_NAME']. ''.$_SERVER['REQUEST_URI'] ?>" role="button">Refresh</a>
 				</div>
 				<div class="col-4">
-					<a class="btn btn-outline-success" href="./" role="button">END</a>
+					<a class="btn btn-outline-success" href="./<?= $url_next ?>_parties.php" role="button">NEXT</a>
 				</div>
 			</div>
 			<div class="row mt-3">
