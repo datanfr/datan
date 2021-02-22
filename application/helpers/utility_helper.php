@@ -2,6 +2,7 @@
   function asset_url() {
     return base_url().'assets/';
   }
+
   function css_url(){
     return base_url().'assets/css/';
   }
@@ -18,6 +19,10 @@
 
   function datatable_file(){
     return '202121_datatable-datan.min';
+  }
+
+  function legislature_current(){
+    return 15;
   }
 
   function localhost(){
