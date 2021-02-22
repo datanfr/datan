@@ -103,11 +103,11 @@ $route['deputes'] = 'deputes_act/actifs';
 $route['index_departements'] = 'departement_act/liste';
 // VOTES
 $route['votes/vote_(:any)'] = 'votes_act/individual/$1';
-$route['votes/all'] = 'votes_act/all//';
+$route['votes/legislature-(:any)'] = 'votes_act/all/$1';
 $route['votes/decryptes'] = 'votes_act/decryptes//';
 $route['votes/decryptes/(:any)'] = 'votes_act/field/$1';
-$route['votes/all/(:any)/(:any)'] = 'votes_act/all/$1/$2';
-$route['votes/all/(:any)'] = 'votes_act/all/$1/';
+$route['votes/legislature-(:any)/(:any)/(:any)'] = 'votes_act/all/$1/$2/$3';
+$route['votes/legislature-(:any)/(:any)'] = 'votes_act/all/$1/$2';
 $route['votes'] = 'votes_act/index';
 // POSTS
 $route['posts/update'] = 'posts/update';

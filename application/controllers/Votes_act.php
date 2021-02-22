@@ -9,7 +9,7 @@
       //$this->password_model->security_password(); Former login protection
     }
 
-    // Page = data.fr/votes
+    // Page = datan.fr/votes
     public function index(){
       // FUNCTION
       function number_zero($x){
@@ -48,7 +48,7 @@
       $data['by_field'] = $x;
 
       // Get all votes
-      $data['votes'] = $this->votes_model->get_all_votes(NULL, NULL);
+      $data['votes'] = $this->votes_model->get_all_votes(legislature_current(), NULL, NULL);
       $data['votes'] = array_slice($data['votes'], 0, 10);
       foreach ($data['votes'] as $key => $value) {
         $data['votes'][$key]['dateScrutinFRAbbrev'] = $this->functions_datan->abbrev_months($value['dateScrutinFR']);
@@ -94,7 +94,7 @@
       $this->load->view('templates/footer', $data);
     }
 
-    // Page = data.fr/votes
+    // Page = datan.fr/votes/decryptes
     public function decryptes(){
       // Get Datan votes
       $data['votes'] = $this->votes_model->get_last_votes_datan();
@@ -183,9 +183,10 @@
 
     }
 
-    // Pages = data.fr/votes/all
-    public function all($year, $month) {
-      $months = array('janvier', 'février', 'mars', 'avril', 'mai', 'juin', 'juillet', 'août', 'septembre', 'octobre', 'novembre', 'decembre');
+    // Pages = data.fr/votes/legislature-(:any)/all
+    public function all($legislature, $year = NULL, $month = NULL) {
+      $months = get_months();
+      // Create some functions
       function number_zero($x){
         if ($x < 10) {
           return "0".$x;
@@ -202,21 +203,20 @@
       }
 
       // Check if votes
-      $data['votes'] = $this->votes_model->get_all_votes($year, $month);
-      //print_r($data['votes']);
+      $data['votes'] = $this->votes_model->get_all_votes($legislature, $year, $month);
 
       if (empty($data['votes'])) {
         show_404();
       }
 
-      // IF ARCHIVE OR NOT ?
+      // ALL OR ALL/YEAR OR ALL/YEAR/MONTH ?
       if ($year == NULL && $month == NULL) {
-        $data['h2'] = "Liste des votes de la 15<sup>e</sup> législature";
+        $data['h2'] = "Liste des votes de la ".$legislature."<sup>e</sup> législature";
         // Meta
         $data['url'] = $this->meta_model->get_url();
-        $data['title_meta'] = "Votes 15e Législature - Assemblée Nationale | Datan";
-        $data['title'] = "Votes de la 15<sup>e</sup> législature";
-        $data['description_meta'] = "Retrouvez tous les votes de l'Assemblée nationale de la 15e législature. Détails des votes, résultats des groupes et des députés, statistiques de participation, de loyauté et de cohésion.";
+        $data['title_meta'] = "Votes ".$legislature."e Législature - Assemblée Nationale | Datan";
+        $data['title'] = "Votes de la ".$legislature."<sup>e</sup> législature";
+        $data['description_meta'] = "Retrouvez tous les votes de l'Assemblée nationale de la ".$legislature."e législature. Détails des votes, résultats des groupes et des députés, statistiques de participation, de loyauté et de cohésion.";
         // Breadcrumb
         $data['breadcrumb'] = array(
           array(
@@ -226,7 +226,7 @@
             "name" => "Votes", "url" => base_url()."votes", "active" => FALSE
           ),
           array(
-            "name" => "Tous les votes", "url" => base_url()."votes/all", "active" => TRUE
+            "name" => $legislature."e législature", "url" => base_url()."votes/legislature-".$legislature, "active" => TRUE
           )
         );
         $data['breadcrumb_json'] = $this->breadcrumb_model->breadcrumb_json($data['breadcrumb']);
@@ -238,11 +238,11 @@
         $data['m_index'] = NULL;
         $data['archive'] = FALSE;
       } elseif ($year != NULL && $month == NULL) {
-        $data['h2'] = "Liste des votes de la 15<sup>e</sup> législature - ".$year;
+        $data['h2'] = "Liste des votes de la ".$legislature."<sup>e</sup> législature - ".$year;
         // Meta
         $data['url'] = $this->meta_model->get_url();
         $data['title_meta'] = "Votes ".$year." Assemblée Nationale - Résultat et Analyse | Datan";
-        $data['title'] = "Votes à l'Assemblée nationale en ".$year;
+        $data['title'] = "Votes à l'Assemblée nationale en ".$year." - ".$legislature."<sup>e</sup> législature";
         $data['description_meta'] = "Retrouvez tous les votes de l'Assemblée nationale en ".$year.". Détails des votes, résultats de vote des groupes et des députés, statistiques de loyauté et de cohésion.";
         // Breadcrumb
         $data['breadcrumb'] = array(
@@ -253,10 +253,10 @@
             "name" => "Votes", "url" => base_url()."votes", "active" => FALSE
           ),
           array(
-            "name" => "Tous les votes", "url" => base_url()."votes/all", "active" => FALSE
+            "name" => $legislature."e législature", "url" => base_url()."votes/legislature-".$legislature, "active" => FALSE
           ),
           array(
-            "name" => $year, "url" => base_url()."votes/all/".$year, "active" => TRUE
+            "name" => $year, "url" => base_url()."votes/legislature-".$legislature."/".$year, "active" => TRUE
           )
         );
         $data['breadcrumb_json'] = $this->breadcrumb_model->breadcrumb_json($data['breadcrumb']);
@@ -269,11 +269,11 @@
         $data['archive'] = TRUE;
       } elseif ($year != NULL && $month != NULL) {
         $month = number($month);
-        $data['h2'] = "Liste des votes de la 15<sup>e</sup> législature - ".$months[$month-1]." ".$year;
+        $data['h2'] = "Liste des votes de la ".$legislature."<sup>e</sup> législature - ".$months[$month-1]." ".$year;
         // Meta
         $data['url'] = $this->meta_model->get_url();
         $data['title_meta'] = "Votes ".ucfirst($months[$month-1])." ".$year." Assemblée Nationale - Résultat et Analyse | Datan";
-        $data['title'] = "Votes à l'Assemblée nationale en ".$months[$month-1]." ".$year;
+        $data['title'] = "Votes à l'Assemblée nationale en ".$months[$month-1]." ".$year." - ".$legislature."<sup>e</sup> législature";
         $data['description_meta'] = "Retrouvez tous les votes de l'Assemblée nationale en ".$months[$month-1]." ".$year.". Détails des votes, résultats de vote des groupes et des députés, statistiques de loyauté et de cohésion.";
         // Breadcrumb
         if ($month < 10 ) {
@@ -289,13 +289,13 @@
             "name" => "Votes", "url" => base_url()."votes", "active" => FALSE
           ),
           array(
-            "name" => "Tous les votes", "url" => base_url()."votes/all", "active" => FALSE
+            "name" => $legislature."e législature", "url" => base_url()."votes/legislature-".$legislature, "active" => FALSE
           ),
           array(
-            "name" => $year, "url" => base_url()."votes/all/".$year, "active" => FALSE
+            "name" => $year, "url" => base_url()."votes/legislature-".$legislature."/".$year, "active" => FALSE
           ),
           array(
-            "name" => ucfirst($months[$month-1]), "url" => base_url()."votes/all/".$year."/".$month_breadcrumb, "active" => TRUE
+            "name" => ucfirst($months[$month-1]), "url" => base_url()."votes/legislature-".$legislature."/".$year."/".$month_breadcrumb, "active" => TRUE
           )
         );
         $data['breadcrumb_json'] = $this->breadcrumb_model->breadcrumb_json($data['breadcrumb']);

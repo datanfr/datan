@@ -16,7 +16,7 @@
                 Pour en savoir plus, <a href="#">cliquez ici</a>.
               </p>
               <p>
-                Si vous voulez avoir accès à <b>tous</b> les votes de l'Assemblée nationale, qu'ils soient décryptés par nos soins ou non, <a href="<?= base_url() ?>votes/all">cliquez ici</a>.
+                Si vous voulez avoir accès à <b>tous</b> les votes de l'Assemblée nationale, qu'ils soient décryptés par nos soins ou non, <a href="<?= base_url() ?>votes/legislature-<?= legislature_current() ?>">cliquez ici</a>.
               </p>
             </div>
             <div class="col-md-4 d-none d-lg-block">
@@ -162,7 +162,7 @@
                   <button type="button" class="btn prev mr-2 button--previous">
                     <?php echo file_get_contents(asset_url()."imgs/icons/arrow_left.svg") ?>
                   </button>
-                  <a class="btn all mx-2" href="<?= base_url() ?>votes/all">
+                  <a class="btn all mx-2" href="<?= base_url() ?>votes/legislature-<?= legislature_current() ?>">
                     <span>VOIR TOUS</span>
                   </a>
                   <button type="button" class="btn next ml-2 button--next">
@@ -186,7 +186,7 @@
             <div class="col-12 text-center">
               <span>
                 Pour voir tous les votes,
-                <a href="<?= base_url() ?>votes/all">cliquez ici</a>.
+                <a href="<?= base_url() ?>votes/legislature-<?= legislature_current() ?>">cliquez ici</a>.
               </span>
             </div>
           </div>
@@ -197,7 +197,7 @@
                   <div class="year d-flex flex-column align-items-center">
                     <div class="my-2 d-flex justify-content-center align-items-center">
                       <div class="d-flex justify-content-center align-items-center">
-                        <span><a href="<?= base_url() ?>votes/all/<?= $year?>" class="no-decoration underline-blue"><?= $year ?></a></span>
+                        <span><a href="<?= base_url() ?>votes/legislature-<?= legislature_current() ?>/<?= $year?>" class="no-decoration underline-blue"><?= $year ?></a></span>
                       </div>
                     </div>
                   </div>
@@ -206,7 +206,7 @@
                       <?php if ($month['years'] == $year): ?>
                         <div class="my-2 d-flex justify-content-center align-items-center">
                           <div class="d-flex justify-content-center align-items-center">
-                            <a href="<?= base_url() ?>votes/all/<?= $year?>/<?= $month['index'] ?>" class="no-decoration underline-blue"><?= ucfirst($month["month"]) ?></a>
+                            <a href="<?= base_url() ?>votes/legislature-<?= legislature_current() ?>/<?= $year?>/<?= $month['index'] ?>" class="no-decoration underline-blue"><?= ucfirst($month["month"]) ?></a>
                           </div>
                         </div>
                       <?php endif; ?>
