@@ -25,6 +25,10 @@
     return 15;
   }
 
+  function legislature_all(){
+    return array(15);
+  }
+
   function get_months(){
     $months = array('janvier', 'février', 'mars', 'avril', 'mai', 'juin', 'juillet', 'août', 'septembre', 'octobre', 'novembre', 'decembre');
     return $months;
