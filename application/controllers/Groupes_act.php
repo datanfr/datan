@@ -450,6 +450,8 @@
       };
 
       $groupe_uid = $data['groupe']['uid'];
+      $groupe_ab = $data['groupe']['libelleAbrev'];
+      $groupe_opposition = $data['groupe']['positionPolitique'];
 
       // Query - get active votes
       $data['votes'] = $this->votes_model->get_votes_datan_groupe_field($groupe_uid, $field);
@@ -493,6 +495,10 @@
 
       // Query fields
       $data['field'] = $this->fields_model->get_field($field);
+
+      // Edito
+      $data['groupes_positionnement'] = $this->groupes_edito->get_groupes_positionnement();
+      $data['edito'] = $this->groupes_edito->edito($groupe_ab, $groupe_opposition, $data['groupes_positionnement']);
 
       // Meta
       $data['url'] = $this->meta_model->get_url();
