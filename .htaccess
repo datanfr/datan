@@ -1,9 +1,23 @@
 #HTACCESS FOR LOCALHOST
+<IfModule mod_rewrite.c>
 
-RewriteEngine on
+  RewriteEngine on
+  RewriteBase /datan
 
-RewriteCond $1 !^(index\.php|resources|robots\.txt)
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule ^(.*)$ index.php/$1 [L,QSA]
-RewriteRule ^scripts/?$ ./scripts/admin.php/ [L]
+  # remove trailing slashes from URLs
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteCond %{REQUEST_URI} (.*)/$
+  RewriteRule ^(.+)/$ $1 [R,L]
+
+  RewriteCond $1 !^(index\.php|resources|robots\.txt)
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteRule ^(.*)$ index.php/$1 [L,QSA]
+  RewriteRule ^scripts/?$ ./scripts/admin.php/ [L]
+
+  # remove trailing slashes from URLs
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteCond %{REQUEST_URI} (.*)/$
+  RewriteRule ^(.+)/$ $1 [R,L]
+
+</IfModule>
