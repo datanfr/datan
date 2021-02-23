@@ -491,7 +491,7 @@
       ELSE NULL END AS vote
       FROM
       (
-      SELECT vi.voteId, gc.voteNumero, gc.cohesion, gc.positionGroupe, vi.dateScrutin, REPLACE(vi.titre, "n?", "n°") AS titre
+      SELECT vi.voteId, vi.legislature, gc.voteNumero, gc.cohesion, gc.positionGroupe, vi.dateScrutin, REPLACE(vi.titre, "n?", "n°") AS titre
       FROM groupes_cohesion gc
       LEFT JOIN votes_info vi ON gc.voteNumero = vi.voteNumero
       WHERE gc.organeRef = "'.$uid.'" AND gc.legislature = 15
@@ -506,7 +506,7 @@
     public function get_votes_datan_groupe($groupe_uid, $limit = FALSE){
       if ($limit != FALSE) {
         $query = $this->db->query('
-          SELECT A.*, f.name AS category_libelle, v.positionMajoritaire AS vote, date_format(vi.dateScrutin, "%d %M %Y") as dateScrutinFR
+          SELECT A.*, f.name AS category_libelle, v.positionMajoritaire AS vote, date_format(vi.dateScrutin, "%d %M %Y") as dateScrutinFR, vi.legislature
           FROM
           (
           SELECT vd.id,
@@ -554,7 +554,7 @@
 
     public function get_votes_datan_groupe_field($groupe_uid, $field){
       $query = $this->db->query('
-      SELECT A.*, f.name AS category_libelle, v.positionMajoritaire AS vote, date_format(vi.dateScrutin, "%d %M %Y") as dateScrutinFR
+      SELECT A.*, f.name AS category_libelle, v.positionMajoritaire AS vote, date_format(vi.dateScrutin, "%d %M %Y") as dateScrutinFR, vi.legislature
       FROM
       (
       SELECT vd.id,
