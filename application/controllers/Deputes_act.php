@@ -438,7 +438,7 @@
       $this->load->view('templates/footer');
     }
 
-    // Pages deputes/x/votes
+    // Pages deputes/(:depute)/votes
     public function votes_datan($input, $departement){
       // Query 1 = infos générales députés
       $input_depute = $input;

@@ -100,10 +100,10 @@
               <tbody>
                 <?php $i = 1; ?>
                 <?php foreach ($votes as $vote): ?>
-                  <tr data-href="<?= base_url() ?>votes/vote_<?= $vote['voteNumero'] ?>">
+                  <tr data-href="<?= base_url() ?>votes/legislature-<?= $vote['legislature'] ?>/vote_<?= $vote['voteNumero'] ?>">
                     <td>
                       <?php if ($i <= 30): ?>
-                        <a href="<?= base_url() ?>votes/vote_<?= $vote['voteNumero'] ?>" class="no-decoration"><?= $vote['voteNumero'] ?></a>
+                        <a href="<?= base_url() ?>votes/legislature-<?= $vote['legislature'] ?>/vote_<?= $vote['voteNumero'] ?>" class="no-decoration"><?= $vote['voteNumero'] ?></a>
                         <?php else: ?>
                         <?= $vote['voteNumero'] ?>
                       <?php endif; ?>

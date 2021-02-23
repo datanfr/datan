@@ -42,7 +42,7 @@
     public function get_last_votes_datan($limit = FALSE){
       if ($limit != FALSE) {
         $query = $this->db->query('
-          SELECT vd.title AS voteTitre, vd.description, vi.dateScrutin, vi.voteNumero, f.name AS category_libelle, f.slug AS category_slug, vi.sortCode, date_format(dateScrutin, "%d %M %Y") as dateScrutinFR
+          SELECT vd.title AS voteTitre, vd.description, vi.dateScrutin, vi.voteNumero, vi.legislature, f.name AS category_libelle, f.slug AS category_slug, vi.sortCode, date_format(dateScrutin, "%d %M %Y") as dateScrutinFR
           FROM votes_datan vd
           LEFT JOIN votes_info vi ON vd.vote_id = vi.voteId
           LEFT JOIN fields f ON vd.category = f.id
@@ -52,7 +52,7 @@
         ');
       } else {
         $query = $this->db->query('
-          SELECT vd.title AS voteTitre, vd.description, vi.dateScrutin, vi.voteNumero, f.name AS category_libelle, f.slug AS category_slug, vi.sortCode, date_format(dateScrutin, "%d %M %Y") as dateScrutinFR
+          SELECT vd.title AS voteTitre, vd.description, vi.dateScrutin, vi.voteNumero, vi.legislature, f.name AS category_libelle, f.slug AS category_slug, vi.sortCode, date_format(dateScrutin, "%d %M %Y") as dateScrutinFR
           FROM votes_datan vd
           LEFT JOIN votes_info vi ON vd.vote_id = vi.voteId
           LEFT JOIN fields f ON vd.category = f.id
@@ -95,7 +95,7 @@
 
     public function get_votes_datan_category($field){
       $query = $this->db->query('
-      SELECT vd.title AS vote_titre, vd.description, vi.dateScrutin, vi.voteNumero, f.name AS category_libelle, f.slug AS category_slug, vi.sortCode, date_format(dateScrutin, "%d %M %Y") as dateScrutinFR
+      SELECT vd.title AS vote_titre, vd.description, vi.dateScrutin, vi.voteNumero, vi.legislature, f.name AS category_libelle, f.slug AS category_slug, vi.sortCode, date_format(dateScrutin, "%d %M %Y") as dateScrutinFR
       FROM votes_datan vd
       LEFT JOIN votes_info vi ON vd.vote_id = vi.voteId
       LEFT JOIN fields f ON vd.category = f.id
@@ -367,7 +367,7 @@
         	WHEN vs.vote IS NULL THEN "absent"
         	ELSE vs.vote
         END AS vote_depute,
-        vs.positionGroup as vote_groupe, vs.scoreLoyaute AS depute_loyaute, vi.sortCode, vp.participation, date_format(vi.dateScrutin, "%d %M %Y") as dateScrutinFR
+        vs.positionGroup as vote_groupe, vs.scoreLoyaute AS depute_loyaute, vi.sortCode, vi.legislature, vp.participation, date_format(vi.dateScrutin, "%d %M %Y") as dateScrutinFR
         FROM
         (
         SELECT vd.id, vd.vote_id,
@@ -426,7 +426,7 @@
 
     public function get_votes_datan_depute_field($depute_id, $field){
       $query = $this->db->query('
-        SELECT A.*, vs.positionGroup as vote_groupe, vs.scoreLoyaute AS depute_loyaute, vi.sortCode, vp.participation, date_format(vi.dateScrutin, "%d %M %Y") as dateScrutinFR,
+        SELECT A.*, vs.positionGroup as vote_groupe, vs.scoreLoyaute AS depute_loyaute, vi.sortCode, vi.legislature, vp.participation, date_format(vi.dateScrutin, "%d %M %Y") as dateScrutinFR,
           CASE
         	WHEN vs.vote = 0 THEN "abstention"
         	WHEN vs.vote = 1 THEN "pour"
@@ -454,7 +454,7 @@
 
     public function get_votes_all_depute($depute_id){
       $query = $this->db->query('
-      SELECT A.voteId, A.voteNumero, A.dateScrutin, A.titre, A.title,
+      SELECT A.voteId, A.voteNumero, A.dateScrutin, A.titre, A.title, A.legislature,
       CASE
       	WHEN A.vote = 1 THEN "pour"
           WHEN A.vote = -1 THEN "contre"
@@ -468,7 +468,7 @@
       ELSE NULL END AS loyaute
       FROM
       (
-      SELECT vp.voteNumero, vp.participation, vs.vote, vs.scoreLoyaute, vi.voteId, vi.dateScrutin, REPLACE(vi.titre, "n?", "n°") AS titre, vd.title AS title
+      SELECT vp.voteNumero, vp.participation, vs.vote, vs.scoreLoyaute, vi.voteId, vi.dateScrutin, vi.legislature, REPLACE(vi.titre, "n?", "n°") AS titre, vd.title AS title
       FROM votes_participation vp
       LEFT JOIN votes_scores vs ON (vs.voteNumero = vp.voteNumero AND vs.mpId = "'.$depute_id.'")
       LEFT JOIN votes_info vi ON vp.voteNumero = vi.voteNumero

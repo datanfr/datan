@@ -140,7 +140,7 @@
                               <?php endif; ?>
                               la proposition de loi Sécurité globale</b>.
                             <?= ucfirst($gender["le"]) ?> député<?= $gender["e"] ?> <?= $key_votes[3254]["loyaute"] === "1" ? "a été loyal" : "n'a pas été loyal" ?><?= $gender['e'] ?> a son groupe.
-                            <a href="<?= base_url() ?>votes/vote_3254" class="font-italic">Voir le vote</a>
+                            <a href="<?= base_url() ?>votes/legislature-15/vote_3254" class="font-italic">Voir le vote</a>
                           </div>
                         </div>
                       <?php endif; ?>
@@ -160,7 +160,7 @@
                               <?php endif; ?>
                               la réintroduction des pesticides néonicotinoïdes</b> jusqu'en 2023</b>.
                             <?= ucfirst($gender['pronom']) ?> <?= $key_votes[2940]["loyaute"] === "1" ? "a été loyal" : "n'a pas été loyal" ?><?= $gender['e'] ?> a son groupe.
-                            <a href="<?= base_url() ?>votes/vote_2940" class="font-italic">Voir le vote</a>
+                            <a href="<?= base_url() ?>votes/legislature-15/vote_2940" class="font-italic">Voir le vote</a>
                           </div>
                         </div>
                       <?php endif; ?>
@@ -180,7 +180,7 @@
                               <?php endif; ?>
                               au Premier ministre Jean Castex</b>.
                             <?= ucfirst($gender['pronom']) ?> <?= $key_votes[2814]["loyaute"] === "1" ? "a été loyal" : "n'a pas été loyal" ?><?= $gender['e'] ?> a son groupe politique.
-                            <a href="<?= base_url() ?>votes/vote_2814" class="font-italic">Voir le vote</a>
+                            <a href="<?= base_url() ?>votes/legislature-15/vote_2814" class="font-italic">Voir le vote</a>
                           </div>
                         </div>
                       <?php endif; ?>
@@ -228,7 +228,7 @@
                     </div>
                     <div class="card-body d-flex align-items-center">
                       <span class="title">
-                        <a href="<?= base_url() ?>votes/vote_<?= $vote['voteNumero'] ?>" class="stretched-link no-decoration"><?= $vote['vote_titre'] ?></a>
+                        <a href="<?= base_url() ?>votes/legislature-<?= $vote['legislature'] ?>/vote_<?= $vote['voteNumero'] ?>" class="stretched-link no-decoration"><?= $vote['vote_titre'] ?></a>
                       </span>
                     </div>
                     <div class="card-footer">
