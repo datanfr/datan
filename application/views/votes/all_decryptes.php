@@ -15,7 +15,7 @@
                 Tous ces votes décryptés font l'objet d'une reformulation et d'une contextualisation, afin de les rendre plus accessibles et plus compréhensibles.
               </p>
               <p>
-                Si vous voulez avoir accès à <b>tous les votes de l'Assemblée nationale</b>, qu'ils soient décryptés par nos soins ou non, <a href="<?= base_url() ?>votes/all">cliquez ici</a>.
+                Si vous voulez avoir accès à <b>tous les votes de l'Assemblée nationale</b>, qu'ils soient décryptés par nos soins ou non, <a href="<?= base_url() ?>votes/legislature-<?= legislature_current() ?>">cliquez ici</a>.
               </p>
             </div>
             <div class="col-12 mb-lg-5 mb-4 d-lg-none">
@@ -47,7 +47,7 @@
                   <?php endforeach; ?>
                 </div>
                 <div class="d-md-flex justify-content-center mt-md-5">
-                  <a class="btn btn-outline-primary d-none d-md-block" href="<?= base_url() ?>votes/all">Liste de tous les votes de l'Assemblée</a>
+                  <a class="btn btn-outline-primary d-none d-md-block" href="<?= base_url() ?>votes/legislature-<?= legislature_current() ?>">Liste de tous les votes de l'Assemblée</a>
                 </div>
               </div>
             </div>
@@ -66,7 +66,7 @@
                       </div>
                       <div class="card-body d-flex align-items-center">
                         <span class="title">
-                          <a href="<?= base_url() ?>votes/vote_<?= $vote['voteNumero'] ?>" class="stretched-link"></a>
+                          <a href="<?= base_url() ?>votes/legislature-<?= $vote['legislature'] ?>/vote_<?= $vote['voteNumero'] ?>" class="stretched-link"></a>
                           <?= $vote['voteTitre'] ?></span>
                       </div>
                       <div class="card-footer">
