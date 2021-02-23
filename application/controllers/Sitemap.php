@@ -101,13 +101,16 @@ class Sitemap extends CI_Controller {
 
   /* 6. sitemap-votes-1.xml */
   function votes(){
-    $results = $this->votes_model->get_all_votes(NULL, NULL);
-    //print_r($results);
-
     $urls = array();
-    foreach ($results as $result) {
-      $n = $result['voteNumero'];
-      $urls[]["url"] = base_url()."votes/vote_".$n;
+
+    foreach (legislature_all() as $legislature) {
+      $results = $this->votes_model->get_all_votes($legislature, NULL, NULL);
+
+      foreach ($results as $result) {
+        $n = $result['voteNumero'];
+        $urls[]["url"] = base_url()."votes/legislature-".$legislature."/vote_".$n;
+      }
+
     }
 
     $data['urls'] = $urls;
@@ -184,16 +187,16 @@ class Sitemap extends CI_Controller {
     foreach ($fields as $field) {
       $urls[]["url"] = base_url()."votes/decryptes/".$field["slug"];
     }
-    $urls[]["url"] = base_url()."votes/all";
+    $urls[]["url"] = base_url()."votes/legislature-15";
     // YEARS
     foreach ($data["years"] as $year) {
-      $urls[]["url"] = base_url()."votes/all/".$year;
+      $urls[]["url"] = base_url()."votes/legislature-15/".$year;
     }
     // MONTHS
     foreach ($data["years"] as $year) {
       foreach ($data["months"] as $month) {
         if ($month["years"] == $year) {
-          $urls[]["url"] = base_url()."votes/all/".$year."/".$month['index'];
+          $urls[]["url"] = base_url()."votes/legislature-15/".$year."/".$month['index'];
         }
       }
     }
