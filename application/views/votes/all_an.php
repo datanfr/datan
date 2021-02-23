@@ -23,12 +23,12 @@
             <tbody>
               <?php $i = 1; ?>
               <?php foreach ($votes as $vote): ?>
-                <tr data-href="<?= base_url() ?>votes/vote_<?= $vote['voteNumero'] ?>">
+                <tr data-href="<?= base_url() ?>votes/legislature-<?= $legislature ?>/vote_<?= $vote['voteNumero'] ?>">
                   <td>
                     <?php if ($archive == TRUE): ?>
-                      <a href="<?= base_url() ?>votes/vote_<?= $vote['voteNumero'] ?>"><?= $vote['voteNumero'] ?></a>
+                      <a href="<?= base_url() ?>votes/legislature-<?= $legislature ?>/vote_<?= $vote['voteNumero'] ?>"><?= $vote['voteNumero'] ?></a>
                     <?php elseif ($i <= 30): ?>
-                      <a href="<?= base_url() ?>votes/vote_<?= $vote['voteNumero'] ?>"><?= $vote['voteNumero'] ?></a>
+                      <a href="<?= base_url() ?>votes/legislature-<?= $legislature ?>/vote_<?= $vote['voteNumero'] ?>"><?= $vote['voteNumero'] ?></a>
                     <?php else: ?>
                       <?= $vote['voteNumero'] ?>
                     <?php endif; ?>
@@ -64,11 +64,11 @@
                 <div class="my-2 d-flex justify-content-center align-items-center">
                   <?php if ($year == $y_index && $m_index == NULL): ?>
                     <div class="current d-flex justify-content-center align-items-center">
-                      <span><a href="<?= base_url() ?>votes/legislature-<?= legislature_current() ?>/<?= $year?>"><?= $year ?></a></span>
+                      <span><a href="<?= base_url() ?>votes/legislature-<?= $legislature ?>/<?= $year?>"><?= $year ?></a></span>
                     </div>
                     <?php else: ?>
                       <div class="d-flex justify-content-center align-items-center">
-                        <span><a href="<?= base_url() ?>votes/legislature-<?= legislature_current() ?>/<?= $year?>" class="no-decoration underline-blue"><?= $year ?></a></span>
+                        <span><a href="<?= base_url() ?>votes/legislature-<?= $legislature ?>/<?= $year?>" class="no-decoration underline-blue"><?= $year ?></a></span>
                       </div>
                   <?php endif; ?>
                 </div>
@@ -78,7 +78,7 @@
                   <?php if ($month['years'] == $year): ?>
                     <div class="my-2 d-flex justify-content-center align-items-center">
                       <div class="<?= ($month['months'] == $m_index) && ($year == $y_index) ? "current" : "" ?> d-flex justify-content-center align-items-center">
-                        <a href="<?= base_url() ?>votes/legislature-<?= legislature_current() ?>/<?= $year?>/<?= $month['index'] ?>" class="no-decoration underline-blue"><?= ucfirst($month["month"]) ?></a>
+                        <a href="<?= base_url() ?>votes/legislature-<?= $legislature ?>/<?= $year?>/<?= $month['index'] ?>" class="no-decoration underline-blue"><?= ucfirst($month["month"]) ?></a>
                       </div>
                     </div>
                   <?php endif; ?>
