@@ -92,7 +92,7 @@
                   </div>
                   <div class="card-body d-flex align-items-center">
                     <span class="title">
-                      <a href="<?= base_url() ?>votes/vote_<?= $vote['voteNumero'] ?>" class="stretched-link no-decoration"><?= $vote['voteTitre'] ?></a>
+                      <a href="<?= base_url() ?>votes/legislature-<?= $vote['legislature'] ?>/vote_<?= $vote['voteNumero'] ?>" class="stretched-link no-decoration"><?= $vote['voteTitre'] ?></a>
                     </span>
                   </div>
                   <div class="card-footer">
