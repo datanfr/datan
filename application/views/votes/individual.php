@@ -226,12 +226,12 @@
     <div class="container-fluid pg-vote-individual mt-5" id="container-always-fluid">
       <div class="row votes-next d-flex flex-md-row flex-column align-items-center justify-content-center py-4">
         <?php if ($vote_previous != FALSE): ?>
-          <a class="btn" href="<?= base_url() ?>votes/vote_<?= $vote_previous ?>" role="button">
+          <a class="btn" href="<?= base_url() ?>votes/legislature-<?= $legislature ?>/vote_<?= $vote_previous ?>" role="button">
             <?php echo file_get_contents(asset_url()."imgs/icons/arrow_left.svg") ?> Vote précédent</a>
         <?php endif; ?>
         <a class="btn" href="<?= base_url() ?>votes" role="button">Tous les votes</a>
         <?php if ($vote_next != FALSE): ?>
-          <a class="btn" href="<?= base_url() ?>votes/vote_<?= $vote_next ?>" role="button">Vote suivant <?php echo file_get_contents(asset_url()."imgs/icons/arrow_right.svg") ?></a>
+          <a class="btn" href="<?= base_url() ?>votes/legislature-<?= $legislature ?>/vote_<?= $vote_next ?>" role="button">Vote suivant <?php echo file_get_contents(asset_url()."imgs/icons/arrow_right.svg") ?></a>
         <?php endif; ?>
       </div>
     </div>
@@ -255,7 +255,7 @@
               </div>
               <div class="card-body d-flex align-items-center">
                 <span class="title">
-                  <a href="<?= base_url() ?>votes/vote_<?= $vote_datan['voteNumero'] ?>" class="stretched-link"></a>
+                  <a href="<?= base_url() ?>votes/legislature-<?= $legislature ?>/vote_<?= $vote_datan['voteNumero'] ?>" class="stretched-link"></a>
                   <?= $vote_datan['voteTitre'] ?></span>
               </div>
               <div class="card-footer">

@@ -12,7 +12,7 @@
         vd.title, vd.slug, vd.category
         FROM votes_info vi
         LEFT JOIN votes_datan vd ON vi.voteId = vd.vote_id AND vd.state = "published"
-        WHERE vi.legislature = "'.$legislature.'"
+        WHERE vi.legislature = '.$legislature.'
         ORDER BY vi.voteNumero DESC
         ');
       } elseif ($year != NULL && $month == NULL) {
@@ -22,7 +22,7 @@
         vd.title, vd.slug, vd.category
         FROM votes_info vi
         LEFT JOIN votes_datan vd ON vi.voteId = vd.vote_id AND vd.state = "published"
-        WHERE vi.legislature = "'.$legislature.'" AND YEAR(vi.dateScrutin) = "'.$year.'"
+        WHERE vi.legislature = '.$legislature.' AND YEAR(vi.dateScrutin) = "'.$year.'"
         ORDER BY vi.voteNumero DESC
         ');
       } elseif ($year != NULL && $month != NULL) {
@@ -32,7 +32,7 @@
         vd.title, vd.slug, vd.category
         FROM votes_info vi
         LEFT JOIN votes_datan vd ON vi.voteId = vd.vote_id AND vd.state = "published"
-        WHERE vi.legislature = "'.$legislature.'" AND YEAR(vi.dateScrutin) = "'.$year.'" AND MONTH(vi.dateScrutin) = "'.$month.'"
+        WHERE vi.legislature = '.$legislature.' AND YEAR(vi.dateScrutin) = "'.$year.'" AND MONTH(vi.dateScrutin) = "'.$month.'"
         ORDER BY vi.voteNumero DESC
         ');
       }
@@ -134,7 +134,7 @@
       return($array);
     }
 
-    public function get_individual_vote($num){
+    public function get_individual_vote($legislature, $num){
       $query = $this->db->query('
       SELECT A.*,
       CASE
@@ -157,7 +157,7 @@
             LEFT JOIN dossiers doss ON vdos.dossier = doss.titreChemin
             LEFT JOIN votes_datan vd ON vi.voteId = vd.vote_id AND vd.state = "published"
             LEFT JOIN fields f ON vd.category = f.id
-            WHERE vi.legislature = 15 AND vi.voteNumero = "'.$num.'"
+            WHERE vi.legislature = '.$legislature.' AND vi.voteNumero = "'.$num.'"
       ) A
       ');
       return $query->row_array();

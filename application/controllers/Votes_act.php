@@ -185,6 +185,11 @@
 
     // Pages = data.fr/votes/legislature-(:any)/all
     public function all($legislature, $year = NULL, $month = NULL) {
+      // Check if legislature is a number
+      if (!is_numeric($legislature)) {
+        show_404();
+      }
+      // Get month array
       $months = get_months();
       // Create some functions
       function number_zero($x){
@@ -324,8 +329,19 @@
 
     }
 
-    public function individual($num){
-      $data['vote'] = $this->votes_model->get_individual_vote($num);
+    public function individual($legislature, $num){
+      // Check if legislature is numeric
+      if (!is_numeric($legislature)) {
+        show_404();
+      }
+      $data['legislature'] = $legislature;
+      // Check if vote number is numeric
+      if (!is_numeric($num)) {
+        show_404();
+      }
+
+      // Get vote
+      $data['vote'] = $this->votes_model->get_individual_vote($legislature, $num);
       //print_r($data['vote']);
 
       if (empty($data['vote'])) {
@@ -371,7 +387,7 @@
         $previous = $num - 1;
         $previous_result = TRUE;
         while ($previous_result) {
-          $query = $this->votes_model->get_individual_vote($previous);
+          $query = $this->votes_model->get_individual_vote($legislature, $previous);
           if (empty($query)) {
             $previous_result = TRUE;
             $previous = $previous - 1;
@@ -390,7 +406,7 @@
         $next = $num + 1;
         $next_result = TRUE;
         while ($next_result) {
-          $query = $this->votes_model->get_individual_vote($next);
+          $query = $this->votes_model->get_individual_vote($legislature, $next);
           if (empty($query)) {
             $next_result = TRUE;
             $next = $next + 1;
@@ -410,8 +426,8 @@
 
       // Meta
       $data['url'] = $this->meta_model->get_url();
-      $data['title_meta'] = "Vote n°".$data['vote']['voteNumero']." - ".ucfirst($data['vote']['title_meta']). " | Datan";
-      $data['description_meta'] = "Découvrez le vote n° ".$data['vote']['voteNumero']." : ".ucfirst($data['vote']['title_meta']).". Détails et analyses des résultats du vote.";
+      $data['title_meta'] = "Vote n°".$data['vote']['voteNumero']." - ".ucfirst($data['vote']['title_meta']). " - ".$legislature."e législature | Datan";
+      $data['description_meta'] = "Découvrez le vote n° ".$data['vote']['voteNumero']." : ".ucfirst($data['vote']['title_meta'])." - ".$legislature."e législature. Détails et analyses des résultats du vote.";
       $data['title'] = $data['vote']['titre'];
       // Breadcrumb
       $data['breadcrumb'] = array(
@@ -422,7 +438,10 @@
           "name" => "Votes", "url" => base_url()."votes", "active" => FALSE
         ),
         array(
-          "name" => "Vote n° ".$data['vote']['voteNumero'], "url" => base_url()."votes/vote_".$data['vote']['voteNumero'], "active" => TRUE
+          "name" => $legislature."e législature", "url" => base_url()."votes/legislature-".$legislature, "active" => FALSE
+        ),
+        array(
+          "name" => "Vote n° ".$data['vote']['voteNumero'], "url" => base_url()."votes/legislature-".$legislature."/vote_".$data['vote']['voteNumero'], "active" => TRUE
         )
       );
       $data['breadcrumb_json'] = $this->breadcrumb_model->breadcrumb_json($data['breadcrumb']);
