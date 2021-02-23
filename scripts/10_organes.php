@@ -3,13 +3,14 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>code_4_groupes</title>
+    <title>10_organes</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.2/css/bootstrap.min.css" integrity="sha384-Smlep5jCw/wG7hdkwQ/Z5nLIefveQRIY9nfy6xoR1uRYBtpZgI6339F5dgvm/e9B" crossorigin="anonymous">
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.2/js/bootstrap.min.js" integrity="sha384-o+RDsa0aLu++PJvFqy8fFScvbHFLtbvScb8AjopnFD+iEQ7wo/CG0xlczd+2O/em" crossorigin="anonymous"></script>
   </head>
   <!--
 
-  This script exports data from the XML into the table 'organes'
+  This script exports data from the XML into the table 'organes'.
+  It also truncates the table 'organes' before updating it.
 
   -->
   <body>
@@ -21,7 +22,7 @@
     ?>
 		<div class="container" style="background-color: #e9ecef;">
 			<div class="row">
-				<h1>4. Mise à jour base 'organes'</h1>
+				<h1>10. Mise à jour base 'organes'</h1>
 			</div>
 			<div class="row">
 				<div class="col-4">
@@ -31,7 +32,7 @@
 					<a class="btn btn-outline-secondary" href="http://<?php echo $_SERVER['SERVER_NAME']. ''.$_SERVER['REQUEST_URI'] ?>" role="button">Refresh</a>
 				</div>
 				<div class="col-4">
-					<a class="btn btn-outline-success" href="./<?= $url_next ?>_organes.php" role="button">Next</a>
+					<a class="btn btn-outline-success" href="./12_organes.php" role="button">Next</a>
 				</div>
 			</div>
 			<div class="row mt-3">
@@ -59,6 +60,8 @@
               <?php
               ini_set('memory_limit','500M');
               $dateMaj = date('Y-m-d');
+              include 'bdd-connexion.php';
+              $bdd->query("TRUNCATE TABLE organes");
 
               //Online file
               $file = 'http://data.assemblee-nationale.fr/static/openData/repository/15/amo/tous_acteurs_mandats_organes_xi_legislature/AMO30_tous_acteurs_tous_mandats_tous_organes_historique.xml.zip';
@@ -133,7 +136,6 @@
                       <?php
 
                       // PLUS qu'à parser //
-                      include 'bdd-connexion.php';
                       $sql = $bdd->prepare("INSERT INTO organes (uid, coteType, libelle, libelleEdition, libelleAbrev, libelleAbrege, dateDebut, dateFin, legislature, positionPolitique, preseance, couleurAssociee, dateMaj) VALUES (:uid, :coteType, :libelle, :libelleEdition, :libelleAbrev, :libelleAbrege, :dateDebut, :dateFin, :legislature, :positionPolitique, :preseance, :couleurAssociee, :dateMaj)");
                       $sql->execute(array('uid' => $uid, 'coteType' => $codeType, 'libelle' => $libelle, 'libelleEdition' => $libelleEdition, 'libelleAbrev' => $libelleAbrev, 'libelleAbrege' => $libelleAbrege, 'dateDebut' => $dateDebut, 'dateFin' => $dateFin, 'legislature' => $legislature, 'positionPolitique' => $positionPolitique, 'preseance' => $preseance, 'couleurAssociee' => $couleurAssociee, 'dateMaj' => $dateMaj));
 

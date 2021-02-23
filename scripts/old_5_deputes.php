@@ -22,7 +22,7 @@
     ?>
 		<div class="container" style="background-color: #e9ecef;">
 			<div class="row">
-				<h1>1-1. Suppression données bdd 'deputes'</h1>
+				<h1>5. Suppression données bdd 'deputes'</h1>
 			</div>
 			<div class="row">
 				<div class="col-4">

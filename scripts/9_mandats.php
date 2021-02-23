@@ -3,14 +3,15 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>code_2_mandats_principaux</title>
+    <title>9_mandats</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.2/css/bootstrap.min.css" integrity="sha384-Smlep5jCw/wG7hdkwQ/Z5nLIefveQRIY9nfy6xoR1uRYBtpZgI6339F5dgvm/e9B" crossorigin="anonymous">
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.2/js/bootstrap.min.js" integrity="sha384-o+RDsa0aLu++PJvFqy8fFScvbHFLtbvScb8AjopnFD+iEQ7wo/CG0xlczd+2O/em" crossorigin="anonymous"></script>
   </head>
   <!--
 
   This script exports from the Open Data XML date regarding MPs' mandates in
-  committees ('GP') ; into the table 'mandat_secondaire'.
+  committees ('GP') ; into the table 'mandat_secondaire'. It also truncates
+  the table 'mandat_secondaire' first.
 
   -->
   <body>
@@ -22,7 +23,7 @@
     ?>
 		<div class="container-fluid" style="background-color: #e9ecef;">
 			<div class="row">
-				<h1>2. Mise à jour base 'mandat_secondaire'</h1>
+				<h1>9. Mise à jour base 'mandat_secondaire'</h1>
 			</div>
 			<div class="row">
 				<div class="col-4">

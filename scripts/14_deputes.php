@@ -3,13 +3,17 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title><?= $_SERVER['REQUEST_URI'] ?></title>
+    <title>14_deputes</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.2/css/bootstrap.min.css" integrity="sha384-Smlep5jCw/wG7hdkwQ/Z5nLIefveQRIY9nfy6xoR1uRYBtpZgI6339F5dgvm/e9B" crossorigin="anonymous">
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.2/js/bootstrap.min.js" integrity="sha384-o+RDsa0aLu++PJvFqy8fFScvbHFLtbvScb8AjopnFD+iEQ7wo/CG0xlczd+2O/em" crossorigin="anonymous"></script>
   </head>
   <!--
 
-  This script creates the table 'deputes_inactifs'
+  This script creates the table 'deputes_all'
+  Evolution of this script in order to take all MPs
+  (not only the current legislature).
+
+  Change the name of the table from deputes_inactifs to deputes_all.
 
   -->
   <body>
@@ -21,7 +25,7 @@
     ?>
 		<div class="container" style="background-color: #e9ecef;">
 			<div class="row">
-				<h1><?= $_SERVER['REQUEST_URI'] ?></h1>
+				<h1>12. Create deputes_inactifs table</h1>
 			</div>
 			<div class="row">
 				<div class="col-4">

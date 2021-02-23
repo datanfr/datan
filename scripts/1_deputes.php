@@ -3,14 +3,14 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>code_1_deputes</title>
+    <title>1_deputes</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.2/css/bootstrap.min.css" >
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.2/js/bootstrap.min.js"></script>
   </head>
   <!--
 
   This script gets the data from the AMO30_tous_acteurs_tous_mandats_tous_organes_historique field
-  and stores the information in a "deputes" table.
+  and stores the information in a "deputes" table. Each time it truncate the "deputes" table.
 
   -->
   <body>
@@ -26,7 +26,7 @@
 			</div>
 			<div class="row">
 				<div class="col-4">
-					<a class="btn btn-outline-success" href="./<?= $url_next ?>_deputes.php" role="button">Next</a>
+					<a class="btn btn-outline-success" href="./3_deputes.php" role="button">Next</a>
 				</div>
 			</div>
 			<div class="row mt-3">
@@ -50,6 +50,8 @@
             </thead>
             <tbody>
               <?php
+                include('bdd-connexion.php');
+                $bdd->query("TRUNCATE TABLE deputes");
                 $dateMaj = date('Y-m-d');
                 //Online file
                 $file = 'http://data.assemblee-nationale.fr/static/openData/repository/15/amo/tous_acteurs_mandats_organes_xi_legislature/AMO30_tous_acteurs_tous_mandats_tous_organes_historique.xml.zip';
@@ -101,7 +103,6 @@
 
                         <?php
                         // SQL //
-                        include('bdd-connexion.php');
         								$sql = $bdd->prepare("INSERT INTO deputes (mpId, civ, nameFirst, nameLast, birthDate, birthCity, birthCountry, job, catSocPro, dateMaj) VALUES (:mpId, :civ, :nameFirst, :nameLast, :birthDate, :birthCity, :birthCountry, :job, :catSocPro, :dateMaj)");
         								$sql->execute(array('mpId' => $mpId, 'civ' => $civ, 'nameFirst' => $nameFirst, 'nameLast' => $nameLast, 'birthDate' => $birthDate, 'birthCity' => $birthCity, 'birthCountry' => $birthCountry, 'job' => $job, 'catSocPro' => $catSocPro, 'dateMaj' => $dateMaj));
                       }

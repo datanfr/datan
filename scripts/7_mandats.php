@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>code_2_mandats_principaux</title>
+    <title>7_mandats</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.2/css/bootstrap.min.css" integrity="sha384-Smlep5jCw/wG7hdkwQ/Z5nLIefveQRIY9nfy6xoR1uRYBtpZgI6339F5dgvm/e9B" crossorigin="anonymous">
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.2/js/bootstrap.min.js" integrity="sha384-o+RDsa0aLu++PJvFqy8fFScvbHFLtbvScb8AjopnFD+iEQ7wo/CG0xlczd+2O/em" crossorigin="anonymous"></script>
   </head>
@@ -11,6 +11,7 @@
 
   This script creates get the data from the 'AMO30_tous_acteurs_tous_mandats_tous_organes_historique.xml'
   file and stores the data in the table 'mandat_principal'. It takes only the mandates 'ASSEMBLEE'
+  It also truncate the table 'mandat_principal' first.
 
   -->
   <body>
@@ -22,7 +23,7 @@
     ?>
 		<div class="container-fluid" style="background-color: #e9ecef;">
 			<div class="row">
-				<h1>2. Mise à jour base 'mandat_principal'</h1>
+				<h1>7. Mise à jour base 'mandat_principal'</h1>
 			</div>
 			<div class="row">
 				<div class="col-4">
