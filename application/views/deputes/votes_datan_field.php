@@ -96,7 +96,7 @@
                 </div>
                 <div class="card-body d-flex align-items-center">
                   <span class="title">
-                    <a href="<?= base_url() ?>votes/vote_<?= $vote['voteNumero'] ?>" class="stretched-link no-decoration"></a>
+                    <a href="<?= base_url() ?>votes/legislature-<?= $vote['legislature'] ?>/vote_<?= $vote['voteNumero'] ?>" class="stretched-link no-decoration"></a>
                     <?= $vote['vote_titre'] ?>
                   </span>
                 </div>
