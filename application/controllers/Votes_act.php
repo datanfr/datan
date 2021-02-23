@@ -183,12 +183,13 @@
 
     }
 
-    // Pages = data.fr/votes/legislature-(:any)/all
+    // Pages = data.fr/votes/legislature-(:legislature)/(:year)/(:month)
     public function all($legislature, $year = NULL, $month = NULL) {
       // Check if legislature is a number
       if (!is_numeric($legislature)) {
         show_404();
       }
+      $data['legislature'] = $legislature;
       // Get month array
       $months = get_months();
       // Create some functions
