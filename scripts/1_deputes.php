@@ -26,7 +26,7 @@
 			</div>
 			<div class="row">
 				<div class="col-4">
-					<a class="btn btn-outline-success" href="./3_deputes.php" role="button">Next</a>
+					<a class="btn btn-outline-success" href="./<?= $url_next ?>_deputes.php" role="button">Next</a>
 				</div>
 			</div>
 			<div class="row mt-3">

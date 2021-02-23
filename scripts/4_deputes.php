@@ -9,8 +9,8 @@
   </head>
   <!--
 
-  This script inserts into the table 'deputes_contacts' the contact infos
-  of each MP. It also truncates the table before importing data.
+  This script creates the new table 'deputes_contacts_cleaned' from the table
+  'deputes_contacts'
 
   -->
   <body>
@@ -22,7 +22,7 @@
     ?>
 		<div class="container" style="background-color: #e9ecef;">
 			<div class="row">
-				<h1>4. Mise à jour base 'deputes_contacts'</h1>
+				<h1>4. Création de la nouvelle table 'deputes_contacts_cleaned'</h1>
 			</div>
 			<div class="row">
 				<div class="col-4">
@@ -32,103 +32,33 @@
 					<a class="btn btn-outline-secondary" href="http://<?php echo $_SERVER['SERVER_NAME']. ''.$_SERVER['REQUEST_URI'] ?>" role="button">Refresh</a>
 				</div>
 				<div class="col-4">
-					<a class="btn btn-outline-success" href="./6_deputes.php" role="button">NEXT</a>
+					<a class="btn btn-outline-success" href="./<?= $url_next ?>_mandats.php" role="button">NEXT</a>
 				</div>
 			</div>
 			<div class="row mt-3">
-        <table class="table">
-          <thead>
-              <tr>
-                <th scope="col">mpId</th>
-                <th scope="col">file</th>
-                <th scope="col">uid</th>
-                <th scope="col">type</th>
-                <th scope="col">typeLibelle</th>
-                <th scope="col">poids</th>
-                <th scope="col">adresseRattachement</th>
-                <th scope="col">intitule</th>
-                <th scope="col">numeroRue</th>
-                <th scope="col">nomRue</th>
-                <th scope="col">complementAdresse</th>
-                <th scope="col">codePostal</th>
-                <th scope="col">ville</th>
-                <th scope="col">valElec</th>
-                <th scope="col">dateMaj</th>
-              </tr>
-            </thead>
-            <tbody>
-              <?php
-                ini_set('memory_limit','500M');
-                include 'bdd-connexion.php';
-                $bdd->query("TRUNCATE TABLE deputes_contacts");
-                $dateMaj = date('Y-m-d');
-                //Online file
-                $file = 'http://data.assemblee-nationale.fr/static/openData/repository/15/amo/tous_acteurs_mandats_organes_xi_legislature/AMO30_tous_acteurs_tous_mandats_tous_organes_historique.xml.zip';
-                $file = trim($file);
-                $newfile = 'tmp_acteurs_organes.zip';
-                if (!copy($file, $newfile)) {
-                  echo "failed to copy $file...\n";
-                }
-                $zip = new ZipArchive();
-                if ($zip->open($newfile)!==TRUE) {
-                  exit("cannot open <$filename>\n");
-                } else {
-                  for ($i=0; $i < $zip->numFiles ; $i++) {
-                    $filename = $zip->getNameIndex($i);
-                    $sub = substr($filename, 0, 13);
-                    if ($sub == 'xml/acteur/PA') {
-                      $xml_string = $zip->getFromName($filename);
-                      if ($xml_string != false) {
-                        $xml = simplexml_load_string($xml_string);
-                        $mpId = str_replace("xml/acteur/", "", $filename);
-                        $mpId = str_replace(".xml", "", $mpId);
-                        foreach ($xml->adresses->adresse as $adresses) {
-                          $uid = $adresses->uid;
-                          $type = $adresses->type;
-                          $typeLibelle = $adresses->typeLibelle;
-                          $poids = $adresses->poids;
-                          $adresseRattachement = $adresses->adresseDeRattachement;
-                          $intitule = $adresses->intitule;
-                          $numeroRue = $adresses->numeroRue;
-                          $nomRue = $adresses->nomRue;
-                          $complementAdresse = $adresses->complementAdresse;
-                          $codePostal = $adresses->codePostal;
-                          $ville = $adresses->ville;
-                          $valElec = $adresses->valElec;
-                          ?>
-
-                          <tr>
-                            <td><?= $mpId ?></td>
-                            <td><?= $file ?></td>
-                            <td><?= $uid ?></td>
-                            <td><?= $type ?></td>
-                            <td><?= $typeLibelle ?></td>
-                            <td><?= $poids ?></td>
-                            <td><?= $adresseRattachement ?></td>
-                            <td><?= $intitule ?></td>
-                            <td><?= $numeroRue ?></td>
-                            <td><?= $nomRue ?></td>
-                            <td><?= $complementAdresse ?></td>
-                            <td><?= $codePostal ?></td>
-                            <td><?= $ville ?></td>
-                            <td><?= $valElec ?></td>
-                            <td><?= $dateMaj ?></td>
-                          </tr>
-
-                          <?php
-                          // AJOUTE SQL ICI //
-                          $sql = $bdd->prepare("INSERT INTO deputes_contacts (mpId, uid, type, typeLibelle, poids, adresseRattachement, intitule, numeroRue, nomRue, complementAdresse, codePostal, ville, valElec, dateMaj) VALUES (:mpId, :uid, :type, :typeLibelle, :poids, :adresseRattachement, :intitule, :numeroRue, :nomRue, :complementAdresse, :codePostal, :ville, :valElec, :dateMaj)");
-                          $sql->execute(array('mpId' => $mpId, 'uid' => $uid, 'type' => $type, 'typeLibelle' => $typeLibelle, 'poids' => $poids, 'adresseRattachement' => $adresseRattachement, 'intitule' => $intitule, 'numeroRue' => $numeroRue, 'nomRue' => $nomRue, 'complementAdresse' => $complementAdresse, 'codePostal' => $codePostal, 'ville' => $ville, 'valElec' => $valElec, 'dateMaj' => $dateMaj));
-                        }
-                      }
-                    }
-                  }
-                }
-
-
-              ?>
-            </tbody>
-        </table>
+        <div class="col">
+  				<?php
+            include 'bdd-connexion.php';
+            $bdd->exec('DROP TABLE IF EXISTS deputes_contacts_cleaned');
+            $bdd->exec('
+              CREATE TABLE deputes_contacts_cleaned AS
+              SELECT A.*, t2.valElec AS website, t3.valElec AS mailAn, t4.valElec AS mailPerso, t5.valElec AS twitter, t6.valElec AS facebook, CURDATE() AS dateMaj
+              FROM
+              (
+              SELECT mpId
+              FROM deputes_contacts t1
+              GROUP BY mpId
+              ) A
+              LEFT JOIN deputes_contacts t2 ON t2.mpId = A.mpId AND t2.type = 22
+              LEFT JOIN deputes_contacts t3 ON t3.mpId = A.mpId AND t3.type = 15 AND t3.valElec LIKE "%nationale.fr%"
+              LEFT JOIN deputes_contacts t4 ON t4.mpId = A.mpId AND t4.type = 15 AND t4.valElec NOT LIKE "%nationale.fr%"
+              LEFT JOIN deputes_contacts t5 ON t5.mpId = A.mpId AND t5.type = 24
+              LEFT JOIN deputes_contacts t6 ON t6.mpId = A.mpId AND t6.type = 25
+              GROUP BY A.mpId
+             ');
+            $bdd->exec('CREATE INDEX idx_mpId ON deputes_contacts_cleaned(mpId)');
+  				?>
+        </div>
 			</div>
 		</div>
 	</body>

@@ -9,8 +9,8 @@
   </head>
   <!--
 
-  This script cleans the first and last names of MPs to create, in the table
-  'deputes', the nameUrl variable (one slug for each MP).
+  This script inserts into the table 'deputes_contacts' the contact infos
+  of each MP. It also truncates the table before importing data.
 
   -->
   <body>
@@ -22,7 +22,7 @@
     ?>
 		<div class="container" style="background-color: #e9ecef;">
 			<div class="row">
-				<h1>3. Modification des noms de la bdd 'deputes'</h1>
+				<h1>3. Mise à jour base 'deputes_contacts'</h1>
 			</div>
 			<div class="row">
 				<div class="col-4">
@@ -36,69 +36,100 @@
 				</div>
 			</div>
 			<div class="row mt-3">
-        <div class="col">
-          <?php
-          	/**
-           * Supprimer les accents
-           *
-           * @param string $str chaîne de caractères avec caractères accentués
-           * @param string $encoding encodage du texte (exemple : utf-8, ISO-8859-1 ...)
-           */
-          function suppr_accents($str, $encoding='utf-8')
-          {
-              // transformer les caractères accentués en entités HTML
-              $str = htmlentities($str, ENT_NOQUOTES, $encoding);
+        <table class="table">
+          <thead>
+              <tr>
+                <th scope="col">mpId</th>
+                <th scope="col">file</th>
+                <th scope="col">uid</th>
+                <th scope="col">type</th>
+                <th scope="col">typeLibelle</th>
+                <th scope="col">poids</th>
+                <th scope="col">adresseRattachement</th>
+                <th scope="col">intitule</th>
+                <th scope="col">numeroRue</th>
+                <th scope="col">nomRue</th>
+                <th scope="col">complementAdresse</th>
+                <th scope="col">codePostal</th>
+                <th scope="col">ville</th>
+                <th scope="col">valElec</th>
+                <th scope="col">dateMaj</th>
+              </tr>
+            </thead>
+            <tbody>
+              <?php
+                ini_set('memory_limit','500M');
+                include 'bdd-connexion.php';
+                $bdd->query("TRUNCATE TABLE deputes_contacts");
+                $dateMaj = date('Y-m-d');
+                //Online file
+                $file = 'http://data.assemblee-nationale.fr/static/openData/repository/15/amo/tous_acteurs_mandats_organes_xi_legislature/AMO30_tous_acteurs_tous_mandats_tous_organes_historique.xml.zip';
+                $file = trim($file);
+                $newfile = 'tmp_acteurs_organes.zip';
+                if (!copy($file, $newfile)) {
+                  echo "failed to copy $file...\n";
+                }
+                $zip = new ZipArchive();
+                if ($zip->open($newfile)!==TRUE) {
+                  exit("cannot open <$filename>\n");
+                } else {
+                  for ($i=0; $i < $zip->numFiles ; $i++) {
+                    $filename = $zip->getNameIndex($i);
+                    $sub = substr($filename, 0, 13);
+                    if ($sub == 'xml/acteur/PA') {
+                      $xml_string = $zip->getFromName($filename);
+                      if ($xml_string != false) {
+                        $xml = simplexml_load_string($xml_string);
+                        $mpId = str_replace("xml/acteur/", "", $filename);
+                        $mpId = str_replace(".xml", "", $mpId);
+                        foreach ($xml->adresses->adresse as $adresses) {
+                          $uid = $adresses->uid;
+                          $type = $adresses->type;
+                          $typeLibelle = $adresses->typeLibelle;
+                          $poids = $adresses->poids;
+                          $adresseRattachement = $adresses->adresseDeRattachement;
+                          $intitule = $adresses->intitule;
+                          $numeroRue = $adresses->numeroRue;
+                          $nomRue = $adresses->nomRue;
+                          $complementAdresse = $adresses->complementAdresse;
+                          $codePostal = $adresses->codePostal;
+                          $ville = $adresses->ville;
+                          $valElec = $adresses->valElec;
+                          ?>
 
-              // remplacer les entités HTML pour avoir juste le premier caractères non accentués
-              // Exemple : "&ecute;" => "e", "&Ecute;" => "E", "à" => "a" ...
-              $str = preg_replace('#&([A-za-z])(?:acute|grave|cedil|circ|orn|ring|slash|th|tilde|uml);#', '\1', $str);
+                          <tr>
+                            <td><?= $mpId ?></td>
+                            <td><?= $file ?></td>
+                            <td><?= $uid ?></td>
+                            <td><?= $type ?></td>
+                            <td><?= $typeLibelle ?></td>
+                            <td><?= $poids ?></td>
+                            <td><?= $adresseRattachement ?></td>
+                            <td><?= $intitule ?></td>
+                            <td><?= $numeroRue ?></td>
+                            <td><?= $nomRue ?></td>
+                            <td><?= $complementAdresse ?></td>
+                            <td><?= $codePostal ?></td>
+                            <td><?= $ville ?></td>
+                            <td><?= $valElec ?></td>
+                            <td><?= $dateMaj ?></td>
+                          </tr>
 
-              // Remplacer les ligatures tel que : , Æ ...
-              // Exemple "œ" => "oe"
-              $str = preg_replace('#&([A-za-z]{2})(?:lig);#', '\1', $str);
-              // Supprimer tout le reste
-              $str = preg_replace('#&[^;]+;#', '', $str);
+                          <?php
+                          // AJOUTE SQL ICI //
+                          $sql = $bdd->prepare("INSERT INTO deputes_contacts (mpId, uid, type, typeLibelle, poids, adresseRattachement, intitule, numeroRue, nomRue, complementAdresse, codePostal, ville, valElec, dateMaj) VALUES (:mpId, :uid, :type, :typeLibelle, :poids, :adresseRattachement, :intitule, :numeroRue, :nomRue, :complementAdresse, :codePostal, :ville, :valElec, :dateMaj)");
+                          $sql->execute(array('mpId' => $mpId, 'uid' => $uid, 'type' => $type, 'typeLibelle' => $typeLibelle, 'poids' => $poids, 'adresseRattachement' => $adresseRattachement, 'intitule' => $intitule, 'numeroRue' => $numeroRue, 'nomRue' => $nomRue, 'complementAdresse' => $complementAdresse, 'codePostal' => $codePostal, 'ville' => $ville, 'valElec' => $valElec, 'dateMaj' => $dateMaj));
+                        }
+                      }
+                    }
+                  }
+                }
 
-              return $str;
-          }
-        	include 'bdd-connexion.php';
-        	$lastIdSql = $bdd->query('
-        		SELECT mpId, nameFirst, nameLast
-        		FROM deputes
-        		WHERE nameUrl is null
-        		ORDER BY mpId ASC
-        		LIMIT 1000
-        		');
 
-          	echo '<hr>';
-
-          	while ($data = $lastIdSql->fetch()) {
-          		$mpId = $data['mpId'];
-          		echo '<p>Last id: '.$data['mpId'].'</p>';
-          		echo '<p>prenom origine: '.$data['nameFirst'].'</p>';
-          		echo '<p>nom origine: '.$data['nameLast'].'</p><br>';
-          		$firstAccent = $data['nameFirst'];
-          		$firstAccent = suppr_accents($firstAccent);
-          		$firstAccent = strtolower($firstAccent);
-          		$lastAccent = $data['nameLast'];
-          		$lastAccent = suppr_accents($lastAccent);
-          		$lastAccent = strtolower($lastAccent);
-          		echo '<p>firstAccent: '.($firstAccent).'</p>';
-          		echo '<p>lastAccent: '.($lastAccent).'</p>';
-          		$firstOk = strtr($firstAccent, array("'" => "", "-" => "", " " => "-"));
-          		echo '<p>firstOk: '.$firstOk.'</p>';
-          		$lastOk = strtr($lastAccent, array('.' => '', ',' => '', "'" => "", " " => "", "-" => ""));
-          		echo '<p>lastOk: '.$lastOk.'</p>';
-          		$nameUrl = $firstOk.'-'.$lastOk;
-          		echo '<p>nameUrl: '.$nameUrl.'</p>';
-          		echo '<hr>';
-              // INSERT INTO SQL //
-          		$sql = $bdd->prepare('UPDATE deputes SET nameUrl = :nameUrl WHERE mpId = "'.$mpId.'"');
-          		$sql -> execute(array('nameUrl' => $nameUrl));
-          	}
-          ?>
-        </div>
-      </div>
-    </div>
-  </body>
+              ?>
+            </tbody>
+        </table>
+			</div>
+		</div>
+	</body>
 </html>

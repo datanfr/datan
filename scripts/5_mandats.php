@@ -3,15 +3,15 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>8_mandats</title>
+    <title>5_mandats</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.2/css/bootstrap.min.css" integrity="sha384-Smlep5jCw/wG7hdkwQ/Z5nLIefveQRIY9nfy6xoR1uRYBtpZgI6339F5dgvm/e9B" crossorigin="anonymous">
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.2/js/bootstrap.min.js" integrity="sha384-o+RDsa0aLu++PJvFqy8fFScvbHFLtbvScb8AjopnFD+iEQ7wo/CG0xlczd+2O/em" crossorigin="anonymous"></script>
   </head>
   <!--
 
-  This script exports from the Open Data XML date regarding MPs' mandates in
-  parliamentary groups ('GP'). The data is stored into 'mandat_group'.
-  It also truncates the table 'mandat_group' first.
+  This script creates get the data from the 'AMO30_tous_acteurs_tous_mandats_tous_organes_historique.xml'
+  file and stores the data in the table 'mandat_principal'. It takes only the mandates 'ASSEMBLEE'
+  It also truncate the table 'mandat_principal' first.
 
   -->
   <body>
@@ -23,7 +23,7 @@
     ?>
 		<div class="container-fluid" style="background-color: #e9ecef;">
 			<div class="row">
-				<h1>8. Mise à jour base 'mandat_group'</h1>
+				<h1>7. Mise à jour base 'mandat_principal'</h1>
 			</div>
 			<div class="row">
 				<div class="col-4">
@@ -52,6 +52,15 @@
                 <th scope="col">codeQualite</th>
                 <th scope="col">libQualiteSex</th>
                 <th scope="col">organe</th>
+                <th scope="col">electionRegion</th>
+                <th scope="col">electionRegionType</th>
+                <th scope="col">electionDepartement</th>
+                <th scope="col">electionDepartementNumero</th>
+                <th scope="col">eletionCirco</th>
+                <th scope="col">datePriseFonction</th>
+                <th scope="col">causeFin</th>
+                <th scope="col">premiereElection</th>
+                <th scope="col">placeHemicycle</th>
                 <th scope="col">dateMaj</th>
               </tr>
             </thead>
@@ -73,13 +82,11 @@
               } else {
                 // AJOUTE SQL ICI //
                 include 'bdd-connexion.php';
-                $bdd->query("TRUNCATE TABLE mandat_groupe");
+                $bdd->query("TRUNCATE TABLE mandat_principal");
                 $i = 1;
                 $until = $zip->numFiles;
-
                 for ($i=0; $i < $until ; $i++) {
                   $filename = $zip->getNameIndex($i);
-                  //echo 'Filename: ' . $filename . '<br />';
                   $sub = substr($filename, 0, 13);
                   if ($sub == 'xml/acteur/PA') {
                     $xml_string = $zip->getFromName($filename);
@@ -87,9 +94,8 @@
                       $xml = simplexml_load_string($xml_string);
                       $mpId = str_replace("xml/acteur/", "", $filename);
                       $mpId = str_replace(".xml", "", $mpId);
-
                       foreach ($xml->mandats->mandat as $mandat) {
-                        if ($mandat->typeOrgane == "GP") {
+                        if ($mandat->typeOrgane == "ASSEMBLEE") {
                           $mandatId = $mandat->uid;
                           $legislature = $mandat->legislature;
                           $typeOrgane = $mandat->typeOrgane;
@@ -107,6 +113,51 @@
                           $codeQualite = $mandat->infosQualite->codeQualite;
                           $libQualiteSex = $mandat->infosQualite->libQualiteSex;
                           $organe = $mandat->organes->organeRef;
+
+                          if (isset($mandat->election->lieu->region)) {
+                            $electionRegion = $mandat->election->lieu->region;
+                          } else {
+                            $electionRegion = NULL;
+                          }
+
+                          if (isset($mandat->election->lieu->regionType)) {
+                            $electionRegionType = $mandat->election->lieu->regionType;
+                          } else {
+                            $electionRegionType = NULL;
+                          }
+
+                          if (isset($mandat->election->lieu->departement)) {
+                            $departement = $mandat->election->lieu->departement;
+                            $numDepartement = $mandat->election->lieu->numDepartement;
+                            $numCirco = $mandat->election->lieu->numCirco;
+                          } else {
+                            $departement = NULL;
+                            $numDepartement = NULL;
+                            $numCirco = NULL;
+                          }
+
+                          if (isset($mandat->mandature)) {
+                            $datePriseFonction = $mandat->mandature->datePriseFonction;
+                            $causeFin = $mandat->mandature->causeFin;
+                            $premiereElection = $mandat->mandature->premiereElection;
+                          } else {
+                            $datePriseFonction = NULL;
+                            $causeFin = NULL;
+                            $premiereElection = NULL;
+                          }
+
+                          if (isset($mandat->mandature->placeHemicycle)) {
+                            $placeHemicycle = $mandat->mandature->placeHemicycle;
+                          } else {
+                            $placeHemicycle = NULL;
+                          }
+
+                          if ($datePriseFonction == "") {
+                            $datePriseFonction = NULL;
+                          } else {
+                            $datePriseFonction = $datePriseFonction;
+                          }
+
                           ?>
 
                           <tr>
@@ -122,6 +173,15 @@
                             <td><?= $codeQualite ?></td>
                             <td><?= $libQualiteSex ?></td>
                             <td><?= $organe ?></td>
+                            <td><?= $electionRegion ?></td>
+                            <td><?= $electionRegionType ?></td>
+                            <td><?= $departement ?></td>
+                            <td><?= $numDepartement ?></td>
+                            <td><?= $numCirco ?></td>
+                            <td><?= $datePriseFonction ?></td>
+                            <td><?= $causeFin ?></td>
+                            <td><?= $premiereElection ?></td>
+                            <td><?= $placeHemicycle ?></td>
                             <td><?= $dateMaj ?></td>
                           </tr>
 
@@ -129,7 +189,7 @@
 
                           // AJOUTE SQL ICI //
                           include 'bdd-connexion.php';
-                          $sql = $bdd->prepare("INSERT INTO mandat_groupe (
+                          $sql = $bdd->prepare("INSERT INTO mandat_principal (
                             mandatId,
                             mpId,
                             legislature,
@@ -140,7 +200,16 @@
                             nominPrincipale,
                             codeQualite,
                             libQualiteSex,
-                            organeRef,
+                            organe,
+                            electionRegion,
+                            electionRegionType,
+                            electionDepartement,
+                            electionDepartementNumero,
+                            electionCirco,
+                            datePriseFonction,
+                            causeFin,
+                            premiereElection,
+                            placeHemicyle,
                             dateMaj)
                             VALUES (
                               :mandatId,
@@ -153,7 +222,16 @@
                               :nomin_principale,
                               :code_qualite,
                               :libQualiteSex,
-                              :organeRef,
+                              :organe,
+                              :election_region,
+                              :election_region_type,
+                              :election_departement,
+                              :election_departement_numero,
+                              :election_circo,
+                              :prise_fonction,
+                              :causeFin,
+                              :premiere_election,
+                              :placeHemicyle,
                               :dateMaj)");
 
                           $sql->execute(array(
@@ -167,7 +245,16 @@
                             'nomin_principale' => $nominPrincipale,
                             'code_qualite' => $codeQualite,
                             'libQualiteSex' => $libQualiteSex,
-                            'organeRef' => $organe,
+                            'organe' => $organe,
+                            'election_region' => $electionRegion,
+                            'election_region_type' => $electionRegionType,
+                            'election_departement' => $departement,
+                            'election_departement_numero' => $numDepartement,
+                            'election_circo' => $numCirco,
+                            'prise_fonction' => $datePriseFonction,
+                            'causeFin' => $causeFin,
+                            'premiere_election' => $premiereElection,
+                            'placeHemicyle' => $placeHemicycle,
                             'dateMaj' => $dateMaj
                           ));
 
