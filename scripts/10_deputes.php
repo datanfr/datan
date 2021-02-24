@@ -9,7 +9,7 @@
   </head>
   <!--
 
-  This script creates the table 'deputes_actifs'
+  This script creates the table 'deputes_all'
 
   -->
   <body>
@@ -21,7 +21,7 @@
     ?>
 		<div class="container" style="background-color: #e9ecef;">
 			<div class="row">
-				<h1>11. Create deputes_actifs table</h1>
+				<h1>11. Create deputes_all table</h1>
 			</div>
 			<div class="row">
 				<div class="col-4">
@@ -36,37 +36,110 @@
 			</div>
 			<div class="row mt-3">
         <div class="col">
+          <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">#</th>
+                <th>mpId</th>
+                <th>legislature</th>
+                <th>mandatId</th>
+                <th>libelle</th>
+                <th>libelleAbrev</th>
+                <th>groupeId</th>
+                <th>couleurAssociee</th>
+                <th>dateFin</th>
+                <th>dateMaj</th>
+              </tr>
+            </thead>
+            <tbody>
   				<?php
             include 'bdd-connexion.php';
-            $bdd->exec('DROP TABLE IF EXISTS deputes_actifs');
-             $bdd->exec('
-              CREATE TABLE deputes_actifs AS
-              SELECT A.*, dpt.slug AS dptSlug, dpt.libelle_1 AS dptLibelle1, dpt.libelle_2 AS dptLibelle2, dpt.departement_nom AS departementNom, dpt.departement_code AS departementCode, mp.electionCirco AS circo, mp.datePriseFonction, mp.premiereElection, mp.placeHemicyle AS placeHemicycle,
-              YEAR(current_timestamp()) - YEAR(A.birthDate) - CASE WHEN MONTH(current_timestamp()) < MONTH(A.birthDate) OR (MONTH(current_timestamp()) = MONTH(A.birthDate) AND DAY(current_timestamp()) < DAY(A.birthDate)) THEN 1 ELSE 0 END AS age,
-              COUNT(mg.mandatId) AS groupesMandatsN,
-              CURDATE() AS dateMaj
-              FROM
-              (
-                SELECT d.nameLast, d.nameFirst, d.civ, d.nameUrl, d.birthDate, d.birthCity, d.birthCountry, mg.mpId, o.libelle, o.libelleAbrev, o.uid AS groupeId, o.couleurAssociee, mg.codeQualite, d.job
-                FROM mandat_groupe mg
-                LEFT JOIN deputes d ON d.mpId = mg.mpId
-                LEFT JOIN organes o ON o.uid = mg.organeRef
-                WHERE (mg.dateFin IS NULL) AND (mg.nominPrincipale = 1)
-              ) A
-              LEFT JOIN mandat_principal mp ON (mp.mpId = A.mpId) AND (mp.dateFin IS NULL) AND (mp.preseance = 50)
-              LEFT JOIN departement dpt ON mp.electionDepartementNumero = dpt.departement_code
-              LEFT JOIN mandat_groupe mg ON mp.mpId = mg.mpId
-              WHERE mg.legislature = 15 AND mg.dateDebut != "2017-06-21" AND (DATEDIFF(mg.dateFin, mg.dateDebut) > 3 OR DATEDIFF(mg.dateFin, mg.dateDebut) IS NULL) AND mg.preseance >= 20
-              GROUP BY mg.mpId
-              ORDER BY A.nameLast ASC
-             ');
+            $dateMaj = date('Y-m-d');
+            $bdd->exec('TRUNCATE TABLE deputes_all');
 
-             $bdd->exec('
-             CREATE INDEX idx_mp ON deputes_actifs (nameUrl, dptSlug);
-             CREATE INDEX idx_mpId ON deputes_actifs (mpId);
-             CREATE INDEX idx_groupeId ON deputes_actifs (groupeId);
-             ');
+            $query = $bdd->query('
+              SELECT mpId, legislature, datePriseFonction, causeFin
+              FROM mandat_principal
+              GROUP BY mpId, legislature
+            ');
+
+            $i = 1;
+
+            while ($data = $query->fetch()) {
+              $mpId = $data['mpId'];
+              $legislature = $data['legislature'];
+
+              // Get the mandat_principal
+
+              $mandatPrincipal = $bdd->query('
+                SELECT *
+                FROM mandat_principal
+                WHERE mpId = "'.$mpId.'" AND preseance = 50 AND legislature = '.$legislature.'
+                ORDER BY !ISNULL(dateFin), dateFin DESC
+                LIMIT 1
+              ');
+
+              if ($mandatPrincipal->rowCount() > 0) {
+                while ($mandat = $mandatPrincipal->fetch()) {
+                  $dateFin = $mandat['dateFin'];
+                  $mandatId = $mandat['mandatId'];
+                }
+              } else {
+                echo "ERROR";
+              }
+
+              $mandatGroupes = $bdd->query('
+              SELECT o.libelle, o.libelleAbrev, o.uid AS groupeId, o.couleurAssociee
+              FROM mandat_groupe mg
+              LEFT JOIN organes o ON o.uid = mg.organeRef
+              WHERE mg.mpId = "'.$mpId.'" AND mg.legislature = '.$legislature.' AND mg.preseance >= 20
+              ORDER BY !ISNULL(mg.dateFin), mg.dateFin DESC
+              LIMIT 1
+              ');
+
+              if ($mandatGroupes->rowCount() > 0) {
+                while ($mandatGroupe = $mandatGroupes->fetch()) {
+                  $libelle = $mandatGroupe['libelle'];
+                  $libelleAbrev = $mandatGroupe['libelleAbrev'];
+                  $groupeId = $mandatGroupe['groupeId'];
+                  $couleurAssociee = $mandatGroupe['couleurAssociee'];
+                }
+              } else {
+                echo "ERROR -- ";
+                echo $mpId." -- ".$legislature."<br>";
+                $libelle = NULL;
+                $libelleAbrev = NULL;
+                $groupeId = NULL;
+                $couleurAssociee = NULL;
+              }
+
+
+              ?>
+
+              <tr>
+                <th scope="row"><?= $i ?></th>
+                <td scope="row"><?= $mpId ?></td>
+                <td><?= $legislature ?></td>
+                <td><?= $mandatId ?></td>
+                <td><?= $libelle ?></td>
+                <td><?= $libelleAbrev ?></td>
+                <td><?= $groupeId ?></td>
+                <td><?= $couleurAssociee ?></td>
+                <td><?= $dateFin ?></td>
+                <td><?= $dateMaj ?></td>
+              </tr>
+
+              <?php
+
+              // SQL //
+              $sql = $bdd->prepare("INSERT INTO deputes_all (mpId, legislature, mandatId, libelle, libelleAbrev, groupeId, couleurAssociee, dateFin, dateMaj) VALUES (:mpId, :legislature, :mandatId, :libelle, :libelleAbrev, :groupeId, :couleurAssociee, :dateFin, :dateMaj)");
+              $sql->execute(array('mpId' => $mpId, 'legislature' => $legislature, 'mandatId' => $mandatId, 'libelle' => $libelle, 'libelleAbrev' => $libelleAbrev, 'groupeId' => $groupeId, 'couleurAssociee' => $couleurAssociee, 'dateFin' => $dateFin, 'dateMaj' => $dateMaj));
+              $i++;
+            }
+
   				?>
+            </tbody>
+          </table>
         </div>
 			</div>
 		</div>
