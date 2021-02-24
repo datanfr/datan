@@ -5,10 +5,10 @@ class Sitemap extends CI_Controller {
 
   function __construct() {
     parent::__construct();
-    $this->load->model('deputes_act_model');
-    $this->load->model('groupes_act_model');
+    $this->load->model('deputes_model');
+    $this->load->model('groupes_model');
     $this->load->model('votes_model');
-    $this->load->model('departement_act_model');
+    $this->load->model('departement_model');
     $this->load->model('category_model');
     $this->load->model('post_model');
     $this->load->model('fields_model');
@@ -22,7 +22,7 @@ class Sitemap extends CI_Controller {
 
   /* 2. datan/sitemap-deputes-1.xml */
   function deputes(){
-    $results = $this->deputes_act_model->get_deputes_actifs(NULL);
+    $results = $this->deputes_model->get_deputes_actifs(NULL);
     //print_r($results);
 
     $urls = array();
@@ -42,7 +42,7 @@ class Sitemap extends CI_Controller {
 
   /* 3. sitemap-deputes-inactifs-1.xml */
   function deputes_inactifs(){
-    $results = $this->deputes_act_model->get_deputes_inactifs(NULL);
+    $results = $this->deputes_model->get_deputes_inactifs(NULL);
     //print_r($results);
 
     $urls = array();
@@ -62,7 +62,7 @@ class Sitemap extends CI_Controller {
 
   /* 4. sitemap-groupes-1.xml */
   function groupes(){
-    $results = $this->groupes_act_model->get_groupes_all(TRUE, FALSE);
+    $results = $this->groupes_model->get_groupes_all(TRUE, FALSE);
     //print_r($results);
 
     $urls = array();
@@ -82,7 +82,7 @@ class Sitemap extends CI_Controller {
 
   /* 5. sitemap-groupes-inactifs-1.xml */
   function groupes_inactifs(){
-    $results = $this->groupes_act_model->get_groupes_all(FALSE, FALSE);
+    $results = $this->groupes_model->get_groupes_all(FALSE, FALSE);
 
     $urls = array();
     foreach ($results as $result) {
@@ -121,7 +121,7 @@ class Sitemap extends CI_Controller {
 
   /* 7. sitemap-localites-d-1.xml */
   function departements(){
-    $results = $this->departement_act_model->get_all_departements();
+    $results = $this->departement_model->get_all_departements();
     //print_r($results);
 
     $urls = array();
@@ -138,13 +138,13 @@ class Sitemap extends CI_Controller {
 
   /* 8. sitemap-localites-v-1.xml */
   function communes(){
-    $departements = $this->departement_act_model->get_all_departements();
+    $departements = $this->departement_model->get_all_departements();
     //print_r($results);
 
     $urls = array();
     foreach ($departements as $dpt) {
       $slug = $dpt['slug'];
-      $cities = $this->departement_act_model->get_communes_population($slug);
+      $cities = $this->departement_model->get_communes_population($slug);
       $dpt_slug = $dpt['slug'];
       foreach ($cities as $city) {
         if ($city['commune_slug'] != NULL) {
