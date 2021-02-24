@@ -102,11 +102,11 @@
 
     public function get_mps_active($organeRef){
       $query = $this->db->query('
-      SELECT da.nameFirst, da.nameLast, da.couleurAssociee, da.mpId, da.dptSlug, da.nameUrl, da.circo AS electionCirco, da.libelle,
-      CASE WHEN circo = 1 THEN CONCAT("re") WHEN circo = 2 THEN CONCAT("de") ELSE CONCAT("e") END AS electionCircoAbbrev
+      SELECT ms.organeRef, da.nameFirst, da.nameLast, da.couleurAssociee, da.mpId, da.dptSlug, da.nameUrl, da.circo AS electionCirco, da.libelle,
+      CASE WHEN da.circo = 1 THEN CONCAT("re") WHEN da.circo = 2 THEN CONCAT("de") ELSE CONCAT("e") END AS electionCircoAbbrev
       FROM mandat_secondaire ms
-      JOIN deputes_actifs da ON ms.mpId = da.mpId
-      WHERE ms.organeRef = "'.$organeRef.'" AND ms.dateFin IS NULL
+      LEFT JOIN deputes_all da ON ms.mpId = da.mpId
+      WHERE ms.organeRef = "'.$organeRef.'" AND ms.dateFin IS NULL AND da.legislature = '.legislature_current().' AND da.dateFin IS NULL
       ORDER BY da.nameLast ASC
       ');
 

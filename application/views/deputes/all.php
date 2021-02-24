@@ -10,12 +10,21 @@
             <p>
               L'Assemblée nationale compte <b>577 députés</b>. Ils sont élus tous les 5 ans lors des élections législatives. Les dernières ont eu lieu en juin 2017 et les prochaines se tiendront en 2022, quelques semaines après l'élection présidentielle.
             </p>
-            <p>
-              L'Assemblée compte <?= $male["n"] ?> députés hommes (<?= $male["percentage"] ?> %) et <?= $female["n"] ?> femmes (<?= $female["percentage"] ?> %).
-            </p>
-            <p>
-              Depuis leur élection, <?= $number_inactive ?> députés ont quitté l'Assemblée pour cause de nomination au Gouvernement, de démission ou de décès. Pour découvrir ces députés qui ne sont plus activité en <a href="<?= base_url() ?>deputes/inactifs" ?>cliquez ici</a>.
-            </p>
+            <?php if ($legislature == legislature_current()): ?>
+              <p>
+                L'Assemblée nationale compte actuellement <?= $male["n"] ?> députés hommes (<?= $male["percentage"] ?> %) et <?= $female["n"] ?> femmes (<?= $female["percentage"] ?> %).
+              </p>
+              <p>
+                Depuis leur élection, <?= $number_inactive ?> députés ont quitté l'Assemblée pour cause de nomination au Gouvernement, de démission ou de décès. Pour découvrir ces députés qui ne sont plus activité en <a href="<?= base_url() ?>deputes/inactifs" ?>cliquez ici</a>.
+              </p>
+            <?php else: ?>
+              <p>
+                Cette page présente tous les députés qui ont servi lors de la <?= $legislature ?><sup>e</sup> législature.
+              </p>
+              <p>
+                Pendant la <?= $legislature ?><sup></sup> législature, il y avait à l'Assemblée nationale <?= $male["n"] ?> députés hommes (<?= $male["percentage"] ?> %) et <?= $female["n"] ?> femmes (<?= $female["percentage"] ?> %).
+              </p>
+            <?php endif; ?>
           <?php else: ?>
             <p>
               Depuis leur élection, <?= $number_inactive ?> députés ont quitté l'Assemblée pour cause de nomination au Gouvernement, de démission, ou de décès. Découvrez sur cette page les députés plus en activité.

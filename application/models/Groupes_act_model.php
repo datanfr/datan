@@ -4,16 +4,27 @@
       $this->load->database();
     }
 
-    public function get_groupes_all($active) {
+    public function get_groupes_all($active, $legislature) {
       if ($active == TRUE) {
-        $query = $this->db->query('
-        SELECT *, date_format(dateDebut, "%d %M %Y") as dateDebutFR, e.effectif,
-          CASE WHEN o.libelle = "Non inscrit" THEN "Députés non inscrits" ELSE o.libelle END AS libelle
-        FROM organes o
-        LEFT JOIN groupes_effectif e ON o.uid = e.organeRef
-        WHERE o.legislature = 15 AND o.coteType = "GP" AND o.dateFin IS NULL
-        ORDER BY e.effectif DESC, o.libelle
-        ');
+        if ($legislature == legislature_current()) {
+          $query = $this->db->query('
+          SELECT *, date_format(dateDebut, "%d %M %Y") as dateDebutFR, e.effectif,
+            CASE WHEN o.libelle = "Non inscrit" THEN "Députés non inscrits" ELSE o.libelle END AS libelle
+          FROM organes o
+          LEFT JOIN groupes_effectif e ON o.uid = e.organeRef
+          WHERE o.legislature = '.legislature_current().' AND o.coteType = "GP" AND o.dateFin IS NULL
+          ORDER BY e.effectif DESC, o.libelle
+          ');
+        } else {
+          $query = $this->db->query('
+          SELECT *, date_format(dateDebut, "%d %M %Y") as dateDebutFR, e.effectif,
+            CASE WHEN o.libelle = "Non inscrit" THEN "Députés non inscrits" ELSE o.libelle END AS libelle
+          FROM organes o
+          LEFT JOIN groupes_effectif e ON o.uid = e.organeRef
+          WHERE o.legislature = '.$legislature.' AND o.coteType = "GP"
+          ORDER BY e.effectif DESC, o.libelle
+          ');
+        }
       } else {
         $query = $this->db->query('
         SELECT *, date_format(dateDebut, "%d %M %Y") as dateDebutFR,
@@ -50,8 +61,8 @@
     public function get_number_mps_groupes(){
       $query = $this->db->query('
       SELECT count(mpId) AS n
-      FROM deputes_actifs
-      WHERE libelleAbrev != "NI"
+      FROM deputes_all
+      WHERE legislature = '.legislature_current().' AND libelleAbrev != "NI" AND dateFin IS NULL
       ');
       return $query->row_array();
     }
@@ -59,8 +70,8 @@
     public function get_number_mps_unattached(){
       $query = $this->db->query('
       SELECT count(mpId) AS n
-      FROM deputes_actifs
-      WHERE libelleAbrev = "NI"
+      FROM deputes_all
+      WHERE legislature = '.legislature_current().' AND libelleAbrev = "NI" AND dateFin IS NULL
       ');
       return $query->row_array();
     }
@@ -84,7 +95,7 @@
       return $array;
     }
 
-    public function get_groupes_individal($groupe){
+    public function get_groupes_individal($groupe, $legislature){
       $query = $this->db->query('
       SELECT o.uid, o.coteType, o.libelle, o.libelleEdition, o.libelleAbrev, o.libelleAbrege, o.dateDebut, o.dateFin, o.regime, o.legislature, o.positionPolitique, o.preseance, o.couleurAssociee, ge.classement, ge.effectif, ROUND((ge.effectif / 577) * 100) AS effectifShare,
       ROUND(gs.age) AS age, ROUND(gs.womenPct) AS womenPct, womenN,
@@ -92,7 +103,7 @@
       FROM organes o
       LEFT JOIN groupes_effectif ge ON o.uid = ge.organeRef
       LEFT JOIN groupes_stats gs ON o.uid = gs.organeRef
-      WHERE o.legislature = 15 AND o.libelleAbrev = "'.$groupe.'"
+      WHERE o.legislature = '.$legislature.' AND o.libelleAbrev = "'.$groupe.'" AND o.coteType = "GP"
       ');
 
       $groupe = $query->row_array();

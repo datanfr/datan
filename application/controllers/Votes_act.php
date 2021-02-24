@@ -382,7 +382,7 @@
         }
       }
       // Votes - députés
-      $data['deputes'] = $this->votes_model->get_vote_deputes($data['vote']['voteNumero']);
+      $data['deputes'] = $this->votes_model->get_vote_deputes($data['vote']['voteNumero'], $legislature);
       // OTHER VOTES
       if ($num != 1) {
         $previous = $num - 1;
