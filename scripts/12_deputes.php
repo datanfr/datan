@@ -42,10 +42,8 @@
 
             $reponse = $bdd->query('
             SELECT da.mpId, da.nameFirst, da.nameLast, da.nameUrl, da.dptSlug
-            FROM deputes_actifs da
-            UNION ALL
-            SELECT di.mpId, di.nameFirst, di.nameLast, di.nameUrl, di.dptSlug
-            FROM deputes_inactifs di
+            FROM deputes_all da
+            WHERE da.legislature = 15
             ');
 
             $i = 1;

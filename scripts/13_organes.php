@@ -57,68 +57,84 @@
             while ($data = $reponse->fetch()) {
               $groupeId = $data['uid'];
 
-              $age_response = $bdd->query('
-                SELECT A.organeRef, ROUND(AVG(age), 2) AS age, COUNT(age) as n
-                FROM
-                (
-                  SELECT t1.organeRef, t1.legislature, t1.mpId,
-                  YEAR(current_timestamp()) - YEAR(d.birthDate) - CASE WHEN MONTH(current_timestamp()) < MONTH(d.birthDate) OR (MONTH(current_timestamp()) = MONTH(d.birthDate) AND DAY(current_timestamp()) < DAY(d.birthDate)) THEN 1 ELSE 0 END AS age
-                  FROM mandat_groupe t1
-                  LEFT JOIN deputes d ON d.mpId = t1.mpId
-                  WHERE t1.typeOrgane = "GP" AND t1.codeQualite != "Président" AND t1.dateFin IS NULL AND t1.organeRef = "'.$groupeId.'"
-                  GROUP BY t1.mpId
-                ) A
-              ');
+              if ($data['dateFin'] == NULL) {
+                $age_response = $bdd->query('
+                SELECT da.groupeId AS organeRef, ROUND(AVG(age), 2) AS age, COUNT(age) as n
+                FROM deputes_all da
+                WHERE da.groupeId = "'.$groupeId.'" AND da.legislature = 15 AND da.dateFin IS NULL
+                ');
 
-              while ($age_data = $age_response->fetch()) {
-                $age = $age_data['age'];
-                echo $age_data['n']." députés === ";
-              }
+                while ($age_data = $age_response->fetch()) {
+                  $age = $age_data['age'];
+                  echo $age_data['n']." députés === ";
+                }
 
-              if (empty($age)) {
+                $women_response = $bdd->query('
+                  SELECT A.*,
+                  ROUND(female / n * 100, 2) AS pct
+                  FROM
+                  (
+                  SELECT groupeId, COUNT(mpId) AS n,
+                  SUM(if(civ = "Mme", 1, 0)) AS female
+                  FROM deputes_all
+                  WHERE groupeId = "'.$groupeId.'" AND legislature = 15 AND dateFin IS NULL
+                  GROUP BY groupeId
+                  ) A
+                ');
+
+                while ($women_data = $women_response->fetch()) {
+                  $womenPct = $women_data['pct'];
+                  $womenN = $women_data['female'];
+                }
+
+              } else {
+                echo "<b>0 députés</b> === ";
+
                 $age_response = $bdd->query('
                   SELECT ROUND(avg(age), 2) AS age
                   FROM
                   (
-                  	SELECT mg.mpId,
-                  	YEAR(current_timestamp()) - YEAR(d.birthDate) - CASE WHEN MONTH(current_timestamp()) < MONTH(d.birthDate) OR (MONTH(current_timestamp()) = MONTH(d.birthDate) AND DAY(current_timestamp()) < DAY(d.birthDate)) THEN 1 ELSE 0 END AS age
-                  	FROM mandat_groupe mg
-                  	LEFT JOIN organes o ON mg.organeRef = o.uid
-                  	LEFT JOIN deputes d ON mg.mpId = d.mpId
-                  	WHERE mg.organeRef = "'.$groupeId.'" AND mg.dateFin = o.dateFin
-                  	GROUP BY mg.mpId
+                    SELECT mg.mpId,
+                    YEAR(current_timestamp()) - YEAR(d.birthDate) - CASE WHEN MONTH(current_timestamp()) < MONTH(d.birthDate) OR (MONTH(current_timestamp()) = MONTH(d.birthDate) AND DAY(current_timestamp()) < DAY(d.birthDate)) THEN 1 ELSE 0 END AS age
+                    FROM mandat_groupe mg
+                    LEFT JOIN organes o ON mg.organeRef = o.uid
+                    LEFT JOIN deputes d ON mg.mpId = d.mpId
+                    WHERE mg.organeRef = "'.$groupeId.'" AND mg.dateFin = o.dateFin
+                    GROUP BY mg.mpId
                   ) A
                 ');
 
                 while ($age_data = $age_response->fetch()) {
                   $age = $age_data['age'];
-                  echo $age;
                 }
-              }
 
-              $women_response = $bdd->query('
-                SELECT A.*,
-                ROUND(female / n * 100, 2) AS pct
+                $women_response = $bdd->query('
+                SELECT A.*, ROUND(female / n * 100, 2) AS pct
                 FROM
                 (
-                SELECT groupeId, COUNT(mpId) AS n,
-                SUM(if(civ = "Mme", 1, 0)) AS female
-                FROM deputes_actifs
-                WHERE groupeId = "'.$groupeId.'"
-                GROUP BY groupeId
+                SELECT o.uid, SUM(if(dl.civ = "Mme", 1, 0)) AS female, COUNT(dl.civ) AS n
+                FROM organes o
+                LEFT JOIN mandat_groupe mg ON o.uid = mg.organeRef AND o.dateFin = mg.dateFin
+                LEFT JOIN deputes_last dl ON mg.mpId = dl.mpId
+                WHERE o.uid = "'.$groupeId.'"
+                GROUP BY o.uid
                 ) A
-              ');
+                ');
 
-              while ($women_data = $women_response->fetch()) {
-                $womenPct = $women_data['pct'];
-                $womenN = $women_data['female'];
+                while ($women_data = $women_response->fetch()) {
+                  $womenPct = $women_data['pct'];
+                  $womenN = $women_data['female'];
+                }
+
               }
+
+
 
               echo $groupeId." --- ";
               echo $age." --- ";
               echo $womenPct." --- ";
               echo $womenN." --- ";
-              echo "<br>";
+              echo "<br><br>";
 
               // INSERT INTO DATABSSE //
               $sql = $bdd->prepare('INSERT INTO groupes_stats (organeRef, age, womenN, womenPct) VALUES (:organeRef, :age, :womenN, :womenPct)');

@@ -50,15 +50,19 @@
             SELECT o.uid, o.libelleAbrev, o.libelle, o.dateFin, COUNT(ms.mpId) AS effectifTotal
             FROM organes o
             LEFT JOIN mandat_secondaire ms ON o.uid = ms.organeRef
-            WHERE o.coteType = "PARPOL" AND (ms.mpId IN (select mpId from deputes_actifs) OR ms.mpId IN (select mpId from deputes_inactifs))
+            LEFT JOIN deputes_all da ON da.mpId = ms.mpId
+            WHERE o.coteType = "PARPOL" AND da.legislature = 15
             GROUP BY o.uid
             ) A
-            LEFT JOIN (SELECT o.uid, o.libelle, o.libelleAbrev, COUNT(ms.mpId) AS effectif
-            FROM deputes_actifs da
+            LEFT JOIN
+            (
+            SELECT o.uid, o.libelle, o.libelleAbrev, COUNT(ms.mpId) AS effectif
+            FROM deputes_all da
             LEFT JOIN mandat_secondaire ms ON ms.mpId = da.mpId
             LEFT JOIN organes o ON o.uid = ms.organeRef
-            WHERE ms.typeOrgane = "PARPOL" AND ms.dateFin IS NULL
-            GROUP BY ms.organeRef) B ON A.uid = B.uid
+            WHERE ms.typeOrgane = "PARPOL" AND ms.dateFin IS NULL AND da.legislature = 15 AND da.dateFin IS NULL
+            GROUP BY ms.organeRef
+            ) B ON A.uid = B.uid
             ORDER BY B.effectif DESC
             ');
 
