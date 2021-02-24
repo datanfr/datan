@@ -17,7 +17,7 @@
         show_404();
       }
 
-      $data['deputes'] = $this->deputes_act_model->get_deputes_actifs($slug);
+      $data['deputes'] = $this->deputes_act_model->get_deputes_all(legislature_current(), TRUE, $slug);
       $data['communes'] = $this->departement_act_model->get_communes_population($slug);
 
       if (empty($data['deputes'])) {

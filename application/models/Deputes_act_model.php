@@ -4,45 +4,46 @@
       $this->load->database();
     }
 
-    public function get_deputes_actifs($departement) {
+    public function get_deputes_all($legislature, $active, $departement) {
       if (is_null($departement)) {
-        $query = $this->db->query('
-          SELECT *
-          FROM deputes_actifs
-        ');
+        if ($legislature == legislature_current()) {
+          if ($active == TRUE) {
+            // IF CURRENT LEGISLATURE AND ACTIVE
+            $query = $this->db->query('
+              SELECT *
+              FROM deputes_all
+              WHERE legislature = '.legislature_current().' AND dateFin IS NULL
+              ORDER BY nameLast ASC, nameFirst ASC
+            ');
+          } else {
+            $query = $this->db->query('
+              SELECT *
+              FROM deputes_all
+              WHERE legislature = '.legislature_current().' AND dateFin IS NOT NULL
+              ORDER BY nameLast ASC, nameFirst ASC
+            ');
+          }
+        } else {
+          $query = $this->db->query('
+            SELECT *
+            FROM deputes_all
+            WHERE legislature = '.$legislature.'
+            ORDER BY nameLast ASC, nameFirst ASC
+          ');
+        }
       } else {
-        $query = $this->db->query('
-          SELECT *
-          FROM deputes_actifs
-          WHERE dptSlug = "'.$departement.'"
-        ');
+        // IF DEPARTEMENT QUERY
+        if ($active == TRUE) {
+          $query = $this->db->query('
+            SELECT *
+            FROM deputes_all
+            WHERE dptSlug = "'.$departement.'" AND legislature = '.legislature_current().' AND dateFin IS NULL
+            ORDER BY nameLast ASC, nameFirst ASC
+          ');
+        }
       }
 
         return $query->result_array();
-    }
-
-    public function get_deputes_all($departement = NULL){
-      if (is_null($departement)) {
-        $query = $this->db->query('
-          SELECT nameLast, nameFirst, dptSlug, nameUrl, mpId
-          FROM deputes_actifs
-          UNION ALL
-          SELECT nameLast, nameFirst, dptSlug, nameUrl, mpId
-          FROM deputes_inactifs
-        ');
-      } else {
-        $query = $this->db->query('
-          SELECT nameLast, nameFirst, dptSlug, nameUrl, mpId
-          FROM deputes_actifs
-          WHERE dptSlug = "'.$departement.'"
-          UNION ALL
-          SELECT nameLast, nameFirst, dptSlug, nameUrl, mpId
-          FROM deputes_inactifs
-          WHERE dptSlug = "'.$departement.'"
-        ');
-      }
-
-      return $query->result_array();
     }
 
     public function get_infos($id){
@@ -64,17 +65,6 @@
       ORDER BY mg.dateDebut DESC
       ');
 
-      return $query->result_array();
-    }
-
-    public function get_deputes_inactifs(){
-      $query = $this->db->query('
-      SELECT di.*, mg.organeRef, o.libelle, o.libelleAbrev, o.couleurAssociee
-      FROM deputes_inactifs di
-      LEFT JOIN (SELECT mpId, MAX(dateFin) AS maxDateFin FROM mandat_groupe GROUP BY mpId) AS S ON di.mpId = S.mpId
-      LEFT JOIN mandat_groupe mg ON di.mpId = mg.mpId AND mg.dateFin = S.maxDateFin
-      LEFT JOIN organes o ON o.uid = mg.organeRef
-      ');
       return $query->result_array();
     }
 
