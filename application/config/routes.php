@@ -91,6 +91,7 @@ $route['partis-politiques/(:any)'] = 'parties/individual/$1';
 $route['partis-politiques'] = 'parties/index';
 // DEPUTES
 $route['deputes/inactifs'] = 'deputes_act/inactifs';
+$route['deputes/legislature-(:any)'] = 'deputes_act/index/$1';
 $route['deputes/(:any)'] = 'departement_act/view/$1';
 $route['deputes/?commune=(:any)'] = 'departement_act/commune';
 $route['deputes/(:any)/depute_(:any)/votes'] = 'deputes_act/votes_datan/$2/$1';
@@ -98,7 +99,7 @@ $route['deputes/(:any)/depute_(:any)/votes/all'] = 'deputes_act/votes_all/$2/$1'
 $route['deputes/(:any)/depute_(:any)/votes/(:any)'] = 'deputes_act/votes_datan_field/$2/$1/$3';
 $route['deputes/(:any)/depute_(:any)'] = 'deputes_act/individual/$2/$1';
 $route['deputes/(:any)/ville_(:any)'] = 'deputes_act/commune/$2/$1';
-$route['deputes'] = 'deputes_act/actifs';
+$route['deputes'] = 'deputes_act/index';
 // DEPARTEMENTS
 $route['index_departements'] = 'departement_act/liste';
 // VOTES

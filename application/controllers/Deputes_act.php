@@ -12,9 +12,18 @@
       //$this->password_model->security_password(); Former login protection
     }
 
-    public function actifs() {
+    public function index($legislature = NULL) {
+
+      if ($legislature == NULL) {
+        $legislature = legislature_current();
+      }
+
+      if (!in_array($legislature, array(14, 15))) {
+        show_404();
+      }
+
       $data['active'] = TRUE;
-      $data['deputes'] = $this->deputes_act_model->get_deputes_actifs(NULL);
+      $data['deputes'] = $this->deputes_act_model->get_deputes_all($legislature, $data['active'], NULL);
       $data['groupes'] = $this->groupes_act_model->get_groupes_all($data['active'], FALSE);
       $number_gender = $this->deputes_act_model->get_deputes_gender();
       foreach ($number_gender as $gender) {
@@ -34,8 +43,6 @@
         $data['deputes'][$key]['couleurAssociee'] = $this->groupes_act_model->get_groupe_color($value);
       }
 
-      // TITLE
-      $data['titre'] = "Les députés de l'Assemblée nationale";
       // Breadcrumb
       $data['breadcrumb'] = array(
         array(
@@ -48,9 +55,15 @@
       $data['breadcrumb_json'] = $this->breadcrumb_model->breadcrumb_json($data['breadcrumb']);
       // Meta
       $data['url'] = $this->meta_model->get_url();
-      $data['title_meta'] = "Députés - Assemblée Nationale | Datan";
-      $data['description_meta'] = "Retrouvez tous les députés actifs de l'Assemblée nationale de la 15e législature. Résultats de vote et analyses pour chaque député.";
-      $data['title'] = "Députés actifs de l'Assemblée nationale";
+      if ($legislature == legislature_current()) {
+        $data['title_meta'] = "Députés - Assemblée Nationale | Datan";
+        $data['description_meta'] = "Retrouvez tous les députés actifs de l'Assemblée nationale de la ".legislature_current()."e législature. Résultats de vote et analyses pour chaque député.";
+        $data['title'] = "Les députés actifs de l'Assemblée nationale";
+      } else {
+        $data['title_meta'] = "Députés ".$legislature."e législature - Assemblée nationale | Datan";
+        $data['description_meta'] = "Retrouvez tous les députés actifs de l'Assemblée nationale de la ".$legislature."e législature. Résultats de vote et analyses pour chaque député.";
+        $data['title'] = "Les députés de la ".$legislature."e législature";
+      }
       //Open Graph
       $controller = $this->router->fetch_class()."/".$this->router->fetch_method();
       $data['ogp'] = $this->meta_model->get_ogp($controller, $data['title_meta'], $data['description_meta'], $data['url'], $data);
@@ -67,11 +80,11 @@
 
     public function inactifs(){
       $data['active'] = FALSE;
-      $data['deputes'] = $this->deputes_act_model->get_deputes_inactifs();
+      $data['deputes'] = $this->deputes_act_model->get_deputes_all(legislature_current(), $data['active'], $departement = NULL);
       $data['groupes'] = $this->deputes_act_model->get_groupes_inactifs();
       $data["number_inactive"] = count($data['deputes']);
 
-      $data['titre'] = "Les députés plus en activité";
+      $data['title'] = "Les députés plus en activité";
       // Breadcrumb
       $data['breadcrumb'] = array(
         array(
@@ -218,7 +231,7 @@
       } else {
         $data['other_deputes'] = $this->deputes_act_model->get_other_deputes_legislature($nameLast, $depute_uid, $legislature);
       }
-      $data['other_deputes_dpt'] = $this->deputes_act_model->get_deputes_all($depute_dpt);
+      $data['other_deputes_dpt'] = $this->deputes_act_model->get_deputes_all(legislature_current(), TRUE, $depute_dpt);
 
       // Get votes datan
       if ($legislature == legislature_current()) {
@@ -247,16 +260,6 @@
       // Gender
       $gender = $data['depute']['civ'];
       $data['gender'] = $this->depute_edito->gender($gender);
-
-
-
-
-
-
-
-
-
-
 
       // Meta
       $data['url'] = $this->meta_model->get_url();

@@ -3,7 +3,7 @@
     <div class="container">
       <div class="row row-grid bloc-titre">
         <div class="col-lg-6 mb-4 mb-lg-0">
-          <h1><?= $titre ?></h1>
+          <h1><?= $title ?></h1>
         </div>
         <div class="col-lg-5 offset-lg-1">
           <?php if ($active == TRUE): ?>
