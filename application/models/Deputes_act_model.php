@@ -4,16 +4,6 @@
       $this->load->database();
     }
 
-    public function active($id){
-      $query = $this->db->query('
-        SELECT mpId
-        FROM deputes_actifs
-        WHERE mpId = "'.$id.'"
-      ');
-
-      return $query;
-    }
-
     public function get_deputes_actifs($departement) {
       if (is_null($departement)) {
         $query = $this->db->query('
@@ -77,16 +67,6 @@
       return $query->result_array();
     }
 
-    // MIGHT BE DELETED
-    public function get_groupes_actifs(){
-      $query = $this->db->query('
-        SELECT libelle, libelleAbrev
-        FROM deputes_actifs
-        GROUP BY libelle
-      ');
-      return $query->result_array();
-    }
-
     public function get_deputes_inactifs(){
       $query = $this->db->query('
       SELECT di.*, mg.organeRef, o.libelle, o.libelleAbrev, o.couleurAssociee
@@ -140,7 +120,49 @@
       return $query->result_array();
     }
 
-    public function get_depute_individual($nameUrl, $departement) {
+    public function get_depute_individual($nameUrl, $dpt){
+      $query = $this->db->query('
+        SELECT
+          d.*,
+          substr(d.mpId, 3) AS idImage,
+          h.mandatesN, h.mpLength, h.lengthEdited,
+          dc.facebook, dc.twitter, dc.website, dc.mailAn,
+          date_format(d.dateFinMP, "%d %M %Y") AS dateFinMpFR
+        FROM deputes_last d
+        LEFT JOIN history_per_mps_average h ON d.mpId = h.mpId
+        LEFT JOIN deputes_contacts_cleaned dc ON d.mpId = dc.mpId
+        WHERE d.nameUrl = "'.$nameUrl.'" AND dptSlug = "'.$dpt.'"
+      ');
+
+      return $query->row_array();
+    }
+
+    public function get_last_group($depute_uid){
+      $query = $this->db->query('
+        SELECT mg.mandatId, mg.legislature, mg.dateDebut, mg.dateFin, mg.codeQualite, mg.organeRef, o.libelle, o.libelleAbrev, o.positionPolitique, o.couleurAssociee, mg.organeRef AS groupeId
+        FROM mandat_groupe mg
+        LEFT JOIN organes o ON mg.organeRef = o.uid
+        WHERE mg.mpId = "'.$depute_uid.'" AND mg.preseance >= 20
+        ORDER BY !ISNULL(mg.dateFin), mg.dateFin DESC
+        LIMIT 1
+      ');
+
+      return $query->row_array();
+    }
+
+    public function depute_group_president($depute_uid, $groupe_id){
+      $query = $this->db->query('
+        SELECT *
+        FROM mandat_groupe
+        WHERE mpId = "'.$depute_uid.'" AND organeRef = "'.$groupe_id.'" AND preseance = 1
+      ');
+
+      return $query->row_array();
+    }
+
+
+    // NEEDS TO BE REMOVED
+    public function get_depute_individual_old($nameUrl, $departement) {
       $query = $this->db->query('
       SELECT da.*,
         substr(da.mpId, 3) AS idImage,
@@ -253,18 +275,6 @@
       return $query->row_array();
     }
 
-    public function get_deputes_groupes($depute_uid) {
-      $query = $this->db->query('
-        SELECT mg.organeRef, mg.codeQualite, o.libelle, o.libelleAbrev, o.couleurAssociee
-        FROM mandat_groupe mg
-        LEFT JOIN organes o ON mg.organeRef = o.uid
-        WHERE mg.mpId = "'.$depute_uid.'" AND mg.typeOrgane = "GP" AND mg.legislature = 15 AND mg.dateFin is null
-        ORDER BY mg.dateDebut DESC, mg.preseance ASC
-        LIMIT 1
-      ');
-      return $query->row_array();
-    }
-
     public function get_depute_groupe_inactif($depute_uid){
       $query = $this->db->query('
       SELECT mg.organeRef AS groupeId, o.libelle, o.libelleAbrev, o.couleurAssociee
@@ -300,67 +310,16 @@
       return $query->result_array();
     }
 
-    public function get_mandats($depute_uid){
+    public function get_other_deputes_legislature($nameLast, $depute_uid, $legislature){
       $query = $this->db->query('
-      SELECT A.*,
-      	CASE
-          WHEN ROUND(A.duree/365) = 1 THEN CONCAT(ROUND(A.duree/365), " an")
-          WHEN ROUND(A.duree/365) > 1 THEN CONCAT(ROUND(A.duree/365), " ans")
-          WHEN ROUND(A.duree/30) != 0 THEN CONCAT(ROUND(A.duree/30), " mois")
-          ELSE CONCAT(A.duree, " jours")
-          END AS duree_edito,
-          @s:=@s+1 AS "classement"
-      FROM
-      (
-      	SELECT mp.dateDebut, mp.dateFin, mp.preseance, mp.causeFin, mp.datePriseFonction,
-      		CASE
-      		WHEN dateFin IS NOT NULL THEN datediff(dateFin, datePriseFonction)
-      		ELSE datediff(curdate(), datePriseFonction)
-      	END AS duree
-      	FROM mandat_principal mp
-      	WHERE mpId = "'.$depute_uid.'" AND typeOrgane = "ASSEMBLEE" AND legislature = 15 AND codeQualite = "membre"
-      	ORDER BY datePriseFonction DESC
-      ) A,
-      (SELECT @s:= 0) AS s
+        SELECT d.nameFirst, d.nameLast, d.nameUrl, d.dptSlug
+        FROM deputes_last d
+        WHERE d.mpId != "'.$depute_uid.'" AND legislature = '.$legislature.'
+        ORDER BY d.nameLast < LEFT ("'.$nameLast.'", 1), d.nameLast
+        LIMIT 15
       ');
 
-      $results = $query->result_array();
-      setlocale(LC_TIME, 'french');
-
-      //print_r($results);
-
-      //If one mandate or two
-      if (count($results) == 1) {
-        $result = $query->row_array();
-        $result['fonction_lettres'] = utf8_encode(strftime('%B %Y', strtotime($result['datePriseFonction'])));
-      } else {
-        //print_r($results);
-        $current = $results[0];
-        $current['fonction_lettres'] = utf8_encode(strftime('%B %Y', strtotime($results[0]['datePriseFonction'])));
-        $current['election_lettres'] = utf8_encode(strftime('%B %Y', strtotime($results[0]['dateDebut'])));
-        $last = $results[count($results)-1];
-        $last['fonction_lettres'] = utf8_encode(strftime('%B %Y', strtotime($last['datePriseFonction'])));
-
-        $elections_inval = array('PA721816', 'PA724827', 'PA721166', 'PA721036', 'PA642764', 'PA267289');
-        $gvt_left = array('PA721560', 'PA717167', 'PA607395', 'PA332747');
-
-        if (in_array($depute_uid, $elections_inval)) {
-          $current["reason"] = "invalidation";
-        } elseif (in_array($depute_uid, $gvt_left)) {
-          $current["reason"] = "gvt";
-        } elseif ($last['causeFin'] == "Nomination comme membre du Gouvernement") {
-          $current["reason"] = "gvt";
-        } else {
-          $current["reason"] = "XXX";
-        }
-
-        $result = [
-          "current" => $current,
-          "last" => $last
-        ];
-      }
-
-      return $result;
+      return $query->result_array();
     }
 
     public function get_history_all_deputes($legislature){
@@ -376,20 +335,6 @@
         SELECT *
         FROM history_per_mps_average
         WHERE mpId = "'.$depute_uid.'"
-      ');
-      return $query->row_array();
-    }
-
-    public function get_mandats_nombre($depute_uid){
-      $query = $this->db->query('
-        SELECT count(A.legislature) AS nombre
-        FROM
-        (
-          SELECT legislature
-          FROM mandat_principal
-          WHERE mpId = "'.$depute_uid.'" AND codeQualite = "membre" AND typeOrgane = "ASSEMBLEE"
-          GROUP BY legislature
-        ) A
       ');
       return $query->row_array();
     }
