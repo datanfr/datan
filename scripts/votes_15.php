@@ -65,8 +65,6 @@
           	GROUP BY v.mpId
           	ORDER BY AVG(v.scoreGvt) DESC, COUNT(v.scoreGvt) DESC
           ) A
-          LEFT JOIN deputes_actifs da ON A.mpId = da.mpId
-          LEFT JOIN deputes_inactifs di ON A.mpId = di.mpId
           ) B
           ORDER BY B.score DESC, B.votesN DESC
           ) C,

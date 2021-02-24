@@ -94,7 +94,8 @@
           	) B
           	WHERE B.mpId IN (
           		SELECT mpId
-          		FROM deputes_actifs
+              FROM deputes_all
+              WHERE legislature = 15 AND dateFin IS NULL
           	)
           ) C,
           (SELECT @s:= 0) AS s

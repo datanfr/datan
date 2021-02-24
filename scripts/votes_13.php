@@ -79,14 +79,11 @@
           /* TO GET THE SCORE OF UNACTIVE MPs */
           SELECT A.mpId, ROUND(AVG(v.scoreLoyaute), 3) AS score, COUNT(v.scoreLoyaute) AS votesN, 0 AS active
           FROM
-          (
-          SELECT da.mpId, mg.mandatId, max(dateFin) AS dateFin
-          FROM deputes_inactifs da
-          LEFT JOIN mandat_groupe mg ON da.mpId = mg.mpId
-          WHERE mg.legislature = 15
-          GROUP BY mg.mpId
+          (SELECT *
+          FROM deputes_all
+          WHERE legislature = 15 AND dateFin IS NOT NULL
           ) A
-          LEFT JOIN votes_scores v ON A.mandatId = v.organeId
+          LEFT JOIN votes_scores v ON A.groupeMandat = v.organeId
           GROUP BY A.mpId
           UNION ALL
           /* TO GET THE SCORE OF ACTIVE MPs */

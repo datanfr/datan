@@ -63,7 +63,7 @@
               da.civ,
           	da.nameLast AS nom,
               da.nameFirst AS prenom,
-              da.birthDate AS naissance,
+              d.birthDate AS naissance,
               da.age,
               da.libelle AS groupe,
               da.libelleAbrev AS groupeAbrev,
@@ -71,9 +71,7 @@
               da.departementCode,
               da.circo,
               da.datePriseFonction,
-              da.premiereElection,
-              da.placeHemicycle,
-              da.job,
+              d.job,
               dc.mailAn AS mail,
               dc.twitter,
               dc.facebook,
@@ -84,14 +82,17 @@
               cpm.score AS scoreParticipationSpecialite,
               cl.score AS scoreLoyaute,
               cm.score AS scoreMajorite,
+              CASE WHEN da.dateFin IS NULL THEN 1 ELSE 0 END AS "active",
               da.dateMaj
-          FROM deputes_actifs da
+          FROM deputes_all da
           LEFT JOIN class_participation_all cp ON da.mpId = cp.mpId
           LEFT JOIN class_participation_commission_all cpm ON da.mpId = cpm.mpId
           LEFT JOIN class_loyaute_all cl ON da.mpId = cl.mpId
           LEFT JOIN class_majorite_all cm ON da.mpId = cm.mpId
           LEFT JOIN deputes_contacts_cleaned dc ON da.mpId = dc.mpId
           LEFT JOIN history_per_mps_average h ON da.mpId = h.mpId
+          LEFT JOIN deputes d ON da.mpId = d.mpId
+          WHERE da.legislature = 15
           ');
 
           // Fetch the result
