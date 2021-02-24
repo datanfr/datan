@@ -8,6 +8,14 @@
       if (is_null($departement)) {
         if ($legislature == legislature_current()) {
           if ($active == TRUE) {
+            $query = $this->db->query('
+              SELECT *
+              FROM deputes_all
+              WHERE legislature = '.legislature_current().'
+              ORDER BY nameLast ASC, nameFirst ASC
+            ');
+          }
+          if ($active == TRUE) {
             // IF CURRENT LEGISLATURE AND ACTIVE
             $query = $this->db->query('
               SELECT *
