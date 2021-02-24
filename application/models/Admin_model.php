@@ -247,21 +247,22 @@
 
     public function get_classement_loyaute_group($libelle){
       $query = $this->db->query('
-      SELECT @s:=@s+1 AS "ranking", B.*
-      FROM
-      (
-      	SELECT t1.score, t1.votesN, r.average, da.nameLast, da.nameFirst, da.mpId, da.libelle, da.libelleAbrev, da.groupeId
-      	FROM class_loyaute t1
-      	LEFT JOIN deputes_actifs da ON da.mpId = t1.mpId
-      	JOIN (
-      		SELECT ROUND(AVG(t2.score), 3) AS average, libelleAbrev
-      		FROM class_loyaute t2
-      		LEFT JOIN deputes_actifs da ON da.mpId = t2.mpId
-      		WHERE da.libelleAbrev = "'.$libelle.'"
-      		) r ON r.libelleAbrev = da.libelleAbrev
-      	ORDER BY t1.score DESC
-      ) B,
-      (SELECT @s:= 0) AS s
+        SELECT @s:=@s+1 AS "ranking", B.*
+        FROM
+        (
+        	SELECT t1.score, t1.votesN, r.average, da.nameLast, da.nameFirst, da.mpId, da.libelle, da.libelleAbrev, da.groupeId
+        	FROM class_loyaute t1
+        	LEFT JOIN deputes_all da ON da.mpId = t1.mpId
+          JOIN (
+  			SELECT ROUND(AVG(t2.score), 3) AS average, libelleAbrev
+  			FROM class_loyaute t2
+  			LEFT JOIN deputes_all da ON da.mpId = t2.mpId
+  			WHERE da.libelleAbrev = "'.$libelle.'" AND da.legislature = 15 AND da.dateFin IS NULL
+          ) r ON r.libelleAbrev = da.libelleAbrev
+          WHERE da.legislature = 15 AND da.dateFin IS NULL AND da.libelleAbrev = "'.$libelle.'"
+        	ORDER BY t1.score DESC
+        ) B,
+        (SELECT @s:= 0) AS s
       ');
 
       return $query->result_array();
