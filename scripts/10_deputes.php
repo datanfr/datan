@@ -55,6 +55,7 @@
                 <th>libelle</th>
                 <th>libelleAbrev</th>
                 <th>groupeId</th>
+                <th>groupeMandat</th>
                 <th>couleurAssociee</th>
                 <th>datePriseFonction</th>
                 <th>dateFin</th>
@@ -115,7 +116,7 @@
               }
 
               $mandatGroupes = $bdd->query('
-              SELECT o.libelle, o.libelleAbrev, o.uid AS groupeId, o.couleurAssociee
+              SELECT o.libelle, o.libelleAbrev, o.uid AS groupeId, o.couleurAssociee, mg.mandatId AS groupeMandat
               FROM mandat_groupe mg
               LEFT JOIN organes o ON o.uid = mg.organeRef
               WHERE mg.mpId = "'.$mpId.'" AND mg.legislature = '.$legislature.' AND mg.preseance >= 20
@@ -129,6 +130,7 @@
                   $libelleAbrev = $mandatGroupe['libelleAbrev'];
                   $groupeId = $mandatGroupe['groupeId'];
                   $couleurAssociee = $mandatGroupe['couleurAssociee'];
+                  $groupeMandat = $mandatGroupe['groupeMandat'];
                 }
               } else {
                 echo "ERROR -- ";
@@ -160,6 +162,7 @@
                 <td><?= $libelle ?></td>
                 <td><?= $libelleAbrev ?></td>
                 <td><?= $groupeId ?></td>
+                <td><?= $groupeMandat ?></td>
                 <td><?= $couleurAssociee ?></td>
                 <td><?= $datePriseFonction ?></td>
                 <td><?= $dateFin ?></td>
@@ -170,8 +173,8 @@
               <?php
 
               // SQL //
-              $sql = $bdd->prepare("INSERT INTO deputes_all (mpId, legislature, nameUrl, civ, nameFirst, nameLast, age, dptSlug, departementNom, departementCode, circo, mandatId, libelle, libelleAbrev, groupeId, couleurAssociee, datePriseFonction, dateFin, causeFin, dateMaj) VALUES (:mpId, :legislature, :nameUrl, :civ, :nameFirst, :nameLast, :age, :dptSlug, :departementNom, :departementCode, :circo, :mandatId, :libelle, :libelleAbrev, :groupeId, :couleurAssociee, :datePriseFonction, :dateFin, :causeFin, :dateMaj)");
-              $sql->execute(array('mpId' => $mpId, 'legislature' => $legislature, 'nameUrl' => $nameUrl, 'civ' => $civ, 'nameFirst' => $nameFirst, 'nameLast' => $nameLast, 'age' => $age, 'dptSlug' => $dptSlug, 'departementNom' => $departementNom, 'departementCode' => $departementCode, 'circo' => $circo, 'mandatId' => $mandatId, 'libelle' => $libelle, 'libelleAbrev' => $libelleAbrev, 'groupeId' => $groupeId, 'couleurAssociee' => $couleurAssociee, 'datePriseFonction' => $datePriseFonction, 'dateFin' => $dateFin, 'causeFin' => $causeFin, 'dateMaj' => $dateMaj));
+              $sql = $bdd->prepare("INSERT INTO deputes_all (mpId, legislature, nameUrl, civ, nameFirst, nameLast, age, dptSlug, departementNom, departementCode, circo, mandatId, libelle, libelleAbrev, groupeId, groupeMandat, couleurAssociee, datePriseFonction, dateFin, causeFin, dateMaj) VALUES (:mpId, :legislature, :nameUrl, :civ, :nameFirst, :nameLast, :age, :dptSlug, :departementNom, :departementCode, :circo, :mandatId, :libelle, :libelleAbrev, :groupeId, :groupeMandat, :couleurAssociee, :datePriseFonction, :dateFin, :causeFin, :dateMaj)");
+              $sql->execute(array('mpId' => $mpId, 'legislature' => $legislature, 'nameUrl' => $nameUrl, 'civ' => $civ, 'nameFirst' => $nameFirst, 'nameLast' => $nameLast, 'age' => $age, 'dptSlug' => $dptSlug, 'departementNom' => $departementNom, 'departementCode' => $departementCode, 'circo' => $circo, 'mandatId' => $mandatId, 'libelle' => $libelle, 'libelleAbrev' => $libelleAbrev, 'groupeId' => $groupeId, 'groupeMandat' => $groupeMandat, 'couleurAssociee' => $couleurAssociee, 'datePriseFonction' => $datePriseFonction, 'dateFin' => $dateFin, 'causeFin' => $causeFin, 'dateMaj' => $dateMaj));
               $i++;
             }
 
