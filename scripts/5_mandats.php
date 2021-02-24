@@ -23,7 +23,7 @@
     ?>
 		<div class="container-fluid" style="background-color: #e9ecef;">
 			<div class="row">
-				<h1>7. Mise à jour base 'mandat_principal'</h1>
+				<h1>5. Mise à jour base 'mandat_principal'</h1>
 			</div>
 			<div class="row">
 				<div class="col-4">
