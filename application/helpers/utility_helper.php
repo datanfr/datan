@@ -29,6 +29,10 @@
     return array(15);
   }
 
+  function majority_group(){
+    return "PO730964";
+  }
+
   function get_months(){
     $months = array('janvier', 'février', 'mars', 'avril', 'mai', 'juin', 'juillet', 'août', 'septembre', 'octobre', 'novembre', 'decembre');
     return $months;
