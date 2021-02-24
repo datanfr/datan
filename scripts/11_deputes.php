@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>14_deputes</title>
+    <title>11_deputes</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.2/css/bootstrap.min.css" integrity="sha384-Smlep5jCw/wG7hdkwQ/Z5nLIefveQRIY9nfy6xoR1uRYBtpZgI6339F5dgvm/e9B" crossorigin="anonymous">
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.2/js/bootstrap.min.js" integrity="sha384-o+RDsa0aLu++PJvFqy8fFScvbHFLtbvScb8AjopnFD+iEQ7wo/CG0xlczd+2O/em" crossorigin="anonymous"></script>
   </head>
@@ -45,29 +45,31 @@
             $bdd->exec('DROP TABLE IF EXISTS deputes_last');
             $bdd->exec('
               CREATE TABLE deputes_last AS
-              SELECT A.mpId, d.civ, d.nameFirst, d.nameLast, d.nameUrl, dpt.slug AS dptSlug, dpt.libelle_1 AS dptLibelle1, dpt.libelle_2 AS dptLibelle2, dpt.departement_nom AS departementNom, dpt.departement_code AS departementCode, A.electionCirco AS circo, A.premiereElection, A.mandatId, A.legislature, A.dateFin AS dateFinMP, A.causeFin, d.birthDate, d.birthCity, d.birthCountry, d.job,
-              YEAR(current_timestamp()) - YEAR(d.birthDate) - CASE WHEN MONTH(current_timestamp()) < MONTH(d.birthDate) OR (MONTH(current_timestamp()) = MONTH(d.birthDate) AND DAY(current_timestamp()) < DAY(d.birthDate)) THEN 1 ELSE 0 END AS age, A.datePriseFonction,
-              CASE WHEN (legislature = 15 AND dateFin IS NULL) THEN 1 ELSE 0 END AS active,
-              CURDATE() AS dateMaj
-              FROM
-              (
-              SELECT *, case when dateFin IS NULL THEN "ongoing" ELSE dateFin END AS dateFinJoin
-              FROM mandat_principal
-              WHERE preseance = 50
-              ) A
-              JOIN
-              (
-              SELECT mpId, case when MAX(dateFin IS NULL) = 0 THEN max(dateFin) ELSE "ongoing" END AS legislatureLastDate
-              FROM mandat_principal
+              SELECT da.*, dpt.libelle_1, dpt.libelle_2,
+              CASE WHEN (legislature = 15 AND dateFin IS NULL) THEN 1 ELSE 0 END AS active
+              FROM deputes_all da
+              JOIN (
+              SELECT mpId, MAX(legislature) AS legislatureLast
+              FROM deputes_all
               GROUP BY mpId
-              ) x ON A.mpId = x.mpId AND A.dateFinJoin = x.legislatureLastDate
-              LEFT JOIN deputes d ON A.mpId = d.mpId
-              LEFT JOIN departement dpt ON A.electionDepartementNumero = dpt.departement_code
+              ) x ON da.mpId = x.mpId AND da.legislature = x.legislatureLast
+              LEFT JOIN departement dpt ON dpt.departement_code = da.departementCode
+
             ');
 
              $bdd->exec('
-             CREATE INDEX idx_mp ON deputes_last (nameUrl, dptSlug);
+             CREATE INDEX idx_mp ON deputes_last (nameUrl);'
+              );
+              $bdd->exec('
+              CREATE INDEX idx_dptSlug ON deputes_last (dptSlug);'
+               );
+             $bdd->exec('
+             CREATE INDEX idx_mpId ON deputes_last(mpId)
              ');
+             $bdd->exec('
+             CREATE INDEX idx_legislature ON deputes_last(legislature);
+             ');
+
   				?>
         </div>
 			</div>
