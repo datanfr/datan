@@ -1,24 +1,24 @@
 <?php
-  class Departement_act extends CI_Controller {
+  class Departement extends CI_Controller {
     public function __construct() {
       parent::__construct();
-      $this->load->model('departement_act_model');
-      $this->load->model('deputes_act_model');
-      $this->load->model('groupes_act_model');
+      $this->load->model('departement_model');
+      $this->load->model('deputes_model');
+      $this->load->model('groupes_model');
       $this->load->model('breadcrumb_model');
       //$this->load->helper('url');
       //$this->password_model->security_password(); Former login protection
     }
 
     public function view($slug){
-      $data['departement'] = $this->departement_act_model->get_departement($slug);
+      $data['departement'] = $this->departement_model->get_departement($slug);
 
       if (empty($data['departement'])) {
         show_404();
       }
 
-      $data['deputes'] = $this->deputes_act_model->get_deputes_all(legislature_current(), TRUE, $slug);
-      $data['communes'] = $this->departement_act_model->get_communes_population($slug);
+      $data['deputes'] = $this->deputes_model->get_deputes_all(legislature_current(), TRUE, $slug);
+      $data['communes'] = $this->departement_model->get_communes_population($slug);
 
       if (empty($data['deputes'])) {
         show_404();
@@ -26,7 +26,7 @@
 
       // Get group color
       foreach ($data['deputes'] as $key => $value) {
-        $data['deputes'][$key]['couleurAssociee'] = $this->groupes_act_model->get_groupe_color($value);
+        $data['deputes'][$key]['couleurAssociee'] = $this->groupes_model->get_groupe_color($value);
       }
 
       // Meta
@@ -65,7 +65,7 @@
     }
 
     public function liste(){
-      $data['departements'] = $this->departement_act_model->get_all_departements();
+      $data['departements'] = $this->departement_model->get_all_departements();
 
       // Meta
       $data['url'] = $this->meta_model->get_url();

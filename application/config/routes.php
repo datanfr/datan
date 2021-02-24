@@ -75,41 +75,39 @@ $route['sitemap-categories-1.xml'] = "sitemap/categories";
 $route['sitemap-posts-1.xml'] = "sitemap/posts";
 $route['sitemap-partis-politiques-1.xml'] = "sitemap/parties";
 // COMMISSION
-$route['commissions'] = 'commissions_act/index';
-// CLASSEMENT
-$route['classements'] = 'classement_act/index';
+$route['commissions'] = 'commissions/index';
 // GROUPES
-$route['groupes/inactifs'] = 'groupes_act/inactifs';
-$route['groupes/(:any)/membres'] = 'groupes_act/individual_membres/$1';
-$route['groupes/(:any)/votes'] = 'groupes_act/individual_votes_datan/$1';
-$route['groupes/(:any)/votes/all'] = 'groupes_act/individual_votes_all/$1';
-$route['groupes/(:any)/votes/(:any)'] = 'groupes_act/individual_votes_datan_field/$1/$2';
-$route['groupes/(:any)'] = 'groupes_act/individual/$1';
-$route['groupes'] = 'groupes_act/actifs';
+$route['groupes/inactifs'] = 'groupes/inactifs';
+$route['groupes/(:any)/membres'] = 'groupes/individual_membres/$1';
+$route['groupes/(:any)/votes'] = 'groupes/individual_votes_datan/$1';
+$route['groupes/(:any)/votes/all'] = 'groupes/individual_votes_all/$1';
+$route['groupes/(:any)/votes/(:any)'] = 'groupes/individual_votes_datan_field/$1/$2';
+$route['groupes/(:any)'] = 'groupes/individual/$1';
+$route['groupes'] = 'groupes/actifs';
 // PARTIS POLITIQUES
 $route['partis-politiques/(:any)'] = 'parties/individual/$1';
 $route['partis-politiques'] = 'parties/index';
 // DEPUTES
-$route['deputes/inactifs'] = 'deputes_act/inactifs';
-$route['deputes/legislature-(:any)'] = 'deputes_act/index/$1';
-$route['deputes/(:any)'] = 'departement_act/view/$1';
-$route['deputes/?commune=(:any)'] = 'departement_act/commune';
-$route['deputes/(:any)/depute_(:any)/votes'] = 'deputes_act/votes_datan/$2/$1';
-$route['deputes/(:any)/depute_(:any)/votes/all'] = 'deputes_act/votes_all/$2/$1';
-$route['deputes/(:any)/depute_(:any)/votes/(:any)'] = 'deputes_act/votes_datan_field/$2/$1/$3';
-$route['deputes/(:any)/depute_(:any)'] = 'deputes_act/individual/$2/$1';
-$route['deputes/(:any)/ville_(:any)'] = 'deputes_act/commune/$2/$1';
-$route['deputes'] = 'deputes_act/index';
+$route['deputes/inactifs'] = 'deputes/inactifs';
+$route['deputes/legislature-(:any)'] = 'deputes/index/$1';
+$route['deputes/(:any)'] = 'departement/view/$1';
+$route['deputes/?commune=(:any)'] = 'departement/commune';
+$route['deputes/(:any)/depute_(:any)/votes'] = 'deputes/votes_datan/$2/$1';
+$route['deputes/(:any)/depute_(:any)/votes/all'] = 'deputes/votes_all/$2/$1';
+$route['deputes/(:any)/depute_(:any)/votes/(:any)'] = 'deputes/votes_datan_field/$2/$1/$3';
+$route['deputes/(:any)/depute_(:any)'] = 'deputes/individual/$2/$1';
+$route['deputes/(:any)/ville_(:any)'] = 'deputes/commune/$2/$1';
+$route['deputes'] = 'deputes/index';
 // DEPARTEMENTS
-$route['index_departements'] = 'departement_act/liste';
+$route['index_departements'] = 'departement/liste';
 // VOTES
-$route['votes/legislature-(:any)/vote_(:any)'] = 'votes_act/individual/$1/$2';
-$route['votes/legislature-(:any)'] = 'votes_act/all/$1';
-$route['votes/decryptes/(:any)'] = 'votes_act/field/$1';
-$route['votes/decryptes'] = 'votes_act/decryptes//';
-$route['votes/legislature-(:any)/(:any)/(:any)'] = 'votes_act/all/$1/$2/$3';
-$route['votes/legislature-(:any)/(:any)'] = 'votes_act/all/$1/$2';
-$route['votes'] = 'votes_act/index';
+$route['votes/legislature-(:any)/vote_(:any)'] = 'votes/individual/$1/$2';
+$route['votes/legislature-(:any)'] = 'votes/all/$1';
+$route['votes/decryptes/(:any)'] = 'votes/field/$1';
+$route['votes/decryptes'] = 'votes/decryptes//';
+$route['votes/legislature-(:any)/(:any)/(:any)'] = 'votes/all/$1/$2/$3';
+$route['votes/legislature-(:any)/(:any)'] = 'votes/all/$1/$2';
+$route['votes'] = 'votes/index';
 // POSTS
 $route['posts/update'] = 'posts/update';
 $route['posts/create'] = 'posts/create';
@@ -117,9 +115,9 @@ $route['blog/categorie/(:any)'] = 'posts/category/$1';
 $route['blog/(:any)/(:any)'] = 'posts/view/$2/$1';
 $route['blog'] = 'posts/index';
 // STATISTIQUES
-$route['statistiques'] = 'stats_act/index';
+$route['statistiques'] = 'stats/index';
 $route['statistiques/aide'] = 'pages/view/statistiques';
-$route['statistiques/(:any)'] = 'stats_act/individual/$1';
+$route['statistiques/(:any)'] = 'stats/individual/$1';
 // LOGIN & REGISTER
 $route['login'] = 'users/login';
 $route['register'] = 'users/register';

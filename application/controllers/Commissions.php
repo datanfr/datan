@@ -1,5 +1,5 @@
 <?php
-  class Commissions_act extends CI_Controller{
+  class Commissions extends CI_Controller{
     public function __construct() {
       parent::__construct();
       //$this->password_model->security_password(); Former login protection

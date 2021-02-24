@@ -2,11 +2,11 @@
   class Home extends CI_Controller {
     public function __construct() {
       parent::__construct();
-      $this->load->model('deputes_act_model');
-      $this->load->model('groupes_act_model');
+      $this->load->model('deputes_model');
+      $this->load->model('groupes_model');
       $this->load->model('depute_edito');
       $this->load->model('votes_model');
-      $this->load->model('departement_act_model');
+      $this->load->model('departement_model');
       $this->load->model('post_model');
       $this->load->helper('form');
       //$this->password_model->security_password(); Former login protection
@@ -14,16 +14,16 @@
 
     public function index() {
       //Get random data
-      $data['commune_random'] = $this->departement_act_model->get_commune_random();
-      $data['depute_random'] = $this->deputes_act_model->get_depute_random();
+      $data['commune_random'] = $this->departement_model->get_commune_random();
+      $data['depute_random'] = $this->deputes_model->get_depute_random();
       $data['depute_random'] = array_merge($data['depute_random'], $this->depute_edito->gender($data['depute_random']['civ']));
-      $data['depute_random']['couleurAssociee'] = $this->groupes_act_model->get_groupe_color($data['depute_random']);
-      $data['groupe_random'] = $this->groupes_act_model->get_groupe_random();
-      $data['groupe_random']['couleurAssociee'] = $this->groupes_act_model->get_groupe_color($data['groupe_random']);
+      $data['depute_random']['couleurAssociee'] = $this->groupes_model->get_groupe_color($data['depute_random']);
+      $data['groupe_random'] = $this->groupes_model->get_groupe_random();
+      $data['groupe_random']['couleurAssociee'] = $this->groupes_model->get_groupe_color($data['groupe_random']);
 
       //Get groups (cached)
       $this->db->cache_on();
-      $data['groupes'] = $this->groupes_act_model->get_groupes_all(TRUE, legislature_current());
+      $data['groupes'] = $this->groupes_model->get_groupes_all(TRUE, legislature_current());
       $this->db->cache_off();
       $groupes = array_column($data['groupes'], 'libelleAbrev');
       function cmp(array $a) {
@@ -44,29 +44,29 @@
         $data['groupesSorted'] = array_replace(array_flip($sort), $data['groupes']);
       }
       foreach ($data['groupes'] as $key => $value) {
-        $data['groupes'][$key]['couleurAssociee'] = $this->groupes_act_model->get_groupe_color($value);
+        $data['groupes'][$key]['couleurAssociee'] = $this->groupes_model->get_groupe_color($value);
       }
 
       //Get stats
-      $data['depute_vote_plus'] = $this->deputes_act_model->get_depute_vote_plus();
+      $data['depute_vote_plus'] = $this->deputes_model->get_depute_vote_plus();
       if (!empty($data['depute_vote_plus'])) {
         $data['depute_vote_plus'] = array_merge($data['depute_vote_plus'], $this->depute_edito->gender($data['depute_vote_plus']['civ']));
-        $data['depute_vote_plus']['couleurAssociee'] = $this->groupes_act_model->get_groupe_color($data['depute_vote_plus']);
+        $data['depute_vote_plus']['couleurAssociee'] = $this->groupes_model->get_groupe_color($data['depute_vote_plus']);
       }
-      $data['depute_vote_moins'] = $this->deputes_act_model->get_depute_vote_moins();
+      $data['depute_vote_moins'] = $this->deputes_model->get_depute_vote_moins();
       if (!empty($data['depute_vote_moins'])) {
         $data['depute_vote_moins'] = array_merge($data['depute_vote_moins'], $this->depute_edito->gender($data['depute_vote_moins']['civ']));
-        $data['depute_vote_moins']['couleurAssociee'] = $this->groupes_act_model->get_groupe_color($data['depute_vote_moins']);
+        $data['depute_vote_moins']['couleurAssociee'] = $this->groupes_model->get_groupe_color($data['depute_vote_moins']);
       }
-      $data['depute_loyal_plus'] = $this->deputes_act_model->get_depute_loyal_plus();
+      $data['depute_loyal_plus'] = $this->deputes_model->get_depute_loyal_plus();
       $data['depute_loyal_plus'] = array_merge($data['depute_loyal_plus'], $this->depute_edito->gender($data['depute_loyal_plus']['civ']));
       if (!empty($data['depute_loyal_plus'])) {
-        $data['depute_loyal_plus']['couleurAssociee'] = $this->groupes_act_model->get_groupe_color($data['depute_loyal_plus']);
+        $data['depute_loyal_plus']['couleurAssociee'] = $this->groupes_model->get_groupe_color($data['depute_loyal_plus']);
       }
-      $data['depute_loyal_moins'] = $this->deputes_act_model->get_depute_loyal_moins();
+      $data['depute_loyal_moins'] = $this->deputes_model->get_depute_loyal_moins();
       $data['depute_loyal_moins'] = array_merge($data['depute_loyal_moins'], $this->depute_edito->gender($data['depute_loyal_moins']['civ']));
       if (!empty($data['depute_loyal_moins'])) {
-        $data['depute_loyal_moins']['couleurAssociee'] = $this->groupes_act_model->get_groupe_color($data['depute_loyal_moins']);
+        $data['depute_loyal_moins']['couleurAssociee'] = $this->groupes_model->get_groupe_color($data['depute_loyal_moins']);
       }
 
       //Get votes (cached)

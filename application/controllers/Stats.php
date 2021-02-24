@@ -1,11 +1,11 @@
 <?php
-  class Stats_act extends CI_Controller{
+  class Stats extends CI_Controller{
     public function __construct() {
       parent::__construct();
       $this->load->model('stats_model');
       $this->load->model('breadcrumb_model');
-      $this->load->model('deputes_act_model');
-      $this->load->model('groupes_act_model');
+      $this->load->model('deputes_model');
+      $this->load->model('groupes_model');
       $this->load->model('depute_edito');
       $this->load->model('votes_model');
       //$this->password_model->security_password(); Former login protection
@@ -17,7 +17,7 @@
       $data['age_mean'] = $this->stats_model->get_age_mean();
       $data['groups_women_more'] = $this->stats_model->get_groups_women_more();
       $data['groups_women_less'] = $this->stats_model->get_groups_women_less();
-      $data['women_mean'] = $this->deputes_act_model->get_deputes_gender(legislature_current());
+      $data['women_mean'] = $this->deputes_model->get_deputes_gender(legislature_current());
       $data['mps_loyalty_more'] = $this->stats_model->get_mps_loyalty_more();
       $data['mps_loyalty_less'] = $this->stats_model->get_mps_loyalty_less();
       $data['loyalty_mean'] = $this->stats_model->get_loyalty_mean();
@@ -109,7 +109,7 @@
         $data['groupsAge'] = $this->stats_model->get_groups_age();
         $data['groupOldest'] = array_slice($data['groupsAge'], 0, 1);
         $data['groupOldest'] = $data['groupOldest'][0];
-        $data['groupOldest']['couleurAssociee'] = $this->groupes_act_model->get_groupe_color($data['groupOldest']);
+        $data['groupOldest']['couleurAssociee'] = $this->groupes_model->get_groupe_color($data['groupOldest']);
         $data['groupYoungest'] = array_slice($data['groupsAge'], -1);
         $data['groupYoungest'] = $data['groupYoungest'][0];
 
@@ -120,7 +120,7 @@
 
       } elseif ($url == "groupes-feminisation") {
         // Data --> REVIEW_COULEURASSOCIEE
-        $women_mean = $this->deputes_act_model->get_deputes_gender(legislature_current());
+        $women_mean = $this->deputes_model->get_deputes_gender(legislature_current());
         $data['womenMean']['n'] = $women_mean[1]['n'];
         $data['womenMean']['pct'] = $women_mean[1]['percentage'];
         $data['womenMean']['nSociety'] = 52;
@@ -158,10 +158,10 @@
         $data['groupsCards'] = $data['groups'];
         unset($data['groupsCards'][$keyRemoveNI]);
         $data['groupsFirst'] = $data['groupsCards'][0];
-        $data['groupsFirst']['couleurAssociee'] = $this->groupes_act_model->get_groupe_color($data['groupsFirst']);
+        $data['groupsFirst']['couleurAssociee'] = $this->groupes_model->get_groupe_color($data['groupsFirst']);
         $data['groupsLast'] = end($data['groupsCards']);
-        $data['groupsLast']['couleurAssociee'] = $this->groupes_act_model->get_groupe_color($data['groupsLast']);
-        $data['cohesionMean'] = $this->groupes_act_model->get_stats_cohesion_moyenne(FALSE);
+        $data['groupsLast']['couleurAssociee'] = $this->groupes_model->get_groupe_color($data['groupsLast']);
+        $data['cohesionMean'] = $this->groupes_model->get_stats_cohesion_moyenne(FALSE);
         $data['cohesionMean'] = $data['cohesionMean']['moyenne'];
 
         // Meta
@@ -184,9 +184,9 @@
       } elseif ($url == "groupes-participation") {
         $data['groups'] = $this->stats_model->get_groups_participation();
         $data['groupsFirst'] = $data['groups'][0];
-        $data['groupsFirst']['couleurAssociee'] = $this->groupes_act_model->get_groupe_color($data['groupsFirst']);
+        $data['groupsFirst']['couleurAssociee'] = $this->groupes_model->get_groupe_color($data['groupsFirst']);
         $data['groupsLast'] = end($data['groups']);
-        $data['groupsLast']['couleurAssociee'] = $this->groupes_act_model->get_groupe_color($data['groupsLast']);
+        $data['groupsLast']['couleurAssociee'] = $this->groupes_model->get_groupe_color($data['groupsLast']);
 
         // Meta
         $data['title_meta'] = "La participation des groupes politiques - Assemblée nationale | Datan";

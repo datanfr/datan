@@ -1,5 +1,5 @@
 <?php
-  class Groupes_act_model extends CI_Model{
+  class Groupes_model extends CI_Model{
     public function __construct() {
       $this->load->database();
     }

@@ -1,14 +1,14 @@
 <?php
-  class Groupes_act extends CI_Controller{
+  class Groupes extends CI_Controller{
     public function __construct() {
       parent::__construct();
-      $this->load->model('groupes_act_model');
+      $this->load->model('groupes_model');
       $this->load->model('groupes_edito');
       $this->load->model('votes_model');
       $this->load->model('depute_edito');
       $this->load->model('breadcrumb_model');
       $this->load->model('stats_model');
-      $this->load->model('deputes_act_model');
+      $this->load->model('deputes_model');
       $this->load->model('functions_datan');
       $this->load->model('fields_model');
       //$this->password_model->security_password(); Former login protection
@@ -17,16 +17,16 @@
     //INDEX - Homepage with all groups//
     public function actifs(){
       $data['active'] = TRUE;
-      $data['groupes'] = $this->groupes_act_model->get_groupes_all($data['active'], TRUE);
-      $data['number_groupes_inactive'] = $this->groupes_act_model->get_number_inactive_groupes();
+      $data['groupes'] = $this->groupes_model->get_groupes_all($data['active'], TRUE);
+      $data['number_groupes_inactive'] = $this->groupes_model->get_number_inactive_groupes();
       $data['number_groupes_inactive'] = $data['number_groupes_inactive']['n'];
-      $data['number'] = $this->groupes_act_model->get_number_active_groupes();
-      $data['number_in_groupes'] = $this->groupes_act_model->get_number_mps_groupes();
-      $data['number_unattached'] = $this->groupes_act_model->get_number_mps_unattached();
+      $data['number'] = $this->groupes_model->get_number_active_groupes();
+      $data['number_in_groupes'] = $this->groupes_model->get_number_mps_groupes();
+      $data['number_unattached'] = $this->groupes_model->get_number_mps_unattached();
 
       // Groupe color
       foreach ($data['groupes'] as $key => $value) {
-        $data['groupes'][$key]['couleurAssociee'] = $this->groupes_act_model->get_groupe_color($value);
+        $data['groupes'][$key]['couleurAssociee'] = $this->groupes_model->get_groupe_color($value);
       }
 
       // Meta
@@ -59,13 +59,13 @@
     //INDEX - Homepage with all inactive groups //
     public function inactifs(){
       $data['active'] = FALSE;
-      $data['groupes'] = $this->groupes_act_model->get_groupes_all($data['active'], legislature_current());
-      $data['number_groupes_inactive'] = $this->groupes_act_model->get_number_inactive_groupes();
-      $data['number_groupes_active'] = $this->groupes_act_model->get_number_active_groupes();
+      $data['groupes'] = $this->groupes_model->get_groupes_all($data['active'], legislature_current());
+      $data['number_groupes_inactive'] = $this->groupes_model->get_number_inactive_groupes();
+      $data['number_groupes_active'] = $this->groupes_model->get_number_active_groupes();
 
       // Groupe color
       foreach ($data['groupes'] as $key => $value) {
-        $data['groupes'][$key]['couleurAssociee'] = $this->groupes_act_model->get_groupe_color($value);
+        $data['groupes'][$key]['couleurAssociee'] = $this->groupes_model->get_groupe_color($value);
       }
 
       // Meta
@@ -104,7 +104,7 @@
       $legislature = $data['legislature'];
       // Query 1 Informations principales
       $groupe_slug = mb_strtoupper($groupe_slug);
-      $data['groupe'] = $this->groupes_act_model->get_groupes_individal($groupe_slug, $legislature);
+      $data['groupe'] = $this->groupes_model->get_groupes_individal($groupe_slug, $legislature);
       print_r($data['groupe']);
 
       if (empty($data['groupe'])) {
@@ -135,70 +135,70 @@
       $groupe_opposition = $data['groupe']['positionPolitique'];
 
       // Query 2 Membres du groupe
-      $data['president'] = $this->groupes_act_model->get_groupes_president($groupe_uid, $data['active']);
+      $data['president'] = $this->groupes_model->get_groupes_president($groupe_uid, $data['active']);
       if (!empty($data['president'])) {
         $data['president'] = array_merge($data['president'], $this->depute_edito->gender($data['president']['civ']));
       }
-      $data['membres'] = $this->groupes_act_model->get_groupe_membres($groupe_uid, $data['active']);
+      $data['membres'] = $this->groupes_model->get_groupe_membres($groupe_uid, $data['active']);
       if ($data['groupe']['uid'] != 'PO723569') {
         $data['membres'] = array_slice($data['membres'], 0, 20);
       }
-      $data['apparentes'] = $this->groupes_act_model->get_groupe_apparentes($groupe_uid, $data['active']);
+      $data['apparentes'] = $this->groupes_model->get_groupe_apparentes($groupe_uid, $data['active']);
       if ($data['groupe']['uid'] != 'PO723569') {
         $data['membres'] = array_slice($data['membres'], 0, 20);
       }
 
       // Query get group_color
-      $data['groupe']['couleurAssociee'] = $this->groupes_act_model->get_groupe_color($data['groupe']);
+      $data['groupe']['couleurAssociee'] = $this->groupes_model->get_groupe_color($data['groupe']);
 
       // Query effectif inactifs
       if ($data['active'] == FALSE) {
-        $data['groupe']['effectif'] = $this->groupes_act_model->get_effectif_inactif($groupe_uid);
+        $data['groupe']['effectif'] = $this->groupes_model->get_effectif_inactif($groupe_uid);
         $data['groupe']['effectifShare'] = round(($data['groupe']['effectif'] / 577) * 100);
       }
       // Query nbr of groups
-      $data['groupesN'] = $this->groupes_act_model->get_number_active_groupes();
+      $data['groupesN'] = $this->groupes_model->get_number_active_groupes();
       $data['groupesN'] = $data['groupesN']['n'];
       // Get mean age in the National Assembly
       $data['ageMean'] = $this->stats_model->get_age_mean();
       $data['ageMean'] = round($data['ageMean']['mean']);
       $data['ageEdited'] = $this->functions_datan->old_young($data['groupe']['age'], $data['ageMean']);
       // Get mean of women in the National Assembly
-      $data['womenPctTotal'] = $this->deputes_act_model->get_deputes_gender($legislature);
+      $data['womenPctTotal'] = $this->deputes_model->get_deputes_gender($legislature);
       $data['womenPctTotal'] = $data['womenPctTotal'][1]['percentage'];
       $data['womenEdited'] = $this->functions_datan->more_less($data['groupe']['womenPct'], $data['womenPctTotal']);
 
       // Social Media du groupe
-      $data['groupe'] = $this->groupes_act_model->get_groupe_social_media($data['groupe']);
+      $data['groupe'] = $this->groupes_model->get_groupe_social_media($data['groupe']);
 
       //Query 3 Statistiques
-      $data['stats_cohesion'] = $this->groupes_act_model->get_stats_cohesion($groupe_uid, $data['active']); // COHESION
+      $data['stats_cohesion'] = $this->groupes_model->get_stats_cohesion($groupe_uid, $data['active']); // COHESION
       if (isset($data['stats_cohesion'])) {
-        $data['stats_cohesion_moyenne'] = $this->groupes_act_model->get_stats_cohesion_moyenne($data['active']);
+        $data['stats_cohesion_moyenne'] = $this->groupes_model->get_stats_cohesion_moyenne($data['active']);
         $data['edito_cohesion'] = $this->groupes_edito->cohesion($data['stats_cohesion']['cohesion'], $data['stats_cohesion_moyenne']['moyenne']);
         $data['no_cohesion'] = FALSE;
       } else {
         $data['no_cohesion'] = TRUE;
       }
-      $data['stats_participation'] = $this->groupes_act_model->get_stats_participation($groupe_uid, $data['active']); // PARTICIPATION
+      $data['stats_participation'] = $this->groupes_model->get_stats_participation($groupe_uid, $data['active']); // PARTICIPATION
       if (isset($data['stats_participation'])) {
-        $data['stats_participation_moyenne'] = $this->groupes_act_model->get_stats_participation_moyenne($data['active']);
+        $data['stats_participation_moyenne'] = $this->groupes_model->get_stats_participation_moyenne($data['active']);
         $data['edito_participation'] = $this->groupes_edito->participation($data['stats_participation']['score'], $data['stats_participation_moyenne']['moyenne']);
         $data['no_participation'] = FALSE;
       } else {
         $data['no_participation'] = TRUE;
       }
-      $data['stats_majorite'] = $this->groupes_act_model->get_stats_majorite($groupe_uid, $data['active']); // PROXIMITÉ MAJORITÉ
+      $data['stats_majorite'] = $this->groupes_model->get_stats_majorite($groupe_uid, $data['active']); // PROXIMITÉ MAJORITÉ
       if (isset($data['stats_majorite'])) {
-        $data['stats_majorite_moyenne'] = $this->groupes_act_model->get_stats_majorite_moyenne($data['active']);
+        $data['stats_majorite_moyenne'] = $this->groupes_model->get_stats_majorite_moyenne($data['active']);
         $data['edito_majorite'] = $this->groupes_edito->majorite($data['stats_majorite']['score'], $data['stats_majorite_moyenne']['moyenne']);
         $data['no_majorite'] = FALSE;
       } else {
         $data['no_majorite'] = TRUE;
       }
       // ACCORD AVEC GROUPES
-      $data['accord_groupes_actifs'] = $this->groupes_act_model->get_stats_proximite($groupe_uid); // PROXIMITÉ TOUS LES GROUPES
-      $data['accord_groupes_all'] = $this->groupes_act_model->get_stats_proximite_all($groupe_uid);
+      $data['accord_groupes_actifs'] = $this->groupes_model->get_stats_proximite($groupe_uid); // PROXIMITÉ TOUS LES GROUPES
+      $data['accord_groupes_all'] = $this->groupes_model->get_stats_proximite_all($groupe_uid);
       $accord_groupes_n = count($data['accord_groupes_actifs']);
       $accord_groupes_divided = round($accord_groupes_n / 2, 0, PHP_ROUND_HALF_UP);
       $data['accord_groupes_first'] = array_slice($data['accord_groupes_actifs'], 0, $accord_groupes_divided);
@@ -219,7 +219,7 @@
       // Query 5 Edito
       $data['edito'] = $this->groupes_edito->edito($groupe_ab, $groupe_opposition, $data['groupes_positionnement']);
       // GET ALL OTHER GROUPES
-      $data['groupesActifs'] = $this->groupes_act_model->get_groupes_all(TRUE, $legislature);
+      $data['groupesActifs'] = $this->groupes_model->get_groupes_all(TRUE, $legislature);
 
       // Meta
       $data['url'] = $this->meta_model->get_url();
@@ -279,7 +279,7 @@
     }
 
     public function individual_membres($groupe){
-      $data['groupe'] = $this->groupes_act_model->get_groupes_individal($groupe);
+      $data['groupe'] = $this->groupes_model->get_groupes_individal($groupe);
 
       if (empty($data['groupe'])) {
         show_404();
@@ -293,12 +293,12 @@
       }
 
       $groupe_uid = $data['groupe']['uid'];
-      $data['president'] = $this->groupes_act_model->get_groupes_president($groupe_uid, $data['active']);
-      $data['membres'] = $this->groupes_act_model->get_groupe_membres($groupe_uid, $data['active']);
-      $data['apparentes'] = $this->groupes_act_model->get_groupe_apparentes($groupe_uid, $data['active']);
+      $data['president'] = $this->groupes_model->get_groupes_president($groupe_uid, $data['active']);
+      $data['membres'] = $this->groupes_model->get_groupe_membres($groupe_uid, $data['active']);
+      $data['apparentes'] = $this->groupes_model->get_groupe_apparentes($groupe_uid, $data['active']);
 
       // Query get group_color
-      $data['groupe']['couleurAssociee'] = $this->groupes_act_model->get_groupe_color($data['groupe']);
+      $data['groupe']['couleurAssociee'] = $this->groupes_model->get_groupe_color($data['groupe']);
 
       // Meta
       $data['url'] = $this->meta_model->get_url();
@@ -341,7 +341,7 @@
 
     /* page: groupes/x/votes */
     public function individual_votes_datan($groupe){
-      $data['groupe'] = $this->groupes_act_model->get_groupes_individal($groupe);
+      $data['groupe'] = $this->groupes_model->get_groupes_individal($groupe);
       if (empty($data['groupe'])) {
         show_404();
       };
@@ -358,25 +358,25 @@
       }
       // Query effectif inactifs
       if ($data['active'] == FALSE) {
-        $data['effectif'] = $this->groupes_act_model->get_effectif_inactif($groupe_uid);
+        $data['effectif'] = $this->groupes_model->get_effectif_inactif($groupe_uid);
       }
 
       // Variables about the group (1. dateDebut / 2. membres du groupe / 3. other groups)
       setlocale(LC_TIME, 'french');
       $data['dateDebut'] = strftime('%d %B %Y', strtotime($data['groupe']['dateDebut']));
-      $data['president'] = $this->groupes_act_model->get_groupes_president($groupe_uid, $data['active']);
+      $data['president'] = $this->groupes_model->get_groupes_president($groupe_uid, $data['active']);
       if (!empty($data['president'])) {
         $data['president'] = array_merge($data['president'], $this->depute_edito->gender($data['president']['civ']));
       }
-      $data['membres'] = $this->groupes_act_model->get_groupe_membres($groupe_uid, $data['active']);
+      $data['membres'] = $this->groupes_model->get_groupe_membres($groupe_uid, $data['active']);
       if ($data['groupe']['uid'] != 'PO723569') {
         $data['membres'] = array_slice($data['membres'], 0, 20);
       }
-      $data['apparentes'] = $this->groupes_act_model->get_groupe_apparentes($groupe_uid, $data['active']);
+      $data['apparentes'] = $this->groupes_model->get_groupe_apparentes($groupe_uid, $data['active']);
       if ($data['groupe']['uid'] != 'PO723569') {
         $data['membres'] = array_slice($data['membres'], 0, 20);
       }
-      $data['groupesActifs'] = $this->groupes_act_model->get_groupes_all(TRUE, legislature_current());
+      $data['groupesActifs'] = $this->groupes_model->get_groupes_all(TRUE, legislature_current());
 
       // Query - get active fields + votes by field + check the logos
       $data['fields'] = $this->fields_model->get_active_fields();
@@ -446,7 +446,7 @@
 
     /* page: groupes/x/votes/field */
     public function individual_votes_datan_field($groupe, $field){
-      $data['groupe'] = $this->groupes_act_model->get_groupes_individal($groupe);
+      $data['groupe'] = $this->groupes_model->get_groupes_individal($groupe);
 
       if (empty($data['groupe'])) {
         show_404();
@@ -476,25 +476,25 @@
       }
       // Query effectif inactifs
       if ($data['active'] == FALSE) {
-        $data['effectif'] = $this->groupes_act_model->get_effectif_inactif($groupe_uid);
+        $data['effectif'] = $this->groupes_model->get_effectif_inactif($groupe_uid);
       }
 
       // Variables about the group (1. dateDebut / 2. membres du groupe / 3. other groups)
       setlocale(LC_TIME, 'french');
       $data['dateDebut'] = strftime('%d %B %Y', strtotime($data['groupe']['dateDebut']));
-      $data['president'] = $this->groupes_act_model->get_groupes_president($groupe_uid, $data['active']);
+      $data['president'] = $this->groupes_model->get_groupes_president($groupe_uid, $data['active']);
       if (!empty($data['president'])) {
         $data['president'] = array_merge($data['president'], $this->depute_edito->gender($data['president']['civ']));
       }
-      $data['membres'] = $this->groupes_act_model->get_groupe_membres($groupe_uid, $data['active']);
+      $data['membres'] = $this->groupes_model->get_groupe_membres($groupe_uid, $data['active']);
       if ($data['groupe']['uid'] != 'PO723569') {
         $data['membres'] = array_slice($data['membres'], 0, 20);
       }
-      $data['apparentes'] = $this->groupes_act_model->get_groupe_apparentes($groupe_uid, $data['active']);
+      $data['apparentes'] = $this->groupes_model->get_groupe_apparentes($groupe_uid, $data['active']);
       if ($data['groupe']['uid'] != 'PO723569') {
         $data['membres'] = array_slice($data['membres'], 0, 20);
       }
-      $data['groupesActifs'] = $this->groupes_act_model->get_groupes_all(TRUE, legislature_current());
+      $data['groupesActifs'] = $this->groupes_model->get_groupes_all(TRUE, legislature_current());
 
       // Query fields
       $data['field'] = $this->fields_model->get_field($field);
@@ -547,7 +547,7 @@
 
     /* page: groupes/votes/all */
     public function individual_votes_all($groupe){
-      $data['groupe'] = $this->groupes_act_model->get_groupes_individal($groupe);
+      $data['groupe'] = $this->groupes_model->get_groupes_individal($groupe);
 
       if (empty($data['groupe'])) {
         show_404();
@@ -565,13 +565,13 @@
       }
       // Query effectif inactifs
       if ($data['active'] == FALSE) {
-        $data['effectif'] = $this->groupes_act_model->get_effectif_inactif($groupe_uid);
+        $data['effectif'] = $this->groupes_model->get_effectif_inactif($groupe_uid);
       }
 
       // Variables about the group (1. dateDebut / 2. membres du groupe / 3. other groups)
       setlocale(LC_TIME, 'french');
       $data['dateDebut'] = strftime('%d %B %Y', strtotime($data['groupe']['dateDebut']));
-      $data['president'] = $this->groupes_act_model->get_groupes_president($groupe_uid, $data['active']);
+      $data['president'] = $this->groupes_model->get_groupes_president($groupe_uid, $data['active']);
       // Edito
       $data['groupes_positionnement'] = $this->groupes_edito->get_groupes_positionnement();
       $data['edito'] = $this->groupes_edito->edito($groupe_ab, $groupe_opposition, $data['groupes_positionnement']);

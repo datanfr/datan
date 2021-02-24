@@ -1,13 +1,13 @@
-<?php
+_<?php
   class Deputes_act extends CI_Controller {
     public function __construct() {
       parent::__construct();
-      $this->load->model('deputes_act_model');
+      $this->load->model('deputes_model');
       $this->load->model('depute_edito');
       $this->load->model('votes_model');
-      $this->load->model('departement_act_model');
+      $this->load->model('departement_model');
       $this->load->model('breadcrumb_model');
-      $this->load->model('groupes_act_model');
+      $this->load->model('groupes_model');
       $this->load->model('fields_model');
       //$this->password_model->security_password(); Former login protection
     }
@@ -24,9 +24,9 @@
 
       $data['active'] = TRUE;
       $data['legislature'] = $legislature;
-      $data['deputes'] = $this->deputes_act_model->get_deputes_all($legislature, $data['active'], NULL);
-      $data['groupes'] = $this->groupes_act_model->get_groupes_all($data['active'], $legislature);
-      $number_gender = $this->deputes_act_model->get_deputes_gender($legislature);
+      $data['deputes'] = $this->deputes_model->get_deputes_all($legislature, $data['active'], NULL);
+      $data['groupes'] = $this->groupes_model->get_groupes_all($data['active'], $legislature);
+      $number_gender = $this->deputes_model->get_deputes_gender($legislature);
       foreach ($number_gender as $gender) {
         if ($gender["gender"] == "male") {
           $data["male"]["n"] = $gender["n"];
@@ -36,12 +36,12 @@
           $data["female"]["percentage"] = $gender["percentage"];
         }
       }
-      $data['number_inactive'] = $this->deputes_act_model->get_n_deputes_inactive();
+      $data['number_inactive'] = $this->deputes_model->get_n_deputes_inactive();
       $data['number_inactive'] = $data['number_inactive']['total'];
 
       // Groupe_color
       foreach ($data['deputes'] as $key => $value) {
-        $data['deputes'][$key]['couleurAssociee'] = $this->groupes_act_model->get_groupe_color($value);
+        $data['deputes'][$key]['couleurAssociee'] = $this->groupes_model->get_groupe_color($value);
       }
 
       // Breadcrumb
@@ -96,8 +96,8 @@
 
     public function inactifs(){
       $data['active'] = FALSE;
-      $data['deputes'] = $this->deputes_act_model->get_deputes_all(legislature_current(), $data['active'], $departement = NULL);
-      $data['groupes'] = $this->deputes_act_model->get_groupes_inactifs();
+      $data['deputes'] = $this->deputes_model->get_deputes_all(legislature_current(), $data['active'], $departement = NULL);
+      $data['groupes'] = $this->deputes_model->get_groupes_inactifs();
       $data["number_inactive"] = count($data['deputes']);
 
       $data['title'] = "Les députés plus en activité";
@@ -137,7 +137,7 @@
       setlocale(LC_TIME, 'french');
 
       // Get infos MP
-      $data['depute'] = $this->deputes_act_model->get_depute_individual($nameUrl, $departement);
+      $data['depute'] = $this->deputes_model->get_depute_individual($nameUrl, $departement);
 
       // Check if depute exists
       if (empty($data['depute'])) {
@@ -166,12 +166,12 @@
       $legislature = $data['depute']['legislature'];
 
       // Get group
-      $data['group'] = $this->deputes_act_model->get_last_group($depute_uid);
+      $data['group'] = $this->deputes_model->get_last_group($depute_uid);
       if (!empty($data['group'])) {
         $groupe_id = $data['group']['groupeId'];
-        $data['group']['couleurAssociee'] = $this->groupes_act_model->get_groupe_color($data['group']);
+        $data['group']['couleurAssociee'] = $this->groupes_model->get_groupe_color($data['group']);
         // Is the MP a group president?
-        $data['group_president'] = $this->deputes_act_model->depute_group_president($depute_uid, $groupe_id);
+        $data['group_president'] = $this->deputes_model->depute_group_president($depute_uid, $groupe_id);
         if (!empty($data['group_president'])) {
           $data['isGroupPresident'] = TRUE;
         } else {
@@ -182,18 +182,18 @@
       // General infos
       $data["depute"]["dateNaissanceFr"] = utf8_encode(strftime('%d %B %Y', strtotime($data['depute']['birthDate']))); // birthdate
       $data['depute']['circo_abbrev'] = $this->functions_datan->abbrev_n($data['depute']['circo'], TRUE); // circo number
-      $data['politicalParty'] = $this->deputes_act_model->get_political_party($depute_uid); // political party
-      $data['election_result'] = $this->deputes_act_model->get_electoral_result_mp($data['depute']['departementCode'], $data['depute']['circo'], $nameLast); // electoral result
+      $data['politicalParty'] = $this->deputes_model->get_political_party($depute_uid); // political party
+      $data['election_result'] = $this->deputes_model->get_electoral_result_mp($data['depute']['departementCode'], $data['depute']['circo'], $nameLast); // electoral result
 
       // Get commission parlementaire
       if ($data['active'] == TRUE) {
-        $data['commission_parlementaire'] = $this->deputes_act_model->get_commission_parlementaire($depute_uid);
+        $data['commission_parlementaire'] = $this->deputes_model->get_commission_parlementaire($depute_uid);
       }
 
       // Statistiques
       if ($legislature == legislature_current()) {
         // Participation (votes related to commission)
-        $data['participation_commission'] = $this->deputes_act_model->get_stats_participation_commission($depute_uid);
+        $data['participation_commission'] = $this->deputes_model->get_stats_participation_commission($depute_uid);
         if ($data['participation_commission']['votesN'] < 5) {
           $data['no_participation'] = TRUE;
         } else {
@@ -201,7 +201,7 @@
         }
         $data['edito_participation_commission'] = $this->depute_edito->participation($data['participation_commission']['score'], $data['participation_commission']['mean']); //edited
         // loyalty
-        $data['loyaute'] = $this->deputes_act_model->get_stats_loyaute($depute_uid);
+        $data['loyaute'] = $this->deputes_model->get_stats_loyaute($depute_uid);
         if ($data['loyaute']['votesN'] < 75) {
           $data['no_loyaute'] = TRUE;
         } else {
@@ -209,9 +209,9 @@
         }
         $data['edito_loyaute'] = $this->depute_edito->loyaute($data['loyaute']['score'], $data['loyaute']['mean']); // edited
         // loyalty history
-        $data['loyaute_history'] = $this->deputes_act_model->get_stats_loyaute_history($depute_uid);
+        $data['loyaute_history'] = $this->deputes_model->get_stats_loyaute_history($depute_uid);
         // proximity with majority
-        $data['majorite'] = $this->deputes_act_model->get_stats_majorite($depute_uid);
+        $data['majorite'] = $this->deputes_model->get_stats_majorite($depute_uid);
         if ($data['majorite']['votesN'] < 75) {
           $data['no_majorite'] = TRUE;
         } else {
@@ -219,8 +219,8 @@
         }
         $data['edito_majorite'] = $this->depute_edito->majorite($data['majorite']['score'], $data['majorite']['mean']); //edited
         // proximity with all groups
-        $data['accord_groupes_actifs'] = $this->deputes_act_model->get_accord_groupes_actifs($depute_uid);
-        $data['accord_groupes_all'] = $this->deputes_act_model->get_accord_groupes_all($depute_uid);
+        $data['accord_groupes_actifs'] = $this->deputes_model->get_accord_groupes_actifs($depute_uid);
+        $data['accord_groupes_all'] = $this->deputes_model->get_accord_groupes_all($depute_uid);
         $accord_groupes_n = count($data['accord_groupes_actifs']);
         $accord_groupes_divided = round($accord_groupes_n / 2, 0, PHP_ROUND_HALF_UP);
         $data['accord_groupes_first'] = array_slice($data['accord_groupes_actifs'], 0, $accord_groupes_divided);
@@ -243,11 +243,11 @@
 
       // Get other MPs
       if ($legislature == legislature_current()) {
-        $data['other_deputes'] = $this->deputes_act_model->get_other_deputes($groupe_id, $nameLast, $depute_uid, $data['active'], $legislature);
+        $data['other_deputes'] = $this->deputes_model->get_other_deputes($groupe_id, $nameLast, $depute_uid, $data['active'], $legislature);
       } else {
-        $data['other_deputes'] = $this->deputes_act_model->get_other_deputes_legislature($nameLast, $depute_uid, $legislature);
+        $data['other_deputes'] = $this->deputes_model->get_other_deputes_legislature($nameLast, $depute_uid, $legislature);
       }
-      $data['other_deputes_dpt'] = $this->deputes_act_model->get_deputes_all(legislature_current(), TRUE, $depute_dpt);
+      $data['other_deputes_dpt'] = $this->deputes_model->get_deputes_all(legislature_current(), TRUE, $depute_dpt);
 
       // Get votes datan
       if ($legislature == legislature_current()) {
@@ -265,7 +265,7 @@
 
       // Historique du député
       $data['depute']['datePriseFonctionLettres'] = utf8_encode(strftime('%B %Y', strtotime($data['depute']['datePriseFonction'])));
-      $data['history_average'] = $this->deputes_act_model->get_history_all_deputes($depute_uid);
+      $data['history_average'] = $this->deputes_model->get_history_all_deputes($depute_uid);
       $data['mandat_edito'] = $this->depute_edito->get_nbr_lettre($data['depute']['mandatesN']);
 
       // History
@@ -304,7 +304,7 @@
       $controller = $this->router->fetch_class()."/".$this->router->fetch_method();
       $data['ogp'] = $this->meta_model->get_ogp($controller, $data['title_meta'], $data['description_meta'], $data['url'], $data);
       // Microdata Person
-      $data['person_schema'] = $this->deputes_act_model->get_person_schema($data['depute']);
+      $data['person_schema'] = $this->deputes_model->get_person_schema($data['depute']);
       // CSS
       $data['critical_css'] = "assets/css/critical/depute_individual.css";
       $data['css_to_load']= array(
@@ -335,7 +335,7 @@
 
     public function commune($input, $departement){
       $input_ville = $input;
-      $data['ville'] = $this->departement_act_model->get_commune_individual($input_ville, $departement);
+      $data['ville'] = $this->departement_model->get_commune_individual($input_ville, $departement);
       //print_r($data['ville']);
 
       if (empty($data['ville'])) {
@@ -357,9 +357,9 @@
       if ($n_circos == 1) {
         $circo[] = $v['circo'];
         $data['n_circos'] = $n_circos;
-        $data['deputes_commune'] = $this->departement_act_model->get_deputes_commune($departement, $circo);
+        $data['deputes_commune'] = $this->departement_model->get_deputes_commune($departement, $circo);
         foreach ($data['deputes_commune'] as $key => $value) {
-          $data['deputes_commune'][$key]['couleurAssociee'] = $this->groupes_act_model->get_groupe_color($value);
+          $data['deputes_commune'][$key]['couleurAssociee'] = $this->groupes_model->get_groupe_color($value);
         }
         $data['depute_commune'] = $data['deputes_commune'][0];
         $data['depute_commune']['electionCircoAbbrev'] = $this->functions_datan->abbrev_n($data['depute_commune']['electionCirco'], TRUE);
@@ -376,9 +376,9 @@
         }
         $data['circos'] = $circo_edited;
         $data['n_circos'] = $n_circos;
-        $data['deputes_commune'] = $this->departement_act_model->get_deputes_commune($departement, $circo);
+        $data['deputes_commune'] = $this->departement_model->get_deputes_commune($departement, $circo);
         foreach ($data['deputes_commune'] as $key => $value) {
-          $data['deputes_commune'][$key]['couleurAssociee'] = $this->groupes_act_model->get_groupe_color($value);
+          $data['deputes_commune'][$key]['couleurAssociee'] = $this->groupes_model->get_groupe_color($value);
           $data['deputes_commune'][$key]['electionCircoAbbrev'] = $this->functions_datan->abbrev_n($value['electionCirco'], TRUE);
         }
       }
@@ -388,7 +388,7 @@
       foreach ($data['deputes_commune'] as $n) {
         $deputes_commune[] = $n['mpId'];
       }
-      $data['deputes_dpt'] = $this->departement_act_model->get_deputes_commune_dpt($departement, $deputes_commune);
+      $data['deputes_dpt'] = $this->departement_model->get_deputes_commune_dpt($departement, $deputes_commune);
 
       // Some editing depending on the number of MPs
       if ($n_circos > 1) {
@@ -414,7 +414,7 @@
       }
 
       // Get all big cities from the department
-      $data['communes_dpt'] = $this->departement_act_model->get_communes_population($departement);
+      $data['communes_dpt'] = $this->departement_model->get_communes_population($departement);
 
       // Clean infos on the city
       $data['ville'] = $data['ville'][0];
@@ -427,10 +427,10 @@
         $data['ville']['evol10_text'] = 'diminué';
       }
       $data['ville']['evol10_edited'] = str_replace("-", "", $data['ville']['evol10']);
-      $data['ville_insee'] = $this->departement_act_model->get_ville_insee($data['ville']['codeRegion'], $data['ville']['dpt_edited'], $data['ville']['insee_city']);
+      $data['ville_insee'] = $this->departement_model->get_ville_insee($data['ville']['codeRegion'], $data['ville']['dpt_edited'], $data['ville']['insee_city']);
 
       // Get city mayor
-      $data['mayor'] = $this->departement_act_model->get_city_mayor($data['ville']['dpt'], $data['ville']['insee_city']);
+      $data['mayor'] = $this->departement_model->get_city_mayor($data['ville']['dpt'], $data['ville']['insee_city']);
       if ($data['mayor']['gender'] == "F") {
         $data['mayor']['gender_le'] = "la";
       } else {
@@ -439,9 +439,9 @@
 
       // Get elections
       // 1. 2017 _ Presidentielles _ 2nd tour
-      $data['results_2017_pres_2'] = $this->departement_act_model->get_results_2017_pres_2($data['ville']['dpt'], $data['ville']['insee_city']);
+      $data['results_2017_pres_2'] = $this->departement_model->get_results_2017_pres_2($data['ville']['dpt'], $data['ville']['insee_city']);
       // 2. 2019 _ Européennes
-      $data['results_2019_europe'] = $this->departement_act_model->get_results_2019_europe($data['ville']);
+      $data['results_2019_europe'] = $this->departement_model->get_results_2019_europe($data['ville']);
 
       // Meta
       $data['url'] = $this->meta_model->get_url();
@@ -483,7 +483,7 @@
     public function votes_datan($input, $departement){
       // Query 1 = infos générales députés
       $input_depute = $input;
-      $data['depute'] = $this->deputes_act_model->get_depute_individual($input, $departement);
+      $data['depute'] = $this->deputes_model->get_depute_individual($input, $departement);
 
       if (empty($data['depute'])) {
         show_404();
@@ -496,16 +496,16 @@
 
       // Groupe if inactive MP
       if ($data['active'] == FALSE) {
-        $inactif_groupe = $this->deputes_act_model->get_depute_groupe_inactif($depute_uid);
+        $inactif_groupe = $this->deputes_model->get_depute_groupe_inactif($depute_uid);
         $data['depute'] = array_merge($data['depute'], $inactif_groupe);
       }
       $groupe_id = $data['depute']['groupeId'];
 
       // Group color
-      $data['depute']['couleurAssociee'] = $this->groupes_act_model->get_groupe_color($data['depute']);
+      $data['depute']['couleurAssociee'] = $this->groupes_model->get_groupe_color($data['depute']);
 
       // Commission parlementaire
-      $data['commission_parlementaire'] = $this->deputes_act_model->get_commission_parlementaire($depute_uid);
+      $data['commission_parlementaire'] = $this->deputes_model->get_commission_parlementaire($depute_uid);
 
       // Query - get active fields + votes by field + check the logos
       $data['fields'] = $this->fields_model->get_active_fields();
@@ -535,13 +535,13 @@
       $data['gender'] = $this->depute_edito->gender($gender);
 
       // Query - mandat
-      $data['mandats_all'] = $this->deputes_act_model->get_mandats_all($depute_uid);
+      $data['mandats_all'] = $this->deputes_model->get_mandats_all($depute_uid);
       $data['mandat_edito'] = $this->depute_edito->get_nbr_lettre($data['mandats_all']['mandatesN']);
 
       // Other MPs from the same group
-      $data['other_deputes'] = $this->deputes_act_model->get_other_deputes($groupe_id, $nameLast, $depute_uid, $data['active']);
+      $data['other_deputes'] = $this->deputes_model->get_other_deputes($groupe_id, $nameLast, $depute_uid, $data['active']);
       // OTHER MPs from the same departement
-      $data['other_deputes_dpt'] = $this->deputes_act_model->get_deputes_all($departement);
+      $data['other_deputes_dpt'] = $this->deputes_model->get_deputes_all($departement);
 
       // Meta
       $data['url'] = $this->meta_model->get_url();
@@ -585,7 +585,7 @@
     public function votes_datan_field($input, $departement, $field){
       // Query 1 = infos générales députés
       $input_depute = $input;
-      $data['depute'] = $this->deputes_act_model->get_depute_individual($input, $departement);
+      $data['depute'] = $this->deputes_model->get_depute_individual($input, $departement);
       $depute_uid = $data['depute']['mpId'];
 
       if (empty($data['depute'])) {
@@ -614,29 +614,29 @@
 
       // Groupe if inactive MP
       if ($data['active'] == FALSE) {
-        $inactif_groupe = $this->deputes_act_model->get_depute_groupe_inactif($depute_uid);
+        $inactif_groupe = $this->deputes_model->get_depute_groupe_inactif($depute_uid);
         $data['depute'] = array_merge($data['depute'], $inactif_groupe);
       }
       $groupe_id = $data['depute']['groupeId'];
 
       // Group color
-      $data['depute']['couleurAssociee'] = $this->groupes_act_model->get_groupe_color($data['depute']);
+      $data['depute']['couleurAssociee'] = $this->groupes_model->get_groupe_color($data['depute']);
 
       // Commission parlementaire
-      $data['commission_parlementaire'] = $this->deputes_act_model->get_commission_parlementaire($depute_uid);
+      $data['commission_parlementaire'] = $this->deputes_model->get_commission_parlementaire($depute_uid);
 
       // Query - gender
       $gender = $data['depute']['civ'];
       $data['gender'] = $this->depute_edito->gender($gender);
 
       // Query - mandat
-      $data['mandats_all'] = $this->deputes_act_model->get_mandats_all($depute_uid);
+      $data['mandats_all'] = $this->deputes_model->get_mandats_all($depute_uid);
       $data['mandat_edito'] = $this->depute_edito->get_nbr_lettre($data['mandats_all']['mandatesN']);
 
       // Other MPs from the same group
-      $data['other_deputes'] = $this->deputes_act_model->get_other_deputes($groupe_id, $nameLast, $depute_uid, $data['active']);
+      $data['other_deputes'] = $this->deputes_model->get_other_deputes($groupe_id, $nameLast, $depute_uid, $data['active']);
       // OTHER MPs from the same departement
-      $data['other_deputes_dpt'] = $this->deputes_act_model->get_deputes_all($departement);
+      $data['other_deputes_dpt'] = $this->deputes_model->get_deputes_all($departement);
 
       // Meta
       $data['url'] = $this->meta_model->get_url();
@@ -683,7 +683,7 @@
     public function votes_all($input, $departement){
       // Query 1 = infos générales députés
       $input_depute = $input;
-      $data['depute'] = $this->deputes_act_model->get_depute_individual($input, $departement);
+      $data['depute'] = $this->deputes_model->get_depute_individual($input, $departement);
 
       if (empty($data['depute'])) {
         show_404();
@@ -696,16 +696,16 @@
 
       // Groupe if inactive MP
       if ($data['active'] == FALSE) {
-        $inactif_groupe = $this->deputes_act_model->get_depute_groupe_inactif($depute_uid);
+        $inactif_groupe = $this->deputes_model->get_depute_groupe_inactif($depute_uid);
         $data['depute'] = array_merge($data['depute'], $inactif_groupe);
       }
       $groupe_id = $data['depute']['groupeId'];
 
       // Group color
-      $data['depute']['couleurAssociee'] = $this->groupes_act_model->get_groupe_color($data['depute']);
+      $data['depute']['couleurAssociee'] = $this->groupes_model->get_groupe_color($data['depute']);
 
       // Commission parlementaire
-      $data['commission_parlementaire'] = $this->deputes_act_model->get_commission_parlementaire($depute_uid);
+      $data['commission_parlementaire'] = $this->deputes_model->get_commission_parlementaire($depute_uid);
 
       // Query - get all votes
       $data['votes'] = $this->votes_model->get_votes_all_depute($depute_uid);
@@ -715,7 +715,7 @@
       $data['gender'] = $this->depute_edito->gender($gender);
 
       // Query - mandat
-      $data['mandats_all'] = $this->deputes_act_model->get_mandats_all($depute_uid);
+      $data['mandats_all'] = $this->deputes_model->get_mandats_all($depute_uid);
       $data['mandat_edito'] = $this->depute_edito->get_nbr_lettre($data['mandats_all']['mandatesN']);
 
       // Meta

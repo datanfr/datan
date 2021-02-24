@@ -20,7 +20,7 @@
       $array['twitter_description'] = $description;
 
 
-      if ($type == "deputes_act/individual") {
+      if ($type == "deputes/individual") {
         $uid = $data['depute']['mpId'];
         $array['img'] = asset_url()."imgs/deputes_ogp/ogp_deputes_".$uid.".png";
         $array['twitter_img'] = asset_url()."imgs/deputes_ogp/ogp_deputes_".$uid.".png";

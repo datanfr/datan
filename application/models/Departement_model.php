@@ -1,5 +1,5 @@
 <?php
-  class Departement_act_model extends CI_Model{
+  class Departement_model extends CI_Model{
     public function __construct() {
       $this->load->database();
     }

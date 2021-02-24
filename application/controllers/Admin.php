@@ -4,7 +4,7 @@
     public function __construct() {
       parent::__construct();
       $this->load->model('admin_model');
-      $this->load->model('deputes_act_model');
+      $this->load->model('deputes_model');
       $this->load->model('post_model');
       $this->load->model('fields_model');
       //$this->password_model->security_password(); Former login protection
@@ -181,42 +181,42 @@
 
       if ($page == "deputes_entrants") {
         $data['title'] = 'Liste des députés entrants (datePriseFonction)';
-        $data['deputes'] = $this->deputes_act_model->get_deputes_entrants();
+        $data['deputes'] = $this->deputes_model->get_deputes_entrants();
 
         $this->load->view('dashboard/header', $data);
         $this->load->view('dashboard/socialmedia_table', $data);
         $this->load->view('dashboard/footer');
       } elseif ($page == "deputes_sortants") {
         $data['title'] = 'Liste des députés sortants (dateFin)';
-        $data['deputes'] = $this->deputes_act_model->get_deputes_sortants();
+        $data['deputes'] = $this->deputes_model->get_deputes_sortants();
 
         $this->load->view('dashboard/header', $data);
         $this->load->view('dashboard/socialmedia_table', $data);
         $this->load->view('dashboard/footer');
       } elseif ($page == "postes_assemblee") {
         $data['title'] = 'Nouveaux postes Assemblée (dateDebut)';
-        $data['deputes'] = $this->deputes_act_model->get_postes_assemblee();
+        $data['deputes'] = $this->deputes_model->get_postes_assemblee();
 
         $this->load->view('dashboard/header', $data);
         $this->load->view('dashboard/socialmedia_table', $data);
         $this->load->view('dashboard/footer');
       } elseif ($page == "groupes_entrants") {
         $data['title'] = 'Groupes entrants (dateDebut)';
-        $data['deputes'] = $this->deputes_act_model->get_groupes_entrants();
+        $data['deputes'] = $this->deputes_model->get_groupes_entrants();
         $this->load->view('dashboard/header', $data);
         $this->load->view('dashboard/socialmedia_table', $data);
         $this->load->view('dashboard/footer');
       } elseif ($page == "historique") {
         if ($id == "NULL") {
-          $data['deputes'] = $this->deputes_act_model->get_deputes_all();
+          $data['deputes'] = $this->deputes_model->get_deputes_all();
           $data['title'] = "Liste des députés";
           $this->load->view('dashboard/header', $data);
           $this->load->view('dashboard/socialmedia_list', $data);
           $this->load->view('dashboard/footer');
         } else {
-          $data['depute'] = $this->deputes_act_model->get_infos($id);
+          $data['depute'] = $this->deputes_model->get_infos($id);
           $data['title'] = "Historique pour le député ".$data['depute']['nameFirst']." ".$data['depute']['nameLast'];
-          $data['historique'] = $this->deputes_act_model->get_historique($id);
+          $data['historique'] = $this->deputes_model->get_historique($id);
           $data['deputes'] = $data['historique'];
           $this->load->view('dashboard/header', $data);
           $this->load->view('dashboard/socialmedia_table', $data);
