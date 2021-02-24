@@ -166,10 +166,9 @@
 
     public function get_deputes_commune($departement, $circo){
       $query = $this->db->query('
-        SELECT d.*, mp.electionCirco
-        FROM deputes_actifs d
-        LEFT JOIN mandat_principal mp ON d.mpId = mp.mpId AND mp.dateFin IS NULL AND mp.codeQualite = "membre"
-        WHERE dptSlug = "'.$departement.'" AND electionCirco IN (' . implode(',', $circo) . ')
+        SELECT d.*, d.circo AS electionCirco
+        FROM deputes_all d
+        WHERE d.dptSlug = "'.$departement.'" AND d.circo IN (' . implode(',', $circo) . ') AND d.legislature = 15 AND d.dateFin IS NULL
       ');
 
       return $query->result_array();
@@ -177,10 +176,9 @@
 
     public function get_deputes_commune_dpt($departement, $deputes_commune){
       $query = $this->db->query("
-      SELECT d.*, mp.electionCirco
-      FROM deputes_actifs d
-      LEFT JOIN mandat_principal mp ON d.mpId = mp.mpId AND mp.dateFin IS NULL AND mp.codeQualite = 'membre'
-      WHERE d.dptSlug = '".$departement."' AND d.mpId NOT IN ('" . implode("', '", $deputes_commune) . "')
+      SELECT d.*, d.circo AS electionCirco
+      FROM deputes_all d
+      WHERE d.dptSlug = '".$departement."' AND d.mpId NOT IN ('" . implode("', '", $deputes_commune) . "') AND d.legislature = 15 AND d.dateFin IS NULL
       ");
 
       return $query->result_array();

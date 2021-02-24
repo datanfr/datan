@@ -316,7 +316,7 @@
       return $query->result_array();
     }
 
-    public function get_vote_deputes($num){
+    public function get_vote_deputes($num, $legislature){
       $query = $this->db->query('
       SELECT B.*
       FROM
@@ -333,21 +333,17 @@
         	WHEN A.scoreLoyaute = 0 THEN "rebel"
         ELSE NULL
         END AS loyaute_libelle,
-        CASE WHEN da.nameFirst IS NULL THEN di.nameFirst ELSE da.nameFirst END AS nameFirst,
-        CASE WHEN da.nameLast IS NULL THEN di.nameLast ELSE da.nameLast END AS nameLast,
-        CASE WHEN da.nameUrl IS NULL THEN di.nameUrl ELSE da.nameUrl END AS nameUrl,
-        CASE WHEN da.dptSlug IS NULL THEN di.dptSlug ELSE da.dptSlug END AS dpt_slug,
+        da.nameFirst, da.nameLast, da.nameUrl, da.dptSlug,
         o.libelle, o.libelleAbrev
         FROM
         (
         	SELECT v.mpId, v.vote, v.typeVote, v.organeId, v.scoreLoyaute
         	FROM votes_scores v
-        	WHERE v.voteNumero = "'.$num.'" AND legislature = 15
+        	WHERE v.voteNumero = '.$num.' AND legislature = '.$legislature.'
         ) A
-        LEFT JOIN deputes_actifs da ON da.mpId = A.mpId
-        LEFT JOIN deputes_inactifs di ON di.mpId = A.mpId
-        LEFT JOIN mandat_groupe mg ON A.organeId = mg.mandatId
-        LEFT JOIN organes o ON mg.organeRef = o.uid
+        LEFT JOIN deputes_all da ON da.mpId = A.mpId
+        LEFT JOIN organes o ON da.groupeId = o.uid
+        WHERE da.legislature = 15
       ) B
       ORDER BY B.nameLast ASC
       ');

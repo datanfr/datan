@@ -23,9 +23,10 @@
       }
 
       $data['active'] = TRUE;
+      $data['legislature'] = $legislature;
       $data['deputes'] = $this->deputes_act_model->get_deputes_all($legislature, $data['active'], NULL);
-      $data['groupes'] = $this->groupes_act_model->get_groupes_all($data['active'], FALSE);
-      $number_gender = $this->deputes_act_model->get_deputes_gender();
+      $data['groupes'] = $this->groupes_act_model->get_groupes_all($data['active'], $legislature);
+      $number_gender = $this->deputes_act_model->get_deputes_gender($legislature);
       foreach ($number_gender as $gender) {
         if ($gender["gender"] == "male") {
           $data["male"]["n"] = $gender["n"];
@@ -44,14 +45,29 @@
       }
 
       // Breadcrumb
-      $data['breadcrumb'] = array(
-        array(
-          "name" => "Datan", "url" => base_url(), "active" => FALSE
-        ),
-        array(
-          "name" => "Députés", "url" => base_url()."deputes", "active" => TRUE
-        )
-      );
+      if ($legislature == legislature_current()) {
+        $data['breadcrumb'] = array(
+          array(
+            "name" => "Datan", "url" => base_url(), "active" => FALSE
+          ),
+          array(
+            "name" => "Députés", "url" => base_url()."deputes", "active" => TRUE
+          )
+        );
+      } else {
+        $data['breadcrumb'] = array(
+          array(
+            "name" => "Datan", "url" => base_url(), "active" => FALSE
+          ),
+          array(
+            "name" => "Députés", "url" => base_url()."deputes", "active" => FALSE
+          ),
+          array(
+            "name" => $legislature."e législature", "url" => base_url()."deputes/legislature-".$legislature, "active" => TRUE
+          )
+        );
+      }
+
       $data['breadcrumb_json'] = $this->breadcrumb_model->breadcrumb_json($data['breadcrumb']);
       // Meta
       $data['url'] = $this->meta_model->get_url();
@@ -227,7 +243,7 @@
 
       // Get other MPs
       if ($legislature == legislature_current()) {
-        $data['other_deputes'] = $this->deputes_act_model->get_other_deputes($groupe_id, $nameLast, $depute_uid, $data['active']);
+        $data['other_deputes'] = $this->deputes_act_model->get_other_deputes($groupe_id, $nameLast, $depute_uid, $data['active'], $legislature);
       } else {
         $data['other_deputes'] = $this->deputes_act_model->get_other_deputes_legislature($nameLast, $depute_uid, $legislature);
       }

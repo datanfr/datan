@@ -17,7 +17,7 @@
       $data['age_mean'] = $this->stats_model->get_age_mean();
       $data['groups_women_more'] = $this->stats_model->get_groups_women_more();
       $data['groups_women_less'] = $this->stats_model->get_groups_women_less();
-      $data['women_mean'] = $this->deputes_act_model->get_deputes_gender();
+      $data['women_mean'] = $this->deputes_act_model->get_deputes_gender(legislature_current());
       $data['mps_loyalty_more'] = $this->stats_model->get_mps_loyalty_more();
       $data['mps_loyalty_less'] = $this->stats_model->get_mps_loyalty_less();
       $data['loyalty_mean'] = $this->stats_model->get_loyalty_mean();
@@ -120,7 +120,7 @@
 
       } elseif ($url == "groupes-feminisation") {
         // Data --> REVIEW_COULEURASSOCIEE
-        $women_mean = $this->deputes_act_model->get_deputes_gender();
+        $women_mean = $this->deputes_act_model->get_deputes_gender(legislature_current());
         $data['womenMean']['n'] = $women_mean[1]['n'];
         $data['womenMean']['pct'] = $women_mean[1]['percentage'];
         $data['womenMean']['nSociety'] = 52;

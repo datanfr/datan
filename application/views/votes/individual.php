@@ -201,7 +201,7 @@
                   <?php foreach ($deputes as $v_depute): ?>
                     <tr>
                       <td class="name">
-                        <a href="<?= base_url() ?>deputes/<?= $v_depute['dpt_slug'] ?>/depute_<?= $v_depute['nameUrl'] ?>" target="_blank" class="no-decoration underline"><?= $v_depute['nameFirst'].' '.$v_depute['nameLast'] ?></a>
+                        <a href="<?= base_url() ?>deputes/<?= $v_depute['dptSlug'] ?>/depute_<?= $v_depute['nameUrl'] ?>" target="_blank" class="no-decoration underline"><?= $v_depute['nameFirst'].' '.$v_depute['nameLast'] ?></a>
                       </td>
                       <td class="text-center"><?= $v_depute['libelle'] ?></td>
                       <td class="text-center vote sort-<?= $v_depute['vote_libelle'] ?>"><?= mb_strtoupper($v_depute['vote_libelle']) ?></td>
