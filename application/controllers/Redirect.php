@@ -3,7 +3,7 @@
 
     public function __construct() {
       parent::__construct();
-      $this->load->model('departement_act_model');
+      $this->load->model('departement_model');
     }
 
     // Delete all cache
@@ -52,7 +52,7 @@
 
 
 
-      $result = $this->departement_act_model->get_commune_slug($newCity, $dpt);
+      $result = $this->departement_model->get_commune_slug($newCity, $dpt);
       if (!empty($result)) {
         $url = base_url()."deputes/".$result['dpt_slug']."/ville_".$result['commune_slug'];
         redirect($url);
