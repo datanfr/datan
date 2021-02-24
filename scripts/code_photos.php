@@ -21,11 +21,9 @@ table, th, td {
 		include 'bdd-connexion.php';
 
 		$donnees = $bdd->query('
-			SELECT d.mpId AS uid
-			FROM deputes d
-			LEFT JOIN mandat_principal mp ON d.mpId = mp.mpId
-			WHERE mp.legislature = 15
-			GROUP BY d.mpId
+			SELECT d.mpId AS uid, d.legislature
+			FROM deputes_last d
+			WHERE legislature IN (14, 15)
 		');
 
 		// LIMIT 5
@@ -35,7 +33,8 @@ table, th, td {
 
 		while ($d = $donnees->fetch()) {
 			$uid = substr($d['uid'], 2);
-			$url = 'http://www2.assemblee-nationale.fr/static/tribun/15/photos/'.$uid.'.jpg';
+			$legislature = $d['legislature'];
+			$url = 'http://www2.assemblee-nationale.fr/static/tribun/'.$legislature.'/photos/'.$uid.'.jpg';
 
 			$content = file_get_contents($url);
 			$img = imagecreatefromstring($content);
