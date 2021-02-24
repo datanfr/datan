@@ -23,7 +23,7 @@
 
       //Get groups (cached)
       $this->db->cache_on();
-      $data['groupes'] = $this->groupes_act_model->get_groupes_all(TRUE);
+      $data['groupes'] = $this->groupes_act_model->get_groupes_all(TRUE, legislature_current());
       $this->db->cache_off();
       $groupes = array_column($data['groupes'], 'libelleAbrev');
       function cmp(array $a) {
@@ -48,22 +48,22 @@
       }
 
       //Get stats
-      $data['depute_vote_plus'] = $this->deputes_act_model->get_depute_vote_plus(TRUE);
+      $data['depute_vote_plus'] = $this->deputes_act_model->get_depute_vote_plus();
       if (!empty($data['depute_vote_plus'])) {
         $data['depute_vote_plus'] = array_merge($data['depute_vote_plus'], $this->depute_edito->gender($data['depute_vote_plus']['civ']));
         $data['depute_vote_plus']['couleurAssociee'] = $this->groupes_act_model->get_groupe_color($data['depute_vote_plus']);
       }
-      $data['depute_vote_moins'] = $this->deputes_act_model->get_depute_vote_moins(TRUE);
+      $data['depute_vote_moins'] = $this->deputes_act_model->get_depute_vote_moins();
       if (!empty($data['depute_vote_moins'])) {
         $data['depute_vote_moins'] = array_merge($data['depute_vote_moins'], $this->depute_edito->gender($data['depute_vote_moins']['civ']));
         $data['depute_vote_moins']['couleurAssociee'] = $this->groupes_act_model->get_groupe_color($data['depute_vote_moins']);
       }
-      $data['depute_loyal_plus'] = $this->deputes_act_model->get_depute_loyal_plus(TRUE);
+      $data['depute_loyal_plus'] = $this->deputes_act_model->get_depute_loyal_plus();
       $data['depute_loyal_plus'] = array_merge($data['depute_loyal_plus'], $this->depute_edito->gender($data['depute_loyal_plus']['civ']));
       if (!empty($data['depute_loyal_plus'])) {
         $data['depute_loyal_plus']['couleurAssociee'] = $this->groupes_act_model->get_groupe_color($data['depute_loyal_plus']);
       }
-      $data['depute_loyal_moins'] = $this->deputes_act_model->get_depute_loyal_moins(TRUE);
+      $data['depute_loyal_moins'] = $this->deputes_act_model->get_depute_loyal_moins();
       $data['depute_loyal_moins'] = array_merge($data['depute_loyal_moins'], $this->depute_edito->gender($data['depute_loyal_moins']['civ']));
       if (!empty($data['depute_loyal_moins'])) {
         $data['depute_loyal_moins']['couleurAssociee'] = $this->groupes_act_model->get_groupe_color($data['depute_loyal_moins']);

@@ -70,42 +70,52 @@
 
     public function get_n_deputes_inactive(){
       $query = $this->db->query('
-      SELECT COUNT(A.mpId) AS total
-      FROM
-      (
-        SELECT di.mpId
-        FROM deputes_inactifs di
-        GROUP BY di.mpId
-      ) A
+        SELECT count(mpId) AS total
+        FROM deputes_all
+        WHERE legislature = 15 AND dateFin IS NOT NULL
       ');
       return $query->row_array();
     }
 
-    public function get_deputes_gender(){
-      $query = $this->db->query('
-        SELECT COUNT(da.civ) AS n, ROUND(COUNT(da.civ)*100/577) AS percentage,
-          CASE
-            WHEN da.civ = "M." THEN "male"
-            WHEN da.civ = "Mme" THEN "female"
-          END AS gender
-        FROM deputes_actifs da
-        GROUP BY da.civ
-      ');
+    public function get_deputes_gender($legislature){
+      if ($legislature == legislature_current()) {
+        $query = $this->db->query('
+          SELECT COUNT(da.civ) AS n, ROUND(COUNT(da.civ)*100/577) AS percentage,
+            CASE
+              WHEN da.civ = "M." THEN "male"
+              WHEN da.civ = "Mme" THEN "female"
+            END AS gender
+          FROM deputes_all da
+          WHERE da.legislature = '.$legislature.' AND da.dateFin IS NULL
+          GROUP BY da.civ
+        ');
+      } else {
+        $query = $this->db->query('
+          SELECT COUNT(da.civ) AS n, ROUND(COUNT(da.civ)*100/577) AS percentage,
+            CASE
+              WHEN da.civ = "M." THEN "male"
+              WHEN da.civ = "Mme" THEN "female"
+            END AS gender
+          FROM deputes_all da
+          WHERE da.legislature = '.$legislature.'
+          GROUP BY da.civ
+        ');
+      }
+
       return $query->result_array();
     }
 
     public function get_groupes_inactifs(){
       $query = $this->db->query('
-        SELECT A.libelle, A.libelleAbrev
+        SELECT A.*
         FROM
         (
-        SELECT di.*, mg.organeRef, o.libelle, o.libelleAbrev, o.couleurAssociee
-        FROM deputes_inactifs di
-        LEFT JOIN (SELECT mpId, MAX(dateFin) AS maxDateFin FROM mandat_groupe GROUP BY mpId) AS S ON di.mpId = S.mpId
-        LEFT JOIN mandat_groupe mg ON di.mpId = mg.mpId AND mg.dateFin = S.maxDateFin
-        LEFT JOIN organes o ON o.uid = mg.organeRef
+          SELECT da.libelle, da.libelleAbrev
+          FROM deputes_all da
+          WHERE da.legislature = 15 AND da.dateFin IS NOT NULL
+          GROUP BY da.groupeId
         ) A
-        GROUP BY libelle
+        WHERE A.libelle IS NOT NULL
       ');
       return $query->result_array();
     }
@@ -113,15 +123,17 @@
     public function get_depute_individual($nameUrl, $dpt){
       $query = $this->db->query('
         SELECT
-          d.*,
-          substr(d.mpId, 3) AS idImage,
+          dl.*, dl.libelle_2 AS dptLibelle2,
+          substr(dl.mpId, 3) AS idImage,
           h.mandatesN, h.mpLength, h.lengthEdited,
           dc.facebook, dc.twitter, dc.website, dc.mailAn,
-          date_format(d.dateFinMP, "%d %M %Y") AS dateFinMpFR
-        FROM deputes_last d
-        LEFT JOIN history_per_mps_average h ON d.mpId = h.mpId
-        LEFT JOIN deputes_contacts_cleaned dc ON d.mpId = dc.mpId
-        WHERE d.nameUrl = "'.$nameUrl.'" AND dptSlug = "'.$dpt.'"
+          date_format(dl.dateFin, "%d %M %Y") AS dateFinMpFR,
+          d.birthDate, d.birthCity
+        FROM deputes_last dl
+        LEFT JOIN history_per_mps_average h ON dl.mpId = h.mpId
+        LEFT JOIN deputes_contacts_cleaned dc ON dl.mpId = dc.mpId
+        LEFT JOIN deputes d ON dl.mpId = d.mpId
+        WHERE dl.nameUrl = "'.$nameUrl.'" AND dl.dptSlug = "'.$dpt.'"
       ');
 
       return $query->row_array();
@@ -148,49 +160,6 @@
       ');
 
       return $query->row_array();
-    }
-
-
-    // NEEDS TO BE REMOVED
-    public function get_depute_individual_old($nameUrl, $departement) {
-      $query = $this->db->query('
-      SELECT da.*,
-        substr(da.mpId, 3) AS idImage,
-        YEAR(current_timestamp()) - YEAR(da.birthDate) - CASE WHEN MONTH(current_timestamp()) < MONTH(da.birthDate) OR (MONTH(current_timestamp()) = MONTH(da.birthDate) AND DAY(current_timestamp()) < DAY(da.birthDate)) THEN 1 ELSE 0 END AS age,
-        dc.facebook, dc.twitter, dc.website, dc.mailAn,
-        h.mpLength, h.mandatesN, h.lengthEdited
-      FROM deputes_actifs da
-      LEFT JOIN mandat_groupe mg ON mg.mpId = da.mpId
-      LEFT JOIN organes o ON mg.organeRef = o.uid
-      LEFT JOIN deputes_contacts_cleaned dc ON dc.mpId = da.mpId
-      LEFT JOIN history_per_mps_average h ON h.mpId = da.mpId
-      WHERE da.nameUrl = "'.$nameUrl.'" AND da.dptSlug = "'.$departement.'" AND mg.preseance IN (SELECT MIN(preseance) FROM mandat_groupe WHERE mpId = da.mpId AND dateFin IS NULL)
-      ');
-
-      $result = $query->row_array();
-
-      if (empty($result)) {
-        $query = $this->db->query('
-          SELECT d.*,
-            substr(d.mpId, 3) AS idImage,
-            YEAR(current_timestamp()) - YEAR(d.birthDate) - CASE WHEN MONTH(current_timestamp()) < MONTH(d.birthDate) OR (MONTH(current_timestamp()) = MONTH(d.birthDate) AND DAY(current_timestamp()) < DAY(d.birthDate)) THEN 1 ELSE 0 END AS age,
-            dc.facebook, dc.twitter, dc.website, dc.mailAn,
-            h.mpLength, h.mandatesN, h.lengthEdited,
-            date_format(d.dateFinMP, "%d %M %Y") AS dateFinMpFR
-          FROM deputes_inactifs d
-          LEFT JOIN deputes_contacts_cleaned dc ON dc.mpId = d.mpId
-          LEFT JOIN history_per_mps_average h ON h.mpId = d.mpId
-          WHERE d.nameUrl = "'.$nameUrl.'" AND d.dptSlug = "'.$departement.'"
-        ');
-        $result = $query->row_array();
-        if (!empty($result)) {
-          $result['active'] = FALSE;
-        }
-      } else {
-        $result['active'] = TRUE;
-      }
-
-      return $result;
     }
 
     public function get_commission_parlementaire($depute_uid){
@@ -279,22 +248,22 @@
     }
 
 
-    public function get_other_deputes($groupe_id, $depute_name, $depute_uid, $active){
+    public function get_other_deputes($groupe_id, $depute_name, $depute_uid, $active, $legislature){
       if ($active == TRUE) {
         $query = $this->db->query('
-        SELECT *
-        FROM deputes_actifs da
-        WHERE da.groupeId = "'.$groupe_id.'" AND da.mpId != "'.$depute_uid.'"
-        ORDER BY da.nameLast < LEFT("'.$depute_name.'", 1), da.nameLast
-        LIMIT 15
+          SELECT *
+          FROM deputes_all da
+          WHERE da.groupeId = "'.$groupe_id.'" AND da.mpId != "'.$depute_uid.'" AND da.legislature = '.$legislature.'
+          ORDER BY da.nameLast < LEFT("'.$depute_name.'", 1), da.nameLast
+          LIMIT 15
         ');
       } else {
         $query = $this->db->query('
-        SELECT di.*
-        FROM deputes_inactifs di
-        WHERE di.mpId != "'.$depute_uid.'"
-        ORDER BY di.nameLast < LEFT ("'.$depute_name.'", 1), di.nameLast
-        LIMIT 15
+          SELECT da.*
+          FROM deputes_all da
+          WHERE da.mpId != "'.$depute_uid.'" AND da.dateFin IS NOT NULL AND da.legislature = 15
+          ORDER BY da.nameLast < LEFT ("'.$depute_name.'", 1), da.nameLast
+          LIMIT 15
         ');
       }
       return $query->result_array();
@@ -422,146 +391,103 @@
 
     public function get_depute_random(){
       $query = $this->db->query('
-        SELECT *
-        FROM deputes_actifs
-        ORDER BY RAND()
-        LIMIT 1
+        SELECT A.*, d.civ
+        FROM
+        (
+          SELECT *
+          FROM deputes_all da
+          WHERE legislature = '.legislature_current().' AND dateFin IS NULL
+          ORDER BY RAND()
+          LIMIT 1
+        ) A
+        LEFT JOIN deputes d ON d.mpId = A.mpId
       ');
       return $query->row_array();
     }
 
-    public function get_depute_vote_plus($six){
-      if ($six == TRUE) {
-        $query = $this->db->query('
-          SELECT A.mpId, A.score, A.classement, A.votesN, da.civ, da.nameFirst, da.nameLast, da.nameUrl, da.dptSlug, da.couleurAssociee, da.libelle, da.libelleAbrev, da.groupeId AS organeRef, da.departementNom AS electionDepartement, da.departementCode AS electionDepartementNumero
-          FROM (
-            SELECT *
-            FROM class_participation_six
-            WHERE score IN (
-            	SELECT MAX(score) AS maximum
-            	FROM class_participation_six
-              WHERE votesN > 200
-            	) AND votesN > 200
-          ) A
-          LEFT JOIN deputes_actifs da ON da.mpId = A.mpId
-          ORDER BY RAND()
-          LIMIT 1
-        ');
-      } else {
-        $query = $this->db->query('
-          SELECT A.mpId, A.score, A.classement, A.votesN, da.civ, da.nameFirst, da.nameLast, da.nameUrl, da.dptSlug, da.couleurAssociee, da.libelle, da.libelleAbrev, da.groupeId AS organeRef, da.departementNom AS electionDepartement, da.departementCode AS electionDepartementNumero
-          FROM
-          (
-            SELECT *
-            FROM class_participation
-            WHERE classement = 1
-          ) A
-          LEFT JOIN deputes_actifs da ON da.mpId = A.mpId
-        ');
-      }
-
-      return $query->row_array();
-    }
-
-    public function get_depute_vote_moins($six){
-      if ($six == TRUE) {
-        $query = $this->db->query('
+    public function get_depute_vote_plus(){
+      $query = $this->db->query('
         SELECT A.mpId, A.score, A.classement, A.votesN, da.civ, da.nameFirst, da.nameLast, da.nameUrl, da.dptSlug, da.couleurAssociee, da.libelle, da.libelleAbrev, da.groupeId AS organeRef, da.departementNom AS electionDepartement, da.departementCode AS electionDepartementNumero
         FROM (
           SELECT *
           FROM class_participation_six
           WHERE score IN (
-            SELECT MIN(score) AS maximum
+            SELECT MAX(score) AS maximum
             FROM class_participation_six
             WHERE votesN > 200
-            )
-          AND votesN > 200
+            ) AND votesN > 200
         ) A
-        LEFT JOIN deputes_actifs da ON da.mpId = A.mpId
+        LEFT JOIN deputes_all da ON da.mpId = A.mpId
+        WHERE da.legislature = '.legislature_current().' AND da.dateFin IS NULL
         ORDER BY RAND()
         LIMIT 1
-        ');
-      } else {
-        $query = $this->db->query('
-          SELECT A.mpId, A.score, A.classement, A.votesN, da.civ, da.nameFirst, da.nameLast, da.nameUrl, da.dptSlug, da.couleurAssociee, da.libelle, da.libelleAbrev, da.groupeId AS organeRef, da.departementNom AS electionDepartement, da.departementCode AS electionDepartementNumero
-          FROM
-          (
-            SELECT *
-            FROM class_participation
-            ORDER BY classement DESC
-            LIMIT 1
-          ) A
-          LEFT JOIN deputes_actifs da ON da.mpId = A.mpId
-        ');
-      }
+      ');
 
       return $query->row_array();
     }
 
-    public function get_depute_loyal_plus($six){
-      if ($six == TRUE) {
-        $query = $this->db->query('
-          SELECT A.mpId, A.score, A.classement, A.votesN, da.civ, da.nameFirst, da.nameLast, da.nameUrl, da.dptSlug, da.couleurAssociee, da.libelle, da.libelleAbrev, da.groupeId AS organeRef, da.departementNom AS electionDepartement, da.departementCode AS electionDepartementNumero
-          FROM
-          (
-            SELECT *
-            FROM class_loyaute_six
-            WHERE score IN (
-              SELECT MAX(score)
-              FROM class_loyaute_six
-              WHERE votesN > 50
-            ) AND votesN > 50
-            ) A
-          LEFT JOIN deputes_actifs da ON da.mpId = A.mpId
-          ORDER BY RAND()
-          LIMIT 1
-        ');
-      } else {
-        $query = $this->db->query('
-          SELECT A.mpId, A.score, A.classement, A.votesN, da.civ, da.nameFirst, da.nameLast, da.nameUrl, da.dptSlug, da.couleurAssociee, da.libelle, da.libelleAbrev, da.groupeId AS organeRef, da.departementNom AS electionDepartement, da.departementCode AS electionDepartementNumero
-          FROM
-          (
-            SELECT *
-            FROM class_loyaute
-            WHERE classement = 1
-          ) A
-          LEFT JOIN deputes_actifs da ON da.mpId = A.mpId
-        ');
-      }
+    public function get_depute_vote_moins(){
+      $query = $this->db->query('
+      SELECT A.mpId, A.score, A.classement, A.votesN, da.civ, da.nameFirst, da.nameLast, da.nameUrl, da.dptSlug, da.couleurAssociee, da.libelle, da.libelleAbrev, da.groupeId AS organeRef, da.departementNom AS electionDepartement, da.departementCode AS electionDepartementNumero
+      FROM (
+        SELECT *
+        FROM class_participation_six
+        WHERE score IN (
+          SELECT MIN(score) AS maximum
+          FROM class_participation_six
+          WHERE votesN > 200
+          )
+        AND votesN > 200
+      ) A
+      LEFT JOIN deputes_all da ON da.mpId = A.mpId
+      WHERE da.legislature = '.legislature_current().' AND da.dateFin IS NULL
+      ORDER BY RAND()
+      LIMIT 1
+      ');
+
       return $query->row_array();
     }
 
-    public function get_depute_loyal_moins($six){
-      if ($six == TRUE) {
-        $query = $this->db->query('
+    public function get_depute_loyal_plus(){
+      $query = $this->db->query('
         SELECT A.mpId, A.score, A.classement, A.votesN, da.civ, da.nameFirst, da.nameLast, da.nameUrl, da.dptSlug, da.couleurAssociee, da.libelle, da.libelleAbrev, da.groupeId AS organeRef, da.departementNom AS electionDepartement, da.departementCode AS electionDepartementNumero
         FROM
         (
           SELECT *
           FROM class_loyaute_six
           WHERE score IN (
-            SELECT MIN(score)
+            SELECT MAX(score)
             FROM class_loyaute_six
             WHERE votesN > 50
           ) AND votesN > 50
           ) A
-        LEFT JOIN deputes_actifs da ON da.mpId = A.mpId
+        LEFT JOIN deputes_all da ON da.mpId = A.mpId
+        WHERE da.legislature = '.legislature_current().' AND da.dateFin IS NULL
         ORDER BY RAND()
         LIMIT 1
-        ');
-      } else {
-        $query = $this->db->query('
-          SELECT A.mpId, A.score, A.classement, A.votesN, da.civ, da.nameFirst, da.nameLast, da.nameUrl, da.dptSlug, da.couleurAssociee, da.libelle, da.libelleAbrev, da.groupeId AS organeRef, da.departementNom AS electionDepartement, da.departementCode AS electionDepartementNumero
-          FROM
-          (
-            SELECT *
-            FROM class_loyaute
-            ORDER BY classement DESC
-            LIMIT 1
-          ) A
-          LEFT JOIN deputes_actifs da ON da.mpId = A.mpId
-        ');
-      }
+      ');
+
+      return $query->row_array();
+    }
+
+    public function get_depute_loyal_moins(){
+      $query = $this->db->query('
+      SELECT A.mpId, A.score, A.classement, A.votesN, da.civ, da.nameFirst, da.nameLast, da.nameUrl, da.dptSlug, da.couleurAssociee, da.libelle, da.libelleAbrev, da.groupeId AS organeRef, da.departementNom AS electionDepartement, da.departementCode AS electionDepartementNumero
+      FROM
+      (
+        SELECT *
+        FROM class_loyaute_six
+        WHERE score IN (
+          SELECT MIN(score)
+          FROM class_loyaute_six
+          WHERE votesN > 50
+        ) AND votesN > 50
+        ) A
+      LEFT JOIN deputes_all da ON da.mpId = A.mpId
+      WHERE da.legislature = '.legislature_current().' AND da.dateFin IS NULL
+      ORDER BY RAND()
+      LIMIT 1
+      ');
 
       return $query->row_array();
     }
@@ -756,34 +682,12 @@
         (
           SELECT ROUND(AVG(t1.score)*100) AS mean
           FROM class_majorite t1
-          LEFT JOIN deputes_actifs da ON t1.mpId = da.mpId
-          WHERE da.groupeId != "PO730964"
+          LEFT JOIN deputes_all da ON t1.mpId = da.mpId
+          WHERE da.groupeId != "'.majority_group().'"  AND legislature = 15 AND dateFin IS NULL
         ) B
       ');
 
-      $result = $query->row_array();
-
-      if (empty($result)) {
-        $query = $this->db->query('
-          SELECT A.*, B.*
-          FROM
-          (
-            SELECT classement, ROUND(score*100) AS score, votesN
-            FROM class_majorite_all
-            WHERE mpId = "'.$depute_uid.'"
-          ) A,
-          (
-            SELECT ROUND(AVG(t1.score)*100) AS mean
-            FROM class_majorite t1
-            LEFT JOIN deputes_actifs da ON t1.mpId = da.mpId
-            WHERE da.groupeId != "PO730964"
-          ) B
-        ');
-
-        $result = $query->row_array();
-      }
-
-      return $result;
+      return $query->row_array();
     }
 
   }

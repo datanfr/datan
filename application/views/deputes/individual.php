@@ -382,7 +382,7 @@
                             <?= $title ?> a participé à <?= $participation_commission['score'] ?> % des votes ayant un lien avec son domaine de spécialisation.
                           </p>
                           <p><?= ucfirst($gender['pronom']) ?> <?= $active == TRUE ? "vote" : "votait" ?> donc <b><?= $edito_participation_commission['phrase'] ?></b> que la moyenne des députés, qui est de <?= $participation_commission['mean'] ?> %.</p>
-                          <p>Ce score prend en compte les votes éléctroniques en séance publique sur les textes qui ont été examinés dans la commission du député (commission <?= $commission_parlementaire['commissionAbrege'] ?>). Ce sont sur ces textes que les élus sont susceptibles d'avoir un intérêt ou une expertise pariculière.</p>
+                          <p>Ce score prend en compte les votes éléctroniques en séance publique sur les textes qui ont été examinés dans la commission du député. Ce sont sur ces textes que les élus sont susceptibles d'avoir un intérêt ou une expertise pariculière.</p>
                           <p><i>Nous avons modifié le score de participation le 31 janvier 2021. Désormais, le score ne prend en compte que les textes en lien avec la commission du parlementaire du député.</i></p>
                         </div>
                       </div>
@@ -728,11 +728,6 @@
                 <a href="<?= base_url() ?>groupes/<?= mb_strtolower($group['libelleAbrev']) ?>">Voir tous les députés membres du groupe <?= $group['libelle'] ?> (<?= $group['libelleAbrev'] ?>)</a>
               <?php else: ?>
                 <a href="<?= base_url(); ?>deputes/inactifs">Tous les députés inactifs</a>
-              <?php endif; ?>
-
-              <?php if ($active == TRUE): ?>
-                <a href="<?= base_url() ?>groupes/<?= mb_strtolower($group['libelleAbrev']) ?>">Voir tous les députés membres du groupe <?= $group['libelle'] ?> (<?= $group['libelleAbrev'] ?>)</a>
-                <?php else: ?>
               <?php endif; ?>
             </div>
           </div>

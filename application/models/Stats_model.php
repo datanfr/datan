@@ -6,17 +6,17 @@
 
     public function get_mps_oldest($limit = 3){
       $query = $this->db->query('
-        SELECT A.*
-        FROM
-        (
-        	SELECT @s:=@s+1 AS "rank",
-        	da.civ, da.nameFirst, da.nameLast, da.nameUrl, da.libelle, da.libelleAbrev, da.mpId, da.dptSlug, da.couleurAssociee, da.departementNom, da.departementCode,
-        	YEAR(current_timestamp()) - YEAR(da.birthDate) - CASE WHEN MONTH(current_timestamp()) < MONTH(da.birthDate) OR (MONTH(current_timestamp()) = MONTH(da.birthDate) AND DAY(current_timestamp()) < DAY(da.birthDate)) THEN 1 ELSE 0 END AS age
-        	FROM deputes_actifs da,
-        	(SELECT @s:= 0) AS s
-        	ORDER BY age DESC
-        ) A
-        LIMIT '.$limit.'
+      SELECT A.*
+      FROM
+      (
+        SELECT @s:=@s+1 AS "rank",
+        da.civ, da.nameFirst, da.nameLast, da.nameUrl, da.age, da.libelle, da.libelleAbrev, da.mpId, da.dptSlug, da.couleurAssociee, da.departementNom, da.departementCode
+        FROM deputes_all da,
+          (SELECT @s:= 0) AS s
+          WHERE da.legislature = '.legislature_current().' AND da.dateFin IS NULL
+        ORDER BY da.age DESC
+      ) A
+      LIMIT '.$limit.'
       ');
       if ($limit == 1) {
         return $query->row_array();
@@ -33,12 +33,12 @@
         SELECT A.*
         FROM
         (
-        	SELECT @s:=@s+1 AS "rank",
-        	da.civ, da.nameFirst, da.nameLast, da.nameUrl, da.libelle, da.libelleAbrev, da.mpId, da.dptSlug, da.couleurAssociee, da.departementNom, da.departementCode,
-        	YEAR(current_timestamp()) - YEAR(da.birthDate) - CASE WHEN MONTH(current_timestamp()) < MONTH(da.birthDate) OR (MONTH(current_timestamp()) = MONTH(da.birthDate) AND DAY(current_timestamp()) < DAY(da.birthDate)) THEN 1 ELSE 0 END AS age
-        	FROM deputes_actifs da,
-        	(SELECT @s:= 0) AS s
-        	ORDER BY age DESC
+          SELECT @s:=@s+1 AS "rank",
+          da.civ, da.nameFirst, da.nameLast, da.nameUrl, da.age, da.libelle, da.libelleAbrev, da.mpId, da.dptSlug, da.couleurAssociee, da.departementNom, da.departementCode
+          FROM deputes_all da,
+            (SELECT @s:= 0) AS s
+            WHERE da.legislature = '.legislature_current().' AND da.dateFin IS NULL
+          ORDER BY da.age DESC
         ) A
         ORDER BY rank DESC
         LIMIT '.$limit.'
@@ -54,23 +54,25 @@
 
     public function get_ranking_age(){
       $query = $this->db->query('
-        SELECT @s:=@s+1 AS "rank",
-        da.civ, da.nameFirst, da.nameLast, da.nameUrl, da.libelle, da.libelleAbrev, da.mpId, da.dptSlug, da.age
-        FROM deputes_actifs da,
-        (SELECT @s:= 0) AS s
-        ORDER BY age DESC
+      SELECT @s:=@s+1 AS "rank",
+      da.civ, da.nameFirst, da.nameLast, da.nameUrl, da.libelle, da.libelleAbrev, da.mpId, da.dptSlug, da.age
+      FROM deputes_all da,
+      (SELECT @s:= 0) AS s
+      WHERE da.legislature = '.legislature_current().' AND da.dateFin IS NULL
+      ORDER BY age DESC
       ');
       return $query->result_array();
     }
 
     public function get_age_mean(){
       $query = $this->db->query('
-        SELECT ROUND(AVG(A.age), 1) AS mean
-        FROM
-        (
-        SELECT YEAR(current_timestamp()) - YEAR(da.birthDate) - CASE WHEN MONTH(current_timestamp()) < MONTH(da.birthDate) OR (MONTH(current_timestamp()) = MONTH(da.birthDate) AND DAY(current_timestamp()) < DAY(da.birthDate)) THEN 1 ELSE 0 END AS age
-        FROM deputes_actifs da
-        ) A
+      SELECT ROUND(AVG(A.age), 1) AS mean
+      FROM
+      (
+      SELECT d.age
+      FROM deputes_last d
+      WHERE d.legislature = '.legislature_current().' AND d.dateFin IS NOT NULL
+      ) A
       ');
 
       return $query->row_array();
@@ -78,25 +80,25 @@
 
     public function get_groups_women(){
       $query = $this->db->query('
-        SELECT @s:=@s+1 AS "rank", B.*
+      SELECT @s:=@s+1 AS "rank", B.*
+      FROM
+      (
+        SELECT A.*,
+        ROUND(female / n * 100) AS pct,
+        o.couleurAssociee, ge.effectif
         FROM
         (
-          SELECT A.*,
-          ROUND(female / n * 100) AS pct,
-          o.couleurAssociee, ge.effectif
-          FROM
-          (
-            SELECT libelle, libelleAbrev, COUNT(mpId) AS n, groupeId,
-            SUM(if(civ = "Mme", 1, 0)) AS female
-            FROM deputes_actifs
-            WHERE libelleAbrev != "NI"
-            GROUP BY libelle
-          ) A
-          LEFT JOIN organes o ON A.groupeId = o.uid
-          LEFT JOIN groupes_effectif ge ON A.groupeId = ge.organeRef
-        ) B,
-        (SELECT @s:= 0) AS s
-        ORDER BY B.pct DESC
+          SELECT libelle, libelleAbrev, COUNT(mpId) AS n, groupeId,
+          SUM(if(civ = "Mme", 1, 0)) AS female
+          FROM deputes_all
+          WHERE libelleAbrev != "NI" AND legislature = '.legislature_current().' AND dateFin IS NULL
+          GROUP BY libelle
+        ) A
+        LEFT JOIN organes o ON A.groupeId = o.uid
+        LEFT JOIN groupes_effectif ge ON A.groupeId = ge.organeRef
+      ) B,
+      (SELECT @s:= 0) AS s
+      ORDER BY B.pct DESC
       ');
 
       return $query->result_array();
@@ -113,8 +115,8 @@
         (
         SELECT libelle, libelleAbrev, COUNT(mpId) AS n,
         SUM(if(civ = "Mme", 1, 0)) AS female
-        FROM deputes_actifs
-        WHERE libelleAbrev != "NI"
+        FROM deputes_all
+        WHERE libelleAbrev != "NI" AND legislature = '.legislature_current().' AND dateFin IS NULL
         GROUP BY libelle
         ) A
         ) B,
@@ -143,8 +145,8 @@
         (
         SELECT libelle, libelleAbrev, COUNT(mpId) AS n,
         SUM(if(civ = "Mme", 1, 0)) AS female
-        FROM deputes_actifs
-        WHERE libelleAbrev != "NI"
+        FROM deputes_all
+        WHERE libelleAbrev != "NI" AND legislature = '.legislature_current().' AND dateFin IS NULL
         GROUP BY libelle
         ) A
         ) B,
@@ -162,9 +164,10 @@
 
     public function get_mps_loyalty(){
       $query = $this->db->query('
-        SELECT cl.*, ROUND(cl.score*100) AS score, da.civ, da.nameLast, da.nameFirst, da.nameUrl, da.libelle, da.libelleAbrev, da.dptSlug, da.couleurAssociee, da.departementNom, da.departementCode
-        FROM class_loyaute cl
-        LEFT JOIN deputes_actifs da ON cl.mpId = da.mpId
+      SELECT cl.*, ROUND(cl.score*100) AS score, da.civ, da.nameLast, da.nameFirst, da.nameUrl, da.libelle, da.libelleAbrev, da.dptSlug, da.couleurAssociee, da.departementNom, da.departementCode
+      FROM class_loyaute cl
+      LEFT JOIN deputes_all da ON cl.mpId = da.mpId
+      WHERE da.legislature = '.legislature_current().' AND da.dateFin IS NULL
       ');
 
       return $query->result_array();
@@ -172,15 +175,15 @@
 
     public function get_mps_loyalty_more(){
       $query = $this->db->query('
-        SELECT A.classement AS rank, ROUND(A.score * 100) AS score, da.nameLast, da.nameFirst, da.nameUrl, da.libelle, da.libelleAbrev, da.groupeId, da.dptSlug
-        FROM
-        (
-        SELECT *
-        FROM class_loyaute
-        LIMIT 3
-        ) A
-        LEFT JOIN deputes_actifs da ON A.mpId = da.mpId
-        ORDER BY classement ASC
+      SELECT A.classement AS rank, ROUND(A.score * 100) AS score, da.nameLast, da.nameFirst, da.nameUrl, da.libelle, da.libelleAbrev, da.groupeId, da.dptSlug
+      FROM
+      (
+      SELECT *
+      FROM class_loyaute
+      LIMIT 3
+      ) A
+      LEFT JOIN deputes_all da ON A.mpId = da.mpId WHERE da.legislature = '.legislature_current().' AND da.dateFin IS NULL
+      ORDER BY classement ASC
       ');
 
       return $query->result_array();
@@ -196,7 +199,7 @@
         ORDER BY classement DESC
         LIMIT 3
         ) A
-        LEFT JOIN deputes_actifs da ON A.mpId = da.mpId
+        LEFT JOIN deputes_all da ON A.mpId = da.mpId WHERE da.legislature = '.legislature_current().' AND da.dateFin IS NULL
         ORDER BY classement ASC
       ');
 
@@ -249,15 +252,15 @@
 
     public function get_mps_participation(){
       $query = $this->db->query('
-        SELECT @s:=@s+1 AS "rank", A.*
-        FROM
-        (
-          SELECT cp.*, da.nameFirst, da.nameLast, da.civ, da.libelle, da.libelleAbrev, da.dptSlug, da.nameUrl, da.couleurAssociee, da.departementNom, da.departementCode
-          FROM class_participation cp
-          LEFT JOIN deputes_actifs da ON cp.mpId = da.mpId
-          WHERE votesN >= 100
-        ) A,
-        (SELECT @s:= 0) AS s
+      SELECT @s:=@s+1 AS "rank", A.*
+      FROM
+      (
+        SELECT cp.*, da.nameFirst, da.nameLast, da.civ, da.libelle, da.libelleAbrev, da.dptSlug, da.nameUrl, da.couleurAssociee, da.departementNom, da.departementCode
+        FROM class_participation cp
+        LEFT JOIN deputes_all da ON cp.mpId = da.mpId AND da.legislature = '.legislature_current().' AND da.dateFin IS NULL
+        WHERE votesN >= 100
+      ) A,
+      (SELECT @s:= 0) AS s
       ');
 
       return $query->result_array();
@@ -270,10 +273,10 @@
         (
           SELECT cp.*, da.nameFirst, da.nameLast, da.civ, da.libelle, da.libelleAbrev, da.dptSlug, da.nameUrl, da.couleurAssociee, da.departementNom, da.departementCode, o.libelleAbrege AS commission
           FROM class_participation_commission cp
-          LEFT JOIN deputes_actifs da ON cp.mpId = da.mpId
+          LEFT JOIN deputes_all da ON cp.mpId = da.mpId
           LEFT JOIN mandat_secondaire ms ON cp.mpId = ms.mpId
           LEFT JOIN organes o ON ms.organeRef = o.uid
-          WHERE ms.dateFin IS NULL AND ms.typeOrgane = "COMPER" AND ms.codeQualite = "Membre"
+          WHERE ms.dateFin IS NULL AND ms.typeOrgane = "COMPER" AND ms.codeQualite = "Membre" AND da.legislature = '.legislature_current().' AND da.dateFin IS NULL 
           ORDER BY cp.classement ASC
         ) A,
         (SELECT @s:= 0) AS s

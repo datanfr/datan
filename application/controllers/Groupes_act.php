@@ -59,7 +59,7 @@
     //INDEX - Homepage with all inactive groups //
     public function inactifs(){
       $data['active'] = FALSE;
-      $data['groupes'] = $this->groupes_act_model->get_groupes_all($data['active'], TRUE);
+      $data['groupes'] = $this->groupes_act_model->get_groupes_all($data['active'], legislature_current());
       $data['number_groupes_inactive'] = $this->groupes_act_model->get_number_inactive_groupes();
       $data['number_groupes_active'] = $this->groupes_act_model->get_number_active_groupes();
 
@@ -100,9 +100,12 @@
 
     //INDIVIDUAL - individual page by group //
     public function individual($groupe_slug){
+      $data['legislature'] = legislature_current();
+      $legislature = $data['legislature'];
       // Query 1 Informations principales
       $groupe_slug = mb_strtoupper($groupe_slug);
-      $data['groupe'] = $this->groupes_act_model->get_groupes_individal($groupe_slug);
+      $data['groupe'] = $this->groupes_act_model->get_groupes_individal($groupe_slug, $legislature);
+      print_r($data['groupe']);
 
       if (empty($data['groupe'])) {
         show_404();
@@ -161,7 +164,7 @@
       $data['ageMean'] = round($data['ageMean']['mean']);
       $data['ageEdited'] = $this->functions_datan->old_young($data['groupe']['age'], $data['ageMean']);
       // Get mean of women in the National Assembly
-      $data['womenPctTotal'] = $this->deputes_act_model->get_deputes_gender();
+      $data['womenPctTotal'] = $this->deputes_act_model->get_deputes_gender($legislature);
       $data['womenPctTotal'] = $data['womenPctTotal'][1]['percentage'];
       $data['womenEdited'] = $this->functions_datan->more_less($data['groupe']['womenPct'], $data['womenPctTotal']);
 
@@ -216,7 +219,7 @@
       // Query 5 Edito
       $data['edito'] = $this->groupes_edito->edito($groupe_ab, $groupe_opposition, $data['groupes_positionnement']);
       // GET ALL OTHER GROUPES
-      $data['groupesActifs'] = $this->groupes_act_model->get_groupes_all(TRUE);
+      $data['groupesActifs'] = $this->groupes_act_model->get_groupes_all(TRUE, $legislature);
 
       // Meta
       $data['url'] = $this->meta_model->get_url();
@@ -373,7 +376,7 @@
       if ($data['groupe']['uid'] != 'PO723569') {
         $data['membres'] = array_slice($data['membres'], 0, 20);
       }
-      $data['groupesActifs'] = $this->groupes_act_model->get_groupes_all(TRUE);
+      $data['groupesActifs'] = $this->groupes_act_model->get_groupes_all(TRUE, legislature_current());
 
       // Query - get active fields + votes by field + check the logos
       $data['fields'] = $this->fields_model->get_active_fields();
@@ -491,7 +494,7 @@
       if ($data['groupe']['uid'] != 'PO723569') {
         $data['membres'] = array_slice($data['membres'], 0, 20);
       }
-      $data['groupesActifs'] = $this->groupes_act_model->get_groupes_all(TRUE);
+      $data['groupesActifs'] = $this->groupes_act_model->get_groupes_all(TRUE, legislature_current());
 
       // Query fields
       $data['field'] = $this->fields_model->get_field($field);
