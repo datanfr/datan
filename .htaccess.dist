@@ -31,3 +31,7 @@
   SetEnv DATABASE_PASSWORD password_example
 
 </IfModule>
+
+<IfModule mod_env.c>
+    SetEnv CI_ENV production
+</IfModule>
