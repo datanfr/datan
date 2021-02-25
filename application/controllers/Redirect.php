@@ -40,15 +40,15 @@
 
       }
 
-      echo "<br>";
-      echo "code => ".$code;
-      echo "<br>";
-      echo "dpt =>".$dpt;
-      echo "<br>";
-      echo "city =>".$city;
-      echo "<br>";
-      echo "new city =>".$newCity;
-      echo "<br>";
+      //echo "<br>";
+      //echo "code => ".$code;
+      //echo "<br>";
+      //echo "dpt =>".$dpt;
+      //echo "<br>";
+      //echo "city =>".$city;
+      //echo "<br>";
+      //echo "new city =>".$newCity;
+      //echo "<br>";
 
 
 
@@ -57,6 +57,7 @@
         $url = base_url()."deputes/".$result['dpt_slug']."/ville_".$result['commune_slug'];
         redirect($url);
       } else {
+        echo "Commune could not be found";
         echo "<br>";
         echo "code => ".$code;
         echo "<br>";
