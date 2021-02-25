@@ -14,6 +14,10 @@
 
     public function index($legislature = NULL) {
 
+      if ($legislature == legislature_current()) {
+        redirect('deputes');
+      }
+
       if ($legislature == NULL) {
         $legislature = legislature_current();
       }
