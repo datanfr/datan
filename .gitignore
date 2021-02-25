@@ -20,17 +20,12 @@ application/logs/*
 node_modules
 test
 .sass-cache
-manifest.json
-sw.js
 package-lock.json
-package.json
 main.css
 main.css.map
-main.scss
-composer.json
-Gruntfile.js
 .gitattributes
 ressources
+.htaccess
 
 #script folder
 scripts/*.zip
@@ -44,5 +39,3 @@ assets/imgs/deputes_original
 assets/imgs/deputes_ogp
 assets/imgs/deputes_webp
 assets/data/deputes_json.json
-
-.htaccess
