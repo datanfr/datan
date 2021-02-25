@@ -21,8 +21,6 @@ node_modules
 test
 .sass-cache
 package-lock.json
-main.css
-main.css.map
 .gitattributes
 ressources
 .htaccess
