@@ -72,12 +72,11 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 */
 $active_group = 'votes';
 $query_builder = TRUE;
-
 $db['votes'] = array(
 	'dsn'	=> '',
 	'hostname' => 'localhost',
-	'username' => 'root',
-	'password' => '',
+	'username' => $_SERVER['DATABASE_USERNAME'],
+	'password' => $_SERVER['DATABASE_PASSWORD'],
 	'database' => 'datan',
 	'dbdriver' => 'mysqli',
 	'dbprefix' => '',
