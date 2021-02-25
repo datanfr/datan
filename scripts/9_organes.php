@@ -16,7 +16,7 @@
     <?php
       $url = $_SERVER['REQUEST_URI'];
       $url = str_replace(array("/", "datan", "scripts", ".php"), "", $url);
-      $url_current = substr($url, 0, 2);
+      $url_current = substr($url, 0, 1);
       $url_next = $url_current + 1;
     ?>
 		<div class="container" style="background-color: #e9ecef;">

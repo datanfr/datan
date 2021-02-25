@@ -108,7 +108,7 @@
                   $age = $age_data['age'];
                 }
 
-                $women_response = $bdd->query('
+                $women_response2 = $bdd->query('
                 SELECT A.*, ROUND(female / n * 100, 2) AS pct
                 FROM
                 (
@@ -121,9 +121,9 @@
                 ) A
                 ');
 
-                while ($women_data = $women_response->fetch()) {
-                  $womenPct = $women_data['pct'];
-                  $womenN = $women_data['female'];
+                while ($women_data2 = $women_response2->fetch()) {
+                  $womenPct = $women_data2['pct'];
+                  $womenN = $women_data2['female'];
                 }
 
               }
