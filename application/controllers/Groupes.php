@@ -279,7 +279,7 @@
     }
 
     public function individual_membres($groupe){
-      $data['groupe'] = $this->groupes_model->get_groupes_individal($groupe);
+      $data['groupe'] = $this->groupes_model->get_groupes_individal($groupe, legislature_current());
 
       if (empty($data['groupe'])) {
         show_404();
@@ -341,7 +341,7 @@
 
     /* page: groupes/x/votes */
     public function individual_votes_datan($groupe){
-      $data['groupe'] = $this->groupes_model->get_groupes_individal($groupe);
+      $data['groupe'] = $this->groupes_model->get_groupes_individal($groupe, legislature_current());
       if (empty($data['groupe'])) {
         show_404();
       };
@@ -446,7 +446,7 @@
 
     /* page: groupes/x/votes/field */
     public function individual_votes_datan_field($groupe, $field){
-      $data['groupe'] = $this->groupes_model->get_groupes_individal($groupe);
+      $data['groupe'] = $this->groupes_model->get_groupes_individal($groupe, legislature_current());
 
       if (empty($data['groupe'])) {
         show_404();
@@ -547,7 +547,7 @@
 
     /* page: groupes/votes/all */
     public function individual_votes_all($groupe){
-      $data['groupe'] = $this->groupes_model->get_groupes_individal($groupe);
+      $data['groupe'] = $this->groupes_model->get_groupes_individal($groupe, legislature_current());
 
       if (empty($data['groupe'])) {
         show_404();
