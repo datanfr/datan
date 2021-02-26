@@ -16,7 +16,11 @@
   </head>
   <!--
 
-  This script creates the table 'class_groups_cohesion'
+  This script creates the table 'class_groups'.
+  The table merge information from the previous
+  ** class_groups_cohesion
+  ** clas_groups_majorite
+  ** class_groups_participation
 
   -->
   <body>
@@ -49,21 +53,52 @@
         	include 'bdd-connexion.php';
 
           $bdd->query('
-            DROP TABLE IF EXISTS class_groups_cohesion;
-            CREATE TABLE class_groups_cohesion AS
-            SELECT  A.*,
-            CASE WHEN o.dateFin IS NULL THEN 1 ELSE 0 END AS active,
-            curdate() AS dateMaj
+            DROP TABLE IF EXISTS class_groups;
+
+            CREATE TABLE class_groups AS
+            SELECT c.*, p.participation, m.majoriteAccord, m.votesN, curdate() AS dateMaj
             FROM
             (
-            SELECT organeRef, legislature, ROUND(AVG(cohesion),3) AS cohesion
-            FROM groupes_cohesion
-            GROUP BY organeRef
-            ) A
-            LEFT JOIN organes o ON A.organeRef = o.uid
-            ORDER BY A.cohesion DESC;
-            ALTER TABLE class_groups_cohesion ADD INDEX idx_organeRef (organeRef);
-            ALTER TABLE class_groups_cohesion ADD INDEX idx_active (active);
+            	SELECT gc.organeRef, gc.legislature, ROUND(AVG(gc.cohesion),3) AS cohesion,
+            	CASE WHEN o.dateFin IS NULL THEN 1 ELSE 0 END AS active
+            	FROM groupes_cohesion gc
+            	LEFT JOIN organes o ON o.uid = gc.organeRef
+            	GROUP BY gc.organeRef
+            ) c
+
+            LEFT JOIN
+
+            (
+
+            SELECT B.organeRef, AVG(B.participation_rate) AS participation
+            FROM
+            (
+            	SELECT A.*, A.total / A.n AS participation_rate
+            	FROM
+            	(
+            		SELECT voteNumero, organeRef, nombreMembresGroupe as n, nombrePours as pour, nombreContres as contre, nombreAbstentions as abstention, nonVotants as nv, nonVotantsVolontaires as nvv, nombrePours+nombreContres+nombreAbstentions as total
+            		FROM votes_groupes
+            	) A
+            ) B
+            GROUP BY B.organeRef
+
+            ) p ON p.organeRef = c.organeRef
+
+            LEFT JOIN
+
+            (
+
+            SELECT ga.organeRef, AVG(ga.PO730964) AS majoriteAccord, COUNT(ga.PO730964) AS votesN,
+            CASE WHEN o.dateFin IS NULL THEN 1 ELSE 0 END AS active
+            FROM groupes_accord ga
+            LEFT JOIN organes o ON o.uid = ga.organeRef
+            WHERE ga.organeRef != "PO730964"
+            GROUP BY ga.organeRef
+
+            ) m ON m.organeRef = c.organeRef;
+
+            ALTER TABLE class_groups ADD INDEX idx_organeRef (organeRef);
+            ALTER TABLE class_groups ADD INDEX idx_active (active);
           ');
 
         ?>
