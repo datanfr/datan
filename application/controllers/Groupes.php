@@ -105,7 +105,7 @@
       // Query 1 Informations principales
       $groupe_slug = mb_strtoupper($groupe_slug);
       $data['groupe'] = $this->groupes_model->get_groupes_individal($groupe_slug, $legislature);
-      print_r($data['groupe']);
+      //print_r($data['groupe']);
 
       if (empty($data['groupe'])) {
         show_404();
