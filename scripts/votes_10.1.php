@@ -43,80 +43,32 @@
 			</div>
 			<div class="row mt-3">
         <div class="col-12">
-          <table class="table">
-            <thead>
-                <tr>
-                  <th scope="col">classement</th>
-                  <th scope="col">depute_id</th>
-                  <th scope="col">score_participation</th>
-                  <th scope="col">nombre_votes</th>
-                  <th scope="col">date_maj</th>
-                </tr>
-              </thead>
-              <tbody>
+
         <?php
 
-        // CONNEXION SQL //
         	include 'bdd-connexion.php';
 
           $bdd->query('
             DROP TABLE IF EXISTS class_participation_commission;
             CREATE TABLE class_participation_commission
-              (id INT(5) NOT NULL AUTO_INCREMENT,
-              classement INT(5) NOT NULL,
-              mpId VARCHAR(25) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
-              score DECIMAL(3,2) NOT NULL,
-              votesN INT(15) NOT NULL,
-              dateMaj DATE NOT NULL,
-              PRIMARY KEY (id));
-            ALTER TABLE class_participation_commission ADD INDEX idx_mpId (mpId);
-          ');
-
-          $result = $bdd->query('
-          SELECT @s:=@s+1 AS "classement", B.*
-          FROM
-          (
-            SELECT A.*
-            FROM (
-              SELECT v.mpId, ROUND(AVG(v.participation),2) AS score, COUNT(v.participation) AS votesN, ROUND(COUNT(v.participation)/100) AS "index"
-              FROM votes_participation_commission v
-              WHERE v.participation IS NOT NULL
-              GROUP BY v.mpId
-              ORDER BY ROUND(COUNT(v.participation)/100) DESC, AVG(v.participation) DESC
+            SELECT A.*, da.legislature,
+            CASE WHEN da.dateFin IS NULL THEN 1 ELSE 0 END AS active,
+            curdate() AS dateMaj
+            FROM
+            (
+            SELECT v.mpId, ROUND(AVG(v.participation),2) AS score, COUNT(v.participation) AS votesN, ROUND(COUNT(v.participation)/100) AS "index"
+            FROM votes_participation_commission v
+            WHERE v.participation IS NOT NULL
+            GROUP BY v.mpId
+            ORDER BY ROUND(COUNT(v.participation)/100) DESC, AVG(v.participation) DESC
             ) A
-            WHERE A.mpId IN (
-              SELECT mpId
-              FROM deputes_all
-              WHERE legislature = 15 AND dateFin IS NULL
-            )
-          ) B,
-          (SELECT @s:= 0) AS s
-          ORDER BY B.score DESC, B.votesN DESC
+            LEFT JOIN deputes_all da ON da.mpId = A.mpId AND da.legislature = 15;
+            ALTER TABLE class_participation_commission ADD INDEX idx_mpId (mpId);
+            ALTER TABLE class_participation_commission ADD INDEX idx_active (active);
           ');
-
-          while ($depute = $result->fetch()) {
-            $classement = $depute["classement"];
-            $mpId = $depute["mpId"];
-            $score = $depute["score"];
-            $votesN = $depute["votesN"];
-            $dateMaj = date('Y-m-d');
-
-            echo "<tr>";
-            echo "<td>".$classement."</td>";
-            echo "<td>".$mpId."</td>";
-            echo "<td>".$score."</td>";
-            echo "<td>".$votesN."</td>";
-            echo "<td>".$dateMaj."</td>";
-            echo "</tr>";
-
-
-            $sql = $bdd->prepare("INSERT INTO class_participation_commission (classement, mpId, score, votesN, dateMaj) VALUES (:classement, :mpId, :score, :votesN, :dateMaj)");
-            $sql->execute(array('classement' => $classement, 'mpId' => $mpId, 'score' => $score, 'votesN' => $votesN, 'dateMaj' => $dateMaj));
-          }
 
         ?>
-            </tbody>
-          </table>
+
         </div>
       </div>
     </div>

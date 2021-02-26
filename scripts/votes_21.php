@@ -43,34 +43,7 @@
 			</div>
 			<div class="row mt-3">
         <div class="col-12">
-        <?php
-
-        // CONNEXION SQL //
-        	include 'bdd-connexion.php';
-
-          $bdd->query('
-            DROP TABLE IF EXISTS class_groups_majorite_all;
-            CREATE TABLE class_groups_majorite_all AS
-            SELECT @s:=@s+1 AS "classement", C.*
-            FROM
-            (
-            SELECT A.*
-            FROM
-            (
-            SELECT organeRef, AVG(PO730964) AS majoriteAccord, COUNT(PO730964) AS votesN
-            FROM groupes_accord
-            GROUP BY organeRef
-            ) A
-            LEFT JOIN organes o ON A.organeRef = o.uid
-            WHERE A.organeRef != "PO730964"
-            ORDER BY A.majoriteAccord DESC
-            ) C,
-            (SELECT @s:= 0) AS s;
-            ALTER TABLE class_groups_majorite_all ADD INDEX idx_organeRef (organeRef);
-          ');
-
-        ?>
-
+          <p>This script and db table has been removed.</p>
         </div>
       </div>
     </div>

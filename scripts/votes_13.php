@@ -16,7 +16,7 @@
   </head>
   <!--
 
-  This script creates the table 'class_loyaute_all' using the deputes_loyaute ==> the LAST group
+  This script creates the table 'class_loyaute' using the deputes_loyaute ==> the LAST group
 
   -->
   <body>
@@ -43,80 +43,27 @@
 			</div>
 			<div class="row mt-3">
         <div class="col-12">
-          <table class="table">
-            <thead>
-                <tr>
-                  <th scope="col">classement</th>
-                  <th scope="col">mpId</th>
-                  <th scope="col">score</th>
-                  <th scope="col">votesM</th>
-                  <th scope="col">dateMaj</th>
-                </tr>
-              </thead>
-              <tbody>
         <?php
 
         // CONNEXION SQL //
         	include 'bdd-connexion.php';
 
           $bdd->query('
-            DROP TABLE IF EXISTS class_loyaute_all;
-            CREATE TABLE class_loyaute_all
-              (id INT(5) NOT NULL AUTO_INCREMENT,
-              classement INT(5) NOT NULL,
-              mpId VARCHAR(25) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
-              score DECIMAL(4,3) NOT NULL,
-              votesN INT(15) NOT NULL,
-              dateMaj DATE NOT NULL,
-              PRIMARY KEY (id));
-              ALTER TABLE class_loyaute_all ADD INDEX idx_mpId (mpId);
+            DROP TABLE IF EXISTS class_loyaute;
+            CREATE TABLE class_loyaute AS
+            SELECT dl.mpId, dl.score, dl.votesN,
+            CASE WHEN da.dateFin IS NULL THEN 1 ELSE 0 END AS active,
+            curdate() AS dateMaj
+            FROM deputes_loyaute dl
+            LEFT JOIN deputes_all da ON dl.mpId = da.mpId AND dl.mandatId = da.groupeMandat
+            WHERE da.legislature = 15
+            ORDER BY dl.score DESC, dl.votesN DESC;
+            ALTER TABLE class_loyaute ADD INDEX idx_mpId (mpId);
+            ALTER TABLE class_loyaute ADD INDEX idx_active (active);
           ');
 
-          $result = $bdd->query('
-          SELECT @s:=@s+1 AS "classement", B.*
-          FROM
-          (
-          /* TO GET THE SCORE OF UNACTIVE MPs */
-          SELECT A.mpId, ROUND(AVG(v.scoreLoyaute), 3) AS score, COUNT(v.scoreLoyaute) AS votesN, 0 AS active
-          FROM
-          (SELECT *
-          FROM deputes_all
-          WHERE legislature = 15 AND dateFin IS NOT NULL
-          ) A
-          LEFT JOIN votes_scores v ON A.groupeMandat = v.organeId
-          GROUP BY A.mpId
-          UNION ALL
-          /* TO GET THE SCORE OF ACTIVE MPs */
-          SELECT mpId, score, votesN, 1 AS active
-          FROM class_loyaute
-          ) B,
-          (SELECT @s:=0) AS s
-          WHERE B.score IS NOT NULL
-          ORDER BY B.score DESC, B.votesN DESC
-          ');
-
-          while ($depute = $result->fetch()) {
-            $classement = $depute["classement"];
-            $mpId = $depute["mpId"];
-            $score = $depute["score"];
-            $votesN = $depute["votesN"];
-            $dateMaj = date('Y-m-d');
-
-            echo "<tr>";
-            echo "<td>".$classement."</td>";
-            echo "<td>".$mpId."</td>";
-            echo "<td>".$score."</td>";
-            echo "<td>".$votesN."</td>";
-            echo "<td>".$dateMaj."</td>";
-            echo "</tr>";
-
-
-            $sql = $bdd->prepare("INSERT INTO class_loyaute_all (classement, mpId, score, votesN, dateMaj) VALUES (:classement, :mpId, :score, :votesN, :dateMaj)");
-            $sql->execute(array('classement' => $classement, 'mpId' => $mpId, 'score' => $score, 'votesN' => $votesN, 'dateMaj' => $dateMaj));
-          }
         ?>
-            </tbody>
-          </table>
+
         </div>
       </div>
     </div>

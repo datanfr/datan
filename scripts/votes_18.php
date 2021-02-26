@@ -51,13 +51,12 @@
           $bdd->query('
             DROP TABLE IF EXISTS class_groups_participation;
             CREATE TABLE class_groups_participation AS
-            SELECT  @s:=@s+1 AS "classement", D.*, curdate() AS dateMaj
+            SELECT C.*,
+            curdate() AS dateMaj
             FROM
             (
-            SELECT C.*
-            FROM
-            (
-            SELECT B.organeRef, AVG(B.participation_rate) AS participation
+            SELECT B.organeRef, AVG(B.participation_rate) AS participation,
+            CASE WHEN o.dateFin IS NULL THEN 1 ELSE 0 END AS active
             FROM
             (
             SELECT A.*, A.total / A.n AS participation_rate
@@ -68,14 +67,12 @@
             WHERE legislature = 15
             ) A
             ) B
-            GROUP BY organeRef
+            LEFT JOIN organes o ON o.uid = B.organeRef
+            GROUP BY B.organeRef
             ) C
-            LEFT JOIN organes o ON o.uid = C.organeRef
-            WHERE o.dateFin IS NULL
-            ORDER BY C.participation DESC
-            ) D,
-            (SELECT @s:= 0) AS s;
+            ORDER BY C.participation DESC;
             ALTER TABLE class_groups_participation ADD INDEX idx_organeRef (organeRef);
+            ALTER TABLE class_groups_participation ADD INDEX idx_active (active);
           ');
 
         ?>

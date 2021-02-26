@@ -51,10 +51,9 @@
           $bdd->query('
             DROP TABLE IF EXISTS class_groups_cohesion;
             CREATE TABLE class_groups_cohesion AS
-            SELECT @s:=@s+1 AS "classement", B.*, curdate() AS dateMaj
-            FROM
-            (
-            SELECT  A.*
+            SELECT  A.*,
+            CASE WHEN o.dateFin IS NULL THEN 1 ELSE 0 END AS active,
+            curdate() AS dateMaj
             FROM
             (
             SELECT organeRef, legislature, ROUND(AVG(cohesion),3) AS cohesion
@@ -62,11 +61,9 @@
             GROUP BY organeRef
             ) A
             LEFT JOIN organes o ON A.organeRef = o.uid
-            WHERE o.dateFin IS NULL
-            ORDER BY A.cohesion DESC
-            ) B,
-            (SELECT @s:= 0) AS s;
+            ORDER BY A.cohesion DESC;
             ALTER TABLE class_groups_cohesion ADD INDEX idx_organeRef (organeRef);
+            ALTER TABLE class_groups_cohesion ADD INDEX idx_active (active);
           ');
 
         ?>

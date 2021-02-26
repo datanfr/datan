@@ -164,10 +164,16 @@
 
     public function get_mps_loyalty(){
       $query = $this->db->query('
-      SELECT cl.*, ROUND(cl.score*100) AS score, da.civ, da.nameLast, da.nameFirst, da.nameUrl, da.libelle, da.libelleAbrev, da.dptSlug, da.couleurAssociee, da.departementNom, da.departementCode
+      SELECT @s:=@s+1 AS "classement", A.*
+      FROM
+      (
+      SELECT cl.mpId, ROUND(cl.score*100) AS score, cl.votesN, da.civ, da.nameLast, da.nameFirst, da.nameUrl, da.libelle, da.libelleAbrev, da.dptSlug, da.couleurAssociee, da.departementNom, da.departementCode
       FROM class_loyaute cl
       LEFT JOIN deputes_all da ON cl.mpId = da.mpId
       WHERE da.legislature = '.legislature_current().' AND da.dateFin IS NULL
+      ORDER BY score DESC, votesN DESC
+      ) A,
+      (SELECT @s:= 0) AS s
       ');
 
       return $query->result_array();
@@ -175,15 +181,17 @@
 
     public function get_mps_loyalty_more(){
       $query = $this->db->query('
-      SELECT A.classement AS rank, ROUND(A.score * 100) AS score, da.nameLast, da.nameFirst, da.nameUrl, da.libelle, da.libelleAbrev, da.groupeId, da.dptSlug
+      SELECT  @s:=@s+1 AS "rank", ROUND(A.score * 100) AS score, da.nameLast, da.nameFirst, da.nameUrl, da.libelle, da.libelleAbrev, da.groupeId, da.dptSlug
       FROM
       (
       SELECT *
       FROM class_loyaute
+      WHERE active = 1
+      ORDER BY score DESC, votesN DESC
       LIMIT 3
       ) A
-      LEFT JOIN deputes_all da ON A.mpId = da.mpId WHERE da.legislature = '.legislature_current().' AND da.dateFin IS NULL
-      ORDER BY classement ASC
+      LEFT JOIN deputes_all da ON A.mpId = da.mpId AND legislature = '.legislature_current().',
+      (SELECT @s:= 0) AS s
       ');
 
       return $query->result_array();
@@ -191,16 +199,17 @@
 
     public function get_mps_loyalty_less(){
       $query = $this->db->query('
-        SELECT A.classement AS rank, ROUND(A.score * 100) AS score, da.nameLast, da.nameFirst, da.nameUrl, da.libelle, da.libelleAbrev, da.groupeId, da.dptSlug
-        FROM
-        (
-        SELECT *
-        FROM class_loyaute
-        ORDER BY classement DESC
-        LIMIT 3
-        ) A
-        LEFT JOIN deputes_all da ON A.mpId = da.mpId WHERE da.legislature = '.legislature_current().' AND da.dateFin IS NULL
-        ORDER BY classement ASC
+      SELECT  @s:=@s+1 AS "rank", ROUND(A.score * 100) AS score, da.nameLast, da.nameFirst, da.nameUrl, da.libelle, da.libelleAbrev, da.groupeId, da.dptSlug
+      FROM
+      (
+      SELECT *
+      FROM class_loyaute
+      WHERE active = 1
+      ORDER BY score ASC, votesN DESC
+      LIMIT 3
+      ) A
+      LEFT JOIN deputes_all da ON A.mpId = da.mpId AND legislature = '.legislature_current().',
+      (SELECT @s:= 0) AS s
       ');
 
       return $query->result_array();
@@ -268,18 +277,18 @@
 
     public function get_mps_participation_commission(){
       $query = $this->db->query('
-        SELECT @s:=@s+1 AS "rank", A.*
-        FROM
-        (
-          SELECT cp.*, da.nameFirst, da.nameLast, da.civ, da.libelle, da.libelleAbrev, da.dptSlug, da.nameUrl, da.couleurAssociee, da.departementNom, da.departementCode, o.libelleAbrege AS commission
-          FROM class_participation_commission cp
-          LEFT JOIN deputes_all da ON cp.mpId = da.mpId
-          LEFT JOIN mandat_secondaire ms ON cp.mpId = ms.mpId
-          LEFT JOIN organes o ON ms.organeRef = o.uid
-          WHERE ms.dateFin IS NULL AND ms.typeOrgane = "COMPER" AND ms.codeQualite = "Membre" AND da.legislature = '.legislature_current().' AND da.dateFin IS NULL 
-          ORDER BY cp.classement ASC
-        ) A,
-        (SELECT @s:= 0) AS s
+      SELECT @s:=@s+1 AS "rank", A.*
+      FROM
+      (
+      SELECT cp.mpId, cp.score, cp.votesN, da.nameFirst, da.nameLast, da.civ, da.libelle, da.libelleAbrev, da.dptSlug, da.nameUrl, da.couleurAssociee, da.departementNom, da.departementCode, o.libelleAbrege AS commission
+      FROM class_participation_commission cp
+      LEFT JOIN deputes_all da ON cp.mpId = da.mpId
+      LEFT JOIN mandat_secondaire ms ON cp.mpId = ms.mpId
+      LEFT JOIN organes o ON ms.organeRef = o.uid
+      WHERE da.legislature = '.legislature_current().' AND cp.active = 1 AND ms.typeOrgane = "COMPER" AND ms.codeQualite = "Membre" AND ms.dateFin IS NULL
+      ORDER BY cp.score DESC, cp.votesN DESC
+      ) A,
+      (SELECT @s:= 0) AS s
       ');
 
       return $query->result_array();
@@ -305,11 +314,17 @@
 
     public function get_groups_participation(){
       $query = $this->db->query('
-        SELECT cp.classement AS rank, cp.organeRef, ROUND(cp.participation * 100) AS participation, o.libelle, o.libelleAbrev, o.couleurAssociee, ge.effectif
-        FROM class_groups_participation cp
-        LEFT JOIN organes o ON cp.organeRef = o.uid
-        LEFT JOIN groupes_effectif ge ON cp.organeRef = ge.organeRef
-        ORDER BY cp.participation DESC
+      SELECT @s:=@s+1 AS "rank", A.*
+      FROM
+      (
+      SELECT cp.organeRef, ROUND(cp.participation * 100) AS participation, o.libelle, o.libelleAbrev, o.couleurAssociee, ge.effectif
+      FROM class_groups_participation cp
+      LEFT JOIN organes o ON cp.organeRef = o.uid
+      LEFT JOIN groupes_effectif ge ON cp.organeRef = ge.organeRef
+      WHERE cp.active = 1
+      ORDER BY cp.participation DESC
+      ) A,
+      (SELECT @s:= 0) AS s
       ');
 
       return $query->result_array();

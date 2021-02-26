@@ -41,14 +41,12 @@
         }
       } else {
         // IF DEPARTEMENT QUERY
-        if ($active == TRUE) {
-          $query = $this->db->query('
-            SELECT *
-            FROM deputes_all
-            WHERE dptSlug = "'.$departement.'" AND legislature = '.legislature_current().' AND dateFin IS NULL
-            ORDER BY nameLast ASC, nameFirst ASC
-          ');
-        }
+        $query = $this->db->query('
+          SELECT *
+          FROM deputes_all
+          WHERE dptSlug = "'.$departement.'" AND legislature = '.legislature_current().' AND dateFin IS NULL
+          ORDER BY nameLast ASC, nameFirst ASC
+        ');
       }
 
         return $query->result_array();
@@ -242,20 +240,6 @@
       return $query->row_array();
     }
 
-    public function get_depute_groupe_inactif($depute_uid){
-      $query = $this->db->query('
-      SELECT mg.organeRef AS groupeId, o.libelle, o.libelleAbrev, o.couleurAssociee
-      FROM deputes_inactifs di
-      LEFT JOIN (SELECT mpId, MAX(dateFin) AS maxDateFin FROM mandat_groupe GROUP BY mpId) AS S ON di.mpId = S.mpId
-      LEFT JOIN mandat_groupe mg ON di.mpId = mg.mpId AND mg.dateFin = S.maxDateFin
-      LEFT JOIN organes o ON o.uid = mg.organeRef
-      WHERE di.mpId = "'.$depute_uid.'"
-      ');
-
-      return $query->row_array();
-    }
-
-
     public function get_other_deputes($groupe_id, $depute_name, $depute_uid, $active, $legislature){
       if ($active == TRUE) {
         $query = $this->db->query('
@@ -415,7 +399,7 @@
 
     public function get_depute_vote_plus(){
       $query = $this->db->query('
-        SELECT A.mpId, A.score, A.classement, A.votesN, da.civ, da.nameFirst, da.nameLast, da.nameUrl, da.dptSlug, da.couleurAssociee, da.libelle, da.libelleAbrev, da.groupeId AS organeRef, da.departementNom AS electionDepartement, da.departementCode AS electionDepartementNumero
+        SELECT A.mpId, A.score, A.votesN, da.civ, da.nameFirst, da.nameLast, da.nameUrl, da.dptSlug, da.couleurAssociee, da.libelle, da.libelleAbrev, da.groupeId AS organeRef, da.departementNom AS electionDepartement, da.departementCode AS electionDepartementNumero
         FROM (
           SELECT *
           FROM class_participation_six
@@ -436,7 +420,7 @@
 
     public function get_depute_vote_moins(){
       $query = $this->db->query('
-      SELECT A.mpId, A.score, A.classement, A.votesN, da.civ, da.nameFirst, da.nameLast, da.nameUrl, da.dptSlug, da.couleurAssociee, da.libelle, da.libelleAbrev, da.groupeId AS organeRef, da.departementNom AS electionDepartement, da.departementCode AS electionDepartementNumero
+      SELECT A.mpId, A.score, A.votesN, da.civ, da.nameFirst, da.nameLast, da.nameUrl, da.dptSlug, da.couleurAssociee, da.libelle, da.libelleAbrev, da.groupeId AS organeRef, da.departementNom AS electionDepartement, da.departementCode AS electionDepartementNumero
       FROM (
         SELECT *
         FROM class_participation_six
@@ -458,7 +442,7 @@
 
     public function get_depute_loyal_plus(){
       $query = $this->db->query('
-        SELECT A.mpId, A.score, A.classement, A.votesN, da.civ, da.nameFirst, da.nameLast, da.nameUrl, da.dptSlug, da.couleurAssociee, da.libelle, da.libelleAbrev, da.groupeId AS organeRef, da.departementNom AS electionDepartement, da.departementCode AS electionDepartementNumero
+        SELECT A.mpId, A.score, A.votesN, da.civ, da.nameFirst, da.nameLast, da.nameUrl, da.dptSlug, da.couleurAssociee, da.libelle, da.libelleAbrev, da.groupeId AS organeRef, da.departementNom AS electionDepartement, da.departementCode AS electionDepartementNumero
         FROM
         (
           SELECT *
@@ -480,7 +464,7 @@
 
     public function get_depute_loyal_moins(){
       $query = $this->db->query('
-      SELECT A.mpId, A.score, A.classement, A.votesN, da.civ, da.nameFirst, da.nameLast, da.nameUrl, da.dptSlug, da.couleurAssociee, da.libelle, da.libelleAbrev, da.groupeId AS organeRef, da.departementNom AS electionDepartement, da.departementCode AS electionDepartementNumero
+      SELECT A.mpId, A.score, A.votesN, da.civ, da.nameFirst, da.nameLast, da.nameUrl, da.dptSlug, da.couleurAssociee, da.libelle, da.libelleAbrev, da.groupeId AS organeRef, da.departementNom AS electionDepartement, da.departementCode AS electionDepartementNumero
       FROM
       (
         SELECT *
@@ -554,7 +538,7 @@
       SELECT A.*, B.*
       FROM
       (
-        SELECT classement, ROUND(score*100) AS score, votesN
+        SELECT ROUND(score*100) AS score, votesN
         FROM class_participation
         WHERE mpId = "'.$depute_uid.'"
       ) A,
@@ -564,27 +548,7 @@
       ) B
       ');
 
-      $result = $query->row_array();
-
-      if (empty($result)) {
-        $query = $this->db->query('
-        SELECT A.*, B.*
-        FROM
-        (
-          SELECT classement, ROUND(score*100) AS score, votesN
-          FROM class_participation_all
-          WHERE mpId = "'.$depute_uid.'"
-        ) A,
-        (
-          SELECT ROUND(AVG(score)*100) AS mean
-          FROM class_participation
-        ) B
-        ');
-
-        $result = $query->row_array();
-      }
-
-      return $result;
+      return $query->row_array();
 
     }
 
@@ -593,7 +557,7 @@
       SELECT A.*, B.*
       FROM
       (
-        SELECT classement, ROUND(score*100) AS score, votesN
+        SELECT ROUND(score*100) AS score, votesN
         FROM class_participation_commission
         WHERE mpId = "'.$depute_uid.'"
       ) A,
@@ -603,27 +567,7 @@
       ) B
       ');
 
-      $result = $query->row_array();
-
-      if (empty($result)) {
-        $query = $this->db->query('
-        SELECT A.*, B.*
-        FROM
-        (
-          SELECT classement, ROUND(score*100) AS score, votesN
-          FROM class_participation_all
-          WHERE mpId = "'.$depute_uid.'"
-        ) A,
-        (
-          SELECT ROUND(AVG(score)*100) AS mean
-          FROM class_participation
-        ) B
-        ');
-
-        $result = $query->row_array();
-      }
-
-      return $result;
+      return $query->row_array();
 
     }
 
@@ -632,7 +576,7 @@
       SELECT A.*, B.*
       FROM
       (
-        SELECT classement, ROUND(score*100) AS score, votesN
+        SELECT ROUND(score*100) AS score, votesN
         FROM class_loyaute
         WHERE mpId = "'.$depute_uid.'"
       ) A,
@@ -642,27 +586,7 @@
       ) B
       ');
 
-      $result = $query->row_array();
-
-      if (empty($result)) {
-        $query = $this->db->query('
-        SELECT A.*, B.*
-        FROM
-        (
-          SELECT classement, ROUND(score*100) AS score, votesN
-          FROM class_loyaute_all
-          WHERE mpId = "'.$depute_uid.'"
-        ) A,
-        (
-          SELECT ROUND(AVG(score)*100) AS mean
-          FROM class_loyaute
-        ) B
-        ');
-
-        $result = $query->row_array();
-      }
-
-      return $result;
+      return $query->row_array();
     }
 
     public function get_stats_loyaute_history($depute_uid){
@@ -683,7 +607,7 @@
         SELECT A.*, B.*
         FROM
         (
-          SELECT classement, ROUND(score*100) AS score, votesN
+          SELECT ROUND(score*100) AS score, votesN
           FROM class_majorite
           WHERE mpId = "'.$depute_uid.'"
         ) A,
@@ -691,7 +615,7 @@
           SELECT ROUND(AVG(t1.score)*100) AS mean
           FROM class_majorite t1
           LEFT JOIN deputes_all da ON t1.mpId = da.mpId
-          WHERE da.groupeId != "'.majority_group().'"  AND legislature = 15 AND dateFin IS NULL
+          WHERE da.groupeId != "'.majority_group().'"  AND da.legislature = 15 AND dateFin IS NULL
         ) B
       ');
 

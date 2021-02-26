@@ -43,28 +43,7 @@
 			</div>
 			<div class="row mt-3">
         <div class="col-12">
-        <?php
-
-        // CONNEXION SQL //
-        	include 'bdd-connexion.php';
-
-          $bdd->query('
-            DROP TABLE IF EXISTS class_groups_cohesion_all;
-            CREATE TABLE class_groups_cohesion_all AS
-            SELECT  @s:=@s+1 AS "classement", A.*, curdate() AS dateMaj
-            FROM
-            (
-            SELECT organeRef, legislature, ROUND(AVG(cohesion),3) AS cohesion
-            FROM groupes_cohesion
-            GROUP BY organeRef
-            ) A,
-            (SELECT @s:= 0) AS s
-            ORDER BY A.cohesion DESC;
-            ALTER TABLE class_groups_cohesion_all ADD INDEX idx_organeRef (organeRef);
-          ');
-
-        ?>
-
+          <p>This script and db table has been removed.</p>
         </div>
       </div>
     </div>

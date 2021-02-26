@@ -43,17 +43,7 @@
 			</div>
 			<div class="row mt-3">
         <div class="col-12">
-          <table class="table">
-            <thead>
-                <tr>
-                  <th scope="col">classement</th>
-                  <th scope="col">mpId</th>
-                  <th scope="col">score</th>
-                  <th scope="col">votesN</th>
-                  <th scope="col">dateMaj</th>
-                </tr>
-              </thead>
-              <tbody>
+
         <?php
 
         // CONNEXION SQL //
@@ -62,59 +52,24 @@
           $bdd->query('
             DROP TABLE IF EXISTS class_majorite;
             CREATE TABLE class_majorite
-              (id INT(5) NOT NULL AUTO_INCREMENT,
-              classement INT(5) NOT NULL,
-              mpId VARCHAR(25) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
-              score DECIMAL(4,3) NOT NULL,
-              votesN INT(15) NOT NULL,
-              dateMaj DATE NOT NULL,
-              PRIMARY KEY (id));
-              ALTER TABLE class_majorite ADD INDEX idx_mpId (mpId);
-          ');
-
-          $result = $bdd->query('
-          SELECT @s:=@s+1 AS "classement", B.*
-          FROM
-          (
-            SELECT A.*
-            FROM (
-              SELECT v.mpId, ROUND(AVG(v.scoreGvt),3) AS score, COUNT(v.scoreGvt) AS votesN
-              FROM votes_scores v
-              WHERE v.scoreGvt IS NOT NULL
-              GROUP BY v.mpId
+            SELECT A.*, da.legislature,
+            CASE WHEN da.dateFin IS NULL THEN 1 ELSE 0 END AS active,
+            curdate() AS dateMaj
+            FROM
+            (
+            SELECT v.mpId, ROUND(AVG(v.scoreGvt),3) AS score, COUNT(v.scoreGvt) AS votesN
+            FROM votes_scores v
+            WHERE v.scoreGvt IS NOT NULL
+            GROUP BY v.mpId
             ) A
-            WHERE A.mpId IN (
-              SELECT mpId
-              FROM deputes_all
-              WHERE legislature = 15 AND dateFin IS NULL
-            )
-          ) B,
-          (SELECT @s:= 0) AS s
-          ORDER BY B.score DESC, B.votesN DESC
+            LEFT JOIN deputes_all da ON da.mpId = A.mpId AND legislature = 15
+            ORDER BY A.score DESC, A.votesN;
+            ALTER TABLE class_majorite ADD INDEX idx_mpId (mpId);
+            ALTER TABLE class_majorite ADD INDEX idx_active (active);
           ');
 
-          while ($depute = $result->fetch()) {
-            $classement = $depute["classement"];
-            $mpId = $depute["mpId"];
-            $score = $depute["score"];
-            $votesN = $depute["votesN"];
-            $dateMaj = date('Y-m-d');
-
-            echo "<tr>";
-            echo "<td>".$classement."</td>";
-            echo "<td>".$mpId."</td>";
-            echo "<td>".$score."</td>";
-            echo "<td>".$votesN."</td>";
-            echo "<td>".$dateMaj."</td>";
-            echo "</tr>";
-
-
-            $sql = $bdd->prepare("INSERT INTO class_majorite (classement, mpId, score, votesN, dateMaj) VALUES (:classement, :mpId, :score, :votesN, :dateMaj)");
-            $sql->execute(array('classement' => $classement, 'mpId' => $mpId, 'score' => $score, 'votesN' => $votesN, 'dateMaj' => $dateMaj));
-          }
         ?>
-            </tbody>
-          </table>
+
         </div>
       </div>
     </div>
