@@ -75,8 +75,8 @@
                   <hr>
                   <a href="1_deputes.php" class="list-group-item list-group-item-action list-group-item-primary">1. Députés - Dernière mise à jour => <b><?php echo $maj_depute ?></b></a>
                   <!--<a href="social_media.php" class="list-group-item list-group-item-action list-group-item-primary disabled">1-3. Social Media</a>-->
-                  <a href="7_mandats.php" class="list-group-item list-group-item-action list-group-item-secondary">2. Mandats principaux - Dernière mise à jour => <b><?php echo $maj_mandat_principal ?></b></a>
-                  <a href="10_organes.php" class="list-group-item list-group-item-action list-group-item-success">4. Organes - Dernière mise à jour => <b><?php echo $maj_groupe ?></b></a>
+                  <a href="5_mandats.php" class="list-group-item list-group-item-action list-group-item-secondary">2. Mandats principaux - Dernière mise à jour => <b><?php echo $maj_mandat_principal ?></b></a>
+                  <a href="8_organes.php" class="list-group-item list-group-item-action list-group-item-success">3. Organes - Dernière mise à jour => <b><?php echo $maj_groupe ?></b></a>
                   <hr>
                   <a href="code_communes_slug.php" class="list-group-item list-group-item-action">Code communes_slug</a>
                   <a href="code_communes_dpt.php" class="list-group-item list-group-item-action">Code communes_dpt</a>
