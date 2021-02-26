@@ -118,6 +118,9 @@ $route['blog'] = 'posts/index';
 $route['statistiques'] = 'stats/index';
 $route['statistiques/aide'] = 'pages/view/statistiques';
 $route['statistiques/(:any)'] = 'stats/individual/$1';
+// QUESTIONNAIRE
+$route['questionnaire'] = 'quiz/index';
+$route['questionnaire/resultat']['post'] = 'quiz/result';
 // LOGIN & REGISTER
 $route['login'] = 'users/login';
 $route['register'] = 'users/register';
