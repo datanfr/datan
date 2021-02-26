@@ -1,0 +1,24 @@
+{
+  "name": "Datan",
+  "version": "1.0.0",
+  "description": "Datan - Mieux comprendre l'Assemblee nationale",
+  "main": "index.js",
+  "devDependencies": {
+    "grunt": "^1.3.0",
+    "grunt-contrib-uglify": "^5.0.0",
+    "grunt-critical": "^2.0.0",
+    "grunt-purifycss": "^0.1.2",
+    "purify-css": "^1.2.5"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Awenig Marié",
+  "license": "ISC",
+  "dependencies": {
+    "bootstrap": "^4.3.1",
+    "bulma": "^0.7.1",
+    "chart.js": "^2.7.3",
+    "progressbar.js": "^1.0.1"
+  }
+}
