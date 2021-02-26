@@ -189,7 +189,7 @@
       </div>
       <div class="row mt-5">
         <div class="col-12">
-          <h2>Les autres députés du département <?= $depute['dptLibelle2'] ?><?= $depute['departementNom'].' ('.$depute['departementCode'].')'?></h2>
+          <h2>Les députés actifs du département <?= $depute['dptLibelle2'] ?><?= $depute['departementNom'].' ('.$depute['departementCode'].')'?></h2>
           <div class="row mt-3">
             <?php foreach ($other_deputes_dpt as $mp): ?>
               <div class="col-6 col-md-3 py-2">

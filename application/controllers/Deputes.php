@@ -100,7 +100,7 @@
 
     public function inactifs(){
       $data['active'] = FALSE;
-      $data['deputes'] = $this->deputes_model->get_deputes_all(legislature_current(), $data['active'], $departement = NULL);
+      $data['deputes'] = $this->deputes_model->get_deputes_all(legislature_current(), $data['active'], NULL);
       $data['groupes'] = $this->deputes_model->get_groupes_inactifs();
       $data["number_inactive"] = count($data['deputes']);
 
@@ -493,16 +493,16 @@
         show_404();
       }
 
+      // Check if it is in legislature
+      if (!in_array($data['depute']['legislature'], array(15))) {
+        show_404();
+      }
+
       $depute_uid = $data['depute']['mpId'];
       $nameLast = $data['depute']['nameLast'];
       $nameUrl = $input_depute;
       $data['active'] = $data['depute']['active'];
-
-      // Groupe if inactive MP
-      if ($data['active'] == FALSE) {
-        $inactif_groupe = $this->deputes_model->get_depute_groupe_inactif($depute_uid);
-        $data['depute'] = array_merge($data['depute'], $inactif_groupe);
-      }
+      $legislature = $data['depute']['legislature'];
       $groupe_id = $data['depute']['groupeId'];
 
       // Group color
@@ -543,9 +543,9 @@
       $data['mandat_edito'] = $this->depute_edito->get_nbr_lettre($data['mandats_all']['mandatesN']);
 
       // Other MPs from the same group
-      $data['other_deputes'] = $this->deputes_model->get_other_deputes($groupe_id, $nameLast, $depute_uid, $data['active']);
+      $data['other_deputes'] = $this->deputes_model->get_other_deputes($groupe_id, $nameLast, $depute_uid, $data['active'], $legislature);
       // OTHER MPs from the same departement
-      $data['other_deputes_dpt'] = $this->deputes_model->get_deputes_all($departement);
+      $data['other_deputes_dpt'] = $this->deputes_model->get_deputes_all($legislature, $data['active'], $departement);
 
       // Meta
       $data['url'] = $this->meta_model->get_url();
@@ -596,6 +596,11 @@
         show_404();
       }
 
+      // Check if it is in legislature
+      if (!in_array($data['depute']['legislature'], array(15))) {
+        show_404();
+      }
+
       // Query - get active votes
       $data['votes'] = $this->votes_model->get_votes_datan_depute_field($depute_uid, $field);
 
@@ -612,15 +617,10 @@
       $nameLast = $data['depute']['nameLast'];
       $nameUrl = $input_depute;
       $data['active'] = $data['depute']['active'];
+      $legislature = $data['depute']['legislature'];
 
       // Query get info on field
       $data['field'] = $this->fields_model->get_field($field);
-
-      // Groupe if inactive MP
-      if ($data['active'] == FALSE) {
-        $inactif_groupe = $this->deputes_model->get_depute_groupe_inactif($depute_uid);
-        $data['depute'] = array_merge($data['depute'], $inactif_groupe);
-      }
       $groupe_id = $data['depute']['groupeId'];
 
       // Group color
@@ -638,9 +638,9 @@
       $data['mandat_edito'] = $this->depute_edito->get_nbr_lettre($data['mandats_all']['mandatesN']);
 
       // Other MPs from the same group
-      $data['other_deputes'] = $this->deputes_model->get_other_deputes($groupe_id, $nameLast, $depute_uid, $data['active']);
+      $data['other_deputes'] = $this->deputes_model->get_other_deputes($groupe_id, $nameLast, $depute_uid, $data['active'], $legislature);
       // OTHER MPs from the same departement
-      $data['other_deputes_dpt'] = $this->deputes_model->get_deputes_all($departement);
+      $data['other_deputes_dpt'] = $this->deputes_model->get_deputes_all($legislature, $data['active'], $departement);
 
       // Meta
       $data['url'] = $this->meta_model->get_url();
@@ -693,16 +693,15 @@
         show_404();
       }
 
+      // Check if it is in legislature
+      if (!in_array($data['depute']['legislature'], array(15))) {
+        show_404();
+      }
+
       $depute_uid = $data['depute']['mpId'];
       $nameLast = $data['depute']['nameLast'];
       $nameUrl = $input_depute;
       $data['active'] = $data['depute']['active'];
-
-      // Groupe if inactive MP
-      if ($data['active'] == FALSE) {
-        $inactif_groupe = $this->deputes_model->get_depute_groupe_inactif($depute_uid);
-        $data['depute'] = array_merge($data['depute'], $inactif_groupe);
-      }
       $groupe_id = $data['depute']['groupeId'];
 
       // Group color
