@@ -26,8 +26,10 @@
   RewriteCond %{REQUEST_URI} (.*)/$
   RewriteRule ^(.+)/$ $1 [R,L]
 
+</IfModule>
 
-  SetEnv DATABASE_USERNAME username_example
-  SetEnv DATABASE_PASSWORD password_example
-
+<IfModule mod_env.c>
+    SetEnv DATABASE_USERNAME username_example
+    SetEnv DATABASE_PASSWORD password_example
+    SetEnv CI_ENV production
 </IfModule>
