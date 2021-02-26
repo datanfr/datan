@@ -1,33 +1,6 @@
 <!DOCTYPE html>
 <html lang="fr" dir="ltr" prefix="og: http://ogp.me/ns#">
   <head>
-    <script type="text/javascript"> var tarteaucitronForceLanguage = "fr"; </script>
-    <script type="text/javascript" src="<?= base_url() ?>assets/js/tarteaucitron.js-1.3/tarteaucitron.min.js" ></script>
-    <script type="text/javascript">
-    tarteaucitron.init({
-    "privacyUrl": "<?= base_url() ?>mentions-legales", /* Privacy policy url */
-
-    "hashtag": "#tarteaucitron", /* Open the panel with this hashtag */
-    "cookieName": "tarteaucitron", /* Cookie name */
-
-    "orientation": "bottom", /* Banner position (top - bottom - middle) */
-    "showAlertSmall": true, /* Show the small banner on bottom right */
-    "cookieslist": true, /* Show the cookie list */
-
-    "adblocker": false, /* Show a Warning if an adblocker is detected */
-    "AcceptAllCta" : true, /* Show the accept all button when highPrivacy on */
-    "highPrivacy": true, /* Disable auto consent */
-    "handleBrowserDNTRequest": false, /* If Do Not Track == 1, disallow all */
-
-    "removeCredit": false, /* Remove credit link */
-    "moreInfoLink": true, /* Show more info link */
-    "useExternalCss": false, /* If false, the tarteaucitron.css file will be loaded */
-
-    //"cookieDomain": ".my-multisite-domaine.fr", /* Shared cookie for multisite */
-
-    "readmoreLink": "/cookiespolicy" /* Change the default readmore link */
-    });
-    </script>
     <meta charset="utf-8">
     <meta name="robots" content="index,follow">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -206,10 +179,6 @@
   }
   ?>
   <body class="<?= $mentions ?>" data-spy="scroll" data-target="#navScrollspy" data-offset="90">
-    <!-- Google Tag Manager (noscript) -->
-    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-K3QQNK2"
-    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-    <!-- End Google Tag Manager (noscript) -->
     <header>
       <section>
         <nav class="navbar fixed-top navbar-expand-lg navbar-light" id="navbar-datan">
