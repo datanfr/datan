@@ -123,6 +123,8 @@
     <script type="text/javascript">
       tarteaucitron.user.googletagmanagerId = 'GTM-K3QQNK2';
       (tarteaucitron.job = tarteaucitron.job || []).push('googletagmanager');
+      tarteaucitron.user.tawktoId = '5f5637ebf0e7167d000e19cd';
+      (tarteaucitron.job = tarteaucitron.job || []).push('tawkto');
     </script>
 
     <?php if (isset($js_to_load)): ?>
