@@ -577,4 +577,20 @@
       return $array;
     }
 
+    public function get_most_famous_votes($limit = false){
+      $queryString = '
+      SELECT vd.title AS voteTitre, vd.description, vi.dateScrutin, vi.voteNumero, vi.legislature, f.name AS category_libelle, f.slug AS category_slug, vi.sortCode, date_format(dateScrutin, "%d %M %Y") as dateScrutinFR, vote_id
+      FROM votes_datan vd
+      LEFT JOIN votes_info vi ON vd.vote_id = vi.voteId
+      LEFT JOIN fields f ON vd.category = f.id
+      WHERE vd.state = "published"
+      ORDER BY vi.voteNumero DESC';
+      if ($limit) {
+        $queryString .= ' LIMIT ' .$limit;
+      }
+      $query = $this->db->query($queryString);
+
+      return $query->result_array();
+    }
+
   }
