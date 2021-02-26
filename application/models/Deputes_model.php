@@ -41,14 +41,12 @@
         }
       } else {
         // IF DEPARTEMENT QUERY
-        if ($active == TRUE) {
-          $query = $this->db->query('
-            SELECT *
-            FROM deputes_all
-            WHERE dptSlug = "'.$departement.'" AND legislature = '.legislature_current().' AND dateFin IS NULL
-            ORDER BY nameLast ASC, nameFirst ASC
-          ');
-        }
+        $query = $this->db->query('
+          SELECT *
+          FROM deputes_all
+          WHERE dptSlug = "'.$departement.'" AND legislature = '.legislature_current().' AND dateFin IS NULL
+          ORDER BY nameLast ASC, nameFirst ASC
+        ');
       }
 
         return $query->result_array();
@@ -241,20 +239,6 @@
 
       return $query->row_array();
     }
-
-    public function get_depute_groupe_inactif($depute_uid){
-      $query = $this->db->query('
-      SELECT mg.organeRef AS groupeId, o.libelle, o.libelleAbrev, o.couleurAssociee
-      FROM deputes_inactifs di
-      LEFT JOIN (SELECT mpId, MAX(dateFin) AS maxDateFin FROM mandat_groupe GROUP BY mpId) AS S ON di.mpId = S.mpId
-      LEFT JOIN mandat_groupe mg ON di.mpId = mg.mpId AND mg.dateFin = S.maxDateFin
-      LEFT JOIN organes o ON o.uid = mg.organeRef
-      WHERE di.mpId = "'.$depute_uid.'"
-      ');
-
-      return $query->row_array();
-    }
-
 
     public function get_other_deputes($groupe_id, $depute_name, $depute_uid, $active, $legislature){
       if ($active == TRUE) {
@@ -601,7 +585,7 @@
         FROM class_loyaute
       ) B
       ');
-      
+
       return $query->row_array();
     }
 
