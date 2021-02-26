@@ -415,7 +415,7 @@
 
     public function get_depute_vote_plus(){
       $query = $this->db->query('
-        SELECT A.mpId, A.score, A.classement, A.votesN, da.civ, da.nameFirst, da.nameLast, da.nameUrl, da.dptSlug, da.couleurAssociee, da.libelle, da.libelleAbrev, da.groupeId AS organeRef, da.departementNom AS electionDepartement, da.departementCode AS electionDepartementNumero
+        SELECT A.mpId, A.score, A.votesN, da.civ, da.nameFirst, da.nameLast, da.nameUrl, da.dptSlug, da.couleurAssociee, da.libelle, da.libelleAbrev, da.groupeId AS organeRef, da.departementNom AS electionDepartement, da.departementCode AS electionDepartementNumero
         FROM (
           SELECT *
           FROM class_participation_six
@@ -436,7 +436,7 @@
 
     public function get_depute_vote_moins(){
       $query = $this->db->query('
-      SELECT A.mpId, A.score, A.classement, A.votesN, da.civ, da.nameFirst, da.nameLast, da.nameUrl, da.dptSlug, da.couleurAssociee, da.libelle, da.libelleAbrev, da.groupeId AS organeRef, da.departementNom AS electionDepartement, da.departementCode AS electionDepartementNumero
+      SELECT A.mpId, A.score, A.votesN, da.civ, da.nameFirst, da.nameLast, da.nameUrl, da.dptSlug, da.couleurAssociee, da.libelle, da.libelleAbrev, da.groupeId AS organeRef, da.departementNom AS electionDepartement, da.departementCode AS electionDepartementNumero
       FROM (
         SELECT *
         FROM class_participation_six
@@ -458,7 +458,7 @@
 
     public function get_depute_loyal_plus(){
       $query = $this->db->query('
-        SELECT A.mpId, A.score, A.classement, A.votesN, da.civ, da.nameFirst, da.nameLast, da.nameUrl, da.dptSlug, da.couleurAssociee, da.libelle, da.libelleAbrev, da.groupeId AS organeRef, da.departementNom AS electionDepartement, da.departementCode AS electionDepartementNumero
+        SELECT A.mpId, A.score, A.votesN, da.civ, da.nameFirst, da.nameLast, da.nameUrl, da.dptSlug, da.couleurAssociee, da.libelle, da.libelleAbrev, da.groupeId AS organeRef, da.departementNom AS electionDepartement, da.departementCode AS electionDepartementNumero
         FROM
         (
           SELECT *
@@ -480,7 +480,7 @@
 
     public function get_depute_loyal_moins(){
       $query = $this->db->query('
-      SELECT A.mpId, A.score, A.classement, A.votesN, da.civ, da.nameFirst, da.nameLast, da.nameUrl, da.dptSlug, da.couleurAssociee, da.libelle, da.libelleAbrev, da.groupeId AS organeRef, da.departementNom AS electionDepartement, da.departementCode AS electionDepartementNumero
+      SELECT A.mpId, A.score, A.votesN, da.civ, da.nameFirst, da.nameLast, da.nameUrl, da.dptSlug, da.couleurAssociee, da.libelle, da.libelleAbrev, da.groupeId AS organeRef, da.departementNom AS electionDepartement, da.departementCode AS electionDepartementNumero
       FROM
       (
         SELECT *
@@ -554,7 +554,7 @@
       SELECT A.*, B.*
       FROM
       (
-        SELECT classement, ROUND(score*100) AS score, votesN
+        SELECT ROUND(score*100) AS score, votesN
         FROM class_participation
         WHERE mpId = "'.$depute_uid.'"
       ) A,
@@ -564,27 +564,7 @@
       ) B
       ');
 
-      $result = $query->row_array();
-
-      if (empty($result)) {
-        $query = $this->db->query('
-        SELECT A.*, B.*
-        FROM
-        (
-          SELECT classement, ROUND(score*100) AS score, votesN
-          FROM class_participation_all
-          WHERE mpId = "'.$depute_uid.'"
-        ) A,
-        (
-          SELECT ROUND(AVG(score)*100) AS mean
-          FROM class_participation
-        ) B
-        ');
-
-        $result = $query->row_array();
-      }
-
-      return $result;
+      return $query->row_array();
 
     }
 
@@ -593,7 +573,7 @@
       SELECT A.*, B.*
       FROM
       (
-        SELECT classement, ROUND(score*100) AS score, votesN
+        SELECT ROUND(score*100) AS score, votesN
         FROM class_participation_commission
         WHERE mpId = "'.$depute_uid.'"
       ) A,
@@ -603,27 +583,7 @@
       ) B
       ');
 
-      $result = $query->row_array();
-
-      if (empty($result)) {
-        $query = $this->db->query('
-        SELECT A.*, B.*
-        FROM
-        (
-          SELECT classement, ROUND(score*100) AS score, votesN
-          FROM class_participation_all
-          WHERE mpId = "'.$depute_uid.'"
-        ) A,
-        (
-          SELECT ROUND(AVG(score)*100) AS mean
-          FROM class_participation
-        ) B
-        ');
-
-        $result = $query->row_array();
-      }
-
-      return $result;
+      return $query->row_array();
 
     }
 
@@ -632,7 +592,7 @@
       SELECT A.*, B.*
       FROM
       (
-        SELECT classement, ROUND(score*100) AS score, votesN
+        SELECT ROUND(score*100) AS score, votesN
         FROM class_loyaute
         WHERE mpId = "'.$depute_uid.'"
       ) A,
@@ -641,28 +601,8 @@
         FROM class_loyaute
       ) B
       ');
-
-      $result = $query->row_array();
-
-      if (empty($result)) {
-        $query = $this->db->query('
-        SELECT A.*, B.*
-        FROM
-        (
-          SELECT classement, ROUND(score*100) AS score, votesN
-          FROM class_loyaute_all
-          WHERE mpId = "'.$depute_uid.'"
-        ) A,
-        (
-          SELECT ROUND(AVG(score)*100) AS mean
-          FROM class_loyaute
-        ) B
-        ');
-
-        $result = $query->row_array();
-      }
-
-      return $result;
+      
+      return $query->row_array();
     }
 
     public function get_stats_loyaute_history($depute_uid){
@@ -683,7 +623,7 @@
         SELECT A.*, B.*
         FROM
         (
-          SELECT classement, ROUND(score*100) AS score, votesN
+          SELECT ROUND(score*100) AS score, votesN
           FROM class_majorite
           WHERE mpId = "'.$depute_uid.'"
         ) A,
@@ -691,7 +631,7 @@
           SELECT ROUND(AVG(t1.score)*100) AS mean
           FROM class_majorite t1
           LEFT JOIN deputes_all da ON t1.mpId = da.mpId
-          WHERE da.groupeId != "'.majority_group().'"  AND legislature = 15 AND dateFin IS NULL
+          WHERE da.groupeId != "'.majority_group().'"  AND da.legislature = 15 AND dateFin IS NULL
         ) B
       ');
 
