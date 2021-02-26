@@ -51,22 +51,20 @@
           $bdd->query('
             DROP TABLE IF EXISTS class_groups_majorite;
             CREATE TABLE class_groups_majorite AS
-            SELECT @s:=@s+1 AS "classement", C.*, curdate() AS dateMaj
+            SELECT A.*,
+            curdate() AS dateMaj
             FROM
             (
-            SELECT A.*
-            FROM
-            (
-            SELECT organeRef, AVG(PO730964) AS majoriteAccord, COUNT(PO730964) AS votesN
-            FROM groupes_accord
-            GROUP BY organeRef
+            SELECT ga.organeRef, AVG(ga.PO730964) AS majoriteAccord, COUNT(ga.PO730964) AS votesN,
+            CASE WHEN o.dateFin IS NULL THEN 1 ELSE 0 END AS active
+            FROM groupes_accord ga
+            LEFT JOIN organes o ON o.uid = ga.organeRef
+            WHERE ga.organeRef != "PO730964"
+            GROUP BY ga.organeRef
             ) A
-            LEFT JOIN organes o ON A.organeRef = o.uid
-            WHERE o.dateFin IS NULL AND A.organeRef != "PO730964"
-            ORDER BY A.majoriteAccord DESC
-            ) C,
-            (SELECT @s:= 0) AS s;
+            ORDER BY majoriteAccord DESC;
             ALTER TABLE class_groups_majorite ADD INDEX idx_organeRef (organeRef);
+            ALTER TABLE class_groups_majorite ADD INDEX idx_active (active);
           ');
 
         ?>

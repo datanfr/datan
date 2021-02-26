@@ -43,37 +43,7 @@
 			</div>
 			<div class="row mt-3">
         <div class="col-12">
-        <?php
-
-        // CONNEXION SQL //
-        	include 'bdd-connexion.php';
-
-          $bdd->query('
-          DROP TABLE IF EXISTS class_majorite_all;
-          CREATE TABLE class_majorite_all AS
-          SELECT @s:=@s+1 AS "classement", C.*, curdate() AS dateMaj
-          FROM
-          (
-          SELECT B.mpId, B.score, B.votesN
-          FROM
-          (
-          SELECT A.*
-          FROM (
-          	SELECT v.mpId, ROUND(AVG(v.scoreGvt),3) AS score, COUNT(v.scoreGvt) AS votesN
-              FROM votes_scores v
-          	WHERE v.scoreGvt IS NOT NULL
-          	GROUP BY v.mpId
-          	ORDER BY AVG(v.scoreGvt) DESC, COUNT(v.scoreGvt) DESC
-          ) A
-          ) B
-          ORDER BY B.score DESC, B.votesN DESC
-          ) C,
-          (SELECT @s:=0) AS s;
-          ALTER TABLE class_majorite_all ADD INDEX idx_mpId (mpId);
-          ');
-
-        ?>
-
+          <p>This script and db table has been removed.</p>
         </div>
       </div>
     </div>

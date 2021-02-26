@@ -43,68 +43,7 @@
 			</div>
 			<div class="row mt-3">
         <div class="col-12">
-          <table class="table">
-            <thead>
-                <tr>
-                  <th scope="col">classement</th>
-                  <th scope="col">mpId</th>
-                  <th scope="col">score</th>
-                  <th scope="col">votesN</th>
-                  <th scope="col">dateMaj</th>
-                </tr>
-              </thead>
-              <tbody>
-        <?php
-
-        // CONNEXION SQL //
-        	include 'bdd-connexion.php';
-
-          $bdd->query('
-            DROP TABLE IF EXISTS class_participation_all;
-            CREATE TABLE class_participation_all
-              (id INT(5) NOT NULL AUTO_INCREMENT,
-              classement INT(5) NOT NULL,
-              mpId VARCHAR(25) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
-              score DECIMAL(3,2) NOT NULL,
-              votesN INT(15) NOT NULL,
-              dateMaj DATE NOT NULL,
-              PRIMARY KEY (id));
-              ALTER TABLE class_participation_all ADD INDEX idx_mpId (mpId);
-          ');
-
-          $result = $bdd->query('
-          SELECT @s:=@s+1 AS "classement", A.*
-          FROM (
-            SELECT v.mpId, ROUND(AVG(v.participation),2) AS score, COUNT(v.participation) AS votesN, ROUND(COUNT(v.participation)/100) AS "index"
-            FROM votes_participation v
-            WHERE v.participation IS NOT NULL
-            GROUP BY v.mpId
-            ORDER BY ROUND(COUNT(v.participation)/100) DESC, AVG(v.participation) DESC
-          ) A, (SELECT @s:= 0) AS s
-          ');
-
-          while ($depute = $result->fetch()) {
-            $classement = $depute["classement"];
-            $mpId = $depute["mpId"];
-            $score = $depute["score"];
-            $votesN = $depute["votesN"];
-            $dateMaj = date('Y-m-d');
-
-            echo "<tr>";
-            echo "<td>".$classement."</td>";
-            echo "<td>".$mpId."</td>";
-            echo "<td>".$score."</td>";
-            echo "<td>".$votesN."</td>";
-            echo "<td>".$dateMaj."</td>";
-            echo "</tr>";
-
-
-            $sql = $bdd->prepare("INSERT INTO class_participation_all (classement, mpId, score, votesN, dateMaj) VALUES (:classement, :mpId, :score, :votesN, :dateMaj)");
-            $sql->execute(array('classement' => $classement, 'mpId' => $mpId, 'score' => $score, 'votesN' => $votesN, 'dateMaj' => $dateMaj));
-          }
-        ?>
-            </tbody>
-          </table>
+          <p>This script and db table has been removed.</p>
         </div>
       </div>
     </div>
