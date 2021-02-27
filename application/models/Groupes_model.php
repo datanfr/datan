@@ -302,57 +302,31 @@
       return $groupe;
     }
 
-    public function get_stats_cohesion($groupe_uid, $active){
-      $this->db->select('*, ROUND(cohesion*100) AS score');
-      $this->db->from('class_groups_cohesion');
-      $this->db->where(array('organeRef' => $groupe_uid));
-      $query = $this->db->get();
+    public function get_stats($groupe_uid){
+      $query = $this->db->query('
+        SELECT *,
+          ROUND(cohesion, 2) AS cohesion,
+          ROUND(participation * 100) AS participation,
+          ROUND(majoriteAccord * 100) AS majorite
+        FROM class_groups
+        WHERE organeRef = "'.$groupe_uid.'"
+      ');
 
       return $query->row_array();
     }
 
-    public function get_stats_cohesion_moyenne($active){
-      $this->db->select('ROUND(AVG(cohesion),2) AS moyenne');
-      $this->db->from('class_groups_cohesion');
-      $query = $this->db->get();
+    public function get_stats_avg(){
+      $query = $this->db->query('
+        SELECT
+          ROUND(AVG(cohesion), 2) AS cohesion,
+          ROUND(AVG(participation) * 100) AS participation,
+          ROUND(AVG(majoriteAccord) * 100) AS majorite
+        FROM class_groups
+      ');
 
       return $query->row_array();
     }
 
-    public function get_stats_participation($groupe_uid, $active){
-      $this->db->select('*, ROUND(participation*100) AS score');
-      $this->db->from('class_groups_participation');
-      $this->db->where(array('organeRef' => $groupe_uid));
-      $query = $this->db->get();
-
-      return $query->row_array();
-    }
-
-    public function get_stats_participation_moyenne($active){
-      $this->db->select('ROUND(AVG(participation),2) AS moyenne');
-      $this->db->from('class_groups_participation');
-      $query = $this->db->get();
-
-      return $query->row_array();
-    }
-
-    public function get_stats_majorite($groupe_uid, $active) {
-      $this->db->select('*, ROUND(majoriteAccord*100) AS score');
-      $this->db->from('class_groups_majorite');
-      $this->db->where(array('organeRef' => $groupe_uid));
-      $query = $this->db->get();
-
-      return $query->row_array();
-    }
-
-    public function get_stats_majorite_moyenne($active){
-      $this->db->select('ROUND(AVG(majoriteAccord),2) AS moyenne');
-      $this->db->from('class_groups_majorite');
-      $query = $this->db->get();
-
-
-      return $query->row_array();
-    }
 
     public function get_stats_proximite($groupe_uid){
       $query = $this->db->query('

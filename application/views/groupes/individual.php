@@ -240,8 +240,8 @@
                   <?php else: ?>
                     <div class="col-lg-3 offset-lg-1 mt-2">
                       <div class="d-flex justify-content-center align-items-center">
-                        <div class="c100 p<?= $stats_participation['score'] ?> m-0">
-                            <span><?= $stats_participation['score'] ?> %</span>
+                        <div class="c100 p<?= $stats['participation'] ?> m-0">
+                            <span><?= $stats['participation'] ?> %</span>
                             <div class="slice">
                                 <div class="bar"></div>
                                 <div class="fill"></div>
@@ -252,12 +252,12 @@
                     <div class="col-lg-8 infos mt-4 mt-lg-2">
                       <div class="texte ml-md-3 pl-md-3 mt-md-0 mt-3">
                         <p>
-                          En moyenne, <?= $stats_participation['score'] ?>% <?php if ($groupe['libelleAbrev'] != "NI"): ?>des députés du groupe <?= $groupe['libelleAbrev'] ?><?php else: ?>des <?= mb_strtolower($title) ?><?php endif; ?> <?= $active == TRUE ? 'prennent' : 'prenaient' ?> part aux votes.
+                          En moyenne, <?= $stats['participation'] ?>% <?php if ($groupe['libelleAbrev'] != "NI"): ?>des députés du groupe <?= $groupe['libelleAbrev'] ?><?php else: ?>des <?= mb_strtolower($title) ?><?php endif; ?> <?= $active == TRUE ? 'prennent' : 'prenaient' ?> part aux votes.
                         </p>
                         <p>
-                          <?php if ($groupe['libelleAbrev'] != "NI"): ?>Le groupe <b><?= $active == TRUE ? 'participe' : 'participait' ?> <?php else: ?>Les <?= mb_strtolower($title) ?> <b>participent <?php endif; ?> <?= $edito_participation ?></b> que la moyenne <?= $active == TRUE ? "des autres groupes" : "de tous les groupes de l'Assemblée" ?>, qui est <?php if ($edito_participation == "autant"): ?>
+                          <?php if ($groupe['libelleAbrev'] != "NI"): ?>Le groupe <b><?= $active == TRUE ? 'participe' : 'participait' ?> <?php else: ?>Les <?= mb_strtolower($title) ?> <b>participent <?php endif; ?> <?= $edito_participation['relative'] ?></b> que la moyenne <?= $active == TRUE ? "des autres groupes" : "de tous les groupes de l'Assemblée" ?>, qui est <?php if ($edito_participation == "autant"): ?>
                             aussi
-                          <?php endif; ?> de <?= $stats_participation_moyenne['moyenne']*100 ?>%.
+                          <?php endif; ?> de <?= $participationAverage ?> %.
                         </p>
                         <!-- <span><a href="#" target="_blank">> Voir le classement général</a></span> -->
                       </div>
@@ -287,8 +287,8 @@
                   <?php else: ?>
                   <div class="col-lg-3 offset-lg-1 mt-2">
                     <div class="d-flex justify-content-center align-items-center">
-                      <div class="c100 p<?= $stats_cohesion['score'] ?> m-0">
-                          <span><?= $stats_cohesion['cohesion'] ?></span>
+                      <div class="c100 p<?= $stats['cohesion'] * 100 ?> m-0">
+                          <span><?= $stats['cohesion'] ?></span>
                           <div class="slice">
                               <div class="bar"></div>
                               <div class="fill"></div>
@@ -299,10 +299,10 @@
                   <div class="col-lg-8 infos mt-4 mt-lg-2">
                     <div class="texte ml-md-3 pl-md-3 mt-md-0 mt-3">
                       <p>
-                        Avec un taux de cohésion de <?= $stats_cohesion['cohesion'] ?>,<?php if ($groupe['libelleAbrev'] != "NI"): ?> le groupe <?= $groupe['libelleAbrev'] ?> peut être considéré<?php else: ?> les <?= mb_strtolower($title) ?> peuvent être considérés<?php endif; ?> comme <b><?= $edito_cohesion["absolute"] ?> soudé<?php if ($groupe['libelleAbrev'] == "NI"): ?>s<?php endif; ?></b> quand il <?= $active == TRUE ? "s'agit" : "s'agissait" ?> de voter.
+                        Avec un taux de cohésion de <?= $stats['cohesion'] ?>,<?php if ($groupe['libelleAbrev'] != "NI"): ?> le groupe <?= $groupe['libelleAbrev'] ?> peut être considéré<?php else: ?> les <?= mb_strtolower($title) ?> peuvent être considérés<?php endif; ?> comme <b><?= $edito_cohesion["absolute"] ?> soudé<?php if ($groupe['libelleAbrev'] == "NI"): ?>s<?php endif; ?></b> quand il <?= $active == TRUE ? "s'agit" : "s'agissait" ?> de voter.
                       </p>
                       <p>
-                        Le groupe <?= $active == TRUE ? "est" : "était" ?> en effet <b><?= $edito_cohesion["relative"] ?> uni</b> que la moyenne de tous les groupes, qui est de <?= $stats_cohesion_moyenne['moyenne'] ?>.
+                        Le groupe <?= $active == TRUE ? "est" : "était" ?> en effet <b><?= $edito_cohesion["relative"] ?> uni</b> que la moyenne de tous les groupes, qui est de <?= $cohesionAverage ?>.
                       </p>
                     </div>
                   </div>
@@ -332,8 +332,8 @@
                     <?php else: ?>
                     <div class="col-lg-3 offset-lg-1 mt-2">
                       <div class="d-flex justify-content-center align-items-center">
-                        <div class="c100 p<?= $stats_majorite['score'] ?> m-0">
-                            <span><?= $stats_majorite['score'] ?> %</span>
+                        <div class="c100 p<?= $stats['majorite'] ?> m-0">
+                            <span><?= $stats['majorite'] ?> %</span>
                             <div class="slice">
                                 <div class="bar"></div>
                                 <div class="fill"></div>
@@ -349,7 +349,7 @@
                             <?php else: ?>
                             Les <?= mb_strtolower($title) ?> ont
                           <?php endif; ?>
-                          voté en accord avec le groupe de la majorité présidentielle (<a href="<?= base_url(); ?>groupes/larem" target="_blank"?>LREM</a>) dans <?= $stats_majorite['score'] ?>% des cas.
+                          voté en accord avec le groupe de la majorité présidentielle (<a href="<?= base_url(); ?>groupes/larem" target="_blank"?>LREM</a>) dans <?= $stats['majorite'] ?> % des cas.
                         </p>
                         <p>
                           <?php if ($groupe['libelleAbrev'] != "NI"): ?>
@@ -357,7 +357,7 @@
                             <?php else: ?>
                             Les députés <?= $groupe['libelleAbrev'] ?> votent
                           <?php endif; ?>
-                          <b><?= $edito_majorite ?> souvent</b> avec la majorité présidentielle que la moyenne des autres groupes, qui est de <?= $stats_majorite_moyenne['moyenne']*100 ?> %.
+                          <b><?= $edito_majorite['relative'] ?> souvent</b> avec la majorité présidentielle que la moyenne des autres groupes, qui est de <?= $majoriteAverage ?> %.
                         </p>
                       </div>
                     </div>

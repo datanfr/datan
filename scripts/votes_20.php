@@ -43,32 +43,7 @@
 			</div>
 			<div class="row mt-3">
         <div class="col-12">
-        <?php
-
-        // CONNEXION SQL //
-        	include 'bdd-connexion.php';
-
-          $bdd->query('
-            DROP TABLE IF EXISTS class_groups_majorite;
-            CREATE TABLE class_groups_majorite AS
-            SELECT A.*,
-            curdate() AS dateMaj
-            FROM
-            (
-            SELECT ga.organeRef, AVG(ga.PO730964) AS majoriteAccord, COUNT(ga.PO730964) AS votesN,
-            CASE WHEN o.dateFin IS NULL THEN 1 ELSE 0 END AS active
-            FROM groupes_accord ga
-            LEFT JOIN organes o ON o.uid = ga.organeRef
-            WHERE ga.organeRef != "PO730964"
-            GROUP BY ga.organeRef
-            ) A
-            ORDER BY majoriteAccord DESC;
-            ALTER TABLE class_groups_majorite ADD INDEX idx_organeRef (organeRef);
-            ALTER TABLE class_groups_majorite ADD INDEX idx_active (active);
-          ');
-
-        ?>
-
+          <p>This script and db table has been removed.</p>
         </div>
       </div>
     </div>

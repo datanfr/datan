@@ -43,40 +43,7 @@
 			</div>
 			<div class="row mt-3">
         <div class="col-12">
-        <?php
-
-        // CONNEXION SQL //
-        	include 'bdd-connexion.php';
-
-          $bdd->query('
-            DROP TABLE IF EXISTS class_groups_participation;
-            CREATE TABLE class_groups_participation AS
-            SELECT C.*,
-            curdate() AS dateMaj
-            FROM
-            (
-            SELECT B.organeRef, AVG(B.participation_rate) AS participation,
-            CASE WHEN o.dateFin IS NULL THEN 1 ELSE 0 END AS active
-            FROM
-            (
-            SELECT A.*, A.total / A.n AS participation_rate
-            FROM
-            (
-            SELECT voteNumero, organeRef, nombreMembresGroupe as n, nombrePours as pour, nombreContres as contre, nombreAbstentions as abstention, nonVotants as nv, nonVotantsVolontaires as nvv, nombrePours+nombreContres+nombreAbstentions as total
-            FROM votes_groupes
-            WHERE legislature = 15
-            ) A
-            ) B
-            LEFT JOIN organes o ON o.uid = B.organeRef
-            GROUP BY B.organeRef
-            ) C
-            ORDER BY C.participation DESC;
-            ALTER TABLE class_groups_participation ADD INDEX idx_organeRef (organeRef);
-            ALTER TABLE class_groups_participation ADD INDEX idx_active (active);
-          ');
-
-        ?>
-
+          <p>This script and db table has been removed.</p>
         </div>
       </div>
     </div>
