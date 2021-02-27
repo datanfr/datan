@@ -22,7 +22,7 @@
 
   try {
     $bdd->query('ALTER TABLE `insee` ADD `new_region` INT;');
-    $bdd->query('Update insee Set region=(Select new_code from regions_old_new where regions_old_new.former_code=insee.region))');
+    $bdd->query('Update insee Set new_region=(Select new_code from regions_old_new where regions_old_new.former_code=insee.region)');
     $bdd->query('DROP TABLE IF EXISTS regions_old_new;');
   }catch(Exception $e){
     echo 'regions_old_new déjà migrées, enfin vérifie ta base quand même';
