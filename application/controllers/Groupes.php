@@ -105,7 +105,6 @@
       // Query 1 Informations principales
       $groupe_slug = mb_strtoupper($groupe_slug);
       $data['groupe'] = $this->groupes_model->get_groupes_individal($groupe_slug, $legislature);
-      //print_r($data['groupe']);
 
       if (empty($data['groupe'])) {
         show_404();
@@ -174,7 +173,6 @@
       //Query 3 Statistiques
       $data['stats'] = $this->groupes_model->get_stats($groupe_uid);
       $data['statsAverage'] = $this->groupes_model->get_stats_avg();
-      print_r($data['stats']);
 
       if (!empty($data['stats']['cohesion'])) {
         $data['cohesionAverage'] = $data['statsAverage']['cohesion'];
