@@ -78,11 +78,11 @@
     public function get_commune_individual($ville, $departement){
       $query = $this->db->query('
       SELECT B.*,
-      CASE WHEN char_length(i.postal) = 4 THEN CONCAT("0", i.postal) ELSE i.postal END AS code_postal, r.new_code AS codeRegion, city.pop2007, city.pop2012, city.pop2017,
+      CASE WHEN char_length(i.postal) = 4 THEN CONCAT("0", i.postal) ELSE i.postal END AS code_postal, i.region AS codeRegion, city.pop2007, city.pop2012, city.pop2017,
       ((city.pop2017 - city.pop2007) / city.pop2007) * 100 AS evol10
       FROM
       (
-      SELECT A.*, d.slug AS dpt_slug, d.libelle_1, d.libelle_2, dr.region_name,
+      SELECT A.*, d.slug AS dpt_slug, d.libelle_1, d.libelle_2, d.region as region_name,
       CASE
 		WHEN A.code_insee_draft LIKE "0%" THEN SUBSTR(A.code_insee_draft, 2)
         ELSE A.code_insee_draft
@@ -120,13 +120,11 @@
       WHERE commune_slug = "'.$ville.'"
       ) A
       LEFT JOIN departement d ON A.dpt_edited = d.departement_code
-      LEFT JOIN departements_regions dr ON A.dpt_edited = dr.num_dep
       WHERE slug = "'.$departement.'"
       GROUP BY circo
       ) B
       LEFT JOIN cities_infos city ON B.code_insee_draft = city.insee
       LEFT JOIN insee i ON B.code_insee = i.insee
-      LEFT JOIN regions_old_new r ON i.region = r.former_code
       GROUP BY B.circo
       ');
 
