@@ -7,6 +7,9 @@
   $bdd->query('DROP TABLE IF EXISTS class_loyaute_all;');
   $bdd->query('DROP TABLE IF EXISTS class_majorite_all;');
   $bdd->query('DROP TABLE IF EXISTS class_participation_all;');
-  $bdd->query('DROP TABLE IF EXISTS class_participation_commission_all;')
+  $bdd->query('DROP TABLE IF EXISTS class_participation_commission_all;');
+  $bdd->query('DROP TABLE IF EXISTS class_groups_cohesion;');
+  $bdd->query('DROP TABLE IF EXISTS class_groups_majorite;');
+  $bdd->query('DROP TABLE IF EXISTS class_groups_participation;');
 
 ?>
