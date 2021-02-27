@@ -64,7 +64,7 @@
         <link rel=preload href="<?= $preload['href'] ?>" as="<?= $preload['as'] ?>" imagesrcset="<?= $preload['imagesrcset'] ?>">
       <?php endforeach; ?>
     <?php endif; ?>
-    <link rel="preload" href="https://matomo.datan.com/matomo.js" onload="embedTracker()" type="script" crossorigin>
+    <link rel="preload" href="https://matomo.datan.fr/1337.js" onload="embedTracker()" type="script" crossorigin>
     <!-- CSS -->
     <?php if (isset($critical_css)): ?>
       <style type="text/css"><?php include $critical_css ?></style>
@@ -129,6 +129,8 @@
     </style>
     <!-- Matomo -->
     <script type="text/javascript">
+      // https://github.com/0x11DFE/Matomo-Anti-Adblock
+      // Static way - Need to redo it after updating Matomo
       var _paq = window._paq = window._paq || [];
       // CODE CNIL
       _paq.push([function() {
@@ -150,13 +152,13 @@
       _paq.push(['enableLinkTracking']);
       (function() {
         var u="//matomo.datan.fr/";
-        _paq.push(['setTrackerUrl', u+'matomo.php']);
+        _paq.push(['setTrackerUrl', u+'1337.php']);
         _paq.push(['setSiteId', '1']);
         var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
-        g.type='text/javascript'; g.async=true; g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s);
+        g.type='text/javascript'; g.async=true; g.src=u+'1337.js'; s.parentNode.insertBefore(g,s);
       })();
     </script>
-    <noscript><p><img src="//matomo.datan.fr/matomo.php?idsite=1&amp;rec=1" style="border:0;" alt="" /></p></noscript>
+    <noscript><p><img src="//matomo.datan.fr/1337.php?idsite=1&amp;rec=1" style="border:0;" alt="" /></p></noscript>
     <!-- End Matomo Code -->
 
   </head>
