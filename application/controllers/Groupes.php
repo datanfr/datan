@@ -172,23 +172,36 @@
       $data['groupe'] = $this->groupes_model->get_groupe_social_media($data['groupe']);
 
       //Query 3 Statistiques
-      $data['stats_cohesion'] = $this->groupes_model->get_stats_cohesion($groupe_uid, $data['active']); // COHESION
-      if (isset($data['stats_cohesion'])) {
-        $data['stats_cohesion_moyenne'] = $this->groupes_model->get_stats_cohesion_moyenne($data['active']);
-        $data['edito_cohesion'] = $this->groupes_edito->cohesion($data['stats_cohesion']['cohesion'], $data['stats_cohesion_moyenne']['moyenne']);
+      $data['stats'] = $this->groupes_model->get_stats($groupe_uid);
+      $data['statsAverage'] = $this->groupes_model->get_stats_avg();
+      print_r($data['stats']);
+
+      if (!empty($data['stats']['cohesion'])) {
+        $data['cohesionAverage'] = $data['statsAverage']['cohesion'];
+        $data['edito_cohesion'] = $this->groupes_edito->cohesion($data['stats']['cohesion'], $data['cohesionAverage']);
         $data['no_cohesion'] = FALSE;
       } else {
         $data['no_cohesion'] = TRUE;
       }
-      $data['stats_participation'] = $this->groupes_model->get_stats_participation($groupe_uid, $data['active']); // PARTICIPATION
-      if (isset($data['stats_participation'])) {
-        $data['stats_participation_moyenne'] = $this->groupes_model->get_stats_participation_moyenne($data['active']);
-        $data['edito_participation'] = $this->groupes_edito->participation($data['stats_participation']['score'], $data['stats_participation_moyenne']['moyenne']);
+
+      if (!empty($data['stats']['participation'])) {
+        $data['participationAverage'] = $data['statsAverage']['participation'];
+        $data['edito_participation'] = $this->groupes_edito->cohesion($data['stats']['participation'], $data['participationAverage']);
         $data['no_participation'] = FALSE;
       } else {
         $data['no_participation'] = TRUE;
       }
-      $data['stats_majorite'] = $this->groupes_model->get_stats_majorite($groupe_uid, $data['active']); // PROXIMITÉ MAJORITÉ
+
+      if (!empty($data['stats']['majorite'])) {
+        $data['majoriteAverage'] = $data['statsAverage']['majorite'];
+        $data['edito_majorite'] = $this->groupes_edito->cohesion($data['stats']['majorite'], $data['majoriteAverage']);
+        $data['no_majorite'] = FALSE;
+      } else {
+        $data['no_majorite'] = TRUE;
+      }
+
+
+
       if (isset($data['stats_majorite'])) {
         $data['stats_majorite_moyenne'] = $this->groupes_model->get_stats_majorite_moyenne($data['active']);
         $data['edito_majorite'] = $this->groupes_edito->majorite($data['stats_majorite']['score'], $data['stats_majorite_moyenne']['moyenne']);
