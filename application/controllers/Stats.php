@@ -161,8 +161,8 @@
         $data['groupsFirst']['couleurAssociee'] = $this->groupes_model->get_groupe_color($data['groupsFirst']);
         $data['groupsLast'] = end($data['groupsCards']);
         $data['groupsLast']['couleurAssociee'] = $this->groupes_model->get_groupe_color($data['groupsLast']);
-        $data['cohesionMean'] = $this->groupes_model->get_stats_cohesion_moyenne(FALSE);
-        $data['cohesionMean'] = $data['cohesionMean']['moyenne'];
+        $data['cohesionMean'] = $this->groupes_model->get_stats_avg(FALSE);
+        $data['cohesionMean'] = $data['cohesionMean']['cohesion'];
 
         // Meta
         $data['title_meta'] = "La cohésion des groupes parlementaires - Assemblée nationale | Datan";
