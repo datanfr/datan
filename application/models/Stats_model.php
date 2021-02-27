@@ -247,13 +247,15 @@
       SELECT @s:=@s+1 AS "rank", A.*
       FROM
       (
-        SELECT gc.*, o.libelle, o.libelleAbrev, o.couleurAssociee, ge.effectif
-        FROM class_groups_cohesion gc
-        LEFT JOIN organes o ON gc.organeRef = o.uid
-        LEFT JOIN groupes_effectif ge ON ge.organeRef  = gc.organeRef
+        SELECT cg.organeRef, cg.legislature, cg.cohesion, cg.active, o.libelle, o.libelleAbrev, o.couleurAssociee, ge.effectif
+        FROM class_groups cg
+        LEFT JOIN organes o ON cg.organeRef = o.uid
+        LEFT JOIN groupes_effectif ge ON ge.organeRef  = cg.organeRef
+        WHERE cg.active = 1
       ) A,
       (SELECT @s:= 0) AS s
       ORDER BY A.cohesion DESC
+
       ');
 
       return $query->result_array();
@@ -317,12 +319,12 @@
       SELECT @s:=@s+1 AS "rank", A.*
       FROM
       (
-      SELECT cp.organeRef, ROUND(cp.participation * 100) AS participation, o.libelle, o.libelleAbrev, o.couleurAssociee, ge.effectif
-      FROM class_groups_participation cp
-      LEFT JOIN organes o ON cp.organeRef = o.uid
-      LEFT JOIN groupes_effectif ge ON cp.organeRef = ge.organeRef
-      WHERE cp.active = 1
-      ORDER BY cp.participation DESC
+      SELECT cg.organeRef, ROUND(cg.participation * 100) AS participation, o.libelle, o.libelleAbrev, o.couleurAssociee, ge.effectif
+      FROM class_groups cg
+      LEFT JOIN organes o ON cg.organeRef = o.uid
+      LEFT JOIN groupes_effectif ge ON cg.organeRef = ge.organeRef
+      WHERE cg.active = 1
+      ORDER BY cg.participation DESC
       ) A,
       (SELECT @s:= 0) AS s
       ');
