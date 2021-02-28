@@ -31,7 +31,7 @@
 					<a class="btn btn-outline-secondary" href="http://<?php echo $_SERVER['SERVER_NAME']. ''.$_SERVER['REQUEST_URI'] ?>" role="button">Refresh</a>
 				</div>
 				<div class="col-4">
-					<a class="btn btn-outline-success" href="./" role="button">END</a>
+					<a class="btn btn-outline-success" href="./<?= $url_next ?>_organes.php" role="button">END</a>
 				</div>
 			</div>
 			<div class="row mt-3">
