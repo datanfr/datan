@@ -234,9 +234,9 @@
           LEFT JOIN organes o ON o.uid = gs.organeRef
           LEFT JOIN groupes_effectif ge ON ge.organeRef  = gs.organeRef
           WHERE dateFin IS NULL
-          ORDER BY gs.age DESC
         ) A,
         (SELECT @s:= 0) AS s
+        ORDER BY A.age DESC
       ');
 
       return $query->result_array();
