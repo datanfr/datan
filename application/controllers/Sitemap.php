@@ -22,7 +22,7 @@ class Sitemap extends CI_Controller {
 
   /* 2. datan/sitemap-deputes-1.xml */
   function deputes(){
-    $results = $this->deputes_model->get_deputes_actifs(NULL);
+    $results = $this->deputes_model->get_deputes_all(legislature_current(), TRUE, NULL);
     //print_r($results);
 
     $urls = array();
@@ -42,7 +42,7 @@ class Sitemap extends CI_Controller {
 
   /* 3. sitemap-deputes-inactifs-1.xml */
   function deputes_inactifs(){
-    $results = $this->deputes_model->get_deputes_inactifs(NULL);
+    $results = $this->deputes_model->get_deputes_all(legislature_current(), FALSE, NULL);
     //print_r($results);
 
     $urls = array();
@@ -62,7 +62,7 @@ class Sitemap extends CI_Controller {
 
   /* 4. sitemap-groupes-1.xml */
   function groupes(){
-    $results = $this->groupes_model->get_groupes_all(TRUE, FALSE);
+    $results = $this->groupes_model->get_groupes_all(TRUE, legislature_current());
     //print_r($results);
 
     $urls = array();
@@ -82,7 +82,7 @@ class Sitemap extends CI_Controller {
 
   /* 5. sitemap-groupes-inactifs-1.xml */
   function groupes_inactifs(){
-    $results = $this->groupes_model->get_groupes_all(FALSE, FALSE);
+    $results = $this->groupes_model->get_groupes_all(FALSE, legislature_current());
 
     $urls = array();
     foreach ($results as $result) {
@@ -263,6 +263,7 @@ class Sitemap extends CI_Controller {
 
   }
 
+  /* 12. sitemap-partis-politiques-1.xml */
   function parties(){
     $resultsActive = $this->parties_model->get_parties_active();
     $resultsOther = $this->parties_model->get_parties_other();
