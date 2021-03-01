@@ -78,11 +78,19 @@
             ');
 
             $i = 1;
-
             while ($data = $query->fetch()) {
+              try {
               $mpId = $data['mpId'];
               $legislature = $data['legislature'];
-              $nameUrl = $data['nameUrl'];
+              $nameUrl = $data['nameUrl'] ? $data['nameUrl'] : \Transliterator::createFromRules(
+                ':: Any-Latin;'
+                . ':: NFD;'
+                . ':: [:Nonspacing Mark:] Remove;'
+                . ':: NFC;'
+                . ':: Lower();'
+                . '[:Separator:] > \'-\''
+            )
+                ->transliterate("{$data['nameFirst']}-{$data['nameLast']}");
               $nameFirst = $data['nameFirst'];
               $nameLast = $data['nameLast'];
               $civ = $data['civ'];
@@ -90,8 +98,7 @@
 
 
               // Get the mandat_principal
-
-              $mandatPrincipal = $bdd->query('
+                $mandatPrincipal = $bdd->query('
                 SELECT mp.*, dpt.slug AS dptSlug, dpt.departement_nom AS departementNom, dpt.departement_code AS departementCode, mp.electionCirco AS circo, mp.causeFin, mp.datePriseFonction
                 FROM mandat_principal mp
                 LEFT JOIN departement dpt ON mp.electionDepartementNumero = dpt.departement_code
@@ -114,7 +121,6 @@
               } else {
                 echo "ERROR";
               }
-
               $mandatGroupes = $bdd->query('
               SELECT o.libelle, o.libelleAbrev, o.uid AS groupeId, o.couleurAssociee, mg.mandatId AS groupeMandat
               FROM mandat_groupe mg
@@ -123,7 +129,6 @@
               ORDER BY !ISNULL(mg.dateFin), mg.dateFin DESC
               LIMIT 1
               ');
-
               if ($mandatGroupes->rowCount() > 0) {
                 while ($mandatGroupe = $mandatGroupes->fetch()) {
                   $libelle = $mandatGroupe['libelle'];
@@ -171,11 +176,13 @@
               </tr>
 
               <?php
-
               // SQL //
               $sql = $bdd->prepare("INSERT INTO deputes_all (mpId, legislature, nameUrl, civ, nameFirst, nameLast, age, dptSlug, departementNom, departementCode, circo, mandatId, libelle, libelleAbrev, groupeId, groupeMandat, couleurAssociee, datePriseFonction, dateFin, causeFin, dateMaj) VALUES (:mpId, :legislature, :nameUrl, :civ, :nameFirst, :nameLast, :age, :dptSlug, :departementNom, :departementCode, :circo, :mandatId, :libelle, :libelleAbrev, :groupeId, :groupeMandat, :couleurAssociee, :datePriseFonction, :dateFin, :causeFin, :dateMaj)");
               $sql->execute(array('mpId' => $mpId, 'legislature' => $legislature, 'nameUrl' => $nameUrl, 'civ' => $civ, 'nameFirst' => $nameFirst, 'nameLast' => $nameLast, 'age' => $age, 'dptSlug' => $dptSlug, 'departementNom' => $departementNom, 'departementCode' => $departementCode, 'circo' => $circo, 'mandatId' => $mandatId, 'libelle' => $libelle, 'libelleAbrev' => $libelleAbrev, 'groupeId' => $groupeId, 'groupeMandat' => $groupeMandat, 'couleurAssociee' => $couleurAssociee, 'datePriseFonction' => $datePriseFonction, 'dateFin' => $dateFin, 'causeFin' => $causeFin, 'dateMaj' => $dateMaj));
               $i++;
+            }catch(Exception $e){
+              echo '<pre>', var_dump($e->getMessage()), '</pre>';
+            }
             }
 
   				?>
