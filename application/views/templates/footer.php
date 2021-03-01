@@ -134,6 +134,7 @@
     <?php endif; ?>
 
     <script type="text/javascript" src="<?= asset_url() ?>js/<?= js_file() ?>.js"></script>
+    <script type="text/javascript" src="<?= asset_url() ?>js/datan/url_obf2.min.js"></script>
 
     <!-- Google Tag Manager (noscript) -->
     <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-K3QQNK2"
