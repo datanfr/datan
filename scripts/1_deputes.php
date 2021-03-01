@@ -39,6 +39,7 @@
                 <th scope="col">civ</th>
                 <th scope="col">nameFirst</th>
                 <th scope="col">nameLast</th>
+                <th scope="col">nameUrl</th>
                 <th scope="col">birthDate</th>
                 <th scope="col">birthCity</th>
                 <th scope="col">birthCountry</th>
@@ -83,6 +84,26 @@
                         $job = $xml->profession->libelleCourant;
                         $catSocPro = $xml->profession->socProcINSEE->catSocPro;
                         $famSocPro = $xml->profession->socProcINSEE->famSocPro;
+                        $lastname = \Transliterator::createFromRules(
+                          ':: Any-Latin;'
+                          . ':: NFD;'
+                          . ':: [:Nonspacing Mark:] Remove;'
+                          . ':: NFC;'
+                          . ':: [:Space:] Remove;'
+                          . ':: [:Punctuation:] Remove;'
+                          . ':: Lower();'
+                          . '[:Separator:] > \'-\';'
+                        )->transliterate($nameLast);
+                        $firstname = \Transliterator::createFromRules(
+                          ':: Any-Latin;'
+                          . ':: NFD;'
+                          . ':: [:Nonspacing Mark:] Remove;'
+                          . ':: NFC;'
+                          . ':: [:Punctuation:] Remove;'
+                          . ':: Lower();'
+                          . '[:Separator:] > \'-\';'
+                        )->transliterate($nameFirst);
+                        $nameUrl = "{$firstname}-{$lastname}";
                         ?>
 
                         <tr>
@@ -92,6 +113,7 @@
                           <td><?= $civ ?></td>
                           <td><?= $nameFirst ?></td>
                           <td><?= $nameLast ?></td>
+                          <td><?= $nameUrl ?></td>
                           <td><?= $birthDate ?></td>
                           <td><?= $birthCity ?></td>
                           <td><?= $birthCountry ?></td>
@@ -102,9 +124,15 @@
                         </tr>
 
                         <?php
+                        try{
                         // SQL //
-        								$sql = $bdd->prepare("INSERT INTO deputes (mpId, civ, nameFirst, nameLast, birthDate, birthCity, birthCountry, job, catSocPro, dateMaj) VALUES (:mpId, :civ, :nameFirst, :nameLast, :birthDate, :birthCity, :birthCountry, :job, :catSocPro, :dateMaj)");
-        								$sql->execute(array('mpId' => $mpId, 'civ' => $civ, 'nameFirst' => $nameFirst, 'nameLast' => $nameLast, 'birthDate' => $birthDate, 'birthCity' => $birthCity, 'birthCountry' => $birthCountry, 'job' => $job, 'catSocPro' => $catSocPro, 'dateMaj' => $dateMaj));
+        								$sql = $bdd->prepare("INSERT INTO deputes (mpId, civ, nameFirst, nameLast, nameUrl, birthDate, birthCity, birthCountry, job, catSocPro, dateMaj) VALUES (:mpId, :civ, :nameFirst, :nameLast, :nameUrl, :birthDate, :birthCity, :birthCountry, :job, :catSocPro, :dateMaj)");
+        								$sql->execute(array('mpId' => $mpId, 'civ' => $civ, 'nameFirst' => $nameFirst, 'nameLast' => $nameLast, 'nameUrl' => $nameUrl, 'birthDate' => $birthDate, 'birthCity' => $birthCity, 'birthCountry' => $birthCountry, 'job' => $job, 'catSocPro' => $catSocPro, 'dateMaj' => $dateMaj));
+ 
+                        }
+                        catch(Exception $e){
+                          echo '<pre>', var_dump($e->getMessage()), '</pre>';die('');
+                        }
                       }
                     }
                   }
