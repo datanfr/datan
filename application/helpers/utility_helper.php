@@ -8,7 +8,7 @@
   }
 
   function css_file(){
-    return 'main_2021222';
+    return 'main_20210301';
     //return 'main';
   }
 
@@ -45,5 +45,10 @@
     );
 
     return $array;
+  }
+
+  function url_obfuscation($x){
+    $url = "sdfghj".str_rot13($x);
+    return $url;
   }
 ?>
