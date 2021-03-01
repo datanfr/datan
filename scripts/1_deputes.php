@@ -19,6 +19,7 @@
       $url = str_replace(array("/", "datan", "scripts", ".php"), "", $url);
       $url_current = substr($url, 0, 1);
       $url_next = $url_current + 1;
+      $deputeFields = array('mpId', 'civ', 'nameFirst', 'nameLast', 'nameUrl', 'birthDate', 'birthCity', 'birthCountry', 'job', 'catSocPro', 'dateMaj');
     ?>
 		<div class="container" style="background-color: #e9ecef;">
 			<div class="row">
@@ -34,24 +35,25 @@
           <thead>
               <tr>
                 <th scope="col">#</th>
-                <th scope="col">file</th>
-                <th scope="col">mpId</th>
-                <th scope="col">civ</th>
-                <th scope="col">nameFirst</th>
-                <th scope="col">nameLast</th>
-                <th scope="col">nameUrl</th>
-                <th scope="col">birthDate</th>
-                <th scope="col">birthCity</th>
-                <th scope="col">birthCountry</th>
-                <th scope="col">job</th>
-                <th scope="col">catSocPro</th>
-                <th scope="col">famSocPro</th>
-                <th scope="col">dateMaj</th>
+                <?php foreach($deputeFields as $deputeField) : ?>
+                <th scope="col"><?= $deputeField ?></th>
+                <?php endforeach ?>
               </tr>
             </thead>
             <tbody>
               <?php
                 include('bdd-connexion.php');
+
+                function placeholders($text, $count=0, $separator=","){
+                  $result = array();
+                  if($count > 0){
+                      for($x=0; $x<$count; $x++){
+                          $result[] = $text;
+                      }
+                  }
+              
+                  return implode($separator, $result);
+              }
                 $bdd->query("TRUNCATE TABLE deputes");
                 $dateMaj = date('Y-m-d');
                 //Online file
@@ -65,6 +67,7 @@
                 if ($zip->open($newfile)!==TRUE) {
                   exit("cannot open <$filename>\n");
                 } else {
+                  $insert_values = [];
                   for ($i=0; $i < $zip->numFiles ; $i++) {
                     $filename = $zip->getNameIndex($i);
                     $sub = substr($filename, 0, 13);
@@ -124,18 +127,28 @@
                         </tr>
 
                         <?php
-                        try{
-                        // SQL //
-        								$sql = $bdd->prepare("INSERT INTO deputes (mpId, civ, nameFirst, nameLast, nameUrl, birthDate, birthCity, birthCountry, job, catSocPro, dateMaj) VALUES (:mpId, :civ, :nameFirst, :nameLast, :nameUrl, :birthDate, :birthCity, :birthCountry, :job, :catSocPro, :dateMaj)");
-        								$sql->execute(array('mpId' => $mpId, 'civ' => $civ, 'nameFirst' => $nameFirst, 'nameLast' => $nameLast, 'nameUrl' => $nameUrl, 'birthDate' => $birthDate, 'birthCity' => $birthCity, 'birthCountry' => $birthCountry, 'job' => $job, 'catSocPro' => $catSocPro, 'dateMaj' => $dateMaj));
- 
-                        }
-                        catch(Exception $e){
-                          echo '<pre>', var_dump($e->getMessage()), '</pre>';die('');
-                        }
+                      try{
+                        $depute = array('mpId' => $mpId, 'civ' => $civ, 'nameFirst' => $nameFirst, 'nameLast' => $nameLast, 'nameUrl' => $nameUrl, 'birthDate' => $birthDate, 'birthCity' => $birthCity, 'birthCountry' => $birthCountry, 'job' => $job, 'catSocPro' => $catSocPro, 'dateMaj' => $dateMaj);
+                        $question_marks[] = '('  . placeholders('?', sizeof($depute)) . ')';
+                        $insert_values = array_merge($insert_values, array_values($depute));
+  
+                      }catch(Exception $e){
+                        echo '<pre>', var_dump($e->getMessage()), '</pre>';
+                      }
+
                       }
                     }
                   }
+
+                  try{
+                    // SQL //
+                    $sql = "INSERT INTO deputes (" . implode(",", $deputeFields ) . ") VALUES ". implode(',', $question_marks);  
+                    $stmt = $bdd->prepare ($sql);
+                    $stmt->execute($insert_values);
+                    }
+                    catch(Exception $e){
+                      echo '<pre>', var_dump($e->getMessage()), '</pre>';die('');
+                    }
                 }
               ?>
             </tbody>
