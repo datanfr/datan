@@ -37,66 +37,7 @@
 			</div>
 			<div class="row mt-3">
         <div class="col">
-          <?php
-          	/**
-           * Supprimer les accents
-           *
-           * @param string $str chaîne de caractères avec caractères accentués
-           * @param string $encoding encodage du texte (exemple : utf-8, ISO-8859-1 ...)
-           */
-          function suppr_accents($str, $encoding='utf-8')
-          {
-              // transformer les caractères accentués en entités HTML
-              $str = htmlentities($str, ENT_NOQUOTES, $encoding);
-
-              // remplacer les entités HTML pour avoir juste le premier caractères non accentués
-              // Exemple : "&ecute;" => "e", "&Ecute;" => "E", "à" => "a" ...
-              $str = preg_replace('#&([A-za-z])(?:acute|grave|cedil|circ|orn|ring|slash|th|tilde|uml);#', '\1', $str);
-
-              // Remplacer les ligatures tel que : , Æ ...
-              // Exemple "œ" => "oe"
-              $str = preg_replace('#&([A-za-z]{2})(?:lig);#', '\1', $str);
-              // Supprimer tout le reste
-              $str = preg_replace('#&[^;]+;#', '', $str);
-
-              return $str;
-          }
-        	include 'bdd-connexion.php';
-        	$lastIdSql = $bdd->query('
-        		SELECT mpId, nameFirst, nameLast
-        		FROM deputes
-        		WHERE nameUrl is null
-        		ORDER BY mpId ASC
-        		LIMIT 1000
-        		');
-
-          	echo '<hr>';
-
-          	while ($data = $lastIdSql->fetch()) {
-          		$mpId = $data['mpId'];
-          		echo '<p>Last id: '.$data['mpId'].'</p>';
-          		echo '<p>prenom origine: '.$data['nameFirst'].'</p>';
-          		echo '<p>nom origine: '.$data['nameLast'].'</p><br>';
-          		$firstAccent = $data['nameFirst'];
-          		$firstAccent = suppr_accents($firstAccent);
-          		$firstAccent = strtolower($firstAccent);
-          		$lastAccent = $data['nameLast'];
-          		$lastAccent = suppr_accents($lastAccent);
-          		$lastAccent = strtolower($lastAccent);
-          		echo '<p>firstAccent: '.($firstAccent).'</p>';
-          		echo '<p>lastAccent: '.($lastAccent).'</p>';
-          		$firstOk = strtr($firstAccent, array("'" => "", "-" => "", " " => "-"));
-          		echo '<p>firstOk: '.$firstOk.'</p>';
-          		$lastOk = strtr($lastAccent, array('.' => '', ',' => '', "'" => "", " " => "", "-" => ""));
-          		echo '<p>lastOk: '.$lastOk.'</p>';
-          		$nameUrl = $firstOk.'-'.$lastOk;
-          		echo '<p>nameUrl: '.$nameUrl.'</p>';
-          		echo '<hr>';
-              // INSERT INTO SQL //
-          		$sql = $bdd->prepare('UPDATE deputes SET nameUrl = :nameUrl WHERE mpId = "'.$mpId.'"');
-          		$sql -> execute(array('nameUrl' => $nameUrl));
-          	}
-          ?>
+			Script deleted.
         </div>
       </div>
     </div>
