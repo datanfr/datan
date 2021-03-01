@@ -268,10 +268,11 @@
       (
         SELECT cp.*, da.nameFirst, da.nameLast, da.civ, da.libelle, da.libelleAbrev, da.dptSlug, da.nameUrl, da.couleurAssociee, da.departementNom, da.departementCode
         FROM class_participation cp
-        LEFT JOIN deputes_all da ON cp.mpId = da.mpId AND da.legislature = '.legislature_current().' AND da.dateFin IS NULL
-        WHERE votesN >= 100
+        LEFT JOIN deputes_all da ON cp.mpId = da.mpId AND da.legislature = '.legislature_current().'
+        WHERE votesN >= 100 AND da.dateFin IS NULL
       ) A,
       (SELECT @s:= 0) AS s
+      ORDER BY A.score DESC, A.votesN DESC
       ');
 
       return $query->result_array();
@@ -288,9 +289,9 @@
       LEFT JOIN mandat_secondaire ms ON cp.mpId = ms.mpId
       LEFT JOIN organes o ON ms.organeRef = o.uid
       WHERE da.legislature = '.legislature_current().' AND cp.active = 1 AND ms.typeOrgane = "COMPER" AND ms.codeQualite = "Membre" AND ms.dateFin IS NULL
-      ORDER BY cp.score DESC, cp.votesN DESC
       ) A,
       (SELECT @s:= 0) AS s
+      ORDER BY A.score DESC, A.votesN DESC
       ');
 
       return $query->result_array();
