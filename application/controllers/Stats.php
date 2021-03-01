@@ -22,7 +22,6 @@
       $data['mps_loyalty_less'] = $this->stats_model->get_mps_loyalty_less();
       $data['loyalty_mean'] = $this->stats_model->get_loyalty_mean();
       $data['groups_age'] = $this->stats_model->get_groups_age();
-      print_r($data['groups_age']);
       $data['groups_age_oldest'] = array_slice($data['groups_age'], 0, 1);
       $data['groups_age_oldest'] = $data['groups_age_oldest'][0];
       $data['groups_age_youngest'] = array_slice($data['groups_age'], -1);
