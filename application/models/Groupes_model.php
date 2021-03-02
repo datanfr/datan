@@ -5,7 +5,7 @@
     }
 
     public function get_groupes_all($active, $legislature) {
-      if ($active == TRUE) {
+      if ($active && $legislature) {
         if ($legislature == legislature_current()) {
           $query = $this->db->query('
           SELECT *, date_format(dateDebut, "%d %M %Y") as dateDebutFR, e.effectif,
