@@ -15,44 +15,42 @@
 
       $city = substr($code, 2);
       $newCity = (int)$city;
+      $dpt_edited = $dpt;
 
       switch ($dpt) {
         case 976:
-          $dpt = "0ZM";
+          $dpt_edited = "0ZM";
           $city = substr($code, 3);
           $newCity = "5".$city;
           break;
 
         case 974:
-          $dpt = "0ZD";
+          $dpt_edited = "0ZD";
           break;
 
         case 972:
-          $dpt = "0ZB";
+          $dpt_edited = "0ZB";
           break;
 
         case 973:
-          $dpt = "0ZC";
+          $dpt_edited = "0ZC";
+          break;
 
         case 971:
-          $dpt = "0ZA";
+          $dpt_edited = "0ZA";
+          break;
+
+        case "2B":
+          $dpt_edited = "02B";
+          break;
+
+        case '2A':
+          $dpt_edited = "02A";
           break;
 
       }
 
-      //echo "<br>";
-      //echo "code => ".$code;
-      //echo "<br>";
-      //echo "dpt =>".$dpt;
-      //echo "<br>";
-      //echo "city =>".$city;
-      //echo "<br>";
-      //echo "new city =>".$newCity;
-      //echo "<br>";
-
-
-
-      $result = $this->departement_model->get_commune_slug($newCity, $dpt);
+      $result = $this->departement_model->get_commune_slug($newCity, $dpt, $dpt_edited);
       if (!empty($result)) {
         $url = base_url()."deputes/".$result['dpt_slug']."/ville_".$result['commune_slug'];
         redirect($url);
