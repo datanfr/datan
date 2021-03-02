@@ -56,7 +56,7 @@
   <div>
     <h1>404</h1>
     <h2>Page non trouvée</h2>
-    <a href='<?= base_url(); ?>'>Page d'accueil</a>
+    <a href='<?=base_url()?>'>Page d'accueil</a>
   </div>
 </body>
 
