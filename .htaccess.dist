@@ -32,4 +32,5 @@
     SetEnv DATABASE_USERNAME username_example
     SetEnv DATABASE_PASSWORD password_example
     SetEnv CI_ENV production
+    SetEnv BASE_URL http://localhost/datan
 </IfModule>
