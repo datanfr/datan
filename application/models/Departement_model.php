@@ -131,30 +131,12 @@
       return $query->result_array();
     }
 
-    public function get_commune_slug($code, $dpt){
+    public function get_commune_slug($city, $dpt, $dpt_edited){
       $query = $this->db->query('
-        SELECT A.*, d.slug AS dpt_slug
-        FROM
-        (
-        SELECT c.commune_slug,
-        CASE
-  		    WHEN dpt_edited = "02B" THEN "2B"
-          WHEN dpt_edited = "02A" THEN "2A"
-          WHEN dpt_edited = "0ZD" THEN "974"
-          WHEN dpt_edited = "0ZM" THEN "976"
-          WHEN dpt_edited = "0ZB" THEN "972"
-          WHEN dpt_edited = "0ZC" THEN "973"
-          WHEN dpt_edited = "0ZA" THEN "971"
-          WHEN dpt_edited = "0ZN" THEN "988"
-          WHEN dpt_edited = "0ZP" THEN "987"
-          WHEN dpt_edited = "0ZW" THEN "986"
-          WHEN dpt_edited = "0ZX" THEN "977"
-          ELSE dpt_edited
-  	    END AS dpt_edited
+        SELECT c.commune_slug, d.slug AS dpt_slug
         FROM circos c
-        WHERE c.dpt_edited = "'.$dpt.'" AND c.commune = "'.$code.'"
-        ) A
-        LEFT JOIN departement d ON A.dpt_edited = d.departement_code
+        LEFT JOIN departement d ON d.departement_code = "'.$dpt.'"
+        WHERE c.dpt_edited = "'.$dpt_edited.'" AND c.commune = "'.$city.'"
         LIMIT 1
       ');
 
