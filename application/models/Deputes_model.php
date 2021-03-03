@@ -145,19 +145,6 @@
       return $query->row_array();
     }
 
-    public function get_last_group($depute_uid){
-      $query = $this->db->query('
-        SELECT mg.mandatId, mg.legislature, mg.dateDebut, mg.dateFin, mg.codeQualite, mg.organeRef, o.libelle, o.libelleAbrev, o.positionPolitique, o.couleurAssociee, mg.organeRef AS groupeId
-        FROM mandat_groupe mg
-        LEFT JOIN organes o ON mg.organeRef = o.uid
-        WHERE mg.mpId = "'.$depute_uid.'" AND mg.preseance >= 20
-        ORDER BY !ISNULL(mg.dateFin), mg.dateFin DESC
-        LIMIT 1
-      ');
-
-      return $query->row_array();
-    }
-
     public function depute_group_president($depute_uid, $groupe_id){
       $query = $this->db->query('
         SELECT *
