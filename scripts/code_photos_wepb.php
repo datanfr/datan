@@ -24,8 +24,8 @@ table, th, td {
 
 		$i = 1;
 
-		$dir = "C:/wamp64/www/datan/assets/imgs/deputes_original/";
-		$newdir = "C:/wamp64/www/datan/assets/imgs/deputes_webp/";
+		$dir = "../assets/imgs/deputes_original/";
+		$newdir = "../assets/imgs/deputes_webp/";
 		$files = scandir($dir);
 		unset($files[0]);
 		unset($files[1]);
