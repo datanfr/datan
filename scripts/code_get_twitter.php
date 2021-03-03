@@ -17,10 +17,10 @@
       <?php
         include 'bdd-connexion.php';
         $query = $bdd->query('
-          SELECT *
+          SELECT twitter
           FROM deputes_contacts
-          WHERE typeLibelle = "Twitter"
-          ORDER BY valElec ASC
+          WHERE 1
+          ORDER BY twitter ASC
         ');
 
       ?>
@@ -36,8 +36,8 @@
             <p>
               <?= $i ?>
               --
-              <a href="https://twitter.com/<?= $x['valElec'] ?>" target="_blank">
-                <?= $x['valElec'] ?>
+              <a href="https://twitter.com/<?= $x['twitter'] ?>" target="_blank">
+                <?= $x['twitter'] ?>
               </a>
             </p>
 

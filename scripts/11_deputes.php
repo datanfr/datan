@@ -25,7 +25,7 @@
     ?>
 		<div class="container" style="background-color: #e9ecef;">
 			<div class="row">
-				<h1>11. Create deputes_inactifs table</h1>
+				<h1>11. Create deputes_last table</h1>
 			</div>
 			<div class="row">
 				<div class="col-4">

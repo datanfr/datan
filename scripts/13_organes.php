@@ -9,7 +9,7 @@
   </head>
   <!--
 
-  This script creates the table organes_stats
+  This script creates the table groupes_stats
 
   -->
   <body>
@@ -36,7 +36,7 @@
 			</div>
 			<div class="row mt-3">
         <div class="col">
-          <p>Create deputes_json.json</p>
+          <p>Create groupes_stats table</p>
           <?php
             include 'bdd-connexion.php';
 

@@ -64,6 +64,9 @@
               <a class="btn btn-primary my-3" href="../cache/delete_all" role="button">Delete all caching</a>
               <br>
               <a class="btn btn-danger my-3" href="update_dataset/20210226.php" role="button">UPDATE THE DATABASE (26 February 2021)</a>
+              <br>
+              <a class="btn btn-danger my-3" href="update_dataset/depute_contact_update.php" role="button">UPDATE THE DEPUTE CONTACT (03 march 2021)</a>
+              
             </div>
           </div>
           <div class="row">

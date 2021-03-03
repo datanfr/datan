@@ -89,7 +89,7 @@
           LEFT JOIN class_participation_commission cpm ON da.mpId = cpm.mpId
           LEFT JOIN class_loyaute_all cl ON da.mpId = cl.mpId
           LEFT JOIN class_majorite cm ON da.mpId = cm.mpId
-          LEFT JOIN deputes_contacts_cleaned dc ON da.mpId = dc.mpId
+          LEFT JOIN deputes_contacts dc ON da.mpId = dc.mpId
           LEFT JOIN history_per_mps_average h ON da.mpId = h.mpId
           LEFT JOIN deputes d ON da.mpId = d.mpId
           WHERE da.legislature = 15
