@@ -85,8 +85,8 @@
 				SELECT v.voteNumero, v.mpId, vi.dateScrutin, v.voteType, v.vote, v.voteId, sortCode, v.legislature, vi.nombreVotants,
 				mg.mandatId AS mandat_uid, mg.typeOrgane, mg.dateDebut, mg.dateFin, mg.organeRef FROM votes v
 				JOIN votes_info vi ON vi.voteId = v.voteId
-				LEFT JOIN mandat_groupe mg ON mg.mpId = v.mpId 
-				AND ((vi.dateScrutin BETWEEN mg.dateDebut AND mg.dateFin ) OR (vi.dateScrutin > mg.dateDebut AND mg.dateFin IS NULL)) 
+				LEFT JOIN mandat_groupe mg ON mg.mpId = v.mpId
+				AND ((vi.dateScrutin BETWEEN mg.dateDebut AND mg.dateFin ) OR (vi.dateScrutin > mg.dateDebut AND mg.dateFin IS NULL))
 				AND mg.codeQualite IN ("Membre", "Député non-inscrit", "Membre apparenté")
 				LEFT JOIN organes o ON o.uid = vi.organeRef
 				WHERE v.voteType != "miseAuPoint" AND (v.voteNumero BETWEEN "' . $lastVote . '" AND "' . $untilVote . '") AND vote != "nv"
@@ -117,8 +117,7 @@
 						<td>date</td>
 						<td>dateDebut</td>
 						<td>dateFin</td>
-						<td>organe</td>
-						<td>organeRef</td>
+						<td>mandat_uid</td>
 						<td>voteGroupe</td>
 						<td>voteEmMarche</td>
 						<td>scoreLoyaute</td>
@@ -252,7 +251,6 @@
 						echo '<td>' . $donnees['dateScrutin'] . '</td>';
 						echo '<td>' . $donnees['dateDebut'] . '</td>';
 						echo '<td>' . $donnees['dateFin'] . '</td>';
-						echo '<td>' . $donnees['libelle'] . '</td>';
 						echo '<td>' . $donnees['mandat_uid'] . '</td>';
 						echo '<td>' . $voteGroupe . '</td>';
 						echo '<td>' . $voteGvt . '</td>';
