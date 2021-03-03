@@ -35,14 +35,14 @@
                     <label>Description</label>
                     <textarea id="editor1" name="description" class="form-control"><?= $vote['description'] ?></textarea>
                     <script>
-                      CKEDITOR.replace('editor1', {
-                        entities: false,
-                        basicEntities: false,
-                        entities_greek: false,
-                        entities_latin: false
-                      }
-                    );
-                      CKEDITOR.add;
+                      ClassicEditor
+                              .create( document.querySelector( '#editor1' ) )
+                              .then( editor => {
+                                      console.log( editor );
+                              } )
+                              .catch( error => {
+                                      console.error( error );
+                              } );
                     </script>
                   </div>
                   <div class="form-group">
