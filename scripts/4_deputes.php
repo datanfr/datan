@@ -37,28 +37,8 @@
 			</div>
 			<div class="row mt-3">
         <div class="col">
-  				<?php
-            include 'bdd-connexion.php';
-            $bdd->exec('DROP TABLE IF EXISTS deputes_contacts_cleaned');
-            $bdd->exec('
-              CREATE TABLE deputes_contacts_cleaned AS
-              SELECT A.*, t2.valElec AS website, t3.valElec AS mailAn, t4.valElec AS mailPerso, t5.valElec AS twitter, t6.valElec AS facebook, CURDATE() AS dateMaj
-              FROM
-              (
-              SELECT mpId
-              FROM deputes_contacts t1
-              GROUP BY mpId
-              ) A
-              LEFT JOIN deputes_contacts t2 ON t2.mpId = A.mpId AND t2.type = 22
-              LEFT JOIN deputes_contacts t3 ON t3.mpId = A.mpId AND t3.type = 15 AND t3.valElec LIKE "%nationale.fr%"
-              LEFT JOIN deputes_contacts t4 ON t4.mpId = A.mpId AND t4.type = 15 AND t4.valElec NOT LIKE "%nationale.fr%"
-              LEFT JOIN deputes_contacts t5 ON t5.mpId = A.mpId AND t5.type = 24
-              LEFT JOIN deputes_contacts t6 ON t6.mpId = A.mpId AND t6.type = 25
-              GROUP BY A.mpId
-             ');
-            $bdd->exec('CREATE INDEX idx_mpId ON deputes_contacts_cleaned(mpId)');
-  				?>
-        </div>
+          script deleted.
+                </div>
 			</div>
 		</div>
 	</body>

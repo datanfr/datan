@@ -37,29 +37,7 @@
 			</div>
 			<div class="row mt-3">
         <div class="col">
-  				<?php
-  					$i=1;
-  					$dateMaj = date('Y-m-d');
-  					echo '<p>date ==>'.$dateMaj.'</p>';
-  					// CONNEXION SQL //
-  					include 'bdd-connexion.php';
-            $reponse = $bdd->query('
-            SELECT *
-            FROM deputes_contacts
-            WHERE dateMaj < "'.$dateMaj.'" OR dateMaj IS NULL
-            ');
-            while ($data = $reponse->fetch()) {
-              echo '<p>'.$i.'. '.$data['mpId'].'</p>';
-              $i++;
-            }
-            if (isset($dateMaj)) {
-              $bdd->exec('DELETE FROM deputes_contacts WHERE dateMaj < "'.$dateMaj.'" OR dateMaj IS NULL');
-              echo '<p>Données supprimées</p>';
-            } else {
-              echo '<p>Erreur</p>';
-            }
-
-  				?>
+        script deleted
         </div>
 			</div>
 		</div>
