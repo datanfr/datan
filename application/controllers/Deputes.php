@@ -170,10 +170,9 @@
       $legislature = $data['depute']['legislature'];
 
       // Get group
-      $data['group'] = $this->deputes_model->get_last_group($depute_uid);
-      if (!empty($data['group'])) {
-        $groupe_id = $data['group']['groupeId'];
-        $data['group']['couleurAssociee'] = $this->groupes_model->get_groupe_color($data['group']);
+      if (!empty($data['depute']['libelle'])) {
+        $groupe_id = $data['depute']['groupeId'];
+        $data['depute']['couleurAssociee'] = $this->groupes_model->get_groupe_color($data['depute']);
         // Is the MP a group president?
         $data['group_president'] = $this->deputes_model->depute_group_president($depute_uid, $groupe_id);
         if (!empty($data['group_president'])) {
@@ -181,6 +180,8 @@
         } else {
           $data['isGroupPresident'] = FALSE;
         }
+      } else {
+        $groupe_id = NULL;
       }
 
       // General infos
