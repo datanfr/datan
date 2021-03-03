@@ -24,11 +24,13 @@
               <!-- INFOS GENERALES -->
               <div class="bloc-infos">
                 <h1 class="text-center"><?= $title ?></h1>
-                <div class="link-group text-center mt-1">
-                  <a href="<?= base_url() ?>groupes/<?= mb_strtolower($group['libelleAbrev']) ?>" style="color: <?= $group['couleurAssociee'] ?>; --color-group: <?= $group['couleurAssociee'] ?>">
-                    <?= $group['libelle'] ?>
-                  </a>
-                </div>
+                <?php if (!empty($depute['libelle'])): ?>
+                  <div class="link-group text-center mt-1">
+                    <a href="<?= base_url() ?>groupes/<?= mb_strtolower($depute['libelleAbrev']) ?>" style="color: <?= $depute['couleurAssociee'] ?>; --color-group: <?= $depute['couleurAssociee'] ?>">
+                      <?= $depute['libelle'] ?>
+                    </a>
+                  </div>
+                <?php endif; ?>
               </div>
               <!-- BIOGRAPHIE -->
               <div class="bloc-bref mt-3 d-flex justify-content-center justify-content-lg-start">
@@ -124,20 +126,22 @@
           <?php endif; ?>
           <!-- Paragraphe groupe parlementaire -->
           <?php if ($active == TRUE): ?>
-            <?php if ( $group['libelleAbrev'] == "NI"): ?>
+            <?php if ( $depute['libelleAbrev'] == "NI"): ?>
               <p>
                 À l'Assemblée nationale, <?= $title ?> n'est pas membre d'un groupe parlementaire, et siège donc en non-inscrit<?= $gender['e'] ?>.
               </p>
             <?php else: ?>
               <p>
-                À l'Assemblée nationale, <?= $gender['pronom'] ?> siège avec le groupe <a href="<?= base_url() ?>groupes/<?= mb_strtolower($group['libelleAbrev']) ?>"><?= $group['libelle'] ?></a> (<?= $group["libelleAbrev"] ?>), un groupe <b>classé <?= $infos_groupes[$group['libelleAbrev']] ?></b> de l'échiquier politique.
+                À l'Assemblée nationale, <?= $gender['pronom'] ?> siège avec le groupe <a href="<?= base_url() ?>groupes/<?= mb_strtolower($depute['libelleAbrev']) ?>"><?= $depute['libelle'] ?></a> (<?= $depute["libelleAbrev"] ?>), un groupe <b>classé <?= $infos_groupes[$depute['libelleAbrev']] ?></b> de l'échiquier politique.
                 <?php if ($isGroupPresident == TRUE): ?><?= $title ?> en est le président.<?php endif; ?>
               </p>
             <?php endif; ?>
           <?php else: ?>
-            <p>
-              Au cours de son dernier mandat, pendant la <?= $depute['legislature'] ?><sup>e</sup> législature, <?= $title ?> a siégé avec le groupe <?= $group['libelle'] ?> (<?= $group['libelleAbrev'] ?>).
-            </p>
+            <?php if (!empty($depute['libelle'])): ?>
+              <p>
+                Au cours de son dernier mandat, pendant la <?= $depute['legislature'] ?><sup>e</sup> législature, <?= $title ?> a siégé avec le groupe <?= $depute['libelle'] ?> (<?= $depute['libelleAbrev'] ?>).
+              </p>
+            <?php endif; ?>
           <?php endif; ?>
           <!-- Paragraphe commission parlementaire -->
           <?php if ($active == TRUE && !empty($commission_parlementaire)): ?>
@@ -459,7 +463,7 @@
                 </div>
               </div> <!-- END CARD LOYAUTE -->
               <!-- CARD MAJORITE -->
-              <?php if ($group['libelleAbrev'] != "LAREM"): ?>
+              <?php if ($depute['libelleAbrev'] != "LAREM"): ?>
                 <div class="card card-statistiques my-4">
                   <div class="card-body">
                     <div class="row">
@@ -549,19 +553,15 @@
                     </div>
                     <div class="row mt-3">
                       <div class="offset-2 col-10">
-                        <?php if ($no_votes != TRUE): ?>
-                          <p>
-                          <?php if ($group['libelleAbrev'] != "NI"): ?>
-                            En plus de son propre groupe,
-                            <?php else: ?>
-                            Le
-                          <?php endif; ?>
-                          <b><?= $title ?></b> <?= $active == TRUE ? "vote" : "votait" ?> souvent (dans <?= $proximite["first1"]["accord"] ?>% des cas) avec le groupe <a href="<?= base_url() ?>groupes/<?= mb_strtolower($proximite["first1"]["libelleAbrev"]) ?>"><?= $proximite["first1"]["libelleAbrev"] ?></a>, <?= $proximite["first1"]["maj_pres"] ?>
-                          <?php if ($proximite['first1']["libelleAbrev"] != "NI"): ?>
-                            classé <?= $proximite["first1"]["ideologiePolitique"] ?> de l'échiquier politique.
-                          <?php endif; ?>
-                        <?php else: ?>
-                          <p>Du fait d'un nombre insuffisant de votes de la part de <?= $title ?>, aucune statistique n'a pu être produite.</p>
+                        <p>
+                        <?php if ($group['libelleAbrev'] != "NI"): ?>
+                          En plus de son propre groupe,
+                          <?php else: ?>
+                          Le
+                        <?php endif; ?>
+                        <b><?= $title ?></b> <?= $active == TRUE ? "vote" : "votait" ?> souvent (dans <?= $proximite["first1"]["accord"] ?>% des cas) avec le groupe <a href="<?= base_url() ?>groupes/<?= mb_strtolower($proximite["first1"]["libelleAbrev"]) ?>"><?= $proximite["first1"]["libelleAbrev"] ?></a>, <?= $proximite["first1"]["maj_pres"] ?>
+                        <?php if ($proximite['first1']["libelleAbrev"] != "NI"): ?>
+                          classé <?= $proximite["first1"]["ideologiePolitique"] ?> de l'échiquier politique.</p>
                         <?php endif; ?>
                       </div>
                     </div>
@@ -599,57 +599,55 @@
                     </div>
                     <div class="row mt-3">
                       <div class="col-10 offset-2 ">
-                        <?php if ($no_votes != TRUE): ?>
-                          <p>À l'opposé, le groupe avec lequel <?= $title; ?> <?= $active == TRUE ? "est" : "était" ?> le moins proche est <a href="<?= base_url() ?>groupes/<?= mb_strtolower($proximite["last1"]["libelleAbrev"]) ?>"><?= $proximite["last1"]["libelle"] ?></a>, <?= $proximite["last1"]["maj_pres"] ?>
-                            <?php if ($proximite['last1']["libelleAbrev"] != "NI"): ?>
-                              classé <?= $proximite["last1"]["ideologiePolitique"] ?> de l'échiquier politique.
-                              <?php endif; ?>
-                              <?= ucfirst($gender["pronom"]) ?> <?= $active == TRUE ? "ne vote" : "n'a voté" ?> avec ce groupe que dans <b><?= $proximite["last1"]["accord"] ?>%</b> des cas.</p>
-                            <?php else: ?>
-                          <p>Du fait d'un nombre insuffisant de votes de la part de <?= $title ?>, aucune statistique n'a pu être produite.</p>
+                        <p>À l'opposé, le groupe avec lequel <?= $title; ?> <?= $active == TRUE ? "est" : "était" ?> le moins proche est <a href="<?= base_url() ?>groupes/<?= mb_strtolower($proximite["last1"]["libelleAbrev"]) ?>"><?= $proximite["last1"]["libelle"] ?></a>, <?= $proximite["last1"]["maj_pres"] ?>
+                        <?php if ($proximite['last1']["libelleAbrev"] != "NI"): ?>
+                          classé <?= $proximite["last1"]["ideologiePolitique"] ?> de l'échiquier politique.
                         <?php endif; ?>
+                        <?= ucfirst($gender["pronom"]) ?> <?= $active == TRUE ? "ne vote" : "n'a voté" ?> avec ce groupe que dans <b><?= $proximite["last1"]["accord"] ?>%</b> des cas.</p>
                       </div>
                     </div>
-                  <?php endif; ?>
-                  <div class="row mt-4">
-                    <div class="col-12">
-                      <div class="text-center">
-                        <a class="btn btn-primary" id="btn-ranking" data-toggle="collapse" href="#collapseProximity" role="button" aria-expanded="false" aria-controls="collapseProximity">
-                          Voir tout le classement
-                        </a>
-                      </div>
-                      <div class="collapse mt-3" id="collapseProximity">
-                        <table class="table">
-                          <thead>
-                            <tr>
-                              <th scope="col"></th>
-                              <th scope="col">Groupe</th>
-                              <th scope="col">Taux de proximité</th>
-                              <th scope="col">Groupe dissout ?</th>
-                              <th scope="col">Nbr de votes</th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            <?php $i = 1; ?>
-                            <?php foreach ($accord_groupes_all as $group): ?>
+                    <div class="row mt-4">
+                      <div class="col-12">
+                        <div class="text-center">
+                          <a class="btn btn-primary" id="btn-ranking" data-toggle="collapse" href="#collapseProximity" role="button" aria-expanded="false" aria-controls="collapseProximity">
+                            Voir tout le classement
+                          </a>
+                        </div>
+                        <div class="collapse mt-3" id="collapseProximity">
+                          <table class="table">
+                            <thead>
                               <tr>
-                                <th scope="row"><?= $i ?></th>
-                                <td><?= $group['libelle'] ?> (<?= $group['libelleAbrev'] ?>)</td>
-                                <td><?= $group['accord'] ?> %</td>
-                                <td><?= $group['ended'] == 1 ? "Oui" : "" ?></td>
-                                <td><?= $group['votesN'] ?></td>
+                                <th scope="col"></th>
+                                <th scope="col">Groupe</th>
+                                <th scope="col">Taux de proximité</th>
+                                <th scope="col">Groupe dissout ?</th>
+                                <th scope="col">Nbr de votes</th>
                               </tr>
-                              <?php $i++ ?>
-                            <?php endforeach; ?>
-                          </tbody>
-                        </table>
+                            </thead>
+                            <tbody>
+                              <?php $i = 1; ?>
+                              <?php foreach ($accord_groupes_all as $group): ?>
+                                <tr>
+                                  <th scope="row"><?= $i ?></th>
+                                  <td><?= $group['libelle'] ?> (<?= $group['libelleAbrev'] ?>)</td>
+                                  <td><?= $group['accord'] ?> %</td>
+                                  <td><?= $group['ended'] == 1 ? "Oui" : "" ?></td>
+                                  <td><?= $group['votesN'] ?></td>
+                                </tr>
+                                <?php $i++ ?>
+                              <?php endforeach; ?>
+                            </tbody>
+                          </table>
+                        </div>
                       </div>
                     </div>
-                  </div>
+                  <?php else: ?>
+                  <p>Du fait d'un nombre insuffisant de votes de la part de <?= $title ?>, aucune statistique n'a pu être produite.</p>
+                  <?php endif; ?>
                 </div>
               </div> <!-- // END BLOC PROXIMITY -->
             </div> <!-- // END BLOC STATISTIQUES -->
-          <?php endif; ?>
+            <?php endif; ?>
           <!-- BLOC SOCIAL-MEDIA -->
           <div class="bloc-links p-lg-0 p-md-2 mt-5">
             <h2>En savoir plus sur <?= $title ?></h2>
@@ -710,7 +708,7 @@
             <?php if ($depute['legislature'] != legislature_current()): ?>
               <h2>Les autres députés de la <?= $depute['legislature'] ?><sup>e</sup> législature</h2>
             <?php elseif($active == TRUE): ?>
-              <h2>Les autres députés <?= $group['libelle'] ?> (<?= $group['libelleAbrev'] ?>)</h2>
+              <h2>Les autres députés <?= $depute['libelle'] ?> (<?= $depute['libelleAbrev'] ?>)</h2>
             <?php else: ?>
               <h2>Les autres députés inactifs</h2>
             <?php endif; ?>
@@ -725,7 +723,7 @@
               <?php if ($depute['legislature'] != legislature_current()): ?>
                 <a href="<?= base_url(); ?>deputes/legislature-<?= $depute['legislature'] ?>">Tous les députés de la législature <?= $depute['legislature'] ?></a>
               <?php elseif($active == TRUE): ?>
-                <a href="<?= base_url() ?>groupes/<?= mb_strtolower($group['libelleAbrev']) ?>">Voir tous les députés membres du groupe <?= $group['libelle'] ?> (<?= $group['libelleAbrev'] ?>)</a>
+                <a href="<?= base_url() ?>groupes/<?= mb_strtolower($depute['libelleAbrev']) ?>">Voir tous les députés membres du groupe <?= $depute['libelle'] ?> (<?= $depute['libelleAbrev'] ?>)</a>
               <?php else: ?>
                 <a href="<?= base_url(); ?>deputes/inactifs">Tous les députés inactifs</a>
               <?php endif; ?>
