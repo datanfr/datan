@@ -137,7 +137,7 @@
           d.birthDate, d.birthCity
         FROM deputes_last dl
         LEFT JOIN history_per_mps_average h ON dl.mpId = h.mpId
-        LEFT JOIN deputes_contacts_cleaned dc ON dl.mpId = dc.mpId
+        LEFT JOIN deputes_contacts dc ON dl.mpId = dc.mpId
         LEFT JOIN deputes d ON dl.mpId = d.mpId
         WHERE dl.nameUrl = "'.$nameUrl.'" AND dl.dptSlug = "'.$dpt.'"
       ');
