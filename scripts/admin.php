@@ -67,6 +67,8 @@
               <br>
               <a class="btn btn-danger my-3" href="update_dataset/groupes_accord.php" role="button">UPDATE THE GROUPES ACCORD DATABASE (03 march 2021)</a>
 
+              <a class="btn btn-warning my-3" href="update_dataset/add_twitter_facebook.php" role="button">Add Social Network</a>
+              
             </div>
           </div>
           <div class="row">
