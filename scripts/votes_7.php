@@ -4,7 +4,7 @@
 
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta http-equiv="refresh" content="15">
+    <meta http-equiv="refresh" content="5">
     <title><?= $_SERVER['REQUEST_URI'] ?></title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.2/css/bootstrap.min.css" integrity="sha384-Smlep5jCw/wG7hdkwQ/Z5nLIefveQRIY9nfy6xoR1uRYBtpZgI6339F5dgvm/e9B" crossorigin="anonymous">
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.2/js/bootstrap.min.js" integrity="sha384-o+RDsa0aLu++PJvFqy8fFScvbHFLtbvScb8AjopnFD+iEQ7wo/CG0xlczd+2O/em" crossorigin="anonymous"></script>
@@ -19,6 +19,7 @@
   <!--
 
   This script updates the table 'groupes_accord'
+  It has been updated on March 3, 2020
 
   -->
   <body>
@@ -47,25 +48,40 @@
         <?php
 
         // CONNEXION SQL //
-        	include 'bdd-connexion.php';
+        include 'bdd-connexion.php';
+        $dateMaj = date('Y-m-d');
+        // Create table if not exists
+        $bdd->query('
+          CREATE TABLE IF NOT EXISTS groupes_accord (
+            id INT(3) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+            voteNumero INT(6) NOT NULL,
+            legislature TINYINT(2) NOT NULL,
+            organeRef VARCHAR(15) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+            organeRefAccord VARCHAR(15) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+            accord TINYINT(2) NULL,
+            dateMaj DATE
+          );
+          CREATE INDEX idx_organeRef ON groupes_accord(organeRef);
+          CREATE INDEX idx_organeRefAccord ON groupes_accord(organeRefAccord);
+        ');
 
-          $reponse_last_vote = $bdd->query('
-          SELECT voteNumero AS lastVote
-          FROM groupes_accord
-          ORDER BY voteNumero DESC
-          LIMIT 1
-          ');
+        $reponse_last_vote = $bdd->query('
+        SELECT voteNumero AS lastVote
+        FROM groupes_accord
+        ORDER BY voteNumero DESC
+        LIMIT 1
+        ');
 
         while ($donnees_last_vote = $reponse_last_vote->fetch()) {
           echo '<p>Last vote: '.$donnees_last_vote['lastVote'].'</p><br>';
           $lastVote = $donnees_last_vote['lastVote'] + 1;
-          $untilVote = $donnees_last_vote['lastVote'] + 50;
+          $untilVote = $donnees_last_vote['lastVote'] + 150;
           echo 'last vote = '.$lastVote.'<br>';
           echo 'until vote = '.$untilVote.'<br>';
         }
 
         if (!isset($lastVote)) {
-          echo 'rien dans la base';
+          echo 'rien dans la base<br>';
           $lastVote = 0;
           $untilVote = 2;
         }
@@ -76,23 +92,18 @@
         $bdd->query('SET SQL_BIG_SELECTS=1');
 
         echo '<br><br>';
-        $reponse_groupes = $bdd->prepare('
-          SELECT uid
-          FROM organes
-          WHERE coteType = "GP" AND legislature = 15
-        ');
-        $reponse_groupes->execute();
-        $groupes = $reponse_groupes->fetchAll();
 
-        foreach ($groupes as $key => $value) {
-          //echo $value['uid'];
-        }
+        $response = $bdd->query('
+        SELECT A.*,
+        CASE WHEN positionGroupe = positionGroupeAccord THEN 1 ELSE 0 END AS accord
+        FROM
+        (
+          SELECT t1.voteNumero, t1.legislature, t1.organeRef, t1.positionGroupe, t2.organeRef AS organeRefAccord, t2.positionGroupe AS positionGroupeAccord
+          FROM groupes_cohesion t1
+          LEFT JOIN groupes_cohesion t2 ON t1.voteNumero = t2.voteNumero AND t1.legislature = t2.legislature
+          WHERE t1.voteNUmero >= "'.$lastVote.'" AND t1.voteNumero <= "'.$untilVote.'" AND t1.legislature = 15
+        ) A
 
-        $reponse_1 = $bdd->query('
-        SELECT voteNumero, organeRef, positionGroupe, o.libelle
-        FROM groupes_cohesion t1
-        JOIN organes o ON t1.organeRef = o.uid
-        WHERE voteNUmero >= "'.$lastVote.'" AND voteNumero <= "'.$untilVote.'" AND t1.legislature = 15
         ');
 
         ?>
@@ -100,128 +111,42 @@
 
         <table>
           <thead>
-            <td>#</td>
-            <td>voteNumero</td>
-            <td>organe</td>
-            <td>libelle</td>
-            <td>positionGroupe</td>
-            <?php foreach ($groupes as $key => $value): ?>
-              <td>check <?= $value['uid'] ?></td>
-              <td>PO<?= $value['uid'] ?></td>
-              <td>acc<?= $value['uid'] ?></td>
-            <?php endforeach; ?>
+            <tr>
+              <td>#</td>
+              <td>voteNumero</td>
+              <td>legislature</td>
+              <td>organeRef</td>
+              <td>organeRefAccord</td>
+              <td>accord</td>
+            </tr>
           </thead>
+          <tbody>
 
-        <?php
+            <?php
 
-        $i = 1;
-        //echo "<br><br>";
-        //echo "nbr of groups => ";
-        //echo count($groupes);
-        //echo "<br><br>";
+            $i = 1;
 
+            while ($data = $response->fetch()) {
+              ?>
 
-        while ($data_1 = $reponse_1->fetch()) {
+              <tr>
+                <td><?= $i ?></td>
+                <td><?= $data['voteNumero'] ?></td>
+                <td><?= $data['legislature'] ?></td>
+                <td><?= $data['organeRef'] ?></td>
+                <td><?= $data['organeRefAccord'] ?></td>
+                <td><?= $data['accord'] ?></td>
+              </tr>
 
-          $query_var_1 = 'SELECT voteNumero,';
-          $query_var_2 = '';
-          foreach ($groupes as $key => $value) {
-            if ($key+1 < count($groupes)) {
-              $query_var_2 = $query_var_2.' SUM(CASE WHEN organeRef = "'.$value['uid'].'" THEN positionGroupe ELSE NULL END) AS "'.$value['uid'].'",';
-            } else {
-              $query_var_2 = $query_var_2.' SUM(CASE WHEN organeRef = "'.$value['uid'].'" THEN positionGroupe ELSE NULL END) AS "'.$value['uid'].'"';
+              <?php
+
+              $sql = $bdd->prepare("INSERT INTO groupes_accord (voteNumero, legislature, organeRef, organeRefAccord, accord, dateMaj) VALUES (:voteNumero, :legislature, :organeRef, :organeRefAccord, :accord, :dateMaj)");
+              $sql->execute(array('voteNumero' => $data['voteNumero'], 'legislature' => $data['legislature'], 'organeRef' => $data['organeRef'] ,'organeRefAccord' => $data['organeRefAccord'], 'accord' => $data['accord'], 'dateMaj' => $dateMaj));
+
             }
-          }
-          $query_var_3 = '
-            FROM groupes_cohesion
-            WHERE voteNUmero = "'.$data_1['voteNumero'].'" AND legislature = 15
-            GROUP BY voteNumero';
 
-          $query_var = $query_var_1.' '.$query_var_2.' '.$query_var_3;
-
-          $reponse_2 = $bdd->query($query_var);
-
-                 while ($data_2 = $reponse_2->fetch()) {
-
-                 //print_r($data_2);
-
-                 foreach ($groupes as $key => $value) {
-                   $groupe_id = $value["uid"];
-                   $groupes[$key]["score"] = NULL;
-                   if ($data_2[$groupe_id] == NULL) {
-                     $groupes[$key]["score"] = NULL;
-                   } elseif ($data_2[$groupe_id] === $data_1["positionGroupe"]) {
-                     $groupes[$key]["score"] = 1;
-                   } else {
-                     $groupes[$key]["score"] = 0;
-                   }
-                 }
-
-                echo '<tr>';
-                echo '<td>'.$i.'</td>';
-                echo '<td>'.$data_1['voteNumero'].'</td>';
-                echo '<td>'.$data_1['organeRef'].'</td>';
-                echo '<td>'.$data_1['libelle'].'</td>';
-                echo '<td>'.$data_1['positionGroupe'].'</td>';
-
-                foreach ($groupes as $key => $value) {
-                  $groupe_id = $value["uid"];
-                  echo '<td>'.$groupe_id.'</td>';
-                  echo '<td>'.$data_2[$groupe_id].'</td>';
-                  echo '<td>'.$value["score"].'</td>';
-                }
-
-                echo '<tr>';
-
-                $i++;
-
-
-                $sql_prepare_1 = '
-                INSERT INTO groupes_accord (voteNumero, organeRef, positionGroupe,
-                ';
-                $sql_prepare_2 = '';
-                foreach ($groupes as $key => $value) {
-                  if ($key+1 < count($groupes)) {
-                    $sql_prepare_2 = $sql_prepare_2.' '.$value['uid'].',';
-                  } else {
-                    $sql_prepare_2 = $sql_prepare_2.' '.$value['uid'];
-                  }
-                }
-                $sql_prepare_3 = '
-                ) VALUES (:voteNumero, :organeRef, :positionGroupe,
-                ';
-                $sql_prepare_4 = '';
-                foreach ($groupes as $key => $value) {
-                  if ($key+1 < count($groupes)) {
-                    $sql_prepare_4 = $sql_prepare_4.' :'.$value['uid'].',';
-                  } else {
-                    $sql_prepare_4 = $sql_prepare_4.' :'.$value['uid'].')';
-                  }
-                }
-
-                $sql_prepare = $sql_prepare_1." ".$sql_prepare_2." ".$sql_prepare_3." ".$sql_prepare_4;
-
-                $sql_array = array(
-                  'voteNumero' => $data_1['voteNumero'],
-                  'organeRef' => $data_1['organeRef'],
-                  'positionGroupe' => $data_1['positionGroupe'],
-                );
-                foreach ($groupes as $key => $value) {
-                  $groupe_id = $value['uid'];
-                  $score = $value['score'];
-                  $sql_array += [$groupe_id => $score];
-                }
-
-                //print_r($sql_array);
-
-                $sql = $bdd->prepare($sql_prepare);
-                $sql->execute($sql_array);
-
-
-                }
-        }
-
-        ?>
+            ?>
+          </tbody>
         </table>
       </div>
     </div>

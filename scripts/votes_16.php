@@ -56,6 +56,7 @@
             DROP TABLE IF EXISTS class_groups;
 
             CREATE TABLE class_groups AS
+
             SELECT c.*, p.participation, m.majoriteAccord, m.votesN, curdate() AS dateMaj
             FROM
             (
@@ -88,12 +89,11 @@
 
             (
 
-            SELECT ga.organeRef, AVG(ga.PO730964) AS majoriteAccord, COUNT(ga.PO730964) AS votesN,
-            CASE WHEN o.dateFin IS NULL THEN 1 ELSE 0 END AS active
-            FROM groupes_accord ga
-            LEFT JOIN organes o ON o.uid = ga.organeRef
-            WHERE ga.organeRef != "PO730964"
-            GROUP BY ga.organeRef
+      			SELECT ga.organeRef, ROUND(AVG(ga.accord), 4) AS majoriteAccord, COUNT(ga.accord) AS votesN, CASE WHEN o.dateFin IS NULL THEN 1 ELSE 0 END AS active
+      			FROM groupes_accord ga
+      			LEFT JOIN organes o ON o.uid = ga.organeRef
+      			WHERE organeRefAccord IN ("PO730964")
+      			GROUP BY ga.organeRef
 
             ) m ON m.organeRef = c.organeRef;
 

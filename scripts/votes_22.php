@@ -47,38 +47,15 @@
 
         // CONNEXION SQL //
         	include 'bdd-connexion.php';
+          $bdd->query('DROP TABLE IF EXISTS class_groups_proximite');
 
-          $reponse_groupes = $bdd->prepare('
-            SELECT uid
-            FROM organes
-            WHERE coteType = "GP" AND legislature = 15
+          $bdd->query('
+            CREATE TABLE class_groups_proximite AS
+            SELECT  ga.organeRef, ga.organeRefAccord AS prox_group, ROUND(AVG(accord), 4) AS score, COUNT(accord) AS votesN, curdate() AS dateMaj
+            FROM groupes_accord ga
+            WHERE ga.organeRef != ga.organeRefAccord
+            GROUP BY ga.organeRef, ga.organeRefAccord
           ');
-          $reponse_groupes->execute();
-          $groupes = $reponse_groupes->fetchAll();
-
-          $sql_delete = 'DROP TABLE IF EXISTS class_groups_proximite';
-          $bdd->query($sql_delete);
-
-          $sql_create_1 = '
-          CREATE TABLE class_groups_proximite AS
-          SELECT B.*, curdate() AS dateMaj
-          FROM
-          (
-          ';
-          $sql_create_2 = "";
-          foreach ($groupes as $key => $value) {
-            $groupe_id = $value["uid"];
-            if ($key+1 < count($groupes)) {
-              $sql_create_2 = $sql_create_2." SELECT A.* FROM ( SELECT organeRef, '".$groupe_id."' AS prox_group, AVG(".$groupe_id.") AS score, COUNT(".$groupe_id.") AS votesN FROM groupes_accord GROUP BY organeRef ) A UNION ALL";
-            } else {
-              $sql_create_2 = $sql_create_2." SELECT A.* FROM ( SELECT organeRef, '".$groupe_id."' AS prox_group, AVG(".$groupe_id.") AS score, COUNT(".$groupe_id.") AS votesN FROM groupes_accord GROUP BY organeRef ) A";
-            }
-          }
-          $sql_create_3 = ') B';
-
-          $sql_create = $sql_create_1." ".$sql_create_2." ".$sql_create_3;
-          echo $sql_create;
-          $bdd->query($sql_create);
 
           $bdd->query("ALTER TABLE class_groups_proximite ADD INDEX idx_organeRef (organeRef)");
 
