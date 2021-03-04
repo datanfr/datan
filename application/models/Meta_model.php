@@ -22,8 +22,13 @@
 
       if ($type == "deputes/individual") {
         $uid = $data['depute']['mpId'];
-        $array['img'] = asset_url()."imgs/deputes_ogp/ogp_deputes_".$uid.".png";
-        $array['twitter_img'] = asset_url()."imgs/deputes_ogp/ogp_deputes_".$uid.".png";
+        if ($data['depute']['imgOgp'] == 1) {
+          $array['img'] = asset_url()."imgs/deputes_ogp/ogp_deputes_".$uid.".png";
+          $array['twitter_img'] = asset_url()."imgs/deputes_ogp/ogp_deputes_".$uid.".png";
+        } else {
+          $array['img'] = asset_url()."imgs/datan/logo_social_media.png";
+          $array['twitter_img'] = asset_url()."imgs/datan/logo_social_media.png";
+        }
         $array['img_width'] = 1200;
         $array['img_height'] = 630;
         $array['img_type'] = "image/png";

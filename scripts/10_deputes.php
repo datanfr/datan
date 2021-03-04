@@ -88,6 +88,18 @@
               $civ = $data['civ'];
               $age = $data['age'];
 
+              if (file_exists("../assets/imgs/deputes_webp/depute_" . str_replace("PA", "", $mpId) ."_webp.webp")) {
+                $img = 1;
+              } else {
+                $img = 0;
+              }
+
+              if (file_exists("../assets/imgs/deputes_ogp/ogp_deputes_" . $mpId .".png")) {
+                $imgOgp = 1;
+              } else {
+                $imgOgp = 0;
+              }
+
 
               // Get the mandat_principal
 
@@ -173,8 +185,8 @@
               <?php
 
               // SQL //
-              $sql = $bdd->prepare("INSERT INTO deputes_all (mpId, legislature, nameUrl, civ, nameFirst, nameLast, age, dptSlug, departementNom, departementCode, circo, mandatId, libelle, libelleAbrev, groupeId, groupeMandat, couleurAssociee, datePriseFonction, dateFin, causeFin, dateMaj) VALUES (:mpId, :legislature, :nameUrl, :civ, :nameFirst, :nameLast, :age, :dptSlug, :departementNom, :departementCode, :circo, :mandatId, :libelle, :libelleAbrev, :groupeId, :groupeMandat, :couleurAssociee, :datePriseFonction, :dateFin, :causeFin, :dateMaj)");
-              $sql->execute(array('mpId' => $mpId, 'legislature' => $legislature, 'nameUrl' => $nameUrl, 'civ' => $civ, 'nameFirst' => $nameFirst, 'nameLast' => $nameLast, 'age' => $age, 'dptSlug' => $dptSlug, 'departementNom' => $departementNom, 'departementCode' => $departementCode, 'circo' => $circo, 'mandatId' => $mandatId, 'libelle' => $libelle, 'libelleAbrev' => $libelleAbrev, 'groupeId' => $groupeId, 'groupeMandat' => $groupeMandat, 'couleurAssociee' => $couleurAssociee, 'datePriseFonction' => $datePriseFonction, 'dateFin' => $dateFin, 'causeFin' => $causeFin, 'dateMaj' => $dateMaj));
+              $sql = $bdd->prepare("INSERT INTO deputes_all (mpId, legislature, nameUrl, civ, nameFirst, nameLast, age, dptSlug, departementNom, departementCode, circo, mandatId, libelle, libelleAbrev, groupeId, groupeMandat, couleurAssociee, datePriseFonction, dateFin, causeFin, img, imgOgp, dateMaj) VALUES (:mpId, :legislature, :nameUrl, :civ, :nameFirst, :nameLast, :age, :dptSlug, :departementNom, :departementCode, :circo, :mandatId, :libelle, :libelleAbrev, :groupeId, :groupeMandat, :couleurAssociee, :datePriseFonction, :dateFin, :causeFin, :img, :imgOgp, :dateMaj)");
+              $sql->execute(array('mpId' => $mpId, 'legislature' => $legislature, 'nameUrl' => $nameUrl, 'civ' => $civ, 'nameFirst' => $nameFirst, 'nameLast' => $nameLast, 'age' => $age, 'dptSlug' => $dptSlug, 'departementNom' => $departementNom, 'departementCode' => $departementCode, 'circo' => $circo, 'mandatId' => $mandatId, 'libelle' => $libelle, 'libelleAbrev' => $libelleAbrev, 'groupeId' => $groupeId, 'groupeMandat' => $groupeMandat, 'couleurAssociee' => $couleurAssociee, 'datePriseFonction' => $datePriseFonction, 'dateFin' => $dateFin, 'causeFin' => $causeFin, 'img' => $img, 'imgOgp' => $imgOgp, 'dateMaj' => $dateMaj));
               $i++;
             }
 
