@@ -57,6 +57,7 @@
               imagesavealpha($img, true);
               imagewebp($img, $newdir . $newfile, 80);
               imagedestroy($img);
+              echo "an image was just downloaded<br>";
             }
 
 
