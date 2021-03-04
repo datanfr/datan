@@ -49,7 +49,7 @@ table, th, td {
 
 			// Start RESMUSH CODE
 			// 1.
-			$file = "C:/wamp64/www/datan/assets/imgs/deputes/depute_".$uid.".png";
+			$file = "../assets/imgs/deputes/depute_".$uid.".png";
 			$mime = mime_content_type($file);
 			$info = pathinfo($file);
 			$name = $info['basename'];
@@ -86,7 +86,7 @@ table, th, td {
 			fclose($fp);
 			*/
 			$url = $arr_result->dest;
-			$img = "C:/wamp64/www/datan/assets/imgs/deputes/".$name;
+			$img = "../assets/imgs/deputes/".$name;
 			file_put_contents($img, file_get_contents($url));
 
 			// END RESMUSH
