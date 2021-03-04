@@ -93,14 +93,17 @@
         </div>
         <div class="row mt-4">
           <div class="col-12 badges-categories">
-            <?php foreach ($fields_voted as $field): ?>
+            <?php if($fields_voted) :
+            foreach ($fields_voted as $field): ?>
               <a class="badge badge-primary no-decoration" href="#<?= $field['slug'] ?>">
                 <?= $field['name'] ?>
               </a>
-            <?php endforeach; ?>
+            <?php endforeach; 
+            endif ?>
           </div>
         </div>
-        <?php foreach ($fields_voted as $field): ?>
+        <?php if($fields_voted):
+          foreach ($fields_voted as $field): ?>
           <div class="row mt-5">
             <div class="col-2 col-md-1 d-flex align-items-end justify-content-center p-0">
               <?php if ($field["logo"] == TRUE): ?>
@@ -159,7 +162,8 @@
               </div>
             </div>
           </div>
-        <?php endforeach; ?>
+        <?php endforeach;
+                endif ?>
       </div>
     </div>
   </div> <!-- END CONTAINER -->
