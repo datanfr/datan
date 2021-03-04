@@ -63,12 +63,10 @@
               <br>
               <a class="btn btn-primary my-3" href="../cache/delete_all" role="button">Delete all caching</a>
               <br>
-              <a class="btn btn-danger my-3" href="update_dataset/depute_contact_update.php" role="button">UPDATE THE DEPUTE CONTACT (03 march 2021)</a>
-              <br>
-              <a class="btn btn-danger my-3" href="update_dataset/groupes_accord.php" role="button">UPDATE THE GROUPES ACCORD DATABASE (03 march 2021)</a>
+              <a class="btn btn-danger my-3" href="update_dataset/20210305_update_database.php" role="button">UPDATE DATABASE (March 5, 2021)</a>
 
               <a class="btn btn-warning my-3" href="update_dataset/add_twitter_facebook.php" role="button">Add Social Network</a>
-              
+
             </div>
           </div>
           <div class="row">
@@ -90,10 +88,7 @@
                   <hr>
                   <a href="code_5_sujets_parlementaires.php" class="list-group-item list-group-item-action">5. Sujets des commissions parlementaires</a>
                   <hr>-->
-                  <a href="code_photos_original.php" class="list-group-item list-group-item-action">1. Code photos ORIGINAL (only localhost)</a>
                   <a href="code_photos.php" class="list-group-item list-group-item-action">2. Code photos RESMUSH (only localhost)</a>
-                  <a href="code_photos_wepb.php" class="list-group-item list-group-item-action">3. Code photos webp (only localhost)</a>
-                  <a href="code_photos_ogp.php" class="list-group-item list-group-item-action">4. Code photos_ogp (only localhost)</a>
                   <hr>
                   <a href="cities_1.php" class="list-group-item list-group-item-action">Cities</a>
                   <hr>
