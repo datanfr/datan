@@ -111,11 +111,7 @@
       }
 
       // Caching
-      $whitelist = array(
-          '127.0.0.1',
-          '::1'
-      );
-      if(!in_array($_SERVER['REMOTE_ADDR'], $whitelist)){
+      if(!in_array($_SERVER['REMOTE_ADDR'], localhost()) && !$this->session->userdata('logged_in')){
           $this->output->cache("4320"); // Caching enable for 3 days (1440 minutes per day)
       }
 
@@ -410,7 +406,7 @@
           } else {
             $data['fields_voted'][$key]["logo"] = TRUE;
           }
-        }  
+        }
       }
       $data['by_field'] = $x;
 
