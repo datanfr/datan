@@ -160,7 +160,7 @@
       <?php endif; ?>
       <div class="row">
         <div class="col-12">
-          <h2>Tous les groupes parlementaires actifs de la 15e législature</h2>
+          <h2>Tous les groupes parlementaires en activité de la 15e législature</h2>
           <div class="row mt-3">
             <?php foreach ($groupesActifs as $group): ?>
               <div class="col-6 col-md-4 py-2">

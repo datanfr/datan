@@ -80,7 +80,7 @@
             </div>
             <!-- Députés inactifs bouton -->
             <div class="d-none d-lg-flex justify-content-center mt-md-5">
-              <a class="btn btn-outline-primary d-none d-md-block" href="<?= base_url() ?>deputes/inactifs">Liste des députés <b>inactifs</b></a>
+              <a class="btn btn-outline-primary d-none d-md-block" href="<?= base_url() ?>deputes/inactifs">Liste des députés <b>plus en activité</b></a>
             </div>
           </div>
         </div>
