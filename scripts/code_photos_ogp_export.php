@@ -100,9 +100,8 @@
 
   $donnees = $bdd->query('
     SELECT d.mpId AS uid, d.nameFirst AS prenom, d.nameLast AS nom
-    FROM deputes d
-    LEFT JOIN mandat_principal mp ON d.mpId = mp.mpId
-    WHERE mp.legislature = 15 AND d.mpId = "'.$uid_url.'"
+    FROM deputes_last d
+    WHERE d.mpId = "'.$uid_url.'"
     GROUP BY d.mpId
     LIMIT 1
   ');
