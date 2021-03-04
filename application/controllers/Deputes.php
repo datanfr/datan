@@ -77,11 +77,11 @@
       $data['url'] = $this->meta_model->get_url();
       if ($legislature == legislature_current()) {
         $data['title_meta'] = "Députés - Assemblée Nationale | Datan";
-        $data['description_meta'] = "Retrouvez tous les députés actifs de l'Assemblée nationale de la ".legislature_current()."e législature. Résultats de vote et analyses pour chaque député.";
-        $data['title'] = "Les députés actifs de l'Assemblée nationale";
+        $data['description_meta'] = "Retrouvez tous les députés en activité de l'Assemblée nationale de la ".legislature_current()."e législature. Résultats de vote et analyses pour chaque député.";
+        $data['title'] = "Les députés en activité de l'Assemblée nationale";
       } else {
         $data['title_meta'] = "Députés ".$legislature."e législature - Assemblée nationale | Datan";
-        $data['description_meta'] = "Retrouvez tous les députés actifs de l'Assemblée nationale de la ".$legislature."e législature. Résultats de vote et analyses pour chaque député.";
+        $data['description_meta'] = "Retrouvez tous les députés en activité de l'Assemblée nationale de la ".$legislature."e législature. Résultats de vote et analyses pour chaque député.";
         $data['title'] = "Les députés de la ".$legislature."e législature";
       }
       //Open Graph
@@ -114,15 +114,15 @@
           "name" => "Députés", "url" => base_url()."deputes", "active" => FALSE
         ),
         array(
-          "name" => "Députés inactifs", "url" => base_url()."deputes/inactifs", "active" => TRUE
+          "name" => "Députés plus en activité", "url" => base_url()."deputes/inactifs", "active" => TRUE
         )
       );
       $data['breadcrumb_json'] = $this->breadcrumb_model->breadcrumb_json($data['breadcrumb']);
       // Meta
       $data['url'] = $this->meta_model->get_url();
-      $data['title_meta'] = "Députés Inactifs - Assemblée Nationale | Datan";
-      $data['description_meta'] = "Retrouvez tous les députés inactifs de l'Assemblée nationale de la 15e législature. Résultats de vote et analyses pour chaque député.";
-      $data['title'] = "Députés inactifs de l'Assemblée nationale";
+      $data['title_meta'] = "Députés plus en activité - Assemblée Nationale | Datan";
+      $data['description_meta'] = "Retrouvez tous les députés plus en activité de l'Assemblée nationale de la 15e législature. Résultats de vote et analyses pour chaque député.";
+      $data['title'] = "Députés plus en activité de l'Assemblée nationale";
       // Open graph
       $controller = $this->router->fetch_class()."/".$this->router->fetch_method();
       $data['ogp'] = $this->meta_model->get_ogp($controller, $data['title_meta'], $data['description_meta'], $data['url'], $data);
