@@ -9,8 +9,8 @@
   </head>
   <!--
 
-  This script cleans the first and last names of MPs to create, in the table
-  'deputes', the nameUrl variable (one slug for each MP).
+  This script downloads the photos in the folder 'deputes_original'
+  These are the non-optimised photos
 
   -->
   <body>
@@ -22,7 +22,7 @@
     ?>
 		<div class="container" style="background-color: #e9ecef;">
 			<div class="row">
-				<h1>2. Modification des noms de la bdd 'deputes'</h1>
+				<h1>2. Photos in folder 'deputes_original'</h1>
 			</div>
 			<div class="row">
 				<div class="col-4">
@@ -32,12 +32,50 @@
 					<a class="btn btn-outline-secondary" href="http://<?php echo $_SERVER['SERVER_NAME']. ''.$_SERVER['REQUEST_URI'] ?>" role="button">Refresh</a>
 				</div>
 				<div class="col-4">
-					<a class="btn btn-outline-success" href="./<?= $url_next ?>_deputes.php" role="button">NEXT</a>
+					<a class="btn btn-outline-success" href="./2.1_deputes.php" role="button">NEXT</a>
 				</div>
 			</div>
 			<div class="row mt-3">
         <div class="col">
-			Script deleted.
+          <p>These are the non-optimised photos.</p>
+          <?php
+
+          include 'bdd-connexion.php';
+
+          $donnees = $bdd->query('
+            SELECT d.mpId AS uid, d.legislature
+            FROM deputes_last d
+            WHERE legislature IN (14, 15)
+          ');
+
+          while ($d = $donnees->fetch()) {
+            $uid = substr($d['uid'], 2);
+            $filename = "../assets/imgs/deputes_original/depute_" . $uid .".png";
+
+            if (!file_exists($filename)) {
+              $legislature = $d['legislature'];
+        			$url = 'http://www2.assemblee-nationale.fr/static/tribun/'.$legislature.'/photos/'.$uid.'.jpg';
+
+
+              if (substr(get_headers($url)[12], 9, 3) != '404' && substr(get_headers($url)[0], 9, 3) != '404') {
+                $content = file_get_contents($url);
+                if ($content){
+                  $img = imagecreatefromstring($content);
+            			$width = imagesx($img);
+            			$height = imagesy($img);
+            			$newwidth = $width;
+            			$newheight = $height;
+            			$quality = 0;
+            			$thumb = imagecreatetruecolor($newwidth, $newheight);
+            			imagecopyresampled($thumb, $img, 0, 0, 0, 0, $newwidth, $newheight, $width, $height);
+            			imagepng($thumb, '../assets/imgs/deputes_original/depute_'.$uid.'.png', $quality);
+                  echo "one image was just downloaded<br>";
+                }
+              }
+            }
+          }
+
+           ?>
         </div>
       </div>
     </div>
