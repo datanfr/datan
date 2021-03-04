@@ -526,11 +526,13 @@
         }
       }
       // Check the logos
-      foreach ($data["fields_voted"] as $key => $value) {
-        if ($this->functions_datan->get_http_response_code(base_url().'/assets/imgs/fields/'.$value["slug"].'.svg') != "200"){
-          $data['fields_voted'][$key]["logo"] = FALSE;
-        } else {
-          $data['fields_voted'][$key]["logo"] = TRUE;
+      if ($data["fields_voted"]){
+        foreach ($data["fields_voted"] as $key => $value) {
+          if ($this->functions_datan->get_http_response_code(base_url().'/assets/imgs/fields/'.$value["slug"].'.svg') != "200"){
+            $data['fields_voted'][$key]["logo"] = FALSE;
+          } else {
+            $data['fields_voted'][$key]["logo"] = TRUE;
+          }
         }
       }
       $data['by_field'] = $x;
