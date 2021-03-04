@@ -131,4 +131,4 @@ $route['translate_uri_dashes'] = FALSE;
 // HOMEPAGE
 $route['default_controller'] = 'home/index';
 // 404 PAGE
-$route['404_override'] = 'my404/index';
+$route['404_override'] = 'errormanager/error404';
