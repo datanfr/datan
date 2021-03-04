@@ -262,6 +262,30 @@
             </div>
           </div>
         </div>
+        <!-- Team 6 -->
+        <div class="col-lg-3 col-md-4 col-6 mt-3 mt-md-0">
+          <div class="card my-2 card-team">
+            <div class="img-profile">
+              <img class="card-img-top" src="<?= asset_url() ?>imgs/team/remi.jpg" alt="Photo Rémi">
+              <div class="overlay"></div>
+            </div>
+            <div class="card-body d-flex flex-column align-items-center">
+              <h3 class="card-title">Rémi</h3>
+              <p class="card-text text-center">Développeur</p>
+              <div class="social-media">
+                <a href="https://www.linkedin.com/in/r%C3%A9mi-mikel-85273665/" target="_blank">
+                  <img src="<?= asset_url() ?>imgs/logos/linkedin.png" alt="Logo Twitter">
+                </a>
+                <a href="https://remikel.fr" title="Site internet" target="_blank">
+                  <img src="<?= asset_url() ?>imgs/icons/link.svg" alt="Website">
+                </a>
+                <a href="https://twitter.com/lekimR" target="_blank">
+                  <img src="<?= asset_url() ?>imgs/logos/twitter.png" alt="Logo Twitter">
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
