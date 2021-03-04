@@ -13,11 +13,18 @@
               <div class="img">
                 <div class="d-flex justify-content-center">
                   <div class="depute-img-circle">
-                    <picture>
-                      <source srcset="<?= asset_url(); ?>imgs/deputes_webp/depute_<?= $depute['idImage'] ?>_webp.webp" alt="<?= $title ?>" type="image/webp">
-                      <source srcset="<?= asset_url(); ?>imgs/deputes/depute_<?= $depute['idImage'] ?>.png" type="image/png">
-                      <img src="<?= asset_url(); ?>imgs/deputes/depute_<?= $depute['idImage'] ?>.png" alt="<?= $title ?>">
-                    </picture>
+                    <?php if ($depute['img'] == 1): ?>
+                      <picture>
+                        <source srcset="<?= asset_url(); ?>imgs/deputes_webp/depute_<?= $depute['idImage'] ?>_webp.webp" alt="<?= $title ?>" type="image/webp">
+                        <source srcset="<?= asset_url(); ?>imgs/deputes/depute_<?= $depute['idImage'] ?>.png" type="image/png">
+                        <img src="<?= asset_url(); ?>imgs/deputes/depute_<?= $depute['idImage'] ?>.png" alt="<?= $title ?>">
+                      </picture>
+                      <?php else: ?>
+                        <picture>
+                          <source srcset="<?= asset_url() ?>imgs/placeholder/placeholder-face.png" type="image/png">
+                          <img src="<?= asset_url() ?>imgs/placeholder/placeholder-face.png" alt="<?= $title ?>">
+                        </picture>
+                    <?php endif; ?>
                   </div>
                 </div>
               </div>
