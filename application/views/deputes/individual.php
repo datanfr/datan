@@ -1,7 +1,7 @@
   <div class="container-fluid bloc-img-deputes async_background" id="container-always-fluid" data-src="<?= asset_url() ?>imgs/cover/hemicycle-front.jpg" data-tablet="<?= asset_url() ?>imgs/cover/hemicycle-front-768.jpg" data-mobile="<?= asset_url() ?>imgs/cover/hemicycle-front-375.jpg" style="height: 13em">
   </div>
-  <?php if (!empty($group['couleurAssociee'])): ?>
-    <div class="liseret-groupe" style="background-color: <?= $group['couleurAssociee'] ?>"></div>
+  <?php if (!empty($depute['couleurAssociee'])): ?>
+    <div class="liseret-groupe" style="background-color: <?= $depute['couleurAssociee'] ?>"></div>
   <?php endif; ?>
   <div class="container pg-depute-individual">
     <div class="row">
