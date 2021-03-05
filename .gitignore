@@ -32,8 +32,8 @@ scripts/architecture
 
 #assets folder
 assets/opendata
-assets/imgs/deputes
-assets/imgs/deputes_original
-assets/imgs/deputes_ogp
-assets/imgs/deputes_webp
+assets/imgs/deputes/*.png
+assets/imgs/deputes_original/*.png
+assets/imgs/deputes_ogp/*.png
+assets/imgs/deputes_webp/*.webp
 assets/data/deputes_json.json
