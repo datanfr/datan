@@ -85,7 +85,7 @@
           <?php foreach ($by_field as $field): ?>
             <div class="row my-5">
               <div class="col-2 col-md-1 logo-field d-flex justify-content-center align-items-center my-3 my-lg-0">
-                <?php if ($field["logo"] == TRUE): ?>
+                <?php if ($field["logo"]): ?>
                   <div class="logo">
                     <img src="<?= asset_url().'imgs/fields/'.$field['slug'].'.svg' ?>">
                   </div>

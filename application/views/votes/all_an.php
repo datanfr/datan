@@ -25,7 +25,7 @@
               <?php foreach ($votes as $vote): ?>
                 <tr data-href="<?= base_url() ?>votes/legislature-<?= $legislature ?>/vote_<?= $vote['voteNumero'] ?>">
                   <td>
-                    <?php if ($archive == TRUE): ?>
+                    <?php if ($archive): ?>
                       <a href="<?= base_url() ?>votes/legislature-<?= $legislature ?>/vote_<?= $vote['voteNumero'] ?>"><?= $vote['voteNumero'] ?></a>
                     <?php elseif ($i <= 30): ?>
                       <a href="<?= base_url() ?>votes/legislature-<?= $legislature ?>/vote_<?= $vote['voteNumero'] ?>"><?= $vote['voteNumero'] ?></a>

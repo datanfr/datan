@@ -4,7 +4,7 @@
     }
 
     public function abbrev_n($n, $fem){
-      if ($fem == TRUE) {
+      if ($fem) {
         switch ($n) {
           case 1:
             return "re";

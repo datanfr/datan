@@ -7,7 +7,7 @@
     public function get_deputes_all($legislature, $active, $departement) {
       if (is_null($departement)) {
         if ($legislature == legislature_current()) {
-          if ($active == TRUE) {
+          if ($active) {
             $query = $this->db->query('
               SELECT *
               FROM deputes_all
@@ -15,7 +15,7 @@
               ORDER BY nameLast ASC, nameFirst ASC
             ');
           }
-          if ($active == TRUE) {
+          if ($active) {
             // IF CURRENT LEGISLATURE AND ACTIVE
             $query = $this->db->query('
               SELECT *
@@ -228,7 +228,7 @@
     }
 
     public function get_other_deputes($groupe_id, $depute_name, $depute_uid, $active, $legislature){
-      if ($active == TRUE) {
+      if ($active) {
         $query = $this->db->query('
           SELECT *
           FROM deputes_all da

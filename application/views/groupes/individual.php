@@ -50,7 +50,7 @@
               </a>
             </div>
           </div>
-          <?php if ($active == TRUE): ?>
+          <?php if ($active): ?>
             <div class="mandats d-flex justify-content-center align-items-center active">
               <span class="active">EN ACTIVITÉ</span>
             </div>
@@ -75,14 +75,14 @@
           <p>Parmi les <?= mb_strtolower($title) ?>, on retrouve également <a href="<?= base_url() ?>deputes/essonne-91/depute_nicolas-dupontaignan" target="_blank">Nicolas Dupont-Aignan</a>, du parti politique Debout La France, <a href="<?= base_url() ?>deputes/deux-sevres-79/depute_delphine-batho" target="_blank">Delphine Batho</a>, du parti écologiste Génération écologie, ainsi que d'anciens membres du groupe La République en Marche, comme <a href="<?= base_url() ?>deputes/indre-et-loire-37/depute_sabine-thillaye" target="_blank">Sabine Thillaye</a> ou <a href="<?= base_url() ?>deputes/nord-59/depute_jennifer-detemmerman" target="_blank">Jennifer de Temmerman</a>.</p>
         <?php else: ?>
           <p>
-            Le groupe <b><?= $groupe['libelle'] ?></b> (<?= $groupe['libelleAbrev'] ?>) <?= $active == TRUE ? 'est' : 'était' ?> un groupe classé <?= $edito['ideology_edited'] ?> de l'échiquier politique.
+            Le groupe <b><?= $groupe['libelle'] ?></b> (<?= $groupe['libelleAbrev'] ?>) <?= $active ? 'est' : 'était' ?> un groupe classé <?= $edito['ideology_edited'] ?> de l'échiquier politique.
             Il a été créé en <?= $dateDebutMois ?><?= $edito['creation'] ?>.
-            <?php if ($active == FALSE): ?>
+            <?php if (!$active): ?>
               Le groupe a été dissout le <?= $groupe['dateFinFr'] ?>.
             <?php endif; ?>
           </p>
           <p>
-            <?= ucfirst($president['son']) ?> président<?= $president['e'] ?> <?= $active == TRUE ? 'est' : 'était' ?> <a href="<?php echo base_url(); ?>deputes/<?= $president['dpt_slug'] ?>/depute_<?= $president['nameUrl'] ?>"><?= $president['nameFirst']." ".$president['nameLast'] ?></a>, à ce poste depuis le <?= $president['dateDebutFR'] ?>.
+            <?= ucfirst($president['son']) ?> président<?= $president['e'] ?> <?= $active ? 'est' : 'était' ?> <a href="<?php echo base_url(); ?>deputes/<?= $president['dpt_slug'] ?>/depute_<?= $president['nameUrl'] ?>"><?= $president['nameFirst']." ".$president['nameLast'] ?></a>, à ce poste depuis le <?= $president['dateDebutFR'] ?>.
           </p>
           <p>
             Le groupe s'est déclaré comme faisant partie de <b><?= $edito['opposition'] ?></b>
@@ -175,7 +175,7 @@
                     <span><?= $groupe['effectif'] ?></span>
                   </div>
                   <div class="explanation">
-                    <?php if ($active == FALSE): ?>
+                    <?php if (!$active): ?>
                       <p>Avec <?= $groupe['effectif'] ?> députés, le groupe <?= $title ?> représentait <?= $groupe['effectifShare'] ?>% du nombre total de députés à l'Assemblée nationale, qui est de 577.</p>
                       <?php else: ?>
                       <p>Avec <?= $groupe['effectif'] ?> députés, le groupe <?= $groupe['libelleAbrev'] ?> est le <?= $groupe['classement'] != "1" ? $groupe['classement'].'<sup>e</sup> ' : '' ?>groupe le plus important (sur <?= $groupesN ?> groupes). Il représente <?= $groupe['effectifShare'] ?>% du nombre total de députés à l'Assemblée nationale.</p>
@@ -233,7 +233,7 @@
                 </div>
               </div>
               <div class="row">
-                <?php if ($no_participation == TRUE): ?>
+                <?php if ($no_participation): ?>
                   <div class="col-12 mt-2">
                     <p>Du fait d'un nombre insuffisant de votes de la part du groupe <?= $title ?>, aucune statistique n'a pu être produite.</p>
                   </div>
@@ -252,10 +252,10 @@
                     <div class="col-lg-8 infos mt-4 mt-lg-2">
                       <div class="texte ml-md-3 pl-md-3 mt-md-0 mt-3">
                         <p>
-                          En moyenne, <?= $stats['participation'] ?>% <?php if ($groupe['libelleAbrev'] != "NI"): ?>des députés du groupe <?= $groupe['libelleAbrev'] ?><?php else: ?>des <?= mb_strtolower($title) ?><?php endif; ?> <?= $active == TRUE ? 'prennent' : 'prenaient' ?> part aux votes.
+                          En moyenne, <?= $stats['participation'] ?>% <?php if ($groupe['libelleAbrev'] != "NI"): ?>des députés du groupe <?= $groupe['libelleAbrev'] ?><?php else: ?>des <?= mb_strtolower($title) ?><?php endif; ?> <?= $active ? 'prennent' : 'prenaient' ?> part aux votes.
                         </p>
                         <p>
-                          <?php if ($groupe['libelleAbrev'] != "NI"): ?>Le groupe <b><?= $active == TRUE ? 'participe' : 'participait' ?> <?php else: ?>Les <?= mb_strtolower($title) ?> <b>participent <?php endif; ?> <?= $edito_participation['relative'] ?></b> que la moyenne <?= $active == TRUE ? "des autres groupes" : "de tous les groupes de l'Assemblée" ?>, qui est <?php if ($edito_participation == "autant"): ?>
+                          <?php if ($groupe['libelleAbrev'] != "NI"): ?>Le groupe <b><?= $active ? 'participe' : 'participait' ?> <?php else: ?>Les <?= mb_strtolower($title) ?> <b>participent <?php endif; ?> <?= $edito_participation['relative'] ?></b> que la moyenne <?= $active ? "des autres groupes" : "de tous les groupes de l'Assemblée" ?>, qui est <?php if ($edito_participation == "autant"): ?>
                             aussi
                           <?php endif; ?> de <?= $participationAverage ?> %.
                         </p>
@@ -280,7 +280,7 @@
                 </div>
               </div>
               <div class="row">
-                <?php if ($no_cohesion == TRUE): ?>
+                <?php if ($no_cohesion): ?>
                   <div class="col-12 mt-2">
                     <p>Du fait d'un nombre insuffisant de votes de la part du groupe <?= $title ?>, aucune statistique n'a pu être produite.</p>
                   </div>
@@ -299,10 +299,10 @@
                   <div class="col-lg-8 infos mt-4 mt-lg-2">
                     <div class="texte ml-md-3 pl-md-3 mt-md-0 mt-3">
                       <p>
-                        Avec un taux de cohésion de <?= $stats['cohesion'] ?>,<?php if ($groupe['libelleAbrev'] != "NI"): ?> le groupe <?= $groupe['libelleAbrev'] ?> peut être considéré<?php else: ?> les <?= mb_strtolower($title) ?> peuvent être considérés<?php endif; ?> comme <b><?= $edito_cohesion["absolute"] ?> soudé<?php if ($groupe['libelleAbrev'] == "NI"): ?>s<?php endif; ?></b> quand il <?= $active == TRUE ? "s'agit" : "s'agissait" ?> de voter.
+                        Avec un taux de cohésion de <?= $stats['cohesion'] ?>,<?php if ($groupe['libelleAbrev'] != "NI"): ?> le groupe <?= $groupe['libelleAbrev'] ?> peut être considéré<?php else: ?> les <?= mb_strtolower($title) ?> peuvent être considérés<?php endif; ?> comme <b><?= $edito_cohesion["absolute"] ?> soudé<?php if ($groupe['libelleAbrev'] == "NI"): ?>s<?php endif; ?></b> quand il <?= $active ? "s'agit" : "s'agissait" ?> de voter.
                       </p>
                       <p>
-                        Le groupe <?= $active == TRUE ? "est" : "était" ?> en effet <b><?= $edito_cohesion["relative"] ?> uni</b> que la moyenne de tous les groupes, qui est de <?= $cohesionAverage ?>.
+                        Le groupe <?= $active ? "est" : "était" ?> en effet <b><?= $edito_cohesion["relative"] ?> uni</b> que la moyenne de tous les groupes, qui est de <?= $cohesionAverage ?>.
                       </p>
                     </div>
                   </div>
@@ -325,7 +325,7 @@
                   </div>
                 </div>
                 <div class="row">
-                  <?php if ($no_participation == TRUE): ?>
+                  <?php if ($no_participation): ?>
                     <div class="col-12 mt-2">
                       <p>Du fait d'un nombre insuffisant de votes de la part du groupe <?= $title ?>, aucune statistique n'a pu être produite.</p>
                     </div>
@@ -353,7 +353,7 @@
                         </p>
                         <p>
                           <?php if ($groupe['libelleAbrev'] != "NI"): ?>
-                            Le groupe <?= $groupe['libelleAbrev'] ?> <?= $active == TRUE ? "vote" : "votait" ?>
+                            Le groupe <?= $groupe['libelleAbrev'] ?> <?= $active ? "vote" : "votait" ?>
                             <?php else: ?>
                             Les députés <?= $groupe['libelleAbrev'] ?> votent
                           <?php endif; ?>
@@ -381,7 +381,7 @@
                   </h3>
                 </div>
               </div>
-              <?php if ($no_proximite == TRUE): ?>
+              <?php if ($no_proximite): ?>
                 <div class="row">
                   <div class="col-10 offset-2">
                     <p>Du fait d'un nombre insuffisant de votes de la part du groupe <?= $title ?>, aucune statistique n'a pu être produite.</p>
@@ -423,13 +423,13 @@
                 <div class="row mt-3">
                   <div class="col-10 offset-2 ">
                     <p>
-                      Le groupe avec lequel le groupe <?= $groupe['libelleAbrev'] ?> <?= $active == TRUE ? "est" : "était" ?> le plus proche est <a href="<?= base_url() ?>groupes/<?= mb_strtolower($edito_proximite['first1']['libelleAbrev']) ?>" target="_blank"><?= $edito_proximite['first1']['libelle'] ?></a>,
+                      Le groupe avec lequel le groupe <?= $groupe['libelleAbrev'] ?> <?= $active ? "est" : "était" ?> le plus proche est <a href="<?= base_url() ?>groupes/<?= mb_strtolower($edito_proximite['first1']['libelleAbrev']) ?>" target="_blank"><?= $edito_proximite['first1']['libelle'] ?></a>,
                       <?php if ($edito_proximite['first1']['libelleAbrev'] != "NI"): ?>
                         <?= $edito_proximite['first1']['maj_pres'] ?> classé <?= $edito_proximite['first1']['ideology'] ?> de l'échiquier politique.
                         <?php else: ?>
                           <?= $edito_proximite['first1']['maj_pres'] ?>.
                       <?php endif; ?>
-                      Il <?= $active == TRUE ? "est" : "était" ?> également proche du groupe <a href="<?= base_url() ?>groupes/<?= mb_strtolower($edito_proximite['first2']['libelleAbrev']) ?>" target="_blank"><?= $edito_proximite['first2']['libelle'] ?></a>,
+                      Il <?= $active ? "est" : "était" ?> également proche du groupe <a href="<?= base_url() ?>groupes/<?= mb_strtolower($edito_proximite['first2']['libelleAbrev']) ?>" target="_blank"><?= $edito_proximite['first2']['libelle'] ?></a>,
                       <?php if ($edito_proximite['first2']['libelleAbrev'] != "NI"): ?>
                         <?= $edito_proximite['first2']['maj_pres'] ?> classé <?= $edito_proximite['first2']['ideology'] ?>.
                         <?php else: ?>
@@ -473,13 +473,13 @@
                 <div class="row mt-3">
                   <div class="col-10 offset-2">
                     <p>
-                      À l'opposé, le groupe avec lequel le groupe <?= $groupe['libelleAbrev'] ?> <?= $active == TRUE ? "est" : "était" ?> le moins proche est <a href="<?= base_url() ?>groupes/<?= mb_strtolower($edito_proximite['last1']['libelleAbrev']) ?>" target="_blank"><?= $edito_proximite['last1']['libelle'] ?></a>,
+                      À l'opposé, le groupe avec lequel le groupe <?= $groupe['libelleAbrev'] ?> <?= $active ? "est" : "était" ?> le moins proche est <a href="<?= base_url() ?>groupes/<?= mb_strtolower($edito_proximite['last1']['libelleAbrev']) ?>" target="_blank"><?= $edito_proximite['last1']['libelle'] ?></a>,
                       <?php if ($edito_proximite['last1']['libelleAbrev'] != "NI"): ?>
                         <?= $edito_proximite['last1']['maj_pres'] ?> classé <?= $edito_proximite['last1']['ideology'] ?> de l'échiquier politique.
                         <?php else: ?>
                           <?= $edito_proximite['first2']['maj_pres'] ?>.
                       <?php endif; ?>
-                      Il <?= $active == TRUE ? "vote" : "votait" ?> également très peu avec <a href="<?= base_url() ?>groupes/<?= mb_strtolower($edito_proximite['last2']['libelleAbrev']) ?>" target="_blank"><?= $edito_proximite['last2']['libelle'] ?> </a>,
+                      Il <?= $active ? "vote" : "votait" ?> également très peu avec <a href="<?= base_url() ?>groupes/<?= mb_strtolower($edito_proximite['last2']['libelleAbrev']) ?>" target="_blank"><?= $edito_proximite['last2']['libelle'] ?> </a>,
                       <?php if ($edito_proximite['last2']['libelleAbrev'] != "NI"): ?>
                         <?= $edito_proximite['last2']['maj_pres'] ?> classé <?= $edito_proximite['last2']['ideology'] ?>.
                         <?php else: ?>
