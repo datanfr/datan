@@ -45,6 +45,7 @@
 				</div>
 			</div>
 			<div class="row mt-3">
+        <h2 class="bg-danger">This script needs to be refreshed until the table below is empty. The scripts automatically is automatically refreshed every 5 seconds.</h2>
         <?php
 
         // CONNEXION SQL //

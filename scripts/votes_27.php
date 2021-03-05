@@ -43,28 +43,29 @@
 			</div>
 			<div class="row mt-3">
         <div class="col-12">
-        <?php
+          <h2 class="bg-success">Run this script only once.</h2>
+          <?php
 
-        // CONNEXION SQL //
-        	include 'bdd-connexion.php';
+          // CONNEXION SQL //
+          	include 'bdd-connexion.php';
 
-          $bdd->query('
-            DROP TABLE IF EXISTS deputes_accord_cleaned;
-            CREATE TABLE deputes_accord_cleaned AS
-            SELECT A.*, o.libelle, o.libelleAbrege, o.libelleAbrev, o.positionPolitique,
-            CASE WHEN o.dateFin IS NOT NULL THEN 1 ELSE 0 END AS ended, CURDATE() AS dateMaj
-            FROM
-            (
-              SELECT da.mpId, da.organeRef, ROUND(AVG(da.accord)*100) AS accord, COUNT(da.accord) AS votesN
-              FROM deputes_accord da
-              GROUP BY da.mpId, da.organeRef
-            ) A
-            LEFT JOIN organes o ON o.uid = A.organeRef
-            WHERE A.accord IS NOT NULL;
-            ALTER TABLE deputes_accord_cleaned ADD INDEX idx_mpId (mpId);
-          ');
+            $bdd->query('
+              DROP TABLE IF EXISTS deputes_accord_cleaned;
+              CREATE TABLE deputes_accord_cleaned AS
+              SELECT A.*, o.libelle, o.libelleAbrege, o.libelleAbrev, o.positionPolitique,
+              CASE WHEN o.dateFin IS NOT NULL THEN 1 ELSE 0 END AS ended, CURDATE() AS dateMaj
+              FROM
+              (
+                SELECT da.mpId, da.organeRef, ROUND(AVG(da.accord)*100) AS accord, COUNT(da.accord) AS votesN
+                FROM deputes_accord da
+                GROUP BY da.mpId, da.organeRef
+              ) A
+              LEFT JOIN organes o ON o.uid = A.organeRef
+              WHERE A.accord IS NOT NULL;
+              ALTER TABLE deputes_accord_cleaned ADD INDEX idx_mpId (mpId);
+            ');
 
-        ?>
+          ?>
 
         </div>
       </div>

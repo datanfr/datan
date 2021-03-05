@@ -43,24 +43,25 @@
 			</div>
 			<div class="row mt-3">
         <div class="col-12">
-        <?php
+          <h2 class="bg-success">Run this script only once.</h2>
+          <?php
 
-        // CONNEXION SQL //
-        	include 'bdd-connexion.php';
-          $bdd->query('DROP TABLE IF EXISTS class_groups_proximite');
+          // CONNEXION SQL //
+          	include 'bdd-connexion.php';
+            $bdd->query('DROP TABLE IF EXISTS class_groups_proximite');
 
-          $bdd->query('
-            CREATE TABLE class_groups_proximite AS
-            SELECT  ga.organeRef, ga.organeRefAccord AS prox_group, ROUND(AVG(accord), 4) AS score, COUNT(accord) AS votesN, curdate() AS dateMaj
-            FROM groupes_accord ga
-            WHERE ga.organeRef != ga.organeRefAccord
-            GROUP BY ga.organeRef, ga.organeRefAccord
-          ');
+            $bdd->query('
+              CREATE TABLE class_groups_proximite AS
+              SELECT  ga.organeRef, ga.organeRefAccord AS prox_group, ROUND(AVG(accord), 4) AS score, COUNT(accord) AS votesN, curdate() AS dateMaj
+              FROM groupes_accord ga
+              WHERE ga.organeRef != ga.organeRefAccord
+              GROUP BY ga.organeRef, ga.organeRefAccord
+            ');
 
-          $bdd->query("ALTER TABLE class_groups_proximite ADD INDEX idx_organeRef (organeRef)");
+            $bdd->query("ALTER TABLE class_groups_proximite ADD INDEX idx_organeRef (organeRef)");
 
 
-        ?>
+          ?>
 
         </div>
       </div>
