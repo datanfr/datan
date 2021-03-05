@@ -15,7 +15,7 @@
                 L'Assemblée nationale compte actuellement <?= $male["n"] ?> députés hommes (<?= $male["percentage"] ?> %) et <?= $female["n"] ?> femmes (<?= $female["percentage"] ?> %).
               </p>
               <p>
-                Depuis leur élection, <?= $number_inactive ?> députés ont quitté l'Assemblée pour cause de nomination au Gouvernement, de démission ou de décès. Pour découvrir ces députés qui ne sont plus activité en <a href="<?= base_url() ?>deputes/inactifs" ?>cliquez ici</a>.
+                Depuis leur élection, <?= $number_inactive ?> députés ont quitté l'Assemblée pour cause de nomination au Gouvernement, de démission ou de décès. Pour découvrir ces députés qui ne sont plus en activité en <a href="<?= base_url() ?>deputes/inactifs" ?>cliquez ici</a>.
               </p>
             <?php else: ?>
               <p>
@@ -80,7 +80,7 @@
             </div>
             <!-- Députés inactifs bouton -->
             <div class="d-none d-lg-flex justify-content-center mt-md-5">
-              <a class="btn btn-outline-primary d-none d-md-block" href="<?= base_url() ?>deputes/inactifs">Liste des députés <b>inactifs</b></a>
+              <a class="btn btn-outline-primary d-none d-md-block" href="<?= base_url() ?>deputes/inactifs">Liste des députés <b>plus en activité</b></a>
             </div>
           </div>
         </div>
