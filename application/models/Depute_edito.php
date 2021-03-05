@@ -14,7 +14,7 @@
             break;
 
           case '0':
-            $array[$key]['loyal_rebel'] = 'rebel';
+            $array[$key]['loyal_rebel'] = 'rebelle';
             $array[$key]['loyaute_edito_1'] = "n'a pas été";
             $array[$key]['loyaute_edito_3'] = "";
             break;

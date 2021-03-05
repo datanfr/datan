@@ -32,7 +32,7 @@
       // Meta
       $data['url'] = $this->meta_model->get_url();
       $data['title_meta'] = "Groupes Parlementaires - Assemblée Nationale | Datan";
-      $data['description_meta'] = "Retrouvez tous les groupes parlementaires actifs de la 15e législature. Résultats de vote et analyses pour chaque groupe parlementaire.";
+      $data['description_meta'] = "Retrouvez tous les groupes parlementaires en activité de la 15e législature. Résultats de vote et analyses pour chaque groupe parlementaire.";
       $data['title'] = "Les groupes politiques de l'Assemblée nationale";
       // Breadcrumb
       $data['breadcrumb'] = array(
@@ -70,8 +70,8 @@
 
       // Meta
       $data['url'] = $this->meta_model->get_url();
-      $data['title_meta'] = "Groupes Parlementaires Inactifs - Assemblée Nationale | Datan";
-      $data['description_meta'] = "Retrouvez tous les groupes parlementaires inactifs de la 15e législature. Résultats de vote et analyses pour chaque groupe parlementaire.";
+      $data['title_meta'] = "Groupes Parlementaires plus en activité - Assemblée Nationale | Datan";
+      $data['description_meta'] = "Retrouvez tous les groupes parlementaires plus en activité de la 15e législature. Résultats de vote et analyses pour chaque groupe parlementaire.";
       $data['title'] = "Les groupes politiques plus en activité";
       // Breadcrumb
       $data['breadcrumb'] = array(
@@ -82,7 +82,7 @@
           "name" => "Groupes", "url" => base_url()."groupes", "active" => FALSE
         ),
         array(
-          "name" => "Groupes inactifs", "url" => base_url()."groupes/inactifs", "active" => TRUE
+          "name" => "Groupes plus en activité", "url" => base_url()."groupes/inactifs", "active" => TRUE
         ),
       );
       $data['breadcrumb_json'] = $this->breadcrumb_model->breadcrumb_json($data['breadcrumb']);
@@ -311,11 +311,11 @@
       $data['url'] = $this->meta_model->get_url();
       if ($data['groupe']['libelleAbrev'] == "NI") {
         $data['title_meta'] = "Députés non incrits - Assemblée Nationale | Datan";
-        $data['description_meta'] = "Retrouvez tous les députés actifs non inscrits (NI) de la 15e législature.";
+        $data['description_meta'] = "Retrouvez tous les députés en activité non inscrits (NI) de la 15e législature.";
         $data['title'] = "Députés non incrits (NI)";
       } else {
         $data['title_meta'] = "Députés ".$data['groupe']['libelle']." - Assemblée Nationale | Datan";
-        $data['description_meta'] = "Retrouvez tous les députés actifs du groupe parlementaire ".$data['groupe']['libelle']." (".$data['groupe']['libelleAbrev'].").";
+        $data['description_meta'] = "Retrouvez tous les députés en activité du groupe parlementaire ".$data['groupe']['libelle']." (".$data['groupe']['libelleAbrev'].").";
         $data['title'] = "Députés membres du groupe ".$data['groupe']['libelle']. " (".$data['groupe']['libelleAbrev'].")";
       }
       // Breadcrumb

@@ -49,7 +49,7 @@
           </p>
           <h2 id="loyalty" class="anchor">La loyauté envers son groupe</h2>
           <p>
-            Les députés membres d'un groupe peuvent soit voter avec la ligne majoritaire de leur groupe, soit contre. Dans le premier cas, il est <b>loyal</b> ; dans le second, il est <b>rebel</b>.
+            Les députés membres d'un groupe peuvent soit voter avec la ligne majoritaire de leur groupe, soit contre. Dans le premier cas, il est <b>loyal</b> ; dans le second, il est <b>rebelle</b>.
           </p>
           <p>
             La ligne politique du groupe politique correspond à la position qui a dominé parmi les députés qui en sont membres. Par exemple, si le nombre de députés membres du groupe <i>Vive la Politique</i> votant "pour" une proposition de loi est supérieur au nombre de députés membres du groupe votant "contre" ainsi qu'au nombre de députés membres du groupe s'abstenant, le groupe est considéré comme ayant voté "pour".

@@ -15,8 +15,8 @@
                 </p>
               <?php endif; ?>
               <p>
-                <?php if ($active): ?>
-                  Cette page présente les <?= $number['n'] ?> groupes parlementaires actifs dans l'Assemblée nationale. Pour découvrir les <?= $number_groupes_inactive ?> groupes qui ne sont plus en activité, <a href="<?= base_url() ?>groupes/inactifs">cliquez ici</a>.
+                <?php if ($active == TRUE): ?>
+                  Cette page présente les <?= $number['n'] ?> groupes parlementaires en activité dans l'Assemblée nationale. Pour découvrir les <?= $number_groupes_inactive ?> groupes qui ne sont plus en activité, <a href="<?= base_url() ?>groupes/inactifs">cliquez ici</a>.
                 </p>
                 <p>
                   Au total, <?= $number_in_groupes['n'] ?> députés sont membres ou apparentés à un groupe, tandis que <?= $number_unattached['n'] ?> sont "non-inscrits".
@@ -24,7 +24,7 @@
                   Cette page présente les <?= $number_groupes_inactive['n'] ?> groupes de la 15<sup>e</sup> qui ne sont plus en activités. Ce sont des groupes qui ont été dissous depuis leur création.
                 </p>
                 <p>
-                  Pour découvrir les <?= $number_groupes_active['n'] ?> groupes politiques actifs à l'Assemblée nationale, <a href="<?= base_url() ?>groupes">cliquez ici</a>.
+                  Pour découvrir les <?= $number_groupes_active['n'] ?> groupes politiques en activité à l'Assemblée nationale, <a href="<?= base_url() ?>groupes">cliquez ici</a>.
                 <?php endif; ?>
               </p>
             </div>
@@ -56,10 +56,10 @@
       </div>
       <hr>
       <div class="row d-flex justify-content-center mt-2 py-2">
-        <?php if ($active): ?>
-          <a class="btn btn-outline-primary d-none d-md-block" href="<?= base_url() ?>groupes/inactifs">Liste des groupes <b>inactifs</b></a>
+        <?php if ($active == TRUE): ?>
+          <a class="btn btn-outline-primary d-none d-md-block" href="<?= base_url() ?>groupes/inactifs">Liste des groupes <b>plus en activité</b></a>
           <?php else: ?>
-          <a class="btn btn-outline-primary d-none d-md-block" href="<?= base_url() ?>groupes">Liste des groupes <b>actifs</b></a>
+          <a class="btn btn-outline-primary d-none d-md-block" href="<?= base_url() ?>groupes">Liste des groupes <b>en activité</b></a>
         <?php endif; ?>
       </div>
     </div>
