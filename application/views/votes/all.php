@@ -13,7 +13,6 @@
               </p>
               <p>
                 Tous ces votes décryptés font l'objet d'une reformulation et d'une contextualisation, afin de les rendre plus accessibles et plus compréhensibles.
-                Pour en savoir plus, <a href="#">cliquez ici</a>.
               </p>
               <p>
                 Si vous voulez avoir accès à <b>tous</b> les votes de l'Assemblée nationale, qu'ils soient décryptés par nos soins ou non, <a href="<?= base_url() ?>votes/legislature-<?= legislature_current() ?>">cliquez ici</a>.
