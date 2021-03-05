@@ -68,7 +68,7 @@
     }
 
     public function get_votes_datan_user($user, $published){
-      if ($published == FALSE) {
+      if (!$published) {
         $queryWhere = array(
           'created_by' => $user,
           'state' => 'draft'

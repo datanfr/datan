@@ -48,7 +48,7 @@
                 </a>
               </div>
             </div>
-            <?php if ($active == TRUE): ?>
+            <?php if ($active): ?>
               <div class="mandats d-flex justify-content-center align-items-center active">
                 <span class="active">EN ACTIVITÉ</span>
               </div>
@@ -106,7 +106,7 @@
           foreach ($fields_voted as $field): ?>
           <div class="row mt-5">
             <div class="col-2 col-md-1 d-flex align-items-end justify-content-center p-0">
-              <?php if ($field["logo"] == TRUE): ?>
+              <?php if ($field["logo"]): ?>
                 <div class="logo">
                   <?php echo file_get_contents(asset_url().'imgs/fields/'.$field['slug'].'.svg') ?>
                 </div>

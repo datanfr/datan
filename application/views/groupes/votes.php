@@ -48,7 +48,7 @@
                 </a>
               </div>
             </div>
-            <?php if ($active == TRUE): ?>
+            <?php if ($active): ?>
               <div class="mandats d-flex justify-content-center align-items-center active">
                 <span class="active">EN ACTIVITÉ</span>
               </div>

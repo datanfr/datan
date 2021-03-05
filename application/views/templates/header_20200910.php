@@ -118,7 +118,7 @@
 
     <?php if (isset($css_to_load)): ?>
       <?php foreach ($css_to_load as $file): ?>
-        <link type="text/css" <?php if ($file['async'] == TRUE): ?> rel="stylesheet" media="print" onload="this.media='all';this.onload=null;" <?php else: ?> rel="stylesheet" <?php endif; ?> href="<?= $file['url'] ?>"/>
+        <link type="text/css" <?php if ($file['async']): ?> rel="stylesheet" media="print" onload="this.media='all';this.onload=null;" <?php else: ?> rel="stylesheet" <?php endif; ?> href="<?= $file['url'] ?>"/>
       <?php endforeach; ?>
     <?php endif; ?>
 
