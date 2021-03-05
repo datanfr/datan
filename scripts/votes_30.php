@@ -43,91 +43,90 @@
 			</div>
 			<div class="row mt-3">
         <div class="col-12">
-
-        <?php
-
-
-          // Connexion Database
-        	include 'bdd-connexion.php';
-
-          // filename for export
-          $csv_filename = 'deputes_15.csv';
-
-          // create var to be filled with export data
-          $csv_export = '';
-
-          // query to get data from database
-          $query = $bdd->query('
-          SELECT
-          	da.mpId AS id,
-              da.civ,
-          	da.nameLast AS nom,
-              da.nameFirst AS prenom,
-              d.birthDate AS naissance,
-              da.age,
-              da.libelle AS groupe,
-              da.libelleAbrev AS groupeAbrev,
-              da.departementNom,
-              da.departementCode,
-              da.circo,
-              da.datePriseFonction,
-              d.job,
-              dc.mailAn AS mail,
-              dc.twitter,
-              dc.facebook,
-              dc.website,
-              h.mandatesN AS nombreMandats,
-              h.lengthEdited AS experienceDepute,
-              cp.score AS scoreParticipation,
-              cpm.score AS scoreParticipationSpecialite,
-              cl.score AS scoreLoyaute,
-              cm.score AS scoreMajorite,
-              CASE WHEN da.dateFin IS NULL THEN 1 ELSE 0 END AS "active",
-              da.dateMaj
-          FROM deputes_all da
-          LEFT JOIN class_participation cp ON da.mpId = cp.mpId
-          LEFT JOIN class_participation_commission cpm ON da.mpId = cpm.mpId
-          LEFT JOIN class_loyaute_all cl ON da.mpId = cl.mpId
-          LEFT JOIN class_majorite cm ON da.mpId = cm.mpId
-          LEFT JOIN deputes_contacts dc ON da.mpId = dc.mpId
-          LEFT JOIN history_per_mps_average h ON da.mpId = h.mpId
-          LEFT JOIN deputes d ON da.mpId = d.mpId
-          WHERE da.legislature = 15
-          ');
-
-          // Fetch the result
-          $results = $query->fetchAll(PDO::FETCH_ASSOC);
-
-          // Get the number of rows
-          $number_of_rows = $query->columnCount();
-
-          // Create line with field names
-          $fields = [];
-          foreach ($results[0] as $key => $value) {
-            $fields[] = $key;
-          }
-
-          // Export the data
-          $dir = __DIR__;
-          $dir = str_replace(array("/", "scripts", ".php"), "", $dir);
-          $dir = "../assets/opendata/";
-          echo $dir;
-          $fp = fopen($dir."".$csv_filename, "w");
-
-          // Print the header
-          fputcsv($fp, $fields);
-
-          // Create new line with results
-          foreach ($results as $key => $result) {
-            fputcsv($fp, $result);
-          }
-
-          // CLose the file
-          fclose($fp);
+          <h2 class="bg-success">Run this script only once.</h2>
+          <p>This script will need to be adapted - not working at the moment!</p>
+          <?php
 
 
+            // Connexion Database
+          	include 'bdd-connexion.php';
 
-        ?>
+            // filename for export
+            $csv_filename = 'deputes_15.csv';
+
+            // create var to be filled with export data
+            $csv_export = '';
+
+            // query to get data from database
+            $query = $bdd->query('
+            SELECT
+            	da.mpId AS id,
+                da.civ,
+            	da.nameLast AS nom,
+                da.nameFirst AS prenom,
+                d.birthDate AS naissance,
+                da.age,
+                da.libelle AS groupe,
+                da.libelleAbrev AS groupeAbrev,
+                da.departementNom,
+                da.departementCode,
+                da.circo,
+                da.datePriseFonction,
+                d.job,
+                dc.mailAn AS mail,
+                dc.twitter,
+                dc.facebook,
+                dc.website,
+                h.mandatesN AS nombreMandats,
+                h.lengthEdited AS experienceDepute,
+                cp.score AS scoreParticipation,
+                cpm.score AS scoreParticipationSpecialite,
+                cl.score AS scoreLoyaute,
+                cm.score AS scoreMajorite,
+                CASE WHEN da.dateFin IS NULL THEN 1 ELSE 0 END AS "active",
+                da.dateMaj
+            FROM deputes_all da
+            LEFT JOIN class_participation cp ON da.mpId = cp.mpId
+            LEFT JOIN class_participation_commission cpm ON da.mpId = cpm.mpId
+            LEFT JOIN class_loyaute_all cl ON da.mpId = cl.mpId
+            LEFT JOIN class_majorite cm ON da.mpId = cm.mpId
+            LEFT JOIN deputes_contacts dc ON da.mpId = dc.mpId
+            LEFT JOIN history_per_mps_average h ON da.mpId = h.mpId
+            LEFT JOIN deputes d ON da.mpId = d.mpId
+            WHERE da.legislature = 15
+            ');
+
+            // Fetch the result
+            $results = $query->fetchAll(PDO::FETCH_ASSOC);
+
+            // Get the number of rows
+            $number_of_rows = $query->columnCount();
+
+            // Create line with field names
+            $fields = [];
+            foreach ($results[0] as $key => $value) {
+              $fields[] = $key;
+            }
+
+            // Export the data
+            $dir = __DIR__;
+            $dir = str_replace(array("/", "scripts", ".php"), "", $dir);
+            $dir = "../assets/opendata/";
+            echo $dir;
+            $fp = fopen($dir."".$csv_filename, "w");
+
+            // Print the header
+            fputcsv($fp, $fields);
+
+            // Create new line with results
+            foreach ($results as $key => $result) {
+              fputcsv($fp, $result);
+            }
+
+            // CLose the file
+            fclose($fp);
+
+          ?>
 
         </div>
       </div>

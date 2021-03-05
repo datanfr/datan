@@ -43,31 +43,31 @@
 			</div>
 			<div class="row mt-3">
         <div class="col-12">
+          <h2 class="bg-success">Run this script only once.</h2>
+          <?php
 
-        <?php
+          	include 'bdd-connexion.php';
 
-        	include 'bdd-connexion.php';
+            $bdd->query('
+              DROP TABLE IF EXISTS class_participation_commission;
+              CREATE TABLE class_participation_commission
+              SELECT A.*, da.legislature,
+              CASE WHEN da.dateFin IS NULL THEN 1 ELSE 0 END AS active,
+              curdate() AS dateMaj
+              FROM
+              (
+              SELECT v.mpId, ROUND(AVG(v.participation),2) AS score, COUNT(v.participation) AS votesN, ROUND(COUNT(v.participation)/100) AS "index"
+              FROM votes_participation_commission v
+              WHERE v.participation IS NOT NULL
+              GROUP BY v.mpId
+              ORDER BY ROUND(COUNT(v.participation)/100) DESC, AVG(v.participation) DESC
+              ) A
+              LEFT JOIN deputes_all da ON da.mpId = A.mpId AND da.legislature = 15;
+              ALTER TABLE class_participation_commission ADD INDEX idx_mpId (mpId);
+              ALTER TABLE class_participation_commission ADD INDEX idx_active (active);
+            ');
 
-          $bdd->query('
-            DROP TABLE IF EXISTS class_participation_commission;
-            CREATE TABLE class_participation_commission
-            SELECT A.*, da.legislature,
-            CASE WHEN da.dateFin IS NULL THEN 1 ELSE 0 END AS active,
-            curdate() AS dateMaj
-            FROM
-            (
-            SELECT v.mpId, ROUND(AVG(v.participation),2) AS score, COUNT(v.participation) AS votesN, ROUND(COUNT(v.participation)/100) AS "index"
-            FROM votes_participation_commission v
-            WHERE v.participation IS NOT NULL
-            GROUP BY v.mpId
-            ORDER BY ROUND(COUNT(v.participation)/100) DESC, AVG(v.participation) DESC
-            ) A
-            LEFT JOIN deputes_all da ON da.mpId = A.mpId AND da.legislature = 15;
-            ALTER TABLE class_participation_commission ADD INDEX idx_mpId (mpId);
-            ALTER TABLE class_participation_commission ADD INDEX idx_active (active);
-          ');
-
-        ?>
+          ?>
 
         </div>
       </div>

@@ -43,43 +43,44 @@
 			</div>
 			<div class="row mt-3">
         <div class="col-12">
-        <?php
+          <h2 class="bg-success">Run this script only once.</h2>
+          <?php
 
-        // CONNEXION SQL //
-        	include 'bdd-connexion.php';
+          // CONNEXION SQL //
+          	include 'bdd-connexion.php';
 
-          $bdd->query('
-            DROP TABLE IF EXISTS history_per_mps_average;
-            CREATE TABLE history_per_mps_average AS
-            SELECT B.*,
-                  	CASE
-                  	WHEN ROUND(B.mpLength/365) = 1 THEN CONCAT(ROUND(B.mpLength/365), " an")
-                      WHEN ROUND(B.mpLength/365) > 1 THEN CONCAT(ROUND(B.mpLength/365), " ans")
-                      WHEN ROUND(B.mpLength/30) != 0 THEN CONCAT(ROUND(B.mpLength/30), " mois")
-                      ELSE CONCAT(B.mpLength, " jours")
-                      END AS lengthEdited, CURDATE() AS dateMaj
-                  FROM
-                  (
-                  	SELECT A.mpId,
-                  		SUM(A.length) AS mpLength,
-            			count(distinct(A.legislature)) AS mandatesN
-                        FROM
-                        (
-                        	SELECT mp.legislature, mp.mpId,
-                        		CASE
-                        		WHEN mp.dateFin IS NOT NULL THEN datediff(mp.dateFin, mp.datePriseFonction)
-                        		ELSE datediff(curdate(), mp.datePriseFonction)
-                        	END AS length
-                        	FROM mandat_principal mp
-                        	WHERE mp.typeOrgane = "ASSEMBLEE" AND mp.codeQualite = "membre"
-                        ) A
-                        GROUP BY A.mpId
-                  ) B;
-              ALTER TABLE history_per_mps_average ADD INDEX idx_mpId (mpId);
+            $bdd->query('
+              DROP TABLE IF EXISTS history_per_mps_average;
+              CREATE TABLE history_per_mps_average AS
+              SELECT B.*,
+                    	CASE
+                    	WHEN ROUND(B.mpLength/365) = 1 THEN CONCAT(ROUND(B.mpLength/365), " an")
+                        WHEN ROUND(B.mpLength/365) > 1 THEN CONCAT(ROUND(B.mpLength/365), " ans")
+                        WHEN ROUND(B.mpLength/30) != 0 THEN CONCAT(ROUND(B.mpLength/30), " mois")
+                        ELSE CONCAT(B.mpLength, " jours")
+                        END AS lengthEdited, CURDATE() AS dateMaj
+                    FROM
+                    (
+                    	SELECT A.mpId,
+                    		SUM(A.length) AS mpLength,
+              			count(distinct(A.legislature)) AS mandatesN
+                          FROM
+                          (
+                          	SELECT mp.legislature, mp.mpId,
+                          		CASE
+                          		WHEN mp.dateFin IS NOT NULL THEN datediff(mp.dateFin, mp.datePriseFonction)
+                          		ELSE datediff(curdate(), mp.datePriseFonction)
+                          	END AS length
+                          	FROM mandat_principal mp
+                          	WHERE mp.typeOrgane = "ASSEMBLEE" AND mp.codeQualite = "membre"
+                          ) A
+                          GROUP BY A.mpId
+                    ) B;
+                ALTER TABLE history_per_mps_average ADD INDEX idx_mpId (mpId);
 
-          ');
+            ');
 
-        ?>
+          ?>
 
         </div>
       </div>

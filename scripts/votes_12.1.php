@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
   <head>
-
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title><?= $_SERVER['REQUEST_URI'] ?></title>
@@ -37,6 +36,7 @@
 			</div>
 			<div class="row mt-3">
         <div class="col-12">
+          <h2 class="bg-success">Run this script only once.</h2>
           <table class="table">
             <thead>
                 <tr>

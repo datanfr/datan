@@ -43,6 +43,7 @@
 			</div>
 			<div class="row mt-3">
         <div class="col-12">
+          <h2 class="bg-success">Run this script only once.</h2>
         <?php
 
         // CONNEXION SQL //

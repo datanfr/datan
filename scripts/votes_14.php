@@ -43,32 +43,32 @@
 			</div>
 			<div class="row mt-3">
         <div class="col-12">
+          <h2 class="bg-success">Run this script only once.</h2>
+          <?php
 
-        <?php
+          // CONNEXION SQL //
+          	include 'bdd-connexion.php';
 
-        // CONNEXION SQL //
-        	include 'bdd-connexion.php';
+            $bdd->query('
+              DROP TABLE IF EXISTS class_majorite;
+              CREATE TABLE class_majorite
+              SELECT A.*, da.legislature,
+              CASE WHEN da.dateFin IS NULL THEN 1 ELSE 0 END AS active,
+              curdate() AS dateMaj
+              FROM
+              (
+              SELECT v.mpId, ROUND(AVG(v.scoreGvt),3) AS score, COUNT(v.scoreGvt) AS votesN
+              FROM votes_scores v
+              WHERE v.scoreGvt IS NOT NULL
+              GROUP BY v.mpId
+              ) A
+              LEFT JOIN deputes_all da ON da.mpId = A.mpId AND legislature = 15
+              ORDER BY A.score DESC, A.votesN;
+              ALTER TABLE class_majorite ADD INDEX idx_mpId (mpId);
+              ALTER TABLE class_majorite ADD INDEX idx_active (active);
+            ');
 
-          $bdd->query('
-            DROP TABLE IF EXISTS class_majorite;
-            CREATE TABLE class_majorite
-            SELECT A.*, da.legislature,
-            CASE WHEN da.dateFin IS NULL THEN 1 ELSE 0 END AS active,
-            curdate() AS dateMaj
-            FROM
-            (
-            SELECT v.mpId, ROUND(AVG(v.scoreGvt),3) AS score, COUNT(v.scoreGvt) AS votesN
-            FROM votes_scores v
-            WHERE v.scoreGvt IS NOT NULL
-            GROUP BY v.mpId
-            ) A
-            LEFT JOIN deputes_all da ON da.mpId = A.mpId AND legislature = 15
-            ORDER BY A.score DESC, A.votesN;
-            ALTER TABLE class_majorite ADD INDEX idx_mpId (mpId);
-            ALTER TABLE class_majorite ADD INDEX idx_active (active);
-          ');
-
-        ?>
+          ?>
 
         </div>
       </div>

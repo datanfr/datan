@@ -43,34 +43,35 @@
 			</div>
 			<div class="row mt-3">
         <div class="col-12">
-        <?php
+          <h2 class="bg-success">Run this script only once.</h2>
+          <?php
 
-        // CONNEXION SQL //
-        	include 'bdd-connexion.php';
+          // CONNEXION SQL //
+          	include 'bdd-connexion.php';
 
-          $bdd->query('
-            DROP TABLE IF EXISTS history_mps_average;
-            CREATE TABLE history_mps_average AS
-            SELECT ROUND(AVG(B.mpLength)/365) as length
-            FROM
-            (
-            	SELECT A.mpId, sum(A.duree) AS mpLength
-            	FROM
-            	(
-            		SELECT d.mpId,
-            		CASE
-            			WHEN m.dateFin IS NOT NULL THEN datediff(m.dateFin, m.datePriseFonction)
-            			ELSE datediff(curdate(), m.datePriseFonction)
-            		END AS duree
-            		FROM mandat_principal d
-            		INNER JOIN mandat_principal m ON d.mpId = m.mpId
-            		WHERE d.legislature = 15 AND d.dateFin IS NULL AND d.codeQualite = "membre" AND d.typeOrgane = "ASSEMBLEE" AND m.codeQualite = "membre"
-            	) A
-            	GROUP BY A.mpId
-            ) B
-          ');
+            $bdd->query('
+              DROP TABLE IF EXISTS history_mps_average;
+              CREATE TABLE history_mps_average AS
+              SELECT ROUND(AVG(B.mpLength)/365) as length
+              FROM
+              (
+              	SELECT A.mpId, sum(A.duree) AS mpLength
+              	FROM
+              	(
+              		SELECT d.mpId,
+              		CASE
+              			WHEN m.dateFin IS NOT NULL THEN datediff(m.dateFin, m.datePriseFonction)
+              			ELSE datediff(curdate(), m.datePriseFonction)
+              		END AS duree
+              		FROM mandat_principal d
+              		INNER JOIN mandat_principal m ON d.mpId = m.mpId
+              		WHERE d.legislature = 15 AND d.dateFin IS NULL AND d.codeQualite = "membre" AND d.typeOrgane = "ASSEMBLEE" AND m.codeQualite = "membre"
+              	) A
+              	GROUP BY A.mpId
+              ) B
+            ');
 
-        ?>
+          ?>
 
         </div>
       </div>
