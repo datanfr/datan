@@ -180,7 +180,7 @@
           <?php if ($active): ?>
             <h2>Les autres députés <?= $depute['libelle'] ?> (<?= $depute['libelleAbrev'] ?>)</h2>
             <?php else: ?>
-            <h2>Les autres députés inactifs</h2>
+            <h2>Les autres députés plus en activité</h2>
           <?php endif; ?>
           <div class="row mt-3">
             <?php foreach ($other_deputes as $mp): ?>
@@ -193,14 +193,14 @@
             <?php if ($active): ?>
               <a href="<?= base_url() ?>groupes/<?= mb_strtolower($depute['libelleAbrev']) ?>">Voir tous les députés membres du groupe <?= $depute['libelle'] ?> (<?= $depute['libelleAbrev'] ?>)</a>
               <?php else: ?>
-              <a href="<?= base_url(); ?>deputes/inactifs">Tous les députés inactifs</a>
+              <a href="<?= base_url(); ?>deputes/inactifs">Tous les députés plus en activité</a>
             <?php endif; ?>
           </div>
         </div>
       </div>
       <div class="row mt-5">
         <div class="col-12">
-          <h2>Les députés actifs du département <?= $depute['dptLibelle2'] ?><?= $depute['departementNom'].' ('.$depute['departementCode'].')'?></h2>
+          <h2>Les députés en activité du département <?= $depute['dptLibelle2'] ?><?= $depute['departementNom'].' ('.$depute['departementCode'].')'?></h2>
           <div class="row mt-3">
             <?php foreach ($other_deputes_dpt as $mp): ?>
               <div class="col-6 col-md-3 py-2">
