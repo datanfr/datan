@@ -6,7 +6,7 @@
           <h1><?= $title ?></h1>
         </div>
         <div class="col-lg-5 offset-lg-1">
-          <?php if ($active == TRUE): ?>
+          <?php if ($active): ?>
             <p>
               L'Assemblée nationale compte <b>577 députés</b>. Ils sont élus tous les 5 ans lors des élections législatives. Les dernières ont eu lieu en juin 2017 et les prochaines se tiendront en 2022, quelques semaines après l'élection présidentielle.
             </p>
@@ -40,7 +40,7 @@
           <div class="sticky-top sticky-offset">
             <!-- Groupes -->
             <div class="d-flex flex-column d-lg-none">
-              <?php if ($active == TRUE): ?>
+              <?php if ($active): ?>
                 <h3>
                   Les <span class="text-primary">577</span> députés de l'Assemblée nationale
                 </h3>
@@ -49,7 +49,7 @@
                   <span class="text-primary"><?= $number_inactive ?></span> députés de la 15<sup>e</sup> législature ne sont plus en activité
                 </h3>
               <?php endif; ?>
-              <?php if ($active == TRUE): ?>
+              <?php if ($active): ?>
                 <div class="mt-3 badges-groupes">
                   <?php foreach ($groupes as $groupe): ?>
                     <a class="badge badge-primary no-decoration" href="<?= base_url() ?>groupes/<?= mb_strtolower($groupe['libelleAbrev']) ?>/membres">
@@ -91,7 +91,7 @@
                 <div class="card card-depute">
                   <div class="liseret" style="background-color: <?= $depute["couleurAssociee"] ?>"></div>
                   <div class="card-avatar">
-                    <?php if ($depute['img'] == 1): ?>
+                    <?php if ($depute['img']): ?>
                       <img class="img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-face.png" data-src="<?= base_url(); ?>assets/imgs/deputes/depute_<?= substr($depute["mpId"], 2) ?>.png" alt="<?= $depute['nameFirst'].' '.$depute['nameLast'] ?>">
                       <?php else: ?>
                       <img class="img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-face.png" data-src="<?= asset_url() ?>imgs/placeholder/placeholder-face.png" alt="<?= $depute['nameFirst'].' '.$depute['nameLast'] ?>">

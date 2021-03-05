@@ -136,7 +136,7 @@
               <div class="card card-depute">
                 <div class="liseret" style="background-color: <?= $depute_random["couleurAssociee"] ?>"></div>
                 <div class="card-avatar">
-                  <?php if ($depute_random['img'] == 1): ?>
+                  <?php if ($depute_random['img']): ?>
                     <img class="img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-face.png" data-src="<?= base_url(); ?>assets/imgs/deputes/depute_<?= substr($depute_random["mpId"], 2) ?>.png" alt="<?= $depute_random['nameFirst'].' '.$depute_random['nameLast'] ?>">
                     <?php else: ?>
                     <img class="img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-face.png" data-src="<?= asset_url() ?>imgs/placeholder/placeholder-face.png" alt="<?= $depute_random['nameFirst'].' '.$depute_random['nameLast'] ?>">

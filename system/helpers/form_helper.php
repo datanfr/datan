@@ -474,7 +474,7 @@ if ( ! function_exists('form_checkbox'))
 			}
 		}
 
-		if ($checked == TRUE)
+		if ($checked)
 		{
 			$defaults['checked'] = 'checked';
 		}

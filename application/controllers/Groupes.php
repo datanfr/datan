@@ -147,7 +147,7 @@
       $data['groupe']['couleurAssociee'] = $this->groupes_model->get_groupe_color($data['groupe']);
 
       // Query effectif inactifs
-      if ($data['active'] == FALSE) {
+      if (!$data['active']) {
         $data['groupe']['effectif'] = $this->groupes_model->get_effectif_inactif($groupe_uid);
         $data['groupe']['effectifShare'] = round(($data['groupe']['effectif'] / 577) * 100);
       }
@@ -364,7 +364,7 @@
         $data['active'] = FALSE;
       }
       // Query effectif inactifs
-      if ($data['active'] == FALSE) {
+      if (!$data['active']) {
         $data['effectif'] = $this->groupes_model->get_effectif_inactif($groupe_uid);
       }
 
@@ -484,7 +484,7 @@
         $data['active'] = FALSE;
       }
       // Query effectif inactifs
-      if ($data['active'] == FALSE) {
+      if (!$data['active']) {
         $data['effectif'] = $this->groupes_model->get_effectif_inactif($groupe_uid);
       }
 
@@ -573,7 +573,7 @@
         $data['active'] = FALSE;
       }
       // Query effectif inactifs
-      if ($data['active'] == FALSE) {
+      if (!$data['active']) {
         $data['effectif'] = $this->groupes_model->get_effectif_inactif($groupe_uid);
       }
 
