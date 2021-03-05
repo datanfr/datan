@@ -112,7 +112,7 @@
     }
 
     public function get_groupes_president($groupe_uid, $active){
-      if ($active == TRUE) {
+      if ($active) {
         $query = $this->db->query('
         SELECT A.*, civ, d.nameFirst, d.nameLast, d.nameUrl, dpt.slug AS dpt_slug, dpt.departement_nom, dpt.departement_code
         FROM
@@ -149,7 +149,7 @@
     }
 
     public function get_groupe_membres($groupe_uid, $active){
-      if ($active == TRUE) {
+      if ($active) {
         $query = $this->db->query('
         SELECT A.*, civ, d.nameFirst, d.nameLast, d.nameUrl, dpt.slug AS dpt_slug, dpt.departement_nom, dpt.departement_code
         FROM
@@ -187,7 +187,7 @@
     }
 
     public function get_groupe_apparentes($groupeId, $active){
-      if ($active == TRUE) {
+      if ($active) {
         $query = $this->db->query('
         SELECT A.*, civ, d.nameFirst, d.nameLast, d.nameUrl, dpt.slug AS dpt_slug, dpt.departement_nom, dpt.departement_code
         FROM

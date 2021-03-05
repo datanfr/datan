@@ -9,7 +9,7 @@
               <p>
                 Les <b>groupes politiques</b> rassemblent des députés selon leur affinité politique. Un groupe doit être composé au minimum de 15 députés.
               </p>
-              <?php if ($active == TRUE): ?>
+              <?php if ($active): ?>
                 <p>
                   Les groupes jouent un rôle important dans l'Assemblée. Ils permettent de structurer le débat sur la base de lignes politiques (gauche, droite, centre). Les groupes reçoivent également des ressources politiques (temps de parole) et financières non négligeables.
                 </p>
@@ -43,7 +43,7 @@
                     </h2>
                     <span class="d-block"><?= $groupe["libelleAbrev"] ?></span>
                   </div>
-                  <?php if ($active == TRUE): ?>
+                  <?php if ($active): ?>
                   <div class="card-footer d-flex justify-content-center align-items-center">
                     <span><?= $groupe["effectif"] ?> membres</span>
                   </div>

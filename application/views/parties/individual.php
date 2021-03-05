@@ -7,7 +7,7 @@
           <?php if ($party['libelle'] == "Non rattaché(s)" || $party['libelle'] == "Non déclaré(s)"): ?>
             <?= $party['effectif'] ?> député<?= $party['effectif'] > 1 ? 's' : FALSE ?>
           <?php else: ?>
-            <?php if ($active == TRUE): ?>
+            <?php if ($active): ?>
               Parti politique
               <?php else: ?>
               Ancien parti politique
@@ -17,7 +17,7 @@
           <?php endif; ?>
         </span>
       </div>
-      <?php if ($party["img"] == TRUE): ?>
+      <?php if ($party["img"]): ?>
         <div class="col-md-3 col-lg-2 mt-4 mt-md-0 d-flex justify-content-center">
           <div class="img-party">
             <img src="<?= asset_url() ?>imgs/parties/<?= mb_strtolower($party['libelleAbrev']) ?>.png" alt="<?= $party['libelle'] ?>">
@@ -41,7 +41,7 @@
         <p>Cela ne veut pas dire que ces députés ne sont pas membres d'un parti politique.</p>
       <?php else: ?>
         <p>
-          <b><?= $party['libelle'] ?> est un <?= $active == FALSE ? 'ancien ' : NULL ?>parti politique français.</b>
+          <b><?= $party['libelle'] ?> est un <?= $active ? null: 'ancien ' ?>parti politique français.</b>
         </p>
         <?php if (empty($party['effectif'])): ?>
           <p>
