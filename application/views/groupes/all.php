@@ -9,13 +9,13 @@
               <p>
                 Les <b>groupes politiques</b> rassemblent des députés selon leur affinité politique. Un groupe doit être composé au minimum de 15 députés.
               </p>
-              <?php if ($active == TRUE): ?>
+              <?php if ($active): ?>
                 <p>
                   Les groupes jouent un rôle important dans l'Assemblée. Ils permettent de structurer le débat sur la base de lignes politiques (gauche, droite, centre). Les groupes reçoivent également des ressources politiques (temps de parole) et financières non négligeables.
                 </p>
               <?php endif; ?>
               <p>
-                <?php if ($active == TRUE): ?>
+                <?php if ($active): ?>
                   Cette page présente les <?= $number['n'] ?> groupes parlementaires actifs dans l'Assemblée nationale. Pour découvrir les <?= $number_groupes_inactive ?> groupes qui ne sont plus en activité, <a href="<?= base_url() ?>groupes/inactifs">cliquez ici</a>.
                 </p>
                 <p>
@@ -43,7 +43,7 @@
                     </h2>
                     <span class="d-block"><?= $groupe["libelleAbrev"] ?></span>
                   </div>
-                  <?php if ($active == TRUE): ?>
+                  <?php if ($active): ?>
                   <div class="card-footer d-flex justify-content-center align-items-center">
                     <span><?= $groupe["effectif"] ?> membres</span>
                   </div>
@@ -56,7 +56,7 @@
       </div>
       <hr>
       <div class="row d-flex justify-content-center mt-2 py-2">
-        <?php if ($active == TRUE): ?>
+        <?php if ($active): ?>
           <a class="btn btn-outline-primary d-none d-md-block" href="<?= base_url() ?>groupes/inactifs">Liste des groupes <b>inactifs</b></a>
           <?php else: ?>
           <a class="btn btn-outline-primary d-none d-md-block" href="<?= base_url() ?>groupes">Liste des groupes <b>actifs</b></a>

@@ -187,7 +187,7 @@
       $data['election_result'] = $this->deputes_model->get_electoral_result_mp($data['depute']['departementCode'], $data['depute']['circo'], $nameLast); // electoral result
 
       // Get commission parlementaire
-      if ($data['active'] == TRUE) {
+      if ($data['active']) {
         $data['commission_parlementaire'] = $this->deputes_model->get_commission_parlementaire($depute_uid);
       }
 

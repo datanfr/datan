@@ -13,7 +13,7 @@
               <div class="img">
                 <div class="d-flex justify-content-center">
                   <div class="depute-img-circle">
-                    <?php if ($depute['img'] == 1): ?>
+                    <?php if ($depute['img']): ?>
                       <picture>
                         <source srcset="<?= asset_url(); ?>imgs/deputes_webp/depute_<?= $depute['idImage'] ?>_webp.webp" alt="<?= $title ?>" type="image/webp">
                         <source srcset="<?= asset_url(); ?>imgs/deputes/depute_<?= $depute['idImage'] ?>.png" type="image/png">
@@ -54,7 +54,7 @@
                   </ul>
               </div>
             </div>
-            <?php if ($active == TRUE): ?>
+            <?php if ($active): ?>
               <div class="mandats d-flex justify-content-center align-items-center active">
                 <span class="active"><?= mb_strtoupper($mandat_edito) ?> MANDAT</span>
               </div>
@@ -122,7 +122,7 @@
     <div class="container bloc-others">
       <div class="row">
         <div class="col-12">
-          <?php if ($active == TRUE): ?>
+          <?php if ($active): ?>
             <h2>Les autres députés <?= $depute['libelle'] ?> (<?= $depute['libelleAbrev'] ?>)</h2>
             <?php else: ?>
             <h2>Les autres députés inactifs</h2>
@@ -135,7 +135,7 @@
             <?php endforeach; ?>
           </div>
           <div class="mt-3">
-            <?php if ($active == TRUE): ?>
+            <?php if ($active): ?>
               <a href="<?= base_url() ?>groupes/<?= mb_strtolower($depute['libelleAbrev']) ?>">Voir tous les députés membres du groupe <?= $depute['libelle'] ?> (<?= $depute['libelleAbrev'] ?>)</a>
               <?php else: ?>
               <a href="<?= base_url(); ?>deputes/inactifs">Tous les députés inactifs</a>

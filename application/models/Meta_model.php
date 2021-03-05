@@ -22,7 +22,7 @@
 
       if ($type == "deputes/individual") {
         $uid = $data['depute']['mpId'];
-        if ($data['depute']['imgOgp'] == 1) {
+        if ($data['depute']['imgOgp']) {
           $array['img'] = asset_url()."imgs/deputes_ogp/ogp_deputes_".$uid.".png";
           $array['twitter_img'] = asset_url()."imgs/deputes_ogp/ogp_deputes_".$uid.".png";
         } else {
