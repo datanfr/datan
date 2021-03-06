@@ -92,6 +92,15 @@
     $('#table_analyses').DataTable({
       "order": [[0, "desc"]]
     });
+
+      for(let link of $('.nav-treeview .nav-link')){
+        if($(link).attr('href').endsWith(location.pathname)){
+          $(link).addClass('active');
+          $(link).closest('.has-treeview').addClass('menu-open');
+          $(link).closest('.has-treeview').addClass('active');
+        }
+      }
+
 } );
 
 </script>
