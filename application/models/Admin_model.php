@@ -257,9 +257,9 @@
   			SELECT ROUND(AVG(t2.score), 3) AS average, libelleAbrev
   			FROM class_loyaute t2
   			LEFT JOIN deputes_all da ON da.mpId = t2.mpId
-  			WHERE da.libelleAbrev = "'.$libelle.'" AND da.legislature = 15 AND da.dateFin IS NULL
+        WHERE da.libelleAbrev = \''.$libelle.'\' AND da.legislature = 15 AND da.dateFin IS NULL
           ) r ON r.libelleAbrev = da.libelleAbrev
-          WHERE da.legislature = 15 AND da.dateFin IS NULL AND da.libelleAbrev = "'.$libelle.'"
+          WHERE da.legislature = 15 AND da.dateFin IS NULL AND da.libelleAbrev = \''.$libelle.'\'
         	ORDER BY t1.score DESC
         ) B,
         (SELECT @s:= 0) AS s
