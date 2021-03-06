@@ -66,7 +66,7 @@
         dom: 'Bfrtip',
         //"lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
         fixedHeader: true,
-        "paging": false,
+        "paging": true,
         "order": [[ 1, "desc" ]],
         buttons: [
           {
