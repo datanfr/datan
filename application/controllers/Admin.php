@@ -217,7 +217,7 @@
           $data['deputes'] = $this->deputes_model->get_deputes_all(legislature_current(), NULL, NULL);
           $data['title'] = "Liste des députés";
           $this->load->view('dashboard/header', $data);
-          $this->load->view('dashboard/socialmedia_list', $data);
+          $this->load->view('dashboard/socialmedia/list', $data);
           $this->load->view('dashboard/footer');
         } else {
           $data['depute'] = $this->deputes_model->get_infos($id);
