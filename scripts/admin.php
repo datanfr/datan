@@ -27,29 +27,6 @@
           $maj_depute = date("d-m-Y", strtotime($maj_depute));
         }
 
-        $maj_principal = $bdd->query('
-        SELECT dateMaj
-        FROM mandat_principal
-        ORDER BY dateMaj
-        LIMIT 1
-        ');
-        while ($data_princ = $maj_principal->fetch()) {
-          $maj_mandat_principal = $data_princ['dateMaj'];
-          $maj_mandat_principal = date("d-m-Y", strtotime($maj_mandat_principal));
-        }
-
-        $maj_groupes = $bdd->query('
-        SELECT dateMaj
-        FROM organes
-        ORDER BY dateMaj
-        LIMIT 1
-        ');
-        while ($data_groupes = $maj_groupes->fetch()) {
-          $maj_groupe = $data_groupes['dateMaj'];
-          $maj_groupe = date("d-m-Y", strtotime($maj_groupe));
-        }
-
-
       ?>
         <div class="container">
           <div class="row">
@@ -59,42 +36,37 @@
             <div class="col">
               <a class="btn btn-outline-primary my-3" href="./" role="button">Back</a>
               <br>
-              <a class="btn btn-primary my-3" href="votes_individual" role="button">Votes individual</a>
-              <br>
+              <h3 class="mt-3">Delete caching of webpages+SQL queries</h3>
               <a class="btn btn-primary my-3" href="../cache/delete_all" role="button">Delete all caching</a>
               <br>
+              <h3 class="mt-3">Database structure update</h3>
               <a class="btn btn-danger my-3" href="update_dataset/20210305_update_database.php" role="button">UPDATE DATABASE (March 5, 2021)</a>
-
               <a class="btn btn-warning my-3" href="update_dataset/add_twitter_facebook.php" role="button">Add Social Network</a>
-
             </div>
           </div>
           <div class="row">
             <div class="col">
+              <div class="my-4 p-3" style="border: 5px solid #00B794">
+                <h3>Data update</h3>
+                <div class="list-group">
+                  <a href="1_deputes.php" class="list-group-item list-group-item-action list-group-item-primary">1. Députés/Mandats/Oranes - Dernière mise à jour => <b><?php echo $maj_depute ?></b></a>
+                  <hr>
+                  <a href="votes_1.php" class="list-group-item list-group-item-action list-group-item-primary">2. Votes (update point 1 before)</a>
+                  <hr>
+                  <a href="code_photos.php" class="list-group-item list-group-item-action list-group-item-primary">3. Code photos RESMUSH</a>
+                </div>
+              </div>
+              <h3 class="mt-3">Unused scripts</h2>
               <div class="list-group">
-
-                  <hr>
-                  <a href="votes_1.php" class="list-group-item list-group-item-action"><b>1. Votes</b></a>
-                  <hr>
-                  <a href="1_deputes.php" class="list-group-item list-group-item-action list-group-item-primary">1. Députés - Dernière mise à jour => <b><?php echo $maj_depute ?></b></a>
-                  <!--<a href="social_media.php" class="list-group-item list-group-item-action list-group-item-primary disabled">1-3. Social Media</a>-->
-                  <a href="5_mandats.php" class="list-group-item list-group-item-action list-group-item-secondary">2. Mandats principaux - Dernière mise à jour => <b><?php echo $maj_mandat_principal ?></b></a>
-                  <a href="8_organes.php" class="list-group-item list-group-item-action list-group-item-success">3. Organes - Dernière mise à jour => <b><?php echo $maj_groupe ?></b></a>
-                  <hr>
-                  <a href="code_communes_slug.php" class="list-group-item list-group-item-action">Code communes_slug</a>
-                  <a href="code_communes_dpt.php" class="list-group-item list-group-item-action">Code communes_dpt</a>
-                  <hr>
-                  <!-- <a href="code_departements.php" class="list-group-item list-group-item-action list-group-item-warning disabled">8. Départements</a>
-                  <hr>
-                  <a href="code_5_sujets_parlementaires.php" class="list-group-item list-group-item-action">5. Sujets des commissions parlementaires</a>
-                  <hr>-->
-                  <a href="code_photos.php" class="list-group-item list-group-item-action">2. Code photos RESMUSH (only localhost)</a>
-                  <hr>
-                  <a href="cities_1.php" class="list-group-item list-group-item-action">Cities</a>
-                  <hr>
-                  <a href="code_get_twitter.php" class="list-group-item list-group-item-action">Code get_twitter (online)</a>
-                  <hr>
-                  <a href="supp.php" class="list-group-item list-group-item-action list-group-item-danger">Suppression de bases</a>
+                <a href="#" class="list-group-item list-group-item-action">Code communes_slug (code_communes_slug.php)</a>
+                <a href="#" class="list-group-item list-group-item-action">Code communes_dpt (code_communes_slug.php)</a>
+                <a href="#" class="list-group-item list-group-item-action">Cities (code_communes_slug.php)</a>
+                <a href="#" class="list-group-item list-group-item-action">Code get_twitter (code_communes_slug.php)</a>
+              </div>
+              <h3 class="mt-3">Delete sripts + get individual votes</h3>
+              <div class="list-group">
+                <a href="supp.php" class="list-group-item list-group-item-action list-group-item-danger">Suppression de bases</a>
+                <a href="votes_individual" class="list-group-item list-group-item-action list-group-item-danger">Get individual votes</a>
               </div>
             </div>
           </div>

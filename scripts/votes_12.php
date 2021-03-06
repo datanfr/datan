@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
   <head>
-
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title><?= $_SERVER['REQUEST_URI'] ?></title>
@@ -16,7 +15,7 @@
   </head>
   <!--
 
-  This script creates the table 'class_loyaute' ==> it the loyalty score to the "current" group
+  This script creates the table 'deputes_loyaute' which take all loyalty score per mandate
 
   -->
   <body>
@@ -38,12 +37,72 @@
 					<a class="btn btn-outline-secondary" href="http://<?php echo $_SERVER['SERVER_NAME']. ''.$_SERVER['REQUEST_URI'] ?>" role="button">Refresh</a>
 				</div>
 				<div class="col-4">
-					<a class="btn btn-outline-success" href="./votes_12.1.php" role="button">NEXT</a>
+					<a class="btn btn-outline-success" href="./votes_<?= $url_second ?>.php" role="button">NEXT</a>
 				</div>
 			</div>
 			<div class="row mt-3">
         <div class="col-12">
-          <p>This script and db table has been removed.</p>
+          <h2 class="bg-success">Run this script only once.</h2>
+          <table class="table">
+            <thead>
+                <tr>
+                  <th scope="col">classement</th>
+                  <th scope="col">mpId</th>
+                  <th scope="col">score</th>
+                  <th scope="col">votesN</th>
+                  <th scope="col">dateMaj</th>
+                </tr>
+              </thead>
+              <tbody>
+        <?php
+
+        // CONNEXION SQL //
+        	include 'bdd-connexion.php';
+
+          $bdd->query('
+            DROP TABLE IF EXISTS deputes_loyaute;
+            CREATE TABLE deputes_loyaute
+              (id INT(5) NOT NULL AUTO_INCREMENT,
+              mpId VARCHAR(15)CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+              mandatId VARCHAR(15)CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+              score DECIMAL(4,3) NOT NULL,
+              votesN INT(10) NOT NULL,
+              dateMaj DATE NOT NULL,
+              PRIMARY KEY (id));
+              ALTER TABLE deputes_loyaute ADD INDEX idx_mpId (mpId);
+              ALTER TABLE deputes_loyaute ADD INDEX idx_mandatId (mandatId);
+          ');
+          $result = $bdd->query('
+          SELECT v.mpId, v.organeId AS mandatId, ROUND(AVG(v.scoreLoyaute),3) AS score, COUNT(v.scoreLoyaute) AS votesN
+          FROM votes_scores v
+          LEFT JOIN mandat_groupe mg ON mg.mandatId = v.organeId
+          WHERE v.scoreLoyaute IS NOT NULL
+          GROUP BY v.organeId
+          ORDER BY v.mpId
+          ');
+
+          while ($depute = $result->fetch()) {
+            $mpId = $depute["mpId"];
+            $mandatId = $depute["mandatId"];
+            $score = $depute["score"];
+            $votesN = $depute["votesN"];
+            $dateMaj = date('Y-m-d');
+
+            echo "<tr>";
+            echo "<td>".$mpId."</td>";
+            echo "<td>".$mandatId."</td>";
+            echo "<td>".$score."</td>";
+            echo "<td>".$votesN."</td>";
+            echo "<td>".$dateMaj."</td>";
+            echo "</tr>";
+
+
+            $sql = $bdd->prepare("INSERT INTO deputes_loyaute (mpId, mandatId, score, votesN, dateMaj) VALUES (:mpId, :mandatId, :score, :votesN, :dateMaj)");
+            $sql->execute(array('mpId' => $mpId, 'mandatId' => $mandatId, 'score' => $score, 'votesN' => $votesN, 'dateMaj' => $dateMaj));
+          }
+        ?>
+            </tbody>
+          </table>
         </div>
       </div>
     </div>
