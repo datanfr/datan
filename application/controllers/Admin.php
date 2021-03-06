@@ -32,14 +32,14 @@
       $data['votes'] = $this->admin_model->get_votes_datan();
 
       $this->load->view('dashboard/header', $data);
-      $this->load->view('dashboard/votes_datan', $data);
+      $this->load->view('dashboard/decrypted/votes_datan', $data);
       $this->load->view('dashboard/footer');
     }
 
     public function create_vote(){
       $data['username'] = $this->session->userdata('username');
       $user_id = $this->session->userdata('user_id');
-      $data['title'] = 'Créer un nouveau vote_datan';
+      $data['title'] = 'Créer un nouveau vote décrypté';
       $data['categories'] = $this->fields_model->get_fields();
 
       //Form valiation
@@ -50,7 +50,7 @@
 
       if ($this->form_validation->run() === FALSE) {
         $this->load->view('dashboard/header', $data);
-        $this->load->view('dashboard/vote_create', $data);
+        $this->load->view('dashboard/decrypted/vote_create', $data);
         $this->load->view('dashboard/footer');
       } else {
         $this->admin_model->create_vote($user_id);
@@ -64,7 +64,7 @@
       $data['usernameType'] = $this->session->userdata("type");
       $user_id = $this->session->userdata('user_id');
 
-      $data['title'] = 'Modifier un vote_datan';
+      $data['title'] = 'Modifier un vote décrypté';
       $data['vote'] = $this->admin_model->get_vote_datan($vote);
       if (empty($data['vote'])) {
         redirect('admin/votes');
@@ -82,7 +82,7 @@
 
         if ($this->form_validation->run() === FALSE) {
           $this->load->view('dashboard/header', $data);
-          $this->load->view('dashboard/vote_modify', $data);
+          $this->load->view('dashboard/decrypted/vote_modify', $data);
           $this->load->view('dashboard/footer');
         } else {
           $this->admin_model->modify_vote($vote,$user_id);
@@ -100,7 +100,7 @@
       } else {
         $data["username"] = $this->session->userdata('username');
 
-        $data['title'] = 'Supprimer un vote_datan';
+        $data['title'] = 'Supprimer un vote décrypté';
 
         $data['vote'] = $this->admin_model->get_vote_datan($vote);
 
@@ -109,7 +109,7 @@
 
         if ($this->form_validation->run() === FALSE) {
           $this->load->view('dashboard/header', $data);
-          $this->load->view('dashboard/vote_delete', $data);
+          $this->load->view('dashboard/decrypted/vote_delete', $data);
           $this->load->view('dashboard/footer');
         } else {
           $this->admin_model->delete_vote($vote);
@@ -184,27 +184,27 @@
         $data['deputes'] = $this->deputes_model->get_deputes_entrants();
 
         $this->load->view('dashboard/header', $data);
-        $this->load->view('dashboard/socialmedia_table', $data);
+        $this->load->view('dashboard/socialmedia/table', $data);
         $this->load->view('dashboard/footer');
       } elseif ($page == "deputes_sortants") {
         $data['title'] = 'Liste des députés sortants (dateFin)';
         $data['deputes'] = $this->deputes_model->get_deputes_sortants();
 
         $this->load->view('dashboard/header', $data);
-        $this->load->view('dashboard/socialmedia_table', $data);
+        $this->load->view('dashboard/socialmedia/table', $data);
         $this->load->view('dashboard/footer');
       } elseif ($page == "postes_assemblee") {
         $data['title'] = 'Nouveaux postes Assemblée (dateDebut)';
         $data['deputes'] = $this->deputes_model->get_postes_assemblee();
 
         $this->load->view('dashboard/header', $data);
-        $this->load->view('dashboard/socialmedia_table', $data);
+        $this->load->view('dashboard/socialmedia/table', $data);
         $this->load->view('dashboard/footer');
       } elseif ($page == "groupes_entrants") {
         $data['title'] = 'Groupes entrants (dateDebut)';
         $data['deputes'] = $this->deputes_model->get_groupes_entrants();
         $this->load->view('dashboard/header', $data);
-        $this->load->view('dashboard/socialmedia_table', $data);
+        $this->load->view('dashboard/socialmedia/table', $data);
         $this->load->view('dashboard/footer');
       } elseif ($page == "historique") {
         if ($id == "NULL") {
@@ -219,7 +219,7 @@
           $data['historique'] = $this->deputes_model->get_historique($id);
           $data['deputes'] = $data['historique'];
           $this->load->view('dashboard/header', $data);
-          $this->load->view('dashboard/socialmedia_table', $data);
+          $this->load->view('dashboard/socialmedia/table', $data);
           $this->load->view('dashboard/footer');
 
         }
