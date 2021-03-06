@@ -15,16 +15,20 @@
                 <h2><?= $vote['voteTitre'] ?></h2>
                 <h3>Auriez-vous été pour ou contre ?</h3>
                 <div class="custom-control custom-radio custom-control-inline">
-                    <input type="radio" id="prochoice[<?= $vote['vote_id'] ?>]" value="pour" name="<?= $vote['vote_id'] ?>[choice]" class="custom-control-input">
-                    <label class="custom-control-label" for="prochoice[<?= $vote['vote_id'] ?>]" >Pour</label>
+                    <input type="radio" id="prochoice[<?= $vote['voteNumero'] ?>]" value="1" name="<?= $vote['voteNumero'] ?>[choice]" class="custom-control-input">
+                    <label class="custom-control-label" for="prochoice[<?= $vote['voteNumero'] ?>]" >Pour</label>
                 </div>
                 <div class="custom-control custom-radio custom-control-inline">
-                    <input type="radio" id="conchoice[<?= $vote['vote_id'] ?>]" value="contre" name="<?= $vote['vote_id'] ?>[choice]" class="custom-control-input">
-                    <label class="custom-control-label" for="conchoice[<?= $vote['vote_id'] ?>]" >Contre</label>
+                    <input type="radio" id="conchoice[<?= $vote['voteNumero'] ?>]" value="-1" name="<?= $vote['voteNumero'] ?>[choice]" class="custom-control-input">
+                    <label class="custom-control-label" for="conchoice[<?= $vote['voteNumero'] ?>]" >Contre</label>
+                </div>
+                <div class="custom-control custom-radio custom-control-inline">
+                    <input type="radio" id="nochoice[<?= $vote['voteNumero'] ?>]" value="0" name="<?= $vote['voteNumero'] ?>[choice]" class="custom-control-input">
+                    <label class="custom-control-label" for="nochoice[<?= $vote['voteNumero'] ?>]" >Ne se prononce pas</label>
                 </div>
                 <div class="form-group">
-                    <label for="weight<?= $vote['vote_id'] ?>"><h3>Etait-il important de s'exprimer sur ce vote ?</h3></label>
-                    <input type="number" max="5" min="0" name="<?= $vote['vote_id'] ?>[weigth]" class="form-control" id="weight<?= $vote['vote_id'] ?>">
+                    <label for="weight<?= $vote['voteNumero'] ?>"><h3>Etait-il important de s'exprimer sur ce vote ?</h3></label>
+                    <input type="number" max="5" min="0" name="<?= $vote['voteNumero'] ?>[weigth]" class="form-control" id="weight<?= $vote['voteNumero'] ?>">
                 </div>
             <?php endforeach ?>
             <button type="submit" class="btn btn-primary">Calculer</button>
