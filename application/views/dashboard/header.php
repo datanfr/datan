@@ -137,12 +137,14 @@ scratch. This page gets rid of all links and provides the needed markup only.
                    <p>LREM perd</p>
                  </a>
                </li>
+               <?php foreach($groupes as $groupe) : ?>
                <li class="nav-item">
-                 <a href="<?= base_url() ?>admin/analyses/class_loyaute_group" class="nav-link">
+                 <a href="<?= base_url() ?>admin/analyses/class_loyaute_group?group=<?= $groupe['libelleAbrev']?>" class="nav-link">
                    <i class="far fa-circle nav-icon"></i>
-                   <p>Class. loyaute groupe</p>
+                   <p>Class. loyaute <?= $groupe['libelleAbrev'] ?></p>
                  </a>
                </li>
+               <?php endforeach ?>
              </ul>
            </li>
            <!-- TABLEAUX SOCIAL MEDIA -->

@@ -94,7 +94,10 @@
     });
 
       for(let link of $('.nav-treeview .nav-link')){
-        if($(link).attr('href').endsWith(location.pathname)){
+        let searchParams = new URLSearchParams(window.location.search);
+        console.log(searchParams.get('group'));
+        if($(link).attr('href').endsWith(location.pathname) 
+        || $(link).attr('href').endsWith('class_loyaute_group?group=' +searchParams.get('group'))){
           $(link).addClass('active');
           $(link).closest('.has-treeview').addClass('menu-open');
           $(link).closest('.has-treeview').addClass('active');
