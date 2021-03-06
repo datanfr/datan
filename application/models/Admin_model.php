@@ -94,8 +94,8 @@
       return $query->result_array();
     }
 
-    public function get_votes_an_position(){
-      $query = $this->db->query("
+    public function get_votes_an_position($limit = false){
+      $queryString = "
       SELECT B.*,
         round((B.max_value - 0.5*((B.decomptePour + B.decompteContre + B.decompteAbs) - B.max_value)) / (B.decomptePour + B.decompteContre + B.decompteAbs),2) AS cohesion
       FROM
@@ -131,8 +131,11 @@
       LEFT JOIN votes_info vi ON A.voteNumero = vi.voteNumero
       LEFT JOIN votes_datan vd ON vi.voteId = vd.vote_id
       ) B
-      ORDER BY B.dateScrutin DESC
-      ");
+      ORDER BY B.dateScrutin DESC";
+      if ($limit){
+        $queryString .= ' LIMIT ' . $limit;
+      }
+      $query = $this->db->query($queryString);
 
       return $query->result_array();
     }
