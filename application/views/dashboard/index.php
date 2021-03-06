@@ -102,6 +102,61 @@
           <!-- /.col-md-6 -->
         </div>
         <!-- /.row -->
+        <div class="row">
+          <div class="col-lg-6">
+            <div class="card card-primary card-outline">
+              <div class="card-header">
+                <h5 class="m-0">Nouveaux députés</h5>
+              </div>
+              <div class="card-body">
+                  <table class="table">
+                    <thead>
+                      <tr>
+                        <th>Nom</th>
+                        <th>Date</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <?php foreach ($deputes_entrants as $depute_entrant): ?>
+                        <tr>
+                          <td><a target="_blank" href="<?= base_url().'deputes/'.$depute_entrant['dptSlug'].'/depute_'.$depute_entrant['nameUrl'] ?>"><?= "{$depute_entrant['nameFirst']} {$depute_entrant['nameLast']}" ?></a></td>
+                          <td><?= $depute_entrant['datePriseFonction'] ?></td>
+                        </tr>
+                      <?php endforeach; ?>
+                    </tbody>
+                  </table>
+              </div>
+            </div><!-- /.card -->
+          </div>
+          <div class="col-lg-6">
+            <div class="card card-primary card-outline">
+              <div class="card-header">
+                <h5 class="m-0">Nouveaux entrants dans un groupe</h5>
+              </div>
+              <div class="card-body">
+                  <table class="table">
+                    <thead>
+                      <tr>
+                        <th>Nom</th>
+                        <th>Groupe</th>
+                        <th>Date</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <?php foreach ($groupes_entrants as $groupe_entrant): ?>
+                        <tr>
+                        <td><a target="_blank" href="<?= base_url().'deputes/'.$groupe_entrant['dptSlug'].'/depute_'.$groupe_entrant['nameUrl'] ?>"><?= "{$groupe_entrant['nameFirst']} {$groupe_entrant['nameLast']}" ?></a></td>
+                          <td><?= $groupe_entrant['libelle'] ?></td>
+                          <td><?= $groupe_entrant['dateDebut'] ?></td>
+                        </tr>
+                      <?php endforeach; ?>
+                    </tbody>
+                  </table>
+              </div>
+            </div><!-- /.card -->
+          </div>
+        </div>
+        <!-- /.row -->
       </div><!-- /.container-fluid -->
     </div>
     <!-- /.content -->

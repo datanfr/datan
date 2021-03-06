@@ -20,7 +20,8 @@
       $data['votesUnpublished'] = $this->admin_model->get_votes_datan_user($user_id, false);
       $data['votesLast'] = $this->admin_model->get_votes_datan_user($user_id, true);
       $data['groupes'] = $this->groupes_model->get_groupes_all(true, 15);
-
+      $data['deputes_entrants'] = $this->deputes_model->get_deputes_entrants(5);
+      $data['groupes_entrants'] = $this->deputes_model->get_groupes_entrants(5);
       $this->load->view('dashboard/header', $data);
       $this->load->view('dashboard/index', $data);
       $this->load->view('dashboard/footer');
