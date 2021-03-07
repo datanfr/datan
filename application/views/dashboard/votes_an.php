@@ -32,13 +32,14 @@
                       <th>%abs</th>
                       <th>%contres</th>
                       <th>cohesion</th>
-                      <?php foreach ($groupes_libelle as $groupe): ?>
-                        <th><?= $groupe["libelle"] ?></th>
+                      <?php foreach ($groupes as $groupe): ?>
+                        <th><?= $groupe["libelleAbrev"] ?></th>
                       <?php endforeach; ?>
                     </tr>
                   </thead>
                 <tbody>
-                  <?php foreach ($votes as $vote): ?>
+                  <?php foreach ($votes as $vote): 
+                    ?>
                     <tr class="<?= $vote['vote_datan'] ?>">
                       <td><a href="http://www2.assemblee-nationale.fr/scrutins/detail/(legislature)/15/(num)/<?= $vote['voteNumero'] ?>" target="_blank"><?= $vote['voteNumero'] ?></a></td>
                       <td><?= $vote['dateScrutin'] ?></td>
@@ -48,11 +49,11 @@
                       <td><?= $vote['abstentions'] ?></td>
                       <td><?= $vote['contres'] ?></td>
                       <td><?= $vote['cohesion'] ?></td>
-                      <?php foreach ($groupes_libelle as $groupe): ?>
+                      <?php foreach ($groupes as $groupe):
+                       ?>
                         <td>
-                          <?php if ($vote[$groupe["uid"]] == NULL): ?>
-                          <?php else: ?>
-                          <?= round($vote[$groupe["uid"]],2) ?>
+                          <?php if (isset($vote[$groupe["uid"]])):?>
+                            <?= round($vote[$groupe["uid"]],2) ?>
                           <?php endif; ?>
                         </td>
                       <?php endforeach; ?>

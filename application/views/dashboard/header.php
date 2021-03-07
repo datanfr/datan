@@ -109,13 +109,13 @@ scratch. This page gets rid of all links and provides the needed markup only.
              </a>
              <ul class="nav nav-treeview">
                <li class="nav-item">
-                 <a href="<?= base_url() ?>admin/votes_an/position/" class="nav-link">
+                 <a href="<?= base_url() ?>admin/votes_an/position" class="nav-link">
                    <i class="far fa-circle nav-icon"></i>
                    <p>Votes_AN (positions)</p>
                  </a>
                </li>
                <li class="nav-item">
-                 <a href="<?= base_url() ?>admin/votes_an/cohesion/" class="nav-link">
+                 <a href="<?= base_url() ?>admin/votes_an/cohesion" class="nav-link">
                    <i class="far fa-circle nav-icon"></i>
                    <p>Votes_AN (cohesion)</p>
                  </a>
@@ -132,17 +132,19 @@ scratch. This page gets rid of all links and provides the needed markup only.
              </a>
              <ul class="nav nav-treeview">
                <li class="nav-item">
-                 <a href="<?= base_url() ?>admin/votes_an/em_lost/" class="nav-link">
+                 <a href="<?= base_url() ?>admin/votes_an/em_lost" class="nav-link">
                    <i class="far fa-circle nav-icon"></i>
                    <p>LREM perd</p>
                  </a>
                </li>
+               <?php foreach($groupes as $groupe) : ?>
                <li class="nav-item">
-                 <a href="<?= base_url() ?>admin/analyses/class_loyaute_group" class="nav-link">
+                 <a href="<?= base_url() ?>admin/analyses/class_loyaute_group?group=<?= $groupe['libelleAbrev']?>" class="nav-link">
                    <i class="far fa-circle nav-icon"></i>
-                   <p>Class. loyaute groupe</p>
+                   <p>Class. loyaute <?= $groupe['libelleAbrev'] ?></p>
                  </a>
                </li>
+               <?php endforeach ?>
              </ul>
            </li>
            <!-- TABLEAUX SOCIAL MEDIA -->
@@ -200,7 +202,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                  </a>
                </li>
                <li class="nav-item">
-                 <a href="<?= base_url() ?>posts/create/" class="nav-link">
+                 <a href="<?= base_url() ?>posts/create" class="nav-link">
                    <i class="far fa-circle nav-icon"></i>
                    <p>Créer un post</p>
                  </a>
