@@ -21,6 +21,9 @@
           <div class="col-lg-12">
             <div class="card">
               <div class="card-body">
+              <?php if(count($table) == 0) :?>
+              Pas de données pour ce groupe.
+              <?php else : ?>
                 <table id="table_analyses" class="table table-bordered table-striped">
                   <thead>
                     <tr>
@@ -42,6 +45,7 @@
                   <?php endforeach; ?>
                 </tbody>
               </table>
+              <?php endif ?>
               </div>
             </div>
           </div>

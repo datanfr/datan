@@ -94,8 +94,8 @@
       return $query->result_array();
     }
 
-    public function get_votes_an_position(){
-      $query = $this->db->query("
+    public function get_votes_an_position($limit = false){
+      $queryString = "
       SELECT B.*,
         round((B.max_value - 0.5*((B.decomptePour + B.decompteContre + B.decompteAbs) - B.max_value)) / (B.decomptePour + B.decompteContre + B.decompteAbs),2) AS cohesion
       FROM
@@ -131,8 +131,11 @@
       LEFT JOIN votes_info vi ON A.voteNumero = vi.voteNumero
       LEFT JOIN votes_datan vd ON vi.voteId = vd.vote_id
       ) B
-      ORDER BY B.dateScrutin DESC
-      ");
+      ORDER BY B.dateScrutin DESC";
+      if ($limit){
+        $queryString .= ' LIMIT ' . $limit;
+      }
+      $query = $this->db->query($queryString);
 
       return $query->result_array();
     }
@@ -257,9 +260,9 @@
   			SELECT ROUND(AVG(t2.score), 3) AS average, libelleAbrev
   			FROM class_loyaute t2
   			LEFT JOIN deputes_all da ON da.mpId = t2.mpId
-  			WHERE da.libelleAbrev = "'.$libelle.'" AND da.legislature = 15 AND da.dateFin IS NULL
+        WHERE da.libelleAbrev = \''.$libelle.'\' AND da.legislature = 15 AND da.dateFin IS NULL
           ) r ON r.libelleAbrev = da.libelleAbrev
-          WHERE da.legislature = 15 AND da.dateFin IS NULL AND da.libelleAbrev = "'.$libelle.'"
+          WHERE da.legislature = 15 AND da.dateFin IS NULL AND da.libelleAbrev = \''.$libelle.'\'
         	ORDER BY t1.score DESC
         ) B,
         (SELECT @s:= 0) AS s

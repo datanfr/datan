@@ -66,7 +66,7 @@
         dom: 'Bfrtip',
         //"lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
         fixedHeader: true,
-        "paging": false,
+        "paging": true,
         "order": [[ 1, "desc" ]],
         buttons: [
           {
@@ -92,6 +92,18 @@
     $('#table_analyses').DataTable({
       "order": [[0, "desc"]]
     });
+
+      for(let link of $('.nav-treeview .nav-link')){
+        let searchParams = new URLSearchParams(window.location.search);
+        console.log(searchParams.get('group'));
+        if($(link).attr('href').endsWith(location.pathname) 
+        || $(link).attr('href').endsWith('class_loyaute_group?group=' +searchParams.get('group'))){
+          $(link).addClass('active');
+          $(link).closest('.has-treeview').addClass('menu-open');
+          $(link).closest('.has-treeview').addClass('active');
+        }
+      }
+
 } );
 
 </script>
