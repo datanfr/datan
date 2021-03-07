@@ -15,7 +15,7 @@
               ORDER BY nameLast ASC, nameFirst ASC
             ');
           }
-          if ($active) {
+          if ($active === TRUE) {
             // IF CURRENT LEGISLATURE AND ACTIVE
             $query = $this->db->query('
               SELECT *
@@ -23,11 +23,18 @@
               WHERE legislature = '.legislature_current().' AND dateFin IS NULL
               ORDER BY nameLast ASC, nameFirst ASC
             ');
-          } else {
+          } elseif ($active === FALSE) {
             $query = $this->db->query('
               SELECT *
               FROM deputes_all
               WHERE legislature = '.legislature_current().' AND dateFin IS NOT NULL
+              ORDER BY nameLast ASC, nameFirst ASC
+            ');
+          } elseif($active === NULL) {
+            $query = $this->db->query('
+              SELECT *
+              FROM deputes_all
+              WHERE legislature = '.legislature_current().'
               ORDER BY nameLast ASC, nameFirst ASC
             ');
           }

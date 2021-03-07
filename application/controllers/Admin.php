@@ -111,7 +111,7 @@
         $data['vote'] = $this->admin_model->get_vote_datan($vote);
 
         $data['groupes'] = $this->groupes_model->get_groupes_all(true, 15);
-        
+
         //Form validation
         $this->form_validation->set_rules('delete', 'Delete', 'required');
 
@@ -160,7 +160,7 @@
           $data['title'] = 'Classement loyauté pour le groupe '.$libelle;
 
           $data['table'] = $this->admin_model->get_classement_loyaute_group($libelle);
-          
+
           $this->load->view('dashboard/header', $data);
           $this->load->view('dashboard/analysis/table_all', $data);
           $this->load->view('dashboard/footer');
@@ -216,7 +216,7 @@
       } elseif ($page == "historique") {
         if ($id == "NULL") {
           $data['deputes'] = $this->deputes_model->get_deputes_all(legislature_current(), NULL, NULL);
-          $data['title'] = "Liste des députés";
+          $data['title'] = "Historique des groupes par député - ".legislature_current()."e législature";
           $this->load->view('dashboard/header', $data);
           $this->load->view('dashboard/socialmedia/list', $data);
           $this->load->view('dashboard/footer');
