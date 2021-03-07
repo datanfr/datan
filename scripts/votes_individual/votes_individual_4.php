@@ -3,19 +3,28 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta http-equiv="refresh" content="">
     <title><?= $_SERVER['REQUEST_URI'] ?></title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.2/css/bootstrap.min.css" integrity="sha384-Smlep5jCw/wG7hdkwQ/Z5nLIefveQRIY9nfy6xoR1uRYBtpZgI6339F5dgvm/e9B" crossorigin="anonymous">
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.2/js/bootstrap.min.js" integrity="sha384-o+RDsa0aLu++PJvFqy8fFScvbHFLtbvScb8AjopnFD+iEQ7wo/CG0xlczd+2O/em" crossorigin="anonymous"></script>
   </head>
+  <!--
+
+  This script updates the table 'votes_groupes'
+
+  -->
   <body>
+    <?php
+    if (isset($_GET["vote"])) {
+      $vote = $_GET["vote"];
+    }
+     ?>
 		<div class="container" style="background-color: #e9ecef;">
 			<div class="row">
-				<h1>Votes_4 individual</h1>
+				<h1>votes_4 individual</h1>
 			</div>
 			<div class="row">
-				<div class="col-4">
-					<a class="btn btn-outline-primary" href="./" role="button">Back</a>
+        <div class="col-4">
+					<a class="btn btn-outline-success" href="votes_individual_5.php?vote=<?= $vote ?>" role="button">Next</a>
 				</div>
 			</div>
 			<div class="row mt-3">
@@ -37,7 +46,7 @@
               </tr>
             </thead>
             <tbody>
-        <?php
+              <?php
 
                 include '../bdd-connexion.php';
 
@@ -45,7 +54,7 @@
                   $number_to_get = $_GET["vote"];
 
                   //DELETE FROM TABLE
-                  $sql_delete = "DELETE FROM votes_groupes WHERE numero = :number_to_get";
+                  $sql_delete = "DELETE FROM votes_groupes WHERE voteNumero = :number_to_get";
                   $stmt = $bdd->prepare($sql_delete);
                   $stmt->execute(array('number_to_get' => $number_to_get));
 
@@ -61,7 +70,7 @@
         					echo "failed to copy $file...\n";
         				}
 
-                echo "VOTE TO GET = ".$number_to_get;
+                echo "VOTE TO GET = ".$number_to_get."<br>";
 
 
                 //https://stackoverflow.com/questions/2600105/need-php-script-to-decompress-and-loop-through-zipped-file

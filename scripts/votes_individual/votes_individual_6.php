@@ -4,8 +4,7 @@
 
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title><?= $_SERVER['REQUEST_URI'] ?></title>
-    <meta http-equiv="refresh" content="">
+    <title>votes_6 individual</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.2/css/bootstrap.min.css" integrity="sha384-Smlep5jCw/wG7hdkwQ/Z5nLIefveQRIY9nfy6xoR1uRYBtpZgI6339F5dgvm/e9B" crossorigin="anonymous">
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.2/js/bootstrap.min.js" integrity="sha384-o+RDsa0aLu++PJvFqy8fFScvbHFLtbvScb8AjopnFD+iEQ7wo/CG0xlczd+2O/em" crossorigin="anonymous"></script>
 
@@ -15,26 +14,29 @@
         border-collapse: collapse;
     }
   </style>
-
   </head>
+  <!--
+
+  This script updates the table 'groupes_cohesion'
+
+  -->
   <body>
+    <?php
+    if (isset($_GET["vote"])) {
+      $vote = $_GET["vote"];
+    }
+     ?>
 		<div class="container" style="background-color: #e9ecef;">
 			<div class="row">
-				<h1>vote_6 individual</h1>
+				<h1>votes_6 individual</h1>
 			</div>
 			<div class="row">
-				<div class="col-4">
-					<a class="btn btn-outline-primary" href="./" role="button">Back</a>
-				</div>
+        <div class="col-4">
+  				<a class="btn btn-outline-success" href="votes_individual_7.php?vote=<?= $vote ?>" role="button">Next</a>
+  			</div>
 			</div>
 			<div class="row mt-3">
         <?php
-
-        // formulaire ici //
-
-
-        // CONNEXION SQL //
-
 
         	include '../bdd-connexion.php';
 
@@ -42,7 +44,7 @@
             $number_to_get = $_GET["vote"];
 
             //DELETE FROM TABLE
-            $sql_delete = "DELETE FROM groupes_cohesion WHERE num = :number_to_get";
+            $sql_delete = "DELETE FROM groupes_cohesion WHERE voteNumero = :number_to_get";
             $stmt = $bdd->prepare($sql_delete);
             $stmt->execute(array('number_to_get' => $number_to_get));
 
@@ -50,13 +52,11 @@
             exit("Please indicate the number of the vote in the url (?vote=xx)");
           }
 
+          echo "VOTE TO GET = ".$number_to_get."<br>";
 
-        $bdd->query('SET SQL_BIG_SELECTS=1');
-
-        echo "VOTE TO GET => ".$number_to_get;
+          $bdd->query('SET SQL_BIG_SELECTS=1');
 
         $reponseVote = $bdd->query('
-
         SELECT A.*,
         CASE
           WHEN A.positionGroup = A.voteResult THEN 1
@@ -81,7 +81,7 @@
           FROM votes_groupes vg
           JOIN organes o ON vg.organeRef = o.uid
           JOIN votes_info vi ON vi.voteNumero = vg.voteNumero
-          WHERE vg.legislature = 15 AND (numero = "'.$number_to_get.'")
+          WHERE vg.legislature = 15 AND (vg.voteNumero = "'.$number_to_get.'")
         ) A
         ');
 
@@ -125,7 +125,6 @@
             echo '<tr>';
 
             $i++;
-
 
 
             $sql = $bdd->prepare("INSERT INTO groupes_cohesion (voteNumero, legislature, organeRef, cohesion, positionGroupe, voteSort, scoreGagnant) VALUES (:voteNumero, :legislature, :organeRef, :cohesion, :positionGroupe, :voteSort, :scoreGagnant)");

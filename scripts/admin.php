@@ -27,6 +27,12 @@
           $maj_depute = date("d-m-Y", strtotime($maj_depute));
         }
 
+        $issueMarch2021 = $bdd->query('
+        SELECT distinct(voteNumero)
+        FROM votes
+        WHERE vote = 99
+        ');
+
       ?>
         <div class="container">
           <div class="row">
@@ -39,8 +45,33 @@
               <h3 class="mt-3">Delete caching of webpages+SQL queries</h3>
               <a class="btn btn-primary my-3" href="../cache/delete_all" role="button">Delete all caching</a>
               <br>
-              <h3 class="mt-3">Database structure update</h3>
-              <a class="btn btn-danger my-3" href="update_dataset/20210305_update_database.php" role="button">UPDATE DATABASE (March 5, 2021)</a>
+              <div class="card">
+                <div class="card-body">
+                  <h5 class="card-title">Database structure update - Fix '99' issues in the 'votes' table</h5>
+                  <h6 class="card-subtitle text-muted">March 7, 2021</h6>
+                  <p class="card-text">
+                    First, update the database. This script allows the 'vote' field in the 'votes' table to take NULL values ==> <a class="btn btn-danger my-3" href="update_dataset/20210307_update_database.php" role="button">UPDATE DATABASE</a>
+                  </p>
+                  <p class="card-text">
+                    As for the 39 rows in the 'votes' table who took for the field 'vote' the value 99, you can re-run some the scripts to remove these votes and update the new value. This is not mandatory (this will be done online, but for local, 39 rows does not change much of the scores).
+                  </p>
+                  <p>
+                    If you want to change the tables, please click on the following links, and "NEXT" when running the diferent scripts.
+                  </p>
+                  <div class="d-flex flex-wrap">
+                    <?php
+                    while ($x = $issueMarch2021->fetch()) {
+                      ?>
+                      <a class="btn btn-outline-primary m-1" href="votes_individual/votes_individual_1.php?vote=<?= $x['voteNumero'] ?>" target="_blank">
+                        <?= $x['voteNumero'] ?>
+                      </a>
+                      <?php
+                    }
+                     ?>
+                  </div>
+                </div>
+              </div>
+
               <a class="btn btn-warning my-3" href="update_dataset/add_twitter_facebook.php" role="button">Add Social Network</a>
             </div>
           </div>
@@ -63,7 +94,7 @@
                 <a href="#" class="list-group-item list-group-item-action">Cities (code_communes_slug.php)</a>
                 <a href="#" class="list-group-item list-group-item-action">Code get_twitter (code_communes_slug.php)</a>
               </div>
-              <h3 class="mt-3">Delete sripts + get individual votes</h3>
+              <h3 class="mt-3">Deleted scripts + get individual votes</h3>
               <div class="list-group">
                 <a href="supp.php" class="list-group-item list-group-item-action list-group-item-danger">Suppression de bases</a>
                 <a href="votes_individual" class="list-group-item list-group-item-action list-group-item-danger">Get individual votes</a>

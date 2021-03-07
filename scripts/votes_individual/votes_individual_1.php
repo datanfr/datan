@@ -3,19 +3,23 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta http-equiv="refresh" content="150">
     <title><?= $_SERVER['REQUEST_URI'] ?></title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.2/css/bootstrap.min.css" integrity="sha384-Smlep5jCw/wG7hdkwQ/Z5nLIefveQRIY9nfy6xoR1uRYBtpZgI6339F5dgvm/e9B" crossorigin="anonymous">
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.2/js/bootstrap.min.js" integrity="sha384-o+RDsa0aLu++PJvFqy8fFScvbHFLtbvScb8AjopnFD+iEQ7wo/CG0xlczd+2O/em" crossorigin="anonymous"></script>
   </head>
   <body>
+    <?php
+    if (isset($_GET["vote"])) {
+      $vote = $_GET["vote"];
+    }
+     ?>
 		<div class="container" style="background-color: #e9ecef;">
 			<div class="row">
 				<h1>Votes_1 individual</h1>
 			</div>
 			<div class="row">
-				<div class="col-4">
-					<a class="btn btn-outline-primary" href="./" role="button">Back</a>
+        <div class="col-4">
+					<a class="btn btn-outline-success" href="votes_individual_4.php?vote=<?= $vote ?>" role="button">Next</a>
 				</div>
 			</div>
 			<div class="row mt-3">
@@ -38,8 +42,8 @@
               </thead>
               <tbody>
         				<?php
-        				ini_set('display_errors', 1);
-        				error_reporting(E_ALL);
+        				  ini_set('display_errors', 1);
+        				  error_reporting(E_ALL);
         					include '../bdd-connexion.php';
 
                   if (isset($_GET["vote"])) {
@@ -102,16 +106,18 @@
                           $item['voteMp'] = $voteMp[0]->getName();
 
 
-                          if ($item['voteMp'] == 'pours') {
+                          if ($item['voteMp'] == 'pours' || $item['voteMp'] == 'pour') {
                             $vote = 1;
-                          } elseif ($item['voteMp'] == 'contres') {
+                          } elseif ($item['voteMp'] == 'contres' || $item['voteMp'] == 'contre') {
                             $vote = -1;
-                          } elseif ($item['voteMp'] == 'abstentions') {
+                          } elseif ($item['voteMp'] == 'abstentions' || $item['voteMp'] == 'abstention') {
                             $vote = 0;
-                          } elseif ($item['voteMp'] == 'nonVotants') {
+                          } elseif ($item['voteMp'] == 'nonVotants' || $item['voteMp'] == 'nonVotant') {
+                            $vote = 'nv';
+                          } elseif ($item['voteMp'] == 'nonVotantsVolontaires' || $item['voteMp'] == 'nonVotantsVolontaire') {
                             $vote = 'nv';
                           } else {
-                            $vote = 99;
+                            $vote = NULL;
                           }
 
                           $voteId = $votant->xpath("./ancestor::*[local-name()='scrutin']/*[local-name()='uid']");
