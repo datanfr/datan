@@ -62,17 +62,9 @@
     }
 
     public function create_post(){
-      function skip_accents( $str, $charset='utf-8' ) {
-        $str = htmlentities( $str, ENT_NOQUOTES, $charset );
-        $str = preg_replace( '#&([A-za-z])(?:acute|cedil|caron|circ|grave|orn|ring|slash|th|tilde|uml);#', '\1', $str );
-        $str = preg_replace( '#&([A-za-z]{2})(?:lig);#', '\1', $str );
-        $str = preg_replace( '#&[^;]+;#', '', $str );
-        return $str;
-      }
-
       $slug = url_title($this->input->post('title'));
       $slug = mb_strtolower($slug);
-      $slug = skip_accents($slug);
+      $slug = $this->skip_accents($slug);
       $data = array(
         'title' => $this->input->post('title'),
         'slug' => $slug,
@@ -91,17 +83,10 @@
       return true;
     }
 
-    public function update_post(){
-      function skip_accents( $str, $charset='utf-8' ) {
-        $str = htmlentities( $str, ENT_NOQUOTES, $charset );
-        $str = preg_replace( '#&([A-za-z])(?:acute|cedil|caron|circ|grave|orn|ring|slash|th|tilde|uml);#', '\1', $str );
-        $str = preg_replace( '#&([A-za-z]{2})(?:lig);#', '\1', $str );
-        $str = preg_replace( '#&[^;]+;#', '', $str );
-        return $str;
-      }
+    public function update_post(){      
       $slug = url_title($this->input->post('title'));
       $slug = mb_strtolower($slug);
-      $slug = skip_accents($slug);
+      $slug = $this->skip_accents($slug);
       $data = array(
         'title' => $this->input->post('title'),
         'slug' => $slug,
@@ -129,6 +114,14 @@
         ORDER BY created_at DESC
       ');
       return $query->result_array();
+    }
+
+    private function skip_accents( $str, $charset='utf-8' ) {
+      $str = htmlentities( $str, ENT_NOQUOTES, $charset );
+      $str = preg_replace( '#&([A-za-z])(?:acute|cedil|caron|circ|grave|orn|ring|slash|th|tilde|uml);#', '\1', $str );
+      $str = preg_replace( '#&([A-za-z]{2})(?:lig);#', '\1', $str );
+      $str = preg_replace( '#&[^;]+;#', '', $str );
+      return $str;
     }
   }
 ?>

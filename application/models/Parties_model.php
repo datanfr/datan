@@ -95,6 +95,7 @@
           ELSE "Aucun député rattaché" END AS effectifSentence
         FROM parties
         WHERE libelleAbrev = "'.$party.'"
+        LIMIT 1
       ');
 
       return $query->row_array();
