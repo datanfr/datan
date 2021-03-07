@@ -4,8 +4,7 @@
 
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title><?= $_SERVER['REQUEST_URI'] ?></title>
-    <meta http-equiv="refresh" content="">
+    <title>votes_9 individual</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.2/css/bootstrap.min.css" integrity="sha384-Smlep5jCw/wG7hdkwQ/Z5nLIefveQRIY9nfy6xoR1uRYBtpZgI6339F5dgvm/e9B" crossorigin="anonymous">
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.2/js/bootstrap.min.js" integrity="sha384-o+RDsa0aLu++PJvFqy8fFScvbHFLtbvScb8AjopnFD+iEQ7wo/CG0xlczd+2O/em" crossorigin="anonymous"></script>
     <style>
@@ -14,17 +13,27 @@
           border-collapse: collapse;
       }
     </style>
-
   </head>
+  <!--
+
+  This script updates the table 'votes_participation'
+
+  -->
   <body>
+    <?php
+    if (isset($_GET["vote"])) {
+      $vote = $_GET["vote"];
+    }
+    ?>
 		<div class="container" style="background-color: #e9ecef;">
 			<div class="row">
-				<h1>vote_9 individual</h1>
+				<h1>votes_9 individual</h1>
 			</div>
 			<div class="row">
-				<div class="col-4">
-					<a class="btn btn-outline-primary" href="./" role="button">Back</a>
-				</div>
+        <div class="col-4">
+  				<a class="btn btn-outline-success" href="votes_individual_9.1.php?vote=<?= $vote ?>" role="button">Next</a>
+  			</div>
+			</div>
 			<div class="row mt-3">
         <div class="col-12">
         <?php
@@ -36,7 +45,7 @@
             $number_to_get = $_GET["vote"];
 
             //DELETE FROM TABLE
-            $sql_delete = "DELETE FROM votes_participation WHERE vote_id = :number_to_get";
+            $sql_delete = "DELETE FROM votes_participation WHERE voteNumero = :number_to_get";
             $stmt = $bdd->prepare($sql_delete);
             $stmt->execute(array('number_to_get' => $number_to_get));
 
@@ -44,34 +53,22 @@
             exit("Please indicate the number of the vote in the url (?vote=xx)");
           }
 
-          echo "VOTE TO GET => ".$number_to_get;
-
         $bdd->query('SET SQL_BIG_SELECTS=1');
 
+        echo "VOTE TO GET = ".$number_to_get."<br>";
         echo '<br>';
 
         $votes = $bdd->query('
-        SELECT voteNumero, legislature, dateScrutin
-        FROM votes_info
-        WHERE voteNumero = "'.$number_to_get.'" AND legislature = 15
+          SELECT voteNumero, legislature, dateScrutin
+          FROM votes_info
+          WHERE voteNumero = "'.$number_to_get.'" AND legislature = 15
         ');
-
-        if ($votes->rowCount() == 0) {
-          $new_vote = $last_vote + 1;
-          $until_vote = $new_vote + 2;
-          echo "Need to jump a vote.<br>";
-          echo "NEW VOTE = ".$new_vote;
-          $votes = $bdd->query('
-            SELECT legislature, voteNumero, legislature, dateScrutin
-            FROM votes_info
-            WHERE voteNumero = "'.$number_to_get.'" AND legislature = 15
-          ');
-        }
 
         while ($vote = $votes->fetch()) {
           echo '<h1>Chercher députés pour = '.$vote['voteNumero'].'</h1>';
           $voteNumero = $vote['voteNumero'];
           $voteDate = $vote['dateScrutin'];
+          $legislature = $vote['legislature'];
           echo 'date = '.$voteDate.'<br>';
           echo 'voteNumero = '.$voteNumero.'<br>';
           $deputes = $bdd->query('

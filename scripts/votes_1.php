@@ -129,16 +129,18 @@
                           $item['voteMp'] = $voteMp[0]->getName();
 
 
-                          if ($item['voteMp'] == 'pours') {
+                          if ($item['voteMp'] == 'pours' || $item['voteMp'] == 'pour') {
                             $vote = 1;
-                          } elseif ($item['voteMp'] == 'contres') {
+                          } elseif ($item['voteMp'] == 'contres' || $item['voteMp'] == 'contre') {
                             $vote = -1;
-                          } elseif ($item['voteMp'] == 'abstentions') {
+                          } elseif ($item['voteMp'] == 'abstentions' || $item['voteMp'] == 'abstention') {
                             $vote = 0;
-                          } elseif ($item['voteMp'] == 'nonVotants') {
+                          } elseif ($item['voteMp'] == 'nonVotants' || $item['voteMp'] == 'nonVotant') {
+                            $vote = 'nv';
+                          } elseif ($item['voteMp'] == 'nonVotantsVolontaires' || $item['voteMp'] == 'nonVotantsVolontaire') {
                             $vote = 'nv';
                           } else {
-                            $vote = 99;
+                            $vote = NULL;
                           }
 
                           $voteId = $votant->xpath("./ancestor::*[local-name()='scrutin']/*[local-name()='uid']");
