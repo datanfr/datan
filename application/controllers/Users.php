@@ -85,7 +85,7 @@
 
             $this->session->set_userdata($user_data);
             //$this->session->set_flashdata('user_loggedin', 'Vous êtes maintenant connecté');
-            redirect('');
+            redirect('/admin');
           } else {
             //$this->session->set_flashdata('login_failed', 'La connexion a échoué');
             redirect('users/login');

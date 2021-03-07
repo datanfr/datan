@@ -15,7 +15,7 @@
               ORDER BY nameLast ASC, nameFirst ASC
             ');
           }
-          if ($active) {
+          if ($active === TRUE) {
             // IF CURRENT LEGISLATURE AND ACTIVE
             $query = $this->db->query('
               SELECT *
@@ -23,11 +23,18 @@
               WHERE legislature = '.legislature_current().' AND dateFin IS NULL
               ORDER BY nameLast ASC, nameFirst ASC
             ');
-          } else {
+          } elseif ($active === FALSE) {
             $query = $this->db->query('
               SELECT *
               FROM deputes_all
               WHERE legislature = '.legislature_current().' AND dateFin IS NOT NULL
+              ORDER BY nameLast ASC, nameFirst ASC
+            ');
+          } elseif($active === NULL) {
+            $query = $this->db->query('
+              SELECT *
+              FROM deputes_all
+              WHERE legislature = '.legislature_current().'
               ORDER BY nameLast ASC, nameFirst ASC
             ');
           }
@@ -471,23 +478,26 @@
       return $query->row_array();
     }
 
-    public function get_deputes_entrants(){
-      $query = $this->db->query('
-      SELECT d.nameFirst, d.nameLast, mp.mpId AS id, mp.dateDebut, mp.dateFin, mp.datePriseFonction
+    public function get_deputes_entrants($limit = false){
+      $queryString = '
+      SELECT d.nameFirst, d.nameLast, mp.mpId AS id, mp.dateDebut, mp.dateFin, mp.datePriseFonction, d.nameUrl, d.dptSlug
       FROM mandat_principal mp
-      LEFT JOIN deputes d ON mp.mpId = d.mpId
+      LEFT JOIN deputes_last d ON mp.mpId = d.mpId
       WHERE mp.legislature = 15 AND codeQualite = "membre"
       ORDER BY mp.datePriseFonction DESC
-      ');
-
+      ';
+      if ($limit){
+        $queryString .= ' LIMIT ' . $limit;
+      }
+      $query = $this->db->query($queryString);
       return $query->result_array();
     }
 
     public function get_deputes_sortants(){
       $query = $this->db->query('
-      SELECT d.nameFirst, d.nameLast, mp.mpId AS id, mp.dateDebut, mp.dateFin
+      SELECT d.nameFirst, d.nameLast, mp.mpId AS id, mp.dateDebut, mp.dateFin, d.nameUrl
       FROM mandat_principal mp
-      LEFT JOIN deputes d ON mp.mpId = d.mpId
+      LEFT JOIN deputes_last d ON mp.mpId = d.mpId
       WHERE mp.legislature = 15 AND codeQualite = "membre" AND dateFin IS NOT NULL
       ORDER BY dateFin DESC
       ');
@@ -507,15 +517,19 @@
       return $query->result_array();
     }
 
-    public function get_groupes_entrants(){
-      $query = $this->db->query('
-      SELECT d.nameFirst, d.nameLast, mg.mpId AS id, mg.dateDebut, mg.dateFin, mg.codeQualite, o.libelle
+    public function get_groupes_entrants($limit = false){
+      $queryString = '
+      SELECT d.nameFirst, d.nameLast, mg.mpId AS id, mg.dateDebut, mg.dateFin, mg.codeQualite, o.libelle, d.nameUrl, d.dptSlug
       FROM mandat_groupe mg
-      LEFT JOIN deputes d ON mg.mpId = d.mpId
+      LEFT JOIN deputes_last d ON mg.mpId = d.mpId
       LEFT JOIN organes o ON mg.organeRef = o.uid
       WHERE mg.legislature = 15
       ORDER BY mg.dateDebut DESC
-      ');
+      ';
+      if ($limit){
+        $queryString .= ' LIMIT ' . $limit;
+      }
+      $query = $this->db->query($queryString);
 
       return $query->result_array();
     }
