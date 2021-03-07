@@ -5,58 +5,22 @@
     }
 
     public function get_deputes_all($legislature, $active, $departement) {
-      if (is_null($departement)) {
-        if ($legislature == legislature_current()) {
-          if ($active) {
-            $query = $this->db->query('
-              SELECT *
-              FROM deputes_all
-              WHERE legislature = '.legislature_current().'
-              ORDER BY nameLast ASC, nameFirst ASC
-            ');
-          }
-          if ($active === TRUE) {
-            // IF CURRENT LEGISLATURE AND ACTIVE
-            $query = $this->db->query('
-              SELECT *
-              FROM deputes_all
-              WHERE legislature = '.legislature_current().' AND dateFin IS NULL
-              ORDER BY nameLast ASC, nameFirst ASC
-            ');
-          } elseif ($active === FALSE) {
-            $query = $this->db->query('
-              SELECT *
-              FROM deputes_all
-              WHERE legislature = '.legislature_current().' AND dateFin IS NOT NULL
-              ORDER BY nameLast ASC, nameFirst ASC
-            ');
-          } elseif($active === NULL) {
-            $query = $this->db->query('
-              SELECT *
-              FROM deputes_all
-              WHERE legislature = '.legislature_current().'
-              ORDER BY nameLast ASC, nameFirst ASC
-            ');
-          }
-        } else {
-          $query = $this->db->query('
-            SELECT *
-            FROM deputes_all
-            WHERE legislature = '.$legislature.'
-            ORDER BY nameLast ASC, nameFirst ASC
-          ');
-        }
-      } else {
-        // IF DEPARTEMENT QUERY
-        $query = $this->db->query('
-          SELECT *
-          FROM deputes_all
-          WHERE dptSlug = "'.$departement.'" AND legislature = '.legislature_current().' AND dateFin IS NULL
-          ORDER BY nameLast ASC, nameFirst ASC
-        ');
+
+      if (!is_null($departement)) {
+        $this->db->where('dptSlug', $departement);
       }
 
-        return $query->result_array();
+      if ($active === TRUE) {
+        $this->db->where('dateFin IS NULL');
+      } elseif ($active === FALSE) {
+        $this->db->where('dateFin IS NOT NULL');
+      }
+
+      $this->db->where('legislature', $legislature);
+      $this->db->order_by('nameLast ASC, nameFirst ASC');
+      $query = $this->db->get('deputes_all');
+      
+      return $query->result_array();
     }
 
     public function get_infos($id){
