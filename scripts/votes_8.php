@@ -57,14 +57,13 @@
           LIMIT 1
           ');
 
-          while ($donnees_last_vote = $reponse_last_vote->fetch()) {
-            echo '<p>Last vote: '.$donnees_last_vote['lastVote'].'</p>';
-            $lastVote = $donnees_last_vote['lastVote'] + 1;
-            $untilVote = $donnees_last_vote['lastVote'] + 10;
-            echo 'last vote = '.$lastVote.'<br>';
-            echo 'until vote = '.$untilVote.'<br>';
-          }
-
+          $donnees_last_vote = $reponse_last_vote->fetch();
+          echo '<p>Last vote: '.$donnees_last_vote['lastVote'].'</p>';
+          $lastVote = $donnees_last_vote['lastVote'] + 1;
+          $untilVote = $donnees_last_vote['lastVote'] + 10;
+          echo 'last vote = '.$lastVote.'<br>';
+          echo 'until vote = '.$untilVote.'<br>';
+          
           if (!isset($lastVote)) {
             echo 'rien dans la base';
             $lastVote = 0;
