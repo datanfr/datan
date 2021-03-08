@@ -92,8 +92,6 @@
       $user_type = $this->session->userdata('type');
       $data['user'] = $user_type;
       $data['post'] = $this->post_model->get_posts($slug, $user_type, $category);
-      $post_id = $data['post']['id'];
-      //$data['comments'] = $this->comment_model->get_comments($post_id);
       if (empty($data['post'])) {
         show_404();
       }
