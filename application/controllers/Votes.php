@@ -357,7 +357,6 @@
       // Vote edited
       $data['vote'] = $this->votes_model->get_individual_vote_edited($data['vote']);
       $data['vote']['description'] = text_url_obfuscation($data['vote']['description']);
-      //echo "<script>console.log('Coucou')</script>";
 
       $data['vote']['edited'] = FALSE;
       if (!empty($data['vote']['title'])) {
