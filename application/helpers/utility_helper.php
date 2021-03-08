@@ -55,9 +55,8 @@
 
   function text_url_obfuscation($text){
     $dom = new DOMDocument();
-    $dom->encoding = 'utf-8';
     if (!isset($text)) return;
-    $dom->loadHTML( utf8_decode($text) );
+    $dom->loadHTML('<?xml encoding="UTF-8">' . $text);
     $tags = $dom->getElementsByTagName('a');
     for ($i = $tags->length - 1; $i > -1 ; $i--) {
       $tag = $tags->item($i);
