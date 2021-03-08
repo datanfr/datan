@@ -47,6 +47,7 @@
     return $array;
   }
 
+  //Obfuscation for SEO purpose
   function url_obfuscation($x){
     $url = "sdfghj".str_rot13($x);
     return $url;
@@ -59,21 +60,18 @@
     $tags = $dom->getElementsByTagName('a');
     for ($i = $tags->length - 1; $i > -1 ; $i--) {
       $tag = $tags->item($i);
-      //print_r($tag);
-
       if ($tag->getAttribute('target') == '_blank') {
-        
-        echo $tag->getAttribute('href');
-        $replacement = $dom->createTextNode($tag->nodeValue);
+        $href = $tag->getAttribute('href');
+        $replacement = $dom->createElement('span');
+        $replacement->setAttribute('class', 'url_obf');
+        $replacement->setAttribute('url_obf', url_obfuscation($href));
+        $a = $dom->createElement('a', $tag->nodeValue);
+        $a->setAttribute('href', "#");
+        $replacement->appendChild($a);
         $tag->parentNode->replaceChild($replacement, $tag);
-
       }
-
-      $dom->saveHTML();
-
     }
-
-
+    return $dom->saveHTML();
   }
 
 ?>
