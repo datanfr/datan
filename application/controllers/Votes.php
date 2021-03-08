@@ -356,6 +356,8 @@
 
       // Vote edited
       $data['vote'] = $this->votes_model->get_individual_vote_edited($data['vote']);
+      $data['vote']['description'] = text_url_obfuscation($data['vote']['description']);
+
       $data['vote']['edited'] = FALSE;
       if (!empty($data['vote']['title'])) {
         // Check whether published
@@ -416,8 +418,6 @@
       } else {
         $data['vote_next'] = FALSE;
       }
-
-
 
       $data['votes_datan'] = $this->votes_model->get_last_votes_datan();
 
