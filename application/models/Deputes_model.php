@@ -19,7 +19,7 @@
       $this->db->where('legislature', $legislature);
       $this->db->order_by('nameLast ASC, nameFirst ASC');
       $query = $this->db->get('deputes_all');
-      
+
       return $query->result_array();
     }
 
@@ -250,9 +250,10 @@
 
     public function get_accord_groupes_actifs($depute_uid){
       $query = $this->db->query('
-      SELECT t1.accord, t1.libelle, t1.libelleAbrev, t1.organeRef, t1.positionPolitique, t1.votesN
+      SELECT t1.accord, o.libelle, o.libelleAbrev, t1.votesN, t1.organeRef, o.positionPolitique
       FROM deputes_accord_cleaned t1
-      WHERE t1.mpId = "'.$depute_uid.'" AND ended = 0 AND libelleAbrev != "NI" AND votesN > 10
+      LEFT JOIN organes o ON t1.organeRef = o.uid
+      WHERE t1.mpId = "'.$depute_uid.'" AND o.dateFin IS NULL AND libelleAbrev != "NI" AND votesN > 10
       ORDER BY t1.accord DESC
       ');
       return $query->result_array();
@@ -260,8 +261,9 @@
 
     public function get_accord_groupes_all($depute_uid){
       $query = $this->db->query('
-      SELECT t1.accord, t1.libelle, t1.libelleAbrev, t1.organeRef, t1.positionPolitique, t1.ended, t1.votesN
+      SELECT t1.accord, o.libelle, o.libelleAbrev, t1.votesN, CASE WHEN o.dateFin IS NULL THEN 1 ELSE 0 END AS ended
       FROM deputes_accord_cleaned t1
+      LEFT JOIN organes o ON t1.organeRef = o.uid
       WHERE t1.mpId = "'.$depute_uid.'"
       ORDER BY t1.accord DESC
       ');
