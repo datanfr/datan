@@ -28,6 +28,7 @@
         SELECT *
         FROM deputes
         WHERE mpId = "'.$id.'"
+        LIMIT 1
       ');
       return $query->row_array();
     }
@@ -83,16 +84,11 @@
     }
 
     public function get_groupes_inactifs(){
-      $query = $this->db->query('
-        SELECT A.*
-        FROM
-        (
-          SELECT da.libelle, da.libelleAbrev
-          FROM deputes_all da
-          WHERE da.legislature = 15 AND da.dateFin IS NOT NULL
-          GROUP BY da.groupeId
-        ) A
-        WHERE A.libelle IS NOT NULL
+      $query = $this->db->query('SELECT da.libelle, da.libelleAbrev 
+      FROM deputes_all da 
+      WHERE da.legislature = 15 AND da.dateFin IS NOT NULL 
+      GROUP BY da.groupeId 
+      HAVING libelle IS NOT NULL
       ');
       return $query->result_array();
     }
@@ -111,6 +107,7 @@
         LEFT JOIN deputes_contacts dc ON dl.mpId = dc.mpId
         LEFT JOIN deputes d ON dl.mpId = d.mpId
         WHERE dl.nameUrl = "'.$nameUrl.'" AND dl.dptSlug = "'.$dpt.'"
+        LIMIT 1
       ');
 
       return $query->row_array();
@@ -121,6 +118,7 @@
         SELECT *
         FROM mandat_groupe
         WHERE mpId = "'.$depute_uid.'" AND organeRef = "'.$groupe_id.'" AND preseance = 1
+        LIMIT 1
       ');
 
       return $query->row_array();
@@ -154,6 +152,7 @@
       $this->db->from('mandat_secondaire ms');
       $this->db->join('organes o', 'ms.organeRef = o.uid');
       $this->db->where($where);
+      $this->db->limit(1);
       $query = $this->db->get();
 
       return $query->row_array();
@@ -193,6 +192,7 @@
         round(score*100, 2) AS score_pct
         FROM election2017_results
         WHERE dpt = "'.$dpt.'" AND circo = "'.$circo.'" AND nom LIKE ("%'.$nom.'%")
+        LIMIT 1
       ');
 
       return $query->row_array();
@@ -244,6 +244,7 @@
         SELECT *
         FROM history_per_mps_average
         WHERE mpId = "'.$depute_uid.'"
+        LIMIT 1
       ');
       return $query->row_array();
     }
@@ -588,4 +589,3 @@
     }
 
   }
-?>

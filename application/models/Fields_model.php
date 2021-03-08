@@ -18,6 +18,7 @@
         SELECT f.*
         FROM fields f
         WHERE f.slug = "'.$field.'"
+        LIMIT 1
       ');
       return $query->row_array();
     }

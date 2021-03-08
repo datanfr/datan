@@ -181,6 +181,7 @@
       SELECT commune_nom
       FROM circos
       WHERE id = "'.$rand.'"
+      LIMIT 1
       ');
 
       return $query->row_array();
@@ -191,6 +192,7 @@
         SELECT nameFirst, nameLast, gender
         FROM cities_mayors
         WHERE dpt = "'.$dpt.'" AND insee = "'.$insee_city.'"
+        LIMIT 1
       ');
 
       return $query->row_array();
@@ -201,6 +203,7 @@
         SELECT macron_n, macron_pct, lePen_n, lePen_pct
         FROM elect_2017_pres_2
         WHERE dpt = "'.$dpt.'" AND commune = "'.$insee_city.'"
+        LIMIT 1
       ');
 
       $array = $query->row_array();
