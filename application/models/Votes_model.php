@@ -12,10 +12,10 @@
       FROM votes_info vi
       LEFT JOIN votes_datan vd ON vi.voteId = vd.vote_id AND vd.state = "published"
       WHERE vi.legislature = '.$legislature.'
-      ORDER BY vi.voteNumero DESC
       ';
       $queryString .= $year ? ' AND YEAR(vi.dateScrutin) = "'.$year.'"' : '';
       $queryString .= $month ? ' AND MONTH(vi.dateScrutin) = "'.$month.'"' : '';
+      $queryString .= ' ORDER BY vi.voteNumero DESC';
       $query = $this->db->query($queryString);
 
       return $query->result_array();
