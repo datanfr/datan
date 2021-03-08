@@ -46,9 +46,8 @@
 			<div class="row mt-3">
         <div class="col-12">
           <h2 class="bg-danger">This script needs to be refreshed until the table below is empty. The scripts automatically is automatically refreshed every 5 seconds.</h2>
-        <?php
-
-        // CONNEXION SQL //
+          <?php
+          // CONNEXION SQL //
         	include 'bdd-connexion.php';
 
           $reponse_last_vote = $bdd->query('
@@ -58,120 +57,104 @@
           LIMIT 1
           ');
 
-        while ($donnees_last_vote = $reponse_last_vote->fetch()) {
+          $donnees_last_vote = $reponse_last_vote->fetch();
           echo '<p>Last vote: '.$donnees_last_vote['lastVote'].'</p>';
           $lastVote = $donnees_last_vote['lastVote'] + 1;
           $untilVote = $donnees_last_vote['lastVote'] + 10;
           echo 'last vote = '.$lastVote.'<br>';
           echo 'until vote = '.$untilVote.'<br>';
-        }
-
+          
           if (!isset($lastVote)) {
             echo 'rien dans la base';
             $lastVote = 0;
             $untilVote = 2;
           }
 
-          //$lastVote = 0;
-          //$untilVote = 2;
+          echo 'LAST VOTE = '.$lastVote.'<br>';
+          echo 'NEW VOTE ='.$untilVote.'<br>';
 
-        echo 'LAST VOTE = '.$lastVote.'<br>';
-        echo 'NEW VOTE ='.$untilVote.'<br>';
+          $bdd->query('SET SQL_BIG_SELECTS=1');
 
-        $bdd->query('SET SQL_BIG_SELECTS=1');
+          echo '<br><br>';
 
-        echo '<br><br>';
-
-        $reponse_1 = $bdd->query('
-        SELECT voteNumero, mpId, vote, legislature
-        FROM votes_scores
-        WHERE voteNumero >= "'.$lastVote.'" AND voteNumero <= "'.$untilVote.'" AND legislature = 15
-        ');
-
-        $reponse_groupes = $bdd->prepare('
-          SELECT uid
-          FROM organes
-          WHERE coteType = "GP" AND legislature = 15
-        ');
-        $reponse_groupes->execute();
-        $groupes_old = $reponse_groupes->fetchAll();
-        $groupes = array();
-        foreach ($groupes_old as $key => $value) {
-          array_push($groupes, $value['uid']);
-        }
-
-        ?>
-
-
-        <table>
-          <thead>
-            <td>#</td>
-            <td>voteNumero</td>
-            <td>legislature</td>
-            <td>mpId</td>
-            <td>vote</td>
-            <td>organeRef</td>
-            <td>groupe</td>
-            <td>positionGroupe</td>
-            <td>accord</td>
-          </thead>
-
-        <?php
-
-        $i = 1;
-
-        while ($data_1 = $reponse_1->fetch()) {
-
-          foreach ($groupes as $groupe) {
-
-            $reponse_2 = $bdd->query('
-            SELECT gc.voteNumero, gc.organeRef, gc.positionGroupe, o.libelle
+          $queryGroupes = $bdd->query('
+            SELECT gc.*, o.libelleAbrev
             FROM groupes_cohesion gc
-            JOIN organes o ON gc.organeRef = o.uid
-            WHERE gc.voteNumero = "'.$data_1['voteNumero'].'" AND gc.legislature = 15 AND gc.organeRef = "'.$groupe.'"
-            ');
+            LEFT JOIN organes o ON gc.organeRef = o.uid
+            WHERE gc.voteNumero >= "'.$lastVote.'" AND gc.voteNumero <= "'.$untilVote.'" AND gc.legislature = 15
+          ');
 
-            if ($reponse_2->rowCount() > 0) {
-              while ($data_2 = $reponse_2->fetch()) {
-                if ($data_1['vote'] === $data_2['positionGroupe']) {
+          ?>
+
+          <table>
+            <thead>
+              <td>#</td>
+              <td>voteNumero</td>
+              <td>legislature</td>
+              <td>mpId</td>
+              <td>vote</td>
+              <td>organeRef</td>
+              <td>groupe</td>
+              <td>positionGroupe</td>
+              <td>accord</td>
+            </thead>
+
+            <?php
+
+            $i = 1;
+
+            while ($groupe = $queryGroupes->fetch()) {
+              $voteNumero = $groupe['voteNumero'];
+              $legislature = $groupe['legislature'];
+              $organeRef = $groupe['organeRef'];
+              $libelleAbrev = $groupe['libelleAbrev'];
+              $positionGroupe = $groupe['positionGroupe'];
+
+              $queryMPs = $bdd->query('
+                SELECT *
+                FROM votes_scores
+                WHERE voteNumero = "'.$voteNumero.'"
+              ');
+
+              while ($mp = $queryMPs->fetch()) {
+                $mpId = $mp['mpId'];
+                $vote = $mp['vote'];
+                $accord = NULL;
+
+                if ($vote === $positionGroupe) {
                   $accord = 1;
                 } else {
                   $accord = 0;
                 }
-                $organeRef = $data_2["organeRef"];
-                $libelle = $data_2["libelle"];
-                $positionGroupe = $data_2["positionGroupe"];
+
+                ?>
+
+                <tr>
+                  <td><?= $i ?></td>
+                  <td><?= $voteNumero ?></td>
+                  <td><?= $legislature ?></td>
+                  <td><?= $mpId ?></td>
+                  <td><?= $vote ?></td>
+                  <td><?= $organeRef ?></td>
+                  <td><?= $libelleAbrev ?></td>
+                  <td><?= $positionGroupe ?></td>
+                  <td><?= $accord ?></td>
+                </tr>
+
+                <?php
+
+                $sql = $bdd->prepare("INSERT INTO deputes_accord (voteNumero, legislature, mpId, organeRef, accord) VALUES (:voteNumero, :legislature, :mpId, :organeRef, :accord)");
+                $sql->execute(array('voteNumero' => $voteNumero, 'legislature' => $legislature, 'mpId' => $mpId, 'organeRef' => $organeRef, 'accord' => $accord));
+
+                $i++;
+
               }
-            } else {
-              $accord = NULL;
-              $organeRef = $groupe;
-              $libelle = NULL;
-              $positionGroupe = NULL;
+
+
             }
 
-            echo '<tr>';
-            echo '<td>'.$i.'</td>';
-            echo '<td>'.$data_1['voteNumero'].'</td>';
-            echo '<td>'.$data_1['legislature'].'</td>';
-            echo '<td>'.$data_1['mpId'].'</td>';
-            echo '<td>'.$data_1['vote'].'</td>';
-            echo '<td>'.$organeRef.'</td>';
-            echo '<td>'.$libelle.'</td>';
-            echo '<td>'.$positionGroupe.'</td>';
-            echo '<td>'.$accord.'</td>';
-            echo '<tr>';
 
-            $i++;
-
-            $sql = $bdd->prepare("INSERT INTO deputes_accord (voteNumero, legislature, mpId, vote, organeRef, accord) VALUES (:voteNumero, :legislature, :mpId, :vote, :organeRef, :accord)");
-            $sql->execute(array('voteNumero' => $data_1['voteNumero'], 'legislature' => $data_1['legislature'], 'mpId' => $data_1['mpId'], 'vote' => $data_1['vote'], 'organeRef' => $organeRef, 'accord' => $accord));
-
-
-          }
-
-        }
-
-        ?>
+            ?>
           </table>
         </div>
       </div>
