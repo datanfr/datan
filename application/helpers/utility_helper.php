@@ -60,7 +60,7 @@
     $tags = $dom->getElementsByTagName('a');
     for ($i = $tags->length - 1; $i > -1 ; $i--) {
       $tag = $tags->item($i);
-      if ($tag->getAttribute('target') == '_blank') {
+      if ($tag->getAttribute('target') == '_blank' && strpos($tag->getAttribute('href'), 'datan.fr') === false) {
         $href = $tag->getAttribute('href');
         $replacement = $dom->createElement('span');
         $replacement->setAttribute('class', 'url_obf');
