@@ -19,6 +19,7 @@
         SELECT *
         FROM categories
         WHERE slug = "'.$slug.'"
+        LIMIT 1
       ');
 
       return $query->row_array();

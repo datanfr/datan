@@ -5,62 +5,33 @@
     }
 
     public function get_all_votes($legislature, $year, $month){
-      if ($year == NULL && $month == NULL) {
-        $query = $this->db->query('
-        SELECT vi.*, date_format(vi.dateScrutin, "%d %M %Y") as dateScrutinFR,
-        REPLACE(vi.titre, "n?", "n°") AS titre,
-        vd.title, vd.slug, vd.category
-        FROM votes_info vi
-        LEFT JOIN votes_datan vd ON vi.voteId = vd.vote_id AND vd.state = "published"
-        WHERE vi.legislature = '.$legislature.'
-        ORDER BY vi.voteNumero DESC
-        ');
-      } elseif ($year != NULL && $month == NULL) {
-        $query = $this->db->query('
-        SELECT vi.*, date_format(vi.dateScrutin, "%d %M %Y") as dateScrutinFR,
-        REPLACE(vi.titre, "n?", "n°") AS titre,
-        vd.title, vd.slug, vd.category
-        FROM votes_info vi
-        LEFT JOIN votes_datan vd ON vi.voteId = vd.vote_id AND vd.state = "published"
-        WHERE vi.legislature = '.$legislature.' AND YEAR(vi.dateScrutin) = "'.$year.'"
-        ORDER BY vi.voteNumero DESC
-        ');
-      } elseif ($year != NULL && $month != NULL) {
-        $query = $this->db->query('
-        SELECT vi.*, date_format(vi.dateScrutin, "%d %M %Y") as dateScrutinFR,
-        REPLACE(vi.titre, "n?", "n°") AS titre,
-        vd.title, vd.slug, vd.category
-        FROM votes_info vi
-        LEFT JOIN votes_datan vd ON vi.voteId = vd.vote_id AND vd.state = "published"
-        WHERE vi.legislature = '.$legislature.' AND YEAR(vi.dateScrutin) = "'.$year.'" AND MONTH(vi.dateScrutin) = "'.$month.'"
-        ORDER BY vi.voteNumero DESC
-        ');
-      }
+      $queryString = '
+      SELECT vi.*, date_format(vi.dateScrutin, "%d %M %Y") as dateScrutinFR,
+      REPLACE(vi.titre, "n?", "n°") AS titre,
+      vd.title, vd.slug, vd.category
+      FROM votes_info vi
+      LEFT JOIN votes_datan vd ON vi.voteId = vd.vote_id AND vd.state = "published"
+      WHERE vi.legislature = '.$legislature.'
+      ';
+      $queryString .= $year ? ' AND YEAR(vi.dateScrutin) = "'.$year.'"' : '';
+      $queryString .= $month ? ' AND MONTH(vi.dateScrutin) = "'.$month.'"' : '';
+      $queryString .= ' ORDER BY vi.voteNumero DESC';
+      $query = $this->db->query($queryString);
+
       return $query->result_array();
     }
 
     public function get_last_votes_datan($limit = FALSE){
-      if ($limit != FALSE) {
-        $query = $this->db->query('
-          SELECT vd.title AS voteTitre, vd.description, vi.dateScrutin, vi.voteNumero, vi.legislature, f.name AS category_libelle, f.slug AS category_slug, vi.sortCode, date_format(dateScrutin, "%d %M %Y") as dateScrutinFR
-          FROM votes_datan vd
-          LEFT JOIN votes_info vi ON vd.vote_id = vi.voteId
-          LEFT JOIN fields f ON vd.category = f.id
-          WHERE vd.state = "published"
-          ORDER BY vi.voteNumero DESC
-          LIMIT '.$limit.'
-        ');
-      } else {
-        $query = $this->db->query('
-          SELECT vd.title AS voteTitre, vd.description, vi.dateScrutin, vi.voteNumero, vi.legislature, f.name AS category_libelle, f.slug AS category_slug, vi.sortCode, date_format(dateScrutin, "%d %M %Y") as dateScrutinFR
-          FROM votes_datan vd
-          LEFT JOIN votes_info vi ON vd.vote_id = vi.voteId
-          LEFT JOIN fields f ON vd.category = f.id
-          WHERE vd.state = "published"
-          ORDER BY vi.voteNumero DESC
-        ');
-      }
-
+      $queryString = '
+      SELECT vd.title AS voteTitre, vd.description, vi.dateScrutin, vi.voteNumero, vi.legislature, f.name AS category_libelle, f.slug AS category_slug, vi.sortCode, date_format(dateScrutin, "%d %M %Y") as dateScrutinFR
+      FROM votes_datan vd
+      LEFT JOIN votes_info vi ON vd.vote_id = vi.voteId
+      LEFT JOIN fields f ON vd.category = f.id
+      WHERE vd.state = "published"
+      ORDER BY vi.voteNumero DESC'
+      ;
+      $queryString .= $limit ? ' LIMIT '.$limit : '';
+      $query = $this->db->query($queryString);
 
       return $query->result_array();
     }
@@ -607,4 +578,3 @@
     }
 
   }
-?>
