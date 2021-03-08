@@ -56,6 +56,7 @@
   function text_url_obfuscation($text){
     $dom = new DOMDocument();
     $dom->encoding = 'utf-8';
+    if (!isset($text)) return;
     $dom->loadHTML( utf8_decode($text) );
     $tags = $dom->getElementsByTagName('a');
     for ($i = $tags->length - 1; $i > -1 ; $i--) {
@@ -71,7 +72,7 @@
         $tag->parentNode->replaceChild($replacement, $tag);
       }
     }
-    return $dom->saveHTML();
+    return $dom->saveHTML($dom->documentElement);
   }
 
 ?>
