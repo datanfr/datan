@@ -35,7 +35,20 @@
                     <textarea id="editor1" name="description" class="form-control" placeholder="Description du vote"></textarea>
                     <script>
                       ClassicEditor
-                              .create( document.querySelector( '#editor1' ) )
+                              .create( document.querySelector( '#editor1' ), {
+                                link: {
+                                  decorators: {
+                                    isExternal: {
+                                      mode: 'automatic',
+                                      callback: url => (!url.startsWith( 'https://datan.fr' )),
+                                      attributes: {
+                                        target: '_blank',
+                                        rel: 'noopener noreferrer'
+                                      }
+                                    }
+                                  }
+                                }
+                              } )
                               .then( editor => {
                                       console.log( editor );
                               } )
