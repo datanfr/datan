@@ -72,7 +72,10 @@
                 </div>
               </div>
 
-              <a class="btn btn-warning my-3" href="update_dataset/add_twitter_facebook.php" role="button">Add Social Network</a>
+              <a class="btn btn-warning my-3" href="update_dataset/add_twitter_facebook.php" role="button">Add Social Network</a>    
+              <hr>
+              <a class="btn btn-warning my-3" href="update_dataset/20210309_update_department.php" role="button">5. Update departments</a>
+
             </div>
           </div>
           <div class="row">

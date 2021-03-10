@@ -61,9 +61,9 @@
           	include 'bdd-connexion.php';
 
           	$reponse_last_id = $bdd->query('
-          		SELECT id, dpt, dpt_edited
+          		SELECT id, dpt
           		FROM circos
-          		WHERE dpt_edited is null
+          		WHERE dpt is null
           		ORDER BY id ASC
           		LIMIT 10000
           		');
@@ -74,24 +74,13 @@
           		$uid = $donnees_last_id['id'];
               $dpt = $donnees_last_id['dpt'];
 
-              // CODE ICI
-              $dpt_edited = NULL;
-              if ($dpt < 10) {
-                $dpt_edited = "0".$dpt;
-              } else {
-                $dpt_edited = $dpt;
-              }
-
           		echo '<p>dpt: '.$dpt.'</p>';
-          		echo '<p>dpt_edited: '.$dpt_edited.'</p>';
-
-
 
           		echo '<hr>';
 
 
-          		$sql = $bdd->prepare('UPDATE circos SET dpt_edited = :dpt_edited WHERE id = "'.$uid.'"');
-          		$sql -> execute(array('dpt_edited' => $dpt_edited));
+          		$sql = $bdd->prepare('UPDATE circos SET dpt = :dpt WHERE id = "'.$uid.'"');
+          		$sql -> execute(array('dpt' => $dpt));
           	}
 
 
