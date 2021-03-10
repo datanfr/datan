@@ -63,7 +63,7 @@
               $results = $bdd->query('
                 SELECT *
                 FROM votes_info
-                WHERE legislature = 15
+                WHERE legislature = "'.$legislature_to_get.'"
                 ORDER BY voteNumero DESC
               ');
 
@@ -229,7 +229,7 @@
                     article = '$article_n',
                     bister = '$bister',
                     posArticle = '$pos_article'
-                    WHERE voteNumero = $num");
+                    WHERE voteNumero = $num AND legislature = $legislature_to_get");
                   $stmt = $bdd->prepare($sql);
                   $stmt->execute();
                 }
