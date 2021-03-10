@@ -4,7 +4,7 @@
           <div class="col-12">
             <p class="city mb-0"><?= $ville['commune_nom'] ?></p>
             <?php if ($n_circos > 1): ?>
-              <span class="department mb-0"><?= $ville['dpt_nom'] ?> (<?= $ville['dpt_edited'] ?>) -
+              <span class="department mb-0"><?= $ville['dpt_nom'] ?> (<?= $ville['dpt'] ?>) -
                 Circonscriptions :
                 <?php foreach ($circos as $key => $circo): ?>
                   <?= $circo["number"] ?>
@@ -14,7 +14,7 @@
                   <?php endif; ?>
                 <?php endforeach; ?>
               <?php else: ?>
-              <span class="department mb-0"><?= $ville['dpt_nom'] ?> (<?= $ville['dpt_edited'] ?>) - <?= $ville['circo'] ?><sup><?= $ville['circo_abbrev'] ?></sup> circonscription</span>
+              <span class="department mb-0"><?= $ville['dpt_nom'] ?> (<?= $ville['dpt'] ?>) - <?= $ville['circo'] ?><sup><?= $ville['circo_abbrev'] ?></sup> circonscription</span>
             <?php endif; ?>
           </div>
         </div>
@@ -89,7 +89,7 @@
         <div class="row mt-5">
           <div class="col-lg-4 d-flex align-items-center">
             <div>
-              <p><b><?= $ville["commune_nom"] ?></b> est une commune située <?= $ville["libelle_1"] ?><?= $ville["dpt_nom"] ?> (<?= $ville["dpt_edited"] ?>). Elle se trouve dans la région <?= $ville['region_name'] ?>.</p>
+              <p><b><?= $ville["commune_nom"] ?></b> est une commune située <?= $ville["libelle_1"] ?><?= $ville["dpt_nom"] ?> (<?= $ville["dpt"] ?>). Elle se trouve dans la région <?= $ville['region_name'] ?>.</p>
               <?php if (!empty($ville["pop2007"])): ?>
                 <p><?= $ville["commune_nom"] ?> compte environ <b><?= $ville["pop2017_format"] ?> habitants</b>. La population de la commune a <b><?= $ville['evol10_text'] ?></b> de <?= round($ville['evol10_edited'], 1) ?> % depuis 10 ans.</p>
               <?php endif; ?>
@@ -128,7 +128,7 @@
                       </div>
                     </div>
                   </div>
-                  <a href="https://www.interieur.gouv.fr/Elections/Les-resultats/Presidentielles/elecresult__presidentielle-2017/(path)/presidentielle-2017/<?= $ville_insee["region"] ?>/<?= $ville_insee["dpt"] ?>/<?= $ville_insee["insee"] ?>.html" target="_blank" rel="noopener" class="no-decoration">
+                  <a href="https://www.interieur.gouv.fr/Elections/Les-resultats/Presidentielles/elecresult__presidentielle-2017/(path)/presidentielle-2017/<?= $ville_insee["region"] ?>/<?= $ville_insee["dpt"] ?>/<?= $ville_insee["old_insee"] ?>.html" target="_blank" rel="noopener" class="no-decoration">
                     <div class="card-footer">
                       <p class="text-center mb-0">Plus d'infos</p>
                     </div>
@@ -175,7 +175,7 @@
       <!-- OTHER MPS FROM THE SAME DEPARTMENT -->
       <div class="row mt-4">
         <div class="col-12">
-          <h2 class="text-center">Autres députés élus <?= $ville['libelle_1'] ?><?= $ville['dpt_nom'] ?> (<?= $ville['dpt_edited'] ?>)</h2>
+          <h2 class="text-center">Autres députés élus <?= $ville['libelle_1'] ?><?= $ville['dpt_nom'] ?> (<?= $ville['dpt'] ?>)</h2>
         </div>
         <div class="col-12 py-4 d-flex flex-wrap justify-content-around">
           <?php foreach ($deputes_dpt as $depute): ?>
@@ -213,7 +213,7 @@
               <?php elseif ($ville['dpt_nom'] == "Wallis-et-Futuna"): ?>
                 <h2>Commune <?= $ville['libelle_2'] ?><?= $ville['dpt_nom'] ?> (<?= $ville['dpt'] ?>)</h2>
               <?php else: ?>
-                <h2>Communes les plus peuplées <?= $ville['libelle_2'] ?><?= $ville['dpt_nom'] ?> (<?= $ville['dpt'] ?>)</h2>
+                <h2>Communes les plus peuplées <?= $ville['libelle_2'] ?><?= $ville['dpt_nom'] ?> (<?= strtoupper($ville['dpt'])  ?>)</h2>
               <?php endif; ?>
             </div>
           </div>

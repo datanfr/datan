@@ -337,7 +337,6 @@
     public function commune($input, $departement){
       $input_ville = $input;
       $data['ville'] = $this->departement_model->get_commune_individual($input_ville, $departement);
-      //print_r($data['ville']);
 
       if (empty($data['ville'])) {
         show_404();
@@ -349,7 +348,6 @@
       $v = $data['ville'][0];
       $commune_nom = $v['commune_nom'];
       $dpt_code = $v['dpt'];
-      $dpt_code_edited = $v['dpt_edited'];
       $departement = $v['dpt_slug'];
       $code_postal = $v['code_postal'];
 
@@ -428,7 +426,7 @@
         $data['ville']['evol10_text'] = 'diminué';
       }
       $data['ville']['evol10_edited'] = str_replace("-", "", $data['ville']['evol10']);
-      $data['ville_insee'] = $this->departement_model->get_ville_insee($data['ville']['codeRegion'], $data['ville']['dpt_edited'], $data['ville']['insee_city']);
+      $data['ville_insee'] = $this->departement_model->get_ville_insee($data['ville']['codeRegion'], $data['ville']['dpt'], $data['ville']['insee_city']);
 
       // Get city mayor
       $data['mayor'] = $this->departement_model->get_city_mayor($data['ville']['dpt'], $data['ville']['insee_city']);
@@ -447,7 +445,7 @@
       // Meta
       $data['url'] = $this->meta_model->get_url();
       $data['title_meta'] = "Député(s) ".$commune_nom." ".$code_postal." | Datan";
-      $data['description_meta'] = "Découvrez le".$s." député".$s." élu".$s." dans la ville ".$de."".$commune_nom." (".$dpt_code_edited.") et tous ".$ses." résultats de vote : taux de participation, loyauté avec ".$son." groupe, proximité avec la majorité présidentielle.";
+      $data['description_meta'] = "Découvrez le".$s." député".$s." élu".$s." dans la ville ".$de."".$commune_nom." (".$dpt_code.") et tous ".$ses." résultats de vote : taux de participation, loyauté avec ".$son." groupe, proximité avec la majorité présidentielle.";
       $data['title'] = "Découvrez ".$le." ".$depute_writing." ".$elu_writing." dans la ville ".$de."".$commune_nom;
       // Breadcrumb
       $data['breadcrumb'] = array(
@@ -458,7 +456,7 @@
           "name" => "Députés", "url" => base_url()."deputes", "active" => FALSE
         ),
         array(
-          "name" => $data['ville']['dpt_nom']." (".$data['ville']['dpt_edited'].")", "url" => base_url()."deputes/".$data['ville']['dpt_slug'], "active" => FALSE
+          "name" => $data['ville']['dpt_nom']." (".$data['ville']['dpt'].")", "url" => base_url()."deputes/".$data['ville']['dpt_slug'], "active" => FALSE
         ),
         array(
           "name" => $data['ville']['commune_nom'], "url" => base_url()."deputes/".$data['ville']['dpt_slug']."/ville_".$input_ville, "active" => TRUE
