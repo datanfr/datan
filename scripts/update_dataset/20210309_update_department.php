@@ -21,7 +21,6 @@ try {
         $bdd->query('UPDATE `circos` SET `dpt`= "' . $dpt['new'] . '" WHERE dpt="' . $dpt['old'] . '"');
         $bdd->query('UPDATE `elect_2017_pres_2` SET `dpt`= "' . $dpt['new'] . '" WHERE dpt="' . $dpt['old'] . '"');
         $bdd->query('UPDATE `elect_2019_europe_clean` SET `dpt`= "' . $dpt['new'] . '" WHERE dpt="' . $dpt['old'] . '"');
-        $bdd->query('UPDATE `cities_mayors` SET `dpt`= "' . $dpt['new'] . '" WHERE dpt="' . $dpt['old'] . '"');
         $bdd->query('UPDATE `circos` SET `commune`=CONCAT("6", RIGHT(commune, 2)) WHERE dpt="976"');
         $bdd->query('UPDATE `elect_2017_pres_2` SET `commune`=CONCAT("6", RIGHT(commune, 2)) WHERE dpt="976"');
     }
