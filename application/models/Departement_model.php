@@ -228,20 +228,6 @@ if ($dpt == "987") {
       //echo $dpt;
       //echo $city;
 
-      if ($dpt == "972") {
-        $new_region = "002";
-      } elseif ($dpt == "987") {
-        $new_region = "000";
-      } elseif ($dpt == "976") {
-        $new_region = "006";
-        $old_city = $city - 100;
-      } elseif ($dpt == "988") {
-        $new_region = "000";
-      } elseif ($region < 10) {
-        $new_region = "00".$region;
-      } elseif ($region < 100) {
-        $new_region = "0".$region;
-      }
 
       if ($dpt < 10) {
         $new_dpt = "0".$dpt;
@@ -261,7 +247,20 @@ if ($dpt == "987") {
         $new_city = $city;
       }
       $old_city = $new_city;
-
+      if ($dpt == "972") {
+        $new_region = "002";
+      } elseif ($dpt == "987") {
+        $new_region = "000";
+      } elseif ($dpt == "976") {
+        $new_region = "006";
+        $old_city = $city - 100;
+      } elseif ($dpt == "988") {
+        $new_region = "000";
+      } elseif ($region < 10) {
+        $new_region = "00".$region;
+      } elseif ($region < 100) {
+        $new_region = "0".$region;
+      }
       $array["region"] = $new_region;
       $array["dpt"] = strtoupper($new_dpt);
       $array["city"] = $new_city;
