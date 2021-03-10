@@ -577,4 +577,30 @@
       return $array;
     }
 
+    public function get_most_famous_votes($limit = false){
+      $queryString = '
+      SELECT vd.title AS voteTitre, vd.description, vi.dateScrutin, vi.voteNumero, vi.legislature, f.name AS category_libelle, f.slug AS category_slug, vi.sortCode, date_format(dateScrutin, "%d %M %Y") as dateScrutinFR, vote_id, vi.voteNumero
+      FROM votes_datan vd
+      LEFT JOIN votes_info vi ON vd.vote_id = vi.voteId
+      LEFT JOIN fields f ON vd.category = f.id
+      WHERE vd.state = "published"
+      ORDER BY vi.voteNumero DESC';
+      if ($limit) {
+        $queryString .= ' LIMIT ' .$limit;
+      }
+      $query = $this->db->query($queryString);
+
+      return $query->result_array();
+    }
+
+    public function get_votes_result_by_depute($voteNumeros){
+      $query = $this->db->query('SELECT votes.voteNumero, organes.libelle, deputes_all.nameFirst, 
+      deputes_all.nameLast, votes.vote, organes.uid, deputes_all.mpId FROM `votes` 
+      LEFT JOIN mandat_principal ON votes.mandatId=mandat_principal.mandatId 
+      LEFT JOIN deputes_all ON votes.mandatId=deputes_all.mandatId 
+      LEFT JOIN organes ON deputes_all.groupeId=organes.uid 
+      WHERE votes.voteNumero IN ('. implode(",", $voteNumeros). ')');
+
+      return $query->result_array();
+    }
   }
