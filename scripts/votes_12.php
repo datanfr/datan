@@ -24,6 +24,8 @@
       $url = str_replace(array("/", "datan", "scripts", "votes_", ".php"), "", $url);
       $url_current = substr($url, 0, 2);
       $url_second = $url_current + 1;
+
+      include "include/legislature.php";
     ?>
 		<div class="container" style="background-color: #e9ecef;">
 			<div class="row">
@@ -37,8 +39,12 @@
 					<a class="btn btn-outline-secondary" href="http://<?php echo $_SERVER['SERVER_NAME']. ''.$_SERVER['REQUEST_URI'] ?>" role="button">Refresh</a>
 				</div>
 				<div class="col-4">
-					<a class="btn btn-outline-success" href="./votes_<?= $url_second ?>.php" role="button">NEXT</a>
-				</div>
+          <?php if ($legislature_to_get == 15): ?>
+  					<a class="btn btn-outline-success" href="./votes_<?= $url_second ?>.php" role="button">Next</a>
+  					<?php else: ?>
+  					<a class="btn btn-outline-success" href="./votes_<?= $url_second ?>.php?legislature=<?= $legislature_to_get ?>" role="button">Next</a>
+  				<?php endif; ?>
+        </div>
 			</div>
 			<div class="row mt-3">
         <div class="col-12">
@@ -50,57 +56,57 @@
                   <th scope="col">mpId</th>
                   <th scope="col">score</th>
                   <th scope="col">votesN</th>
-                  <th scope="col">dateMaj</th>
                 </tr>
               </thead>
               <tbody>
-        <?php
+              <?php
 
-        // CONNEXION SQL //
-        	include 'bdd-connexion.php';
+              // CONNEXION SQL //
+              	include 'bdd-connexion.php';
 
-          $bdd->query('
-            DROP TABLE IF EXISTS deputes_loyaute;
-            CREATE TABLE deputes_loyaute
-              (id INT(5) NOT NULL AUTO_INCREMENT,
-              mpId VARCHAR(15)CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
-              mandatId VARCHAR(15)CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
-              score DECIMAL(4,3) NOT NULL,
-              votesN INT(10) NOT NULL,
-              dateMaj DATE NOT NULL,
-              PRIMARY KEY (id));
-              ALTER TABLE deputes_loyaute ADD INDEX idx_mpId (mpId);
-              ALTER TABLE deputes_loyaute ADD INDEX idx_mandatId (mandatId);
-          ');
-          $result = $bdd->query('
-          SELECT v.mpId, v.organeId AS mandatId, ROUND(AVG(v.scoreLoyaute),3) AS score, COUNT(v.scoreLoyaute) AS votesN
-          FROM votes_scores v
-          LEFT JOIN mandat_groupe mg ON mg.mandatId = v.organeId
-          WHERE v.scoreLoyaute IS NOT NULL
-          GROUP BY v.organeId
-          ORDER BY v.mpId
-          ');
+                $bdd->query('
+                  DROP TABLE IF EXISTS deputes_loyaute;
+                  CREATE TABLE deputes_loyaute
+                    (id INT(5) NOT NULL AUTO_INCREMENT,
+                    mpId VARCHAR(15)CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+                    mandatId VARCHAR(15)CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+                    score DECIMAL(4,3) NOT NULL,
+                    votesN INT(10) NOT NULL,
+                    legislature TINYINT NOT NULL,
+                    dateMaj DATE NOT NULL,
+                    PRIMARY KEY (id));
+                    ALTER TABLE deputes_loyaute ADD INDEX idx_mpId (mpId);
+                    ALTER TABLE deputes_loyaute ADD INDEX idx_mandatId (mandatId);
+                    ALTER TABLE deputes_loyaute ADD INDEX idx_legislature (legislature);
+                ');
+                $result = $bdd->query('
+                SELECT v.mpId, v.mandatId, ROUND(AVG(v.scoreLoyaute),3) AS score, COUNT(v.scoreLoyaute) AS votesN, v.legislature
+                FROM votes_scores v
+                LEFT JOIN mandat_groupe mg ON mg.mandatId = v.mandatId
+                WHERE v.scoreLoyaute IS NOT NULL AND mg.mandatId IS NOT NULL
+                GROUP BY v.mandatId
+                ORDER BY v.mpId
+                ');
 
-          while ($depute = $result->fetch()) {
-            $mpId = $depute["mpId"];
-            $mandatId = $depute["mandatId"];
-            $score = $depute["score"];
-            $votesN = $depute["votesN"];
-            $dateMaj = date('Y-m-d');
+                while ($depute = $result->fetch()) {
+                  $mpId = $depute["mpId"];
+                  $mandatId = $depute["mandatId"];
+                  $score = $depute["score"];
+                  $votesN = $depute["votesN"];
+                  $legislature = $depute["legislature"];
 
-            echo "<tr>";
-            echo "<td>".$mpId."</td>";
-            echo "<td>".$mandatId."</td>";
-            echo "<td>".$score."</td>";
-            echo "<td>".$votesN."</td>";
-            echo "<td>".$dateMaj."</td>";
-            echo "</tr>";
+                  echo "<tr>";
+                  echo "<td>".$mpId."</td>";
+                  echo "<td>".$mandatId."</td>";
+                  echo "<td>".$score."</td>";
+                  echo "<td>".$votesN."</td>";
+                  echo "</tr>";
 
 
-            $sql = $bdd->prepare("INSERT INTO deputes_loyaute (mpId, mandatId, score, votesN, dateMaj) VALUES (:mpId, :mandatId, :score, :votesN, :dateMaj)");
-            $sql->execute(array('mpId' => $mpId, 'mandatId' => $mandatId, 'score' => $score, 'votesN' => $votesN, 'dateMaj' => $dateMaj));
-          }
-        ?>
+                  $sql = $bdd->prepare("INSERT INTO deputes_loyaute (mpId, mandatId, score, votesN, legislature, dateMaj) VALUES (:mpId, :mandatId, :score, :votesN, :legislature, curdate())");
+                  $sql->execute(array('mpId' => $mpId, 'mandatId' => $mandatId, 'score' => $score, 'votesN' => $votesN, 'legislature' => $legislature));
+                }
+              ?>
             </tbody>
           </table>
         </div>
