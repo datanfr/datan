@@ -45,6 +45,7 @@
 			<div class="row mt-3">
         <div class="col-12">
           <h2 class="bg-danger">This script needs to be refreshed until the table below is empty. The scripts automatically is automatically refreshed every 5 seconds.</h2>
+          <p>Legislature to get = <?= $legislature_to_get ?></p>
           <table class="table">
             <thead>
                 <tr>
@@ -67,8 +68,6 @@
           				error_reporting(E_ALL);
 
         					include 'bdd-connexion.php';
-
-                  echo "legislature to get ==>" . $legislature_to_get . "<br>";
 
                   $reponse_vote = $bdd->query('
                     SELECT voteNumero
