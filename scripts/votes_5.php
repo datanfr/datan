@@ -122,7 +122,7 @@
 					WHERE v.voteType != "miseAuPoint" AND (v.voteNumero BETWEEN "'.$lastVote.'" AND "'.$untilVote.'") AND v.legislature = "'.$legislature_to_get.'" AND vote != "nv"
 					) A
 					LEFT JOIN votes_groupes vg ON vg.organeRef = A.organeRef AND vg.voteNumero = A.voteNumero AND vg.legislature = A.legislature
-					LEFT JOIN votes_groupes gvt ON gvt.organeRef IN ("PO730964", "PO730964", "PO656002") AND gvt.voteNumero = A.voteNumero AND gvt.legislature = A.legislature
+					LEFT JOIN votes_groupes gvt ON gvt.organeRef IN ("PO730964", "PO713077", "PO656002") AND gvt.voteNumero = A.voteNumero AND gvt.legislature = A.legislature
 					) B
 				');
 
