@@ -67,7 +67,11 @@
 
           $donnees_last_vote = $reponse_last_vote->fetch();
           $lastVote = $donnees_last_vote['lastVote'] + 1;
-          $untilVote = $donnees_last_vote['lastVote'] + 10;
+          if ($legislature_to_get == 15) {
+            $untilVote = $donnees_last_vote['lastVote'] + 10;
+          } elseif ($legislature_to_get == 14) {
+            $untilVote = $donnees_last_vote['lastVote'] + 18;
+          }
           echo '<p>First vote to get = '.$lastVote.'</p>';
           echo '<p>Until vote = '.$untilVote.'</p>';
 
