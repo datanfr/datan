@@ -27,6 +27,8 @@
       $url = str_replace(array("/", "datan", "scripts", "votes_", ".php"), "", $url);
       $url_current = substr($url, 0, 1);
       $url_second = $url_current + 1;
+
+      include "include/legislature.php";
     ?>
 		<div class="container" style="background-color: #e9ecef;">
 			<div class="row">
@@ -40,12 +42,17 @@
 					<a class="btn btn-outline-secondary" href="http://<?php echo $_SERVER['SERVER_NAME']. ''.$_SERVER['REQUEST_URI'] ?>" role="button">Refresh</a>
 				</div>
 				<div class="col-4">
-					<a class="btn btn-outline-success" href="./votes_<?= $url_second ?>.php" role="button">NEXT</a>
-				</div>
+          <?php if ($legislature_to_get == 15): ?>
+  					<a class="btn btn-outline-success" href="./votes_<?= $url_second ?>.php" role="button">Next</a>
+  					<?php else: ?>
+  					<a class="btn btn-outline-success" href="./votes_<?= $url_second ?>.php?legislature=<?= $legislature_to_get ?>" role="button">Next</a>
+  				<?php endif; ?>
+        </div>
 			</div>
 			<div class="row mt-3">
         <div class="col-12">
           <h2 class="bg-danger">This script needs to be refreshed until the table below is empty. The scripts automatically is automatically refreshed every 5 seconds.</h2>
+          <p>Legislature to get = <?= $legislature_to_get ?></p>
           <?php
           // CONNEXION SQL //
         	include 'bdd-connexion.php';
@@ -53,35 +60,31 @@
           $reponse_last_vote = $bdd->query('
           SELECT voteNumero AS lastVote
           FROM deputes_accord
+          WHERE legislature = "'.$legislature_to_get.'"
           ORDER BY voteNumero DESC
           LIMIT 1
           ');
 
           $donnees_last_vote = $reponse_last_vote->fetch();
-          echo '<p>Last vote: '.$donnees_last_vote['lastVote'].'</p>';
           $lastVote = $donnees_last_vote['lastVote'] + 1;
           $untilVote = $donnees_last_vote['lastVote'] + 10;
-          echo 'last vote = '.$lastVote.'<br>';
-          echo 'until vote = '.$untilVote.'<br>';
-          
+          echo '<p>First vote to get = '.$lastVote.'</p>';
+          echo '<p>Until vote = '.$untilVote.'</p>';
+
           if (!isset($lastVote)) {
             echo 'rien dans la base';
-            $lastVote = 0;
+            $lastVote = 1;
             $untilVote = 2;
           }
 
-          echo 'LAST VOTE = '.$lastVote.'<br>';
-          echo 'NEW VOTE ='.$untilVote.'<br>';
-
           $bdd->query('SET SQL_BIG_SELECTS=1');
 
-          echo '<br><br>';
-
-          $queryGroupes = $bdd->query('
-            SELECT gc.*, o.libelleAbrev
-            FROM groupes_cohesion gc
-            LEFT JOIN organes o ON gc.organeRef = o.uid
-            WHERE gc.voteNumero >= "'.$lastVote.'" AND gc.voteNumero <= "'.$untilVote.'" AND gc.legislature = 15
+          $query = $bdd->query('
+          SELECT vs.voteNumero, vs.legislature, vs.mpId, gc.organeRef,
+          CASE WHEN vs.vote = gc.positionGroupe THEN 1 ELSE 0 END AS accord
+          FROM votes_scores vs
+          LEFT JOIN groupes_cohesion gc ON vs.voteNumero = gc.voteNumero AND vs.legislature = gc.legislature
+          WHERE vs.legislature = "'.$legislature_to_get.'" AND vs.voteNumero BETWEEN "'.$lastVote.'" AND "'.$untilVote.'"
           ');
 
           ?>
@@ -92,10 +95,7 @@
               <td>voteNumero</td>
               <td>legislature</td>
               <td>mpId</td>
-              <td>vote</td>
               <td>organeRef</td>
-              <td>groupe</td>
-              <td>positionGroupe</td>
               <td>accord</td>
             </thead>
 
@@ -103,52 +103,32 @@
 
             $i = 1;
 
-            while ($groupe = $queryGroupes->fetch()) {
-              $voteNumero = $groupe['voteNumero'];
-              $legislature = $groupe['legislature'];
-              $organeRef = $groupe['organeRef'];
-              $libelleAbrev = $groupe['libelleAbrev'];
-              $positionGroupe = $groupe['positionGroupe'];
+            while ($group = $query->fetch()) {
 
-              $queryMPs = $bdd->query('
-                SELECT *
-                FROM votes_scores
-                WHERE voteNumero = "'.$voteNumero.'"
-              ');
+              ?>
 
-              while ($mp = $queryMPs->fetch()) {
-                $mpId = $mp['mpId'];
-                $vote = $mp['vote'];
-                $accord = NULL;
+              <tr>
+                <td><?= $i ?></td>
+                <td><?= $group['voteNumero'] ?></td>
+                <td><?= $group['legislature'] ?></td>
+                <td><?= $group['mpId'] ?></td>
+                <td><?= $group['organeRef'] ?></td>
+                <td><?= $group['accord'] ?></td>
+              </tr>
 
-                if ($vote === $positionGroupe) {
-                  $accord = 1;
-                } else {
-                  $accord = 0;
-                }
+              <?php
 
-                ?>
+              $sql = $bdd->prepare("INSERT INTO deputes_accord (voteNumero, legislature, mpId, organeRef, accord) VALUES (:voteNumero, :legislature, :mpId, :organeRef, :accord)");
+              $arraySql = array(
+                'voteNumero' => $group['voteNumero'],
+                'legislature' => $group['legislature'],
+                'mpId' => $group['mpId'],
+                'organeRef' => $group['organeRef'],
+                'accord' => $group['accord']
+              );
+              $sql->execute($arraySql);
 
-                <tr>
-                  <td><?= $i ?></td>
-                  <td><?= $voteNumero ?></td>
-                  <td><?= $legislature ?></td>
-                  <td><?= $mpId ?></td>
-                  <td><?= $vote ?></td>
-                  <td><?= $organeRef ?></td>
-                  <td><?= $libelleAbrev ?></td>
-                  <td><?= $positionGroupe ?></td>
-                  <td><?= $accord ?></td>
-                </tr>
-
-                <?php
-
-                $sql = $bdd->prepare("INSERT INTO deputes_accord (voteNumero, legislature, mpId, organeRef, accord) VALUES (:voteNumero, :legislature, :mpId, :organeRef, :accord)");
-                $sql->execute(array('voteNumero' => $voteNumero, 'legislature' => $legislature, 'mpId' => $mpId, 'organeRef' => $organeRef, 'accord' => $accord));
-
-                $i++;
-
-              }
+              $i++;
 
 
             }
