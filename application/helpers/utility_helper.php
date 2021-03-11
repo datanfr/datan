@@ -7,18 +7,8 @@
     return base_url().'assets/css/';
   }
 
-  function css_file(){
-    return 'main_20210301';
-    //return 'main';
-  }
-
-  function js_file(){
-    return 'main_20201125.min';
-    //return 'main';
-  }
-
-  function datatable_file(){
-    return '202121_datatable-datan.min';
+  function getVersion(){
+    return '1';
   }
 
   function legislature_current(){
