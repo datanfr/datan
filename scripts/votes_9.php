@@ -26,6 +26,8 @@
       $url = str_replace(array("/", "datan", "scripts", "votes_", ".php"), "", $url);
       $url_current = substr($url, 0, 1);
       $url_second = $url_current + 1;
+
+      include "include/legislature.php";
     ?>
 		<div class="container" style="background-color: #e9ecef;">
 			<div class="row">
@@ -39,106 +41,83 @@
 					<a class="btn btn-outline-secondary" href="http://<?php echo $_SERVER['SERVER_NAME']. ''.$_SERVER['REQUEST_URI'] ?>" role="button">Refresh</a>
 				</div>
 				<div class="col-4">
-					<a class="btn btn-outline-success" href="./votes_9.1.php" role="button">NEXT</a>
-				</div>
+          <?php if ($legislature_to_get == 15): ?>
+  					<a class="btn btn-outline-success" href="./votes_9.1.php" role="button">Next</a>
+  					<?php else: ?>
+  					<a class="btn btn-outline-success" href="./votes_9.1.php?legislature=<?= $legislature_to_get ?>" role="button">Next</a>
+  				<?php endif; ?>
+        </div>
 			</div>
 			<div class="row mt-3">
         <div class="col-12">
           <h2 class="bg-danger">This script needs to be refreshed until the table below is empty. The scripts automatically is automatically refreshed every 5 seconds.</h2>
-        <?php
+          <p>Legislature to get = <?= $legislature_to_get ?></p>
+          <?php
 
-        // CONNEXION SQL //
-        	include 'bdd-connexion.php';
+            // CONNEXION SQL //
+            include 'bdd-connexion.php';
 
-          $result = $bdd->query('
-          SELECT voteNumero
-          FROM votes_participation
-          ORDER BY voteNumero DESC
-          LIMIT 1
-          ');
-
-        while ($last = $result->fetch()) {
-          echo '<p>Last vote: '.$last['voteNumero'].'</p>';
-          $last_vote = $last['voteNumero'];
-          $until_vote = $last_vote + 10;
-          echo 'until vote = '.$until_vote.'<br>';
-          $legislature = 15;
-        }
-
-        if (!isset($until_vote)) {
-          echo 'rien dans la base';
-          $last_vote = 0;
-          $until_vote = 2;
-          $legislature = 15;
-        }
-
-        $bdd->query('SET SQL_BIG_SELECTS=1');
-
-        echo '<br>';
-
-        $votes = $bdd->query('
-          SELECT voteNumero, legislature, dateScrutin
-          FROM votes_info
-          WHERE voteNumero > "'.$last_vote.'" AND voteNumero <= "'.$until_vote.'" AND legislature = 15
-        ');
-
-        if ($votes->rowCount() == 0) {
-          $new_vote = $last_vote + 1;
-          $until_vote = $new_vote + 2;
-          echo "Need to jump a vote.<br>";
-          echo "NEW VOTE = ".$new_vote;
-          $votes = $bdd->query('
-            SELECT voteNumero, legislature, dateScrutin
-            FROM votes_info
-            WHERE voteNumero > "'.$new_vote.'" AND voteNumero <= "'.$until_vote.'" AND legislature = 15
-          ');
-        }
-
-        while ($vote = $votes->fetch()) {
-          echo '<h1>Chercher députés pour = '.$vote['voteNumero'].'</h1>';
-          $voteNumero = $vote['voteNumero'];
-          $voteDate = $vote['dateScrutin'];
-          echo 'date = '.$voteDate.'<br>';
-          echo 'voteNumero = '.$voteNumero.'<br>';
-          $deputes = $bdd->query('
-            SELECT *
-            FROM mandat_principal m
-            LEFT JOIN deputes d ON d.mpId = m.mpId
-            WHERE ((m.datePriseFonction < "'.$voteDate.'" AND m.dateFin > "'.$voteDate.'") OR (m.datePriseFonction < "'.$voteDate.'" AND m.dateFin IS NULL)) AND m.legislature = 15 AND m.typeOrgane = "ASSEMBLEE" AND m.codeQualite = "membre" AND m.preseance = 50
-          ');
-
-          $i = 1;
-          while ($depute = $deputes->fetch()) {
-            echo $i.' - '.$depute['mpId'].' - '.$vote['voteNumero'].' - voteId : '.$voteNumero.' - ';
-            $mpId = $depute['mpId'];
-            $voted = $bdd->query('
-              SELECT vote
-              FROM votes
-              WHERE mpId = "'.$mpId.'" AND legislature = 15 AND voteNumero = "'.$voteNumero.'"
-            ');
-
-            if ($voted->rowCount() > 0) {
-              while ($x = $voted->fetch()) {
-                $v = $x["vote"];
-              }
-              if ($v == "nv") {
-                $participation = NULL;
-              } else {
-                $participation = 1;
-              }
-            } else {
-              $participation = 0;
+            if ($legislature_to_get == 14) {
+              $votesLeft = $bdd->query('
+                SELECT voteNumero
+                FROM votes_info
+                WHERE legislature = 14 AND codeTypeVote IN ("SAT", "SPS", "MOC") AND voteNumero NOT IN (
+                  SELECT DISTINCT(voteNumero)
+                  FROM votes_participation
+                  WHERE legislature = 14 AND voteNumero
+                )
+                ORDER BY voteNumero ASC
+                LIMIT 3
+              ');
+            } elseif ($legislature_to_get == 15) {
+              $votesLeft = $bdd->query('
+                SELECT voteNumero
+                FROM votes_info
+                WHERE legislature = 15 AND voteNumero NOT IN (
+                  SELECT DISTINCT(voteNumero)
+                  FROM votes_participation
+                  WHERE legislature = 15 AND voteNumero
+                )
+                ORDER BY voteNumero ASC
+                LIMIT 3
+              ');
             }
 
-            echo 'participation = '.$participation.'<br>';
-            $i++;
+            $i = 1;
 
-            $sql = $bdd->prepare("INSERT INTO votes_participation (legislature, voteNumero, mpId, participation) VALUES (:legislature, :voteNumero, :mpId, :participation)");
-            $sql->execute(array('legislature' => $legislature, 'voteNumero' => $voteNumero, 'mpId' => $mpId, 'participation' => $participation));
-          }
-        }
 
-        ?>
+            while ($vote = $votesLeft->fetch()) {
+
+              $voteQuery = $bdd->query('
+                SELECT A.*, v.vote,
+                CASE
+                  WHEN vote IN ("1", "0", "-1") THEN 1
+                    WHEN vote = "nv" THEN NULL
+                    ELSE 0
+                END AS participation
+                FROM
+                (
+                SELECT vi.voteNumero, vi.legislature, mp.mpId
+                FROM votes_info vi
+                LEFT JOIN mandat_principal mp ON ((vi.dateScrutin BETWEEN mp.datePriseFonction AND mp.dateFin) OR (mp.datePriseFonction < vi.dateScrutin AND mp.dateFin IS NULL))
+                WHERE vi.legislature = "'.$legislature_to_get.'" AND vi.voteNumero = "'.$vote['voteNumero'].'"
+                ) A
+                LEFT JOIN votes v ON A.mpId = v.mpId AND A.legislature = v.legislature AND A.voteNumero = v.voteNumero
+              ');
+
+              while ($mp = $voteQuery->fetch()) {
+                echo $i." - ".$mp['legislature']." - ".$mp['voteNumero']." - ".$mp['mpId']." - ".$mp['participation']."<br>";
+
+                $sql = $bdd->prepare("INSERT INTO votes_participation (legislature, voteNumero, mpId, participation) VALUES (:legislature, :voteNumero, :mpId, :participation)");
+                $sql->execute(array('legislature' => $mp['legislature'], 'voteNumero' => $mp['voteNumero'], 'mpId' => $mp['mpId'], 'participation' => $mp['participation']));
+
+                $i++;
+              }
+
+            }
+
+
+          ?>
         </div>
       </div>
     </div>
