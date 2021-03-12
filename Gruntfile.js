@@ -113,7 +113,24 @@ module.exports = function (grunt) {
         ],
         dest: 'assets/js/main.min.js'
       }
-    }
+    },
+    watch: {
+      css: {
+        files: 'main.scss',
+        tasks: ['sass','purifycss', 'concat',],
+        options: {
+          livereload: true,
+        },
+      },
+      scripts: {
+        files: ['assets/js/main.js'],
+        tasks: ['uglify'],
+        options: {
+          spawn: false,
+        },
+
+      }
+    },
   });
 
   // Load the plugins
@@ -122,6 +139,7 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-contrib-sass');
   grunt.loadNpmTasks('grunt-contrib-concat');
+  grunt.loadNpmTasks('grunt-contrib-watch');
 
   // Default tasks. Mind the order
   grunt.registerTask('default', ['sass', 'purifycss', 'concat', 'critical', 'uglify']);
