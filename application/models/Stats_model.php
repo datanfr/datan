@@ -64,15 +64,15 @@
       return $query->result_array();
     }
 
-    public function get_age_mean(){
+    public function get_age_mean($legislature){
       $query = $this->db->query('
-      SELECT ROUND(AVG(A.age), 1) AS mean
-      FROM
-      (
-      SELECT d.age
-      FROM deputes_last d
-      WHERE d.legislature = '.legislature_current().' AND d.dateFin IS NOT NULL
-      ) A
+        SELECT ROUND(AVG(A.age), 1) AS mean
+        FROM
+        (
+          SELECT d.age
+          FROM deputes_last d
+          WHERE d.legislature = '.$legislature.' AND d.dateFin IS NOT NULL
+        ) A
       ');
 
       return $query->row_array();

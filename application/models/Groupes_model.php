@@ -80,7 +80,7 @@
       $query = $this->db->query('SELECT o.uid, o.libelle, o.libelleAbrev, o.couleurAssociee, e.effectif
         FROM organes o
         LEFT JOIN groupes_effectif e ON o.uid = e.organeRef
-        WHERE o.legislature = '.legislature_current().' AND o.coteType = "GP" AND o.dateFin IS NULL AND o.libelle != "Non inscrit" 
+        WHERE o.legislature = '.legislature_current().' AND o.coteType = "GP" AND o.dateFin IS NULL AND o.libelle != "Non inscrit"
         ORDER BY RAND()
         LIMIT 1
       ');
@@ -325,13 +325,14 @@
       return $query->row_array();
     }
 
-    public function get_stats_avg(){
+    public function get_stats_avg($legislature){
       $query = $this->db->query('
         SELECT
           ROUND(AVG(cohesion), 2) AS cohesion,
           ROUND(AVG(participation) * 100) AS participation,
           ROUND(AVG(majoriteAccord) * 100) AS majorite
         FROM class_groups
+        WHERE legislature = "'.$legislature.'"
       ');
 
       return $query->row_array();
