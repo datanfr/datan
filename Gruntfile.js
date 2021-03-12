@@ -101,7 +101,7 @@ module.exports = function (grunt) {
       },
       dist: {
         files: {
-          "assets/js/main.js": "assets/js/main.js",
+          "assets/js/main-es5.js": "assets/js/main.js",
         },
       },
     },
@@ -120,7 +120,7 @@ module.exports = function (grunt) {
       },
       main: {
         src: [
-          'assets/js/main.js'
+          'assets/js/main-es5.js'
         ],
         dest: 'assets/js/main.min.js'
       }

@@ -39,3 +39,5 @@ assets/imgs/deputes_webp/*.webp
 assets/data/deputes_json.json
 
 assets/css/bootstrap*
+assets/js/main-es5*
+
