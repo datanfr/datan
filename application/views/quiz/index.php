@@ -15,15 +15,15 @@
                 <h2><?= $vote['voteTitre'] ?></h2>
                 <h3>Auriez-vous été pour ou contre ?</h3>
                 <div class="custom-control custom-radio custom-control-inline">
-                    <input type="radio" id="prochoice[<?= $vote['voteNumero'] ?>]" value="1" name="<?= $vote['voteNumero'] ?>[choice]" class="custom-control-input">
+                    <input type="radio" required id="prochoice[<?= $vote['voteNumero'] ?>]" value="1" name="<?= $vote['voteNumero'] ?>[choice]" class="custom-control-input">
                     <label class="custom-control-label" for="prochoice[<?= $vote['voteNumero'] ?>]" >Pour</label>
                 </div>
                 <div class="custom-control custom-radio custom-control-inline">
-                    <input type="radio" id="conchoice[<?= $vote['voteNumero'] ?>]" value="-1" name="<?= $vote['voteNumero'] ?>[choice]" class="custom-control-input">
+                    <input type="radio" required id="conchoice[<?= $vote['voteNumero'] ?>]" value="-1" name="<?= $vote['voteNumero'] ?>[choice]" class="custom-control-input">
                     <label class="custom-control-label" for="conchoice[<?= $vote['voteNumero'] ?>]" >Contre</label>
                 </div>
                 <div class="custom-control custom-radio custom-control-inline">
-                    <input type="radio" id="nochoice[<?= $vote['voteNumero'] ?>]" value="0" name="<?= $vote['voteNumero'] ?>[choice]" class="custom-control-input">
+                    <input type="radio" required id="nochoice[<?= $vote['voteNumero'] ?>]" value="0" name="<?= $vote['voteNumero'] ?>[choice]" class="custom-control-input">
                     <label class="custom-control-label" for="nochoice[<?= $vote['voteNumero'] ?>]" >Ne se prononce pas</label>
                 </div>
                 <div class="form-group">

@@ -67,22 +67,22 @@ $(document).ready(function () {
 */
 // init Flickity
 
-var $carousel = $('.carousel-cards').flickity({
-  prevNextButtons: false,
-  pageDots: false,
-  freeScroll: true,
-  contain: true
-}); // Flickity instance
+// var $carousel = $('.carousel-cards').flickity({
+//   prevNextButtons: false,
+//   pageDots: false,
+//   freeScroll: true,
+//   contain: true
+// }); // Flickity instance
 
-var flkty = $carousel.data('flickity'); // previous
+// var flkty = $carousel.data('flickity'); // previous
 
-$('.button--previous').on('click', function () {
-  $carousel.flickity('previous');
-}); // next
+// $('.button--previous').on('click', function () {
+//   $carousel.flickity('previous');
+// }); // next
 
-$('.button--next').on('click', function () {
-  $carousel.flickity('next');
-});
+// $('.button--next').on('click', function () {
+//   $carousel.flickity('next');
+// });
 /*
 ################
                 no-img (votes controller)
