@@ -68,10 +68,10 @@
      CSS -->
     <?php if (isset($critical_css)): ?>
       <style type="text/css"><?php include $critical_css ?></style>
-      <link rel="stylesheet" href="<?= css_url() ?>/main.css?v=<?= getVersion() ?>" media="print" onload="this.media='all'">
-      <noscript><link rel="stylesheet" type="text/css" href="<?= css_url() ?>/main.css?v=<?= getVersion() ?>"></noscript>
+      <link rel="stylesheet" href="<?= css_url() ?>main.css?v=<?= getVersion() ?>" media="print" onload="this.media='all'">
+      <noscript><link rel="stylesheet" type="text/css" href="<?= css_url() ?>main.css?v=<?= getVersion() ?>"></noscript>
       <?php else: ?>
-      <link rel="stylesheet" type="text/css" href="<?= css_url() ?>/main.css?v=<?= getVersion() ?>">
+      <link rel="stylesheet" type="text/css" href="<?= css_url() ?>main.css?v=<?= getVersion() ?>">
     <?php endif; ?>
     <!-- GOOGLE FONTS -->
     <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin>
