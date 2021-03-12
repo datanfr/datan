@@ -25,6 +25,8 @@
       $url = str_replace(array("/", "datan", "scripts", "votes_", ".php"), "", $url);
       $url_current = substr($url, 0, 2);
       $url_second = $url_current + 1;
+
+      include "include/legislature.php";
     ?>
 		<div class="container" style="background-color: #e9ecef;">
 			<div class="row">

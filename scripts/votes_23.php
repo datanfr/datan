@@ -18,6 +18,8 @@
       $url = str_replace(array("/", "datan", "scripts", "votes_", ".php"), "", $url);
       $url_current = substr($url, 0, 2);
       $url_second = $url_current + 1;
+
+      include "include/legislature.php";
     ?>
 		<div class="container" style="background-color: #e9ecef;">
 			<div class="row">
@@ -31,34 +33,38 @@
 					<a class="btn btn-outline-secondary" href="http://<?php echo $_SERVER['SERVER_NAME']. ''.$_SERVER['REQUEST_URI'] ?>" role="button">Refresh</a>
 				</div>
 				<div class="col-4">
-					<a class="btn btn-outline-success" href="./votes_<?= $url_second ?>.php" role="button">NEXT</a>
-				</div>
+          <?php if ($legislature_to_get == 15): ?>
+  					<a class="btn btn-outline-success" href="./votes_<?= $url_second ?>.php" role="button">Next</a>
+  					<?php else: ?>
+  					<a class="btn btn-outline-success" href="./votes_<?= $url_second ?>.php?legislature=<?= $legislature_to_get ?>" role="button">Next</a>
+  				<?php endif; ?>
+        </div>
 			</div>
 			<div class="row mt-3">
         <div class="col-12">
           <h2 class="bg-success">Run this script only once.</h2>
+          <p class="bg-warning">This scripts does not depend on legislature. All legislatures are managed by a single script. </p>
           <table class="table">
             <thead>
                 <tr>
                   <th scope="col">#</th>
                   <th>offset</th>
+                  <th>legislature</th>
                   <th>num</th>
                   <th>href</th>
                   <th>dossier</th>
                 </tr>
               </thead>
               <tbody>
-        				<?php
+        			<?php
                 include "lib/simplehtmldom_1_9/simple_html_dom.php";
                 include "bdd-connexion.php";
                 ini_set('memory_limit', '1024M'); // or you could use 1G
 
-                $bdd->query('
-                  TRUNCATE TABLE votes_dossiers
-                ');
+                $bdd->query('DELETE FROM votes_dossiers WHERE legislature = "'.$legislature_to_get.'"');
 
                 //Until where to go?
-                $until_html = file_get_html("http://www2.assemblee-nationale.fr/scrutins/liste/(legislature)/15/(type)/TOUS/(idDossier)/TOUS");
+                $until_html = file_get_html("http://www2.assemblee-nationale.fr/scrutins/liste/(legislature)/'.$legislature_to_get.'/(type)/TOUS/(idDossier)/TOUS");
                 $pagination = $until_html->find('.pagination-bootstrap ul', 0);
                 $last = $pagination->find('li', -2)->plaintext;
                 $until = ($last-1)*100;
@@ -69,7 +75,7 @@
                 $i = 1;
 
                 foreach ($offsets as $offset) {
-                  $url = "http://www2.assemblee-nationale.fr/scrutins/liste/(offset)/".$offset."/(legislature)/15/(type)/TOUS/(idDossier)/TOUS";
+                  $url = "http://www2.assemblee-nationale.fr/scrutins/liste/(offset)/".$offset."/(legislature)/".$legislature_to_get."/(type)/TOUS/(idDossier)/TOUS";
                   //echo "<br>Offset = ".$offset;
                   //echo "<br>URL = ".$url;
 
@@ -113,6 +119,7 @@
                     <tr>
                       <td><?= $i ?></td>
                       <td><?= $offset ?></td>
+                      <td><?= $legislature_to_get ?></td>
                       <td><?= $voteNumero ?></td>
                       <td><?= $href ?></td>
                       <td><?= $dossier ?></td>
@@ -120,15 +127,15 @@
                     <?php
 
                     // INSERT INTO THE DATABASE HERE
-                    $sql = $bdd->prepare("INSERT INTO votes_dossiers (offset_num, voteNumero, href, dossier) VALUES (:offset_num, :voteNumero, :href, :dossier)");
-                    $sql->execute(array('offset_num' => $offset, 'voteNumero' => $voteNumero, 'href' => $href, 'dossier' => $dossier));
+                    $sql = $bdd->prepare("INSERT INTO votes_dossiers (offset_num, legislature, voteNumero, href, dossier) VALUES (:offset_num, :legislature, :voteNumero, :href, :dossier)");
+                    $sql->execute(array('offset_num' => $offset, 'legislature' => $legislature_to_get, 'voteNumero' => $voteNumero, 'href' => $href, 'dossier' => $dossier));
 
                     $i++;
                   }
 
                 }
 
-                ?>
+              ?>
             </tbody>
           </table>
         </div>
