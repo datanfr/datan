@@ -29,3 +29,6 @@ Lancez grunt pour compiler les fichiers scss et js
 grunt
 Qaund vous travaillez sur main.scss ou main.js lancez grunt watch pour que ça recompile à chaque changement
 grunt watch 
+## Windows
+Il faut au préalable installer Ruby et possiblement lancer "gem install sass"
+Si problème de permissions supprimer le dossier .sass-cache
