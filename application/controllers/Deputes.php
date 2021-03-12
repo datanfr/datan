@@ -510,7 +510,7 @@
       $data['fields'] = $this->fields_model->get_active_fields();
       foreach ($data['fields'] as $key => $field) {
         // Get votes by field
-        $x[$field["slug"]] = $this->votes_model->get_votes_datan_depute_field($depute_uid, $field['slug']);
+        $x[$field["slug"]] = $this->votes_model->get_votes_datan_depute_field($depute_uid, $field['slug'], 2);
         if (!empty($x[$field["slug"]])) {
           $data['fields_voted'][] = $field;
         }
@@ -599,7 +599,7 @@
       }
 
       // Query - get active votes
-      $data['votes'] = $this->votes_model->get_votes_datan_depute_field($depute_uid, $field);
+      $data['votes'] = $this->votes_model->get_votes_datan_depute_field($depute_uid, $field, FALSE);
 
       if (empty($data['votes'])) {
         show_404();
