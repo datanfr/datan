@@ -162,63 +162,28 @@
       return $query->result_array();
     }
 
-    public function get_mps_loyalty(){
+    public function get_mps_loyalty($legislature){
       $query = $this->db->query('
-      SELECT @s:=@s+1 AS "classement", A.*
-      FROM
-      (
-      SELECT cl.mpId, ROUND(cl.score*100) AS score, cl.votesN, da.civ, da.nameLast, da.nameFirst, da.nameUrl, da.libelle, da.libelleAbrev, da.dptSlug, da.couleurAssociee, da.departementNom, da.departementCode
-      FROM class_loyaute cl
-      LEFT JOIN deputes_all da ON cl.mpId = da.mpId
-      WHERE da.legislature = '.legislature_current().' AND da.dateFin IS NULL
-      ORDER BY score DESC, votesN DESC
-      ) A,
-      (SELECT @s:= 0) AS s
+        SELECT @s:=@s+1 AS "rank", A.*
+        FROM
+        (
+        SELECT cl.mpId, ROUND(cl.score*100) AS score, cl.votesN, da.civ, da.nameLast, da.nameFirst, da.nameUrl, da.libelle, da.libelleAbrev, da.dptSlug, da.couleurAssociee, da.departementNom, da.departementCode
+        FROM class_loyaute cl
+        LEFT JOIN deputes_all da ON cl.mpId = da.mpId AND cl.legislature = da.legislature
+        WHERE da.legislature = '.$legislature.' AND da.dateFin IS NULL
+        ORDER BY score DESC, votesN DESC
+        ) A,
+        (SELECT @s:= 0) AS s
       ');
 
       return $query->result_array();
     }
 
-    public function get_mps_loyalty_more(){
-      $query = $this->db->query('
-      SELECT  @s:=@s+1 AS "rank", ROUND(A.score * 100) AS score, da.nameLast, da.nameFirst, da.nameUrl, da.libelle, da.libelleAbrev, da.groupeId, da.dptSlug
-      FROM
-      (
-      SELECT *
-      FROM class_loyaute
-      WHERE active = 1
-      ORDER BY score DESC, votesN DESC
-      LIMIT 3
-      ) A
-      LEFT JOIN deputes_all da ON A.mpId = da.mpId AND legislature = '.legislature_current().',
-      (SELECT @s:= 0) AS s
-      ');
-
-      return $query->result_array();
-    }
-
-    public function get_mps_loyalty_less(){
-      $query = $this->db->query('
-      SELECT  @s:=@s+1 AS "rank", ROUND(A.score * 100) AS score, da.nameLast, da.nameFirst, da.nameUrl, da.libelle, da.libelleAbrev, da.groupeId, da.dptSlug
-      FROM
-      (
-      SELECT *
-      FROM class_loyaute
-      WHERE active = 1
-      ORDER BY score ASC, votesN DESC
-      LIMIT 3
-      ) A
-      LEFT JOIN deputes_all da ON A.mpId = da.mpId AND legislature = '.legislature_current().',
-      (SELECT @s:= 0) AS s
-      ');
-
-      return $query->result_array();
-    }
-
-    public function get_loyalty_mean(){
+    public function get_loyalty_mean($legislature){
       $query = $this->db->query('
         SELECT ROUND(AVG(score)*100) AS mean
         FROM class_loyaute
+        WHERE legislature = "'.$legislature.'"
       ');
 
       return $query->row_array();
@@ -233,7 +198,7 @@
           FROM groupes_stats gs
           LEFT JOIN organes o ON o.uid = gs.organeRef
           LEFT JOIN groupes_effectif ge ON ge.organeRef  = gs.organeRef
-          WHERE dateFin IS NULL
+          WHERE dateFin IS NULL AND o.legislature = '.legislature_current().'
         ) A,
         (SELECT @s:= 0) AS s
         ORDER BY A.age DESC
@@ -255,7 +220,6 @@
       ) A,
       (SELECT @s:= 0) AS s
       ORDER BY A.cohesion DESC
-
       ');
 
       return $query->result_array();
@@ -268,8 +232,8 @@
       (
         SELECT cp.*, da.nameFirst, da.nameLast, da.civ, da.libelle, da.libelleAbrev, da.dptSlug, da.nameUrl, da.couleurAssociee, da.departementNom, da.departementCode
         FROM class_participation cp
-        LEFT JOIN deputes_all da ON cp.mpId = da.mpId AND da.legislature = '.legislature_current().'
-        WHERE votesN >= 100 AND da.dateFin IS NULL
+        LEFT JOIN deputes_all da ON cp.mpId = da.mpId AND da.legislature = cp.legislature
+        WHERE votesN >= 100 AND da.dateFin IS NULL AND cp.legislature = '.legislature_current().'
       ) A,
       (SELECT @s:= 0) AS s
       ORDER BY A.score DESC, A.votesN DESC
@@ -297,10 +261,11 @@
       return $query->result_array();
     }
 
-    public function get_mps_participation_mean(){
+    public function get_mps_participation_mean($legislature){
       $query = $this->db->query('
         SELECT ROUND(AVG(score) * 100) AS mean
         FROM class_participation
+        WHERE legislature = '.$legislature.'
       ');
 
       return $query->row_array('');
