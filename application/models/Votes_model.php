@@ -595,7 +595,7 @@
 
     public function get_votes_result_by_depute($voteNumeros){
       $query = $this->db->query('SELECT votes.voteNumero, organes.libelle, deputes_all.nameFirst, 
-      deputes_all.nameLast, votes.vote, organes.uid, deputes_all.mpId FROM `votes` 
+      deputes_all.nameLast, votes.vote, organes.uid, deputes_all.mpId, organes.couleurAssociee FROM `votes` 
       LEFT JOIN mandat_principal ON votes.mandatId=mandat_principal.mandatId 
       LEFT JOIN deputes_all ON votes.mandatId=deputes_all.mandatId 
       LEFT JOIN organes ON deputes_all.groupeId=organes.uid 
