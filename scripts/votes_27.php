@@ -25,6 +25,8 @@
       $url = str_replace(array("/", "datan", "scripts", "votes_", ".php"), "", $url);
       $url_current = substr($url, 0, 2);
       $url_second = $url_current + 1;
+
+      include "include/legislature.php";
     ?>
 		<div class="container" style="background-color: #e9ecef;">
 			<div class="row">
@@ -38,15 +40,20 @@
 					<a class="btn btn-outline-secondary" href="http://<?php echo $_SERVER['SERVER_NAME']. ''.$_SERVER['REQUEST_URI'] ?>" role="button">Refresh</a>
 				</div>
 				<div class="col-4">
-					<a class="btn btn-outline-success" href="./votes_<?= $url_second ?>.php" role="button">Next</a>
-				</div>
+          <?php if ($legislature_to_get == 15): ?>
+  					<a class="btn btn-outline-success" href="./votes_<?= $url_second ?>.php" role="button">Next</a>
+  					<?php else: ?>
+  					<a class="btn btn-outline-success" href="./votes_<?= $url_second ?>.php?legislature=<?= $legislature_to_get ?>" role="button">Next</a>
+  				<?php endif; ?>
+        </div>
 			</div>
 			<div class="row mt-3">
         <div class="col-12">
           <h2 class="bg-success">Run this script only once.</h2>
+          <p class="bg-warning">This scripts does not depend on legislature. All legislatures are managed by a single script. </p>
           <?php
 
-          // CONNEXION SQL //
+            // CONNEXION SQL //
           	include 'bdd-connexion.php';
 
             $bdd->query('
@@ -55,12 +62,13 @@
               SELECT A.*
               FROM
               (
-                SELECT da.mpId, da.organeRef, ROUND(AVG(da.accord)*100) AS accord, COUNT(da.accord) AS votesN
+                SELECT da.mpId, da.legislature, da.organeRef, ROUND(AVG(da.accord)*100) AS accord, COUNT(da.accord) AS votesN
                 FROM deputes_accord da
                 GROUP BY da.mpId, da.organeRef
               ) A
               WHERE A.accord IS NOT NULL;
               ALTER TABLE deputes_accord_cleaned ADD INDEX idx_mpId (mpId);
+              ALTER TABLE deputes_accord_cleaned ADD INDEX idx_legislature (legislature);
             ');
 
           ?>

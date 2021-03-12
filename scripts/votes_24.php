@@ -19,6 +19,8 @@
       $url = str_replace(array("/", "datan", "scripts", "votes_", ".php"), "", $url);
       $url_current = substr($url, 0, 2);
       $url_second = $url_current + 1;
+
+      include "include/legislature.php";
     ?>
 		<div class="container" style="background-color: #e9ecef;">
 			<div class="row">
@@ -32,12 +34,17 @@
 					<a class="btn btn-outline-secondary" href="http://<?php echo $_SERVER['SERVER_NAME']. ''.$_SERVER['REQUEST_URI'] ?>" role="button">Refresh</a>
 				</div>
 				<div class="col-4">
-					<a class="btn btn-outline-success" href="./votes_<?= $url_second ?>.php" role="button">NEXT</a>
-				</div>
+          <?php if ($legislature_to_get == 15): ?>
+  					<a class="btn btn-outline-success" href="./votes_<?= $url_second ?>.php" role="button">Next</a>
+  					<?php else: ?>
+  					<a class="btn btn-outline-success" href="./votes_<?= $url_second ?>.php?legislature=<?= $legislature_to_get ?>" role="button">Next</a>
+  				<?php endif; ?>
+        </div>
 			</div>
 			<div class="row mt-3">
         <div class="col-12">
           <h2 class="bg-success">Run this script only once.</h2>
+          <p>Legislature to get = <?= $legislature_to_get ?></p>
           <table class="table">
             <thead>
                 <tr>
@@ -61,52 +68,115 @@
           				include 'bdd-connexion.php';
 
                   $bdd->query('
-                    TRUNCATE TABLE dossiers
+                    DELETE FROM dossiers WHERE legislature = "'.$legislature_to_get.'"
                   ');
 
-                  // Online file
-                  $file = 'http://data.assemblee-nationale.fr/static/openData/repository/15/loi/dossiers_legislatifs/Dossiers_Legislatifs_XV.xml.zip';
-                  $file = trim($file);
-                  $newfile = 'tmp_dossiers.zip';
-                  if (!copy($file, $newfile)) {
-                    echo "failed to copy $file...\n";
-                  }
+                  if ($legislature_to_get == 15) {
 
-                  $zip = new ZipArchive();
-                  if ($zip->open($newfile)!==TRUE) {
-                    exit("cannot open <$filename>\n");
-                  } else {
+                    // Online file
+                    $file = 'http://data.assemblee-nationale.fr/static/openData/repository/15/loi/dossiers_legislatifs/Dossiers_Legislatifs_XV.xml.zip';
+                    $file = trim($file);
+                    $newfile = 'tmp_dossiers.zip';
+                    if (!copy($file, $newfile)) {
+                      echo "failed to copy $file...\n";
+                    }
 
-                    for ($i=0; $i < $zip->numFiles ; $i++) {
-                      $filename = $zip->getNameIndex($i);
-                      //echo 'Filename: ' . $filename . '<br />';
-                      $sub = substr($filename, 0, 13);
+                    $zip = new ZipArchive();
+                    if ($zip->open($newfile)!==TRUE) {
+                      exit("cannot open <$filename>\n");
+                    } else {
 
-                      if ($sub == 'xml/dossierPa') {
-                        $xml_string = $zip->getFromName($filename);
+                      for ($i=0; $i < $zip->numFiles ; $i++) {
+                        $filename = $zip->getNameIndex($i);
+                        //echo 'Filename: ' . $filename . '<br />';
+                        $sub = substr($filename, 0, 13);
 
-                        if ($xml_string != false) {
-                          $xml = simplexml_load_string($xml_string);
+                        if ($sub == 'xml/dossierPa') {
+                          $xml_string = $zip->getFromName($filename);
 
-                          $dossierId = $xml->uid;
-                          $legislature = $xml->legislature;
-                          $titre = $xml->titreDossier->titre;
-                          $titreChemin = $xml->titreDossier->titreChemin;
-                          $senatChemin = $xml->titreDossier->senatChemin;
-                          $procedureParlementaireCode = $xml->procedureParlementaire->code;
-                          $procedureParlementaireLibelle = $xml->procedureParlementaire->libelle;
+                          if ($xml_string != false) {
+                            $xml = simplexml_load_string($xml_string);
 
-                          $commissionFond = $xml->xpath("//*[text()='AN1-COM-FOND']/parent::*[local-name()='acteLegislatif']/*[local-name()='organeRef']");
+                            $dossierId = $xml->uid;
+                            $legislature = $xml->legislature;
+                            $titre = $xml->titreDossier->titre;
+                            $titreChemin = $xml->titreDossier->titreChemin;
+                            $senatChemin = $xml->titreDossier->senatChemin;
+                            $procedureParlementaireCode = $xml->procedureParlementaire->code;
+                            $procedureParlementaireLibelle = $xml->procedureParlementaire->libelle;
+
+                            $commissionFond = $xml->xpath("//*[text()='AN1-COM-FOND']/parent::*[local-name()='acteLegislatif']/*[local-name()='organeRef']");
+                            if (!empty($commissionFond)) {
+                              $commissionFond = $commissionFond[0];
+                            } else {
+                              $commissionFond = NULL;
+                            }
+
+
+                            //INITIATEUR (BUT DIFFERENT ONES?)
+                            //GET REPORT TEXT
+                            //GET FINAL TEXT / JO promulgation.;
+
+                            ?>
+
+                            <tr>
+                              <td><?= $i ?></td>
+                              <td><?= $dossierId ?></td>
+                              <td><?= $legislature ?></td>
+                              <td><?= $titre ?></td>
+                              <td><?= $titreChemin ?></td>
+                              <td><?= $senatChemin ?></td>
+                              <td><?= $procedureParlementaireCode ?></td>
+                              <td><?= $procedureParlementaireLibelle ?></td>
+                              <td>jo</td>
+                              <td><?= $commissionFond ?></td>
+                            </tr>
+
+                            <?php
+
+                            // INSERT INTO SQLiteDatabase
+                            $sql = $bdd->prepare("INSERT INTO dossiers (dossierId, legislature, titre, titreChemin, senatChemin, procedureParlementaireCode, procedureParlementaireLibelle, commissionFond) VALUES (:dossierId, :legislature, :titre, :titreChemin, :senatChemin, :procedureParlementaireCode, :procedureParlementaireLibelle, :commissionFond)");
+                            $sql->execute(array('dossierId' => $dossierId, 'legislature' => $legislature, 'titre' => $titre, 'titreChemin' => $titreChemin, 'senatChemin' => $senatChemin, 'procedureParlementaireCode' => $procedureParlementaireCode, 'procedureParlementaireLibelle' => $procedureParlementaireLibelle, 'commissionFond' => $commissionFond));
+
+                          }
+                        }
+                      }
+                    }
+                  } elseif ($legislature_to_get == 14) {
+
+                    // Online file
+                    $file = 'https://data.assemblee-nationale.fr/static/openData/repository/14/loi/dossiers_legislatifs/Dossiers_Legislatifs_XIV.xml.zip';
+                    $file = trim($file);
+                    $newfile = 'tmp_dossiers_14.zip';
+                    if (!copy($file, $newfile)) {
+                      echo "failed to copy $file...\n";
+                    }
+
+                    $zip = new ZipArchive();
+                    if ($zip->open($newfile)!==TRUE) {
+                      exit("cannot open <$filename>\n");
+                    } else {
+                      $xml_string = $zip->getFromName("Dossiers_Legislatifs_XIV.xml");
+                      if ($xml_string != false) {
+                        $xml = simplexml_load_string($xml_string);
+
+                        $i = 1;
+
+                        foreach ($xml->xpath("//*[local-name()='dossierParlementaire']") as $dossier) {
+                          $dossierId = $dossier->uid;
+                          $legislature = $dossier->legislature;
+                          $titre = $dossier->titreDossier->titre;
+                          $titreChemin = $dossier->titreDossier->titreChemin;
+                          $senatChemin = $dossier->titreDossier->senatChemin;
+                          $procedureParlementaireCode = $dossier->procedureParlementaire->code;
+                          $procedureParlementaireLibelle = $dossier->procedureParlementaire->libelle;
+
+                          $commissionFond = $dossier->xpath(".//*[text()='AN1-COM-FOND']/parent::*[local-name()='acteLegislatif']/*[local-name()='organeRef']");
                           if (!empty($commissionFond)) {
                             $commissionFond = $commissionFond[0];
                           } else {
                             $commissionFond = NULL;
                           }
-
-
-                          //INITIATEUR (BUT DIFFERENT ONES?)
-                          //GET REPORT TEXT
-                          //GET FINAL TEXT / JO promulgation.;
 
                           ?>
 
@@ -125,13 +195,15 @@
 
                           <?php
 
+                          $i++;
+
                           // INSERT INTO SQLiteDatabase
                           $sql = $bdd->prepare("INSERT INTO dossiers (dossierId, legislature, titre, titreChemin, senatChemin, procedureParlementaireCode, procedureParlementaireLibelle, commissionFond) VALUES (:dossierId, :legislature, :titre, :titreChemin, :senatChemin, :procedureParlementaireCode, :procedureParlementaireLibelle, :commissionFond)");
                           $sql->execute(array('dossierId' => $dossierId, 'legislature' => $legislature, 'titre' => $titre, 'titreChemin' => $titreChemin, 'senatChemin' => $senatChemin, 'procedureParlementaireCode' => $procedureParlementaireCode, 'procedureParlementaireLibelle' => $procedureParlementaireLibelle, 'commissionFond' => $commissionFond));
 
+
                         }
                       }
-
                     }
                   }
 
