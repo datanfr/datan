@@ -301,7 +301,7 @@
         END AS vote_libelle,
         CASE
         	WHEN A.scoreLoyaute = 1 THEN "loyal"
-        	WHEN A.scoreLoyaute = 0 THEN "rebel"
+        	WHEN A.scoreLoyaute = 0 THEN "rebelle"
         ELSE NULL
         END AS loyaute_libelle,
         da.nameFirst, da.nameLast, da.nameUrl, da.dptSlug,
@@ -431,7 +431,7 @@
       END AS vote,
       CASE
       	WHEN A.scoreLoyaute = 1 THEN "loyal"
-      	WHEN A.scoreLoyaute = 0 THEN "rebel"
+      	WHEN A.scoreLoyaute = 0 THEN "rebelle"
       ELSE NULL END AS loyaute
       FROM
       (
