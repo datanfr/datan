@@ -77,11 +77,11 @@
     }
 
     public function get_groupe_random(){
-      $query = $this->db->query('SELECT o.uid, o.libelle, o.libelleAbrev, o.couleurAssociee, e.effectif 
-        FROM organes o 
-        LEFT JOIN groupes_effectif e ON o.uid = e.organeRef 
-        WHERE o.legislature = 15 AND o.coteType = "GP" AND o.dateFin IS NULL AND o.libelle != "Non inscrit" 
-        ORDER BY RAND() 
+      $query = $this->db->query('SELECT o.uid, o.libelle, o.libelleAbrev, o.couleurAssociee, e.effectif
+        FROM organes o
+        LEFT JOIN groupes_effectif e ON o.uid = e.organeRef
+        WHERE o.legislature = '.legislature_current().' AND o.coteType = "GP" AND o.dateFin IS NULL AND o.libelle != "Non inscrit" 
+        ORDER BY RAND()
         LIMIT 1
       ');
 
@@ -109,16 +109,16 @@
 
     public function get_groupes_president($groupe_uid, $active){
       if ($active) {
-        $query = $this->db->query('SELECT mg.mpId, mg.dateDebut, date_format(mg.dateDebut, "%d %M %Y") as dateDebutFR, 
-        mg.dateFin, mg.codeQualite, mg.libQualiteSex, civ, 
-        d.nameFirst, d.nameLast, d.nameUrl, 
-        dpt.slug AS dpt_slug, dpt.departement_nom, dpt.departement_code 
-        FROM mandat_groupe mg 
-        LEFT JOIN deputes d ON d.mpId = mg.mpId 
-        LEFT JOIN mandat_principal mp ON mp.mpId = mg.mpId 
-        LEFT JOIN departement dpt ON mp.electionDepartementNumero = dpt.departement_code 
-        WHERE organeRef = "'.$groupe_uid.'" AND mg.preseance = 1 AND mp.legislature = 15 
-        AND mp.typeOrgane = "ASSEMBLEE" AND mp.dateFin IS NULL AND mg.dateFin IS NULL 
+        $query = $this->db->query('SELECT mg.mpId, mg.dateDebut, date_format(mg.dateDebut, "%d %M %Y") as dateDebutFR,
+        mg.dateFin, mg.codeQualite, mg.libQualiteSex, civ,
+        d.nameFirst, d.nameLast, d.nameUrl,
+        dpt.slug AS dpt_slug, dpt.departement_nom, dpt.departement_code
+        FROM mandat_groupe mg
+        LEFT JOIN deputes d ON d.mpId = mg.mpId
+        LEFT JOIN mandat_principal mp ON mp.mpId = mg.mpId
+        LEFT JOIN departement dpt ON mp.electionDepartementNumero = dpt.departement_code
+        WHERE organeRef = "'.$groupe_uid.'" AND mg.preseance = 1 AND mp.legislature = 15
+        AND mp.typeOrgane = "ASSEMBLEE" AND mp.dateFin IS NULL AND mg.dateFin IS NULL
         LIMIT 1
         ');
       } else {
