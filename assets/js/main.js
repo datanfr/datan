@@ -11,7 +11,7 @@ $(document).ready(function(){
   $(".img-lazy").unveil();
 });
 
-$(function(){<!--from  w ww .j  a  v a  2s  .c  o  m-->
+$(function(){
 // prevents jumping
 $("a.pop-me-over").on("click", function (e) {
     e.preventDefault();
