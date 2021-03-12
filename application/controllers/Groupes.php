@@ -194,8 +194,6 @@
         $data['no_majorite'] = TRUE;
       }
 
-
-
       if (isset($data['stats_majorite'])) {
         $data['stats_majorite_moyenne'] = $this->groupes_model->get_stats_majorite_moyenne($data['active']);
         $data['edito_majorite'] = $this->groupes_edito->majorite($data['stats_majorite']['score'], $data['stats_majorite_moyenne']['moyenne']);
