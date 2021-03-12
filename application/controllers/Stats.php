@@ -14,13 +14,14 @@
     public function index(){
       $data['mps_oldest'] = $this->stats_model->get_mps_oldest();
       $data['mps_youngest'] = $this->stats_model->get_mps_youngest();
-      $data['age_mean'] = $this->stats_model->get_age_mean();
+      $data['age_mean'] = $this->stats_model->get_age_mean(legislature_current());
       $data['groups_women_more'] = $this->stats_model->get_groups_women_more();
       $data['groups_women_less'] = $this->stats_model->get_groups_women_less();
       $data['women_mean'] = $this->deputes_model->get_deputes_gender(legislature_current());
-      $data['mps_loyalty_more'] = $this->stats_model->get_mps_loyalty_more();
-      $data['mps_loyalty_less'] = $this->stats_model->get_mps_loyalty_less();
-      $data['loyalty_mean'] = $this->stats_model->get_loyalty_mean();
+      $data['mps_loyalty'] = $this->stats_model->get_mps_loyalty(legislature_current());
+      $data['mps_loyalty_more'] = array_slice($data['mps_loyalty'], 0, 3);
+      $data['mps_loyalty_less'] = array_slice($data['mps_loyalty'], -3);
+      $data['loyalty_mean'] = $this->stats_model->get_loyalty_mean(legislature_current());
       $data['groups_age'] = $this->stats_model->get_groups_age();
       $data['groups_age_oldest'] = array_slice($data['groups_age'], 0, 1);
       $data['groups_age_oldest'] = $data['groups_age_oldest'][0];
@@ -41,7 +42,7 @@
       $data['mps_participation'] = $this->stats_model->get_mps_participation();
       $data['mps_participation_first'] = array_slice($data['mps_participation'], 0, 3);
       $data['mps_participation_last'] = array_slice($data['mps_participation'], -3);
-      $data['mps_participation_mean'] = $this->stats_model->get_mps_participation_mean();
+      $data['mps_participation_mean'] = $this->stats_model->get_mps_participation_mean(legislature_current());
       $data['mps_participation_mean'] = $data['mps_participation_mean']['mean'];
       $data['groups_participation'] = $this->stats_model->get_groups_participation();
       $data['groups_participation_first'] = array_slice($data['groups_participation'], 0, 1);
@@ -85,7 +86,7 @@
 
       if ($url == "deputes-age") {
         // Data
-        $data['ageMean'] = $this->stats_model->get_age_mean();
+        $data['ageMean'] = $this->stats_model->get_age_mean(legislature_current());
         $data['ageMean'] = round($data['ageMean']['mean']);
         $data['ageMeanPop'] = 42;
         $data['ageDiff'] = $data['ageMean'] - $data['ageMeanPop'];
@@ -135,7 +136,7 @@
         $data['title'] = "Le taux de féminisation des groupes parlementaires";
       } elseif ($url == "deputes-loyaute") {
         // TO DO --> Data --> REVIEW_COULEURASSOCIEE
-        $data['deputes'] = $this->stats_model->get_mps_loyalty();
+        $data['deputes'] = $this->stats_model->get_mps_loyalty(legislature_current());
         $data['mpLoyal'] = array_slice($data['deputes'], 0, 1);
         $data['mpLoyal'] = $data['mpLoyal'][0];
         $data['mpLoyal']['name'] = $data['mpLoyal']['nameFirst']." ".$data['mpLoyal']['nameLast'];
@@ -161,7 +162,7 @@
         $data['groupsFirst']['couleurAssociee'] = $this->groupes_model->get_groupe_color($data['groupsFirst']);
         $data['groupsLast'] = end($data['groupsCards']);
         $data['groupsLast']['couleurAssociee'] = $this->groupes_model->get_groupe_color($data['groupsLast']);
-        $data['cohesionMean'] = $this->groupes_model->get_stats_avg(FALSE);
+        $data['cohesionMean'] = $this->groupes_model->get_stats_avg(legislature_current());
         $data['cohesionMean'] = $data['cohesionMean']['cohesion'];
 
         // Meta
@@ -169,7 +170,7 @@
         $data['description_meta'] = "Quel est le groupe politique le plus soudé à l'Assemblée nationale ? Celui qui vote le moins souvent ensemble ? Découvrez le classement sur Datan.";
         $data['title'] = "La cohésion des groupes parlementaires";
       } elseif ($url == "deputes-participation") {
-        $data['participationMean'] = $this->stats_model->get_mps_participation_mean();
+        $data['participationMean'] = $this->stats_model->get_mps_participation_mean(legislature_current());
         $data['participationMean'] = $data['participationMean']['mean'];
         $data['participationCommissionMean'] = $this->stats_model->get_mps_participation_commission_mean();
         $data['participationCommissionMean'] = $data['participationCommissionMean']['mean'];
