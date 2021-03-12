@@ -27,7 +27,7 @@
                     <label class="custom-control-label" for="nochoice[<?= $vote['voteNumero'] ?>]" >Ne se prononce pas</label>
                 </div>
                 <div class="form-group">
-                    <label for="weight<?= $vote['voteNumero'] ?>"><h3>Etait-il important de s'exprimer sur ce vote ?</h3></label>
+                    <label for="weight<?= $vote['voteNumero'] ?>"><h3>Ce sujet vous tient-il à coeur ?</h3></label>
                     <input type="number" max="5" min="0" name="<?= $vote['voteNumero'] ?>[weigth]" class="form-control" id="weight<?= $vote['voteNumero'] ?>">
                 </div>
             <?php endforeach ?>
