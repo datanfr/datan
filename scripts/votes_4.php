@@ -180,7 +180,7 @@
                         $zip->close();
                       }
 
-                  } else {
+                  } elseif($legislature_to_get == 14) {
 
                     $file = 'http://data.assemblee-nationale.fr/static/openData/repository/14/loi/scrutins/Scrutins_XIV.xml.zip';
                     $file = trim($file);
