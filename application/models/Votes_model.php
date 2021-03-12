@@ -52,6 +52,7 @@
     }
 
     public function get_n_votes(){
+      $this->db->where('legislature', legislature_current());
       $query = $this->db->count_all_results('votes_info');
 
       return $query;
