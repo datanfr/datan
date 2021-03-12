@@ -94,6 +94,17 @@ module.exports = function (grunt) {
         dest: 'assets/css/critical/groupe_individual.css'
       },
     },
+    babel: {
+      options: {
+        sourceMap: true,
+        presets: ["@babel/preset-env"],
+      },
+      dist: {
+        files: {
+          "assets/js/main.js": "assets/js/main.js",
+        },
+      },
+    },
     uglify: {
       options: {
         compress: true
@@ -124,7 +135,7 @@ module.exports = function (grunt) {
       },
       scripts: {
         files: ['assets/js/main.js'],
-        tasks: ['uglify'],
+        tasks: ['babel', 'uglify'],
         options: {
           spawn: false,
         },
@@ -140,8 +151,9 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-contrib-sass');
   grunt.loadNpmTasks('grunt-contrib-concat');
   grunt.loadNpmTasks('grunt-contrib-watch');
+  grunt.loadNpmTasks('grunt-babel');
 
   // Default tasks. Mind the order
-  grunt.registerTask('default', ['sass', 'purifycss', 'concat', 'critical', 'uglify']);
+  grunt.registerTask('default', ['sass', 'purifycss', 'concat', 'critical', 'babel', 'uglify']);
 
 };
