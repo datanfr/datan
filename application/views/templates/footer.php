@@ -133,7 +133,7 @@
       <?php endforeach; ?>
     <?php endif; ?>
 
-    <script type="text/javascript" src="<?= asset_url() ?>js/main.js?v=<?= getVersion() ?>"></script>
+    <script type="text/javascript" src="<?= asset_url() ?>js/main.min.js?v=<?= getVersion() ?>"></script>
     <script type="text/javascript" src="<?= asset_url() ?>js/datan/url_obf2.min.js"></script>
 
     <!-- Google Tag Manager (noscript) -->
