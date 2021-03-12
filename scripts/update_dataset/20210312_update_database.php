@@ -54,6 +54,9 @@ try {
     ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
   ');
   $bdd->query('ALTER TABLE `dossiers` ADD INDEX `idx_legislature` (`legislature`);');
+  $bdd->query('ALTER TABLE `votes_datan` ADD `legislature` TINYINT NOT NULL AFTER `id`, ADD `voteNumero` INT NOT NULL AFTER `legislature`;');
+  $bdd->query('UPDATE `votes_datan` SET `legislature` = 15');
+  $bdd->query('UPDATE `votes_datan` SET `voteNumero` = TRIM(LEADING "VTANR5L15V" FROM vote_id)');
 
 
 

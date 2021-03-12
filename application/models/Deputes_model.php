@@ -84,10 +84,10 @@
     }
 
     public function get_groupes_inactifs(){
-      $query = $this->db->query('SELECT da.libelle, da.libelleAbrev 
-      FROM deputes_all da 
-      WHERE da.legislature = 15 AND da.dateFin IS NOT NULL 
-      GROUP BY da.groupeId 
+      $query = $this->db->query('SELECT da.libelle, da.libelleAbrev
+      FROM deputes_all da
+      WHERE da.legislature = 15 AND da.dateFin IS NOT NULL
+      GROUP BY da.groupeId
       HAVING libelle IS NOT NULL
       ');
       return $query->result_array();
@@ -249,23 +249,23 @@
       return $query->row_array();
     }
 
-    public function get_accord_groupes_actifs($depute_uid){
+    public function get_accord_groupes_actifs($depute_uid, $legislature){
       $query = $this->db->query('
       SELECT t1.accord, o.libelle, o.libelleAbrev, t1.votesN, t1.organeRef, o.positionPolitique
       FROM deputes_accord_cleaned t1
       LEFT JOIN organes o ON t1.organeRef = o.uid
-      WHERE t1.mpId = "'.$depute_uid.'" AND o.dateFin IS NULL AND libelleAbrev != "NI" AND votesN > 10
+      WHERE t1.mpId = "'.$depute_uid.'" AND o.dateFin IS NULL AND libelleAbrev != "NI" AND votesN > 10 AND t1.legislature = "'.$legislature.'"
       ORDER BY t1.accord DESC
       ');
       return $query->result_array();
     }
 
-    public function get_accord_groupes_all($depute_uid){
+    public function get_accord_groupes_all($depute_uid, $legislature){
       $query = $this->db->query('
       SELECT t1.accord, o.libelle, o.libelleAbrev, t1.votesN, CASE WHEN o.dateFin IS NULL THEN 1 ELSE 0 END AS ended
       FROM deputes_accord_cleaned t1
       LEFT JOIN organes o ON t1.organeRef = o.uid
-      WHERE t1.mpId = "'.$depute_uid.'"
+      WHERE t1.mpId = "'.$depute_uid.'" AND t1.legislature = "'.$legislature.'"
       ORDER BY t1.accord DESC
       ');
       return $query->result_array();
@@ -539,51 +539,52 @@
 
     }
 
-    public function get_stats_loyaute($depute_uid){
+    public function get_stats_loyaute($depute_uid, $legislature){
       $query = $this->db->query('
       SELECT A.*, B.*
       FROM
       (
-        SELECT ROUND(score*100) AS score, votesN
+        SELECT ROUND(score*100) AS score, votesN, legislature
         FROM class_loyaute
-        WHERE mpId = "'.$depute_uid.'"
+        WHERE mpId = "'.$depute_uid.'" AND legislature = "'.$legislature.'"
       ) A,
       (
         SELECT ROUND(AVG(score)*100) AS mean
         FROM class_loyaute
+        WHERE legislature = "'.$legislature.'"
       ) B
       ');
 
       return $query->row_array();
     }
 
-    public function get_stats_loyaute_history($depute_uid){
+    public function get_stats_loyaute_history($depute_uid, $legislature){
       $query = $this->db->query('
       SELECT mg.dateDebut, mg.dateFin, o.libelle, o.libelleAbrev, ROUND(dl.score * 100) AS score, dl.votesN
       FROM deputes_loyaute dl
       LEFT JOIN mandat_groupe mg ON dl.mandatId = mg.mandatId
       LEFT JOIN organes o ON mg.organeRef = o.uid
-      WHERE dl.mpId = "'.$depute_uid.'"
+      WHERE dl.mpId = "'.$depute_uid.'" AND dl.legislature = "'.$legislature.'"
       ORDER BY mg.dateDebut DESC
       ');
 
       return $query->result_array();
     }
 
-    public function get_stats_majorite($depute_uid){
+    public function get_stats_majorite($depute_uid, $legislature){
       $query = $this->db->query('
         SELECT A.*, B.*
         FROM
         (
           SELECT ROUND(score*100) AS score, votesN
           FROM class_majorite
-          WHERE mpId = "'.$depute_uid.'"
+          WHERE mpId = "'.$depute_uid.'" AND legislature = "'.$legislature.'"
         ) A,
         (
           SELECT ROUND(AVG(t1.score)*100) AS mean
           FROM class_majorite t1
           LEFT JOIN deputes_all da ON t1.mpId = da.mpId
-          WHERE da.groupeId != "'.majority_group().'"  AND da.legislature = 15 AND dateFin IS NULL
+          WHERE da.groupeId != "'.majority_group().'"  AND da.legislature = "'.$legislature.'" AND dateFin IS NULL
         ) B
       ');
 
