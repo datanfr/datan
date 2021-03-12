@@ -44,56 +44,6 @@ module.exports = function (grunt) {
         dest: 'assets/css/main.css'
       }
     },
-    critical: {
-      // Homepage
-      index: {
-        options: {
-          base: './',
-          width: 1200,
-          height: 1500
-        },
-        // The source file
-        src: 'http://localhost/datan/',
-        // The destination file
-        dest: 'assets/css/critical/index.css'
-      },
-      // Page city
-      city: {
-        options: {
-          base: './',
-          width: 1200,
-          height: 1500
-        },
-        // The source file
-        src: 'http://localhost/datan/deputes/ille-et-vilaine-35/ville_rennes',
-        // The destination file
-        dest: 'assets/css/critical/city.css'
-      },
-      // Page depute
-      depute_individual: {
-        options: {
-          base: './',
-          width: 1200,
-          height: 1500
-        },
-        // The source file
-        src: 'http://localhost/datan/deputes/lozere-48/depute_pierre-morelalhuissier',
-        // The destination file
-        dest: 'assets/css/critical/depute_individual.css'
-      },
-      // Page groupe
-      groupe_individual: {
-        options: {
-          base: './',
-          width: 1200,
-          height: 1500
-        },
-        // The source file
-        src: 'http://localhost/datan/groupes/larem',
-        // The destination file
-        dest: 'assets/css/critical/groupe_individual.css'
-      },
-    },
     babel: {
       options: {
         sourceMap: true,
@@ -125,6 +75,68 @@ module.exports = function (grunt) {
         dest: 'assets/js/main.min.js'
       }
     },
+    critical: {
+      // Homepage
+      index: {
+        options: {
+          base: './',
+          css: [
+              'assets/css/main.css'
+          ],
+          width: 1200,
+          height: 1500
+        },
+        // The source file
+        src: 'http://localhost/datan/',
+        // The destination file
+        dest: 'assets/css/critical/index.css'
+      },
+      // Page city
+      city: {
+        options: {
+          base: './',
+          css: [
+              'assets/css/main.css'
+          ],
+          width: 1200,
+          height: 1500
+        },
+        // The source file
+        src: 'http://localhost/datan/deputes/ille-et-vilaine-35/ville_rennes',
+        // The destination file
+        dest: 'assets/css/critical/city.css'
+      },
+      // Page depute
+      depute_individual: {
+        options: {
+          base: './',
+          css: [
+              'assets/css/main.css'
+          ],
+          width: 1200,
+          height: 1500
+        },
+        // The source file
+        src: 'http://localhost/datan/deputes/lozere-48/depute_pierre-morelalhuissier',
+        // The destination file
+        dest: 'assets/css/critical/depute_individual.css'
+      },
+      // Page groupe
+      groupe_individual: {
+        options: {
+          base: './',
+          css: [
+              'assets/css/main.css'
+          ],
+          width: 1200,
+          height: 1500
+        },
+        // The source file
+        src: 'http://localhost/datan/groupes/larem',
+        // The destination file
+        dest: 'assets/css/critical/groupe_individual.css'
+      },
+    },
     watch: {
       css: {
         files: 'main.scss',
@@ -154,6 +166,6 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-babel');
 
   // Default tasks. Mind the order
-  grunt.registerTask('default', ['sass', 'purifycss', 'concat', 'critical', 'babel', 'uglify']);
+  grunt.registerTask('default', ['sass', 'purifycss', 'concat', 'babel', 'uglify', 'critical']);
 
 };
