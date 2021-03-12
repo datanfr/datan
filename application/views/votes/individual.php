@@ -255,7 +255,7 @@
               </div>
               <div class="card-body d-flex align-items-center">
                 <span class="title">
-                  <a href="<?= base_url() ?>votes/legislature-<?= $legislature ?>/vote_<?= $vote_datan['voteNumero'] ?>" class="stretched-link"></a>
+                  <a href="<?= base_url() ?>votes/legislature-<?= $vote_datan['legislature'] ?>/vote_<?= $vote_datan['voteNumero'] ?>" class="stretched-link"></a>
                   <?= $vote_datan['voteTitre'] ?></span>
               </div>
               <div class="card-footer">
