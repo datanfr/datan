@@ -254,7 +254,7 @@
       SELECT t1.accord, o.libelle, o.libelleAbrev, t1.votesN, t1.organeRef, o.positionPolitique
       FROM deputes_accord_cleaned t1
       LEFT JOIN organes o ON t1.organeRef = o.uid
-      WHERE t1.mpId = "'.$depute_uid.'" AND o.dateFin IS NULL AND libelleAbrev != "NI" AND votesN > 10
+      WHERE t1.mpId = "'.$depute_uid.'" AND o.dateFin IS NULL AND o.libelleAbrev != "NI" AND votesN > 10
       ORDER BY t1.accord DESC
       ');
       return $query->result_array();

@@ -21,3 +21,14 @@ Puis les données de ces tables :
 -elect_2017_pres_2.sql
 
 Puis lancer ces scripts depuis /scripts/admin.php
+
+# Assets
+Installez les dépendances
+npm install --dev
+Lancez grunt pour compiler les fichiers scss et js
+grunt
+Qaund vous travaillez sur main.scss ou main.js lancez grunt watch pour que ça recompile à chaque changement
+grunt watch 
+## Windows
+Il faut au préalable installer Ruby et possiblement lancer "gem install sass"
+Si problème de permissions supprimer le dossier .sass-cache
