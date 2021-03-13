@@ -59,7 +59,7 @@
           $bdd->query('
             DROP TABLE IF EXISTS class_loyaute;
             CREATE TABLE class_loyaute AS
-            SELECT dl.mpId, dl.score, dl.votesN, dL.legislature,
+            SELECT dl.mpId, dl.score, dl.votesN, dl.legislature,
           	curdate() AS dateMaj
           	FROM deputes_loyaute dl
           	JOIN deputes_all da ON dl.mpId = da.mpId AND dl.mandatId = da.groupeMandat;
