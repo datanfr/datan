@@ -1,0 +1,76 @@
+/*
+################
+               Bootstrap variables to change
+################
+*/
+// COLORS
+$orange: #ff661a;
+$vert: #00B794;
+$bleu: #00668E;
+$text-gray: #4D5755;
+$text-gray-light: #AAAAAA;
+$text-black: #4C4C4C;
+$bg-colour: #F3F5F6;
+$body-bg: $bg-colour;
+$primary: $vert;
+$primary_rgb: rgb(0, 183, 148);
+$adopted: $vert;
+$abstention: #FFBA49;
+$rejected: #C5283D;
+// BREADCRUMB
+$breadcrumb-divider: quote(">");
+$breadcrumb-border-radius: 6px;
+$breadcrumb-bg: transparent;
+$breadcrumb-active-color: $text-gray;
+// CARD
+$card-border-radius: 5px;
+$card-border-color: transparent;
+$card-box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.08);
+// FONT
+$font-family-sans-serif: "Open Sans";
+$font-weight-bold: 800;
+$h1-font-size:                2em;
+$h2-font-size:                1.8em;
+$h3-font-size:                1.6em;
+$h4-font-size:                1.4em;
+$h5-font-size:                1.2em;
+$h6-font-size-text:           1.1em;
+$h6-font-size:                1em;
+$h7-font-size:                0.85em;
+// LINKS
+$link-datan-color: $bleu;
+//NAVBAR
+$navbar-padding-y: 15px;
+$navbar-padding-x: 15px;
+// CAROUSEL
+$carousel-caption-width: 100%;
+/*
+################
+               Import Bootstrap
+################
+*/
+//@import "node_modules/bootstrap/scss/bootstrap";
+
+// Required
+@import "node_modules/bootstrap/scss/functions";
+@import "node_modules/bootstrap/scss/variables";
+@import "node_modules/bootstrap/scss/mixins";
+//// Optional
+@import "node_modules/bootstrap/scss/reboot";
+@import "node_modules/bootstrap/scss/grid";
+@import "node_modules/bootstrap/scss/breadcrumb";
+@import "node_modules/bootstrap/scss/buttons";
+@import "node_modules/bootstrap/scss/card";
+@import "node_modules/bootstrap/scss/dropdown";
+@import "node_modules/bootstrap/scss/forms";
+@import "node_modules/bootstrap/scss/images";
+@import "node_modules/bootstrap/scss/nav";
+@import "node_modules/bootstrap/scss/navbar";
+@import "node_modules/bootstrap/scss/tables";
+@import "node_modules/bootstrap/scss/transitions";
+@import "node_modules/bootstrap/scss/utilities";
+@import "node_modules/bootstrap/scss/popover";
+@import "node_modules/bootstrap/scss/pagination";
+@import "node_modules/bootstrap/scss/tooltip";
+@import "node_modules/bootstrap/scss/badge";
+@import "node_modules/bootstrap/scss/list-group";

@@ -81,7 +81,7 @@
     <script src="<?= asset_url(); ?>js/jquery-ui.min.js"></script>
     <?php if (isset($js_to_load_before_bootstrap)): ?>
       <?php foreach ($js_to_load_before_bootstrap as $file): ?>
-        <script src="<?= asset_url(); ?>js/<?= $file ?>.js"></script>
+        <script src="<?= asset_url(); ?>js/<?= $file ?>.js?v=<?= getVersion() ?>"></script>
       <?php endforeach; ?>
     <?php endif; ?>
     <script type="text/javascript" src="<?= asset_url() ?>js/bootstrap.min.js"></script>
@@ -129,11 +129,11 @@
 
     <?php if (isset($js_to_load)): ?>
       <?php foreach ($js_to_load as $file): ?>
-        <script type="text/javascript" src="<?= asset_url() ?>js/<?= $file ?>.js"></script>
+        <script type="text/javascript" src="<?= asset_url() ?>js/<?= $file ?>.js?v=<?= getVersion() ?>"></script>
       <?php endforeach; ?>
     <?php endif; ?>
 
-    <script type="text/javascript" src="<?= asset_url() ?>js/<?= js_file() ?>.js"></script>
+    <script type="text/javascript" src="<?= asset_url() ?>js/main.min.js?v=<?= getVersion() ?>"></script>
     <script type="text/javascript" src="<?= asset_url() ?>js/datan/url_obf2.min.js"></script>
 
     <!-- Google Tag Manager (noscript) -->
