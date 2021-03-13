@@ -74,20 +74,19 @@
           //$nobg => no background
           $lcdggithuburl = 'https://raw.githubusercontent.com/brissa-a/lcdg-data/main/img-nobg/PA' . $uid . '.png';
           $nobgfilename = '../assets/imgs/deputes_nobg/depute_' . $uid . '.png';
-          //$removebg_api_key = 'yourapikey';
           if (!file_exists($nobgfilename)) {
             if (substr(get_headers($lcdggithuburl)[0], 9, 3) != '404') {
               $nobg = file_get_contents($lcdggithuburl);
               file_put_contents($nobgfilename, $nobg);
               echo "one nobg image was just downloaded from lcdg<br>";
-            } else if (isset($removebg_api_key)) {
+            } else if (isset($_SERVER['API_KEY_NOBG'])) {
               $ch = curl_init('https://api.remove.bg/v1.0/removebg');
               curl_setopt($ch, CURLOPT_HEADER, false);
               curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-              curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+              // curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
               echo "URL:" . $url."<br>";
               curl_setopt($ch, CURLOPT_HTTPHEADER, [
-                'X-Api-Key:' . $removebg_api_key
+                'X-Api-Key:' . $_SERVER['API_KEY_NOBG']
               ]);
               curl_setopt($ch, CURLOPT_POST, 1);
               curl_setopt($ch, CURLOPT_POSTFIELDS, array(
