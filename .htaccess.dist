@@ -35,4 +35,5 @@
     SetEnv DATABASE_HOST localhost
     SetEnv CI_ENV production
     SetEnv BASE_URL http://localhost/datan
+    SetEnv API_KEY_NOBG get your api key on remove.bg
 </IfModule>
