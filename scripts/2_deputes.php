@@ -47,7 +47,6 @@
             SELECT d.mpId AS uid, d.legislature
             FROM deputes_last d
             WHERE legislature IN (14, 15)
-            AND d.mpId = "PA719"
           ');
         while ($d = $donnees->fetch()) {
           $uid = substr($d['uid'], 2);
@@ -109,10 +108,11 @@
                 echo "</pre>";
                 var_dump($nobg);
               }
+              curl_close($ch);
             } else {
-              echo 'try adding removebg_api_key to download image from paying website remove.bg';
+              echo 'try adding removebg_api_key to download image from paying website remove.bg'."<br>";
             }
-            curl_close($ch);
+            
           }
         }
 
