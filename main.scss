@@ -1522,10 +1522,14 @@ ul.ui-menu{
       //top: -90px;
       border-radius: 50%;
       //box-shadow: $card-box-shadow;
+      background: linear-gradient(#99BDDA, white);
       img{
-        width: 100%;
+        width: 84%;
         height: auto;
         margin-top: -10px;
+      }
+      img.placeholder {
+        width: 100%;
       }
     }
     .depute-img-rectangle{
