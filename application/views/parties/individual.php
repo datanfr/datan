@@ -85,8 +85,7 @@
             <div class="liseret" style="background-color: <?= $mp["couleurAssociee"] ?>"></div>
             <div class="card-avatar">
               <picture>
-                <source srcset="<?= asset_url(); ?>imgs/deputes_webp/depute_<?= substr($mp["mpId"], 2) ?>_webp.webp" alt="<?= $mp['nameFirst'].' '.$mp['nameLast'] ?>" type="image/webp">
-                <source srcset="<?= asset_url(); ?>imgs/deputes/depute_<?= substr($mp["mpId"], 2) ?>.png" type="image/png">
+                <source srcset="<?= asset_url(); ?>imgs/deputes_nobg/depute_<?= substr($mp["mpId"], 2) ?>.png" type="image/png">
                 <img src="<?= asset_url(); ?>imgs/deputes/depute_<?= substr($mp["mpId"], 2) ?>.png" alt="<?= $mp['nameFirst'].' '.$mp['nameLast'] ?>">
               </picture>
             </div>
