@@ -27,6 +27,14 @@
                     <input type="text" class="form-control" autocomplete="off" name="title" placeholder="Ajouter un titre">
                   </div>
                   <div class="form-group">
+                    <div class="form-group">
+                      <label>Legislature</label>
+                      <select class="form-control" name="legislature">
+                        <option>15</option>
+                    </select>
+                  </div>
+                  </div>
+                  <div class="form-group">
                     <label for="">Vote ID --> <a href="<?= base_url() ?>admin/votes_an/position/" target="_blank">check list of votes</a></label>
                     <input type="text" class="form-control" autocomplete="off" name="vote_id" placeholder="Exemple: 156">
                   </div>
