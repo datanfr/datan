@@ -48,6 +48,14 @@
             FROM deputes_last d
             WHERE legislature IN (14, 15)
           ');
+
+        if (!isset($_SERVER['API_KEY_NOBG'])) {
+          ?>
+            try adding API_KEY_NOBG env variable to download image from paying website
+            <a href="https://www.remove.bg/dashboard#api-key">https://www.remove.bg/dashboard#api-key</a><br>
+            50 img/month free</br></br>
+          <?php
+        }
         while ($d = $donnees->fetch()) {
           $uid = substr($d['uid'], 2);
           $filename = "../assets/imgs/deputes_original/depute_" . $uid . ".png";
@@ -109,9 +117,8 @@
               }
               curl_close($ch);
             } else {
-              echo 'try adding removebg_api_key to download image from paying website remove.bg'."<br>";
-            }
-            
+              echo "API_KEY_NOBG not set nothing was downloaded</br>";
+            }      
           }
         }
 
