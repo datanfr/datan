@@ -34,7 +34,7 @@
         <a class="btn btn-outline-secondary" href="http://<?php echo $_SERVER['SERVER_NAME'] . '' . $_SERVER['REQUEST_URI'] ?>" role="button">Refresh</a>
       </div>
       <div class="col-4">
-        <a class="btn btn-outline-success" href="./<?= $url_next ?>_deputes.php" role="button">NEXT</a>
+        <a class="btn btn-outline-success" href="./5_mandats.php" role="button">NEXT</a>
       </div>
     </div>
     <div class="row mt-3">
