@@ -15,7 +15,7 @@
             <div class="card card-depute">
               <div class="liseret" style="background-color: <?= $depute["couleurAssociee"] ?>"></div>
               <div class="card-avatar">
-                <img src="<?= base_url(); ?>assets/imgs/deputes/depute_<?= substr($depute["mpId"], 2) ?>.png" alt="<?= $depute['nameFirst'].' '.$depute['nameLast'] ?>">
+                <img src="<?= base_url(); ?>assets/imgs/deputes_nobg/depute_<?= substr($depute["mpId"], 2) ?>.png" alt="<?= $depute['nameFirst'].' '.$depute['nameLast'] ?>">
               </div>
               <div class="card-body">
                 <h3 class="d-block card-title">
