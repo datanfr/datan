@@ -104,9 +104,7 @@
                   <hr>
                   <a href="votes_1.php" class="list-group-item list-group-item-action list-group-item-primary">2. Votes (update point 1 before)</a>
                   <hr>
-                  <a href="code_photos.php" class="list-group-item list-group-item-action list-group-item-primary">3. Code photos RESMUSH</a>
-                  <hr>
-                  <a href="cities_mayors_update.php" class="list-group-item list-group-item-action list-group-item-primary">4. Update cities_mayors</a>
+                  <a href="cities_mayors_update.php" class="list-group-item list-group-item-action list-group-item-primary">3. Update cities_mayors (the open data source is updated every three month)</a>
                 </div>
               </div>
               <h3 class="mt-3">Past legislature update</h2>
