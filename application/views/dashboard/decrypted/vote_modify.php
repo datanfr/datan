@@ -27,8 +27,13 @@
                     <input type="text" class="form-control" autocomplete="off" name="title" value="<?= $vote['title'] ?>">
                   </div>
                   <div class="form-group">
+                    <label for="">Legislature</label>
+                      <option value="<?= $vote['vote_id'] ?>"><?= $vote['legislature'] ?></option>
+                    </select>
+                  </div>
+                  <div class="form-group">
                     <label for="">Vote ID</label>
-                        <option value="<?= $vote['vote_id'] ?>"><?= $vote['vote_id'] ?></option>
+                      <option value="<?= $vote['vote_id'] ?>"><?= $vote['voteNumero'] ?></option>
                     </select>
                   </div>
                   <div class="form-group">
