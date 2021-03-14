@@ -29,6 +29,8 @@
       $url = str_replace(array("/", "datan", "scripts", "votes_", ".php"), "", $url);
       $url_current = substr($url, 0, 2);
       $url_second = $url_current + 1;
+
+      include "include/legislature.php";
     ?>
 		<div class="container" style="background-color: #e9ecef;">
 			<div class="row">
@@ -42,37 +44,37 @@
 					<a class="btn btn-outline-secondary" href="http://<?php echo $_SERVER['SERVER_NAME']. ''.$_SERVER['REQUEST_URI'] ?>" role="button">Refresh</a>
 				</div>
 				<div class="col-4">
-					<a class="btn btn-outline-success" href="./votes_22.php" role="button">NEXT</a>
-				</div>
+          <?php if ($legislature_to_get == 15): ?>
+  					<a class="btn btn-outline-success" href="./votes_22.php" role="button">Next</a>
+  					<?php else: ?>
+  					<a class="btn btn-outline-success" href="./votes_22.php?legislature=<?= $legislature_to_get ?>" role="button">Next</a>
+  				<?php endif; ?>
+        </div>
 			</div>
 			<div class="row mt-3">
         <div class="col-12">
           <h2 class="bg-success">Run this script only once.</h2>
+          <p class="bg-warning">This scripts does not depend on legislature. All legislatures are managed by a single script. </p>
           <?php
 
-          // CONNEXION SQL //
+            // CONNEXION SQL //
           	include 'bdd-connexion.php';
 
             $bdd->query('
               DROP TABLE IF EXISTS class_groups;
-
               CREATE TABLE class_groups AS
-
-              SELECT c.*, p.participation, m.majoriteAccord, m.votesN, curdate() AS dateMaj
+              SELECT c.organeRef, c.legislature, c.active, c.cohesion, c.votesN_cohesion, p.participation, p.votesN_participation, m.majoriteAccord, m.votesN AS votesN_majorite, curdate() AS dateMaj
               FROM
               (
-              	SELECT gc.organeRef, gc.legislature, ROUND(AVG(gc.cohesion),3) AS cohesion,
+              	SELECT gc.organeRef, gc.legislature, ROUND(AVG(gc.cohesion),3) AS cohesion, COUNT(voteNumero) AS votesN_cohesion,
               	CASE WHEN o.dateFin IS NULL THEN 1 ELSE 0 END AS active
               	FROM groupes_cohesion gc
               	LEFT JOIN organes o ON o.uid = gc.organeRef
               	GROUP BY gc.organeRef
               ) c
-
               LEFT JOIN
-
               (
-
-              SELECT B.organeRef, AVG(B.participation_rate) AS participation
+              SELECT B.organeRef, AVG(B.participation_rate) AS participation, COUNT(voteNumero) AS votesN_participation
               FROM
               (
               	SELECT A.*, A.total / A.n AS participation_rate
@@ -83,23 +85,18 @@
               	) A
               ) B
               GROUP BY B.organeRef
-
               ) p ON p.organeRef = c.organeRef
-
               LEFT JOIN
-
               (
-
-        			SELECT ga.organeRef, ROUND(AVG(ga.accord), 4) AS majoriteAccord, COUNT(ga.accord) AS votesN, CASE WHEN o.dateFin IS NULL THEN 1 ELSE 0 END AS active
+        			SELECT ga.organeRef, ROUND(AVG(ga.accord), 3) AS majoriteAccord, COUNT(ga.accord) AS votesN
         			FROM groupes_accord ga
         			LEFT JOIN organes o ON o.uid = ga.organeRef
-        			WHERE organeRefAccord IN ("PO730964")
+        			WHERE organeRefAccord IN ("PO730964", "PO713077", "PO656002")
         			GROUP BY ga.organeRef
-
               ) m ON m.organeRef = c.organeRef;
-
               ALTER TABLE class_groups ADD INDEX idx_organeRef (organeRef);
               ALTER TABLE class_groups ADD INDEX idx_active (active);
+              ALTER TABLE class_groups ADD INDEX idx_legislature (legislature);
             ');
 
           ?>

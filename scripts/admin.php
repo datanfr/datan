@@ -47,6 +47,22 @@
               <br>
               <div class="card">
                 <div class="card-body">
+                  <h5 class="card-title">Database structure update - New legislature</h5>
+                  <h6 class="card-subtitle text-muted">March 12, 2021</h6>
+                  <p class="card-text">
+                    First run the following script to update the database structure ==> <a class="btn btn-danger my-3" href="update_dataset/20210312_update_database.php" role="button">UPDATE DATABASE</a>
+                  </p>
+                  <p class="card-text">
+                    Second, updat the 1. below (Députés/Mandats/Organes).
+                  </p>
+                  <p>
+                    Finally, you can update the votes scripts. First, for the 15th legislature, use the 2. Votes button below. Second, for the 14th legislature, the button is below, in the "Past legislature" section.
+                  </p>
+                </div>
+              </div>
+              <br>
+              <div class="card">
+                <div class="card-body">
                   <h5 class="card-title">Database structure update - Fix '99' issues in the 'votes' table</h5>
                   <h6 class="card-subtitle text-muted">March 7, 2021</h6>
                   <p class="card-text">
@@ -72,7 +88,8 @@
                 </div>
               </div>
 
-              <a class="btn btn-warning my-3" href="update_dataset/add_twitter_facebook.php" role="button">Add Social Network</a>    
+
+              <a class="btn btn-warning my-3" href="update_dataset/add_twitter_facebook.php" role="button">Add Social Network</a>
               <hr>
               <a class="btn btn-warning my-3" href="update_dataset/20210309_update_department.php" role="button">5. Update departments</a>
 
@@ -91,6 +108,10 @@
                   <hr>
                   <a href="cities_mayors_update.php" class="list-group-item list-group-item-action list-group-item-primary">4. Update cities_mayors</a>
                 </div>
+              </div>
+              <h3 class="mt-3">Past legislature update</h2>
+              <div class="list-group">
+                <a href="votes_1.php?legislature=14" class="list-group-item list-group-item-action">Votes for the 14th legislature</a>
               </div>
               <h3 class="mt-3">Unused scripts</h2>
               <div class="list-group">

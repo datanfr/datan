@@ -202,7 +202,7 @@
         }
         $data['edito_participation_commission'] = $this->depute_edito->participation($data['participation_commission']['score'], $data['participation_commission']['mean']); //edited
         // loyalty
-        $data['loyaute'] = $this->deputes_model->get_stats_loyaute($depute_uid);
+        $data['loyaute'] = $this->deputes_model->get_stats_loyaute($depute_uid, legislature_current());
         if ($data['loyaute']['votesN'] < 75) {
           $data['no_loyaute'] = TRUE;
         } else {
@@ -210,9 +210,9 @@
         }
         $data['edito_loyaute'] = $this->depute_edito->loyaute($data['loyaute']['score'], $data['loyaute']['mean']); // edited
         // loyalty history
-        $data['loyaute_history'] = $this->deputes_model->get_stats_loyaute_history($depute_uid);
+        $data['loyaute_history'] = $this->deputes_model->get_stats_loyaute_history($depute_uid, legislature_current());
         // proximity with majority
-        $data['majorite'] = $this->deputes_model->get_stats_majorite($depute_uid);
+        $data['majorite'] = $this->deputes_model->get_stats_majorite($depute_uid, legislature_current());
         if ($data['majorite']['votesN'] < 75) {
           $data['no_majorite'] = TRUE;
         } else {
@@ -220,8 +220,8 @@
         }
         $data['edito_majorite'] = $this->depute_edito->majorite($data['majorite']['score'], $data['majorite']['mean']); //edited
         // proximity with all groups
-        $data['accord_groupes_actifs'] = $this->deputes_model->get_accord_groupes_actifs($depute_uid);
-        $data['accord_groupes_all'] = $this->deputes_model->get_accord_groupes_all($depute_uid);
+        $data['accord_groupes_actifs'] = $this->deputes_model->get_accord_groupes_actifs($depute_uid, legislature_current());
+        $data['accord_groupes_all'] = $this->deputes_model->get_accord_groupes_all($depute_uid, legislature_current());
         $accord_groupes_n = count($data['accord_groupes_actifs']);
         $accord_groupes_divided = round($accord_groupes_n / 2, 0, PHP_ROUND_HALF_UP);
         $data['accord_groupes_first'] = array_slice($data['accord_groupes_actifs'], 0, $accord_groupes_divided);
@@ -510,7 +510,7 @@
       $data['fields'] = $this->fields_model->get_active_fields();
       foreach ($data['fields'] as $key => $field) {
         // Get votes by field
-        $x[$field["slug"]] = $this->votes_model->get_votes_datan_depute_field($depute_uid, $field['slug']);
+        $x[$field["slug"]] = $this->votes_model->get_votes_datan_depute_field($depute_uid, $field['slug'], 2);
         if (!empty($x[$field["slug"]])) {
           $data['fields_voted'][] = $field;
         }
@@ -599,7 +599,7 @@
       }
 
       // Query - get active votes
-      $data['votes'] = $this->votes_model->get_votes_datan_depute_field($depute_uid, $field);
+      $data['votes'] = $this->votes_model->get_votes_datan_depute_field($depute_uid, $field, FALSE);
 
       if (empty($data['votes'])) {
         show_404();
@@ -708,7 +708,7 @@
       $data['commission_parlementaire'] = $this->deputes_model->get_commission_parlementaire($depute_uid);
 
       // Query - get all votes
-      $data['votes'] = $this->votes_model->get_votes_all_depute($depute_uid);
+      $data['votes'] = $this->votes_model->get_votes_all_depute($depute_uid, legislature_current());
 
       // Query - gender
       $gender = $data['depute']['civ'];

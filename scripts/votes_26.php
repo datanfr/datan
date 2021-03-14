@@ -26,6 +26,8 @@
       $url = str_replace(array("/", "datan", "scripts", "votes_", ".php"), "", $url);
       $url_current = substr($url, 0, 2);
       $url_second = $url_current + 1;
+
+      include "include/legislature.php";
     ?>
 		<div class="container" style="background-color: #e9ecef;">
 			<div class="row">
@@ -39,8 +41,12 @@
 					<a class="btn btn-outline-secondary" href="http://<?php echo $_SERVER['SERVER_NAME']. ''.$_SERVER['REQUEST_URI'] ?>" role="button">Refresh</a>
 				</div>
 				<div class="col-4">
-          <a class="btn btn-outline-success" href="./votes_<?= $url_second ?>.php" role="button">Next</a>
-				</div>
+          <?php if ($legislature_to_get == 15): ?>
+            <a class="btn btn-outline-success" href="./votes_<?= $url_second ?>.php" role="button">Next</a>
+            <?php else: ?>
+            <a class="btn btn-outline-success" href="./votes_<?= $url_second ?>.php?legislature=<?= $legislature_to_get ?>" role="button">Next</a>
+          <?php endif; ?>
+        </div>
 			</div>
 			<div class="row mt-3">
         <div class="col-12">
@@ -56,69 +62,73 @@
                 </tr>
               </thead>
               <tbody>
-        <?php
+            <?php
+              if ($legislature_to_get == 14) {
+                echo '<p class="bg-danger">This script is not run for the legislature 14, please launch the following script.</p>';
+              } else {
 
-        // CONNEXION SQL //
-        	include 'bdd-connexion.php';
+                // CONNEXION SQL //
+                include 'bdd-connexion.php';
 
-          $bdd->query('
-            DROP TABLE IF EXISTS class_loyaute_six;
-            CREATE TABLE class_loyaute_six
-              (id INT(5) NOT NULL AUTO_INCREMENT,
-              classement INT(5) NOT NULL,
-              mpId VARCHAR(25) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
-              score DECIMAL(4,3) NOT NULL,
-              votesN INT(15) NOT NULL,
-              dateMaj DATE NOT NULL,
-              PRIMARY KEY (id));
-              ALTER TABLE class_loyaute_six ADD INDEX idx_mpId (mpId);
-          ');
-          $result = $bdd->query('
-          SELECT @s:=@s+1 AS "classement", B.*
-          FROM (
-            SELECT A.*
-            FROM (
-              SELECT t1.mpId, ROUND(AVG(t1.scoreLoyaute),3) AS score, COUNT(t1.scoreLoyaute) AS votesN
-              FROM
-              (
-					SELECT v.mpId, v.scoreLoyaute, vi.dateScrutin
-					FROM votes_scores v
-					LEFT JOIN votes_info vi ON v.voteNumero = vi.voteNumero
-					WHERE vi.dateScrutin >= CURDATE() - INTERVAL 12 MONTH
-              ) t1
-              WHERE t1.scoreLoyaute IS NOT NULL
-              GROUP BY t1.mpId
-            ) A
-            WHERE A.mpId IN (
-              SELECT mpId
-              FROM deputes_all
-              WHERE legislature = 15 AND dateFin IS NULL
-            )
-          ) B,
-          (SELECT @s:= 0) AS s
-          ORDER BY B.score DESC, B.votesN DESC
-          ');
+                $bdd->query('
+                  DROP TABLE IF EXISTS class_loyaute_six;
+                  CREATE TABLE class_loyaute_six
+                    (id INT(5) NOT NULL AUTO_INCREMENT,
+                    classement INT(5) NOT NULL,
+                    mpId VARCHAR(25) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+                    score DECIMAL(4,3) NOT NULL,
+                    votesN INT(15) NOT NULL,
+                    dateMaj DATE NOT NULL,
+                    PRIMARY KEY (id));
+                    ALTER TABLE class_loyaute_six ADD INDEX idx_mpId (mpId);
+                ');
+                $result = $bdd->query('
+                SELECT @s:=@s+1 AS "classement", B.*
+                FROM (
+                  SELECT A.*
+                  FROM (
+                    SELECT t1.mpId, ROUND(AVG(t1.scoreLoyaute),3) AS score, COUNT(t1.scoreLoyaute) AS votesN
+                    FROM
+                    (
+      					SELECT v.mpId, v.scoreLoyaute, vi.dateScrutin
+      					FROM votes_scores v
+      					LEFT JOIN votes_info vi ON v.voteNumero = vi.voteNumero
+      					WHERE vi.dateScrutin >= CURDATE() - INTERVAL 12 MONTH
+                    ) t1
+                    WHERE t1.scoreLoyaute IS NOT NULL
+                    GROUP BY t1.mpId
+                  ) A
+                  WHERE A.mpId IN (
+                    SELECT mpId
+                    FROM deputes_all
+                    WHERE legislature = 15 AND dateFin IS NULL
+                  )
+                ) B,
+                (SELECT @s:= 0) AS s
+                ORDER BY B.score DESC, B.votesN DESC
+                ');
 
-          while ($depute = $result->fetch()) {
-            $classement = $depute["classement"];
-            $mpId = $depute["mpId"];
-            $score = $depute["score"];
-            $votesN = $depute["votesN"];
-            $dateMaj = date('Y-m-d');
+                while ($depute = $result->fetch()) {
+                  $classement = $depute["classement"];
+                  $mpId = $depute["mpId"];
+                  $score = $depute["score"];
+                  $votesN = $depute["votesN"];
+                  $dateMaj = date('Y-m-d');
 
-            echo "<tr>";
-            echo "<td>".$classement."</td>";
-            echo "<td>".$mpId."</td>";
-            echo "<td>".$score."</td>";
-            echo "<td>".$votesN."</td>";
-            echo "<td>".$dateMaj."</td>";
-            echo "</tr>";
+                  echo "<tr>";
+                  echo "<td>".$classement."</td>";
+                  echo "<td>".$mpId."</td>";
+                  echo "<td>".$score."</td>";
+                  echo "<td>".$votesN."</td>";
+                  echo "<td>".$dateMaj."</td>";
+                  echo "</tr>";
 
 
-            $sql = $bdd->prepare("INSERT INTO class_loyaute_six (classement, mpId, score, votesN, dateMaj) VALUES (:classement, :mpId, :score, :votesN, :dateMaj)");
-            $sql->execute(array('classement' => $classement, 'mpId' => $mpId, 'score' => $score, 'votesN' => $votesN, 'dateMaj' => $dateMaj));
-          }
-        ?>
+                  $sql = $bdd->prepare("INSERT INTO class_loyaute_six (classement, mpId, score, votesN, dateMaj) VALUES (:classement, :mpId, :score, :votesN, :dateMaj)");
+                  $sql->execute(array('classement' => $classement, 'mpId' => $mpId, 'score' => $score, 'votesN' => $votesN, 'dateMaj' => $dateMaj));
+                }
+              }
+            ?>
             </tbody>
           </table>
         </div>
