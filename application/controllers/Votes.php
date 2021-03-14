@@ -48,15 +48,14 @@
       $data['by_field'] = $x;
 
       // Get all votes
-      $data['votes'] = $this->votes_model->get_all_votes(legislature_current(), NULL, NULL);
-      $data['votes'] = array_slice($data['votes'], 0, 10);
+      $data['votes'] = $this->votes_model->get_all_votes(legislature_current(), NULL, NULL, 10);
       foreach ($data['votes'] as $key => $value) {
         $data['votes'][$key]['dateScrutinFRAbbrev'] = $this->functions_datan->abbrev_months($value['dateScrutinFR']);
       }
       // Archives
-      $data['years'] = $this->votes_model->get_years_archives();
+      $data['years'] = $this->votes_model->get_years_archives(legislature_current());
       $data['years'] = array_column($data['years'], 'votes_year');
-      $data['months'] = $this->votes_model->get_months_archives();
+      $data['months'] = $this->votes_model->get_months_archives(legislature_current());
 
       // Meta
       $data['url'] = $this->meta_model->get_url();
@@ -209,7 +208,7 @@
       }
 
       // Check if votes
-      $data['votes'] = $this->votes_model->get_all_votes($legislature, $year, $month);
+      $data['votes'] = $this->votes_model->get_all_votes($legislature, $year, $month, FALSE);
 
       if (empty($data['votes'])) {
         show_404();
@@ -315,10 +314,10 @@
       }
 
       /* Get year */
-      $data['years'] = $this->votes_model->get_years_archives();
+      $data['years'] = $this->votes_model->get_years_archives(legislature_current());
       $data['years'] = array_column($data['years'], 'votes_year');
       /* Get months */
-      $data['months'] = $this->votes_model->get_months_archives();
+      $data['months'] = $this->votes_model->get_months_archives(legislature_current());
 
       // JS
       $data['js_to_load']= array("moment.min", "datatable-datan.min.js", "datetime-moment", "datan/async_background");
@@ -336,6 +335,9 @@
         show_404();
       }
       $data['legislature'] = $legislature;
+      if ($legislature != legislature_current()) {
+        //show_404();
+      }
       // Check if vote number is numeric
       if (!is_numeric($num)) {
         show_404();
@@ -372,7 +374,7 @@
         }
       }
       // Votes - groupes
-      $data['groupes'] = $this->votes_model->get_vote_groupes($data['vote']['voteNumero'], $data['vote']['dateScrutin']);
+      $data['groupes'] = $this->votes_model->get_vote_groupes($data['vote']['voteNumero'], $data['vote']['dateScrutin'], $legislature);
       // Vote - array for majorité
       foreach ($data['groupes'] as $groupe) {
         if ($groupe['positionPolitique'] == 'Majoritaire') {
@@ -419,7 +421,7 @@
         $data['vote_next'] = FALSE;
       }
 
-      $data['votes_datan'] = $this->votes_model->get_last_votes_datan();
+      $data['votes_datan'] = $this->votes_model->get_last_votes_datan(7);
 
       // Meta
       $data['url'] = $this->meta_model->get_url();

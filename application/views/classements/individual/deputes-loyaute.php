@@ -73,7 +73,7 @@
             <?php $i = 1; ?>
             <?php foreach ($deputes as $depute): ?>
               <tr>
-                <td class="text-center"><?= $depute["classement"] ?></td>
+                <td class="text-center"><?= $depute["rank"] ?></td>
                 <td class="text-center"><?= $depute["nameFirst"]." ".$depute["nameLast"] ?></td>
                 <td class="text-center"><?= $depute["libelleAbrev"] ?></td>
                 <td class="text-center"><?= $depute["score"] ?> %</td>
