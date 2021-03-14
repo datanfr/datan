@@ -35,6 +35,7 @@
               <div class="liseret" style="background-color: <?= $depute_commune["couleurAssociee"] ?>"></div>
               <div class="card-avatar">
                 <picture>
+                  <source srcset="<?= asset_url(); ?>imgs/deputes_nobg_webp/depute_<?= substr($depute_commune["mpId"], 2) ?>_webp.webp" type="image/webp">
                   <source srcset="<?= asset_url(); ?>imgs/deputes_nobg/depute_<?= substr($depute_commune["mpId"], 2) ?>.png" type="image/png">
                   <img src="<?= asset_url(); ?>imgs/deputes/depute_<?= substr($depute_commune["mpId"], 2) ?>.png" alt="<?= $depute_commune['nameFirst'].' '.$depute_commune['nameLast'] ?>">
                 </picture>
@@ -57,6 +58,7 @@
                 <div class="liseret" style="background-color: <?= $depute_commune["couleurAssociee"] ?>"></div>
                 <div class="card-avatar">
                   <picture>
+                    <source srcset="<?= asset_url(); ?>imgs/deputes_nobg_webp/depute_<?= substr($depute_commune["mpId"], 2) ?>_webp.webp" type="image/webp">
                     <source srcset="<?= asset_url(); ?>imgs/deputes_nobg/depute_<?= substr($depute_commune["mpId"], 2) ?>.png" type="image/png">
                     <img src="<?= asset_url(); ?>imgs/deputes/depute_<?= substr($depute_commune["mpId"], 2) ?>.png" alt="<?= $depute_commune['nameFirst'].' '.$depute_commune['nameLast'] ?>">
                   </picture>
@@ -181,6 +183,7 @@
               <div class="liseret" style="background-color: <?= $depute["couleurAssociee"] ?>"></div>
               <div class="card-avatar">
                 <picture>
+                  <source srcset="<?= asset_url(); ?>imgs/deputes_nobg_webp/depute_<?= substr($depute["mpId"], 2) ?>_webp.webp" type="image/webp">
                   <source srcset="<?= asset_url(); ?>imgs/deputes_nobg/depute_<?= substr($depute["mpId"], 2) ?>.png" type="image/png">
                   <img src="<?= asset_url(); ?>imgs/deputes/depute_<?= substr($depute["mpId"], 2) ?>.png" alt="<?= $depute['nameFirst'].' '.$depute['nameLast'] ?>">
                 </picture>
