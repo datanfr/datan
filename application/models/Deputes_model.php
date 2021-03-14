@@ -450,7 +450,7 @@
       SELECT d.nameFirst, d.nameLast, mp.mpId AS id, mp.dateDebut, mp.dateFin, mp.datePriseFonction, d.nameUrl, d.dptSlug
       FROM mandat_principal mp
       LEFT JOIN deputes_last d ON mp.mpId = d.mpId
-      WHERE mp.legislature = 15 AND codeQualite = "membre"
+      WHERE mp.legislature = '.legislature_current().' AND codeQualite = "membre"
       ORDER BY mp.datePriseFonction DESC
       ';
       if ($limit){
@@ -465,8 +465,8 @@
       SELECT d.nameFirst, d.nameLast, mp.mpId AS id, mp.dateDebut, mp.dateFin, d.nameUrl
       FROM mandat_principal mp
       LEFT JOIN deputes_last d ON mp.mpId = d.mpId
-      WHERE mp.legislature = 15 AND codeQualite = "membre" AND dateFin IS NOT NULL
-      ORDER BY dateFin DESC
+      WHERE mp.legislature = 15 AND codeQualite = "membre" AND mp.dateFin IS NOT NULL
+      ORDER BY mp.dateFin DESC
       ');
 
       return $query->result_array();
