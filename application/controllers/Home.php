@@ -22,9 +22,14 @@
       $data['groupe_random']['couleurAssociee'] = $this->groupes_model->get_groupe_color($data['groupe_random']);
 
       //Get groups (cached)
-      $this->db->cache_on();
-      $data['groupes'] = $this->groupes_model->get_groupes_all(TRUE, legislature_current());
-      $this->db->cache_off();
+      if(!in_array($_SERVER['REMOTE_ADDR'], localhost())){
+        $this->db->cache_on();
+        $data['groupes'] = $this->groupes_model->get_groupes_all(TRUE, legislature_current());
+        $this->db->cache_off();
+      } else {
+        $data['groupes'] = $this->groupes_model->get_groupes_all(TRUE, legislature_current());
+      }
+
       $groupes = array_column($data['groupes'], 'libelleAbrev');
       function cmp(array $a) {
           $order = array("GDR", "FI", "SOC", "DEM", "LAREM", "AGIR-E", "LT", "UDI_I", "LR", "NI");
