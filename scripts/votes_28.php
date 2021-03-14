@@ -58,7 +58,7 @@
 
             $bdd->query('DROP TABLE IF EXISTS history_mps_average;');
 
-            $bdd->query('CREATE TABLE `datan`.`history_mps_average` ( `id` TINYINT NOT NULL AUTO_INCREMENT , `legislature` TINYINT NOT NULL , `length` DECIMAL(4,2) NOT NULL , PRIMARY KEY (`id`)) ENGINE = MyISAM;');
+            $bdd->query('CREATE TABLE `history_mps_average` ( `id` TINYINT NOT NULL AUTO_INCREMENT , `legislature` TINYINT NOT NULL , `length` DECIMAL(4,2) NOT NULL , PRIMARY KEY (`id`)) ENGINE = MyISAM;');
 
 
             $terms = array(14, 15);
