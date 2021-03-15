@@ -628,6 +628,7 @@
       );
       /// JS
       $data['js_to_load']= array("moment.min", "datatable-datan.min.js", "datetime-moment", "datan/async_background");
+      $data['js_to_load_before_bootstrap'] = array("popper.min");
       // Load Views
       $this->load->view('templates/header', $data);
       $this->load->view('groupes/votes');
