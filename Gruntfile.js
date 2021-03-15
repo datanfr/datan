@@ -57,7 +57,9 @@ module.exports = function (grunt) {
     },
     uglify: {
       options: {
-        compress: true
+        compress: true,
+        sourceMap : true,
+        sourceMapName : 'assets/js/main.map'
       },
       datatables: {
         src: [
