@@ -696,8 +696,14 @@ body:not(.pg-mentions) #tarteaucitronAlertSmall {
   .card-avatar{
     border-radius: 50%;
     padding: 0;
+    background: linear-gradient(#99BDDA, white);
     img{
+      width: 84%;
       margin-top: -10px;
+
+    }
+    img.placeholder {
+      width: 100%;
     }
   }
 }
@@ -1518,10 +1524,15 @@ ul.ui-menu{
       //top: -90px;
       border-radius: 50%;
       //box-shadow: $card-box-shadow;
+      background: linear-gradient(#99BDDA, white);
+      text-align: center;
       img{
-        width: 100%;
+        width: 84%;
         height: auto;
         margin-top: -10px;
+      }
+      img.placeholder {
+        width: 100%;
       }
     }
     .depute-img-rectangle{
