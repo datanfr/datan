@@ -56,7 +56,6 @@ btn.on('click', function (e) {
                Collapse button
 ################
 */
-
 $(document).ready(function () {
   $("#collapseProximity").on("hide.bs.collapse", function () {
     $("#btn-ranking").html('Voir tout le classement');
