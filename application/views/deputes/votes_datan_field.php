@@ -1,6 +1,6 @@
   <div class="container-fluid bloc-img-deputes async_background" id="container-always-fluid" data-src="<?= asset_url() ?>imgs/cover/hemicycle-front.jpg" data-tablet="<?= asset_url() ?>imgs/cover/hemicycle-front-768.jpg" data-mobile="<?= asset_url() ?>imgs/cover/hemicycle-front-375.jpg" style="height: 13em">
   </div>
-  <?php if (!empty($depute['couleurAssociee'])): ?>
+  <?php if (!empty($depute['couleurAssociee'])) : ?>
     <div class="liseret-groupe" style="background-color: <?= $depute['couleurAssociee'] ?>"></div>
   <?php endif; ?>
   <div class="container pg-depute-individual">
@@ -13,17 +13,17 @@
               <div class="img">
                 <div class="d-flex justify-content-center">
                   <div class="depute-img-circle">
-                    <?php if ($depute['img']): ?>
+                    <?php if ($depute['img']) : ?>
                       <picture>
-                        <source srcset="<?= asset_url(); ?>imgs/deputes_webp/depute_<?= $depute['idImage'] ?>_webp.webp" alt="<?= $title ?>" type="image/webp">
-                        <source srcset="<?= asset_url(); ?>imgs/deputes/depute_<?= $depute['idImage'] ?>.png" type="image/png">
+                        <source srcset="<?= asset_url(); ?>imgs/deputes_nobg_webp/depute_<?= $depute['idImage'] ?>_webp.webp" type="image/webp">
+                        <source srcset="<?= asset_url(); ?>imgs/deputes_nobg/depute_<?= $depute['idImage'] ?>.png" type="image/png">
                         <img src="<?= asset_url(); ?>imgs/deputes/depute_<?= $depute['idImage'] ?>.png" alt="<?= $title ?>">
                       </picture>
-                      <?php else: ?>
-                        <picture>
-                          <source srcset="<?= asset_url() ?>imgs/placeholder/placeholder-face.png" type="image/png">
-                          <img src="<?= asset_url() ?>imgs/placeholder/placeholder-face.png" alt="<?= $title ?>">
-                        </picture>
+                    <?php else : ?>
+                      <picture>
+                        <source srcset="<?= asset_url() ?>imgs/placeholder/placeholder-face.png" type="image/png">
+                        <img src="<?= asset_url() ?>imgs/placeholder/placeholder-face.png" alt="<?= $title ?>">
+                      </picture>
                     <?php endif; ?>
                   </div>
                 </div>
@@ -41,27 +41,27 @@
               <div class="bloc-bref mt-3 d-flex justify-content-center justify-content-lg-start">
                 <ul>
                   <li class="first">
-                    <div class="label"><?php echo file_get_contents(asset_url().'imgs/icons/geo-alt-fill.svg') ?></div>
-                    <div class="value"><?= $depute['departementNom'].' ('.$depute['departementCode'].')'?></div>
+                    <div class="label"><?php echo file_get_contents(asset_url() . 'imgs/icons/geo-alt-fill.svg') ?></div>
+                    <div class="value"><?= $depute['departementNom'] . ' (' . $depute['departementCode'] . ')' ?></div>
                   </li>
                   <li>
-                    <div class="label"><?php echo file_get_contents(asset_url().'imgs/icons/person-fill.svg') ?></div>
+                    <div class="label"><?php echo file_get_contents(asset_url() . 'imgs/icons/person-fill.svg') ?></div>
                     <div class="value"><?= $depute['age'] ?> ans</div>
                   </li>
                   <li class="mb-0">
-                    <div class="label"><?php echo file_get_contents(asset_url().'imgs/icons/briefcase-fill.svg') ?></div>
+                    <div class="label"><?php echo file_get_contents(asset_url() . 'imgs/icons/briefcase-fill.svg') ?></div>
                     <div class="value">Commission <?= $commission_parlementaire['commissionAbrege'] ?></div>
-                  </ul>
+                </ul>
               </div>
             </div>
-            <?php if ($active): ?>
+            <?php if ($active) : ?>
               <div class="mandats d-flex justify-content-center align-items-center active">
                 <span class="active"><?= mb_strtoupper($mandat_edito) ?> MANDAT</span>
               </div>
-              <?php else: ?>
-                <div class="mandats d-flex justify-content-center align-items-center inactive">
-                  <span class="inactive">PLUS EN ACTIVITÉ</span>
-                </div>
+            <?php else : ?>
+              <div class="mandats d-flex justify-content-center align-items-center inactive">
+                <span class="inactive">PLUS EN ACTIVITÉ</span>
+              </div>
             <?php endif; ?>
           </div> <!-- END CARD PROFILE -->
         </div> <!-- END STICKY TOP -->
@@ -71,7 +71,7 @@
         <div class="row mt-4">
           <div class="col-12 btn-back text-center text-md-left">
             <a class="btn btn-outline-primary mx-2" href="<?= base_url() ?>deputes/<?= $depute['dptSlug'] ?>/depute_<?= $depute['nameUrl'] ?>">
-              <?= file_get_contents(asset_url().'imgs/icons/arrow_left.svg') ?>
+              <?= file_get_contents(asset_url() . 'imgs/icons/arrow_left.svg') ?>
               Retour profil député
             </a>
           </div>
@@ -82,21 +82,21 @@
           </div>
         </div>
         <div class="row mt-4">
-          <?php foreach ($votes as $vote): ?>
+          <?php foreach ($votes as $vote) : ?>
             <div class="col-md-6 d-flex justify-content-center">
               <div class="card card-vote my-3">
-                <?php if ($vote['vote_depute'] == 'absent'): ?>
+                <?php if ($vote['vote_depute'] == 'absent') : ?>
                   <div class="thumb absent d-flex align-items-center">
                     <div class="d-flex align-items-center">
                       <span>ABSENT<?= mb_strtoupper($gender['e']) ?></span>
                     </div>
                   </div>
-                  <?php else: ?>
-                    <div class="thumb d-flex align-items-center <?= $vote['vote_depute'] ?>">
-                      <div class="d-flex align-items-center">
-                        <span><?= mb_strtoupper($vote['vote_depute']) ?></span>
-                      </div>
+                <?php else : ?>
+                  <div class="thumb d-flex align-items-center <?= $vote['vote_depute'] ?>">
+                    <div class="d-flex align-items-center">
+                      <span><?= mb_strtoupper($vote['vote_depute']) ?></span>
                     </div>
+                  </div>
                 <?php endif; ?>
                 <div class="card-header d-flex flex-row justify-content-between">
                   <span class="date"><?= $vote['dateScrutinFRAbbrev'] ?></span>
@@ -122,22 +122,22 @@
     <div class="container bloc-others">
       <div class="row">
         <div class="col-12">
-          <?php if ($active): ?>
+          <?php if ($active) : ?>
             <h2>Les autres députés <?= $depute['libelle'] ?> (<?= $depute['libelleAbrev'] ?>)</h2>
-            <?php else: ?>
+          <?php else : ?>
             <h2>Les autres députés plus en activité</h2>
           <?php endif; ?>
           <div class="row mt-3">
-            <?php foreach ($other_deputes as $mp): ?>
+            <?php foreach ($other_deputes as $mp) : ?>
               <div class="col-6 col-md-3 py-2">
-                <a class="membre no-decoration underline" href="<?= base_url(); ?>deputes/<?= $mp['dptSlug'] ?>/depute_<?= $mp['nameUrl'] ?>"> <?= $mp['nameFirst'].' '.$mp['nameLast'] ?></a>
+                <a class="membre no-decoration underline" href="<?= base_url(); ?>deputes/<?= $mp['dptSlug'] ?>/depute_<?= $mp['nameUrl'] ?>"> <?= $mp['nameFirst'] . ' ' . $mp['nameLast'] ?></a>
               </div>
             <?php endforeach; ?>
           </div>
           <div class="mt-3">
-            <?php if ($active): ?>
+            <?php if ($active) : ?>
               <a href="<?= base_url() ?>groupes/<?= mb_strtolower($depute['libelleAbrev']) ?>">Voir tous les députés membres du groupe <?= $depute['libelle'] ?> (<?= $depute['libelleAbrev'] ?>)</a>
-              <?php else: ?>
+            <?php else : ?>
               <a href="<?= base_url(); ?>deputes/inactifs">Tous les députés plus en activité</a>
             <?php endif; ?>
           </div>
@@ -145,11 +145,11 @@
       </div>
       <div class="row mt-5">
         <div class="col-12">
-          <h2>Les députés en activité du département <?= $depute['dptLibelle2'] ?><?= $depute['departementNom'].' ('.$depute['departementCode'].')'?></h2>
+          <h2>Les députés en activité du département <?= $depute['dptLibelle2'] ?><?= $depute['departementNom'] . ' (' . $depute['departementCode'] . ')' ?></h2>
           <div class="row mt-3">
-            <?php foreach ($other_deputes_dpt as $mp): ?>
+            <?php foreach ($other_deputes_dpt as $mp) : ?>
               <div class="col-6 col-md-3 py-2">
-                <a class="membre no-decoration underline" href="<?= base_url(); ?>deputes/<?= $mp['dptSlug'] ?>/depute_<?= $mp['nameUrl'] ?>"> <?= $mp['nameFirst'].' '.$mp['nameLast'] ?></a>
+                <a class="membre no-decoration underline" href="<?= base_url(); ?>deputes/<?= $mp['dptSlug'] ?>/depute_<?= $mp['nameUrl'] ?>"> <?= $mp['nameFirst'] . ' ' . $mp['nameLast'] ?></a>
               </div>
             <?php endforeach; ?>
           </div>
