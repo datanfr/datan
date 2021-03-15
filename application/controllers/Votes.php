@@ -422,7 +422,6 @@
       }
 
       $data['votes_datan'] = $this->votes_model->get_last_votes_datan(7);
-
       // Meta
       $data['url'] = $this->meta_model->get_url();
       $data['title_meta'] = "Vote n°".$data['vote']['voteNumero']." - ".ucfirst($data['vote']['title_meta']). " - ".$legislature."e législature | Datan";
