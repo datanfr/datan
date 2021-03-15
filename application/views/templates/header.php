@@ -66,9 +66,9 @@
     <?php endif; ?><!--
     <link rel="preload" href="https://matomo.datan.fr/1337.js" onload="embedTracker()" type="script" crossorigin>
      CSS -->
-    <?php 
+    <?php
     if (isset($critical_css)): ?>
-      <link rel="stylesheet" href="<?= base_url() .$critical_css?>?v=1">
+      <link rel="stylesheet" href="<?= base_url() .$critical_css?>?v=<?= getVersion() ?>">
       <link rel="stylesheet" href="<?= css_url() ?>main.css?v=<?= getVersion() ?>" media="print" onload="this.media='all'">
       <noscript><link rel="stylesheet" type="text/css" href="<?= css_url() ?>main.css?v=<?= getVersion() ?>"></noscript>
       <?php else: ?>
