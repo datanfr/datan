@@ -46,7 +46,7 @@
         $donnees = $bdd->query('
             SELECT d.mpId AS uid, d.legislature
             FROM deputes_last d
-            WHERE legislature IN (14, 15)
+            WHERE legislature IN (14, 15) AND mpId = "PA1001"
           ');
 
         if (!isset($_SERVER['API_KEY_NOBG'])) {
@@ -91,7 +91,7 @@
               $ch = curl_init('https://api.remove.bg/v1.0/removebg');
               curl_setopt($ch, CURLOPT_HEADER, false);
               curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-              // curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+              curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
               echo "URL:" . $url."<br>";
               curl_setopt($ch, CURLOPT_HTTPHEADER, [
                 'X-Api-Key:' . $_SERVER['API_KEY_NOBG']
@@ -118,7 +118,7 @@
               curl_close($ch);
             } else {
               echo "API_KEY_NOBG not set nothing was downloaded</br>";
-            }      
+            }
           }
         }
 
