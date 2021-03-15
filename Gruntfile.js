@@ -59,7 +59,7 @@ module.exports = function (grunt) {
       options: {
         compress: true,
         sourceMap : true,
-        sourceMapName : 'assets/js/sourceMap.map'
+        sourceMapName : 'assets/js/main.map'
       },
       datatables: {
         src: [

@@ -465,7 +465,7 @@
       $data['js_to_load_up'] = array("chart.min.js", "chartjs-plugin-annotation.js");
       // JS
       $data['js_to_load_before_bootstrap'] = array("popper.min");
-      $data['js_to_load']= array("moment.min", "datatable-datan.min.js", "datetime-moment", "datan/async_background", "flickity.pkgd.min");
+      $data['js_to_load']= array("moment.min", "datatable-datan.min", "datetime-moment", "datan/async_background", "flickity.pkgd.min");
       // Load Views
       $this->load->view('templates/header', $data);
       $this->load->view('templates/button_up');
