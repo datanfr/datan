@@ -97,10 +97,10 @@
 
               // END RESMUSH
             }
+            echo '<p>' . $uid . ' = <img src=' . $input_filename . '>'.'=> <img src=' . $output_filename . '></p>';
+            echo '<br>';
+            echo "<br>";
           }
-          echo '<p>' . $uid . ' = <img src=' . $input_filename . '>'.'=> <img src=' . $output_filename . '></p>';
-          echo '<br>';
-          echo "<br>";
         }
 
         ?>
