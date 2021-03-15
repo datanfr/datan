@@ -7,8 +7,11 @@ $(document).ready(function(){
     html: true
   });
 
-  // Lazy Image //
-  $(".img-lazy").unveil();
+  $(".img-lazy").unveil(200, function() {
+    this.onload = function () {
+      $(this).removeClass("placeholder")
+    }
+  });
 });
 
 $(function(){
