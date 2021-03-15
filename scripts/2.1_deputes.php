@@ -64,12 +64,12 @@
         }
 
         //Same for nobg png
-        $dir = "../assets/imgs/deputes_nobg/";
+        $dir = "../assets/imgs/deputes_nobg_import/";
         $newdir = "../assets/imgs/deputes_nobg_webp/";
         $files = scandir($dir);
         unset($files[0]);
         unset($files[1]);
-        echo "Number of photos in the deputes_original ==> " . count($files) . "<br>";
+        echo "Number of photos in the deputes_nobg_import ==> " . count($files) . "<br>";
 
         foreach ($files as $file) {
           $newfile = str_replace(".png", "", $file);
