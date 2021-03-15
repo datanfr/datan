@@ -81,7 +81,7 @@
           }
           //$nobg => no background
           $lcdggithuburl = 'https://raw.githubusercontent.com/brissa-a/lcdg-data/main/img-nobg/PA' . $uid . '.png';
-          $nobgfilename = '../assets/imgs/deputes_nobg/depute_' . $uid . '.png';
+          $nobgfilename = '../assets/imgs/deputes_nobg_import/depute_' . $uid . '.png';
           if (!file_exists($nobgfilename)) {
             if (substr(get_headers($lcdggithuburl)[0], 9, 3) != '404') {
               $nobg = file_get_contents($lcdggithuburl);

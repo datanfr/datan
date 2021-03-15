@@ -52,8 +52,8 @@
 
         while ($d = $donnees->fetch()) {
           $uid = substr($d['uid'], 2);
-          $output_filename = "../assets/imgs/deputes_nobg_resmushed/depute_" . $uid . ".png";
-          $input_filename = "../assets/imgs/deputes_nobg/depute_" . $uid . ".png";
+          $output_filename = "../assets/imgs/deputes_nobg/depute_" . $uid . ".png";
+          $input_filename = "../assets/imgs/deputes_nobg_import/depute_" . $uid . ".png";
 
           if (!file_exists($output_filename)) {
             $content = file_get_contents($input_filename);
