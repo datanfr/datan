@@ -15,7 +15,7 @@
             <div class="card card-depute">
               <div class="liseret" style="background-color: <?= $groupe["couleurAssociee"] ?>"></div>
               <div class="card-avatar">
-                <img src="<?= base_url(); ?>assets/imgs/deputes/depute_<?= substr($president["mpId"], 2) ?>.png" alt="<?= $president['nameFirst'].' '.$president['nameLast'] ?>">
+                <img src="<?= base_url(); ?>assets/imgs/deputes_nobg/depute_<?= substr($president["mpId"], 2) ?>.png" alt="<?= $president['nameFirst'].' '.$president['nameLast'] ?>">
               </div>
               <div class="card-body">
                 <h3 class="d-block card-title"><a href="<?= base_url(); ?>deputes/<?= $president['dpt_slug'].'/depute_'.$president['nameUrl'] ?>" class="stretched-link no-decoration"><?= $president['nameFirst'] .' ' . $president['nameLast'] ?></a></h4>
@@ -37,7 +37,7 @@
             <div class="card card-depute">
               <div class="liseret" style="background-color: <?= $groupe["couleurAssociee"] ?>"></div>
               <div class="card-avatar">
-                <img src="<?= base_url(); ?>assets/imgs/deputes/depute_<?= substr($mp["mpId"], 2) ?>.png" alt="<?= $mp['nameFirst'].' '.$mp['nameLast'] ?>">
+                <img src="<?= base_url(); ?>assets/imgs/deputes_nobg/depute_<?= substr($mp["mpId"], 2) ?>.png" alt="<?= $mp['nameFirst'].' '.$mp['nameLast'] ?>">
               </div>
               <div class="card-body">
                 <h3 class="d-block card-title"><a href="<?= base_url(); ?>deputes/<?= $mp['dpt_slug'].'/depute_'.$mp['nameUrl'] ?>" class="stretched-link no-decoration"><?= $mp['nameFirst'] .' ' . $mp['nameLast'] ?></a></h3>
@@ -58,7 +58,7 @@
               <div class="card card-depute">
                 <div class="liseret" style="background-color: <?= $groupe["couleurAssociee"] ?>"></div>
                 <div class="card-avatar">
-                  <img src="<?= base_url(); ?>assets/imgs/deputes/depute_<?= substr($mp["mpId"], 2) ?>.png" alt="<?= $mp['nameFirst'].' '.$mp['nameLast'] ?>">
+                  <img src="<?= base_url(); ?>assets/imgs/deputes_nobg/depute_<?= substr($mp["mpId"], 2) ?>.png" alt="<?= $mp['nameFirst'].' '.$mp['nameLast'] ?>">
                 </div>
                 <div class="card-body">
                   <h3 class="d-block card-title"><a href="<?= base_url(); ?>deputes/<?= $mp['dpt_slug'].'/depute_'.$mp['nameUrl'] ?>" class="stretched-link no-decoration"><?= $mp['nameFirst'] .' ' . $mp['nameLast'] ?></a></h3>
