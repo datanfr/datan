@@ -46,7 +46,7 @@
         $donnees = $bdd->query('
             SELECT d.mpId AS uid, d.legislature
             FROM deputes_last d
-            WHERE legislature IN (14, 15) AND mpId = "PA1001"
+            WHERE legislature IN (14, 15)
           ');
 
         if (!isset($_SERVER['API_KEY_NOBG'])) {
