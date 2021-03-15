@@ -56,51 +56,44 @@
           $input_filename = "../assets/imgs/deputes_nobg_import/depute_" . $uid . ".png";
 
           if (!file_exists($output_filename)) {
-            $content = file_get_contents($input_filename);
-            if ($content) {
-              $img = imagecreatefromstring($content);
-              $width = imagesx($img);
-              $height = imagesy($img);
+            $filename = realpath($input_filename);
+            $mime = mime_content_type($input_filename);
+            $info = pathinfo($input_filename);
+            $name = $info['basename'];
+            $output = new CURLFile($filename, $mime, $name);
+            $data = array(
+              "files" => $output,
+            );
+            // 2.
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, 'http://api.resmush.it/');
+            curl_setopt($ch, CURLOPT_POST, 1);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+            curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+            $result = curl_exec($ch);
 
-              $filename = realpath($input_filename);
-              $mime = mime_content_type($input_filename);
-              $info = pathinfo($input_filename);
-              $name = $info['basename'];
-              $output = new CURLFile($filename, $mime, $name);
-              $data = array(
-                "files" => $output,
-              );
-              // 2.
-              $ch = curl_init();
-              curl_setopt($ch, CURLOPT_URL, 'http://api.resmush.it/');
-              curl_setopt($ch, CURLOPT_POST, 1);
-              curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-              curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-              curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
-              $result = curl_exec($ch);
-
-              if (curl_errno($ch)) {
-                $result = curl_error($ch);
-              }
-              curl_close($ch);
-
-              $arr_result = json_decode($result);
-              echo "<pre>";
-              print_r($arr_result);
-              echo "</pre>";
-
-              if ($arr_result->dest) {
-                file_put_contents($output_filename, file_get_contents($arr_result->dest));
-                $reducedBy = ($arr_result->src_size - $arr_result->dest_size) / $arr_result->src_size * 100;
-                echo "file size reduced by ".$reducedBy."% = (src_size-dest_size)/src_size";
-              }
-
-              // END RESMUSH
+            if (curl_errno($ch)) {
+              $result = curl_error($ch);
             }
-            echo '<p>' . $uid . ' = <img src=' . $input_filename . '>'.'=> <img src=' . $output_filename . '></p>';
-            echo '<br>';
-            echo "<br>";
+            curl_close($ch);
+
+            $arr_result = json_decode($result);
+            echo "<pre>";
+            print_r($arr_result);
+            echo "</pre>";
+
+            if ($arr_result->dest) {
+              file_put_contents($output_filename, file_get_contents($arr_result->dest));
+              $reducedBy = ($arr_result->src_size - $arr_result->dest_size) / $arr_result->src_size * 100;
+              echo "file size reduced by " . $reducedBy . "% = (src_size-dest_size)/src_size";
+            }
+
+            // END RESMUSH
           }
+          echo '<p>' . $uid . ' = <img src=' . $input_filename . '>' . '=> <img src=' . $output_filename . '></p>';
+          echo '<br>';
+          echo "<br>";
         }
 
         ?>
