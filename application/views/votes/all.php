@@ -2,7 +2,7 @@
     <div class="container-fluid pg-vote-all" id="container-always-fluid">
       <div class="row">
         <div class="container">
-          <div class="row row-grid bloc-titre">
+          <div class="row row-grid bloc-titre mb-5">
             <div class="col-lg-4 col-md-5 mb-4 mb-md-0">
               <h1>Les votes décryptés par Datan</h1>
             </div>
@@ -24,36 +24,7 @@
               </div>
             </div>
           </div>
-          <div class="row bloc-carousel-votes-flickity mt-5">
-            <div class="col-12 carousel-cards">
-              <?php foreach ($votes_datan as $vote): ?>
-                <div class="card card-vote">
-                  <div class="thumb d-flex align-items-center <?= $vote['sortCode'] ?>">
-                    <div class="d-flex align-items-center">
-                      <span><?= mb_strtoupper($vote['sortCode']) ?></span>
-                    </div>
-                  </div>
-                  <div class="card-header d-flex flex-row justify-content-between">
-                    <span class="date"><?= $vote['dateScrutinFRAbbrev'] ?></span>
-                  </div>
-                  <div class="card-body d-flex align-items-center">
-                    <span class="title">
-                      <a href="<?= base_url() ?>votes/legislature-<?= $vote['legislature'] ?>/vote_<?= $vote['voteNumero'] ?>" class="stretched-link no-decoration"></a>
-                      <?= $vote['voteTitre'] ?>
-                    </span>
-                  </div>
-                  <div class="card-footer">
-                    <span class="field badge badge-primary py-1 px-2"><?= $vote['category_libelle'] ?></span>
-                  </div>
-                </div>
-              <?php endforeach; ?>
-              <div class="card card-vote see-all">
-                <div class="card-body d-flex align-items-center justify-content-center">
-                  <a href="<?= base_url() ?>votes/decryptes" class="stretched-link no-decoration">VOIR TOUS</a>
-                </div>
-              </div>
-            </div>
-          </div>
+            <?php $this->load->view('votes/partials/votes_carousel.php', array('votes' => $votes_datan)) ?>
           <div class="row mt-4 mb-5"> <!-- BUTTONS BELOW -->
             <div class="col-12 d-flex justify-content-center">
               <div class="bloc-carousel-votes">
