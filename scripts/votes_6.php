@@ -27,6 +27,8 @@
       $url = str_replace(array("/", "datan", "scripts", "votes_", ".php"), "", $url);
       $url_current = substr($url, 0, 1);
       $url_second = $url_current + 1;
+
+      include "include/legislature.php";
     ?>
 		<div class="container" style="background-color: #e9ecef;">
 			<div class="row">
@@ -40,123 +42,128 @@
 					<a class="btn btn-outline-secondary" href="http://<?php echo $_SERVER['SERVER_NAME']. ''.$_SERVER['REQUEST_URI'] ?>" role="button">Refresh</a>
 				</div>
 				<div class="col-4">
-					<a class="btn btn-outline-success" href="./votes_<?= $url_second ?>.php" role="button">Next</a>
-				</div>
+          <?php if ($legislature_to_get == 15): ?>
+  					<a class="btn btn-outline-success" href="./votes_<?= $url_second ?>.php" role="button">Next</a>
+  					<?php else: ?>
+  					<a class="btn btn-outline-success" href="./votes_<?= $url_second ?>.php?legislature=<?= $legislature_to_get ?>" role="button">Next</a>
+  				<?php endif; ?>
+        </div>
 			</div>
 			<div class="row mt-3">
-        <h2 class="bg-danger">This script needs to be refreshed until the table below is empty. The scripts automatically is automatically refreshed every 5 seconds.</h2>
-        <?php
+        <div class="col-12">
+          <h2 class="bg-danger">This script needs to be refreshed until the table below is empty. The scripts automatically is automatically refreshed every 5 seconds.</h2>
+          <p>Legislature to get = <?= $legislature_to_get ?></p>
+          <br>
+          <?php
 
-        // formulaire ici //
+          // CONNEXION SQL //
 
 
-        // CONNEXION SQL //
+            include 'bdd-connexion.php';
 
+            $reponse_last_vote = $bdd->query('
+            SELECT voteNumero AS lastVote
+            FROM groupes_cohesion
+            WHERE legislature = "'.$legislature_to_get.'"
+            ORDER BY voteNumero DESC
+            LIMIT 1
+            ');
 
-        	include 'bdd-connexion.php';
-
-          $reponse_last_vote = $bdd->query('
-          SELECT voteNumero AS lastVote
-          FROM groupes_cohesion
-          ORDER BY voteNumero DESC
-          LIMIT 1
-          ');
-
-        while ($donnees_last_vote = $reponse_last_vote->fetch()) {
-          echo 'Last vote: '.$donnees_last_vote['lastVote'].'<br>';
-          $lastVote = $donnees_last_vote['lastVote'] + 1;
-                $untilVote = $donnees_last_vote['lastVote'] + 100;
-          echo 'last vote = '.$lastVote.'<br>';
-          echo 'until vote = '.$untilVote.'<br>';
-        }
-
-          if (!isset($lastVote)) {
-            echo 'rien dans la base';
-            $lastVote = 0;
-            $untilVote = 2;
+          while ($donnees_last_vote = $reponse_last_vote->fetch()) {
+            $lastVote = $donnees_last_vote['lastVote'] + 1;
+            $untilVote = $donnees_last_vote['lastVote'] + 100;
+            echo '<p>First vote to get = '.$lastVote.'</p>';
+            echo '<p>Until vote = '.$untilVote.'</p>';
           }
 
+            if (!isset($lastVote)) {
+              echo 'rien dans la base';
+              $lastVote = 0;
+              $untilVote = 2;
+            }
 
-        $bdd->query('SET SQL_BIG_SELECTS=1');
 
-        $reponseVote = $bdd->query('
-        SELECT A.*,
-        CASE
-          WHEN A.positionGroup = A.voteResult THEN 1
-          ELSE 0
-        END AS scoreGagnant
-        FROM
-        (
-          SELECT vg.voteNumero, vg.organeRef, o.libelle, vg.legislature, vg.nombrePours, vg.nombreContres, vg.nombreAbstentions,
-              ROUND((GREATEST(vg.nombrePours,nombreContres, nombreAbstentions)-0.5*((nombrePours + nombreContres + nombreAbstentions)-GREATEST(vg.nombrePours, vg.nombreContres, vg.nombreAbstentions)))/(vg.nombrePours + vg.nombreContres + vg.nombreAbstentions),3) as cohesion,
+          $bdd->query('SET SQL_BIG_SELECTS=1');
+
+          $reponseVote = $bdd->query('
+          SELECT A.*,
           CASE
-            WHEN vg.positionMajoritaire = "pour" THEN 1
-            WHEN vg.positionMajoritaire = "abstention" THEN 0
-            WHEN vg.positionMajoritaire = "contre" THEN -1
-            WHEN vg.positionMajoritaire = "nv" THEN "nv"
-            ELSE "error"
-          END AS positionGroup,
-          CASE
-            WHEN vi.sortCode = "adopté" THEN 1
-            WHEN vi.sortCode = "rejeté" THEN -1
-            ELSE vi.sortCode
-          END AS voteResult
-          FROM votes_groupes vg
-          JOIN organes o ON vg.organeRef = o.uid
-          JOIN votes_info vi ON vi.voteNumero = vg.voteNumero
-          WHERE vg.legislature = 15 AND (vg.voteNumero BETWEEN "'.$lastVote.'" AND "'.$untilVote.'")
-        ) A
-        ');
+            WHEN A.positionGroup = A.voteResult THEN 1
+            ELSE 0
+          END AS scoreGagnant
+          FROM
+          (
+            SELECT vg.voteNumero, vg.organeRef, o.libelle, vg.legislature, vg.nombrePours, vg.nombreContres, vg.nombreAbstentions,
+                ROUND((GREATEST(vg.nombrePours,nombreContres, nombreAbstentions)-0.5*((nombrePours + nombreContres + nombreAbstentions)-GREATEST(vg.nombrePours, vg.nombreContres, vg.nombreAbstentions)))/(vg.nombrePours + vg.nombreContres + vg.nombreAbstentions),3) as cohesion,
+            CASE
+              WHEN vg.positionMajoritaire = "pour" THEN 1
+              WHEN vg.positionMajoritaire = "abstention" THEN 0
+              WHEN vg.positionMajoritaire = "contre" THEN -1
+              WHEN vg.positionMajoritaire = "nv" THEN "nv"
+              ELSE "error"
+            END AS positionGroup,
+            CASE
+              WHEN vi.sortCode = "adopté" THEN 1
+              WHEN vi.sortCode = "rejeté" THEN -1
+              ELSE vi.sortCode
+            END AS voteResult
+            FROM votes_groupes vg
+            JOIN organes o ON vg.organeRef = o.uid
+            JOIN votes_info vi ON vi.voteNumero = vg.voteNumero AND vi.legislature = vg.legislature
+            WHERE vg.legislature = "'.$legislature_to_get.'" AND (vg.voteNumero BETWEEN "'.$lastVote.'" AND "'.$untilVote.'")
+          ) A
+          ');
 
-        ?>
+          ?>
 
-        <table>
-          <thead>
-            <td>#</td>
-            <td>voteNumero</td>
-            <td>legislature</td>
-            <td>organe</td>
-            <td>oganeName</td>
-            <td>pours</td>
-            <td>contres</td>
-            <td>abstentions</td>
-            <td>cohesion</td>
-            <td>positionGroup</td>
-            <td>voteSort</td>
-            <td>gagnant</td>
-          </thead>
+          <table>
+            <thead>
+              <td>#</td>
+              <td>voteNumero</td>
+              <td>legislature</td>
+              <td>organe</td>
+              <td>oganeName</td>
+              <td>pours</td>
+              <td>contres</td>
+              <td>abstentions</td>
+              <td>cohesion</td>
+              <td>positionGroup</td>
+              <td>voteSort</td>
+              <td>gagnant</td>
+            </thead>
 
-        <?php
+          <?php
 
-        $i = 1;
+          $i = 1;
 
-        while ($donneesVote = $reponseVote->fetch()) {
+          while ($donneesVote = $reponseVote->fetch()) {
 
-            echo '<tr>';
-            echo '<td>'.$i.'</td>';
-            echo '<td>'.$donneesVote['voteNumero'].'</td>';
-            echo '<td>'.$donneesVote['legislature'].'</td>';
-            echo '<td>'.$donneesVote['organeRef'].'</td>';
-            echo '<td>'.$donneesVote['libelle'].'</td>';
-            echo '<td>'.$donneesVote['nombrePours'].'</td>';
-            echo '<td>'.$donneesVote['nombreContres'].'</td>';
-            echo '<td>'.$donneesVote['nombreAbstentions'].'</td>';
-            echo '<td>'.$donneesVote['cohesion'].'</td>';
-            echo '<td>'.$donneesVote['positionGroup'].'</td>';
-            echo '<td>'.$donneesVote['voteResult'].'</td>';
-            echo '<td>'.$donneesVote['scoreGagnant'].'</td>';
-            echo '<tr>';
+              echo '<tr>';
+              echo '<td>'.$i.'</td>';
+              echo '<td>'.$donneesVote['voteNumero'].'</td>';
+              echo '<td>'.$donneesVote['legislature'].'</td>';
+              echo '<td>'.$donneesVote['organeRef'].'</td>';
+              echo '<td>'.$donneesVote['libelle'].'</td>';
+              echo '<td>'.$donneesVote['nombrePours'].'</td>';
+              echo '<td>'.$donneesVote['nombreContres'].'</td>';
+              echo '<td>'.$donneesVote['nombreAbstentions'].'</td>';
+              echo '<td>'.$donneesVote['cohesion'].'</td>';
+              echo '<td>'.$donneesVote['positionGroup'].'</td>';
+              echo '<td>'.$donneesVote['voteResult'].'</td>';
+              echo '<td>'.$donneesVote['scoreGagnant'].'</td>';
+              echo '<tr>';
 
-            $i++;
+              $i++;
 
 
-            $sql = $bdd->prepare("INSERT INTO groupes_cohesion (voteNumero, legislature, organeRef, cohesion, positionGroupe, voteSort, scoreGagnant) VALUES (:voteNumero, :legislature, :organeRef, :cohesion, :positionGroupe, :voteSort, :scoreGagnant)");
-            $sql->execute(array('voteNumero' => $donneesVote['voteNumero'], 'legislature' => $donneesVote['legislature'], 'organeRef' => $donneesVote['organeRef'] ,'cohesion' => $donneesVote['cohesion'], 'positionGroupe' => $donneesVote['positionGroup'], 'voteSort' => $donneesVote['voteResult'], 'scoreGagnant' => $donneesVote['scoreGagnant']));
+              $sql = $bdd->prepare("INSERT INTO groupes_cohesion (voteNumero, legislature, organeRef, cohesion, positionGroupe, voteSort, scoreGagnant) VALUES (:voteNumero, :legislature, :organeRef, :cohesion, :positionGroupe, :voteSort, :scoreGagnant)");
+              $sql->execute(array('voteNumero' => $donneesVote['voteNumero'], 'legislature' => $donneesVote['legislature'], 'organeRef' => $donneesVote['organeRef'] ,'cohesion' => $donneesVote['cohesion'], 'positionGroupe' => $donneesVote['positionGroup'], 'voteSort' => $donneesVote['voteResult'], 'scoreGagnant' => $donneesVote['scoreGagnant']));
 
-        }
+          }
 
-        ?>
-      </table>
+          ?>
+          </table>
+        </div>
       </div>
     </div>
   </body>

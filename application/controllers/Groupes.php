@@ -155,7 +155,7 @@
       $data['groupesN'] = $this->groupes_model->get_number_active_groupes();
       $data['groupesN'] = $data['groupesN']['n'];
       // Get mean age in the National Assembly
-      $data['ageMean'] = $this->stats_model->get_age_mean();
+      $data['ageMean'] = $this->stats_model->get_age_mean($legislature);
       $data['ageMean'] = round($data['ageMean']['mean']);
       $data['ageEdited'] = $this->functions_datan->old_young($data['groupe']['age'], $data['ageMean']);
       // Get mean of women in the National Assembly
@@ -168,7 +168,7 @@
 
       //Query 3 Statistiques
       $data['stats'] = $this->groupes_model->get_stats($groupe_uid);
-      $data['statsAverage'] = $this->groupes_model->get_stats_avg();
+      $data['statsAverage'] = $this->groupes_model->get_stats_avg($legislature);
 
       if (!empty($data['stats']['cohesion'])) {
         $data['cohesionAverage'] = $data['statsAverage']['cohesion'];
@@ -193,8 +193,6 @@
       } else {
         $data['no_majorite'] = TRUE;
       }
-
-
 
       if (isset($data['stats_majorite'])) {
         $data['stats_majorite_moyenne'] = $this->groupes_model->get_stats_majorite_moyenne($data['active']);
@@ -221,7 +219,7 @@
       }
 
       // Query 4 Votes
-      $data['votes_datan'] = $this->votes_model->get_votes_datan_groupe($groupe_uid, 5);
+      $data['votes_datan'] = $this->votes_model->get_votes_datan_groupe($groupe_uid, 5, $legislature);
 
       // Query 5 Edito
       $data['edito'] = $this->groupes_edito->edito($groupe_ab, $groupe_opposition, $data['groupes_positionnement']);
@@ -389,7 +387,7 @@
       $data['fields'] = $this->fields_model->get_active_fields();
       foreach ($data['fields'] as $key => $field) {
         // Get votes by field
-        $x[$field["slug"]] = $this->votes_model->get_votes_datan_groupe_field($groupe_uid, $field['slug']);
+        $x[$field["slug"]] = $this->votes_model->get_votes_datan_groupe_field($groupe_uid, $field['slug'], 2);
         if (!empty($x[$field["slug"]])) {
           $data['fields_voted'][] = $field;
         }
@@ -466,7 +464,7 @@
       $groupe_opposition = $data['groupe']['positionPolitique'];
 
       // Query - get active votes
-      $data['votes'] = $this->votes_model->get_votes_datan_groupe_field($groupe_uid, $field);
+      $data['votes'] = $this->votes_model->get_votes_datan_groupe_field($groupe_uid, $field, NULL);
 
       if (empty($data['votes'])) {
         show_404();
@@ -586,7 +584,7 @@
       $data['edito'] = $this->groupes_edito->edito($groupe_ab, $groupe_opposition, $data['groupes_positionnement']);
 
       // Query - get all votes
-      $data['votes'] = $this->votes_model->get_votes_all_groupe($groupe_uid);
+      $data['votes'] = $this->votes_model->get_votes_all_groupe($groupe_uid, legislature_current());
 
       // Meta
       $data['url'] = $this->meta_model->get_url();
@@ -630,6 +628,7 @@
       );
       /// JS
       $data['js_to_load']= array("moment.min", "datatable-datan.min.js", "datetime-moment", "datan/async_background");
+      $data['js_to_load_before_bootstrap'] = array("popper.min");
       // Load Views
       $this->load->view('templates/header', $data);
       $this->load->view('groupes/votes');

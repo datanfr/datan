@@ -22,6 +22,8 @@
           $url = str_replace(array("/", "datan", "scripts", "votes_", ".php"), "", $url);
           $url_current = substr($url, 0, 1);
           $url_second = $url_current + 1;
+
+          include 'include/legislature.php';
         ?>
 				<h1><?= $_SERVER['REQUEST_URI'] ?></h1>
 			</div>
@@ -33,12 +35,17 @@
 					<a class="btn btn-outline-secondary" href="http://<?php echo $_SERVER['SERVER_NAME']. ''.$_SERVER['REQUEST_URI'] ?>" role="button">Refresh</a>
 				</div>
 				<div class="col-4">
-					<a class="btn btn-outline-success" href="./votes_<?= $url_second ?>.php" role="button">Next</a>
+          <?php if ($legislature_to_get == 15): ?>
+            <a class="btn btn-outline-success" href="./votes_<?= $url_second ?>.php" role="button">Next</a>
+            <?php else: ?>
+            <a class="btn btn-outline-success" href="./votes_<?= $url_second ?>.php?legislature=<?= $legislature_to_get ?>" role="button">Next</a>
+          <?php endif; ?>
 				</div>
 			</div>
 			<div class="row mt-3">
         <div class="col-12">
           <h2 class="bg-danger">This script needs to be refreshed until the table below is empty. The scripts automatically is automatically refreshed every 5 seconds.</h2>
+          <p>Legislature to get = <?= $legislature_to_get ?></p>
           <table class="table">
             <thead>
                 <tr>
@@ -57,103 +64,189 @@
               </thead>
               <tbody>
         				<?php
-        				ini_set('display_errors', 1);
-        				error_reporting(E_ALL);
+          				ini_set('display_errors', 1);
+          				error_reporting(E_ALL);
+
         					include 'bdd-connexion.php';
 
-        					$reponse_vote = $bdd->query('
-        						SELECT voteNumero
-        						FROM votes
-        						ORDER BY voteNumero DESC
-        						LIMIT 1
-        					');
+                  $reponse_vote = $bdd->query('
+                    SELECT voteNumero
+                    FROM votes
+                    WHERE legislature = "'.$legislature_to_get.'"
+                    ORDER BY voteNumero DESC
+                    LIMIT 1
+                  ');
 
-        					while ($dernier_vote = $reponse_vote->fetch() ) {
-        						$last_vote = $dernier_vote['voteNumero'];
-        					}
+                  while ($dernier_vote = $reponse_vote->fetch() ) {
+                    $last_vote = $dernier_vote['voteNumero'];
+                  }
                   // Last vote
                   if (!isset($last_vote)) {
                     $number_to_import = 1;
                   } else {
                     $number_to_import = $last_vote + 1;
                   }
-                  echo $number_to_import;
 
-                  // Online File
-                  $file = 'http://data.assemblee-nationale.fr/static/openData/repository/15/loi/scrutins/Scrutins_XV.xml.zip';
-                  $file = trim($file);
-                  $newfile = 'tmp_Scrutins_XV.xml.zip';
-                  if (!copy($file, $newfile)) {
-                    echo "failed to copy $file...\n";
-                  }
-
-                  echo "FROM WHICH VOTE TO IMPORT = ".$number_to_import."<br>";
+                  echo "<b>FIRST VOTE TO IMPORT</b> = ".$number_to_import."<br>";
                   $until = $number_to_import + 149;
-                  echo "UNTIL WHICH VOTE TO IMPORT = ".$until."<br>";
+                  echo "<b>UNTIL WHICH VOTE TO IMPORT</b> = ".$until."<br>";
 
-                  $zip = new ZipArchive();
-                  if ($zip->open($newfile)!==TRUE) {
-                    exit("cannot open <$filename>\n");
-                  } else {
+                  // SCRAPPING DEPENDING ON LEGISLATURE
+                  if ($legislature_to_get == 15) {
 
-                    $i = 1;
+                    $file = 'http://data.assemblee-nationale.fr/static/openData/repository/15/loi/scrutins/Scrutins_XV.xml.zip';
+                    $file = trim($file);
+                    $newfile = 'tmp_Scrutins_XV.xml.zip';
+                    if (!copy($file, $newfile)) {
+                      echo "failed to copy $file...\n";
+                    }
+                    $zip = new ZipArchive();
 
-                    foreach (range($number_to_import, $until) as $n) {
-                      $file_to_import = 'VTANR5L15V'.$n;
-                      $xml_string = $zip->getFromName('xml/'.$file_to_import.'.xml');
+                    if ($zip->open($newfile)!==TRUE) {
+                      exit("cannot open <$filename>\n");
+                    } else {
+
+                      $i = 1;
+
+                      foreach (range($number_to_import, $until) as $n) {
+                        $file_to_import = 'VTANR5L15V'.$n;
+                        $xml_string = $zip->getFromName('xml/'.$file_to_import.'.xml');
+                        if ($xml_string != false) {
+                          $xml = simplexml_load_string($xml_string);
+
+                          foreach ($xml->xpath("//*[local-name()='votant']") as $votant) {
+                            $mpId = $votant->xpath("./*[local-name()='acteurRef']");
+                            $item['mpId'] = $mpId[0];
+
+                            $mandatId = $votant->xpath("./*[local-name()='mandatRef']");
+                            $item['mandatId'] = $mandatId[0];
+
+                            $parDelegation = $votant->xpath("./*[local-name()='parDelegation']");
+                              if (isset($parDelegation[0])) {
+                                $item['parDelegation'] = $parDelegation[0];
+                              } else {
+                                $item['parDelegation'] = NULL;
+                              }
+
+                            $causePosition = $votant->xpath("./*[local-name()='causePositionVote']");
+                              if (isset($causePosition[0])) {
+                                $item['causePosition'] = $causePosition[0];
+                              } else {
+                                $item['causePosition'] = NULL;
+                              }
+
+                            $voteMp = $votant->xpath("./parent::*");
+                            $item['voteMp'] = $voteMp[0]->getName();
+
+
+                            if ($item['voteMp'] == 'pours' || $item['voteMp'] == 'pour') {
+                              $vote = 1;
+                            } elseif ($item['voteMp'] == 'contres' || $item['voteMp'] == 'contre') {
+                              $vote = -1;
+                            } elseif ($item['voteMp'] == 'abstentions' || $item['voteMp'] == 'abstention') {
+                              $vote = 0;
+                            } elseif ($item['voteMp'] == 'nonVotants' || $item['voteMp'] == 'nonVotant') {
+                              $vote = 'nv';
+                            } elseif ($item['voteMp'] == 'nonVotantsVolontaires' || $item['voteMp'] == 'nonVotantsVolontaire') {
+                              $vote = 'nv';
+                            } else {
+                              $vote = NULL;
+                            }
+
+                            $voteId = $votant->xpath("./ancestor::*[local-name()='scrutin']/*[local-name()='uid']");
+                            $item['voteId'] = $voteId[0];
+
+                            $voteNumero = $votant->xpath("./ancestor::*[local-name()='scrutin']/*[local-name()='numero']");
+                            $item['voteNumero'] = $voteNumero[0];
+
+                            $legislature = $votant->xpath("./ancestor::*[local-name()='scrutin']/*[local-name()='legislature']");
+                            $item['legislature'] = $legislature[0];
+
+                            $miseaupoint = $votant->xpath("./../..");
+                            $item['voteType'] = $miseaupoint[0]->getName();
+
+
+                              ?>
+
+                              <tr>
+                                <td><?= $i ?></td>
+                                <td><?= $item['mpId'] ?></td>
+                                <td><?= $item['mandatId'] ?></td>
+                                <td><?= $item['parDelegation'] ?></td>
+                                <td><?= $item['causePosition'] ?></td>
+                                <td><?= $item['voteMp'] ?></td>
+                                <td><?= $vote ?></td>
+                                <td><?= $item['voteId'] ?></td>
+                                <td><?= $item['voteNumero'] ?></td>
+                                <td><?= $item['legislature'] ?></td>
+                                <td><?= $item['voteType'] ?></td>
+                              </tr>
+
+                              <?php
+
+                              $sql = $bdd->prepare("INSERT INTO votes (mpId, vote, voteNumero, voteId, legislature, mandatId, parDelegation, causePosition, voteType) VALUES (:mpId, :vote, :voteNumero, :voteId, :legislature, :mandatId, :parDelegation, :causePosition, :voteType)");
+
+                              $sql->execute(array('mpId' => $item['mpId'], 'vote' => $vote, 'voteNumero' => $item['voteNumero'], 'voteId' => $item['voteId'], 'legislature' => $item['legislature'], 'mandatId' => $item['mandatId'], 'parDelegation' => $item['parDelegation'], 'causePosition' => $item['causePosition'], 'voteType' => $item['voteType']));
+
+                              $i++;
+                          }
+                        }
+                      }
+                    }
+
+                  } elseif($legislature_to_get == 14) {
+
+                    $file = 'http://data.assemblee-nationale.fr/static/openData/repository/14/loi/scrutins/Scrutins_XIV.xml.zip';
+                    $file = trim($file);
+                    $newfile = 'tmp_Scrutins_XIV.xml.zip';
+                    if (!copy($file, $newfile)) {
+                      echo "failed to copy $file...\n";
+                    }
+                    $zip = new ZipArchive();
+
+                    if ($zip->open($newfile)!==TRUE) {
+                      exit("cannot open <$filename>\n");
+                    } else {
+
+                      $i = 1;
+
+                      $xml_string = $zip->getFromName('Scrutins_XIV.xml');
                       if ($xml_string != false) {
                         $xml = simplexml_load_string($xml_string);
 
-                        foreach ($xml->xpath("//*[local-name()='votant']") as $votant) {
-                          $mpId = $votant->xpath("./*[local-name()='acteurRef']");
-                          $item['mpId'] = $mpId[0];
+                        foreach ($xml->xpath('//acteurRef/ancestor::scrutin[(numero>='. $number_to_import .') and (numero<='. $until.')]') as $xml2) {
 
-                          $mandatId = $votant->xpath("./*[local-name()='mandatRef']");
-                          $item['mandatId'] = $mandatId[0];
+                          foreach ($xml2->xpath('.//acteurRef') as $mp) {
+                            $item['mpId'] = $mp;
 
-                          $parDelegation = $votant->xpath("./*[local-name()='parDelegation']");
-                            if (isset($parDelegation[0])) {
-                              $item['parDelegation'] = $parDelegation[0];
-                            } else {
-                              $item['parDelegation'] = NULL;
-                            }
+                            $mandatId = $mp->xpath("following-sibling::mandatRef");
+                              $item['mandatId'] = $mandatId[0];
 
-                          $causePosition = $votant->xpath("./*[local-name()='causePositionVote']");
-                            if (isset($causePosition[0])) {
-                              $item['causePosition'] = $causePosition[0];
-                            } else {
-                              $item['causePosition'] = NULL;
-                            }
+                            $vote = $mp->xpath('../..');
+                    					$item['vote'] = $vote[0]->getName();
 
-                          $voteMp = $votant->xpath("./parent::*");
-                          $item['voteMp'] = $voteMp[0]->getName();
+                              if ($item['vote'] == 'pours' || $item['vote'] == 'pour') {
+                                $vote = 1;
+                              } elseif ($item['vote'] == 'contres' || $item['vote'] == 'contre') {
+                                $vote = -1;
+                              } elseif ($item['vote'] == 'abstentions' || $item['vote'] == 'abstention') {
+                                $vote = 0;
+                              } elseif ($item['vote'] == 'nonVotants' || $item['vote'] == 'nonVotant') {
+                                $vote = 'nv';
+                              } elseif ($item['vote'] == 'nonVotantsVolontaires' || $item['vote'] == 'nonVotantsVolontaire') {
+                                $vote = 'nv';
+                              } else {
+                                $vote = NULL;
+                              }
 
+                              $voteId = $mp->xpath("./ancestor::scrutin/uid");
+                              $item['voteId'] = $voteId[0];
 
-                          if ($item['voteMp'] == 'pours' || $item['voteMp'] == 'pour') {
-                            $vote = 1;
-                          } elseif ($item['voteMp'] == 'contres' || $item['voteMp'] == 'contre') {
-                            $vote = -1;
-                          } elseif ($item['voteMp'] == 'abstentions' || $item['voteMp'] == 'abstention') {
-                            $vote = 0;
-                          } elseif ($item['voteMp'] == 'nonVotants' || $item['voteMp'] == 'nonVotant') {
-                            $vote = 'nv';
-                          } elseif ($item['voteMp'] == 'nonVotantsVolontaires' || $item['voteMp'] == 'nonVotantsVolontaire') {
-                            $vote = 'nv';
-                          } else {
-                            $vote = NULL;
-                          }
+                              $voteNumero = $mp->xpath("./ancestor::scrutin/numero");
+                              $item['voteNumero'] = $voteNumero[0];
 
-                          $voteId = $votant->xpath("./ancestor::*[local-name()='scrutin']/*[local-name()='uid']");
-                          $item['voteId'] = $voteId[0];
-
-                          $voteNumero = $votant->xpath("./ancestor::*[local-name()='scrutin']/*[local-name()='numero']");
-                          $item['voteNumero'] = $voteNumero[0];
-
-                          $legislature = $votant->xpath("./ancestor::*[local-name()='scrutin']/*[local-name()='legislature']");
-                          $item['legislature'] = $legislature[0];
-
-                          $miseaupoint = $votant->xpath("./../..");
-                          $item['voteType'] = $miseaupoint[0]->getName();
+                              $miseaupoint = $mp->xpath("./../../..");
+                              $item['voteType'] = $miseaupoint[0]->getName();
 
 
                             ?>
@@ -162,24 +255,29 @@
                               <td><?= $i ?></td>
                               <td><?= $item['mpId'] ?></td>
                               <td><?= $item['mandatId'] ?></td>
-                              <td><?= $item['parDelegation'] ?></td>
-                              <td><?= $item['causePosition'] ?></td>
-                              <td><?= $item['voteMp'] ?></td>
+                              <td></td>
+                              <td></td>
+                              <td><?= $item['vote'] ?></td>
                               <td><?= $vote ?></td>
                               <td><?= $item['voteId'] ?></td>
                               <td><?= $item['voteNumero'] ?></td>
-                              <td><?= $item['legislature'] ?></td>
+                              <td><?= $legislature_to_get ?></td>
                               <td><?= $item['voteType'] ?></td>
                             </tr>
 
                             <?php
 
-                            $sql = $bdd->prepare("INSERT INTO votes (mpId, vote, voteNumero, voteId, legislature, mandatId, parDelegation, causePosition, voteType) VALUES (:mpId, :vote, :voteNumero, :voteId, :legislature, :mandatId, :parDelegation, :causePosition, :voteType)");
 
-                            $sql->execute(array('mpId' => $item['mpId'], 'vote' => $vote, 'voteNumero' => $item['voteNumero'], 'voteId' => $item['voteId'], 'legislature' => $item['legislature'], 'mandatId' => $item['mandatId'], 'parDelegation' => $item['parDelegation'], 'causePosition' => $item['causePosition'], 'voteType' => $item['voteType']));
+                            $sql = $bdd->prepare("INSERT INTO votes (mpId, vote, voteNumero, voteId, legislature, mandatId, parDelegation, causePosition, voteType) VALUES (:mpId, :vote, :voteNumero, :voteId, :legislature, :mandatId, null, null, :voteType)");
+
+                            $sql->execute(array('mpId' => $item['mpId'], 'vote' => $vote, 'voteNumero' => $item['voteNumero'], 'voteId' => $item['voteId'], 'legislature' => $legislature_to_get, 'mandatId' => $item['mandatId'], 'voteType' => $item['voteType']));
+
 
                             $i++;
+
+                          }
                         }
+
                       }
                     }
                   }

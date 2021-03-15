@@ -25,6 +25,8 @@
       $url = str_replace(array("/", "datan", "scripts", "votes_", ".php"), "", $url);
       $url_current = substr($url, 0, 2);
       $url_second = $url_current + 1;
+
+      include "include/legislature.php";
     ?>
 		<div class="container" style="background-color: #e9ecef;">
 			<div class="row">
@@ -38,27 +40,33 @@
 					<a class="btn btn-outline-secondary" href="http://<?php echo $_SERVER['SERVER_NAME']. ''.$_SERVER['REQUEST_URI'] ?>" role="button">Refresh</a>
 				</div>
 				<div class="col-4">
-					<a class="btn btn-outline-success" href="./votes_<?= $url_second ?>.php" role="button">NEXT</a>
-				</div>
+          <?php if ($legislature_to_get == 15): ?>
+  					<a class="btn btn-outline-success" href="./votes_<?= $url_second ?>.php" role="button">Next</a>
+  					<?php else: ?>
+  					<a class="btn btn-outline-success" href="./votes_<?= $url_second ?>.php?legislature=<?= $legislature_to_get ?>" role="button">Next</a>
+  				<?php endif; ?>
+        </div>
 			</div>
 			<div class="row mt-3">
         <div class="col-12">
           <h2 class="bg-success">Run this script only once.</h2>
+          <p class="bg-warning">This scripts does not depend on legislature. All legislatures are managed by a single script. </p>
           <?php
 
-          // CONNEXION SQL //
+            // CONNEXION SQL //
           	include 'bdd-connexion.php';
             $bdd->query('DROP TABLE IF EXISTS class_groups_proximite');
 
             $bdd->query('
               CREATE TABLE class_groups_proximite AS
-              SELECT  ga.organeRef, ga.organeRefAccord AS prox_group, ROUND(AVG(accord), 4) AS score, COUNT(accord) AS votesN, curdate() AS dateMaj
+              SELECT  ga.organeRef, ga.legislature, ga.organeRefAccord AS prox_group, ROUND(AVG(accord), 4) AS score, COUNT(accord) AS votesN, curdate() AS dateMaj
               FROM groupes_accord ga
               WHERE ga.organeRef != ga.organeRefAccord
               GROUP BY ga.organeRef, ga.organeRefAccord
             ');
 
             $bdd->query("ALTER TABLE class_groups_proximite ADD INDEX idx_organeRef (organeRef)");
+            $bdd->query("ALTER TABLE class_groups_proximite ADD INDEX idx_legislature (legislature)");
 
 
           ?>

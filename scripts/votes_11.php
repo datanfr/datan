@@ -25,6 +25,8 @@
       $url = str_replace(array("/", "datan", "scripts", "votes_", ".php"), "", $url);
       $url_current = substr($url, 0, 2);
       $url_second = $url_current + 1;
+
+      include "include/legislature.php";
     ?>
 		<div class="container" style="background-color: #e9ecef;">
 			<div class="row">
@@ -38,8 +40,12 @@
 					<a class="btn btn-outline-secondary" href="http://<?php echo $_SERVER['SERVER_NAME']. ''.$_SERVER['REQUEST_URI'] ?>" role="button">Refresh</a>
 				</div>
 				<div class="col-4">
-					<a class="btn btn-outline-success" href="./votes_<?= $url_second ?>.php" role="button">NEXT</a>
-				</div>
+          <?php if ($legislature_to_get == 15): ?>
+  					<a class="btn btn-outline-success" href="./votes_<?= $url_second ?>.php" role="button">Next</a>
+  					<?php else: ?>
+  					<a class="btn btn-outline-success" href="./votes_<?= $url_second ?>.php?legislature=<?= $legislature_to_get ?>" role="button">Next</a>
+  				<?php endif; ?>
+        </div>
 			</div>
 			<div class="row mt-3">
         <div class="col-12">
@@ -48,24 +54,32 @@
 
           	include 'bdd-connexion.php';
 
-            $bdd->query('
-              DROP TABLE IF EXISTS class_participation_commission;
-              CREATE TABLE class_participation_commission
-              SELECT A.*, da.legislature,
-              CASE WHEN da.dateFin IS NULL THEN 1 ELSE 0 END AS active,
-              curdate() AS dateMaj
-              FROM
-              (
-              SELECT v.mpId, ROUND(AVG(v.participation),2) AS score, COUNT(v.participation) AS votesN, ROUND(COUNT(v.participation)/100) AS "index"
-              FROM votes_participation_commission v
-              WHERE v.participation IS NOT NULL
-              GROUP BY v.mpId
-              ORDER BY ROUND(COUNT(v.participation)/100) DESC, AVG(v.participation) DESC
-              ) A
-              LEFT JOIN deputes_all da ON da.mpId = A.mpId AND da.legislature = 15;
-              ALTER TABLE class_participation_commission ADD INDEX idx_mpId (mpId);
-              ALTER TABLE class_participation_commission ADD INDEX idx_active (active);
-            ');
+            if ($legislature_to_get == 14) {
+              echo '<p class="bg-danger">This script is not run for the legislature 14, please launch the following script.</p>';
+            } else {
+
+              $bdd->query('
+                DROP TABLE IF EXISTS class_participation_commission;
+                CREATE TABLE class_participation_commission
+                SELECT A.*, da.legislature,
+                CASE WHEN da.dateFin IS NULL THEN 1 ELSE 0 END AS active,
+                curdate() AS dateMaj
+                FROM
+                (
+                SELECT v.mpId, ROUND(AVG(v.participation),2) AS score, COUNT(v.participation) AS votesN, ROUND(COUNT(v.participation)/100) AS "index"
+                FROM votes_participation_commission v
+                WHERE v.participation IS NOT NULL
+                GROUP BY v.mpId
+                ORDER BY ROUND(COUNT(v.participation)/100) DESC, AVG(v.participation) DESC
+                ) A
+                LEFT JOIN deputes_all da ON da.mpId = A.mpId AND da.legislature = 15;
+                ALTER TABLE class_participation_commission ADD INDEX idx_mpId (mpId);
+                ALTER TABLE class_participation_commission ADD INDEX idx_active (active);
+              ');
+
+            }
+
+
 
           ?>
 
