@@ -63,9 +63,8 @@
       <?php foreach ($preloads as $preload): ?>
         <link rel=preload href="<?= $preload['href'] ?>" as="<?= $preload['as'] ?>" imagesrcset="<?= $preload['imagesrcset'] ?>">
       <?php endforeach; ?>
-    <?php endif; ?><!--
+    <?php endif; ?>
     <link rel="preload" href="https://matomo.datan.fr/1337.js" onload="embedTracker()" type="script" crossorigin>
-     CSS -->
     <?php
     if (isset($critical_css)): ?>
       <link rel="stylesheet" href="<?= base_url() .$critical_css?>?v=<?= getVersion() ?>">
