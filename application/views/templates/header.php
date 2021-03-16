@@ -63,12 +63,11 @@
       <?php foreach ($preloads as $preload): ?>
         <link rel=preload href="<?= $preload['href'] ?>" as="<?= $preload['as'] ?>" imagesrcset="<?= $preload['imagesrcset'] ?>">
       <?php endforeach; ?>
-    <?php endif; ?><!--
+    <?php endif; ?>
     <link rel="preload" href="https://matomo.datan.fr/1337.js" onload="embedTracker()" type="script" crossorigin>
-     CSS -->
-    <?php 
+    <?php
     if (isset($critical_css)): ?>
-      <link rel="stylesheet" href="<?= base_url() .$critical_css?>?v=1">
+      <link rel="stylesheet" href="<?= base_url() .$critical_css?>?v=<?= getVersion() ?>">
       <link rel="stylesheet" href="<?= css_url() ?>main.css?v=<?= getVersion() ?>" media="print" onload="this.media='all'">
       <noscript><link rel="stylesheet" type="text/css" href="<?= css_url() ?>main.css?v=<?= getVersion() ?>"></noscript>
       <?php else: ?>
@@ -149,16 +148,17 @@
       }]);
       // FIN CODE CNIL
       /* tracker methods like "setCustomDimension" should be called before "trackPageView" */
-      // _paq.push(['trackPageView']);
-      // _paq.push(['enableLinkTracking']);
-      // (function() {
-      //   var u="//matomo.datan.fr/";
-      //   _paq.push(['setTrackerUrl', u+'1337.php']);
-      //   _paq.push(['setSiteId', '1']);
-      //   var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
-      //   g.type='text/javascript'; g.async=true; g.src=u+'1337.js'; s.parentNode.insertBefore(g,s);
-      // })();
+      _paq.push(['trackPageView']);
+      _paq.push(['enableLinkTracking']);
+      (function() {
+        var u="//matomo.datan.fr/";
+        _paq.push(['setTrackerUrl', u+'1337.php']);
+        _paq.push(['setSiteId', '1']);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
+        g.type='text/javascript'; g.async=true; g.src=u+'1337.js'; s.parentNode.insertBefore(g,s);
+      })();
     </script>
+    <noscript><p><img src="//matomo.datan.fr/1337.php?idsite=1&amp;rec=1" style="border:0;" alt="" /></p></noscript>
     <!-- End Matomo Code -->
 
   </head>
