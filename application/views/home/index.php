@@ -78,35 +78,7 @@
               <h2 class="text-center my-4">Derniers votes décryptés par Datan</h2>
             </div>
           </div>
-          <div class="row bloc-carousel-votes-flickity"> <!-- CARDS -->
-            <div class="col-12 carousel-cards">
-              <?php foreach ($votes as $vote): ?>
-                <div class="card card-vote">
-                  <div class="thumb d-flex align-items-center <?= $vote['sortCode'] ?>">
-                    <div class="d-flex align-items-center">
-                      <span><?= mb_strtoupper($vote['sortCode']) ?></span>
-                    </div>
-                  </div>
-                  <div class="card-header d-flex flex-row justify-content-between">
-                    <span class="date"><?= $vote['dateScrutinFRAbbrev'] ?></span>
-                  </div>
-                  <div class="card-body d-flex align-items-center">
-                    <span class="title">
-                      <a href="<?= base_url() ?>votes/legislature-<?= $vote['legislature'] ?>/vote_<?= $vote['voteNumero'] ?>" class="stretched-link no-decoration"><?= $vote['voteTitre'] ?></a>
-                    </span>
-                  </div>
-                  <div class="card-footer">
-                    <span class="field badge badge-primary py-1 px-2"><?= $vote['category_libelle'] ?></span>
-                  </div>
-                </div>
-              <?php endforeach; ?>
-              <div class="card card-vote see-all">
-                <div class="card-body d-flex align-items-center justify-content-center">
-                  <a href="<?= base_url() ?>votes/decryptes" class="stretched-link no-decoration">VOIR TOUS</a>
-                </div>
-              </div>
-            </div>
-          </div>
+            <?php $this->load->view('votes/partials/votes_carousel.php', array('votes' => $votes)) ?>
           <div class="row mt-4 mb-5"> <!-- BUTTONS BELOW -->
             <div class="col-12 d-flex justify-content-center">
               <div class="bloc-carousel-votes">
@@ -137,9 +109,9 @@
                 <div class="liseret" style="background-color: <?= $depute_random["couleurAssociee"] ?>"></div>
                 <div class="card-avatar">
                   <?php if ($depute_random['img']): ?>
-                    <img class="img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-face.png" data-src="<?= base_url(); ?>assets/imgs/deputes_nobg/depute_<?= substr($depute_random["mpId"], 2) ?>.png" alt="<?= $depute_random['nameFirst'].' '.$depute_random['nameLast'] ?>">
+                    <img class="img-lazy placeholder" src="<?= asset_url() ?>imgs/placeholder/placeholder-face.png" data-src="<?= base_url(); ?>assets/imgs/deputes_nobg/depute_<?= substr($depute_random["mpId"], 2) ?>.png" alt="<?= $depute_random['nameFirst'].' '.$depute_random['nameLast'] ?>">
                     <?php else: ?>
-                    <img class="img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-face.png" data-src="<?= asset_url() ?>imgs/placeholder/placeholder-face.png" alt="<?= $depute_random['nameFirst'].' '.$depute_random['nameLast'] ?>">
+                    <img class="img-lazy placeholder" src="<?= asset_url() ?>imgs/placeholder/placeholder-face.png" data-src="<?= asset_url() ?>imgs/placeholder/placeholder-face.png" alt="<?= $depute_random['nameFirst'].' '.$depute_random['nameLast'] ?>">
                   <?php endif; ?>
                 </div>
                 <div class="card-body d-flex align-items-center justify-content-center">
@@ -192,7 +164,7 @@
               <div class="card card-depute">
                 <div class="liseret" style="background-color: <?= $depute_vote_plus["couleurAssociee"] ?>"></div>
                 <div class="card-avatar">
-                  <img class="img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-face.png" data-src="<?= base_url(); ?>assets/imgs/deputes_nobg/depute_<?= substr($depute_vote_plus["mpId"], 2) ?>.png" alt="<?= $depute_vote_plus['nameFirst'].' '.$depute_vote_plus['nameLast'] ?>">
+                  <img class="img-lazy placeholder" src="<?= asset_url() ?>imgs/placeholder/placeholder-face.png" data-src="<?= base_url(); ?>assets/imgs/deputes_nobg/depute_<?= substr($depute_vote_plus["mpId"], 2) ?>.png" alt="<?= $depute_vote_plus['nameFirst'].' '.$depute_vote_plus['nameLast'] ?>">
                 </div>
                 <div class="card-body d-flex align-items-center justify-content-center">
                   <div>
@@ -213,7 +185,7 @@
               <div class="card card-depute">
                 <div class="liseret" style="background-color: <?= $depute_vote_moins["couleurAssociee"] ?>"></div>
                 <div class="card-avatar">
-                  <img class="img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-face.png" data-src="<?= base_url(); ?>assets/imgs/deputes_nobg/depute_<?= substr($depute_vote_moins["mpId"], 2) ?>.png" alt="<?= $depute_vote_moins['nameFirst'].' '.$depute_vote_moins['nameLast'] ?>">
+                  <img class="img-lazy placeholder" src="<?= asset_url() ?>imgs/placeholder/placeholder-face.png" data-src="<?= base_url(); ?>assets/imgs/deputes_nobg/depute_<?= substr($depute_vote_moins["mpId"], 2) ?>.png" alt="<?= $depute_vote_moins['nameFirst'].' '.$depute_vote_moins['nameLast'] ?>">
                 </div>
                 <div class="card-body d-flex align-items-center justify-content-center">
                   <div>
@@ -234,7 +206,7 @@
               <div class="card card-depute">
                 <div class="liseret" style="background-color: <?= $depute_loyal_plus["couleurAssociee"] ?>"></div>
                 <div class="card-avatar">
-                  <img class="img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-face.png" data-src="<?= base_url(); ?>assets/imgs/deputes_nobg/depute_<?= substr($depute_loyal_plus["mpId"], 2) ?>.png" alt="<?= $depute_loyal_plus['nameFirst'].' '.$depute_loyal_plus['nameLast'] ?>">
+                  <img class="img-lazy placeholder" src="<?= asset_url() ?>imgs/placeholder/placeholder-face.png" data-src="<?= base_url(); ?>assets/imgs/deputes_nobg/depute_<?= substr($depute_loyal_plus["mpId"], 2) ?>.png" alt="<?= $depute_loyal_plus['nameFirst'].' '.$depute_loyal_plus['nameLast'] ?>">
                 </div>
                 <div class="card-body d-flex align-items-center justify-content-center">
                   <div>
@@ -255,7 +227,7 @@
               <div class="card card-depute">
                 <div class="liseret" style="background-color: <?= $depute_loyal_moins["couleurAssociee"] ?>"></div>
                 <div class="card-avatar">
-                  <img class="img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-face.png" data-src="<?= base_url(); ?>assets/imgs/deputes_nobg/depute_<?= substr($depute_loyal_moins["mpId"], 2) ?>.png" alt="<?= $depute_loyal_moins['nameFirst'].' '.$depute_loyal_moins['nameLast'] ?>">
+                  <img class="img-lazy placeholder" src="<?= asset_url() ?>imgs/placeholder/placeholder-face.png" data-src="<?= base_url(); ?>assets/imgs/deputes_nobg/depute_<?= substr($depute_loyal_moins["mpId"], 2) ?>.png" alt="<?= $depute_loyal_moins['nameFirst'].' '.$depute_loyal_moins['nameLast'] ?>">
                 </div>
                 <div class="card-body d-flex align-items-center justify-content-center">
                   <div>
@@ -287,22 +259,22 @@
             </div>
             <div class="col-12 my-5 d-flex flex-wrap justify-content-around align-items-center">
               <span class="url_obf" url_obf="<?= url_obfuscation("https://www.leparisien.fr/info-paris-ile-de-france-oise/vote-assiduite-loyaute-comment-se-comportent-vos-deputes-franciliens-et-oisiens-21-01-2021-8420482.php") ?>">
-                <img class="mx-2 my-3 img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" data-src="<?= asset_url() ?>imgs/media/le_parisien.png" alt="Le Parisien">
+                <img class="mx-2 my-3 img-lazy placeholder" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" data-src="<?= asset_url() ?>imgs/media/le_parisien.png" alt="Le Parisien">
               </span>
               <a href="https://theconversation.com/reintroduction-des-pesticides-neonicotino-des-comment-nos-deputes-ont-ils-vote-et-pourquoi-155158" target="_blank" rel="noopener">
-                <img class="mx-2 my-3 img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" data-src="<?= asset_url() ?>imgs/media/the_conversation.png" alt="The Conversation">
+                <img class="mx-2 my-3 img-lazy placeholder" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" data-src="<?= asset_url() ?>imgs/media/the_conversation.png" alt="The Conversation">
               </a>
               <span class="url_obf" url_obf="<?= url_obfuscation("https://www.sudouest.fr/redaction/le-cercle-sud-ouest-des-idees/reintroduction-des-pesticides-neonicotinoides-comment-nos-deputes-ont-ils-vote-et-pourquoi-1400279.php") ?>">
-                <img class="mx-2 my-3 img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" data-src="<?= asset_url() ?>imgs/media/sud_ouest.png" alt="Sud Ouest">
+                <img class="mx-2 my-3 img-lazy placeholder" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" data-src="<?= asset_url() ?>imgs/media/sud_ouest.png" alt="Sud Ouest">
               </span>
               <span class="url_obf" url_obf="<?= url_obfuscation("https://www.tv78.com/78-journal-info-yvelines-actu-edition-25-janvier-2021/") ?>">
-                <img class="mx-2 my-3 img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" data-src="<?= asset_url() ?>imgs/media/tv78.png" alt="TV 78">
+                <img class="mx-2 my-3 img-lazy placeholder" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" data-src="<?= asset_url() ?>imgs/media/tv78.png" alt="TV 78">
               </span>
               <span class="url_obf" url_obf="<?= url_obfuscation("https://www.ladepeche.fr/2021/01/23/comment-votent-vos-deputes-a-lassemblee-nationale-9328626.php") ?>">
-                <img class="mx-2 my-3 img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" data-src="<?= asset_url() ?>imgs/media/depeche.png" alt="La Dépêche Ouest">
+                <img class="mx-2 my-3 img-lazy placeholder" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" data-src="<?= asset_url() ?>imgs/media/depeche.png" alt="La Dépêche Ouest">
               </span>
               <a href="https://www.latribune.fr/opinions/tribunes/apres-trois-votes-de-confiance-la-majorite-presidentielle-s-erode-t-elle-a-l-assemblee-nationale-853748.html" target="_blank" rel="noopener">
-                <img class="mx-2 my-3 img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" data-src="<?= asset_url() ?>imgs/media/la_tribune.png" alt="La Tribune">
+                <img class="mx-2 my-3 img-lazy placeholder" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" data-src="<?= asset_url() ?>imgs/media/la_tribune.png" alt="La Tribune">
               </a>
             </div>
           </div>
@@ -357,7 +329,7 @@
                     <div class="card card-post my-3">
                       <div class="row no-gutters">
                         <div class="col-auto img-wrap d-none d-lg-block">
-                          <img class="img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder.png" data-src="<?= asset_url() ?>imgs/posts/img_post_<?= $post['id'] ?>.png" alt="Image post <?= $post['id'] ?>">
+                          <img class="img-lazy placeholder" src="<?= asset_url() ?>imgs/placeholder/placeholder.png" data-src="<?= asset_url() ?>imgs/posts/img_post_<?= $post['id'] ?>.png" alt="Image post <?= $post['id'] ?>">
                         </div>
                         <div class="col">
                           <div class="card-block p-3">

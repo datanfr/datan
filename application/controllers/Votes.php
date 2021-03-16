@@ -422,7 +422,6 @@
       }
 
       $data['votes_datan'] = $this->votes_model->get_last_votes_datan(7);
-
       // Meta
       $data['url'] = $this->meta_model->get_url();
       $data['title_meta'] = "Vote n°".$data['vote']['voteNumero']." - ".ucfirst($data['vote']['title_meta']). " - ".$legislature."e législature | Datan";
@@ -466,7 +465,7 @@
       $data['js_to_load_up'] = array("chart.min.js", "chartjs-plugin-annotation.js");
       // JS
       $data['js_to_load_before_bootstrap'] = array("popper.min");
-      $data['js_to_load']= array("moment.min", "datatable-datan.min.js", "datetime-moment", "datan/async_background", "flickity.pkgd.min");
+      $data['js_to_load']= array("moment.min", "datatable-datan.min", "datetime-moment", "datan/async_background", "flickity.pkgd.min");
       // Load Views
       $this->load->view('templates/header', $data);
       $this->load->view('templates/button_up');
