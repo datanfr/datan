@@ -15,4 +15,4 @@ jobs:
           password: ${{ secrets.PASSWORD }}
           port: 22
           script: |
-            cd /home/teft0095/public_html
+            echo 'test'
