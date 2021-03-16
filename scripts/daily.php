@@ -36,7 +36,14 @@ class Script
     {
         echo "fillDeputes starting \n";
         $deputeFields = array('mpId', 'civ', 'nameFirst', 'nameLast', 'nameUrl', 'birthDate', 'birthCity', 'birthCountry', 'job', 'catSocPro', 'dateMaj');
+        $mandatFields = array('mandatId', 'mpId', 'legislature', 'typeOrgane', 'dateDebut', 'dateFin', 'preseance', 'nominPrincipale', 'codeQualite', 'libQualiteSex', 'organe', 'electionRegion', 'electionRegionType', 'electionDepartement', 'electionDepartementNumero', 'electionCirco', 'datePriseFonction', 'causeFin', 'premiereElection', 'placeHemicyle', 'dateMaj');
+        $mandatGroupeFields = array('mandatId', 'mpId', 'legislature', 'typeOrgane', 'dateDebut', 'dateFin', 'preseance', 'nominPrincipale', 'codeQualite', 'libQualiteSex', 'organeRef', 'dateMaj');
+        $organeFields = array('uid', 'coteType', 'libelle', 'libelleEdition', 'libelleAbrev', 'libelleAbrege', 'dateDebut', 'dateFin', 'legislature', 'positionPolitique', 'preseance', 'couleurAssociee', 'dateMaj');
         $this->bdd->query("TRUNCATE TABLE deputes");
+        $this->bdd->query("TRUNCATE TABLE mandat_principal");
+        $this->bdd->query("TRUNCATE TABLE mandat_groupe");
+        $this->bdd->query("TRUNCATE TABLE mandat_secondaire");
+        $this->bdd->query("TRUNCATE TABLE organes");
         $dateMaj = date('Y-m-d');
         //Online file
         $file = 'http://data.assemblee-nationale.fr/static/openData/repository/15/amo/tous_acteurs_mandats_organes_xi_legislature/AMO30_tous_acteurs_tous_mandats_tous_organes_historique.xml.zip';
@@ -49,8 +56,12 @@ class Script
         if ($zip->open($newfile) !== TRUE) {
             exit("cannot open <$file>\n");
         } else {
-            $insert_values = [];
+            $deputes = [];
             $deputeContacts = [];
+            $mandats = [];
+            $mandatsGroupe = [];
+            $mandatsSecondaire = [];
+            $organes = [];
             for ($i = 0; $i < $zip->numFiles; $i++) {
                 $filename = $zip->getNameIndex($i);
                 $sub = substr($filename, 0, 13);
@@ -58,9 +69,10 @@ class Script
                     $xml_string = $zip->getFromName($filename);
                     if ($xml_string != false) {
                         $xml = simplexml_load_string($xml_string);
-
                         $mpId = str_replace("xml/acteur/", "", $filename);
                         $mpId = str_replace(".xml", "", $mpId);
+
+                        //deputes
                         $civ = $xml->etatCivil->ident->civ;
                         $nameFirst = $xml->etatCivil->ident->prenom;
                         $nameLast = $xml->etatCivil->ident->nom;
@@ -89,6 +101,8 @@ class Script
                                 . '[:Separator:] > \'-\';'
                         )->transliterate($nameFirst);
                         $nameUrl = "{$firstname}-{$lastname}";
+
+                        //depute contact
                         foreach ($xml->adresses->adresse as $adresses) {
                             $type = $adresses->type;
                             $valElec = $adresses->valElec;
@@ -114,23 +128,229 @@ class Script
                                     break;
                             }
                         }
+
+                        //mandats
+                        foreach ($xml->mandats->mandat as $mandat) {
+                            $mandatId = $mandat->uid;
+                            $legislature = $mandat->legislature;
+                            $typeOrgane = $mandat->typeOrgane;
+                            $dateDebut = $mandat->dateDebut;
+                            $dateFin = $mandat->dateFin;
+
+                            if ($dateFin == "") {
+                                $dateFin = NULL;
+                            } else {
+                                $dateFin = $dateFin;
+                            }
+
+                            $preseance = $mandat->preseance;
+                            $nominPrincipale = $mandat->nominPrincipale;
+                            $codeQualite = $mandat->infosQualite->codeQualite;
+                            $libQualiteSex = $mandat->infosQualite->libQualiteSex;
+                            $organe = $mandat->organes->organeRef;
+
+                            if ($mandat->typeOrgane == "ASSEMBLEE") {
+                                if (isset($mandat->election->lieu->region)) {
+                                    $electionRegion = $mandat->election->lieu->region;
+                                } else {
+                                    $electionRegion = NULL;
+                                }
+
+                                if (isset($mandat->election->lieu->regionType)) {
+                                    $electionRegionType = $mandat->election->lieu->regionType;
+                                } else {
+                                    $electionRegionType = NULL;
+                                }
+
+                                if (isset($mandat->election->lieu->departement)) {
+                                    $departement = $mandat->election->lieu->departement;
+                                    $numDepartement = $mandat->election->lieu->numDepartement;
+                                    $numCirco = $mandat->election->lieu->numCirco;
+                                } else {
+                                    $departement = NULL;
+                                    $numDepartement = NULL;
+                                    $numCirco = NULL;
+                                }
+
+                                if (isset($mandat->mandature)) {
+                                    $datePriseFonction = $mandat->mandature->datePriseFonction;
+                                    $causeFin = $mandat->mandature->causeFin;
+                                    $premiereElection = $mandat->mandature->premiereElection;
+                                } else {
+                                    $datePriseFonction = NULL;
+                                    $causeFin = NULL;
+                                    $premiereElection = NULL;
+                                }
+
+                                if (isset($mandat->mandature->placeHemicycle)) {
+                                    $placeHemicycle = $mandat->mandature->placeHemicycle;
+                                } else {
+                                    $placeHemicycle = NULL;
+                                }
+
+                                if ($datePriseFonction == "") {
+                                    $datePriseFonction = NULL;
+                                } else {
+                                    $datePriseFonction = $datePriseFonction;
+                                }
+                                $mandatPrincipal = array(
+                                    'mandatId' => $mandatId,
+                                    'mpId' => $mpId,
+                                    'legislature' => $legislature,
+                                    'type_organe' => $typeOrgane,
+                                    'date_debut' => $dateDebut,
+                                    'date_fin' => $dateFin,
+                                    'preseance' => $preseance,
+                                    'nomin_principale' => $nominPrincipale,
+                                    'code_qualite' => $codeQualite,
+                                    'libQualiteSex' => $libQualiteSex,
+                                    'organe' => $organe,
+                                    'election_region' => $electionRegion,
+                                    'election_region_type' => $electionRegionType,
+                                    'election_departement' => $departement,
+                                    'election_departement_numero' => $numDepartement,
+                                    'election_circo' => $numCirco,
+                                    'prise_fonction' => $datePriseFonction,
+                                    'causeFin' => $causeFin,
+                                    'premiere_election' => $premiereElection,
+                                    'placeHemicyle' => $placeHemicycle,
+                                    'dateMaj' => $dateMaj
+                                );
+                                $question_marks_mandat[] = '('  . $this->placeholders('?', sizeof($mandatPrincipal)) . ')';
+                                $mandats = array_merge($mandats, array_values($mandatPrincipal));
+                            } else if ($mandat->typeOrgane == "GP") {
+                                $mandatGroupe = array(
+                                    'mandatId' => $mandatId,
+                                    'mpId' => $mpId,
+                                    'legislature' => $legislature,
+                                    'type_organe' => $typeOrgane,
+                                    'date_debut' => $dateDebut,
+                                    'date_fin' => $dateFin,
+                                    'preseance' => $preseance,
+                                    'nomin_principale' => $nominPrincipale,
+                                    'code_qualite' => $codeQualite,
+                                    'libQualiteSex' => $libQualiteSex,
+                                    'organe' => $organe,
+                                    'dateMaj' => $dateMaj
+                                );
+                                $question_marks_mandat_groupe[] = '('  . $this->placeholders('?', sizeof($mandatGroupe)) . ')';
+                                $mandatsGroupe = array_merge($mandatsGroupe, array_values($mandatGroupe));
+                            } else if (($mandat->typeOrgane == "COMPER") || ($mandat->typeOrgane == "DELEGBUREAU") || ($mandat->typeOrgane == "PARPOL")) {
+                                $mandatSecondaire = array(
+                                    'mandatId' => $mandatId,
+                                    'mpId' => $mpId,
+                                    'legislature' => $legislature,
+                                    'type_organe' => $typeOrgane,
+                                    'date_debut' => $dateDebut,
+                                    'date_fin' => $dateFin,
+                                    'preseance' => $preseance,
+                                    'nomin_principale' => $nominPrincipale,
+                                    'code_qualite' => $codeQualite,
+                                    'libQualiteSex' => $libQualiteSex,
+                                    'organe' => $organe,
+                                    'dateMaj' => $dateMaj
+                                );
+                                $question_marks_mandat_secondaire[] = '('  . $this->placeholders('?', sizeof($mandatSecondaire)) . ')';
+                                $mandatsSecondaire = array_merge($mandatsSecondaire, array_values($mandatSecondaire));
+                            }
+                        }
                     }
                     try {
                         $depute = array('mpId' => $mpId, 'civ' => $civ, 'nameFirst' => $nameFirst, 'nameLast' => $nameLast, 'nameUrl' => $nameUrl, 'birthDate' => $birthDate, 'birthCity' => $birthCity, 'birthCountry' => $birthCountry, 'job' => $job, 'catSocPro' => $catSocPro, 'dateMaj' => $dateMaj);
                         $question_marks[] = '('  . $this->placeholders('?', sizeof($depute)) . ')';
-                        $insert_values = array_merge($insert_values, array_values($depute));
+                        $deputes = array_merge($deputes, array_values($depute));
                     } catch (Exception $e) {
                         echo '<pre>', var_dump($e->getMessage()), '</pre>';
                     }
+                } else if ($sub == 'xml/organe/PO') {
+                    $xml_string = $zip->getFromName($filename);
+
+                    if ($xml_string != false) {
+                        $xml = simplexml_load_string($xml_string);
+                        $uid = str_replace("xml/organe/", "", $filename);
+                        $uid = str_replace(".xml", "", $uid);
+                        $codeType = $xml->codeType;
+                        $libelle = $xml->libelle;
+                        $libelleEdition = $xml->libelleEdition;
+                        $libelleAbrege = $xml->libelleAbrege;
+                        $libelleAbrev = $xml->libelleAbrev;
+
+                        if (isset($xml->viMoDe->dateDebut) && $xml->viMoDe->dateDebut != "") {
+                            $dateDebut = $xml->viMoDe->dateDebut;
+                        } else {
+                            $dateDebut = NULL;
+                        }
+
+                        if (isset($xml->viMoDe->dateFin) && $xml->viMoDe->dateFin != "") {
+                            $dateFin = $xml->viMoDe->dateFin;
+                        } else {
+                            $dateFin = NULL;
+                        }
+
+                        if (isset($xml->legislature) && $xml->legislature != "") {
+                            $legislature = $xml->legislature;
+                        } else {
+                            $legislature = NULL;
+                        }
+
+                        $positionPolitique = $xml->positionPolitique;
+                        $preseance = $xml->preseance;
+                        $couleurAssociee = $xml->couleurAssociee;
+
+                        $organe = array('uid' => $uid, 'coteType' => $codeType, 'libelle' => $libelle, 'libelleEdition' => $libelleEdition, 'libelleAbrev' => $libelleAbrev, 'libelleAbrege' => $libelleAbrege, 'dateDebut' => $dateDebut, 'dateFin' => $dateFin, 'legislature' => $legislature, 'positionPolitique' => $positionPolitique, 'preseance' => $preseance, 'couleurAssociee' => $couleurAssociee, 'dateMaj' => $dateMaj);
+                        $question_marks_organe[] = '('  . $this->placeholders('?', sizeof($organe)) . ')';
+                        $organes = array_merge($organes, array_values($organe));
+                    }
                 }
             }
-            
+
             // insert deputes
             try {
                 // SQL //
                 $sql = "INSERT INTO deputes (" . implode(",", $deputeFields) . ") VALUES " . implode(',', $question_marks);
                 $stmt = $this->bdd->prepare($sql);
-                $stmt->execute($insert_values);
+                $stmt->execute($deputes);
+            } catch (Exception $e) {
+                echo '<pre>', var_dump($e->getMessage()), '</pre>';
+                die('');
+            }
+
+            // insert mandat
+            try {
+                // SQL //
+                $sql = "INSERT INTO mandat_principal (" . implode(",", $mandatFields) . ") VALUES " . implode(',', $question_marks_mandat);
+                $stmt = $this->bdd->prepare($sql);
+                $stmt->execute($mandats);
+            } catch (Exception $e) {
+                echo '<pre>', var_dump($e->getMessage()), '</pre>';
+                die('');
+            }
+            // insert mandat grpupe
+            try {
+                // SQL //
+                $sql = "INSERT INTO mandat_groupe (" . implode(",", $mandatGroupeFields) . ") VALUES " . implode(',', $question_marks_mandat_groupe);
+                $stmt = $this->bdd->prepare($sql);
+                $stmt->execute($mandatsGroupe);
+            } catch (Exception $e) {
+                echo '<pre>', var_dump($e->getMessage()), '</pre>';
+                die('');
+            }
+            // insert mandat secondaire
+            try {
+                // SQL //
+                $sql = "INSERT INTO mandat_secondaire (" . implode(",", $mandatGroupeFields) . ") VALUES " . implode(',', $question_marks_mandat_secondaire);
+                $stmt = $this->bdd->prepare($sql);
+                $stmt->execute($mandatsSecondaire);
+            } catch (Exception $e) {
+                echo '<pre>', var_dump($e->getMessage()), '</pre>';
+                die('');
+            }
+            // insert organes
+            try {
+                // SQL //
+                $sql = "INSERT INTO organes (" . implode(",", $organeFields) . ") VALUES " . implode(',', $question_marks_organe);
+                $stmt = $this->bdd->prepare($sql);
+                $stmt->execute($organes);
             } catch (Exception $e) {
                 echo '<pre>', var_dump($e->getMessage()), '</pre>';
                 die('');
@@ -378,10 +598,350 @@ class Script
             }
         }
     }
+
+    function groupeEffectif()
+    {
+        $this->bdd->query('
+            DROP TABLE IF EXISTS groupes_effectif;
+            CREATE TABLE groupes_effectif AS
+            SELECT @s:=@s+1 AS "classement", A.*, CURDATE() AS dateMaj
+            FROM
+            (
+            SELECT t1.organeRef, o.libelle, count(t1.mpId) AS effectif, t1.legislature
+            FROM mandat_groupe t1
+            LEFT JOIN organes o ON t1.organeRef = o.uid
+            WHERE t1.typeOrgane = "GP" AND t1.codeQualite != "Président" AND t1.dateFin IS NULL
+            GROUP BY t1.organeRef, t1.legislature
+            ) A,
+            (SELECT @s:= 0) AS s
+            ORDER BY A.effectif DESC;
+            ALTER TABLE groupes_effectif ADD INDEX idx_organeRef (organeRef);
+        ');
+    }
+
+    public function deputeAll()
+    {
+        $dateMaj = date('Y-m-d');
+        $this->bdd->exec('TRUNCATE TABLE deputes_all');
+
+        $query = $this->bdd->query('
+            SELECT mp.mpId, mp.legislature, d.nameUrl, d.nameFirst, d.nameLast, d.civ,
+            YEAR(current_timestamp()) - YEAR(d.birthDate) - CASE WHEN MONTH(current_timestamp()) < MONTH(d.birthDate) OR (MONTH(current_timestamp()) = MONTH(d.birthDate) AND DAY(current_timestamp()) < DAY(d.birthDate)) THEN 1 ELSE 0 END AS age
+            FROM mandat_principal mp
+            LEFT JOIN deputes d ON d.mpId = mp.mpId
+            GROUP BY mp.mpId, mp.legislature
+        ');
+
+        $i = 1;
+
+        while ($data = $query->fetch()) {
+            $mpId = $data['mpId'];
+            $legislature = $data['legislature'];
+            $nameUrl = $data['nameUrl'];
+            $nameFirst = $data['nameFirst'];
+            $nameLast = $data['nameLast'];
+            $civ = $data['civ'];
+            $age = $data['age'];
+            $img = file_exists("../assets/imgs/deputes_nobg_webp/depute_" . substr($mpId, 2) . "_webp.webp") ? 1 : 0;
+            $imgOgp = file_exists("../assets/imgs/deputes_ogp/ogp_deputes_" . $mpId . ".png") ? 1 : 0;
+
+
+            // Get the mandat_principal
+
+            $mandatPrincipal = $this->bdd->query('
+                SELECT mp.*, dpt.slug AS dptSlug, dpt.departement_nom AS departementNom, dpt.departement_code AS departementCode, mp.electionCirco AS circo, mp.causeFin, mp.datePriseFonction
+                FROM mandat_principal mp
+                LEFT JOIN departement dpt ON mp.electionDepartementNumero = dpt.departement_code
+                WHERE mp.mpId = "' . $mpId . '" AND mp.preseance = 50 AND mp.legislature = ' . $legislature . '
+                ORDER BY !ISNULL(mp.dateFin), mp.dateFin DESC
+                LIMIT 1
+            ');
+
+            if ($mandatPrincipal->rowCount() > 0) {
+                while ($mandat = $mandatPrincipal->fetch()) {
+                    $dateFin = $mandat['dateFin'];
+                    $mandatId = $mandat['mandatId'];
+                    $dptSlug = $mandat['dptSlug'];
+                    $departementNom = $mandat['departementNom'];
+                    $departementCode = $mandat['departementCode'];
+                    $circo = $mandat['circo'];
+                    $causeFin = $mandat['causeFin'];
+                    $datePriseFonction = $mandat['datePriseFonction'];
+                }
+            } else {
+                echo "ERROR";
+            }
+
+            $mandatGroupes = $this->bdd->query('
+                SELECT o.libelle, o.libelleAbrev, o.uid AS groupeId, o.couleurAssociee, mg.mandatId AS groupeMandat
+                FROM mandat_groupe mg
+                LEFT JOIN organes o ON o.uid = mg.organeRef
+                WHERE mg.mpId = "' . $mpId . '" AND mg.legislature = ' . $legislature . ' AND mg.preseance >= 20
+                ORDER BY !ISNULL(mg.dateFin), mg.dateFin DESC
+                LIMIT 1
+            ');
+
+            if ($mandatGroupes->rowCount() > 0) {
+                while ($mandatGroupe = $mandatGroupes->fetch()) {
+                    $libelle = $mandatGroupe['libelle'];
+                    $libelleAbrev = $mandatGroupe['libelleAbrev'];
+                    $groupeId = $mandatGroupe['groupeId'];
+                    $couleurAssociee = $mandatGroupe['couleurAssociee'];
+                    $groupeMandat = $mandatGroupe['groupeMandat'];
+                }
+            } else {
+                echo "ERROR -- ";
+                echo $mpId . " -- " . $legislature . "\n";
+                $libelle = NULL;
+                $libelleAbrev = NULL;
+                $groupeId = NULL;
+                $couleurAssociee = NULL;
+            }
+
+
+            // SQL //
+            $sql = $this->bdd->prepare("INSERT INTO deputes_all (mpId, legislature, nameUrl, civ, nameFirst, nameLast, age, dptSlug, departementNom, departementCode, circo, mandatId, libelle, libelleAbrev, groupeId, groupeMandat, couleurAssociee, datePriseFonction, dateFin, causeFin, img, imgOgp, dateMaj) VALUES (:mpId, :legislature, :nameUrl, :civ, :nameFirst, :nameLast, :age, :dptSlug, :departementNom, :departementCode, :circo, :mandatId, :libelle, :libelleAbrev, :groupeId, :groupeMandat, :couleurAssociee, :datePriseFonction, :dateFin, :causeFin, :img, :imgOgp, :dateMaj)");
+            $sql->execute(array('mpId' => $mpId, 'legislature' => $legislature, 'nameUrl' => $nameUrl, 'civ' => $civ, 'nameFirst' => $nameFirst, 'nameLast' => $nameLast, 'age' => $age, 'dptSlug' => $dptSlug, 'departementNom' => $departementNom, 'departementCode' => $departementCode, 'circo' => $circo, 'mandatId' => $mandatId, 'libelle' => $libelle, 'libelleAbrev' => $libelleAbrev, 'groupeId' => $groupeId, 'groupeMandat' => $groupeMandat, 'couleurAssociee' => $couleurAssociee, 'datePriseFonction' => $datePriseFonction, 'dateFin' => $dateFin, 'causeFin' => $causeFin, 'img' => $img, 'imgOgp' => $imgOgp, 'dateMaj' => $dateMaj));
+            $i++;
+        }
+    }
+
+    public function deputeLast()
+    {
+        $this->bdd->exec('DROP TABLE IF EXISTS deputes_last');
+        $this->bdd->exec('
+            CREATE TABLE deputes_last AS
+            SELECT da.*, dpt.libelle_1, dpt.libelle_2,
+            CASE WHEN (legislature = 15 AND dateFin IS NULL) THEN 1 ELSE 0 END AS active
+            FROM deputes_all da
+            JOIN (
+            SELECT mpId, MAX(legislature) AS legislatureLast
+            FROM deputes_all
+            GROUP BY mpId
+            ) x ON da.mpId = x.mpId AND da.legislature = x.legislatureLast
+            LEFT JOIN departement dpt ON dpt.departement_code = da.departementCode
+        ');
+
+        $this->bdd->exec(
+            '
+            CREATE INDEX idx_mp ON deputes_last (nameUrl);'
+        );
+        $this->bdd->exec(
+            '
+            CREATE INDEX idx_dptSlug ON deputes_last (dptSlug);'
+        );
+        $this->bdd->exec('CREATE INDEX idx_mpId ON deputes_last(mpId)');
+        $this->bdd->exec('CREATE INDEX idx_legislature ON deputes_last(legislature);');
+    }
+
+    public function deputeJson()
+    {
+        $reponse = $this->bdd->query('
+        SELECT da.mpId, da.nameFirst, da.nameLast, da.nameUrl, da.dptSlug
+        FROM deputes_all da
+        WHERE da.legislature = 15
+        ');
+
+        $array = array();
+        while ($data = $reponse->fetch()) {
+            $id = $data['mpId'];
+            $name = $data['nameFirst'] . ' ' . $data['nameLast'];
+            $slug = $data['nameUrl'];
+            $dpt = $data['dptSlug'];
+
+            $array[] = [
+                "id" => $id,
+                "name" => $name,
+                "slug" => $slug,
+                "dpt" => $dpt
+            ];
+        }
+
+        $json = json_encode($array, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+
+        // save file
+        $dir = __DIR__;
+        $dir = str_replace(array("/", "scripts", ".php"), "", $dir);
+        $dir = $dir . "assets/data/";
+        $dir = "../assets/data/";
+        $fp = fopen($dir . "deputes_json.json", 'w');
+        if (fwrite($fp, $json)) {
+            echo "JSON created \n";
+        }
+        fclose($fp);
+    }
+
+    public function groupeStats()
+    {
+        $this->bdd->query("DROP TABLE IF EXISTS groupes_stats");
+        $this->bdd->query('CREATE TABLE groupes_stats ( organeRef VARCHAR(15) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL , womenPct DECIMAL(4,2) NULL , womenN INT(3) NULL  , age DECIMAL(4,2) NULL ) ENGINE = MyISAM;');
+
+        $reponse = $this->bdd->query('
+            SELECT *
+            FROM organes
+            WHERE legislature = 15 AND coteType = "GP"
+        ');
+
+        while ($data = $reponse->fetch()) {
+            $groupeId = $data['uid'];
+
+            if ($data['dateFin'] == NULL) {
+                $age_response = $this->bdd->query('
+                    SELECT da.groupeId AS organeRef, ROUND(AVG(age), 2) AS age, COUNT(age) as n
+                    FROM deputes_all da
+                    WHERE da.groupeId = "' . $groupeId . '" AND da.legislature = 15 AND da.dateFin IS NULL
+                ');
+
+                while ($age_data = $age_response->fetch()) {
+                    $age = $age_data['age'];
+                }
+
+                $women_response = $this->bdd->query('
+                    SELECT A.*,
+                    ROUND(female / n * 100, 2) AS pct
+                    FROM
+                    (
+                    SELECT groupeId, COUNT(mpId) AS n,
+                    SUM(if(civ = "Mme", 1, 0)) AS female
+                    FROM deputes_all
+                    WHERE groupeId = "' . $groupeId . '" AND legislature = 15 AND dateFin IS NULL
+                    GROUP BY groupeId
+                    ) A
+                ');
+
+                while ($women_data = $women_response->fetch()) {
+                    $womenPct = $women_data['pct'];
+                    $womenN = $women_data['female'];
+                }
+            } else {
+                $age_response = $this->bdd->query('
+                    SELECT ROUND(avg(age), 2) AS age
+                    FROM
+                    (
+                        SELECT mg.mpId,
+                        YEAR(current_timestamp()) - YEAR(d.birthDate) - CASE WHEN MONTH(current_timestamp()) < MONTH(d.birthDate) OR (MONTH(current_timestamp()) = MONTH(d.birthDate) AND DAY(current_timestamp()) < DAY(d.birthDate)) THEN 1 ELSE 0 END AS age
+                        FROM mandat_groupe mg
+                        LEFT JOIN organes o ON mg.organeRef = o.uid
+                        LEFT JOIN deputes d ON mg.mpId = d.mpId
+                        WHERE mg.organeRef = "' . $groupeId . '" AND mg.dateFin = o.dateFin
+                        GROUP BY mg.mpId
+                    ) A
+                ');
+
+                while ($age_data = $age_response->fetch()) {
+                    $age = $age_data['age'];
+                }
+
+                $women_response2 = $this->bdd->query('
+                    SELECT A.*, ROUND(female / n * 100, 2) AS pct
+                    FROM
+                    (
+                    SELECT o.uid, SUM(if(dl.civ = "Mme", 1, 0)) AS female, COUNT(dl.civ) AS n
+                    FROM organes o
+                    LEFT JOIN mandat_groupe mg ON o.uid = mg.organeRef AND o.dateFin = mg.dateFin
+                    LEFT JOIN deputes_last dl ON mg.mpId = dl.mpId
+                    WHERE o.uid = "' . $groupeId . '"
+                    GROUP BY o.uid
+                    ) A
+                ');
+
+                while ($women_data2 = $women_response2->fetch()) {
+                    $womenPct = $women_data2['pct'];
+                    $womenN = $women_data2['female'];
+                }
+            }
+
+            // INSERT INTO DATABSSE //
+            $sql = $this->bdd->prepare('INSERT INTO groupes_stats (organeRef, age, womenN, womenPct) VALUES (:organeRef, :age, :womenN, :womenPct)');
+            $sql->execute(array('organeRef' => $groupeId, 'age' => $age, 'womenN' => $womenN, 'womenPct' => $womenPct));
+        }
+    }
+
+    public function parties()
+    {
+
+        $this->bdd->exec('DROP TABLE IF EXISTS parties');
+
+        $this->bdd->exec('
+        CREATE TABLE parties AS
+        SELECT A.*, B.effectif
+        FROM
+        (
+        SELECT o.uid, o.libelleAbrev, o.libelle, o.dateFin, COUNT(ms.mpId) AS effectifTotal
+        FROM organes o
+        LEFT JOIN mandat_secondaire ms ON o.uid = ms.organeRef
+        LEFT JOIN deputes_all da ON da.mpId = ms.mpId
+        WHERE o.coteType = "PARPOL" AND da.legislature = 15
+        GROUP BY o.uid
+        ) A
+        LEFT JOIN
+        (
+        SELECT o.uid, o.libelle, o.libelleAbrev, COUNT(ms.mpId) AS effectif
+        FROM deputes_all da
+        LEFT JOIN mandat_secondaire ms ON ms.mpId = da.mpId
+        LEFT JOIN organes o ON o.uid = ms.organeRef
+        WHERE ms.typeOrgane = "PARPOL" AND ms.dateFin IS NULL AND da.legislature = 15 AND da.dateFin IS NULL
+        GROUP BY ms.organeRef
+        ) B ON A.uid = B.uid
+        ORDER BY B.effectif DESC
+        ');
+
+        $this->bdd->exec('
+        CREATE INDEX idx_uid ON parties (uid);
+        ');
+    }
+
+    public function legislature()
+    {
+        $dateMaj = date('Y-m-d');
+        $this->bdd->exec('
+            CREATE TABLE IF NOT EXISTS legislature (
+            id INT(3) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+            organeRef VARCHAR(30) NOT NULL,
+            libelle VARCHAR(255) NOT NULL,
+            libelleAbrev VARCHAR(30) NOT NULL,
+            name VARCHAR(255) NOT NULL,
+            legislatureNumber TINYINT(1) NOT NULL,
+            dateDebut DATE NOT NULL,
+            dateFin DATE NULL,
+            dateMaj DATE NOT NULL
+            );
+        ');
+
+        $this->bdd->query('TRUNCATE TABLE legislature');
+
+        $response = $this->bdd->query('
+            SELECT *
+            FROM organes
+            WHERE coteType = "ASSEMBLEE"
+        ');
+
+        while ($data = $response->fetch()) {
+            $organeRef = $data['uid'];
+            $libelle = $data['libelle'];
+            $libelleAbrev = $data['libelleAbrev'];
+            $number = $data['legislature'];
+            $dateDebut = $data['dateDebut'];
+            $dateFin = $data['dateFin'];
+
+            $name = $number . "ème législature";
+
+            // INSERT INTO DATABSSE //
+            $sql = $this->bdd->prepare('INSERT INTO legislature (organeRef, libelle, libelleAbrev, name, legislatureNumber, dateDebut, dateFin, dateMaj) VALUES (:organeRef, :libelle, :libelleAbrev, :name, :legislatureNumber, :dateDebut, :dateFin, :dateMaj)');
+            $sql->execute(array('organeRef' => $organeRef, 'libelle' => $libelle, 'libelleAbrev' => $libelleAbrev, 'name' => $name, 'legislatureNumber' => $number, 'dateDebut' => $dateDebut, 'dateFin' => $dateFin, 'dateMaj' => $dateMaj));
+        }
+    }
 }
 
 $script = new Script();
-$script->fillDeputes();
+// $script->fillDeputes();
 // $script->downloadPictures();
 // $script->webpPictures();
 // $script->resmushPictures();
+// $script->groupeEffectif();
+// $script->deputeAll();
+// $script->deputeLast();
+// $script->deputeJson();
+// $script->groupeStats();
+// $script->parties();
+// $script->legislature();
