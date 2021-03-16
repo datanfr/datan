@@ -148,16 +148,17 @@
       }]);
       // FIN CODE CNIL
       /* tracker methods like "setCustomDimension" should be called before "trackPageView" */
-      // _paq.push(['trackPageView']);
-      // _paq.push(['enableLinkTracking']);
-      // (function() {
-      //   var u="//matomo.datan.fr/";
-      //   _paq.push(['setTrackerUrl', u+'1337.php']);
-      //   _paq.push(['setSiteId', '1']);
-      //   var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
-      //   g.type='text/javascript'; g.async=true; g.src=u+'1337.js'; s.parentNode.insertBefore(g,s);
-      // })();
+      _paq.push(['trackPageView']);
+      _paq.push(['enableLinkTracking']);
+      (function() {
+        var u="//matomo.datan.fr/";
+        _paq.push(['setTrackerUrl', u+'1337.php']);
+        _paq.push(['setSiteId', '1']);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
+        g.type='text/javascript'; g.async=true; g.src=u+'1337.js'; s.parentNode.insertBefore(g,s);
+      })();
     </script>
+    <noscript><p><img src="//matomo.datan.fr/1337.php?idsite=1&amp;rec=1" style="border:0;" alt="" /></p></noscript>
     <!-- End Matomo Code -->
 
   </head>
