@@ -15,10 +15,12 @@ jobs:
           password: ${{ secrets.PASSWORD }}
           port: 22
           script: |
-            cd datan
+            cd public_html
             git pull origin master
             git status
+            grunt
             cd scripts
             php update_version_asset
-            cd ..
-            grunt
+            git add application/helpers/utility_helper.php
+            git commit -m "update asset version"
+            git push
