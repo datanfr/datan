@@ -16,4 +16,3 @@ jobs:
           port: 22
           script: |
             cd /home/teft0095/public_html
-            git status
