@@ -15,4 +15,4 @@ jobs:
           password: ${{ secrets.PASSWORD }}
           port: 22
           script: |
-            ls
+            echo 'youpi'
