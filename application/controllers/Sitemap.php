@@ -104,7 +104,7 @@ class Sitemap extends CI_Controller {
     $urls = array();
 
     foreach (legislature_all() as $legislature) {
-      $results = $this->votes_model->get_all_votes($legislature, NULL, NULL);
+      $results = $this->votes_model->get_all_votes($legislature, NULL, NULL, NULL);
 
       foreach ($results as $result) {
         $n = $result['voteNumero'];
@@ -171,9 +171,9 @@ class Sitemap extends CI_Controller {
     }
 
     $fields = $this->fields_model->get_active_fields();
-    $data['years'] = $this->votes_model->get_years_archives();
+    $data['years'] = $this->votes_model->get_years_archives(legislature_current());
     $data['years'] = array_column($data['years'], 'votes_year');
-    $data['months'] = $this->votes_model->get_months_archives();
+    $data['months'] = $this->votes_model->get_months_archives(legislature_current());
 
 
     // Create array with urls
