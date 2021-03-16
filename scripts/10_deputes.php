@@ -87,7 +87,7 @@
               $nameLast = $data['nameLast'];
               $civ = $data['civ'];
               $age = $data['age'];
-              $img = file_exists("../assets/imgs/deputes_webp/depute_" . substr($mpId, 2) ."_webp.webp") ? 1 : 0;
+              $img = file_exists("../assets/imgs/deputes_nobg_webp/depute_" . substr($mpId, 2) ."_webp.webp") ? 1 : 0;
               $imgOgp = file_exists("../assets/imgs/deputes_ogp/ogp_deputes_" . $mpId .".png") ? 1: 0;
 
 
