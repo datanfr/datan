@@ -26,10 +26,10 @@
             <p>Nous contacter : <a href="mailto:contact@datan.fr" class="no-decoration underline">contact@datan.fr</a></p>
             <div class="social-media">
               <a href="https://www.facebook.com/datanFR/" target="_blank" class="no-decoration" rel="noopener">
-                <img class="img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" data-src="<?= asset_url() ?>imgs/logos/facebook_datan.png" alt="Logo Facebook Datan">
+                <img class="img-lazy placeholder" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" data-src="<?= asset_url() ?>imgs/logos/facebook_datan.png" alt="Logo Facebook Datan">
               </a>
               <a href="https://twitter.com/datanFR" target="_blank" class="no-decoration" rel="noopener">
-                <img class="img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" data-src="<?= asset_url() ?>imgs/logos/twitter_datan.png" alt="Logo Twitter Datan">
+                <img class="img-lazy placeholder" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" data-src="<?= asset_url() ?>imgs/logos/twitter_datan.png" alt="Logo Twitter Datan">
               </a>
             </div>
           </div>
