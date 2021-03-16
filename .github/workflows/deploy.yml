@@ -15,6 +15,5 @@ jobs:
           password: ${{ secrets.PASSWORD }}
           port: 22
           script: |
-            cd public_html
-            git pull origin master
+            cd /home/teft0095/public_html
             git status
