@@ -15,7 +15,7 @@ jobs:
           password: ${{ secrets.PASSWORD }}
           port: 22
           script: |
-            cd public_html
+            cd ~/public_html
             git pull origin master
             git status
             grunt
