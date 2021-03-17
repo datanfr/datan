@@ -16,4 +16,4 @@ jobs:
         run: echo Hello, world!
       - name: echo wget
         run: |
-          wget -qO- http://ipecho.net/plain | xargs echo
+          wget -qO - icanhazip.com
