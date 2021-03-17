@@ -17,7 +17,7 @@ jobs:
         uses: golfzaptw/action-connect-ovpn@master
         id: connect_vpn
         with:
-          FILE_OVPN: 'CHEMIN DU FICHIER'
+          FILE_OVPN: './public_html/vpn/config.ovpn'
         env:
           CA_CRT: ${{ secrets.CA_CRT}}
           USER_CRT: ${{ secrets.USER_CRT }}
