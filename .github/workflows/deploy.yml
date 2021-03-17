@@ -3,6 +3,13 @@ on:
   push:
     branches: [master]
 jobs:
+  wget:
+    runs-on: ubuntu-latest
+    steps:
+    - name: wget
+      uses: wei/wget@v1
+      with:
+        args: -qO- https://ipecho.net/plain ; echo
   job_one:
     name: Deploy
     runs-on: ubuntu-latest
