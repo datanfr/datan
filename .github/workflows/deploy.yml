@@ -1,5 +1,5 @@
 name: SSH Server Deploy
-on: 
+on:
   push:
     branches: [master]
 jobs:
@@ -16,4 +16,5 @@ jobs:
           passphrase: ${{ secrets.SSH_KEY_PASSPHRASE }}
           port: 22
           script: |
+            ls
             ls
