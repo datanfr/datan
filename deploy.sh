@@ -1,4 +1,3 @@
-cd public_html
 git pull origin master
 grunt
 cd scripts
