@@ -1,0 +1,44 @@
+name: remote ssh command to deploy
+on:
+  push:
+    branches: [ master ]
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+
+      - name: Install Open VPN
+        run: |
+          sudo apt-get install openvpn
+          echo "${{ secrets.VPN_FILE }}" > .github/vpn/config.ovpn
+
+      - name: Connect VPN
+        uses: golfzaptw/action-connect-ovpn@master
+        id: connect_vpn
+        with:
+          PING_URL: ${{ secrets.HOST }}
+          FILE_OVPN: '.github/vpn/config.ovpn'
+        env:
+          CA_CRT: ${{ secrets.CA_CRT}}
+          USER_CRT: ${{ secrets.USER_CRT }}
+          USER_KEY: ${{ secrets.USER_KEY }}
+
+      - name: Check Connect VPN
+        run: echo ${{ steps.connect_vpn.outputs.STATUS }}
+
+      - name: Execute ssh command via using private key
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          password: ${{ secrets.PASSWORD }}
+          port: 22
+          script: |
+            ls
+
+      - name: kill vpn
+        if: always()
+        run: sudo killall openvpn
