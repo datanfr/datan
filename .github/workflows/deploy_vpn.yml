@@ -9,18 +9,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
-
       - name: Install Open VPN
         run: |
           sudo apt-get install openvpn
-          echo "${{ secrets.VPN_FILE }}" > .github/vpn/config.ovpn
 
       - name: Connect VPN
         uses: golfzaptw/action-connect-ovpn@master
         id: connect_vpn
         with:
-          PING_URL: ${{ secrets.HOST }}
-          FILE_OVPN: '.github/vpn/config.ovpn'
+          FILE_OVPN: 'CHEMIN DU FICHIER'
         env:
           CA_CRT: ${{ secrets.CA_CRT}}
           USER_CRT: ${{ secrets.USER_CRT }}
