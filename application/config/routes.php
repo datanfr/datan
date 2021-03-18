@@ -125,10 +125,12 @@ $route['questionnaire/resultat']['post'] = 'quiz/result';
 // LOGIN & REGISTER
 $route['login'] = 'users/login';
 $route['register'] = 'users/register';
+$route['users/logout'] = 'users/logout';
 // REDIRECTION
 $route['classements'] = 'redirection/redir/statistiques';
 $route['search/(:any)/(:any)'] = 'redirect/cities/$1/$2';
-
+// CACHE
+$route['cache/delete_all'] = 'cache/delete_all';
 // PAGES
 $route['(:any)'] = 'pages/view/$1';
 $route['translate_uri_dashes'] = FALSE;
