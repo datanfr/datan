@@ -50,12 +50,14 @@
           ');
 
         if (!isset($_SERVER['API_KEY_NOBG'])) {
-          ?>
-            try adding API_KEY_NOBG env variable to download image from paying website
-            <a href="https://www.remove.bg/dashboard#api-key">https://www.remove.bg/dashboard#api-key</a><br>
-            50 img/month free</br></br>
-          <?php
+        ?>
+          try adding API_KEY_NOBG env variable to download image from paying website
+          <a href="https://www.remove.bg/dashboard#api-key">https://www.remove.bg/dashboard#api-key</a><br>
+          50 img/month free</br></br>
+        <?php
         }
+        $originalFolder = "../assets/imgs/deputes_original/";
+        if (!file_exists($originalFolder)) mkdir($originalFolder);
         while ($d = $donnees->fetch()) {
           $uid = substr($d['uid'], 2);
           $filename = "../assets/imgs/deputes_original/depute_" . $uid . ".png";
@@ -80,19 +82,21 @@
             }
           }
           //$nobg => no background
-          $lcdggithuburl = 'https://raw.githubusercontent.com/brissa-a/lcdg-data/main/img-nobg/PA' . $uid . '.png';
+          $nobgFolder = "../assets/imgs/deputes_nobg_import/";
+          if (!file_exists($nobgFolder)) mkdir($nobgFolder);
+          $liveUrl = 'https://datan.fr/assets/imgs/deputes_nobg_import/depute_' . $uid . '.png';
           $nobgfilename = '../assets/imgs/deputes_nobg_import/depute_' . $uid . '.png';
           if (!file_exists($nobgfilename)) {
-            if (substr(get_headers($lcdggithuburl)[0], 9, 3) != '404') {
-              $nobg = file_get_contents($lcdggithuburl);
-              file_put_contents($nobgfilename, $nobg);
-              echo "one nobg image was just downloaded from lcdg<br>";
+            $nobgLive = file_get_contents($liveUrl);
+            if ($nobgLive) {
+              file_put_contents($nobgfilename, $nobgLive);
+              echo "one nobg image was just downloaded from datan.fr<br>";
             } else if (isset($_SERVER['API_KEY_NOBG'])) {
               $ch = curl_init('https://api.remove.bg/v1.0/removebg');
               curl_setopt($ch, CURLOPT_HEADER, false);
               curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
               curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-              echo "URL:" . $url."<br>";
+              echo "URL:" . $url . "<br>";
               curl_setopt($ch, CURLOPT_HTTPHEADER, [
                 'X-Api-Key:' . $_SERVER['API_KEY_NOBG']
               ]);
@@ -104,12 +108,12 @@
               $nobg = curl_exec($ch);
               $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
               $version = curl_getinfo($ch, CURLINFO_HTTP_VERSION);
-              echo "VERSON".$version."<br>";
+              echo "VERSON" . $version . "<br>";
               if ($nobg && $httpCode == 200) {
                 file_put_contents($nobgfilename, $nobg);
                 echo "one nobg image was just downloaded from remove.bg<br>";
               } else {
-                echo "Error while downloading from remove.bg httpCode:".$httpCode."<br>";
+                echo "Error while downloading from remove.bg httpCode:" . $httpCode . "<br>";
                 echo "<pre>";
                 echo curl_error($ch);
                 echo "</pre>";

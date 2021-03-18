@@ -47,7 +47,7 @@
         unset($files[0]);
         unset($files[1]);
         echo "Number of photos in the deputes_original ==> " . count($files) . "<br>";
-
+        if (!file_exists($newdir)) mkdir($newdir);
         foreach ($files as $file) {
           $newfile = str_replace(".png", "", $file);
           $newfile = $newfile . "_webp.webp";
@@ -70,7 +70,7 @@
         unset($files[0]);
         unset($files[1]);
         echo "Number of photos in the deputes_nobg_import ==> " . count($files) . "<br>";
-
+        if (!file_exists($newdir)) mkdir($newdir);
         foreach ($files as $file) {
           $newfile = str_replace(".png", "", $file);
           $newfile = $newfile . "_webp.webp";
