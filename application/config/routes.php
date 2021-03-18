@@ -52,6 +52,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 // ADMIN
 $route['admin'] = 'admin/index';
+$route['admin/votes'] = 'admin/votes';
 $route['admin/votes/create'] = 'admin/create_vote';
 $route['admin/votes/modify/(:any)'] = 'admin/modify_vote/$1';
 $route['admin/votes/delete/(:any)'] = 'admin/delete_vote/$1';
