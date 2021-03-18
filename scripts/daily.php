@@ -2,10 +2,12 @@
 class Script
 {
     private $bdd;
+    private $legislature_to_get;
 
     // export the variables in environment
-    public function __construct()
+    public function __construct($legislature = 15)
     {
+        $this->legislature_to_get = $legislature;
         try {
             $this->bdd = new PDO(
                 'mysql:host=' . getenv('DATABASE_HOST') . ';dbname=' . getenv('DATABASE_NAME'),
@@ -909,13 +911,13 @@ class Script
         }
     }
 
-    public function vote($legislature_to_get = 15)
+    public function vote()
     {
         echo "starting vote\n";
         $reponse_vote = $this->bdd->query('
             SELECT voteNumero
             FROM votes
-            WHERE legislature = "' . $legislature_to_get . '"
+            WHERE legislature = "' . $this->legislature_to_get . '"
             ORDER BY voteNumero DESC
             LIMIT 1
         ');
@@ -932,7 +934,7 @@ class Script
         }
 
         // SCRAPPING DEPENDING ON LEGISLATURE
-        if ($legislature_to_get == 15) {
+        if ($this->legislature_to_get == 15) {
 
             $file = 'http://data.assemblee-nationale.fr/static/openData/repository/15/loi/scrutins/Scrutins_XV.xml.zip';
             $file = trim($file);
@@ -1143,7 +1145,7 @@ class Script
                 // insert votes groupes
                 $this->insertAll('votes_groupe', $voteGroupeFields, $question_marks_vote_groupe, $votesGroupe);
             }
-        } elseif ($legislature_to_get == 14) {
+        } elseif ($this->legislature_to_get == 14) {
 
             $file = 'http://data.assemblee-nationale.fr/static/openData/repository/14/loi/scrutins/Scrutins_XIV.xml.zip';
             $file = trim($file);
@@ -1203,7 +1205,7 @@ class Script
                             $miseaupoint = $mp->xpath("./../../..");
                             $item['voteType'] = $miseaupoint[0]->getName();
 
-                            $voteMain = array('mpId' => $item['mpId'], 'vote' => $vote, 'voteNumero' => $item['voteNumero'], 'voteId' => $item['voteId'], 'legislature' => $legislature_to_get, 'mandatId' => $item['mandatId'], 'parDelegation' => null, 'causePosition' => null, 'voteType' => $item['voteType']);
+                            $voteMain = array('mpId' => $item['mpId'], 'vote' => $vote, 'voteNumero' => $item['voteNumero'], 'voteId' => $item['voteId'], 'legislature' => $this->legislature_to_get, 'mandatId' => $item['mandatId'], 'parDelegation' => null, 'causePosition' => null, 'voteType' => $item['voteType']);
                             $question_marks_vote[] = '('  . $this->placeholders('?', sizeof($voteMain)) . ')';
                             $votesMain = array_merge($votesMain, array_values($voteMain));
                         }
@@ -1270,7 +1272,7 @@ class Script
                         $decompteNv = $xml2->xpath("./*[local-name()='syntheseVote']/*[local-name()='decompte']/*[local-name()='nonVotants']");
                         $item['decompteNv'] = $decompteNv[0];
 
-                        $voteInfo = array('voteId' => $item['voteId'], 'voteNumero' => $item['voteNumero'], 'organeRef' => $item['organeRef'], 'legislature' => $legislature_to_get, 'sessionREF' => $item['sessionRef'], 'seanceRef' => $item['seanceRef'], 'dateScrutin' => $item['dateScrutin'], 'quantiemeJourSeance' => $item['quantiemeJourSeance'], 'codeTypeVote' => $item['codeTypeVote'], 'libelleTypeVote' => $item['libelleTypeVote'], 'typeMajorite' => $item['typeMajorite'], 'sortCode' => $item['sortCode'], 'titre' => $item['titre'], 'demandeur' => $item['demandeur'], 'modePublicationDesVotes' => $item['modePublicationDesVotes'], 'nombreVotants' => $item['nombreVotants'], 'suffragesExprimes' => $item['suffragesExprimes'], 'nbrSuffragesRequis' => $item['nbrSuffragesRequis'], 'decomptePour' => $item['decomptePour'], 'decompteContre' => $item['decompteContre'], 'decompteAbs' => $item['decompteAbs'], 'decompteNv' => $item['decompteNv']);
+                        $voteInfo = array('voteId' => $item['voteId'], 'voteNumero' => $item['voteNumero'], 'organeRef' => $item['organeRef'], 'legislature' => $this->legislature_to_get, 'sessionREF' => $item['sessionRef'], 'seanceRef' => $item['seanceRef'], 'dateScrutin' => $item['dateScrutin'], 'quantiemeJourSeance' => $item['quantiemeJourSeance'], 'codeTypeVote' => $item['codeTypeVote'], 'libelleTypeVote' => $item['libelleTypeVote'], 'typeMajorite' => $item['typeMajorite'], 'sortCode' => $item['sortCode'], 'titre' => $item['titre'], 'demandeur' => $item['demandeur'], 'modePublicationDesVotes' => $item['modePublicationDesVotes'], 'nombreVotants' => $item['nombreVotants'], 'suffragesExprimes' => $item['suffragesExprimes'], 'nbrSuffragesRequis' => $item['nbrSuffragesRequis'], 'decomptePour' => $item['decomptePour'], 'decompteContre' => $item['decompteContre'], 'decompteAbs' => $item['decompteAbs'], 'decompteNv' => $item['decompteNv']);
                         $question_marks_vote_info[] = '('  . $this->placeholders('?', sizeof($voteInfo)) . ')';
                         $votesInfo = array_merge($votesInfo, array_values($voteInfo));
 
@@ -1318,7 +1320,7 @@ class Script
                             } else {
                                 $positionMajoritaire = $item['positionMajoritaire'];
                             }
-                            $voteGroupe = array('voteId' => $item['voteId'], 'voteNumero' => $item['voteNumero'], 'legislature' => $legislature_to_get, 'organeRef' => $item['organeRef'], 'nombreMembresGroupe' => $item['nombreMembresGroupe'], 'positionMajoritaire' => $positionMajoritaire, 'nombrePours' => $item['nombrePours'], 'nombreContres' => $item['nombreContres'], 'nombreAbstentions' => $item['nombreAbstentions'], 'nonVotants' => $item['nonVotants']);
+                            $voteGroupe = array('voteId' => $item['voteId'], 'voteNumero' => $item['voteNumero'], 'legislature' => $this->legislature_to_get, 'organeRef' => $item['organeRef'], 'nombreMembresGroupe' => $item['nombreMembresGroupe'], 'positionMajoritaire' => $positionMajoritaire, 'nombrePours' => $item['nombrePours'], 'nombreContres' => $item['nombreContres'], 'nombreAbstentions' => $item['nombreAbstentions'], 'nonVotants' => $item['nonVotants']);
                             $question_marks_vote_groupe[] = '('  . $this->placeholders('?', sizeof($voteGroupe)) . ')';
                             $votesGroupe = array_merge($votesGroupe, array_values($voteGroupe));
                         }
@@ -1328,6 +1330,256 @@ class Script
                     $this->insertAll('votes_groupes', $voteGroupeFields, $question_marks_vote_groupe, $votesGroupe);
                 }
             }
+        }
+    }
+
+    public function updateVoteInfo()
+    {
+        $results = $this->bdd->query('
+            SELECT *
+            FROM votes_info
+            WHERE legislature = "' . $this->legislature_to_get . '"
+            ORDER BY voteNumero DESC
+        ');
+
+        while ($data = $results->fetch()) {
+            $num = $data["voteNumero"];
+            $titre = $data["titre"];
+
+            //variable type_vote
+            if (strpos($titre, "ensemble d")) {
+                $type_vote = "final";
+            } elseif (strpos($titre, "sous-amendement") || strpos($titre, "sous-amendment")) {
+                $type_vote = "sous-amendement";
+            } elseif (strpos($titre, "'amendement")) {
+                $type_vote = "amendement";
+            } elseif (substr($titre, 0, 8) == "l'articl" || substr($titre, 0, 8) == " l'artic") {
+                $type_vote = "article";
+            } elseif (strpos($titre, "a motion de rejet prealable") || strpos($titre, "a motion de rejet préalable")) {
+                $type_vote = "motion de rejet préalable";
+            } elseif (strpos($titre, "a motion de renvoi en commi")) {
+                $type_vote = "motion de renvoi en commission";
+            } elseif (strpos($titre, "a motion de censure")) {
+                $type_vote = "motion de censure";
+            } elseif (strpos($titre, "motion référendaire")) {
+                $type_vote = "motion référendaire";
+            } elseif (strpos($titre, "a declaration de politique generale")) {
+                $type_vote = "declaration de politique generale";
+            } elseif (strpos($titre, "es crédits de la mission") || strpos($titre, "es credits de")) {
+                $type_vote = "crédits de mission";
+            } elseif (strpos($titre, "a déclaration du Gouvernement")) {
+                $type_vote = "déclaration du gouvernement";
+            } elseif (strpos($titre, "partie du projet de loi de finances")) {
+                $type_vote = "partie du projet de loi de finances";
+            } elseif (strpos($titre, "demande de constitution de commission speciale") | strpos($titre, "demande de constitution de la commission speciale")) {
+                $type_vote = "demande de constitution de commission speciale";
+            } elseif (strpos($titre, "demande de suspension de séance")) {
+                $type_vote = "demande de suspension de séance";
+            } elseif (strpos($titre, "motion d'ajournement")) {
+                $type_vote = "motion d'ajournement";
+            } elseif (strpos($titre, "conclusions de rejet de la commission")) {
+                $type_vote = "conclusions de rejet de la commission";
+            } else {
+                $type_vote = substr($titre, 0, 8);
+                //$type_vote = "REVOIR";
+            }
+
+            //variable amdt_n
+            if ($type_vote == "amendement") {
+                $amdt_n = substr($titre, 0, 25);
+                $amdt_n = preg_replace("/[^0-9]/", "", $amdt_n);
+            } else {
+                $amdt_n = NULL;
+            }
+
+            //varible article_n
+            if ($type_vote == "article") {
+                $pos_article = NULL;
+                if (strpos($titre, "article premier")) {
+                    $article_n = 1;
+                } else {
+                    $article_n = substr($titre, 0, 20);
+                    $article_n = preg_replace("/[^0-9]/", "", $article_n);
+                }
+            } elseif (strpos($titre, "a l'article")) {
+                // "a l'article"
+                $a_article = substr($titre, strpos($titre, "a l'article") + 1, 20);
+                $pos_article = "a";
+                if (strpos($a_article, "premier")) {
+                    $article_n = 1;
+                } else {
+                    $article_n = preg_replace("/[^0-9]/", "", $a_article);
+                }
+            } elseif (strpos($titre, "apres l'article")) {
+                // "apres l'article"
+                $pos_article = "après";
+                $a_article = substr($titre, strpos($titre, "apres l'article") + 1, 25);
+                if (strpos($a_article, "premier")) {
+                    $article_n = 1;
+                } else {
+                    $article_n = preg_replace("/[^0-9]/", "", $a_article);
+                }
+            } elseif (strpos($titre, "avant l'article")) {
+                // "avant l'article"
+                $pos_article = "avant";
+                $a_article = substr($titre, strpos($titre, "avant l'article") + 1, 25);
+                if (strpos($a_article, "premier")) {
+                    $article_n = 1;
+                } else {
+                    $article_n = preg_replace("/[^0-9]/", "", $a_article);
+                }
+            } else {
+                $article_n = NULL;
+                $pos_article = NULL;
+            }
+
+            //variable "bister"
+            if (strpos($titre, "bis")) {
+                // BIS
+                $b = substr($titre, strpos($titre, "bis") + -1, 9);
+                if (strpos($b, "bis AA")) {
+                    $bister = "bis AA";
+                } elseif (strpos($b, "bis A ")) {
+                    $bister = "bis A";
+                } elseif (strpos($b, "bis B ")) {
+                    $bister = "bis B";
+                } elseif (strpos($b, "bis F ")) {
+                    $bister = "bis F";
+                } elseif (strpos($b, "bis D ")) {
+                    $bister = "bis D";
+                } elseif (strpos($b, "bis C")) {
+                    $bister = "bis C";
+                } elseif (strpos($b, "bis E")) {
+                    $bister = "bis E";
+                } elseif (strpos($b, "bis")) {
+                    $bister = "bis";
+                } else {
+                    //$bister = "error".$b;
+                    $bister = "error";
+                }
+            } elseif (strpos($titre, " ter ")) {
+                // TER
+                $ter = substr($titre, strpos($titre, " ter ") + -1, 9);
+                if (strpos($ter, "ter B ")) {
+                    $bister = "ter B";
+                } elseif (strpos($ter, "ter C ")) {
+                    $bister = "ter C";
+                } elseif (strpos($ter, "ter A ")) {
+                    $bister = "ter A";
+                } elseif (strpos($ter, "ter D ")) {
+                    $bister = "ter D";
+                } elseif (strpos($ter, "ter B")) {
+                    $bister = "ter B";
+                } elseif (strpos($ter, "ter")) {
+                    $bister = "ter";
+                } else {
+                    //$bister = "error".$ter;
+                    $bister = "error";
+                }
+            } else {
+                $bister = NULL;
+            }
+
+            // INSER INTO DATABASE.
+            try {
+                $sql = ("UPDATE votes_info SET
+                    voteType = '" . addslashes($type_vote) . "',
+                    amdt = '$amdt_n',
+                    article = '$article_n',
+                    bister = '$bister',
+                    posArticle = '$pos_article'
+                WHERE voteNumero = $num AND legislature = $this->legislature_to_get");
+                $stmt = $this->bdd->prepare($sql);
+                $stmt->execute();
+            } catch (PDOException $e) {
+                echo $sql . "\n" . $e->getMessage();
+            }
+        }
+    }
+
+    public function voteScore()
+    {
+
+        // TEST AVEC BDD //
+        $reponse_last_vote = $this->bdd->query('
+                SELECT voteNumero AS lastVote
+                FROM votes_scores
+                WHERE legislature = "' . $this->legislature_to_get . '"
+                ORDER BY voteNumero DESC
+                LIMIT 1
+                ');
+
+        while ($donnees_last_vote = $reponse_last_vote->fetch()) {
+            $lastVote = $donnees_last_vote['lastVote'] + 1;
+        }
+
+        if (!isset($lastVote)) {
+            $lastVote = 1;
+        }
+        echo "Vote score from " . $lastVote . "\n";
+
+        $reponseVote = $this->bdd->query('
+            SELECT B.voteNumero, B.legislature, B.mpId, B.vote, B.mandat_uid AS mandatId, B.sortCode, B.positionGroup, B.gvtPosition AS positionGvt,
+            case when B.vote = B.positionGroup then 1 else 0 end as scoreLoyaute,
+            case when B.vote = B.sortCode then 1 else 0 end as scoreGagnant,
+            case when B.vote = B.gvtPosition then 1 else 0 end as scoreGvt,
+            1 as scoreParticipation
+            FROM
+            (
+            SELECT A.*,
+            case
+            when vg.positionMajoritaire = "pour" then 1
+            when vg.positionMajoritaire = "contre" then -1
+            when vg.positionMajoritaire = "abstention" then 0
+            else "error" end as positionGroup,
+            case
+            when gvt.positionMajoritaire = "pour" then 1
+            when gvt.positionMajoritaire = "contre" then -1
+            when gvt.positionMajoritaire = "abstention" then 0
+            else "error" end as gvtPosition
+            FROM
+            (
+            SELECT v.voteNumero, v.mpId, v.vote,
+            case
+            when sortCode = "adopté" then 1
+            when sortCode = "rejeté" then -1
+            else 0 end as sortCode,
+            v.legislature,
+            mg.mandatId AS mandat_uid, mg.organeRef
+            FROM votes v
+            JOIN votes_info vi ON vi.voteNumero = v.voteNumero AND vi.legislature = v.legislature
+            LEFT JOIN mandat_groupe mg ON mg.mpId = v.mpId
+            AND ((vi.dateScrutin BETWEEN mg.dateDebut AND mg.dateFin ) OR (vi.dateScrutin > mg.dateDebut AND mg.dateFin IS NULL))
+            AND mg.codeQualite IN ("Membre", "Député non-inscrit", "Membre apparenté")
+            LEFT JOIN organes o ON o.uid = vi.organeRef
+            WHERE v.voteType != "miseAuPoint" AND v.voteNumero >= "' . $lastVote . '" AND v.legislature = "' . $this->legislature_to_get . '" AND vote != "nv"
+            ) A
+            LEFT JOIN votes_groupes vg ON vg.organeRef = A.organeRef AND vg.voteNumero = A.voteNumero AND vg.legislature = A.legislature
+            LEFT JOIN votes_groupes gvt ON gvt.organeRef IN ("PO730964", "PO713077", "PO656002") AND gvt.voteNumero = A.voteNumero AND gvt.legislature = A.legislature
+            ) B
+        ');
+
+
+        while ($x = $reponseVote->fetch(PDO::FETCH_ASSOC)) {
+
+            $sql = $this->bdd->prepare("INSERT INTO votes_scores (voteNumero, legislature, mpId, vote, mandatId, sortCode, positionGroup, scoreLoyaute, scoreGagnant, scoreParticipation, positionGvt, scoreGvt, dateMaj) VALUES (:voteNumero, :legislature, :mpId, :vote, :mandatId, :sortCode, :positionGroup, :scoreLoyaute, :scoreGagnant, :scoreParticipation, :positionGvt, :scoreGvt, curdate())");
+
+            $arraySql = array(
+                'voteNumero' => $x['voteNumero'],
+                'legislature' => $x['legislature'],
+                'mpId' => $x['mpId'],
+                'vote' => $x['vote'],
+                'mandatId' => $x['mandatId'],
+                'sortCode' => $x['sortCode'],
+                'positionGroup' => $x['positionGroup'],
+                'scoreLoyaute' => $x['scoreLoyaute'],
+                'scoreGagnant' => $x['scoreGagnant'],
+                'scoreParticipation' => $x['scoreParticipation'],
+                'positionGvt' => $x['positionGvt'],
+                'scoreGvt' => $x['scoreGvt'],
+            );
+
+            $sql->execute($arraySql);
         }
     }
 }
@@ -1345,3 +1597,5 @@ $script = new Script();
 // $script->parties();
 // $script->legislature();
 // $script->vote();
+// $script->updateVoteIsnfo();
+// $script->voteScore();
