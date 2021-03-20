@@ -20,7 +20,9 @@ Puis les données de ces tables :
 -elect_2019_europe.sql
 -elect_2017_pres_2.sql
 
-Puis lancer ces scripts depuis /scripts/admin.php
+Puis lancer ces scripts :
+php /scripts/daily.php
+php /scripts/daily.php 14
 
 # Assets
 Installez les dépendances

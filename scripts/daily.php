@@ -5,12 +5,16 @@ class Script
     private $bdd;
     private $legislature_to_get;
     private $dateMaj;
+    private $time_pre;
 
     // export the variables in environment
     public function __construct($legislature = 15)
     {
+        echo "__construct starting \n";
         $this->legislature_to_get = $legislature;
         $this->dateMaj = date('Y-m-d');
+        echo date('Y-m-d') . " : Launching the daily script.\n";
+        $this->time_pre = microtime(true);;
         try {
             $this->bdd = new PDO(
                 'mysql:host=' . getenv('DATABASE_HOST') . ';dbname=' . getenv('DATABASE_NAME'),
@@ -23,6 +27,14 @@ class Script
         } catch (Exception $e) {
             die('Erreur : ' . $e->getMessage());
         }
+    }
+
+
+    function __destruct()
+    {
+        $time_post = microtime(true);
+        $exec_time = $time_post - $this->time_pre;
+        echo ("Script is over ! It took: " . round($exec_time, 2) . " seconds.\n");
     }
 
     private function placeholders($text, $count = 0, $separator = ",")
@@ -47,10 +59,10 @@ class Script
                 $stmt->execute($datas);
                 echo $table . " inserted\n";
             } catch (Exception $e) {
-                echo "Error inserting : " . $table . "\n" . $e->getMessage();
+                echo "Error inserting : " . $table . "\n" . $e->getMessage(). "\n";
             }
         } else {
-            echo "Nothing to insert in " . $table;
+            echo "Nothing to insert in " . $table . "\n";
         }
     }
 
@@ -403,8 +415,9 @@ class Script
         echo "fill Depute finished \n";
     }
 
-    function downloadPictures()
+    public function downloadPictures()
     {
+        echo "downloadPictures starting \n";
         if (!getenv('API_KEY_NOBG')) {
             echo "no API key for nobg\n";
         }
@@ -468,21 +481,18 @@ class Script
                         echo "one nobg image was just downloaded from remove.bg\n";
                     } else {
                         echo "Error while downloading from remove.bg httpCode:" . $httpCode . "\n";
-                        echo "<pre>";
                         echo curl_error($ch);
-                        echo "</pre>";
                         var_dump($nobg);
                     }
                     curl_close($ch);
-                } else {
-                    echo "API_KEY_NOBG not set nothing was downloaded\n";
                 }
             }
         }
     }
 
-    function webpPictures()
+    public function webpPictures()
     {
+        echo "webpPictures starting \n";
         $dir = "../assets/imgs/deputes_original/";
         $newdir = "../assets/imgs/deputes_webp/";
         $files = scandir($dir);
@@ -529,8 +539,9 @@ class Script
         }
     }
 
-    function resmushPictures()
+    public function resmushPictures()
     {
+        echo "resmushPictures starting \n";
         $donnees = $this->bdd->query('
             SELECT d.mpId AS uid, d.legislature
             FROM deputes_last d
@@ -580,8 +591,9 @@ class Script
         }
     }
 
-    function groupeEffectif()
+    public function groupeEffectif()
     {
+        echo "groupeEffectif starting \n";
         $this->bdd->query('
             DROP TABLE IF EXISTS groupes_effectif;
             CREATE TABLE groupes_effectif AS
@@ -602,6 +614,7 @@ class Script
 
     public function deputeAll()
     {
+        echo "deputeAll starting \n";
         $this->bdd->exec('TRUNCATE TABLE deputes_all');
 
         $query = $this->bdd->query('
@@ -688,6 +701,7 @@ class Script
 
     public function deputeLast()
     {
+        echo "deputeLast starting \n";
         $this->bdd->exec('DROP TABLE IF EXISTS deputes_last');
         $this->bdd->exec('
             CREATE TABLE deputes_last AS
@@ -716,6 +730,7 @@ class Script
 
     public function deputeJson()
     {
+        echo "deputeJson starting \n";
         $reponse = $this->bdd->query('
         SELECT da.mpId, da.nameFirst, da.nameLast, da.nameUrl, da.dptSlug
         FROM deputes_all da
@@ -753,6 +768,7 @@ class Script
 
     public function groupeStats()
     {
+        echo "groupeStats starting \n";
         $this->bdd->query("DROP TABLE IF EXISTS groupes_stats");
         $this->bdd->query('CREATE TABLE groupes_stats ( organeRef VARCHAR(15) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL , womenPct DECIMAL(4,2) NULL , womenN INT(3) NULL  , age DECIMAL(4,2) NULL ) ENGINE = MyISAM;');
 
@@ -839,6 +855,7 @@ class Script
 
     public function parties()
     {
+        echo "parties starting \n";
 
         $this->bdd->exec('DROP TABLE IF EXISTS parties');
 
@@ -873,6 +890,7 @@ class Script
 
     public function legislature()
     {
+        echo "legislature starting \n";
         $this->bdd->exec('
             CREATE TABLE IF NOT EXISTS legislature (
             id INT(3) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
@@ -913,6 +931,7 @@ class Script
 
     public function vote()
     {
+        echo "vote starting \n";
         echo "starting vote\n";
         $reponse_vote = $this->bdd->query('
             SELECT voteNumero
@@ -1335,6 +1354,7 @@ class Script
 
     public function updateVoteInfo()
     {
+        echo "updateVoteInfo starting \n";
         $results = $this->bdd->query('
             SELECT *
             FROM votes_info
@@ -1499,6 +1519,7 @@ class Script
 
     public function voteScore()
     {
+        echo "voteScore starting \n";
 
         // TEST AVEC BDD //
         $reponse_last_vote = $this->bdd->query('
@@ -1588,6 +1609,7 @@ class Script
 
     public function groupeCohesion()
     {
+        echo "groupeCohesion starting \n";
         $reponse_last_vote = $this->bdd->query('
         SELECT voteNumero AS lastVote
         FROM groupes_cohesion
@@ -1648,6 +1670,7 @@ class Script
 
     public function groupeAccord()
     {
+        echo "groupeAccord starting \n";
 
         $this->bdd->query('
             CREATE TABLE IF NOT EXISTS groupes_accord (
@@ -1707,6 +1730,7 @@ class Script
 
     public function deputeAccord()
     {
+        echo "deputeAccord starting \n";
         $reponse_last_vote = $this->bdd->query('
         SELECT voteNumero AS lastVote
         FROM deputes_accord
@@ -1752,6 +1776,7 @@ class Script
 
     public function voteParticipationCommission()
     {
+        echo "voteParticipationCommission starting \n";
         if ($this->legislature_to_get == 15) {
             $result = $this->bdd->query('
             SELECT voteNumero
@@ -1828,6 +1853,7 @@ class Script
 
     public function classParticipation()
     {
+        echo "classParticipation starting \n";
         $this->bdd->query('
             DROP TABLE IF EXISTS class_participation;
         ');
@@ -1854,6 +1880,7 @@ class Script
 
     public function classParticipationCommission()
     {
+        echo "classParticipationCommission starting \n";
         if ($this->legislature_to_get == 15) {
             $this->bdd->query('
                 DROP TABLE IF EXISTS class_participation_commission;
@@ -1878,6 +1905,7 @@ class Script
 
     public function deputeLoyaute()
     {
+        echo "deputeLoyaute starting \n";
         $this->bdd->query('
             DROP TABLE IF EXISTS deputes_loyaute;
             CREATE TABLE deputes_loyaute
@@ -1922,6 +1950,7 @@ class Script
 
     public function classLoyaute()
     {
+        echo "classLoyaute starting \n";
         $this->bdd->query('
             DROP TABLE IF EXISTS class_loyaute;
             CREATE TABLE class_loyaute AS
@@ -1936,6 +1965,7 @@ class Script
 
     public function classMajorite()
     {
+        echo "classMajorite starting \n";
         $this->bdd->query('
             DROP TABLE IF EXISTS class_majorite;
             CREATE TABLE class_majorite
@@ -1955,6 +1985,7 @@ class Script
 
     public function classGroups()
     {
+        echo "classGroups starting \n";
         $this->bdd->query('
             DROP TABLE IF EXISTS class_groups;
             CREATE TABLE class_groups AS
@@ -1997,6 +2028,7 @@ class Script
 
     public function classGroupsProximite()
     {
+        echo "classGroupsProximite starting \n";
         $this->bdd->query('DROP TABLE IF EXISTS class_groups_proximite');
 
         $this->bdd->query('
@@ -2013,6 +2045,7 @@ class Script
 
     public function votesDossiers()
     {
+        echo "votesDossiers starting \n";
         $this->bdd->query('DELETE FROM votes_dossiers WHERE legislature = "' . $this->legislature_to_get . '"');
 
         //Until where to go?
@@ -2076,6 +2109,7 @@ class Script
 
     public function dossier()
     {
+        echo "dossier starting \n";
         $this->bdd->query('
             DELETE FROM dossiers WHERE legislature = "' . $this->legislature_to_get . '"
         ');
@@ -2124,7 +2158,7 @@ class Script
                                 $commissionFond = NULL;
                             }
 
-                            $dossier =array('dossierId' => $dossierId, 'legislature' => $legislature, 'titre' => $titre, 'titreChemin' => $titreChemin, 'senatChemin' => $senatChemin, 'procedureParlementaireCode' => $procedureParlementaireCode, 'procedureParlementaireLibelle' => $procedureParlementaireLibelle, 'commissionFond' => $commissionFond);
+                            $dossier = array('dossierId' => $dossierId, 'legislature' => $legislature, 'titre' => $titre, 'titreChemin' => $titreChemin, 'senatChemin' => $senatChemin, 'procedureParlementaireCode' => $procedureParlementaireCode, 'procedureParlementaireLibelle' => $procedureParlementaireLibelle, 'commissionFond' => $commissionFond);
                             $question_marks[] = '('  . $this->placeholders('?', sizeof($dossier)) . ')';
                             $dossiers = array_merge($dossiers, array_values($dossier));
                         }
@@ -2174,33 +2208,333 @@ class Script
         }
         $this->insertAll('dossiers', $dossierFields, $question_marks, $dossiers);
     }
+
+    public function classParticipationSix()
+    {
+        echo "classParticipationSix starting \n";
+        if ($this->legislature_to_get == 15) {
+            $this->bdd->query('
+            DROP TABLE IF EXISTS class_participation_six;
+            CREATE TABLE class_participation_six
+            (id INT(5) NOT NULL AUTO_INCREMENT,
+            classement INT(5) NOT NULL,
+            mpId VARCHAR(25) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+            score DECIMAL(3,2) NOT NULL,
+            votesN INT(15) NOT NULL,
+            dateMaj DATE NOT NULL,
+            PRIMARY KEY (id));
+            ALTER TABLE class_participation_six ADD INDEX idx_mpId (mpId);
+        ');
+
+            $result = $this->bdd->query('
+            SELECT @s:=@s+1 AS "classement", C.*
+            FROM
+            (
+                SELECT B.*
+                FROM
+                (
+                    SELECT A.mpId, ROUND(AVG(A.participation),2) AS score, COUNT(A.participation) AS votesN, ROUND(COUNT(A.participation)/10) AS "index"
+                    FROM
+                    (
+                        SELECT v.mpId, v.participation, vi.dateScrutin
+                        FROM votes_participation_commission v
+                        LEFT JOIN votes_info vi ON v.voteNumero = vi.voteNumero
+                        WHERE vi.dateScrutin >= CURDATE() - INTERVAL 12 MONTH
+                    ) A
+                    WHERE A.participation IS NOT NULL
+                    GROUP BY A.mpId
+                    ORDER BY ROUND(COUNT(A.participation)/10) DESC, AVG(A.participation) DESC
+                ) B
+                WHERE B.mpId IN (
+                    SELECT mpId
+                FROM deputes_all
+                WHERE legislature = 15 AND dateFin IS NULL
+                )
+            ) C,
+            (SELECT @s:= 0) AS s
+            WHERE C.votesN > 5
+            ORDER BY C.score DESC, C.votesN DESC
+        ');
+
+            $participationFields = array('classement', 'mpId', 'score', 'votesN', 'dateMaj');
+            $participation = [];
+            $participations = [];
+            $question_marks = [];
+            while ($depute = $result->fetch()) {
+                $classement = $depute["classement"];
+                $mpId = $depute["mpId"];
+                $score = $depute["score"];
+                $votesN = $depute["votesN"];
+
+                $participation = array('classement' => $classement, 'mpId' => $mpId, 'score' => $score, 'votesN' => $votesN, 'dateMaj' => $this->dateMaj);
+                $question_marks[] = '('  . $this->placeholders('?', sizeof($participation)) . ')';
+                $participations = array_merge($participations, array_values($participation));
+            }
+            $this->insertAll('class_participation_six', $participationFields, $question_marks, $participations);
+        }
+    }
+
+    public function classLoyauteSix()
+    {
+        echo "classLoyauteSix starting \n";
+        if ($this->legislature_to_get == 15) {
+
+            // CONNEXION SQL //
+            include 'bdd-connexion.php';
+
+            $this->bdd->query('
+                DROP TABLE IF EXISTS class_loyaute_six;
+                CREATE TABLE class_loyaute_six
+                    (id INT(5) NOT NULL AUTO_INCREMENT,
+                    classement INT(5) NOT NULL,
+                    mpId VARCHAR(25) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+                    score DECIMAL(4,3) NOT NULL,
+                    votesN INT(15) NOT NULL,
+                    dateMaj DATE NOT NULL,
+                    PRIMARY KEY (id));
+                    ALTER TABLE class_loyaute_six ADD INDEX idx_mpId (mpId);
+            ');
+            $result = $this->bdd->query('
+                SELECT @s:=@s+1 AS "classement", B.*
+                FROM (
+                SELECT A.*
+                FROM (
+                    SELECT t1.mpId, ROUND(AVG(t1.scoreLoyaute),3) AS score, COUNT(t1.scoreLoyaute) AS votesN
+                    FROM
+                    (
+                        SELECT v.mpId, v.scoreLoyaute, vi.dateScrutin
+                        FROM votes_scores v
+                        LEFT JOIN votes_info vi ON v.voteNumero = vi.voteNumero
+                        WHERE vi.dateScrutin >= CURDATE() - INTERVAL 12 MONTH
+                    ) t1
+                    WHERE t1.scoreLoyaute IS NOT NULL
+                    GROUP BY t1.mpId
+                ) A
+                WHERE A.mpId IN (
+                    SELECT mpId
+                    FROM deputes_all
+                    WHERE legislature = 15 AND dateFin IS NULL
+                )
+                ) B,
+                (SELECT @s:= 0) AS s
+                ORDER BY B.score DESC, B.votesN DESC
+            ');
+
+            $loyauteFields = array('classement', 'mpId', 'score', 'votesN', 'dateMaj');
+            $loyaute = [];
+            $loyautes = [];
+            $question_marks = [];
+            while ($depute = $result->fetch()) {
+                $classement = $depute["classement"];
+                $mpId = $depute["mpId"];
+                $score = $depute["score"];
+                $votesN = $depute["votesN"];
+
+
+                $loyaute = array('classement' => $classement, 'mpId' => $mpId, 'score' => $score, 'votesN' => $votesN, 'dateMaj' => $this->dateMaj);
+                $question_marks[] = '('  . $this->placeholders('?', sizeof($loyaute)) . ')';
+                $loyautes = array_merge($loyautes, array_values($loyaute));
+            }
+            $this->insertAll('class_loyaute_six', $loyauteFields, $question_marks, $loyautes);
+        }
+    }
+
+    public function deputeAccordCleaned()
+    {
+        echo "deputeAccordCleaned starting \n";
+        $this->bdd->query('
+            DROP TABLE IF EXISTS deputes_accord_cleaned;
+            CREATE TABLE deputes_accord_cleaned AS
+            SELECT A.*
+            FROM
+            (
+            SELECT da.mpId, da.legislature, da.organeRef, ROUND(AVG(da.accord)*100) AS accord, COUNT(da.accord) AS votesN
+            FROM deputes_accord da
+            GROUP BY da.mpId, da.organeRef
+            ) A
+            WHERE A.accord IS NOT NULL;
+            ALTER TABLE deputes_accord_cleaned ADD INDEX idx_mpId (mpId);
+            ALTER TABLE deputes_accord_cleaned ADD INDEX idx_legislature (legislature);
+        ');
+    }
+
+    public function historyMpsAverage()
+    {
+        echo "historyMpsAverage starting \n";
+        $this->bdd->query('DROP TABLE IF EXISTS history_mps_average;');
+        $this->bdd->query('CREATE TABLE `history_mps_average` ( `id` TINYINT NOT NULL AUTO_INCREMENT , `legislature` TINYINT NOT NULL , `length` DECIMAL(4,2) NOT NULL , PRIMARY KEY (`id`)) ENGINE = MyISAM;');
+        $terms = array(14, 15);
+        foreach ($terms as $term) {
+            echo "Getting average for term => " . $term . "\n";
+            $this->bdd->query('
+                INSERT INTO history_mps_average (legislature, length)
+                SELECT "' . $term . '" AS legislature, ROUND(AVG(B.mpLength)/365, 2) as length
+                FROM
+                (
+                    SELECT A.mpId, sum(A.duree) AS mpLength
+                    FROM
+                    (
+                        SELECT m1.mpId, m1.legislature,
+                        CASE
+                        WHEN m1.dateFin IS NOT NULL THEN datediff(m1.dateFin, m1.datePriseFonction)
+                        ELSE datediff(curdate(), m1.datePriseFonction)
+                        END AS duree
+                        FROM mandat_principal m1
+                        LEFT JOIN deputes_all da ON m1.mpId = da.mpId AND da.legislature = "' . $term . '"
+                        WHERE m1.codeQualite = "membre" AND m1.typeOrgane = "ASSEMBLEE" AND m1.legislature <= "' . $term . '"
+                        ORDER BY m1.mpId
+                    ) A
+                    GROUP BY A.mpId
+                ) B
+            ');
+        }
+
+        $this->bdd->query('ALTER TABLE history_mps_average ADD INDEX idx_legislature (legislature)');
+    }
+
+    public function historyPerMpsAverage()
+    {
+        echo "historyPerMpsAverage starting \n";
+        $this->bdd->query('
+            DROP TABLE IF EXISTS history_per_mps_average;
+            CREATE TABLE history_per_mps_average AS
+            SELECT B.*,
+                    CASE
+                    WHEN ROUND(B.mpLength/365) = 1 THEN CONCAT(ROUND(B.mpLength/365), " an")
+                    WHEN ROUND(B.mpLength/365) > 1 THEN CONCAT(ROUND(B.mpLength/365), " ans")
+                    WHEN ROUND(B.mpLength/30) != 0 THEN CONCAT(ROUND(B.mpLength/30), " mois")
+                    ELSE CONCAT(B.mpLength, " jours")
+                    END AS lengthEdited, CURDATE() AS dateMaj
+                FROM
+                (
+                    SELECT A.mpId,
+                        SUM(A.length) AS mpLength,
+                        count(distinct(A.legislature)) AS mandatesN
+                        FROM
+                        (
+                            SELECT mp.legislature, mp.mpId,
+                                CASE
+                                WHEN mp.dateFin IS NOT NULL THEN datediff(mp.dateFin, mp.datePriseFonction)
+                                ELSE datediff(curdate(), mp.datePriseFonction)
+                            END AS length
+                            FROM mandat_principal mp
+                            WHERE mp.typeOrgane = "ASSEMBLEE" AND mp.codeQualite = "membre"
+                        ) A
+                        GROUP BY A.mpId
+                ) B;
+            ALTER TABLE history_per_mps_average ADD INDEX idx_mpId (mpId);
+        ');
+    }
+
+    public function createCsvFile()
+    {
+        echo "createCsvFile starting \n";
+        // filename for export
+        $csv_filename = 'deputes_15.csv';
+
+        // query to get data from database
+        $query = $this->bdd->query('
+                SELECT
+                    da.mpId AS id,
+                    da.civ,
+                    da.nameLast AS nom,
+                    da.nameFirst AS prenom,
+                    d.birthDate AS naissance,
+                    da.age,
+                    da.libelle AS groupe,
+                    da.libelleAbrev AS groupeAbrev,
+                    da.departementNom,
+                    da.departementCode,
+                    da.circo,
+                    da.datePriseFonction,
+                    d.job,
+                    dc.mailAn AS mail,
+                    dc.twitter,
+                    dc.facebook,
+                    dc.website,
+                    h.mandatesN AS nombreMandats,
+                    h.lengthEdited AS experienceDepute,
+                    cp.score AS scoreParticipation,
+                    cpm.score AS scoreParticipationSpecialite,
+                    cl.score AS scoreLoyaute,
+                    cm.score AS scoreMajorite,
+                    CASE WHEN da.dateFin IS NULL THEN 1 ELSE 0 END AS "active",
+                    da.dateMaj
+                FROM deputes_all da
+                LEFT JOIN class_participation cp ON da.mpId = cp.mpId
+                LEFT JOIN class_participation_commission cpm ON da.mpId = cpm.mpId
+                LEFT JOIN class_loyaute cl ON da.mpId = cl.mpId
+                LEFT JOIN class_majorite cm ON da.mpId = cm.mpId
+                LEFT JOIN deputes_contacts dc ON da.mpId = dc.mpId
+                LEFT JOIN history_per_mps_average h ON da.mpId = h.mpId
+                LEFT JOIN deputes d ON da.mpId = d.mpId
+                WHERE da.legislature = 15
+            ');
+
+        // Fetch the result
+        $results = $query->fetchAll(PDO::FETCH_ASSOC);
+
+        // Create line with field names
+        $fields = [];
+        foreach ($results[0] as $key => $value) {
+            $fields[] = $key;
+        }
+
+        // Export the data
+        $dir = __DIR__;
+        $dir = str_replace(array("/", "scripts", ".php"), "", $dir);
+        $dir = "../assets/opendata/";
+        $fp = fopen($dir . "" . $csv_filename, "w");
+
+        // Print the header
+        fputcsv($fp, $fields);
+
+        // Create new line with results
+        foreach ($results as $key => $result) {
+            fputcsv($fp, $result);
+        }
+
+        // CLose the file
+        fclose($fp);
+    }
 }
 
-$script = new Script();
-// $script->fillDeputes();
-// $script->downloadPictures();
-// $script->webpPictures();
-// $script->resmushPictures();
-// $script->groupeEffectif();
-// $script->deputeAll();
-// $script->deputeLast();
-// $script->deputeJson();
-// $script->groupeStats();
-// $script->parties();
-// $script->legislature();
-// $script->vote();
-// $script->updateVoteInfo();
-// $script->voteScore();
-// $script->groupeCohesion();
-// $script->groupeAccord();
-// $script->deputeAccord();
-// $script->voteParticipationCommission();
-// $script->classParticipation();
-// $script->classParticipationCommission();
-// $script->deputeLoyaute();
-// $script->classLoyaute();
-// $script->classMajorite();
-// $script->classGroups();
-// $script->classGroupsProximite();
-// $script->votesDossiers();
-// $script->dossier();
+// Specify the legislature
+if (isset($argv[1])){
+    $script = new Script($argv[1]);    
+} else {
+    $script = new Script();
+}
+$script->fillDeputes();
+$script->downloadPictures();
+$script->webpPictures();
+$script->resmushPictures();
+$script->groupeEffectif();
+$script->deputeAll();
+$script->deputeLast();
+$script->deputeJson();
+$script->groupeStats();
+$script->parties();
+$script->legislature();
+$script->vote();
+$script->updateVoteInfo();
+$script->voteScore();
+$script->groupeCohesion();
+$script->groupeAccord();
+$script->deputeAccord();
+$script->voteParticipationCommission();
+$script->classParticipation();
+$script->classParticipationCommission();
+$script->deputeLoyaute();
+$script->classLoyaute();
+$script->classMajorite();
+$script->classGroups();
+$script->classGroupsProximite();
+$script->votesDossiers();
+$script->dossier();
+$script->classParticipationSix();
+$script->classLoyauteSix();
+$script->deputeAccordCleaned();
+$script->historyMpsAverage();
+$script->historyPerMpsAverage();
+$script->createCsvFile();
