@@ -12,7 +12,7 @@ class Script
     {
         $this->legislature_to_get = $legislature;
         $this->dateMaj = date('Y-m-d');
-        echo date('Y-m-d') . " : Launching the daily script for legislature " . $this->legislature_to_get ."\n";
+        echo date('Y-m-d') . " : Launching the daily script for legislature " . $this->legislature_to_get . "\n";
         $this->time_pre = microtime(true);;
         try {
             $this->bdd = new PDO(
@@ -58,7 +58,7 @@ class Script
                 $stmt->execute($datas);
                 echo $table . " inserted\n";
             } catch (Exception $e) {
-                echo "Error inserting : " . $table . "\n" . $e->getMessage(). "\n";
+                echo "Error inserting : " . $table . "\n" . $e->getMessage() . "\n";
             }
         } else {
             echo "Nothing to insert in " . $table . "\n";
@@ -94,6 +94,11 @@ class Script
             $mandatsGroupe = [];
             $mandatsSecondaire = [];
             $organes = [];
+            $question_marks_organe = [];
+            $question_marks = [];
+            $question_marks_mandat = [];
+            $question_marks_mandat_groupe = [];
+            $question_marks_mandat_secondaire = [];
             for ($i = 0; $i < $zip->numFiles; $i++) {
                 $filename = $zip->getNameIndex($i);
                 $sub = substr($filename, 0, 13);
@@ -334,8 +339,32 @@ class Script
                         $organes = array_merge($organes, array_values($organe));
                     }
                 }
+                if ($i % 1000 === 0) {
+                    echo "Let's insert until " .$i . "\n";
+                    // insert deputes
+                    $this->insertAll('deputes', $deputeFields, $question_marks, $deputes);
+                    // insert mandat
+                    $this->insertAll('mandat_principal', $mandatFields, $question_marks_mandat, $mandats);
+                    // insert mandat grpupe
+                    $this->insertAll('mandat_groupe', $mandatGroupeFields, $question_marks_mandat_groupe, $mandatsGroupe);
+                    // insert mandat secondaire
+                    $this->insertAll('mandat_secondaire', $mandatGroupeFields, $question_marks_mandat_secondaire, $mandatsSecondaire);
+                    // insert organes
+                    $this->insertAll('organes', $organeFields, $question_marks_organe, $organes);
+                    $deputes = [];
+                    $deputeContacts = [];
+                    $mandats = [];
+                    $mandatsGroupe = [];
+                    $mandatsSecondaire = [];
+                    $organes = [];
+                    $question_marks_organe = [];
+                    $question_marks = [];
+                    $question_marks_mandat = [];
+                    $question_marks_mandat_groupe = [];
+                    $question_marks_mandat_secondaire = [];        
+                }
             }
-
+            echo "Let's insert until the end : " .$i . "\n";
             // insert deputes
             $this->insertAll('deputes', $deputeFields, $question_marks, $deputes);
             // insert mandat
@@ -1155,8 +1184,8 @@ class Script
                     } else {
                         break;
                     }
-                    if ($number_to_import % 100 === 0){
-                        echo "Let's insert to scrutin until ". $number_to_import . "\n";       
+                    if ($number_to_import % 100 === 0) {
+                        echo "Let's insert to scrutin until " . $number_to_import . "\n";
                         // insert votes
                         $this->insertAll('votes', $voteMainFields, $question_marks_vote, $votesMain);
                         // insert votes infos
@@ -1168,11 +1197,11 @@ class Script
                         $votesGroupe = [];
                         $question_marks_vote = [];
                         $question_marks_vote_info = [];
-                        $question_marks_vote_groupe = []; 
+                        $question_marks_vote_groupe = [];
                     }
                 }
-                if ($number_to_import % 100 !== 0){
-                    echo "Let's insert to scrutin until the end the : ". $number_to_import . "\n";
+                if ($number_to_import % 100 !== 0) {
+                    echo "Let's insert to scrutin until the end the : " . $number_to_import . "\n";
                     $this->insertAll('votes', $voteMainFields, $question_marks_vote, $votesMain);
                     // insert votes infos
                     $this->insertAll('votes_info', $voteInfoFields, $question_marks_vote_info, $votesInfo);
@@ -1620,7 +1649,7 @@ class Script
             );
             $question_marks_vote[] = '('  . $this->placeholders('?', sizeof($voteScore)) . ')';
             $votesScore = array_merge($votesScore, array_values($voteScore));
-            if ($i % 1000 === 0){
+            if ($i % 1000 === 0) {
                 echo "Let's import until vote n " . $i . "\n";
                 $this->insertAll('votes_scores', $voteScoreFields, $question_marks_vote, $votesScore);
                 $votesScore = [];
@@ -1629,7 +1658,7 @@ class Script
             }
             $i++;
         }
-        if ($i % 1000 !== 0){
+        if ($i % 1000 !== 0) {
             echo "Let's import until the end vote : " . $i . "\n";
             $this->insertAll('votes_scores', $voteScoreFields, $question_marks_vote, $votesScore);
         }
@@ -1743,7 +1772,7 @@ class Script
             $groupeAccord = array('voteNumero' => $data['voteNumero'], 'legislature' => $data['legislature'], 'organeRef' => $data['organeRef'], 'organeRefAccord' => $data['organeRefAccord'], 'accord' => $data['accord'], 'dateMaj' => $this->dateMaj);
             $question_marks_vote[] = '('  . $this->placeholders('?', sizeof($groupeAccord)) . ')';
             $groupesAccord = array_merge($groupesAccord, array_values($groupeAccord));
-            if ($i % 1000 === 0){
+            if ($i % 1000 === 0) {
                 echo "Let's insert until a pack of 1000 rows \n";
                 $this->insertAll('groupes_accord', $groupeAccordFields, $question_marks_vote, $groupesAccord);
                 $groupesAccord = [];
@@ -1752,7 +1781,7 @@ class Script
             }
             $i++;
         }
-        if ($i % 1000 !== 0){
+        if ($i % 1000 !== 0) {
             echo "Let's insert what's left \n";
             $this->insertAll('groupes_accord', $groupeAccordFields, $question_marks_vote, $groupesAccord);
         }
@@ -1796,7 +1825,7 @@ class Script
             );
             $question_marks_vote[] = '('  . $this->placeholders('?', sizeof($deputeAccord)) . ')';
             $deputesAccord = array_merge($deputesAccord, array_values($deputeAccord));
-            if ($i % 1000 === 0){
+            if ($i % 1000 === 0) {
                 echo "let's insert a pack of 1000\n";
                 $this->insertAll('deputes_accord', $deputeAccordFields, $question_marks_vote, $deputesAccord);
                 $deputesAccord = [];
@@ -1876,9 +1905,9 @@ class Script
                         $votesCommissionParticipation = array_merge($votesCommissionParticipation, array_values($voteCommissionParticipation));
                     }
                 }
-                if ($i % 1000 === 0){
+                if ($i % 1000 === 0) {
                     echo "let's insert this pack of 1000\n";
-                    $this->insertAll('votes_participation_commission', $voteCommissionParticipationFields, $question_marks_vote, $votesCommissionParticipation);                    
+                    $this->insertAll('votes_participation_commission', $voteCommissionParticipationFields, $question_marks_vote, $votesCommissionParticipation);
                     $votesCommissionParticipation = [];
                     $question_marks_vote = [];
                     $voteCommissionParticipation = [];
@@ -2538,18 +2567,18 @@ class Script
 }
 
 // Specify the legislature
-if (isset($argv[1])){
-    $script = new Script($argv[1]);    
+if (isset($argv[1])) {
+    $script = new Script($argv[1]);
 } else {
     $script = new Script();
 }
 $script->fillDeputes();
+$script->deputeAll();
+$script->deputeLast();
 $script->downloadPictures();
 $script->webpPictures();
 $script->resmushPictures();
 $script->groupeEffectif();
-$script->deputeAll();
-$script->deputeLast();
 $script->deputeJson();
 $script->groupeStats();
 $script->parties();
