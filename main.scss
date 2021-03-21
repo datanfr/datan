@@ -1461,6 +1461,19 @@ ul.ui-menu{
 }
 /*
 ################
+               Electoral banner
+################
+*/
+.electionBanner{
+  background-color: $bleu;
+  span{
+    font-size: $h5-font-size;
+    font-weight: 600;
+    color: white;
+  }
+}
+/*
+################
                PAGE DEPUTE ET GROUPE INDIVIDUAL (pg-depute-individual) & (pg-groupe-individual) & deputes/x/votes
 ################
 */
