@@ -489,7 +489,7 @@ class Script
                 $nobgLive = file_get_contents($liveUrl);
                 if ($nobgLive) {
                     file_put_contents($nobgfilename, $nobgLive);
-                    echo "one nobg image was just downloaded from datan.fr<br>";
+                    echo "one nobg image was just downloaded from datan.fr\n";
                 } else if (getenv('API_KEY_NOBG')) {
                     $ch = curl_init('https://api.remove.bg/v1.0/removebg');
                     curl_setopt($ch, CURLOPT_HEADER, false);
