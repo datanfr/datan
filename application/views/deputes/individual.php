@@ -1,3 +1,12 @@
+  <?php if ($regionales2021): ?>
+    <a href="#" class="underline" style="color: white">
+      <div class="container-fluid electionBanner d-flex justify-content-center align-items-center py-4">
+        <span class="text-center">
+          <?= $title ?> est candidat aux prochaines élections régionales, dans la région <?= $regionales2021['district'] ?>.
+        </span>
+      </div>
+    </a>
+  <?php endif; ?>
   <div class="container-fluid bloc-img-deputes async_background" id="container-always-fluid" data-src="<?= asset_url() ?>imgs/cover/hemicycle-front.jpg" data-tablet="<?= asset_url() ?>imgs/cover/hemicycle-front-768.jpg" data-mobile="<?= asset_url() ?>imgs/cover/hemicycle-front-375.jpg" style="height: 13em">
   </div>
   <?php if (!empty($depute['couleurAssociee'])): ?>
