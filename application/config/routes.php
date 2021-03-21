@@ -52,6 +52,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 // ADMIN
 $route['admin'] = 'admin/index';
+$route['admin/votes'] = 'admin/votes';
 $route['admin/votes/create'] = 'admin/create_vote';
 $route['admin/votes/modify/(:any)'] = 'admin/modify_vote/$1';
 $route['admin/votes/delete/(:any)'] = 'admin/delete_vote/$1';
@@ -111,6 +112,7 @@ $route['votes'] = 'votes/index';
 // POSTS
 $route['posts/update'] = 'posts/update';
 $route['posts/create'] = 'posts/create';
+$route['posts/edit/(:any)'] = 'posts/edit/$1';
 $route['blog/categorie/(:any)'] = 'posts/category/$1';
 $route['blog/(:any)/(:any)'] = 'posts/view/$2/$1';
 $route['blog'] = 'posts/index';
@@ -124,10 +126,12 @@ $route['questionnaire/resultat']['post'] = 'quiz/result';
 // LOGIN & REGISTER
 $route['login'] = 'users/login';
 $route['register'] = 'users/register';
+$route['users/logout'] = 'users/logout';
 // REDIRECTION
 $route['classements'] = 'redirection/redir/statistiques';
 $route['search/(:any)/(:any)'] = 'redirect/cities/$1/$2';
-
+// CACHE
+$route['cache/delete_all'] = 'cache/delete_all';
 // PAGES
 $route['(:any)'] = 'pages/view/$1';
 $route['translate_uri_dashes'] = FALSE;
