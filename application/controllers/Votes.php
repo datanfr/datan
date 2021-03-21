@@ -319,8 +319,15 @@
       /* Get months */
       $data['months'] = $this->votes_model->get_months_archives(legislature_current());
 
+      // CSS
+      $data['css_to_load']= array(
+        array(
+          "url" => css_url()."datatables.bootstrap4.min.css",
+          "async" => TRUE
+        )
+      );
       // JS
-      $data['js_to_load']= array("moment.min", "datatable-datan.min.js", "datetime-moment", "datan/async_background");
+      $data['js_to_load']= array("moment.min", "datatable-datan.min", "datetime-moment", "datan/async_background");
       // Load views
       $this->load->view('templates/header', $data);
       $this->load->view('votes/all_an', $data);
