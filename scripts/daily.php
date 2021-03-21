@@ -80,7 +80,7 @@ class Script
         //Online file
         $file = 'http://data.assemblee-nationale.fr/static/openData/repository/15/amo/tous_acteurs_mandats_organes_xi_legislature/AMO30_tous_acteurs_tous_mandats_tous_organes_historique.xml.zip';
         $file = trim($file);
-        $newfile = 'tmp_acteurs_organes.zip';
+        $newfile = __DIR__ . '/tmp_acteurs_organes.zip';
         if (!copy($file, $newfile)) {
             echo "failed to copy $file...\n";
         }
@@ -340,7 +340,7 @@ class Script
                     }
                 }
                 if ($i % 1000 === 0) {
-                    echo "Let's insert until " .$i . "\n";
+                    echo "Let's insert until " . $i . "\n";
                     // insert deputes
                     $this->insertAll('deputes', $deputeFields, $question_marks, $deputes);
                     // insert mandat
@@ -364,7 +364,7 @@ class Script
                     $question_marks_mandat_secondaire = [];
                 }
             }
-            echo "Let's insert until the end : " .$i . "\n";
+            echo "Let's insert until the end : " . $i . "\n";
             // insert deputes
             $this->insertAll('deputes', $deputeFields, $question_marks, $deputes);
             // insert mandat
@@ -455,11 +455,11 @@ class Script
             WHERE legislature IN (14, 15)
         ');
 
-        $originalFolder = "../assets/imgs/deputes_original/";
+        $originalFolder = __DIR__ . "/../assets/imgs/deputes_original/";
         if (!file_exists($originalFolder)) mkdir($originalFolder);
         while ($d = $donnees->fetch()) {
             $uid = substr($d['uid'], 2);
-            $filename = "../assets/imgs/deputes_original/depute_" . $uid . ".png";
+            $filename = __DIR__ . "/../assets/imgs/deputes_original/depute_" . $uid . ".png";
             $legislature = $d['legislature'];
             $url = 'http://www2.assemblee-nationale.fr/static/tribun/' . $legislature . '/photos/' . $uid . '.jpg';
 
@@ -481,10 +481,10 @@ class Script
                 }
             }
             //$nobg => no background
-            $nobgFolder = "../assets/imgs/deputes_nobg_import/";
+            $nobgFolder = __DIR__ . "/../assets/imgs/deputes_nobg_import/";
             if (!file_exists($nobgFolder)) mkdir($nobgFolder);
             $liveUrl = 'https://datan.fr/assets/imgs/deputes_nobg_import/depute_' . $uid . '.png';
-            $nobgfilename = '../assets/imgs/deputes_nobg_import/depute_' . $uid . '.png';
+            $nobgfilename = __DIR__ . '/../assets/imgs/deputes_nobg_import/depute_' . $uid . '.png';
             if (!file_exists($nobgfilename)) {
                 $nobgLive = file_get_contents($liveUrl);
                 if ($nobgLive) {
@@ -525,8 +525,8 @@ class Script
     public function webpPictures()
     {
         echo "webpPictures starting \n";
-        $dir = "../assets/imgs/deputes_original/";
-        $newdir = "../assets/imgs/deputes_webp/";
+        $dir = __DIR__ . "/../assets/imgs/deputes_original/";
+        $newdir = __DIR__ . "/../assets/imgs/deputes_webp/";
         $files = scandir($dir);
         unset($files[0]);
         unset($files[1]);
@@ -549,8 +549,8 @@ class Script
         }
 
         //Same for nobg png
-        $dir = "../assets/imgs/deputes_nobg_import/";
-        $newdir = "../assets/imgs/deputes_nobg_webp/";
+        $dir = __DIR__ . "/../assets/imgs/deputes_nobg_import/";
+        $newdir = __DIR__ . "/../assets/imgs/deputes_nobg_webp/";
         $files = scandir($dir);
         unset($files[0]);
         unset($files[1]);
@@ -584,8 +584,8 @@ class Script
 
         while ($d = $donnees->fetch()) {
             $uid = substr($d['uid'], 2);
-            $output_filename = "../assets/imgs/deputes_nobg/depute_" . $uid . ".png";
-            $input_filename = "../assets/imgs/deputes_nobg_import/depute_" . $uid . ".png";
+            $output_filename = __DIR__ . "/../assets/imgs/deputes_nobg/depute_" . $uid . ".png";
+            $input_filename = __DIR__ . "/../assets/imgs/deputes_nobg_import/depute_" . $uid . ".png";
 
             if (!file_exists($output_filename)) {
                 $filename = realpath($input_filename);
@@ -669,8 +669,8 @@ class Script
             $nameLast = $data['nameLast'];
             $civ = $data['civ'];
             $age = $data['age'];
-            $img = file_exists("../assets/imgs/deputes_nobg_webp/depute_" . substr($mpId, 2) . "_webp.webp") ? 1 : 0;
-            $imgOgp = file_exists("../assets/imgs/deputes_ogp/ogp_deputes_" . $mpId . ".png") ? 1 : 0;
+            $img = file_exists(__DIR__ . "/../assets/imgs/deputes_nobg_webp/depute_" . substr($mpId, 2) . "_webp.webp") ? 1 : 0;
+            $imgOgp = file_exists(__DIR__ . "/../assets/imgs/deputes_ogp/ogp_deputes_" . $mpId . ".png") ? 1 : 0;
 
 
             // Get the mandat_principal
@@ -789,10 +789,7 @@ class Script
         $json = json_encode($array, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
 
         // save file
-        $dir = __DIR__;
-        $dir = str_replace(array("/", "scripts", ".php"), "", $dir);
-        $dir = $dir . "assets/data/";
-        $dir = "../assets/data/";
+        $dir = __DIR__ . "/../assets/data/";
         $fp = fopen($dir . "deputes_json.json", 'w');
         if (fwrite($fp, $json)) {
             echo "JSON created \n";
@@ -991,7 +988,7 @@ class Script
 
             $file = 'http://data.assemblee-nationale.fr/static/openData/repository/15/loi/scrutins/Scrutins_XV.xml.zip';
             $file = trim($file);
-            $newfile = 'tmp_Scrutins_XV.xml.zip';
+            $newfile = __DIR__ . '/tmp_Scrutins_XV.xml.zip';
             if (!copy($file, $newfile)) {
                 echo "failed to copy $file...\n";
             }
@@ -1219,7 +1216,7 @@ class Script
 
             $file = 'http://data.assemblee-nationale.fr/static/openData/repository/14/loi/scrutins/Scrutins_XIV.xml.zip';
             $file = trim($file);
-            $newfile = 'tmp_Scrutins_XIV.xml.zip';
+            $newfile = __DIR__ . '/tmp_Scrutins_XIV.xml.zip';
             if (!copy($file, $newfile)) {
                 echo "failed to copy $file...\n";
             }
@@ -2134,6 +2131,7 @@ class Script
         $question_marks = [];
         $voteDossier = [];
         $voteDossiersFields = array('offset_num', 'legislature', 'voteNumero', 'href', 'dossier');
+        $i = 1;
         foreach ($offsets as $offset) {
             $url = "http://www2.assemblee-nationale.fr/scrutins/liste/(offset)/" . $offset . "/(legislature)/" . $this->legislature_to_get . "/(type)/TOUS/(idDossier)/TOUS";
 
@@ -2175,6 +2173,13 @@ class Script
                 $voteDossier = array('offset_num' => $offset, 'legislature' => $this->legislature_to_get, 'voteNumero' => $voteNumero, 'href' => $href, 'dossier' => $dossier);
                 $question_marks[] = '('  . $this->placeholders('?', sizeof($voteDossier)) . ')';
                 $voteDossiers = array_merge($voteDossiers, array_values($voteDossier));
+                if ($i % 100 === 0) {
+                    echo "Let's insert 100 rows\n";
+                    $this->insertAll('votes_dossiers', $voteDossiersFields, $question_marks, $voteDossiers);
+                    $voteDossiers = [];
+                    $question_marks = [];
+                }
+                $i++;
             }
         }
         $this->insertAll('votes_dossiers', $voteDossiersFields, $question_marks, $voteDossiers);
@@ -2195,7 +2200,7 @@ class Script
             // Online file
             $file = 'http://data.assemblee-nationale.fr/static/openData/repository/15/loi/dossiers_legislatifs/Dossiers_Legislatifs_XV.xml.zip';
             $file = trim($file);
-            $newfile = 'tmp_dossiers.zip';
+            $newfile = __DIR__ . '/tmp_dossiers.zip';
             if (!copy($file, $newfile)) {
                 echo "failed to copy $file...\n";
             }
@@ -2243,7 +2248,7 @@ class Script
             // Online file
             $file = 'https://data.assemblee-nationale.fr/static/openData/repository/14/loi/dossiers_legislatifs/Dossiers_Legislatifs_XIV.xml.zip';
             $file = trim($file);
-            $newfile = 'tmp_dossiers_14.zip';
+            $newfile = __DIR__ . '/tmp_dossiers_14.zip';
             if (!copy($file, $newfile)) {
                 echo "failed to copy $file...\n";
             }
@@ -2554,9 +2559,7 @@ class Script
         }
 
         // Export the data
-        $dir = __DIR__;
-        $dir = str_replace(array("/", "scripts", ".php"), "", $dir);
-        $dir = "../assets/opendata/";
+        $dir = __DIR__ . "/../assets/opendata/";
         $fp = fopen($dir . "" . $csv_filename, "w");
 
         // Print the header
