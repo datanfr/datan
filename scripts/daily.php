@@ -361,7 +361,7 @@ class Script
                     $question_marks = [];
                     $question_marks_mandat = [];
                     $question_marks_mandat_groupe = [];
-                    $question_marks_mandat_secondaire = [];        
+                    $question_marks_mandat_secondaire = [];
                 }
             }
             echo "Let's insert until the end : " .$i . "\n";
@@ -455,6 +455,8 @@ class Script
             WHERE legislature IN (14, 15)
         ');
 
+        $originalFolder = "../assets/imgs/deputes_original/";
+        if (!file_exists($originalFolder)) mkdir($originalFolder);
         while ($d = $donnees->fetch()) {
             $uid = substr($d['uid'], 2);
             $filename = "../assets/imgs/deputes_original/depute_" . $uid . ".png";
@@ -479,13 +481,15 @@ class Script
                 }
             }
             //$nobg => no background
-            $lcdggithuburl = 'https://raw.githubusercontent.com/brissa-a/lcdg-data/main/img-nobg/PA' . $uid . '.png';
+            $nobgFolder = "../assets/imgs/deputes_nobg_import/";
+            if (!file_exists($nobgFolder)) mkdir($nobgFolder);
+            $liveUrl = 'https://datan.fr/assets/imgs/deputes_nobg_import/depute_' . $uid . '.png';
             $nobgfilename = '../assets/imgs/deputes_nobg_import/depute_' . $uid . '.png';
             if (!file_exists($nobgfilename)) {
-                if (substr(get_headers($lcdggithuburl)[0], 9, 3) != '404') {
-                    $nobg = file_get_contents($lcdggithuburl);
-                    file_put_contents($nobgfilename, $nobg);
-                    echo "one nobg image was just downloaded from lcdg\n";
+                $nobgLive = file_get_contents($liveUrl);
+                if ($nobgLive) {
+                    file_put_contents($nobgfilename, $nobgLive);
+                    echo "one nobg image was just downloaded from datan.fr<br>";
                 } else if (getenv('API_KEY_NOBG')) {
                     $ch = curl_init('https://api.remove.bg/v1.0/removebg');
                     curl_setopt($ch, CURLOPT_HEADER, false);
@@ -528,6 +532,7 @@ class Script
         unset($files[1]);
         echo "Number of photos in the deputes_original ==> " . count($files) . "\n";
 
+        if (!file_exists($newdir)) mkdir($newdir);
         foreach ($files as $file) {
             $newfile = str_replace(".png", "", $file);
             $newfile = $newfile . "_webp.webp";
@@ -551,6 +556,7 @@ class Script
         unset($files[1]);
         echo "Number of photos in the deputes_nobg_import ==> " . count($files) . "\n";
 
+        if (!file_exists($newdir)) mkdir($newdir);
         foreach ($files as $file) {
             $newfile = str_replace(".png", "", $file);
             $newfile = $newfile . "_webp.webp";
