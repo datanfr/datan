@@ -2173,14 +2173,15 @@ class Script
                 $voteDossier = array('offset_num' => $offset, 'legislature' => $this->legislature_to_get, 'voteNumero' => $voteNumero, 'href' => $href, 'dossier' => $dossier);
                 $question_marks[] = '('  . $this->placeholders('?', sizeof($voteDossier)) . ')';
                 $voteDossiers = array_merge($voteDossiers, array_values($voteDossier));
-                if ($i % 100 === 0) {
-                    echo "Let's insert 100 rows\n";
+                if ($i % 1000 === 0) {
+                    echo "Let's insert 1000 rows\n";
                     $this->insertAll('votes_dossiers', $voteDossiersFields, $question_marks, $voteDossiers);
                     $voteDossiers = [];
                     $question_marks = [];
                 }
                 $i++;
             }
+            $html->clear();
         }
         $this->insertAll('votes_dossiers', $voteDossiersFields, $question_marks, $voteDossiers);
     }
@@ -2582,35 +2583,35 @@ if (isset($argv[1])) {
     $script = new Script();
 }
 $script->fillDeputes();
-$script->deputeAll();
-$script->deputeLast();
-$script->downloadPictures();
-$script->webpPictures();
-$script->resmushPictures();
-$script->groupeEffectif();
-$script->deputeJson();
-$script->groupeStats();
-$script->parties();
-$script->legislature();
-$script->vote();
-$script->updateVoteInfo();
-$script->voteScore();
-$script->groupeCohesion();
-$script->groupeAccord();
-$script->deputeAccord();
-$script->voteParticipationCommission();
-$script->classParticipation();
-$script->classParticipationCommission();
-$script->deputeLoyaute();
-$script->classLoyaute();
-$script->classMajorite();
-$script->classGroups();
-$script->classGroupsProximite();
+// $script->deputeAll();
+// $script->deputeLast();
+// $script->downloadPictures();
+// $script->webpPictures();
+// $script->resmushPictures();
+// $script->groupeEffectif();
+// $script->deputeJson();
+// $script->groupeStats();
+// $script->parties();
+// $script->legislature();
+// $script->vote();
+// $script->updateVoteInfo();
+// $script->voteScore();
+// $script->groupeCohesion();
+// $script->groupeAccord();
+// $script->deputeAccord();
+// $script->voteParticipationCommission();
+// $script->classParticipation();
+// $script->classParticipationCommission();
+// $script->deputeLoyaute();
+// $script->classLoyaute();
+// $script->classMajorite();
+// $script->classGroups();
+// $script->classGroupsProximite();
 $script->votesDossiers();
-$script->dossier();
-$script->classParticipationSix();
-$script->classLoyauteSix();
-$script->deputeAccordCleaned();
-$script->historyMpsAverage();
-$script->historyPerMpsAverage();
-$script->createCsvFile();
+// $script->dossier();
+// $script->classParticipationSix();
+// $script->classLoyauteSix();
+// $script->deputeAccordCleaned();
+// $script->historyMpsAverage();
+// $script->historyPerMpsAverage();
+// $script->createCsvFile();
