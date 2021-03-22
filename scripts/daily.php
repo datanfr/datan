@@ -2372,7 +2372,6 @@ class Script
     {
         echo "classLoyauteSix starting \n";
         if ($this->legislature_to_get == 15) {
-
             $this->bdd->query('
                 DROP TABLE IF EXISTS class_loyaute_six;
                 CREATE TABLE class_loyaute_six
