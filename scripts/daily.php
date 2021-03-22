@@ -2173,14 +2173,15 @@ class Script
                 $voteDossier = array('offset_num' => $offset, 'legislature' => $this->legislature_to_get, 'voteNumero' => $voteNumero, 'href' => $href, 'dossier' => $dossier);
                 $question_marks[] = '('  . $this->placeholders('?', sizeof($voteDossier)) . ')';
                 $voteDossiers = array_merge($voteDossiers, array_values($voteDossier));
-                if ($i % 100 === 0) {
-                    echo "Let's insert 100 rows\n";
+                if ($i % 1000 === 0) {
+                    echo "Let's insert 1000 rows\n";
                     $this->insertAll('votes_dossiers', $voteDossiersFields, $question_marks, $voteDossiers);
                     $voteDossiers = [];
                     $question_marks = [];
                 }
                 $i++;
             }
+            $html->clear();
         }
         $this->insertAll('votes_dossiers', $voteDossiersFields, $question_marks, $voteDossiers);
     }
