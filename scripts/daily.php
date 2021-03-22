@@ -3,6 +3,8 @@ include "lib/simplehtmldom_1_9/simple_html_dom.php";
 
 global $config;
 
+ini_set('memory_limit', '2048M');
+
 
 class Script
 {
@@ -19,7 +21,7 @@ class Script
         $this->legislature_to_get = $legislature;
         $this->dateMaj = date('Y-m-d');
         echo date('Y-m-d') . " : Launching the daily script for legislature " . $this->legislature_to_get . "\n";
-        $this->time_pre = microtime(true);;
+        $this->time_pre = microtime(true);
         try {
             $this->bdd = new PDO(
                 'mysql:host=' . $this->config['DATABASE_HOST'] . ';dbname=' . $this->config['DATABASE_NAME'],
@@ -56,15 +58,21 @@ class Script
 
     private function insertAll($table, $fields, $question_marks, $datas)
     {
+        
         if (count($datas) > 0) {
             try {
                 // SQL //
+                $start = microtime(true);
                 $sql = "INSERT INTO " . $table . " (" . implode(",", $fields) . ") VALUES " . implode(',', $question_marks);
                 $stmt = $this->bdd->prepare($sql);
                 $stmt->execute($datas);
                 echo $table . " inserted\n";
+                $time_elapsed_secs = microtime(true) - $start;
             } catch (Exception $e) {
                 echo "Error inserting : " . $table . "\n" . $e->getMessage() . "\n";
+                $time_elapsed_secs = microtime(true) - $start;
+            } finally {
+                echo "time_elapsed_secs:".$time_elapsed_secs. "\n";                
             }
         } else {
             echo "Nothing to insert in " . $table . "\n";
@@ -991,7 +999,7 @@ class Script
 
         // SCRAPPING DEPENDING ON LEGISLATURE
         if ($this->legislature_to_get == 15) {
-
+            echo "Parsing Scrutins_XV.xml.zip";
             $file = 'http://data.assemblee-nationale.fr/static/openData/repository/15/loi/scrutins/Scrutins_XV.xml.zip';
             $file = trim($file);
             $newfile = __DIR__ . '/tmp_Scrutins_XV.xml.zip';
@@ -1196,6 +1204,7 @@ class Script
                     if ($number_to_import % 100 === 0) {
                         echo "Let's insert to scrutin until " . $number_to_import . "\n";
                         // insert votes
+                        
                         $this->insertAll('votes', $voteMainFields, $question_marks_vote, $votesMain);
                         // insert votes infos
                         $this->insertAll('votes_info', $voteInfoFields, $question_marks_vote_info, $votesInfo);
@@ -1219,7 +1228,7 @@ class Script
                 }
             }
         } elseif ($this->legislature_to_get == 14) {
-
+            echo "Parsing Scrutins_XIV.xml.zip";
             $file = 'http://data.assemblee-nationale.fr/static/openData/repository/14/loi/scrutins/Scrutins_XIV.xml.zip';
             $file = trim($file);
             $newfile = __DIR__ . '/tmp_Scrutins_XIV.xml.zip';
@@ -2364,9 +2373,6 @@ class Script
         echo "classLoyauteSix starting \n";
         if ($this->legislature_to_get == 15) {
 
-            // CONNEXION SQL //
-            include 'bdd-connexion.php';
-
             $this->bdd->query('
                 DROP TABLE IF EXISTS class_loyaute_six;
                 CREATE TABLE class_loyaute_six
@@ -2567,6 +2573,7 @@ class Script
 
         // Export the data
         $dir = __DIR__ . "/../assets/opendata/";
+        mkdir($dir);
         $fp = fopen($dir . "" . $csv_filename, "w");
 
         // Print the header
