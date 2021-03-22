@@ -4,7 +4,7 @@
           <p>L'âge, tout comme le genre ou le parcours social d'un parlementaire, est un élément clé de la représentation politique. Pour certains, la composition du parlement doit être similaire à la composition de la société. Par exemple, les jeunes ne peuvent être représentés que par des députés issus de cette classe d'âge.</p>
           <p>Le groupe parlementaire avec la moyenne d'âge la plus élevée est <a href="<?= base_url() ?>groupes/<?= mb_strtolower($groupOldest["libelleAbrev"]) ?>"><?= $groupOldest["libelle"] ?></a>. Ses membres ont en moyenne <?= $groupOldest["age"] ?> ans.</p>
           <p>Le groupe <a href="<?= base_url() ?>groupes/<?= mb_strtolower($groupYoungest["libelleAbrev"]) ?>"><?= $groupYoungest["libelle"] ?></a> est celui avec la moyenne d'âge la plus faible. En effet, les députés membres du groupe <?= $groupYoungest["libelleAbrev"] ?> ont en moyenne <?= $groupYoungest["age"] ?> ans.</p>
-          <p>La moyenne d'âge dans la population française éligible (plus de 18 ans) est de <?= $ageMeanPop ?> ans.</p>
+          <p>La <a href="<?= base_url() ?>statistiques/aide#ageMoyen">moyenne d'âge dans la population française éligible</a> (plus de 18 ans) est de <?= $ageMeanPop ?> ans.</p>
         </div>
       </div>
       <div class="row row-grid mt-5">
