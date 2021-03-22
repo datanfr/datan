@@ -534,29 +534,29 @@
             <?php if (isset($groupe['website'])): ?>
               <div class="col-12 col-sm-6 mt-2 d-flex justify-content-center">
                 <span class="url_obf" url_obf="<?= url_obfuscation($groupe['website']) ?>">
-                  <a class="btn btn-website d-flex align-items-center justify-content-center">
+                  <span class="btn btn-website d-flex align-items-center justify-content-center">
                     Site internet
-                  </a>
+                  </span>
                 </span>
               </div>
             <?php endif; ?>
             <?php if (isset($groupe['facebook'])): ?>
               <div class="col-12 col-sm-6 mt-2 d-flex justify-content-center">
                 <span class="url_obf" url_obf="<?= url_obfuscation("https://www.facebook.com/" . $groupe['facebook']) ?>">
-                  <a class="btn btn-fcb d-flex align-items-center justify-content-center">
+                  <span class="btn btn-fcb d-flex align-items-center justify-content-center">
                     <?php echo file_get_contents(base_url().'/assets/imgs/logos/facebook_svg.svg') ?>
                     <span class="ml-3">Profil Facebook</span>
-                  </a>
+                  </span>
                 </span>
               </div>
             <?php endif; ?>
             <?php if (isset($groupe['twitter'])): ?>
               <div class="col-12 col-sm-6 mt-2 d-flex justify-content-center">
                 <span class="url_obf" url_obf="<?= url_obfuscation("https://twitter.com/" . $groupe['twitter']) ?>">
-                  <a class="btn btn-twitter d-flex align-items-center justify-content-center">
+                  <span class="btn btn-twitter d-flex align-items-center justify-content-center">
                     <?php echo file_get_contents(base_url().'/assets/imgs/logos/twitter_svg.svg') ?>
                     <span class="ml-3">Profil Twitter</span>
-                  </a>
+                  </span>
                 </span>
               </div>
             <?php endif; ?>
