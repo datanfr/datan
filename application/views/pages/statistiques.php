@@ -21,14 +21,14 @@
           </p>
           <h2>Accès aux données</h2>
           <p>
-            <b>Datan</b> réutilise les données de l'Assemblée nationale, qui sont <a href="http://data.assemblee-nationale.fr/licence-ouverte-open-licence" target="_blank">distribuées sous la licence « Licence Ouverte / Open Licence »</a>.
+            <b>Datan</b> réutilise les données de l'Assemblée nationale, qui sont <a href="http://data.assemblee-nationale.fr/licence-ouverte-open-licence" target="_blank" rel="nofollow noopener">distribuées sous la licence « Licence Ouverte / Open Licence »</a>.
           </p>
           <p>
             Les données mises en forme par Datan, et les statistiques que nous élaborons, visent également à être disponibles et distribuées en licence ouverte. Nous publions sur le site <b>data.gouv.fr</b> et mettons à jour de façon hebdomadaire les jeux de données suivants :
           </p>
           <ul>
             <li>
-              <a href="https://www.data.gouv.fr/fr/datasets/deputes-actifs-de-lassemblee-nationale-informations-et-statistiques/" target="_blank">Députés actifs de l'Assemblée nationale - Informations et statistiques</a>
+              <a href="https://www.data.gouv.fr/fr/datasets/deputes-actifs-de-lassemblee-nationale-informations-et-statistiques/" target="_blank" rel="nofollow noopener">Députés actifs de l'Assemblée nationale - Informations et statistiques</a>
             </li>
           </ul>
           <h2 id="participation" class="anchor">La participation aux votes</h2>
@@ -45,7 +45,7 @@
             Par exemple, prenons un groupe parlementaire fictif, qui se nomme <i>Vive la Politique</i>. Ce groupe compte 5 membres. Un des députés membre du groupe participe à 20% des scrutins, un autre à 15%, un autre à 30%, un autre à 5%, et un autre à 35%. Le taux de participation du groupe est la moyenne des taux individuels. Par exemple, <i>(20+15+30+5+35)/5 = 21%.</i> Le taux de participation du groupe est donc de 21%. Aurement dit, les députés membres du groupe <i>Vive la Politique</i> participent <i>en moyenne</i> à 21% des scrutins.
           </p>
           <p>
-            <b>Attention</b>, le taux de participation des députés, et la moyenne des groupes, ne mesure pas toute l'activité parlementaire. En plus des votes, les députés peuvent par exemple rédiger des propositions de loi, rapports, écrire des amendements, poser des questions écrites ou orales au gouvernement, etc. Les députés prennent également part aux discussions en commission et en séance plénière. De plus, les faibles taux de participation des députés s'expliquent par l'organisation interne de l'Assemblée nationale. Contrairement au <a href='https://www.europarl.europa.eu/about-parliament/fr/organisation-and-rules/how-plenary-works' title='Les votes au Parlement européen' target="_blank">Parlement européen</a>, les votes en séance plénière se déroulent à n'importe quel moment de la semaine, souvent en même temps que se tiennent d'autres réunions également importantes pour les députés, comme les réunions de commissions parlementaires.
+            <b>Attention</b>, le taux de participation des députés, et la moyenne des groupes, ne mesure pas toute l'activité parlementaire. En plus des votes, les députés peuvent par exemple rédiger des propositions de loi, rapports, écrire des amendements, poser des questions écrites ou orales au gouvernement, etc. Les députés prennent également part aux discussions en commission et en séance plénière. De plus, les faibles taux de participation des députés s'expliquent par l'organisation interne de l'Assemblée nationale. Contrairement au <a href='https://www.europarl.europa.eu/about-parliament/fr/organisation-and-rules/how-plenary-works' title='Les votes au Parlement européen' target="_blank" rel="nofollow noopener">Parlement européen</a>, les votes en séance plénière se déroulent à n'importe quel moment de la semaine, souvent en même temps que se tiennent d'autres réunions également importantes pour les députés, comme les réunions de commissions parlementaires.
           </p>
           <h2 id="loyalty" class="anchor">La loyauté envers son groupe</h2>
           <p>
@@ -85,6 +85,19 @@
           </p>
           <p>
             <b>À savoir</b>, dans beaucoup de parlements, y compris à l'Assemblée nationale, les députés suivent souvent la ligne officielle du groupe politique. Autrement dit, quand il s'agit de voter, la cohésion des groupes politiques est relativement élevée. Tout d'abord, les députés membres d'un groupe politique sont généralement proches idéologiquement, et donc sont amenés à avoir la même position quand il s'agit de voter. De plus, les groupes peuvent exercer des pressions pour inciter les députés à être loyaux, autrement dit à voter comme la ligne officielle du groupe, favorisant ainsi la cohésion au sein du groupe. La mesure de cohésion proposée est donc intéressante quand elle est comparée aux taux de cohésion des autres groupes parlementaires.
+          </p>
+          <h2 id="ageMoyen">L'âge moyen en France</h2>
+          <p>
+            Sur certaines pages, nous comparons l'âge des groupes parlementaires, ou l'âge moyen des députés, avec la moyenne d'âge de la population française. Les personnes attachant de l'importance à la représentativité « sociale » du parlement estiment que les députés ne doivent pas forcément être plus vieux ou plus jeunes que l'ensemble des Français.
+          </p>
+          <p>
+            Pour mesurer la moyenne d'âge de la population française, nous avons enlevé les citoyens âgés de moins de 18 ans, qui ne peuvent pas être élus députés. Ainsi, l'âge des députés est comparé à la moyenne d'âge des Français en âge d'être éligible.
+          </p>
+          <p>
+            Ainsi, alors que la moyenne d'âge de toute la population est de <?= round(meanAgeFranceAll()) ?> ans (<a href="https://www.insee.fr/fr/statistiques/2381476" target="_blank" rel="nofollow noopener">source insee</a>), la moyenne des Français de plus de 18 ans est de <?= round(meanAgeFrance()) ?> ans.
+          </p>
+          <p>
+            Pour le calculer, nous avons récupéré la pyramide des âges, un document avec le nombre d'habitants en France selon leur âge (<a href="https://www.insee.fr/fr/statistiques/2381472#tableau-figure1" target="_blank" rel="nofollow noopener">source insee</a>). Nous avons ensuite calculé la moyenne d'âge en ne prenant en compte que les individus ayant plus de 18 ans. Pour découvrir le document avec le calcul, <a href="https://docs.google.com/spreadsheets/d/17pf7I0vN_yIl7lnebXhZSKDRaE6j31qzRX77Cx1SYD8/edit#gid=1699168638" target="_blank" rel="nofollow noopener">cliquez ici</a>.
           </p>
           <h2>Contactez-nous</h2>
           <p>Pour plus d'information, envoyez-nous un email : <a href="mailto:contact@datan.fr">contact@datan.fr</a></p>
