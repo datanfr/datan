@@ -81,7 +81,7 @@ html {
                LINKS
 ################
 */
-a:not(.btn) {
+a:not(.btn), .url_obf>span:not(.btn) {
   color: $link-datan-color;
   text-decoration: underline;
   &:hover{
