@@ -19,7 +19,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Base de données : `teft0095_datan`
+-- Base de données : `datan`
 --
 
 -- --------------------------------------------------------
