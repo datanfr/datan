@@ -19,6 +19,11 @@
     return array(15);
   }
 
+  function meanAgeFrance(){
+    // Only more than 18 yo.
+    return 50.52;
+  }
+
   function majority_group(){
     return "PO730964";
   }
