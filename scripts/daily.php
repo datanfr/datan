@@ -1,24 +1,30 @@
 <?php
 include "lib/simplehtmldom_1_9/simple_html_dom.php";
+
+global $config;
+
+
 class Script
 {
     private $bdd;
     private $legislature_to_get;
     private $dateMaj;
     private $time_pre;
+    private $config;
 
     // export the variables in environment
     public function __construct($legislature = 15)
     {
+        $this->config = json_decode(file_get_contents(__DIR__ . "../config.json"), true);
         $this->legislature_to_get = $legislature;
         $this->dateMaj = date('Y-m-d');
         echo date('Y-m-d') . " : Launching the daily script for legislature " . $this->legislature_to_get . "\n";
         $this->time_pre = microtime(true);;
         try {
             $this->bdd = new PDO(
-                'mysql:host=' . getenv('DATABASE_HOST') . ';dbname=' . getenv('DATABASE_NAME'),
-                getenv('DATABASE_USERNAME'),
-                getenv('DATABASE_PASSWORD'),
+                'mysql:host=' . $this->config['DATABASE_HOST'] . ';dbname=' . $this->config['DATABASE_NAME'],
+                $this->config['DATABASE_USERNAME'],
+                $this->config['DATABASE_PASSWORD'],
                 array(
                     PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION, PDO::ATTR_PERSISTENT => true, PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8",
                 )
@@ -446,7 +452,7 @@ class Script
     public function downloadPictures()
     {
         echo "downloadPictures starting \n";
-        if (!getenv('API_KEY_NOBG')) {
+        if (!$this->config['API_KEY_NOBG']) {
             echo "no API key for nobg\n";
         }
         $donnees = $this->bdd->query('
@@ -483,21 +489,21 @@ class Script
             //$nobg => no background
             $nobgFolder = __DIR__ . "/../assets/imgs/deputes_nobg_import/";
             if (!file_exists($nobgFolder)) mkdir($nobgFolder);
-            $liveUrl = 'https://datan.fr/assets/imgs/deputes_nobg_import/depute_' . $uid . '.png';
+            $liveUrl = 'https://raw.githubusercontent.com/brissa-a/lcdg-nobg/main/depute/PA' . $uid . '/legislature/' . $legislature . '-removebg.png';
             $nobgfilename = __DIR__ . '/../assets/imgs/deputes_nobg_import/depute_' . $uid . '.png';
             if (!file_exists($nobgfilename)) {
                 $nobgLive = file_get_contents($liveUrl);
                 if ($nobgLive) {
                     file_put_contents($nobgfilename, $nobgLive);
                     echo "one nobg image was just downloaded from datan.fr\n";
-                } else if (getenv('API_KEY_NOBG')) {
+                } else if ($this->config['API_KEY_NOBG']) {
                     $ch = curl_init('https://api.remove.bg/v1.0/removebg');
                     curl_setopt($ch, CURLOPT_HEADER, false);
                     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
                     curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
                     echo "URL:" . $url . "\n";
                     curl_setopt($ch, CURLOPT_HTTPHEADER, [
-                        'X-Api-Key:' . getenv('API_KEY_NOBG')
+                        'X-Api-Key:' . $this->config['API_KEY_NOBG']
                     ]);
                     curl_setopt($ch, CURLOPT_POST, 1);
                     curl_setopt($ch, CURLOPT_POSTFIELDS, array(
