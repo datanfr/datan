@@ -65,9 +65,8 @@
         $replacement = $dom->createElement('span');
         $replacement->setAttribute('class', 'url_obf');
         $replacement->setAttribute('url_obf', url_obfuscation($href));
-        $a = $dom->createElement('a', $tag->nodeValue);
-        $a->setAttribute('href', "#");
-        $replacement->appendChild($a);
+        $span = $dom->createElement('span', $tag->nodeValue);
+        $replacement->appendChild($span);
         $tag->parentNode->replaceChild($replacement, $tag);
       }
     }
