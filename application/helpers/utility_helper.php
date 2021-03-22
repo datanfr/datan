@@ -62,11 +62,9 @@
       $tag = $tags->item($i);
       if ($tag->getAttribute('target') == '_blank' && strpos($tag->getAttribute('href'), 'datan.fr') === false) {
         $href = $tag->getAttribute('href');
-        $replacement = $dom->createElement('span');
+        $replacement = $dom->createElement('span', $tag->nodeValue);
         $replacement->setAttribute('class', 'url_obf');
         $replacement->setAttribute('url_obf', url_obfuscation($href));
-        $span = $dom->createElement('span', $tag->nodeValue);
-        $replacement->appendChild($span);
         $tag->parentNode->replaceChild($replacement, $tag);
       }
     }
