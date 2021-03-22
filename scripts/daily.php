@@ -2572,7 +2572,7 @@ class Script
 
         // Export the data
         $dir = __DIR__ . "/../assets/opendata/";
-        mkdir($dir);
+        if (!file_exists($dir)) mkdir($dir);
         $fp = fopen($dir . "" . $csv_filename, "w");
 
         // Print the header
