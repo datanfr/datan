@@ -660,38 +660,30 @@
             <h2>En savoir plus sur <?= $title ?></h2>
             <div class="row mt-4">
               <div class="col-12 col-sm-6 mt-2 d-flex justify-content-center">
-                <span class="url_obf" url_obf="<?= url_obfuscation("http://www2.assemblee-nationale.fr/deputes/fiche/OMC_" . $depute['mpId']) ?>">
-                  <span class="btn btn-an d-flex align-items-center justify-content-center">
+                <span class="url_obf btn btn-an d-flex align-items-center justify-content-center" url_obf="<?= url_obfuscation("http://www2.assemblee-nationale.fr/deputes/fiche/OMC_" . $depute['mpId']) ?>">
                     Profil Assemblée Nationale
-                  </span>
                 </span>
               </div>
               <?php if ($depute['website'] !== NULL): ?>
                 <div class="col-12 col-sm-6 mt-2 d-flex justify-content-center">
-                  <span class="url_obf" url_obf="<?= url_obfuscation("https://" . $depute['website']) ?>">
-                    <span class="btn btn-website d-flex align-items-center justify-content-center">
+                  <span class="url_obf btn btn-website d-flex align-items-center justify-content-center" url_obf="<?= url_obfuscation("https://" . $depute['website']) ?>">
                       Site internet
-                    </span>
                   </span>
                 </div>
               <?php endif; ?>
               <?php if ($depute['facebook'] !== NULL): ?>
                 <div class="col-12 col-sm-6 mt-2 d-flex justify-content-center">
-                  <span class="url_obf" url_obf="<?= url_obfuscation("https://www.facebook.com/" . $depute['facebook']) ?>">
-                    <span class="btn btn-fcb d-flex align-items-center justify-content-center">
+                  <span class="url_obf btn btn-fcb d-flex align-items-center justify-content-center" url_obf="<?= url_obfuscation("https://www.facebook.com/" . $depute['facebook']) ?>">
                       <?php echo file_get_contents(base_url().'/assets/imgs/logos/facebook_svg.svg') ?>
                       <span class="ml-3">Profil Facebook</span>
-                    </span>
                   </span>
                 </div>
               <?php endif; ?>
               <?php if ($depute['twitter'] !== NULL): ?>
                 <div class="col-12 col-sm-6 mt-2 d-flex justify-content-center">
-                  <span class="url_obf" url_obf="<?= url_obfuscation("https://twitter.com/" . $depute['twitter']) ?>">
-                    <span class="btn btn-twitter d-flex align-items-center justify-content-center">
+                  <span class="url_obf btn btn-twitter d-flex align-items-center justify-content-center" url_obf="<?= url_obfuscation("https://twitter.com/" . $depute['twitter']) ?>">
                       <?php echo file_get_contents(base_url().'/assets/imgs/logos/twitter_svg.svg') ?>
                       <span class="ml-3">Profil Twitter</span>
-                    </span>
                   </span>
                 </div>
               <?php endif; ?>
