@@ -10,6 +10,7 @@ class Script
     // export the variables in environment
     public function __construct($legislature = 15)
     {
+        ini_set('memory_limit', '2048M');
         $this->legislature_to_get = $legislature;
         $this->dateMaj = date('Y-m-d');
         echo date('Y-m-d') . " : Launching the daily script for legislature " . $this->legislature_to_get . "\n";
@@ -352,7 +353,6 @@ class Script
                     // insert organes
                     $this->insertAll('organes', $organeFields, $question_marks_organe, $organes);
                     $deputes = [];
-                    $deputeContacts = [];
                     $mandats = [];
                     $mandatsGroupe = [];
                     $mandatsSecondaire = [];
@@ -1840,6 +1840,75 @@ class Script
         $this->insertAll('deputes_accord', $deputeAccordFields, $question_marks_vote, $deputesAccord);
     }
 
+    public function voteParticipation()
+    {
+        echo "voteParticipation starting \n";
+
+        if ($this->legislature_to_get == 14) {
+            $votesLeft = $this->bdd->query('
+                SELECT voteNumero
+                FROM votes_info
+                WHERE legislature = 14 AND codeTypeVote IN ("SAT", "SPS", "MOC") AND voteNumero NOT IN (
+                    SELECT DISTINCT(voteNumero)
+                    FROM votes_participation
+                    WHERE legislature = 14 AND voteNumero
+                )
+                ORDER BY voteNumero ASC
+            ');
+        } elseif ($this->legislature_to_get == 15) {
+            $votesLeft = $this->bdd->query('
+                SELECT voteNumero
+                FROM votes_info
+                WHERE legislature = 15 AND voteNumero NOT IN (
+                    SELECT DISTINCT(voteNumero)
+                    FROM votes_participation
+                    WHERE legislature = 15 AND voteNumero
+                )
+                ORDER BY voteNumero ASC
+            ');
+        }
+
+        $i = 1;
+        $votesParticipation = [];
+        $question_marks_vote = [];
+        $voteParticipation = [];
+        $voteParticipationFields = array('legislature', 'voteNumero', 'mpId', 'participation');
+        while ($vote = $votesLeft->fetch()) {
+
+            $voteQuery = $this->bdd->query('
+                SELECT A.*, v.vote,
+                CASE
+                    WHEN vote IN ("1", "0", "-1") THEN 1
+                    WHEN vote = "nv" THEN NULL
+                    ELSE 0
+                END AS participation
+                FROM
+                (
+                SELECT vi.voteNumero, vi.legislature, mp.mpId
+                FROM votes_info vi
+                LEFT JOIN mandat_principal mp ON ((vi.dateScrutin BETWEEN mp.datePriseFonction AND mp.dateFin) OR (mp.datePriseFonction < vi.dateScrutin AND mp.dateFin IS NULL))
+                WHERE vi.legislature = "' . $this->legislature_to_get . '" AND vi.voteNumero = "' . $vote['voteNumero'] . '"
+                ) A
+                LEFT JOIN votes v ON A.mpId = v.mpId AND A.legislature = v.legislature AND A.voteNumero = v.voteNumero
+            ');
+
+            while ($mp = $voteQuery->fetch()) {
+                $voteParticipation = array('legislature' => $mp['legislature'], 'voteNumero' => $mp['voteNumero'], 'mpId' => $mp['mpId'], 'participation' => $mp['participation']);
+                $question_marks_vote[] = '('  . $this->placeholders('?', sizeof($voteParticipation)) . ')';
+                $votesParticipation = array_merge($votesParticipation, array_values($voteParticipation));
+                if ($i % 1000 === 0) {
+                    echo "let's insert this pack of 1000\n";
+                    $this->insertAll('votes_participation', $voteParticipationFields, $question_marks_vote, $votesParticipation);
+                    $votesParticipation = [];
+                    $question_marks_vote = [];
+                    $voteParticipation = [];
+                }
+                $i++;
+            }
+        }
+        $this->insertAll('votes_participation', $voteParticipationFields, $question_marks_vote, $votesParticipation);
+    }
+
     public function voteParticipationCommission()
     {
         echo "voteParticipationCommission starting \n";
@@ -2595,6 +2664,7 @@ $script->voteScore();
 $script->groupeCohesion();
 $script->groupeAccord();
 $script->deputeAccord();
+$script->voteParticipation();
 $script->voteParticipationCommission();
 $script->classParticipation();
 $script->classParticipationCommission();
