@@ -1720,7 +1720,9 @@ ul.ui-menu{
         &:hover{
           background-color: #fff;
           border: 1px solid #4267B2;
-          color: #4267B2;
+          span {
+            color: #4267B2;
+          }
           svg path{
             fill: #4267B2;
           }
@@ -1738,7 +1740,9 @@ ul.ui-menu{
         &:hover{
           background-color: #fff;
           border: 1px solid #1DA1F2;
-          color: #1DA1F2;
+          span{
+            color: #1DA1F2;
+          }
           svg path{
             fill: #1DA1F2;
           }
