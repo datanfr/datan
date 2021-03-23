@@ -81,7 +81,7 @@ html {
                LINKS
 ################
 */
-a:not(.btn) {
+a:not(.btn), .url_obf:not(.btn) {
   color: $link-datan-color;
   text-decoration: underline;
   &:hover{
@@ -907,7 +907,7 @@ body{
   }
   @include media-breakpoint-up(sm) {
     &.async_home{
-      background-image: linear-gradient(130deg, rgba($primary_rgb, 0.7) 0.65%, rgba(36, 107, 150, 0.7) 112%), url('../imgs/cover/hemicycle-from-back-min.jpg');
+      background-image: linear-gradient(130deg, rgba($primary_rgb, 0.7) 0.65%, rgba(36, 107, 150, 0.7) 112%), url('https://datan.fr/assets/imgs/cover/hemicycle-from-back-min.jpg');
     }
     background-size: cover;
     min-height: 27rem;
@@ -916,7 +916,7 @@ body{
 }
 .bloc-img-deputes{
   &.async_background{
-    background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.8)), url('../imgs/cover/hemicycle-front-min.jpg');
+    background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.8)), url('https://datan.fr/assets/imgs/cover/hemicycle-front-min.jpg');
     background-size: cover;
     background-position-y: 50%;
   }
@@ -1712,7 +1712,7 @@ ul.ui-menu{
     .btn{
       height: 40px;
     }
-    a {
+    a, .url_obf {
       width: 230px;
       margin: 0.5em 0 0.5em 0;
       padding: 0.4em 0.7em 0.4em 0.7em;
@@ -1733,7 +1733,9 @@ ul.ui-menu{
         &:hover{
           background-color: #fff;
           border: 1px solid #4267B2;
-          color: #4267B2;
+          span {
+            color: #4267B2;
+          }
           svg path{
             fill: #4267B2;
           }
@@ -1751,7 +1753,9 @@ ul.ui-menu{
         &:hover{
           background-color: #fff;
           border: 1px solid #1DA1F2;
-          color: #1DA1F2;
+          span{
+            color: #1DA1F2;
+          }
           svg path{
             fill: #1DA1F2;
           }
