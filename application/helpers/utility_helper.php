@@ -8,7 +8,7 @@
   }
 
   function getVersion(){
-    return '8';
+    return '9';
   }
 
   function legislature_current(){
@@ -17,6 +17,16 @@
 
   function legislature_all(){
     return array(15);
+  }
+
+  function meanAgeFranceAll(){
+    return 42.1;
+  }
+
+  function meanAgeFrance(){
+    // Only more than 18 yo.
+    // source: https://docs.google.com/spreadsheets/d/17pf7I0vN_yIl7lnebXhZSKDRaE6j31qzRX77Cx1SYD8/edit?usp=sharing
+    return 50.52;
   }
 
   function majority_group(){
@@ -52,12 +62,9 @@
       $tag = $tags->item($i);
       if ($tag->getAttribute('target') == '_blank' && strpos($tag->getAttribute('href'), 'datan.fr') === false) {
         $href = $tag->getAttribute('href');
-        $replacement = $dom->createElement('span');
+        $replacement = $dom->createElement('span', $tag->nodeValue);
         $replacement->setAttribute('class', 'url_obf');
         $replacement->setAttribute('url_obf', url_obfuscation($href));
-        $a = $dom->createElement('a', $tag->nodeValue);
-        $a->setAttribute('href', "#");
-        $replacement->appendChild($a);
         $tag->parentNode->replaceChild($replacement, $tag);
       }
     }

@@ -88,9 +88,10 @@
         // Data
         $data['ageMean'] = $this->stats_model->get_age_mean(legislature_current());
         $data['ageMean'] = round($data['ageMean']['mean']);
-        $data['ageMeanPop'] = 42;
+        $data['ageMeanPop'] = round(meanAgeFrance());
         $data['ageDiff'] = $data['ageMean'] - $data['ageMeanPop'];
         $data['ageDiffStr'] = $this->functions_datan->int2str($data['ageDiff']);
+        $data['ageDiffStr'] = $data['ageDiffStr'] == "un" ? $data['ageDiffStr'] . " an" : $data['ageDiffStr'] . " ans";
         $data['mpOldest'] = $this->stats_model->get_mps_oldest(1);
         $data['mpOldest']["name"] = $data['mpOldest']["nameFirst"]." ".$data['mpOldest']["nameLast"];
         $data['mpOldestGender'] = $this->depute_edito->gender($data['mpOldest']["civ"]);
@@ -106,7 +107,7 @@
 
       } elseif ($url == "groupes-age") {
         // Data
-        $data['ageMeanPop'] = 42;
+        $data['ageMeanPop'] = round(meanAgeFrance());
         $data['groupsAge'] = $this->stats_model->get_groups_age();
         $data['groupOldest'] = array_slice($data['groupsAge'], 0, 1);
         $data['groupOldest'] = $data['groupOldest'][0];
