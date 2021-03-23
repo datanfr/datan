@@ -68,15 +68,6 @@ class Script
     public function fillDeputes()
     {
         echo "fillDeputes starting \n";
-        $deputeFields = array('mpId', 'civ', 'nameFirst', 'nameLast', 'nameUrl', 'birthDate', 'birthCity', 'birthCountry', 'job', 'catSocPro', 'dateMaj');
-        $mandatFields = array('mandatId', 'mpId', 'legislature', 'typeOrgane', 'dateDebut', 'dateFin', 'preseance', 'nominPrincipale', 'codeQualite', 'libQualiteSex', 'organe', 'electionRegion', 'electionRegionType', 'electionDepartement', 'electionDepartementNumero', 'electionCirco', 'datePriseFonction', 'causeFin', 'premiereElection', 'placeHemicyle', 'dateMaj');
-        $mandatGroupeFields = array('mandatId', 'mpId', 'legislature', 'typeOrgane', 'dateDebut', 'dateFin', 'preseance', 'nominPrincipale', 'codeQualite', 'libQualiteSex', 'organeRef', 'dateMaj');
-        $organeFields = array('uid', 'coteType', 'libelle', 'libelleEdition', 'libelleAbrev', 'libelleAbrege', 'dateDebut', 'dateFin', 'legislature', 'positionPolitique', 'preseance', 'couleurAssociee', 'dateMaj');
-        $this->bdd->query("TRUNCATE TABLE deputes");
-        $this->bdd->query("TRUNCATE TABLE mandat_principal");
-        $this->bdd->query("TRUNCATE TABLE mandat_groupe");
-        $this->bdd->query("TRUNCATE TABLE mandat_secondaire");
-        $this->bdd->query("TRUNCATE TABLE organes");
         //Online file
         $file = 'http://data.assemblee-nationale.fr/static/openData/repository/15/amo/tous_acteurs_mandats_organes_xi_legislature/AMO30_tous_acteurs_tous_mandats_tous_organes_historique.xml.zip';
         $file = trim($file);
@@ -88,6 +79,15 @@ class Script
         if ($zip->open($newfile) !== TRUE) {
             exit("cannot open <$file>\n");
         } else {
+            $deputeFields = array('mpId', 'civ', 'nameFirst', 'nameLast', 'nameUrl', 'birthDate', 'birthCity', 'birthCountry', 'job', 'catSocPro', 'dateMaj');
+            $mandatFields = array('mandatId', 'mpId', 'legislature', 'typeOrgane', 'dateDebut', 'dateFin', 'preseance', 'nominPrincipale', 'codeQualite', 'libQualiteSex', 'organe', 'electionRegion', 'electionRegionType', 'electionDepartement', 'electionDepartementNumero', 'electionCirco', 'datePriseFonction', 'causeFin', 'premiereElection', 'placeHemicyle', 'dateMaj');
+            $mandatGroupeFields = array('mandatId', 'mpId', 'legislature', 'typeOrgane', 'dateDebut', 'dateFin', 'preseance', 'nominPrincipale', 'codeQualite', 'libQualiteSex', 'organeRef', 'dateMaj');
+            $organeFields = array('uid', 'coteType', 'libelle', 'libelleEdition', 'libelleAbrev', 'libelleAbrege', 'dateDebut', 'dateFin', 'legislature', 'positionPolitique', 'preseance', 'couleurAssociee', 'dateMaj');
+            $this->bdd->query("TRUNCATE TABLE deputes");
+            $this->bdd->query("TRUNCATE TABLE mandat_principal");
+            $this->bdd->query("TRUNCATE TABLE mandat_groupe");
+            $this->bdd->query("TRUNCATE TABLE mandat_secondaire");
+            $this->bdd->query("TRUNCATE TABLE organes");
             $deputes = [];
             $deputeContacts = [];
             $mandats = [];
