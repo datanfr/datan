@@ -81,7 +81,7 @@ html {
                LINKS
 ################
 */
-a:not(.btn) {
+a:not(.btn), .url_obf:not(.btn) {
   color: $link-datan-color;
   text-decoration: underline;
   &:hover{
@@ -1699,7 +1699,7 @@ ul.ui-menu{
     .btn{
       height: 40px;
     }
-    a {
+    a, .url_obf {
       width: 230px;
       margin: 0.5em 0 0.5em 0;
       padding: 0.4em 0.7em 0.4em 0.7em;
@@ -1720,7 +1720,9 @@ ul.ui-menu{
         &:hover{
           background-color: #fff;
           border: 1px solid #4267B2;
-          color: #4267B2;
+          span {
+            color: #4267B2;
+          }
           svg path{
             fill: #4267B2;
           }
@@ -1738,7 +1740,9 @@ ul.ui-menu{
         &:hover{
           background-color: #fff;
           border: 1px solid #1DA1F2;
-          color: #1DA1F2;
+          span{
+            color: #1DA1F2;
+          }
           svg path{
             fill: #1DA1F2;
           }

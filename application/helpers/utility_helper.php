@@ -8,7 +8,7 @@
   }
 
   function getVersion(){
-    return '8';
+    return '9';
   }
 
   function legislature_current(){
@@ -62,12 +62,9 @@
       $tag = $tags->item($i);
       if ($tag->getAttribute('target') == '_blank' && strpos($tag->getAttribute('href'), 'datan.fr') === false) {
         $href = $tag->getAttribute('href');
-        $replacement = $dom->createElement('span');
+        $replacement = $dom->createElement('span', $tag->nodeValue);
         $replacement->setAttribute('class', 'url_obf');
         $replacement->setAttribute('url_obf', url_obfuscation($href));
-        $a = $dom->createElement('a', $tag->nodeValue);
-        $a->setAttribute('href', "#");
-        $replacement->appendChild($a);
         $tag->parentNode->replaceChild($replacement, $tag);
       }
     }
