@@ -25,7 +25,7 @@
         $this->user_model->register($enc_password);
         // Set message
         $this->session->set_flashdata('user_registered', 'Vous êtes maintenant inscrit et pouvez vous connecter');
-        redirect('users/login');
+        redirect('/login');
       }
     }
 
@@ -88,7 +88,7 @@
             redirect('/admin');
           } else {
             //$this->session->set_flashdata('login_failed', 'La connexion a échoué');
-            redirect('users/login');
+            redirect('/login');
           }
         }
       }
