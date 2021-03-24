@@ -367,8 +367,8 @@
           WHERE score IN (
             SELECT MAX(score) AS maximum
             FROM class_participation_six
-            WHERE votesN > 200
-            ) AND votesN > 200
+            WHERE votesN > 10
+            ) AND votesN > 10
         ) A
         LEFT JOIN deputes_all da ON da.mpId = A.mpId
         WHERE da.legislature = '.legislature_current().' AND da.dateFin IS NULL
@@ -388,9 +388,9 @@
         WHERE score IN (
           SELECT MIN(score) AS maximum
           FROM class_participation_six
-          WHERE votesN > 200
+          WHERE votesN > 10
           )
-        AND votesN > 200
+        AND votesN > 10
       ) A
       LEFT JOIN deputes_all da ON da.mpId = A.mpId
       WHERE da.legislature = '.legislature_current().' AND da.dateFin IS NULL
