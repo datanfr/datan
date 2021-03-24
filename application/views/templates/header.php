@@ -228,7 +228,7 @@
                   <?php endif; ?>
                   <?php if ($this->session->userdata('logged_in')): ?>
                     <li class="nav-item">
-                      <a href="<?= base_url(); ?>users/logout" class="nav-link no-decoration">Déconnexion</a>
+                      <a href="<?= base_url(); ?>logout" class="nav-link no-decoration">Déconnexion</a>
                     </li>
                   <?php endif; ?>
               </ul>
