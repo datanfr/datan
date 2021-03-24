@@ -171,9 +171,9 @@
         FROM class_loyaute cl
         LEFT JOIN deputes_all da ON cl.mpId = da.mpId AND cl.legislature = da.legislature
         WHERE da.legislature = '.$legislature.' AND da.dateFin IS NULL
-        ORDER BY score DESC, votesN DESC
         ) A,
         (SELECT @s:= 0) AS s
+        ORDER BY A.score DESC, A.votesN DESC
       ');
 
       return $query->result_array();
@@ -290,9 +290,9 @@
       LEFT JOIN organes o ON cg.organeRef = o.uid
       LEFT JOIN groupes_effectif ge ON cg.organeRef = ge.organeRef
       WHERE cg.active = 1
-      ORDER BY cg.participation DESC
       ) A,
       (SELECT @s:= 0) AS s
+      ORDER BY A.participation DESC
       ');
 
       return $query->result_array();
