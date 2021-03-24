@@ -3,7 +3,7 @@
 
     // REGISTER //
     public function register(){
-      $this->password_model->security_admin();
+      //$this->password_model->security_admin();
       $data['title'] = 'Créez votre compte';
       $data['title_meta'] = "Datan: S'inscrire";
       $data['no_offset'] = TRUE;
@@ -25,7 +25,7 @@
         $this->user_model->register($enc_password);
         // Set message
         $this->session->set_flashdata('user_registered', 'Vous êtes maintenant inscrit et pouvez vous connecter');
-        redirect('/login');
+        redirect('login');
       }
     }
 
@@ -88,7 +88,7 @@
             redirect('/admin');
           } else {
             //$this->session->set_flashdata('login_failed', 'La connexion a échoué');
-            redirect('/login');
+            redirect('login');
           }
         }
       }
