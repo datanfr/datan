@@ -1813,7 +1813,6 @@ class Script
 
         $i = 1;
         $votesParticipation = [];
-        $question_marks_vote = [];
         $voteParticipation = [];
         $voteParticipationFields = array('legislature', 'voteNumero', 'mpId', 'participation');
         while ($vote = $votesLeft->fetch()) {
@@ -1837,19 +1836,16 @@ class Script
 
             while ($mp = $voteQuery->fetch()) {
                 $voteParticipation = array('legislature' => $mp['legislature'], 'voteNumero' => $mp['voteNumero'], 'mpId' => $mp['mpId'], 'participation' => $mp['participation']);
-                $question_marks_vote[] = '('  . $this->placeholders('?', sizeof($voteParticipation)) . ')';
                 $votesParticipation = array_merge($votesParticipation, array_values($voteParticipation));
                 if ($i % 1000 === 0) {
                     echo "let's insert this pack of 1000\n";
-                    $this->insertAll('votes_participation', $voteParticipationFields, $question_marks_vote, $votesParticipation);
+                    $this->insertAll('votes_participation', $voteParticipationFields, $votesParticipation);
                     $votesParticipation = [];
-                    $question_marks_vote = [];
-                    $voteParticipation = [];
                 }
                 $i++;
             }
         }
-        $this->insertAll('votes_participation', $voteParticipationFields, $question_marks_vote, $votesParticipation);
+        $this->insertAll('votes_participation', $voteParticipationFields, $votesParticipation);
     }
 
     public function voteParticipationCommission()
@@ -1871,7 +1867,7 @@ class Script
             $votes = $this->bdd->query('
                 SELECT vi.voteNumero, vi.legislature, vi.dateScrutin, d.*, o.libelleAbrev
                 FROM votes_info vi
-                LEFT JOIN votes_dossiers vd ON vi.voteNumero = vd.voteNumero
+                LEFT JOIN votes_dossiers vd ON vi.voteNumero = vd.voteNumero AND vi.legislature = vd.legislature
                 LEFT JOIN dossiers d ON vd.dossier = d.titreChemin
                 LEFT JOIN organes o ON d.commissionFond = o.uid
                 WHERE vi.voteNumero > "' . $last_vote . '" AND vi.legislature = 15
@@ -2591,6 +2587,8 @@ $script->groupeCohesion();
 $script->groupeAccord();
 $script->deputeAccord();
 $script->voteParticipation();
+$script->votesDossiers();
+$script->dossier();
 $script->voteParticipationCommission();
 $script->classParticipation();
 $script->classParticipationCommission();
@@ -2599,8 +2597,6 @@ $script->classLoyaute();
 $script->classMajorite();
 $script->classGroups();
 $script->classGroupsProximite();
-$script->votesDossiers();
-$script->dossier();
 $script->classParticipationSix();
 $script->classLoyauteSix();
 $script->deputeAccordCleaned();
