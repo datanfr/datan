@@ -126,7 +126,7 @@ $route['questionnaire/resultat']['post'] = 'quiz/result';
 // LOGIN & REGISTER
 $route['login'] = 'users/login';
 $route['register'] = 'users/register';
-$route['users/logout'] = 'users/logout';
+$route['logout'] = 'users/logout';
 // REDIRECTION
 $route['classements'] = 'redirection/redir/statistiques';
 $route['search/(:any)/(:any)'] = 'redirect/cities/$1/$2';

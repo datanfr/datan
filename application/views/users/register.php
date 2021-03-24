@@ -2,7 +2,7 @@
   <div class="row">
     <div class="col-lg-6 col-md-7 col-12" >
       <?php echo validation_errors(); ?>
-      <?php echo form_open('users/register'); ?>
+      <?php echo form_open('register'); ?>
       <div class="row mt-4">
         <div class="col-lg-4 col-md-5 col-8 offset-2 offset-md-0">
           <a href="<?= base_url() ?>">
@@ -47,7 +47,7 @@
                 <input type="password" class="form-control" name="password2" placeholder="Mot de passe">
               </div>
               <button type="submit" class="btn btn-primary btn-block">Confirmez</button>
-              <p class="mt-4">Déjà un compte sur Datan ? <a href="<?php echo base_url(); ?>users/login">Se connnecter</a></p>
+              <p class="mt-4">Déjà un compte sur Datan ? <a href="<?php echo base_url(); ?>login">Se connnecter</a></p>
             </div>
           </div>
           <?php echo form_close(); ?>
