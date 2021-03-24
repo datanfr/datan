@@ -625,6 +625,8 @@ class Script
     {
         echo "deputeAll starting \n";
 
+        $this->bdd->query('TRUNCATE TABLE deputes_all');
+        
         $query = $this->bdd->query('
             SELECT mp.mpId, mp.legislature, d.nameUrl, d.nameFirst, d.nameLast, d.civ,
             YEAR(current_timestamp()) - YEAR(d.birthDate) - CASE WHEN MONTH(current_timestamp()) < MONTH(d.birthDate) OR (MONTH(current_timestamp()) = MONTH(d.birthDate) AND DAY(current_timestamp()) < DAY(d.birthDate)) THEN 1 ELSE 0 END AS age
@@ -767,9 +769,9 @@ class Script
         $json = json_encode($array, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
 
         // save file
-        $dir = __DIR__ . "/../assets/data/";
-        $fp = fopen($dir . "deputes_json.json", 'w');
-        if (fwrite($fp, $json)) {
+        $file_destination = __DIR__ . "/../assets/data/deputes_json.json";
+        $fp = fopen($file_destination, 'w');
+        if (fputs($fp, $json)) {
             echo "JSON created \n";
         }
         fclose($fp);
@@ -2569,37 +2571,37 @@ if (isset($argv[1])) {
 } else {
     $script = new Script();
 }
-$script->fillDeputes();
+// $script->fillDeputes();
 $script->deputeAll();
-$script->deputeLast();
-$script->downloadPictures();
-$script->webpPictures();
-$script->resmushPictures();
-$script->groupeEffectif();
+// $script->deputeLast();
+// $script->downloadPictures();
+// $script->webpPictures();
+// $script->resmushPictures();
+// $script->groupeEffectif();
 $script->deputeJson();
-$script->groupeStats();
-$script->parties();
-$script->legislature();
-$script->vote();
-$script->updateVoteInfo();
-$script->voteScore();
-$script->groupeCohesion();
-$script->groupeAccord();
-$script->deputeAccord();
-$script->voteParticipation();
-$script->votesDossiers();
-$script->dossier();
-$script->voteParticipationCommission();
-$script->classParticipation();
-$script->classParticipationCommission();
-$script->deputeLoyaute();
-$script->classLoyaute();
-$script->classMajorite();
-$script->classGroups();
-$script->classGroupsProximite();
-$script->classParticipationSix();
-$script->classLoyauteSix();
-$script->deputeAccordCleaned();
-$script->historyMpsAverage();
-$script->historyPerMpsAverage();
-$script->createCsvFile();
+// $script->groupeStats();
+// $script->parties();
+// $script->legislature();
+// $script->vote();
+// $script->updateVoteInfo();
+// $script->voteScore();
+// $script->groupeCohesion();
+// $script->groupeAccord();
+// $script->deputeAccord();
+// $script->voteParticipation();
+// $script->votesDossiers();
+// $script->dossier();
+// $script->voteParticipationCommission();
+// $script->classParticipation();
+// $script->classParticipationCommission();
+// $script->deputeLoyaute();
+// $script->classLoyaute();
+// $script->classMajorite();
+// $script->classGroups();
+// $script->classGroupsProximite();
+// $script->classParticipationSix();
+// $script->classLoyauteSix();
+// $script->deputeAccordCleaned();
+// $script->historyMpsAverage();
+// $script->historyPerMpsAverage();
+// $script->createCsvFile();
