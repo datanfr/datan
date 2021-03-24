@@ -28,7 +28,7 @@
               <input type="password" name="password" class="form-control" placeholder="Mot de passe" required autofocus>
             </div>
             <button type="submit" class="btn btn-primary btn-block">Se connecter</button>
-            <p class="mt-4">Pas encore de compte sur Datan ? <a href="<?php echo base_url(); ?>users/register">S'incrire</a></p>
+            <p class="mt-4">Pas encore de compte sur Datan ? <a href="<?php echo base_url(); ?>/register">S'incrire</a></p>
           </div>
         </div>
         <?php echo form_close(); ?>
