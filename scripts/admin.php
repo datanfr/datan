@@ -94,6 +94,9 @@
               <hr>
               <a class="btn btn-warning my-3" href="update_dataset/20210309_update_department.php" role="button">5. Update departments</a>
 
+              <hr>
+              <a class="btn btn-warning my-3" href="update_dataset/20210322_update_primary_key.php" role="button">Add primary keys</a>
+
             </div>
           </div>
           <div class="row">
