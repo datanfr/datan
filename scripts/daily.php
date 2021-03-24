@@ -1530,22 +1530,16 @@ class Script
     {
         echo "voteScore starting \n";
 
-        // TEST AVEC BDD //
         $reponse_last_vote = $this->bdd->query('
-                SELECT voteNumero AS lastVote
-                FROM votes_scores
-                WHERE legislature = "' . $this->legislature_to_get . '"
-                ORDER BY voteNumero DESC
-                LIMIT 1
-                ');
+            SELECT voteNumero AS lastVote
+            FROM votes_scores
+            WHERE legislature = "' . $this->legislature_to_get . '"
+            ORDER BY voteNumero DESC
+            LIMIT 1
+        ');
 
-        while ($donnees_last_vote = $reponse_last_vote->fetch()) {
-            $lastVote = $donnees_last_vote['lastVote'] + 1;
-        }
-
-        if (!isset($lastVote)) {
-            $lastVote = 1;
-        }
+        $donnees_last_vote = $reponse_last_vote->fetch();
+        $lastVote = isset($donnees_last_vote['lastVote']) ? $donnees_last_vote['lastVote'] + 1 : 1;
         echo "Vote score from " . $lastVote . "\n";
 
         $reponseVote = $this->bdd->query('
@@ -1588,13 +1582,14 @@ class Script
             LEFT JOIN votes_groupes gvt ON gvt.organeRef IN ("PO730964", "PO713077", "PO656002") AND gvt.voteNumero = A.voteNumero AND gvt.legislature = A.legislature
             ) B
         ');
-
+        echo "requete ok\n";
 
         $votesScore = [];
         $voteScore = [];
         $voteScoreFields = array('voteNumero', 'legislature', 'mpId', 'vote', 'mandatId', 'sortCode', 'positionGroup', 'scoreLoyaute', 'scoreGagnant', 'scoreParticipation', 'positionGvt', 'scoreGvt', 'dateMaj');
         $i = 1;
         while ($x = $reponseVote->fetch(PDO::FETCH_ASSOC)) {
+            echo "ok";
             $voteScore = array(
                 'voteNumero' => $x['voteNumero'],
                 'legislature' => $x['legislature'],
@@ -1617,7 +1612,7 @@ class Script
                 $votesScore = [];
                 $voteScore = [];
             }
-            $i++;
+            echo $i++;
         }
         echo "Let's import until the end vote : " . $i . "\n";
         $this->insertAll('votes_scores', $voteScoreFields, $votesScore);
