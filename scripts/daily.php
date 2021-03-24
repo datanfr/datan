@@ -1928,7 +1928,7 @@ class Script
             $votes = $this->bdd->query('
                 SELECT vi.voteNumero, vi.legislature, vi.dateScrutin, d.*, o.libelleAbrev
                 FROM votes_info vi
-                LEFT JOIN votes_dossiers vd ON vi.voteNumero = vd.voteNumero
+                LEFT JOIN votes_dossiers vd ON vi.voteNumero = vd.voteNumero AND vi.legislature = vd.legislature
                 LEFT JOIN dossiers d ON vd.dossier = d.titreChemin
                 LEFT JOIN organes o ON d.commissionFond = o.uid
                 WHERE vi.voteNumero > "' . $last_vote . '" AND vi.legislature = 15
@@ -1950,6 +1950,12 @@ class Script
                     $voteCommissionParticipation = array('legislature' => $legislature, 'voteNumero' => $voteNumero, 'mpId' => NULL, 'participation' => NULL);
                     $question_marks_vote[] = '('  . $this->placeholders('?', sizeof($voteCommissionParticipation)) . ')';
                     $votesCommissionParticipation = array_merge($votesCommissionParticipation, array_values($voteCommissionParticipation));
+
+                    $this->insertAll('votes_participation_commission', $voteCommissionParticipationFields, $question_marks_vote, $votesCommissionParticipation);
+                    $votesCommissionParticipation = [];
+                    $question_marks_vote = [];
+                    $voteCommissionParticipation = [];
+
                 } else {
 
                     $deputes = $this->bdd->query('
@@ -1976,7 +1982,14 @@ class Script
                         $question_marks_vote[] = '('  . $this->placeholders('?', sizeof($voteCommissionParticipation)) . ')';
                         $votesCommissionParticipation = array_merge($votesCommissionParticipation, array_values($voteCommissionParticipation));
                     }
+
+                    $this->insertAll('votes_participation_commission', $voteCommissionParticipationFields, $question_marks_vote, $votesCommissionParticipation);
+                    $votesCommissionParticipation = [];
+                    $question_marks_vote = [];
+                    $voteCommissionParticipation = [];
+                    
                 }
+                /*
                 if ($i % 1000 === 0) {
                     echo "let's insert this pack of 1000\n";
                     $this->insertAll('votes_participation_commission', $voteCommissionParticipationFields, $question_marks_vote, $votesCommissionParticipation);
@@ -1984,7 +1997,7 @@ class Script
                     $question_marks_vote = [];
                     $voteCommissionParticipation = [];
                 }
-                $i++;
+                $i++; */
             }
             $this->insertAll('votes_participation_commission', $voteCommissionParticipationFields, $question_marks_vote, $votesCommissionParticipation);
         }
@@ -2665,6 +2678,8 @@ $script->groupeCohesion();
 $script->groupeAccord();
 $script->deputeAccord();
 $script->voteParticipation();
+$script->votesDossiers();
+$script->dossier();
 $script->voteParticipationCommission();
 $script->classParticipation();
 $script->classParticipationCommission();
@@ -2673,8 +2688,6 @@ $script->classLoyaute();
 $script->classMajorite();
 $script->classGroups();
 $script->classGroupsProximite();
-$script->votesDossiers();
-$script->dossier();
 $script->classParticipationSix();
 $script->classLoyauteSix();
 $script->deputeAccordCleaned();
