@@ -329,7 +329,6 @@
 
 
     public function get_votes_datan_depute($depute_id, $limit = FALSE){
-      echo $depute_id;
       $queryString = '
         SELECT vd.voteNumero, vd.legislature, vd.title AS vote_titre, vd.category, f.name AS category_libelle, vi.sortCode, date_format(vi.dateScrutin, "%d %M %Y") as dateScrutinFR,
         CASE
