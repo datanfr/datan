@@ -48,7 +48,7 @@ class Script
                 }
                 $update = substr($update, 0, -1);
                 // SQL //
-                $sql = "INSERT INTO " . $table . " (" . implode(",", $fields) . ") VALUES " . $values 
+                $sql = "INSERT INTO " . $table . " (" . implode(",", $fields) . ") VALUES " . $values
                 . " ON DUPLICATE KEY UPDATE " . $update;
                 $stmt = $this->bdd->prepare($sql);
                 $stmt->execute($datas);
@@ -624,7 +624,7 @@ class Script
     public function deputeAll()
     {
         echo "deputeAll starting \n";
-        
+
         $query = $this->bdd->query('
             SELECT mp.mpId, mp.legislature, d.nameUrl, d.nameFirst, d.nameLast, d.civ,
             YEAR(current_timestamp()) - YEAR(d.birthDate) - CASE WHEN MONTH(current_timestamp()) < MONTH(d.birthDate) OR (MONTH(current_timestamp()) = MONTH(d.birthDate) AND DAY(current_timestamp()) < DAY(d.birthDate)) THEN 1 ELSE 0 END AS age
@@ -728,16 +728,11 @@ class Script
             LEFT JOIN departement dpt ON dpt.departement_code = da.departementCode
         ');
 
-        $this->bdd->exec(
-            '
-            CREATE INDEX idx_mp ON deputes_last (nameUrl);'
-        );
-        $this->bdd->exec(
-            '
-            CREATE INDEX idx_dptSlug ON deputes_last (dptSlug);'
-        );
+        $this->bdd->exec('CREATE INDEX idx_mp ON deputes_last (nameUrl);');
+        $this->bdd->exec('CREATE INDEX idx_dptSlug ON deputes_last (dptSlug);');
         $this->bdd->exec('CREATE INDEX idx_mpId ON deputes_last(mpId)');
         $this->bdd->exec('CREATE INDEX idx_legislature ON deputes_last(legislature);');
+        $this->bdd->exec('ALTER TABLE `deputes_last` ADD PRIMARY KEY(`mpId`, `legislature`);');
     }
 
     public function deputeJson()
@@ -940,7 +935,7 @@ class Script
             $legislature = array('organeRef' => $organeRef, 'libelle' => $libelle, 'libelleAbrev' => $libelleAbrev, 'name' => $name, 'legislatureNumber' => $number, 'dateDebut' => $dateDebut, 'dateFin' => $dateFin, 'dateMaj' => $this->dateMaj);
             $legislatures = array_merge($legislatures, array_values($legislature));
         }
-        $this->insertAll('legislature', $legislatureFields, $legislatures);    
+        $this->insertAll('legislature', $legislatureFields, $legislatures);
     }
 
     public function vote()
