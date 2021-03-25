@@ -1538,7 +1538,7 @@ class Script
         echo "Vote score from " . $lastVote . "\n";
 
         $reponseVote = $this->bdd->query('
-            SELECT B.voteNumero, B.legislature, B.mpId, B.vote, B.mandat_uid AS mandatId, B.sortCode, B.positionGroup, B.gvtPosition AS positionGvt,
+            SELECT B.voteNumero, B.legislature, B.mpId, B.vote, B.mandatId, B.sortCode, B.positionGroup, B.gvtPosition AS positionGvt,
             case when B.vote = B.positionGroup then 1 else 0 end as scoreLoyaute,
             case when B.vote = B.sortCode then 1 else 0 end as scoreGagnant,
             case when B.vote = B.gvtPosition then 1 else 0 end as scoreGvt,
@@ -1564,14 +1564,14 @@ class Script
             when sortCode = "rejeté" then -1
             else 0 end as sortCode,
             v.legislature,
-            mg.mandatId AS mandat_uid, mg.organeRef
+            mg.mandatId, mg.organeRef
             FROM votes v
             JOIN votes_info vi ON vi.voteNumero = v.voteNumero AND vi.legislature = v.legislature
             LEFT JOIN mandat_groupe mg ON mg.mpId = v.mpId
-            AND ((vi.dateScrutin BETWEEN mg.dateDebut AND mg.dateFin ) OR (vi.dateScrutin > mg.dateDebut AND mg.dateFin IS NULL))
+            AND ((vi.dateScrutin BETWEEN mg.dateDebut AND mg.dateFin ) OR (vi.dateScrutin >= mg.dateDebut AND mg.dateFin IS NULL))
             AND mg.codeQualite IN ("Membre", "Député non-inscrit", "Membre apparenté")
             LEFT JOIN organes o ON o.uid = vi.organeRef
-            WHERE v.voteType != "miseAuPoint" AND v.voteNumero >= "' . $lastVote . '" AND v.legislature = "' . $this->legislature_to_get . '" AND vote != "nv"
+            WHERE v.voteType = "decompteNominatif" AND v.voteNumero >= "' . $lastVote . '" AND v.legislature = "' . $this->legislature_to_get . '" AND vote != "nv"
             ) A
             LEFT JOIN votes_groupes vg ON vg.organeRef = A.organeRef AND vg.voteNumero = A.voteNumero AND vg.legislature = A.legislature
             LEFT JOIN votes_groupes gvt ON gvt.organeRef IN ("PO730964", "PO713077", "PO656002") AND gvt.voteNumero = A.voteNumero AND gvt.legislature = A.legislature
@@ -1826,7 +1826,7 @@ class Script
                 LEFT JOIN mandat_principal mp ON ((vi.dateScrutin BETWEEN mp.datePriseFonction AND mp.dateFin) OR (mp.datePriseFonction < vi.dateScrutin AND mp.dateFin IS NULL))
                 WHERE vi.legislature = "' . $this->legislature_to_get . '" AND vi.voteNumero = "' . $vote['voteNumero'] . '"
                 ) A
-                LEFT JOIN votes v ON A.mpId = v.mpId AND A.legislature = v.legislature AND A.voteNumero = v.voteNumero
+                LEFT JOIN votes_scores v ON A.mpId = v.mpId AND A.legislature = v.legislature AND A.voteNumero = v.voteNumero
             ');
 
             while ($mp = $voteQuery->fetch()) {
@@ -1863,7 +1863,7 @@ class Script
                 SELECT vi.voteNumero, vi.legislature, vi.dateScrutin, d.*, o.libelleAbrev
                 FROM votes_info vi
                 LEFT JOIN votes_dossiers vd ON vi.voteNumero = vd.voteNumero AND vi.legislature = vd.legislature
-                LEFT JOIN dossiers d ON vd.dossier = d.titreChemin
+                LEFT JOIN dossiers d ON vd.dossier = d.titreChemin AND d.legislature = vi.legislature
                 LEFT JOIN organes o ON d.commissionFond = o.uid
                 WHERE vi.voteNumero > "' . $last_vote . '" AND vi.legislature = 15
                 ORDER BY vi.voteNumero ASC
