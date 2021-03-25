@@ -942,7 +942,7 @@ class Script
     {
         echo "vote starting \n";
         echo "starting vote\n";
-        $reponse_vote = $this->bdd->query('
+        $response_vote = $this->bdd->query('
             SELECT voteNumero
             FROM votes
             WHERE legislature = "' . $this->legislature_to_get . '"
@@ -950,8 +950,8 @@ class Script
             LIMIT 1
         ');
 
-        $dernier_vote = $reponse_vote->fetch();
-        $number_to_import = isset($dernier_vote['voteNumero']) ? $dernier_vote['voteNumero'] : 1;
+        $dernier_vote = $response_vote->fetch();
+        $number_to_import = isset($dernier_vote['voteNumero']) ? $dernier_vote['voteNumero'] + 1 : 1;
         echo "From " . $number_to_import . "\n";
 
         // SCRAPPING DEPENDING ON LEGISLATURE
@@ -975,7 +975,7 @@ class Script
                 $votesGroupe = [];
 
                 while (1) {
-                    $file_to_import = 'VTANR5L15V' . $number_to_import++;
+                    $file_to_import = 'VTANR5L15V' . $number_to_import ++;
                     $xml_string = $zip->getFromName('xml/' . $file_to_import . '.xml');
                     if ($xml_string != false) {
                         $xml = simplexml_load_string($xml_string);
