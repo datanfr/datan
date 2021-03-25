@@ -624,8 +624,6 @@ class Script
     public function deputeAll()
     {
         echo "deputeAll starting \n";
-
-        $this->bdd->query('TRUNCATE TABLE deputes_all');
         
         $query = $this->bdd->query('
             SELECT mp.mpId, mp.legislature, d.nameUrl, d.nameFirst, d.nameLast, d.civ,
