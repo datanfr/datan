@@ -44,7 +44,7 @@
                 <tr>
                   <td><?= $candidat['id'] ?></td>
                   <td><a target="_blank" href="<?php echo base_url(); ?>deputes/<?php echo $candidat['dptSlug'].'/depute_'.$candidat['nameUrl'] ?>" class="stretched-link no-decoration"><?php echo $candidat['nameFirst'] .' ' . $candidat['nameLast'] ?></a></td>
-                  <td><?= $candidat['election'] ?></td>
+                  <td><?= $candidat['election_libelle'] ?></td>
                   <td><?= $candidat['district'] ?></td>
                   <td><?= $candidat['position'] ?></td>
                   <td><?= $candidat['nuance'] ?></td>
