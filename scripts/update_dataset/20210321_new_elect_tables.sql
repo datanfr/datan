@@ -50,12 +50,14 @@ INSERT INTO `elect_deputes_candidats` (`id`, `mpId`, `election`, `district`, `po
 
 DROP VIEW IF EXISTS `candidate_full`;
 -- --------------------------------------------------------
+-- --------------------------------------------------------
 CREATE VIEW candidate_full AS SELECT 
-  /*`id`, `mpId`,*/ `election`, `district`, `position`, `nuance`, `source`,
-  /*`id`, `mpId`,*/ `legislature`, `nameUrl`, `civ`, `nameFirst`, `nameLast`, `age`, `dptSlug`, `departementNom`, `departementCode`, `circo`, `mandatId`, `libelle`, `libelleAbrev`, `groupeId`, `groupeMandat`, `couleurAssociee`, `dateFin`, `datePriseFonction`, `causeFin`, `img`, `imgOgp`, `dateMaj`, `libelle_1`, `libelle_2`, `active`,
-  edc.mpId as mpId, edc.id as id
+  edc.mpId as mpId, edc.id as id, `election`, `district`, `position`, `nuance`, `source`,
+  dl.`id` as "depute_id", /*`mpId`,*/ `legislature`, `nameUrl`, `civ`, `nameFirst`, `nameLast`, `age`, `dptSlug`, `departementNom`, `departementCode`, `circo`, `mandatId`, dl.`libelle` as "depute_libelle", dl.`libelleAbrev` as "depute_libelleAbrev", `groupeId`, `groupeMandat`, `couleurAssociee`, `dateFin`, `datePriseFonction`, `causeFin`, `img`, `imgOgp`, `dateMaj`, `libelle_1`, `libelle_2`, `active`,
+  el.`id` as "election_id", el.`libelle` as "election_libelle", el.`libelleAbrev` as "election_libelleAbrev", `dateYear`, `dateFirstRound`, `dateSecondRound`
   FROM elect_deputes_candidats edc
   LEFT JOIN deputes_last dl ON edc.mpId = dl.mpId
+  LEFT JOIN elect_libelle el ON edc.election = el.id
 
 --
 -- Structure de la table `elect_libelle`
