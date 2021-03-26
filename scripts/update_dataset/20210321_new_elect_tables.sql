@@ -37,6 +37,7 @@ CREATE TABLE IF NOT EXISTS `elect_deputes_candidats` (
   `position` varchar(50) NOT NULL,
   `nuance` varchar(25) DEFAULT NULL,
   `source` text NOT NULL,
+  `visible` boolean NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
@@ -47,7 +48,14 @@ CREATE TABLE IF NOT EXISTS `elect_deputes_candidats` (
 INSERT INTO `elect_deputes_candidats` (`id`, `mpId`, `election`, `district`, `position`, `nuance`, `source`) VALUES
 (1, 'PA720278', 1, 'Pays de la Loire', 'Tête de liste', NULL, 'https://www.ouest-france.fr/elections/regionales/elections-regionales-en-pays-de-la-loire-qui-seront-les-candidats-en-juin-2021-7190091');
 
+DROP VIEW IF EXISTS `candidate_full`;
 -- --------------------------------------------------------
+CREATE VIEW candidate_full AS SELECT 
+  /*`id`, `mpId`,*/ `election`, `district`, `position`, `nuance`, `source`,
+  /*`id`, `mpId`,*/ `legislature`, `nameUrl`, `civ`, `nameFirst`, `nameLast`, `age`, `dptSlug`, `departementNom`, `departementCode`, `circo`, `mandatId`, `libelle`, `libelleAbrev`, `groupeId`, `groupeMandat`, `couleurAssociee`, `dateFin`, `datePriseFonction`, `causeFin`, `img`, `imgOgp`, `dateMaj`, `libelle_1`, `libelle_2`, `active`,
+  edc.mpId as mpId, edc.id as id
+  FROM elect_deputes_candidats edc
+  LEFT JOIN deputes_last dl ON edc.mpId = dl.mpId
 
 --
 -- Structure de la table `elect_libelle`

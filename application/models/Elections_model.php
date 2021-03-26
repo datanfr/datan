@@ -15,4 +15,14 @@
       return $query->row_array();
     }
 
+    public function get_all_candidate($election){
+      $whereQuery = array(
+        'election' => $election
+      );
+
+      $query = $this->db->get_where('candidate_full', $whereQuery, 1);
+
+      return $query->result_array();
+    }
+
   }
