@@ -35,3 +35,4 @@
   ');
 
   // Table to truncate for next update: votes ; votes_info ; votes_groupes ; votes_scores ; votes_participation ; votes_participation_commission ; votes_participation_commission ; groupes_accord ; groupes_cohesion ; deputes_accord
+  // Table to be truncated before adding the indexes! 
