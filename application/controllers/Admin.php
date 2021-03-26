@@ -8,6 +8,7 @@
       $this->load->model('post_model');
       $this->load->model('fields_model');
       $this->load->model('groupes_model');
+      $this->load->model('elections_model');
       //$this->password_model->security_password(); Former login protection
       $this->password_model->security_admin();
     }
@@ -30,10 +31,9 @@
     public function elections(){
       $data['username'] = $this->session->userdata('username');
       $data['usernameType'] = $this->session->userdata('type');
-      $data['title'] = 'Listes candidats aux élections';
+      $data['title'] = 'Liste candidats aux élections';
 
-      // $data['votes'] = $this->admin_model->get_votes_datan();
-      // $data['groupes'] = $this->groupes_model->get_groupes_all(true, 15);
+      $data['candidats'] = $this->elections_model->get_all_candidate(1/* Régionales 2021 */);
 
       $this->load->view('dashboard/header', $data);
       $this->load->view('dashboard/elections/list', $data);

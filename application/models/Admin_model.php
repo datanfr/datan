@@ -15,6 +15,33 @@
       return $query->result_array();
     }
 
+    public function create_candidat($user_id){
+      $url = url_title($this->input->post('depute_url'));
+      
+
+      $data = array(
+        'title' => $this->input->post('title'),
+        'slug' => $slug,
+        'legislature' => $this->input->post('legislature'),
+        'voteNumero' => $this->input->post('vote_id'),
+        'vote_id' => "VTANR5L".$this->input->post('legislature')."V".$this->input->post('vote_id'),
+        'category' => $this->input->post('category'),
+        'description' => $this->input->post('description'),
+        'contexte' => strip_tags($this->input->post('contexte')),
+        'created_at' => date("Y-m-d H:i:s"),
+        'state' => 'draft',
+        'created_by' => $user_id
+      );
+
+      $query = $this->db->get_where('votes_datan', array('voteNumero' => $data['voteNumero'], 'legislature' => $data['legislature']));
+
+      if ($query->num_rows() > 0) {
+        return NULL;
+      } else {
+        return $this->db->insert('votes_datan', $data);
+      }
+    }
+
     public function create_vote($user_id){
       $slug = url_title($this->input->post('title'));
 

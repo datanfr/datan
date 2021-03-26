@@ -93,6 +93,22 @@
       return $query->result_array();
     }
 
+    public function get_depute_by_nameUrl($nameUrl) {
+      $whereQuery = array(
+        'nameUrl' => $nameUrl
+      );
+
+      $query = $this->db->get_where('deputes_last', $whereQuery, 1);
+    }
+
+    public function get_depute_by_mpId($mpId) {
+      $whereQuery = array(
+        'mpId' => $mpId
+      );
+
+      $query = $this->db->get_where('deputes_last', $whereQuery, 1);
+    }
+
     public function get_depute_individual($nameUrl, $dpt){
       $query = $this->db->query('
         SELECT

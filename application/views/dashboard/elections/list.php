@@ -30,7 +30,7 @@
             <thead>
               <tr>
                 <th>id</th>
-                <th>mpId</th>
+                <th>Député</th>
                 <th>election id</th>
                 <th>district</th>
                 <th>position</th>
@@ -39,25 +39,25 @@
               </tr>
             </thead>
             <tbody>
-              <?php if (!isset($votes)) $votes = [] ?>
-              <?php foreach ($votes as $vote) : ?>
+              <?php if (!isset($candidats)) $candidats = [] ?>
+              <?php foreach ($candidats as $candidat) : ?>
                 <tr>
-                  <td><?= $vote['id'] ?></td>
-                  <td><?= $vote['mpId'] ?></td>
-                  <td><?= $vote['election'] ?></td>
-                  <td><?= $vote['district'] ?></td>
-                  <td><?= $vote['position'] ?></td>
-                  <td><?= $vote['nuance'] ?></td>
-                  <td><?= $vote['source'] ?></td>
+                  <td><?= $candidat['id'] ?></td>
+                  <td><a target="_blank" href="<?php echo base_url(); ?>deputes/<?php echo $candidat['dptSlug'].'/depute_'.$candidat['nameUrl'] ?>" class="stretched-link no-decoration"><?php echo $candidat['nameFirst'] .' ' . $candidat['nameLast'] ?></a></td>
+                  <td><?= $candidat['election'] ?></td>
+                  <td><?= $candidat['district'] ?></td>
+                  <td><?= $candidat['position'] ?></td>
+                  <td><?= $candidat['nuance'] ?></td>
+                  <td><?= $candidat['source'] ?></td>
                   <td>
-                    <?php if ($vote['state'] == "published" && $usernameType != "admin") : ?>
+                    <?php if ($usernameType != "admin") : ?>
                     <?php else : ?>
-                      <a href="<?= base_url() ?>admin/votes/modify/<?= $vote['id'] ?>" ?>modifier</a>
+                      <a href="<?= base_url() ?>admin/elections/candidat/modify<?= $candidat['id'] ?>" ?>modifier</a>
                     <?php endif; ?>
                   </td>
                   <td>
                     <?php if ($usernameType == "admin") : ?>
-                      <a href="<?= base_url() ?>admin/votes/delete/<?= $vote['id'] ?>">supprimer</a>
+                      <a href="<?= base_url() ?>admin/votes/delete/<?= $candidat['id'] ?>">supprimer</a>
                     <?php endif; ?>
                   </td>
                 </tr>
