@@ -27,6 +27,42 @@
       $this->load->view('dashboard/footer');
     }
 
+    public function elections(){
+      $data['username'] = $this->session->userdata('username');
+      $data['usernameType'] = $this->session->userdata('type');
+      $data['title'] = 'Listes candidats aux élections';
+
+      // $data['votes'] = $this->admin_model->get_votes_datan();
+      // $data['groupes'] = $this->groupes_model->get_groupes_all(true, 15);
+
+      $this->load->view('dashboard/header', $data);
+      $this->load->view('dashboard/elections/list', $data);
+      $this->load->view('dashboard/footer');
+    }
+
+    public function create_candidat(){
+      $data['username'] = $this->session->userdata('username');
+      $user_id = $this->session->userdata('user_id');
+
+      $data['title'] = 'Créer un nouveau vote décrypté';
+      $data['categories'] = $this->fields_model->get_fields();
+      $data['groupes'] = $this->groupes_model->get_groupes_all(true, 15);
+
+      //Form valiation
+      $this->form_validation->set_rules('depute_url', 'Url député', 'required');
+
+      if ($this->form_validation->run() === FALSE) {
+        $this->load->view('dashboard/header', $data);
+        $this->load->view('dashboard/elections/create', $data);
+        $this->load->view('dashboard/footer');
+      } else {
+        $this->admin_model->create_vote($user_id);
+        redirect('admin/elections');
+      }
+
+    }
+
+
     public function votes(){
       $data['username'] = $this->session->userdata('username');
       $data['usernameType'] = $this->session->userdata('type');

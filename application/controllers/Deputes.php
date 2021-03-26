@@ -193,7 +193,7 @@
       }
 
       // Regionales 2021
-      $data['regionales2021'] = $this->elections_model->get_candidate($depute_uid, 1);
+      $data['regionales2021'] = $this->elections_model->get_candidate($depute_uid, 1/* Régionales 2021 */);
 
       // Statistiques
       if ($legislature == legislature_current()) {
