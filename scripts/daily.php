@@ -1878,34 +1878,24 @@ class Script
                 $voteDate = $vote['dateScrutin'];
                 $commissionFond = $vote['commissionFond'];
 
-                if ($commissionFond == NULL) {
-                    echo "pas de commission parlementaire \n";
-                    $voteCommissionParticipation = array('legislature' => $legislature, 'voteNumero' => $voteNumero, 'mpId' => NULL, 'participation' => NULL);
-                    $votesCommissionParticipation = array_merge($votesCommissionParticipation, array_values($voteCommissionParticipation));
-                } else {
+                if ($commissionFond != NULL) {
+                  $deputes = $this->bdd->query('
+                      SELECT *
+                      FROM votes_participation vp
+                      LEFT JOIN mandat_secondaire ms ON vp.mpId = ms.mpId
+                      WHERE vp.voteNumero = "' . $voteNumero . '" AND ms.typeOrgane = "COMPER" AND ms.codeQualite = "Membre" AND ms.organeRef = "' . $commissionFond . '" AND ((DATE_ADD(ms.dateDebut, INTERVAL 1 MONTH) <= "' . $voteDate . '" AND ms.dateFin >= "' . $voteDate . '") OR (DATE_ADD(ms.dateDebut, INTERVAL 1 MONTH) <= "' . $voteDate . '" AND ms.dateFin IS NULL)) AND vp.participation IS NOT NULL
+                  ');
+                  if ($deputes->rowCount() > 0) {
+                      while ($depute = $deputes->fetch()) {
+                          $legislature = $depute['legislature'];
+                          $voteNumero = $depute['voteNumero'];
+                          $mpId = $depute['mpId'];
+                          $participation = $depute['participation'];
 
-                    $deputes = $this->bdd->query('
-                        SELECT *
-                        FROM votes_participation vp
-                        LEFT JOIN mandat_secondaire ms ON vp.mpId = ms.mpId
-                        WHERE vp.voteNumero = "' . $voteNumero . '" AND ms.typeOrgane = "COMPER" AND ms.codeQualite = "Membre" AND ms.organeRef = "' . $commissionFond . '" AND ((DATE_ADD(ms.dateDebut, INTERVAL 1 MONTH) <= "' . $voteDate . '" AND ms.dateFin >= "' . $voteDate . '") OR (DATE_ADD(ms.dateDebut, INTERVAL 1 MONTH) <= "' . $voteDate . '" AND ms.dateFin IS NULL)) AND vp.participation IS NOT NULL
-                    ');
-
-                    if ($deputes->rowCount() > 0) {
-
-                        while ($depute = $deputes->fetch()) {
-                            $legislature = $depute['legislature'];
-                            $voteNumero = $depute['voteNumero'];
-                            $mpId = $depute['mpId'];
-                            $participation = $depute['participation'];
-
-                            $voteCommissionParticipation = array('legislature' => $legislature, 'voteNumero' => $voteNumero, 'mpId' => $mpId, 'participation' => $participation);
-                            $votesCommissionParticipation = array_merge($votesCommissionParticipation, array_values($voteCommissionParticipation));
-                        }
-                    } else {
-                        $voteCommissionParticipation = array('legislature' => $legislature, 'voteNumero' => $voteNumero, 'mpId' => NULL, 'participation' => NULL);
-                        $votesCommissionParticipation = array_merge($votesCommissionParticipation, array_values($voteCommissionParticipation));
-                    }
+                          $voteCommissionParticipation = array('legislature' => $legislature, 'voteNumero' => $voteNumero, 'mpId' => $mpId, 'participation' => $participation);
+                          $votesCommissionParticipation = array_merge($votesCommissionParticipation, array_values($voteCommissionParticipation));
+                      }
+                  }
                 }
                 if ($i % 1000 === 0) {
                     echo "let's insert this pack of 1000\n";

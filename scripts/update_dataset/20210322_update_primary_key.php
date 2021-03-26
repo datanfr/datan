@@ -25,7 +25,7 @@
   ALTER TABLE `votes_participation` DROP `id`;
   ALTER TABLE `votes_participation` ADD PRIMARY KEY(`legislature`, `voteNumero`, `mpId`);
   ALTER TABLE `votes_participation_commission` DROP `id`;
-  ALTER TABLE `votes_participation_commission` ADD PRIMARY KEY(`legislature`, `voteNumero`, `mpId`); // NOT WORKING
+  ALTER TABLE `votes_participation_commission` ADD PRIMARY KEY(`legislature`, `voteNumero`, `mpId`);
   ALTER TABLE `groupes_accord` DROP `id`;
   ALTER TABLE `groupes_accord` ADD PRIMARY KEY(`legislature`, `voteNumero`, `organeRef`, `organeRefAccord`);
   ALTER TABLE `groupes_cohesion` DROP `id`;
