@@ -1659,12 +1659,22 @@ class Script
         $groupesCohesion = [];
         $groupeCohesion = [];
         $groupeCohesionFields = array('voteNumero', 'legislature', 'organeRef', 'cohesion', 'positionGroupe', 'voteSort', 'scoreGagnant');
+        $i = 1;
         while ($donneesVote = $reponseVote->fetch()) {
             $groupeCohesion = array('voteNumero' => $donneesVote['voteNumero'], 'legislature' => $donneesVote['legislature'], 'organeRef' => $donneesVote['organeRef'], 'cohesion' => $donneesVote['cohesion'], 'positionGroupe' => $donneesVote['positionGroup'], 'voteSort' => $donneesVote['voteResult'], 'scoreGagnant' => $donneesVote['scoreGagnant']);
             $groupesCohesion = array_merge($groupesCohesion, array_values($groupeCohesion));
+            if ($i % 1000 === 0) {
+                echo "Let's insert until a pack of 1000 rows \n";
+                $this->insertAll('groupes_cohesion', $groupeCohesionFields, $groupesCohesion);
+                $groupeCohesion = [];
+                $groupesCohesion = [];
+            }
+            $i++;
         }
-
-        $this->insertAll('groupes_cohesion', $groupeCohesionFields, $groupesCohesion);
+        if ($i % 1000 !== 0) {
+            echo "Let's insert what's left \n";
+            $this->insertAll('groupes_cohesion', $groupeCohesionFields, $groupesCohesion);
+        }
     }
 
     public function groupeAccord()
