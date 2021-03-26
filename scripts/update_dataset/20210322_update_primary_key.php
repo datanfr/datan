@@ -15,7 +15,8 @@
   ');
 
   // New indexes
-  $bdd->query('ALTER TABLE `votes` ADD PRIMARY KEY(`legislature`, `voteNumero`, `mpId`, `voteType`);
+  $bdd->query('ALTER TABLE `votes` DROP `id`;
+  ALTER TABLE `votes` ADD PRIMARY KEY(`legislature`, `voteNumero`, `mpId`, `voteType`);
   ALTER TABLE `votes_info` DROP `id`;
   ALTER TABLE `votes_info` ADD PRIMARY KEY(`legislature`, `voteNumero`);
   ALTER TABLE `votes_groupes` DROP `id`;
@@ -35,4 +36,4 @@
   ');
 
   // Table to truncate for next update: votes ; votes_info ; votes_groupes ; votes_scores ; votes_participation ; votes_participation_commission ; votes_participation_commission ; groupes_accord ; groupes_cohesion ; deputes_accord
-  // Table to be truncated before adding the indexes! 
+  // Table to be truncated before adding the indexes!
