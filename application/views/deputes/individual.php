@@ -1,17 +1,8 @@
-  <?php if ($regionales2021) : ?>
+<pre><?php var_dump($regionales2021)?></pre>
+  <?php if (($regionales2021 && $regionales2021['visible']) || isset($_GET['regionales2021'])) : ?>
     <div class="container-fluid electionBanner d-flex justify-content-center align-items-center py-4">
       <span class="text-center">
-        <?= $title ?> est candidat aux prochaines élections régionales, dans la région <?= $regionales2021['district'] ?>.
-        <!--
-              display: flex;
-              justify-content: flex-end;
-              font-size: 0.5em;
-              height: 0;
-        -->
-        <div >
-          <span class="url_obf btn btn-an d-flex align-items-right justify-content-center" url_obf="<?= url_obfuscation($regionales2021['source']) ?>">Tous les candidats</span>          
-          <span class="url_obf btn btn-an d-flex align-items-right justify-content-center" url_obf="<?= url_obfuscation($regionales2021['source']) ?>">source</span>
-        </div>
+        <?= $title ?> est candidat aux prochaines élections régionales, dans la région <?= $regionales2021['district'] ?>.  
     </div>
   <?php endif; ?>
   <div class="container-fluid bloc-img-deputes async_background" id="container-always-fluid" data-src="<?= asset_url() ?>imgs/cover/hemicycle-front.jpg" data-tablet="<?= asset_url() ?>imgs/cover/hemicycle-front-768.jpg" data-mobile="<?= asset_url() ?>imgs/cover/hemicycle-front-375.jpg" style="height: 13em">
