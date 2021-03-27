@@ -1,4 +1,3 @@
-<pre><?php var_dump($regionales2021)?></pre>
   <?php if (($regionales2021 && $regionales2021['visible']) || isset($_GET['regionales2021'])) : ?>
     <div class="container-fluid electionBanner d-flex justify-content-center align-items-center py-4">
       <span class="text-center">

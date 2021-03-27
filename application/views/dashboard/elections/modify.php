@@ -20,7 +20,7 @@
           <div class="card">
             <div class="card-body">
               <?php 
-                echo form_open_multipart('admin/elections/modify');
+                echo form_open_multipart('admin/elections/candidat/modify/'.$candidat['mpId']);
               ?>
               <div class="form-group">
                 <label>Député</label>
