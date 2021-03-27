@@ -36,6 +36,8 @@
                 <th>position</th>
                 <th>nuance</th>
                 <th>source</th>
+                <th>visible</th>
+                <th></th>
               </tr>
             </thead>
             <tbody>
@@ -43,23 +45,20 @@
               <?php foreach ($candidats as $candidat) : ?>
                 <tr>
                   <td><?= $candidat['id'] ?></td>
-                  <td><a target="_blank" href="<?php echo base_url(); ?>deputes/<?php echo $candidat['dptSlug'].'/depute_'.$candidat['nameUrl'] ?>" class="stretched-link no-decoration"><?php echo $candidat['nameFirst'] .' ' . $candidat['nameLast'] ?></a></td>
+                  <td><a target="_blank" href="<?php echo base_url(); ?>deputes/<?php echo $candidat['dptSlug'].'/depute_'.$candidat['nameUrl'] ?>"><?php echo $candidat['nameFirst'] .' ' . $candidat['nameLast'] ?></a></td>
                   <td><?= $candidat['election_libelle'] ?></td>
                   <td><?= $candidat['district'] ?></td>
                   <td><?= $candidat['position'] ?></td>
                   <td><?= $candidat['nuance'] ?></td>
                   <td><?= $candidat['source'] ?></td>
-                  <td><a target="_blank" href="<?php echo base_url(); ?>deputes/<?php echo $candidat['dptSlug'].'/depute_'.$candidat['nameUrl'].'?regionales2021' ?>" class="stretched-link no-decoration">Preview</a></td>
+                  <td><?= $candidat['visible'] ?></td>
                   <td>
                     <?php if ($usernameType != "admin") : ?>
                     <?php else : ?>
-                      <a href="<?= base_url() ?>admin/elections/candidat/modify<?= $candidat['id'] ?>" ?>modifier</a>
+                      <a class="btn btn-link" href="<?= base_url() ?>admin/elections/candidat/modify<?= $candidat['id'] ?>" ?>modifier</a><br/>
+                      <a class="btn btn-link" href="<?= base_url() ?>admin/elections/candidat/delete<?= $candidat['id'] ?>">supprimer</a><br/>
                     <?php endif; ?>
-                  </td>
-                  <td>
-                    <?php if ($usernameType == "admin") : ?>
-                      <a href="<?= base_url() ?>admin/votes/delete/<?= $candidat['id'] ?>">supprimer</a>
-                    <?php endif; ?>
+                    <a class="btn btn-link" target="_blank" href="<?php echo base_url(); ?>deputes/<?php echo $candidat['dptSlug'].'/depute_'.$candidat['nameUrl'].'?regionales2021' ?>">Preview</a><br/>
                   </td>
                 </tr>
               <?php endforeach; ?>
