@@ -49,6 +49,7 @@
                   <td><?= $candidat['position'] ?></td>
                   <td><?= $candidat['nuance'] ?></td>
                   <td><?= $candidat['source'] ?></td>
+                  <td><a target="_blank" href="<?php echo base_url(); ?>deputes/<?php echo $candidat['dptSlug'].'/depute_'.$candidat['nameUrl'].'?regionales2021' ?>" class="stretched-link no-decoration">Preview</a></td>
                   <td>
                     <?php if ($usernameType != "admin") : ?>
                     <?php else : ?>
