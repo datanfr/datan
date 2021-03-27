@@ -90,6 +90,29 @@
 
     }
 
+    public function delete_candidat($candidateMpId){
+      $data['username'] = $this->session->userdata('username');
+      $data['usernameType'] = $this->session->userdata("type");
+
+      if ($data['usernameType'] != "admin") {
+        redirect();
+      } else {
+        $data['candidat'] = $this->elections_model->get_candidate_full($candidateMpId, 1/*Regionales 2021*/);
+
+        $data['title'] = 'Supprimer un candidat';
+      //Form valiation
+      $this->form_validation->set_rules('mpId', 'mpId', 'required');
+      if ($this->form_validation->run() === FALSE) {
+        $this->load->view('dashboard/header', $data);
+        $this->load->view('dashboard/elections/delete', $data);
+        $this->load->view('dashboard/footer');
+      } else {
+          $this->admin_model->delete_candidat();
+          redirect('admin/elections');
+      }
+      }
+
+    }
 
     public function votes(){
       $data['username'] = $this->session->userdata('username');
