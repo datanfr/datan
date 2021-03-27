@@ -47,6 +47,10 @@
                 <label>Source</label>
                 <input name="source" class="form-control" type="text" value="<?= $candidat['source']?>" placeholder="ex:  https://www.ouest-france.fr/elections/regionales/elections-regionales-en-pays-de-la-loire-qui-seront-les-candidats-en-juin-2021-7190091"></input>
               </div>
+              <div class="form-group">
+                <label>Visible</label>
+                <input name="visible" class="form-control" type="checkbox" <?= $candidat['visible'] ? 'checked': ''?> value="true"></input>
+              </div>
               <button type="submit" class="btn btn-primary">Submit</button>
               </form>
 

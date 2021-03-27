@@ -28,7 +28,8 @@ class Admin_model extends CI_Model
       'district' => $this->input->post('district'),
       'position' =>  $this->input->post('position'),
       'nuance' =>  $this->input->post('nuance'),
-      'source' =>  $this->input->post('source')
+      'source' =>  $this->input->post('source'),
+      'visible' => $this->input->post('visible') ? true : false 
     );
 
     $query = $this->db->get_where(
@@ -49,7 +50,8 @@ class Admin_model extends CI_Model
       'district' => $this->input->post('district'),
       'position' =>  $this->input->post('position'),
       'nuance' =>  $this->input->post('nuance'),
-      'source' =>  $this->input->post('source')
+      'source' =>  $this->input->post('source'),
+      'visible' => $this->input->post('visible') ? true : false
     );
 
     $this->db->set($data);
