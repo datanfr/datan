@@ -35,6 +35,10 @@
 
       $data['candidats'] = $this->elections_model->get_all_candidate(1/* Régionales 2021 */);
 
+      // echo "<pre>";
+      // var_dump($data);
+      // echo "</pre>";
+
       $this->load->view('dashboard/header', $data);
       $this->load->view('dashboard/elections/list', $data);
       $this->load->view('dashboard/footer');
@@ -48,16 +52,31 @@
       $data['categories'] = $this->fields_model->get_fields();
       $data['groupes'] = $this->groupes_model->get_groupes_all(true, 15);
 
+      
       //Form valiation
       $this->form_validation->set_rules('depute_url', 'Url député', 'required');
-
       if ($this->form_validation->run() === FALSE) {
         $this->load->view('dashboard/header', $data);
         $this->load->view('dashboard/elections/create', $data);
         $this->load->view('dashboard/footer');
       } else {
-        $this->admin_model->create_vote($user_id);
-        redirect('admin/elections');
+        $path = parse_url($this->input->post('depute_url'), PHP_URL_PATH);
+        $nameUrl = substr(explode('/', $path)[3], 7);
+        // echo "<pre>";
+        // var_dump($nameUrl);
+        // echo "</pre>";
+        $depute = $this->deputes_model->get_depute_by_nameUrl($nameUrl);
+        // echo "<pre>";
+        // var_dump($depute);
+        // echo "</pre>";
+        if ($depute) {
+          $this->admin_model->create_candidat($user_id, $depute);
+          redirect('admin/elections');
+        } else {
+          $this->load->view('dashboard/header', $data);
+          $this->load->view('dashboard/elections/create', $data);
+          $this->load->view('dashboard/footer');
+        }
       }
 
     }

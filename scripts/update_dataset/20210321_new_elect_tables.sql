@@ -37,7 +37,7 @@ CREATE TABLE IF NOT EXISTS `elect_deputes_candidats` (
   `position` varchar(50) NOT NULL,
   `nuance` varchar(25) DEFAULT NULL,
   `source` text NOT NULL,
-  `visible` boolean NOT NULL,
+  `visible` boolean NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
