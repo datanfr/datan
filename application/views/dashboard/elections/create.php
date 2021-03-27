@@ -19,7 +19,7 @@
         <div class="col-lg-12">
           <div class="card">
             <div class="card-body">
-              <?php echo form_open_multipart('admin/elections/create'); ?>
+              <?php echo form_open_multipart('admin/elections/candidat/create'); ?>
               <div class="form-group">
                 <label>Député</label>
                 <input name="depute_url" type="text" class="form-control" autocomplete="off" name="title" placeholder="ex: http://datan.fr/deputes/maine-et-loire-49/depute_matthieu-orphelin">
