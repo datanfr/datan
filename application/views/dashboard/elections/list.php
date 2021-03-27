@@ -55,8 +55,8 @@
                   <td>
                     <?php if ($usernameType != "admin") : ?>
                     <?php else : ?>
-                      <a class="btn btn-link" href="<?= base_url() ?>admin/elections/candidat/modify<?= $candidat['id'] ?>" ?>modifier</a><br/>
-                      <a class="btn btn-link" href="<?= base_url() ?>admin/elections/candidat/delete<?= $candidat['id'] ?>">supprimer</a><br/>
+                      <a class="btn btn-link" href="<?= base_url() ?>admin/elections/candidat/modify/<?= $candidat['mpId'] ?>" ?>modifier</a><br/>
+                      <a class="btn btn-link" href="<?= base_url() ?>admin/elections/candidat/delete/<?= $candidat['mpId'] ?>">supprimer</a><br/>
                     <?php endif; ?>
                     <a class="btn btn-link" target="_blank" href="<?php echo base_url(); ?>deputes/<?php echo $candidat['dptSlug'].'/depute_'.$candidat['nameUrl'].'?regionales2021' ?>">Preview</a><br/>
                   </td>

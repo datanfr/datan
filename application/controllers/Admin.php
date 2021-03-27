@@ -48,11 +48,8 @@
       $data['username'] = $this->session->userdata('username');
       $user_id = $this->session->userdata('user_id');
 
-      $data['title'] = 'Créer un nouveau vote décrypté';
-      $data['categories'] = $this->fields_model->get_fields();
-      $data['groupes'] = $this->groupes_model->get_groupes_all(true, 15);
+      $data['title'] = 'Créer un nouveau candidat';
 
-      
       //Form valiation
       $this->form_validation->set_rules('depute_url', 'Url député', 'required');
       if ($this->form_validation->run() === FALSE) {
@@ -62,19 +59,41 @@
       } else {
         $path = parse_url($this->input->post('depute_url'), PHP_URL_PATH);
         $nameUrl = substr(explode('/', $path)[3], 7);
-        // echo "<pre>";
-        // var_dump($nameUrl);
-        // echo "</pre>";
         $depute = $this->deputes_model->get_depute_by_nameUrl($nameUrl);
-        // echo "<pre>";
-        // var_dump($depute);
-        // echo "</pre>";
         if ($depute) {
           $this->admin_model->create_candidat($user_id, $depute);
           redirect('admin/elections');
         } else {
           $this->load->view('dashboard/header', $data);
           $this->load->view('dashboard/elections/create', $data);
+          $this->load->view('dashboard/footer');
+        }
+      }
+
+    }
+
+    public function modify_candidat($candidateMpId){
+      $data['username'] = $this->session->userdata('username');
+      $user_id = $this->session->userdata('user_id');
+
+      $data['title'] = 'Modifier un candidat';
+      $data['candidat'] = $this->elections_model->get_candidate_full($candidateMpId, 1/*Regionales 2021*/);
+      //Form valiation
+      $this->form_validation->set_rules('depute_url', 'Url député', 'required');
+      if ($this->form_validation->run() === FALSE) {
+        $this->load->view('dashboard/header', $data);
+        $this->load->view('dashboard/elections/modify', $data);
+        $this->load->view('dashboard/footer');
+      } else {
+        $path = parse_url($this->input->post('depute_url'), PHP_URL_PATH);
+        $nameUrl = substr(explode('/', $path)[3], 7);
+        $depute = $this->deputes_model->get_depute_by_nameUrl($nameUrl);
+        if ($depute) {
+          $this->admin_model->create_candidat($user_id, $depute);
+          redirect('admin/elections');
+        } else {
+          $this->load->view('dashboard/header', $data);
+          $this->load->view('dashboard/elections/modify', $data);
           $this->load->view('dashboard/footer');
         }
       }
