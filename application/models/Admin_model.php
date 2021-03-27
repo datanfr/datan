@@ -58,6 +58,12 @@ class Admin_model extends CI_Model
     $this->db->update('elect_deputes_candidats');
   }
 
+  public function delete_candidat()
+  {
+    $this->db->where('mpId', $this->input->post('mpId'));
+    $this->db->where('election', 1);
+    $this->db->delete('elect_deputes_candidats');
+  }
 
   public function create_vote($user_id)
   {
