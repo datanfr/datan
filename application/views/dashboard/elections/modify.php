@@ -19,10 +19,13 @@
         <div class="col-lg-12">
           <div class="card">
             <div class="card-body">
-              <?php echo form_open_multipart('admin/elections/create'); ?>
+              <?php 
+                echo form_open_multipart('admin/elections/modify');
+              ?>
               <div class="form-group">
                 <label>Député</label>
-                <input name="depute_url" type="text" class="form-control" autocomplete="off" name="title" placeholder="ex: http://datan.fr/deputes/maine-et-loire-49/depute_matthieu-orphelin">
+                <input type="text" class="form-control" autocomplete="off" readonly value="<?= $candidat['nameFirst'] .' ' . $candidat['nameLast'] . ' ('. $candidat['mpId'] . ')' ?>">
+                <input name="mpId" type="hidden" class="form-control" autocomplete="off" readonly value="<?= $candidat['mpId']?>">
               </div>
               <div class="form-group">
                 <label>Election</label>
@@ -30,19 +33,19 @@
               </div>
               <div class="form-group">
                 <label>Région de candidature</label>
-                <input name="district" class="form-control" type="text" placeholder="ex: Pays de la Loire"></input>
+                <input name="district" class="form-control" type="text" value="<?= $candidat['district']?>" placeholder="ex: Pays de la Loire"></input>
               </div>
               <div class="form-group">
                 <label>Position</label>
-                <input name="position" class="form-control" type="text" placeholder="ex: Tête de liste"></input>
+                <input name="position" class="form-control" type="text" value="<?= $candidat['position']?>" placeholder="ex: Tête de liste"></input>
               </div>
               <div class="form-group">
                 <label>Nuance</label>
-                <input name="nuance" class="form-control" type="text" placeholder="ex: ???"></input>
+                <input name="nuance" class="form-control" type="text" value="<?= $candidat['nuance']?>" placeholder="ex: ???"></input>
               </div>
               <div class="form-group">
                 <label>Source</label>
-                <input name="source" class="form-control" type="text" placeholder="ex:  https://www.ouest-france.fr/elections/regionales/elections-regionales-en-pays-de-la-loire-qui-seront-les-candidats-en-juin-2021-7190091"></input>
+                <input name="source" class="form-control" type="text" value="<?= $candidat['source']?>" placeholder="ex:  https://www.ouest-france.fr/elections/regionales/elections-regionales-en-pays-de-la-loire-qui-seront-les-candidats-en-juin-2021-7190091"></input>
               </div>
               <button type="submit" class="btn btn-primary">Submit</button>
               </form>

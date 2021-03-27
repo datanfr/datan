@@ -22,7 +22,7 @@
               <?php echo form_open_multipart('admin/elections/candidat/create'); ?>
               <div class="form-group">
                 <label>Député</label>
-                <input name="depute_url" type="text" class="form-control" autocomplete="off" name="title" placeholder="ex: http://datan.fr/deputes/maine-et-loire-49/depute_matthieu-orphelin">
+                <input name="depute_url" type="text" class="form-control" autocomplete="off" placeholder="ex: http://datan.fr/deputes/maine-et-loire-49/depute_matthieu-orphelin">
               </div>
               <div class="form-group">
                 <label>Election</label>
