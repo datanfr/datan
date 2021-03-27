@@ -20,7 +20,7 @@
         'election' => $election
       );
 
-      $query = $this->db->get_where('candidate_full', $whereQuery, 1);
+      $query = $this->db->get_where('candidate_full', $whereQuery);
 
       return $query->result_array();
     }
