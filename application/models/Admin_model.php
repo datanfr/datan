@@ -24,12 +24,12 @@ class Admin_model extends CI_Model
 
     $data = array(
       'mpId' => $depute['mpId'],
-      'election' => 1,
+      'election' => $this->input->post('election'),
       'district' => $this->input->post('district'),
       'position' =>  $this->input->post('position'),
       'nuance' =>  $this->input->post('nuance'),
       'source' =>  $this->input->post('source'),
-      'visible' => $this->input->post('visible') ? true : false 
+      'visible' => $this->input->post('visible') ? true : false
     );
 
     $query = $this->db->get_where(
@@ -56,14 +56,14 @@ class Admin_model extends CI_Model
 
     $this->db->set($data);
     $this->db->where('mpId', $this->input->post('mpId'));
-    $this->db->where('election', 1);
+    $this->db->where('election', $this->input->post('election'));
     $this->db->update('elect_deputes_candidats');
   }
 
   public function delete_candidat()
   {
     $this->db->where('mpId', $this->input->post('mpId'));
-    $this->db->where('election', 1);
+    $this->db->where('election', $this->input->post('election'));
     $this->db->delete('elect_deputes_candidats');
   }
 
