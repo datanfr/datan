@@ -49,6 +49,7 @@
       $user_id = $this->session->userdata('user_id');
 
       $data['title'] = 'Créer un nouveau candidat';
+      $data['positions'] = array('', 'Tête de liste', 'Colistier');
 
       //Form valiation
       $this->form_validation->set_rules('depute_url', 'député', 'required');
@@ -79,6 +80,7 @@
 
       $data['title'] = 'Modifier un candidat';
       $data['candidat'] = $this->elections_model->get_candidate_full($candidateMpId, 1/*Regionales 2021*/);
+      $data['positions'] = array('Tête de liste', 'Colistier');
       //Form valiation
       $this->form_validation->set_rules('mpId', 'mpId', 'required');
       $this->form_validation->set_rules('district', 'région de candidature', 'required');

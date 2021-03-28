@@ -40,8 +40,15 @@
                 <input name="district" class="form-control" type="text" value="<?= $candidat['district']?>" placeholder="ex: Pays de la Loire"></input>
               </div>
               <div class="form-group">
-                <label>Position</label>
-                <input name="position" class="form-control" type="text" value="<?= $candidat['position']?>" placeholder="ex: Tête de liste"></input>
+                <label for="">Position (tête de liste ou colistier)</label>
+                <select class="form-control" name="position">
+                  <option value="<?= $candidat['position'] ?>" selected="selected">Selectionné : <?= $candidat['position'] ?></option>
+                  <?php foreach ($positions as $position): ?>
+                    <?php if ($position !== $candidat['position']): ?>
+                      <option value="<?= $position ?>"><?= $position ?></option>
+                    <?php endif; ?>
+                  <?php endforeach; ?>
+                </select>
               </div>
               <div class="form-group">
                 <label>Nuance</label>
