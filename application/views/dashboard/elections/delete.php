@@ -19,8 +19,8 @@
         <div class="col-lg-12">
           <div class="card">
             <div class="card-body">
-              <?php 
-                echo form_open_multipart('admin/elections/candidat/delete/'.$candidat['mpId']);
+              <?php
+                echo form_open_multipart('admin/elections/candidat/delete/'.$candidat['mpId'].'?election='.$election['slug']);
               ?>
               <div class="form-group">
                 <label>Député</label>
@@ -29,7 +29,7 @@
               </div>
               <div class="form-group">
                 <label>Election</label>
-                <input class="form-control" type="text" readonly value="Régionales 2021"></input>
+                <input name="election" class="form-control" type="text" readonly value="<?= $election['id'] ?>"></input>
               </div>
               <div class="form-group">
                 <label>Région de candidature</label>

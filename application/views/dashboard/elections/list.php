@@ -17,7 +17,7 @@
     <div class="col-lg-12">
       <div class="card">
         <div class="card-body">
-          <a class="btn btn-primary" role="button" href="<?= base_url() ?>admin/elections/candidat/create">Ajouter un candidat</a>
+          <a class="btn btn-primary" role="button" href="<?= base_url() ?>admin/elections//candidat/create?election=<?= $election['slug'] ?>">Ajouter un candidat</a>
         </div>
       </div>
     </div>
@@ -26,16 +26,16 @@
     <div class="col-lg-12">
       <div class="card">
         <div class="card-body">
-          <table id="table_votes_datan" class="table table-bordered table-striped">
+          <table id="table_votes_datan" class="table table-bordered table-striped" data-order='[[6, "desc"]]'>
             <thead>
               <tr>
-                <th>Député</th>
-                <th>election id</th>
+                <th>député</th>
                 <th>district</th>
                 <th>position</th>
                 <th>nuance</th>
                 <th>source</th>
                 <th>visible</th>
+                <th>dernière modif</th>
                 <th></th>
               </tr>
             </thead>
@@ -44,21 +44,21 @@
               <?php foreach ($candidats as $candidat) : ?>
                 <tr>
                   <td><a target="_blank" href="<?php echo base_url(); ?>deputes/<?php echo $candidat['dptSlug'].'/depute_'.$candidat['nameUrl'] ?>"><?php echo $candidat['nameFirst'] .' ' . $candidat['nameLast'] ?></a></td>
-                  <td><?= $candidat['election_libelle'] ?></td>
-                  <td><?= $candidat['district'] ?></td>
+                  <td><?= $candidat['regionLibelle'] ?></td>
                   <td><?= $candidat['position'] ?></td>
                   <td><?= $candidat['nuance'] ?></td>
                   <td>
                     <a href="<?= $candidat['source'] ?>" target="_blank" rel="nofollow noopener noreferrer"><?= $candidat['source'] ?></a>
                   </td>
                   <td><?= $candidat['visible'] ?></td>
+                  <td><?= $candidat['modified_at'] ?></td>
                   <td>
                     <?php if ($usernameType != "admin") : ?>
                     <?php else : ?>
-                      <a class="btn btn-link" href="<?= base_url() ?>admin/elections/candidat/modify/<?= $candidat['mpId'] ?>" ?>modifier</a><br/>
-                      <a class="btn btn-link" href="<?= base_url() ?>admin/elections/candidat/delete/<?= $candidat['mpId'] ?>">supprimer</a><br/>
+                      <a class="btn btn-link" href="<?= base_url() ?>admin/elections/candidat/modify/<?= $candidat['mpId'] ?>?election=<?= $election['slug'] ?>" ?>modifier</a><br/>
+                      <a class="btn btn-link" href="<?= base_url() ?>admin/elections/candidat/delete/<?= $candidat['mpId'] ?>?election=<?= $election['slug'] ?>">supprimer</a><br/>
                     <?php endif; ?>
-                    <a class="btn btn-link" target="_blank" href="<?php echo base_url(); ?>deputes/<?php echo $candidat['dptSlug'].'/depute_'.$candidat['nameUrl'].'?regionales2021' ?>">Preview</a><br/>
+                    <a class="btn btn-link" target="_blank" href="<?php echo base_url(); ?>deputes/<?php echo $candidat['dptSlug'].'/depute_'.$candidat['nameUrl'].'?regionales2021' ?>">preview</a><br/>
                   </td>
                 </tr>
               <?php endforeach; ?>

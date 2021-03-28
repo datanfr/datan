@@ -24,7 +24,7 @@
           <div class="card">
             <div class="card-body">
               <?php
-                echo form_open_multipart('admin/elections/candidat/modify/'.$candidat['mpId']);
+                echo form_open_multipart('admin/elections/candidat/modify/'.$candidat['mpId'].'?election='.$election['slug']);
               ?>
               <div class="form-group">
                 <label>Député</label>
@@ -33,11 +33,18 @@
               </div>
               <div class="form-group">
                 <label>Election</label>
-                <input class="form-control" type="text" readonly value="Régionales 2021"></input>
+                <input name="election" class="form-control" type="text" readonly value="<?= $election['id'] ?>"></input>
               </div>
               <div class="form-group">
-                <label>Région de candidature</label>
-                <input name="district" class="form-control" type="text" value="<?= $candidat['district']?>" placeholder="ex: Pays de la Loire"></input>
+                <label for="">Région de candidature</label>
+                <select class="form-control" name="district">
+                  <option value="<?= $candidat['position'] ?>" selected="selected">Selectionné : <?= $candidat['regionLibelle'] ?></option>
+                  <?php foreach ($regions as $region): ?>
+                    <?php if ($region['libelle'] !== $candidat['regionLibelle']): ?>
+                      <option value="<?= $region['id'] ?>"><?= $region['libelle'] ?></option>
+                    <?php endif; ?>
+                  <?php endforeach; ?>
+                </select>
               </div>
               <div class="form-group">
                 <label for="">Position (tête de liste ou colistier)</label>
@@ -51,8 +58,8 @@
                 </select>
               </div>
               <div class="form-group">
-                <label>Nuance</label>
-                <input name="nuance" class="form-control" type="text" value="<?= $candidat['nuance']?>" placeholder="ex: ???"></input>
+                <label>Nuance (ne pas remplir)</label>
+                <input name="nuance" class="form-control" type="text" placeholder="Ne pas remplir pour le moment" readonly>
               </div>
               <div class="form-group">
                 <label>Source</label>
