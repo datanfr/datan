@@ -17,9 +17,13 @@
     <div class="container-fluid">
       <div class="row">
         <div class="col-lg-12">
+          <?php if (!empty(validation_errors())): ?>
+            <p class="bg-danger">Certains champs n'ont pas été renseignés. Voir ci-dessous.</p>
+            <?php echo validation_errors(); ?>
+          <?php endif; ?>
           <div class="card">
             <div class="card-body">
-              <?php 
+              <?php
                 echo form_open_multipart('admin/elections/candidat/modify/'.$candidat['mpId']);
               ?>
               <div class="form-group">
