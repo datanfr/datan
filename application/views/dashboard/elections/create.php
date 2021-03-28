@@ -17,6 +17,10 @@
     <div class="container-fluid">
       <div class="row">
         <div class="col-lg-12">
+          <?php if (!empty(validation_errors())): ?>
+            <p class="bg-danger">Certains champs n'ont pas été renseignés. Voir ci-dessous.</p>
+            <?php echo validation_errors(); ?>
+          <?php endif; ?>
           <div class="card">
             <div class="card-body">
               <?php echo form_open_multipart('admin/elections/candidat/create'); ?>
@@ -41,7 +45,7 @@
                 <input name="nuance" class="form-control" type="text" placeholder="ex: ???"></input>
               </div>
               <div class="form-group">
-                <label>Source</label>
+                <label>Source (article de presse)</label>
                 <input name="source" class="form-control" type="text" placeholder="ex:  https://www.ouest-france.fr/elections/regionales/elections-regionales-en-pays-de-la-loire-qui-seront-les-candidats-en-juin-2021-7190091"></input>
               </div>
               <div class="form-group">

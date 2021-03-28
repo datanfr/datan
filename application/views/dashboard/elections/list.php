@@ -29,7 +29,6 @@
           <table id="table_votes_datan" class="table table-bordered table-striped">
             <thead>
               <tr>
-                <th>id</th>
                 <th>Député</th>
                 <th>election id</th>
                 <th>district</th>
@@ -44,13 +43,14 @@
               <?php if (!isset($candidats)) $candidats = [] ?>
               <?php foreach ($candidats as $candidat) : ?>
                 <tr>
-                  <td><?= $candidat['id'] ?></td>
                   <td><a target="_blank" href="<?php echo base_url(); ?>deputes/<?php echo $candidat['dptSlug'].'/depute_'.$candidat['nameUrl'] ?>"><?php echo $candidat['nameFirst'] .' ' . $candidat['nameLast'] ?></a></td>
                   <td><?= $candidat['election_libelle'] ?></td>
                   <td><?= $candidat['district'] ?></td>
                   <td><?= $candidat['position'] ?></td>
                   <td><?= $candidat['nuance'] ?></td>
-                  <td><?= $candidat['source'] ?></td>
+                  <td>
+                    <a href="<?= $candidat['source'] ?>" target="_blank" rel="nofollow noopener noreferrer"><?= $candidat['source'] ?></a>
+                  </td>
                   <td><?= $candidat['visible'] ?></td>
                   <td>
                     <?php if ($usernameType != "admin") : ?>
