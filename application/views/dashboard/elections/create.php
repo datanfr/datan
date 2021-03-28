@@ -37,8 +37,12 @@
                 <input name="district" class="form-control" type="text" placeholder="ex: Pays de la Loire"></input>
               </div>
               <div class="form-group">
-                <label>Position</label>
-                <input name="position" class="form-control" type="text" placeholder="ex: Tête de liste"></input>
+                <label for="">Position (tête de liste ou colistier)</label>
+                <select class="form-control" name="position">
+                  <?php foreach ($positions as $position): ?>
+                    <option value="<?= $position ?>"><?= $position ?></option>
+                  <?php endforeach; ?>
+                </select>
               </div>
               <div class="form-group">
                 <label>Nuance</label>
