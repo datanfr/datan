@@ -53,7 +53,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 // ADMIN
 $route['admin'] = 'admin/index';
 $route['admin/votes'] = 'admin/votes';
-$route['admin/elections'] = 'admin/elections';
+$route['admin/elections/(:any)'] = 'admin/election_candidates/$1';
 $route['admin/elections/candidat/create'] = 'admin/create_candidat';
 $route['admin/elections/candidat/modify/(:any)'] = 'admin/modify_candidat/$1';
 $route['admin/elections/candidat/delete/(:any)'] = 'admin/delete_candidat/$1';

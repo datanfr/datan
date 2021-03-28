@@ -32,11 +32,12 @@ DROP TABLE IF EXISTS `elect_deputes_candidats`;
 CREATE TABLE IF NOT EXISTS `elect_deputes_candidats` (
   `mpId` varchar(15) NOT NULL,
   `election` tinyint(4) NOT NULL,
-  `district` varchar(50) NOT NULL,
+  `district` int(5) NOT NULL,
   `position` varchar(50) NOT NULL,
   `nuance` varchar(25) DEFAULT NULL,
   `source` text NOT NULL,
   `visible` boolean NOT NULL DEFAULT 0,
+  `modified_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`mpId`, `election`)
 ) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
@@ -45,7 +46,7 @@ CREATE TABLE IF NOT EXISTS `elect_deputes_candidats` (
 --
 
 INSERT INTO `elect_deputes_candidats` (`mpId`, `election`, `district`, `position`, `nuance`, `source`) VALUES
-('PA720278', 1, 'Pays de la Loire', 'Tête de liste', NULL, 'https://www.ouest-france.fr/elections/regionales/elections-regionales-en-pays-de-la-loire-qui-seront-les-candidats-en-juin-2021-7190091');
+('PA720278', 1, 52, 'Tête de liste', NULL, 'https://www.ouest-france.fr/elections/regionales/elections-regionales-en-pays-de-la-loire-qui-seront-les-candidats-en-juin-2021-7190091');
 
 DROP VIEW IF EXISTS `candidate_full`;
 -- --------------------------------------------------------
@@ -53,7 +54,7 @@ DROP VIEW IF EXISTS `candidate_full`;
 CREATE VIEW candidate_full AS SELECT
   edc.mpId as mpId, `election`, `district`, `position`, `nuance`, `source`, `visible`,
   `legislature`, `nameUrl`, `civ`, `nameFirst`, `nameLast`, `age`, `dptSlug`, `departementNom`, `departementCode`, `circo`, `mandatId`, dl.`libelle` as "depute_libelle", dl.`libelleAbrev` as "depute_libelleAbrev", `groupeId`, `groupeMandat`, `couleurAssociee`, `dateFin`, `datePriseFonction`, `causeFin`, `img`, `imgOgp`, `dateMaj`, `libelle_1`, `libelle_2`, `active`,
-  el.`id` as "election_id", el.`libelle` as "election_libelle", el.`libelleAbrev` as "election_libelleAbrev", `dateYear`, `dateFirstRound`, `dateSecondRound`
+  el.`id` as "election_id", el.`libelle` as "election_libelle", el.`libelleAbrev` as "election_libelleAbrev", `dateYear`, `dateFirstRound`, `dateSecondRound`, edc.`modified_at`
   FROM elect_deputes_candidats edc
   LEFT JOIN deputes_last dl ON edc.mpId = dl.mpId
   LEFT JOIN elect_libelle el ON edc.election = el.id;
@@ -68,6 +69,7 @@ CREATE TABLE IF NOT EXISTS `elect_libelle` (
   `libelle` varchar(255) NOT NULL,
   `libelleAbrev` varchar(255) NOT NULL,
   `dateYear` year(4) NOT NULL,
+  `slug` varchar(50) NOT NULL,
   `dateFirstRound` date NOT NULL,
   `dateSecondRound` date DEFAULT NULL,
   PRIMARY KEY (`id`)
@@ -77,8 +79,8 @@ CREATE TABLE IF NOT EXISTS `elect_libelle` (
 -- Déchargement des données de la table `elect_libelle`
 --
 
-INSERT INTO `elect_libelle` (`id`, `libelle`, `libelleAbrev`, `dateYear`, `dateFirstRound`, `dateSecondRound`) VALUES
-(1, 'Élections régionales', 'Régionales', 2021, '2021-06-13', '2021-06-20');
+INSERT INTO `elect_libelle` (`id`, `libelle`, `libelleAbrev`, `dateYear`, `slug`, `dateFirstRound`, `dateSecondRound`) VALUES
+(1, 'Élections régionales', 'Régionales', 2021, 'regionales-2021', '2021-06-13', '2021-06-20');
 COMMIT;
 
 --
@@ -87,7 +89,7 @@ COMMIT;
 
 DROP TABLE IF EXISTS `regions`;
 CREATE TABLE IF NOT EXISTS `regions` (
-  `reg` varchar(3) DEFAULT NULL,
+  `id` tinyint(3) DEFAULT NULL,
   `cheflieu` varchar(8) DEFAULT NULL,
   `tncc` varchar(4) DEFAULT NULL,
   `ncc` varchar(26) DEFAULT NULL,
@@ -99,7 +101,7 @@ CREATE TABLE IF NOT EXISTS `regions` (
 -- Déchargement des données de la table `regions`
 --
 
-INSERT INTO `regions` (`reg`, `cheflieu`, `tncc`, `ncc`, `nccner`, `libelle`) VALUES
+INSERT INTO `regions` (`id`, `cheflieu`, `tncc`, `ncc`, `nccner`, `libelle`) VALUES
 ('01', '97105', '3', 'GUADELOUPE', 'Guadeloupe', 'Guadeloupe'),
 ('02', '97209', '3', 'MARTINIQUE', 'Martinique', 'Martinique'),
 ('03', '97302', '3', 'GUYANE', 'Guyane', 'Guyane'),

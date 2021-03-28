@@ -23,18 +23,22 @@
           <?php endif; ?>
           <div class="card">
             <div class="card-body">
-              <?php echo form_open_multipart('admin/elections/candidat/create'); ?>
+              <?php echo form_open_multipart('admin/elections/candidat/create?election=' . $election['slug']); ?>
               <div class="form-group">
                 <label>Député</label>
                 <input name="depute_url" type="text" class="form-control" autocomplete="off" placeholder="ex: http://datan.fr/deputes/maine-et-loire-49/depute_matthieu-orphelin">
               </div>
               <div class="form-group">
                 <label>Election</label>
-                <input class="form-control" type="text" readonly value="Régionales 2021"></input>
+                <input name="election" class="form-control" type="text" value="<?= $election['id'] ?>" placeholder="<?= $election['libelle'] ?> <?= $election['dateYear'] ?>" readonly></input>
               </div>
               <div class="form-group">
-                <label>Région de candidature</label>
-                <input name="district" class="form-control" type="text" placeholder="ex: Pays de la Loire"></input>
+                <label for="">Région de candidature</label>
+                <select class="form-control" name="district">
+                  <?php foreach ($regions as $region): ?>
+                    <option value="<?= $region['id'] ?>"><?= $region['libelle'] ?></option>
+                  <?php endforeach; ?>
+                </select>
               </div>
               <div class="form-group">
                 <label for="">Position (tête de liste ou colistier)</label>
@@ -45,8 +49,8 @@
                 </select>
               </div>
               <div class="form-group">
-                <label>Nuance</label>
-                <input name="nuance" class="form-control" type="text" placeholder="ex: ???"></input>
+                <label>Nuance (ne pas remplir)</label>
+                <input name="nuance" class="form-control" type="text" placeholder="Ne pas remplir pour le moment" readonly>
               </div>
               <div class="form-group">
                 <label>Source (article de presse)</label>

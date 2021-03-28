@@ -219,7 +219,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
              </a>
              <ul class="nav nav-treeview">
                <li class="nav-item">
-                 <a href="<?= base_url() ?>admin/elections" class="nav-link">
+                 <a href="<?= base_url() ?>admin/elections/regionales-2021" class="nav-link">
                    <i class="far fa-circle nav-icon"></i>
                    <p>Régionales 2021</p>
                  </a>

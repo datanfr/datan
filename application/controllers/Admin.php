@@ -28,12 +28,18 @@
       $this->load->view('dashboard/footer');
     }
 
-    public function elections(){
+    public function election_candidates($slug){
+      $data['election'] = $this->elections_model->get_election($slug);
+
+      if (empty($data['election'])) {
+        show_404();
+      }
+
       $data['username'] = $this->session->userdata('username');
       $data['usernameType'] = $this->session->userdata('type');
       $data['title'] = 'Liste candidats aux élections';
 
-      $data['candidats'] = $this->elections_model->get_all_candidate(1/* Régionales 2021 */);
+    $data['candidats'] = $this->elections_model->get_all_candidate($data['election']['id']);
 
       // echo "<pre>";
       // var_dump($data);
@@ -45,11 +51,21 @@
     }
 
     public function create_candidat(){
+      if (!isset($_GET['election'])) {
+        redirect('admin');
+      }
+      $slug = $_GET['election'];
+      $data['election'] = $this->elections_model->get_election($slug);
+      if (empty($data['election'])) {
+        show_404();
+      }
+
       $data['username'] = $this->session->userdata('username');
       $user_id = $this->session->userdata('user_id');
 
-      $data['title'] = 'Créer un nouveau candidat';
+      $data['title'] = 'Créer un nouveau candidat pour les ' . $data['election']['libelleAbrev'] . ' ' . $data['election']['dateYear'];
       $data['positions'] = array('', 'Tête de liste', 'Colistier');
+      $data['regions'] = $this->elections_model->get_all_regions();
 
       //Form valiation
       $this->form_validation->set_rules('depute_url', 'député', 'required');
@@ -65,7 +81,8 @@
         $depute = $this->deputes_model->get_depute_by_nameUrl($nameUrl);
         if ($depute) {
           $this->admin_model->create_candidat($user_id, $depute);
-          redirect('admin/elections');
+          $election = $this->elections_model->get_election_by_id($this->input->post('election'));
+          redirect('admin/elections/' . $election['slug']);
         } else {
           $this->load->view('dashboard/header', $data);
           $this->load->view('dashboard/elections/create', $data);
@@ -76,11 +93,26 @@
     }
 
     public function modify_candidat($candidateMpId){
+      if (!isset($_GET['election'])) {
+        redirect('admin');
+      }
+      $slug = $_GET['election'];
+      $data['election'] = $this->elections_model->get_election($slug);
+      if (empty($data['election'])) {
+        show_404();
+      }
+
       $data['username'] = $this->session->userdata('username');
 
-      $data['title'] = 'Modifier un candidat';
-      $data['candidat'] = $this->elections_model->get_candidate_full($candidateMpId, 1/*Regionales 2021*/);
+      $data['title'] = 'Modifier un candidat pour les ' . $data['election']['libelleAbrev'] . ' ' . $data['election']['dateYear'];
+      $data['candidat'] = $this->elections_model->get_candidate_full($candidateMpId, $data['election']['id']);
+
+      if (empty($data['candidat'])) {
+        redirect('admin/elections/' . $data['election']['slug']);
+      }
+
       $data['positions'] = array('Tête de liste', 'Colistier');
+      $data['regions'] = $this->elections_model->get_all_regions();
       //Form valiation
       $this->form_validation->set_rules('mpId', 'mpId', 'required');
       $this->form_validation->set_rules('district', 'région de candidature', 'required');
@@ -91,12 +123,22 @@
         $this->load->view('dashboard/footer');
       } else {
           $this->admin_model->modify_candidat();
-          redirect('admin/elections');
+          $election = $this->elections_model->get_election_by_id($this->input->post('election'));
+          redirect('admin/elections/' . $election['slug']);
       }
 
     }
 
     public function delete_candidat($candidateMpId){
+      if (!isset($_GET['election'])) {
+        redirect('admin');
+      }
+      $slug = $_GET['election'];
+      $data['election'] = $this->elections_model->get_election($slug);
+      if (empty($data['election'])) {
+        show_404();
+      }
+
       $data['username'] = $this->session->userdata('username');
       $data['usernameType'] = $this->session->userdata("type");
 
@@ -105,7 +147,7 @@
       } else {
         $data['candidat'] = $this->elections_model->get_candidate_full($candidateMpId, 1/*Regionales 2021*/);
 
-        $data['title'] = 'Supprimer un candidat';
+        $data['title'] = 'Supprimer un candidat pour les ' . $data['election']['libelleAbrev'] . ' ' . $data['election']['dateYear'];
       //Form valiation
       $this->form_validation->set_rules('mpId', 'mpId', 'required');
       if ($this->form_validation->run() === FALSE) {
@@ -114,7 +156,8 @@
         $this->load->view('dashboard/footer');
       } else {
           $this->admin_model->delete_candidat();
-          redirect('admin/elections');
+          $election = $this->elections_model->get_election_by_id($this->input->post('election'));
+          redirect('admin/elections/' . $election['slug']);
       }
       }
 
