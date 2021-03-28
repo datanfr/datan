@@ -30,7 +30,6 @@ SET time_zone = "+00:00";
 
 DROP TABLE IF EXISTS `elect_deputes_candidats`;
 CREATE TABLE IF NOT EXISTS `elect_deputes_candidats` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
   `mpId` varchar(15) NOT NULL,
   `election` tinyint(4) NOT NULL,
   `district` varchar(50) NOT NULL,
@@ -38,26 +37,26 @@ CREATE TABLE IF NOT EXISTS `elect_deputes_candidats` (
   `nuance` varchar(25) DEFAULT NULL,
   `source` text NOT NULL,
   `visible` boolean NOT NULL DEFAULT 0,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`mpId`, `election`)
 ) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
 --
 -- Déchargement des données de la table `elect_deputes_candidats`
 --
 
-INSERT INTO `elect_deputes_candidats` (`id`, `mpId`, `election`, `district`, `position`, `nuance`, `source`) VALUES
-(1, 'PA720278', 1, 'Pays de la Loire', 'Tête de liste', NULL, 'https://www.ouest-france.fr/elections/regionales/elections-regionales-en-pays-de-la-loire-qui-seront-les-candidats-en-juin-2021-7190091');
+INSERT INTO `elect_deputes_candidats` (`mpId`, `election`, `district`, `position`, `nuance`, `source`) VALUES
+('PA720278', 1, 'Pays de la Loire', 'Tête de liste', NULL, 'https://www.ouest-france.fr/elections/regionales/elections-regionales-en-pays-de-la-loire-qui-seront-les-candidats-en-juin-2021-7190091');
 
 DROP VIEW IF EXISTS `candidate_full`;
 -- --------------------------------------------------------
 -- --------------------------------------------------------
-CREATE VIEW candidate_full AS SELECT 
-  edc.mpId as mpId, edc.id as id, `election`, `district`, `position`, `nuance`, `source`, `visible`,
-  dl.`id` as "depute_id", /*`mpId`,*/ `legislature`, `nameUrl`, `civ`, `nameFirst`, `nameLast`, `age`, `dptSlug`, `departementNom`, `departementCode`, `circo`, `mandatId`, dl.`libelle` as "depute_libelle", dl.`libelleAbrev` as "depute_libelleAbrev", `groupeId`, `groupeMandat`, `couleurAssociee`, `dateFin`, `datePriseFonction`, `causeFin`, `img`, `imgOgp`, `dateMaj`, `libelle_1`, `libelle_2`, `active`,
+CREATE VIEW candidate_full AS SELECT
+  edc.mpId as mpId, `election`, `district`, `position`, `nuance`, `source`, `visible`,
+  `legislature`, `nameUrl`, `civ`, `nameFirst`, `nameLast`, `age`, `dptSlug`, `departementNom`, `departementCode`, `circo`, `mandatId`, dl.`libelle` as "depute_libelle", dl.`libelleAbrev` as "depute_libelleAbrev", `groupeId`, `groupeMandat`, `couleurAssociee`, `dateFin`, `datePriseFonction`, `causeFin`, `img`, `imgOgp`, `dateMaj`, `libelle_1`, `libelle_2`, `active`,
   el.`id` as "election_id", el.`libelle` as "election_libelle", el.`libelleAbrev` as "election_libelleAbrev", `dateYear`, `dateFirstRound`, `dateSecondRound`
   FROM elect_deputes_candidats edc
   LEFT JOIN deputes_last dl ON edc.mpId = dl.mpId
-  LEFT JOIN elect_libelle el ON edc.election = el.id
+  LEFT JOIN elect_libelle el ON edc.election = el.id;
 
 --
 -- Structure de la table `elect_libelle`
