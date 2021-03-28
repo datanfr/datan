@@ -51,7 +51,9 @@
       $data['title'] = 'Créer un nouveau candidat';
 
       //Form valiation
-      $this->form_validation->set_rules('depute_url', 'Url député', 'required');
+      $this->form_validation->set_rules('depute_url', 'député', 'required');
+      $this->form_validation->set_rules('district', 'région de candidature', 'required');
+      $this->form_validation->set_rules('source', 'source', 'required');
       if ($this->form_validation->run() === FALSE) {
         $this->load->view('dashboard/header', $data);
         $this->load->view('dashboard/elections/create', $data);
@@ -79,6 +81,8 @@
       $data['candidat'] = $this->elections_model->get_candidate_full($candidateMpId, 1/*Regionales 2021*/);
       //Form valiation
       $this->form_validation->set_rules('mpId', 'mpId', 'required');
+      $this->form_validation->set_rules('district', 'région de candidature', 'required');
+      $this->form_validation->set_rules('source', 'source', 'required');
       if ($this->form_validation->run() === FALSE) {
         $this->load->view('dashboard/header', $data);
         $this->load->view('dashboard/elections/modify', $data);
