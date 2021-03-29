@@ -5,7 +5,6 @@
     public function __construct() {
       parent::__construct();
       $this->load->model('post_model');
-      $this->load->model('breadcrumb_model');
       $this->load->model('votes_model');
     }
 
@@ -101,7 +100,7 @@
         }
       }
       // foreach($groupes as $key => $groupe){
-      //   $groupes[$key]['averageScore'] = $groupes[$key]['score'] / $groupes[$key]['totalVote']; 
+      //   $groupes[$key]['averageScore'] = $groupes[$key]['score'] / $groupes[$key]['totalVote'];
       // }
       usort($deputes, function($a, $b){
         return $a > $b;

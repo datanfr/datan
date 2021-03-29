@@ -90,7 +90,25 @@
       GROUP BY da.groupeId
       HAVING libelle IS NOT NULL
       ');
-      return $query->result_array();
+      return $query->row_array();
+    }
+
+    public function get_depute_by_nameUrl($nameUrl) {
+      $whereQuery = array(
+        'nameUrl' => $nameUrl
+      );
+
+      $query = $this->db->get_where('deputes_last', $whereQuery, 1);
+      return $query->row_array();
+    }
+
+    public function get_depute_by_mpId($mpId) {
+      $whereQuery = array(
+        'mpId' => $mpId
+      );
+
+      $query = $this->db->get_where('deputes_last', $whereQuery, 1);
+      return $query->row_array();
     }
 
     public function get_depute_individual($nameUrl, $dpt){

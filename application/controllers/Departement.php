@@ -5,7 +5,6 @@
       $this->load->model('departement_model');
       $this->load->model('deputes_model');
       $this->load->model('groupes_model');
-      $this->load->model('breadcrumb_model');
       //$this->load->helper('url');
       //$this->password_model->security_password(); Former login protection
     }

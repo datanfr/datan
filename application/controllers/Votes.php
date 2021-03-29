@@ -3,7 +3,6 @@
     public function __construct() {
       parent::__construct();
       $this->load->model('votes_model');
-      $this->load->model('breadcrumb_model');
       $this->load->model('fields_model');
       $this->load->model('groupes_model');
       //$this->password_model->security_password(); Former login protection
