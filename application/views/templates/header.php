@@ -223,13 +223,12 @@
                         <div class="dropdown-divider"></div>
                         <a class="dropdown-item no-decoration" href="<?= base_url(); ?>scripts/">Scripts</a>
                       <?php endif; ?>
+                      <?php if ($this->session->userdata('logged_in')): ?>
+                        <div class="dropdown-divider"></div>
+                        <a href="<?= base_url(); ?>logout" class="dropdown-item no-decoration">Déconnexion</a>
+                      <?php endif; ?>
                     </div>
                   </li>
-                  <?php endif; ?>
-                  <?php if ($this->session->userdata('logged_in')): ?>
-                    <li class="nav-item">
-                      <a href="<?= base_url(); ?>logout" class="nav-link no-decoration">Déconnexion</a>
-                    </li>
                   <?php endif; ?>
               </ul>
             </div>

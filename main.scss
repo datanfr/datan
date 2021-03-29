@@ -829,7 +829,7 @@ body:not(.pg-mentions) #tarteaucitronAlertSmall {
 ################
 */
 body{
-  padding-top: 70px;
+  padding-top: 73px;
 }
 #navbar-datan{
   background-color: $bg-colour;
@@ -1457,6 +1457,19 @@ ul.ui-menu{
         font-weight: 700;
       }
     }
+  }
+}
+/*
+################
+               Electoral banner
+################
+*/
+.electionBanner{
+  background-color: $bleu;
+  span{
+    font-size: $h5-font-size;
+    font-weight: 600;
+    color: white;
   }
 }
 /*
