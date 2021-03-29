@@ -6,9 +6,9 @@
       $this->load->model('depute_edito');
       $this->load->model('votes_model');
       $this->load->model('departement_model');
-      $this->load->model('breadcrumb_model');
       $this->load->model('groupes_model');
       $this->load->model('fields_model');
+      $this->load->model('elections_model');
       //$this->password_model->security_password(); Former login protection
     }
 
@@ -190,6 +190,9 @@
       if ($data['active']) {
         $data['commission_parlementaire'] = $this->deputes_model->get_commission_parlementaire($depute_uid);
       }
+
+      // Regionales 2021
+      $data['regionales2021'] = $this->elections_model->get_candidate($depute_uid, 1/* Régionales 2021 */);
 
       // Statistiques
       if ($legislature == legislature_current()) {

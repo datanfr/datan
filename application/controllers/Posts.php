@@ -5,7 +5,6 @@
     public function __construct() {
       parent::__construct();
       $this->load->model('post_model');
-      $this->load->model('breadcrumb_model');
       $this->load->model('category_model');
       $this->load->model('fields_model');
       //$this->password_model->security_password(); Former login protection
