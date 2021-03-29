@@ -127,6 +127,8 @@ $route['statistiques/(:any)'] = 'stats/individual/$1';
 // QUESTIONNAIRE
 $route['questionnaire'] = 'quiz/index';
 $route['questionnaire/resultat']['post'] = 'quiz/result';
+// ELECTIONS
+$route['elections'] = 'elections/index';
 // LOGIN & REGISTER
 $route['login'] = 'users/login';
 $route['register'] = 'users/register';

@@ -14,6 +14,13 @@
       return $query->row_array();
     }
 
+    public function get_election_all(){
+      $this->db->order_by('dateYear', 'DESC');
+      $query = $this->db->get('elect_libelle');
+
+      return $query->result_array();
+    }
+
     public function get_election_by_id($id){
       $whereQuery = array(
         'id' => $id
