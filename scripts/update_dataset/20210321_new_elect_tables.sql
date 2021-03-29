@@ -28,7 +28,7 @@ SET time_zone = "+00:00";
 -- Structure de la table `elect_deputes_candidats`
 --
 
-DROP TABLE IF EXISTS `elect_deputes_candidats`;
+--DROP TABLE IF EXISTS `elect_deputes_candidats`;
 CREATE TABLE IF NOT EXISTS `elect_deputes_candidats` (
   `mpId` varchar(15) NOT NULL,
   `election` tinyint(4) NOT NULL,
@@ -45,10 +45,11 @@ CREATE TABLE IF NOT EXISTS `elect_deputes_candidats` (
 -- Déchargement des données de la table `elect_deputes_candidats`
 --
 
-INSERT INTO `elect_deputes_candidats` (`mpId`, `election`, `district`, `position`, `nuance`, `source`) VALUES
-('PA720278', 1, 52, 'Tête de liste', NULL, 'https://www.ouest-france.fr/elections/regionales/elections-regionales-en-pays-de-la-loire-qui-seront-les-candidats-en-juin-2021-7190091');
+-- Example data
+-- INSERT INTO `elect_deputes_candidats` (`mpId`, `election`, `district`, `position`, `nuance`, `source`) VALUES
+-- ('PA720278', 1, 52, 'Tête de liste', NULL, 'https://www.ouest-france.fr/elections/regionales/elections-regionales-en-pays-de-la-loire-qui-seront-les-candidats-en-juin-2021-7190091');
 
-DROP VIEW IF EXISTS `candidate_full`;
+--DROP VIEW IF EXISTS `candidate_full`;
 -- --------------------------------------------------------
 -- --------------------------------------------------------
 CREATE VIEW candidate_full AS SELECT
@@ -63,7 +64,7 @@ CREATE VIEW candidate_full AS SELECT
 -- Structure de la table `elect_libelle`
 --
 
-DROP TABLE IF EXISTS `elect_libelle`;
+--DROP TABLE IF EXISTS `elect_libelle`;
 CREATE TABLE IF NOT EXISTS `elect_libelle` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `libelle` varchar(255) NOT NULL,
@@ -79,15 +80,16 @@ CREATE TABLE IF NOT EXISTS `elect_libelle` (
 -- Déchargement des données de la table `elect_libelle`
 --
 
-INSERT INTO `elect_libelle` (`id`, `libelle`, `libelleAbrev`, `dateYear`, `slug`, `dateFirstRound`, `dateSecondRound`) VALUES
-(1, 'Élections régionales', 'Régionales', 2021, 'regionales-2021', '2021-06-13', '2021-06-20');
-COMMIT;
+-- Example data
+-- INSERT INTO `elect_libelle` (`id`, `libelle`, `libelleAbrev`, `dateYear`, `slug`, `dateFirstRound`, `dateSecondRound`) VALUES
+-- (1, 'Élections régionales', 'Régionales', 2021, 'regionales-2021', '2021-06-13', '2021-06-20');
+-- COMMIT;
 
 --
 -- Structure de la table `regions`
 --
 
-DROP TABLE IF EXISTS `regions`;
+--DROP TABLE IF EXISTS `regions`;
 CREATE TABLE IF NOT EXISTS `regions` (
   `id` tinyint(3) DEFAULT NULL,
   `cheflieu` varchar(8) DEFAULT NULL,
