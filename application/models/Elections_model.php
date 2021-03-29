@@ -37,6 +37,11 @@
         'election' => $election
       );
 
+      if ($election == 1/*regionales 2021*/) {
+        $this->db->join('regions', 'elect_deputes_candidats.district = regions.id', 'left');
+        $this->db->select('*, libelle AS regionLibelle');
+      }
+
       $query = $this->db->get_where('elect_deputes_candidats', $whereQuery, 1);
 
       return $query->row_array();
