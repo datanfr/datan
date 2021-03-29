@@ -2,8 +2,6 @@
   class Parties extends CI_Controller{
     public function __construct() {
       parent::__construct();
-      $this->load->model('breadcrumb_model');
-      $this->load->model('functions_datan');
       $this->load->model('parties_model');
       //$this->password_model->security_password(); Former login protection
     }
