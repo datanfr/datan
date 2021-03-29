@@ -3,7 +3,6 @@
     public function __construct() {
       parent::__construct();
       $this->load->model('stats_model');
-      $this->load->model('breadcrumb_model');
       $this->load->model('deputes_model');
       $this->load->model('groupes_model');
       $this->load->model('depute_edito');

@@ -6,7 +6,6 @@
       $this->load->model('depute_edito');
       $this->load->model('votes_model');
       $this->load->model('departement_model');
-      $this->load->model('breadcrumb_model');
       $this->load->model('groupes_model');
       $this->load->model('fields_model');
       $this->load->model('elections_model');
