@@ -119,7 +119,7 @@ module.exports = function (grunt) {
           height: 1500
         },
         // The source file
-        src: 'http://localhost/datan/deputes/lozere-48/depute_pierre-morelalhuissier',
+        src: 'http://localhost/datan/deputes/maine-et-loire-49/depute_matthieu-orphelin',
         // The destination file
         dest: 'assets/css/critical/depute_individual.css'
       },
