@@ -39,7 +39,7 @@
                   </div>
                   <div class="card-body d-flex flex-column justify-content-center align-items-center">
                     <h2 class="d-block card-title">
-                      <a href="<?= base_url(); ?>groupes/<?= mb_strtolower($groupe['libelleAbrev']) ?>" class="stretched-link no-decoration"><?php echo $groupe['libelle'] ?></a>
+                      <a href="<?= base_url(); ?>groupes/<?= mb_strtolower($groupe['libelleAbrev']) ?>" class="stretched-link no-decoration"><?= $groupe['libelle'] ?></a>
                     </h2>
                     <span class="d-block"><?= $groupe["libelleAbrev"] ?></span>
                   </div>
