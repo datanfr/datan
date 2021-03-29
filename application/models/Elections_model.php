@@ -55,7 +55,7 @@
 
       if ($election == 1/*regionales 2021*/) {
         $this->db->join('regions', 'candidate_full.district = regions.id', 'left');
-        $this->db->select('*, libelle AS regionLibelle');
+        $this->db->select('*, libelle AS regionLibelle, id AS regionId');
       }
 
       $query = $this->db->get_where('candidate_full', $whereQuery, 1);
