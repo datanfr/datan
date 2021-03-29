@@ -942,7 +942,7 @@ class Script
     {
         echo "vote starting \n";
         echo "starting vote\n";
-        $reponse_vote = $this->bdd->query('
+        $response_vote = $this->bdd->query('
             SELECT voteNumero
             FROM votes
             WHERE legislature = "' . $this->legislature_to_get . '"
@@ -950,8 +950,8 @@ class Script
             LIMIT 1
         ');
 
-        $dernier_vote = $reponse_vote->fetch();
-        $number_to_import = isset($dernier_vote['voteNumero']) ? $dernier_vote['voteNumero'] : 1;
+        $dernier_vote = $response_vote->fetch();
+        $number_to_import = isset($dernier_vote['voteNumero']) ? $dernier_vote['voteNumero'] + 1 : 1;
         echo "From " . $number_to_import . "\n";
 
         // SCRAPPING DEPENDING ON LEGISLATURE
@@ -975,7 +975,7 @@ class Script
                 $votesGroupe = [];
 
                 while (1) {
-                    $file_to_import = 'VTANR5L15V' . $number_to_import++;
+                    $file_to_import = 'VTANR5L15V' . $number_to_import ++;
                     $xml_string = $zip->getFromName('xml/' . $file_to_import . '.xml');
                     if ($xml_string != false) {
                         $xml = simplexml_load_string($xml_string);
@@ -1152,8 +1152,8 @@ class Script
                     } else {
                         break;
                     }
-                    if ($number_to_import % 100 === 0) {
-                        echo "Let's insert to scrutin until " . $number_to_import . "\n";
+                    if ($number_to_import % 50 === 0) {
+                        echo "Let's insert to scrutin from " . $number_to_import . "\n";
                         // insert votes
                         $this->insertAll('votes', $voteMainFields, $votesMain);
                         // insert votes infos
@@ -1165,7 +1165,7 @@ class Script
                         $votesGroupe = [];
                     }
                 }
-                if ($number_to_import % 100 !== 0) {
+                if ($number_to_import % 50 !== 0) {
                     echo "Let's insert to scrutin until the end the : " . $number_to_import . "\n";
                     $this->insertAll('votes', $voteMainFields, $votesMain);
                     // insert votes infos
@@ -1538,7 +1538,7 @@ class Script
         echo "Vote score from " . $lastVote . "\n";
 
         $reponseVote = $this->bdd->query('
-            SELECT B.voteNumero, B.legislature, B.mpId, B.vote, B.mandat_uid AS mandatId, B.sortCode, B.positionGroup, B.gvtPosition AS positionGvt,
+            SELECT B.voteNumero, B.legislature, B.mpId, B.vote, B.mandatId, B.sortCode, B.positionGroup, B.gvtPosition AS positionGvt,
             case when B.vote = B.positionGroup then 1 else 0 end as scoreLoyaute,
             case when B.vote = B.sortCode then 1 else 0 end as scoreGagnant,
             case when B.vote = B.gvtPosition then 1 else 0 end as scoreGvt,
@@ -1564,14 +1564,14 @@ class Script
             when sortCode = "rejeté" then -1
             else 0 end as sortCode,
             v.legislature,
-            mg.mandatId AS mandat_uid, mg.organeRef
+            mg.mandatId, mg.organeRef
             FROM votes v
             JOIN votes_info vi ON vi.voteNumero = v.voteNumero AND vi.legislature = v.legislature
             LEFT JOIN mandat_groupe mg ON mg.mpId = v.mpId
-            AND ((vi.dateScrutin BETWEEN mg.dateDebut AND mg.dateFin ) OR (vi.dateScrutin > mg.dateDebut AND mg.dateFin IS NULL))
+            AND ((vi.dateScrutin BETWEEN mg.dateDebut AND mg.dateFin ) OR (vi.dateScrutin >= mg.dateDebut AND mg.dateFin IS NULL))
             AND mg.codeQualite IN ("Membre", "Député non-inscrit", "Membre apparenté")
             LEFT JOIN organes o ON o.uid = vi.organeRef
-            WHERE v.voteType != "miseAuPoint" AND v.voteNumero >= "' . $lastVote . '" AND v.legislature = "' . $this->legislature_to_get . '" AND vote != "nv"
+            WHERE v.voteType = "decompteNominatif" AND v.voteNumero >= "' . $lastVote . '" AND v.legislature = "' . $this->legislature_to_get . '" AND vote != "nv"
             ) A
             LEFT JOIN votes_groupes vg ON vg.organeRef = A.organeRef AND vg.voteNumero = A.voteNumero AND vg.legislature = A.legislature
             LEFT JOIN votes_groupes gvt ON gvt.organeRef IN ("PO730964", "PO713077", "PO656002") AND gvt.voteNumero = A.voteNumero AND gvt.legislature = A.legislature
@@ -1659,12 +1659,22 @@ class Script
         $groupesCohesion = [];
         $groupeCohesion = [];
         $groupeCohesionFields = array('voteNumero', 'legislature', 'organeRef', 'cohesion', 'positionGroupe', 'voteSort', 'scoreGagnant');
+        $i = 1;
         while ($donneesVote = $reponseVote->fetch()) {
             $groupeCohesion = array('voteNumero' => $donneesVote['voteNumero'], 'legislature' => $donneesVote['legislature'], 'organeRef' => $donneesVote['organeRef'], 'cohesion' => $donneesVote['cohesion'], 'positionGroupe' => $donneesVote['positionGroup'], 'voteSort' => $donneesVote['voteResult'], 'scoreGagnant' => $donneesVote['scoreGagnant']);
             $groupesCohesion = array_merge($groupesCohesion, array_values($groupeCohesion));
+            if ($i % 1000 === 0) {
+                echo "Let's insert until a pack of 1000 rows \n";
+                $this->insertAll('groupes_cohesion', $groupeCohesionFields, $groupesCohesion);
+                $groupeCohesion = [];
+                $groupesCohesion = [];
+            }
+            $i++;
         }
-
-        $this->insertAll('groupes_cohesion', $groupeCohesionFields, $groupesCohesion);
+        if ($i % 1000 !== 0) {
+            echo "Let's insert what's left \n";
+            $this->insertAll('groupes_cohesion', $groupeCohesionFields, $groupesCohesion);
+        }
     }
 
     public function groupeAccord()
@@ -1826,7 +1836,7 @@ class Script
                 LEFT JOIN mandat_principal mp ON ((vi.dateScrutin BETWEEN mp.datePriseFonction AND mp.dateFin) OR (mp.datePriseFonction < vi.dateScrutin AND mp.dateFin IS NULL))
                 WHERE vi.legislature = "' . $this->legislature_to_get . '" AND vi.voteNumero = "' . $vote['voteNumero'] . '"
                 ) A
-                LEFT JOIN votes v ON A.mpId = v.mpId AND A.legislature = v.legislature AND A.voteNumero = v.voteNumero
+                LEFT JOIN votes_scores v ON A.mpId = v.mpId AND A.legislature = v.legislature AND A.voteNumero = v.voteNumero
             ');
 
             while ($mp = $voteQuery->fetch()) {
@@ -1863,7 +1873,7 @@ class Script
                 SELECT vi.voteNumero, vi.legislature, vi.dateScrutin, d.*, o.libelleAbrev
                 FROM votes_info vi
                 LEFT JOIN votes_dossiers vd ON vi.voteNumero = vd.voteNumero AND vi.legislature = vd.legislature
-                LEFT JOIN dossiers d ON vd.dossier = d.titreChemin
+                LEFT JOIN dossiers d ON vd.dossier = d.titreChemin AND d.legislature = vi.legislature
                 LEFT JOIN organes o ON d.commissionFond = o.uid
                 WHERE vi.voteNumero > "' . $last_vote . '" AND vi.legislature = 15
                 ORDER BY vi.voteNumero ASC
@@ -1878,34 +1888,24 @@ class Script
                 $voteDate = $vote['dateScrutin'];
                 $commissionFond = $vote['commissionFond'];
 
-                if ($commissionFond == NULL) {
-                    echo "pas de commission parlementaire \n";
-                    $voteCommissionParticipation = array('legislature' => $legislature, 'voteNumero' => $voteNumero, 'mpId' => NULL, 'participation' => NULL);
-                    $votesCommissionParticipation = array_merge($votesCommissionParticipation, array_values($voteCommissionParticipation));
-                } else {
+                if ($commissionFond != NULL) {
+                  $deputes = $this->bdd->query('
+                      SELECT *
+                      FROM votes_participation vp
+                      LEFT JOIN mandat_secondaire ms ON vp.mpId = ms.mpId
+                      WHERE vp.voteNumero = "' . $voteNumero . '" AND ms.typeOrgane = "COMPER" AND ms.codeQualite = "Membre" AND ms.organeRef = "' . $commissionFond . '" AND ((DATE_ADD(ms.dateDebut, INTERVAL 1 MONTH) <= "' . $voteDate . '" AND ms.dateFin >= "' . $voteDate . '") OR (DATE_ADD(ms.dateDebut, INTERVAL 1 MONTH) <= "' . $voteDate . '" AND ms.dateFin IS NULL)) AND vp.participation IS NOT NULL
+                  ');
+                  if ($deputes->rowCount() > 0) {
+                      while ($depute = $deputes->fetch()) {
+                          $legislature = $depute['legislature'];
+                          $voteNumero = $depute['voteNumero'];
+                          $mpId = $depute['mpId'];
+                          $participation = $depute['participation'];
 
-                    $deputes = $this->bdd->query('
-                        SELECT *
-                        FROM votes_participation vp
-                        LEFT JOIN mandat_secondaire ms ON vp.mpId = ms.mpId
-                        WHERE vp.voteNumero = "' . $voteNumero . '" AND ms.typeOrgane = "COMPER" AND ms.codeQualite = "Membre" AND ms.organeRef = "' . $commissionFond . '" AND ((DATE_ADD(ms.dateDebut, INTERVAL 1 MONTH) <= "' . $voteDate . '" AND ms.dateFin >= "' . $voteDate . '") OR (DATE_ADD(ms.dateDebut, INTERVAL 1 MONTH) <= "' . $voteDate . '" AND ms.dateFin IS NULL)) AND vp.participation IS NOT NULL
-                    ');
-
-                    if ($deputes->rowCount() > 0) {
-
-                        while ($depute = $deputes->fetch()) {
-                            $legislature = $depute['legislature'];
-                            $voteNumero = $depute['voteNumero'];
-                            $mpId = $depute['mpId'];
-                            $participation = $depute['participation'];
-
-                            $voteCommissionParticipation = array('legislature' => $legislature, 'voteNumero' => $voteNumero, 'mpId' => $mpId, 'participation' => $participation);
-                            $votesCommissionParticipation = array_merge($votesCommissionParticipation, array_values($voteCommissionParticipation));
-                        }
-                    } else {
-                        $voteCommissionParticipation = array('legislature' => $legislature, 'voteNumero' => $voteNumero, 'mpId' => NULL, 'participation' => NULL);
-                        $votesCommissionParticipation = array_merge($votesCommissionParticipation, array_values($voteCommissionParticipation));
-                    }
+                          $voteCommissionParticipation = array('legislature' => $legislature, 'voteNumero' => $voteNumero, 'mpId' => $mpId, 'participation' => $participation);
+                          $votesCommissionParticipation = array_merge($votesCommissionParticipation, array_values($voteCommissionParticipation));
+                      }
+                  }
                 }
                 if ($i % 1000 === 0) {
                     echo "let's insert this pack of 1000\n";
