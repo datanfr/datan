@@ -1,4 +1,4 @@
-<div class="container pg-stats-index mb-5">
+<div class="container pg-elections-index mb-5">
   <div class="row bloc-titre">
     <div class="col-md-12">
       <h1><?= $title ?></h1>
@@ -20,20 +20,25 @@
     </div>
   </div>
   <div class="row my-5">
-    <?php foreach ($elections as $election): ?>
-      <div class="col-lg-6 col-md-6 py-3">
-        <div class="card card-groupe">
-          <div class="liseret"></div>
+    <div class="col-12">
+      <h2 class="my-4">Découvrez les députés candidats à des élections</h2>
+    </div>
+    <div class="col-12 d-flex flex-wrap">
+      <?php foreach ($elections as $election): ?>
+        <div class="card card-election">
+          <div class="liseret" style="background-color: <?= $electionsColor[$election['libelleAbrev']] ?>"></div>
           <div class="card-body d-flex flex-column justify-content-center align-items-center">
             <h2 class="d-block card-title">
-              <a href="<?= base_url(); ?>elections/<?= mb_strtolower($election['slug']) ?>" class="stretched-link no-decoration"><?= $election['libelle'] ?></a>
+              <a href="<?= base_url(); ?>elections/<?= mb_strtolower($election['slug']) ?>" class="stretched-link no-decoration"><?= $election['libelleAbrev'] ?> <?= $election['dateYear'] ?></a>
             </h2>
+            <span class="mt-3">1<sup>er</sup> tour : <?= $election['dateFirstRoundFr'] ?></span>
+            <span>2<sup>nd</sup> tour : <?= $election['dateSecondRoundFr'] ?></span>
           </div>
           <div class="card-footer d-flex justify-content-center align-items-center">
-            <span>X députés candidats</span>
+            <span class="font-weight-bold"><?= $election['candidatsN'] ?> députés candidats</span>
           </div>
         </div>
-      </div>
-    <?php endforeach; ?>
+      <?php endforeach; ?>
+    </div>
   </div>
 </div>
