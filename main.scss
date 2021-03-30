@@ -2299,23 +2299,9 @@ ul.ui-menu{
   .bloc-titre{
     margin-top: 4rem;
     margin-bottom:  4rem;
-  }
-  .title_svg{
-    position: relative;
-    h2{
-      z-index: 10;
-    }
     svg{
-      position: absolute;
-      left: -70px;
-      top: -50px;
-      width: 140px;
+      width: 100%;
       height: auto;
-      z-index: -1;
-      path{
-        fill: $primary;
-        fill-opacity: 0.8;
-      }
     }
   }
 }
