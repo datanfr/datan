@@ -18,6 +18,7 @@
       <div class="card">
         <div class="card-body">
           <a class="btn btn-primary" role="button" href="<?= base_url() ?>admin/elections//candidat/create?election=<?= $election['slug'] ?>">Ajouter un candidat</a>
+          <a class="btn btn-warning my-3" href="<?= base_url() ?>cache/delete_all" role="button">Supprimer cache après avoir ajouté un candidat</a>
         </div>
       </div>
     </div>
