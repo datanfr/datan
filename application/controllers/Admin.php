@@ -37,7 +37,7 @@
 
       $data['username'] = $this->session->userdata('username');
       $data['usernameType'] = $this->session->userdata('type');
-      $data['title'] = 'Liste candidats aux élections';
+      $data['title'] = 'Liste candidats aux élections ' . $data['election']['libelleAbrev']. ' '.$data['election']['dateYear'];
 
     $data['candidats'] = $this->elections_model->get_all_candidate($data['election']['id']);
 
