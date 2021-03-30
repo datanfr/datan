@@ -15,10 +15,25 @@
     }
 
     public function get_election_all(){
-      $this->db->order_by('dateYear', 'DESC');
-      $query = $this->db->get('elect_libelle');
+      $query = $this->db->query('
+      SELECT *, date_format(e.dateFirstRound, "%d %M") as dateFirstRoundFr, date_format(e.dateSecondRound, "%d %M") as dateSecondRoundFr, candidatsN
+      FROM elect_libelle e
+      LEFT JOIN (
+        SELECT election, COUNT(mpId) AS candidatsN
+        FROM elect_deputes_candidats
+        GROUP BY election) c ON e.id = c.election
+      ORDER BY e.dateYear DESC
+      ');
 
       return $query->result_array();
+    }
+
+    public function get_election_color(){
+      $array = array(
+        "Régionales" => '#097AB8'
+      );
+
+      return $array;
     }
 
     public function get_election_by_id($id){

@@ -9,6 +9,7 @@
     public function index(){
       // Data
       $data['elections'] = $this->elections_model->get_election_all();
+      $data['electionsColor'] = $this->elections_model->get_election_color();
 
       // Breadcrumb
       $data['breadcrumb'] = array(
