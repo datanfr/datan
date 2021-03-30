@@ -45,6 +45,19 @@
               <br>
               <h3 class="mt-3">Delete caching of webpages+SQL queries</h3>
               <a class="btn btn-primary my-3" href="../cache/delete_all" role="button">Delete all caching</a>
+              <div class="card">
+                <div class="card-body">
+                  <h5 class="card-title">Database structure update - Fix issues with departements / circos table</h5>
+                  <h6 class="card-subtitle text-muted">March 30, 2021</h6>
+                  <p class="card-text">
+                    Run this script to fix issues with the "circos" tables. Departements such as 1, 2, 3 has been replaced by "01", "02", "03"
+                    The same for the table elect_2017_pres_2 (presidential elections).
+                  </p>
+                  <p>
+                    <a class="btn btn-danger my-3" href="update_dataset/20210330_update_dpts_circos.php" role="button">UPDATE DATABASE</a>
+                  </p>
+                </div>
+              </div>
               <br>
               <div class="card">
                 <div class="card-body">
