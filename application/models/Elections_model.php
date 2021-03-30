@@ -30,7 +30,8 @@
 
     public function get_election_color(){
       $array = array(
-        "Régionales" => '#097AB8'
+        "Régionales" => '#097AB8',
+        "Départementales" => "#C14330"
       );
 
       return $array;
