@@ -14,6 +14,16 @@
       return $query->row_array();
     }
 
+    public function get_election_by_id($id){
+      $whereQuery = array(
+        'id' => $id
+      );
+
+      $query = $this->db->get_where('elect_libelle', $whereQuery, 1);
+
+      return $query->row_array();
+    }
+
     public function get_election_all(){
       $query = $this->db->query('
       SELECT *, date_format(e.dateFirstRound, "%d %M") as dateFirstRoundFr, date_format(e.dateSecondRound, "%d %M") as dateSecondRoundFr, candidatsN
@@ -38,14 +48,18 @@
       return $array;
     }
 
-    public function get_election_by_id($id){
-      $whereQuery = array(
-        'id' => $id
-      );
+    public function get_election_infos($type){
+      if ($type == "Régionales") {
+        $info = "
+        <p>
+          Les élections régionales ont lieu tous les 5 ans.
+        </p>
+        ";
+      } else {
+        $info = NULL;
+      }
 
-      $query = $this->db->get_where('elect_libelle', $whereQuery, 1);
-
-      return $query->row_array();
+      return $info;
     }
 
     public function get_candidate($mpId, $election){
