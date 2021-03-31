@@ -44,6 +44,7 @@
       // Data
       $data['deputes'] = $this->elections_model->get_all_candidate($data['election']['id'], TRUE);
       $data['districts'] = $this->elections_model->get_all_districts($data['election']['id']);
+      $data['electionInfos'] = $this->elections_model->get_election_infos($data['election']['libelleAbrev']);
 
       // Breadcrumb
       $data['breadcrumb'] = array(
