@@ -129,6 +129,8 @@ $route['questionnaire'] = 'quiz/index';
 $route['questionnaire/resultat']['post'] = 'quiz/result';
 // ELECTIONS
 $route['elections'] = 'elections/index';
+// API
+$route['api/(:any)/(:any)'] = 'api/index/$1/$2';
 // LOGIN & REGISTER
 $route['login'] = 'users/login';
 $route['register'] = 'users/register';
