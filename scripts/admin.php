@@ -45,6 +45,18 @@
               <br>
               <h3 class="mt-3">Delete caching of webpages+SQL queries</h3>
               <a class="btn btn-primary my-3" href="../cache/delete_all" role="button">Delete all caching</a>
+              <br>
+              <div class="card">
+                <div class="card-body">
+                  <h5 class="card-title">Database structure update - Newsletter</h5>
+                  <h6 class="card-subtitle text-muted">March 31, 2021</h6>
+                  <p class="card-text">
+                    New table for newsletter
+                    <a class="btn btn-danger my-3" href="update_dataset/addNewsletter.php" role="button">UPDATE DATABASE</a>
+                  </p>
+                </div>
+              </div>
+              <br>
               <div class="card">
                 <div class="card-body">
                   <h5 class="card-title">Database structure update - Fix issues with departements / circos table</h5>
@@ -109,6 +121,8 @@
 
               <hr>
               <a class="btn btn-warning my-3" href="update_dataset/20210322_update_primary_key.php" role="button">Add primary keys</a>
+              <hr>
+              <a class="btn btn-warning my-3" href="update_dataset/addNewsletter.php" role="button">Add table newsletter</a>
 
             </div>
           </div>
