@@ -248,5 +248,7 @@ NEWSLETTER
 */
 $('#newsletterForm').on('submit', (e) => {
   e.preventDefault();
+  console.log($('#newsletterForm').serializeArray())
+  // $.post()
   return true;
 })
