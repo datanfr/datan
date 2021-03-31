@@ -11,5 +11,10 @@
       );
       return $this->db->insert('newsletter', $data);
     }
+
+    public function delete_newsletter($email){
+      $this->db->where('email', urldecode($email));
+      return $this->db->delete('newsletter');
+    }
   }
 ?>
