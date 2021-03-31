@@ -248,7 +248,20 @@ NEWSLETTER
 */
 $('#newsletterForm').on('submit', (e) => {
   e.preventDefault();
-  console.log($('#newsletterForm').serializeArray())
-  // $.post()
+  $.ajax({
+    url: "api/newsletter/create_newsletter",
+    type: "POST",
+    data: $('#newsletterForm').serialize(),
+    dataType: 'json',
+    success: function(){
+      $('#newsletterForm').hide();
+      $('#modalSubscription').show();
+      
+    },
+    error:function(){
+      $('#newsletterForm').hide();
+      $('#modalFail').show();
+    }
+});
   return true;
 })

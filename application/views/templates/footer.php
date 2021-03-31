@@ -4,7 +4,7 @@
     <div class="modal fade" id="newsletter" tabindex="-1" role="dialog" aria-labelledby="newsletterLabel" aria-hidden="true">
       <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
         <div class="modal-content">
-          <form id="newsletterForm">
+          <?= form_open('newsletter', array('id'=> 'newsletterForm')); ?>
             <div class="modal-header">
               <h2 class="modal-title" id="newsletterLabel">Newsletter</h2>
               <span class="close cursor-pointer" data-dismiss="modal" aria-label="Close">
@@ -18,7 +18,35 @@
             <div class="modal-footer">
               <button type="submit" class="btn btn-primary">Recevoir la newsletter</button>
             </div>
-          </form>
+            <?= form_close() ?>
+          <div id="modalSubscription">
+            <div class="modal-header">
+              <h2 class="modal-title" id="newsletterLabel">Félicitations</h2>
+              <span class="close cursor-pointer" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </span>
+            </div>
+            <div class="modal-body">
+              <p>Vous serez maintenant informé des actualités politiques de nos députés et un peu du site aussi :)</p>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+            </div>
+          </div>
+          <div id="modalFail">
+            <div class="modal-header">
+              <h2 class="modal-title" id="newsletterLabel">Quelque chose s'est mal passé</h2>
+              <span class="close cursor-pointer" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </span>
+            </div>
+            <div class="modal-body">
+              <p>Vous êtes sans doute déjà inscrit !</p>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+            </div>
+          </div>
         </div>
       </div>
     </div>
