@@ -86,6 +86,9 @@ CREATE TABLE IF NOT EXISTS `elect_libelle` (
 -- Example data
 INSERT INTO `elect_libelle` (`id`, `libelle`, `libelleAbrev`, `dateYear`, `slug`, `dateFirstRound`, `dateSecondRound`) VALUES
 (1, 'Élections régionales', 'Régionales', 2021, 'regionales-2021', '2021-06-13', '2021-06-20');
+--- Insert départementales
+INSERT INTO `elect_libelle` (`id`, `libelle`, `libelleAbrev`, `dateYear`, `slug`, `dateFirstRound`, `dateSecondRound`) VALUES
+(2, 'Élections départementales', 'Départementales', 2021, 'departementales-2021', '2021-06-13', '2021-06-20');
 -- COMMIT;
 
 --

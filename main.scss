@@ -636,7 +636,7 @@ body:not(.pg-mentions) #tarteaucitronAlertSmall {
 ################
 */
 /* 1. Card depute and groups */
-.card-depute, .card-groupe{
+.card-depute, .card-groupe, .card-election{
   border:0;
   text-align: center;
   width: 17em;
@@ -2276,6 +2276,32 @@ ul.ui-menu{
       @include media-breakpoint-up(sm) {
         height: 260px;
       }
+    }
+  }
+}
+/*
+################
+               PAGE STATS ELECTIONS (pg-elections-index)
+################
+*/
+.pg-elections-index{
+  // HN //
+  h1{
+    font-size: 3em;
+    font-weight: 800;
+    color: $text-black;
+  }
+  h2{
+    font-size: 1.8em;
+    color: $text-black;
+    font-weight: 800;
+  }
+  .bloc-titre{
+    margin-top: 4rem;
+    margin-bottom:  4rem;
+    svg{
+      width: 100%;
+      height: auto;
     }
   }
 }
