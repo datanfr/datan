@@ -27,6 +27,9 @@
       $data['title_meta'] = "Les élections en France - Candidats et résultats | Datan";
       $data['description_meta'] = "Retrouvez toutes les informations sur les différentes élections en France (présidentielle, législative, régionales). Découvrez les députés candidats et les résultats.";
       $data['title'] = "Les élections politiques en France";
+      //Open Graph
+      $controller = $this->router->fetch_class()."/".$this->router->fetch_method();
+      $data['ogp'] = $this->meta_model->get_ogp($controller, $data['title_meta'], $data['description_meta'], $data['url'], $data);
       // Load Views
       $this->load->view('templates/header', $data);
       $this->load->view('elections/index', $data);
@@ -65,6 +68,9 @@
       $data['title_meta'] = "Les " . mb_strtolower($data['election']['libelle']) . " de " . $data['election']['dateYear'] . " - Candidats et résultats | Datan";
       $data['description_meta'] = "Retrouvez toutes les informations sur les " . mb_strtolower($data['election']['libelle']) . " de " . $data['election']['dateYear'] . " en France. Découvrez les députés candidats et les résultats.";
       $data['title'] = "Les " . mb_strtolower($data['election']['libelle']) . " de " . $data['election']['dateYear'];
+      //Open Graph
+      $controller = $this->router->fetch_class()."/".$this->router->fetch_method();
+      $data['ogp'] = $this->meta_model->get_ogp($controller, $data['title_meta'], $data['description_meta'], $data['url'], $data);
       // JS
       $data['js_to_load_before_datan'] = array("isotope.pkgd.min");
       $data['js_to_load']= array("datan/sorting");
