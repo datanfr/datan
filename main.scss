@@ -2305,6 +2305,18 @@ ul.ui-menu{
     }
   }
 }
+.pg-elections-candidats{
+  .infos{
+    border: 1px solid #00b794;
+    border-radius: 20px;
+    .title{
+      display: inline-block;
+      transform: translateY(-50%);
+      padding: 0 .5em;
+      background: $bg-colour;
+    }
+  }
+}
 /*
 ################
                PAGE STATS INDEX (pg-stats-index)

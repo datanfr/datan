@@ -3,10 +3,20 @@
     <div class="col-12">
       <h1><?= $title ?></h1>
     </div>
+    <div class="col-md-8 col-lg-7 my-4">
+      <p>Les <?= mb_strtolower($election['libelle']) ?> <?= $election['dateYear'] ?> se dérouleront en deux tours.</p>
+      <p>Le premier tour se tiendra le <?= $election['dateFirstRoundFr'] ?>, tandis que le second tour se déroulera le <?= $election['dateSecondRoundFr'] ?>.</p>
+      <p><b>Attention</b>, au vu de la crise sanitaire de la Covid-19, les dates des <?= mb_strtolower($election['libelle']) ?> sont susceptibles de changer.</p>
+      <p>Découvrez sur cette page les députés candidats aux <?= mb_strtolower($election['libelle']) ?> de <?= $election['dateYear'] ?>. Nous avons jusqu'à présent répertorié <span class="font-weight-bold text-primary"><?= $election['candidatsN'] ?> députés candidats</span>.</p>
+      <p>Un député candidat ne se trouve pas dans la liste ? N'hésitez pas à nous le faire savoir: <a href="mailto:contact@datan.fr">contact@datan.fr</a> !</p>
+    </div>
     <?php if (!empty($electionInfos)): ?>
       <div class="col-md-8 col-lg-7">
-        <div class="mt-4">
-          <?= $electionInfos ?>
+        <div class="mt-4 infos">
+          <h2 class="title ml-md-5 ml-3">Mieux comprendre</h2>
+          <div class="px-4">
+            <?= $electionInfos ?>
+          </div>
         </div>
       </div>
     <?php endif; ?>
@@ -66,9 +76,9 @@
                 <?php endif; ?>
               </div>
               <div class="card-body">
-                <h2 class="d-block card-title">
+                <h3 class="d-block card-title">
                   <a href="<?php echo base_url(); ?>deputes/<?php echo $depute['dptSlug'].'/depute_'.$depute['nameUrl'] ?>" class="stretched-link no-decoration"><?php echo $depute['nameFirst'] .' ' . $depute['nameLast'] ?></a>
-                </h2>
+                </h3>
                 <span class="d-block"><?= $depute["departementNom"] ?> (<?= $depute["departementCode"] ?>)</span>
               </div>
               <div class="card-footer d-flex justify-content-center align-items-center">
