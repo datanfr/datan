@@ -21,6 +21,7 @@
       LEFT JOIN (
         SELECT election, COUNT(mpId) AS candidatsN
         FROM elect_deputes_candidats
+        WHERE visible = 1
         GROUP BY election) c ON e.id = c.election
       ORDER BY e.dateYear DESC
       ');
