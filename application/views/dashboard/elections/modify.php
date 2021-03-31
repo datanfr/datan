@@ -38,10 +38,10 @@
               <div class="form-group">
                 <label for="">Région de candidature</label>
                 <select class="form-control" name="district">
-                  <option value="<?= $candidat['regionId'] ?>" selected="selected">Selectionné : <?= $candidat['regionLibelle'] ?></option>
-                  <?php foreach ($regions as $region): ?>
-                    <?php if ($region['libelle'] !== $candidat['regionLibelle']): ?>
-                      <option value="<?= $region['id'] ?>"><?= $region['libelle'] ?></option>
+                  <option value="<?= $candidat['districtId'] ?>" selected="selected">Selectionné : <?= $candidat['districtLibelle'] ?></option>
+                  <?php foreach ($districts as $district): ?>
+                    <?php if ($district['libelle'] !== $candidat['regionLibelle']): ?>
+                      <option value="<?= $district['id'] ?>"><?= $district['libelle'] ?></option>
                     <?php endif; ?>
                   <?php endforeach; ?>
                 </select>
