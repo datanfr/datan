@@ -52,12 +52,12 @@
     public function get_election_infos($type){
       if ($type == "Régionales") {
         $info = "
-        <p><b>Les élections régionales ont lieu tous les six ans</b>, en même temps que les élection départementales.</p>
+        <p><b>Les élections régionales ont lieu tous les six ans</b>, en même temps que les élections départementales.</p>
         <p>Les élections régionales permettent d'<b>élire les conseillers régionaux</b> qui composent le conseil régional. Ce sont les conseillers régionaux qui décident et votent sur les affaires de la région.</p>
-        <p><b>Les compétences des régions sont multiples</b>. Il s'agit par exemple du développement économique et social, de l'orgranisation du transport, de la construction des lycées, ou encore de l'organisation de la formation professionnelle. Pour plus d'information, <a href='https://www.prefectures-regions.gouv.fr/Le-savez-vous/Quelles-sont-les-competences-d-une-region' target='_blank' rel='nofollow noreferrer noopener'>cliquez ici</a>.
+        <p><b>Les compétences des régions sont multiples</b>. Il s'agit par exemple du développement économique et social, de l'organisation du transport, de la construction des lycées, ou encore de l'organisation de la formation professionnelle. Pour plus d'information, <a href='https://www.prefectures-regions.gouv.fr/Le-savez-vous/Quelles-sont-les-competences-d-une-region' target='_blank' rel='nofollow noreferrer noopener'>cliquez ici</a>.
         <p>Les candidats se rassemblent sur des listes politiques, en fonction de leur parti d'appartenance. Le jour de l'élection, les électeurs votent donc pour une liste.</p>
         <p><b>L'élection est organisée en deux tours</b>. Au premier tour, si aucune liste obtient plus de 50% des suffrages exprimés, un second tour est organisé avec uniquement les listes ayant récolté plus de 10% des voix.</p>
-        <p><b>La liste arrivant en tête se voit attribuer 25% des sièges</b> du conseil régional. Pour les sièges restant, ils sont attribués à la proportionnelle entre toutes les listes ayant obtenu au moins 5% des voix.</p>
+        <p><b>La liste arrivant en tête se voit attribuer 25% des sièges</b> du conseil régional. Pour les sièges restants, ils sont attribués à la proportionnelle entre toutes les listes ayant obtenu au moins 5% des voix.</p>
         ";
       } else {
         $info = NULL;
