@@ -84,17 +84,25 @@
     }
 
 
-    public function get_all_candidate($election){
-      $whereQuery = array(
-        'election' => $election
-      );
+    public function get_all_candidate($election, $visible = FALSE){
+      if ($visible == FALSE) {
+        $whereQuery = array(
+          'election' => $election
+        );
+      } else {
+        $whereQuery = array(
+          'election' => $election,
+          'visible' => 1
+        );
+      }
+
 
       if ($election == 1/*regionales 2021*/) {
         $this->db->join('regions', 'candidate_full.district = regions.id', 'left');
-        $this->db->select('*, libelle AS districtLibelle');
+        $this->db->select('*, regions.libelle AS districtLibelle, regions.id AS districtId');
       } elseif ($election == 2/*départementales 2021*/) {
         $this->db->join('departement', 'candidate_full.district = departement.departement_code', 'left');
-        $this->db->select('*, departement.departement_nom AS districtLibelle');
+        $this->db->select('*, departement.departement_nom AS districtLibelle, departement.departement_code AS districtId');
       }
 
       $this->db->select('DATE_FORMAT(modified_at, "%d/%m/%Y") AS modified_at');
