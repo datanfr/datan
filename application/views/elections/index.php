@@ -5,10 +5,21 @@
     </div>
     <div class="col-md-8 col-lg-7 mt-4">
       <p>
-        Ipsam vero urbem Byzantiorum fuisse refertissimam atque ornatissimam signis quis ignorat? Quae illi, exhausti sumptibus bellisque maximis, cum omnis Mithridaticos impetus totumque Pontum armatum affervescentem in Asiam atque erumpentem, ore repulsum et cervicibus interclusum suis sustinerent, tum, inquam, Byzantii et postea signa illa et reliqua urbis ornanemta sanctissime custodita tenuerunt.
+        L'élection politique est un <b>outil central de notre vie démocratique</b>. Elle permet aux citoyens de choisir ses représentants et ses gouvernants, qui auront pour rôle de rédiger et voter la loi.
       </p>
       <p>
-        Hinc ille commotus ut iniusta perferens et indigna praefecti custodiam protectoribus mandaverat fidis. quo conperto Montius tunc quaestor acer quidem sed ad lenitatem propensior, consulens in commune advocatos palatinarum primos scholarum adlocutus est mollius docens nec decere haec fieri nec prodesse addensque vocis obiurgatorio sonu quod si id placeret, post statuas Constantii deiectas super adimenda vita praefecto conveniet securius cogitari.
+        Il existe, en France, <a href="https://www.diplomatie.gouv.fr/fr/services-aux-francais/voter-a-l-etranger/les-differentes-elections/" target="_blank" rel="nofollow noreferrer noopener">plusieurs élections</a>. La plus importante est <b>l'élection présidentielle</b>. Se tenant tous les cinq ans, elle permet d'élire le Président de la République. Les <b>élections législatives</b>, se tenant quelques mois après la présidentielle, permettent d'élire les <a href="<?= base_url() ?>deputes">577 députés de l'Assemblée nationale</a>.
+      </p>
+      <p>
+        Les autres élections en France sont les sénatoriales, les européennes, les régionales, les départementales et les municipales.
+      </p>
+        Découvrez sur Datan les députés ou anciens députés qui se sont portés candidats à des élections politiques.
+      </p>
+      <p>
+        Être député et candidat à une autre élection peut être critiquable. Pendant la campagne, le député est moins présent à l'Assemblée nationale et ne s'engage pas de la même manière dans le travail parlementaire.
+      </p>
+      <p>
+        Il existe en France des <a href="https://www.interieur.gouv.fr/Elections/Les-elections-en-France/Le-cumul-des-mandats-electoraux" target="_blank" rel="nofollow noreferrer noopener">règles interdisant le non-cumul des mandats</a>. Par exemple, on ne peut pas être député et en même temps sénateur ou député européen. Par contre, si le député est élu au Conseil régional ou départemental, il pourra garder son mandat de député, sauf s'il en est président ou vice-président.
       </p>
     </div>
     <div class="col-md-4 d-none d-lg-flex align-items-center mt-4">
