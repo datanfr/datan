@@ -74,22 +74,24 @@ $(document).ready(function () {
 */
 
 // init Flickity
-var $carousel = $('.carousel-cards').flickity({
-  prevNextButtons: false,
-  pageDots: false,
-  freeScroll: true,
-  contain: true
-});
-// Flickity instance
-var flkty = $carousel.data('flickity');
-// previous
-$('.button--previous').on( 'click', function() {
-  $carousel.flickity('previous');
-});
-// next
-$('.button--next').on( 'click', function() {
-  $carousel.flickity('next');
-});
+if ($('.carousel-cards').length > 0){
+  var $carousel = $('.carousel-cards').flickity({
+    prevNextButtons: false,
+    pageDots: false,
+    freeScroll: true,
+    contain: true
+  });
+  // Flickity instance
+  var flkty = $carousel.data('flickity');
+  // previous
+  $('.button--previous').on( 'click', function() {
+    $carousel.flickity('previous');
+  });
+  // next
+  $('.button--next').on( 'click', function() {
+    $carousel.flickity('next');
+  });  
+}
 
 /*
 ################
@@ -237,3 +239,14 @@ $(function() {
   });
 
 });
+
+
+/*
+##########
+NEWSLETTER
+##########
+*/
+$('#newsletterForm').on('submit', (e) => {
+  e.preventDefault();
+  return true;
+})

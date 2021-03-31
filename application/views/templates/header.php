@@ -208,6 +208,7 @@
                   <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                     <a class="dropdown-item no-decoration" href="https://twitter.com/datanFR" target="_blank" rel="noopener">Twitter</a>
                     <a class="dropdown-item no-decoration" href="https://www.facebook.com/datanFR/" target="_blank" rel="noopener">Facebook</a>
+                    <span class="dropdown-item no-decoration cursor-pointer" data-toggle="modal" data-target="#newsletter">Newsletter</span>
                   </div>
                 </li>
                 <?php if (($this->session->userdata('type') == 'admin') || ($this->session->userdata('type') == 'writer')): ?>
