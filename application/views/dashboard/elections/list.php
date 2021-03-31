@@ -45,7 +45,7 @@
               <?php foreach ($candidats as $candidat) : ?>
                 <tr>
                   <td><a target="_blank" href="<?php echo base_url(); ?>deputes/<?php echo $candidat['dptSlug'].'/depute_'.$candidat['nameUrl'] ?>"><?php echo $candidat['nameFirst'] .' ' . $candidat['nameLast'] ?></a></td>
-                  <td><?= $candidat['regionLibelle'] ?></td>
+                  <td><?= $candidat['districtLibelle'] ?></td>
                   <td><?= $candidat['position'] ?></td>
                   <td><?= $candidat['nuance'] ?></td>
                   <td>
