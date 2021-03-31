@@ -178,7 +178,7 @@ class Admin_model extends CI_Model
         CASE WHEN vd.title IS NOT NULL THEN 'vote_datan' ELSE NULL END AS vote_datan
         FROM
         (
-        SELECT id, voteNumero, voteSort, legislature,
+        SELECT voteNumero, voteSort, legislature,
         SUM(CASE WHEN organeRef = 'PO723569' THEN positionGroupe ELSE NULL END) AS 'PO723569',
         SUM(CASE WHEN organeRef = 'PO730934' THEN positionGroupe ELSE NULL END) AS 'PO730934',
         SUM(CASE WHEN organeRef = 'PO730940' THEN positionGroupe ELSE NULL END) AS 'PO730940',
@@ -226,7 +226,7 @@ class Admin_model extends CI_Model
       CASE WHEN vd.title IS NOT NULL THEN 'vote_datan' ELSE NULL END AS vote_datan
       FROM
       (
-      SELECT id, voteNumero, voteSort, legislature,
+      SELECT voteNumero, voteSort, legislature,
       SUM(CASE WHEN organeRef = 'PO723569' THEN cohesion ELSE NULL END) AS 'PO723569',
       SUM(CASE WHEN organeRef = 'PO730934' THEN cohesion ELSE NULL END) AS 'PO730934',
       SUM(CASE WHEN organeRef = 'PO730940' THEN cohesion ELSE NULL END) AS 'PO730940',
