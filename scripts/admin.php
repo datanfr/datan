@@ -109,6 +109,8 @@
 
               <hr>
               <a class="btn btn-warning my-3" href="update_dataset/20210322_update_primary_key.php" role="button">Add primary keys</a>
+              <hr>
+              <a class="btn btn-warning my-3" href="update_dataset/addNewsletter.php" role="button">Add table newsletter</a>
 
             </div>
           </div>
