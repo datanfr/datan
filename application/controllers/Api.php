@@ -9,6 +9,7 @@ class Api extends CI_Controller
         $this->load->model('groupes_model');
         $this->load->model('votes_model');
         $this->load->model('breadcrumb_model');
+        $this->load->model('newsletter_model');
     }
 
     private function response($data, $code = 200)
@@ -31,8 +32,11 @@ class Api extends CI_Controller
         }
         try {
             $data = call_user_func_array(array($this->$model, $method), $gets);
-        } catch (ArgumentCountError $e) {
+        } catch (\ArgumentCountError $e) {
             return $this->response(array('error' => true, 'message' => $e->getMessage()), 405);
+        }
+        catch(\Exception $e){
+            return $this->response(array('error' => true, 'message' => $e->getMessage()), 500);
         }
 
         return $this->response($data);
