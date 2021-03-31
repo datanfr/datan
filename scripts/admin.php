@@ -48,6 +48,31 @@
               <br>
               <div class="card">
                 <div class="card-body">
+                  <h5 class="card-title">Database structure update - Newsletter</h5>
+                  <h6 class="card-subtitle text-muted">March 31, 2021</h6>
+                  <p class="card-text">
+                    New table for newsletter
+                    <a class="btn btn-danger my-3" href="update_dataset/addNewsletter.php" role="button">UPDATE DATABASE</a>
+                  </p>
+                </div>
+              </div>
+              <br>
+              <div class="card">
+                <div class="card-body">
+                  <h5 class="card-title">Database structure update - Fix issues with departements / circos table</h5>
+                  <h6 class="card-subtitle text-muted">March 30, 2021</h6>
+                  <p class="card-text">
+                    Run this script to fix issues with the "circos" tables. Departements such as 1, 2, 3 has been replaced by "01", "02", "03"
+                    The same for the table elect_2017_pres_2 (presidential elections).
+                  </p>
+                  <p>
+                    <a class="btn btn-danger my-3" href="update_dataset/20210330_update_dpts_circos.php" role="button">UPDATE DATABASE</a>
+                  </p>
+                </div>
+              </div>
+              <br>
+              <div class="card">
+                <div class="card-body">
                   <h5 class="card-title">Database structure update - New legislature</h5>
                   <h6 class="card-subtitle text-muted">March 12, 2021</h6>
                   <p class="card-text">
@@ -96,6 +121,8 @@
 
               <hr>
               <a class="btn btn-warning my-3" href="update_dataset/20210322_update_primary_key.php" role="button">Add primary keys</a>
+              <hr>
+              <a class="btn btn-warning my-3" href="update_dataset/addNewsletter.php" role="button">Add table newsletter</a>
 
             </div>
           </div>
