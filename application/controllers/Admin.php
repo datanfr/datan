@@ -37,13 +37,9 @@
 
       $data['username'] = $this->session->userdata('username');
       $data['usernameType'] = $this->session->userdata('type');
-      $data['title'] = 'Liste candidats aux élections';
+      $data['title'] = 'Liste candidats aux élections ' . $data['election']['libelleAbrev']. ' '.$data['election']['dateYear'];
 
-    $data['candidats'] = $this->elections_model->get_all_candidate($data['election']['id']);
-
-      // echo "<pre>";
-      // var_dump($data);
-      // echo "</pre>";
+      $data['candidats'] = $this->elections_model->get_all_candidate($data['election']['id']);
 
       $this->load->view('dashboard/header', $data);
       $this->load->view('dashboard/elections/list', $data);
@@ -65,7 +61,8 @@
 
       $data['title'] = 'Créer un nouveau candidat pour les ' . $data['election']['libelleAbrev'] . ' ' . $data['election']['dateYear'];
       $data['positions'] = array('', 'Tête de liste', 'Colistier');
-      $data['regions'] = $this->elections_model->get_all_regions();
+
+      $data['districts'] = $this->elections_model->get_all_districts($data['election']['id']);
 
       //Form valiation
       $this->form_validation->set_rules('depute_url', 'député', 'required');
@@ -112,7 +109,7 @@
       }
 
       $data['positions'] = array('Tête de liste', 'Colistier');
-      $data['regions'] = $this->elections_model->get_all_regions();
+      $data['districts'] = $this->elections_model->get_all_districts($data['election']['id']);
       //Form valiation
       $this->form_validation->set_rules('mpId', 'mpId', 'required');
       $this->form_validation->set_rules('district', 'région de candidature', 'required');
