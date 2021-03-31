@@ -1,4 +1,4 @@
-<div class="container pg-elections-candidats">
+<div class="container pg-elections-candidats pb-5">
   <div class="row bloc-titre">
     <div class="col-12">
       <h1><?= $title ?></h1>
@@ -16,24 +16,16 @@
       <div class="sticky-top sticky-offset">
         <!-- Groupes -->
         <div class="d-flex flex-column d-lg-none">
-          <?php if ($active): ?>
-            <h3>
-              Les <span class="text-primary">577</span> députés de l'Assemblée nationale
-            </h3>
-          <?php else: ?>
-            <h3>
-              <span class="text-primary"><?= $number_inactive ?></span> députés de la 15<sup>e</sup> législature ne sont plus en activité
-            </h3>
-          <?php endif; ?>
-          <?php if ($active): ?>
-            <div class="mt-3 badges-groupes">
-              <?php foreach ($groupes as $groupe): ?>
-                <a class="badge badge-primary no-decoration" href="<?= base_url() ?>groupes/<?= mb_strtolower($groupe['libelleAbrev']) ?>/membres">
-                  <span><?= $groupe['effectif'] ?></span> <?= $groupe['libelle'] ?>
-                </a>
-              <?php endforeach; ?>
-            </div>
-          <?php endif; ?>
+          <h3>
+            Les <span class="text-primary">577</span> députés de l'Assemblée nationale
+          </h3>
+          <div class="mt-3 badges-groupes">
+            <?php foreach ($districts as $district): ?>
+              <a class="badge badge-primary no-decoration" href="<?= base_url() ?>elections/<?= mb_strtolower($district['libelle']) ?>/membres">
+                <span>XX</span> <?= $district['libelle'] ?>
+              </a>
+            <?php endforeach; ?>
+          </div>
         </div>
         <!-- Search -->
         <div class="mt-3 mt-lg-0">
