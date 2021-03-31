@@ -202,7 +202,7 @@
     public function get_results_2019_europe($array){
       $dpt = $array["dpt"];
       $city = $array["insee_city"];
-if ($dpt == "987") {
+      if ($dpt == "987") {
         $city = 700 + $city;
       } elseif ($city < 10) {
         $city = "00".$city;

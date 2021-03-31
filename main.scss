@@ -106,7 +106,7 @@ a:not(.btn), .url_obf:not(.btn) {
     }
   }
 }
-.url_obf{
+.url_obf, .cursor-pointer{
   cursor: pointer;
 }
 /*
@@ -2658,4 +2658,14 @@ ul.ui-menu{
 }
 .footer-data{
   background-color: $bg-colour;
+}
+
+
+/*
+################
+MODAL
+################
+*/
+#modalSubscription,#modalFail{
+  display: none;
 }
