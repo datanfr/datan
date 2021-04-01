@@ -74,7 +74,11 @@
       $data['ogp'] = $this->meta_model->get_ogp($controller, $data['title_meta'], $data['description_meta'], $data['url'], $data);
       // JS
       $data['js_to_load_before_datan'] = array("isotope.pkgd.min");
-      $data['js_to_load']= array("datan/sorting");
+      if (count($data['districts']) <= 25) {
+        $data['js_to_load']= array("datan/sorting");
+      } else {
+        $data['js_to_load']= array("datan/sorting_select");
+      }
       // Load Views
       $this->load->view('templates/header', $data);
       $this->load->view('templates/button_up');
