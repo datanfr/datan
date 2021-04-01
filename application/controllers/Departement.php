@@ -36,7 +36,6 @@
         $data['title'] = "Députés ".$data['departement']['libelle_2'];
       } else {
         $data['title'] = "Députés ".$data['departement']['libelle_2']." ".$data['departement']['departement_nom']." (".$data['departement']['departement_code'].")";
-        $data['title'] = $data['departement']['departement_nom']." (".$data['departement']['departement_code'].")";
       }
       // Breadcrumb
       $data['breadcrumb'] = array(
