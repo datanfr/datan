@@ -131,6 +131,7 @@ $route['questionnaire/resultat']['post'] = 'quiz/result';
 $route['elections'] = 'elections/index';
 // NEWSLETTER
 $route['newsletter/edit/(:any)'] = 'newsletter/edit/$1';
+$route['newsletter/update'] = 'newsletter/edit';
 $route['newsletter/delete/(:any)'] = 'newsletter/delete/$1';
 // API
 $route['api/(:any)/(:any)'] = 'api/index/$1/$2';
