@@ -1,5 +1,5 @@
 var qsRegex;
-var buttonFilter;
+var selectedFilter;
 
 // init Isotope
 var $grid = $('.sorting').isotope({
@@ -8,19 +8,18 @@ var $grid = $('.sorting').isotope({
   filter: function(){
     var $this = $(this);
     var searchResult = qsRegex ? $this.text().match( qsRegex ) : true;
-    var buttonResult = buttonFilter ? $this.is( buttonFilter ) : true;
-    console.log(buttonFilter);
-    return searchResult && buttonResult;
+    var selectedResult = selectedFilter ? $this.is( selectedFilter ) : true;
+    console.log(selectedFilter);
+    return searchResult && selectedResult;
   }
 });
 
-// bind filter on radio button click
-$('.filters').on( 'click', 'input', function() {
-  // get filter value from input value
-  //var filterValue = this.value;
-  buttonFilter = this.value;
+function changeFilterFunc() {
+  var selectBox = document.getElementById("selectFilter");
+  selectedFilter = selectBox.options[selectBox.selectedIndex].value;
+  //console.log(selectedFilter);
   $grid.isotope();
-});
+}
 
 // use value of search field to filter
 var $quicksearch = $('#quicksearch').keyup( debounce( function() {
