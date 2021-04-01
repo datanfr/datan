@@ -124,6 +124,8 @@
       }
 
       $this->db->select('DATE_FORMAT(modified_at, "%d/%m/%Y") AS modified_at');
+      $this->db->order_by('nameLast', 'ASC');
+      $this->db->order_by('nameFirst', 'ASC');
       $query = $this->db->get_where('candidate_full', $whereQuery);
 
       return $query->result_array();
