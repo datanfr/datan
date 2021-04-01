@@ -7,7 +7,14 @@
       <p>Les <?= mb_strtolower($election['libelle']) ?> <?= $election['dateYear'] ?> se dérouleront en deux tours.</p>
       <p>Le premier tour se tiendra le <?= $election['dateFirstRoundFr'] ?>, tandis que le second tour se déroulera le <?= $election['dateSecondRoundFr'] ?>.</p>
       <p><b>Attention</b>, au vu de la crise sanitaire de la Covid-19, les dates des <?= mb_strtolower($election['libelle']) ?> sont susceptibles de changer.</p>
-      <p>Découvrez sur cette page les députés candidats aux <?= mb_strtolower($election['libelle']) ?> de <?= $election['dateYear'] ?>. Nous avons jusqu'à présent répertorié <span class="font-weight-bold text-primary"><?= $election['candidatsN'] ?> députés candidats</span>.</p>
+      <p>
+        Découvrez sur cette page les députés candidats aux <?= mb_strtolower($election['libelle']) ?> de <?= $election['dateYear'] ?>.
+        <?php if ($election['candidatsN']): ?>
+          Nous avons jusqu'à présent répertorié <span class="font-weight-bold text-primary"><?= $election['candidatsN'] ?> député<?= $election['candidatsN'] > 1 ? "s" : NULL ?> candidat<?= $election['candidatsN'] > 1 ? "s" : NULL ?></span>.
+          <?php else: ?>
+          Nous avons jusqu'à présent répertorié <span class="font-weight-bold text-primary">aucun député candidat</span>.
+        <?php endif; ?>
+      </p>
       <p>Un député candidat ne se trouve pas dans la liste ? N'hésitez pas à nous le faire savoir: <a href="mailto:contact@datan.fr">contact@datan.fr</a> !</p>
     </div>
     <?php if (!empty($electionInfos)): ?>
@@ -42,24 +49,30 @@
           <input type="text" id="quicksearch" placeholder="Recherchez un député..." />
         </div>
         <!-- Filters -->
-        <div class="filters mt-md-4 d-none d-lg-block">
-          <input class="radio-btn" name="radio-collection" id="radio-1" type="radio" checked="" value="*">
-          <label for="radio-1" class="radio-label d-flex align-items-center">
-            <span class="d-flex align-items-center"><b>Tous les députés</b></span>
-          </label>
-          <?php $i=2 ?>
-          <?php foreach ($districts as $district): ?>
-            <input class="radio-btn" name="radio-collection" id="radio-<?= $i ?>" type="radio" value=".<?= strtolower($district['id']) ?>">
-            <label class="radio-label d-flex align-items-center" for="radio-<?= $i ?>">
-              <span class="d-flex align-items-center"><?= $district['libelle'] ?></span>
+        <?php if (count($districts) <= 25): ?>
+          <div class="filters mt-md-4 d-none d-lg-block">
+            <input class="radio-btn" name="radio-collection" id="radio-1" type="radio" checked="" value="*">
+            <label for="radio-1" class="radio-label d-flex align-items-center">
+              <span class="d-flex align-items-center"><b>Tous les députés</b></span>
             </label>
-            <?php $i++ ?>
-          <?php endforeach; ?>
-        </div>
-        <!-- Députés inactifs bouton -->
-        <div class="d-none d-lg-flex justify-content-center mt-md-5">
-          <a class="btn btn-outline-primary d-none d-md-block" href="<?= base_url() ?>deputes/inactifs">Liste des députés <b>plus en activité</b></a>
-        </div>
+            <?php $i=2 ?>
+            <?php foreach ($districts as $district): ?>
+              <input class="radio-btn" name="radio-collection" id="radio-<?= $i ?>" type="radio" value=".<?= strtolower($district['id']) ?>">
+              <label class="radio-label d-flex align-items-center" for="radio-<?= $i ?>">
+                <span class="d-flex align-items-center"><?= $district['libelle'] ?></span>
+              </label>
+              <?php $i++ ?>
+            <?php endforeach; ?>
+          </div>
+        <?php else: ?>
+          <br>
+          <select class="custom-select filters" id="selectFilter" onchange="changeFilterFunc()">
+            <option selected value="*">Tous les députés</option>
+            <?php foreach ($districts as $district): ?>
+              <option value=".<?= $district['id'] ?>"><?= $district['libelle'] ?> (<?= $district['id'] ?>)</option>
+            <?php endforeach; ?>
+          </select>
+        <?php endif; ?>
       </div>
     </div>
     <div class="col-lg-9 col-md-12">
@@ -82,7 +95,7 @@
                 <span class="d-block"><?= $depute["departementNom"] ?> (<?= $depute["departementCode"] ?>)</span>
               </div>
               <div class="card-footer d-flex justify-content-center align-items-center">
-                <span><?= $depute["libelle"] ?></span>
+                <span><?= $depute["districtLibelle"] ?></span>
               </div>
             </div>
           </div>
