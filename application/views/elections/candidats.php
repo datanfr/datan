@@ -3,7 +3,7 @@
     <div class="col-12">
       <h1><?= $title ?></h1>
     </div>
-    <div class="col-md-8 col-lg-7 my-4">
+    <div class="col-md-7 col-lg-7 my-4">
       <p>Les <?= mb_strtolower($election['libelle']) ?> <?= $election['dateYear'] ?> se dérouleront en deux tours.</p>
       <p>Le premier tour se tiendra le <?= $election['dateFirstRoundFr'] ?>, tandis que le second tour se déroulera le <?= $election['dateSecondRoundFr'] ?>.</p>
       <p><b>Attention</b>, au vu de la crise sanitaire de la Covid-19, les dates des <?= mb_strtolower($election['libelle']) ?> sont susceptibles de changer.</p>
@@ -16,9 +16,16 @@
         <?php endif; ?>
       </p>
       <p>Un député candidat ne se trouve pas dans la liste ? N'hésitez pas à nous le faire savoir: <a href="mailto:contact@datan.fr">contact@datan.fr</a> !</p>
+      <?php if ($election['id'] == 1): ?>
+        <h2 class="mt-5 my-4">La couleur politique actuelle des conseils régionaux</h2>
+        <p>Les dernières élections régionales ont eu lieu en 2015. Pour retrouver les résultats, <a href="https://www.interieur.gouv.fr/Elections/Les-resultats/Regionales/elecresult__regionales-2015/(path)/regionales-2015/index.html" target="_blank" rel="nofollow noreferrer noopener">cliquez ici</a>.</p>
+        <p>Dans les conseils régionaux, les partis politiques qui arrivent en têtes aux élections reçoivent la majorité des sièges et en prennent la présidence. C'est donc la liste arrivée en tête qui se retrouve à la tête de la région.</p>
+        <p>Découvrez sur cette carte la couleur politique des différentes régions de 2015 à 2021.</p>
+        
+      <?php endif; ?>
     </div>
     <?php if (!empty($electionInfos)): ?>
-      <div class="col-md-8 col-lg-7">
+      <div class="col-md-5 col-lg-4 offset-lg-1">
         <div class="mt-4 infos">
           <h2 class="title ml-md-5 ml-3">Mieux comprendre</h2>
           <div class="px-4">
@@ -34,7 +41,7 @@
         <!-- Groupes -->
         <div class="d-flex flex-column d-lg-none">
           <h3>
-            Les <span class="text-primary">577</span> députés de l'Assemblée nationale
+            Les <span class="text-primary">577</span> députés candidats aux <?= mb_strtolower($election['libelle']) ?> de <?= $election['dateYear'] ?>
           </h3>
           <div class="mt-3 badges-groupes">
             <?php foreach ($districts as $district): ?>
