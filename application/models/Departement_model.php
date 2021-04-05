@@ -12,48 +12,45 @@
     }
 
     public function get_all_departements(){
-      $query = $this->db->query('
-        SELECT *
-        FROM departement
-        ORDER BY departement_id ASC
-      ');
+      $this->db->order_by('departement_code');
+      $query = $this->db->get('departement');
 
       return $query->result_array();
     }
 
     public function get_communes_population($slug){
-      $query = $this->db->query('
-      SELECT B.*
-      FROM (
-          SELECT A.*, c.commune, c.commune_nom, c.commune_slug,
-          CASE
-            	WHEN c.commune < 10 THEN CONCAT(LEFT(A.departement_code,2), "00", c.commune)
-            	WHEN c.commune < 100 THEN CONCAT(LEFT(A.departement_code,2), "0", c.commune)
-                ELSE CONCAT(LEFT(A.departement_code,2), c.commune)
-            END AS code_insee,
-          CASE
-            	WHEN c.commune < 10 THEN CONCAT(LEFT(A.departement_code,2), "00", c.commune)
-            	WHEN c.commune < 100 THEN CONCAT(LEFT(A.departement_code,2), "0", c.commune)
-                ELSE CONCAT(LEFT(A.departement_code,2), c.commune)
-            END AS code_insee_2
-          FROM (
-            SELECT d.slug, departement_code
-            FROM departement d
-            WHERE d.slug = "'.$slug.'"
-      	) A
-          LEFT JOIN circos c ON A.departement_code = c.dpt
-          GROUP BY c.commune_nom
-      ) B
-      LEFT JOIN cities_infos city ON B.code_insee_2 = city.insee
-      ORDER BY city.pop2017 DESC
-      LIMIT 30
-      ');
+      $sql = 'SELECT B.*
+        FROM (
+            SELECT A.*, c.commune, c.commune_nom, c.commune_slug,
+            CASE
+              	WHEN c.commune < 10 THEN CONCAT(LEFT(A.departement_code,2), "00", c.commune)
+              	WHEN c.commune < 100 THEN CONCAT(LEFT(A.departement_code,2), "0", c.commune)
+                  ELSE CONCAT(LEFT(A.departement_code,2), c.commune)
+              END AS code_insee,
+            CASE
+              	WHEN c.commune < 10 THEN CONCAT(LEFT(A.departement_code,2), "00", c.commune)
+              	WHEN c.commune < 100 THEN CONCAT(LEFT(A.departement_code,2), "0", c.commune)
+                  ELSE CONCAT(LEFT(A.departement_code,2), c.commune)
+              END AS code_insee_2
+            FROM (
+              SELECT d.slug, departement_code
+              FROM departement d
+              WHERE d.slug = ?
+        	) A
+            LEFT JOIN circos c ON A.departement_code = c.dpt
+            GROUP BY c.commune_nom
+        ) B
+        LEFT JOIN cities_infos city ON B.code_insee_2 = city.insee
+        ORDER BY city.pop2017 DESC
+        LIMIT 30
+      ';
+      $query = $this->db->query($sql, $slug);
 
       return $query->result_array();
     }
 
     public function get_commune_individual($ville, $departement){
-      $query = $this->db->query('SELECT
+      $sql = 'SELECT
             B.*,
             CASE
                 WHEN char_length(i.postal) = 4 THEN CONCAT("0", i.postal)
@@ -97,11 +94,11 @@
                         FROM
                             circos c
                         WHERE
-                            commune_slug = "'.$ville.'"
+                            commune_slug = ?
                     ) A
                     LEFT JOIN departement d ON A.dpt = d.departement_code
                 WHERE
-                    slug = "'.$departement.'"
+                    slug = ?
                 GROUP BY
                     circo
             ) B
@@ -109,88 +106,71 @@
             LEFT JOIN insee i ON B.code_insee = i.insee
         GROUP BY
             B.circo
-      ');
+      ';
+      $query = $this->db->query($sql, array($ville, $departement));
 
       return $query->result_array();
     }
 
     public function get_commune_slug($city, $dpt){
-      // if ($dpt == "976"){
-      //   $city = $city - 100;
-      // }
-      $query = $this->db->query('
-        SELECT c.commune_slug, d.slug AS dpt_slug
+      $sql = 'SELECT c.commune_slug, d.slug AS dpt_slug
         FROM circos c
-        LEFT JOIN departement d ON d.departement_code = "'.$dpt.'"
-        WHERE c.dpt = "'.$dpt.'" AND c.commune = "'.$city.'"
+        LEFT JOIN departement d ON d.departement_code = ?
+        WHERE c.dpt = ? AND c.commune = ?
         LIMIT 1
-      ');
+      ';
+      $query = $this->db->query($sql, array($dpt, $dpt, $city));
 
       return $query->row_array();
 
     }
 
-    public function get_deputes_commune($departement, $circo){
-      $query = $this->db->query('
-        SELECT d.*, d.circo AS electionCirco
+    public function get_deputes_commune($departement, $circos){
+      $sql = 'SELECT d.*, d.circo AS electionCirco
         FROM deputes_all d
-        WHERE d.dptSlug = "'.$departement.'" AND d.circo IN (' . implode(',', $circo) . ') AND d.legislature = 15 AND d.dateFin IS NULL
-      ');
+        WHERE d.dptSlug = ? AND d.circo IN ? AND d.legislature = 15 AND d.dateFin IS NULL
+      ';
+      $query = $this->db->query($sql, array($departement, $circos));
 
       return $query->result_array();
     }
 
     public function get_deputes_commune_dpt($departement, $deputes_commune){
-      $query = $this->db->query("
-      SELECT d.*, d.circo AS electionCirco
-      FROM deputes_all d
-      WHERE d.dptSlug = '".$departement."' AND d.mpId NOT IN ('" . implode("', '", $deputes_commune) . "') AND d.legislature = 15 AND d.dateFin IS NULL
-      ");
+      $sql = 'SELECT d.*, d.circo AS electionCirco
+        FROM deputes_all d
+        WHERE d.dptSlug = ? AND d.mpId NOT IN ? AND d.legislature = 15 AND d.dateFin IS NULL
+      ';
+      $query = $this->db->query($sql, array($departement, $deputes_commune));
 
-      return $query->result_array();
-    }
-
-    public function get_deputes_dpt($dpt, $circo){
-      $query = $this->db->query('
-        SELECT m.electionRegion, m.electionDepartement, m.electionDepartementNumero, m.electionCirco, d.civ, d.prenom, d.nom, d.nameUrl, dpt.slug AS dpt_slug
-        FROM mandat_principal m
-        LEFT JOIN deputes d ON d.uid = m.idDepute
-        LEFT JOIN departement dpt ON m.electionDepartementNumero = dpt.departement_code
-        WHERE m.legislature = 15 AND m.dateFin IS NULL AND m.electionDepartementNumero = "'.$dpt.'" AND electionCirco != "'.$circo.'"
-      ');
       return $query->result_array();
     }
 
     public function get_commune_random(){
-      $rand = rand(1, 36467);
-      $query = $this->db->query('
-      SELECT commune_nom
-      FROM circos
-      WHERE id = "'.$rand.'"
-      LIMIT 1
-      ');
+      $this->db->select('commune_nom');
+      $this->db->order_by('id', 'RANDOM');
+      $query = $this->db->get_where('circos', array('commune_nom != ' => '0'), 1);
 
       return $query->row_array();
     }
 
-    public function get_city_mayor($dpt, $insee_city){
-      $query = $this->db->query('
-        SELECT nameFirst, nameLast, gender
-        FROM cities_mayors
-        WHERE dpt = "'.$dpt.'" AND insee = "'.$insee_city.'"
-        LIMIT 1
-      ');
+    public function get_city_mayor($dpt, $insee){
+      $where = array(
+        'dpt' => $dpt,
+        'insee' => $insee
+      );
+      $this->db->select('nameFirst, nameLast, gender');
+      $query = $this->db->get_where('cities_mayors', $where, 1);
 
       return $query->row_array();
     }
 
-    public function get_results_2017_pres_2($dpt, $insee_city){
-      $query = $this->db->query('
-        SELECT macron_n, macron_pct, lePen_n, lePen_pct
-        FROM elect_2017_pres_2
-        WHERE dpt = "'.$dpt.'" AND commune = "'.$insee_city.'"
-        LIMIT 1
-      ');
+    public function get_results_2017_pres_2($dpt, $insee){
+      $where = array(
+        'dpt' => $dpt,
+        'commune' => $insee
+      );
+      $this->db->select('macron_n, macron_pct, lePen_n, lePen_pct');
+      $query = $this->db->get('elect_2017_pres_2', $where, 1);
 
       $array = $query->row_array();
       $array['macron_n'] = number_format($array['macron_n'], 0, ',', ' ');
@@ -211,24 +191,19 @@
       } else {
         $city = $city;
       }
-      $query = $this->db->query('
-        SELECT res.party, res.value, l.name AS listName, l.tete AS listTete, l.parti AS partiName
+      $sql = 'SELECT res.party, res.value, l.name AS listName, l.tete AS listTete, l.parti AS partiName
         FROM elect_2019_europe_clean res
         LEFT JOIN elect_2019_europe_listes l ON res.party = l.id
-        WHERE res.dpt = "'.$dpt.'" AND res.commune = "'.$city.'"
+        WHERE res.dpt = ? AND res.commune = ?
         ORDER BY res.value DESC
         LIMIT 3
-      ');
+      ';
+      $query = $this->db->query($sql, array($dpt, $city));
 
       return $query->result_array();
     }
 
     public function get_ville_insee($region, $dpt, $city){
-      //echo $region;
-      //echo $dpt;
-      //echo $city;
-
-
       if ($dpt < 10) {
         $new_dpt = "0".$dpt;
       } elseif($dpt < 100) {
@@ -267,8 +242,7 @@
       $array["insee"] = strtoupper($new_dpt)."".$new_city;
       //before 2019 Mayotte had different insee code
       $array["old_insee"] = strtoupper($new_dpt)."".$old_city;
-
-
+      
       return $array;
     }
   }
