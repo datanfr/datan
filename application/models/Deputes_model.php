@@ -73,20 +73,20 @@
     }
 
     public function get_depute_by_nameUrl($nameUrl) {
-      $whereQuery = array(
+      $where = array(
         'nameUrl' => $nameUrl
       );
 
-      $query = $this->db->get_where('deputes_last', $whereQuery, 1);
+      $query = $this->db->get_where('deputes_last', $where, 1);
       return $query->row_array();
     }
 
     public function get_depute_by_mpId($mpId) {
-      $whereQuery = array(
+      $where = array(
         'mpId' => $mpId
       );
 
-      $query = $this->db->get_where('deputes_last', $whereQuery, 1);
+      $query = $this->db->get_where('deputes_last', $where, 1);
       return $query->row_array();
     }
 
@@ -111,12 +111,12 @@
     }
 
     public function depute_group_president($depute_uid, $groupe_id){
-      $whereQuery = array(
+      $where = array(
         'mpId' => $depute_uid,
         'organeRef' => $groupe_id,
         'preseance' => 1
       );
-      $query = $this->db->get_where('mandat_groupe', $whereQuery, 1);
+      $query = $this->db->get_where('mandat_groupe', $where, 1);
 
       return $query->row_array();
     }
