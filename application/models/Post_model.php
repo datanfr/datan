@@ -6,47 +6,42 @@
 
     public function get_posts($slug, $user, $category){
       if (empty($slug)) {
-        // QUERY FOR ALL POSTS WHEN ADMIN
-        if ($user == "admin" || $user == "writer") {
-          $query = $this->db->query('
-            SELECT p.id, date_format(created_at, "%d %M %Y") as created_at_fr, c.name AS category_name, c.slug AS category_slug, p.id, p.user_id, p.title, p.slug, p.body, p.created_at, p.state, p.category_id
-            FROM posts p
-            LEFT JOIN categories c ON p.category_id = c.id
-            ORDER BY created_at DESC
-          ');
-        } else {
-          // QUERY FOR ALL POSTS WHEN NORMAL USER
-          $query = $this->db->query('
-            SELECT p.id, date_format(created_at, "%d %M %Y") as created_at_fr, c.name AS category_name, c.slug AS category_slug, p.id, p.user_id, p.title, p.slug, p.body, p.created_at, p.state, p.category_id, date(p.created_at) AS created_at_sitemap, date(p.modified_at) AS modified_at_sitemap
-            FROM posts p
-            LEFT JOIN categories c ON p.category_id = c.id
-            WHERE state = "published"
-            ORDER BY created_at DESC
-          ');
+        $sql = 'SELECT p.id, date_format(created_at, "%d %M %Y") as created_at_fr, c.name AS category_name, c.slug AS category_slug, p.id, p.user_id, p.title, p.slug, p.body, p.created_at, p.state, p.category_id
+          FROM posts p
+          LEFT JOIN categories c ON p.category_id = c.id
+        ';
+        if ($user != "admin" && $user != "writer") {
+          $sql .= 'WHERE state = "published"';
         }
+        $sql .= 'ORDER BY created_at DESC';
+        $query = $this->db->query($sql);
+
         return $query->result_array();
       } else {
-        if ($user == "admin" || $user == "writer") {
-          // QUERY FOR INDIVIDUAL POST WHEN ADMIN/WRITER
-          $query = $this->db->query('
-            SELECT p.id, date_format(created_at, "%d %M %Y") as created_at_fr, c.name AS category_name, c.slug AS category_slug, p.id, p.user_id, p.title, p.slug, p.body, p.created_at, p.state, p.category_id
-            FROM posts p
-            LEFT JOIN categories c ON p.category_id = c.id AND c.slug = "'.$category.'"
-            WHERE p.slug = "'.$slug.'"
-            ORDER BY created_at DESC
-          ');
-        } else {
-          // QUERY FOR INDIVIDUAL POST WHEN NORMAL USER
-          $query = $this->db->query('
-            SELECT p.id, date_format(created_at, "%d %M %Y") as created_at_fr, c.name AS category_name, c.slug AS category_slug, p.id, p.user_id, p.title, p.slug, p.body, p.created_at, p.state, p.category_id
-            FROM posts p
-            LEFT JOIN categories c ON p.category_id = c.id
-            WHERE p.slug = "'.$slug.'" AND p.state = "published" AND c.slug = "'.$category.'"
-            ORDER BY created_at DESC
-          ');
+        $sql = 'SELECT p.id, date_format(created_at, "%d %M %Y") as created_at_fr, c.name AS category_name, c.slug AS category_slug, p.id, p.user_id, p.title, p.slug, p.body, p.created_at, p.state, p.category_id
+          FROM posts p
+          LEFT JOIN categories c ON p.category_id = c.id
+          WHERE p.slug = ? AND c.slug = ?
+        ';
+        if ($user != "admin" && $user != "writer") {
+          $sql .= ' AND p.state = "published"';
         }
+        $query = $this->db->query($sql, array($slug, $category));
+
         return $query->row_array();
       }
+    }
+
+    public function get_post_edit($slug){
+      $sql = 'SELECT p.id, date_format(created_at, "%d %M %Y") as created_at_fr, c.name AS category_name, c.slug AS category_slug, p.id, p.user_id, p.title, p.slug, p.body, p.created_at, p.state, p.category_id
+        FROM posts p
+        LEFT JOIN categories c ON p.category_id = c.id
+        WHERE p.slug = ?
+        LIMIT 1
+      ';
+      $query = $this->db->query($sql, $slug);
+
+      return $query->row_array();
     }
 
     public function get_last_posts(){
@@ -83,7 +78,7 @@
       return true;
     }
 
-    public function update_post(){      
+    public function update_post(){
       $slug = url_title($this->input->post('title'));
       $slug = mb_strtolower($slug);
       $slug = $this->skip_accents($slug);
@@ -99,20 +94,15 @@
       return $this->db->update('posts', $data);
     }
 
-    public function get_categories(){
-      $this->db->order_by('name');
-      $query = $this->db->get('categories');
-      return $query->result_array();
-    }
-
     public function get_posts_by_category($category){
-      $query = $this->db->query('
-        SELECT p.id, date_format(created_at, "%d %M %Y") as created_at_fr, p.title, p.body, p.user_id, c.name AS category_name, c.slug AS category_slug, p.slug, p.state
+      $sql = ' SELECT p.id, date_format(created_at, "%d %M %Y") as created_at_fr, p.title, p.body, p.user_id, c.name AS category_name, c.slug AS category_slug, p.slug, p.state
         FROM posts p
-        JOIN categories c ON p.category_id = c.id AND c.slug = "'.$category.'"
+        JOIN categories c ON p.category_id = c.id AND c.slug = ?
         WHERE p.state = "published"
         ORDER BY created_at DESC
-      ');
+      ';
+      $query = $this->db->query($sql, $category);
+
       return $query->result_array();
     }
 
