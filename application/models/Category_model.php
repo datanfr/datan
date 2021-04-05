@@ -5,22 +5,14 @@
     }
 
     public function get_categories(){
-      $query = $this->db->query('
-        SELECT *
-        FROM categories
-        ORDER BY name
-      ');
+      $this->db->order_by('name', 'ASC');
+      $query = $this->db->get('categories');
 
       return $query->result_array();
     }
 
     public function get_category($slug){
-      $query = $this->db->query('
-        SELECT *
-        FROM categories
-        WHERE slug = "'.$slug.'"
-        LIMIT 1
-      ');
+      $query = $this->db->get_where('categories', array('slug' => $slug), 1);
 
       return $query->row_array();
     }
