@@ -16,9 +16,9 @@
               <div class="liseret" style="background-color: <?= $groupe["couleurAssociee"] ?>"></div>
               <div class="card-avatar">
                 <?php if ($president['img']): ?>
-                  <img class="img-lazy placeholder" src="<?= asset_url() ?>imgs/placeholder/placeholder-face.png" data-src="<?= base_url(); ?>assets/imgs/deputes_nobg/depute_<?= substr($president["mpId"], 2) ?>.png" alt="<?= $president['nameFirst'].' '.$president['nameLast'] ?>">
+                  <img class="img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-face.png" data-src="<?= base_url(); ?>assets/imgs/deputes_nobg/depute_<?= substr($president["mpId"], 2) ?>.png" alt="<?= $president['nameFirst'].' '.$president['nameLast'] ?>">
                   <?php else: ?>
-                  <img class="img-lazy placeholder" src="<?= asset_url() ?>imgs/placeholder/placeholder-face.png" alt="<?= $president['nameFirst'].' '.$president['nameLast'] ?>">
+                  <img class="img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-face.png" alt="<?= $president['nameFirst'].' '.$president['nameLast'] ?>">
                 <?php endif; ?>
               </div>
               <div class="card-body">
@@ -42,9 +42,9 @@
               <div class="liseret" style="background-color: <?= $groupe["couleurAssociee"] ?>"></div>
               <div class="card-avatar">
                 <?php if ($mp['img']): ?>
-                  <img class="img-lazy placeholder" src="<?= asset_url() ?>imgs/placeholder/placeholder-face.png" data-src="<?= base_url(); ?>assets/imgs/deputes_nobg/depute_<?= substr($mp["mpId"], 2) ?>.png" alt="<?= $mp['nameFirst'].' '.$mp['nameLast'] ?>">
+                  <img class="img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-face.png" data-src="<?= base_url(); ?>assets/imgs/deputes_nobg/depute_<?= substr($mp["mpId"], 2) ?>.png" alt="<?= $mp['nameFirst'].' '.$mp['nameLast'] ?>">
                   <?php else: ?>
-                  <img class="img-lazy placeholder" src="<?= asset_url() ?>imgs/placeholder/placeholder-face.png" alt="<?= $mp['nameFirst'].' '.$mp['nameLast'] ?>">
+                  <img class="img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-face.png" alt="<?= $mp['nameFirst'].' '.$mp['nameLast'] ?>">
                 <?php endif; ?>
               </div>
               <div class="card-body">
@@ -67,9 +67,9 @@
                 <div class="liseret" style="background-color: <?= $groupe["couleurAssociee"] ?>"></div>
                 <div class="card-avatar">
                   <?php if ($mp['img']): ?>
-                    <img class="img-lazy placeholder" src="<?= asset_url() ?>imgs/placeholder/placeholder-face.png" data-src="<?= base_url(); ?>assets/imgs/deputes_nobg/depute_<?= substr($mp["mpId"], 2) ?>.png" alt="<?= $mp['nameFirst'].' '.$mp['nameLast'] ?>">
+                    <img class="img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-face.png" data-src="<?= base_url(); ?>assets/imgs/deputes_nobg/depute_<?= substr($mp["mpId"], 2) ?>.png" alt="<?= $mp['nameFirst'].' '.$mp['nameLast'] ?>">
                     <?php else: ?>
-                    <img class="img-lazy placeholder" src="<?= asset_url() ?>imgs/placeholder/placeholder-face.png" alt="<?= $mp['nameFirst'].' '.$mp['nameLast'] ?>">
+                    <img class="img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-face.png" alt="<?= $mp['nameFirst'].' '.$mp['nameLast'] ?>">
                   <?php endif; ?>
                 </div>
                 <div class="card-body">
