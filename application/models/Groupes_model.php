@@ -89,20 +89,16 @@
 
     public function get_groupes_president($groupe_uid, $active){
       if ($active) {
-        $sql = 'SELECT mg.mpId, mg.dateDebut, date_format(mg.dateDebut, "%d %M %Y") as dateDebutFR,
-          mg.dateFin, mg.codeQualite, mg.libQualiteSex, civ,
-          d.nameFirst, d.nameLast, d.nameUrl,
-          dpt.slug AS dpt_slug, dpt.departement_nom, dpt.departement_code
-          FROM mandat_groupe mg
-          LEFT JOIN deputes d ON d.mpId = mg.mpId
-          LEFT JOIN mandat_principal mp ON mp.mpId = mg.mpId
-          LEFT JOIN departement dpt ON mp.electionDepartementNumero = dpt.departement_code
-          WHERE organeRef = ? AND mg.preseance = 1 AND mp.legislature = 15
-          AND mp.typeOrgane = "ASSEMBLEE" AND mp.dateFin IS NULL AND mg.dateFin IS NULL
-          LIMIT 1
-        ';
+        $where = array(
+          'mandat_groupe.organeRef' => $groupe_uid,
+          'mandat_groupe.preseance' => 1,
+          'mandat_groupe.dateFin' => NULL
+        );
+        $this->db->select('*, date_format(dateDebut, "%d %M %Y") as dateDebutFR');
+        $this->db->join('deputes_last', 'deputes_last.mpId = mandat_groupe.mpId', 'left');
+        $query = $this->db->get_where('mandat_groupe', $where, 1);
       } else {
-        $sql = 'SELECT A.*, civ, d.nameFirst, d.nameLast, d.nameUrl, dpt.slug AS dpt_slug, dpt.departement_nom, dpt.departement_code
+        $sql = 'SELECT A.*, civ, da.nameFirst, da.nameLast, da.nameUrl, da.dptSlug, da.departementNom, da.departementCode, da.img
           FROM
           (
           SELECT mpId, dateDebut, date_format(dateDebut, "%d %M %Y") as dateDebutFR, dateFin, codeQualite, libQualiteSex
@@ -111,40 +107,28 @@
           ORDER BY dateFin DESC
           LIMIT 1
           ) A
-          LEFT JOIN deputes d ON d.mpId = A.mpId
-          LEFT JOIN mandat_principal mp ON mp.mpId = A.mpId
-          LEFT JOIN departement dpt ON mp.electionDepartementNumero = dpt.departement_code
-          WHERE mp.legislature = 15 AND mp.typeOrgane = "ASSEMBLEE"
+          LEFT JOIN deputes_last da ON da.mpId = A.mpId
           LIMIT 1
         ';
+        $query = $this->db->query($sql, $groupe_uid);
       }
-      $query = $this->db->query($sql, $groupe_uid);
 
       return $query->row_array();
     }
 
     public function get_groupe_membres($groupe_uid, $active){
       if ($active) {
-        $sql = 'SELECT mg.mpId, mg.dateFin, mg.codeQualite, mg.libQualiteSex, civ,
-          d.nameFirst, d.nameLast, d.nameUrl, dpt.slug AS dpt_slug, dpt.departement_nom, dpt.departement_code
-          FROM
-          mandat_groupe mg
-          LEFT JOIN deputes d ON d.mpId = mg.mpId
-          LEFT JOIN mandat_principal mp ON mp.mpId = mg.mpId
-          LEFT JOIN departement dpt ON mp.electionDepartementNumero = dpt.departement_code
-          WHERE mg.organeRef = ?
-            AND mg.nominPrincipale = 1
-            AND mg.legislature = 15
-            AND mg.dateFin IS NULL
-            AND mg.preseance IN (20, 28)
-            AND mp.legislature = 15
-            AND mp.typeOrgane = "ASSEMBLEE"
-            AND mp.dateFin IS NULL
-            AND mp.preseance = 50
-            ORDER BY d.nameLast
-        ';
+        $where = array(
+          'mandat_groupe.organeRef' => $groupe_uid,
+          'mandat_groupe.dateFin' => NULL,
+          'mandat_groupe.nominPrincipale' => 1
+        );
+        $this->db->where_in('mandat_groupe.preseance', array(20, 28));
+        $this->db->join('deputes_last', 'deputes_last.mpId = mandat_groupe.mpId');
+        $this->db->order_by('nameLast ASC, nameFirst ASC');
+        $query = $this->db->get_where('mandat_groupe', $where);
       } else {
-        $sql = 'SELECT A.*, d.civ, d.nameFirst, d.nameLast, d.nameUrl, dpt.slug AS dpt_slug, dpt.departement_nom, dpt.departement_code
+        $sql = 'SELECT A.*, da.civ, da.nameFirst, da.nameLast, da.nameUrl, da.dptSlug, da.departementNom, da.departementCode, da.img
           FROM
           (
           SELECT mg.mpId, mg.dateFin, mg.codeQualite, mg.libQualiteSex
@@ -152,51 +136,27 @@
           WHERE mg.organeRef = ? AND mg.nominPrincipale = 1 AND mg.legislature = 15 AND mg.preseance IN (20, 28)
           GROUP BY mg.mpId
           ) A
-          LEFT JOIN deputes d ON d.mpId = A.mpId
-          LEFT JOIN mandat_principal mp ON mp.mpId = A.mpId
-          LEFT JOIN departement dpt ON mp.electionDepartementNumero = dpt.departement_code
-          WHERE mp.legislature = 15 AND mp.typeOrgane = "ASSEMBLEE" AND mp.preseance = 50
-          GROUP BY A.mpId
+          LEFT JOIN deputes_last da ON da.mpId = A.mpId
+          ORDER BY da.nameLast ASC, da.nameFirst ASC
         ';
+        $query = $this->db->query($sql, $groupe_uid);
       }
-      $query = $this->db->query($sql, $groupe_uid);
+
 
 
       return $query->result_array();
     }
 
     public function get_groupe_apparentes($groupe_uid, $active){
-        $sql = 'SELECT
-              mg.mpId,
-              mg.dateFin,
-              mg.codeQualite,
-              mg.libQualiteSex,
-              civ,
-              d.nameFirst,
-              d.nameLast,
-              d.nameUrl,
-              dpt.slug AS dpt_slug,
-              dpt.departement_nom,
-              dpt.departement_code
-          FROM
-              mandat_groupe mg
-              LEFT JOIN deputes d ON d.mpId = mg.mpId
-              LEFT JOIN mandat_principal mp ON mp.mpId = mg.mpId
-              LEFT JOIN departement dpt ON mp.electionDepartementNumero = dpt.departement_code
-          WHERE
-              mg.organeRef = ?
-              AND mg.nominPrincipale = 1
-              AND mg.legislature = 15 '
-              . ($active ? 'AND mg.dateFin IS NULL ' : '') .
-              'AND mg.preseance = 24
-              AND mp.legislature = 15
-              AND mp.typeOrgane = "ASSEMBLEE"
-              AND mp.dateFin IS NULL
-              AND mp.preseance = 50
-          ORDER BY
-              d.nameLast
-        ';
-        $query = $this->db->query($sql, $groupe_uid);
+      $where = array(
+        'mandat_groupe.organeRef' => $groupe_uid,
+        'mandat_groupe.dateFin' => NULL,
+        'mandat_groupe.nominPrincipale' => 1
+      );
+      $this->db->where_in('mandat_groupe.preseance', array(24));
+      $this->db->join('deputes_last', 'deputes_last.mpId = mandat_groupe.mpId');
+      $this->db->order_by('nameLast ASC, nameFirst ASC');
+      $query = $this->db->get_where('mandat_groupe', $where);
 
       return $query->result_array();
     }
