@@ -96,12 +96,9 @@ class Admin_model extends CI_Model
 
   public function get_vote_datan($id)
   {
-    $query = $this->db->query('
-        SELECT vd.*, f.name AS category_name
-        FROM votes_datan vd
-        LEFT JOIN fields f ON f.id = vd.category
-        WHERE vd.id = "' . $id . '"
-      ');
+    $this->db->join('fields', 'fields.id = votes_datan.category', 'left');
+    $this->db->select('votes_datan.*, fields.name AS category_name');
+    $query = $this->db->get_where('votes_datan', array('votes_datan.id' => $id), 1);
 
     return $query->row_array();
   }
@@ -162,8 +159,7 @@ class Admin_model extends CI_Model
 
   public function get_votes_an_position($limit = false)
   {
-    $queryString = "
-        SELECT B.*,
+    $sql = "SELECT B.*,
           round((B.max_value - 0.5*((B.decomptePour + B.decompteContre + B.decompteAbs) - B.max_value)) / (B.decomptePour + B.decompteContre + B.decompteAbs),2) AS cohesion
         FROM
         (
@@ -193,25 +189,25 @@ class Admin_model extends CI_Model
         SUM(CASE WHEN organeRef = 'PO759900' THEN positionGroupe ELSE NULL END) AS 'PO759900',
         SUM(CASE WHEN organeRef = 'PO765636' THEN positionGroupe ELSE NULL END) AS 'PO765636'
         FROM groupes_cohesion
-        WHERE legislature = " . legislature_current() . "
+        WHERE legislature = ?
         GROUP BY voteNumero
         ) A
         LEFT JOIN votes_info vi ON A.voteNumero = vi.voteNumero AND A.legislature = vi.legislature
         LEFT JOIN votes_datan vd ON A.voteNumero = vd.voteNumero AND A.legislature = vd.legislature
         ) B
-        ORDER BY B.dateScrutin DESC";
+        ORDER BY B.dateScrutin DESC
+    ";
     if ($limit) {
-      $queryString .= ' LIMIT ' . $limit;
+      $sql .= ' LIMIT ' . $limit;
     }
-    $query = $this->db->query($queryString);
+    $query = $this->db->query($sql, legislature_current());
 
     return $query->result_array();
   }
 
   public function get_votes_an_cohesion()
   {
-    $query = $this->db->query("
-      SELECT B.*,
+    $sql = "SELECT B.*,
       	round((B.max_value - 0.5*((B.decomptePour + B.decompteContre + B.decompteAbs) - B.max_value)) / (B.decomptePour + B.decompteContre + B.decompteAbs),2) AS cohesion
       FROM
       (
@@ -241,36 +237,17 @@ class Admin_model extends CI_Model
       SUM(CASE WHEN organeRef = 'PO759900' THEN cohesion ELSE NULL END) AS 'PO759900',
       SUM(CASE WHEN organeRef = 'PO765636' THEN cohesion ELSE NULL END) AS 'PO765636'
       FROM groupes_cohesion
-      WHERE legislature = " . legislature_current() . "
+      WHERE legislature = ?
       GROUP BY voteNumero
       ) A
       LEFT JOIN votes_info vi ON A.voteNumero = vi.voteNumero AND A.legislature = vi.legislature
       LEFT JOIN votes_datan vd ON A.voteNumero = vd.voteNumero AND A.legislature = vd.legislature
       ) B
       ORDER BY B.dateScrutin DESC
-      ");
+    ";
+    $query = $this->db->query($sql, legislature_current());
 
     return $query->result_array();
-  }
-
-  public function get_groupes_libelle($groupes)
-  {
-    foreach ($groupes as $groupe) {
-      $query = $this->db->query('
-          SELECT libelleAbrev, uid
-          FROM organes
-          WHERE uid = "' . $groupe . '"
-      ');
-      $result = $query->row_array();
-      //print_r($result);
-
-      $array[] = [
-        "libelle" => $result["libelleAbrev"],
-        "uid" => $result["uid"]
-      ];
-    }
-
-    return $array;
   }
 
   public function get_votes_em_lost()
