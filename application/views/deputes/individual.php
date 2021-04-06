@@ -27,8 +27,8 @@
                       </picture>
                     <?php else : ?>
                       <picture>
-                        <source srcset="<?= asset_url() ?>imgs/placeholder/placeholder-face.png" type="image/png">
-                        <img src="<?= asset_url() ?>imgs/placeholder/placeholder-face.png" alt="<?= $title ?>">
+                        <source srcset="<?= asset_url() ?>imgs/placeholder/placeholder-face-2.png" type="image/png">
+                        <img src="<?= asset_url() ?>imgs/placeholder/placeholder-face-2.png" alt="<?= $title ?>">
                       </picture>
                     <?php endif; ?>
                   </div>
