@@ -84,11 +84,11 @@
           <div class="card card-depute mx-2">
             <div class="liseret" style="background-color: <?= $mp["couleurAssociee"] ?>"></div>
             <div class="card-avatar">
-              <picture>
-                <source srcset="<?= asset_url(); ?>imgs/deputes_nobg_webp/depute_<?= substr($mp["mpId"], 2) ?>_webp.webp" type="image/webp">
-                <source srcset="<?= asset_url(); ?>imgs/deputes_nobg/depute_<?= substr($mp["mpId"], 2) ?>.png" type="image/png">
-                <img src="<?= asset_url(); ?>imgs/deputes/depute_<?= substr($mp["mpId"], 2) ?>.png" alt="<?= $mp['nameFirst'].' '.$mp['nameLast'] ?>">
-              </picture>
+              <?php if ($mp['img']): ?>
+                <img class="img-lazy placeholder" src="<?= asset_url() ?>imgs/placeholder/placeholder-face.png" data-src="<?= base_url(); ?>assets/imgs/deputes_nobg/depute_<?= substr($mp["mpId"], 2) ?>.png" alt="<?= $mp['nameFirst'].' '.$mp['nameLast'] ?>">
+                <?php else: ?>
+                <img class="img-lazy placeholder" src="<?= asset_url() ?>imgs/placeholder/placeholder-face.png" alt="<?= $mp['nameFirst'].' '.$mp['nameLast'] ?>">
+              <?php endif; ?>
             </div>
             <div class="card-body">
               <h2 class="card-title">
