@@ -218,7 +218,7 @@
       }
 
       // Query 4 Votes
-      $data['votes_datan'] = $this->votes_model->get_votes_datan_groupe($groupe_uid, 5, $legislature);
+      $data['votes_datan'] = $this->votes_model->get_votes_datan_groupe($groupe_uid, 5);
 
       // Query 5 Edito
       $data['edito'] = $this->groupes_edito->edito($groupe_ab, $groupe_opposition, $data['groupes_positionnement']);
