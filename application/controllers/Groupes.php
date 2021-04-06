@@ -18,7 +18,6 @@
       $data['active'] = TRUE;
       $data['groupes'] = $this->groupes_model->get_groupes_all($data['active'], legislature_current());
       $data['number_groupes_inactive'] = $this->groupes_model->get_number_inactive_groupes();
-      $data['number_groupes_inactive'] = $data['number_groupes_inactive']['n'];
       $data['number'] = $this->groupes_model->get_number_active_groupes();
       $data['number_in_groupes'] = $this->groupes_model->get_number_mps_groupes();
       $data['number_unattached'] = $this->groupes_model->get_number_mps_unattached();
