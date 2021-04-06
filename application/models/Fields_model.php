@@ -5,21 +5,15 @@
     }
 
     public function get_fields(){
-      $query = $this->db->query('
-        SELECT *
-        FROM fields
-        ORDER BY name
-      ');
+      $this->db->order_by('name');
+      $query = $this->db->get('fields');
+
       return $query->result_array();
     }
 
     public function get_field($field){
-      $query = $this->db->query('
-        SELECT f.*
-        FROM fields f
-        WHERE f.slug = "'.$field.'"
-        LIMIT 1
-      ');
+      $query = $this->db->get_where('fields', array('slug' => $field), 1);
+      
       return $query->row_array();
     }
 

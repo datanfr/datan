@@ -18,7 +18,6 @@
       $data['active'] = TRUE;
       $data['groupes'] = $this->groupes_model->get_groupes_all($data['active'], legislature_current());
       $data['number_groupes_inactive'] = $this->groupes_model->get_number_inactive_groupes();
-      $data['number_groupes_inactive'] = $data['number_groupes_inactive']['n'];
       $data['number'] = $this->groupes_model->get_number_active_groupes();
       $data['number_in_groupes'] = $this->groupes_model->get_number_mps_groupes();
       $data['number_unattached'] = $this->groupes_model->get_number_mps_unattached();
@@ -218,7 +217,7 @@
       }
 
       // Query 4 Votes
-      $data['votes_datan'] = $this->votes_model->get_votes_datan_groupe($groupe_uid, 5, $legislature);
+      $data['votes_datan'] = $this->votes_model->get_votes_datan_groupe($groupe_uid, 5);
 
       // Query 5 Edito
       $data['edito'] = $this->groupes_edito->edito($groupe_ab, $groupe_opposition, $data['groupes_positionnement']);
