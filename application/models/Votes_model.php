@@ -5,27 +5,27 @@
     }
 
     public function get_all_votes($legislature, $year, $month, $limit){
-      $queryString = '
+      $sql = '
       SELECT vi.*, date_format(vi.dateScrutin, "%d %M %Y") as dateScrutinFR,
       REPLACE(vi.titre, "n?", "n°") AS titre,
       vd.title, vd.slug, vd.category
       FROM votes_info vi
       LEFT JOIN votes_datan vd ON vi.voteId = vd.vote_id AND vd.state = "published"
-      WHERE vi.legislature = '.$legislature.'
+      WHERE vi.legislature = '.$this->db->escape($legislature).'
       ';
-      $queryString .= $year ? ' AND YEAR(vi.dateScrutin) = "'.$year.'"' : '';
-      $queryString .= $month ? ' AND MONTH(vi.dateScrutin) = "'.$month.'"' : '';
-      $queryString .= ' ORDER BY vi.voteNumero DESC';
+      $sql .= $year ? ' AND YEAR(vi.dateScrutin) = "'.$this->db->escape_str($year).'"' : '';
+      $sql .= $month ? ' AND MONTH(vi.dateScrutin) = "'.$this->db->escape_str($month).'"' : '';
+      $sql .= ' ORDER BY vi.voteNumero DESC';
       if ($limit != FALSE) {
-        $queryString .= ' LIMIT ' . $limit;
+        $sql .= ' LIMIT ' . $this->db->escape_str($limit);
       }
-      $query = $this->db->query($queryString);
+      $query = $this->db->query($sql);
 
       return $query->result_array();
     }
 
     public function get_last_votes_datan($limit = FALSE){
-      $queryString = '
+      $sql = '
       SELECT vd.title AS voteTitre, vd.description, vi.dateScrutin, vi.voteNumero, vi.legislature, f.name AS category_libelle, f.slug AS category_slug, vi.sortCode, date_format(dateScrutin, "%d %M %Y") as dateScrutinFR
       FROM votes_datan vd
       LEFT JOIN votes_info vi ON vd.voteNumero = vi.voteNumero AND vd.legislature = vi.legislature
@@ -33,74 +33,61 @@
       WHERE vd.state = "published"
       ORDER BY vi.voteNumero DESC'
       ;
-      $queryString .= $limit ? ' LIMIT '.$limit : '';
-      $query = $this->db->query($queryString);
+      $sql .= $limit ? ' LIMIT '.$this->db->escape($limit) : '';
+      $query = $this->db->query($sql);
 
       return $query->result_array();
     }
 
     public function get_n_votes_datan(){
-      $query = $this->db->query('
-        SELECT COUNT(vd.title) AS n
-        FROM votes_datan vd
-        LEFT JOIN votes_info vi ON vd.voteNumero = vi.voteNumero AND vd.legislature = vi.legislature
-        JOIN fields f ON vd.category = f.id
-        WHERE vd.state = "published"
-      ');
-
-      return $query->row_array();
+      $this->db->where(array('state' => 'published'));
+      return $this->db->count_all_results('votes_datan');
     }
 
     public function get_n_votes(){
       $this->db->where('legislature', legislature_current());
-      $query = $this->db->count_all_results('votes_info');
-
-      return $query;
+      return $this->db->count_all_results('votes_info');
     }
 
     public function get_last_vote(){
-      $query = $this->db->query('
-        SELECT voteNumero
-        FROM votes_info
-        WHERE legislature = 15
-        ORDER BY voteNumero DESC
-        LIMIT 1
-      ');
+      $this->db->select('voteNumero');
+      $this->db->order_by('voteNumero', 'DESC');
+      $query = $this->db->get_where('votes_info', array('legislature' => legislature_current()), 1);
 
       return $query->row_array();
     }
 
     public function get_votes_datan_category($field){
-      $query = $this->db->query('
-      SELECT vd.title AS vote_titre, vd.description, vi.dateScrutin, vi.voteNumero, vi.legislature, f.name AS category_libelle, f.slug AS category_slug, vi.sortCode, date_format(dateScrutin, "%d %M %Y") as dateScrutinFR
-      FROM votes_datan vd
-      LEFT JOIN votes_info vi ON vd.voteNumero = vi.voteNumero AND vd.legislature = vi.legislature
-      LEFT JOIN fields f ON vd.category = f.id
-      WHERE vd.state = "published" AND f.id = "'.$field.'"
-      ORDER BY vd.id DESC
-      ');
+      $sql = 'SELECT vd.title AS vote_titre, vd.description, vi.dateScrutin, vi.voteNumero, vi.legislature, f.name AS category_libelle, f.slug AS category_slug, vi.sortCode, date_format(dateScrutin, "%d %M %Y") as dateScrutinFR
+        FROM votes_datan vd
+        LEFT JOIN votes_info vi ON vd.voteNumero = vi.voteNumero AND vd.legislature = vi.legislature
+        LEFT JOIN fields f ON vd.category = f.id
+        WHERE vd.state = "published" AND f.id = ?
+        ORDER BY vd.id DESC
+      ';
+      $query = $this->db->query($sql, $field);
 
       return $query->result_array();
     }
 
     public function get_years_archives($legislature){
-      $query = $this->db->query('
-        SELECT DISTINCT(YEAR(dateScrutin)) AS votes_year
+      $sql = 'SELECT DISTINCT(YEAR(dateScrutin)) AS votes_year
         FROM votes_info
-        WHERE legislature = "'.$legislature.'"
+        WHERE legislature = ?
         ORDER BY YEAR(dateScrutin) ASC
-      ');
+      ';
+      $query = $this->db->query($sql, $legislature);
 
       return $query->result_array();
     }
 
     public function get_months_archives($legislature){
 
-      $query = $this->db->query('
-        SELECT DISTINCT(YEAR(dateScrutin)) AS years, (MONTH(dateScrutin)) AS months
+      $sql = 'SELECT DISTINCT(YEAR(dateScrutin)) AS years, (MONTH(dateScrutin)) AS months
         FROM votes_info
-        WHERE legislature = "'.$legislature.'"
-      ');
+        WHERE legislature = ?
+      ';
+      $query = $this->db->query($sql, $legislature);
 
       $months = array('janvier', 'février', 'mars', 'avril', 'mai', 'juin', 'juillet', 'août', 'septembre', 'octobre', 'novembre', 'decembre');
 
@@ -114,31 +101,32 @@
     }
 
     public function get_individual_vote($legislature, $num){
-      $query = $this->db->query('
-      SELECT A.*,
-      CASE
-      	WHEN A.dossier_titre != "" AND A.voteType = "final" THEN CONCAT("Vote final - ", A.dossier_titre)
-          WHEN A.dossier_titre != "" AND A.voteType = "motion de renvoi en commission" THEN CONCAT("Motion de renvoi en commission - ", A.dossier_titre)
-          WHEN A.dossier_titre != "" AND A.amdt != "" THEN CONCAT("Amendement n°", A.amdt, " - ", A.dossier_titre)
-          WHEN A.dossier_titre != "" AND A.voteType = "article" AND A.article != "" THEN CONCAT("Article n°", A.article, " - ", A.dossier_titre)
-          WHEN A.dossier_titre != "" AND A.voteType = "motion de rejet préalable" THEN CONCAT("Motion de rejet préalable - ", A.dossier_titre)
-          WHEN A.dossier_titre != "" THEN A.titre
-          WHEN A.voteType = "declaration de politique generale" THEN CONCAT("Déclaration de politique générale")
-          WHEN A.voteType = "motion de censure" THEN CONCAT("Motion de censure")
-          ELSE A.titre
-      END AS title_meta
-      FROM
-      (
-         SELECT vi.voteId, vi.voteNumero, vi.legislature, vi.dateScrutin, vi.libelleTypeVote, vi.typeMajorite, vi.sortCode, vi.demandeur, vi.nombreVotants, vi.suffragesExprimes, vi.nbrSuffragesRequis, vi.decomptePour AS pour, vi.decompteContre AS contre, vi.decompteAbs AS abstention, vi.decompteNv AS nonVotant, vi.voteType, vi.amdt, vi.article, vi.bister, vi.posArticle,
-        REPLACE(vi.titre, "n?", "n°") AS titre, vdos.href, vdos.dossier, doss.dossierId, doss.titre AS dossier_titre, doss.senatChemin, doss.procedureParlementaireLibelle, vd.title, vd.description, vd.state, f.name AS category, f.slug AS category_slug
-        FROM votes_info vi
-        LEFT JOIN votes_dossiers vdos ON vi.voteNumero = vdos.voteNumero AND vi.legislature = vdos.legislature
-        LEFT JOIN dossiers doss ON vdos.dossier = doss.titreChemin
-        LEFT JOIN votes_datan vd ON vi.voteId = vd.vote_id AND vi.legislature = vd.legislature AND vd.state = "published"
-        LEFT JOIN fields f ON vd.category = f.id
-        WHERE vi.legislature = '.$legislature.' AND vi.voteNumero = "'.$num.'"
-      ) A
-      ');
+      $sql = 'SELECT A.*,
+        CASE
+        	WHEN A.dossier_titre != "" AND A.voteType = "final" THEN CONCAT("Vote final - ", A.dossier_titre)
+            WHEN A.dossier_titre != "" AND A.voteType = "motion de renvoi en commission" THEN CONCAT("Motion de renvoi en commission - ", A.dossier_titre)
+            WHEN A.dossier_titre != "" AND A.amdt != "" THEN CONCAT("Amendement n°", A.amdt, " - ", A.dossier_titre)
+            WHEN A.dossier_titre != "" AND A.voteType = "article" AND A.article != "" THEN CONCAT("Article n°", A.article, " - ", A.dossier_titre)
+            WHEN A.dossier_titre != "" AND A.voteType = "motion de rejet préalable" THEN CONCAT("Motion de rejet préalable - ", A.dossier_titre)
+            WHEN A.dossier_titre != "" THEN A.titre
+            WHEN A.voteType = "declaration de politique generale" THEN CONCAT("Déclaration de politique générale")
+            WHEN A.voteType = "motion de censure" THEN CONCAT("Motion de censure")
+            ELSE A.titre
+        END AS title_meta
+        FROM
+        (
+           SELECT vi.voteId, vi.voteNumero, vi.legislature, vi.dateScrutin, vi.libelleTypeVote, vi.typeMajorite, vi.sortCode, vi.demandeur, vi.nombreVotants, vi.suffragesExprimes, vi.nbrSuffragesRequis, vi.decomptePour AS pour, vi.decompteContre AS contre, vi.decompteAbs AS abstention, vi.decompteNv AS nonVotant, vi.voteType, vi.amdt, vi.article, vi.bister, vi.posArticle,
+          REPLACE(vi.titre, "n?", "n°") AS titre, vdos.href, vdos.dossier, doss.dossierId, doss.titre AS dossier_titre, doss.senatChemin, doss.procedureParlementaireLibelle, vd.title, vd.description, vd.state, f.name AS category, f.slug AS category_slug
+          FROM votes_info vi
+          LEFT JOIN votes_dossiers vdos ON vi.voteNumero = vdos.voteNumero AND vi.legislature = vdos.legislature
+          LEFT JOIN dossiers doss ON vdos.dossier = doss.titreChemin
+          LEFT JOIN votes_datan vd ON vi.voteId = vd.vote_id AND vi.legislature = vd.legislature AND vd.state = "published"
+          LEFT JOIN fields f ON vd.category = f.id
+          WHERE vi.legislature = ? AND vi.voteNumero = ?
+        ) A
+      ';
+      $query = $this->db->query($sql, array($legislature, $num));
+
       return $query->row_array();
     }
 
@@ -268,8 +256,7 @@
     }
 
     public function get_vote_groupes($num, $date, $legislature){
-      $query = $this->db->query('
-        SELECT B.*, C.n AS total_deputes, ROUND((B.nombreVotants * 100) / C.n, 1) AS percentageVotants
+      $sql = 'SELECT B.*, C.n AS total_deputes, ROUND((B.nombreVotants * 100) / C.n, 1) AS percentageVotants
         FROM
         (
         SELECT A.*, A.nombrePours + A.nombreContres + A.nombreAbstentions AS nombreVotants, ROUND(gc.cohesion, 2) AS cohesion, gc.scoreGagnant, o.libelle, o.libelleAbrev, o.dateFin, o.positionPolitique, o.couleurAssociee
@@ -277,7 +264,7 @@
         (
         	SELECT *
           FROM votes_groupes vg
-        	WHERE vg.voteNumero = "'.$num.'" AND vg.legislature = "'.$legislature.'"
+        	WHERE vg.voteNumero = ? AND vg.legislature = ?
         ) A
         LEFT JOIN groupes_cohesion gc ON A.voteNumero = gc.voteNumero AND A.organeRef = gc.organeRef
         LEFT JOIN organes o ON A.organeRef = o.uid
@@ -285,51 +272,52 @@
         LEFT JOIN (
         SELECT organeRef, COUNT(*) AS n
         FROM mandat_groupe
-        WHERE legislature = 15 AND dateDebut <= "'.$date.'" AND (dateFin >= "'.$date.'" OR dateFin IS NULL) AND preseance != 1
+        WHERE legislature = 15 AND dateDebut <= ? AND (dateFin >= ? OR dateFin IS NULL) AND preseance != 1
         GROUP BY organeRef) C
         ON B.organeRef = C.organeRef
-      ');
+      ';
+      $query = $this->db->query($sql, array($num, $legislature, $date, $date));
 
       return $query->result_array();
     }
 
     public function get_vote_deputes($num, $legislature){
-      $query = $this->db->query('
-      SELECT B.*
-      FROM
-      (
-        SELECT A.*,
-        CASE
-        	WHEN A.vote = 1 THEN "pour"
-        	WHEN A.vote = 0 THEN "abstention"
-        	WHEN A.vote = -1 THEN "contre"
-        ELSE NULL
-        END AS vote_libelle,
-        CASE
-        	WHEN A.scoreLoyaute = 1 THEN "loyal"
-        	WHEN A.scoreLoyaute = 0 THEN "rebelle"
-        ELSE NULL
-        END AS loyaute_libelle,
-        da.nameFirst, da.nameLast, da.nameUrl, da.dptSlug,
-        o.libelle, o.libelleAbrev
+      $sql = 'SELECT B.*
         FROM
         (
-        	SELECT v.mpId, v.vote, v.mandatId, v.scoreLoyaute, v.legislature
-        	FROM votes_scores v
-        	WHERE v.voteNumero = '.$num.' AND legislature = '.$legislature.'
-        ) A
-        LEFT JOIN deputes_all da ON da.mpId = A.mpId AND da.legislature = A.legislature
-        LEFT JOIN organes o ON da.groupeId = o.uid
-      ) B
-      ORDER BY B.nameLast ASC, B.nameFirst ASC
-      ');
+          SELECT A.*,
+          CASE
+          	WHEN A.vote = 1 THEN "pour"
+          	WHEN A.vote = 0 THEN "abstention"
+          	WHEN A.vote = -1 THEN "contre"
+          ELSE NULL
+          END AS vote_libelle,
+          CASE
+          	WHEN A.scoreLoyaute = 1 THEN "loyal"
+          	WHEN A.scoreLoyaute = 0 THEN "rebelle"
+          ELSE NULL
+          END AS loyaute_libelle,
+          da.nameFirst, da.nameLast, da.nameUrl, da.dptSlug,
+          o.libelle, o.libelleAbrev
+          FROM
+          (
+          	SELECT v.mpId, v.vote, v.mandatId, v.scoreLoyaute, v.legislature
+          	FROM votes_scores v
+          	WHERE v.voteNumero = ? AND legislature = ?
+          ) A
+          LEFT JOIN deputes_all da ON da.mpId = A.mpId AND da.legislature = A.legislature
+          LEFT JOIN organes o ON da.groupeId = o.uid
+        ) B
+        ORDER BY B.nameLast ASC, B.nameFirst ASC
+      ';
+      $query = $this->db->query($sql, array($num, $legislature));
 
       return $query->result_array();
     }
 
 
     public function get_votes_datan_depute($depute_id, $limit = FALSE){
-      $queryString = '
+      $sql = '
         SELECT vd.voteNumero, vd.legislature, vd.title AS vote_titre, vd.category, f.name AS category_libelle, vi.sortCode, date_format(vi.dateScrutin, "%d %M %Y") as dateScrutinFR,
         CASE
         	WHEN vs.vote = 0 THEN "abstention"
@@ -340,20 +328,21 @@
         END AS vote_depute
         FROM votes_datan vd
         LEFT JOIN fields f ON vd.category = f.id
-        LEFT JOIN votes_scores vs ON vd.voteNumero = vs.voteNumero AND vd.legislature = vs.legislature AND vs.mpId = "'.$depute_id.'"
+        LEFT JOIN votes_scores vs ON vd.voteNumero = vs.voteNumero AND vd.legislature = vs.legislature AND vs.mpId = '.$this->db->escape($depute_id).'
         LEFT JOIN votes_info vi ON vd.voteNumero = vi.voteNumero AND vd.legislature = vi.legislature
         WHERE vd.state = "published" AND vs.vote IS NOT NULL
         ORDER BY vi.dateScrutin DESC
       ';
       if ($limit){
-        $queryString .= ' LIMIT ' . $limit;
+        $sql .= ' LIMIT ' . $this->db->escape($limit);
       }
-      $query = $this->db->query($queryString);
+      $query = $this->db->query($sql);
+
       return $query->result_array();
     }
 
     public function get_votes_datan_depute_field($depute_id, $field, $limit){
-      $queryString = '
+      $sql = '
         SELECT vd.voteNumero, vd.legislature, vd.title AS vote_titre, vd.category, f.name AS category_libelle, f.slug, date_format(vi.dateScrutin, "%d %M %Y") as dateScrutinFR,
         CASE
         	WHEN vs.vote = 0 THEN "abstention"
@@ -364,152 +353,117 @@
         END AS vote_depute
         FROM votes_datan vd
         LEFT JOIN fields f ON vd.category = f.id
-        LEFT JOIN votes_scores vs ON vd.voteNumero = vs.voteNumero AND vd.legislature = vs.legislature AND vs.mpId = "'.$depute_id.'"
+        LEFT JOIN votes_scores vs ON vd.voteNumero = vs.voteNumero AND vd.legislature = vs.legislature AND vs.mpId = '.$this->db->escape($depute_id).'
         LEFT JOIN votes_info vi ON vd.voteNumero = vi.voteNumero AND vd.legislature = vi.legislature
-        WHERE vd.state = "published" AND f.slug = "'.$field.'" AND vs.vote IS NOT NULL
+        WHERE vd.state = "published" AND f.slug = '.$this->db->escape($field).' AND vs.vote IS NOT NULL
         ORDER BY vi.dateScrutin DESC
       ';
       if ($limit){
-        $queryString .= ' LIMIT ' . $limit;
+        $sql .= ' LIMIT ' . $this->db->escape($limit);
       }
-      $query = $this->db->query($queryString);
+      $query = $this->db->query($sql);
+
       return $query->result_array();
     }
 
     public function get_votes_all_depute($depute_id, $legislature){
-      $query = $this->db->query('
-      SELECT A.voteId, A.voteNumero, A.dateScrutin, A.titre, A.title, A.legislature,
-      CASE
-      	WHEN A.vote = 1 THEN "pour"
-          WHEN A.vote = -1 THEN "contre"
-          WHEN A.vote = 0 THEN "abstention"
-          WHEN A.vote IS NULL THEN "absent"
-          ELSE NULL
-      END AS vote,
-      CASE
-      	WHEN A.scoreLoyaute = 1 THEN "loyal"
-      	WHEN A.scoreLoyaute = 0 THEN "rebelle"
-      ELSE NULL END AS loyaute
-      FROM
-      (
-      SELECT vp.voteNumero, vp.participation, vs.vote, vs.scoreLoyaute, vi.voteId, vi.dateScrutin, vi.legislature, REPLACE(vi.titre, "n?", "n°") AS titre, vd.title AS title
-      FROM votes_participation vp
-      LEFT JOIN votes_scores vs ON (vs.voteNumero = vp.voteNumero AND vs.legislature = vp.legislature AND vs.mpId = "'.$depute_id.'")
-      LEFT JOIN votes_info vi ON vp.voteNumero = vi.voteNumero AND vp.legislature = vi.legislature
-      LEFT JOIN votes_datan vd ON vi.voteId = vd.vote_id AND vd.state = "published"
-      WHERE vp.mpId = "'.$depute_id.'" AND vp.legislature = "'.$legislature.'"
-      ) A
-      ORDER BY voteNumero DESC
-      ');
+      $sql = 'SELECT A.voteId, A.voteNumero, A.dateScrutin, A.titre, A.title, A.legislature,
+        CASE
+        	WHEN A.vote = 1 THEN "pour"
+            WHEN A.vote = -1 THEN "contre"
+            WHEN A.vote = 0 THEN "abstention"
+            WHEN A.vote IS NULL THEN "absent"
+            ELSE NULL
+        END AS vote,
+        CASE
+        	WHEN A.scoreLoyaute = 1 THEN "loyal"
+        	WHEN A.scoreLoyaute = 0 THEN "rebelle"
+        ELSE NULL END AS loyaute
+        FROM
+        (
+        SELECT vp.voteNumero, vp.participation, vs.vote, vs.scoreLoyaute, vi.voteId, vi.dateScrutin, vi.legislature, REPLACE(vi.titre, "n?", "n°") AS titre, vd.title AS title
+        FROM votes_participation vp
+        LEFT JOIN votes_scores vs ON (vs.voteNumero = vp.voteNumero AND vs.legislature = vp.legislature AND vs.mpId = ?)
+        LEFT JOIN votes_info vi ON vp.voteNumero = vi.voteNumero AND vp.legislature = vi.legislature
+        LEFT JOIN votes_datan vd ON vi.voteId = vd.vote_id AND vd.state = "published"
+        WHERE vp.mpId = ? AND vp.legislature = ?
+        ) A
+        ORDER BY voteNumero DESC
+      ';
+      $query = $this->db->query($sql, array($depute_id, $depute_id, $legislature));
 
       return $query->result_array();
     }
 
     public function get_votes_all_groupe($uid, $legislature){
-      $query = $this->db->query('
-      SELECT A.*, vd.title,
-      CASE
-      	WHEN A.positionGroupe = 1 THEN "pour"
-      	WHEN A.positionGroupe = -1 THEN "contre"
-      	WHEN A.positionGroupe = 0 THEN "abstention"
-      ELSE NULL END AS vote
-      FROM
-      (
-      SELECT vi.voteId, vi.legislature, gc.voteNumero, gc.cohesion, gc.positionGroupe, vi.dateScrutin, REPLACE(vi.titre, "n?", "n°") AS titre
-      FROM groupes_cohesion gc
-      LEFT JOIN votes_info vi ON gc.voteNumero = vi.voteNumero AND gc.legislature = vi.legislature
-      WHERE gc.organeRef = "'.$uid.'" AND gc.legislature = "'.$legislature.'"
-      ) A
-      LEFT JOIN  votes_datan vd ON A.voteId = vd.vote_id AND A.legislature = vd.legislature AND vd.state = "published"
-      ORDER BY A.voteNumero DESC
-      ');
+      $sql = 'SELECT A.*, vd.title,
+        CASE
+        	WHEN A.positionGroupe = 1 THEN "pour"
+        	WHEN A.positionGroupe = -1 THEN "contre"
+        	WHEN A.positionGroupe = 0 THEN "abstention"
+        ELSE NULL END AS vote
+        FROM
+        (
+        SELECT vi.voteId, vi.legislature, gc.voteNumero, gc.cohesion, gc.positionGroupe, vi.dateScrutin, REPLACE(vi.titre, "n?", "n°") AS titre
+        FROM groupes_cohesion gc
+        LEFT JOIN votes_info vi ON gc.voteNumero = vi.voteNumero AND gc.legislature = vi.legislature
+        WHERE gc.organeRef = ? AND gc.legislature = ?
+        ) A
+        LEFT JOIN  votes_datan vd ON A.voteId = vd.vote_id AND A.legislature = vd.legislature AND vd.state = "published"
+        ORDER BY A.voteNumero DESC
+      ';
+      $query = $this->db->query($sql, array($uid, $legislature));
 
       return $query->result_array();
     }
 
-    public function get_votes_datan_groupe($groupe_uid, $limit = FALSE, $legislature){
-      if ($limit != FALSE) {
-        $query = $this->db->query('
-          SELECT A.*, f.name AS category_libelle, v.positionMajoritaire AS vote, date_format(vi.dateScrutin, "%d %M %Y") as dateScrutinFR, vi.legislature
-          FROM
-          (
-          SELECT vd.id, vd.voteNumero, vd.legislature, vd.title AS vote_titre, vd.slug, vd.category
-          FROM votes_datan vd
-          WHERE vd.state = "published"
-          ORDER BY vd.id DESC
-          LIMIT 15
-          ) A
-          LEFT JOIN fields f ON A.category = f.id
-          JOIN votes_groupes v ON A.voteNumero = v.voteNumero AND A.legislature = v.legislature AND v.organeRef = "'.$groupe_uid.'"
-          LEFT JOIN votes_info vi ON A.voteNumero = vi.voteNumero AND A.legislature = vi.legislature
-          ORDER BY vi.dateScrutin DESC
-          LIMIT '.$limit.'
-        ');
-      } else {
-        $query = $this->db->query('
-          SELECT A.*, f.name AS category_libelle, v.positionMajoritaire AS vote, date_format(vi.dateScrutin, "%d %M %Y") as dateScrutinFR, vi.legislature
-          FROM
-          (
-          SELECT vd.id, vd.voteNumero, vd.legislature, vd.title AS vote_titre, vd.slug, vd.category
-          FROM votes_datan vd
-          WHERE vd.state = "published"
-          ORDER BY vd.id DESC
-          LIMIT 15
-          ) A
-          LEFT JOIN fields f ON A.category = f.id
-          JOIN votes_groupes v ON A.voteNumero = v.voteNumero AND A.legislature = v.legislature AND v.organeRef = "'.$groupe_uid.'"
-          LEFT JOIN votes_info vi ON A.voteNumero = vi.voteNumero AND A.legislature = vi.legislature
-          ORDER BY vi.dateScrutin DESC
-        ');
-      }
+    public function get_votes_datan_groupe($groupe_uid, $limit){
+      $sql = 'SELECT A.*, f.name AS category_libelle, v.positionMajoritaire AS vote, date_format(vi.dateScrutin, "%d %M %Y") as dateScrutinFR, vi.legislature
+        FROM
+        (
+        SELECT vd.id, vd.voteNumero, vd.legislature, vd.title AS vote_titre, vd.slug, vd.category
+        FROM votes_datan vd
+        WHERE vd.state = "published"
+        ORDER BY vd.id DESC
+        LIMIT 15
+        ) A
+        LEFT JOIN fields f ON A.category = f.id
+        JOIN votes_groupes v ON A.voteNumero = v.voteNumero AND A.legislature = v.legislature AND v.organeRef = ?
+        LEFT JOIN votes_info vi ON A.voteNumero = vi.voteNumero AND A.legislature = vi.legislature
+        ORDER BY vi.dateScrutin DESC
+        LIMIT ?
+      ';
+      $query = $this->db->query($sql, array($groupe_uid, $limit));
 
       return $query->result_array();
     }
 
     public function get_votes_datan_groupe_field($groupe_uid, $field, $limit){
-      if ($limit != FALSE) {
-        $query = $this->db->query('
-          SELECT A.*, f.name AS category_libelle, v.positionMajoritaire AS vote, date_format(vi.dateScrutin, "%d %M %Y") as dateScrutinFR, vi.legislature
-          FROM
-          (
-            SELECT vd.id, vd. voteNumero, vd.legislature, vd.title AS vote_titre, vd.slug, vd.category
-            FROM votes_datan vd
-            LEFT JOIN fields f ON vd.category = f.id
-            WHERE vd.state = "published" AND f.slug = "'.$field.'"
-            ORDER BY vd.id DESC
-            LIMIT 15
-          ) A
-          LEFT JOIN fields f ON A.category = f.id
-          JOIN votes_groupes v ON A.voteNumero = v.voteNumero AND A.legislature = v.legislature AND v.organeRef = "'.$groupe_uid.'"
-          LEFT JOIN votes_info vi ON A.voteNumero = vi.voteNumero AND A.legislature = vi.legislature
-          ORDER BY vi.dateScrutin DESC
-          LIMIT '.$limit.'
-        ');
-      } else {
-        $query = $this->db->query('
-          SELECT A.*, f.name AS category_libelle, v.positionMajoritaire AS vote, date_format(vi.dateScrutin, "%d %M %Y") as dateScrutinFR, vi.legislature
-          FROM
-          (
+      $sql = 'SELECT A.*, f.name AS category_libelle, v.positionMajoritaire AS vote, date_format(vi.dateScrutin, "%d %M %Y") as dateScrutinFR, vi.legislature
+        FROM
+        (
           SELECT vd.id, vd. voteNumero, vd.legislature, vd.title AS vote_titre, vd.slug, vd.category
           FROM votes_datan vd
-            LEFT JOIN fields f ON vd.category = f.id
-            WHERE vd.state = "published" AND f.slug = "'.$field.'"
-            ORDER BY vd.id DESC
-          ) A
-          LEFT JOIN fields f ON A.category = f.id
-          JOIN votes_groupes v ON A.voteNumero = v.voteNumero AND A.legislature = v.legislature AND v.organeRef = "'.$groupe_uid.'"
-          LEFT JOIN votes_info vi ON A.voteNumero = vi.voteNumero AND A.legislature = vi.legislature
-          ORDER BY vi.dateScrutin DESC
-        ');
+          LEFT JOIN fields f ON vd.category = f.id
+          WHERE vd.state = "published" AND f.slug = '.$this->db->escape($field).'
+          ORDER BY vd.id DESC
+          LIMIT 15
+        ) A
+        LEFT JOIN fields f ON A.category = f.id
+        JOIN votes_groupes v ON A.voteNumero = v.voteNumero AND A.legislature = v.legislature AND v.organeRef = '.$this->db->escape($groupe_uid).'
+        LEFT JOIN votes_info vi ON A.voteNumero = vi.voteNumero AND A.legislature = vi.legislature
+        ORDER BY vi.dateScrutin DESC
+      ';
+      if ($limit) {
+        $sql .= ' LIMIT ' . $this->db->escape($limit);
       }
-
+      $query = $this->db->query($sql);
 
       return $query->result_array();
     }
 
     public function get_key_votes_mp($mpId){
-      $query = $this->db->query('
-        SELECT vs.voteNumero, vs.scoreLoyaute, vs.vote,
+      $sql =  'SELECT vs.voteNumero, vs.scoreLoyaute, vs.vote,
         CASE
           WHEN vs.vote = 1 THEN "pour"
           WHEN vs.vote = 0 THEN "abstention"
@@ -517,9 +471,10 @@
         ELSE NULL
         END AS vote_libelle
         FROM votes_scores vs
-        WHERE vs.voteNumero IN (2814, 2940, 3254) AND vs.mpId = "'.$mpId.'"
+        WHERE vs.voteNumero IN (2814, 2940, 3254) AND vs.mpId = ?
         GROUP BY vs.voteNumero
-      ');
+      ';
+      $query = $this->db->query($sql, $mpId);
 
       $votes = $query->result_array();
 
@@ -540,28 +495,30 @@
     }
 
     public function get_most_famous_votes($limit = false){
-      $queryString = '
-      SELECT vd.title AS voteTitre, vd.description, vi.dateScrutin, vi.voteNumero, vi.legislature, f.name AS category_libelle, f.slug AS category_slug, vi.sortCode, date_format(dateScrutin, "%d %M %Y") as dateScrutinFR, vote_id, vi.voteNumero
-      FROM votes_datan vd
-      LEFT JOIN votes_info vi ON vd.vote_id = vi.voteId
-      LEFT JOIN fields f ON vd.category = f.id
-      WHERE vd.state = "published"
-      ORDER BY vi.voteNumero DESC';
+      $sql = 'SELECT vd.title AS voteTitre, vd.description, vi.dateScrutin, vi.voteNumero, vi.legislature, f.name AS category_libelle, f.slug AS category_slug, vi.sortCode, date_format(dateScrutin, "%d %M %Y") as dateScrutinFR, vote_id, vi.voteNumero
+        FROM votes_datan vd
+        LEFT JOIN votes_info vi ON vd.vote_id = vi.voteId
+        LEFT JOIN fields f ON vd.category = f.id
+        WHERE vd.state = "published"
+        ORDER BY vi.voteNumero DESC
+      ';
       if ($limit) {
-        $queryString .= ' LIMIT ' .$limit;
+        $sql .= ' LIMIT ' .$limit;
       }
-      $query = $this->db->query($queryString);
+      $query = $this->db->query($sql, $limit);
 
       return $query->result_array();
     }
 
     public function get_votes_result_by_depute($voteNumeros){
-      $query = $this->db->query('SELECT votes.voteNumero, organes.libelle, deputes_all.nameFirst,
-      deputes_all.nameLast, votes.vote, organes.uid, deputes_all.mpId FROM `votes`
-      LEFT JOIN mandat_principal ON votes.mandatId=mandat_principal.mandatId
-      LEFT JOIN deputes_all ON votes.mandatId=deputes_all.mandatId
-      LEFT JOIN organes ON deputes_all.groupeId=organes.uid
-      WHERE votes.voteNumero IN ('. implode(",", $voteNumeros). ')');
+      $sql = 'SELECT votes.voteNumero, organes.libelle, deputes_all.nameFirst, deputes_all.nameLast, votes.vote, organes.uid, deputes_all.mpId
+        FROM `votes`
+        LEFT JOIN mandat_principal ON votes.mandatId=mandat_principal.mandatId
+        LEFT JOIN deputes_all ON votes.mandatId=deputes_all.mandatId
+        LEFT JOIN organes ON deputes_all.groupeId=organes.uid
+        WHERE votes.voteNumero IN ?
+      ';
+      $query = $this->db->query($sql, $voteNumeros);
 
       return $query->result_array();
     }
