@@ -10,7 +10,7 @@
               <!-- IMAGE MP -->
               <div class="img">
                 <div class="d-flex justify-content-center">
-                  <div class="depute-img-circle">
+                  <div>
                     <img src="<?= asset_url(); ?>imgs/groupes/<?= $groupe['libelleAbrev'] ?>.png" alt="<?= $groupe['libelle'] ?>">
                   </div>
                 </div>
@@ -23,7 +23,7 @@
               <div class="bloc-bref mt-3 d-flex justify-content-center justify-content-lg-start">
                 <ul>
                   <li class="first">
-                    <div class="label">Création</div>
+                    <div class="label">Créationd</div>
                     <div class="value"><?= $dateDebut ?></div>
                   </li>
                   <li>
@@ -98,7 +98,7 @@
               <a class="badge badge-primary no-decoration" href="#<?= $field['slug'] ?>">
                 <?= $field['name'] ?>
               </a>
-            <?php endforeach; 
+            <?php endforeach;
             endif ?>
           </div>
         </div>

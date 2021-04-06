@@ -7,10 +7,10 @@
         <div class="sticky-top" style="margin-top: -110px; top: 110px;">
           <div class="card card-profile">
             <div class="card-body">
-              <!-- IMAGE MP -->
+              <!-- IMAGE GROUPE -->
               <div class="img">
                 <div class="d-flex justify-content-center">
-                  <div class="depute-img-circle">
+                  <div>
                     <img src="<?= asset_url(); ?>imgs/groupes/<?= $groupe['libelleAbrev'] ?>.png" alt="<?= $groupe['libelle'] ?>">
                   </div>
                 </div>
