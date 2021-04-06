@@ -16,7 +16,7 @@
           <div class="card card-depute">
             <div class="liseret" style="background-color: <?= $mpOldest["couleurAssociee"] ?>"></div>
             <div class="card-avatar">
-              <img class="img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-face.png" data-src="<?= base_url(); ?>assets/imgs/deputes_nobg/depute_<?= substr($mpOldest["mpId"], 2) ?>.png" alt="<?= $mpOldest['nameFirst'].' '.$mpOldest['nameLast'] ?>">
+              <img class="img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-face-2.png" data-src="<?= base_url(); ?>assets/imgs/deputes_nobg/depute_<?= substr($mpOldest["mpId"], 2) ?>.png" alt="<?= $mpOldest['nameFirst'].' '.$mpOldest['nameLast'] ?>">
             </div>
             <div class="card-body d-flex align-items-center justify-content-center">
               <div>
@@ -37,7 +37,7 @@
           <div class="card card-depute">
             <div class="liseret" style="background-color: <?= $mpYoungest["couleurAssociee"] ?>"></div>
             <div class="card-avatar">
-              <img class="img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-face.png" data-src="<?= base_url(); ?>assets/imgs/deputes_nobg/depute_<?= substr($mpYoungest["mpId"], 2) ?>.png" alt="<?= $mpYoungest['nameFirst'].' '.$mpYoungest['nameLast'] ?>">
+              <img class="img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-face-2.png" data-src="<?= base_url(); ?>assets/imgs/deputes_nobg/depute_<?= substr($mpYoungest["mpId"], 2) ?>.png" alt="<?= $mpYoungest['nameFirst'].' '.$mpYoungest['nameLast'] ?>">
             </div>
             <div class="card-body d-flex align-items-center justify-content-center">
               <div>

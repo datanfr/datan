@@ -109,9 +109,9 @@
                 <div class="liseret" style="background-color: <?= $depute_random["couleurAssociee"] ?>"></div>
                 <div class="card-avatar">
                   <?php if ($depute_random['img']): ?>
-                    <img class="img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-face.png" data-src="<?= base_url(); ?>assets/imgs/deputes_nobg/depute_<?= substr($depute_random["mpId"], 2) ?>.png" alt="<?= $depute_random['nameFirst'].' '.$depute_random['nameLast'] ?>">
+                    <img class="img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-face-2.png" data-src="<?= base_url(); ?>assets/imgs/deputes_nobg/depute_<?= substr($depute_random["mpId"], 2) ?>.png" alt="<?= $depute_random['nameFirst'].' '.$depute_random['nameLast'] ?>">
                     <?php else: ?>
-                    <img class="img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-face.png" data-src="<?= asset_url() ?>imgs/placeholder/placeholder-face.png" alt="<?= $depute_random['nameFirst'].' '.$depute_random['nameLast'] ?>">
+                    <img class="img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-face-2.png" data-src="<?= asset_url() ?>imgs/placeholder/placeholder-face-2.png" alt="<?= $depute_random['nameFirst'].' '.$depute_random['nameLast'] ?>">
                   <?php endif; ?>
                 </div>
                 <div class="card-body d-flex align-items-center justify-content-center">
@@ -164,7 +164,7 @@
               <div class="card card-depute">
                 <div class="liseret" style="background-color: <?= $depute_vote_plus["couleurAssociee"] ?>"></div>
                 <div class="card-avatar">
-                  <img class="img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-face.png" data-src="<?= base_url(); ?>assets/imgs/deputes_nobg/depute_<?= substr($depute_vote_plus["mpId"], 2) ?>.png" alt="<?= $depute_vote_plus['nameFirst'].' '.$depute_vote_plus['nameLast'] ?>">
+                  <img class="img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-face-2.png" data-src="<?= base_url(); ?>assets/imgs/deputes_nobg/depute_<?= substr($depute_vote_plus["mpId"], 2) ?>.png" alt="<?= $depute_vote_plus['nameFirst'].' '.$depute_vote_plus['nameLast'] ?>">
                 </div>
                 <div class="card-body d-flex align-items-center justify-content-center">
                   <div>
@@ -185,7 +185,7 @@
               <div class="card card-depute">
                 <div class="liseret" style="background-color: <?= $depute_vote_moins["couleurAssociee"] ?>"></div>
                 <div class="card-avatar">
-                  <img class="img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-face.png" data-src="<?= base_url(); ?>assets/imgs/deputes_nobg/depute_<?= substr($depute_vote_moins["mpId"], 2) ?>.png" alt="<?= $depute_vote_moins['nameFirst'].' '.$depute_vote_moins['nameLast'] ?>">
+                  <img class="img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-face-2.png" data-src="<?= base_url(); ?>assets/imgs/deputes_nobg/depute_<?= substr($depute_vote_moins["mpId"], 2) ?>.png" alt="<?= $depute_vote_moins['nameFirst'].' '.$depute_vote_moins['nameLast'] ?>">
                 </div>
                 <div class="card-body d-flex align-items-center justify-content-center">
                   <div>
@@ -206,7 +206,7 @@
               <div class="card card-depute">
                 <div class="liseret" style="background-color: <?= $depute_loyal_plus["couleurAssociee"] ?>"></div>
                 <div class="card-avatar">
-                  <img class="img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-face.png" data-src="<?= base_url(); ?>assets/imgs/deputes_nobg/depute_<?= substr($depute_loyal_plus["mpId"], 2) ?>.png" alt="<?= $depute_loyal_plus['nameFirst'].' '.$depute_loyal_plus['nameLast'] ?>">
+                  <img class="img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-face-2.png" data-src="<?= base_url(); ?>assets/imgs/deputes_nobg/depute_<?= substr($depute_loyal_plus["mpId"], 2) ?>.png" alt="<?= $depute_loyal_plus['nameFirst'].' '.$depute_loyal_plus['nameLast'] ?>">
                 </div>
                 <div class="card-body d-flex align-items-center justify-content-center">
                   <div>
@@ -227,7 +227,7 @@
               <div class="card card-depute">
                 <div class="liseret" style="background-color: <?= $depute_loyal_moins["couleurAssociee"] ?>"></div>
                 <div class="card-avatar">
-                  <img class="img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-face.png" data-src="<?= base_url(); ?>assets/imgs/deputes_nobg/depute_<?= substr($depute_loyal_moins["mpId"], 2) ?>.png" alt="<?= $depute_loyal_moins['nameFirst'].' '.$depute_loyal_moins['nameLast'] ?>">
+                  <img class="img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-face-2.png" data-src="<?= base_url(); ?>assets/imgs/deputes_nobg/depute_<?= substr($depute_loyal_moins["mpId"], 2) ?>.png" alt="<?= $depute_loyal_moins['nameFirst'].' '.$depute_loyal_moins['nameLast'] ?>">
                 </div>
                 <div class="card-body d-flex align-items-center justify-content-center">
                   <div>
