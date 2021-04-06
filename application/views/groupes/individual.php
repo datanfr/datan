@@ -82,7 +82,7 @@
             <?php endif; ?>
           </p>
           <p>
-            <?= ucfirst($president['son']) ?> président<?= $president['e'] ?> <?= $active ? 'est' : 'était' ?> <a href="<?php echo base_url(); ?>deputes/<?= $president['dpt_slug'] ?>/depute_<?= $president['nameUrl'] ?>"><?= $president['nameFirst']." ".$president['nameLast'] ?></a>, à ce poste depuis le <?= $president['dateDebutFR'] ?>.
+            <?= ucfirst($president['son']) ?> président<?= $president['e'] ?> <?= $active ? 'est' : 'était' ?> <a href="<?php echo base_url(); ?>deputes/<?= $president['dptSlug'] ?>/depute_<?= $president['nameUrl'] ?>"><?= $president['nameFirst']." ".$president['nameLast'] ?></a>, à ce poste depuis le <?= $president['dateDebutFR'] ?>.
           </p>
           <p>
             Le groupe s'est déclaré comme faisant partie de <b><?= $edito['opposition'] ?></b>
