@@ -92,9 +92,9 @@
                   <div class="liseret" style="background-color: <?= $depute["couleurAssociee"] ?>"></div>
                   <div class="card-avatar">
                     <?php if ($depute['img']): ?>
-                      <img class="img-lazy placeholder" src="<?= asset_url() ?>imgs/placeholder/placeholder-face.png" data-src="<?= base_url(); ?>assets/imgs/deputes_nobg/depute_<?= substr($depute["mpId"], 2) ?>.png" alt="<?= $depute['nameFirst'].' '.$depute['nameLast'] ?>">
+                      <img class="img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-face.png" data-src="<?= base_url(); ?>assets/imgs/deputes_nobg/depute_<?= substr($depute["mpId"], 2) ?>.png" alt="<?= $depute['nameFirst'].' '.$depute['nameLast'] ?>">
                       <?php else: ?>
-                      <img class="img-lazy placeholder" src="<?= asset_url() ?>imgs/placeholder/placeholder-face.png" alt="<?= $depute['nameFirst'].' '.$depute['nameLast'] ?>">
+                      <img class="img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-face.png" alt="<?= $depute['nameFirst'].' '.$depute['nameLast'] ?>">
                     <?php endif; ?>
                   </div>
                   <div class="card-body">
