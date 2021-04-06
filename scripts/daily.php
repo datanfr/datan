@@ -977,6 +977,10 @@ class Script
                 while (1) {
                     $file_to_import = 'VTANR5L15V' . $number_to_import ++;
                     $xml_string = $zip->getFromName('xml/' . $file_to_import . '.xml');
+                    if ($xml_string == false) { // Check if the AN file forgot to include one vote
+                      $file_to_import = 'VTANR5L15V' . ($number_to_import + 1);
+                      $xml_string = $zip->getFromName('xml/' . $file_to_import . '.xml');
+                    }
                     if ($xml_string != false) {
                         $xml = simplexml_load_string($xml_string);
                         //vote
