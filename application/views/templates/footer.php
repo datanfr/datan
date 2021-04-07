@@ -198,6 +198,16 @@
       <?php endforeach; ?>
     <?php endif; ?>
 
+    <script>
+      $(function(){
+        $('#map-regions').vectorMap({
+          map: 'fr_regions_2016_merc',
+          hoverOpacity: 0.7,
+          hoverColor: false
+        });
+      });
+    </script>
+
     <script type="text/javascript" src="<?= asset_url() ?>js/main.min.js?v=<?= getVersion() ?>"></script>
     <script type="text/javascript" src="<?= asset_url() ?>js/datan/url_obf2.min.js"></script>
 

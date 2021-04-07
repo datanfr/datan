@@ -72,13 +72,21 @@
       //Open Graph
       $controller = $this->router->fetch_class()."/".$this->router->fetch_method();
       $data['ogp'] = $this->meta_model->get_ogp($controller, $data['title_meta'], $data['description_meta'], $data['url'], $data);
+      // CSS
+      $data['css_to_load']= array(
+        array(
+          "url" => asset_url() . "css/jquery-jvectormap-2.0.5.css",
+          "async" => FALSE
+        )
+      );
       // JS
       $data['js_to_load_before_datan'] = array("isotope.pkgd.min");
       if (count($data['districts']) <= 25) {
-        $data['js_to_load']= array("datan/sorting");
+        $data['js_to_load'] = array("datan/sorting");
       } else {
-        $data['js_to_load']= array("datan/sorting_select");
+        $data['js_to_load'] = array("datan/sorting_select");
       }
+      array_push($data['js_to_load'], "jvectormap/jquery-jvectormap-2.0.5.min", "jvectormap/jquery-jvectormap-fr_regions_2016-merc");
       // Load Views
       $this->load->view('templates/header', $data);
       $this->load->view('templates/button_up');
