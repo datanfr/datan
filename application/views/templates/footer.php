@@ -233,6 +233,20 @@
           }
         });
       });
+
+      $(function() {
+        $('#map-departements').vectorMap({
+          map: 'fr_merc',
+          hoverOpacity: 0.7,
+          hoverColor: false,
+          backgroundColor:'#f3f5f6',
+          series: {
+            regions: [{
+              values: colors
+            }]
+          }
+        });
+      });
     </script>
 
     <script type="text/javascript" src="<?= asset_url() ?>js/main.min.js?v=<?= getVersion() ?>"></script>

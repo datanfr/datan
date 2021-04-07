@@ -28,13 +28,22 @@
 </div>
 <div class="container pg-elections-candidats py-5">
   <div class="row">
-    <?php if ($election['id'] == 1): ?>
+    <?php if ($election['id'] == 1 /*regionales-2021 */): ?>
       <div class="col-md-8 col-lg-7">
         <h2 class="my-4">La couleur politique actuelle des conseils régionaux</h2>
         <p>Les dernières élections régionales ont eu lieu en 2015. Pour retrouver les résultats, <a href="https://www.interieur.gouv.fr/Elections/Les-resultats/Regionales/elecresult__regionales-2015/(path)/regionales-2015/index.html" target="_blank" rel="nofollow noreferrer noopener">cliquez ici</a>.</p>
         <p>Dans les conseils régionaux, les partis politiques qui arrivent en têtes aux élections reçoivent la majorité des sièges et en prennent la présidence. C'est donc la liste arrivée en tête qui se retrouve à la tête de la région.</p>
-        <p>Découvrez sur cette carte la couleur politique des différentes régions de 2015 à 2021.</p>
-        <div id="map-regions" style="width: 600px; height: 400px"></div>
+        <p>Découvrez sur cette carte la couleur politique des différents départements de 2015 à 2021.</p>
+        <div class="my-5" id="map-regions" style="width: 600px; height: 400px"></div>
+      </div>
+    <?php endif; ?>
+    <?php if ($election['id'] == 2 /* departementales-2021 */): ?>
+      <div class="col-md-8 col-lg-7">
+        <h2 class="my-4">La couleur politique actuelle des conseils départementaux</h2>
+        <p>Les dernières élections départementales ont eu lieu en 2015. Pour retrouver les résultats, <a href="https://www.interieur.gouv.fr/Elections/Les-resultats/Departementales/elecresult__departementales-2015/(path)/departementales-2015/index.html" target="_blank" rel="nofollow noreferrer noopener">cliquez ici</a>.</p>
+        <p>Après les élections, les conseillers départementaux élisent le président du conseil départemental. Le président est, dans la plupart des cas, élu par une majorité de droite ou de gauche.</p>
+        <p>Le président élu, qui se retrouve à la tête du conseil département, est chargé de l'administration et a la charge des dépenses et des recettes.</p>        <p>Découvrez sur cette carte la couleur politique des différentes régions de 2015 à 2021.</p>
+        <div class="my-5" id="map-departements" style="width: 600px; height: 400px"></div>
       </div>
     <?php endif; ?>
     <?php if (!empty($electionInfos)): ?>
