@@ -199,7 +199,7 @@
     <?php endif; ?>
 
     <script>
-      let colors = {
+      let colorsRegions = {
         "FR-X1": "#F78080",
         "FR-X2": "#F78080",
         "FR-X3": "#54FEFF",
@@ -219,6 +219,11 @@
         "FR-RE": "#0000000",
         "FR-YT": "#0000000"
       }
+      let colorsDpt = {
+        "FR-01": "#F78080",
+        "FR-02": "#F78080",
+        "FR-03": "#54FEFF"
+      }
 
       $(function() {
         $('#map-regions').vectorMap({
@@ -228,7 +233,7 @@
           backgroundColor:'#f3f5f6',
           series: {
             regions: [{
-              values: colors
+              values: colorsRegions
             }]
           }
         });
@@ -242,7 +247,7 @@
           backgroundColor:'#f3f5f6',
           series: {
             regions: [{
-              values: colors
+              values: colorsDpt
             }]
           }
         });
