@@ -34,7 +34,7 @@
         <p>Les dernières élections régionales ont eu lieu en 2015. Pour retrouver les résultats, <a href="https://www.interieur.gouv.fr/Elections/Les-resultats/Regionales/elecresult__regionales-2015/(path)/regionales-2015/index.html" target="_blank" rel="nofollow noreferrer noopener">cliquez ici</a>.</p>
         <p>Dans les conseils régionaux, les partis politiques qui arrivent en têtes aux élections reçoivent la majorité des sièges et en prennent la présidence. C'est donc la liste arrivée en tête qui se retrouve à la tête de la région.</p>
         <p>Découvrez sur cette carte la couleur politique des différentes régions de 2015 à 2021.</p>
-        <p>CARTE</p>
+        <div id="map-regions" style="width: 600px; height: 400px"></div>
       </div>
     <?php endif; ?>
     <?php if (!empty($electionInfos)): ?>
