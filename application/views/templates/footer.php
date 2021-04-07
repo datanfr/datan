@@ -4,21 +4,21 @@
     <div class="modal fade" id="newsletter" tabindex="-1" role="dialog" aria-labelledby="newsletterLabel" aria-hidden="true">
       <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
         <div class="modal-content">
-          <?= form_open('newsletter', array('id'=> 'newsletterForm')); ?>
-            <div class="modal-header">
-              <h2 class="modal-title" id="newsletterLabel">Newsletter</h2>
-              <span class="close cursor-pointer" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </span>
-            </div>
-            <div class="modal-body">
-              <p>Souhaitez-vous vous inscrire et recevoir les informations parlementaires et les nouvelles de Datan.fr <b>une fois par mois</b> ?</p>
-              <input type="email" name="email" class="form-control" placeholder="Votre email">
-            </div>
-            <div class="modal-footer">
-              <button type="submit" class="btn btn-primary">Recevoir la newsletter</button>
-            </div>
-            <?= form_close() ?>
+          <?= form_open('newsletter', array('id' => 'newsletterForm')); ?>
+          <div class="modal-header">
+            <h2 class="modal-title" id="newsletterLabel">Newsletter</h2>
+            <span class="close cursor-pointer" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </span>
+          </div>
+          <div class="modal-body">
+            <p>Souhaitez-vous vous inscrire et recevoir les informations parlementaires et les nouvelles de Datan.fr <b>une fois par mois</b> ?</p>
+            <input type="email" name="email" class="form-control" placeholder="Votre email">
+          </div>
+          <div class="modal-footer">
+            <button type="submit" class="btn btn-primary">Recevoir la newsletter</button>
+          </div>
+          <?= form_close() ?>
           <div id="modalSubscription">
             <div class="modal-header">
               <h2 class="modal-title" id="newsletterLabel">Félicitations</h2>
@@ -199,11 +199,38 @@
     <?php endif; ?>
 
     <script>
-      $(function(){
+      let colors = {
+        "FR-X1": "#F78080",
+        "FR-X2": "#F78080",
+        "FR-X3": "#54FEFF",
+        "FR-X4": "#1A66CC",
+        "FR-X5": "#F78080",
+        "FR-X6": "#ADC1FD",
+        "FR-X7": "#1A66CC",
+        "FR-E": "#F78080",
+        "FR-F": "#F78080",
+        "FR-H": "#FBCC33",
+        "FR-J": "#ADC1FD",
+        "FR-R": "#1A66CC",
+        "FR-U": "#1A66CC",
+        "FR-GF": "#fac0c0",
+        "FR-GP": "#fac0c0",
+        "FR-MQ": "#FBCC33",
+        "FR-RE": "#0000000",
+        "FR-YT": "#0000000"
+      }
+
+      $(function() {
         $('#map-regions').vectorMap({
           map: 'fr_regions_2016_merc',
           hoverOpacity: 0.7,
-          hoverColor: false
+          hoverColor: false,
+          backgroundColor:'#f3f5f6',
+          series: {
+            regions: [{
+              values: colors
+            }]
+          }
         });
       });
     </script>
