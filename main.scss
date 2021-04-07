@@ -2308,6 +2308,28 @@ ul.ui-menu{
       background: $bg-colour;
     }
   }
+  .map-container{
+    height: 300px;
+  }
+  .jvmap-smart{
+    width: 100%;
+    height: 100%;
+  }
+  @media only screen and (min-width: 576px) {
+      .map-container{
+          height: 350px;
+      }
+  }
+  @media only screen and (min-width: 768px) {
+      .map-container{
+          height: 400px;
+      }
+  }
+  @media only screen and (min-width: 992px) {
+      .map-container{
+          height: 500px;
+      }
+  }
 }
 /*
 ################
