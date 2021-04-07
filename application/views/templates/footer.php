@@ -216,7 +216,7 @@
         "FR-GF": "#fac0c0",
         "FR-GP": "#fac0c0",
         "FR-MQ": "#FBCC33",
-        "FR-RE": "#0000000",
+        "FR-RE": "#1A66CC",
         "FR-YT": "#0000000"
       }
       let colorsDpt = {
