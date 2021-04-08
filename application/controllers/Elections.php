@@ -92,6 +92,7 @@
       } elseif ($data['election']['libelleAbrev'] == "Départementales") {
         array_push($data['js_to_load'], "jvectormap/jquery-jvectormap-fr-merc");
       }
+      array_push($data['js_to_load'], "jvectormap/maps_jvectormap-datan");
       // Load Views
       $this->load->view('templates/header', $data);
       $this->load->view('templates/button_up');
