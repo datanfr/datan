@@ -75,6 +75,33 @@
       return $info;
     }
 
+    public function get_map_legend($id){
+      if ($id == 1 /*regionales-2021*/) {
+        $array = array(
+          array("party" => "Parti socialiste (PS)", "color" => "#F78080"),
+          array("party" => "Les Centrists (LC)", "color" => "#54FEFF"),
+          array("party" => "Les Républicains (LR)", "color" => "#1A66CC"),
+          array("party" => "Divers droite", "color" => "#ADC1FD"),
+          array("party" => "Régionalistes", "color" => "#FBCC33"),
+          array("party" => "Divers gauche", "color" => "#fac0c0")
+        );
+      }
+      if ($id == 2 /*regionales-2021*/) {
+        $array = array(
+          array("party" => "Les Républicains (LR)", "color" => "#0066CC"),
+          array("party" => "Parti socialistes (PS)", "color" => "#FF8080"),
+          array("party" => "Union des démocrates et indépendants (UDI)", "color" => "#00FFFF"),
+          array("party" => "Mouvement démocrate (MoDEM)", "color" => "#FF9900"),
+          array("party" => "Divers droite", "color" => "#ADC1FD"),
+          array("party" => "Parti radical de gauche (PRG)", "color" => "#FFD1DC"),
+          array("party" => "Parti communiste français (PCF)", "color" => "#DD0000"),
+          array("party" => "Sans étiquette", "color" => "#DDDDDD")
+        );
+      }
+
+      return $array;
+    }
+
     public function get_candidate($mpId, $election){
       $whereQuery = array(
         'mpId' => $mpId,

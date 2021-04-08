@@ -37,6 +37,16 @@
         <div class="map-container my-5">
           <div class="jvmap-smart" id="map-regions"></div>
         </div>
+        <div class="row my-4">
+          <?php foreach ($mapLegend as $x): ?>
+            <div class="map-container-ledend col-6">
+              <div class="d-flex my-2">
+                <div class="color" style="background-color: <?= $x['color'] ?>"></div>
+                <span class="ml-4"><?= $x['party'] ?></span>
+              </div>
+            </div>
+          <?php endforeach; ?>
+        </div>
       </div>
     <?php endif; ?>
     <?php if ($election['id'] == 2 /* departementales-2021 */): ?>
@@ -48,6 +58,16 @@
         <p>Découvrez sur cette carte la couleur politique des différentes régions de 2015 à 2021.</p>
         <div class="map-container my-5">
           <div class="jvmap-smart" id="map-departements"></div>
+        </div>
+        <div class="row my-4">
+          <?php foreach ($mapLegend as $x): ?>
+            <div class="map-container-ledend col-6">
+              <div class="d-flex my-2">
+                <div class="color" style="background-color: <?= $x['color'] ?>"></div>
+                <span class="ml-4"><?= $x['party'] ?></span>
+              </div>
+            </div>
+          <?php endforeach; ?>
         </div>
       </div>
     <?php endif; ?>
