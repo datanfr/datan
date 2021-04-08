@@ -197,63 +197,7 @@
         <script type="text/javascript" src="<?= asset_url() ?>js/<?= $file ?>.js?v=<?= getVersion() ?>"></script>
       <?php endforeach; ?>
     <?php endif; ?>
-
-    <script>
-      let colorsRegions = {
-        "FR-X1": "#F78080",
-        "FR-X2": "#F78080",
-        "FR-X3": "#54FEFF",
-        "FR-X4": "#1A66CC",
-        "FR-X5": "#F78080",
-        "FR-X6": "#ADC1FD",
-        "FR-X7": "#1A66CC",
-        "FR-E": "#F78080",
-        "FR-F": "#F78080",
-        "FR-H": "#FBCC33",
-        "FR-J": "#ADC1FD",
-        "FR-R": "#1A66CC",
-        "FR-U": "#1A66CC",
-        "FR-GF": "#fac0c0",
-        "FR-GP": "#fac0c0",
-        "FR-MQ": "#FBCC33",
-        "FR-RE": "#1A66CC",
-        "FR-YT": "#0000000"
-      }
-      let colorsDpt = {
-        "FR-01": "#F78080",
-        "FR-02": "#F78080",
-        "FR-03": "#54FEFF"
-      }
-
-      $(function() {
-        $('#map-regions').vectorMap({
-          map: 'fr_regions_2016_merc',
-          hoverOpacity: 0.7,
-          hoverColor: false,
-          backgroundColor:'#f3f5f6',
-          series: {
-            regions: [{
-              values: colorsRegions
-            }]
-          }
-        });
-      });
-
-      $(function() {
-        $('#map-departements').vectorMap({
-          map: 'fr_merc',
-          hoverOpacity: 0.7,
-          hoverColor: false,
-          backgroundColor:'#f3f5f6',
-          series: {
-            regions: [{
-              values: colorsDpt
-            }]
-          }
-        });
-      });
-    </script>
-
+    
     <script type="text/javascript" src="<?= asset_url() ?>js/main.min.js?v=<?= getVersion() ?>"></script>
     <script type="text/javascript" src="<?= asset_url() ?>js/datan/url_obf2.min.js"></script>
 
