@@ -169,12 +169,21 @@
 
     public function get_all_districts($election){
       if ($election == 1/*regionales 2021*/) {
-        $this->db->order_by('libelle', 'ASC');
-        $query = $this->db->get('regions');
+        $query = $this->db->query('SELECT r.*, count(c.mpId) AS candidatsN
+          FROM elect_deputes_candidats c
+          LEFT JOIN regions r ON c.district = r.id
+          WHERE c.election = 1
+          GROUP BY c.district
+          ORDER BY r.libelle ASC
+        ');
       } elseif ($election == 2 /*departementales 2021*/) {
-        $this->db->select('departement_code AS id, CONCAT(departement_code, " - ", departement_nom) AS libelle');
-        $this->db->order_by('departement_code', 'ASC');
-        $query = $this->db->get('departement');
+        $query = $this->db->query('SELECT departement_code AS id, CONCAT(departement_code, " - ", departement_nom) AS libelle
+          FROM elect_deputes_candidats c
+          LEFT JOIN departement d ON c.district = d.departement_code
+          WHERE c.election = 2
+          GROUP BY c.district
+          ORDER BY d.departement_nom ASC
+        ');
       }
 
       return $query->result_array();
