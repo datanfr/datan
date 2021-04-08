@@ -385,12 +385,7 @@
       }
       // Votes - groupes
       $data['groupes'] = $this->votes_model->get_vote_groupes($data['vote']['voteNumero'], $data['vote']['dateScrutin'], $legislature);
-      // Vote - array for majorité
-      foreach ($data['groupes'] as $groupe) {
-        if ($groupe['positionPolitique'] == 'Majoritaire') {
-          $data['vote_majoritaire'] = $groupe;
-        }
-      }
+
       // Votes - députés
       $data['deputes'] = $this->votes_model->get_vote_deputes($data['vote']['voteNumero'], $legislature);
       // OTHER VOTES
