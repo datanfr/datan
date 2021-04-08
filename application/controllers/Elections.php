@@ -49,6 +49,7 @@
       $data['districts'] = $this->elections_model->get_all_districts($data['election']['id']);
       $data['electionInfos'] = $this->elections_model->get_election_infos($data['election']['libelleAbrev']);
       $data['election']['candidatsN'] = count($data['deputes']);
+      $data['mapLegend'] = $this->elections_model->get_map_legend($data['election']['id']);
 
       // Breadcrumb
       $data['breadcrumb'] = array(
