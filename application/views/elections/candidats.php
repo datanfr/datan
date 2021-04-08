@@ -15,8 +15,8 @@
         <p><b>Attention</b>, au vu de la crise sanitaire de la Covid-19, les dates des <?= mb_strtolower($election['libelle']) ?> sont susceptibles de changer.</p>
         <p>
           Découvrez sur cette page les députés candidats aux <?= mb_strtolower($election['libelle']) ?> de <?= $election['dateYear'] ?>.
-          <?php if ($election['candidatsN']): ?>
-            Nous avons jusqu'à présent répertorié <span class="font-weight-bold"><?= $election['candidatsN'] ?> député<?= $election['candidatsN'] > 1 ? "s" : NULL ?> candidat<?= $election['candidatsN'] > 1 ? "s" : NULL ?></span>.
+          <?php if ($candidatsN): ?>
+            Nous avons jusqu'à présent répertorié <span class="font-weight-bold"><?= $candidatsN ?> député<?= $candidatsN > 1 ? "s" : NULL ?> candidat<?= $candidatsN > 1 ? "s" : NULL ?></span>.
             <?php else: ?>
             Nous avons jusqu'à présent répertorié <span class="font-weight-bold">aucun député candidat</span>.
           <?php endif; ?>
@@ -82,9 +82,9 @@
       </div>
     <?php endif; ?>
   </div>
-  <div class="row my-5">
+  <div class="row mt-5 mb-3">
     <div class="col-12">
-      <h2>Retrouvez les <?= $election['candidatsN'] ?> députés candidats aux <?= mb_strtolower($election['libelle']) ?> de <?= $election['dateYear'] ?></h2>
+      <h2>Retrouvez <?= $candidatsN > 1 ? "les " . $candidatsN : "le" ?> député<?= $candidatsN > 1 ? "s" : NULL ?> candidat<?= $candidatsN > 1 ? "s" : NULL ?> aux <?= mb_strtolower($election['libelle']) ?> de <?= $election['dateYear'] ?></h2>
     </div>
   </div>
   <div class="row">
@@ -92,13 +92,10 @@
       <div class="sticky-top sticky-offset">
         <!-- Groupes -->
         <div class="d-flex flex-column d-lg-none">
-          <h3>
-            Les <span class="text-primary">577</span> députés candidats aux <?= mb_strtolower($election['libelle']) ?> de <?= $election['dateYear'] ?>
-          </h3>
           <div class="mt-3 badges-groupes">
             <?php foreach ($districts as $district): ?>
               <a class="badge badge-primary no-decoration" href="<?= base_url() ?>elections/<?= mb_strtolower($district['libelle']) ?>/membres">
-                <span>XX</span> <?= $district['libelle'] ?>
+                <span><?= $district['libelle'] ?>
               </a>
             <?php endforeach; ?>
           </div>
