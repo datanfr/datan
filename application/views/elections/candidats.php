@@ -90,16 +90,6 @@
   <div class="row">
     <div class="pb-4 col-lg-3 search-element sticky-top sticky-top-lg">
       <div class="sticky-top sticky-offset">
-        <!-- Groupes -->
-        <div class="d-flex flex-column d-lg-none">
-          <div class="mt-3 badges-groupes">
-            <?php foreach ($districts as $district): ?>
-              <a class="badge badge-primary no-decoration" href="<?= base_url() ?>elections/<?= mb_strtolower($district['libelle']) ?>/membres">
-                <span><?= $district['libelle'] ?>
-              </a>
-            <?php endforeach; ?>
-          </div>
-        </div>
         <!-- Search -->
         <div class="mt-3 mt-lg-0">
           <input type="text" id="quicksearch" placeholder="Recherchez un député..." />
