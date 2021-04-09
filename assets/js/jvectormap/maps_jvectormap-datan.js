@@ -1,3 +1,5 @@
+let disabled = "#F3F5F6"; // Background color of datan
+
 let colorsRegions2015 = {
   "FR-X1": "#F78080",
   "FR-X2": "#F78080",
@@ -16,8 +18,11 @@ let colorsRegions2015 = {
   "FR-GP": "#fac0c0",
   "FR-MQ": "#FBCC33",
   "FR-RE": "#1A66CC",
-  "FR-YT": "#0000000"
+  "FR-YT": disabled
 }
+
+let Regions2015Disabled = ['FR-YT'];
+
 // Converting CSV to JSON ==> https://www.convertcsv.com/csv-to-json.htm
 let colorsDpt2015 = {
    "FR-01":"#0066cc",
@@ -117,8 +122,13 @@ let colorsDpt2015 = {
    "FR-95":"#adc1fd",
    "FR-GP":"#FF8080",
    "FR-RE":"#00FFFF",
-   "FR-YT":"#0066cc"
+   "FR-YT":"#0066cc",
+   "FR-GF":disabled,
+   "FR-MQ":disabled,
+   "FR-75":disabled
 }
+
+let Dpts2015Disabled = ['FR-GF', 'FR-MQ', 'FR-75'];
 
 $(function() {
   $('#map-regions').vectorMap({
@@ -130,6 +140,18 @@ $(function() {
       regions: [{
         values: colorsRegions2015
       }]
+    },
+    onRegionTipShow: function ( e, label, code ) {
+       if ( Regions2015Disabled.indexOf(code) >= 0 ) {
+         e.preventDefault();
+         document.body.style.cursor = 'default';
+       }
+    },
+    onRegionOver: function ( e, code) {
+      console.log(code);
+      if ( Regions2015Disabled.indexOf(code) >= 0 ) {
+        e.preventDefault();
+      }
     }
   });
 });
@@ -144,6 +166,18 @@ $(function() {
       regions: [{
         values: colorsDpt2015
       }]
+    },
+    onRegionTipShow: function ( e, label, code ) {
+       if ( Dpts2015Disabled.indexOf(code) >= 0 ) {
+         e.preventDefault();
+         document.body.style.cursor = 'default';
+       }
+    },
+    onRegionOver: function ( e, code) {
+      console.log(code);
+      if ( Dpts2015Disabled.indexOf(code) >= 0 ) {
+        e.preventDefault();
+      }
     }
   });
 });
