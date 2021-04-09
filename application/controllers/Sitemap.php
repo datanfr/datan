@@ -13,6 +13,7 @@ class Sitemap extends CI_Controller {
     $this->load->model('post_model');
     $this->load->model('fields_model');
     $this->load->model('parties_model');
+    $this->load->model('elections_model');
   }
 
   /* 1. Index */
@@ -170,11 +171,12 @@ class Sitemap extends CI_Controller {
       }
     }
 
+    // Data
     $fields = $this->fields_model->get_active_fields();
     $data['years'] = $this->votes_model->get_years_archives(legislature_current());
     $data['years'] = array_column($data['years'], 'votes_year');
     $data['months'] = $this->votes_model->get_months_archives(legislature_current());
-
+    $data['elections'] = $this->elections_model->get_election_all();
 
     // Create array with urls
     $urls = array();
@@ -212,6 +214,10 @@ class Sitemap extends CI_Controller {
     $urls[]["url"] = base_url()."statistiques/groupes-cohesion";
     $urls[]["url"] = base_url()."statistiques/deputes-participation";
     $urls[]["url"] = base_url()."statistiques/groupes-participation";
+    $urls[]["url"] = base_url()."elections";
+    foreach ($data['elections'] as $election) {
+      $urls[]["url"] = base_url()."elections/".$election['slug'];
+    }
 
     $data['urls'] = $urls;
     $data['nbUrl'] = count($data['urls']);
