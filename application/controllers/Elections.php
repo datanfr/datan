@@ -48,7 +48,8 @@
       $data['deputes'] = $this->elections_model->get_all_candidate($data['election']['id'], TRUE);
       $data['districts'] = $this->elections_model->get_all_districts($data['election']['id']);
       $data['electionInfos'] = $this->elections_model->get_election_infos($data['election']['libelleAbrev']);
-      $data['election']['candidatsN'] = count($data['deputes']);
+      $data['candidatsN'] = count($data['deputes']);
+      $data['mapLegend'] = $this->elections_model->get_map_legend($data['election']['id']);
 
       // Breadcrumb
       $data['breadcrumb'] = array(
@@ -72,13 +73,27 @@
       //Open Graph
       $controller = $this->router->fetch_class()."/".$this->router->fetch_method();
       $data['ogp'] = $this->meta_model->get_ogp($controller, $data['title_meta'], $data['description_meta'], $data['url'], $data);
+      // CSS
+      $data['css_to_load']= array(
+        array(
+          "url" => asset_url() . "css/jquery-jvectormap-2.0.5.css",
+          "async" => FALSE
+        )
+      );
       // JS
       $data['js_to_load_before_datan'] = array("isotope.pkgd.min");
       if (count($data['districts']) <= 25) {
-        $data['js_to_load']= array("datan/sorting");
+        $data['js_to_load'] = array("datan/sorting");
       } else {
-        $data['js_to_load']= array("datan/sorting_select");
+        $data['js_to_load'] = array("datan/sorting_select");
       }
+      array_push($data['js_to_load'], "jvectormap/jquery-jvectormap-2.0.5.min");
+      if ($data['election']['libelleAbrev'] == "Régionales") {
+        array_push($data['js_to_load'], "jvectormap/jquery-jvectormap-fr_regions_2016-merc");
+      } elseif ($data['election']['libelleAbrev'] == "Départementales") {
+        array_push($data['js_to_load'], "jvectormap/jquery-jvectormap-fr-merc");
+      }
+      array_push($data['js_to_load'], "jvectormap/maps_jvectormap-datan");
       // Load Views
       $this->load->view('templates/header', $data);
       $this->load->view('templates/button_up');

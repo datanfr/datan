@@ -4,21 +4,21 @@
     <div class="modal fade" id="newsletter" tabindex="-1" role="dialog" aria-labelledby="newsletterLabel" aria-hidden="true">
       <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
         <div class="modal-content">
-          <?= form_open('newsletter', array('id'=> 'newsletterForm')); ?>
-            <div class="modal-header">
-              <h2 class="modal-title" id="newsletterLabel">Newsletter</h2>
-              <span class="close cursor-pointer" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </span>
-            </div>
-            <div class="modal-body">
-              <p>Souhaitez-vous vous inscrire et recevoir les informations parlementaires et les nouvelles de Datan.fr <b>une fois par mois</b> ?</p>
-              <input type="email" name="email" class="form-control" placeholder="Votre email">
-            </div>
-            <div class="modal-footer">
-              <button type="submit" class="btn btn-primary">Recevoir la newsletter</button>
-            </div>
-            <?= form_close() ?>
+          <?= form_open('newsletter', array('id' => 'newsletterForm')); ?>
+          <div class="modal-header">
+            <h2 class="modal-title" id="newsletterLabel">Newsletter</h2>
+            <span class="close cursor-pointer" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </span>
+          </div>
+          <div class="modal-body">
+            <p>Souhaitez-vous vous inscrire et recevoir les informations parlementaires et les nouvelles de Datan.fr <b>une fois par mois</b> ?</p>
+            <input type="email" name="email" class="form-control" placeholder="Votre email">
+          </div>
+          <div class="modal-footer">
+            <button type="submit" class="btn btn-primary">Recevoir la newsletter</button>
+          </div>
+          <?= form_close() ?>
           <div id="modalSubscription">
             <div class="modal-header">
               <h2 class="modal-title" id="newsletterLabel">Félicitations</h2>
@@ -197,7 +197,7 @@
         <script type="text/javascript" src="<?= asset_url() ?>js/<?= $file ?>.js?v=<?= getVersion() ?>"></script>
       <?php endforeach; ?>
     <?php endif; ?>
-
+    
     <script type="text/javascript" src="<?= asset_url() ?>js/main.min.js?v=<?= getVersion() ?>"></script>
     <script type="text/javascript" src="<?= asset_url() ?>js/datan/url_obf2.min.js"></script>
 

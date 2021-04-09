@@ -17,6 +17,7 @@ $primary_rgb: rgb(0, 183, 148);
 $adopted: $vert;
 $abstention: #FFBA49;
 $rejected: #C5283D;
+
 // BREADCRUMB
 $breadcrumb-divider: quote(">");
 $breadcrumb-border-radius: 6px;
@@ -48,7 +49,7 @@ $carousel-caption-width: 100%;
 @import "node_modules/bootstrap/scss/functions";
 @import "node_modules/bootstrap/scss/variables";
 @import "node_modules/bootstrap/scss/mixins";
-/*
+
 /*
 ################
                HTML
@@ -58,11 +59,7 @@ html {
   overflow-x: hidden;
 }
 
-/*
-################
-               TARTE AU CITRON
-################
-*/
+
 /*
 ################
                Sticky Top
@@ -2283,7 +2280,18 @@ ul.ui-menu{
   }
 }
 .pg-elections-candidats{
-  .infos{
+  &.infosIndividual{
+    background-color: $bleu;
+    color: #fff;
+    h2, a{
+      color: #fff;
+    }
+    h2{
+      font-size: 2.2em;
+      margin-bottom: 1.5rem;
+    }
+  }
+  .infosGeneral{
     border: 1px solid #00b794;
     border-radius: 20px;
     .title{
@@ -2292,6 +2300,34 @@ ul.ui-menu{
       padding: 0 .5em;
       background: $bg-colour;
     }
+  }
+  .map-container{
+    height: 300px;
+  }
+  .map-container-ledend{
+    .color{
+      width: 30px;
+      height: 20px;
+    }
+  }
+  .jvmap-smart{
+    width: 100%;
+    height: 100%;
+  }
+  @media only screen and (min-width: 576px) {
+      .map-container{
+          height: 350px;
+      }
+  }
+  @media only screen and (min-width: 768px) {
+      .map-container{
+          height: 400px;
+      }
+  }
+  @media only screen and (min-width: 992px) {
+      .map-container{
+          height: 500px;
+      }
   }
 }
 /*

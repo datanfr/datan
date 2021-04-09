@@ -59,11 +59,47 @@
         <p><b>L'élection est organisée en deux tours</b>. Au premier tour, si aucune liste obtient plus de 50% des suffrages exprimés, un second tour est organisé avec uniquement les listes ayant récolté plus de 10% des voix.</p>
         <p><b>La liste arrivant en tête se voit attribuer 25% des sièges</b> du conseil régional. Pour les sièges restants, ils sont attribués à la proportionnelle entre toutes les listes ayant obtenu au moins 5% des voix.</p>
         ";
+      } elseif ($type == "Départementales") {
+        $info = "
+        <p><b>Les élections départementales ont lieu tous les six ans</b>, en même temps que les élections régionales.</p>
+        <p>Les élections départementales permettent d'<b>élire les conseillers départementaux</b> qui composent le conseil régional. Ce sont les conseillers départementaux qui décident et votent sur les affaires de la région. Avant 2013, les conseillers départementaux étaient appelés conseillers généraux.</p>
+        <p><b>Les compétences des régions sont multiples</b>. La compétence la plus importante est sociale. Les conseils départementaux gèrent l'aide sociale à l'enfant, les politiques d'hebergement et d'insertion des personnes handicapées, ou encore la gestion de maisons de retraite. Les conseils départementaux ont également des compétences en matière d'éducation (construction et entretien de collèges), la voirie départementale, ou encore l'action culturelle et sportive. Pour plus d'information, <a href='https://www.vie-publique.fr/fiches/19620-quelles-sont-les-competences-exercees-par-les-departements' target='_blank' rel='nofollow noreferrer noopener'>cliquez ici</a>.
+        <p>Les candidats doivent former un <b>binôme mixte</b> (une candidat femme et un candidat homme). Le jours de l'élection, les électeurs votent pour un binôme candidat.</p>
+        <p><b>L'élection est organisée en deux tours</b>. Au premier tour, si un binôme obtient la majorité absolue des voix, alors il est automatiquement élu. Si aucun binôme ne l'emporte, un second tour est organisé.</p>
+        <p>Les binômes ayant obtenu au moins 12,5% des voix des électeurs inscrits peuvent se présenter au second tour. <b>Au second tour, le binôme obtenant le plus de voix l'emporte</b>.
+        ";
       } else {
         $info = NULL;
       }
 
       return $info;
+    }
+
+    public function get_map_legend($id){
+      if ($id == 1 /*regionales-2021*/) {
+        $array = array(
+          array("party" => "Parti socialiste (PS)", "color" => "#F78080"),
+          array("party" => "Les Centrists (LC)", "color" => "#54FEFF"),
+          array("party" => "Les Républicains (LR)", "color" => "#1A66CC"),
+          array("party" => "Divers droite", "color" => "#ADC1FD"),
+          array("party" => "Régionalistes", "color" => "#FBCC33"),
+          array("party" => "Divers gauche", "color" => "#fac0c0")
+        );
+      }
+      if ($id == 2 /*regionales-2021*/) {
+        $array = array(
+          array("party" => "Les Républicains (LR)", "color" => "#0066CC"),
+          array("party" => "Parti socialistes (PS)", "color" => "#FF8080"),
+          array("party" => "Union des démocrates et indépendants (UDI)", "color" => "#00FFFF"),
+          array("party" => "Mouvement démocrate (MoDEM)", "color" => "#FF9900"),
+          array("party" => "Divers droite", "color" => "#ADC1FD"),
+          array("party" => "Parti radical de gauche (PRG)", "color" => "#FFD1DC"),
+          array("party" => "Parti communiste français (PCF)", "color" => "#DD0000"),
+          array("party" => "Sans étiquette", "color" => "#DDDDDD")
+        );
+      }
+
+      return $array;
     }
 
     public function get_candidate($mpId, $election){
