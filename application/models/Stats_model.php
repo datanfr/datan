@@ -5,19 +5,20 @@
     }
 
     public function get_mps_oldest($limit = 3){
-      $query = $this->db->query('
-      SELECT A.*
+      $sql = 'SELECT A.*
       FROM
       (
         SELECT @s:=@s+1 AS "rank",
         da.civ, da.nameFirst, da.nameLast, da.nameUrl, da.age, da.libelle, da.libelleAbrev, da.mpId, da.dptSlug, da.couleurAssociee, da.departementNom, da.departementCode
         FROM deputes_all da,
           (SELECT @s:= 0) AS s
-          WHERE da.legislature = '.legislature_current().' AND da.dateFin IS NULL
+          WHERE da.legislature = ? AND da.dateFin IS NULL
         ORDER BY da.age DESC
       ) A
-      LIMIT '.$limit.'
-      ');
+      LIMIT ?
+      ';
+      $query = $this->db->query($sql, array(legislature_current(), $limit));
+
       if ($limit == 1) {
         return $query->row_array();
       } else {
@@ -26,8 +27,7 @@
     }
 
     public function get_mps_youngest($limit = 3){
-      $query = $this->db->query('
-        SELECT B.*
+      $sql = 'SELECT B.*
         FROM
         (
         SELECT A.*
@@ -37,14 +37,16 @@
           da.civ, da.nameFirst, da.nameLast, da.nameUrl, da.age, da.libelle, da.libelleAbrev, da.mpId, da.dptSlug, da.couleurAssociee, da.departementNom, da.departementCode
           FROM deputes_all da,
             (SELECT @s:= 0) AS s
-            WHERE da.legislature = '.legislature_current().' AND da.dateFin IS NULL
+            WHERE da.legislature = ? AND da.dateFin IS NULL
           ORDER BY da.age DESC
         ) A
         ORDER BY rank DESC
-        LIMIT '.$limit.'
+        LIMIT ?
         ) B
         ORDER BY rank
-      ');
+      ';
+      $query = $this->db->query($sql, array(legislature_current(), $limit));
+
       if ($limit == 1) {
         return $query->row_array();
       } else {
@@ -53,34 +55,34 @@
     }
 
     public function get_ranking_age(){
-      $query = $this->db->query('
-      SELECT @s:=@s+1 AS "rank",
+      $sql = 'SELECT @s:=@s+1 AS "rank",
       da.civ, da.nameFirst, da.nameLast, da.nameUrl, da.libelle, da.libelleAbrev, da.mpId, da.dptSlug, da.age
-      FROM deputes_all da,
-      (SELECT @s:= 0) AS s
-      WHERE da.legislature = '.legislature_current().' AND da.dateFin IS NULL
-      ORDER BY age DESC
-      ');
+        FROM deputes_all da,
+        (SELECT @s:= 0) AS s
+        WHERE da.legislature = ? AND da.dateFin IS NULL
+        ORDER BY age DESC
+      ';
+      $query = $this->db->query($sql, legislature_current());
+
       return $query->result_array();
     }
 
     public function get_age_mean($legislature){
-      $query = $this->db->query('
-        SELECT ROUND(AVG(A.age), 1) AS mean
+      $sql = 'SELECT ROUND(AVG(A.age), 1) AS mean
         FROM
         (
           SELECT d.age
           FROM deputes_last d
-          WHERE d.legislature = '.$legislature.' AND d.dateFin IS NOT NULL
+          WHERE d.legislature = ? AND d.dateFin IS NOT NULL
         ) A
-      ');
+      ';
+      $query = $this->db->query($sql, $legislature);
 
       return $query->row_array();
     }
 
     public function get_groups_women(){
-      $query = $this->db->query('
-      SELECT @s:=@s+1 AS "rank", B.*
+      $sql = 'SELECT @s:=@s+1 AS "rank", B.*
       FROM
       (
         SELECT A.*,
@@ -91,7 +93,7 @@
           SELECT libelle, libelleAbrev, COUNT(mpId) AS n, groupeId,
           SUM(if(civ = "Mme", 1, 0)) AS female
           FROM deputes_all
-          WHERE libelleAbrev != "NI" AND legislature = '.legislature_current().' AND dateFin IS NULL
+          WHERE libelleAbrev != "NI" AND legislature = ? AND dateFin IS NULL
           GROUP BY libelle
         ) A
         LEFT JOIN organes o ON A.groupeId = o.uid
@@ -99,14 +101,14 @@
       ) B,
       (SELECT @s:= 0) AS s
       ORDER BY B.pct DESC
-      ');
+      ';
+      $query = $this->db->query($sql, legislature_current());
 
       return $query->result_array();
     }
 
     public function get_groups_women_more(){
-      $query = $this->db->query('
-        SELECT @s:=@s+1 AS "rank", B.*
+      $sql = 'SELECT @s:=@s+1 AS "rank", B.*
         FROM
         (
         SELECT A.*,
@@ -116,21 +118,21 @@
         SELECT libelle, libelleAbrev, COUNT(mpId) AS n,
         SUM(if(civ = "Mme", 1, 0)) AS female
         FROM deputes_all
-        WHERE libelleAbrev != "NI" AND legislature = '.legislature_current().' AND dateFin IS NULL
+        WHERE libelleAbrev != "NI" AND legislature = ? AND dateFin IS NULL
         GROUP BY libelle
         ) A
         ) B,
         (SELECT @s:= 0) AS s
         ORDER BY B.pct DESC
         LIMIT 3
-      ');
+      ';
+      $query = $this->db->query($sql, legislature_current());
 
       return $query->result_array();
     }
 
     public function get_groups_women_less(){
-      $query = $this->db->query('
-        SELECT D.*
+      $sql = 'SELECT D.*
         FROM
         (
         SELECT C.*
@@ -146,7 +148,7 @@
         SELECT libelle, libelleAbrev, COUNT(mpId) AS n,
         SUM(if(civ = "Mme", 1, 0)) AS female
         FROM deputes_all
-        WHERE libelleAbrev != "NI" AND legislature = '.legislature_current().' AND dateFin IS NULL
+        WHERE libelleAbrev != "NI" AND legislature = ? AND dateFin IS NULL
         GROUP BY libelle
         ) A
         ) B,
@@ -157,52 +159,53 @@
         LIMIT 3
         ) D
         ORDER BY D.rank ASC
-      ');
+      ';
+      $query = $this->db->query($sql, legislature_current());
 
       return $query->result_array();
     }
 
     public function get_mps_loyalty($legislature){
-      $query = $this->db->query('
-        SELECT @s:=@s+1 AS "rank", A.*
+      $sql = 'SELECT @s:=@s+1 AS "rank", A.*
         FROM
         (
         SELECT cl.mpId, ROUND(cl.score*100) AS score, cl.votesN, da.civ, da.nameLast, da.nameFirst, da.nameUrl, da.libelle, da.libelleAbrev, da.dptSlug, da.couleurAssociee, da.departementNom, da.departementCode
         FROM class_loyaute cl
         LEFT JOIN deputes_all da ON cl.mpId = da.mpId AND cl.legislature = da.legislature
-        WHERE da.legislature = '.$legislature.' AND da.dateFin IS NULL
+        WHERE da.legislature = ? AND da.dateFin IS NULL
         ) A,
         (SELECT @s:= 0) AS s
         ORDER BY A.score DESC, A.votesN DESC
-      ');
+      ';
+      $query = $this->db->query($sql, $legislature);
 
       return $query->result_array();
     }
 
     public function get_loyalty_mean($legislature){
-      $query = $this->db->query('
-        SELECT ROUND(AVG(score)*100) AS mean
+      $sql = 'SELECT ROUND(AVG(score)*100) AS mean
         FROM class_loyaute
-        WHERE legislature = "'.$legislature.'"
-      ');
+        WHERE legislature = ?
+      ';
+      $query = $this->db->query($sql, $legislature);
 
       return $query->row_array();
     }
 
     public function get_groups_age(){
-      $query = $this->db->query('
-        SELECT @s:=@s+1 AS "rank", A.*
+      $sql = 'SELECT @s:=@s+1 AS "rank", A.*
         FROM
         (
           SELECT gs.organeRef, ROUND(gs.age) AS age, o.libelle, o.libelleAbrev, o.couleurAssociee, ge.effectif
           FROM groupes_stats gs
           LEFT JOIN organes o ON o.uid = gs.organeRef
           LEFT JOIN groupes_effectif ge ON ge.organeRef  = gs.organeRef
-          WHERE dateFin IS NULL AND o.legislature = '.legislature_current().'
+          WHERE dateFin IS NULL AND o.legislature = ?
         ) A,
         (SELECT @s:= 0) AS s
         ORDER BY A.age DESC
-      ');
+      ';
+      $query = $this->db->query($sql, legislature_current());
 
       return $query->result_array();
     }
@@ -226,25 +229,24 @@
     }
 
     public function get_mps_participation(){
-      $query = $this->db->query('
-      SELECT @s:=@s+1 AS "rank", A.*
+      $sql = 'SELECT @s:=@s+1 AS "rank", A.*
       FROM
       (
         SELECT cp.*, da.nameFirst, da.nameLast, da.civ, da.libelle, da.libelleAbrev, da.dptSlug, da.nameUrl, da.couleurAssociee, da.departementNom, da.departementCode
         FROM class_participation cp
         LEFT JOIN deputes_all da ON cp.mpId = da.mpId AND da.legislature = cp.legislature
-        WHERE votesN >= 100 AND da.dateFin IS NULL AND cp.legislature = '.legislature_current().'
+        WHERE votesN >= 100 AND da.dateFin IS NULL AND cp.legislature = ?
       ) A,
       (SELECT @s:= 0) AS s
       ORDER BY A.score DESC, A.votesN DESC
-      ');
+      ';
+      $query = $this->db->query($sql, legislature_current());
 
       return $query->result_array();
     }
 
     public function get_mps_participation_commission(){
-      $query = $this->db->query('
-      SELECT @s:=@s+1 AS "rank", A.*
+      $sql = 'SELECT @s:=@s+1 AS "rank", A.*
       FROM
       (
       SELECT cp.mpId, cp.score, cp.votesN, da.nameFirst, da.nameLast, da.civ, da.libelle, da.libelleAbrev, da.dptSlug, da.nameUrl, da.couleurAssociee, da.departementNom, da.departementCode, o.libelleAbrege AS commission
@@ -252,23 +254,24 @@
       LEFT JOIN deputes_all da ON cp.mpId = da.mpId
       LEFT JOIN mandat_secondaire ms ON cp.mpId = ms.mpId
       LEFT JOIN organes o ON ms.organeRef = o.uid
-      WHERE da.legislature = '.legislature_current().' AND cp.active = 1 AND ms.typeOrgane = "COMPER" AND ms.codeQualite = "Membre" AND ms.dateFin IS NULL
+      WHERE da.legislature = ? AND cp.active = 1 AND ms.typeOrgane = "COMPER" AND ms.codeQualite = "Membre" AND ms.dateFin IS NULL
       ) A,
       (SELECT @s:= 0) AS s
       ORDER BY A.score DESC, A.votesN DESC
-      ');
+      ';
+      $query = $this->db->query($sql, legislature_current());
 
       return $query->result_array();
     }
 
     public function get_mps_participation_mean($legislature){
-      $query = $this->db->query('
-        SELECT ROUND(AVG(score) * 100) AS mean
+      $sql = 'SELECT ROUND(AVG(score) * 100) AS mean
         FROM class_participation
-        WHERE legislature = '.$legislature.'
-      ');
+        WHERE legislature = ?
+      ';
+      $query = $this->db->query($sql, $legislature);
 
-      return $query->row_array('');
+      return $query->row_array();
     }
 
     public function get_mps_participation_commission_mean(){
@@ -277,7 +280,7 @@
         FROM class_participation_commission
       ');
 
-      return $query->row_array('');
+      return $query->row_array();
     }
 
     public function get_groups_participation(){

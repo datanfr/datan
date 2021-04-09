@@ -5,22 +5,22 @@
     }
 
     public function get_election($slug){
-      $whereQuery = array(
+      $where = array(
         'slug' => $slug
       );
       $this->db->select('*, date_format(dateFirstRound, "%d %M %Y") as dateFirstRoundFr, date_format(dateSecondRound, "%d %M %Y") as dateSecondRoundFr');
 
-      $query = $this->db->get_where('elect_libelle', $whereQuery, 1);
+      $query = $this->db->get_where('elect_libelle', $where, 1);
 
       return $query->row_array();
     }
 
     public function get_election_by_id($id){
-      $whereQuery = array(
+      $where = array(
         'id' => $id
       );
 
-      $query = $this->db->get_where('elect_libelle', $whereQuery, 1);
+      $query = $this->db->get_where('elect_libelle', $where, 1);
 
       return $query->row_array();
     }
@@ -103,7 +103,7 @@
     }
 
     public function get_candidate($mpId, $election){
-      $whereQuery = array(
+      $where = array(
         'mpId' => $mpId,
         'election' => $election
       );
@@ -113,13 +113,13 @@
         $this->db->select('*, libelle AS regionLibelle');
       }
 
-      $query = $this->db->get_where('elect_deputes_candidats', $whereQuery, 1);
+      $query = $this->db->get_where('elect_deputes_candidats', $where, 1);
 
       return $query->row_array();
     }
 
     public function get_candidate_full($mpId, $election){
-      $whereQuery = array(
+      $where = array(
         'mpId' => $mpId,
         'election' => $election
       );
@@ -132,7 +132,7 @@
         $this->db->select('*, departement.departement_nom AS districtLibelle, departement.departement_code AS districtId');
       }
 
-      $query = $this->db->get_where('candidate_full', $whereQuery, 1);
+      $query = $this->db->get_where('candidate_full', $where, 1);
 
       return $query->row_array();
     }
@@ -140,11 +140,11 @@
 
     public function get_all_candidate($election, $visible = FALSE){
       if ($visible == FALSE) {
-        $whereQuery = array(
+        $where = array(
           'election' => $election
         );
       } else {
-        $whereQuery = array(
+        $where = array(
           'election' => $election,
           'visible' => 1
         );
@@ -162,7 +162,7 @@
       $this->db->select('DATE_FORMAT(modified_at, "%d/%m/%Y") AS modified_at');
       $this->db->order_by('nameLast', 'ASC');
       $this->db->order_by('nameFirst', 'ASC');
-      $query = $this->db->get_where('candidate_full', $whereQuery);
+      $query = $this->db->get_where('candidate_full', $where);
 
       return $query->result_array();
     }

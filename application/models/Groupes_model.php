@@ -7,32 +7,29 @@
     public function get_groupes_all($active, $legislature) {
       if ($active && $legislature) {
         if ($legislature == legislature_current()) {
-          $query = $this->db->query('
-          SELECT *, date_format(dateDebut, "%d %M %Y") as dateDebutFR, e.effectif,
+          $query = $this->db->query('SELECT *, date_format(dateDebut, "%d %M %Y") as dateDebutFR, e.effectif,
             CASE WHEN o.libelle = "Non inscrit" THEN "Députés non inscrits" ELSE o.libelle END AS libelle
-          FROM organes o
-          LEFT JOIN groupes_effectif e ON o.uid = e.organeRef
-          WHERE o.legislature = '.legislature_current().' AND o.coteType = "GP" AND o.dateFin IS NULL
-          ORDER BY e.effectif DESC, o.libelle
+            FROM organes o
+            LEFT JOIN groupes_effectif e ON o.uid = e.organeRef
+            WHERE o.legislature = '.$this->db->escape(legislature_current()).' AND o.coteType = "GP" AND o.dateFin IS NULL
+            ORDER BY e.effectif DESC, o.libelle
           ');
         } else {
-          $query = $this->db->query('
-          SELECT *, date_format(dateDebut, "%d %M %Y") as dateDebutFR, e.effectif,
+          $query = $this->db->query('SELECT *, date_format(dateDebut, "%d %M %Y") as dateDebutFR, e.effectif,
             CASE WHEN o.libelle = "Non inscrit" THEN "Députés non inscrits" ELSE o.libelle END AS libelle
-          FROM organes o
-          LEFT JOIN groupes_effectif e ON o.uid = e.organeRef
-          WHERE o.legislature = '.$legislature.' AND o.coteType = "GP"
-          ORDER BY e.effectif DESC, o.libelle
+            FROM organes o
+            LEFT JOIN groupes_effectif e ON o.uid = e.organeRef
+            WHERE o.legislature = '.$this->db->escape($legislature).' AND o.coteType = "GP"
+            ORDER BY e.effectif DESC, o.libelle
           ');
         }
       } else {
-        $query = $this->db->query('
-        SELECT *, date_format(dateDebut, "%d %M %Y") as dateDebutFR,
+        $query = $this->db->query('SELECT *, date_format(dateDebut, "%d %M %Y") as dateDebutFR,
           CASE WHEN o.libelle = "Non inscrit" THEN "Députés non inscrits" ELSE o.libelle END AS libelle
-        FROM organes o
-        LEFT JOIN groupes_effectif e ON o.uid = e.organeRef
-        WHERE o.legislature = 15 AND o.coteType = "GP" AND o.dateFin IS NOT NULL
-        ORDER BY e.effectif DESC, o.libelle
+          FROM organes o
+          LEFT JOIN groupes_effectif e ON o.uid = e.organeRef
+          WHERE o.legislature = 15 AND o.coteType = "GP" AND o.dateFin IS NOT NULL
+          ORDER BY e.effectif DESC, o.libelle
         ');
       }
 
@@ -41,209 +38,141 @@
     }
 
     public function get_number_active_groupes(){
-      $query = $this->db->query('
-        SELECT COUNT(o.uid) AS n
-        FROM organes o
-        WHERE o.coteType = "GP" AND o.dateFin IS NULL AND o.libelleAbrev != "NI"
-      ');
-      return $query->row_array();
+      $this->db->where(array('coteType' => 'GP', 'libelleAbrev != ' => 'NI', 'dateFin' => NULL, 'legislature' => legislature_current()));
+      return $this->db->count_all_results('organes');
     }
 
     public function get_number_inactive_groupes(){
-      $query = $this->db->query('
-        SELECT COUNT(o.uid) AS n
-        FROM organes o
-        WHERE o.coteType = "GP" AND o.dateFin IS NOT NULL AND o.libelleAbrev != "NI" AND legislature = 15
-      ');
-      return $query->row_array();
+      $this->db->where(array('coteType' => 'GP', 'libelleAbrev != ' => 'NI', 'legislature' => legislature_current()));
+      $this->db->where('dateFin IS NOT NULL');
+      return $this->db->count_all_results('organes');
     }
 
     public function get_number_mps_groupes(){
-      $query = $this->db->query('
-      SELECT count(mpId) AS n
-      FROM deputes_all
-      WHERE legislature = '.legislature_current().' AND libelleAbrev != "NI" AND dateFin IS NULL
-      ');
-      return $query->row_array();
+      $this->db->where(array('libelleAbrev != ' => 'NI','dateFin' => NULL, 'legislature' => legislature_current()));
+      return $this->db->count_all_results('deputes_all');
     }
 
     public function get_number_mps_unattached(){
-      $query = $this->db->query('
-      SELECT count(mpId) AS n
-      FROM deputes_all
-      WHERE legislature = '.legislature_current().' AND libelleAbrev = "NI" AND dateFin IS NULL
-      ');
-      return $query->row_array();
+      $this->db->where(array('libelleAbrev' => 'NI', 'dateFin' => NULL, 'legislature' => legislature_current()));
+      return $this->db->count_all_results('deputes_all');
     }
 
     public function get_groupe_random(){
-      $query = $this->db->query('SELECT o.uid, o.libelle, o.libelleAbrev, o.couleurAssociee, e.effectif
+      $sql = 'SELECT o.uid, o.libelle, o.libelleAbrev, o.couleurAssociee, e.effectif
         FROM organes o
         LEFT JOIN groupes_effectif e ON o.uid = e.organeRef
-        WHERE o.legislature = '.legislature_current().' AND o.coteType = "GP" AND o.dateFin IS NULL AND o.libelle != "Non inscrit"
+        WHERE o.legislature = ? AND o.coteType = "GP" AND o.dateFin IS NULL AND o.libelle != "Non inscrit"
         ORDER BY RAND()
         LIMIT 1
-      ');
+      ';
+      $query = $this->db->query($sql, legislature_current());
 
-      $array = $query->row_array();
-
-      return $array;
+      return $query->row_array();
     }
 
     public function get_groupes_individal($groupe, $legislature){
-      $query = $this->db->query('
-      SELECT o.uid, o.coteType, o.libelle, o.libelleEdition, o.libelleAbrev, o.libelleAbrege, o.dateDebut, o.dateFin, o.regime, o.legislature, o.positionPolitique, o.preseance, o.couleurAssociee, ge.classement, ge.effectif, ROUND((ge.effectif / 577) * 100) AS effectifShare,
-      ROUND(gs.age) AS age, ROUND(gs.womenPct) AS womenPct, womenN,
-      date_format(dateDebut, "%d %M %Y") as dateDebutFR, date_format(dateFin, "%d %M %Y") as dateFinFr
-      FROM organes o
-      LEFT JOIN groupes_effectif ge ON o.uid = ge.organeRef
-      LEFT JOIN groupes_stats gs ON o.uid = gs.organeRef
-      WHERE o.legislature = '.$legislature.' AND o.libelleAbrev = "'.$groupe.'" AND o.coteType = "GP"
-      LIMIT 1
-      ');
+      $sql = 'SELECT o.uid, o.coteType, o.libelle, o.libelleEdition, o.libelleAbrev, o.libelleAbrege, o.dateDebut, o.dateFin, o.regime, o.legislature, o.positionPolitique, o.preseance, o.couleurAssociee,
+        ge.classement, ge.effectif, ROUND((ge.effectif / 577) * 100) AS effectifShare,
+        ROUND(gs.age) AS age, ROUND(gs.womenPct) AS womenPct, womenN,
+        date_format(dateDebut, "%d %M %Y") as dateDebutFR, date_format(dateFin, "%d %M %Y") as dateFinFr
+        FROM organes o
+        LEFT JOIN groupes_effectif ge ON o.uid = ge.organeRef
+        LEFT JOIN groupes_stats gs ON o.uid = gs.organeRef
+        WHERE o.legislature = ? AND o.libelleAbrev = ? AND o.coteType = "GP"
+        LIMIT 1
+      ';
+      $query = $this->db->query($sql, array($legislature, $groupe));
 
-      $groupe = $query->row_array();
-
-      return $groupe;
+      return $query->row_array();
     }
 
     public function get_groupes_president($groupe_uid, $active){
       if ($active) {
-        $query = $this->db->query('SELECT mg.mpId, mg.dateDebut, date_format(mg.dateDebut, "%d %M %Y") as dateDebutFR,
-        mg.dateFin, mg.codeQualite, mg.libQualiteSex, civ,
-        d.nameFirst, d.nameLast, d.nameUrl,
-        dpt.slug AS dpt_slug, dpt.departement_nom, dpt.departement_code
-        FROM mandat_groupe mg
-        LEFT JOIN deputes d ON d.mpId = mg.mpId
-        LEFT JOIN mandat_principal mp ON mp.mpId = mg.mpId
-        LEFT JOIN departement dpt ON mp.electionDepartementNumero = dpt.departement_code
-        WHERE organeRef = "'.$groupe_uid.'" AND mg.preseance = 1 AND mp.legislature = 15
-        AND mp.typeOrgane = "ASSEMBLEE" AND mp.dateFin IS NULL AND mg.dateFin IS NULL
-        LIMIT 1
-        ');
+        $where = array(
+          'mandat_groupe.organeRef' => $groupe_uid,
+          'mandat_groupe.preseance' => 1,
+          'mandat_groupe.dateFin' => NULL
+        );
+        $this->db->select('*, date_format(dateDebut, "%d %M %Y") as dateDebutFR');
+        $this->db->join('deputes_last', 'deputes_last.mpId = mandat_groupe.mpId', 'left');
+        $query = $this->db->get_where('mandat_groupe', $where, 1);
       } else {
-        $query = $this->db->query('
-          SELECT A.*, civ, d.nameFirst, d.nameLast, d.nameUrl, dpt.slug AS dpt_slug, dpt.departement_nom, dpt.departement_code
+        $sql = 'SELECT A.*, civ, da.nameFirst, da.nameLast, da.nameUrl, da.dptSlug, da.departementNom, da.departementCode, da.img
           FROM
           (
           SELECT mpId, dateDebut, date_format(dateDebut, "%d %M %Y") as dateDebutFR, dateFin, codeQualite, libQualiteSex
           FROM mandat_groupe
-          WHERE organeRef = "'.$groupe_uid.'" AND preseance = 1 AND legislature = 15
+          WHERE organeRef = ? AND preseance = 1 AND legislature = 15
           ORDER BY dateFin DESC
           LIMIT 1
           ) A
-          LEFT JOIN deputes d ON d.mpId = A.mpId
-          LEFT JOIN mandat_principal mp ON mp.mpId = A.mpId
-          LEFT JOIN departement dpt ON mp.electionDepartementNumero = dpt.departement_code
-          WHERE mp.legislature = 15 AND mp.typeOrgane = "ASSEMBLEE"
-        ');
+          LEFT JOIN deputes_last da ON da.mpId = A.mpId
+          LIMIT 1
+        ';
+        $query = $this->db->query($sql, $groupe_uid);
       }
-
 
       return $query->row_array();
     }
 
     public function get_groupe_membres($groupe_uid, $active){
       if ($active) {
-        $query = $this->db->query('SELECT
-            mg.mpId,
-            mg.dateFin,
-            mg.codeQualite,
-            mg.libQualiteSex,
-            civ,
-            d.nameFirst,
-            d.nameLast,
-            d.nameUrl,
-            dpt.slug AS dpt_slug,
-            dpt.departement_nom,
-            dpt.departement_code
-        FROM
-            mandat_groupe mg
-            LEFT JOIN deputes d ON d.mpId = mg.mpId
-            LEFT JOIN mandat_principal mp ON mp.mpId = mg.mpId
-            LEFT JOIN departement dpt ON mp.electionDepartementNumero = dpt.departement_code
-        WHERE
-            mg.organeRef = "'.$groupe_uid.'"
-            AND mg.nominPrincipale = 1
-            AND mg.legislature = 15
-            AND mg.dateFin IS NULL
-            AND mg.preseance IN (20, 28)
-            AND mp.legislature = 15
-            AND mp.typeOrgane = "ASSEMBLEE"
-            AND mp.dateFin IS NULL
-            AND mp.preseance = 50
-        ORDER BY
-            d.nameLast
-        ');
+        $where = array(
+          'mandat_groupe.organeRef' => $groupe_uid,
+          'mandat_groupe.dateFin' => NULL,
+          'mandat_groupe.nominPrincipale' => 1
+        );
+        $this->db->where_in('mandat_groupe.preseance', array(20, 28));
+        $this->db->join('deputes_last', 'deputes_last.mpId = mandat_groupe.mpId');
+        $this->db->order_by('nameLast ASC, nameFirst ASC');
+        $query = $this->db->get_where('mandat_groupe', $where);
       } else {
-        $query = $this->db->query('
-        SELECT A.*, d.civ, d.nameFirst, d.nameLast, d.nameUrl, dpt.slug AS dpt_slug, dpt.departement_nom, dpt.departement_code
-        FROM
-        (
-        SELECT mg.mpId, mg.dateFin, mg.codeQualite, mg.libQualiteSex
-        FROM mandat_groupe mg
-        WHERE mg.organeRef = "'.$groupe_uid.'" AND mg.nominPrincipale = 1 AND mg.legislature = 15 AND mg.preseance IN (20, 28)
-        GROUP BY mg.mpId
-        ) A
-        LEFT JOIN deputes d ON d.mpId = A.mpId
-        LEFT JOIN mandat_principal mp ON mp.mpId = A.mpId
-        LEFT JOIN departement dpt ON mp.electionDepartementNumero = dpt.departement_code
-        WHERE mp.legislature = 15 AND mp.typeOrgane = "ASSEMBLEE" AND mp.preseance = 50
-        GROUP BY A.mpId
-        ');
+        $sql = 'SELECT A.*, da.civ, da.nameFirst, da.nameLast, da.nameUrl, da.dptSlug, da.departementNom, da.departementCode, da.img
+          FROM
+          (
+          SELECT mg.mpId, mg.dateFin, mg.codeQualite, mg.libQualiteSex
+          FROM mandat_groupe mg
+          WHERE mg.organeRef = ? AND mg.nominPrincipale = 1 AND mg.legislature = 15 AND mg.preseance IN (20, 28)
+          GROUP BY mg.mpId
+          ) A
+          LEFT JOIN deputes_last da ON da.mpId = A.mpId
+          ORDER BY da.nameLast ASC, da.nameFirst ASC
+        ';
+        $query = $this->db->query($sql, $groupe_uid);
       }
+
 
 
       return $query->result_array();
     }
 
-    public function get_groupe_apparentes($groupeId, $active){
-        $query = $this->db->query('SELECT
-              mg.mpId,
-              mg.dateFin,
-              mg.codeQualite,
-              mg.libQualiteSex,
-              civ,
-              d.nameFirst,
-              d.nameLast,
-              d.nameUrl,
-              dpt.slug AS dpt_slug,
-              dpt.departement_nom,
-              dpt.departement_code
-          FROM
-              mandat_groupe mg
-              LEFT JOIN deputes d ON d.mpId = mg.mpId
-              LEFT JOIN mandat_principal mp ON mp.mpId = mg.mpId
-              LEFT JOIN departement dpt ON mp.electionDepartementNumero = dpt.departement_code
-          WHERE
-              mg.organeRef = "'.$groupeId.'"
-              AND mg.nominPrincipale = 1
-              AND mg.legislature = 15 '
-              . ($active ? 'AND mg.dateFin IS NULL ' : '') .
-              'AND mg.preseance = 24
-              AND mp.legislature = 15
-              AND mp.typeOrgane = "ASSEMBLEE"
-              AND mp.dateFin IS NULL
-              AND mp.preseance = 50
-          ORDER BY
-              d.nameLast
-        ');
+    public function get_groupe_apparentes($groupe_uid, $active){
+      $where = array(
+        'mandat_groupe.organeRef' => $groupe_uid,
+        'mandat_groupe.dateFin' => NULL,
+        'mandat_groupe.nominPrincipale' => 1
+      );
+      $this->db->where_in('mandat_groupe.preseance', array(24));
+      $this->db->join('deputes_last', 'deputes_last.mpId = mandat_groupe.mpId');
+      $this->db->order_by('nameLast ASC, nameFirst ASC');
+      $query = $this->db->get_where('mandat_groupe', $where);
 
       return $query->result_array();
     }
 
     public function get_effectif_inactif($groupe_uid){
-      $query = $this->db->query('
-      SELECT COUNT(A.mpId) AS effectif
-      FROM
-      (
-      SELECT mg.mpId
-      FROM mandat_groupe mg
-      LEFT JOIN organes o ON mg.organeRef = o.uid
-      WHERE mg.organeRef = "'.$groupe_uid.'" AND mg.dateFin = o.dateFin
-      GROUP BY mg.mpId
-      ) A
-      ');
+      $sql = 'SELECT COUNT(A.mpId) AS effectif
+        FROM
+        (
+        SELECT mg.mpId
+        FROM mandat_groupe mg
+        LEFT JOIN organes o ON mg.organeRef = o.uid
+        WHERE mg.organeRef = ? AND mg.dateFin = o.dateFin
+        GROUP BY mg.mpId
+        ) A
+      ';
+      $query = $this->db->query($sql, $groupe_uid);
 
       $result = $query->row_array();
       return $result['effectif'];
@@ -313,52 +242,53 @@
     }
 
     public function get_stats($groupe_uid){
-      $query = $this->db->query('
-        SELECT *,
-          ROUND(cohesion, 2) AS cohesion,
-          ROUND(participation * 100) AS participation,
-          ROUND(majoriteAccord * 100) AS majorite
+      $sql = 'SELECT *,
+        ROUND(cohesion, 2) AS cohesion,
+        ROUND(participation * 100) AS participation,
+        ROUND(majoriteAccord * 100) AS majorite
         FROM class_groups
-        WHERE organeRef = "'.$groupe_uid.'"
-      ');
+        WHERE organeRef = ?
+      ';
+      $query = $this->db->query($sql, $groupe_uid);
 
       return $query->row_array();
     }
 
     public function get_stats_avg($legislature){
-      $query = $this->db->query('
-        SELECT
-          ROUND(AVG(cohesion), 2) AS cohesion,
-          ROUND(AVG(participation) * 100) AS participation,
-          ROUND(AVG(majoriteAccord) * 100) AS majorite
+      $sql = 'SELECT
+        ROUND(AVG(cohesion), 2) AS cohesion,
+        ROUND(AVG(participation) * 100) AS participation,
+        ROUND(AVG(majoriteAccord) * 100) AS majorite
         FROM class_groups
-        WHERE legislature = "'.$legislature.'"
-      ');
+        WHERE legislature = ?
+      ';
+      $query = $this->db->query($sql, $legislature);
 
       return $query->row_array();
     }
 
 
     public function get_stats_proximite($groupe_uid){
-      $query = $this->db->query('
-      SELECT t1.prox_group, ROUND(t1.score * 100) AS score, o.libelle, o.libelleAbrege, o.libelleAbrev, o.positionPolitique
-      FROM class_groups_proximite t1
-      LEFT JOIN organes o ON o.uid = t1.prox_group
-      WHERE t1.organeRef = "'.$groupe_uid.'" AND t1.prox_group != "'.$groupe_uid.'" AND o.dateFin IS NULL AND t1.score IS NOT NULL AND o.libelleAbrev != "NI" AND votesN > 20
-      ORDER BY t1.score DESC
-      ');
+      $sql = 'SELECT t1.prox_group, ROUND(t1.score * 100) AS score, o.libelle, o.libelleAbrege, o.libelleAbrev, o.positionPolitique
+        FROM class_groups_proximite t1
+        LEFT JOIN organes o ON o.uid = t1.prox_group
+        WHERE t1.organeRef = ? AND t1.prox_group != ? AND o.dateFin IS NULL AND t1.score IS NOT NULL AND o.libelleAbrev != "NI" AND votesN > 20
+        ORDER BY t1.score DESC
+      ';
+      $query = $this->db->query($sql, array($groupe_uid, $groupe_uid));
+
       return $query->result_array();
     }
 
     public function get_stats_proximite_all($groupe_uid){
-      $query = $this->db->query('
-      SELECT t1.prox_group, ROUND(t1.score * 100) AS accord, t1.votesN,  o.libelle, o.libelleAbrege, o.libelleAbrev, o.positionPolitique, o.dateFin,
-		IF(o.dateFin IS NULL, 0, 1) AS ended
-      FROM class_groups_proximite t1
-      LEFT JOIN organes o ON o.uid = t1.prox_group
-      WHERE t1.organeRef = "'.$groupe_uid.'" AND t1.prox_group != "'.$groupe_uid.'" AND t1.score IS NOT NULL
-      ORDER BY t1.score DESC
-      ');
+      $sql = 'SELECT t1.prox_group, ROUND(t1.score * 100) AS accord, t1.votesN,  o.libelle, o.libelleAbrege, o.libelleAbrev, o.positionPolitique, o.dateFin,
+        IF(o.dateFin IS NULL, 0, 1) AS ended
+        FROM class_groups_proximite t1
+        LEFT JOIN organes o ON o.uid = t1.prox_group
+        WHERE t1.organeRef = ? AND t1.prox_group != ? AND t1.score IS NOT NULL
+        ORDER BY t1.score DESC
+      ';
+      $query = $this->db->query($sql, array($groupe_uid, $groupe_uid));
 
       return $query->result_array();
     }
