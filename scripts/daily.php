@@ -2561,11 +2561,10 @@ class Script
         // CLose the file
         fclose($fp);
         $api = 'https://www.data.gouv.fr/api/1';
-        $apiKey = 'eyJhbGciOiJIUzUxMiJ9.eyJ1c2VyIjoiNWYxZmQ3OTFiZjU1NTg4MTllMGNmOGY1IiwidGltZSI6MTYwNjk4ODc5My40MTM5NTc0fQ.Au_gWc0JWUkQT2eq5g9RbqpTMOKScrBgAKyahGun7YYI7ywyzuXE-g_MSR3JZXs3J79rheo8qWOah3bWqKEbCg';
         $dataset = '5fc8b732d30fbf1ed6648aab';
         $resource = '092bd7bb-1543-405b-b53c-932ebb49bb8e';
         $headers = [
-            'X-API-KEY: '. $apiKey
+            'X-API-KEY: '. getenv('API_GOUV')
         ];
         $url = $api.'/datasets/'.$dataset. '/resources/'.$resource.'/upload/';
         $cFile = curl_file_create($dir . $csv_filename);
@@ -2576,10 +2575,10 @@ class Script
         curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
         curl_setopt($ch, CURLOPT_POSTFIELDS, $post);
         if(curl_exec($ch)){
-            echo $csv_filename . ' uploaded to gouv.fr\n';
+            echo $csv_filename . " uploaded to gouv.fr\n";
         }
         else {
-            echo $csv_filename . ' not uploaded, something went wrong !\n';
+            echo $csv_filename . " not uploaded, something went wrong !\n";
         }
         curl_close($ch);
     }
@@ -2591,37 +2590,37 @@ if (isset($argv[1])) {
 } else {
     $script = new Script();
 }
-$script->fillDeputes();
-$script->deputeAll();
-$script->deputeLast();
-$script->downloadPictures();
-$script->webpPictures();
-$script->resmushPictures();
-$script->groupeEffectif();
-$script->deputeJson();
-$script->groupeStats();
-$script->parties();
-$script->legislature();
-$script->vote();
-$script->updateVoteInfo();
-$script->voteScore();
-$script->groupeCohesion();
-$script->groupeAccord();
-$script->deputeAccord();
-$script->voteParticipation();
-$script->votesDossiers();
-$script->dossier();
-$script->voteParticipationCommission();
-$script->classParticipation();
-$script->classParticipationCommission();
-$script->deputeLoyaute();
-$script->classLoyaute();
-$script->classMajorite();
-$script->classGroups();
-$script->classGroupsProximite();
-$script->classParticipationSix();
-$script->classLoyauteSix();
-$script->deputeAccordCleaned();
-$script->historyMpsAverage();
-$script->historyPerMpsAverage();
+// $script->fillDeputes();
+// $script->deputeAll();
+// $script->deputeLast();
+// $script->downloadPictures();
+// $script->webpPictures();
+// $script->resmushPictures();
+// $script->groupeEffectif();
+// $script->deputeJson();
+// $script->groupeStats();
+// $script->parties();
+// $script->legislature();
+// $script->vote();
+// $script->updateVoteInfo();
+// $script->voteScore();
+// $script->groupeCohesion();
+// $script->groupeAccord();
+// $script->deputeAccord();
+// $script->voteParticipation();
+// $script->votesDossiers();
+// $script->dossier();
+// $script->voteParticipationCommission();
+// $script->classParticipation();
+// $script->classParticipationCommission();
+// $script->deputeLoyaute();
+// $script->classLoyaute();
+// $script->classMajorite();
+// $script->classGroups();
+// $script->classGroupsProximite();
+// $script->classParticipationSix();
+// $script->classLoyauteSix();
+// $script->deputeAccordCleaned();
+// $script->historyMpsAverage();
+// $script->historyPerMpsAverage();
 $script->createCsvFile();
