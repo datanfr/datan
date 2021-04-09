@@ -43,18 +43,19 @@ class Script
             try {
                 $update = "";
                 $values = substr(str_repeat("(" . substr(str_repeat('?,', count($fields)), 0, -1) . "),", count($datas) / count($fields)), 0, -1);
-                foreach($fields as $field){
+                foreach ($fields as $field) {
                     $update .= $field . "=VALUES(" . $field . "),";
                 }
                 $update = substr($update, 0, -1);
                 // SQL //
                 $sql = "INSERT INTO " . $table . " (" . implode(",", $fields) . ") VALUES " . $values
-                . " ON DUPLICATE KEY UPDATE " . $update;
+                    . " ON DUPLICATE KEY UPDATE " . $update;
                 $stmt = $this->bdd->prepare($sql);
                 $stmt->execute($datas);
                 echo $table . " inserted\n";
             } catch (Exception $e) {
-                echo "Error inserting : " . $table . "\n" . $e->getMessage() . "\n";die;
+                echo "Error inserting : " . $table . "\n" . $e->getMessage() . "\n";
+                die;
             }
         } else {
             echo "Nothing to insert in " . $table . "\n";
@@ -975,7 +976,7 @@ class Script
                 $votesGroupe = [];
 
                 while (1) {
-                    $file_to_import = 'VTANR5L15V' . $number_to_import ++;
+                    $file_to_import = 'VTANR5L15V' . $number_to_import++;
                     $xml_string = $zip->getFromName('xml/' . $file_to_import . '.xml');
                     if ($xml_string == false) { // Check if the AN file forgot to include one vote
                       $file_to_import = 'VTANR5L15V' . ($number_to_import + 1);
@@ -1893,23 +1894,23 @@ class Script
                 $commissionFond = $vote['commissionFond'];
 
                 if ($commissionFond != NULL) {
-                  $deputes = $this->bdd->query('
+                    $deputes = $this->bdd->query('
                       SELECT *
                       FROM votes_participation vp
                       LEFT JOIN mandat_secondaire ms ON vp.mpId = ms.mpId
                       WHERE vp.voteNumero = "' . $voteNumero . '" AND ms.typeOrgane = "COMPER" AND ms.codeQualite = "Membre" AND ms.organeRef = "' . $commissionFond . '" AND ((DATE_ADD(ms.dateDebut, INTERVAL 1 MONTH) <= "' . $voteDate . '" AND ms.dateFin >= "' . $voteDate . '") OR (DATE_ADD(ms.dateDebut, INTERVAL 1 MONTH) <= "' . $voteDate . '" AND ms.dateFin IS NULL)) AND vp.participation IS NOT NULL
                   ');
-                  if ($deputes->rowCount() > 0) {
-                      while ($depute = $deputes->fetch()) {
-                          $legislature = $depute['legislature'];
-                          $voteNumero = $depute['voteNumero'];
-                          $mpId = $depute['mpId'];
-                          $participation = $depute['participation'];
+                    if ($deputes->rowCount() > 0) {
+                        while ($depute = $deputes->fetch()) {
+                            $legislature = $depute['legislature'];
+                            $voteNumero = $depute['voteNumero'];
+                            $mpId = $depute['mpId'];
+                            $participation = $depute['participation'];
 
-                          $voteCommissionParticipation = array('legislature' => $legislature, 'voteNumero' => $voteNumero, 'mpId' => $mpId, 'participation' => $participation);
-                          $votesCommissionParticipation = array_merge($votesCommissionParticipation, array_values($voteCommissionParticipation));
-                      }
-                  }
+                            $voteCommissionParticipation = array('legislature' => $legislature, 'voteNumero' => $voteNumero, 'mpId' => $mpId, 'participation' => $participation);
+                            $votesCommissionParticipation = array_merge($votesCommissionParticipation, array_values($voteCommissionParticipation));
+                        }
+                    }
                 }
                 if ($i % 1000 === 0) {
                     echo "let's insert this pack of 1000\n";
@@ -2547,7 +2548,7 @@ class Script
 
         // Export the data
         $dir = __DIR__ . "/../assets/opendata/";
-        $fp = fopen($dir . "" . $csv_filename, "w");
+        $fp = fopen($dir . $csv_filename, "w");
 
         // Print the header
         fputcsv($fp, $fields);
@@ -2559,6 +2560,27 @@ class Script
 
         // CLose the file
         fclose($fp);
+        $api = 'https://www.data.gouv.fr/api/1';
+        $dataset = '5fc8b732d30fbf1ed6648aab';
+        $resource = '092bd7bb-1543-405b-b53c-932ebb49bb8e';
+        $headers = [
+            'X-API-KEY: '. getenv('API_GOUV')
+        ];
+        $url = $api.'/datasets/'.$dataset. '/resources/'.$resource.'/upload/';
+        $cFile = curl_file_create($dir . $csv_filename);
+        $post = array('file' => $cFile);
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $post);
+        if(curl_exec($ch)){
+            echo $csv_filename . " uploaded to gouv.fr\n";
+        }
+        else {
+            echo $csv_filename . " not uploaded, something went wrong !\n";
+        }
+        curl_close($ch);
     }
 }
 
