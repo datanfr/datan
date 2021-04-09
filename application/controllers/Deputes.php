@@ -41,7 +41,6 @@
         }
       }
       $data['number_inactive'] = $this->deputes_model->get_n_deputes_inactive();
-      $data['number_inactive'] = $data['number_inactive']['total'];
 
       // Groupe_color
       foreach ($data['deputes'] as $key => $value) {
@@ -538,9 +537,8 @@
       $gender = $data['depute']['civ'];
       $data['gender'] = $this->depute_edito->gender($gender);
 
-      // Query - mandat
-      $data['mandats_all'] = $this->deputes_model->get_mandats_all($depute_uid);
-      $data['mandat_edito'] = $this->depute_edito->get_nbr_lettre($data['mandats_all']['mandatesN']);
+      // Historique du député
+      $data['mandat_edito'] = $this->depute_edito->get_nbr_lettre($data['depute']['mandatesN']);
 
       // Other MPs from the same group
       $data['other_deputes'] = $this->deputes_model->get_other_deputes($groupe_id, $nameLast, $depute_uid, $data['active'], $legislature);
@@ -633,9 +631,8 @@
       $gender = $data['depute']['civ'];
       $data['gender'] = $this->depute_edito->gender($gender);
 
-      // Query - mandat
-      $data['mandats_all'] = $this->deputes_model->get_mandats_all($depute_uid);
-      $data['mandat_edito'] = $this->depute_edito->get_nbr_lettre($data['mandats_all']['mandatesN']);
+      // Historique du député
+      $data['mandat_edito'] = $this->depute_edito->get_nbr_lettre($data['depute']['mandatesN']);
 
       // Other MPs from the same group
       $data['other_deputes'] = $this->deputes_model->get_other_deputes($groupe_id, $nameLast, $depute_uid, $data['active'], $legislature);
@@ -717,9 +714,8 @@
       $gender = $data['depute']['civ'];
       $data['gender'] = $this->depute_edito->gender($gender);
 
-      // Query - mandat
-      $data['mandats_all'] = $this->deputes_model->get_mandats_all($depute_uid);
-      $data['mandat_edito'] = $this->depute_edito->get_nbr_lettre($data['mandats_all']['mandatesN']);
+      // Historique du député
+      $data['mandat_edito'] = $this->depute_edito->get_nbr_lettre($data['depute']['mandatesN']);
 
       // Meta
       $data['url'] = $this->meta_model->get_url();

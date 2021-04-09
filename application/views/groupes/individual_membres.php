@@ -15,11 +15,15 @@
             <div class="card card-depute">
               <div class="liseret" style="background-color: <?= $groupe["couleurAssociee"] ?>"></div>
               <div class="card-avatar">
-                <img src="<?= base_url(); ?>assets/imgs/deputes_nobg/depute_<?= substr($president["mpId"], 2) ?>.png" alt="<?= $president['nameFirst'].' '.$president['nameLast'] ?>">
+                <?php if ($president['img']): ?>
+                  <img class="img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-face-2.png" data-src="<?= base_url(); ?>assets/imgs/deputes_nobg/depute_<?= substr($president["mpId"], 2) ?>.png" alt="<?= $president['nameFirst'].' '.$president['nameLast'] ?>">
+                  <?php else: ?>
+                  <img class="img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-face-2.png" alt="<?= $president['nameFirst'].' '.$president['nameLast'] ?>">
+                <?php endif; ?>
               </div>
               <div class="card-body">
-                <h3 class="d-block card-title"><a href="<?= base_url(); ?>deputes/<?= $president['dpt_slug'].'/depute_'.$president['nameUrl'] ?>" class="stretched-link no-decoration"><?= $president['nameFirst'] .' ' . $president['nameLast'] ?></a></h4>
-                <span class="d-block"><?= $president["departement_nom"] ?> (<?= $president["departement_code"] ?>)</span>
+                <h3 class="d-block card-title"><a href="<?= base_url(); ?>deputes/<?= $president['dptSlug'].'/depute_'.$president['nameUrl'] ?>" class="stretched-link no-decoration"><?= $president['nameFirst'] .' ' . $president['nameLast'] ?></a></h4>
+                <span class="d-block"><?= $president["departementNom"] ?> (<?= $president["departementCode"] ?>)</span>
               </div>
             </div>
           </div>
@@ -37,18 +41,22 @@
             <div class="card card-depute">
               <div class="liseret" style="background-color: <?= $groupe["couleurAssociee"] ?>"></div>
               <div class="card-avatar">
-                <img src="<?= base_url(); ?>assets/imgs/deputes_nobg/depute_<?= substr($mp["mpId"], 2) ?>.png" alt="<?= $mp['nameFirst'].' '.$mp['nameLast'] ?>">
+                <?php if ($mp['img']): ?>
+                  <img class="img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-face-2.png" data-src="<?= base_url(); ?>assets/imgs/deputes_nobg/depute_<?= substr($mp["mpId"], 2) ?>.png" alt="<?= $mp['nameFirst'].' '.$mp['nameLast'] ?>">
+                  <?php else: ?>
+                  <img class="img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-face-2.png" alt="<?= $mp['nameFirst'].' '.$mp['nameLast'] ?>">
+                <?php endif; ?>
               </div>
               <div class="card-body">
-                <h3 class="d-block card-title"><a href="<?= base_url(); ?>deputes/<?= $mp['dpt_slug'].'/depute_'.$mp['nameUrl'] ?>" class="stretched-link no-decoration"><?= $mp['nameFirst'] .' ' . $mp['nameLast'] ?></a></h3>
-                <span class="d-block"><?= $mp["departement_nom"] ?> (<?= $mp["departement_code"] ?>)</span>
+                <h3 class="d-block card-title"><a href="<?= base_url(); ?>deputes/<?= $mp['dptSlug'].'/depute_'.$mp['nameUrl'] ?>" class="stretched-link no-decoration"><?= $mp['nameFirst'] .' ' . $mp['nameLast'] ?></a></h3>
+                <span class="d-block"><?= $mp["departementNom"] ?> (<?= $mp["departementCode"] ?>)</span>
               </div>
             </div>
           </div>
         <?php endforeach; ?>
       </div>
       <!-- ROW APPARENTES -->
-      <?php if ($groupe['libelleAbrev'] != 'NI'): ?>
+      <?php if ($groupe['libelleAbrev'] != 'NI' && !empty($apparentes)): ?>
         <div class="row my-5">
           <div class="col-12 d-flex justify-content-center">
             <h2>Membres apparentés</h2>
@@ -58,11 +66,15 @@
               <div class="card card-depute">
                 <div class="liseret" style="background-color: <?= $groupe["couleurAssociee"] ?>"></div>
                 <div class="card-avatar">
-                  <img src="<?= base_url(); ?>assets/imgs/deputes_nobg/depute_<?= substr($mp["mpId"], 2) ?>.png" alt="<?= $mp['nameFirst'].' '.$mp['nameLast'] ?>">
+                  <?php if ($mp['img']): ?>
+                    <img class="img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-face-2.png" data-src="<?= base_url(); ?>assets/imgs/deputes_nobg/depute_<?= substr($mp["mpId"], 2) ?>.png" alt="<?= $mp['nameFirst'].' '.$mp['nameLast'] ?>">
+                    <?php else: ?>
+                    <img class="img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-face-2.png" alt="<?= $mp['nameFirst'].' '.$mp['nameLast'] ?>">
+                  <?php endif; ?>
                 </div>
                 <div class="card-body">
-                  <h3 class="d-block card-title"><a href="<?= base_url(); ?>deputes/<?= $mp['dpt_slug'].'/depute_'.$mp['nameUrl'] ?>" class="stretched-link no-decoration"><?= $mp['nameFirst'] .' ' . $mp['nameLast'] ?></a></h3>
-                  <span class="d-block"><?= $mp["departement_nom"] ?> (<?= $mp["departement_code"] ?>)</span>
+                  <h3 class="d-block card-title"><a href="<?= base_url(); ?>deputes/<?= $mp['dptSlug'].'/depute_'.$mp['nameUrl'] ?>" class="stretched-link no-decoration"><?= $mp['nameFirst'] .' ' . $mp['nameLast'] ?></a></h3>
+                  <span class="d-block"><?= $mp["departementNom"] ?> (<?= $mp["departementCode"] ?>)</span>
                 </div>
               </div>
             </div>

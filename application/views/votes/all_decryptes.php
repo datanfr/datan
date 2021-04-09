@@ -19,7 +19,7 @@
               </p>
             </div>
             <div class="col-12 mb-lg-5 mb-4 d-lg-none">
-              <h2><span><?= $number_votes['n'] ?></span> votes de l'Assemblée nationale décryptés par l'équipe de Datan</h2>
+              <h2><span><?= $number_votes ?></span> votes de l'Assemblée nationale décryptés par l'équipe de Datan</h2>
               <div class="categories mt-3">
                 <?php foreach ($fields as $field): ?>
                   <a class="badge badge-primary no-decoration" href="<?= base_url() ?>votes/decryptes/<?= $field['slug'] ?>">
