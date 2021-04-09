@@ -16,15 +16,15 @@
               <?php endif; ?>
               <p>
                 <?php if ($active == TRUE): ?>
-                  Cette page présente les <?= $number['n'] ?> groupes parlementaires en activité dans l'Assemblée nationale. Pour découvrir les <?= $number_groupes_inactive ?> groupes qui ne sont plus en activité, <a href="<?= base_url() ?>groupes/inactifs">cliquez ici</a>.
+                  Cette page présente les <?= $number ?> groupes parlementaires en activité dans l'Assemblée nationale. Pour découvrir les <?= $number_groupes_inactive ?> groupes qui ne sont plus en activité, <a href="<?= base_url() ?>groupes/inactifs">cliquez ici</a>.
                 </p>
                 <p>
-                  Au total, <?= $number_in_groupes['n'] ?> députés sont membres ou apparentés à un groupe, tandis que <?= $number_unattached['n'] ?> sont "non-inscrits".
+                  Au total, <?= $number_in_groupes ?> députés sont membres ou apparentés à un groupe, tandis que <?= $number_unattached ?> sont "non-inscrits".
                   <?php else: ?>
-                  Cette page présente les <?= $number_groupes_inactive['n'] ?> groupes de la 15<sup>e</sup> qui ne sont plus en activités. Ce sont des groupes qui ont été dissous depuis leur création.
+                  Cette page présente les <?= $number_groupes_inactive ?> groupes de la 15<sup>e</sup> qui ne sont plus en activités. Ce sont des groupes qui ont été dissous depuis leur création.
                 </p>
                 <p>
-                  Pour découvrir les <?= $number_groupes_active['n'] ?> groupes politiques en activité à l'Assemblée nationale, <a href="<?= base_url() ?>groupes">cliquez ici</a>.
+                  Pour découvrir les <?= $number_groupes_active ?> groupes politiques en activité à l'Assemblée nationale, <a href="<?= base_url() ?>groupes">cliquez ici</a>.
                 <?php endif; ?>
               </p>
             </div>

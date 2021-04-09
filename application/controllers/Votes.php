@@ -351,7 +351,11 @@
 
       // Get vote
       $data['vote'] = $this->votes_model->get_individual_vote($legislature, $num);
-      //print_r($data['vote']);
+      if ($data['vote']['title']) {
+        $voteDatan = TRUE;
+      } else {
+        $voteDatan = FALSE;
+      }
 
       if (empty($data['vote'])) {
         show_404();
@@ -381,12 +385,7 @@
       }
       // Votes - groupes
       $data['groupes'] = $this->votes_model->get_vote_groupes($data['vote']['voteNumero'], $data['vote']['dateScrutin'], $legislature);
-      // Vote - array for majorité
-      foreach ($data['groupes'] as $groupe) {
-        if ($groupe['positionPolitique'] == 'Majoritaire') {
-          $data['vote_majoritaire'] = $groupe;
-        }
-      }
+
       // Votes - députés
       $data['deputes'] = $this->votes_model->get_vote_deputes($data['vote']['voteNumero'], $legislature);
       // OTHER VOTES
@@ -451,7 +450,12 @@
       $data['breadcrumb_json'] = $this->breadcrumb_model->breadcrumb_json($data['breadcrumb']);
       //Open Graph
       $controller = $this->router->fetch_class()."/".$this->router->fetch_method();
-      $data['ogp'] = $this->meta_model->get_ogp($controller, $data['title_meta'], $data['description_meta'], $data['url'], $data);
+      if ($voteDatan) {
+        $title_ogp = "Vote Assemblée nationale : " . $data['vote']['title'] . " | Datan";
+      } else {
+        $title_ogp = $data['title_meta'];
+      }
+      $data['ogp'] = $this->meta_model->get_ogp($controller, $title_ogp, $data['description_meta'], $data['url'], $data);
       // CSS
       $data['css_to_load']= array(
         array(

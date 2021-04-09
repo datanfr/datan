@@ -87,29 +87,27 @@
     }
 
     public function get_party_individual($party){
-      $query = $this->db->query('
-        SELECT *,
+      $this->db->select('*');
+      $this->db->select('
         CASE
-          WHEN effectif = 1 THEN CONCAT(effectif, " député rattaché")
-          WHEN effectif > 1 THEN CONCAT(effectif, " députés rattachés")
-          ELSE "Aucun député rattaché" END AS effectifSentence
-        FROM parties
-        WHERE libelleAbrev = "'.$party.'"
-        LIMIT 1
-      ');
+        WHEN effectif = 1 THEN CONCAT(effectif, " député rattaché")
+        WHEN effectif > 1 THEN CONCAT(effectif, " députés rattachés")
+        ELSE "Aucun député rattaché" END AS effectifSentence'
+      );
+      $query = $this->db->get_where('parties', array('libelleAbrev' => $party), 1);
 
       return $query->row_array();
     }
 
     public function get_mps_active($organeRef){
-      $query = $this->db->query('
-      SELECT ms.organeRef, da.nameFirst, da.nameLast, da.couleurAssociee, da.mpId, da.dptSlug, da.nameUrl, da.circo AS electionCirco, da.libelle,
-      CASE WHEN da.circo = 1 THEN CONCAT("re") WHEN da.circo = 2 THEN CONCAT("de") ELSE CONCAT("e") END AS electionCircoAbbrev
-      FROM mandat_secondaire ms
-      LEFT JOIN deputes_all da ON ms.mpId = da.mpId
-      WHERE ms.organeRef = "'.$organeRef.'" AND ms.dateFin IS NULL AND da.legislature = '.legislature_current().' AND da.dateFin IS NULL
-      ORDER BY da.nameLast ASC
-      ');
+      $sql = 'SELECT ms.organeRef, da.nameFirst, da.nameLast, da.couleurAssociee, da.mpId, da.dptSlug, da.nameUrl, da.circo AS electionCirco, da.libelle, da.img,
+        CASE WHEN da.circo = 1 THEN CONCAT("re") WHEN da.circo = 2 THEN CONCAT("de") ELSE CONCAT("e") END AS electionCircoAbbrev
+        FROM mandat_secondaire ms
+        LEFT JOIN deputes_all da ON ms.mpId = da.mpId
+        WHERE ms.organeRef = ? AND ms.dateFin IS NULL AND da.legislature = ? AND da.dateFin IS NULL
+        ORDER BY da.nameLast ASC
+      ';
+      $query = $this->db->query($sql, array($organeRef, legislature_current()));
 
       return $query->result_array();
     }

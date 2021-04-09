@@ -26,9 +26,10 @@
               </div>
             </div>
           </div>
-          <div class="row mt-5 bloc-groupes">
-            <div class="col-lg-6">
-              <div class="card" style="border: 0.5px solid rgba(0, 183, 148, 1)">
+          <div class="row mt-5 bloc-groupes d-flex justify-content-around">
+            <!-- POUR -->
+            <?php if (in_array_r("pour", $groupes)): ?>
+              <div class="card my-3" style="border: 0.5px solid rgba(0, 183, 148, 1)">
                 <div class="thumb2 d-flex justify-content-end">
                   <span style="background-color: rgba(0, 183, 148, 1);">
                     POUR
@@ -44,9 +45,10 @@
                   <?php endforeach; ?>
                 </div>
               </div>
-            </div>
-            <div class="col-lg-6">
-              <div class="card" style="border: 0.5px solid rgba(197, 40, 61, 1)">
+            <?php endif; ?>
+            <!-- CONTRE -->
+            <?php if (in_array_r("contre", $groupes)): ?>
+              <div class="card my-3" style="border: 0.5px solid rgba(197, 40, 61, 1)">
                 <div class="thumb2 d-flex justify-content-end">
                   <span style="background-color: rgba(197, 40, 61, 1)">
                     CONTRE
@@ -62,7 +64,26 @@
                   <?php endforeach; ?>
                 </div>
               </div>
-            </div>
+            <?php endif; ?>
+            <!-- ABSTENTION -->
+           <?php if (in_array_r("abstention", $groupes)): ?>
+             <div class="card my-3" style="border: 0.5px solid rgba(255, 173, 41, 1)">
+               <div class="thumb2 d-flex justify-content-end">
+                 <span style="background-color: rgba(255, 173, 41, 1)">
+                   ABSTENTION
+                 </span>
+               </div>
+               <div class="card-body d-flex align-items-center justify-content-around flex-wrap">
+                 <?php foreach ($groupes as $groupe): ?>
+                   <?php if ($groupe['positionMajoritaire'] == 'abstention'): ?>
+                     <div class="card-vote-groupe my-1 mx-1" data-toggle="tooltip" data-placement="top" title="<?= $groupe['libelle'] ?> (<?= $groupe['libelleAbrev'] ?>)">
+                       <img class="img" src="<?= asset_url() ?>imgs/groupes/<?= $groupe['libelleAbrev'] ?>.png" alt="Logo <?= $groupe['libelleAbrev'] ?>">
+                     </div>
+                   <?php endif; ?>
+                 <?php endforeach; ?>
+               </div>
+             </div>
+           <?php endif; ?>
           </div>
           <?php if ($vote['description'] != ""): ?>
             <div class="row bloc-description mt-5">

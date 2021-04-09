@@ -178,11 +178,11 @@
       $this->password_model->security_admin();
       $data['username'] = $this->session->userdata('username');
       $user_type = $this->session->userdata('type');
-      $data['post'] = $this->post_model->get_posts($slug, $user_type, NULL);
+      $data['post'] = $this->post_model->get_post_edit($slug, $user_type);
       if (empty($data['post'])) {
         show_404();
       }
-      $data['categories'] = $this->post_model->get_categories();
+      $data['categories'] = $this->category_model->get_categories();
       $data['title'] = 'Editer un post';
 
       $this->form_validation->set_rules('title', 'Title', 'required');
