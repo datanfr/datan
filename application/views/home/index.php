@@ -251,20 +251,30 @@
         </div>
       </div> <!-- // END BLOC STATS -->
       <!-- BLOC ELECTION -->
-      <div class="row bloc-votes*" id="pattern_background">
+      <div class="row bloc-election" id="pattern_background">
         <div class="container p-md-0">
           <div class="row py-4">
             <div class="col-12">
               <h2 class="text-center my-4">Députés candidats aux élections régionales de 2021</h2>
             </div>
           </div>
-          <div class="row pb-5">
-            <div class="col-7 test-border">
+          <div class="row pt-2 pb-5">
+            <div class="col-md-7 d-flex flex-column justify-content-center">
               <p>Les élections régionales de 2021 devraient se tenir les 13 et 20 juin 2021.</p>
               <p><b>Attention</b>, au vu de la crise sanitaire de la Covid-19, les dates des élections régionales sont susceptibles de changer.</p>
               <p>Les députés de l'Assemblée nationale peuvent se présenter aux élections régionales. Si le député est élu, il devrait quitter son siège de député que s'il devient président ou vice-président du conseil régional.</p>
               <p>Nous avons jusqu'à présent répertorié <span class="font-weight-bold text-primary"><?= $candidatsN ?> députés candidats</span> aux élections régionales de 2021.</p>
-              [bouton]
+            </div>
+            <div class="col-md-5 mt-5 mt-md-0">
+              <h3>DÉPUTÉ<?= $candidatRandom['civ'] == "Mme" ? "E" : NULL ?> CANDIDAT<?= $candidatRandom['civ'] == "Mme" ? "E" : NULL ?></h3>
+              <?php $this->load->view('deputes/partials/card_home.php', array('depute' => $candidatRandom, 'tag' => 'span')) ?>
+            </div>
+          </div>
+          <div class="row pb-5">
+            <div class="col-12 d-flex justify-content-center">
+              <a href="<?= base_url();?>elections/regionales-2021" class="no-decoration">
+                <button type="button" class="btn btn-primary">Découvrez tous les députés candidats</button>
+              </a>
             </div>
           </div>
         </div>
@@ -385,7 +395,7 @@
               </div>
               <div class="mt-5 d-flex flex-column align-items-center">
                 <a href="<?= base_url();?>index_departements" class="no-decoration">
-                  <button type="button" class="btn btn-outline-primary">Liste de tous les départements</button>
+                  <button type="button" class="btn btn-primary">Liste de tous les départements</button>
                 </a>
               </div>
             </div>
