@@ -90,6 +90,8 @@
       // Get elections
       $data['candidats'] = $this->elections_model->get_all_candidate(1, TRUE); // Get candidates for regionales-2021
       $data['candidatsN'] = count($data['candidats']);
+      $randKey = array_rand($data['candidats']);
+      $data['candidatRandom'] = $data['candidats'][$randKey];
 
       //Get posts (needs to be cached)
       $data['posts'] = $this->post_model->get_last_posts();
