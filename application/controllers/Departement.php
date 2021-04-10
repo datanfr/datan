@@ -17,15 +17,17 @@
       }
 
       $data['deputes'] = $this->deputes_model->get_deputes_all(legislature_current(), TRUE, $slug);
+
+      foreach ($data['deputes'] as $key => $value) {
+        $data['deputes'][$key]['couleurAssociee'] = $this->groupes_model->get_groupe_color(array($value['groupLibelleAbrev'], $value['couleurAssociee']));
+        $data['deputes'][$key]['circoAbbrev'] = $this->functions_datan->abbrev_n($value['circo'], TRUE);
+        $data['deputes'][$key]['cardCenter'] = $data['deputes'][$key]['circo']."<sup>".$data['deputes'][$key]['circoAbbrev']."</sup> circonscription";
+      }
+
       $data['communes'] = $this->departement_model->get_communes_population($slug);
 
       if (empty($data['deputes'])) {
         show_404();
-      }
-
-      // Get group color
-      foreach ($data['deputes'] as $key => $value) {
-        $data['deputes'][$key]['couleurAssociee'] = $this->groupes_model->get_groupe_color($value);
       }
 
       // Meta

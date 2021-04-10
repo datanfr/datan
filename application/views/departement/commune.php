@@ -30,49 +30,13 @@
       <!-- MPS FROM THE CITY -->
       <div class="row">
         <?php if ($n_circos == 1): ?>
-          <div class="col-12">
-            <div class="card card-depute">
-              <div class="liseret" style="background-color: <?= $depute_commune["couleurAssociee"] ?>"></div>
-              <div class="card-avatar">
-                <picture>
-                  <source srcset="<?= asset_url(); ?>imgs/deputes_nobg_webp/depute_<?= substr($depute_commune["mpId"], 2) ?>_webp.webp" type="image/webp">
-                  <source srcset="<?= asset_url(); ?>imgs/deputes_nobg/depute_<?= substr($depute_commune["mpId"], 2) ?>.png" type="image/png">
-                  <img src="<?= asset_url(); ?>imgs/deputes/depute_<?= substr($depute_commune["mpId"], 2) ?>.png" alt="<?= $depute_commune['nameFirst'].' '.$depute_commune['nameLast'] ?>">
-                </picture>
-              </div>
-              <div class="card-body">
-                <h2 class="card-title">
-                  <a href="<?php echo base_url(); ?>deputes/<?php echo $depute_commune['dptSlug'].'/depute_'.$depute_commune['nameUrl'] ?>" class="stretched-link no-decoration"><?php echo $depute_commune['nameFirst'] .' ' . $depute_commune['nameLast'] ?></a>
-                </h2>
-                <span><?= $depute_commune["electionCirco"] ?><sup><?= $depute_commune['electionCircoAbbrev'] ?></sup> circonscription</span>
-              </div>
-              <div class="card-footer d-flex justify-content-center align-items-center">
-                <span><?= $depute_commune["libelle"] ?></span>
-              </div>
-            </div>
+          <div class="col-12 d-flex justify-content-center">
+            <?php $this->load->view('deputes/partials/card_home.php', array('depute' => $depute_commune, 'tag' => 'h2')) ?>
           </div>
         <?php else: ?>
           <div class="col-12 d-flex flex-wrap justify-content-around">
             <?php foreach ($deputes_commune as $depute_commune): ?>
-              <div class="card card-depute mx-2">
-                <div class="liseret" style="background-color: <?= $depute_commune["couleurAssociee"] ?>"></div>
-                <div class="card-avatar">
-                  <picture>
-                    <source srcset="<?= asset_url(); ?>imgs/deputes_nobg_webp/depute_<?= substr($depute_commune["mpId"], 2) ?>_webp.webp" type="image/webp">
-                    <source srcset="<?= asset_url(); ?>imgs/deputes_nobg/depute_<?= substr($depute_commune["mpId"], 2) ?>.png" type="image/png">
-                    <img src="<?= asset_url(); ?>imgs/deputes/depute_<?= substr($depute_commune["mpId"], 2) ?>.png" alt="<?= $depute_commune['nameFirst'].' '.$depute_commune['nameLast'] ?>">
-                  </picture>
-                </div>
-                <div class="card-body">
-                  <h2 class="card-title">
-                    <a href="<?php echo base_url(); ?>deputes/<?php echo $depute_commune['dptSlug'].'/depute_'.$depute_commune['nameUrl'] ?>" class="stretched-link no-decoration"><?php echo $depute_commune['nameFirst'] .' ' . $depute_commune['nameLast'] ?></a>
-                  </h2>
-                  <span><?= $depute_commune["electionCirco"] ?><sup><?= $depute_commune['electionCircoAbbrev'] ?></sup> circonscription</span>
-                </div>
-                <div class="card-footer d-flex justify-content-center align-items-center">
-                  <span><?= $depute_commune["libelle"] ?></span>
-                </div>
-              </div>
+              <?php $this->load->view('deputes/partials/card_home.php', array('depute' => $depute_commune, 'tag' => 'h2')) ?>
             <?php endforeach; ?>
           </div>
         <?php endif; ?>
@@ -179,25 +143,7 @@
         </div>
         <div class="col-12 py-4 d-flex flex-wrap justify-content-around">
           <?php foreach ($deputes_dpt as $depute): ?>
-            <div class="card card-depute mx-2">
-              <div class="liseret" style="background-color: <?= $depute["couleurAssociee"] ?>"></div>
-              <div class="card-avatar">
-                <picture>
-                  <source srcset="<?= asset_url(); ?>imgs/deputes_nobg_webp/depute_<?= substr($depute["mpId"], 2) ?>_webp.webp" type="image/webp">
-                  <source srcset="<?= asset_url(); ?>imgs/deputes_nobg/depute_<?= substr($depute["mpId"], 2) ?>.png" type="image/png">
-                  <img src="<?= asset_url(); ?>imgs/deputes/depute_<?= substr($depute["mpId"], 2) ?>.png" alt="<?= $depute['nameFirst'].' '.$depute['nameLast'] ?>">
-                </picture>
-              </div>
-              <div class="card-body">
-                <h3 class="card-title">
-                  <a href="<?php echo base_url(); ?>deputes/<?php echo $depute['dptSlug'].'/depute_'.$depute['nameUrl'] ?>" class="stretched-link no-decoration"><?php echo $depute['nameFirst'] .' ' . $depute['nameLast'] ?></a>
-                </h3>
-                <span><?= $depute["electionCirco"] ?><sup>e</sup> circonscription</span>
-              </div>
-              <div class="card-footer d-flex justify-content-center align-items-center">
-                <span><?= $depute["libelle"] ?></span>
-              </div>
-            </div>
+            <?php $this->load->view('deputes/partials/card_home.php', array('depute' => $depute, 'tag' => 'h3')) ?>
           <?php endforeach; ?>
         </div>
       </div> <!-- END OTHER MPS FROM THE SAME DEPARTMENT -->
