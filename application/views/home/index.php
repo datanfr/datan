@@ -250,14 +250,35 @@
           </div>
         </div>
       </div> <!-- // END BLOC STATS -->
+      <!-- BLOC ELECTION -->
+      <div class="row bloc-votes*" id="pattern_background">
+        <div class="container p-md-0">
+          <div class="row py-4">
+            <div class="col-12">
+              <h2 class="text-center my-4">Députés candidats aux élections régionales de 2021</h2>
+            </div>
+          </div>
+          <div class="row pb-5">
+            <div class="col-7 test-border">
+              <p>Les élections régionales de 2021 devraient se tenir les 13 et 20 juin 2021.</p>
+              <p><b>Attention</b>, au vu de la crise sanitaire de la Covid-19, les dates des élections régionales sont susceptibles de changer.</p>
+              <p>Les députés de l'Assemblée nationale peuvent se présenter aux élections régionales. Si le député est élu, il devrait quitter son siège de député que s'il devient président ou vice-président du conseil régional.</p>
+              <p>Nous avons jusqu'à présent répertorié <span class="font-weight-bold text-primary"><?= $candidatsN ?> députés candidats</span> aux élections régionales de 2021.</p>
+              [bouton]
+            </div>
+          </div>
+        </div>
+      </div> <!-- END BLOC ELECTIONS -->
       <!-- BLOC ILS PARLENT DE NOUS -->
       <div class="row">
-        <div class="container py-3">
-          <div class="row">
+        <div class="container">
+          <div class="row py-4">
             <div class="col-12">
-              <h2 class="text-center">Ils parlent de nous</h2>
+              <h2 class="text-center my-4">Ils parlent de nous</h2>
             </div>
-            <div class="col-12 my-5 d-flex flex-wrap justify-content-around align-items-center">
+          </div>
+          <div class="row pb-5">
+            <div class="col-12 d-flex flex-wrap justify-content-around align-items-center">
               <span class="url_obf" url_obf="<?= url_obfuscation("https://www.leparisien.fr/info-paris-ile-de-france-oise/vote-assiduite-loyaute-comment-se-comportent-vos-deputes-franciliens-et-oisiens-21-01-2021-8420482.php") ?>">
                 <img class="mx-2 my-3 img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" data-src="<?= asset_url() ?>imgs/media/le_parisien.png" alt="Le Parisien">
               </span>

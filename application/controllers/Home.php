@@ -8,6 +8,7 @@
       $this->load->model('votes_model');
       $this->load->model('departement_model');
       $this->load->model('post_model');
+      $this->load->model('elections_model');
       $this->load->helper('form');
       //$this->password_model->security_password(); Former login protection
     }
@@ -82,10 +83,13 @@
       } else {
         $data['votes'] = $this->votes_model->get_last_votes_datan(5);
       }
-
       foreach ($data['votes'] as $key => $value) {
         $data['votes'][$key]['dateScrutinFRAbbrev'] = $this->functions_datan->abbrev_months($value['dateScrutinFR']);
       }
+
+      // Get elections
+      $data['candidats'] = $this->elections_model->get_all_candidate(1, TRUE); // Get candidates for regionales-2021
+      $data['candidatsN'] = count($data['candidats']);
 
       //Get posts (needs to be cached)
       $data['posts'] = $this->post_model->get_last_posts();
