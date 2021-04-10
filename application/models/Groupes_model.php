@@ -294,7 +294,7 @@
     }
 
     public function get_groupe_color($x){
-      switch ($x['libelleAbrev']) {
+      switch ($x[0]) {
         case 'SOC':
           $couleur = "#e30040";
           break;
@@ -304,7 +304,7 @@
           break;
 
         default:
-          $couleur = $x['couleurAssociee'];
+          $couleur = $x[1];
           break;
       }
       return $couleur;

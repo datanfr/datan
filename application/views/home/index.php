@@ -105,26 +105,8 @@
             <!-- DEPUTE AU HASARD CARD -->
             <div class="col-md-6 py-4">
               <h2>DÉPUTÉ<?= mb_strtoupper($depute_random['e']) ?> AU HASARD</h2>
-              <div class="card card-depute">
-                <div class="liseret" style="background-color: <?= $depute_random["couleurAssociee"] ?>"></div>
-                <div class="card-avatar">
-                  <?php if ($depute_random['img']): ?>
-                    <img class="img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-face-2.png" data-src="<?= base_url(); ?>assets/imgs/deputes_nobg/depute_<?= substr($depute_random["mpId"], 2) ?>.png" alt="<?= $depute_random['nameFirst'].' '.$depute_random['nameLast'] ?>">
-                    <?php else: ?>
-                    <img class="img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-face-2.png" data-src="<?= asset_url() ?>imgs/placeholder/placeholder-face-2.png" alt="<?= $depute_random['nameFirst'].' '.$depute_random['nameLast'] ?>">
-                  <?php endif; ?>
-                </div>
-                <div class="card-body d-flex align-items-center justify-content-center">
-                  <div>
-                    <span class="d-block card-title my-2">
-                      <a href="<?php echo base_url(); ?>deputes/<?php echo $depute_random['dptSlug'].'/depute_'.$depute_random['nameUrl'] ?>" class="stretched-link no-decoration"><?php echo $depute_random['nameFirst'] .' ' . $depute_random['nameLast'] ?></a>
-                    </span>
-                    <span class="d-block"><?= $depute_random["departementNom"] ?> (<?= $depute_random["departementCode"] ?>)</span>
-                  </div>
-                </div>
-                <div class="card-footer d-flex justify-content-center align-items-center">
-                  <span><?= $depute_random["libelle"] ?> (<?= $depute_random["libelleAbrev"] ?>)</span>
-                </div>
+              <div class="d-flex justify-content-center">
+                <?php $this->load->view('deputes/partials/card_home.php', array('depute' => $depute_random, 'tag' => 'span')) ?>
               </div>
             </div>
             <!-- GROUPE AU HASARD CARD -->
@@ -161,85 +143,29 @@
             <!-- VOTE LE PLUS -->
             <div class="col-xl-3 col-md-6 py-4">
               <h3>VOTE LE <span class="plus">PLUS</span></h3>
-              <div class="card card-depute">
-                <div class="liseret" style="background-color: <?= $depute_vote_plus["couleurAssociee"] ?>"></div>
-                <div class="card-avatar">
-                  <img class="img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-face-2.png" data-src="<?= base_url(); ?>assets/imgs/deputes_nobg/depute_<?= substr($depute_vote_plus["mpId"], 2) ?>.png" alt="<?= $depute_vote_plus['nameFirst'].' '.$depute_vote_plus['nameLast'] ?>">
-                </div>
-                <div class="card-body d-flex align-items-center justify-content-center">
-                  <div>
-                    <span class="d-block card-title">
-                      <a href="<?php echo base_url(); ?>deputes/<?php echo $depute_vote_plus['dptSlug'].'/depute_'.$depute_vote_plus['nameUrl'] ?>" class="stretched-link no-decoration"><?php echo $depute_vote_plus['nameFirst'] .' ' . $depute_vote_plus['nameLast'] ?></a>
-                    </span>
-                    <span class="d-block"><?= $depute_vote_plus["electionDepartement"] ?> (<?= $depute_vote_plus["electionDepartementNumero"] ?>)</span>
-                  </div>
-                </div>
-                <div class="card-footer d-flex justify-content-center align-items-center">
-                  <span><?= $depute_vote_plus["libelle"] ?> (<?= $depute_vote_plus["libelleAbrev"] ?>)</span>
-                </div>
+              <div class="d-flex justify-content-center">
+                <?php $this->load->view('deputes/partials/card_home.php', array('depute' => $depute_vote_plus, 'tag' => 'span')) ?>
               </div>
             </div>
             <!-- VOTE LE MOINS -->
             <div class="col-xl-3 col-md-6 py-4">
               <h3>VOTE LE <span class="minus">MOINS</span></h3>
-              <div class="card card-depute">
-                <div class="liseret" style="background-color: <?= $depute_vote_moins["couleurAssociee"] ?>"></div>
-                <div class="card-avatar">
-                  <img class="img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-face-2.png" data-src="<?= base_url(); ?>assets/imgs/deputes_nobg/depute_<?= substr($depute_vote_moins["mpId"], 2) ?>.png" alt="<?= $depute_vote_moins['nameFirst'].' '.$depute_vote_moins['nameLast'] ?>">
-                </div>
-                <div class="card-body d-flex align-items-center justify-content-center">
-                  <div>
-                    <span class="d-block card-title">
-                      <a href="<?php echo base_url(); ?>deputes/<?php echo $depute_vote_moins['dptSlug'].'/depute_'.$depute_vote_moins['nameUrl'] ?>" class="stretched-link no-decoration"><?php echo $depute_vote_moins['nameFirst'] .' ' . $depute_vote_moins['nameLast'] ?></a>
-                    </span>
-                    <span class="d-block"><?= $depute_vote_moins["electionDepartement"] ?> (<?= $depute_vote_moins["electionDepartementNumero"] ?>)</span>
-                  </div>
-                </div>
-                <div class="card-footer d-flex justify-content-center align-items-center">
-                  <span><?= $depute_vote_moins["libelle"] ?> (<?= $depute_vote_moins["libelleAbrev"] ?>)</span>
-                </div>
+              <div class="d-flex justify-content-center">
+                <?php $this->load->view('deputes/partials/card_home.php', array('depute' => $depute_vote_moins, 'tag' => 'span')) ?>
               </div>
             </div>
             <!-- PLUS LOYAL -->
             <div class="col-xl-3 col-md-6 py-4">
               <h3><?= mb_strtoupper($depute_loyal_plus['le']) ?> <span class="plus">PLUS</span> LOYAL<?= mb_strtoupper($depute_loyal_plus['e']) ?></h3>
-              <div class="card card-depute">
-                <div class="liseret" style="background-color: <?= $depute_loyal_plus["couleurAssociee"] ?>"></div>
-                <div class="card-avatar">
-                  <img class="img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-face-2.png" data-src="<?= base_url(); ?>assets/imgs/deputes_nobg/depute_<?= substr($depute_loyal_plus["mpId"], 2) ?>.png" alt="<?= $depute_loyal_plus['nameFirst'].' '.$depute_loyal_plus['nameLast'] ?>">
-                </div>
-                <div class="card-body d-flex align-items-center justify-content-center">
-                  <div>
-                    <span class="d-block card-title">
-                      <a href="<?php echo base_url(); ?>deputes/<?php echo $depute_loyal_plus['dptSlug'].'/depute_'.$depute_loyal_plus['nameUrl'] ?>" class="stretched-link no-decoration"><?php echo $depute_loyal_plus['nameFirst'] .' ' . $depute_loyal_plus['nameLast'] ?></a>
-                    </span>
-                    <span class="d-block"><?= $depute_loyal_plus["electionDepartement"] ?> (<?= $depute_loyal_plus["electionDepartementNumero"] ?>)</span>
-                  </div>
-                </div>
-                <div class="card-footer d-flex justify-content-center align-items-center">
-                  <span><?= $depute_loyal_plus["libelle"] ?> (<?= $depute_loyal_plus["libelleAbrev"] ?>)</span>
-                </div>
+              <div class="d-flex justify-content-center">
+                <?php $this->load->view('deputes/partials/card_home.php', array('depute' => $depute_loyal_plus, 'tag' => 'span')) ?>
               </div>
             </div>
             <!-- MOINS LOYAL -->
             <div class="col-xl-3 col-md-6 py-4">
               <h3><?= mb_strtoupper($depute_loyal_moins['le']) ?> <span class="minus">MOINS</span> LOYAL<?= mb_strtoupper($depute_loyal_moins['e']) ?></h3>
-              <div class="card card-depute">
-                <div class="liseret" style="background-color: <?= $depute_loyal_moins["couleurAssociee"] ?>"></div>
-                <div class="card-avatar">
-                  <img class="img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-face-2.png" data-src="<?= base_url(); ?>assets/imgs/deputes_nobg/depute_<?= substr($depute_loyal_moins["mpId"], 2) ?>.png" alt="<?= $depute_loyal_moins['nameFirst'].' '.$depute_loyal_moins['nameLast'] ?>">
-                </div>
-                <div class="card-body d-flex align-items-center justify-content-center">
-                  <div>
-                    <span class="d-block card-title">
-                      <a href="<?php echo base_url(); ?>deputes/<?php echo $depute_loyal_moins['dptSlug'].'/depute_'.$depute_loyal_moins['nameUrl'] ?>" class="stretched-link no-decoration"><?php echo $depute_loyal_moins['nameFirst'] .' ' . $depute_loyal_moins['nameLast'] ?></a>
-                    </span>
-                    <span class="d-block"><?= $depute_loyal_moins["electionDepartement"] ?> (<?= $depute_loyal_moins["electionDepartementNumero"] ?>)</span>
-                  </div>
-                </div>
-                <div class="card-footer d-flex justify-content-center align-items-center">
-                  <span><?= $depute_loyal_moins["libelle"] ?> (<?= $depute_loyal_moins["libelleAbrev"] ?>)</span>
-                </div>
+              <div class="d-flex justify-content-center">
+                <?php $this->load->view('deputes/partials/card_home.php', array('depute' => $depute_loyal_moins, 'tag' => 'span')) ?>
               </div>
             </div>
           </div>
@@ -267,7 +193,9 @@
             </div>
             <div class="col-md-5 mt-5 mt-md-0">
               <h3>DÉPUTÉ<?= $candidatRandom['civ'] == "Mme" ? "E" : NULL ?> CANDIDAT<?= $candidatRandom['civ'] == "Mme" ? "E" : NULL ?></h3>
-              <?php $this->load->view('deputes/partials/card_home.php', array('depute' => $candidatRandom, 'tag' => 'span')) ?>
+              <div class="d-flex justify-content-center">
+                <?php $this->load->view('deputes/partials/card_home.php', array('depute' => $candidatRandom, 'tag' => 'span')) ?>
+              </div>
             </div>
           </div>
           <div class="row pb-5">
