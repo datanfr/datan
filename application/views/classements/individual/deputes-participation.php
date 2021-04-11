@@ -47,7 +47,7 @@
                   <tr>
                     <td class="text-center"><?= $depute['rank'] ?></td>
                     <td class="text-center"><?= $depute['nameFirst']." ".$depute['nameLast'] ?></td>
-                    <td class="text-center"><?= $depute['libelleAbrev'] ?></td>
+                    <td class="text-center"><?= $depute['groupLibelleAbrev'] ?></td>
                     <td class="text-center"><?= $depute['score'] * 100 ?> %</td>
                     <td class="text-center"><?= $depute['votesN'] ?></td>
                     <td class="text-center"><?= $depute['commission'] ?></td>
@@ -75,7 +75,7 @@
                   <tr>
                     <td class="text-center"><?= $depute['rank'] ?></td>
                     <td class="text-center"><?= $depute['nameFirst']." ".$depute['nameLast'] ?></td>
-                    <td class="text-center"><?= $depute['libelleAbrev'] ?></td>
+                    <td class="text-center"><?= $depute['groupLibelleAbrev'] ?></td>
                     <td class="text-center"><?= $depute['score'] * 100 ?> %</td>
                     <td class="text-center"><?= $depute['votesN'] ?></td>
                   </tr>

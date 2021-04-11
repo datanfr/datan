@@ -24,7 +24,7 @@
 
       // Groupe color
       foreach ($data['groupes'] as $key => $value) {
-        $data['groupes'][$key]['couleurAssociee'] = $this->groupes_model->get_groupe_color($value);
+        $data['groupes'][$key]['couleurAssociee'] = $this->groupes_model->get_groupe_color(array($value['libelleAbrev'], $value['couleurAssociee']));
       }
 
       // Meta
@@ -63,7 +63,7 @@
 
       // Groupe color
       foreach ($data['groupes'] as $key => $value) {
-        $data['groupes'][$key]['couleurAssociee'] = $this->groupes_model->get_groupe_color($value);
+        $data['groupes'][$key]['couleurAssociee'] = $this->groupes_model->get_groupe_color(array($value['libelleAbrev'], $value['couleurAssociee']));
       }
 
       // Meta
@@ -142,7 +142,7 @@
       }
 
       // Query get group_color
-      $data['groupe']['couleurAssociee'] = $this->groupes_model->get_groupe_color($data['groupe']);
+      $data['groupe']['couleurAssociee'] = $this->groupes_model->get_groupe_color(array($data['groupe']['libelleAbrev'], $data['groupe']['couleurAssociee']));
 
       // Query effectif inactifs
       if (!$data['active']) {
@@ -301,7 +301,7 @@
       $data['apparentes'] = $this->groupes_model->get_groupe_apparentes($groupe_uid, $data['active']);
 
       // Query get group_color
-      $data['groupe']['couleurAssociee'] = $this->groupes_model->get_groupe_color($data['groupe']);
+      $data['groupe']['couleurAssociee'] = $this->groupes_model->get_groupe_color(array($data['groupe']['libelleAbrev'], $data['groupe']['couleurAssociee']));
 
       // Meta
       $data['url'] = $this->meta_model->get_url();
@@ -363,6 +363,9 @@
       if (!$data['active']) {
         $data['effectif'] = $this->groupes_model->get_effectif_inactif($groupe_uid);
       }
+
+      // Query get group_color
+      $data['groupe']['couleurAssociee'] = $this->groupes_model->get_groupe_color(array($data['groupe']['libelleAbrev'], $data['groupe']['couleurAssociee']));
 
       // Variables about the group (1. dateDebut / 2. membres du groupe / 3. other groups)
       setlocale(LC_TIME, 'french');
@@ -483,6 +486,9 @@
       if (!$data['active']) {
         $data['effectif'] = $this->groupes_model->get_effectif_inactif($groupe_uid);
       }
+
+      // Query get group_color
+      $data['groupe']['couleurAssociee'] = $this->groupes_model->get_groupe_color(array($data['groupe']['libelleAbrev'], $data['groupe']['couleurAssociee']));
 
       // Variables about the group (1. dateDebut / 2. membres du groupe / 3. other groups)
       setlocale(LC_TIME, 'french');
