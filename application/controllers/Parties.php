@@ -3,6 +3,7 @@
     public function __construct() {
       parent::__construct();
       $this->load->model('parties_model');
+      $this->load->model('groupes_model');
       //$this->password_model->security_password(); Former login protection
     }
 
@@ -79,6 +80,10 @@
 
       // Get MPs
       $data['deputesActive'] = $this->parties_model->get_mps_active($organeRef);
+
+      foreach ($data['deputesActive'] as $key => $value) {
+        $data['deputesActive'][$key]['couleurAssociee'] = $this->groupes_model->get_groupe_color(array($value['groupLibelleAbrev'], $value['couleurAssociee']));
+      }
 
       // Meta
       $data['url'] = $this->meta_model->get_url();
