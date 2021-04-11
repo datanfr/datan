@@ -11,8 +11,9 @@
     }
 
     public function index(){
-      $data['mps_oldest'] = $this->stats_model->get_mps_oldest();
-      $data['mps_youngest'] = $this->stats_model->get_mps_youngest();
+      $data['mps_age'] = $this->stats_model->get_ranking_age();
+      $data['mps_oldest'] = array_slice($data['mps_age'], 0, 3);
+      $data['mps_youngest'] = array_slice($data['mps_age'], -3, 3);
       $data['age_mean'] = $this->stats_model->get_age_mean(legislature_current());
       $data['groups_women_more'] = $this->stats_model->get_groups_women_more();
       $data['groups_women_less'] = $this->stats_model->get_groups_women_less();
@@ -91,15 +92,16 @@
         $data['ageDiff'] = $data['ageMean'] - $data['ageMeanPop'];
         $data['ageDiffStr'] = $this->functions_datan->int2str($data['ageDiff']);
         $data['ageDiffStr'] = $data['ageDiffStr'] == "un" ? $data['ageDiffStr'] . " an" : $data['ageDiffStr'] . " ans";
-        $data['mpOldest'] = $this->stats_model->get_mps_oldest(1);
-        $data['mpOldest']["name"] = $data['mpOldest']["nameFirst"]." ".$data['mpOldest']["nameLast"];
-        $data['mpOldest']['couleurAssociee'] = $this->groupes_model->get_groupe_color($data['mpOldest']);
-        $data['mpOldestGender'] = $this->depute_edito->gender($data['mpOldest']["civ"]);
-        $data['mpYoungest'] = $this->stats_model->get_mps_youngest(1);
-        $data['mpYoungest']["name"] = $data['mpYoungest']["nameFirst"]." ".$data['mpYoungest']["nameLast"];
-        $data['mpYoungest']['couleurAssociee'] = $this->groupes_model->get_groupe_color($data['mpYoungest']);
-        $data['mpYoungestGender'] = $this->depute_edito->gender($data['mpYoungest']["civ"]);
         $data['deputes'] = $this->stats_model->get_ranking_age();
+        $data['mpOldest'] = $data['deputes'][0];
+        $data['mpOldest']["name"] = $data['mpOldest']["nameFirst"]." ".$data['mpOldest']["nameLast"];
+        $data['mpOldest']['couleurAssociee'] = $this->groupes_model->get_groupe_color(array($data['mpOldest']['groupLibelleAbrev'], $data['mpOldest']['couleurAssociee']));
+        $data['mpOldestGender'] = $this->depute_edito->gender($data['mpOldest']["civ"]);
+        $data['mpYoungest'] = end($data['deputes']);
+        $data['mpYoungest']["name"] = $data['mpYoungest']["nameFirst"]." ".$data['mpYoungest']["nameLast"];
+        $data['mpYoungest']['couleurAssociee'] = $this->groupes_model->get_groupe_color(array($data['mpYoungest']['groupLibelleAbrev'], $data['mpYoungest']['couleurAssociee']));
+        $data['mpYoungestGender'] = $this->depute_edito->gender($data['mpYoungest']["civ"]);
+
 
         // Meta
         $data['title_meta'] = "L'âge des députés - Assemblée nationale | Datan";
@@ -112,10 +114,10 @@
         $data['groupsAge'] = $this->stats_model->get_groups_age();
         $data['groupOldest'] = array_slice($data['groupsAge'], 0, 1);
         $data['groupOldest'] = $data['groupOldest'][0];
-        $data['groupOldest']['couleurAssociee'] = $this->groupes_model->get_groupe_color($data['groupOldest']);
+        $data['groupOldest']['couleurAssociee'] = $this->groupes_model->get_groupe_color(array($data['groupOldest']['libelleAbrev'], $data['groupOldest']['couleurAssociee']));
         $data['groupYoungest'] = array_slice($data['groupsAge'], -1);
         $data['groupYoungest'] = $data['groupYoungest'][0];
-        $data['groupYoungest']['couleurAssociee'] = $this->groupes_model->get_groupe_color($data['groupYoungest']);
+        $data['groupYoungest']['couleurAssociee'] = $this->groupes_model->get_groupe_color(array($data['groupYoungest']['libelleAbrev'], $data['groupYoungest']['couleurAssociee']));
 
         // Meta
         $data['title_meta'] = "L'âge moyen au sein des groupes - Assemblée nationale | Datan";
@@ -131,9 +133,9 @@
         $data['womenMean']['diff'] = abs($women_mean[1]['percentage'] - $data['womenMean']['nSociety']);
         $data['groupsWomen'] = $this->stats_model->get_groups_women();
         $data['groupsWomenFirst'] = $data['groupsWomen'][0];
-        $data['groupsWomenFirst']['couleurAssociee'] = $this->groupes_model->get_groupe_color($data['groupsWomenFirst']);
+        $data['groupsWomenFirst']['couleurAssociee'] = $this->groupes_model->get_groupe_color(array($data['groupsWomenFirst']['libelleAbrev'], $data['groupsWomenFirst']['couleurAssociee']));
         $data['groupsWomenLast'] = end($data['groupsWomen']);
-        $data['groupsWomenLast']['couleurAssociee'] = $this->groupes_model->get_groupe_color($data['groupsWomenLast']);
+        $data['groupsWomenLast']['couleurAssociee'] = $this->groupes_model->get_groupe_color(array($data['groupsWomenLast']['libelleAbrev'], $data['groupsWomenLast']['couleurAssociee']));
 
         // Meta
         $data['title_meta'] = "La féminisation des groupes politiques - Assemblée nationale | Datan";
@@ -145,11 +147,11 @@
         $data['mpLoyal'] = array_slice($data['deputes'], 0, 1);
         $data['mpLoyal'] = $data['mpLoyal'][0];
         $data['mpLoyal']['name'] = $data['mpLoyal']['nameFirst']." ".$data['mpLoyal']['nameLast'];
-        $data['mpLoyal']['couleurAssociee'] = $this->groupes_model->get_groupe_color($data['mpLoyal']);
+        $data['mpLoyal']['couleurAssociee'] = $this->groupes_model->get_groupe_color(array($data['mpLoyal']['groupLibelleAbrev'], $data['mpLoyal']['couleurAssociee']));
         $data['mpLoyalGender'] = $this->depute_edito->gender($data['mpLoyal']["civ"]);
         $data['mpRebel'] = end($data['deputes']);
         $data['mpRebel']['name'] = $data['mpRebel']['nameFirst']." ".$data['mpRebel']['nameLast'];
-        $data['mpRebel']['couleurAssociee'] = $this->groupes_model->get_groupe_color($data['mpRebel']);
+        $data['mpRebel']['couleurAssociee'] = $this->groupes_model->get_groupe_color(array($data['mpRebel']['groupLibelleAbrev'], $data['mpRebel']['couleurAssociee']));
         $data['mpRebelGender'] = $this->depute_edito->gender($data['mpRebel']["civ"]);
 
         // Meta
@@ -166,9 +168,9 @@
         $data['groupsCards'] = $data['groups'];
         unset($data['groupsCards'][$keyRemoveNI]);
         $data['groupsFirst'] = $data['groupsCards'][0];
-        $data['groupsFirst']['couleurAssociee'] = $this->groupes_model->get_groupe_color($data['groupsFirst']);
+        $data['groupsFirst']['couleurAssociee'] = $this->groupes_model->get_groupe_color(array($data['groupsFirst']['libelleAbrev'], $data['groupsFirst']['couleurAssociee']));
         $data['groupsLast'] = end($data['groupsCards']);
-        $data['groupsLast']['couleurAssociee'] = $this->groupes_model->get_groupe_color($data['groupsLast']);
+        $data['groupsLast']['couleurAssociee'] = $this->groupes_model->get_groupe_color(array($data['groupsLast']['libelleAbrev'], $data['groupsLast']['couleurAssociee']));
         $data['cohesionMean'] = $this->groupes_model->get_stats_avg(legislature_current());
         $data['cohesionMean'] = $data['cohesionMean']['cohesion'];
 
@@ -191,11 +193,12 @@
         $data['description_meta'] = "Quel parlementaire vote le plus souvent ? Quel député vote le moins souvent ? Découvrez le classement sur Datan.";
         $data['title'] = "La participation des députés";
       } elseif ($url == "groupes-participation") {
+        // Data
         $data['groups'] = $this->stats_model->get_groups_participation();
         $data['groupsFirst'] = $data['groups'][0];
-        $data['groupsFirst']['couleurAssociee'] = $this->groupes_model->get_groupe_color($data['groupsFirst']);
+        $data['groupsFirst']['couleurAssociee'] = $this->groupes_model->get_groupe_color(array($data['groupsFirst']['libelleAbrev'], $data['groupsFirst']['couleurAssociee']));
         $data['groupsLast'] = end($data['groups']);
-        $data['groupsLast']['couleurAssociee'] = $this->groupes_model->get_groupe_color($data['groupsLast']);
+        $data['groupsLast']['couleurAssociee'] = $this->groupes_model->get_groupe_color(array($data['groupsLast']['libelleAbrev'], $data['groupsLast']['couleurAssociee']));
 
         // Meta
         $data['title_meta'] = "La participation des groupes politiques - Assemblée nationale | Datan";
