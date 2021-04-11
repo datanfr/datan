@@ -154,11 +154,14 @@
       if ($election == 1/*regionales 2021*/) {
         $this->db->join('regions', 'candidate_full.district = regions.id', 'left');
         $this->db->select('*, regions.libelle AS districtLibelle, regions.id AS districtId');
+        $this->db->select('regions.libelle AS cardCenter'); // Central information on card
       } elseif ($election == 2/*départementales 2021*/) {
         $this->db->join('departement', 'candidate_full.district = departement.departement_code', 'left');
         $this->db->select('*, departement.departement_nom AS districtLibelle, departement.departement_code AS districtId');
+        $this->db->select('CONCAT(departement.departement_nom, " (", departement.departement_code, ")") AS cardCenter'); // Central information on card
       }
 
+      $this->db->select('candidate_full.depute_libelle AS groupLibelle, candidate_full.depute_libelleAbrev AS groupLibelleAbrev');
       $this->db->select('DATE_FORMAT(modified_at, "%d/%m/%Y") AS modified_at');
       $this->db->order_by('nameLast', 'ASC');
       $this->db->order_by('nameFirst', 'ASC');

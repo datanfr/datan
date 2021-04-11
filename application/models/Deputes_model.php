@@ -16,6 +16,8 @@
         $this->db->where('dateFin IS NOT NULL');
       }
 
+      $this->db->select('*');
+      $this->db->select('libelle AS groupLibelle, libelleAbrev AS groupLibelleAbrev, CONCAT(departementNom, " (", departementCode, ")") AS cardCenter');
       $this->db->where('legislature', $legislature);
       $this->db->order_by('nameLast ASC, nameFirst ASC');
       $query = $this->db->get('deputes_all');
@@ -327,7 +329,8 @@
       $sql = 'SELECT A.*, d.civ
         FROM
         (
-          SELECT *
+          SELECT *, libelle AS groupLibelle, libelleAbrev AS groupLibelleAbrev,
+          CONCAT(da.departementNom, " (", da.departementCode, ")") AS cardCenter
           FROM deputes_all da
           WHERE legislature = ? AND dateFin IS NULL
           ORDER BY RAND()
@@ -341,7 +344,8 @@
     }
 
     public function get_depute_vote_plus(){
-      $sql = 'SELECT A.mpId, A.score, A.votesN, da.civ, da.nameFirst, da.nameLast, da.nameUrl, da.dptSlug, da.couleurAssociee, da.libelle, da.libelleAbrev, da.groupeId AS organeRef, da.departementNom AS electionDepartement, da.departementCode AS electionDepartementNumero
+      $sql = 'SELECT A.mpId, A.score, A.votesN, da.civ, da.nameFirst, da.nameLast, da.nameUrl, da.dptSlug, da.couleurAssociee, da.img, da.libelle AS groupLibelle, da.libelleAbrev AS groupLibelleAbrev, da.groupeId AS organeRef, da.departementNom AS electionDepartement, da.departementCode AS electionDepartementNumero,
+      CONCAT(da.departementNom, " (", da.departementCode, ")") AS cardCenter
         FROM (
           SELECT *
           FROM class_participation_six
@@ -362,7 +366,8 @@
     }
 
     public function get_depute_vote_moins(){
-      $sql = 'SELECT A.mpId, A.score, A.votesN, da.civ, da.nameFirst, da.nameLast, da.nameUrl, da.dptSlug, da.couleurAssociee, da.libelle, da.libelleAbrev, da.groupeId AS organeRef, da.departementNom AS electionDepartement, da.departementCode AS electionDepartementNumero
+      $sql = 'SELECT A.mpId, A.score, A.votesN, da.civ, da.nameFirst, da.nameLast, da.nameUrl, da.dptSlug, da.couleurAssociee, da.img, da.libelle AS groupLibelle, da.libelleAbrev AS groupLibelleAbrev, da.groupeId AS organeRef, da.departementNom AS electionDepartement, da.departementCode AS electionDepartementNumero,
+      CONCAT(da.departementNom, " (", da.departementCode, ")") AS cardCenter
         FROM (
           SELECT *
           FROM class_participation_six
@@ -384,7 +389,8 @@
     }
 
     public function get_depute_loyal_plus(){
-      $sql = 'SELECT A.mpId, A.score, A.votesN, da.civ, da.nameFirst, da.nameLast, da.nameUrl, da.dptSlug, da.couleurAssociee, da.libelle, da.libelleAbrev, da.groupeId AS organeRef, da.departementNom AS electionDepartement, da.departementCode AS electionDepartementNumero
+      $sql = 'SELECT A.mpId, A.score, A.votesN, da.civ, da.nameFirst, da.nameLast, da.nameUrl, da.dptSlug, da.couleurAssociee, da.img, da.libelle AS groupLibelle, da.libelleAbrev AS groupLibelleAbrev, da.groupeId AS organeRef, da.departementNom AS electionDepartement, da.departementCode AS electionDepartementNumero,
+      CONCAT(da.departementNom, " (", da.departementCode, ")") AS cardCenter
         FROM
         (
           SELECT *
@@ -406,7 +412,8 @@
     }
 
     public function get_depute_loyal_moins(){
-      $sql = 'SELECT A.mpId, A.score, A.votesN, da.civ, da.nameFirst, da.nameLast, da.nameUrl, da.dptSlug, da.couleurAssociee, da.libelle, da.libelleAbrev, da.groupeId AS organeRef, da.departementNom AS electionDepartement, da.departementCode AS electionDepartementNumero
+      $sql = 'SELECT A.mpId, A.score, A.votesN, da.civ, da.nameFirst, da.nameLast, da.nameUrl, da.dptSlug, da.couleurAssociee, da.img, da.libelle AS groupLibelle, da.libelleAbrev AS groupLibelleAbrev, da.groupeId AS organeRef, da.departementNom AS electionDepartement, da.departementCode AS electionDepartementNumero,
+      CONCAT(da.departementNom, " (", da.departementCode, ")") AS cardCenter
         FROM
         (
           SELECT *

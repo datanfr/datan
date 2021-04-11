@@ -126,7 +126,8 @@
     }
 
     public function get_deputes_commune($departement, $circos){
-      $sql = 'SELECT d.*, d.circo AS electionCirco
+      $sql = 'SELECT d.*, d.circo AS electionCirco,
+        d.libelle AS groupLibelle, d.libelleAbrev AS groupLibelleAbrev
         FROM deputes_all d
         WHERE d.dptSlug = ? AND d.circo IN ? AND d.legislature = 15 AND d.dateFin IS NULL
       ';
@@ -136,7 +137,8 @@
     }
 
     public function get_deputes_commune_dpt($departement, $deputes_commune){
-      $sql = 'SELECT d.*, d.circo AS electionCirco
+      $sql = 'SELECT d.*, d.circo AS electionCirco,
+        d.libelle AS groupLibelle, d.libelleAbrev AS groupLibelleAbrev
         FROM deputes_all d
         WHERE d.dptSlug = ? AND d.mpId NOT IN ? AND d.legislature = 15 AND d.dateFin IS NULL
       ';
@@ -242,7 +244,7 @@
       $array["insee"] = strtoupper($new_dpt)."".$new_city;
       //before 2019 Mayotte had different insee code
       $array["old_insee"] = strtoupper($new_dpt)."".$old_city;
-      
+
       return $array;
     }
   }

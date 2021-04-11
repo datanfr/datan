@@ -1117,7 +1117,15 @@ body{
       font-size: $h3-font-size;
       font-weight: 800;
       text-align: center;
-      margin-bottom: 4em;
+    }
+  }
+  .bloc-election{
+    h3{
+      color: $text-black;
+      text-align: center;
+      font-weight: 800;
+      font-size: $h4-font-size;
+      color: $primary;
     }
   }
   .bloc-statistiques{
@@ -1126,7 +1134,6 @@ body{
       text-align: center;
       color: $text-black;
       font-weight: 600;
-      margin-bottom: 5rem;
     }
     span{
       &.plus{

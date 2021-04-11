@@ -125,25 +125,7 @@
       <div class="row mt-2 sorting">
         <?php foreach ($deputes as $depute): ?>
           <div class="col-lg-4 col-md-6 sorting-item <?= strtolower($depute["districtId"]) ?>">
-            <div class="card card-depute">
-              <div class="liseret" style="background-color: <?= $depute["couleurAssociee"] ?>"></div>
-              <div class="card-avatar">
-                <?php if ($depute['img']): ?>
-                  <img class="img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-face-2.png" data-src="<?= base_url(); ?>assets/imgs/deputes_nobg/depute_<?= substr($depute["mpId"], 2) ?>.png" alt="<?= $depute['nameFirst'].' '.$depute['nameLast'] ?>">
-                  <?php else: ?>
-                  <img class="img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-face-2.png" alt="<?= $depute['nameFirst'].' '.$depute['nameLast'] ?>">
-                <?php endif; ?>
-              </div>
-              <div class="card-body">
-                <h3 class="d-block card-title">
-                  <a href="<?php echo base_url(); ?>deputes/<?php echo $depute['dptSlug'].'/depute_'.$depute['nameUrl'] ?>" class="stretched-link no-decoration"><?php echo $depute['nameFirst'] .' ' . $depute['nameLast'] ?></a>
-                </h3>
-                <span class="d-block"><?= $depute["departementNom"] ?> (<?= $depute["departementCode"] ?>)</span>
-              </div>
-              <div class="card-footer d-flex justify-content-center align-items-center">
-                <span><?= $depute["districtLibelle"] ?></span>
-              </div>
-            </div>
+            <?php $this->load->view('deputes/partials/card_home.php', array('depute' => $depute, 'tag' => 'h3')) ?>
           </div>
         <?php endforeach; ?>
       </div>

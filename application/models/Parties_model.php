@@ -100,8 +100,8 @@
     }
 
     public function get_mps_active($organeRef){
-      $sql = 'SELECT ms.organeRef, da.nameFirst, da.nameLast, da.couleurAssociee, da.mpId, da.dptSlug, da.nameUrl, da.circo AS electionCirco, da.libelle, da.img,
-        CASE WHEN da.circo = 1 THEN CONCAT("re") WHEN da.circo = 2 THEN CONCAT("de") ELSE CONCAT("e") END AS electionCircoAbbrev
+      $sql = 'SELECT ms.organeRef, da.nameFirst, da.nameLast, da.couleurAssociee, da.mpId, da.dptSlug, da.nameUrl, da.circo AS electionCirco, da.libelle AS groupLibelle, da.libelleAbrev AS groupLibelleAbrev, da.img,
+        CONCAT(da.departementNom, " (", da.departementCode, ")") AS cardCenter
         FROM mandat_secondaire ms
         LEFT JOIN deputes_all da ON ms.mpId = da.mpId
         WHERE ms.organeRef = ? AND ms.dateFin IS NULL AND da.legislature = ? AND da.dateFin IS NULL
