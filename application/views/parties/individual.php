@@ -81,25 +81,7 @@
     <div class="row">
       <div class="col-12 d-flex flex-wrap justify-content-around">
         <?php foreach ($deputesActive as $mp): ?>
-          <div class="card card-depute mx-2">
-            <div class="liseret" style="background-color: <?= $mp["couleurAssociee"] ?>"></div>
-            <div class="card-avatar">
-              <?php if ($mp['img']): ?>
-                <img class="img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-face-2.png" data-src="<?= base_url(); ?>assets/imgs/deputes_nobg/depute_<?= substr($mp["mpId"], 2) ?>.png" alt="<?= $mp['nameFirst'].' '.$mp['nameLast'] ?>">
-                <?php else: ?>
-                <img class="img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-face-2.png" alt="<?= $mp['nameFirst'].' '.$mp['nameLast'] ?>">
-              <?php endif; ?>
-            </div>
-            <div class="card-body">
-              <h2 class="card-title">
-                <a href="<?php echo base_url(); ?>deputes/<?php echo $mp['dptSlug'].'/depute_'.$mp['nameUrl'] ?>" class="stretched-link no-decoration"><?php echo $mp['nameFirst'] .' ' . $mp['nameLast'] ?></a>
-              </h2>
-              <span><?= $mp["electionCirco"] ?><sup><?= $mp['electionCircoAbbrev'] ?></sup> circonscription</span>
-            </div>
-            <div class="card-footer d-flex justify-content-center align-items-center">
-              <span><?= $mp["libelle"] ?></span>
-            </div>
-          </div>
+          <?php $this->load->view('deputes/partials/card_home.php', array('depute' => $mp, 'tag' => 'h2')) ?>
         <?php endforeach; ?>
       </div>
     </div>
