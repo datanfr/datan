@@ -20,6 +20,9 @@
           <a href="<?php echo base_url(); ?>deputes/<?php echo $depute['dptSlug'].'/depute_'.$depute['nameUrl'] ?>" class="stretched-link no-decoration"><?php echo $depute['nameFirst'] .' ' . $depute['nameLast'] ?></a>
         </h3>
       <?php endif; ?>
+      <?php if (isset($stats)): ?>
+        <span class="badge badge-primary badge-stats mb-3"><?= $stats ?></span>
+      <?php endif; ?>
       <span class="d-block"><?= $depute["cardCenter"] ?></span>
     </div>
   </div>
