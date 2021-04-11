@@ -9,21 +9,9 @@
   </div>
   <div class="card-body d-flex align-items-center justify-content-center">
     <div>
-      <?php if ($tag == "span"): ?>
-        <span class="d-block card-title">
+        <<?= $tag ?> class="d-block card-title">
           <a href="<?php echo base_url(); ?>deputes/<?php echo $depute['dptSlug'].'/depute_'.$depute['nameUrl'] ?>" class="stretched-link no-decoration"><?php echo $depute['nameFirst'] .' ' . $depute['nameLast'] ?></a>
-        </span>
-      <?php endif; ?>
-      <?php if ($tag == "h2"): ?>
-        <h2 class="d-block card-title">
-          <a href="<?php echo base_url(); ?>deputes/<?php echo $depute['dptSlug'].'/depute_'.$depute['nameUrl'] ?>" class="stretched-link no-decoration"><?php echo $depute['nameFirst'] .' ' . $depute['nameLast'] ?></a>
-        </h2>
-      <?php endif; ?>
-      <?php if ($tag == "h3"): ?>
-        <h3 class="d-block card-title">
-          <a href="<?php echo base_url(); ?>deputes/<?php echo $depute['dptSlug'].'/depute_'.$depute['nameUrl'] ?>" class="stretched-link no-decoration"><?php echo $depute['nameFirst'] .' ' . $depute['nameLast'] ?></a>
-        </h3>
-      <?php endif; ?>
+        </<?= $tag ?>>
       <?php if (isset($stats)): ?>
         <span class="badge badge-primary badge-stats mb-3"><?= $stats ?></span>
       <?php endif; ?>
