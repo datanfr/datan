@@ -17,45 +17,11 @@
       <div class="row row-grid mt-5">
         <div class="col-md-6 py-3">
           <h2 class="text-center"><?= ucfirst($mpLoyalGender['le']) ?> <?= $mpLoyalGender['depute'] ?> <?= $mpLoyalGender["le"] ?> plus loyal<?= $mpLoyalGender["e"] ?></h2>
-          <div class="card card-depute">
-            <div class="liseret" style="background-color: <?= $mpLoyal["couleurAssociee"] ?>"></div>
-            <div class="card-avatar">
-              <img class="img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-face-2.png" data-src="<?= base_url(); ?>assets/imgs/deputes_nobg/depute_<?= substr($mpLoyal["mpId"], 2) ?>.png" alt="<?= $mpLoyal['nameFirst'].' '.$mpLoyal['nameLast'] ?>">
-            </div>
-            <div class="card-body d-flex align-items-center justify-content-center">
-              <div>
-                <span class="d-block card-title">
-                  <a href="<?= base_url(); ?>deputes/<?= $mpLoyal['dptSlug'].'/depute_'.$mpLoyal['nameUrl'] ?>" class="stretched-link no-decoration"><?= $mpLoyal['nameFirst'] .' ' . $mpLoyal['nameLast'] ?></a>
-                </span>
-                <span class="badge badge-primary badge-stats mb-3"><?= $mpLoyal["score"] ?> %</span>
-                <span class="d-block"><?= $mpLoyal["departementNom"] ?> (<?= $mpLoyal["departementCode"] ?>)</span>
-              </div>
-            </div>
-            <div class="card-footer d-flex justify-content-center align-items-center">
-              <span><?= $mpLoyal["libelle"] ?> (<?= $mpLoyal["libelleAbrev"] ?>)</span>
-            </div>
-          </div>
+          <?php $this->load->view('deputes/partials/card_home.php', array('depute' => $mpLoyal, 'tag' => 'span', 'stats' => $mpLoyal['score'] . " %")) ?>
         </div>
         <div class="col-md-6 py-3">
           <h2 class="text-center"><?= ucfirst($mpRebelGender['le']) ?> <?= $mpRebelGender['depute'] ?> <?= $mpRebelGender["le"] ?> plus rebelle</h2>
-          <div class="card card-depute">
-            <div class="liseret" style="background-color: <?= $mpRebel["couleurAssociee"] ?>"></div>
-            <div class="card-avatar">
-              <img class="img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-face-2.png" data-src="<?= base_url(); ?>assets/imgs/deputes_nobg/depute_<?= substr($mpRebel["mpId"], 2) ?>.png" alt="<?= $mpRebel['nameFirst'].' '.$mpRebel['nameLast'] ?>">
-            </div>
-            <div class="card-body d-flex align-items-center justify-content-center">
-              <div>
-                <span class="d-block card-title">
-                  <a href="<?= base_url(); ?>deputes/<?= $mpRebel['dptSlug'].'/depute_'.$mpRebel['nameUrl'] ?>" class="stretched-link no-decoration"><?= $mpRebel['nameFirst'] .' ' . $mpRebel['nameLast'] ?></a>
-                </span>
-                <span class="badge badge-primary badge-stats mb-3"><?= $mpRebel["score"] ?> %</span>
-                <span class="d-block"><?= $mpRebel["departementNom"] ?> (<?= $mpRebel["departementCode"] ?>)</span>
-              </div>
-            </div>
-            <div class="card-footer d-flex justify-content-center align-items-center">
-              <span><?= $mpRebel["libelle"] ?> (<?= $mpRebel["libelleAbrev"] ?>)</span>
-            </div>
-          </div>
+          <?php $this->load->view('deputes/partials/card_home.php', array('depute' => $mpRebel, 'tag' => 'span', 'stats' => $mpRebel['score'] . " %")) ?>
         </div>
       </div>
       <div class="mt-5">
@@ -75,7 +41,7 @@
               <tr>
                 <td class="text-center"><?= $depute["rank"] ?></td>
                 <td class="text-center"><?= $depute["nameFirst"]." ".$depute["nameLast"] ?></td>
-                <td class="text-center"><?= $depute["libelleAbrev"] ?></td>
+                <td class="text-center"><?= $depute["groupLibelleAbrev"] ?></td>
                 <td class="text-center"><?= $depute["score"] ?> %</td>
               </tr>
               <?php $i++; ?>
