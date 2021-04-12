@@ -35,7 +35,6 @@ $h2-font-size:                1.8em;
 $h3-font-size:                1.6em;
 $h4-font-size:                1.4em;
 $h5-font-size:                1.2em;
-$h6-font-size-text:           1.1em;
 $h6-font-size:                1em;
 $h7-font-size:                0.85em;
 // LINKS
@@ -58,7 +57,6 @@ $carousel-caption-width: 100%;
 html {
   overflow-x: hidden;
 }
-
 
 /*
 ################
@@ -142,28 +140,28 @@ body:not(.pg-mentions) #tarteaucitronAlertSmall {
                Responsive font size
 ################
 */
-@include media-breakpoint-up(xs) {
+@include media-breakpoint-up(sm) {
   // Small devices (landscape phones, 576px and up)
   body{
-    font-size: 0.75rem;
+    font-size: 0.95rem;
   }
 }
-@media (min-width: 768px) {
+@include media-breakpoint-up(md) {
   // Medium devices (tablets, 768px and up)
   body {
-    font-size: 0.825rem;
+    font-size: 0.95rem;
   }
 }
-@media (min-width: 992px) {
+@include media-breakpoint-up(lg) {
   // Large devices (desktops, 992px and up)
   body {
-    font-size: 0.850rem;
+    font-size: 0.95rem;
   }
 }
-@media (min-width: 1200px) {
+@include media-breakpoint-up(xl) {
   // Extra large devices (large desktops, 1200px and up)
   body {
-    font-size: 0.875rem;
+    font-size: 0.95rem;
   }
 }
 /*
@@ -236,7 +234,6 @@ body:not(.pg-mentions) #tarteaucitronAlertSmall {
         color: #fff;
         .score{
           font-weight: 800;
-          font-size: $h6-font-size;
         }
         &:hover{
           background-color: #fff;
@@ -248,9 +245,6 @@ body:not(.pg-mentions) #tarteaucitronAlertSmall {
 }
 .legend-element{
   width: 75px;
-  span{
-    font-size: $h6-font-size-text;
-  }
 }
 /*
 ################
@@ -363,7 +357,6 @@ body:not(.pg-mentions) #tarteaucitronAlertSmall {
       width: 120px;
       color: #ffffff;
       font-weight: 600;
-      font-size: $h6-font-size;
       transition: 0.3s;
       &:hover{
         border: 1px solid $primary;
@@ -470,7 +463,6 @@ body:not(.pg-mentions) #tarteaucitronAlertSmall {
     padding: .75rem;
     .field{
       font-weight: bold;
-      font-size: $h6-font-size;
     }
   }
   // HOVER //
@@ -695,9 +687,6 @@ body:not(.pg-mentions) #tarteaucitronAlertSmall {
 }
 /* 4. Card statistique */
 .card-statistiques{
-  p{
-    font-size: $h6-font-size-text;
-  }
   i {
     color: $text-gray-light;
   }
@@ -777,7 +766,6 @@ body:not(.pg-mentions) #tarteaucitronAlertSmall {
     }
   }
   td{
-    //font-size: $h7-font-size;
     .vote-datan-bold{
       font-weight: 600;
     }
@@ -1149,7 +1137,7 @@ body{
   /* BLOC-PIE */
   .bloc-pie{
     .tableGroupes{
-      font-size: $h6-font-size*1.15;
+      font-size: $h5-font-size;
       .tableHover{
         color: $rejected;
       }
@@ -1431,7 +1419,6 @@ ul.ui-menu{
   .badges-groupes{
     .badge {
       padding: 7px 12px;
-      font-size: $h6-font-size;
       border-radius: 10px;
       color: $white;
       font-weight: 600;
@@ -1568,7 +1555,6 @@ ul.ui-menu{
       }
       span{
         font-weight: 700;
-        font-size: $h6-font-size;
       }
     }
     .link-group{
@@ -1606,13 +1592,9 @@ ul.ui-menu{
   /* Bloc biographie */
   .bloc-bio{
     max-width: 575px;
-    p{
-      font-size: $h6-font-size-text;
-    }
   }
   /* Bloc key-votes */
   .bloc-key-votes{
-    font-size: $h6-font-size-text;
     .libelle{
       color: $primary;
       font-weight: 800;
@@ -1626,9 +1608,6 @@ ul.ui-menu{
   }
   /* Bloc election */
   .bloc-election{
-    p{
-      font-size: $h6-font-size-text;
-    }
     .card{
       .card-body{
         padding: 1.5rem;
@@ -1791,7 +1770,6 @@ ul.ui-menu{
     .badges-categories{
       .badge {
         padding: 7px 12px;
-        font-size: $h6-font-size;
         border-radius: 10px;
         color: $white;
         font-weight: 600;
@@ -2061,12 +2039,11 @@ ul.ui-menu{
         border-bottom-right-radius: 10px;
       }
       .legend{
-        font-size: $h6-font-size;
         font-weight: 600;
       }
       .number{
         font-weight: 800;
-        font-size: $h6-font-size*1.1;
+        font-size: $h5-font-size;
       }
     }
   }
@@ -2107,7 +2084,6 @@ ul.ui-menu{
       border: none;
       color: $text-black;
       font-weight: 800;
-      font-size: $h6-font-size;
       border-radius: 10px;
       margin: 1rem 2rem 1rem 2rem;
       padding: 0.5rem 1rem;
@@ -2123,7 +2099,6 @@ ul.ui-menu{
       border: none;
       color: $text-black;
       font-weight: 800;
-      font-size: $h6-font-size;
       border-radius: 10px;
       margin: 1rem 2rem 1rem 2rem;
       padding: 0.5rem 1rem;
@@ -2237,7 +2212,6 @@ ul.ui-menu{
   .bloc-titre{
     .badge {
       padding: 7px 12px;
-      font-size: $h6-font-size;
       border-radius: 10px;
       color: $white;
       font-weight: 600;
@@ -2605,7 +2579,6 @@ ul.ui-menu{
   }
   .date{
     color: $text-gray-light;
-    font-size: $h6-font-size;
   }
   .img{
     img{
