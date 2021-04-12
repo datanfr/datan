@@ -75,10 +75,10 @@
               <p>© Datan 2021 - Tous droits réservés</p>
               <p>Nous contacter : <a href="mailto:contact@datan.fr" class="no-decoration underline">contact@datan.fr</a></p>
               <div class="social-media">
-                <a href="https://www.facebook.com/datanFR/" target="_blank" class="no-decoration" rel="noopener">
+                <a href="https://www.facebook.com/datanFR/" target="_blank" class="no-decoration" rel="noreferrer">
                   <img class="img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" data-src="<?= asset_url() ?>imgs/logos/facebook_datan.png" alt="Logo Facebook Datan">
                 </a>
-                <a href="https://twitter.com/datanFR" target="_blank" class="no-decoration" rel="noopener">
+                <a href="https://twitter.com/datanFR" target="_blank" class="no-decoration" rel="noreferrer">
                   <img class="img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" data-src="<?= asset_url() ?>imgs/logos/twitter_datan.png" alt="Logo Twitter Datan">
                 </a>
               </div>
@@ -113,11 +113,11 @@
         <div class="container">
           <div class="row py-3">
             <div class="col-md-6 text-center">
-              Nos données sont disponibles sur le site <a href="https://www.data.gouv.fr/fr/organizations/datan/" target="_blank" rel="noopener">data.gouv.fr</a>
+              Nos données sont disponibles sur le site <a href="https://www.data.gouv.fr/fr/organizations/datan/" target="_blank" rel="noreferrer">data.gouv.fr</a>
             </div>
             <div class="col-md-6">
               Notre projet est disponible sur
-              <a href="https://github.com/awenig/datan" target="_blank" class="no-decoration underline">
+              <a href="https://github.com/awenig/datan" target="_blank" rel="noreferrer" class="no-decoration underline">
                 <img src="<?= asset_url() ?>imgs/logos/GitHub-Mark.png" style="width: 25px" alt="Logo GitHub">
                 GitHub
               </a>
@@ -197,7 +197,7 @@
         <script type="text/javascript" src="<?= asset_url() ?>js/<?= $file ?>.js?v=<?= getVersion() ?>"></script>
       <?php endforeach; ?>
     <?php endif; ?>
-    
+
     <script type="text/javascript" src="<?= asset_url() ?>js/main.min.js?v=<?= getVersion() ?>"></script>
     <script type="text/javascript" src="<?= asset_url() ?>js/datan/url_obf2.min.js"></script>
 
