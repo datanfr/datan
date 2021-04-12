@@ -115,7 +115,11 @@
               <div class="card card-groupe">
                 <div class="liseret" style="background-color: <?= $groupe_random["couleurAssociee"] ?>"></div>
                 <div class="card-avatar group">
-                  <img src="<?= asset_url() ?>imgs/groupes/<?= $groupe_random['libelleAbrev'] ?>.png" alt="<?= $groupe_random['libelle'] ?>">
+                  <picture>
+                    <source srcset="<?= asset_url(); ?>imgs/groupes/webp/<?= $groupe_random['libelleAbrev'] ?>.webp" type="image/webp">
+                    <source srcset="<?= asset_url(); ?>imgs/groupes/<?= $groupe_random['libelleAbrev'] ?>.png" type="image/png">
+                    <img src="<?= asset_url(); ?>imgs/groupes/<?= $groupe_random['libelleAbrev'] ?>.png" alt="<?= $groupe_random['libelle'] ?>">
+                  </picture>
                 </div>
                 <div class="card-body d-flex flex-column justify-content-center align-items-center">
                   <span class="d-block card-title my-2">
