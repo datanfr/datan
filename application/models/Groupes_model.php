@@ -95,6 +95,8 @@
           'mandat_groupe.dateFin' => NULL
         );
         $this->db->select('*, date_format(dateDebut, "%d %M %Y") as dateDebutFR');
+        $this->db->select('libelle AS groupLibelle, libelleAbrev AS groupLibelleAbrev');
+        $this->db->select('CONCAT(departementNom, " (", departementCode, ")") AS cardCenter');
         $this->db->join('deputes_last', 'deputes_last.mpId = mandat_groupe.mpId', 'left');
         $query = $this->db->get_where('mandat_groupe', $where, 1);
       } else {
@@ -123,6 +125,8 @@
           'mandat_groupe.dateFin' => NULL,
           'mandat_groupe.nominPrincipale' => 1
         );
+        $this->db->select('*, libelle AS groupLibelle, libelleAbrev AS groupLibelleAbrev');
+        $this->db->select('CONCAT(departementNom, " (", departementCode, ")") AS cardCenter');
         $this->db->where_in('mandat_groupe.preseance', array(20, 28));
         $this->db->join('deputes_last', 'deputes_last.mpId = mandat_groupe.mpId');
         $this->db->order_by('nameLast ASC, nameFirst ASC');
@@ -153,6 +157,8 @@
         'mandat_groupe.dateFin' => NULL,
         'mandat_groupe.nominPrincipale' => 1
       );
+      $this->db->select('*, libelle AS groupLibelle, libelleAbrev AS groupLibelleAbrev');
+      $this->db->select('CONCAT(departementNom, " (", departementCode, ")") AS cardCenter');
       $this->db->where_in('mandat_groupe.preseance', array(24));
       $this->db->join('deputes_last', 'deputes_last.mpId = mandat_groupe.mpId');
       $this->db->order_by('nameLast ASC, nameFirst ASC');
