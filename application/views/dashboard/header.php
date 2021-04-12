@@ -41,6 +41,14 @@ scratch. This page gets rid of all links and provides the needed markup only.
         <li class="nav-item d-none d-sm-inline-block">
           <a href="<?= base_url () ?>" class="nav-link">Datan</a>
         </li>
+        <li class="nav-item d-none d-sm-inline-block">
+          <a href="<?= base_url () ?>cache/delete_all" class="nav-link">Delete cache</a>
+        </li>
+        <?php if (($this->session->userdata('type') == 'admin')): ?>
+          <li class="nav-item d-none d-sm-inline-block">
+            <a href="<?= base_url () ?>scripts" class="nav-link">Scripts</a>
+          </li>
+        <?php endif; ?>
       </ul>
 
       <!-- SEARCH FORM -->
