@@ -1,5 +1,6 @@
 <?php
 include "lib/simplehtmldom_1_9/simple_html_dom.php";
+include "include/json_minify.php";
 class Script
 {
     private $bdd;
@@ -761,6 +762,7 @@ class Script
         }
 
         $json = json_encode($array, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+        $json = json_minify($json);
 
         // save file
         $file_destination = __DIR__ . "/../assets/data/deputes_json.json";
