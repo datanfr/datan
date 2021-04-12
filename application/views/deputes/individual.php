@@ -1,8 +1,10 @@
   <?php if (($regionales2021 && $regionales2021['visible']) || isset($_GET['regionales2021'])) : ?>
-    <div class="container-fluid electionBanner d-flex justify-content-center align-items-center py-4">
-      <span class="text-center">
-        <?= $title ?> est candidat<?= $gender['e'] ?> aux prochaines élections régionales de juin 2021, dans la région <?= $regionales2021['regionLibelle'] ?>.  
-    </div>
+    <a href="<?= base_url() ?>elections/regionales-2021">
+      <div class="container-fluid electionBanner d-flex justify-content-center align-items-center py-4">
+        <span class="text-center">
+          <?= $title ?> est candidat<?= $gender['e'] ?> aux prochaines élections régionales de juin 2021, dans la région <?= $regionales2021['regionLibelle'] ?>.
+      </div>
+    </a>
   <?php endif; ?>
   <div class="container-fluid bloc-img-deputes async_background" id="container-always-fluid" data-src="<?= asset_url() ?>imgs/cover/hemicycle-front.jpg" data-tablet="<?= asset_url() ?>imgs/cover/hemicycle-front-768.jpg" data-mobile="<?= asset_url() ?>imgs/cover/hemicycle-front-375.jpg" style="height: 13em">
   </div>
