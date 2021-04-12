@@ -8,24 +8,9 @@
       <!-- ROW PRESIDENT -->
       <?php if ($groupe['libelleAbrev'] != 'NI'): ?>
         <div class="row my-5">
-          <div class="col-12 d-flex justify-content-center">
+          <div class="col-12 d-flex flex-column align-items-center">
             <h2>Président<?php if ($president['civ'] == 'Mme'): ?>e<?php endif; ?></h2>
-          </div>
-          <div class="col-lg-4 offset-lg-4">
-            <div class="card card-depute">
-              <div class="liseret" style="background-color: <?= $groupe["couleurAssociee"] ?>"></div>
-              <div class="card-avatar">
-                <?php if ($president['img']): ?>
-                  <img class="img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-face-2.png" data-src="<?= base_url(); ?>assets/imgs/deputes_nobg/depute_<?= substr($president["mpId"], 2) ?>.png" alt="<?= $president['nameFirst'].' '.$president['nameLast'] ?>">
-                  <?php else: ?>
-                  <img class="img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-face-2.png" alt="<?= $president['nameFirst'].' '.$president['nameLast'] ?>">
-                <?php endif; ?>
-              </div>
-              <div class="card-body">
-                <h3 class="d-block card-title"><a href="<?= base_url(); ?>deputes/<?= $president['dptSlug'].'/depute_'.$president['nameUrl'] ?>" class="stretched-link no-decoration"><?= $president['nameFirst'] .' ' . $president['nameLast'] ?></a></h4>
-                <span class="d-block"><?= $president["departementNom"] ?> (<?= $president["departementCode"] ?>)</span>
-              </div>
-            </div>
+            <?php $this->load->view('deputes/partials/card_home.php', array('depute' => $president, 'tag' => 'h3')) ?>
           </div>
         </div>
       <?php endif; ?>
@@ -37,21 +22,8 @@
           </div>
         <?php endif; ?>
         <?php foreach ($membres as $mp): ?>
-          <div class="col-lg-4 col-md-6">
-            <div class="card card-depute">
-              <div class="liseret" style="background-color: <?= $groupe["couleurAssociee"] ?>"></div>
-              <div class="card-avatar">
-                <?php if ($mp['img']): ?>
-                  <img class="img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-face-2.png" data-src="<?= base_url(); ?>assets/imgs/deputes_nobg/depute_<?= substr($mp["mpId"], 2) ?>.png" alt="<?= $mp['nameFirst'].' '.$mp['nameLast'] ?>">
-                  <?php else: ?>
-                  <img class="img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-face-2.png" alt="<?= $mp['nameFirst'].' '.$mp['nameLast'] ?>">
-                <?php endif; ?>
-              </div>
-              <div class="card-body">
-                <h3 class="d-block card-title"><a href="<?= base_url(); ?>deputes/<?= $mp['dptSlug'].'/depute_'.$mp['nameUrl'] ?>" class="stretched-link no-decoration"><?= $mp['nameFirst'] .' ' . $mp['nameLast'] ?></a></h3>
-                <span class="d-block"><?= $mp["departementNom"] ?> (<?= $mp["departementCode"] ?>)</span>
-              </div>
-            </div>
+          <div class="col-lg-4 col-md-6 d-flex justify-content-center">
+            <?php $this->load->view('deputes/partials/card_home.php', array('depute' => $mp, 'tag' => 'h3')) ?>
           </div>
         <?php endforeach; ?>
       </div>
@@ -62,21 +34,8 @@
             <h2>Membres apparentés</h2>
           </div>
           <?php foreach ($apparentes as $mp): ?>
-            <div class="col-lg-4 col-md-6">
-              <div class="card card-depute">
-                <div class="liseret" style="background-color: <?= $groupe["couleurAssociee"] ?>"></div>
-                <div class="card-avatar">
-                  <?php if ($mp['img']): ?>
-                    <img class="img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-face-2.png" data-src="<?= base_url(); ?>assets/imgs/deputes_nobg/depute_<?= substr($mp["mpId"], 2) ?>.png" alt="<?= $mp['nameFirst'].' '.$mp['nameLast'] ?>">
-                    <?php else: ?>
-                    <img class="img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-face-2.png" alt="<?= $mp['nameFirst'].' '.$mp['nameLast'] ?>">
-                  <?php endif; ?>
-                </div>
-                <div class="card-body">
-                  <h3 class="d-block card-title"><a href="<?= base_url(); ?>deputes/<?= $mp['dptSlug'].'/depute_'.$mp['nameUrl'] ?>" class="stretched-link no-decoration"><?= $mp['nameFirst'] .' ' . $mp['nameLast'] ?></a></h3>
-                  <span class="d-block"><?= $mp["departementNom"] ?> (<?= $mp["departementCode"] ?>)</span>
-                </div>
-              </div>
+            <div class="col-lg-4 col-md-6 d-flex justify-content-center">
+              <?php $this->load->view('deputes/partials/card_home.php', array('depute' => $mp, 'tag' => 'h3')) ?>
             </div>
           <?php endforeach; ?>
         </div>
