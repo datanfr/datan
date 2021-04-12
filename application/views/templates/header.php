@@ -68,7 +68,7 @@
     <?php
     if (isset($critical_css)): ?>
       <link rel="stylesheet" href="<?= base_url() .$critical_css?>?v=<?= getVersion() ?>">
-      <link rel="preload" href="<?= css_url() ?>main.css?v=<?= getVersion() ?>" as="style" onload="this.onload=null;this.rel='stylesheet'">
+      <link rel="stylesheet" href="<?= css_url() ?>main.css?v=<?= getVersion() ?>" media="print" onload="this.media='all'; this.onload=null;">
       <noscript><link rel="stylesheet" type="text/css" href="<?= css_url() ?>main.css?v=<?= getVersion() ?>"></noscript>
       <?php else: ?>
       <link rel="stylesheet" type="text/css" href="<?= css_url() ?>main.css?v=<?= getVersion() ?>">
