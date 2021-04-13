@@ -55,31 +55,17 @@
         <div class="container p-0">
           <div class="row row-grid py-3">
             <div class="col-md-4 d-flex flex-column justify-content-center">
-              <img class="img-lazy img-fluid" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media-big.png" data-src="<?= asset_url(); ?>imgs/datan/logo_baseline_white_transp.png" alt="Logo Facebook Datan">
+              <img class="img-lazy img-fluid" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media-big.png" width="4500" height="1975" data-src="<?= asset_url(); ?>imgs/datan/logo_baseline_white_transp.png" alt="Logo Datan">
             </div>
-            <!--
-          <div class="col-md-8 d-flex flex-column justify-content-center">
-            <div>
-              PHP //form_open()
-                <div class="d-flex">
-                    <div class="input-group">
-                      <input type="text" class="form-control" id="inlineFormInputGroupUsername" placeholder="Inscrivez-vous à notre newsletter!">
-                    </div>
-                    <button class="btn" type="submit" id="button-addon2"><i class="fa fa-paper-plane"></i></button>
-                </div>
-              PHP //form_close()
-            </div>
-          </div>
-          -->
             <div class="col-md-4 d-flex flex-column justify-content-center">
               <p>© Datan 2021 - Tous droits réservés</p>
               <p>Nous contacter : <a href="mailto:contact@datan.fr" class="no-decoration underline">contact@datan.fr</a></p>
               <div class="social-media">
                 <a href="https://www.facebook.com/datanFR/" target="_blank" class="no-decoration" rel="noreferrer">
-                  <img class="img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" data-src="<?= asset_url() ?>imgs/logos/facebook_datan.png" alt="Logo Facebook Datan">
+                  <img class="img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="542" height="542" data-src="<?= asset_url() ?>imgs/logos/facebook_datan.png" alt="Logo Facebook Datan">
                 </a>
                 <a href="https://twitter.com/datanFR" target="_blank" class="no-decoration" rel="noreferrer">
-                  <img class="img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" data-src="<?= asset_url() ?>imgs/logos/twitter_datan.png" alt="Logo Twitter Datan">
+                  <img class="img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="542" height="542" data-src="<?= asset_url() ?>imgs/logos/twitter_datan.png" alt="Logo Twitter Datan">
                 </a>
               </div>
             </div>
@@ -118,7 +104,7 @@
             <div class="col-md-6">
               Notre projet est disponible sur
               <a href="https://github.com/awenig/datan" target="_blank" rel="noreferrer" class="no-decoration underline">
-                <img src="<?= asset_url() ?>imgs/logos/GitHub-Mark.png" style="width: 25px" alt="Logo GitHub">
+                <img src="<?= asset_url() ?>imgs/logos/GitHub-Mark.png" width="25" height="25" alt="Logo GitHub">
                 GitHub
               </a>
             </div>
