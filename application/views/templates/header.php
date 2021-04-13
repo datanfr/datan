@@ -173,7 +173,7 @@
         <nav class="navbar fixed-top navbar-expand-lg navbar-light" id="navbar-datan">
           <div class="container p-0">
             <a class="navbar-brand mx-auto p-0 no-decoration" href="<?= base_url(); ?>" style="text-align: center">
-              <img src="<?= asset_url() ?>imgs/datan/logo_svg.svg" alt="Logo Datan">
+              <img src="<?= asset_url() ?>imgs/datan/logo_svg.svg" width="937" height="204" alt="Logo Datan">
             </a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar_datan" aria-controls="navbar_datan" aria-expanded="false" aria-label="Toggle navigation">
               <span class="navbar-toggler-icon"></span>
