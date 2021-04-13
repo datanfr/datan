@@ -6,7 +6,7 @@
         <div class="modal-content">
           <?= form_open('newsletter', array('id' => 'newsletterForm')); ?>
           <div class="modal-header">
-            <h2 class="modal-title" id="newsletterLabel">Newsletter</h2>
+            <h2 class="modal-title">Newsletter</h2>
             <span class="close cursor-pointer" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </span>
@@ -21,7 +21,7 @@
           <?= form_close() ?>
           <div id="modalSubscription">
             <div class="modal-header">
-              <h2 class="modal-title" id="newsletterLabel">Félicitations</h2>
+              <h2 class="modal-title">Félicitations</h2>
               <span class="close cursor-pointer" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
               </span>
@@ -35,7 +35,7 @@
           </div>
           <div id="modalFail">
             <div class="modal-header">
-              <h2 class="modal-title" id="newsletterLabel">Quelque chose s'est mal passé</h2>
+              <h2 class="modal-title">Quelque chose s'est mal passé</h2>
               <span class="close cursor-pointer" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
               </span>
