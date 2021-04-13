@@ -158,7 +158,7 @@
 
         "orientation": "bottom",
         /* Banner position (top - bottom - middle) */
-        "showAlertSmall": true,
+        "showAlertSmall": false,
         /* Show the small banner on bottom right */
         "cookieslist": true,
         /* Show the cookie list */
