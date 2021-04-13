@@ -145,7 +145,7 @@
     <script type="text/javascript">
       var tarteaucitronForceLanguage = "fr";
     </script>
-    <script type="text/javascript" src="<?= base_url() ?>assets/js/tarteaucitron.js-1.3/tarteaucitron.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/AmauriC/tarteaucitron.js@20210329/tarteaucitron.min.js"></script>
     <script type="text/javascript">
       tarteaucitron.init({
         "privacyUrl": "<?= base_url() ?>mentions-legales",
