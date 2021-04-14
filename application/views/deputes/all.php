@@ -87,7 +87,7 @@
         <div class="col-lg-9 col-md-12">
           <div class="row mt-2 sorting">
             <?php foreach ($deputes as $depute): ?>
-              <div class="col-lg-4 col-md-6 sorting-item <?= strtolower($depute["libelleAbrev"]) ?>">
+              <div class="col-lg-4 col-md-6 sorting-item <?= strtolower($depute["libelleAbrev"]) ?> d-flex justify-content-center">
                 <?php $this->load->view('deputes/partials/card_home.php', array('depute' => $depute, 'tag' => 'h2')) ?>
               </div>
             <?php endforeach; ?>
