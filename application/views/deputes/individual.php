@@ -310,10 +310,10 @@
               <div class="col-12 d-flex justify-content-center">
                 <div class="bloc-carousel-votes">
                   <div class="carousel-buttons">
-                    <button type="button" class="btn prev mr-2 button--previous">
+                    <button type="button" class="btn prev mr-2 button--previous" aria-label="précédent">
                       <?php echo file_get_contents(asset_url() . "imgs/icons/arrow_left.svg") ?>
                     </button>
-                    <button type="button" class="btn next ml-2 button--next">
+                    <button type="button" class="btn next ml-2 button--next" aria-label="suivant">
                       <?php echo file_get_contents(asset_url() . "imgs/icons/arrow_right.svg") ?>
                     </button>
                   </div>
