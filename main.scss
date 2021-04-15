@@ -883,15 +883,19 @@ body{
   &.async_background{
     @include media-breakpoint-only(xs){
       background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.8)), url('https://datan.fr/assets/imgs/cover/hemicycle-front-375.jpg');
+      background-size: cover;
+      background-position-y: 50%;
     }
     @include media-breakpoint-between(sm, md){
       background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.8)), url('https://datan.fr/assets/imgs/cover/hemicycle-front-768.jpg');
+      background-size: cover;
+      background-position-y: 50%;
     }
     @include media-breakpoint-up(lg){
       background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.8)), url('https://datan.fr/assets/imgs/cover/hemicycle-front.jpg');
+      background-size: cover;
+      background-position-y: 50%;
     }
-    background-size: cover;
-    background-position-y: 50%;
   }
   &.pg-parties-individual{
     @include media-breakpoint-down(sm) {
