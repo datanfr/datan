@@ -1,4 +1,4 @@
-    <div class="container-fluid bloc-img-deputes async_background" id="container-always-fluid" data-src="<?= asset_url() ?>imgs/cover/hemicycle-front.jpg" data-tablet="<?= asset_url() ?>imgs/cover/hemicycle-front-768.jpg" data-mobile="<?= asset_url() ?>imgs/cover/hemicycle-front-375.jpg" style="position: relative; height: 155px">
+    <div class="container-fluid bloc-img-deputes bloc-img d-flex async_background" id="container-always-fluid" style="position: relative; height: 155px">
       <?php if ($vote['edited']): ?>
         <div class="container pg-vote-individual d-flex align-items-end" style="height: 100%">
           <?php if ($vote['logo']): ?>
