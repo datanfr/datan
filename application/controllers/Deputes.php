@@ -328,8 +328,13 @@
       // JS UP
       $data['js_to_load_before_bootstrap'] = array("popper.min");
       $data['js_to_load']= array(
-        "datan/async_background",
         "flickity.pkgd.min",
+      );
+      // Preloads
+      $data['preloads'] = array(
+        array("href" => asset_url()."imgs/cover/hemicycle-front-375.jpg", "as" => "image", "media" => "(max-width: 575.98px)"),
+        array("href" => asset_url()."imgs/cover/hemicycle-front-768.jpg", "as" => "image", "media" => "(min-width: 576px) and (max-width: 970px)"),
+        array("href" => asset_url()."imgs/cover/hemicycle-front.jpg", "as" => "image", "media" => "(min-width: 970.1px)"),
       );
       // Load Views
       $this->load->view('templates/header', $data);
