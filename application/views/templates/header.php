@@ -61,7 +61,7 @@
     <!-- PRELOAD -->
     <?php if (isset($preloads)): ?>
       <?php foreach ($preloads as $preload): ?>
-        <link rel=preload href="<?= $preload['href'] ?>" as="<?= $preload['as'] ?>" imagesrcset="<?= $preload['imagesrcset'] ?>">
+        <link rel=preload href="<?= $preload['href'] ?>" as="<?= $preload['as'] ?>" <?php if (isset($preload['imagesrcset'])): ?>imagesrcset="<?= $preload['imagesrcset'] ?>"<?php endif; ?> <?php if (isset($preload['media'])): ?>media="<?= $preload['media'] ?>"<?php endif; ?>>
       <?php endforeach; ?>
     <?php endif; ?>
     <link rel="preload" href="https://matomo.datan.fr/1337.js" onload="embedTracker()" type="script" crossorigin>

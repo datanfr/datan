@@ -90,7 +90,7 @@ if ($('.carousel-cards').length > 0){
   // next
   $('.button--next').on( 'click', function() {
     $carousel.flickity('next');
-  });  
+  });
 }
 
 /*
@@ -151,7 +151,7 @@ $('.no-img').css({'height':cw+'px'});
                 async_background
 ################
 */
-
+/*
 (() => {
   'use strict';
   // Page is loaded
@@ -189,7 +189,7 @@ $('.no-img').css({'height':cw+'px'});
 
   });
 })();
-
+*/
 /*
 ################
                 Read more
@@ -256,7 +256,7 @@ $('#newsletterForm').on('submit', (e) => {
     success: function(){
       $('#newsletterForm').hide();
       $('#modalSubscription').show();
-      
+
     },
     error:function(){
       $('#newsletterForm').hide();
