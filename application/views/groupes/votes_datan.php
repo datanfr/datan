@@ -1,4 +1,4 @@
-  <div class="container-fluid bloc-img-deputes async_background" id="container-always-fluid" data-src="<?= asset_url() ?>imgs/cover/hemicycle-front.jpg" data-tablet="<?= asset_url() ?>imgs/cover/hemicycle-front-768.jpg" data-mobile="<?= asset_url() ?>imgs/cover/hemicycle-front-375.jpg">
+  <div class="container-fluid bloc-img-deputes async_background" id="container-always-fluid" style="height: 13em"></div>
   </div>
   <div class="liseret-groupe" style="background-color: <?= $groupe['couleurAssociee'] ?>"></div>
   <div class="container pg-groupe-individual">
@@ -176,7 +176,7 @@
             <h2>Président du groupe <?= $title ?></h2>
             <div class="row mt-3">
               <div class="col-6 col-md-3 py-2">
-                <a class="membre no-decoration underline" href="<?php echo base_url(); ?>deputes/<?= $president['dpt_slug'] ?>/depute_<?= $president['nameUrl'] ?>"><?= $president['nameFirst']." ".$president['nameLast'] ?></a>
+                <a class="membre no-decoration underline" href="<?php echo base_url(); ?>deputes/<?= $president['dptSlug'] ?>/depute_<?= $president['nameUrl'] ?>"><?= $president['nameFirst']." ".$president['nameLast'] ?></a>
               </div>
             </div>
           </div>
@@ -188,7 +188,7 @@
           <div class="row mt-3">
             <?php foreach ($membres as $key => $membre): ?>
               <div class="col-6 col-md-3 py-2">
-                <a class="membre no-decoration underline" href="<?php echo base_url(); ?>deputes/<?= $membre['dpt_slug'] ?>/depute_<?= $membre['nameUrl'] ?>"><?= $membre['nameFirst']." ".$membre['nameLast'] ?></a>
+                <a class="membre no-decoration underline" href="<?php echo base_url(); ?>deputes/<?= $membre['dptSlug'] ?>/depute_<?= $membre['nameUrl'] ?>"><?= $membre['nameFirst']." ".$membre['nameLast'] ?></a>
               </div>
             <?php endforeach; ?>
           </div>
@@ -204,7 +204,7 @@
             <div class="row mt-3">
               <?php foreach ($apparentes as $key => $mp): ?>
                 <div class="col-6 col-md-3 py-2">
-                  <a class="membre no-decoration underline" href="<?php echo base_url(); ?>deputes/<?= $mp['dpt_slug'] ?>/depute_<?= $mp['nameUrl'] ?>"><?= $mp['nameFirst']." ".$mp['nameLast'] ?></a>
+                  <a class="membre no-decoration underline" href="<?php echo base_url(); ?>deputes/<?= $mp['dptSlug'] ?>/depute_<?= $mp['nameUrl'] ?>"><?= $mp['nameFirst']." ".$mp['nameLast'] ?></a>
                 </div>
               <?php endforeach; ?>
             </div>
