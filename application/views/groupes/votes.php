@@ -1,5 +1,4 @@
-  <div class="container-fluid bloc-img-deputes async_background" id="container-always-fluid" data-src="<?= asset_url() ?>imgs/cover/hemicycle-front.jpg" data-tablet="<?= asset_url() ?>imgs/cover/hemicycle-front-768.jpg" data-mobile="<?= asset_url() ?>imgs/cover/hemicycle-front-375.jpg">
-  </div>
+  <div class="container-fluid bloc-img-deputes async_background" id="container-always-fluid" style="height: 13em"></div>
   <div class="liseret-groupe" style="background-color: <?= $groupe['couleurAssociee'] ?>"></div>
   <div class="container pg-groupe-individual pb-5">
     <div class="row">
