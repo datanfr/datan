@@ -145,41 +145,46 @@ $('.no-img').css({
 ################
 */
 
-
-(function () {
-  'use strict'; // Page is loaded
-
-  var objects = document.getElementsByClassName('async_background');
-  Array.from(objects).map(function (item) {
+/*
+(() => {
+  'use strict';
+  // Page is loaded
+  const objects = document.getElementsByClassName('async_background');
+  Array.from(objects).map((item) => {
     // Start loading image
-    var img = new Image();
-
+    const img = new Image();
     if (window.matchMedia("(max-width: 575.98px)").matches) {
       img.src = item.dataset.mobile;
-
-      img.onload = function () {
+      img.onload = () => {
         item.classList.remove('async_background');
-        return item.nodeName === 'IMG' ? item.src = item.dataset.src : item.style.backgroundImage = "linear-gradient(rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0.65)), url(".concat(item.dataset.mobile, ")");
+        return item.nodeName === 'IMG' ?
+          item.src = item.dataset.src :
+          item.style.backgroundImage = `linear-gradient(rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0.65)), url(${item.dataset.mobile})`
       };
     } else if (window.matchMedia("(max-width: 970px)").matches) {
       // Once image is loaded replace the src of the HTML element
       img.src = item.dataset.tablet;
-
-      img.onload = function () {
+      img.onload = () => {
         item.classList.remove('async_background');
-        return item.nodeName === 'IMG' ? item.src = item.dataset.src : item.style.backgroundImage = "linear-gradient(rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0.65)), url(".concat(item.dataset.tablet, ")");
+        return item.nodeName === 'IMG' ?
+          item.src = item.dataset.src :
+          item.style.backgroundImage = `linear-gradient(rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0.65)), url(${item.dataset.tablet})`
       };
     } else {
       // Once image is loaded replace the src of the HTML element
       img.src = item.dataset.src;
-
-      img.onload = function () {
+      img.onload = () => {
         item.classList.remove('async_background');
-        return item.nodeName === 'IMG' ? item.src = item.dataset.src : item.style.backgroundImage = "linear-gradient(rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0.65)), url(".concat(item.dataset.src, ")");
+        return item.nodeName === 'IMG' ?
+          item.src = item.dataset.src :
+          item.style.backgroundImage = `linear-gradient(rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0.65)), url(${item.dataset.src})`
       };
     }
+
   });
 })();
+*/
+
 /*
 ################
                 Read more
