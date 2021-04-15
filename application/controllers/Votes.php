@@ -326,7 +326,13 @@
         )
       );
       // JS
-      $data['js_to_load']= array("moment.min", "datatable-datan.min", "datetime-moment", "datan/async_background");
+      $data['js_to_load']= array("moment.min", "datatable-datan.min", "datetime-moment");
+      // Preloads
+      $data['preloads'] = array(
+        array("href" => asset_url()."imgs/cover/hemicycle-front-375.jpg", "as" => "image", "media" => "(max-width: 575.98px)"),
+        array("href" => asset_url()."imgs/cover/hemicycle-front-768.jpg", "as" => "image", "media" => "(min-width: 576px) and (max-width: 970px)"),
+        array("href" => asset_url()."imgs/cover/hemicycle-front.jpg", "as" => "image", "media" => "(min-width: 970.1px)"),
+      );
       // Load views
       $this->load->view('templates/header', $data);
       $this->load->view('votes/all_an', $data);
@@ -475,7 +481,13 @@
       $data['js_to_load_up'] = array("chart.min.js", "chartjs-plugin-annotation.js");
       // JS
       $data['js_to_load_before_bootstrap'] = array("popper.min");
-      $data['js_to_load']= array("moment.min", "datatable-datan.min", "datetime-moment", "datan/async_background", "flickity.pkgd.min");
+      $data['js_to_load']= array("moment.min", "datatable-datan.min", "datetime-moment", "flickity.pkgd.min");
+      // Preloads
+      $data['preloads'] = array(
+        array("href" => asset_url()."imgs/cover/hemicycle-front-375.jpg", "as" => "image", "media" => "(max-width: 575.98px)"),
+        array("href" => asset_url()."imgs/cover/hemicycle-front-768.jpg", "as" => "image", "media" => "(min-width: 576px) and (max-width: 970px)"),
+        array("href" => asset_url()."imgs/cover/hemicycle-front.jpg", "as" => "image", "media" => "(min-width: 970.1px)"),
+      );
       // Load Views
       $this->load->view('templates/header', $data);
       $this->load->view('templates/button_up');
