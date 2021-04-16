@@ -595,6 +595,8 @@
       $controller = $this->router->fetch_class()."/".$this->router->fetch_method();
       $data['ogp'] = $this->meta_model->get_ogp($controller, $data['title_meta'], $data['description_meta'], $data['url'], $data);
       // JS
+      // CSS
+      $data['critical_css'] = "assets/css/critical/depute_votes.css";
       // Preloads
       $data['preloads'] = array(
         array("href" => asset_url()."imgs/cover/hemicycle-front-375.jpg", "as" => "image", "media" => "(max-width: 575.98px)"),
@@ -696,6 +698,8 @@
       // Open Graph
       $controller = $this->router->fetch_class()."/".$this->router->fetch_method();
       $data['ogp'] = $this->meta_model->get_ogp($controller, $data['title_meta'], $data['description_meta'], $data['url'], $data);
+      // CSS
+      $data['critical_css'] = "assets/css/critical/depute_votes_field.css";
       // JS
       // Preloads
       $data['preloads'] = array(
@@ -787,7 +791,7 @@
         )
       );
       // JS
-      $data['js_to_load']= array("moment.min", "datatable-datan.min.js", "datetime-moment");
+      $data['js_to_load']= array("moment.min", "datatable-datan.min", "datetime-moment");
       // Preloads
       $data['preloads'] = array(
         array("href" => asset_url()."imgs/cover/hemicycle-front-375.jpg", "as" => "image", "media" => "(max-width: 575.98px)"),
