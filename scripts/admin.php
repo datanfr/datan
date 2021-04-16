@@ -48,6 +48,17 @@
               <br>
               <div class="card">
                 <div class="card-body">
+                  <h5 class="card-title">Update elections date</h5>
+                  <h6 class="card-subtitle text-muted">April 16, 2021</h6>
+                  <p class="card-text">
+                    Update the date for regional and department elections
+                    <a class="btn btn-danger my-3" href="update_dataset/20210416_elections.php" role="button">UPDATE DATABASE</a>
+                  </p>
+                </div>
+              </div>
+              <br>
+              <div class="card">
+                <div class="card-body">
                   <h5 class="card-title">Database structure update - Newsletter</h5>
                   <h6 class="card-subtitle text-muted">March 31, 2021</h6>
                   <p class="card-text">
