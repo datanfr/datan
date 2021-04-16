@@ -123,6 +123,21 @@ module.exports = function (grunt) {
         // The destination file
         dest: 'assets/css/critical/depute_individual.css'
       },
+      // Page depute/votes
+      depute_votes: {
+        options: {
+          base: './',
+          css: [
+              'assets/css/main.css'
+          ],
+          width: 1200,
+          height: 1500
+        },
+        // The source file
+        src: 'http://localhost/datan/deputes/maine-et-loire-49/depute_matthieu-orphelin/votes',
+        // The destination file
+        dest: 'assets/css/critical/depute_votes.css'
+      },
       // Page groupe
       groupe_individual: {
         options: {
