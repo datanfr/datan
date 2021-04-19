@@ -2,13 +2,19 @@
   class Newsletter_model extends CI_Model{
     public function __construct(){
       $this->load->database();
+      $this->load->helper('email_helper');
+      $this->load->library('parser');
     }
 
     public function create_newsletter(){
+      $email = $this->input->post('email');
       $data = array(
-        'email' => $this->input->post('email'),
+        'email' => $email,
         'general' => true,
       );
+      $template = $this->parser->parse('emails/newsletter', array('email' => $email));
+      sendMail('Bienvenue à la newsletter', $template, $email);
+
       return $this->db->insert('newsletter', $data);
     }
 

@@ -253,12 +253,14 @@ $('#newsletterForm').on('submit', (e) => {
     type: "POST",
     data: $('#newsletterForm').serialize(),
     dataType: 'json',
-    success: function(){
+    success: function(ac){
+      console.log(ac)
       $('#newsletterForm').hide();
       $('#modalSubscription').show();
       
     },
-    error:function(){
+    error:function(err){
+      console.log('err', err)
       $('#newsletterForm').hide();
       $('#modalFail').show();
     }
