@@ -26,7 +26,12 @@
         show_404();
       }
 
-      $data['active'] = TRUE;
+      if ($legislature == legislature_current()) {
+        $data['active'] = TRUE;
+      } else {
+        $data['active'] = FALSE;
+      }
+
       $data['legislature'] = $legislature;
       $data['deputes'] = $this->deputes_model->get_deputes_all($legislature, $data['active'], NULL);
       $data['groupes'] = $this->groupes_model->get_groupes_all($data['active'], $legislature);
@@ -99,6 +104,7 @@
 
     public function inactifs(){
       $data['active'] = FALSE;
+      $data['legislature'] = legislature_current();
       $data['deputes'] = $this->deputes_model->get_deputes_all(legislature_current(), $data['active'], NULL);
       $data['groupes'] = $this->deputes_model->get_groupes_inactifs();
       $data["number_inactive"] = count($data['deputes']);
