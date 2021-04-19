@@ -16,7 +16,7 @@
   }
 
   function legislature_all(){
-    return array(15);
+    return array(14, 15);
   }
 
   function meanAgeFranceAll(){
@@ -31,6 +31,27 @@
 
   function majority_group(){
     return "PO730964";
+  }
+
+  function groupsPositionEdited(){
+    $array = array(
+      "FI" => "à l'extrême gauche",
+      "GDR" => "à l'extrême gauche",
+      "SOC" => "à gauche",
+      "MODEM" => "au centre-droit",
+      "LAREM" => "au centre",
+      "UDI-AGIR" => "au centre-droit",
+      "LR" => "à droite",
+      "UDI-A-I" => "au centre-droit",
+      "NI" => "XX",
+      "LT" => "au centre",
+      "EDS" => "au centre",
+      "AGIR-E" => "au centre-droit",
+      "UDI_I" => "au centre-droit",
+      "NG" => "à la gauche",
+      "DEM" => "au centre-gauche"
+    );
+    return $array;
   }
 
   function get_months(){

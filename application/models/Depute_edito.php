@@ -102,25 +102,8 @@
     }
 
     public function positionnement($stats, $groupe){
-      $infos = array(
-        "FI" => "à l'extrême gauche",
-        "GDR" => "à l'extrême gauche",
-        "SOC" => "à gauche",
-        "MODEM" => "au centre-gauche",
-        "LAREM" => "au centre",
-        "UDI-AGIR" => "au centre-droit",
-        "LR" => "à droite",
-        "UDI-A-I" => "au centre-droit",
-        "NI" => "qui regroupe les députés non affiliés à un groupe parlementaire",
-        "LC" => "au centre-droit",
-        "LT" => "au centre",
-        "EDS" => "au centre",
-        "AGIR-E" => "au centre-droit",
-        "UDI_I" => "au centre-droit",
-        "NG" => "à la gauche",
-        "DEM" => "au centre-gauche"
-      );
-
+      $infos = groupsPositionEdited();
+      
       function maj_pres($positionPolitique){
         if ($positionPolitique == "Opposition") {
           $maj_pres = "un groupe d'opposition";
@@ -169,27 +152,6 @@
       ];
       return $array;
 
-    }
-
-    public function infos_groupes(){
-      $infos = array(
-        "FI" => "à l'extrême gauche",
-        "GDR" => "à l'extrême gauche",
-        "SOC" => "à gauche",
-        "MODEM" => "au centre-droit",
-        "LAREM" => "au centre",
-        "UDI-AGIR" => "au centre-droit",
-        "LR" => "à droite",
-        "UDI-A-I" => "au centre-droit",
-        "NI" => "XX",
-        "LT" => "au centre",
-        "EDS" => "au centre",
-        "AGIR-E" => "au centre-droit",
-        "UDI_I" => "au centre-droit",
-        "NG" => "à la gauche",
-        "DEM" => "au centre-gauche"
-      );
-      return $infos;
     }
 
     public function gender($gender){
