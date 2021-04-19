@@ -31,31 +31,12 @@
           </div>
           <div class="row mt-4">
             <?php foreach ($groupes as $groupe): ?>
-              <div class="col-lg-4 col-md-6 py-3">
-                <div class="card card-groupe">
-                  <div class="liseret" style="background-color: <?= $groupe["couleurAssociee"] ?>"></div>
-                  <div class="card-avatar group">
-                    <img src="<?= asset_url() ?>imgs/groupes/<?= $groupe['libelleAbrev'] ?>.png" alt="<?= $groupe['libelle'] ?>">
-                  </div>
-                  <div class="card-body d-flex flex-column justify-content-center align-items-center">
-                    <h2 class="d-block card-title">
-                      <a href="<?= base_url(); ?>groupes/<?= mb_strtolower($groupe['libelleAbrev']) ?>" class="stretched-link no-decoration"><?= $groupe['libelle'] ?></a>
-                    </h2>
-                    <span class="d-block"><?= $groupe["libelleAbrev"] ?></span>
-                  </div>
-                  <?php if ($active): ?>
-                  <div class="card-footer d-flex justify-content-center align-items-center">
-                    <span><?= $groupe["effectif"] ?> membres</span>
-                  </div>
-                  <?php endif; ?>
-                </div>
-              </div>
+              <?php $this->load->view('groupes/partials/card_home.php', array('groupe' => $groupe, 'tag' => 'h2')) ?>
             <?php endforeach; ?>
           </div>
         </div>
       </div>
-      <hr>
-      <div class="row d-flex justify-content-center mt-2 py-2">
+      <div class="row d-flex justify-content-center mt-5 py-2">
         <?php if ($active == TRUE): ?>
           <a class="btn btn-outline-primary d-none d-md-block" href="<?= base_url() ?>groupes/inactifs">Liste des groupes <b>plus en activité</b></a>
           <?php else: ?>
