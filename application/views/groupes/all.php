@@ -31,7 +31,9 @@
           </div>
           <div class="row mt-4">
             <?php foreach ($groupes as $groupe): ?>
-              <?php $this->load->view('groupes/partials/card_home.php', array('groupe' => $groupe, 'tag' => 'h2')) ?>
+              <div class="col-lg-4 col-md-6 py-3">
+                <?php $this->load->view('groupes/partials/card_home.php', array('groupe' => $groupe, 'tag' => 'h2')) ?>
+              </div>
             <?php endforeach; ?>
           </div>
         </div>
