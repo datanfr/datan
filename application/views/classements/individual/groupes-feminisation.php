@@ -10,41 +10,11 @@
       <div class="row row-grid mt-5">
         <div class="col-md-6 py-3">
           <h2 class="text-center">Le plus féminisé</h2>
-          <div class="card card-groupe">
-            <div class="liseret" style="background-color: <?= $groupsWomenFirst["couleurAssociee"] ?>"></div>
-            <div class="card-avatar group">
-              <img src="<?= asset_url() ?>imgs/groupes/<?= $groupsWomenFirst['libelleAbrev'] ?>.png" alt="<?= $groupsWomenFirst['libelle'] ?>">
-            </div>
-            <div class="card-body d-flex flex-column justify-content-center align-items-center">
-              <span class="d-block card-title my-2">
-                <a href="<?= base_url(); ?>groupes/<?php echo mb_strtolower($groupsWomenFirst['libelleAbrev']) ?>" class="stretched-link no-decoration"><?php echo $groupsWomenFirst['libelle'] ?></a>
-              </span>
-              <span><?= $groupsWomenFirst["libelleAbrev"] ?></span>
-              <span class="badge badge-primary badge-stats mt-3"><?= $groupsWomenFirst["pct"] ?> % de femmes</span>
-            </div>
-            <div class="card-footer d-flex justify-content-center align-items-center">
-              <span><?= $groupsWomenFirst["effectif"] ?> membres</span>
-            </div>
-          </div>
+          <?php $this->load->view('groupes/partials/card_home.php', array('groupe' => $groupsWomenFirst, 'tag' => 'span', 'active' => TRUE, 'stats' => $groupsWomenFirst['pct'] . "% de femmes")) ?>
         </div>
         <div class="col-md-6 py-3">
           <h2 class="text-center">Le moins féminisé</h2>
-          <div class="card card-groupe">
-            <div class="liseret" style="background-color: <?= $groupsWomenLast["couleurAssociee"] ?>"></div>
-            <div class="card-avatar group">
-              <img src="<?= asset_url() ?>imgs/groupes/<?= $groupsWomenLast['libelleAbrev'] ?>.png" alt="<?= $groupsWomenLast['libelle'] ?>">
-            </div>
-            <div class="card-body d-flex flex-column justify-content-center align-items-center">
-              <span class="d-block card-title my-2">
-                <a href="<?= base_url(); ?>groupes/<?php echo mb_strtolower($groupsWomenLast['libelleAbrev']) ?>" class="stretched-link no-decoration"><?php echo $groupsWomenLast['libelle'] ?></a>
-              </span>
-              <span><?= $groupsWomenLast["libelleAbrev"] ?></span>
-              <span class="badge badge-primary badge-stats mt-3"><?= $groupsWomenLast["pct"] ?> % de femmes</span>
-            </div>
-            <div class="card-footer d-flex justify-content-center align-items-center">
-              <span><?= $groupsWomenLast["effectif"] ?> membres</span>
-            </div>
-          </div>
+          <?php $this->load->view('groupes/partials/card_home.php', array('groupe' => $groupsWomenLast, 'tag' => 'span', 'active' => TRUE, 'stats' => $groupsWomenLast['pct'] . "% de femmes")) ?>
         </div>
       </div>
       <div class="mt-5">

@@ -10,41 +10,11 @@
       <div class="row row-grid mt-5">
         <div class="col-md-6 py-3">
           <h2 class="text-center">Le plus âgé</h2>
-          <div class="card card-groupe">
-            <div class="liseret" style="background-color: <?= $groupOldest["couleurAssociee"] ?>"></div>
-            <div class="card-avatar group">
-              <img src="<?= asset_url() ?>imgs/groupes/<?= $groupOldest['libelleAbrev'] ?>.png" alt="<?= $groupOldest['libelle'] ?>">
-            </div>
-            <div class="card-body d-flex flex-column justify-content-center align-items-center">
-              <span class="d-block card-title my-2">
-                <a href="<?= base_url(); ?>groupes/<?php echo mb_strtolower($groupOldest['libelleAbrev']) ?>" class="stretched-link no-decoration"><?php echo $groupOldest['libelle'] ?></a>
-              </span>
-              <span><?= $groupOldest["libelleAbrev"] ?></span>
-              <span class="badge badge-primary badge-stats mt-3">Moyenne : <?= $groupOldest["age"] ?> ans</span>
-            </div>
-            <div class="card-footer d-flex justify-content-center align-items-center">
-              <span><?= $groupOldest["effectif"] ?> membres</span>
-            </div>
-          </div>
+          <?php $this->load->view('groupes/partials/card_home.php', array('groupe' => $groupOldest, 'tag' => 'span', 'active' => TRUE, 'stats' => "Moyenne : " . $groupOldest['age'] . " ans")) ?>
         </div>
         <div class="col-md-6 py-3">
           <h2 class="text-center">Le plus jeune</h2>
-          <div class="card card-groupe">
-            <div class="liseret" style="background-color: <?= $groupYoungest["couleurAssociee"] ?>"></div>
-            <div class="card-avatar group">
-              <img src="<?= asset_url() ?>imgs/groupes/<?= $groupYoungest['libelleAbrev'] ?>.png" alt="<?= $groupYoungest['libelle'] ?>">
-            </div>
-            <div class="card-body d-flex flex-column justify-content-center align-items-center">
-              <span class="d-block card-title my-2">
-                <a href="<?= base_url(); ?>groupes/<?php echo mb_strtolower($groupYoungest['libelleAbrev']) ?>" class="stretched-link no-decoration"><?php echo $groupYoungest['libelle'] ?></a>
-              </span>
-              <span><?= $groupYoungest["libelleAbrev"] ?></span>
-              <span class="badge badge-primary badge-stats mt-3">Moyenne : <?= $groupYoungest["age"] ?> ans</span>
-            </div>
-            <div class="card-footer d-flex justify-content-center align-items-center">
-              <span><?= $groupYoungest["effectif"] ?> membres</span>
-            </div>
-          </div>
+          <?php $this->load->view('groupes/partials/card_home.php', array('groupe' => $groupYoungest, 'tag' => 'span', 'active' => TRUE, 'stats' => "Moyenne : " . $groupYoungest['age'] . " ans")) ?>
         </div>
       </div>
       <div class="mt-5">
