@@ -112,24 +112,8 @@
             <!-- GROUPE AU HASARD CARD -->
             <div class="col-md-6 py-4">
               <h2>GROUPE AU HASARD</h2>
-              <div class="card card-groupe">
-                <div class="liseret" style="background-color: <?= $groupe_random["couleurAssociee"] ?>"></div>
-                <div class="card-avatar group">
-                  <picture>
-                    <source srcset="<?= asset_url(); ?>imgs/groupes/webp/<?= $groupe_random['libelleAbrev'] ?>.webp" type="image/webp">
-                    <source srcset="<?= asset_url(); ?>imgs/groupes/<?= $groupe_random['libelleAbrev'] ?>.png" type="image/png">
-                    <img src="<?= asset_url(); ?>imgs/groupes/<?= $groupe_random['libelleAbrev'] ?>.png" width="150" height="150" alt="<?= $groupe_random['libelle'] ?>">
-                  </picture>
-                </div>
-                <div class="card-body d-flex flex-column justify-content-center align-items-center">
-                  <span class="d-block card-title my-2">
-                    <a href="<?= base_url(); ?>groupes/<?php echo mb_strtolower($groupe_random['libelleAbrev']) ?>" class="stretched-link no-decoration"><?php echo $groupe_random['libelle'] ?></a>
-                  </span>
-                  <span><?= $groupe_random["libelleAbrev"] ?></span>
-                </div>
-                <div class="card-footer d-flex justify-content-center align-items-center">
-                  <span><?= $groupe_random["effectif"] ?> membres</span>
-                </div>
+              <div class="d-flex justify-content-center">
+                <?php $this->load->view('groupes/partials/card_home.php', array('groupe' => $groupe_random, 'tag' => 'span', 'active' => TRUE)) ?>
               </div>
             </div>
           </div>
