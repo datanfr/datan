@@ -243,7 +243,7 @@
     }
 
     public function get_accord_groupes_all($depute_uid, $legislature){
-      $sql = 'SELECT t1.accord, o.libelle, o.libelleAbrev, t1.votesN, CASE WHEN o.dateFin IS NULL THEN 1 ELSE 0 END AS ended
+      $sql = 'SELECT t1.accord, o.libelle, o.libelleAbrev, t1.votesN, CASE WHEN o.dateFin IS NULL THEN 0 ELSE 1 END AS ended
         FROM deputes_accord_cleaned t1
         LEFT JOIN organes o ON t1.organeRef = o.uid
         WHERE t1.mpId = ? AND t1.legislature = ?
@@ -505,7 +505,25 @@
       $query = $this->db->query($sql, $depute_uid);
 
       return $query->row_array();
+    }
 
+    public function get_stats_participation($depute_uid, $legislature){
+      $sql = 'SELECT A.*, B.*
+        FROM
+        (
+          SELECT ROUND(score*100) AS score, votesN
+          FROM class_participation
+          WHERE mpId = ? AND legislature = ?
+        ) A,
+        (
+          SELECT ROUND(AVG(score)*100) AS mean
+          FROM class_participation
+          WHERE legislature = ?
+        ) B
+      ';
+      $query = $this->db->query($sql, array($depute_uid, $legislature, $legislature));
+
+      return $query->row_array();
     }
 
     public function get_stats_loyaute($depute_uid, $legislature){
@@ -552,7 +570,7 @@
           SELECT ROUND(AVG(t1.score)*100) AS mean
           FROM class_majorite t1
           LEFT JOIN deputes_all da ON t1.mpId = da.mpId
-          WHERE da.groupeId != ?  AND da.legislature = ? AND dateFin IS NULL
+          WHERE da.groupeId != ?  AND da.legislature = ?
         ) B
       ';
       $query = $this->db->query($sql, array($depute_uid, $legislature, majority_group(), $legislature));

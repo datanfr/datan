@@ -63,12 +63,18 @@
                       <div class="value">Commission <?= $commission_parlementaire['commissionAbrege'] ?></div>
                     </li>
                   <?php endif; ?>
+                  <?php if (!($active)): ?>
+                    <li class="mb-0">
+                      <div class="label"><?php echo file_get_contents(base_url() . '/assets/imgs/icons/calendar-date-fill.svg') ?></div>
+                      <div class="value">Dernier mandat : <?= $depute['legislature'] ?><sup>e</sup> législature</div>
+                    </li>
+                  <?php endif; ?>
                 </ul>
               </div>
             </div>
             <?php if ($active) : ?>
               <div class="mandats d-flex justify-content-center align-items-center active">
-                <span class="active"><?= mb_strtoupper($mandat_edito) ?> MANDAT</span>
+                <span class="active">EN ACTIVITÉ</span>
               </div>
             <?php else : ?>
               <div class="mandats d-flex justify-content-center align-items-center inactive">
@@ -327,16 +333,16 @@
           <div class="card">
             <div class="card-body">
               <?php if ($active) : ?>
-                <p>
+                <p class="mb-0">
                   <?= $title ?> est <?= $gender['le'] ?> député<?= $gender['e'] ?> de la <?= $depute["circo"] ?><sup><?= $depute["circo_abbrev"] ?></sup> circonscription <?= $depute['dptLibelle2'] ?><a href="<?= base_url() ?>deputes/<?= $depute['dptSlug'] ?>"><?= $depute['departementNom'] . ' (' . $depute['departementCode'] . ')' ?></a>.
                 </p>
               <?php else : ?>
-                <p>
+                <p class="mb-0">
                   <?= $title ?> était <?= $gender['le'] ?> député<?= $gender['e'] ?> de la <?= $depute["circo"] ?><sup><?= $depute["circo_abbrev"] ?></sup> circonscription <?= $depute['dptLibelle2'] ?><a href="<?= base_url() ?>deputes/<?= $depute['dptSlug'] ?>"><?= $depute['departementNom'] . ' (' . $depute['departementCode'] . ')' ?></a>.
                 </p>
               <?php endif; ?>
               <?php if (!empty($election_result)) : ?>
-                <p>
+                <p class="mt-2">
                   <?= ucfirst($gender['pronom']) ?> a été élu<?= $gender['e'] ?> au <b><?= $election_result['tour_election'] ?> tour</b> avec <?= $election_result['score_pct'] ?>% des voix.
                 </p>
               <?php endif; ?>
@@ -358,9 +364,14 @@
           </div>
         </div><!-- // END BLOC ELECTION -->
         <!-- BLOC STATISTIQUES -->
-        <?php if ($depute['legislature'] == legislature_current()) : ?>
+        <?php if (in_array($depute['legislature'], legislature_all())) : ?>
           <div class="bloc-statistiques mt-5">
-            <h2 class="mb-3">Son comportement politique</h2>
+            <h2 class="mb-3">
+              Son comportement politique
+              <?php if ($depute['legislature'] != legislature_current()): ?>
+                (<?= $depute['legislature'] ?><sup>e</sup> législature)
+              <?php endif; ?>
+            </h2>
             <div class="card card-statistiques my-4">
               <div class="card-body">
                 <div class="row">
@@ -381,8 +392,8 @@
                   <?php else : ?>
                     <div class="col-lg-3 offset-lg-1 mt-2">
                       <div class="d-flex justify-content-center align-items-center">
-                        <div class="c100 p<?= $participation_commission['score'] ?> m-0">
-                          <span><?= $participation_commission['score'] ?> %</span>
+                        <div class="c100 p<?= $participation['score'] ?> m-0">
+                          <span><?= $participation['score'] ?> %</span>
                           <div class="slice">
                             <div class="bar"></div>
                             <div class="fill"></div>
@@ -392,17 +403,29 @@
                     </div>
                     <div class="col-lg-8 infos mt-4 mt-lg-2">
                       <div class="texte ml-md-3 pl-md-3 mt-md-0 mt-3">
-                        <p>
-                          <?php if ($active) : ?>
-                            Depuis sa prise de fonctions,
-                          <?php else : ?>
-                            Quand <?= $gender['pronom'] ?> était en activité à l'Assemblée,
-                          <?php endif; ?>
-                          <?= $title ?> a participé à <?= $participation_commission['score'] ?> % des votes ayant un lien avec son domaine de spécialisation.
-                        </p>
-                        <p><?= ucfirst($gender['pronom']) ?> <?= $active ? "vote" : "votait" ?> donc <b><?= $edito_participation_commission['phrase'] ?></b> que la moyenne des députés, qui est de <?= $participation_commission['mean'] ?> %.</p>
-                        <p>Ce score prend en compte les votes éléctroniques en séance publique sur les textes qui ont été examinés dans la commission du député. Ce sont sur ces textes que les élus sont susceptibles d'avoir un intérêt ou une expertise pariculière.</p>
-                        <p><i>Nous avons modifié le score de participation le 31 janvier 2021. Désormais, le score ne prend en compte que les textes en lien avec la commission du parlementaire du député.</i></p>
+                        <?php if ($depute['legislature'] == legislature_current()): ?>
+                          <p>
+                            <?php if ($active) : ?>
+                              Depuis sa prise de fonctions,
+                            <?php else : ?>
+                              Quand <?= $gender['pronom'] ?> était en activité à l'Assemblée,
+                            <?php endif; ?>
+                            <?= $title ?> a participé à <?= $participation['score'] ?> % des votes ayant un lien avec son domaine de spécialisation.
+                          </p>
+                          <p>
+                            <?= ucfirst($gender['pronom']) ?> <?= $active ? "vote" : "votait" ?> donc <b><?= $edito_participation['phrase'] ?></b> que la moyenne des députés, qui est de <?= $participation['mean'] ?> %.
+                          </p>
+                          <p>
+                            Ce score prend en compte les votes éléctroniques en séance publique sur les textes qui ont été examinés dans la commission du député. Ce sont sur ces textes que les élus sont susceptibles d'avoir un intérêt ou une expertise pariculière.
+                          </p>
+                        <?php else: ?>
+                          <p>
+                            Pendant la <?= $depute['legislature'] ?><sup>e</sup> législature, <?= $title ?> a participé à <?= $participation['score'] ?> % des votes électroniques à l'Assemblée nationale.
+                          </p>
+                          <p>
+                            <?= ucfirst($gender['pronom']) ?> <?= $active ? "vote" : "votait" ?> donc <b><?= $edito_participation['phrase'] ?></b> que la moyenne des députés, qui était de <?= $participation['mean'] ?> %.
+                          </p>
+                        <?php endif; ?>
                       </div>
                     </div>
                   <?php endif; ?>
@@ -440,13 +463,24 @@
                     </div>
                     <div class="col-lg-8 infos mt-4 mt-lg-2">
                       <div class="texte ml-md-3 pl-md-3 mt-md-0 mt-3">
-                        <p><?php if (!$active) : ?>Quand <?= $gender['pronom'] ?> était en activité, <?php endif; ?><?= $title ?> a voté sur la même ligne que son groupe dans <?= $loyaute['score'] ?>% des cas.</p>
-                        <p>
-                          <?= ucfirst($gender['pronom']) ?> <?= $active ? "est" : "était" ?> donc <b><?= $edito_loyaute['phrase'] ?><?= $gender['e'] ?></b> que la moyenne des députés, qui est de <?= $loyaute['mean'] ?>%.
-                        </p>
+                        <?php if ($depute['legislature'] == legislature_current()): ?>
+                          <p>
+                            <?php if (!$active) : ?>Quand <?= $gender['pronom'] ?> était en activité, <?php endif; ?><?= $title ?> a voté sur la même ligne que son groupe politique dans <?= $loyaute['score'] ?>% des cas.
+                          </p>
+                          <p>
+                            <?= ucfirst($gender['pronom']) ?> <?= $active ? "est" : "était" ?> donc <b><?= $edito_loyaute['phrase'] ?><?= $gender['e'] ?></b> que la moyenne des députés, qui est de <?= $loyaute['mean'] ?>%.
+                          </p>
+                        <?php else: ?>
+                            <p>
+                              Pendant la <?= $depute['legislature'] ?><sup>e</sup> législature, <?= $title ?> a voté sur la même ligne que son groupe politique dans <?= $loyaute['score'] ?>% des cas.
+                            </p>
+                            <p>
+                              <?= ucfirst($gender['pronom']) ?> <?= $active ? "est" : "était" ?> donc <b><?= $edito_loyaute['phrase'] ?><?= $gender['e'] ?></b> que la moyenne des députés, qui est de <?= $loyaute['mean'] ?>%.
+                            </p>
+                        <?php endif; ?>
                         <?php if (isset($loyaute_history)) : ?>
                           <p>
-                            <?= $title ?> a appartenu à plusieurs groupes parlementaires. Pour voir son taux de loyauté avec ces différents groupes, <a data-toggle="collapse" href="#collapseLoyaute" role="button" aria-expanded="false" aria-controls="collapseLoyaute">cliquez ici</a>.
+                            Ce score ne prend en compte que le dernier groupe politique auquel <?= $title ?> a appartenu. Pour voir les taux de loyauté <?= $gender['du'] ?> <?= $gender['depute'] ?> avec ses précédents groupes, <a data-toggle="collapse" href="#collapseLoyaute" role="button" aria-expanded="false" aria-controls="collapseLoyaute">cliquez ici</a>.
                           </p>
                           <div class="collapse my-4" id="collapseLoyaute">
                             <table class="table">
@@ -470,7 +504,6 @@
                             </table>
                           </div>
                         <?php endif; ?>
-                        <p><i>Nous avons modifé le calcul de ce score le 26 janvier 2021. Désormais, il s'agit de taux de loyauté du député à son groupe actuel (ou le dernier groupe pour les députés plus en activité), et non à tous les groupes auxquels il ou elle a pu appartenir.</i></p>
                       </div>
                     </div>
                   <?php endif; ?>
@@ -510,8 +543,21 @@
                       </div>
                       <div class="col-lg-8 infos mt-4 mt-lg-2">
                         <div class="texte ml-md-3 pl-md-3 mt-md-0 mt-3">
-                          <p><?= $title ?> a voté comme la majoité présientielle (<a href="<?= base_url() ?>groupes/larem">La République en Marche</a>) dans <?= $majorite['score'] ?> % des cas.</p>
-                          <p><?= ucfirst($gender['pronom']) ?> <?= $active ? "est" : "était" ?> <b><?= $edito_majorite ?></b> de la majorité présidentielle que la moyenne des députés n'y appartenant pas, qui est de (<?= $majorite['mean'] ?> %).</p>
+                          <?php if ($depute['legislature'] == legislature_current()): ?>
+                            <p>
+                              <?= $title ?> a voté comme la majoité présientielle (<a href="<?= base_url() ?>groupes/larem">La République en Marche</a>) dans <?= $majorite['score'] ?> % des cas.
+                            </p>
+                            <p>
+                              <?= ucfirst($gender['pronom']) ?> <?= $active ? "est" : "était" ?> <b><?= $edito_majorite ?></b> de la majorité présidentielle que la moyenne des députés n'y appartenant pas, qui est de <?= $majorite['mean'] ?> %.
+                            </p>
+                          <?php else: ?>
+                            <p>
+                              Pendant la <?= $depute['legislature'] ?><sup></sup> législature, <?= $title ?> a voté comme le groupe de la majorité présidentielle dans <?= $majorite['score'] ?> % des cas.
+                            </p>
+                            <p>
+                              <?= ucfirst($gender['pronom']) ?> <?= $active ? "est" : "était" ?> <b><?= $edito_majorite ?></b> de la majorité présidentielle que la moyenne des députés, qui est de <?= $majorite['mean'] ?> %.
+                            </p>
+                          <?php endif; ?>
                         </div>
                       </div>
                     <?php endif; ?>
@@ -536,7 +582,7 @@
                 <?php if ($no_votes != TRUE) : ?>
                   <div class="row">
                     <div class="offset-2 col-10">
-                      <h4><?= $title ?> vote <b>souvent</b> avec :</h4>
+                      <h4><?= $title ?> <?= $depute['legislature'] == legislature_current() ? "vote" : "votait" ?> <b>souvent</b> avec :</h4>
                     </div>
                   </div>
                   <div class="row mt-1 bar-container pr-2">
@@ -574,22 +620,24 @@
                   </div>
                   <div class="row mt-3">
                     <div class="offset-2 col-10">
-                      <p>
-                        <?php if ($group['libelleAbrev'] != "NI") : ?>
-                          En plus de son propre groupe,
-                        <?php else : ?>
-                          Le
-                        <?php endif; ?>
-                        <b><?= $title ?></b> <?= $active ? "vote" : "votait" ?> souvent (dans <?= $proximite["first1"]["accord"] ?>% des cas) avec le groupe <a href="<?= base_url() ?>groupes/<?= mb_strtolower($proximite["first1"]["libelleAbrev"]) ?>"><?= $proximite["first1"]["libelleAbrev"] ?></a>, <?= $proximite["first1"]["maj_pres"] ?>
-                        <?php if ($proximite['first1']["libelleAbrev"] != "NI") : ?>
-                          classé <?= $proximite["first1"]["ideologiePolitique"] ?> de l'échiquier politique.
-                      </p>
-                    <?php endif; ?>
+                      <?php if ($depute['legislature'] == legislature_current()): ?>
+                        <p>
+                          <?php if ($group['libelleAbrev'] != "NI") : ?>
+                            En plus de son propre groupe,
+                          <?php else : ?>
+                            Le
+                          <?php endif; ?>
+                          <b><?= $title ?></b> <?= $active ? "vote" : "votait" ?> souvent (dans <?= $proximite["first1"]["accord"] ?>% des cas) avec le groupe <a href="<?= base_url() ?>groupes/<?= mb_strtolower($proximite["first1"]["libelleAbrev"]) ?>"><?= $proximite["first1"]["libelleAbrev"] ?></a>, <?= $proximite["first1"]["maj_pres"] ?>
+                          <?php if ($proximite['first1']["libelleAbrev"] != "NI") : ?>
+                            classé <?= $proximite["first1"]["ideologiePolitique"] ?> de l'échiquier politique.
+                          <?php endif; ?>
+                        </p>
+                      <?php endif; ?>
                     </div>
                   </div>
                   <div class="row mt-5">
                     <div class="col-10 offset-2">
-                      <h4><?= ucfirst($gender['pronom']) ?> vote <b>rarement</b> avec :</h4>
+                      <h4><?= ucfirst($gender['pronom']) ?> <?= $depute['legislature'] == legislature_current() ? "vote" : "votait" ?> <b>rarement</b> avec :</h4>
                     </div>
                   </div>
                   <div class="row mt-1 bar-container pr-2">
@@ -627,11 +675,15 @@
                   </div>
                   <div class="row mt-3">
                     <div class="col-10 offset-2 ">
-                      <p>À l'opposé, le groupe avec lequel <?= $title; ?> <?= $active ? "est" : "était" ?> le moins proche est <a href="<?= base_url() ?>groupes/<?= mb_strtolower($proximite["last1"]["libelleAbrev"]) ?>"><?= $proximite["last1"]["libelle"] ?></a>, <?= $proximite["last1"]["maj_pres"] ?>
-                        <?php if ($proximite['last1']["libelleAbrev"] != "NI") : ?>
-                          classé <?= $proximite["last1"]["ideologiePolitique"] ?> de l'échiquier politique.
-                        <?php endif; ?>
-                        <?= ucfirst($gender["pronom"]) ?> <?= $active ? "ne vote" : "n'a voté" ?> avec ce groupe que dans <b><?= $proximite["last1"]["accord"] ?>%</b> des cas.</p>
+                      <?php if ($depute['legislature'] == legislature_current()): ?>
+                        <p>
+                          À l'opposé, le groupe avec lequel <?= $title; ?> <?= $active ? "est" : "était" ?> le moins proche est <a href="<?= base_url() ?>groupes/<?= mb_strtolower($proximite["last1"]["libelleAbrev"]) ?>"><?= $proximite["last1"]["libelle"] ?></a>, <?= $proximite["last1"]["maj_pres"] ?>
+                          <?php if ($proximite['last1']["libelleAbrev"] != "NI") : ?>
+                            classé <?= $proximite["last1"]["ideologiePolitique"] ?> de l'échiquier politique.
+                          <?php endif; ?>
+                          <?= ucfirst($gender["pronom"]) ?> <?= $active ? "ne vote" : "n'a voté" ?> avec ce groupe que dans <b><?= $proximite["last1"]["accord"] ?>%</b> des cas.
+                        </p>
+                      <?php endif; ?>
                     </div>
                   </div>
                   <div class="row mt-4">
@@ -676,6 +728,10 @@
             </div> <!-- // END BLOC PROXIMITY -->
           </div> <!-- // END BLOC STATISTIQUES -->
         <?php endif; ?>
+        <!-- BLOC HISTORIQUE MANDATS -->
+        <div class="mt-5">
+          <h2>Tous les mandats de <?= $title ?></h2>
+        </div> <!-- // END BLOC HISTORIQUE MANDAT -->
         <!-- BLOC SOCIAL-MEDIA -->
         <div class="bloc-links p-lg-0 p-md-2 mt-5">
           <h2>En savoir plus sur <?= $title ?></h2>
@@ -711,7 +767,7 @@
           </div>
         </div> <!-- END BLOC SOCIAL MEDIA -->
         <!-- BLOC CONTACT -->
-        <?php if ($depute['mailAn'] !== NULL) : ?>
+        <?php if ($depute['mailAn'] !== NULL && $active) : ?>
           <div class="bloc-links p-lg-0 p-md-2 mt-5">
             <h2>Contacter <?= $title ?></h2>
             <div class="row mt-4">

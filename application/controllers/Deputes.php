@@ -205,17 +205,21 @@
       $data['regionales2021'] = $this->elections_model->get_candidate($depute_uid, 1/* Régionales 2021 */);
 
       // Statistiques
-      if ($legislature == legislature_current()) {
+      if (in_array($legislature, legislature_all())) {
         // Participation (votes related to commission)
-        $data['participation_commission'] = $this->deputes_model->get_stats_participation_commission($depute_uid);
-        if ($data['participation_commission']['votesN'] < 5) {
+        if ($legislature == legislature_current()) {
+          $data['participation'] = $this->deputes_model->get_stats_participation_commission($depute_uid);
+        } else {
+          $data['participation'] = $this->deputes_model->get_stats_participation($depute_uid, $legislature);
+        }
+        if ($data['participation']['votesN'] < 5) {
           $data['no_participation'] = TRUE;
         } else {
           $data['no_participation'] = FALSE;
         }
-        $data['edito_participation_commission'] = $this->depute_edito->participation($data['participation_commission']['score'], $data['participation_commission']['mean']); //edited
+        $data['edito_participation'] = $this->depute_edito->participation($data['participation']['score'], $data['participation']['mean']); //edited
         // loyalty
-        $data['loyaute'] = $this->deputes_model->get_stats_loyaute($depute_uid, legislature_current());
+        $data['loyaute'] = $this->deputes_model->get_stats_loyaute($depute_uid, $legislature);
         if ($data['loyaute']['votesN'] < 75) {
           $data['no_loyaute'] = TRUE;
         } else {
@@ -223,9 +227,10 @@
         }
         $data['edito_loyaute'] = $this->depute_edito->loyaute($data['loyaute']['score'], $data['loyaute']['mean']); // edited
         // loyalty history
-        $data['loyaute_history'] = $this->deputes_model->get_stats_loyaute_history($depute_uid, legislature_current());
+        $data['loyaute_history'] = $this->deputes_model->get_stats_loyaute_history($depute_uid, $legislature);
         // proximity with majority
-        $data['majorite'] = $this->deputes_model->get_stats_majorite($depute_uid, legislature_current());
+        $data['majorite'] = $this->deputes_model->get_stats_majorite($depute_uid, $legislature);
+        print_r($data['majorite']);
         if ($data['majorite']['votesN'] < 75) {
           $data['no_majorite'] = TRUE;
         } else {
@@ -233,26 +238,43 @@
         }
         $data['edito_majorite'] = $this->depute_edito->majorite($data['majorite']['score'], $data['majorite']['mean']); //edited
         // proximity with all groups
-        $data['accord_groupes_actifs'] = $this->deputes_model->get_accord_groupes_actifs($depute_uid, legislature_current());
-        $data['accord_groupes_all'] = $this->deputes_model->get_accord_groupes_all($depute_uid, legislature_current());
-        $accord_groupes_n = count($data['accord_groupes_actifs']);
+        if ($legislature == legislature_current()) /*LEGISLATURE 15*/ {
+          $data['accord_groupes'] = $this->deputes_model->get_accord_groupes_actifs($depute_uid, legislature_current());
+          $data['accord_groupes_all'] = $this->deputes_model->get_accord_groupes_all($depute_uid, legislature_current());
+
+          // Positionnement politique
+          $accord_groupes_sorted = $data['accord_groupes'];
+          if (empty($accord_groupes_sorted)) {
+            $data["no_votes"] = TRUE;
+          } else {
+            $data["no_votes"] = FALSE;
+            $sort_key  = array_column($accord_groupes_sorted, 'accord');
+            array_multisort($sort_key, SORT_DESC, $accord_groupes_sorted);
+            $data['proximite'] = $this->depute_edito->positionnement($accord_groupes_sorted, $groupe_id);
+          }
+          $data['infos_groupes'] = groupsPositionEdited();
+
+        } else /* LEGISLATURE 14 */ {
+          $data['accord_groupes'] = $this->deputes_model->get_accord_groupes_all($depute_uid, $legislature);
+          $data['accord_groupes_all'] = $data['accord_groupes'];
+          print_r($data['accord_groupes']);
+
+          if ($data['accord_groupes']) {
+            $data['no_votes'] = FALSE;
+          } else {
+            $data['no_votes'] = TRUE;
+          }
+
+        }
+
+        $accord_groupes_n = count($data['accord_groupes']);
         $accord_groupes_divided = round($accord_groupes_n / 2, 0, PHP_ROUND_HALF_UP);
-        $data['accord_groupes_first'] = array_slice($data['accord_groupes_actifs'], 0, $accord_groupes_divided);
+        $data['accord_groupes_first'] = array_slice($data['accord_groupes'], 0, $accord_groupes_divided);
         $data['accord_groupes_first'] = array_slice($data['accord_groupes_first'], 0, 3);
-        $data['accord_groupes_last'] = array_slice($data['accord_groupes_actifs'], $accord_groupes_divided, $accord_groupes_n);
+        $data['accord_groupes_last'] = array_slice($data['accord_groupes'], $accord_groupes_divided, $accord_groupes_n);
         $data['accord_groupes_last'] = array_slice($data['accord_groupes_last'], -3);
         $data['accord_groupes_last_sorted'] = array_reverse($data['accord_groupes_last']);
-        // Positionnement politique
-        $accord_groupes_sorted = $data['accord_groupes_actifs'];
-        if (empty($accord_groupes_sorted)) {
-          $data["no_votes"] = TRUE;
-        } else {
-          $data["no_votes"] = FALSE;
-          $sort_key  = array_column($accord_groupes_sorted, 'accord');
-          array_multisort($sort_key, SORT_DESC, $accord_groupes_sorted);
-          $data['proximite'] = $this->depute_edito->positionnement($accord_groupes_sorted, $groupe_id);
-        }
-        $data['infos_groupes'] = $this->depute_edito->infos_groupes();
+
       }
 
       // Get other MPs
