@@ -9,9 +9,9 @@
   </div>
   <div class="card-body d-flex align-items-center justify-content-center">
     <div>
-        <<?= $tag ?> class="d-block card-title">
-          <a href="<?php echo base_url(); ?>deputes/<?php echo $depute['dptSlug'].'/depute_'.$depute['nameUrl'] ?>" class="stretched-link no-decoration"><?php echo $depute['nameFirst'] .' ' . $depute['nameLast'] ?></a>
-        </<?= $tag ?>>
+      <<?= $tag ?> class="d-block card-title">
+        <a href="<?php echo base_url(); ?>deputes/<?php echo $depute['dptSlug'].'/depute_'.$depute['nameUrl'] ?>" class="stretched-link no-decoration"><?php echo $depute['nameFirst'] .' ' . $depute['nameLast'] ?></a>
+      </<?= $tag ?>>
       <?php if (isset($stats)): ?>
         <span class="badge badge-primary badge-stats mb-3"><?= $stats ?></span>
       <?php endif; ?>
