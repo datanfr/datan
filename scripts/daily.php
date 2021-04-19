@@ -742,8 +742,8 @@ class Script
         echo "deputeJson starting \n";
         $reponse = $this->bdd->query('
         SELECT da.mpId, da.nameFirst, da.nameLast, da.nameUrl, da.dptSlug
-        FROM deputes_all da
-        WHERE da.legislature = 15
+        FROM deputes_last da
+        WHERE da.legislature IN (14,15)
         ');
 
         $array = array();
