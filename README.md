@@ -23,3 +23,4 @@ grunt watch
 ## Windows
 Il faut au préalable installer Ruby et possiblement lancer "gem install sass"  
 Si problème de permissions supprimer le dossier .sass-cache  
+Si problème pour le lancement de la newsletter: https://stackoverflow.com/questions/21114371/php-curl-error-code-60  
