@@ -8,7 +8,7 @@ function sendMail($subject, $template, $to){
         'Messages' => [
             [
                 'From' => [
-                    'Email' => "no-reply@datan.fr",
+                    'Email' => "info@datan.fr",
                     'Name' => "Datan"
                 ],
                 'To' => [
