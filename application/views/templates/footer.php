@@ -73,7 +73,7 @@
           -->
             <div class="col-md-4 d-flex flex-column justify-content-center">
               <p>© Datan 2021 - Tous droits réservés</p>
-              <p>Nous contacter : <a href="mailto:contact@datan.fr" class="no-decoration underline">contact@datan.fr</a></p>
+              <p>Nous contacter : <a href="mailto:info@datan.fr" class="no-decoration underline">info@datan.fr</a></p>
               <div class="social-media">
                 <a href="https://www.facebook.com/datanFR/" target="_blank" class="no-decoration" rel="noopener">
                   <img class="img-lazy placeholder" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" data-src="<?= asset_url() ?>imgs/logos/facebook_datan.png" alt="Logo Facebook Datan">
