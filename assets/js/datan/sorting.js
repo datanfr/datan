@@ -9,7 +9,6 @@ var $grid = $('.sorting').isotope({
     var $this = $(this);
     var searchResult = qsRegex ? $this.text().match( qsRegex ) : true;
     var buttonResult = buttonFilter ? $this.is( buttonFilter ) : true;
-    console.log(buttonFilter);
     return searchResult && buttonResult;
   }
 });
