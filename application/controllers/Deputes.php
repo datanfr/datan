@@ -256,7 +256,6 @@
         } else /* LEGISLATURE 14 */ {
           $data['accord_groupes'] = $this->deputes_model->get_accord_groupes_all($depute_uid, $legislature);
           $data['accord_groupes_all'] = $data['accord_groupes'];
-          print_r($data['accord_groupes']);
 
           if ($data['accord_groupes']) {
             $data['no_votes'] = FALSE;
