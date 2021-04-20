@@ -15,7 +15,10 @@
                 L'Assemblée nationale compte actuellement <?= $male["n"] ?> députés hommes (<?= $male["percentage"] ?> %) et <?= $female["n"] ?> femmes (<?= $female["percentage"] ?> %).
               </p>
               <p>
-                Depuis leur élection, <?= $number_inactive ?> députés ont quitté l'Assemblée pour cause de nomination au Gouvernement, de démission ou de décès. Pour découvrir ces députés qui ne sont plus en activité en <a href="<?= base_url() ?>deputes/inactifs" ?>cliquez ici</a>.
+                Depuis leur élection, <b><?= $number_inactive ?> députés ont quitté l'Assemblée</b> pour cause de nomination au Gouvernement, de démission ou de décès. Pour découvrir ces députés qui ne sont plus en activité en <a href="<?= base_url() ?>deputes/inactifs" ?>cliquez ici</a>.
+              </p>
+              <p>
+                <b>Envie de découvrir les députés de la législature précédente ?</b> Nous avons mis en ligne sur Datan les députés de la <a href="<?= base_url() ?>deputes/legislature-14">14ème législature</a>.
               </p>
             <?php else: ?>
               <p>
@@ -31,6 +34,9 @@
             </p>
             <p>
               Pendant la <?= $legislature ?><sup></sup> législature, il y avait à l'Assemblée nationale <?= $male["n"] ?> députés hommes (<?= $male["percentage"] ?> %) et <?= $female["n"] ?> femmes (<?= $female["percentage"] ?> %).
+            </p>
+            <p>
+              Pour découvrir les députés de la législature actuelle, <a href="<?= base_url() ?>deputes">cliquez ici</a>.
             </p>
           <?php endif; ?>
         </div>

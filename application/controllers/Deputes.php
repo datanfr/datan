@@ -230,7 +230,6 @@
         $data['loyaute_history'] = $this->deputes_model->get_stats_loyaute_history($depute_uid, $legislature);
         // proximity with majority
         $data['majorite'] = $this->deputes_model->get_stats_majorite($depute_uid, $legislature);
-        print_r($data['majorite']);
         if ($data['majorite']['votesN'] < 75) {
           $data['no_majorite'] = TRUE;
         } else {
@@ -303,11 +302,10 @@
       $data['depute']['datePriseFonctionLettres'] = utf8_encode(strftime('%B %Y', strtotime($data['depute']['datePriseFonction'])));
       $data['history_average'] = $this->deputes_model->get_history_all_deputes($depute_uid);
       $data['mandat_edito'] = $this->depute_edito->get_nbr_lettre($data['depute']['mandatesN']);
-
-      // History
       $duree_depute = round($data['depute']['mpLength']/365);
       $duree_average = $data['history_average']['length'];
       $data['history_edito'] = $this->depute_edito->history($duree_depute, $duree_average);
+      $data['mandats'] = $this->deputes_model->get_historique_mandats($depute_uid);
 
       // Gender
       $gender = $data['depute']['civ'];
