@@ -52,7 +52,7 @@
       "url" : "https://datan.fr",
       "logo": "https://datan.fr/assets/imgs/datan/logo_datan.png",
       "sameAs" : ["https://www.facebook.com/datanFR","https://twitter.com/datanFR"],
-      "email" : "contact@datan.fr"
+      "email" : "info@datan.fr"
     }
     </script>
 
