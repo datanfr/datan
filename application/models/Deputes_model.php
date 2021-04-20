@@ -43,6 +43,17 @@
       return $query->result_array();
     }
 
+    public function get_historique_mandats($id){
+      $sql = 'SELECT *
+        FROM deputes_all
+        WHERE mpId = ?
+        ORDER BY legislature DESC
+      ';
+      $query = $this->db->query($sql, $id);
+
+      return $query->result_array();
+    }
+
     public function get_n_deputes_inactive(){
       $this->db->where('legislature = 15');
       $this->db->where('dateFin IS NOT NULL');

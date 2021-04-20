@@ -729,8 +729,29 @@
           </div> <!-- // END BLOC STATISTIQUES -->
         <?php endif; ?>
         <!-- BLOC HISTORIQUE MANDATS -->
-        <div class="mt-5">
-          <h2>Tous les mandats de <?= $title ?></h2>
+        <div class="bloc-mandats mt-5">
+          <h2 class="mb-4">Historique des mandats</h2>
+          <?php if (count($mandats) > 1): ?>
+            <p>
+              <?= $title ?> a été élu<?= $gender['e'] ?> à plusieurs reprises. Au total, <?= $gender['pronom'] ?> a été <?= $gender['depute'] ?> à l'Assemblée nationale pendant <?= $depute['lengthEdited'] ?>.
+            </p>
+          <?php else: ?>
+            <p>
+              <?= $title ?> n'a été élu<?= $gender['e'] ?> <?= $gender['depute'] ?> qu'une fois. Au total, <?= $gender['pronom'] ?> a été <?= $gender['depute'] ?> à l'Assemblée nationale pendant <?= $depute['lengthEdited'] ?>.
+            </p>
+            </p>
+          <?php endif; ?>
+          <div class="row">
+            <?php foreach ($mandats as $mandat): ?>
+              <?php if ($mandat['legislature'] != 13 && $mandat['legislature'] != legislature_current()): ?>
+                <div class="col-12 col-sm-6 mt-2 d-flex justify-content-center">
+                  <a class="btn d-flex align-items-center justify-content-center" href="<?= base_url() ?>deputes/<?= $mandat['dptSlug'] ?>/<?= $mandat['nameUrl'] ?>/legislature-<?= $mandat['legislature'] ?>">
+                    <?= $mandat['legislature'] ?>ème législature
+                  </a>
+                </div>
+              <?php endif; ?>
+            <?php endforeach; ?>
+          </div>
         </div> <!-- // END BLOC HISTORIQUE MANDAT -->
         <!-- BLOC SOCIAL-MEDIA -->
         <div class="bloc-links p-lg-0 p-md-2 mt-5">
