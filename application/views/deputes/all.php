@@ -1,4 +1,4 @@
-<div class="container-fluid pg-depute-all" id="container-always-fluid">
+<div class="container-fluid pg-depute-all mb-5" id="container-always-fluid">
   <div class="row">
     <div class="container">
       <div class="row row-grid bloc-titre">
@@ -93,7 +93,7 @@
         <div class="col-lg-9 col-md-12">
           <div class="row mt-2 sorting">
             <?php foreach ($deputes as $depute): ?>
-              <div class="col-lg-4 col-md-6 sorting-item <?= strtolower($depute["libelleAbrev"]) ?> d-flex justify-content-center">
+              <div class="col-md-6 col-xl-4 sorting-item <?= strtolower($depute["libelleAbrev"]) ?>">
                 <?php $this->load->view('deputes/partials/card_home.php', array('depute' => $depute, 'tag' => 'h2')) ?>
               </div>
             <?php endforeach; ?>
