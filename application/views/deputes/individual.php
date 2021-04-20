@@ -743,7 +743,7 @@
           <?php endif; ?>
           <div class="row">
             <?php foreach ($mandats as $mandat): ?>
-              <?php if ($mandat['legislature'] != 13 && $mandat['legislature'] != legislature_current()): ?>
+              <?php if ($mandat['legislature'] != 13): ?>
                 <div class="col-12 col-sm-6 mt-2 d-flex justify-content-center">
                   <a class="btn d-flex align-items-center justify-content-center" href="<?= base_url() ?>deputes/<?= $mandat['dptSlug'] ?>/<?= $mandat['nameUrl'] ?>/legislature-<?= $mandat['legislature'] ?>">
                     <?= $mandat['legislature'] ?>ème législature
@@ -752,6 +752,17 @@
               <?php endif; ?>
             <?php endforeach; ?>
           </div>
+          <p class="mt-4">
+            En plus de ces mandats, <?= $title ?> a également été député pendant les législatures suivantes :
+            <?php $i = 1; ?>
+            <?php foreach ($mandats as $mandat): ?>
+              <?php if ($mandat['legislature'] < 14): ?>
+                <i><?= $mandat['legislature'] ?>ème législature</i><?php if ($i < count($mandats)): ?>,<?php else: ?>.<?php endif; ?>
+              <?php endif; ?>
+              <?php $i++; ?>
+            <?php endforeach; ?>
+            Nous n'avons pas de données disponibles sur Datan pour ces législatures.
+          </p>
         </div> <!-- // END BLOC HISTORIQUE MANDAT -->
         <!-- BLOC SOCIAL-MEDIA -->
         <div class="bloc-links p-lg-0 p-md-2 mt-5">
