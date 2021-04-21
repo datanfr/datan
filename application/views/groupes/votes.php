@@ -9,9 +9,11 @@
               <!-- IMAGE GROUPE -->
               <div class="img">
                 <div class="d-flex justify-content-center">
-                  <div>
-                    <img src="<?= asset_url(); ?>imgs/groupes/<?= $groupe['libelleAbrev'] ?>.png" alt="<?= $groupe['libelle'] ?>">
-                  </div>
+                  <picture>
+                    <source srcset="<?= asset_url(); ?>imgs/groupes/webp/<?= $groupe['libelleAbrev'] ?>.webp" type="image/webp">
+                    <source srcset="<?= asset_url(); ?>imgs/groupes/<?= $groupe['libelleAbrev'] ?>.png" type="image/png">
+                    <img src="<?= asset_url(); ?>imgs/groupes/<?= $groupe['libelleAbrev'] ?>.png" width="150" height="150" alt="<?= $groupe['libelle'] ?>">
+                  </picture>
                 </div>
               </div>
               <!-- INFOS GENERALES -->
@@ -35,7 +37,7 @@
                       <div class="value"><?= $president['nameFirst']." ".$president['nameLast'] ?></div>
                     </li>
                     <li>
-                      <div class="label">Positionnement</div>
+                      <div class="label">Position</div>
                       <div class="value"><?= ucfirst($edito['ideology']) ?></div>
                     </li>
                   <?php endif; ?>
