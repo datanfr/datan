@@ -159,7 +159,7 @@
       }
 
       // Check if it is in legislature 14 or 15
-      if (!in_array($data['depute']['legislature'], array(14,15))) {
+      if (!in_array($data['depute']['legislature'], legislature_all())) {
         show_404();
       }
 
@@ -307,8 +307,7 @@
       $data['mandats'] = $this->deputes_model->get_historique_mandats($depute_uid);
 
       // Gender
-      $gender = $data['depute']['civ'];
-      $data['gender'] = $this->depute_edito->gender($gender);
+      $data['gender'] = $this->depute_edito->gender($data['depute']['civ']);
 
       // Meta
       $data['url'] = $this->meta_model->get_url();
@@ -367,8 +366,98 @@
       $this->load->view('deputes/individual', $data);
       $this->load->view('templates/breadcrumb', $data);
       $this->load->view('templates/footer');
+    }
 
+    public function historique($nameUrl, $departement, $legislature){
+      // Check with this page : http://localhost/datan/deputes/ille-et-vilaine-35/depute_thierry-benoit/legislature-14
+      $data['depute'] = $this->deputes_model->get_depute_individual_historique($nameUrl, $departement, $legislature);
+      $depute_last = $this->deputes_model->get_depute_individual($nameUrl, $departement);
 
+      // Check if MP exists
+      if (empty($data['depute'])) {
+        show_404();
+      }
+
+      // Check if it is in legislature 14 or 15
+      if (!in_array($data['depute']['legislature'], legislature_all())) {
+        show_404();
+      }
+
+      // Redirect if legislature depute and depute_last is the same ==> redirect v/ webpage with last mandate
+      if ($legislature == $depute_last['legislature']) {
+        redirect("deputes/" . $data['depute']['dptSlug'] . "/depute_" . $data['depute']['nameUrl']);
+      }
+
+      // Main variables
+      $depute_uid = $data['depute']['mpId'];
+      $nameLast = $data['depute']['nameLast'];
+      $depute_dpt = $data['depute']['dptSlug'];
+      $data['active'] = $data['depute']['active'];
+      $data['legislature'] = $legislature;
+      $legislature = $data['depute']['legislature'];
+
+      // Gender
+      $data['gender'] = $this->depute_edito->gender($data['depute']['civ']);
+
+      // Meta
+      $data['url'] = $this->meta_model->get_url();
+      $depute = $data['depute']['nameFirst'].' '.$data['depute']['nameLast'];
+      $data['title_meta'] = $depute." - Histrique ".$legislature."e législature | Datan";
+      $data['description_meta'] = "Découvrez l'historique  ".$data['gender']['du']." député".$data['gender']['e']." ".$depute." pour la ".$legislature."e législature : taux de participation, loyauté avec son groupe, proximité avec la majorité présidentielle.";
+      $data['title'] = $depute;
+      $data['title_breadcrumb'] = mb_substr($data['depute']['nameFirst'], 0, 1).'. '.$data['depute']['nameLast'];
+      // Breadcrumb
+      $data['breadcrumb'] = array(
+        array(
+          "name" => "Datan", "url" => base_url(), "active" => FALSE
+        ),
+        array(
+          "name" => "Députés", "url" => base_url()."deputes", "active" => FALSE
+        ),
+        array(
+          "name" => $data['depute']['departementNom']." (".$data['depute']['departementCode'].")", "url" => base_url()."deputes/".$data['depute']['dptSlug'], "active" => FALSE
+        ),
+        array(
+          "name" => $data['title_breadcrumb'], "url" => base_url()."deputes/".$data['depute']['dptSlug']."/depute_".$nameUrl, "active" => FALSE
+        ),
+        array(
+          "name" => "Historique ".$legislature . "e legislature", "url" => base_url()."deputes/".$data['depute']['dptSlug']."/depute_".$nameUrl."/legislature-".$legislature, "active" => TRUE
+        ),
+      );
+      $data['breadcrumb_json'] = $this->breadcrumb_model->breadcrumb_json($data['breadcrumb']);
+      // Open Graph
+      $controller = $this->router->fetch_class()."/".$this->router->fetch_method();
+      $data['ogp'] = $this->meta_model->get_ogp($controller, $data['title_meta'], $data['description_meta'], $data['url'], $data);
+      // Microdata Person
+      $data['person_schema'] = $this->deputes_model->get_person_schema($data['depute']);
+      // CSS
+      $data['css_to_load']= array(
+        array(
+          "url" => css_url()."circle.css",
+          "async" => TRUE
+        ),
+        array(
+          "url" => "https://unpkg.com/flickity@2/dist/flickity.min.css",
+          "async" => TRUE
+        )
+      );
+      // JS UP
+      $data['js_to_load_before_bootstrap'] = array("popper.min");
+      $data['js_to_load']= array(
+        "flickity.pkgd.min",
+      );
+      // Preloads
+      $data['preloads'] = array(
+        array("href" => asset_url()."imgs/cover/hemicycle-front-375.jpg", "as" => "image", "media" => "(max-width: 575.98px)"),
+        array("href" => asset_url()."imgs/cover/hemicycle-front-768.jpg", "as" => "image", "media" => "(min-width: 576px) and (max-width: 970px)"),
+        array("href" => asset_url()."imgs/cover/hemicycle-front.jpg", "as" => "image", "media" => "(min-width: 970.1px)"),
+      );
+      // Load Views
+      $this->load->view('templates/header', $data);
+      $this->load->view('templates/button_up');
+      $this->load->view('deputes/historique', $data);
+      $this->load->view('templates/breadcrumb', $data);
+      $this->load->view('templates/footer');
     }
 
     public function commune($input, $departement){
@@ -579,8 +668,7 @@
       $data['by_field'] = $x;
 
       // Query - gender
-      $gender = $data['depute']['civ'];
-      $data['gender'] = $this->depute_edito->gender($gender);
+      $data['gender'] = $this->depute_edito->gender($data['depute']['civ']);
 
       // Historique du député
       $data['mandat_edito'] = $this->depute_edito->get_nbr_lettre($data['depute']['mandatesN']);
@@ -680,8 +768,7 @@
       $data['commission_parlementaire'] = $this->deputes_model->get_commission_parlementaire($depute_uid);
 
       // Query - gender
-      $gender = $data['depute']['civ'];
-      $data['gender'] = $this->depute_edito->gender($gender);
+      $data['gender'] = $this->depute_edito->gender($data['depute']['civ']);
 
       // Historique du député
       $data['mandat_edito'] = $this->depute_edito->get_nbr_lettre($data['depute']['mandatesN']);
@@ -770,8 +857,7 @@
       $data['votes'] = $this->votes_model->get_votes_all_depute($depute_uid, legislature_current());
 
       // Query - gender
-      $gender = $data['depute']['civ'];
-      $data['gender'] = $this->depute_edito->gender($gender);
+      $data['gender'] = $this->depute_edito->gender($data['depute']['civ']);
 
       // Historique du député
       $data['mandat_edito'] = $this->depute_edito->get_nbr_lettre($data['depute']['mandatesN']);

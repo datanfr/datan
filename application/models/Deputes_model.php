@@ -123,6 +123,27 @@
       return $query->row_array();
     }
 
+    public function get_depute_individual_historique($nameUrl, $dpt, $legislature){
+      $sql = 'SELECT
+        dl.*,
+        substr(dl.mpId, 3) AS idImage,
+        h.mandatesN, h.mpLength, h.lengthEdited,
+        dc.facebook, dc.twitter, dc.website, dc.mailAn,
+        date_format(dl.dateFin, "%d %M %Y") AS dateFinMpFR,
+        d.birthDate, d.birthCity, last.active
+        FROM deputes_all dl
+        LEFT JOIN history_per_mps_average h ON dl.mpId = h.mpId
+        LEFT JOIN deputes_contacts dc ON dl.mpId = dc.mpId
+        LEFT JOIN deputes d ON dl.mpId = d.mpId
+        LEFT JOIN deputes_last last ON dl.mpId = last.mpId
+        WHERE dl.nameUrl = ? AND dl.dptSlug = ? AND dl.legislature = ?
+        LIMIT 1
+      ';
+      $query = $this->db->query($sql, array($nameUrl, $dpt, $legislature));
+
+      return $query->row_array();
+    }
+
     public function depute_group_president($depute_uid, $groupe_id){
       $where = array(
         'mpId' => $depute_uid,
