@@ -39,7 +39,7 @@
                     <div class="value"><?= $president['nameFirst']." ".$president['nameLast'] ?></div>
                   </li>
                   <li>
-                    <div class="label">Positionnement</div>
+                    <div class="label">Position</div>
                     <div class="value"><?= ucfirst($edito['ideology']) ?></div>
                   </li>
                 <?php endif; ?>
