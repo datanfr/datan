@@ -646,7 +646,7 @@
         )
       );
       /// JS
-      $data['js_to_load']= array("moment.min", "datatable-datan.min.js", "datetime-moment");
+      $data['js_to_load']= array("moment.min", "datatable-datan.min", "datetime-moment");
       $data['preloads'] = array(
         array("href" => asset_url()."imgs/cover/hemicycle-front-375.jpg", "as" => "image", "media" => "(max-width: 575.98px)"),
         array("href" => asset_url()."imgs/cover/hemicycle-front-768.jpg", "as" => "image", "media" => "(min-width: 576px) and (max-width: 970px)"),
