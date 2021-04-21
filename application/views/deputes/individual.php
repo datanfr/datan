@@ -743,7 +743,7 @@
           <?php endif; ?>
           <div class="row">
             <?php foreach ($mandats as $mandat): ?>
-              <?php if ($mandat['legislature'] != 13): ?>
+              <?php if ($mandat['legislature'] >= 14): ?>
                 <div class="col-12 col-sm-6 mt-2 d-flex justify-content-center">
                   <a class="btn d-flex align-items-center justify-content-center" href="<?= base_url() ?>deputes/<?= $mandat['dptSlug'] ?>/depute_<?= $mandat['nameUrl'] ?>/legislature-<?= $mandat['legislature'] ?>">
                     <?= $mandat['legislature'] ?>ème législature
