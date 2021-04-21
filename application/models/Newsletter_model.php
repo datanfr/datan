@@ -12,8 +12,12 @@
         'email' => $email,
         'general' => true,
       );
-      $template = $this->parser->parse('emails/newsletter', array('email' => $email));
-      sendMail('Bienvenue à la newsletter', $template, $email);
+      //$template = $this->parser->parse('emails/newsletter', array('email' => $email));
+      $templateId = 2826349; /* Welcome */
+      $variables = array(
+        "email" => $email
+      );
+      sendMail($email, 'Bienvenue à la newsletter', NULL, TRUE, $templateId, $variables);
 
       return $this->db->insert('newsletter', $data);
     }

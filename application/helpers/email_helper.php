@@ -2,7 +2,7 @@
 
 use \Mailjet\Resources;
 
-function sendMail($subject, $template, $to){
+function sendMail($to, $subject, $templateHtml, $templateLanguage, $templateId, $variables){
     $mj = new \Mailjet\Client($_SERVER['API_KEY_MAILJET'], $_SERVER['API_KEY_SECRETE_MAILJET'], true, ['version' => 'v3.1']);
     $body = [
         'Messages' => [
@@ -17,7 +17,10 @@ function sendMail($subject, $template, $to){
                     ]
                 ],
                 'Subject' => $subject,
-                'HTMLPart' => $template
+                'HTMLPart' => $templateHtml,
+                "TemplateLanguage" => $templateLanguage,
+                "TemplateId" => $templateId,
+                "Variables" => $variables
             ]
         ]
     ];
