@@ -29,13 +29,13 @@
             <div class="col-12 d-flex justify-content-center">
               <div class="bloc-carousel-votes">
                 <div class="carousel-buttons">
-                  <button type="button" class="btn prev mr-2 button--previous">
+                  <button type="button" class="btn prev mr-2 button--previous" aria-label="précédent">
                     <?php echo file_get_contents(asset_url()."imgs/icons/arrow_left.svg") ?>
                   </button>
                   <a class="btn all mx-2" href="<?= base_url() ?>votes/decryptes">
                     <span>VOIR TOUS</span>
                   </a>
-                  <button type="button" class="btn next ml-2 button--next">
+                  <button type="button" class="btn next ml-2 button--next" aria-label="suivant">
                     <?php echo file_get_contents(asset_url()."imgs/icons/arrow_right.svg") ?>
                   </button>
                 </div>
@@ -57,7 +57,7 @@
               <div class="col-2 col-md-1 logo-field d-flex justify-content-center align-items-center my-3 my-lg-0">
                 <?php if ($field["logo"]): ?>
                   <div class="logo">
-                    <img src="<?= asset_url().'imgs/fields/'.$field['slug'].'.svg' ?>">
+                    <img src="<?= asset_url().'imgs/fields/'.$field['slug'].'.svg' ?>" alt="<?= $field['slug'] ?>" width="792" height="612">
                   </div>
                 <?php endif; ?>
               </div>
@@ -77,8 +77,8 @@
                     </div>
                     <div class="card-body d-flex align-items-center">
                       <span class="title">
-                        <a href="<?= base_url() ?>votes/legislature-<?= $vote['legislature'] ?>/vote_<?= $vote['voteNumero'] ?>" class="stretched-link"></a>
-                        <?= $vote['vote_titre'] ?></span>
+                        <a href="<?= base_url() ?>votes/legislature-<?= $vote['legislature'] ?>/vote_<?= $vote['voteNumero'] ?>" class="stretched-link no-decoration"><?= $vote['vote_titre'] ?></a>
+                      </span>
                     </div>
                     <div class="card-footer">
                       <span class="field badge badge-primary py-1 px-2"><?= $vote['category_libelle'] ?></span>
@@ -117,8 +117,7 @@
                   </div>
                   <div class="card-body d-flex align-items-center">
                     <span class="title">
-                      <a href="<?= base_url() ?>votes/legislature-<?= $vote['legislature'] ?>/vote_<?= $vote['voteNumero'] ?>" class="stretched-link no-decoration"></a>
-                      <?= ucfirst(word_limiter($vote['titre'], 20, " ...")) ?>
+                      <a href="<?= base_url() ?>votes/legislature-<?= $vote['legislature'] ?>/vote_<?= $vote['voteNumero'] ?>" class="stretched-link no-decoration"><?= ucfirst(word_limiter($vote['titre'], 20, " ...")) ?></a>
                     </span>
                   </div>
                 </div>
