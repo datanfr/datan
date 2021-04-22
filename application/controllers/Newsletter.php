@@ -25,16 +25,27 @@ class Newsletter extends CI_Controller
 
 
         if ($this->form_validation->run() === FALSE) {
-          $this->load->view('templates/header', $data);
-          $this->load->view('newsletter/edit');
-          $this->load->view('templates/footer', $data);
+            $this->load->view('templates/header', $data);
+            $this->load->view('newsletter/edit');
+            $this->load->view('templates/footer', $data);
         }
-  
-      }
+    }
 
     public function delete($email){
-        if ($this->newsletter_model->delete_newsletter($email)){
-            $this->session->set_flashdata('newsletter_deleted', 'Vous ne recevrez plus nos newsletter');
+        $email = urldecode($email);
+        $data['email'] = $email;
+        $data['url'] = $this->meta_model->get_url();
+        $data['title_meta'] = "Désinscription à la newsletter | Datan";
+        $data['title'] = 'Désinscription à la newsletter';
+        if ($this->newsletter_model->get_by_email($email)){
+            $this->newsletter_model->delete_newsletter($email);
+            $data['message'] = 'Vous ne recevrez plus nos newsletters, c\'est dommage mais n\'hésitez pas à revenir pour connaitre l\'activité de vos députés !';
         }
+        else {
+            $data['message'] = 'Vous ne semblez pas être actuellement inscrit à la newsletter, si malgré tout vous continuez de recevoir des e-mails de notre part merci de nous contacter.';
+        }
+        $this->load->view('templates/header', $data);
+        $this->load->view('newsletter/delete', $data);
+        $this->load->view('templates/footer', $data);
     }
 }
