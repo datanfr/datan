@@ -8,24 +8,20 @@
 
     public function create_newsletter(){
       $email = $this->input->post('email');
+      if ($this->get_by_email($email)){
+        return false;
+      }
       $data = array(
         'email' => $email,
         'general' => true,
       );
       //$template = $this->parser->parse('emails/newsletter', array('email' => $email));
-
-      // Send email
       $templateId = 2826349; /* Welcome */
       $variables = array(
         "email" => $email
       );
       sendMail($email, 'Bienvenue à la newsletter', NULL, TRUE, $templateId, $variables);
 
-      // Inscription Mailjet contact list
-      $listId = "25834";
-      createContact($email, $listId);
-
-      // Inscription MySQL
       return $this->db->insert('newsletter', $data);
     }
 
