@@ -28,14 +28,29 @@ function sendMail($to, $subject, $templateHtml, $templateLanguage, $templateId, 
     $response->success();
 }
 
-function createContact($email, $listId){
+function createContact($email){
   $mj = new \Mailjet\Client($_SERVER['API_KEY_MAILJET'], $_SERVER['API_KEY_SECRETE_MAILJET'], true, ['version' => 'v3.1']);
   $body = [
-    'IsUnsubscribed' => "false",
-    'ContactAlt' => $email,
+    'IsExcludedFromCampaigns' => "true",
+    'Name' => $email,
+    'Email' => $email
+  ];
+  $response = $mj->post(Resources::$Contact, ['body' => $body]);
+  var_dump($response->getStatus());
+  $response->success() && var_dump($response->getData());
+}
+
+function getContactId(){
+
+}
+
+function sendContactList($contactId, $listId){
+  $mj = new \Mailjet\Client($_SERVER['API_KEY_MAILJET'], $_SERVER['API_KEY_SECRETE_MAILJET'], true, ['version' => 'v3.1']);
+  $body = [
+    'ContactID' => $contactId,
     'ListID' => $listId
   ];
   $response = $mj->post(Resources::$Listrecipient, ['body' => $body]);
-  $response->success();
-
+  var_dump($response->getStatus());
+  $response->success() && var_dump($response->getData());
 }

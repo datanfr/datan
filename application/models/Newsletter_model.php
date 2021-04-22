@@ -22,7 +22,14 @@
       );
       sendMail($email, 'Bienvenue à la newsletter', NULL, TRUE, $templateId, $variables);
 
-      return $this->db->insert('newsletter', $data);
+      // Inscription Mailjet contact list
+      createContact($email);
+      $listId = "25834";
+      $contactId = NULL;
+      sendContactList($contactId, $listId);
+
+      // Inscription MySQL
+      //return $this->db->insert('newsletter', $data);
     }
 
     public function get_by_email($email){
