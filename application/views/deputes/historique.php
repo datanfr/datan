@@ -1,8 +1,5 @@
 <div class="container-fluid bloc-img-deputes async_background" id="container-always-fluid" style="height: 13em"></div>
-<?php if (!empty($depute['couleurAssociee'])) : ?>
-  <div class="liseret-groupe" style="background-color: <?= $depute['couleurAssociee'] ?>"></div>
-<?php endif; ?>
-<div class="container pg-depute-individual">
+<div class="container pg-depute-individual mb-5">
   <div class="row">
     <div class="col-12 col-md-8 col-lg-4 offset-md-2 offset-lg-0 px-lg-4">
       <div class="sticky-top" style="margin-top: -110px; top: 110px;">
@@ -32,9 +29,7 @@
               <h1 class="text-center"><?= $title ?></h1>
               <?php if (!empty($depute['libelle'])) : ?>
                 <div class="link-group text-center mt-1">
-                  <a href="<?= base_url() ?>groupes/<?= mb_strtolower($depute['libelleAbrev']) ?>" style="color: <?= $depute['couleurAssociee'] ?>; --color-group: <?= $depute['couleurAssociee'] ?>">
-                    <?= $depute['libelle'] ?>
-                  </a>
+                  <?= $depute['libelle'] ?>
                 </div>
               <?php endif; ?>
             </div>
@@ -45,22 +40,14 @@
                   <div class="label"><?php echo file_get_contents(base_url() . '/assets/imgs/icons/geo-alt-fill.svg') ?></div>
                   <div class="value"><?= $depute['departementNom'] . ' (' . $depute['departementCode'] . ')' ?></div>
                 </li>
-                <?php if ($active) : ?>
-                  <li>
-                    <div class="label"><?php echo file_get_contents(base_url() . '/assets/imgs/icons/person-fill.svg') ?></div>
-                    <div class="value"><?= $depute['age'] ?> ans</div>
-                  </li>
-                  <li class="mb-0">
-                    <div class="label"><?php echo file_get_contents(base_url() . '/assets/imgs/icons/briefcase-fill.svg') ?></div>
-                    <div class="value">Commission <?= $commission_parlementaire['commissionAbrege'] ?></div>
-                  </li>
-                <?php endif; ?>
-                <?php if (!($active)): ?>
-                  <li class="mb-0">
-                    <div class="label"><?php echo file_get_contents(base_url() . '/assets/imgs/icons/calendar-date-fill.svg') ?></div>
-                    <div class="value">Dernier mandat : <?= $depute['legislature'] ?><sup>e</sup> législature</div>
-                  </li>
-                <?php endif; ?>
+                <li class="mb-0">
+                  <div class="label"><?php echo file_get_contents(base_url() . '/assets/imgs/icons/calendar-date-fill.svg') ?></div>
+                  <div class="value">
+                    <a href="<?= base_url() ?>deputes/<?= $depute_last['dptSlug'] ?>/depute_<?= $depute_last['nameUrl'] ?>/legislature-<?= $depute_last['legislature'] ?>" class="no-decoration underline">
+                      Dernier mandat : <?= $depute_last['legislature'] ?><sup>e</sup> législature
+                    </a>
+                  </div>
+                </li>
               </ul>
             </div>
           </div>
@@ -79,282 +66,19 @@
     <div class="col-md-10 col-lg-8 offset-md-1 offset-lg-0 pl-lg-5">
       <!-- BIO & ELECTION -->
       <div class="bloc-bio mt-5">
-        <h2 class="mb-4">Qui est-<?= ($gender['pronom']) ?> ?</h2>
-        <!-- Paragraphe introductif -->
-        <?php if ($active) : ?>
-          <p>
-            <b><?= $title ?></b>, né<?= $gender['e'] ?> le <?= $depute['dateNaissanceFr'] ?> à <?= $depute['birthCity'] ?>, est <?= $gender['le'] ?> député<?= $gender['e'] ?> de la <?= $depute["circo"] ?><sup><?= $depute["circo_abbrev"] ?></sup> circonscription <?= $depute['dptLibelle2'] ?><a href="<?= base_url() ?>deputes/<?= $depute['dptSlug'] ?>"><?= $depute['departementNom'] . ' (' . $depute['departementCode'] . ')' ?></a>.
-          </p>
-        <?php else : ?>
-          <p>
-            <b><?= $title ?></b>, né<?= $gender['e'] ?> le <?= $depute['dateNaissanceFr'] ?> à <?= $depute['birthCity'] ?>, était un<?= $gender['e'] ?> député<?= $gender['e'] ?> de l'Assemblée nationale.
-            Pendant la <?= $depute['legislature'] ?><sup>e</sup> législature, <?= $gender['pronom'] ?> a été élu<?= $gender['e'] ?> dans le département <?= $depute['dptLibelle2'] ?> <a href="<?= base_url() ?>deputes/<?= $depute['dptSlug'] ?>"><?= $depute['departementNom'] . ' (' . $depute['departementCode'] . ')' ?></a>.
-          </p>
-        <?php endif; ?>
-        <!-- Paragraphe historique -->
-        <?php if ($active) : ?>
-          <p>
-            <?= ucfirst($gender['pronom']) ?> est entré<?= $gender['e'] ?> en fonction en <?= $depute['datePriseFonctionLettres'] ?> et est en est à son <?= $mandat_edito ?> mandat.
-            Au total, <?= $title ?> a passé <?= $depute['lengthEdited'] ?> sur les bancs de l’Assemblée nationale, soit <?= $history_edito ?> des députés, qui est de <?= $history_average['length'] ?> ans.
-          </p>
-        <?php elseif ($depute['legislature'] == legislature_current()) : ?>
-          <p>
-            Pour son dernier mandat, pendant la <?= legislature_current() ?><sup>e</sup> législature, <?= $title ?> est entré<?= $gender['e'] ?> en fonction en <?= $depute['datePriseFonctionLettres'] ?>.
-            <?= ucfirst($gender['pronom']) ?> en était à son <?= $mandat_edito ?> mandat.
-            Au total, <?= $gender['pronom'] ?> a passé <?= $depute['lengthEdited'] ?> sur les bancs de l’Assemblée nationale.
-          </p>
-        <?php else : ?>
-          <p>
-            Pour son dernier mendat, pendant la <?= $depute['legislature'] ?><sup>e</sup> législature, <?= $title ?> est entré<?= $gender['e'] ?> en fonction en <?= $depute['datePriseFonctionLettres'] ?>.
-            <?= ucfirst($gender['pronom']) ?> en était à son <?= $mandat_edito ?> mandat.
-            Au total, <?= $gender['pronom'] ?> a passé <?= $depute['lengthEdited'] ?> sur les bancs de l’Assemblée nationale.
-          </p>
-        <?php endif; ?>
-        <!-- Paragraphe end -->
-        <?php if ($active) : ?>
-        <?php elseif ($depute['legislature'] == legislature_current()) : ?>
-          <p>
-            <?= ucfirst($gender['pronom']) ?> a quitté l'Assemblée nationale le <?= $depute['dateFinMpFR'] ?>
-            <?php if (strpos($depute['causeFin'], 'Nomination comme membre du Gouvernement') !== false) : ?>
-              pour cause de nomination au Gouvernement.
-            <?php elseif (strpos($depute['causeFin'], 'Décès') !== false) : ?>
-              pour cause de décès.
-            <?php elseif (strpos($depute['causeFin'], "Démission d'office sur décision du Conseil constitutionnel") !== false) : ?>
-              pour cause de démission sur décision du Conseil constitutionnel.
-            <?php elseif (strpos($depute['causeFin'], 'Démission') !== false) : ?>
-              pour cause de démission.
-            <?php elseif (strpos($depute['causeFin'], "Annulation de l'élection sur décision du Conseil constitutionnel") !== false) : ?>
-              pour cause d'annulation de l'élection sur décision du Conseil constitutionnel.
-            <?php elseif (strpos($depute['causeFin'], "Reprise de l'exercice du mandat d'un ancien membre du Gouvernement") !== false) : ?>
-              . Remplaçant un député nommé au Gouvernement, <?= $title ?> a quitté l'Assemblée lorsque celui-ci est redevenu député.
-            <?php else : ?>
-              .
-            <?php endif; ?>
-          </p>
-        <?php else : ?>
-          <p>
-            <?= ucfirst($gender['pronom']) ?> a quitté l'Assemblée nationale le <?= $depute['dateFinMpFR'] ?>.
-          </p>
-        <?php endif; ?>
-        <!-- Paragraphe groupe parlementaire -->
-        <?php if ($active) : ?>
-          <?php if ($depute['libelleAbrev'] == "NI") : ?>
-            <p>
-              À l'Assemblée nationale, <?= $title ?> n'est pas membre d'un groupe parlementaire, et siège donc en non-inscrit<?= $gender['e'] ?>.
-            </p>
-          <?php else : ?>
-            <p>
-              À l'Assemblée nationale, <?= $gender['pronom'] ?> siège avec le groupe <a href="<?= base_url() ?>groupes/<?= mb_strtolower($depute['libelleAbrev']) ?>"><?= $depute['libelle'] ?></a> (<?= $depute["libelleAbrev"] ?>), un groupe <b>classé <?= $infos_groupes[$depute['libelleAbrev']] ?></b> de l'échiquier politique.
-              <?php if ($isGroupPresident) : ?><?= $title ?> en est le président.<?php endif; ?>
-            </p>
-          <?php endif; ?>
-        <?php else : ?>
-          <?php if (!empty($depute['libelle'])) : ?>
-            <p>
-              Au cours de son dernier mandat, pendant la <?= $depute['legislature'] ?><sup>e</sup> législature, <?= $title ?> a siégé avec le groupe <?= $depute['libelle'] ?> (<?= $depute['libelleAbrev'] ?>).
-            </p>
-          <?php endif; ?>
-        <?php endif; ?>
-        <!-- Paragraphe commission parlementaire -->
-        <?php if ($active && !empty($commission_parlementaire)) : ?>
-          <p><?= $title ?> est <?= mb_strtolower($commission_parlementaire['commissionCodeQualiteGender']) ?> de la <?= $commission_parlementaire['commissionLibelle'] ?>.</p>
-        <?php endif; ?>
-        <!-- Paragraphe parti politique -->
-        <?php if ($politicalParty['libelle'] != "") : ?>
-          <?php if ($active) : ?>
-            <p>
-              <?= $title ?> est rattaché<?= $gender['e'] ?> financièrement au parti politique <a href="<?= base_url() ?>partis-politiques/<?= mb_strtolower($politicalParty['libelleAbrev']) ?>"><?= $politicalParty['libelle'] ?> (<?= $politicalParty['libelleAbrev'] ?>)</a>.
-              Le rattachement permet aux partis politiques de recevoir, pour chaque député, une subvention publique.
-            </p>
-          <?php else : ?>
-            <p>
-              Quand <?= $gender['pronom'] ?> était <?= $gender['depute'] ?>, <?= $title ?> était rattaché<?= $gender['e'] ?> financièrement au parti politique <a href="<?= base_url() ?>partis-politiques/<?= mb_strtolower($politicalParty['libelleAbrev']) ?>"><?= $politicalParty['libelle'] ?> (<?= $politicalParty['libelleAbrev'] ?>)</a>.
-              Le rattachement permet aux partis politiques de recevoir, pour chaque député, une subvention publique.
-            </p>
-          <?php endif; ?>
-        <?php endif; ?>
+        <h2 class="mb-4">Historique de la <?= $legislature ?><sup>ème</sup> législature</h2>
+        <p>
+          <b><?= $title ?></b> est né<?= $gender['e'] ?> le <?= $depute['dateNaissanceFr'] ?> à <?= $depute['birthCity'] ?>.
+          Pendant la <?= $legislature ?><sup>ème</sup> législature, <?= $gender['pronom'] ?> a été <?= $gender['le'] ?> <?= $gender['depute'] ?> de la <?= $depute["circo"] ?><sup><?= $depute["circo_abbrev"] ?></sup> circonscription <?= $depute['dptLibelle2'] ?><a href="<?= base_url() ?>deputes/<?= $depute['dptSlug'] ?>"><?= $depute['departementNom'] . ' (' . $depute['departementCode'] . ')' ?></a>.
+        </p>
+        <p>
+          Pendant ce mandat, <?= $title ?> siégeait avec le groupe <?= $depute['libelle'] ?> (<?= $depute['libelleAbrev'] ?>).
+        </p>
+        <p>
+          La dernière législature au cours de laquelle <?= $gender['le'] ?> <?= $gender['depute'] ?> a siégeait est la <?= $depute_last['legislature'] ?><sum>ème</sup>.
+          Pour plus d'information sur l'activité de <?= $title ?> au cours de cette législature, <a href="<?= base_url() ?>deputes/<?= $depute_last['dptSlug'] ?>/depute_<?= $depute_last['nameUrl'] ?>/legislature-<?= $depute_last['legislature'] ?>">cliquez ici</a>.
+        </p>
       </div>
-      <!-- BLOC POSITIONS CLEFS -->
-      <?php if ($key_votes !== NULL) : ?>
-        <div class="bloc-key-votes mt-5">
-          <div class="row">
-            <div class="col-12">
-              <h2 class="mb-4">Ses positions importantes</h2>
-              <div class="card">
-                <div class="card-body key-votes">
-                  <?php if (isset($key_votes[3254])) : ?>
-                    <div class="row">
-                      <div class="col-md-3 libelle d-flex align-items-center justify-content-md-center">
-                        <span class="sort-<?= $key_votes[3254]["vote_libelle"] ?>"><?= mb_strtoupper($key_votes[3254]["vote_libelle"]) ?></span>
-                      </div>
-                      <div class="col-md-9 value">
-                        <?= $title ?><b>
-                          <?php if ($key_votes[3254]["vote"] === "1") : ?>
-                            a voté en faveur de
-                          <?php elseif ($key_votes[3254]["vote"] === "-1") : ?>
-                            a voté contre
-                          <?php else : ?>
-                            s'est abstenu<?= $gender["e"] ?> lors du vote sur
-                          <?php endif; ?>
-                          la proposition de loi Sécurité globale</b>.
-                        <?= ucfirst($gender["le"]) ?> député<?= $gender["e"] ?> <?= $key_votes[3254]["loyaute"] === "1" ? "a été loyal" : "n'a pas été loyal" ?><?= $gender['e'] ?> a son groupe.
-                        <a href="<?= base_url() ?>votes/legislature-15/vote_3254" class="font-italic">Voir le vote</a>
-                      </div>
-                    </div>
-                  <?php endif; ?>
-                  <?php if (isset($key_votes[2940])) : ?>
-                    <div class="row">
-                      <div class="col-md-3 libelle d-flex align-items-center justify-content-md-center">
-                        <span class="sort-<?= $key_votes[2940]["vote_libelle"] ?>"><?= mb_strtoupper($key_votes[2940]["vote_libelle"]) ?></span>
-                      </div>
-                      <div class="col-md-9 value">
-                        <?= $title ?> a voté <b>
-                          <?php if ($key_votes[2940]["vote"] === "1") : ?>
-                            a voté en faveur de
-                          <?php elseif ($key_votes[2940]["vote"] === "-1") : ?>
-                            a voté contre
-                          <?php else : ?>
-                            s'est abstenu<?= $gender["e"] ?> sur le vote concernant
-                          <?php endif; ?>
-                          la réintroduction des pesticides néonicotinoïdes</b> jusqu'en 2023</b>.
-                        <?= ucfirst($gender['pronom']) ?> <?= $key_votes[2940]["loyaute"] === "1" ? "a été loyal" : "n'a pas été loyal" ?><?= $gender['e'] ?> a son groupe.
-                        <a href="<?= base_url() ?>votes/legislature-15/vote_2940" class="font-italic">Voir le vote</a>
-                      </div>
-                    </div>
-                  <?php endif; ?>
-                  <?php if (isset($key_votes[2814])) : ?>
-                    <div class="row">
-                      <div class="col-md-3 libelle d-flex align-items-center justify-content-md-center">
-                        <span class="sort-<?= $key_votes[2814]["vote_libelle"] ?>"><?= mb_strtoupper($key_votes[2814]["vote_libelle"]) ?></span>
-                      </div>
-                      <div class="col-md-9 value">
-                        <?= $title ?> <b>
-                          <?php if ($key_votes[2814]["vote"] === "1") : ?>
-                            a accordé sa confiance
-                          <?php elseif ($key_votes[2814]["vote"] === "-1") : ?>
-                            n'a pas accordé sa confiance
-                          <?php else : ?>
-                            s'est abstenu<?= $gender["e"] ?> lors du vote de confiance
-                          <?php endif; ?>
-                          au Premier ministre Jean Castex</b>.
-                        <?= ucfirst($gender['pronom']) ?> <?= $key_votes[2814]["loyaute"] === "1" ? "a été loyal" : "n'a pas été loyal" ?><?= $gender['e'] ?> a son groupe politique.
-                        <a href="<?= base_url() ?>votes/legislature-15/vote_2814" class="font-italic">Voir le vote</a>
-                      </div>
-                    </div>
-                  <?php endif; ?>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      <?php endif; ?>
-      <!-- BLOC VOTES -->
-      <?php if (!empty($votes_datan)) : ?>
-        <div class="bloc-votes mt-5">
-          <div class="row">
-            <div class="col-12">
-              <div class="d-flex justify-content-between mb-4">
-                <h2>Ses derniers votes</h2>
-                <div class="bloc-carousel-votes">
-                  <div class="carousel-buttons">
-                    <a class="btn all mx-2" href="<?= base_url() ?>deputes/<?= $depute['dptSlug'] ?>/depute_<?= $depute['nameUrl'] ?>/votes">
-                      <span>VOIR TOUS</span>
-                    </a>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="row bloc-carousel-votes-flickity">
-            <div class="col-12 carousel-cards">
-              <?php foreach ($votes_datan as $vote) : ?>
-                <div class="card card-vote">
-                  <?php if ($vote['vote_depute'] == 'absent') : ?>
-                    <div class="thumb absent d-flex align-items-center">
-                      <div class="d-flex align-items-center">
-                        <span>ABSENT<?= mb_strtoupper($gender['e']) ?></span>
-                      </div>
-                    </div>
-                  <?php else : ?>
-                    <div class="thumb d-flex align-items-center <?= $vote['vote_depute'] ?>">
-                      <div class="d-flex align-items-center">
-                        <span><?= mb_strtoupper($vote['vote_depute']) ?></span>
-                      </div>
-                    </div>
-                  <?php endif; ?>
-                  <div class="card-header d-flex flex-row justify-content-between">
-                    <span class="date"><?= $vote['dateScrutinFRAbbrev'] ?></span>
-                  </div>
-                  <div class="card-body d-flex align-items-center">
-                    <span class="title">
-                      <a href="<?= base_url() ?>votes/legislature-<?= $vote['legislature'] ?>/vote_<?= $vote['voteNumero'] ?>" class="stretched-link no-decoration"><?= $vote['vote_titre'] ?></a>
-                    </span>
-                  </div>
-                  <div class="card-footer">
-                    <span class="field badge badge-primary py-1 px-2"><?= $vote['category_libelle'] ?></span>
-                  </div>
-                </div>
-              <?php endforeach; ?>
-              <div class="card card-vote see-all">
-                <div class="card-body d-flex align-items-center justify-content-center">
-                  <a href="<?= base_url() ?>deputes/<?= $depute['dptSlug'] ?>/depute_<?= $depute['nameUrl'] ?>/votes" class="stretched-link no-decoration">VOIR TOUS</a>
-                </div>
-              </div>
-            </div>
-          </div> <!-- // END BLOC VOTES -->
-          <div class="row mt-2">
-            <!-- BUTTONS BELOW -->
-            <div class="col-12 d-flex justify-content-center">
-              <div class="bloc-carousel-votes">
-                <div class="carousel-buttons">
-                  <button type="button" class="btn prev mr-2 button--previous" aria-label="précédent">
-                    <?php echo file_get_contents(asset_url() . "imgs/icons/arrow_left.svg") ?>
-                  </button>
-                  <button type="button" class="btn next ml-2 button--next" aria-label="suivant">
-                    <?php echo file_get_contents(asset_url() . "imgs/icons/arrow_right.svg") ?>
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div> <!-- // END BLOC VOTES -->
-      <?php endif; ?>
-      <!-- BLOC ELECTION -->
-      <div class="bloc-election mt-5">
-        <h2 class="mb-4">Son élection</h2>
-        <div class="card">
-          <div class="card-body">
-            <?php if ($active) : ?>
-              <p class="mb-0">
-                <?= $title ?> est <?= $gender['le'] ?> député<?= $gender['e'] ?> de la <?= $depute["circo"] ?><sup><?= $depute["circo_abbrev"] ?></sup> circonscription <?= $depute['dptLibelle2'] ?><a href="<?= base_url() ?>deputes/<?= $depute['dptSlug'] ?>"><?= $depute['departementNom'] . ' (' . $depute['departementCode'] . ')' ?></a>.
-              </p>
-            <?php else : ?>
-              <p class="mb-0">
-                <?= $title ?> était <?= $gender['le'] ?> député<?= $gender['e'] ?> de la <?= $depute["circo"] ?><sup><?= $depute["circo_abbrev"] ?></sup> circonscription <?= $depute['dptLibelle2'] ?><a href="<?= base_url() ?>deputes/<?= $depute['dptSlug'] ?>"><?= $depute['departementNom'] . ' (' . $depute['departementCode'] . ')' ?></a>.
-              </p>
-            <?php endif; ?>
-            <?php if (!empty($election_result)) : ?>
-              <p class="mt-2">
-                <?= ucfirst($gender['pronom']) ?> a été élu<?= $gender['e'] ?> au <b><?= $election_result['tour_election'] ?> tour</b> avec <?= $election_result['score_pct'] ?>% des voix.
-              </p>
-            <?php endif; ?>
-            <?php if (!empty($election_result)) : ?>
-              <div class="chart">
-                <div class="majority d-flex align-items-center" style="flex-basis: <?= $election_result['score_pct'] ?>%">
-                  <span><?= $election_result['score_pct'] ?>%</span>
-                </div>
-                <div class="line">
-                </div>
-                <div class="minority" style="flex-basis: <?= 100 - $election_result['score_pct'] ?>%">
-                </div>
-              </div>
-              <div class="legend d-flex justify-content-center mt-1">
-                <span>50%</span>
-              </div>
-            <?php endif; ?>
-          </div>
-        </div>
-      </div><!-- // END BLOC ELECTION -->
       <!-- BLOC STATISTIQUES -->
       <?php if (in_array($depute['legislature'], legislature_all())) : ?>
         <div class="bloc-statistiques mt-5">
@@ -790,70 +514,6 @@
           <?php endif; ?>
         </div>
       </div> <!-- END BLOC SOCIAL MEDIA -->
-      <!-- BLOC CONTACT -->
-      <?php if ($depute['mailAn'] !== NULL && $active) : ?>
-        <div class="bloc-links p-lg-0 p-md-2 mt-5">
-          <h2>Contacter <?= $title ?></h2>
-          <div class="row mt-4">
-            <div class="col-12">
-              <span class="mr-4">
-                <?php echo file_get_contents(base_url() . '/assets/imgs/icons/envelope-fill.svg') ?>
-              </span>
-              <a href="mailto:<?= $depute['mailAn'] ?>" class="no-decoration underline text-dark"><?= $depute['mailAn'] ?></a>
-            </div>
-          </div>
-        </div>
-      <?php endif; ?>
-      <!-- END BLOC SOCIAL MEDIA -->
     </div>
   </div>
 </div> <!-- END CONTAINER -->
-<!-- AUTRES DEPUTES -->
-<div class="container-fluid pg-depute-individual bloc-others-container">
-  <div class="container bloc-others">
-    <?php if (isset($other_deputes)) : ?>
-      <div class="row mb-5">
-        <div class="col-12">
-          <?php if ($depute['legislature'] != legislature_current()) : ?>
-            <h2>Les autres députés de la <?= $depute['legislature'] ?><sup>e</sup> législature</h2>
-          <?php elseif ($active) : ?>
-            <h2>Les autres députés <?= $depute['libelle'] ?> (<?= $depute['libelleAbrev'] ?>)</h2>
-          <?php else : ?>
-            <h2>Les autres députés plus en activité</h2>
-          <?php endif; ?>
-          <div class="row mt-3">
-            <?php foreach ($other_deputes as $mp) : ?>
-              <div class="col-6 col-md-3 py-2">
-                <a class="membre no-decoration underline" href="<?= base_url(); ?>deputes/<?= $mp['dptSlug'] ?>/depute_<?= $mp['nameUrl'] ?>"> <?= $mp['nameFirst'] . ' ' . $mp['nameLast'] ?></a>
-              </div>
-            <?php endforeach; ?>
-          </div>
-          <div class="mt-3">
-            <?php if ($depute['legislature'] != legislature_current()) : ?>
-              <a href="<?= base_url(); ?>deputes/legislature-<?= $depute['legislature'] ?>">Tous les députés de la législature <?= $depute['legislature'] ?></a>
-            <?php elseif ($active) : ?>
-              <a href="<?= base_url() ?>groupes/<?= mb_strtolower($depute['libelleAbrev']) ?>">Voir tous les députés membres du groupe <?= $depute['libelle'] ?> (<?= $depute['libelleAbrev'] ?>)</a>
-            <?php else : ?>
-              <a href="<?= base_url(); ?>deputes/inactifs">Tous les députés plus en activité</a>
-            <?php endif; ?>
-          </div>
-        </div>
-      </div>
-    <?php endif; ?>
-    <div class="row">
-      <div class="col-12">
-        <h2>Les députés en activité du département <?= $depute['dptLibelle2'] ?><?= $depute['departementNom'] . ' (' . $depute['departementCode'] . ')' ?></h2>
-        <div class="row mt-3">
-          <?php foreach ($other_deputes_dpt as $mp) : ?>
-            <div class="col-6 col-md-3 py-2">
-              <a class="membre no-decoration underline" href="<?= base_url(); ?>deputes/<?= $mp['dptSlug'] ?>/depute_<?= $mp['nameUrl'] ?>"> <?= $mp['nameFirst'] . ' ' . $mp['nameLast'] ?></a>
-            </div>
-          <?php endforeach; ?>
-        </div>
-        <div class="mt-3">
-          <a href="<?= base_url() ?>deputes/<?= $depute['dptSlug'] ?>">Voir tous les députés élus dans le département <?= $depute['dptLibelle2'] ?><?= $depute['departementNom'] ?></a>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
