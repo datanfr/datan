@@ -42,8 +42,8 @@
                       </div>
                       <div class="card-body">
                         <span class="title">
-                          <a href="<?= base_url() ?>votes/legislature-<?= $vote['legislature'] ?>/vote_<?= $vote['voteNumero'] ?>" class="stretched-link"></a>
-                          <?= $vote['vote_titre'] ?></span>
+                          <a href="<?= base_url() ?>votes/legislature-<?= $vote['legislature'] ?>/vote_<?= $vote['voteNumero'] ?>" class="stretched-link no-decoration"><?= $vote['vote_titre'] ?></a>
+                        </span>
                       </div>
                     </div>
                   </div>
