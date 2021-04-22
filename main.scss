@@ -2223,14 +2223,15 @@ ul.ui-menu{
   }
   .bloc-titre{
     .badge {
-      padding: 7px 12px;
+      padding: 16px 12px;
       border-radius: 10px;
       color: $white;
       font-weight: 600;
       display: inline-block;
-      margin: 0 2px 3px 2px;
+      margin: 0 4px 12px 4px;
+      font-size: $h6-font-size;
       span{
-        font-weight: 700;
+        font-weight: 800;
       }
     }
   }
