@@ -182,6 +182,11 @@ class Sitemap extends CI_Controller {
     $urls = array();
     $urls[]["url"] = base_url();
     $urls[]["url"] = base_url()."deputes";
+    foreach (legislature_all() as $legislature) {
+      if ($legislature != legislature_current()) {
+        $urls[]["url"] = base_url()."deputes/legislature-".$legislature;
+      }
+    }
     $urls[]["url"] = base_url()."groupes";
     $urls[]["url"] = base_url()."votes";
     $urls[]["url"] = base_url()."partis-politiques";
