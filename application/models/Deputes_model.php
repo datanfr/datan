@@ -5,7 +5,6 @@
     }
 
     public function get_deputes_all($legislature, $active, $departement) {
-
       if (!is_null($departement)) {
         $this->db->where('dptSlug', $departement);
       }
@@ -21,6 +20,13 @@
       $this->db->where('legislature', $legislature);
       $this->db->order_by('nameLast ASC, nameFirst ASC');
       $query = $this->db->get('deputes_all');
+
+      return $query->result_array();
+    }
+
+    public function get_deputes_last($legislature){
+      $where = array('legislature' => $legislature);
+      $query = $this->db->get_where('deputes_last', $where);
 
       return $query->result_array();
     }
@@ -121,6 +127,15 @@
       $query = $this->db->query($sql, array($nameUrl, $dpt));
 
       return $query->row_array();
+    }
+
+    public function check_depute_legislature($nameUrl, $legislature){
+      $where = array(
+        "mpId" => $nameUrl,
+        "legislature" => $legislature
+      );
+      $this->db->where($where);
+      return $this->db->count_all_results("deputes_all");
     }
 
     public function get_depute_individual_historique($nameUrl, $dpt, $legislature){
