@@ -23,7 +23,6 @@
       sendMail($email, 'Bienvenue à la newsletter', NULL, TRUE, $templateId, $variables);
 
       // Inscription Mailjet contact list
-      //createContact($email);
       $list = 25834;
       sendContactList($email, $list);
 
