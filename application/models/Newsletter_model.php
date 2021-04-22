@@ -1,4 +1,4 @@
-<?php
+ <?php
   class Newsletter_model extends CI_Model{
     public function __construct(){
       $this->load->database();
@@ -23,13 +23,12 @@
       sendMail($email, 'Bienvenue à la newsletter', NULL, TRUE, $templateId, $variables);
 
       // Inscription Mailjet contact list
-      createContact($email);
-      $listId = "25834";
-      $contactId = NULL;
-      sendContactList($contactId, $listId);
+      //createContact($email);
+      $list = 25834;
+      sendContactList($email, $list);
 
       // Inscription MySQL
-      //return $this->db->insert('newsletter', $data);
+      return $this->db->insert('newsletter', $data);
     }
 
     public function get_by_email($email){
