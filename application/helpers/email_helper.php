@@ -37,3 +37,22 @@ function sendContactList($email, $list){
   $response = $mj->post(Resources::$Listrecipient, ['body' => $body]);
   $response->success() && var_dump($response->getData());
 }
+
+function getContactId($id){
+  $mj = new \Mailjet\Client($_SERVER['API_KEY_MAILJET'], $_SERVER['API_KEY_SECRETE_MAILJET'], true, ['version' => 'v3']);
+  return $mj->get(Resources::$Contactdata, ['id' => $id]);
+}
+
+function removeContactlist($id, $list){
+  $mj = new \Mailjet\Client($_SERVER['API_KEY_MAILJET'], $_SERVER['API_KEY_SECRETE_MAILJET'], true, ['version' => 'v3']);
+  $body = [
+    'ContactsLists' => [
+      [
+        'Action' => "remove",
+        'ListID' => $list
+      ]
+    ]
+  ];
+  $response = $mj->post(Resources::$ContactManagecontactslists, ['id' => $id, 'body' => $body]);
+  $response->success();
+}

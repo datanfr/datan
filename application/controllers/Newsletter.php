@@ -37,6 +37,13 @@ class Newsletter extends CI_Controller
         $data['url'] = $this->meta_model->get_url();
         $data['title_meta'] = "Désinscription à la newsletter | Datan";
         $data['title'] = 'Désinscription à la newsletter';
+        $response = getContactId($email);
+        if ($response->success()) {
+          $emailId = $response->getData()[0]["ContactID"];
+          $list = 25834;
+          removeContactlist($emailId, $list);
+        }
+
         if ($this->newsletter_model->get_by_email($email)){
             $this->newsletter_model->delete_newsletter($email);
             $data['message'] = 'Vous ne recevrez plus nos newsletters, c\'est dommage mais n\'hésitez pas à revenir pour connaitre l\'activité de vos députés !';
