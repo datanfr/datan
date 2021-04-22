@@ -130,12 +130,13 @@
         h.mandatesN, h.mpLength, h.lengthEdited,
         dc.facebook, dc.twitter, dc.website, dc.mailAn,
         date_format(dl.dateFin, "%d %M %Y") AS dateFinMpFR,
-        d.birthDate, d.birthCity, last.active
+        d.birthDate, d.birthCity, last.active, dpt.libelle_1 AS dptLibelle1, dpt.libelle_2 AS dptLibelle2
         FROM deputes_all dl
         LEFT JOIN history_per_mps_average h ON dl.mpId = h.mpId
         LEFT JOIN deputes_contacts dc ON dl.mpId = dc.mpId
         LEFT JOIN deputes d ON dl.mpId = d.mpId
         LEFT JOIN deputes_last last ON dl.mpId = last.mpId
+        LEFT JOIN departement dpt ON dpt.departement_code = dl.departementCode
         WHERE dl.nameUrl = ? AND dl.dptSlug = ? AND dl.legislature = ?
         LIMIT 1
       ';
