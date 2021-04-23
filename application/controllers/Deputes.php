@@ -412,7 +412,7 @@
       // Meta
       $data['url'] = $this->meta_model->get_url();
       $depute = $data['depute']['nameFirst'].' '.$data['depute']['nameLast'];
-      $data['title_meta'] = $depute." - Histrique ".$legislature."e législature | Datan";
+      $data['title_meta'] = $depute." - Historique ".$legislature."e législature | Datan";
       $data['description_meta'] = "Découvrez l'historique  ".$data['gender']['du']." député".$data['gender']['e']." ".$depute." pour la ".$legislature."e législature : taux de participation, loyauté avec son groupe, proximité avec la majorité présidentielle.";
       $data['title'] = $depute;
       $data['title_breadcrumb'] = mb_substr($data['depute']['nameFirst'], 0, 1).'. '.$data['depute']['nameLast'];
