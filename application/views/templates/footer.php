@@ -103,7 +103,7 @@
             </div>
             <div class="col-md-6">
               Notre projet est disponible sur
-              <a href="https://github.com/awenig/datan" target="_blank" rel="noreferrer" class="no-decoration underline">
+              <a href="https://github.com/datanFR/datan" target="_blank" rel="noreferrer" class="no-decoration underline">
                 <img src="<?= asset_url() ?>imgs/logos/GitHub-Mark.png" width="25" height="25" alt="Logo GitHub">
                 GitHub
               </a>
