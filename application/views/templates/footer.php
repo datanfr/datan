@@ -42,6 +42,7 @@
             </div>
             <div class="modal-body">
               <p>Vous êtes sans doute déjà inscrit !</p>
+              <p>Pour gérer vos abonnements aux newsletters de Datan, <a href="<?= base_url() ?>newsletter/edit/">cliquez ici</a>. // TO DO HERE</p>
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>

@@ -15,7 +15,6 @@
         'email' => $email,
         'general' => true,
       );
-      //$template = $this->parser->parse('emails/newsletter', array('email' => $email));
       $templateId = 2826349; /* Welcome */
       $variables = array(
         "email" => $email
@@ -37,6 +36,12 @@
     public function delete_newsletter($email){
       $this->db->where('email', urldecode($email));
       return $this->db->delete('newsletter');
+    }
+
+    public function update_list($email, $data, $list){
+      $this->db->set($list['nameSQL'], $data[$list['nameSQL']]);
+      $this->db->where('email', urldecode($email));
+      $this->db->update('newsletter');
     }
   }
 ?>
