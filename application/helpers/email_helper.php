@@ -35,7 +35,6 @@ function sendContactList($email, $list){
     'ListID' => $list
   ];
   $response = $mj->post(Resources::$Listrecipient, ['body' => $body]);
-  $response->success() && var_dump($response->getData());
 }
 
 function getContactId($id){
@@ -54,5 +53,4 @@ function removeContactlist($id, $list){
     ]
   ];
   $response = $mj->post(Resources::$ContactManagecontactslists, ['id' => $id, 'body' => $body]);
-  $response->success();
 }

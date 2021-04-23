@@ -11,23 +11,48 @@ class Newsletter extends CI_Controller
 
     public function edit($email){
         $data = [];
-        $this->form_validation->set_rules('title', 'Title', 'required');
-        $this->form_validation->set_rules('body', 'Body', 'required');
 
         $data['newsletter'] = $this->newsletter_model->get_by_email($email);
+        if (empty($data['newsletter'])) {
+          redirect();
+        }
+
         // Meta
         $data['url'] = $this->meta_model->get_url();
-        $data['title_meta'] = "Les élections en France - Candidats et résultats | Datan";
-        $data['description_meta'] = "Retrouvez toutes les informations sur les différentes élections en France (présidentielle, législative, régionales). Découvrez les députés candidats et les résultats";
+        $data['title_meta'] = "Gestion des abonnements aux newsletters | Datan";
+        $data['description_meta'] = "Mettez à jour vos abonnements aux différentes newsletters de Datan.";
         $data['title'] = 'Mettre à jour vos abonnements';
 
-        // TODO if post
+        if ($this->input->post()) {
+          $data['general'] = $this->input->post('general');
+          $data['general'] = $data['general'] == "on" ? 1 : 0;
+          if ($data['general'] != $data['newsletter']['general']) {
+            $list = array(
+              'nameSQL' => 'general',
+              'mailjetId' => 25834
+            );
+            $this->newsletter_model->update_list($email, $data, $list);
 
+            // API
+            if ($data['general'] == 1) {
+              sendContactList(urldecode($email), $list['mailjetId']);
+            } else {
+              $response = getContactId(urldecode($email));
+              if ($response->success()) {
+                $emailId = $response->getData()[0]["ContactID"];
+                removeContactlist($emailId, $list['mailjetId']);
+              }
+            }
+          }
 
-        if ($this->form_validation->run() === FALSE) {
-            $this->load->view('templates/header', $data);
-            $this->load->view('newsletter/edit');
-            $this->load->view('templates/footer', $data);
+          $this->load->view('templates/header', $data);
+          $this->load->view('newsletter/edit_success');
+          $this->load->view('templates/footer', $data);
+
+        } else {
+          $this->load->view('templates/header', $data);
+          $this->load->view('newsletter/edit');
+          $this->load->view('templates/footer', $data);
         }
     }
 
