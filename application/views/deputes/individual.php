@@ -752,9 +752,15 @@
               <?php foreach ($mandats as $mandat): ?>
                 <?php if ($mandat['legislature'] >= 14 && $mandat['legislature'] != $depute['legislature']): ?>
                   <div class="col-12 col-sm-6 mt-2 d-flex justify-content-center">
-                    <a class="btn d-flex align-items-center justify-content-center" href="<?= base_url() ?>deputes/<?= $mandat['dptSlug'] ?>/depute_<?= $mandat['nameUrl'] ?>/legislature-<?= $mandat['legislature'] ?>">
-                      <?= $mandat['legislature'] ?>ème législature
-                    </a>
+                    <?php if ($mandat['legislature'] == legislature_current()): ?>
+                      <a class="btn d-flex align-items-center justify-content-center" href="<?= base_url() ?>deputes/<?= $mandat['dptSlug'] ?>/depute_<?= $mandat['nameUrl'] ?>">
+                        <?= $mandat['legislature'] ?>ème législature
+                      </a>
+                    <?php else: ?>
+                      <a class="btn d-flex align-items-center justify-content-center" href="<?= base_url() ?>deputes/<?= $mandat['dptSlug'] ?>/depute_<?= $mandat['nameUrl'] ?>/legislature-<?= $mandat['legislature'] ?>">
+                        <?= $mandat['legislature'] ?>ème législature
+                      </a>
+                    <?php endif; ?>
                   </div>
                 <?php endif; ?>
               <?php endforeach; ?>

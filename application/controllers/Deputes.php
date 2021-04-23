@@ -401,6 +401,7 @@
       $data["depute"]["dateNaissanceFr"] = utf8_encode(strftime('%d %B %Y', strtotime($data['depute']['birthDate']))); // birthdate
       $data['depute']['circo_abbrev'] = $this->functions_datan->abbrev_n($data['depute']['circo'], TRUE); // circo number
       $data['mandats'] = $this->deputes_model->get_historique_mandats($depute_uid);
+      $data['mandatsReversed'] = array_reverse($data['mandats']);
 
       // Gender
       $data['gender'] = $this->depute_edito->gender($data['depute']['civ']);
