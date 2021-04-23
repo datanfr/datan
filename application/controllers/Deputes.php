@@ -306,6 +306,7 @@
       $duree_average = $data['history_average']['length'];
       $data['history_edito'] = $this->depute_edito->history($duree_depute, $duree_average);
       $data['mandats'] = $this->deputes_model->get_historique_mandats($depute_uid);
+      $data['mandatsReversed'] = array_reverse($data['mandats']);
 
       // Gender
       $data['gender'] = $this->depute_edito->gender($data['depute']['civ']);
