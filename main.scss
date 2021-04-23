@@ -1474,7 +1474,7 @@ ul.ui-menu{
       color: $text-gray;
     }
   }
-  .bloc-statistiques, .bloc-votes, .bloc-bio, .bloc-election, .bloc-links, .bloc-chiffres, .bloc-key-votes{
+  .bloc-statistiques, .bloc-votes, .bloc-bio, .bloc-election, .bloc-links, .bloc-chiffres, .bloc-key-votes, .bloc-mandats{
     h2{
       font-size: $h2-font-size;
       font-weight: 800;
@@ -1517,9 +1517,7 @@ ul.ui-menu{
       height: 150px;
       overflow: hidden;
       position: relative;
-      //top: -90px;
       border-radius: 50%;
-      //box-shadow: $card-box-shadow;
       background: linear-gradient(#99BDDA, white);
       text-align: center;
       img{
@@ -1533,9 +1531,7 @@ ul.ui-menu{
       height: 160px;
       overflow: hidden;
       position: relative;
-      //top: -120px;
       border-radius: 4px;
-      //box-shadow: $card-box-shadow;
       img{
         width: 100%;
         height: auto;
@@ -1570,10 +1566,8 @@ ul.ui-menu{
       }
     }
     .link-group{
-      a{
-        font-size: $h5-font-size;
-        font-weight: 600;
-      }
+      font-size: $h5-font-size;
+      font-weight: 600;
     }
   }
   /* Bloc En Bref */
@@ -1679,14 +1673,27 @@ ul.ui-menu{
       font-size: $h4-font-size;
     }
   }
-  /* Bloc links */
-  .bloc-links{
+  /* Bloc mandat */
+  .bloc-mandats{
     .btn{
       height: 40px;
-    }
-    a, .url_obf {
       width: 230px;
-      margin: 0.5em 0 0.5em 0;
+      background-color: $text-gray-light;
+      color: #fff;
+      margin: 0.5em 0;
+      &:hover{
+        background-color: #fff;
+        border: 1px solid $text-gray-light;
+        color: $text-black;
+      }
+    }
+  }
+  /* Bloc links */
+  .bloc-links{
+    a, .url_obf {
+      height: 40px;
+      width: 230px;
+      margin: 0.5em 0;
       padding: 0.4em 0.7em 0.4em 0.7em;
       color: #ffffff;
       font-style: italic;

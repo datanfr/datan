@@ -33,6 +33,10 @@ class Sitemap extends CI_Controller {
       $urls[]["url"] = base_url()."deputes/".$dpt_slug."/depute_".$nameUrl;
       $urls[]["url"] = base_url()."deputes/".$dpt_slug."/depute_".$nameUrl."/votes";
       $urls[]["url"] = base_url()."deputes/".$dpt_slug."/depute_".$nameUrl."/votes/all";
+      $past14 = $this->deputes_model->check_depute_legislature($result["mpId"], 14);
+      if ($past14) {
+        $urls[]["url"] = base_url()."deputes/".$dpt_slug."/depute_".$nameUrl."/legislature-14";
+      }
     }
 
     $data['urls'] = $urls;
@@ -44,15 +48,17 @@ class Sitemap extends CI_Controller {
   /* 3. sitemap-deputes-inactifs-1.xml */
   function deputes_inactifs(){
     $results = $this->deputes_model->get_deputes_all(legislature_current(), FALSE, NULL);
+    $deputes14 = $this->deputes_model->get_deputes_last(14);
     //print_r($results);
 
     $urls = array();
     foreach ($results as $result) {
-      $dpt_slug = $result['dptSlug'];
-      $nameUrl = $result['nameUrl'];
-      $urls[]["url"] = base_url()."deputes/".$dpt_slug."/depute_".$nameUrl;
-      $urls[]["url"] = base_url()."deputes/".$dpt_slug."/depute_".$nameUrl."/votes";
-      $urls[]["url"] = base_url()."deputes/".$dpt_slug."/depute_".$nameUrl."/votes/all";
+      $urls[]["url"] = base_url()."deputes/".$result["dptSlug"]."/depute_".$result["nameUrl"];
+      $urls[]["url"] = base_url()."deputes/".$result["dptSlug"]."/depute_".$result["nameUrl"]."/votes";
+      $urls[]["url"] = base_url()."deputes/".$result["dptSlug"]."/depute_".$result["nameUrl"]."/votes/all";
+    }
+    foreach ($deputes14 as $result) {
+      $urls[]["url"] = base_url()."deputes/".$result["dptSlug"]."/depute_".$result["nameUrl"];
     }
 
     $data['urls'] = $urls;
@@ -182,6 +188,11 @@ class Sitemap extends CI_Controller {
     $urls = array();
     $urls[]["url"] = base_url();
     $urls[]["url"] = base_url()."deputes";
+    foreach (legislature_all() as $legislature) {
+      if ($legislature != legislature_current()) {
+        $urls[]["url"] = base_url()."deputes/legislature-".$legislature;
+      }
+    }
     $urls[]["url"] = base_url()."groupes";
     $urls[]["url"] = base_url()."votes";
     $urls[]["url"] = base_url()."partis-politiques";
