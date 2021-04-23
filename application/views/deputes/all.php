@@ -2,10 +2,10 @@
   <div class="row">
     <div class="container">
       <div class="row row-grid bloc-titre">
-        <div class="col-lg-6 mb-4 mb-lg-0">
+        <div class="col-12">
           <h1><?= $title ?></h1>
         </div>
-        <div class="col-lg-5 offset-lg-1">
+        <div class="col-lg-8">
           <?php if ($legislature == legislature_current()): ?>
             <p>
               L'Assemblée nationale compte <b>577 députés</b>. Ils sont élus tous les 5 ans lors des élections législatives. Les dernières ont eu lieu en juin 2017 et les prochaines se tiendront en 2022, quelques semaines après l'élection présidentielle.
@@ -15,11 +15,13 @@
                 L'Assemblée nationale compte actuellement <?= $male["n"] ?> députés hommes (<?= $male["percentage"] ?> %) et <?= $female["n"] ?> femmes (<?= $female["percentage"] ?> %).
               </p>
               <p>
-                Depuis leur élection, <b><?= $number_inactive ?> députés ont quitté l'Assemblée</b> pour cause de nomination au Gouvernement, de démission ou de décès. Pour découvrir ces députés qui ne sont plus en activité en <a href="<?= base_url() ?>deputes/inactifs" ?>cliquez ici</a>.
+                Depuis le début de la <?= legislature_current() ?><sup>ème</sup> législature, <b><?= $number_inactive ?> députés ont quitté l'Assemblée</b> pour cause de nomination au Gouvernement, de démission ou de décès. Pour découvrir ces députés qui ne sont plus en activité en <a href="<?= base_url() ?>deputes/inactifs" ?>cliquez ici</a>.
               </p>
-              <p>
-                <b>Envie de découvrir les députés de la législature précédente ?</b> Nous avons mis en ligne sur Datan les députés de la <a href="<?= base_url() ?>deputes/legislature-14">14ème législature</a>.
-              </p>
+              <div class="d-flex flex-wrap justify-content-around mt-5">
+                <a href="<?= base_url() ?>deputes/inactifs" class="btn btn-primary my-2">Députés inactifs (15<sup>ème</sup> législature)</a>
+                <a href="<?= base_url() ?>deputes/legislature-14" class="btn btn-primary my-2">Députés de la 14<sup>ème</sup> législature</a>
+              </div>
+              <h2 class="mt-5">Découvrez les députés en activité de la <?= legislature_current() ?><sup>ème</sup> législature</h2>
             <?php else: ?>
               <p>
                 Depuis leur élection, <?= $number_inactive ?> députés ont quitté l'Assemblée pour cause de nomination au Gouvernement, de démission, ou de décès. Découvrez sur cette page les députés plus en activité.
@@ -94,7 +96,7 @@
           <div class="row mt-2 sorting">
             <?php foreach ($deputes as $depute): ?>
               <div class="col-md-6 col-xl-4 sorting-item <?= strtolower($depute["libelleAbrev"]) ?>">
-                <?php $this->load->view('deputes/partials/card_home.php', array('depute' => $depute, 'tag' => 'h2')) ?>
+                <?php $this->load->view('deputes/partials/card_home.php', array('depute' => $depute, 'tag' => 'h3')) ?>
               </div>
             <?php endforeach; ?>
           </div>
