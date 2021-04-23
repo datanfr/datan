@@ -1,36 +1,44 @@
-<div class="container-fluid pg-depute-all" id="container-always-fluid">
+<div class="container-fluid pg-depute-all mb-5" id="container-always-fluid">
   <div class="row">
     <div class="container">
       <div class="row row-grid bloc-titre">
-        <div class="col-lg-6 mb-4 mb-lg-0">
+        <div class="col-12">
           <h1><?= $title ?></h1>
         </div>
-        <div class="col-lg-5 offset-lg-1">
-          <?php if ($active): ?>
+        <div class="col-lg-8">
+          <?php if ($legislature == legislature_current()): ?>
             <p>
               L'Assemblée nationale compte <b>577 députés</b>. Ils sont élus tous les 5 ans lors des élections législatives. Les dernières ont eu lieu en juin 2017 et les prochaines se tiendront en 2022, quelques semaines après l'élection présidentielle.
             </p>
-            <?php if ($legislature == legislature_current()): ?>
+            <?php if ($active): ?>
               <p>
                 L'Assemblée nationale compte actuellement <?= $male["n"] ?> députés hommes (<?= $male["percentage"] ?> %) et <?= $female["n"] ?> femmes (<?= $female["percentage"] ?> %).
               </p>
               <p>
-                Depuis leur élection, <?= $number_inactive ?> députés ont quitté l'Assemblée pour cause de nomination au Gouvernement, de démission ou de décès. Pour découvrir ces députés qui ne sont plus en activité en <a href="<?= base_url() ?>deputes/inactifs" ?>cliquez ici</a>.
+                Depuis le début de la <?= legislature_current() ?><sup>ème</sup> législature, <b><?= $number_inactive ?> députés ont quitté l'Assemblée</b> pour cause de nomination au Gouvernement, de démission ou de décès. Pour découvrir ces députés qui ne sont plus en activité en <a href="<?= base_url() ?>deputes/inactifs" ?>cliquez ici</a>.
               </p>
+              <div class="d-flex flex-wrap justify-content-around mt-5">
+                <a href="<?= base_url() ?>deputes/inactifs" class="btn btn-primary my-2">Députés inactifs (15<sup>ème</sup> législature)</a>
+                <a href="<?= base_url() ?>deputes/legislature-14" class="btn btn-primary my-2">Députés de la 14<sup>ème</sup> législature</a>
+              </div>
+              <h2 class="mt-5">Découvrez les députés en activité de la <?= legislature_current() ?><sup>ème</sup> législature</h2>
             <?php else: ?>
               <p>
-                Cette page présente tous les députés qui ont servi lors de la <?= $legislature ?><sup>e</sup> législature.
+                Depuis leur élection, <?= $number_inactive ?> députés ont quitté l'Assemblée pour cause de nomination au Gouvernement, de démission, ou de décès. Découvrez sur cette page les députés plus en activité.
               </p>
               <p>
-                Pendant la <?= $legislature ?><sup></sup> législature, il y avait à l'Assemblée nationale <?= $male["n"] ?> députés hommes (<?= $male["percentage"] ?> %) et <?= $female["n"] ?> femmes (<?= $female["percentage"] ?> %).
+                Pour découvrir les 577 députés actuellement en activité, <a href="<?= base_url() ?>deputes">cliquez ici.</a>
               </p>
             <?php endif; ?>
           <?php else: ?>
             <p>
-              Depuis leur élection, <?= $number_inactive ?> députés ont quitté l'Assemblée pour cause de nomination au Gouvernement, de démission, ou de décès. Découvrez sur cette page les députés plus en activité.
+              Cette page présente tous les députés qui ont servi lors de la <?= $legislature ?><sup>e</sup> législature.
             </p>
             <p>
-              Pour découvrir les 577 députés actuellement en activité, <a href="<?= base_url() ?>deputes">cliquez ici.</a>
+              Pendant la <?= $legislature ?><sup></sup> législature, il y avait à l'Assemblée nationale <?= $male["n"] ?> députés hommes (<?= $male["percentage"] ?> %) et <?= $female["n"] ?> femmes (<?= $female["percentage"] ?> %).
+            </p>
+            <p>
+              Pour découvrir les députés de la législature actuelle, <a href="<?= base_url() ?>deputes">cliquez ici</a>.
             </p>
           <?php endif; ?>
         </div>
@@ -87,8 +95,8 @@
         <div class="col-lg-9 col-md-12">
           <div class="row mt-2 sorting">
             <?php foreach ($deputes as $depute): ?>
-              <div class="col-lg-4 col-md-6 sorting-item <?= strtolower($depute["libelleAbrev"]) ?> d-flex justify-content-center">
-                <?php $this->load->view('deputes/partials/card_home.php', array('depute' => $depute, 'tag' => 'h2')) ?>
+              <div class="col-md-6 col-xl-4 sorting-item <?= strtolower($depute["libelleAbrev"]) ?>">
+                <?php $this->load->view('deputes/partials/card_home.php', array('depute' => $depute, 'tag' => 'h3')) ?>
               </div>
             <?php endforeach; ?>
           </div>
