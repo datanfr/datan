@@ -75,8 +75,8 @@
           Pendant ce mandat, <?= $title ?> siégeait avec le groupe <?= $depute['libelle'] ?> (<?= $depute['libelleAbrev'] ?>).
         </p>
         <p>
-          La dernière législature au cours de laquelle <?= $gender['le'] ?> <?= $gender['depute'] ?> a siégeait est la <?= $depute_last['legislature'] ?><sum>ème</sup>.
-          Pour plus d'information sur l'activité de <?= $title ?> au cours de cette législature, <a href="<?= base_url() ?>deputes/<?= $depute_last['dptSlug'] ?>/depute_<?= $depute_last['nameUrl'] ?>/legislature-<?= $depute_last['legislature'] ?>">cliquez ici</a>.
+          La dernière législature au cours de laquelle <?= $gender['le'] ?> <?= $gender['depute'] ?> a siégé est la <?= $depute_last['legislature'] ?><sum>ème</sup>.
+          Pour plus d'information sur l'activité de <?= $title ?> au cours de cette législature, <a href="<?= base_url() ?>deputes/<?= $depute_last['dptSlug'] ?>/depute_<?= $depute_last['nameUrl'] ?>">cliquez ici</a>.
         </p>
       </div>
       <!-- BLOC STATISTIQUES -->
