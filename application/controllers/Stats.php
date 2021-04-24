@@ -232,7 +232,7 @@
       // JS
       //$data['js_to_load_before_bootstrap'] = array("");
       //$data['js_to_load_before_datan'] = array("");
-      $data['js_to_load']= array("moment.min", "datatable-datan.min.js", "datetime-moment", "datan/async_background");
+      $data['js_to_load']= array("moment.min", "datatable-datan.min.js", "datetime-moment");
       // Meta
       $data['url'] = $this->meta_model->get_url();
       // Views
