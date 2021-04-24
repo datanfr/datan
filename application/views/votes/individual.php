@@ -39,7 +39,11 @@
                   <?php foreach ($groupes as $groupe): ?>
                     <?php if ($groupe['positionMajoritaire'] == 'pour'): ?>
                       <div class="card-vote-groupe my-1 mx-1" data-toggle="tooltip" data-placement="top" title="<?= $groupe['libelle'] ?> (<?= $groupe['libelleAbrev'] ?>)">
-                        <img class="img" src="<?= asset_url() ?>imgs/groupes/<?= $groupe['libelleAbrev'] ?>.png" alt="Logo <?= $groupe['libelleAbrev'] ?>">
+                        <picture>
+                          <source srcset="<?= asset_url(); ?>imgs/groupes/webp/<?= $groupe['libelleAbrev'] ?>.webp" type="image/webp">
+                          <source srcset="<?= asset_url(); ?>imgs/groupes/<?= $groupe['libelleAbrev'] ?>.png" type="image/png">
+                          <img class="img" src="<?= asset_url(); ?>imgs/groupes/<?= $groupe['libelleAbrev'] ?>.png" width="150" height="150" alt="<?= $groupe['libelle'] ?>">
+                        </picture>
                       </div>
                     <?php endif; ?>
                   <?php endforeach; ?>
@@ -58,7 +62,11 @@
                   <?php foreach ($groupes as $groupe): ?>
                     <?php if ($groupe['positionMajoritaire'] == 'contre'): ?>
                       <div class="card-vote-groupe my-1 mx-1" data-toggle="tooltip" data-placement="top" title="<?= $groupe['libelle'] ?> (<?= $groupe['libelleAbrev'] ?>)">
-                        <img class="img" src="<?= asset_url() ?>imgs/groupes/<?= $groupe['libelleAbrev'] ?>.png" alt="Logo <?= $groupe['libelleAbrev'] ?>">
+                        <picture>
+                          <source srcset="<?= asset_url(); ?>imgs/groupes/webp/<?= $groupe['libelleAbrev'] ?>.webp" type="image/webp">
+                          <source srcset="<?= asset_url(); ?>imgs/groupes/<?= $groupe['libelleAbrev'] ?>.png" type="image/png">
+                          <img class="img" src="<?= asset_url(); ?>imgs/groupes/<?= $groupe['libelleAbrev'] ?>.png" width="150" height="150" alt="<?= $groupe['libelle'] ?>">
+                        </picture>
                       </div>
                     <?php endif; ?>
                   <?php endforeach; ?>
@@ -77,7 +85,11 @@
                  <?php foreach ($groupes as $groupe): ?>
                    <?php if ($groupe['positionMajoritaire'] == 'abstention'): ?>
                      <div class="card-vote-groupe my-1 mx-1" data-toggle="tooltip" data-placement="top" title="<?= $groupe['libelle'] ?> (<?= $groupe['libelleAbrev'] ?>)">
-                       <img class="img" src="<?= asset_url() ?>imgs/groupes/<?= $groupe['libelleAbrev'] ?>.png" alt="Logo <?= $groupe['libelleAbrev'] ?>">
+                       <picture>
+                         <source srcset="<?= asset_url(); ?>imgs/groupes/webp/<?= $groupe['libelleAbrev'] ?>.webp" type="image/webp">
+                         <source srcset="<?= asset_url(); ?>imgs/groupes/<?= $groupe['libelleAbrev'] ?>.png" type="image/png">
+                         <img class="img" src="<?= asset_url(); ?>imgs/groupes/<?= $groupe['libelleAbrev'] ?>.png" width="150" height="150" alt="<?= $groupe['libelle'] ?>">
+                       </picture>
                      </div>
                    <?php endif; ?>
                  <?php endforeach; ?>
@@ -117,7 +129,7 @@
                     <div class="label"><?php echo file_get_contents(base_url().'/assets/imgs/icons/journal.svg') ?></div>
                     <div class="value">
                       <?= ucfirst($vote['type_edited']) ?>
-                      <a tabindex="0" role="button" data-toggle="popover" data-trigger="focus" class="question no-decoration" data-content="<?= $vote['type_edited_explication'] ?>" id="popover_focus"><?php echo file_get_contents(asset_url()."imgs/icons/question_circle.svg") ?></a>
+                      <a tabindex="0" role="button" data-toggle="popover" data-trigger="focus" class="question no-decoration" aria-label="Tooltip explication" data-content="<?= $vote['type_edited_explication'] ?>"><?php echo file_get_contents(asset_url()."imgs/icons/question_circle.svg") ?></a>
                     </div>
                   </li>
                   <?php if ($vote['dossier_titre'] != ""): ?>
@@ -177,7 +189,7 @@
                     <th class="text-center">Participation</th>
                     <th class="text-center min-tablet">
                       Cohésion
-                      <a tabindex="0" role="button" data-toggle="popover" data-trigger="focus" title="Taux de cohésion" data-content="Le taux de cohésion représente <b>l'unité d'un groupe politique</b> lorsqu'il vote. Il peut prendre des mesures allant de 0 à 1. Un taux proche de 1 signifie que le groupe est très uni.<br><br>Attention, dans beaucoup de parlements, y compris l'Assemblée nationale, les députés suivent dans la plupart des cas la ligne officielle du groupe, expliquant des taux de cohésion très élevés. Le mesure proposée ici est intéressante quand elle est comparée avec les mesures de cohésion des autres groupes.<br><br>Pour plus d'information, <a href='<?= base_url() ?>statistiques#cohesion' target='_blank'>cliquez ici</a>." id="popover_focus"><?php echo file_get_contents(asset_url()."imgs/icons/question_circle.svg") ?></a>
+                      <a tabindex="0" role="button" data-toggle="popover" data-trigger="focus" title="Taux de cohésion" data-content="Le taux de cohésion représente <b>l'unité d'un groupe politique</b> lorsqu'il vote. Il peut prendre des mesures allant de 0 à 1. Un taux proche de 1 signifie que le groupe est très uni.<br><br>Attention, dans beaucoup de parlements, y compris l'Assemblée nationale, les députés suivent dans la plupart des cas la ligne officielle du groupe, expliquant des taux de cohésion très élevés. Le mesure proposée ici est intéressante quand elle est comparée avec les mesures de cohésion des autres groupes.<br><br>Pour plus d'information, <a href='<?= base_url() ?>statistiques#cohesion' target='_blank'>cliquez ici</a>."><?php echo file_get_contents(asset_url()."imgs/icons/question_circle.svg") ?></a>
                     </th>
                     <th class="pl-4"></th>
                   </tr>
@@ -267,13 +279,13 @@
         <div class="col-12 d-flex justify-content-center">
           <div class="bloc-carousel-votes">
             <div class="carousel-buttons">
-              <button type="button" class="btn prev mr-2 button--previous">
+              <button type="button" class="btn prev mr-2 button--previous" aria-label="précédent">
                 <?php echo file_get_contents(asset_url()."imgs/icons/arrow_left.svg") ?>
               </button>
               <a class="btn all mx-2" href="<?= base_url() ?>votes/decryptes">
                 <span>VOIR TOUS</span>
               </a>
-              <button type="button" class="btn next ml-2 button--next">
+              <button type="button" class="btn next ml-2 button--next" aria-label="suivant">
                 <?php echo file_get_contents(asset_url()."imgs/icons/arrow_right.svg") ?>
               </button>
             </div>
