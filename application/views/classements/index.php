@@ -92,7 +92,11 @@
                   <a href="<?= base_url() ?>groupes/<?= mb_strtolower($groups_age_oldest["libelleAbrev"]) ?>">
                     <div class="score mb-4">
                       <div class="avatar">
-                        <img src="<?= asset_url() ?>imgs/groupes/<?= $groups_age_oldest["libelleAbrev"] ?>.png" alt="<?= $groups_age_oldest["libelle"] ?>">
+                        <picture>
+                          <source srcset="<?= asset_url(); ?>imgs/groupes/webp/<?= $groups_age_oldest['libelleAbrev'] ?>.webp" type="image/webp">
+                          <source srcset="<?= asset_url(); ?>imgs/groupes/<?= $groups_age_oldest['libelleAbrev'] ?>.png" type="image/png">
+                          <img class="img" src="<?= asset_url(); ?>imgs/groupes/<?= $groups_age_oldest['libelleAbrev'] ?>.png" width="150" height="150" alt="<?= $groups_age_oldest['libelle'] ?>">
+                        </picture>
                       </div>
                       <div class="age">
                         <span class="badge badge-primary shadow"><?= round($groups_age_oldest["age"]) ?> ans</span>
@@ -110,7 +114,11 @@
                   <a href="<?= base_url() ?>groupes/<?= mb_strtolower($groups_age_youngest["libelleAbrev"]) ?>">
                     <div class="score mb-4">
                       <div class="avatar">
-                        <img src="<?= asset_url() ?>imgs/groupes/<?= $groups_age_youngest["libelleAbrev"] ?>.png" alt="<?= $groups_age_youngest["libelle"] ?>">
+                        <picture>
+                          <source srcset="<?= asset_url(); ?>imgs/groupes/webp/<?= $groups_age_youngest['libelleAbrev'] ?>.webp" type="image/webp">
+                          <source srcset="<?= asset_url(); ?>imgs/groupes/<?= $groups_age_youngest['libelleAbrev'] ?>.png" type="image/png">
+                          <img class="img" src="<?= asset_url(); ?>imgs/groupes/<?= $groups_age_youngest['libelleAbrev'] ?>.png" width="150" height="150" alt="<?= $groups_age_youngest['libelle'] ?>">
+                        </picture>
                       </div>
                       <div class="age">
                         <span class="badge badge-primary shadow"><?= round($groups_age_youngest["age"]) ?> ans</span>
@@ -305,7 +313,11 @@
                   <a href="<?= base_url() ?>groupes/<?= mb_strtolower($groups_cohesion_first["libelleAbrev"]) ?>">
                     <div class="score mb-4">
                       <div class="avatar">
-                        <img src="<?= asset_url() ?>imgs/groupes/<?= $groups_cohesion_first["libelleAbrev"] ?>.png" alt="<?= $groups_cohesion_first["libelle"] ?>">
+                        <picture>
+                          <source srcset="<?= asset_url(); ?>imgs/groupes/webp/<?= $groups_cohesion_first['libelleAbrev'] ?>.webp" type="image/webp">
+                          <source srcset="<?= asset_url(); ?>imgs/groupes/<?= $groups_cohesion_first['libelleAbrev'] ?>.png" type="image/png">
+                          <img class="img" src="<?= asset_url(); ?>imgs/groupes/<?= $groups_cohesion_first['libelleAbrev'] ?>.png" width="150" height="150" alt="<?= $groups_cohesion_first['libelle'] ?>">
+                        </picture>
                       </div>
                     </div>
                   </a>
@@ -320,7 +332,11 @@
                   <a href="<?= base_url() ?>groupes/<?= mb_strtolower($groups_cohesion_last["libelleAbrev"]) ?>">
                     <div class="score mb-4">
                       <div class="avatar">
-                        <img src="<?= asset_url() ?>imgs/groupes/<?= $groups_cohesion_last["libelleAbrev"] ?>.png" alt="<?= $groups_cohesion_last["libelle"] ?>">
+                        <picture>
+                          <source srcset="<?= asset_url(); ?>imgs/groupes/webp/<?= $groups_cohesion_last['libelleAbrev'] ?>.webp" type="image/webp">
+                          <source srcset="<?= asset_url(); ?>imgs/groupes/<?= $groups_cohesion_last['libelleAbrev'] ?>.png" type="image/png">
+                          <img class="img" src="<?= asset_url(); ?>imgs/groupes/<?= $groups_cohesion_last['libelleAbrev'] ?>.png" width="150" height="150" alt="<?= $groups_cohesion_last['libelle'] ?>">
+                        </picture>
                       </div>
                     </div>
                   </a>
@@ -406,7 +422,11 @@
                   <a href="<?= base_url() ?>groupes/<?= mb_strtolower($groups_participation_first["libelleAbrev"]) ?>">
                     <div class="score mb-4">
                       <div class="avatar">
-                        <img src="<?= asset_url() ?>imgs/groupes/<?= $groups_participation_first["libelleAbrev"] ?>.png" alt="<?= $groups_participation_first["libelle"] ?>">
+                        <picture>
+                          <source srcset="<?= asset_url(); ?>imgs/groupes/webp/<?= $groups_participation_first['libelleAbrev'] ?>.webp" type="image/webp">
+                          <source srcset="<?= asset_url(); ?>imgs/groupes/<?= $groups_participation_first['libelleAbrev'] ?>.png" type="image/png">
+                          <img class="img" src="<?= asset_url(); ?>imgs/groupes/<?= $groups_participation_first['libelleAbrev'] ?>.png" width="150" height="150" alt="<?= $groups_participation_first['libelle'] ?>">
+                        </picture>
                       </div>
                       <div class="age">
                         <span class="badge badge-primary shadow"><?= round($groups_participation_first["participation"]) ?> %</span>
@@ -424,7 +444,11 @@
                   <a href="<?= base_url() ?>groupes/<?= mb_strtolower($groups_participation_last["libelleAbrev"]) ?>">
                     <div class="score mb-4">
                       <div class="avatar">
-                        <img src="<?= asset_url() ?>imgs/groupes/<?= $groups_participation_last["libelleAbrev"] ?>.png" alt="<?= $groups_participation_last["libelle"] ?>">
+                        <picture>
+                          <source srcset="<?= asset_url(); ?>imgs/groupes/webp/<?= $groups_participation_last['libelleAbrev'] ?>.webp" type="image/webp">
+                          <source srcset="<?= asset_url(); ?>imgs/groupes/<?= $groups_participation_last['libelleAbrev'] ?>.png" type="image/png">
+                          <img class="img" src="<?= asset_url(); ?>imgs/groupes/<?= $groups_participation_last['libelleAbrev'] ?>.png" width="150" height="150" alt="<?= $groups_participation_last['libelle'] ?>">
+                        </picture>
                       </div>
                       <div class="age">
                         <span class="badge badge-primary shadow"><?= round($groups_participation_last["participation"]) ?> %</span>
