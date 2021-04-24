@@ -12,8 +12,10 @@
                 </div>
                 <div class="card-body d-flex align-items-center">
                     <span class="title">
-                        <a href="<?= base_url() ?>votes/legislature-<?= $vote['legislature'] ?>/vote_<?= $vote['voteNumero'] ?>" class="stretched-link"></a>
-                        <?= $vote['voteTitre'] ?></span>
+                        <a href="<?= base_url() ?>votes/legislature-<?= $vote['legislature'] ?>/vote_<?= $vote['voteNumero'] ?>" class="stretched-link no-decoration">
+                            <?= $vote['voteTitre'] ?>
+                        </a>
+                      </span>
                 </div>
                 <div class="card-footer">
                     <span class="field badge badge-primary py-1 px-2"><?= $vote['category_libelle'] ?></span>
