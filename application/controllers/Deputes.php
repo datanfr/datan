@@ -340,7 +340,7 @@
       // Microdata Person
       $data['person_schema'] = $this->deputes_model->get_person_schema($data['depute']);
       // CSS
-      $data['critical_css'] = "assets/css/critical/depute_individual.css";
+      $data['critical_css'] = "depute_individual";
       $data['css_to_load']= array(
         array(
           "url" => css_url()."circle.css",
@@ -608,7 +608,7 @@
       $controller = $this->router->fetch_class()."/".$this->router->fetch_method();
       $data['ogp'] = $this->meta_model->get_ogp($controller, $data['title_meta'], $data['description_meta'], $data['url'], $data);
       // CSS TO LOAD
-      $data['critical_css'] = "assets/css/critical/city.css";
+      $data['critical_css'] = "city";
       // JS UP
       // JS
       // Preloads
@@ -719,7 +719,6 @@
       $data['ogp'] = $this->meta_model->get_ogp($controller, $data['title_meta'], $data['description_meta'], $data['url'], $data);
       // JS
       // CSS
-      $data['critical_css'] = "assets/css/critical/depute_votes.css";
       // Preloads
       $data['preloads'] = array(
         array("href" => asset_url()."imgs/cover/hemicycle-front-375.jpg", "as" => "image", "media" => "(max-width: 575.98px)"),
@@ -821,7 +820,6 @@
       $controller = $this->router->fetch_class()."/".$this->router->fetch_method();
       $data['ogp'] = $this->meta_model->get_ogp($controller, $data['title_meta'], $data['description_meta'], $data['url'], $data);
       // CSS
-      $data['critical_css'] = "assets/css/critical/depute_votes_field.css";
       // JS
       // Preloads
       $data['preloads'] = array(
