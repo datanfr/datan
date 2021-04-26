@@ -41,7 +41,7 @@
                 <div class="card card-groupe">
                   <div class="liseret" style="background-color: <?= $party['couleurAssociee'] ?>"></div>
                   <div class="card-avatar group">
-                    <img src="<?= asset_url() ?>imgs/parties/<?= mb_strtolower($party['libelleAbrev']) ?>.png" alt="<?= $party['libelle'] ?>">
+                    <img src="<?= asset_url() ?>imgs/parties/<?= mb_strtolower($party['libelleAbrev']) ?>.png" width="150" height="150" alt="<?= $party['libelle'] ?>">
                   </div>
                   <div class="card-body d-flex flex-column justify-content-center align-items-center">
                     <h2 class="d-block card-title">
