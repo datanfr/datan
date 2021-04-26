@@ -16,6 +16,7 @@
               <input type="email" name="email" class="form-control" placeholder="Votre email">
             </div>
             <div class="modal-footer">
+              <a type="button" class="btn btn-warning">Gérer mes abonnements</a>
               <button type="submit" class="btn btn-primary">Recevoir la newsletter</button>
             </div>
             <?= form_close() ?>
