@@ -34,13 +34,17 @@
       return $this->db->where('email', urldecode($email))->limit(1)->get('newsletter')->row_array();
     }
 
+    public function get_all_by_list($list){
+      return $this->db->get_where('newsletter', array($list => TRUE))->result_array();
+    }
+
     public function delete_newsletter($email){
       $this->db->where('email', urldecode($email));
       return $this->db->delete('newsletter');
     }
 
-    public function update_list($email, $data, $list){
-      $this->db->set($list['nameSQL'], $data[$list['nameSQL']]);
+    public function update_list($email, $set, $list){
+      $this->db->set($list, $set);
       $this->db->where('email', urldecode($email));
       $this->db->update('newsletter');
     }
