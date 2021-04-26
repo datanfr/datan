@@ -14,7 +14,11 @@
         <div class="card card-post mt-3">
           <div class="row no-gutters">
             <div class="col-auto img-wrap d-none d-lg-block">
-              <img src="<?= asset_url() ?>imgs/posts/img_post_<?= $post['id'] ?>.png" alt="Image post">
+              <picture>
+                <source srcset="<?= asset_url() ?>imgs/posts/webp/img_post_<?= $post['id'] ?>.webp" type="image/webp">
+                <source srcset="<?= asset_url() ?>imgs/posts/img_post_<?= $post['id'] ?>.png" type="image/png">
+                <img src="<?= asset_url() ?>imgs/posts/img_post_<?= $post['id'] ?>.png" alt="Image post">
+              </picture>
             </div>
             <div class="col">
               <div class="card-block p-3">
