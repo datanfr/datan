@@ -1,3 +1,5 @@
+"use strict";
+
 $(document).ready(function () {
   // popover
   $("[data-toggle=popover]").popover({
@@ -6,14 +8,12 @@ $(document).ready(function () {
     trigger: 'focus',
     html: true
   });
-
   $(".img-lazy").unveil(200, function () {
     this.onload = function () {
-      $(this).removeClass("placeholder")
-    }
+      $(this).removeClass("placeholder");
+    };
   });
 });
-
 $(function () {
   // prevents jumping
   $("a.pop-me-over").on("click", function (e) {
@@ -22,11 +22,9 @@ $(function () {
   });
   $(".pop-me-over").popover();
 });
-
 $(function () {
-  $('[data-toggle="tooltip"]').tooltip()
-})
-
+  $('[data-toggle="tooltip"]').tooltip();
+});
 /*
 ################
                Button UP
@@ -34,7 +32,6 @@ $(function () {
 */
 
 var btn = $('#btnup');
-
 $(window).scroll(function () {
   if ($(window).scrollTop() > 300) {
     btn.addClass('show');
@@ -42,7 +39,6 @@ $(window).scroll(function () {
     btn.removeClass('show');
   }
 });
-
 btn.on('click', function (e) {
   e.preventDefault();
   var distance = $(window).scrollTop();
@@ -52,12 +48,12 @@ btn.on('click', function (e) {
     scrollTop: 0
   }, 2000, 'swing'); // for all browsers
 });
-
 /*
 ################
                Collapse button
 ################
 */
+
 $(document).ready(function () {
   $("#collapseProximity").on("hide.bs.collapse", function () {
     $("#btn-ranking").html('Voir tout le classement');
@@ -66,55 +62,56 @@ $(document).ready(function () {
     $("#btn-ranking").html('Fermer');
   });
 });
-
 /*
 ################
                Flickity
 ################
 */
-
 // init Flickity
+
 if ($('.carousel-cards').length > 0) {
   var $carousel = $('.carousel-cards').flickity({
     prevNextButtons: false,
     pageDots: false,
     freeScroll: true,
     contain: true
-  });
-  // Flickity instance
-  var flkty = $carousel.data('flickity');
-  // previous
+  }); // Flickity instance
+
+  var flkty = $carousel.data('flickity'); // previous
+
   $('.button--previous').on('click', function () {
     $carousel.flickity('previous');
-  });
-  // next
+  }); // next
+
   $('.button--next').on('click', function () {
     $carousel.flickity('next');
   });
 }
-
 /*
 ################
                 no-img (votes controller)
 ################
 */
 
-var cw = $('.no-img').width();
-$('.no-img').css({ 'height': cw + 'px' });
 
+var cw = $('.no-img').width();
+$('.no-img').css({
+  'height': cw + 'px'
+});
 /*
 ################
                 async_home
 ################
 */
 
-(() => {
-  'use strict';
-  // Page is loaded
-  const objects = document.getElementsByClassName('async_home');
-  Array.from(objects).map((item) => {
+(function () {
+  'use strict'; // Page is loaded
+
+  var objects = document.getElementsByClassName('async_home');
+  Array.from(objects).map(function (item) {
     // Start loading image
-    const img = new Image();
+    var img = new Image();
+
     if (window.matchMedia("(max-width: 575.98px)").matches) {
       /*img.src = item.dataset.mobile;
       img.onload = () => {
@@ -126,134 +123,114 @@ $('.no-img').css({ 'height': cw + 'px' });
     } else if (window.matchMedia("(max-width: 970px)").matches) {
       // Once image is loaded replace the src of the HTML element
       img.src = item.dataset.tablet;
-      img.onload = () => {
+
+      img.onload = function () {
         item.classList.remove('async_home');
-        return item.nodeName === 'IMG' ?
-          item.src = item.dataset.src :
-          item.style.backgroundImage = `linear-gradient(130deg, rgba(0, 183, 148, 0.7) 0.65%, rgba(36, 107, 150, 0.7) 112%), url(${item.dataset.tablet})`
+        return item.nodeName === 'IMG' ? item.src = item.dataset.src : item.style.backgroundImage = "linear-gradient(130deg, rgba(0, 183, 148, 0.7) 0.65%, rgba(36, 107, 150, 0.7) 112%), url(".concat(item.dataset.tablet, ")");
       };
     } else {
       // Once image is loaded replace the src of the HTML element
       img.src = item.dataset.src;
-      img.onload = () => {
+
+      img.onload = function () {
         item.classList.remove('async_home');
-        return item.nodeName === 'IMG' ?
-          item.src = item.dataset.src :
-          item.style.backgroundImage = `linear-gradient(130deg, rgba(0, 183, 148, 0.7) 0.65%, rgba(36, 107, 150, 0.7) 112%), url(${item.dataset.src})`
+        return item.nodeName === 'IMG' ? item.src = item.dataset.src : item.style.backgroundImage = "linear-gradient(130deg, rgba(0, 183, 148, 0.7) 0.65%, rgba(36, 107, 150, 0.7) 112%), url(".concat(item.dataset.src, ")");
       };
     }
-
   });
 })();
-
 /*
 ################
                 async_background
 ################
 */
 
-(() => {
-  'use strict';
-  // Page is loaded
-  const objects = document.getElementsByClassName('async_background');
-  Array.from(objects).map((item) => {
+
+(function () {
+  'use strict'; // Page is loaded
+
+  var objects = document.getElementsByClassName('async_background');
+  Array.from(objects).map(function (item) {
     // Start loading image
-    const img = new Image();
+    var img = new Image();
+
     if (window.matchMedia("(max-width: 575.98px)").matches) {
       img.src = item.dataset.mobile;
-      img.onload = () => {
+
+      img.onload = function () {
         item.classList.remove('async_background');
-        return item.nodeName === 'IMG' ?
-          item.src = item.dataset.src :
-          item.style.backgroundImage = `linear-gradient(rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0.65)), url(${item.dataset.mobile})`
+        return item.nodeName === 'IMG' ? item.src = item.dataset.src : item.style.backgroundImage = "linear-gradient(rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0.65)), url(".concat(item.dataset.mobile, ")");
       };
     } else if (window.matchMedia("(max-width: 970px)").matches) {
       // Once image is loaded replace the src of the HTML element
       img.src = item.dataset.tablet;
-      img.onload = () => {
+
+      img.onload = function () {
         item.classList.remove('async_background');
-        return item.nodeName === 'IMG' ?
-          item.src = item.dataset.src :
-          item.style.backgroundImage = `linear-gradient(rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0.65)), url(${item.dataset.tablet})`
+        return item.nodeName === 'IMG' ? item.src = item.dataset.src : item.style.backgroundImage = "linear-gradient(rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0.65)), url(".concat(item.dataset.tablet, ")");
       };
     } else {
       // Once image is loaded replace the src of the HTML element
       img.src = item.dataset.src;
-      img.onload = () => {
+
+      img.onload = function () {
         item.classList.remove('async_background');
-        return item.nodeName === 'IMG' ?
-          item.src = item.dataset.src :
-          item.style.backgroundImage = `linear-gradient(rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0.65)), url(${item.dataset.src})`
+        return item.nodeName === 'IMG' ? item.src = item.dataset.src : item.style.backgroundImage = "linear-gradient(rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0.65)), url(".concat(item.dataset.src, ")");
       };
     }
-
   });
 })();
-
 /*
 ################
                 Read more
 ################
 */
 
+
 $(function () {
-
   var $el, $ps, $up, totalHeight;
-
   $(".read-more-container .btn").click(function () {
-
     // IE 7 doesn't even get this far. I didn't feel like dicking with it.
-
     totalHeight = 0;
     var margin = 0;
     $el = $(this);
-    let $p = $el.parent();
+    var $p = $el.parent();
     $up = $p.parent();
-    $ps = $up.find("p:not('.read-more-button')");
+    $ps = $up.find("p:not('.read-more-button')"); // measure how tall inside should be by adding together heights of all inside paragraphs (except read-more paragraph)
 
-    // measure how tall inside should be by adding together heights of all inside paragraphs (except read-more paragraph)
     $ps.each(function () {
       totalHeight += $(this).outerHeight();
       margin = parseInt($(this).css("margin-bottom"), 10);
       totalHeight = totalHeight + margin;
     });
-
     totalHeight = totalHeight - margin;
+    $up.css({
+      // Set height to prevent instant jumpdown when max height is removed
+      "height": $up.height(),
+      "max-height": 9999
+    }).animate({
+      "height": totalHeight
+    }); // fade out read-more
 
-    $up
-      .css({
-        // Set height to prevent instant jumpdown when max height is removed
-        "height": $up.height(),
-        "max-height": 9999
-      })
-      .animate({
-        "height": totalHeight
-      });
+    $p.fadeOut(); // prevent jump-down
 
-    // fade out read-more
-    $p.fadeOut();
-
-    // prevent jump-down
     return false;
-
   });
-
 });
-
-
 /*
 ##########
 NEWSLETTER
 ##########
 */
-$('#newsletterForm').on('submit', (e) => {
+
+$('#newsletterForm').on('submit', function (e) {
   e.preventDefault();
   $.ajax({
     url: "api/newsletter/create_newsletter",
     type: "POST",
     data: $('#newsletterForm').serialize(),
     dataType: 'json',
-    success: function (ac) {
+    success: function success(ac) {
       if (!ac) {
         $('#newsletterForm').hide();
         $('#modalFail').show();
@@ -262,19 +239,20 @@ $('#newsletterForm').on('submit', (e) => {
         $('#modalSubscription').show();
       }
     },
-    error: function (err) {
-      console.log('err', err)
+    error: function error(err) {
+      console.log('err', err);
       $('#newsletterForm').hide();
       $('#modalFail').show();
     }
   });
   return true;
-})
-$('#manage').on('click', (e) => {
+});
+$('#manage').on('click', function (e) {
   var data = $('#newsletterForm').serializeArray();
   e.preventDefault();
   data = $('#newsletterForm').serializeArray();
   data = data[1]["value"];
   data = encodeURIComponent(data);
   window.location.href = "https://datan.fr/newsletter/edit/" + data;
-})
+});
+//# sourceMappingURL=main-es5.js.map
