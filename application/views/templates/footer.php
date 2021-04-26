@@ -42,7 +42,6 @@
             </div>
             <div class="modal-body">
               <p>Vous êtes sans doute déjà inscrit !</p>
-              <p>Pour gérer vos abonnements aux newsletters de Datan, <a href="<?= base_url() ?>newsletter/edit/">cliquez ici</a>. // TO DO HERE</p>
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
@@ -58,20 +57,6 @@
             <div class="col-md-4 d-flex flex-column justify-content-center">
               <img class="img-lazy img-fluid" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media-big.png" data-src="<?= asset_url(); ?>imgs/datan/logo_baseline_white_transp.png" alt="Logo Facebook Datan">
             </div>
-            <!--
-          <div class="col-md-8 d-flex flex-column justify-content-center">
-            <div>
-              PHP //form_open()
-                <div class="d-flex">
-                    <div class="input-group">
-                      <input type="text" class="form-control" id="inlineFormInputGroupUsername" placeholder="Inscrivez-vous à notre newsletter!">
-                    </div>
-                    <button class="btn" type="submit" id="button-addon2"><i class="fa fa-paper-plane"></i></button>
-                </div>
-              PHP //form_close()
-            </div>
-          </div>
-          -->
             <div class="col-md-4 d-flex flex-column justify-content-center">
               <p>© Datan 2021 - Tous droits réservés</p>
               <p>Nous contacter : <a href="mailto:info@datan.fr" class="no-decoration underline">info@datan.fr</a></p>
