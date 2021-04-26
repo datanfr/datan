@@ -86,12 +86,27 @@ module.exports = function (grunt) {
               'assets/css/main.css'
           ],
           width: 1200,
-          height: 1500
+          height: 1350
         },
         // The source file
         src: 'http://localhost/datan/',
         // The destination file
         dest: 'assets/css/critical/index.css'
+      },
+      // Homepage mobile
+      indexMobile: {
+        options: {
+          base: './',
+          css: [
+              'assets/css/main.css'
+          ],
+          width: 375,
+          height: 1800
+        },
+        // The source file
+        src: 'http://localhost/datan/',
+        // The destination file
+        dest: 'assets/css/critical/index-mobile.css'
       },
       // Page city
       city: {
@@ -101,12 +116,27 @@ module.exports = function (grunt) {
               'assets/css/main.css'
           ],
           width: 1200,
-          height: 1500
+          height: 1350
         },
         // The source file
         src: 'http://localhost/datan/deputes/ille-et-vilaine-35/ville_rennes',
         // The destination file
         dest: 'assets/css/critical/city.css'
+      },
+      // Page city mobile
+      cityMobile: {
+        options: {
+          base: './',
+          css: [
+              'assets/css/main.css'
+          ],
+          width: 375,
+          height: 812
+        },
+        // The source file
+        src: 'http://localhost/datan/deputes/ille-et-vilaine-35/ville_rennes',
+        // The destination file
+        dest: 'assets/css/critical/city-mobile.css'
       },
       // Page depute
       depute_individual: {
@@ -116,12 +146,27 @@ module.exports = function (grunt) {
               'assets/css/main.css'
           ],
           width: 1200,
-          height: 1500
+          height: 1350
         },
         // The source file
         src: 'http://localhost/datan/deputes/maine-et-loire-49/depute_matthieu-orphelin',
         // The destination file
         dest: 'assets/css/critical/depute_individual.css'
+      },
+      // Page depute Mobile
+      depute_individualMobile: {
+        options: {
+          base: './',
+          css: [
+              'assets/css/main.css'
+          ],
+          width: 375,
+          height: 2500
+        },
+        // The source file
+        src: 'http://localhost/datan/deputes/maine-et-loire-49/depute_matthieu-orphelin',
+        // The destination file
+        dest: 'assets/css/critical/depute_individual-mobile.css'
       },
       // Page depute/votes
       depute_votes: {
@@ -131,27 +176,12 @@ module.exports = function (grunt) {
               'assets/css/main.css'
           ],
           width: 1200,
-          height: 1500
+          height: 1350
         },
         // The source file
         src: 'http://localhost/datan/deputes/maine-et-loire-49/depute_matthieu-orphelin/votes',
         // The destination file
         dest: 'assets/css/critical/depute_votes.css'
-      },
-      // Page depute/votes/field
-      depute_votes_field: {
-        options: {
-          base: './',
-          css: [
-              'assets/css/main.css'
-          ],
-          width: 1200,
-          height: 1500
-        },
-        // The source file
-        src: 'http://localhost/datan/deputes/maine-et-loire-49/depute_matthieu-orphelin/votes/affaires-sociales',
-        // The destination file
-        dest: 'assets/css/critical/depute_votes_field.css'
       },
       // Page groupe
       groupe_individual: {
@@ -161,12 +191,27 @@ module.exports = function (grunt) {
               'assets/css/main.css'
           ],
           width: 1200,
-          height: 1500
+          height: 1350
         },
         // The source file
         src: 'http://localhost/datan/groupes/larem',
         // The destination file
         dest: 'assets/css/critical/groupe_individual.css'
+      },
+      // Page groupe Mobile
+      groupe_individual: {
+        options: {
+          base: './',
+          css: [
+              'assets/css/main.css'
+          ],
+          width: 375,
+          height: 1700
+        },
+        // The source file
+        src: 'http://localhost/datan/groupes/larem',
+        // The destination file
+        dest: 'assets/css/critical/groupe_individual-mobile.css'
       },
     },
     watch: {
