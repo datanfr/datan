@@ -17,7 +17,8 @@
       );
       $templateId = 2826349; /* Welcome */
       $variables = array(
-        "email" => $email
+        "email" => $email,
+        "email_encode" => urlencode($email)
       );
       sendMail($email, 'Bienvenue à la newsletter', NULL, TRUE, $templateId, $variables);
 
