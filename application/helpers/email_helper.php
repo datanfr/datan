@@ -31,15 +31,24 @@ function sendMail($to, $subject, $templateHtml, $templateLanguage, $templateId, 
 function sendContactList($email, $list){
   $mj = new \Mailjet\Client($_SERVER['API_KEY_MAILJET'], $_SERVER['API_KEY_SECRETE_MAILJET'], true, ['version' => 'v3']);
   $body = [
-    'ContactAlt' => $email,
-    'ListID' => $list
+    'ContactsLists' => [
+      [
+        'Action' => "addforce",
+        'ListID' => $list
+      ]
+    ]
   ];
-  $response = $mj->post(Resources::$Listrecipient, ['body' => $body]);
+  $mj->post(Resources::$ContactManagecontactslists, ['id' => $email, 'body' => $body]);
 }
 
 function getContactId($id){
   $mj = new \Mailjet\Client($_SERVER['API_KEY_MAILJET'], $_SERVER['API_KEY_SECRETE_MAILJET'], true, ['version' => 'v3']);
   return $mj->get(Resources::$Contactdata, ['id' => $id]);
+}
+
+function getContactLists($id){
+  $mj = new \Mailjet\Client($_SERVER['API_KEY_MAILJET'], $_SERVER['API_KEY_SECRETE_MAILJET'], true, ['version' => 'v3']);
+  return $mj->get(Resources::$ContactGetcontactslists, ['id' => $id]);
 }
 
 function removeContactlist($id, $list){

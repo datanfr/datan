@@ -28,10 +28,10 @@ class Newsletter extends CI_Controller
           $data['general'] = $data['general'] == "on" ? 1 : 0;
           if ($data['general'] != $data['newsletter']['general']) {
             $list = array(
-              'nameSQL' => 'general',
+              'sql' => 'general',
               'mailjetId' => 25834
             );
-            $this->newsletter_model->update_list($email, $data, $list);
+            $this->newsletter_model->update_list($email, $data[$list['sql']], $list['sql']);
 
             // API
             if ($data['general'] == 1) {
@@ -54,6 +54,30 @@ class Newsletter extends CI_Controller
           $this->load->view('newsletter/edit');
           $this->load->view('templates/footer', $data);
         }
+    }
+
+    public function update(){
+      $lists = array(
+        array(
+          "sql" => "general",
+          "mailjet" => 25834
+        )
+      );
+
+      foreach ($lists as $list) {
+        $contactsSql = $this->newsletter_model->get_all_by_list($list['sql']);
+        foreach ($contactsSql as $contact) {
+          $response = getContactLists($contact['email']);
+          if ($response->success()) {
+            $responseLists = $response->getData();
+            foreach ($responseLists as $responseList) {
+              if (($responseList['ListID'] == $list['mailjet']) && ($responseList['IsUnsub'])) {
+                $this->newsletter_model->update_list($contact['email'], NULL, $list['sql']);
+              }
+            }
+          }
+        }
+      }
     }
 
     public function delete($email){
