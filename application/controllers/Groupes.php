@@ -252,7 +252,7 @@
       $controller = $this->router->fetch_class()."/".$this->router->fetch_method();
       $data['ogp'] = $this->meta_model->get_ogp($controller, $data['title_meta'], $data['description_meta'], $data['url'], $data);
       // CSS
-      $data['critical_css'] = "assets/css/critical/groupe_individual.css";
+      $data['critical_css'] = "groupe_individual";
       $data['css_to_load']= array(
         array(
           "url" => css_url()."circle.css",
