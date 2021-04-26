@@ -103,7 +103,7 @@
       //Open Graph
       $data['ogp'] = $this->meta_model->get_ogp('home', $data['title_meta'], $data['description_meta'], $data['url'], $data);
       // CSS
-      $data['critical_css'] = "assets/css/critical/index.css";
+      $data['critical_css'] = "index";
       $data['css_to_load']= array(
         array(
           "url" => "https://unpkg.com/flickity@2/dist/flickity.min.css",
