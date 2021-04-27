@@ -10,7 +10,10 @@ class Newsletter extends CI_Controller
     }
 
     public function edit($email){
-        $data = [];
+
+        if (strpos($email, '@') !== false) {
+            redirect('newsletter/edit/' . urlencode($email));
+        }
 
         $data['newsletter'] = $this->newsletter_model->get_by_email($email);
         if (empty($data['newsletter'])) {
