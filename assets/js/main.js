@@ -1,4 +1,4 @@
-$(document).ready(function(){
+$(document).ready(function () {
   // popover
   $("[data-toggle=popover]").popover({
     placement: 'top',
@@ -7,20 +7,20 @@ $(document).ready(function(){
     html: true
   });
 
-  $(".img-lazy").unveil(200, function() {
+  $(".img-lazy").unveil(200, function () {
     this.onload = function () {
       $(this).removeClass("placeholder")
     }
   });
 });
 
-$(function(){
-// prevents jumping
-$("a.pop-me-over").on("click", function (e) {
+$(function () {
+  // prevents jumping
+  $("a.pop-me-over").on("click", function (e) {
     e.preventDefault();
     return true;
-});
-$(".pop-me-over").popover();
+  });
+  $(".pop-me-over").popover();
 });
 
 $(function () {
@@ -35,7 +35,7 @@ $(function () {
 
 var btn = $('#btnup');
 
-$(window).scroll(function() {
+$(window).scroll(function () {
   if ($(window).scrollTop() > 300) {
     btn.addClass('show');
   } else {
@@ -43,7 +43,7 @@ $(window).scroll(function() {
   }
 });
 
-btn.on('click', function(e) {
+btn.on('click', function (e) {
   e.preventDefault();
   var distance = $(window).scrollTop();
   var speed = 2;
@@ -62,7 +62,7 @@ $(document).ready(function () {
   $("#collapseProximity").on("hide.bs.collapse", function () {
     $("#btn-ranking").html('Voir tout le classement');
   });
-  $("#collapseProximity").on("show.bs.collapse", function(){
+  $("#collapseProximity").on("show.bs.collapse", function () {
     $("#btn-ranking").html('Fermer');
   });
 });
@@ -74,7 +74,7 @@ $(document).ready(function () {
 */
 
 // init Flickity
-if ($('.carousel-cards').length > 0){
+if ($('.carousel-cards').length > 0) {
   var $carousel = $('.carousel-cards').flickity({
     prevNextButtons: false,
     pageDots: false,
@@ -84,11 +84,11 @@ if ($('.carousel-cards').length > 0){
   // Flickity instance
   var flkty = $carousel.data('flickity');
   // previous
-  $('.button--previous').on( 'click', function() {
+  $('.button--previous').on('click', function () {
     $carousel.flickity('previous');
   });
   // next
-  $('.button--next').on( 'click', function() {
+  $('.button--next').on('click', function () {
     $carousel.flickity('next');
   });
 }
@@ -100,7 +100,7 @@ if ($('.carousel-cards').length > 0){
 */
 
 var cw = $('.no-img').width();
-$('.no-img').css({'height':cw+'px'});
+$('.no-img').css({ 'height': cw + 'px' });
 
 /*
 ################
@@ -152,11 +152,11 @@ $('.no-img').css({'height':cw+'px'});
 ################
 */
 
-$(function() {
+$(function () {
 
   var $el, $ps, $up, totalHeight;
 
-  $(".read-more-container .btn").click(function() {
+  $(".read-more-container .btn").click(function () {
 
     // IE 7 doesn't even get this far. I didn't feel like dicking with it.
 
@@ -168,7 +168,7 @@ $(function() {
     $ps = $up.find("p:not('.read-more-button')");
 
     // measure how tall inside should be by adding together heights of all inside paragraphs (except read-more paragraph)
-    $ps.each(function() {
+    $ps.each(function () {
       totalHeight += $(this).outerHeight();
       margin = parseInt($(this).css("margin-bottom"), 10);
       totalHeight = totalHeight + margin;
@@ -209,15 +209,20 @@ $('#newsletterForm').on('submit', (e) => {
     type: "POST",
     data: $('#newsletterForm').serialize(),
     dataType: 'json',
-    success: function(){
-      $('#newsletterForm').hide();
-      $('#modalSubscription').show();
-
+    success: function (ac) {
+      if (!ac) {
+        $('#newsletterForm').hide();
+        $('#modalFail').show();
+      } else {
+        $('#newsletterForm').hide();
+        $('#modalSubscription').show();
+      }
     },
-    error:function(){
+    error: function (err) {
+      console.log('err', err)
       $('#newsletterForm').hide();
       $('#modalFail').show();
     }
-});
+  });
   return true;
 })
