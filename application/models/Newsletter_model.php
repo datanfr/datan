@@ -5,6 +5,7 @@
       $this->load->helper('email_helper');
       //$this->load->library('parser');
     }
+    
 
     public function create_newsletter(){
       $email = $this->input->post('email');
