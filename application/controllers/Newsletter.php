@@ -14,7 +14,7 @@ class Newsletter extends CI_Controller
         $data['newsletter'] = $this->newsletter_model->get_by_email($email);
         if (!isset($data['newsletter'])) {
           echo "yes";
-          //redirect();
+          redirect();
         }
 
         // Meta
