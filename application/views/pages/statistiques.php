@@ -100,7 +100,7 @@
             Pour le calculer, nous avons récupéré la pyramide des âges, un document avec le nombre d'habitants en France selon leur âge (<a href="https://www.insee.fr/fr/statistiques/2381472#tableau-figure1" target="_blank" rel="nofollow noopener">source insee</a>). Nous avons ensuite calculé la moyenne d'âge en ne prenant en compte que les individus ayant plus de 18 ans. Pour découvrir le document avec le calcul, <a href="https://docs.google.com/spreadsheets/d/17pf7I0vN_yIl7lnebXhZSKDRaE6j31qzRX77Cx1SYD8/edit#gid=1699168638" target="_blank" rel="nofollow noopener">cliquez ici</a>.
           </p>
           <h2>Contactez-nous</h2>
-          <p>Pour plus d'information, envoyez-nous un email : <a href="mailto:contact@datan.fr">contact@datan.fr</a></p>
+          <p>Pour plus d'information, envoyez-nous un email : <a href="mailto:info@datan.fr">info@datan.fr</a></p>
         </div>
       </div>
     </div>

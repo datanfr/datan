@@ -131,6 +131,10 @@ $route['questionnaire/resultat']['post'] = 'quiz/result';
 // ELECTIONS
 $route['elections'] = 'elections/index';
 $route['elections/(:any)'] = 'elections/individual/$1';
+// NEWSLETTER
+$route['newsletter/edit/(:any)'] = 'newsletter/edit/$1';
+$route['newsletter/update'] = 'newsletter/update';
+$route['newsletter/delete/(:any)'] = 'newsletter/delete/$1';
 // API
 $route['api/(:any)/(:any)'] = 'api/index/$1/$2';
 // LOGIN & REGISTER

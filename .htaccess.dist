@@ -36,4 +36,6 @@
     SetEnv CI_ENV production
     SetEnv BASE_URL http://localhost/datan
     SetEnv API_KEY_NOBG get your api key on remove.bg
+    SetEnv API_KEY_MAILJET api key for newsletter
+    SetEnv API_KEY_SECRETE_MAILJET secrete api key for newsletter
 </IfModule>

@@ -4,21 +4,21 @@
     <div class="modal fade" id="newsletter" tabindex="-1" role="dialog" aria-labelledby="newsletterLabel" aria-hidden="true">
       <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
         <div class="modal-content">
-          <?= form_open('newsletter', array('id' => 'newsletterForm')); ?>
-          <div class="modal-header">
-            <h2 class="modal-title">Newsletter</h2>
-            <span class="close cursor-pointer" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </span>
-          </div>
-          <div class="modal-body">
-            <p>Souhaitez-vous vous inscrire et recevoir les informations parlementaires et les nouvelles de Datan.fr <b>une fois par mois</b> ?</p>
-            <input type="email" name="email" class="form-control" placeholder="Votre email">
-          </div>
-          <div class="modal-footer">
-            <button type="submit" class="btn btn-primary">Recevoir la newsletter</button>
-          </div>
-          <?= form_close() ?>
+          <?= form_open('newsletter', array('id'=> 'newsletterForm')); ?>
+            <div class="modal-header">
+              <h2 class="modal-title" id="newsletterLabel">Newsletter</h2>
+              <span class="close cursor-pointer" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </span>
+            </div>
+            <div class="modal-body">
+              <p>Souhaitez-vous vous inscrire et recevoir les informations parlementaires et les nouvelles de Datan.fr <b>une fois par mois</b> ?</p>
+              <input type="email" name="email" required class="form-control" placeholder="Votre email">
+            </div>
+            <div class="modal-footer">
+              <button type="submit" class="btn btn-primary">Recevoir la newsletter</button>
+            </div>
+            <?= form_close() ?>
           <div id="modalSubscription">
             <div class="modal-header">
               <h2 class="modal-title">Félicitations</h2>
@@ -59,7 +59,7 @@
             </div>
             <div class="col-md-4 d-flex flex-column justify-content-center">
               <p>© Datan 2021 - Tous droits réservés</p>
-              <p>Nous contacter : <a href="mailto:contact@datan.fr" class="no-decoration underline">contact@datan.fr</a></p>
+              <p>Nous contacter : <a href="mailto:info@datan.fr" class="no-decoration underline">info@datan.fr</a></p>
               <div class="social-media">
                 <a href="https://www.facebook.com/datanFR/" target="_blank" class="no-decoration" rel="noreferrer">
                   <img class="img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="542" height="542" data-src="<?= asset_url() ?>imgs/logos/facebook_datan.png" alt="Logo Facebook Datan">
