@@ -27,7 +27,7 @@ class Api extends CI_Controller
     {
         // Check if the call is not in the forbidden list
         if (in_array($model . '/' . $method, $this->forbidden)){
-            //return $this->response(array('error' => true, 'message' => 'This method is forbidden', 403));
+            return $this->response(array('error' => true, 'message' => 'This method is forbidden', 403));
         }
         $model = $model . '_model';
         $gets = $this->input->get();
