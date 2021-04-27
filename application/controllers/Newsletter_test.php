@@ -7,7 +7,7 @@
 
     // Delete all cache
     public function edit(){
-      echo "yes";
+      redirect();
     }
 
   }
