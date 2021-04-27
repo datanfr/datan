@@ -247,12 +247,4 @@ $('#newsletterForm').on('submit', function (e) {
   });
   return true;
 });
-$('#manage').on('click', function (e) {
-  var data = $('#newsletterForm').serializeArray();
-  e.preventDefault();
-  data = $('#newsletterForm').serializeArray();
-  data = data[1]["value"];
-  data = encodeURIComponent(data);
-  window.location.href = "https://datan.fr/newsletter/edit/" + data;
-});
 //# sourceMappingURL=main-es5.js.map
