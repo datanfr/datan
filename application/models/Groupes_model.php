@@ -316,5 +316,114 @@
       return $couleur;
     }
 
+    public function get_organization_schema($groupe, $president, $members){
+      $schema = [
+        "@context" => "http://schema.org",
+        "@type" => "Organization",
+        "name" => $groupe['libelle'] . " (" . $groupe['libelleAbrev'] . ")",
+        "description" => "Le groupe " . $groupe['libelle'] . " est un groupe parlementaire de l'Assemblée nationale française.",
+        "url" => base_url() . "groupes/" . $groupe['libelleAbrev'],
+        "address" => [
+          "@type" => "PostalAddress",
+          "addressCountry" => "FR",
+          "addressLocality" => "Paris",
+          "postalCode" => "75355",
+          "streetAddress" => "126 rue de l'Université"
+        ],
+        "member" => [
+          [
+            "@type" => "Person",
+            "name" => $president['nameFirst']. ' '.$president['nameLast'],
+            "familyName" => $president['nameLast'],
+            "givenName" => $president['nameFirst'],
+            "url" => base_url().'deputes/'.$president['dptSlug'].'/depute_'.$president['nameUrl'],
+            "jobTitle" => "Député français et président du groupe " . $groupe['libelle']
+          ]
+        ],
+        "foundingDate" => $groupe['dateDebut'],
+        "logo" => asset_url() . "imgs/groupes/" . $groupe['libelleAbrev'] . ".png",
+        "numberOfEmployees" => $groupe["effectif"],
+        "memberOf" => [
+          "@type" => "Organization",
+          "name" => "Assemblée nationale",
+          "url" => "http://www.assemblee-nationale.fr/",
+          "foundingDate" => "1958-10-04",
+          "sameAs" => "https://fr.wikipedia.org/wiki/Assembl%C3%A9e_nationale_(France)",
+          "location" => [
+            "@type" => "Place",
+            "address" => [
+              "@type" => "PostalAddress",
+              "addressCountry" => "FR",
+              "addressLocality" => "Paris",
+              "postalCode" => "75355",
+              "streetAddress" => "126 rue de l'Université"
+            ]
+          ]
+        ]
+      ];
+
+      if ($groupe['dateFin'] != NULL) {
+        $schema["dissolutionDate"] = $groupe["dateFin"];
+      }
+
+      if (isset($groupe['website']) && $groupe['website']) {
+        if (!isset($schema['sameAs'])) {
+          $schema['sameAs'] = array($groupe['website']);
+        }
+      }
+
+      if (isset($groupe['twitter']) && $groupe['twitter']) {
+        $twitter = "https://twitter.com/" . $groupe['twitter'];
+        if (!isset($schema['sameAs'])) {
+          $schema['sameAs'] = array($twitter);
+        } else {
+          array_push($schema['sameAs'], $twitter);
+        }
+      }
+
+      if (isset($groupe['facebook']) && $groupe['facebook']) {
+        $facebook = "https://www.facebook.com/" . $groupe['facebook'];
+        if (!isset($schema['sameAs'])) {
+          $schema['sameAs'] = array($facebook);
+        } else {
+          array_push($schema['sameAs'], $facebook);
+        }
+      }
+
+      if ($members) {
+        print_r($groupe);
+        // Membres
+        foreach ($members["members"] as $member) {
+          $array = array(
+            "@type" => "Person",
+            "name" => $member['nameFirst']. ' '.$member['nameLast'],
+            "familyName" => $member['nameLast'],
+            "givenName" => $member['nameFirst'],
+            "url" => base_url().'deputes/'.$member['dptSlug'].'/depute_'.$member['nameUrl'],
+          );
+          if (!$groupe['dateFin']) {
+            $array["jobTitle"] = "Député français et membre du groupe " . $member['libelle'];
+          }
+          array_push($schema["member"], $array);
+        }
+        // Apparentes
+        foreach ($members["apparentes"] as $member) {
+          $array = array(
+            "@type" => "Person",
+            "name" => $member['nameFirst']. ' '.$member['nameLast'],
+            "familyName" => $member['nameLast'],
+            "givenName" => $member['nameFirst'],
+            "url" => base_url().'deputes/'.$member['dptSlug'].'/depute_'.$member['nameUrl']
+          );
+          if (!$groupe['dateFin']) {
+            $array["jobTitle"] = "Député français et membre apparenté au groupe " . $member['libelle'];
+          }
+          array_push($schema["member"], $array);
+        }
+      }
+
+      return $schema;
+    }
+
   }
 ?>

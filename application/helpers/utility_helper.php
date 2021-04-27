@@ -29,6 +29,10 @@
     return 50.52;
   }
 
+  function groupesNI(){
+    return array("PO723569");
+  }
+
   function majority_group(){
     return "PO730964";
   }
