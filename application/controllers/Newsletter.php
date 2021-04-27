@@ -11,6 +11,10 @@ class Newsletter extends CI_Controller
 
     public function edit($email){
       echo "debug";
+      if (strpos($email, '@') !== false) {
+        echo "yes";
+        //redirect('newsletter/edit/' . urlencode($email));
+      }
     }
 
     /*
