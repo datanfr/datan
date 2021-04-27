@@ -10,17 +10,9 @@ class Newsletter extends CI_Controller
     }
 
     public function edit($email){
-      if (strpos($email, '@') !== false) {
-        $emailEncoded = urlencode($email);
-        redirect();
-      }
-    }
-
-    /*
-    public function edit($email){
 
         if (strpos($email, '@') !== false) {
-            redirect('newsletter/edit/' . urlencode($email));
+            $email = urlencode($email);
         }
 
         $data['newsletter'] = $this->newsletter_model->get_by_email($email);
@@ -66,7 +58,6 @@ class Newsletter extends CI_Controller
           $this->load->view('templates/footer', $data);
         }
     }
-    */
 
     public function update(){
       $lists = array(
