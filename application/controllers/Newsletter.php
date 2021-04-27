@@ -35,9 +35,9 @@ class Newsletter extends CI_Controller
 
             // API
             if ($data['general'] == 1) {
-              sendContactList(urldecode($email), $list['mailjetId']);
+              sendContactList(($email), $list['mailjetId']);
             } else {
-              $response = getContactId(urldecode($email));
+              $response = getContactId(($email));
               if ($response->success()) {
                 $emailId = $response->getData()[0]["ContactID"];
                 removeContactlist($emailId, $list['mailjetId']);
@@ -81,7 +81,7 @@ class Newsletter extends CI_Controller
     }
 
     public function delete($email){
-        $email = urldecode($email);
+        $email = ($email);
         $data['email'] = $email;
         $data['url'] = $this->meta_model->get_url();
         $data['title_meta'] = "Désinscription à la newsletter | Datan";
