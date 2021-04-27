@@ -13,7 +13,7 @@
             </div>
             <div class="modal-body">
               <p>Souhaitez-vous vous inscrire et recevoir les informations parlementaires et les nouvelles de Datan.fr <b>une fois par mois</b> ?</p>
-              <input type="email" name="email" class="form-control" placeholder="Votre email">
+              <input type="email" name="email" required class="form-control" placeholder="Votre email">
             </div>
             <div class="modal-footer">
               <a id="manage" class="btn btn-warning">Gérer mes abonnements</a>
