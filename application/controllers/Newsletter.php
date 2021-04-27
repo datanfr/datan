@@ -11,15 +11,9 @@ class Newsletter extends CI_Controller
 
     public function edit($email){
 
-        if (strpos($email, '@') !== false) {
-            $email = urlencode($email);
-        }
-
         $data['newsletter'] = $this->newsletter_model->get_by_email($email);
-        print_r($data['newsletter']);
         if (!isset($data['newsletter'])) {
-          //redirect();
-          echo "yes";
+          redirect();
         }
 
         // Meta
