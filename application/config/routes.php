@@ -132,7 +132,6 @@ $route['questionnaire/resultat']['post'] = 'quiz/result';
 $route['elections'] = 'elections/index';
 $route['elections/(:any)'] = 'elections/individual/$1';
 // NEWSLETTER
-$route['newsletter_test/edit/(:any)'] = "newsletter_test/edit/$1";
 $route['newsletter/edit/(:any)'] = 'newsletter/edit/$1';
 $route['newsletter/update'] = 'newsletter/update';
 $route['newsletter/delete/(:any)'] = 'newsletter/delete/$1';
