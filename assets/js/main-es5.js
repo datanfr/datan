@@ -189,11 +189,17 @@ $('#newsletterForm').on('submit', function (e) {
     type: "POST",
     data: $('#newsletterForm').serialize(),
     dataType: 'json',
-    success: function success() {
-      $('#newsletterForm').hide();
-      $('#modalSubscription').show();
+    success: function success(ac) {
+      if (!ac) {
+        $('#newsletterForm').hide();
+        $('#modalFail').show();
+      } else {
+        $('#newsletterForm').hide();
+        $('#modalSubscription').show();
+      }
     },
-    error: function error() {
+    error: function error(err) {
+      console.log('err', err);
       $('#newsletterForm').hide();
       $('#modalFail').show();
     }

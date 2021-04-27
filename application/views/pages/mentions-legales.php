@@ -39,7 +39,7 @@
       <br />
       Hebergeur : <strong>o2switch 222-224 Boulevard Gustave Flaubert 63000 Clermont-Ferrand</strong><br />
 
-      <p>En cas de réclamation, il est recommandé de nous adresser un email à <a href="mailto:contact@datan.fr" target="_blank">contact@datan.fr</a></p>
+      <p>En cas de réclamation, il est recommandé de nous adresser un email à <a href="mailto:info@datan.fr" target="_blank">info@datan.fr</a></p>
 
       <p>Les photos des députés sont réutilisées à titre gratuit à partir des données officielles du site de l'<a href="http://www.assemblee-nationale.fr/" target="_blank">Assemblée nationale</a> et restent donc soumises aux conditions légales de réutilisation de ces sites.</p>
 

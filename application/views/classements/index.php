@@ -9,7 +9,7 @@
               Quel député vote le plus ? Qui est le plus loyal à son groupe ? Quel groupe parlementaire est le plus divisé ? Ou encore quel député est le plus âgé ?
             </p>
             <p>
-              L'équipe de <b>Datan</b> vous propose une série de classements qui répondent à ces questions. Et si vous avez d'autres idées, n'hésitez pas à nous envoyer <a href="mailto:contact@datan.fr">un mail</a> !
+              L'équipe de <b>Datan</b> vous propose une série de classements qui répondent à ces questions. Et si vous avez d'autres idées, n'hésitez pas à nous envoyer <a href="mailto:info@datan.fr">un mail</a> !
             </p>
             <p>
               Pour en savoir plus sur nos statistiques, <a href="<?= base_url() ?>statistiques/aide">cliquez ici</a>.
