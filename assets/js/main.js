@@ -270,11 +270,3 @@ $('#newsletterForm').on('submit', (e) => {
   });
   return true;
 })
-$('#manage').on('click', (e) => {
-  var data = $('#newsletterForm').serializeArray();
-  e.preventDefault();
-  data = $('#newsletterForm').serializeArray();
-  data = data[1]["value"];
-  data = encodeURIComponent(data);
-  window.location.href = "https://datan.fr/newsletter/edit/" + data;
-})
