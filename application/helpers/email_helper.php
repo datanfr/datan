@@ -62,3 +62,5 @@ function removeContactlist($id, $list){
   ];
   $response = $mj->post(Resources::$ContactManagecontactslists, ['id' => $id, 'body' => $body]);
 }
+
+?>
