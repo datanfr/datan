@@ -38,9 +38,9 @@ class Newsletter extends CI_Controller
 
             // API
             if ($data['general'] == 1) {
-              sendContactList(urldecode($email), $list['mailjetId']);
+              //sendContactList(urldecode($email), $list['mailjetId']);
             } else {
-              removeContactlist(urldecode($email), $list['mailjetId']);
+              //removeContactlist(urldecode($email), $list['mailjetId']);
             }
           }
 
