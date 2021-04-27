@@ -40,11 +40,7 @@ class Newsletter extends CI_Controller
             if ($data['general'] == 1) {
               sendContactList(urldecode($email), $list['mailjetId']);
             } else {
-              $response = getContactId(urldecode($email));
-              if ($response->success()) {
-                $emailId = $response->getData()[0]["ContactID"];
-                removeContactlist($emailId, $list['mailjetId']);
-              }
+              removeContactlist(urldecode($email), $list['mailjetId']);
             }
           }
 
