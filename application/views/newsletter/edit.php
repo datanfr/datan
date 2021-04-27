@@ -9,7 +9,7 @@
             <div class="row mb-4">
                 <div class="col-12">
                     <h2 class="mb-3">Abonnement(s) de <?= $newsletter['email'] ?></h2>
-                    <?= form_open('newsletter/edit/' . urlencode($newsletter['email'])) ?>
+                    <?= form_open() ?>
                     <div class="form-check">
                         <input type="checkbox" class="form-check-input" name="general" id="general" <?= !$newsletter['general'] ?: 'checked' ?>>
                         <label for="general">Inscription à la newsletter principale</label>
