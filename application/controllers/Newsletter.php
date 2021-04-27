@@ -16,6 +16,7 @@ class Newsletter extends CI_Controller
         }
 
         $data['newsletter'] = $this->newsletter_model->get_by_email($email);
+        print_r($data['newsletter']);
         if (empty($data['newsletter'])) {
           redirect();
         }
