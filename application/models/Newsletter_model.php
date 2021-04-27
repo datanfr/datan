@@ -40,13 +40,13 @@
     }
 
     public function delete_newsletter($email){
-      $this->db->where('email', urldecode($email));
+      $this->db->where('email', ($email));
       return $this->db->delete('newsletter');
     }
 
     public function update_list($email, $set, $list){
       $this->db->set($list, $set);
-      $this->db->where('email', urldecode($email));
+      $this->db->where('email', ($email));
       $this->db->update('newsletter');
     }
   }
