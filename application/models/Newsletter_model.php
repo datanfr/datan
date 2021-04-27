@@ -3,7 +3,7 @@
     public function __construct(){
       $this->load->database();
       $this->load->helper('email_helper');
-      $this->load->library('parser');
+      //$this->load->library('parser');
     }
 
     public function create_newsletter(){
@@ -31,7 +31,8 @@
     }
 
     public function get_by_email($email){
-      return $this->db->where('email', $email)->limit(1)->get('newsletter')->row_array();
+      $query = $this->db->where('email', $email)->limit(1)->get('newsletter');
+      return $query->row_array();
     }
 
     public function get_all_by_list($list){
