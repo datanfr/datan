@@ -31,7 +31,7 @@
     }
 
     public function get_by_email($email){
-      return $this->db->where('email', urldecode($email))->limit(1)->get('newsletter')->row_array();
+      return $this->db->where('email', $email)->limit(1)->get('newsletter')->row_array();
     }
 
     public function get_all_by_list($list){
