@@ -11,9 +11,12 @@ class Newsletter extends CI_Controller
 
     public function edit($email){
 
-        $data['newsletter'] = $this->newsletter_model->get_by_email($email);
+        if (strpos($email, '@') !== false) {
+          redirect('newsletter/edit/' . urlencode($email));
+        }
+
+        $data['newsletter'] = $this->newsletter_model->get_by_email(urldecode($email));
         if (!isset($data['newsletter'])) {
-          //echo "yes";
           redirect();
         }
 
@@ -31,13 +34,13 @@ class Newsletter extends CI_Controller
               'sql' => 'general',
               'mailjetId' => 25834
             );
-            $this->newsletter_model->update_list($email, $data[$list['sql']], $list['sql']);
+            $this->newsletter_model->update_list(urldecode($email), $data[$list['sql']], $list['sql']);
 
             // API
             if ($data['general'] == 1) {
-              sendContactList(($email), $list['mailjetId']);
+              sendContactList(urldecode($email), $list['mailjetId']);
             } else {
-              $response = getContactId(($email));
+              $response = getContactId(urldecode($email));
               if ($response->success()) {
                 $emailId = $response->getData()[0]["ContactID"];
                 removeContactlist($emailId, $list['mailjetId']);
