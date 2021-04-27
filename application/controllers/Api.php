@@ -1,6 +1,9 @@
 <?php
 class Api extends CI_Controller
 {
+    // Fill the forbidden call list here
+    private $forbidden = array('newsletter/get_all_by_list');
+
     public function __construct()
     {
         parent::__construct();
@@ -22,6 +25,10 @@ class Api extends CI_Controller
 
     public function index($model, $method)
     {
+        // Check if the call is not in the forbidden list
+        if (in_array($model . '/' . $method, $this->forbidden)){
+            return $this->response(array('error' => true, 'message' => 'This method is forbidden', 403));
+        }
         $model = $model . '_model';
         $gets = $this->input->get();
         if (!$this->$model) {
