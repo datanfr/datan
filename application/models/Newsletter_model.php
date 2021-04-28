@@ -20,11 +20,13 @@
         "email" => $email,
         "email_encode" => urlencode($email)
       );
-      sendMail($email, 'Bienvenue à la newsletter', NULL, TRUE, $templateId, $variables);
+      //sendMail($email, 'Bienvenue à la newsletter', NULL, TRUE, $templateId, $variables);
 
+      // Create Contact
+      createContact($email);
       // Inscription Mailjet contact list
       $list = 25834;
-      sendContactList($email, $list);
+      //sendContactList($email, $list);
 
       // Inscription MySQL
       return $this->db->insert('newsletter', $data);
