@@ -40,6 +40,14 @@ function sendContactList($email, $list){
   $mj->post(Resources::$ContactManagecontactslists, ['id' => $email, 'body' => $body]);
 }
 
+function createContact($email){
+  $mj = new \Mailjet\Client($_SERVER['API_KEY_MAILJET'], $_SERVER['API_KEY_SECRETE_MAILJET'],true,['version' => 'v3']);
+  $body = [
+    'Email' => $email
+  ];
+  $mj->post(Resources::$Contact, ['body' => $body]);
+}
+
 function getContactId($id){
   $mj = new \Mailjet\Client($_SERVER['API_KEY_MAILJET'], $_SERVER['API_KEY_SECRETE_MAILJET'], true, ['version' => 'v3']);
   return $mj->get(Resources::$Contactdata, ['id' => $id]);

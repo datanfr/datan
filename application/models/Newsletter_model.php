@@ -4,7 +4,6 @@ class Newsletter_model extends CI_Model{
     $this->load->database();
   }
 
-
   public function create_newsletter(){
     $email = $this->input->post('email');
     $exists = $this->get_by_email($email);
@@ -22,6 +21,8 @@ class Newsletter_model extends CI_Model{
     );
     sendMail($email, 'Bienvenue à la newsletter', NULL, TRUE, $templateId, $variables);
 
+    // Create Contact
+    createContact($email);
     // Inscription Mailjet contact list
     $list = 25834;
     sendContactList($email, $list);
