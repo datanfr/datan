@@ -20,7 +20,7 @@
 
     public function get_parties_other(){
       $this->db->where('effectif IS NULL');
-      $this->db->order_by('effectifTotal', 'DESC');
+      $this->db->order_by('libelle', 'ASC');
       $query = $this->db->get('parties');
 
       return $query->result_array();
@@ -110,6 +110,42 @@
       $query = $this->db->query($sql, array($organeRef, legislature_current()));
 
       return $query->result_array();
+    }
+
+    public function get_organization_schema($party, $members){
+      $schema = [
+        "@context" => "http://schema.org",
+        "@type" => "Organization",
+        "name" => $party['libelle'] . " (" . $party['libelleAbrev'] . ")",
+        "url" => base_url() . "partis-politiques/" . mb_strtolower($party['libelleAbrev']),
+      ];
+
+      foreach ($members as $member) {
+        $schema['member'][] = [
+          "@type" => "Person",
+          "name" => $member['nameFirst']. ' '.$member['nameLast'],
+          "familyName" => $member['nameLast'],
+          "givenName" => $member['nameFirst'],
+          "url" => base_url().'deputes/'.$member['dptSlug'].'/depute_'.$member['nameUrl'],
+          "jobTitle" => "Député français et membre apparenté au parti " . $party['libelle']
+        ];
+      }
+
+      if ($party['effectif']) {
+        $schema['numberOfEmployees'] = $party['effectif'];
+      }
+
+      if ($party['dateFin'] == NULL) {
+        $schema["description"] = $party['libelle'] . " (" . $party['libelleAbrev'] . ") est un parti politique français.";
+      } else {
+        $schema["description"] = $party['libelle'] . " (" . $party['libelleAbrev'] . ") est un ancien parti politique français.";
+      }
+
+      if ($party['img']) {
+        $schema["logo"] = asset_url() . "imgs/partis/" . mb_strtolower($party['libelleAbrev']) . ".png";
+      }
+
+      return $schema;
     }
 
   }
