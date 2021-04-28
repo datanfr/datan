@@ -2,66 +2,7 @@
 <div class="container pg-depute-individual mb-5">
   <div class="row">
     <div class="col-12 col-md-8 col-lg-4 offset-md-2 offset-lg-0 px-lg-4">
-      <div class="sticky-top" style="margin-top: -110px; top: 110px;">
-        <div class="card card-profile">
-          <div class="card-body">
-            <!-- IMAGE MP -->
-            <div class="img">
-              <div class="d-flex justify-content-center">
-                <div class="depute-img-circle">
-                  <?php if ($depute['img']) : ?>
-                    <picture>
-                      <source srcset="<?= asset_url(); ?>imgs/deputes_nobg_webp/depute_<?= $depute['idImage'] ?>_webp.webp" type="image/webp">
-                      <source srcset="<?= asset_url(); ?>imgs/deputes_nobg/depute_<?= $depute['idImage'] ?>.png" type="image/png">
-                      <img src="<?= asset_url(); ?>imgs/deputes/depute_<?= $depute['idImage'] ?>.png" width="150" height="192" alt="<?= $title ?>">
-                    </picture>
-                  <?php else : ?>
-                    <picture>
-                      <source srcset="<?= asset_url() ?>imgs/placeholder/placeholder-face-2.png" type="image/png">
-                      <img src="<?= asset_url() ?>imgs/placeholder/placeholder-face-2.png" alt="<?= $title ?>">
-                    </picture>
-                  <?php endif; ?>
-                </div>
-              </div>
-            </div>
-            <!-- INFOS GENERALES -->
-            <div class="bloc-infos">
-              <h1 class="text-center"><?= $title ?></h1>
-              <?php if (!empty($depute['libelle'])) : ?>
-                <div class="link-group text-center mt-1">
-                  <?= $depute['libelle'] ?>
-                </div>
-              <?php endif; ?>
-            </div>
-            <!-- BIOGRAPHIE -->
-            <div class="bloc-bref mt-3 d-flex justify-content-center justify-content-lg-start">
-              <ul>
-                <li class="first">
-                  <div class="label"><?php echo file_get_contents(base_url() . '/assets/imgs/icons/geo-alt-fill.svg') ?></div>
-                  <div class="value"><?= $depute['departementNom'] . ' (' . $depute['departementCode'] . ')' ?></div>
-                </li>
-                <li class="mb-0">
-                  <div class="label"><?php echo file_get_contents(base_url() . '/assets/imgs/icons/calendar-date-fill.svg') ?></div>
-                  <div class="value">
-                    <a href="<?= base_url() ?>deputes/<?= $depute_last['dptSlug'] ?>/depute_<?= $depute_last['nameUrl'] ?>/legislature-<?= $depute_last['legislature'] ?>" class="no-decoration underline">
-                      Dernier mandat : <?= $depute_last['legislature'] ?><sup>e</sup> législature
-                    </a>
-                  </div>
-                </li>
-              </ul>
-            </div>
-          </div>
-          <?php if ($active) : ?>
-            <div class="mandats d-flex justify-content-center align-items-center active">
-              <span class="active">EN ACTIVITÉ</span>
-            </div>
-          <?php else : ?>
-            <div class="mandats d-flex justify-content-center align-items-center inactive">
-              <span class="inactive">PLUS EN ACTIVITÉ</span>
-            </div>
-          <?php endif; ?>
-        </div> <!-- END CARD PROFILE -->
-      </div> <!-- END STICKY TOP -->
+      <?php $this->load->view('deputes/partials/card_individual.php', array('historique' => TRUE, 'last_legislature' => $depute_last['legislature'])) ?>
     </div> <!-- END COL -->
     <div class="col-md-10 col-lg-8 offset-md-1 offset-lg-0 pl-lg-5">
       <!-- BIO & ELECTION -->
