@@ -322,7 +322,7 @@
         "@type" => "Organization",
         "name" => $groupe['libelle'] . " (" . $groupe['libelleAbrev'] . ")",
         "description" => "Le groupe " . $groupe['libelle'] . " est un groupe parlementaire de l'Assemblée nationale française.",
-        "url" => base_url() . "groupes/" . $groupe['libelleAbrev'],
+        "url" => base_url() . "groupes/" . mb_strtolower($groupe['libelleAbrev']),
         "address" => [
           "@type" => "PostalAddress",
           "addressCountry" => "FR",
@@ -341,7 +341,7 @@
           ]
         ],
         "foundingDate" => $groupe['dateDebut'],
-        "logo" => asset_url() . "imgs/groupes/" . $groupe['libelleAbrev'] . ".png",
+        "logo" => asset_url() . "imgs/groupes/" . mb_strtolower($groupe['libelleAbrev']) . ".png",
         "numberOfEmployees" => $groupe["effectif"],
         "memberOf" => [
           "@type" => "Organization",
@@ -391,7 +391,6 @@
       }
 
       if ($members) {
-        print_r($groupe);
         // Membres
         foreach ($members["members"] as $member) {
           $array = array(
