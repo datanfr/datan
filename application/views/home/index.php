@@ -197,7 +197,6 @@
       </div> <!-- END BLOC ELECTIONS -->
       <!-- BLOC NEWSLETTER -->
       <div class="row bloc-newsletter">
-        <div class="anchor d-none" id="newslettr-inscription"></div>
         <div class="container py-5" >
           <div class="row py-3">
             <div class="col-12">
