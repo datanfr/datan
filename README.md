@@ -16,6 +16,7 @@ php /scripts/daily.php 14
 # Assets
 Installez les dépendances  
 npm install --dev  
+composer install  
 Lancez grunt pour compiler les fichiers scss et js  
 grunt  
 Qaund vous travaillez sur main.scss ou main.js lancez grunt watch pour que ça recompile à chaque changement  
