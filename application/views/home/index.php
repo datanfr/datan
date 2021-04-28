@@ -195,10 +195,25 @@
           </div>
         </div>
       </div> <!-- END BLOC ELECTIONS -->
+      <!-- BLOC NEWSLETTER -->
+      <div class="row bloc-newsletter">
+        <div class="anchor d-none" id="newslettr-inscription"></div>
+        <div class="container py-5" >
+          <div class="row py-3">
+            <div class="col-12">
+              <h2 class="text-center">Restez informés !</h2>
+              <p class="mt-5 mb-0 text-center">N'hésitez pas à vous inscrire à notre newsletter !</p>
+              <div class="text-center">
+                <button class="btn btn-primary mt-5" data-toggle="modal" data-target="#newsletter">S'inscrire à la newsletter</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div> <!-- NED BLOC NEWSLETTER -->
       <!-- BLOC ILS PARLENT DE NOUS -->
       <div class="row">
         <div class="container">
-          <div class="row py-4">
+          <div class="row">
             <div class="col-12">
               <h2 class="text-center my-4">Ils parlent de nous</h2>
             </div>
