@@ -20,7 +20,7 @@
       <?php if ($party["img"]): ?>
         <div class="col-md-3 col-lg-2 mt-4 mt-md-0 d-flex justify-content-center">
           <div class="img-party">
-            <img src="<?= asset_url() ?>imgs/parties/<?= mb_strtolower($party['libelleAbrev']) ?>.png" width="150" height="150" alt="<?= $party['libelle'] ?>">
+            <img src="<?= asset_url() ?>imgs/partis/<?= mb_strtolower($party['libelleAbrev']) ?>.png" width="150" height="150" alt="<?= $party['libelle'] ?>">
           </div>
         </div>
       <?php endif; ?>

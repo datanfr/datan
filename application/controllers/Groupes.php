@@ -133,12 +133,12 @@
         $data['president'] = array_merge($data['president'], $this->depute_edito->gender($data['president']['civ']));
       }
       $data['membres'] = $this->groupes_model->get_groupe_membres($groupe_uid, $data['active']);
-      if ($data['groupe']['uid'] != 'PO723569') {
+      if (!in_array($data['groupe']['uid'], groupesNI())) {
         $data['membres'] = array_slice($data['membres'], 0, 20);
       }
       $data['apparentes'] = $this->groupes_model->get_groupe_apparentes($groupe_uid, $data['active']);
-      if ($data['groupe']['uid'] != 'PO723569') {
-        $data['membres'] = array_slice($data['membres'], 0, 20);
+      if (!in_array($data['groupe']['uid'], groupesNI())) {
+       $data['apparentes'] = array_slice($data['apparentes'], 0, 20);
       }
 
       // Query get group_color
@@ -251,6 +251,10 @@
       //Open Graph
       $controller = $this->router->fetch_class()."/".$this->router->fetch_method();
       $data['ogp'] = $this->meta_model->get_ogp($controller, $data['title_meta'], $data['description_meta'], $data['url'], $data);
+      // Microdata Person
+      if (!in_array($data['groupe']['uid'], groupesNI())) {
+        $data['person_schema'] = $this->groupes_model->get_organization_schema($data['groupe'], $data['president'], NULL);
+      }
       // CSS
       $data['critical_css'] = "groupe_individual";
       $data['css_to_load']= array(
@@ -336,6 +340,10 @@
       //Open Graph
       $controller = $this->router->fetch_class()."/".$this->router->fetch_method();
       $data['ogp'] = $this->meta_model->get_ogp($controller, $data['title_meta'], $data['description_meta'], $data['url'], $data);
+      // Microdata Person
+      if (!in_array($data['groupe']['uid'], groupesNI())) {
+        $data['person_schema'] = $this->groupes_model->get_organization_schema($data['groupe'], $data['president'], array('members' => $data['membres'], 'apparentes' => $data['apparentes']));
+      }
       // JS
       $data['preloads'] = array(
         array("href" => asset_url()."imgs/cover/hemicycle-front-375.jpg", "as" => "image", "media" => "(max-width: 575.98px)"),
@@ -382,12 +390,12 @@
         $data['president'] = array_merge($data['president'], $this->depute_edito->gender($data['president']['civ']));
       }
       $data['membres'] = $this->groupes_model->get_groupe_membres($groupe_uid, $data['active']);
-      if ($data['groupe']['uid'] != 'PO723569') {
+      if (!in_array($data['groupe']['uid'], groupesNI())) {
         $data['membres'] = array_slice($data['membres'], 0, 20);
       }
       $data['apparentes'] = $this->groupes_model->get_groupe_apparentes($groupe_uid, $data['active']);
-      if ($data['groupe']['uid'] != 'PO723569') {
-        $data['membres'] = array_slice($data['membres'], 0, 20);
+      if (!in_array($data['groupe']['uid'], groupesNI())) {
+        $data['apparentes'] = array_slice($data['apparentes'], 0, 20);
       }
       $data['groupesActifs'] = $this->groupes_model->get_groupes_all(TRUE, legislature_current());
 
@@ -509,12 +517,12 @@
         $data['president'] = array_merge($data['president'], $this->depute_edito->gender($data['president']['civ']));
       }
       $data['membres'] = $this->groupes_model->get_groupe_membres($groupe_uid, $data['active']);
-      if ($data['groupe']['uid'] != 'PO723569') {
+      if (!in_array($data['groupe']['uid'], groupesNI())) {
         $data['membres'] = array_slice($data['membres'], 0, 20);
       }
       $data['apparentes'] = $this->groupes_model->get_groupe_apparentes($groupe_uid, $data['active']);
-      if ($data['groupe']['uid'] != 'PO723569') {
-        $data['membres'] = array_slice($data['membres'], 0, 20);
+      if (!in_array($data['groupe']['uid'], groupesNI())) {
+        $data['apparentes'] = array_slice($data['apparentes'], 0, 20);
       }
       $data['groupesActifs'] = $this->groupes_model->get_groupes_all(TRUE, legislature_current());
 
