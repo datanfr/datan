@@ -267,7 +267,10 @@
         $data['election_result'] = $this->deputes_model->get_electoral_result($data['depute']['departementCode'], $data['depute']['circo'], $nameLast); // electoral result
         if ($data['election_result']) { // Get electoral infos
           $data['election_opponents'] = $this->deputes_model->get_electoral_opponent($data['depute']['departementCode'], $data['depute']['circo']);
+          $data['election_opponent'] = $data['election_opponents'][0];
+          $data['election_opponent']['candidat'] = ucwords(mb_strtolower(str_replace(array("M. ", "Mme "), "", $data['election_opponent']['candidat'])));
           $data['election_infos'] = $this->deputes_model->get_electoral_infos($data['depute']['departementCode'], $data['depute']['circo']);
+          $data['election_infos']['abstention_rate'] = round($data['election_infos']['abstentions'] * 100 / $data['election_infos']['inscrits']);
         }
       } else {
         $data['election_result'] = NULL;
