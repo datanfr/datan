@@ -227,9 +227,8 @@ body:not(.pg-mentions) #tarteaucitronIcon {
       height: 150px;
       .bars{
         background-color: $primary;
-        max-width: 75px;
+        //max-width: 75px;
         width: 100%;
-        margin: 0 3px;
         transition: 0.3s;
         color: #fff;
         .score{
@@ -244,7 +243,7 @@ body:not(.pg-mentions) #tarteaucitronIcon {
   }
 }
 .legend-element{
-  width: 75px;
+  width: 100%;
 }
 /*
 ################
@@ -1622,15 +1621,12 @@ ul.ui-menu{
   /* Bloc election */
   .bloc-election{
     .card{
-      .card-body{
-        padding: 1.5rem;
-      }
+      border: none;
     }
-    .chart{
+    .chart-election {
       display: flex;
       position: relative;
       border: none;
-      margin-top: 1.5rem;
       .majority{
         background-color: $adopted;
         padding: 0.8rem 0;
