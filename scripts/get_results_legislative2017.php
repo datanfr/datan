@@ -4,12 +4,14 @@
 
   ini_set('memory_limit', '2048M');
 
+  $bdd->query('TRUNCATE TABLE elect_2017_leg_results');
+  $bdd->query('TRUNCATE TABLE elect_2017_leg_infos');
+
   $circos = $bdd->query('SELECT departementCode, circo
     FROM deputes_all
     WHERE legislature = 15
     GROUP BY departementCode, circo
     ORDER BY departementCode, circo
-    LIMIT 50
   ');
 
   while ($x = $circos->fetch()) {
@@ -65,12 +67,19 @@
       }
 
       foreach ($resultsCandidates->find('tr') as $row) {
-        $name = $row->find('td', 0);
-        $nuance = $row->find('td', 1);
-        $voix = str_replace(' ', '', $row->find('td', 2));
-        $pct_inscrits = $row->find('td', 3);
-        $pct_exprimes = $row->find('td', 4);
-        $elected = $row->find('td', 5);
+        $name = $row->find('td', 0)->plaintext;
+        $nuance = str_replace(' ', '', $row->find('td', 1)->plaintext);
+        $voix = str_replace(' ', '', $row->find('td', 2)->plaintext);
+        $pct_inscrits = $row->find('td', 3)->plaintext;
+        $pct_inscrits = str_replace(',', '.', $pct_inscrits);
+        $pct_exprimes = $row->find('td', 4)->plaintext;
+        $pct_exprimes = str_replace(',', '.', $pct_exprimes);
+        $elected = $row->find('td', 5)->plaintext;
+        if ($elected == "Oui") {
+          $elected = 1;
+        } else {
+          $elected = 0;
+        }
 
         ?>
 
@@ -87,6 +96,23 @@
         </tr>
 
         <?php
+
+        // Insert into database
+        $updateResults = $bdd->prepare("INSERT INTO elect_2017_leg_results (dpt, dpt_url, circo, circo_url, tour, nuance, candidat, voix, pct_inscrits, pct_exprimes, elected) VALUES (:dpt, :dpt_url, :circo, :circo_url, :tour, :nuance, :candidat, :voix, :pct_inscrits, :pct_exprimes, :elected)");
+        $updateResultsArray = array(
+          'dpt' => $dpt,
+          'dpt_url' => $dpt_url,
+          'circo' => $circo,
+          'circo_url' => $circo_url,
+          'tour' => $round,
+          'nuance' => $nuance,
+          'voix' => $voix,
+          'candidat' => $name,
+          'pct_inscrits' => $pct_inscrits,
+          'pct_exprimes' => $pct_exprimes,
+          'elected' => $elected
+        );
+        $updateResults->execute($updateResultsArray);
 
       }
 
@@ -117,5 +143,22 @@
     echo "blancs => ".$blancs."<br>";
     echo "nuls => ".$nuls."<br>";
     echo "exprimes => ".$exprimes."<br>";
+
+    // Insert into database
+    $updateInfos = $bdd->prepare("INSERT INTO elect_2017_leg_infos (dpt, dpt_url, circo, circo_url, tour, inscrits, abstentions, votants, blancs, nuls, exprimes) VALUES (:dpt, :dpt_url, :circo, :circo_url, :tour, :inscrits, :abstentions, :votants, :blancs, :nuls, :exprimes)");
+    $updateInfosArray = array(
+      'dpt' => $dpt,
+      'dpt_url' => $dpt_url,
+      'circo' => $circo,
+      'circo_url' => $circo_url,
+      'tour' => $round,
+      'inscrits' => $inscrits,
+      'abstentions' => $abstentions,
+      'votants' => $votants,
+      'blancs' => $blancs,
+      'nuls' => $nuls,
+      'exprimes' => $exprimes
+    );
+    $updateInfos->execute($updateInfosArray);
 
 }
