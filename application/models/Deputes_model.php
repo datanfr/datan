@@ -204,34 +204,39 @@
       return $query->row_array();
     }
 
-    public function get_electoral_result_mp($dpt, $circo, $nom){
-      if (in_array($dpt, ['01','02'], true)) {
-        $dpt = substr($dpt, 1);
-      } elseif($dpt == 971) {
-        $dpt = "ZA";
-      } elseif ($dpt == 976) {
-        $dpt = "ZM";
-      } elseif ($dpt == 973) {
-        $dpt = "ZC";
-      } elseif ($dpt == 972) {
-        $dpt = "ZB";
-      } elseif ($dpt == 974) {
-        $dpt = "ZD";
-      } elseif ($dpt == 987) {
-        $dpt = "ZP";
-      } elseif ($dpt == 988) {
-        $dpt = "ZN";
-      }
-
-      $sql = 'SELECT *,
+    public function get_electoral_result($dpt, $circo, $nom){
+      $sql = 'SELECT candidat, voix, pct_exprimes,
         CASE
           WHEN tour = 2 THEN "2ème"
           WHEN tour = 1 THEN "1er"
-        END AS tour_election,
-        round(score*100, 2) AS score_pct
-        FROM election2017_results
-        WHERE dpt = ? AND circo = ? AND nom LIKE "%'.$this->db->escape_like_str($nom).'%"
+        END AS tour_election
+        FROM elect_2017_leg_results
+        WHERE dpt = ? AND circo = ? AND elected = 1 AND candidat LIKE "%'.$this->db->escape_like_str($nom).'%"
         LIMIT 1
+      ';
+      $query = $this->db->query($sql, array($dpt, $circo));
+
+      return $query->row_array();
+    }
+
+    public function get_electoral_opponent($dpt, $circo){
+      $sql = 'SELECT candidat, voix, pct_exprimes,
+        CASE
+          WHEN tour = 2 THEN "2ème"
+          WHEN tour = 1 THEN "1er"
+        END AS tour_election
+        FROM elect_2017_leg_results
+        WHERE dpt = ? AND circo = ? AND elected = 0
+      ';
+      $query = $this->db->query($sql, array($dpt, $circo));
+
+      return $query->result_array();
+    }
+
+    public function get_electoral_infos($dpt, $circo){
+      $sql = 'SELECT *
+        FROM elect_2017_leg_infos
+        WHERE dpt = ? AND circo = ?
       ';
       $query = $this->db->query($sql, array($dpt, $circo));
 
