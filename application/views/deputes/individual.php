@@ -272,23 +272,42 @@
                   <?= $title ?> était <?= $gender['le'] ?> député<?= $gender['e'] ?> de la <?= $depute["circo"] ?><sup><?= $depute["circo_abbrev"] ?></sup> circonscription <?= $depute['dptLibelle2'] ?><a href="<?= base_url() ?>deputes/<?= $depute['dptSlug'] ?>"><?= $depute['departementNom'] . ' (' . $depute['departementCode'] . ')' ?></a>.
                 </p>
               <?php endif; ?>
-              <?php if (!empty($election_result)) : ?>
+              <?php if ($election_result) : ?>
                 <p class="mt-2">
-                  <?= ucfirst($gender['pronom']) ?> a été élu<?= $gender['e'] ?> au <b><?= $election_result['tour_election'] ?> tour</b> avec <?= $election_result['score_pct'] ?>% des voix.
+                  <?= ucfirst($gender['pronom']) ?> a été élu<?= $gender['e'] ?> au <b><?= $election_result['tour_election'] ?> tour</b> avec <?= round($election_result['pct_exprimes']) ?>% des voix. Pendant le <? $election_result['tour_election'] ?> tour, <?= $election_result['voix'] ?> électeurs ont voté pour <?= $title ?>.
                 </p>
-              <?php endif; ?>
-              <?php if (!empty($election_result)) : ?>
                 <div class="chart">
-                  <div class="majority d-flex align-items-center" style="flex-basis: <?= $election_result['score_pct'] ?>%">
-                    <span><?= $election_result['score_pct'] ?>%</span>
+                  <div class="majority d-flex align-items-center" style="flex-basis: <?= round($election_result['pct_exprimes']) ?>%">
+                    <span><?= round($election_result['pct_exprimes']) ?>%</span>
                   </div>
                   <div class="line">
                   </div>
-                  <div class="minority" style="flex-basis: <?= 100 - $election_result['score_pct'] ?>%">
+                  <div class="minority" style="flex-basis: <?= 100 - round($election_result['pct_exprimes']) ?>%">
                   </div>
                 </div>
                 <div class="legend d-flex justify-content-center mt-1">
                   <span>50%</span>
+                </div>
+                <div class="election-details mt-4">
+                  <div class="text-center">
+                    <a class="btn btn-primary" data-toggle="collapse" href="#collapseElection" role="button" aria-expanded="false" aria-controls="collapseElection">
+                      En savoir plus sur son élection
+                    </a>
+                  </div>
+                  <div class="collapse mt-3 test-border" id="collapseElection">
+                    <p>Autre candidates :</p>
+                    <?php foreach ($election_opponents as $opponent): ?>
+                      <p><?= $opponent['candidat'] ?> - <?= $opponent['voix'] ?> voix</p>
+                    <?php endforeach; ?>
+                    <p>Inscrits : <?= $election_infos['inscrits'] ?></p>
+                    <p>Abstentions : <?= $election_infos['abstentions'] ?></p>
+                    <p>Votants : <?= $election_infos['votants'] ?></p>
+                    <p>Blancs : <?= $election_infos['blancs'] ?></p>
+                    <p>Nuls : <?= $election_infos['nuls'] ?></p>
+                    <p>Exprimés : <?= $election_infos['exprimes'] ?></p>
+                    <br>
+                    <a href="https://www.interieur.gouv.fr/Elections/Les-resultats/Legislatives/elecresult__legislatives-2017/(path)/legislatives-2017/<?= $election_infos['dpt_url'] ?>/<?= $election_infos['dpt_url'] ?><?= $election_infos['circo_url'] ?>.html" target="_blank">Lien vers election (site ministere)</a>
+                  </div>
                 </div>
               <?php endif; ?>
             </div>

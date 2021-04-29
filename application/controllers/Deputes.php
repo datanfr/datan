@@ -263,7 +263,16 @@
       $data["depute"]["dateNaissanceFr"] = utf8_encode(strftime('%d %B %Y', strtotime($data['depute']['birthDate']))); // birthdate
       $data['depute']['circo_abbrev'] = $this->functions_datan->abbrev_n($data['depute']['circo'], TRUE); // circo number
       $data['politicalParty'] = $this->deputes_model->get_political_party($depute_uid); // political party
-      $data['election_result'] = $this->deputes_model->get_electoral_result_mp($data['depute']['departementCode'], $data['depute']['circo'], $nameLast); // electoral result
+      if ($legislature == 15) { // Get election if 15th legislature
+        $data['election_result'] = $this->deputes_model->get_electoral_result($data['depute']['departementCode'], $data['depute']['circo'], $nameLast); // electoral result
+        if ($data['election_result']) { // Get electoral infos
+          $data['election_opponents'] = $this->deputes_model->get_electoral_opponent($data['depute']['departementCode'], $data['depute']['circo']);
+          $data['election_infos'] = $this->deputes_model->get_electoral_infos($data['depute']['departementCode'], $data['depute']['circo']);
+        }
+      } else {
+        $data['election_result'] = NULL;
+      }
+
 
       // Get commission parlementaire
       if ($data['active']) {
