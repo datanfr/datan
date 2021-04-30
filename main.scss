@@ -200,6 +200,7 @@ body:not(.pg-mentions) #tarteaucitronIcon {
     }
   }
   &.election{
+    flex-grow: 1;
     .title{
       font-size: $h6-font-size;
       color: $text-black;
@@ -1648,9 +1649,13 @@ ul.ui-menu{
   .bloc-election{
     .card{
       border: none;
+      overflow: hidden;
     }
     .row-chart-election{
-      margin-right: -20px;
+      margin-right: -21px;
+      @include media-breakpoint-down(sm) {
+        margin-left: -21px;
+      }
     }
     .subtitle{
       font-weight: 800;
