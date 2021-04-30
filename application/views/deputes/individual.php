@@ -262,7 +262,7 @@
         <div class="bloc-election mt-5">
           <h2 class="mb-4">Son élection</h2>
           <div class="card">
-            <div class="card-body">
+            <div class="card-body pb-0">
               <?php if ($active) : ?>
                 <p class="mb-0">
                   <?= $title ?> est <?= $gender['le'] ?> député<?= $gender['e'] ?> de la <?= $depute["circo"] ?><sup><?= $depute["circo_abbrev"] ?></sup> circonscription <?= $depute['dptLibelle2'] ?><a href="<?= base_url() ?>deputes/<?= $depute['dptSlug'] ?>"><?= $depute['departementNom'] . ' (' . $depute['departementCode'] . ')' ?></a>.
@@ -291,13 +291,13 @@
                 <h3 class="mt-4">L'élection de <?= $title ?> en détail</h3>
                 <span class="subtitle"><?= $election_result['tour_election'] ?> tour des élections législatives de 2017 - <?= $depute["circo"] ?><sup><?= $depute["circo_abbrev"] ?></sup> circonscription <?= $depute['dptLibelle2'] ?><?= $depute['departementNom'] ?></span>
                 <div class="row row-chart-election mt-4">
-                  <div class="col-5 d-flex flex-column justify-content-center">
+                  <div class="col-md-5 d-flex flex-column justify-content-center">
                     <p>Il y avait dans dans la circonscription <b><?= formatNumber($election_infos['inscrits']) ?> personnes inscrites</b> sur les listes électorales.</p>
                     <p>Pendant le <?= $election_result['tour_election'] ?> tour, le taux d'abstention dans cette circonscription était de <?= $election_infos['abstention_rate'] ?> %. Le taux d'abstention national était de 57 %.</p>
                     <p>Plus d'information sur l'élection ? <span class="url_obf" url_obf="<?= url_obfuscation("https://www.interieur.gouv.fr/Elections/Les-resultats/Legislatives/elecresult__legislatives-2017/(path)/legislatives-2017/" . $election_infos['dpt_url'] . "/" . $election_infos['dpt_url'] . "" . $election_infos['circo_url'] .".html") ?>">Cliquez ici.</span></p>
                   </div>
-                  <div class="col-7 px-0">
-                    <div class="bar-container election py-4" id="pattern_background">
+                  <div class="col-md-7 p-0 d-flex">
+                    <div class="bar-container election py-4 px-2 pr-md-1 pl-md-0" id="pattern_background">
                       <p class="text-center title">Le choix électoral des <?= formatNumber($election_infos['inscrits']) ?> inscrits</p>
                       <div class="chart">
                         <div class="bar-chart d-flex justify-content-between align-items-end">
