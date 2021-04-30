@@ -187,10 +187,38 @@ body:not(.pg-mentions) #tarteaucitronIcon {
 ################
 */
 .bar-container{
-  background-color: #E8E8E8;
-  margin-left: -20px;
-  margin-right: -20px;
-  padding: 3rem 0 1.5rem 0;
+  &.stats{
+    padding: 3rem 0 1.5rem 0;
+    background-color: #E8E8E8;
+    margin-left: -20px;
+    margin-right: -20px;
+    .bars{
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: #fff;
+    }
+  }
+  &.election{
+    .title{
+      font-size: $h6-font-size;
+      color: $text-black;
+      font-weight: 800;
+    }
+    .legend-element{
+      font-size: $h7-font-size;
+      font-weight: 600;
+    }
+    .bars{
+      position: relative;
+      .score{
+        position: absolute;
+        top: -30px;
+        right: 0px;
+        left: 0px
+      }
+    }
+  }
   .chart{
     width: auto;
     height: 150px;
@@ -227,10 +255,8 @@ body:not(.pg-mentions) #tarteaucitronIcon {
       height: 150px;
       .bars{
         background-color: $primary;
-        //max-width: 75px;
         width: 100%;
         transition: 0.3s;
-        color: #fff;
         .score{
           font-weight: 800;
         }
@@ -1622,6 +1648,13 @@ ul.ui-menu{
   .bloc-election{
     .card{
       border: none;
+    }
+    .row-chart-election{
+      margin-right: -20px;
+    }
+    .subtitle{
+      font-weight: 800;
+      color: $text-gray-light;
     }
     .chart-election {
       display: flex;

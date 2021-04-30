@@ -274,9 +274,9 @@
               <?php endif; ?>
               <?php if ($election_result) : ?>
                 <p class="mt-2">
-                  <?= ucfirst($gender['pronom']) ?> a été élu<?= $gender['e'] ?> au <b><?= $election_result['tour_election'] ?> tour</b> avec <?= round($election_result['pct_exprimes']) ?>% des voix. Pendant le <? $election_result['tour_election'] ?> tour, <?= formatNumber($election_result['voix']) ?> électeurs ont voté pour <?= $title ?>.
+                  <?= ucfirst($gender['pronom']) ?> a été élu<?= $gender['e'] ?> au <b><?= $election_result['tour_election'] ?> tour</b> avec <?= formatNumber($election_result['voix']) ?> voix, soit <?= round($election_result['pct_exprimes']) ?>% des suffrages exprimés.
                 </p>
-                <div class="chart-election mt-5">
+                <div class="chart-election mt-4">
                   <div class="majority d-flex align-items-center" style="flex-basis: <?= round($election_result['pct_exprimes']) ?>%">
                     <span><?= round($election_result['pct_exprimes']) ?>%</span>
                   </div>
@@ -288,35 +288,42 @@
                 <div class="legend d-flex justify-content-center mt-1">
                   <span>50%</span>
                 </div>
-                <h3 class="mt-5 mb-4">L'élection de <?= $title ?> en détail</h3>
-                <p>Au total, il y a dans dans la circonscription de <?= $title ?> <b><?= formatNumber($election_infos['inscrits']) ?> personnes inscrites</b> sur les listes électorales.</p>
-                <p>Pendant le <?= $election_result['tour_election'] ?> tour, le taux d'abstention dans cette circonscription était de <?= $election_infos['abstention_rate'] ?> %.</p>
-                <p>Découvrez le choix électoral des habitants de la <?= $depute["circo"] ?><sup><?= $depute["circo_abbrev"] ?></sup> circonscription <?= $depute['dptLibelle2'] ?><?= $depute['departementNom'] ?> pendant le <?= $election_result['tour_election'] ?> tour des élections législatives de 2017.</p>
-                <div class="bar-container mt-4">
-                  <div class="chart">
-                    <div class="bar-chart d-flex justify-content-between align-items-end">
-                      <div class="bars d-flex align-items-center justify-content-center mx-1 mx-md-3" style="height: <?= round($election_result['voix'] / $election_infos['inscrits'] * 100) ?>%">
-                        <span class="score"><?= formatNumber($election_result['voix']) ?></span>
+                <h3 class="mt-4">L'élection de <?= $title ?> en détail</h3>
+                <span class="subtitle"><?= $election_result['tour_election'] ?> tour des élections législatives de 2017 - <?= $depute["circo"] ?><sup><?= $depute["circo_abbrev"] ?></sup> circonscription <?= $depute['dptLibelle2'] ?><?= $depute['departementNom'] ?></span>
+                <div class="row row-chart-election mt-4">
+                  <div class="col-5 d-flex flex-column justify-content-center">
+                    <p>Il y avait dans dans la circonscription <b><?= formatNumber($election_infos['inscrits']) ?> personnes inscrites</b> sur les listes électorales.</p>
+                    <p>Pendant le <?= $election_result['tour_election'] ?> tour, le taux d'abstention dans cette circonscription était de <?= $election_infos['abstention_rate'] ?> %. Le taux d'abstention national était de 57 %.</p>
+                    <p>Plus d'information sur l'élection ? <span class="url_obf" url_obf="<?= url_obfuscation("https://www.interieur.gouv.fr/Elections/Les-resultats/Legislatives/elecresult__legislatives-2017/(path)/legislatives-2017/" . $election_infos['dpt_url'] . "/" . $election_infos['dpt_url'] . "" . $election_infos['circo_url'] .".html") ?>">Cliquez ici.</span></p>
+                  </div>
+                  <div class="col-7 px-0">
+                    <div class="bar-container election py-4" id="pattern_background">
+                      <p class="text-center title">Le choix électoral des <?= formatNumber($election_infos['inscrits']) ?> inscrits</p>
+                      <div class="chart">
+                        <div class="bar-chart d-flex justify-content-between align-items-end">
+                          <div class="bars mx-1 mx-md-3" style="height: <?= round($election_result['voix'] / $election_infos['inscrits'] * 100) ?>%">
+                            <span class="score text-center"><?= formatNumber($election_result['voix']) ?></span>
+                          </div>
+                          <div class="bars mx-1 mx-md-3" style="height: <?= round($election_opponent['voix'] / $election_infos['inscrits'] * 100) ?>%">
+                            <span class="score text-center"><?= formatNumber($election_opponent['voix']) ?></span>
+                          </div>
+                          <div class="bars mx-1 mx-md-3" style="height: <?= round(($election_infos['blancs'] + $election_infos['nuls']) / $election_infos['inscrits'] * 100) ?>%">
+                            <span class="score text-center"><?= formatNumber($election_infos['blancs'] + $election_infos['nuls']) ?></span>
+                          </div>
+                          <div class="bars mx-1 mx-md-3" style="height: <?= round($election_infos['abstentions'] / $election_infos['inscrits'] * 100) ?>%">
+                            <span class="score text-center"><?= formatNumber($election_infos['abstentions']) ?></span>
+                          </div>
+                        </div>
                       </div>
-                      <div class="bars d-flex align-items-center justify-content-center mx-1 mx-md-3" style="height: <?= round($election_opponent['voix'] / $election_infos['inscrits'] * 100) ?>%">
-                        <span class="score"><?= formatNumber($election_opponent['voix']) ?></span>
-                      </div>
-                      <div class="bars d-flex align-items-center justify-content-center mx-1 mx-md-3" style="height: <?= round(($election_infos['blancs'] + $election_infos['nuls']) / $election_infos['inscrits'] * 100) ?>%">
-                        <span class="score"><?= formatNumber($election_infos['blancs'] + $election_infos['nuls']) ?></span>
-                      </div>
-                      <div class="bars d-flex align-items-center justify-content-center mx-1 mx-md-3" style="height: <?= round($election_infos['abstentions'] / $election_infos['inscrits'] * 100) ?>%">
-                        <span class="score"><?= formatNumber($election_infos['abstentions']) ?></span>
+                      <div class="d-flex justify-content-between mt-2">
+                        <div class="legend-element text-center mx-1"><?= $title ?></div>
+                        <div class="legend-element text-center mx-1"><?= $election_opponent['candidat'] ?></div>
+                        <div class="legend-element text-center mx-1">Blancs et nuls</div>
+                        <div class="legend-element text-center mx-1">Abstentions</div>
                       </div>
                     </div>
                   </div>
-                  <div class="d-flex justify-content-between mt-2">
-                    <div class="legend-element text-center mx-1"><?= $title ?></div>
-                    <div class="legend-element text-center mx-1"><?= $election_opponent['candidat'] ?></div>
-                    <div class="legend-element text-center mx-1">Votes blancs et nuls</div>
-                    <div class="legend-element text-center mx-1">Abstentions</div>
-                  </div>
                 </div>
-                <a href="https://www.interieur.gouv.fr/Elections/Les-resultats/Legislatives/elecresult__legislatives-2017/(path)/legislatives-2017/<?= $election_infos['dpt_url'] ?>/<?= $election_infos['dpt_url'] ?><?= $election_infos['circo_url'] ?>.html" target="_blank">Lien vers election (site ministere)</a>
               <?php endif; ?>
             </div>
           </div>
@@ -543,7 +550,7 @@
                       <h4><?= $title ?> <?= $depute['legislature'] == legislature_current() ? "vote" : "votait" ?> <b>souvent</b> avec :</h4>
                     </div>
                   </div>
-                  <div class="row mt-1 bar-container pr-2">
+                  <div class="row mt-1 bar-container stats pr-2">
                     <div class="offset-2 col-10">
                       <div class="chart">
                         <div class="chart-grid">
@@ -561,7 +568,7 @@
                         </div>
                         <div class="bar-chart d-flex flex-row justify-content-between align-items-end">
                           <?php foreach ($accord_groupes_first as $group) : ?>
-                            <div class="bars d-flex align-items-center justify-content-center  mx-1 mx-md-3" style="height: <?= $group['accord'] ?>%">
+                            <div class="bars mx-1 mx-md-3" style="height: <?= $group['accord'] ?>%">
                               <span class="score"><?= $group['accord'] ?>%</span>
                             </div>
                           <?php endforeach; ?>
@@ -598,7 +605,7 @@
                       <h4><?= ucfirst($gender['pronom']) ?> <?= $depute['legislature'] == legislature_current() ? "vote" : "votait" ?> <b>rarement</b> avec :</h4>
                     </div>
                   </div>
-                  <div class="row mt-1 bar-container pr-2">
+                  <div class="row mt-1 bar-container stats pr-2">
                     <div class="offset-2 col-10">
                       <div class="chart">
                         <div class="chart-grid">
@@ -616,7 +623,7 @@
                         </div>
                         <div class="bar-chart d-flex flex-row justify-content-between align-items-end">
                           <?php foreach ($accord_groupes_last_sorted as $group) : ?>
-                            <div class="bars d-flex align-items-center justify-content-center  mx-1 mx-md-3" style="height: <?= $group['accord'] ?>%">
+                            <div class="bars mx-1 mx-md-3" style="height: <?= $group['accord'] ?>%">
                               <span class="score"><?= $group['accord'] ?>%</span>
                             </div>
                           <?php endforeach; ?>
