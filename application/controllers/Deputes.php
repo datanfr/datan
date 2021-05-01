@@ -243,6 +243,7 @@
       $data['active'] = $data['depute']['active'];
       $legislature = $data['depute']['legislature'];
       $data['infos_groupes'] = groupsPositionEdited();
+      $depute = $data['depute']['nameFirst'].' '.$data['depute']['nameLast'];
 
       // Get group
       if (!empty($data['depute']['libelle'])) {
@@ -263,7 +264,41 @@
       $data["depute"]["dateNaissanceFr"] = utf8_encode(strftime('%d %B %Y', strtotime($data['depute']['birthDate']))); // birthdate
       $data['depute']['circo_abbrev'] = $this->functions_datan->abbrev_n($data['depute']['circo'], TRUE); // circo number
       $data['politicalParty'] = $this->deputes_model->get_political_party($depute_uid); // political party
-      $data['election_result'] = $this->deputes_model->get_electoral_result_mp($data['depute']['departementCode'], $data['depute']['circo'], $nameLast); // electoral result
+      if ($legislature == 15) { // Get election if 15th legislature
+        $data['election_canceled'] = $this->deputes_model->get_election_canceled($depute_uid, 15);
+        $canceled = array(
+          "Annulation de l'élection sur décision du Conseil constitutionnel",
+          "Démission d'office sur décision du Conseil constitutionnel"
+        );
+        if (!in_array($data['election_canceled']['causeFin'], $canceled)) {
+          $data['election_canceled']['cause'] = NULL;
+          $data['election_result'] = $this->deputes_model->get_election_result($data['depute']['departementCode'], $data['depute']['circo'], $nameLast); // electoral result
+          if ($data['election_result']) { // Get electoral infos & mandat not canceled
+            $data['election_opponents'] = $this->deputes_model->get_election_opponent($data['depute']['departementCode'], $data['depute']['circo']);
+            $data['election_infos'] = $this->deputes_model->get_election_infos($data['depute']['departementCode'], $data['depute']['circo']);
+            $data['election_infos']['abstention_rate'] = round($data['election_infos']['abstentions'] * 100 / $data['election_infos']['inscrits']);
+            if ($data['election_infos']['tour'] == 2) { // elected at first round
+              $data['election_opponent'] = $data['election_opponents'][0];
+              $data['election_opponent']['candidat'] = ucwords(mb_strtolower(str_replace(array("M. ", "Mme "), "", $data['election_opponent']['candidat'])));
+            } else { // elected at second round
+              $data['election_opponent']['voix'] = 0;
+              $data['election_opponent']['candidat'] = "Reste des candidats";
+              foreach ($data['election_opponents'] as $x) {
+                $data['election_opponent']['voix'] += $x['voix'];
+              }
+            }
+          }
+        } else {
+          switch ($data['election_canceled']['causeFin']) {
+            case "Annulation de l'élection sur décision du Conseil constitutionnel":
+              $data['election_canceled']['cause'] = "L'élection de " . $depute . ", qui s'est tenue pendant les législatures de juin 2017, a été invalidée par le Conseil constitutionnel en " . $data['election_canceled']['dateFinFR'] . "." ;
+              break;
+            default:
+              $data['election_canceled']['cause'] = NULL;
+              break;
+          }
+        }
+      }
 
       // Get commission parlementaire
       if ($data['active']) {
@@ -313,7 +348,6 @@
 
       // Meta
       $data['url'] = $this->meta_model->get_url();
-      $depute = $data['depute']['nameFirst'].' '.$data['depute']['nameLast'];
       $data['title_meta'] = $depute." - Activité Parlementaire | Datan";
       $data['description_meta'] = "Découvrez les résultats des votes ".$data['gender']['du']." député".$data['gender']['e']." ".$depute." : taux de participation, loyauté avec son groupe, proximité avec la majorité présidentielle.";
       $data['title'] = $depute;

@@ -187,10 +187,39 @@ body:not(.pg-mentions) #tarteaucitronIcon {
 ################
 */
 .bar-container{
-  background-color: #E8E8E8;
-  margin-left: -20px;
-  margin-right: -20px;
-  padding: 3rem 0 1.5rem 0;
+  &.stats{
+    padding: 3rem 0 1.5rem 0;
+    background-color: #E8E8E8;
+    margin-left: -20px;
+    margin-right: -20px;
+    .bars{
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: #fff;
+    }
+  }
+  &.election{
+    flex-grow: 1;
+    .title{
+      font-size: $h6-font-size;
+      color: $text-black;
+      font-weight: 800;
+    }
+    .legend-element{
+      font-size: $h7-font-size;
+      font-weight: 600;
+    }
+    .bars{
+      position: relative;
+      .score{
+        position: absolute;
+        top: -30px;
+        right: 0px;
+        left: 0px
+      }
+    }
+  }
   .chart{
     width: auto;
     height: 150px;
@@ -227,11 +256,8 @@ body:not(.pg-mentions) #tarteaucitronIcon {
       height: 150px;
       .bars{
         background-color: $primary;
-        max-width: 75px;
         width: 100%;
-        margin: 0 3px;
         transition: 0.3s;
-        color: #fff;
         .score{
           font-weight: 800;
         }
@@ -244,7 +270,7 @@ body:not(.pg-mentions) #tarteaucitronIcon {
   }
 }
 .legend-element{
-  width: 75px;
+  width: 100%;
 }
 /*
 ################
@@ -1622,15 +1648,23 @@ ul.ui-menu{
   /* Bloc election */
   .bloc-election{
     .card{
-      .card-body{
-        padding: 1.5rem;
+      border: none;
+      overflow: hidden;
+    }
+    .row-chart-election{
+      margin-right: -21px;
+      @include media-breakpoint-down(sm) {
+        margin-left: -21px;
       }
     }
-    .chart{
+    .subtitle{
+      font-weight: 800;
+      color: $text-gray-light;
+    }
+    .chart-election {
       display: flex;
       position: relative;
       border: none;
-      margin-top: 1.5rem;
       .majority{
         background-color: $adopted;
         padding: 0.8rem 0;
@@ -1643,7 +1677,7 @@ ul.ui-menu{
       }
       .minority{
         padding: 0.8rem 0;
-        background-color: #C0C0C0;
+        background-color: #E8E8E8;
       }
       .line{
         border: 1px solid rgba(255, 255, 255, 0.5);
