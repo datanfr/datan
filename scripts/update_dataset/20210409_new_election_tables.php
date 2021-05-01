@@ -1815,3 +1815,5 @@ $bdd->query("INSERT INTO `elect_2017_leg_results` (`dpt`, `dpt_url`, `circo`, `c
     ('988', '988', 2, '02', 2, 'UDI', 'M. Philippe GOMES', 28557, '27.29', '54.95', 1),
     ('988', '988', 2, '02', 2, 'REG', 'M. Louis MAPOU', 23413, '22.38', '45.05', 0);
 ");
+
+?>
