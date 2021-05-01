@@ -262,33 +262,72 @@
         <div class="bloc-election mt-5">
           <h2 class="mb-4">Son élection</h2>
           <div class="card">
-            <div class="card-body">
+            <div class="card-body pb-0">
               <?php if ($active) : ?>
-                <p class="mb-0">
+                <p>
                   <?= $title ?> est <?= $gender['le'] ?> député<?= $gender['e'] ?> de la <?= $depute["circo"] ?><sup><?= $depute["circo_abbrev"] ?></sup> circonscription <?= $depute['dptLibelle2'] ?><a href="<?= base_url() ?>deputes/<?= $depute['dptSlug'] ?>"><?= $depute['departementNom'] . ' (' . $depute['departementCode'] . ')' ?></a>.
                 </p>
               <?php else : ?>
-                <p class="mb-0">
+                <p>
                   <?= $title ?> était <?= $gender['le'] ?> député<?= $gender['e'] ?> de la <?= $depute["circo"] ?><sup><?= $depute["circo_abbrev"] ?></sup> circonscription <?= $depute['dptLibelle2'] ?><a href="<?= base_url() ?>deputes/<?= $depute['dptSlug'] ?>"><?= $depute['departementNom'] . ' (' . $depute['departementCode'] . ')' ?></a>.
                 </p>
               <?php endif; ?>
-              <?php if (!empty($election_result)) : ?>
-                <p class="mt-2">
-                  <?= ucfirst($gender['pronom']) ?> a été élu<?= $gender['e'] ?> au <b><?= $election_result['tour_election'] ?> tour</b> avec <?= $election_result['score_pct'] ?>% des voix.
-                </p>
+              <?php if ($election_canceled['cause']): ?>
+                <p><?= $election_canceled['cause'] ?></p>
+                <p>Pour découvrir les résultats des élection législatives partielles, organisées après l'invalidation par le Conseil constitutionnel, <span class="url_obf" url_obf="<?= url_obfuscation("https://www.interieur.gouv.fr/Elections/Les-resultats/Partielles/Legislatives") ?>">cliquez ici</span>.</p>
               <?php endif; ?>
-              <?php if (!empty($election_result)) : ?>
-                <div class="chart">
-                  <div class="majority d-flex align-items-center" style="flex-basis: <?= $election_result['score_pct'] ?>%">
-                    <span><?= $election_result['score_pct'] ?>%</span>
+              <?php if (isset($election_result)) : ?>
+                <p>
+                  <?= ucfirst($gender['pronom']) ?> a été élu<?= $gender['e'] ?> au <b><?= $election_result['tour_election'] ?> tour</b> avec <?= formatNumber($election_result['voix']) ?> voix, soit <?= round($election_result['pct_exprimes']) ?>% des suffrages exprimés.
+                </p>
+                <div class="chart-election mt-4">
+                  <div class="majority d-flex align-items-center" style="flex-basis: <?= round($election_result['pct_exprimes']) ?>%">
+                    <span><?= round($election_result['pct_exprimes']) ?>%</span>
                   </div>
                   <div class="line">
                   </div>
-                  <div class="minority" style="flex-basis: <?= 100 - $election_result['score_pct'] ?>%">
+                  <div class="minority" style="flex-basis: <?= 100 - round($election_result['pct_exprimes']) ?>%">
                   </div>
                 </div>
                 <div class="legend d-flex justify-content-center mt-1">
                   <span>50%</span>
+                </div>
+                <h3 class="mt-4">L'élection de <?= $title ?> en détail</h3>
+                <span class="subtitle"><?= $election_result['tour_election'] ?> tour des élections législatives de 2017 - <?= $depute["circo"] ?><sup><?= $depute["circo_abbrev"] ?></sup> circonscription <?= $depute['dptLibelle2'] ?><?= $depute['departementNom'] ?></span>
+                <div class="row row-chart-election mt-4">
+                  <div class="col-md-5 d-flex flex-column justify-content-center">
+                    <p>Il y avait dans dans la circonscription <b><?= formatNumber($election_infos['inscrits']) ?> personnes inscrites</b> sur les listes électorales.</p>
+                    <p>Pendant le <?= $election_result['tour_election'] ?> tour, le taux d'abstention était de <?= $election_infos['abstention_rate'] ?> %. Au niveau national, il était de 57 %.</p>
+                    <p><?= $title ?> a été élu avec <?= formatNumber($election_result['voix']) ?> voix, soit <?= round($election_result['voix'] * 100 / $election_infos['inscrits']) ?>% des inscrits.</p>
+                    <p>Plus d'information ? <span class="url_obf" url_obf="<?= url_obfuscation("https://www.interieur.gouv.fr/Elections/Les-resultats/Legislatives/elecresult__legislatives-2017/(path)/legislatives-2017/" . $election_infos['dpt_url'] . "/" . $election_infos['dpt_url'] . "" . $election_infos['circo_url'] .".html") ?>">Cliquez ici.</span></p>
+                  </div>
+                  <div class="col-md-7 p-0 d-flex">
+                    <div class="bar-container election py-4 px-2 pr-md-1 pl-md-0" id="pattern_background">
+                      <p class="text-center title">Le choix électoral des <u><?= formatNumber($election_infos['inscrits']) ?> inscrits</u></p>
+                      <div class="chart">
+                        <div class="bar-chart d-flex justify-content-between align-items-end">
+                          <div class="bars mx-1 mx-md-3" style="height: <?= round($election_result['voix'] / $election_infos['inscrits'] * 100) ?>%">
+                            <span class="score text-center"><?= formatNumber($election_result['voix']) ?></span>
+                          </div>
+                          <div class="bars mx-1 mx-md-3" style="height: <?= round($election_opponent['voix'] / $election_infos['inscrits'] * 100) ?>%">
+                            <span class="score text-center"><?= formatNumber($election_opponent['voix']) ?></span>
+                          </div>
+                          <div class="bars mx-1 mx-md-3" style="height: <?= round(($election_infos['blancs'] + $election_infos['nuls']) / $election_infos['inscrits'] * 100) ?>%">
+                            <span class="score text-center"><?= formatNumber($election_infos['blancs'] + $election_infos['nuls']) ?></span>
+                          </div>
+                          <div class="bars mx-1 mx-md-3" style="height: <?= round($election_infos['abstentions'] / $election_infos['inscrits'] * 100) ?>%">
+                            <span class="score text-center"><?= formatNumber($election_infos['abstentions']) ?></span>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="d-flex justify-content-between mt-2">
+                        <div class="legend-element text-center mx-1"><?= $title ?></div>
+                        <div class="legend-element text-center mx-1"><?= $election_opponent['candidat'] ?></div>
+                        <div class="legend-element text-center mx-1">Blancs et nuls</div>
+                        <div class="legend-element text-center mx-1">Abstentions</div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               <?php endif; ?>
             </div>
@@ -516,7 +555,7 @@
                       <h4><?= $title ?> <?= $depute['legislature'] == legislature_current() ? "vote" : "votait" ?> <b>souvent</b> avec :</h4>
                     </div>
                   </div>
-                  <div class="row mt-1 bar-container pr-2">
+                  <div class="row mt-1 bar-container stats pr-2">
                     <div class="offset-2 col-10">
                       <div class="chart">
                         <div class="chart-grid">
@@ -534,7 +573,7 @@
                         </div>
                         <div class="bar-chart d-flex flex-row justify-content-between align-items-end">
                           <?php foreach ($accord_groupes_first as $group) : ?>
-                            <div class="bars d-flex align-items-center justify-content-center" style="height: <?= $group['accord'] ?>%">
+                            <div class="bars mx-1 mx-md-3" style="height: <?= $group['accord'] ?>%">
                               <span class="score"><?= $group['accord'] ?>%</span>
                             </div>
                           <?php endforeach; ?>
@@ -571,7 +610,7 @@
                       <h4><?= ucfirst($gender['pronom']) ?> <?= $depute['legislature'] == legislature_current() ? "vote" : "votait" ?> <b>rarement</b> avec :</h4>
                     </div>
                   </div>
-                  <div class="row mt-1 bar-container pr-2">
+                  <div class="row mt-1 bar-container stats pr-2">
                     <div class="offset-2 col-10">
                       <div class="chart">
                         <div class="chart-grid">
@@ -589,7 +628,7 @@
                         </div>
                         <div class="bar-chart d-flex flex-row justify-content-between align-items-end">
                           <?php foreach ($accord_groupes_last_sorted as $group) : ?>
-                            <div class="bars d-flex align-items-center justify-content-center" style="height: <?= $group['accord'] ?>%">
+                            <div class="bars mx-1 mx-md-3" style="height: <?= $group['accord'] ?>%">
                               <span class="score"><?= $group['accord'] ?>%</span>
                             </div>
                           <?php endforeach; ?>

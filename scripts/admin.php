@@ -48,6 +48,17 @@
               <br>
               <div class="card">
                 <div class="card-body">
+                  <h5 class="card-title">Update database : two new tables for 2017 electoral results</h5>
+                  <h6 class="card-subtitle text-muted">April 29, 2021</h6>
+                  <p class="card-text">
+                    Two new table for electoral results, and drop one unused table
+                    <a class="btn btn-danger my-3" href="update_dataset/20210409_new_election_tables.php" role="button">UPDATE DATABASE</a>
+                  </p>
+                </div>
+              </div>
+              <br>
+              <div class="card">
+                <div class="card-body">
                   <h5 class="card-title">Update elections date</h5>
                   <h6 class="card-subtitle text-muted">April 16, 2021</h6>
                   <p class="card-text">
