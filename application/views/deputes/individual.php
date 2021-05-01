@@ -264,16 +264,20 @@
           <div class="card">
             <div class="card-body pb-0">
               <?php if ($active) : ?>
-                <p class="mb-0">
+                <p>
                   <?= $title ?> est <?= $gender['le'] ?> député<?= $gender['e'] ?> de la <?= $depute["circo"] ?><sup><?= $depute["circo_abbrev"] ?></sup> circonscription <?= $depute['dptLibelle2'] ?><a href="<?= base_url() ?>deputes/<?= $depute['dptSlug'] ?>"><?= $depute['departementNom'] . ' (' . $depute['departementCode'] . ')' ?></a>.
                 </p>
               <?php else : ?>
-                <p class="mb-0">
+                <p>
                   <?= $title ?> était <?= $gender['le'] ?> député<?= $gender['e'] ?> de la <?= $depute["circo"] ?><sup><?= $depute["circo_abbrev"] ?></sup> circonscription <?= $depute['dptLibelle2'] ?><a href="<?= base_url() ?>deputes/<?= $depute['dptSlug'] ?>"><?= $depute['departementNom'] . ' (' . $depute['departementCode'] . ')' ?></a>.
                 </p>
               <?php endif; ?>
-              <?php if ($election_result) : ?>
-                <p class="mt-2">
+              <?php if ($election_canceled['cause']): ?>
+                <p><?= $election_canceled['cause'] ?></p>
+                <p>Pour découvrir les résultats des élection législatives partielles, organisées après l'invalidation par le Conseil constitutionnel, <span class="url_obf" url_obf="<?= url_obfuscation("https://www.interieur.gouv.fr/Elections/Les-resultats/Partielles/Legislatives") ?>">cliquez ici</span>.</p>
+              <?php endif; ?>
+              <?php if (isset($election_result)) : ?>
+                <p>
                   <?= ucfirst($gender['pronom']) ?> a été élu<?= $gender['e'] ?> au <b><?= $election_result['tour_election'] ?> tour</b> avec <?= formatNumber($election_result['voix']) ?> voix, soit <?= round($election_result['pct_exprimes']) ?>% des suffrages exprimés.
                 </p>
                 <div class="chart-election mt-4">
@@ -293,12 +297,13 @@
                 <div class="row row-chart-election mt-4">
                   <div class="col-md-5 d-flex flex-column justify-content-center">
                     <p>Il y avait dans dans la circonscription <b><?= formatNumber($election_infos['inscrits']) ?> personnes inscrites</b> sur les listes électorales.</p>
-                    <p>Pendant le <?= $election_result['tour_election'] ?> tour, le taux d'abstention dans cette circonscription était de <?= $election_infos['abstention_rate'] ?> %. Le taux d'abstention national était de 57 %.</p>
-                    <p>Plus d'information sur l'élection ? <span class="url_obf" url_obf="<?= url_obfuscation("https://www.interieur.gouv.fr/Elections/Les-resultats/Legislatives/elecresult__legislatives-2017/(path)/legislatives-2017/" . $election_infos['dpt_url'] . "/" . $election_infos['dpt_url'] . "" . $election_infos['circo_url'] .".html") ?>">Cliquez ici.</span></p>
+                    <p>Pendant le <?= $election_result['tour_election'] ?> tour, le taux d'abstention était de <?= $election_infos['abstention_rate'] ?> %. Au niveau national, il était de 57 %.</p>
+                    <p><?= $title ?> a été élu avec <?= formatNumber($election_result['voix']) ?> voix, soit <?= round($election_result['voix'] * 100 / $election_infos['inscrits']) ?>% des inscrits.</p>
+                    <p>Plus d'information ? <span class="url_obf" url_obf="<?= url_obfuscation("https://www.interieur.gouv.fr/Elections/Les-resultats/Legislatives/elecresult__legislatives-2017/(path)/legislatives-2017/" . $election_infos['dpt_url'] . "/" . $election_infos['dpt_url'] . "" . $election_infos['circo_url'] .".html") ?>">Cliquez ici.</span></p>
                   </div>
                   <div class="col-md-7 p-0 d-flex">
                     <div class="bar-container election py-4 px-2 pr-md-1 pl-md-0" id="pattern_background">
-                      <p class="text-center title">Le choix électoral des <?= formatNumber($election_infos['inscrits']) ?> inscrits</p>
+                      <p class="text-center title">Le choix électoral des <u><?= formatNumber($election_infos['inscrits']) ?> inscrits</u></p>
                       <div class="chart">
                         <div class="bar-chart d-flex justify-content-between align-items-end">
                           <div class="bars mx-1 mx-md-3" style="height: <?= round($election_result['voix'] / $election_infos['inscrits'] * 100) ?>%">

@@ -204,7 +204,17 @@
       return $query->row_array();
     }
 
-    public function get_electoral_result($dpt, $circo, $nom){
+    public function get_election_canceled($depute_uid, $legislature){
+      $where = array(
+        'mpId' => $depute_uid,
+        'datePriseFonction' => "2017-06-21"
+      );
+      $this->db->select('causeFin, dateFin, date_format(dateFin, "%M %Y") AS dateFinFR');
+      $query = $this->db->get_where('mandat_principal', $where);
+      return $query->row_array();
+    }
+
+    public function get_election_result($dpt, $circo, $nom){
       $sql = 'SELECT candidat, voix, pct_exprimes,
         CASE
           WHEN tour = 2 THEN "2ème"
@@ -219,7 +229,7 @@
       return $query->row_array();
     }
 
-    public function get_electoral_opponent($dpt, $circo){
+    public function get_election_opponent($dpt, $circo){
       $sql = 'SELECT candidat, voix, pct_exprimes,
         CASE
           WHEN tour = 2 THEN "2ème"
@@ -233,7 +243,7 @@
       return $query->result_array();
     }
 
-    public function get_electoral_infos($dpt, $circo){
+    public function get_election_infos($dpt, $circo){
       $sql = 'SELECT *
         FROM elect_2017_leg_infos
         WHERE dpt = ? AND circo = ?
