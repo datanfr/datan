@@ -925,13 +925,13 @@ body{
   }
   &.pg-parties-individual{
     @include media-breakpoint-down(sm) {
-      height: auto;
-      padding-bottom: 55px;
+      //height: auto;
+      //padding-bottom: 55px;
     }
   }
   background-position-y: 50%;
   background-size: cover;
-  height: 14em;
+  min-height: 14em;
   border-radius: 0;
   padding-top: 1rem;
 }
@@ -1924,6 +1924,12 @@ ul.ui-menu{
     font-weight: 800;
     color: $text-black;
   }
+  .title-text{
+    @include media-breakpoint-down(sm) {
+      padding: 75px 0;
+    }
+    padding: 50px 0;
+  }
   .subtitle{
     color: #fff;
     font-size: 1.2em;
@@ -1937,21 +1943,19 @@ ul.ui-menu{
     border-radius: 10%;
     padding: 10px;
     background-color: #fff;
-    @include media-breakpoint-down(sm) {
-      top: 0px;
-      margin-top: 10px;
+    @include media-breakpoint-down(xs) {
+      top: -55px;
     }
-    @include media-breakpoint-down(md) {
-      top: 75px;
+    @include media-breakpoint-up(sm) {
+      bottom: -50px;
     }
-    top: 50px;
     img{
       width: 100%;
       height: auto;
     }
   }
   .first-row{
-    @include media-breakpoint-down(sm){
+    @include media-breakpoint-down(xs){
       margin-top: 110px;
     }
     margin-top: 3rem;
