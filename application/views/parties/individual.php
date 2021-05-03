@@ -1,7 +1,7 @@
-<div class="container-fluid bloc-img-deputes bloc-img d-flex async_background" id="container-always-fluid" style="height: 14em">
+<div class="container-fluid bloc-img-deputes bloc-img d-flex async_background" id="container-always-fluid">
   <div class="container d-flex flex-column justify-content-center py-2 pg-parties-individual">
-    <div class="row title">
-      <div class="col-md-9 col-lg-10">
+    <div class="row">
+      <div class="col-sm-9 col-lg-10 title-text">
         <h1 class="mb-0"><?= $title ?></h1>
         <span class="subtitle">
           <?php if ($party['libelle'] == "Non rattaché(s)" || $party['libelle'] == "Non déclaré(s)"): ?>
@@ -18,7 +18,7 @@
         </span>
       </div>
       <?php if ($party["img"]): ?>
-        <div class="col-md-3 col-lg-2 mt-4 mt-md-0 d-flex justify-content-center">
+        <div class="col-sm-3 col-lg-2 d-flex justify-content-center">
           <div class="img-party">
             <img src="<?= asset_url() ?>imgs/partis/<?= mb_strtolower($party['libelleAbrev']) ?>.png" width="150" height="150" alt="<?= $party['libelle'] ?>">
           </div>
