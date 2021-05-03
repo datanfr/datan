@@ -38,7 +38,7 @@ assets/imgs/deputes_ogp/*.png
 assets/imgs/deputes_webp/*.webp
 assets/imgs/deputes_nobg/*
 assets/imgs/deputes_nobg_import/
-assets/data/deputes_json.json
+assets/data/*.json
 assets/imgs/deputes_nobg/
 assets/imgs/deputes_nobg_import/
 assets/css/bootstrap*
