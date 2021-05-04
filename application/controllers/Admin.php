@@ -25,7 +25,6 @@
       $data['groupes_entrants'] = $this->deputes_model->get_groupes_entrants(5);
       $data['newsletter_total'] = $this->newsletter_model->get_number_registered("general");
       $data['newsletter_month'] = $this->newsletter_model->get_registered_month("general");
-      print_r($data['newsletter_month']);
 
       $this->load->view('dashboard/header', $data);
       $this->load->view('dashboard/index', $data);
