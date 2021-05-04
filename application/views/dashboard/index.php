@@ -200,6 +200,13 @@
               data: data,
               borderWidth: 1
           }]
+      },
+      options: {
+          scales: {
+              y: {
+                  min: 0
+              }
+          }
       }
   });
   </script>
