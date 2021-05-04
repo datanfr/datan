@@ -63,7 +63,6 @@
               </div>
             </div><!-- /.card -->
           </div>
-          <!-- /.col-md-6 -->
           <div class="col-lg-6">
             <div class="card card-primary card-outline">
               <div class="card-header">
@@ -99,10 +98,6 @@
               </div>
             </div>
           </div>
-          <!-- /.col-md-6 -->
-        </div>
-        <!-- /.row -->
-        <div class="row">
           <div class="col-lg-6">
             <div class="card card-primary card-outline">
               <div class="card-header">
@@ -155,8 +150,20 @@
               </div>
             </div><!-- /.card -->
           </div>
+          <div class="col-lg-6">
+            <div class="card card-primary card-outline">
+              <div class="card-header">
+                <h5 class="m-0">Abonnements à la newletter</h5>
+              </div>
+              <div class="card-body">
+                  <p>Il y a <b><?= $newsletter_total ?> personnes</b> abonnées à la newsletter générale de Datan.</p>
+                  <div class="chart">
+                    <canvas id="barChart" style="height:230px"></canvas>
+                  </div>
+              </div>
+            </div><!-- /.card -->
+          </div>
         </div>
-        <!-- /.row -->
       </div><!-- /.container-fluid -->
     </div>
     <!-- /.content -->
@@ -172,3 +179,27 @@
     </div>
   </aside>
   <!-- /.control-sidebar -->
+  <script>
+  var ctx = document.getElementById('barChart').getContext('2d');
+  const data = [
+    <?php foreach ($newsletter_month as $month) {
+      echo $month['n'].",";
+    } ?>
+  ];
+  const labels = [
+    <?php foreach ($newsletter_month as $month) {
+      echo '"'.$month['y'].'",';
+    } ?>
+  ];
+  var myChart = new Chart(ctx, {
+      type: 'bar',
+      data: {
+          labels: labels,
+          datasets: [{
+              label: "Nombre d'abonnés supplémentaires",
+              data: data,
+              borderWidth: 1
+          }]
+      }
+  });
+  </script>
