@@ -25,6 +25,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
   <link rel="stylesheet" href="<?= asset_url() ?>css/dashboard/buttons.dataTables.min.css">
   <!-- CKeditor -->
   <script src="https://cdn.ckeditor.com/ckeditor5/26.0.0/classic/ckeditor.js"></script>
+  <!-- ChartJS -->
+  <script src="<?= asset_url() ?>js/chart.min.js"></script>
 </head>
 <body class="hold-transition sidebar-mini">
 <div class="wrapper">
