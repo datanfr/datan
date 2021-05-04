@@ -264,6 +264,7 @@
       $data["depute"]["dateNaissanceFr"] = utf8_encode(strftime('%d %B %Y', strtotime($data['depute']['birthDate']))); // birthdate
       $data['depute']['circo_abbrev'] = $this->functions_datan->abbrev_n($data['depute']['circo'], TRUE); // circo number
       $data['politicalParty'] = $this->deputes_model->get_political_party($depute_uid); // political party
+      $data['election_canceled']['cause'] = NULL;
       if ($legislature == 15) { // Get election if 15th legislature
         $data['election_canceled'] = $this->deputes_model->get_election_canceled($depute_uid, 15);
         $canceled = array(
@@ -271,7 +272,6 @@
           "Démission d'office sur décision du Conseil constitutionnel"
         );
         if (!in_array($data['election_canceled']['causeFin'], $canceled)) {
-          $data['election_canceled']['cause'] = NULL;
           $data['election_result'] = $this->deputes_model->get_election_result($data['depute']['departementCode'], $data['depute']['circo'], $nameLast); // electoral result
           if ($data['election_result']) { // Get electoral infos & mandat not canceled
             $data['election_opponents'] = $this->deputes_model->get_election_opponent($data['depute']['departementCode'], $data['depute']['circo']);
