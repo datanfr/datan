@@ -77,7 +77,7 @@ class Script
         if ($zip->open($newfile) !== TRUE) {
             exit("cannot open <$file>\n");
         } else {
-            $deputeFields = array('mpId', 'civ', 'nameFirst', 'nameLast', 'nameUrl', 'birthDate', 'birthCity', 'birthCountry', 'job', 'catSocPro', 'dateMaj');
+            $deputeFields = array('mpId', 'civ', 'nameFirst', 'nameLast', 'nameUrl', 'birthDate', 'birthCity', 'birthCountry', 'job', 'catSocPro', 'famSocPro', 'dateMaj');
             $mandatFields = array('mandatId', 'mpId', 'legislature', 'typeOrgane', 'dateDebut', 'dateFin', 'preseance', 'nominPrincipale', 'codeQualite', 'libQualiteSex', 'organe', 'electionRegion', 'electionRegionType', 'electionDepartement', 'electionDepartementNumero', 'electionCirco', 'datePriseFonction', 'causeFin', 'premiereElection', 'placeHemicyle', 'dateMaj');
             $mandatGroupeFields = array('mandatId', 'mpId', 'legislature', 'typeOrgane', 'dateDebut', 'dateFin', 'preseance', 'nominPrincipale', 'codeQualite', 'libQualiteSex', 'organeRef', 'dateMaj');
             $organeFields = array('uid', 'coteType', 'libelle', 'libelleEdition', 'libelleAbrev', 'libelleAbrege', 'dateDebut', 'dateFin', 'legislature', 'positionPolitique', 'preseance', 'couleurAssociee', 'dateMaj');
@@ -106,6 +106,7 @@ class Script
                         $birthCountry = $xml->etatCivil->infoNaissance->paysNais;
                         $job = $xml->profession->libelleCourant;
                         $catSocPro = $xml->profession->socProcINSEE->catSocPro;
+                        $famSocPro = $xml->profession->socProcINSEE->famSocPro;
                         $lastname = Transliterator::createFromRules(
                             ':: Any-Latin;'
                                 . ':: NFD;'
@@ -278,7 +279,19 @@ class Script
                         }
                     }
                     try {
-                        $depute = array('mpId' => $mpId, 'civ' => $civ, 'nameFirst' => $nameFirst, 'nameLast' => $nameLast, 'nameUrl' => $nameUrl, 'birthDate' => $birthDate, 'birthCity' => $birthCity, 'birthCountry' => $birthCountry, 'job' => $job, 'catSocPro' => $catSocPro, 'dateMaj' => $this->dateMaj);
+                        $depute = array(
+                          'mpId' => $mpId,
+                          'civ' => $civ,
+                          'nameFirst' => $nameFirst,
+                          'nameLast' => $nameLast,
+                          'nameUrl' => $nameUrl,
+                          'birthDate' => $birthDate,
+                          'birthCity' => $birthCity,
+                          'birthCountry' => $birthCountry,
+                          'job' => $job,
+                          'catSocPro' => $catSocPro,
+                          'famSocPro' => $famSocPro,
+                          'dateMaj' => $this->dateMaj);
                         $deputes = array_merge($deputes, array_values($depute));
                     } catch (Exception $e) {
                         var_dump($e->getMessage());
@@ -630,7 +643,7 @@ class Script
         $query = $this->bdd->query('
             SELECT mp.mpId, mp.legislature, d.nameUrl, d.nameFirst, d.nameLast, d.civ,
             YEAR(current_timestamp()) - YEAR(d.birthDate) - CASE WHEN MONTH(current_timestamp()) < MONTH(d.birthDate) OR (MONTH(current_timestamp()) = MONTH(d.birthDate) AND DAY(current_timestamp()) < DAY(d.birthDate)) THEN 1 ELSE 0 END AS age,
-            d.job, d.catSocPro
+            d.job, d.catSocPro, d.famSocPro
             FROM mandat_principal mp
             LEFT JOIN deputes d ON d.mpId = mp.mpId
             GROUP BY mp.mpId, mp.legislature
@@ -639,7 +652,7 @@ class Script
         $i = 1;
         $deputes = [];
         $depute = [];
-        $deputeFields = array('mpId', 'legislature', 'nameUrl', 'civ', 'nameFirst', 'nameLast', 'age', 'job', 'catSocPro',  'dptSlug', 'departementNom', 'departementCode', 'circo', 'mandatId', 'libelle', 'libelleAbrev', 'groupeId', 'groupeMandat', 'couleurAssociee', 'datePriseFonction', 'dateFin', 'causeFin', 'img', 'imgOgp', 'dateMaj');
+        $deputeFields = array('mpId', 'legislature', 'nameUrl', 'civ', 'nameFirst', 'nameLast', 'age', 'job', 'catSocPro', 'famSocPro',  'dptSlug', 'departementNom', 'departementCode', 'circo', 'mandatId', 'libelle', 'libelleAbrev', 'groupeId', 'groupeMandat', 'couleurAssociee', 'datePriseFonction', 'dateFin', 'causeFin', 'img', 'imgOgp', 'dateMaj');
         while ($data = $query->fetch()) {
             $mpId = $data['mpId'];
             $legislature = $data['legislature'];
@@ -650,6 +663,7 @@ class Script
             $age = $data['age'];
             $job = $data['job'];
             $catSocPro = $data['catSocPro'];
+            $famSocPro = $data['famSocPro'];
             $img = file_exists(__DIR__ . "/../assets/imgs/deputes_nobg_webp/depute_" . substr($mpId, 2) . "_webp.webp") ? 1 : 0;
             $imgOgp = file_exists(__DIR__ . "/../assets/imgs/deputes_ogp/ogp_deputes_" . $mpId . ".png") ? 1 : 0;
 
@@ -714,6 +728,7 @@ class Script
               'age' => $age,
               'job' => $job,
               'catSocPro' => $catSocPro,
+              'famSocPro' => $famSocPro,
               'dptSlug' => $dptSlug,
               'departementNom' => $departementNom,
               'departementCode' => $departementCode,
