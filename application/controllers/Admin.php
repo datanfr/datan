@@ -9,7 +9,7 @@
       $this->load->model('fields_model');
       $this->load->model('groupes_model');
       $this->load->model('elections_model');
-      //$this->password_model->security_password(); Former login protection
+      $this->load->model('newsletter_model');
       $this->password_model->security_admin();
     }
 
@@ -23,6 +23,10 @@
       $data['groupes'] = $this->groupes_model->get_groupes_all(true, 15);
       $data['deputes_entrants'] = $this->deputes_model->get_deputes_entrants(5);
       $data['groupes_entrants'] = $this->deputes_model->get_groupes_entrants(5);
+      $data['newsletter_total'] = $this->newsletter_model->get_number_registered("general");
+      $data['newsletter_month'] = $this->newsletter_model->get_registered_month("general");
+      print_r($data['newsletter_month']);
+
       $this->load->view('dashboard/header', $data);
       $this->load->view('dashboard/index', $data);
       $this->load->view('dashboard/footer');
