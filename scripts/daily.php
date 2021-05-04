@@ -629,7 +629,8 @@ class Script
 
         $query = $this->bdd->query('
             SELECT mp.mpId, mp.legislature, d.nameUrl, d.nameFirst, d.nameLast, d.civ,
-            YEAR(current_timestamp()) - YEAR(d.birthDate) - CASE WHEN MONTH(current_timestamp()) < MONTH(d.birthDate) OR (MONTH(current_timestamp()) = MONTH(d.birthDate) AND DAY(current_timestamp()) < DAY(d.birthDate)) THEN 1 ELSE 0 END AS age
+            YEAR(current_timestamp()) - YEAR(d.birthDate) - CASE WHEN MONTH(current_timestamp()) < MONTH(d.birthDate) OR (MONTH(current_timestamp()) = MONTH(d.birthDate) AND DAY(current_timestamp()) < DAY(d.birthDate)) THEN 1 ELSE 0 END AS age,
+            d.job, d.catSocPro
             FROM mandat_principal mp
             LEFT JOIN deputes d ON d.mpId = mp.mpId
             GROUP BY mp.mpId, mp.legislature
@@ -638,7 +639,7 @@ class Script
         $i = 1;
         $deputes = [];
         $depute = [];
-        $deputeFields = array('mpId', 'legislature', 'nameUrl', 'civ', 'nameFirst', 'nameLast', 'age', 'dptSlug', 'departementNom', 'departementCode', 'circo', 'mandatId', 'libelle', 'libelleAbrev', 'groupeId', 'groupeMandat', 'couleurAssociee', 'datePriseFonction', 'dateFin', 'causeFin', 'img', 'imgOgp', 'dateMaj');
+        $deputeFields = array('mpId', 'legislature', 'nameUrl', 'civ', 'nameFirst', 'nameLast', 'age', 'job', 'catSocPro',  'dptSlug', 'departementNom', 'departementCode', 'circo', 'mandatId', 'libelle', 'libelleAbrev', 'groupeId', 'groupeMandat', 'couleurAssociee', 'datePriseFonction', 'dateFin', 'causeFin', 'img', 'imgOgp', 'dateMaj');
         while ($data = $query->fetch()) {
             $mpId = $data['mpId'];
             $legislature = $data['legislature'];
@@ -647,6 +648,8 @@ class Script
             $nameLast = $data['nameLast'];
             $civ = $data['civ'];
             $age = $data['age'];
+            $job = $data['job'];
+            $catSocPro = $data['catSocPro'];
             $img = file_exists(__DIR__ . "/../assets/imgs/deputes_nobg_webp/depute_" . substr($mpId, 2) . "_webp.webp") ? 1 : 0;
             $imgOgp = file_exists(__DIR__ . "/../assets/imgs/deputes_ogp/ogp_deputes_" . $mpId . ".png") ? 1 : 0;
 
@@ -701,7 +704,32 @@ class Script
                 $couleurAssociee = NULL;
             }
 
-            $depute = array('mpId' => $mpId, 'legislature' => $legislature, 'nameUrl' => $nameUrl, 'civ' => $civ, 'nameFirst' => $nameFirst, 'nameLast' => $nameLast, 'age' => $age, 'dptSlug' => $dptSlug, 'departementNom' => $departementNom, 'departementCode' => $departementCode, 'circo' => $circo, 'mandatId' => $mandatId, 'libelle' => $libelle, 'libelleAbrev' => $libelleAbrev, 'groupeId' => $groupeId, 'groupeMandat' => $groupeMandat, 'couleurAssociee' => $couleurAssociee, 'datePriseFonction' => $datePriseFonction, 'dateFin' => $dateFin, 'causeFin' => $causeFin, 'img' => $img, 'imgOgp' => $imgOgp, 'dateMaj' => $this->dateMaj);
+            $depute = array(
+              'mpId' => $mpId,
+              'legislature' => $legislature,
+              'nameUrl' => $nameUrl,
+              'civ' => $civ,
+              'nameFirst' => $nameFirst,
+              'nameLast' => $nameLast,
+              'age' => $age,
+              'job' => $job,
+              'catSocPro' => $catSocPro,
+              'dptSlug' => $dptSlug,
+              'departementNom' => $departementNom,
+              'departementCode' => $departementCode,
+              'circo' => $circo,
+              'mandatId' => $mandatId,
+              'libelle' => $libelle,
+              'libelleAbrev' => $libelleAbrev,
+              'groupeId' => $groupeId,
+              'groupeMandat' => $groupeMandat,
+              'couleurAssociee' => $couleurAssociee,
+              'datePriseFonction' => $datePriseFonction,
+              'dateFin' => $dateFin,
+              'causeFin' => $causeFin,
+              'img' => $img,
+              'imgOgp' => $imgOgp,
+              'dateMaj' => $this->dateMaj);
             $deputes = array_merge($deputes, array_values($depute));
             if ($i % 1000 === 0) {
                 echo "Let's import until vote n " . $i . "\n";

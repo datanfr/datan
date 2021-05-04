@@ -45,6 +45,16 @@
               <br>
               <h3 class="mt-3">Delete caching of webpages+SQL queries</h3>
               <a class="btn btn-primary my-3" href="../cache/delete_all" role="button">Delete all caching</a>
+              <div class="card">
+                <div class="card-body">
+                  <h5 class="card-title">Update database : update table deputesAll</h5>
+                  <h6 class="card-subtitle text-muted">May 5, 2021</h6>
+                  <p class="card-text">
+                    Add two new fields: jobs and catSocPro
+                    <a class="btn btn-danger my-3" href="update_dataset/20210505_deputesAll.php" role="button">UPDATE DATABASE</a>
+                  </p>
+                </div>
+              </div>
               <br>
               <div class="card">
                 <div class="card-body">
