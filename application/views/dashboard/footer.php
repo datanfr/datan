@@ -22,10 +22,6 @@
 </script>
 <!-- Bootstrap 4 -->
 <script src="<?= asset_url() ?>js/dashboard/bootstrap.bundle.min.js"></script>
-<!-- ChartJS -->
-<!-- <script src="plugins/chart.js/Chart.min.js"></script> -->
-<!-- Sparkline -->
-<!-- <script src="plugins/sparklines/sparkline.js"></script> -->
 <!-- JQVMap -->
 <!-- <script src="plugins/jqvmap/jquery.vmap.min.js"></script> -->
 <!-- <script src="plugins/jqvmap/maps/jquery.vmap.usa.js"></script> -->
@@ -42,10 +38,6 @@
 <!-- <script src="plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js"></script> -->
 <!-- AdminLTE App -->
 <script src="<?= asset_url() ?>js/dashboard/adminlte.js"></script>
-<!-- AdminLTE dashboard demo (This is only for demo purposes) -->
-<!-- <script src="dist/js/pages/dashboard.js"></script> -->
-<!-- AdminLTE for demo purposes -->
-<!-- <script src="dist/js/demo.js"></script> -->
 
 <!-- DataTables -->
 <script src="<?= asset_url() ?>js/dashboard/jquery.dataTables.js"></script>
@@ -96,7 +88,7 @@
       for(let link of $('.nav-treeview .nav-link')){
         let searchParams = new URLSearchParams(window.location.search);
         console.log(searchParams.get('group'));
-        if($(link).attr('href').endsWith(location.pathname) 
+        if($(link).attr('href').endsWith(location.pathname)
         || $(link).attr('href').endsWith('class_loyaute_group?group=' +searchParams.get('group'))){
           $(link).addClass('active');
           $(link).closest('.has-treeview').addClass('menu-open');
