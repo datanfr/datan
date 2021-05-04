@@ -59,8 +59,8 @@ class Newsletter_model extends CI_Model{
     $this->db->where(array($list => 1));
     $this->db->select("count(*) AS n, DATE_FORMAT(created_at, '%M %Y') as y");
     $this->db->group_by(array("YEAR(created_at)", "MONTH(created_at)"));
-    $this->db->order_by('YEAR(created_at)', 'DESC');
-    $this->db->order_by('MONTH(created_at)', 'DESC');
+    $this->db->order_by('YEAR(created_at)', 'ASC');
+    $this->db->order_by('MONTH(created_at)', 'ASC');
     $this->db->from('newsletter');
     $query = $this->db->get();
 
