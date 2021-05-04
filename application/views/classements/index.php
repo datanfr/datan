@@ -468,5 +468,29 @@
             </a>
           </div>
         </div>
+      </div> <!-- // END PARTICIPATION -->
+      <!-- AGE -->
+      <div class="row mt-5">
+        <div class="col-12">
+          <div class="title_svg">
+            <h2>L'origine sociale des députés</h2>
+            <?= file_get_contents(asset_url()."imgs/svg/blob_1.svg") ?>
+          </div>
+        </div>
       </div>
+      <div class="row bloc-ranking mt-5">
+        <div class="col-lg-6 col-md-10 offset-md-1 offset-lg-0">
+          <div class="card">
+            <div class="card-body">
+              <h3>xx</h3>
+              <p>xx</p>
+            </div>
+            <a href="<?= base_url() ?>statistiques/" class="no-decoration">
+              <div class="card-footer text-center">
+                <span>Découvrez tout le classement</span>
+              </div>
+            </a>
+          </div>
+        </div>
+      </div> <!-- // END BLOC ORIGINE SOCIALE -->
     </div>
