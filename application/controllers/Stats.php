@@ -51,6 +51,11 @@
       $data['groups_participation_last'] = array_slice($data['groups_participation'], -1);
       $data['groups_participation_last'] = $data['groups_participation_last'][0];
       $data['famSocPro'] = $this->jobs_model->get_stats_all_mp(legislature_current());
+      foreach ($data['famSocPro'] as $key => $value) {
+        if ($value['famille'] == "Cadres et professions intellectuelles supérieures") {
+          $data['famSocPro_cadres'] = $data['famSocPro'][$key];
+        }
+      }
 
       // Breadcrumb
       $data['breadcrumb'] = array(
