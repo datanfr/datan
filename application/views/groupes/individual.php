@@ -393,7 +393,7 @@
                     <h4><?= $title ?> vote <b>souvent</b> avec :</h4>
                   </div>
                 </div>
-                <div class="row mt-1 bar-container pr-2">
+                <div class="row mt-1 bar-container stats pr-2">
                   <div class="col-10 offset-2">
                     <div class="chart">
                       <div class="chart-grid">
@@ -405,7 +405,7 @@
                       </div>
                       <div class="bar-chart d-flex flex-row justify-content-between align-items-end">
                         <?php foreach ($accord_groupes_first as $group): ?>
-                          <div class="bars d-flex align-items-center justify-content-center" style="height: <?= $group['score'] ?>%">
+                          <div class="bars mx-1 mx-md-3" style="height: <?= $group['score'] ?>%">
                             <span class="score"><?= $group['score'] ?>%</span>
                           </div>
                         <?php endforeach; ?>
@@ -443,7 +443,7 @@
                     <h4><?= $title ?> vote <b>rarement</b> avec :</h4>
                   </div>
                 </div>
-                <div class="row mt-1 bar-container pr-2">
+                <div class="row mt-1 bar-container stats pr-2">
                   <div class="col-10 offset-2">
                     <div class="chart">
                       <div class="chart-grid">
@@ -455,7 +455,7 @@
                       </div>
                       <div class="bar-chart d-flex flex-row justify-content-between align-items-end">
                         <?php foreach ($accord_groupes_last as $group): ?>
-                          <div class="bars d-flex align-items-center justify-content-center" style="height: <?= $group['score'] ?>%">
+                          <div class="bars mx-1 mx-md-3" style="height: <?= $group['score'] ?>%">
                             <span class="score"><?= $group['score'] ?>%</span>
                           </div>
                         <?php endforeach; ?>
