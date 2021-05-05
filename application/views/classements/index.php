@@ -479,13 +479,20 @@
         </div>
       </div>
       <div class="row bloc-ranking mt-5">
-        <div class="col-lg-8 offset-lg-2 col-md-10 offset-md-1 offset-lg-0">
+        <div class="col-lg-10 offset-lg-1 col-md-10 offset-md-1 offset-lg-0">
           <div class="card">
             <div class="card-body">
-              <h3>Les députés selon leur catégorie socioprofessionnelle</h3>
-              <p>Pour comprendre l'origine sociale des députés, nous analysons le nombre d'élus dans chaque catégorie socioprofessionnelle. Ces catégories ont été élaborées par <span class="url_obf" url_obf="<?= url_obfuscation("https://www.insee.fr/fr/information/2400059") ?>">l'insee</span> et permettent grouper les députés selon leur ancienne activité professionnelle.</p>
-              <p>Cette analyse permet de mesurer la représentativité sociale de l'Assemblée nationale. Par exemples, y a-t-il autant d'agriculteurs au sein du parlement et dans la population française ?</p>
-              <canvas id="chartOrigineSociale" height="200px"></canvas>
+              <h3>Les députés selon leur catégorie professionnelle</h3>
+              <div class="row test-border">
+                <div class="col-lg-4 test-border">
+                  <p>Pour comprendre l'origine sociale des députés, analysons le nombre d'élus dans chaque catégorie professionnelle. <span class="url_obf" url_obf="<?= url_obfuscation("https://www.insee.fr/fr/information/2400059") ?>">Ces catégories</span> permettent de grouper les députés selon leur ancienne activité.</p>
+                  <p>Cette analyse permet de mesurer la représentativité sociale de l'Assemblée nationale. Par exemple, y a-t-il autant de cadres dans la population française que sur les bancs de l'Assemblée ?</p>
+                  <p>À ce propos, <?= round($famSocPro_cadres['population']) ?>% des Français se trouvent dans la catégorie « cadre et professions intellectuelles supérieures » (par exemple des médecins, avocats, professeurs, journalistes). À l'Assemblée nationale, <?= round($famSocPro_cadres['mps']) ?> % des députés viennent de cette catégorie.</p>
+                </div>
+                <div class="col-lg-8 test-border" style="min-height: 400px">
+                  <canvas id="chartOrigineSociale"></canvas>
+                </div>
+              </div>
             </div>
             <a href="<?= base_url() ?>statistiques/" class="no-decoration">
               <div class="card-footer text-center">
@@ -496,7 +503,6 @@
         </div>
       </div> <!-- // END BLOC ORIGINE SOCIALE -->
     </div>
-
     <script type="text/javascript">
       var colorMp = "rgba(0, 183, 148, 1)";
       var colorPop = "rgba(255, 102, 26, 1)";
@@ -530,13 +536,13 @@
           }
         ]
       };
-      const options = {
-
-      };
       var ctx = document.getElementById('chartOrigineSociale');
       var myChart = new Chart(ctx, {
         type: 'horizontalBar',
         data: data,
-        options: options
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+        }
       });
     </script>
