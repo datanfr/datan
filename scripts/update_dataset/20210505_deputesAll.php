@@ -13,15 +13,18 @@
 
   $bdd->query('DROP TABLE IF EXISTS `famsocpro`');
   $bdd->query('CREATE TABLE IF NOT EXISTS `famsocpro` (
-    `famille` varchar(255) DEFAULT NULL,
-    `population` varchar(4) DEFAULT NULL
+    `id` int(11) NOT NULL AUTO_INCREMENT,
+    `famille` varchar(49) DEFAULT NULL,
+    `population` varchar(10) DEFAULT NULL,
+    PRIMARY KEY (`id`)
   )');
-  $bdd->query('INSERT INTO `famsocpro` (`famille`, `population`) VALUES
-  ('Agriculteurs exploitants', '1,4'),
-  ('Artisans, commerçants, chefs d\'entreprise', '6,8'),
-  ('Cadres et professions intellectuelles supérieures', '20,4'),
-  ('Professions intermédiaires', '26,0'),
-  ('Employés', '25,8'),
-  ('Ouvriers', '19,2'),
-  ('Non déterminé', '0,4');
+  $bdd->query('INSERT INTO `famsocpro` (`id`, `famille`, `population`) VALUES
+  (1, 'Agriculteurs exploitants', '0.7'),
+  (2, 'Artisans, commerçants et chefs d\'entreprise', '3.5'),
+  (3, 'Cadres et professions intellectuelles supérieures', '10.6'),
+  (4, 'Professions intermédiaires', '13.7'),
+  (5, 'Employés', '14.2'),
+  (6, 'Ouvriers', '10.9'),
+  (7, 'Retraités', '33.4'),
+  (8, 'Personnes n’ayant jamais travaillé (ex étudiants)', '12.7');
   ');
