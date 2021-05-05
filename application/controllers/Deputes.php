@@ -303,7 +303,7 @@
       }
 
       // Get pct famSocPro
-      $data['famSocPro'] = $this->jobs_model->get_stats_famSocPro($data['depute']['famSocPro'], $legislature);
+      $data['famSocPro'] = $this->jobs_model->get_stats_individual($data['depute']['famSocPro'], $legislature);
 
       // Get commission parlementaire
       if ($data['active']) {

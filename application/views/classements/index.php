@@ -479,11 +479,13 @@
         </div>
       </div>
       <div class="row bloc-ranking mt-5">
-        <div class="col-lg-6 col-md-10 offset-md-1 offset-lg-0">
+        <div class="col-lg-8 offset-lg-2 col-md-10 offset-md-1 offset-lg-0">
           <div class="card">
             <div class="card-body">
-              <h3>xx</h3>
-              <p>xx</p>
+              <h3>Les députés selon leur catégorie socioprofessionnelle</h3>
+              <p>Pour comprendre l'origine sociale des députés, nous analysons le nombre d'élus dans chaque catégorie socioprofessionnelle. Ces catégories ont été élaborées par <span class="url_obf" url_obf="<?= url_obfuscation("https://www.insee.fr/fr/information/2400059") ?>">l'insee</span> et permettent grouper les députés selon leur ancienne activité professionnelle.</p>
+              <p>Cette analyse permet de mesurer la représentativité sociale de l'Assemblée nationale. Par exemples, y a-t-il autant d'agriculteurs au sein du parlement et dans la population française ?</p>
+              <canvas id="chartOrigineSociale" height="200px"></canvas>
             </div>
             <a href="<?= base_url() ?>statistiques/" class="no-decoration">
               <div class="card-footer text-center">
@@ -494,3 +496,47 @@
         </div>
       </div> <!-- // END BLOC ORIGINE SOCIALE -->
     </div>
+
+    <script type="text/javascript">
+      var colorMp = "rgba(0, 183, 148, 1)";
+      var colorPop = "rgba(255, 102, 26, 1)";
+      const labels = [
+        <?php foreach ($famSocPro as $fam) {
+          echo '"'.$fam['famille'].'",';
+        } ?>
+      ];
+      const data = {
+        labels: labels,
+        datasets: [
+          {
+            label: 'Députés',
+            data: [
+              <?php foreach ($famSocPro as $fam) {
+                echo '"'.$fam['mps'].'",';
+              } ?>
+            ],
+            borderColor: colorMp,
+            backgroundColor: colorMp
+          },
+          {
+            label: 'Population',
+            data: [
+              <?php foreach ($famSocPro as $fam) {
+                echo '"'.$fam['population'].'",';
+              } ?>
+            ],
+            borderColor: colorPop,
+            backgroundColor: colorPop
+          }
+        ]
+      };
+      const options = {
+
+      };
+      var ctx = document.getElementById('chartOrigineSociale');
+      var myChart = new Chart(ctx, {
+        type: 'horizontalBar',
+        data: data,
+        options: options
+      });
+    </script>

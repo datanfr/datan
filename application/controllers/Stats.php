@@ -7,6 +7,7 @@
       $this->load->model('groupes_model');
       $this->load->model('depute_edito');
       $this->load->model('votes_model');
+      $this->load->model('jobs_model');
       //$this->password_model->security_password(); Former login protection
     }
 
@@ -49,6 +50,7 @@
       $data['groups_participation_first'] = $data['groups_participation_first'][0];
       $data['groups_participation_last'] = array_slice($data['groups_participation'], -1);
       $data['groups_participation_last'] = $data['groups_participation_last'][0];
+      $data['famSocPro'] = $this->jobs_model->get_stats_all_mp(legislature_current());
 
       // Breadcrumb
       $data['breadcrumb'] = array(
@@ -70,6 +72,7 @@
       $data['ogp'] = $this->meta_model->get_ogp($controller, $data['title_meta'], $data['description_meta'], $data['url'], $data);
       // JS
       $data['js_to_load_before_bootstrap'] = array("popper.min");
+      $data['js_to_load_up'] = array("chart.min.js");
       // Views
       $this->load->view('templates/header', $data);
       $this->load->view('classements/index', $data);
