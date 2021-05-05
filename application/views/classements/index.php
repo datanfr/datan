@@ -163,7 +163,7 @@
                   En effet, entre 2012 et 2017, il n'y avait que 155 femmes députées.
                  </p>
               </div>
-              <div class="row mt-lg-3 bar-container pr-2">
+              <div class="row mt-lg-3 bar-container stats pr-2">
                 <div class="col-10 offset-2">
                   <div class="chart">
                     <div class="chart-grid">
@@ -175,8 +175,8 @@
                     </div>
                     <div class="bar-chart d-flex flex-row justify-content-between align-items-end">
                       <?php foreach ($women_history as $key => $term): ?>
-                        <div class="bars <?= $key < 1 ? "d-none d-sm-flex" : "d-flex" ?> align-items-center justify-content-center" style="height: <?= $term['pct'] ?>%" data-toggle="tooltip" data-placement="top" title="<?= $term['term'] ?>e législature (<?= $term['year_start'] ?> - <?= $term['year_end'] ?>)">
-                          <span class="score"><?= $term['pct'] ?> %</span>
+                        <div class="bars mx-1 <?= $key < 1 ? "d-none d-sm-flex" : "d-flex" ?>" style="height: <?= $term['pct'] ?>%" data-toggle="tooltip" data-placement="top" title="<?= $term['term'] ?>e législature (<?= $term['year_start'] ?> - <?= $term['year_end'] ?>)">
+                          <span class="score"><?= $term['pct'] ?>%</span>
                         </div>
                       <?php endforeach; ?>
                     </div>
