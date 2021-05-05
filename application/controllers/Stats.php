@@ -55,6 +55,8 @@
         if ($value['famille'] == "Cadres et professions intellectuelles supérieures") {
           $data['famSocPro_cadres'] = $data['famSocPro'][$key];
         }
+        $str = word_wrap($value['famille'], 25, "\n");
+        $data['famSocPro'][$key]['familleCut'] = explode("\n", $str);
       }
 
       // Breadcrumb

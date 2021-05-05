@@ -483,14 +483,23 @@
           <div class="card">
             <div class="card-body">
               <h3>Les députés selon leur catégorie professionnelle</h3>
-              <div class="row test-border">
+              <div class="row row-grid test-border mt-4">
                 <div class="col-lg-4 test-border">
-                  <p>Pour comprendre l'origine sociale des députés, analysons le nombre d'élus dans chaque catégorie professionnelle. <span class="url_obf" url_obf="<?= url_obfuscation("https://www.insee.fr/fr/information/2400059") ?>">Ces catégories</span> permettent de grouper les députés selon leur ancienne activité.</p>
-                  <p>Cette analyse permet de mesurer la représentativité sociale de l'Assemblée nationale. Par exemple, y a-t-il autant de cadres dans la population française que sur les bancs de l'Assemblée ?</p>
-                  <p>À ce propos, <?= round($famSocPro_cadres['population']) ?>% des Français se trouvent dans la catégorie « cadre et professions intellectuelles supérieures » (par exemple des médecins, avocats, professeurs, journalistes). À l'Assemblée nationale, <?= round($famSocPro_cadres['mps']) ?> % des députés viennent de cette catégorie.</p>
+                  <p>
+                    Les députés sont-ils représentatifs de la population française ?
+                  </p>
+                  <p>
+                    La grande majorité des parlementaires étaient cadres ou exerçaient une profession intellectuelle supérieur, par exemple avocat, médecin ou ingénieur. Ils représentent <?= round($famSocPro_cadres['mps']) ?> % des députés, alors que seulement <?= round($famSocPro_cadres['population']) ?> % de la population française appartient à cette catégorie.
+                  </p>
+                  <p>
+                    Au contraire, <b>peu de députés étaient employés ou ouvriers</b>, alors qu'ils représentent un tiers de la population.
+                  </p>
                 </div>
-                <div class="col-lg-8 test-border" style="min-height: 400px">
-                  <canvas id="chartOrigineSociale"></canvas>
+                <div class="col-lg-8 test-border">
+                  <h4 class="text-center mb-4">Pourcentage de députés et de citoyens dans chaque catégorie</h4>
+                  <div style="min-height: 425px">
+                    <canvas id="chartOrigineSociale"></canvas>
+                  </div>
                 </div>
               </div>
             </div>
@@ -507,8 +516,14 @@
       var colorMp = "rgba(0, 183, 148, 1)";
       var colorPop = "rgba(255, 102, 26, 1)";
       const labels = [
-        <?php foreach ($famSocPro as $fam) {
-          echo '"'.$fam['famille'].'",';
+        <?php foreach ($famSocPro as $x) {
+          echo "[";
+          foreach ($x['familleCut'] as $y) {
+            if ($y) {
+              echo '"'.$y.'",';
+            }
+          }
+          echo "],";
         } ?>
       ];
       const data = {
@@ -536,13 +551,22 @@
           }
         ]
       };
+      const options = {
+        responsive: true,
+        maintainAspectRatio: false,
+        tooltips: {
+          callbacks: {
+            label: function(tooltipItem, data) {
+              return data.datasets[tooltipItem.datasetIndex]['data'][tooltipItem.index] + ' %';
+            }
+          }
+        }
+      };
+      const cut = 10;
       var ctx = document.getElementById('chartOrigineSociale');
       var myChart = new Chart(ctx, {
         type: 'horizontalBar',
         data: data,
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-        }
+        options: options
       });
     </script>
