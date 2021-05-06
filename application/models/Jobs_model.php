@@ -5,7 +5,7 @@
     }
 
     public function get_stats_individual($famSocPro, $legislature){
-      $sql = 'SELECT A.*, round(A.n / A.total * 100, 2) AS pct
+      $sql = 'SELECT A.*, round(A.n / A.total * 100, 2) AS pct, fam.population
         FROM
         (
         	SELECT da.famSocPro, count(da.mpId) AS n,
@@ -18,6 +18,7 @@
         	WHERE da.famSocPro = ? AND da.legislature = ? AND da.dateFin IS NULL
         	GROUP BY da.famSocPro
         ) A
+        LEFT JOIN famSocPro fam ON A.famSocPro = fam.famille
       ';
 
       $query = $this->db->query($sql, array($famSocPro, $legislature), 1);
@@ -25,7 +26,7 @@
     }
 
     public function get_stats_all_mp($legislature){
-      $sql = 'SELECT fam.famille, round(A.n / A.total * 100, 2) AS mps, fam.population
+      $sql = 'SELECT fam.famille, round(A.n / A.total * 100, 2) AS mps, A.n AS mpsCount, fam.population
         FROM
         (
         	SELECT da.famSocPro, count(da.mpId) AS n,
