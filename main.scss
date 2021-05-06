@@ -1732,7 +1732,7 @@ ul.ui-menu{
   /* Bloc links */
   .bloc-links{
     a, .url_obf {
-      height: 40px;
+      min-height: 40px;
       width: 230px;
       margin: 0.5em 0;
       padding: 0.4em 0.7em 0.4em 0.7em;
