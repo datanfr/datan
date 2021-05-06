@@ -223,6 +223,8 @@
           $str = word_wrap($value['famille'], 25, "\n");
           $data['famSocPro'][$key]['familleCut'] = explode("\n", $str);
         }
+        $data['jobs'] = $this->jobs_model->get_stats_jobs(legislature_current(), 10);
+        $data['deputes'] = $this->jobs_model->get_mps(legislature_current());
 
         // Meta
         $data['title_meta'] = "L'origine sociale des députés - Assemblée nationale | Datan";

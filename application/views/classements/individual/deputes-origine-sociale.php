@@ -7,14 +7,20 @@
           <p><b>Cela a-t-il un impact ?</b> Les citoyens ne votent pas pour une origine sociale mais pour des idées et un programme politique. Cependant, la sous représentation de certaines catégories de la population pose question. <span class="url_obf" url_obf="<?= url_obfuscation("https://onlinelibrary.wiley.com/doi/abs/10.1111/ajps.12112") ?>">Plusieurs chercheurs</span> ont montré que l'origine sociale d'un parlementaire a un impact sur ses idées et la façon dont il vote.</p>
         </div>
       </div>
-      <div class="mt-5 test-border">
-        <h2 class="mb-5">Titre de la section</h2>
-        <div style="min-height: 425px">
-          <canvas id="chartOrigineSociale"></canvas>
+      <div class="mt-5">
+        <h2 class="mb-4">Les 10 métiers les plus communs à l'Assemblée nationale</h2>
+        <div class="row">
+          <div class="col-md-10">
+            <p>Découvrez sur ce graphique les métiers les plus communs parmi les députés.</p>
+            <p>À la première place se trouve le métier : <b><?= mb_strtolower($jobs[0]["job"]) ?></b>. Au total, <?= $jobs[0]["total"] ?> parlementaires avaient ce métier avant de devenir député. En deuxième position se trouve le métier de <b><?= lcfirst($jobs[1]["job"]) ?></b> (<?= $jobs[1]["total"] ?> députés).</p>
+          </div>
+        </div>
+        <div class="mt-4" style="min-height: 425px">
+          <canvas id="chartJobs"></canvas>
         </div>
       </div>
-      <div class="mt-5 test-border">
-        <h2 class="mb-5">Titre de la section</h2>
+      <div class="mt-5">
+        <h2 class="mb-5">Les catégories professionnelles à l'Assemblée et dans la population</h2>
         <table class="table table-stats" id="table-stats">
           <thead>
             <tr>
@@ -38,22 +44,37 @@
           </tbody>
         </table>
       </div>
-      <div class="mt-5 test-border">
-        <h2 class="mb-5">Titre de la section</h2>
+      <div class="mt-5">
+        <h2 class="mb-5">Les métiers et catégories professionnelles des députés</h2>
+        <table class="table table-stats" id="table-stats">
+          <thead>
+            <tr>
+              <th class="text-center all">Député</th>
+              <th class="text-center min-tablet">Groupe</th>
+              <th class="text-center all">Ancien métier</th>
+              <th class="text-center all">Catégorie socioprofessionnelle</th>
+            </tr>
+          </thead>
+          <tbody>
+            <?php $i = 1; ?>
+            <?php foreach ($deputes as $mp): ?>
+              <tr>
+                <td class="text-center"><?= $mp['nameFirst']. " ".$mp['nameLast'] ?></td>
+                <td class="text-center"><?= $mp['libelleAbrev'] ?></td>
+                <td class="text-center"><?= $mp['job'] ?></td>
+                <td class="text-center"><?= $mp['famSocPro'] ?></td>
+              </tr>
+              <?php $i++; ?>
+            <?php endforeach; ?>
+          </tbody>
+        </table>
       </div>
     </div>
     <script type="text/javascript">
       var colorMp = "rgba(0, 183, 148, 1)";
-      var colorPop = "rgba(255, 102, 26, 1)";
       const labels = [
-        <?php foreach ($famSocPro as $x) {
-          echo "[";
-          foreach ($x['familleCut'] as $y) {
-            if ($y) {
-              echo '"'.$y.'",';
-            }
-          }
-          echo "],";
+        <?php foreach ($jobs as $x) {
+          echo '"'.$x['job'].'",';
         } ?>
       ];
       const data = {
@@ -62,22 +83,12 @@
           {
             label: 'Députés',
             data: [
-              <?php foreach ($famSocPro as $fam) {
-                echo '"'.$fam['mps'].'",';
+              <?php foreach ($jobs as $x) {
+                echo '"'.$x['total'].'",';
               } ?>
             ],
             borderColor: colorMp,
             backgroundColor: colorMp
-          },
-          {
-            label: 'Population',
-            data: [
-              <?php foreach ($famSocPro as $fam) {
-                echo '"'.$fam['population'].'",';
-              } ?>
-            ],
-            borderColor: colorPop,
-            backgroundColor: colorPop
           }
         ]
       };
@@ -87,15 +98,15 @@
         tooltips: {
           callbacks: {
             label: function(tooltipItem, data) {
-              return data.datasets[tooltipItem.datasetIndex]['data'][tooltipItem.index] + ' %';
+              return data.datasets[tooltipItem.datasetIndex]['data'][tooltipItem.index] + ' députés';
             }
           }
         }
       };
       const cut = 10;
-      var ctx = document.getElementById('chartOrigineSociale');
+      var ctx = document.getElementById('chartJobs');
       var myChart = new Chart(ctx, {
-        type: 'horizontalBar',
+        type: 'bar',
         data: data,
         options: options
       });

@@ -46,6 +46,28 @@
       return $query->result_array();
     }
 
+    public function get_stats_jobs($legislature, $limit){
+      $sql = 'SELECT job, count(*) as total
+        FROM deputes_last
+        WHERE legislature = ? AND dateFin IS NULL AND job NOT IN ("Sans profession déclarée")
+        GROUP BY job
+        ORDER BY count(*) DESC
+        LIMIT ?
+      ';
+
+      $query = $this->db->query($sql, array($legislature, $limit));
+      return $query->result_array();
+    }
+
+    public function get_mps($legislature){
+      $where = array('legislature' => $legislature);
+      $this->db->select('nameFirst, nameLast, libelleAbrev, job, famSocPro');
+      $this->db->order_by('nameLast', 'ASC');
+      $this->db->order_by('nameFirst', 'ASC');
+      $query = $this->db->get_where('deputes_last', $where);
+      return $query->result_array();
+    }
+
 
   }
 ?>
