@@ -117,7 +117,6 @@
         $data['title_meta'] = "L'âge des députés - Assemblée nationale | Datan";
         $data['description_meta'] = "Qui est le député le plus âgé ? Le plus jeune ? Découvrez sur Datan le classement des députés de l'Assemblée nationale selon leur âge.";
         $data['title'] = "L'âge des députés";
-
       } elseif ($url == "groupes-age") {
         // Data
         $data['ageMeanPop'] = round(meanAgeFrance());
@@ -214,6 +213,21 @@
         $data['title_meta'] = "La participation des groupes politiques - Assemblée nationale | Datan";
         $data['description_meta'] = "Quel groupe parlementaire est le plus actif au moment de voter ? Quel groupe a le plus faible taux de participation ? Découvrez le classement sur Datan.";
         $data['title'] = "La participation des groupes politiques";
+      } elseif ($url == "deputes-origine-sociale") {
+        // Data
+        $data['famSocPro'] = $this->jobs_model->get_stats_all_mp(legislature_current());
+        foreach ($data['famSocPro'] as $key => $value) {
+          if ($value['famille'] == "Cadres et professions intellectuelles supérieures") {
+            $data['famSocPro_cadres'] = $data['famSocPro'][$key];
+          }
+          $str = word_wrap($value['famille'], 25, "\n");
+          $data['famSocPro'][$key]['familleCut'] = explode("\n", $str);
+        }
+
+        // Meta
+        $data['title_meta'] = "L'origine sociale des députés - Assemblée nationale | Datan";
+        $data['description_meta'] = "Quel groupe parlementaire est le plus actif au moment de voter ? Quel groupe a le plus faible taux de participation ? Découvrez le classement sur Datan.";
+        $data['title'] = "L'origine sociale des députés";
       }
 
       // Breadcrumb
@@ -240,8 +254,7 @@
         )
       );
       // JS
-      //$data['js_to_load_before_bootstrap'] = array("");
-      //$data['js_to_load_before_datan'] = array("");
+      $data['js_to_load_up'] = array("chart.min.js");
       $data['js_to_load']= array("moment.min", "datatable-datan.min.js", "datetime-moment");
       // Meta
       $data['url'] = $this->meta_model->get_url();
