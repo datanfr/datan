@@ -21,7 +21,7 @@
             Nous avons jusqu'à présent répertorié <span class="font-weight-bold">aucun député candidat</span>.
           <?php endif; ?>
         </p>
-        <p>Un député candidat ne se trouve pas dans la liste ? N'hésitez pas à nous le faire savoir: <a href="mailto:contact@datan.fr">contact@datan.fr</a> !</p>
+        <p>Un député candidat ne se trouve pas dans la liste ? N'hésitez pas à nous le faire savoir: <a href="mailto:info@datan.fr">contact@datan.fr</a> !</p>
       </div>
     </div>
   </div>
