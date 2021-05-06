@@ -483,8 +483,8 @@
           <div class="card">
             <div class="card-body">
               <h3>Les députés selon leur catégorie professionnelle</h3>
-              <div class="row row-grid test-border mt-4">
-                <div class="col-lg-4 test-border">
+              <div class="row row-grid mt-5 mt-md-4">
+                <div class="col-lg-4 d-flex flex-column justify-content-center">
                   <p>
                     Les députés sont-ils représentatifs de la population française ?
                   </p>
@@ -495,7 +495,7 @@
                     Au contraire, <b>peu de députés étaient employés ou ouvriers</b>, alors qu'ils représentent un tiers de la population.
                   </p>
                 </div>
-                <div class="col-lg-8 test-border">
+                <div class="col-lg-8">
                   <h4 class="text-center mb-4">Pourcentage de députés et de citoyens dans chaque catégorie</h4>
                   <div style="min-height: 425px">
                     <canvas id="chartOrigineSociale"></canvas>
