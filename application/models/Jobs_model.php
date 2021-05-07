@@ -5,6 +5,12 @@
     }
 
     public function get_stats_individual($famSocPro, $legislature){
+      if ($legislature == legislature_current()) {
+        $dateFin = "AND da.dateFin IS NULL";
+      } else {
+        $dateFin = "";
+      }
+
       $sql = 'SELECT A.*, round(A.n / A.total * 100, 2) AS pct, fam.population
         FROM
         (
@@ -15,13 +21,13 @@
         		WHERE legislature = 15 AND dateFin IS NULL AND famSocPro NOT IN ("", "Autres personnes sans activité professionnelle", "Sans profession déclarée")
         	) AS total
         	FROM deputes_all da
-        	WHERE da.famSocPro = ? AND da.legislature = ? AND da.dateFin IS NULL
+        	WHERE da.famSocPro = ? AND da.legislature = ? ?
         	GROUP BY da.famSocPro
         ) A
         LEFT JOIN famsocpro fam ON A.famSocPro = fam.famille
       ';
 
-      $query = $this->db->query($sql, array($famSocPro, $legislature), 1);
+      $query = $this->db->query($sql, array($famSocPro, $legislature, $dateFin), 1);
       return $query->row_array();
     }
 
