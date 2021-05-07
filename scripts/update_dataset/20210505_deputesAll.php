@@ -1,8 +1,6 @@
 <?php
   include('../bdd-connexion.php');
 
-  /*
-
   $bdd->query('ALTER TABLE `deputes_all`
     ADD `job` VARCHAR(255) NULL DEFAULT NULL AFTER `age`,
     ADD `catSocPro` VARCHAR(255) NULL DEFAULT NULL AFTER `job`,
@@ -29,4 +27,4 @@
   (6, 'Ouvriers', '10.9'),
   (7, 'Retraités', '33.4'),
   (8, 'Personnes n’ayant jamais travaillé (ex étudiants)', '12.7')
-  '); */
+  ');
