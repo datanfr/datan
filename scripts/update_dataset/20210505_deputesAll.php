@@ -26,5 +26,5 @@
   (5, 'Employés', '14.2'),
   (6, 'Ouvriers', '10.9'),
   (7, 'Retraités', '33.4'),
-  (8, 'Personnes n’ayant jamais travaillé (ex étudiants)', '12.7');
+  (8, 'Personnes n’ayant jamais travaillé (ex étudiants)', '12.7')
   ');
