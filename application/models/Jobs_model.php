@@ -18,7 +18,7 @@
         	WHERE da.famSocPro = ? AND da.legislature = ? AND da.dateFin IS NULL
         	GROUP BY da.famSocPro
         ) A
-        LEFT JOIN famSocPro fam ON A.famSocPro = fam.famille
+        LEFT JOIN famsocpro fam ON A.famSocPro = fam.famille
       ';
 
       $query = $this->db->query($sql, array($famSocPro, $legislature), 1);
@@ -39,7 +39,7 @@
         	WHERE da.famSocPro NOT IN ("", "Autres personnes sans activité professionnelle", "Sans profession déclarée") AND da.legislature = ? AND da.dateFin IS NULL
         	GROUP BY da.famSocPro
         ) A
-        RIGHT JOIN famSocPro fam ON A.famSocPro = fam.famille
+        RIGHT JOIN famsocpro fam ON A.famSocPro = fam.famille
       ';
 
       $query = $this->db->query($sql, array($legislature, $legislature));
