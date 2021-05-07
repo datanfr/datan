@@ -225,6 +225,7 @@ class Sitemap extends CI_Controller {
     $urls[]["url"] = base_url()."statistiques/groupes-cohesion";
     $urls[]["url"] = base_url()."statistiques/deputes-participation";
     $urls[]["url"] = base_url()."statistiques/groupes-participation";
+    $urls[]["url"] = base_url()."statistiques/deputes-origine-sociale";
     $urls[]["url"] = base_url()."elections";
     foreach ($data['elections'] as $election) {
       $urls[]["url"] = base_url()."elections/".$election['slug'];
