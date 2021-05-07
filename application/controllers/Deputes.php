@@ -266,6 +266,7 @@
       $data["depute"]["dateNaissanceFr"] = utf8_encode(strftime('%d %B %Y', strtotime($data['depute']['birthDate']))); // birthdate
       $data['depute']['circo_abbrev'] = $this->functions_datan->abbrev_n($data['depute']['circo'], TRUE); // circo number
       $data['politicalParty'] = $this->deputes_model->get_political_party($mpId); // political party
+      $data['election_canceled'] = NULL;
       if ($legislature == 15) { // Get election if 15th legislature
         $data['election_canceled'] = $this->deputes_model->get_election_canceled($mpId, 15);
         $canceled = array(

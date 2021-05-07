@@ -116,7 +116,7 @@
             <p>
               Avant de devenir <?= $gender['depute'] ?>, <?= $title ?> exerçait le metier <b><?= mb_strtolower($depute['job']) ?></b>.
               Comme <?= round($famSocPro['pct']) ?>% des députés, <?= $gender['pronom'] ?> fait partie de la famille professionnelle <?= mb_strtolower($depute['famSocPro']) ?>.
-              Pour en savoir plus sur l'origine social des parlementaires, <a href="<?= base_url() ?>statistiques">cliquez ici</a>.
+              Pour en savoir plus sur l'origine sociale des parlementaires, <a href="<?= base_url() ?>statistiques">cliquez ici</a>.
             </p>
           <?php endif; ?>
         </div>
