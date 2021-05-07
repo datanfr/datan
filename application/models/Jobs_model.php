@@ -47,11 +47,26 @@
     }
 
     public function get_stats_jobs($legislature, $limit){
-      $sql = 'SELECT job, count(*) as total
+      $sql = 'SELECT A.job, count(A.job) as total
+        FROM
+        (
+        SELECT
+        	CASE
+        		WHEN job LIKE "%vocat%" THEN "Avocat"
+                WHEN job LIKE "Médecin%" THEN "Médecin"
+                WHEN job LIKE "%Cadre%" THEN "Cadre"
+                WHEN job LIKE "Professeur%" THEN "Professeur"
+                WHEN job LIKE "%conférence%" THEN "Professeur"
+                WHEN job LIKE "%Chef d\'entreprise%" THEN "Chef d\'entreprise"
+                WHEN job LIKE "%Agriculteur%" THEN "Agriculteur"
+                WHEN job LIKE "%Pharmacienne%" THEN "Pharmacien"
+        		ELSE job
+        	END AS job
         FROM deputes_last
-        WHERE legislature = ? AND dateFin IS NULL AND job NOT IN ("Sans profession déclarée")
-        GROUP BY job
-        ORDER BY count(*) DESC
+        WHERE legislature = ? AND dateFin IS NULL AND job NOT IN ("Sans profession déclarée", "", "Autre profession libérale")
+        ) A
+        GROUP BY A.job
+        ORDER BY count(A.job) DESC
         LIMIT ?
       ';
 

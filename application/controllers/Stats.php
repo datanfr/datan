@@ -230,6 +230,8 @@
         $data['title_meta'] = "L'origine sociale des députés - Assemblée nationale | Datan";
         $data['description_meta'] = "Quel groupe parlementaire est le plus actif au moment de voter ? Quel groupe a le plus faible taux de participation ? Découvrez le classement sur Datan.";
         $data['title'] = "L'origine sociale des députés";
+        // JS
+        $data['js_to_load_up'] = array("chart.min.js");
       }
 
       // Breadcrumb
@@ -255,9 +257,7 @@
           "async" => FALSE
         )
       );
-      // JS
-      $data['js_to_load_up'] = array("chart.min.js");
-      $data['js_to_load']= array("moment.min", "datatable-datan.min.js", "datetime-moment");
+      $data['js_to_load']= array("moment.min", "datatable-datan.min", "datetime-moment");
       // Meta
       $data['url'] = $this->meta_model->get_url();
       // Views
