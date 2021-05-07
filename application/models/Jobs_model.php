@@ -75,7 +75,10 @@
     }
 
     public function get_mps($legislature){
-      $where = array('legislature' => $legislature);
+      $where = array(
+        'legislature' => $legislature,
+        'dateFin' => NULL
+      );
       $this->db->select('nameFirst, nameLast, libelleAbrev, job, famSocPro');
       $this->db->order_by('nameLast', 'ASC');
       $this->db->order_by('nameFirst', 'ASC');
