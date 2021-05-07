@@ -65,7 +65,7 @@ module.exports = function (grunt) {
         src: [
           'assets/js/datatable/jquery.dataTables.min.js',
           'assets/js/datatable/dataTables.bootstrap4.min.js',
-          'assets/js/datatable/dataTables.responsive.min',
+          'assets/js/datatable/dataTables.responsive.min.js',
           'assets/js/datatable/data-table-datan.js'
         ],
         dest: 'assets/js/datatable-datan.min.js'

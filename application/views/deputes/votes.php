@@ -94,7 +94,7 @@
         </div>
         <div class="row mt-4">
           <div class="col-12">
-            <table class="table" id="table-depute-votes">
+            <table class="table" id="table-deputes-groupes-votes-all">
               <thead>
                 <tr>
                   <th class="all">N°</th>

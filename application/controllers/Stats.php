@@ -7,6 +7,7 @@
       $this->load->model('groupes_model');
       $this->load->model('depute_edito');
       $this->load->model('votes_model');
+      $this->load->model('jobs_model');
       //$this->password_model->security_password(); Former login protection
     }
 
@@ -49,6 +50,14 @@
       $data['groups_participation_first'] = $data['groups_participation_first'][0];
       $data['groups_participation_last'] = array_slice($data['groups_participation'], -1);
       $data['groups_participation_last'] = $data['groups_participation_last'][0];
+      $data['famSocPro'] = $this->jobs_model->get_stats_all_mp(legislature_current());
+      foreach ($data['famSocPro'] as $key => $value) {
+        if ($value['famille'] == "Cadres et professions intellectuelles supérieures") {
+          $data['famSocPro_cadres'] = $data['famSocPro'][$key];
+        }
+        $str = word_wrap($value['famille'], 25, "\n");
+        $data['famSocPro'][$key]['familleCut'] = explode("\n", $str);
+      }
 
       // Breadcrumb
       $data['breadcrumb'] = array(
@@ -70,6 +79,7 @@
       $data['ogp'] = $this->meta_model->get_ogp($controller, $data['title_meta'], $data['description_meta'], $data['url'], $data);
       // JS
       $data['js_to_load_before_bootstrap'] = array("popper.min");
+      $data['js_to_load_up'] = array("chart.min.js");
       // Views
       $this->load->view('templates/header', $data);
       $this->load->view('classements/index', $data);
@@ -107,7 +117,6 @@
         $data['title_meta'] = "L'âge des députés - Assemblée nationale | Datan";
         $data['description_meta'] = "Qui est le député le plus âgé ? Le plus jeune ? Découvrez sur Datan le classement des députés de l'Assemblée nationale selon leur âge.";
         $data['title'] = "L'âge des députés";
-
       } elseif ($url == "groupes-age") {
         // Data
         $data['ageMeanPop'] = round(meanAgeFrance());
@@ -204,6 +213,25 @@
         $data['title_meta'] = "La participation des groupes politiques - Assemblée nationale | Datan";
         $data['description_meta'] = "Quel groupe parlementaire est le plus actif au moment de voter ? Quel groupe a le plus faible taux de participation ? Découvrez le classement sur Datan.";
         $data['title'] = "La participation des groupes politiques";
+      } elseif ($url == "deputes-origine-sociale") {
+        // Data
+        $data['famSocPro'] = $this->jobs_model->get_stats_all_mp(legislature_current());
+        foreach ($data['famSocPro'] as $key => $value) {
+          if ($value['famille'] == "Cadres et professions intellectuelles supérieures") {
+            $data['famSocPro_cadres'] = $data['famSocPro'][$key];
+          }
+          $str = word_wrap($value['famille'], 25, "\n");
+          $data['famSocPro'][$key]['familleCut'] = explode("\n", $str);
+        }
+        $data['jobs'] = $this->jobs_model->get_stats_jobs(legislature_current(), 10);
+        $data['deputes'] = $this->jobs_model->get_mps(legislature_current());
+
+        // Meta
+        $data['title_meta'] = "L'origine sociale des députés - Assemblée nationale | Datan";
+        $data['description_meta'] = "Quel groupe parlementaire est le plus actif au moment de voter ? Quel groupe a le plus faible taux de participation ? Découvrez le classement sur Datan.";
+        $data['title'] = "L'origine sociale des députés";
+        // JS
+        $data['js_to_load_up'] = array("chart.min.js");
       }
 
       // Breadcrumb
@@ -229,10 +257,7 @@
           "async" => FALSE
         )
       );
-      // JS
-      //$data['js_to_load_before_bootstrap'] = array("");
-      //$data['js_to_load_before_datan'] = array("");
-      $data['js_to_load']= array("moment.min", "datatable-datan.min.js", "datetime-moment");
+      $data['js_to_load']= array("moment.min", "datatable-datan.min", "datetime-moment");
       // Meta
       $data['url'] = $this->meta_model->get_url();
       // Views
