@@ -36,7 +36,12 @@
           <?php endif; ?>
           <?php if ($page != "groupes-participation"): ?>
             <li class="list-group-item">
-              <a href="<?= base_url() ?>statistiques/deputes-participation" class="no-decoration underline">La participation des groupes</a>
+              <a href="<?= base_url() ?>statistiques/groupes-participation" class="no-decoration underline">La participation des groupes</a>
+            </li>
+          <?php endif; ?>
+          <?php if ($page != "deputes-origine-sociale"): ?>
+            <li class="list-group-item">
+              <a href="<?= base_url() ?>statistiques/deputes-origine-sociale" class="no-decoration underline">L'origine sociale des députés</a>
             </li>
           <?php endif; ?>
         </ul>

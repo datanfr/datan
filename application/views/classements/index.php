@@ -163,7 +163,7 @@
                   En effet, entre 2012 et 2017, il n'y avait que 155 femmes députées.
                  </p>
               </div>
-              <div class="row mt-lg-3 bar-container pr-2">
+              <div class="row mt-lg-3 bar-container stats pr-2">
                 <div class="col-10 offset-2">
                   <div class="chart">
                     <div class="chart-grid">
@@ -175,8 +175,8 @@
                     </div>
                     <div class="bar-chart d-flex flex-row justify-content-between align-items-end">
                       <?php foreach ($women_history as $key => $term): ?>
-                        <div class="bars <?= $key < 1 ? "d-none d-sm-flex" : "d-flex" ?> align-items-center justify-content-center" style="height: <?= $term['pct'] ?>%" data-toggle="tooltip" data-placement="top" title="<?= $term['term'] ?>e législature (<?= $term['year_start'] ?> - <?= $term['year_end'] ?>)">
-                          <span class="score"><?= $term['pct'] ?> %</span>
+                        <div class="bars mx-1 <?= $key < 1 ? "d-none d-sm-flex" : "d-flex" ?>" style="height: <?= $term['pct'] ?>%" data-toggle="tooltip" data-placement="top" title="<?= $term['term'] ?>e législature (<?= $term['year_start'] ?> - <?= $term['year_end'] ?>)">
+                          <span class="score"><?= $term['pct'] ?>%</span>
                         </div>
                       <?php endforeach; ?>
                     </div>
@@ -468,5 +468,105 @@
             </a>
           </div>
         </div>
+      </div> <!-- // END PARTICIPATION -->
+      <!-- AGE -->
+      <div class="row mt-5">
+        <div class="col-12">
+          <div class="title_svg">
+            <h2>L'origine sociale des députés</h2>
+            <?= file_get_contents(asset_url()."imgs/svg/blob_1.svg") ?>
+          </div>
+        </div>
       </div>
+      <div class="row bloc-ranking mt-5">
+        <div class="col-lg-10 offset-lg-1 col-md-10 offset-md-1 offset-lg-0">
+          <div class="card">
+            <div class="card-body">
+              <h3>Les députés selon leur catégorie professionnelle</h3>
+              <div class="row row-grid mt-5 mt-md-4">
+                <div class="col-lg-4 d-flex flex-column justify-content-center">
+                  <p>
+                    Les députés sont-ils représentatifs de la population française ?
+                  </p>
+                  <p>
+                    La grande majorité des parlementaires étaient cadres ou exerçaient une profession intellectuelle supérieure, par exemple avocat, médecin ou ingénieur. Ils représentent <?= round($famSocPro_cadres['mps']) ?> % des députés, alors que seulement <?= round($famSocPro_cadres['population']) ?> % de la population française appartient à cette catégorie.
+                  </p>
+                  <p>
+                    Au contraire, <b>peu de députés étaient employés ou ouvriers</b>, alors qu'ils représentent un tiers de la population.
+                  </p>
+                </div>
+                <div class="col-lg-8">
+                  <h4 class="text-center mb-4">Pourcentage de députés et de citoyens dans chaque catégorie</h4>
+                  <div style="min-height: 425px">
+                    <canvas id="chartOrigineSociale"></canvas>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <a href="<?= base_url() ?>statistiques/deputes-origine-sociale" class="no-decoration">
+              <div class="card-footer text-center">
+                <span>Découvrez tout le classement</span>
+              </div>
+            </a>
+          </div>
+        </div>
+      </div> <!-- // END BLOC ORIGINE SOCIALE -->
     </div>
+    <script type="text/javascript">
+      var colorMp = "rgba(0, 183, 148, 1)";
+      var colorPop = "rgba(255, 102, 26, 1)";
+      const labels = [
+        <?php foreach ($famSocPro as $x) {
+          echo "[";
+          foreach ($x['familleCut'] as $y) {
+            if ($y) {
+              echo '"'.$y.'",';
+            }
+          }
+          echo "],";
+        } ?>
+      ];
+      const data = {
+        labels: labels,
+        datasets: [
+          {
+            label: 'Députés',
+            data: [
+              <?php foreach ($famSocPro as $fam) {
+                echo '"'.$fam['mps'].'",';
+              } ?>
+            ],
+            borderColor: colorMp,
+            backgroundColor: colorMp
+          },
+          {
+            label: 'Population',
+            data: [
+              <?php foreach ($famSocPro as $fam) {
+                echo '"'.$fam['population'].'",';
+              } ?>
+            ],
+            borderColor: colorPop,
+            backgroundColor: colorPop
+          }
+        ]
+      };
+      const options = {
+        responsive: true,
+        maintainAspectRatio: false,
+        tooltips: {
+          callbacks: {
+            label: function(tooltipItem, data) {
+              return data.datasets[tooltipItem.datasetIndex]['data'][tooltipItem.index] + ' %';
+            }
+          }
+        }
+      };
+      const cut = 10;
+      var ctx = document.getElementById('chartOrigineSociale');
+      var myChart = new Chart(ctx, {
+        type: 'horizontalBar',
+        data: data,
+        options: options
+      });
+    </script>
