@@ -36,7 +36,7 @@
           <?php endif; ?>
           <?php if ($page != "groupes-participation"): ?>
             <li class="list-group-item">
-              <a href="<?= base_url() ?>statistiques/deputes-participation" class="no-decoration underline">La participation des groupes</a>
+              <a href="<?= base_url() ?>statistiques/groupes-participation" class="no-decoration underline">La participation des groupes</a>
             </li>
           <?php endif; ?>
           <?php if ($page != "deputes-origine-sociale"): ?>
