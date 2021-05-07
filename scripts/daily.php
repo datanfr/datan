@@ -452,7 +452,7 @@ class Script
                         $quality = 0;
                         $thumb = imagecreatetruecolor($newwidth, $newheight);
                         imagecopyresampled($thumb, $img, 0, 0, 0, 0, $newwidth, $newheight, $width, $height);
-                        imagepng($thumb, '../assets/imgs/deputes_original/depute_' . $uid . '.png', $quality);
+                        imagepng($thumb, __DIR__ . '/../assets/imgs/deputes_original/depute_' . $uid . '.png', $quality);
                         echo "one image was just downloaded\n";
                     }
                 }
