@@ -58,6 +58,10 @@
         $str = word_wrap($value['famille'], 25, "\n");
         $data['famSocPro'][$key]['familleCut'] = explode("\n", $str);
       }
+      $data['groupes_cadres'] = $this->jobs_model->get_groups_category("Cadres et professions intellectuelles supérieures");
+      $data['groupes_cadres_first'] = $data['groupes_cadres'][0];
+      $data['groupes_cadres_last'] = end($data['groupes_cadres']);
+      print_r($data['groupes_cadres_last']);
 
       // Breadcrumb
       $data['breadcrumb'] = array(
