@@ -24,10 +24,18 @@
       $data['mps_loyalty_less'] = array_slice($data['mps_loyalty'], -3);
       $data['loyalty_mean'] = $this->stats_model->get_loyalty_mean(legislature_current());
       $data['groups_age'] = $this->stats_model->get_groups_age();
-      $data['groups_age_oldest'] = array_slice($data['groups_age'], 0, 1);
-      $data['groups_age_oldest'] = $data['groups_age_oldest'][0];
-      $data['groups_age_youngest'] = array_slice($data['groups_age'], -1);
-      $data['groups_age_youngest'] = $data['groups_age_youngest'][0];
+      $data['groups_age_edited'] = array(
+        'first' => array(
+          'title' => 'Le plus âgé',
+          'group' => $data['groups_age'][0],
+          'stat' => $data['groups_age'][0]['age'].' ans'
+        ),
+        'second' => array(
+          'title' => 'Le plus jeune',
+          'group' => end($data['groups_age']),
+          'stat' => end($data['groups_age'])['age'].' ans'
+        )
+      );
       $data['women_history'] = $this->stats_model->get_women_history();
       $data['women_history'] = array_slice($data['women_history'], -6);
       $data['groups_cohesion'] = $this->stats_model->get_groups_cohesion();
@@ -37,19 +45,36 @@
         }
       }
       unset($data['groups_cohesion'][$keyRemoveNI]);
-      $data['groups_cohesion_first'] = $data['groups_cohesion'][0];
-      $data['groups_cohesion_last'] = array_slice($data['groups_cohesion'], -1);
-      $data['groups_cohesion_last'] = $data['groups_cohesion_last'][0];
+      $data['groups_cohesion_edited'] = array(
+        'first' => array(
+          'title' => 'Le plus divisé',
+          'group' => end($data['groups_cohesion']),
+          'stat' => round(end($data['groups_cohesion'])['cohesion'], 2)
+        ),
+        'second' => array(
+          'title' => 'Le plus uni',
+          'group' => $data['groups_cohesion'][0],
+          'stat' => round($data['groups_cohesion'][0]['cohesion'], 2)
+        )
+      );
       $data['mps_participation'] = $this->stats_model->get_mps_participation();
       $data['mps_participation_first'] = array_slice($data['mps_participation'], 0, 3);
       $data['mps_participation_last'] = array_slice($data['mps_participation'], -3);
       $data['mps_participation_mean'] = $this->stats_model->get_mps_participation_mean(legislature_current());
       $data['mps_participation_mean'] = $data['mps_participation_mean']['mean'];
       $data['groups_participation'] = $this->stats_model->get_groups_participation();
-      $data['groups_participation_first'] = array_slice($data['groups_participation'], 0, 1);
-      $data['groups_participation_first'] = $data['groups_participation_first'][0];
-      $data['groups_participation_last'] = array_slice($data['groups_participation'], -1);
-      $data['groups_participation_last'] = $data['groups_participation_last'][0];
+      $data['groups_participation_edited'] = array(
+        'first' => array(
+          'title' => 'Vote le moins',
+          'group' => end($data['groups_participation']),
+          'stat' => end($data['groups_participation'])['participation'].' %'
+        ),
+        'second' => array(
+          'title' => 'Vote le plus',
+          'group' => $data['groups_participation'][0],
+          'stat' => $data['groups_participation'][0]['participation'].' %'
+        )
+      );
       $data['famSocPro'] = $this->jobs_model->get_stats_all_mp(legislature_current());
       foreach ($data['famSocPro'] as $key => $value) {
         if ($value['famille'] == "Cadres et professions intellectuelles supérieures") {
@@ -59,9 +84,18 @@
         $data['famSocPro'][$key]['familleCut'] = explode("\n", $str);
       }
       $data['groupes_cadres'] = $this->jobs_model->get_groups_category("Cadres et professions intellectuelles supérieures");
-      $data['groupes_cadres_first'] = $data['groupes_cadres'][0];
-      $data['groupes_cadres_last'] = end($data['groupes_cadres']);
-      print_r($data['groupes_cadres_last']);
+      $data['groups_cadres_edited'] = array(
+        'first' => array(
+          'title' => 'Le moins de cadres',
+          'group' => end($data['groupes_cadres']),
+          'stat' => end($data['groupes_cadres'])['pct']. " %"
+        ),
+        'second' => array(
+          'title' => 'Le plus de cadres',
+          'group' => $data['groupes_cadres'][0],
+          'stat' => $data['groupes_cadres'][0]['pct']." %"
+        ),
+      );
 
       // Breadcrumb
       $data['breadcrumb'] = array(
