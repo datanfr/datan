@@ -479,7 +479,69 @@
         </div>
       </div>
       <div class="row bloc-ranking mt-5">
-        <div class="col-lg-10 offset-lg-1 col-md-10 offset-md-1 offset-lg-0">
+        <div class="col-lg-6 col-md-10 offset-md-1 offset-lg-0 mt-5 mt-lg-0">
+          <div class="card">
+            <div class="card-body pb-0">
+              <h3>Le nombre de députés cadres au sein des groupes politiques</h3>
+              <p>
+                La grande majorité de parlementaires étaient cadres ou exerçaient une profession intellectuelle supérieure (par exemple avocat, médecin ou ingénieur).
+              </p>
+              <p>Découvrez le groupe politique qui compte le plus de députés cadres et celui en ayant le moins.</p>
+              <div class="ranking-graph-group mt-4 py-4 row row-grid">
+                <div class="col-sm-6 d-flex flex-column align-items-center">
+                  <div class="title text-center mb-4">
+                    Le moins de cadres
+                  </div>
+                  <a href="<?= base_url() ?>groupes/<?= mb_strtolower($groupes_cadres_last["libelleAbrev"]) ?>">
+                    <div class="score mb-4">
+                      <div class="avatar">
+                        <picture>
+                          <source srcset="<?= asset_url(); ?>imgs/groupes/webp/<?= $groupes_cadres_last['libelleAbrev'] ?>.webp" type="image/webp">
+                          <source srcset="<?= asset_url(); ?>imgs/groupes/<?= $groupes_cadres_last['libelleAbrev'] ?>.png" type="image/png">
+                          <img class="img" src="<?= asset_url(); ?>imgs/groupes/<?= $groupes_cadres_last['libelleAbrev'] ?>.png" width="150" height="150" alt="<?= $groupes_cadres_last['libelle'] ?>">
+                        </picture>
+                      </div>
+                      <div class="age">
+                        <span class="badge badge-primary shadow"><?= round($groupes_cadres_last["pct"]) ?> %</span>
+                      </div>
+                    </div>
+                  </a>
+                  <div class="description text-center">
+                    <a href="<?= base_url() ?>groupes/<?= mb_strtolower($groupes_cadres_last["libelleAbrev"]) ?>" class="no-decoration underline"><?= $groupes_cadres_last["libelle"] ?></a>
+                  </div>
+                </div>
+                <div class="col-sm-6 d-flex flex-column align-items-center">
+                  <div class="title text-center mb-4">
+                    Le plus de cadres
+                  </div>
+                  <a href="<?= base_url() ?>groupes/<?= mb_strtolower($groupes_cadres_first["libelleAbrev"]) ?>">
+                    <div class="score mb-4">
+                      <div class="avatar">
+                        <picture>
+                          <source srcset="<?= asset_url(); ?>imgs/groupes/webp/<?= $groupes_cadres_first['libelleAbrev'] ?>.webp" type="image/webp">
+                          <source srcset="<?= asset_url(); ?>imgs/groupes/<?= $groupes_cadres_first['libelleAbrev'] ?>.png" type="image/png">
+                          <img class="img" src="<?= asset_url(); ?>imgs/groupes/<?= $groupes_cadres_first['libelleAbrev'] ?>.png" width="150" height="150" alt="<?= $groupes_cadres_first['libelle'] ?>">
+                        </picture>
+                      </div>
+                      <div class="age">
+                        <span class="badge badge-primary shadow"><?= round($groupes_cadres_first["pct"]) ?> %</span>
+                      </div>
+                    </div>
+                  </a>
+                  <div class="description">
+                    <a href="<?= base_url() ?>groupes/<?= mb_strtolower($groupes_cadres_first["libelleAbrev"]) ?>" class="no-decoration underline"><?= $groupes_cadres_first["libelle"] ?></a>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <a href="<?= base_url() ?>statistiques/groupes-age" class="no-decoration">
+              <div class="card-footer text-center">
+                <span>Découvrez tout le classement</span>
+              </div>
+            </a>
+          </div>
+        </div>
+        <div class="col-12 mt-5">
           <div class="card">
             <div class="card-body">
               <h3>Les députés selon leur catégorie professionnelle</h3>
