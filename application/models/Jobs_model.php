@@ -92,6 +92,23 @@
       return $query->result_array();
     }
 
+    public function get_groups_category($category){
+      $sql = 'SELECT *
+        FROM
+        (
+        SELECT dl.groupeId, dl.libelle, dl.libelleAbrev, COUNT(mpId) AS n, ge.effectif AS total, ROUND(COUNT(mpId) / ge.effectif * 100) AS pct
+        FROM deputes_last dl
+        LEFT JOIN groupes_effectif ge ON dl.groupeId = ge.organeRef
+        WHERE dl.legislature = ? AND dl.active AND dl.famSocPro = ? AND dl.libelleAbrev != "NI"
+        GROUP BY dl.groupeId
+        ) A
+        ORDER BY A.pct DESC
+      ';
+
+      $query = $this->db->query($sql, array(legislature_current(), $category));
+      return $query->result_array();
+    }
+
 
   }
 ?>
