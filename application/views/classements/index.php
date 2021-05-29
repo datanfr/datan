@@ -340,7 +340,7 @@
           </div>
         </div>
       </div> <!-- // END PARTICIPATION -->
-      <!-- AGE -->
+      <!-- ORIGINE SOCIALE -->
       <div class="row mt-5">
         <div class="col-12">
           <div class="title_svg">
@@ -354,13 +354,26 @@
           <div class="card">
             <div class="card-body pb-0">
               <h3>Le nombre de députés cadres au sein des groupes politiques</h3>
-              <p>
-                La grande majorité de parlementaires étaient cadres ou exerçaient une profession intellectuelle supérieure (par exemple avocat, médecin ou ingénieur).
-              </p>
+              <p>La grande majorité de parlementaires étaient cadres ou exerçaient une profession intellectuelle supérieure (par exemple avocat, médecin ou ingénieur).</p>
               <p>Découvrez le groupe politique qui compte le plus de députés cadres et celui en ayant le moins.</p>
               <?php $this->load->view('classements/partials/groups_index.php', $groups_cadres_edited) ?>
             </div>
-            <a href="<?= base_url() ?>statistiques/groupes-age" class="no-decoration">
+            <a href="<?= base_url() ?>statistiques" class="no-decoration">
+              <div class="card-footer text-center">
+                <span>Découvrez tout le classement</span>
+              </div>
+            </a>
+          </div>
+        </div>
+        <div class="col-lg-6 col-md-10 offset-md-1 offset-lg-0 mt-5 mt-lg-0">
+          <div class="card">
+            <div class="card-body pb-0">
+              <h3>La représentativité sociale des groupes politiques</h3>
+              <p>Un groupe politique est-il représentatif de la population française ? Quel groupe politique ressemble le plus socialement à la population ? Nous avons développé un indicateur mesurant la représentation des groupes de l'Assemblée nationale.</p>
+              <p>Découvrez les groupes politiques selon leur représentativité sociale.</p>
+              <?php $this->load->view('classements/partials/groups_index.php', $groups_cadres_edited) ?>
+            </div>
+            <a href="<?= base_url() ?>statistiques" class="no-decoration">
               <div class="card-footer text-center">
                 <span>Découvrez tout le classement</span>
               </div>
