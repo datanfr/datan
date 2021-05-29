@@ -820,7 +820,7 @@ class Script
     {
         echo "groupeStats starting \n";
         $this->bdd->query("DROP TABLE IF EXISTS groupes_stats");
-        $this->bdd->query('CREATE TABLE groupes_stats ( organeRef VARCHAR(15) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL , womenPct DECIMAL(4,2) NULL , womenN INT(3) NULL  , age DECIMAL(4,2) NULL ) ENGINE = MyISAM;');
+        $this->bdd->query('CREATE TABLE groupes_stats ( organeRef VARCHAR(15) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL , womenPct DECIMAL(4,2) NULL , womenN INT(3) NULL  , age DECIMAL(4,2) NULL, rose_index DECIMAL(4,3) ) ENGINE = MyISAM;');
 
         $reponse = $this->bdd->query('
             SELECT *
@@ -897,9 +897,34 @@ class Script
                 }
             }
 
+            $representation_response = $this->bdd->query('
+              SELECT 1 - (0.5 * sum(y)) AS rose_index
+              FROM
+              (
+              SELECT B.*, abs(population - x) AS y
+              FROM
+              (
+                SELECT famille, round(population / 100, 3) AS population, round(count(mpId) / total, 3) AS x
+                FROM famsocpro fam
+                LEFT JOIN deputes_last dl ON dl.famSocPro = fam.famille AND dl.groupeId = "' . $groupeId . '" AND dl.active AND dl.legislature = 15
+                LEFT JOIN (
+                  SELECT groupeId, count(*) AS total
+                  FROM famsocpro fam
+                  LEFT JOIN deputes_last dl ON dl.famSocPro = fam.famille
+                  WHERE dl.legislature = 15 AND dl.active AND groupeId = "' . $groupeId . '"
+                ) A ON A.groupeId = dl.groupeId
+                GROUP BY famille
+              ) B
+              ) C
+            ');
+
+            while ($representation = $representation_response->fetch()) {
+                $rose_index = $representation['rose_index'];
+            }
+
             // INSERT INTO DATABSSE //
-            $sql = $this->bdd->prepare('INSERT INTO groupes_stats (organeRef, age, womenN, womenPct) VALUES (:organeRef, :age, :womenN, :womenPct)');
-            $sql->execute(array('organeRef' => $groupeId, 'age' => $age, 'womenN' => $womenN, 'womenPct' => $womenPct));
+            $sql = $this->bdd->prepare('INSERT INTO groupes_stats (organeRef, age, womenN, womenPct, rose_index) VALUES (:organeRef, :age, :womenN, :womenPct, :rose_index)');
+            $sql->execute(array('organeRef' => $groupeId, 'age' => $age, 'womenN' => $womenN, 'womenPct' => $womenPct, 'rose_index' => $rose_index));
         }
     }
 
