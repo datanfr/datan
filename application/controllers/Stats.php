@@ -83,17 +83,30 @@
         $str = word_wrap($value['famille'], 25, "\n");
         $data['famSocPro'][$key]['familleCut'] = explode("\n", $str);
       }
-      $data['groupes_cadres'] = $this->jobs_model->get_groups_category("Cadres et professions intellectuelles supérieures");
+      $data['groups_cadres'] = $this->jobs_model->get_groups_category("Cadres et professions intellectuelles supérieures");
       $data['groups_cadres_edited'] = array(
         'first' => array(
           'title' => 'Le moins de cadres',
-          'group' => end($data['groupes_cadres']),
-          'stat' => end($data['groupes_cadres'])['pct']. " %"
+          'group' => end($data['groups_cadres']),
+          'stat' => end($data['groups_cadres'])['pct']. " %"
         ),
         'second' => array(
           'title' => 'Le plus de cadres',
-          'group' => $data['groupes_cadres'][0],
-          'stat' => $data['groupes_cadres'][0]['pct']." %"
+          'group' => $data['groups_cadres'][0],
+          'stat' => $data['groups_cadres'][0]['pct']." %"
+        ),
+      );
+      $data['groups_rose'] = $this->jobs_model->get_groups_rose();
+      $data['groups_rose_edited'] = array(
+        'first' => array(
+          'title' => 'Le moins représentatif',
+          'group' => end($data['groups_rose']),
+          'stat' => end($data['groups_rose'])['rose_index']
+        ),
+        'second' => array(
+          'title' => 'Le plus représentatif',
+          'group' => $data['groups_rose'][0],
+          'stat' => $data['groups_rose'][0]['rose_index']
         ),
       );
 

@@ -109,6 +109,18 @@
       return $query->result_array();
     }
 
+    public function get_groups_rose(){
+      $sql = 'SELECT gs.organeRef, gs.rose_index, o.libelle, o.libelleAbrev
+        FROM groupes_stats gs
+        LEFT JOIN organes o ON gs.organeRef = o.uid
+        WHERE o.legislature = 15 and o.dateFin IS NULL AND o.libelleAbrev != "NI"
+        ORDER BY gs.rose_index DESC
+      ';
+
+      $query = $this->db->query($sql);
+      return $query->result_array();
+    }
+
 
   }
 ?>

@@ -369,9 +369,9 @@
           <div class="card">
             <div class="card-body pb-0">
               <h3>La représentativité sociale des groupes politiques</h3>
-              <p>Un groupe politique est-il représentatif de la population française ? Quel groupe politique ressemble le plus socialement à la population ? Nous avons développé un indicateur mesurant la représentation des groupes de l'Assemblée nationale.</p>
-              <p>Découvrez les groupes politiques selon leur représentativité sociale.</p>
-              <?php $this->load->view('classements/partials/groups_index.php', $groups_cadres_edited) ?>
+              <p>Un groupe politique est-il représentatif de la population française ? Quel groupe politique ressemble le plus socialement à la population ?</p>
+              <p>Nous utilisons un <span class="url_obf" url_obf="<?= url_obfuscation("https://rdrr.io/rforge/polrep/man/Rose.html") ?>">indicateur</span> permettant de mesurer la représentation des groupes de l'Assemblée nationale. Il va de 0 (le moins représentatif) à 1 (le plus représentatif).</p>
+              <?php $this->load->view('classements/partials/groups_index.php', $groups_rose_edited) ?>
             </div>
             <a href="<?= base_url() ?>statistiques" class="no-decoration">
               <div class="card-footer text-center">
