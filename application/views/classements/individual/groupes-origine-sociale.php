@@ -42,10 +42,11 @@
           <h2>Part des catégories professionnelles dans chaque groupe</h2>
           <p>Dans quel groupe politique y a-t-il le plus de députés avec un parcours d'agriculteur ? Avec le plus de parlementaires ayant effectué une profession de cadre ? D'ouvriers ? Découvrez-le dans le tableau ci-dessous !</p>
           <table class="table table-striped table-stats mt-4">
-            <thead class="thead-dark">
+            <thead class="thead-dark table-sm">
               <tr>
-                <?php foreach ($groups[0] as $key => $value): ?>
-                  <th><?= $key ?></th>
+                <th>Catégorie</th>
+                <?php foreach ($groups as $key => $value): ?>
+                  <th class="text-center"><small><?= $key ?></small></th>
                   <?php
                     $cols[] = $key;
                   ?>
@@ -53,13 +54,24 @@
               </tr>
             </thead>
             <tbody>
-              <?php foreach ($groups as $x): ?>
+              <?php foreach ($groups_rows as $row): ?>
                 <tr>
-                  <?php foreach ($cols as $col): ?>
-                    <td class="text-center"><?= $col == "Groupe" ? $x[$col] : $x[$col]." %" ?></td>
+                  <td><?= $row ?></td>
+                  <?php foreach ($groups as $key => $value): ?>
+                    <?php if (isset($groups[$key][$row])): ?>
+                      <td class="text-center"><?= $groups[$key][$row] ?>%</td>
+                      <?php else: ?>
+                      <td class="text-center">0%</td>
+                    <?php endif; ?>
                   <?php endforeach; ?>
                 </tr>
               <?php endforeach; ?>
+              <tr>
+                <td>Total</td>
+                <?php foreach ($groups as $key => $value): ?>
+                  <td class="text-center">100%</td>
+                <?php endforeach; ?>
+              </tr>
             </tbody>
           </table>
         </div>

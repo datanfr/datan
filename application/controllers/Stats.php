@@ -294,7 +294,31 @@
         $data['groups_rose'] = $this->jobs_model->get_groups_rose();
         $data['rose_first'] = $data['groups_rose'][0];
         $data['rose_first']['couleurAssociee'] = $this->groupes_model->get_groupe_color(array($data['rose_first']['libelleAbrev'], $data['rose_first']['couleurAssociee']));
-        $data['groups'] = $this->jobs_model->get_groups_representativite();
+        $groups = $this->jobs_model->get_groups_representativite();
+
+        /* $columns is a list of all column names */
+        $columns = array();
+        /* $rows is a list of all row names (probably '1', '2', etc) */
+        $rows = array();
+
+        $test = array();
+
+
+        foreach ($groups as $row) {
+
+          if (!in_array($row['libelleAbrev'], $columns)) {
+            array_push($columns, $row['libelleAbrev']);
+          }
+
+          if (!in_array($row['famSocPro'], $rows)) {
+              array_push($rows, $row['famSocPro']);
+          }
+
+          $test[$row['libelleAbrev']][$row['famSocPro']] = $row['pct'];
+
+        }
+        $data['groups'] = $test;
+        $data['groups_rows'] = $rows;
 
         // Meta
         $data['title_meta'] = "La représentatité sociale des groupes - Assemblée nationale | Datan";
