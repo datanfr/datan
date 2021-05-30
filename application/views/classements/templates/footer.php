@@ -44,6 +44,11 @@
               <a href="<?= base_url() ?>statistiques/deputes-origine-sociale" class="no-decoration underline">L'origine sociale des députés</a>
             </li>
           <?php endif; ?>
+          <?php if ($page != "groupes-origine-sociale"): ?>
+            <li class="list-group-item">
+              <a href="<?= base_url() ?>statistiques/groupes-origine-sociale" class="no-decoration underline">La représentativité des groupes</a>
+            </li>
+          <?php endif; ?>
         </ul>
       </div>
     </div>

@@ -92,6 +92,79 @@
       return $query->result_array();
     }
 
+    public function get_groups_category($category){
+      $sql = 'SELECT *
+        FROM
+        (
+        SELECT dl.groupeId, dl.libelle, dl.libelleAbrev, COUNT(mpId) AS n, ge.effectif AS total, ROUND(COUNT(mpId) / ge.effectif * 100) AS pct
+        FROM deputes_last dl
+        LEFT JOIN groupes_effectif ge ON dl.groupeId = ge.organeRef
+        WHERE dl.legislature = ? AND dl.active AND dl.famSocPro = ? AND dl.libelleAbrev != "NI"
+        GROUP BY dl.groupeId
+        ) A
+        ORDER BY A.pct DESC
+      ';
+
+      $query = $this->db->query($sql, array(legislature_current(), $category));
+      return $query->result_array();
+    }
+
+    public function get_groups_rose(){
+      $sql = 'SELECT gs.organeRef, gs.rose_index, o.libelle, o.libelleAbrev AS libelleAbrev, o.couleurAssociee, ge.effectif
+        FROM groupes_stats gs
+        LEFT JOIN organes o ON gs.organeRef = o.uid
+        LEFT JOIN groupes_effectif ge ON gs.organeRef = ge.organeRef
+        WHERE o.legislature = 15 and o.dateFin IS NULL AND o.libelleAbrev != "NI"
+        ORDER BY gs.rose_index DESC
+      ';
+
+      $query = $this->db->query($sql);
+      return $query->result_array();
+    }
+
+    public function get_group_category_random($groupe_uid){
+      $sql = 'SELECT A.famille, A.n, ROUND(A.n / ge.effectif * 100) AS pct, A.population
+        FROM
+        (
+        SELECT fam.famille, fam.population, COUNT(dl.mpId) AS n
+        FROM famSocPro fam
+        LEFT JOIN deputes_last dl ON dl.famSocPro = fam.famille AND groupeId = ? AND dl.active AND dl.legislature = 15
+        GROUP BY fam.famille
+        ORDER BY rand()
+        LIMIT 1
+        ) A
+        LEFT JOIN groupes_effectif ge ON ge.organeRef = ?
+      ';
+
+      $query = $this->db->query($sql, array($groupe_uid, $groupe_uid));
+      return $query->row_array();
+    }
+
+    public function get_groups_representativite(){
+        $sql = 'SELECT B.*
+        FROM
+        (
+        	SELECT A.libelleAbrev, A.libelle, A.famSocPro, round(count(A.mpId) / ge.effectif * 100) AS pct
+        	FROM
+        	(
+        		SElECT mpId, legislature, groupeId, libelle, libelleAbrev, active,
+        		CASE
+        			WHEN famSocPro = "" THEN "Sans profession déclarée"
+        			WHEN famSocPro = "Autres personnes sans activité professionnelle" THEN "Sans profession déclarée"
+        			ELSE famSocPro
+        		END AS famSocPro
+        		FROM deputes_last
+        	) A
+        	LEFT JOIN groupes_effectif ge ON A.groupeId = ge.organeRef
+        	WHERE A.legislature = ? AND A.active AND A.libelleAbrev != "NI"
+        	GROUP BY A.groupeId, A.famSocPro
+        ) B
+        ORDER BY B.libelleAbrev ASC';
+
+      $query = $this->db->query($sql, legislature_current());
+      return $query->result_array();
+    }
+
 
   }
 ?>
