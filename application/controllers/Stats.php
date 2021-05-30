@@ -283,6 +283,23 @@
         $data['title'] = "L'origine sociale des députés";
         // JS
         $data['js_to_load_up'] = array("chart.min.js");
+      } elseif ($url == "groupes-origine-sociale") {
+        // Data
+        $data['famSocPro'] = $this->jobs_model->get_stats_all_mp(legislature_current());
+        foreach ($data['famSocPro'] as $key => $value) {
+          if ($value['famille'] == "Cadres et professions intellectuelles supérieures") {
+            $data['famSocPro_cadres'] = $data['famSocPro'][$key];
+          }
+        }
+        $data['groups_rose'] = $this->jobs_model->get_groups_rose();
+        $data['rose_first'] = $data['groups_rose'][0];
+        $data['rose_first']['couleurAssociee'] = $this->groupes_model->get_groupe_color(array($data['rose_first']['libelleAbrev'], $data['rose_first']['couleurAssociee']));
+        $data['groups'] = $this->jobs_model->get_groups_representativite();
+
+        // Meta
+        $data['title_meta'] = "La représentatité sociale des groupes - Assemblée nationale | Datan";
+        $data['description_meta'] = "Quel groupe parlementaire est le plus actif au moment de voter ? Quel groupe a le plus faible taux de participation ? Découvrez le classement sur Datan.";
+        $data['title'] = "La représentativité sociale des groupes politiques";
       }
 
       // Breadcrumb

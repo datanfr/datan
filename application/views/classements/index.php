@@ -353,12 +353,12 @@
         <div class="col-lg-6 col-md-10 offset-md-1 offset-lg-0 mt-5 mt-lg-0">
           <div class="card">
             <div class="card-body pb-0">
-              <h3>Le nombre de députés cadres au sein des groupes politiques</h3>
+              <h3>La part de députés cadres dans chaque groupe politique</h3>
               <p>La grande majorité de parlementaires étaient cadres ou exerçaient une profession intellectuelle supérieure (par exemple avocat, médecin ou ingénieur).</p>
               <p>Découvrez le groupe politique qui compte le plus de députés cadres et celui en ayant le moins.</p>
               <?php $this->load->view('classements/partials/groups_index.php', $groups_cadres_edited) ?>
             </div>
-            <a href="<?= base_url() ?>statistiques" class="no-decoration">
+            <a href="<?= base_url() ?>statistiques/groupes-origine-sociale" class="no-decoration">
               <div class="card-footer text-center">
                 <span>Découvrez tout le classement</span>
               </div>
@@ -373,7 +373,7 @@
               <p>Nous utilisons un <span class="url_obf" url_obf="<?= url_obfuscation("https://rdrr.io/rforge/polrep/man/Rose.html") ?>">indicateur</span> permettant de mesurer la représentation des groupes de l'Assemblée nationale. Il va de 0 (le moins représentatif) à 1 (le plus représentatif).</p>
               <?php $this->load->view('classements/partials/groups_index.php', $groups_rose_edited) ?>
             </div>
-            <a href="<?= base_url() ?>statistiques" class="no-decoration">
+            <a href="<?= base_url() ?>statistiques/groupes-origine-sociale" class="no-decoration">
               <div class="card-footer text-center">
                 <span>Découvrez tout le classement</span>
               </div>
