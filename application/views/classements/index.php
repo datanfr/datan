@@ -84,52 +84,7 @@
             <div class="card-body pb-0">
               <h3>La moyenne d'âge par groupe</h3>
               <p>Découvrez le groupe politique ayant la moyenne d'âge la plus élevée et celui avec la moyenne d'âge la plus faible.</p>
-              <div class="ranking-graph-group mt-4 py-4 row row-grid">
-                <div class="col-sm-6 d-flex flex-column align-items-center">
-                  <div class="title text-center mb-4">
-                    Le plus âgé
-                  </div>
-                  <a href="<?= base_url() ?>groupes/<?= mb_strtolower($groups_age_oldest["libelleAbrev"]) ?>">
-                    <div class="score mb-4">
-                      <div class="avatar">
-                        <picture>
-                          <source srcset="<?= asset_url(); ?>imgs/groupes/webp/<?= $groups_age_oldest['libelleAbrev'] ?>.webp" type="image/webp">
-                          <source srcset="<?= asset_url(); ?>imgs/groupes/<?= $groups_age_oldest['libelleAbrev'] ?>.png" type="image/png">
-                          <img class="img" src="<?= asset_url(); ?>imgs/groupes/<?= $groups_age_oldest['libelleAbrev'] ?>.png" width="150" height="150" alt="<?= $groups_age_oldest['libelle'] ?>">
-                        </picture>
-                      </div>
-                      <div class="age">
-                        <span class="badge badge-primary shadow"><?= round($groups_age_oldest["age"]) ?> ans</span>
-                      </div>
-                    </div>
-                  </a>
-                  <div class="description">
-                    <a href="<?= base_url() ?>groupes/<?= mb_strtolower($groups_age_oldest["libelleAbrev"]) ?>" class="no-decoration underline"><?= $groups_age_oldest["libelle"] ?></a>
-                  </div>
-                </div>
-                <div class="col-sm-6 d-flex flex-column align-items-center">
-                  <div class="title text-center mb-4">
-                    Le plus jeune
-                  </div>
-                  <a href="<?= base_url() ?>groupes/<?= mb_strtolower($groups_age_youngest["libelleAbrev"]) ?>">
-                    <div class="score mb-4">
-                      <div class="avatar">
-                        <picture>
-                          <source srcset="<?= asset_url(); ?>imgs/groupes/webp/<?= $groups_age_youngest['libelleAbrev'] ?>.webp" type="image/webp">
-                          <source srcset="<?= asset_url(); ?>imgs/groupes/<?= $groups_age_youngest['libelleAbrev'] ?>.png" type="image/png">
-                          <img class="img" src="<?= asset_url(); ?>imgs/groupes/<?= $groups_age_youngest['libelleAbrev'] ?>.png" width="150" height="150" alt="<?= $groups_age_youngest['libelle'] ?>">
-                        </picture>
-                      </div>
-                      <div class="age">
-                        <span class="badge badge-primary shadow"><?= round($groups_age_youngest["age"]) ?> ans</span>
-                      </div>
-                    </div>
-                  </a>
-                  <div class="description">
-                    <a href="<?= base_url() ?>groupes/<?= mb_strtolower($groups_age_youngest["libelleAbrev"]) ?>" class="no-decoration underline"><?= $groups_age_youngest["libelle"] ?></a>
-                  </div>
-                </div>
-              </div>
+              <?php $this->load->view('classements/partials/groups_index.php', $groups_age_edited) ?>
             </div>
             <a href="<?= base_url() ?>statistiques/groupes-age" class="no-decoration">
               <div class="card-footer text-center">
@@ -305,46 +260,7 @@
               <p>
                 Quand ils votent, les députés peuvent décider de suivre la ligne de leur groupe politique. Ils peuvent également décider de voter contre leur groupe, par exemple si leur position personnelle est différente ou si les intérêts de leur circonscription sont contraires à la ligne du groupe.
               </p>
-              <div class="ranking-graph-group mt-4 py-4 row row-grid">
-                <div class="col-sm-6 d-flex flex-column align-items-center">
-                  <div class="title text-center mb-4">
-                    Le plus uni
-                  </div>
-                  <a href="<?= base_url() ?>groupes/<?= mb_strtolower($groups_cohesion_first["libelleAbrev"]) ?>">
-                    <div class="score mb-4">
-                      <div class="avatar">
-                        <picture>
-                          <source srcset="<?= asset_url(); ?>imgs/groupes/webp/<?= $groups_cohesion_first['libelleAbrev'] ?>.webp" type="image/webp">
-                          <source srcset="<?= asset_url(); ?>imgs/groupes/<?= $groups_cohesion_first['libelleAbrev'] ?>.png" type="image/png">
-                          <img class="img" src="<?= asset_url(); ?>imgs/groupes/<?= $groups_cohesion_first['libelleAbrev'] ?>.png" width="150" height="150" alt="<?= $groups_cohesion_first['libelle'] ?>">
-                        </picture>
-                      </div>
-                    </div>
-                  </a>
-                  <div class="description">
-                    <a href="<?= base_url() ?>groupes/<?= mb_strtolower($groups_cohesion_first["libelleAbrev"]) ?>" class="no-decoration underline"><?= $groups_cohesion_first["libelle"] ?></a>
-                  </div>
-                </div>
-                <div class="col-sm-6 d-flex flex-column align-items-center">
-                  <div class="title text-center mb-4">
-                    Le plus divisé
-                  </div>
-                  <a href="<?= base_url() ?>groupes/<?= mb_strtolower($groups_cohesion_last["libelleAbrev"]) ?>">
-                    <div class="score mb-4">
-                      <div class="avatar">
-                        <picture>
-                          <source srcset="<?= asset_url(); ?>imgs/groupes/webp/<?= $groups_cohesion_last['libelleAbrev'] ?>.webp" type="image/webp">
-                          <source srcset="<?= asset_url(); ?>imgs/groupes/<?= $groups_cohesion_last['libelleAbrev'] ?>.png" type="image/png">
-                          <img class="img" src="<?= asset_url(); ?>imgs/groupes/<?= $groups_cohesion_last['libelleAbrev'] ?>.png" width="150" height="150" alt="<?= $groups_cohesion_last['libelle'] ?>">
-                        </picture>
-                      </div>
-                    </div>
-                  </a>
-                  <div class="description">
-                    <a href="<?= base_url() ?>groupes/<?= mb_strtolower($groups_cohesion_last["libelleAbrev"]) ?>" class="no-decoration underline"><?= $groups_cohesion_last["libelle"] ?></a>
-                  </div>
-                </div>
-              </div>
+              <?php $this->load->view('classements/partials/groups_index.php', $groups_cohesion_edited) ?>
             </div>
             <a href="<?= base_url() ?>statistiques/groupes-cohesion" class="no-decoration">
               <div class="card-footer text-center">
@@ -414,52 +330,7 @@
               <h3>La participation au sein des groupes</h3>
               <p>Quels sont les groups politiques ayant les députés participant le plus aux votes à l'Assemblée nationale ?</p>
               <p><b>Attention</b>, le taux de participation est faible à cause de l'organisation du travail. Avec plusieurs réunions en même temps, seuls les députés spécialistes d'un sujet participent aux discussions en séance plénière.</p>
-              <div class="ranking-graph-group mt-4 py-4 row row-grid">
-                <div class="col-sm-6 d-flex flex-column align-items-center">
-                  <div class="title text-center mb-4">
-                    Vote le plus souvent
-                  </div>
-                  <a href="<?= base_url() ?>groupes/<?= mb_strtolower($groups_participation_first["libelleAbrev"]) ?>">
-                    <div class="score mb-4">
-                      <div class="avatar">
-                        <picture>
-                          <source srcset="<?= asset_url(); ?>imgs/groupes/webp/<?= $groups_participation_first['libelleAbrev'] ?>.webp" type="image/webp">
-                          <source srcset="<?= asset_url(); ?>imgs/groupes/<?= $groups_participation_first['libelleAbrev'] ?>.png" type="image/png">
-                          <img class="img" src="<?= asset_url(); ?>imgs/groupes/<?= $groups_participation_first['libelleAbrev'] ?>.png" width="150" height="150" alt="<?= $groups_participation_first['libelle'] ?>">
-                        </picture>
-                      </div>
-                      <div class="age">
-                        <span class="badge badge-primary shadow"><?= round($groups_participation_first["participation"]) ?> %</span>
-                      </div>
-                    </div>
-                  </a>
-                  <div class="description">
-                    <a href="<?= base_url() ?>groupes/<?= mb_strtolower($groups_participation_first["libelleAbrev"]) ?>" class="no-decoration underline"><?= $groups_participation_first["libelle"] ?></a>
-                  </div>
-                </div>
-                <div class="col-sm-6 d-flex flex-column align-items-center">
-                  <div class="title text-center mb-4">
-                    Vote le moins souvent
-                  </div>
-                  <a href="<?= base_url() ?>groupes/<?= mb_strtolower($groups_participation_last["libelleAbrev"]) ?>">
-                    <div class="score mb-4">
-                      <div class="avatar">
-                        <picture>
-                          <source srcset="<?= asset_url(); ?>imgs/groupes/webp/<?= $groups_participation_last['libelleAbrev'] ?>.webp" type="image/webp">
-                          <source srcset="<?= asset_url(); ?>imgs/groupes/<?= $groups_participation_last['libelleAbrev'] ?>.png" type="image/png">
-                          <img class="img" src="<?= asset_url(); ?>imgs/groupes/<?= $groups_participation_last['libelleAbrev'] ?>.png" width="150" height="150" alt="<?= $groups_participation_last['libelle'] ?>">
-                        </picture>
-                      </div>
-                      <div class="age">
-                        <span class="badge badge-primary shadow"><?= round($groups_participation_last["participation"]) ?> %</span>
-                      </div>
-                    </div>
-                  </a>
-                  <div class="description">
-                    <a href="<?= base_url() ?>groupes/<?= mb_strtolower($groups_participation_last["libelleAbrev"]) ?>" class="no-decoration underline"><?= $groups_participation_last["libelle"] ?></a>
-                  </div>
-                </div>
-              </div>
+              <?php $this->load->view('classements/partials/groups_index.php', $groups_participation_edited) ?>
             </div>
             <a href="<?= base_url() ?>statistiques/groupes-participation" class="no-decoration">
               <div class="card-footer text-center">
@@ -469,7 +340,7 @@
           </div>
         </div>
       </div> <!-- // END PARTICIPATION -->
-      <!-- AGE -->
+      <!-- ORIGINE SOCIALE -->
       <div class="row mt-5">
         <div class="col-12">
           <div class="title_svg">
@@ -479,7 +350,37 @@
         </div>
       </div>
       <div class="row bloc-ranking mt-5">
-        <div class="col-lg-10 offset-lg-1 col-md-10 offset-md-1 offset-lg-0">
+        <div class="col-lg-6 col-md-10 offset-md-1 offset-lg-0 mt-5 mt-lg-0">
+          <div class="card">
+            <div class="card-body pb-0">
+              <h3>La part de députés cadres dans chaque groupe politique</h3>
+              <p>La grande majorité de parlementaires étaient cadres ou exerçaient une profession intellectuelle supérieure (par exemple avocat, médecin ou ingénieur).</p>
+              <p>Découvrez le groupe politique qui compte le plus de députés cadres et celui en ayant le moins.</p>
+              <?php $this->load->view('classements/partials/groups_index.php', $groups_cadres_edited) ?>
+            </div>
+            <a href="<?= base_url() ?>statistiques/groupes-origine-sociale" class="no-decoration">
+              <div class="card-footer text-center">
+                <span>Découvrez tout le classement</span>
+              </div>
+            </a>
+          </div>
+        </div>
+        <div class="col-lg-6 col-md-10 offset-md-1 offset-lg-0 mt-5 mt-lg-0">
+          <div class="card">
+            <div class="card-body pb-0">
+              <h3>La représentativité sociale des groupes politiques</h3>
+              <p>Un groupe politique est-il représentatif de la population française ? Quel groupe politique ressemble le plus socialement à la population ?</p>
+              <p>Nous utilisons un <span class="url_obf" url_obf="<?= url_obfuscation("https://rdrr.io/rforge/polrep/man/Rose.html") ?>">indicateur</span> permettant de mesurer la représentation des groupes de l'Assemblée nationale. Il va de 0 (le moins représentatif) à 1 (le plus représentatif).</p>
+              <?php $this->load->view('classements/partials/groups_index.php', $groups_rose_edited) ?>
+            </div>
+            <a href="<?= base_url() ?>statistiques/groupes-origine-sociale" class="no-decoration">
+              <div class="card-footer text-center">
+                <span>Découvrez tout le classement</span>
+              </div>
+            </a>
+          </div>
+        </div>
+        <div class="col-12 mt-5">
           <div class="card">
             <div class="card-body">
               <h3>Les députés selon leur catégorie professionnelle</h3>
