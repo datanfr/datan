@@ -122,36 +122,25 @@
       return $query->result_array();
     }
 
-    public function get_groups_representativite(){
-      $sql = 'SELECT CONCAT(B.libelle, " (", B.libelleAbrev, ")") AS Groupe,
-        MAX(IF(famSocPro = "Agriculteurs exploitants", pct, 0)) AS "Agriculteurs",
-        MAX(IF(famSocPro = "Artisans, commerçants et chefs d\'entreprise", pct, 0)) AS "Commerçants et chefs d\'entreprise",
-        MAX(IF(famSocPro = "Cadres et professions intellectuelles supérieures", pct, 0)) AS "Cadres et professions intellectuelles",
-        MAX(IF(famSocPro = "Employés", pct, 0)) AS "Employés",
-        MAX(IF(famSocPro = "Ouvriers", pct, 0)) AS "Ouvriers",
-        MAX(IF(famSocPro = "Professions Intermediaires", pct, 0)) AS "Professions intermediaires",
-        MAX(IF(famSocPro = "Retraités", pct, 0)) AS "Retraités",
-        MAX(IF(famSocPro = "Sans profession déclarée", pct, 0)) AS "Autre"
+    public function get_group_category_random($groupe_uid){
+      $sql = 'SELECT A.famille, A.n, ROUND(A.n / ge.effectif * 100) AS pct, A.population
         FROM
         (
-        	SELECT A.groupeId, A.libelleAbrev, A.libelle, A.famSocPro, round(count(A.mpId) / ge.effectif * 100) AS pct
-        	FROM
-        	(
-        		SElECT mpId, legislature, groupeId, libelle, libelleAbrev, active,
-        		CASE
-        			WHEN famSocPro = "" THEN "Sans profession déclarée"
-        			WHEN famSocPro = "Autres personnes sans activité professionnelle" THEN "Sans profession déclarée"
-        			ELSE famSocPro
-        		END AS famSocPro
-        		FROM deputes_last
-        	) A
-        	LEFT JOIN groupes_effectif ge ON A.groupeId = ge.organeRef
-        	WHERE A.legislature = ? AND A.active AND A.libelleAbrev != "NI"
-        	GROUP BY A.groupeId, A.famSocPro
-        ) B
-        GROUP BY groupeId
-        ORDER BY B.libelleAbrev ASC';
+        SELECT fam.famille, fam.population, COUNT(dl.mpId) AS n
+        FROM famSocPro fam
+        LEFT JOIN deputes_last dl ON dl.famSocPro = fam.famille AND groupeId = ? AND dl.active AND dl.legislature = 15
+        GROUP BY fam.famille
+        ORDER BY rand()
+        LIMIT 1
+        ) A
+        LEFT JOIN groupes_effectif ge ON ge.organeRef = ?
+      ';
 
+      $query = $this->db->query($sql, array($groupe_uid, $groupe_uid));
+      return $query->row_array();
+    }
+
+    public function get_groups_representativite(){
         $sql = 'SELECT B.*
         FROM
         (

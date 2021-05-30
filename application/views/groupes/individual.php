@@ -212,7 +212,21 @@
                 </div>
               </div>
             </div>
-            <div class="col-6">
+            <div class="col-sm-6">
+              <div class="card">
+                <div class="card-body">
+                  <h3>Origine sociale des députés</h3>
+                  <div class="stat">
+                    <span><?= $origineSociale['pct'] ?> %</span>
+                  </div>
+                  <div class="explanation">
+                    <p>
+                      <?= $origineSociale['n'] > 0 ? $origineSociale['n'] : "Aucun" ?> député<?= $origineSociale['n'] > 1 ? "s" : NULL ?> du groupe <?= $groupe['libelleAbrev'] ?> (soit <?= $origineSociale['pct'] ?> %) apparten<?= $origineSociale['n'] > 1 ? "aient" : "ait" ?> à la catégorie <b><u><?= mb_strtolower($origineSociale['famille']) ?></u></b>.
+                      C'est <?= $origineSociale['edited'] ?> que dans la population française (<?= round($origineSociale['population']) ?> %).
+                    </p>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div> <!-- // END BLOC CHIFFRES -->
