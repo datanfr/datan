@@ -10,6 +10,7 @@
       $this->load->model('deputes_model');
       $this->load->model('functions_datan');
       $this->load->model('fields_model');
+      $this->load->model('jobs_model');
       //$this->password_model->security_password(); Former login protection
     }
 
@@ -160,6 +161,15 @@
       $data['womenPctTotal'] = $this->deputes_model->get_deputes_gender($legislature);
       $data['womenPctTotal'] = $data['womenPctTotal'][1]['percentage'];
       $data['womenEdited'] = $this->functions_datan->more_less($data['groupe']['womenPct'], $data['womenPctTotal']);
+      // Get origine-sociale
+      $data['origineSociale'] = $this->jobs_model->get_group_category_random($groupe_uid);
+      if (round($data['origineSociale']['pct']) > round($data['origineSociale']['population'])) {
+        $data['origineSociale']['edited'] = 'plus';
+      } elseif (round($data['origineSociale']['pct']) < round($data['origineSociale']['population'])) {
+        $data['origineSociale']['edited'] = 'moins';
+      } else {
+        $data['origineSociale']['edited'] = 'autant';
+      }
 
       // Social Media du groupe
       $data['groupe'] = $this->groupes_model->get_groupe_social_media($data['groupe']);
