@@ -7,11 +7,12 @@
           <p><b>Cela a-t-il un impact ?</b> Les citoyens ne votent pas pour une origine sociale mais pour des idées et un programme politique. Cependant, la sous-représentation de certaines catégories de la population pose question. <span class="url_obf" url_obf="<?= url_obfuscation("https://onlinelibrary.wiley.com/doi/abs/10.1111/ajps.12112") ?>">Plusieurs chercheurs</span> ont montré que l'origine sociale d'un parlementaire a un impact sur ses idées et la façon dont il vote.</p>
         </div>
       </div>
-      <div class="row row-grid mt-5">
+      <div class="row row-grid5">
         <div class="col-12">
-          <h2>Le groupe politique le plus représentatif de la population</h2>
-          <p>Nous utilisons <span class="url_obf" url_obf="<?= url_obfuscation("https://rdrr.io/rforge/polrep/man/Rose.html") ?>">l'indicateur  de Rose</span> pour mesurer la représentativité sociale des différents groupes politiques. Pour chaque catégorie professionnelle, l'indicateur compare le pourcentage de députés issus de cette catégorie au sein d'un groupe politique avec le pourcentage de Français appartenant à cette même catégorie.</p>
-          <p>L'indicateur de Rose va de 0 à 1. Un groupe politique ayant une représentativité parfaite (par exemple 15% de députés ouvriers s'il y a 15% d'ouvriers dans la population française, 30% d'employés s'il y a 30% d'employés dans la population) aura un score de 1.</p>
+          <h2 class="my-5">Le groupe politique le plus représentatif de la population</h2>
+          <p>Nous utilisons <span class="url_obf" url_obf="<?= url_obfuscation("https://rdrr.io/rforge/polrep/man/Rose.html") ?>">l'indicateur  de Rose</span> pour mesurer la représentativité sociale des groupes politiques.</p>
+          <p>Cet indicateur compare le pourcentage de députés issus des différentes catégories professionnelles avec le pourcentage de la population dans ces mêmes catégories.</p>
+          <p>Un groupe politique est parfaitement représentatif si 15% de ces députés étaient des ouvriers et qu'il y a 15% d'ouvriers dans la population, et ainsi de suite. Un groupe parfaitement représentatif aura une valeur de 1, tandis qu'un groupe non représentatif aura une valeur de 0.</p>
           <p>Le groupe politique de l'Assemblée nationale le plus représentatif socialement de la population est <a href="<?= base_url() ?>groupes/<?= $rose_first['libelleAbrev'] ?>"><?= $rose_first['libelle'] ?> (<?= $rose_first['libelleAbrev'] ?>)</a>, avec un score de <?= $rose_first['rose_index'] ?>.</p>
         </div>
         <div class="col-12">
@@ -66,12 +67,6 @@
                   <?php endforeach; ?>
                 </tr>
               <?php endforeach; ?>
-              <tr>
-                <td>Total</td>
-                <?php foreach ($groups as $key => $value): ?>
-                  <td class="text-center">100%</td>
-                <?php endforeach; ?>
-              </tr>
             </tbody>
           </table>
         </div>
