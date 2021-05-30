@@ -127,7 +127,7 @@
         FROM
         (
         SELECT fam.famille, fam.population, COUNT(dl.mpId) AS n
-        FROM famSocPro fam
+        FROM famsocpro fam
         LEFT JOIN deputes_last dl ON dl.famSocPro = fam.famille AND groupeId = ? AND dl.active AND dl.legislature = 15
         GROUP BY fam.famille
         ORDER BY rand()
