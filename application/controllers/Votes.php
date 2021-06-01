@@ -462,6 +462,10 @@
         $title_ogp = $data['title_meta'];
       }
       $data['ogp'] = $this->meta_model->get_ogp($controller, $title_ogp, $data['description_meta'], $data['url'], $data);
+      // Microdata Person
+      if ($voteDatan) {
+        $data['vote_schema'] = $this->votes_model->get_vote_schema($data['vote']);
+      }
       // CSS
       $data['css_to_load']= array(
         array(

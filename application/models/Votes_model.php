@@ -522,4 +522,17 @@
 
       return $query->result_array();
     }
+
+    public function get_vote_schema($vote){
+      $schema = [
+        "@context" => "http://schema.org",
+        "@type" => "NewsArticle",
+        "headline" => $vote['title'],
+        "image" => NULL, // a faire
+        "datePublished" => NULL, // a faire
+        "dateModified" => NULL, // a faire
+      ];
+
+      return $schema;
+    }
   }
