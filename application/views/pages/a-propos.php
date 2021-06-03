@@ -179,7 +179,7 @@
             <div class="card-body d-flex flex-column align-items-center">
               <h3 class="card-title">Awenig</h3>
               <p class="card-text">Fondateur</p>
-              <div class="social-media">
+              <div class="social-media d-flex justify-content-center">
                 <a href="https://twitter.com/awenig" target="_blank">
                   <img src="<?= asset_url() ?>imgs/logos/twitter.png" width="30" height="30" alt="Logo Twitter">
                 </a>
@@ -200,7 +200,7 @@
             <div class="card-body d-flex flex-column align-items-center">
               <h3 class="card-title">Gwenneg</h3>
               <p class="card-text">Projet Web</p>
-              <div class="social-media">
+              <div class="social-media d-flex justify-content-center">
                 <a href="https://www.linkedin.com/in/gwennegmarie/" target="_blank">
                   <img src="<?= asset_url() ?>imgs/logos/linkedin.png" width="30" height="30" alt="Logo Twitter">
                 </a>
@@ -218,7 +218,7 @@
             <div class="card-body d-flex flex-column align-items-center">
               <h3 class="card-title">Chloë</h3>
               <p class="card-text">Communication</p>
-              <div class="social-media">
+              <div class="social-media d-flex justify-content-center">
                 <a href="https://www.linkedin.com/in/chloë-bouvier-408956124/" target="_blank">
                   <img src="<?= asset_url() ?>imgs/logos/linkedin.png" width="30" height="30" alt="Logo Twitter">
                 </a>
@@ -236,7 +236,7 @@
             <div class="card-body d-flex flex-column align-items-center">
               <h3 class="card-title">Hugo</h3>
               <p class="card-text">Design</p>
-              <div class="social-media">
+              <div class="social-media d-flex justify-content-center">
                 <a href="https://www.linkedin.com/in/hugo-stephan/" target="_blank">
                   <img src="<?= asset_url() ?>imgs/logos/linkedin.png" width="30" height="30" alt="Logo Twitter">
                 </a>
@@ -254,7 +254,7 @@
             <div class="card-body d-flex flex-column align-items-center">
               <h3 class="card-title">Brewalan</h3>
               <p class="card-text text-center">Analyse et contenu</p>
-              <div class="social-media">
+              <div class="social-media d-flex justify-content-center">
                 <a href="https://twitter.com/BrewalanM" target="_blank">
                   <img src="<?= asset_url() ?>imgs/logos/twitter.png" width="30" height="30" alt="Logo Twitter">
                 </a>
@@ -272,7 +272,7 @@
             <div class="card-body d-flex flex-column align-items-center">
               <h3 class="card-title">Rémi</h3>
               <p class="card-text text-center">Développeur</p>
-              <div class="social-media">
+              <div class="social-media d-flex justify-content-center">
                 <a href="https://www.linkedin.com/in/r%C3%A9mi-mikel-85273665/" target="_blank">
                   <img src="<?= asset_url() ?>imgs/logos/linkedin.png" width="30" height="30" alt="Logo Linkedin">
                 </a>
@@ -296,7 +296,7 @@
             <div class="card-body d-flex flex-column align-items-center">
               <h3 class="card-title">Alexis</h3>
               <p class="card-text text-center">Développeur</p>
-              <div class="social-media">
+              <div class="social-media d-flex justify-content-center">
                 <a href="https://www.linkedin.com/in/alexis-brissard-775173aa/?originalSubdomain=fr" target="_blank">
                   <img src="<?= asset_url() ?>imgs/logos/linkedin.png" width="30" height="30" alt="Logo Linkedin">
                 </a>
