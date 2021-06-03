@@ -968,7 +968,7 @@ body{
     box-shadow: $card-box-shadow;
     border: 0;
     margin-bottom: 1.5rem;
-    height: 150px;
+    min-height: 150px;
     .card-body{
       padding: 0.7rem 0.95rem;
     }
