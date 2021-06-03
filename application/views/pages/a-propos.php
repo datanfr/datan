@@ -286,6 +286,24 @@
             </div>
           </div>
         </div>
+        <!-- Team 7 -->
+        <div class="col-lg-3 col-md-4 col-6 mt-3 mt-md-0">
+          <div class="card my-2 card-team">
+            <div class="img-profile">
+              <img class="card-img-top" src="<?= asset_url() ?>imgs/team/alexis.jpg" alt="Photo Alexis">
+              <div class="overlay"></div>
+            </div>
+            <div class="card-body d-flex flex-column align-items-center">
+              <h3 class="card-title">Alexis</h3>
+              <p class="card-text text-center">Développeur</p>
+              <div class="social-media">
+                <a href="https://www.linkedin.com/in/alexis-brissard-775173aa/?originalSubdomain=fr" target="_blank">
+                  <img src="<?= asset_url() ?>imgs/logos/linkedin.png" width="30" height="30" alt="Logo Linkedin">
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
