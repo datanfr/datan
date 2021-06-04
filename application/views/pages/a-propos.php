@@ -36,7 +36,7 @@
           <div class="card card-member d-flex flex-row">
             <div class="left d-flex flex-column">
               <div class="img-profile">
-                <img class="card-img-top" src="<?= asset_url() ?>imgs/team/costa.png" width="100" height="100" alt="Olivier Costa">
+                <img class="card-img-top" src="<?= asset_url() ?>imgs/team/costa.png" alt="Olivier Costa">
                 <div class="overlay"></div>
               </div>
               <div class="social-media d-flex justify-content-around align-items-center">
@@ -59,7 +59,7 @@
           <div class="card card-member d-flex flex-row">
             <div class="left d-flex flex-column">
               <div class="img-profile">
-                <img class="card-img-top" src="<?= asset_url() ?>imgs/team/auel.jpg" width="100" height="100" alt="Katrin Auel">
+                <img class="card-img-top" src="<?= asset_url() ?>imgs/team/auel.jpg" alt="Katrin Auel">
                 <div class="overlay"></div>
               </div>
               <div class="social-media d-flex justify-content-around align-items-center">
@@ -81,7 +81,7 @@
           <div class="card card-member d-flex flex-row">
             <div class="left d-flex flex-column">
               <div class="img-profile">
-                <img class="card-img-top" src="<?= asset_url() ?>imgs/team/brack.jpg" width="100" height="100" alt="Nathalie Brack">
+                <img class="card-img-top" src="<?= asset_url() ?>imgs/team/brack.jpg" alt="Nathalie Brack">
                 <div class="overlay"></div>
               </div>
               <div class="social-media d-flex justify-content-around align-items-center">
@@ -103,7 +103,7 @@
           <div class="card card-member d-flex flex-row">
             <div class="left d-flex flex-column">
               <div class="img-profile">
-                <img class="card-img-top" src="<?= asset_url() ?>imgs/team/guinaudeau.jpg" width="100" height="100" alt="Isabelle Guinaudeau">
+                <img class="card-img-top" src="<?= asset_url() ?>imgs/team/guinaudeau.jpg" alt="Isabelle Guinaudeau">
                 <div class="overlay"></div>
               </div>
               <div class="social-media d-flex justify-content-around align-items-center">
@@ -125,7 +125,7 @@
           <div class="card card-member d-flex flex-row">
             <div class="left d-flex flex-column">
               <div class="img-profile">
-                <img class="card-img-top" src="<?= asset_url() ?>imgs/team/lupo.png" width="100" height="100" alt="Nicola Lupou">
+                <img class="card-img-top" src="<?= asset_url() ?>imgs/team/lupo.png" alt="Nicola Lupou">
                 <div class="overlay"></div>
               </div>
               <div class="social-media d-flex justify-content-around align-items-center">
@@ -144,7 +144,7 @@
           <div class="card card-member d-flex flex-row">
             <div class="left d-flex flex-column">
               <div class="img-profile">
-                <img class="card-img-top" src="<?= asset_url() ?>imgs/team/rozenberg.jpg" width="100" height="100" alt="Olivier Rozenberg">
+                <img class="card-img-top" src="<?= asset_url() ?>imgs/team/rozenberg.jpg" alt="Olivier Rozenberg">
                 <div class="overlay"></div>
               </div>
               <div class="social-media d-flex justify-content-around align-items-center">
@@ -173,13 +173,13 @@
         <div class="col-lg-3 col-md-4 col-6">
           <div class="card my-2 card-team">
             <div class="img-profile">
-              <img class="card-img-top" src="<?= asset_url() ?>imgs/team/awenig.jpg" width="180" height="180" alt="Photo Awenig">
+              <img class="card-img-top" src="<?= asset_url() ?>imgs/team/awenig.jpg" alt="Photo Awenig">
               <div class="overlay"></div>
             </div>
             <div class="card-body d-flex flex-column align-items-center">
               <h3 class="card-title">Awenig</h3>
               <p class="card-text">Fondateur</p>
-              <div class="social-media">
+              <div class="social-media d-flex justify-content-center">
                 <a href="https://twitter.com/awenig" target="_blank">
                   <img src="<?= asset_url() ?>imgs/logos/twitter.png" width="30" height="30" alt="Logo Twitter">
                 </a>
@@ -194,13 +194,13 @@
         <div class="col-lg-3 col-md-4 col-6">
           <div class="card my-2 card-team">
             <div class="img-profile">
-              <img class="card-img-top" src="<?= asset_url() ?>imgs/team/gwenneg.jpg" width="180" height="180" alt="Photo Gwenneg">
+              <img class="card-img-top" src="<?= asset_url() ?>imgs/team/gwenneg.jpg" alt="Photo Gwenneg">
               <div class="overlay"></div>
             </div>
             <div class="card-body d-flex flex-column align-items-center">
               <h3 class="card-title">Gwenneg</h3>
               <p class="card-text">Projet Web</p>
-              <div class="social-media">
+              <div class="social-media d-flex justify-content-center">
                 <a href="https://www.linkedin.com/in/gwennegmarie/" target="_blank">
                   <img src="<?= asset_url() ?>imgs/logos/linkedin.png" width="30" height="30" alt="Logo Twitter">
                 </a>
@@ -212,13 +212,13 @@
         <div class="col-lg-3 col-md-4 col-6 mt-3 mt-md-0">
           <div class="card my-2 card-team">
             <div class="img-profile">
-              <img class="card-img-top" src="<?= asset_url() ?>imgs/team/chloe.jpg" width="180" height="180" alt="Photo Chloë">
+              <img class="card-img-top" src="<?= asset_url() ?>imgs/team/chloe.jpg" alt="Photo Chloë">
               <div class="overlay"></div>
             </div>
             <div class="card-body d-flex flex-column align-items-center">
               <h3 class="card-title">Chloë</h3>
               <p class="card-text">Communication</p>
-              <div class="social-media">
+              <div class="social-media d-flex justify-content-center">
                 <a href="https://www.linkedin.com/in/chloë-bouvier-408956124/" target="_blank">
                   <img src="<?= asset_url() ?>imgs/logos/linkedin.png" width="30" height="30" alt="Logo Twitter">
                 </a>
@@ -230,13 +230,13 @@
         <div class="col-lg-3 col-md-4 col-6 mt-3 mt-md-0">
           <div class="card my-2 card-team">
             <div class="img-profile">
-              <img class="card-img-top" src="<?= asset_url() ?>imgs/team/hugo.jpg" width="180" height="180" alt="Photo Hugo">
+              <img class="card-img-top" src="<?= asset_url() ?>imgs/team/hugo.jpg" alt="Photo Hugo">
               <div class="overlay"></div>
             </div>
             <div class="card-body d-flex flex-column align-items-center">
               <h3 class="card-title">Hugo</h3>
               <p class="card-text">Design</p>
-              <div class="social-media">
+              <div class="social-media d-flex justify-content-center">
                 <a href="https://www.linkedin.com/in/hugo-stephan/" target="_blank">
                   <img src="<?= asset_url() ?>imgs/logos/linkedin.png" width="30" height="30" alt="Logo Twitter">
                 </a>
@@ -248,13 +248,13 @@
         <div class="col-lg-3 col-md-4 col-6 mt-3 mt-md-0">
           <div class="card my-2 card-team">
             <div class="img-profile">
-              <img class="card-img-top" src="<?= asset_url() ?>imgs/team/brewalan.jpg" width="180" height="180" alt="Photo Brewalan">
+              <img class="card-img-top" src="<?= asset_url() ?>imgs/team/brewalan.jpg" alt="Photo Brewalan">
               <div class="overlay"></div>
             </div>
             <div class="card-body d-flex flex-column align-items-center">
               <h3 class="card-title">Brewalan</h3>
               <p class="card-text text-center">Analyse et contenu</p>
-              <div class="social-media">
+              <div class="social-media d-flex justify-content-center">
                 <a href="https://twitter.com/BrewalanM" target="_blank">
                   <img src="<?= asset_url() ?>imgs/logos/twitter.png" width="30" height="30" alt="Logo Twitter">
                 </a>
@@ -266,13 +266,13 @@
         <div class="col-lg-3 col-md-4 col-6 mt-3 mt-md-0">
           <div class="card my-2 card-team">
             <div class="img-profile">
-              <img class="card-img-top" src="<?= asset_url() ?>imgs/team/remi.jpg" width="180" height="180" alt="Photo Rémi">
+              <img class="card-img-top" src="<?= asset_url() ?>imgs/team/remi.jpg" alt="Photo Rémi">
               <div class="overlay"></div>
             </div>
             <div class="card-body d-flex flex-column align-items-center">
               <h3 class="card-title">Rémi</h3>
               <p class="card-text text-center">Développeur</p>
-              <div class="social-media">
+              <div class="social-media d-flex justify-content-center">
                 <a href="https://www.linkedin.com/in/r%C3%A9mi-mikel-85273665/" target="_blank">
                   <img src="<?= asset_url() ?>imgs/logos/linkedin.png" width="30" height="30" alt="Logo Linkedin">
                 </a>
@@ -281,6 +281,24 @@
                 </a>
                 <a href="https://twitter.com/lekimR" target="_blank">
                   <img src="<?= asset_url() ?>imgs/logos/twitter.png" width="30" height="30" alt="Logo Twitter">
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Team 7 -->
+        <div class="col-lg-3 col-md-4 col-6 mt-3 mt-md-0">
+          <div class="card my-2 card-team">
+            <div class="img-profile">
+              <img class="card-img-top" src="<?= asset_url() ?>imgs/team/alexis.jpg" alt="Photo Alexis">
+              <div class="overlay"></div>
+            </div>
+            <div class="card-body d-flex flex-column align-items-center">
+              <h3 class="card-title">Alexis</h3>
+              <p class="card-text text-center">Développeur</p>
+              <div class="social-media d-flex justify-content-center">
+                <a href="https://www.linkedin.com/in/alexis-brissard-775173aa/?originalSubdomain=fr" target="_blank">
+                  <img src="<?= asset_url() ?>imgs/logos/linkedin.png" width="30" height="30" alt="Logo Linkedin">
                 </a>
               </div>
             </div>
