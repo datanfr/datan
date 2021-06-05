@@ -55,6 +55,11 @@
       "email" : "info@datan.fr"
     }
     </script>
+    <?php if (isset($vote_schema)): ?>
+      <script type="application/ld+json">
+        <?= json_encode($vote_schema, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT |  JSON_UNESCAPED_UNICODE); ?>
+      </script>
+    <?php endif; ?>
 
     <link rel="canonical" href="<?= $url ?>">
     <link rel="icon" type="image/png" href="<?= asset_url() ?>imgs/icons/datan_favicon.ico" />
