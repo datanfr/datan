@@ -116,7 +116,8 @@
         FROM
         (
            SELECT vi.voteId, vi.voteNumero, vi.legislature, vi.dateScrutin, vi.libelleTypeVote, vi.typeMajorite, vi.sortCode, vi.demandeur, vi.nombreVotants, vi.suffragesExprimes, vi.nbrSuffragesRequis, vi.decomptePour AS pour, vi.decompteContre AS contre, vi.decompteAbs AS abstention, vi.decompteNv AS nonVotant, vi.voteType, vi.amdt, vi.article, vi.bister, vi.posArticle,
-          REPLACE(vi.titre, "n?", "n°") AS titre, vdos.href, vdos.dossier, doss.dossierId, doss.titre AS dossier_titre, doss.senatChemin, doss.procedureParlementaireLibelle, vd.title, vd.description, vd.state, f.name AS category, f.slug AS category_slug
+          REPLACE(vi.titre, "n?", "n°") AS titre, vdos.href, vdos.dossier, doss.dossierId, doss.titre AS dossier_titre, doss.senatChemin, doss.procedureParlementaireLibelle,
+          vd.title, vd.description, vd.state, f.name AS category, f.slug AS category_slug, vd.created_at, vd.modified_at
           FROM votes_info vi
           LEFT JOIN votes_dossiers vdos ON vi.voteNumero = vdos.voteNumero AND vi.legislature = vdos.legislature
           LEFT JOIN dossiers doss ON vdos.dossier = doss.titreChemin
@@ -521,5 +522,24 @@
       $query = $this->db->query($sql, $voteNumeros);
 
       return $query->result_array();
+    }
+
+    public function get_vote_schema($vote){
+      $schema = [
+        "@context" => "http://schema.org",
+        "@type" => "NewsArticle",
+        "headline" => "Vote à l'Assemblée : " . $vote['title'],
+        "image" => $vote['og_image'],
+      ];
+
+      if ($vote['created_at']) {
+        $schema['datePublished'] = $vote['created_at'];
+      }
+
+      if ($vote['modified_at']) {
+        $schema['dateModified'] = $vote['modified_at'];
+      }
+
+      return $schema;
     }
   }

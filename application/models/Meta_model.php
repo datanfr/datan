@@ -45,6 +45,20 @@
         $array['img_height'] = NULL;
         $array['img_type'] = "image/png";
         $array['type'] = 'website';
+      } elseif ($type == "votes/individual") {
+        if (isset($data['vote']['og_image'])) {
+          $array['img'] = $data['vote']['og_image'];
+          $array['twitter_img'] = $data['vote']['og_image'];
+          $array['img_width'] = 2048;
+          $array['img_height'] = 1170;
+        } else {
+          $array['img'] = asset_url()."imgs/datan/logo_social_media.png";
+          $array['twitter_img'] = asset_url()."imgs/datan/logo_social_media.png";
+          $array['img_width'] = 1200;
+          $array['img_height'] = 630;
+        }
+        $array['img_type'] = "image/png";
+        $array['type'] = 'website';
       } else {
         $array['img'] = asset_url()."imgs/datan/logo_social_media.png";
         $array['twitter_img'] = asset_url()."imgs/datan/logo_social_media.png";
