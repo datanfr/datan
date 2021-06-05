@@ -529,15 +529,15 @@
         "@context" => "http://schema.org",
         "@type" => "NewsArticle",
         "headline" => "Vote à l'Assemblée : " . $vote['title'],
-        "image" => NULL, // a faire
+        "image" => $vote['og_image'],
       ];
 
       if ($vote['created_at']) {
-        $schema["datePublished"] = $vote['created_at'];
+        $schema['datePublished'] = $vote['created_at'];
       }
 
       if ($vote['modified_at']) {
-        $schema["dateModified"] = $vote['modified_at'];
+        $schema['dateModified'] = $vote['modified_at'];
       }
 
       return $schema;
