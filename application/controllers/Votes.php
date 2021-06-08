@@ -487,7 +487,6 @@
       // JS UP
       $data['js_to_load_up'] = array("chart.min.js", "chartjs-plugin-annotation.js");
       // JS
-      $data['js_to_load_before_bootstrap'] = array("popper.min");
       $data['js_to_load']= array("moment.min", "datatable-datan.min", "datetime-moment", "flickity.pkgd.min");
       // Preloads
       $data['preloads'] = array(
