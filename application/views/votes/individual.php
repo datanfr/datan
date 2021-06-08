@@ -160,6 +160,13 @@
                 </div>
               </div>
             </div>
+            <div class="card mt-5" style="background-color: #009CF3">
+              <div class="card-body text-center">
+                <p style="color: white; font-weight: 600">Prenez position sur</p>
+                <img style="width: 50px; height: auto" src="https://www.todayivote.com/wp-content/uploads/2020/08/TIV-New-Logo-SD-150x150.png" alt="">
+                <span style="color: white; font-weight: 600">NOS LOIS</span>
+              </div>
+            </div>
           </div>
         </div>
       </div>
