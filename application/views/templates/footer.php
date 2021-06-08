@@ -115,11 +115,7 @@
     <!-- JS files -->
     <script src="<?= asset_url(); ?>js/jquery-3.5.1.min.js"></script>
     <script src="<?= asset_url(); ?>js/jquery-ui.min.js"></script>
-    <?php if (isset($js_to_load_before_bootstrap)) : ?>
-      <?php foreach ($js_to_load_before_bootstrap as $file) : ?>
-        <script src="<?= asset_url(); ?>js/<?= $file ?>.js?v=<?= getVersion() ?>"></script>
-      <?php endforeach; ?>
-    <?php endif; ?>
+    <script src="<?= asset_url(); ?>js/popper.min.js"></script>
     <script type="text/javascript" src="<?= asset_url() ?>js/bootstrap.min.js"></script>
     <?php if (isset($js_to_load_before_datan)) : ?>
       <?php foreach ($js_to_load_before_datan as $file) : ?>

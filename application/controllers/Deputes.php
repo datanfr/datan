@@ -392,7 +392,6 @@
         )
       );
       // JS UP
-      $data['js_to_load_before_bootstrap'] = array("popper.min");
       $data['js_to_load']= array(
         "flickity.pkgd.min",
       );
@@ -492,7 +491,6 @@
         )
       );
       // JS UP
-      $data['js_to_load_before_bootstrap'] = array("popper.min");
       $data['js_to_load']= array(
         "flickity.pkgd.min",
       );

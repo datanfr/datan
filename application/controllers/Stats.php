@@ -129,7 +129,6 @@
       $controller = $this->router->fetch_class()."/".$this->router->fetch_method();
       $data['ogp'] = $this->meta_model->get_ogp($controller, $data['title_meta'], $data['description_meta'], $data['url'], $data);
       // JS
-      $data['js_to_load_before_bootstrap'] = array("popper.min");
       $data['js_to_load_up'] = array("chart.min.js");
       // Views
       $this->load->view('templates/header', $data);

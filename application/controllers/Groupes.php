@@ -283,7 +283,6 @@
       );
       // JS
       $data['js_to_load_up'] = array("Chart.min.js", "chartjs-plugin-annotation.js"); // TO BE REMOVED
-      $data['js_to_load_before_bootstrap'] = array("popper.min");
       $data['js_to_load']= array("flickity.pkgd.min");
       // Preloads
       $data['preloads'] = array(
@@ -670,7 +669,6 @@
         array("href" => asset_url()."imgs/cover/hemicycle-front-768.jpg", "as" => "image", "media" => "(min-width: 576px) and (max-width: 970px)"),
         array("href" => asset_url()."imgs/cover/hemicycle-front.jpg", "as" => "image", "media" => "(min-width: 970.1px)"),
       );
-      $data['js_to_load_before_bootstrap'] = array("popper.min");
       // Load Views
       $this->load->view('templates/header', $data);
       $this->load->view('groupes/votes');
