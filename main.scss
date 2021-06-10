@@ -27,6 +27,7 @@ $breadcrumb-active-color: $text-gray;
 $card-border-radius: 5px;
 $card-border-color: transparent;
 $card-box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.08);
+$card-box-shadow-hover: 5px 3px 11px rgba(0, 0, 0, 0.18);
 // FONT
 $font-family-sans-serif: "Open Sans";
 $font-weight-bold: 800;
@@ -372,7 +373,6 @@ body:not(.pg-mentions) #tarteaucitronIcon {
       transition: 0.3s;
       &:hover{
         border: 1px solid $text-black;
-        //background-color: #000; DEMANDER CHLOE
       }
     }
   }
@@ -493,7 +493,7 @@ body:not(.pg-mentions) #tarteaucitronIcon {
   }
   // HOVER //
   &:hover{
-    box-shadow: 5px 3px 11px rgba(0, 0, 0, 0.18);
+    box-shadow: $card-box-shadow-hover;
   }
 }
 /* Card see-all */
@@ -1983,6 +1983,18 @@ ul.ui-menu{
                PAGE VOTES INDIVIDUAL (pg-vote-individual)
 ################
 */
+.nos-lois{
+  background-color: #009CF3;
+  box-shadow: $card-box-shadow;
+  transition: 0.3s;
+  p, span{
+    color: #fff;
+    font-weight: 600;
+  }
+  &:hover{
+    box-shadow: $card-box-shadow-hover;
+  }
+}
 .pg-vote-individual{
   // HN //
   .logo-category{
