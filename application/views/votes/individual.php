@@ -164,8 +164,7 @@
               <div class="card-body text-center d-flex flex-column">
                 <span>Prenez position sur</span>
                 <a href="https://www.todayivote.com/fr/" class="no-decoration mt-2 stretched-link" target="_blank">
-                  <img style="width: 50px; height: auto" src="https://www.todayivote.com/wp-content/uploads/2020/08/TIV-New-Logo-SD-150x150.png" alt="">
-                  <span>NOS LOIS</span>
+                  <img src="<?= asset_url() ?>imgs/logos/nos-lois.png" alt="">
                 </a>
               </div>
             </div>
