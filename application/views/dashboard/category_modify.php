@@ -21,7 +21,7 @@
           <div class="col-lg-12">
             <div class="card">
               <div class="card-body">
-                <?php echo form_open_multipart('admin/categories/modify/'.$category['id']); ?>
+                <?= form_open_multipart('admin/categories/modify/'.$category['id']); ?>
                   <div class="form-group">
                     <label>Nom</label>
                     <input type="text" class="form-control" autocomplete="off" name="name" value="<?= $category['name'] ?>">

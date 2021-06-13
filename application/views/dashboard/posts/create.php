@@ -21,9 +21,9 @@
           <div class="col-lg-12">
             <div class="card">
               <div class="card-body">
-                <?php echo validation_errors();  ?>
+                <?= validation_errors();  ?>
 
-                <?php echo form_open_multipart('posts/create'); ?>
+                <?= form_open_multipart('posts/create'); ?>
                   <div class="form-group">
                     <label>Title</label>
                     <input type="text" class="form-control" name="title" placeholder="Ajouter un titre">
@@ -59,7 +59,7 @@
                     <label for="">Categorie</label>
                     <select class="form-control" name="category_id">
                       <?php foreach ($categories as $category): ?>
-                        <option value="<?php echo $category['id'] ?>"><?php echo $category['name'] ?></option>
+                        <option value="<?= $category['id'] ?>"><?= $category['name'] ?></option>
                       <?php endforeach; ?>
                     </select>
                   </div>
