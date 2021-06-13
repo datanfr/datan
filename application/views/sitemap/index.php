@@ -1,5 +1,5 @@
 <?php header('Content-type: application/xml'); ?>
-<?php echo '<?xml version="1.0" encoding="utf-8"?>' ?>
+<?= '<?xml version="1.0" encoding="utf-8"?>' ?>
 <sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" nbUrl="15">
 	<sitemap>
 		<loc><?= base_url() ?>sitemap-deputes-1.xml</loc>

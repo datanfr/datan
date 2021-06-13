@@ -3,7 +3,7 @@
       <ul class="list-group">
         <?php foreach ($categories as $category): ?>
           <li class="list-group-item">
-            <a href="<?php echo base_url('/categories/posts/'.$category['id']); ?>"><?php echo $category['name'] ?></a>
+            <a href="<?= base_url('/categories/posts/'.$category['id']); ?>"><?= $category['name'] ?></a>
           </li>
         <?php endforeach; ?>
       </ul>

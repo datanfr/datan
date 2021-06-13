@@ -69,7 +69,7 @@
                   <button type="button" onclick="window.location.href = '<?= base_url() ?>admin/categories';" class="btn btn-default"> Annuler</button>
                 </div>
                 <div class="float-right">
-                  <?php echo form_open_multipart('admin/categories/delete/'.$category['id']); ?>
+                  <?= form_open_multipart('admin/categories/delete/'.$category['id']); ?>
                     <input type="hidden" name="delete" value="deleted">
                     <button type="submit" class="btn btn-danger">Supprimer</button>
                   </form>

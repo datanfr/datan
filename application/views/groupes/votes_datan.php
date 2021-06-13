@@ -110,7 +110,7 @@
             <div class="col-2 col-md-1 d-flex align-items-end justify-content-center p-0">
               <?php if ($field["logo"]): ?>
                 <div class="logo">
-                  <?php echo file_get_contents(asset_url().'imgs/fields/'.$field['slug'].'.svg') ?>
+                  <?= file_get_contents(asset_url().'imgs/fields/'.$field['slug'].'.svg') ?>
                 </div>
               <?php endif; ?>
             </div>
@@ -178,7 +178,7 @@
             <h2>Président du groupe <?= $title ?></h2>
             <div class="row mt-3">
               <div class="col-6 col-md-3 py-2">
-                <a class="membre no-decoration underline" href="<?php echo base_url(); ?>deputes/<?= $president['dptSlug'] ?>/depute_<?= $president['nameUrl'] ?>"><?= $president['nameFirst']." ".$president['nameLast'] ?></a>
+                <a class="membre no-decoration underline" href="<?= base_url(); ?>deputes/<?= $president['dptSlug'] ?>/depute_<?= $president['nameUrl'] ?>"><?= $president['nameFirst']." ".$president['nameLast'] ?></a>
               </div>
             </div>
           </div>
@@ -190,7 +190,7 @@
           <div class="row mt-3">
             <?php foreach ($membres as $key => $membre): ?>
               <div class="col-6 col-md-3 py-2">
-                <a class="membre no-decoration underline" href="<?php echo base_url(); ?>deputes/<?= $membre['dptSlug'] ?>/depute_<?= $membre['nameUrl'] ?>"><?= $membre['nameFirst']." ".$membre['nameLast'] ?></a>
+                <a class="membre no-decoration underline" href="<?= base_url(); ?>deputes/<?= $membre['dptSlug'] ?>/depute_<?= $membre['nameUrl'] ?>"><?= $membre['nameFirst']." ".$membre['nameLast'] ?></a>
               </div>
             <?php endforeach; ?>
           </div>
@@ -206,7 +206,7 @@
             <div class="row mt-3">
               <?php foreach ($apparentes as $key => $mp): ?>
                 <div class="col-6 col-md-3 py-2">
-                  <a class="membre no-decoration underline" href="<?php echo base_url(); ?>deputes/<?= $mp['dptSlug'] ?>/depute_<?= $mp['nameUrl'] ?>"><?= $mp['nameFirst']." ".$mp['nameLast'] ?></a>
+                  <a class="membre no-decoration underline" href="<?= base_url(); ?>deputes/<?= $mp['dptSlug'] ?>/depute_<?= $mp['nameUrl'] ?>"><?= $mp['nameFirst']." ".$mp['nameLast'] ?></a>
                 </div>
               <?php endforeach; ?>
             </div>
@@ -222,7 +222,7 @@
           <div class="row mt-3">
             <?php foreach ($groupesActifs as $group): ?>
               <div class="col-6 col-md-4 py-2">
-                <a class="membre no-decoration underline" href="<?php echo base_url(); ?>groupes/<?= mb_strtolower($group['libelleAbrev']) ?>"><?= $group['libelle']." (".$group['libelleAbrev'].")" ?></a>
+                <a class="membre no-decoration underline" href="<?= base_url(); ?>groupes/<?= mb_strtolower($group['libelleAbrev']) ?>"><?= $group['libelle']." (".$group['libelleAbrev'].")" ?></a>
               </div>
             <?php endforeach; ?>
           </div>

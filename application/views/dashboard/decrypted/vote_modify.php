@@ -21,7 +21,7 @@
           <div class="col-lg-12">
             <div class="card">
               <div class="card-body">
-                <?php echo form_open_multipart('admin/votes/modify/'.$vote['id']); ?>
+                <?= form_open_multipart('admin/votes/modify/'.$vote['id']); ?>
                   <div class="form-group">
                     <label>Titre</label>
                     <input type="text" class="form-control" autocomplete="off" name="title" value="<?= $vote['title'] ?>">
@@ -68,7 +68,7 @@
                     <select class="form-control" name="category">
                       <option value="<?= $vote['category'] ?>" selected="selected">Selected: <?= $vote['category_name'] ?></option>
                       <?php foreach ($categories as $category): ?>
-                        <option value="<?php echo $category['id'] ?>"><?php echo $category['name'] ?></option>
+                        <option value="<?= $category['id'] ?>"><?= $category['name'] ?></option>
                       <?php endforeach; ?>
                     </select>
                   </div>

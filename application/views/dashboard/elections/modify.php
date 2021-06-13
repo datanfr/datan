@@ -19,7 +19,7 @@
         <div class="col-lg-12">
           <?php if (!empty(validation_errors())): ?>
             <p class="bg-danger">Certains champs n'ont pas été renseignés. Voir ci-dessous.</p>
-            <?php echo validation_errors(); ?>
+            <?= validation_errors(); ?>
           <?php endif; ?>
           <div class="card">
             <div class="card-body">

@@ -12,7 +12,7 @@
     })(window,document,'script','dataLayer','GTM-K3QQNK2');</script>
     <!-- End Google Tag Manager -->
 
-    <link rel="stylesheet" href="<?php echo asset_url(); ?>css/main.css">
+    <link rel="stylesheet" href="<?= asset_url(); ?>css/main.css">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.0/css/all.css" integrity="sha384-lKuwvrZot6UHsBSfcMvOkWwlCMgc0TaWr+30HWe3a4ltaBwTZhyTEggF5tJv8tbt" crossorigin="anonymous">
     <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Open+Sans" />
 
@@ -27,7 +27,7 @@
       background: linear-gradient(
         rgba(0, 0, 0, 0.45),
         rgba(0, 0, 0, 0.45)
-        ), url('<?php echo base_url(); ?>assets/imgs/hemycicle.jpg');
+        ), url('<?= base_url(); ?>assets/imgs/hemycicle.jpg');
         height: 100%;
         background-position: center;
         background-size: cover;
@@ -74,8 +74,8 @@
     <!-- End Google Tag Manager (noscript) -->
     <div class="bgimg">
       <div class="topleft">
-        <a href="<?php echo base_url(); ?>">
-          <img src="<?php echo asset_url(); ?>imgs/logo_white_transp.png" alt="">
+        <a href="<?= base_url(); ?>">
+          <img src="<?= asset_url(); ?>imgs/logo_white_transp.png" alt="">
         </a>
       </div>
       <div class="middle">

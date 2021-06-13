@@ -34,7 +34,7 @@
               <div class="row">
                 <div class="col-12 d-flex flex-row align-items-center">
                   <div class="icon">
-                    <?php echo file_get_contents(base_url() . '/assets/imgs/icons/voting.svg') ?>
+                    <?= file_get_contents(base_url() . '/assets/imgs/icons/voting.svg') ?>
                   </div>
                   <h3 class="ml-3">PARTICIPATION AUX VOTES
                     <a tabindex="0" role="button" data-toggle="popover" data-trigger="focus" aria-label="Tooltip participation" class="no-decoration popover_focus" title="Taux de participation" data-content="Le taux de participation est le <b>pourcentage de votes auxquels le ou la député a participé</b>.<br><br>Attention, le taux de participation ne mesure pas toute l'activité d'un député ou d'un groupe. Contrairement au <a href='https://www.europarl.europa.eu/about-parliament/fr/organisation-and-rules/how-plenary-works' title='lien'>Parlement européen</a>, les votes à l'Assemblée nationale se déroulent à n'importe quel moment de la semaine. D'autres réunions ont souvent lieu en même temps, expliquant le faible taux de participation des députés et des groupes.<br><br>Pour plus d'information, <a href='<?= base_url() ?>statistiques/aide#participation' target='_blank'>cliquez ici</a>."><?= file_get_contents(asset_url() . "imgs/icons/question_circle.svg") ?></a>
@@ -94,7 +94,7 @@
               <div class="row">
                 <div class="col-12 d-flex flex-row align-items-center">
                   <div class="icon">
-                    <?php echo file_get_contents(base_url() . 'assets/imgs/icons/loyalty.svg') ?>
+                    <?= file_get_contents(base_url() . 'assets/imgs/icons/loyalty.svg') ?>
                   </div>
                   <h3 class="ml-3">LOYAUTÉ ENVERS SON GROUPE
                     <a tabindex="0" role="button" data-toggle="popover" class="no-decoration popover_focus" data-trigger="focus" aria-label="Tooltip loyauté" title="Loyauté envers le groupe politique" data-content="Le taux de loyauté est le <b>pourcentage de votes où le ou la député a voté sur la même ligne que son groupe</b>.<br><br>Attention, dans beaucoup de parlements, y compris l'Assemblée nationale, les députés suivent dans la plupart des cas la ligne officielle du groupe, expliquant des taux de cohésion très élevés. Le mesure proposée ici est intéressante quand elle est comparée avec les taux de cohésion des autres parlementaires.<br><br>Pour plus d'information, <a href='<?= base_url() ?>statistiques/aide#loyalty' target='_blank'>cliquez ici</a>." id="popover_focus"><?= file_get_contents(asset_url() . "imgs/icons/question_circle.svg") ?></a>
@@ -174,7 +174,7 @@
                 <div class="row">
                   <div class="col-12 d-flex flex-row align-items-center">
                     <div class="icon">
-                      <?php echo file_get_contents(base_url() . '/assets/imgs/icons/elysee.svg') ?>
+                      <?= file_get_contents(base_url() . '/assets/imgs/icons/elysee.svg') ?>
                     </div>
                     <h3 class="ml-3">PROXIMITÉ AVEC LA MAJORITÉ PRÉSIDENTIELLE
                       <a tabindex="0" role="button" data-toggle="popover" class="no-decoration popover_focus" data-trigger="focus" aria-label="Tooltip majorité" title="Proximité avec la majorité présidentielle" data-content="Le <b>taux de proximité avec la majorité présidentielle</b> représente le pourcentage de fois où un député vote la même chose que le groupe présidentiel (La République en Marche).<br><br>Pour plus d'information, <a href='<?= base_url() ?>statistiques/aide#proximity' target='_blank'>cliquez ici</a>." id="popover_focus"><?= file_get_contents(asset_url() . "imgs/icons/question_circle.svg") ?></a>
@@ -227,7 +227,7 @@
               <div class="row">
                 <div class="col-2">
                   <div class="icon">
-                    <?php echo file_get_contents(base_url() . '/assets/imgs/icons/group.svg') ?>
+                    <?= file_get_contents(base_url() . '/assets/imgs/icons/group.svg') ?>
                   </div>
                 </div>
                 <div class="col-10">
@@ -457,7 +457,7 @@
           <?php if ($depute['facebook'] !== NULL) : ?>
             <div class="col-12 col-sm-6 mt-2 d-flex justify-content-center">
               <span class="url_obf btn btn-fcb d-flex align-items-center justify-content-center" url_obf="<?= url_obfuscation("https://www.facebook.com/" . $depute['facebook']) ?>">
-                <?php echo file_get_contents(base_url() . '/assets/imgs/logos/facebook_svg.svg') ?>
+                <?= file_get_contents(base_url() . '/assets/imgs/logos/facebook_svg.svg') ?>
                 <span class="ml-3">Profil Facebook</span>
               </span>
             </div>
@@ -465,7 +465,7 @@
           <?php if ($depute['twitter'] !== NULL) : ?>
             <div class="col-12 col-sm-6 mt-2 d-flex justify-content-center">
               <span class="url_obf btn btn-twitter d-flex align-items-center justify-content-center" url_obf="<?= url_obfuscation("https://twitter.com/" . $depute['twitter']) ?>">
-                <?php echo file_get_contents(base_url() . '/assets/imgs/logos/twitter_svg.svg') ?>
+                <?= file_get_contents(base_url() . '/assets/imgs/logos/twitter_svg.svg') ?>
                 <span class="ml-3">Profil Twitter</span>
               </span>
             </div>

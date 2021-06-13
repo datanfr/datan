@@ -19,11 +19,11 @@
         <div class="col-lg-12">
           <?php if (!empty(validation_errors())): ?>
             <p class="bg-danger">Certains champs n'ont pas été renseignés. Voir ci-dessous.</p>
-            <?php echo validation_errors(); ?>
+            <?= validation_errors(); ?>
           <?php endif; ?>
           <div class="card">
             <div class="card-body">
-              <?php echo form_open_multipart('admin/elections/candidat/create?election=' . $election['slug']); ?>
+              <?= form_open_multipart('admin/elections/candidat/create?election=' . $election['slug']); ?>
               <div class="form-group">
                 <label>Député</label>
                 <input name="depute_url" type="text" class="form-control" autocomplete="off" placeholder="ex: http://datan.fr/deputes/maine-et-loire-49/depute_matthieu-orphelin">
