@@ -8,8 +8,8 @@
             <?php else: ?>
             <span class="badge badge-danger">Brouillon</span>
           <?php endif; ?>
-          <a class="btn btn-secondary float-left" href="<?php echo base_url(); ?>posts/edit/<?php echo $post['slug']; ?>">Edit</a>
-          <?php echo form_open('posts/delete/'.$post['id']);  ?>
+          <a class="btn btn-secondary float-left" href="<?= base_url(); ?>posts/edit/<?= $post['slug']; ?>">Edit</a>
+          <?= form_open('posts/delete/'.$post['id']);  ?>
             <input type="submit" name="" value="delete" class="btn btn-danger">
           </form>
         </div>

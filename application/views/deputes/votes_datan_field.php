@@ -41,15 +41,15 @@
               <div class="bloc-bref mt-3 d-flex justify-content-center justify-content-lg-start">
                 <ul>
                   <li class="first">
-                    <div class="label"><?php echo file_get_contents(asset_url() . 'imgs/icons/geo-alt-fill.svg') ?></div>
+                    <div class="label"><?= file_get_contents(asset_url() . 'imgs/icons/geo-alt-fill.svg') ?></div>
                     <div class="value"><?= $depute['departementNom'] . ' (' . $depute['departementCode'] . ')' ?></div>
                   </li>
                   <li>
-                    <div class="label"><?php echo file_get_contents(asset_url() . 'imgs/icons/person-fill.svg') ?></div>
+                    <div class="label"><?= file_get_contents(asset_url() . 'imgs/icons/person-fill.svg') ?></div>
                     <div class="value"><?= $depute['age'] ?> ans</div>
                   </li>
                   <li class="mb-0">
-                    <div class="label"><?php echo file_get_contents(asset_url() . 'imgs/icons/briefcase-fill.svg') ?></div>
+                    <div class="label"><?= file_get_contents(asset_url() . 'imgs/icons/briefcase-fill.svg') ?></div>
                     <div class="value">Commission <?= $commission_parlementaire['commissionAbrege'] ?></div>
                 </ul>
               </div>

@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <META NAME="ROBOTS" CONTENT="NOINDEX, NOFOLLOW">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title><?php echo $title_meta ?></title>
+    <title><?= $title_meta ?></title>
 
     <!-- Google Tag Manager -->
     <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
@@ -16,17 +16,17 @@
 
     <link rel="icon" type="image/png" href="<?= asset_url() ?>/imgs/icons/datan_favicon_ie.ico" />
     <!-- CSS -->
-    <link rel="stylesheet" href="<?php echo asset_url(); ?>css/main.css">
+    <link rel="stylesheet" href="<?= asset_url(); ?>css/main.css">
     <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Open+Sans:400,600,800" />
     <!--<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Heebo"> NOT USED -->
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.0/css/all.css" integrity="sha384-lKuwvrZot6UHsBSfcMvOkWwlCMgc0TaWr+30HWe3a4ltaBwTZhyTEggF5tJv8tbt" crossorigin="anonymous">
-    <link rel="stylesheet" href="<?php echo asset_url(); ?>css/circle.css">
-    <link rel="stylesheet" type="text/css" href="<?php echo asset_url(); ?>css/Chart.min.css">
+    <link rel="stylesheet" href="<?= asset_url(); ?>css/circle.css">
+    <link rel="stylesheet" type="text/css" href="<?= asset_url(); ?>css/Chart.min.css">
 
     <!-- JS -->
-    <script src="<?php echo asset_url(); ?>js/Chart.min.js"></script>
+    <script src="<?= asset_url(); ?>js/Chart.min.js"></script>
     <script src="https://rawgit.com/chartjs/chartjs-plugin-annotation/master/chartjs-plugin-annotation.js"></script> <!-- can be deleted? -->
-    <script src="<?php echo asset_url(); ?>js/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="<?= asset_url(); ?>js/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
 
     <style media="screen">
       body {

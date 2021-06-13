@@ -45,7 +45,7 @@
                   </div>
                   <div class="card-body d-flex flex-column justify-content-center align-items-center">
                     <h2 class="d-block card-title">
-                      <a href="<?= base_url(); ?>partis-politiques/<?= mb_strtolower($party['libelleAbrev']) ?>" class="stretched-link no-decoration"><?php echo $party['libelle'] ?></a>
+                      <a href="<?= base_url(); ?>partis-politiques/<?= mb_strtolower($party['libelleAbrev']) ?>" class="stretched-link no-decoration"><?= $party['libelle'] ?></a>
                     </h2>
                     <span class="d-block"><?= $party["libelleAbrev"] ?></span>
                   </div>

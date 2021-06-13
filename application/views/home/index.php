@@ -84,13 +84,13 @@
               <div class="bloc-carousel-votes">
                 <div class="carousel-buttons">
                   <button type="button" class="btn prev mr-2 button--previous" aria-label="précédent">
-                    <?php echo file_get_contents(asset_url()."imgs/icons/arrow_left.svg") ?>
+                    <?= file_get_contents(asset_url()."imgs/icons/arrow_left.svg") ?>
                   </button aria-label="tous">
                   <a class="btn all mx-2" href="<?= base_url() ?>votes/decryptes">
                     <span>VOIR TOUS</span>
                   </a>
                   <button type="button" class="btn next ml-2 button--next" aria-label="suivant">
-                    <?php echo file_get_contents(asset_url()."imgs/icons/arrow_right.svg") ?>
+                    <?= file_get_contents(asset_url()."imgs/icons/arrow_right.svg") ?>
                   </button>
                 </div>
               </div>
@@ -318,10 +318,10 @@
             <div class="col-lg-6 col-12 bloc-map mt-4 mt-lg-0 offset-lg-3">
               <h2 class="text-center pb-5">Explorer les députés par département</h2>
               <div class="map map_france mt-3">
-                <?php echo file_get_contents(asset_url()."imgs/france_map/map.svg"); ?>
+                <?= file_get_contents(asset_url()."imgs/france_map/map.svg"); ?>
               </div>
               <div class="map map_outre_mer">
-                <?php echo file_get_contents(asset_url()."imgs/france_map/outre-mer.svg"); ?>
+                <?= file_get_contents(asset_url()."imgs/france_map/outre-mer.svg"); ?>
               </div>
               <div class="mt-5 d-flex flex-column align-items-center">
                 <a href="<?= base_url();?>index_departements" class="no-decoration">
