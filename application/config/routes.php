@@ -135,6 +135,8 @@ $route['elections/(:any)'] = 'elections/individual/$1';
 $route['newsletter/edit/(:any)'] = 'newsletter/edit/$1';
 $route['newsletter/update'] = 'newsletter/update';
 $route['newsletter/delete/(:any)'] = 'newsletter/delete/$1';
+// FAQ
+$route['faq'] = 'faq/index';
 // API
 $route['api/(:any)/(:any)'] = 'api/index/$1/$2';
 // LOGIN & REGISTER

@@ -2719,7 +2719,32 @@ ul.ui-menu{
   background-color: $bg-colour;
 }
 
-
+/*
+################
+FAQ
+################
+*/
+.pg-faq{
+  .list-group-item:first-child {
+  }
+  .card-categories{
+    border: none;
+    .card-header{
+      background-color: #fff;
+    }
+  }
+  .card-category{
+    border: none;
+    .card-header{
+      background-color: #fff;
+    }
+  }
+  .card-question{
+    border: 1px solid black;
+    border-top-right-radius: 0;
+    border-top-left-radius: 0;
+  }
+}
 /*
 ################
 MODAL
