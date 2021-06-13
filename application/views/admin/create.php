@@ -1,12 +1,12 @@
 <div class="container">
   <div class="row">
     <div class="col-12">
-      <p><a href="<?php echo base_url(); ?>admin/">Back to admin</a></p>
+      <p><a href="<?= base_url(); ?>admin/">Back to admin</a></p>
       <h2><?= $title?></h2>
 
-      <?php echo validation_errors();  ?>
+      <?= validation_errors();  ?>
 
-      <?php echo form_open_multipart('admin/votes/create'); ?>
+      <?= form_open_multipart('admin/votes/create'); ?>
         <div class="form-group">
           <label>Titre</label>
           <input type="text" class="form-control" name="title" placeholder="Ajouter un titre">
@@ -15,7 +15,7 @@
           <label for="">Vote ID</label>
           <select class="form-control" name="vote_id">
             <?php foreach ($votes_id as $vote): ?>
-              <option value="<?php echo $vote['uid'] ?>"><?php echo $vote['voteNumero'] ?></option>
+              <option value="<?= $vote['uid'] ?>"><?= $vote['voteNumero'] ?></option>
             <?php endforeach; ?>
           </select>
         </div>
@@ -31,7 +31,7 @@
           <label for="">Categorie</label>
           <select class="form-control" name="category">
             <?php foreach ($categories as $category): ?>
-              <option value="<?php echo $category['id'] ?>"><?php echo $category['name'] ?></option>
+              <option value="<?= $category['id'] ?>"><?= $category['name'] ?></option>
             <?php endforeach; ?>
           </select>
         </div>

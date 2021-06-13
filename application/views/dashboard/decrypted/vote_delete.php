@@ -73,7 +73,7 @@
                   <button type="button" onclick="window.location.href = '<?= base_url() ?>admin/votes';" class="btn btn-default"> Annuler</button>
                 </div>
                 <div class="float-right">
-                  <?php echo form_open_multipart('admin/votes/delete/'.$vote['id']); ?>
+                  <?= form_open_multipart('admin/votes/delete/'.$vote['id']); ?>
                     <input type="hidden" name="delete" value="deleted">
                     <button type="submit" class="btn btn-danger">Supprimer</button>
                   </form>
