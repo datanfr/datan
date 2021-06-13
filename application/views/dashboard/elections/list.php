@@ -44,7 +44,7 @@
               <?php if (!isset($candidats)) $candidats = [] ?>
               <?php foreach ($candidats as $candidat) : ?>
                 <tr>
-                  <td><a target="_blank" href="<?php echo base_url(); ?>deputes/<?php echo $candidat['dptSlug'].'/depute_'.$candidat['nameUrl'] ?>"><?php echo $candidat['nameFirst'] .' ' . $candidat['nameLast'] ?></a></td>
+                  <td><a target="_blank" href="<?= base_url(); ?>deputes/<?= $candidat['dptSlug'].'/depute_'.$candidat['nameUrl'] ?>"><?= $candidat['nameFirst'] .' ' . $candidat['nameLast'] ?></a></td>
                   <td><?= $candidat['districtLibelle'] ?></td>
                   <td><?= $candidat['position'] ?></td>
                   <td><?= $candidat['nuance'] ?></td>
@@ -56,7 +56,7 @@
                   <td>
                     <a class="btn btn-link" href="<?= base_url() ?>admin/elections/candidat/modify/<?= $candidat['mpId'] ?>?election=<?= $election['slug'] ?>" ?>modifier</a><br/>
                     <a class="btn btn-link" href="<?= base_url() ?>admin/elections/candidat/delete/<?= $candidat['mpId'] ?>?election=<?= $election['slug'] ?>">supprimer</a><br/>
-                    <a class="btn btn-link" target="_blank" href="<?php echo base_url(); ?>deputes/<?php echo $candidat['dptSlug'].'/depute_'.$candidat['nameUrl'].'?regionales2021' ?>">preview</a><br/>
+                    <a class="btn btn-link" target="_blank" href="<?= base_url(); ?>deputes/<?= $candidat['dptSlug'].'/depute_'.$candidat['nameUrl'].'?regionales2021' ?>">preview</a><br/>
                   </td>
                 </tr>
               <?php endforeach; ?>
