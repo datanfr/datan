@@ -30,13 +30,13 @@
               <div class="bloc-carousel-votes">
                 <div class="carousel-buttons">
                   <button type="button" class="btn prev mr-2 button--previous" aria-label="précédent">
-                    <?php echo file_get_contents(asset_url()."imgs/icons/arrow_left.svg") ?>
+                    <?= file_get_contents(asset_url()."imgs/icons/arrow_left.svg") ?>
                   </button>
                   <a class="btn all mx-2" href="<?= base_url() ?>votes/decryptes">
                     <span>VOIR TOUS</span>
                   </a>
                   <button type="button" class="btn next ml-2 button--next" aria-label="suivant">
-                    <?php echo file_get_contents(asset_url()."imgs/icons/arrow_right.svg") ?>
+                    <?= file_get_contents(asset_url()."imgs/icons/arrow_right.svg") ?>
                   </button>
                 </div>
               </div>
@@ -129,13 +129,13 @@
               <div class="bloc-carousel-votes">
                 <div class="carousel-buttons">
                   <button type="button" class="btn prev mr-2 button--previous">
-                    <?php echo file_get_contents(asset_url()."imgs/icons/arrow_left.svg") ?>
+                    <?= file_get_contents(asset_url()."imgs/icons/arrow_left.svg") ?>
                   </button>
                   <a class="btn all mx-2" href="<?= base_url() ?>votes/legislature-<?= legislature_current() ?>">
                     <span>VOIR TOUS</span>
                   </a>
                   <button type="button" class="btn next ml-2 button--next">
-                    <?php echo file_get_contents(asset_url()."imgs/icons/arrow_right.svg") ?>
+                    <?= file_get_contents(asset_url()."imgs/icons/arrow_right.svg") ?>
                   </button>
                 </div>
               </div>

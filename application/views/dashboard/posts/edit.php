@@ -22,13 +22,13 @@
             <div class="card">
               <div class="card-body">
 
-                <?php echo validation_errors();  ?>
+                <?= validation_errors();  ?>
 
-                <?php echo form_open('posts/update'); ?>
-                    <input type="hidden" name="id" value="<?php echo $post['id']; ?>">
+                <?= form_open('posts/update'); ?>
+                    <input type="hidden" name="id" value="<?= $post['id']; ?>">
                   <div class="form-group">
                     <label>Title</label>
-                    <input type="text" class="form-control" name="title" placeholder="Ajouter un titre" value="<?php echo $post['title']; ?>">
+                    <input type="text" class="form-control" name="title" placeholder="Ajouter un titre" value="<?= $post['title']; ?>">
                   </div>
                   <div class="form-group">
                     <label>Corps du post</label>
@@ -62,7 +62,7 @@
                     <select class="form-control" name="category_id">
                       <option value="<?= $post['category_id'] ?>" selected="selected">Selected: <?= $post['category_name'] ?></option>
                       <?php foreach ($categories as $category): ?>
-                        <option value="<?php echo $category['id'] ?>"><?php echo $category['name'] ?></option>
+                        <option value="<?= $category['id'] ?>"><?= $category['name'] ?></option>
                       <?php endforeach; ?>
                     </select>
                   </div>
