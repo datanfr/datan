@@ -67,6 +67,7 @@ $route['admin/analyses/(:any)'] = 'admin/analyses/$1';
 $route['admin/socialmedia/historique/(:any)'] = 'admin/socialmedia/historique/$1';
 $route['admin/socialmedia/(:any)'] = 'admin/socialmedia/$1/NULL';
 $route['admin/faq'] = 'admin/faq_list';
+$route['admin/faq/create'] = 'admin/create_faq';
 $route['admin/faq/delete/(:any)'] = 'admin/delete_faq/$1';
 // SEO
 $route['sitemap.xml'] = "sitemap/index";
