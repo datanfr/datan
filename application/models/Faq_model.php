@@ -43,7 +43,25 @@
       );
 
       return $this->db->insert('faq_posts', $data);
+    }
 
+    public function modify($id, $user_id) {
+      $slug = convert_accented_characters($this->input->post('title'));
+      $slug = url_title($slug, 'dash', TRUE);
+
+      $data = array(
+        'title' => $this->input->post('title'),
+        'slug' => $slug,
+        'category' => $this->input->post('category'),
+        'text' => $this->input->post('article'),
+        'state' => $this->input->post('state'),
+        'modified_at' => date("Y-m-d H:i:s"),
+        'modified_by' => $user_id
+      );
+
+      $this->db->set($data);
+      $this->db->where('id', $id);
+      $this->db->update('faq_posts');
     }
 
     public function get_categories(){

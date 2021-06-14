@@ -230,7 +230,6 @@
           redirect('admin/votes');
         }
       }
-
     }
 
     public function delete_vote($vote){
@@ -425,6 +424,38 @@
       } else {
         $this->faq_model->create($user_id);
         redirect('admin/faq');
+      }
+    }
+
+    public function modify_faq($id){
+      $data['username'] = $this->session->userdata('username');
+      $data['usernameType'] = $this->session->userdata('type');
+      $user_id = $this->session->userdata('user_id');
+      $data['title'] = 'Modifier un article de FAQ';
+      $data['article'] = $this->faq_model->get_article($id);
+
+      if (empty($data['article'])) {
+        redirect('admin/faq');
+      }
+
+      if ($data['article']['state'] == "published" && $data['usernameType'] != "admin") {
+        redirect('admin/faq');
+      } else {
+        $data['categories'] = $this->faq_model->get_categories();
+
+        //Form valiation
+        $this->form_validation->set_rules('title', 'Title', 'required');
+        $this->form_validation->set_rules('article', 'Article', 'required');
+        $this->form_validation->set_rules('category', 'Category', 'required');
+
+        if ($this->form_validation->run() === FALSE) {
+          $this->load->view('dashboard/header', $data);
+          $this->load->view('dashboard/faq/modify', $data);
+          $this->load->view('dashboard/footer');
+        } else {
+          $this->faq_model->modify($id, $user_id);
+          redirect('admin/faq');
+        }
       }
     }
 
