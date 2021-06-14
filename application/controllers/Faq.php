@@ -2,11 +2,14 @@
   class Faq extends CI_Controller {
     public function __construct() {
       parent::__construct();
-      //$this->password_model->security_password(); Former login protection
+      $this->load->model('faq_model');
     }
 
     public function index() {
-
+      $data['categories'] = $this->faq_model->get_categories_n();
+      foreach ($data['categories'] as $category) {
+        $data['articles'][$category['id']] = $this->faq_model->get_articles($category['id'], 'published');
+      }
 
       //Meta
       $data['title'] = "Foire aux questions";
