@@ -5,13 +5,19 @@
     }
 
 
-    public function get_articles(){
+    public function get_articles($id = NULL, $state = NULL) {
       $this->db->join('faq_categories fc', 'fc.id = fp.category', 'left');
       $this->db->join('users u_created', 'u_created.id = fp.created_by', 'left');
       $this->db->join('users u_modified', 'u_modified.id = fp.modified_by', 'left');
       $this->db->select('fp.*, fc.name AS category_name, u_created.name AS created_by_name, u_modified.name AS modified_by_name');
-      $query = $this->db->get('faq_posts fp');
+      if ($id) {
+        $this->db->where('fp.category', $id);
+      }
+      if ($state) {
+        $this->db->where('fp.state', $state);
+      }
 
+      $query = $this->db->get('faq_posts fp');
       return $query->result_array();
     }
 
@@ -66,6 +72,17 @@
 
     public function get_categories(){
       return $this->db->get('faq_categories')->result_array();
+    }
+
+    public function get_categories_n(){
+      $query = $this->db->query('SELECT fc.name, fc.id, COUNT(*) AS n
+          FROM faq_posts fp
+          LEFT JOIN faq_categories fc ON fc.id = fp.category
+          WHERE fp.state = "published"
+          GROUP BY fc.id
+          ORDER BY fc.id
+      ');
+      return $query->result_array();
     }
 
   }
