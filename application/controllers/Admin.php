@@ -10,6 +10,7 @@
       $this->load->model('groupes_model');
       $this->load->model('elections_model');
       $this->load->model('newsletter_model');
+      $this->load->model('faq_model');
       $this->password_model->security_admin();
     }
 
@@ -368,6 +369,44 @@
       } else {
         show_404();
       }
+    }
+
+    public function faq_list(){
+      $data['username'] = $this->session->userdata('username');
+      $data['usernameType'] = $this->session->userdata('type');
+      $data['title'] = 'Liste des articles FAQ';
+
+      $data['articles'] = $this->faq_model->get_articles();
+
+      $this->load->view('dashboard/header', $data);
+      $this->load->view('dashboard/faq/list', $data);
+      $this->load->view('dashboard/footer');
+    }
+
+    public function delete_faq($id){
+      $data['usernameType'] = $this->session->userdata("type");
+
+      if ($data['usernameType'] != "admin") {
+        redirect();
+      } else {
+        $data['username'] = $this->session->userdata('username');
+
+        $data['title'] = 'Supprimer un article de FAQ';
+        $data['article'] = $this->faq_model->get_article($id);
+
+        //Form validation
+        $this->form_validation->set_rules('delete', 'Delete', 'required');
+
+        if ($this->form_validation->run() === FALSE) {
+          $this->load->view('dashboard/header', $data);
+          $this->load->view('dashboard/faq/delete', $data);
+          $this->load->view('dashboard/footer');
+        } else {
+          $this->faq_model->delete($id);
+          redirect('admin/faq');
+        }
+      }
+
     }
 
   }
