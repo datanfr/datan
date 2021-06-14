@@ -33,9 +33,9 @@
     `category` int(11) NOT NULL,
     `state` varchar(15) NOT NULL,
     `created_by` varchar(10) NOT NULL,
-    `created_at` timestamp NOT NULL,
+    `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `modified_by` varchar(10) NOT NULL,
-    `modified_at` timestamp NOT NULL,
+    `modified_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (`id`)
   ) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
   ");
