@@ -29,6 +29,7 @@
   $bdd->query("CREATE TABLE IF NOT EXISTS `faq_posts` (
     `id` int(11) NOT NULL AUTO_INCREMENT,
     `title` text NOT NULL,
+    `slug` varchar(255) NOT NULL,
     `text` text NOT NULL,
     `category` int(11) NOT NULL,
     `state` varchar(15) NOT NULL,
