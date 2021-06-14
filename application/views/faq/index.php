@@ -18,57 +18,38 @@
       <div class="card card-categories">
         <h2 class="card-header">Categories</h2>
         <ul class="list-group">
-          <li class="list-group-item d-flex align-items-center active rounded-0">
-            Datan <span class="badge badge-light badge-pill ml-3">06</span>
-          </li>
-          <li class="list-group-item d-flex align-items-center">
-            Nos statistiques <span class="badge badge-light badge-pill ml-3">14</span>
-          </li>
-          <li class="list-group-item d-flex align-items-center">
-            L'Assemblée nationale <span class="badge badge-light badge-pill ml-3">14</span>
-          </li>
-          <li class="list-group-item d-flex align-items-center">
-            Les députés <span class="badge badge-light badge-pill ml-3">14</span>
-          </li>
-          <li class="list-group-item d-flex align-items-center">
-            Les groupes parlementaires <span class="badge badge-light badge-pill ml-3">14</span>
-          </li>
-          <li class="list-group-item d-flex align-items-center">
-            Les votes <span class="badge badge-light badge-pill ml-3">14</span>
-          </li>
+          <?php foreach ($categories as $category): ?>
+            <li class="list-group-item d-flex align-items-center rounded-0 border">
+              <?= $category['name'] ?> <span class="badge badge-primary badge-pill ml-3"><?= $category['n'] ?></span>
+            </li>
+          <?php endforeach; ?>
         </ul>
       </div>
     </div> <!-- END CATEGORIES -->
     <div class="col-xl-8">
-      <div class="card card-category">
-        <h2 class="card-header">Datan</h2>
-        <div class="accordion accordion-type-2" id="accordion_2">
-          <div class="card card-question">
-            <div class="card-header d-flex justify-content-between activestate">
-              <a role="button" data-toggle="collapse" href="#collapse_1i" aria-expanded="true" class="no-decoration">
-                <?= file_get_contents(base_url() . '/assets/imgs/icons/plus.svg') ?><span class="ml-3">Qui sommes nous ?</span>
-              </a>
-            </div>
-            <div id="collapse_1i" class="collapse show" data-parent="#accordion_2" role="tabpanel">
-              <div class="card-body">
-                The Intellectual Property disclosure will inform users that the contents, logo and other visual media you created is your property and is protected by copyright laws.
+      <?php $x = 1; ?>
+      <?php foreach ($categories as $category): ?>
+        <div class="card card-category mb-5">
+          <h2 class="card-header"><?= $category['name'] ?></h2>
+          <div class="accordion" id="accordion_<?= $x ?>">
+            <?php $y = 1 ?>
+            <?php foreach ($articles[$category['id']] as $article): ?>
+              <div class="card card-question">
+                <div class="card-header d-flex justify-content-between">
+                  <a role="button" data-toggle="collapse" href="#collapse_<?= $x ?>_<?= $y ?>" aria-expanded="true" class="no-decoration">
+                    <?= file_get_contents(base_url() . '/assets/imgs/icons/plus.svg') ?><span class="ml-3"><?= $article['title'] ?></span>
+                  </a>
+                </div>
+                <div id="collapse_<?= $x ?>_<?= $y ?>" class="collapse" data-parent="#accordion_<?= $x ?>" role="tabpanel">
+                  <div class="card-body"><?= $article['text'] ?></div>
+                </div>
               </div>
-            </div>
-          </div>
-          <div class="card card-question">
-            <div class="card-header d-flex justify-content-between">
-              <a class="collapsed no-decoration" role="button" data-toggle="collapse" href="#collapse_2i" aria-expanded="false">
-                <?= file_get_contents(base_url() . '/assets/imgs/icons/plus.svg') ?><span class="ml-3">Qui sommes nous ?</span>
-              </a>
-            </div>
-            <div id="collapse_2i" class="collapse" data-parent="#accordion_2">
-              <div class="card-body">
-                A Termination clause will inform that users’ accounts on your website and mobile app or users’ access to your website and mobile (if users can’t have an account with you) can be terminated in case of abuses or at your sole discretion.
-              </div>
-            </div>
+              <?php $y++ ?>
+            <?php endforeach; ?>
           </div>
         </div>
-      </div>
+        <?php $x++ ?>
+      <?php endforeach; ?>
     </div>
   </div>
 </div>
