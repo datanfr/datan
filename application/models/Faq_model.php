@@ -28,5 +28,27 @@
       $this->db->delete('faq_posts');
     }
 
+    public function create($user_id){
+      $slug = convert_accented_characters($this->input->post('title'));
+      $slug = url_title($slug, 'dash', TRUE);
+
+      $data = array(
+        'title' => $this->input->post('title'),
+        'slug' => $slug,
+        'category' => $this->input->post('category'),
+        'text' => $this->input->post('article'),
+        'created_at' => date("Y-m-d H:i:s"),
+        'state' => 'draft',
+        'created_by' => $user_id
+      );
+
+      return $this->db->insert('faq_posts', $data);
+
+    }
+
+    public function get_categories(){
+      return $this->db->get('faq_categories')->result_array();
+    }
+
   }
 ?>
