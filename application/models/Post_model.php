@@ -57,9 +57,8 @@
     }
 
     public function create_post(){
-      $slug = url_title($this->input->post('title'));
-      $slug = mb_strtolower($slug);
-      $slug = $this->skip_accents($slug);
+      $slug = convert_accented_characters($this->input->post('title'));
+      $slug = url_title($slug, 'dash', TRUE);
       $data = array(
         'title' => $this->input->post('title'),
         'slug' => $slug,
@@ -79,9 +78,8 @@
     }
 
     public function update_post(){
-      $slug = url_title($this->input->post('title'));
-      $slug = mb_strtolower($slug);
-      $slug = $this->skip_accents($slug);
+      $slug = convert_accented_characters($this->input->post('title'));
+      $slug = url_title($slug, 'dash', TRUE);
       $data = array(
         'title' => $this->input->post('title'),
         'slug' => $slug,

@@ -69,7 +69,8 @@ class Admin_model extends CI_Model
 
   public function create_vote($user_id)
   {
-    $slug = url_title($this->input->post('title'));
+    $slug = convert_accented_characters($this->input->post('title'));
+    $slug = url_title($slug, 'dash', TRUE);
 
     $data = array(
       'title' => $this->input->post('title'),
@@ -105,7 +106,8 @@ class Admin_model extends CI_Model
 
   public function modify_vote($vote, $user_id)
   {
-    $slug = url_title($this->input->post('title'));
+    $slug = convert_accented_characters($this->input->post('title'));
+    $slug = url_title($slug, 'dash', TRUE);
 
     $data = array(
       'title' => $this->input->post('title'),
@@ -284,10 +286,8 @@ class Admin_model extends CI_Model
       $str = preg_replace('#&[^;]+;#', '', $str);
       return $str;
     }
-    $slug = skip_accents($this->input->post('name'));
-    $slug = mb_strtolower($slug);
-    $slug = url_title($slug);
-
+    $slug = convert_accented_characters($this->input->post('name'));
+    $slug = url_title($slug, 'dash', TRUE);
 
     $data = array(
       'name' => $this->input->post('name'),
