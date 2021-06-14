@@ -35,7 +35,7 @@
     `created_by` varchar(10) NOT NULL,
     `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `modified_by` varchar(10) DEFAULT NULL,
-    `modified_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `modified_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (`id`)
   ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
   ");
