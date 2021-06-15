@@ -544,9 +544,14 @@
       SELECT vd.title AS voteTitre, vd.description, vi.dateScrutin, vi.voteNumero, vi.legislature, f.name AS category_libelle, f.slug AS category_slug, vi.sortCode, date_format(dateScrutin, "%d %M %Y") as dateScrutinFR, vote_id, vi.voteNumero
       FROM votes_datan vd
       LEFT JOIN votes_info vi ON vd.vote_id = vi.voteId
-      LEFT JOIN fields f ON vd.category = f.id
-      WHERE vd.state = "published"
-      ORDER BY vi.voteNumero DESC';
+      LEFT JOIN fields f ON vd.category = f.id';
+      if ($theme){
+        $queryString .= ' LEFT JOIN fields ON vd.category=fields.id WHERE fields.slug = "' . $theme .'" AND vd.state = "published"';
+      }
+      else {
+        $queryString .= ' WHERE vd.state = "published"';
+      }
+      $queryString .= ' ORDER BY vi.voteNumero DESC';
       if ($limit) {
         $queryString .= ' LIMIT ' .$limit;
       }
