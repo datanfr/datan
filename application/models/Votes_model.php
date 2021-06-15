@@ -539,7 +539,7 @@
       return $array;
     }
 
-    public function get_most_famous_votes($limit = false){
+    public function get_most_famous_votes($limit = false, $theme = null){
       $queryString = '
       SELECT vd.title AS voteTitre, vd.description, vi.dateScrutin, vi.voteNumero, vi.legislature, f.name AS category_libelle, f.slug AS category_slug, vi.sortCode, date_format(dateScrutin, "%d %M %Y") as dateScrutinFR, vote_id, vi.voteNumero
       FROM votes_datan vd
