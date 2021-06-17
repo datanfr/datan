@@ -12,6 +12,7 @@ class Api extends CI_Controller
         $this->load->model('groupes_model');
         $this->load->model('votes_model');
         $this->load->model('quiz_model');
+        $this->load->model('fields_model');
     }
 
     private function response($data, $code = 200)
