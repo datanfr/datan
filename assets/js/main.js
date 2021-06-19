@@ -233,12 +233,16 @@ $('#newsletterForm').on('submit', (e) => {
 FAQ
 ##########
 */
-$.expr[':'].icontains = function(a, i, m) {
-  .indexOf(m[3].toUpperCase()) >= 0);
-  return $(a).text().toUpperCase()
-      .indexOf(m[3].toUpperCase()) >= 0;
-};
-$('#searchfaq').on('keyup', function(e){
+$('#searchfaq').on('keyup', function (e) {
   $(".card-question").hide();
-  $(".card-question:icontains('" + $(this).val() + "')").show();
+  var array = $(this).val().split(" ");
+  var match = "(?:" + array.join(".*") + "|";
+  array.reverse();
+  match += array.join(".*") + ")";
+  var regex = new RegExp(match, 'i');
+
+  $(".card-question").filter(function () {
+    return regex.test($(this).text());
+  }).show();
+
 })
