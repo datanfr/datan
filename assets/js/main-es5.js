@@ -206,4 +206,20 @@ $('#newsletterForm').on('submit', function (e) {
   });
   return true;
 });
+/*
+##########
+FAQ
+##########
+*/
+
+$.expr[':'].icontains = function (a, i, m) {
+  console.log($(a).text().toUpperCase().indexOf(m[3].toUpperCase()) >= 0);
+  return $(a).text().toUpperCase().indexOf(m[3].toUpperCase()) >= 0;
+};
+
+$('#searchfaq').on('keyup', function (e) {
+  console.log($(".card-question:icontains('" + $(this).val() + "')"));
+  $(".card-question").hide();
+  $(".card-question:icontains('" + $(this).val() + "')").show();
+});
 //# sourceMappingURL=main-es5.js.map
