@@ -5,7 +5,7 @@
         <h1><?= $title ?></h1>
         <div class="form-group">
           <div class="input-group">
-            <input class="form-control form-control-lg filled-input" placeholder="Cherchez ..." type="text">
+            <input class="form-control form-control-lg filled-input" id="searchfaq" placeholder="Cherchez ..." type="text">
           </div>
         </div>
       </div>

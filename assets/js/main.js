@@ -226,3 +226,19 @@ $('#newsletterForm').on('submit', (e) => {
   });
   return true;
 })
+
+
+/*
+##########
+FAQ
+##########
+*/
+$.expr[':'].icontains = function(a, i, m) {
+  .indexOf(m[3].toUpperCase()) >= 0);
+  return $(a).text().toUpperCase()
+      .indexOf(m[3].toUpperCase()) >= 0;
+};
+$('#searchfaq').on('keyup', function(e){
+  $(".card-question").hide();
+  $(".card-question:icontains('" + $(this).val() + "')").show();
+})
