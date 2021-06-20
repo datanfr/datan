@@ -43,13 +43,15 @@
             <span class="mt-3">1<sup>er</sup> tour : <?= $election['dateFirstRoundFr'] ?></span>
             <span>2<sup>nd</sup> tour : <?= $election['dateSecondRoundFr'] ?></span>
           </div>
-          <div class="card-footer d-flex justify-content-center align-items-center">
-            <?php if (empty($election['candidatsN'])): ?>
-              <span class="font-weight-bold">Aucun député candidat</span>
-              <?php else: ?>
-              <span class="font-weight-bold"><?= $election['candidatsN'] ?> députés candidats</span>
-            <?php endif; ?>
-          </div>
+          <?php if ($election['id'] != 2 /* Not departementales 2021 */): ?>
+            <div class="card-footer d-flex justify-content-center align-items-center">
+              <?php if (empty($election['candidatsN'])): ?>
+                <span class="font-weight-bold">Aucun député candidat</span>
+                <?php else: ?>
+                <span class="font-weight-bold"><?= $election['candidatsN'] ?> députés candidats</span>
+              <?php endif; ?>
+            </div>
+          <?php endif; ?>
         </div>
       <?php endforeach; ?>
     </div>
