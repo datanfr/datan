@@ -14,7 +14,7 @@
 </div>
 <div class="container pg-faq my-5">
   <div class="row">
-    <div class="col-xl-4">
+    <div class="col-lg-4">
       <div class="card card-categories">
         <h2 class="card-header">Categories</h2>
         <ul class="list-group">
@@ -26,11 +26,11 @@
         </ul>
       </div>
     </div> <!-- END CATEGORIES -->
-    <div class="col-xl-8">
+    <div class="col-lg-8">
       <?php $x = 1; ?>
       <?php foreach ($categories as $category): ?>
         <div class="card card-category mb-5">
-          <h2 class="card-header"><?= $category['name'] ?></h2>
+          <h2 class="card-header header-category"><?= $category['name'] ?></h2>
           <div class="accordion" id="accordion_<?= $x ?>">
             <?php $y = 1 ?>
             <?php foreach ($articles[$category['id']] as $article): ?>
