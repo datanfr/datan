@@ -66,12 +66,20 @@
                 <input name="source" class="form-control" type="text" value="<?= $candidat['source']?>" placeholder="ex:  https://www.ouest-france.fr/elections/regionales/elections-regionales-en-pays-de-la-loire-qui-seront-les-candidats-en-juin-2021-7190091"></input>
               </div>
               <div class="form-group p-3" style="background-color: rgba(0, 183, 148, 0.3)">
-                <label>Se maintient au 2nd round ?</label>
-                <input name="secondRound" class="form-control" type="checkbox" <?= $candidat['secondRound'] ? 'checked': ''?> value="true"></input>
+                <label>Se maintient au 2nd tour ?</label>
+                <select class="form-control" name="secondRound">
+                  <option value="99" <?= $candidat['secondRound'] === NULL ? " selected='selected'" : NULL ?>>Ne sait pas</option>
+                  <option value="1" <?= $candidat['secondRound'] === "1" ? " selected='selected'" : NULL ?>>Oui</option>
+                  <option value="0" <?= $candidat['secondRound'] === "0" ? " selected='selected'" : NULL ?>>Non</option>
+                </select>
               </div>
               <div class="form-group p-3" style="background-color: rgba(0, 183, 148, 0.3)">
                 <label>Elu ?</label>
-                <input name="elected" class="form-control" type="checkbox" <?= $candidat['elected'] ? 'checked': ''?> value="true"></input>
+                <select class="form-control" name="elected">
+                  <option value="99" <?= $candidat['elected'] == NULL ? " selected='selected'" : NULL ?>>Ne sait pas</option>
+                  <option value="1" <?= $candidat['elected'] === "1" ? " selected='selected'" : NULL ?>>Oui</option>
+                  <option value="0" <?= $candidat['elected'] === "0" ? " selected='selected'" : NULL ?>>Non</option>
+                </select>
               </div>
               <div class="form-group p-3" style="background-color: rgba(0, 183, 148, 0.3)">
                 <label>Visible</label>
