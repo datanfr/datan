@@ -65,21 +65,20 @@
                 <label>Source</label>
                 <input name="source" class="form-control" type="text" value="<?= $candidat['source']?>" placeholder="ex:  https://www.ouest-france.fr/elections/regionales/elections-regionales-en-pays-de-la-loire-qui-seront-les-candidats-en-juin-2021-7190091"></input>
               </div>
-              <div class="form-group">
+              <div class="form-group p-3" style="background-color: rgba(0, 183, 148, 0.3)">
+                <label>Se maintient au 2nd round ?</label>
+                <input name="secondRound" class="form-control" type="checkbox" <?= $candidat['secondRound'] ? 'checked': ''?> value="true"></input>
+              </div>
+              <div class="form-group p-3" style="background-color: rgba(0, 183, 148, 0.3)">
+                <label>Elu ?</label>
+                <input name="elected" class="form-control" type="checkbox" <?= $candidat['elected'] ? 'checked': ''?> value="true"></input>
+              </div>
+              <div class="form-group p-3" style="background-color: rgba(0, 183, 148, 0.3)">
                 <label>Visible</label>
                 <input name="visible" class="form-control" type="checkbox" <?= $candidat['visible'] ? 'checked': ''?> value="true"></input>
               </div>
               <button type="submit" class="btn btn-primary">Submit</button>
               </form>
-
-              <!--
-                <p class="card-text">
-                  Some quick example text to build on the card title and make up the bulk of the card's
-                  content.
-                </p>
-                <a href="#" class="card-link">Card link</a>
-                <a href="#" class="card-link">Another link</a>
-              -->
             </div>
           </div>
         </div>
