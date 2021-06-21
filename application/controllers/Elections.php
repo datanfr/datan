@@ -51,6 +51,28 @@
       $data['candidatsN'] = count($data['deputes']);
       $data['mapLegend'] = $this->elections_model->get_map_legend($data['election']['id']);
 
+      // badgeCenter
+      foreach ($data['deputes'] as $key => $value) {
+        if ($value["secondRound"] == 1 & $value["elected"] == NULL) {
+          $data['deputes'][$key]['badgeCenter'] = "Second tour";
+          $data['deputes'][$key]['badgeCenterColor'] = "badge-secondary";
+        } elseif ($value["elected"] === "1") {
+          $data['deputes'][$key]['badgeCenterColor'] = "badge-primary";
+          if ($value["civ"] == "Mme") {
+            $data['deputes'][$key]['badgeCenter'] = "Élue";
+          } else {
+            $data['deputes'][$key]['badgeCenter'] = "Élu";
+          }
+        } elseif ($value["elected"] === "0") {
+          $data['deputes'][$key]['badgeCenterColor'] = "badge-danger";
+          if ($value["civ"] == "Mme") {
+            $data['deputes'][$key]['badgeCenter'] = "Éliminée";
+          } else {
+            $data['deputes'][$key]['badgeCenter'] = "Éliminé";
+          }
+        }
+      }
+
       // Breadcrumb
       $data['breadcrumb'] = array(
         array(
