@@ -13,7 +13,7 @@
         <p>Les <?= mb_strtolower($election['libelle']) ?> <?= $election['dateYear'] ?> se dérouleront en deux tours.</p>
         <p>Le premier tour se tiendra le <?= $election['dateFirstRoundFr'] ?>, tandis que le second tour se déroulera le <?= $election['dateSecondRoundFr'] ?>.</p>
         <p><b>Attention</b>, au vu de la crise sanitaire de la Covid-19, les dates des <?= mb_strtolower($election['libelle']) ?> sont susceptibles de changer.</p>
-        <?php if ($election['id'] == 1): ?>
+        <?php if ($election['candidates']): ?>
           <p>
             Découvrez sur cette page les députés candidats aux <?= mb_strtolower($election['libelle']) ?> de <?= $election['dateYear'] ?>.
             <?php if ($candidatsN): ?>
@@ -89,7 +89,7 @@
       </div>
     <?php endif; ?>
   </div>
-  <?php if ($election['id'] != 2 /* Not departementales 2021 */): ?>
+  <?php if ($election['candidates']): ?>
     <div class="row mt-5 mb-3">
       <div class="col-12">
         <h2>Retrouvez <?= $candidatsN > 1 ? "les " . $candidatsN : "le" ?> député<?= $candidatsN > 1 ? "s" : NULL ?> candidat<?= $candidatsN > 1 ? "s" : NULL ?> aux <?= mb_strtolower($election['libelle']) ?> de <?= $election['dateYear'] ?></h2>
