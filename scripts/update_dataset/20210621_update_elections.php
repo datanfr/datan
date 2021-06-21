@@ -5,7 +5,7 @@
   $bdd->query('UPDATE `elect_libelle` SET `candidates` = true WHERE `elect_libelle`.`id` = 1');
   $bdd->query('UPDATE `elect_libelle` SET `candidates` = false WHERE `elect_libelle`.`id` = 2');
 
-  $bdd->query('ALTER TABLE `elect_deputes_candidats` ADD `secondRound` BOOLEAN NULL AFTER `visible`, ADD `elected` BOOLEAN NULL AFTER `secondRun`');
+  $bdd->query('ALTER TABLE `elect_deputes_candidats` ADD `secondRound` BOOLEAN NULL AFTER `visible`, ADD `elected` BOOLEAN NULL AFTER `secondRound`');
 
   $bdd->query('DROP VIEW IF EXISTS `candidate_full`');
   $bdd->query('CREATE VIEW candidate_full AS SELECT
