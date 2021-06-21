@@ -34,7 +34,7 @@
     public function election_candidates($slug){
       $data['election'] = $this->elections_model->get_election($slug);
 
-      if (empty($data['election'])) {
+      if (empty($data['election']) || !$data['election']['candidates']) {
         show_404();
       }
 

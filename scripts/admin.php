@@ -48,6 +48,17 @@
               <br>
               <div class="card">
                 <div class="card-body">
+                  <h5 class="card-title">Update database : update elections</h5>
+                  <h6 class="card-subtitle text-muted">June 21, 2021</h6>
+                  <p class="card-text">
+                    Update election
+                    <a class="btn btn-danger my-3" href="update_dataset/20210621_update_elections.php" role="button">UPDATE DATABASE</a>
+                  </p>
+                </div>
+              </div>
+              <br>
+              <div class="card">
+                <div class="card-body">
                   <h5 class="card-title">Update database : update table deputesAll</h5>
                   <h6 class="card-subtitle text-muted">May 5, 2021</h6>
                   <p class="card-text">

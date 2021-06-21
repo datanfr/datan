@@ -35,6 +35,8 @@
                 <th>position</th>
                 <th>nuance</th>
                 <th>source</th>
+                <th>second round</th>
+                <th>elected</th>
                 <th>visible</th>
                 <th>dernière modif</th>
                 <th></th>
@@ -51,6 +53,17 @@
                   <td>
                     <a href="<?= $candidat['source'] ?>" target="_blank" rel="nofollow noopener noreferrer"><?= $candidat['source'] ?></a>
                   </td>
+                  <td>
+                    <?php if ($candidat['secondRound'] == NULL): ?>
+                    <?php else: ?>
+                      <span class="<?= $candidat['secondRound'] == 1 ? "text-success" : "text-danger" ?> font-weight-bold"><?= $candidat['secondRound'] == 1 ? "Se maintient" : "Non" ?></span>
+                    <?php endif; ?>
+                  </td>
+                  <td>
+                    <?php if ($candidat['elected'] == NULL): ?>
+                    <?php else: ?>
+                      <span class="<?= $candidat['elected'] == 1 ? "text-success" : "text-danger" ?> font-weight-bold"><?= $candidat['elected'] == 1 ? "Élu" : "Non" ?></span>
+                    <?php endif; ?>
                   <td><?= $candidat['visible'] ?></td>
                   <td><?= $candidat['modified_at'] ?></td>
                   <td>
