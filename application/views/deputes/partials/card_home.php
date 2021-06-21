@@ -16,6 +16,11 @@
         <span class="badge badge-primary badge-stats mb-3"><?= $stats ?></span>
       <?php endif; ?>
       <span class="d-block"><?= $depute["cardCenter"] ?></span>
+      <?php if (isset($depute["badgeCenter"])): ?>
+        <span class="badge badge-center mt-2 <?= $depute['badgeCenterColor'] ?>">
+          <?= $depute["badgeCenter"] ?>
+        </span>
+      <?php endif; ?>
     </div>
   </div>
   <div class="card-footer d-flex justify-content-center align-items-center">
