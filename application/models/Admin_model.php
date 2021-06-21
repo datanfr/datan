@@ -51,6 +51,8 @@ class Admin_model extends CI_Model
       'position' =>  $this->input->post('position'),
       'nuance' =>  $this->input->post('nuance'),
       'source' =>  $this->input->post('source'),
+      'secondRound' => $this->input->post('secondRound') ? true : false,
+      'elected' => $this->input->post('elected') ? true : false,
       'visible' => $this->input->post('visible') ? true : false
     );
 
