@@ -117,7 +117,7 @@
       $controller = $this->router->fetch_class()."/".$this->router->fetch_method();
       $data['ogp'] = $this->meta_model->get_ogp($controller, $data['title_meta'], $data['description_meta'], $data['url'], $data);
       // Microdata Person
-      $data['person_schema'] = $this->parties_model->get_organization_schema($data['party'], $data['deputesActive']);
+      $data['schema'] = $this->parties_model->get_organization_schema($data['party'], $data['deputesActive']);
       // CSS
       // JS
       // Preloads
