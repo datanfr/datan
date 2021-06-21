@@ -263,7 +263,7 @@
       $data['ogp'] = $this->meta_model->get_ogp($controller, $data['title_meta'], $data['description_meta'], $data['url'], $data);
       // Microdata Person
       if (!in_array($data['groupe']['uid'], groupesNI())) {
-        $data['person_schema'] = $this->groupes_model->get_organization_schema($data['groupe'], $data['president'], NULL);
+        $data['schema'] = $this->groupes_model->get_organization_schema($data['groupe'], $data['president'], NULL);
       }
       // CSS
       $data['critical_css'] = "groupe_individual";
@@ -352,7 +352,7 @@
       $data['ogp'] = $this->meta_model->get_ogp($controller, $data['title_meta'], $data['description_meta'], $data['url'], $data);
       // Microdata Person
       if (!in_array($data['groupe']['uid'], groupesNI())) {
-        $data['person_schema'] = $this->groupes_model->get_organization_schema($data['groupe'], $data['president'], array('members' => $data['membres'], 'apparentes' => $data['apparentes']));
+        $data['schema'] = $this->groupes_model->get_organization_schema($data['groupe'], $data['president'], array('members' => $data['membres'], 'apparentes' => $data['apparentes']));
       }
       // JS
       $data['preloads'] = array(

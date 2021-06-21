@@ -85,5 +85,27 @@
       return $query->result_array();
     }
 
+    public function get_faq_schema($data){
+      $schema = [
+        "@context" => "http://schema.org",
+        "@type" => "FAQPage",
+        "mainEntity" => array()
+      ];
+      foreach ($data as $category) {
+        foreach ($category as $key => $question) {
+          $array = array(
+            "@type" => "Question",
+            "name" => $question['title'],
+            "acceptedAnswer" => array(
+              "@type" => "Answer",
+              "text" => $question['text']
+            )
+          );
+          array_push($schema["mainEntity"], $array);
+        }
+      }
+      return $schema;
+    }
+
   }
 ?>
