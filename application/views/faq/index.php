@@ -1,11 +1,11 @@
 <div class="container-fluid pg-faq py-5" style="background-color: #00b794; color: #fff">
   <div class="container">
     <div class="row">
-      <div class="col-12">
-        <h1><?= $title ?></h1>
-        <div class="form-group">
+      <div class="col-lg-6 col-md-8 offset-lg-3 offset-md-2">
+        <h1 class="text-center">Une question sur Datan ?<br>Sur l'Assemblée nationale ?</h1>
+        <div class="form-group mt-5">
           <div class="input-group">
-            <input class="form-control form-control-lg filled-input" id="searchfaq" placeholder="Cherchez ..." type="text">
+            <input class="form-control form-control-lg filled-input" id="searchfaq" placeholder="Cherchez par mots clés" type="text">
           </div>
         </div>
       </div>
@@ -14,7 +14,7 @@
 </div>
 <div class="container pg-faq my-5">
   <div class="row">
-    <div class="col-lg-4">
+    <div class="col-md-4">
       <div class="card card-categories">
         <h2 class="card-header">Categories</h2>
         <ul class="list-group">
@@ -28,7 +28,7 @@
         </ul>
       </div>
     </div> <!-- END CATEGORIES -->
-    <div class="col-lg-8">
+    <div class="col-md-8">
       <?php $x = 1; ?>
       <?php foreach ($categories as $category): ?>
         <div class="anchor mb-5" id="<?= $category['slug'] ?>">

@@ -2738,12 +2738,15 @@ FAQ
   .card-category{
     border: none;
     .header-category{
-      background-color: $vert;
-      color: #fff;
+      background-color: transparent;
+      color: $vert;
     }
   }
   .card-question{
     border: none;
+    .card-header{
+      background-color: transparent;
+    }
   }
 }
 /*
