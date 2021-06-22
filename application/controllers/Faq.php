@@ -24,6 +24,7 @@
       // JS
       // Load views
       $this->load->view('templates/header', $data);
+      $this->load->view('templates/button_up');
       $this->load->view('faq/index', $data);
       $this->load->view('templates/footer', $data);
     }
