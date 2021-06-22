@@ -12,7 +12,6 @@
       }
 
       //Meta
-      $data['title'] = "Foire aux questions";
       $data['url'] = $this->meta_model->get_url();
       $data['title_meta'] = "Foire aux questions - Assemblée nationale | Datan";
       $data['description_meta'] = "Comment les députés sont-ils élus ? Quels sont leurs rôles au parlement ? Découvrez la foire aux questions (FAQ) de Datan.";
