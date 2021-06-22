@@ -75,7 +75,7 @@
     }
 
     public function get_categories_n(){
-      $query = $this->db->query('SELECT fc.name, fc.id, COUNT(*) AS n
+      $query = $this->db->query('SELECT fc.name, fc.id, fc.slug, COUNT(*) AS n
           FROM faq_posts fp
           LEFT JOIN faq_categories fc ON fc.id = fp.category
           WHERE fp.state = "published"
