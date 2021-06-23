@@ -53,7 +53,6 @@
 
       // badgeCenter
       foreach ($data['deputes'] as $key => $value) {
-        print_r($data['deputes']);
         if ($value["secondRound"] === "1" & $value["elected"] == NULL) {
           $data['deputes'][$key]['badgeCenter'] = "Second tour";
           $data['deputes'][$key]['badgeCenterColor'] = "badge-secondary";
