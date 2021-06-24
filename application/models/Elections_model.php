@@ -196,4 +196,16 @@
       return $query->result_array();
     }
 
+    public function get_state($second, $elected){
+      if ($second === "1" & $elected == NULL) {
+        return "second";
+      } elseif ($second === "0" & $elected == NULL) {
+        return "lost";
+      } elseif ($elected === "1") {
+        return "elected";
+      } elseif ($elected === "0") {
+        return "lost";
+      }
+    }
+
   }
