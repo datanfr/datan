@@ -146,7 +146,7 @@ module.exports = function (grunt) {
               'assets/css/main.css'
           ],
           width: 1200,
-          height: 1350
+          height: 1800
         },
         // The source file
         src: 'http://localhost/datan/deputes/maine-et-loire-49/depute_matthieu-orphelin',
