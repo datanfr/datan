@@ -44,11 +44,18 @@
         show_404();
       }
 
+      // STATE
+      $data['state'] = 0;
+      if ($data['election']['id'] == '1') {
+        $data['state'] = 1;
+      }
+
       // Data
       $data['deputes'] = $this->elections_model->get_all_candidate($data['election']['id'], TRUE);
       $data['districts'] = $this->elections_model->get_all_districts($data['election']['id']);
       $data['electionInfos'] = $this->elections_model->get_election_infos($data['election']['libelleAbrev']);
-      $data['candidatsN'] = count($data['deputes']);
+      $data['candidatsN'] = $this->elections_model->count_candidats($data['election']['id'], FALSE, FALSE);
+      $data['candidatsN_second'] = $this->elections_model->count_candidats($data['election']['id'], TRUE, FALSE);
       $data['mapLegend'] = $this->elections_model->get_map_legend($data['election']['id']);
 
       // badgeCenter
