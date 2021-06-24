@@ -44,38 +44,41 @@
         show_404();
       }
 
+      // STATE
+      $data['state'] = 0;
+      if ($data['election']['id'] == '1') {
+        $data['state'] = 1;
+      }
+
       // Data
       $data['deputes'] = $this->elections_model->get_all_candidate($data['election']['id'], TRUE);
       $data['districts'] = $this->elections_model->get_all_districts($data['election']['id']);
       $data['electionInfos'] = $this->elections_model->get_election_infos($data['election']['libelleAbrev']);
-      $data['candidatsN'] = count($data['deputes']);
+      $data['candidatsN'] = $this->elections_model->count_candidats($data['election']['id'], FALSE, FALSE);
+      $data['candidatsN_second'] = $this->elections_model->count_candidats($data['election']['id'], TRUE, FALSE);
       $data['mapLegend'] = $this->elections_model->get_map_legend($data['election']['id']);
 
       // badgeCenter
       foreach ($data['deputes'] as $key => $value) {
-        if ($value["secondRound"] === "1" & $value["elected"] == NULL) {
-          $data['deputes'][$key]['badgeCenter'] = "Second tour";
-          $data['deputes'][$key]['badgeCenterColor'] = "badge-secondary";
-        } elseif ($value["secondRound"] === "0" & $value["elected"] == NULL) {
-          $data['deputes'][$key]['badgeCenterColor'] = "badge-danger";
+        $deputeState = $this->elections_model->get_state($value['secondRound'], $value['elected']);
+        if ($deputeState == 'lost') {
           if ($value["civ"] == "Mme") {
             $data['deputes'][$key]['badgeCenter'] = "Éliminée";
           } else {
             $data['deputes'][$key]['badgeCenter'] = "Éliminé";
           }
-        } elseif ($value["elected"] === "1") {
+          $data['deputes'][$key]['badgeCenterColor'] = "badge-danger";
+        }
+        if ($deputeState == 'second') {
+          $data['deputes'][$key]['badgeCenter'] = "Second tour";
+          $data['deputes'][$key]['badgeCenterColor'] = "badge-secondary";
+        }
+        if ($deputeState == 'elected') {
           $data['deputes'][$key]['badgeCenterColor'] = "badge-primary";
           if ($value["civ"] == "Mme") {
             $data['deputes'][$key]['badgeCenter'] = "Élue";
           } else {
             $data['deputes'][$key]['badgeCenter'] = "Élu";
-          }
-        } elseif ($value["elected"] === "0") {
-          $data['deputes'][$key]['badgeCenterColor'] = "badge-danger";
-          if ($value["civ"] == "Mme") {
-            $data['deputes'][$key]['badgeCenter'] = "Éliminée";
-          } else {
-            $data['deputes'][$key]['badgeCenter'] = "Éliminé";
           }
         }
       }

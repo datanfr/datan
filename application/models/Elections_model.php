@@ -138,7 +138,7 @@
     }
 
 
-    public function get_all_candidate($election, $visible = FALSE){
+    public function get_all_candidate($election, $visible = FALSE, $state = FALSE){
       if ($visible == FALSE) {
         $where = array(
           'election' => $election
@@ -150,6 +150,9 @@
         );
       }
 
+      if ($state == 'second') {
+        $where['secondRound'] = '1';
+      }
 
       if ($election == 1/*regionales 2021*/) {
         $this->db->join('regions', 'candidate_full.district = regions.id', 'left');
@@ -170,6 +173,16 @@
       return $query->result_array();
     }
 
+    public function count_candidats($id, $second = FALSE, $end = FALSE){
+      $this->db->where('election', $id);
+
+      if ($second === TRUE) {
+        $this->db->where('secondRound', 1);
+      }
+
+      return $this->db->count_all_results('candidate_full');
+    }
+
     public function get_all_districts($election){
       if ($election == 1/*regionales 2021*/) {
         $this->db->order_by('libelle', 'ASC');
@@ -181,6 +194,18 @@
       }
 
       return $query->result_array();
+    }
+
+    public function get_state($second, $elected){
+      if ($second === "1" & $elected == NULL) {
+        return "second";
+      } elseif ($second === "0" & $elected == NULL) {
+        return "lost";
+      } elseif ($elected === "1") {
+        return "elected";
+      } elseif ($elected === "0") {
+        return "lost";
+      }
     }
 
   }
