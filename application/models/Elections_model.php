@@ -149,8 +149,8 @@
           'visible' => 1
         );
       }
-      
-      if ($state = 'second') {
+
+      if ($state == 'second') {
         $where['secondRound'] = '1';
       }
 
@@ -171,6 +171,16 @@
       $query = $this->db->get_where('candidate_full', $where);
 
       return $query->result_array();
+    }
+
+    public function count_candidats($id, $second = FALSE, $end = FALSE){
+      $this->db->where('election', $id);
+
+      if ($second === TRUE) {
+        $this->db->where('secondRound', 1);
+      }
+
+      return $this->db->count_all_results('candidate_full');
     }
 
     public function get_all_districts($election){

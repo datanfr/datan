@@ -1180,7 +1180,7 @@ body{
   .bloc-newsletter{
     p {
       font-size: $h5-font-size;
-      font-size: 600;
+      font-weight: 600;
     }
   }
   /* BLOC-PIE */
@@ -2378,6 +2378,11 @@ ul.ui-menu{
       .map-container{
           height: 500px;
       }
+  }
+  .candidatsN{
+    color: $vert;
+    font-size: 4em;
+    font-weight: 800;
   }
 }
 /*

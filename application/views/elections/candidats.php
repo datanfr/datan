@@ -16,11 +16,19 @@
         <?php if ($election['candidates']): ?>
           <p>
             Découvrez sur cette page les députés candidats aux <?= mb_strtolower($election['libelle']) ?> de <?= $election['dateYear'] ?>.
+          </p>
+          <p>
             <?php if ($candidatsN): ?>
-              Nous avons jusqu'à présent répertorié <span class="font-weight-bold"><?= $candidatsN ?> député<?= $candidatsN > 1 ? "s" : NULL ?> candidat<?= $candidatsN > 1 ? "s" : NULL ?></span>.
-              <?php else: ?>
+              Nous avons répertorié <b><?= $candidatsN ?> député<?= $candidatsN > 1 ? "s" : NULL ?> candidat<?= $candidatsN > 1 ? "s" : NULL ?></b>.
+            <?php else: ?>
               Nous avons jusqu'à présent répertorié <span class="font-weight-bold">aucun député candidat</span>.
             <?php endif; ?>
+          </p>
+          <?php if ($state == 1): ?>
+            <p>
+              De ces candidats, <b><?= $candidatsN_second ?> député<?= $candidatsN_second > 1 ? "s se sont maintenus" : " s'est maintenu" ?> pour le second tour</b>.
+            </p>
+          <?php endif; ?>
           </p>
           <p>Un député candidat ne se trouve pas dans la liste ? N'hésitez pas à nous le faire savoir: <a href="mailto:info@datan.fr">contact@datan.fr</a> !</p>
         <?php endif; ?>
@@ -92,8 +100,26 @@
   <?php if ($election['candidates']): ?>
     <div class="row mt-5 mb-3">
       <div class="col-12">
-        <h2>Retrouvez <?= $candidatsN > 1 ? "les " . $candidatsN : "le" ?> député<?= $candidatsN > 1 ? "s" : NULL ?> candidat<?= $candidatsN > 1 ? "s" : NULL ?> aux <?= mb_strtolower($election['libelle']) ?> de <?= $election['dateYear'] ?></h2>
+        <h2>Retrouvez les députés candidats aux <?= mb_strtolower($election['libelle']) ?> de <?= $election['dateYear'] ?></h2>
       </div>
+      <div class="col-lg-6 d-flex">
+        <div class="d-flex align-items-center">
+          <span class="candidatsN"><?= $candidatsN ?></span>
+        </div>
+        <div class="d-flex align-items-center ml-3">
+          <span>Au total, <?= $candidatsN ?> députés ont été candidats au <b>premier tour</b> des <?= mb_strtolower($election['libelle']) ?> de <?= $election['dateYear'] ?></span>
+        </div>
+      </div>
+      <?php if ($state == 1): ?>
+        <div class="col-lg-6 d-flex">
+          <div class="d-flex align-items-center">
+            <span class="candidatsN"><?= $candidatsN_second ?></span>
+          </div>
+          <div class="d-flex align-items-center ml-3">
+            <span>Après le premier tour, <?= $candidatsN_second ?> députés se sont maintenus au <b>second tour</b> des <?= mb_strtolower($election['libelle']) ?> de <?= $election['dateYear'] ?></span>
+          </div>
+        </div>
+      <?php endif; ?>
     </div>
     <div class="row">
       <div class="pb-4 col-lg-3 search-element sticky-top sticky-top-lg">
