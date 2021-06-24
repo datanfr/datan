@@ -313,6 +313,7 @@
 
       // Regionales 2021
       $data['regionales2021'] = $this->elections_model->get_candidate($mpId, 1/* Régionales 2021 */);
+      $data['regionales2021']['state'] = $this->elections_model->get_state($data['regionales2021']['secondRound'], $data['regionales2021']['elected']);
 
       // Statistiques
       $data = $this->get_statistiques($data, $legislature, $mpId, $groupe_id);
