@@ -138,7 +138,7 @@
     }
 
 
-    public function get_all_candidate($election, $visible = FALSE){
+    public function get_all_candidate($election, $visible = FALSE, $state = FALSE){
       if ($visible == FALSE) {
         $where = array(
           'election' => $election
@@ -149,7 +149,10 @@
           'visible' => 1
         );
       }
-
+      
+      if ($state = 'second') {
+        $where['secondRound'] = '1';
+      }
 
       if ($election == 1/*regionales 2021*/) {
         $this->db->join('regions', 'candidate_full.district = regions.id', 'left');
