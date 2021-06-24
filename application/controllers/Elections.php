@@ -60,29 +60,25 @@
 
       // badgeCenter
       foreach ($data['deputes'] as $key => $value) {
-        if ($value["secondRound"] === "1" & $value["elected"] == NULL) {
-          $data['deputes'][$key]['badgeCenter'] = "Second tour";
-          $data['deputes'][$key]['badgeCenterColor'] = "badge-secondary";
-        } elseif ($value["secondRound"] === "0" & $value["elected"] == NULL) {
-          $data['deputes'][$key]['badgeCenterColor'] = "badge-danger";
+        $deputeState = $this->elections_model->get_state($value['secondRound'], $value['elected']);
+        if ($deputeState == 'lost') {
           if ($value["civ"] == "Mme") {
             $data['deputes'][$key]['badgeCenter'] = "Éliminée";
           } else {
             $data['deputes'][$key]['badgeCenter'] = "Éliminé";
           }
-        } elseif ($value["elected"] === "1") {
+          $data['deputes'][$key]['badgeCenterColor'] = "badge-danger";
+        }
+        if ($deputeState == 'second') {
+          $data['deputes'][$key]['badgeCenter'] = "Second tour";
+          $data['deputes'][$key]['badgeCenterColor'] = "badge-secondary";
+        }
+        if ($deputeState == 'elected') {
           $data['deputes'][$key]['badgeCenterColor'] = "badge-primary";
           if ($value["civ"] == "Mme") {
             $data['deputes'][$key]['badgeCenter'] = "Élue";
           } else {
             $data['deputes'][$key]['badgeCenter'] = "Élu";
-          }
-        } elseif ($value["elected"] === "0") {
-          $data['deputes'][$key]['badgeCenterColor'] = "badge-danger";
-          if ($value["civ"] == "Mme") {
-            $data['deputes'][$key]['badgeCenter'] = "Éliminée";
-          } else {
-            $data['deputes'][$key]['badgeCenter'] = "Éliminé";
           }
         }
       }
