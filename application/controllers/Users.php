@@ -3,7 +3,7 @@
 
     // REGISTER //
     public function register(){
-      $this->password_model->security_admin();
+      //$this->password_model->security_admin();
       $data['title'] = 'Créez votre compte';
       $data['title_meta'] = "Datan: S'inscrire";
       $data['no_offset'] = TRUE;
