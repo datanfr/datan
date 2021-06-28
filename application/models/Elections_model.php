@@ -180,6 +180,10 @@
         $this->db->where('secondRound', 1);
       }
 
+      if ($end === TRUE) {
+        $this->db->where('elected', 1);
+      }
+
       return $this->db->count_all_results('candidate_full');
     }
 
