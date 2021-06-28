@@ -102,24 +102,36 @@
       <div class="col-12">
         <h2>Retrouvez les députés candidats aux <?= mb_strtolower($election['libelle']) ?> de <?= $election['dateYear'] ?></h2>
       </div>
-      <div class="col-lg-6 d-flex">
-        <div class="d-flex align-items-center">
-          <span class="candidatsN"><?= $candidatsN ?></span>
-        </div>
-        <div class="d-flex align-items-center ml-3">
-          <span>Au total, <?= $candidatsN ?> députés ont été candidats au <b>premier tour</b> des <?= mb_strtolower($election['libelle']) ?> de <?= $election['dateYear'] ?></span>
-        </div>
-      </div>
-      <?php if ($state == 1): ?>
-        <div class="col-lg-6 d-flex">
+      <div class="col-12 d-flex flex-column flex-lg-row">
+        <div class="d-flex flex-even px-2">
           <div class="d-flex align-items-center">
-            <span class="candidatsN"><?= $candidatsN_second ?></span>
+            <span class="candidatsN"><?= $candidatsN ?></span>
           </div>
-          <div class="d-flex align-items-center ml-3">
-            <span>Après le premier tour, <?= $candidatsN_second ?> députés se sont maintenus au <b>second tour</b> des <?= mb_strtolower($election['libelle']) ?> de <?= $election['dateYear'] ?></span>
+          <div class="d-flex align-items-center ml-4">
+            <span>Au total, <?= $candidatsN ?> députés étaient candidats au <b>premier tour</b> des <?= mb_strtolower($election['libelle']) ?> de <?= $election['dateYear'] ?>.</span>
           </div>
         </div>
-      <?php endif; ?>
+        <?php if ($state > 0): ?>
+          <div class="d-flex flex-even px-2">
+            <div class="d-flex align-items-center">
+              <span class="candidatsN"><?= $candidatsN_second ?></span>
+            </div>
+            <div class="d-flex align-items-center ml-4">
+              <span>Après le premier tour, <?= $candidatsN_second ?> députés se sont maintenus au <b>second tour</b> des <?= mb_strtolower($election['libelle']) ?> de <?= $election['dateYear'] ?>.</span>
+            </div>
+          </div>
+        <?php endif; ?>
+        <?php if ($state > 1): ?>
+          <div class="d-flex flex-even px-2">
+            <div class="d-flex align-items-center">
+              <span class="candidatsN"><?= $candidatsN_elected ?></span>
+            </div>
+            <div class="d-flex align-items-center ml-4">
+              <span>Après le second tour, <?= $candidatsN_elected ?> députés ont été <b>élus</b> lors des <?= mb_strtolower($election['libelle']) ?> de <?= $election['dateYear'] ?>.</span>
+            </div>
+          </div>
+        <?php endif; ?>
+      </div>
     </div>
     <div class="row">
       <div class="pb-4 col-lg-3 search-element sticky-top sticky-top-lg">
