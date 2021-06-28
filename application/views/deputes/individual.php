@@ -6,7 +6,9 @@
           <?php if ($regionales2021['state'] == 'lost'): ?>
             <u><?= ucfirst($gender['pronom']) ?> a été éliminé<?= $gender['e'] ?></u>.
           <?php endif; ?>
-          <?php if ($regionales2021['state'] == 'second'): ?>
+          <?php if ($regionales2021['state'] == 'elected'): ?>
+            <u><?= ucfirst($gender['pronom']) ?> a été élu<?= $gender['e'] ?> conseill<?= $gender['pronom'] == 'il' ? 'er' : 'ère' ?> régional<?= $gender['e'] ?></u>.
+          <?php elseif ($regionales2021['state'] == 'second') : ?>
             <u><?= ucfirst($gender['pronom']) ?> a été qualifié<?= $gender['e'] ?> pour le second tour</u>.
           <?php endif; ?>
         </span>

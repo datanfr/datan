@@ -47,7 +47,7 @@
       // STATE
       $data['state'] = 0;
       if ($data['election']['id'] == '1') {
-        $data['state'] = 1;
+        $data['state'] = 2;
       }
 
       // Data
@@ -56,6 +56,7 @@
       $data['electionInfos'] = $this->elections_model->get_election_infos($data['election']['libelleAbrev']);
       $data['candidatsN'] = $this->elections_model->count_candidats($data['election']['id'], FALSE, FALSE);
       $data['candidatsN_second'] = $this->elections_model->count_candidats($data['election']['id'], TRUE, FALSE);
+      $data['candidatsN_elected'] = $this->elections_model->count_candidats($data['election']['id'], TRUE, TRUE);
       $data['mapLegend'] = $this->elections_model->get_map_legend($data['election']['id']);
 
       // badgeCenter
