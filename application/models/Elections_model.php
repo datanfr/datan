@@ -154,6 +154,10 @@
         $where['secondRound'] = '1';
       }
 
+      if ($state == 'elected') {
+        $where['elected'] = '1';
+      }
+
       if ($election == 1/*regionales 2021*/) {
         $this->db->join('regions', 'candidate_full.district = regions.id', 'left');
         $this->db->select('*, regions.libelle AS districtLibelle, regions.id AS districtId');
