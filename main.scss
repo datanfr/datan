@@ -548,6 +548,13 @@ body:not(.pg-mentions) #tarteaucitronIcon {
   // FILTER
   .filters{
     width: 100%;
+    .surtitre{
+      color: $text-gray;
+      font-weight: 800;
+      font-size: $h5-font-size;
+      margin-left: 13px;
+      margin-bottom: 1.4em;
+    }
     .radio-label {
       cursor: pointer;
       display: inline-block;
@@ -584,6 +591,7 @@ body:not(.pg-mentions) #tarteaucitronIcon {
     .radio-btn{
       position: absolute;
       visibility: hidden;
+
     }
     .radio-btn:checked + .radio-label {
       //background: rgba($primary_rgb, 0.5);

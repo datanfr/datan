@@ -140,17 +140,34 @@
           <div class="mt-3 mt-lg-0">
             <input type="text" id="quicksearch" placeholder="Recherchez un député..." />
           </div>
+          <!-- Filters state -->
+          <div class="filters filtersState mt-md-4 d-none d-lg-block">
+            <p class="surtitre">Résultat de l'élection</p>
+            <input class="radio-btn" name="state" id="radio-100" type="radio" checked="" value="*">
+            <label for="radio-100" class="radio-label d-flex align-items-center">
+              <span class="d-flex align-items-center"><b>Tous les députés</b></span>
+            </label>
+            <input class="radio-btn" name="state" id="radio-101" type="radio" value=".elected">
+            <label for="radio-101" class="radio-label d-flex align-items-center">
+              <span class="d-flex align-items-center">Élu</span>
+            </label>
+            <input class="radio-btn" name="state" id="radio-102" type="radio" value=".lost">
+            <label for="radio-102" class="radio-label d-flex align-items-center">
+              <span class="d-flex align-items-center">Éliminé</span>
+            </label>
+          </div>
           <!-- Filters -->
           <?php if (count($districts) <= 25): ?>
-            <div class="filters mt-md-4 d-none d-lg-block">
-              <input class="radio-btn" name="radio-collection" id="radio-1" type="radio" checked="" value="*">
+            <div class="filters filtersDistrict mt-md-5 d-none d-lg-block">
+              <p class="surtitre">Région</p>
+              <input class="radio-btn" name="district" id="radio-1" type="radio" checked="" value="*">
               <label for="radio-1" class="radio-label d-flex align-items-center">
                 <span class="d-flex align-items-center"><b>Tous les députés</b></span>
               </label>
               <?php $i=2 ?>
               <?php foreach ($districts as $district): ?>
-                <input class="radio-btn" name="radio-collection" id="radio-<?= $i ?>" type="radio" value=".<?= strtolower($district['id']) ?>">
-                <label class="radio-label d-flex align-items-center" for="radio-<?= $i ?>">
+                <input class="radio-btn" name="district" id="radio-<?= $i ?>" type="radio" value=".<?= strtolower($district['id']) ?>">
+                <label for="radio-<?= $i ?>" class="radio-label d-flex align-items-center">
                   <span class="d-flex align-items-center"><?= $district['libelle'] ?></span>
                 </label>
                 <?php $i++ ?>
@@ -170,7 +187,7 @@
       <div class="col-lg-9 col-md-12">
         <div class="row mt-2 sorting">
           <?php foreach ($deputes as $depute): ?>
-            <div class="col-md-6 col-xl-4 sorting-item <?= strtolower($depute["districtId"]) ?>">
+            <div class="col-md-6 col-xl-4 sorting-item <?= strtolower($depute['districtId']) ?> <?= strtolower($depute['electionState']) ?>">
               <div class="d-flex justify-content-center">
                 <?php $this->load->view('deputes/partials/card_home.php', array('depute' => $depute, 'tag' => 'h3')) ?>
               </div>
