@@ -242,7 +242,7 @@
                     <h4><?= $title ?> <?= $depute['legislature'] == legislature_current() ? "vote" : "votait" ?> <b>souvent</b> avec :</h4>
                   </div>
                 </div>
-                <div class="row mt-1 bar-container pr-2">
+                <div class="row mt-1 bar-container stats pr-2">
                   <div class="offset-2 col-10">
                     <div class="chart">
                       <div class="chart-grid">
@@ -260,7 +260,7 @@
                       </div>
                       <div class="bar-chart d-flex flex-row justify-content-between align-items-end">
                         <?php foreach ($accord_groupes_first as $group) : ?>
-                          <div class="bars d-flex align-items-center justify-content-center" style="height: <?= $group['accord'] ?>%">
+                          <div class="bars mx-1 mx-md-3" style="height: <?= $group['accord'] ?>%">
                             <span class="score"><?= $group['accord'] ?>%</span>
                           </div>
                         <?php endforeach; ?>
@@ -297,7 +297,7 @@
                     <h4><?= ucfirst($gender['pronom']) ?> <?= $depute['legislature'] == legislature_current() ? "vote" : "votait" ?> <b>rarement</b> avec :</h4>
                   </div>
                 </div>
-                <div class="row mt-1 bar-container pr-2">
+                <div class="row mt-1 bar-container stats pr-2">
                   <div class="offset-2 col-10">
                     <div class="chart">
                       <div class="chart-grid">
@@ -315,7 +315,7 @@
                       </div>
                       <div class="bar-chart d-flex flex-row justify-content-between align-items-end">
                         <?php foreach ($accord_groupes_last_sorted as $group) : ?>
-                          <div class="bars d-flex align-items-center justify-content-center" style="height: <?= $group['accord'] ?>%">
+                          <div class="bars mx-1 mx-md-3" style="height: <?= $group['accord'] ?>%">
                             <span class="score"><?= $group['accord'] ?>%</span>
                           </div>
                         <?php endforeach; ?>
