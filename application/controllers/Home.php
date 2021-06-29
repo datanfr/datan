@@ -88,7 +88,7 @@
       }
 
       // Get elections
-      $data['candidats'] = $this->elections_model->get_all_candidate(1, TRUE, "second"); // Get candidates for regionales-2021, second tour
+      $data['candidats'] = $this->elections_model->get_all_candidate(1, TRUE, "elected"); // Get candidates for regionales-2021, elected MPs
       $data['candidatsN'] = count($data['candidats']);
       $randKey = array_rand($data['candidats']);
       $data['candidatRandom'] = $data['candidats'][$randKey];
