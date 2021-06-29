@@ -61,8 +61,9 @@
 
       // badgeCenter
       foreach ($data['deputes'] as $key => $value) {
-        $deputeState = $this->elections_model->get_state($value['secondRound'], $value['elected']);
-        if ($deputeState == 'lost') {
+        $state = $this->elections_model->get_state($value['secondRound'], $value['elected']);
+        $data['deputes'][$key]['electionState'] = $state;
+        if ($state == 'lost') {
           if ($value["civ"] == "Mme") {
             $data['deputes'][$key]['badgeCenter'] = "Éliminée";
           } else {
@@ -70,11 +71,11 @@
           }
           $data['deputes'][$key]['badgeCenterColor'] = "badge-danger";
         }
-        if ($deputeState == 'second') {
+        if ($state == 'second') {
           $data['deputes'][$key]['badgeCenter'] = "Second tour";
           $data['deputes'][$key]['badgeCenterColor'] = "badge-secondary";
         }
-        if ($deputeState == 'elected') {
+        if ($state == 'elected') {
           $data['deputes'][$key]['badgeCenterColor'] = "badge-primary";
           if ($value["civ"] == "Mme") {
             $data['deputes'][$key]['badgeCenter'] = "Élue";
@@ -116,7 +117,7 @@
       // JS
       $data['js_to_load_before_datan'] = array("isotope.pkgd.min");
       if (count($data['districts']) <= 25) {
-        $data['js_to_load'] = array("datan/sorting");
+        $data['js_to_load'] = array("datan/sorting_elections");
       } else {
         $data['js_to_load'] = array("datan/sorting_select");
       }
