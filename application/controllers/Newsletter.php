@@ -77,6 +77,7 @@ class Newsletter extends CI_Controller
           }
         }
       }
+      echo "worked";
     }
 
     public function delete($email){
