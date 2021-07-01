@@ -1,20 +1,22 @@
   <?php if ($depute['legislature'] == legislature_current()): ?>
-    <?php if (($regionales2021 && $regionales2021['visible']) || isset($_GET['regionales2021'])) : ?>
-      <a href="<?= base_url() ?>elections/regionales-2021">
-        <div class="container-fluid electionBanner d-flex justify-content-center align-items-center py-4">
-          <span class="text-center">
-            <?= $title ?> est candidat<?= $gender['e'] ?> aux élections régionales de juin 2021, dans la région <?= $regionales2021['regionLibelle'] ?>.
-            <?php if ($regionales2021['state'] == 'lost'): ?>
-              <u><?= ucfirst($gender['pronom']) ?> a été éliminé<?= $gender['e'] ?></u>.
-            <?php endif; ?>
-            <?php if ($regionales2021['state'] == 'elected'): ?>
-              <u><?= ucfirst($gender['pronom']) ?> a été élu<?= $gender['e'] ?> conseill<?= $gender['pronom'] == 'il' ? 'er' : 'ère' ?> régional<?= $gender['e'] ?></u>.
-            <?php elseif ($regionales2021['state'] == 'second') : ?>
-              <u><?= ucfirst($gender['pronom']) ?> a été qualifié<?= $gender['e'] ?> pour le second tour</u>.
-            <?php endif; ?>
-          </span>
-        </div>
-      </a>
+    <?php if ($regionales2021): ?>
+      <?php if ($regionales2021['visible']) : ?>
+        <a href="<?= base_url() ?>elections/regionales-2021">
+          <div class="container-fluid electionBanner d-flex justify-content-center align-items-center py-4">
+            <span class="text-center">
+              <?= $title ?> est candidat<?= $gender['e'] ?> aux élections régionales de juin 2021, dans la région <?= $regionales2021['regionLibelle'] ?>.
+              <?php if ($regionales2021['state'] == 'lost'): ?>
+                <u><?= ucfirst($gender['pronom']) ?> a été éliminé<?= $gender['e'] ?></u>.
+              <?php endif; ?>
+              <?php if ($regionales2021['state'] == 'elected'): ?>
+                <u><?= ucfirst($gender['pronom']) ?> a été élu<?= $gender['e'] ?> conseill<?= $gender['pronom'] == 'il' ? 'er' : 'ère' ?> régional<?= $gender['e'] ?></u>.
+              <?php elseif ($regionales2021['state'] == 'second') : ?>
+                <u><?= ucfirst($gender['pronom']) ?> a été qualifié<?= $gender['e'] ?> pour le second tour</u>.
+              <?php endif; ?>
+            </span>
+          </div>
+        </a>
+      <?php endif; ?>
     <?php endif; ?>
   <?php endif; ?>
   <div class="container-fluid bloc-img-deputes async_background" id="container-always-fluid" style="height: 13em"></div>
@@ -44,7 +46,7 @@
           <!-- Paragraphe historique -->
           <?php if ($active) : ?>
             <p>
-              <?= ucfirst($gender['pronom']) ?> est entré<?= $gender['e'] ?> en fonction en <?= $depute['datePriseFonctionLettres'] ?> et est en est à son <?= $mandat_edito ?> mandat.
+              <?= ucfirst($gender['pronom']) ?> est entré<?= $gender['e'] ?> en fonction en <?= $depute['datePriseFonctionLettres'] ?> et en est à son <?= $mandat_edito ?> mandat.
               Au total, <?= $title ?> a passé <?= $depute['lengthEdited'] ?> sur les bancs de l’Assemblée nationale, soit <?= $history_edito ?> des députés, qui est de <?= $history_average['length'] ?> ans.
             </p>
           <?php elseif ($depute['legislature'] == legislature_current()) : ?>
