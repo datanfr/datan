@@ -46,7 +46,7 @@
           <!-- Paragraphe historique -->
           <?php if ($active) : ?>
             <p>
-              <?= ucfirst($gender['pronom']) ?> est entré<?= $gender['e'] ?> en fonction en <?= $depute['datePriseFonctionLettres'] ?> et est en est à son <?= $mandat_edito ?> mandat.
+              <?= ucfirst($gender['pronom']) ?> est entré<?= $gender['e'] ?> en fonction en <?= $depute['datePriseFonctionLettres'] ?> et en est à son <?= $mandat_edito ?> mandat.
               Au total, <?= $title ?> a passé <?= $depute['lengthEdited'] ?> sur les bancs de l’Assemblée nationale, soit <?= $history_edito ?> des députés, qui est de <?= $history_average['length'] ?> ans.
             </p>
           <?php elseif ($depute['legislature'] == legislature_current()) : ?>
