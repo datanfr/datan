@@ -10,6 +10,7 @@
       $this->load->model('groupes_model');
       $this->load->model('elections_model');
       $this->load->model('newsletter_model');
+      $this->load->model('faq_model');
       $this->password_model->security_admin();
     }
 
@@ -197,7 +198,6 @@
         $this->admin_model->create_vote($user_id);
         redirect('admin/votes');
       }
-
     }
 
     public function modify_vote($vote){
@@ -230,7 +230,6 @@
           redirect('admin/votes');
         }
       }
-
     }
 
     public function delete_vote($vote){
@@ -367,6 +366,96 @@
         }
       } else {
         show_404();
+      }
+    }
+
+    public function faq_list(){
+      $data['username'] = $this->session->userdata('username');
+      $data['usernameType'] = $this->session->userdata('type');
+      $data['title'] = 'Liste des articles FAQ';
+
+      $data['articles'] = $this->faq_model->get_articles();
+
+      $this->load->view('dashboard/header', $data);
+      $this->load->view('dashboard/faq/list', $data);
+      $this->load->view('dashboard/footer');
+    }
+
+    public function delete_faq($id){
+      $data['usernameType'] = $this->session->userdata("type");
+
+      if ($data['usernameType'] != "admin") {
+        redirect();
+      } else {
+        $data['username'] = $this->session->userdata('username');
+
+        $data['title'] = 'Supprimer un article de FAQ';
+        $data['article'] = $this->faq_model->get_article($id);
+
+        //Form validation
+        $this->form_validation->set_rules('delete', 'Delete', 'required');
+
+        if ($this->form_validation->run() === FALSE) {
+          $this->load->view('dashboard/header', $data);
+          $this->load->view('dashboard/faq/delete', $data);
+          $this->load->view('dashboard/footer');
+        } else {
+          $this->faq_model->delete($id);
+          redirect('admin/faq');
+        }
+      }
+    }
+
+    public function create_faq(){
+      $data['username'] = $this->session->userdata('username');
+      $user_id = $this->session->userdata('user_id');
+      $data['title'] = 'Créer un article de FAQ';
+      $data['categories'] = $this->faq_model->get_categories();
+
+      //Form valiation
+      $this->form_validation->set_rules('title', 'Title', 'required');
+      $this->form_validation->set_rules('article', 'Article', 'required');
+      $this->form_validation->set_rules('category', 'Category', 'required');
+
+      if ($this->form_validation->run() === FALSE) {
+        $this->load->view('dashboard/header', $data);
+        $this->load->view('dashboard/faq/create', $data);
+        $this->load->view('dashboard/footer');
+      } else {
+        $this->faq_model->create($user_id);
+        redirect('admin/faq');
+      }
+    }
+
+    public function modify_faq($id){
+      $data['username'] = $this->session->userdata('username');
+      $data['usernameType'] = $this->session->userdata('type');
+      $user_id = $this->session->userdata('user_id');
+      $data['title'] = 'Modifier un article de FAQ';
+      $data['article'] = $this->faq_model->get_article($id);
+
+      if (empty($data['article'])) {
+        redirect('admin/faq');
+      }
+
+      if ($data['article']['state'] == "published" && $data['usernameType'] != "admin") {
+        redirect('admin/faq');
+      } else {
+        $data['categories'] = $this->faq_model->get_categories();
+
+        //Form valiation
+        $this->form_validation->set_rules('title', 'Title', 'required');
+        $this->form_validation->set_rules('article', 'Article', 'required');
+        $this->form_validation->set_rules('category', 'Category', 'required');
+
+        if ($this->form_validation->run() === FALSE) {
+          $this->load->view('dashboard/header', $data);
+          $this->load->view('dashboard/faq/modify', $data);
+          $this->load->view('dashboard/footer');
+        } else {
+          $this->faq_model->modify($id, $user_id);
+          redirect('admin/faq');
+        }
       }
     }
 
