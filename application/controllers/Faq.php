@@ -14,7 +14,7 @@
       //Meta
       $data['url'] = $this->meta_model->get_url();
       $data['title_meta'] = "Foire aux questions - Assemblée nationale | Datan";
-      $data['description_meta'] = "Comment les députés sont-ils élus ? Quels sont leurs rôles au parlement ? Découvrez la foire aux questions (FAQ) de Datan.";
+      $data['description_meta'] = "Comment les députés sont-ils élus ? Quels sont leur rôle au parlement ? Découvrez la foire aux questions (FAQ) de Datan.";
       // Open Graph
       $data['ogp'] = $this->meta_model->get_ogp('home', $data['title_meta'], $data['description_meta'], $data['url'], $data);
       // FAQ schema
