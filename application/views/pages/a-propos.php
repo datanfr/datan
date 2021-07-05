@@ -2,7 +2,7 @@
   <div class="container d-flex flex-column justify-content-center py-2">
     <div class="row">
       <div class="col-lg-8 offset-lg-2 col-md-10 offset-md-1">
-        <h1> <?= $title ?></h1>
+        <h1><?= $title ?></h1>
       </div>
     </div>
   </div>

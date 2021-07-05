@@ -66,6 +66,10 @@ $route['admin/votes_an/em_lost'] = 'admin/votes_an_em_lost';
 $route['admin/analyses/(:any)'] = 'admin/analyses/$1';
 $route['admin/socialmedia/historique/(:any)'] = 'admin/socialmedia/historique/$1';
 $route['admin/socialmedia/(:any)'] = 'admin/socialmedia/$1/NULL';
+$route['admin/faq'] = 'admin/faq_list';
+$route['admin/faq/create'] = 'admin/create_faq';
+$route['admin/faq/modify/(:any)'] = 'admin/modify_faq/$1';
+$route['admin/faq/delete/(:any)'] = 'admin/delete_faq/$1';
 // SEO
 $route['sitemap.xml'] = "sitemap/index";
 $route['sitemap-deputes-1.xml'] = "sitemap/deputes";
@@ -135,6 +139,8 @@ $route['elections/(:any)'] = 'elections/individual/$1';
 $route['newsletter/edit/(:any)'] = 'newsletter/edit/$1';
 $route['newsletter/update'] = 'newsletter/update';
 $route['newsletter/delete/(:any)'] = 'newsletter/delete/$1';
+// FAQ
+$route['faq'] = 'faq/index';
 // API
 $route['api/(:any)/(:any)'] = 'api/index/$1/$2';
 // LOGIN & REGISTER

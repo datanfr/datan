@@ -2743,7 +2743,41 @@ ul.ui-menu{
   background-color: $bg-colour;
 }
 
-
+/*
+################
+FAQ
+################
+*/
+.faq-header{
+  background-color: $vert;
+  color: #fff;
+}
+.pg-faq{
+  h2{
+    color: $vert;
+    font-size: 1.8em;
+  }
+  .card-categories{
+    border: none;
+    .card-header{
+      background-color: #fff;
+      border-right: solid 1px rgba(0, 0, 0, 0.125);
+      border-left: solid 1px rgba(0, 0, 0, 0.125);
+      border-top: solid 1px rgba(0, 0, 0, 0.125);
+    }
+  }
+  .card-question{
+    border: none;
+    .card-header{
+      background-color: transparent;
+      span{
+        font-size: 1.1em;
+        color: $text-black;
+        font-weight: 800;
+      }
+    }
+  }
+}
 /*
 ################
 MODAL

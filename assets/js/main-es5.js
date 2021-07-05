@@ -206,4 +206,21 @@ $('#newsletterForm').on('submit', function (e) {
   });
   return true;
 });
+/*
+##########
+FAQ
+##########
+*/
+
+$('#searchfaq').on('keyup', function (e) {
+  $(".card-question").hide();
+  var array = $(this).val().split(" ");
+  var match = "(?:" + array.join(".*") + "|";
+  array.reverse();
+  match += array.join(".*") + ")";
+  var regex = new RegExp(match, 'i');
+  $(".card-question").filter(function () {
+    return regex.test($(this).text());
+  }).show();
+});
 //# sourceMappingURL=main-es5.js.map

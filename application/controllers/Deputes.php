@@ -381,7 +381,7 @@
       $controller = $this->router->fetch_class()."/".$this->router->fetch_method();
       $data['ogp'] = $this->meta_model->get_ogp($controller, $data['title_meta'], $data['description_meta'], $data['url'], $data);
       // Microdata Person
-      $data['person_schema'] = $this->deputes_model->get_person_schema($data['depute']);
+      $data['schema'] = $this->deputes_model->get_person_schema($data['depute']);
       // CSS
       $data['critical_css'] = "depute_individual";
       $data['css_to_load']= array(
@@ -481,7 +481,7 @@
       $controller = $this->router->fetch_class()."/".$this->router->fetch_method();
       $data['ogp'] = $this->meta_model->get_ogp($controller, $data['title_meta'], $data['description_meta'], $data['url'], $data);
       // Microdata Person
-      $data['person_schema'] = $this->deputes_model->get_person_schema($data['depute']);
+      $data['schema'] = $this->deputes_model->get_person_schema($data['depute']);
       // CSS
       $data['css_to_load']= array(
         array(
