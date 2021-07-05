@@ -219,6 +219,29 @@ scratch. This page gets rid of all links and provides the needed markup only.
                </li>
              </ul>
            </li>
+           <!-- Blog posts -->
+           <li class="nav-item has-treeview">
+             <a href="#" class="nav-link">
+               <p>
+                 FAQ
+                 <i class="fas fa-angle-left right"></i>
+               </p>
+             </a>
+             <ul class="nav nav-treeview">
+               <li class="nav-item">
+                 <a href="<?= base_url() ?>admin/faq" class="nav-link">
+                   <i class="far fa-circle nav-icon"></i>
+                   <p>Tous les articles</p>
+                 </a>
+               </li>
+               <li class="nav-item">
+                 <a href="<?= base_url() ?>admin/faq/create" class="nav-link">
+                   <i class="far fa-circle nav-icon"></i>
+                   <p>Créer un article</p>
+                 </a>
+               </li>
+             </ul>
+           </li>
            <!-- Election -->
            <li class="nav-item has-treeview">
              <a href="#" class="nav-link">

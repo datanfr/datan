@@ -39,9 +39,9 @@
         <?= json_encode($breadcrumb_json, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT |  JSON_UNESCAPED_UNICODE); ?>
       </script>
     <?php endif; ?>
-    <?php if (isset($person_schema)): ?>
+    <?php if (isset($schema)): ?>
       <script type="application/ld+json">
-        <?= json_encode($person_schema, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT |  JSON_UNESCAPED_UNICODE); ?>
+        <?= json_encode($schema, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT |  JSON_UNESCAPED_UNICODE); ?>
       </script>
     <?php endif; ?>
     <script type='application/ld+json'>
