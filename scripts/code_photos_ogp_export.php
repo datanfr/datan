@@ -139,7 +139,7 @@
                 <h1 class="nom"><?= $nom ?></h1>
               </div>
               <div class="image">
-                <img src="http://localhost/datan/assets/imgs/deputes_original/depute_<?= substr($uid, 2) ?>.png" alt="img" id="photo">
+                <img src="../assets/imgs/deputes_original/depute_<?= substr($uid, 2) ?>.png" alt="img" id="photo">
               </div>
             </div>
           </div>

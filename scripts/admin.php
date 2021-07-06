@@ -9,8 +9,6 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.2/js/bootstrap.min.js" integrity="sha384-o+RDsa0aLu++PJvFqy8fFScvbHFLtbvScb8AjopnFD+iEQ7wo/CG0xlczd+2O/em" crossorigin="anonymous"></script>
   </head>
   <body>
-    <header>
-    </header>
     <main>
       <?php
         include 'bdd-connexion.php';
@@ -168,17 +166,16 @@
                   </div>
                 </div>
               </div>
-
-
-              <a class="btn btn-warning my-3" href="update_dataset/add_twitter_facebook.php" role="button">Add Social Network</a>
-              <hr>
-              <a class="btn btn-warning my-3" href="update_dataset/20210309_update_department.php" role="button">5. Update departments</a>
-
-              <hr>
-              <a class="btn btn-warning my-3" href="update_dataset/20210322_update_primary_key.php" role="button">Add primary keys</a>
-              <hr>
-              <a class="btn btn-warning my-3" href="update_dataset/addNewsletter.php" role="button">Add table newsletter</a>
-
+              <br>
+              <div class="card">
+                <div class="card-body">
+                  <h5 class="card-title">Old database updates</h5>
+                  <a class="btn btn-warning my-3" href="update_dataset/add_twitter_facebook.php" role="button">Add Social Network</a>
+                  <a class="btn btn-warning my-3" href="update_dataset/20210309_update_department.php" role="button">Update departments</a>
+                  <a class="btn btn-warning my-3" href="update_dataset/20210322_update_primary_key.php" role="button">Add primary keys</a>
+                  <a class="btn btn-warning my-3" href="update_dataset/addNewsletter.php" role="button">Add table newsletter</a>
+                </div>
+              </div>
             </div>
           </div>
           <div class="row">
@@ -186,16 +183,8 @@
               <div class="my-4 p-3" style="border: 5px solid #00B794">
                 <h3>Data update</h3>
                 <div class="list-group">
-                  <a href="1_deputes.php" class="list-group-item list-group-item-action list-group-item-primary">1. Députés/Mandats/Oranes - Dernière mise à jour => <b><?php echo $maj_depute ?></b></a>
-                  <hr>
-                  <a href="votes_1.php" class="list-group-item list-group-item-action list-group-item-primary">2. Votes (update point 1 before)</a>
-                  <hr>
-                  <a href="cities_mayors_update.php" class="list-group-item list-group-item-action list-group-item-primary">3. Update cities_mayors (the open data source is updated every three month)</a>
+                  <a href="cities_mayors_update.php" class="list-group-item list-group-item-action list-group-item-primary">Update cities_mayors (the open data source is updated every three month)</a>
                 </div>
-              </div>
-              <h3 class="mt-3">Past legislature update</h2>
-              <div class="list-group">
-                <a href="votes_1.php?legislature=14" class="list-group-item list-group-item-action">Votes for the 14th legislature</a>
               </div>
               <h3 class="mt-3">Photos OGP</h2>
               <div class="list-group">
@@ -209,9 +198,7 @@
               <h3 class="mt-3">Unused scripts</h2>
               <div class="list-group">
                 <a href="#" class="list-group-item list-group-item-action">Code communes_slug (code_communes_slug.php)</a>
-                <a href="#" class="list-group-item list-group-item-action">Code communes_dpt (code_communes_slug.php)</a>
-                <a href="#" class="list-group-item list-group-item-action">Cities (code_communes_slug.php)</a>
-                <a href="#" class="list-group-item list-group-item-action">Code get_twitter (code_communes_slug.php)</a>
+                <a href="#" class="list-group-item list-group-item-action">Cities (cities.php)</a>
               </div>
               <h3 class="mt-3">Deleted scripts + get individual votes</h3>
               <div class="list-group">
@@ -221,12 +208,6 @@
             </div>
           </div>
         </div>
-
-
     </main>
-    <footer>
-
-    </footer>
-
-</body>
+  </body>
 </html>
