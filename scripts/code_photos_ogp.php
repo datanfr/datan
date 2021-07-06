@@ -49,7 +49,7 @@
         ?>
 
             <p>
-              <a href="http://localhost/datan/scripts/code_photos_ogp_export.php?uid=<?= $mp['uid'] ?>" target="_blank"><?= $mp['prenom'] ?> <?= $mp['nom'] ?> - <?= $mp['uid'] ?></a>
+              <a href="https://datan.fr/scripts/code_photos_ogp_export.php?uid=<?= $mp['uid'] ?>" target="_blank"><?= $mp['prenom'] ?> <?= $mp['nom'] ?> - <?= $mp['uid'] ?></a>
             </p>
 
           <?php

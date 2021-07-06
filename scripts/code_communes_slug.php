@@ -102,9 +102,6 @@
           		$sql -> execute(array('commune_slug' => $commune, 'commune_nom' => $commune_nom));
           	}
 
-
-
-
           ?>
         </div>
       </div>
