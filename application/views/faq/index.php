@@ -16,7 +16,7 @@
   <div class="row">
     <div class="col-md-4">
       <div class="card card-categories">
-        <h3 class="card-header">Categories</h3>
+        <h3 class="card-header">Catégories</h3>
         <ul class="list-group">
           <?php foreach ($categories as $category): ?>
             <a href="#<?= $category['slug'] ?>" class="no-decoration">
