@@ -2,6 +2,7 @@
   class Faq_model extends CI_Model{
     public function __construct(){
       $this->load->database();
+      $this->load->model('stats_model');
     }
 
 
@@ -19,6 +20,22 @@
 
       $query = $this->db->get('faq_posts fp');
       return $query->result_array();
+    }
+
+    public function get_additional_articles($category, $array){
+      if ($category['slug'] == 'deputes') {
+        // Question Quel est l'âge moyen des députés ?
+        $age = $this->stats_model->get_age_mean(legislature_current());
+        $question = array(
+          "title" => "Quel est l'âge moyen des députés ?",
+          "text" => "
+            <p>L'âge moyen des députés est de ".round($age)." ans.</p>
+            <p>Découvrez sur Datan le <a href='" . base_url() ."statistiques/deputes-age' target='_blank'>classement des députés en fonction de leur âge</a>.
+          "
+        );
+        array_push($array, $question);
+      }
+      return $array;
     }
 
     public function get_article($id){
@@ -72,17 +89,6 @@
 
     public function get_categories(){
       return $this->db->get('faq_categories')->result_array();
-    }
-
-    public function get_categories_n(){
-      $query = $this->db->query('SELECT fc.name, fc.id, fc.slug, COUNT(*) AS n
-          FROM faq_posts fp
-          LEFT JOIN faq_categories fc ON fc.id = fp.category
-          WHERE fp.state = "published"
-          GROUP BY fc.id
-          ORDER BY fc.id
-      ');
-      return $query->result_array();
     }
 
     public function get_faq_schema($data){
