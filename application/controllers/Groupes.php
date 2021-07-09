@@ -155,7 +155,7 @@
       $data['groupesN'] = $data['groupesN']['n'];
       // Get mean age in the National Assembly
       $data['ageMean'] = $this->stats_model->get_age_mean($legislature);
-      $data['ageMean'] = round($data['ageMean']['mean']);
+      $data['ageMean'] = round($data['ageMean']);
       $data['ageEdited'] = $this->functions_datan->old_young($data['groupe']['age'], $data['ageMean']);
       // Get mean of women in the National Assembly
       $data['womenPctTotal'] = $this->deputes_model->get_deputes_gender($legislature);
