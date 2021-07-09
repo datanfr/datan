@@ -6,9 +6,19 @@
     }
 
     public function index() {
-      $data['categories'] = $this->faq_model->get_categories_n();
+      $data['categories'] = $this->faq_model->get_categories();
       foreach ($data['categories'] as $category) {
         $data['articles'][$category['id']] = $this->faq_model->get_articles($category['id'], 'published');
+        // Additional questions
+        $data['articles'][$category['id']] = $this->faq_model->get_additional_articles($category, $data['articles'][$category['id']]);
+      }
+
+      foreach ($data['categories'] as $key => $value) {
+        $n = count($data['articles'][$value['id']]);
+        $data['categories'][$key]['n'] = $n;
+        if ($n == 0) {
+          unset($data['categories'][$key]);
+        }
       }
 
       //Meta
