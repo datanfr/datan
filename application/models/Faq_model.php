@@ -2,8 +2,8 @@
   class Faq_model extends CI_Model{
     public function __construct(){
       $this->load->database();
+      $this->load->model('stats_model');
     }
-
 
     public function get_articles($id = NULL, $state = NULL) {
       $this->db->join('faq_categories fc', 'fc.id = fp.category', 'left');
@@ -19,6 +19,21 @@
 
       $query = $this->db->get('faq_posts fp');
       return $query->result_array();
+    }
+
+    public function change_variables($text){
+      // Variables
+      $variables['ageMean'] = round($this->stats_model->get_age_mean(legislature_current()));
+
+      // Loop through text
+      $text = explode(' ', $text);
+      foreach ($text as $key => $value) {
+        if (substr($value, 0, 2) === '[[') {
+          $replace = array('[', ']');
+          $text[$key] = $variables[str_replace($replace, '', $value)];
+        }
+      }
+      return implode(' ', $text);
     }
 
     public function get_article($id){

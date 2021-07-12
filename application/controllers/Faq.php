@@ -9,6 +9,9 @@
       $data['categories'] = $this->faq_model->get_categories_n();
       foreach ($data['categories'] as $category) {
         $data['articles'][$category['id']] = $this->faq_model->get_articles($category['id'], 'published');
+        foreach ($data['articles'][$category['id']] as $key => $value) {
+          $data['articles'][$category['id']][$key]['text'] = $this->faq_model->change_variables($value['text']);
+        }
       }
 
       //Meta
