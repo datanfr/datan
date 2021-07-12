@@ -65,12 +65,15 @@
         $data['title_meta'] = 'Datan : Se connecter';
         $this->form_validation->set_rules('username', 'Username', 'required');
         $this->form_validation->set_rules('password', 'Password', 'required');
+        echo $this->session->userdata('attempt');
+        //$this->session->set_tempdata('penalty', false);
+        //$this->session->set_userdata('attempt', 0);
 
         // If penalty
-        if ($this->session->tempdata('penalty')) {
+        if ($this->session->tempdata('penalty') === true) {
           $this->load->view('templates/header_no_navbar', $data);
           $this->load->view('users/blocked');
-          $this->load->view('templates/footer_no_navbar');
+          //$this->load->view('templates/footer_no_navbar');
         } else {
 
           if ($this->form_validation->run() === FALSE) {
@@ -86,13 +89,14 @@
             $this->load->view('users/login', $data);
             $this->load->view('templates/footer_no_navbar');
 
-          } else {
+          } elseif (!($this->session->flashdata('login_failed'))) {
             $username = $this->input->post('username');
             $password = $this->input->post('password');
             $user = $this->user_model->login($username);
 
             // Test captcha
-            if ($data['captcha']) {
+            if ($this->input->post('captcha') !== null) {
+              echo "yes1";
               $inputCaptcha = $this->input->post('captcha');
               $sessCaptcha = $this->session->userdata('captchaCode');
               if (!($inputCaptcha === $sessCaptcha)) {
@@ -119,7 +123,7 @@
 
               $this->session->set_userdata($user_data);
               $this->session->set_userdata('attempt', 0);
-              redirect('/admin');
+              redirect('admin');
             } else {
               $attempt = $this->session->userdata('attempt');
               $attempt++;
@@ -130,6 +134,8 @@
               $this->session->set_flashdata("login_failed", "L'identifiant ou le mot de passe sont erronés. Veuillez réessayer.");
               redirect('login');
             }
+
+
           }
         }
       }
