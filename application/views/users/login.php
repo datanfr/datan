@@ -19,8 +19,13 @@
               S'INSCRIRE
             </a>
           </div>
-          <div class="row mt-5 d-flex justify-content-center login_form">
+          <div class="row mt-5 d-flex flex-column justify-content-center login_form">
             <h1 class="text-center my-4"><?= $title ?></h1>
+            <?php if ($this->session->flashdata('login_failed')): ?>
+              <div class="alert alert-danger mb-4 text-center" role="alert">
+                <?= ($this->session->flashdata('login_failed')) ?>
+              </div>
+            <?php endif; ?>
             <div class="form-group">
               <input type="text" name="username" class="form-control" placeholder="Pseudo ou Email" required autofocus>
             </div>

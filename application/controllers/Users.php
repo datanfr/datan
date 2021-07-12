@@ -87,7 +87,7 @@
             //$this->session->set_flashdata('user_loggedin', 'Vous êtes maintenant connecté');
             redirect('/admin');
           } else {
-            //$this->session->set_flashdata('login_failed', 'La connexion a échoué');
+            $this->session->set_flashdata('login_failed', 'La connexion a échouée. Veuillez réessayer.');
             redirect('login');
           }
         }
