@@ -32,6 +32,9 @@
             <div class="form-group">
               <input type="password" name="password" class="form-control" placeholder="Mot de passe" required autofocus>
             </div>
+            <?php if ($captcha): ?>
+              <?php $this->view('captcha/index') ?>
+            <?php endif; ?>
             <button type="submit" class="btn btn-primary btn-block">Se connecter</button>
             <p class="mt-4">Pas encore de compte sur Datan ? <a href="<?= base_url(); ?>register">S'incrire</a></p>
           </div>
