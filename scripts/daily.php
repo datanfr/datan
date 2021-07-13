@@ -2702,7 +2702,7 @@ class Script
       LEFT JOIN groupes_stats gs ON gs.organeRef = o.uid
       LEFT JOIN groupes_effectif ge ON ge.organeRef = o.uid
       LEFT JOIN class_groups class ON class.organeRef = o.uid
-      WHERE o.coteType = "GP" AND o.dateFin IS NULL
+      WHERE o.coteType = 'GP' AND o.dateFin IS NULL
       ";
 
       $this->opendata($query, "groupes_active.csv", "60ed57a9f0c7c3a1eb29733f", "4612d596-9a78-4ec6-b60c-ccc1ee11f8c0");
