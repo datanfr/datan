@@ -30,6 +30,9 @@
             <li>
               <a href="https://www.data.gouv.fr/fr/datasets/deputes-actifs-de-lassemblee-nationale-informations-et-statistiques/" target="_blank" rel="nofollow noopener">Députés actifs de l'Assemblée nationale - Informations et statistiques</a>
             </li>
+            <li>
+              <a href="https://www.data.gouv.fr/fr/datasets/groupes-politiques-actifs-de-lassemblee-nationale-informations-et-statistiques/" target="_blank" rel="nofollow noopener">Groupes actifs de l'Assemblée nationale - Informations et statistiques</a>
+            </li>
           </ul>
           <h2 id="participation" class="anchor">La participation aux votes</h2>
           <p>
