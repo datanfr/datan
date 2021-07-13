@@ -147,7 +147,7 @@
       if ($url == "deputes-age") {
         // Data
         $data['ageMean'] = $this->stats_model->get_age_mean(legislature_current());
-        $data['ageMean'] = round($data['ageMean']['mean']);
+        $data['ageMean'] = round($data['ageMean']);
         $data['ageMeanPop'] = round(meanAgeFrance());
         $data['ageDiff'] = $data['ageMean'] - $data['ageMeanPop'];
         $data['ageDiffStr'] = $this->functions_datan->int2str($data['ageDiff']);
