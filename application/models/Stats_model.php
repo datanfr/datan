@@ -27,9 +27,8 @@
           WHERE d.legislature = ? AND d.dateFin IS NOT NULL
         ) A
       ';
-      $query = $this->db->query($sql, $legislature);
-
-      return $query->row_array();
+      $result = $this->db->query($sql, $legislature)->row_array();
+      return $result['mean'];
     }
 
     public function get_groups_women(){

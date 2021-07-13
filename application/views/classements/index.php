@@ -36,7 +36,7 @@
           <div class="card">
             <div class="card-body">
               <h3>Les plus âgés ? Les plus jeunes ?</h3>
-              <p>L'âge moyen des députés est de <b><?= $age_mean['mean'] ?> ans</b>. Découvrez dans ce tableau les trois députés les plus âgés et les trois députés les plus jeunes.</p>
+              <p>L'âge moyen des députés est de <b><?= $age_mean ?> ans</b>. Découvrez dans ce tableau les trois députés les plus âgés et les trois députés les plus jeunes.</p>
               <div class="table_ranking mt-4">
                 <table class="table table-striped">
                   <thead>
