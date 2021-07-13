@@ -2761,6 +2761,5 @@ $script->classLoyauteSix();
 $script->deputeAccordCleaned();
 $script->historyMpsAverage();
 $script->historyPerMpsAverage();
-$script->createCsvFile();
 $script->opendata_activeMPs();
 $script->opendata_activeGroupes();
