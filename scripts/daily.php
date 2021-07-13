@@ -38,6 +38,57 @@ class Script
         echo ("Script is over ! It took: " . round($exec_time, 2) . " seconds.\n");
     }
 
+    private function opendata($query, $csv_filename, $dataset, $resource)
+    {
+      echo "createCsvFile starting = ". $csv_filename ." \n";
+
+      // query to get data from database
+      $query = $this->bdd->query($query);
+
+      // Fetch the result
+      $results = $query->fetchAll(PDO::FETCH_ASSOC);
+
+      // Create line with field names
+      $fields = [];
+      foreach ($results[0] as $key => $value) {
+          $fields[] = $key;
+      }
+
+      // Export the data
+      $dir = __DIR__ . "/../assets/opendata/";
+      $fp = fopen($dir . $csv_filename, "w");
+
+      // Print the header
+      fputcsv($fp, $fields);
+
+      // Create new line with results
+      foreach ($results as $key => $result) {
+          fputcsv($fp, $result);
+      }
+
+      // CLose the file
+      fclose($fp);
+      $api = 'https://www.data.gouv.fr/api/1';
+      $headers = [
+          'X-API-KEY: '. getenv('API_GOUV')
+      ];
+      $url = $api.'/datasets/'.$dataset. '/resources/'.$resource.'/upload/';
+      $cFile = curl_file_create($dir . $csv_filename, 'text/csv', 'deputes-15.csv');
+      $post = array('file' => $cFile);
+      $ch = curl_init();
+      curl_setopt($ch, CURLOPT_URL, $url);
+      curl_setopt($ch, CURLOPT_POST, 1);
+      curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+      curl_setopt($ch, CURLOPT_POSTFIELDS, $post);
+      if(curl_exec($ch)){
+          echo $csv_filename . " uploaded to gouv.fr\n";
+      }
+      else {
+          echo $csv_filename . " not uploaded, something went wrong !\n";
+      }
+      curl_close($ch);
+    }
+
     private function insertAll($table, $fields, $datas)
     {
         if (count($datas) > 0) {
@@ -2588,93 +2639,9 @@ class Script
 
     public function createCsvFile()
     {
-        echo "createCsvFile starting \n";
-        // filename for export
-        $csv_filename = 'deputes_15.csv';
-
-        // query to get data from database
-        $query = $this->bdd->query('
-          SELECT
-            da.mpId AS id,
-            da.legislature,
-            da.civ,
-            da.nameLast AS nom,
-            da.nameFirst AS prenom,
-            d.birthDate AS naissance,
-            da.age,
-            da.libelle AS groupe,
-            da.libelleAbrev AS groupeAbrev,
-            da.departementNom,
-            da.departementCode,
-            da.circo,
-            da.datePriseFonction,
-            da.job,
-            dc.mailAn AS mail,
-            dc.twitter,
-            dc.facebook,
-            dc.website,
-            h.mandatesN AS nombreMandats,
-            h.lengthEdited AS experienceDepute,
-            cp.score AS scoreParticipation,
-            cpc.score AS scoreParticipationSpecialite,
-            cl.score AS scoreLoyaute,
-            cm.score AS scoreMajorite,
-            da.dateMaj
-          FROM deputes_last da
-          LEFT JOIN deputes d ON d.mpId = da.mpId
-          LEFT JOIN deputes_contacts dc ON dc.mpId = da.mpId
-          LEFT JOIN history_per_mps_average h ON da.mpId = h.mpId
-          LEFT JOIN class_participation cp ON da.mpId = cp.mpId AND da.legislature = cp.legislature
-          LEFT JOIN class_participation_commission cpc ON da.mpId = cpc.mpId AND da.legislature = cpc.legislature
-          LEFT JOIN class_loyaute cl ON da.mpId = cl.mpId AND da.legislature = cl.legislature
-          LEFT JOIN class_majorite cm ON da.mpId = cm.mpId AND da.legislature = cm.legislature
-          WHERE da.active
-        ');
-
-        // Fetch the result
-        $results = $query->fetchAll(PDO::FETCH_ASSOC);
-
-        // Create line with field names
-        $fields = [];
-        foreach ($results[0] as $key => $value) {
-            $fields[] = $key;
-        }
-
-        // Export the data
-        $dir = __DIR__ . "/../assets/opendata/";
-        $fp = fopen($dir . $csv_filename, "w");
-
-        // Print the header
-        fputcsv($fp, $fields);
-
-        // Create new line with results
-        foreach ($results as $key => $result) {
-            fputcsv($fp, $result);
-        }
-
-        // CLose the file
-        fclose($fp);
-        $api = 'https://www.data.gouv.fr/api/1';
-        $dataset = '5fc8b732d30fbf1ed6648aab';
-        $resource = '092bd7bb-1543-405b-b53c-932ebb49bb8e';
-        $headers = [
-            'X-API-KEY: '. getenv('API_GOUV')
-        ];
-        $url = $api.'/datasets/'.$dataset. '/resources/'.$resource.'/upload/';
-        $cFile = curl_file_create($dir . $csv_filename, 'text/csv', 'deputes-15.csv');
-        $post = array('file' => $cFile);
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_POST, 1);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $post);
-        if(curl_exec($ch)){
-            echo $csv_filename . " uploaded to gouv.fr\n";
-        }
-        else {
-            echo $csv_filename . " not uploaded, something went wrong !\n";
-        }
-        curl_close($ch);
+      //csv_filename = deputes_15.csv
+      // $dataset = '5fc8b732d30fbf1ed6648aab';
+      // $resource = '092bd7bb-1543-405b-b53c-932ebb49bb8e';
     }
 }
 
@@ -2718,3 +2685,81 @@ $script->deputeAccordCleaned();
 $script->historyMpsAverage();
 $script->historyPerMpsAverage();
 $script->createCsvFile();
+
+// Open data
+// 1. Active MPs
+$query = "SELECT
+	da.mpId AS id,
+    da.legislature,
+    da.civ,
+    da.nameLast AS nom,
+    da.nameFirst AS prenom,
+    d.birthDate AS naissance,
+    da.age,
+    da.libelle AS groupe,
+    da.libelleAbrev AS groupeAbrev,
+    da.departementNom,
+    da.departementCode,
+    da.circo,
+    da.datePriseFonction,
+    da.job,
+    dc.mailAn AS mail,
+    dc.twitter,
+    dc.facebook,
+    dc.website,
+    h.mandatesN AS nombreMandats,
+    h.lengthEdited AS experienceDepute,
+    cp.score AS scoreParticipation,
+    cpc.score AS scoreParticipationSpecialite,
+    cl.score AS scoreLoyaute,
+    cm.score AS scoreMajorite,
+    da.dateMaj
+  FROM deputes_last da
+  LEFT JOIN deputes d ON d.mpId = da.mpId
+  LEFT JOIN deputes_contacts dc ON dc.mpId = da.mpId
+  LEFT JOIN history_per_mps_average h ON da.mpId = h.mpId
+  LEFT JOIN class_participation cp ON da.mpId = cp.mpId AND da.legislature = cp.legislature
+  LEFT JOIN class_participation_commission cpc ON da.mpId = cpc.mpId AND da.legislature = cpc.legislature
+  LEFT JOIN class_loyaute cl ON da.mpId = cl.mpId AND da.legislature = cl.legislature
+  LEFT JOIN class_majorite cm ON da.mpId = cm.mpId AND da.legislature = cm.legislature
+  WHERE da.active";
+$script->opendata($query, "deputes_active.csv", "5fc8b732d30fbf1ed6648aab", "092bd7bb-1543-405b-b53c-932ebb49bb8e");
+
+// 2. Active groupes politiques
+$query = "SELECT
+	da.mpId AS id,
+    da.legislature,
+    da.civ,
+    da.nameLast AS nom,
+    da.nameFirst AS prenom,
+    d.birthDate AS naissance,
+    da.age,
+    da.libelle AS groupe,
+    da.libelleAbrev AS groupeAbrev,
+    da.departementNom,
+    da.departementCode,
+    da.circo,
+    da.datePriseFonction,
+    da.job,
+    dc.mailAn AS mail,
+    dc.twitter,
+    dc.facebook,
+    dc.website,
+    h.mandatesN AS nombreMandats,
+    h.lengthEdited AS experienceDepute,
+    cp.score AS scoreParticipation,
+    cpc.score AS scoreParticipationSpecialite,
+    cl.score AS scoreLoyaute,
+    cm.score AS scoreMajorite,
+    da.dateMaj
+  FROM deputes_last da
+  LEFT JOIN deputes d ON d.mpId = da.mpId
+  LEFT JOIN deputes_contacts dc ON dc.mpId = da.mpId
+  LEFT JOIN history_per_mps_average h ON da.mpId = h.mpId
+  LEFT JOIN class_participation cp ON da.mpId = cp.mpId AND da.legislature = cp.legislature
+  LEFT JOIN class_participation_commission cpc ON da.mpId = cpc.mpId AND da.legislature = cpc.legislature
+  LEFT JOIN class_loyaute cl ON da.mpId = cl.mpId AND da.legislature = cl.legislature
+  LEFT JOIN class_majorite cm ON da.mpId = cm.mpId AND da.legislature = cm.legislature
+  WHERE da.active
+";
+$script->opendata($query, "groupes_active.csv", "60ed57a9f0c7c3a1eb29733f", "4612d596-9a78-4ec6-b60c-ccc1ee11f8c0");
