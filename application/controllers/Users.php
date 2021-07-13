@@ -65,7 +65,7 @@
         $data['title_meta'] = 'Datan : Se connecter';
         $this->form_validation->set_rules('username', 'Username', 'required');
         $this->form_validation->set_rules('password', 'Password', 'required');
-        echo $this->session->userdata('attempt');
+        // echo $this->session->userdata('attempt');
         // $this->session->set_tempdata('penalty', false);
         // $this->session->set_userdata('attempt', 0);
 
@@ -130,7 +130,6 @@
                 $this->session->set_tempdata('penalty', true, 300);
               }
               $this->session->set_flashdata("login_failed", "L'identifiant ou le mot de passe sont erronés. Veuillez réessayer.");
-
               redirect('login');
             }
 
