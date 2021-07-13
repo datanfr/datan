@@ -21,12 +21,8 @@
     <!--<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Heebo"> NOT USED -->
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.0/css/all.css" integrity="sha384-lKuwvrZot6UHsBSfcMvOkWwlCMgc0TaWr+30HWe3a4ltaBwTZhyTEggF5tJv8tbt" crossorigin="anonymous">
     <link rel="stylesheet" href="<?= asset_url(); ?>css/circle.css">
-    <link rel="stylesheet" type="text/css" href="<?= asset_url(); ?>css/Chart.min.css">
 
     <!-- JS -->
-    <script src="<?= asset_url(); ?>js/Chart.min.js"></script>
-    <script src="https://rawgit.com/chartjs/chartjs-plugin-annotation/master/chartjs-plugin-annotation.js"></script> <!-- can be deleted? -->
-    <script src="<?= asset_url(); ?>js/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
 
     <style media="screen">
       body {

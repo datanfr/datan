@@ -17,6 +17,7 @@ $primary_rgb: rgb(0, 183, 148);
 $adopted: $vert;
 $abstention: #FFBA49;
 $rejected: #C5283D;
+
 // BREADCRUMB
 $breadcrumb-divider: quote(">");
 $breadcrumb-border-radius: 6px;
@@ -34,7 +35,6 @@ $h2-font-size:                1.8em;
 $h3-font-size:                1.6em;
 $h4-font-size:                1.4em;
 $h5-font-size:                1.2em;
-$h6-font-size-text:           1.1em;
 $h6-font-size:                1em;
 $h7-font-size:                0.85em;
 // LINKS
@@ -45,24 +45,24 @@ $navbar-padding-x: 15px;
 // CAROUSEL
 $carousel-caption-width: 100%;
 .modal-content {
-    width:100%;
-  }
-  
+  width:100%;
+}
+
+.modal-dialog-centered {
+  display:-webkit-box;
+  display:-ms-flexbox;
+  display:flex;
+  -webkit-box-align:center;
+  -ms-flex-align:center;
+  align-items:center;
+  min-height:calc(100% - (.5rem * 2));
+}
+
+@media (min-width: 576px) {
   .modal-dialog-centered {
-    display:-webkit-box;
-    display:-ms-flexbox;
-    display:flex;
-    -webkit-box-align:center;
-    -ms-flex-align:center;
-    align-items:center;
-    min-height:calc(100% - (.5rem * 2));
+    min-height:calc(100% - (1.75rem * 2));
   }
-  
-  @media (min-width: 576px) {
-    .modal-dialog-centered {
-      min-height:calc(100% - (1.75rem * 2));
-    }
-  }
+}
 /*
 
 ################
@@ -95,3 +95,4 @@ $carousel-caption-width: 100%;
 @import "node_modules/bootstrap/scss/badge";
 @import "node_modules/bootstrap/scss/list-group";
 @import "node_modules/bootstrap/scss/modal";
+@import "node_modules/bootstrap/scss/alert";

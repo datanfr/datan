@@ -1,5 +1,10 @@
 <?php
-  class Users extends CI_Controller{
+  class Users extends CI_Controller {
+
+    public function __construct(){
+      parent::__construct();
+      $this->load->model('captcha_model');
+    }
 
     // REGISTER //
     public function register(){
@@ -51,7 +56,6 @@
       }
     }
 
-
     // LOGIN //
     public function login(){
       if ($this->session->userdata('logged_in')) {
@@ -61,34 +65,75 @@
         $data['title_meta'] = 'Datan : Se connecter';
         $this->form_validation->set_rules('username', 'Username', 'required');
         $this->form_validation->set_rules('password', 'Password', 'required');
+        // echo $this->session->userdata('attempt');
+        // $this->session->set_tempdata('penalty', false);
+        // $this->session->set_userdata('attempt', 0);
 
-        if ($this->form_validation->run() === FALSE) {
+        // If penalty
+        if ($this->session->tempdata('penalty') === true) {
           $this->load->view('templates/header_no_navbar', $data);
-          $this->load->view('users/login', $data);
+          $this->load->view('users/blocked');
           $this->load->view('templates/footer_no_navbar');
         } else {
-          // Get the Username
-          $username = $this->input->post('username');
-          // Get the password
-          $password = $this->input->post('password');
-          // Login user
-          $user = $this->user_model->login($username);
 
-          if (password_verify($password, $user->password)) {
-            // Create session
-            $user_data = array(
-              'user_id' => $user->id,
-              'username' => $username,
-              'logged_in' => true,
-              'type' => $user->type
-            );
+          if ($this->form_validation->run() === FALSE) {
 
-            $this->session->set_userdata($user_data);
-            //$this->session->set_flashdata('user_loggedin', 'Vous êtes maintenant connecté');
-            redirect('/admin');
-          } else {
-            //$this->session->set_flashdata('login_failed', 'La connexion a échoué');
-            redirect('login');
+            if ($this->session->userdata('attempt') >= 3) {
+              $data['captcha'] = TRUE;
+              $data['captchaImg'] = $this->captcha_model->generateCaptcha();
+            } else {
+              $data['captcha'] = FALSE;
+            }
+
+            $this->load->view('templates/header_no_navbar', $data);
+            $this->load->view('users/login', $data);
+            $this->load->view('templates/footer_no_navbar');
+
+          } elseif (!($this->session->flashdata('login_failed'))) {
+            $username = $this->input->post('username');
+            $password = $this->input->post('password');
+            $user = $this->user_model->login($username);
+
+            // Test captcha
+            if ($this->input->post('captcha') !== null) {
+              $inputCaptcha = $this->input->post('captcha');
+              $sessCaptcha = $this->session->userdata('captchaCode');
+              if (!($inputCaptcha === $sessCaptcha)) {
+                $attempt = $this->session->userdata('attempt');
+                $attempt++;
+                $this->session->set_userdata('attempt', $attempt);
+                if ($this->session->userdata('attempt') >= 5) {
+                  $this->session->set_tempdata('penalty', true, 300);
+                }
+                $this->session->set_flashdata("login_failed", "Le code captcha est erroné. Veuillez réessayer.");
+                redirect('login');
+              }
+            }
+
+            // Test password
+            if (password_verify($password, $user->password)) {
+              // Create session
+              $user_data = array(
+                'user_id' => $user->id,
+                'username' => $username,
+                'logged_in' => true,
+                'type' => $user->type
+              );
+              $this->session->set_userdata($user_data);
+              $this->session->set_userdata('attempt', 0);
+              redirect('admin');
+            } else {
+              $attempt = $this->session->userdata('attempt');
+              $attempt++;
+              $this->session->set_userdata('attempt', $attempt);
+              if ($this->session->userdata('attempt') >= 5) {
+                $this->session->set_tempdata('penalty', true, 300);
+              }
+              $this->session->set_flashdata("login_failed", "L'identifiant ou le mot de passe sont erronés. Veuillez réessayer.");
+              redirect('login');
+            }
+
+
           }
         }
       }
@@ -101,10 +146,10 @@
       $this->session->unset_userdata('user_id');
       $this->session->unset_userdata('username');
       $this->session->unset_userdata('type');
+      $this->session->unset_userdata('attempt');
 
       // Set message
       redirect();
     }
 
   }
-?>
