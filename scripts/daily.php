@@ -2637,11 +2637,88 @@ class Script
         ');
     }
 
-    public function createCsvFile()
+    public function opendata_activeMPs()
     {
-      //csv_filename = deputes_15.csv
-      // $dataset = '5fc8b732d30fbf1ed6648aab';
-      // $resource = '092bd7bb-1543-405b-b53c-932ebb49bb8e';
+      $query = "SELECT
+      	da.mpId AS id,
+          da.legislature,
+          da.civ,
+          da.nameLast AS nom,
+          da.nameFirst AS prenom,
+          d.birthDate AS naissance,
+          da.age,
+          da.libelle AS groupe,
+          da.libelleAbrev AS groupeAbrev,
+          da.departementNom,
+          da.departementCode,
+          da.circo,
+          da.datePriseFonction,
+          da.job,
+          dc.mailAn AS mail,
+          dc.twitter,
+          dc.facebook,
+          dc.website,
+          h.mandatesN AS nombreMandats,
+          h.lengthEdited AS experienceDepute,
+          cp.score AS scoreParticipation,
+          cpc.score AS scoreParticipationSpecialite,
+          cl.score AS scoreLoyaute,
+          cm.score AS scoreMajorite,
+          da.dateMaj
+        FROM deputes_last da
+        LEFT JOIN deputes d ON d.mpId = da.mpId
+        LEFT JOIN deputes_contacts dc ON dc.mpId = da.mpId
+        LEFT JOIN history_per_mps_average h ON da.mpId = h.mpId
+        LEFT JOIN class_participation cp ON da.mpId = cp.mpId AND da.legislature = cp.legislature
+        LEFT JOIN class_participation_commission cpc ON da.mpId = cpc.mpId AND da.legislature = cpc.legislature
+        LEFT JOIN class_loyaute cl ON da.mpId = cl.mpId AND da.legislature = cl.legislature
+        LEFT JOIN class_majorite cm ON da.mpId = cm.mpId AND da.legislature = cm.legislature
+        WHERE da.active
+      ";
+
+      $this->opendata($query, "deputes_active.csv", "5fc8b732d30fbf1ed6648aab", "092bd7bb-1543-405b-b53c-932ebb49bb8e");
+    }
+
+    public function opendata_activeGroupes()
+    {
+      $query = "SELECT
+      	da.mpId AS id,
+          da.legislature,
+          da.civ,
+          da.nameLast AS nom,
+          da.nameFirst AS prenom,
+          d.birthDate AS naissance,
+          da.age,
+          da.libelle AS groupe,
+          da.libelleAbrev AS groupeAbrev,
+          da.departementNom,
+          da.departementCode,
+          da.circo,
+          da.datePriseFonction,
+          da.job,
+          dc.mailAn AS mail,
+          dc.twitter,
+          dc.facebook,
+          dc.website,
+          h.mandatesN AS nombreMandats,
+          h.lengthEdited AS experienceDepute,
+          cp.score AS scoreParticipation,
+          cpc.score AS scoreParticipationSpecialite,
+          cl.score AS scoreLoyaute,
+          cm.score AS scoreMajorite,
+          da.dateMaj
+        FROM deputes_last da
+        LEFT JOIN deputes d ON d.mpId = da.mpId
+        LEFT JOIN deputes_contacts dc ON dc.mpId = da.mpId
+        LEFT JOIN history_per_mps_average h ON da.mpId = h.mpId
+        LEFT JOIN class_participation cp ON da.mpId = cp.mpId AND da.legislature = cp.legislature
+        LEFT JOIN class_participation_commission cpc ON da.mpId = cpc.mpId AND da.legislature = cpc.legislature
+        LEFT JOIN class_loyaute cl ON da.mpId = cl.mpId AND da.legislature = cl.legislature
+        LEFT JOIN class_majorite cm ON da.mpId = cm.mpId AND da.legislature = cm.legislature
+        WHERE da.active
+      ";
+
+      $this->opendata($query, "groupes_active.csv", "60ed57a9f0c7c3a1eb29733f", "4612d596-9a78-4ec6-b60c-ccc1ee11f8c0");
     }
 }
 
@@ -2685,81 +2762,5 @@ $script->deputeAccordCleaned();
 $script->historyMpsAverage();
 $script->historyPerMpsAverage();
 $script->createCsvFile();
-
-// Open data
-// 1. Active MPs
-$query = "SELECT
-	da.mpId AS id,
-    da.legislature,
-    da.civ,
-    da.nameLast AS nom,
-    da.nameFirst AS prenom,
-    d.birthDate AS naissance,
-    da.age,
-    da.libelle AS groupe,
-    da.libelleAbrev AS groupeAbrev,
-    da.departementNom,
-    da.departementCode,
-    da.circo,
-    da.datePriseFonction,
-    da.job,
-    dc.mailAn AS mail,
-    dc.twitter,
-    dc.facebook,
-    dc.website,
-    h.mandatesN AS nombreMandats,
-    h.lengthEdited AS experienceDepute,
-    cp.score AS scoreParticipation,
-    cpc.score AS scoreParticipationSpecialite,
-    cl.score AS scoreLoyaute,
-    cm.score AS scoreMajorite,
-    da.dateMaj
-  FROM deputes_last da
-  LEFT JOIN deputes d ON d.mpId = da.mpId
-  LEFT JOIN deputes_contacts dc ON dc.mpId = da.mpId
-  LEFT JOIN history_per_mps_average h ON da.mpId = h.mpId
-  LEFT JOIN class_participation cp ON da.mpId = cp.mpId AND da.legislature = cp.legislature
-  LEFT JOIN class_participation_commission cpc ON da.mpId = cpc.mpId AND da.legislature = cpc.legislature
-  LEFT JOIN class_loyaute cl ON da.mpId = cl.mpId AND da.legislature = cl.legislature
-  LEFT JOIN class_majorite cm ON da.mpId = cm.mpId AND da.legislature = cm.legislature
-  WHERE da.active";
-$script->opendata($query, "deputes_active.csv", "5fc8b732d30fbf1ed6648aab", "092bd7bb-1543-405b-b53c-932ebb49bb8e");
-
-// 2. Active groupes politiques
-$query = "SELECT
-	da.mpId AS id,
-    da.legislature,
-    da.civ,
-    da.nameLast AS nom,
-    da.nameFirst AS prenom,
-    d.birthDate AS naissance,
-    da.age,
-    da.libelle AS groupe,
-    da.libelleAbrev AS groupeAbrev,
-    da.departementNom,
-    da.departementCode,
-    da.circo,
-    da.datePriseFonction,
-    da.job,
-    dc.mailAn AS mail,
-    dc.twitter,
-    dc.facebook,
-    dc.website,
-    h.mandatesN AS nombreMandats,
-    h.lengthEdited AS experienceDepute,
-    cp.score AS scoreParticipation,
-    cpc.score AS scoreParticipationSpecialite,
-    cl.score AS scoreLoyaute,
-    cm.score AS scoreMajorite,
-    da.dateMaj
-  FROM deputes_last da
-  LEFT JOIN deputes d ON d.mpId = da.mpId
-  LEFT JOIN deputes_contacts dc ON dc.mpId = da.mpId
-  LEFT JOIN history_per_mps_average h ON da.mpId = h.mpId
-  LEFT JOIN class_participation cp ON da.mpId = cp.mpId AND da.legislature = cp.legislature
-  LEFT JOIN class_participation_commission cpc ON da.mpId = cpc.mpId AND da.legislature = cpc.legislature
-  LEFT JOIN class_loyaute cl ON da.mpId = cl.mpId AND da.legislature = cl.legislature
-  LEFT JOIN class_majorite cm ON da.mpId = cm.mpId AND da.legislature = cm.legislature
-  WHERE da.active
-";
-$script->opendata($query, "groupes_active.csv", "60ed57a9f0c7c3a1eb29733f", "4612d596-9a78-4ec6-b60c-ccc1ee11f8c0");
+$script->opendata_activeMPs();
+$script->opendata_activeGroupes();
