@@ -66,14 +66,14 @@
         $this->form_validation->set_rules('username', 'Username', 'required');
         $this->form_validation->set_rules('password', 'Password', 'required');
         echo $this->session->userdata('attempt');
-        //$this->session->set_tempdata('penalty', false);
-        //$this->session->set_userdata('attempt', 0);
+        // $this->session->set_tempdata('penalty', false);
+        // $this->session->set_userdata('attempt', 0);
 
         // If penalty
         if ($this->session->tempdata('penalty') === true) {
           $this->load->view('templates/header_no_navbar', $data);
           $this->load->view('users/blocked');
-          //$this->load->view('templates/footer_no_navbar');
+          $this->load->view('templates/footer_no_navbar');
         } else {
 
           if ($this->form_validation->run() === FALSE) {
@@ -96,7 +96,6 @@
 
             // Test captcha
             if ($this->input->post('captcha') !== null) {
-              echo "yes1";
               $inputCaptcha = $this->input->post('captcha');
               $sessCaptcha = $this->session->userdata('captchaCode');
               if (!($inputCaptcha === $sessCaptcha)) {
@@ -120,7 +119,6 @@
                 'logged_in' => true,
                 'type' => $user->type
               );
-
               $this->session->set_userdata($user_data);
               $this->session->set_userdata('attempt', 0);
               redirect('admin');
@@ -132,6 +130,7 @@
                 $this->session->set_tempdata('penalty', true, 300);
               }
               $this->session->set_flashdata("login_failed", "L'identifiant ou le mot de passe sont erronés. Veuillez réessayer.");
+
               redirect('login');
             }
 
@@ -155,4 +154,3 @@
     }
 
   }
-?>
