@@ -73,7 +73,7 @@ class Script
           'X-API-KEY: '. getenv('API_GOUV')
       ];
       $url = $api.'/datasets/'.$dataset. '/resources/'.$resource.'/upload/';
-      $cFile = curl_file_create($dir . $csv_filename, 'text/csv', 'deputes-15.csv');
+      $cFile = curl_file_create($dir . $csv_filename, 'text/csv', $csv_filename);
       $post = array('file' => $cFile);
       $ch = curl_init();
       curl_setopt($ch, CURLOPT_URL, $url);
