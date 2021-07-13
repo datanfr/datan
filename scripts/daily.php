@@ -2594,42 +2594,42 @@ class Script
 
         // query to get data from database
         $query = $this->bdd->query('
-                SELECT
-                    da.mpId AS id,
-                    da.civ,
-                    da.nameLast AS nom,
-                    da.nameFirst AS prenom,
-                    d.birthDate AS naissance,
-                    da.age,
-                    da.libelle AS groupe,
-                    da.libelleAbrev AS groupeAbrev,
-                    da.departementNom,
-                    da.departementCode,
-                    da.circo,
-                    da.datePriseFonction,
-                    d.job,
-                    dc.mailAn AS mail,
-                    dc.twitter,
-                    dc.facebook,
-                    dc.website,
-                    h.mandatesN AS nombreMandats,
-                    h.lengthEdited AS experienceDepute,
-                    cp.score AS scoreParticipation,
-                    cpm.score AS scoreParticipationSpecialite,
-                    cl.score AS scoreLoyaute,
-                    cm.score AS scoreMajorite,
-                    CASE WHEN da.dateFin IS NULL THEN 1 ELSE 0 END AS "active",
-                    da.dateMaj
-                FROM deputes_all da
-                LEFT JOIN class_participation cp ON da.mpId = cp.mpId
-                LEFT JOIN class_participation_commission cpm ON da.mpId = cpm.mpId
-                LEFT JOIN class_loyaute cl ON da.mpId = cl.mpId
-                LEFT JOIN class_majorite cm ON da.mpId = cm.mpId
-                LEFT JOIN deputes_contacts dc ON da.mpId = dc.mpId
-                LEFT JOIN history_per_mps_average h ON da.mpId = h.mpId
-                LEFT JOIN deputes d ON da.mpId = d.mpId
-                WHERE da.legislature = 15
-            ');
+          SELECT
+            da.mpId AS id,
+            da.legislature,
+            da.civ,
+            da.nameLast AS nom,
+            da.nameFirst AS prenom,
+            d.birthDate AS naissance,
+            da.age,
+            da.libelle AS groupe,
+            da.libelleAbrev AS groupeAbrev,
+            da.departementNom,
+            da.departementCode,
+            da.circo,
+            da.datePriseFonction,
+            da.job,
+            dc.mailAn AS mail,
+            dc.twitter,
+            dc.facebook,
+            dc.website,
+            h.mandatesN AS nombreMandats,
+            h.lengthEdited AS experienceDepute,
+            cp.score AS scoreParticipation,
+            cpc.score AS scoreParticipationSpecialite,
+            cl.score AS scoreLoyaute,
+            cm.score AS scoreMajorite,
+            da.dateMaj
+          FROM deputes_last da
+          LEFT JOIN deputes d ON d.mpId = da.mpId
+          LEFT JOIN deputes_contacts dc ON dc.mpId = da.mpId
+          LEFT JOIN history_per_mps_average h ON da.mpId = h.mpId
+          LEFT JOIN class_participation cp ON da.mpId = cp.mpId AND da.legislature = cp.legislature
+          LEFT JOIN class_participation_commission cpc ON da.mpId = cpc.mpId AND da.legislature = cpc.legislature
+          LEFT JOIN class_loyaute cl ON da.mpId = cl.mpId AND da.legislature = cl.legislature
+          LEFT JOIN class_majorite cm ON da.mpId = cm.mpId AND da.legislature = cm.legislature
+          WHERE da.active
+        ');
 
         // Fetch the result
         $results = $query->fetchAll(PDO::FETCH_ASSOC);
