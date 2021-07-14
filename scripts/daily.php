@@ -2121,6 +2121,29 @@ class Script
         }
     }
 
+    public function classParticipationSolennels()
+    {
+        echo "classParticipationSolennels starting \n";
+        $this->bdd->query('
+            DROP TABLE IF EXISTS class_participation_solennels;
+            CREATE TABLE class_participation_solennels
+            SELECT A.*,
+            	CASE WHEN da.dateFin IS NULL THEN 1 ELSE 0 END AS active,
+            	curdate() AS dateMaj
+            	FROM
+                (
+            		SELECT v.mpId, v.legislature, ROUND(AVG(v.participation),2) AS score, COUNT(v.participation) AS votesN, ROUND(COUNT(v.participation)/100) AS "index"
+            		FROM votes_participation v
+            		LEFT JOIN votes_info vi ON v.voteNumero = vi.voteNumero AND v.legislature = vi.legislature
+            		WHERE v.participation IS NOT NULL AND vi.codeTypeVote = "SPS"
+            		GROUP BY v.mpId, v.legislature
+            	) A
+            LEFT JOIN deputes_all da ON da.mpId = A.mpId AND da.legislature = A.legislature;
+            ALTER TABLE class_participation_solennels ADD INDEX idx_mpId (mpId);
+            ALTER TABLE class_participation_solennels ADD INDEX idx_active (active);
+        ');
+    }
+
     public function deputeLoyaute()
     {
         echo "deputeLoyaute starting \n";
@@ -2738,6 +2761,7 @@ $script->dossier();
 $script->voteParticipationCommission();
 $script->classParticipation();
 $script->classParticipationCommission();
+$script->classParticipationSolennels();
 $script->deputeLoyaute();
 $script->classLoyaute();
 $script->classMajorite();
