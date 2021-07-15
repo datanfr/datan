@@ -243,9 +243,19 @@
         $data['participationMean'] = $data['participationMean']['mean'];
         $data['participationCommissionMean'] = $this->stats_model->get_mps_participation_commission_mean();
         $data['participationCommissionMean'] = $data['participationCommissionMean']['mean'];
+        $data['mpsSolennels'] = $this->stats_model->get_mps_participation_solennels();
         $data['mps'] = $this->stats_model->get_mps_participation();
         $data['votesN'] = $this->votes_model->get_n_votes();
         $data['mpsCommission'] = $this->stats_model->get_mps_participation_commission();
+        $data['mpActive'] = array_slice($data['mpsSolennels'], 0, 1);
+        $data['mpActive'] = $data['mpActive'][0];
+        $data['mpActive']['name'] = $data['mpActive']['nameFirst']." ".$data['mpActive']['nameLast'];
+        $data['mpActive']['couleurAssociee'] = $this->groupes_model->get_groupe_color(array($data['mpActive']['groupLibelleAbrev'], $data['mpActive']['couleurAssociee']));
+        $data['mpActiveGender'] = $this->depute_edito->gender($data['mpActive']["civ"]);
+        $data['mpInactive'] = end($data['mpsSolennels']);
+        $data['mpInactive']['name'] = $data['mpInactive']['nameFirst']." ".$data['mpInactive']['nameLast'];
+        $data['mpInactive']['couleurAssociee'] = $this->groupes_model->get_groupe_color(array($data['mpInactive']['groupLibelleAbrev'], $data['mpInactive']['couleurAssociee']));
+        $data['mpInactiveGender'] = $this->depute_edito->gender($data['mpInactive']["civ"]);
 
         // Meta
         $data['title_meta'] = "La participation des députés - Assemblée nationale | Datan";

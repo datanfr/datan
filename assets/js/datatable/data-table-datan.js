@@ -114,6 +114,15 @@
       language: french
     });
 
+    $('#table-stats3').DataTable({
+      "paging" : false,
+      "info": false,
+      responsive: {
+        details: false
+      },
+      language: french
+    });
+
     $('#table-stats-origine-sociale').DataTable( {
       "ordering": false,
       "info": false,
