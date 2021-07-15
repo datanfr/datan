@@ -400,22 +400,22 @@
                             <?php else : ?>
                               Quand <?= $gender['pronom'] ?> était en activité à l'Assemblée,
                             <?php endif; ?>
-                            <?= $title ?> a participé à <?= $participation['score'] ?> % des votes ayant un lien avec son domaine de spécialisation.
+                            <?= $title ?> a participé à <?= $participation['score'] ?> % des votes solennels à l'Assemblée nationale.
                           </p>
                           <p>
                             <?= ucfirst($gender['pronom']) ?> <?= $active ? "vote" : "votait" ?> donc <b><?= $edito_participation['phrase'] ?></b> que la moyenne des députés, qui est de <?= $participation['mean'] ?> %.
                           </p>
-                          <p>
-                            Ce score prend en compte les votes éléctroniques en séance publique sur les textes qui ont été examinés dans la commission du député. Ce sont sur ces textes que les élus sont susceptibles d'avoir un intérêt ou une expertise pariculière.
-                          </p>
                         <?php else: ?>
                           <p>
-                            Pendant la <?= $depute['legislature'] ?><sup>e</sup> législature, <?= $title ?> a participé à <?= $participation['score'] ?> % des votes électroniques à l'Assemblée nationale.
+                            Pendant la <?= $depute['legislature'] ?><sup>e</sup> législature, <?= $title ?> a participé à <?= $participation['score'] ?> % des votes solennels à l'Assemblée nationale.
                           </p>
                           <p>
                             <?= ucfirst($gender['pronom']) ?> <?= $active ? "vote" : "votait" ?> donc <b><?= $edito_participation['phrase'] ?></b> que la moyenne des députés, qui était de <?= $participation['mean'] ?> %.
                           </p>
                         <?php endif; ?>
+                        <p>
+                           Les votes solennels sont les votes considérés comme importants pour lesquels les députés connaissent à l'avance le jour et l'heure du vote.
+                        </p>
                       </div>
                     </div>
                   <?php endif; ?>

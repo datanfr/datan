@@ -19,21 +19,16 @@
       $this->db->select('libelle AS groupLibelle, libelleAbrev AS groupLibelleAbrev, CONCAT(departementNom, " (", departementCode, ")") AS cardCenter');
       $this->db->where('legislature', $legislature);
       $this->db->order_by('nameLast ASC, nameFirst ASC');
-      $query = $this->db->get('deputes_all');
-
-      return $query->result_array();
+      return $this->db->get('deputes_all')->result_array();
     }
 
     public function get_deputes_last($legislature){
       $where = array('legislature' => $legislature);
-      $query = $this->db->get_where('deputes_last', $where);
-
-      return $query->result_array();
+      return $this->db->get_where('deputes_last', $where)->result_array();
     }
 
     public function get_infos($id){
-      $query = $this->db->get_where('deputes', array('mpId' => $id), 1);
-      return $query->row_array();
+      return $this->db->get_where('deputes', array('mpId' => $id), 1)->row_array();
     }
 
     public function get_historique($id){
@@ -44,9 +39,7 @@
         WHERE mg.legislature = 15 AND mg.mpId = ?
         ORDER BY mg.dateDebut DESC
       ';
-      $query = $this->db->query($sql, $id);
-
-      return $query->result_array();
+      return $this->db->query($sql, $id)->result_array();
     }
 
     public function get_historique_mandats($id){
@@ -55,9 +48,7 @@
         WHERE mpId = ?
         ORDER BY legislature DESC
       ';
-      $query = $this->db->query($sql, $id);
-
-      return $query->result_array();
+      return $this->db->query($sql, $id)->result_array();
     }
 
     public function get_n_deputes_inactive(){
@@ -73,10 +64,8 @@
       if ($legislature == legislature_current()) {
         $this->db->where('dateFin IS NULL');
       }
-      $query = $this->db->group_by('civ');
-      $query = $this->db->get('deputes_all');
-
-      return $query->result_array();
+      $this->db->group_by('civ');
+      return $this->db->get('deputes_all')->result_array();
     }
 
     public function get_groupes_inactifs(){
@@ -86,27 +75,21 @@
       $this->db->group_by('groupeId');
       $this->db->order_by('libelle', 'ASC');
       $this->db->having('libelle IS NOT NULL');
-      $query = $this->db->get('deputes_all');
-
-      return $query->result_array();
+      return $this->db->get('deputes_all')->result_array();
     }
 
     public function get_depute_by_nameUrl($nameUrl) {
       $where = array(
         'nameUrl' => $nameUrl
       );
-
-      $query = $this->db->get_where('deputes_last', $where, 1);
-      return $query->row_array();
+      return $this->db->get_where('deputes_last', $where, 1)->row_array();
     }
 
     public function get_depute_by_mpId($mpId) {
       $where = array(
         'mpId' => $mpId
       );
-
-      $query = $this->db->get_where('deputes_last', $where, 1);
-      return $query->row_array();
+      return $this->db->get_where('deputes_last', $where, 1)->row_array();
     }
 
     public function get_depute_individual($nameUrl, $dpt){
@@ -124,9 +107,7 @@
         WHERE dl.nameUrl = ? AND dl.dptSlug = ?
         LIMIT 1
       ';
-      $query = $this->db->query($sql, array($nameUrl, $dpt));
-
-      return $query->row_array();
+      return $this->db->query($sql, array($nameUrl, $dpt))->row_array();
     }
 
     public function check_depute_legislature($nameUrl, $legislature){
@@ -155,9 +136,7 @@
         WHERE dl.nameUrl = ? AND dl.dptSlug = ? AND dl.legislature = ?
         LIMIT 1
       ';
-      $query = $this->db->query($sql, array($nameUrl, $dpt, $legislature));
-
-      return $query->row_array();
+      return $this->db->query($sql, array($nameUrl, $dpt, $legislature))->row_array();
     }
 
     public function depute_group_president($depute_uid, $groupe_id){
@@ -166,9 +145,7 @@
         'organeRef' => $groupe_id,
         'preseance' => 1
       );
-      $query = $this->db->get_where('mandat_groupe', $where, 1);
-
-      return $query->row_array();
+      return $this->db->get_where('mandat_groupe', $where, 1)->row_array();
     }
 
     public function get_commission_parlementaire($depute_uid){
@@ -182,9 +159,7 @@
           FROM mandat_secondaire t1
           WHERE t1.mpId = ms.mpId AND typeOrgane = "COMPER" AND legislature = 15
       )';
-      $query = $this->db->query($sql, $depute_uid, 1);
-
-      return $query->row_array();
+      return $this->db->query($sql, $depute_uid, 1)->row_array();
     }
 
     public function get_political_party($depute_uid){
@@ -199,9 +174,7 @@
       $this->db->join('organes o', 'ms.organeRef = o.uid');
       $this->db->where($where);
       $this->db->limit(1);
-      $query = $this->db->get();
-
-      return $query->row_array();
+      return $this->db->get()->row_array();
     }
 
     public function get_election_canceled($depute_uid, $legislature){
@@ -210,8 +183,7 @@
         'datePriseFonction' => "2017-06-21"
       );
       $this->db->select('causeFin, dateFin, date_format(dateFin, "%M %Y") AS dateFinFR');
-      $query = $this->db->get_where('mandat_principal', $where);
-      return $query->row_array();
+      return $this->db->get_where('mandat_principal', $where)->row_array();
     }
 
     public function get_election_result($dpt, $circo, $nom){
@@ -224,9 +196,7 @@
         WHERE dpt = ? AND circo = ? AND elected = 1 AND candidat LIKE "%'.$this->db->escape_like_str($nom).'%"
         LIMIT 1
       ';
-      $query = $this->db->query($sql, array($dpt, $circo));
-
-      return $query->row_array();
+      return $this->db->query($sql, array($dpt, $circo))->row_array();
     }
 
     public function get_election_opponent($dpt, $circo){
@@ -238,9 +208,7 @@
         FROM elect_2017_leg_results
         WHERE dpt = ? AND circo = ? AND elected = 0
       ';
-      $query = $this->db->query($sql, array($dpt, $circo));
-
-      return $query->result_array();
+      return $this->db->query($sql, array($dpt, $circo))->result_array();
     }
 
     public function get_election_infos($dpt, $circo){
@@ -248,9 +216,7 @@
         FROM elect_2017_leg_infos
         WHERE dpt = ? AND circo = ?
       ';
-      $query = $this->db->query($sql, array($dpt, $circo));
-
-      return $query->row_array();
+      return $this->db->query($sql, array($dpt, $circo))->row_array();
     }
 
     public function get_other_deputes($groupe_id, $depute_name, $depute_uid, $active, $legislature){
@@ -281,16 +247,12 @@
         ORDER BY d.nameLast < LEFT (?, 1), d.nameLast
         LIMIT 15
       ';
-      $query = $this->db->query($sql, array($depute_uid, $legislature, $nameLast));
-
-      return $query->result_array();
+      return $this->db->query($sql, array($depute_uid, $legislature, $nameLast))->result_array();
     }
 
     public function get_history_all_deputes($legislature){
       $this->db->select('length');
-      $query = $this->db->get('history_mps_average', 1);
-
-      return $query->row_array();
+      return $this->db->get('history_mps_average', 1)->row_array();
     }
 
     public function get_accord_groupes_actifs($depute_uid, $legislature){
@@ -300,9 +262,7 @@
         WHERE t1.mpId = ? AND o.dateFin IS NULL AND libelleAbrev != "NI" AND votesN > 10 AND t1.legislature = ?
         ORDER BY t1.accord DESC
       ';
-      $query = $this->db->query($sql, array($depute_uid, $legislature));
-
-      return $query->result_array();
+      return $this->db->query($sql, array($depute_uid, $legislature))->result_array();
     }
 
     public function get_accord_groupes_all($depute_uid, $legislature){
@@ -312,9 +272,7 @@
         WHERE t1.mpId = ? AND t1.legislature = ?
         ORDER BY t1.accord DESC
       ';
-      $query = $this->db->query($sql, array($depute_uid, $legislature));
-
-      return $query->result_array();
+      return $this->db->query($sql, array($depute_uid, $legislature))->result_array();
     }
 
     public function get_person_schema($depute){
@@ -401,9 +359,7 @@
         ) A
         LEFT JOIN deputes d ON d.mpId = A.mpId
       ';
-      $query = $this->db->query($sql, legislature_current());
-
-      return $query->row_array();
+      return $this->db->query($sql, legislature_current())->row_array();
     }
 
     public function get_depute_vote_plus(){
@@ -423,9 +379,7 @@
         ORDER BY RAND()
         LIMIT 1
       ';
-      $query = $this->db->query($sql, legislature_current());
-
-      return $query->row_array();
+      return $this->db->query($sql, legislature_current())->row_array();
     }
 
     public function get_depute_vote_moins(){
@@ -446,9 +400,7 @@
         ORDER BY RAND()
         LIMIT 1
       ';
-      $query = $this->db->query($sql, legislature_current());
-
-      return $query->row_array();
+      return $this->db->query($sql, legislature_current())->row_array();
     }
 
     public function get_depute_loyal_plus(){
@@ -469,9 +421,7 @@
         ORDER BY RAND()
         LIMIT 1
       ';
-      $query = $this->db->query($sql, legislature_current());
-
-      return $query->row_array();
+      return $this->db->query($sql, legislature_current())->row_array();
     }
 
     public function get_depute_loyal_moins(){
@@ -492,9 +442,7 @@
         ORDER BY RAND()
         LIMIT 1
       ';
-      $query = $this->db->query($sql, legislature_current());
-
-      return $query->row_array();
+      return $this->db->query($sql, legislature_current())->row_array();
     }
 
     public function get_deputes_entrants($limit = false){
@@ -507,9 +455,7 @@
       if ($limit){
         $sql .= ' LIMIT ' . $limit;
       }
-      $query = $this->db->query($sql, legislature_current());
-
-      return $query->result_array();
+      return $this->db->query($sql, legislature_current())->result_array();
     }
 
     public function get_deputes_sortants(){
@@ -519,9 +465,7 @@
         WHERE mp.legislature = ? AND codeQualite = "membre" AND mp.dateFin IS NOT NULL
         ORDER BY mp.dateFin DESC
       ';
-      $query = $this->db->query($sql, legislature_current());
-
-      return $query->result_array();
+      return $this->db->query($sql, legislature_current())->result_array();
     }
 
     public function get_postes_assemblee(){
@@ -531,9 +475,7 @@
         WHERE mp.legislature = ? AND codeQualite != "membre"
         ORDER BY mp.dateDebut DESC
       ';
-      $query = $this->db->query($sql, legislature_current());
-
-      return $query->result_array();
+      return $this->db->query($sql, legislature_current())->result_array();
     }
 
     public function get_groupes_entrants($limit = false){
@@ -547,9 +489,24 @@
       if ($limit){
         $sql .= ' LIMIT ' . $limit;
       }
-      $query = $this->db->query($sql, legislature_current());
+      return $this->db->query($sql, legislature_current())->result_array();
+    }
 
-      return $query->result_array();
+    public function get_stats_participation_solennels($depute_uid, $legislature){
+      $sql = 'SELECT A.*, B.*
+        FROM
+        (
+          SELECT ROUND(score*100) AS score, votesN
+          FROM class_participation_solennels
+          WHERE mpId = ? AND legislature = ?
+        ) A,
+        (
+          SELECT ROUND(AVG(score)*100) AS mean
+          FROM class_participation_solennels
+          WHERE legislature = ?
+        ) B
+      ';
+      return $this->db->query($sql, array($depute_uid, $legislature, $legislature))->row_array();
     }
 
     public function get_stats_participation_commission($depute_uid){
@@ -565,9 +522,7 @@
           FROM class_participation_commission
         ) B
       ';
-      $query = $this->db->query($sql, $depute_uid);
-
-      return $query->row_array();
+      return $this->db->query($sql, $depute_uid)->row_array();
     }
 
     public function get_stats_participation($depute_uid, $legislature){
@@ -584,9 +539,7 @@
           WHERE legislature = ?
         ) B
       ';
-      $query = $this->db->query($sql, array($depute_uid, $legislature, $legislature));
-
-      return $query->row_array();
+      return $this->db->query($sql, array($depute_uid, $legislature, $legislature))->row_array();
     }
 
     public function get_stats_loyaute($depute_uid, $legislature){
@@ -603,9 +556,7 @@
           WHERE legislature = ?
         ) B
       ';
-      $query = $this->db->query($sql, array($depute_uid, $legislature, $legislature));
-
-      return $query->row_array();
+      return $this->db->query($sql, array($depute_uid, $legislature, $legislature))->row_array();
     }
 
     public function get_stats_loyaute_history($depute_uid, $legislature){
@@ -616,9 +567,7 @@
         WHERE dl.mpId = ? AND dl.legislature = ?
         ORDER BY mg.dateDebut DESC
       ';
-      $query = $this->db->query($sql, array($depute_uid, $legislature));
-
-      return $query->result_array();
+      return $this->db->query($sql, array($depute_uid, $legislature))->result_array();
     }
 
     public function get_stats_majorite($depute_uid, $legislature){
@@ -636,9 +585,7 @@
           WHERE da.groupeId != ?  AND da.legislature = ?
         ) B
       ';
-      $query = $this->db->query($sql, array($depute_uid, $legislature, majority_group(), $legislature));
-
-      return $query->row_array();
+      return $this->db->query($sql, array($depute_uid, $legislature, majority_group(), $legislature))->row_array();
     }
 
   }
