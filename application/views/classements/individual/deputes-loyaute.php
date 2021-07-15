@@ -17,11 +17,15 @@
       <div class="row row-grid mt-5">
         <div class="col-md-6 py-3">
           <h2 class="text-center"><?= ucfirst($mpLoyalGender['le']) ?> <?= $mpLoyalGender['depute'] ?> <?= $mpLoyalGender["le"] ?> plus loyal<?= $mpLoyalGender["e"] ?></h2>
-          <?php $this->load->view('deputes/partials/card_home.php', array('depute' => $mpLoyal, 'tag' => 'span', 'stats' => $mpLoyal['score'] . " %")) ?>
+          <div class="d-flex justify-content-center">
+            <?php $this->load->view('deputes/partials/card_home.php', array('depute' => $mpLoyal, 'tag' => 'span', 'stats' => $mpLoyal['score'] . " %")) ?>
+          </div>
         </div>
         <div class="col-md-6 py-3">
           <h2 class="text-center"><?= ucfirst($mpRebelGender['le']) ?> <?= $mpRebelGender['depute'] ?> <?= $mpRebelGender["le"] ?> plus rebelle</h2>
-          <?php $this->load->view('deputes/partials/card_home.php', array('depute' => $mpRebel, 'tag' => 'span', 'stats' => $mpRebel['score'] . " %")) ?>
+          <div class="d-flex justify-content-center">
+            <?php $this->load->view('deputes/partials/card_home.php', array('depute' => $mpRebel, 'tag' => 'span', 'stats' => $mpRebel['score'] . " %")) ?>
+          </div>
         </div>
       </div>
       <div class="mt-5">

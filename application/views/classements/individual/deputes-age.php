@@ -13,11 +13,15 @@
       <div class="row row-grid mt-5">
         <div class="col-md-6 py-3">
           <h2 class="text-center"><?= ucfirst($mpOldestGender['le']) ?> <?= $mpOldestGender['depute'] ?> <?= $mpOldestGender["le"] ?> plus âgé<?= $mpOldestGender["e"] ?></h2>
-          <?php $this->load->view('deputes/partials/card_home.php', array('depute' => $mpOldest, 'tag' => 'span', 'stats' => $mpOldest['age'] . " ans")) ?>
+          <div class="d-flex justify-content-center">
+            <?php $this->load->view('deputes/partials/card_home.php', array('depute' => $mpOldest, 'tag' => 'span', 'stats' => $mpOldest['age'] . " ans")) ?>
+          </div>
         </div>
         <div class="col-md-6 py-3">
           <h2 class="text-center"><?= ucfirst($mpYoungestGender['le']) ?> <?= $mpYoungestGender['depute'] ?> <?= $mpYoungestGender["le"] ?> plus jeune</h2>
-          <?php $this->load->view('deputes/partials/card_home.php', array('depute' => $mpYoungest, 'tag' => 'span', 'stats' => $mpYoungest['age'] . " ans")) ?>
+          <div class="d-flex justify-content-center">
+            <?php $this->load->view('deputes/partials/card_home.php', array('depute' => $mpYoungest, 'tag' => 'span', 'stats' => $mpYoungest['age'] . " ans")) ?>
+          </div>
         </div>
       </div>
       <div class="mt-5">

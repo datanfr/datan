@@ -18,11 +18,15 @@
       <div class="row row-grid mt-5">
         <div class="col-md-6 py-3">
           <h2 class="text-center">Vote le plus</h2>
-          <?php $this->load->view('deputes/partials/card_home.php', array('depute' => $mpActive, 'tag' => 'span', 'stats' => round($mpActive['score'] * 100) . " %")) ?>
+          <div class="d-flex justify-content-center">
+            <?php $this->load->view('deputes/partials/card_home.php', array('depute' => $mpActive, 'tag' => 'span', 'stats' => round($mpActive['score'] * 100) . " %")) ?>
+          </div>
         </div>
         <div class="col-md-6 py-3">
           <h2 class="text-center">Vote le moins</h2>
-          <?php $this->load->view('deputes/partials/card_home.php', array('depute' => $mpInactive, 'tag' => 'span', 'stats' => round($mpInactive['score'] * 100) . " %")) ?>
+          <div class="d-flex justify-content-center">
+            <?php $this->load->view('deputes/partials/card_home.php', array('depute' => $mpInactive, 'tag' => 'span', 'stats' => round($mpInactive['score'] * 100) . " %")) ?>
+          </div>
         </div>
       </div>
       <div class="mt-5">
