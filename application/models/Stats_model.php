@@ -13,9 +13,7 @@
         WHERE da.legislature = ? AND da.dateFin IS NULL
         ORDER BY age DESC
       ';
-      $query = $this->db->query($sql, legislature_current());
-
-      return $query->result_array();
+      return $this->db->query($sql, legislature_current())->result_array();
     }
 
     public function get_age_mean($legislature){
@@ -52,9 +50,7 @@
       (SELECT @s:= 0) AS s
       ORDER BY B.pct DESC
       ';
-      $query = $this->db->query($sql, legislature_current());
-
-      return $query->result_array();
+      return $this->db->query($sql, legislature_current())->result_array();
     }
 
     public function get_groups_women_more(){
@@ -76,9 +72,7 @@
         ORDER BY B.pct DESC
         LIMIT 3
       ';
-      $query = $this->db->query($sql, legislature_current());
-
-      return $query->result_array();
+      return $this->db->query($sql, legislature_current())->result_array();
     }
 
     public function get_groups_women_less(){
@@ -110,9 +104,7 @@
         ) D
         ORDER BY D.rank ASC
       ';
-      $query = $this->db->query($sql, legislature_current());
-
-      return $query->result_array();
+      return $this->db->query($sql, legislature_current())->result_array();
     }
 
     public function get_mps_loyalty($legislature){
@@ -128,9 +120,7 @@
         (SELECT @s:= 0) AS s
         ORDER BY A.score DESC, A.votesN DESC
       ';
-      $query = $this->db->query($sql, $legislature);
-
-      return $query->result_array();
+      return $this->db->query($sql, $legislature)->result_array();
     }
 
     public function get_loyalty_mean($legislature){
@@ -138,9 +128,7 @@
         FROM class_loyaute
         WHERE legislature = ?
       ';
-      $query = $this->db->query($sql, $legislature);
-
-      return $query->row_array();
+      return $this->db->query($sql, $legislature)->row_array();
     }
 
     public function get_groups_age(){
@@ -156,9 +144,7 @@
         (SELECT @s:= 0) AS s
         ORDER BY A.age DESC
       ';
-      $query = $this->db->query($sql, legislature_current());
-
-      return $query->result_array();
+      return $this->db->query($sql, legislature_current())->result_array();
     }
 
     public function get_groups_cohesion(){
@@ -191,9 +177,23 @@
       (SELECT @s:= 0) AS s
       ORDER BY A.score DESC, A.votesN DESC
       ';
-      $query = $this->db->query($sql, legislature_current());
+      return $this->db->query($sql, legislature_current())->result_array();
+    }
 
-      return $query->result_array();
+    public function get_mps_participation_solennels(){
+      $sql = 'SELECT @s:=@s+1 AS "rank", A.*
+      FROM
+      (
+        SELECT cp.*, da.nameFirst, da.nameLast, da.civ, da.libelle AS groupLibelle, da.libelleAbrev AS groupLibelleAbrev, da.dptSlug, da.nameUrl, da.couleurAssociee, da.img,
+        CONCAT(da.departementNom, " (", da.departementCode, ")") AS cardCenter
+        FROM class_participation_solennels cp
+        LEFT JOIN deputes_all da ON cp.mpId = da.mpId AND da.legislature = cp.legislature
+        WHERE votesN >= 100 AND da.dateFin IS NULL AND cp.legislature = ?
+      ) A,
+      (SELECT @s:= 0) AS s
+      ORDER BY A.score DESC, A.votesN DESC
+      ';
+      return $this->db->query($sql, legislature_current())->result_array();
     }
 
     public function get_mps_participation_commission(){
@@ -210,9 +210,7 @@
       (SELECT @s:= 0) AS s
       ORDER BY A.score DESC, A.votesN DESC
       ';
-      $query = $this->db->query($sql, legislature_current());
-
-      return $query->result_array();
+      return $this->db->query($sql, legislature_current())->result_array();
     }
 
     public function get_mps_participation_mean($legislature){
@@ -220,9 +218,7 @@
         FROM class_participation
         WHERE legislature = ?
       ';
-      $query = $this->db->query($sql, $legislature);
-
-      return $query->row_array();
+      return $this->db->query($sql, $legislature)->row_array();
     }
 
     public function get_mps_participation_commission_mean(){

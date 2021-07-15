@@ -15,11 +15,24 @@
           </p>
         </div>
       </div>
+      <div class="row row-grid mt-5">
+        <div class="col-md-6 py-3">
+          <h2 class="text-center">Vote le plus</h2>
+          <?php $this->load->view('deputes/partials/card_home.php', array('depute' => $mpActive, 'tag' => 'span', 'stats' => round($mpActive['score'] * 100) . " %")) ?>
+        </div>
+        <div class="col-md-6 py-3">
+          <h2 class="text-center">Vote le moins</h2>
+          <?php $this->load->view('deputes/partials/card_home.php', array('depute' => $mpInactive, 'tag' => 'span', 'stats' => round($mpInactive['score'] * 100) . " %")) ?>
+        </div>
+      </div>
       <div class="mt-5">
         <h2 class="mb-5">Classement des députés selon leur taux de participation</h2>
         <nav class="mt-4">
           <div class="nav nav-tabs" id="nav-tab" role="tablist">
-            <a class="nav-item nav-link active no-decoration" id="nav-votes-com" data-toggle="tab" href="#nav-commission" role="tab" aria-controls="nav-commission" aria-selected="true">
+            <a class="nav-item nav-link active no-decoration" id="nav-votes-solennels" data-toggle="tab" href="#nav-solennels" role="tab" aria-controls="nav-commission" aria-selected="true">
+              <h3>Votes solennels</h3>
+            </a>
+            <a class="nav-item nav-link no-decoration" id="nav-votes-com" data-toggle="tab" href="#nav-commission" role="tab" aria-controls="nav-commission" aria-selected="true">
               <h3>Votes par spécialisation</h3>
             </a>
             <a class="nav-item nav-link no-decoration" id="nav-votes-all" data-toggle="tab" href="#nav-all" role="tab" aria-controls="nav-all" aria-selected="false">
@@ -28,9 +41,36 @@
           </div>
         </nav>
         <div class="tab-content" id="nav-tabContent">
-          <div class="tab-pane fade show active" id="nav-commission" role="tabpanel" aria-labelledby="nav-votes-commission">
-            <p class="my-4"><i>Ce tableau comprend tous les votes en séance publique et qui ont un lien avec le domaine de spécialisation (par exemple économie, environnement) du député. Plus précisément, ce score ne prend en compte que les textes précédemment examinés dans la commission du député.</i></p>
+          <div class="tab-pane fade show active" id="nav-solennels" role="tabpanel" aria-labelledby="nav-votes-solennels">
+            <p class="my-4"><i>Ce tableau comprend tous les votes solennels en séance publique. Les votes solennels sont des votes sur des dossiers considérés comme importants. Le jour et l'heure du vote sont connus à l'avance, afin de favoriser la présence des députés.</i></p>
             <table class="table table-stats" id="table-stats">
+              <thead>
+                <tr>
+                  <th class="text-center all">N°</th>
+                  <th class="text-center min-tablet">Député</th>
+                  <th class="text-center all">Groupe</th>
+                  <th class="text-center all">Participation</th>
+                  <th class="text-center all">Nombre de votes</th>
+                </tr>
+              </thead>
+              <tbody>
+                <?php $i = 1; ?>
+                <?php foreach ($mpsSolennels as $depute): ?>
+                  <tr>
+                    <td class="text-center"><?= $depute['rank'] ?></td>
+                    <td class="text-center"><?= $depute['nameFirst']." ".$depute['nameLast'] ?></td>
+                    <td class="text-center"><?= $depute['groupLibelleAbrev'] ?></td>
+                    <td class="text-center"><?= $depute['score'] * 100 ?> %</td>
+                    <td class="text-center"><?= $depute['votesN'] ?></td>
+                  </tr>
+                  <?php $i++; ?>
+                <?php endforeach; ?>
+              </tbody>
+            </table>
+          </div>
+          <div class="tab-pane fade" id="nav-commission" role="tabpanel" aria-labelledby="nav-votes-commission">
+            <p class="my-4"><i>Ce tableau comprend tous les votes en séance publique et qui ont un lien avec le domaine de spécialisation (par exemple économie, environnement) du député. Plus précisément, ce score ne prend en compte que les textes précédemment examinés dans la commission du député.</i></p>
+            <table class="table table-stats" id="table-stats2" style="width: 100%;">
               <thead>
                 <tr>
                   <th class="text-center all">N°</th>
@@ -59,7 +99,7 @@
           </div>
           <div class="tab-pane fade" id="nav-all" role="tabpanel" aria-labelledby="nav-votes-all">
             <p class="my-4"><i>Ce tableau comprend tous les votes en séance publique auxquels un député a pu participer. Depuis le début de la législature, il y a eu <?= $votesN ?> votes.</i></p>
-            <table class="table table-stats" id="table-stats2">
+            <table class="table table-stats" id="table-stats3" style="width: 100%;">
               <thead>
                 <tr>
                   <th class="text-center all">N°</th>
