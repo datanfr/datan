@@ -1721,7 +1721,7 @@ class Script
             AND ((vi.dateScrutin BETWEEN mg.dateDebut AND mg.dateFin ) OR (vi.dateScrutin >= mg.dateDebut AND mg.dateFin IS NULL))
             AND mg.codeQualite IN ("Membre", "Député non-inscrit", "Membre apparenté")
             LEFT JOIN organes o ON o.uid = vi.organeRef
-            WHERE v.voteType = "decompteNominatif" AND v.voteNumero >= "' . $lastVote . '" AND v.legislature = "' . $this->legislature_to_get . '" AND vote != "nv"
+            WHERE v.voteType = "decompteNominatif" AND v.voteNumero >= "' . $lastVote . '" AND v.legislature = "' . $this->legislature_to_get . '"
             ) A
             LEFT JOIN votes_groupes vg ON vg.organeRef = A.organeRef AND vg.voteNumero = A.voteNumero AND vg.legislature = A.legislature
             LEFT JOIN votes_groupes gvt ON gvt.organeRef IN ("PO730964", "PO713077", "PO656002") AND gvt.voteNumero = A.voteNumero AND gvt.legislature = A.legislature
