@@ -57,7 +57,7 @@
           'stat' => round($data['groups_cohesion'][0]['cohesion'], 2)
         )
       );
-      $data['mps_participation'] = $this->stats_model->get_mps_participation();
+      $data['mps_participation'] = $this->stats_model->get_mps_participation_solennels();
       $data['mps_participation_first'] = array_slice($data['mps_participation'], 0, 3);
       $data['mps_participation_last'] = array_slice($data['mps_participation'], -3);
       $data['mps_participation_mean'] = $this->stats_model->get_mps_participation_mean(legislature_current());
