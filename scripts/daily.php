@@ -2455,21 +2455,11 @@ class Script
     {
         echo "classParticipationSix starting \n";
         if ($this->legislature_to_get == 15) {
-            $this->bdd->query('
+
+          $this->bdd->query('
             DROP TABLE IF EXISTS class_participation_six;
             CREATE TABLE class_participation_six
-            (id INT(5) NOT NULL AUTO_INCREMENT,
-            classement INT(5) NOT NULL,
-            mpId VARCHAR(25) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
-            score DECIMAL(3,2) NOT NULL,
-            votesN INT(15) NOT NULL,
-            dateMaj DATE NOT NULL,
-            PRIMARY KEY (id));
-            ALTER TABLE class_participation_six ADD INDEX idx_mpId (mpId);
-        ');
-
-            $result = $this->bdd->query('
-            SELECT @s:=@s+1 AS "classement", C.*
+            SELECT @s:=@s+1 AS "classement", C.*, curdate() AS dateMaj
             FROM
             (
                 SELECT B.*
@@ -2479,38 +2469,23 @@ class Script
                     FROM
                     (
                         SELECT v.mpId, v.participation, vi.dateScrutin
-                        FROM votes_participation_commission v
+                        FROM votes_participation v
                         LEFT JOIN votes_info vi ON v.voteNumero = vi.voteNumero
-                        WHERE vi.dateScrutin >= CURDATE() - INTERVAL 12 MONTH
+                        WHERE vi.dateScrutin >= CURDATE() - INTERVAL 12 MONTH AND vi.codeTypeVote = "SPS"
                     ) A
                     WHERE A.participation IS NOT NULL
                     GROUP BY A.mpId
                     ORDER BY ROUND(COUNT(A.participation)/10) DESC, AVG(A.participation) DESC
                 ) B
-                WHERE B.mpId IN (
-                    SELECT mpId
-                FROM deputes_all
-                WHERE legislature = 15 AND dateFin IS NULL
-                )
+                LEFT JOIN deputes_last dl ON B.mpId = dl.mpId
+                WHERE dl.active
             ) C,
             (SELECT @s:= 0) AS s
             WHERE C.votesN > 5
-            ORDER BY C.score DESC, C.votesN DESC
-        ');
-
-            $participationFields = array('classement', 'mpId', 'score', 'votesN', 'dateMaj');
-            $participation = [];
-            $participations = [];
-            while ($depute = $result->fetch()) {
-                $classement = $depute["classement"];
-                $mpId = $depute["mpId"];
-                $score = $depute["score"];
-                $votesN = $depute["votesN"];
-
-                $participation = array('classement' => $classement, 'mpId' => $mpId, 'score' => $score, 'votesN' => $votesN, 'dateMaj' => $this->dateMaj);
-                $participations = array_merge($participations, array_values($participation));
-            }
-            $this->insertAll('class_participation_six', $participationFields, $participations);
+            ORDER BY C.score DESC, C.votesN DESC;
+            ALTER TABLE class_participation_six ADD PRIMARY KEY (id);
+            ALTER TABLE class_participation_six ADD INDEX idx_mpId (mpId);
+          ');
         }
     }
 
