@@ -1721,7 +1721,7 @@ class Script
             AND ((vi.dateScrutin BETWEEN mg.dateDebut AND mg.dateFin ) OR (vi.dateScrutin >= mg.dateDebut AND mg.dateFin IS NULL))
             AND mg.codeQualite IN ("Membre", "Député non-inscrit", "Membre apparenté")
             LEFT JOIN organes o ON o.uid = vi.organeRef
-            WHERE v.voteType = "decompteNominatif" AND v.voteNumero >= "' . $lastVote . '" AND v.legislature = "' . $this->legislature_to_get . '" AND vote != "nv"
+            WHERE v.voteType = "decompteNominatif" AND v.voteNumero >= "' . $lastVote . '" AND v.legislature = "' . $this->legislature_to_get . '"
             ) A
             LEFT JOIN votes_groupes vg ON vg.organeRef = A.organeRef AND vg.voteNumero = A.voteNumero AND vg.legislature = A.legislature
             LEFT JOIN votes_groupes gvt ON gvt.organeRef IN ("PO730964", "PO713077", "PO656002") AND gvt.voteNumero = A.voteNumero AND gvt.legislature = A.legislature
@@ -2121,6 +2121,29 @@ class Script
         }
     }
 
+    public function classParticipationSolennels()
+    {
+        echo "classParticipationSolennels starting \n";
+        $this->bdd->query('
+            DROP TABLE IF EXISTS class_participation_solennels;
+            CREATE TABLE class_participation_solennels
+            SELECT A.*,
+            	CASE WHEN da.dateFin IS NULL THEN 1 ELSE 0 END AS active,
+            	curdate() AS dateMaj
+            	FROM
+                (
+            		SELECT v.mpId, v.legislature, ROUND(AVG(v.participation),2) AS score, COUNT(v.participation) AS votesN, ROUND(COUNT(v.participation)/100) AS "index"
+            		FROM votes_participation v
+            		LEFT JOIN votes_info vi ON v.voteNumero = vi.voteNumero AND v.legislature = vi.legislature
+            		WHERE v.participation IS NOT NULL AND vi.codeTypeVote = "SPS"
+            		GROUP BY v.mpId, v.legislature
+            	) A
+            LEFT JOIN deputes_all da ON da.mpId = A.mpId AND da.legislature = A.legislature;
+            ALTER TABLE class_participation_solennels ADD INDEX idx_mpId (mpId);
+            ALTER TABLE class_participation_solennels ADD INDEX idx_active (active);
+        ');
+    }
+
     public function deputeLoyaute()
     {
         echo "deputeLoyaute starting \n";
@@ -2432,21 +2455,11 @@ class Script
     {
         echo "classParticipationSix starting \n";
         if ($this->legislature_to_get == 15) {
-            $this->bdd->query('
+
+          $this->bdd->query('
             DROP TABLE IF EXISTS class_participation_six;
             CREATE TABLE class_participation_six
-            (id INT(5) NOT NULL AUTO_INCREMENT,
-            classement INT(5) NOT NULL,
-            mpId VARCHAR(25) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
-            score DECIMAL(3,2) NOT NULL,
-            votesN INT(15) NOT NULL,
-            dateMaj DATE NOT NULL,
-            PRIMARY KEY (id));
-            ALTER TABLE class_participation_six ADD INDEX idx_mpId (mpId);
-        ');
-
-            $result = $this->bdd->query('
-            SELECT @s:=@s+1 AS "classement", C.*
+            SELECT @s:=@s+1 AS "classement", C.*, curdate() AS dateMaj
             FROM
             (
                 SELECT B.*
@@ -2456,38 +2469,23 @@ class Script
                     FROM
                     (
                         SELECT v.mpId, v.participation, vi.dateScrutin
-                        FROM votes_participation_commission v
+                        FROM votes_participation v
                         LEFT JOIN votes_info vi ON v.voteNumero = vi.voteNumero
-                        WHERE vi.dateScrutin >= CURDATE() - INTERVAL 12 MONTH
+                        WHERE vi.dateScrutin >= CURDATE() - INTERVAL 12 MONTH AND vi.codeTypeVote = "SPS"
                     ) A
                     WHERE A.participation IS NOT NULL
                     GROUP BY A.mpId
                     ORDER BY ROUND(COUNT(A.participation)/10) DESC, AVG(A.participation) DESC
                 ) B
-                WHERE B.mpId IN (
-                    SELECT mpId
-                FROM deputes_all
-                WHERE legislature = 15 AND dateFin IS NULL
-                )
+                LEFT JOIN deputes_last dl ON B.mpId = dl.mpId
+                WHERE dl.active
             ) C,
             (SELECT @s:= 0) AS s
             WHERE C.votesN > 5
-            ORDER BY C.score DESC, C.votesN DESC
-        ');
-
-            $participationFields = array('classement', 'mpId', 'score', 'votesN', 'dateMaj');
-            $participation = [];
-            $participations = [];
-            while ($depute = $result->fetch()) {
-                $classement = $depute["classement"];
-                $mpId = $depute["mpId"];
-                $score = $depute["score"];
-                $votesN = $depute["votesN"];
-
-                $participation = array('classement' => $classement, 'mpId' => $mpId, 'score' => $score, 'votesN' => $votesN, 'dateMaj' => $this->dateMaj);
-                $participations = array_merge($participations, array_values($participation));
-            }
-            $this->insertAll('class_participation_six', $participationFields, $participations);
+            ORDER BY C.score DESC, C.votesN DESC;
+            ALTER TABLE class_participation_six ADD PRIMARY KEY (id);
+            ALTER TABLE class_participation_six ADD INDEX idx_mpId (mpId);
+          ');
         }
     }
 
@@ -2738,6 +2736,7 @@ $script->dossier();
 $script->voteParticipationCommission();
 $script->classParticipation();
 $script->classParticipationCommission();
+$script->classParticipationSolennels();
 $script->deputeLoyaute();
 $script->classLoyaute();
 $script->classMajorite();

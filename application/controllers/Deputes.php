@@ -15,12 +15,7 @@
 
     private function get_statistiques($data, $legislature, $mpId, $groupe_id){
       if (in_array($legislature, legislature_all())) {
-        // Participation (votes related to commission)
-        if ($legislature == legislature_current()) {
-          $data['participation'] = $this->deputes_model->get_stats_participation_commission($mpId);
-        } else {
-          $data['participation'] = $this->deputes_model->get_stats_participation($mpId, $legislature);
-        }
+        $data['participation'] = $this->deputes_model->get_stats_participation_solennels($mpId, $legislature);
         if ($data['participation']['votesN'] < 5) {
           $data['no_participation'] = TRUE;
         } else {
