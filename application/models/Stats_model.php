@@ -148,18 +148,17 @@
     }
 
     public function get_groups_cohesion(){
-      $query = $this->db->query('
-      SELECT @s:=@s+1 AS "rank", A.*
-      FROM
-      (
-        SELECT cg.organeRef, cg.legislature, cg.cohesion, cg.active, o.libelle, o.libelleAbrev, o.couleurAssociee, ge.effectif
-        FROM class_groups cg
-        LEFT JOIN organes o ON cg.organeRef = o.uid
-        LEFT JOIN groupes_effectif ge ON ge.organeRef  = cg.organeRef
-        WHERE cg.active = 1
-      ) A,
-      (SELECT @s:= 0) AS s
-      ORDER BY A.cohesion DESC
+      $query = $this->db->query('SELECT @s:=@s+1 AS "rank", A.*
+        FROM
+        (
+          SELECT cg.organeRef, cg.legislature, cg.cohesion, cg.active, o.libelle, o.libelleAbrev, o.couleurAssociee, ge.effectif
+          FROM class_groups cg
+          LEFT JOIN organes o ON cg.organeRef = o.uid
+          LEFT JOIN groupes_effectif ge ON ge.organeRef  = cg.organeRef
+          WHERE cg.active = 1
+        ) A,
+        (SELECT @s:= 0) AS s
+        ORDER BY A.cohesion DESC
       ');
 
       return $query->result_array();
@@ -171,8 +170,8 @@
       (
         SELECT cp.*, da.nameFirst, da.nameLast, da.civ, da.libelle AS groupLibelle, da.libelleAbrev AS groupLibelleAbrev, da.dptSlug, da.nameUrl, da.couleurAssociee, da.departementNom, da.departementCode
         FROM class_participation cp
-        LEFT JOIN deputes_all da ON cp.mpId = da.mpId AND da.legislature = cp.legislature
-        WHERE votesN >= 100 AND da.dateFin IS NULL AND cp.legislature = ?
+        LEFT JOIN deputes_last da ON cp.mpId = da.mpId AND da.legislature = cp.legislature
+        WHERE da.active AND cp.legislature = ?
       ) A,
       (SELECT @s:= 0) AS s
       ORDER BY A.score DESC, A.votesN DESC
@@ -187,8 +186,8 @@
         SELECT cp.*, da.nameFirst, da.nameLast, da.civ, da.libelle AS groupLibelle, da.libelleAbrev AS groupLibelleAbrev, da.dptSlug, da.nameUrl, da.couleurAssociee, da.img,
         CONCAT(da.departementNom, " (", da.departementCode, ")") AS cardCenter
         FROM class_participation_solennels cp
-        LEFT JOIN deputes_all da ON cp.mpId = da.mpId AND da.legislature = cp.legislature
-        WHERE votesN >= 100 AND da.dateFin IS NULL AND cp.legislature = ?
+        LEFT JOIN deputes_last da ON cp.mpId = da.mpId AND da.legislature = cp.legislature
+        WHERE da.active AND cp.legislature = ?
       ) A,
       (SELECT @s:= 0) AS s
       ORDER BY A.score DESC, A.votesN DESC
