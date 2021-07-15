@@ -241,8 +241,10 @@
         // Data
         $data['participationMean'] = $this->stats_model->get_mps_participation_mean(legislature_current());
         $data['participationMean'] = $data['participationMean']['mean'];
-        $data['participationCommissionMean'] = $this->stats_model->get_mps_participation_commission_mean();
+        $data['participationCommissionMean'] = $this->stats_model->get_mps_participation_commission_mean(legislature_current());
         $data['participationCommissionMean'] = $data['participationCommissionMean']['mean'];
+        $data['participationSolennelsMean'] = $this->stats_model->get_mps_participation_solennels_mean(legislature_current());
+        $data['participationSolennelsMean'] = $data['participationSolennelsMean']['mean'];
         $data['mpsSolennels'] = $this->stats_model->get_mps_participation_solennels();
         $data['mps'] = $this->stats_model->get_mps_participation();
         $data['votesN'] = $this->votes_model->get_n_votes();

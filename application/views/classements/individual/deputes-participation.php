@@ -5,13 +5,16 @@
           <p><b>Le vote est une activité essentielle</b> des élus : ce sont les projets de loi et les amendements adoptés par une majorité des députés qui impacteront la vie des citoyens. Lors d'un scrutin, un élu peut soit voter « pour », « contre », ou s'abstenir.</p>
           <p>Le taux de participation moyen à l'Assemblée nationale est de <?= $participationMean ?> %. Ce faible taux de participation s'explique par l'organisation du travail : avec plusieurs réunions en même temps, seuls les députés spécialistes d'un sujet participent aux discussions et votent en séance.</p>
           <p>
-            <b>Nous proposons donc deux scores de participation :</b>
+            <b>Nous proposons donc trois scores de participation :</b>
           </p>
           <p>
-            Le premier ne prend en compte que les votes en lien avec le domaine de spécialisation d'un député. Par exemple, un député avec un score de 100% aura participé, en séance publique, à tous les scrutins sur des textes qui ont été précédemment examinés dans sa commission parlementaire. Ce sont sur ces votes que les élus ont un intérêt et une expertise particulière, et sont donc plus susceptibles de participer aux travaux parlementaires. Le taux de participation moyen pour ce score est de <?= $participationCommissionMean ?> %.
+            Le <u>premier</u> ne concerne que les votes solennels. Les votes solennels sont les votes les plus importants et concernent des projets de loi significatifs et fortement discutés dans les médias. Pour ces votes, le jour et l'heure du vote sont connus à l'avance, favorisant ainsi la présence des parlementaires dans l'hémicycle. Le taux de participation moyen pour ce score est de <?= $participationSolennelsMean ?> %.
           </p>
           <p>
-            Le deuxième prend en compte tous les votes en séance publique. Le taux de participation moyen pour ce score est de <?= $participationMean ?> %.
+            Le <u>deuxième</u> ne prend en compte que les votes en lien avec le domaine de spécialisation d'un député. Par exemple, un député avec un score de 100% aura participé, en séance publique, à tous les scrutins sur des textes qui ont été précédemment examinés dans sa commission parlementaire. Ce sont sur ces votes que les élus ont un intérêt et une expertise particulière, et sont donc plus susceptibles de participer aux travaux parlementaires. Le taux de participation moyen pour ce score est de <?= $participationCommissionMean ?> %.
+          </p>
+          <p>
+            Le <u>troisième</u> prend en compte tous les votes en séance publique. Le taux de participation moyen pour ce score est de <?= $participationMean ?> %.
           </p>
         </div>
       </div>
@@ -46,7 +49,12 @@
         </nav>
         <div class="tab-content" id="nav-tabContent">
           <div class="tab-pane fade show active" id="nav-solennels" role="tabpanel" aria-labelledby="nav-votes-solennels">
-            <p class="my-4"><i>Ce tableau comprend tous les votes solennels en séance publique. Les votes solennels sont des votes sur des dossiers considérés comme importants. Le jour et l'heure du vote sont connus à l'avance, afin de favoriser la présence des députés.</i></p>
+            <p class="my-4">
+              <i>Ce tableau comprend tous les votes solennels en séance publique. Les votes solennels sont des votes sur des dossiers considérés comme importants. Le jour et l'heure du vote sont connus à l'avance, afin de favoriser la présence des députés.</i>
+            </p>
+            <p>
+              <i>Le taux de participation moyen pour ce score est de <?= $participationSolennelsMean ?> %.</i>
+            </p>
             <table class="table table-stats" id="table-stats">
               <thead>
                 <tr>
@@ -73,7 +81,12 @@
             </table>
           </div>
           <div class="tab-pane fade" id="nav-commission" role="tabpanel" aria-labelledby="nav-votes-commission">
-            <p class="my-4"><i>Ce tableau comprend tous les votes en séance publique et qui ont un lien avec le domaine de spécialisation (par exemple économie, environnement) du député. Plus précisément, ce score ne prend en compte que les textes précédemment examinés dans la commission du député.</i></p>
+            <p class="my-4">
+              <i>Ce tableau comprend tous les votes en séance publique et qui ont un lien avec le domaine de spécialisation (par exemple économie, environnement) du député. Plus précisément, ce score ne prend en compte que les textes précédemment examinés dans la commission du député.</i>
+            </p>
+            <p>
+              <i>Le taux de participation moyen pour ce score est de <?= $participationCommissionMean ?> %.</i>
+            </p>
             <table class="table table-stats" id="table-stats2" style="width: 100%;">
               <thead>
                 <tr>
@@ -102,7 +115,12 @@
             </table>
           </div>
           <div class="tab-pane fade" id="nav-all" role="tabpanel" aria-labelledby="nav-votes-all">
-            <p class="my-4"><i>Ce tableau comprend tous les votes en séance publique auxquels un député a pu participer. Depuis le début de la législature, il y a eu <?= $votesN ?> votes.</i></p>
+            <p class="my-4">
+              <i>Ce tableau comprend tous les votes en séance publique auxquels un député a pu participer. Ce score est souvent plus faible, du fait de l'organisation du travail à l'Assemblée (un vote en séance publique peut se tenir en même temps qu'une réunion de commission). Depuis le début de la législature, il y a eu <?= $votesN ?> votes.</i>
+            </p>
+            <p>
+              <i>Le taux de participation moyen pour ce score est de <?= $participationMean ?> %.</i>
+            </p>
             <table class="table table-stats" id="table-stats3" style="width: 100%;">
               <thead>
                 <tr>

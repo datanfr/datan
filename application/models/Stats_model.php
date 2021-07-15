@@ -221,13 +221,20 @@
       return $this->db->query($sql, $legislature)->row_array();
     }
 
-    public function get_mps_participation_commission_mean(){
-      $query = $this->db->query('
-        SELECT ROUND(AVG(score) * 100) AS mean
-        FROM class_participation_commission
-      ');
+    public function get_mps_participation_solennels_mean($legislature){
+      $sql = 'SELECT ROUND(AVG(score) * 100) AS mean
+        FROM class_participation_solennels
+        WHERE legislature = ?
+      ';
+      return $this->db->query($sql, $legislature)->row_array();
+    }
 
-      return $query->row_array();
+    public function get_mps_participation_commission_mean($legislature){
+      $sql = 'SELECT ROUND(AVG(score) * 100) AS mean
+        FROM class_participation_commission
+        WHERE legislature = ?
+      ';
+      return $this->db->query($sql, $legislature)->row_array();
     }
 
     public function get_groups_participation(){
