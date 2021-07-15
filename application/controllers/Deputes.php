@@ -16,7 +16,6 @@
     private function get_statistiques($data, $legislature, $mpId, $groupe_id){
       if (in_array($legislature, legislature_all())) {
         $data['participation'] = $this->deputes_model->get_stats_participation_solennels($mpId, $legislature);
-        print_r($data['participation']);
         if ($data['participation']['votesN'] < 5) {
           $data['no_participation'] = TRUE;
         } else {
