@@ -165,49 +165,40 @@
     }
 
     public function get_mps_participation(){
-      $sql = 'SELECT @s:=@s+1 AS "rank", A.*
-      FROM
-      (
-        SELECT cp.*, da.nameFirst, da.nameLast, da.civ, da.libelle AS groupLibelle, da.libelleAbrev AS groupLibelleAbrev, da.dptSlug, da.nameUrl, da.couleurAssociee, da.departementNom, da.departementCode
+      $sql = 'SELECT cp.*, da.nameFirst, da.nameLast, da.civ, da.libelle AS groupLibelle, da.libelleAbrev AS groupLibelleAbrev, da.dptSlug, da.nameUrl, da.couleurAssociee, da.departementNom, da.departementCode
         FROM class_participation cp
         LEFT JOIN deputes_last da ON cp.mpId = da.mpId AND da.legislature = cp.legislature
         WHERE da.active AND cp.legislature = ?
-      ) A,
-      (SELECT @s:= 0) AS s
-      ORDER BY A.score DESC, A.votesN DESC
+        ORDER BY cp.score DESC, cp.votesN DESC
       ';
       return $this->db->query($sql, legislature_current())->result_array();
     }
 
     public function get_mps_participation_solennels(){
-      $sql = 'SELECT @s:=@s+1 AS "rank", A.*
-      FROM
-      (
-        SELECT cp.*, da.nameFirst, da.nameLast, da.civ, da.libelle AS groupLibelle, da.libelleAbrev AS groupLibelleAbrev, da.dptSlug, da.nameUrl, da.couleurAssociee, da.img,
+      $sql = 'SELECT cp.*, da.nameFirst, da.nameLast, da.civ, da.libelle AS groupLibelle, da.libelleAbrev AS groupLibelleAbrev, da.dptSlug, da.nameUrl, da.couleurAssociee, da.img,
         CONCAT(da.departementNom, " (", da.departementCode, ")") AS cardCenter
         FROM class_participation_solennels cp
         LEFT JOIN deputes_last da ON cp.mpId = da.mpId AND da.legislature = cp.legislature
-        WHERE da.active AND cp.legislature = ?
-      ) A,
-      (SELECT @s:= 0) AS s
-      ORDER BY A.score DESC, A.votesN DESC
+        WHERE da.active AND cp.legislature = 15
+        ORDER BY cp.score DESC, cp.votesN DESC
       ';
-      return $this->db->query($sql, legislature_current())->result_array();
+      $array = $this->db->query($sql, legislature_current())->result_array();
+      $i = 1;
+      foreach ($array as $key => $value) {
+        $array[$key]["rank"] = $i;
+        $i++;
+      }
+      return $array;
     }
 
     public function get_mps_participation_commission(){
-      $sql = 'SELECT @s:=@s+1 AS "rank", A.*
-      FROM
-      (
-      SELECT cp.mpId, cp.score, cp.votesN, da.nameFirst, da.nameLast, da.civ, da.libelle AS groupLibelle, da.libelleAbrev AS groupLibelleAbrev, da.dptSlug, da.nameUrl, da.couleurAssociee, da.departementNom, da.departementCode, o.libelleAbrege AS commission
-      FROM class_participation_commission cp
-      LEFT JOIN deputes_all da ON cp.mpId = da.mpId
-      LEFT JOIN mandat_secondaire ms ON cp.mpId = ms.mpId
-      LEFT JOIN organes o ON ms.organeRef = o.uid
-      WHERE da.legislature = ? AND cp.active = 1 AND ms.typeOrgane = "COMPER" AND ms.codeQualite = "Membre" AND ms.dateFin IS NULL
-      ) A,
-      (SELECT @s:= 0) AS s
-      ORDER BY A.score DESC, A.votesN DESC
+      $sql = 'SELECT cp.mpId, cp.score, cp.votesN, da.nameFirst, da.nameLast, da.civ, da.libelle AS groupLibelle, da.libelleAbrev AS groupLibelleAbrev, da.dptSlug, da.nameUrl, da.couleurAssociee, da.departementNom, da.departementCode, o.libelleAbrege AS commission
+        FROM class_participation_commission cp
+        LEFT JOIN deputes_all da ON cp.mpId = da.mpId
+        LEFT JOIN mandat_secondaire ms ON cp.mpId = ms.mpId
+        LEFT JOIN organes o ON ms.organeRef = o.uid
+        WHERE da.legislature = ? AND cp.active = 1 AND ms.typeOrgane = "COMPER" AND ms.codeQualite = "Membre" AND ms.dateFin IS NULL
+        ORDER BY cp.score DESC, cp.votesN DESC
       ';
       return $this->db->query($sql, legislature_current())->result_array();
     }
