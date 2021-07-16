@@ -4,7 +4,7 @@
         <a href="<?= base_url() ?>elections/regionales-2021">
           <div class="container-fluid electionBanner d-flex justify-content-center align-items-center py-4">
             <span class="text-center">
-              <?= $title ?> est candidat<?= $gender['e'] ?> aux élections régionales de juin 2021, dans la région <?= $regionales2021['regionLibelle'] ?>.
+              <?= $title ?> était candidat<?= $gender['e'] ?> aux élections régionales de juin 2021, en <?= $regionales2021['regionLibelle'] ?>.
               <?php if ($regionales2021['state'] == 'lost'): ?>
                 <u><?= ucfirst($gender['pronom']) ?> a été éliminé<?= $gender['e'] ?></u>.
               <?php endif; ?>
