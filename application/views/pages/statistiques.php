@@ -42,7 +42,7 @@
             Cependant, les députés ont plusieurs activités (contrôle du gouvernement, écriture d'amendements, présence en circonscription) et ne sont donc pas tout le temps présent dans l'hémicycle. De plus, contrairement au <a href='https://www.europarl.europa.eu/about-parliament/fr/organisation-and-rules/how-plenary-works' title='Les votes au Parlement européen' target="_blank" rel="nofollow noopener">Parlement européen</a>, les votes dans l'hémicycle se déroulent à n'importe quel moment de la semaine, souvent en même temps que d'autres réunions importantes pour les députés, comme les réunions de commissions parlementaires.
           </p>
           <p>
-            Nous avons développé trois scores de participation. Il s'agit de pourcentages. Ainsi, si un député participe à 10 votes sur 100, il aura un score de participation de 10 %.
+            Nous avons développé <a href="<?= base_url() ?>statistiques/deputes-participation">trois scores de participation</a>. Il s'agit de pourcentages. Ainsi, si un député participe à 10 votes sur 100, il aura un score de participation de 10 %.
           </p>
           <ul>
             <li><b>Scrutins solennels</b>. Le premier score, mis en avant sur les pages des députés, est le taux de participation aux scrutins solennels. Les scrutins solennels sont les votes les plus importants et concernent des projets de loi significatifs et fortement discutés dans les médias. Pour ces votes, le jour et l'heure du vote sont connus à l'avance, favorisant ainsi la présence des parlementaires dans l'hémicycle. Il est attendu d'un député qu'il participe à la majorité de ces scrutins.</li>
