@@ -78,15 +78,13 @@
     public function get_map_legend($id){
       if ($id == 1 /*regionales-2021*/) {
         $array = array(
-          array("party" => "Parti socialiste (PS)", "color" => "#F78080"),
-          array("party" => "Les Centrists (LC)", "color" => "#54FEFF"),
-          array("party" => "Les Républicains (LR)", "color" => "#1A66CC"),
-          array("party" => "Divers droite", "color" => "#ADC1FD"),
+          array("party" => "Union de la gauche et divers gauche", "color" => "#F78080"),
+          array("party" => "Union au centre et à droite", "color" => "#54FEFF"),
+          array("party" => "Union de la droite et divers droite", "color" => "#1A66CC"),
           array("party" => "Régionalistes", "color" => "#FBCC33"),
-          array("party" => "Divers gauche", "color" => "#fac0c0")
         );
       }
-      if ($id == 2 /*regionales-2021*/) {
+    if ($id == 2 /*departementales-2021*/) {
         $array = array(
           array("party" => "Les Républicains (LR)", "color" => "#0066CC"),
           array("party" => "Parti socialistes (PS)", "color" => "#FF8080"),
