@@ -21,6 +21,28 @@ let colorsRegions2015 = {
   "FR-YT": disabled
 }
 
+let colorsRegions2021 = {
+  // https://jvectormap.com/maps/countries/france-regions-2016/
+  "FR-X1": "#F78080",
+  "FR-X2": "#F78080",
+  "FR-X3": "#54FEFF",
+  "FR-X4": "#54FEFF",
+  "FR-X5": "#F78080",
+  "FR-X6": "#1A66CC",
+  "FR-X7": "#1A66CC",
+  "FR-E": "#F78080",
+  "FR-F": "#F78080",
+  "FR-H": "#FBCC33",
+  "FR-J": "#1A66CC",
+  "FR-R": "#54FEFF",
+  "FR-U": "#1A66CC",
+  "FR-GF": "#F78080",
+  "FR-GP": "#54FEFF",
+  "FR-MQ": "#F78080",
+  "FR-RE": "#F78080",
+  "FR-YT": disabled
+}
+
 let Regions2015Disabled = ['FR-YT'];
 
 // Converting CSV to JSON ==> https://www.convertcsv.com/csv-to-json.htm
@@ -138,7 +160,7 @@ $(function() {
     backgroundColor:'#f3f5f6',
     series: {
       regions: [{
-        values: colorsRegions2015
+        values: colorsRegions2021
       }]
     },
     onRegionTipShow: function ( e, label, code ) {

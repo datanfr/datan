@@ -58,6 +58,7 @@
       $data['candidatsN_second'] = $this->elections_model->count_candidats($data['election']['id'], TRUE, FALSE);
       $data['candidatsN_elected'] = $this->elections_model->count_candidats($data['election']['id'], TRUE, TRUE);
       $data['mapLegend'] = $this->elections_model->get_map_legend($data['election']['id']);
+      $data['today'] = date("Y-m-d");
 
       // badgeCenter
       foreach ($data['deputes'] as $key => $value) {

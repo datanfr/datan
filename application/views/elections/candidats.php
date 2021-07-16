@@ -11,8 +11,7 @@
       <div class="col-md-8 col-lg-7 my-4">
         <h2>Informations</h2>
         <p>Les <?= mb_strtolower($election['libelle']) ?> <?= $election['dateYear'] ?> se dérouleront en deux tours.</p>
-        <p>Le premier tour se tiendra le <?= $election['dateFirstRoundFr'] ?>, tandis que le second tour se déroulera le <?= $election['dateSecondRoundFr'] ?>.</p>
-        <p><b>Attention</b>, au vu de la crise sanitaire de la Covid-19, les dates des <?= mb_strtolower($election['libelle']) ?> sont susceptibles de changer.</p>
+        <p>Le premier tour <?= $today > $election['dateFirstRound'] ? "s'est tenu" : "se tiendra" ?> le <?= $election['dateFirstRoundFr'] ?>, tandis que le second tour <?= $today > $election['dateSecondRound'] ? "s'est déroulé" : "se déroulera" ?> le <?= $election['dateSecondRoundFr'] ?>.</p>
         <?php if ($election['candidates']): ?>
           <p>
             Découvrez sur cette page les députés candidats aux <?= mb_strtolower($election['libelle']) ?> de <?= $election['dateYear'] ?>.
@@ -45,10 +44,9 @@
   <div class="row">
     <?php if ($election['id'] == 1 /*regionales-2021 */): ?>
       <div class="col-md-8 col-lg-7">
-        <h2 class="my-4">La couleur politique actuelle des conseils régionaux</h2>
-        <p>Les dernières élections régionales ont eu lieu en 2015. Pour retrouver les résultats, <a href="https://www.interieur.gouv.fr/Elections/Les-resultats/Regionales/elecresult__regionales-2015/(path)/regionales-2015/index.html" target="_blank" rel="nofollow noreferrer noopener">cliquez ici</a>.</p>
+        <h2 class="my-4">Résultats : la couleur politique des conseils régionaux</h2>
         <p>Dans les conseils régionaux, les partis politiques qui arrivent en têtes aux élections reçoivent la majorité des sièges et en prennent la présidence. C'est donc la liste arrivée en tête qui se retrouve à la tête de la région.</p>
-        <p>Découvrez sur cette carte la couleur politique des différents départements de 2015 à 2021.</p>
+        <p>Découvrez sur cette carte la couleur politique des différentes régions après le second tour des élections de 2021.</p>
         <div class="map-container my-5">
           <div class="jvmap-smart" id="map-regions"></div>
         </div>
