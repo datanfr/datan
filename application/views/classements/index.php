@@ -285,7 +285,7 @@
             <div class="card-body">
               <h3>La participation des députés aux votes</h3>
               <p>En moyenne, les députés participent à <b><?= $mps_participation_mean ?> %</b> des scrutins.</p>
-              <p><b>Attention</b>, le taux de participation à l'Assemblée tend à être faible du fait de l'organisation du travail. De plus, à cause de la crise de la Covid-19, les députés ayant rejoint le parlement récemment ont des scores de participation plus faibles que la moyenne.</p>
+              <p><b>Attention</b>, à cause de la crise de la Covid-19, les députés ayant rejoint le parlement récemment ont des scores de participation plus faibles que la moyenne.</p>
               <div class="table_ranking">
                 <table class="table table-striped">
                   <thead>
@@ -329,7 +329,7 @@
             <div class="card-body pb-0">
               <h3>La participation au sein des groupes</h3>
               <p>Quels sont les groups politiques ayant les députés participant le plus aux votes à l'Assemblée nationale ?</p>
-              <p><b>Attention</b>, le taux de participation est faible à cause de l'organisation du travail. Avec plusieurs réunions en même temps, seuls les députés spécialistes d'un sujet participent aux discussions en séance plénière.</p>
+              <p><b>Attention</b>, à cause de la crise de la Covid-19, les députés ayant rejoint le parlement récemment ont des scores de participation plus faibles que la moyenne.</p>
               <?php $this->load->view('classements/partials/groups_index.php', $groups_participation_edited) ?>
             </div>
             <a href="<?= base_url() ?>statistiques/groupes-participation" class="no-decoration">
