@@ -36,19 +36,24 @@
           </ul>
           <h2 id="participation" class="anchor">La participation aux votes</h2>
           <p>
-            Pour calculer les <b>taux de participation des députés</b>, nous prenons en compte chaque vote (scrutin) auquel un député aurait pu participé lors de son mandat. Le score qui se trouve sur la page des députés représente le <i>pourcentage</i> de scrutin pour lesquels le député a participé, par rapport au total des scrutins qui ont eu lieu au cours de son mandat (pendant la 15<sup>e</sup>législature).
+            Le vote est une activité essentielle pour un député : les élus votent pour ou contre des projets de loi qui auront un impact direct sur la vie des citoyens.
           </p>
           <p>
-            Par exemple, prenons une députée fictive, qui se nomme Julie Dupont. Julie est députée depuis juin 2017. Depuis cette date, 200 votes ont eu lieu à l'Assemblée nationale. Julie Dupont a participé à 50 votes. Elle a donc un taux de participation de 25%. Autrement dit, elle a participé à 25% des votes (<i>50/100*100 = 25</i>).
+            Cependant, les députés ont plusieurs activités (contrôle du gouvernement, écriture d'amendements, présence en circonscription) et ne sont donc pas tout le temps présent dans l'hémicycle. De plus, contrairement au <a href='https://www.europarl.europa.eu/about-parliament/fr/organisation-and-rules/how-plenary-works' title='Les votes au Parlement européen' target="_blank" rel="nofollow noopener">Parlement européen</a>, les votes dans l'hémicycle se déroulent à n'importe quel moment de la semaine, souvent en même temps que d'autres réunions importantes pour les députés, comme les réunions de commissions parlementaires.
           </p>
           <p>
-            Le <b>taux de participation des groupes politiques</b> représente la moyenne des taux de participation de ses députés membres et apparentés.
+            Nous avons développé <a href="<?= base_url() ?>statistiques/deputes-participation">trois scores de participation</a>. Il s'agit de pourcentages. Ainsi, si un député participe à 10 votes sur 100, il aura un score de participation de 10 %.
+          </p>
+          <ul>
+            <li><b>Scrutins solennels</b>. Le premier score, mis en avant sur les pages des députés, est le taux de participation aux scrutins solennels. Les scrutins solennels sont les votes les plus importants et concernent des projets de loi significatifs et fortement discutés dans les médias. Pour ces votes, le jour et l'heure du vote sont connus à l'avance, favorisant ainsi la présence des parlementaires dans l'hémicycle. Il est attendu d'un député qu'il participe à la majorité de ces scrutins.</li>
+            <li><b>Spécialisation du député.</b> Le deuxième score ne prend en compte que les votes en lien avec le domaine de spécialisation d'un député. Par exemple, un député avec un score de 100% aura participé, en séance publique, à tous les scrutins sur des textes qui ont été précédemment examinés dans sa commission parlementaire. Ce sont sur ces votes que les élus ont un intérêt et une expertise particulière, et sont donc plus susceptibles de participer aux travaux parlementaires.</li>
+            <li><b>Tous les votes</b>. Pour ce dernier score, nous prenons en compte tous les votes. Ce score est en moyenne assez faible, étant donné que beaucoup de votes dans l'hémicycle ont lieu en même temps que des réunions de commissions parlementaires.</li>
+          </ul>
+          <p>
+            Le <b>taux de participation des groupes politiques</b> représente la moyenne des taux de participation de ses députés membres et apparentés. Nous prenons en compte le score de participation aux scrutins solennels.
           </p>
           <p>
-            Par exemple, prenons un groupe parlementaire fictif, qui se nomme <i>Vive la Politique</i>. Ce groupe compte 5 membres. Un des députés membre du groupe participe à 20% des scrutins, un autre à 15%, un autre à 30%, un autre à 5%, et un autre à 35%. Le taux de participation du groupe est la moyenne des taux individuels. Par exemple, <i>(20+15+30+5+35)/5 = 21%.</i> Le taux de participation du groupe est donc de 21%. Aurement dit, les députés membres du groupe <i>Vive la Politique</i> participent <i>en moyenne</i> à 21% des scrutins.
-          </p>
-          <p>
-            <b>Attention</b>, le taux de participation des députés, et la moyenne des groupes, ne mesure pas toute l'activité parlementaire. En plus des votes, les députés peuvent par exemple rédiger des propositions de loi, rapports, écrire des amendements, poser des questions écrites ou orales au gouvernement, etc. Les députés prennent également part aux discussions en commission et en séance plénière. De plus, les faibles taux de participation des députés s'expliquent par l'organisation interne de l'Assemblée nationale. Contrairement au <a href='https://www.europarl.europa.eu/about-parliament/fr/organisation-and-rules/how-plenary-works' title='Les votes au Parlement européen' target="_blank" rel="nofollow noopener">Parlement européen</a>, les votes en séance plénière se déroulent à n'importe quel moment de la semaine, souvent en même temps que se tiennent d'autres réunions également importantes pour les députés, comme les réunions de commissions parlementaires.
+            Par exemple, prenons un groupe parlementaire fictif, qui se nomme <i>Vive la Politique</i>. Ce groupe compte 5 membres. Un des députés membre du groupe participe à 20% des scrutins solennels, un autre à 15%, un autre à 30%, un autre à 5%, et un autre à 35%. Le taux de participation du groupe est la moyenne des taux individuels. Par exemple, <i>(20+15+30+5+35)/5 = 21%.</i> Le taux de participation du groupe est donc de 21%. Aurement dit, les députés membres du groupe <i>Vive la Politique</i> participent <i>en moyenne</i> à 21% des scrutins solennels.
           </p>
           <h2 id="loyalty" class="anchor">La loyauté envers son groupe</h2>
           <p>
