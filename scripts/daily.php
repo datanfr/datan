@@ -2242,11 +2242,13 @@ class Script
             SELECT B.organeRef, AVG(B.participation_rate) AS participation, COUNT(voteNumero) AS votesN_participation
             FROM
             (
-                SELECT A.*, A.total / A.n AS participation_rate
+                SELECT A.*, A.total / (A.n - A.nv) AS participation_rate
                 FROM
                 (
-                    SELECT voteNumero, organeRef, nombreMembresGroupe as n, nombrePours as pour, nombreContres as contre, nombreAbstentions as abstention, nonVotants as nv, nonVotantsVolontaires as nvv, nombrePours+nombreContres+nombreAbstentions as total
-                    FROM votes_groupes
+                    SELECT vg.voteNumero, vg.organeRef, vg.nombreMembresGroupe as n, vg.nombrePours as pour, vg.nombreContres as contre, vg.nombreAbstentions as abstention, CASE WHEN vg.nonVotants IS NULL THEN 0 ELSE vg.nonVotants END AS nv, vg.nonVotantsVolontaires as nvv, vg.nombrePours+vg.nombreContres+vg.nombreAbstentions as total
+                    FROM votes_groupes vg
+                    LEFT JOIN votes_info vi ON vg.voteNumero = vi.voteNumero AND vg.legislature = vi.legislature
+                    WHERE vi.codeTypeVote = "SPS"
                 ) A
             ) B
             GROUP BY B.organeRef

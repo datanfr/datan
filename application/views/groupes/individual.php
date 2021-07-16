@@ -266,12 +266,15 @@
                     <div class="col-lg-8 infos mt-4 mt-lg-2">
                       <div class="texte ml-md-3 pl-md-3 mt-md-0 mt-3">
                         <p>
-                          En moyenne, <?= $stats['participation'] ?>% <?php if ($groupe['libelleAbrev'] != "NI"): ?>des députés du groupe <?= $groupe['libelleAbrev'] ?><?php else: ?>des <?= mb_strtolower($title) ?><?php endif; ?> <?= $active ? 'prennent' : 'prenaient' ?> part aux votes.
+                          En moyenne, <?= $stats['participation'] ?>% <?php if ($groupe['libelleAbrev'] != "NI"): ?>des députés du groupe <?= $groupe['libelleAbrev'] ?><?php else: ?>des <?= mb_strtolower($title) ?><?php endif; ?> <?= $active ? 'prennent' : 'prenaient' ?> part aux scrutins solennels.
                         </p>
                         <p>
                           <?php if ($groupe['libelleAbrev'] != "NI"): ?>Le groupe <b><?= $active ? 'participe' : 'participait' ?> <?php else: ?>Les <?= mb_strtolower($title) ?> <b>participent <?php endif; ?> <?= $edito_participation['relative'] ?></b> que la moyenne <?= $active ? "des autres groupes" : "de tous les groupes de l'Assemblée" ?>, qui est <?php if ($edito_participation == "autant"): ?>
                             aussi
                           <?php endif; ?> de <?= $participationAverage ?> %.
+                        </p>
+                        <p>
+                          Les votes solennels sont les votes considérés comme importants pour lesquels les députés connaissent à l'avance le jour et l'heure du vote.
                         </p>
                         <!-- <span><a href="#" target="_blank">> Voir le classement général</a></span> -->
                       </div>
