@@ -33,6 +33,13 @@
             <li>
               <a href="https://www.data.gouv.fr/fr/datasets/groupes-politiques-actifs-de-lassemblee-nationale-informations-et-statistiques/" target="_blank" rel="nofollow noopener">Groupes actifs de l'Assemblée nationale - Informations et statistiques</a>
             </li>
+            <li>
+              <a href="https://www.data.gouv.fr/fr/datasets/historique-des-deputes-de-lassemblee-nationale-depuis-2002-informations-et-statistiques/" target="_blank" rel="nofollow noopener">Historique des députés de l'Assemblée nationale (depuis 2002) - Informations et statistiques</a>
+            </li>
+            <li>
+              <a href="https://www.data.gouv.fr/fr/datasets/historique-des-groupes-politiques-de-lassemblee-nationale-depuis-2012-informations-et-statistiques/" target="_blank" rel="nofollow noopener">Historique des groupes politiques de l'Assemblée nationale (depuis 2012) - Informations et statistiques</a>
+            </li>
+
           </ul>
           <h2 id="participation" class="anchor">La participation aux votes</h2>
           <p>
