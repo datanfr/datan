@@ -132,6 +132,14 @@
               Pour en savoir plus sur l'origine sociale des parlementaires, <a href="<?= base_url() ?>statistiques">cliquez ici</a>.
             </p>
           <?php endif; ?>
+          <?php if ($depute['mailAn'] !== NULL && $active): ?>
+            <div class="d-flex justify-content-center mt-5">
+              <a href="mailto:<?= $depute['mailAn'] ?>" class="btn btn-primary">
+                <?= file_get_contents(asset_url() . "imgs/icons/envelope.svg") ?>
+                <span class="ml-2">Contacter <?= $title ?></span>
+              </a>
+            </div>
+          <?php endif; ?>
         </div>
         <!-- BLOC POSITIONS CLEFS -->
         <?php if ($key_votes !== NULL) : ?>
