@@ -113,7 +113,7 @@
 
       // Groupe_color
       foreach ($data['deputes'] as $key => $value) {
-        $data['deputes'][$key]['couleurAssociee'] = $this->groupes_model->get_groupe_color(array($value['groupLibelleAbrev'], $value['couleurAssociee']));
+        $data['deputes'][$key]['couleurAssociee'] = $this->groupes_model->get_groupe_color(array($value['libelleAbrev'], $value['couleurAssociee']));
       }
 
       // Breadcrumb
@@ -175,7 +175,7 @@
 
       // Groupe_color
       foreach ($data['deputes'] as $key => $value) {
-        $data['deputes'][$key]['couleurAssociee'] = $this->groupes_model->get_groupe_color(array($value['groupLibelleAbrev'], $value['couleurAssociee']));
+        $data['deputes'][$key]['couleurAssociee'] = $this->groupes_model->get_groupe_color(array($value['libelleAbrev'], $value['couleurAssociee']));
       }
 
       $data['title'] = "Les députés plus en activité";
@@ -530,7 +530,7 @@
         $data['n_circos'] = $n_circos;
         $data['deputes_commune'] = $this->departement_model->get_deputes_commune($departement, $circo);
         $data['depute_commune'] = $data['deputes_commune'][0];
-        $data['depute_commune']['couleurAssociee'] = $this->groupes_model->get_groupe_color(array($data['depute_commune']['groupLibelleAbrev'], $data['depute_commune']['couleurAssociee']));
+        $data['depute_commune']['couleurAssociee'] = $this->groupes_model->get_groupe_color(array($data['depute_commune']['libelleAbrev'], $data['depute_commune']['couleurAssociee']));
         $data['depute_commune']['electionCircoAbbrev'] = $this->functions_datan->abbrev_n($data['depute_commune']['electionCirco'], TRUE);
         $data['depute_commune']['cardCenter'] = $data['depute_commune']['electionCirco']."<sup>".$data['depute_commune']['electionCircoAbbrev']."</sup> circonscription";
         $data['gender'] = $this->depute_edito->gender($data['depute_commune']['civ']);
@@ -548,7 +548,7 @@
         $data['n_circos'] = $n_circos;
         $data['deputes_commune'] = $this->departement_model->get_deputes_commune($departement, $circo);
         foreach ($data['deputes_commune'] as $key => $value) {
-          $data['deputes_commune'][$key]['couleurAssociee'] = $this->groupes_model->get_groupe_color(array($value['groupLibelleAbrev'], $value['couleurAssociee']));
+          $data['deputes_commune'][$key]['couleurAssociee'] = $this->groupes_model->get_groupe_color(array($value['libelleAbrev'], $value['couleurAssociee']));
           $data['deputes_commune'][$key]['electionCircoAbbrev'] = $this->functions_datan->abbrev_n($value['electionCirco'], TRUE);
           $data['deputes_commune'][$key]['cardCenter'] = $data['deputes_commune'][$key]['electionCirco']."<sup>".$data['deputes_commune'][$key]['electionCircoAbbrev']."</sup> circonscription";
         }
@@ -561,7 +561,7 @@
       }
       $data['deputes_dpt'] = $this->departement_model->get_deputes_commune_dpt($departement, $deputes_commune);
       foreach ($data['deputes_dpt'] as $key => $value) {
-        $data['deputes_dpt'][$key]['couleurAssociee'] = $this->groupes_model->get_groupe_color(array($value['groupLibelleAbrev'], $value['couleurAssociee']));
+        $data['deputes_dpt'][$key]['couleurAssociee'] = $this->groupes_model->get_groupe_color(array($value['libelleAbrev'], $value['couleurAssociee']));
         $data['deputes_dpt'][$key]['electionCircoAbbrev'] = $this->functions_datan->abbrev_n($value['electionCirco'], TRUE);
         $data['deputes_dpt'][$key]['cardCenter'] = $data['deputes_dpt'][$key]['electionCirco']."<sup>".$data['deputes_dpt'][$key]['electionCircoAbbrev']."</sup> circonscription";
       }

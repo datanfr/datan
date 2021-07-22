@@ -42,7 +42,7 @@
     </div>
     <?php else: ?>
       <div class="card-footer d-flex justify-content-center align-items-center">
-        <span><?= $depute["groupLibelle"] ?> (<?= $depute["groupLibelleAbrev"] ?>)</span>
+        <span><?= $depute["libelle"] ?> (<?= $depute["libelleAbrev"] ?>)</span>
       </div>
   <?php endif; ?>
 </div>
