@@ -11,14 +11,23 @@
     <<?= $tag ?> class="d-block card-title">
       <a href="<?= base_url(); ?>groupes/<?= mb_strtolower($groupe['libelleAbrev']) ?>" class="stretched-link no-decoration"><?= $groupe['libelle'] ?></a>
     </<?= $tag ?>>
-    <span class="d-block"><?= $groupe["libelleAbrev"] ?></span>
+    <span class="d-block libelle"><?= $groupe["libelleAbrev"] ?></span>
     <?php if (isset($stats)): ?>
       <span class="badge badge-primary badge-stats mt-3"><?= $stats ?></span>
     <?php endif; ?>
+    <?php if ($cat): ?>
+      <span class="d-block mt-2"><?= $groupe["effectif"] ?> membres</span>
+    <?php endif; ?>
   </div>
-  <?php if ($active): ?>
-  <div class="card-footer d-flex justify-content-center align-items-center">
-    <span><?= $groupe["effectif"] ?> membres</span>
-  </div>
+  <?php if ($cat): ?>
+    <div class="mb-3">
+      <a class="btn btn-cat btn-primary stretched-link" href="<?= base_url(); ?>groupes/<?= mb_strtolower($groupe['libelleAbrev']) ?>" role="button">Découvrir son activité</a>
+    </div>
+    <?php else: ?>
+      <?php if ($active): ?>
+      <div class="card-footer d-flex justify-content-center align-items-center">
+        <span><?= $groupe["effectif"] ?> membres</span>
+      </div>
+      <?php endif; ?>
   <?php endif; ?>
 </div>
