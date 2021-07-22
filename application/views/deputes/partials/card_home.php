@@ -17,7 +17,7 @@
       <?php endif; ?>
       </<?= $tag ?>>
       <?php if (isset($stats)): ?>
-        <span class="badge badge-primary badge-stats mb-3"><?= $stats ?></span>
+        <span class="badge badge-stats mb-3"><?= $stats ?></span>
       <?php endif; ?>
       <span class="d-block"><?= $depute["cardCenter"] ?></span>
       <?php if (isset($depute["badgeCenter"])): ?>
