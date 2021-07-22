@@ -687,6 +687,19 @@ body:not(.pg-mentions) #tarteaucitronIcon {
     font-size: 1em;
   }
 }
+/* card-depute ==> CAT */
+.card-depute{
+  .btn-cat{
+    color: #fff;
+    padding: 10px;
+  }
+  .img-group-cat{
+    img {
+      height: 85px;
+      width: auto;
+    }
+  }
+}
 /* card-avatar */
 .card-avatar{
   width: 130px;
