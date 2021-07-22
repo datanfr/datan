@@ -155,11 +155,11 @@
         $data['deputes'] = $this->stats_model->get_ranking_age();
         $data['mpOldest'] = $data['deputes'][0];
         $data['mpOldest']["name"] = $data['mpOldest']["nameFirst"]." ".$data['mpOldest']["nameLast"];
-        $data['mpOldest']['couleurAssociee'] = $this->groupes_model->get_groupe_color(array($data['mpOldest']['groupLibelleAbrev'], $data['mpOldest']['couleurAssociee']));
+        $data['mpOldest']['couleurAssociee'] = $this->groupes_model->get_groupe_color(array($data['mpOldest']['libelleAbrev'], $data['mpOldest']['couleurAssociee']));
         $data['mpOldestGender'] = $this->depute_edito->gender($data['mpOldest']["civ"]);
         $data['mpYoungest'] = end($data['deputes']);
         $data['mpYoungest']["name"] = $data['mpYoungest']["nameFirst"]." ".$data['mpYoungest']["nameLast"];
-        $data['mpYoungest']['couleurAssociee'] = $this->groupes_model->get_groupe_color(array($data['mpYoungest']['groupLibelleAbrev'], $data['mpYoungest']['couleurAssociee']));
+        $data['mpYoungest']['couleurAssociee'] = $this->groupes_model->get_groupe_color(array($data['mpYoungest']['libelleAbrev'], $data['mpYoungest']['couleurAssociee']));
         $data['mpYoungestGender'] = $this->depute_edito->gender($data['mpYoungest']["civ"]);
 
 
@@ -206,11 +206,11 @@
         $data['mpLoyal'] = array_slice($data['deputes'], 0, 1);
         $data['mpLoyal'] = $data['mpLoyal'][0];
         $data['mpLoyal']['name'] = $data['mpLoyal']['nameFirst']." ".$data['mpLoyal']['nameLast'];
-        $data['mpLoyal']['couleurAssociee'] = $this->groupes_model->get_groupe_color(array($data['mpLoyal']['groupLibelleAbrev'], $data['mpLoyal']['couleurAssociee']));
+        $data['mpLoyal']['couleurAssociee'] = $this->groupes_model->get_groupe_color(array($data['mpLoyal']['libelleAbrev'], $data['mpLoyal']['couleurAssociee']));
         $data['mpLoyalGender'] = $this->depute_edito->gender($data['mpLoyal']["civ"]);
         $data['mpRebel'] = end($data['deputes']);
         $data['mpRebel']['name'] = $data['mpRebel']['nameFirst']." ".$data['mpRebel']['nameLast'];
-        $data['mpRebel']['couleurAssociee'] = $this->groupes_model->get_groupe_color(array($data['mpRebel']['groupLibelleAbrev'], $data['mpRebel']['couleurAssociee']));
+        $data['mpRebel']['couleurAssociee'] = $this->groupes_model->get_groupe_color(array($data['mpRebel']['libelleAbrev'], $data['mpRebel']['couleurAssociee']));
         $data['mpRebelGender'] = $this->depute_edito->gender($data['mpRebel']["civ"]);
 
         // Meta
@@ -252,11 +252,11 @@
         $data['mpActive'] = array_slice($data['mpsSolennels'], 0, 1);
         $data['mpActive'] = $data['mpActive'][0];
         $data['mpActive']['name'] = $data['mpActive']['nameFirst']." ".$data['mpActive']['nameLast'];
-        $data['mpActive']['couleurAssociee'] = $this->groupes_model->get_groupe_color(array($data['mpActive']['groupLibelleAbrev'], $data['mpActive']['couleurAssociee']));
+        $data['mpActive']['couleurAssociee'] = $this->groupes_model->get_groupe_color(array($data['mpActive']['libelleAbrev'], $data['mpActive']['couleurAssociee']));
         $data['mpActiveGender'] = $this->depute_edito->gender($data['mpActive']["civ"]);
         $data['mpInactive'] = end($data['mpsSolennels']);
         $data['mpInactive']['name'] = $data['mpInactive']['nameFirst']." ".$data['mpInactive']['nameLast'];
-        $data['mpInactive']['couleurAssociee'] = $this->groupes_model->get_groupe_color(array($data['mpInactive']['groupLibelleAbrev'], $data['mpInactive']['couleurAssociee']));
+        $data['mpInactive']['couleurAssociee'] = $this->groupes_model->get_groupe_color(array($data['mpInactive']['libelleAbrev'], $data['mpInactive']['couleurAssociee']));
         $data['mpInactiveGender'] = $this->depute_edito->gender($data['mpInactive']["civ"]);
 
         // Meta

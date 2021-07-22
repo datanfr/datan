@@ -6,7 +6,7 @@
 
     public function get_ranking_age(){
       $sql = 'SELECT @s:=@s+1 AS "rank",
-        da.civ, da.nameFirst, da.nameLast, da.nameUrl, da.img, da.libelle AS groupLibelle, da.libelleAbrev AS groupLibelleAbrev, da.mpId, da.dptSlug, da.age, da.couleurAssociee,
+        da.civ, da.nameFirst, da.nameLast, da.nameUrl, da.img, da.libelle AS libelle, da.libelleAbrev AS libelleAbrev, da.mpId, da.dptSlug, da.age, da.couleurAssociee,
         CONCAT(da.departementNom, " (", da.departementCode, ")") AS cardCenter
         FROM deputes_all da,
         (SELECT @s:= 0) AS s
@@ -111,7 +111,7 @@
       $sql = 'SELECT @s:=@s+1 AS "rank", A.*
         FROM
         (
-        SELECT cl.mpId, ROUND(cl.score*100) AS score, cl.votesN, da.civ, da.nameLast, da.nameFirst, da.nameUrl, da.img, da.libelle AS groupLibelle, da.libelleAbrev AS groupLibelleAbrev, da.dptSlug, da.couleurAssociee, da.departementNom, da.departementCode,
+        SELECT cl.mpId, ROUND(cl.score*100) AS score, cl.votesN, da.civ, da.nameLast, da.nameFirst, da.nameUrl, da.img, da.libelle AS libelle, da.libelleAbrev AS libelleAbrev, da.dptSlug, da.couleurAssociee, da.departementNom, da.departementCode,
         CONCAT(da.departementNom, " (", da.departementCode, ")") AS cardCenter
         FROM class_loyaute cl
         LEFT JOIN deputes_all da ON cl.mpId = da.mpId AND cl.legislature = da.legislature
@@ -165,7 +165,7 @@
     }
 
     public function get_mps_participation(){
-      $sql = 'SELECT cp.*, da.nameFirst, da.nameLast, da.civ, da.libelle AS groupLibelle, da.libelleAbrev AS groupLibelleAbrev, da.dptSlug, da.nameUrl, da.couleurAssociee, da.departementNom, da.departementCode
+      $sql = 'SELECT cp.*, da.nameFirst, da.nameLast, da.civ, da.libelle AS libelle, da.libelleAbrev AS libelleAbrev, da.dptSlug, da.nameUrl, da.couleurAssociee, da.departementNom, da.departementCode
         FROM class_participation cp
         LEFT JOIN deputes_last da ON cp.mpId = da.mpId AND da.legislature = cp.legislature
         WHERE da.active AND cp.legislature = ?
@@ -175,7 +175,7 @@
     }
 
     public function get_mps_participation_solennels(){
-      $sql = 'SELECT cp.*, da.nameFirst, da.nameLast, da.civ, da.libelle AS groupLibelle, da.libelleAbrev AS groupLibelleAbrev, da.dptSlug, da.nameUrl, da.couleurAssociee, da.img,
+      $sql = 'SELECT cp.*, da.nameFirst, da.nameLast, da.civ, da.libelle AS libelle, da.libelleAbrev AS libelleAbrev, da.dptSlug, da.nameUrl, da.couleurAssociee, da.img,
         CONCAT(da.departementNom, " (", da.departementCode, ")") AS cardCenter
         FROM class_participation_solennels cp
         LEFT JOIN deputes_last da ON cp.mpId = da.mpId AND da.legislature = cp.legislature
@@ -192,7 +192,7 @@
     }
 
     public function get_mps_participation_commission(){
-      $sql = 'SELECT cp.mpId, cp.score, cp.votesN, da.nameFirst, da.nameLast, da.civ, da.libelle AS groupLibelle, da.libelleAbrev AS groupLibelleAbrev, da.dptSlug, da.nameUrl, da.couleurAssociee, da.departementNom, da.departementCode, o.libelleAbrege AS commission
+      $sql = 'SELECT cp.mpId, cp.score, cp.votesN, da.nameFirst, da.nameLast, da.civ, da.libelle AS libelle, da.libelleAbrev AS libelleAbrev, da.dptSlug, da.nameUrl, da.couleurAssociee, da.departementNom, da.departementCode, o.libelleAbrege AS commission
         FROM class_participation_commission cp
         LEFT JOIN deputes_all da ON cp.mpId = da.mpId
         LEFT JOIN mandat_secondaire ms ON cp.mpId = ms.mpId

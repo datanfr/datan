@@ -82,7 +82,7 @@
       $data['deputesActive'] = $this->parties_model->get_mps_active($organeRef);
 
       foreach ($data['deputesActive'] as $key => $value) {
-        $data['deputesActive'][$key]['couleurAssociee'] = $this->groupes_model->get_groupe_color(array($value['groupLibelleAbrev'], $value['couleurAssociee']));
+        $data['deputesActive'][$key]['couleurAssociee'] = $this->groupes_model->get_groupe_color(array($value['libelleAbrev'], $value['couleurAssociee']));
       }
 
       // Meta

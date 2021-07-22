@@ -51,7 +51,7 @@
                       <tr>
                         <th scope="row"><?= $mp['rank'] ?></th>
                         <td>
-                          <a href="<?= base_url() ?>deputes/<?= $mp['dptSlug'] ?>/depute_<?= $mp['nameUrl'] ?>" class="no-decoration underline"><?= $mp['nameFirst'].' '.$mp['nameLast'] ?> (<?= $mp['groupLibelleAbrev'] ?>)</a>
+                          <a href="<?= base_url() ?>deputes/<?= $mp['dptSlug'] ?>/depute_<?= $mp['nameUrl'] ?>" class="no-decoration underline"><?= $mp['nameFirst'].' '.$mp['nameLast'] ?> (<?= $mp['libelleAbrev'] ?>)</a>
                         </td>
                         <td><?= $mp['age'] ?> ans</td>
                       </tr>
@@ -63,7 +63,7 @@
                       <tr>
                         <th scope="row"><?= $mp['rank'] ?></th>
                         <td>
-                          <a href="<?= base_url() ?>deputes/<?= $mp['dptSlug'] ?>/depute_<?= $mp['nameUrl'] ?>" class="no-decoration underline"><?= $mp['nameFirst'].' '.$mp['nameLast'] ?> (<?= $mp['groupLibelleAbrev'] ?>)</a>
+                          <a href="<?= base_url() ?>deputes/<?= $mp['dptSlug'] ?>/depute_<?= $mp['nameUrl'] ?>" class="no-decoration underline"><?= $mp['nameFirst'].' '.$mp['nameLast'] ?> (<?= $mp['libelleAbrev'] ?>)</a>
                         </td>
                         <td><?= $mp['age'] ?> ans</td>
                       </tr>
@@ -228,7 +228,7 @@
                     <?php foreach ($mps_loyalty_more as $mp): ?>
                       <tr>
                         <th scope="row"><?= $mp['rank'] ?></th>
-                        <td><?= $mp['nameFirst'].' '.$mp['nameLast'] ?> (<?= $mp['groupLibelleAbrev'] ?>)</td>
+                        <td><?= $mp['nameFirst'].' '.$mp['nameLast'] ?> (<?= $mp['libelleAbrev'] ?>)</td>
                         <td><?= $mp['score'] ?> %</td>
                       </tr>
                     <?php endforeach; ?>
@@ -238,7 +238,7 @@
                     <?php foreach ($mps_loyalty_less as $mp): ?>
                       <tr>
                         <th scope="row"><?= $mp['rank'] ?></th>
-                        <td><?= $mp['nameFirst'].' '.$mp['nameLast'] ?> (<?= $mp['groupLibelleAbrev'] ?>)</td>
+                        <td><?= $mp['nameFirst'].' '.$mp['nameLast'] ?> (<?= $mp['libelleAbrev'] ?>)</td>
                         <td><?= $mp['score'] ?> %</td>
                       </tr>
                     <?php endforeach; ?>
@@ -299,7 +299,7 @@
                     <?php foreach ($mps_participation_first as $mp): ?>
                       <tr>
                         <th scope="row"><?= $mp['rank'] ?></th>
-                        <td><?= $mp['nameFirst'].' '.$mp['nameLast'] ?> (<?= $mp['groupLibelleAbrev'] ?>)</td>
+                        <td><?= $mp['nameFirst'].' '.$mp['nameLast'] ?> (<?= $mp['libelleAbrev'] ?>)</td>
                         <td><?= $mp['score'] * 100 ?> %</td>
                       </tr>
                     <?php endforeach; ?>
@@ -309,7 +309,7 @@
                     <?php foreach ($mps_participation_last as $mp): ?>
                       <tr>
                         <th scope="row"><?= $mp['rank'] ?></th>
-                        <td><?= $mp['nameFirst'].' '.$mp['nameLast'] ?> (<?= $mp['groupLibelleAbrev'] ?>)</td>
+                        <td><?= $mp['nameFirst'].' '.$mp['nameLast'] ?> (<?= $mp['libelleAbrev'] ?>)</td>
                         <td><?= $mp['score'] * 100 ?> %</td>
                       </tr>
                     <?php endforeach; ?>

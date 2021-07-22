@@ -100,7 +100,7 @@
     }
 
     public function get_mps_active($organeRef){
-      $sql = 'SELECT ms.organeRef, da.nameFirst, da.nameLast, da.couleurAssociee, da.mpId, da.dptSlug, da.nameUrl, da.circo AS electionCirco, da.libelle AS groupLibelle, da.libelleAbrev AS groupLibelleAbrev, da.img,
+      $sql = 'SELECT ms.organeRef, da.nameFirst, da.nameLast, da.couleurAssociee, da.mpId, da.dptSlug, da.nameUrl, da.circo AS electionCirco, da.libelle AS libelle, da.libelleAbrev AS libelleAbrev, da.img,
         CONCAT(da.departementNom, " (", da.departementCode, ")") AS cardCenter
         FROM mandat_secondaire ms
         LEFT JOIN deputes_all da ON ms.mpId = da.mpId

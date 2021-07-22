@@ -16,7 +16,7 @@
       }
 
       $this->db->select('*');
-      $this->db->select('libelle AS groupLibelle, libelleAbrev AS groupLibelleAbrev, CONCAT(departementNom, " (", departementCode, ")") AS cardCenter');
+      $this->db->select('libelle AS libelle, libelleAbrev AS libelleAbrev, CONCAT(departementNom, " (", departementCode, ")") AS cardCenter');
       $this->db->where('legislature', $legislature);
       $this->db->order_by('nameLast ASC, nameFirst ASC');
       return $this->db->get('deputes_all')->result_array();
@@ -350,7 +350,7 @@
       $sql = 'SELECT A.*, d.civ
         FROM
         (
-          SELECT *, libelle AS groupLibelle, libelleAbrev AS groupLibelleAbrev,
+          SELECT *,
           CONCAT(da.departementNom, " (", da.departementCode, ")") AS cardCenter
           FROM deputes_all da
           WHERE legislature = ? AND dateFin IS NULL

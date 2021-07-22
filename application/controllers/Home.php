@@ -18,7 +18,7 @@
       $data['commune_random'] = $this->departement_model->get_commune_random();
       $data['depute_random'] = $this->deputes_model->get_depute_random();
       $data['depute_random'] = array_merge($data['depute_random'], $this->depute_edito->gender($data['depute_random']['civ']));
-      $data['depute_random']['couleurAssociee'] = $this->groupes_model->get_groupe_color(array($data['depute_random']['groupLibelleAbrev'], $data['depute_random']['couleurAssociee']));
+      $data['depute_random']['couleurAssociee'] = $this->groupes_model->get_groupe_color(array($data['depute_random']['libelleAbrev'], $data['depute_random']['couleurAssociee']));
       $data['groupe_random'] = $this->groupes_model->get_groupe_random();
       $data['groupe_random']['couleurAssociee'] = $this->groupes_model->get_groupe_color(array($data['groupe_random']['libelleAbrev'], $data['groupe_random']['couleurAssociee']));
 

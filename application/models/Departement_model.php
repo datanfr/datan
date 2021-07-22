@@ -127,7 +127,7 @@
 
     public function get_deputes_commune($departement, $circos){
       $sql = 'SELECT d.*, d.circo AS electionCirco,
-        d.libelle AS groupLibelle, d.libelleAbrev AS groupLibelleAbrev
+        d.libelle, d.libelleAbrev
         FROM deputes_all d
         WHERE d.dptSlug = ? AND d.circo IN ? AND d.legislature = 15 AND d.dateFin IS NULL
       ';
@@ -138,7 +138,7 @@
 
     public function get_deputes_commune_dpt($departement, $deputes_commune){
       $sql = 'SELECT d.*, d.circo AS electionCirco,
-        d.libelle AS groupLibelle, d.libelleAbrev AS groupLibelleAbrev
+        d.libelle, d.libelleAbrev
         FROM deputes_all d
         WHERE d.dptSlug = ? AND d.mpId NOT IN ? AND d.legislature = 15 AND d.dateFin IS NULL
       ';
