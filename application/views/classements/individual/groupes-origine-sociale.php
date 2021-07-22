@@ -16,7 +16,7 @@
           <p>Le groupe politique de l'Assemblée nationale le plus représentatif socialement de la population est <a href="<?= base_url() ?>groupes/<?= $rose_first['libelleAbrev'] ?>"><?= $rose_first['libelle'] ?> (<?= $rose_first['libelleAbrev'] ?>)</a>, avec un score de <?= $rose_first['rose_index'] ?>.</p>
         </div>
         <div class="col-12">
-          <?php $this->load->view('groupes/partials/card_home.php', array('groupe' => $rose_first, 'tag' => 'span', 'active' => TRUE, 'stats' => "Score : " . $rose_first['rose_index'] . " ans")) ?>
+          <?php $this->load->view('groupes/partials/card_home.php', array('groupe' => $rose_first, 'tag' => 'span', 'active' => TRUE, 'stats' => "Score : " . $rose_first['rose_index'] . " ans", 'cat' => true)) ?>
         </div>
         <div class="col-12 mt-5">
           <p>Découvrez ci-dessous le classement des groupes en fonction de leur représentativité sociale.</p>

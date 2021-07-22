@@ -12,11 +12,11 @@
       <div class="row row-grid mt-5">
         <div class="col-md-6 py-3">
           <h2 class="text-center">Le plus uni</h2>
-          <?php $this->load->view('groupes/partials/card_home.php', array('groupe' => $groupsFirst, 'tag' => 'span', 'active' => TRUE, 'stats' => "Cohésion : " . round($groupsFirst["cohesion"], 2))) ?>
+          <?php $this->load->view('groupes/partials/card_home.php', array('groupe' => $groupsFirst, 'tag' => 'span', 'active' => TRUE, 'stats' => "Cohésion : " . round($groupsFirst["cohesion"], 2), 'cat' => true)) ?>
         </div>
         <div class="col-md-6 py-3">
           <h2 class="text-center">Le plus divisé</h2>
-          <?php $this->load->view('groupes/partials/card_home.php', array('groupe' => $groupsLast, 'tag' => 'span', 'active' => TRUE, 'stats' => "Cohésion : " . round($groupsLast["cohesion"], 2))) ?>
+          <?php $this->load->view('groupes/partials/card_home.php', array('groupe' => $groupsLast, 'tag' => 'span', 'active' => TRUE, 'stats' => "Cohésion : " . round($groupsLast["cohesion"], 2), 'cat' => true)) ?>
         </div>
       </div>
       <div class="mt-5">

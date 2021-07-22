@@ -10,11 +10,11 @@
       <div class="row row-grid mt-5">
         <div class="col-md-6 py-3">
           <h2 class="text-center">Le plus féminisé</h2>
-          <?php $this->load->view('groupes/partials/card_home.php', array('groupe' => $groupsWomenFirst, 'tag' => 'span', 'active' => TRUE, 'stats' => $groupsWomenFirst['pct'] . "% de femmes")) ?>
+          <?php $this->load->view('groupes/partials/card_home.php', array('groupe' => $groupsWomenFirst, 'tag' => 'span', 'active' => TRUE, 'stats' => $groupsWomenFirst['pct'] . "% de femmes", 'cat' => true)) ?>
         </div>
         <div class="col-md-6 py-3">
           <h2 class="text-center">Le moins féminisé</h2>
-          <?php $this->load->view('groupes/partials/card_home.php', array('groupe' => $groupsWomenLast, 'tag' => 'span', 'active' => TRUE, 'stats' => $groupsWomenLast['pct'] . "% de femmes")) ?>
+          <?php $this->load->view('groupes/partials/card_home.php', array('groupe' => $groupsWomenLast, 'tag' => 'span', 'active' => TRUE, 'stats' => $groupsWomenLast['pct'] . "% de femmes", 'cat' => true)) ?>
         </div>
       </div>
       <div class="mt-5">
