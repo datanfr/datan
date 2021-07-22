@@ -22,13 +22,13 @@
         <div class="col-md-6 py-3">
           <h2 class="text-center">Vote le plus</h2>
           <div class="d-flex justify-content-center">
-            <?php $this->load->view('deputes/partials/card_home.php', array('depute' => $mpActive, 'tag' => 'span', 'stats' => round($mpActive['score'] * 100) . " %")) ?>
+            <?php $this->load->view('deputes/partials/card_home.php', array('depute' => $mpActive, 'tag' => 'span', 'stats' => round($mpActive['score'] * 100) . " %", 'cat' => true)) ?>
           </div>
         </div>
         <div class="col-md-6 py-3">
           <h2 class="text-center">Vote le moins</h2>
           <div class="d-flex justify-content-center">
-            <?php $this->load->view('deputes/partials/card_home.php', array('depute' => $mpInactive, 'tag' => 'span', 'stats' => round($mpInactive['score'] * 100) . " %")) ?>
+            <?php $this->load->view('deputes/partials/card_home.php', array('depute' => $mpInactive, 'tag' => 'span', 'stats' => round($mpInactive['score'] * 100) . " %", 'cat' => true)) ?>
           </div>
         </div>
       </div>
@@ -70,7 +70,7 @@
                   <tr>
                     <td class="text-center"><?= $depute['rank'] ?></td>
                     <td class="text-center"><?= $depute['nameFirst']." ".$depute['nameLast'] ?></td>
-                    <td class="text-center"><?= $depute['groupLibelleAbrev'] ?></td>
+                    <td class="text-center"><?= $depute['libelleAbrev'] ?></td>
                     <td class="text-center"><?= $depute['score'] * 100 ?> %</td>
                     <td class="text-center"><?= $depute['votesN'] ?></td>
                   </tr>
@@ -102,7 +102,7 @@
                   <tr>
                     <td class="text-center"><?= $i ?></td>
                     <td class="text-center"><?= $depute['nameFirst']." ".$depute['nameLast'] ?></td>
-                    <td class="text-center"><?= $depute['groupLibelleAbrev'] ?></td>
+                    <td class="text-center"><?= $depute['libelleAbrev'] ?></td>
                     <td class="text-center"><?= $depute['score'] * 100 ?> %</td>
                     <td class="text-center"><?= $depute['votesN'] ?></td>
                     <td class="text-center"><?= $depute['commission'] ?></td>
@@ -135,7 +135,7 @@
                   <tr>
                     <td class="text-center"><?= $i ?></td>
                     <td class="text-center"><?= $depute['nameFirst']." ".$depute['nameLast'] ?></td>
-                    <td class="text-center"><?= $depute['groupLibelleAbrev'] ?></td>
+                    <td class="text-center"><?= $depute['libelleAbrev'] ?></td>
                     <td class="text-center"><?= $depute['score'] * 100 ?> %</td>
                     <td class="text-center"><?= $depute['votesN'] ?></td>
                   </tr>

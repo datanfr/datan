@@ -18,13 +18,13 @@
         <div class="col-md-6 py-3">
           <h2 class="text-center"><?= ucfirst($mpLoyalGender['le']) ?> <?= $mpLoyalGender['depute'] ?> <?= $mpLoyalGender["le"] ?> plus loyal<?= $mpLoyalGender["e"] ?></h2>
           <div class="d-flex justify-content-center">
-            <?php $this->load->view('deputes/partials/card_home.php', array('depute' => $mpLoyal, 'tag' => 'span', 'stats' => $mpLoyal['score'] . " %")) ?>
+            <?php $this->load->view('deputes/partials/card_home.php', array('depute' => $mpLoyal, 'tag' => 'span', 'stats' => $mpLoyal['score'] . " %", 'cat' => true)) ?>
           </div>
         </div>
         <div class="col-md-6 py-3">
           <h2 class="text-center"><?= ucfirst($mpRebelGender['le']) ?> <?= $mpRebelGender['depute'] ?> <?= $mpRebelGender["le"] ?> plus rebelle</h2>
           <div class="d-flex justify-content-center">
-            <?php $this->load->view('deputes/partials/card_home.php', array('depute' => $mpRebel, 'tag' => 'span', 'stats' => $mpRebel['score'] . " %")) ?>
+            <?php $this->load->view('deputes/partials/card_home.php', array('depute' => $mpRebel, 'tag' => 'span', 'stats' => $mpRebel['score'] . " %", 'cat' => true)) ?>
           </div>
         </div>
       </div>
@@ -45,7 +45,7 @@
               <tr>
                 <td class="text-center"><?= $depute["rank"] ?></td>
                 <td class="text-center"><?= $depute["nameFirst"]." ".$depute["nameLast"] ?></td>
-                <td class="text-center"><?= $depute["groupLibelleAbrev"] ?></td>
+                <td class="text-center"><?= $depute["libelleAbrev"] ?></td>
                 <td class="text-center"><?= $depute["score"] ?> %</td>
               </tr>
               <?php $i++; ?>

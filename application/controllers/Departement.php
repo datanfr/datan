@@ -19,7 +19,7 @@
       $data['deputes'] = $this->deputes_model->get_deputes_all(legislature_current(), TRUE, $slug);
 
       foreach ($data['deputes'] as $key => $value) {
-        $data['deputes'][$key]['couleurAssociee'] = $this->groupes_model->get_groupe_color(array($value['groupLibelleAbrev'], $value['couleurAssociee']));
+        $data['deputes'][$key]['couleurAssociee'] = $this->groupes_model->get_groupe_color(array($value['libelleAbrev'], $value['couleurAssociee']));
         $data['deputes'][$key]['circoAbbrev'] = $this->functions_datan->abbrev_n($value['circo'], TRUE);
         $data['deputes'][$key]['cardCenter'] = $data['deputes'][$key]['circo']."<sup>".$data['deputes'][$key]['circoAbbrev']."</sup> circonscription";
       }

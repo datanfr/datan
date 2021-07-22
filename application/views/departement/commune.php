@@ -31,12 +31,12 @@
       <div class="row">
         <?php if ($n_circos == 1): ?>
           <div class="col-12 d-flex justify-content-center">
-            <?php $this->load->view('deputes/partials/card_home.php', array('depute' => $depute_commune, 'tag' => 'h2')) ?>
+            <?php $this->load->view('deputes/partials/card_home.php', array('depute' => $depute_commune, 'tag' => 'h2', 'cat' => true)) ?>
           </div>
         <?php else: ?>
           <div class="col-12 d-flex flex-wrap justify-content-around">
             <?php foreach ($deputes_commune as $depute_commune): ?>
-              <?php $this->load->view('deputes/partials/card_home.php', array('depute' => $depute_commune, 'tag' => 'h2')) ?>
+              <?php $this->load->view('deputes/partials/card_home.php', array('depute' => $depute_commune, 'tag' => 'h2', 'cat' => true)) ?>
             <?php endforeach; ?>
           </div>
         <?php endif; ?>

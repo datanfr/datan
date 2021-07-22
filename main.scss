@@ -668,6 +668,7 @@ body:not(.pg-mentions) #tarteaucitronIcon {
   .card-title{
     margin-top: 10px;
     font-size: $h4-font-size;
+    font-weight: 800;
   }
   .card-body{
     padding: .9375rem 1.875rem;
@@ -681,10 +682,25 @@ body:not(.pg-mentions) #tarteaucitronIcon {
     font-weight: 800;
   }
   .badge-stats{
-    font-size: 1.1em;
+    font-size: 0.95em;
+    font-weight: 400;
+    background-color: $text-gray-light;
   }
   .badge-center{
     font-size: 1em;
+  }
+  .btn-cat{
+    color: #fff;
+    padding: 10px;
+  }
+  .img-group-cat{
+    img {
+      height: 85px;
+      width: auto;
+    }
+  }
+  .libelle{
+    font-weight: 600;
   }
 }
 /* card-avatar */
