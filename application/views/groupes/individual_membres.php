@@ -10,7 +10,7 @@
         <div class="row my-5">
           <div class="col-12 d-flex flex-column align-items-center">
             <h2>Président<?php if ($president['civ'] == 'Mme'): ?>e<?php endif; ?></h2>
-            <?php $this->load->view('deputes/partials/card_home.php', array('depute' => $president, 'tag' => 'h3')) ?>
+            <?php $this->load->view('deputes/partials/card_home.php', array('depute' => $president, 'tag' => 'h3', 'cat' => false)) ?>
           </div>
         </div>
       <?php endif; ?>
@@ -23,7 +23,7 @@
         <?php endif; ?>
         <?php foreach ($membres as $mp): ?>
           <div class="col-lg-4 col-md-6 d-flex justify-content-center">
-            <?php $this->load->view('deputes/partials/card_home.php', array('depute' => $mp, 'tag' => 'h3')) ?>
+            <?php $this->load->view('deputes/partials/card_home.php', array('depute' => $mp, 'tag' => 'h3', 'cat' => false)) ?>
           </div>
         <?php endforeach; ?>
       </div>
@@ -35,7 +35,7 @@
           </div>
           <?php foreach ($apparentes as $mp): ?>
             <div class="col-lg-4 col-md-6 d-flex justify-content-center">
-              <?php $this->load->view('deputes/partials/card_home.php', array('depute' => $mp, 'tag' => 'h3')) ?>
+              <?php $this->load->view('deputes/partials/card_home.php', array('depute' => $mp, 'tag' => 'h3', 'cat' => false)) ?>
             </div>
           <?php endforeach; ?>
         </div>
