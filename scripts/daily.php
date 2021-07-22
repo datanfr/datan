@@ -2147,44 +2147,19 @@ class Script
     public function deputeLoyaute()
     {
         echo "deputeLoyaute starting \n";
-        $this->bdd->query('
-            DROP TABLE IF EXISTS deputes_loyaute;
-            CREATE TABLE deputes_loyaute
-            (id INT(5) NOT NULL AUTO_INCREMENT,
-            mpId VARCHAR(15)CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
-            mandatId VARCHAR(15)CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
-            score DECIMAL(4,3) NOT NULL,
-            votesN INT(10) NOT NULL,
-            legislature TINYINT NOT NULL,
-            dateMaj DATE NOT NULL,
-            PRIMARY KEY (id));
-            ALTER TABLE deputes_loyaute ADD INDEX idx_mpId (mpId);
-            ALTER TABLE deputes_loyaute ADD INDEX idx_mandatId (mandatId);
-            ALTER TABLE deputes_loyaute ADD INDEX idx_legislature (legislature);
+        $this->bdd->query('DROP TABLE IF EXISTS deputes_loyaute;
+          CREATE TABLE deputes_loyaute
+          SELECT v.mpId, v.mandatId, ROUND(AVG(v.scoreLoyaute),3) AS score, COUNT(v.scoreLoyaute) AS votesN, v.legislature, curdate() AS dateMaj
+          FROM votes_scores v
+          LEFT JOIN mandat_groupe mg ON mg.mandatId = v.mandatId
+          WHERE v.scoreLoyaute IS NOT NULL AND mg.mandatId IS NOT NULL AND v.vote != "nv"
+          GROUP BY v.mandatId
+          ORDER BY v.mpId;
+          ALTER TABLE deputes_loyaute ADD PRIMARY KEY (id);
+          ALTER TABLE deputes_loyaute ADD INDEX idx_mpId (mpId);
+          ALTER TABLE deputes_loyaute ADD INDEX idx_mandatId (mandatId);
+          ALTER TABLE deputes_loyaute ADD INDEX idx_legislature (legislature);
         ');
-        $result = $this->bdd->query('
-            SELECT v.mpId, v.mandatId, ROUND(AVG(v.scoreLoyaute),3) AS score, COUNT(v.scoreLoyaute) AS votesN, v.legislature
-            FROM votes_scores v
-            LEFT JOIN mandat_groupe mg ON mg.mandatId = v.mandatId
-            WHERE v.scoreLoyaute IS NOT NULL AND mg.mandatId IS NOT NULL
-            GROUP BY v.mandatId
-            ORDER BY v.mpId
-        ');
-
-        $deputeLoyautes = [];
-        $deputeLoyaute = [];
-        $deputeLoyauteFields = array('mpId', 'mandatId', 'score', 'votesN', 'legislature', 'dateMaj');
-        while ($depute = $result->fetch()) {
-            $mpId = $depute["mpId"];
-            $mandatId = $depute["mandatId"];
-            $score = $depute["score"];
-            $votesN = $depute["votesN"];
-            $legislature = $depute["legislature"];
-
-            $deputeLoyaute = array('mpId' => $mpId, 'mandatId' => $mandatId, 'score' => $score, 'votesN' => $votesN, 'legislature' => $legislature, 'dateMaj' => $this->dateMaj);
-            $deputeLoyautes = array_merge($deputeLoyautes, array_values($deputeLoyaute));
-        }
-        $this->insertAll('deputes_loyaute', $deputeLoyauteFields, $deputeLoyautes);
     }
 
     public function classLoyaute()
