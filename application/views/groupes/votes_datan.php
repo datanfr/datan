@@ -39,7 +39,7 @@
                     </li>
                     <li>
                       <div class="label">Position</div>
-                      <div class="value"><?= ucfirst($edito['ideology']) ?></div>
+                      <div class="value"><?= ucfirst($infos_groupes[$groupe['libelleAbrev']]['libelle']) ?></div>
                     </li>
                   <?php endif; ?>
                 </ul>
