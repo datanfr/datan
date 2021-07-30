@@ -5,63 +5,7 @@
 <div class="container pg-groupe-individual">
   <div class="row">
     <div class="col-12 col-md-8 col-lg-4 offset-md-2 offset-lg-0 px-lg-4">
-      <div class="sticky-top" style="margin-top: -110px; top: 110px;">
-        <div class="card card-profile">
-          <div class="card-body">
-            <!-- IMAGE GROUPE -->
-            <div class="img">
-              <div class="d-flex justify-content-center">
-                <picture>
-                  <source srcset="<?= asset_url(); ?>imgs/groupes/webp/<?= $groupe['libelleAbrev'] ?>.webp" type="image/webp">
-                  <source srcset="<?= asset_url(); ?>imgs/groupes/<?= $groupe['libelleAbrev'] ?>.png" type="image/png">
-                  <img src="<?= asset_url(); ?>imgs/groupes/<?= $groupe['libelleAbrev'] ?>.png" width="150" height="150" alt="<?= $groupe['libelle'] ?>">
-                </picture>
-              </div>
-            </div>
-            <!-- INFOS GENERALES -->
-            <div class="bloc-infos">
-              <h1 class="text-center text-lg-left"><?= $title ?></h1>
-            </div>
-            <!-- BIOGRAPHIE -->
-            <div class="bloc-bref mt-3 d-flex justify-content-center justify-content-lg-start">
-              <ul>
-                <li class="first">
-                  <div class="label">Création</div>
-                  <div class="value"><?= $dateDebut ?></div>
-                </li>
-                <li>
-                  <div class="label">Effectif</div>
-                  <div class="value"><?= $groupe['effectif'] ?> membres</div>
-                </li>
-                <?php if ($groupe['libelleAbrev'] != "NI"): ?>
-                  <li>
-                    <div class="label">Président</div>
-                    <div class="value"><?= $president['nameFirst']." ".$president['nameLast'] ?></div>
-                  </li>
-                  <li>
-                    <div class="label">Position</div>
-                    <div class="value"><?= ucfirst($edito['ideology']) ?></div>
-                  </li>
-                <?php endif; ?>
-              </ul>
-            </div>
-            <div class="text-center mt-4">
-              <a class="btn btn-outline-primary" href="<?= base_url() ?>groupes/<?= mb_strtolower($groupe['libelleAbrev']) ?>/membres">
-                Voir tous les membres
-              </a>
-            </div>
-          </div>
-          <?php if ($active): ?>
-            <div class="mandats d-flex justify-content-center align-items-center active">
-              <span class="active">EN ACTIVITÉ</span>
-            </div>
-          <?php else: ?>
-            <div class="mandats d-flex justify-content-center align-items-center inactive">
-              <span class="inactive">PLUS EN ACTIVITÉ</span>
-            </div>
-          <?php endif; ?>
-        </div> <!-- END CARD PROFILE -->
-      </div> <!-- END STICKY TOP -->
+      <?php $this->load->view('groupes/partials/card_individual.php') ?>
     </div> <!-- END COL -->
     <div class="col-md-10 col-lg-8 offset-md-1 offset-lg-0 pl-lg-5">
       <!-- BIO & ELECTION -->
@@ -76,7 +20,7 @@
           <p>Parmi les <?= mb_strtolower($title) ?>, on retrouve également <a href="<?= base_url() ?>deputes/essonne-91/depute_nicolas-dupontaignan" target="_blank">Nicolas Dupont-Aignan</a>, du parti politique Debout La France, <a href="<?= base_url() ?>deputes/deux-sevres-79/depute_delphine-batho" target="_blank">Delphine Batho</a>, du parti écologiste Génération écologie, ainsi que d'anciens membres du groupe La République en Marche, comme <a href="<?= base_url() ?>deputes/indre-et-loire-37/depute_sabine-thillaye" target="_blank">Sabine Thillaye</a> ou <a href="<?= base_url() ?>deputes/nord-59/depute_jennifer-detemmerman" target="_blank">Jennifer de Temmerman</a>.</p>
         <?php else: ?>
           <p>
-            Le groupe <b><?= $groupe['libelle'] ?></b> (<?= $groupe['libelleAbrev'] ?>) <?= $active ? 'est' : 'était' ?> un groupe classé <?= $edito['ideology_edited'] ?> de l'échiquier politique.
+            Le groupe <b><?= $groupe['libelle'] ?></b> (<?= $groupe['libelleAbrev'] ?>) <?= $active ? 'est' : 'était' ?> un groupe classé <?= $infos_groupes[$groupe['libelleAbrev']]['edited'] ?> de l'échiquier politique.
             Il a été créé en <?= $dateDebutMois ?><?= $edito['creation'] ?>.
             <?php if (!$active): ?>
               Le groupe a été dissout le <?= $groupe['dateFinFr'] ?>.

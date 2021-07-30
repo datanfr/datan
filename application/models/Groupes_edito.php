@@ -1,54 +1,10 @@
 <?php
   class Groupes_edito extends CI_Model {
 
-    public function get_groupes_positionnement(){
-      $couleurs = array(
-        "right" => "droite",
-        "left" => "gauche",
-        "center-right" => "centre-droit",
-        "center-left" => "centre-gauche",
-        "center" => "centre"
-      );
-      $couleurs_edited = array(
-        "right" => "à droite",
-        "left" => "à gauche",
-        "center-right" => "au centre droit",
-        "center-left" => "au centre gauche",
-        "center" => "au centre"
-      );
-      $array = array(
-        "FI" => "left",
-        "GDR" => "left",
-        "SOC" => "left",
-        "MODEM" => "center-left",
-        "LAREM" => "center",
-        "UDI-AGIR" => "center-right",
-        "LR" => "right",
-        "UDI-A-I" => "center-right",
-        "LT" => "center",
-        "EDS" => "center",
-        "AGIR-E" => "center-right",
-        "UDI_I" => "center-right",
-        "LC" => "center",
-        "NG" => "left",
-        "UDI-I" => "center-right",
-        "DEM" => "center-left"
-      );
-
-      $return = array();
-      foreach ($array as $key => $value) {
-        $return[$key]["ideology"] = $couleurs[$value];
-        $return[$key]["ideology_edited"] = $couleurs_edited[$value];
-      }
-
-      return $return;
-    }
-
     // Fonction édito
-    public function edito($id, $opposition, $positionnement){
+    public function edito($id, $opposition){
       $infos = [];
       // Variables
-
       if ($opposition == "Minoritaire") {
         $infos["opposition"] = "la majorité présidentielle";
       }
@@ -60,20 +16,12 @@
         $infos["opposition"] = "à faire";
       }
 
-
-
       $qqjours = ", soit dès la mise en place de la nouvelle législature";
       $left = "à gauche";
       $center_left = "au centre-gauche";
       $center = "au centre";
       $center_right = "au centre-droit";
       $right = "à droite";
-
-      if ($id != "NI") {
-        $infos['ideology'] = $positionnement[$id]["ideology"];
-        $infos['ideology_edited'] = $positionnement[$id]["ideology_edited"];
-      }
-
 
       //Positionnement
       switch ($id) {
@@ -208,17 +156,17 @@
 
       if (!empty($stats)) {
         $first1 = $stats[0];
-        $first1["ideology"] = $positionnement[$first1["libelleAbrev"]]["ideology_edited"];
+        $first1["ideology"] = $positionnement[$first1["libelleAbrev"]]["edited"];
         $first1["maj_pres"] = maj_pres($first1["positionPolitique"]);
         $first2 = $stats[1];
-        $first2["ideology"] = $positionnement[$first2["libelleAbrev"]]["ideology_edited"];
+        $first2["ideology"] = $positionnement[$first2["libelleAbrev"]]["edited"];
         $first2["maj_pres"] = maj_pres($first2["positionPolitique"]);
 
         $last1 = $stats[count($stats)-1];
-        $last1["ideology"] = $positionnement[$last1["libelleAbrev"]]["ideology_edited"];
+        $last1["ideology"] = $positionnement[$last1["libelleAbrev"]]["edited"];
         $last1["maj_pres"] = maj_pres($last1["positionPolitique"]);
         $last2 = $stats[count($stats)-2];
-        $last2["ideology"] = $positionnement[$last2["libelleAbrev"]]["ideology_edited"];
+        $last2["ideology"] = $positionnement[$last2["libelleAbrev"]]["edited"];
         $last2["maj_pres"] = maj_pres($last2["positionPolitique"]);
 
         $array = [

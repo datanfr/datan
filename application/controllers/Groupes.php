@@ -127,6 +127,7 @@
       $groupe_uid = $data['groupe']['uid'];
       $groupe_ab = $data['groupe']['libelleAbrev'];
       $groupe_opposition = $data['groupe']['positionPolitique'];
+      $data['infos_groupes'] = groupsPositionEdited();
 
       // Query 2 Membres du groupe
       $data['president'] = $this->groupes_model->get_groupes_president($groupe_uid, $data['active']);
@@ -218,9 +219,8 @@
       $data['accord_groupes_first'] = array_slice($data['accord_groupes_first'], 0, 3);
       $data['accord_groupes_last'] = array_slice($data['accord_groupes_actifs'], $accord_groupes_divided, $accord_groupes_n);
       $data['accord_groupes_last'] = array_slice($data['accord_groupes_last'], -3);
-      $data['groupes_positionnement'] = $this->groupes_edito->get_groupes_positionnement();
       if (!empty($data['accord_groupes_actifs'])) {
-        $data['edito_proximite'] = $this->groupes_edito->proximite($data['accord_groupes_actifs'], $data['groupes_positionnement']);
+        $data['edito_proximite'] = $this->groupes_edito->proximite($data['accord_groupes_actifs'], $data['infos_groupes']);
         $data['no_proximite'] = FALSE;
       } else {
         $data['no_proximite'] = TRUE;
@@ -230,7 +230,7 @@
       $data['votes_datan'] = $this->votes_model->get_votes_datan_groupe($groupe_uid, 5);
 
       // Query 5 Edito
-      $data['edito'] = $this->groupes_edito->edito($groupe_ab, $groupe_opposition, $data['groupes_positionnement']);
+      $data['edito'] = $this->groupes_edito->edito($groupe_ab, $groupe_opposition);
       // GET ALL OTHER GROUPES
       $data['groupesActifs'] = $this->groupes_model->get_groupes_all(TRUE, $legislature);
 
@@ -376,6 +376,7 @@
       $groupe_uid = $data['groupe']['uid'];
       $groupe_ab = $data['groupe']['libelleAbrev'];
       $groupe_opposition = $data['groupe']['positionPolitique'];
+      $data['infos_groupes'] = groupsPositionEdited();
 
       // Query active
       if ($data['groupe']['dateFin'] == NULL) {
@@ -434,8 +435,7 @@
       $data['by_field'] = $x;
 
       // Edito
-      $data['groupes_positionnement'] = $this->groupes_edito->get_groupes_positionnement();
-      $data['edito'] = $this->groupes_edito->edito($groupe_ab, $groupe_opposition, $data['groupes_positionnement']);
+      $data['edito'] = $this->groupes_edito->edito($groupe_ab, $groupe_opposition);
 
       // Meta
       $data['url'] = $this->meta_model->get_url();
@@ -491,6 +491,7 @@
       $groupe_uid = $data['groupe']['uid'];
       $groupe_ab = $data['groupe']['libelleAbrev'];
       $groupe_opposition = $data['groupe']['positionPolitique'];
+      $data['infos_groupes'] = groupsPositionEdited();
 
       // Query - get active votes
       $data['votes'] = $this->votes_model->get_votes_datan_groupe_field($groupe_uid, $field, NULL);
@@ -539,8 +540,7 @@
       $data['field'] = $this->fields_model->get_field($field);
 
       // Edito
-      $data['groupes_positionnement'] = $this->groupes_edito->get_groupes_positionnement();
-      $data['edito'] = $this->groupes_edito->edito($groupe_ab, $groupe_opposition, $data['groupes_positionnement']);
+      $data['edito'] = $this->groupes_edito->edito($groupe_ab, $groupe_opposition);
 
       // Meta
       $data['url'] = $this->meta_model->get_url();
@@ -599,6 +599,7 @@
       $groupe_uid = $data['groupe']['uid'];
       $groupe_ab = $data['groupe']['libelleAbrev'];
       $groupe_opposition = $data['groupe']['positionPolitique'];
+      $data['infos_groupes'] = groupsPositionEdited();
 
       // Query active
       if ($data['groupe']['dateFin'] == NULL) {
@@ -616,8 +617,7 @@
       $data['dateDebut'] = strftime('%d %B %Y', strtotime($data['groupe']['dateDebut']));
       $data['president'] = $this->groupes_model->get_groupes_president($groupe_uid, $data['active']);
       // Edito
-      $data['groupes_positionnement'] = $this->groupes_edito->get_groupes_positionnement();
-      $data['edito'] = $this->groupes_edito->edito($groupe_ab, $groupe_opposition, $data['groupes_positionnement']);
+      $data['edito'] = $this->groupes_edito->edito($groupe_ab, $groupe_opposition);
 
       // Query - get all votes
       $data['votes'] = $this->votes_model->get_votes_all_groupe($groupe_uid, legislature_current());
