@@ -40,7 +40,7 @@
                   </li>
                   <li>
                     <div class="label">Position</div>
-                    <div class="value"><?= ucfirst($edito['ideology']) ?></div>
+                    <div class="value"><?= ucfirst($infos_groupes[$groupe['libelleAbrev']]['libelle']) ?></div>
                   </li>
                 <?php endif; ?>
               </ul>
@@ -76,7 +76,7 @@
           <p>Parmi les <?= mb_strtolower($title) ?>, on retrouve également <a href="<?= base_url() ?>deputes/essonne-91/depute_nicolas-dupontaignan" target="_blank">Nicolas Dupont-Aignan</a>, du parti politique Debout La France, <a href="<?= base_url() ?>deputes/deux-sevres-79/depute_delphine-batho" target="_blank">Delphine Batho</a>, du parti écologiste Génération écologie, ainsi que d'anciens membres du groupe La République en Marche, comme <a href="<?= base_url() ?>deputes/indre-et-loire-37/depute_sabine-thillaye" target="_blank">Sabine Thillaye</a> ou <a href="<?= base_url() ?>deputes/nord-59/depute_jennifer-detemmerman" target="_blank">Jennifer de Temmerman</a>.</p>
         <?php else: ?>
           <p>
-            Le groupe <b><?= $groupe['libelle'] ?></b> (<?= $groupe['libelleAbrev'] ?>) <?= $active ? 'est' : 'était' ?> un groupe classé <?= $edito['ideology_edited'] ?> de l'échiquier politique.
+            Le groupe <b><?= $groupe['libelle'] ?></b> (<?= $groupe['libelleAbrev'] ?>) <?= $active ? 'est' : 'était' ?> un groupe classé <?= $infos_groupes[$groupe['libelleAbrev']]['edited'] ?> de l'échiquier politique.
             Il a été créé en <?= $dateDebutMois ?><?= $edito['creation'] ?>.
             <?php if (!$active): ?>
               Le groupe a été dissout le <?= $groupe['dateFinFr'] ?>.
