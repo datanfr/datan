@@ -42,22 +42,26 @@
   }
 
   function groupsPositionEdited(){
+    $left = array("libelle" => "gauche", "edited" => "à gauche");
+    $center = array("libelle" => "centre", "edited" => "au centre");
+    $right = array("libelle" => "droite", "edited" => "à droite");
+
     $array = array(
-      "FI" => "à l'extrême gauche",
-      "GDR" => "à l'extrême gauche",
-      "SOC" => "à gauche",
-      "MODEM" => "au centre-droit",
-      "LAREM" => "au centre",
-      "UDI-AGIR" => "au centre-droit",
-      "LR" => "à droite",
-      "UDI-A-I" => "au centre-droit",
-      "NI" => "XX",
-      "LT" => "au centre",
-      "EDS" => "au centre",
-      "AGIR-E" => "au centre-droit",
-      "UDI_I" => "au centre-droit",
-      "NG" => "à la gauche",
-      "DEM" => "au centre-gauche"
+      "FI" => $left,
+      "GDR" => $left,
+      "SOC" => $left,
+      "MODEM" => $center,
+      "LAREM" => $center,
+      "UDI-AGIR" => $center,
+      "LR" => $right,
+      "UDI-A-I" => $right,
+      "NI" => NULL,
+      "LT" => $center,
+      "EDS" => $center,
+      "AGIR-E" => $center,
+      "UDI_I" => $center,
+      "NG" => $left,
+      "DEM" => $center
     );
     return $array;
   }
