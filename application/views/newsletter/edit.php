@@ -10,10 +10,12 @@
                 <div class="col-12">
                     <h2 class="mb-3">Abonnement(s) de <?= $newsletter['email'] ?></h2>
                     <?= form_open() ?>
-                    <div class="form-check">
-                        <input type="checkbox" class="form-check-input" name="general" id="general" <?= !$newsletter['general'] ?: 'checked' ?>>
-                        <label for="general">Inscription à la newsletter principale</label>
-                    </div>
+                    <?php foreach ($lists as $list): ?>
+                      <div class="form-check">
+                          <input type="checkbox" class="form-check-input" name="<?= $list['name'] ?>" id="<?= $list['name'] ?>" <?= !$newsletter[$list['name']] ?: 'checked' ?>>
+                          <label for="<?= $list['name'] ?>"><?= $list['label'] ?></label>
+                      </div>
+                    <?php endforeach; ?>
                     <button type="submit" name="submit" class="btn btn-primary my-3">Mettre à jour</button>
                     <?= form_close() ?>
                     <h2 class="mt-5">Se désabonner de toutes les newsletters</h2>
