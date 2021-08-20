@@ -17,8 +17,21 @@ class Newsletter extends CI_Controller
 
         $data['newsletter'] = $this->newsletter_model->get_by_email(urldecode($email));
         if (!isset($data['newsletter'])) {
-          redirect();
+          show_404();
         }
+
+        $data['lists'] = array(
+          array(
+            'label' => 'Newsletter principale',
+            'name' => 'general',
+            'mailjetId' => 25834
+          ),
+          array(
+            'label' => 'Newsletter votes',
+            'name' => 'votes',
+            'mailjetId' => 47010
+          )
+        );
 
         // Meta
         $data['url'] = $this->meta_model->get_url();
@@ -27,22 +40,20 @@ class Newsletter extends CI_Controller
         $data['title'] = 'Mettre à jour vos abonnements';
 
         if ($this->input->post()) {
-          $data['general'] = $this->input->post('general');
-          $data['general'] = $data['general'] == "on" ? 1 : 0;
-          if ($data['general'] != $data['newsletter']['general']) {
-            $list = array(
-              'sql' => 'general',
-              'mailjetId' => 25834
-            );
-            $this->newsletter_model->update_list(urldecode($email), $data[$list['sql']], $list['sql']);
-
-            // API
-            if ($data['general'] == 1) {
-              sendContactList(urldecode($email), $list['mailjetId']);
-            } else {
-              removeContactlist(urldecode($email), $list['mailjetId']);
+          foreach ($data['lists'] as $list) {
+            $data[$list['name']] = $this->input->post($list['name']);
+            $data[$list['name']] = $data[$list['name']] == "on" ? 1 : 0;
+            if ($data[$list['name']] != $data['newsletter'][$list['name']]) {
+              $this->newsletter_model->update_list(urldecode($email), $data[$list['name']], $list['name']);
+              // API
+              if ($data[$list['name']] == 1) {
+                sendContactList(urldecode($email), $list['mailjetId']);
+              } else {
+                removeContactlist(urldecode($email), $list['mailjetId']);
+              }
             }
           }
+
 
           $this->load->view('templates/header', $data);
           $this->load->view('newsletter/edit_success');
@@ -60,8 +71,14 @@ class Newsletter extends CI_Controller
         array(
           "sql" => "general",
           "mailjet" => 25834
+        ),
+        array(
+          "sql" => "votes",
+          "mailjet" => 47010
         )
       );
+
+      // REVOIR ICI LE UPDATE !
 
       foreach ($lists as $list) {
         $contactsSql = $this->newsletter_model->get_all_by_list($list['sql']);
@@ -77,7 +94,6 @@ class Newsletter extends CI_Controller
           }
         }
       }
-      echo "worked";
     }
 
     public function delete($email){
