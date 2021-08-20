@@ -13,6 +13,7 @@ class Newsletter_model extends CI_Model{
     $data = array(
       'email' => $email,
       'general' => true,
+      'votes' => true
     );
     $templateId = 2826349; /* Welcome */
     $variables = array(
@@ -24,8 +25,10 @@ class Newsletter_model extends CI_Model{
     // Create Contact
     createContact($email);
     // Inscription Mailjet contact list
-    $list = 25834;
-    sendContactList($email, $list);
+    $lists = array(25834, 47010);
+    foreach ($lists as $list) {
+      sendContactList($email, $list);
+    }
 
     // Inscription MySQL
     return $this->db->insert('newsletter', $data);
