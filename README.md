@@ -7,7 +7,7 @@ Fill in the SetEnv variables (replace username_example and password_example)
 
 ## Base de données
 Importer la structure et les données essentielles de la base de données.  
-Le fichier SQL est le suivant : *scripts/update_dataset/datan_database_[date].sql*
+Le fichier SQL est le suivant : *scripts/update_dataset/backup/datan_database_[date].sql*
 
 Puis lancer ces scripts :  
 php /scripts/daily.php  
