@@ -48,7 +48,7 @@
                   <h5 class="card-title">Update database : fix bug for database export (backup)</h5>
                   <h6 class="card-subtitle text-muted">August 21, 2021</h6>
                   <p class="card-text">
-                    <a class="btn btn-danger my-3" href="update_dataset/20210621_update_elections.php" role="button">UPDATE DATABASE</a>
+                    <a class="btn btn-danger my-3" href="update_dataset/20210821_bug-database.php" role="button">UPDATE DATABASE</a>
                   </p>
                 </div>
               </div>
