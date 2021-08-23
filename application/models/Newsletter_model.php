@@ -43,9 +43,9 @@ class Newsletter_model extends CI_Model{
     return $this->db->get_where('newsletter', array($list => TRUE))->result_array();
   }
 
-  public function delete_newsletter($email){
+  public function delete($email){
     $this->db->where('email', ($email));
-    return $this->db->delete('newsletter');
+    $this->db->delete('newsletter');
   }
 
   public function update_list($email, $set, $list){

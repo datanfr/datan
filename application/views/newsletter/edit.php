@@ -18,6 +18,8 @@
                     <?php endforeach; ?>
                     <button type="submit" name="submit" class="btn btn-primary my-3">Mettre à jour</button>
                     <?= form_close() ?>
+                    <h2 class="mt-5">Se désabonner de toutes les newsletters</h2>
+                    <p>Si vous souhaitez vous désabonnez de toutes les newsletters, <a href="<?= base_url() ?>newsletter/delete/<?= urlencode($newsletter['email']) ?>">cliquez ici</a>.</p>
                 </div>
             </div>
         </div>
