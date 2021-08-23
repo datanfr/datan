@@ -7,6 +7,7 @@ class Newsletter extends CI_Controller
     {
         parent::__construct();
         $this->load->model('newsletter_model');
+        $this->load->model('votes_model');
     }
 
     public function edit($email){
@@ -118,19 +119,29 @@ class Newsletter extends CI_Controller
       // Do not forget to install this: https://qferrer.medium.com/rendering-mjml-in-php-982d703aa703
 
       // Data for the newsletter
-      $data['votesN'] = 300;
+      setlocale(LC_TIME, "fr_FR");
+      $data['month'] = utf8_encode(strftime("%B"));
+      $data['year'] = utf8_encode(strftime("%Y"));
+      $year = date("Y");
+      $month = date("m");
+      $month = 7;
+      $data['votesN'] = $this->votes_model->get_n_votes(legislature_current(), $year = $year, $month = $month);
+
+      // Metadata
+      $data['title'] = "Les votes de l'Assemblée nationale - " . $data['month'] . " " . $data['year'] . " | Newsletter Datan";
 
       // Create the MJML/HTML newsletter
       $header = $this->load->view('newsletterTemplates/templates/header', $data, TRUE);
+      $votesHeader = $this->load->view('newsletterTemplates/votes/header', $data, TRUE);
       $footer = $this->load->view('newsletterTemplates/templates/footer', $data, TRUE);
-      $mjml = $header." ".$footer;
+      $mjml = $header." ".$votesHeader." ".$footer;
       $html = getMjmlHtml($mjml);
       echo $html;
 
       // Send emails
       $emails = $this->newsletter_model->get_emails("votes");
       foreach ($emails as $email) {
-        //sendMail($email['email'], 'Bienvenue à la newsletter', $templateHtml = $html, $templateLanguage = TRUE, $templateId = NULL, $variables = NULL);
+      //sendMail($email['email'], 'Bienvenue à la newsletter', $templateHtml = $html, $templateLanguage = TRUE, $templateId = NULL, $variables = NULL);
       }
 
     }
