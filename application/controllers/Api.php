@@ -43,6 +43,26 @@ class Api extends CI_Controller
 
         $model = $model . '_model';
         $gets = $this->input->get();
+        foreach ($gets as $key => $value) {
+            switch ($value) {
+              case '':
+                $gets[$key] = NULL;
+                break;
+
+              case 'TRUE':
+                $gets[$key] = TRUE;
+                break;
+
+              case 'FALSE':
+                $gets[$key] = FALSE;
+                break;
+
+              default:
+                $gets[$key] = $value;
+                break;
+            }
+
+        }
         if (!$this->$model) {
             return $this->response(array('error' => true, 'message' => 'The model ' . $model . ' doesn\'t exist'), 405);
         }
