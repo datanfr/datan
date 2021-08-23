@@ -69,5 +69,9 @@ class Newsletter_model extends CI_Model{
 
     return $query->result_array();
   }
+
+  public function get_emails($list){
+    return $this->db->get_where('newsletter', array($list => 1))->result_array();
+  }
 }
 ?>

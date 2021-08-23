@@ -78,8 +78,6 @@ class Newsletter extends CI_Controller
         )
       );
 
-      // REVOIR ICI LE UPDATE !
-
       foreach ($lists as $list) {
         $contactsSql = $this->newsletter_model->get_all_by_list($list['sql']);
         foreach ($contactsSql as $contact) {
@@ -94,5 +92,26 @@ class Newsletter extends CI_Controller
           }
         }
       }
+    }
+
+    public function votes(){
+      // Do not forget to install this: https://qferrer.medium.com/rendering-mjml-in-php-982d703aa703
+
+      // Data for the newsletter
+      $data['votesN'] = 300;
+
+      // Create the MJML/HTML newsletter
+      $header = $this->load->view('newsletterTemplates/templates/header', $data, TRUE);
+      $footer = $this->load->view('newsletterTemplates/templates/footer', $data, TRUE);
+      $mjml = $header." ".$footer;
+      $html = getMjmlHtml($mjml);
+      echo $html;
+
+      // Send emails
+      $emails = $this->newsletter_model->get_emails("votes");
+      foreach ($emails as $email) {
+        //sendMail($email['email'], 'Bienvenue à la newsletter', $templateHtml = $html, $templateLanguage = TRUE, $templateId = NULL, $variables = NULL);
+      }
+
     }
 }
