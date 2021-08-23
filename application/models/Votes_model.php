@@ -44,8 +44,14 @@
       return $this->db->count_all_results('votes_datan');
     }
 
-    public function get_n_votes(){
-      $this->db->where('legislature', legislature_current());
+    public function get_n_votes($legislature, $year, $month){
+      if (!is_null($year)) {
+        $this->db->where('YEAR(dateScrutin)', $year);
+      }
+      if (!is_null($month)) {
+        $this->db->where('MONTH(dateScrutin)', $month);
+      }
+      $this->db->where('legislature', $legislature);
       return $this->db->count_all_results('votes_info');
     }
 
