@@ -94,6 +94,26 @@ class Newsletter extends CI_Controller
       }
     }
 
+    public function delete($email){
+      $data['email'] = $email;
+      $data['url'] = $this->meta_model->get_url();
+      $data['title_meta'] = "Désinscription à la newsletter | Datan";
+      $data['title'] = 'Désinscription à la newsletter';
+      $response = getContactId($email);
+      if ($response->success()) {
+        $emailId = $response->getData()[0]["ContactID"];
+        removeContactlist($emailId, 25834);
+      }
+      $lists = array('general', 'votes');
+      $this->newsletter_model->delete(urldecode($email), $lists);
+      $data['message'] = 'Vous ne recevrez plus nos newsletters, c\'est dommage mais n\'hésitez pas à revenir pour connaitre l\'activité de vos députés !';
+
+      // Views
+      $this->load->view('templates/header', $data);
+      $this->load->view('newsletter/delete', $data);
+      $this->load->view('templates/footer', $data);
+    }
+
     public function votes(){
       // Do not forget to install this: https://qferrer.medium.com/rendering-mjml-in-php-982d703aa703
 
