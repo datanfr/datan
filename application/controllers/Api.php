@@ -30,15 +30,8 @@ class Api extends CI_Controller
     public function index($model, $method)
     {
 
-        // Check if the call is allowed
-        if (!in_array($model, $this->modelAllowed)){ // If the model is not on the allowed list
-          if (!in_array($model . '/' . $method, $this->methodAllowed)) { // And the method is not allowed
-            return $this->response(array('error' => true, 'message' => 'This model is forbidden', 403));
-          }
-        } else { // If the model is on the allowed list
-          if (in_array($model . '/' . $method, $this->methodForbidden)) { // And the method is forbidden
-            return $this->response(array('error' => true, 'message' => 'This model is forbidden', 403));
-          }
+        if ((!in_array($model, $this->modelAllowed) && !in_array($model . '/' . $method, $this->methodAllowed)) || in_array($model . '/' . $method, $this->methodForbidden)) {
+          return $this->response(array('error' => true, 'message' => 'This model is forbidden', 403));
         }
 
         $model = $model . '_model';
