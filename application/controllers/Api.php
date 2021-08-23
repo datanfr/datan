@@ -2,7 +2,11 @@
 class Api extends CI_Controller
 {
     // Fill the forbidden call list here
-    private $forbidden = array('newsletter/get_all_by_list');
+    private $modelAllowed = array('deputes');
+
+    private $methodAllowed = array('newsletter/create_newsletter');
+
+    private $methodForbidden = array();
 
     public function __construct()
     {
@@ -25,12 +29,33 @@ class Api extends CI_Controller
 
     public function index($model, $method)
     {
-        // Check if the call is not in the forbidden list
-        if (in_array($model . '/' . $method, $this->forbidden)){
-            return $this->response(array('error' => true, 'message' => 'This method is forbidden', 403));
+
+        if ((!in_array($model, $this->modelAllowed) && !in_array($model . '/' . $method, $this->methodAllowed)) || in_array($model . '/' . $method, $this->methodForbidden)) {
+          return $this->response(array('error' => true, 'message' => 'This model is forbidden', 403));
         }
+
         $model = $model . '_model';
         $gets = $this->input->get();
+        foreach ($gets as $key => $value) {
+            switch ($value) {
+              case '':
+                $gets[$key] = NULL;
+                break;
+
+              case 'TRUE':
+                $gets[$key] = TRUE;
+                break;
+
+              case 'FALSE':
+                $gets[$key] = FALSE;
+                break;
+
+              default:
+                $gets[$key] = $value;
+                break;
+            }
+
+        }
         if (!$this->$model) {
             return $this->response(array('error' => true, 'message' => 'The model ' . $model . ' doesn\'t exist'), 405);
         }
