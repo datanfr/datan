@@ -2,9 +2,11 @@
 class Api extends CI_Controller
 {
     // Fill the forbidden call list here
-    private $forbidden = array();
+    private $modelAllowed = array('deputes');
 
-    private $forbiddenModel = array('newsletter');
+    private $methodAllowed = array('newsletter/create_newsletter');
+
+    private $methodForbidden = array();
 
     public function __construct()
     {
@@ -27,13 +29,16 @@ class Api extends CI_Controller
 
     public function index($model, $method)
     {
-        // Check if the call is not in the forbidden list
-        if (in_array($model . '/' . $method, $this->forbidden)){
-            return $this->response(array('error' => true, 'message' => 'This method is forbidden', 403));
-        }
-        // Check if the model is in the forbidden list
-        if (in_array($model, $this->forbiddenModel)){
+
+        // Check if the call is allowed
+        if (!in_array($model, $this->modelAllowed)){ // If the model is not on the allowed list
+          if (!in_array($model . '/' . $method, $this->methodAllowed)) { // And the method is not allowed
             return $this->response(array('error' => true, 'message' => 'This model is forbidden', 403));
+          }
+        } else { // If the model is on the allowed list
+          if (in_array($model . '/' . $method, $this->methodForbidden)) { // And the method is forbidden
+            return $this->response(array('error' => true, 'message' => 'This model is forbidden', 403));
+          }
         }
 
         $model = $model . '_model';
