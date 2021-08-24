@@ -13,8 +13,9 @@
         color: #aaa;
         font-size: 16px;
       }
-      p {
-        color: #00000;
+      .para {
+        line-height: 1.8;
+        font-size: 14px;
       }
     </mj-style>
   </mj-head>
