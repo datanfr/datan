@@ -129,9 +129,9 @@ class Newsletter extends CI_Controller
       $data['votesNDatan'] = $this->votes_model->get_n_votes_datan(legislature_current(), 2020, 9);
       $data['votesInfos'] = $this->votes_model->get_infos_period(legislature_current(), $year, $month);
       if ($data['votesInfos']['adopted'] > $data['votesInfos']['rejected']) {
-        $data['votesInfosEdited'] = "La majorité de ces votes a été adoptée. En effet, pendant cette période, il y a eu " . $data['votesInfos']['adopted'] . " votes adoptés par les députés de l'Assemblée nationale, contre seulement " . $data['votesInfos']['rejected'] . " votes rejetés.";
+        $data['votesInfosEdited'] = "La majorité de ces votes a été adoptée : il y a eu " . $data['votesInfos']['adopted'] . " votes adoptés par les députés en " . $data['month'] . " " .  $year . ", contre seulement " . $data['votesInfos']['rejected'] . " votes rejetés.";
       } elseif ($data['votesInfos']['adopted'] < $data['votesInfos']['rejected']) {
-        $data['votesInfosEdited'] = "La majorité de ces votes a été rejetée. En effet, pendant cette période, il y a eu " . $data['votesInfos']['rejected'] . " votes rejetés par les députés de l'Assemblée nationale, contre seulement " . $data['votesInfos']['adopted'] . " votes adoptés.";
+        $data['votesInfosEdited'] = "La majorité de ces votes a été rejetée : il y a eu " . $data['votesInfos']['rejected'] . " votes rejetés par les députés en " . $data['month'] . " " .  $year . ", contre seulement " . $data['votesInfos']['adopted'] . " votes adoptés.";
       } else {
         $data['votesInfosEdited'] = NULL;
       }
@@ -143,9 +143,9 @@ class Newsletter extends CI_Controller
 
       // Create the MJML/HTML newsletter
       $header = $this->load->view('newsletterTemplates/templates/header', $data, TRUE);
-      $votesHeader = $this->load->view('newsletterTemplates/votes/header', $data, TRUE);
+      $body = $this->load->view('newsletterTemplates/votes/body', $data, TRUE);
       $footer = $this->load->view('newsletterTemplates/templates/footer', $data, TRUE);
-      $mjml = $header." ".$votesHeader." ".$footer;
+      $mjml = $header." ".$body." ".$footer;
       $html = getMjmlHtml($mjml);
       echo $html;
 
