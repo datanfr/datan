@@ -40,7 +40,6 @@
 </mj-section>
 
 <?php foreach ($votes as $vote): ?>
-
   <mj-section background-color="#ffffff" background-repeat="repeat" background-size="auto" padding="20px 15px" text-align="center" vertical-align="top">
     <mj-column vertical-align="top">
       <mj-divider border-width="1px" border-style="dashed" border-color="lightgrey" />
@@ -56,3 +55,17 @@
     </mj-column>
   </mj-section>
 <?php endforeach; ?>
+
+<mj-section background-color="#ffffff" background-repeat="no-repeat" background-size="auto" padding="20px 15px" text-align="center" vertical-align="top" border-top = "20px solid #F4F4F4">
+  <mj-column vertical-align="top">
+    <mj-text>
+      <span><b>Section : travailler avec nous & nous suivre</b></span>
+    </mj-text>
+    <mj-text padding-top="0px">
+      <span>AAA</span>
+    </mj-text>
+    <mj-text padding-top="40px">
+      <span class="para">XXXX</span>
+    </mj-text>
+  </mj-column>
+</mj-section>
