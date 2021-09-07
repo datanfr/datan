@@ -137,6 +137,14 @@ class Newsletter extends CI_Controller
       }
       $data['votes'] = $this->votes_model->get_votes_datan(legislature_current(), 2020, 9);
 
+      foreach ($data['votes'] as $key => $value) {
+        $string = substr($value['description'], 0, strpos($value['description'], "</p>")+4);
+        $string = strip_tags($string);
+        $data['votes'][$key]['description'] = $string;
+      }
+
+
+
 
       // Metadata
       $data['title'] = "Les votes de l'Assemblée nationale - " . $data['month'] . " " . $data['year'] . " | Newsletter Datan";
