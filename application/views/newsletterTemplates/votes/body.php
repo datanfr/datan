@@ -1,16 +1,16 @@
 <mj-section background-color="#ffffff" background-repeat="repeat" background-size="auto" padding="20px 15px" text-align="center" vertical-align="top">
   <mj-column vertical-align="top">
     <mj-text>
-      <span class="title"><b>Les derniers votes de l'Assemblée nationale</b></span>
+      <span class="title">Les derniers votes de l'Assemblée nationale</span>
     </mj-text>
     <mj-text padding-top="0px">
       <span class="subtitle"><?= ucfirst($month) ?> <?= $year ?></span>
     </mj-text>
     <mj-text padding-top="40px">
-      <span class="para">Il y a eu <b><?= $votesN ?> votes</b> à l'Assemblée nationale en <?= $month.' '.$year ?>. <?= $votesInfosEdited ?></span>
+      Il y a eu <b><?= $votesN ?> votes</b> à l'Assemblée nationale en <?= $month.' '.$year ?>. <?= $votesInfosEdited ?>
     </mj-text>
     <mj-text>
-      <span class="para">L'équipe de Datan a sélectionné et décrypté <?= $votesNDatan ?> votes. Retrouvez-les ci-dessous !</span>
+      L'équipe de Datan a sélectionné et décrypté <?= $votesNDatan ?> votes. Retrouvez-les ci-dessous !
     </mj-text>
   </mj-column>
 </mj-section>
@@ -25,15 +25,12 @@
   <!-- right paragraph -->
   <mj-column>
     <mj-text font-style="italic"
-             font-size="20px"
-             font-family="Helvetica Neue"
+             font-size="16px"
              color="#00b794">
         Les votes décryptés par Datan
       </mj-text>
-
       <mj-text color="#525252">
-        <span class="para">
-          Connaissez-vous le contenu de "L'article 1er de la proposition de loi visant à renforcer le droit à l'avortement" ? Non ? Pas de problème, <b>Datan</b> décrypte pour vous les votes importants qui se déroulent à l'Assemblée nationale.
+          Connaissez-vous le contenu du vote intitulé « L'article 1er de la proposition de loi visant à renforcer le droit à l'avortement » ? Non ? Pas de problème, <b>Datan</b> décrypte pour vous les votes importants qui se déroulent à l'Assemblée nationale.
         </span>
       </mj-text>
   </mj-column>
@@ -43,15 +40,25 @@
   <mj-section background-color="#ffffff" background-repeat="repeat" background-size="auto" padding="20px 15px" text-align="center" vertical-align="top">
     <mj-column vertical-align="top">
       <mj-divider border-width="1px" border-style="dashed" border-color="lightgrey" />
-      <mj-text>
-        <span><b><?= $vote['voteTitre'] ?></b></span>
+      <mj-text font-size="17px">
+        <span class="text-black"><b><?= $vote['voteTitre'] ?></b></span>
+      </mj-text>
+      <mj-text padding-top="0px" font-size="13px">
+        <span class="text-grey"><?= $vote['dateScrutinFR'] ?> - <?= $vote['category_libelle'] ?></span>
+      </mj-text>
+      <mj-text padding-top="0px" font-size="14px">
+        <span class="badge badge-<?= $vote['sortCode'] ?>"><b><?= mb_strtoupper($vote['sortCode']) ?></b></span>
+      </mj-text>
+      <mj-text font-size="16px" font-weight="800" padding-bottom="0px">
+        <span class="primary">En savoir plus</span>
       </mj-text>
       <mj-text padding-top="0px">
-        <span><?= $vote['dateScrutinFR'] ?> -- <?= $vote['category_libelle'] ?> -- <?= $vote['sortCode'] ?> -- vote n° <?= $vote['voteNumero'] ?></span>
+        <?= word_limiter($vote['description'], 35) ?>
+        <a href="https://datan.fr/votes/legislature-15/vote_<?= $vote['voteNumero'] ?>" target="_blank">Lire plus</a>
       </mj-text>
-      <mj-text padding-top="40px">
-        <span class="para">XXXX</span>
-      </mj-text>
+      <mj-button href="https://datan.fr/votes/legislature-15/vote_<?= $vote['voteNumero'] ?>">
+        Découvrez la position de son député
+      </mj-button>
     </mj-column>
   </mj-section>
 <?php endforeach; ?>
@@ -65,7 +72,7 @@
       <span>AAA</span>
     </mj-text>
     <mj-text padding-top="40px">
-      <span class="para">XXXX</span>
+      XXXX
     </mj-text>
   </mj-column>
 </mj-section>
