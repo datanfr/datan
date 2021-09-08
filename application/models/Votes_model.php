@@ -36,12 +36,12 @@
     }
 
     public function get_votes_datan($legislature, $year, $month){
-      $sql = '
-      SELECT vd.title AS voteTitre, vd.description, vi.dateScrutin, vi.voteNumero, vi.legislature, f.name AS category_libelle, f.slug AS category_slug, vi.sortCode, date_format(dateScrutin, "%d %M %Y") as dateScrutinFR
-      FROM votes_datan vd
-      LEFT JOIN votes_info vi ON vd.voteNumero = vi.voteNumero AND vd.legislature = vi.legislature
-      LEFT JOIN fields f ON vd.category = f.id
-      WHERE vd.state = "published"
+      $sql = 'SELECT vd.title AS voteTitre, vd.description, vi.dateScrutin, vi.voteNumero, vi.legislature, f.name AS category_libelle, f.slug AS category_slug, vi.sortCode, date_format(dateScrutin, "%d %M %Y") as dateScrutinFR,
+        vi.nombreVotants, vi.decomptePour, vi.decompteContre, vi.decompteAbs
+        FROM votes_datan vd
+        LEFT JOIN votes_info vi ON vd.voteNumero = vi.voteNumero AND vd.legislature = vi.legislature
+        LEFT JOIN fields f ON vd.category = f.id
+        WHERE vd.state = "published"
       ';
       $sql .= $legislature ? ' AND vi.legislature = '.$this->db->escape($legislature) : '';
       $sql .= $year ? ' AND YEAR(vi.dateScrutin) = '.$this->db->escape($year) : '';
