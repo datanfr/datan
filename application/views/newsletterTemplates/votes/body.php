@@ -50,7 +50,17 @@
         <span class="badge badge-<?= $vote['sortCode'] ?>"><b><?= mb_strtoupper($vote['sortCode']) ?></b></span>
       </mj-text>
       <mj-text font-size="16px" font-weight="800" padding-bottom="0px">
-        <span class="primary">En savoir plus</span>
+        <span class="primary">Résultat du vote</span>
+      </mj-text>
+      <mj-text padding-top="0px">
+        Ce vote a été <?= $vote['sortCode'] ?> par les députés de l'Assemblée nationale. Sur les <?= $vote['nombreVotants'] ?> parlementaires ayant pris part au vote, <?= $vote['decomptePour'] ?> ont voté pour et <?= $vote['decompteContre'] ?> ont voté contre.
+      </mj-text>
+      <mj-text font-size="16px" font-weight="800" padding-bottom="0px">
+        <span class="primary">Les groupes ayant voté pour</span>
+      </mj-text>
+      <mj-image width="100%" src="<?= asset_url() ?>imgs/groupes/LAREM.png" />
+      <mj-text font-size="16px" font-weight="800" padding-bottom="0px">
+        <span class="primary">Le contexte du vote</span>
       </mj-text>
       <mj-text padding-top="0px">
         <?= word_limiter($vote['description'], 35) ?>
