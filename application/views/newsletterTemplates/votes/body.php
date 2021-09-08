@@ -58,7 +58,7 @@
       <mj-text font-size="16px" font-weight="800" padding-bottom="0px">
         <span class="primary">Les groupes ayant voté pour</span>
       </mj-text>
-      <mj-image width="100%" src="<?= asset_url() ?>imgs/groupes/LAREM.png" />
+      <mj-image width="100%" src="https://datan.fr/assets/imgs/groupes/LAREM.png" />
       <mj-text font-size="16px" font-weight="800" padding-bottom="0px">
         <span class="primary">Le contexte du vote</span>
       </mj-text>
