@@ -1,4 +1,4 @@
-<mj-section background-color="#ffffff" background-repeat="repeat" background-size="auto" padding="20px 15px" text-align="center" vertical-align="top">
+<mj-section background-color="#ffffff" background-repeat="repeat" background-size="auto" text-align="center" vertical-align="top">
   <mj-column vertical-align="top">
     <mj-text>
       <span class="title">Les derniers votes de l'Assemblée nationale</span>
@@ -37,7 +37,7 @@
 </mj-section>
 
 <?php foreach ($votes as $vote): ?>
-  <mj-section background-color="#ffffff" background-repeat="repeat" background-size="auto" padding="20px 15px" text-align="center" vertical-align="top">
+  <mj-section background-color="#ffffff" background-repeat="repeat" background-size="auto" text-align="center" vertical-align="top">
     <mj-column vertical-align="top">
       <mj-divider border-width="1px" border-style="dashed" border-color="lightgrey" />
       <mj-text font-size="17px">
@@ -53,12 +53,22 @@
         <span class="primary">Résultat du vote</span>
       </mj-text>
       <mj-text padding-top="0px">
-        Ce vote a été <?= $vote['sortCode'] ?> par les députés de l'Assemblée nationale. Sur les <?= $vote['nombreVotants'] ?> parlementaires ayant pris part au vote, <?= $vote['decomptePour'] ?> ont voté pour et <?= $vote['decompteContre'] ?> ont voté contre.
+        Ce vote a été <?= $vote['sortCode'] ?>. Sur les <?= $vote['nombreVotants'] ?> parlementaires ayant pris part au vote, <?= $vote['decomptePour'] ?> ont voté pour et <?= $vote['decompteContre'] ?> ont voté contre.
       </mj-text>
       <mj-text font-size="16px" font-weight="800" padding-bottom="0px">
         <span class="primary">Les groupes ayant voté pour</span>
       </mj-text>
-      <mj-image width="100%" src="https://datan.fr/assets/imgs/groupes/LAREM.png" />
+      <mj-section css-class="hide_on_mobile" padding-top="0" padding-bottom="0">
+        <mj-group>
+          <?php foreach ($vote['groupes'] as $group): ?>
+            <?php if ($group['positionMajoritaire'] == 'pour'): ?>
+              <mj-column width="25%">
+                <mj-image padding="5px 10px" src="https://datan.fr/assets/imgs/groupes/<?= $group['libelleAbrev'] ?>.png" />
+              </mj-column>
+            <?php endif; ?>
+          <?php endforeach; ?>
+        </mj-group>
+      </mj-section>
       <mj-text font-size="16px" font-weight="800" padding-bottom="0px">
         <span class="primary">Le contexte du vote</span>
       </mj-text>
@@ -73,7 +83,21 @@
   </mj-section>
 <?php endforeach; ?>
 
-<mj-section background-color="#ffffff" background-repeat="no-repeat" background-size="auto" padding="20px 15px" text-align="center" vertical-align="top" border-top = "20px solid #F4F4F4">
+<mj-section background-color="#ffffff" background-repeat="no-repeat" background-size="auto" text-align="center" vertical-align="top" border-top = "20px solid #F4F4F4">
+  <mj-column vertical-align="top">
+    <mj-text>
+      <span><b>Autres derniers votes</b></span>
+    </mj-text>
+    <mj-text padding-top="0px">
+      <span>AAA</span>
+    </mj-text>
+    <mj-text padding-top="40px">
+      XXXX
+    </mj-text>
+  </mj-column>
+</mj-section>
+
+<mj-section background-color="#ffffff" background-repeat="no-repeat" background-size="auto" text-align="center" vertical-align="top" border-top = "20px solid #F4F4F4">
   <mj-column vertical-align="top">
     <mj-text>
       <span><b>Section : travailler avec nous & nous suivre</b></span>
