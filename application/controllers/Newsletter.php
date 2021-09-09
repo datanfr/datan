@@ -141,6 +141,7 @@ class Newsletter extends CI_Controller
         $string = substr($value['description'], 0, strpos($value['description'], "</p>")+4);
         $string = strip_tags($string);
         $data['votes'][$key]['description'] = $string;
+        $data['votes'][$key]['groupes'] = $this->votes_model->get_vote_groupes_simplified($value['voteNumero'], $value['legislature']);
       }
 
 
@@ -160,7 +161,8 @@ class Newsletter extends CI_Controller
       // Send emails
       $emails = $this->newsletter_model->get_emails("votes");
       foreach ($emails as $email) {
-      //sendMail($email['email'], 'Bienvenue à la newsletter', $templateHtml = $html, $templateLanguage = TRUE, $templateId = NULL, $variables = NULL);
+        $title = $data['month'] . " " . $data['year'] . " | Les derniers votes à l'Assemblée nationale";
+      //sendMail($email['email'], $title, $templateHtml = $html, $templateLanguage = TRUE, $templateId = NULL, $variables = NULL);
       }
 
     }

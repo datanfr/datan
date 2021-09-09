@@ -310,6 +310,16 @@
       return $this->db->query($sql, array($num, $legislature, $date, $date))->result_array();
     }
 
+    public function get_vote_groupes_simplified($num, $legislature){
+      $sql = 'SELECT o.libelleAbrev, vg.*
+        FROM votes_groupes vg
+        LEFT JOIN organes o ON vg.organeRef = o.uid
+        WHERE vg.voteNumero = ? AND vg.legislature = ?
+        ORDER BY vg.nombreMembresGroupe DESC
+      ';
+      return $this->db->query($sql, array($num, $legislature))->result_array();
+    }
+
     public function get_vote_deputes($num, $legislature){
       $sql = 'SELECT B.*
         FROM
