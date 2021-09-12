@@ -15,9 +15,9 @@
     <mj-style inline="inline">
       .title {
         color: #00b794;
-        font-size: 24px;
-        font-family: Open Sans;
-        font-weight: 600;
+        font-size: 38px;
+        font-weight: 800;
+        line-height: 1.3;
       }
       .subtitle {
         color: #aaa;
