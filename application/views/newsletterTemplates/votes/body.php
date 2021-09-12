@@ -18,7 +18,7 @@
 <?php foreach ($votes as $vote): ?>
   <mj-section padding-top="0" background-color="#ffffff" background-repeat="repeat" background-size="auto">
     <mj-column vertical-align="top">
-      <mj-divider padding-bottom="40px" border-width="5px" border-style="solid" border-color="#00b794" /> <!-- lightgrey -->
+      <mj-divider padding-bottom="40px" border-width="5px" border-style="solid" border-color="lightgrey" />
       <mj-text font-size="22px" font-weight="800" line-height="1.5" padding-bottom="0">
         <?= $vote['voteTitre'] ?>
       </mj-text>
@@ -39,7 +39,6 @@
           <?php foreach ($vote['groupes'] as $group): ?>
             <?php if ($group['positionMajoritaire'] == 'pour'): ?>
               <mj-column width="20%">
-
                 <mj-image padding="5px 10px" href="https://datan.fr/groupes/<?= mb_strtolower($group['libelleAbrev']) ?>" src="https://datan.fr/assets/imgs/groupes/<?= $group['libelleAbrev'] ?>.png" />
               </mj-column>
             <?php endif; ?>
@@ -60,21 +59,22 @@
   </mj-section>
 <?php endforeach; ?>
 
-<mj-section background-color="#ffffff" background-repeat="no-repeat" background-size="auto" border-top="20px solid #F4F4F4" padding-bottom="0" padding-left="0" padding-right="0">
+<mj-section background-color="#ffffff" background-repeat="no-repeat" background-size="auto" border-top="20px solid #F4F4F4">
   <mj-column vertical-align="top">
-    <mj-text font-size="22px" font-weight="800" padding-left="40px" padding-right="40px">
-      <span class="primary">Nous suivre sur les réseaux sociaux !</span>
+    <mj-text font-size="22px" font-weight="800">
+      <span class="primary">Suivez-nous !</span>
     </mj-text>
-    <mj-text padding-left="40px" padding-right="40px">
+    <mj-text>
       Vous souhaitez rester informé de nos dernières infos ? Vous voulez découvrir en temps réel le vote des groupes politiques à l'Assemblée nationale ? <b>Suivez-nous sur les réseaux sociaux !</b>
     </mj-text>
-    <mj-section padding="10px 0 0 0">
-      <mj-group>
-        <mj-column background-color="#3b5998">
-          <mj-image href="https://www.facebook.com/datanFR/" width="100%" src="https://datan.fr/assets/imgs/logos/facebook_datan.png" />
+    <mj-section padding-top="15px" padding-bottom="15px">
+      <mj-group padding="0">
+        <mj-column padding="10px" background-color="#3b5998" border-radius="5px" width="40%">
+          <mj-image href="https://www.facebook.com/datanFR/" width="70%" src="https://datan.fr/assets/imgs/logos/facebook_datan.png" />
         </mj-column>
-        <mj-column background-color="#00acee">
-          <mj-image href="https://twitter.com/datanfr?lang=fr" width="100%" src="https://datan.fr/assets/imgs/logos/twitter_datan.png" />
+        <mj-column padding="10px" background-color="#FFFFFF" width="20%"></mj-column>
+        <mj-column padding="10px" background-color="#00acee" border-radius="5px" width="40%">
+          <mj-image href="https://twitter.com/datanfr?lang=fr" width="70%" src="https://datan.fr/assets/imgs/logos/twitter_datan.png" />
         </mj-column>
       </mj-group>
     </mj-section>
@@ -84,7 +84,7 @@
 <mj-section background-color="#ffffff" background-repeat="no-repeat" background-size="auto" border-top = "20px solid #F4F4F4">
   <mj-column vertical-align="top">
     <mj-text font-size="22px" font-weight="800">
-      <span class="primary">Contribuer au projet ? 👨‍💻 🔨</span>
+      <span class="primary">Contribuer au projet 👨‍💻 🔨</span>
     </mj-text>
     <mj-text>
       Datan est géré par <b>une équipe de bénévoles</b>. Notre objectif ? Rendre l'activité parlementaire plus accessible et compréhensible !
