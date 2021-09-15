@@ -7,7 +7,7 @@
        href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,800" />
     <mj-attributes>
       <mj-class name="big" font-size="20px" />
-      <mj-all font-family="Open Sans" font-size="14px" line-height="1.8" />
+      <mj-all font-family="Open Sans, Verdana" font-size="14px" line-height="1.8" />
       <mj-button background-color="transparent" color="#00B794" border="1px solid #00B794" font-weight="800" border-radius="5px" inner-padding="10px 20px" />
       <mj-section padding="20px 15px" />
     </mj-attributes>
