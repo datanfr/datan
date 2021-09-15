@@ -161,7 +161,7 @@ class Newsletter extends CI_Controller
       // Send emails
       $emails = $this->newsletter_model->get_emails("votes");
       foreach ($emails as $email) {
-        $title = $data['month'] . " " . $data['year'] . " | Les derniers votes à l'Assemblée nationale";
+        $title = ucfirst($data['month']) . " " . $data['year'] . " | Les derniers votes à l'Assemblée nationale";
         if (isset($_GET["state"]) && $_GET["state"] == "send") {
           sendMail($email['email'], $title, $templateHtml = $html, $templateLanguage = TRUE, $templateId = NULL, $variables = NULL);
         }
