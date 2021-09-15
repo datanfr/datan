@@ -144,9 +144,6 @@ class Newsletter extends CI_Controller
         $data['votes'][$key]['groupes'] = $this->votes_model->get_vote_groupes_simplified($value['voteNumero'], $value['legislature']);
       }
 
-
-
-
       // Metadata
       $data['title'] = "Les votes de l'Assemblée nationale - " . $data['month'] . " " . $data['year'] . " | Newsletter Datan";
 
@@ -156,6 +153,7 @@ class Newsletter extends CI_Controller
       $footer = $this->load->view('newsletterTemplates/templates/footer', $data, TRUE);
       $mjml = $header." ".$body." ".$footer;
       $html = getMjmlHtml($mjml);
+      $html = getHtmlMinified($html);
       echo $html;
 
       // Send emails
