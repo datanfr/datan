@@ -382,6 +382,23 @@
       return $this->db->query($sql, legislature_current())->row_array();
     }
 
+    public function get_depute_vote_plus_month($legislature, $year, $month){
+      $sql = 'SELECT A.*, da.civ, da.nameFirst, da.nameLast, da.nameUrl, da.dptSlug, da.couleurAssociee, da.img, da.libelle, da.libelleAbrev, da.groupeId AS organeRef, da.departementNom AS electionDepartement, da.departementCode AS electionDepartementNumero
+        FROM
+        (
+          SELECT vp.mpId, sum(participation) AS votesN, round(avg(participation)*100, 2) AS score
+          FROM votes_participation vp
+          LEFT JOIN votes_info vi ON vi.legislature = vp.legislature AND vi.voteNumero = vp.voteNumero
+          WHERE vp.legislature = ? AND YEAR(vi.dateScrutin) = ? AND MONTH(vi.dateScrutin) = ?
+          GROUP BY vp.mpId
+        ) A
+        LEFT JOIN deputes_all da ON da.mpId = A.mpId
+        ORDER BY score DESC
+        LIMIT 1
+      ';
+      return $this->db->query($sql, array($legislature, $year, $month))->row_array();
+    }
+
     public function get_depute_vote_moins(){
       $sql = 'SELECT A.mpId, A.score, A.votesN, da.civ, da.nameFirst, da.nameLast, da.nameUrl, da.dptSlug, da.couleurAssociee, da.img, da.libelle, da.libelleAbrev, da.groupeId AS organeRef, da.departementNom AS electionDepartement, da.departementCode AS electionDepartementNumero,
       CONCAT(da.departementNom, " (", da.departementCode, ")") AS cardCenter
