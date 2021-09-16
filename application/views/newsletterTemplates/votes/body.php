@@ -64,6 +64,30 @@
   </mj-section>
 <?php endforeach; ?>
 
+<mj-section padding="10px 0"></mj-section> 
+
+<mj-section background-color="#ffffff" background-repeat="no-repeat" background-size="auto"  border="2px solid #00b794">
+  <mj-column width="100%">
+    <mj-text font-size="22px" font-weight="800">
+      <span class="primary"><?= ucfirst($depute['gender']['le']) ?> <?= $depute['gender']['depute'] ?> qui a le plus participé</span>
+    </mj-text>
+  </mj-column>
+  <mj-column width="30%" vertical-align="middle">
+    <mj-image width="200px"  border-radius="5px" src="https://datan.fr/assets/imgs/deputes/depute_<?= substr($depute['mpId'], 2) ?>.png" href="https://www.datan.fr/deputes/<?= $depute['dptSlug'] ?>/depute_<?= $depute['nameUrl'] ?>" />
+  </mj-column>
+  <mj-column width="70%" vertical-align="middle">
+    <mj-text>
+      <a href="https://www.datan.fr/deputes/<?= $depute['dptSlug'] ?>/depute_<?= $depute['nameUrl'] ?>" target="_blank"><?= $depute['nameFirst'].' '.$depute['nameLast'] ?></a> est <?= $depute['gender']['le'] ?> <?= $depute['gender']['depute'] ?> qui a le plus participé aux scrutins en <?= $month.' '.$year ?>.
+      Avec un <b>taux de participation de <?= round($depute['score']) ?> %</b>, <?= $depute['gender']['pronom'] ?> a participé au total à <?= $depute['votesN'] ?> votes dans l'hémicycle.
+    </mj-text>
+  </mj-column>
+  <mj-column width="100%">
+    <mj-button background-color="#00b794" color="#fff" font-weight="800" padding-top="20px" padding-bottom="10px" href="https://www.datan.fr/deputes/<?= $depute['dptSlug'] ?>/depute_<?= $depute['nameUrl'] ?>">
+      Découvrez son activité
+    </mj-button>
+  </mj-column>
+</mj-section>
+
 <mj-section background-color="#ffffff" background-repeat="no-repeat" background-size="auto" border-top="20px solid #F4F4F4">
   <mj-column vertical-align="top">
     <mj-text font-size="22px" font-weight="800">
