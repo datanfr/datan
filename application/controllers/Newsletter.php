@@ -128,14 +128,26 @@ class Newsletter extends CI_Controller
       $data['votesN'] = $this->votes_model->get_n_votes(legislature_current(), $year, $month);
       $data['votesNDatan'] = $this->votes_model->get_n_votes_datan(legislature_current(), 2020, 9);
       $data['votesInfos'] = $this->votes_model->get_infos_period(legislature_current(), $year, $month);
+
+      // Edited text
       if ($data['votesInfos']['adopted'] > $data['votesInfos']['rejected']) {
-        $data['votesInfosEdited'] = "La majorité a été adoptée : il y a eu " . $data['votesInfos']['adopted'] . " votes adoptés par les députés en " . $data['month'] . " " .  $year . ", contre seulement " . $data['votesInfos']['rejected'] . " votes rejetés.";
+        $data['votesInfosEdited'] = "Au total, " . $data['votesInfos']['adopted'] . " votes adoptés par les députés tandis que " . $data['votesInfos']['rejected'] . " votes rejetés.";
       } elseif ($data['votesInfos']['adopted'] < $data['votesInfos']['rejected']) {
-        $data['votesInfosEdited'] = "La majorité a été rejetée : il y a eu " . $data['votesInfos']['rejected'] . " votes rejetés par les députés en " . $data['month'] . " " .  $year . ", contre seulement " . $data['votesInfos']['adopted'] . " votes adoptés.";
+        $data['votesInfosEdited'] = "Au total, " . $data['votesInfos']['rejected'] . " votes ont été rejetés par les députés tandis que  " . $data['votesInfos']['adopted'] . " votes ont été adoptés.";
       } else {
         $data['votesInfosEdited'] = NULL;
       }
-      $data['votes'] = $this->votes_model->get_votes_datan(legislature_current(), 2020, 9);
+
+      $data['votesNDatan'] = 1;
+
+      // Get votes
+      if ($data['votesNDatan'] <= 3 ) {
+        $data['importants'] = FALSE;
+        $data['votes'] = $this->votes_model->get_votes_datan(legislature_current(), 2020, 9, 3, FALSE);
+      } else {
+        $data['importants'] = TRUE;
+        $data['votes'] = $this->votes_model->get_votes_datan(legislature_current(), 2020, 9, 3, TRUE);
+      }
 
       foreach ($data['votes'] as $key => $value) {
         $string = substr($value['description'], 0, strpos($value['description'], "</p>")+4);

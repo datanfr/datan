@@ -10,7 +10,12 @@
       Il y a eu <b><?= $votesN ?> votes</b> à l'Assemblée nationale en <?= $month.' '.$year ?>. <?= $votesInfosEdited ?>
     </mj-text>
     <mj-text padding-bottom="40px">
-      <b>L'équipe de Datan a sélectionné et <span class="primary">décrypté <?= $votesNDatan ?> votes</span> pour vous</b>. Découvrez-les ci-dessous !
+      <b>L'équipe de Datan a sélectionné et <span class="primary">décrypté <?= $votesNDatan ?> vote<?= $votesNDatan > 1 ? "s" : "" ?></span> pour vous</b>.
+      <?php if ($importants): ?>
+        Découvrez dans cette newsletter les votes les plus importants !
+        <?php else: ?>
+        Découvrez-le<?= $votesNDatan > 1 ? "s" : "" ?> ci-dessous !
+      <?php endif; ?>
     </mj-text>
   </mj-column>
 </mj-section>
