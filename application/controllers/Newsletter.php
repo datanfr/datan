@@ -8,6 +8,8 @@ class Newsletter extends CI_Controller
         parent::__construct();
         $this->load->model('newsletter_model');
         $this->load->model('votes_model');
+        $this->load->model('deputes_model');
+        $this->load->model('depute_edito');
     }
 
     public function edit($email){
@@ -156,6 +158,10 @@ class Newsletter extends CI_Controller
         $data['votes'][$key]['groupes'] = $this->votes_model->get_vote_groupes_simplified($value['voteNumero'], $value['legislature']);
       }
 
+      // Get most active MP
+      $data['depute'] = $this->deputes_model->get_depute_vote_plus_month(legislature_current(), $year, $month);
+      $data['depute']['gender'] = $this->depute_edito->gender($data['depute']['civ']);
+      
       // Metadata
       $data['title'] = "Les votes de l'Assemblée nationale - " . $data['month'] . " " . $data['year'] . " | Newsletter Datan";
 
@@ -176,6 +182,5 @@ class Newsletter extends CI_Controller
           sendMail($email['email'], $title, $templateHtml = $html, $templateLanguage = TRUE, $templateId = NULL, $variables = NULL);
         }
       }
-
     }
 }
