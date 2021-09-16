@@ -35,7 +35,7 @@
       return $this->db->query($sql)->result_array();
     }
 
-    public function get_votes_datan($legislature, $year, $month){
+    public function get_votes_datan($legislature, $year, $month, $limit, $important){
       $sql = 'SELECT vd.title AS voteTitre, vd.description, vi.dateScrutin, vi.voteNumero, vi.legislature, f.name AS category_libelle, f.slug AS category_slug, vi.sortCode, date_format(dateScrutin, "%d %M %Y") as dateScrutinFR,
         vi.nombreVotants, vi.decomptePour, vi.decompteContre, vi.decompteAbs
         FROM votes_datan vd
@@ -46,7 +46,13 @@
       $sql .= $legislature ? ' AND vi.legislature = '.$this->db->escape($legislature) : '';
       $sql .= $year ? ' AND YEAR(vi.dateScrutin) = '.$this->db->escape($year) : '';
       $sql .= $month ? ' AND MONTH(vi.dateScrutin) = '.$this->db->escape($month) : '';
-      $sql .= ' ORDER BY vi.voteNumero DESC';
+      if ($important == TRUE) {
+        $sql .= ' ORDER BY vi.nombreVotants DESC';
+      } else {
+        $sql .= ' ORDER BY vi.voteNumero DESC';
+      }
+
+      $sql .= $limit ? ' LIMIT ' . $limit : '';
       return $this->db->query($sql)->result_array();
     }
 
