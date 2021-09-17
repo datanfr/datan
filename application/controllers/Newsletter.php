@@ -120,12 +120,18 @@ class Newsletter extends CI_Controller
     public function votes(){
       // Do not forget to install this: https://qferrer.medium.com/rendering-mjml-in-php-982d703aa703
 
+      // Check if CLI
+      if (!is_cli()) {
+        die("Only command line access");
+      }
+
       // Data for the newsletter
       setlocale(LC_TIME, "fr_FR");
       $data['month'] = utf8_encode(strftime("%B", strtotime("- 1 months")));
       $data['year'] = utf8_encode(strftime("%Y", strtotime("- 1 months")));
       $year = date("Y", strtotime("-1 months"));
       $month = date("m", strtotime("-1 months"));
+      $year = 2020; $month = 9; // For testing
       $data['votesN'] = $this->votes_model->get_n_votes(legislature_current(), $year, $month);
       $data['votesNDatan'] = $this->votes_model->get_n_votes_datan(legislature_current(), $year, $month);
 
@@ -174,7 +180,7 @@ class Newsletter extends CI_Controller
         $mjml = $header." ".$body." ".$footer;
         $html = getMjmlHtml($mjml);
         $html = getHtmlMinified($html);
-        echo $html;
+        //echo $html; // For testing
 
         // Send emails
         $emails = $this->newsletter_model->get_emails("votes");
