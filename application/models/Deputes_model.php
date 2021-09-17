@@ -386,7 +386,7 @@
       $sql = 'SELECT A.*, da.civ, da.nameFirst, da.nameLast, da.nameUrl, da.dptSlug, da.couleurAssociee, da.img, da.libelle, da.libelleAbrev, da.groupeId AS organeRef, da.departementNom AS electionDepartement, da.departementCode AS electionDepartementNumero
         FROM
         (
-          SELECT vp.mpId, sum(participation) AS votesN, round(avg(participation)*100, 2) AS score
+          SELECT vp.mpId, sum(participation) AS votesN, round(avg(participation)*100, 3) AS score
           FROM votes_participation vp
           LEFT JOIN votes_info vi ON vi.legislature = vp.legislature AND vi.voteNumero = vp.voteNumero
           WHERE vp.legislature = ? AND YEAR(vi.dateScrutin) = ? AND MONTH(vi.dateScrutin) = ?
