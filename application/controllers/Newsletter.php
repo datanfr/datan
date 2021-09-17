@@ -122,65 +122,70 @@ class Newsletter extends CI_Controller
 
       // Data for the newsletter
       setlocale(LC_TIME, "fr_FR");
-      $data['month'] = utf8_encode(strftime("%B"));
-      $data['year'] = utf8_encode(strftime("%Y"));
-      $year = date("Y");
-      $month = date("m");
-      $month = 7;
+      $data['month'] = utf8_encode(strftime("%B", strtotime("- 1 months")));
+      $data['year'] = utf8_encode(strftime("%Y", strtotime("- 1 months")));
+      $year = date("Y", strtotime("-1 months"));
+      $month = date("m", strtotime("-1 months"));
       $data['votesN'] = $this->votes_model->get_n_votes(legislature_current(), $year, $month);
-      $data['votesNDatan'] = $this->votes_model->get_n_votes_datan(legislature_current(), 2020, 9);
-      $data['votesInfos'] = $this->votes_model->get_infos_period(legislature_current(), $year, $month);
+      $data['votesNDatan'] = $this->votes_model->get_n_votes_datan(legislature_current(), $year, $month);
 
-      // Edited text
-      if ($data['votesInfos']['adopted'] > $data['votesInfos']['rejected']) {
-        $data['votesInfosEdited'] = "Au total, " . $data['votesInfos']['adopted'] . " votes adoptés par les députés tandis que " . $data['votesInfos']['rejected'] . " votes rejetés.";
-      } elseif ($data['votesInfos']['adopted'] < $data['votesInfos']['rejected']) {
-        $data['votesInfosEdited'] = "Au total, " . $data['votesInfos']['rejected'] . " votes ont été rejetés par les députés tandis que  " . $data['votesInfos']['adopted'] . " votes ont été adoptés.";
-      } else {
-        $data['votesInfosEdited'] = NULL;
-      }
+      if ($data['votesNDatan'] > 0) {
+        $data['votesInfos'] = $this->votes_model->get_infos_period(legislature_current(), $year, $month);
 
-      $data['votesNDatan'] = 1;
-
-      // Get votes
-      if ($data['votesNDatan'] <= 3 ) {
-        $data['importants'] = FALSE;
-        $data['votes'] = $this->votes_model->get_votes_datan(legislature_current(), 2020, 9, 3, FALSE);
-      } else {
-        $data['importants'] = TRUE;
-        $data['votes'] = $this->votes_model->get_votes_datan(legislature_current(), 2020, 9, 3, TRUE);
-      }
-
-      foreach ($data['votes'] as $key => $value) {
-        $string = substr($value['description'], 0, strpos($value['description'], "</p>")+4);
-        $string = strip_tags($string);
-        $data['votes'][$key]['description'] = $string;
-        $data['votes'][$key]['groupes'] = $this->votes_model->get_vote_groupes_simplified($value['voteNumero'], $value['legislature']);
-      }
-
-      // Get most active MP
-      $data['depute'] = $this->deputes_model->get_depute_vote_plus_month(legislature_current(), $year, $month);
-      $data['depute']['gender'] = $this->depute_edito->gender($data['depute']['civ']);
-      
-      // Metadata
-      $data['title'] = "Les votes de l'Assemblée nationale - " . $data['month'] . " " . $data['year'] . " | Newsletter Datan";
-
-      // Create the MJML/HTML newsletter
-      $header = $this->load->view('newsletterTemplates/templates/header', $data, TRUE);
-      $body = $this->load->view('newsletterTemplates/votes/body', $data, TRUE);
-      $footer = $this->load->view('newsletterTemplates/templates/footer', $data, TRUE);
-      $mjml = $header." ".$body." ".$footer;
-      $html = getMjmlHtml($mjml);
-      $html = getHtmlMinified($html);
-      echo $html;
-
-      // Send emails
-      $emails = $this->newsletter_model->get_emails("votes");
-      foreach ($emails as $email) {
-        $title = ucfirst($data['month']) . " " . $data['year'] . " | Les derniers votes à l'Assemblée nationale";
-        if (isset($_GET["state"]) && $_GET["state"] == "send") {
-          sendMail($email['email'], $title, $templateHtml = $html, $templateLanguage = TRUE, $templateId = NULL, $variables = NULL);
+        // Edited text
+        if ($data['votesInfos']['adopted'] > $data['votesInfos']['rejected']) {
+          $data['votesInfosEdited'] = "Au total, " . $data['votesInfos']['adopted'] . " votes adoptés par les députés tandis que " . $data['votesInfos']['rejected'] . " votes rejetés.";
+        } elseif ($data['votesInfos']['adopted'] < $data['votesInfos']['rejected']) {
+          $data['votesInfosEdited'] = "Au total, " . $data['votesInfos']['rejected'] . " votes ont été rejetés par les députés tandis que  " . $data['votesInfos']['adopted'] . " votes ont été adoptés.";
+        } else {
+          $data['votesInfosEdited'] = NULL;
         }
+
+        // Get votes
+        if ($data['votesNDatan'] <= 3 ) {
+          $data['importants'] = FALSE;
+          $data['votes'] = $this->votes_model->get_votes_datan(legislature_current(), 2020, 9, 3, FALSE);
+        } else {
+          $data['importants'] = TRUE;
+          $data['votes'] = $this->votes_model->get_votes_datan(legislature_current(), 2020, 9, 3, TRUE);
+        }
+
+        // Description of votes
+        foreach ($data['votes'] as $key => $value) {
+          $string = substr($value['description'], 0, strpos($value['description'], "</p>")+4);
+          $string = strip_tags($string);
+          $data['votes'][$key]['description'] = $string;
+          $data['votes'][$key]['groupes'] = $this->votes_model->get_vote_groupes_simplified($value['voteNumero'], $value['legislature']);
+        }
+
+        // Get most active MP
+        if ($data['votesN'] > 25) {
+          $data['depute'] = $this->deputes_model->get_depute_vote_plus_month(legislature_current(), $year, $month);
+          $data['depute']['gender'] = $this->depute_edito->gender($data['depute']['civ']);
+        }
+
+        // Metadata
+        $data['title'] = "Les votes de l'Assemblée nationale - " . $data['month'] . " " . $data['year'] . " | Newsletter Datan";
+
+        // Create the MJML/HTML newsletter
+        $header = $this->load->view('newsletterTemplates/templates/header', $data, TRUE);
+        $body = $this->load->view('newsletterTemplates/votes/body', $data, TRUE);
+        $footer = $this->load->view('newsletterTemplates/templates/footer', $data, TRUE);
+        $mjml = $header." ".$body." ".$footer;
+        $html = getMjmlHtml($mjml);
+        $html = getHtmlMinified($html);
+        echo $html;
+
+        // Send emails
+        $emails = $this->newsletter_model->get_emails("votes");
+        foreach ($emails as $email) {
+          $title = ucfirst($data['month']) . " " . $data['year'] . " | Les derniers votes à l'Assemblée nationale";
+          if (isset($_GET["state"]) && $_GET["state"] == "send") {
+            sendMail($email['email'], $title, $templateHtml = $html, $templateLanguage = TRUE, $templateId = NULL, $variables = NULL);
+          }
+        }
+      } else {
+        echo "Not enough votes in the database for this month!";
       }
     }
 }
