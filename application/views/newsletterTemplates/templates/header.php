@@ -3,8 +3,8 @@
     <mj-preview>
       Découvrez le site Datan
     </mj-preview>
-    <mj-font name="Open Sans"
-       href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,800" />
+    <mj-font name="Open Sans" href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,800" />
+    <mj-font name="Verdana" href="https://fonts.googleapis.com/css?family=Verdana" />
     <mj-attributes>
       <mj-class name="big" font-size="20px" />
       <mj-all font-family="Open Sans, Verdana" font-size="14px" line-height="1.8" />
