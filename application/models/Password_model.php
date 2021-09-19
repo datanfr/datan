@@ -17,5 +17,11 @@
         redirect('login');
       }
     }
+
+    public function is_admin(){
+      if (($this->session->userdata('type') == 'admin')) {
+        return TRUE;
+      } 
+    }
   }
 ?>
