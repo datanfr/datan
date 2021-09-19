@@ -142,7 +142,7 @@
     }
 
     public function create() {
-      $this->password_model->security_admin();
+      $this->password_model->security();
       $data['username'] = $this->session->userdata('username');
       $data['title'] = 'Créer un post de blog';
 
@@ -185,7 +185,7 @@
 
     // EDIT A POST (display page)
     public function edit($slug){
-      $this->password_model->security_admin();
+      $this->password_model->security();
       $data['username'] = $this->session->userdata('username');
       $user_type = $this->session->userdata('type');
       $data['post'] = $this->post_model->get_post_edit($slug, $user_type);
@@ -208,7 +208,7 @@
 
     // UPDATE A POST
     public function update(){
-      $this->password_model->security_admin();
+      $this->password_model->security();
       $this->post_model->update_post();
 
       // Set message

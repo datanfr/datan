@@ -6,7 +6,7 @@
       }
     }
 
-    public function security_admin(){
+    public function security(){
       if ((!$this->session->userdata('type') == 'admin') || (!$this->session->userdata('type') == 'writer')) {
         redirect('login');
       }
