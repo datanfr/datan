@@ -117,11 +117,12 @@ class Newsletter extends CI_Controller
       $this->load->view('templates/footer', $data);
     }
 
-    public function votes(){
+    public function votes($action){
+
       // Do not forget to install this: https://qferrer.medium.com/rendering-mjml-in-php-982d703aa703
 
       // Check if CLI
-      if (!is_cli()) {
+      if (!is_cli() && !$this->password_model->is_admin()) { // ||
         die("Only command line access"); // Comment for testing with URL newsletter/votes
       }
 
@@ -172,6 +173,11 @@ class Newsletter extends CI_Controller
 
         // Metadata
         $data['title'] = "Les votes de l'Assemblée nationale - " . $data['month'] . " " . $data['year'] . " | Newsletter Datan";
+        if ($action == "test") {
+          $title = "[TEST] " . ucfirst($data['month']) . " " . $data['year'] . " | Les derniers votes à l'Assemblée nationale";
+        } else {
+          $title = ucfirst($data['month']) . " " . $data['year'] . " | Les derniers votes à l'Assemblée nationale";
+        }
 
         // Create the MJML/HTML newsletter
         $header = $this->load->view('newsletterTemplates/templates/header', $data, TRUE);
@@ -180,14 +186,25 @@ class Newsletter extends CI_Controller
         $mjml = $header." ".$body." ".$footer;
         $html = getMjmlHtml($mjml);
         $html = getHtmlMinified($html);
-        //echo $html; // For testing
+        if ($this->password_model->is_admin()) {
+          echo $html;
+        }
 
         // Send emails
-        $emails = $this->newsletter_model->get_emails("votes");
-        foreach ($emails as $email) {
-          $title = ucfirst($data['month']) . " " . $data['year'] . " | Les derniers votes à l'Assemblée nationale";
-          sendMail($email['email'], $title, $templateHtml = $html, $templateLanguage = TRUE, $templateId = NULL, $variables = NULL);
+        if (in_array($action, ['send','test'], true )) {
+          if ($action == 'send') {
+            $emails = $this->newsletter_model->get_emails("votes");
+          } else {
+            $emails[]['email'] =  'info@datan.fr';
+          }
+
+          foreach ($emails as $email) {
+            sendMail($email['email'], $title, $templateHtml = $html, $templateLanguage = TRUE, $templateId = NULL, $variables = NULL);
+
+          }
         }
+
+
       } else {
         echo "Not enough votes in the database for this month!";
       }
