@@ -122,7 +122,7 @@ class Newsletter extends CI_Controller
 
       // Check if CLI
       if (!is_cli()) {
-        die("Only command line access");
+        die("Only command line access"); // Comment for testing with URL newsletter/votes
       }
 
       // Data for the newsletter
@@ -186,9 +186,7 @@ class Newsletter extends CI_Controller
         $emails = $this->newsletter_model->get_emails("votes");
         foreach ($emails as $email) {
           $title = ucfirst($data['month']) . " " . $data['year'] . " | Les derniers votes à l'Assemblée nationale";
-          if (isset($_GET["state"]) && $_GET["state"] == "send") {
-            sendMail($email['email'], $title, $templateHtml = $html, $templateLanguage = TRUE, $templateId = NULL, $variables = NULL);
-          }
+          sendMail($email['email'], $title, $templateHtml = $html, $templateLanguage = TRUE, $templateId = NULL, $variables = NULL);
         }
       } else {
         echo "Not enough votes in the database for this month!";
