@@ -19,9 +19,7 @@
       if ($limit != FALSE) {
         $sql .= ' LIMIT ' . $this->db->escape_str($limit);
       }
-      $query = $this->db->query($sql);
-
-      return $query->result_array();
+      return $this->db->query($sql)->result_array();
     }
 
     public function get_last_votes_datan($limit = FALSE){
@@ -34,27 +32,71 @@
       ORDER BY vi.voteNumero DESC'
       ;
       $sql .= $limit ? ' LIMIT '.$this->db->escape($limit) : '';
-      $query = $this->db->query($sql);
-
-      return $query->result_array();
+      return $this->db->query($sql)->result_array();
     }
 
-    public function get_n_votes_datan(){
-      $this->db->where(array('state' => 'published'));
-      return $this->db->count_all_results('votes_datan');
+    public function get_votes_datan($legislature, $year, $month, $limit, $important){
+      $sql = 'SELECT vd.title AS voteTitre, vd.description, vi.dateScrutin, vi.voteNumero, vi.legislature, f.name AS category_libelle, f.slug AS category_slug, vi.sortCode, date_format(dateScrutin, "%d %M %Y") as dateScrutinFR,
+        vi.nombreVotants, vi.decomptePour, vi.decompteContre, vi.decompteAbs
+        FROM votes_datan vd
+        LEFT JOIN votes_info vi ON vd.voteNumero = vi.voteNumero AND vd.legislature = vi.legislature
+        LEFT JOIN fields f ON vd.category = f.id
+        WHERE vd.state = "published"
+      ';
+      $sql .= $legislature ? ' AND vi.legislature = '.$this->db->escape($legislature) : '';
+      $sql .= $year ? ' AND YEAR(vi.dateScrutin) = '.$this->db->escape($year) : '';
+      $sql .= $month ? ' AND MONTH(vi.dateScrutin) = '.$this->db->escape($month) : '';
+      if ($important == TRUE) {
+        $sql .= ' ORDER BY vi.nombreVotants DESC';
+      } else {
+        $sql .= ' ORDER BY vi.voteNumero DESC';
+      }
+
+      $sql .= $limit ? ' LIMIT ' . $limit : '';
+      return $this->db->query($sql)->result_array();
     }
 
-    public function get_n_votes(){
-      $this->db->where('legislature', legislature_current());
+    public function get_n_votes_datan($legislature, $year = NULL, $month = NULL){
+      if (!is_null($year)) {
+        $this->db->where('YEAR(vi.dateScrutin)', $year);
+      }
+      if (!is_null($month)) {
+        $this->db->where('MONTH(vi.dateScrutin)', $month);
+      }
+      $this->db->join('votes_info vi', 'vd.voteNumero = vi.voteNumero AND vd.legislature = vi.legislature', 'left');
+      $this->db->where(array('vd.state' => 'published', 'vd.legislature' => $legislature));
+      return $this->db->count_all_results('votes_datan vd');
+    }
+
+    public function get_n_votes($legislature, $year = NULL, $month = NULL){
+      if (!is_null($year)) {
+        $this->db->where('YEAR(dateScrutin)', $year);
+      }
+      if (!is_null($month)) {
+        $this->db->where('MONTH(dateScrutin)', $month);
+      }
+      $this->db->where('legislature', $legislature);
       return $this->db->count_all_results('votes_info');
+    }
+
+    public function get_infos_period($legislature, $year, $month){
+      if (!is_null($year)) {
+        $this->db->where('YEAR(dateScrutin)', $year);
+      }
+      if (!is_null($month)) {
+        $this->db->where('MONTH(dateScrutin)', $month);
+      }
+      $this->db->select('count(*) AS total');
+      $this->db->select('SUM(if(sortCode = "adopté", 1, 0)) AS adopted');
+      $this->db->select('SUM(if(sortCode = "rejeté", 1, 0)) AS rejected');
+      $this->db->where('legislature', $legislature);
+      return $this->db->get('votes_info')->row_array();
     }
 
     public function get_last_vote(){
       $this->db->select('voteNumero');
       $this->db->order_by('voteNumero', 'DESC');
-      $query = $this->db->get_where('votes_info', array('legislature' => legislature_current()), 1);
-
-      return $query->row_array();
+      return $this->db->get_where('votes_info', array('legislature' => legislature_current()), 1)->row_array();
     }
 
     public function get_votes_datan_category($field){
@@ -65,9 +107,7 @@
         WHERE vd.state = "published" AND f.id = ?
         ORDER BY vd.id DESC
       ';
-      $query = $this->db->query($sql, $field);
-
-      return $query->result_array();
+      return $this->db->query($sql, $field)->result_array();
     }
 
     public function get_years_archives($legislature){
@@ -76,9 +116,7 @@
         WHERE legislature = ?
         ORDER BY YEAR(dateScrutin) ASC
       ';
-      $query = $this->db->query($sql, $legislature);
-
-      return $query->result_array();
+      return $this->db->query($sql, $legislature)->result_array();
     }
 
     public function get_months_archives($legislature){
@@ -126,9 +164,7 @@
           WHERE vi.legislature = ? AND vi.voteNumero = ?
         ) A
       ';
-      $query = $this->db->query($sql, array($legislature, $num));
-
-      return $query->row_array();
+      return $this->db->query($sql, array($legislature, $num))->row_array();
     }
 
     public function get_individual_vote_edited($x){
@@ -277,9 +313,17 @@
         GROUP BY organeRef) C
         ON B.organeRef = C.organeRef
       ';
-      $query = $this->db->query($sql, array($num, $legislature, $date, $date));
+      return $this->db->query($sql, array($num, $legislature, $date, $date))->result_array();
+    }
 
-      return $query->result_array();
+    public function get_vote_groupes_simplified($num, $legislature){
+      $sql = 'SELECT o.libelleAbrev, vg.*
+        FROM votes_groupes vg
+        LEFT JOIN organes o ON vg.organeRef = o.uid
+        WHERE vg.voteNumero = ? AND vg.legislature = ?
+        ORDER BY vg.nombreMembresGroupe DESC
+      ';
+      return $this->db->query($sql, array($num, $legislature))->result_array();
     }
 
     public function get_vote_deputes($num, $legislature){
@@ -311,9 +355,7 @@
         ) B
         ORDER BY B.nameLast ASC, B.nameFirst ASC
       ';
-      $query = $this->db->query($sql, array($num, $legislature));
-
-      return $query->result_array();
+      return $this->db->query($sql, array($num, $legislature))->result_array();
     }
 
 
@@ -337,9 +379,7 @@
       if ($limit){
         $sql .= ' LIMIT ' . $this->db->escape($limit);
       }
-      $query = $this->db->query($sql);
-
-      return $query->result_array();
+      return $this->db->query($sql)->result_array();
     }
 
     public function get_votes_datan_depute_field($depute_id, $field, $limit){
@@ -362,9 +402,7 @@
       if ($limit){
         $sql .= ' LIMIT ' . $this->db->escape($limit);
       }
-      $query = $this->db->query($sql);
-
-      return $query->result_array();
+      return $this->db->query($sql)->result_array();
     }
 
     public function get_votes_all_depute($depute_id, $legislature){
@@ -391,9 +429,7 @@
         ) A
         ORDER BY voteNumero DESC
       ';
-      $query = $this->db->query($sql, array($depute_id, $depute_id, $legislature));
-
-      return $query->result_array();
+      return $this->db->query($sql, array($depute_id, $depute_id, $legislature))->result_array();
     }
 
     public function get_votes_all_groupe($uid, $legislature){
@@ -413,9 +449,7 @@
         LEFT JOIN  votes_datan vd ON A.voteId = vd.vote_id AND A.legislature = vd.legislature AND vd.state = "published"
         ORDER BY A.voteNumero DESC
       ';
-      $query = $this->db->query($sql, array($uid, $legislature));
-
-      return $query->result_array();
+      return $this->db->query($sql, array($uid, $legislature))->result_array();
     }
 
     public function get_votes_datan_groupe($groupe_uid, $limit){
@@ -434,9 +468,7 @@
         ORDER BY vi.dateScrutin DESC
         LIMIT ?
       ';
-      $query = $this->db->query($sql, array($groupe_uid, $limit));
-
-      return $query->result_array();
+      return $this->db->query($sql, array($groupe_uid, $limit))->result_array();
     }
 
     public function get_votes_datan_groupe_field($groupe_uid, $field, $limit){
@@ -458,9 +490,8 @@
       if ($limit) {
         $sql .= ' LIMIT ' . $this->db->escape($limit);
       }
-      $query = $this->db->query($sql);
+      return $this->db->query($sql)->result_array();
 
-      return $query->result_array();
     }
 
     public function get_key_votes_mp($mpId){
@@ -506,9 +537,7 @@
       if ($limit) {
         $sql .= ' LIMIT ' .$limit;
       }
-      $query = $this->db->query($sql, $limit);
-
-      return $query->result_array();
+      return $this->db->query($sql, $limit)->result_array();
     }
 
     public function get_votes_result_by_depute($voteNumeros){
@@ -519,9 +548,7 @@
         LEFT JOIN organes ON deputes_all.groupeId=organes.uid
         WHERE votes.voteNumero IN ?
       ';
-      $query = $this->db->query($sql, $voteNumeros);
-
-      return $query->result_array();
+      return $this->db->query($sql, $voteNumeros)->result_array();
     }
 
     public function get_vote_schema($vote){
