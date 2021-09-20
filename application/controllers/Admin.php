@@ -11,7 +11,7 @@
       $this->load->model('elections_model');
       $this->load->model('newsletter_model');
       $this->load->model('faq_model');
-      $this->password_model->security_admin();
+      $this->password_model->security();
     }
 
     // Dashboard homepage

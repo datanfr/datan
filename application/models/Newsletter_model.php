@@ -13,6 +13,7 @@ class Newsletter_model extends CI_Model{
     $data = array(
       'email' => $email,
       'general' => true,
+      'votes' => true
     );
     $templateId = 2826349; /* Welcome */
     $variables = array(
@@ -24,8 +25,10 @@ class Newsletter_model extends CI_Model{
     // Create Contact
     createContact($email);
     // Inscription Mailjet contact list
-    $list = 25834;
-    sendContactList($email, $list);
+    $lists = array(25834, 47010);
+    foreach ($lists as $list) {
+      sendContactList($email, $list);
+    }
 
     // Inscription MySQL
     return $this->db->insert('newsletter', $data);
@@ -40,9 +43,9 @@ class Newsletter_model extends CI_Model{
     return $this->db->get_where('newsletter', array($list => TRUE))->result_array();
   }
 
-  public function delete_newsletter($email){
+  public function delete($email){
     $this->db->where('email', ($email));
-    return $this->db->delete('newsletter');
+    $this->db->delete('newsletter');
   }
 
   public function update_list($email, $set, $list){
@@ -65,6 +68,10 @@ class Newsletter_model extends CI_Model{
     $query = $this->db->get();
 
     return $query->result_array();
+  }
+
+  public function get_emails($list){
+    return $this->db->get_where('newsletter', array($list => 1))->result_array();
   }
 }
 ?>

@@ -139,6 +139,7 @@ $route['elections/(:any)'] = 'elections/individual/$1';
 $route['newsletter/edit/(:any)'] = 'newsletter/edit/$1';
 $route['newsletter/update'] = 'newsletter/update';
 $route['newsletter/delete/(:any)'] = 'newsletter/delete/$1';
+$route['newsletter/votes/(:any)'] = 'newsletter/votes/$1';
 // FAQ
 $route['faq'] = 'faq/index';
 // API

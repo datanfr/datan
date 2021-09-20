@@ -44,6 +44,17 @@
               <a class="btn btn-primary my-3" href="../cache/delete_all" role="button">Delete all caching</a>
               <div class="card">
                 <div class="card-body">
+                  <h5 class="card-title">Update database : new newsletter (votes)</h5>
+                  <h6 class="card-subtitle text-muted">September 09, 2021</h6>
+                  <p class="card-text">
+                    Add new newsletter (votes)
+                    <a class="btn btn-danger my-3" href="update_dataset/20210920_add_newsletter.php" role="button">UPDATE DATABASE</a>
+                  </p>
+                </div>
+              </div>
+              <br>
+              <div class="card">
+                <div class="card-body">
                   <h5 class="card-title">Update database : fix bug for database export (backup)</h5>
                   <h6 class="card-subtitle text-muted">August 21, 2021</h6>
                   <p class="card-text">
