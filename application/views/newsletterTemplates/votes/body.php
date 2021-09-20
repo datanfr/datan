@@ -12,9 +12,9 @@
     <mj-text padding-bottom="40px">
       <b>L'équipe de Datan a sélectionné et <span class="primary">décrypté <?= $votesNDatan ?> vote<?= $votesNDatan > 1 ? "s" : "" ?></span> pour vous</b>.
       <?php if ($importants): ?>
-        Découvrez dans cette newsletter les votes les plus importants !
+        Découvre dans cette newsletter les votes les plus importants !
         <?php else: ?>
-        Découvrez-le<?= $votesNDatan > 1 ? "s" : "" ?> ci-dessous !
+        Découvre-le<?= $votesNDatan > 1 ? "s" : "" ?> ci-dessous !
       <?php endif; ?>
     </mj-text>
   </mj-column>
@@ -58,7 +58,7 @@
         <a href="https://datan.fr/votes/legislature-15/vote_<?= $vote['voteNumero'] ?>" target="_blank">Lire plus</a>
       </mj-text>
       <mj-button padding-top="40px" padding-bottom="30px" href="https://datan.fr/votes/legislature-15/vote_<?= $vote['voteNumero'] ?>">
-        Découvrez la position de son député
+        Découvre la position de ton député
       </mj-button>
     </mj-column>
   </mj-section>
@@ -84,7 +84,7 @@
     </mj-column>
     <mj-column width="100%">
       <mj-button background-color="#00b794" color="#fff" font-weight="800" padding-top="20px" padding-bottom="10px" href="https://www.datan.fr/deputes/<?= $depute['dptSlug'] ?>/depute_<?= $depute['nameUrl'] ?>">
-        Découvrez son activité
+        Découvre son activité
       </mj-button>
     </mj-column>
   </mj-section>
@@ -95,10 +95,10 @@
 <mj-section background-color="#ffffff" background-repeat="no-repeat" background-size="auto">
   <mj-column vertical-align="top">
     <mj-text font-size="22px" font-weight="800">
-      <span class="primary">Suivez-nous !</span>
+      <span class="primary">Rester informer !</span>
     </mj-text>
     <mj-text>
-      Vous souhaitez rester informé de nos dernières infos ? Vous voulez découvrir en temps réel le vote des groupes politiques à l'Assemblée nationale ? <b>Suivez-nous sur les réseaux sociaux !</b>
+      Vous souhaitez rester informé de nos dernières infos ? Vous voulez découvrir en temps réel le vote des groupes politiques à l'Assemblée nationale ? <b>Suis-nous sur les réseaux sociaux !</b>
     </mj-text>
     <mj-section padding-top="15px" padding-bottom="15px">
       <mj-group padding="0">
@@ -125,10 +125,10 @@
       Datan est géré par <b>une équipe de bénévoles</b>. Notre objectif ? Rendre l'activité parlementaire plus accessible et compréhensible !
     </mj-text>
     <mj-text>
-      Vous savez coder ? Vous avez un don pour le design et la création de visuels ? Vous êtes un mordu de politique et souhaitez expliquer certains votes de l'Assemblée ?
+      Tu as un don pour coder ou pour le design ? Tu es un mordu de politique et souhaite expliquer certains votes de l'Assemblée ?
     </mj-text>
     <mj-text>
-      Contactez-nous : <a href="mailto:info@datan.fr">info@datan.fr</a>
+      Contacte-nous : <a href="mailto:info@datan.fr">info@datan.fr</a>
     </mj-text>
   </mj-column>
 </mj-section>
