@@ -1,7 +1,7 @@
 <mj-section background-repeat="repeat" background-size="auto" padding-left="0px" padding-right="0px" padding="20px 0px 20px 0px" text-align="center" vertical-align="top">
   <mj-column>
     <mj-button align="center" background-color="#00b794" border-radius="3px" border="none" color="#ffffff" font-family="Arial, sans-serif" font-size="16px" font-weight="normal" href="https://datan.fr" inner-padding="10px 25px 10px 25px" padding-left="25px" padding-right="25px" padding="10px 25px 10px 25px" text-decoration="none" text-transform="none" vertical-align="middle">
-      <span style="font-size:16px;text-align:center;background-color:#00b794;color:#ffffff;font-family:Open Sans;"><b>Découvrez les votes de votre député !</b></span>
+      <span style="font-size:16px;text-align:center;background-color:#00b794;color:#ffffff;font-family:Open Sans;"><b>Découvre les votes de ton député !</b></span>
     </mj-button>
     <mj-social align="center" font-family="Ubuntu, Helvetica, Arial, sans-serif" font-size="13px" icon-padding="0px 0px 0px 0px" icon-size="20" line-height="22px" mode="horizontal" padding-left="25px" padding-right="25px" padding="10px 25px 10px 25px" text-decoration="none" text-mode="false">
       <mj-social-element background-color="#3B5998" href="https://www.facebook.com/datanFR" name="facebook-noshare" src="https://www.mailjet.com/images/theme/v1/icons/ico-social/facebook.png"></mj-social-element>
