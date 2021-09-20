@@ -1,27 +1,46 @@
-# datan
- Datan is a website anlaysing the voting behaviour of French MPs.
+# Datan
+Datan is a website anlaysing the voting behaviour of French MPs.
+Datan est un site internet analysant les votes des députés français (Assemblée nationale).
 
 # Installation
-Copy .htaccess.dist to .htaccess  
-Fill in the SetEnv variables (replace username_example and password_example)  
+Suivez les étapes suivantes pour installer Datan en local.
 
-## Base de données
-Importer la structure et les données essentielles de la base de données.  
-Le fichier SQL est le suivant : *scripts/update_dataset/backup/datan_database_[date].sql*
+## 1. Assets
+* Installez les dépendances en lancant les commandes suivantes :
 
-Puis lancer ces scripts :  
-php /scripts/daily.php  
-php /scripts/daily.php 14  
-
-# Assets
-Installez les dépendances  
+```
 npm install --dev  
 composer install  
-Lancez grunt pour compiler les fichiers scss et js  
+```
+* Pour **Windows**, il faut également installer Ruby et lancer la commande suivante. Si problème de permission, supprimer le dossier *.sass-cache*.
+
+```
+gem install sass
+```
+* Lancer **Grunt** pour compiler les fichiers css et js avec la commande suivante.
+
+```
 grunt  
-Qaund vous travaillez sur main.scss ou main.js lancez grunt watch pour que ça recompile à chaque changement  
-grunt watch  
-## Windows
-Il faut au préalable installer Ruby et possiblement lancer "gem install sass"  
-Si problème de permissions supprimer le dossier .sass-cache  
-Si problème pour le lancement de la newsletter: https://stackoverflow.com/questions/21114371/php-curl-error-code-60  
+```
+* NB : Quand vous travaillez sur le fichier *main.scss* ou le fichier *main.js*, lancez la commande suivante pour compiler automatiquement les fichiers css et js.
+
+```
+grunt watch
+```
+
+## 2. Base de données
+* Importer le fichier SQL principal. Le fichier contient la structure de la base de données, ainsi que les données essentielles. Fichier : *scripts/update_dataset/backup/datan_database_[date].sql*
+
+## 3. Variables environnement
+* Dupliquer *.htaccess.dist* et renomer le nouveau fichier en *.htaccess*  
+* Remplir les variables *SetEnv* (exemple : DATABASE_USERNAME, DATABASE_PASSWORD, etc). Les variables concernant les API suivantes ne sont pas nécessaires pour que le site Datan fonctionne en local (NOBG, MAILJET, MJML).
+
+## 4. Remplir la base de données
+* Lancer les scripts suivants via la ligne de commande :
+
+```
+php /scripts/daily.php  
+php /scripts/daily.php 14  
+```
+## 5. Problème supplémentaire avec Windows
+* Si problème pour le lancement de la newsletter: https://stackoverflow.com/questions/21114371/php-curl-error-code-60  
