@@ -132,7 +132,7 @@ class Newsletter extends CI_Controller
       $data['year'] = utf8_encode(strftime("%Y", strtotime("- 1 months")));
       $year = date("Y", strtotime("-1 months"));
       $month = date("m", strtotime("-1 months"));
-      //$year = 2020; $month = 9; // For testing
+      $year = 2020; $month = 9; // For testing
       $data['votesN'] = $this->votes_model->get_n_votes(legislature_current(), $year, $month);
       $data['votesNDatan'] = $this->votes_model->get_n_votes_datan(legislature_current(), $year, $month);
 
