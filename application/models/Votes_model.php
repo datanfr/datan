@@ -56,7 +56,7 @@
       return $this->db->query($sql)->result_array();
     }
 
-    public function get_n_votes_datan($legislature, $year, $month){
+    public function get_n_votes_datan($legislature, $year = NULL, $month = NULL){
       if (!is_null($year)) {
         $this->db->where('YEAR(vi.dateScrutin)', $year);
       }
@@ -68,7 +68,7 @@
       return $this->db->count_all_results('votes_datan vd');
     }
 
-    public function get_n_votes($legislature, $year, $month){
+    public function get_n_votes($legislature, $year = NULL, $month = NULL){
       if (!is_null($year)) {
         $this->db->where('YEAR(dateScrutin)', $year);
       }

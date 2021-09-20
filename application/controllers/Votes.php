@@ -99,7 +99,7 @@
       // Get active policy fields
       $data['fields'] = $this->fields_model->get_active_fields();
       // Get number of votes
-      $data['number_votes'] = $this->votes_model->get_n_votes_datan(legislature_current(), $year = NULL, $month = NULL);
+      $data['number_votes'] = $this->votes_model->get_n_votes_datan(legislature_current());
 
       // Meta
       $data['url'] = $this->meta_model->get_url();
