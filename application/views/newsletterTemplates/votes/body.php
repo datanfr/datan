@@ -10,7 +10,7 @@
       Il y a eu <b><?= $votesN ?> votes</b> à l'Assemblée nationale en <?= $month.' '.$year ?>. <?= $votesInfosEdited ?>
     </mj-text>
     <mj-text padding-bottom="40px">
-      <b>L'équipe de Datan a sélectionné et <span class="primary">décrypté <?= $votesNDatan ?> vote<?= $votesNDatan > 1 ? "s" : "" ?></span> pour vous</b>.
+      <b>L'équipe de Datan a sélectionné et <span class="primary">décrypté <?= $votesNDatan ?> vote<?= $votesNDatan > 1 ? "s" : "" ?></span></b>.
       <?php if ($importants): ?>
         Découvre dans cette newsletter les votes les plus importants !
         <?php else: ?>
@@ -95,10 +95,10 @@
 <mj-section background-color="#ffffff" background-repeat="no-repeat" background-size="auto">
   <mj-column vertical-align="top">
     <mj-text font-size="22px" font-weight="800">
-      <span class="primary">Rester informer !</span>
+      <span class="primary">Reste informé !</span>
     </mj-text>
     <mj-text>
-      Vous souhaitez rester informé de nos dernières infos ? Vous voulez découvrir en temps réel le vote des groupes politiques à l'Assemblée nationale ? <b>Suis-nous sur les réseaux sociaux !</b>
+      Tu souhaites rester informé de nos dernières infos ? Tu veux découvrir en temps réel le vote des groupes politiques à l'Assemblée nationale ? <b>Suis-nous sur les réseaux sociaux !</b>
     </mj-text>
     <mj-section padding-top="15px" padding-bottom="15px">
       <mj-group padding="0">
@@ -119,7 +119,7 @@
 <mj-section background-color="#ffffff" background-repeat="no-repeat" background-size="auto">
   <mj-column vertical-align="top">
     <mj-text font-size="22px" font-weight="800">
-      <span class="primary">Contribuer au projet 👨‍💻 🔨</span>
+      <span class="primary">Contribue au projet 👨‍💻 🔨</span>
     </mj-text>
     <mj-text>
       Datan est géré par <b>une équipe de bénévoles</b>. Notre objectif ? Rendre l'activité parlementaire plus accessible et compréhensible !
