@@ -3,7 +3,7 @@
 
     public function __construct() {
       parent::__construct();
-      $this->password_model->security_admin();
+      $this->password_model->security();
     }
 
     // Delete all cache
