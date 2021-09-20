@@ -122,7 +122,7 @@ class Newsletter extends CI_Controller
       // Do not forget to install this: https://qferrer.medium.com/rendering-mjml-in-php-982d703aa703
 
       // Check if CLI
-      if (!is_cli() && !$this->password_model->is_admin()) { // ||
+      if ((!is_cli() && !$this->password_model->is_admin()) || (!is_cli() && $action == "send")) { // ||
         die("Only command line access"); // Comment for testing with URL newsletter/votes
       }
 
