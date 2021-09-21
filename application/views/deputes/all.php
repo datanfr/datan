@@ -15,10 +15,10 @@
                 L'Assemblée nationale compte actuellement <?= $male["n"] ?> députés hommes (<?= $male["percentage"] ?> %) et <?= $female["n"] ?> femmes (<?= $female["percentage"] ?> %).
               </p>
               <p>
-                Depuis le début de la <?= legislature_current() ?><sup>ème</sup> législature, <b><?= $number_inactive ?> députés ont quitté l'Assemblée</b> pour cause de nomination au Gouvernement, de démission ou de décès. Pour découvrir ces députés qui ne sont plus en activité en <a href="<?= base_url() ?>deputes/inactifs" ?>cliquez ici</a>.
+                Depuis le début de la <?= legislature_current() ?><sup>ème</sup> législature, <b><?= $number_inactive ?> députés ont quitté l'Assemblée</b> pour cause de nomination au Gouvernement, de démission ou de décès. Pour découvrir ces députés qui ne sont plus en activité, <a href="<?= base_url() ?>deputes/inactifs" ?>cliquez ici</a>.
               </p>
               <div class="d-flex flex-wrap justify-content-around mt-5">
-                <a href="<?= base_url() ?>deputes/inactifs" class="btn btn-primary my-2">Députés inactifs (15<sup>ème</sup> législature)</a>
+                <a href="<?= base_url() ?>deputes/inactifs" class="btn btn-primary my-2">Anciens députés (15<sup>ème</sup> législature)</a>
                 <a href="<?= base_url() ?>deputes/legislature-14" class="btn btn-primary my-2">Députés de la 14<sup>ème</sup> législature</a>
               </div>
               <h2 class="mt-5">Découvrez les députés en activité de la <?= legislature_current() ?><sup>ème</sup> législature</h2>
@@ -88,7 +88,7 @@
             </div>
             <!-- Députés inactifs bouton -->
             <div class="d-none d-lg-flex justify-content-center mt-md-5">
-              <a class="btn btn-outline-primary d-none d-md-block" href="<?= base_url() ?>deputes/inactifs">Liste des députés <b>plus en activité</b></a>
+              <a class="btn btn-outline-primary d-none d-md-block" href="<?= base_url() ?>deputes/inactifs">Liste des <b>anciens députés</b></a>
             </div>
           </div>
         </div>
