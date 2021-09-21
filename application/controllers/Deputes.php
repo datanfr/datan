@@ -146,7 +146,7 @@
       if ($legislature == legislature_current()) {
         $data['title_meta'] = "Députés - Assemblée Nationale | Datan";
         $data['description_meta'] = "Retrouvez tous les députés en activité de l'Assemblée nationale de la ".legislature_current()."e législature. Résultats de vote et analyses pour chaque député.";
-        $data['title'] = "Les députés en activité de l'Assemblée nationale";
+        $data['title'] = "Les 577 députés de l'Assemblée nationale";
       } else {
         $data['title_meta'] = "Députés ".$legislature."e législature - Assemblée nationale | Datan";
         $data['description_meta'] = "Retrouvez tous les députés en activité de l'Assemblée nationale de la ".$legislature."e législature. Résultats de vote et analyses pour chaque député.";
