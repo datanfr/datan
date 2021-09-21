@@ -351,7 +351,8 @@
           	WHERE v.voteNumero = ? AND legislature = ?
           ) A
           LEFT JOIN deputes_all da ON da.mpId = A.mpId AND da.legislature = A.legislature
-          LEFT JOIN organes o ON da.groupeId = o.uid
+          LEFT JOIN mandat_groupe mg ON mg.mandatId = A.mandatId
+          LEFT JOIN organes o ON mg.organeRef = o.uid
         ) B
         ORDER BY B.nameLast ASC, B.nameFirst ASC
       ';
@@ -360,8 +361,7 @@
 
 
     public function get_votes_datan_depute($depute_id, $limit = FALSE){
-      $sql = '
-        SELECT vd.voteNumero, vd.legislature, vd.title AS vote_titre, vd.category, f.name AS category_libelle, vi.sortCode, date_format(vi.dateScrutin, "%d %M %Y") as dateScrutinFR,
+      $sql = 'SELECT vd.voteNumero, vd.legislature, vd.title AS vote_titre, vd.category, f.name AS category_libelle, vi.sortCode, date_format(vi.dateScrutin, "%d %M %Y") as dateScrutinFR,
         CASE
         	WHEN vs.vote = 0 THEN "abstention"
         	WHEN vs.vote = 1 THEN "pour"
