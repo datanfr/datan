@@ -1687,45 +1687,61 @@ class Script
         $lastVote = isset($donnees_last_vote['lastVote']) ? $donnees_last_vote['lastVote'] + 1 : 1;
         echo "Vote score from " . $lastVote . "\n";
 
-        $reponseVote = $this->bdd->query('
-            SELECT B.voteNumero, B.legislature, B.mpId, B.vote, B.mandatId, B.sortCode, B.positionGroup, B.gvtPosition AS positionGvt,
-            case when B.vote = B.positionGroup then 1 else 0 end as scoreLoyaute,
-            case when B.vote = B.sortCode then 1 else 0 end as scoreGagnant,
-            case when B.vote = B.gvtPosition then 1 else 0 end as scoreGvt,
-            1 as scoreParticipation
-            FROM
-            (
+        $reponseVote = $this->bdd->query('SELECT B.voteNumero, B.legislature, B.mpId, B.vote, B.mandatId, B.sortCode, B.positionGroup, B.gvtPosition AS positionGvt,
+          CASE
+          	 WHEN B.vote = "nv" THEN NULL
+             WHEN B.vote = B.positionGroup THEN 1
+            ELSE 0
+          END AS scoreLoyaute,
+          CASE
+            WHEN B.vote = "nv" THEN NULL
+            WHEN B.vote = B.sortCode THEN 1
+            ELSE 0
+          END AS scoreGagnant,
+          CASE
+            WHEN B.vote = "nv" THEN NULL
+            WHEN B.vote = B.gvtPosition THEN 1
+          	ELSE 0
+          END AS scoreGvt,
+          CASE
+            WHEN B.vote = "nv" THEN NULL
+            ELSE 1
+          END AS scoreParticipation
+          FROM
+          (
             SELECT A.*,
-            case
-            when vg.positionMajoritaire = "pour" then 1
-            when vg.positionMajoritaire = "contre" then -1
-            when vg.positionMajoritaire = "abstention" then 0
-            else "error" end as positionGroup,
-            case
-            when gvt.positionMajoritaire = "pour" then 1
-            when gvt.positionMajoritaire = "contre" then -1
-            when gvt.positionMajoritaire = "abstention" then 0
-            else "error" end as gvtPosition
+            CASE
+              WHEN vg.positionMajoritaire = "pour" THEN 1
+              WHEN vg.positionMajoritaire = "contre" THEN -1
+              WHEN vg.positionMajoritaire = "abstention" THEN 0
+              ELSE "error"
+            END AS positionGroup,
+            CASE
+              WHEN gvt.positionMajoritaire = "pour" THEN 1
+              WHEN gvt.positionMajoritaire = "contre" THEN -1
+              WHEN gvt.positionMajoritaire = "abstention" THEN 0
+              ELSE "error"
+            END AS gvtPosition
             FROM
             (
-            SELECT v.voteNumero, v.mpId, v.vote,
-            case
-            when sortCode = "adopté" then 1
-            when sortCode = "rejeté" then -1
-            else 0 end as sortCode,
-            v.legislature,
-            mg.mandatId, mg.organeRef
-            FROM votes v
-            JOIN votes_info vi ON vi.voteNumero = v.voteNumero AND vi.legislature = v.legislature
-            LEFT JOIN mandat_groupe mg ON mg.mpId = v.mpId
-            AND ((vi.dateScrutin BETWEEN mg.dateDebut AND mg.dateFin ) OR (vi.dateScrutin >= mg.dateDebut AND mg.dateFin IS NULL))
-            AND mg.codeQualite IN ("Membre", "Député non-inscrit", "Membre apparenté")
-            LEFT JOIN organes o ON o.uid = vi.organeRef
-            WHERE v.voteType = "decompteNominatif" AND v.voteNumero >= "' . $lastVote . '" AND v.legislature = "' . $this->legislature_to_get . '"
-            ) A
+              SELECT v.voteNumero, v.mpId, v.vote,
+              CASE
+                WHEN sortCode = "adopté" THEN 1
+                WHEN sortCode = "rejeté" THEN -1
+                ELSE 0
+              END AS sortCode,
+              v.legislature, mg.mandatId, mg.organeRef
+              FROM votes v
+              JOIN votes_info vi ON vi.voteNumero = v.voteNumero AND vi.legislature = v.legislature
+              LEFT JOIN mandat_groupe mg ON mg.mpId = v.mpId
+                AND ((vi.dateScrutin BETWEEN mg.dateDebut AND mg.dateFin ) OR (vi.dateScrutin >= mg.dateDebut AND mg.dateFin IS NULL))
+                AND mg.codeQualite IN ("Membre", "Député non-inscrit", "Membre apparenté")
+              LEFT JOIN organes o ON o.uid = vi.organeRef
+              WHERE v.voteType = "decompteNominatif" AND v.voteNumero >= "' . $lastVote . '" AND v.legislature = "' . $this->legislature_to_get . '"
+              ) A
             LEFT JOIN votes_groupes vg ON vg.organeRef = A.organeRef AND vg.voteNumero = A.voteNumero AND vg.legislature = A.legislature
             LEFT JOIN votes_groupes gvt ON gvt.organeRef IN ("PO730964", "PO713077", "PO656002") AND gvt.voteNumero = A.voteNumero AND gvt.legislature = A.legislature
-            ) B
+          ) B
         ');
         echo "requete ok\n";
 
