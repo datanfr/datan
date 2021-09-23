@@ -200,7 +200,6 @@ class Newsletter extends CI_Controller
 
           foreach ($emails as $email) {
             sendMail($email['email'], $title, $templateHtml = $html, $templateLanguage = TRUE, $templateId = NULL, $variables = NULL);
-
           }
         }
 
