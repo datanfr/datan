@@ -332,9 +332,10 @@
         (
           SELECT A.*,
           CASE
-          	WHEN A.vote = 1 THEN "pour"
-          	WHEN A.vote = 0 THEN "abstention"
-          	WHEN A.vote = -1 THEN "contre"
+          	WHEN A.vote = "1" THEN "pour"
+          	WHEN A.vote = "0" THEN "abstention"
+          	WHEN A.vote = "-1" THEN "contre"
+            WHEN A.vote = "nv" THEN "non-votant"
           ELSE NULL
           END AS vote_libelle,
           CASE
