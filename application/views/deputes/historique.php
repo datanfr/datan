@@ -61,26 +61,33 @@
                   <div class="col-lg-8 infos mt-4 mt-lg-2">
                     <div class="texte ml-md-3 pl-md-3 mt-md-0 mt-3">
                       <?php if ($depute['legislature'] == legislature_current()): ?>
+                        <!-- Paragraph for MP from the current legislature -->
                         <p>
                           <?php if ($active) : ?>
                             Depuis sa prise de fonctions,
                           <?php else : ?>
                             Quand <?= $gender['pronom'] ?> était en activité à l'Assemblée,
                           <?php endif; ?>
-                          <?= $title ?> a participé à <?= $participation['score'] ?> % des votes ayant un lien avec son domaine de spécialisation.
+                          <?= $title ?> a participé à <?= $participation['score'] ?>% des votes solennels à l'Assemblée nationale.
                         </p>
                         <p>
-                          <?= ucfirst($gender['pronom']) ?> <?= $active ? "vote" : "votait" ?> donc <b><?= $edito_participation['phrase'] ?></b> que la moyenne des députés, qui est de <?= $participation['mean'] ?> %.
-                        </p>
-                        <p>
-                          Ce score prend en compte les votes éléctroniques en séance publique sur les textes qui ont été examinés dans la commission du député. Ce sont sur ces textes que les élus sont susceptibles d'avoir un intérêt ou une expertise pariculière.
+                          <?= ucfirst($gender['pronom']) ?> <?= $active ? "vote" : "votait" ?> <b><?= $edito_participation['all'] ?></b> que la moyenne des députés, qui est de <u><?= $participation['all'] ?>%</u>.
                         </p>
                       <?php else: ?>
+                        <!-- Paragraph for MP from older legislatures -->
                         <p>
-                          Pendant la <?= $depute['legislature'] ?><sup>e</sup> législature, <?= $title ?> a participé à <?= $participation['score'] ?> % des votes électroniques à l'Assemblée nationale.
+                          Pendant la <?= $depute['legislature'] ?><sup>e</sup> législature, <?= $title ?> a participé à <?= $participation['score'] ?>% des votes solennels à l'Assemblée nationale.
                         </p>
                         <p>
-                          <?= ucfirst($gender['pronom']) ?> <?= $active ? "vote" : "votait" ?> donc <b><?= $edito_participation['phrase'] ?></b> que la moyenne des députés, qui était de <?= $participation['mean'] ?> %.
+                          <?= ucfirst($gender['pronom']) ?> votait <b><?= $edito_participation['all'] ?></b> que la moyenne des députés, qui était de <u><?= $participation['all'] ?>%</u>.
+                        </p>
+                        <?php if ($participation['group']): ?>
+                          <p>
+                            De plus, <?= $title ?> votait <b><?= $edito_participation['group'] ?></b> que la moyenne des députés de son groupe, qui était <?= $edito_participation['group'] == "autant" ? "également" : "" ?> de <u><?= $participation['group'] ?>%</u>.
+                          </p>
+                        <?php endif; ?>
+                        <p>
+                           Les votes solennels sont les votes considérés comme importants pour lesquels les députés connaissent à l'avance le jour et l'heure du vote.
                         </p>
                       <?php endif; ?>
                     </div>

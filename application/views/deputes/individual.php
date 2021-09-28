@@ -402,24 +402,36 @@
                     <div class="col-lg-8 infos mt-4 mt-lg-2">
                       <div class="texte ml-md-3 pl-md-3 mt-md-0 mt-3">
                         <?php if ($depute['legislature'] == legislature_current()): ?>
+                          <!-- Paragraph for MP from the current legislature -->
                           <p>
                             <?php if ($active) : ?>
                               Depuis sa prise de fonctions,
                             <?php else : ?>
                               Quand <?= $gender['pronom'] ?> était en activité à l'Assemblée,
                             <?php endif; ?>
-                            <?= $title ?> a participé à <?= $participation['score'] ?> % des votes solennels à l'Assemblée nationale.
+                            <?= $title ?> a participé à <?= $participation['score'] ?>% des votes solennels à l'Assemblée nationale.
                           </p>
                           <p>
-                            <?= ucfirst($gender['pronom']) ?> <?= $active ? "vote" : "votait" ?> donc <b><?= $edito_participation['phrase'] ?></b> que la moyenne des députés, qui est de <?= $participation['mean'] ?> %.
+                            <?= ucfirst($gender['pronom']) ?> <?= $active ? "vote" : "votait" ?> <b><?= $edito_participation['all'] ?></b> que la moyenne des députés, qui est <?= $edito_participation['all'] == "autant" ? "également" : "" ?> de <u><?= $participation['all'] ?>%</u>.
                           </p>
+                          <?php if ($participation['group']): ?>
+                            <p>
+                              De plus, <?= $title ?> <?= $active ? "vote" : "votait" ?> <b><?= $edito_participation['group'] ?></b> que la moyenne des députés de son groupe, qui est <?= $edito_participation['group'] == "autant" ? "également" : "" ?> de <u><?= $participation['group'] ?>%</u>.
+                            </p>
+                          <?php endif; ?>
                         <?php else: ?>
+                          <!-- Paragraph for MP from older legislatures -->
                           <p>
                             Pendant la <?= $depute['legislature'] ?><sup>e</sup> législature, <?= $title ?> a participé à <?= $participation['score'] ?> % des votes solennels à l'Assemblée nationale.
                           </p>
                           <p>
-                            <?= ucfirst($gender['pronom']) ?> <?= $active ? "vote" : "votait" ?> donc <b><?= $edito_participation['phrase'] ?></b> que la moyenne des députés, qui était de <?= $participation['mean'] ?> %.
+                            <?= ucfirst($gender['pronom']) ?> <?= $active ? "vote" : "votait" ?> <b><?= $edito_participation['all'] ?></b> que la moyenne des députés, qui était <?= $edito_participation['all'] == "autant" ? "également" : "" ?> de <?= $participation['all'] ?> %.
                           </p>
+                          <?php if ($participation['group']): ?>
+                            <p>
+                              De plus, <?= $title ?> <?= $active ? "vote" : "votait" ?> <b><?= $edito_participation['group'] ?></b> que la moyenne des députés de son groupe, qui était <?= $edito_participation['group'] == "autant" ? "également" : "" ?> de <u><?= $participation['group'] ?>%</u>.
+                            </p>
+                          <?php endif; ?>
                         <?php endif; ?>
                         <p>
                            Les votes solennels sont les votes considérés comme importants pour lesquels les députés connaissent à l'avance le jour et l'heure du vote.
