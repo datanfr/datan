@@ -64,23 +64,14 @@
     }
 
     public function loyaute($depute, $average){
-      $bottom = $average-1;
-      $top = $average+1;
-      if ($depute < $bottom) {
+      if ($depute < $average) {
         $phrase = 'moins loyal';
-        $circle = 'red';
-      } elseif($depute >= $bottom && $depute <= $top) {
-        $phrase = 'aussi loyal';
-        $circle = 'orange';
-      } elseif($depute > $top){
+      } elseif ($depute > $average) {
         $phrase = 'plus loyal';
-        $circle = 'green';
+      } else {
+        $phrase = 'aussi loyal';
       }
-      $result = array(
-        'phrase' => $phrase,
-        'circle' => $circle,
-      );
-      return $result;
+      return $phrase;
     }
 
     public function majorite($depute, $average){
