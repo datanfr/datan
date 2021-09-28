@@ -75,14 +75,12 @@
     }
 
     public function majorite($depute, $average){
-      $bottom = $average-1;
-      $top = $average+1;
-      if ($depute < $bottom) {
+      if ($depute < $average) {
         $phrase = 'moins proche';
-      } elseif($depute >= $bottom && $depute <= $top) {
-        $phrase = 'aussi proche';
-      } elseif($depute > $top){
+      } elseif ($depute > $average) {
         $phrase = 'plus proche';
+      } else {
+        $phrase = 'aussi proche';
       }
       return $phrase;
     }

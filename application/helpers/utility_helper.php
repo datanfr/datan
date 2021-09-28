@@ -41,6 +41,10 @@
     return "PO730964";
   }
 
+  function majority_groups(){
+    return array("PO730964", "PO713077", "PO656002");
+  }
+
   function groupsPositionEdited(){
     $left = array("libelle" => "gauche", "edited" => "à gauche");
     $center = array("libelle" => "centre", "edited" => "au centre");
