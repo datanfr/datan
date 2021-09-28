@@ -412,11 +412,11 @@
                             <?= $title ?> a participé à <?= $participation['score'] ?>% des votes solennels à l'Assemblée nationale.
                           </p>
                           <p>
-                            <?= ucfirst($gender['pronom']) ?> <?= $active ? "vote" : "votait" ?> <b><?= $edito_participation['all'] ?></b> que la moyenne des députés, qui est <?= $edito_participation['all'] == "autant" ? "également" : "" ?> de <u><?= $participation['all'] ?>%</u>.
+                            <?= ucfirst($gender['pronom']) ?> <?= $active ? "vote" : "votait" ?> <b><?= $edito_participation['all'] ?></b> que la moyenne des députés, qui est <?= $edito_participation['all'] == "autant" ? "également" : "" ?> de <?= $participation['all'] ?>%.
                           </p>
                           <?php if ($participation['group']): ?>
                             <p>
-                              De plus, <?= $title ?> <?= $active ? "vote" : "votait" ?> <b><?= $edito_participation['group'] ?></b> que la moyenne des députés de son groupe politique, qui est <?= $edito_participation['group'] == "autant" ? "également" : "" ?> de <u><?= $participation['group'] ?>%</u>.
+                              De plus, <?= $title ?> <?= $active ? "vote" : "votait" ?> <b><?= $edito_participation['group'] ?></b> que la moyenne des députés de son groupe politique, qui est <?= $edito_participation['group'] == "autant" ? "également" : "" ?> de <?= $participation['group'] ?>%.
                             </p>
                           <?php endif; ?>
                         <?php else: ?>
@@ -425,11 +425,11 @@
                             Pendant la <?= $depute['legislature'] ?><sup>e</sup> législature, <?= $title ?> a participé à <?= $participation['score'] ?>% des votes solennels à l'Assemblée nationale.
                           </p>
                           <p>
-                            <?= ucfirst($gender['pronom']) ?> <?= $active ? "vote" : "votait" ?> <b><?= $edito_participation['all'] ?></b> que la moyenne des députés, qui était <?= $edito_participation['all'] == "autant" ? "également" : "" ?> de <u><?= $participation['all'] ?>%</u>.
+                            <?= ucfirst($gender['pronom']) ?> <?= $active ? "vote" : "votait" ?> <b><?= $edito_participation['all'] ?></b> que la moyenne des députés, qui était <?= $edito_participation['all'] == "autant" ? "également" : "" ?> de <?= $participation['all'] ?>%.
                           </p>
                           <?php if ($participation['group']): ?>
                             <p>
-                              De plus, <?= $title ?> <?= $active ? "vote" : "votait" ?> <b><?= $edito_participation['group'] ?></b> que la moyenne des députés de son groupe politique, qui était <?= $edito_participation['group'] == "autant" ? "également" : "" ?> de <u><?= $participation['group'] ?>%</u>.
+                              De plus, <?= $title ?> <?= $active ? "vote" : "votait" ?> <b><?= $edito_participation['group'] ?></b> que la moyenne des députés de son groupe politique, qui était <?= $edito_participation['group'] == "autant" ? "également" : "" ?> de <?= $participation['group'] ?>%.
                             </p>
                           <?php endif; ?>
                         <?php endif; ?>
@@ -478,11 +478,11 @@
                             <?php if (!$active) : ?>Quand <?= $gender['pronom'] ?> était en activité, <?php endif; ?><?= $title ?> a voté sur la même ligne que son groupe politique dans <?= $loyaute['score'] ?>% des cas.
                           </p>
                           <p>
-                            <?= ucfirst($gender['pronom']) ?> <?= $active ? "est" : "était" ?> <b><?= $edito_loyaute['all'] ?><?= $gender['e'] ?></b> que la moyenne des députés, qui est <?= $edito_loyaute['all'] == "aussi loyal" ? "également" : "" ?> de <u><?= $loyaute['all'] ?>%</u>.
+                            <?= ucfirst($gender['pronom']) ?> <?= $active ? "est" : "était" ?> <b><?= $edito_loyaute['all'] ?><?= $gender['e'] ?></b> que la moyenne des députés, qui est <?= $edito_loyaute['all'] == "aussi loyal" ? "également" : "" ?> de <?= $loyaute['all'] ?>.
                           </p>
                           <?php if ($loyaute['group']): ?>
                             <p>
-                              De plus, <?= $title ?> <?= $active ? "est" : "était" ?> <b><?= $edito_loyaute['group'] ?></b> que la moyenne des députés de son groupe politique, qui est <?= $edito_participation['group'] == "autant" ? "également" : "" ?> de <u><?= $loyaute['group'] ?>%</u>.
+                              De plus, <?= $title ?> <?= $active ? "est" : "était" ?> <b><?= $edito_loyaute['group'] ?></b> que la moyenne des députés de son groupe politique, qui est <?= $edito_participation['group'] == "autant" ? "également" : "" ?> de <?= $loyaute['group'] ?>%.
                             </p>
                           <?php endif; ?>
                         <?php else: ?>
@@ -490,11 +490,11 @@
                               Pendant la <?= $depute['legislature'] ?><sup>e</sup> législature, <?= $title ?> a voté sur la même ligne que son groupe politique dans <?= $loyaute['score'] ?>% des cas.
                             </p>
                             <p>
-                              <?= ucfirst($gender['pronom']) ?> <?= $active ? "est" : "était" ?> <b><?= $edito_loyaute['all'] ?><?= $gender['e'] ?></b> que la moyenne des députés, qui était <?= $edito_loyaute['all'] == "aussi loyal" ? "également" : "" ?> de <u><?= $loyaute['all'] ?>%</u>.
+                              <?= ucfirst($gender['pronom']) ?> <?= $active ? "est" : "était" ?> <b><?= $edito_loyaute['all'] ?><?= $gender['e'] ?></b> que la moyenne des députés, qui était <?= $edito_loyaute['all'] == "aussi loyal" ? "également" : "" ?> de <?= $loyaute['all'] ?>.
                             </p>
                             <?php if ($loyaute['group']): ?>
                               <p>
-                                De plus, <?= $title ?> <?= $active ? "est" : "était" ?> <b><?= $edito_loyaute['group'] ?></b> que la moyenne des députés de son groupe politique, qui était <?= $edito_participation['group'] == "autant" ? "également" : "" ?> de <u><?= $loyaute['group'] ?>%</u>.
+                                De plus, <?= $title ?> <?= $active ? "est" : "était" ?> <b><?= $edito_loyaute['group'] ?></b> que la moyenne des députés de son groupe politique, qui était <?= $edito_participation['group'] == "autant" ? "également" : "" ?> de <?= $loyaute['group'] ?>%.
                               </p>
                             <?php endif; ?>
                         <?php endif; ?>
@@ -568,23 +568,23 @@
                               <?= $title ?> a voté comme la majoité présientielle (<a href="<?= base_url() ?>groupes/larem">La République en Marche</a>) dans <?= $majorite['score'] ?>% des cas.
                             </p>
                             <p>
-                              <?= ucfirst($gender['pronom']) ?> <?= $active ? "est" : "était" ?> <b><?= $edito_majorite['all'] ?></b> de la majorité présidentielle que la moyenne des députés non membres de la majorité (<u><?= $majorite['all'] ?>%</u>).
+                              <?= ucfirst($gender['pronom']) ?> <?= $active ? "est" : "était" ?> <b><?= $edito_majorite['all'] ?></b> de la majorité présidentielle que la moyenne des députés non membres de la majorité (<?= $majorite['all'] ?>%).
                             </p>
                             <?php if ($majorite['group']): ?>
                               <p>
-                                De plus, <?= $title ?> <?= $active ? "est" : "était" ?> <b><?= $edito_majorite['group'] ?></b> de la majorité présidentielle que la moyenne des députés de son groupe politique (<u><?= $majorite['group'] ?>%</u>).
+                                De plus, <?= $title ?> <?= $active ? "est" : "était" ?> <b><?= $edito_majorite['group'] ?></b> de la majorité présidentielle que la moyenne des députés de son groupe politique (<?= $majorite['group'] ?>%).
                               </p>
                             <?php endif; ?>
                           <?php else: ?>
                             <p>
-                              Pendant la <?= $depute['legislature'] ?><sup></sup> législature, <?= $title ?> a voté comme le groupe de la majorité présidentielle dans <u><?= $majorite['score'] ?>%</u> des cas.
+                              Pendant la <?= $depute['legislature'] ?><sup></sup> législature, <?= $title ?> a voté comme le groupe de la majorité présidentielle dans <?= $majorite['score'] ?>% des cas.
                             </p>
                             <p>
-                              <?= ucfirst($gender['pronom']) ?> <?= $active ? "est" : "était" ?> <b><?= $edito_majorite['all'] ?></b> de la majorité présidentielle que la moyenne des députés, qui est de <u><?= $majorite['all'] ?>%</u>.
+                              <?= ucfirst($gender['pronom']) ?> <?= $active ? "est" : "était" ?> <b><?= $edito_majorite['all'] ?></b> de la majorité présidentielle que la moyenne des députés, qui est de <?= $majorite['all'] ?>%.
                             </p>
                             <?php if ($majorite['group']): ?>
                               <p>
-                                De plus, <?= $title ?> <?= $active ? "est" : "était" ?> <b><?= $edito_majorite['group'] ?></b> de la majorité présidentielle que la moyenne des députés de son groupe politique (<u><?= $majorite['group'] ?>%</u>).
+                                De plus, <?= $title ?> <?= $active ? "est" : "était" ?> <b><?= $edito_majorite['group'] ?></b> de la majorité présidentielle que la moyenne des députés de son groupe politique (<?= $majorite['group'] ?>%).
                               </p>
                             <?php endif; ?>
                           <?php endif; ?>
