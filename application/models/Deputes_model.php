@@ -510,10 +510,10 @@
     }
 
     public function get_stats_participation_solennels($depute_uid, $legislature){
-      $sql = 'SELECT ROUND(score*100) AS score, votesN
-        FROM class_participation_solennels
-        WHERE mpId = ? AND legislature = ?';
-      return $this->db->query($sql, array($depute_uid, $legislature))->row_array();
+      $this->db->select('ROUND(score*100) AS score, votesN');
+      $this->db->where('mpId', $depute_uid);
+      $this->db->where('legislature', $legislature);
+      return $this->db->get('class_participation_solennels')->row_array();
     }
 
     public function get_stats_participation_solennels_all($legislature){
