@@ -639,7 +639,7 @@
                           <?php endif; ?>
                           <b><?= $title ?></b> <?= $active ? "vote" : "votait" ?> souvent (dans <?= $proximite["first1"]["accord"] ?>% des cas) avec le groupe <a href="<?= base_url() ?>groupes/<?= mb_strtolower($proximite["first1"]["libelleAbrev"]) ?>"><?= $proximite["first1"]["libelleAbrev"] ?></a>, <?= $proximite["first1"]["maj_pres"] ?>
                           <?php if ($proximite['first1']["libelleAbrev"] != "NI") : ?>
-                            classé <?= $proximite["first1"]["ideologiePolitique"] ?> de l'échiquier politique.
+                            classé <?= $proximite["first1"]["ideologiePolitique"]["edited"] ?> de l'échiquier politique.
                           <?php endif; ?>
                         </p>
                       <?php endif; ?>
@@ -689,7 +689,7 @@
                         <p>
                           À l'opposé, le groupe avec lequel <?= $title; ?> <?= $active ? "est" : "était" ?> le moins proche est <a href="<?= base_url() ?>groupes/<?= mb_strtolower($proximite["last1"]["libelleAbrev"]) ?>"><?= $proximite["last1"]["libelle"] ?></a>, <?= $proximite["last1"]["maj_pres"] ?>
                           <?php if ($proximite['last1']["libelleAbrev"] != "NI") : ?>
-                            classé <?= $proximite["last1"]["ideologiePolitique"] ?> de l'échiquier politique.
+                            classé <?= $proximite["last1"]["ideologiePolitique"]["edited"] ?> de l'échiquier politique.
                           <?php endif; ?>
                           <?= ucfirst($gender["pronom"]) ?> <?= $active ? "ne vote" : "n'a voté" ?> avec ce groupe que dans <b><?= $proximite["last1"]["accord"] ?>%</b> des cas.
                         </p>
