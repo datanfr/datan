@@ -572,20 +572,33 @@
     }
 
     public function get_stats_loyaute($depute_uid, $legislature){
-      $sql = 'SELECT A.*, B.*
-        FROM
-        (
-          SELECT ROUND(score*100) AS score, votesN, legislature
-          FROM class_loyaute
-          WHERE mpId = ? AND legislature = ?
-        ) A,
-        (
-          SELECT ROUND(AVG(score)*100) AS mean
-          FROM class_loyaute
-          WHERE legislature = ?
-        ) B
-      ';
-      return $this->db->query($sql, array($depute_uid, $legislature, $legislature))->row_array();
+      $this->db->select('ROUND(score*100) AS score, votesN');
+      $this->db->where('mpId', $depute_uid);
+      $this->db->where('legislature', $legislature);
+      return $this->db->get('class_loyaute')->row_array();
+    }
+
+    public function get_stats_loyaute_all($legislature){
+      $this->db->select('ROUND(AVG(cl.score*100)) AS score');
+      $this->db->where('cl.legislature', $legislature);
+      $this->db->join('deputes_all da', 'da.mpId = cl.mpId AND da.legislature = cl.legislature', 'left');
+      if ($legislature == legislature_current()) {
+        $this->db->where('da.dateFin IS NULL');
+      }
+      $result = $this->db->get('class_loyaute cl')->row_array();
+      return($result['score']);
+    }
+
+    public function get_stats_loyaute_group($legislature, $groupe_id){
+      $this->db->select('ROUND(AVG(cl.score*100)) AS score');
+      $this->db->where('cl.legislature', $legislature);
+      $this->db->where('da.groupeId', $groupe_id);
+      $this->db->join('deputes_all da', 'da.mpId = cl.mpId AND da.legislature = cl.legislature', 'left');
+      if ($legislature == legislature_current()) {
+        $this->db->where('da.dateFin IS NULL');
+      }
+      $result = $this->db->get('class_loyaute cl')->row_array();
+      return($result['score']);
     }
 
     public function get_stats_loyaute_history($depute_uid, $legislature){
