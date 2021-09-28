@@ -39,18 +39,25 @@
           $data['edito_loyaute']['all'] = $this->depute_edito->loyaute($data['loyaute']['score'], $data['loyaute']['all']); // edited for ALL
           $data['loyaute']['group'] = $this->deputes_model->get_stats_loyaute_group($legislature, $groupe_id);
           $data['edito_loyaute']['group'] = $this->depute_edito->loyaute($data['loyaute']['score'], $data['loyaute']['group']); //edited for GROUP
+          // loyalty history
+          $data['loyaute_history'] = $this->deputes_model->get_stats_loyaute_history($mpId, $legislature);
         }
 
-        // loyalty history
-        $data['loyaute_history'] = $this->deputes_model->get_stats_loyaute_history($mpId, $legislature);
-        // proximity with majority
-        $data['majorite'] = $this->deputes_model->get_stats_majorite($mpId, $legislature);
-        if ($data['majorite']['votesN'] < 75) {
-          $data['no_majorite'] = TRUE;
-        } else {
-          $data['no_majorite'] = FALSE;
+        // PROXIMITY WITH MAJORITY
+        if (!in_array($groupe_id, majority_groups())) {
+          $data['majorite'] = $this->deputes_model->get_stats_majorite($mpId, $legislature);
+          if ($data['majorite']['votesN'] < 75) {
+            $data['no_majorite'] = TRUE;
+          } else {
+            $data['no_majorite'] = FALSE;
+            // GET ALL DATA FOR PROXIMITY WITH MAJORITY
+            $data['majorite']['all'] = $this->deputes_model->get_stats_majorite_all($legislature); // DOUBLE CHECK --> ONLY THOSE NOT FROM THE GROUP OF THE MAJORITY
+            $data['edito_majorite']['all'] = $this->depute_edito->majorite($data['majorite']['score'], $data['majorite']['all']); // edited for ALL
+            $data['majorite']['group'] = $this->deputes_model->get_stats_majorite_group($legislature, $groupe_id);
+            $data['edito_majorite']['group'] = $this->depute_edito->majorite($data['majorite']['score'], $data['majorite']['group']); //edited for GROUP
+          }
         }
-        $data['edito_majorite'] = $this->depute_edito->majorite($data['majorite']['score'], $data['majorite']['mean']); //edited
+
         // proximity with all groups
         if ($legislature == legislature_current()) /*LEGISLATURE 15*/ {
           $data['accord_groupes'] = $this->deputes_model->get_accord_groupes_actifs($mpId, legislature_current());

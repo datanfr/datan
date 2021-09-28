@@ -579,25 +579,25 @@
     }
 
     public function get_stats_loyaute_all($legislature){
-      $this->db->select('ROUND(AVG(cl.score*100)) AS score');
-      $this->db->where('cl.legislature', $legislature);
-      $this->db->join('deputes_all da', 'da.mpId = cl.mpId AND da.legislature = cl.legislature', 'left');
+      $this->db->select('ROUND(AVG(c.score*100)) AS score');
+      $this->db->where('c.legislature', $legislature);
+      $this->db->join('deputes_all da', 'da.mpId = c.mpId AND da.legislature = c.legislature', 'left');
       if ($legislature == legislature_current()) {
         $this->db->where('da.dateFin IS NULL');
       }
-      $result = $this->db->get('class_loyaute cl')->row_array();
+      $result = $this->db->get('class_loyaute c')->row_array();
       return($result['score']);
     }
 
-    public function get_stats_loyaute_group($legislature, $groupe_id){
-      $this->db->select('ROUND(AVG(cl.score*100)) AS score');
-      $this->db->where('cl.legislature', $legislature);
-      $this->db->where('da.groupeId', $groupe_id);
-      $this->db->join('deputes_all da', 'da.mpId = cl.mpId AND da.legislature = cl.legislature', 'left');
+    public function get_stats_loyaute_group($legislature, $group){
+      $this->db->select('ROUND(AVG(c.score*100)) AS score');
+      $this->db->where('c.legislature', $legislature);
+      $this->db->where('da.groupeId', $group);
+      $this->db->join('deputes_all da', 'da.mpId = c.mpId AND da.legislature = c.legislature', 'left');
       if ($legislature == legislature_current()) {
         $this->db->where('da.dateFin IS NULL');
       }
-      $result = $this->db->get('class_loyaute cl')->row_array();
+      $result = $this->db->get('class_loyaute c')->row_array();
       return($result['score']);
     }
 
@@ -613,21 +613,34 @@
     }
 
     public function get_stats_majorite($depute_uid, $legislature){
-      $sql = 'SELECT A.*, B.*
-        FROM
-        (
-          SELECT ROUND(score*100) AS score, votesN
-          FROM class_majorite
-          WHERE mpId = ? AND legislature = ?
-        ) A,
-        (
-          SELECT ROUND(AVG(t1.score)*100) AS mean
-          FROM class_majorite t1
-          LEFT JOIN deputes_all da ON t1.mpId = da.mpId
-          WHERE da.groupeId != ?  AND da.legislature = ?
-        ) B
-      ';
-      return $this->db->query($sql, array($depute_uid, $legislature, majority_group(), $legislature))->row_array();
+      $this->db->select('ROUND(score*100) AS score, votesN');
+      $this->db->where('mpId', $depute_uid);
+      $this->db->where('legislature', $legislature);
+      return $this->db->get('class_majorite')->row_array();
+    }
+
+    public function get_stats_majorite_all($legislature){
+      $this->db->select('ROUND(AVG(c.score*100)) AS score');
+      $this->db->where('c.legislature', $legislature);
+      $this->db->where_not_in('da.groupeId', majority_groups());
+      $this->db->join('deputes_all da', 'da.mpId = c.mpId AND da.legislature = c.legislature', 'left');
+      if ($legislature == legislature_current()) {
+        $this->db->where('da.dateFin IS NULL');
+      }
+      $result = $this->db->get('class_majorite c')->row_array();
+      return($result['score']);
+    }
+
+    public function get_stats_majorite_group($legislature, $group){
+      $this->db->select('ROUND(AVG(c.score*100)) AS score');
+      $this->db->where('c.legislature', $legislature);
+      $this->db->where('da.groupeId', $group);
+      $this->db->join('deputes_all da', 'da.mpId = c.mpId AND da.legislature = c.legislature', 'left');
+      if ($legislature == legislature_current()) {
+        $this->db->where('da.dateFin IS NULL');
+      }
+      $result = $this->db->get('class_majorite c')->row_array();
+      return($result['score']);
     }
 
   }
