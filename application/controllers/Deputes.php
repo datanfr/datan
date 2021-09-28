@@ -20,8 +20,14 @@
           $data['no_participation'] = TRUE;
         } else {
           $data['no_participation'] = FALSE;
+          // GET ALL DATA FOR PARTICIPATION
+          $data['participation']['all'] = $this->deputes_model->get_stats_participation_solennels_all($legislature);
+          $data['edito_participation']['all'] = $this->depute_edito->participation($data['participation']['score'], $data['participation']['all']); //edited for ALL
+          $data['participation']['group'] = $this->deputes_model->get_stats_participation_solennels_group($legislature, $groupe_id);
+          $data['edito_participation']['group'] = $this->depute_edito->participation($data['participation']['score'], $data['participation']['group']); //edited for GROUP
         }
-        $data['edito_participation'] = $this->depute_edito->participation($data['participation']['score'], $data['participation']['mean']); //edited
+
+        //print_r($data['edito_participation']['all']);
         // loyalty
         $data['loyaute'] = $this->deputes_model->get_stats_loyaute($mpId, $legislature);
         if ($data['loyaute']['votesN'] < 75) {
@@ -439,12 +445,13 @@
       $data['depute']['circo_abbrev'] = $this->functions_datan->abbrev_n($data['depute']['circo'], TRUE); // circo number
       $data['mandats'] = $this->deputes_model->get_historique_mandats($mpId);
       $data['mandatsReversed'] = array_reverse($data['mandats']);
+      $groupe_id = $data['depute']['groupeId'];
 
       // Gender
       $data['gender'] = $this->depute_edito->gender($data['depute']['civ']);
 
       // Statistiques
-      $data = $this->get_statistiques($data, $legislature, $mpId, NULL);
+      $data = $this->get_statistiques($data, $legislature, $mpId, $groupe_id);
 
       // Meta
       $data['url'] = $this->meta_model->get_url();

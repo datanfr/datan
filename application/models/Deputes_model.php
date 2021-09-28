@@ -510,20 +510,32 @@
     }
 
     public function get_stats_participation_solennels($depute_uid, $legislature){
-      $sql = 'SELECT A.*, B.*
-        FROM
-        (
-          SELECT ROUND(score*100) AS score, votesN
-          FROM class_participation_solennels
-          WHERE mpId = ? AND legislature = ?
-        ) A,
-        (
-          SELECT ROUND(AVG(score)*100) AS mean
-          FROM class_participation_solennels
-          WHERE legislature = ?
-        ) B
-      ';
-      return $this->db->query($sql, array($depute_uid, $legislature, $legislature))->row_array();
+      $sql = 'SELECT ROUND(score*100) AS score, votesN
+        FROM class_participation_solennels
+        WHERE mpId = ? AND legislature = ?';
+      return $this->db->query($sql, array($depute_uid, $legislature))->row_array();
+    }
+
+    public function get_stats_participation_solennels_all($legislature){
+      $this->db->select('round(avg(score) * 100) AS score');
+      $this->db->where('legislature', $legislature);
+      if ($legislature == legislature_current()) {
+        $this->db->where('active', 1);
+      }
+      $result = $this->db->get('class_participation_solennels')->row_array();
+      return($result['score']);
+    }
+
+    public function get_stats_participation_solennels_group($legislature, $group){
+      $this->db->select('round(avg(cps.score) * 100) AS score');
+      $this->db->join('deputes_all da', 'da.mpId = cps.mpId AND da.legislature = cps.legislature');
+      $this->db->where('da.groupeId', $group);
+      $this->db->where('cps.legislature', $legislature);
+      if ($legislature == legislature_current()) {
+        $this->db->where('cps.active', 1);
+      }
+      $result = $this->db->get('class_participation_solennels cps')->row_array();
+      return($result['score']);
     }
 
     public function get_stats_participation_commission($depute_uid){
