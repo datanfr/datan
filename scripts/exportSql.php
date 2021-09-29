@@ -98,10 +98,30 @@ function EXPORT_TABLES($host, $user, $pass, $name, $tables = false, $backup_name
         echo 'Caught exception: ', $e->getMessage(), "\n";
     }
     $backup_name = $backup_name ? $backup_name : $name . "_database_" . date('Y-m-d') . ".sql";
-    header('Content-Type: application/octet-stream');
-    header("Content-Transfer-Encoding: Binary");
-    header("Content-disposition: attachment; filename=\"" . $backup_name . "\"");
-    echo $content;
+    //header('Content-Type: application/octet-stream');
+    //header("Content-Transfer-Encoding: Binary");
+    //header("Content-disposition: attachment; filename=\"" . $backup_name . "\"");
+    //echo $content;
+
+    // NEW SYSTEM ==> Save the file in the update_dataset/backup folder
+
+    $date = date("Y-m-d");
+    $file = 'update_dataset/backup/general/' . date("Ymd") .'.sql';
+
+    if(!is_file($file)){
+      file_put_contents($file, "");
+
+      $contentFinal = " /* DATABASE BACKUP FOR THE votes_datan TABLE \n";
+      $contentFinal .= " Date of the backup: " . $date . " \n";
+      $contentFinal .= " Information: This document is a backup of all important tables of the website https://datan.fr \n";
+      $contentFinal .= " For additional requests, contact info@datan.fr */ \n";
+      $contentFinal .= $content;
+
+      file_put_contents($file, $contentFinal);
+    } else {
+      die("File alreay exists!");
+    }
+
     exit;
 }
 

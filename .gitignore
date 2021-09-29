@@ -29,6 +29,8 @@ ressources
 scripts/*.zip
 scripts/votes_individual/*.zip
 scripts/architecture
+scripts/update_dataset/backup/general/*.sql
+scripts/update_dataset/backup/votes_datan/*.sql
 
 #assets folder
 assets/opendata
