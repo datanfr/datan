@@ -53,57 +53,41 @@
     }
 
     public function participation($depute, $average){
-      $bottom = $average-1;
-      $top = $average+1;
-      if ($depute < $bottom) {
+      if ($depute < $average) {
         $phrase = 'moins souvent';
-      } elseif($depute >= $bottom && $depute <= $top) {
-        $phrase = 'autant';
-      } elseif($depute > $top){
+      } elseif ($depute > $average) {
         $phrase = 'plus souvent';
+      } else {
+        $phrase = 'autant';
       }
-      $result = array(
-        'phrase' => $phrase
-      );
-      return $result;
+      return $phrase;
     }
 
     public function loyaute($depute, $average){
-      $bottom = $average-1;
-      $top = $average+1;
-      if ($depute < $bottom) {
+      if ($depute < $average) {
         $phrase = 'moins loyal';
-        $circle = 'red';
-      } elseif($depute >= $bottom && $depute <= $top) {
-        $phrase = 'aussi loyal';
-        $circle = 'orange';
-      } elseif($depute > $top){
+      } elseif ($depute > $average) {
         $phrase = 'plus loyal';
-        $circle = 'green';
+      } else {
+        $phrase = 'aussi loyal';
       }
-      $result = array(
-        'phrase' => $phrase,
-        'circle' => $circle,
-      );
-      return $result;
+      return $phrase;
     }
 
     public function majorite($depute, $average){
-      $bottom = $average-1;
-      $top = $average+1;
-      if ($depute < $bottom) {
+      if ($depute < $average) {
         $phrase = 'moins proche';
-      } elseif($depute >= $bottom && $depute <= $top) {
-        $phrase = 'aussi proche';
-      } elseif($depute > $top){
+      } elseif ($depute > $average) {
         $phrase = 'plus proche';
+      } else {
+        $phrase = 'aussi proche';
       }
       return $phrase;
     }
 
     public function positionnement($stats, $groupe){
       $infos = groupsPositionEdited();
-      
+
       function maj_pres($positionPolitique){
         if ($positionPolitique == "Opposition") {
           $maj_pres = "un groupe d'opposition";
