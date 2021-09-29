@@ -97,7 +97,7 @@ function EXPORT_TABLES($host, $user, $pass, $name, $tables = false, $backup_name
     {
         echo 'Caught exception: ', $e->getMessage(), "\n";
     }
-    $backup_name = $backup_name ? $backup_name : $name . "_database_" . date('Y-m-d') . ".sql";
+    //$backup_name = $backup_name ? $backup_name : $name . "_database_" . date('Y-m-d') . ".sql";
     //header('Content-Type: application/octet-stream');
     //header("Content-Transfer-Encoding: Binary");
     //header("Content-disposition: attachment; filename=\"" . $backup_name . "\"");
@@ -111,7 +111,7 @@ function EXPORT_TABLES($host, $user, $pass, $name, $tables = false, $backup_name
     if(!is_file($file)){
       file_put_contents($file, "");
 
-      $contentFinal = " /* DATABASE BACKUP FOR THE votes_datan TABLE \n";
+      $contentFinal = " /* DATABASE BACKUP FOR ALL IMPORTANT DATAN TABLES \n";
       $contentFinal .= " Date of the backup: " . $date . " \n";
       $contentFinal .= " Information: This document is a backup of all important tables of the website https://datan.fr \n";
       $contentFinal .= " For additional requests, contact info@datan.fr */ \n";

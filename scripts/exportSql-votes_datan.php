@@ -83,7 +83,7 @@ function EXPORT_TABLES($host, $user, $pass, $name, $tables = false, $backup_name
     {
         echo 'Caught exception: ', $e->getMessage(), "\n";
     }
-    $backup_name = $backup_name ? $backup_name : $name . "_votes_datan_backup_" . date('Y-m-d') . ".sql";
+    //$backup_name = $backup_name ? $backup_name : $name . "_votes_datan_backup_" . date('Y-m-d') . ".sql";
     //header('Content-Type: application/octet-stream');
     //header("Content-Transfer-Encoding: Binary");
     //header("Content-disposition: attachment; filename=\"" . $backup_name . "\"");
