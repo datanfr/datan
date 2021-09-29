@@ -160,12 +160,12 @@
       }
     }
 
-    public function history($depute, $average){
-      if ($depute < $average) {
+    public function history($mp, $average){
+      if ($mp < $average) {
         return 'moins que la moyenne';
-      } elseif($depute > $average){
+      } elseif($mp > $average){
         return 'plus que la moyenne';
-      } elseif($depute == $average){
+      } elseif($mp == $average){
         return 'autant que la moyenne';
       }
     }

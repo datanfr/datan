@@ -250,9 +250,10 @@
       return $this->db->query($sql, array($depute_uid, $legislature, $nameLast))->result_array();
     }
 
-    public function get_history_all_deputes($legislature){
+    public function get_history_all_mps($legislature){
       $this->db->select('length');
-      return $this->db->get('history_mps_average', 1)->row_array();
+      $result = $this->db->get('history_mps_average', 1)->row_array();
+      return $result['length'];
     }
 
     public function get_accord_groupes_actifs($depute_uid, $legislature){
