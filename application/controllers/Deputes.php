@@ -358,7 +358,7 @@
       // Historique du député
       $data['depute']['datePriseFonctionLettres'] = utf8_encode(strftime('%B %Y', strtotime($data['depute']['datePriseFonction'])));
       $data['mandat_edito'] = $this->depute_edito->get_nbr_lettre($data['depute']['mandatesN']);
-      $data['history_average'] = round($this->deputes_model->get_history_all_mps($mpId));
+      $data['history_average'] = round($this->deputes_model->get_average_length_as_mp($mpId));
       $data['history_edito'] = $this->depute_edito->history(round($data['depute']['mpLength']/365), $data['history_average']);
       $data['mandats'] = $this->deputes_model->get_historique_mandats($mpId);
       $data['mandatsReversed'] = array_reverse($data['mandats']);
