@@ -15,31 +15,49 @@
 
     private function get_statistiques($data, $legislature, $mpId, $groupe_id){
       if (in_array($legislature, legislature_all())) {
+        // PARTICIPATION
         $data['participation'] = $this->deputes_model->get_stats_participation_solennels($mpId, $legislature);
         if ($data['participation']['votesN'] < 5) {
           $data['no_participation'] = TRUE;
         } else {
           $data['no_participation'] = FALSE;
+          // GET ALL DATA FOR PARTICIPATION
+          $data['participation']['all'] = $this->deputes_model->get_stats_participation_solennels_all($legislature);
+          $data['edito_participation']['all'] = $this->depute_edito->participation($data['participation']['score'], $data['participation']['all']); //edited for ALL
+          $data['participation']['group'] = $this->deputes_model->get_stats_participation_solennels_group($legislature, $groupe_id);
+          $data['edito_participation']['group'] = $this->depute_edito->participation($data['participation']['score'], $data['participation']['group']); //edited for GROUP
         }
-        $data['edito_participation'] = $this->depute_edito->participation($data['participation']['score'], $data['participation']['mean']); //edited
-        // loyalty
+
+        // LOYALTY
         $data['loyaute'] = $this->deputes_model->get_stats_loyaute($mpId, $legislature);
-        if ($data['loyaute']['votesN'] < 75) {
+        if ($data['loyaute']['votesN'] < 10) {
           $data['no_loyaute'] = TRUE;
         } else {
           $data['no_loyaute'] = FALSE;
+          // GET ALL DATA FOR LOYALTY
+          $data['loyaute']['all'] = $this->deputes_model->get_stats_loyaute_all($legislature);
+          $data['edito_loyaute']['all'] = $this->depute_edito->loyaute($data['loyaute']['score'], $data['loyaute']['all']); // edited for ALL
+          $data['loyaute']['group'] = $this->deputes_model->get_stats_loyaute_group($legislature, $groupe_id);
+          $data['edito_loyaute']['group'] = $this->depute_edito->loyaute($data['loyaute']['score'], $data['loyaute']['group']); //edited for GROUP
+          // loyalty history
+          $data['loyaute_history'] = $this->deputes_model->get_stats_loyaute_history($mpId, $legislature);
         }
-        $data['edito_loyaute'] = $this->depute_edito->loyaute($data['loyaute']['score'], $data['loyaute']['mean']); // edited
-        // loyalty history
-        $data['loyaute_history'] = $this->deputes_model->get_stats_loyaute_history($mpId, $legislature);
-        // proximity with majority
-        $data['majorite'] = $this->deputes_model->get_stats_majorite($mpId, $legislature);
-        if ($data['majorite']['votesN'] < 75) {
-          $data['no_majorite'] = TRUE;
-        } else {
-          $data['no_majorite'] = FALSE;
+
+        // PROXIMITY WITH MAJORITY
+        if (!in_array($groupe_id, majority_groups())) {
+          $data['majorite'] = $this->deputes_model->get_stats_majorite($mpId, $legislature);
+          if ($data['majorite']['votesN'] < 75) {
+            $data['no_majorite'] = TRUE;
+          } else {
+            $data['no_majorite'] = FALSE;
+            // GET ALL DATA FOR PROXIMITY WITH MAJORITY
+            $data['majorite']['all'] = $this->deputes_model->get_stats_majorite_all($legislature); // DOUBLE CHECK --> ONLY THOSE NOT FROM THE GROUP OF THE MAJORITY
+            $data['edito_majorite']['all'] = $this->depute_edito->majorite($data['majorite']['score'], $data['majorite']['all']); // edited for ALL
+            $data['majorite']['group'] = $this->deputes_model->get_stats_majorite_group($legislature, $groupe_id);
+            $data['edito_majorite']['group'] = $this->depute_edito->majorite($data['majorite']['score'], $data['majorite']['group']); //edited for GROUP
+          }
         }
-        $data['edito_majorite'] = $this->depute_edito->majorite($data['majorite']['score'], $data['majorite']['mean']); //edited
+
         // proximity with all groups
         if ($legislature == legislature_current()) /*LEGISLATURE 15*/ {
           $data['accord_groupes'] = $this->deputes_model->get_accord_groupes_actifs($mpId, legislature_current());
@@ -439,12 +457,13 @@
       $data['depute']['circo_abbrev'] = $this->functions_datan->abbrev_n($data['depute']['circo'], TRUE); // circo number
       $data['mandats'] = $this->deputes_model->get_historique_mandats($mpId);
       $data['mandatsReversed'] = array_reverse($data['mandats']);
+      $groupe_id = $data['depute']['groupeId'];
 
       // Gender
       $data['gender'] = $this->depute_edito->gender($data['depute']['civ']);
 
       // Statistiques
-      $data = $this->get_statistiques($data, $legislature, $mpId, NULL);
+      $data = $this->get_statistiques($data, $legislature, $mpId, $groupe_id);
 
       // Meta
       $data['url'] = $this->meta_model->get_url();
