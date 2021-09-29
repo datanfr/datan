@@ -106,7 +106,7 @@ function EXPORT_TABLES($host, $user, $pass, $name, $tables = false, $backup_name
     // NEW SYSTEM ==> Save the file in the update_dataset/backup folder
 
     $date = date("Y-m-d");
-    $file = 'update_dataset/backup/general/' . date("Ymd") .'.sql';
+    $file = '../assets/dataset_backup/general/' . date("Ymd") .'.sql';
 
     if(!is_file($file)){
       file_put_contents($file, "");
