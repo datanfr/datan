@@ -32,6 +32,7 @@ scripts/architecture
 scripts/update_dataset/backup/general/*.sql
 scripts/update_dataset/backup/votes_datan/*.sql
 scripts/update_dataset/backup/users/*.sql
+scripts/update_dataset/backup/newsletter/*.sql
 
 #assets folder
 assets/opendata
