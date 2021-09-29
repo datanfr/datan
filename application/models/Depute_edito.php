@@ -165,7 +165,7 @@
         return 'moins que la moyenne';
       } elseif($mp > $average){
         return 'plus que la moyenne';
-      } elseif($mp == $average){
+      } else {
         return 'autant que la moyenne';
       }
     }
