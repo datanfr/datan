@@ -402,24 +402,36 @@
                     <div class="col-lg-8 infos mt-4 mt-lg-2">
                       <div class="texte ml-md-3 pl-md-3 mt-md-0 mt-3">
                         <?php if ($depute['legislature'] == legislature_current()): ?>
+                          <!-- Paragraph for MP from the current legislature -->
                           <p>
                             <?php if ($active) : ?>
                               Depuis sa prise de fonctions,
                             <?php else : ?>
                               Quand <?= $gender['pronom'] ?> était en activité à l'Assemblée,
                             <?php endif; ?>
-                            <?= $title ?> a participé à <?= $participation['score'] ?> % des votes solennels à l'Assemblée nationale.
+                            <?= $title ?> a participé à <?= $participation['score'] ?>% des votes solennels à l'Assemblée nationale.
                           </p>
                           <p>
-                            <?= ucfirst($gender['pronom']) ?> <?= $active ? "vote" : "votait" ?> donc <b><?= $edito_participation['phrase'] ?></b> que la moyenne des députés, qui est de <?= $participation['mean'] ?> %.
+                            <?= ucfirst($gender['pronom']) ?> <?= $active ? "vote" : "votait" ?> <b><?= $edito_participation['all'] ?></b> que la moyenne des députés, qui est <?= $edito_participation['all'] == "autant" ? "également" : "" ?> de <?= $participation['all'] ?>%.
                           </p>
+                          <?php if ($participation['group']): ?>
+                            <p>
+                              De plus, <?= $title ?> <?= $active ? "vote" : "votait" ?> <b><?= $edito_participation['group'] ?></b> que la moyenne des députés de son groupe politique, qui est <?= $edito_participation['group'] == "autant" ? "également" : "" ?> de <?= $participation['group'] ?>%.
+                            </p>
+                          <?php endif; ?>
                         <?php else: ?>
+                          <!-- Paragraph for MP from older legislatures -->
                           <p>
-                            Pendant la <?= $depute['legislature'] ?><sup>e</sup> législature, <?= $title ?> a participé à <?= $participation['score'] ?> % des votes solennels à l'Assemblée nationale.
+                            Pendant la <?= $depute['legislature'] ?><sup>e</sup> législature, <?= $title ?> a participé à <?= $participation['score'] ?>% des votes solennels à l'Assemblée nationale.
                           </p>
                           <p>
-                            <?= ucfirst($gender['pronom']) ?> <?= $active ? "vote" : "votait" ?> donc <b><?= $edito_participation['phrase'] ?></b> que la moyenne des députés, qui était de <?= $participation['mean'] ?> %.
+                            <?= ucfirst($gender['pronom']) ?> <?= $active ? "vote" : "votait" ?> <b><?= $edito_participation['all'] ?></b> que la moyenne des députés, qui était <?= $edito_participation['all'] == "autant" ? "également" : "" ?> de <?= $participation['all'] ?>%.
                           </p>
+                          <?php if ($participation['group']): ?>
+                            <p>
+                              De plus, <?= $title ?> <?= $active ? "vote" : "votait" ?> <b><?= $edito_participation['group'] ?></b> que la moyenne des députés de son groupe politique, qui était <?= $edito_participation['group'] == "autant" ? "également" : "" ?> de <?= $participation['group'] ?>%.
+                            </p>
+                          <?php endif; ?>
                         <?php endif; ?>
                         <p>
                            Les votes solennels sont les votes considérés comme importants pour lesquels les députés connaissent à l'avance le jour et l'heure du vote.
@@ -443,7 +455,7 @@
                   </div>
                 </div>
                 <div class="row">
-                  <?php if ($no_participation) : ?>
+                  <?php if ($no_loyaute) : ?>
                     <div class="col-12 mt-2">
                       <p>Du fait d'un nombre insuffisant de votes de la part de <?= $title ?>, aucune statistique n'a pu être produite.</p>
                     </div>
@@ -466,15 +478,25 @@
                             <?php if (!$active) : ?>Quand <?= $gender['pronom'] ?> était en activité, <?php endif; ?><?= $title ?> a voté sur la même ligne que son groupe politique dans <?= $loyaute['score'] ?>% des cas.
                           </p>
                           <p>
-                            <?= ucfirst($gender['pronom']) ?> <?= $active ? "est" : "était" ?> donc <b><?= $edito_loyaute['phrase'] ?><?= $gender['e'] ?></b> que la moyenne des députés, qui est de <?= $loyaute['mean'] ?>%.
+                            <?= ucfirst($gender['pronom']) ?> <?= $active ? "est" : "était" ?> <b><?= $edito_loyaute['all'] ?><?= $gender['e'] ?></b> que la moyenne des députés, qui est <?= $edito_loyaute['all'] == "aussi loyal" ? "également" : "" ?> de <?= $loyaute['all'] ?>.
                           </p>
+                          <?php if ($loyaute['group']): ?>
+                            <p>
+                              De plus, <?= $title ?> <?= $active ? "est" : "était" ?> <b><?= $edito_loyaute['group'] ?></b> que la moyenne des députés de son groupe politique, qui est <?= $edito_participation['group'] == "autant" ? "également" : "" ?> de <?= $loyaute['group'] ?>%.
+                            </p>
+                          <?php endif; ?>
                         <?php else: ?>
                             <p>
                               Pendant la <?= $depute['legislature'] ?><sup>e</sup> législature, <?= $title ?> a voté sur la même ligne que son groupe politique dans <?= $loyaute['score'] ?>% des cas.
                             </p>
                             <p>
-                              <?= ucfirst($gender['pronom']) ?> <?= $active ? "est" : "était" ?> donc <b><?= $edito_loyaute['phrase'] ?><?= $gender['e'] ?></b> que la moyenne des députés, qui est de <?= $loyaute['mean'] ?>%.
+                              <?= ucfirst($gender['pronom']) ?> <?= $active ? "est" : "était" ?> <b><?= $edito_loyaute['all'] ?><?= $gender['e'] ?></b> que la moyenne des députés, qui était <?= $edito_loyaute['all'] == "aussi loyal" ? "également" : "" ?> de <?= $loyaute['all'] ?>.
                             </p>
+                            <?php if ($loyaute['group']): ?>
+                              <p>
+                                De plus, <?= $title ?> <?= $active ? "est" : "était" ?> <b><?= $edito_loyaute['group'] ?></b> que la moyenne des députés de son groupe politique, qui était <?= $edito_participation['group'] == "autant" ? "également" : "" ?> de <?= $loyaute['group'] ?>%.
+                              </p>
+                            <?php endif; ?>
                         <?php endif; ?>
                         <?php if (isset($loyaute_history)) : ?>
                           <p>
@@ -485,7 +507,7 @@
                               <thead>
                                 <tr>
                                   <th scope="col">Groupe</th>
-                                  <th scope="col">Loyauté</th>
+                                  <th scope="col" class="text-center">Loyauté</th>
                                 </tr>
                               </thead>
                               <tbody>
@@ -494,7 +516,7 @@
                                     <td>
                                       <a href="<?= base_url() ?>groupes/<?= mb_strtolower($y['libelleAbrev']) ?>" class="no-decoration underline"><?= $y['libelle'] ?></a>
                                     </td>
-                                    <td><?= $y['score'] ?> %</td>
+                                    <td class="text-center"><?= $y['score'] ?>%</td>
                                   </tr>
                                 <?php endforeach; ?>
                                 <?php $i = 1; ?>
@@ -509,7 +531,7 @@
               </div>
             </div> <!-- END CARD LOYAUTE -->
             <!-- CARD MAJORITE -->
-            <?php if ($depute['libelleAbrev'] != "LAREM") : ?>
+            <?php if (!in_array($depute['groupeId'], majority_groups())): ?>
               <div class="card card-statistiques my-4">
                 <div class="card-body">
                   <div class="row">
@@ -523,7 +545,7 @@
                     </div>
                   </div>
                   <div class="row">
-                    <?php if ($no_participation) : ?>
+                    <?php if ($no_majorite) : ?>
                       <div class="col-12 mt-2">
                         <p>Du fait d'un nombre insuffisant de votes de la part de <?= $title ?>, aucune statistique n'a pu être produite.</p>
                       </div>
@@ -543,18 +565,28 @@
                         <div class="texte ml-md-3 pl-md-3 mt-md-0 mt-3">
                           <?php if ($depute['legislature'] == legislature_current()): ?>
                             <p>
-                              <?= $title ?> a voté comme la majoité présientielle (<a href="<?= base_url() ?>groupes/larem">La République en Marche</a>) dans <?= $majorite['score'] ?> % des cas.
+                              <?= $title ?> a voté comme la majoité présientielle (<a href="<?= base_url() ?>groupes/larem">La République en Marche</a>) dans <?= $majorite['score'] ?>% des cas.
                             </p>
                             <p>
-                              <?= ucfirst($gender['pronom']) ?> <?= $active ? "est" : "était" ?> <b><?= $edito_majorite ?></b> de la majorité présidentielle que la moyenne des députés n'y appartenant pas, qui est de <?= $majorite['mean'] ?> %.
+                              <?= ucfirst($gender['pronom']) ?> <?= $active ? "est" : "était" ?> <b><?= $edito_majorite['all'] ?></b> de la majorité présidentielle que la moyenne des députés non membres de la majorité (<?= $majorite['all'] ?>%).
                             </p>
+                            <?php if ($majorite['group']): ?>
+                              <p>
+                                De plus, <?= $title ?> <?= $active ? "est" : "était" ?> <b><?= $edito_majorite['group'] ?></b> de la majorité présidentielle que la moyenne des députés de son groupe politique (<?= $majorite['group'] ?>%).
+                              </p>
+                            <?php endif; ?>
                           <?php else: ?>
                             <p>
-                              Pendant la <?= $depute['legislature'] ?><sup></sup> législature, <?= $title ?> a voté comme le groupe de la majorité présidentielle dans <?= $majorite['score'] ?> % des cas.
+                              Pendant la <?= $depute['legislature'] ?><sup></sup> législature, <?= $title ?> a voté comme le groupe de la majorité présidentielle dans <?= $majorite['score'] ?>% des cas.
                             </p>
                             <p>
-                              <?= ucfirst($gender['pronom']) ?> <?= $active ? "est" : "était" ?> <b><?= $edito_majorite ?></b> de la majorité présidentielle que la moyenne des députés, qui est de <?= $majorite['mean'] ?> %.
+                              <?= ucfirst($gender['pronom']) ?> <?= $active ? "est" : "était" ?> <b><?= $edito_majorite['all'] ?></b> de la majorité présidentielle que la moyenne des députés, qui est de <?= $majorite['all'] ?>%.
                             </p>
+                            <?php if ($majorite['group']): ?>
+                              <p>
+                                De plus, <?= $title ?> <?= $active ? "est" : "était" ?> <b><?= $edito_majorite['group'] ?></b> de la majorité présidentielle que la moyenne des députés de son groupe politique (<?= $majorite['group'] ?>%).
+                              </p>
+                            <?php endif; ?>
                           <?php endif; ?>
                         </div>
                       </div>
@@ -627,7 +659,7 @@
                           <?php endif; ?>
                           <b><?= $title ?></b> <?= $active ? "vote" : "votait" ?> souvent (dans <?= $proximite["first1"]["accord"] ?>% des cas) avec le groupe <a href="<?= base_url() ?>groupes/<?= mb_strtolower($proximite["first1"]["libelleAbrev"]) ?>"><?= $proximite["first1"]["libelleAbrev"] ?></a>, <?= $proximite["first1"]["maj_pres"] ?>
                           <?php if ($proximite['first1']["libelleAbrev"] != "NI") : ?>
-                            classé <?= $proximite["first1"]["ideologiePolitique"] ?> de l'échiquier politique.
+                            classé <?= $proximite["first1"]["ideologiePolitique"]["edited"] ?> de l'échiquier politique.
                           <?php endif; ?>
                         </p>
                       <?php endif; ?>
@@ -677,7 +709,7 @@
                         <p>
                           À l'opposé, le groupe avec lequel <?= $title; ?> <?= $active ? "est" : "était" ?> le moins proche est <a href="<?= base_url() ?>groupes/<?= mb_strtolower($proximite["last1"]["libelleAbrev"]) ?>"><?= $proximite["last1"]["libelle"] ?></a>, <?= $proximite["last1"]["maj_pres"] ?>
                           <?php if ($proximite['last1']["libelleAbrev"] != "NI") : ?>
-                            classé <?= $proximite["last1"]["ideologiePolitique"] ?> de l'échiquier politique.
+                            classé <?= $proximite["last1"]["ideologiePolitique"]["edited"] ?> de l'échiquier politique.
                           <?php endif; ?>
                           <?= ucfirst($gender["pronom"]) ?> <?= $active ? "ne vote" : "n'a voté" ?> avec ce groupe que dans <b><?= $proximite["last1"]["accord"] ?>%</b> des cas.
                         </p>
