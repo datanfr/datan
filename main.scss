@@ -77,7 +77,7 @@ html {
                LINKS
 ################
 */
-a:not(.btn), .url_obf:not(.btn) {
+a:not(.btn), .url_obf:not(.btn, .card) {
   color: $link-datan-color;
   text-decoration: underline;
   &:hover{
