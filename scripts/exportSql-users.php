@@ -3,9 +3,9 @@
 define("MAX_EXECUTION_TIME", -1); // seconds
 ini_set('memory_limit', '-1');
 
+require $_SERVER['COMPOSER_AUTOLOAD'];
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
-require $_SERVER['COMPOSER_AUTOLOAD'];
 
 function sendEmail($date, $path){
   $mail = new PHPMailer;
