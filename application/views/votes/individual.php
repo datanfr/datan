@@ -97,7 +97,7 @@
              </div>
            <?php endif; ?>
           </div>
-          <?php if ($vote['description'] != ""): ?>
+          <?php if ($description): ?>
             <div class="row bloc-description mt-5">
               <div class="col-12">
                 <h2>Pour mieux comprendre</h2>
