@@ -1,11 +1,9 @@
 <?php
 class Api extends CI_Controller
 {
-    // Fill the forbidden call list here
-    private $modelAllowed = array('deputes');
-
-    private $methodAllowed = array('newsletter/create_newsletter');
-
+    // FORBIDDEN LIST
+    private $modelAllowed = array();
+    private $methodAllowed = array('newsletter/create_newsletter', 'votes/get_last_votes_datan');
     private $methodForbidden = array();
 
     public function __construct()
