@@ -160,7 +160,7 @@
                 </div>
               </div>
             </div>
-            <div class="card nos-lois mt-5 url_obf" url_obf="<?= url_obfuscation("https://www.noslois.fr/") ?>" >
+            <div class="d-none d-md-block card nos-lois mt-5 url_obf" url_obf="<?= url_obfuscation("https://www.noslois.fr/") ?>" >
               <div class="card-body d-flex flex-column align-items-center py-3">
                 <span class="text-center mb-2">Prenez position sur</span>
                 <img src="<?= asset_url() ?>imgs/logos/nos-lois.png" alt="Logo Nos Lois">
@@ -257,6 +257,16 @@
                     </tr>
                 </tfoot>
               </table>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row mt-4 d-block d-md-none">
+        <div class="col-12">
+          <div class="card nos-lois url_obf" url_obf="<?= url_obfuscation("https://www.noslois.fr/") ?>" >
+            <div class="card-body d-flex flex-column align-items-center py-3">
+              <span class="text-center mb-2">Prenez position sur</span>
+              <img src="<?= asset_url() ?>imgs/logos/nos-lois.png" alt="Logo Nos Lois">
             </div>
           </div>
         </div>
