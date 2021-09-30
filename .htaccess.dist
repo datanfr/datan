@@ -42,4 +42,8 @@
     SetEnv API_KEY_SECRETE_MAILJET secrete api key for newsletter
     SetEnv API_MJML_ID api key for newsletter
     SetEnv API_MJML_SECRETE_KEY secrete api key for newsletter
+    SetEnv EMAIL_DATAN Not necessary for running the website locally
+    SetEnv EMAIL_DATAN_PASSWORD Not necessary for running the website locally
+    SetEnv EMAIL_DATAN_HOST Not necessary for running the website locally
+    SetEnv EMAIL_BACKUP Not necessary for running the website locally
 </IfModule>

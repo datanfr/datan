@@ -3,6 +3,59 @@
 define("MAX_EXECUTION_TIME", -1); // seconds
 ini_set('memory_limit', '-1');
 
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+require $_SERVER['COMPOSER_AUTOLOAD'];
+
+function sendEmail($date, $path){
+  $mail = new PHPMailer;
+
+  //Enable SMTP debugging.
+  $mail->SMTPDebug = 3;
+  //Set PHPMailer to use SMTP.
+  $mail->isSMTP();
+  //Set SMTP host name
+  $mail->Host = $_SERVER['EMAIL_DATAN_HOST'];
+  //Set this to true if SMTP host requires authentication to send email
+  $mail->SMTPAuth = true;
+  //Provide username and password
+  $mail->Username = $_SERVER['EMAIL_DATAN'];
+  $mail->Password = $_SERVER['EMAIL_DATAN_PASSWORD'];
+  //If SMTP requires TLS encryption then set it
+  //$mail->SMTPSecure = "tls";
+  //Set TCP port to connect to
+  $mail->Port = 587;
+  $mail->From = "info@datan.fr";
+  $mail->FromName = "Datan Database Backup";
+
+  $mail->smtpConnect(
+      array(
+          "ssl" => array(
+              "verify_peer" => false,
+              "verify_peer_name" => false,
+              "allow_self_signed" => true
+          )
+      )
+  );
+
+  $mail->addAddress($_SERVER['EMAIL_BACKUP']);
+
+  $mail->Subject = "DB BACKUP - " . $date;
+  $mail->Body = "This is the database backup. Date of the backup : " . $date;
+  $mail->addAttachment($path);
+
+  if(!$mail->send())
+  {
+      echo "Mailer Error: " . $mail->ErrorInfo;
+  }
+  else
+  {
+      echo "Message has been sent successfully";
+  }
+}
+
+
+
 $timeline = time() + MAX_EXECUTION_TIME;
 
 EXPORT_TABLES($_SERVER['DATABASE_HOST'], $_SERVER['DATABASE_USERNAME'], $_SERVER['DATABASE_PASSWORD'], $_SERVER['DATABASE_NAME'], array('users', 'newsletter', 'votes_datan'));
@@ -98,8 +151,9 @@ function EXPORT_TABLES($host, $user, $pass, $name, $tables = false, $backup_name
       $contentFinal .= $content;
 
       file_put_contents($file, $contentFinal);
+      sendEmail($date, $file);
     } else {
-      die("CRON " . $date . " -- File alreay exists! \n ");
+      die("CRON " . $date . " -- File alreay exists!");
     }
 
     exit;
