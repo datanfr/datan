@@ -160,12 +160,10 @@
                 </div>
               </div>
             </div>
-            <div class="card nos-lois mt-5">
-              <div class="card-body text-center d-flex flex-column py-3">
-                <span>Prenez position sur</span>
-                <a href="https://www.todayivote.com/fr/" class="no-decoration stretched-link" target="_blank">
-                  <img src="<?= asset_url() ?>imgs/logos/nos-lois.png" alt="">
-                </a>
+            <div class="card nos-lois mt-5 url_obf" url_obf="<?= url_obfuscation("https://www.noslois.fr/") ?>" >
+              <div class="card-body d-flex flex-column align-items-center py-3">
+                <span class="text-center mb-2">Prenez position sur</span>
+                <img src="<?= asset_url() ?>imgs/logos/nos-lois.png" alt="Logo Nos Lois">
               </div>
             </div>
           </div>
