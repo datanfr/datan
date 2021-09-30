@@ -29,7 +29,7 @@ grunt watch
 ```
 
 ## 2. Base de données
-* Importer le fichier SQL principal. Le fichier contient la structure de la base de données, ainsi que les données essentielles. Fichier : *scripts/update_dataset/backup/datan_database_[date].sql*
+* Importer le fichier SQL principal. Le fichier contient la structure de la base de données, ainsi que les données essentielles. Importer le fichier de backup le plus récent se trouvant dans le dossier suivant : *https://datan.fr/assets/dataset_backup/general/*
 
 ## 3. Variables environnement
 * Dupliquer *.htaccess.dist* et renomer le nouveau fichier en *.htaccess*  
