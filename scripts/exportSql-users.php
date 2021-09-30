@@ -25,7 +25,7 @@ function sendEmail($date, $path){
   //$mail->SMTPSecure = "tls";
   //Set TCP port to connect to
   $mail->Port = 587;
-  $mail->From = "info@datan.fr";
+  $mail->From = $_SERVER['EMAIL_DATAN'];
   $mail->FromName = "Datan Database Backup";
 
   $mail->smtpConnect(
