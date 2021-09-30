@@ -2816,6 +2816,22 @@ FAQ
 MODAL
 ################
 */
+.pg-newsletter{
+  h1{
+    font-size: 3em;
+    font-weight: 800;
+    color: $text-black;
+  }
+  .legend{
+    color: $text-gray-light;
+    font-weight: 800;
+  }
+}
+/*
+################
+MODAL
+################
+*/
 #modalSubscription,#modalFail{
   display: none;
 }
