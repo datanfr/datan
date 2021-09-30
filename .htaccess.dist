@@ -35,6 +35,7 @@
     SetEnv DATABASE_HOST localhost
     SetEnv CI_ENV production
     SetEnv BASE_URL http://localhost/datan
+    SetEnv ABSOLUTE_PATH your absolute path of the folder in which this file is located
     SetEnv COMPOSER_AUTOLOAD your composer autoload file
     SetEnv API_KEY_NOBG get your api key on remove.bg
     SetEnv API_KEY_MAILJET api key for newsletter
