@@ -5,12 +5,14 @@ ini_set('memory_limit', '-1');
 
 $timeline = time() + MAX_EXECUTION_TIME;
 
-EXPORT_TABLES($_SERVER['DATABASE_HOST'], $_SERVER['DATABASE_USERNAME'], $_SERVER['DATABASE_PASSWORD'], $_SERVER['DATABASE_NAME'], array("users"));
+EXPORT_TABLES($_SERVER['DATABASE_HOST'], $_SERVER['DATABASE_USERNAME'], $_SERVER['DATABASE_PASSWORD'], $_SERVER['DATABASE_NAME'], array('users', 'newsletter', 'votes_datan'));
 
 function EXPORT_TABLES($host, $user, $pass, $name, $tables = false, $backup_name = false)
 {
     $tablesData = array(
-      'users'
+      'users',
+      'newsletter',
+      'votes_datan'
     );
     $mysqli = new mysqli($host, $user, $pass, $name);
     $mysqli->select_db($name);
@@ -84,20 +86,14 @@ function EXPORT_TABLES($host, $user, $pass, $name, $tables = false, $backup_name
         echo 'Caught exception: ', $e->getMessage(), "\n";
     }
     $backup_name = $backup_name ? $backup_name : $name . "_votes_datan_backup_" . date('Y-m-d') . ".sql";
-    //header('Content-Type: application/octet-stream');
-    //header("Content-Transfer-Encoding: Binary");
-    //header("Content-disposition: attachment; filename=\"" . $backup_name . "\"");
-    //echo $content;
-
-    // NEW SYSTEM ==> Save the file in the update_dataset/backup folder
 
     $date = date("Y-m-d");
-    $file = $_SERVER['ABSOLUTE_PATH'] . '/scripts/update_dataset/backup/users/' . date("Ymd") .'.sql';
+    $file = $_SERVER['ABSOLUTE_PATH'] . '/scripts/update_dataset/backup/' . date("Ymd") .'.sql';
 
     if(!is_file($file)){
       file_put_contents($file, "");
 
-      $contentFinal = " /* DATABASE BACKUP FOR THE users TABLE \n";
+      $contentFinal = " /* DATABASE BACKUP FOR THE FOLLOWING TABLES : users, newsletter, votes_datan \n";
       $contentFinal .= " Date of the backup: " . $date . " */ \n";
       $contentFinal .= $content;
 
