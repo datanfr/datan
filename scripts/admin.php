@@ -209,11 +209,6 @@
               <div class="list-group">
                 <a href="code_photos_ogp.php" class="list-group-item list-group-item-action">Code photos OGP</a>
               </div>
-              <h3 class="mt-3">Database backup</h2>
-              <div class="list-group">
-                <a href="exportSql.php" class="list-group-item list-group-item-action">All the database</a>
-                <a href="exportSql-votes_datan.php" class="list-group-item list-group-item-action">Only votes_datan</a>
-              </div>
               <h3 class="mt-3">Unused scripts</h2>
               <div class="list-group">
                 <a href="#" class="list-group-item list-group-item-action">Code communes_slug (code_communes_slug.php)</a>

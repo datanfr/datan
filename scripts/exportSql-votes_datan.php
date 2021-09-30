@@ -10,20 +10,6 @@ EXPORT_TABLES($_SERVER['DATABASE_HOST'], $_SERVER['DATABASE_USERNAME'], $_SERVER
 function EXPORT_TABLES($host, $user, $pass, $name, $tables = false, $backup_name = false)
 {
     $tablesData = array(
-      'categories',
-      'circos',
-      'cities_infos',
-      'cities_mayors',
-      'departement',
-      'election2017_results',
-      'elect_2017_pres_2',
-      'elect_2019_europe',
-      'elect_2019_europe_clean',
-      'elect_2019_europe_listes',
-      'fields',
-      'insee',
-      'posts',
-      'regions',
       'votes_datan'
     );
     $mysqli = new mysqli($host, $user, $pass, $name);
@@ -97,11 +83,32 @@ function EXPORT_TABLES($host, $user, $pass, $name, $tables = false, $backup_name
     {
         echo 'Caught exception: ', $e->getMessage(), "\n";
     }
-    $backup_name = $backup_name ? $backup_name : $name . "_votes_datan_backup_" . date('Y-m-d') . ".sql";
-    header('Content-Type: application/octet-stream');
-    header("Content-Transfer-Encoding: Binary");
-    header("Content-disposition: attachment; filename=\"" . $backup_name . "\"");
-    echo $content;
+    //$backup_name = $backup_name ? $backup_name : $name . "_votes_datan_backup_" . date('Y-m-d') . ".sql";
+    //header('Content-Type: application/octet-stream');
+    //header("Content-Transfer-Encoding: Binary");
+    //header("Content-disposition: attachment; filename=\"" . $backup_name . "\"");
+    //echo $content;
+
+    // NEW SYSTEM ==> Save the file in the update_dataset/backup folder
+
+    $date = date("Y-m-d");
+    $file = 'update_dataset/backup/votes_datan/' . date("Ymd") .'.sql';
+
+    if(!is_file($file)){
+      file_put_contents($file, "");
+
+      $contentFinal = " /* DATABASE BACKUP FOR THE votes_datan TABLE \n";
+      $contentFinal .= " Date of the backup: " . $date . " \n";
+      $contentFinal .= " Information: This table gathers all votes from the French National Assembly that have been decrypted by the Datan team \n";
+      $contentFinal .= " https://datan.fr \n";
+      $contentFinal .= " For additional requests, contact info@datan.fr */ \n";
+      $contentFinal .= $content;
+
+      file_put_contents($file, $contentFinal);
+    } else {
+      die("File alreay exists!");
+    }
+
     exit;
 }
 
