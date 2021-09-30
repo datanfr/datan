@@ -375,6 +375,7 @@
       // Vote edited
       $data['vote'] = $this->votes_model->get_individual_vote_edited($data['vote']);
       $data['vote']['description'] = text_url_obfuscation($data['vote']['description']);
+      $data['description'] = preg_replace('/\s+/', '', strip_tags($data['vote']['description'])) === "" ? FALSE : TRUE;
 
       $data['vote']['edited'] = FALSE;
       if (!empty($data['vote']['title'])) {
