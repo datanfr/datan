@@ -103,7 +103,7 @@ function EXPORT_TABLES($host, $user, $pass, $name, $tables = false, $backup_name
 
       file_put_contents($file, $contentFinal);
     } else {
-      die("File alreay exists!");
+      die("CRON " . $date . " -- File alreay exists! \n ");
     }
 
     exit;
