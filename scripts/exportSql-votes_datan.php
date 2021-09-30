@@ -92,7 +92,7 @@ function EXPORT_TABLES($host, $user, $pass, $name, $tables = false, $backup_name
     // NEW SYSTEM ==> Save the file in the update_dataset/backup folder
 
     $date = date("Y-m-d");
-    $file = 'update_dataset/backup/votes_datan/' . date("Ymd") .'.sql';
+    $file = $_SERVER['ABSOLUTE_PATH'] . '/scripts/update_dataset/backup/votes_datan/' . date("Ymd") .'.sql';
 
     if(!is_file($file)){
       file_put_contents($file, "");
