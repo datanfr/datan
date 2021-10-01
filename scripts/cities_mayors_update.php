@@ -27,11 +27,13 @@
           <?php
             include 'bdd-connexion.php';
 
+            $bdd->query('DROP TABLE IF EXISTS cities_mayors');
+
             $bdd->query('
               CREATE TABLE IF NOT EXISTS `cities_mayors` (
                 `dpt` varchar(5) DEFAULT NULL,
                 `libelle_dpt` text,
-                `insee` smallint(6) DEFAULT NULL,
+                `insee` varchar(6) DEFAULT NULL,
                 `libelle_commune` text NOT NULL,
                 `nameLast` text,
                 `nameFirst` text,
@@ -45,8 +47,6 @@
               ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
             ');
 
-            $bdd->query('TRUNCATE TABLE cities_mayors');
-
             $url = "https://www.data.gouv.fr/fr/datasets/r/2876a346-d50c-4911-934e-19ee07b0e503";
             $lines = file($url, FILE_IGNORE_NEW_LINES);
 
@@ -58,16 +58,16 @@
               $array = preg_split("/[\t]/", $value);
               if ($array[0] != "Titre du rapport" && $array[0] != "Code du département (Maire)") {
 
-                $dpt = $array[0];
-                $libelle_dpt = $array[1];
-                $insee = $array[2];
-                $libelle_commune = $array[3];
-                $nameLast = $array[4];
-                $nameFirst = $array[5];
-                $gender = $array[6];
-                $birthDate = $array[7];
-                $profession = $array[8];
-                $libelle_profession = $array[9];
+                $dpt = utf8_decode($array[0]);
+                $libelle_dpt = utf8_decode($array[1]);
+                $insee = utf8_decode($array[4]);
+                $libelle_commune = utf8_decode($array[5]);
+                $nameLast = utf8_decode($array[6]);
+                $nameFirst = utf8_decode($array[7]);
+                $gender = utf8_decode($array[8]);
+                $birthDate = utf8_decode($array[9]);
+                $profession = utf8_decode($array[10]);
+                $libelle_profession = utf8_decode($array[11]);
 
                 $birthDate = str_replace("/", "-", $birthDate);
                 $birthDate = date("Y-m-d", strtotime($birthDate));
@@ -124,23 +124,24 @@
 
                 echo $i." - ".$dpt." - ".$libelle_dpt." - ".$insee." - ".$libelle_commune." - ".$nameLast." - ".$nameFirst." - ".$gender." - ".$birthDate." - ".$profession." - ".$libelle_profession."<br>";
 
-                $update1 = $bdd->prepare("INSERT INTO cities_mayors (dpt, libelle_dpt, insee, libelle_commune, nameLast, nameFirst, gender, birthDate, profession, libelle_profession, dateMaj) VALUES (:dpt, :libelle_dpt, :insee, :libelle_commune, :nameLast, :nameFirst, :gender, :birthDate, :profession, :libelle_profession, CURDATE() )");
-                $update1array = array(
-                  'dpt' => $dpt,
-                  'libelle_dpt' => $libelle_dpt,
-                  'insee' => $insee,
-                  'libelle_commune' => $libelle_commune,
-                  'nameLast' => $nameLast,
-                  'nameFirst' => $nameFirst,
-                  'gender' => $gender,
-                  'birthDate' => $birthDate,
-                  'profession' => $profession,
-                  'libelle_profession' => $libelle_profession
-                );
-                $update1->execute($update1array);
+                if ($i > 1) {
+                  $update = $bdd->prepare("INSERT INTO cities_mayors (dpt, libelle_dpt, insee, libelle_commune, nameLast, nameFirst, gender, birthDate, profession, libelle_profession, dateMaj) VALUES (:dpt, :libelle_dpt, :insee, :libelle_commune, :nameLast, :nameFirst, :gender, :birthDate, :profession, :libelle_profession, CURDATE() )");
+                  $updatearray = array(
+                    'dpt' => $dpt,
+                    'libelle_dpt' => $libelle_dpt,
+                    'insee' => $insee,
+                    'libelle_commune' => $libelle_commune,
+                    'nameLast' => $nameLast,
+                    'nameFirst' => $nameFirst,
+                    'gender' => $gender,
+                    'birthDate' => $birthDate,
+                    'profession' => $profession,
+                    'libelle_profession' => $libelle_profession
+                  );
+                  $update->execute($updatearray);
+                }
 
                 $i++;
-                //if($i == 35) break;
               }
             }
 
