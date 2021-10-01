@@ -5,12 +5,12 @@
       $this->load->model('departement_model');
       $this->load->model('groupes_model');
       $this->load->model('depute_edito');
+      $this->load->model('city_model');
     }
 
     public function index($input, $departement){
       $input_ville = $input;
-      $data['ville'] = $this->departement_model->get_commune_individual($input_ville, $departement);
-      print_r($data['ville']);
+      $data['ville'] = $this->city_model->get_individual($input_ville, $departement);
 
       if (empty($data['ville'])) {
         show_404();
@@ -30,8 +30,7 @@
       if ($n_circos == 1) {
         $circo[] = $v['circo'];
         $data['n_circos'] = $n_circos;
-        print_r($circo);
-        $data['deputes_commune'] = $this->departement_model->get_deputes_commune($departement, $circo, legislature_current());
+        $data['deputes_commune'] = $this->city_model->get_mps($departement, $circo, legislature_current());
 
         if (empty($data['deputes_commune'])) {
           $data['noMP'] = TRUE;
@@ -56,7 +55,7 @@
         }
         $data['circos'] = $circo_edited;
         $data['n_circos'] = $n_circos;
-        $data['deputes_commune'] = $this->departement_model->get_deputes_commune($departement, $circo, legislature_current());
+        $data['deputes_commune'] = $this->city_model->get_mps($departement, $circo, legislature_current());
         foreach ($data['deputes_commune'] as $key => $value) {
           $data['deputes_commune'][$key]['couleurAssociee'] = $this->groupes_model->get_groupe_color(array($value['libelleAbrev'], $value['couleurAssociee']));
           $data['deputes_commune'][$key]['electionCircoAbbrev'] = $this->functions_datan->abbrev_n($value['electionCirco'], TRUE);
@@ -69,7 +68,7 @@
       foreach ($data['deputes_commune'] as $n) {
         $deputes_commune[] = $n['mpId'];
       }
-      $data['deputes_dpt'] = $this->departement_model->get_deputes_commune_dpt($departement, $deputes_commune, legislature_current());
+      $data['deputes_dpt'] = $this->city_model->get_mps_dpt($departement, $deputes_commune, legislature_current());
       foreach ($data['deputes_dpt'] as $key => $value) {
         $data['deputes_dpt'][$key]['couleurAssociee'] = $this->groupes_model->get_groupe_color(array($value['libelleAbrev'], $value['couleurAssociee']));
         $data['deputes_dpt'][$key]['electionCircoAbbrev'] = $this->functions_datan->abbrev_n($value['electionCirco'], TRUE);
@@ -104,7 +103,7 @@
 
 
       // Get all big cities from the department
-      $data['communes_dpt'] = $this->departement_model->get_communes_population($departement);
+      $data['communes_dpt'] = $this->city_model->get_communes_population($departement);
 
       // Clean infos on the city
       $data['ville'] = $data['ville'][0];
@@ -117,13 +116,10 @@
         $data['ville']['evol10_text'] = 'diminué';
       }
       $data['ville']['evol10_edited'] = str_replace("-", "", $data['ville']['evol10']);
-      $data['ville_insee'] = $this->departement_model->get_ville_insee($data['ville']['codeRegion'], $data['ville']['dpt'], $data['ville']['insee_city']);
-      //print_r($data['ville_insee']);
-      echo "<br>";
+      $data['ville_insee'] = $this->city_model->get_insee($data['ville']['codeRegion'], $data['ville']['dpt'], $data['ville']['insee_city']);
 
       // Get city mayor
-      $data['mayor'] = $this->departement_model->get_city_mayor($data['ville']['dpt'], $data['ville']['code_insee'], $data['ville']['commune']);
-      print_r($data['mayor']);
+      $data['mayor'] = $this->city_model->get_mayor($data['ville']['dpt'], $data['ville']['code_insee'], $data['ville']['commune']);
       if ($data['mayor']['gender'] == "F") {
         $data['mayor']['gender_le'] = "la";
       } else {
@@ -132,9 +128,9 @@
 
       // Get elections
       // 1. 2017 _ Presidentielles _ 2nd tour
-      $data['results_2017_pres_2'] = $this->departement_model->get_results_2017_pres_2($data['ville']['dpt'], $data['ville']['insee_city']);
+      $data['results_2017_pres_2'] = $this->city_model->get_results_2017_pres_2($data['ville']['dpt'], $data['ville']['insee_city']);
       // 2. 2019 _ Européennes
-      $data['results_2019_europe'] = $this->departement_model->get_results_2019_europe($data['ville']);
+      $data['results_2019_europe'] = $this->city_model->get_results_2019_europe($data['ville']);
 
       // Meta
       $data['url'] = $this->meta_model->get_url();
