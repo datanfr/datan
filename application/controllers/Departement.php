@@ -3,6 +3,7 @@
     public function __construct() {
       parent::__construct();
       $this->load->model('departement_model');
+      $this->load->model('city_model');
       $this->load->model('deputes_model');
       $this->load->model('groupes_model');
       //$this->load->helper('url');
@@ -24,7 +25,7 @@
         $data['deputes'][$key]['cardCenter'] = $data['deputes'][$key]['circo']."<sup>".$data['deputes'][$key]['circoAbbrev']."</sup> circonscription";
       }
 
-      $data['communes'] = $this->departement_model->get_communes_population($slug);
+      $data['communes'] = $this->city_model->get_communes_population($slug);
 
       if (empty($data['deputes'])) {
         show_404();
