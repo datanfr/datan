@@ -100,13 +100,13 @@ $route['partis-politiques'] = 'parties/index';
 $route['deputes/inactifs'] = 'deputes/inactifs';
 $route['deputes/legislature-(:any)'] = 'deputes/index/$1';
 $route['deputes/(:any)'] = 'departement/view/$1';
-$route['deputes/?commune=(:any)'] = 'departement/commune';
+$route['deputes/?commune=(:any)'] = 'city/index';
 $route['deputes/(:any)/depute_(:any)/legislature-(:any)'] = 'deputes/historique/$2/$1/$3';
 $route['deputes/(:any)/depute_(:any)/votes'] = 'deputes/votes_datan/$2/$1';
 $route['deputes/(:any)/depute_(:any)/votes/all'] = 'deputes/votes_all/$2/$1';
 $route['deputes/(:any)/depute_(:any)/votes/(:any)'] = 'deputes/votes_datan_field/$2/$1/$3';
 $route['deputes/(:any)/depute_(:any)'] = 'deputes/individual/$2/$1';
-$route['deputes/(:any)/ville_(:any)'] = 'deputes/commune/$2/$1';
+$route['deputes/(:any)/ville_(:any)'] = 'city/index/$2/$1';
 $route['deputes'] = 'deputes/index';
 // DEPARTEMENTS
 $route['index_departements'] = 'departement/liste';

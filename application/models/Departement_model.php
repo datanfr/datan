@@ -125,24 +125,30 @@
 
     }
 
-    public function get_deputes_commune($departement, $circos){
+    public function get_deputes_commune($departement, $circos, $legislature){
+      echo $departement;
+      echo "<br>";
+      //print_r($circos);
       $sql = 'SELECT d.*, d.circo AS electionCirco,
         d.libelle, d.libelleAbrev
         FROM deputes_all d
-        WHERE d.dptSlug = ? AND d.circo IN ? AND d.legislature = 15 AND d.dateFin IS NULL
+        WHERE d.dptSlug = ? AND d.circo IN ? AND d.legislature = ? AND d.dateFin IS NULL
       ';
-      $query = $this->db->query($sql, array($departement, $circos));
+      $query = $this->db->query($sql, array($departement, $circos, $legislature));
 
       return $query->result_array();
     }
 
-    public function get_deputes_commune_dpt($departement, $deputes_commune){
+    public function get_deputes_commune_dpt($departement, $deputes_commune, $legislature){
+      if (empty($deputes_commune)) {
+        $deputes_commune[] = "";
+      }
       $sql = 'SELECT d.*, d.circo AS electionCirco,
         d.libelle, d.libelleAbrev
         FROM deputes_all d
-        WHERE d.dptSlug = ? AND d.mpId NOT IN ? AND d.legislature = 15 AND d.dateFin IS NULL
+        WHERE d.dptSlug = ? AND d.mpId NOT IN ? AND d.legislature = ? AND d.dateFin IS NULL
       ';
-      $query = $this->db->query($sql, array($departement, $deputes_commune));
+      $query = $this->db->query($sql, array($departement, $deputes_commune, $legislature));
 
       return $query->result_array();
     }
@@ -155,9 +161,21 @@
       return $query->row_array();
     }
 
-    public function get_city_mayor($dpt, $insee){
+    public function get_city_mayor($dpt, $insee, $commune){
+      echo $dpt;
+      echo "<br>";
+      echo $insee;
+      echo "<br>";
+      echo $commune;
+
+      if ($dpt === "987") {
+        $insee = $dpt . "" . $commune;
+      }
+
+
+
+
       $where = array(
-        'dpt' => $dpt,
         'insee' => $insee
       );
       $this->db->select('nameFirst, nameLast, gender');
@@ -215,7 +233,7 @@
       }
 
       if ($dpt == "987") {
-        $new_city = 700 + $city;
+        $new_city = "0" . $city;
       } elseif ($city < 10) {
         $new_city = "00".$city;
       } elseif ($city < 100) {
@@ -232,6 +250,10 @@
         $new_region = "006";
         $old_city = $city - 100;
       } elseif ($dpt == "988") {
+        $new_region = "000";
+      } elseif ($dpt == "977") {
+        $new_region = "000";
+      } elseif ($dpt == "986") {
         $new_region = "000";
       } elseif ($region < 10) {
         $new_region = "00".$region;
