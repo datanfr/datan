@@ -29,16 +29,24 @@
       </div> <!-- // END TITLE OF THE PAGE -->
       <!-- MPS FROM THE CITY -->
       <div class="row">
-        <?php if ($n_circos == 1): ?>
-          <div class="col-12 d-flex justify-content-center">
-            <?php $this->load->view('deputes/partials/card_home.php', array('depute' => $depute_commune, 'tag' => 'h2', 'cat' => true)) ?>
+        <?php if ($noMP): ?>
+          <div class="col-12">
+            <div class="text-center alert alert-danger">
+              Il n'y a actuellement aucun député représentant à l'Assemblée nationale les citoyens habitant dans cette ville.
+            </div>
           </div>
-        <?php else: ?>
-          <div class="col-12 d-flex flex-wrap justify-content-around">
-            <?php foreach ($deputes_commune as $depute_commune): ?>
-              <?php $this->load->view('deputes/partials/card_home.php', array('depute' => $depute_commune, 'tag' => 'h2', 'cat' => true)) ?>
-            <?php endforeach; ?>
-          </div>
+          <?php else: ?>
+            <?php if ($n_circos == 1): ?>
+              <div class="col-12 d-flex justify-content-center">
+                <?php $this->load->view('deputes/partials/card_home.php', array('depute' => $depute_commune, 'tag' => 'h2', 'cat' => true)) ?>
+              </div>
+            <?php else: ?>
+              <div class="col-12 d-flex flex-wrap justify-content-around">
+                <?php foreach ($deputes_commune as $depute_commune): ?>
+                  <?php $this->load->view('deputes/partials/card_home.php', array('depute' => $depute_commune, 'tag' => 'h2', 'cat' => true)) ?>
+                <?php endforeach; ?>
+              </div>
+            <?php endif; ?>
         <?php endif; ?>
       </div><!-- // END MPS FROM THE CITY -->
     </div>
@@ -137,16 +145,18 @@
     </div> <!-- // END INFOS ON THE CITY -->
     <div class="container pg-commune">
       <!-- OTHER MPS FROM THE SAME DEPARTMENT -->
-      <div class="row mt-4">
-        <div class="col-12">
-          <h2 class="text-center">Autres députés élus <?= $ville['libelle_1'] ?><?= $ville['dpt_nom'] ?> (<?= $ville['dpt'] ?>)</h2>
-        </div>
-        <div class="col-12 py-4 d-flex flex-wrap justify-content-around">
-          <?php foreach ($deputes_dpt as $depute): ?>
-            <?php $this->load->view('deputes/partials/card_home.php', array('depute' => $depute, 'tag' => 'h3')) ?>
-          <?php endforeach; ?>
-        </div>
-      </div> <!-- END OTHER MPS FROM THE SAME DEPARTMENT -->
+      <?php if (!empty($deputes_dpt)): ?>
+        <div class="row mt-4">
+          <div class="col-12">
+            <h2 class="text-center">Autres députés élus <?= $ville['libelle_1'] ?><?= $ville['dpt_nom'] ?> (<?= $ville['dpt'] ?>)</h2>
+          </div>
+          <div class="col-12 py-4 d-flex flex-wrap justify-content-around">
+            <?php foreach ($deputes_dpt as $depute): ?>
+              <?php $this->load->view('deputes/partials/card_home.php', array('depute' => $depute, 'tag' => 'h3', 'cat' => true)) ?>
+            <?php endforeach; ?>
+          </div>
+        </div> <!-- END OTHER MPS FROM THE SAME DEPARTMENT -->
+      <?php endif; ?>
     </div>
     <!-- OTHER CITIES FROM THE DEPARTMENT -->
     <div class="container-fluid bloc-others-container">
