@@ -16,7 +16,7 @@
       $city = substr($code, 2);
       $newCity = (int)$city;
 
-      $result = $this->departement_model->get_commune_slug($newCity, $dpt);
+      $result = $this->city_model->get_slug$newCity, $dpt);
       if (!empty($result)) {
         $url = base_url()."deputes/".$result['dpt_slug']."/ville_".$result['commune_slug'];
         redirect($url);
