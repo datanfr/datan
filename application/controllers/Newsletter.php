@@ -149,10 +149,10 @@ class Newsletter extends CI_Controller
         // Get votes
         if ($data['votesNDatan'] <= 3 ) {
           $data['importants'] = FALSE;
-          $data['votes'] = $this->votes_model->get_votes_datan(legislature_current(), 2020, 9, 3, FALSE);
+          $data['votes'] = $this->votes_model->get_votes_datan(legislature_current(), $year, $month, 3, FALSE);
         } else {
           $data['importants'] = TRUE;
-          $data['votes'] = $this->votes_model->get_votes_datan(legislature_current(), 2020, 9, 3, TRUE);
+          $data['votes'] = $this->votes_model->get_votes_datan(legislature_current(), $year, $month, 3, TRUE);
         }
 
         // Description of votes
