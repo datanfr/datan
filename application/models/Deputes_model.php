@@ -393,11 +393,11 @@
           WHERE vp.legislature = ? AND YEAR(vi.dateScrutin) = ? AND MONTH(vi.dateScrutin) = ?
           GROUP BY vp.mpId
         ) A
-        LEFT JOIN deputes_all da ON da.mpId = A.mpId
+        LEFT JOIN deputes_all da ON da.mpId = A.mpId AND da.legislature = ?
         ORDER BY score DESC
         LIMIT 1
       ';
-      return $this->db->query($sql, array($legislature, $year, $month))->row_array();
+      return $this->db->query($sql, array($legislature, $year, $month, $legislature))->row_array();
     }
 
     public function get_depute_vote_moins(){

@@ -50,13 +50,16 @@
           <?php endforeach; ?>
         </mj-group>
       </mj-section>
-      <mj-text font-size="16px" font-weight="800" padding-bottom="0" padding-top="20px">
-        <span class="primary">Le contexte du vote</span>
-      </mj-text>
-      <mj-text padding-top="0">
-        <?= word_limiter($vote['description'], 30) ?>
-        <a href="https://datan.fr/votes/legislature-15/vote_<?= $vote['voteNumero'] ?>" target="_blank">Lire plus</a>
-      </mj-text>
+      <?php if ($vote['description'] !== ""): ?>
+        <mj-text font-size="16px" font-weight="800" padding-bottom="0" padding-top="20px">
+          <span class="primary">Le contexte du vote</span>
+        </mj-text>
+        <mj-text padding-top="0">
+          <?= word_limiter($vote['description'], 30) ?>
+          <a href="https://datan.fr/votes/legislature-15/vote_<?= $vote['voteNumero'] ?>" target="_blank">Lire plus</a>
+        </mj-text>
+      <?php endif; ?>
+
       <mj-button padding-top="40px" padding-bottom="30px" href="https://datan.fr/votes/legislature-15/vote_<?= $vote['voteNumero'] ?>">
         Découvre la position de ton député
       </mj-button>
