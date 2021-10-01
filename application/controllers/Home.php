@@ -7,6 +7,7 @@
       $this->load->model('depute_edito');
       $this->load->model('votes_model');
       $this->load->model('departement_model');
+      $this->load->model('city_model');
       $this->load->model('post_model');
       $this->load->model('elections_model');
       $this->load->helper('form');
@@ -15,7 +16,7 @@
 
     public function index() {
       //Get random data
-      $data['commune_random'] = $this->departement_model->get_commune_random();
+      $data['commune_random'] = $this->city_model->get_random();
       $data['depute_random'] = $this->deputes_model->get_depute_random();
       $data['depute_random'] = array_merge($data['depute_random'], $this->depute_edito->gender($data['depute_random']['civ']));
       $data['depute_random']['couleurAssociee'] = $this->groupes_model->get_groupe_color(array($data['depute_random']['libelleAbrev'], $data['depute_random']['couleurAssociee']));
