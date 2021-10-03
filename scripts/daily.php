@@ -128,7 +128,7 @@ class Script
         if ($zip->open($newfile) !== TRUE) {
             exit("cannot open <$file>\n");
         } else {
-            $deputeFields = array('mpId', 'civ', 'nameFirst', 'nameLast', 'nameUrl', 'birthDate', 'birthCity', 'birthCountry', 'job', 'catSocPro', 'famSocPro', 'dateMaj');
+            $deputeFields = array('mpId', 'civ', 'nameFirst', 'nameLast', 'nameUrl', 'birthDate', 'birthCity', 'birthCountry', 'job', 'catSocPro', 'famSocPro', 'hatvp', 'dateMaj');
             $mandatFields = array('mandatId', 'mpId', 'legislature', 'typeOrgane', 'dateDebut', 'dateFin', 'preseance', 'nominPrincipale', 'codeQualite', 'libQualiteSex', 'organe', 'electionRegion', 'electionRegionType', 'electionDepartement', 'electionDepartementNumero', 'electionCirco', 'datePriseFonction', 'causeFin', 'premiereElection', 'placeHemicyle', 'dateMaj');
             $mandatGroupeFields = array('mandatId', 'mpId', 'legislature', 'typeOrgane', 'dateDebut', 'dateFin', 'preseance', 'nominPrincipale', 'codeQualite', 'libQualiteSex', 'organeRef', 'dateMaj');
             $organeFields = array('uid', 'coteType', 'libelle', 'libelleEdition', 'libelleAbrev', 'libelleAbrege', 'dateDebut', 'dateFin', 'legislature', 'positionPolitique', 'preseance', 'couleurAssociee', 'dateMaj');
@@ -158,6 +158,7 @@ class Script
                         $job = $xml->profession->libelleCourant;
                         $catSocPro = $xml->profession->socProcINSEE->catSocPro;
                         $famSocPro = $xml->profession->socProcINSEE->famSocPro;
+                        $hatvp = $xml->uri_hatvp;
                         $lastname = Transliterator::createFromRules(
                             ':: Any-Latin;'
                                 . ':: NFD;'
@@ -342,6 +343,7 @@ class Script
                           'job' => $job,
                           'catSocPro' => $catSocPro,
                           'famSocPro' => $famSocPro,
+                          'hatvp' => $hatvp,
                           'dateMaj' => $this->dateMaj);
                         $deputes = array_merge($deputes, array_values($depute));
                     } catch (Exception $e) {
