@@ -10,3 +10,14 @@
       echo "hatvp column already exists!";
     }
   }
+
+  $bdd->query("CREATE TABLE IF NOT EXISTS `datan`.`hatvp` (
+    `mpId` VARCHAR(10) NOT NULL ,
+    `url` TEXT NOT NULL ,
+    `category` VARCHAR(35) NOT NULL ,
+    `value` TEXT NOT NULL ,
+    `dateDebut` DATE NOT NULL ,
+    `dateFin` DATE NOT NULL,
+    `dateMaj` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    INDEX `idx_mpId` (`mpId`)
+  ) ENGINE = MyISAM;");
