@@ -101,11 +101,25 @@ class Script
             $activities = $xml->activProfCinqDerniereDto->items;
             if (count($activities) > 0) {
               foreach ($activities->items as $activity) {
+                echo $mpId;
                 $description = (string) $activity->description;
+                $description = str_replace("[Données non publiées]", "", $description);
+                $description = preg_replace('/\s+/', ' ', $description);
+                $conservee = $activity->conservee;
+                $conservee = $conservee == "true" ? 1 : 0;
                 $dateDebut = (string) $activity->dateDebut;
-                $dateDebut = substr($dateDebut, 3, 4) . '-' . substr($dateDebut, 0, 2). '-01';
+                if ($dateDebut !== "") {
+                  $dateDebut = substr($dateDebut, 3, 4) . '-' . substr($dateDebut, 0, 2). '-01';
+                } else {
+                  $dateDebut = NULL;
+                }
                 $dateFin = (string) $activity->dateFin;
-                $dateFin = substr($dateFin, 3, 4) . '-' . substr($dateFin, 0, 2). '-01';
+                if ($dateFin !== "") {
+                  $dateFin = substr($dateFin, 3, 4) . '-' . substr($dateFin, 0, 2). '-01';
+                } else {
+                  $dateFin = NULL;
+                }
+
 
                 //echo $description . '<br>';
                 //echo $dateDebut . '<br>';
@@ -116,15 +130,16 @@ class Script
                   'url' => $xmlUrl,
                   'category' => 'activProf',
                   'value' => $description,
+                  'conservee' => $conservee,
                   'dateDebut' => $dateDebut,
                   'dateFin' => $dateFin
                 );
 
                 // INSERT INTO DATABSSE //
-                $sql = $this->bdd->prepare('INSERT INTO hatvp (mpId, url, category, value, dateDebut, dateFin) VALUES (:mpId, :url, :category, :value, :dateDebut, :dateFin)');
+                $sql = $this->bdd->prepare('INSERT INTO hatvp (mpId, url, category, value, conservee, dateDebut, dateFin) VALUES (:mpId, :url, :category, :value, :conservee, :dateDebut, :dateFin)');
                 $sql->execute($item);
                 echo "Inserted \n ";
-                
+
               }
             }
           }
