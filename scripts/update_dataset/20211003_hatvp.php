@@ -16,8 +16,9 @@
     `url` TEXT NOT NULL ,
     `category` VARCHAR(35) NOT NULL ,
     `value` TEXT NOT NULL ,
-    `dateDebut` DATE NOT NULL ,
-    `dateFin` DATE NOT NULL,
+    `conservee` BOOLEAN NOT NULL ,
+    `dateDebut` DATE NULL ,
+    `dateFin` DATE NULL,
     `dateMaj` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     INDEX `idx_mpId` (`mpId`)
   ) ENGINE = MyISAM;");
