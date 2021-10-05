@@ -24,7 +24,7 @@
               <input type="email" name="email" class="form-control" placeholder="Exemple : benoit@assemblee-nationale.fr" required autofocus>
             </div>
             <div id="newsletterSuccess" class="d-none alert alert-success mt-3" role="alert">
-              Félicitations. Vous serez maintenant informé des actualités politiques de nos députés et un peu du site aussi :)
+              Félicitations. Vous serez maintenant informés des actualités politiques de nos députés et un peu du site aussi :)
             </div>
             <div id="newsletterFailed" class="d-none alert alert-danger mt-3" role="alert">
               Quelque chose s'est mal passé. Vous êtes sans doute déjà inscrit !
