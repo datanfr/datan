@@ -63,7 +63,11 @@ class Script
         }
     }
 
-    public function hatvp(){
+    public function hatvpScrapping(){
+      echo "hatvpScrapping starting \n";
+      $fields = array('mpId', 'url', 'category', 'value', 'conservee', 'dateDebut', 'dateFin');
+      $array = [];
+      $i = 1;
       // Context for 403 security on the website
       $context = stream_context_create(
           array(
@@ -101,7 +105,7 @@ class Script
             $activities = $xml->activProfCinqDerniereDto->items;
             if (count($activities) > 0) {
               foreach ($activities->items as $activity) {
-                echo $mpId;
+                //echo $mpId;
                 $description = (string) $activity->description;
                 $description = str_replace("[Données non publiées]", "", $description);
                 $description = preg_replace('/\s+/', ' ', $description);
@@ -120,7 +124,6 @@ class Script
                   $dateFin = NULL;
                 }
 
-
                 //echo $description . '<br>';
                 //echo $dateDebut . '<br>';
                 //echo $dateFin . '<br>';
@@ -134,17 +137,26 @@ class Script
                   'dateDebut' => $dateDebut,
                   'dateFin' => $dateFin
                 );
-
-                // INSERT INTO DATABSSE //
-                $sql = $this->bdd->prepare('INSERT INTO hatvp (mpId, url, category, value, conservee, dateDebut, dateFin) VALUES (:mpId, :url, :category, :value, :conservee, :dateDebut, :dateFin)');
-                $sql->execute($item);
-                echo "Inserted \n ";
+                $array = array_merge($array, array_values($item));
+                if ($i % 100 === 0) {
+                  echo "Let's import until n " . $i . "\n";
+                  $this->insertAll('hatvp', $fields, $array);
+                  $array = [];
+                }
+                $i++;
 
               }
             }
           }
         }
       }
+      $this->insertAll('hatvp', $fields, $array);
+    }
+
+    public function hatvpCleaning(){
+
+      // A faire :) 
+
     }
 }
 
@@ -154,4 +166,6 @@ if (isset($argv[1])) {
 } else {
     $script = new Script();
 }
-$script->hatvp();
+
+$script->hatvpScrapping();
+$script->hatvpCleaning();
