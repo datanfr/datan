@@ -16,6 +16,7 @@
     `url` TEXT NOT NULL ,
     `category` VARCHAR(35) NOT NULL ,
     `value` TEXT NOT NULL ,
+    `valueCleaned` TEXT NULL ,
     `conservee` BOOLEAN NOT NULL ,
     `dateDebut` DATE NULL ,
     `dateFin` DATE NULL,
