@@ -4,6 +4,7 @@
     public function __construct() {
       parent::__construct();
       $this->load->model('departement_model');
+      $this->load->model('city_model');
     }
 
     // Delete all cache
@@ -16,7 +17,7 @@
       $city = substr($code, 2);
       $newCity = (int)$city;
 
-      $result = $this->city_model->get_slug$newCity, $dpt);
+      $result = $this->city_model->get_slug($newCity, $dpt);
       if (!empty($result)) {
         $url = base_url()."deputes/".$result['dpt_slug']."/ville_".$result['commune_slug'];
         redirect($url);
