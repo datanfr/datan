@@ -2819,3 +2819,21 @@ MODAL
 #modalSubscription,#modalFail{
   display: none;
 }
+.modalDatan{
+  .modal-header{
+    background-color: $primary;
+  }
+  .modal-title{
+    font-size: $h4-font-size;
+    font-weight: 800;
+    color: #fff;
+  }
+  .source{
+    font-size: $h7-font-size;
+    font-style: italic;
+  }
+  .close{
+    font-size:25px;
+    color: #fff;
+  }
+}
