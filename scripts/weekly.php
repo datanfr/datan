@@ -65,7 +65,7 @@ class Script
 
     public function hatvpScrapping(){
       echo "hatvpScrapping starting \n";
-      $fields = array('mpId', 'url', 'category', 'value', 'conservee', 'dateDebut', 'dateFin');
+      $fields = array('mpId', 'url', 'category', 'value', 'employeur', 'conservee', 'dateDebut', 'dateFin');
       $array = [];
       $i = 1;
       // Context for 403 security on the website
@@ -109,6 +109,7 @@ class Script
                 $description = (string) $activity->description;
                 $description = str_replace("[Données non publiées]", "", $description);
                 $description = preg_replace('/\s+/', ' ', $description);
+                $employeur = $activity->employeur;
                 $conservee = $activity->conservee;
                 $conservee = $conservee == "true" ? 1 : 0;
                 $dateDebut = (string) $activity->dateDebut;
@@ -133,6 +134,7 @@ class Script
                   'url' => $xmlUrl,
                   'category' => 'activProf',
                   'value' => $description,
+                  'employeur' => $employeur,
                   'conservee' => $conservee,
                   'dateDebut' => $dateDebut,
                   'dateFin' => $dateFin
@@ -155,7 +157,7 @@ class Script
 
     public function hatvpCleaning(){
 
-      // A faire :) 
+      // A faire :)
 
     }
 }
