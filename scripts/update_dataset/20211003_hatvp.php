@@ -17,6 +17,7 @@
     `category` VARCHAR(35) NOT NULL ,
     `value` TEXT NOT NULL ,
     `valueCleaned` TEXT NULL ,
+    `employeur` TEXT NOT NULL ,
     `conservee` BOOLEAN NOT NULL ,
     `dateDebut` DATE NULL ,
     `dateFin` DATE NULL,
