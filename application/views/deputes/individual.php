@@ -133,7 +133,7 @@
             </p>
             <?php if ($hatvpJobs): ?>
               <p>
-                Certains députés ne déclarent pas leur dernière activité professionnelle mais un métier exercé il y a plusieurs années. La <a href="https://www.hatvp.fr/">Haute Autorité pour la transparence de la vie publique</a> publie au contraire les dernier métier des élus.
+                Certains députés ne déclarent pas leur dernière activité professionnelle mais un métier exercé il y a plusieurs années. La <span class="url_obf" url_obf="<?= url_obfuscation("https://www.hatvp.fr/") ?>">Haute Autorité pour la transparence de la vie publique</span> publie au contraire les dernier métier des élus.
                 Pour découvrir les dernières activités de <?= $title ?>, <a href="#modalHatvp" data-toggle="modal" data-target="#modalHatvp">cliquez ici</a>.
               </p>
               <!-- modalHatvp -->
@@ -167,8 +167,8 @@
                           <?php endforeach; ?>
                         </tbody>
                       </table>
-                      <p class="mt-4 source">Ces données viennent de la déclaration de <?= $title ?> à la <a href="https://www.hatvp.fr/">Haute Autorité pour la transparence de la vie publique</a> (HATVP).</p>
-                      <p class="source">Pour découvrir la déclaration de <?= $title ?>, <a href="<?= $depute['hatvp'] ?>">cliquez ici.</a></p>
+                      <p class="mt-4 source">Ces données viennent de la déclaration de <?= $title ?> à la <span class="url_obf" url_obf="<?= url_obfuscation("https://www.hatvp.fr/") ?>">Haute Autorité pour la transparence de la vie publique</span> (HATVP).</p>
+                      <p class="source">Pour découvrir la déclaration de <?= $title ?>, <span class="url_obf" url_obf="<?= url_obfuscation($depute['hatvp']) ?>">cliquez ici</span>.</p>
                     </div>
                     <div class="modal-footer">
                       <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
