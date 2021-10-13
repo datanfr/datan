@@ -260,6 +260,10 @@
       $depute = $data['depute']['nameFirst'].' '.$data['depute']['nameLast'];
       $data['no_job'] = array('autre profession','autres', 'sans profession déclarée', 'sans profession');
 
+      // Get hatvp job
+      $data['depute']['hatvp'] = $this->deputes_model->get_hatvp_url($mpId);
+      $data['hatvpJobs'] = $this->deputes_model->get_last_hatvp_job($mpId);
+
       // Get group
       if (!empty($data['depute']['libelle'])) {
         $groupe_id = $data['depute']['groupeId'];
