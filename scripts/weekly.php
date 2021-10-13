@@ -140,7 +140,7 @@ class Script
                   'dateFin' => $dateFin
                 );
                 $array = array_merge($array, array_values($item));
-                if ($i % 100 === 0) {
+                if ($i % 10 === 0) {
                   echo "Let's import until n " . $i . "\n";
                   $this->insertAll('hatvp', $fields, $array);
                   $array = [];
