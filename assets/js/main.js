@@ -202,6 +202,7 @@ $(function () {
 NEWSLETTER
 ##########
 */
+// Neweletter in header
 $('#newsletterForm').on('submit', (e) => {
   e.preventDefault();
   $.ajax({
@@ -226,7 +227,28 @@ $('#newsletterForm').on('submit', (e) => {
   });
   return true;
 })
-
+// Newsletter on datan.fr/newsletter page
+$('#newsletterPage').on('submit', (e) => {
+  e.preventDefault();
+  $.ajax({
+    url: "api/newsletter/create_newsletter",
+    type: "POST",
+    data: $('#newsletterPage').serialize(),
+    dataType: 'json',
+    success: function (ac) {
+      if (!ac) {
+        $('#newsletterFailed').removeClass("d-none");
+      } else {
+        $('#newsletterSuccess').removeClass("d-none");
+      }
+    },
+    error: function (err) {
+      console.log('err', err)
+      $('#newsletterFailed').removeClass("d-none");
+    }
+  });
+  return true;
+})
 
 /*
 ##########

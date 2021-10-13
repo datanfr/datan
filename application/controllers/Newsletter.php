@@ -69,6 +69,30 @@ class Newsletter extends CI_Controller
         }
     }
 
+    public function register(){
+      // Meta
+      $data['url'] = $this->meta_model->get_url();
+      $data['title_meta'] = "S'inscrire à la newsletter | Datan";
+      $data['description_meta'] = "Abonnez-vous à la newsletter de Datan. Recevez tous les mois des informations concernant l'Assemblée nationale, l'activité des députés et leurs positions de vote.";
+      $data['title'] = 'Abonnez-vous à la newsletter';
+      // Breadcrumb
+      $data['breadcrumb'] = array(
+        array(
+          "name" => "Datan", "url" => base_url(), "active" => FALSE
+        ),
+        array(
+          "name" => "Newsletter", "url" => base_url()."newsletter", "active" => TRUE
+        )
+      );
+      $data['breadcrumb_json'] = $this->breadcrumb_model->breadcrumb_json($data['breadcrumb']);
+
+      // Load views
+      $this->load->view('templates/header', $data);
+      $this->load->view('newsletter/index', $data);
+      $this->load->view('templates/breadcrumb', $data);
+      $this->load->view('templates/footer', $data);
+    }
+
     public function update(){
       $lists = array(
         array(
