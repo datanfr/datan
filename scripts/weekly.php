@@ -155,11 +155,6 @@ class Script
       $this->insertAll('hatvp', $fields, $array);
     }
 
-    public function hatvpCleaning(){
-
-      // A faire :)
-
-    }
 }
 
 // Specify the legislature
@@ -170,4 +165,3 @@ if (isset($argv[1])) {
 }
 
 $script->hatvpScrapping();
-$script->hatvpCleaning();
