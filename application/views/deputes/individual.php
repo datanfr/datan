@@ -131,6 +131,53 @@
               Comme <?= round($famSocPro['pct']) ?>% des députés, <?= $gender['pronom'] ?> fait partie de la famille professionnelle <?= mb_strtolower($depute['famSocPro']) ?>.
               Pour en savoir plus sur l'origine sociale des parlementaires, <a href="<?= base_url() ?>statistiques">cliquez ici</a>.
             </p>
+            <?php if ($hatvpJobs): ?>
+              <p>
+                Certains députés ne déclarent pas leur dernière activité professionnelle mais un métier exercé il y a plusieurs années. La <span class="url_obf" url_obf="<?= url_obfuscation("https://www.hatvp.fr/") ?>">Haute Autorité pour la transparence de la vie publique</span> publie au contraire les dernier métier des élus.
+                Pour découvrir les dernières activités de <?= $title ?>, <a href="#modalHatvp" data-toggle="modal" data-target="#modalHatvp">cliquez ici</a>.
+              </p>
+              <!-- modalHatvp -->
+              <div class="modal fade modalDatan" id="modalHatvp" tabindex="-1" role="dialog" aria-labelledby="modalHatvpLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <span class="modal-title" id="modalHatvpLabel">Les dernières activités professionnelles de <?= $title ?></span>
+                      <span class="close cursor-pointer" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                      </span>
+                    </div>
+                    <div class="modal-body">
+                      <table class="table table-sm mt-3">
+                        <thead>
+                          <tr>
+                            <th scope="col">Métier</th>
+                            <th scope="col" class="text-center">Organisation</th>
+                            <th scope="col" class="text-center">Début</th>
+                            <th scope="col" class="text-center">Fin</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <?php foreach ($hatvpJobs as $job): ?>
+                            <tr>
+                              <td><?= ucfirst(strtolower($job['value'])) ?></td>
+                              <td class="text-center"><?= ucfirst(strtolower($job['employeur'])) ?></td>
+                              <td class="text-center"><?= $job['dateDebut'] ?></td>
+                              <td class="text-center"><?= $job['dateFin'] ?></td>
+                            </tr>
+                          <?php endforeach; ?>
+                        </tbody>
+                      </table>
+                      <p class="mt-4 source">Ces données viennent de la déclaration de <?= $title ?> à la <span class="url_obf" url_obf="<?= url_obfuscation("https://www.hatvp.fr/") ?>">Haute Autorité pour la transparence de la vie publique</span> (HATVP).</p>
+                      <p class="source">Pour découvrir la déclaration de <?= $title ?>, <span class="url_obf" url_obf="<?= url_obfuscation($depute['hatvp']) ?>">cliquez ici</span>.</p>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+            <?php endif; ?>
           <?php endif; ?>
           <?php if ($depute['mailAn'] !== NULL && $active): ?>
             <div class="d-flex justify-content-center mt-5">
