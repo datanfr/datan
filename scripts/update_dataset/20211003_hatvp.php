@@ -11,7 +11,7 @@
     }
   }
 
-  $bdd->query("CREATE TABLE IF NOT EXISTS `datan`.`hatvp` (
+  $bdd->query("CREATE TABLE IF NOT EXISTS `hatvp` (
     `mpId` VARCHAR(10) NOT NULL ,
     `url` TEXT NOT NULL ,
     `category` VARCHAR(35) NOT NULL ,
