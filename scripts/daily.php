@@ -118,7 +118,7 @@ class Script
     {
         echo "fillDeputes starting \n";
         //Online file
-        $file = 'http://data.assemblee-nationale.fr/static/openData/repository/15/amo/tous_acteurs_mandats_organes_xi_legislature/AMO30_tous_acteurs_tous_mandats_tous_organes_historique.xml.zip';
+        $file = 'https://data.assemblee-nationale.fr/static/openData/repository/15/amo/tous_acteurs_mandats_organes_xi_legislature/AMO30_tous_acteurs_tous_mandats_tous_organes_historique.xml.zip';
         $file = trim($file);
         $newfile = __DIR__ . '/tmp_acteurs_organes.zip';
         if (!copy($file, $newfile)) {
