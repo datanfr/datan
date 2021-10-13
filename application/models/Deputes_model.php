@@ -110,6 +110,26 @@
       return $this->db->query($sql, array($nameUrl, $dpt))->row_array();
     }
 
+    public function get_hatvp_url($mpId){
+      $where = array(
+        "mpId" => $mpId
+      );
+      $this->db->select('hatvp');
+      $result = $this->db->get_where('deputes', $where)->row_array();
+      return $result['hatvp'];
+    }
+
+    public function get_last_hatvp_job($mpId){
+      $where = array(
+        "mpId" => $mpId,
+        "category" => "activProf"
+      );
+      $this->db->select('*, date_format(dateDebut, "%M %Y") AS dateDebut');
+      $this->db->select('date_format(dateFin, "%M %Y") AS dateFin');
+      $this->db->order_by('dateFin', 'DESC');
+      return $this->db->get_where('hatvp', $where)->result_array();
+    }
+
     public function check_depute_legislature($nameUrl, $legislature){
       $where = array(
         "mpId" => $nameUrl,
