@@ -504,7 +504,7 @@ class Script
             $uid = substr($d['uid'], 2);
             $filename = __DIR__ . "/../assets/imgs/deputes_original/depute_" . $uid . ".png";
             $legislature = $d['legislature'];
-            $url = 'http://www2.assemblee-nationale.fr/static/tribun/' . $legislature . '/photos/' . $uid . '.jpg';
+            $url = 'https://www2.assemblee-nationale.fr/static/tribun/' . $legislature . '/photos/' . $uid . '.jpg';
 
             if (!file_exists($filename)) {
                 if (substr(get_headers($url)[12], 9, 3) != '404' && substr(get_headers($url)[0], 9, 3) != '404') {
@@ -1081,7 +1081,7 @@ class Script
         // SCRAPPING DEPENDING ON LEGISLATURE
         if ($this->legislature_to_get == 15) {
 
-            $file = 'http://data.assemblee-nationale.fr/static/openData/repository/15/loi/scrutins/Scrutins_XV.xml.zip';
+            $file = 'https://data.assemblee-nationale.fr/static/openData/repository/15/loi/scrutins/Scrutins_XV.xml.zip';
             $file = trim($file);
             $newfile = __DIR__ . '/tmp_Scrutins_XV.xml.zip';
             if (!copy($file, $newfile)) {
@@ -1304,7 +1304,7 @@ class Script
             }
         } elseif ($this->legislature_to_get == 14) {
 
-            $file = 'http://data.assemblee-nationale.fr/static/openData/repository/14/loi/scrutins/Scrutins_XIV.xml.zip';
+            $file = 'https://data.assemblee-nationale.fr/static/openData/repository/14/loi/scrutins/Scrutins_XIV.xml.zip';
             $file = trim($file);
             $newfile = __DIR__ . '/tmp_Scrutins_XIV.xml.zip';
             if (!copy($file, $newfile)) {
@@ -2283,7 +2283,7 @@ class Script
         $this->bdd->query('DELETE FROM votes_dossiers WHERE legislature = "' . $this->legislature_to_get . '"');
 
         //Until where to go?
-        $until_html = file_get_html("http://www2.assemblee-nationale.fr/scrutins/liste/(legislature)/'.$this->legislature_to_get.'/(type)/TOUS/(idDossier)/TOUS");
+        $until_html = file_get_html("https://www2.assemblee-nationale.fr/scrutins/liste/(legislature)/'.$this->legislature_to_get.'/(type)/TOUS/(idDossier)/TOUS");
         $pagination = $until_html->find('.pagination-bootstrap ul', 0);
         $last = $pagination->find('li', -2)->plaintext;
         $until = ($last - 1) * 100;
@@ -2296,7 +2296,7 @@ class Script
         $voteDossiersFields = array('offset_num', 'legislature', 'voteNumero', 'href', 'dossier');
         $i = 1;
         foreach ($offsets as $offset) {
-            $url = "http://www2.assemblee-nationale.fr/scrutins/liste/(offset)/" . $offset . "/(legislature)/" . $this->legislature_to_get . "/(type)/TOUS/(idDossier)/TOUS";
+            $url = "https://www2.assemblee-nationale.fr/scrutins/liste/(offset)/" . $offset . "/(legislature)/" . $this->legislature_to_get . "/(type)/TOUS/(idDossier)/TOUS";
 
             $html = file_get_html($url);
             foreach ($html->find('tbody tr') as $x) {
@@ -2359,7 +2359,7 @@ class Script
         $dossiers = [];
         if ($this->legislature_to_get == 15) {
             // Online file
-            $file = 'http://data.assemblee-nationale.fr/static/openData/repository/15/loi/dossiers_legislatifs/Dossiers_Legislatifs_XV.xml.zip';
+            $file = 'https://data.assemblee-nationale.fr/static/openData/repository/15/loi/dossiers_legislatifs/Dossiers_Legislatifs_XV.xml.zip';
             $file = trim($file);
             $newfile = __DIR__ . '/tmp_dossiers.zip';
             if (!copy($file, $newfile)) {
