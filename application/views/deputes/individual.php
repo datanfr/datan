@@ -97,7 +97,7 @@
             <?php else : ?>
               <p>
                 À l'Assemblée nationale, <?= $gender['pronom'] ?> siège avec le groupe <a href="<?= base_url() ?>groupes/<?= mb_strtolower($depute['libelleAbrev']) ?>"><?= $depute['libelle'] ?></a> (<?= $depute["libelleAbrev"] ?>), un groupe <b>classé <?= $infos_groupes[$depute['libelleAbrev']]['edited'] ?></b> de l'échiquier politique.
-                <?php if ($isGroupPresident) : ?><?= $title ?> en est le président.<?php endif; ?>
+                <?php if ($isGroupPresident) : ?><?= $title ?> en est <?= $gender['le'] ?> président<?= $gender['e'] ?>.<?php endif; ?>
               </p>
             <?php endif; ?>
           <?php else : ?>
