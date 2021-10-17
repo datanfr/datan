@@ -2446,6 +2446,130 @@ class Script
         $this->insertAll('dossiers', $dossierFields, $dossiers);
     }
 
+    public function dossiersActeurs()
+    {
+        echo "dossiersActeurs starting \n";
+        $this->bdd->query('
+            DELETE FROM dossiersActeurs WHERE legislature = "' . $this->legislature_to_get . '"
+        ');
+
+        $dossierActeursFields = array('id', 'legislature', 'value', 'type', 'ref', 'mandate');
+        $dossierActeur = [];
+        $dossiersActeurs = [];
+        if ($this->legislature_to_get == 15) {
+            // Online file
+            $file = 'https://data.assemblee-nationale.fr/static/openData/repository/15/loi/dossiers_legislatifs/Dossiers_Legislatifs_XV.xml.zip';
+            $file = trim($file);
+            $newfile = __DIR__ . '/tmp_dossiers.zip';
+            if (!copy($file, $newfile)) {
+                echo "failed to copy $file...\n";
+            }
+
+            $zip = new ZipArchive();
+            if ($zip->open($newfile) !== TRUE) {
+                exit("cannot open <$newfile>\n");
+            } else {
+
+                for ($i = 0; $i < $zip->numFiles; $i++) {
+                    $dossierActeur = [];
+                    $dossiersActeurs = [];
+                    $filename = $zip->getNameIndex($i);
+                    //echo 'Filename: ' . $filename . '<br />';
+                    $sub = substr($filename, 0, 13);
+
+                    if ($sub == 'xml/dossierPa') {
+
+                        $xml_string = $zip->getFromName($filename);
+
+                        if ($xml_string != false) {
+
+                            $xml = simplexml_load_string($xml_string);
+
+                            $id = $xml->uid;
+                            $legislature = $xml->legislature;
+
+                            if (!empty($xml->initiateur)) {
+
+
+                              if (!empty($xml->initiateur->acteurs)) {
+                                $type = 'acteur';
+                                foreach ($xml->initiateur->acteurs->acteur as $x) {
+                                  $ref = $x->acteurRef;
+                                  $mandate = $x->mandatRef;
+
+                                  //echo $id . ' - ' . $type . ' - ' . $ref . ' - ' . $mandate . '<br>';
+
+                                  $dossierActeur = array('id' => $id, 'legislature' => $legislature, 'value' => 'initiateur', 'type' => $type, 'ref' => $ref, 'mandate' => $mandate);
+                                  $dossiersActeurs = array_merge($dossiersActeurs, array_values($dossierActeur));
+                                  $this->insertAll('dossiersActeurs', $dossierActeursFields, $dossiersActeurs);
+                                  $dossiersActeurs = array();
+                                }
+                              }
+
+                              if (!empty($xml->initiateur->organes)) {
+                                $type = 'organe';
+                                foreach ($xml->initiateur->organes->organe as $y) {
+                                  $ref = $y->organeRef->uid;
+                                  $mandate = NULL;
+
+                                  //echo $id . ' - ' . $type . ' - ' . $ref . ' - ' . $mandate . '<br>';
+
+                                  $dossierActeur = array('id' => $id, 'legislature' => $legislature, 'value' => 'initiateur', 'type' => $type, 'ref' => $ref, 'mandate' => $mandate);
+                                  $dossiersActeurs = array_merge($dossiersActeurs, array_values($dossierActeur));
+                                  $this->insertAll('dossiersActeurs', $dossierActeursFields, $dossiersActeurs);
+                                  $dossiersActeurs = array();
+                                }
+                              }
+                            }
+                        }
+                      }
+                }
+            }
+        } elseif ($this->legislature_to_get == 14) {
+
+            // A FAIRE ICI !
+
+            // Online file
+            $file = 'https://data.assemblee-nationale.fr/static/openData/repository/14/loi/dossiers_legislatifs/Dossiers_Legislatifs_XIV.xml.zip';
+            $file = trim($file);
+            $newfile = __DIR__ . '/tmp_dossiers_14.zip';
+            if (!copy($file, $newfile)) {
+                echo "failed to copy $file...\n";
+            }
+
+            $zip = new ZipArchive();
+            if ($zip->open($newfile) !== TRUE) {
+                exit("cannot open <$newfile>\n");
+            } else {
+                $xml_string = $zip->getFromName("Dossiers_Legislatifs_XIV.xml");
+                if ($xml_string != false) {
+                    $xml = simplexml_load_string($xml_string);
+
+                    foreach ($xml->xpath("//*[local-name()='dossierParlementaire']") as $dossier) {
+                        $dossierId = $dossier->uid;
+                        $legislature = $dossier->legislature;
+                        $titre = $dossier->titreDossier->titre;
+                        $titreChemin = $dossier->titreDossier->titreChemin;
+                        $senatChemin = $dossier->titreDossier->senatChemin;
+                        $procedureParlementaireCode = $dossier->procedureParlementaire->code;
+                        $procedureParlementaireLibelle = $dossier->procedureParlementaire->libelle;
+
+                        $commissionFond = $dossier->xpath(".//*[text()='AN1-COM-FOND']/parent::*[local-name()='acteLegislatif']/*[local-name()='organeRef']");
+                        if (!empty($commissionFond)) {
+                            $commissionFond = $commissionFond[0];
+                        } else {
+                            $commissionFond = NULL;
+                        }
+
+                        $dossier = array('dossierId' => $dossierId, 'legislature' => $legislature, 'titre' => $titre, 'titreChemin' => $titreChemin, 'senatChemin' => $senatChemin, 'procedureParlementaireCode' => $procedureParlementaireCode, 'procedureParlementaireLibelle' => $procedureParlementaireLibelle, 'commissionFond' => $commissionFond);
+                        $dossiers = array_merge($dossiers, array_values($dossier));
+                    }
+                }
+            }
+        }
+        //$this->insertAll('dossiersActeurs', $dossierActeursFields, $dossiersActeurs);
+    }
+
     public function classParticipationSix()
     {
         echo "classParticipationSix starting \n";
@@ -2800,6 +2924,7 @@ $script->deputeAccord();
 $script->voteParticipation();
 $script->votesDossiers();
 $script->dossier();
+$script->dossiersActeurs();
 $script->voteParticipationCommission();
 $script->classParticipation();
 $script->classParticipationCommission();
