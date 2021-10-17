@@ -44,6 +44,17 @@
               <a class="btn btn-primary my-3" href="../cache/delete_all" role="button">Delete all caching</a>
               <div class="card">
                 <div class="card-body">
+                  <h5 class="card-title">Update database : dossiersActeurs</h5>
+                  <h6 class="card-subtitle text-muted">October 17, 2021</h6>
+                  <p class="card-text">
+                    Add new table (dossiersActeurs)
+                    <a class="btn btn-danger my-3" href="update_dataset/20211017_dossiersActeurs.php" role="button">UPDATE DATABASE</a>
+                  </p>
+                </div>
+              </div>
+              <br>
+              <div class="card">
+                <div class="card-body">
                   <h5 class="card-title">Update database : hatvp</h5>
                   <h6 class="card-subtitle text-muted">October 03, 2021</h6>
                   <p class="card-text">
