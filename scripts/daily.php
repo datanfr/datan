@@ -2453,7 +2453,7 @@ class Script
             DELETE FROM dossiers_acteurs WHERE legislature = "' . $this->legislature_to_get . '"
         ');
 
-        $dossierActeursFields = array('id', 'legislature', 'value', 'type', 'ref', 'mandate');
+        $dossierActeursFields = array('id', 'legislature', 'etape', 'value', 'type', 'ref', 'mandate');
         if ($this->legislature_to_get == 15) {
             // Online file
             $file = 'https://data.assemblee-nationale.fr/static/openData/repository/15/loi/dossiers_legislatifs/Dossiers_Legislatifs_XV.xml.zip';
@@ -2486,8 +2486,9 @@ class Script
                             $id = $xml->uid;
                             $legislature = $xml->legislature;
 
-                            if (!empty($xml->initiateur)) {
+                            // 1 - Get initiateurs : acteurs and organes
 
+                            if (!empty($xml->initiateur)) {
 
                               if (!empty($xml->initiateur->acteurs)) {
                                 $type = 'acteur';
@@ -2497,7 +2498,7 @@ class Script
 
                                   //echo $id . ' - ' . $type . ' - ' . $ref . ' - ' . $mandate . '<br>';
 
-                                  $dossierActeur = array('id' => $id, 'legislature' => $legislature, 'value' => 'initiateur', 'type' => $type, 'ref' => $ref, 'mandate' => $mandate);
+                                  $dossierActeur = array('id' => $id, 'legislature' => $legislature, 'etape' => NULL, 'value' => 'initiateur', 'type' => $type, 'ref' => $ref, 'mandate' => $mandate);
                                   $dossiersActeurs = array_merge($dossiersActeurs, array_values($dossierActeur));
                                   $this->insertAll('dossiers_acteurs', $dossierActeursFields, $dossiersActeurs);
                                   $dossiersActeurs = array();
@@ -2512,15 +2513,37 @@ class Script
 
                                   //echo $id . ' - ' . $type . ' - ' . $ref . ' - ' . $mandate . '<br>';
 
-                                  $dossierActeur = array('id' => $id, 'legislature' => $legislature, 'value' => 'initiateur', 'type' => $type, 'ref' => $ref, 'mandate' => $mandate);
+                                  $dossierActeur = array('id' => $id, 'legislature' => $legislature, 'etape' => NULL, 'value' => 'initiateur', 'type' => $type, 'ref' => $ref, 'mandate' => $mandate);
                                   $dossiersActeurs = array_merge($dossiersActeurs, array_values($dossierActeur));
                                   $this->insertAll('dossiers_acteurs', $dossierActeursFields, $dossiersActeurs);
                                   $dossiersActeurs = array();
                                 }
                               }
                             }
+
+                            // 2 - Get rapporteurs
+
+                            if (!empty($xml->actesLegislatifs)) {
+                              foreach ($xml->actesLegislatifs->acteLegislatif as $acte) {
+                                $etape = $acte->codeActe;
+
+                                foreach ($acte->xpath(".//*[local-name()='rapporteur']") as $rapporteur) {
+                                  $ref = $rapporteur->acteurRef;
+                                  $type = $rapporteur->typeRapporteur;
+                                  $mandate = NULL;
+
+                                  //echo $etape . ' - ' . $ref . ' - ' . $type . '<br><br>';
+
+                                  $dossierActeur = array('id' => $id, 'legislature' => $legislature, 'etape' => $etape, 'value' => 'rapporteur', 'type' => $type, 'ref' => $ref, 'mandate' => $mandate);
+                                  $dossiersActeurs = array_merge($dossiersActeurs, array_values($dossierActeur));
+                                  $this->insertAll('dossiers_acteurs', $dossierActeursFields, $dossiersActeurs);
+                                  $dossiersActeurs = array();
+
+                                }
+                              }
+                            }
                         }
-                      }
+                    }
                 }
             }
         } elseif ($this->legislature_to_get == 14) {
@@ -2546,7 +2569,11 @@ class Script
                     foreach ($xml->xpath("//*[local-name()='dossierParlementaire']") as $dossier) {
                         $id = $dossier->uid;
                         $legislature = $dossier->legislature;
+
+                        // 1 - Get initiateurs : acteurs and organes
+
                         if (!empty($dossier->initiateur)) {
+
                           // Acteurs
                           if (!empty($dossier->initiateur->acteurs)) {
                             $type = 'acteur';
@@ -2579,8 +2606,10 @@ class Script
                             }
                           }
                         }
-                    }
 
+                        // 2 - Get rapporteurs
+                        // A FAIRE ICI !
+                    }
                 }
             }
         }
