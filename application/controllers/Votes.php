@@ -461,12 +461,12 @@
         $title_ogp = "Vote Assemblée nationale : " . $data['vote']['title'] . " | Datan";
         $title_og_img = str_replace(' ', '%20', $data['vote']['title']);
         $date_og_img = str_replace(' ', '%20', $data['vote']['date_edited']);
-        $data['vote']['og_image'] = 'https://og-image-datan.vercel.app/'.$title_og_img.'?voteN='.$data['vote']['voteNumero'].'&legislature='.$data['vote']['legislature'].'&date='.$date_og_img.'&pour='.$data['vote']['pour'].'&abs='.$data['vote']['abstention'].'&sort='.$data['vote']['sortCode'];
+        $data['vote']['og_image'] = 'https://og-image-datan.vercel.app/'.$title_og_img.'?voteN='.$data['vote']['voteNumero'].'&legislature='.$data['vote']['legislature'].'&date='.$date_og_img.'&pour='.$data['vote']['pour'].'&abs='.$data['vote']['abstention'].'&contre='.$data['vote']['contre'].'&sort='.$data['vote']['sortCode'];
       } elseif($data['vote']['voteType'] == "final") {
         $title_ogp = "Assemblée nationale : " . $data['vote']['dossier_titre'] . " - Vote final";
         $title_og_img = str_replace(' ', '%20', ucfirst($data['vote']['titre']));
         $date_og_img = str_replace(' ', '%20', $data['vote']['date_edited']);
-        $data['vote']['og_image'] = 'https://og-image-datan.vercel.app/'.$title_og_img.'?voteN='.$data['vote']['voteNumero'].'&legislature='.$data['vote']['legislature'].'&date='.$date_og_img.'&pour='.$data['vote']['pour'].'&abs='.$data['vote']['abstention'].'&sort='.$data['vote']['sortCode'];
+        $data['vote']['og_image'] = 'https://og-image-datan.vercel.app/'.$title_og_img.'?voteN='.$data['vote']['voteNumero'].'&legislature='.$data['vote']['legislature'].'&date='.$date_og_img.'&pour='.$data['vote']['pour'].'&abs='.$data['vote']['abstention'].'&contre='.$data['vote']['contre'].'&sort='.$data['vote']['sortCode'];
       } else {
         $title_ogp = $data['title_meta'];
       }
