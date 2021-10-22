@@ -2632,6 +2632,69 @@ class Script
         }
     }
 
+    public function amendements()
+    {
+        echo "amendements starting \n";
+
+        $fields = array('id', 'dossier', 'legislature', 'texteLegislatifRef', 'texteLegislatifNum', 'num', 'numordre', 'seanceRef', 'expose');
+        $newfile = __DIR__ . '/tmp_amendements.zip';
+        $zip = new ZipArchive();
+        $insert = [];
+
+        if ($zip->open($newfile) !== TRUE) {
+            exit("cannot open <$newfile>\n");
+        } else {
+            for ($i = 0; $i < $zip->numFiles; $i++) {
+                $filename = $zip->getNameIndex($i);
+
+                if (strpos($filename, "BTC") !== false) {
+                  $xml_string = $zip->getFromName($filename);
+
+                  if ($xml_string != false) {
+                    //echo 'Filename: ' . $filename . '<br>';
+                    $xml = simplexml_load_string($xml_string);
+
+                    $split = preg_split("#/#", $filename);
+                    $dossier = $split[1];
+
+                    $id = $xml->uid;
+                    $legislature = $xml->legislature;
+                    $texteLegislatifRef = $xml->texteLegislatifRef;
+                    $num = $xml->identification->numeroLong;
+                    $numOrdre = $xml->identification->numeroOrdreDepot;
+                    $seanceRef = $xml->seanceDiscussionRef;
+                    $expose = $xml->corps->contenuAuteur->exposeSommaire;
+
+                    $texteLegislatifNum = "not working";
+
+                    if (strpos($texteLegislatifRef, "PRJLANR5L15BTC") !== false) {
+                      $texteLegislatifNum = str_replace("PRJLANR5L15BTC", "", $texteLegislatifRef);
+                    } elseif (strpos($texteLegislatifRef, "PIONANR5L15BTC") !== false) {
+                      $texteLegislatifNum = str_replace("PIONANR5L15BTC", "", $texteLegislatifRef);
+                    } elseif (strpos($texteLegislatifRef, "PNREANR5L15BTC") !== false) {
+                      $texteLegislatifNum = str_replace("PNREANR5L15BTC", "", $texteLegislatifRef);
+                    }
+
+                    //echo $id . ' - ' . $dossier . ' - ' . $legislature . ' - ' . $texteLegislatifRef . ' - ' . $texteLegislatifNum . ' - ' . $num . ' - ' . $numOrdre . ' - ' . $seanceRef;
+                    //echo ' - ' . $expose;
+                    //echo '<br><br>';
+
+                    $amdt = array('id' => $id, 'dossier' => $dossier,  'legislature' => $legislature, 'texteLegislatifRef' => $texteLegislatifRef, 'texteLegislatifNum' => $texteLegislatifNum, 'nume' => $num, 'numOrdre' => $numOrdre, 'seanceRef' => $seanceRef, 'expose' => $expose);
+                    $insert = array_merge($insert, array_values($amdt));
+                    if (($i + 1) % 1000 === 0) {
+                        echo "Let's insert until " . $i . "\n";
+                        // insert deputes
+                        $this->insertAll('amendements', $fields, $insert);
+                        $insert = [];
+                    }
+                  }
+                }
+            }
+        }
+        echo "Let's insert until the end : " . $i . "\n";
+        $this->insertAll('amendements', $fields, $insert);
+    }
+
     public function classParticipationSix()
     {
         echo "classParticipationSix starting \n";
@@ -2987,6 +3050,7 @@ $script->voteParticipation();
 $script->votesDossiers();
 $script->dossier();
 $script->dossiersActeurs();
+$script->amendements();
 $script->voteParticipationCommission();
 $script->classParticipation();
 $script->classParticipationCommission();
