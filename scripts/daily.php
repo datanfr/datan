@@ -1064,6 +1064,7 @@ class Script
 
     public function vote()
     {
+        // THIS FUNCTION UPDATE THE FOLLOWING TABLES --> votes ; votes_info ; votes_groupes
         echo "vote starting \n";
         echo "starting vote\n";
         $response_vote = $this->bdd->query('
