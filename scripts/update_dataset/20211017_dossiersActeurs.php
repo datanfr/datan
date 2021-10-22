@@ -34,3 +34,17 @@
     INDEX idx_numOrdre (numOrdre),
     INDEX idx_seanceRef (seanceRef)
   ) ENGINE = MyISAM;");
+
+  // Create table amendements_auteurs
+  $bdd->query('DROP TABLE IF EXISTS `amendements_auteurs`');
+  $bdd->query("CREATE TABLE `amendements_acteurs` (
+    `id` VARCHAR(55) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL ,
+    `type` VARCHAR(15) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL ,
+    `acteurRef` VARCHAR(15) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL ,
+    `groupePolitiqueRef` VARCHAR(15) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL ,
+    `auteurRapporteurOrganeRef` VARCHAR(15) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL ,
+    `dateMaj` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (`id`),
+    INDEX idx_acteurRef (acteurRef),
+    INDEX idx_groupePolitiqueRef (groupePolitiqueRef)
+  ) ENGINE = MyISAM;");
