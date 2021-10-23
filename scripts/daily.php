@@ -2695,6 +2695,61 @@ class Script
         $this->insertAll('amendements', $fields, $insert);
     }
 
+    public function amendementsAuteurs()
+    {
+        echo "amendementsAuteurs starting \n";
+
+        $fields = array('id', 'type', 'acteurRef', 'groupeId', 'auteurOrgane');
+        $newfile = __DIR__ . '/tmp_amendements.zip';
+        $zip = new ZipArchive();
+        $insertAll = [];
+
+        if ($zip->open($newfile) !== TRUE) {
+            exit("cannot open <$newfile>\n");
+        } else {
+            for ($i = 0; $i < $zip->numFiles; $i++) {
+                $filename = $zip->getNameIndex($i);
+
+                if (strpos($filename, "BTC") !== false) {
+                  $xml_string = $zip->getFromName($filename);
+
+                  if ($xml_string != false) {
+                    //echo 'Filename: ' . $filename . '<br>';
+                    $xml = simplexml_load_string($xml_string);
+
+                    $id = $xml->uid;
+                    $type = $xml->signataires->auteur->typeAuteur;
+                    if (in_array($type, array("Député", "Rapporteur"))) {
+                      $acteurRef = $xml->signataires->auteur->acteurRef;
+                    } elseif ($type == "Gouvernement") {
+                      $acteurRef = $xml->signataires->auteur->gouvernementRef;
+                    }
+                    $groupeId = $xml->signataires->auteur->groupePolitiqueRef;
+                    $auteurOrgane = $xml->signataires->auteur->auteurRapporteurOrganeRef;
+
+                    // Insert NULL values
+                    $groupeId = $groupeId == "" ? NULL : $groupeId;
+                    $auteurOrgane = $auteurOrgane == "" ? NULL : $auteurOrgane;
+
+                    echo $x . ' - ' . $id . ' - ' . $type . ' - ' . $acteurRef . ' - ' . $groupeId . ' - ' . $auteurOrgane;
+                    echo '<br><br>';
+
+                    $insertAuteur = array('id' => $id, 'type' => $type,  'acteurRef' => $acteurRef, 'groupeId' => $groupeId, 'auteurOrgane' => $auteurOrgane);
+                    $insertAll = array_merge($insertAll, array_values($insertAuteur));
+                    if (($i + 1) % 1000 === 0) {
+                        echo "Let's insert until " . $i . "\n";
+                        // insert deputes
+                        $this->insertAll('amendements_auteurs', $fields, $insertAll);
+                        $insertAll = [];
+                    }
+                  }
+                }
+            }
+        }
+        echo "Let's insert until the end : " . $i . "\n";
+        $this->insertAll('amendements_auteursc', $fields, $insertAll);
+    }
+
     public function classParticipationSix()
     {
         echo "classParticipationSix starting \n";
@@ -3051,6 +3106,7 @@ $script->votesDossiers();
 $script->dossier();
 $script->dossiersActeurs();
 $script->amendements();
+$script->amendementsAuteurs();
 $script->voteParticipationCommission();
 $script->classParticipation();
 $script->classParticipationCommission();
