@@ -37,7 +37,7 @@
 
   // Create table amendements_auteurs
   $bdd->query('DROP TABLE IF EXISTS `amendements_auteurs`');
-  $bdd->query("CREATE TABLE `amendements_acteurs` (
+  $bdd->query("CREATE TABLE `amendements_auteurs` (
     `id` VARCHAR(55) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL ,
     `type` VARCHAR(15) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL ,
     `acteurRef` VARCHAR(15) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL ,
