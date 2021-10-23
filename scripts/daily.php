@@ -2675,6 +2675,10 @@ class Script
                       $texteLegislatifNum = str_replace("PNREANR5L15BTC", "", $texteLegislatifRef);
                     }
 
+                    // Insert NULL values
+                    $seanceRef = $seanceRef == "" ? NULL : $seanceRef;
+                    $expose = $expose == "" ? NULL : $expose;
+
                     //echo $id . ' - ' . $dossier . ' - ' . $legislature . ' - ' . $texteLegislatifRef . ' - ' . $texteLegislatifNum . ' - ' . $num . ' - ' . $numOrdre . ' - ' . $seanceRef;
                     //echo ' - ' . $expose;
                     //echo '<br><br>';
@@ -2731,8 +2735,8 @@ class Script
                     $groupeId = $groupeId == "" ? NULL : $groupeId;
                     $auteurOrgane = $auteurOrgane == "" ? NULL : $auteurOrgane;
 
-                    echo $x . ' - ' . $id . ' - ' . $type . ' - ' . $acteurRef . ' - ' . $groupeId . ' - ' . $auteurOrgane;
-                    echo '<br><br>';
+                    //echo $id . ' - ' . $type . ' - ' . $acteurRef . ' - ' . $groupeId . ' - ' . $auteurOrgane;
+                    //echo '<br><br>';
 
                     $insertAuteur = array('id' => $id, 'type' => $type,  'acteurRef' => $acteurRef, 'groupeId' => $groupeId, 'auteurOrgane' => $auteurOrgane);
                     $insertAll = array_merge($insertAll, array_values($insertAuteur));
@@ -2747,7 +2751,7 @@ class Script
             }
         }
         echo "Let's insert until the end : " . $i . "\n";
-        $this->insertAll('amendements_auteursc', $fields, $insertAll);
+        $this->insertAll('amendements_auteurs', $fields, $insertAll);
     }
 
     public function classParticipationSix()
