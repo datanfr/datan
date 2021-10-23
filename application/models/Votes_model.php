@@ -583,13 +583,7 @@
       return $this->db->get_where('amendements', $where)->row_array();
     }
 
-    public function get_amendement_author($id, $legislature){
-      $sql = 'SELECT a.*, da.*,
-          CONCAT(da.departementNom, " (", da.departementCode, ")") AS cardCenter
-        FROM amendements_auteurs a
-        LEFT JOIN deputes_all da ON a.acteurRef = da.mpId
-        WHERE a.id = ? and da.legislature = ?
-        LIMIT 1';
-      return $this->db->query($sql, array($id, $legislature))->row_array();
+    public function get_amendement_author($id){
+      return $this->db->get_where('amendements_auteurs', array('id' => $id))->row_array();
     }
   }
