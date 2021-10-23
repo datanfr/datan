@@ -46,5 +46,5 @@
     `dateMaj` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (`id`),
     INDEX idx_acteurRef (acteurRef),
-    INDEX idx_groupePolitiqueRef (groupePolitiqueRef)
+    INDEX idx_groupeId (groupeId)
   ) ENGINE = MyISAM;");
