@@ -112,6 +112,16 @@
               </div>
             </div>
           <?php endif; ?>
+          <?php if (!empty($auteur)): ?>
+            <div class="row bloc-auteur mt-5">
+              <div class="col-12 test-border">
+                <h2>L'auteur de l'amendement</h2>
+                <div class="d-flex justify-content-center">
+                  <?php $this->load->view('deputes/partials/card_home.php', array('depute' => $auteur, 'tag' => 'h3', 'cat' => false)) ?>
+                </div>
+              </div>
+            </div>
+          <?php endif; ?>
         </div>
         <div class="col-lg-3 col-md-4 col-10 offset-lg-1 offset-md-0 offset-1 bloc-results">
           <div class="sticky-top">

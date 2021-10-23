@@ -390,6 +390,15 @@
           $data['vote']['logo'] = TRUE;
         }
       }
+
+      // Info about the author --> WORKING ICI ! 
+      //print_r($data['vote']);
+      if ($data['vote']['voteType'] == 'amendement') {
+        $data['amdt'] = $this->votes_model->get_amendement($legislature, $data['vote']['dossierId'], $data['vote']['seanceRef'], $data['vote']['amdt']);
+        $data['auteur'] = $this->votes_model->get_amendement_author($data['amdt']['id'], $legislature);
+        //print_r($data['auteur']);
+      }
+
       // Votes - groupes
       $data['groupes'] = $this->votes_model->get_vote_groupes($data['vote']['voteNumero'], $data['vote']['dateScrutin'], $legislature);
 
