@@ -578,7 +578,6 @@
         'seanceRef' => $seanceRef,
         'numOrdre' => $num
       );
-      print_r($where);
       $this->db->select('id');
       $this->db->limit(1);
       return $this->db->get_where('amendements', $where)->row_array();
@@ -602,4 +601,14 @@
     public function get_amendement_author($id){
       return $this->db->get_where('amendements_auteurs', array('id' => $id))->row_array();
     }
+
+    public function get_dossier_author($id){
+      $where = array(
+        'id' => $id,
+        'value' => 'initiateur'
+      );
+      return $this->db->get_where('dossiers_acteurs', $where, 1)->row_array();
+
+    }
+
   }

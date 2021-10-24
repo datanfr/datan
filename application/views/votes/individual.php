@@ -115,14 +115,14 @@
           <?php if (!empty($author)): ?>
             <div class="row bloc-auteur mt-5">
               <div class="col-12 test-border">
-                <h2 class="text-center">L'auteur de l'amendement</h2>
-                <?php if (in_array($amdt['author']['type'], array('Député', 'Rapporteur'))): ?>
+                <h2 class="text-center"><?= $authorTitle ?></h2>
+                <?php if ($authorType == "mp"): ?>
                   <p>Député</p>
                   <div class="d-flex justify-content-center">
                     <?php $this->load->view('deputes/partials/card_home.php', array('depute' => $author, 'tag' => 'h3', 'cat' => false)) ?>
                   </div>
                 <?php endif; ?>
-                <?php if ($amdt['author']['type'] == 'Gouvernement'): ?>
+                <?php if ($authorType == "gvt"): ?>
                   <p>Gouvernement</p>
                   <div class="d-flex justify-content-center">
                     <?php print_r($author) ?>
