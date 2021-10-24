@@ -394,20 +394,17 @@
       }
 
       // Info about the author --> WORKING ICI !
-      //print_r($data['vote']);
-      if ($data['vote']['voteType'] == 'amendement') {
-        $data['amdt'] = $this->votes_model->get_amendement($legislature, $data['vote']['dossierId'], $data['vote']['seanceRef'], $data['vote']['amdt']);
-        //print_r($data['amdt']);
-        $data['amdt']['author'] = $this->votes_model->get_amendement_author($data['amdt']['id']);
-        if (in_array($data['amdt']['author']['type'], array('Député', 'Rapporteur'))) {
-          $data['author'] = $this->deputes_model->get_depute_by_legislature($data['amdt']['author']['acteurRef'], $legislature);
-          $data['author']['cardCenter'] = $data['author']['departementNom'] . ' (' . $data['author']['departementCode'] . ')';
-        } elseif ($data['amdt']['author']['type'] == 'Gouvernement') {
-          $data['author'] = $this->organes_model->get_organe($data['amdt']['author']['acteurRef']);
+      if ($data['vote']['dossier']) {
+        if ($data['vote']['voteType'] == 'amendement') {
+          $data['amdt'] = $this->votes_model->get_amendement($legislature, $data['vote']['dossierId'], $data['vote']['seanceRef'], $data['vote']['amdt']);
+          $data['amdt']['author'] = $this->votes_model->get_amendement_author($data['amdt']['id']);
+          if (in_array($data['amdt']['author']['type'], array('Député', 'Rapporteur'))) {
+            $data['author'] = $this->deputes_model->get_depute_by_legislature($data['amdt']['author']['acteurRef'], $legislature);
+            $data['author']['cardCenter'] = $data['author']['departementNom'] . ' (' . $data['author']['departementCode'] . ')';
+          } elseif ($data['amdt']['author']['type'] == 'Gouvernement') {
+            $data['author'] = $this->organes_model->get_organe($data['amdt']['author']['acteurRef']);
+          }
         }
-
-
-        //print_r($data['auteur']);
       }
 
       // Votes - groupes
