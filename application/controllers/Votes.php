@@ -147,7 +147,6 @@
       if (empty($data['votes'])) {
         show_404();
       }
-      //print_r($data['votes']);
 
       // Meta
       $data['url'] = $this->meta_model->get_url();
@@ -394,19 +393,44 @@
       }
 
       // Info about the author --> WORKING ICI !
-      if ($data['vote']['dossier']) {
-        if ($data['vote']['voteType'] == 'amendement') {
+      if ($data['vote']['dossier'] && $legislature >= 15) {
+        if ($data['vote']['voteType'] == 'amendement') { // If the vote is an amendment
           $data['amdt'] = $this->votes_model->get_amendement($legislature, $data['vote']['dossierId'], $data['vote']['seanceRef'], $data['vote']['amdt']);
-          if (!$data['amdt']) {
-            $newDossierId = $this->votes_model->get_another_dossierId($data['vote']['dossier'], $data['vote']['dossierId']);
-            $data['amdt'] = $this->votes_model->get_amendement($legislature, $newDossierId, $data['vote']['seanceRef'], $data['vote']['amdt']);
-          }
-          $data['amdt']['author'] = $this->votes_model->get_amendement_author($data['amdt']['id']);
-          if (in_array($data['amdt']['author']['type'], array('Député', 'Rapporteur'))) {
-            $data['author'] = $this->deputes_model->get_depute_by_legislature($data['amdt']['author']['acteurRef'], $legislature);
-            $data['author']['cardCenter'] = $data['author']['departementNom'] . ' (' . $data['author']['departementCode'] . ')';
-          } elseif ($data['amdt']['author']['type'] == 'Gouvernement') {
-            $data['author'] = $this->organes_model->get_organe($data['amdt']['author']['acteurRef']);
+          if ($data['amdt']) { // If amendment is working properly :)
+            $data['amdt']['author'] = $this->votes_model->get_amendement_author($data['amdt']['id']);
+            if (in_array($data['amdt']['author']['type'], array('Député', 'Rapporteur'))) {
+              $data['author'] = $this->deputes_model->get_depute_by_legislature($data['amdt']['author']['acteurRef'], $legislature);
+              $data['author']['cardCenter'] = $data['author']['departementNom'] . ' (' . $data['author']['departementCode'] . ')';
+            } elseif ($data['amdt']['author']['type'] == 'Gouvernement') {
+              $data['author'] = $this->organes_model->get_organe($data['amdt']['author']['acteurRef']);
+            }
+          } else {
+            $newDossierIds = $this->votes_model->get_another_dossierId($data['vote']['dossier']);
+            foreach ($newDossierIds as $newDossierId) {
+              $newSeances = $this->votes_model->get_amendement_all_seanceRef($legislature, $newDossierId['dossierId'], $data['vote']['amdt']);
+              foreach ($newSeances as $newSeance) {
+                $data['amdt']['author'] = $this->votes_model->get_amendement_author($newSeance['id']);
+                if (in_array($data['amdt']['author']['type'], array('Député', 'Rapporteur'))) {
+                  $author = $this->deputes_model->get_depute_by_legislature($data['amdt']['author']['acteurRef'], $legislature);
+                  if (strpos($data['vote']['titre'], $author['nameLast']) !== false) {
+                    $data['author'] = $author;
+                    $data['author']['cardCenter'] = $data['author']['departementNom'] . ' (' . $data['author']['departementCode'] . ')';
+                    break 2;
+                  }
+                  if ($data['amdt']['author']['type'] == 'Rapporteur' || strpos($data['vote']['titre'], 'commission') !== false) {
+                    $data['author'] = $author;
+                    $data['author']['cardCenter'] = $data['author']['departementNom'] . ' (' . $data['author']['departementCode'] . ')';
+                    break 2;
+                  }
+                } elseif ($data['amdt']['author']['type'] == 'Gouvernement') {
+                  $author = $this->organes_model->get_organe($data['amdt']['author']['acteurRef']);
+                  if (strpos($data['vote']['titre'], 'Gouvernement') !== false) {
+                    $data['author'] = $author;
+                    break 2;
+                  }
+                }
+              }
+            }
           }
         }
       }
