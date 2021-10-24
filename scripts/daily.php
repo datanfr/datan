@@ -1569,6 +1569,8 @@ class Script
             //variable amdt_n
             if ($type_vote == "amendement") {
                 $amdt_n = strstr($titre, 'n°');
+                $amdt_n = str_replace("2e rect", "", $amdt_n);
+                $amdt_n = str_replace("2ème rect", "", $amdt_n);
                 $amdt_n = substr($amdt_n, 0, 15);
                 $amdt_n = preg_replace("/[^0-9]/", "", $amdt_n);
 
