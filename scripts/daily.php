@@ -2661,36 +2661,32 @@ class Script
                   //echo 'Filename: ' . $filename . '<br>';
                   $xml = simplexml_load_string($xml_string);
 
+                  $split = preg_split("#/#", $filename);
+                  $dossier = $split[1];
+
+                  $id = $xml->uid;
+                  $legislature = $xml->legislature;
+                  $texteLegislatifRef = $xml->texteLegislatifRef;
+                  $num = $xml->identification->numeroLong;
+                  $numOrdre = $xml->identification->numeroOrdreDepot;
                   $seanceRef = $xml->seanceDiscussionRef;
+                  $expose = $xml->corps->contenuAuteur->exposeSommaire;
 
-                  if ($seanceRef != "") {
-                    $split = preg_split("#/#", $filename);
-                    $dossier = $split[1];
+                  // Insert NULL values
+                  $seanceRef = $seanceRef == "" ? NULL : $seanceRef;
+                  $expose = $expose == "" ? NULL : $expose;
 
-                    $id = $xml->uid;
-                    $legislature = $xml->legislature;
-                    $texteLegislatifRef = $xml->texteLegislatifRef;
-                    $num = $xml->identification->numeroLong;
-                    $numOrdre = $xml->identification->numeroOrdreDepot;
-                    $seanceRef = $xml->seanceDiscussionRef;
-                    $expose = $xml->corps->contenuAuteur->exposeSommaire;
+                  //echo $id . ' - ' . $dossier . ' - ' . $legislature . ' - ' . $texteLegislatifRef . ' - ' . $num . ' - ' . $numOrdre . ' - ' . $seanceRef;
+                  //echo ' - ' . $expose;
+                  //echo '<br><br>';
 
-                    // Insert NULL values
-                    $seanceRef = $seanceRef == "" ? NULL : $seanceRef;
-                    $expose = $expose == "" ? NULL : $expose;
-
-                    //echo $id . ' - ' . $dossier . ' - ' . $legislature . ' - ' . $texteLegislatifRef . ' - ' . $num . ' - ' . $numOrdre . ' - ' . $seanceRef;
-                    //echo ' - ' . $expose;
-                    //echo '<br><br>';
-
-                    $amdt = array('id' => $id, 'dossier' => $dossier,  'legislature' => $legislature, 'texteLegislatifRef' => $texteLegislatifRef, 'num' => $num, 'numOrdre' => $numOrdre, 'seanceRef' => $seanceRef, 'expose' => $expose);
-                    $insert = array_merge($insert, array_values($amdt));
-                    if (($i + 1) % 1000 === 0) {
-                        echo "Let's insert until " . $i . "\n";
-                        // insert deputes
-                        $this->insertAll('amendements', $fields, $insert);
-                        $insert = [];
-                    }
+                  $amdt = array('id' => $id, 'dossier' => $dossier,  'legislature' => $legislature, 'texteLegislatifRef' => $texteLegislatifRef, 'num' => $num, 'numOrdre' => $numOrdre, 'seanceRef' => $seanceRef, 'expose' => $expose);
+                  $insert = array_merge($insert, array_values($amdt));
+                  if (($i + 1) % 1000 === 0) {
+                      echo "Let's insert until " . $i . "\n";
+                      // insert deputes
+                      $this->insertAll('amendements', $fields, $insert);
+                      $insert = [];
                   }
                 }
             }
@@ -2720,34 +2716,30 @@ class Script
                   //echo 'Filename: ' . $filename . '<br>';
                   $xml = simplexml_load_string($xml_string);
 
-                  $seanceRef = $xml->seanceDiscussionRef;
+                  $id = $xml->uid;
+                  $type = $xml->signataires->auteur->typeAuteur;
+                  if (in_array($type, array("Député", "Rapporteur"))) {
+                    $acteurRef = $xml->signataires->auteur->acteurRef;
+                  } elseif ($type == "Gouvernement") {
+                    $acteurRef = $xml->signataires->auteur->gouvernementRef;
+                  }
+                  $groupeId = $xml->signataires->auteur->groupePolitiqueRef;
+                  $auteurOrgane = $xml->signataires->auteur->auteurRapporteurOrganeRef;
 
-                  if ($seanceRef != "") {
-                    $id = $xml->uid;
-                    $type = $xml->signataires->auteur->typeAuteur;
-                    if (in_array($type, array("Député", "Rapporteur"))) {
-                      $acteurRef = $xml->signataires->auteur->acteurRef;
-                    } elseif ($type == "Gouvernement") {
-                      $acteurRef = $xml->signataires->auteur->gouvernementRef;
-                    }
-                    $groupeId = $xml->signataires->auteur->groupePolitiqueRef;
-                    $auteurOrgane = $xml->signataires->auteur->auteurRapporteurOrganeRef;
+                  // Insert NULL values
+                  $groupeId = $groupeId == "" ? NULL : $groupeId;
+                  $auteurOrgane = $auteurOrgane == "" ? NULL : $auteurOrgane;
 
-                    // Insert NULL values
-                    $groupeId = $groupeId == "" ? NULL : $groupeId;
-                    $auteurOrgane = $auteurOrgane == "" ? NULL : $auteurOrgane;
+                  //echo $id . ' - ' . $type . ' - ' . $acteurRef . ' - ' . $groupeId . ' - ' . $auteurOrgane;
+                  //echo '<br><br>';
 
-                    //echo $id . ' - ' . $type . ' - ' . $acteurRef . ' - ' . $groupeId . ' - ' . $auteurOrgane;
-                    //echo '<br><br>';
-
-                    $insertAuteur = array('id' => $id, 'type' => $type,  'acteurRef' => $acteurRef, 'groupeId' => $groupeId, 'auteurOrgane' => $auteurOrgane);
-                    $insertAll = array_merge($insertAll, array_values($insertAuteur));
-                    if (($i + 1) % 1000 === 0) {
-                        echo "Let's insert until " . $i . "\n";
-                        // insert deputes
-                        $this->insertAll('amendements_auteurs', $fields, $insertAll);
-                        $insertAll = [];
-                    }
+                  $insertAuteur = array('id' => $id, 'type' => $type,  'acteurRef' => $acteurRef, 'groupeId' => $groupeId, 'auteurOrgane' => $auteurOrgane);
+                  $insertAll = array_merge($insertAll, array_values($insertAuteur));
+                  if (($i + 1) % 1000 === 0) {
+                      echo "Let's insert until " . $i . "\n";
+                      // insert deputes
+                      $this->insertAll('amendements_auteurs', $fields, $insertAll);
+                      $insertAll = [];
                   }
                 }
             }
