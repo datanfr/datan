@@ -1523,6 +1523,11 @@ class Script
             $num = $data["voteNumero"];
             $titre = $data["titre"];
 
+            // Change titre if n? instead of n°
+            if (strpos($titre, 'n?')) {
+              $titre = str_replace('n?', 'n°', $titre);
+            }
+
             //variable type_vote
             if (strpos($titre, "ensemble d")) {
                 $type_vote = "final";
@@ -1566,6 +1571,7 @@ class Script
                 $amdt_n = strstr($titre, 'n°');
                 $amdt_n = substr($amdt_n, 0, 15);
                 $amdt_n = preg_replace("/[^0-9]/", "", $amdt_n);
+
             } else {
                 $amdt_n = NULL;
             }
@@ -1665,7 +1671,8 @@ class Script
                     amdt = '$amdt_n',
                     article = '$article_n',
                     bister = '$bister',
-                    posArticle = '$pos_article'
+                    posArticle = '$pos_article',
+                    titre = '" . addslashes($titre) . "'
                 WHERE voteNumero = $num AND legislature = $this->legislature_to_get");
                 $stmt = $this->bdd->prepare($sql);
                 $stmt->execute();
