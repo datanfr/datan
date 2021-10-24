@@ -578,19 +578,28 @@
         'seanceRef' => $seanceRef,
         'numOrdre' => $num
       );
+      print_r($where);
       $this->db->select('id');
       $this->db->limit(1);
       return $this->db->get_where('amendements', $where)->row_array();
     }
 
-    public function get_amendement_author($id){
-      return $this->db->get_where('amendements_auteurs', array('id' => $id))->row_array();
+    public function get_amendement_all_seanceRef($legislature, $dossier, $num){
+      $where = array(
+        'legislature' => $legislature,
+        'dossier' => $dossier,
+        'numOrdre' => $num
+      );
+      $this->db->select('id');
+      return $this->db->get_where('amendements', $where)->result_array();
     }
 
-    public function get_another_dossierId($chemin, $dossierId){
+    public function get_another_dossierId($chemin){
       $this->db->where('titreChemin', $chemin);
-      $this->db->where('dossierId != "'.$dossierId.'"');
-      $result = $this->db->get('dossiers')->row_array();
-      return $result['dossierId'];
+      return $this->db->get('dossiers')->result_array();
+    }
+
+    public function get_amendement_author($id){
+      return $this->db->get_where('amendements_auteurs', array('id' => $id))->row_array();
     }
   }
