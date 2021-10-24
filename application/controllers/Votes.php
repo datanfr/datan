@@ -398,7 +398,7 @@
         if ($data['vote']['voteType'] == 'amendement') {
           $data['amdt'] = $this->votes_model->get_amendement($legislature, $data['vote']['dossierId'], $data['vote']['seanceRef'], $data['vote']['amdt']);
           if (!$data['amdt']) {
-            $newDossierId = $this->votes_model->get_another_dossierId($data['vote']['dossier'], $legislature);
+            $newDossierId = $this->votes_model->get_another_dossierId($data['vote']['dossier'], $data['vote']['dossierId']);
             $data['amdt'] = $this->votes_model->get_amendement($legislature, $newDossierId, $data['vote']['seanceRef'], $data['vote']['amdt']);
           }
           $data['amdt']['author'] = $this->votes_model->get_amendement_author($data['amdt']['id']);
