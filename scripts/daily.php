@@ -1563,7 +1563,8 @@ class Script
 
             //variable amdt_n
             if ($type_vote == "amendement") {
-                $amdt_n = substr($titre, 0, 25);
+                $amdt_n = strstr($titre, 'n°');
+                $amdt_n = substr($amdt_n, 0, 15);
                 $amdt_n = preg_replace("/[^0-9]/", "", $amdt_n);
             } else {
                 $amdt_n = NULL;
@@ -2636,7 +2637,7 @@ class Script
     {
         echo "amendements starting \n";
 
-        $fields = array('id', 'dossier', 'legislature', 'texteLegislatifRef', 'texteLegislatifNum', 'num', 'numordre', 'seanceRef', 'expose');
+        $fields = array('id', 'dossier', 'legislature', 'texteLegislatifRef', 'num', 'numordre', 'seanceRef', 'expose');
         $newfile = __DIR__ . '/tmp_amendements.zip';
         $zip = new ZipArchive();
         $insert = [];
@@ -2647,13 +2648,15 @@ class Script
             for ($i = 0; $i < $zip->numFiles; $i++) {
                 $filename = $zip->getNameIndex($i);
 
-                if (strpos($filename, "BTC") !== false) {
-                  $xml_string = $zip->getFromName($filename);
+                $xml_string = $zip->getFromName($filename);
 
-                  if ($xml_string != false) {
-                    //echo 'Filename: ' . $filename . '<br>';
-                    $xml = simplexml_load_string($xml_string);
+                if ($xml_string != false) {
+                  //echo 'Filename: ' . $filename . '<br>';
+                  $xml = simplexml_load_string($xml_string);
 
+                  $seanceRef = $xml->seanceDiscussionRef;
+
+                  if ($seanceRef != "") {
                     $split = preg_split("#/#", $filename);
                     $dossier = $split[1];
 
@@ -2665,25 +2668,15 @@ class Script
                     $seanceRef = $xml->seanceDiscussionRef;
                     $expose = $xml->corps->contenuAuteur->exposeSommaire;
 
-                    $texteLegislatifNum = "not working";
-
-                    if (strpos($texteLegislatifRef, "PRJLANR5L15BTC") !== false) {
-                      $texteLegislatifNum = str_replace("PRJLANR5L15BTC", "", $texteLegislatifRef);
-                    } elseif (strpos($texteLegislatifRef, "PIONANR5L15BTC") !== false) {
-                      $texteLegislatifNum = str_replace("PIONANR5L15BTC", "", $texteLegislatifRef);
-                    } elseif (strpos($texteLegislatifRef, "PNREANR5L15BTC") !== false) {
-                      $texteLegislatifNum = str_replace("PNREANR5L15BTC", "", $texteLegislatifRef);
-                    }
-
                     // Insert NULL values
                     $seanceRef = $seanceRef == "" ? NULL : $seanceRef;
                     $expose = $expose == "" ? NULL : $expose;
 
-                    //echo $id . ' - ' . $dossier . ' - ' . $legislature . ' - ' . $texteLegislatifRef . ' - ' . $texteLegislatifNum . ' - ' . $num . ' - ' . $numOrdre . ' - ' . $seanceRef;
+                    //echo $id . ' - ' . $dossier . ' - ' . $legislature . ' - ' . $texteLegislatifRef . ' - ' . $num . ' - ' . $numOrdre . ' - ' . $seanceRef;
                     //echo ' - ' . $expose;
                     //echo '<br><br>';
 
-                    $amdt = array('id' => $id, 'dossier' => $dossier,  'legislature' => $legislature, 'texteLegislatifRef' => $texteLegislatifRef, 'texteLegislatifNum' => $texteLegislatifNum, 'nume' => $num, 'numOrdre' => $numOrdre, 'seanceRef' => $seanceRef, 'expose' => $expose);
+                    $amdt = array('id' => $id, 'dossier' => $dossier,  'legislature' => $legislature, 'texteLegislatifRef' => $texteLegislatifRef, 'num' => $num, 'numOrdre' => $numOrdre, 'seanceRef' => $seanceRef, 'expose' => $expose);
                     $insert = array_merge($insert, array_values($amdt));
                     if (($i + 1) % 1000 === 0) {
                         echo "Let's insert until " . $i . "\n";
@@ -2714,13 +2707,15 @@ class Script
             for ($i = 0; $i < $zip->numFiles; $i++) {
                 $filename = $zip->getNameIndex($i);
 
-                if (strpos($filename, "BTC") !== false) {
-                  $xml_string = $zip->getFromName($filename);
+                $xml_string = $zip->getFromName($filename);
 
-                  if ($xml_string != false) {
-                    //echo 'Filename: ' . $filename . '<br>';
-                    $xml = simplexml_load_string($xml_string);
+                if ($xml_string != false) {
+                  //echo 'Filename: ' . $filename . '<br>';
+                  $xml = simplexml_load_string($xml_string);
 
+                  $seanceRef = $xml->seanceDiscussionRef;
+
+                  if ($seanceRef != "") {
                     $id = $xml->uid;
                     $type = $xml->signataires->auteur->typeAuteur;
                     if (in_array($type, array("Député", "Rapporteur"))) {

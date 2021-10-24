@@ -23,7 +23,6 @@
     `dossier` VARCHAR(25) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL ,
     `legislature` INT(5) NOT NULL ,
     `texteLegislatifRef` VARCHAR(35) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL ,
-    `texteLegislatifNum` INT(10) NOT NULL ,
     `num` VARCHAR(55) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL ,
     `numOrdre` VARCHAR(15) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL ,
     `seanceRef` VARCHAR(35) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL ,
