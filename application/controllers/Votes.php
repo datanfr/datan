@@ -395,14 +395,17 @@
       // Info about the author --> WORKING ICI !
       if ($data['vote']['dossier'] && $legislature >= 15) {
         if ($data['vote']['voteType'] == 'amendement') { // If the vote is an amendment
+          $data['authorTitle'] = "L'auteur de l'amendement";
           $data['amdt'] = $this->votes_model->get_amendement($legislature, $data['vote']['dossierId'], $data['vote']['seanceRef'], $data['vote']['amdt']);
           if ($data['amdt']) { // If amendment is working properly :)
             $data['amdt']['author'] = $this->votes_model->get_amendement_author($data['amdt']['id']);
             if (in_array($data['amdt']['author']['type'], array('Député', 'Rapporteur'))) {
               $data['author'] = $this->deputes_model->get_depute_by_legislature($data['amdt']['author']['acteurRef'], $legislature);
               $data['author']['cardCenter'] = $data['author']['departementNom'] . ' (' . $data['author']['departementCode'] . ')';
+              $data['authorType'] = "mp";
             } elseif ($data['amdt']['author']['type'] == 'Gouvernement') {
               $data['author'] = $this->organes_model->get_organe($data['amdt']['author']['acteurRef']);
+              $data['authorType'] = "gvt";
             }
           } else {
             $newDossierIds = $this->votes_model->get_another_dossierId($data['vote']['dossier']);
@@ -415,22 +418,33 @@
                   if (strpos($data['vote']['titre'], $author['nameLast']) !== false) {
                     $data['author'] = $author;
                     $data['author']['cardCenter'] = $data['author']['departementNom'] . ' (' . $data['author']['departementCode'] . ')';
+                    $data['authorType'] = "mp";
                     break 2;
                   }
                   if ($data['amdt']['author']['type'] == 'Rapporteur' || strpos($data['vote']['titre'], 'commission') !== false) {
                     $data['author'] = $author;
                     $data['author']['cardCenter'] = $data['author']['departementNom'] . ' (' . $data['author']['departementCode'] . ')';
+                    $data['authorType'] = "mp";
                     break 2;
                   }
                 } elseif ($data['amdt']['author']['type'] == 'Gouvernement') {
                   $author = $this->organes_model->get_organe($data['amdt']['author']['acteurRef']);
                   if (strpos($data['vote']['titre'], 'Gouvernement') !== false) {
                     $data['author'] = $author;
+                    $data['authorType'] = "gvt";
                     break 2;
                   }
                 }
               }
             }
+          }
+        } elseif ($data['vote']['procedureParlementaireLibelle'] == 'Proposition de loi ordinaire') {
+          $data['authorTitle'] = "L'auteur de la proposition de loi";
+          $initiateur = $this->votes_model->get_dossier_author($data['vote']['dossierId']);
+          if ($initiateur['type'] != 'organe') {
+            $data['authorType'] = "mp";
+            $data['author'] = $this->deputes_model->get_depute_by_legislature($initiateur['ref'], $legislature);
+            $data['author']['cardCenter'] = $data['author']['departementNom'] . ' (' . $data['author']['departementCode'] . ')';
           }
         }
       }
