@@ -158,7 +158,7 @@
           vd.title, vd.description, vd.state, f.name AS category, f.slug AS category_slug, vd.created_at, vd.modified_at
           FROM votes_info vi
           LEFT JOIN votes_dossiers vdos ON vi.voteNumero = vdos.voteNumero AND vi.legislature = vdos.legislature
-          LEFT JOIN dossiers doss ON vdos.dossier = doss.titreChemin
+          LEFT JOIN dossiers doss ON vdos.dossier = doss.titreChemin AND doss.legislature = vi.legislature
           LEFT JOIN votes_datan vd ON vi.voteId = vd.vote_id AND vi.legislature = vd.legislature AND vd.state = "published"
           LEFT JOIN fields f ON vd.category = f.id
           WHERE vi.legislature = ? AND vi.voteNumero = ?
@@ -585,5 +585,12 @@
 
     public function get_amendement_author($id){
       return $this->db->get_where('amendements_auteurs', array('id' => $id))->row_array();
+    }
+
+    public function get_another_dossierId($chemin, $legislature){
+      $this->db->where('titreChemin', $chemin);
+      $this->db->where('legislature != ' . $legislature);
+      $result = $this->db->get('dossiers')->row_array();
+      return $result['dossierId'];
     }
   }
