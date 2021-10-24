@@ -397,6 +397,10 @@
       if ($data['vote']['dossier']) {
         if ($data['vote']['voteType'] == 'amendement') {
           $data['amdt'] = $this->votes_model->get_amendement($legislature, $data['vote']['dossierId'], $data['vote']['seanceRef'], $data['vote']['amdt']);
+          if (!$data['amdt']) {
+            $newDossierId = $this->votes_model->get_another_dossierId($data['vote']['dossier'], $legislature);
+            $data['amdt'] = $this->votes_model->get_amendement($legislature, $newDossierId, $data['vote']['seanceRef'], $data['vote']['amdt']);
+          }
           $data['amdt']['author'] = $this->votes_model->get_amendement_author($data['amdt']['id']);
           if (in_array($data['amdt']['author']['type'], array('Député', 'Rapporteur'))) {
             $data['author'] = $this->deputes_model->get_depute_by_legislature($data['amdt']['author']['acteurRef'], $legislature);
