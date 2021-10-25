@@ -456,7 +456,7 @@
               $data['authorTitle'] = "Les rapporteurs";
             }
           }
-        } elseif (in_array($data['vote']['procedureParlementaireLibelle'], array('Projet de ratification des traités et conventions', 'Projet ou proposition de loi organique'))) {
+        } else {
           $data['authorType'] = "mps";
           $data['author'] = $this->votes_model->get_dossier_mp_rapporteurs($data['vote']['dossierId'], $legislature);
           if (count($data['author']) == 1) {
