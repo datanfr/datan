@@ -440,9 +440,21 @@
             }
           }
         } elseif (in_array($data['vote']['procedureParlementaireLibelle'], array('Proposition de loi ordinaire', 'Résolution Article 34-1', 'Résolution'))) {
-          $data['authorTitle'] = "L'auteur de la proposition de loi";
           $data['authorType'] = "mps";
           $data['author'] = $this->votes_model->get_dossier_mp_authors($data['vote']['dossierId']);
+          if (count($data['author']) == 1) {
+            $data['authorTitle'] = "L'auteur de la proposition de loi";
+          } else {
+            $data['authorTitle'] = "Les auteurs de la proposition de loi";
+          }
+        } elseif (in_array($data['vote']['procedureParlementaireLibelle'], array('Projet de ratification des traités et conventions'))) {
+          $data['authorType'] = "mps";
+          $data['author'] = $this->votes_model->get_dossier_mp_rapporteurs($data['vote']['dossierId'], $legislature);
+          if (count($data['author']) == 1) {
+            $data['authorTitle'] = "Le rapporteur";
+          } else {
+            $data['authorTitle'] = "Les rapporteurs";
+          }
         }
       }
 
