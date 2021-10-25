@@ -181,6 +181,10 @@
         $x['contre_percentage'] = NULL;
       }
 
+      $x['pour_pct'] = round($x['pour'] / $x['suffragesExprimes'] * 100, 2);
+      $x['abs_pct'] = round($x['abstention'] / $x['suffragesExprimes'] * 100, 2);
+      $x['contre_pct'] = round($x['contre'] / $x['suffragesExprimes'] * 100, 2);
+
       setlocale(LC_TIME, 'french');
       $x['date_edited'] = utf8_encode(strftime('%d %B %Y', strtotime($x['dateScrutin'])));
       //echo $x['voteType'];
