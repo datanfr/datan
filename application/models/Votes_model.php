@@ -612,10 +612,10 @@
         'da.type' => 'acteur',
         'dl.legislature' => $legislature
       );
-      print_r($where);
       $this->db->join('deputes_all dl', 'da.ref = dl.mpId');
       $this->db->select('*, CONCAT(departementNom, " (", departementCode, ")") AS cardCenter');
       $this->db->order_by('dl.nameLast', 'ASC');
+      $this->db->group_by('dl.mpId');
       return $this->db->get_where('dossiers_acteurs da', $where)->result_array();
     }
 
@@ -628,6 +628,7 @@
       $this->db->join('deputes_all dl', 'da.ref = dl.mpId');
       $this->db->select('*, CONCAT(departementNom, " (", departementCode, ")") AS cardCenter');
       $this->db->order_by('dl.nameLast', 'ASC');
+      $this->db->group_by('dl.mpId');
       return $this->db->get_where('dossiers_acteurs da', $where)->result_array();
     }
 
