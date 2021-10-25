@@ -605,13 +605,15 @@
       return $this->db->get_where('amendements_auteurs', array('id' => $id))->row_array();
     }
 
-    public function get_dossier_mp_authors($id){
+    public function get_dossier_mp_authors($id, $legislature){
       $where = array(
         'da.id' => $id,
         'da.value' => 'initiateur',
-        'da.type' => 'acteur'
+        'da.type' => 'acteur',
+        'dl.legislature' => $legislature
       );
-      $this->db->join('deputes_all dl', 'da.ref = dl.mpId AND da.legislature = dl.legislature');
+      print_r($where);
+      $this->db->join('deputes_all dl', 'da.ref = dl.mpId');
       $this->db->select('*, CONCAT(departementNom, " (", departementCode, ")") AS cardCenter');
       $this->db->order_by('dl.nameLast', 'ASC');
       return $this->db->get_where('dossiers_acteurs da', $where)->result_array();
