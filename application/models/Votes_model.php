@@ -581,7 +581,6 @@
         'seanceRef' => $seanceRef,
         'numOrdre' => $num
       );
-      print_r($where);
       $this->db->select('id');
       $this->db->limit(1);
       return $this->db->get_where('amendements', $where)->row_array();
@@ -613,6 +612,18 @@
         'da.type' => 'acteur'
       );
       $this->db->join('deputes_all dl', 'da.ref = dl.mpId AND da.legislature = dl.legislature');
+      $this->db->select('*, CONCAT(departementNom, " (", departementCode, ")") AS cardCenter');
+      $this->db->order_by('dl.nameLast', 'ASC');
+      return $this->db->get_where('dossiers_acteurs da', $where)->result_array();
+    }
+
+    public function get_dossier_mp_rapporteurs($id, $legislature){
+      $where = array(
+        'da.id' => $id,
+        'da.value' => 'rapporteur',
+        'dl.legislature' => $legislature
+      );
+      $this->db->join('deputes_all dl', 'da.ref = dl.mpId');
       $this->db->select('*, CONCAT(departementNom, " (", departementCode, ")") AS cardCenter');
       $this->db->order_by('dl.nameLast', 'ASC');
       return $this->db->get_where('dossiers_acteurs da', $where)->result_array();
