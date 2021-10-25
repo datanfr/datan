@@ -208,6 +208,9 @@
         } elseif ($x['procedureParlementaireLibelle'] == "Projet de loi de finances de l'année") {
           $x['type_edited'] = 'Projet de loi de finances';
           $x['type_edited_explication'] = "Le projet de loi de finances (PLF), présenté à l'automne par le Gouvernement, est le projet de budget pour la France. C'est un document unique rassemblant l'ensemble des recettes et des dépenses de l’État pour l'année à venir. Le projet propose le montant, la nature et l'affectation des ressources et des charges de l’État. L'Assemblée nationale vote ici sur une partie de ce projet de loi de finances.<br><br><a href='https://www.gouvernement.fr/projet-de-loi-de-finances-plf-qu-est-ce-que-c-est' targe='_blank'>Plus d'information</a>";
+        } elseif ($x['procedureParlementaireLibelle'] == 'Résolution') {
+          $x['type_edited'] = 'proposition de résolution';
+          $x['type_edited_explication'] = "Une proposition de résolution est un texte non législatif (qui est donc purement symbolique) et qui sert à exprimer la position de l'Assemblée nationale sur un sujet donné.";
         }
       } elseif ($x['voteType'] == 'amendement') {
         $x['type_edited'] = 'amendement';
@@ -249,8 +252,8 @@
         $x['type_edited'] = 'déclaration de politique générale';
         $x['type_edited_explication'] = "La déclaration de politique générale est une déclaration du Premier ministre devant l'Assemblée nationale lors de l'entrée en fonction d'un nouveau gouvernement.";
       } elseif ($x['voteType'] == 'la propo') {
-        $x['type_edited'] = 'la proposition de résolution';
-        $x['type_edited_explication'] = "Une proposition de résolution est un texte non législatif (qui est donc purement symbolique) et qui sert à exprimer la position de l'Assemblée nationale sur un sujet donné. Ses modalités sont prévues l'article 34-1 de la <a href='http://www.assemblee-nationale.fr/connaissance/constitution.asp' target='_blank'>Constitution</a>.";
+        $x['type_edited'] = 'proposition de résolution';
+          $x['type_edited_explication'] = "Une proposition de résolution est un texte non législatif (qui est donc purement symbolique) et qui sert à exprimer la position de l'Assemblée nationale sur un sujet donné. Ses modalités sont prévues l'article 34-1 de la <a href='http://www.assemblee-nationale.fr/connaissance/constitution.asp' target='_blank'>Constitution</a>.";
       } else {
         $x['type_edited'] = $x['voteType'];
       }
@@ -270,13 +273,13 @@
         "motion de rejet préalable" => "cette motion de rejet préalable",
         "partie du projet de loi de finances" => "cette partie du projet de loi de finances",
         "sous-amendement" => "ce sous-amendement",
-        "la proposition de résolution" => "cette proposition de résolution",
+        "proposition de résolution" => "cette proposition de résolution",
         "proposition de loi" => "cette proposition de loi",
         "Projet ou proposition de loi organique" => "ce projet ou proposition de loi organique",
         "Projet de loi de finances rectificative" => "ce projet de loi de finances rectificative",
         "Ratification de traités et conventions" => "ce projet de ratificatio de traité",
         "Projet de loi de financement de la sécurité sociale" => "ce projet de loi de financement de la sécurité sociale",
-        "Projet de loi de finances" => "ce projet de loi de finances"
+        "Projet de loi de finances" => "ce projet de loi de finances",
       ];
 
       //echo $x["type_edited"];
@@ -578,6 +581,7 @@
         'seanceRef' => $seanceRef,
         'numOrdre' => $num
       );
+      print_r($where);
       $this->db->select('id');
       $this->db->limit(1);
       return $this->db->get_where('amendements', $where)->row_array();
@@ -602,13 +606,16 @@
       return $this->db->get_where('amendements_auteurs', array('id' => $id))->row_array();
     }
 
-    public function get_dossier_author($id){
+    public function get_dossier_mp_authors($id){
       $where = array(
-        'id' => $id,
-        'value' => 'initiateur'
+        'da.id' => $id,
+        'da.value' => 'initiateur',
+        'da.type' => 'acteur'
       );
-      return $this->db->get_where('dossiers_acteurs', $where, 1)->row_array();
-
+      $this->db->join('deputes_all dl', 'da.ref = dl.mpId AND da.legislature = dl.legislature');
+      $this->db->select('*, CONCAT(departementNom, " (", departementCode, ")") AS cardCenter');
+      $this->db->order_by('dl.nameLast', 'ASC');
+      return $this->db->get_where('dossiers_acteurs da', $where)->result_array();
     }
 
   }

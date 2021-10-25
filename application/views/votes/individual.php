@@ -122,6 +122,21 @@
                     <?php $this->load->view('deputes/partials/card_home.php', array('depute' => $author, 'tag' => 'h3', 'cat' => false)) ?>
                   </div>
                 <?php endif; ?>
+                <?php if ($authorType == "mps"): ?>
+                  <?php if (count($author) > 1): ?>
+                    <?php foreach ($author as $x): ?>
+                      <p>Député</p>
+                      <div class="d-flex justify-content-center">
+                        <?php $this->load->view('deputes/partials/card_home.php', array('depute' => $x, 'tag' => 'h3', 'cat' => false)) ?>
+                      </div>
+                    <?php endforeach; ?>
+                  <?php else: ?>
+                    <p>Député</p>
+                    <div class="d-flex justify-content-center">
+                      <?php $this->load->view('deputes/partials/card_home.php', array('depute' => $author[0], 'tag' => 'h3', 'cat' => false)) ?>
+                    </div>
+                  <?php endif; ?>
+                <?php endif; ?>
                 <?php if ($authorType == "gvt"): ?>
                   <p>Gouvernement</p>
                   <div class="d-flex justify-content-center">
