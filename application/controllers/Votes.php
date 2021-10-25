@@ -394,9 +394,10 @@
 
       // Info about the author --> WORKING ICI !
       if ($data['vote']['dossier'] && $legislature >= 15) {
-        if ($data['vote']['voteType'] == 'amendement') { // If the vote is an amendment
+        if ($data['vote']['voteType'] == 'amendement' || $data['vote']['voteType'] == 'sous-amendement') { // If the vote is an amendment
           $data['authorTitle'] = "L'auteur de l'amendement";
           $data['amdt'] = $this->votes_model->get_amendement($legislature, $data['vote']['dossierId'], $data['vote']['seanceRef'], $data['vote']['amdt']);
+          $data['amdt'];
           if ($data['amdt']) { // If amendment is working properly :)
             $data['amdt']['author'] = $this->votes_model->get_amendement_author($data['amdt']['id']);
             if (in_array($data['amdt']['author']['type'], array('Député', 'Rapporteur'))) {
@@ -438,14 +439,10 @@
               }
             }
           }
-        } elseif ($data['vote']['procedureParlementaireLibelle'] == 'Proposition de loi ordinaire') {
+        } elseif (in_array($data['vote']['procedureParlementaireLibelle'], array('Proposition de loi ordinaire', 'Résolution Article 34-1', 'Résolution'))) {
           $data['authorTitle'] = "L'auteur de la proposition de loi";
-          $initiateur = $this->votes_model->get_dossier_author($data['vote']['dossierId']);
-          if ($initiateur['type'] != 'organe') {
-            $data['authorType'] = "mp";
-            $data['author'] = $this->deputes_model->get_depute_by_legislature($initiateur['ref'], $legislature);
-            $data['author']['cardCenter'] = $data['author']['departementNom'] . ' (' . $data['author']['departementCode'] . ')';
-          }
+          $data['authorType'] = "mps";
+          $data['author'] = $this->votes_model->get_dossier_mp_authors($data['vote']['dossierId']);
         }
       }
 
