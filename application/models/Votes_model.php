@@ -193,6 +193,9 @@
         } elseif ($x['procedureParlementaireLibelle'] == 'Proposition de loi ordinaire') {
           $x['type_edited'] = 'proposition de loi';
           $x['type_edited_explication'] = "Une proposition de loi est un texte destiné à devenir une loi et qui émane d'un député ou d'un sénateur, contrairement au projet de loi qui émane du Gouvernement.";
+        } elseif ($x['procedureParlementaireLibelle'] == 'Projet ou proposition de loi constitutionnelle') {
+          $x['type_edited'] = 'projet ou proposition de loi constitutionnelle';
+          $x['type_edited_explication'] = "Un projet ou proposition de loi constitutionnelle est une loi visant à modifier la Constitution. Soit cette modification est à l'origine du Gouvernement (projet de loi) soit du Parlement (proposition de loi).<br><br><a href='https://www2.assemblee-nationale.fr/decouvrir-l-assemblee/role-et-pouvoirs-de-l-assemblee-nationale/les-fonctions-de-l-assemblee-nationale/les-fonctions-legislatives/la-revision-de-la-constitution' target='_blank'>Plus d'information sur la procédure de révision de la Constitution</a>";
         } elseif ($x['procedureParlementaireLibelle'] == 'Projet ou proposition de loi organique') {
           $x['type_edited'] = 'Projet ou proposition de loi organique';
           $x['type_edited_explication'] = "Un projet ou proposition de loi organique est une loi complétant la Constitution afin de préciser l'organisation des pouvoirs publics. Elle est hiérarchiquement en dessous de la Constitution, mais au dessus des lois ordinaires.";
@@ -207,7 +210,7 @@
           $x['type_edited_explication'] = "Le Projet de loi de financement de la sécurité sociale (PLFSS) vise à gérer les dépenses sociales et de santé. Le projet, présenté à l'automne par le gouvernement, fixe les objectifs de dépenses en fonction des recettes, et détermine donc les conditions à l'équilibre financier de la Sécurité sociale.";
         } elseif ($x['procedureParlementaireLibelle'] == "Projet de loi de finances de l'année") {
           $x['type_edited'] = 'Projet de loi de finances';
-          $x['type_edited_explication'] = "Le projet de loi de finances (PLF), présenté à l'automne par le Gouvernement, est le projet de budget pour la France. C'est un document unique rassemblant l'ensemble des recettes et des dépenses de l’État pour l'année à venir. Le projet propose le montant, la nature et l'affectation des ressources et des charges de l’État. L'Assemblée nationale vote ici sur une partie de ce projet de loi de finances.<br><br><a href='https://www.gouvernement.fr/projet-de-loi-de-finances-plf-qu-est-ce-que-c-est' targe='_blank'>Plus d'information</a>";
+          $x['type_edited_explication'] = "Le projet de loi de finances (PLF), présenté à l'automne par le Gouvernement, est le projet de budget pour la France. C'est un document unique rassemblant l'ensemble des recettes et des dépenses de l’État pour l'année à venir. Le projet propose le montant, la nature et l'affectation des ressources et des charges de l’État. L'Assemblée nationale vote ici sur une partie de ce projet de loi de finances.<br><br><a href='https://www.gouvernement.fr/projet-de-loi-de-finances-plf-qu-est-ce-que-c-est' target='_blank'>Plus d'information</a>";
         } elseif ($x['procedureParlementaireLibelle'] == 'Résolution') {
           $x['type_edited'] = 'proposition de résolution';
           $x['type_edited_explication'] = "Une proposition de résolution est un texte non législatif (qui est donc purement symbolique) et qui sert à exprimer la position de l'Assemblée nationale sur un sujet donné.";
@@ -244,7 +247,7 @@
         $x['type_edited_explication'] = "La motion de rejet préalable est discutée et votée avant la discussion générale d'un texte de loi. Elle vise à indiquer que le texte (projet ou proposition de loi) est contraire à une ou plusieurs dispositions constitutionnelles. Si la motion est adoptée, elle entraîne le rejet du texte.<br><br><a href='http://www.assemblee-nationale.fr/encyclopedie/loi.asp' target='_blank'>Plus d'information</a>";
       } elseif ($x['voteType'] == 'partie du projet de loi de finances') {
         $x['type_edited'] = $x['voteType'];
-        $x['type_edited_explication'] = "Le projet de loi de finances (PLF), présenté à l'automne par le Gouvernement, est le projet de budget pour la France. C'est un document unique rassemblant l'ensemble des recettes et des dépenses de l’État pour l'année à venir. Le projet propose le montant, la nature et l'affectation des ressources et des charges de l’État. L'Assemblée nationale vote ici sur une partie de ce projet de loi de finances.<br><br><a href='https://www.gouvernement.fr/projet-de-loi-de-finances-plf-qu-est-ce-que-c-est' targe='_blank'>Plus d'information</a>";
+        $x['type_edited_explication'] = "Le projet de loi de finances (PLF), présenté à l'automne par le Gouvernement, est le projet de budget pour la France. C'est un document unique rassemblant l'ensemble des recettes et des dépenses de l’État pour l'année à venir. Le projet propose le montant, la nature et l'affectation des ressources et des charges de l’État. L'Assemblée nationale vote ici sur une partie de ce projet de loi de finances.<br><br><a href='https://www.gouvernement.fr/projet-de-loi-de-finances-plf-qu-est-ce-que-c-est' target='_blank'>Plus d'information</a>";
       } elseif ($x['voteType'] == 'sous-amendement') {
         $x['type_edited'] = $x['voteType'];
         $x['type_edited_explication'] = "Un sous-amendement est, comme un amendement, une modification apportée à un texte juridique, d'un projet de loi par exemple. Le sous-amendement porte sur un amendement, et ne peut pas contredire le sens initial de l'amendement.";
@@ -253,37 +256,13 @@
         $x['type_edited_explication'] = "La déclaration de politique générale est une déclaration du Premier ministre devant l'Assemblée nationale lors de l'entrée en fonction d'un nouveau gouvernement.";
       } elseif ($x['voteType'] == 'la propo') {
         $x['type_edited'] = 'proposition de résolution';
-          $x['type_edited_explication'] = "Une proposition de résolution est un texte non législatif (qui est donc purement symbolique) et qui sert à exprimer la position de l'Assemblée nationale sur un sujet donné. Ses modalités sont prévues l'article 34-1 de la <a href='http://www.assemblee-nationale.fr/connaissance/constitution.asp' target='_blank'>Constitution</a>.";
+        $x['type_edited_explication'] = "Une proposition de résolution est un texte non législatif (qui est donc purement symbolique) et qui sert à exprimer la position de l'Assemblée nationale sur un sujet donné. Ses modalités sont prévues l'article 34-1 de la <a href='http://www.assemblee-nationale.fr/connaissance/constitution.asp' target='_blank'>Constitution</a>.";
+      } elseif ($x['voteType'] == "motion d'ajournement") {
+        $x['type_edited'] = "motion d'ajournement";
+        $x['type_edited_explication'] = "Une motion d'ajournement est utilisé que dans le cadre des accords internationaux. Si la motion est adoptée, le texte retourne en commission parlementaire, où il doit être rediscuté.<br><br><a href='https://www.lemonde.fr/blog/cuisines-assemblee/2019/02/18/la-motion-dajournement/' target='_blank'>Plus d'information</a>";
       } else {
         $x['type_edited'] = $x['voteType'];
       }
-
-      //type_libelle
-      $type_libelle = [
-        "projet de loi" => "ce projet de loi",
-        "amendement" => "cet amendement",
-        "article" => "cet article",
-        "déclaration de politique générale" => "cette déclaration de politique générale",
-        "motion de renvoi en commission" => "cette motion de renvoi en commission",
-        "conclusions de rejet de la commission" => "les conclusions de rejet de la commission",
-        "crédits de mission" => "les crédits de mission",
-        "déclaration du gouvernement" => "la déclaration du gouvernement",
-        "demande de constitution de commission spéciale" => "cette demande de constitution de commission speciale",
-        "motion de censure" => "cette motion de censure",
-        "motion de rejet préalable" => "cette motion de rejet préalable",
-        "partie du projet de loi de finances" => "cette partie du projet de loi de finances",
-        "sous-amendement" => "ce sous-amendement",
-        "proposition de résolution" => "cette proposition de résolution",
-        "proposition de loi" => "cette proposition de loi",
-        "Projet ou proposition de loi organique" => "ce projet ou proposition de loi organique",
-        "Projet de loi de finances rectificative" => "ce projet de loi de finances rectificative",
-        "Ratification de traités et conventions" => "ce projet de ratificatio de traité",
-        "Projet de loi de financement de la sécurité sociale" => "ce projet de loi de financement de la sécurité sociale",
-        "Projet de loi de finances" => "ce projet de loi de finances",
-      ];
-
-      //echo $x["type_edited"];
-      $x['type_edited_libelle'] = $type_libelle[$x['type_edited']];
 
       //sortCodeLibelle
       if ($x['sortCode'] == "adopté") {
