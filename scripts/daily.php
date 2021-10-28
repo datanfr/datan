@@ -2641,6 +2641,96 @@ class Script
         }
     }
 
+    public function documentsLegislatifs()
+    {
+      echo "documentsLegislatifs starting \n";
+
+      $fields = array('id', 'dossierId', 'numNotice', 'titre', 'titreCourt');
+      $insert = [];
+
+      if ($this->legislature_to_get == 15) {
+
+        $file = 'https://data.assemblee-nationale.fr/static/openData/repository/15/loi/dossiers_legislatifs/Dossiers_Legislatifs_XV.xml.zip';
+        $file = trim($file);
+        $newfile = __DIR__ . '/tmp_dossiers.zip';
+        if (!copy($file, $newfile)) {
+            echo "failed to copy $file...\n";
+        }
+        $zip = new ZipArchive();
+        if ($zip->open($newfile) !== TRUE) {
+            exit("cannot open <$newfile>\n");
+        } else {
+          for ($i = 0; $i < $zip->numFiles; $i++) {
+            $filename = $zip->getNameIndex($i);
+            //echo 'Filename: ' . $filename . '<br />';
+
+            $split = preg_split("#/#", $filename);
+            $type = $split[1];
+            $file = $split[2];
+            if ($type == "document" && preg_match("/(PRJL|PION|PNRE)/", $file)) {
+              $xml_string = $zip->getFromName($filename);
+
+              if ($xml_string != false) {
+                $xml = simplexml_load_string($xml_string);
+
+                $id = $xml->uid;
+                $dossierId = $xml->dossierRef;
+                $numNotice = $xml->notice->numNotice;
+                $titre = $xml->titres->titrePrincipal;
+                $titreCourt = $xml->titres->titrePrincipalCourt;
+
+                //echo $id. ' - ' . $dossierId . ' - ' . $numNotice . ' - ' . $titre . ' - ' . $titreCourt . '<br>';
+                $doc = array('id' => $id, 'dossierId' => $dossierId,  'numNotice' => $numNotice, 'titre' => $titre, 'titreCourt' => $titreCourt);
+                $insert = array_merge($insert, array_values($doc));
+                if (($i + 1) % 500 === 0) {
+                    echo "Let's insert until " . $i . "\n";
+                    $this->insertAll('documents_legislatifs', $fields, $insert);
+                    $insert = [];
+                }
+              }
+            }
+          }
+          echo "Let's insert until the end : " . $i . "\n";
+          $this->insertAll('documents_legislatifs', $fields, $insert);
+        }
+      } elseif ($this->legislature_to_get == 14) {
+
+        $file = 'https://data.assemblee-nationale.fr/static/openData/repository/14/loi/dossiers_legislatifs/Dossiers_Legislatifs_XIV.xml.zip';
+        $file = trim($file);
+        $newfile = __DIR__ . '/tmp_dossiers_14.zip';
+        if (!copy($file, $newfile)) {
+            echo "failed to copy $file...\n";
+        }
+
+        $zip = new ZipArchive();
+        if ($zip->open($newfile) !== TRUE) {
+            exit("cannot open <$newfile>\n");
+        } else {
+          $xml_string = $zip->getFromName("Dossiers_Legislatifs_XIV.xml");
+          if ($xml_string != false) {
+            $xml = simplexml_load_string($xml_string);
+
+            foreach ($xml->xpath("//*[local-name()='document']") as $document) {
+              $id = $document->uid;
+              $dossierId = $document->dossierRef;
+              $numNotice = $document->notice->numNotice;
+              if ($numNotice == "") {
+                $numNotice = NULL;
+              }
+              $titre = $document->titres->titrePrincipal;
+              $titreCourt = $document->titres->titrePrincipalCourt;
+
+              //echo $id. ' - ' . $dossierId . ' - ' . $numNotice . ' - ' . $titre . ' - ' . $titreCourt . '<br>';
+              $doc = array('id' => $id, 'dossierId' => $dossierId,  'numNotice' => $numNotice, 'titre' => $titre, 'titreCourt' => $titreCourt);
+              $insert = array_merge($insert, array_values($doc));
+              $this->insertAll('documents_legislatifs', $fields, $insert);
+              $insert = [];
+            }
+          }
+        }
+      }
+    }
+
     public function amendements()
     {
         echo "amendements starting \n";
@@ -2685,7 +2775,6 @@ class Script
                   $insert = array_merge($insert, array_values($amdt));
                   if (($i + 1) % 1000 === 0) {
                       echo "Let's insert until " . $i . "\n";
-                      // insert deputes
                       $this->insertAll('amendements', $fields, $insert);
                       $insert = [];
                   }
@@ -2738,7 +2827,6 @@ class Script
                   $insertAll = array_merge($insertAll, array_values($insertAuteur));
                   if (($i + 1) % 1000 === 0) {
                       echo "Let's insert until " . $i . "\n";
-                      // insert deputes
                       $this->insertAll('amendements_auteurs', $fields, $insertAll);
                       $insertAll = [];
                   }
@@ -3104,6 +3192,7 @@ $script->voteParticipation();
 $script->votesDossiers();
 $script->dossier();
 $script->dossiersActeurs();
+$script->documentsLegislatifs();
 $script->amendements();
 $script->amendementsAuteurs();
 $script->voteParticipationCommission();
