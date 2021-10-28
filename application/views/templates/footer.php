@@ -76,7 +76,7 @@
                     <a href="<?= base_url(); ?>a-propos" class="no-decoration underline">À propos</a>
                   </p>
                   <p>
-                    <a href="<?= base_url(); ?>login" class="no-decoration underline">Connexion</a>
+                    <a href="<?= base_url(); ?>newsletter" class="no-decoration underline">Newsletter</a>
                   </p>
                   <p>
                     <a href="<?= base_url(); ?>statistiques/aide" class="no-decoration underline">Nos statistiques</a>
@@ -85,6 +85,9 @@
                 <div class="d-flex flex-column mx-1">
                   <p>
                     <a href="<?= base_url(); ?>blog" class="no-decoration underline">Actualités</a>
+                  </p>
+                  <p>
+                    <a href="<?= base_url(); ?>login" class="no-decoration underline">Connexion</a>
                   </p>
                   <p>
                     <a href="<?= base_url(); ?>mentions-legales" class="no-decoratio underline">Mentions légales</a>
