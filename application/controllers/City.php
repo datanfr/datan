@@ -40,7 +40,7 @@
           $data['depute_commune']['couleurAssociee'] = $this->groupes_model->get_groupe_color(array($data['depute_commune']['libelleAbrev'], $data['depute_commune']['couleurAssociee']));
           $data['depute_commune']['electionCircoAbbrev'] = $this->functions_datan->abbrev_n($data['depute_commune']['electionCirco'], TRUE);
           $data['depute_commune']['cardCenter'] = $data['depute_commune']['electionCirco']."<sup>".$data['depute_commune']['electionCircoAbbrev']."</sup> circonscription";
-          $data['gender'] = $this->depute_edito->gender($data['depute_commune']['civ']);
+          $data['gender'] = gender($data['depute_commune']['civ']);
         }
 
       // IF more than one district

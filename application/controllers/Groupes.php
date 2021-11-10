@@ -132,7 +132,7 @@
       // Query 2 Membres du groupe
       $data['president'] = $this->groupes_model->get_groupes_president($groupe_uid, $data['active']);
       if (!empty($data['president'])) {
-        $data['president'] = array_merge($data['president'], $this->depute_edito->gender($data['president']['civ']));
+        $data['president'] = array_merge($data['president'], gender($data['president']['civ']));
       }
       $data['membres'] = $this->groupes_model->get_groupe_membres($groupe_uid, $data['active']);
       if (!in_array($data['groupe']['uid'], groupesNI())) {
@@ -397,7 +397,7 @@
       $data['dateDebut'] = strftime('%d %B %Y', strtotime($data['groupe']['dateDebut']));
       $data['president'] = $this->groupes_model->get_groupes_president($groupe_uid, $data['active']);
       if (!empty($data['president'])) {
-        $data['president'] = array_merge($data['president'], $this->depute_edito->gender($data['president']['civ']));
+        $data['president'] = array_merge($data['president'], gender($data['president']['civ']));
       }
       $data['membres'] = $this->groupes_model->get_groupe_membres($groupe_uid, $data['active']);
       if (!in_array($data['groupe']['uid'], groupesNI())) {
@@ -524,7 +524,7 @@
       $data['dateDebut'] = strftime('%d %B %Y', strtotime($data['groupe']['dateDebut']));
       $data['president'] = $this->groupes_model->get_groupes_president($groupe_uid, $data['active']);
       if (!empty($data['president'])) {
-        $data['president'] = array_merge($data['president'], $this->depute_edito->gender($data['president']['civ']));
+        $data['president'] = array_merge($data['president'], gender($data['president']['civ']));
       }
       $data['membres'] = $this->groupes_model->get_groupe_membres($groupe_uid, $data['active']);
       if (!in_array($data['groupe']['uid'], groupesNI())) {
