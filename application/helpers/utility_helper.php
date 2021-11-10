@@ -8,7 +8,7 @@
   }
 
   function getVersion(){
-    return 33;
+    return 34;
   }
 
   function legislature_current(){
@@ -117,6 +117,29 @@
       }
 
       return false;
+  }
+
+  // Gender of actors
+  function gender($gender){
+    if ($gender == 'Mme') {
+      return array(
+        'depute' => 'députée',
+        'pronom' => 'elle',
+        'e' => 'e',
+        'le' => 'la',
+        'son' => 'sa',
+        'du' => 'de la'
+      );
+    } elseif ($gender == 'M.') {
+      return array(
+        'depute' => 'député',
+        'pronom' => 'il',
+        'e' => '',
+        'le' => 'le',
+        'son' => 'son',
+        'du' => 'du'
+      );
+    }
   }
 
 ?>
