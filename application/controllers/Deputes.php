@@ -368,7 +368,7 @@
       $data['mandatsReversed'] = array_reverse($data['mandats']);
 
       // Gender
-      $data['gender'] = $this->depute_edito->gender($data['depute']['civ']);
+      $data['gender'] = gender($data['depute']['civ']);
 
       // Meta
       $data['url'] = $this->meta_model->get_url();
@@ -462,7 +462,7 @@
       $groupe_id = $data['depute']['groupeId'];
 
       // Gender
-      $data['gender'] = $this->depute_edito->gender($data['depute']['civ']);
+      $data['gender'] = gender($data['depute']['civ']);
 
       // Statistiques
       $data = $this->get_statistiques($data, $legislature, $mpId, $groupe_id);
@@ -581,7 +581,7 @@
       $data['by_field'] = $x;
 
       // Query - gender
-      $data['gender'] = $this->depute_edito->gender($data['depute']['civ']);
+      $data['gender'] = gender($data['depute']['civ']);
 
       // Historique du député
       $data['mandat_edito'] = $this->depute_edito->get_nbr_lettre($data['depute']['mandatesN']);
@@ -680,7 +680,7 @@
       $data['commission_parlementaire'] = $this->deputes_model->get_commission_parlementaire($mpId);
 
       // Query - gender
-      $data['gender'] = $this->depute_edito->gender($data['depute']['civ']);
+      $data['gender'] = gender($data['depute']['civ']);
 
       // Historique du député
       $data['mandat_edito'] = $this->depute_edito->get_nbr_lettre($data['depute']['mandatesN']);
@@ -768,7 +768,7 @@
       $data['votes'] = $this->votes_model->get_votes_all_depute($mpId, legislature_current());
 
       // Query - gender
-      $data['gender'] = $this->depute_edito->gender($data['depute']['civ']);
+      $data['gender'] = gender($data['depute']['civ']);
 
       // Historique du député
       $data['mandat_edito'] = $this->depute_edito->get_nbr_lettre($data['depute']['mandatesN']);

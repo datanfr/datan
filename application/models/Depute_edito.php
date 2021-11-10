@@ -138,28 +138,6 @@
 
     }
 
-    public function gender($gender){
-      if ($gender == 'Mme') {
-        return array(
-          'depute' => 'députée',
-          'pronom' => 'elle',
-          'e' => 'e',
-          'le' => 'la',
-          'son' => 'sa',
-          'du' => 'de la'
-        );
-      } elseif ($gender == 'M.') {
-        return array(
-          'depute' => 'député',
-          'pronom' => 'il',
-          'e' => '',
-          'le' => 'le',
-          'son' => 'son',
-          'du' => 'du'
-        );
-      }
-    }
-
     public function history($mp, $average){
       if ($mp < $average) {
         return 'moins que la moyenne';
