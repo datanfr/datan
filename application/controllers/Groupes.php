@@ -418,9 +418,6 @@
           $data['fields_voted'][] = $field;
         }
         $x[$field["slug"]] = array_slice($x[$field["slug"]], 0, 2);
-        foreach ($x[$field["slug"]] as $key2 => $value) {
-          $x[$field["slug"]][$key2 ]['dateScrutinFRAbbrev'] = $this->functions_datan->abbrev_months($value['dateScrutinFR']);
-        }
       }
       // Check the logos
       if ($data["fields_voted"]){
@@ -498,11 +495,6 @@
 
       if (empty($data['votes'])) {
         show_404();
-      }
-
-      // Change data of votes
-      foreach ($data['votes'] as $key => $value) {
-        $data['votes'][$key]['dateScrutinFRAbbrev'] = $this->functions_datan->abbrev_months($value['dateScrutinFR']);
       }
 
       // Query active
