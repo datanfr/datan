@@ -7,7 +7,7 @@
     return base_url().'assets/css/';
   }
 
-  function getVersion(){
+  function get_version(){
     return 34;
   }
 
@@ -23,17 +23,17 @@
     return number_format($x, 0, '.', ' ');
   }
 
-  function meanAgeFranceAll(){
+  function mean_age_france_all(){
     return 42.1;
   }
 
-  function meanAgeFrance(){
+  function mean_age_france(){
     // Only more than 18 yo.
     // source: https://docs.google.com/spreadsheets/d/17pf7I0vN_yIl7lnebXhZSKDRaE6j31qzRX77Cx1SYD8/edit?usp=sharing
     return 50.52;
   }
 
-  function groupesNI(){
+  function groupes_NI(){
     return array("PO723569");
   }
 
@@ -45,7 +45,7 @@
     return array("PO730964", "PO713077", "PO656002");
   }
 
-  function groupsPositionEdited(){
+  function groups_position_edited(){
     $left = array("libelle" => "gauche", "edited" => "à gauche");
     $center = array("libelle" => "centre", "edited" => "au centre");
     $right = array("libelle" => "droite", "edited" => "à droite");

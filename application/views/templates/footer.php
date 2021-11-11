@@ -176,11 +176,11 @@
 
     <?php if (isset($js_to_load)) : ?>
       <?php foreach ($js_to_load as $file) : ?>
-        <script type="text/javascript" src="<?= asset_url() ?>js/<?= $file ?>.js?v=<?= getVersion() ?>"></script>
+        <script type="text/javascript" src="<?= asset_url() ?>js/<?= $file ?>.js?v=<?= get_version() ?>"></script>
       <?php endforeach; ?>
     <?php endif; ?>
 
-    <script type="text/javascript" src="<?= asset_url() ?>js/main.min.js?v=<?= getVersion() ?>"></script>
+    <script type="text/javascript" src="<?= asset_url() ?>js/main.min.js?v=<?= get_version() ?>"></script>
     <script type="text/javascript" src="<?= asset_url() ?>js/datan/url_obf2.min.js"></script>
 
     <!-- Google Tag Manager (noscript) -->

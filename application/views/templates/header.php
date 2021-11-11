@@ -74,10 +74,10 @@
     if (isset($critical_css)): ?>
       <link rel="stylesheet" media="screen and (max-width: 480px)" href="<?= asset_url() ?>css/critical/<?= $critical_css ?>-mobile.css" />
       <link rel="stylesheet" media="screen and (min-width: 481px)" href="<?= asset_url() ?>css/critical/<?= $critical_css ?>.css" />
-      <link rel="stylesheet" href="<?= css_url() ?>main.css?v=<?= getVersion() ?>" media="print" onload="this.media='all'; this.onload=null;">
-      <noscript><link rel="stylesheet" type="text/css" href="<?= css_url() ?>main.css?v=<?= getVersion() ?>"></noscript>
+      <link rel="stylesheet" href="<?= css_url() ?>main.css?v=<?= get_version() ?>" media="print" onload="this.media='all'; this.onload=null;">
+      <noscript><link rel="stylesheet" type="text/css" href="<?= css_url() ?>main.css?v=<?= get_version() ?>"></noscript>
       <?php else: ?>
-      <link rel="stylesheet" type="text/css" href="<?= css_url() ?>main.css?v=<?= getVersion() ?>">
+      <link rel="stylesheet" type="text/css" href="<?= css_url() ?>main.css?v=<?= get_version() ?>">
     <?php endif; ?>
     <!-- GOOGLE FONTS -->
     <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin>

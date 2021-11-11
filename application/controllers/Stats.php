@@ -148,7 +148,7 @@
         // Data
         $data['ageMean'] = $this->stats_model->get_age_mean(legislature_current());
         $data['ageMean'] = round($data['ageMean']);
-        $data['ageMeanPop'] = round(meanAgeFrance());
+        $data['ageMeanPop'] = round(mean_age_france());
         $data['ageDiff'] = $data['ageMean'] - $data['ageMeanPop'];
         $data['ageDiffStr'] = $this->functions_datan->int2str($data['ageDiff']);
         $data['ageDiffStr'] = $data['ageDiffStr'] == "un" ? $data['ageDiffStr'] . " an" : $data['ageDiffStr'] . " ans";
@@ -169,7 +169,7 @@
         $data['title'] = "L'âge des députés";
       } elseif ($url == "groupes-age") {
         // Data
-        $data['ageMeanPop'] = round(meanAgeFrance());
+        $data['ageMeanPop'] = round(mean_age_france());
         $data['groupsAge'] = $this->stats_model->get_groups_age();
         $data['groupOldest'] = array_slice($data['groupsAge'], 0, 1);
         $data['groupOldest'] = $data['groupOldest'][0];
