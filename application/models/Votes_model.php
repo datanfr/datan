@@ -24,10 +24,11 @@
 
     public function get_last_votes_datan($limit = FALSE){
       $sql = '
-      SELECT vd.title AS voteTitre, vd.description, vi.dateScrutin, vi.voteNumero, vi.legislature, f.name AS category_libelle, f.slug AS category_slug, vi.sortCode, date_format(dateScrutin, "%d %M %Y") as dateScrutinFR
+      SELECT vd.title AS voteTitre, vd.description, vi.dateScrutin, vi.voteNumero, vi.legislature, f.name AS category_libelle, f.slug AS category_slug, vi.sortCode, date_format(dateScrutin, "%d %M %Y") as dateScrutinFR, r.name AS reading
       FROM votes_datan vd
       LEFT JOIN votes_info vi ON vd.voteNumero = vi.voteNumero AND vd.legislature = vi.legislature
       LEFT JOIN fields f ON vd.category = f.id
+      LEFT JOIN readings r ON r.id = vd.reading
       WHERE vd.state = "published"
       ORDER BY vi.voteNumero DESC'
       ;
