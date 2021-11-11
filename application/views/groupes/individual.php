@@ -39,7 +39,7 @@
         </div>
         <!-- BLOC VOTES -->
         <?php if (!(empty($votes_datan))): ?>
-          <div class="bloc-votes mt-5">
+          <div class="bloc-votes carousel-container mt-5">
             <div class="row">
               <div class="col-12">
                 <div class="d-flex justify-content-between mb-4">
@@ -92,17 +92,13 @@
               </div>
             </div>
             <div class="row mt-2"> <!-- BUTTONS BELOW -->
-              <div class="col-12 d-flex justify-content-center">
-                <div class="bloc-carousel-votes">
-                  <div class="carousel-buttons">
-                    <button type="button" class="btn prev mr-2 button--previous" aria-label="précédent">
-                      <?= file_get_contents(asset_url()."imgs/icons/arrow_left.svg") ?>
-                    </button>
-                    <button type="button" class="btn next ml-2 button--next" aria-label="suivant">
-                      <?= file_get_contents(asset_url()."imgs/icons/arrow_right.svg") ?>
-                    </button>
-                  </div>
-                </div>
+              <div class="carousel-buttons col-12 d-flex justify-content-center">
+                <button type="button" class="btn prev mr-2 carousel--prev" aria-label="précédent">
+                  <?= file_get_contents(asset_url()."imgs/icons/arrow_left.svg") ?>
+                </button>
+                <button type="button" class="btn next ml-2 carousel--next" aria-label="suivant">
+                  <?= file_get_contents(asset_url()."imgs/icons/arrow_right.svg") ?>
+                </button>
               </div>
             </div>
           </div> <!-- // END BLOC VOTES -->

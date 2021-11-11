@@ -74,23 +74,31 @@ $(document).ready(function () {
 */
 
 // init Flickity
-if ($('.carousel-cards').length > 0) {
-  var $carousel = $('.carousel-cards').flickity({
+// external js: flickity.pkgd.js
+var carouselContainers = document.querySelectorAll('.carousel-container');
+
+for ( var i=0; i < carouselContainers.length; i++ ) {
+  var container = carouselContainers[i];
+  initCarouselContainer( container );
+}
+
+function initCarouselContainer( container ) {
+  var carousel = container.querySelector('.carousel-cards');
+  var flkty = new Flickity( carousel, {
     prevNextButtons: false,
     pageDots: false,
     freeScroll: true,
     contain: true
+  } );
+  var previousButton = container.querySelector('.carousel--prev');
+  previousButton.addEventListener('click', function () {
+    flkty.previous();
   });
-  // Flickity instance
-  var flkty = $carousel.data('flickity');
-  // previous
-  $('.button--previous').on('click', function () {
-    $carousel.flickity('previous');
+  var nextButton = container.querySelector('.carousel--next');
+  nextButton.addEventListener('click', function () {
+    flkty.next();
   });
-  // next
-  $('.button--next').on('click', function () {
-    $carousel.flickity('next');
-  });
+
 }
 
 /*
