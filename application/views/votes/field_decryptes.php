@@ -38,7 +38,7 @@
                         </div>
                       </div>
                       <div class="card-header d-flex flex-row justify-content-between">
-                        <span class="date"><?= $vote['dateScrutinFR'] ?></span>
+                        <span class="date"><?= months_abbrev($vote['dateScrutinFR']) ?></span>
                       </div>
                       <div class="card-body">
                         <span class="title">

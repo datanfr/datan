@@ -28,7 +28,7 @@
         <?= $vote['voteTitre'] ?>
       </mj-text>
       <mj-text font-size="14px" font-weight="400" color="#aaa">
-        <?= $vote['dateScrutinFR'] ?>
+        <?= months_abbrev($vote['dateScrutinFR']) ?>
       </mj-text>
       <mj-text font-size="14px">
         <span class="badge badge-<?= $vote['sortCode'] ?>"><b><?= mb_strtoupper($vote['sortCode']) ?></b></span>

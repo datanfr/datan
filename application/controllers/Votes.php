@@ -30,9 +30,6 @@
 
       // Get datan_votes
       $data['votes_datan'] = $this->votes_model->get_last_votes_datan(7);
-      foreach ($data['votes_datan'] as $key => $value) {
-        $data['votes_datan'][$key]['dateScrutinFRAbbrev'] = $this->functions_datan->abbrev_months($value['dateScrutinFR']);
-      }
       // Get by category
       $data['fields'] = $this->fields_model->get_active_fields();
       $fields = $data['fields'];
@@ -50,9 +47,6 @@
 
       // Get all votes
       $data['votes'] = $this->votes_model->get_all_votes(legislature_current(), NULL, NULL, 10);
-      foreach ($data['votes'] as $key => $value) {
-        $data['votes'][$key]['dateScrutinFRAbbrev'] = $this->functions_datan->abbrev_months($value['dateScrutinFR']);
-      }
       // Archives
       $data['years'] = $this->votes_model->get_years_archives(legislature_current());
       $data['years'] = array_column($data['years'], 'votes_year');

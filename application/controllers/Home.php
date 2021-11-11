@@ -84,9 +84,6 @@
       } else {
         $data['votes'] = $this->votes_model->get_last_votes_datan(5);
       }
-      foreach ($data['votes'] as $key => $value) {
-        $data['votes'][$key]['dateScrutinFRAbbrev'] = $this->functions_datan->abbrev_months($value['dateScrutinFR']);
-      }
 
       // Get elections
       $data['candidats'] = $this->elections_model->get_all_candidate(1, TRUE, "elected"); // Get candidates for regionales-2021, elected MPs
