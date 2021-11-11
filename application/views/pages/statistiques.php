@@ -109,7 +109,7 @@
             Pour mesurer la moyenne d'âge de la population française, nous avons enlevé les citoyens âgés de moins de 18 ans, qui ne peuvent pas être élus députés. Ainsi, l'âge des députés est comparé à la moyenne d'âge des Français en âge d'être éligible.
           </p>
           <p>
-            Ainsi, alors que la moyenne d'âge de toute la population est de <?= round(meanAgeFranceAll()) ?> ans (<a href="https://www.insee.fr/fr/statistiques/2381476" target="_blank" rel="nofollow noopener">source insee</a>), la moyenne des Français de plus de 18 ans est de <?= round(meanAgeFrance()) ?> ans.
+            Ainsi, alors que la moyenne d'âge de toute la population est de <?= round(mean_age_france_all()) ?> ans (<a href="https://www.insee.fr/fr/statistiques/2381476" target="_blank" rel="nofollow noopener">source insee</a>), la moyenne des Français de plus de 18 ans est de <?= round(mean_age_france()) ?> ans.
           </p>
           <p>
             Pour le calculer, nous avons récupéré la pyramide des âges, un document avec le nombre d'habitants en France selon leur âge (<a href="https://www.insee.fr/fr/statistiques/2381472#tableau-figure1" target="_blank" rel="nofollow noopener">source insee</a>). Nous avons ensuite calculé la moyenne d'âge en ne prenant en compte que les individus ayant plus de 18 ans. Pour découvrir le document avec le calcul, <a href="https://docs.google.com/spreadsheets/d/17pf7I0vN_yIl7lnebXhZSKDRaE6j31qzRX77Cx1SYD8/edit#gid=1699168638" target="_blank" rel="nofollow noopener">cliquez ici</a>.

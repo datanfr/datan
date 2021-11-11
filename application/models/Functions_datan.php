@@ -63,7 +63,7 @@
     }
 
     // $precision = 1 (par défaut) pour les dizaines, 2 pour les centaines, 3 pour millier etc...
-    function decRound ($value, $precision = 1)
+    function dec_round ($value, $precision = 1)
       {
         $p = pow (10, $precision);
         return ceil ($value / $p) * $p; // arrondi à la précision supérieure

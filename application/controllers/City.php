@@ -108,7 +108,7 @@
       // Clean infos on the city
       $data['ville'] = $data['ville'][0];
       $data['ville']['circo_abbrev'] = $this->functions_datan->abbrev_n($data['ville']['circo'], TRUE);
-      $data['ville']['pop2017'] = $this->functions_datan->decRound($data['ville']['pop2017'], mb_strlen($data['ville']['pop2017']) - 4);
+      $data['ville']['pop2017'] = $this->functions_datan->dec_round($data['ville']['pop2017'], mb_strlen($data['ville']['pop2017']) - 4);
       $data['ville']['pop2017_format'] = number_format($data['ville']['pop2017'], 0, ',', ' ');
       if ($data['ville']['evol10'] > 0) {
         $data['ville']['evol10_text'] = 'augmenté';
