@@ -256,7 +256,7 @@
       $depute_dpt = $data['depute']['dptSlug'];
       $data['active'] = $data['depute']['active'];
       $legislature = $data['depute']['legislature'];
-      $data['infos_groupes'] = groupsPositionEdited();
+      $data['infos_groupes'] = groups_position_edited();
       $depute = $data['depute']['nameFirst'].' '.$data['depute']['nameLast'];
       $data['no_job'] = array('autre profession','autres', 'sans profession déclarée', 'sans profession');
 

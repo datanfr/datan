@@ -86,7 +86,7 @@
     }
 
     public function positionnement($stats, $groupe){
-      $infos = groupsPositionEdited();
+      $infos = groups_position_edited();
 
       function maj_pres($positionPolitique){
         if ($positionPolitique == "Opposition") {
