@@ -349,9 +349,6 @@
       if ($legislature == legislature_current()) {
         // Get edited votes
         $data['votes_datan'] = $this->votes_model->get_votes_datan_depute($mpId, 5);
-        foreach ($data['votes_datan'] as $key => $value) {
-          $data['votes_datan'][$key]['dateScrutinFRAbbrev'] = $this->functions_datan->abbrev_months($value['dateScrutinFR']);
-        }
         // Get key votes
         $data['key_votes'] = $this->votes_model->get_key_votes_mp($mpId);
       } else {
@@ -564,9 +561,6 @@
           $data['fields_voted'][] = $field;
         }
         $x[$field["slug"]] = array_slice($x[$field["slug"]], 0, 2);
-        foreach ($x[$field["slug"]] as $key2 => $value) {
-          $x[$field["slug"]][$key2 ]['dateScrutinFRAbbrev'] = $this->functions_datan->abbrev_months($value['dateScrutinFR']);
-        }
       }
       // Check the logos
       if ($data["fields_voted"]){
@@ -656,11 +650,6 @@
 
       if (empty($data['votes'])) {
         show_404();
-      }
-
-      // Change data of votes
-      foreach ($data['votes'] as $key => $value) {
-        $data['votes'][$key]['dateScrutinFRAbbrev'] = $this->functions_datan->abbrev_months($value['dateScrutinFR']);
       }
 
       // Variables
