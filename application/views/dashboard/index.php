@@ -36,21 +36,19 @@
                   <table class="table">
                     <thead>
                       <tr>
-                        <th>id</th>
-                        <th>numero</th>
+                        <th>num.</th>
                         <th>titre</th>
-                        <th>catégorie</th>
+                        <th></th>
                         <th></th>
                       </tr>
                     </thead>
                     <tbody>
                       <?php foreach ($votesUnpublished as $vote): ?>
                         <tr>
-                          <td><?= $vote['id'] ?></td>
                           <td><?= $vote['voteNumero'] ?></td>
                           <td><?= $vote['title'] ?></td>
-                          <td><?= $vote['categoryName'] ?></td>
                           <td><a href="<?= base_url() ?>admin/votes/modify/<?= $vote['id'] ?>" class="btn btn-primary">Modifier</a></td>
+                          <td><a href="<?= base_url() ?>admin/votes/delete/<?= $vote['id'] ?>" class="btn btn-danger">Supprimer</a></td>
                         </tr>
                       <?php endforeach; ?>
                     </tbody>

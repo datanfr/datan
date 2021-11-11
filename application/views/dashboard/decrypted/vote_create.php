@@ -71,6 +71,15 @@
                       <?php endforeach; ?>
                     </select>
                   </div>
+                  <div class="form-group">
+                    <label for="">Lecture</label>
+                    <select class="form-control" name="reading">
+                      <option value=""></option>
+                      <?php foreach ($readings as $reading): ?>
+                        <option value="<?= $reading['id'] ?>"><?= $reading['name'] ?></option>
+                      <?php endforeach; ?>
+                    </select>
+                  </div>
                   <button type="submit" class="btn btn-primary">Submit</button>
               </form>
 

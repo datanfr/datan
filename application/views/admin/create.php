@@ -24,10 +24,6 @@
           <textarea id="editor" name="description" class="form-control" placeholder="Description du vote"></textarea>
         </div>
         <div class="form-group">
-          <label>Contexte</label>
-          <textarea id="editor" name="contexte" class="form-control" placeholder="Contexte du vote"></textarea>
-        </div>
-        <div class="form-group">
           <label for="">Categorie</label>
           <select class="form-control" name="category">
             <?php foreach ($categories as $category): ?>

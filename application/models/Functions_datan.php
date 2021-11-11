@@ -125,7 +125,6 @@
     	} else if ($a<1000000){
     		return int2str((int)($a/1000)).' '.int2str(1000).' '.int2str($a%1000);
     	}
-
     }
 
   }

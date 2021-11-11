@@ -11,6 +11,7 @@
       $this->load->model('elections_model');
       $this->load->model('newsletter_model');
       $this->load->model('faq_model');
+      $this->load->model('readings_model');
       $this->password_model->security();
     }
 
@@ -167,7 +168,7 @@
     public function votes(){
       $data['username'] = $this->session->userdata('username');
       $data['usernameType'] = $this->session->userdata('type');
-      $data['title'] = 'Tous les votes datan';
+      $data['title'] = 'Tous les votes datan (décryptés)';
 
       $data['votes'] = $this->admin_model->get_votes_datan();
       $data['groupes'] = $this->groupes_model->get_groupes_all(true, 15);
@@ -183,6 +184,7 @@
       $data['title'] = 'Créer un nouveau vote décrypté';
       $data['categories'] = $this->fields_model->get_fields();
       $data['groupes'] = $this->groupes_model->get_groupes_all(true, 15);
+      $data['readings'] = $this->readings_model->get();
 
       //Form valiation
       $this->form_validation->set_rules('vote_id', 'Vote_id', 'required');
@@ -205,6 +207,7 @@
       $data['usernameType'] = $this->session->userdata("type");
       $user_id = $this->session->userdata('user_id');
       $data['groupes'] = $this->groupes_model->get_groupes_all(true, 15);
+      $data['readings'] = $this->readings_model->get();
 
       $data['title'] = 'Modifier un vote décrypté';
       $data['vote'] = $this->admin_model->get_vote_datan($vote);
