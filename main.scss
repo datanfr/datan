@@ -505,6 +505,11 @@ body:not(.pg-mentions) #tarteaucitronIcon {
       font-weight: 600;
       font-size: $h6-font-size;
     }
+    .reading{
+      color: $text-gray-light;
+      font-weight: 400;
+      font-size: 0.9em;
+    }
   }
   .card-footer{
     background-color: transparent;
