@@ -77,22 +77,18 @@
         <div class="col-12">
           <h2 class="text-center my-4">Derniers votes décryptés par Datan</h2>
         </div>
-      </div>
-        <?php $this->load->view('votes/partials/votes_carousel.php', array('votes' => $votes)) ?>
-      <div class="row mt-4 mb-5"> <!-- BUTTONS BELOW -->
-        <div class="col-12 d-flex justify-content-center">
-          <div class="bloc-carousel-votes">
-            <div class="carousel-buttons">
-              <button type="button" class="btn prev mr-2 button--previous" aria-label="précédent">
-                <?= file_get_contents(asset_url()."imgs/icons/arrow_left.svg") ?>
-              </button aria-label="tous">
-              <a class="btn all mx-2" href="<?= base_url() ?>votes/decryptes">
-                <span>VOIR TOUS</span>
-              </a>
-              <button type="button" class="btn next ml-2 button--next" aria-label="suivant">
-                <?= file_get_contents(asset_url()."imgs/icons/arrow_right.svg") ?>
-              </button>
-            </div>
+        <div class="col-12 carousel-container bloc-carousel-votes-flickity">
+          <?php $this->load->view('votes/partials/votes_carousel.php', array('votes' => $votes)) ?>
+          <div class="carousel-buttons d-flex justify-content-center">
+            <button type="button" class="btn prev mr-2 carousel--prev" aria-label="précédent">
+              <?= file_get_contents(asset_url()."imgs/icons/arrow_left.svg") ?>
+            </button>
+            <a class="btn all mx-2" href="<?= base_url() ?>votes/decryptes">
+              <span>VOIR TOUS</span>
+            </a>
+            <button type="button" class="btn next ml-2 carousel--next" aria-label="suivant">
+              <?= file_get_contents(asset_url()."imgs/icons/arrow_right.svg") ?>
+            </button>
           </div>
         </div>
       </div>

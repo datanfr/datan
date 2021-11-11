@@ -154,7 +154,7 @@
         FROM
         (
            SELECT vi.voteId, vi.voteNumero, vi.legislature, vi.dateScrutin, vi.seanceRef, vi.libelleTypeVote, vi.typeMajorite, vi.sortCode, vi.demandeur, vi.nombreVotants, vi.suffragesExprimes, vi.nbrSuffragesRequis, vi.decomptePour AS pour, vi.decompteContre AS contre, vi.decompteAbs AS abstention, vi.decompteNv AS nonVotant, vi.voteType, vi.amdt, vi.article, vi.bister, vi.posArticle,
-          REPLACE(vi.titre, "n?", "n°") AS titre, vdos.href, vdos.dossier, doss.dossierId, doss.titre AS dossier_titre, doss.senatChemin, doss.procedureParlementaireLibelle,
+          REPLACE(vi.titre, "n?", "n°") AS titre, vdos.href AS dossierUrl, vdos.dossier, doss.dossierId, doss.legislature AS dossierLegislature, doss.titre AS dossier_titre, doss.senatChemin, doss.procedureParlementaireLibelle,
           vd.title, vd.description, vd.state, f.name AS category, f.slug AS category_slug, vd.created_at, vd.modified_at
           FROM votes_info vi
           LEFT JOIN votes_dossiers vdos ON vi.voteNumero = vdos.voteNumero AND vi.legislature = vdos.legislature
@@ -564,7 +564,7 @@
         'seanceRef' => $seanceRef,
         'numOrdre' => $num
       );
-      $this->db->select('id');
+      $this->db->select('id, legislature, num, numOrdre');
       $this->db->limit(1);
       return $this->db->get_where('amendements', $where)->row_array();
     }
@@ -575,7 +575,7 @@
         'dossier' => $dossier,
         'numOrdre' => $num
       );
-      $this->db->select('id');
+      $this->db->select('id, legislature, num, numOrdre');
       return $this->db->get_where('amendements', $where)->result_array();
     }
 
