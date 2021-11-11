@@ -496,8 +496,8 @@ body:not(.pg-mentions) #tarteaucitronIcon {
     background-color: transparent;
     .date{
       color: $text-gray-light;
-      font-weight: 600;
-      font-size: 1.1em;
+      font-weight: 400;
+      font-size: 1em;
     }
   }
   .card-body{
@@ -511,6 +511,7 @@ body:not(.pg-mentions) #tarteaucitronIcon {
     padding: .75rem;
     .field{
       font-weight: bold;
+      font-size: 0.9em;
     }
   }
   // HOVER //
