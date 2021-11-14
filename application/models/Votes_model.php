@@ -101,10 +101,11 @@
     }
 
     public function get_votes_datan_category($field){
-      $sql = 'SELECT vd.title AS vote_titre, vd.description, vi.dateScrutin, vi.voteNumero, vi.legislature, f.name AS category_libelle, f.slug AS category_slug, vi.sortCode, date_format(dateScrutin, "%d %M %Y") as dateScrutinFR
+      $sql = 'SELECT vd.title AS voteTitre, vd.description, vi.dateScrutin, vi.voteNumero, vi.legislature, f.name AS category_libelle, f.slug AS category_slug, vi.sortCode, date_format(dateScrutin, "%d %M %Y") as dateScrutinFR, r.name AS reading
         FROM votes_datan vd
         LEFT JOIN votes_info vi ON vd.voteNumero = vi.voteNumero AND vd.legislature = vi.legislature
         LEFT JOIN fields f ON vd.category = f.id
+        LEFT JOIN readings r ON r.id = vd.reading
         WHERE vd.state = "published" AND f.id = ?
         ORDER BY vd.id DESC
       ';
@@ -349,7 +350,7 @@
 
 
     public function get_votes_datan_depute($depute_id, $limit = FALSE){
-      $sql = 'SELECT vd.voteNumero, vd.legislature, vd.title AS vote_titre, vd.category, f.name AS category_libelle, vi.sortCode, date_format(vi.dateScrutin, "%d %M %Y") as dateScrutinFR,
+      $sql = 'SELECT vd.voteNumero, vd.legislature, vd.title AS vote_titre, vd.category, f.name AS category_libelle, vi.sortCode, date_format(vi.dateScrutin, "%d %M %Y") as dateScrutinFR, r.name AS reading,
         CASE
         	WHEN vs.vote = 0 THEN "abstention"
         	WHEN vs.vote = 1 THEN "pour"
@@ -359,20 +360,21 @@
         END AS vote_depute
         FROM votes_datan vd
         LEFT JOIN fields f ON vd.category = f.id
-        LEFT JOIN votes_scores vs ON vd.voteNumero = vs.voteNumero AND vd.legislature = vs.legislature AND vs.mpId = '.$this->db->escape($depute_id).'
+        LEFT JOIN votes_scores vs ON vd.voteNumero = vs.voteNumero AND vd.legislature = vs.legislature AND vs.mpId = ?
         LEFT JOIN votes_info vi ON vd.voteNumero = vi.voteNumero AND vd.legislature = vi.legislature
+        LEFT JOIN readings r ON r.id = vd.reading
         WHERE vd.state = "published" AND vs.vote IS NOT NULL
         ORDER BY vi.dateScrutin DESC
       ';
       if ($limit){
         $sql .= ' LIMIT ' . $this->db->escape($limit);
       }
-      return $this->db->query($sql)->result_array();
+      return $this->db->query($sql, array($depute_id))->result_array();
     }
 
     public function get_votes_datan_depute_field($depute_id, $field, $limit){
       $sql = '
-        SELECT vd.voteNumero, vd.legislature, vd.title AS vote_titre, vd.category, f.name AS category_libelle, f.slug, date_format(vi.dateScrutin, "%d %M %Y") as dateScrutinFR,
+        SELECT vd.voteNumero, vd.legislature, vd.title AS vote_titre, vd.category, f.name AS category_libelle, f.slug, date_format(vi.dateScrutin, "%d %M %Y") as dateScrutinFR, r.name AS reading,
         CASE
         	WHEN vs.vote = 0 THEN "abstention"
         	WHEN vs.vote = 1 THEN "pour"
@@ -382,15 +384,16 @@
         END AS vote_depute
         FROM votes_datan vd
         LEFT JOIN fields f ON vd.category = f.id
-        LEFT JOIN votes_scores vs ON vd.voteNumero = vs.voteNumero AND vd.legislature = vs.legislature AND vs.mpId = '.$this->db->escape($depute_id).'
+        LEFT JOIN votes_scores vs ON vd.voteNumero = vs.voteNumero AND vd.legislature = vs.legislature AND vs.mpId = ?
         LEFT JOIN votes_info vi ON vd.voteNumero = vi.voteNumero AND vd.legislature = vi.legislature
+        LEFT JOIN readings r ON r.id = vd.reading
         WHERE vd.state = "published" AND f.slug = '.$this->db->escape($field).' AND vs.vote IS NOT NULL
         ORDER BY vi.dateScrutin DESC
       ';
       if ($limit){
         $sql .= ' LIMIT ' . $this->db->escape($limit);
       }
-      return $this->db->query($sql)->result_array();
+      return $this->db->query($sql, array($depute_id))->result_array();
     }
 
     public function get_votes_all_depute($depute_id, $legislature){
@@ -440,11 +443,11 @@
       return $this->db->query($sql, array($uid, $legislature))->result_array();
     }
 
-    public function get_votes_datan_groupe($groupe_uid, $limit){
-      $sql = 'SELECT A.*, f.name AS category_libelle, v.positionMajoritaire AS vote, date_format(vi.dateScrutin, "%d %M %Y") as dateScrutinFR, vi.legislature
+    public function get_votes_datan_groupe($groupe_id, $limit){
+      $sql = 'SELECT A.*, f.name AS category_libelle, v.positionMajoritaire AS vote, date_format(vi.dateScrutin, "%d %M %Y") as dateScrutinFR, vi.legislature, r.name AS reading
         FROM
         (
-        SELECT vd.id, vd.voteNumero, vd.legislature, vd.title AS vote_titre, vd.slug, vd.category
+        SELECT vd.id, vd.voteNumero, vd.legislature, vd.title AS vote_titre, vd.slug, vd.category, vd.reading
         FROM votes_datan vd
         WHERE vd.state = "published"
         ORDER BY vd.id DESC
@@ -453,17 +456,18 @@
         LEFT JOIN fields f ON A.category = f.id
         JOIN votes_groupes v ON A.voteNumero = v.voteNumero AND A.legislature = v.legislature AND v.organeRef = ?
         LEFT JOIN votes_info vi ON A.voteNumero = vi.voteNumero AND A.legislature = vi.legislature
+        LEFT JOIN readings r ON r.id = A.reading
         ORDER BY vi.dateScrutin DESC
         LIMIT ?
       ';
-      return $this->db->query($sql, array($groupe_uid, $limit))->result_array();
+      return $this->db->query($sql, array($groupe_id, $limit))->result_array();
     }
 
-    public function get_votes_datan_groupe_field($groupe_uid, $field, $limit){
-      $sql = 'SELECT A.*, f.name AS category_libelle, v.positionMajoritaire AS vote, date_format(vi.dateScrutin, "%d %M %Y") as dateScrutinFR, vi.legislature
+    public function get_votes_datan_groupe_field($groupe_id, $field, $limit){
+      $sql = 'SELECT A.*, f.name AS category_libelle, v.positionMajoritaire AS vote, date_format(vi.dateScrutin, "%d %M %Y") as dateScrutinFR, vi.legislature, r.name AS reading
         FROM
         (
-          SELECT vd.id, vd. voteNumero, vd.legislature, vd.title AS vote_titre, vd.slug, vd.category
+          SELECT vd.id, vd. voteNumero, vd.legislature, vd.title AS vote_titre, vd.slug, vd.category, vd.reading
           FROM votes_datan vd
           LEFT JOIN fields f ON vd.category = f.id
           WHERE vd.state = "published" AND f.slug = '.$this->db->escape($field).'
@@ -471,14 +475,15 @@
           LIMIT 15
         ) A
         LEFT JOIN fields f ON A.category = f.id
-        JOIN votes_groupes v ON A.voteNumero = v.voteNumero AND A.legislature = v.legislature AND v.organeRef = '.$this->db->escape($groupe_uid).'
+        JOIN votes_groupes v ON A.voteNumero = v.voteNumero AND A.legislature = v.legislature AND v.organeRef = ?
         LEFT JOIN votes_info vi ON A.voteNumero = vi.voteNumero AND A.legislature = vi.legislature
+        LEFT JOIN readings r ON r.id = A.reading
         ORDER BY vi.dateScrutin DESC
       ';
       if ($limit) {
         $sql .= ' LIMIT ' . $this->db->escape($limit);
       }
-      return $this->db->query($sql)->result_array();
+      return $this->db->query($sql, array($groupe_id))->result_array();
 
     }
 

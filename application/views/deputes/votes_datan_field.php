@@ -83,34 +83,8 @@
         </div>
         <div class="row mt-4">
           <?php foreach ($votes as $vote) : ?>
-            <div class="col-md-6 d-flex justify-content-center">
-              <div class="card card-vote my-3">
-                <?php if ($vote['vote_depute'] == 'absent') : ?>
-                  <div class="thumb absent d-flex align-items-center">
-                    <div class="d-flex align-items-center">
-                      <span>ABSENT<?= mb_strtoupper($gender['e']) ?></span>
-                    </div>
-                  </div>
-                <?php else : ?>
-                  <div class="thumb d-flex align-items-center <?= $vote['vote_depute'] ?>">
-                    <div class="d-flex align-items-center">
-                      <span><?= mb_strtoupper($vote['vote_depute']) ?></span>
-                    </div>
-                  </div>
-                <?php endif; ?>
-                <div class="card-header d-flex flex-row justify-content-between">
-                  <span class="date"><?= months_abbrev($vote['dateScrutinFR']) ?></span>
-                </div>
-                <div class="card-body d-flex align-items-center">
-                  <span class="title">
-                    <a href="<?= base_url() ?>votes/legislature-<?= $vote['legislature'] ?>/vote_<?= $vote['voteNumero'] ?>" class="stretched-link no-decoration"></a>
-                    <?= $vote['vote_titre'] ?>
-                  </span>
-                </div>
-                <div class="card-footer">
-                  <span class="field badge badge-primary py-1 px-2"><?= $vote['category_libelle'] ?></span>
-                </div>
-              </div>
+            <div class="col-md-6 col-lg-6 d-flex justify-content-center my-3">
+              <?php $this->load->view('deputes/partials/card_vote.php', array('vote' => $vote)) ?>
             </div>
           <?php endforeach; ?>
         </div>
