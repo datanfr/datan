@@ -27,7 +27,18 @@
   ) ENGINE=MyISAM DEFAULT CHARSET=utf8;");
 
   // Insert into 'readings'
+  $bdd->query('TRUNCATE TABLE readings');
   $bdd->query("INSERT INTO `readings` (`id`, `name`) VALUES
   (1, 'Première lecture'),
   (2, 'Deuxième lecture')
   ");
+
+  // Create new table: votes_datan_requested
+  $bdd->query("CREATE TABLE IF NOT EXISTS `votes_datan_requested` (
+    `id` INT NOT NULL AUTO_INCREMENT ,
+    `legislature` INT NOT NULL,
+    `vote` INT NOT NULL,
+    `email` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NULL,
+    `date_requested` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (`id`)
+  ) ENGINE=MyISAM DEFAULT CHARSET=utf8;");
