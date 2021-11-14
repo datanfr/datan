@@ -75,11 +75,9 @@
           </div>
           <div class="row mt-4">
             <div class="col-md-11 offset-md-1 d-flex justify-content-center">
-              <div class="btn-all">
-                <a class="btn py-1" href="<?= base_url() ?>groupes/<?= mb_strtolower($groupe['libelleAbrev']) ?>/votes/<?= $field['slug'] ?>">
-                  <span>VOIR TOUS</span>
-                </a>
-              </div>
+              <a class="btn see-all-votes py-1" href="<?= base_url() ?>groupes/<?= mb_strtolower($groupe['libelleAbrev']) ?>/votes/<?= $field['slug'] ?>">
+                <span>VOIR TOUS</span>
+              </a>
             </div>
           </div>
         <?php endforeach;

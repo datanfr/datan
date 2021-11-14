@@ -29,8 +29,8 @@
                 <button type="button" class="btn prev mr-2 carousel--prev" aria-label="précédent">
                   <?= file_get_contents(asset_url()."imgs/icons/arrow_left.svg") ?>
                 </button>
-                <a class="btn all mx-2" href="<?= base_url() ?>votes/decryptes">
-                  <span>VOIR TOUS</span>
+                <a class="btn see-all-carousel mx-2" href="<?= base_url() ?>votes/decryptes">
+                  <span>VOIR TOUS LES VOTES</span>
                 </a>
                 <button type="button" class="btn next ml-2 carousel--next" aria-label="suivant">
                   <?= file_get_contents(asset_url()."imgs/icons/arrow_right.svg") ?>
@@ -65,8 +65,8 @@
                   <?php $this->load->view('votes/partials/card_vote.php', array('vote' => $vote)) ?>
                 <?php endforeach; ?>
               </div>
-              <div class="col-md-11 col-lg-2 offset-md-1 offset-lg-0 btn-all d-flex justify-content-center align-items-center my-3 my-lg-0">
-                <a class="btn py-1" href="<?= base_url() ?>votes/decryptes/<?= $field['slug'] ?>">
+              <div class="col-md-11 col-lg-2 offset-md-1 offset-lg-0 d-flex justify-content-center align-items-center my-3 my-lg-0">
+                <a class="btn see-all-votes py-1" href="<?= base_url() ?>votes/decryptes/<?= $field['slug'] ?>">
                   <span>VOIR TOUS</span>
                 </a>
               </div>
@@ -107,8 +107,8 @@
                 <button type="button" class="btn prev mr-2 carousel--prev" aria-label="précédent">
                   <?= file_get_contents(asset_url()."imgs/icons/arrow_left.svg") ?>
                 </button>
-                <a class="btn all mx-2" href="<?= base_url() ?>votes/decryptes">
-                  <span>VOIR TOUS</span>
+                <a class="btn see-all-carousel mx-2" href="<?= base_url() ?>votes/decryptes">
+                  <span>VOIR TOUS LES VOTES</span>
                 </a>
                 <button type="button" class="btn next ml-2 carousel--next" aria-label="suivant">
                   <?= file_get_contents(asset_url()."imgs/icons/arrow_right.svg") ?>
