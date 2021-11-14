@@ -455,6 +455,10 @@
         }
       }
 
+      // Amendement link
+      if ($data['vote']['voteType'] == 'amendement' && !empty($data['amdt'])) {
+        $data['documentLegislatif'] = $this->votes_model->get_document_legislatif($data['amdt']['texteLegislatifRef']);
+      }
 
       // Votes - groupes
       $data['groupes'] = $this->votes_model->get_vote_groupes($data['vote']['voteNumero'], $data['vote']['dateScrutin'], $legislature);

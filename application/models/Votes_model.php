@@ -570,7 +570,7 @@
         'seanceRef' => $seanceRef,
         'numOrdre' => $num
       );
-      $this->db->select('id, legislature, num, numOrdre');
+      $this->db->select('id, legislature, num, numOrdre, texteLegislatifRef');
       $this->db->limit(1);
       return $this->db->get_where('amendements', $where)->row_array();
     }
@@ -581,7 +581,7 @@
         'dossier' => $dossier,
         'numOrdre' => $num
       );
-      $this->db->select('id, legislature, num, numOrdre');
+      $this->db->select('id, legislature, num, numOrdre, texteLegislatifRef');
       return $this->db->get_where('amendements', $where)->result_array();
     }
 
@@ -592,6 +592,10 @@
 
     public function get_amendement_author($id){
       return $this->db->get_where('amendements_auteurs', array('id' => $id))->row_array();
+    }
+
+    public function get_document_legislatif($id){
+      return $this->db->get_where('documents_legislatifs', array('id' => $id), 1)->row_array();
     }
 
     public function get_dossier_mp_authors($id, $legislature){

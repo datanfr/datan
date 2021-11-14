@@ -168,12 +168,16 @@
             <h3 class="subtitle">En savoir plus</h3>
             <div class="bloc-links">
               <div class="d-flex">
-                <span class="d-flex justify-content-center align-items-center url_obf btn btn-secondary link" url_obf="<?= url_obfuscation($vote['dossierUrl']) ?>">
-                  <span class="text">Sur le dossier</span>
-                </span>
-                <span class="d-flex justify-content-center align-items-center url_obf btn btn-secondary link" url_obf="<?= url_obfuscation("https://www.assemblee-nationale.fr/dyn/15/amendements/3995/AN/138") ?>">
-                  <span class="text">Sur l'amendement</span>
-                </span>
+                <?php if ($vote['dossierUrl']): ?>
+                  <span class="d-flex justify-content-center align-items-center url_obf btn btn-secondary link" url_obf="<?= url_obfuscation($vote['dossierUrl']) ?>">
+                    <span class="text">Sur le dossier</span>
+                  </span>
+                <?php endif; ?>
+                <?php if ($vote['voteType'] == 'amendement' && !empty($documentLegislatif)): ?>
+                  <span class="d-flex justify-content-center align-items-center url_obf btn btn-secondary link" url_obf="<?= url_obfuscation("https://www.assemblee-nationale.fr/dyn/" . $amdt['legislature'] . "/amendements/" . $documentLegislatif['numNotice'] ."/AN/".$amdt['numOrdre']) ?>">
+                    <span class="text">Sur l'amendement</span>
+                  </span>
+                <?php endif; ?>
               </div>
             </div>
           </div>
