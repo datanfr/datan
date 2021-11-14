@@ -376,6 +376,29 @@ body:not(.pg-mentions) #tarteaucitronIcon {
                Carousel  & card-vote
 ################
 */
+.see-all-votes{
+  background-color: $primary;
+  color: #fff;
+  font-weight: 800;
+  transition: 0.3s;
+  &:hover{
+    border: 1px solid $primary;
+    background-color: #fff;
+    color: $primary;
+  }
+}
+.see-all-carousel{
+  background-color: $primary;
+  border-radius: 12px;
+  color: #fff;
+  font-weight: 800;
+  transition: 0.3s;
+  &:hover{
+    border: 1px solid $primary;
+    background-color: #fff;
+    color: $primary;
+  }
+}
 .carousel-container{
   .carousel-buttons{
     margin-top: 1.4rem;
@@ -388,21 +411,6 @@ body:not(.pg-mentions) #tarteaucitronIcon {
       transition: 0.3s;
       &:hover{
         border: 1px solid $text-black;
-      }
-    }
-  }
-  a {
-    &.all{
-      border-radius: 12px;
-      background-color: rgba($primary_rgb, 1);
-      width: 120px;
-      color: #ffffff;
-      font-weight: 600;
-      transition: 0.3s;
-      &:hover{
-        border: 1px solid $primary;
-        background-color: #fff;
-        color: $primary;
       }
     }
   }
@@ -1924,21 +1932,6 @@ ul.ui-menu{
         height: auto;
       }
     }
-    .btn-all{
-      a{
-        width: 100%;
-        background-color: rgba($primary_rgb, 1);
-        color: #ffffff;
-        font-weight: 800;
-        border-radius: 12px;
-        transition: 0.3s;
-        &:hover{
-          border: 1px solid $primary;
-          background-color: #fff;
-          color: $primary;
-        }
-      }
-    }
   }
 }
 /*
@@ -2270,26 +2263,6 @@ ul.ui-menu{
     .logo-field img {
       width: 50px;
       height: auto;
-    }
-    .btn-all{
-      a{
-        @include media-breakpoint-down(sm) {
-          width: 100%;
-        }
-        @include media-breakpoint-up(sm) {
-          width: 240px;
-        }
-        background-color: rgba($primary_rgb, 1);
-        color: #ffffff;
-        font-weight: 800;
-        border-radius: 12px;
-        transition: 0.3s;
-        &:hover{
-          border: 1px solid $primary;
-          background-color: #fff;
-          color: $primary;
-        }
-      }
     }
   }
   svg{

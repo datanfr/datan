@@ -270,7 +270,7 @@
                 <div class="d-flex justify-content-between mb-4">
                   <h2>Ses derniers votes</h2>
                   <div class="bloc-carousel-votes">
-                    <a class="btn all mx-2" href="<?= base_url() ?>deputes/<?= $depute['dptSlug'] ?>/depute_<?= $depute['nameUrl'] ?>/votes">
+                    <a class="btn see-all-votes mx-2" href="<?= base_url() ?>deputes/<?= $depute['dptSlug'] ?>/depute_<?= $depute['nameUrl'] ?>/votes">
                       <span>VOIR TOUS</span>
                     </a>
                   </div>
