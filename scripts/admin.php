@@ -47,7 +47,7 @@
                   <h5 class="card-title">Update database : 'reading' field in votes_datan & new table 'votes_datan_requested'</h5>
                   <h6 class="card-subtitle text-muted">November 11, 2021</h6>
                   <p class="card-text">
-                    Add new field 'reading' in votes_datan + new table (votes_datan_reqiested)
+                    Add new field 'reading' in votes_datan + new table (votes_datan_requested)
                     <a class="btn btn-danger my-3" href="update_dataset/20211111_votesDatan_reading.php" role="button">UPDATE DATABASE</a>
                   </p>
                 </div>
