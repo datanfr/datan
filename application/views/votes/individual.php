@@ -179,9 +179,12 @@
           </div>
           <div class="bloc-social mt-5">
             <h3 class="subtitle">Partagez ce vote</h3>
-            <div class="d-flex">
+            <div class="d-flex flex-row">
               <a href="https://twitter.com/share?ref_src=twsrc%5Etfw" class="twitter-share-button" data-size="large" data-show-count="false">Tweetez</a>
-              <div class="fb-share-button ml-3" data-href="https://datan.fr/votes/legislature-15/vote_3888" data-layout="button" data-lazy="true" data-size="large"></div>
+              <div class="fb-share-button ml-2" data-href="https://datan.fr/votes/legislature-<?= $legislature ?>/vote_<?= $vote['voteNumero'] ?>" data-layout="button" data-lazy="true" data-size="large"></div>
+              <div class="ml-2">
+                <script type="IN/Share" data-url="https://datan.fr/votes/legislature-<?= $legislature ?>/vote_<?= $vote['voteNumero'] ?>"></script>
+              </div>
             </div>
           </div>
           <div class="bloc-nos-lois mt-5">
@@ -369,8 +372,8 @@
             <button type="button" class="btn prev mr-2 carousel--prev" aria-label="précédent">
               <?= file_get_contents(asset_url()."imgs/icons/arrow_left.svg") ?>
             </button>
-            <a class="btn all mx-2" href="<?= base_url() ?>votes/decryptes">
-              <span>VOIR TOUS</span>
+            <a class="btn see-all-carousel mx-2" href="<?= base_url() ?>votes/decryptes">
+              <span>VOIR TOUS LES VOTES</span>
             </a>
             <button type="button" class="btn next ml-2 carousel--next" aria-label="suivant">
               <?= file_get_contents(asset_url()."imgs/icons/arrow_right.svg") ?>
