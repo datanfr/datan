@@ -73,7 +73,7 @@
                     </select>
                   </div>
                   <div class="form-group">
-                    <label for="">Categorie</label>
+                    <label for="">Lecture</label>
                     <select class="form-control" name="reading">
                       <option value="<?= $vote['reading'] ?>" selected="selected">Selected: <?= $vote['reading_name'] ?></option>
                       <option value=""></option>
