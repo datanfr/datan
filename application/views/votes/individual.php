@@ -43,9 +43,9 @@
               <div class="col-lg-8">
                 <p class="mt-4">Les députés ont <span class="font-weight-bold sort-<?= $vote['sortCode'] ?>"><?= $vote['sortCode'] ?></span> le <?= $vote['date_edited'] ?> <?= $vote['titre'] ?></p>
                 <?php if ($vote['sortCode'] == "adopté"): ?>
-                  <p>Au total, <?= $vote['pour'] ?> députés (<?= round($vote['pour_pct']) ?> % des votants) ont voté en faveur, tandis que <?= $vote['contre'] ?> députés (<?= $vote['contre_pct'] ?> %) ont voté contre. <?= $vote['abstention'] ?> parlementaires (<?= $vote['abs_pct'] ?>%) ont décidé de s'abstenir.</p>
+                  <p>Au total, <b><?= $vote['nombreVotants'] ?> députés</b> ont pris part au vote : <?= round($vote['pour_pct']) ?> % ont voté en faveur, <?= round($vote['contre_pct']) ?> % ont voté contre, et <?= round($vote['abs_pct']) ?> % se sont abstenus.</p>
                   <?php else: ?>
-                    <p>Au total, <?= $vote['contre'] ?> députés (<?= round($vote['contre_pct']) ?> % des votants) ont voté contre, tandis que <?= $vote['pour'] ?> députés (<?= $vote['pour_pct'] ?> %) ont voté en faveur. <?= $vote['abstention'] ?> parlementaires (<?= $vote['abs_pct'] ?>%) ont décidé de s'abstenir.</p>
+                    <p>Au total, <b><?= $vote['nombreVotants'] ?> députés</b> ont pris part au vote : <?= round($vote['contre_pct']) ?> % ont voté contre, <?= round($vote['pour_pct']) ?> % ont voté en faveur, et <?= round($vote['abs_pct']) ?> % se sont abstenus.</p>
                 <?php endif; ?>
               </div>
               <div class="col-lg-4">
@@ -126,7 +126,7 @@
             </div>
           <?php else: ?>
             <div class="mt-5">
-              <h2>Vous ne comprenez pas ce vote ?</h2>
+              <h2>Ce vote n'est pas compréhensible ?</h2>
               <p class="mt-4">Certains votes peuvent être compliqués à comprendre. Comment savoir à quoi correspond un article dans un projet de loi ? Comment connaître le contenu de tel amendement ?</p>
               <p>Pas de problème, <b>l’équipe de Datan contextualise et simplifie certains votes</b>.</p>
               <p>Vous souhaitez que l'on vous explique ce vote ? Demandez-nous-le !</p>
@@ -165,7 +165,7 @@
             </table>
           </div>
           <div class="bloc-savoir-plus mt-5">
-            <h2>En savoir plus</h2>
+            <h3 class="subtitle">En savoir plus</h3>
             <div class="bloc-links">
               <div class="d-flex">
                 <span class="d-flex justify-content-center align-items-center url_obf btn btn-secondary link" url_obf="<?= url_obfuscation($vote['dossierUrl']) ?>">
@@ -178,14 +178,14 @@
             </div>
           </div>
           <div class="bloc-social mt-5">
-            <h2>Partagez ce vote</h2>
+            <h3 class="subtitle">Partagez ce vote</h3>
             <div class="d-flex">
-              <a href="https://twitter.com/share?ref_src=twsrc%5Etfw" class="twitter-share-button" data-size="large" data-show-count="false">Tweet</a>
+              <a href="https://twitter.com/share?ref_src=twsrc%5Etfw" class="twitter-share-button" data-size="large" data-show-count="false">Tweetez</a>
               <div class="fb-share-button ml-3" data-href="https://datan.fr/votes/legislature-15/vote_3888" data-layout="button" data-lazy="true" data-size="large"></div>
             </div>
           </div>
           <div class="bloc-nos-lois mt-5">
-            <h2>Prenez position</h2>
+            <h3 class="subtitle">Prenez position</h3>
             <p>Vous aimez Datan ? Alors vous aimerez sûrement <b>Nos Lois</b>, une application permettant de donner son avis sur les textes en discussion à l'Assemblée.</p>
             <div class="d-flex justify-content-center">
               <div class="card align-items-center link nos-lois url_obf my-2 p-2" url_obf="<?= url_obfuscation("https://www.noslois.fr/") ?>" >
