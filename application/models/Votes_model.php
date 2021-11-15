@@ -631,19 +631,25 @@
       $legislature = $this->input->post('legislature');
       $voteNumero = $this->input->post('voteNumero');
       $newsletter = $this->input->post('newsletter');
+      $captcha = $this->input->post('captcha');
 
-      // Newsletter
-      if ($newsletter && $email != NULL) {
-        $this->newsletter_model->create_newsletter();
+      // Check captcha
+      if ($captcha !== $this->session->userdata('captchaCode')) {
+        return FALSE;
+      } else {
+        // Newsletter
+        if ($newsletter && $email != NULL) {
+          $this->newsletter_model->create_newsletter();
+        }
+
+        // Add data in table 'votes_datan_requested'
+        $data = array(
+          'legislature' => $legislature,
+          'vote' => $voteNumero,
+          'email' => $email
+        );
+        return $this->db->insert('votes_datan_requested', $data);
       }
-
-      // Add data in table 'votes_datan_requested'
-      $data = array(
-        'legislature' => $legislature,
-        'vote' => $voteNumero,
-        'email' => $email
-      );
-      return $this->db->insert('votes_datan_requested', $data);
     }
 
     public function get_requested_votes($limit = NULL){
