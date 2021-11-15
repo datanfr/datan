@@ -575,6 +575,7 @@
       $this->load->view('templates/button_up');
       $this->load->view('votes/individual', $data);
       $this->load->view('templates/breadcrumb', $data);
+      $this->load->view('votes/modals/vote_datan_requested', $data);
       $this->load->view('templates/footer');
 
     }
