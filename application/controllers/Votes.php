@@ -7,6 +7,7 @@
       $this->load->model('groupes_model');
       $this->load->model('deputes_model');
       $this->load->model('organes_model');
+      $this->load->model('captcha_model');
       //$this->password_model->security_password(); Former login protection
     }
 
@@ -502,6 +503,9 @@
       } else {
         $data['vote_next'] = FALSE;
       }
+
+      // Captcha for votes_datan_requested
+      $data['captchaImg'] = $this->captcha_model->generateCaptcha();
 
       $data['votes_datan'] = $this->votes_model->get_last_votes_datan(7);
       // Meta

@@ -21,6 +21,11 @@
             <input type="checkbox" name="newsletter" class="form-check-input" id="voteDatanRequest">
             <label class="form-check-label">Vous souhaitez recevoir plus d'informations de notre part ? Inscrivez-vous à nos newsletters !</label>
           </div>
+          <div class="mt-3 border border-primary p-3">
+            <p class="font-weight-bold">Petite vérification</p>
+            <p>Veuillez confirmer que vous n'êtes pas un robot !</p>
+            <?php $this->view('captcha/index') ?>
+          </div>
         </div>
         <div class="modal-footer">
           <button type="submit" class="btn btn-primary font-weight-bold">Demandez une explication</button>
