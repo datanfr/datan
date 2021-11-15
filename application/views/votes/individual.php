@@ -131,7 +131,7 @@
               <p>Pas de problème, <b>l’équipe de Datan contextualise et simplifie certains votes</b>.</p>
               <p>Vous souhaitez que l'on vous explique ce vote ? Demandez-nous-le !</p>
               <div class="d-flex justify-content-center mt-4">
-                <a href="<?= base_url() ?>" class="btn btn-primary font-weight-bold">Demandez-nous une explication !</a>
+                <a class="btn bg-primary text-white font-weight-bold cursor-pointer" data-toggle="modal" data-target="#voteDatanRequested">Demandez-nous une explication !</a>
               </div>
             </div>
           <?php endif; ?>

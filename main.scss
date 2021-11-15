@@ -2093,7 +2093,7 @@ ul.ui-menu{
   .subtitle{
     color: $text-black;
     font-weight: 800;
-    font-size: 1.3em; 
+    font-size: 1.3em;
   }
   // NEW BLOC INFOS (LEFT)
   .bloc-card-vote{
@@ -2822,7 +2822,7 @@ MODAL
 MODAL
 ################
 */
-#modalSubscription,#modalFail{
+#modalSubscription,#modalFail, #fail, #success{
   display: none;
 }
 .modalDatan{
