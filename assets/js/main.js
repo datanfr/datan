@@ -1,3 +1,22 @@
+/*
+################
+               FUNCTION IF LOCALHOST
+################
+*/
+function get_base_url() {
+  var localhost = 'http://localhost/datan';
+  if (location.hostname === "localhost" || location.hostname === "127.0.0.1") {
+    return localhost;
+  } else {
+    return 'https://datan.fr';
+  }
+}
+/*
+################
+                A TRIER
+################
+*/
+
 $(document).ready(function () {
   // popover
   $("[data-toggle=popover]").popover({
@@ -207,14 +226,14 @@ $(function () {
 
 /*
 ##########
-NEWSLETTER
+NEWSLETTER (MODAL)
 ##########
 */
 // Neweletter in header
 $('#newsletterForm').on('submit', (e) => {
   e.preventDefault();
   $.ajax({
-    url: "api/newsletter/create_newsletter",
+    url: get_base_url() + "/api/newsletter/create_newsletter",
     type: "POST",
     data: $('#newsletterForm').serialize(),
     dataType: 'json',
@@ -239,7 +258,7 @@ $('#newsletterForm').on('submit', (e) => {
 $('#newsletterPage').on('submit', (e) => {
   e.preventDefault();
   $.ajax({
-    url: "api/newsletter/create_newsletter",
+    url: get_base_url() + "/api/newsletter/create_newsletter",
     type: "POST",
     data: $('#newsletterPage').serialize(),
     dataType: 'json',
@@ -258,6 +277,35 @@ $('#newsletterPage').on('submit', (e) => {
   return true;
 })
 
+/*
+##########
+VOTE DATAN REQUESTED (MODAL)
+##########
+*/
+$('#voteDatanRequestedForm').on('submit', (e) => {
+  e.preventDefault();
+  $.ajax({
+    url: get_base_url() + "/api/votes/request_vote_datan",
+    type: "POST",
+    data: $('#voteDatanRequestedForm').serialize(),
+    dataType: 'json',
+    success: function (ac) {
+      if (!ac) {
+        $('#voteDatanRequestedForm').hide();
+        $('#fail').show();
+      } else {
+        $('#voteDatanRequestedForm').hide();
+        $('#success').show();
+      }
+    },
+    error: function (err) {
+      console.log('err', err)
+      $('#voteDatanRequestedForm').hide();
+      $('#fail').show();
+    }
+  });
+  return true;
+})
 /*
 ##########
 FAQ

@@ -625,4 +625,25 @@
       return $this->db->get_where('dossiers_acteurs da', $where)->result_array();
     }
 
+    public function request_vote_datan(){
+      $email = $this->input->post('email');
+      $email = empty($email) ? NULL : $email;
+      $legislature = $this->input->post('legislature');
+      $voteNumero = $this->input->post('voteNumero');
+      $newsletter = $this->input->post('newsletter');
+
+      // Newsletter
+      if ($newsletter && $email != NULL) {
+        $this->newsletter_model->create_newsletter();
+      }
+
+      // Add data in table 'votes_datan_requested'
+      $data = array(
+        'legislature' => $legislature,
+        'vote' => $voteNumero,
+        'email' => $email
+      );
+      return $this->db->insert('votes_datan_requested', $data);
+    }
+
   }

@@ -1,5 +1,26 @@
 "use strict";
 
+/*
+################
+               FUNCTION IF LOCALHOST
+################
+*/
+function get_base_url() {
+  var localhost = 'http://localhost/datan';
+
+  if (location.hostname === "localhost" || location.hostname === "127.0.0.1") {
+    return localhost;
+  } else {
+    return 'https://datan.fr';
+  }
+}
+/*
+################
+                A TRIER
+################
+*/
+
+
 $(document).ready(function () {
   // popover
   $("[data-toggle=popover]").popover({
@@ -185,7 +206,7 @@ $(function () {
 });
 /*
 ##########
-NEWSLETTER
+NEWSLETTER (MODAL)
 ##########
 */
 // Neweletter in header
@@ -193,7 +214,7 @@ NEWSLETTER
 $('#newsletterForm').on('submit', function (e) {
   e.preventDefault();
   $.ajax({
-    url: "api/newsletter/create_newsletter",
+    url: get_base_url() + "/api/newsletter/create_newsletter",
     type: "POST",
     data: $('#newsletterForm').serialize(),
     dataType: 'json',
@@ -218,7 +239,7 @@ $('#newsletterForm').on('submit', function (e) {
 $('#newsletterPage').on('submit', function (e) {
   e.preventDefault();
   $.ajax({
-    url: "api/newsletter/create_newsletter",
+    url: get_base_url() + "/api/newsletter/create_newsletter",
     type: "POST",
     data: $('#newsletterPage').serialize(),
     dataType: 'json',
@@ -232,6 +253,36 @@ $('#newsletterPage').on('submit', function (e) {
     error: function error(err) {
       console.log('err', err);
       $('#newsletterFailed').removeClass("d-none");
+    }
+  });
+  return true;
+});
+/*
+##########
+VOTE DATAN REQUESTED (MODAL)
+##########
+*/
+
+$('#voteDatanRequestedForm').on('submit', function (e) {
+  e.preventDefault();
+  $.ajax({
+    url: get_base_url() + "/api/votes/request_vote_datan",
+    type: "POST",
+    data: $('#voteDatanRequestedForm').serialize(),
+    dataType: 'json',
+    success: function success(ac) {
+      if (!ac) {
+        $('#voteDatanRequestedForm').hide();
+        $('#fail').show();
+      } else {
+        $('#voteDatanRequestedForm').hide();
+        $('#success').show();
+      }
+    },
+    error: function error(err) {
+      console.log('err', err);
+      $('#voteDatanRequestedForm').hide();
+      $('#fail').show();
     }
   });
   return true;
