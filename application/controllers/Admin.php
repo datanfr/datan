@@ -12,6 +12,7 @@
       $this->load->model('newsletter_model');
       $this->load->model('faq_model');
       $this->load->model('readings_model');
+      $this->load->model('votes_model');
       $this->password_model->security();
     }
 
@@ -27,6 +28,7 @@
       $data['groupes_entrants'] = $this->deputes_model->get_groupes_entrants(5);
       $data['newsletter_total'] = $this->newsletter_model->get_number_registered("general");
       $data['newsletter_month'] = $this->newsletter_model->get_registered_month("general");
+      $data['votes_requested'] = $this->votes_model->get_requested_votes();
 
       $this->load->view('dashboard/header', $data);
       $this->load->view('dashboard/index', $data);

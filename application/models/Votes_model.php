@@ -646,4 +646,19 @@
       return $this->db->insert('votes_datan_requested', $data);
     }
 
+    public function get_requested_votes($limit = NULL){
+      $sql = 'SELECT vr.legislature, vr.vote, COUNT(*) as n
+        FROM votes_datan_requested vr
+        LEFT JOIN votes_datan vd ON vr.vote = vd.voteNumero AND vr.legislature = vd.legislature
+        WHERE vd.voteNumero IS NULL
+        GROUP BY vr.legislature, vr.vote
+        ORDER BY COUNT(*) DESC
+      ';
+      if ($limit){
+        $sql .= ' LIMIT ' . $this->db->escape_like_str($limit);
+      }
+
+      return $this->db->query($sql)->result_array();
+    }
+
   }
