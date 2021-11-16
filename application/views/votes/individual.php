@@ -183,12 +183,26 @@
           </div>
           <div class="bloc-social mt-5">
             <h3 class="subtitle">Partagez ce vote</h3>
-            <div class="d-flex flex-row">
-              <a href="https://twitter.com/share?ref_src=twsrc%5Etfw" class="twitter-share-button" data-size="large" data-show-count="false">Tweetez</a>
-              <div class="fb-share-button ml-2" data-href="https://datan.fr/votes/legislature-<?= $legislature ?>/vote_<?= $vote['voteNumero'] ?>" data-layout="button" data-lazy="true" data-size="large"></div>
-              <div class="ml-2">
-                <script type="IN/Share" data-url="https://datan.fr/votes/legislature-<?= $legislature ?>/vote_<?= $vote['voteNumero'] ?>"></script>
-              </div>
+            <!-- DESIGN https://feralvoice.com/social-media-sharing-buttons/ -->
+            <!-- Linkedin does not work -->
+            <!-- Whatsapp à faire -->
+            <div class="d-flex flex-row flex-wrap social-share-bloc">
+              <button type="button" name="button" class="btn social-share twitter twitter-bg">
+                <img src="<?= asset_url() ?>imgs/logos/twitter-no-round.png" alt="Partagez sur Twitter">
+                <span>Twitter</span>
+              </button>
+              <button type="button" name="button" class="btn social-share facebook fcb-bg">
+                <img src="<?= asset_url() ?>imgs/logos/facebook-no-round.png" alt="Partagez sur Twitter">
+                <span>Facebook</span>
+              </button>
+              <button type="button" name="button" class="btn social-share linkedin linkedin-bg">
+                <img src="<?= asset_url() ?>imgs/logos/linkedin-no-round.png" alt="Partagez sur Linkedin">
+                <span>Linkedin</span>
+              </button>
+              <button type="button" name="button" class="mobileShow* btn social-share whatsapp whatsapp-bg">
+                <img src="<?= asset_url() ?>imgs/logos/whatsapp-no-round.png" alt="Partagez sur Whatsapp">
+                <span>Whatsapp</span>
+              </button>
             </div>
           </div>
           <div class="bloc-nos-lois mt-5">
