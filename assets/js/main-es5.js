@@ -304,4 +304,43 @@ $('#searchfaq').on('keyup', function (e) {
     return regex.test($(this).text());
   }).show();
 });
+/*
+##########
+Social media buttons
+##########
+*/
+// Source: https://css-tricks.com/simple-social-sharing-links/
+
+setShareLinks();
+
+function socialWindow(url) {
+  var left = (screen.width - 570) / 2;
+  var top = (screen.height - 570) / 2;
+  var params = "menubar=no,toolbar=no,status=no,width=570,height=570,top=" + top + ",left=" + left;
+  window.open(url, "NewWindow", params);
+}
+
+function setShareLinks() {
+  var pageUrl = encodeURIComponent(document.URL);
+  var tweet = encodeURIComponent(jQuery("meta[property='og:description']").attr("content"));
+  var whatsappMessage = "Je viens de découvrir un nouveau vote de l'Assemblée nationale sur Datan ! Découvre le aussi : " + document.URL;
+  jQuery(".social-share.facebook").on("click", function () {
+    url = "https://www.facebook.com/sharer.php?u=" + pageUrl;
+    socialWindow(url);
+  });
+  jQuery(".social-share.twitter").on("click", function () {
+    url = "https://twitter.com/intent/tweet?url=" + pageUrl + "&text=" + tweet;
+    socialWindow(url);
+  }); // REVOIR LINKEDIN
+
+  jQuery(".social-share.linkedin").on("click", function () {
+    url = "https://www.linkedin.com/sharing/share-offsite/?url=" + pageUrl;
+    socialWindow(url);
+  }); // Need to be tested prod
+
+  jQuery(".social-share.whatsapp").on("click", function () {
+    url = "whatsapp://send?text=" + whatsappMessage;
+    socialWindow(url);
+  });
+}
 //# sourceMappingURL=main-es5.js.map

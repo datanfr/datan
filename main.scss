@@ -17,6 +17,10 @@ $primary_rgb: rgb(0, 183, 148);
 $adopted: $vert;
 $abstention: #FFBA49;
 $rejected: #C5283D;
+$fcb-color: #4267B2;
+$twitter-color: #1DA1F2;
+$linkedin-color: #2867B2;
+$whatsapp-color: #128C7E;
 
 // BREADCRUMB
 $breadcrumb-divider: quote(">");
@@ -369,6 +373,52 @@ body:not(.pg-mentions) #tarteaucitronIcon {
     width: 100%;
     margin: 0; padding: 30px 0;
     background-image: linear-gradient(to bottom, transparent, #fff);
+  }
+}
+.mobileShow {display: none;}
+  /* Smartphone Portrait and Landscape */
+@media only screen and (max-width: 768px) {
+  .mobileShow {display: block}
+}
+/*
+################
+              Social media and social-share
+################
+*/
+.fcb-bg{
+  background-color: $fcb-color;
+  color: #fff;
+}
+.twitter-bg{
+  background-color: $twitter-color;
+  color: #fff;
+}
+.linkedin-bg{
+  background-color: $linkedin-color;
+  color: #fff;
+}
+.whatsapp-bg{
+  background-color: $whatsapp-color;
+  color: #fff;
+}
+.social-share-bloc{
+  button{
+    padding: 0.2rem 0.6rem;
+    border-radius: 0;
+    margin: 0.2rem;
+    transition: 0.3s;
+    img{
+      height: 20px;
+      width: auto;
+    }
+    span{
+      font-size: $h7-font-size;
+      margin-left: 0.25rem;
+    }
+    &:hover{
+      color: #fff;
+      box-shadow: $card-box-shadow-hover;
+    }
   }
 }
 /*
@@ -1828,7 +1878,7 @@ ul.ui-menu{
         margin-left: 0.7em;
       }
       &.btn-fcb{
-        background-color: #4267B2;
+        background-color: $fcb-color;
         svg{
           width: 10px;
           height: auto;
@@ -1838,17 +1888,17 @@ ul.ui-menu{
         }
         &:hover{
           background-color: #fff;
-          border: 1px solid #4267B2;
+          border: 1px solid $fcb-color;
           span {
-            color: #4267B2;
+            color: $fcb-color;
           }
           svg path{
-            fill: #4267B2;
+            fill: $fcb-color;
           }
         }
       }
       &.btn-twitter{
-        background-color: #1DA1F2;
+        background-color: $twitter-color;
         svg{
           width: 27px;
           height: auto;
@@ -1858,12 +1908,12 @@ ul.ui-menu{
         }
         &:hover{
           background-color: #fff;
-          border: 1px solid #1DA1F2;
+          border: 1px solid $twitter-color;
           span{
-            color: #1DA1F2;
+            color: $twitter-color;
           }
           svg path{
-            fill: #1DA1F2;
+            fill: $twitter-color;
           }
         }
       }
