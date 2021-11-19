@@ -170,12 +170,12 @@
               <div class="d-flex">
                 <?php if ($vote['dossierUrl']): ?>
                   <span class="d-flex justify-content-center align-items-center url_obf btn btn-secondary link" url_obf="<?= url_obfuscation($vote['dossierUrl']) ?>">
-                    <span class="text">Sur le dossier</span>
+                    <span class="text">Le dossier</span>
                   </span>
                 <?php endif; ?>
                 <?php if ($vote['voteType'] == 'amendement' && !empty($documentLegislatif)): ?>
                   <span class="d-flex justify-content-center align-items-center url_obf btn btn-secondary link" url_obf="<?= url_obfuscation("https://www.assemblee-nationale.fr/dyn/" . $amdt['legislature'] . "/amendements/" . $documentLegislatif['numNotice'] ."/AN/".$amdt['numOrdre']) ?>">
-                    <span class="text">Sur l'amendement</span>
+                    <span class="text">L'amendement</span>
                   </span>
                 <?php endif; ?>
               </div>
@@ -187,19 +187,19 @@
             <!-- Linkedin does not work -->
             <!-- Whatsapp à faire -->
             <div class="d-flex flex-row flex-wrap social-share-bloc">
-              <button type="button" name="button" class="btn social-share twitter twitter-bg">
+              <button type="button" name="button" class="btn social-share twitter twitter-bg d-flex">
                 <img src="<?= asset_url() ?>imgs/logos/twitter-no-round.png" alt="Partagez sur Twitter">
                 <span>Twitter</span>
               </button>
-              <button type="button" name="button" class="btn social-share facebook fcb-bg">
+              <button type="button" name="button" class="btn social-share facebook fcb-bg d-flex">
                 <img src="<?= asset_url() ?>imgs/logos/facebook-no-round.png" alt="Partagez sur Twitter">
                 <span>Facebook</span>
               </button>
-              <button type="button" name="button" class="btn social-share linkedin linkedin-bg">
+              <button type="button" name="button" class="btn social-share linkedin linkedin-bg d-flex">
                 <img src="<?= asset_url() ?>imgs/logos/linkedin-no-round.png" alt="Partagez sur Linkedin">
                 <span>Linkedin</span>
               </button>
-              <button type="button" name="button" class="mobileShow* btn social-share whatsapp whatsapp-bg">
+              <button type="button" name="button" class="mobileShow btn social-share whatsapp whatsapp-bg">
                 <img src="<?= asset_url() ?>imgs/logos/whatsapp-no-round.png" alt="Partagez sur Whatsapp">
                 <span>Whatsapp</span>
               </button>
