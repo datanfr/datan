@@ -21,7 +21,7 @@
   </div>
   <?php if ($cat): ?>
     <div class="mb-3">
-      <a class="btn btn-cat btn-primary stretched-link" href="<?= base_url(); ?>groupes/<?= mb_strtolower($groupe['libelleAbrev']) ?>" role="button">Découvrir son activité</a>
+      <a class="btn btn-cat btn-primary stretched-link" href="<?= base_url(); ?>groupes/<?= mb_strtolower($groupe['libelleAbrev']) ?>" role="button">Découvrez son activité</a>
     </div>
     <?php else: ?>
       <?php if ($active): ?>
