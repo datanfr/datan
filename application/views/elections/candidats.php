@@ -10,7 +10,7 @@
     <div class="row">
       <div class="col-md-8 col-lg-7 my-4">
         <h2>Informations</h2>
-        <p>Les <?= mb_strtolower($election['libelle']) ?> <?= $election['dateYear'] ?> se dérouleront en deux tours.</p>
+        <p>Les <?= mb_strtolower($election['libelle']) ?> <?= $election['dateYear'] ?> se déroulent en deux tours.</p>
         <p>Le premier tour <?= $today > $election['dateFirstRound'] ? "s'est tenu" : "se tiendra" ?> le <?= $election['dateFirstRoundFr'] ?>, tandis que le second tour <?= $today > $election['dateSecondRound'] ? "s'est déroulé" : "se déroulera" ?> le <?= $election['dateSecondRoundFr'] ?>.</p>
         <?php if ($election['candidates']): ?>
           <p>
@@ -33,57 +33,25 @@
         <?php endif; ?>
       </div>
       <div class="col-md-4 col-lg-5 d-flex justify-content-center align-items-center">
-        <span class="url_obf btn btn-light btn-lg" url_obf="<?= url_obfuscation("https://elections.interieur.gouv.fr/") ?>">
-          Résultats
-        </span>
+        <?php if (!empty($election['resultsUrl'])): ?>
+          <span class="url_obf btn btn-light btn-lg" url_obf="<?= url_obfuscation($election['resultsUrl']) ?>">
+            Résultats
+          </span>
+        <?php else: ?>
+          <span class="url_obf btn btn-light btn-lg" url_obf="<?= url_obfuscation("https://elections.interieur.gouv.fr/") ?>">
+            Résultats
+          </span>
+        <?php endif; ?>
+
       </div>
     </div>
   </div>
 </div>
 <div class="container pg-elections-candidats py-5">
   <div class="row">
-    <?php if ($election['id'] == 1 /*regionales-2021 */): ?>
-      <div class="col-md-8 col-lg-7">
-        <h2 class="my-4">Résultats : la couleur politique des conseils régionaux</h2>
-        <p>Dans les conseils régionaux, les partis politiques qui arrivent en têtes aux élections reçoivent la majorité des sièges et en prennent la présidence. C'est donc la liste arrivée en tête qui se retrouve à la tête de la région.</p>
-        <p>Découvrez sur cette carte la couleur politique des différentes régions après le second tour des élections de 2021.</p>
-        <div class="map-container my-5">
-          <div class="jvmap-smart" id="map-regions"></div>
-        </div>
-        <div class="row my-4">
-          <?php foreach ($mapLegend as $x): ?>
-            <div class="map-container-ledend col-6">
-              <div class="d-flex my-2">
-                <div class="color" style="background-color: <?= $x['color'] ?>"></div>
-                <span class="ml-4"><?= $x['party'] ?></span>
-              </div>
-            </div>
-          <?php endforeach; ?>
-        </div>
-      </div>
-    <?php endif; ?>
-    <?php if ($election['id'] == 2 /* departementales-2021 */): ?>
-      <div class="col-md-8 col-lg-7">
-        <h2 class="my-4">La couleur politique actuelle des conseils départementaux</h2>
-        <p>Les dernières élections départementales ont eu lieu en 2015. Pour retrouver les résultats, <a href="https://www.interieur.gouv.fr/Elections/Les-resultats/Departementales/elecresult__departementales-2015/(path)/departementales-2015/index.html" target="_blank" rel="nofollow noreferrer noopener">cliquez ici</a>.</p>
-        <p>Après les élections, les conseillers départementaux élisent le président du conseil départemental. Le président est, dans la plupart des cas, élu par une majorité de droite ou de gauche.</p>
-        <p>Le président élu, qui se retrouve à la tête du conseil département, est chargé de l'administration et a la charge des dépenses et des recettes.</p>
-        <p>Découvrez sur cette carte la couleur politique des différentes régions de 2015 à 2021.</p>
-        <div class="map-container my-5">
-          <div class="jvmap-smart" id="map-departements"></div>
-        </div>
-        <div class="row my-4">
-          <?php foreach ($mapLegend as $x): ?>
-            <div class="map-container-ledend col-6">
-              <div class="d-flex my-2">
-                <div class="color" style="background-color: <?= $x['color'] ?>"></div>
-                <span class="ml-4"><?= $x['party'] ?></span>
-              </div>
-            </div>
-          <?php endforeach; ?>
-        </div>
-      </div>
-    <?php endif; ?>
+    <div class="col-md-8 col-lg-7">
+      <?php $this->load->view('elections/results/'.$election['slug'].'.php') ?>
+    </div>
     <?php if (!empty($electionInfos)): ?>
       <div class="col-md-8 col-lg-4 offset-lg-1 mt-5 mt-lg-0">
         <div class="mt-4 infosGeneral">
