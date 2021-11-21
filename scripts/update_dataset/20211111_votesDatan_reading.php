@@ -30,7 +30,9 @@
   $bdd->query('TRUNCATE TABLE readings');
   $bdd->query("INSERT INTO `readings` (`id`, `name`) VALUES
   (1, 'Première lecture'),
-  (2, 'Deuxième lecture')
+  (2, 'Deuxième lecture'),
+  (3, 'Lecture définitive'),
+  (4, 'Texte de la commission mixte paritaire')
   ");
 
   // Create new table: votes_datan_requested
