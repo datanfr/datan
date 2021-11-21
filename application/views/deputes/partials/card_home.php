@@ -38,7 +38,7 @@
   </div>
   <?php if ($cat): ?>
     <div class="mb-3">
-      <a class="btn btn-cat btn-primary stretched-link" href="<?= base_url(); ?>deputes/<?= $depute['dptSlug'].'/depute_'.$depute['nameUrl'] ?>" role="button">Découvrir son activité</a>
+      <a class="btn btn-cat btn-primary stretched-link" href="<?= base_url(); ?>deputes/<?= $depute['dptSlug'].'/depute_'.$depute['nameUrl'] ?>" role="button">Découvrez son activité</a>
     </div>
     <?php else: ?>
       <div class="card-footer d-flex justify-content-center align-items-center">

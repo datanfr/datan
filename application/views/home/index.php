@@ -155,7 +155,7 @@
       </div>
       <div class="pb-5 d-flex justify-content-center">
         <a href="<?= base_url();?>statistiques" class="no-decoration">
-          <button type="button" class="btn btn-outline-primary">Découvrez toutes nos statistiques</button>
+          <button type="button" class="btn btn-outline-primary">Découvrez nos statistiques</button>
         </a>
       </div>
     </div>
@@ -320,7 +320,7 @@
           </div>
           <div class="mt-5 d-flex flex-column align-items-center">
             <a href="<?= base_url();?>index_departements" class="no-decoration">
-              <button type="button" class="btn btn-primary">Liste de tous les départements</button>
+              <button type="button" class="btn btn-primary">Voir tous les départements</button>
             </a>
           </div>
         </div>
