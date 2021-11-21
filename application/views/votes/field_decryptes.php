@@ -31,21 +31,7 @@
               <div class="row mt-2 votes-sort">
                 <?php foreach ($votes as $vote): ?>
                   <div class="col-lg-4 col-md-6 votes-sort-item <?= $vote['category_slug'] ?>">
-                    <div class="card card-vote">
-                      <div class="d-flex justify-content-end">
-                        <div class="sort px-2 py-1 <?= $vote['sortCode'] ?>">
-                          <span class="m-0"><?= mb_strtoupper($vote['sortCode']) ?></span>
-                        </div>
-                      </div>
-                      <div class="card-header d-flex flex-row justify-content-between">
-                        <span class="date"><?= $vote['dateScrutinFR'] ?></span>
-                      </div>
-                      <div class="card-body">
-                        <span class="title">
-                          <a href="<?= base_url() ?>votes/legislature-<?= $vote['legislature'] ?>/vote_<?= $vote['voteNumero'] ?>" class="stretched-link no-decoration"><?= $vote['vote_titre'] ?></a>
-                        </span>
-                      </div>
-                    </div>
+                    <?php $this->load->view('votes/partials/card_vote.php', array('vote' => $vote)) ?>
                   </div>
                 <?php endforeach; ?>
               </div>

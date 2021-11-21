@@ -86,7 +86,7 @@
     }
 
     public function positionnement($stats, $groupe){
-      $infos = groupsPositionEdited();
+      $infos = groups_position_edited();
 
       function maj_pres($positionPolitique){
         if ($positionPolitique == "Opposition") {
@@ -136,28 +136,6 @@
       ];
       return $array;
 
-    }
-
-    public function gender($gender){
-      if ($gender == 'Mme') {
-        return array(
-          'depute' => 'députée',
-          'pronom' => 'elle',
-          'e' => 'e',
-          'le' => 'la',
-          'son' => 'sa',
-          'du' => 'de la'
-        );
-      } elseif ($gender == 'M.') {
-        return array(
-          'depute' => 'député',
-          'pronom' => 'il',
-          'e' => '',
-          'le' => 'le',
-          'son' => 'son',
-          'du' => 'du'
-        );
-      }
     }
 
     public function history($mp, $average){

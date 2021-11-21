@@ -7,8 +7,8 @@
     return base_url().'assets/css/';
   }
 
-  function getVersion(){
-    return 33;
+  function get_version(){
+    return 35;
   }
 
   function legislature_current(){
@@ -23,17 +23,17 @@
     return number_format($x, 0, '.', ' ');
   }
 
-  function meanAgeFranceAll(){
+  function mean_age_france_all(){
     return 42.1;
   }
 
-  function meanAgeFrance(){
+  function mean_age_france(){
     // Only more than 18 yo.
     // source: https://docs.google.com/spreadsheets/d/17pf7I0vN_yIl7lnebXhZSKDRaE6j31qzRX77Cx1SYD8/edit?usp=sharing
     return 50.52;
   }
 
-  function groupesNI(){
+  function groupes_NI(){
     return array("PO723569");
   }
 
@@ -45,7 +45,7 @@
     return array("PO730964", "PO713077", "PO656002");
   }
 
-  function groupsPositionEdited(){
+  function groups_position_edited(){
     $left = array("libelle" => "gauche", "edited" => "à gauche");
     $center = array("libelle" => "centre", "edited" => "au centre");
     $right = array("libelle" => "droite", "edited" => "à droite");
@@ -73,6 +73,28 @@
   function get_months(){
     $months = array('janvier', 'février', 'mars', 'avril', 'mai', 'juin', 'juillet', 'août', 'septembre', 'octobre', 'novembre', 'decembre');
     return $months;
+  }
+
+  function months_abbrev($x){
+    if (strpos($x, "janvier") !== false) {
+      return str_replace("janvier", "janv.", $x);
+    } elseif (strpos($x, "février") !== false) {
+      return str_replace("février", "févr.", $x);
+    } elseif (strpos($x, "avril") !== false) {
+      return str_replace("avril", "avr.", $x);
+    } elseif (strpos($x, "juillet") !== false) {
+      return str_replace("juillet", "juill.", $x);
+    } elseif (strpos($x, "septembre") !== false) {
+      return str_replace("septembre", "sept.", $x);
+    } elseif (strpos($x, "octobre") !== false) {
+      return str_replace("octobre", "oct.", $x);
+    } elseif (strpos($x, "novembre") !== false) {
+      return str_replace("novembre", "nov.", $x);
+    } elseif (strpos($x, "décembre") !== false) {
+      return str_replace("décembre", "déc.", $x);
+    } else {
+      return $x;
+    }
   }
 
   function localhost(){
@@ -117,6 +139,29 @@
       }
 
       return false;
+  }
+
+  // Gender of actors
+  function gender($gender){
+    if ($gender == 'Mme') {
+      return array(
+        'depute' => 'députée',
+        'pronom' => 'elle',
+        'e' => 'e',
+        'le' => 'la',
+        'son' => 'sa',
+        'du' => 'de la'
+      );
+    } elseif ($gender == 'M.') {
+      return array(
+        'depute' => 'député',
+        'pronom' => 'il',
+        'e' => '',
+        'le' => 'le',
+        'son' => 'son',
+        'du' => 'du'
+      );
+    }
   }
 
 ?>

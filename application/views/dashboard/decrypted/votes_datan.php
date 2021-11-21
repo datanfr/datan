@@ -28,6 +28,7 @@
                       <th>vote_id</th>
                       <th>title</th>
                       <th>cat.</th>
+                      <th>reading</th>
                       <th>state</th>
                       <th>Créé le</th>
                       <th>créé par</th>
@@ -44,6 +45,7 @@
                       <td><?= $vote['vote_id'] ?></td>
                       <td><?= $vote['title'] ?></td>
                       <td><?= $vote['category'] ?></td>
+                      <td><?= $vote['reading'] ?></td>
                       <td><?= $vote['state'] ?></td>
                       <td><?= $vote['created_at'] ?></td>
                       <td><?= $vote['created_by_name'] ?></td>

@@ -92,6 +92,14 @@
       return $this->db->get_where('deputes_last', $where, 1)->row_array();
     }
 
+    public function get_depute_by_legislature($mpId, $legislature){
+      $where = array(
+        'mpId' => $mpId,
+        'legislature' => $legislature
+      );
+      return $this->db->get_where('deputes_all', $where, 1)->row_array();
+    }
+
     public function get_depute_individual($nameUrl, $dpt){
       $sql = 'SELECT
         dl.*, dl.libelle_2 AS dptLibelle2,

@@ -50,16 +50,12 @@
                       <td><?= $vote['category_name'] ?></td>
                     </tr>
                     <tr>
-                      <td>category id</td>
-                      <td><?= $vote['category'] ?></td>
+                      <td>reading</td>
+                      <td><?= $vote['reading_name'] ?></td>
                     </tr>
                     <tr>
                       <td>description</td>
                       <td><?= $vote['description'] ?></td>
-                    </tr>
-                    <tr>
-                      <td>contexte</td>
-                      <td><?= $vote['contexte'] ?></td>
                     </tr>
                     <tr>
                       <td>state</td>

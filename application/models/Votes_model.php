@@ -24,10 +24,11 @@
 
     public function get_last_votes_datan($limit = FALSE){
       $sql = '
-      SELECT vd.title AS voteTitre, vd.description, vi.dateScrutin, vi.voteNumero, vi.legislature, f.name AS category_libelle, f.slug AS category_slug, vi.sortCode, date_format(dateScrutin, "%d %M %Y") as dateScrutinFR
+      SELECT vd.title AS voteTitre, vd.description, vi.dateScrutin, vi.voteNumero, vi.legislature, f.name AS category_libelle, f.slug AS category_slug, vi.sortCode, date_format(dateScrutin, "%d %M %Y") as dateScrutinFR, r.name AS reading
       FROM votes_datan vd
       LEFT JOIN votes_info vi ON vd.voteNumero = vi.voteNumero AND vd.legislature = vi.legislature
       LEFT JOIN fields f ON vd.category = f.id
+      LEFT JOIN readings r ON r.id = vd.reading
       WHERE vd.state = "published"
       ORDER BY vi.voteNumero DESC'
       ;
@@ -100,10 +101,11 @@
     }
 
     public function get_votes_datan_category($field){
-      $sql = 'SELECT vd.title AS vote_titre, vd.description, vi.dateScrutin, vi.voteNumero, vi.legislature, f.name AS category_libelle, f.slug AS category_slug, vi.sortCode, date_format(dateScrutin, "%d %M %Y") as dateScrutinFR
+      $sql = 'SELECT vd.title AS voteTitre, vd.description, vi.dateScrutin, vi.voteNumero, vi.legislature, f.name AS category_libelle, f.slug AS category_slug, vi.sortCode, date_format(dateScrutin, "%d %M %Y") as dateScrutinFR, r.name AS reading
         FROM votes_datan vd
         LEFT JOIN votes_info vi ON vd.voteNumero = vi.voteNumero AND vd.legislature = vi.legislature
         LEFT JOIN fields f ON vd.category = f.id
+        LEFT JOIN readings r ON r.id = vd.reading
         WHERE vd.state = "published" AND f.id = ?
         ORDER BY vd.id DESC
       ';
@@ -153,8 +155,8 @@
         END AS title_meta
         FROM
         (
-           SELECT vi.voteId, vi.voteNumero, vi.legislature, vi.dateScrutin, vi.libelleTypeVote, vi.typeMajorite, vi.sortCode, vi.demandeur, vi.nombreVotants, vi.suffragesExprimes, vi.nbrSuffragesRequis, vi.decomptePour AS pour, vi.decompteContre AS contre, vi.decompteAbs AS abstention, vi.decompteNv AS nonVotant, vi.voteType, vi.amdt, vi.article, vi.bister, vi.posArticle,
-          REPLACE(vi.titre, "n?", "n°") AS titre, vdos.href, vdos.dossier, doss.dossierId, doss.titre AS dossier_titre, doss.senatChemin, doss.procedureParlementaireLibelle,
+           SELECT vi.voteId, vi.voteNumero, vi.legislature, vi.dateScrutin, vi.seanceRef, vi.libelleTypeVote, vi.typeMajorite, vi.sortCode, vi.demandeur, vi.nombreVotants, vi.suffragesExprimes, vi.nbrSuffragesRequis, vi.decomptePour AS pour, vi.decompteContre AS contre, vi.decompteAbs AS abstention, vi.decompteNv AS nonVotant, vi.voteType, vi.amdt, vi.article, vi.bister, vi.posArticle,
+          REPLACE(vi.titre, "n?", "n°") AS titre, vdos.href AS dossierUrl, vdos.dossier, doss.dossierId, doss.legislature AS dossierLegislature, doss.titre AS dossier_titre, doss.senatChemin, doss.procedureParlementaireLibelle,
           vd.title, vd.description, vd.state, f.name AS category, f.slug AS category_slug, vd.created_at, vd.modified_at
           FROM votes_info vi
           LEFT JOIN votes_dossiers vdos ON vi.voteNumero = vdos.voteNumero AND vi.legislature = vdos.legislature
@@ -181,6 +183,10 @@
         $x['contre_percentage'] = NULL;
       }
 
+      $x['pour_pct'] = round($x['pour'] / $x['nombreVotants'] * 100, 2);
+      $x['abs_pct'] = round($x['abstention'] / $x['nombreVotants'] * 100, 2);
+      $x['contre_pct'] = round($x['contre'] / $x['nombreVotants'] * 100, 2);
+
       setlocale(LC_TIME, 'french');
       $x['date_edited'] = utf8_encode(strftime('%d %B %Y', strtotime($x['dateScrutin'])));
       //echo $x['voteType'];
@@ -193,6 +199,9 @@
         } elseif ($x['procedureParlementaireLibelle'] == 'Proposition de loi ordinaire') {
           $x['type_edited'] = 'proposition de loi';
           $x['type_edited_explication'] = "Une proposition de loi est un texte destiné à devenir une loi et qui émane d'un député ou d'un sénateur, contrairement au projet de loi qui émane du Gouvernement.";
+        } elseif ($x['procedureParlementaireLibelle'] == 'Projet ou proposition de loi constitutionnelle') {
+          $x['type_edited'] = 'projet ou proposition de loi constitutionnelle';
+          $x['type_edited_explication'] = "Un projet ou proposition de loi constitutionnelle est une loi visant à modifier la Constitution. Soit cette modification est à l'origine du Gouvernement (projet de loi) soit du Parlement (proposition de loi).<br><br><a href='https://www2.assemblee-nationale.fr/decouvrir-l-assemblee/role-et-pouvoirs-de-l-assemblee-nationale/les-fonctions-de-l-assemblee-nationale/les-fonctions-legislatives/la-revision-de-la-constitution' target='_blank'>Plus d'information sur la procédure de révision de la Constitution</a>";
         } elseif ($x['procedureParlementaireLibelle'] == 'Projet ou proposition de loi organique') {
           $x['type_edited'] = 'Projet ou proposition de loi organique';
           $x['type_edited_explication'] = "Un projet ou proposition de loi organique est une loi complétant la Constitution afin de préciser l'organisation des pouvoirs publics. Elle est hiérarchiquement en dessous de la Constitution, mais au dessus des lois ordinaires.";
@@ -207,7 +216,10 @@
           $x['type_edited_explication'] = "Le Projet de loi de financement de la sécurité sociale (PLFSS) vise à gérer les dépenses sociales et de santé. Le projet, présenté à l'automne par le gouvernement, fixe les objectifs de dépenses en fonction des recettes, et détermine donc les conditions à l'équilibre financier de la Sécurité sociale.";
         } elseif ($x['procedureParlementaireLibelle'] == "Projet de loi de finances de l'année") {
           $x['type_edited'] = 'Projet de loi de finances';
-          $x['type_edited_explication'] = "Le projet de loi de finances (PLF), présenté à l'automne par le Gouvernement, est le projet de budget pour la France. C'est un document unique rassemblant l'ensemble des recettes et des dépenses de l’État pour l'année à venir. Le projet propose le montant, la nature et l'affectation des ressources et des charges de l’État. L'Assemblée nationale vote ici sur une partie de ce projet de loi de finances.<br><br><a href='https://www.gouvernement.fr/projet-de-loi-de-finances-plf-qu-est-ce-que-c-est' targe='_blank'>Plus d'information</a>";
+          $x['type_edited_explication'] = "Le projet de loi de finances (PLF), présenté à l'automne par le Gouvernement, est le projet de budget pour la France. C'est un document unique rassemblant l'ensemble des recettes et des dépenses de l’État pour l'année à venir. Le projet propose le montant, la nature et l'affectation des ressources et des charges de l’État. L'Assemblée nationale vote ici sur une partie de ce projet de loi de finances.<br><br><a href='https://www.gouvernement.fr/projet-de-loi-de-finances-plf-qu-est-ce-que-c-est' target='_blank'>Plus d'information</a>";
+        } elseif ($x['procedureParlementaireLibelle'] == 'Résolution') {
+          $x['type_edited'] = 'proposition de résolution';
+          $x['type_edited_explication'] = "Une proposition de résolution est un texte non législatif (qui est donc purement symbolique) et qui sert à exprimer la position de l'Assemblée nationale sur un sujet donné.";
         }
       } elseif ($x['voteType'] == 'amendement') {
         $x['type_edited'] = 'amendement';
@@ -241,7 +253,7 @@
         $x['type_edited_explication'] = "La motion de rejet préalable est discutée et votée avant la discussion générale d'un texte de loi. Elle vise à indiquer que le texte (projet ou proposition de loi) est contraire à une ou plusieurs dispositions constitutionnelles. Si la motion est adoptée, elle entraîne le rejet du texte.<br><br><a href='http://www.assemblee-nationale.fr/encyclopedie/loi.asp' target='_blank'>Plus d'information</a>";
       } elseif ($x['voteType'] == 'partie du projet de loi de finances') {
         $x['type_edited'] = $x['voteType'];
-        $x['type_edited_explication'] = "Le projet de loi de finances (PLF), présenté à l'automne par le Gouvernement, est le projet de budget pour la France. C'est un document unique rassemblant l'ensemble des recettes et des dépenses de l’État pour l'année à venir. Le projet propose le montant, la nature et l'affectation des ressources et des charges de l’État. L'Assemblée nationale vote ici sur une partie de ce projet de loi de finances.<br><br><a href='https://www.gouvernement.fr/projet-de-loi-de-finances-plf-qu-est-ce-que-c-est' targe='_blank'>Plus d'information</a>";
+        $x['type_edited_explication'] = "Le projet de loi de finances (PLF), présenté à l'automne par le Gouvernement, est le projet de budget pour la France. C'est un document unique rassemblant l'ensemble des recettes et des dépenses de l’État pour l'année à venir. Le projet propose le montant, la nature et l'affectation des ressources et des charges de l’État. L'Assemblée nationale vote ici sur une partie de ce projet de loi de finances.<br><br><a href='https://www.gouvernement.fr/projet-de-loi-de-finances-plf-qu-est-ce-que-c-est' target='_blank'>Plus d'information</a>";
       } elseif ($x['voteType'] == 'sous-amendement') {
         $x['type_edited'] = $x['voteType'];
         $x['type_edited_explication'] = "Un sous-amendement est, comme un amendement, une modification apportée à un texte juridique, d'un projet de loi par exemple. Le sous-amendement porte sur un amendement, et ne peut pas contredire le sens initial de l'amendement.";
@@ -249,38 +261,14 @@
         $x['type_edited'] = 'déclaration de politique générale';
         $x['type_edited_explication'] = "La déclaration de politique générale est une déclaration du Premier ministre devant l'Assemblée nationale lors de l'entrée en fonction d'un nouveau gouvernement.";
       } elseif ($x['voteType'] == 'la propo') {
-        $x['type_edited'] = 'la proposition de résolution';
+        $x['type_edited'] = 'proposition de résolution';
         $x['type_edited_explication'] = "Une proposition de résolution est un texte non législatif (qui est donc purement symbolique) et qui sert à exprimer la position de l'Assemblée nationale sur un sujet donné. Ses modalités sont prévues l'article 34-1 de la <a href='http://www.assemblee-nationale.fr/connaissance/constitution.asp' target='_blank'>Constitution</a>.";
+      } elseif ($x['voteType'] == "motion d'ajournement") {
+        $x['type_edited'] = "motion d'ajournement";
+        $x['type_edited_explication'] = "Une motion d'ajournement est utilisé que dans le cadre des accords internationaux. Si la motion est adoptée, le texte retourne en commission parlementaire, où il doit être rediscuté.<br><br><a href='https://www.lemonde.fr/blog/cuisines-assemblee/2019/02/18/la-motion-dajournement/' target='_blank'>Plus d'information</a>";
       } else {
         $x['type_edited'] = $x['voteType'];
       }
-
-      //type_libelle
-      $type_libelle = [
-        "projet de loi" => "ce projet de loi",
-        "amendement" => "cet amendement",
-        "article" => "cet article",
-        "déclaration de politique générale" => "cette déclaration de politique générale",
-        "motion de renvoi en commission" => "cette motion de renvoi en commission",
-        "conclusions de rejet de la commission" => "les conclusions de rejet de la commission",
-        "crédits de mission" => "les crédits de mission",
-        "déclaration du gouvernement" => "la déclaration du gouvernement",
-        "demande de constitution de commission spéciale" => "cette demande de constitution de commission speciale",
-        "motion de censure" => "cette motion de censure",
-        "motion de rejet préalable" => "cette motion de rejet préalable",
-        "partie du projet de loi de finances" => "cette partie du projet de loi de finances",
-        "sous-amendement" => "ce sous-amendement",
-        "la proposition de résolution" => "cette proposition de résolution",
-        "proposition de loi" => "cette proposition de loi",
-        "Projet ou proposition de loi organique" => "ce projet ou proposition de loi organique",
-        "Projet de loi de finances rectificative" => "ce projet de loi de finances rectificative",
-        "Ratification de traités et conventions" => "ce projet de ratificatio de traité",
-        "Projet de loi de financement de la sécurité sociale" => "ce projet de loi de financement de la sécurité sociale",
-        "Projet de loi de finances" => "ce projet de loi de finances"
-      ];
-
-      //echo $x["type_edited"];
-      $x['type_edited_libelle'] = $type_libelle[$x['type_edited']];
 
       //sortCodeLibelle
       if ($x['sortCode'] == "adopté") {
@@ -362,7 +350,7 @@
 
 
     public function get_votes_datan_depute($depute_id, $limit = FALSE){
-      $sql = 'SELECT vd.voteNumero, vd.legislature, vd.title AS vote_titre, vd.category, f.name AS category_libelle, vi.sortCode, date_format(vi.dateScrutin, "%d %M %Y") as dateScrutinFR,
+      $sql = 'SELECT vd.voteNumero, vd.legislature, vd.title AS vote_titre, vd.category, f.name AS category_libelle, vi.sortCode, date_format(vi.dateScrutin, "%d %M %Y") as dateScrutinFR, r.name AS reading,
         CASE
         	WHEN vs.vote = 0 THEN "abstention"
         	WHEN vs.vote = 1 THEN "pour"
@@ -372,20 +360,21 @@
         END AS vote_depute
         FROM votes_datan vd
         LEFT JOIN fields f ON vd.category = f.id
-        LEFT JOIN votes_scores vs ON vd.voteNumero = vs.voteNumero AND vd.legislature = vs.legislature AND vs.mpId = '.$this->db->escape($depute_id).'
+        LEFT JOIN votes_scores vs ON vd.voteNumero = vs.voteNumero AND vd.legislature = vs.legislature AND vs.mpId = ?
         LEFT JOIN votes_info vi ON vd.voteNumero = vi.voteNumero AND vd.legislature = vi.legislature
+        LEFT JOIN readings r ON r.id = vd.reading
         WHERE vd.state = "published" AND vs.vote IS NOT NULL
         ORDER BY vi.dateScrutin DESC
       ';
       if ($limit){
         $sql .= ' LIMIT ' . $this->db->escape($limit);
       }
-      return $this->db->query($sql)->result_array();
+      return $this->db->query($sql, array($depute_id))->result_array();
     }
 
     public function get_votes_datan_depute_field($depute_id, $field, $limit){
       $sql = '
-        SELECT vd.voteNumero, vd.legislature, vd.title AS vote_titre, vd.category, f.name AS category_libelle, f.slug, date_format(vi.dateScrutin, "%d %M %Y") as dateScrutinFR,
+        SELECT vd.voteNumero, vd.legislature, vd.title AS vote_titre, vd.category, f.name AS category_libelle, f.slug, date_format(vi.dateScrutin, "%d %M %Y") as dateScrutinFR, r.name AS reading,
         CASE
         	WHEN vs.vote = 0 THEN "abstention"
         	WHEN vs.vote = 1 THEN "pour"
@@ -395,15 +384,16 @@
         END AS vote_depute
         FROM votes_datan vd
         LEFT JOIN fields f ON vd.category = f.id
-        LEFT JOIN votes_scores vs ON vd.voteNumero = vs.voteNumero AND vd.legislature = vs.legislature AND vs.mpId = '.$this->db->escape($depute_id).'
+        LEFT JOIN votes_scores vs ON vd.voteNumero = vs.voteNumero AND vd.legislature = vs.legislature AND vs.mpId = ?
         LEFT JOIN votes_info vi ON vd.voteNumero = vi.voteNumero AND vd.legislature = vi.legislature
+        LEFT JOIN readings r ON r.id = vd.reading
         WHERE vd.state = "published" AND f.slug = '.$this->db->escape($field).' AND vs.vote IS NOT NULL
         ORDER BY vi.dateScrutin DESC
       ';
       if ($limit){
         $sql .= ' LIMIT ' . $this->db->escape($limit);
       }
-      return $this->db->query($sql)->result_array();
+      return $this->db->query($sql, array($depute_id))->result_array();
     }
 
     public function get_votes_all_depute($depute_id, $legislature){
@@ -453,11 +443,11 @@
       return $this->db->query($sql, array($uid, $legislature))->result_array();
     }
 
-    public function get_votes_datan_groupe($groupe_uid, $limit){
-      $sql = 'SELECT A.*, f.name AS category_libelle, v.positionMajoritaire AS vote, date_format(vi.dateScrutin, "%d %M %Y") as dateScrutinFR, vi.legislature
+    public function get_votes_datan_groupe($groupe_id, $limit){
+      $sql = 'SELECT A.*, f.name AS category_libelle, v.positionMajoritaire AS vote, date_format(vi.dateScrutin, "%d %M %Y") as dateScrutinFR, vi.legislature, r.name AS reading
         FROM
         (
-        SELECT vd.id, vd.voteNumero, vd.legislature, vd.title AS vote_titre, vd.slug, vd.category
+        SELECT vd.id, vd.voteNumero, vd.legislature, vd.title AS vote_titre, vd.slug, vd.category, vd.reading
         FROM votes_datan vd
         WHERE vd.state = "published"
         ORDER BY vd.id DESC
@@ -466,17 +456,18 @@
         LEFT JOIN fields f ON A.category = f.id
         JOIN votes_groupes v ON A.voteNumero = v.voteNumero AND A.legislature = v.legislature AND v.organeRef = ?
         LEFT JOIN votes_info vi ON A.voteNumero = vi.voteNumero AND A.legislature = vi.legislature
+        LEFT JOIN readings r ON r.id = A.reading
         ORDER BY vi.dateScrutin DESC
         LIMIT ?
       ';
-      return $this->db->query($sql, array($groupe_uid, $limit))->result_array();
+      return $this->db->query($sql, array($groupe_id, $limit))->result_array();
     }
 
-    public function get_votes_datan_groupe_field($groupe_uid, $field, $limit){
-      $sql = 'SELECT A.*, f.name AS category_libelle, v.positionMajoritaire AS vote, date_format(vi.dateScrutin, "%d %M %Y") as dateScrutinFR, vi.legislature
+    public function get_votes_datan_groupe_field($groupe_id, $field, $limit){
+      $sql = 'SELECT A.*, f.name AS category_libelle, v.positionMajoritaire AS vote, date_format(vi.dateScrutin, "%d %M %Y") as dateScrutinFR, vi.legislature, r.name AS reading
         FROM
         (
-          SELECT vd.id, vd. voteNumero, vd.legislature, vd.title AS vote_titre, vd.slug, vd.category
+          SELECT vd.id, vd. voteNumero, vd.legislature, vd.title AS vote_titre, vd.slug, vd.category, vd.reading
           FROM votes_datan vd
           LEFT JOIN fields f ON vd.category = f.id
           WHERE vd.state = "published" AND f.slug = '.$this->db->escape($field).'
@@ -484,14 +475,15 @@
           LIMIT 15
         ) A
         LEFT JOIN fields f ON A.category = f.id
-        JOIN votes_groupes v ON A.voteNumero = v.voteNumero AND A.legislature = v.legislature AND v.organeRef = '.$this->db->escape($groupe_uid).'
+        JOIN votes_groupes v ON A.voteNumero = v.voteNumero AND A.legislature = v.legislature AND v.organeRef = ?
         LEFT JOIN votes_info vi ON A.voteNumero = vi.voteNumero AND A.legislature = vi.legislature
+        LEFT JOIN readings r ON r.id = A.reading
         ORDER BY vi.dateScrutin DESC
       ';
       if ($limit) {
         $sql .= ' LIMIT ' . $this->db->escape($limit);
       }
-      return $this->db->query($sql)->result_array();
+      return $this->db->query($sql, array($groupe_id))->result_array();
 
     }
 
@@ -570,4 +562,109 @@
 
       return $schema;
     }
+
+    public function get_amendement($legislature, $dossier, $seanceRef, $num){
+      $where = array(
+        'legislature' => $legislature,
+        'dossier' => $dossier,
+        'seanceRef' => $seanceRef,
+        'numOrdre' => $num
+      );
+      $this->db->select('id, legislature, num, numOrdre, texteLegislatifRef');
+      $this->db->limit(1);
+      return $this->db->get_where('amendements', $where)->row_array();
+    }
+
+    public function get_amendement_all_seanceRef($legislature, $dossier, $num){
+      $where = array(
+        'legislature' => $legislature,
+        'dossier' => $dossier,
+        'numOrdre' => $num
+      );
+      $this->db->select('id, legislature, num, numOrdre, texteLegislatifRef');
+      return $this->db->get_where('amendements', $where)->result_array();
+    }
+
+    public function get_another_dossierId($chemin){
+      $this->db->where('titreChemin', $chemin);
+      return $this->db->get('dossiers')->result_array();
+    }
+
+    public function get_amendement_author($id){
+      return $this->db->get_where('amendements_auteurs', array('id' => $id))->row_array();
+    }
+
+    public function get_document_legislatif($id){
+      return $this->db->get_where('documents_legislatifs', array('id' => $id), 1)->row_array();
+    }
+
+    public function get_dossier_mp_authors($id, $legislature){
+      $where = array(
+        'da.id' => $id,
+        'da.value' => 'initiateur',
+        'da.type' => 'acteur',
+        'dl.legislature' => $legislature
+      );
+      $this->db->join('deputes_all dl', 'da.ref = dl.mpId');
+      $this->db->select('*, CONCAT(departementNom, " (", departementCode, ")") AS cardCenter');
+      $this->db->order_by('dl.nameLast', 'ASC');
+      $this->db->group_by('dl.mpId');
+      return $this->db->get_where('dossiers_acteurs da', $where)->result_array();
+    }
+
+    public function get_dossier_mp_rapporteurs($id, $legislature){
+      $where = array(
+        'da.id' => $id,
+        'da.value' => 'rapporteur',
+        'dl.legislature' => $legislature
+      );
+      $this->db->join('deputes_all dl', 'da.ref = dl.mpId');
+      $this->db->select('*, CONCAT(departementNom, " (", departementCode, ")") AS cardCenter');
+      $this->db->order_by('dl.nameLast', 'ASC');
+      $this->db->group_by('dl.mpId');
+      return $this->db->get_where('dossiers_acteurs da', $where)->result_array();
+    }
+
+    public function request_vote_datan(){
+      $email = $this->input->post('email');
+      $email = empty($email) ? NULL : $email;
+      $legislature = $this->input->post('legislature');
+      $voteNumero = $this->input->post('voteNumero');
+      $newsletter = $this->input->post('newsletter');
+      $captcha = $this->input->post('captcha');
+
+      // Check captcha
+      if ($captcha !== $this->session->userdata('captchaCode')) {
+        return FALSE;
+      } else {
+        // Newsletter
+        if ($newsletter && $email != NULL) {
+          $this->newsletter_model->create_newsletter();
+        }
+
+        // Add data in table 'votes_datan_requested'
+        $data = array(
+          'legislature' => $legislature,
+          'vote' => $voteNumero,
+          'email' => $email
+        );
+        return $this->db->insert('votes_datan_requested', $data);
+      }
+    }
+
+    public function get_requested_votes($limit = NULL){
+      $sql = 'SELECT vr.legislature, vr.vote, COUNT(*) as n
+        FROM votes_datan_requested vr
+        LEFT JOIN votes_datan vd ON vr.vote = vd.voteNumero AND vr.legislature = vd.legislature
+        WHERE vd.voteNumero IS NULL
+        GROUP BY vr.legislature, vr.vote
+        ORDER BY COUNT(*) DESC
+      ';
+      if ($limit){
+        $sql .= ' LIMIT ' . $this->db->escape_like_str($limit);
+      }
+
+      return $this->db->query($sql)->result_array();
+    }
+
   }

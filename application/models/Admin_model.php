@@ -8,11 +8,12 @@ class Admin_model extends CI_Model
   public function get_votes_datan()
   {
     $query = $this->db->query('
-        SELECT vd.id, vd.voteNumero AS vote_id, vd.title, vd.slug, f.name AS category, vd.description, vd.state, vd.created_at, vd.modified_at, vd.created_by, vd.modified_by, u1.name AS created_by_name, u2.name AS modified_by_name
+        SELECT vd.id, vd.voteNumero AS vote_id, vd.title, vd.slug, f.name AS category, vd.description, vd.state, vd.created_at, vd.modified_at, vd.created_by, vd.modified_by, u1.name AS created_by_name, u2.name AS modified_by_name, r.id AS reading
         FROM votes_datan vd
         LEFT JOIN users u1 ON vd.created_by = u1.id
         LEFT JOIN users u2 ON vd.modified_by = u2.id
         LEFT JOIN fields f ON vd.category = f.id
+        LEFT JOIN readings r ON r.id = vd.reading
       ');
 
     return $query->result_array();
@@ -73,6 +74,7 @@ class Admin_model extends CI_Model
   {
     $slug = convert_accented_characters($this->input->post('title'));
     $slug = url_title($slug, 'dash', TRUE);
+    $reading = $this->input->post('reading') != "" ? $this->input->post('reading') : NULL;
 
     $data = array(
       'title' => $this->input->post('title'),
@@ -81,8 +83,8 @@ class Admin_model extends CI_Model
       'voteNumero' => $this->input->post('vote_id'),
       'vote_id' => "VTANR5L" . $this->input->post('legislature') . "V" . $this->input->post('vote_id'),
       'category' => $this->input->post('category'),
+      'reading' => $reading,
       'description' => $this->input->post('description'),
-      'contexte' => strip_tags($this->input->post('contexte')),
       'created_at' => date("Y-m-d H:i:s"),
       'state' => 'draft',
       'created_by' => $user_id
@@ -100,7 +102,8 @@ class Admin_model extends CI_Model
   public function get_vote_datan($id)
   {
     $this->db->join('fields', 'fields.id = votes_datan.category', 'left');
-    $this->db->select('votes_datan.*, fields.name AS category_name');
+    $this->db->join('readings', 'readings.id = votes_datan.reading', 'left');
+    $this->db->select('votes_datan.*, fields.name AS category_name, readings.name AS reading_name');
     $query = $this->db->get_where('votes_datan', array('votes_datan.id' => $id), 1);
 
     return $query->row_array();
@@ -110,13 +113,14 @@ class Admin_model extends CI_Model
   {
     $slug = convert_accented_characters($this->input->post('title'));
     $slug = url_title($slug, 'dash', TRUE);
+    $reading = $this->input->post('reading') != "" ? $this->input->post('reading') : NULL;
 
     $data = array(
       'title' => $this->input->post('title'),
       'slug' => $slug,
       'category' => $this->input->post('category'),
+      'reading' => $reading,
       'description' => $this->input->post('description'),
-      'contexte' => strip_tags($this->input->post('contexte')),
       'state' => $this->input->post('state'),
       'modified_at' => date("Y-m-d H:i:s"),
       'modified_by' => $user_id

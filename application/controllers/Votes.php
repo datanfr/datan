@@ -5,6 +5,9 @@
       $this->load->model('votes_model');
       $this->load->model('fields_model');
       $this->load->model('groupes_model');
+      $this->load->model('deputes_model');
+      $this->load->model('organes_model');
+      $this->load->model('captcha_model');
       //$this->password_model->security_password(); Former login protection
     }
 
@@ -28,9 +31,6 @@
 
       // Get datan_votes
       $data['votes_datan'] = $this->votes_model->get_last_votes_datan(7);
-      foreach ($data['votes_datan'] as $key => $value) {
-        $data['votes_datan'][$key]['dateScrutinFRAbbrev'] = $this->functions_datan->abbrev_months($value['dateScrutinFR']);
-      }
       // Get by category
       $data['fields'] = $this->fields_model->get_active_fields();
       $fields = $data['fields'];
@@ -48,9 +48,6 @@
 
       // Get all votes
       $data['votes'] = $this->votes_model->get_all_votes(legislature_current(), NULL, NULL, 10);
-      foreach ($data['votes'] as $key => $value) {
-        $data['votes'][$key]['dateScrutinFRAbbrev'] = $this->functions_datan->abbrev_months($value['dateScrutinFR']);
-      }
       // Archives
       $data['years'] = $this->votes_model->get_years_archives(legislature_current());
       $data['years'] = array_column($data['years'], 'votes_year');
@@ -145,7 +142,6 @@
       if (empty($data['votes'])) {
         show_404();
       }
-      //print_r($data['votes']);
 
       // Meta
       $data['url'] = $this->meta_model->get_url();
@@ -383,13 +379,88 @@
         if ($data['vote']['state'] == 'published') {
           $data['vote']['edited'] = TRUE;
         }
-        // Get logo
-        if ($this->functions_datan->get_http_response_code(asset_url().'imgs/fields_white/'.$data['vote']['category_slug'].'.svg') != '200'){
-          $data['vote']['logo'] = FALSE;
+      }
+      // Info about the author
+      if ($data['vote']['dossier'] && $legislature >= 15) {
+        if ($data['vote']['voteType'] == 'amendement' || $data['vote']['voteType'] == 'sous-amendement') { // If the vote is an amendment
+          $data['authorMeta']['title'] = "amendement";
+          $data['amdt'] = $this->votes_model->get_amendement($legislature, $data['vote']['dossierId'], $data['vote']['seanceRef'], $data['vote']['amdt']);
+          if ($data['amdt']) { // If amendment is working properly :)
+            $data['amdtAuthor'] = $this->votes_model->get_amendement_author($data['amdt']['id']);
+            if (in_array($data['amdtAuthor']['type'], array('Député', 'Rapporteur'))) {
+              $data['author'] = $this->deputes_model->get_depute_by_legislature($data['amdtAuthor']['acteurRef'], $legislature);
+              $data['author']['cardCenter'] = $data['author']['departementNom'] . ' (' . $data['author']['departementCode'] . ')';
+              $data['authorMeta']['type'] = "mp";
+            } elseif ($data['amdtAuthor']['type'] == 'Gouvernement') {
+              $data['author'] = $this->organes_model->get_organe($data['amdtAuthor']['acteurRef']);
+              $data['authorMeta']['type'] = "gvt";
+            }
+          } else {
+            $newDossierIds = $this->votes_model->get_another_dossierId($data['vote']['dossier']);
+            foreach ($newDossierIds as $newDossierId) {
+              $newSeances = $this->votes_model->get_amendement_all_seanceRef($legislature, $newDossierId['dossierId'], $data['vote']['amdt']);
+              foreach ($newSeances as $newSeance) {
+                $data['amdtAuthor'] = $this->votes_model->get_amendement_author($newSeance['id']);
+                if (in_array($data['amdtAuthor']['type'], array('Député', 'Rapporteur'))) {
+                  $author = $this->deputes_model->get_depute_by_legislature($data['amdtAuthor']['acteurRef'], $legislature);
+                  if (strpos($data['vote']['titre'], $author['nameLast']) !== false) {
+                    $data['author'] = $author;
+                    $data['author']['cardCenter'] = $data['author']['departementNom'] . ' (' . $data['author']['departementCode'] . ')';
+                    $data['authorMeta']['type'] = "mp";
+                    $data['amdt'] = $newSeance;
+                    break 2;
+                  }
+                  if ($data['amdtAuthor']['type'] == 'Rapporteur' || strpos($data['vote']['titre'], 'commission') !== false) {
+                    $data['author'] = $author;
+                    $data['author']['cardCenter'] = $data['author']['departementNom'] . ' (' . $data['author']['departementCode'] . ')';
+                    $data['authorMeta']['type'] = "mp";
+                    $data['amdt'] = $newSeance;
+                    break 2;
+                  }
+                } elseif ($data['amdtAuthor']['type'] == 'Gouvernement') {
+                  $author = $this->organes_model->get_organe($data['amdtAuthor']['acteurRef']);
+                  if (strpos($data['vote']['titre'], 'Gouvernement') !== false) {
+                    $data['author'] = $author;
+                    $data['authorMeta']['type'] = "gvt";
+                    $data['amdt'] = $newSeance;
+                    break 2;
+                  }
+                }
+              }
+            }
+          }
+        } elseif (in_array($data['vote']['procedureParlementaireLibelle'], array('Proposition de loi ordinaire', 'Résolution Article 34-1', 'Résolution'))) {
+          $data['authorMeta']['type'] = "mps";
+          $data['author'] = $this->votes_model->get_dossier_mp_authors($data['vote']['dossierId'], $legislature);
+          if ($data['author']) {
+            $data['authorMeta']['title'] = 'proposition';
+          } else {
+            $data['author'] = $this->votes_model->get_dossier_mp_rapporteurs($data['vote']['dossierId'], $legislature);
+            $data['authorMeta']['title'] = 'rapporteur';
+          }
         } else {
-          $data['vote']['logo'] = TRUE;
+          $data['authorMeta']['type'] = "mps";
+          $data['author'] = $this->votes_model->get_dossier_mp_rapporteurs($data['vote']['dossierId'], $legislature);
+          $data['authorMeta']['title'] = 'rapporteur';
         }
       }
+
+      // Author Explication
+      if (isset($data['authorMeta'])) {
+        if ($data['authorMeta']['title'] == 'amendement') {
+          $data['authorMeta']['explication'] = "Un amendement est un texte, déposé par un ou plusieurs députés, qui vise à modifier un projet ou une proposition de loi. Il y a un auteur principal, mais un amendement peut être cosigné par plusieurs députés.";
+        } elseif ($data['authorMeta']['title'] == 'rapporteur') {
+          $data['authorMeta']['explication'] = "Le rapporteur d'un projet ou proposition de loi est en charge d'étudier en profondeur le texte et de guider ses collègues parlementaires dans son examen. Le rapporteur peut également donner son avis sur tous les amendements déposés sur le texte.";
+        } elseif ($data['authorMeta']['title'] == 'proposition') {
+          $data['authorMeta']['explication'] = "Les propositions de loi sont des textes déposés par des députés et qui, s'ils sont adoptés par l'Assemblée nationale et le Sénat, deviendront des lois. Les propositions sont écrites par un ou plusieurs députés, et peuvent être cosignées par plusieurs parlementaires.";
+        }
+      }
+
+      // Amendement link
+      if ($data['vote']['voteType'] == 'amendement' && !empty($data['amdt'])) {
+        $data['documentLegislatif'] = $this->votes_model->get_document_legislatif($data['amdt']['texteLegislatifRef']);
+      }
+
       // Votes - groupes
       $data['groupes'] = $this->votes_model->get_vote_groupes($data['vote']['voteNumero'], $data['vote']['dateScrutin'], $legislature);
 
@@ -432,6 +503,9 @@
       } else {
         $data['vote_next'] = FALSE;
       }
+
+      // Captcha for votes_datan_requested
+      $data['captchaImg'] = $this->captcha_model->generateCaptcha();
 
       $data['votes_datan'] = $this->votes_model->get_last_votes_datan(7);
       // Meta
@@ -505,6 +579,7 @@
       $this->load->view('templates/button_up');
       $this->load->view('votes/individual', $data);
       $this->load->view('templates/breadcrumb', $data);
+      $this->load->view('votes/modals/vote_datan_requested', $data);
       $this->load->view('templates/footer');
 
     }

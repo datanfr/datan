@@ -1,3 +1,22 @@
+/*
+################
+               FUNCTION IF LOCALHOST
+################
+*/
+function get_base_url() {
+  var localhost = 'http://localhost/datan';
+  if (location.hostname === "localhost" || location.hostname === "127.0.0.1") {
+    return localhost;
+  } else {
+    return 'https://datan.fr';
+  }
+}
+/*
+################
+                A TRIER
+################
+*/
+
 $(document).ready(function () {
   // popover
   $("[data-toggle=popover]").popover({
@@ -74,23 +93,31 @@ $(document).ready(function () {
 */
 
 // init Flickity
-if ($('.carousel-cards').length > 0) {
-  var $carousel = $('.carousel-cards').flickity({
+// external js: flickity.pkgd.js
+var carouselContainers = document.querySelectorAll('.carousel-container');
+
+for ( var i=0; i < carouselContainers.length; i++ ) {
+  var container = carouselContainers[i];
+  initCarouselContainer( container );
+}
+
+function initCarouselContainer( container ) {
+  var carousel = container.querySelector('.carousel-cards');
+  var flkty = new Flickity( carousel, {
     prevNextButtons: false,
     pageDots: false,
     freeScroll: true,
     contain: true
+  } );
+  var previousButton = container.querySelector('.carousel--prev');
+  previousButton.addEventListener('click', function () {
+    flkty.previous();
   });
-  // Flickity instance
-  var flkty = $carousel.data('flickity');
-  // previous
-  $('.button--previous').on('click', function () {
-    $carousel.flickity('previous');
+  var nextButton = container.querySelector('.carousel--next');
+  nextButton.addEventListener('click', function () {
+    flkty.next();
   });
-  // next
-  $('.button--next').on('click', function () {
-    $carousel.flickity('next');
-  });
+
 }
 
 /*
@@ -199,14 +226,14 @@ $(function () {
 
 /*
 ##########
-NEWSLETTER
+NEWSLETTER (MODAL)
 ##########
 */
 // Neweletter in header
 $('#newsletterForm').on('submit', (e) => {
   e.preventDefault();
   $.ajax({
-    url: "api/newsletter/create_newsletter",
+    url: get_base_url() + "/api/newsletter/create_newsletter",
     type: "POST",
     data: $('#newsletterForm').serialize(),
     dataType: 'json',
@@ -231,7 +258,7 @@ $('#newsletterForm').on('submit', (e) => {
 $('#newsletterPage').on('submit', (e) => {
   e.preventDefault();
   $.ajax({
-    url: "api/newsletter/create_newsletter",
+    url: get_base_url() + "/api/newsletter/create_newsletter",
     type: "POST",
     data: $('#newsletterPage').serialize(),
     dataType: 'json',
@@ -252,9 +279,41 @@ $('#newsletterPage').on('submit', (e) => {
 
 /*
 ##########
+VOTE DATAN REQUESTED (MODAL)
+##########
+*/
+
+$('#voteDatanRequestedForm').on('submit', (e) => {
+  e.preventDefault();
+  $.ajax({
+    url: get_base_url() + "/api/votes/request_vote_datan",
+    type: "POST",
+    data: $('#voteDatanRequestedForm').serialize(),
+    dataType: 'json',
+    success: function (ac) {
+      if (!ac) {
+        $('#voteDatanRequestedForm').hide();
+        $('#fail').show();
+      } else {
+        $('#voteDatanRequestedForm').hide();
+        $('#success').show();
+      }
+    },
+    error: function (err) {
+      console.log('err', err)
+      $('#voteDatanRequestedForm').hide();
+      $('#fail').show();
+    }
+  });
+  return true;
+})
+
+/*
+##########
 FAQ
 ##########
 */
+
 $('#searchfaq').on('keyup', function (e) {
   $(".card-question").hide();
   var array = $(this).val().split(" ");
@@ -267,4 +326,40 @@ $('#searchfaq').on('keyup', function (e) {
     return regex.test($(this).text());
   }).show();
 
+})
+
+/*
+##########
+Social media buttons
+##########
+*/
+// Source: https://css-tricks.com/simple-social-sharing-links/
+function socialWindow(url) {
+  var left = (screen.width - 570) / 2;
+  var top = (screen.height - 570) / 2;
+  var params = "menubar=no,toolbar=no,status=no,width=570,height=570,top=" + top + ",left=" + left;
+  window.open(url,"NewWindow",params);
+}
+var pageUrl = encodeURIComponent(document.URL);
+var tweet = encodeURIComponent(jQuery("meta[property='og:description']").attr("content"));
+var whatsappMessage = "Je viens de découvrir un nouveau vote de l'Assemblée nationale sur Datan ! Découvre le aussi : " + document.URL;
+
+jQuery(".social-share.facebook").on("click", function() {
+    var url = "https://www.facebook.com/sharer.php?u=" + pageUrl;
+    socialWindow(url);
+});
+
+jQuery(".social-share.twitter").on("click", function() {
+    var url = "https://twitter.com/intent/tweet?url=" + pageUrl + "&text=" + tweet;
+    socialWindow(url);
+});
+
+jQuery(".social-share.linkedin").on("click", function() {
+    var url = "https://www.linkedin.com/sharing/share-offsite/?url=" + pageUrl;
+    socialWindow(url);
+})
+
+jQuery(".social-share.whatsapp").on("click", function() {
+    var url = "whatsapp://send?text=" + whatsappMessage;
+    socialWindow(url);
 })
