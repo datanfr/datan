@@ -1,5 +1,3 @@
-
-
   <!-- Content Wrapper. Contains page content -->
   <div class="content-wrapper">
     <!-- Content Header (Page header) -->
@@ -19,7 +17,6 @@
       </div><!-- /.container-fluid -->
     </div>
     <!-- /.content-header -->
-
     <!-- Main content -->
     <div class="content">
       <div class="container-fluid">
@@ -36,21 +33,19 @@
                   <table class="table">
                     <thead>
                       <tr>
-                        <th>id</th>
-                        <th>numero</th>
+                        <th>num.</th>
                         <th>titre</th>
-                        <th>catégorie</th>
+                        <th></th>
                         <th></th>
                       </tr>
                     </thead>
                     <tbody>
                       <?php foreach ($votesUnpublished as $vote): ?>
                         <tr>
-                          <td><?= $vote['id'] ?></td>
                           <td><?= $vote['voteNumero'] ?></td>
                           <td><?= $vote['title'] ?></td>
-                          <td><?= $vote['categoryName'] ?></td>
                           <td><a href="<?= base_url() ?>admin/votes/modify/<?= $vote['id'] ?>" class="btn btn-primary">Modifier</a></td>
+                          <td><a href="<?= base_url() ?>admin/votes/delete/<?= $vote['id'] ?>" class="btn btn-danger">Supprimer</a></td>
                         </tr>
                       <?php endforeach; ?>
                     </tbody>
@@ -89,7 +84,7 @@
                             <td><?= $vote['voteNumero'] ?></td>
                             <td><?= $vote['title'] ?></td>
                             <td><?= $vote['categoryName'] ?></td>
-                            <td><a href="<?= base_url() ?>votes/vote_<?= $vote['voteNumero'] ?>" class="btn btn-primary">Voir</a></td>
+                            <td><a href="<?= base_url() ?>votes/legislature-<?= $vote['legislature'] ?>/vote_<?= $vote['voteNumero'] ?>" class="btn btn-primary">Voir</a></td>
                           </tr>
                         <?php endforeach; ?>
                       </tbody>
@@ -140,7 +135,7 @@
                     <tbody>
                       <?php foreach ($groupes_entrants as $groupe_entrant): ?>
                         <tr>
-                        <td><a target="_blank" href="<?= base_url().'deputes/'.$groupe_entrant['dptSlug'].'/depute_'.$groupe_entrant['nameUrl'] ?>"><?= "{$groupe_entrant['nameFirst']} {$groupe_entrant['nameLast']}" ?></a></td>
+                          <td><a target="_blank" href="<?= base_url().'deputes/'.$groupe_entrant['dptSlug'].'/depute_'.$groupe_entrant['nameUrl'] ?>"><?= "{$groupe_entrant['nameFirst']} {$groupe_entrant['nameLast']}" ?></a></td>
                           <td><?= $groupe_entrant['libelle'] ?></td>
                           <td><?= $groupe_entrant['dateDebut'] ?></td>
                         </tr>
@@ -160,6 +155,35 @@
                   <div class="chart">
                     <canvas id="barChart" style="height:230px"></canvas>
                   </div>
+              </div>
+            </div><!-- /.card -->
+          </div>
+          <div class="col-lg-6">
+            <div class="card card-primary card-outline">
+              <div class="card-header">
+                <h5 class="m-0">Ils souhaitent voir ces votes décryptés !</h5>
+              </div>
+              <div class="card-body">
+                  <table class="table">
+                    <thead>
+                      <tr>
+                        <th>Legislature</th>
+                        <th>Vote n°</th>
+                        <th>Nombre</th>
+                        <th></th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <?php foreach ($votes_requested as $vote): ?>
+                        <tr>
+                          <td><?= $vote['legislature'] ?></td>
+                          <td><?= $vote['vote'] ?></td>
+                          <td><?= $vote['n'] ?></td>
+                          <td><a href="<?= base_url() ?>votes/legislature-<?= $vote['legislature'] ?>/vote_<?= $vote['vote'] ?>" class="btn btn-primary">Voir</a></td>
+                        </tr>
+                      <?php endforeach; ?>
+                    </tbody>
+                  </table>
               </div>
             </div><!-- /.card -->
           </div>

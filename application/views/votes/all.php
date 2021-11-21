@@ -23,22 +23,18 @@
                 <?= file_get_contents(asset_url()."imgs/svg/undraw_voting_nvu7.svg") ?>
               </div>
             </div>
-          </div>
-            <?php $this->load->view('votes/partials/votes_carousel.php', array('votes' => $votes_datan)) ?>
-          <div class="row mt-4 mb-5"> <!-- BUTTONS BELOW -->
-            <div class="col-12 d-flex justify-content-center">
-              <div class="bloc-carousel-votes">
-                <div class="carousel-buttons">
-                  <button type="button" class="btn prev mr-2 button--previous" aria-label="précédent">
-                    <?= file_get_contents(asset_url()."imgs/icons/arrow_left.svg") ?>
-                  </button>
-                  <a class="btn all mx-2" href="<?= base_url() ?>votes/decryptes">
-                    <span>VOIR TOUS</span>
-                  </a>
-                  <button type="button" class="btn next ml-2 button--next" aria-label="suivant">
-                    <?= file_get_contents(asset_url()."imgs/icons/arrow_right.svg") ?>
-                  </button>
-                </div>
+            <div class="col-12 carousel-container bloc-carousel-votes-flickity">
+              <?php $this->load->view('votes/partials/votes_carousel.php', array('votes' => $votes_datan)) ?>
+              <div class="carousel-buttons d-flex justify-content-center">
+                <button type="button" class="btn prev mr-2 carousel--prev" aria-label="précédent">
+                  <?= file_get_contents(asset_url()."imgs/icons/arrow_left.svg") ?>
+                </button>
+                <a class="btn see-all-carousel mx-2" href="<?= base_url() ?>votes/decryptes">
+                  <span>VOIR TOUS LES VOTES</span>
+                </a>
+                <button type="button" class="btn next ml-2 carousel--next" aria-label="suivant">
+                  <?= file_get_contents(asset_url()."imgs/icons/arrow_right.svg") ?>
+                </button>
               </div>
             </div>
           </div>
@@ -66,28 +62,11 @@
               </div>
               <div class="col-lg-7 col-md-11 offset-md-1 offset-lg-0 d-flex justify-content-center justify-content-md-start flex-wrap my-3 my-lg-0">
                 <?php foreach ($field['votes'] as $vote): ?>
-                  <div class="card card-vote my-4 my-md-0">
-                    <div class="thumb d-flex align-items-center <?= $vote['sortCode'] ?>">
-                      <div class="d-flex align-items-center">
-                        <span><?= mb_strtoupper($vote['sortCode']) ?></span>
-                      </div>
-                    </div>
-                    <div class="card-header d-flex flex-row justify-content-between">
-                      <span class="date"><?= $vote['dateScrutinFR'] ?></span>
-                    </div>
-                    <div class="card-body d-flex align-items-center">
-                      <span class="title">
-                        <a href="<?= base_url() ?>votes/legislature-<?= $vote['legislature'] ?>/vote_<?= $vote['voteNumero'] ?>" class="stretched-link no-decoration"><?= $vote['vote_titre'] ?></a>
-                      </span>
-                    </div>
-                    <div class="card-footer">
-                      <span class="field badge badge-primary py-1 px-2"><?= $vote['category_libelle'] ?></span>
-                    </div>
-                  </div>
+                  <?php $this->load->view('votes/partials/card_vote.php', array('vote' => $vote)) ?>
                 <?php endforeach; ?>
               </div>
-              <div class="col-md-11 col-lg-2 offset-md-1 offset-lg-0 btn-all d-flex justify-content-center align-items-center my-3 my-lg-0">
-                <a class="btn py-1" href="<?= base_url() ?>votes/decryptes/<?= $field['slug'] ?>">
+              <div class="col-md-11 col-lg-2 offset-md-1 offset-lg-0 d-flex justify-content-center align-items-center my-3 my-lg-0">
+                <a class="btn see-all-votes py-1" href="<?= base_url() ?>votes/decryptes/<?= $field['slug'] ?>">
                   <span>VOIR TOUS</span>
                 </a>
               </div>
@@ -103,41 +82,37 @@
               <h2>Derniers votes non-decryptés de l'Assemblée nationale</h2>
             </div>
           </div>
-          <div class="row bloc-carousel-votes-flickity mt-5"> <!-- CARDS -->
-            <div class="col-12 carousel-cards">
-              <?php foreach ($votes as $vote): ?>
-                <div class="card card-vote">
-                  <div class="thumb d-flex align-items-center <?= $vote['sortCode'] ?>">
-                    <div class="d-flex align-items-center">
-                      <span><?= mb_strtoupper($vote['sortCode']) ?></span>
+          <div class="row mt-5"> <!-- CARDS -->
+            <div class="col-12 carousel-container bloc-carousel-votes-flickity">
+              <div class="carousel-cards">
+                <?php foreach ($votes as $vote): ?>
+                  <div class="card card-vote">
+                    <div class="thumb d-flex align-items-center <?= $vote['sortCode'] ?>">
+                      <div class="d-flex align-items-center">
+                        <span><?= mb_strtoupper($vote['sortCode']) ?></span>
+                      </div>
+                    </div>
+                    <div class="card-header d-flex flex-row justify-content-between">
+                      <span class="date"><?= months_abbrev($vote['dateScrutinFR']) ?></span>
+                    </div>
+                    <div class="card-body d-flex align-items-center">
+                      <span class="title">
+                        <a href="<?= base_url() ?>votes/legislature-<?= $vote['legislature'] ?>/vote_<?= $vote['voteNumero'] ?>" class="stretched-link no-decoration"><?= ucfirst(word_limiter($vote['titre'], 20, " ...")) ?></a>
+                      </span>
                     </div>
                   </div>
-                  <div class="card-header d-flex flex-row justify-content-between">
-                    <span class="date"><?= $vote['dateScrutinFRAbbrev'] ?></span>
-                  </div>
-                  <div class="card-body d-flex align-items-center">
-                    <span class="title">
-                      <a href="<?= base_url() ?>votes/legislature-<?= $vote['legislature'] ?>/vote_<?= $vote['voteNumero'] ?>" class="stretched-link no-decoration"><?= ucfirst(word_limiter($vote['titre'], 20, " ...")) ?></a>
-                    </span>
-                  </div>
-                </div>
-              <?php endforeach; ?>
-            </div>
-          </div>
-          <div class="row mt-4 mb-5"> <!-- BUTTONS BELOW -->
-            <div class="col-12 d-flex justify-content-center">
-              <div class="bloc-carousel-votes">
-                <div class="carousel-buttons">
-                  <button type="button" class="btn prev mr-2 button--previous">
-                    <?= file_get_contents(asset_url()."imgs/icons/arrow_left.svg") ?>
-                  </button>
-                  <a class="btn all mx-2" href="<?= base_url() ?>votes/legislature-<?= legislature_current() ?>">
-                    <span>VOIR TOUS</span>
-                  </a>
-                  <button type="button" class="btn next ml-2 button--next">
-                    <?= file_get_contents(asset_url()."imgs/icons/arrow_right.svg") ?>
-                  </button>
-                </div>
+                <?php endforeach; ?>
+              </div>
+              <div class="carousel-buttons d-flex justify-content-center">
+                <button type="button" class="btn prev mr-2 carousel--prev" aria-label="précédent">
+                  <?= file_get_contents(asset_url()."imgs/icons/arrow_left.svg") ?>
+                </button>
+                <a class="btn see-all-carousel mx-2" href="<?= base_url() ?>votes/decryptes">
+                  <span>VOIR TOUS LES VOTES</span>
+                </a>
+                <button type="button" class="btn next ml-2 carousel--next" aria-label="suivant">
+                  <?= file_get_contents(asset_url()."imgs/icons/arrow_right.svg") ?>
+                </button>
               </div>
             </div>
           </div>

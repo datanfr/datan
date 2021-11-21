@@ -256,7 +256,7 @@
       $depute_dpt = $data['depute']['dptSlug'];
       $data['active'] = $data['depute']['active'];
       $legislature = $data['depute']['legislature'];
-      $data['infos_groupes'] = groupsPositionEdited();
+      $data['infos_groupes'] = groups_position_edited();
       $depute = $data['depute']['nameFirst'].' '.$data['depute']['nameLast'];
       $data['no_job'] = array('autre profession','autres', 'sans profession déclarée', 'sans profession');
 
@@ -349,9 +349,6 @@
       if ($legislature == legislature_current()) {
         // Get edited votes
         $data['votes_datan'] = $this->votes_model->get_votes_datan_depute($mpId, 5);
-        foreach ($data['votes_datan'] as $key => $value) {
-          $data['votes_datan'][$key]['dateScrutinFRAbbrev'] = $this->functions_datan->abbrev_months($value['dateScrutinFR']);
-        }
         // Get key votes
         $data['key_votes'] = $this->votes_model->get_key_votes_mp($mpId);
       } else {
@@ -368,7 +365,7 @@
       $data['mandatsReversed'] = array_reverse($data['mandats']);
 
       // Gender
-      $data['gender'] = $this->depute_edito->gender($data['depute']['civ']);
+      $data['gender'] = gender($data['depute']['civ']);
 
       // Meta
       $data['url'] = $this->meta_model->get_url();
@@ -462,7 +459,7 @@
       $groupe_id = $data['depute']['groupeId'];
 
       // Gender
-      $data['gender'] = $this->depute_edito->gender($data['depute']['civ']);
+      $data['gender'] = gender($data['depute']['civ']);
 
       // Statistiques
       $data = $this->get_statistiques($data, $legislature, $mpId, $groupe_id);
@@ -564,9 +561,6 @@
           $data['fields_voted'][] = $field;
         }
         $x[$field["slug"]] = array_slice($x[$field["slug"]], 0, 2);
-        foreach ($x[$field["slug"]] as $key2 => $value) {
-          $x[$field["slug"]][$key2 ]['dateScrutinFRAbbrev'] = $this->functions_datan->abbrev_months($value['dateScrutinFR']);
-        }
       }
       // Check the logos
       if ($data["fields_voted"]){
@@ -581,7 +575,7 @@
       $data['by_field'] = $x;
 
       // Query - gender
-      $data['gender'] = $this->depute_edito->gender($data['depute']['civ']);
+      $data['gender'] = gender($data['depute']['civ']);
 
       // Historique du député
       $data['mandat_edito'] = $this->depute_edito->get_nbr_lettre($data['depute']['mandatesN']);
@@ -658,11 +652,6 @@
         show_404();
       }
 
-      // Change data of votes
-      foreach ($data['votes'] as $key => $value) {
-        $data['votes'][$key]['dateScrutinFRAbbrev'] = $this->functions_datan->abbrev_months($value['dateScrutinFR']);
-      }
-
       // Variables
       $nameLast = $data['depute']['nameLast'];
       $nameUrl = $input_depute;
@@ -680,7 +669,7 @@
       $data['commission_parlementaire'] = $this->deputes_model->get_commission_parlementaire($mpId);
 
       // Query - gender
-      $data['gender'] = $this->depute_edito->gender($data['depute']['civ']);
+      $data['gender'] = gender($data['depute']['civ']);
 
       // Historique du député
       $data['mandat_edito'] = $this->depute_edito->get_nbr_lettre($data['depute']['mandatesN']);
@@ -768,7 +757,7 @@
       $data['votes'] = $this->votes_model->get_votes_all_depute($mpId, legislature_current());
 
       // Query - gender
-      $data['gender'] = $this->depute_edito->gender($data['depute']['civ']);
+      $data['gender'] = gender($data['depute']['civ']);
 
       // Historique du député
       $data['mandat_edito'] = $this->depute_edito->get_nbr_lettre($data['depute']['mandatesN']);

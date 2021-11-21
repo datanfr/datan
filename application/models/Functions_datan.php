@@ -57,35 +57,13 @@
       }
     }
 
-    public function abbrev_months($x){
-      if (strpos($x, "janvier") !== false) {
-        return str_replace("janvier", "janv.", $x);
-      } elseif (strpos($x, "février") !== false) {
-        return str_replace("février", "févr.", $x);
-      } elseif (strpos($x, "avril") !== false) {
-        return str_replace("avril", "avr.", $x);
-      } elseif (strpos($x, "juillet") !== false) {
-        return str_replace("juillet", "juill.", $x);
-      } elseif (strpos($x, "septembre") !== false) {
-        return str_replace("septembre", "sept.", $x);
-      } elseif (strpos($x, "octobre") !== false) {
-        return str_replace("octobre", "oct.", $x);
-      } elseif (strpos($x, "novembre") !== false) {
-        return str_replace("novembre", "nov.", $x);
-      } elseif (strpos($x, "décembre") !== false) {
-        return str_replace("décembre", "déc.", $x);
-      } else {
-        return $x;
-      }
-    }
-
     public function get_http_response_code($url){
       $headers = get_headers($url);
       return substr($headers[0], 9, 3);
     }
 
     // $precision = 1 (par défaut) pour les dizaines, 2 pour les centaines, 3 pour millier etc...
-    function decRound ($value, $precision = 1)
+    function dec_round ($value, $precision = 1)
       {
         $p = pow (10, $precision);
         return ceil ($value / $p) * $p; // arrondi à la précision supérieure
@@ -147,7 +125,6 @@
     	} else if ($a<1000000){
     		return int2str((int)($a/1000)).' '.int2str(1000).' '.int2str($a%1000);
     	}
-            
     }
 
   }

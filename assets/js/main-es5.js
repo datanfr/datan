@@ -1,5 +1,26 @@
 "use strict";
 
+/*
+################
+               FUNCTION IF LOCALHOST
+################
+*/
+function get_base_url() {
+  var localhost = 'http://localhost/datan';
+
+  if (location.hostname === "localhost" || location.hostname === "127.0.0.1") {
+    return localhost;
+  } else {
+    return 'https://datan.fr';
+  }
+}
+/*
+################
+                A TRIER
+################
+*/
+
+
 $(document).ready(function () {
   // popover
   $("[data-toggle=popover]").popover({
@@ -68,23 +89,30 @@ $(document).ready(function () {
 ################
 */
 // init Flickity
+// external js: flickity.pkgd.js
 
-if ($('.carousel-cards').length > 0) {
-  var $carousel = $('.carousel-cards').flickity({
+var carouselContainers = document.querySelectorAll('.carousel-container');
+
+for (var i = 0; i < carouselContainers.length; i++) {
+  var container = carouselContainers[i];
+  initCarouselContainer(container);
+}
+
+function initCarouselContainer(container) {
+  var carousel = container.querySelector('.carousel-cards');
+  var flkty = new Flickity(carousel, {
     prevNextButtons: false,
     pageDots: false,
     freeScroll: true,
     contain: true
-  }); // Flickity instance
-
-  var flkty = $carousel.data('flickity'); // previous
-
-  $('.button--previous').on('click', function () {
-    $carousel.flickity('previous');
-  }); // next
-
-  $('.button--next').on('click', function () {
-    $carousel.flickity('next');
+  });
+  var previousButton = container.querySelector('.carousel--prev');
+  previousButton.addEventListener('click', function () {
+    flkty.previous();
+  });
+  var nextButton = container.querySelector('.carousel--next');
+  nextButton.addEventListener('click', function () {
+    flkty.next();
   });
 }
 /*
@@ -178,7 +206,7 @@ $(function () {
 });
 /*
 ##########
-NEWSLETTER
+NEWSLETTER (MODAL)
 ##########
 */
 // Neweletter in header
@@ -186,7 +214,7 @@ NEWSLETTER
 $('#newsletterForm').on('submit', function (e) {
   e.preventDefault();
   $.ajax({
-    url: "api/newsletter/create_newsletter",
+    url: get_base_url() + "/api/newsletter/create_newsletter",
     type: "POST",
     data: $('#newsletterForm').serialize(),
     dataType: 'json',
@@ -211,7 +239,7 @@ $('#newsletterForm').on('submit', function (e) {
 $('#newsletterPage').on('submit', function (e) {
   e.preventDefault();
   $.ajax({
-    url: "api/newsletter/create_newsletter",
+    url: get_base_url() + "/api/newsletter/create_newsletter",
     type: "POST",
     data: $('#newsletterPage').serialize(),
     dataType: 'json',
@@ -225,6 +253,36 @@ $('#newsletterPage').on('submit', function (e) {
     error: function error(err) {
       console.log('err', err);
       $('#newsletterFailed').removeClass("d-none");
+    }
+  });
+  return true;
+});
+/*
+##########
+VOTE DATAN REQUESTED (MODAL)
+##########
+*/
+
+$('#voteDatanRequestedForm').on('submit', function (e) {
+  e.preventDefault();
+  $.ajax({
+    url: get_base_url() + "/api/votes/request_vote_datan",
+    type: "POST",
+    data: $('#voteDatanRequestedForm').serialize(),
+    dataType: 'json',
+    success: function success(ac) {
+      if (!ac) {
+        $('#voteDatanRequestedForm').hide();
+        $('#fail').show();
+      } else {
+        $('#voteDatanRequestedForm').hide();
+        $('#success').show();
+      }
+    },
+    error: function error(err) {
+      console.log('err', err);
+      $('#voteDatanRequestedForm').hide();
+      $('#fail').show();
     }
   });
   return true;
@@ -245,5 +303,38 @@ $('#searchfaq').on('keyup', function (e) {
   $(".card-question").filter(function () {
     return regex.test($(this).text());
   }).show();
+});
+/*
+##########
+Social media buttons
+##########
+*/
+// Source: https://css-tricks.com/simple-social-sharing-links/
+
+function socialWindow(url) {
+  var left = (screen.width - 570) / 2;
+  var top = (screen.height - 570) / 2;
+  var params = "menubar=no,toolbar=no,status=no,width=570,height=570,top=" + top + ",left=" + left;
+  window.open(url, "NewWindow", params);
+}
+
+var pageUrl = encodeURIComponent(document.URL);
+var tweet = encodeURIComponent(jQuery("meta[property='og:description']").attr("content"));
+var whatsappMessage = "Je viens de découvrir un nouveau vote de l'Assemblée nationale sur Datan ! Découvre le aussi : " + document.URL;
+jQuery(".social-share.facebook").on("click", function () {
+  var url = "https://www.facebook.com/sharer.php?u=" + pageUrl;
+  socialWindow(url);
+});
+jQuery(".social-share.twitter").on("click", function () {
+  var url = "https://twitter.com/intent/tweet?url=" + pageUrl + "&text=" + tweet;
+  socialWindow(url);
+});
+jQuery(".social-share.linkedin").on("click", function () {
+  var url = "https://www.linkedin.com/sharing/share-offsite/?url=" + pageUrl;
+  socialWindow(url);
+});
+jQuery(".social-share.whatsapp").on("click", function () {
+  var url = "whatsapp://send?text=" + whatsappMessage;
+  socialWindow(url);
 });
 //# sourceMappingURL=main-es5.js.map

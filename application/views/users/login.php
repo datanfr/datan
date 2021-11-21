@@ -46,8 +46,7 @@
       </div>
     </div>
     <div class="col-lg-6 col-md-5 d-none d-md-block m-0 p-0 login_img">
-      <div class="img-container">
-      </div>
+      <div class="img-container"></div>
     </div>
   </div>
 </div>
