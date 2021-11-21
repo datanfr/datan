@@ -264,17 +264,15 @@
         <?php endif; ?>
         <!-- BLOC VOTES -->
         <?php if (!empty($votes_datan)) : ?>
-          <div class="bloc-votes mt-5">
+          <div class="bloc-votes carousel-container mt-5">
             <div class="row">
               <div class="col-12">
                 <div class="d-flex justify-content-between mb-4">
                   <h2>Ses derniers votes</h2>
                   <div class="bloc-carousel-votes">
-                    <div class="carousel-buttons">
-                      <a class="btn all mx-2" href="<?= base_url() ?>deputes/<?= $depute['dptSlug'] ?>/depute_<?= $depute['nameUrl'] ?>/votes">
-                        <span>VOIR TOUS</span>
-                      </a>
-                    </div>
+                    <a class="btn see-all-votes mx-2" href="<?= base_url() ?>deputes/<?= $depute['dptSlug'] ?>/depute_<?= $depute['nameUrl'] ?>/votes">
+                      <span>VOIR TOUS</span>
+                    </a>
                   </div>
                 </div>
               </div>
@@ -282,32 +280,7 @@
             <div class="row bloc-carousel-votes-flickity">
               <div class="col-12 carousel-cards">
                 <?php foreach ($votes_datan as $vote) : ?>
-                  <div class="card card-vote">
-                    <?php if ($vote['vote_depute'] == 'absent') : ?>
-                      <div class="thumb absent d-flex align-items-center">
-                        <div class="d-flex align-items-center">
-                          <span>ABSENT<?= mb_strtoupper($gender['e']) ?></span>
-                        </div>
-                      </div>
-                    <?php else : ?>
-                      <div class="thumb d-flex align-items-center <?= $vote['vote_depute'] ?>">
-                        <div class="d-flex align-items-center">
-                          <span><?= mb_strtoupper($vote['vote_depute']) ?></span>
-                        </div>
-                      </div>
-                    <?php endif; ?>
-                    <div class="card-header d-flex flex-row justify-content-between">
-                      <span class="date"><?= $vote['dateScrutinFRAbbrev'] ?></span>
-                    </div>
-                    <div class="card-body d-flex align-items-center">
-                      <span class="title">
-                        <a href="<?= base_url() ?>votes/legislature-<?= $vote['legislature'] ?>/vote_<?= $vote['voteNumero'] ?>" class="stretched-link no-decoration"><?= $vote['vote_titre'] ?></a>
-                      </span>
-                    </div>
-                    <div class="card-footer">
-                      <span class="field badge badge-primary py-1 px-2"><?= $vote['category_libelle'] ?></span>
-                    </div>
-                  </div>
+                  <?php $this->load->view('deputes/partials/card_vote.php', array('vote' => $vote)) ?>
                 <?php endforeach; ?>
                 <div class="card card-vote see-all">
                   <div class="card-body d-flex align-items-center justify-content-center">
@@ -318,17 +291,13 @@
             </div> <!-- // END BLOC VOTES -->
             <div class="row mt-2">
               <!-- BUTTONS BELOW -->
-              <div class="col-12 d-flex justify-content-center">
-                <div class="bloc-carousel-votes">
-                  <div class="carousel-buttons">
-                    <button type="button" class="btn prev mr-2 button--previous" aria-label="précédent">
-                      <?= file_get_contents(asset_url() . "imgs/icons/arrow_left.svg") ?>
-                    </button>
-                    <button type="button" class="btn next ml-2 button--next" aria-label="suivant">
-                      <?= file_get_contents(asset_url() . "imgs/icons/arrow_right.svg") ?>
-                    </button>
-                  </div>
-                </div>
+              <div class="carousel-buttons col-12 d-flex justify-content-center">
+                <button type="button" class="btn prev mr-2 carousel--prev" aria-label="précédent">
+                  <?= file_get_contents(asset_url()."imgs/icons/arrow_left.svg") ?>
+                </button>
+                <button type="button" class="btn next ml-2 carousel--next" aria-label="suivant">
+                  <?= file_get_contents(asset_url()."imgs/icons/arrow_right.svg") ?>
+                </button>
               </div>
             </div>
           </div> <!-- // END BLOC VOTES -->

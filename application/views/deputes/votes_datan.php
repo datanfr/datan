@@ -123,36 +123,10 @@
           </div>
           <div class="row mt-2 votes">
             <div class="col-md-11 offset-md-1">
-              <div class="row">
+              <div class="row my-3">
                 <?php foreach ($by_field[$field["slug"]] as $vote): ?>
                   <div class="col-md-6 d-flex justify-content-center">
-                    <div class="card card-vote my-3">
-                      <?php if ($vote['vote_depute'] == 'absent'): ?>
-                        <div class="thumb absent d-flex align-items-center">
-                          <div class="d-flex align-items-center">
-                            <span>ABSENT<?= mb_strtoupper($gender['e']) ?></span>
-                          </div>
-                        </div>
-                        <?php else: ?>
-                          <div class="thumb d-flex align-items-center <?= $vote['vote_depute'] ?>">
-                            <div class="d-flex align-items-center">
-                              <span><?= mb_strtoupper($vote['vote_depute']) ?></span>
-                            </div>
-                          </div>
-                      <?php endif; ?>
-                      <div class="card-header d-flex flex-row justify-content-between">
-                        <span class="date"><?= $vote['dateScrutinFRAbbrev'] ?></span>
-                      </div>
-                      <div class="card-body d-flex align-items-center">
-                        <span class="title">
-                          <a href="<?= base_url() ?>votes/legislature-<?= $vote['legislature'] ?>/vote_<?= $vote['voteNumero'] ?>" class="stretched-link no-decoration"></a>
-                          <?= $vote['vote_titre'] ?>
-                        </span>
-                      </div>
-                      <div class="card-footer">
-                        <span class="field badge badge-primary py-1 px-2"><?= $vote['category_libelle'] ?></span>
-                      </div>
-                    </div>
+                    <?php $this->load->view('deputes/partials/card_vote.php', array('vote' => $vote)) ?>
                   </div>
                 <?php endforeach; ?>
               </div>
@@ -160,11 +134,9 @@
           </div>
           <div class="row mt-2">
             <div class="col-md-11 offset-md-1 d-flex justify-content-center">
-              <div class="btn-all">
-                <a class="btn py-1" href="<?= base_url() ?>deputes/<?= $depute['dptSlug'] ?>/depute_<?= $depute['nameUrl'] ?>/votes/<?= $field['slug'] ?>">
-                  <span>VOIR TOUS</span>
-                </a>
-              </div>
+              <a class="btn see-all-votes py-1" href="<?= base_url() ?>deputes/<?= $depute['dptSlug'] ?>/depute_<?= $depute['nameUrl'] ?>/votes/<?= $field['slug'] ?>">
+                <span>VOIR TOUS</span>
+              </a>
             </div>
           </div>
         <?php endforeach;

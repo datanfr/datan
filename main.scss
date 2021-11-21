@@ -17,6 +17,10 @@ $primary_rgb: rgb(0, 183, 148);
 $adopted: $vert;
 $abstention: #FFBA49;
 $rejected: #C5283D;
+$fcb-color: #4267B2;
+$twitter-color: #1DA1F2;
+$linkedin-color: #2867B2;
+$whatsapp-color: #128C7E;
 
 // BREADCRUMB
 $breadcrumb-divider: quote(">");
@@ -308,6 +312,15 @@ body:not(.pg-mentions) #tarteaucitronIcon {
 .sort-abstention{
   color: $abstention;
 }
+.sort-bg-pour{
+  background-color: $adopted;
+}
+.sort-bg-contre{
+  background-color: $rejected;
+}
+.sort-bg-abstention{
+  background-color: $abstention;
+}
 .pagination{
   a{
     color: $primary;
@@ -362,16 +375,82 @@ body:not(.pg-mentions) #tarteaucitronIcon {
     background-image: linear-gradient(to bottom, transparent, #fff);
   }
 }
+.mobileShow {display: none;}
+  /* Smartphone Portrait and Landscape */
+@media only screen and (max-width: 767.98px) {
+  .mobileShow {display: block}
+}
 /*
 ################
-               Carousel vote & card-vote
+              Social media and social-share
 ################
 */
-/* Bloc carousel */
-.bloc-carousel-votes{
-  .carousel-cards{
-    margin-top: 1.5rem;
-    margin-bottom: 3rem;
+.fcb-bg{
+  background-color: $fcb-color;
+  color: #fff;
+}
+.twitter-bg{
+  background-color: $twitter-color;
+  color: #fff;
+}
+.linkedin-bg{
+  background-color: $linkedin-color;
+  color: #fff;
+}
+.whatsapp-bg{
+  background-color: $whatsapp-color;
+  color: #fff;
+}
+.social-share-bloc{
+  button{
+    padding: 0.2rem 0.6rem;
+    margin: 0.2rem;
+    transition: 0.3s;
+    img{
+      height: 20px;
+      width: auto;
+    }
+    span{
+      font-size: $h7-font-size;
+      margin-left: 0.25rem;
+    }
+    &:hover{
+      color: #fff;
+      box-shadow: $card-box-shadow-hover;
+    }
+  }
+}
+/*
+################
+               Carousel  & card-vote
+################
+*/
+.see-all-votes{
+  background-color: $primary;
+  color: #fff;
+  font-weight: 800;
+  transition: 0.3s;
+  &:hover{
+    border: 1px solid $primary;
+    background-color: #fff;
+    color: $primary;
+  }
+}
+.see-all-carousel{
+  background-color: $primary;
+  border-radius: 12px;
+  color: #fff;
+  font-weight: 800;
+  transition: 0.3s;
+  &:hover{
+    border: 1px solid $primary;
+    background-color: #fff;
+    color: $primary;
+  }
+}
+.carousel-container{
+  .carousel-buttons{
+    margin-top: 1.4rem;
   }
   button{
     &.prev, &.prev-all, &.next, &.next-all{
@@ -384,20 +463,12 @@ body:not(.pg-mentions) #tarteaucitronIcon {
       }
     }
   }
-  a {
-    &.all{
-      border-radius: 12px;
-      background-color: rgba($primary_rgb, 1);
-      width: 120px;
-      color: #ffffff;
-      font-weight: 600;
-      transition: 0.3s;
-      &:hover{
-        border: 1px solid $primary;
-        background-color: #fff;
-        color: $primary;
-      }
-    }
+}
+/* Bloc carousel */
+.bloc-carousel-votes{
+  .carousel-cards{
+    margin-top: 1.5rem;
+    margin-bottom: 3rem;
   }
 }
 /* Card-vote */
@@ -482,8 +553,8 @@ body:not(.pg-mentions) #tarteaucitronIcon {
     background-color: transparent;
     .date{
       color: $text-gray-light;
-      font-weight: 600;
-      font-size: 1.1em;
+      font-weight: 400;
+      font-size: 1em;
     }
   }
   .card-body{
@@ -491,12 +562,18 @@ body:not(.pg-mentions) #tarteaucitronIcon {
       font-weight: 600;
       font-size: $h6-font-size;
     }
+    .reading{
+      color: $text-gray-light;
+      font-weight: 400;
+      font-size: 0.9em;
+    }
   }
   .card-footer{
     background-color: transparent;
     padding: .75rem;
     .field{
       font-weight: bold;
+      font-size: 0.9em;
     }
   }
   // HOVER //
@@ -778,24 +855,46 @@ body:not(.pg-mentions) #tarteaucitronIcon {
     }
   }
 }
-/* 5. Card pie */
-.card-pie{
+/* 5. Card-vote-infos */
+.card-vote-infos {
   box-shadow: $card-box-shadow;
   border: 0;
   border-radius: 10px;
-  .card-header{
-    padding: 0.3rem 1.25rem;
-    background-color: $primary;
-    border-top-left-radius: 10px;
-    border-top-right-radius: 10px;
-  }
-  .card-body{
-    padding: 1.25rem 0 0 0;
+  .num{
+    color: $text-gray;
+    font-weight: 600;
+    font-size: $h5-font-size;
   }
   .title{
-    font-weight: bold;
-    color: $white;
-    margin: 0;
+    font-size: 2em;
+    color: $text-black;
+    font-weight: 800;
+  }
+  .results {
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+    text-align: center;
+    color: #fff;
+    span{
+      display: block;
+    }
+    div {
+      padding: 0.50rem 0.75rem;
+      width: 33.33%;
+    }
+    div:first-child{
+      border-bottom-left-radius: 10px;
+    }
+    div:last-child{
+      border-bottom-right-radius: 10px;
+    }
+    .legend{
+      font-weight: 600;
+    }
+    .number{
+      font-weight: 800;
+      font-size: $h4-font-size;
+    }
   }
 }
 /*
@@ -926,7 +1025,6 @@ body{
     font-size: 2.3em;
   }
 }
-//WHERE IS THE bloc-hemycicle?
 .bloc-hemycicle-home{
   @include media-breakpoint-only(xs) {
     background-image: linear-gradient(130deg, rgba($primary_rgb, 0.7) 0.65%, rgba(36, 107, 150, 0.7) 112%);
@@ -1778,7 +1876,7 @@ ul.ui-menu{
         margin-left: 0.7em;
       }
       &.btn-fcb{
-        background-color: #4267B2;
+        background-color: $fcb-color;
         svg{
           width: 10px;
           height: auto;
@@ -1788,17 +1886,17 @@ ul.ui-menu{
         }
         &:hover{
           background-color: #fff;
-          border: 1px solid #4267B2;
+          border: 1px solid $fcb-color;
           span {
-            color: #4267B2;
+            color: $fcb-color;
           }
           svg path{
-            fill: #4267B2;
+            fill: $fcb-color;
           }
         }
       }
       &.btn-twitter{
-        background-color: #1DA1F2;
+        background-color: $twitter-color;
         svg{
           width: 27px;
           height: auto;
@@ -1808,12 +1906,12 @@ ul.ui-menu{
         }
         &:hover{
           background-color: #fff;
-          border: 1px solid #1DA1F2;
+          border: 1px solid $twitter-color;
           span{
-            color: #1DA1F2;
+            color: $twitter-color;
           }
           svg path{
-            fill: #1DA1F2;
+            fill: $twitter-color;
           }
         }
       }
@@ -1880,21 +1978,6 @@ ul.ui-menu{
       svg{
         width: 50px;
         height: auto;
-      }
-    }
-    .btn-all{
-      a{
-        width: 100%;
-        background-color: rgba($primary_rgb, 1);
-        color: #ffffff;
-        font-weight: 800;
-        border-radius: 12px;
-        transition: 0.3s;
-        &:hover{
-          border: 1px solid $primary;
-          background-color: #fff;
-          color: $primary;
-        }
       }
     }
   }
@@ -2022,6 +2105,7 @@ ul.ui-menu{
   background-color: #009CF3;
   box-shadow: $card-box-shadow;
   transition: 0.3s;
+  width: 100%;
   span{
     font-size: 1.15em;
     color: #fff;
@@ -2036,55 +2120,53 @@ ul.ui-menu{
   }
 }
 .pg-vote-individual{
-  // HN //
-  .logo-category{
-    svg{
-      width: 70px;
-      height: auto;
-    }
-  }
   .category{
     font-weight: 800;
     color: #fff;
     font-size: 1.6em;
+    text-decoration: none;
+    &:hover{
+      color: #fff;
+    }
   }
-  h1{
-    font-size: 2em;
+  h2{
     color: $text-black;
     font-weight: 800;
+    font-size: 1.8em;
   }
   h3{
     font-size: 1.2em;
     font-weight: 600;
   }
-  .votes-decryptes{
-    h2{
-      color: $text-black;
-      font-weight: 800;
-      font-size: 2em;
-    }
+  .subtitle{
+    color: $text-black;
+    font-weight: 800;
+    font-size: 1.3em;
   }
-  .bloc-description, .bloc-table{
-    h2{
-      font-size: 1.9em;
-      color: $text-black;
-      font-weight: 800;
+  // bloc-card-vote
+  .bloc-card-vote{
+    .card-vote-infos{
+      margin-top: -140px;
     }
   }
   .sort{
     font-size: 1.2em;
+    padding: 0.5em 1.5em;
   }
   // END HN //
   .bloc-groupes{
+    .bloc-groupe{
+      width: 100%;
+    }
     .card{
       box-shadow: $card-box-shadow;
       border: 0;
-      width: 24em;
+      width: 100%;
       .card-body{
         margin: 15px 0;
         padding: 0 0.5rem;
       }
-      .thumb2{
+      .thumb{
         span{
           padding: 5px 18px;
           border-top-right-radius: 5px;
@@ -2098,70 +2180,55 @@ ul.ui-menu{
       }
     }
   }
-  .bloc-results{
-    .sticky-top{
-      @include media-breakpoint-up(md) {
-        margin-top: -110px; top: 110px;
-      }
-      @include media-breakpoint-down(sm){
-        margin-top: 3rem;
-      }
-    }
+  .bloc-infos{
     .infos{
-      padding-inline-start: 0;
-      margin-bottom: 0;
-      display: inline-block;
-      li{
-        list-style: none;
-        margin-bottom: 8px;
-        display: flex;
-        &:last-child {
-          margin-bottom: 0;
-        }
-      }
       svg{
         color: $primary;
         width: 1.2em;
         height: auto;
       }
+      .icon{
+        width: 2em;
+      }
       .label{
-        min-width: 30px;
-        margin-right: 1rem;
+        font-weight: 800;
       }
       .value{
         font-weight: 600;
+        padding-left: 20px;
       }
       .question{
         svg{
-          width: 1em;
+          width: 1.2em;
           height: auto;
         }
       }
+      td {
+        padding-top: 10px;
+        padding-bottom: 10px;
+      }
+      tr:not(:first-child){
+        border-top: 1px solid #E5E5E5;
+      }
     }
-    .results{
-      border-bottom-left-radius: 10px;
-      border-bottom-right-radius: 10px;
-      text-align: center;
-      color: #fff;
-      span{
-        display: block;
-      }
-      div{
-        padding: 0.25rem 0;
-      }
-      div:first-child{
-        border-bottom-left-radius: 10px;
-      }
-      div:last-child{
-        border-bottom-right-radius: 10px;
-      }
-      .legend{
-        font-weight: 600;
-      }
-      .number{
+  }
+  .bloc-links{
+    .link{
+      width: 100%;
+      .text{
         font-weight: 800;
-        font-size: $h5-font-size;
       }
+    }
+  }
+  &.bloc-author{
+    background-color: $bleu;
+    .title{
+      color: #fff;
+    }
+    p{
+      color: #fff;
+      font-style: italic;
+      margin-top: 1rem;
     }
   }
   .bloc-table{
@@ -2195,22 +2262,7 @@ ul.ui-menu{
   }
   // Other votes in footer //
   .votes-next{
-    background-color: $primary;
-    .btn{
-      background-color: #FFFFFF;
-      border: none;
-      color: $text-black;
-      font-weight: 800;
-      border-radius: 10px;
-      margin: 1rem 2rem 1rem 2rem;
-      padding: 0.5rem 1rem;
-      i{
-        margin: 0 0.25rem;
-      }
-    }
-  }
-  .votes-next{
-    background-color: $primary;
+    background-color: $bleu;
     .btn{
       background-color: #FFFFFF;
       border: none;
@@ -2258,26 +2310,6 @@ ul.ui-menu{
     .logo-field img {
       width: 50px;
       height: auto;
-    }
-    .btn-all{
-      a{
-        @include media-breakpoint-down(sm) {
-          width: 100%;
-        }
-        @include media-breakpoint-up(sm) {
-          width: 240px;
-        }
-        background-color: rgba($primary_rgb, 1);
-        color: #ffffff;
-        font-weight: 800;
-        border-radius: 12px;
-        transition: 0.3s;
-        &:hover{
-          border: 1px solid $primary;
-          background-color: #fff;
-          color: $primary;
-        }
-      }
     }
   }
   svg{
@@ -2832,7 +2864,7 @@ MODAL
 MODAL
 ################
 */
-#modalSubscription,#modalFail{
+#modalSubscription,#modalFail, #fail, #success{
   display: none;
 }
 .modalDatan{

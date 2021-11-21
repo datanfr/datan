@@ -4,8 +4,10 @@ class Newsletter_model extends CI_Model{
     $this->load->database();
   }
 
-  public function create_newsletter(){
-    $email = $this->input->post('email');
+  public function create_newsletter($email = NULL){
+    if ($email == NULL) {
+      $email = $this->input->post('email');
+    }
     $exists = $this->get_by_email($email);
     if (isset($exists)){
       return false;

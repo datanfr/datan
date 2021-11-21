@@ -127,19 +127,19 @@
       $groupe_uid = $data['groupe']['uid'];
       $groupe_ab = $data['groupe']['libelleAbrev'];
       $groupe_opposition = $data['groupe']['positionPolitique'];
-      $data['infos_groupes'] = groupsPositionEdited();
+      $data['infos_groupes'] = groups_position_edited();
 
       // Query 2 Membres du groupe
       $data['president'] = $this->groupes_model->get_groupes_president($groupe_uid, $data['active']);
       if (!empty($data['president'])) {
-        $data['president'] = array_merge($data['president'], $this->depute_edito->gender($data['president']['civ']));
+        $data['president'] = array_merge($data['president'], gender($data['president']['civ']));
       }
       $data['membres'] = $this->groupes_model->get_groupe_membres($groupe_uid, $data['active']);
-      if (!in_array($data['groupe']['uid'], groupesNI())) {
+      if (!in_array($data['groupe']['uid'], groupes_NI())) {
         $data['membres'] = array_slice($data['membres'], 0, 20);
       }
       $data['apparentes'] = $this->groupes_model->get_groupe_apparentes($groupe_uid, $data['active']);
-      if (!in_array($data['groupe']['uid'], groupesNI())) {
+      if (!in_array($data['groupe']['uid'], groupes_NI())) {
        $data['apparentes'] = array_slice($data['apparentes'], 0, 20);
       }
 
@@ -262,7 +262,7 @@
       $controller = $this->router->fetch_class()."/".$this->router->fetch_method();
       $data['ogp'] = $this->meta_model->get_ogp($controller, $data['title_meta'], $data['description_meta'], $data['url'], $data);
       // Microdata Person
-      if (!in_array($data['groupe']['uid'], groupesNI())) {
+      if (!in_array($data['groupe']['uid'], groupes_NI())) {
         $data['schema'] = $this->groupes_model->get_organization_schema($data['groupe'], $data['president'], NULL);
       }
       // CSS
@@ -350,7 +350,7 @@
       $controller = $this->router->fetch_class()."/".$this->router->fetch_method();
       $data['ogp'] = $this->meta_model->get_ogp($controller, $data['title_meta'], $data['description_meta'], $data['url'], $data);
       // Microdata Person
-      if (!in_array($data['groupe']['uid'], groupesNI())) {
+      if (!in_array($data['groupe']['uid'], groupes_NI())) {
         $data['schema'] = $this->groupes_model->get_organization_schema($data['groupe'], $data['president'], array('members' => $data['membres'], 'apparentes' => $data['apparentes']));
       }
       // JS
@@ -376,7 +376,7 @@
       $groupe_uid = $data['groupe']['uid'];
       $groupe_ab = $data['groupe']['libelleAbrev'];
       $groupe_opposition = $data['groupe']['positionPolitique'];
-      $data['infos_groupes'] = groupsPositionEdited();
+      $data['infos_groupes'] = groups_position_edited();
 
       // Query active
       if ($data['groupe']['dateFin'] == NULL) {
@@ -397,14 +397,14 @@
       $data['dateDebut'] = strftime('%d %B %Y', strtotime($data['groupe']['dateDebut']));
       $data['president'] = $this->groupes_model->get_groupes_president($groupe_uid, $data['active']);
       if (!empty($data['president'])) {
-        $data['president'] = array_merge($data['president'], $this->depute_edito->gender($data['president']['civ']));
+        $data['president'] = array_merge($data['president'], gender($data['president']['civ']));
       }
       $data['membres'] = $this->groupes_model->get_groupe_membres($groupe_uid, $data['active']);
-      if (!in_array($data['groupe']['uid'], groupesNI())) {
+      if (!in_array($data['groupe']['uid'], groupes_NI())) {
         $data['membres'] = array_slice($data['membres'], 0, 20);
       }
       $data['apparentes'] = $this->groupes_model->get_groupe_apparentes($groupe_uid, $data['active']);
-      if (!in_array($data['groupe']['uid'], groupesNI())) {
+      if (!in_array($data['groupe']['uid'], groupes_NI())) {
         $data['apparentes'] = array_slice($data['apparentes'], 0, 20);
       }
       $data['groupesActifs'] = $this->groupes_model->get_groupes_all(TRUE, legislature_current());
@@ -418,9 +418,6 @@
           $data['fields_voted'][] = $field;
         }
         $x[$field["slug"]] = array_slice($x[$field["slug"]], 0, 2);
-        foreach ($x[$field["slug"]] as $key2 => $value) {
-          $x[$field["slug"]][$key2 ]['dateScrutinFRAbbrev'] = $this->functions_datan->abbrev_months($value['dateScrutinFR']);
-        }
       }
       // Check the logos
       if ($data["fields_voted"]){
@@ -491,18 +488,13 @@
       $groupe_uid = $data['groupe']['uid'];
       $groupe_ab = $data['groupe']['libelleAbrev'];
       $groupe_opposition = $data['groupe']['positionPolitique'];
-      $data['infos_groupes'] = groupsPositionEdited();
+      $data['infos_groupes'] = groups_position_edited();
 
       // Query - get active votes
       $data['votes'] = $this->votes_model->get_votes_datan_groupe_field($groupe_uid, $field, NULL);
 
       if (empty($data['votes'])) {
         show_404();
-      }
-
-      // Change data of votes
-      foreach ($data['votes'] as $key => $value) {
-        $data['votes'][$key]['dateScrutinFRAbbrev'] = $this->functions_datan->abbrev_months($value['dateScrutinFR']);
       }
 
       // Query active
@@ -524,14 +516,14 @@
       $data['dateDebut'] = strftime('%d %B %Y', strtotime($data['groupe']['dateDebut']));
       $data['president'] = $this->groupes_model->get_groupes_president($groupe_uid, $data['active']);
       if (!empty($data['president'])) {
-        $data['president'] = array_merge($data['president'], $this->depute_edito->gender($data['president']['civ']));
+        $data['president'] = array_merge($data['president'], gender($data['president']['civ']));
       }
       $data['membres'] = $this->groupes_model->get_groupe_membres($groupe_uid, $data['active']);
-      if (!in_array($data['groupe']['uid'], groupesNI())) {
+      if (!in_array($data['groupe']['uid'], groupes_NI())) {
         $data['membres'] = array_slice($data['membres'], 0, 20);
       }
       $data['apparentes'] = $this->groupes_model->get_groupe_apparentes($groupe_uid, $data['active']);
-      if (!in_array($data['groupe']['uid'], groupesNI())) {
+      if (!in_array($data['groupe']['uid'], groupes_NI())) {
         $data['apparentes'] = array_slice($data['apparentes'], 0, 20);
       }
       $data['groupesActifs'] = $this->groupes_model->get_groupes_all(TRUE, legislature_current());
@@ -599,7 +591,7 @@
       $groupe_uid = $data['groupe']['uid'];
       $groupe_ab = $data['groupe']['libelleAbrev'];
       $groupe_opposition = $data['groupe']['positionPolitique'];
-      $data['infos_groupes'] = groupsPositionEdited();
+      $data['infos_groupes'] = groups_position_edited();
 
       // Query active
       if ($data['groupe']['dateFin'] == NULL) {

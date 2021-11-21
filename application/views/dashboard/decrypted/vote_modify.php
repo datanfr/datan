@@ -72,6 +72,16 @@
                       <?php endforeach; ?>
                     </select>
                   </div>
+                  <div class="form-group">
+                    <label for="">Lecture</label>
+                    <select class="form-control" name="reading">
+                      <option value="<?= $vote['reading'] ?>" selected="selected">Selected: <?= $vote['reading_name'] ?></option>
+                      <option value=""></option>
+                      <?php foreach ($readings as $reading): ?>
+                        <option value="<?= $reading['id'] ?>"><?= $reading['name'] ?></option>
+                      <?php endforeach; ?>
+                    </select>
+                  </div>
                   <?php if ($this->session->userdata('type') == 'admin'): ?>
                     <div class="form-group">
                       <div class="form-check">
