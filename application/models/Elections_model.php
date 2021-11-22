@@ -87,13 +87,14 @@
     if ($id == 2 /*departementales-2021*/) {
         $array = array(
           array("party" => "Les Républicains (LR)", "color" => "#0066CC"),
-          array("party" => "Parti socialistes (PS)", "color" => "#FF8080"),
           array("party" => "Union des démocrates et indépendants (UDI)", "color" => "#00FFFF"),
-          array("party" => "Mouvement démocrate (MoDEM)", "color" => "#FF9900"),
           array("party" => "Divers droite", "color" => "#ADC1FD"),
+          array("party" => "La République en marche (LREM)", "color" => "#FFEB00"),
+          array("party" => "Mouvement démocrate (MoDEM)", "color" => "#FF9900"),
+          array("party" => "Divers", "color" => "#CCCCCC"),
+          array("party" => "Divers gauche", "color" => "#FFC0C0"),
           array("party" => "Parti radical de gauche (PRG)", "color" => "#FFD1DC"),
-          array("party" => "Parti communiste français (PCF)", "color" => "#DD0000"),
-          array("party" => "Sans étiquette", "color" => "#DDDDDD")
+          array("party" => "Parti socialistes (PS)", "color" => "#FF8080"),
         );
       }
 
