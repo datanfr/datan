@@ -30,7 +30,7 @@
   </div>
   <div class="row my-5">
     <div class="col-12">
-      <h2 class="my-4">Découvrez les députés candidats à des élections</h2>
+      <h2 class="my-4">Découvrez les députés candidats aux élections</h2>
     </div>
     <div class="col-12 d-flex flex-wrap">
       <?php foreach ($elections as $election): ?>
