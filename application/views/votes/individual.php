@@ -252,11 +252,11 @@
             <?php if (in_array($authorMeta['type'], array("mp", "gvt")) || ($authorMeta['type'] == "mps" && count($author) == 1)): ?>
               <div class="col-lg-7 d-flex flex-column justify-content-center">
                 <?php if ($authorMeta['title'] == "amendement"): ?>
-                  <h2 class="title text-center text-lg-left">L'auteur<?= gender($author['civ'])['e'] ?> de l'amendement</h2>
+                  <h2 class="title text-center text-lg-left">L'auteur<?= !empty($author['civ']) ? gender($author['civ'])['e'] : "" ?> de l'amendement</h2>
                 <?php elseif ($authorMeta['title'] == "rapporteur"): ?>
                   <h2 class="title text-center text-lg-left"><?= ucfirst(gender($author[0]['civ'])['le']) ?> rapporteur<?= gender($author[0]['civ'])['e'] ?></h2>
                 <?php elseif ($authorMeta['title'] == "proposition"): ?>
-                  <h2 class="title text-center text-lg-left">L'auteur<?= gender($author[0]['civ'])['e'] ?> de la proposition de loi</h2>
+                  <h2 class="title text-center text-lg-left">L'auteur<?= !empty($author[0]['civ']) ? gender($author[0]['civ'])['e'] : "" ?> de la proposition de loi</h2>
                 <?php endif; ?>
                 <p class="text-center text-lg-left"><?= $authorMeta['explication'] ?></p>
               </div>
@@ -265,12 +265,17 @@
                 <div class="col-lg-5 d-flex align-items-center justify-content-center pb-4">
                   <?php $this->load->view('deputes/partials/card_home.php', array('depute' => $author, 'tag' => 'h3', 'cat' => false)) ?>
                 </div>
-                <?php else: ?>
-                  <p>Gouvernement</p>
-                  <div class="d-flex justify-content-center">
-                    <!-- A FAIRE ICI -->
-                    <?php print_r($author) ?>
+              <?php else: ?>
+                <div class="col-lg-5 d-flex align-items-center justify-content-center pb-4">
+                  <div class="card card-depute mx-2">
+                    <div class="card-body d-flex flex-column align-items-center justify-content-center">
+                      <div>
+                        <h3 class="d-block card-title">Gouvernement <?= ucfirst(mb_strtolower($author['libelleAbrege'])) ?></h3>
+                        <span class="d-block">Formé le <?= $author['dateDebutFR'] ?></span>
+                      </div>
+                    </div>
                   </div>
+                </div>
               <?php endif; ?>
             <?php else: ?>
               <div class="col-12 d-flex flex-column align-items-center">
