@@ -252,15 +252,21 @@ scratch. This page gets rid of all links and provides the needed markup only.
              </a>
              <ul class="nav nav-treeview">
                <li class="nav-item">
-                 <a href="<?= base_url() ?>admin/elections/regionales-2021" class="nav-link">
+                 <a href="<?= base_url() ?>admin/elections/presidentielle-2022" class="nav-link">
                    <i class="far fa-circle nav-icon"></i>
-                   <p>Régionales 2021</p>
+                   <p>Présidentielle 2022</p>
                  </a>
                </li>
                <li class="nav-item">
-                 <a href="<?= base_url() ?>admin/elections/departementales-2021" class="nav-link">
+                 <a href="<?= base_url() ?>admin/elections/legislatives-2022" class="nav-link">
                    <i class="far fa-circle nav-icon"></i>
-                   <p>Départementales 2021</p>
+                   <p>Législatives 2022</p>
+                 </a>
+               </li>
+               <li class="nav-item">
+                 <a href="<?= base_url() ?>admin/elections/regionales-2021" class="nav-link disabled">
+                   <i class="far fa-circle nav-icon"></i>
+                   <p>Régionales 2021</p>
                  </a>
                </li>
              </ul>

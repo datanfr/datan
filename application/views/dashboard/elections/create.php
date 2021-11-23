@@ -32,45 +32,32 @@
                 <label>Election</label>
                 <input name="election" class="form-control" type="text" value="<?= $election['id'] ?>" placeholder="<?= $election['libelle'] ?> <?= $election['dateYear'] ?>" readonly></input>
               </div>
-              <div class="form-group">
-                <label for="">Région de candidature</label>
-                <select class="form-control" name="district">
-                  <?php foreach ($districts as $district): ?>
-                    <option value="<?= $district['id'] ?>"><?= $district['libelle'] ?></option>
-                  <?php endforeach; ?>
-                </select>
-              </div>
-              <div class="form-group">
-                <label for="">Position (tête de liste ou colistier)</label>
-                <select class="form-control" name="position">
-                  <?php foreach ($positions as $position): ?>
-                    <option value="<?= $position ?>"><?= $position ?></option>
-                  <?php endforeach; ?>
-                </select>
-              </div>
-              <div class="form-group">
-                <label>Nuance (ne pas remplir)</label>
-                <input name="nuance" class="form-control" type="text" placeholder="Ne pas remplir pour le moment" readonly>
-              </div>
-              <div class="form-group">
-                <label>Source (article de presse)</label>
-                <input name="source" class="form-control" type="text" placeholder="ex:  https://www.ouest-france.fr/elections/regionales/elections-regionales-en-pays-de-la-loire-qui-seront-les-candidats-en-juin-2021-7190091"></input>
-              </div>
+              <?php if (in_array('district', $requiredFields)): ?>
+                <div class="form-group">
+                  <label for="">Circonscription de candidature</label>
+                  <select class="form-control" name="district">
+                    <?php foreach ($districts as $district): ?>
+                      <option value="<?= $district['id'] ?>"><?= $district['libelle'] ?></option>
+                    <?php endforeach; ?>
+                  </select>
+                </div>
+              <?php endif; ?>
+              <?php if (in_array('position', $requiredFields)): ?>
+                <div class="form-group">
+                  <label for="">Position sur la liste</label>
+                  <select class="form-control" name="position">
+                    <?php foreach ($positions as $position): ?>
+                      <option value="<?= $position ?>"><?= $position ?></option>
+                    <?php endforeach; ?>
+                  </select>
+                </div>
+              <?php endif; ?>
               <div class="form-group">
                 <label>Visible</label>
                 <input name="visible" class="form-control" type="checkbox" value="true"></input>
               </div>
               <button type="submit" class="btn btn-primary">Submit</button>
               </form>
-
-              <!--
-                <p class="card-text">
-                  Some quick example text to build on the card title and make up the bulk of the card's
-                  content.
-                </p>
-                <a href="#" class="card-link">Card link</a>
-                <a href="#" class="card-link">Another link</a>
-              -->
             </div>
           </div>
         </div>

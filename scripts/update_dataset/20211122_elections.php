@@ -3,6 +3,10 @@
 
   include('../bdd-connexion.php');
 
+  $bdd->query('ALTER TABLE `elect_deputes_candidats` CHANGE `district` `district` INT(5) NULL DEFAULT NULL');
+  $bdd->query('ALTER TABLE `elect_deputes_candidats` CHANGE `source` `source` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL');
+  $bdd->query('ALTER TABLE `elect_deputes_candidats` CHANGE `position` `position` VARCHAR(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL');
+
   $bdd->query('DROP TABLE IF EXISTS elect_libelle');
 
   $bdd->query('CREATE TABLE IF NOT EXISTS `elect_libelle` (
