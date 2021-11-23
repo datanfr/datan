@@ -20,7 +20,9 @@
 
   $bdd->query("INSERT INTO `elect_libelle` (`id`, `libelle`, `libelleAbrev`, `dateYear`, `slug`, `dateFirstRound`, `dateSecondRound`,  `candidates`, `resultsUrl`) VALUES
   (1, 'Élections régionales', 'Régionales', 2021, 'regionales-2021', '2021-06-20', '2021-06-27', TRUE, 'https://www.interieur.gouv.fr/Elections/Les-resultats/Regionales/elecresult__regionales-2021/(path)/regionales-2021/index.html'),
-  (2, 'Élections départementales', 'Départementales', 2021, 'departementales-2021', '2021-06-20', '2021-06-27', FALSE, 'https://www.interieur.gouv.fr/Elections/Les-resultats/Departementales/elecresult__departementales-2021/(path)/departementales-2021/index.html')
+  (2, 'Élections départementales', 'Départementales', 2021, 'departementales-2021', '2021-06-20', '2021-06-27', FALSE, 'https://www.interieur.gouv.fr/Elections/Les-resultats/Departementales/elecresult__departementales-2021/(path)/departementales-2021/index.html'),
+  (3, 'Élection présidentielle', 'Présidentielle', 2022, 'presidentielle-2022', '2022-04-10', '2022-04-24', TRUE, NULL),
+  (4, 'Élections législatives', 'Législatives', 2022, 'legislatives-2022', '2022-06-12', '2022-06-19', FALSE, NULL)
   ");
 
   $bdd->query('DROP VIEW IF EXISTS `candidate_full`;');
