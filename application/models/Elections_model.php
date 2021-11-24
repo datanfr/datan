@@ -42,8 +42,10 @@
 
     public function get_election_color(){
       $array = array(
-        "Régionales" => '#097AB8',
-        "Départementales" => "#C14330"
+        "Régionales" => "#EAFEF7",
+        "Départementales" => "#35563F",
+        "Présidentielle" => "#0076BE",
+        "Législatives" => "#30AAF7"
       );
 
       return $array;
@@ -85,8 +87,9 @@
           array("party" => "Les Républicains", "color" => "#0066cc"),
           array("party" => "Régionalistes", "color" => "#FBCC33"),
         );
+        return $array;
       }
-    if ($id == 2 /*departementales-2021*/) {
+      if ($id == 2 /*departementales-2021*/) {
         $array = array(
           array("party" => "Les Républicains (LR)", "color" => "#0066CC"),
           array("party" => "Union des démocrates et indépendants (UDI)", "color" => "#00FFFF"),
@@ -98,9 +101,8 @@
           array("party" => "Parti radical de gauche (PRG)", "color" => "#FFD1DC"),
           array("party" => "Parti socialiste (PS)", "color" => "#FF8080"),
         );
+        return $array;
       }
-
-      return $array;
     }
 
     public function get_candidate($mpId, $election){
@@ -167,6 +169,9 @@
         $this->db->join('departement', 'candidate_full.district = departement.departement_code', 'left');
         $this->db->select('*, departement.departement_nom AS districtLibelle, departement.departement_code AS districtId');
         $this->db->select('CONCAT(departement.departement_nom, " (", departement.departement_code, ")") AS cardCenter'); // Central information on card
+      } else {
+        $this->db->select('*, '.$this->db->escape('').' AS districtLibelle');
+        $this->db->select('CONCAT(candidate_full.departementNom, " (", candidate_full.departementCode, ")") AS cardCenter');
       }
 
       $this->db->select('candidate_full.depute_libelle AS libelle, candidate_full.depute_libelleAbrev AS libelleAbrev');
@@ -196,13 +201,13 @@
       if ($election == 1/*regionales 2021*/) {
         $this->db->order_by('libelle', 'ASC');
         $query = $this->db->get('regions');
+        return $query->result_array();
       } elseif ($election == 2 /*departementales 2021*/) {
         $this->db->select('departement_code AS id, CONCAT(departement_code, " - ", departement_nom) AS libelle');
         $this->db->order_by('departement_code', 'ASC');
         $query = $this->db->get('departement');
+        return $query->result_array();
       }
-
-      return $query->result_array();
     }
 
     public function get_state($second, $elected){
