@@ -38,7 +38,7 @@
           <div class="liseret" style="background-color: <?= $electionsColor[$election['libelleAbrev']] ?>"></div>
           <div class="card-body d-flex flex-column justify-content-center align-items-center">
             <h2 class="d-block card-title">
-              <a href="<?= base_url(); ?>elections/<?= mb_strtolower($election['slug']) ?>" class="stretched-link no-decoration"><?= $election['libelleAbrev'] ?> <?= $election['dateYear'] ?></a>
+              <a href="<?= base_url(); ?>elections/<?= mb_strtolower($election['slug']) ?>" class="stretched-link no-decoration"><?= $election['libelleAbrev'] ?><br><?= $election['dateYear'] ?></a>
             </h2>
             <span class="mt-3">1<sup>er</sup> tour : <?= $election['dateFirstRoundFr'] ?></span>
             <span>2<sup>nd</sup> tour : <?= $election['dateSecondRoundFr'] ?></span>
@@ -48,9 +48,11 @@
               <?php if (empty($election['candidatsN'])): ?>
                 <span class="font-weight-bold">Aucun député candidat</span>
                 <?php else: ?>
-                <span class="font-weight-bold"><?= $election['candidatsN'] ?> députés candidats</span>
+                <span class="font-weight-bold"><?= $election['candidatsN'] ?> député<?= $election['candidatsN'] > 1 ? "s" : "" ?> candidat<?= $election['candidatsN'] > 1 ? "s" : "" ?></span>
               <?php endif; ?>
             </div>
+            <?php else: ?>
+              <div class="card-footer bg-transparent"></div>
           <?php endif; ?>
         </div>
       <?php endforeach; ?>

@@ -102,9 +102,16 @@
       $data['breadcrumb_json'] = $this->breadcrumb_model->breadcrumb_json($data['breadcrumb']);
       // Meta
       $data['url'] = $this->meta_model->get_url();
-      $data['title_meta'] = "Les " . mb_strtolower($data['election']['libelle']) . " de " . $data['election']['dateYear'] . " - Candidats et résultats | Datan";
-      $data['description_meta'] = "Retrouvez toutes les informations sur les " . mb_strtolower($data['election']['libelle']) . " de " . $data['election']['dateYear'] . " en France. Découvrez les députés candidats et les résultats.";
-      $data['title'] = "Les " . mb_strtolower($data['election']['libelle']) . " de " . $data['election']['dateYear'];
+      if ($data['election']['libelleAbrev'] == 'Présidentielle') {
+        $data['title_meta'] = "L'" . mb_strtolower($data['election']['libelle']) . " de " . $data['election']['dateYear'] . " - Candidats et résultats | Datan";
+        $data['title'] = "L'" . mb_strtolower($data['election']['libelle']) . " de " . $data['election']['dateYear'];
+        $data['description_meta'] = "Retrouvez toutes les informations sur l'" . mb_strtolower($data['election']['libelle']) . " de " . $data['election']['dateYear'] . " en France. Découvrez les députés candidats et les résultats.";
+      } else {
+        $data['title_meta'] = "Les " . mb_strtolower($data['election']['libelle']) . " de " . $data['election']['dateYear'] . " - Candidats et résultats | Datan";
+        $data['title'] = "Les " . mb_strtolower($data['election']['libelle']) . " de " . $data['election']['dateYear'];
+        $data['description_meta'] = "Retrouvez toutes les informations sur les " . mb_strtolower($data['election']['libelle']) . " de " . $data['election']['dateYear'] . " en France. Découvrez les députés candidats et les résultats.";
+      }
+
       //Open Graph
       $controller = $this->router->fetch_class()."/".$this->router->fetch_method();
       $data['ogp'] = $this->meta_model->get_ogp($controller, $data['title_meta'], $data['description_meta'], $data['url'], $data);
@@ -117,10 +124,14 @@
       );
       // JS
       $data['js_to_load_before_datan'] = array("isotope.pkgd.min");
-      if (count($data['districts']) <= 25) {
-        $data['js_to_load'] = array("datan/sorting_elections");
+      if ($data['districts']) {
+        if (count($data['districts']) <= 25) {
+          $data['js_to_load'] = array("datan/sorting_elections");
+        } else {
+          $data['js_to_load'] = array("datan/sorting_select");
+        }
       } else {
-        $data['js_to_load'] = array("datan/sorting_select");
+        $data['js_to_load'] = array();
       }
       array_push($data['js_to_load'], "jvectormap/jquery-jvectormap-2.0.5.min");
       if ($data['election']['libelleAbrev'] == "Régionales") {
