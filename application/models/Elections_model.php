@@ -56,7 +56,7 @@
         $info = "
         <p><b>Les élections régionales ont lieu tous les six ans</b>, en même temps que les élections départementales.</p>
         <p>Les élections régionales permettent d'<b>élire les conseillers régionaux</b> qui composent le conseil régional. Ce sont les conseillers régionaux qui décident et votent sur les affaires de la région.</p>
-        <p><b>Les compétences des régions sont multiples</b>. Il s'agit par exemple du développement économique et social, de l'organisation du transport, de la construction des lycées, ou encore de l'organisation de la formation professionnelle. Pour plus d'information, <a href='https://www.prefectures-regions.gouv.fr/Le-savez-vous/Quelles-sont-les-competences-d-une-region' target='_blank' rel='nofollow noreferrer noopener'>cliquez ici</a>.
+        <p><b>Les compétences des régions sont multiples</b>. Il s'agit par exemple du développement économique et social, de l'organisation du transport, de la construction des lycées, ou encore de l'organisation de la formation professionnelle.</p>
         <p>Les candidats se rassemblent sur des listes politiques, en fonction de leur parti d'appartenance. Le jour de l'élection, les électeurs votent donc pour une liste.</p>
         <p><b>L'élection est organisée en deux tours</b>. Au premier tour, si aucune liste obtient plus de 50% des suffrages exprimés, un second tour est organisé avec uniquement les listes ayant récolté plus de 10% des voix.</p>
         <p><b>La liste arrivant en tête se voit attribuer 25% des sièges</b> du conseil régional. Pour les sièges restants, ils sont attribués à la proportionnelle entre toutes les listes ayant obtenu au moins 5% des voix.</p>
@@ -65,10 +65,23 @@
         $info = "
         <p><b>Les élections départementales ont lieu tous les six ans</b>, en même temps que les élections régionales.</p>
         <p>Les élections départementales permettent d'<b>élire les conseillers départementaux</b> qui composent le conseil régional. Ce sont les conseillers départementaux qui décident et votent sur les affaires de la région. Avant 2013, les conseillers départementaux étaient appelés conseillers généraux.</p>
-        <p><b>Les compétences des régions sont multiples</b>. La compétence la plus importante est sociale. Les conseils départementaux gèrent l'aide sociale à l'enfant, les politiques d'hebergement et d'insertion des personnes handicapées, ou encore la gestion de maisons de retraite. Les conseils départementaux ont également des compétences en matière d'éducation (construction et entretien de collèges), la voirie départementale, ou encore l'action culturelle et sportive. Pour plus d'information, <a href='https://www.vie-publique.fr/fiches/19620-quelles-sont-les-competences-exercees-par-les-departements' target='_blank' rel='nofollow noreferrer noopener'>cliquez ici</a>.
+        <p><b>Les compétences des régions sont multiples</b>. La compétence la plus importante est sociale. Les conseils départementaux gèrent l'aide sociale à l'enfant, les politiques d'hebergement et d'insertion des personnes handicapées, ou encore la gestion de maisons de retraite. Les conseils départementaux ont également des compétences en matière d'éducation (construction et entretien de collèges), la voirie départementale, ou encore l'action culturelle et sportive.</p>
         <p>Les candidats doivent former un <b>binôme mixte</b> (une candidat femme et un candidat homme). Le jours de l'élection, les électeurs votent pour un binôme candidat.</p>
         <p><b>L'élection est organisée en deux tours</b>. Au premier tour, si un binôme obtient la majorité absolue des voix, alors il est automatiquement élu. Si aucun binôme ne l'emporte, un second tour est organisé.</p>
         <p>Les binômes ayant obtenu au moins 12,5% des voix des électeurs inscrits peuvent se présenter au second tour. <b>Au second tour, le binôme obtenant le plus de voix l'emporte</b>.
+        ";
+      } elseif ($type == "Législatives") {
+        $info = "
+        <p>Les élections législatives ont lieu <b>tous les cinq ans</b>, quelques semaines après l'élection présidentielle.</p>
+        <p>Les élections législatives permettent <b>d'élire les 577 députés</b> qui composent l'Assemblée nationale.</p>
+        <p><b>Comment les députés sont-ils élus ?</b> Lors du premier tour, un candidat peut être élu s'il obtient la majorité des suffrages exprimés (plus de 50%). Si aucun candidat ne remplit ces conditions, un second tour est organisé. Les candidats ayant reçu un nombre de suffrages supérieur à 12,5% des inscrits peuvent se présenter au second tour. Le vainqueur est le candidat qui arrive en tête au second tour.</p>
+        <p>Les rôles du député sont multiples. Ils votent la loi, contrôlent le gouvernement, et représentent les intérêts de leur circonscription au niveau national. Pour plus d'informations, <a href='https://datan.fr/faq' target='_blank'>cliquez ici</a>.</p>
+        ";
+      } elseif ($type == "Présidentielle") {
+        $info = "
+        <p>L'élection présidentielle a lieu <b>tous les cinq ans</b>, quelques semaines avant les élections législatives. Elle permet d'élire le président de la République.</p>
+        <p><b>Comment le président est-il élu ?</b> Pour être candidat, il faut avoir récolté le parrainage de 500 élus (maires, parlementaires, conseillers régionaux, etc.) L'élection se déroule sur deux tours. Lors du premier tour, un candidat peut être élu s'il obtient la majorité des suffrages exprimés (plus de 50%). Si aucun candidat n'y parvient, un second tour est organisé avec les deux candidats arrivés en tête au premier tour. Le vainqueur est le candidat qui arrive en tête du second tour.</p>
+        <p>Les rôles du président de la République sont nombreux. Il ou elle est veille au respect de la Constitution, assure le fonctionnement des institutions, nomme le Premier ministre et préside le Conseil des ministres, promulgue les lois, etc. Pour plus d'informations, <a href='https://www.vie-publique.fr/infographie/23816-infographie-quel-est-le-role-du-president-de-la-republique' target='_blank' rel='nofollow noreferrer noopener'>cliquez ici</a>.</p>
         ";
       } else {
         $info = NULL;
