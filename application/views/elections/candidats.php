@@ -42,7 +42,7 @@
     </div>
   </div>
 </div>
-<div class="container pg-elections-candidats py-5">
+<div class="container pg-elections-candidats py-4">
   <div class="row">
     <div class="col-md-8 col-lg-7">
       <?php $this->load->view('elections/results/'.$election['slug'].'.php') ?>
