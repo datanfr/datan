@@ -381,6 +381,31 @@ body:not(.pg-mentions) #tarteaucitronIcon {
 @media only screen and (max-width: 767.98px) {
   .mobileShow {display: block}
 }
+.chart-election {
+  display: flex;
+  position: relative;
+  border: none;
+  .majority{
+    background-color: $adopted;
+    padding: 0.8rem 0;
+    span{
+      color: #ffffff;
+      font-size: 1.25em;
+      font-weight: 800;
+      margin-left: 2rem;
+    }
+  }
+  .minority{
+    padding: 0.8rem 0;
+    background-color: #E8E8E8;
+  }
+  .line{
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    position: absolute;
+    left: 50%;
+    height: 100%;
+  }
+}
 /*
 ################
               Social media and social-share
@@ -1798,31 +1823,6 @@ ul.ui-menu{
       font-weight: 800;
       color: $text-gray-light;
     }
-    .chart-election {
-      display: flex;
-      position: relative;
-      border: none;
-      .majority{
-        background-color: $adopted;
-        padding: 0.8rem 0;
-        span{
-          color: #ffffff;
-          font-size: 1.25em;
-          font-weight: 800;
-          margin-left: 2rem;
-        }
-      }
-      .minority{
-        padding: 0.8rem 0;
-        background-color: #E8E8E8;
-      }
-      .line{
-        border: 1px solid rgba(255, 255, 255, 0.5);
-        position: absolute;
-        left: 50%;
-        height: 100%;
-      }
-    }
     .legend{
       span{
         color: $text-gray-light;
@@ -2469,6 +2469,16 @@ ul.ui-menu{
     color: $vert;
     font-size: 4em;
     font-weight: 800;
+  }
+  .resultsPresidentielle{
+    img{
+      width: 100px;
+      height: auto;
+    }
+    p{
+      font-weight: 800;
+      color: $text-black;
+    }
   }
 }
 /*
