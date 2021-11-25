@@ -7,8 +7,8 @@
       <div class="d-flex align-items-center">
         <span class="candidatsN"><?= $candidatsN ?></span>
       </div>
-      <div class="d-flex align-items-center ml-4">
-        <span>Au total, <?= $candidatsN ?> députés étaient candidats au <b>premier tour</b> des <?= mb_strtolower($election['libelle']) ?> de <?= $election['dateYear'] ?>.</span>
+      <div class="d-flex align-items-center ml-1">
+        <span>députés candidats au <b>premier tour</b></span>
       </div>
     </div>
     <?php if ($state > 0): ?>
@@ -16,8 +16,8 @@
         <div class="d-flex align-items-center">
           <span class="candidatsN"><?= $candidatsN_second ?></span>
         </div>
-        <div class="d-flex align-items-center ml-4">
-          <span>Après le premier tour, <?= $candidatsN_second ?> députés se sont maintenus au <b>second tour</b> des <?= mb_strtolower($election['libelle']) ?> de <?= $election['dateYear'] ?>.</span>
+        <div class="d-flex align-items-center ml-1">
+          <span>députés maintenus pour le <b>second tour</b></span>
         </div>
       </div>
     <?php endif; ?>
@@ -26,8 +26,8 @@
         <div class="d-flex align-items-center">
           <span class="candidatsN"><?= $candidatsN_elected ?></span>
         </div>
-        <div class="d-flex align-items-center ml-4">
-          <span>Après le second tour, <?= $candidatsN_elected ?> députés ont été <b>élus</b> lors des <?= mb_strtolower($election['libelle']) ?> de <?= $election['dateYear'] ?>.</span>
+        <div class="d-flex align-items-center ml-1">
+          <span><b>députés élus</b></span>
         </div>
       </div>
     <?php endif; ?>

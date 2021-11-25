@@ -1,4 +1,4 @@
-<div class="container pg-elections-index mb-5">
+<div class="container pg-elections-index">
   <div class="row bloc-titre">
     <div class="col-md-12">
       <h1><?= $title ?></h1>
@@ -28,33 +28,72 @@
       </div>
     </div>
   </div>
-  <div class="row my-5">
-    <div class="col-12">
-      <h2 class="my-4">Découvrez les députés candidats aux élections</h2>
-    </div>
-    <div class="col-12 d-flex flex-wrap">
-      <?php foreach ($elections as $election): ?>
-        <div class="card card-election">
-          <div class="liseret" style="background-color: <?= $electionsColor[$election['libelleAbrev']] ?>"></div>
-          <div class="card-body d-flex flex-column justify-content-center align-items-center">
-            <h2 class="d-block card-title">
-              <a href="<?= base_url(); ?>elections/<?= mb_strtolower($election['slug']) ?>" class="stretched-link no-decoration"><?= $election['libelleAbrev'] ?><br><?= $election['dateYear'] ?></a>
-            </h2>
-            <span class="mt-3">1<sup>er</sup> tour : <?= $election['dateFirstRoundFr'] ?></span>
-            <span>2<sup>nd</sup> tour : <?= $election['dateSecondRoundFr'] ?></span>
-          </div>
-          <?php if ($election['candidates']): ?>
-            <div class="card-footer d-flex justify-content-center align-items-center">
-              <?php if (empty($election['candidatsN'])): ?>
-                <span class="font-weight-bold">Aucun député candidat</span>
+</div>
+<div class="container-fluid pg-elections-index py-5 mt-5 bg-info">
+  <div class="container">
+    <div class="row">
+      <div class="col-12">
+        <h2 class="text-white text-center">Députés candidats aux prochaines élections</h2>
+      </div>
+      <div class="col-12 mt-3 d-flex flex-wrap">
+        <?php foreach ($elections as $election): ?>
+          <?php if (strtotime($election['dateSecondRound']) >= strtotime('-30 days')): ?>
+            <div class="card card-election my-3">
+              <div class="card-body d-flex flex-column justify-content-center align-items-center">
+                <h2 class="d-block card-title">
+                  <a href="<?= base_url(); ?>elections/<?= mb_strtolower($election['slug']) ?>" class="stretched-link no-decoration"><?= $election['libelleAbrev'] ?><br><?= $election['dateYear'] ?></a>
+                </h2>
+                <span class="mt-3">1<sup>er</sup> tour : <?= $election['dateFirstRoundFr'] ?></span>
+                <span>2<sup>nd</sup> tour : <?= $election['dateSecondRoundFr'] ?></span>
+              </div>
+              <?php if ($election['candidates']): ?>
+                <div class="card-footer d-flex justify-content-center align-items-center">
+                  <?php if (empty($election['candidatsN'])): ?>
+                    <span class="font-weight-bold">Aucun député candidat</span>
+                    <?php else: ?>
+                    <span class="font-weight-bold"><?= $election['candidatsN'] ?> député<?= $election['candidatsN'] > 1 ? "s" : "" ?> candidat<?= $election['candidatsN'] > 1 ? "s" : "" ?></span>
+                  <?php endif; ?>
+                </div>
                 <?php else: ?>
-                <span class="font-weight-bold"><?= $election['candidatsN'] ?> député<?= $election['candidatsN'] > 1 ? "s" : "" ?> candidat<?= $election['candidatsN'] > 1 ? "s" : "" ?></span>
+                  <div class="card-footer bg-transparent"></div>
               <?php endif; ?>
             </div>
-            <?php else: ?>
-              <div class="card-footer bg-transparent"></div>
           <?php endif; ?>
-        </div>
+        <?php endforeach; ?>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="container pg-elections-index my-5">
+  <div class="row">
+    <div class="col-12">
+      <h2 class="text-center">Les élections passées</h2>
+    </div>
+    <div class="col-12 mt-3 d-flex flex-wrap">
+      <?php foreach ($elections as $election): ?>
+        <?php if (strtotime($election['dateSecondRound']) < strtotime('-30 days')): ?>
+          <div class="card card-election my-3">
+            <div class="liseret" style="background-color: #00668E"></div>
+            <div class="card-body d-flex flex-column justify-content-center align-items-center">
+              <h2 class="d-block card-title">
+                <a href="<?= base_url(); ?>elections/<?= mb_strtolower($election['slug']) ?>" class="stretched-link no-decoration"><?= $election['libelleAbrev'] ?><br><?= $election['dateYear'] ?></a>
+              </h2>
+              <span class="mt-3">1<sup>er</sup> tour : <?= $election['dateFirstRoundFr'] ?></span>
+              <span>2<sup>nd</sup> tour : <?= $election['dateSecondRoundFr'] ?></span>
+            </div>
+            <?php if ($election['candidates']): ?>
+              <div class="card-footer d-flex justify-content-center align-items-center">
+                <?php if (empty($election['candidatsN'])): ?>
+                  <span class="font-weight-bold">Aucun député candidat</span>
+                  <?php else: ?>
+                  <span class="font-weight-bold"><?= $election['candidatsN'] ?> député<?= $election['candidatsN'] > 1 ? "s" : "" ?> candidat<?= $election['candidatsN'] > 1 ? "s" : "" ?></span>
+                <?php endif; ?>
+              </div>
+              <?php else: ?>
+                <div class="card-footer bg-transparent"></div>
+            <?php endif; ?>
+          </div>
+        <?php endif; ?>
       <?php endforeach; ?>
     </div>
   </div>

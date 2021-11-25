@@ -9,7 +9,6 @@
     public function index(){
       // Data
       $data['elections'] = $this->elections_model->get_election_all();
-      $data['electionsColor'] = $this->elections_model->get_election_color();
 
       // Breadcrumb
       $data['breadcrumb'] = array(
@@ -26,7 +25,7 @@
       $data['url'] = $this->meta_model->get_url();
       $data['title_meta'] = "Les élections en France - Candidats et résultats | Datan";
       $data['description_meta'] = "Retrouvez toutes les informations sur les différentes élections en France (présidentielle, législative, régionales). Découvrez les députés candidats et les résultats.";
-      $data['title'] = "Les élections politiques en France";
+      $data['title'] = "Les élections en France";
       //Open Graph
       $controller = $this->router->fetch_class()."/".$this->router->fetch_method();
       $data['ogp'] = $this->meta_model->get_ogp($controller, $data['title_meta'], $data['description_meta'], $data['url'], $data);

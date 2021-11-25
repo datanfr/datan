@@ -13,6 +13,7 @@ $text-black: #4C4C4C;
 $bg-colour: #F3F5F6;
 $body-bg: $bg-colour;
 $primary: $vert;
+$info: $bleu;
 $primary_rgb: rgb(0, 183, 148);
 $adopted: $vert;
 $abstention: #FFBA49;
@@ -728,13 +729,15 @@ body:not(.pg-mentions) #tarteaucitronIcon {
 ################
 */
 /* 1. Card depute and groups */
+.card-depute, .card-groupe{
+  margin-top: 60px;
+}
 .card-depute, .card-groupe, .card-election{
   border:0;
   text-align: center;
   width: 17em;
   margin-left:auto;
   margin-right: auto;
-  margin-top: 60px;
   box-shadow: $card-box-shadow;
   min-height: 290px;
   .liseret{
@@ -2403,7 +2406,6 @@ ul.ui-menu{
   }
   .bloc-titre{
     margin-top: 4rem;
-    margin-bottom:  4rem;
     svg{
       width: 100%;
       height: auto;
@@ -2411,6 +2413,9 @@ ul.ui-menu{
   }
 }
 .pg-elections-candidats{
+  .bloc-titre{
+    margin-bottom: 4rem;
+  }
   &.infosIndividual{
     background-color: $bleu;
     color: #fff;
