@@ -40,17 +40,6 @@
       return $query->result_array();
     }
 
-    public function get_election_color(){
-      $array = array(
-        "Régionales" => "#EAFEF7",
-        "Départementales" => "#35563F",
-        "Présidentielle" => "#0076BE",
-        "Législatives" => "#30AAF7"
-      );
-
-      return $array;
-    }
-
     public function get_election_infos($type){
       if ($type == "Régionales") {
         $info = "
