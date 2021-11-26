@@ -1,5 +1,6 @@
 var qsRegex;
-var selectedFilter;
+var districtFilter = "*";
+var stateFilter;
 
 // init Isotope
 var $grid = $('.sorting').isotope({
@@ -8,18 +9,22 @@ var $grid = $('.sorting').isotope({
   filter: function(){
     var $this = $(this);
     var searchResult = qsRegex ? $this.text().match( qsRegex ) : true;
-    var selectedResult = selectedFilter ? $this.is( selectedFilter ) : true;
-    console.log(selectedFilter);
-    return searchResult && selectedResult;
+    var districtResult = districtFilter ? $this.is( districtFilter ) : true;
+    var stateResult = stateFilter ? $this.is( stateFilter ) : true;
+    return searchResult && districtResult && stateResult;
   }
 });
 
-function changeFilterFunc() {
-  var selectBox = document.getElementById("selectFilter");
-  selectedFilter = selectBox.options[selectBox.selectedIndex].value;
-  //console.log(selectedFilter);
+function districtChange() {
+  var selectBox = document.getElementById("districtChange");
+  districtFilter = selectBox.options[selectBox.selectedIndex].value;
   $grid.isotope();
 }
+
+$('.stateChange').on( 'click', 'input', function() {
+  stateFilter = this.value;
+  $grid.isotope();
+});
 
 // use value of search field to filter
 var $quicksearch = $('#quicksearch').keyup( debounce( function() {
