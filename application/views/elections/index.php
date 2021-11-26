@@ -73,7 +73,6 @@
       <?php foreach ($elections as $election): ?>
         <?php if (strtotime($election['dateSecondRound']) < strtotime('-30 days')): ?>
           <div class="card card-election my-3">
-            <div class="liseret" style="background-color: #00668E"></div>
             <div class="card-body d-flex flex-column justify-content-center align-items-center">
               <h2 class="d-block card-title">
                 <a href="<?= base_url(); ?>elections/<?= mb_strtolower($election['slug']) ?>" class="stretched-link no-decoration"><?= $election['libelleAbrev'] ?><br><?= $election['dateYear'] ?></a>
@@ -83,11 +82,7 @@
             </div>
             <?php if ($election['candidates']): ?>
               <div class="card-footer d-flex justify-content-center align-items-center">
-                <?php if (empty($election['candidatsN'])): ?>
-                  <span class="font-weight-bold">Aucun député candidat</span>
-                  <?php else: ?>
-                  <span class="font-weight-bold"><?= $election['candidatsN'] ?> député<?= $election['candidatsN'] > 1 ? "s" : "" ?> candidat<?= $election['candidatsN'] > 1 ? "s" : "" ?></span>
-                <?php endif; ?>
+                <span class="font-weight-bold"><?= $election['electedN'] ?> député<?= $election['electedN'] > 1 ? "s" : "" ?> élu<?= $election['electedN'] > 1 ? "s" : "" ?></span>
               </div>
               <?php else: ?>
                 <div class="card-footer bg-transparent"></div>
