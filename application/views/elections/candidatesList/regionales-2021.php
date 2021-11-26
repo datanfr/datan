@@ -1,6 +1,6 @@
 <div class="row mt-5 mb-3">
   <div class="col-12">
-    <h2>Retrouvez les députés candidats aux <?= mb_strtolower($election['libelle']) ?> de <?= $election['dateYear'] ?></h2>
+    <h2>Découvrez les députés candidats aux <?= mb_strtolower($election['libelle']) ?> de <?= $election['dateYear'] ?></h2>
   </div>
   <div class="col-12 d-flex flex-column flex-lg-row">
     <div class="d-flex flex-even px-2">
@@ -41,8 +41,7 @@
         <input type="text" id="quicksearch" placeholder="Recherchez un député..." />
       </div>
       <!-- Filters state -->
-      <div class="filters filtersState mt-md-4 d-none d-lg-block">
-        <p class="surtitre">Résultat de l'élection</p>
+      <div class="filters stateChange mt-md-5 d-none d-lg-block">
         <input class="radio-btn" name="state" id="radio-100" type="radio" checked="" value="*">
         <label for="radio-100" class="radio-label d-flex align-items-center">
           <span class="d-flex align-items-center"><b>Tous les députés</b></span>
@@ -55,33 +54,14 @@
         <label for="radio-102" class="radio-label d-flex align-items-center">
           <span class="d-flex align-items-center">Éliminé</span>
         </label>
-      </div>
-      <!-- Filters -->
-      <?php if (count($districts) <= 25): ?>
-        <div class="filters filtersDistrict mt-md-5 d-none d-lg-block">
-          <p class="surtitre">Région</p>
-          <input class="radio-btn" name="district" id="radio-1" type="radio" checked="" value="*">
-          <label for="radio-1" class="radio-label d-flex align-items-center">
-            <span class="d-flex align-items-center"><b>Tous les députés</b></span>
-          </label>
-          <?php $i=2 ?>
-          <?php foreach ($districts as $district): ?>
-            <input class="radio-btn" name="district" id="radio-<?= $i ?>" type="radio" value=".<?= strtolower($district['id']) ?>">
-            <label for="radio-<?= $i ?>" class="radio-label d-flex align-items-center">
-              <span class="d-flex align-items-center"><?= $district['libelle'] ?></span>
-            </label>
-            <?php $i++ ?>
-          <?php endforeach; ?>
-        </div>
-      <?php else: ?>
-        <br>
-        <select class="custom-select filters" id="selectFilter" onchange="changeFilterFunc()">
+        <p class="surtitre mt-5">Filtrer les candidats par région</p>
+        <select class="custom-select filters" id="districtChange" onchange="districtChange()">
           <option selected value="*">Tous les députés</option>
           <?php foreach ($districts as $district): ?>
             <option value=".<?= $district['id'] ?>"><?= $district['libelle'] ?> (<?= $district['id'] ?>)</option>
           <?php endforeach; ?>
         </select>
-      <?php endif; ?>
+      </div>
     </div>
   </div>
   <div class="col-lg-9 col-md-12">

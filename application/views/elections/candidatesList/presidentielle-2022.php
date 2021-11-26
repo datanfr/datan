@@ -1,6 +1,6 @@
 <div class="row mt-5 mb-3">
   <div class="col-12">
-    <h2>Retrouvez les députés candidats à l'élection présidentielle de 2022</h2>
+    <h2>Découvrez les députés candidats à l'élection présidentielle de 2022</h2>
   </div>
   <div class="col-12 mt-3">
     <p>Au total, nous avons répertorié <?= $candidatsN ?> député<?= $candidatsN > 1 ? 's' : '' ?> candidat<?= $candidatsN > 1 ? 's' : '' ?> à l'élection présidentielle de 2022.</p>
