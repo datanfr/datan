@@ -30,7 +30,10 @@
       SELECT *, date_format(e.dateFirstRound, "%d %M") as dateFirstRoundFr, date_format(e.dateSecondRound, "%d %M") as dateSecondRoundFr, candidatsN
       FROM elect_libelle e
       LEFT JOIN (
-        SELECT election, COUNT(mpId) AS candidatsN
+        SELECT election,
+          COUNT(mpId) AS candidatsN,
+          SUM(case when secondRound = 1 then 1 else 0 end) as secondRoundN,
+          SUM(case when elected = 1 then 1 else 0 end) as electedN
         FROM elect_deputes_candidats
         WHERE visible = 1
         GROUP BY election) c ON e.id = c.election
