@@ -34,7 +34,30 @@
       }
 
       return $query->result_array();
+    }
 
+    public function get_groupes_sorted($groupes){
+      $groupesLibelle = array_column($groupes, 'libelleAbrev');
+      function cmp(array $a) {
+        $order = array("GDR", "FI", "SOC", "DEM", "LAREM", "AGIR-E", "LT", "UDI_I", "LR", "NI");
+        foreach ($order as $x) {
+          $y[] = array_search($x, $a);
+        }
+        return $y;
+      }
+      $sort = cmp($groupesLibelle);
+      $empty = NULL;
+      foreach ($sort as $key => $value) {
+        if (empty($value) && $value !== 0) {
+          $empty = TRUE;
+        }
+      }
+      foreach ($groupes as $key => $value) {
+        $groupes[$key]['couleurAssociee'] = $this->groupes_model->get_groupe_color(array($value['libelleAbrev'], $value['couleurAssociee']));
+      }
+      if ($empty != TRUE) {
+        return array_replace(array_flip($sort), $groupes);
+      }
     }
 
     public function get_number_active_groupes(){

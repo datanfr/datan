@@ -3,6 +3,8 @@
     public function __construct() {
       parent::__construct();
       $this->load->model('elections_model');
+      $this->load->model('deputes_model');
+      $this->load->model('groupes_model');
       //$this->password_model->security_password(); Former login protection
     }
 
@@ -58,6 +60,14 @@
       $data['candidatsN_elected'] = $this->elections_model->count_candidats($data['election']['id'], TRUE, TRUE);
       $data['mapLegend'] = $this->elections_model->get_map_legend($data['election']['id']);
       $data['today'] = date("Y-m-d");
+      $data['women_mean'] = $this->deputes_model->get_deputes_gender(legislature_current());
+      $data['women_mean'] = $data['women_mean'][1]['percentage'];
+
+      // If legislative
+      if ($data['election']['slug'] == 'legislatives-2022') {
+        $data['groupes'] = $this->groupes_model->get_groupes_all(TRUE, legislature_current());
+        $data['groupesSorted'] = $this->groupes_model->get_groupes_sorted($data['groupes']);
+      }
 
       // badgeCenter
       foreach ($data['deputes'] as $key => $value) {
@@ -123,6 +133,12 @@
       );
       // JS
       $data['js_to_load_before_datan'] = array('isotope.pkgd.min');
+      if ($data['election']['slug'] == 'legislatives-2022') {
+        $data['js_to_load_up_defer'] = array(
+          "chart.min.js",
+          "chartjs-plugin-datalabels@0.7.js"
+        );
+      }
       $data['js_to_load'] = array();
       if ($data['districts']) {
         array_push($data['js_to_load'], 'datan/sorting_select');
