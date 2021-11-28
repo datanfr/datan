@@ -58,7 +58,7 @@
         <select class="custom-select filters" id="districtChange" onchange="districtChange()">
           <option selected value="*">Tous les députés</option>
           <?php foreach ($districts as $district): ?>
-            <option value=".<?= $district['id'] ?>"><?= $district['libelle'] ?> (<?= $district['id'] ?>)</option>
+            <option value=".<?= $district['id'] ?>"><?= $district['libelle'] ?></option>
           <?php endforeach; ?>
         </select>
       </div>

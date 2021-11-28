@@ -110,20 +110,25 @@
       }
     }
 
-    public function get_candidate($mpId, $election){
+    public function get_candidate_election($mpId, $election){
       $where = array(
         'mpId' => $mpId,
         'election' => $election
       );
 
-      if ($election == 1/*regionales 2021*/) {
-        $this->db->join('regions', 'elect_deputes_candidats.district = regions.id', 'left');
-        $this->db->select('*, libelle AS regionLibelle');
-      }
-
       $query = $this->db->get_where('elect_deputes_candidats', $where, 1);
 
       return $query->row_array();
+    }
+
+    public function get_candidate_elections($mpId){
+      $where = array(
+        'mpId' => $mpId
+      );
+
+      $this->db->join('elect_libelle', 'elect_libelle.id = elect_deputes_candidats.election', 'left');
+      $this->db->order_by('dateYear', 'DESC');
+      return $this->db->get_where('elect_deputes_candidats', $where)->result_array();
     }
 
     public function get_candidate_full($mpId, $election){
@@ -131,14 +136,6 @@
         'mpId' => $mpId,
         'election' => $election
       );
-
-      if ($election == 1/*regionales 2021*/) {
-        $this->db->join('regions', 'candidate_full.district = regions.id', 'left');
-        $this->db->select('*, libelle AS districtLibelle, id AS districtId');
-      } elseif ($election == 2/*departementales 2021*/) {
-        $this->db->join('departement', 'candidate_full.district = departement.departement_code', 'left');
-        $this->db->select('*, departement.departement_nom AS districtLibelle, departement.departement_code AS districtId');
-      }
 
       $query = $this->db->get_where('candidate_full', $where, 1);
 
@@ -166,20 +163,22 @@
         $where['elected'] = '1';
       }
 
-      if ($election == 1/*regionales 2021*/) {
+      // TO DO !!!!
+      /*
+      if ($election == 1) {
         $this->db->join('regions', 'candidate_full.district = regions.id', 'left');
         $this->db->select('*, regions.libelle AS districtLibelle, regions.id AS districtId');
         $this->db->select('regions.libelle AS cardCenter'); // Central information on card
-      } elseif ($election == 2/*départementales 2021*/) {
+      } elseif ($election == 2) {
         $this->db->join('departement', 'candidate_full.district = departement.departement_code', 'left');
         $this->db->select('*, departement.departement_nom AS districtLibelle, departement.departement_code AS districtId');
         $this->db->select('CONCAT(departement.departement_nom, " (", departement.departement_code, ")") AS cardCenter'); // Central information on card
       } else {
         $this->db->select('*, '.$this->db->escape('').' AS districtLibelle');
         $this->db->select('CONCAT(candidate_full.departementNom, " (", candidate_full.departementCode, ")") AS cardCenter');
-      }
+      } */
 
-      $this->db->select('candidate_full.depute_libelle AS libelle, candidate_full.depute_libelleAbrev AS libelleAbrev');
+      $this->db->select('*, candidate_full.depute_libelle AS libelle, candidate_full.depute_libelleAbrev AS libelleAbrev');
       $this->db->select('DATE_FORMAT(modified_at, "%d/%m/%Y") AS modified_at');
       $this->db->order_by('nameLast', 'ASC');
       $this->db->order_by('nameFirst', 'ASC');
@@ -213,6 +212,18 @@
         $query = $this->db->get('departement');
         return $query->result_array();
       }
+    }
+
+    public function get_district($type, $district){
+      if ($type == 'Régionales') {
+        $result = $this->db->get_where('regions', array('id' => $district))->row_array();
+        $array = array(
+          'id' => $result['id'],
+          'libelle' => $result['libelle']
+        );
+        return $array;
+      }
+
     }
 
     public function get_state($second, $elected){

@@ -47,6 +47,10 @@
       $data['title'] = 'Liste candidats aux élections ' . $data['election']['libelleAbrev']. ' '.$data['election']['dateYear'];
 
       $data['candidats'] = $this->elections_model->get_all_candidate($data['election']['id']);
+      foreach ($data['candidats'] as $key => $value) {
+        $district = $this->elections_model->get_district($value['election_libelleAbrev'], $value['district']);
+        $data['candidats'][$key]['districtLibelle'] = $district['libelle'];
+      }
 
       $this->load->view('dashboard/header', $data);
       $this->load->view('dashboard/elections/list', $data);
@@ -117,6 +121,9 @@
 
       $data['title'] = 'Modifier un candidat pour les ' . $data['election']['libelleAbrev'] . ' ' . $data['election']['dateYear'];
       $data['candidat'] = $this->elections_model->get_candidate_full($candidateMpId, $data['election']['id']);
+      $district = $this->elections_model->get_district($data['election']['libelleAbrev'], $data['candidat']['district']);
+      $data['candidat']['districtId'] = $district['id'];
+      $data['candidat']['districtLibelle'] = $district['libelle'];
 
       if (empty($data['candidat'])) {
         redirect('admin/elections/' . $data['election']['slug']);
