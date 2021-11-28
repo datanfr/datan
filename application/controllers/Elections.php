@@ -53,6 +53,11 @@
 
       // Data
       $data['deputes'] = $this->elections_model->get_all_candidate($data['election']['id'], TRUE);
+      foreach ($data['deputes'] as $key => $value) {
+        $district = $this->elections_model->get_district($value['election_libelleAbrev'], $value['district']);
+        $data['deputes'][$key]['cardCenter'] = $district['libelle'];
+        $data['deputes'][$key]['districtId'] = $district['id'];
+      }
       $data['districts'] = $this->elections_model->get_all_districts($data['election']['id']);
       $data['electionInfos'] = $this->elections_model->get_election_infos($data['election']['libelleAbrev']);
       $data['candidatsN'] = $this->elections_model->count_candidats($data['election']['id'], FALSE, FALSE);
