@@ -1,5 +1,5 @@
   <?php if ($depute['legislature'] == legislature_current()): ?>
-    <?php if ($regionales2021): ?>
+    <?php if (isset($regionales2021)): ?>
       <?php if ($regionales2021['visible']) : ?>
         <a href="<?= base_url() ?>elections/regionales-2021">
           <div class="container-fluid electionBanner d-flex justify-content-center align-items-center py-4">
@@ -773,6 +773,28 @@
               </div>
             </div> <!-- // END BLOC PROXIMITY -->
           </div> <!-- // END BLOC STATISTIQUES -->
+        <?php endif; ?>
+        <!-- BLOC ELECTIONS -->
+        <?php if ($elections): ?>
+          <div class="bloc-elections mt-5">
+            <h2 class="mb-4">Ses participations électorales</h2>
+            <!-- TO DO ==> PLUSIEURS QUAND PLUSIEURS count($elections) -->
+            <p>
+              <?= $title ?> a été candidat<?= $gender['e'] ?> <?= count($elections) > 1 ? 'à plusieurs élections' : 'à une élection' ?> alors qu'<?= $gender['pronom'] ?> était député<?= $gender['e'] ?>.
+            </p>
+          </div>
+          <table class="table">
+            <tbody>
+              <?php foreach ($elections as $election): ?>
+                <tr>
+                  <td><?= $election['dateYear'] ?></td>
+                  <td><?= $election['libelle'] ?></td>
+                  <td><?= $election['district']['libelle'] ?></td>
+                  <td><?= $election['electedLibelle'] ?></td>
+                </tr>
+              <?php endforeach; ?>
+            </tbody>
+          </table>
         <?php endif; ?>
         <!-- BLOC HISTORIQUE MANDATS -->
         <div class="bloc-mandats mt-5">
