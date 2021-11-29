@@ -53,6 +53,7 @@
 
       // Data
       $data['deputes'] = $this->elections_model->get_all_candidate($data['election']['id'], TRUE);
+      print_r($data['deputes']);
       if (!empty($data['deputes'])) {
         foreach ($data['deputes'] as $key => $value) {
           $district = $this->elections_model->get_district($value['election_libelleAbrev'], $value['district']);
