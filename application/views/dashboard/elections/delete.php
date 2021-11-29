@@ -31,33 +31,20 @@
                 <label>Election</label>
                 <input name="election" class="form-control" type="text" readonly value="<?= $election['id'] ?>"></input>
               </div>
-              <div class="form-group">
-                <label>Région de candidature</label>
-                <input name="district" class="form-control" readonly type="text" value="<?= $candidat['district']?>" placeholder="ex: Pays de la Loire"></input>
-              </div>
-              <div class="form-group">
-                <label>Position</label>
-                <input name="position" class="form-control" readonly type="text" value="<?= $candidat['position']?>" placeholder="ex: Tête de liste"></input>
-              </div>
-              <div class="form-group">
-                <label>Nuance</label>
-                <input name="nuance" class="form-control" readonly type="text" value="<?= $candidat['nuance']?>" placeholder="ex: ???"></input>
-              </div>
-              <div class="form-group">
-                <label>Source</label>
-                <input name="source" class="form-control" readonly type="text" value="<?= $candidat['source']?>" placeholder="ex:  https://www.ouest-france.fr/elections/regionales/elections-regionales-en-pays-de-la-loire-qui-seront-les-candidats-en-juin-2021-7190091"></input>
-              </div>
+              <?php if (in_array('district', $requiredFields)): ?>
+                <div class="form-group">
+                  <label>Circonscription de candidature</label>
+                  <input name="district" class="form-control" readonly type="text" value="<?= $candidat['district']?>" placeholder="ex: Pays de la Loire"></input>
+                </div>
+              <?php endif; ?>
+              <?php if (in_array('position', $requiredFields)): ?>
+                <div class="form-group">
+                  <label>Position</label>
+                  <input name="position" class="form-control" readonly type="text" value="<?= $candidat['position']?>" placeholder="ex: Tête de liste"></input>
+                </div>
+              <?php endif; ?>
               <button type="submit" class="btn btn-danger">Delete</button>
               </form>
-
-              <!--
-                <p class="card-text">
-                  Some quick example text to build on the card title and make up the bulk of the card's
-                  content.
-                </p>
-                <a href="#" class="card-link">Card link</a>
-                <a href="#" class="card-link">Another link</a>
-              -->
             </div>
           </div>
         </div>
