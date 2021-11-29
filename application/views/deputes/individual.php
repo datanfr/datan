@@ -1,24 +1,3 @@
-  <?php if ($depute['legislature'] == legislature_current()): ?>
-    <?php if (isset($regionales2021)): ?>
-      <?php if ($regionales2021['visible']) : ?>
-        <a href="<?= base_url() ?>elections/regionales-2021">
-          <div class="container-fluid electionBanner d-flex justify-content-center align-items-center py-4">
-            <span class="text-center">
-              <?= $title ?> était candidat<?= $gender['e'] ?> aux élections régionales de juin 2021, en <?= $regionales2021['regionLibelle'] ?>.
-              <?php if ($regionales2021['state'] == 'lost'): ?>
-                <u><?= ucfirst($gender['pronom']) ?> a été éliminé<?= $gender['e'] ?></u>.
-              <?php endif; ?>
-              <?php if ($regionales2021['state'] == 'elected'): ?>
-                <u><?= ucfirst($gender['pronom']) ?> a été élu<?= $gender['e'] ?> conseill<?= $gender['pronom'] == 'il' ? 'er' : 'ère' ?> régional<?= $gender['e'] ?></u>.
-              <?php elseif ($regionales2021['state'] == 'second') : ?>
-                <u><?= ucfirst($gender['pronom']) ?> a été qualifié<?= $gender['e'] ?> pour le second tour</u>.
-              <?php endif; ?>
-            </span>
-          </div>
-        </a>
-      <?php endif; ?>
-    <?php endif; ?>
-  <?php endif; ?>
   <div class="container-fluid bloc-img-deputes async_background" id="container-always-fluid" style="height: 13em"></div>
   <?php if (!empty($depute['couleurAssociee'])) : ?>
     <div class="liseret-groupe" style="background-color: <?= $depute['couleurAssociee'] ?>"></div>
@@ -29,8 +8,15 @@
         <?php $this->load->view('deputes/partials/card_individual.php', array('historique' => FALSE, 'last_legislature' => $depute['legislature'])) ?>
       </div> <!-- END COL -->
       <div class="col-md-10 col-lg-8 offset-md-1 offset-lg-0 pl-lg-5">
-        <!-- BIO & ELECTION -->
         <div class="bloc-bio mt-5">
+          <?php if ($electionFeature): ?>
+            <div class="card card-election-feature mb-4">
+              <div class="card-body">
+                <h2>Présidentielle 2022</h2>
+                <?= $title ?> est candidat<?= $gender['e'] ?> à l'élection présidentielle 2022.
+              </div>
+            </div>
+          <?php endif; ?>
           <h2 class="mb-4">Qui est-<?= ($gender['pronom']) ?> ?</h2>
           <!-- Paragraphe introductif -->
           <?php if ($active) : ?>
@@ -776,25 +762,24 @@
         <?php endif; ?>
         <!-- BLOC ELECTIONS -->
         <?php if ($elections): ?>
-          <div class="bloc-elections mt-5">
+          <div class="bloc-elections-history mt-5">
             <h2 class="mb-4">Ses participations électorales</h2>
-            <!-- TO DO ==> PLUSIEURS QUAND PLUSIEURS count($elections) -->
             <p>
               <?= $title ?> a été candidat<?= $gender['e'] ?> <?= count($elections) > 1 ? 'à plusieurs élections' : 'à une élection' ?> alors qu'<?= $gender['pronom'] ?> était député<?= $gender['e'] ?>.
             </p>
+            <table class="table">
+              <tbody>
+                <?php foreach ($elections as $election): ?>
+                  <tr>
+                    <td class="font-weight-bold"><?= $election['dateYear'] ?></td>
+                    <td><?= $election['libelle'] ?></td>
+                    <td><?= $election['district']['libelle'] ?></td>
+                    <td class="font-weight-bold sort-<?= $election['electedColor'] ?>"><?= $election['electedLibelle'] ?></td>
+                  </tr>
+                <?php endforeach; ?>
+              </tbody>
+            </table>
           </div>
-          <table class="table">
-            <tbody>
-              <?php foreach ($elections as $election): ?>
-                <tr>
-                  <td><?= $election['dateYear'] ?></td>
-                  <td><?= $election['libelle'] ?></td>
-                  <td><?= $election['district']['libelle'] ?></td>
-                  <td><?= $election['electedLibelle'] ?></td>
-                </tr>
-              <?php endforeach; ?>
-            </tbody>
-          </table>
         <?php endif; ?>
         <!-- BLOC HISTORIQUE MANDATS -->
         <div class="bloc-mandats mt-5">
@@ -853,20 +838,20 @@
         <div class="bloc-links p-lg-0 p-md-2 mt-5">
           <h2>En savoir plus sur <?= $title ?></h2>
           <div class="row mt-4">
-            <div class="col-12 col-sm-6 mt-2 d-flex justify-content-center">
+            <div class="col-12 col-sm-6 mt-2 d-flex justify-content-center align-items-center">
               <span class="url_obf btn btn-an" url_obf="<?= url_obfuscation("http://www2.assemblee-nationale.fr/deputes/fiche/OMC_" . $depute['mpId']) ?>">
                 Profil Assemblée Nationale
               </span>
             </div>
             <?php if ($depute['website'] !== NULL) : ?>
-              <div class="col-12 col-sm-6 mt-2 d-flex justify-content-center">
+              <div class="col-12 col-sm-6 mt-2 d-flex justify-content-center align-items-center">
                 <span class="url_obf btn btn-website" url_obf="<?= url_obfuscation("https://" . $depute['website']) ?>">
                   Site internet
                 </span>
               </div>
             <?php endif; ?>
             <?php if ($depute['facebook'] !== NULL) : ?>
-              <div class="col-12 col-sm-6 mt-2 d-flex justify-content-center">
+              <div class="col-12 col-sm-6 mt-2 d-flex justify-content-center align-items-center">
                 <span class="url_obf btn btn-fcb" url_obf="<?= url_obfuscation("https://www.facebook.com/" . $depute['facebook']) ?>">
                   <?= file_get_contents(base_url() . '/assets/imgs/logos/facebook_svg.svg') ?>
                   <span class="ml-3">Profil Facebook</span>
@@ -874,7 +859,7 @@
               </div>
             <?php endif; ?>
             <?php if ($depute['twitter'] !== NULL) : ?>
-              <div class="col-12 col-sm-6 mt-2 d-flex justify-content-center">
+              <div class="col-12 col-sm-6 mt-2 d-flex justify-content-center align-items-center">
                 <span class="url_obf btn btn-twitter" url_obf="<?= url_obfuscation("https://twitter.com/" . $depute['twitter']) ?>">
                   <?= file_get_contents(base_url() . '/assets/imgs/logos/twitter_svg.svg') ?>
                   <span class="ml-3">Profil Twitter</span>

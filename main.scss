@@ -1637,19 +1637,6 @@ ul.ui-menu{
 }
 /*
 ################
-               Electoral banner
-################
-*/
-.electionBanner{
-  background-color: $bleu;
-  span{
-    font-size: $h5-font-size;
-    font-weight: 600;
-    color: white;
-  }
-}
-/*
-################
                PAGE DEPUTE ET GROUPE INDIVIDUAL (pg-depute-individual) & (pg-groupe-individual) & deputes/x/votes
 ################
 */
@@ -1667,7 +1654,7 @@ ul.ui-menu{
       color: $text-gray;
     }
   }
-  .bloc-statistiques, .bloc-votes, .bloc-bio, .bloc-election, .bloc-links, .bloc-chiffres, .bloc-key-votes, .bloc-mandats, .bloc-elections {
+  .bloc-statistiques, .bloc-votes, .bloc-bio, .bloc-election, .bloc-links, .bloc-chiffres, .bloc-key-votes, .bloc-mandats, .bloc-elections-history {
     h2{
       font-size: $h2-font-size;
       font-weight: 800;
@@ -1788,6 +1775,16 @@ ul.ui-menu{
       height: auto;
     }
   }
+  /* Bloc election feature */
+  .card-election-feature{
+    background-color: $bleu;
+    color: #fff;
+    //border-radius: 0;
+    h2{
+      font-weight: 800;
+      color: #fff;
+    }
+  }
   /* Bloc biographie */
   .bloc-bio{
     max-width: 575px;
@@ -1824,6 +1821,22 @@ ul.ui-menu{
     .legend{
       span{
         color: $text-gray-light;
+      }
+    }
+  }
+  /* Bloc elections history */
+  .bloc-elections-history{
+    table{
+      background-position: red;
+      border-spacing: 0 1em;
+      border-collapse:separate;
+      tr{
+        background-color: #fff;
+        border-radius: $card-border-radius;
+        box-shadow: $card-box-shadow;
+      }
+      td{
+        border-top: 0;
       }
     }
   }

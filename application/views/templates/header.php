@@ -202,9 +202,6 @@
                   <a class="nav-link no-decoration" href="<?= base_url() ?>elections">Élections</a>
                 </li>
                 <li class="nav-item">
-                  <a class="nav-link no-decoration" href="<?= base_url() ?>partis-politiques">Partis</a>
-                </li>
-                <li class="nav-item">
                   <a class="nav-link no-decoration" href="<?= base_url(); ?>a-propos">À propos</a>
                 </li>
                 <li class="nav-item dropdown follow-us">

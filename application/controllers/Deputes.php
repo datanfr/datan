@@ -337,12 +337,16 @@
         $data['elections'][$key]['district'] = $this->elections_model->get_district($value['libelleAbrev'], $value['district']);
         if ($value['elected'] === "1") {
           $data['elections'][$key]['electedLibelle'] = 'Élu' . $data['gender']['e'];
+          $data['elections'][$key]['electedColor'] = 'adopté';
         } elseif ($value['elected'] === "0") {
           $data['elections'][$key]['electedLibelle'] = 'Éliminé' . $data['gender']['e'];
+          $data['elections'][$key]['electedColor'] = 'rejeté';
         } else {
           $data['elections'][$key]['electedLibelle'] = '';
+          $data['elections'][$key]['electedColor'] = '';
         }
       }
+      $data['electionFeature'] = $this->elections_model->get_candidate_election($mpId, 3); /*Présidentielle-2022*/
 
       // Statistiques
       $data = $this->get_statistiques($data, $legislature, $mpId, $groupe_id);
