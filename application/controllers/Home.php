@@ -31,28 +31,7 @@
       } else {
         $data['groupes'] = $this->groupes_model->get_groupes_all(TRUE, legislature_current());
       }
-
-      $groupes = array_column($data['groupes'], 'libelleAbrev');
-      function cmp(array $a) {
-          $order = array("GDR", "FI", "SOC", "DEM", "LAREM", "AGIR-E", "LT", "UDI_I", "LR", "NI");
-          foreach ($order as $x) {
-            $y[] = array_search($x, $a);
-          }
-          return $y;
-      }
-      $sort = cmp($groupes);
-      $empty = NULL;
-      foreach ($sort as $key => $value) {
-        if (empty($value) && $value !== 0) {
-          $empty = TRUE;
-        }
-      }
-      foreach ($data['groupes'] as $key => $value) {
-        $data['groupes'][$key]['couleurAssociee'] = $this->groupes_model->get_groupe_color(array($value['libelleAbrev'], $value['couleurAssociee']));
-      }
-      if ($empty != TRUE) {
-        $data['groupesSorted'] = array_replace(array_flip($sort), $data['groupes']);
-      }
+      $data['groupesSorted'] = $this->groupes_model->get_groupes_sorted($data['groupes']);
 
       //Get stats
       $data['depute_vote_plus'] = $this->deputes_model->get_depute_vote_plus();
@@ -87,6 +66,10 @@
 
       // Get elections
       $data['candidats'] = $this->elections_model->get_all_candidate(1, TRUE, "elected"); // Get candidates for regionales-2021, elected MPs
+      foreach ($data['candidats'] as $key => $value) {
+        $district = $this->elections_model->get_district($value['election_libelleAbrev'], $value['district']);
+        $data['candidats'][$key]['cardCenter'] = $district['libelle'];
+      }
       $data['candidatsN'] = count($data['candidats']);
       $randKey = array_rand($data['candidats']);
       $data['candidatRandom'] = $data['candidats'][$randKey];
@@ -109,7 +92,6 @@
         )
       );
       // JS
-
       $data['js_to_load_up_defer'] = array(
         "chart.min.js",
         "chartjs-plugin-datalabels@0.7.js"

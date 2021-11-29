@@ -260,6 +260,9 @@
       $depute = $data['depute']['nameFirst'].' '.$data['depute']['nameLast'];
       $data['no_job'] = array('autre profession','autres', 'sans profession déclarée', 'sans profession');
 
+      // Gender
+      $data['gender'] = gender($data['depute']['civ']);
+
       // Get hatvp job
       $data['depute']['hatvp'] = $this->deputes_model->get_hatvp_url($mpId);
       $data['hatvpJobs'] = $this->deputes_model->get_last_hatvp_job($mpId);
@@ -280,7 +283,7 @@
       }
 
       // General infos
-      $data["depute"]["dateNaissanceFr"] = utf8_encode(strftime('%d %B %Y', strtotime($data['depute']['birthDate']))); // birthdate
+      $data['depute']['dateNaissanceFr'] = utf8_encode(strftime('%d %B %Y', strtotime($data['depute']['birthDate']))); // birthdate
       $data['depute']['circo_abbrev'] = $this->functions_datan->abbrev_n($data['depute']['circo'], TRUE); // circo number
       $data['politicalParty'] = $this->deputes_model->get_political_party($mpId); // political party
       $data['election_canceled'] = NULL;
@@ -328,11 +331,22 @@
         $data['commission_parlementaire'] = $this->deputes_model->get_commission_parlementaire($mpId);
       }
 
-      // Regionales 2021
-      $data['regionales2021'] = $this->elections_model->get_candidate($mpId, 1/* Régionales 2021 */);
-      if ($data['regionales2021']) {
-        $data['regionales2021']['state'] = $this->elections_model->get_state($data['regionales2021']['secondRound'], $data['regionales2021']['elected']);
+      // Elections
+      $data['elections'] = $this->elections_model->get_candidate_elections($mpId);
+      foreach ($data['elections'] as $key => $value) {
+        $data['elections'][$key]['district'] = $this->elections_model->get_district($value['libelleAbrev'], $value['district']);
+        if ($value['elected'] === "1") {
+          $data['elections'][$key]['electedLibelle'] = 'Élu' . $data['gender']['e'];
+          $data['elections'][$key]['electedColor'] = 'adopté';
+        } elseif ($value['elected'] === "0") {
+          $data['elections'][$key]['electedLibelle'] = 'Éliminé' . $data['gender']['e'];
+          $data['elections'][$key]['electedColor'] = 'rejeté';
+        } else {
+          $data['elections'][$key]['electedLibelle'] = '';
+          $data['elections'][$key]['electedColor'] = '';
+        }
       }
+      $data['electionFeature'] = $this->elections_model->get_candidate_election($mpId, 3); /*Présidentielle-2022*/
 
       // Statistiques
       $data = $this->get_statistiques($data, $legislature, $mpId, $groupe_id);
@@ -363,9 +377,6 @@
       $data['history_edito'] = $this->depute_edito->history(round($data['depute']['mpLength']/365), $data['history_average']);
       $data['mandats'] = $this->deputes_model->get_historique_mandats($mpId);
       $data['mandatsReversed'] = array_reverse($data['mandats']);
-
-      // Gender
-      $data['gender'] = gender($data['depute']['civ']);
 
       // Meta
       $data['url'] = $this->meta_model->get_url();
