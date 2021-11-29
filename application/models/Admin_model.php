@@ -22,6 +22,7 @@ class Admin_model extends CI_Model
   public function create_candidat($user_id, $depute)
   {
     $url = parse_url($this->input->post('depute_url'));
+    $source = $this->input->post('source') != "" ? $this->input->post('source') : NULL;
 
     $data = array(
       'mpId' => $depute['mpId'],
@@ -29,7 +30,7 @@ class Admin_model extends CI_Model
       'district' => $this->input->post('district'),
       'position' =>  $this->input->post('position'),
       'nuance' =>  $this->input->post('nuance'),
-      'source' =>  $this->input->post('source'),
+      'source' =>  $source,
       'visible' => $this->input->post('visible') ? true : false
     );
 

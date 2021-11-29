@@ -175,7 +175,6 @@
           <p>Au total, <span class="font-weight-bold text-primary"><?= $candidatsN ?> députés ont été élus</span> lors des élections régionales de 2021.</p>
         </div>
         <div class="col-md-5 mt-5 mt-md-0">
-          <h3>DÉPUTÉ<?= $candidatRandom['civ'] == "Mme" ? "E" : NULL ?> ÉLU<?= $candidatRandom['civ'] == "Mme" ? "E" : NULL ?></h3>
           <div class="d-flex justify-content-center">
             <?php $this->load->view('deputes/partials/card_home.php', array('depute' => $candidatRandom, 'tag' => 'span', 'cat' => true)) ?>
           </div>

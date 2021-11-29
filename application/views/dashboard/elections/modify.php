@@ -35,36 +35,32 @@
                 <label>Election</label>
                 <input name="election" class="form-control" type="text" readonly value="<?= $election['id'] ?>"></input>
               </div>
-              <div class="form-group">
-                <label for="">Région de candidature</label>
-                <select class="form-control" name="district">
-                  <option value="<?= $candidat['districtId'] ?>" selected="selected">Selectionné : <?= $candidat['districtLibelle'] ?></option>
-                  <?php foreach ($districts as $district): ?>
-                    <?php if ($district['libelle'] !== $candidat['regionLibelle']): ?>
-                      <option value="<?= $district['id'] ?>"><?= $district['libelle'] ?></option>
-                    <?php endif; ?>
-                  <?php endforeach; ?>
-                </select>
-              </div>
-              <div class="form-group">
-                <label for="">Position (tête de liste ou colistier)</label>
-                <select class="form-control" name="position">
-                  <option value="<?= $candidat['position'] ?>" selected="selected">Selectionné : <?= $candidat['position'] ?></option>
-                  <?php foreach ($positions as $position): ?>
-                    <?php if ($position !== $candidat['position']): ?>
-                      <option value="<?= $position ?>"><?= $position ?></option>
-                    <?php endif; ?>
-                  <?php endforeach; ?>
-                </select>
-              </div>
-              <div class="form-group">
-                <label>Nuance (ne pas remplir)</label>
-                <input name="nuance" class="form-control" type="text" placeholder="Ne pas remplir pour le moment" readonly>
-              </div>
-              <div class="form-group">
-                <label>Source</label>
-                <input name="source" class="form-control" type="text" value="<?= $candidat['source']?>" placeholder="ex:  https://www.ouest-france.fr/elections/regionales/elections-regionales-en-pays-de-la-loire-qui-seront-les-candidats-en-juin-2021-7190091"></input>
-              </div>
+              <?php if (in_array('district', $requiredFields)): ?>
+                <div class="form-group">
+                  <label for="">Circonscription de candidature</label>
+                  <select class="form-control" name="district">
+                    <option value="<?= $candidat['districtId'] ?>" selected="selected">Selectionné : <?= $candidat['districtLibelle'] ?></option>
+                    <?php foreach ($districts as $district): ?>
+                      <?php if ($district['libelle'] !== $candidat['regionLibelle']): ?>
+                        <option value="<?= $district['id'] ?>"><?= $district['libelle'] ?></option>
+                      <?php endif; ?>
+                    <?php endforeach; ?>
+                  </select>
+                </div>
+              <?php endif; ?>
+              <?php if (in_array('position', $requiredFields)): ?>
+                <div class="form-group">
+                  <label for="">Position sur la liste</label>
+                  <select class="form-control" name="position">
+                    <option value="<?= $candidat['position'] ?>" selected="selected">Selectionné : <?= $candidat['position'] ?></option>
+                    <?php foreach ($positions as $position): ?>
+                      <?php if ($position !== $candidat['position']): ?>
+                        <option value="<?= $position ?>"><?= $position ?></option>
+                      <?php endif; ?>
+                    <?php endforeach; ?>
+                  </select>
+                </div>
+              <?php endif; ?>
               <div class="form-group p-3" style="background-color: rgba(0, 183, 148, 0.3)">
                 <label>Se maintient au 2nd tour ?</label>
                 <select class="form-control" name="secondRound">

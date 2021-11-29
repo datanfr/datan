@@ -13,6 +13,7 @@ $text-black: #4C4C4C;
 $bg-colour: #F3F5F6;
 $body-bg: $bg-colour;
 $primary: $vert;
+$info: $bleu;
 $primary_rgb: rgb(0, 183, 148);
 $adopted: $vert;
 $abstention: #FFBA49;
@@ -380,6 +381,31 @@ body:not(.pg-mentions) #tarteaucitronIcon {
 @media only screen and (max-width: 767.98px) {
   .mobileShow {display: block}
 }
+.chart-election {
+  display: flex;
+  position: relative;
+  border: none;
+  .majority{
+    background-color: $adopted;
+    padding: 0.8rem 0;
+    span{
+      color: #ffffff;
+      font-size: 1.25em;
+      font-weight: 800;
+      margin-left: 2rem;
+    }
+  }
+  .minority{
+    padding: 0.8rem 0;
+    background-color: #E8E8E8;
+  }
+  .line{
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    position: absolute;
+    left: 50%;
+    height: 100%;
+  }
+}
 /*
 ################
               Social media and social-share
@@ -629,8 +655,6 @@ body:not(.pg-mentions) #tarteaucitronIcon {
       color: $text-gray;
       font-weight: 800;
       font-size: $h5-font-size;
-      margin-left: 13px;
-      margin-bottom: 1.4em;
     }
     .radio-label {
       cursor: pointer;
@@ -728,13 +752,15 @@ body:not(.pg-mentions) #tarteaucitronIcon {
 ################
 */
 /* 1. Card depute and groups */
+.card-depute, .card-groupe{
+  margin-top: 60px;
+}
 .card-depute, .card-groupe, .card-election{
   border:0;
   text-align: center;
   width: 17em;
   margin-left:auto;
   margin-right: auto;
-  margin-top: 60px;
   box-shadow: $card-box-shadow;
   min-height: 290px;
   .liseret{
@@ -1611,19 +1637,6 @@ ul.ui-menu{
 }
 /*
 ################
-               Electoral banner
-################
-*/
-.electionBanner{
-  background-color: $bleu;
-  span{
-    font-size: $h5-font-size;
-    font-weight: 600;
-    color: white;
-  }
-}
-/*
-################
                PAGE DEPUTE ET GROUPE INDIVIDUAL (pg-depute-individual) & (pg-groupe-individual) & deputes/x/votes
 ################
 */
@@ -1641,7 +1654,7 @@ ul.ui-menu{
       color: $text-gray;
     }
   }
-  .bloc-statistiques, .bloc-votes, .bloc-bio, .bloc-election, .bloc-links, .bloc-chiffres, .bloc-key-votes, .bloc-mandats{
+  .bloc-statistiques, .bloc-votes, .bloc-bio, .bloc-election, .bloc-links, .bloc-chiffres, .bloc-key-votes, .bloc-mandats, .bloc-elections-history {
     h2{
       font-size: $h2-font-size;
       font-weight: 800;
@@ -1762,6 +1775,16 @@ ul.ui-menu{
       height: auto;
     }
   }
+  /* Bloc election feature */
+  .card-election-feature{
+    background-color: $bleu;
+    color: #fff;
+    //border-radius: 0;
+    h2{
+      font-weight: 800;
+      color: #fff;
+    }
+  }
   /* Bloc biographie */
   .bloc-bio{
     max-width: 575px;
@@ -1795,34 +1818,25 @@ ul.ui-menu{
       font-weight: 800;
       color: $text-gray-light;
     }
-    .chart-election {
-      display: flex;
-      position: relative;
-      border: none;
-      .majority{
-        background-color: $adopted;
-        padding: 0.8rem 0;
-        span{
-          color: #ffffff;
-          font-size: 1.25em;
-          font-weight: 800;
-          margin-left: 2rem;
-        }
-      }
-      .minority{
-        padding: 0.8rem 0;
-        background-color: #E8E8E8;
-      }
-      .line{
-        border: 1px solid rgba(255, 255, 255, 0.5);
-        position: absolute;
-        left: 50%;
-        height: 100%;
-      }
-    }
     .legend{
       span{
         color: $text-gray-light;
+      }
+    }
+  }
+  /* Bloc elections history */
+  .bloc-elections-history{
+    table{
+      background-position: red;
+      border-spacing: 0 1em;
+      border-collapse:separate;
+      tr{
+        background-color: #fff;
+        border-radius: $card-border-radius;
+        box-shadow: $card-box-shadow;
+      }
+      td{
+        border-top: 0;
       }
     }
   }
@@ -2403,7 +2417,6 @@ ul.ui-menu{
   }
   .bloc-titre{
     margin-top: 4rem;
-    margin-bottom:  4rem;
     svg{
       width: 100%;
       height: auto;
@@ -2411,6 +2424,9 @@ ul.ui-menu{
   }
 }
 .pg-elections-candidats{
+  .bloc-titre{
+    margin-bottom: 4rem;
+  }
   &.infosIndividual{
     background-color: $bleu;
     color: #fff;
@@ -2464,6 +2480,16 @@ ul.ui-menu{
     color: $vert;
     font-size: 4em;
     font-weight: 800;
+  }
+  .resultsPresidentielle{
+    img{
+      width: 100px;
+      height: auto;
+    }
+    p{
+      font-weight: 800;
+      color: $text-black;
+    }
   }
 }
 /*
