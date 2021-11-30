@@ -182,7 +182,7 @@
       </div>
       <div class="row pb-5">
         <div class="col-12 d-flex justify-content-center">
-          <a href="<?= base_url();?>elections/regionales-2021" class="no-decoration">
+          <a href="<?= base_url();?>elections/presidentielle-2022" class="no-decoration">
             <button type="button" class="btn btn-primary">Découvrez les députés élus</button>
           </a>
         </div>
