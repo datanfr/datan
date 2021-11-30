@@ -50,6 +50,9 @@ scratch. This page gets rid of all links and provides the needed markup only.
           <li class="nav-item d-none d-sm-inline-block">
             <a href="<?= base_url () ?>scripts" class="nav-link">Scripts</a>
           </li>
+          <li class="nav-item d-none d-sm-inline-block">
+            <a href="<?= base_url () ?>admin/logs" class="nav-link">CI Logs</a>
+          </li>
         <?php endif; ?>
       </ul>
 
