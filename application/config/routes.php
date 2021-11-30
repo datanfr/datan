@@ -155,6 +155,8 @@ $route['classements'] = 'redirection/redir/statistiques';
 $route['search/(:any)/(:any)'] = 'redirect/cities/$1/$2';
 // CACHE
 $route['cache/delete_all'] = 'cache/delete_all';
+// CI LOGS
+$route['admin/logs'] = 'logViewerController/index';
 // PAGES
 $route['(:any)'] = 'pages/view/$1';
 $route['translate_uri_dashes'] = FALSE;
