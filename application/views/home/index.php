@@ -165,14 +165,14 @@
     <div class="container p-md-0">
       <div class="row py-4">
         <div class="col-12">
-          <h2 class="text-center my-4">Députés élus aux élections régionales de 2021</h2>
+          <h2 class="text-center my-4">Députés candidats à l'élection présidentielle</h2>
         </div>
       </div>
       <div class="row pt-2 pb-5">
         <div class="col-md-7 d-flex flex-column justify-content-center">
-          <p>Les élections régionales de 2021 se sont déroulées les 20 et 27 juin 2021.</p>
-          <p>Les députés de l'Assemblée nationale peuvent se présenter aux élections régionales. Si le député est élu, il devrait quitter son siège de député que s'il devient président ou vice-président du conseil régional.</p>
-          <p>Au total, <span class="font-weight-bold text-primary"><?= $candidatsN ?> députés ont été élus</span> lors des élections régionales de 2021.</p>
+          <p>L'élection présidentielle se déroulera les dimanches <b>10 et 24 avril 2022</b>.</p>
+          <p>Un député peut se présenter à l'élection présidentielle. Il devra alors quitter son siège de député s'il est élu président.</p>
+          <p>Au total, <span class="font-weight-bold text-primary"><?= $candidatsN ?> députés sont candidats</span> à l'élection présidentielle de 2022.</p>
         </div>
         <div class="col-md-5 mt-5 mt-md-0">
           <div class="d-flex justify-content-center">

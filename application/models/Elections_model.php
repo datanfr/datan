@@ -144,15 +144,9 @@
 
 
     public function get_all_candidate($election, $visible = FALSE, $state = FALSE){
-      if ($visible == FALSE) {
-        $where = array(
-          'election' => $election
-        );
-      } else {
-        $where = array(
-          'election' => $election,
-          'visible' => 1
-        );
+      $where['election'] = $election;
+      if ($visible != FALSE) {
+        $where['visible'] = 1;
       }
 
       if ($state == 'second') {
@@ -162,21 +156,6 @@
       if ($state == 'elected') {
         $where['elected'] = '1';
       }
-
-      // TO DO !!!!
-      /*
-      if ($election == 1) {
-        $this->db->join('regions', 'candidate_full.district = regions.id', 'left');
-        $this->db->select('*, regions.libelle AS districtLibelle, regions.id AS districtId');
-        $this->db->select('regions.libelle AS cardCenter'); // Central information on card
-      } elseif ($election == 2) {
-        $this->db->join('departement', 'candidate_full.district = departement.departement_code', 'left');
-        $this->db->select('*, departement.departement_nom AS districtLibelle, departement.departement_code AS districtId');
-        $this->db->select('CONCAT(departement.departement_nom, " (", departement.departement_code, ")") AS cardCenter'); // Central information on card
-      } else {
-        $this->db->select('*, '.$this->db->escape('').' AS districtLibelle');
-        $this->db->select('CONCAT(candidate_full.departementNom, " (", candidate_full.departementCode, ")") AS cardCenter');
-      } */
 
       $this->db->select('*, candidate_full.depute_libelle AS libelle, candidate_full.depute_libelleAbrev AS libelleAbrev');
       $this->db->select('DATE_FORMAT(modified_at, "%d/%m/%Y") AS modified_at');

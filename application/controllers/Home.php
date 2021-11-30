@@ -65,7 +65,8 @@
       }
 
       // Get elections
-      $data['candidats'] = $this->elections_model->get_all_candidate(1, TRUE, "elected"); // Get candidates for regionales-2021, elected MPs
+      $data['candidats'] = $this->elections_model->get_all_candidate(3, TRUE);
+      //print_r($data['candidats']);
       foreach ($data['candidats'] as $key => $value) {
         $district = $this->elections_model->get_district($value['election_libelleAbrev'], $value['district']);
         $data['candidats'][$key]['cardCenter'] = $district['libelle'];
