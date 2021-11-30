@@ -37,16 +37,31 @@ class Script
         echo ("Script is over ! It took: " . round($exec_time, 2) . " seconds.\n");
     }
 
+    public function chunked_copy($from, $to) {
+      # 1 meg at a time, you can adjust this.
+      $buffer_size = 1048576;
+      $ret = 0;
+      $fin = fopen($from, "rb");
+      $fout = fopen($to, "w");
+      while(!feof($fin)) {
+        $ret += fwrite($fout, fread($fin, $buffer_size));
+      }
+      fclose($fin);
+      fclose($fout);
+      echo 'size = ' . $ret . '\n'; # return number of bytes written
+      return TRUE;
+    }
+
     public function amendements(){
       echo "downloading amendements starting \n";
 
       $file = 'http://data.assemblee-nationale.fr/static/openData/repository/15/loi/amendements_legis/Amendements_XV.xml.zip';
-      $file = trim($file);
       $newfile = __DIR__ . '/tmp_amendements.zip';
-      if (!copy($file, $newfile)) {
-          echo "failed to copy $file...\n";
+
+      if ($this->chunked_copy($file, $newfile)) {
+        echo "Success. Copied $newfile \n";
       } else {
-        echo 'working';
+        echo "failed to copy $newfile \n";
       }
 
     }
