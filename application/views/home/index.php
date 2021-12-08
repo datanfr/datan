@@ -231,6 +231,9 @@
           <a href="https://www.latribune.fr/opinions/tribunes/apres-trois-votes-de-confiance-la-majorite-presidentielle-s-erode-t-elle-a-l-assemblee-nationale-853748.html" target="_blank" rel="noopener">
             <img class="mx-2 my-3 img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="100" height="45" data-src="<?= asset_url() ?>imgs/media/la_tribune.png" alt="La Tribune">
           </a>
+          <span class="url_obf" url_obf="<?= url_obfuscation("https://ram05.fr/podcasts/journal/29-novembre-2021-7") ?>">
+            <img class="mx-2 my-3 img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="75" height="50" data-src="<?= asset_url() ?>imgs/media/ram05.png" alt="Radio Ram05">
+          </span>
         </div>
       </div>
     </div>
