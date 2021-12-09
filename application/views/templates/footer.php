@@ -54,22 +54,10 @@
       <div class="container-fluid footer">
         <div class="container p-0">
           <div class="row row-grid py-3">
-            <div class="col-md-4 d-flex flex-column justify-content-center">
+            <div class="col-md-5 d-flex flex-column justify-content-center">
               <img class="img-lazy img-fluid" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media-big.png" width="4500" height="1975" data-src="<?= asset_url(); ?>imgs/datan/logo_baseline_white_transp.png" alt="Logo Datan">
             </div>
-            <div class="col-md-4 d-flex flex-column justify-content-center">
-              <p>© Datan 2021 - Tous droits réservés</p>
-              <p>Nous contacter : <a href="mailto:info@datan.fr" class="no-decoration underline">info@datan.fr</a></p>
-              <div class="social-media">
-                <a href="https://www.facebook.com/datanFR/" target="_blank" class="no-decoration" rel="noreferrer">
-                  <img class="img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="542" height="542" data-src="<?= asset_url() ?>imgs/logos/facebook_datan.png" alt="Logo Facebook">
-                </a>
-                <a href="https://twitter.com/datanFR" target="_blank" class="no-decoration" rel="noreferrer">
-                  <img class="img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="542" height="542" data-src="<?= asset_url() ?>imgs/logos/twitter_datan.png" alt="Logo Twitter">
-                </a>
-              </div>
-            </div>
-            <div class="col-md-4 d-flex flex-column justify-content-center mt-md-0">
+            <div class="col-md-4 pt-md-4">
               <div class="d-flex flex-row liste justify-content-center">
                 <div class="d-flex flex-column mx-1">
                   <p>
@@ -94,6 +82,30 @@
                   </p>
                 </div>
               </div>
+            </div>
+            <div class="col-md-3 social-media pt-md-3 test-border">
+              <div class="row test-border">
+                <div class="col-6 col-md-12 d-flex flex-column test-border">
+                  <p class="font-weight-bold mb-1">Nous suivre</p>
+                  <a href="https://www.facebook.com/datanFR/" target="_blank" class="no-decoration my-1" rel="noreferrer">
+                    <img class="img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="542" height="542" data-src="<?= asset_url() ?>imgs/logos/facebook_datan.png" alt="Logo Facebook">
+                    Facebook
+                  </a>
+                  <a href="https://twitter.com/datanFR" target="_blank" class="no-decoration my-1" rel="noreferrer">
+                    <img class="img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="542" height="542" data-src="<?= asset_url() ?>imgs/logos/twitter_datan.png" alt="Logo Twitter">
+                    Twitter
+                  </a>
+                </div>
+                <div class="col-6 col-md-12 d-flex flex-column test-border mt-0">
+                  <p class="font-weight-bold mt-md-2 mb-1">Nous contacter</p>
+                  <a href="mailto:info@datan.fr" class="no-decoration underline">info@datan.fr</a>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-12">
+              <p>© Datan 2021 - Tous droits réservés</p>
             </div>
           </div>
         </div>
