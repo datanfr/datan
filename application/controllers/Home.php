@@ -66,10 +66,9 @@
 
       // Get elections
       $data['candidats'] = $this->elections_model->get_all_candidate(3, TRUE);
-      //print_r($data['candidats']);
-      foreach ($data['candidats'] as $key => $value) {
-        $district = $this->elections_model->get_district($value['election_libelleAbrev'], $value['district']);
-        $data['candidats'][$key]['cardCenter'] = $district['libelle'];
+      foreach ($data['candidats'] as $key => $value) { // When a district is needed!
+        //$district = $this->elections_model->get_district($value['election_libelleAbrev'], $value['district']);
+        $data['candidats'][$key]['cardCenter'] = NULL;
       }
       $data['candidatsN'] = count($data['candidats']);
       $randKey = array_rand($data['candidats']);
