@@ -14,6 +14,7 @@ class Sitemap extends CI_Controller {
     $this->load->model('fields_model');
     $this->load->model('parties_model');
     $this->load->model('elections_model');
+    $this->load->model('city_model');
   }
 
   /* 1. Index */
