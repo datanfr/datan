@@ -39,7 +39,7 @@
       $data['election'] = $this->elections_model->get_election($slug);
 
       if (empty($data['election']) || !$data['election']['candidates']) {
-        show_404();
+        show_404($this->functions_datan->get_404_infos());;
       }
 
       $data['username'] = $this->session->userdata('username');
@@ -64,7 +64,7 @@
       $slug = $_GET['election'];
       $data['election'] = $this->elections_model->get_election($slug);
       if (empty($data['election'])) {
-        show_404();
+        show_404($this->functions_datan->get_404_infos());;
       }
 
       if ($data['election']['libelleAbrev'] == 'Présidentielle') {
@@ -114,7 +114,7 @@
       $slug = $_GET['election'];
       $data['election'] = $this->elections_model->get_election($slug);
       if (empty($data['election'])) {
-        show_404();
+        show_404($this->functions_datan->get_404_infos());;
       }
 
       $data['username'] = $this->session->userdata('username');
@@ -161,7 +161,7 @@
       $slug = $_GET['election'];
       $data['election'] = $this->elections_model->get_election($slug);
       if (empty($data['election'])) {
-        show_404();
+        show_404($this->functions_datan->get_404_infos());;
       }
 
       $data['username'] = $this->session->userdata('username');
@@ -332,7 +332,7 @@
           $this->load->view('dashboard/footer');
       }
       } else {
-        show_404();
+        show_404($this->functions_datan->get_404_infos());;
       }
     }
 
@@ -397,7 +397,7 @@
 
         }
       } else {
-        show_404();
+        show_404($this->functions_datan->get_404_infos());;
       }
     }
 

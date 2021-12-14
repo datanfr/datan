@@ -6,7 +6,7 @@
     public function view($page){
 
       if (!file_exists(APPPATH.'views/pages/'.$page.'.php')) {
-        show_404();
+        show_404($this->functions_datan->get_404_infos());
       }
 
       if ($page == "a-propos") {

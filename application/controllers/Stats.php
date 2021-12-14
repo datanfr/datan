@@ -139,7 +139,7 @@
 
     public function individual($url){
       if (!file_exists(APPPATH.'views/classements/individual/'.$url.'.php')) {
-        show_404();
+        show_404($this->functions_datan->get_404_infos());;
       }
 
       $data['page'] = $url;
