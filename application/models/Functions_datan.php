@@ -127,5 +127,13 @@
     	}
     }
 
+    public function get_404_infos(){
+      $url = $_SERVER['REQUEST_URI'];
+      $controller = $this->router->fetch_class();
+      $method = $this->router->fetch_method();
+
+      return 'URL = ' . $url . ' ||| controller = '. $controller . ' ||| method = ' . $method;
+    }
+
   }
 ?>

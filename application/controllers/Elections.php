@@ -42,7 +42,7 @@
       $data['election'] = $this->elections_model->get_election($slug);
 
       if (empty($data['election'])) {
-        show_404();
+        show_404($this->functions_datan->get_404_infos());;
       }
 
       // STATE
