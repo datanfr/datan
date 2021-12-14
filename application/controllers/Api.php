@@ -13,7 +13,6 @@ class Api extends CI_Controller
         $this->load->model('deputes_model');
         $this->load->model('groupes_model');
         $this->load->model('votes_model');
-        $this->load->model('breadcrumb_model');
         $this->load->model('newsletter_model');
     }
 
