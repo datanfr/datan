@@ -266,11 +266,12 @@ class Sitemap extends CI_Controller {
       $posts[$i]["url"] = base_url()."blog/".$slug_category."/".$slug;
 
       //modified_at
-      if ($result['modified_at_sitemap'] == NULL) {
-        $posts[$i]["lastmod"] = $result['created_at_sitemap'];
+      if ($result['modified_at'] == NULL) {
+        $posts[$i]['lastmod'] = substr($result['created_at'], 0, 10);
       } else {
-        $posts[$i]["lastmod"] = $result["modified_at_sitemap"];
+        $posts[$i]['lastmod'] = substr($result['modified_at'], 0, 10);
       }
+
 
       $i++;
     }
