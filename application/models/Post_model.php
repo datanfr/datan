@@ -6,7 +6,7 @@
 
     public function get_posts($slug, $user, $category){
       if (empty($slug)) {
-        $sql = 'SELECT p.id, date_format(created_at, "%d %M %Y") as created_at_fr, c.name AS category_name, c.slug AS category_slug, p.id, p.user_id, p.title, p.slug, p.body, p.created_at, p.state, p.category_id
+        $sql = 'SELECT p.id, date_format(created_at, "%d %M %Y") as created_at_fr, c.name AS category_name, c.slug AS category_slug, p.id, p.user_id, p.title, p.slug, p.body, p.created_at, p.modified_at, p.state, p.category_id
           FROM posts p
           LEFT JOIN categories c ON p.category_id = c.id
         ';
@@ -18,7 +18,7 @@
 
         return $query->result_array();
       } else {
-        $sql = 'SELECT p.id, date_format(created_at, "%d %M %Y") as created_at_fr, c.name AS category_name, c.slug AS category_slug, p.id, p.user_id, p.title, p.slug, p.body, p.created_at, p.state, p.category_id
+        $sql = 'SELECT p.id, date_format(created_at, "%d %M %Y") as created_at_fr, c.name AS category_name, c.slug AS category_slug, p.id, p.user_id, p.title, p.slug, p.body, p.created_at, p.modified_at, p.state, p.category_id
           FROM posts p
           LEFT JOIN categories c ON p.category_id = c.id
           WHERE p.slug = ? AND c.slug = ?
