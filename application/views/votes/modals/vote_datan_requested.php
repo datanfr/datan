@@ -53,7 +53,7 @@
           </span>
         </div>
         <div class="modal-body">
-          <p>Contactez-nous si vous rencontrez ce problème : info@datan.fr</p>
+          <p>Contactez-nous si vous rencontrez ce problème : info[at]datan.fr</p>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>

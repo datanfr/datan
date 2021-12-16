@@ -19,7 +19,7 @@
         <li>Pour les <b>utilisateurs ayant un compte</b>, les données récoltées sont exclusivement : nom, pseudo, email et, optionnellement, le code postal de résidence.</li>
         <li>Les <b>cookies</b> déposés dans le navigateur sont les cookies de session.</li>
       </ul>
-      <p>En application des articles 38 et suivants de la loi du 6 janvier 1978 modifiée, vous bénéficiez d’un droit d’accès, d’opposition et de rectification aux informations qui vous concernent. Si vous souhaitez exercer ce droit ou obtenir des informations vous concernant, veuillez nous adresser un email à <a href="mailto:cil@datan.fr">cil@datan.fr</a></p>
+      <p>En application des articles 38 et suivants de la loi du 6 janvier 1978 modifiée, vous bénéficiez d’un droit d’accès, d’opposition et de rectification aux informations qui vous concernent. Si vous souhaitez exercer ce droit ou obtenir des informations vous concernant, veuillez nous envoyer un email : info[at]datan.fr</a></p>
       <p>Aucune information personnelle de l'utilisateur du site www.datan.fr n'est publiée à l'insu de l'utilisateur, échangée, transférée, cédée ou vendue sur un support quelconque à des tiers.</p>
 
       <iframe
@@ -34,12 +34,12 @@
 
       <p>Statut du propriétaire : <strong>particulier</strong><br />
       Propriétaire, responsable de la publication et webmaster : <strong>Awenig Marié</strong><br />
-      Contact : <a href="mailto:awenig@datan.fr">awenig@datan.fr</a><br />
+      Contact : awenig[at]datan.fr<br />
       Le responsable de la publication est une<strong> personne physique</strong><br />
       <br />
       Hebergeur : <strong>o2switch 222-224 Boulevard Gustave Flaubert 63000 Clermont-Ferrand</strong><br />
 
-      <p>En cas de réclamation, il est recommandé de nous adresser un email à <a href="mailto:info@datan.fr" target="_blank">info@datan.fr</a></p>
+      <p>En cas de réclamation, il est recommandé de nous adresser un email à info[at]datan.fr</p>
 
       <p>Les photos des députés sont réutilisées à titre gratuit à partir des données officielles du site de l'<a href="http://www.assemblee-nationale.fr/" target="_blank">Assemblée nationale</a> et restent donc soumises aux conditions légales de réutilisation de ces sites.</p>
 
