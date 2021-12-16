@@ -168,7 +168,7 @@
                               <?php foreach ($loyaute_history as $y) : ?>
                                 <tr>
                                   <td>
-                                    <a href="<?= base_url() ?>groupes/<?= mb_strtolower($y['libelleAbrev']) ?>" class="no-decoration underline"><?= $y['libelle'] ?></a>
+                                    <?= $y['libelle'] ?>
                                   </td>
                                   <td><?= $y['score'] ?> %</td>
                                 </tr>
