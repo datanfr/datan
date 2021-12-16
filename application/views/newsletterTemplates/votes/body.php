@@ -77,7 +77,7 @@
       </mj-text>
     </mj-column>
     <mj-column width="30%" vertical-align="middle">
-      <mj-image width="200px"  border-radius="5px" src="https://datan.fr/assets/imgs/deputes/depute_<?= substr($depute['mpId'], 2) ?>.png" href="https://www.datan.fr/deputes/<?= $depute['dptSlug'] ?>/depute_<?= $depute['nameUrl'] ?>" />
+      <mj-image width="200px"  border-radius="5px" src="https://datan.fr/assets/imgs/deputes_original/depute_<?= substr($depute['mpId'], 2) ?>.png" href="https://www.datan.fr/deputes/<?= $depute['dptSlug'] ?>/depute_<?= $depute['nameUrl'] ?>" />
     </mj-column>
     <mj-column width="70%" vertical-align="middle">
       <mj-text>
