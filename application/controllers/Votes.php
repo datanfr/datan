@@ -342,14 +342,17 @@
       if (!is_numeric($legislature)) {
         show_404($this->functions_datan->get_404_infos());;
       }
-      $data['legislature'] = $legislature;
-      if ($legislature != legislature_current()) {
-        //show_404($this->functions_datan->get_404_infos());;
-      }
       // Check if vote number is numeric
       if (!is_numeric($num)) {
         show_404($this->functions_datan->get_404_infos());;
       }
+
+      if ($legislature < 14) {
+        show_404($this->functions_datan->get_404_infos());;
+      }
+
+      $data['legislature'] = $legislature;
+
 
       // Get vote
       $data['vote'] = $this->votes_model->get_individual_vote($legislature, $num);
@@ -363,10 +366,11 @@
         show_404($this->functions_datan->get_404_infos());;
       }
 
-      // Caching
+      // Caching --> Has been disable to allow for captcha
+      /*
       if(!in_array($_SERVER['REMOTE_ADDR'], localhost()) && !$this->session->userdata('logged_in')){
           $this->output->cache("4320"); // Caching enable for 3 days (1440 minutes per day)
-      }
+      } */
 
       // Vote edited
       $data['vote'] = $this->votes_model->get_individual_vote_edited($data['vote']);

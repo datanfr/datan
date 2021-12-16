@@ -313,7 +313,7 @@
         "givenName" => $depute['nameFirst'],
         "url" => base_url().'deputes/'.$depute['dptSlug'].'/depute_'.$depute['nameUrl'],
         "jobTitle" => "Député français",
-        "image" => base_url()."assets/imgs/deputes/depute_".$depute['idImage'].".png",
+        "image" => base_url()."assets/imgs/deputes_original/depute_".$depute['idImage'].".png",
         "memberOf" => [
           "@type" => "Organization",
           "name" => "Assemblée nationale",
