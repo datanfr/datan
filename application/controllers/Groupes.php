@@ -282,7 +282,6 @@
         )
       );
       // JS
-      $data['js_to_load_up'] = array("Chart.min.js", "chartjs-plugin-annotation.js"); // TO BE REMOVED
       $data['js_to_load']= array("flickity.pkgd.min");
       // Preloads
       $data['preloads'] = array(
