@@ -164,10 +164,10 @@
         Pour consulter le document constitutif du conseil scientifique, <a href="<?= asset_url() ?>documents/conseil_scientifique_datan_2020.pdf" target="_blank">cliquez ici</a>.
       </p>
       <h2 class="mt-4">Contactez-nous</h2>
-      <p><a href="mailto:info@datan.fr">info@datan.fr</a></p>
+      <p>info[at]datan.fr</p>
       <h2 class="mt-4">Ils contribuent au projet</h2>
       <p><b>Datan</b> est un site en construction qui ne reçoit aucune aide financière. Plusieurs personnes contribuent ou ont contribué au projet de manière bénévole. Merci à eux !</p>
-      <p>Si vous souhaitez contribuer au projet, n'hésitez pas à nous écrire  : <a href="mailto:info@datan.fr">info@datan.fr</a></p>
+      <p>Si vous souhaitez contribuer au projet, n'hésitez pas à nous envoyer un email : info[at]datan.fr</p>
       <div class="row mt-3">
         <!-- Team 1 -->
         <div class="col-lg-3 col-md-4 col-6">

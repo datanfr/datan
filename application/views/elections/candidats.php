@@ -29,7 +29,7 @@
             </p>
           <?php endif; ?>
           </p>
-          <p>Un député candidat ne se trouve pas dans la liste ? N'hésitez pas à nous le faire savoir: <a href="mailto:info@datan.fr">contact@datan.fr</a> !</p>
+          <p>Un député candidat ne se trouve pas dans la liste ? N'hésitez pas à nous envoyer un email : info[at]datan.fr !</p>
         <?php endif; ?>
       </div>
       <div class="col-md-4 col-lg-5 d-flex justify-content-center align-items-center">
