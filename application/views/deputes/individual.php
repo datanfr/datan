@@ -339,9 +339,11 @@
                           <div class="bars mx-1 mx-md-3" style="height: <?= round($election_result['voix'] / $election_infos['inscrits'] * 100) ?>%">
                             <span class="score text-center"><?= formatNumber($election_result['voix']) ?></span>
                           </div>
-                          <div class="bars mx-1 mx-md-3" style="height: <?= round($election_opponent['voix'] / $election_infos['inscrits'] * 100) ?>%">
-                            <span class="score text-center"><?= formatNumber($election_opponent['voix']) ?></span>
-                          </div>
+                          <?php if (isset($election_opponent)): ?>
+                            <div class="bars mx-1 mx-md-3" style="height: <?= round($election_opponent['voix'] / $election_infos['inscrits'] * 100) ?>%">
+                              <span class="score text-center"><?= formatNumber($election_opponent['voix']) ?></span>
+                            </div>
+                          <?php endif; ?>
                           <div class="bars mx-1 mx-md-3" style="height: <?= round(($election_infos['blancs'] + $election_infos['nuls']) / $election_infos['inscrits'] * 100) ?>%">
                             <span class="score text-center"><?= formatNumber($election_infos['blancs'] + $election_infos['nuls']) ?></span>
                           </div>
@@ -352,7 +354,9 @@
                       </div>
                       <div class="d-flex justify-content-between mt-2">
                         <div class="legend-element text-center mx-1"><?= $title ?></div>
-                        <div class="legend-element text-center mx-1"><?= $election_opponent['candidat'] ?></div>
+                        <?php if (isset($election_opponent)): ?>
+                          <div class="legend-element text-center mx-1"><?= $election_opponent['candidat'] ?></div>
+                        <?php endif; ?>
                         <div class="legend-element text-center mx-1">Blancs et nuls</div>
                         <div class="legend-element text-center mx-1">Abstentions</div>
                       </div>
