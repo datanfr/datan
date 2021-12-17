@@ -177,7 +177,7 @@
 
     }
 
-    // Pages = data.fr/votes/legislature-(:legislature)/(:year)/(:month)
+    // Pages = datan.fr/votes/legislature-(:legislature)/(:year)/(:month)
     public function all($legislature, $year = NULL, $month = NULL) {
       // Check if legislature is a number
       if (!is_numeric($legislature)) {
