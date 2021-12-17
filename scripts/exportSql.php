@@ -20,11 +20,18 @@ function EXPORT_TABLES($host, $user, $pass, $name, $tables = false, $backup_name
       'elect_2019_europe',
       'elect_2019_europe_clean',
       'elect_2019_europe_listes',
+      'elect_libelle',
+      'famsocpro',
+      'faq_categories',
+      'faq_posts',
       'fields',
+      'hatvp',
       'insee',
       'posts',
+      'readings',
       'regions',
-      'votes_datan'
+      'votes_datan',
+      'votes_datan_requested'
     );
     $mysqli = new mysqli($host, $user, $pass, $name);
     $mysqli->select_db($name);
