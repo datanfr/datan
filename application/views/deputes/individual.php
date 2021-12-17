@@ -339,9 +339,11 @@
                           <div class="bars mx-1 mx-md-3" style="height: <?= round($election_result['voix'] / $election_infos['inscrits'] * 100) ?>%">
                             <span class="score text-center"><?= formatNumber($election_result['voix']) ?></span>
                           </div>
-                          <div class="bars mx-1 mx-md-3" style="height: <?= round($election_opponent['voix'] / $election_infos['inscrits'] * 100) ?>%">
-                            <span class="score text-center"><?= formatNumber($election_opponent['voix']) ?></span>
-                          </div>
+                          <?php if (isset($election_opponent)): ?>
+                            <div class="bars mx-1 mx-md-3" style="height: <?= round($election_opponent['voix'] / $election_infos['inscrits'] * 100) ?>%">
+                              <span class="score text-center"><?= formatNumber($election_opponent['voix']) ?></span>
+                            </div>
+                          <?php endif; ?>
                           <div class="bars mx-1 mx-md-3" style="height: <?= round(($election_infos['blancs'] + $election_infos['nuls']) / $election_infos['inscrits'] * 100) ?>%">
                             <span class="score text-center"><?= formatNumber($election_infos['blancs'] + $election_infos['nuls']) ?></span>
                           </div>
@@ -352,7 +354,9 @@
                       </div>
                       <div class="d-flex justify-content-between mt-2">
                         <div class="legend-element text-center mx-1"><?= $title ?></div>
-                        <div class="legend-element text-center mx-1"><?= $election_opponent['candidat'] ?></div>
+                        <?php if (isset($election_opponent)): ?>
+                          <div class="legend-element text-center mx-1"><?= $election_opponent['candidat'] ?></div>
+                        <?php endif; ?>
                         <div class="legend-element text-center mx-1">Blancs et nuls</div>
                         <div class="legend-element text-center mx-1">Abstentions</div>
                       </div>
@@ -781,6 +785,11 @@
             </table>
           </div>
         <?php endif; ?>
+        <!-- BLOC PARTAGEZ -->
+        <div class="bloc-social mt-5">
+          <h2 class="subtitle mb-4">Partagez cette page</h2>
+          <?php $this->load->view('partials/share.php') ?>
+        </div>
         <!-- BLOC HISTORIQUE MANDATS -->
         <div class="bloc-mandats mt-5">
           <h2 class="mb-4">Historique des mandats</h2>
@@ -840,7 +849,7 @@
           <div class="row mt-4">
             <div class="col-12 col-sm-6 mt-2 d-flex justify-content-center align-items-center">
               <span class="url_obf btn btn-an" url_obf="<?= url_obfuscation("http://www2.assemblee-nationale.fr/deputes/fiche/OMC_" . $depute['mpId']) ?>">
-                Profil Assemblée Nationale
+                Profil officiel
               </span>
             </div>
             <?php if ($depute['website'] !== NULL) : ?>
@@ -886,6 +895,8 @@
       </div>
     </div>
   </div> <!-- END CONTAINER -->
+  <!-- CONTAINER FOLLOW US -->
+  <?php $this->load->view('partials/follow-us.php') ?>
   <!-- AUTRES DEPUTES -->
   <div class="container-fluid pg-depute-individual bloc-others-container">
     <div class="container bloc-others">

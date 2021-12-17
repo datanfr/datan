@@ -54,22 +54,10 @@
       <div class="container-fluid footer">
         <div class="container p-0">
           <div class="row row-grid py-3">
-            <div class="col-md-4 d-flex flex-column justify-content-center">
+            <div class="col-md-5 d-flex flex-column justify-content-center">
               <img class="img-lazy img-fluid" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media-big.png" width="4500" height="1975" data-src="<?= asset_url(); ?>imgs/datan/logo_baseline_white_transp.png" alt="Logo Datan">
             </div>
-            <div class="col-md-4 d-flex flex-column justify-content-center">
-              <p>© Datan 2021 - Tous droits réservés</p>
-              <p>Nous contacter : <a href="mailto:info@datan.fr" class="no-decoration underline">info@datan.fr</a></p>
-              <div class="social-media">
-                <a href="https://www.facebook.com/datanFR/" target="_blank" class="no-decoration" rel="noreferrer">
-                  <img class="img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="542" height="542" data-src="<?= asset_url() ?>imgs/logos/facebook_datan.png" alt="Logo Facebook">
-                </a>
-                <a href="https://twitter.com/datanFR" target="_blank" class="no-decoration" rel="noreferrer">
-                  <img class="img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="542" height="542" data-src="<?= asset_url() ?>imgs/logos/twitter_datan.png" alt="Logo Twitter">
-                </a>
-              </div>
-            </div>
-            <div class="col-md-4 d-flex flex-column justify-content-center mt-md-0">
+            <div class="col-md-4 pt-md-4">
               <div class="d-flex flex-row liste justify-content-center">
                 <div class="d-flex flex-column mx-1">
                   <p>
@@ -95,6 +83,41 @@
                 </div>
               </div>
             </div>
+            <div class="col-md-3 social-media pt-md-3">
+              <div class="row">
+                <div class="col-6 col-md-12 d-flex flex-column">
+                  <p class="font-weight-bold mb-1">Nous suivre</p>
+                  <?php if ($this->router->fetch_class() == "home"): ?>
+                    <a href="https://www.facebook.com/datanFR/" target="_blank" class="no-decoration my-1" rel="noreferrer">
+                      <img class="img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="542" height="542" data-src="<?= asset_url() ?>imgs/logos/facebook_datan.png" alt="Logo Facebook">
+                      Facebook
+                    </a>
+                    <a href="https://twitter.com/datanFR" target="_blank" class="no-decoration my-1" rel="noreferrer">
+                      <img class="img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="542" height="542" data-src="<?= asset_url() ?>imgs/logos/twitter_datan.png" alt="Logo Twitter">
+                      Twitter
+                    </a>
+                    <?php else: ?>
+                    <span class="url_obf no-decoration text-white my-1" url_obf="<?= url_obfuscation("https://www.facebook.com/datanFR/") ?>">
+                      <img class="img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="542" height="542" data-src="<?= asset_url() ?>imgs/logos/facebook_datan.png" alt="Logo Facebook">
+                      Facebook
+                    </span>
+                    <span class="url_obf no-decoration text-white my-1" url_obf="<?= url_obfuscation("https://twitter.com/datanFR") ?>">
+                      <img class="img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="542" height="542" data-src="<?= asset_url() ?>imgs/logos/twitter_datan.png" alt="Logo Twitter">
+                      Twitter
+                    </span>
+                  <?php endif; ?>
+                </div>
+                <div class="col-6 col-md-12 d-flex flex-column mt-0">
+                  <p class="font-weight-bold mt-md-2 mb-1">Nous contacter</p>
+                  info[at]datan.fr
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-12">
+              <p>© Datan 2021 - Tous droits réservés</p>
+            </div>
           </div>
         </div>
       </div>
@@ -102,14 +125,25 @@
         <div class="container">
           <div class="row py-3">
             <div class="col-md-6 text-center">
-              Nos données sont disponibles sur le site <a href="https://www.data.gouv.fr/fr/organizations/datan/" target="_blank" rel="noreferrer">data.gouv.fr</a>
+              <?php if ($this->router->fetch_class() == "home"): ?>
+                Nos données sont disponibles sur le site <a href="https://www.data.gouv.fr/fr/organizations/datan/" target="_blank" rel="noreferrer">data.gouv.fr</a>
+                <?php else: ?>
+                Nos données sont disponibles sur le site <span class="url_obf" url_obf="<?= url_obfuscation("https://www.data.gouv.fr/fr/organizations/datan/") ?>">data.gouv.fr</span>
+              <?php endif; ?>
             </div>
             <div class="col-md-6">
               Notre projet est disponible sur
-              <a href="https://github.com/datanFR/datan" target="_blank" rel="noreferrer" class="no-decoration underline">
-                <img src="<?= asset_url() ?>imgs/logos/GitHub-Mark.png" width="25" height="25" alt="Logo GitHub">
-                GitHub
-              </a>
+              <?php if ($this->router->fetch_class() == "home"): ?>
+                <a href="https://github.com/datanFR/datan" target="_blank" rel="noreferrer" class="no-decoration underline">
+                  <img src="<?= asset_url() ?>imgs/logos/GitHub-Mark.png" width="25" height="25" alt="Logo GitHub">
+                  GitHub
+                </a>
+                <?php else: ?>
+                  <span class="url_obf no-decoration" url_obf="<?= url_obfuscation("https://github.com/datanFR/datan") ?>">
+                    <img class="img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="25" height="25" data-src="<?= asset_url() ?>imgs/logos/GitHub-Mark.png" alt="Logo GitHub">
+                    GitHub
+                  </span>
+              <?php endif; ?>
             </div>
           </div>
         </div>

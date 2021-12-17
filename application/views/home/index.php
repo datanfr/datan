@@ -197,7 +197,7 @@
           <h2 class="text-center">Restez informés !</h2>
           <p class="mt-5 mb-0 text-center">N'hésitez pas à vous inscrire à notre newsletter !</p>
           <div class="text-center">
-            <button class="btn btn-primary mt-5" data-toggle="modal" data-target="#newsletter">S'inscrire à la newsletter</button>
+            <button class="btn btn-primary mt-5" data-toggle="modal" data-target="#newsletter">Inscrivez-vous à la newsletter</button>
           </div>
         </div>
       </div>
