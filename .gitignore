@@ -34,7 +34,6 @@ scripts/update_dataset/backup/*.sql
 #assets folder
 assets/opendata
 assets/dataset_backup/general/*.sql
-assets/imgs/deputes/*.png
 assets/imgs/deputes_original/*.png
 assets/imgs/deputes_ogp/*.png
 assets/imgs/deputes_webp/*.webp
