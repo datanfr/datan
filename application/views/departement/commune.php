@@ -158,6 +158,8 @@
         </div> <!-- END OTHER MPS FROM THE SAME DEPARTMENT -->
       <?php endif; ?>
     </div>
+    <!-- BLOC FOLLOW-US -->
+    <?php $this->load->view('partials/follow-us.php') ?> 
     <!-- OTHER CITIES FROM THE DEPARTMENT -->
     <div class="container-fluid bloc-others-container">
       <div class="container bloc-others">
