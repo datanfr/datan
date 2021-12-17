@@ -453,14 +453,18 @@
       </div>
     </div>
     <div class="container-fluid pg-vote-individual mt-5" id="container-always-fluid">
-      <div class="row votes-next d-flex flex-md-row flex-column align-items-center justify-content-center py-4">
+      <div class="row votes-next d-flex flex-row align-items-center justify-content-center py-4">
         <?php if ($vote_previous != FALSE): ?>
-          <a class="btn" href="<?= base_url() ?>votes/legislature-<?= $legislature ?>/vote_<?= $vote_previous ?>" role="button">
-            <?= file_get_contents(asset_url()."imgs/icons/arrow_left.svg") ?> Vote précédent</a>
+          <a class="btn d-flex align-items-center mx-1 mx-md-2" href="<?= base_url() ?>votes/legislature-<?= $legislature ?>/vote_<?= $vote_previous ?>" role="button">
+            <?= file_get_contents(asset_url()."imgs/icons/arrow_left.svg") ?>
+            <span class="d-none d-md-block ml-2">Précédent</span>
+          </a>
         <?php endif; ?>
-        <a class="btn" href="<?= base_url() ?>votes" role="button">Tous les votes</a>
+        <a class="btn mx-1 mx-md-2 d-flex align-items-center" href="<?= base_url() ?>votes" role="button">Tous les votes</a>
         <?php if ($vote_next != FALSE): ?>
-          <a class="btn" href="<?= base_url() ?>votes/legislature-<?= $legislature ?>/vote_<?= $vote_next ?>" role="button">Vote suivant <?= file_get_contents(asset_url()."imgs/icons/arrow_right.svg") ?></a>
+          <a class="btn d-flex align-items-center mx-1 mx-md-2" href="<?= base_url() ?>votes/legislature-<?= $legislature ?>/vote_<?= $vote_next ?>" role="button">
+            <span class="d-none d-md-block mr-2">Suivant</span>
+            <?= file_get_contents(asset_url()."imgs/icons/arrow_right.svg") ?></a>
         <?php endif; ?>
       </div>
     </div>
