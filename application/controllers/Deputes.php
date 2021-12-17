@@ -300,10 +300,12 @@
             $data['election_opponents'] = $this->deputes_model->get_election_opponent($data['depute']['departementCode'], $data['depute']['circo']);
             $data['election_infos'] = $this->deputes_model->get_election_infos($data['depute']['departementCode'], $data['depute']['circo']);
             $data['election_infos']['abstention_rate'] = round($data['election_infos']['abstentions'] * 100 / $data['election_infos']['inscrits']);
-            if ($data['election_infos']['tour'] == 2) { // elected at first round
-              $data['election_opponent'] = $data['election_opponents'][0];
-              $data['election_opponent']['candidat'] = ucwords(mb_strtolower(str_replace(array("M. ", "Mme "), "", $data['election_opponent']['candidat'])));
-            } else { // elected at second round
+            if ($data['election_infos']['tour'] == 2) { // elected at second round
+              if ($data['election_opponents']) {
+                $data['election_opponent'] = $data['election_opponents'][0];
+                $data['election_opponent']['candidat'] = ucwords(mb_strtolower(str_replace(array("M. ", "Mme "), "", $data['election_opponent']['candidat'])));
+              }
+            } else { // elected at first round
               $data['election_opponent']['voix'] = 0;
               $data['election_opponent']['candidat'] = "Reste des candidats";
               foreach ($data['election_opponents'] as $x) {

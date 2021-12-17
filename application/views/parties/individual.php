@@ -88,7 +88,7 @@
   <?php endif; ?>
 </div> <!-- END CONTAINER -->
 <!-- AUTRES DEPUTES -->
-<div class="container-fluid pg-party-individual bloc-others-container">
+<div class="container-fluid pg-party-individual bloc-others-container mt-5">
   <div class="container bloc-others">
     <div class="row">
       <div class="col-12">
