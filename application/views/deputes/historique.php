@@ -2,7 +2,7 @@
 <div class="container pg-depute-individual mb-5">
   <div class="row">
     <div class="col-12 col-md-8 col-lg-4 offset-md-2 offset-lg-0 px-lg-4">
-      <?php $this->load->view('deputes/partials/card_individual.php', array('historique' => TRUE, 'last_legislature' => $depute_last['legislature'])) ?>
+      <?php $this->load->view('deputes/partials/card_individual.php', array('historique' => TRUE, 'last_legislature' => $depute_last['legislature'], 'legislature' => $legislature)) ?>
     </div> <!-- END COL -->
     <div class="col-md-10 col-lg-8 offset-md-1 offset-lg-0 pl-lg-5">
       <!-- BIO & ELECTION -->
