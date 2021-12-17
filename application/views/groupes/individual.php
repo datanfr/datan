@@ -457,6 +457,11 @@
             </div>
           </div> <!-- END BLOC PROXIMITY -->
         </div> <!-- // END BLOC STATISTIQUES -->
+        <!-- BLOC PARTAGEZ -->
+        <div class="bloc-social mt-5">
+          <h2 class="subtitle mb-4">Partagez cette page</h2>
+          <?php $this->load->view('partials/share.php') ?>
+        </div>
         <!-- BLOC SOCIAL-MEDIA -->
         <div class="bloc-links p-lg-0 p-md-2 mt-5">
           <h2>En savoir plus</h2>
@@ -490,7 +495,7 @@
   </div>
 </div> <!-- END CONTAINER -->
 <!-- AUTRES DEPUTES -->
-<div class="container-fluid pg-groupe-individual bloc-others-container">
+<div class="container-fluid pg-groupe-individual bloc-others-container mt-5">
   <div class="container bloc-others">
     <?php if ($groupe['libelleAbrev'] != "NI"): ?>
       <div class="row">

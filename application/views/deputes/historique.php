@@ -412,6 +412,11 @@
           </div> <!-- // END BLOC PROXIMITY -->
         </div> <!-- // END BLOC STATISTIQUES -->
       <?php endif; ?>
+      <!-- BLOC PARTAGEZ -->
+      <div class="bloc-social mt-5">
+        <h2 class="subtitle mb-4">Partagez cette page</h2>
+        <?php $this->load->view('partials/share.php') ?>
+      </div>
       <!-- BLOC HISTORIQUE MANDATS -->
       <div class="bloc-mandats mt-5">
         <h2 class="mb-4">Historique des mandats</h2>
