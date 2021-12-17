@@ -8,7 +8,7 @@
     <?php endif; ?>
   </div>
   <div class="card-body d-flex flex-column align-items-center justify-content-center">
-    <div>
+    <div class="mb-3">
       <<?= $tag ?> class="d-block card-title">
       <?php if ($cat): ?>
         <?= $depute['nameFirst'] .' ' . $depute['nameLast'] ?>
@@ -27,7 +27,7 @@
       <?php endif; ?>
     </div>
     <?php if ($cat): ?>
-      <div class="img-group-cat mt-3">
+      <div class="img-group-cat">
         <picture>
           <source srcset="<?= asset_url(); ?>imgs/groupes/webp/<?= $depute['libelleAbrev'] ?>.webp" type="image/webp">
           <source srcset="<?= asset_url(); ?>imgs/groupes/<?= $depute['libelleAbrev'] ?>.png" type="image/png">
