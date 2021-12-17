@@ -194,7 +194,7 @@
     <div class="container py-5" >
       <div class="row py-3">
         <div class="col-12">
-          <h2 class="text-center">Restez informés !</h2>
+          <h2 class="text-center">Restez informé !</h2>
           <p class="mt-5 mb-0 text-center">N'hésitez pas à vous inscrire à notre newsletter !</p>
           <div class="text-center">
             <button class="btn btn-primary mt-5" data-toggle="modal" data-target="#newsletter">Inscrivez-vous à la newsletter</button>
