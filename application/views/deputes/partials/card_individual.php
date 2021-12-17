@@ -25,9 +25,15 @@
         <h1 class="text-center"><?= $title ?></h1>
         <?php if (!empty($depute['libelle'])) : ?>
           <div class="link-group text-center mt-1">
-            <a href="<?= base_url() ?>groupes/<?= mb_strtolower($depute['libelleAbrev']) ?>" style="color: <?= $depute['couleurAssociee'] ?>; --color-group: <?= $depute['couleurAssociee'] ?>">
-              <?= $depute['libelle'] ?>
-            </a>
+            <?php if ($legislature >= 15): ?>
+              <a href="<?= base_url() ?>groupes/<?= mb_strtolower($depute['libelleAbrev']) ?>" style="color: <?= $depute['couleurAssociee'] ?>; --color-group: <?= $depute['couleurAssociee'] ?>">
+                <?= $depute['libelle'] ?>
+              </a>
+              <?php else: ?>
+              <span style="color: <?= $depute['couleurAssociee'] ?>">
+                <?= $depute['libelle'] ?>
+              </span>
+            <?php endif; ?>
           </div>
         <?php endif; ?>
       </div>
