@@ -32,7 +32,7 @@
     </div>
   </div> <!-- END CONTAINER -->
   <!-- AUTRES DEPUTES -->
-  <div class="container-fluid pg-groupe-individual bloc-others-container">
+  <div class="container-fluid pg-groupe-individual bloc-others-container mt-5">
     <div class="container bloc-others">
       <?php if ($groupe['libelleAbrev'] != "NI"): ?>
         <div class="row">

@@ -291,6 +291,22 @@ body:not(.pg-mentions) #tarteaucitronIcon {
                A CLASSER
 ################
 */
+.follow-us{
+  background-color: $primary;
+  .btn{
+    max-width: 200px;
+  }
+  .title{
+    font-size: $h1-font-size;
+    color: #fff;
+    font-weight: 800;
+  }
+  .subtitle{
+    font-size: $h5-font-size;
+    color: #fff;
+    font-weight: 800;
+  }
+}
 .popover_focus{
   cursor: pointer;
 }
@@ -351,7 +367,6 @@ body:not(.pg-mentions) #tarteaucitronIcon {
 .bloc-others-container{
   background-color: #ffffff;
   padding: 3rem 0 3rem 0;
-  margin-top: 3rem;
   .bloc-others{
     &>.row:not(:first-child){
       margin-top: 3rem;

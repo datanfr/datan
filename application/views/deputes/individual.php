@@ -845,7 +845,7 @@
           <div class="row mt-4">
             <div class="col-12 col-sm-6 mt-2 d-flex justify-content-center align-items-center">
               <span class="url_obf btn btn-an" url_obf="<?= url_obfuscation("http://www2.assemblee-nationale.fr/deputes/fiche/OMC_" . $depute['mpId']) ?>">
-                Profil Assemblée Nationale
+                Profil officiel
               </span>
             </div>
             <?php if ($depute['website'] !== NULL) : ?>
@@ -891,6 +891,8 @@
       </div>
     </div>
   </div> <!-- END CONTAINER -->
+  <!-- CONTAINER FOLLOW US -->
+  <?php $this->load->view('partials/follow-us.php') ?>
   <!-- AUTRES DEPUTES -->
   <div class="container-fluid pg-depute-individual bloc-others-container">
     <div class="container bloc-others">
