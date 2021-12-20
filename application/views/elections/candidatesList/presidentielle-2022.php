@@ -10,7 +10,7 @@
   <div class="col-12 d-flex flex-wrap justify-content-around">
     <?php foreach ($deputes as $depute): ?>
       <div class="d-flex justify-content-center">
-        <?php $this->load->view('deputes/partials/card_home.php', array('depute' => $depute, 'tag' => 'h3', 'cat' => false)) ?>
+        <?php $this->load->view('deputes/partials/card_home.php', array('depute' => $depute, 'tag' => 'h3', 'cat' => false, 'logo' => false)) ?>
       </div>
     <?php endforeach; ?>
   </div>
