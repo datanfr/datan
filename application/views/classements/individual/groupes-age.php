@@ -10,11 +10,11 @@
       <div class="row row-grid mt-5">
         <div class="col-md-6 py-3">
           <h2 class="text-center">Le plus âgé</h2>
-          <?php $this->load->view('groupes/partials/card_home.php', array('groupe' => $groupOldest, 'tag' => 'span', 'active' => TRUE, 'stats' => "Moyenne : " . $groupOldest['age'] . " ans", 'cat' => true)) ?>
+          <?php $this->load->view('groupes/partials/card_home.php', array('groupe' => $groupOldest, 'tag' => 'span', 'active' => true, 'stats' => "Moyenne : " . $groupOldest['age'] . " ans", 'cat' => true)) ?>
         </div>
         <div class="col-md-6 py-3">
           <h2 class="text-center">Le plus jeune</h2>
-          <?php $this->load->view('groupes/partials/card_home.php', array('groupe' => $groupYoungest, 'tag' => 'span', 'active' => TRUE, 'stats' => "Moyenne : " . $groupYoungest['age'] . " ans", 'cat' => true)) ?>
+          <?php $this->load->view('groupes/partials/card_home.php', array('groupe' => $groupYoungest, 'tag' => 'span', 'active' => true, 'stats' => "Moyenne : " . $groupYoungest['age'] . " ans", 'cat' => true)) ?>
         </div>
       </div>
       <div class="mt-5">
