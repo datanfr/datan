@@ -26,7 +26,7 @@
         </span>
       <?php endif; ?>
     </div>
-    <?php if ($cat): ?>
+    <?php if ($cat && $logo): ?>
       <div class="img-group-cat">
         <picture>
           <source srcset="<?= asset_url(); ?>imgs/groupes/webp/<?= $depute['libelleAbrev'] ?>.webp" type="image/webp">
