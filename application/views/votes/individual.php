@@ -246,7 +246,7 @@
               <?php if (in_array($authorMeta['type'], array("mp", "mps"))): ?>
                 <?php $author = $authorMeta['type'] == "mps" ? $author[0] : $author ?>
                 <div class="col-lg-5 d-flex align-items-center justify-content-center pb-4">
-                  <?php $this->load->view('deputes/partials/card_home.php', array('depute' => $author, 'tag' => 'h3', 'cat' => false)) ?>
+                  <?php $this->load->view('deputes/partials/card_home.php', array('depute' => $author, 'tag' => 'h3', 'cat' => false, 'logo' => false)) ?>
                 </div>
               <?php else: ?>
                 <div class="col-lg-5 d-flex align-items-center justify-content-center pb-4">
@@ -272,7 +272,7 @@
               <div class="col-12 carousel-container">
                 <div class="carousel-cards">
                   <?php foreach ($author as $x) : ?>
-                    <?php $this->load->view('deputes/partials/card_home.php', array('depute' => $x, 'tag' => 'h3', 'cat' => false)) ?>
+                    <?php $this->load->view('deputes/partials/card_home.php', array('depute' => $x, 'tag' => 'h3', 'cat' => false, 'logo' => false)) ?>
                   <?php endforeach; ?>
                 </div>
                 <div class="carousel-buttons d-flex justify-content-center mb-2">

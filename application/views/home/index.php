@@ -102,7 +102,7 @@
         <div class="col-md-6 py-4">
           <h2>DÉPUTÉ<?= mb_strtoupper($depute_random['e']) ?> AU HASARD</h2>
           <div class="d-flex justify-content-center">
-            <?php $this->load->view('deputes/partials/card_home.php', array('depute' => $depute_random, 'tag' => 'span', 'cat' => true)) ?>
+            <?php $this->load->view('deputes/partials/card_home.php', array('depute' => $depute_random, 'tag' => 'span', 'cat' => true, 'logo' => true)) ?>
           </div>
         </div>
         <!-- GROUPE AU HASARD CARD -->
@@ -128,28 +128,28 @@
         <div class="col-xl-3 col-md-6 py-4">
           <h3>VOTE LE <span class="plus">PLUS</span></h3>
           <div class="d-flex justify-content-center">
-            <?php $this->load->view('deputes/partials/card_home.php', array('depute' => $depute_vote_plus, 'tag' => 'span', 'cat' => true)) ?>
+            <?php $this->load->view('deputes/partials/card_home.php', array('depute' => $depute_vote_plus, 'tag' => 'span', 'cat' => true, 'logo' => true)) ?>
           </div>
         </div>
         <!-- VOTE LE MOINS -->
         <div class="col-xl-3 col-md-6 py-4">
           <h3>VOTE LE <span class="minus">MOINS</span></h3>
           <div class="d-flex justify-content-center">
-            <?php $this->load->view('deputes/partials/card_home.php', array('depute' => $depute_vote_moins, 'tag' => 'span', 'cat' => true)) ?>
+            <?php $this->load->view('deputes/partials/card_home.php', array('depute' => $depute_vote_moins, 'tag' => 'span', 'cat' => true, 'logo' => true)) ?>
           </div>
         </div>
         <!-- PLUS LOYAL -->
         <div class="col-xl-3 col-md-6 py-4">
           <h3><?= mb_strtoupper($depute_loyal_plus['le']) ?> <span class="plus">PLUS</span> LOYAL<?= mb_strtoupper($depute_loyal_plus['e']) ?></h3>
           <div class="d-flex justify-content-center">
-            <?php $this->load->view('deputes/partials/card_home.php', array('depute' => $depute_loyal_plus, 'tag' => 'span', 'cat' => true)) ?>
+            <?php $this->load->view('deputes/partials/card_home.php', array('depute' => $depute_loyal_plus, 'tag' => 'span', 'cat' => true, 'logo' => true)) ?>
           </div>
         </div>
         <!-- MOINS LOYAL -->
         <div class="col-xl-3 col-md-6 py-4">
           <h3><?= mb_strtoupper($depute_loyal_moins['le']) ?> <span class="minus">MOINS</span> LOYAL<?= mb_strtoupper($depute_loyal_moins['e']) ?></h3>
           <div class="d-flex justify-content-center">
-            <?php $this->load->view('deputes/partials/card_home.php', array('depute' => $depute_loyal_moins, 'tag' => 'span', 'cat' => true)) ?>
+            <?php $this->load->view('deputes/partials/card_home.php', array('depute' => $depute_loyal_moins, 'tag' => 'span', 'cat' => true, 'logo' => true)) ?>
           </div>
         </div>
       </div>
@@ -176,7 +176,7 @@
         </div>
         <div class="col-md-5 mt-5 mt-md-0">
           <div class="d-flex justify-content-center">
-            <?php $this->load->view('deputes/partials/card_home.php', array('depute' => $candidatRandom, 'tag' => 'span', 'cat' => FALSE)) ?>
+            <?php $this->load->view('deputes/partials/card_home.php', array('depute' => $candidatRandom, 'tag' => 'span', 'cat' => true, 'logo' => false)) ?>
           </div>
         </div>
       </div>
