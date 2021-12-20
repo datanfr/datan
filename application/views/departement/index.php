@@ -12,7 +12,7 @@
       <div class="row mt-5">
         <div class="col-12 d-flex flex-wrap justify-content-around">
           <?php foreach ($deputes as $depute): ?>
-            <?php $this->load->view('deputes/partials/card_home.php', array('depute' => $depute, 'tag' => 'h3', 'cat' => true)) ?>
+            <?php $this->load->view('deputes/partials/card_home.php', array('depute' => $depute, 'tag' => 'h3', 'cat' => true, 'logo' => true)) ?>
           <?php endforeach; ?>
         </div>
       </div>

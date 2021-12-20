@@ -81,7 +81,7 @@
     <div class="row">
       <div class="col-12 d-flex flex-wrap justify-content-around">
         <?php foreach ($deputesActive as $mp): ?>
-          <?php $this->load->view('deputes/partials/card_home.php', array('depute' => $mp, 'tag' => 'h2', 'cat' => false)) ?>
+          <?php $this->load->view('deputes/partials/card_home.php', array('depute' => $mp, 'tag' => 'h2', 'cat' => false, 'logo' => false)) ?>
         <?php endforeach; ?>
       </div>
     </div>

@@ -38,12 +38,12 @@
           <?php else: ?>
             <?php if ($n_circos == 1): ?>
               <div class="col-12 d-flex justify-content-center">
-                <?php $this->load->view('deputes/partials/card_home.php', array('depute' => $depute_commune, 'tag' => 'h2', 'cat' => true)) ?>
+                <?php $this->load->view('deputes/partials/card_home.php', array('depute' => $depute_commune, 'tag' => 'h2', 'cat' => true, 'logo' => true)) ?>
               </div>
             <?php else: ?>
               <div class="col-12 d-flex flex-wrap justify-content-around">
                 <?php foreach ($deputes_commune as $depute_commune): ?>
-                  <?php $this->load->view('deputes/partials/card_home.php', array('depute' => $depute_commune, 'tag' => 'h2', 'cat' => true)) ?>
+                  <?php $this->load->view('deputes/partials/card_home.php', array('depute' => $depute_commune, 'tag' => 'h2', 'cat' => true, 'logo' => true)) ?>
                 <?php endforeach; ?>
               </div>
             <?php endif; ?>
@@ -152,14 +152,14 @@
           </div>
           <div class="col-12 py-4 d-flex flex-wrap justify-content-around">
             <?php foreach ($deputes_dpt as $depute): ?>
-              <?php $this->load->view('deputes/partials/card_home.php', array('depute' => $depute, 'tag' => 'h3', 'cat' => true)) ?>
+              <?php $this->load->view('deputes/partials/card_home.php', array('depute' => $depute, 'tag' => 'h3', 'cat' => true, 'logo' => true)) ?>
             <?php endforeach; ?>
           </div>
         </div> <!-- END OTHER MPS FROM THE SAME DEPARTMENT -->
       <?php endif; ?>
     </div>
     <!-- BLOC FOLLOW-US -->
-    <?php $this->load->view('partials/follow-us.php') ?> 
+    <?php $this->load->view('partials/follow-us.php') ?>
     <!-- OTHER CITIES FROM THE DEPARTMENT -->
     <div class="container-fluid bloc-others-container">
       <div class="container bloc-others">
