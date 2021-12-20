@@ -10,7 +10,7 @@
       <meta name="description" content="<?= $description_meta ?>">
     <?php endif; ?>
     <!-- Color theme -->
-    <meta name="theme-color" content="#00b794">
+    <meta name="theme-color" content="#F3F5F6">
     <!-- Open Graph -->
     <!-- https://ogp.me/ -->
     <?php if (isset($ogp)): ?>
