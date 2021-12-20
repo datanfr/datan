@@ -9,6 +9,8 @@
     <?php if (isset($description_meta)): ?>
       <meta name="description" content="<?= $description_meta ?>">
     <?php endif; ?>
+    <!-- Color theme -->
+    <meta name="theme-color" content="#00b794">
     <!-- Open Graph -->
     <!-- https://ogp.me/ -->
     <?php if (isset($ogp)): ?>
