@@ -123,9 +123,9 @@
           </div>
           <div class="row mt-2 votes">
             <div class="col-md-11 offset-md-1">
-              <div class="row row-grid my-3">
+              <div class="row my-3">
                 <?php foreach ($by_field[$field["slug"]] as $vote): ?>
-                  <div class="col-md-6 d-flex justify-content-center">
+                  <div class="col-md-6 d-flex justify-content-center my-3">
                     <?php $this->load->view('deputes/partials/card_vote.php', array('vote' => $vote)) ?>
                   </div>
                 <?php endforeach; ?>
