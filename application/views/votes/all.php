@@ -60,10 +60,14 @@
               <div class="col-10 col-md-11 col-lg-2 d-flex justify-content-start align-items-end align-items-lg-center my-3 my-lg-0">
                 <h3 class="ml-4 ml-lg-0 mb-0"><?= $field['name'] ?></h3>
               </div>
-              <div class="col-lg-7 col-md-11 offset-md-1 offset-lg-0 d-flex justify-content-center justify-content-md-start flex-wrap my-3 my-lg-0">
-                <?php foreach ($field['votes'] as $vote): ?>
-                  <?php $this->load->view('votes/partials/card_vote.php', array('vote' => $vote)) ?>
-                <?php endforeach; ?>
+              <div class="col-lg-7 col-md-11 offset-md-1 offset-lg-0">
+                <div class="row">
+                  <?php foreach ($field['votes'] as $vote): ?>
+                    <div class="col-12 col-lg-6 d-flex justify-content-center my-3 my-lg-0">
+                      <?php $this->load->view('votes/partials/card_vote.php', array('vote' => $vote)) ?>
+                    </div>
+                  <?php endforeach; ?>
+                </div>
               </div>
               <div class="col-md-11 col-lg-2 offset-md-1 offset-lg-0 d-flex justify-content-center align-items-center my-3 my-lg-0">
                 <a class="btn see-all-votes py-1" href="<?= base_url() ?>votes/decryptes/<?= $field['slug'] ?>">
