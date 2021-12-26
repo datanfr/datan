@@ -221,7 +221,7 @@
           $x['type_edited'] = 'proposition de résolution';
           $x['type_edited_explication'] = "Une proposition de résolution est un texte non législatif (qui est donc purement symbolique) et qui sert à exprimer la position de l'Assemblée nationale sur un sujet donné.";
         }
-      } elseif ($x['voteType'] == 'amendement') {
+      } elseif ($x['voteType'] == 'amendement' || $x['voteType'] == 'les amen') {
         $x['type_edited'] = 'amendement';
         $x['type_edited_explication'] = "Un amendement est une modification apportée à un texte juridique, d'un projet de loi par exemple.";
       } elseif ($x['voteType'] == 'article') {
@@ -268,6 +268,7 @@
         $x['type_edited_explication'] = "Une motion d'ajournement est utilisé que dans le cadre des accords internationaux. Si la motion est adoptée, le texte retourne en commission parlementaire, où il doit être rediscuté.<br><br><a href='https://www.lemonde.fr/blog/cuisines-assemblee/2019/02/18/la-motion-dajournement/' target='_blank'>Plus d'information</a>";
       } else {
         $x['type_edited'] = $x['voteType'];
+        $x['type_edited_explication'] = NULL;
       }
 
       //sortCodeLibelle
