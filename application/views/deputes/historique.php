@@ -219,7 +219,7 @@
                       <div class="texte ml-md-3 pl-md-3 mt-md-0 mt-3">
                         <?php if ($depute['legislature'] == legislature_current()): ?>
                           <p>
-                            <?= $title ?> a voté comme la majoité présientielle (<a href="<?= base_url() ?>groupes/larem">La République en Marche</a>) dans <?= $majorite['score'] ?>% des cas.
+                            <?= $title ?> a voté comme la majoité présientielle (<a href="<?= base_url() ?>groupes/legislature-15/larem">La République en Marche</a>) dans <?= $majorite['score'] ?>% des cas.
                           </p>
                           <p>
                             <?= ucfirst($gender['pronom']) ?> <?= $active ? "est" : "était" ?> <b><?= $edito_majorite['all'] ?></b> de la majorité présidentielle que la moyenne des députés n'y appartenant pas, qui est de <?= $majorite['all'] ?>%.
@@ -302,23 +302,6 @@
                     <?php endforeach; ?>
                   </div>
                 </div>
-                <div class="row mt-3">
-                  <div class="offset-2 col-10">
-                    <?php if ($depute['legislature'] == legislature_current()): ?>
-                      <p>
-                        <?php if ($group['libelleAbrev'] != "NI") : ?>
-                          En plus de son propre groupe,
-                        <?php else : ?>
-                          Le
-                        <?php endif; ?>
-                        <b><?= $title ?></b> <?= $active ? "vote" : "votait" ?> souvent (dans <?= $proximite["first1"]["accord"] ?>% des cas) avec le groupe <a href="<?= base_url() ?>groupes/<?= mb_strtolower($proximite["first1"]["libelleAbrev"]) ?>"><?= $proximite["first1"]["libelleAbrev"] ?></a>, <?= $proximite["first1"]["maj_pres"] ?>
-                        <?php if ($proximite['first1']["libelleAbrev"] != "NI") : ?>
-                          classé <?= $proximite["first1"]["ideologiePolitique"]["edited"] ?> de l'échiquier politique.
-                        <?php endif; ?>
-                      </p>
-                    <?php endif; ?>
-                  </div>
-                </div>
                 <div class="row mt-5">
                   <div class="col-10 offset-2">
                     <h4><?= ucfirst($gender['pronom']) ?> <?= $depute['legislature'] == legislature_current() ? "vote" : "votait" ?> <b>rarement</b> avec :</h4>
@@ -355,19 +338,6 @@
                         <span><?= $group['libelleAbrev'] ?></span>
                       </div>
                     <?php endforeach; ?>
-                  </div>
-                </div>
-                <div class="row mt-3">
-                  <div class="col-10 offset-2 ">
-                    <?php if ($depute['legislature'] == legislature_current()): ?>
-                      <p>
-                        À l'opposé, le groupe avec lequel <?= $title; ?> <?= $active ? "est" : "était" ?> le moins proche est <a href="<?= base_url() ?>groupes/<?= mb_strtolower($proximite["last1"]["libelleAbrev"]) ?>"><?= $proximite["last1"]["libelle"] ?></a>, <?= $proximite["last1"]["maj_pres"] ?>
-                        <?php if ($proximite['last1']["libelleAbrev"] != "NI") : ?>
-                          classé <?= $proximite["last1"]["ideologiePolitique"]["edited"] ?> de l'échiquier politique.
-                        <?php endif; ?>
-                        <?= ucfirst($gender["pronom"]) ?> <?= $active ? "ne vote" : "n'a voté" ?> avec ce groupe que dans <b><?= $proximite["last1"]["accord"] ?>%</b> des cas.
-                      </p>
-                    <?php endif; ?>
                   </div>
                 </div>
                 <div class="row mt-4">
