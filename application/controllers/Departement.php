@@ -14,7 +14,7 @@
       $data['departement'] = $this->departement_model->get_departement($slug);
 
       if (empty($data['departement'])) {
-        show_404($this->functions_datan->get_404_infos());;
+        show_404($this->functions_datan->get_404_infos());
       }
 
       $data['deputes'] = $this->deputes_model->get_deputes_all(legislature_current(), TRUE, $slug);
@@ -28,7 +28,7 @@
       $data['communes'] = $this->city_model->get_communes_population($slug);
 
       if (empty($data['deputes'])) {
-        show_404($this->functions_datan->get_404_infos());;
+        show_404($this->functions_datan->get_404_infos());
       }
 
       // Meta
