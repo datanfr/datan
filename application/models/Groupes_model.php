@@ -24,7 +24,7 @@
           ');
         }
       } else {
-        $query = $this->db->query('SELECT *, date_format(dateDebut, "%d %M %Y") as dateDebutFR,
+        $query = $this->db->query('SELECT *, o.legislature, date_format(dateDebut, "%d %M %Y") as dateDebutFR,
           CASE WHEN o.libelle = "Non inscrit" THEN "Députés non inscrits" ELSE o.libelle END AS libelle
           FROM organes o
           LEFT JOIN groupes_effectif e ON o.uid = e.organeRef
