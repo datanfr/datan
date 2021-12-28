@@ -1,6 +1,5 @@
       <div class="row mt-4">
         <div class="col-md-10">
-          <?php print_r($groupsFirst) ?>
           <p>Quel est le groupe politique le plus uni quand il s'agit de voter ? Quel est le groupe le plus divisé ? Découvrez sur cette page le classement des groupes en fonction de leur taux de cohésion.</p>
           <p>Dans beaucoup de parlements, y compris à l'Assemblée nationale, les députés suivent dans la plupart des cas la ligne officielle du groupe, expliquant des taux de cohésion très élevés. Un groupe parlementaire peut également mettre en place explicitement ou implicitement des sanctions aux députés votant souvent contre la ligne officielle du groupe. </p>
           <p>Les groupes parlementaires ayant un taux de cohésion proche de 1 affichent une forte unité quand il s'agit de voter. Au contraire, les groupes politiques avec un taux de cohésion proche de 0 sont souvent divisés lors des scrutins à l'Assemblée nationale. Pour plus d'information sur la manière dont est calculé le taux de cohésion, <a href="<?= base_url() ?>statistiques/aide#cohesion" target="_blank">cliquez ici</a>.</p>

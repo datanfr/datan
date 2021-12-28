@@ -35,7 +35,7 @@
       (
         SELECT A.*,
         ROUND(female / n * 100) AS pct,
-        o.couleurAssociee, ge.effectif
+        o.couleurAssociee, o.legislature, ge.effectif
         FROM
         (
           SELECT libelle, libelleAbrev, COUNT(mpId) AS n, groupeId,
@@ -228,18 +228,17 @@
     }
 
     public function get_groups_participation(){
-      $query = $this->db->query('
-      SELECT @s:=@s+1 AS "rank", A.*
-      FROM
-      (
-      SELECT cg.organeRef, ROUND(cg.participation * 100) AS participation, o.libelle, o.libelleAbrev, o.couleurAssociee, ge.effectif
-      FROM class_groups cg
-      LEFT JOIN organes o ON cg.organeRef = o.uid
-      LEFT JOIN groupes_effectif ge ON cg.organeRef = ge.organeRef
-      WHERE cg.active = 1
-      ) A,
-      (SELECT @s:= 0) AS s
-      ORDER BY A.participation DESC
+      $query = $this->db->query('SELECT @s:=@s+1 AS "rank", A.*
+        FROM
+        (
+        SELECT cg.organeRef, ROUND(cg.participation * 100) AS participation, o.libelle, o.libelleAbrev, o.couleurAssociee, o.legislature, ge.effectif
+        FROM class_groups cg
+        LEFT JOIN organes o ON cg.organeRef = o.uid
+        LEFT JOIN groupes_effectif ge ON cg.organeRef = ge.organeRef
+        WHERE cg.active = 1
+        ) A,
+        (SELECT @s:= 0) AS s
+        ORDER BY A.participation DESC
       ');
 
       return $query->result_array();
