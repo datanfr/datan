@@ -326,7 +326,7 @@
                     <?php foreach ($groupes as $v_groupe): ?>
                       <tr>
                         <td class="name">
-                          <a href="<?= base_url() ?>groupes/<?= mb_strtolower($v_groupe['libelleAbrev']) ?>" target="_blank" class="no-decoration underline">
+                          <a href="<?= base_url() ?>groupes/legislature-<?= $v_groupe['legislature'] ?>/<?= mb_strtolower($v_groupe['libelleAbrev']) ?>" target="_blank" class="no-decoration underline">
                             <?= $v_groupe['libelle'] ?> (<?= $v_groupe['libelleAbrev'] ?>)
                           </a>
                         </td>

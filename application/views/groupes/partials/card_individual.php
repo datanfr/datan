@@ -39,7 +39,7 @@
         </ul>
       </div>
       <div class="text-center mt-4">
-        <a class="btn btn-outline-primary" href="<?= base_url() ?>groupes/<?= mb_strtolower($groupe['libelleAbrev']) ?>/membres">
+        <a class="btn btn-outline-primary" href="<?= base_url() ?>groupes/legislature-<?= $groupe['legislature'] ?>/<?= mb_strtolower($groupe['libelleAbrev']) ?>/membres">
           Voir tous les membres
         </a>
       </div>

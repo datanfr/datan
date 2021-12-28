@@ -13,7 +13,7 @@
         <h2 class="mb-4">En quelques mots</h2>
         <?php if ($groupe['libelleAbrev'] == "NI"): ?>
           <p>Les <?= mb_strtolower($title) ?> (NI) ne sont pas membres d'un groupe politique.</p>
-          <p>Ces députés peuvent cependant être membres d'un parti politique. Le parti politique est un groupement constitué hors de l'Assemblée nationale, alors que le <a href="http://www2.assemblee-nationale.fr/15/les-groupes-politiques/" target="_blank">groupe politique</a> est un organe officiel de l'Assemblée qui comporte au minimum 15 députés. Certains groupes, comme <a href="<?= base_url() ?>groupes/udi_i" target="_blank">UDI_I</a>, regroupent ainsi des députés venant de partis différents.</p>
+          <p>Ces députés peuvent cependant être membres d'un parti politique. Le parti politique est un groupement constitué hors de l'Assemblée nationale, alors que le <a href="http://www2.assemblee-nationale.fr/15/les-groupes-politiques/" target="_blank">groupe politique</a> est un organe officiel de l'Assemblée qui comporte au minimum 15 députés. Certains groupes, comme <a href="<?= base_url() ?>groupes/legislature-15/udi_i" target="_blank">UDI_I</a>, regroupent ainsi des députés venant de partis différents.</p>
           <p>Les <?= mb_strtolower($title) ?> ne sont pas représentés à la <a href="http://www2.assemblee-nationale.fr/15/la-conference-des-presidents" target="_blank">conférence des présidents</a> ni au <a href="http://www2.assemblee-nationale.fr/15/le-bureau-de-l-assemblee-nationale" target="_blank">bureau de l'Assemblée nationale</a>.</p>
           <p>Cependant, ils disposent de certains droits, comme l'attribution de temps de parole pour la discussion des textes (<i>art. 49</i> du <a href="http://www.assemblee-nationale.fr/connaissance/reglement.pdf" target="_blank">règlement de l'Assemblée nationale</a>).</p>
           <p>Actuellement, le parti politique le plus représenté parmi les <?= mb_strtolower($title) ?> est le Rassemblement national (avec par exemple <a href="<?= base_url() ?>deputes/pas-de-calais-62/depute_marine-lepen" target="_blank">Marine Le Pen</a>). Avec seulement 7 députés, les élus du Rassemblement nationale n'atteignent pas les 15 députés nécessaires pour former leur propre groupe politique.</p>
@@ -45,7 +45,7 @@
                 <div class="d-flex justify-content-between mb-4">
                   <h2>Derniers votes</h2>
                   <div class="bloc-carousel-votes">
-                    <a class="btn see-all-votes mx-2" href="<?= base_url() ?>groupes/<?= mb_strtolower($groupe['libelleAbrev']) ?>/votes">
+                    <a class="btn see-all-votes mx-2" href="<?= base_url() ?>groupes/legislature-<?= $groupe['legislature'] ?>/<?= mb_strtolower($groupe['libelleAbrev']) ?>/votes">
                       <span>VOIR TOUS</span>
                     </a>
                   </div>
@@ -59,7 +59,7 @@
                 <?php endforeach; ?>
                 <div class="card card-vote see-all">
                   <div class="card-body d-flex align-items-center justify-content-center">
-                    <a href="<?= base_url() ?>groupes/<?= mb_strtolower($groupe['libelleAbrev']) ?>/votes" class="stretched-link no-decoration">VOIR TOUS</a>
+                    <a href="<?= base_url() ?>groupes/legislature-<?= $groupe['legislature'] ?>/<?= mb_strtolower($groupe['libelleAbrev']) ?>/votes" class="stretched-link no-decoration">VOIR TOUS</a>
                   </div>
                 </div>
               </div>
@@ -279,7 +279,7 @@
                             <?php else: ?>
                             Les <?= mb_strtolower($title) ?> ont
                           <?php endif; ?>
-                          voté en accord avec le groupe de la majorité présidentielle (<a href="<?= base_url(); ?>groupes/larem" target="_blank"?>LREM</a>) dans <?= $stats['majorite'] ?> % des cas.
+                          voté en accord avec le groupe de la majorité présidentielle (<a href="<?= base_url(); ?>groupes/legislature-15/larem" target="_blank"?>LREM</a>) dans <?= $stats['majorite'] ?> % des cas.
                         </p>
                         <p>
                           <?php if ($groupe['libelleAbrev'] != "NI"): ?>
@@ -353,13 +353,13 @@
                 <div class="row mt-3">
                   <div class="col-10 offset-2 ">
                     <p>
-                      Le groupe avec lequel le groupe <?= $groupe['libelleAbrev'] ?> <?= $active ? "est" : "était" ?> le plus proche est <a href="<?= base_url() ?>groupes/<?= mb_strtolower($edito_proximite['first1']['libelleAbrev']) ?>" target="_blank"><?= $edito_proximite['first1']['libelle'] ?></a>,
+                      Le groupe avec lequel le groupe <?= $groupe['libelleAbrev'] ?> <?= $active ? "est" : "était" ?> le plus proche est <a href="<?= base_url() ?>groupes/legislature-<?= $edito_proximite['first1']['legislature'] ?>/<?= mb_strtolower($edito_proximite['first1']['libelleAbrev']) ?>" target="_blank"><?= $edito_proximite['first1']['libelle'] ?></a>,
                       <?php if ($edito_proximite['first1']['libelleAbrev'] != "NI"): ?>
                         <?= $edito_proximite['first1']['maj_pres'] ?> classé <?= $edito_proximite['first1']['ideology'] ?> de l'échiquier politique.
                         <?php else: ?>
                           <?= $edito_proximite['first1']['maj_pres'] ?>.
                       <?php endif; ?>
-                      Il <?= $active ? "est" : "était" ?> également proche du groupe <a href="<?= base_url() ?>groupes/<?= mb_strtolower($edito_proximite['first2']['libelleAbrev']) ?>" target="_blank"><?= $edito_proximite['first2']['libelle'] ?></a>,
+                      Il <?= $active ? "est" : "était" ?> également proche du groupe <a href="<?= base_url() ?>groupes/legislature-<?= $edito_proximite['first2']['legislature'] ?>/<?= mb_strtolower($edito_proximite['first2']['libelleAbrev']) ?>" target="_blank"><?= $edito_proximite['first2']['libelle'] ?></a>,
                       <?php if ($edito_proximite['first2']['libelleAbrev'] != "NI"): ?>
                         <?= $edito_proximite['first2']['maj_pres'] ?> classé <?= $edito_proximite['first2']['ideology'] ?>.
                         <?php else: ?>
@@ -403,13 +403,13 @@
                 <div class="row mt-3">
                   <div class="col-10 offset-2">
                     <p>
-                      À l'opposé, le groupe avec lequel le groupe <?= $groupe['libelleAbrev'] ?> <?= $active ? "est" : "était" ?> le moins proche est <a href="<?= base_url() ?>groupes/<?= mb_strtolower($edito_proximite['last1']['libelleAbrev']) ?>" target="_blank"><?= $edito_proximite['last1']['libelle'] ?></a>,
+                      À l'opposé, le groupe avec lequel le groupe <?= $groupe['libelleAbrev'] ?> <?= $active ? "est" : "était" ?> le moins proche est <a href="<?= base_url() ?>groupes/legislature-<?= $edito_proximite['last1']['legislature'] ?>/<?= mb_strtolower($edito_proximite['last1']['libelleAbrev']) ?>" target="_blank"><?= $edito_proximite['last1']['libelle'] ?></a>,
                       <?php if ($edito_proximite['last1']['libelleAbrev'] != "NI"): ?>
                         <?= $edito_proximite['last1']['maj_pres'] ?> classé <?= $edito_proximite['last1']['ideology'] ?> de l'échiquier politique.
                         <?php else: ?>
                           <?= $edito_proximite['first2']['maj_pres'] ?>.
                       <?php endif; ?>
-                      Il <?= $active ? "vote" : "votait" ?> également très peu avec <a href="<?= base_url() ?>groupes/<?= mb_strtolower($edito_proximite['last2']['libelleAbrev']) ?>" target="_blank"><?= $edito_proximite['last2']['libelle'] ?> </a>,
+                      Il <?= $active ? "vote" : "votait" ?> également très peu avec <a href="<?= base_url() ?>groupes/legislature-<?= $edito_proximite['last2']['legislature'] ?>/<?= mb_strtolower($edito_proximite['last2']['libelleAbrev']) ?>" target="_blank"><?= $edito_proximite['last2']['libelle'] ?> </a>,
                       <?php if ($edito_proximite['last2']['libelleAbrev'] != "NI"): ?>
                         <?= $edito_proximite['last2']['maj_pres'] ?> classé <?= $edito_proximite['last2']['ideology'] ?>.
                         <?php else: ?>
@@ -520,7 +520,7 @@
           <?php endforeach; ?>
         </div>
         <div class="mt-3">
-          <a href="<?= base_url() ?>groupes/<?= mb_strtolower($groupe['libelleAbrev']) ?>/membres">Voir tous les députés membres du groupe <?= $groupe['libelleAbrev'] ?></a>
+          <a href="<?= base_url() ?>groupes/legislature-<?= $groupe['legislature'] ?>/<?= mb_strtolower($groupe['libelleAbrev']) ?>/membres">Voir tous les députés membres du groupe <?= $groupe['libelleAbrev'] ?></a>
         </div>
       </div>
     </div>
@@ -536,7 +536,7 @@
             <?php endforeach; ?>
           </div>
           <div class="mt-3">
-            <a href="<?= base_url() ?>groupes/<?= mb_strtolower($groupe['libelleAbrev']) ?>/membres">Voir tous les députés apparentés au groupe <?= $groupe['libelleAbrev'] ?></a>
+            <a href="<?= base_url() ?>groupes/legislature-<?= $groupe['legislature'] ?>/<?= mb_strtolower($groupe['libelleAbrev']) ?>/membres">Voir tous les députés apparentés au groupe <?= $groupe['libelleAbrev'] ?></a>
           </div>
         </div>
       </div>
@@ -547,7 +547,7 @@
         <div class="row mt-3">
           <?php foreach ($groupesActifs as $group): ?>
             <div class="col-6 col-md-4 py-2">
-              <a class="membre no-decoration underline" href="<?= base_url(); ?>groupes/<?= mb_strtolower($group['libelleAbrev']) ?>"><?= $group['libelle']." (".$group['libelleAbrev'].")" ?></a>
+              <a class="membre no-decoration underline" href="<?= base_url() ?>groupes/legislature-<?= $group['legislature'] ?>/<?= mb_strtolower($group['libelleAbrev']) ?>"><?= $group['libelle']." (".$group['libelleAbrev'].")" ?></a>
             </div>
           <?php endforeach; ?>
         </div>
