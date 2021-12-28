@@ -98,15 +98,20 @@
     }
 
     //INDIVIDUAL - individual page by group //
-    public function individual($groupe_slug){
-      $data['legislature'] = legislature_current();
+    public function individual($legislature, $groupe_slug){
+      $data['legislature'] = $legislature;
       $legislature = $data['legislature'];
+
+      if ($legislature < 15) {
+        show_404($this->functions_datan->get_404_infos());
+      }
+
       // Query 1 Informations principales
       $groupe_slug = mb_strtoupper($groupe_slug);
       $data['groupe'] = $this->groupes_model->get_groupes_individal($groupe_slug, $legislature);
 
       if (empty($data['groupe'])) {
-        show_404($this->functions_datan->get_404_infos());;
+        show_404($this->functions_datan->get_404_infos());
       }
 
       // Caching
