@@ -135,7 +135,7 @@
       $sql = 'SELECT @s:=@s+1 AS "rank", A.*
         FROM
         (
-          SELECT gs.organeRef, ROUND(gs.age) AS age, o.libelle, o.libelleAbrev, o.couleurAssociee, ge.effectif
+          SELECT gs.organeRef, ROUND(gs.age) AS age, o.libelle, o.libelleAbrev, o.couleurAssociee, o.legislature, ge.effectif
           FROM groupes_stats gs
           LEFT JOIN organes o ON o.uid = gs.organeRef
           LEFT JOIN groupes_effectif ge ON ge.organeRef  = gs.organeRef
@@ -151,7 +151,7 @@
       $query = $this->db->query('SELECT @s:=@s+1 AS "rank", A.*
         FROM
         (
-          SELECT cg.organeRef, cg.legislature, cg.cohesion, cg.active, o.libelle, o.libelleAbrev, o.couleurAssociee, ge.effectif
+          SELECT cg.organeRef, cg.cohesion, cg.active, o.libelle, o.libelleAbrev, o.couleurAssociee, o.legislature, ge.effectif
           FROM class_groups cg
           LEFT JOIN organes o ON cg.organeRef = o.uid
           LEFT JOIN groupes_effectif ge ON ge.organeRef  = cg.organeRef
