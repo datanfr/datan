@@ -13,7 +13,7 @@
       $data['ville'] = $this->city_model->get_individual($input_ville, $departement);
 
       if (empty($data['ville'])) {
-        show_404($this->functions_datan->get_404_infos());;
+        show_404($this->functions_datan->get_404_infos());
       }
 
       $n_circos = count($data['ville']);
