@@ -32,7 +32,7 @@
               <div class="bloc-infos">
                 <h1 class="text-center text-lg-left"><?= $title ?></h1>
                 <div class="link-group text-center text-lg-left mt-1">
-                  <a href="<?= base_url() ?>groupes/<?= mb_strtolower($depute['libelleAbrev']) ?>" style="color: <?= $depute['couleurAssociee'] ?>; --color-group: <?= $depute['couleurAssociee'] ?>">
+                  <a href="<?= base_url() ?>groupes/legislature-<?= $depute['legislature'] ?>/<?= mb_strtolower($depute['libelleAbrev']) ?>" style="color: <?= $depute['couleurAssociee'] ?>; --color-group: <?= $depute['couleurAssociee'] ?>">
                     <?= $depute['libelle'] ?>
                   </a>
                 </div>
@@ -110,7 +110,7 @@
           </div>
           <div class="mt-3">
             <?php if ($active) : ?>
-              <a href="<?= base_url() ?>groupes/<?= mb_strtolower($depute['libelleAbrev']) ?>">Voir tous les députés membres du groupe <?= $depute['libelle'] ?> (<?= $depute['libelleAbrev'] ?>)</a>
+              <a href="<?= base_url() ?>groupes/legislature-<?= $depute['legislature'] ?>/<?= mb_strtolower($depute['libelleAbrev']) ?>/membres">Voir tous les députés membres du groupe <?= $depute['libelle'] ?> (<?= $depute['libelleAbrev'] ?>)</a>
             <?php else : ?>
               <a href="<?= base_url(); ?>deputes/inactifs">Tous les députés plus en activité</a>
             <?php endif; ?>

@@ -3,7 +3,7 @@
     <div class="title text-center mb-4">
       <?= $first["title"] ?>
     </div>
-    <a href="<?= base_url() ?>groupes/<?= mb_strtolower($first["group"]["libelleAbrev"]) ?>">
+    <a href="<?= base_url() ?>groupes/legislature-<?= $first["group"]["legislature"] ?>/<?= mb_strtolower($first["group"]["libelleAbrev"]) ?>">
       <div class="score mb-4">
         <div class="avatar">
           <picture>
@@ -18,14 +18,14 @@
       </div>
     </a>
     <div class="description text-center">
-      <a href="<?= base_url() ?>groupes/<?= mb_strtolower($first["group"]["libelleAbrev"]) ?>" class="no-decoration underline"><?= $first["group"]["libelle"] ?></a>
+      <a href="<?= base_url() ?>groupes/legislature-<?= $first["group"]["legislature"] ?>/<?= mb_strtolower($first["group"]["libelleAbrev"]) ?>" class="no-decoration underline"><?= $first["group"]["libelle"] ?></a>
     </div>
   </div>
   <div class="col-sm-6 d-flex flex-column align-items-center">
     <div class="title text-center mb-4">
       <?= $second["title"] ?>
     </div>
-    <a href="<?= base_url() ?>groupes/<?= mb_strtolower($second["group"]["libelleAbrev"]) ?>">
+    <a href="<?= base_url() ?>groupes/legislature-<?= $second["group"]["legislature"] ?>/<?= mb_strtolower($second["group"]["libelleAbrev"]) ?>">
       <div class="score mb-4">
         <div class="avatar">
           <picture>
@@ -40,7 +40,7 @@
       </div>
     </a>
     <div class="description">
-      <a href="<?= base_url() ?>groupes/<?= mb_strtolower($second["group"]["libelleAbrev"]) ?>" class="no-decoration underline"><?= $second["group"]["libelle"] ?></a>
+      <a href="<?= base_url() ?>groupes/legislature-<?= $second["group"]["legislature"] ?>/<?= mb_strtolower($second["group"]["libelleAbrev"]) ?>" class="no-decoration underline"><?= $second["group"]["libelle"] ?></a>
     </div>
   </div>
 </div>

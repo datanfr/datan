@@ -58,7 +58,7 @@
           }
         }
 
-        // proximity with all groups
+        // PROXIMITY WITH ALL GROUPS
         if ($legislature == legislature_current()) /*LEGISLATURE 15*/ {
           $data['accord_groupes'] = $this->deputes_model->get_accord_groupes_actifs($mpId, legislature_current());
           $data['accord_groupes_all'] = $this->deputes_model->get_accord_groupes_all($mpId, legislature_current());
