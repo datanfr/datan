@@ -594,11 +594,15 @@
     }
 
     /* page: groupes/votes/all */
-    public function individual_votes_all($groupe){
-      $data['groupe'] = $this->groupes_model->get_groupes_individal($groupe, legislature_current());
+    public function individual_votes_all($legislature, $groupe){
+      if ($legislature < 15) {
+        show_404($this->functions_datan->get_404_infos());
+      };
+
+      $data['groupe'] = $this->groupes_model->get_groupes_individal($groupe, $legislature);
 
       if (empty($data['groupe'])) {
-        show_404($this->functions_datan->get_404_infos());;
+        show_404($this->functions_datan->get_404_infos());
       };
 
       $groupe_uid = $data['groupe']['uid'];
