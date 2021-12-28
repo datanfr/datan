@@ -303,13 +303,13 @@
 
     public function individual_membres($legislature, $groupe){
       if ($legislature < 15) {
-        show_404($this->functions_datan->get_404_infos());;
+        show_404($this->functions_datan->get_404_infos());
       }
 
       $data['groupe'] = $this->groupes_model->get_groupes_individal($groupe, $legislature);
 
       if (empty($data['groupe'])) {
-        show_404($this->functions_datan->get_404_infos());;
+        show_404($this->functions_datan->get_404_infos());
       }
 
       // Query active
@@ -511,7 +511,7 @@
       $data['votes'] = $this->votes_model->get_votes_datan_groupe_field($groupe_uid, $field, NULL);
 
       if (empty($data['votes'])) {
-        show_404($this->functions_datan->get_404_infos());;
+        show_404($this->functions_datan->get_404_infos());
       }
 
       // Query active

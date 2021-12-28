@@ -140,7 +140,7 @@
       // Get votes from the field
       $data['votes'] = $this->votes_model->get_votes_datan_category($data['field']['id']);
       if (empty($data['votes'])) {
-        show_404($this->functions_datan->get_404_infos());;
+        show_404($this->functions_datan->get_404_infos());
       }
 
       // Meta
@@ -181,7 +181,7 @@
     public function all($legislature, $year = NULL, $month = NULL) {
       // Check if legislature is a number
       if (!is_numeric($legislature)) {
-        show_404($this->functions_datan->get_404_infos());;
+        show_404($this->functions_datan->get_404_infos());
       }
       $data['legislature'] = $legislature;
       // Get month array
@@ -206,7 +206,7 @@
       $data['votes'] = $this->votes_model->get_all_votes($legislature, $year, $month, FALSE);
 
       if (empty($data['votes'])) {
-        show_404($this->functions_datan->get_404_infos());;
+        show_404($this->functions_datan->get_404_infos());
       }
 
       // ALL OR ALL/YEAR OR ALL/YEAR/MONTH ?
@@ -340,15 +340,15 @@
     public function individual($legislature, $num){
       // Check if legislature is numeric
       if (!is_numeric($legislature)) {
-        show_404($this->functions_datan->get_404_infos());;
+        show_404($this->functions_datan->get_404_infos());
       }
       // Check if vote number is numeric
       if (!is_numeric($num)) {
-        show_404($this->functions_datan->get_404_infos());;
+        show_404($this->functions_datan->get_404_infos());
       }
 
       if ($legislature < 14) {
-        show_404($this->functions_datan->get_404_infos());;
+        show_404($this->functions_datan->get_404_infos());
       }
 
       $data['legislature'] = $legislature;
@@ -363,7 +363,7 @@
       }
 
       if (empty($data['vote'])) {
-        show_404($this->functions_datan->get_404_infos());;
+        show_404($this->functions_datan->get_404_infos());
       }
 
       // Caching --> Has been disable to allow for captcha
