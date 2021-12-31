@@ -259,7 +259,7 @@
           "name" => "Groupes", "url" => base_url()."groupes", "active" => FALSE
         ),
         array(
-          "name" => $data['groupe']['libelle'], "url" => base_url()."groupes/".mb_strtolower($data['groupe']['libelleAbrev']), "active" => TRUE
+          "name" => $data['groupe']['libelle'], "url" => base_url()."groupes/legislature-".$data['groupe']['legislature']."/".mb_strtolower($data['groupe']['libelleAbrev']), "active" => TRUE
         ),
       );
       $data['breadcrumb_json'] = $this->breadcrumb_model->breadcrumb_json($data['breadcrumb']);
@@ -347,10 +347,10 @@
           "name" => "Groupes", "url" => base_url()."groupes", "active" => FALSE
         ),
         array(
-          "name" => $data['groupe']['libelle'], "url" => base_url()."groupes/".mb_strtolower($data['groupe']['libelleAbrev']), "active" => FALSE
+          "name" => $data['groupe']['libelle'], "url" => base_url()."groupes/legislature-".$data['groupe']['legislature']."/".mb_strtolower($data['groupe']['libelleAbrev']), "active" => FALSE
         ),
         array(
-          "name" => "Membres", "url" => base_url()."groupes/".mb_strtolower($data['groupe']['libelleAbrev'])."/membres", "active" => TRUE
+          "name" => "Membres", "url" => base_url()."groupes/legislature-".$data['groupe']['legislature']."/".mb_strtolower($data['groupe']['libelleAbrev'])."/membres", "active" => TRUE
         )
       );
       $data['breadcrumb_json'] = $this->breadcrumb_model->breadcrumb_json($data['breadcrumb']);
@@ -467,10 +467,10 @@
           "name" => "Groupes", "url" => base_url()."groupes", "active" => FALSE
         ),
         array(
-          "name" => $data['groupe']['libelle'], "url" => base_url()."groupes/".mb_strtolower($data['groupe']['libelleAbrev']), "active" => FALSE
+          "name" => $data['groupe']['libelle'], "url" => base_url()."groupes/legislature-".$data['groupe']['legislature']."/".mb_strtolower($data['groupe']['libelleAbrev']), "active" => FALSE
         ),
         array(
-          "name" => "Votes", "url" => base_url()."groupes/".mb_strtolower($data['groupe']['libelleAbrev'])."/votes", "active" => TRUE
+          "name" => "Votes", "url" => base_url()."groupes/legislature-".$data['groupe']['legislature']."/".mb_strtolower($data['groupe']['libelleAbrev'])."/votes", "active" => TRUE
         )
       );
       $data['breadcrumb_json'] = $this->breadcrumb_model->breadcrumb_json($data['breadcrumb']);
@@ -571,13 +571,13 @@
           "name" => "Groupes", "url" => base_url()."groupes", "active" => FALSE
         ),
         array(
-          "name" => $data['groupe']['libelle'], "url" => base_url()."groupes/".mb_strtolower($data['groupe']['libelleAbrev']), "active" => FALSE
+          "name" => $data['groupe']['libelle'], "url" => base_url()."groupes/legislature-".$data['groupe']['legislature']."/".mb_strtolower($data['groupe']['libelleAbrev']), "active" => FALSE
         ),
         array(
-          "name" => "Votes", "url" => base_url()."groupes/".mb_strtolower($data['groupe']['libelleAbrev'])."/votes", "active" => FALSE
+          "name" => "Votes", "url" => base_url()."groupes/legislature-".$data['groupe']['legislature']."/".mb_strtolower($data['groupe']['libelleAbrev'])."/votes", "active" => FALSE
         ),
         array(
-          "name" => $data['field']['name'], "url" => base_url()."groupes/".mb_strtolower($data['groupe']['libelleAbrev'])."/votes".NULL."/".$data['field']['slug'], "active" => TRUE
+          "name" => $data['field']['name'], "url" => base_url()."groupes/legislature-".$data['groupe']['legislature']."/".mb_strtolower($data['groupe']['libelleAbrev'])."/votes".NULL."/".$data['field']['slug'], "active" => TRUE
         )
       );
       $data['breadcrumb_json'] = $this->breadcrumb_model->breadcrumb_json($data['breadcrumb']);
@@ -655,13 +655,13 @@
           "name" => "Groupes", "url" => base_url()."groupes", "active" => FALSE
         ),
         array(
-          "name" => $data['groupe']['libelle'], "url" => base_url()."groupes/".mb_strtolower($data['groupe']['libelleAbrev']), "active" => FALSE
+          "name" => $data['groupe']['libelle'], "url" => base_url()."groupes/legislature-".$data['groupe']['legislature']."/".mb_strtolower($data['groupe']['libelleAbrev']), "active" => FALSE
         ),
         array(
-          "name" => "Votes", "url" => base_url()."groupes/".mb_strtolower($data['groupe']['libelleAbrev'])."/votes", "active" => FALSE
+          "name" => "Votes", "url" => base_url()."groupes/legislature-".$data['groupe']['legislature']."/".mb_strtolower($data['groupe']['libelleAbrev'])."/votes", "active" => FALSE
         ),
         array(
-          "name" => "Tous les votes à l'Assemblée nationale", "url" => base_url()."groupes/".mb_strtolower($data['groupe']['libelleAbrev'])."/votes/all", "active" => TRUE
+          "name" => "Tous les votes", "url" => base_url()."groupes/legislature-".$data['groupe']['legislature']."/".mb_strtolower($data['groupe']['libelleAbrev'])."/votes/all", "active" => TRUE
         )
       );
       $data['breadcrumb_json'] = $this->breadcrumb_model->breadcrumb_json($data['breadcrumb']);
