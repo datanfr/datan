@@ -68,7 +68,6 @@
         $array['type'] = 'website';
       }
 
-
       return $array;
     }
   }
