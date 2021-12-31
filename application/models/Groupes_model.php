@@ -347,7 +347,7 @@
         "@type" => "Organization",
         "name" => $groupe['libelle'] . " (" . $groupe['libelleAbrev'] . ")",
         "description" => "Le groupe " . $groupe['libelle'] . " est un groupe parlementaire de l'Assemblée nationale française.",
-        "url" => base_url() . "groupes/" . mb_strtolower($groupe['libelleAbrev']),
+        "url" => base_url() . "groupes/legislature-".$groupe['legislature']."/" . mb_strtolower($groupe['libelleAbrev']),
         "address" => [
           "@type" => "PostalAddress",
           "addressCountry" => "FR",
