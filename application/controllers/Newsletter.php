@@ -20,7 +20,7 @@ class Newsletter extends CI_Controller
 
         $data['newsletter'] = $this->newsletter_model->get_by_email(urldecode($email));
         if (!isset($data['newsletter'])) {
-          show_404($this->functions_datan->get_404_infos());;
+          show_404($this->functions_datan->get_404_infos());
         }
 
         $data['lists'] = array(

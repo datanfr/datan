@@ -58,7 +58,7 @@
           }
         }
 
-        // proximity with all groups
+        // PROXIMITY WITH ALL GROUPS
         if ($legislature == legislature_current()) /*LEGISLATURE 15*/ {
           $data['accord_groupes'] = $this->deputes_model->get_accord_groupes_actifs($mpId, legislature_current());
           $data['accord_groupes_all'] = $this->deputes_model->get_accord_groupes_all($mpId, legislature_current());
@@ -105,7 +105,7 @@
       }
 
       if (!in_array($legislature, array(14, 15))) {
-        show_404($this->functions_datan->get_404_infos());;
+        show_404($this->functions_datan->get_404_infos());
       }
 
       if ($legislature == legislature_current()) {
@@ -237,12 +237,12 @@
 
       // Check if depute exists
       if (empty($data['depute'])) {
-        show_404($this->functions_datan->get_404_infos());;
+        show_404($this->functions_datan->get_404_infos());
       }
 
       // Check if it is in legislature 14 or 15
       if (!in_array($data['depute']['legislature'], legislature_all())) {
-        show_404($this->functions_datan->get_404_infos());;
+        show_404($this->functions_datan->get_404_infos());
       }
 
       // Caching
@@ -445,12 +445,12 @@
 
       // Check if MP exists
       if (empty($data['depute'])) {
-        show_404($this->functions_datan->get_404_infos());;
+        show_404($this->functions_datan->get_404_infos());
       }
 
       // Check if it is in legislature 14 or 15
       if (!in_array($data['depute']['legislature'], legislature_all())) {
-        show_404($this->functions_datan->get_404_infos());;
+        show_404($this->functions_datan->get_404_infos());
       }
 
       // Redirect if legislature depute and depute_last is the same ==> redirect v/ webpage with last mandate
@@ -544,12 +544,12 @@
       $data['depute'] = $this->deputes_model->get_depute_individual($input, $departement);
 
       if (empty($data['depute'])) {
-        show_404($this->functions_datan->get_404_infos());;
+        show_404($this->functions_datan->get_404_infos());
       }
 
       // Check if it is in legislature
       if (!in_array($data['depute']['legislature'], array(15))) {
-        show_404($this->functions_datan->get_404_infos());;
+        show_404($this->functions_datan->get_404_infos());
       }
 
       $mpId = $data['depute']['mpId'];
@@ -650,19 +650,19 @@
       $mpId = $data['depute']['mpId'];
 
       if (empty($data['depute'])) {
-        show_404($this->functions_datan->get_404_infos());;
+        show_404($this->functions_datan->get_404_infos());
       }
 
       // Check if it is in legislature
       if (!in_array($data['depute']['legislature'], array(15))) {
-        show_404($this->functions_datan->get_404_infos());;
+        show_404($this->functions_datan->get_404_infos());
       }
 
       // Query - get active votes
       $data['votes'] = $this->votes_model->get_votes_datan_depute_field($mpId, $field, FALSE);
 
       if (empty($data['votes'])) {
-        show_404($this->functions_datan->get_404_infos());;
+        show_404($this->functions_datan->get_404_infos());
       }
 
       // Variables
@@ -746,12 +746,12 @@
       $data['depute'] = $this->deputes_model->get_depute_individual($input, $departement);
 
       if (empty($data['depute'])) {
-        show_404($this->functions_datan->get_404_infos());;
+        show_404($this->functions_datan->get_404_infos());
       }
 
       // Check if it is in legislature
       if (!in_array($data['depute']['legislature'], array(15))) {
-        show_404($this->functions_datan->get_404_infos());;
+        show_404($this->functions_datan->get_404_infos());
       }
 
       $mpId = $data['depute']['mpId'];

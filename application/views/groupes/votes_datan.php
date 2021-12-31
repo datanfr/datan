@@ -10,7 +10,7 @@
       <div class="col-md-10 col-lg-8 offset-md-1 offset-lg-0 pl-lg-5 bloc-votes-datan">
         <div class="row mt-4">
           <div class="col-12 btn-back text-center text-lg-left">
-            <a class="btn btn-outline-primary mx-2" href="<?= base_url() ?>groupes/<?= mb_strtolower($groupe['libelleAbrev']) ?>">
+            <a class="btn btn-outline-primary mx-2" href="<?= base_url() ?>groupes/legislature-<?= $groupe['legislature'] ?>/<?= mb_strtolower($groupe['libelleAbrev']) ?>">
               <?= file_get_contents(asset_url().'imgs/icons/arrow_left.svg') ?>
               Retour profil
             </a>
@@ -30,7 +30,7 @@
               Vous trouverez sur cette page les positions de <b><?= $title ?></b> sur ces votes.
             </p>
             <p>
-              Pour avoir accès à tous les votes de <?= $title ?> à l'Assemblée nationale, <a href="<?= base_url() ?>groupes/<?= mb_strtolower($groupe['libelleAbrev']) ?>/votes/all">cliquez ici</a>.
+              Pour avoir accès à tous les votes de <?= $title ?> à l'Assemblée nationale, <a href="<?= base_url() ?>groupes/legislature-<?= $groupe['legislature'] ?>/<?= mb_strtolower($groupe['libelleAbrev']) ?>/votes/all">cliquez ici</a>.
             </p>
           </div>
           <div class="d-none d-md-block col-md-5 col-lg-6 vote-svg">
@@ -75,7 +75,7 @@
           </div>
           <div class="row mt-4">
             <div class="col-md-11 offset-md-1 d-flex justify-content-center">
-              <a class="btn see-all-votes py-1" href="<?= base_url() ?>groupes/<?= mb_strtolower($groupe['libelleAbrev']) ?>/votes/<?= $field['slug'] ?>">
+              <a class="btn see-all-votes py-1" href="<?= base_url() ?>groupes/legislature-<?= $groupe['legislature'] ?>/<?= mb_strtolower($groupe['libelleAbrev']) ?>/votes/<?= $field['slug'] ?>">
                 <span>VOIR TOUS</span>
               </a>
             </div>
@@ -111,7 +111,7 @@
             <?php endforeach; ?>
           </div>
           <div class="mt-3">
-            <a href="<?= base_url() ?>groupes/<?= mb_strtolower($groupe['libelleAbrev']) ?>/membres">Voir tous les députés membres du groupe <?= $groupe['libelleAbrev'] ?></a>
+            <a href="<?= base_url() ?>groupes/legislature-<?= $groupe['legislature'] ?>/<?= mb_strtolower($groupe['libelleAbrev']) ?>/membres">Voir tous les députés membres du groupe <?= $groupe['libelleAbrev'] ?></a>
           </div>
         </div>
       </div>
@@ -127,7 +127,7 @@
               <?php endforeach; ?>
             </div>
             <div class="mt-3">
-              <a href="<?= base_url() ?>groupes/<?= mb_strtolower($groupe['libelleAbrev']) ?>/membres">Voir tous les députés apparentés au groupe <?= $groupe['libelleAbrev'] ?></a>
+              <a href="<?= base_url() ?>groupes/legislature-<?= $groupe['legislature'] ?>/<?= mb_strtolower($groupe['libelleAbrev']) ?>/membres">Voir tous les députés apparentés au groupe <?= $groupe['libelleAbrev'] ?></a>
             </div>
           </div>
         </div>
@@ -138,7 +138,7 @@
           <div class="row mt-3">
             <?php foreach ($groupesActifs as $group): ?>
               <div class="col-6 col-md-4 py-2">
-                <a class="membre no-decoration underline" href="<?= base_url(); ?>groupes/<?= mb_strtolower($group['libelleAbrev']) ?>"><?= $group['libelle']." (".$group['libelleAbrev'].")" ?></a>
+                <a class="membre no-decoration underline" href="<?= base_url(); ?>groupes/legislature-<?= $groupe['legislature'] ?>/<?= mb_strtolower($group['libelleAbrev']) ?>"><?= $group['libelle']." (".$group['libelleAbrev'].")" ?></a>
               </div>
             <?php endforeach; ?>
           </div>

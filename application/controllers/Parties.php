@@ -54,7 +54,7 @@
 
       // If empty
       if (empty($data['party'])) {
-        show_404($this->functions_datan->get_404_infos());;
+        show_404($this->functions_datan->get_404_infos());
       }
 
       // Get color

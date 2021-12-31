@@ -3,7 +3,9 @@
         <h1><?= $title ?></h1>
       </div>
     </div>
-    <div class="liseret-groupe" style="background-color: <?= $groupe['couleurAssociee'] ?>"></div>
+    <?php if ($groupe['couleurAssociee']): ?>
+      <div class="liseret-groupe" style="background-color: <?= $groupe['couleurAssociee'] ?>"></div>
+    <?php endif; ?>
     <div class="container pg-groupe-membres my-4">
       <!-- ROW PRESIDENT -->
       <?php if ($groupe['libelleAbrev'] != 'NI'): ?>

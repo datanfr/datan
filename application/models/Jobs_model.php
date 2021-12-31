@@ -110,7 +110,7 @@
     }
 
     public function get_groups_rose(){
-      $sql = 'SELECT gs.organeRef, gs.rose_index, o.libelle, o.libelleAbrev AS libelleAbrev, o.couleurAssociee, ge.effectif
+      $sql = 'SELECT gs.organeRef, gs.rose_index, o.libelle, o.libelleAbrev AS libelleAbrev, o.couleurAssociee, o.legislature, ge.effectif
         FROM groupes_stats gs
         LEFT JOIN organes o ON gs.organeRef = o.uid
         LEFT JOIN groupes_effectif ge ON gs.organeRef = ge.organeRef
