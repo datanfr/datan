@@ -60,7 +60,7 @@
               <?php if ($active): ?>
                 <div class="mt-3 badges-groupes">
                   <?php foreach ($groupes as $groupe): ?>
-                    <a class="badge badge-primary no-decoration" href="<?= base_url() ?>groupes/<?= mb_strtolower($groupe['libelleAbrev']) ?>/membres">
+                    <a class="badge badge-primary no-decoration" href="<?= base_url() ?>groupes/legislature-<?= $groupe['legislature'] ?>/<?= mb_strtolower($groupe['libelleAbrev']) ?>/membres">
                       <span><?= $groupe['effectif'] ?></span> <?= $groupe['libelle'] ?>
                     </a>
                   <?php endforeach; ?>

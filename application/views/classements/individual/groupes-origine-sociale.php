@@ -13,7 +13,7 @@
           <p>Nous utilisons <span class="url_obf" url_obf="<?= url_obfuscation("https://rdrr.io/rforge/polrep/man/Rose.html") ?>">l'indicateur  de Rose</span> pour mesurer la représentativité sociale des groupes politiques.</p>
           <p>Cet indicateur compare le pourcentage de députés issus des différentes catégories professionnelles avec le pourcentage de la population dans ces mêmes catégories.</p>
           <p>Un groupe politique est parfaitement représentatif si 15% de ces députés étaient des ouvriers et qu'il y a 15% d'ouvriers dans la population, et ainsi de suite. Un groupe parfaitement représentatif aura une valeur de 1, tandis qu'un groupe non représentatif aura une valeur de 0.</p>
-          <p>Le groupe politique de l'Assemblée nationale le plus représentatif socialement de la population est <a href="<?= base_url() ?>groupes/<?= $rose_first['libelleAbrev'] ?>"><?= $rose_first['libelle'] ?> (<?= $rose_first['libelleAbrev'] ?>)</a>, avec un score de <?= $rose_first['rose_index'] ?>.</p>
+          <p>Le groupe politique de l'Assemblée nationale le plus représentatif socialement de la population est <a href="<?= base_url() ?>groupes/legislature-<?= $rose_first['legislature'] ?>/<?= $rose_first['libelleAbrev'] ?>"><?= $rose_first['libelle'] ?> (<?= $rose_first['libelleAbrev'] ?>)</a>, avec un score de <?= $rose_first['rose_index'] ?>.</p>
         </div>
         <div class="col-12">
           <?php $this->load->view('groupes/partials/card_home.php', array('groupe' => $rose_first, 'tag' => 'span', 'active' => TRUE, 'stats' => "Score : " . $rose_first['rose_index'] . " ans", 'cat' => true)) ?>

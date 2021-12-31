@@ -98,15 +98,20 @@
     }
 
     //INDIVIDUAL - individual page by group //
-    public function individual($groupe_slug){
-      $data['legislature'] = legislature_current();
+    public function individual($legislature, $groupe_slug){
+      $data['legislature'] = $legislature;
       $legislature = $data['legislature'];
+
+      if ($legislature < 15) {
+        show_404($this->functions_datan->get_404_infos());
+      }
+
       // Query 1 Informations principales
       $groupe_slug = mb_strtoupper($groupe_slug);
       $data['groupe'] = $this->groupes_model->get_groupes_individal($groupe_slug, $legislature);
 
       if (empty($data['groupe'])) {
-        show_404($this->functions_datan->get_404_infos());;
+        show_404($this->functions_datan->get_404_infos());
       }
 
       // Caching
@@ -296,11 +301,15 @@
       $this->load->view('templates/footer');
     }
 
-    public function individual_membres($groupe){
-      $data['groupe'] = $this->groupes_model->get_groupes_individal($groupe, legislature_current());
+    public function individual_membres($legislature, $groupe){
+      if ($legislature < 15) {
+        show_404($this->functions_datan->get_404_infos());
+      }
+
+      $data['groupe'] = $this->groupes_model->get_groupes_individal($groupe, $legislature);
 
       if (empty($data['groupe'])) {
-        show_404($this->functions_datan->get_404_infos());;
+        show_404($this->functions_datan->get_404_infos());
       }
 
       // Query active
@@ -366,10 +375,15 @@
     }
 
     /* page: groupes/x/votes */
-    public function individual_votes_datan($groupe){
-      $data['groupe'] = $this->groupes_model->get_groupes_individal($groupe, legislature_current());
+    public function individual_votes_datan($legislature, $groupe){
+      if ($legislature < 15) {
+        show_404($this->functions_datan->get_404_infos());
+      };
+
+      $data['groupe'] = $this->groupes_model->get_groupes_individal($groupe, $legislature);
+
       if (empty($data['groupe'])) {
-        show_404($this->functions_datan->get_404_infos());;
+        show_404($this->functions_datan->get_404_infos());
       };
 
       $groupe_uid = $data['groupe']['uid'];
@@ -477,11 +491,15 @@
     }
 
     /* page: groupes/x/votes/field */
-    public function individual_votes_datan_field($groupe, $field){
-      $data['groupe'] = $this->groupes_model->get_groupes_individal($groupe, legislature_current());
+    public function individual_votes_datan_field($legislature, $groupe, $field){
+      if ($legislature < 15) {
+        show_404($this->functions_datan->get_404_infos());
+      };
+
+      $data['groupe'] = $this->groupes_model->get_groupes_individal($groupe, $legislature);
 
       if (empty($data['groupe'])) {
-        show_404($this->functions_datan->get_404_infos());;
+        show_404($this->functions_datan->get_404_infos());
       };
 
       $groupe_uid = $data['groupe']['uid'];
@@ -493,7 +511,7 @@
       $data['votes'] = $this->votes_model->get_votes_datan_groupe_field($groupe_uid, $field, NULL);
 
       if (empty($data['votes'])) {
-        show_404($this->functions_datan->get_404_infos());;
+        show_404($this->functions_datan->get_404_infos());
       }
 
       // Query active
@@ -580,11 +598,15 @@
     }
 
     /* page: groupes/votes/all */
-    public function individual_votes_all($groupe){
-      $data['groupe'] = $this->groupes_model->get_groupes_individal($groupe, legislature_current());
+    public function individual_votes_all($legislature, $groupe){
+      if ($legislature < 15) {
+        show_404($this->functions_datan->get_404_infos());
+      };
+
+      $data['groupe'] = $this->groupes_model->get_groupes_individal($groupe, $legislature);
 
       if (empty($data['groupe'])) {
-        show_404($this->functions_datan->get_404_infos());;
+        show_404($this->functions_datan->get_404_infos());
       };
 
       $groupe_uid = $data['groupe']['uid'];
