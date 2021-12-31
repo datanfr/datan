@@ -123,7 +123,8 @@
         $this->db->join('deputes_last', 'deputes_last.mpId = mandat_groupe.mpId', 'left');
         $query = $this->db->get_where('mandat_groupe', $where, 1);
       } else {
-        $sql = 'SELECT A.*, civ, da.nameFirst, da.nameLast, da.nameUrl, da.dptSlug, da.departementNom, da.departementCode, da.img
+        $sql = 'SELECT A.*, da.*,
+          CONCAT(da.departementNom, " (", da.departementCode, ")") AS cardCenter
           FROM
           (
           SELECT mpId, dateDebut, date_format(dateDebut, "%d %M %Y") as dateDebutFR, dateFin, codeQualite, libQualiteSex
@@ -155,7 +156,8 @@
         $this->db->order_by('nameLast ASC, nameFirst ASC');
         $query = $this->db->get_where('mandat_groupe', $where);
       } else {
-        $sql = 'SELECT A.*, da.civ, da.nameFirst, da.nameLast, da.nameUrl, da.dptSlug, da.departementNom, da.departementCode, da.img
+        $sql = 'SELECT A.*, da.*,
+          CONCAT(departementNom, " (", departementCode, ")") AS cardCenter
           FROM
           (
           SELECT mg.mpId, mg.dateFin, mg.codeQualite, mg.libQualiteSex
