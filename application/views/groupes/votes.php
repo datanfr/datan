@@ -9,7 +9,7 @@
       <div class="col-md-10 col-lg-8 offset-md-1 offset-lg-0 pl-lg-5 bloc-votes-datan">
         <div class="row mt-4">
           <div class="col-12 btn-back text-center text-lg-left">
-            <a class="btn btn-outline-primary mx-2" href="<?= base_url() ?>groupes/<?= mb_strtolower($groupe['libelleAbrev']) ?>">
+            <a class="btn btn-outline-primary mx-2" href="<?= base_url() ?>groupes/legislature-<?= $groupe['legislature'] ?>/<?= mb_strtolower($groupe['libelleAbrev']) ?>">
               <?= file_get_contents(asset_url().'imgs/icons/arrow_left.svg') ?>
               Retour profil
             </a>
@@ -29,7 +29,7 @@
               Les données de ces votes sont automatiquement récupérées sur le site de l'Assemblée, et ne font donc pas l'objet d'une analyse et d'une recontextualisation. La signification de ces votes peut donc être complexe à comprendre au premier abord.
             </p>
             <p>
-              C'est pourquoi l'équipe de Datan contextualise et reformule certains scrutins. Pour découvrir les positions du groupe <b><?= $title ?></b> sur ces votes, <a href="<?= base_url() ?>groupes/<?= mb_strtolower($groupe['libelleAbrev']) ?>/votes">cliquez ici</a>.
+              C'est pourquoi l'équipe de Datan contextualise et reformule certains scrutins. Pour découvrir les positions du groupe <b><?= $title ?></b> sur ces votes, <a href="<?= base_url() ?>groupes/legislature-<?= $groupe['legislature'] ?>/<?= mb_strtolower($groupe['libelleAbrev']) ?>/votes">cliquez ici</a>.
             </p>
           </div>
         </div>

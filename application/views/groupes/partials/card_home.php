@@ -9,7 +9,7 @@
   </div>
   <div class="card-body d-flex flex-column justify-content-center align-items-center">
     <<?= $tag ?> class="d-block card-title">
-      <a href="<?= base_url(); ?>groupes/<?= mb_strtolower($groupe['libelleAbrev']) ?>" class="stretched-link no-decoration"><?= $groupe['libelle'] ?></a>
+      <a href="<?= base_url() ?>groupes/legislature-<?= $groupe['legislature'] ?>/<?= mb_strtolower($groupe['libelleAbrev']) ?>" class="stretched-link no-decoration"><?= $groupe['libelle'] ?></a>
     </<?= $tag ?>>
     <span class="d-block libelle"><?= $groupe["libelleAbrev"] ?></span>
     <?php if (isset($stats)): ?>
@@ -21,7 +21,7 @@
   </div>
   <?php if ($cat): ?>
     <div class="mb-3">
-      <a class="btn btn-cat btn-primary stretched-link" href="<?= base_url(); ?>groupes/<?= mb_strtolower($groupe['libelleAbrev']) ?>" role="button">Découvrez son activité</a>
+      <a class="btn btn-cat btn-primary stretched-link" href="<?= base_url(); ?>groupes/legislature-<?= $groupe['legislature'] ?>/<?= mb_strtolower($groupe['libelleAbrev']) ?>" role="button">Découvrez son activité</a>
     </div>
     <?php else: ?>
       <?php if ($active): ?>

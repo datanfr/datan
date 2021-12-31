@@ -24,7 +24,7 @@
           ');
         }
       } else {
-        $query = $this->db->query('SELECT *, date_format(dateDebut, "%d %M %Y") as dateDebutFR,
+        $query = $this->db->query('SELECT *, o.legislature, date_format(dateDebut, "%d %M %Y") as dateDebutFR,
           CASE WHEN o.libelle = "Non inscrit" THEN "Députés non inscrits" ELSE o.libelle END AS libelle
           FROM organes o
           LEFT JOIN groupes_effectif e ON o.uid = e.organeRef
@@ -82,7 +82,7 @@
     }
 
     public function get_groupe_random(){
-      $sql = 'SELECT o.uid, o.libelle, o.libelleAbrev, o.couleurAssociee, e.effectif
+      $sql = 'SELECT o.uid, o.libelle, o.libelleAbrev, o.couleurAssociee, o.legislature, e.effectif
         FROM organes o
         LEFT JOIN groupes_effectif e ON o.uid = e.organeRef
         WHERE o.legislature = ? AND o.coteType = "GP" AND o.dateFin IS NULL AND o.libelle != "Non inscrit"
@@ -123,7 +123,8 @@
         $this->db->join('deputes_last', 'deputes_last.mpId = mandat_groupe.mpId', 'left');
         $query = $this->db->get_where('mandat_groupe', $where, 1);
       } else {
-        $sql = 'SELECT A.*, civ, da.nameFirst, da.nameLast, da.nameUrl, da.dptSlug, da.departementNom, da.departementCode, da.img
+        $sql = 'SELECT A.*, da.*,
+          CONCAT(da.departementNom, " (", da.departementCode, ")") AS cardCenter
           FROM
           (
           SELECT mpId, dateDebut, date_format(dateDebut, "%d %M %Y") as dateDebutFR, dateFin, codeQualite, libQualiteSex
@@ -155,7 +156,8 @@
         $this->db->order_by('nameLast ASC, nameFirst ASC');
         $query = $this->db->get_where('mandat_groupe', $where);
       } else {
-        $sql = 'SELECT A.*, da.civ, da.nameFirst, da.nameLast, da.nameUrl, da.dptSlug, da.departementNom, da.departementCode, da.img
+        $sql = 'SELECT A.*, da.*,
+          CONCAT(departementNom, " (", departementCode, ")") AS cardCenter
           FROM
           (
           SELECT mg.mpId, mg.dateFin, mg.codeQualite, mg.libQualiteSex
@@ -298,7 +300,7 @@
 
 
     public function get_stats_proximite($groupe_uid){
-      $sql = 'SELECT t1.prox_group, ROUND(t1.score * 100) AS score, o.libelle, o.libelleAbrege, o.libelleAbrev, o.positionPolitique
+      $sql = 'SELECT t1.prox_group, ROUND(t1.score * 100) AS score, o.libelle, o.libelleAbrege, o.libelleAbrev, o.positionPolitique, o.legislature
         FROM class_groups_proximite t1
         LEFT JOIN organes o ON o.uid = t1.prox_group
         WHERE t1.organeRef = ? AND t1.prox_group != ? AND o.dateFin IS NULL AND t1.score IS NOT NULL AND o.libelleAbrev != "NI" AND votesN > 20

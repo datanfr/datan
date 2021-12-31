@@ -76,10 +76,10 @@ class Sitemap extends CI_Controller {
     $urls = array();
     foreach ($results as $result) {
       $libelleAbrev = mb_strtolower($result['libelleAbrev']);
-      $urls[]["url"] = base_url()."groupes/".$libelleAbrev;
-      $urls[]["url"] = base_url()."groupes/".$libelleAbrev."/membres";
-      $urls[]["url"] = base_url()."groupes/".$libelleAbrev."/votes";
-      $urls[]["url"] = base_url()."groupes/".$libelleAbrev."/votes/all";
+      $urls[]["url"] = base_url()."groupes/legislature-".$result['legislature']."/".$libelleAbrev;
+      $urls[]["url"] = base_url()."groupes/legislature-".$result['legislature']."/".$libelleAbrev."/membres";
+      $urls[]["url"] = base_url()."groupes/legislature-".$result['legislature']."/".$libelleAbrev."/votes";
+      $urls[]["url"] = base_url()."groupes/legislature-".$result['legislature']."/".$libelleAbrev."/votes/all";
     }
 
     $data['urls'] = $urls;
@@ -95,10 +95,10 @@ class Sitemap extends CI_Controller {
     $urls = array();
     foreach ($results as $result) {
       $libelleAbrev = mb_strtolower($result['libelleAbrev']);
-      $urls[]["url"] = base_url()."groupes/".$libelleAbrev;
-      $urls[]["url"] = base_url()."groupes/".$libelleAbrev."/membres";
-      $urls[]["url"] = base_url()."groupes/".$libelleAbrev."/votes";
-      $urls[]["url"] = base_url()."groupes/".$libelleAbrev."/votes/all";
+      $urls[]["url"] = base_url()."groupes/legislature-".$result['legislature']."/".$libelleAbrev;
+      $urls[]["url"] = base_url()."groupes/legislature-".$result['legislature']."/".$libelleAbrev."/membres";
+      $urls[]["url"] = base_url()."groupes/legislature-".$result['legislature']."/".$libelleAbrev."/votes";
+      $urls[]["url"] = base_url()."groupes/legislature-".$result['legislature']."/".$libelleAbrev."/votes/all";
     }
 
     $data['urls'] = $urls;

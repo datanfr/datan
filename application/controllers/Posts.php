@@ -54,7 +54,7 @@
       $data['category'] = $this->category_model->get_category($category);
       $data['posts'] = $this->post_model->get_posts_by_category($category);
       if (empty($data['posts'])) {
-        show_404($this->functions_datan->get_404_infos());;
+        show_404($this->functions_datan->get_404_infos());
       }
       $data['categories'] = $this->category_model->get_active_categories();
       $user_type = $this->session->userdata('type');
@@ -102,7 +102,7 @@
       $data['user'] = $user_type;
       $data['post'] = $this->post_model->get_posts($slug, $user_type, $category);
       if (empty($data['post'])) {
-        show_404($this->functions_datan->get_404_infos());;
+        show_404($this->functions_datan->get_404_infos());
       }
       $data['categories'] = $this->category_model->get_active_categories();
       $data['last_posts'] = $this->post_model->get_last_posts();
@@ -190,7 +190,7 @@
       $user_type = $this->session->userdata('type');
       $data['post'] = $this->post_model->get_post_edit($slug, $user_type);
       if (empty($data['post'])) {
-        show_404($this->functions_datan->get_404_infos());;
+        show_404($this->functions_datan->get_404_infos());
       }
       $data['categories'] = $this->category_model->get_categories();
       $data['title'] = 'Editer un post';

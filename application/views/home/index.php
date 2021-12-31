@@ -264,7 +264,7 @@
                     </div>
                   </td>
                   <td id="table<?= $groupe['libelleAbrev'] ?>">
-                    <a href="<?= base_url() ?>groupes/<?= mb_strtolower($groupe['libelleAbrev']) ?>" class="no-decoration underline"><?= $groupe['libelle'] ?></a>
+                    <a href="<?= base_url() ?>groupes/legislature-<?= $groupe['legislature'] ?>/<?= mb_strtolower($groupe['libelleAbrev']) ?>" class="no-decoration underline"><?= $groupe['libelle'] ?></a>
                   </td>
                   <td class="effectif"><?= $groupe['effectif'] ?></td>
                 </tr>

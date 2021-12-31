@@ -82,7 +82,7 @@
               </p>
             <?php else : ?>
               <p>
-                À l'Assemblée nationale, <?= $gender['pronom'] ?> siège avec le groupe <a href="<?= base_url() ?>groupes/<?= mb_strtolower($depute['libelleAbrev']) ?>"><?= $depute['libelle'] ?></a> (<?= $depute["libelleAbrev"] ?>), un groupe <b>classé <?= $infos_groupes[$depute['libelleAbrev']]['edited'] ?></b> de l'échiquier politique.
+                À l'Assemblée nationale, <?= $gender['pronom'] ?> siège avec le groupe <a href="<?= base_url() ?>groupes/legislature-<?= $depute['legislature'] ?>/<?= mb_strtolower($depute['libelleAbrev']) ?>"><?= $depute['libelle'] ?></a> (<?= $depute["libelleAbrev"] ?>), un groupe <b>classé <?= $infos_groupes[$depute['libelleAbrev']]['edited'] ?></b> de l'échiquier politique.
                 <?php if ($isGroupPresident) : ?><?= $title ?> en est <?= $gender['le'] ?> président<?= $gender['e'] ?>.<?php endif; ?>
               </p>
             <?php endif; ?>
@@ -520,7 +520,7 @@
                                 <?php foreach ($loyaute_history as $y) : ?>
                                   <tr>
                                     <td>
-                                      <a href="<?= base_url() ?>groupes/<?= mb_strtolower($y['libelleAbrev']) ?>" class="no-decoration underline"><?= $y['libelle'] ?></a>
+                                      <a href="<?= base_url() ?>groupes/legislature-<?= $depute['legislature'] ?>/<?= mb_strtolower($y['libelleAbrev']) ?>" class="no-decoration underline"><?= $y['libelle'] ?></a>
                                     </td>
                                     <td class="text-center"><?= $y['score'] ?>%</td>
                                   </tr>
@@ -571,7 +571,7 @@
                         <div class="texte ml-md-3 pl-md-3 mt-md-0 mt-3">
                           <?php if ($depute['legislature'] == legislature_current()): ?>
                             <p>
-                              <?= $title ?> a voté comme la majoité présientielle (<a href="<?= base_url() ?>groupes/larem">La République en Marche</a>) dans <?= $majorite['score'] ?>% des cas.
+                              <?= $title ?> a voté comme la majorité présidentielle (<a href="<?= base_url() ?>groupes/legislature-15/larem">La République en Marche</a>) dans <?= $majorite['score'] ?>% des cas.
                             </p>
                             <p>
                               <?= ucfirst($gender['pronom']) ?> <?= $active ? "est" : "était" ?> <b><?= $edito_majorite['all'] ?></b> de la majorité présidentielle que la moyenne des députés non membres de la majorité (<?= $majorite['all'] ?>%).
@@ -663,8 +663,8 @@
                           <?php else : ?>
                             Le
                           <?php endif; ?>
-                          <b><?= $title ?></b> <?= $active ? "vote" : "votait" ?> souvent (dans <?= $proximite["first1"]["accord"] ?>% des cas) avec le groupe <a href="<?= base_url() ?>groupes/<?= mb_strtolower($proximite["first1"]["libelleAbrev"]) ?>"><?= $proximite["first1"]["libelleAbrev"] ?></a>, <?= $proximite["first1"]["maj_pres"] ?>
-                          <?php if ($proximite['first1']["libelleAbrev"] != "NI") : ?>
+                          <b><?= $title ?></b> <?= $active ? "vote" : "votait" ?> souvent (dans <?= $proximite["first1"]["accord"] ?>% des cas) avec le groupe <a href="<?= base_url() ?>groupes/legislature-<?= $depute["legislature"] ?>/<?= mb_strtolower($proximite["first1"]["libelleAbrev"]) ?>"><?= $proximite["first1"]["libelleAbrev"] ?></a>, <?= $proximite["first1"]["maj_pres"] ?>
+                          <?php if ($proximite["first1"]["libelleAbrev"] != "NI") : ?>
                             classé <?= $proximite["first1"]["ideologiePolitique"]["edited"] ?> de l'échiquier politique.
                           <?php endif; ?>
                         </p>
@@ -713,8 +713,8 @@
                     <div class="col-10 offset-2 ">
                       <?php if ($depute['legislature'] == legislature_current()): ?>
                         <p>
-                          À l'opposé, le groupe avec lequel <?= $title; ?> <?= $active ? "est" : "était" ?> le moins proche est <a href="<?= base_url() ?>groupes/<?= mb_strtolower($proximite["last1"]["libelleAbrev"]) ?>"><?= $proximite["last1"]["libelle"] ?></a>, <?= $proximite["last1"]["maj_pres"] ?>
-                          <?php if ($proximite['last1']["libelleAbrev"] != "NI") : ?>
+                          À l'opposé, le groupe avec lequel <?= $title; ?> <?= $active ? "est" : "était" ?> le moins proche est <a href="<?= base_url() ?>groupes/legislature-<?= $depute["legislature"] ?>/<?= mb_strtolower($proximite["last1"]["libelleAbrev"]) ?>"><?= $proximite["last1"]["libelle"] ?></a>, <?= $proximite["last1"]["maj_pres"] ?>
+                          <?php if ($proximite["last1"]["libelleAbrev"] != "NI") : ?>
                             classé <?= $proximite["last1"]["ideologiePolitique"]["edited"] ?> de l'échiquier politique.
                           <?php endif; ?>
                           <?= ucfirst($gender["pronom"]) ?> <?= $active ? "ne vote" : "n'a voté" ?> avec ce groupe que dans <b><?= $proximite["last1"]["accord"] ?>%</b> des cas.
@@ -921,7 +921,7 @@
               <?php if ($depute['legislature'] != legislature_current()) : ?>
                 <a href="<?= base_url(); ?>deputes/legislature-<?= $depute['legislature'] ?>">Tous les députés de la législature <?= $depute['legislature'] ?></a>
               <?php elseif ($active) : ?>
-                <a href="<?= base_url() ?>groupes/<?= mb_strtolower($depute['libelleAbrev']) ?>">Voir tous les députés membres du groupe <?= $depute['libelle'] ?> (<?= $depute['libelleAbrev'] ?>)</a>
+                <a href="<?= base_url() ?>groupes/legislature-<?= $depute['legislature'] ?>/<?= mb_strtolower($depute['libelleAbrev']) ?>/membres">Voir tous les députés membres du groupe <?= $depute['libelle'] ?> (<?= $depute['libelleAbrev'] ?>)</a>
               <?php else : ?>
                 <a href="<?= base_url(); ?>deputes/inactifs">Tous les députés plus en activité</a>
               <?php endif; ?>
