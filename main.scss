@@ -516,10 +516,10 @@ body:not(.pg-mentions) #tarteaucitronIcon {
 .bloc-carousel-votes, .bloc-carousel-votes-flickity {
   .flickity-viewport{
     @include media-breakpoint-up(xs) {
-      height: 290px !important;
+      height: 270px !important;
     }
     @include media-breakpoint-up(sm) {
-      height: 290px !important;
+      height: 270px !important;
     }
     @include media-breakpoint-up(md) {
       height: 260px !important;
@@ -533,18 +533,18 @@ body:not(.pg-mentions) #tarteaucitronIcon {
 .card-vote {
   @include media-breakpoint-up(xs) {
     width: 240px;
-    height: 280px !important;
+    height: 250px !important;
   }
   @include media-breakpoint-up(sm) {
     width: 240px;
-    height: 280px !important;
+    height: 250px !important;
   }
   @include media-breakpoint-up(md) {
-    width: 275px;
+    width: 260px;
     height: 250px !important;
   }
   @include media-breakpoint-up(lg) {
-    width: 280px;
+    width: 260px;
     height: 250px !important;
   }
   box-shadow: $card-box-shadow;
@@ -599,6 +599,7 @@ body:not(.pg-mentions) #tarteaucitronIcon {
     }
   }
   .card-body{
+    padding: 0 1.25rem 0 1.25rem;
     .title{
       font-weight: 600;
       font-size: $h6-font-size;
@@ -611,7 +612,7 @@ body:not(.pg-mentions) #tarteaucitronIcon {
   }
   .card-footer{
     background-color: transparent;
-    padding: .75rem;
+    padding: 0 1.25rem 0.75rem 1.25rem;
     .field{
       font-weight: bold;
       font-size: 0.9em;
