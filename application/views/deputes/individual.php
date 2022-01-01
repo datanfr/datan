@@ -275,7 +275,7 @@
                 </div>
               </div>
             </div> <!-- // END BLOC VOTES -->
-            <div class="row mt-2">
+            <div class="row">
               <!-- BUTTONS BELOW -->
               <div class="carousel-buttons col-12 d-flex justify-content-center">
                 <button type="button" class="btn prev mr-2 carousel--prev" aria-label="précédent">
