@@ -64,7 +64,7 @@
                 </div>
               </div>
             </div>
-            <div class="row mt-2"> <!-- BUTTONS BELOW -->
+            <div class="row"> <!-- BUTTONS BELOW -->
               <div class="carousel-buttons col-12 d-flex justify-content-center">
                 <button type="button" class="btn prev mr-2 carousel--prev" aria-label="précédent">
                   <?= file_get_contents(asset_url()."imgs/icons/arrow_left.svg") ?>
