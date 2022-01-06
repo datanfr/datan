@@ -52,6 +52,48 @@ class Script
       return TRUE;
     }
 
+    public function dossiers(){
+      echo "downloading dossiers starting \n";
+
+      $file = 'https://data.assemblee-nationale.fr/static/openData/repository/15/loi/dossiers_legislatifs/Dossiers_Legislatifs_XV.xml.zip';
+      $newfile = __DIR__ . '/tmp_dossiers.zip';
+
+      if ($this->chunked_copy($file, $newfile)) {
+        echo "Success. Copied $newfile \n";
+      } else {
+        echo "failed to copy $newfile \n";
+      }
+
+    }
+
+    public function scrutins(){
+      echo "downloading scrutins starting \n";
+
+      $file = 'https://data.assemblee-nationale.fr/static/openData/repository/15/loi/scrutins/Scrutins_XV.xml.zip';
+      $newfile = __DIR__ . '/tmp_Scrutins_XV.zip';
+
+      if ($this->chunked_copy($file, $newfile)) {
+        echo "Success. Copied $newfile \n";
+      } else {
+        echo "failed to copy $newfile \n";
+      }
+
+    }
+
+    public function acteurs_organes(){
+      echo "downloading scrutins starting \n";
+
+      $file = 'https://data.assemblee-nationale.fr/static/openData/repository/15/amo/tous_acteurs_mandats_organes_xi_legislature/AMO30_tous_acteurs_tous_mandats_tous_organes_historique.xml.zip';
+      $newfile = __DIR__ . '/tmp_acteurs_organes.zip';
+
+      if ($this->chunked_copy($file, $newfile)) {
+        echo "Success. Copied $newfile \n";
+      } else {
+        echo "failed to copy $newfile \n";
+      }
+
+    }
+
     public function amendements(){
       echo "downloading amendements starting \n";
 
@@ -75,4 +117,7 @@ if (isset($argv[1])) {
     $script = new Script();
 }
 
+$script->dossiers();
+$script->scrutins();
+$script->acteurs_organes();
 $script->amendements();
