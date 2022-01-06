@@ -117,15 +117,9 @@ class Script
     public function fillDeputes()
     {
         echo "fillDeputes starting \n";
-        //Online file
-        $file = 'https://data.assemblee-nationale.fr/static/openData/repository/15/amo/tous_acteurs_mandats_organes_xi_legislature/AMO30_tous_acteurs_tous_mandats_tous_organes_historique.xml.zip';
-        $file = trim($file);
-        $newfile = __DIR__ . '/tmp_acteurs_organes.zip';
-        if (!copy($file, $newfile)) {
-            echo "failed to copy $file...\n";
-        }
+        $file = __DIR__ . '/tmp_acteurs_organes.zip';
         $zip = new ZipArchive();
-        if ($zip->open($newfile) !== TRUE) {
+        if ($zip->open($file) !== TRUE) {
             exit("cannot open <$file>\n");
         } else {
             $deputeFields = array('mpId', 'civ', 'nameFirst', 'nameLast', 'nameUrl', 'birthDate', 'birthCity', 'birthCountry', 'job', 'catSocPro', 'famSocPro', 'hatvp', 'dateMaj');
@@ -1081,16 +1075,10 @@ class Script
 
         // SCRAPPING DEPENDING ON LEGISLATURE
         if ($this->legislature_to_get == 15) {
-
-            $file = 'https://data.assemblee-nationale.fr/static/openData/repository/15/loi/scrutins/Scrutins_XV.xml.zip';
-            $file = trim($file);
-            $newfile = __DIR__ . '/tmp_Scrutins_XV.xml.zip';
-            if (!copy($file, $newfile)) {
-                echo "failed to copy $file...\n";
-            }
+            $file = __DIR__ . '/tmp_Scrutins_XV.zip';
             $zip = new ZipArchive();
-            if ($zip->open($newfile) !== TRUE) {
-                exit("cannot open <$newfile>\n");
+            if ($zip->open($file) !== TRUE) {
+                exit("cannot open <$file>\n");
             } else {
                 $voteMainFields = array('mpId', 'vote', 'voteNumero', 'voteId', 'legislature', 'mandatId', 'parDelegation', 'causePosition', 'voteType');
                 $voteInfoFields =  array('voteId', 'voteNumero', 'organeRef', 'legislature', 'sessionREF', 'seanceRef', 'dateScrutin', 'quantiemeJourSeance', 'codeTypeVote', 'libelleTypeVote', 'typeMajorite', 'sortCode', 'titre', 'demandeur', 'modePublicationDesVotes', 'nombreVotants', 'suffragesExprimes', 'nbrSuffragesRequis', 'decomptePour', 'decompteContre', 'decompteAbs', 'decompteNv');
@@ -2368,17 +2356,11 @@ class Script
         $dossier = [];
         $dossiers = [];
         if ($this->legislature_to_get == 15) {
-            // Online file
-            $file = 'https://data.assemblee-nationale.fr/static/openData/repository/15/loi/dossiers_legislatifs/Dossiers_Legislatifs_XV.xml.zip';
-            $file = trim($file);
-            $newfile = __DIR__ . '/tmp_dossiers.zip';
-            if (!copy($file, $newfile)) {
-                echo "failed to copy $file...\n";
-            }
-
+            $file = __DIR__ . '/tmp_dossiers.zip';
             $zip = new ZipArchive();
-            if ($zip->open($newfile) !== TRUE) {
-                exit("cannot open <$newfile>\n");
+
+            if ($zip->open($file) !== TRUE) {
+                exit("cannot open <$file>\n");
             } else {
 
                 for ($i = 0; $i < $zip->numFiles; $i++) {
@@ -2469,17 +2451,11 @@ class Script
         $n = 1;
 
         if ($this->legislature_to_get == 15) {
-            // Online file
-            $file = 'https://data.assemblee-nationale.fr/static/openData/repository/15/loi/dossiers_legislatifs/Dossiers_Legislatifs_XV.xml.zip';
-            $file = trim($file);
-            $newfile = __DIR__ . '/tmp_dossiers.zip';
-            if (!copy($file, $newfile)) {
-                echo "failed to copy $file...\n";
-            }
+            $file = __DIR__ . '/tmp_dossiers.zip';
 
             $zip = new ZipArchive();
-            if ($zip->open($newfile) !== TRUE) {
-                exit("cannot open <$newfile>\n");
+            if ($zip->open($file) !== TRUE) {
+                exit("cannot open <$file>\n");
             } else {
 
                 for ($i = 0; $i < $zip->numFiles; $i++) {
@@ -2666,16 +2642,11 @@ class Script
       $insert = [];
 
       if ($this->legislature_to_get == 15) {
+        $file = __DIR__ . '/tmp_dossiers.zip';
 
-        $file = 'https://data.assemblee-nationale.fr/static/openData/repository/15/loi/dossiers_legislatifs/Dossiers_Legislatifs_XV.xml.zip';
-        $file = trim($file);
-        $newfile = __DIR__ . '/tmp_dossiers.zip';
-        if (!copy($file, $newfile)) {
-            echo "failed to copy $file...\n";
-        }
         $zip = new ZipArchive();
-        if ($zip->open($newfile) !== TRUE) {
-            exit("cannot open <$newfile>\n");
+        if ($zip->open($file) !== TRUE) {
+            exit("cannot open <$file>\n");
         } else {
           for ($i = 0; $i < $zip->numFiles; $i++) {
             $filename = $zip->getNameIndex($i);
@@ -2753,12 +2724,12 @@ class Script
         echo "amendements starting \n";
 
         $fields = array('id', 'dossier', 'legislature', 'texteLegislatifRef', 'num', 'numordre', 'seanceRef', 'expose');
-        $newfile = __DIR__ . '/tmp_amendements.zip';
+        $file = __DIR__ . '/tmp_amendements.zip';
         $zip = new ZipArchive();
         $insert = [];
 
-        if ($zip->open($newfile) !== TRUE) {
-            exit("cannot open <$newfile>\n");
+        if ($zip->open($file) !== TRUE) {
+            exit("cannot open <$file>\n");
         } else {
             for ($i = 0; $i < $zip->numFiles; $i++) {
                 $filename = $zip->getNameIndex($i);
@@ -2807,12 +2778,12 @@ class Script
         echo "amendementsAuteurs starting \n";
 
         $fields = array('id', 'type', 'acteurRef', 'groupeId', 'auteurOrgane');
-        $newfile = __DIR__ . '/tmp_amendements.zip';
+        $file = __DIR__ . '/tmp_amendements.zip';
         $zip = new ZipArchive();
         $insertAll = [];
 
-        if ($zip->open($newfile) !== TRUE) {
-            exit("cannot open <$newfile>\n");
+        if ($zip->open($file) !== TRUE) {
+            exit("cannot open <$file>\n");
         } else {
             for ($i = 0; $i < $zip->numFiles; $i++) {
                 $filename = $zip->getNameIndex($i);
