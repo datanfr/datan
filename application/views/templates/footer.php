@@ -69,6 +69,9 @@
                   <p>
                     <a href="<?= base_url(); ?>statistiques/aide" class="no-decoration underline">Nos statistiques</a>
                   </p>
+                  <p>
+                    <a href="https://www.helloasso.com/associations/datan/formulaires/1" target="_blank" rel="noopener" class="no-decoration underline">Dons</a>
+                  </p>
                 </div>
                 <div class="d-flex flex-column mx-1">
                   <p>
