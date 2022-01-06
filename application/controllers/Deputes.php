@@ -565,27 +565,11 @@
       // Commission parlementaire
       $data['commission_parlementaire'] = $this->deputes_model->get_commission_parlementaire($mpId);
 
-      // Query - get active fields + votes by field + check the logos
+      // Get active fields
       $data['fields'] = $this->fields_model->get_active_fields();
-      foreach ($data['fields'] as $key => $field) {
-        // Get votes by field
-        $x[$field["slug"]] = $this->votes_model->get_votes_datan_depute_field($mpId, $field['slug'], 2);
-        if (!empty($x[$field["slug"]])) {
-          $data['fields_voted'][] = $field;
-        }
-        $x[$field["slug"]] = array_slice($x[$field["slug"]], 0, 2);
-      }
-      // Check the logos
-      if ($data["fields_voted"]){
-        foreach ($data["fields_voted"] as $key => $value) {
-          if ($this->functions_datan->get_http_response_code(base_url().'/assets/imgs/fields/'.$value["slug"].'.svg') != "200"){
-            $data['fields_voted'][$key]["logo"] = FALSE;
-          } else {
-            $data['fields_voted'][$key]["logo"] = TRUE;
-          }
-        }
-      }
-      $data['by_field'] = $x;
+
+      // Get votes
+      $data['votes'] = $this->votes_model->get_votes_datan_depute($mpId); // ICI !
 
       // Query - gender
       $data['gender'] = gender($data['depute']['civ']);
@@ -628,6 +612,8 @@
       $controller = $this->router->fetch_class()."/".$this->router->fetch_method();
       $data['ogp'] = $this->meta_model->get_ogp($controller, $data['title_meta'], $data['description_meta'], $data['url'], $data);
       // JS
+      $data['js_to_load_before_datan'] = array("isotope.pkgd.min");
+      $data['js_to_load']= array("datan/sorting");
       // CSS
       // Preloads
       $data['preloads'] = array(
@@ -637,6 +623,7 @@
       );
       // Load views
       $this->load->view('templates/header', $data);
+      $this->load->view('templates/button_up');
       $this->load->view('deputes/votes_datan', $data);
       $this->load->view('templates/breadcrumb', $data);
       $this->load->view('templates/footer');

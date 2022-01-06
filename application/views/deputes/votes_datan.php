@@ -77,7 +77,7 @@
         </div>
         <div class="row mt-4">
           <div class="col-12">
-            <h2>Découvrez les votes <?= $gender["du"] ?> député<?= $gender["e"] ?> <?= $title ?></h2>
+            <h2>Les votes de <?= $title ?></h2>
           </div>
         </div>
         <div class="row mt-4">
@@ -97,50 +97,42 @@
           </div>
         </div>
         <div class="row mt-4">
-          <div class="col-12 badges-categories">
-            <?php if($fields_voted):
-              foreach ($fields_voted as $field): ?>
-              <a class="badge badge-primary no-decoration" href="#<?= $field['slug'] ?>">
-                <?= $field['name'] ?>
-              </a>
-            <?php endforeach;
-            endif ?>
-          </div>
-        </div>
-        <?php if($fields_voted):
-          foreach ($fields_voted as $field): ?>
-          <div class="row mt-5">
-            <div class="col-2 col-md-1 d-flex align-items-end justify-content-center p-0">
-              <?php if ($field["logo"]): ?>
-                <div class="logo">
-                  <?= file_get_contents(asset_url().'imgs/fields/'.$field['slug'].'.svg') ?>
+          <div class="col-7">
+            <div class="card">
+              <div class="card-body badges-filter">
+                <p>Filtrer par catégorie</p>
+                <div class="test-border*">
+                  <?php foreach ($fields as $field): ?>
+                    <span class="badge badge-field popover_focus is-selected"><span class="tick">&#10004; </span><?= $field['name'] ?></span>
+                  <?php endforeach; ?>
                 </div>
-              <?php endif; ?>
-            </div>
-            <div class="col-10 col-md-11 d-flex align-items-end">
-              <h3 class="anchor ml-4 mb-0" id="<?= $field['slug'] ?>"><?= $field['name'] ?></h3>
-            </div>
-          </div>
-          <div class="row mt-2 votes">
-            <div class="col-md-11 offset-md-1">
-              <div class="row my-3">
-                <?php foreach ($by_field[$field["slug"]] as $vote): ?>
-                  <div class="col-md-6 d-flex justify-content-center my-3">
-                    <?php $this->load->view('deputes/partials/card_vote.php', array('vote' => $vote)) ?>
-                  </div>
-                <?php endforeach; ?>
+                <div class="mt-2 test-border*">
+                  <button type="button" class="btn btn-secondary">Reset</button>
+                  <button type="button" class="btn btn-primary">Toutes les catégories</button>
+                </div>
               </div>
             </div>
           </div>
-          <div class="row mt-2">
-            <div class="col-md-11 offset-md-1 d-flex justify-content-center">
-              <a class="btn see-all-votes py-1" href="<?= base_url() ?>deputes/<?= $depute['dptSlug'] ?>/depute_<?= $depute['nameUrl'] ?>/votes/<?= $field['slug'] ?>">
-                <span>VOIR TOUS</span>
-              </a>
+          <div class="col-5">
+            <div class="card">
+              <div class="card-body badges-filter">
+                <p>Rechercher</p>
+                <div class="mt-3 mt-lg-0">
+                  <input type="text" id="quicksearch" placeholder="Cherchez un vote..." />
+                </div>
+              </div>
             </div>
           </div>
-        <?php endforeach;
-        endif ?>
+        </div>
+        <div class="row mt-4 sorting">
+          <?php foreach ($votes as $vote): ?>
+            <div class="col-md-6 sorting-item">
+              <div class="d-flex justify-content-center my-3">
+                <?php $this->load->view('deputes/partials/card_vote.php', array('vote' => $vote)) ?>
+              </div>
+            </div>
+          <?php endforeach; ?>
+        </div>
       </div>
     </div>
   </div> <!-- END CONTAINER -->
