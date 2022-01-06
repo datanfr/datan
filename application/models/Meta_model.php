@@ -59,6 +59,13 @@
         }
         $array['img_type'] = "image/png";
         $array['type'] = 'website';
+      } elseif ($type == "newsletter/register") {
+        $array['img'] = asset_url()."imgs/datan/newsletter_social_media.png";
+        $array['twitter_img'] = asset_url()."imgs/datan/newsletter_social_media.png";
+        $array['img_width'] = 1200;
+        $array['img_height'] = 630;
+        $array['img_type'] = "image/png";
+        $array['type'] = 'website';
       } else {
         $array['img'] = asset_url()."imgs/datan/logo_social_media.png";
         $array['twitter_img'] = asset_url()."imgs/datan/logo_social_media.png";
