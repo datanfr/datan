@@ -60,7 +60,7 @@
       $data['mps_participation'] = $this->stats_model->get_mps_participation_solennels();
       $data['mps_participation_first'] = array_slice($data['mps_participation'], 0, 3);
       $data['mps_participation_last'] = array_slice($data['mps_participation'], -3);
-      $data['mps_participation_mean'] = $this->stats_model->get_mps_participation_mean(legislature_current());
+      $data['mps_participation_mean'] = $this->stats_model->get_mps_participation_solennels_mean(legislature_current());
       $data['mps_participation_mean'] = $data['mps_participation_mean']['mean'];
       $data['groups_participation'] = $this->stats_model->get_groups_participation();
       $data['groups_participation_edited'] = array(

@@ -85,6 +85,11 @@ class Newsletter extends CI_Controller
         )
       );
       $data['breadcrumb_json'] = $this->breadcrumb_model->breadcrumb_json($data['breadcrumb']);
+      //Meta
+      $data['url'] = $this->meta_model->get_url();
+      //Open Graph
+      $controller = $this->router->fetch_class()."/".$this->router->fetch_method();
+      $data['ogp'] = $this->meta_model->get_ogp($controller, $data['title_meta'], $data['description_meta'], $data['url'], $data);
 
       // Load views
       $this->load->view('templates/header', $data);
