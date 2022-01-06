@@ -586,7 +586,6 @@ body:not(.pg-mentions) #tarteaucitronIcon {
     border-bottom-left-radius: 10px;
     border-top-left-radius: 7px;
     box-shadow: inset 3px 1px 4px rgba(0, 0, 0, 0.25);
-    padding: 5px 18px 5px 18px;
     span{
       color: #ffffff;
       font-weight: 800;
@@ -594,15 +593,19 @@ body:not(.pg-mentions) #tarteaucitronIcon {
     }
     &.pour, &.adopté{
       background-color: $adopted;
+      padding: 5px 18px 5px 18px;
     }
     &.contre, &.rejeté{
       background-color: $rejected;
+      padding: 5px 18px 5px 18px;
     }
     &.abstention{
       background-color: $abstention;
+      padding: 5px 8px 5px 8px;
     }
     &.absent{
       background-color: $text-gray-light;
+      padding: 5px 8px 5px 8px;
     }
   }
   .card-header{
