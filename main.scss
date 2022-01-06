@@ -291,6 +291,21 @@ body:not(.pg-mentions) #tarteaucitronIcon {
                A CLASSER
 ################
 */
+.don{
+  background-color: $bleu;
+  transition: 0.3s;
+  &:hover{
+    background-color: $bg-colour;
+    span{
+      color: $bleu;
+    }
+  }
+  span{
+    color: #fff;
+    font-size: 1.1em;
+    font-weight: 800;
+  }
+}
 .follow-us{
   background-color: $primary;
   .btn{
