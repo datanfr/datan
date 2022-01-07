@@ -23,7 +23,6 @@ $('#filter').on( 'click', 'input', function() {
 
 // bind filter on button click
 $(".filters").on( 'click', 'button', function() {
-  console.log("click");
   // get filter value from input value
   //var filterValue = this.value;
   buttonFilter = this.value;
