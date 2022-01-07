@@ -51,10 +51,10 @@
   <div class="container pg-depute-votes">
     <div class="row">
       <div class="col-lg-4 d-none d-lg-block"> <!-- CARD ONLY > lg -->
-        <div style="margin-top: -110px; top: 110px;">
+        <div style="margin-top: -125px; top: 125px;">
           <?php $this->load->view('deputes/partials/card_individual.php', array('historique' => FALSE, 'last_legislature' => $depute['legislature'], 'legislature' => $depute['legislature'], 'tag' => 'span')) ?>
         </div>
-        <div class="sticky-top mt-5" style="margin-top: -110px; top: 110px;">
+        <div class="sticky-top mt-5" style="margin-top: -125px; top: 125px;">
           <div class="card">
             <div class="card-body badges-filter px-4 py-3">
               <span class="title">Filtrer par catégorie</span>
