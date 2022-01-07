@@ -4,8 +4,10 @@
   <?php endif; ?>
   <div class="container pg-depute-individual">
     <div class="row">
-      <div class="col-12 col-md-8 col-lg-4 offset-md-2 offset-lg-0 px-lg-4">
-        <?php $this->load->view('deputes/partials/card_individual.php', array('historique' => FALSE, 'last_legislature' => $depute['legislature'], 'legislature' => $depute['legislature'])) ?>
+      <div class="col-12 col-md-8 col-lg-4 offset-md-2 offset-lg-0">
+        <div class="sticky-top" style="margin-top: -110px; top: 110px;">
+          <?php $this->load->view('deputes/partials/card_individual.php', array('historique' => FALSE, 'last_legislature' => $depute['legislature'], 'legislature' => $depute['legislature'], 'tag' => 'h1')) ?>
+        </div>
       </div> <!-- END COL -->
       <div class="col-md-10 col-lg-8 offset-md-1 offset-lg-0 pl-lg-5">
         <div class="bloc-bio mt-5">

@@ -153,7 +153,7 @@
             "name" => "Députés", "url" => base_url()."deputes", "active" => FALSE
           ),
           array(
-            "name" => $legislature."e législature", "url" => base_url()."deputes/legislature-".$legislature, "active" => TRUE
+            "name" => $legislature."ème législature", "url" => base_url()."deputes/legislature-".$legislature, "active" => TRUE
           )
         );
       }
@@ -163,12 +163,12 @@
       $data['url'] = $this->meta_model->get_url();
       if ($legislature == legislature_current()) {
         $data['title_meta'] = "Députés - Assemblée Nationale | Datan";
-        $data['description_meta'] = "Retrouvez tous les députés en activité de l'Assemblée nationale de la ".legislature_current()."e législature. Résultats de vote et analyses pour chaque député.";
-        $data['title'] = "Les 577 députés de l'Assemblée nationale";
+        $data['description_meta'] = "Retrouvez tous les députés en activité de l'Assemblée nationale de la ".legislature_current()."ème législature. Résultats de vote et analyses pour chaque député.";
+        $data['title'] = "Les députés de l'Assemblée nationale";
       } else {
-        $data['title_meta'] = "Députés ".$legislature."e législature - Assemblée nationale | Datan";
-        $data['description_meta'] = "Retrouvez tous les députés en activité de l'Assemblée nationale de la ".$legislature."e législature. Résultats de vote et analyses pour chaque député.";
-        $data['title'] = "Les députés de la ".$legislature."e législature";
+        $data['title_meta'] = "Députés ".$legislature."ème législature - Assemblée nationale | Datan";
+        $data['description_meta'] = "Retrouvez tous les députés en activité de l'Assemblée nationale de la ".$legislature."ème législature. Résultats de vote et analyses pour chaque député.";
+        $data['title'] = "Les députés de la ".$legislature."ème législature";
       }
       //Open Graph
       $controller = $this->router->fetch_class()."/".$this->router->fetch_method();
@@ -213,8 +213,8 @@
       // Meta
       $data['url'] = $this->meta_model->get_url();
       $data['title_meta'] = "Députés plus en activité - Assemblée Nationale | Datan";
-      $data['description_meta'] = "Retrouvez tous les députés plus en activité de l'Assemblée nationale de la 15e législature. Résultats de vote et analyses pour chaque député.";
-      $data['title'] = "Députés plus en activité de l'Assemblée nationale";
+      $data['description_meta'] = "Retrouvez tous les députés plus en activité de l'Assemblée nationale de la 15ème législature. Résultats de vote et analyses pour chaque député.";
+      $data['title'] = "Les anciens députés de la ".legislature_current()."ème legislature";
       // Open graph
       $controller = $this->router->fetch_class()."/".$this->router->fetch_method();
       $data['ogp'] = $this->meta_model->get_ogp($controller, $data['title_meta'], $data['description_meta'], $data['url'], $data);
@@ -480,8 +480,8 @@
       // Meta
       $data['url'] = $this->meta_model->get_url();
       $depute = $data['depute']['nameFirst'].' '.$data['depute']['nameLast'];
-      $data['title_meta'] = $depute." - Historique ".$legislature."e législature | Datan";
-      $data['description_meta'] = "Découvrez l'historique  ".$data['gender']['du']." député".$data['gender']['e']." ".$depute." pour la ".$legislature."e législature : taux de participation, loyauté avec son groupe, proximité avec la majorité présidentielle.";
+      $data['title_meta'] = $depute." - Historique ".$legislature."ème législature | Datan";
+      $data['description_meta'] = "Découvrez l'historique  ".$data['gender']['du']." député".$data['gender']['e']." ".$depute." pour la ".$legislature."ème législature : taux de participation, loyauté avec son groupe, proximité avec la majorité présidentielle.";
       $data['title'] = $depute;
       $data['title_breadcrumb'] = mb_substr($data['depute']['nameFirst'], 0, 1).'. '.$data['depute']['nameLast'];
       // Breadcrumb
@@ -565,27 +565,11 @@
       // Commission parlementaire
       $data['commission_parlementaire'] = $this->deputes_model->get_commission_parlementaire($mpId);
 
-      // Query - get active fields + votes by field + check the logos
+      // Get active fields
       $data['fields'] = $this->fields_model->get_active_fields();
-      foreach ($data['fields'] as $key => $field) {
-        // Get votes by field
-        $x[$field["slug"]] = $this->votes_model->get_votes_datan_depute_field($mpId, $field['slug'], 2);
-        if (!empty($x[$field["slug"]])) {
-          $data['fields_voted'][] = $field;
-        }
-        $x[$field["slug"]] = array_slice($x[$field["slug"]], 0, 2);
-      }
-      // Check the logos
-      if ($data["fields_voted"]){
-        foreach ($data["fields_voted"] as $key => $value) {
-          if ($this->functions_datan->get_http_response_code(base_url().'/assets/imgs/fields/'.$value["slug"].'.svg') != "200"){
-            $data['fields_voted'][$key]["logo"] = FALSE;
-          } else {
-            $data['fields_voted'][$key]["logo"] = TRUE;
-          }
-        }
-      }
-      $data['by_field'] = $x;
+
+      // Get votes
+      $data['votes'] = $this->votes_model->get_votes_datan_depute($mpId);
 
       // Query - gender
       $data['gender'] = gender($data['depute']['civ']);
@@ -628,6 +612,8 @@
       $controller = $this->router->fetch_class()."/".$this->router->fetch_method();
       $data['ogp'] = $this->meta_model->get_ogp($controller, $data['title_meta'], $data['description_meta'], $data['url'], $data);
       // JS
+      $data['js_to_load_before_datan'] = array("isotope.pkgd.min");
+      $data['js_to_load']= array("datan/sorting");
       // CSS
       // Preloads
       $data['preloads'] = array(
@@ -637,104 +623,8 @@
       );
       // Load views
       $this->load->view('templates/header', $data);
+      $this->load->view('templates/button_up');
       $this->load->view('deputes/votes_datan', $data);
-      $this->load->view('templates/breadcrumb', $data);
-      $this->load->view('templates/footer');
-    }
-
-    // Pages deputes/x/votes/field
-    public function votes_datan_field($input, $departement, $field){
-      // Query 1 = infos générales députés
-      $input_depute = $input;
-      $data['depute'] = $this->deputes_model->get_depute_individual($input, $departement);
-      $mpId = $data['depute']['mpId'];
-
-      if (empty($data['depute'])) {
-        show_404($this->functions_datan->get_404_infos());
-      }
-
-      // Check if it is in legislature
-      if (!in_array($data['depute']['legislature'], array(15))) {
-        show_404($this->functions_datan->get_404_infos());
-      }
-
-      // Query - get active votes
-      $data['votes'] = $this->votes_model->get_votes_datan_depute_field($mpId, $field, FALSE);
-
-      if (empty($data['votes'])) {
-        show_404($this->functions_datan->get_404_infos());
-      }
-
-      // Variables
-      $nameLast = $data['depute']['nameLast'];
-      $nameUrl = $input_depute;
-      $data['active'] = $data['depute']['active'];
-      $legislature = $data['depute']['legislature'];
-
-      // Query get info on field
-      $data['field'] = $this->fields_model->get_field($field);
-      $groupe_id = $data['depute']['groupeId'];
-
-      // Group color
-      $data['depute']['couleurAssociee'] = $this->groupes_model->get_groupe_color(array($data['depute']['libelleAbrev'], $data['depute']['couleurAssociee']));
-
-      // Commission parlementaire
-      $data['commission_parlementaire'] = $this->deputes_model->get_commission_parlementaire($mpId);
-
-      // Query - gender
-      $data['gender'] = gender($data['depute']['civ']);
-
-      // Historique du député
-      $data['mandat_edito'] = $this->depute_edito->get_nbr_lettre($data['depute']['mandatesN']);
-
-      // Other MPs from the same group
-      $data['other_deputes'] = $this->deputes_model->get_other_deputes($groupe_id, $nameLast, $mpId, $data['active'], $legislature);
-      // OTHER MPs from the same departement
-      $data['other_deputes_dpt'] = $this->deputes_model->get_deputes_all($legislature, $data['active'], $departement);
-
-      // Meta
-      $data['url'] = $this->meta_model->get_url();
-      $depute = $data['depute']['nameFirst'].' '.$data['depute']['nameLast'];
-      $data['title_meta'] = $depute." - Votes ".mb_strtolower($data['field']['name'])." | Datan";
-      $data['description_meta'] = "Découvrez toutes les positions ".$data['gender']['du']." député".$data['gender']['e']." ".$depute." concernant ".$data['field']['libelle'].".";
-      $data['title'] = $depute;
-      $data['title_breadcrumb'] = mb_substr($data['depute']['nameFirst'], 0, 1).'. '.$data['depute']['nameLast'];
-      // Breadcrumb
-      $data['breadcrumb'] = array(
-        array(
-          "name" => "Datan", "url" => base_url(), "active" => FALSE
-        ),
-        array(
-          "name" => "Députés", "url" => base_url()."deputes", "active" => FALSE
-        ),
-        array(
-          "name" => $data['depute']['departementNom']." (".$data['depute']['departementCode'].")", "url" => base_url()."deputes/".$data['depute']['dptSlug'], "active" => FALSE
-        ),
-        array(
-          "name" => $data['title_breadcrumb'], "url" => base_url()."deputes/".$data['depute']['dptSlug']."/depute_".$nameUrl, "active" => FALSE
-        ),
-        array(
-          "name" => "Votes", "url" => base_url()."deputes/".$data['depute']['dptSlug']."/depute_".$nameUrl."/votes", "active" => FALSE
-        ),
-        array(
-          "name" => $data['field']['name'], "url" => base_url()."deputes/".$data['depute']['dptSlug']."/depute_".$nameUrl."/votes".NULL."/".$data['field']['slug'], "active" => TRUE
-        )
-      );
-      $data['breadcrumb_json'] = $this->breadcrumb_model->breadcrumb_json($data['breadcrumb']);
-      // Open Graph
-      $controller = $this->router->fetch_class()."/".$this->router->fetch_method();
-      $data['ogp'] = $this->meta_model->get_ogp($controller, $data['title_meta'], $data['description_meta'], $data['url'], $data);
-      // CSS
-      // JS
-      // Preloads
-      $data['preloads'] = array(
-        array("href" => asset_url()."imgs/cover/hemicycle-front-375.jpg", "as" => "image", "media" => "(max-width: 575.98px)"),
-        array("href" => asset_url()."imgs/cover/hemicycle-front-768.jpg", "as" => "image", "media" => "(min-width: 576px) and (max-width: 970px)"),
-        array("href" => asset_url()."imgs/cover/hemicycle-front.jpg", "as" => "image", "media" => "(min-width: 970.1px)"),
-      );
-      // Load views
-      $this->load->view('templates/header', $data);
-      $this->load->view('deputes/votes_datan_field', $data);
       $this->load->view('templates/breadcrumb', $data);
       $this->load->view('templates/footer');
     }
