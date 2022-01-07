@@ -2,67 +2,11 @@
   <?php if (!empty($depute['couleurAssociee'])): ?>
     <div class="liseret-groupe" style="background-color: <?= $depute['couleurAssociee'] ?>"></div>
   <?php endif; ?>
-  <div class="container pg-depute-individual pb-5">
+  <div class="container pg-depute-votes pb-5">
     <div class="row">
-      <div class="col-12 col-md-8 col-lg-4 offset-md-2 offset-lg-0 px-lg-4 ">
+      <div class="col-12 col-md-8 col-lg-4 offset-md-2 offset-lg-0">
         <div class="sticky-top" style="margin-top: -110px; top: 110px;">
-          <div class="card card-profile">
-            <div class="card-body">
-              <!-- IMAGE MP -->
-              <div class="img">
-                <div class="d-flex justify-content-center">
-                  <div class="depute-img-circle">
-                    <?php if ($depute['img']): ?>
-                      <picture>
-                        <source srcset="<?= asset_url(); ?>imgs/deputes_nobg_webp/depute_<?= $depute['idImage'] ?>_webp.webp" type="image/webp">
-                        <source srcset="<?= asset_url(); ?>imgs/deputes_nobg/depute_<?= $depute['idImage'] ?>.png" type="image/png">
-                        <img src="<?= asset_url(); ?>imgs/deputes_original/depute_<?= $depute['idImage'] ?>.png" alt="<?= $title ?>">
-                      </picture>
-                      <?php else: ?>
-                        <picture>
-                          <source srcset="<?= asset_url() ?>imgs/placeholder/placeholder-face-2.png" type="image/png">
-                          <img src="<?= asset_url() ?>imgs/placeholder/placeholder-face-2.png" alt="<?= $title ?>">
-                        </picture>
-                    <?php endif; ?>
-                  </div>
-                </div>
-              </div>
-              <!-- INFOS GENERALES -->
-              <div class="bloc-infos">
-                <h1 class="text-center text-lg-left"><?= $title ?></h1>
-                <div class="link-group text-center text-lg-left mt-1">
-                  <a href="<?= base_url() ?>groupes/legislature-<?= $depute['legislature'] ?>/<?= mb_strtolower($depute['libelleAbrev']) ?>" style="color: <?= $depute['couleurAssociee'] ?>; --color-group: <?= $depute['couleurAssociee'] ?>">
-                    <?= $depute['libelle'] ?>
-                  </a>
-                </div>
-              </div>
-              <!-- BIOGRAPHIE -->
-              <div class="bloc-bref mt-3 d-flex justify-content-center justify-content-lg-start">
-                <ul>
-                  <li class="first">
-                    <div class="label"><?= file_get_contents(asset_url().'imgs/icons/geo-alt-fill.svg') ?></div>
-                    <div class="value"><?= $depute['departementNom'].' ('.$depute['departementCode'].')'?></div>
-                  </li>
-                  <li>
-                    <div class="label"><?= file_get_contents(asset_url().'imgs/icons/person-fill.svg') ?></div>
-                    <div class="value"><?= $depute['age'] ?> ans</div>
-                  </li>
-                  <li class="mb-0">
-                    <div class="label"><?= file_get_contents(asset_url().'imgs/icons/briefcase-fill.svg') ?></div>
-                    <div class="value">Commission <?= $commission_parlementaire['commissionAbrege'] ?></div>
-                  </ul>
-              </div>
-            </div>
-            <?php if ($active): ?>
-              <div class="mandats d-flex justify-content-center align-items-center active">
-                <span class="active"><?= mb_strtoupper($mandat_edito) ?> MANDAT</span>
-              </div>
-              <?php else: ?>
-                <div class="mandats d-flex justify-content-center align-items-center inactive">
-                  <span class="inactive">PLUS EN ACTIVITÉ</span>
-                </div>
-            <?php endif; ?>
-          </div> <!-- END CARD PROFILE -->
+          <?php $this->load->view('deputes/partials/card_individual.php', array('historique' => FALSE, 'last_legislature' => $depute['legislature'], 'legislature' => $depute['legislature'], 'tag' => 'span')) ?>
         </div> <!-- END STICKY TOP -->
       </div> <!-- END COL -->
       <div class="col-md-10 col-lg-8 offset-md-1 offset-lg-0 pl-lg-5 bloc-votes-datan">
@@ -76,7 +20,7 @@
         </div>
         <div class="row mt-4">
           <div class="col-12">
-            <h2>Tous les votes <?= $gender["du"] ?> député<?= $gender["e"] ?> <?= $title ?></h2>
+            <h1>Tous les votes <?= $gender["du"] ?> député<?= $gender["e"] ?> <?= $title ?></h1>
           </div>
         </div>
         <div class="row mt-4">
@@ -90,6 +34,11 @@
             <p>
               C'est pourquoi l'équipe de Datan contextualise et reformule certains scrutins. Pour découvrir les positions de <b><?= $title ?></b> sur ces votes, <a href="<?= base_url() ?>deputes/<?= $depute['dptSlug'] ?>/depute_<?= $depute['nameUrl'] ?>/votes">cliquez ici</a>.
             </p>
+          </div>
+        </div>
+        <div class="row mt-4">
+          <div class="col-12">
+            <h2>Les positions de <?= $title ?> sur <span class="text-primary"><?= count($votes) ?> scrutins</span></h2>
           </div>
         </div>
         <div class="row mt-4">

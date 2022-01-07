@@ -6,7 +6,7 @@
             <?= file_get_contents(asset_url().'imgs/icons/arrow_left.svg') ?>
             Retour profil
           </a>
-          <h2 class="title"><?= $title ?></h2>
+          <span class="title"><?= $title ?></span>
           <p class="subtitle"><?= $depute['libelle'] ?></p>
           <p><?= $depute['departementNom'] ?> (<?= $depute['departementCode'] ?>)</p>
         </div>
@@ -48,12 +48,12 @@
       </div>
     </div>
   </div>
-  <div class="container pg-depute-individual">
+  <div class="container pg-depute-votes">
     <div class="row">
       <div class="col-lg-4 d-none d-lg-block"> <!-- CARD ONLY > lg -->
         <div style="margin-top: -110px; top: 110px;">
-          <?php $this->load->view('deputes/partials/card_individual.php', array('historique' => FALSE, 'last_legislature' => $depute['legislature'], 'legislature' => $depute['legislature'])) ?>
-        </div> <!-- END STICKY TOP -->
+          <?php $this->load->view('deputes/partials/card_individual.php', array('historique' => FALSE, 'last_legislature' => $depute['legislature'], 'legislature' => $depute['legislature'], 'tag' => 'span')) ?>
+        </div>
         <div class="sticky-top mt-5" style="margin-top: -110px; top: 110px;">
           <div class="card">
             <div class="card-body badges-filter px-4 py-3">
@@ -89,7 +89,7 @@
         </div>
         <div class="row mt-4">
           <div class="col-12">
-            <h2 class="mb-0">Les votes de <?= $title ?></h2>
+            <h1 class="mb-0">Les votes de <?= $title ?></h1>
           </div>
         </div>
         <div class="row mt-4">
@@ -105,6 +105,11 @@
             </p>
           </div>
         </div>
+        <div class="row mt-4">
+          <div class="col-12">
+            <h2>Découvrez les <span class="text-primary"><?= count($votes) ?> votes</span> décryptés de <?= $title ?></h2>
+          </div>
+        </div>
         <div class="row mt-4 sorting">
           <?php foreach ($votes as $vote): ?>
             <div class="col-md-6 sorting-item <?= $vote['category_slug'] ?>">
@@ -118,7 +123,7 @@
     </div>
   </div> <!-- END CONTAINER -->
   <!-- AUTRES DEPUTES -->
-  <div class="container-fluid pg-depute-individual bloc-others-container mt-5">
+  <div class="container-fluid bloc-others-container mt-5">
     <div class="container bloc-others">
       <div class="row">
         <div class="col-12">

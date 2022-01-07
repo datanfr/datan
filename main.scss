@@ -982,6 +982,80 @@ input#quicksearch[type=text]{
     }
   }
 }
+/* 6. card-profile (MPs and groups) */
+.card-profile {
+  border: none;
+  top: 0px;
+  border-radius: 10px;
+  box-shadow: $card-box-shadow;
+  .title{
+    color: $text-gray;
+    font-size: $h1-font-size*1.1;
+    line-height: 1.2;
+    font-weight: 800;
+  }
+  .mandats{
+    color: #fff;
+    font-weight: 800;
+    font-size: $h4-font-size;
+    padding: 0.35rem 0 0.35rem 0;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+    &.active{
+      background-color: $primary;
+    }
+    &.inactive{
+      background-color: $danger;
+    }
+  }
+  .card-body{
+    padding: 1.5rem 1.8rem;
+  }
+  .img{
+    .depute-img-circle{
+      width: 150px;
+      height: 150px;
+      overflow: hidden;
+      position: relative;
+      border-radius: 50%;
+      background: linear-gradient(#99BDDA, white);
+      text-align: center;
+      img{
+        width: 84%;
+        height: auto;
+        margin-top: -10px;
+      }
+    }
+  }
+  .bloc-bref{
+    ul{
+      padding-inline-start: 0;
+      margin-bottom: 0;
+      display:inline-block;
+    }
+    li{
+      list-style: none;
+      display: flex;
+      margin-bottom: 8px;
+      .label{
+        min-width: 30px;
+        margin-right: 1rem;
+      }
+      .value{
+        font-weight: 600;
+      }
+    }
+    svg{
+      color: $primary;
+      width: 1.2em;
+      height: auto;
+    }
+  }
+  .link-group{
+    font-size: $h5-font-size;
+    font-weight: 600;
+  }
+}
 /*
 ################
                TABLES
@@ -1706,13 +1780,7 @@ ul.ui-menu{
     font-size: $h1-font-size*1.1;
     font-weight: 800;
   }
-  .bloc-links, .bloc-bref, .bloc-statistiques {
-    h2{
-      font-size: $h5-font-size;
-      font-weight: 700;
-      color: $text-gray;
-    }
-  }
+
   .bloc-statistiques, .bloc-votes, .bloc-bio, .bloc-election, .bloc-links, .bloc-chiffres, .bloc-key-votes, .bloc-mandats, .bloc-social, .bloc-elections-history {
     h2{
       font-size: $h2-font-size;
@@ -1726,119 +1794,6 @@ ul.ui-menu{
     }
   }
   /* FIN HN */
-  /* CARD PROFILE */
-  .card-profile{
-    border: none;
-    top: 0px;
-    border-radius: 10px;
-    box-shadow: $card-box-shadow;
-    .title{
-      color: $text-gray;
-      font-size: $h1-font-size*1.1;
-      font-weight: 800;
-    }
-    .mandats{
-      color: #fff;
-      font-weight: 800;
-      font-size: $h4-font-size;
-      padding: 0.35rem 0 0.35rem 0;
-      border-bottom-left-radius: 10px;
-      border-bottom-right-radius: 10px;
-      &.active{
-        background-color: $primary;
-      }
-      &.inactive{
-        background-color: $danger;
-      }
-    }
-    .card-body{
-      padding: 1.5rem 1.8rem;
-    }
-  }
-  .img{
-    .depute-img-circle{
-      width: 150px;
-      height: 150px;
-      overflow: hidden;
-      position: relative;
-      border-radius: 50%;
-      background: linear-gradient(#99BDDA, white);
-      text-align: center;
-      img{
-        width: 84%;
-        height: auto;
-        margin-top: -10px;
-      }
-    }
-    .depute-img-rectangle{
-      width: 150px;
-      height: 160px;
-      overflow: hidden;
-      position: relative;
-      border-radius: 4px;
-      img{
-        width: 100%;
-        height: auto;
-        margin-top: -10px;
-      }
-    }
-  }
-  /* Bloc Infos générales */
-  .bloc-infos{
-    .groupe{
-      font-size: $h5-font-size;
-    }
-    .active{
-      font-size: $h5-font-size;
-    }
-    .btn-group{
-      background-color: #ffffff;
-      border-radius: 5px;
-      padding: 1px;
-      &:hover{
-        background-color: var(--color-group, black);
-        span{
-          color: #ffffff !important;
-        }
-      }
-      img{
-        width: 60px;
-        height: auto;
-      }
-      span{
-        font-weight: 700;
-      }
-    }
-    .link-group{
-      font-size: $h5-font-size;
-      font-weight: 600;
-    }
-  }
-  /* Bloc En Bref */
-  .bloc-bref{
-    ul{
-      padding-inline-start: 0;
-      margin-bottom: 0;
-      display:inline-block;
-    }
-    li{
-      list-style: none;
-      display: flex;
-      margin-bottom: 8px;
-      .label{
-        min-width: 30px;
-        margin-right: 1rem;
-      }
-      .value{
-        font-weight: 600;
-      }
-    }
-    svg{
-      color: $primary;
-      width: 1.2em;
-      height: auto;
-    }
-  }
   /* Bloc election feature */
   .card-election-feature{
     background-color: $bleu;
@@ -2018,10 +1973,22 @@ ul.ui-menu{
 }
 /*
 ################
-               PAGE DEPUTE VOTES DATAN (pg-depute-individual)
+               PAGE DEPUTE VOTES DATAN (pg-depute-votes) (decryptes and all)
 ################
 */
-.pg-depute-individual, .pg-groupe-individual{
+.pg-depute-votes {
+  h1 {
+    font-size: $h2-font-size;
+    font-weight: 800;
+    color: $text-gray;
+  }
+  h2 {
+    font-size: $h5-font-size;
+    font-weight: 800;
+    color: $text-gray;
+  }
+}
+.pg-groupe-individual{
   .bloc-votes-datan{
     h2{
       font-size: 1.9em;

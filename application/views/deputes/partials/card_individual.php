@@ -21,7 +21,7 @@
     </div>
     <!-- INFOS GENERALES -->
     <div class="bloc-infos">
-      <h1 class="text-center"><?= $title ?></h1>
+      <<?= $tag ?> class="title d-block text-center"><?= $title ?></<?= $tag ?>>
       <?php if (!empty($depute['libelle'])) : ?>
         <div class="link-group text-center mt-1">
           <?php if ($legislature >= 15): ?>
