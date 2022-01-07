@@ -153,7 +153,7 @@
             "name" => "Députés", "url" => base_url()."deputes", "active" => FALSE
           ),
           array(
-            "name" => $legislature."e législature", "url" => base_url()."deputes/legislature-".$legislature, "active" => TRUE
+            "name" => $legislature."ème législature", "url" => base_url()."deputes/legislature-".$legislature, "active" => TRUE
           )
         );
       }
@@ -163,12 +163,12 @@
       $data['url'] = $this->meta_model->get_url();
       if ($legislature == legislature_current()) {
         $data['title_meta'] = "Députés - Assemblée Nationale | Datan";
-        $data['description_meta'] = "Retrouvez tous les députés en activité de l'Assemblée nationale de la ".legislature_current()."e législature. Résultats de vote et analyses pour chaque député.";
-        $data['title'] = "Les 577 députés de l'Assemblée nationale";
+        $data['description_meta'] = "Retrouvez tous les députés en activité de l'Assemblée nationale de la ".legislature_current()."ème législature. Résultats de vote et analyses pour chaque député.";
+        $data['title'] = "Les députés de l'Assemblée nationale";
       } else {
-        $data['title_meta'] = "Députés ".$legislature."e législature - Assemblée nationale | Datan";
-        $data['description_meta'] = "Retrouvez tous les députés en activité de l'Assemblée nationale de la ".$legislature."e législature. Résultats de vote et analyses pour chaque député.";
-        $data['title'] = "Les députés de la ".$legislature."e législature";
+        $data['title_meta'] = "Députés ".$legislature."ème législature - Assemblée nationale | Datan";
+        $data['description_meta'] = "Retrouvez tous les députés en activité de l'Assemblée nationale de la ".$legislature."ème législature. Résultats de vote et analyses pour chaque député.";
+        $data['title'] = "Les députés de la ".$legislature."ème législature";
       }
       //Open Graph
       $controller = $this->router->fetch_class()."/".$this->router->fetch_method();
@@ -213,8 +213,8 @@
       // Meta
       $data['url'] = $this->meta_model->get_url();
       $data['title_meta'] = "Députés plus en activité - Assemblée Nationale | Datan";
-      $data['description_meta'] = "Retrouvez tous les députés plus en activité de l'Assemblée nationale de la 15e législature. Résultats de vote et analyses pour chaque député.";
-      $data['title'] = "Députés plus en activité de l'Assemblée nationale";
+      $data['description_meta'] = "Retrouvez tous les députés plus en activité de l'Assemblée nationale de la 15ème législature. Résultats de vote et analyses pour chaque député.";
+      $data['title'] = "Les anciens députés de la ".legislature_current()."ème legislature";
       // Open graph
       $controller = $this->router->fetch_class()."/".$this->router->fetch_method();
       $data['ogp'] = $this->meta_model->get_ogp($controller, $data['title_meta'], $data['description_meta'], $data['url'], $data);
@@ -480,8 +480,8 @@
       // Meta
       $data['url'] = $this->meta_model->get_url();
       $depute = $data['depute']['nameFirst'].' '.$data['depute']['nameLast'];
-      $data['title_meta'] = $depute." - Historique ".$legislature."e législature | Datan";
-      $data['description_meta'] = "Découvrez l'historique  ".$data['gender']['du']." député".$data['gender']['e']." ".$depute." pour la ".$legislature."e législature : taux de participation, loyauté avec son groupe, proximité avec la majorité présidentielle.";
+      $data['title_meta'] = $depute." - Historique ".$legislature."ème législature | Datan";
+      $data['description_meta'] = "Découvrez l'historique  ".$data['gender']['du']." député".$data['gender']['e']." ".$depute." pour la ".$legislature."ème législature : taux de participation, loyauté avec son groupe, proximité avec la majorité présidentielle.";
       $data['title'] = $depute;
       $data['title_breadcrumb'] = mb_substr($data['depute']['nameFirst'], 0, 1).'. '.$data['depute']['nameLast'];
       // Breadcrumb

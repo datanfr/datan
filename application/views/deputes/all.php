@@ -21,7 +21,6 @@
                 <a href="<?= base_url() ?>deputes/inactifs" class="btn btn-primary my-2">Anciens députés (15<sup>ème</sup> législature)</a>
                 <a href="<?= base_url() ?>deputes/legislature-14" class="btn btn-primary my-2">Députés de la 14<sup>ème</sup> législature</a>
               </div>
-              <h2 class="mt-5">Découvrez les députés en activité de la <?= legislature_current() ?><sup>ème</sup> législature</h2>
             <?php else: ?>
               <p>
                 Depuis leur élection, <?= $number_inactive ?> députés ont quitté l'Assemblée pour cause de nomination au Gouvernement, de démission, ou de décès. Découvrez sur cette page les députés plus en activité.
@@ -32,14 +31,27 @@
             <?php endif; ?>
           <?php else: ?>
             <p>
-              Cette page présente tous les députés qui ont servi lors de la <?= $legislature ?><sup>e</sup> législature.
+              Cette page présente tous les députés qui ont servi lors de la <?= $legislature ?><sup>ème</sup> législature.
             </p>
             <p>
-              Pendant la <?= $legislature ?><sup></sup> législature, il y avait à l'Assemblée nationale <?= $male["n"] ?> députés hommes (<?= $male["percentage"] ?> %) et <?= $female["n"] ?> femmes (<?= $female["percentage"] ?> %).
+              Pendant la <?= $legislature ?><sup>ème</sup> législature, il y avait à l'Assemblée nationale <?= $male["n"] ?> députés hommes (<?= $male["percentage"] ?> %) et <?= $female["n"] ?> femmes (<?= $female["percentage"] ?> %).
             </p>
             <p>
               Pour découvrir les députés de la législature actuelle, <a href="<?= base_url() ?>deputes">cliquez ici</a>.
             </p>
+          <?php endif; ?>
+        </div>
+      </div>
+      <div class="row mt-5">
+        <div class="col-12">
+          <?php if ($legislature == legislature_current()): ?>
+            <?php if ($active): ?>
+              <h2>Les députés en activité de la <?= $legislature ?><sup>ème</sup> législature</h2>
+              <?php else: ?>
+              <h2>Les <span class="text-primary"><?= count($deputes) ?> anciens députés</span> de la <?= $legislature ?><sup>ème</sup> législature</h2>
+            <?php endif; ?>
+            <?php else: ?>
+            <h2>Les <span class="text-primary"><?= count($deputes) ?> députés</span> de la <?= $legislature ?><sup>ème</sup> législature</h2>
           <?php endif; ?>
         </div>
       </div>
@@ -48,15 +60,6 @@
           <div class="sticky-top sticky-offset">
             <!-- Groupes -->
             <div class="d-flex flex-column d-lg-none">
-              <?php if ($active): ?>
-                <h3>
-                  Les <span class="text-primary">577</span> députés de l'Assemblée nationale
-                </h3>
-              <?php else: ?>
-                <h3>
-                  <span class="text-primary"><?= $number_inactive ?></span> députés de la 15<sup>e</sup> législature ne sont plus en activité
-                </h3>
-              <?php endif; ?>
               <?php if ($active): ?>
                 <div class="mt-3 badges-groupes">
                   <?php foreach ($groupes as $groupe): ?>
