@@ -1746,13 +1746,13 @@ ul.ui-menu{
     font-weight: 800;
     color: $text-black;
   }
-  h3{
-    color: $text-black;
-    font-weight: 600;
+  h2{
+    font-size: $h2-font-size;
+    font-weight: 800;
+    color: $text-gray;
   }
   .bloc-titre{
-    margin-top: 4rem;
-    margin-bottom: 4rem;
+    margin-top: 3rem;
   }
   .badges-groupes{
     .badge {
