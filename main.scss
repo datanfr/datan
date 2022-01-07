@@ -292,6 +292,7 @@ body:not(.pg-mentions) #tarteaucitronIcon {
 ################
 */
 .don{
+  height: 30px;
   background-color: $bleu;
   transition: 0.3s;
   &:hover{
@@ -1131,7 +1132,7 @@ input#quicksearch[type=text]{
 ################
 */
 body{
-  padding-top: 73px;
+  padding-top: 100px;
 }
 #navbar-datan{
   background-color: $bg-colour;
