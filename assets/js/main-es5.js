@@ -52,12 +52,16 @@ $(function () {
 ################
 */
 
+var filterBanner = $('#filterBanner'); // Filter appear on mobile
+
 var btn = $('#btnup');
 $(window).scroll(function () {
-  if ($(window).scrollTop() > 300) {
+  if ($(window).scrollTop() > 400) {
     btn.addClass('show');
+    filterBanner.removeClass('d-none').addClass('d-flex');
   } else {
     btn.removeClass('show');
+    filterBanner.addClass('d-none').removeClass('d-flex');
   }
 });
 btn.on('click', function (e) {
