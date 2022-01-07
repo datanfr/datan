@@ -1,68 +1,58 @@
-  <div class="container-fluid bloc-img-deputes async_background" id="container-always-fluid" style="height: 13em"></div>
+  <div class="container-fluid bloc-img-deputes d-flex async_background pt-0" id="container-always-fluid" style="min-height: 13em">
+    <div class="container banner-depute-mobile d-flex d-lg-none flex-column justify-content-center py-2 mt-2">
+      <div class="row">
+        <div class="col-12">
+          <a class="btn btn-primary text-border mb-2" href="<?= base_url() ?>deputes/<?= $depute['dptSlug'] ?>/depute_<?= $depute['nameUrl'] ?>">
+            <?= file_get_contents(asset_url().'imgs/icons/arrow_left.svg') ?>
+            Retour profil
+          </a>
+          <h2 class="title"><?= $title ?></h2>
+          <p class="subtitle"><?= $depute['libelle'] ?></p>
+          <p><?= $depute['departementNom'] ?> (<?= $depute['departementCode'] ?>)</p>
+        </div>
+      </div>
+    </div>
+  </div>
   <?php if (!empty($depute['couleurAssociee'])): ?>
     <div class="liseret-groupe" style="background-color: <?= $depute['couleurAssociee'] ?>"></div>
   <?php endif; ?>
+  <div class="d-none d-lg-none justify-content-between align-items-center sticky-top p-3" data-toggle="modal" data-target="#filterModal" id="filterBanner" style="top: 70px">
+    <span class="text-white font-weight-bold">Filtrer par catégorie</span>
+    <?= file_get_contents(asset_url().'imgs/icons/funnel-fill.svg') ?>
+  </div>
+  <!-- Modal filter only on mobile & tablet -->
+  <div class="modal fade" id="filterModal" tabindex="-1" role="dialog" aria-labelledby="filterModalTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content badges-filter">
+        <div class="modal-header">
+          <span class="title">Filtrer par catégorie</span>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="filters" id="filter">
+            <div class="mt-2">
+              <?php foreach ($fields as $field): ?>
+                <button type="button" class="badge badge-field popover_focus is-selected" value=".<?= strtolower($field['slug']) ?>"><?= $field['name'] ?></button>
+              <?php endforeach; ?>
+            </div>
+            <div class="mt-2">
+              <button type="button" id="all-categories" class="btn btn-primary" value="*">Toutes les catégories</button>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" data-dismiss="modal">Fermer</button>
+        </div>
+      </div>
+    </div>
+  </div>
   <div class="container pg-depute-individual">
     <div class="row">
-      <div class="col-12 col-md-8 col-lg-4 offset-md-2 offset-lg-0 px-lg-4">
+      <div class="col-lg-4 d-none d-lg-block"> <!-- CARD ONLY > lg -->
         <div style="margin-top: -110px; top: 110px;">
-          <div class="card card-profile">
-            <div class="card-body">
-              <!-- IMAGE MP -->
-              <div class="img">
-                <div class="d-flex justify-content-center">
-                  <div class="depute-img-circle">
-                    <?php if ($depute['img']): ?>
-                      <picture>
-                        <source srcset="<?= asset_url(); ?>imgs/deputes_nobg_webp/depute_<?= $depute['idImage'] ?>_webp.webp" type="image/webp">
-                        <source srcset="<?= asset_url(); ?>imgs/deputes_nobg/depute_<?= $depute['idImage'] ?>.png" type="image/png">
-                        <img src="<?= asset_url(); ?>imgs/deputes_original/depute_<?= $depute['idImage'] ?>.png" width="130" height="166" alt="<?= $title ?>">
-                      </picture>
-                      <?php else: ?>
-                        <picture>
-                          <source srcset="<?= asset_url() ?>imgs/placeholder/placeholder-face-2.png" type="image/png">
-                          <img src="<?= asset_url() ?>imgs/placeholder/placeholder-face-2.png" width="130" height="166" alt="<?= $title ?>">
-                        </picture>
-                    <?php endif; ?>
-                  </div>
-                </div>
-              </div>
-              <!-- INFOS GENERALES -->
-              <div class="bloc-infos">
-                <h1 class="text-center text-lg-left"><?= $title ?></h1>
-                <div class="link-group text-center text-lg-left mt-1">
-                  <a href="<?= base_url() ?>groupes/legislature-<?= $depute['legislature'] ?>/<?= mb_strtolower($depute['libelleAbrev']) ?>" style="color: <?= $depute['couleurAssociee'] ?>; --color-group: <?= $depute['couleurAssociee'] ?>">
-                    <?= $depute['libelle'] ?>
-                  </a>
-                </div>
-              </div>
-              <!-- BIOGRAPHIE -->
-              <div class="bloc-bref mt-3 d-flex justify-content-center justify-content-lg-start">
-                <ul>
-                  <li class="first">
-                    <div class="label"><?= file_get_contents(asset_url().'imgs/icons/geo-alt-fill.svg') ?></div>
-                    <div class="value"><?= $depute['departementNom'].' ('.$depute['departementCode'].')'?></div>
-                  </li>
-                  <li>
-                    <div class="label"><?= file_get_contents(asset_url().'imgs/icons/person-fill.svg') ?></div>
-                    <div class="value"><?= $depute['age'] ?> ans</div>
-                  </li>
-                  <li class="mb-0">
-                    <div class="label"><?= file_get_contents(asset_url().'imgs/icons/briefcase-fill.svg') ?></div>
-                    <div class="value">Commission <?= $commission_parlementaire['commissionAbrege'] ?></div>
-                  </ul>
-              </div>
-            </div>
-            <?php if ($active): ?>
-              <div class="mandats d-flex justify-content-center align-items-center active">
-                <span class="active"><?= mb_strtoupper($mandat_edito) ?> MANDAT</span>
-              </div>
-              <?php else: ?>
-                <div class="mandats d-flex justify-content-center align-items-center inactive">
-                  <span class="inactive">PLUS EN ACTIVITÉ</span>
-                </div>
-            <?php endif; ?>
-          </div> <!-- END CARD PROFILE -->
+          <?php $this->load->view('deputes/partials/card_individual.php', array('historique' => FALSE, 'last_legislature' => $depute['legislature'], 'legislature' => $depute['legislature'])) ?>
         </div> <!-- END STICKY TOP -->
         <div class="sticky-top mt-5" style="margin-top: -110px; top: 110px;">
           <div class="card">
@@ -89,7 +79,7 @@
       </div> <!-- END COL -->
       <!-- BLOC VOTES -->
       <div class="col-md-10 col-lg-8 offset-md-1 offset-lg-0 pl-lg-5 bloc-votes-datan">
-        <div class="row mt-4">
+        <div class="row mt-4 d-none d-lg-block">
           <div class="col-12 btn-back text-center text-lg-left">
             <a class="btn btn-outline-primary mx-2" href="<?= base_url() ?>deputes/<?= $depute['dptSlug'] ?>/depute_<?= $depute['nameUrl'] ?>">
               <?= file_get_contents(asset_url().'imgs/icons/arrow_left.svg') ?>
@@ -99,11 +89,11 @@
         </div>
         <div class="row mt-4">
           <div class="col-12">
-            <h2>Les votes de <?= $title ?></h2>
+            <h2 class="mb-0">Les votes de <?= $title ?></h2>
           </div>
         </div>
         <div class="row mt-4">
-          <div class="col-md-7 col-lg-6">
+          <div class="col-12">
             <p>
               L'équipe de Datan décrypte pour vous les votes les plus intéressants de la législature. Il s'agit des votes qui ont fait l'objet d'attention médiatique, ou sur lesquels un ou plusieurs groupes parlementaires étaient fortement divisés. Ces votes font l'objet d'une reformulation et d'une contextualisation, afin de les rendre plus compréhensibles.
             </p>
@@ -113,9 +103,6 @@
             <p>
               Pour avoir accès à tous les votes de <?= $title ?> à l'Assemblée nationale, <a href="<?= base_url() ?>deputes/<?= $depute['dptSlug'] ?>/depute_<?= $depute['nameUrl'] ?>/votes/all">cliquez ici</a>.
             </p>
-          </div>
-          <div class="d-none d-md-block col-md-5 col-lg-6 vote-svg">
-            <?= file_get_contents(asset_url()."imgs/svg/undraw_voting_nvu7.svg") ?>
           </div>
         </div>
         <div class="row mt-4 sorting">
