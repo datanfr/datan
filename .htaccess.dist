@@ -47,6 +47,7 @@
   RewriteRule ^groupes/udi-agir ./groupes/legislature-15/udi-agir [R=301,L]
 
   # redirection of MPs' vote fields
+  RewriteCond %{REQUEST_URI} !votes/all [NC]
   RewriteRule ^deputes/(.*)/depute_(.*)/votes/(.*) ./deputes/$1/depute_$2/votes [R=301,L]
 
   # remove trailing slashes from URLs
