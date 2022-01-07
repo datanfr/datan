@@ -1,12 +1,12 @@
-  <div class="container-fluid bloc-img-deputes d-flex async_background pt-0" id="container-always-fluid" style="min-height: 13em">
-    <div class="container banner-depute-mobile d-flex d-lg-none flex-column justify-content-center py-2 mt-2">
+  <div class="container-fluid bloc-img-deputes d-flex async_background" id="container-always-fluid" style="min-height: 13em">
+    <div class="container banner-depute-mobile d-flex d-lg-none flex-column justify-content-center py-2">
       <div class="row">
         <div class="col-12">
           <a class="btn btn-primary text-border mb-2" href="<?= base_url() ?>deputes/<?= $depute['dptSlug'] ?>/depute_<?= $depute['nameUrl'] ?>">
             <?= file_get_contents(asset_url().'imgs/icons/arrow_left.svg') ?>
             Retour profil
           </a>
-          <span class="title"><?= $title ?></span>
+          <span class="title d-block"><?= $title ?></span>
           <p class="subtitle"><?= $depute['libelle'] ?></p>
           <p><?= $depute['departementNom'] ?> (<?= $depute['departementCode'] ?>)</p>
         </div>
@@ -16,7 +16,7 @@
   <?php if (!empty($depute['couleurAssociee'])): ?>
     <div class="liseret-groupe" style="background-color: <?= $depute['couleurAssociee'] ?>"></div>
   <?php endif; ?>
-  <div class="d-none d-lg-none justify-content-between align-items-center sticky-top p-3" data-toggle="modal" data-target="#filterModal" id="filterBanner" style="top: 70px">
+  <div class="d-none d-lg-none justify-content-between align-items-center sticky-top p-3" data-toggle="modal" data-target="#filterModal" id="filterBanner" style="top: 100px">
     <span class="text-white font-weight-bold">Filtrer par catégorie</span>
     <?= file_get_contents(asset_url().'imgs/icons/funnel-fill.svg') ?>
   </div>
