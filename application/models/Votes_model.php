@@ -351,7 +351,7 @@
 
 
     public function get_votes_datan_depute($depute_id, $limit = FALSE){
-      $sql = 'SELECT vd.voteNumero, vd.legislature, vd.title AS vote_titre, vd.category, f.name AS category_libelle, vi.sortCode, date_format(vi.dateScrutin, "%d %M %Y") as dateScrutinFR, r.name AS reading,
+      $sql = 'SELECT vd.voteNumero, vd.legislature, vd.title AS vote_titre, vd.category, f.name AS category_libelle, f.slug AS category_slug, vi.sortCode, date_format(vi.dateScrutin, "%d %M %Y") as dateScrutinFR, r.name AS reading,
         CASE
         	WHEN vs.vote = 0 THEN "abstention"
         	WHEN vs.vote = 1 THEN "pour"

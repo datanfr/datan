@@ -314,6 +314,10 @@ body:not(.pg-mentions) #tarteaucitronIcon {
     font-size: $h7-font-size;
     margin: 0 0 8px 3px;
   }
+  .title{
+    font-weight: 800;
+    color: $text-gray;
+  }
 }
 .follow-us{
   background-color: $primary;
@@ -564,15 +568,14 @@ body:not(.pg-mentions) #tarteaucitronIcon {
     height: 250px !important;
   }
   @include media-breakpoint-up(md) {
-    width: 260px;
+    width: 270px;
     height: 250px !important;
   }
   @include media-breakpoint-up(lg) {
-    width: 260px;
+    width: 270px;
     height: 250px !important;
   }
   box-shadow: $card-box-shadow;
-  margin: 0 1em 0em 1em;
   border: none;
   display: flex;
   transition: 0.3s;

@@ -72,7 +72,7 @@
               <input type="text" id="quicksearch" placeholder="Recherchez un député..." />
             </div>
             <!-- Filters -->
-            <div class="filters mt-md-4 d-none d-lg-block">
+            <div class="filters mt-md-4 d-none d-lg-block" id="filter">
               <input class="radio-btn" name="radio-collection" id="radio-1" type="radio" checked="" value="*">
               <label for="radio-1" class="radio-label d-flex align-items-center">
                 <span class="d-flex align-items-center"><b>Tous les députés</b></span>
