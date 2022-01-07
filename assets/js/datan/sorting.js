@@ -22,7 +22,8 @@ $('#filter').on( 'click', 'input', function() {
 });
 
 // bind filter on button click
-$('#filter').on( 'click', 'button', function() {
+$(".filters").on( 'click', 'button', function() {
+  console.log("click");
   // get filter value from input value
   //var filterValue = this.value;
   buttonFilter = this.value;
@@ -33,10 +34,10 @@ $('#filter').on( 'click', 'button', function() {
 $(".badge-field").click(function(){
   $(this).addClass("is-selected");
   $(".badge-field").not(this).removeClass("is-selected").addClass("not-selected");
-})
-$('#all-categories').click(function(){
+});
+$(".all-categories").click(function(){
   $(".badge-field").removeClass("not-selected").addClass("is-selected");
-})
+});
 
 // use value of search field to filter
 var $quicksearch = $('#quicksearch').keyup( debounce( function() {
