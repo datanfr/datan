@@ -31,14 +31,14 @@
           </button>
         </div>
         <div class="modal-body">
-          <div class="filters" id="filter">
+          <div class="filters">
             <div class="mt-2">
               <?php foreach ($fields as $field): ?>
                 <button type="button" class="badge badge-field popover_focus is-selected" value=".<?= strtolower($field['slug']) ?>"><?= $field['name'] ?></button>
               <?php endforeach; ?>
             </div>
             <div class="mt-2">
-              <button type="button" id="all-categories" class="btn btn-primary" value="*">Toutes les catégories</button>
+              <button type="button" class="btn btn-primary all-categories" value="*">Toutes les catégories</button>
             </div>
           </div>
         </div>
@@ -58,14 +58,14 @@
           <div class="card">
             <div class="card-body badges-filter px-4 py-3">
               <span class="title">Filtrer par catégorie</span>
-              <div class="filters" id="filter">
+              <div class="filters">
                 <div class="mt-2">
                   <?php foreach ($fields as $field): ?>
                     <button type="button" class="badge badge-field popover_focus is-selected" value=".<?= strtolower($field['slug']) ?>"><?= $field['name'] ?></button>
                   <?php endforeach; ?>
                 </div>
                 <div class="mt-2">
-                  <button type="button" id="all-categories" class="btn btn-primary" value="*">Toutes les catégories</button>
+                  <button type="button" class="btn btn-primary all-categories" value="*">Toutes les catégories</button>
                 </div>
               </div>
             </div>
