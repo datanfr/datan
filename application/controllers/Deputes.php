@@ -569,7 +569,7 @@
       $data['fields'] = $this->fields_model->get_active_fields();
 
       // Get votes
-      $data['votes'] = $this->votes_model->get_votes_datan_depute($mpId); // ICI !
+      $data['votes'] = $this->votes_model->get_votes_datan_depute($mpId);
 
       // Query - gender
       $data['gender'] = gender($data['depute']['civ']);

@@ -4,8 +4,8 @@
   <?php endif; ?>
   <div class="container pg-depute-individual">
     <div class="row">
-      <div class="col-12 col-md-8 col-lg-4 offset-md-2 offset-lg-0 px-lg-4 ">
-        <div class="sticky-top" style="margin-top: -110px; top: 110px;">
+      <div class="col-12 col-md-8 col-lg-4 offset-md-2 offset-lg-0 px-lg-4">
+        <div style="margin-top: -110px; top: 110px;">
           <div class="card card-profile">
             <div class="card-body">
               <!-- IMAGE MP -->
@@ -64,6 +64,28 @@
             <?php endif; ?>
           </div> <!-- END CARD PROFILE -->
         </div> <!-- END STICKY TOP -->
+        <div class="sticky-top mt-5" style="margin-top: -110px; top: 110px;">
+          <div class="card">
+            <div class="card-body badges-filter px-4 py-3">
+              <span class="title">Filtrer par catégorie</span>
+              <div class="filters" id="filter">
+                <div class="mt-2">
+                  <?php foreach ($fields as $field): ?>
+                    <button type="button" class="badge badge-field popover_focus is-selected" value=".<?= strtolower($field['slug']) ?>"><?= $field['name'] ?></button>
+                  <?php endforeach; ?>
+                </div>
+                <div class="mt-2">
+                  <button type="button" id="all-categories" class="btn btn-primary" value="*">Toutes les catégories</button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="card mt-3">
+            <div class="card-body badges-filter px-4 py-3">
+              <input type="text" id="quicksearch" placeholder="Cherchez un vote..." />
+            </div>
+          </div>
+        </div>
       </div> <!-- END COL -->
       <!-- BLOC VOTES -->
       <div class="col-md-10 col-lg-8 offset-md-1 offset-lg-0 pl-lg-5 bloc-votes-datan">
@@ -96,37 +118,9 @@
             <?= file_get_contents(asset_url()."imgs/svg/undraw_voting_nvu7.svg") ?>
           </div>
         </div>
-        <div class="row mt-4">
-          <div class="col-7">
-            <div class="card">
-              <div class="card-body badges-filter">
-                <p>Filtrer par catégorie</p>
-                <div class="test-border*">
-                  <?php foreach ($fields as $field): ?>
-                    <span class="badge badge-field popover_focus is-selected"><span class="tick">&#10004; </span><?= $field['name'] ?></span>
-                  <?php endforeach; ?>
-                </div>
-                <div class="mt-2 test-border*">
-                  <button type="button" class="btn btn-secondary">Reset</button>
-                  <button type="button" class="btn btn-primary">Toutes les catégories</button>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="col-5">
-            <div class="card">
-              <div class="card-body badges-filter">
-                <p>Rechercher</p>
-                <div class="mt-3 mt-lg-0">
-                  <input type="text" id="quicksearch" placeholder="Cherchez un vote..." />
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
         <div class="row mt-4 sorting">
           <?php foreach ($votes as $vote): ?>
-            <div class="col-md-6 sorting-item">
+            <div class="col-md-6 sorting-item <?= $vote['category_slug'] ?>">
               <div class="d-flex justify-content-center my-3">
                 <?php $this->load->view('deputes/partials/card_vote.php', array('vote' => $vote)) ?>
               </div>
