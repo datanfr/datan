@@ -1,4 +1,4 @@
-<div class="card card-vote">
+<div class="card card-vote>
   <?php if ($vote['vote'] == 'nv'): ?>
     <div class="thumb absent d-flex align-items-center">
       <div class="d-flex align-items-center">
