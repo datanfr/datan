@@ -291,6 +291,25 @@ body:not(.pg-mentions) #tarteaucitronIcon {
                A CLASSER
 ################
 */
+body.modal-open {
+    overflow: visible;
+}
+#filterBanner{
+  background-color: $primary;
+  opacity: 0;
+  visibility: hidden;
+  z-index: 900;
+  transition: opacity .5s, visibility .5s;
+  &.d-flex{
+    opacity: 1;
+    visibility: visible;
+  }
+  svg{
+    color: #fff;
+    width: 25px;
+    height: auto;
+  }
+}
 .badges-filter {
   .badge {
     padding: 0.375rem 0.75rem;
@@ -671,26 +690,6 @@ body:not(.pg-mentions) #tarteaucitronIcon {
   @include media-breakpoint-up(lg){
     padding-top: 70px;
   }
-  input#quicksearch{
-    border: 1px solid #d4d4d4;
-    background-color: #fff;
-    padding: 5px;
-    border-radius: 5px;
-  }
-  input#quicksearch[type=text]{
-    //background-color: transparent;
-    //border-bottom: 1px solid $primary;
-    width: 100%;
-    color: $text-gray-light;
-    text-align: left;
-    &:focus{
-      //border-bottom: 1.5px solid $white;
-      outline: none;
-    }
-    &::placeholder{
-      color: $text-gray-light;
-    }
-  }
   // FILTER
   .filters{
     width: 100%;
@@ -749,6 +748,23 @@ body:not(.pg-mentions) #tarteaucitronIcon {
         background-position: center;
         background-size: 15px;
     }
+  }
+}
+input#quicksearch{
+  border: 1px solid #d4d4d4;
+  background-color: #fff;
+  padding: 5px;
+  border-radius: 5px;
+}
+input#quicksearch[type=text]{
+  width: 100%;
+  color: $text-gray-light;
+  text-align: left;
+  &:focus{
+    outline: none;
+  }
+  &::placeholder{
+    color: $text-gray-light;
   }
 }
 /*
@@ -1716,6 +1732,11 @@ ul.ui-menu{
     top: 0px;
     border-radius: 10px;
     box-shadow: $card-box-shadow;
+    .title{
+      color: $text-gray;
+      font-size: $h1-font-size*1.1;
+      font-weight: 800;
+    }
     .mandats{
       color: #fff;
       font-weight: 800;
@@ -2012,12 +2033,6 @@ ul.ui-menu{
       font-weight: 800;
       color: $primary;
     }
-    .vote-svg{
-      svg{
-        width: 100%;
-        height: auto;
-      }
-    }
     .badges-categories{
       .badge {
         padding: 7px 12px;
@@ -2037,6 +2052,16 @@ ul.ui-menu{
         height: auto;
       }
     }
+  }
+}
+.banner-depute-mobile{
+  color: #fff;
+  .title{
+    font-weight: 800;
+    font-size: 2.4em;
+  }
+  .subtitle{
+    margin-bottom: 0.5rem;
   }
 }
 /*
