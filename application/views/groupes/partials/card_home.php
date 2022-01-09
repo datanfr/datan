@@ -1,6 +1,6 @@
 <div class="card card-groupe">
   <div class="liseret" style="background-color: <?= $groupe["couleurAssociee"] ?>"></div>
-  <div class="card-avatar group">
+  <div class="card-avatar">
     <picture>
       <source srcset="<?= asset_url(); ?>imgs/groupes/webp/<?= $groupe['libelleAbrev'] ?>.webp" type="image/webp">
       <source srcset="<?= asset_url(); ?>imgs/groupes/<?= $groupe['libelleAbrev'] ?>.png" type="image/png">

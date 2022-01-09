@@ -898,8 +898,8 @@ input#quicksearch[type=text]{
     height: auto;
   }
 }
-.card-avatar {
-  &.group{
+.card-groupe{
+  .card-avatar{
     border-radius: 10%;
     padding: 10px;
     background-color: #fff;
@@ -914,8 +914,7 @@ input#quicksearch[type=text]{
     padding: 0;
     background: linear-gradient(#99BDDA, white);
     img{
-      width: 84%;
-      margin-top: -10px;
+      width: 80%;
     }
   }
 }
@@ -1041,9 +1040,8 @@ input#quicksearch[type=text]{
       background: linear-gradient(#99BDDA, white);
       text-align: center;
       img{
-        width: 84%;
+        width: 80%;
         height: auto;
-        margin-top: -10px;
       }
     }
   }
