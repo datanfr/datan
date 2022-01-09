@@ -328,9 +328,9 @@
                 <span class="subtitle"><?= $election_result['tour_election'] ?> tour des élections législatives de 2017 - <?= $depute["circo"] ?><sup><?= $depute["circo_abbrev"] ?></sup> circonscription <?= $depute['dptLibelle2'] ?><?= $depute['departementNom'] ?></span>
                 <div class="row row-chart-election mt-4">
                   <div class="col-md-5 d-flex flex-column justify-content-center">
-                    <p>Il y avait dans dans la circonscription <b><?= formatNumber($election_infos['inscrits']) ?> personnes inscrites</b> sur les listes électorales.</p>
+                    <p>Il y avait dans  la circonscription <b><?= formatNumber($election_infos['inscrits']) ?> personnes inscrites</b> sur les listes électorales.</p>
                     <p>Pendant le <?= $election_result['tour_election'] ?> tour, le taux d'abstention était de <?= $election_infos['abstention_rate'] ?> %. Au niveau national, il était de 57 %.</p>
-                    <p><?= $title ?> a été élu avec <?= formatNumber($election_result['voix']) ?> voix, soit <?= round($election_result['voix'] * 100 / $election_infos['inscrits']) ?>% des inscrits.</p>
+                    <p><?= $title ?> a été élu<?= $gender['e'] ?> avec <?= formatNumber($election_result['voix']) ?> voix, soit <?= round($election_result['voix'] * 100 / $election_infos['inscrits']) ?>% des inscrits.</p>
                     <p>Plus d'information ? <span class="url_obf" url_obf="<?= url_obfuscation("https://www.interieur.gouv.fr/Elections/Les-resultats/Legislatives/elecresult__legislatives-2017/(path)/legislatives-2017/" . $election_infos['dpt_url'] . "/" . $election_infos['dpt_url'] . "" . $election_infos['circo_url'] .".html") ?>">Cliquez ici.</span></p>
                   </div>
                   <div class="col-md-7 p-0 d-flex">
