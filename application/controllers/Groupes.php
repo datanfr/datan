@@ -15,9 +15,19 @@
     }
 
     //INDEX - Homepage with all groups//
-    public function actifs(){
+    public function index($legislature = NULL){
+
+      if ($legislature == legislature_current()) {
+        redirect('groupes');
+      }
+
+      if ($legislature == NULL) {
+        $legislature = legislature_current();
+      }
+
       $data['active'] = TRUE;
-      $data['groupes'] = $this->groupes_model->get_groupes_all($data['active'], legislature_current());
+      $data['legislature'] = $legislature;
+      $data['groupes'] = $this->groupes_model->get_groupes_all($data['active'], $data['legislature']);
       $data['number_groupes_inactive'] = $this->groupes_model->get_number_inactive_groupes();
       $data['number'] = $this->groupes_model->get_number_active_groupes();
       $data['number_in_groupes'] = $this->groupes_model->get_number_mps_groupes();
@@ -30,9 +40,15 @@
 
       // Meta
       $data['url'] = $this->meta_model->get_url();
-      $data['title_meta'] = "Groupes Parlementaires - Assemblée Nationale | Datan";
-      $data['description_meta'] = "Retrouvez tous les groupes parlementaires en activité de la 15e législature. Résultats de vote et analyses pour chaque groupe parlementaire.";
-      $data['title'] = "Les groupes politiques de l'Assemblée nationale";
+      if ($data['legislature'] == legislature_current()) {
+        $data['title_meta'] = "Groupes Parlementaires - Assemblée Nationale | Datan";
+        $data['description_meta'] = "Retrouvez tous les groupes parlementaires en activité de la " . $data['legislature'] . "ème législature. Résultats de vote et analyses pour chaque groupe parlementaire.";
+        $data['title'] = "Les groupes politiques à l'Assemblée nationale";
+      } else {
+        $data['title_meta'] = "Groupes Parlementaires " . $data['legislature'] . "ème legislature - Assemblée Nationale | Datan";
+        $data['description_meta'] = "Retrouvez tous les groupes parlementaires de la " . $data['legislature'] . "ème législature. Résultats de vote et analyses pour chaque groupe parlementaire.";
+        $data['title'] = "Les groupes politiques de la " . $data['legislature'] . "ème législature";
+      }
       // Breadcrumb
       $data['breadcrumb'] = array(
         array(
@@ -58,6 +74,7 @@
     //INDEX - Homepage with all inactive groups //
     public function inactifs(){
       $data['active'] = FALSE;
+      $data['legislature'] = legislature_current();
       $data['groupes'] = $this->groupes_model->get_groupes_all($data['active'], legislature_current());
       $data['number_groupes_inactive'] = $this->groupes_model->get_number_inactive_groupes();
       $data['number_groupes_active'] = $this->groupes_model->get_number_active_groupes();
@@ -70,8 +87,8 @@
       // Meta
       $data['url'] = $this->meta_model->get_url();
       $data['title_meta'] = "Anciens groupes politiques - Assemblée Nationale | Datan";
-      $data['description_meta'] = "Retrouvez tous les anciens groupes parlementaires de la 15e législature. Résultats de vote et analyses pour chaque groupe.";
-      $data['title'] = "Les anciens groupes politiques de la XXème législature";
+      $data['description_meta'] = "Retrouvez tous les anciens groupes parlementaires de la " . legislature_current() . "ème législature. Résultats de vote et analyses pour chaque groupe.";
+      $data['title'] = "Les anciens groupes politiques de la " . legislature_current() . "ème législature";
       // Breadcrumb
       $data['breadcrumb'] = array(
         array(
