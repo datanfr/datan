@@ -69,9 +69,9 @@
 
       // Meta
       $data['url'] = $this->meta_model->get_url();
-      $data['title_meta'] = "Groupes Parlementaires plus en activité - Assemblée Nationale | Datan";
-      $data['description_meta'] = "Retrouvez tous les groupes parlementaires plus en activité de la 15e législature. Résultats de vote et analyses pour chaque groupe parlementaire.";
-      $data['title'] = "Les groupes politiques plus en activité";
+      $data['title_meta'] = "Anciens groupes politiques - Assemblée Nationale | Datan";
+      $data['description_meta'] = "Retrouvez tous les anciens groupes parlementaires de la 15e législature. Résultats de vote et analyses pour chaque groupe.";
+      $data['title'] = "Les anciens groupes politiques de la XXème législature";
       // Breadcrumb
       $data['breadcrumb'] = array(
         array(
@@ -81,7 +81,7 @@
           "name" => "Groupes", "url" => base_url()."groupes", "active" => FALSE
         ),
         array(
-          "name" => "Groupes plus en activité", "url" => base_url()."groupes/inactifs", "active" => TRUE
+          "name" => "Anciens groupes", "url" => base_url()."groupes/inactifs", "active" => TRUE
         ),
       );
       $data['breadcrumb_json'] = $this->breadcrumb_model->breadcrumb_json($data['breadcrumb']);
