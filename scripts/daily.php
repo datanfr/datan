@@ -2724,7 +2724,7 @@ class Script
         echo "amendements starting \n";
 
         $fields = array('id', 'dossier', 'legislature', 'texteLegislatifRef', 'num', 'numordre', 'seanceRef', 'expose');
-        $file = __DIR__ . '/tmp_amendements.zip';
+        $file = __DIR__ . '/Amendements_XV.xml.zip';
         $zip = new ZipArchive();
         $insert = [];
 
@@ -2778,7 +2778,7 @@ class Script
         echo "amendementsAuteurs starting \n";
 
         $fields = array('id', 'type', 'acteurRef', 'groupeId', 'auteurOrgane');
-        $file = __DIR__ . '/tmp_amendements.zip';
+        $file = __DIR__ . '/Amendements_XV.xml.zip';
         $zip = new ZipArchive();
         $insertAll = [];
 
