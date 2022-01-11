@@ -104,7 +104,7 @@
         $legislature = legislature_current();
       }
 
-      if (!in_array($legislature, array(14, 15))) {
+      if ($legislature < 14) {
         show_404($this->functions_datan->get_404_infos());
       }
 

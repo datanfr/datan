@@ -25,6 +25,10 @@
         $legislature = legislature_current();
       }
 
+      if ($legislature < 14) {
+        show_404($this->functions_datan->get_404_infos());
+      }
+
       $data['active'] = TRUE;
       $data['legislature'] = $legislature;
       $data['groupes'] = $this->groupes_model->get_groupes_all($data['active'], $data['legislature']);
@@ -38,26 +42,40 @@
         $data['groupes'][$key]['couleurAssociee'] = $this->groupes_model->get_groupe_color(array($value['libelleAbrev'], $value['couleurAssociee']));
       }
 
-      // Meta
+      // Meta and Breadcrum
       $data['url'] = $this->meta_model->get_url();
       if ($data['legislature'] == legislature_current()) {
+        // Meta
         $data['title_meta'] = "Groupes Parlementaires - Assemblée Nationale | Datan";
         $data['description_meta'] = "Retrouvez tous les groupes parlementaires en activité de la " . $data['legislature'] . "ème législature. Résultats de vote et analyses pour chaque groupe parlementaire.";
         $data['title'] = "Les groupes politiques à l'Assemblée nationale";
+        // Breadcrum
+        $data['breadcrumb'] = array(
+          array(
+            "name" => "Datan", "url" => base_url(), "active" => FALSE
+          ),
+          array(
+            "name" => "Groupes", "url" => base_url()."groupes", "active" => TRUE
+          )
+        );
       } else {
+        // Meta
         $data['title_meta'] = "Groupes Parlementaires " . $data['legislature'] . "ème legislature - Assemblée Nationale | Datan";
         $data['description_meta'] = "Retrouvez tous les groupes parlementaires de la " . $data['legislature'] . "ème législature. Résultats de vote et analyses pour chaque groupe parlementaire.";
         $data['title'] = "Les groupes politiques de la " . $data['legislature'] . "ème législature";
+        // Breadcrum
+        $data['breadcrumb'] = array(
+          array(
+            "name" => "Datan", "url" => base_url(), "active" => FALSE
+          ),
+          array(
+            "name" => "Groupes", "url" => base_url()."groupes", "active" => FALSE
+          ),
+          array(
+            "name" => "Législature " . $data['legislature'], "url" => base_url()."groupes/legislature-" . $data['legislature'], "active" => TRUE
+          )
+        );
       }
-      // Breadcrumb
-      $data['breadcrumb'] = array(
-        array(
-          "name" => "Datan", "url" => base_url(), "active" => FALSE
-        ),
-        array(
-          "name" => "Groupes", "url" => base_url()."groupes", "active" => TRUE
-        )
-      );
       $data['breadcrumb_json'] = $this->breadcrumb_model->breadcrumb_json($data['breadcrumb']);
       //Open Graph
       $controller = $this->router->fetch_class()."/".$this->router->fetch_method();
