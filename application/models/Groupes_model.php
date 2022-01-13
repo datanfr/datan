@@ -7,7 +7,7 @@
     public function get_groupes_all($active, $legislature) {
       if ($active && $legislature) {
         if ($legislature == legislature_current()) {
-          $query = $this->db->query('SELECT *, date_format(dateDebut, "%d %M %Y") as dateDebutFR, e.effectif,
+          $query = $this->db->query('SELECT *, o.legislature AS legislature, date_format(dateDebut, "%d %M %Y") as dateDebutFR, e.effectif,
             CASE WHEN o.libelle = "Non inscrit" THEN "Députés non inscrits" ELSE o.libelle END AS libelle
             FROM organes o
             LEFT JOIN groupes_effectif e ON o.uid = e.organeRef
@@ -15,12 +15,11 @@
             ORDER BY e.effectif DESC, o.libelle
           ');
         } else {
-          $query = $this->db->query('SELECT *, date_format(dateDebut, "%d %M %Y") as dateDebutFR, e.effectif,
+          $query = $this->db->query('SELECT *, o.legislature AS legislature, date_format(dateDebut, "%d %M %Y") as dateDebutFR,
             CASE WHEN o.libelle = "Non inscrit" THEN "Députés non inscrits" ELSE o.libelle END AS libelle
             FROM organes o
-            LEFT JOIN groupes_effectif e ON o.uid = e.organeRef
             WHERE o.legislature = '.$this->db->escape($legislature).' AND o.coteType = "GP"
-            ORDER BY e.effectif DESC, o.libelle
+            ORDER BY o.libelle
           ');
         }
       } else {

@@ -24,7 +24,7 @@
       <a class="btn btn-cat btn-primary stretched-link" href="<?= base_url(); ?>groupes/legislature-<?= $groupe['legislature'] ?>/<?= mb_strtolower($groupe['libelleAbrev']) ?>" role="button">Découvrez son activité</a>
     </div>
     <?php else: ?>
-      <?php if ($active): ?>
+      <?php if ($active && $legislature === legislature_current()): ?>
       <div class="card-footer d-flex justify-content-center align-items-center">
         <span><?= $groupe["effectif"] ?> membres</span>
       </div>
