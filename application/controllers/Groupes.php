@@ -137,7 +137,7 @@
       $data['legislature'] = $legislature;
       $legislature = $data['legislature'];
 
-      if ($legislature < 15) {
+      if ($legislature < 14) {
         show_404($this->functions_datan->get_404_infos());
       }
 
@@ -162,7 +162,6 @@
       }
 
       setlocale(LC_TIME, 'french');
-      $data['dateDebut'] = strftime('%d %B %Y', strtotime($data['groupe']['dateDebut']));
       $data['dateDebutMois'] = strftime('%B %Y', strtotime($data['groupe']['dateDebut']));
       $groupe_uid = $data['groupe']['uid'];
       $groupe_ab = $data['groupe']['libelleAbrev'];
@@ -170,7 +169,7 @@
       $data['infos_groupes'] = groups_position_edited();
 
       // Query 2 Membres du groupe
-      $data['president'] = $this->groupes_model->get_groupes_president($groupe_uid, $data['active']);
+      $data['president'] = $this->groupes_model->get_groupes_president($groupe_uid, $legislature, $data['active']);
       if (!empty($data['president'])) {
         $data['president'] = array_merge($data['president'], gender($data['president']['civ']));
       }
@@ -197,7 +196,7 @@
       // Get mean age in the National Assembly
       $data['ageMean'] = $this->stats_model->get_age_mean($legislature);
       $data['ageMean'] = round($data['ageMean']);
-      $data['ageEdited'] = $this->functions_datan->old_young($data['groupe']['age'], $data['ageMean']);
+      $data['ageEdited'] = $this->functions_datan->more_less($data['groupe']['age'], $data['ageMean']);
       // Get mean of women in the National Assembly
       $data['womenPctTotal'] = $this->deputes_model->get_deputes_gender($legislature);
       $data['womenPctTotal'] = $data['womenPctTotal'][1]['percentage'];
@@ -253,14 +252,22 @@
       // ACCORD AVEC GROUPES
       $data['accord_groupes_actifs'] = $this->groupes_model->get_stats_proximite($groupe_uid); // PROXIMITÉ TOUS LES GROUPES
       $data['accord_groupes_all'] = $this->groupes_model->get_stats_proximite_all($groupe_uid);
-      $accord_groupes_n = count($data['accord_groupes_actifs']);
+
+      if ($data['groupe']['legislature'] == legislature_current()) {
+        $data['accord_groupes_featured'] = $data['accord_groupes_actifs'];
+      } else {
+        $data['accord_groupes_featured'] = $data['accord_groupes_all'];
+      }
+
+
+      $accord_groupes_n = count($data['accord_groupes_featured']);
       $accord_groupes_divided = round($accord_groupes_n / 2, 0, PHP_ROUND_HALF_UP);
-      $data['accord_groupes_first'] = array_slice($data['accord_groupes_actifs'], 0, $accord_groupes_divided);
+      $data['accord_groupes_first'] = array_slice($data['accord_groupes_featured'], 0, $accord_groupes_divided);
       $data['accord_groupes_first'] = array_slice($data['accord_groupes_first'], 0, 3);
-      $data['accord_groupes_last'] = array_slice($data['accord_groupes_actifs'], $accord_groupes_divided, $accord_groupes_n);
+      $data['accord_groupes_last'] = array_slice($data['accord_groupes_featured'], $accord_groupes_divided, $accord_groupes_n);
       $data['accord_groupes_last'] = array_slice($data['accord_groupes_last'], -3);
-      if (!empty($data['accord_groupes_actifs'])) {
-        $data['edito_proximite'] = $this->groupes_edito->proximite($data['accord_groupes_actifs'], $data['infos_groupes']);
+      if (!empty($data['accord_groupes_featured'])) {
+        $data['edito_proximite'] = $this->groupes_edito->proximite($data['accord_groupes_featured'], $data['infos_groupes']);
         $data['no_proximite'] = FALSE;
       } else {
         $data['no_proximite'] = TRUE;
