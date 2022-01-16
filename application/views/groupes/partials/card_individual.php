@@ -1,4 +1,4 @@
-<div class="sticky-top" style="margin-top: -110px; top: 110px;">
+<div class="sticky-top" style="margin-top: -130px; top: 130px;">
   <div class="card card-profile groupe">
     <div class="card-body">
       <!-- IMAGE GROUPE -->

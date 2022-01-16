@@ -3,7 +3,7 @@
   <div class="container pg-groupe-individual pb-5">
     <div class="row">
       <div class="col-12 col-md-8 col-lg-4 offset-md-2 offset-lg-0 px-lg-4">
-        <?php $this->load->view('groupes/partials/card_individual.php') ?>
+        <?php $this->load->view('groupes/partials/card_individual.php', array('tag' => 'span')) ?>
       </div> <!-- END COL -->
       <!-- BLOC VOTES -->
       <div class="col-md-10 col-lg-8 offset-md-1 offset-lg-0 pl-lg-5 bloc-votes-datan">
