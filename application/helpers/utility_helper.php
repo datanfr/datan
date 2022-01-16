@@ -59,6 +59,8 @@
       "UDI-AGIR" => $center,
       "LR" => $right,
       "UDI-A-I" => $right,
+      "UDI-I" => $right,
+      "LC" => $right,
       "NI" => NULL,
       "LT" => $center,
       "EDS" => $center,
