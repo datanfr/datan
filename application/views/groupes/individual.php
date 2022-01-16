@@ -5,7 +5,7 @@
 <div class="container pg-groupe-individual">
   <div class="row">
     <div class="col-12 col-md-8 col-lg-4 offset-md-2 offset-lg-0">
-      <?php $this->load->view('groupes/partials/card_individual.php') ?>
+      <?php $this->load->view('groupes/partials/card_individual.php', array('tag' => 'h1')) ?>
     </div> <!-- END COL -->
     <div class="col-md-10 col-lg-8 offset-md-1 offset-lg-0 pl-lg-5">
       <!-- BIO & ELECTION -->

@@ -1073,6 +1073,15 @@ input#quicksearch[type=text]{
     font-weight: 600;
   }
 }
+.card-profile {
+  &.groupe{
+    .bloc-bref{
+      .label{
+        width: 110px;
+      }
+    }
+  }
+}
 /*
 ################
                TABLES
@@ -1976,19 +1985,12 @@ ul.ui-menu{
                PAGE GROUPE INDIVIDUAL (pg-groupe-individual)
 ################
 */
-.pg-groupe-individual{
-  .bloc-bref{
-    .label{
-      width: 110px;
-    }
-  }
-}
 /*
 ################
-               PAGE DEPUTE VOTES DATAN (pg-depute-votes) (decryptes and all)
+               PAGE DEPUTE/GROUPES VOTES DATAN (pg-depute-votes) (decryptes and all)
 ################
 */
-.pg-depute-votes {
+.pg-depute-votes, .pg-groupe-votes {
   h1 {
     font-size: $h2-font-size;
     font-weight: 800;
@@ -2012,19 +2014,6 @@ ul.ui-menu{
       font-weight: 800;
       color: $primary;
     }
-    .badges-categories{
-      .badge {
-        padding: 7px 12px;
-        border-radius: 10px;
-        color: $white;
-        font-weight: 600;
-        display: inline-block;
-        margin: 0 3px 8px 3px;
-        span{
-          font-weight: 700;
-        }
-      }
-    }
     .logo{
       svg{
         width: 50px;
@@ -2033,7 +2022,7 @@ ul.ui-menu{
     }
   }
 }
-.banner-depute-mobile{
+.banner-depute-mobile, .banner-groupe-mobile{
   color: #fff;
   .title{
     font-weight: 800;

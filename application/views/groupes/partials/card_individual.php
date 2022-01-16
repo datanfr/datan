@@ -1,5 +1,5 @@
 <div class="sticky-top" style="margin-top: -110px; top: 110px;">
-  <div class="card card-profile">
+  <div class="card card-profile groupe">
     <div class="card-body">
       <!-- IMAGE GROUPE -->
       <div class="img">
@@ -13,7 +13,7 @@
       </div>
       <!-- INFOS GENERALES -->
       <div class="bloc-infos">
-        <h1 class="text-center text-lg-left"><?= $title ?></h1>
+        <<?= $tag ?> class="title d-block text-lg-left"><?= $title ?></<?= $tag ?>>
       </div>
       <!-- BIOGRAPHIE -->
       <div class="bloc-bref mt-3 d-flex justify-content-center justify-content-lg-start">
