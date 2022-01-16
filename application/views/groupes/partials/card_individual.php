@@ -20,8 +20,14 @@
         <ul>
           <li class="first">
             <div class="label">Création</div>
-            <div class="value"><?= $dateDebut ?></div>
+            <div class="value"><?= $groupe['dateDebutFR'] ?></div>
           </li>
+          <?php if ($groupe['dateFin']): ?>
+            <li>
+              <div class="label">Dissolution</div>
+              <div class="value"><?= $groupe['dateFinFR'] ?></div>
+            </li>
+          <?php endif; ?>
           <li>
             <div class="label">Effectif</div>
             <div class="value"><?= $groupe['effectif'] ?> membres</div>

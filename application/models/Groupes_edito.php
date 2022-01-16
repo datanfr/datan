@@ -77,21 +77,23 @@
           $infos['creation'] = " et a été remplacé par le groupe <a href='".base_url()."groupes/udi-a-i'>UDI, Agir et Indépendants (UDI-A-I)</a>";
           break;
 
-          case 'EDS':
-            $infos['creation'] = " par des députés venant pour la plulart du groupe de la majorité présidentielle, La République en Marche";
-            break;
+        case 'EDS':
+          $infos['creation'] = " par des députés venant pour la plupart du groupe de la majorité présidentielle, La République en Marche";
+          break;
 
-          case 'AGIR-E':
-            $infos['creation'] = " par des députés membres du parti politique AGIR. Ils étaient avant alliés aux députés UDI dans le groupe <a href='".base_url()."groupes/udi-a-i'>UDI-A-I</a>";
+        case 'AGIR-E':
+          $infos['creation'] = " par des députés membres du parti politique AGIR. Ils étaient avant alliés aux députés UDI dans le groupe <a href='".base_url()."groupes/udi-a-i'>UDI-A-I</a>";
 
-          case 'UDI_I':
-            $infos['creation'] = " suite à la dissolution du groupe <a href='".base_url()."groupes/udi-a-i'>UDI-A-I</a>. Ce nouveau groupe UDI ne comporte plus que les députés membres de UDI, les députés AGIR ayant créé leur propre groupe, <a href='".base_url()."groupes/agir-e'>Agir Ensemble</a>";
+        case 'UDI_I':
+          $infos['creation'] = " suite à la dissolution du groupe <a href='".base_url()."groupes/udi-a-i'>UDI-A-I</a>. Ce nouveau groupe UDI ne comporte plus que les députés membres de UDI, les députés AGIR ayant créé leur propre groupe, <a href='".base_url()."groupes/agir-e'>Agir Ensemble</a>";
 
-          case 'DEM':
-            $infos['creation'] = " suite à la dissolution du groupe <a href='".base_url()."groupes/modem'>MODEM</a>. Ce nouveau groupe centriste a accueilli de nouveaux députés anciennement membres du groupe La République en Marche, comme Sabine Thillaye ou Christophe Jerretie.";
+        case 'DEM':
+          $infos['creation'] = " suite à la dissolution du groupe <a href='".base_url()."groupes/modem'>MODEM</a>. Ce nouveau groupe centriste a accueilli de nouveaux députés anciennement membres du groupe La République en Marche, comme Sabine Thillaye ou Christophe Jerretie.";
+
+
 
         default:
-          break;
+          $infos['creation'] = NULL;
       }
 
       return $infos;
@@ -121,7 +123,7 @@
         $array["absolute"] = "peu";
       } elseif ($groupe == $average) {
         $array["relative"] = "aussi";
-        $array["relative"] = "relativement bien";
+        $array["absolute"] = "relativement bien";
       }
 
       return $array;
