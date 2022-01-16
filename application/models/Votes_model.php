@@ -428,7 +428,6 @@
         FROM votes_datan vd
         WHERE vd.state = "published"
         ORDER BY vd.id DESC
-        LIMIT 15
         ) A
         LEFT JOIN fields f ON A.category = f.id
         JOIN votes_groupes v ON A.voteNumero = v.voteNumero AND A.legislature = v.legislature AND v.organeRef = ?
