@@ -344,7 +344,7 @@
     }
 
     public function individual_membres($legislature, $groupe){
-      if ($legislature < 15) {
+      if ($legislature < 14) {
         show_404($this->functions_datan->get_404_infos());
       }
 
@@ -362,7 +362,7 @@
       }
 
       $groupe_uid = $data['groupe']['uid'];
-      $data['president'] = $this->groupes_model->get_groupes_president($groupe_uid, $data['active']);
+      $data['president'] = $this->groupes_model->get_groupes_president($groupe_uid, $legislature, $data['active']);
       $data['membres'] = $this->groupes_model->get_groupe_membres($groupe_uid, $data['active']);
       $data['apparentes'] = $this->groupes_model->get_groupe_apparentes($groupe_uid, $data['active']);
 
@@ -450,7 +450,7 @@
       // Variables about the group (1. dateDebut / 2. membres du groupe / 3. other groups)
       setlocale(LC_TIME, 'french');
       $data['dateDebut'] = strftime('%d %B %Y', strtotime($data['groupe']['dateDebut']));
-      $data['president'] = $this->groupes_model->get_groupes_president($groupe_uid, $data['active']);
+      $data['president'] = $this->groupes_model->get_groupes_president($groupe_uid, $legislature, $data['active']);
       if (!empty($data['president'])) {
         $data['president'] = array_merge($data['president'], gender($data['president']['civ']));
       }
@@ -573,7 +573,7 @@
       // Variables about the group (1. dateDebut / 2. membres du groupe / 3. other groups)
       setlocale(LC_TIME, 'french');
       $data['dateDebut'] = strftime('%d %B %Y', strtotime($data['groupe']['dateDebut']));
-      $data['president'] = $this->groupes_model->get_groupes_president($groupe_uid, $data['active']);
+      $data['president'] = $this->groupes_model->get_groupes_president($groupe_uid, $legislature, $data['active']);
       if (!empty($data['president'])) {
         $data['president'] = array_merge($data['president'], gender($data['president']['civ']));
       }
@@ -670,7 +670,7 @@
       // Variables about the group (1. dateDebut / 2. membres du groupe / 3. other groups)
       setlocale(LC_TIME, 'french');
       $data['dateDebut'] = strftime('%d %B %Y', strtotime($data['groupe']['dateDebut']));
-      $data['president'] = $this->groupes_model->get_groupes_president($groupe_uid, $data['active']);
+      $data['president'] = $this->groupes_model->get_groupes_president($groupe_uid, $legislature, $data['active']);
       // Edito
       $data['edito'] = $this->groupes_edito->edito($groupe_ab, $groupe_opposition);
 
