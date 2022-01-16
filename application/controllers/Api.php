@@ -3,7 +3,7 @@ class Api extends CI_Controller
 {
     // FORBIDDEN LIST
     private $modelAllowed = array();
-    private $methodAllowed = array('newsletter/create_newsletter', 'votes/get_last_votes_datan', 'votes/request_vote_datan');
+    private $methodAllowed = array('newsletter/create_newsletter', 'votes/get_last_votes_datan', 'votes/request_vote_datan', 'votes/get_vote_deputes', 'votes/get_vote_groupes_simplified');
     private $methodForbidden = array();
 
     public function __construct()
