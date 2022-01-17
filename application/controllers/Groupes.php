@@ -47,7 +47,7 @@
       if ($data['legislature'] == legislature_current()) {
         // Meta
         $data['title_meta'] = "Groupes Parlementaires - Assemblée Nationale | Datan";
-        $data['description_meta'] = "Retrouvez tous les groupes parlementaires en activité de la " . $data['legislature'] . "ème législature. Résultats de vote et analyses pour chaque groupe parlementaire.";
+        $data['description_meta'] = "Retrouvez tous les groupes parlementaires en activité de la " . $data['legislature'] . "ème législature. Résultats de vote et analyses pour chaque groupe.";
         $data['title'] = "Les groupes politiques à l'Assemblée nationale";
         // Breadcrum
         $data['breadcrumb'] = array(
@@ -61,7 +61,7 @@
       } else {
         // Meta
         $data['title_meta'] = "Groupes Parlementaires " . $data['legislature'] . "ème legislature - Assemblée Nationale | Datan";
-        $data['description_meta'] = "Retrouvez tous les groupes parlementaires de la " . $data['legislature'] . "ème législature. Résultats de vote et analyses pour chaque groupe parlementaire.";
+        $data['description_meta'] = "Retrouvez tous les groupes parlementaires de la " . $data['legislature'] . "ème législature. Résultats de vote et analyses pour chaque groupe.";
         $data['title'] = "Les groupes politiques de la " . $data['legislature'] . "ème législature";
         // Breadcrum
         $data['breadcrumb'] = array(
@@ -377,7 +377,7 @@
         $data['title'] = "Députés non incrits (NI)";
       } else {
         $data['title_meta'] = "Députés ".$data['groupe']['libelle']." - Assemblée Nationale | Datan";
-        $data['description_meta'] = "Retrouvez tous les députés en activité du groupe parlementaire ".$data['groupe']['libelle']." (".$data['groupe']['libelleAbrev'].").";
+        $data['description_meta'] = "Retrouvez tous les députés membres du groupe parlementaire ".$data['groupe']['libelle']." (".$data['groupe']['libelleAbrev'].").";
         $data['title'] = "Députés membres du groupe ".$data['groupe']['libelle']. " (".$data['groupe']['libelleAbrev'].")";
       }
       // Breadcrumb
@@ -520,7 +520,7 @@
       $this->load->view('templates/breadcrumb', $data);
       $this->load->view('templates/footer');
     }
-    
+
     /* page: groupes/votes/all */
     public function individual_votes_all($legislature, $groupe){
       if ($legislature < 15) {
