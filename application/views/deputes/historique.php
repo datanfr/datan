@@ -9,7 +9,7 @@
     <div class="col-md-10 col-lg-8 offset-md-1 offset-lg-0 pl-lg-5">
       <!-- BIO & ELECTION -->
       <div class="bloc-bio mt-5">
-        <h2 class="mb-4">Historique de la <?= $legislature ?><sup>ème</sup> législature</h2>
+        <h1 class="mb-4 title-center">Mandat de <?= $title ?> pendant la <?= $legislature ?><sup>ème</sup> législature</h1>
         <p>
           <b><?= $title ?></b> est né<?= $gender['e'] ?> le <?= $depute['dateNaissanceFr'] ?> à <?= $depute['birthCity'] ?>.
           Pendant la <?= $legislature ?><sup>ème</sup> législature, <?= $gender['pronom'] ?> a été <?= $gender['le'] ?> <?= $gender['depute'] ?> de la <?= $depute["circo"] ?><sup><?= $depute["circo_abbrev"] ?></sup> circonscription <?= $depute['dptLibelle2'] ?><a href="<?= base_url() ?>deputes/<?= $depute['dptSlug'] ?>"><?= $depute['departementNom'] . ' (' . $depute['departementCode'] . ')' ?></a>.
@@ -25,12 +25,7 @@
       <!-- BLOC STATISTIQUES -->
       <?php if (in_array($depute['legislature'], legislature_all())) : ?>
         <div class="bloc-statistiques mt-5">
-          <h2 class="mb-3">
-            Son comportement politique
-            <?php if ($depute['legislature'] != legislature_current()): ?>
-              (<?= $depute['legislature'] ?><sup>e</sup> législature)
-            <?php endif; ?>
-          </h2>
+          <h2 class="mb-3 title-center">Son comportement politique</h2>
           <div class="card card-statistiques my-4">
             <div class="card-body">
               <div class="row">
@@ -386,12 +381,12 @@
       <?php endif; ?>
       <!-- BLOC PARTAGEZ -->
       <div class="bloc-social mt-5">
-        <h2 class="subtitle mb-4">Partagez cette page</h2>
+        <h2 class="mb-4 title-center">Partagez cette page</h2>
         <?php $this->load->view('partials/share.php') ?>
       </div>
       <!-- BLOC HISTORIQUE MANDATS -->
       <div class="bloc-mandats mt-5">
-        <h2 class="mb-4">Historique des mandats</h2>
+        <h2 class="mb-4 title-center">Historique des mandats</h2>
         <?php if (count($mandats) > 1): ?>
           <p>
             <?= $title ?> a été élu<?= $gender['e'] ?> à plusieurs reprises. Au total, <?= $gender['pronom'] ?> a été <?= $gender['depute'] ?> à l'Assemblée nationale pendant <?= $depute['lengthEdited'] ?>.
@@ -444,7 +439,7 @@
       </div> <!-- // END BLOC HISTORIQUE MANDAT -->
       <!-- BLOC SOCIAL-MEDIA -->
       <div class="bloc-links p-lg-0 p-md-2 mt-5">
-        <h2>En savoir plus sur <?= $title ?></h2>
+        <h2 class="title-center">En savoir plus sur <?= $title ?></h2>
         <div class="row mt-4">
           <div class="col-12 col-sm-6 mt-2 d-flex justify-content-center">
             <span class="url_obf btn btn-an d-flex align-items-center justify-content-center" url_obf="<?= url_obfuscation("http://www2.assemblee-nationale.fr/deputes/fiche/OMC_" . $depute['mpId']) ?>">

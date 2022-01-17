@@ -1,6 +1,6 @@
   <div class="container-fluid bloc-img-deputes async_background" id="container-always-fluid" style="height: 13em"></div>
   <div class="liseret-groupe" style="background-color: <?= $groupe['couleurAssociee'] ?>"></div>
-  <div class="container pg-groupe-individual pb-5">
+  <div class="container pg-groupe-votes pb-5">
     <div class="row">
       <div class="col-12 col-md-8 col-lg-4 offset-md-2 offset-lg-0 px-lg-4">
         <?php $this->load->view('groupes/partials/card_individual.php', array('tag' => 'span')) ?>
@@ -17,7 +17,7 @@
         </div>
         <div class="row mt-4">
           <div class="col-12">
-            <h2>Découvrez les votes du groupe <?= $title ?></h2>
+            <h1>Tous les votes du groupe <?= $title ?> à l'Assemblée</h1>
           </div>
         </div>
         <div class="row mt-4">
@@ -31,6 +31,11 @@
             <p>
               C'est pourquoi l'équipe de Datan contextualise et reformule certains scrutins. Pour découvrir les positions du groupe <b><?= $title ?></b> sur ces votes, <a href="<?= base_url() ?>groupes/legislature-<?= $groupe['legislature'] ?>/<?= mb_strtolower($groupe['libelleAbrev']) ?>/votes">cliquez ici</a>.
             </p>
+          </div>
+        </div>
+        <div class="row mt-4">
+          <div class="col-12">
+            <h2>Les positions du groupe <?= $groupe['libelleAbrev'] ?> sur <span class="text-primary"><?= count($votes) ?> scrutins</span></h2>
           </div>
         </div>
         <div class="row mt-4">

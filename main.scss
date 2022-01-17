@@ -1801,13 +1801,13 @@ ul.ui-menu{
     font-size: $h1-font-size*1.1;
     font-weight: 800;
   }
-
+  .title-center{
+    font-size: $h2-font-size;
+    font-weight: 800;
+    color: $text-gray;
+  }
   .bloc-statistiques, .bloc-votes, .bloc-bio, .bloc-election, .bloc-links, .bloc-chiffres, .bloc-key-votes, .bloc-mandats, .bloc-social, .bloc-elections-history {
-    h2{
-      font-size: $h2-font-size;
-      font-weight: 800;
-      color: $text-gray;
-    }
+
     h3 {
       font-size: $h5-font-size;
       font-weight: 800;

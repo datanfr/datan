@@ -10,7 +10,7 @@
     <div class="col-md-10 col-lg-8 offset-md-1 offset-lg-0 pl-lg-5">
       <!-- BIO & ELECTION -->
       <div class="bloc-bio mt-5">
-        <h2 class="mb-4">En quelques mots</h2>
+        <h2 class="mb-4 title-center">En quelques mots</h2>
         <?php if ($groupe['libelleAbrev'] == "NI"): ?>
           <p>Les <?= mb_strtolower($title) ?> (NI) ne sont pas membres d'un groupe politique.</p>
           <p>Ces députés peuvent cependant être membres d'un parti politique. Le parti politique est un groupement constitué hors de l'Assemblée nationale, alors que le <a href="http://www2.assemblee-nationale.fr/15/les-groupes-politiques/" target="_blank">groupe politique</a> est un organe officiel de l'Assemblée qui comporte au minimum 15 députés. Certains groupes, comme <a href="<?= base_url() ?>groupes/legislature-15/udi_i" target="_blank">UDI_I</a>, regroupent ainsi des députés venant de partis différents.</p>
@@ -43,7 +43,7 @@
             <div class="row">
               <div class="col-12">
                 <div class="d-flex justify-content-between mb-4">
-                  <h2>Derniers votes</h2>
+                  <h2 class="title-center">Derniers votes</h2>
                   <div class="bloc-carousel-votes">
                     <a class="btn see-all-votes mx-2" href="<?= base_url() ?>groupes/legislature-<?= $groupe['legislature'] ?>/<?= mb_strtolower($groupe['libelleAbrev']) ?>/votes">
                       <span>VOIR TOUS</span>
@@ -78,7 +78,7 @@
         <?php endif; ?>
         <!-- BLOC CHIFFRES -->
         <div class="bloc-chiffres mt-5">
-          <h2 class="mb-3">En chiffres</h2>
+          <h2 class="mb-3 title-center">En chiffres</h2>
           <div class="row">
             <div class="col-sm-6">
               <div class="card">
@@ -155,7 +155,7 @@
         </div> <!-- // END BLOC CHIFFRES -->
         <!-- BLOC STATISTIQUES -->
         <div class="bloc-statistiques mt-5">
-          <h2 class="mb-3">Comportement politique</h2>
+          <h2 class="mb-3 title-center">Comportement politique</h2>
           <!-- CARD PARTICIPATION -->
           <div class="card card-statistiques my-4">
             <div class="card-body">
@@ -469,13 +469,13 @@
         </div> <!-- // END BLOC STATISTIQUES -->
         <!-- BLOC PARTAGEZ -->
         <div class="bloc-social mt-5">
-          <h2 class="subtitle mb-4">Partagez cette page</h2>
+          <h2 class="mb-4 title-center">Partagez cette page</h2>
           <?php $this->load->view('partials/share.php') ?>
         </div>
         <!-- BLOC SOCIAL-MEDIA -->
         <?php if (isset($groupe['website']) || isset($groupe['facebook']) || isset($groupe['twitter'])): ?>
           <div class="bloc-links p-lg-0 p-md-2 mt-5">
-            <h2>En savoir plus</h2>
+            <h2 class="title-center">En savoir plus</h2>
             <div class="row mt-4">
               <?php if (isset($groupe['website'])): ?>
                 <div class="col-12 col-sm-6 mt-2 d-flex justify-content-center">
