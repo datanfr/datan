@@ -99,8 +99,10 @@ class Sitemap extends CI_Controller {
       $libelleAbrev = mb_strtolower($result['libelleAbrev']);
       $urls[]["url"] = base_url()."groupes/legislature-".$result['legislature']."/".$libelleAbrev;
       $urls[]["url"] = base_url()."groupes/legislature-".$result['legislature']."/".$libelleAbrev."/membres";
-      $urls[]["url"] = base_url()."groupes/legislature-".$result['legislature']."/".$libelleAbrev."/votes";
-      $urls[]["url"] = base_url()."groupes/legislature-".$result['legislature']."/".$libelleAbrev."/votes/all";
+      if ($result['legislature'] >= 15) {
+        $urls[]["url"] = base_url()."groupes/legislature-".$result['legislature']."/".$libelleAbrev."/votes";
+        $urls[]["url"] = base_url()."groupes/legislature-".$result['legislature']."/".$libelleAbrev."/votes/all";
+      }
     }
 
     $data['urls'] = $urls;
