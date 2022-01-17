@@ -19,7 +19,7 @@
               </div>
             </div>
           <?php endif; ?>
-          <h2 class="mb-4">Qui est-<?= ($gender['pronom']) ?> ?</h2>
+          <h2 class="mb-4 title-center">Qui est-<?= ($gender['pronom']) ?> ?</h2>
           <!-- Paragraphe introductif -->
           <?php if ($active) : ?>
             <p>
@@ -181,7 +181,7 @@
           <div class="bloc-key-votes mt-5">
             <div class="row">
               <div class="col-12">
-                <h2 class="mb-4">Ses positions importantes</h2>
+                <h2 class="mb-4 title-center">Ses positions importantes</h2>
                 <div class="card">
                   <div class="card-body key-votes">
                     <?php if (isset($key_votes[3254])) : ?>
@@ -256,7 +256,7 @@
             <div class="row">
               <div class="col-12">
                 <div class="d-flex justify-content-between mb-4">
-                  <h2>Ses derniers votes</h2>
+                  <h2 class="title-center">Ses derniers votes</h2>
                   <div class="bloc-carousel-votes">
                     <a class="btn see-all-votes mx-2" href="<?= base_url() ?>deputes/<?= $depute['dptSlug'] ?>/depute_<?= $depute['nameUrl'] ?>/votes">
                       <span>VOIR TOUS</span>
@@ -292,7 +292,7 @@
         <?php endif; ?>
         <!-- BLOC ELECTION -->
         <div class="bloc-election mt-5">
-          <h2 class="mb-4">Son élection</h2>
+          <h2 class="mb-4 title-center">Son élection</h2>
           <div class="card">
             <div class="card-body pb-0">
               <?php if ($active) : ?>
@@ -372,7 +372,7 @@
         <!-- BLOC STATISTIQUES -->
         <?php if (in_array($depute['legislature'], legislature_all())) : ?>
           <div class="bloc-statistiques mt-5">
-            <h2 class="mb-3">
+            <h2 class="mb-3 title-center">
               Son comportement politique
               <?php if ($depute['legislature'] != legislature_current()): ?>
                 (<?= $depute['legislature'] ?><sup>e</sup> législature)
@@ -789,12 +789,12 @@
         <?php endif; ?>
         <!-- BLOC PARTAGEZ -->
         <div class="bloc-social mt-5">
-          <h2 class="subtitle mb-4">Partagez cette page</h2>
+          <h2 class="title-center mb-4">Partagez cette page</h2>
           <?php $this->load->view('partials/share.php') ?>
         </div>
         <!-- BLOC HISTORIQUE MANDATS -->
         <div class="bloc-mandats mt-5">
-          <h2 class="mb-4">Historique des mandats</h2>
+          <h2 class="mb-4 title-center">Historique des mandats</h2>
           <?php if (count($mandats) > 1): ?>
             <p>
               <?= $title ?> a été élu<?= $gender['e'] ?> à plusieurs reprises. Au total, <?= $gender['pronom'] ?> a été <?= $gender['depute'] ?> à l'Assemblée nationale pendant <?= $depute['lengthEdited'] ?>.
@@ -847,7 +847,7 @@
         </div> <!-- // END BLOC HISTORIQUE MANDAT -->
         <!-- BLOC SOCIAL-MEDIA -->
         <div class="bloc-links p-lg-0 p-md-2 mt-5">
-          <h2>En savoir plus sur <?= $title ?></h2>
+          <h2 class="title-center">En savoir plus sur <?= $title ?></h2>
           <div class="row mt-4">
             <div class="col-12 col-sm-6 mt-2 d-flex justify-content-center align-items-center">
               <span class="url_obf btn btn-an" url_obf="<?= url_obfuscation("http://www2.assemblee-nationale.fr/deputes/fiche/OMC_" . $depute['mpId']) ?>">
@@ -882,7 +882,7 @@
         <!-- BLOC CONTACT -->
         <?php if ($depute['mailAn'] !== NULL && $active) : ?>
           <div class="bloc-links p-lg-0 p-md-2 mt-5">
-            <h2>Contacter <?= $title ?></h2>
+            <h2 class="title-center">Contactez <?= $title ?></h2>
             <div class="row mt-4">
               <div class="col-12">
                 <span class="mr-4">
