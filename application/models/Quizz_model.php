@@ -78,5 +78,47 @@
       $this->db->update('quizz');
     }
 
+    public function get_questions_api($quizz){
+      $select = array(
+        'quizz.title AS voteTitre',
+        'vi.dateScrutin AS dateScrutin',
+        'date_format(vi.dateScrutin, "%d %M %Y") AS dateScrutinFR',
+        'quizz.voteNumero',
+        'quizz.legislature',
+        'fields.name AS category_name',
+        'fields.slug AS category_slug',
+        'vi.sortCode AS sortCode',
+        'vi.voteId AS vote_id',
+        'quizz.for1',
+        'quizz.for2',
+        'quizz.for3',
+        'quizz.against1',
+        'quizz.against2',
+        'quizz.against3'
+      );
+      $this->db->select($select);
+      $this->db->join('fields', 'quizz.category = fields.id', 'left');
+      $this->db->join('votes_info vi', 'quizz.legislature = vi.legislature AND quizz.voteNumero = vi.voteNumero', 'left');
+      $query = $this->db->get_where('quizz', array('quizz' => $quizz));
+
+      $questions = $query->result_array();
+
+      $arguments = array('for1', 'for2', 'for3', 'against1', 'against2', 'against3');
+
+      foreach ($questions as $key => $value) {
+        $array = array();
+        foreach ($arguments as $argument) {
+          array_push($array, array("opinion" => "POUR", "texte" => $value[$argument]));
+        }
+        $questions[$key]['arguments'] = $array;
+
+        foreach ($arguments as $argument) {
+          unset($questions[$key][$argument]);
+        }
+      }
+
+      return $questions;
+    }
+
   }
 ?>
