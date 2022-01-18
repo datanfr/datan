@@ -213,9 +213,12 @@
         </div>
       </div>
       <div class="row pb-5">
-        <div class="col-12 d-flex flex-wrap justify-content-around align-items-center">
+        <div class="col-lg-8 offset-lg-2 d-flex flex-wrap justify-content-around align-items-center">
           <span class="url_obf" url_obf="<?= url_obfuscation("https://www.leparisien.fr/info-paris-ile-de-france-oise/vote-assiduite-loyaute-comment-se-comportent-vos-deputes-franciliens-et-oisiens-21-01-2021-8420482.php") ?>">
             <img class="mx-2 my-3 img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="120" height="38" data-src="<?= asset_url() ?>imgs/media/le_parisien.png" alt="Le Parisien">
+          </span>
+          <span class="url_obf" url_obf="<?= url_obfuscation("https://www.franceculture.fr/emissions/les-enjeux-des-reseaux-sociaux/la-lutte-contre-l-abstention-passe-par-les-reseaux") ?>">
+            <img class="mx-2 my-3 img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="70" height="70" data-src="<?= asset_url() ?>imgs/media/france_culture.png" alt="France Culture">
           </span>
           <span class="url_obf" url_obf="<?= url_obfuscation("https://www.ouest-france.fr/pays-de-la-loire/chateaubriant-44110/legislatives-yves-daniel-un-depute-laboureur-a-l-action-discrete-47ce6f94-5b56-11ec-8d8b-3f378dbb8f2c") ?>">
             <img class="mx-2 my-3 img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="120" height="38" data-src="<?= asset_url() ?>imgs/media/ouest_france.png" alt="Ouest France">
