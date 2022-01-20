@@ -594,21 +594,10 @@ body.modal-open {
 }
 /* Card vote */
 .card-vote {
-  @include media-breakpoint-up(xs) {
-    width: 240px;
-    height: 250px !important;
-  }
-  @include media-breakpoint-up(sm) {
-    width: 240px;
-    height: 250px !important;
-  }
+  width: 265px;
+  height: 250px !important;
   @include media-breakpoint-up(md) {
     width: 270px;
-    height: 250px !important;
-  }
-  @include media-breakpoint-up(lg) {
-    width: 270px;
-    height: 250px !important;
   }
   box-shadow: $card-box-shadow;
   margin: 0 0.75em 0em 0.75em;
