@@ -293,17 +293,34 @@
         $data['title'] = $data['groupe']['libelle'];
       }
       // Breadcrumb
-      $data['breadcrumb'] = array(
-        array(
-          "name" => "Datan", "url" => base_url(), "active" => FALSE
-        ),
-        array(
-          "name" => "Groupes", "url" => base_url()."groupes", "active" => FALSE
-        ),
-        array(
-          "name" => $data['groupe']['libelle'], "url" => base_url()."groupes/legislature-".$data['groupe']['legislature']."/".mb_strtolower($data['groupe']['libelleAbrev']), "active" => TRUE
-        ),
-      );
+      if ($legislature == legislature_current()) {
+        $data['breadcrumb'] = array(
+          array(
+            "name" => "Datan", "url" => base_url(), "active" => FALSE
+          ),
+          array(
+            "name" => "Groupes", "url" => base_url()."groupes", "active" => FALSE
+          ),
+          array(
+            "name" => $data['groupe']['libelle'], "url" => base_url()."groupes/legislature-".$data['groupe']['legislature']."/".mb_strtolower($data['groupe']['libelleAbrev']), "active" => TRUE
+          ),
+        );
+      } else {
+        $data['breadcrumb'] = array(
+          array(
+            "name" => "Datan", "url" => base_url(), "active" => FALSE
+          ),
+          array(
+            "name" => "Groupes", "url" => base_url()."groupes", "active" => FALSE
+          ),
+          array(
+            "name" => "Législature " . $legislature, "url" => base_url()."groupes/legislature-" . $legislature, "active" => FALSE
+          ),
+          array(
+            "name" => $data['groupe']['libelle'], "url" => base_url()."groupes/legislature-".$data['groupe']['legislature']."/".mb_strtolower($data['groupe']['libelleAbrev']), "active" => TRUE
+          ),
+        );
+      }
       $data['breadcrumb_json'] = $this->breadcrumb_model->breadcrumb_json($data['breadcrumb']);
       //Open Graph
       $controller = $this->router->fetch_class()."/".$this->router->fetch_method();
@@ -381,20 +398,40 @@
         $data['title'] = "Députés membres du groupe ".$data['groupe']['libelle']. " (".$data['groupe']['libelleAbrev'].")";
       }
       // Breadcrumb
-      $data['breadcrumb'] = array(
-        array(
-          "name" => "Datan", "url" => base_url(), "active" => FALSE
-        ),
-        array(
-          "name" => "Groupes", "url" => base_url()."groupes", "active" => FALSE
-        ),
-        array(
-          "name" => $data['groupe']['libelle'], "url" => base_url()."groupes/legislature-".$data['groupe']['legislature']."/".mb_strtolower($data['groupe']['libelleAbrev']), "active" => FALSE
-        ),
-        array(
-          "name" => "Membres", "url" => base_url()."groupes/legislature-".$data['groupe']['legislature']."/".mb_strtolower($data['groupe']['libelleAbrev'])."/membres", "active" => TRUE
-        )
-      );
+      if ($legislature == legislature_current()) {
+        $data['breadcrumb'] = array(
+          array(
+            "name" => "Datan", "url" => base_url(), "active" => FALSE
+          ),
+          array(
+            "name" => "Groupes", "url" => base_url()."groupes", "active" => FALSE
+          ),
+          array(
+            "name" => $data['groupe']['libelle'], "url" => base_url()."groupes/legislature-".$data['groupe']['legislature']."/".mb_strtolower($data['groupe']['libelleAbrev']), "active" => FALSE
+          ),
+          array(
+            "name" => "Membres", "url" => base_url()."groupes/legislature-".$data['groupe']['legislature']."/".mb_strtolower($data['groupe']['libelleAbrev'])."/membres", "active" => TRUE
+          )
+        );
+      } else {
+        $data['breadcrumb'] = array(
+          array(
+            "name" => "Datan", "url" => base_url(), "active" => FALSE
+          ),
+          array(
+            "name" => "Groupes", "url" => base_url()."groupes", "active" => FALSE
+          ),
+          array(
+            "name" => "Législature " . $legislature, "url" => base_url()."groupes/legislature-" . $legislature, "active" => FALSE
+          ),
+          array(
+            "name" => $data['groupe']['libelle'], "url" => base_url()."groupes/legislature-".$data['groupe']['legislature']."/".mb_strtolower($data['groupe']['libelleAbrev']), "active" => FALSE
+          ),
+          array(
+            "name" => "Membres", "url" => base_url()."groupes/legislature-".$data['groupe']['legislature']."/".mb_strtolower($data['groupe']['libelleAbrev'])."/membres", "active" => TRUE
+          )
+        );
+      }
       $data['breadcrumb_json'] = $this->breadcrumb_model->breadcrumb_json($data['breadcrumb']);
       //Open Graph
       $controller = $this->router->fetch_class()."/".$this->router->fetch_method();
