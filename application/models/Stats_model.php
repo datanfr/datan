@@ -17,15 +17,30 @@
     }
 
     public function get_age_mean($legislature){
-      $sql = 'SELECT ROUND(AVG(A.age), 1) AS mean
-        FROM
-        (
-          SELECT d.age
-          FROM deputes_last d
-          WHERE d.legislature = ? AND d.dateFin IS NOT NULL
-        ) A
-      ';
-      $result = $this->db->query($sql, $legislature)->row_array();
+      if ($legislature == legislature_current()) {
+        $sql = 'SELECT ROUND(AVG(A.age), 1) AS mean
+          FROM
+          (
+            SELECT d.age
+            FROM deputes_last d
+            WHERE d.legislature = ? AND d.dateFin IS NOT NULL
+          ) A
+        ';
+        $result = $this->db->query($sql, $legislature)->row_array();
+      } else {
+        $sql = 'SELECT ROUND(AVG(A.age), 1) AS mean
+          FROM
+          (
+            SELECT d.birthDate, l.dateFin,
+            YEAR(l.dateFin) - YEAR(d.birthDate) - CASE WHEN MONTH(l.dateFin) < MONTH(d.birthDate) OR (MONTH(l.dateFin) = MONTH(d.birthDate) AND DAY(l.dateFin) < DAY(d.birthDate)) THEN 1 ELSE 0 END AS age
+            FROM deputes_all da
+            LEFT JOIN deputes d ON d.mpId = da.mpId
+            LEFT JOIN legislature l ON l.legislatureNumber = ?
+            WHERE da.legislature = ?
+        ) A';
+        $result = $this->db->query($sql, array($legislature, $legislature))->row_array();
+      }
+
       return $result['mean'];
     }
 

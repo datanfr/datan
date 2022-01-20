@@ -7,7 +7,7 @@
     public function get_groupes_all($active, $legislature) {
       if ($active && $legislature) {
         if ($legislature == legislature_current()) {
-          $query = $this->db->query('SELECT *, date_format(dateDebut, "%d %M %Y") as dateDebutFR, e.effectif,
+          $query = $this->db->query('SELECT *, o.legislature AS legislature, date_format(dateDebut, "%d %M %Y") as dateDebutFR, e.effectif,
             CASE WHEN o.libelle = "Non inscrit" THEN "Députés non inscrits" ELSE o.libelle END AS libelle
             FROM organes o
             LEFT JOIN groupes_effectif e ON o.uid = e.organeRef
@@ -15,12 +15,11 @@
             ORDER BY e.effectif DESC, o.libelle
           ');
         } else {
-          $query = $this->db->query('SELECT *, date_format(dateDebut, "%d %M %Y") as dateDebutFR, e.effectif,
+          $query = $this->db->query('SELECT *, o.legislature AS legislature, date_format(dateDebut, "%d %M %Y") as dateDebutFR,
             CASE WHEN o.libelle = "Non inscrit" THEN "Députés non inscrits" ELSE o.libelle END AS libelle
             FROM organes o
-            LEFT JOIN groupes_effectif e ON o.uid = e.organeRef
             WHERE o.legislature = '.$this->db->escape($legislature).' AND o.coteType = "GP"
-            ORDER BY e.effectif DESC, o.libelle
+            ORDER BY o.libelle
           ');
         }
       } else {
@@ -98,7 +97,7 @@
       $sql = 'SELECT o.uid, o.coteType, o.libelle, o.libelleEdition, o.libelleAbrev, o.libelleAbrege, o.dateDebut, o.dateFin, o.regime, o.legislature, o.positionPolitique, o.preseance, o.couleurAssociee,
         ge.classement, ge.effectif, ROUND((ge.effectif / 577) * 100) AS effectifShare,
         ROUND(gs.age) AS age, ROUND(gs.womenPct) AS womenPct, womenN,
-        date_format(dateDebut, "%d %M %Y") as dateDebutFR, date_format(dateFin, "%d %M %Y") as dateFinFr
+        date_format(dateDebut, "%d %M %Y") as dateDebutFR, date_format(dateFin, "%d %M %Y") as dateFinFR
         FROM organes o
         LEFT JOIN groupes_effectif ge ON o.uid = ge.organeRef
         LEFT JOIN groupes_stats gs ON o.uid = gs.organeRef
@@ -110,7 +109,7 @@
       return $query->row_array();
     }
 
-    public function get_groupes_president($groupe_uid, $active){
+    public function get_groupes_president($groupe_uid, $legislature, $active){
       if ($active) {
         $where = array(
           'mandat_groupe.organeRef' => $groupe_uid,
@@ -127,16 +126,16 @@
           CONCAT(da.departementNom, " (", da.departementCode, ")") AS cardCenter
           FROM
           (
-          SELECT mpId, dateDebut, date_format(dateDebut, "%d %M %Y") as dateDebutFR, dateFin, codeQualite, libQualiteSex
-          FROM mandat_groupe
-          WHERE organeRef = ? AND preseance = 1 AND legislature = 15
-          ORDER BY dateFin DESC
-          LIMIT 1
+            SELECT mpId, dateDebut, date_format(dateDebut, "%d %M %Y") as dateDebutFR, dateFin, date_format(dateFin, "%d %M %Y") as dateFinFR, codeQualite, libQualiteSex
+            FROM mandat_groupe
+            WHERE organeRef = ? AND preseance = 1 AND legislature = ?
+            ORDER BY dateFin DESC
+            LIMIT 1
           ) A
           LEFT JOIN deputes_last da ON da.mpId = A.mpId
           LIMIT 1
         ';
-        $query = $this->db->query($sql, $groupe_uid);
+        $query = $this->db->query($sql, array($groupe_uid, $legislature));
       }
 
       return $query->row_array();
@@ -162,7 +161,7 @@
           (
           SELECT mg.mpId, mg.dateFin, mg.codeQualite, mg.libQualiteSex
           FROM mandat_groupe mg
-          WHERE mg.organeRef = ? AND mg.nominPrincipale = 1 AND mg.legislature = 15 AND mg.preseance IN (20, 28)
+          WHERE mg.organeRef = ? AND mg.nominPrincipale = 1 AND mg.preseance IN (20, 28)
           GROUP BY mg.mpId
           ) A
           LEFT JOIN deputes_last da ON da.mpId = A.mpId
@@ -177,17 +176,34 @@
     }
 
     public function get_groupe_apparentes($groupe_uid, $active){
-      $where = array(
-        'mandat_groupe.organeRef' => $groupe_uid,
-        'mandat_groupe.dateFin' => NULL,
-        'mandat_groupe.nominPrincipale' => 1
-      );
-      $this->db->select('*, libelle AS libelle, libelleAbrev AS libelleAbrev');
-      $this->db->select('CONCAT(departementNom, " (", departementCode, ")") AS cardCenter');
-      $this->db->where_in('mandat_groupe.preseance', array(24));
-      $this->db->join('deputes_last', 'deputes_last.mpId = mandat_groupe.mpId');
-      $this->db->order_by('nameLast ASC, nameFirst ASC');
-      $query = $this->db->get_where('mandat_groupe', $where);
+      if ($active) {
+        $where = array(
+          'mandat_groupe.organeRef' => $groupe_uid,
+          'mandat_groupe.dateFin' => NULL,
+          'mandat_groupe.nominPrincipale' => 1
+        );
+        $this->db->select('*, libelle AS libelle, libelleAbrev AS libelleAbrev');
+        $this->db->select('CONCAT(departementNom, " (", departementCode, ")") AS cardCenter');
+        $this->db->where_in('mandat_groupe.preseance', array(24));
+        $this->db->join('deputes_last', 'deputes_last.mpId = mandat_groupe.mpId');
+        $this->db->order_by('nameLast ASC, nameFirst ASC');
+        $query = $this->db->get_where('mandat_groupe', $where);
+      } else {
+        $sql = 'SELECT A.*, da.*,
+          CONCAT(departementNom, " (", departementCode, ")") AS cardCenter
+          FROM
+          (
+          SELECT mg.mpId, mg.dateFin, mg.codeQualite, mg.libQualiteSex
+          FROM mandat_groupe mg
+          WHERE mg.organeRef = ? AND mg.nominPrincipale = 1 AND mg.preseance = 24
+          GROUP BY mg.mpId
+          ) A
+          LEFT JOIN deputes_last da ON da.mpId = A.mpId
+          ORDER BY da.nameLast ASC, da.nameFirst ASC
+        ';
+        $query = $this->db->query($sql, $groupe_uid);
+      }
+
 
       return $query->result_array();
     }
@@ -312,7 +328,7 @@
     }
 
     public function get_stats_proximite_all($groupe_uid){
-      $sql = 'SELECT t1.prox_group, ROUND(t1.score * 100) AS accord, t1.votesN,  o.libelle, o.libelleAbrege, o.libelleAbrev, o.positionPolitique, o.dateFin,
+      $sql = 'SELECT t1.prox_group, ROUND(t1.score * 100) AS score, t1.votesN,  o.libelle, o.libelleAbrege, o.libelleAbrev, o.positionPolitique, o.dateFin, o.legislature,
         IF(o.dateFin IS NULL, 0, 1) AS ended
         FROM class_groups_proximite t1
         LEFT JOIN organes o ON o.uid = t1.prox_group

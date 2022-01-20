@@ -420,36 +420,14 @@
       return $this->db->query($sql, array($uid, $legislature))->result_array();
     }
 
-    public function get_votes_datan_groupe($groupe_id, $limit){
-      $sql = 'SELECT A.*, f.name AS category_libelle, v.positionMajoritaire AS vote, date_format(vi.dateScrutin, "%d %M %Y") as dateScrutinFR, vi.legislature, r.name AS reading
+    public function get_votes_datan_groupe($groupe_id, $limit = FALSE){
+      $sql = 'SELECT A.*, f.name AS category_libelle, f.slug AS category_slug, v.positionMajoritaire AS vote, date_format(vi.dateScrutin, "%d %M %Y") as dateScrutinFR, vi.legislature, r.name AS reading
         FROM
         (
         SELECT vd.id, vd.voteNumero, vd.legislature, vd.title AS vote_titre, vd.slug, vd.category, vd.reading
         FROM votes_datan vd
         WHERE vd.state = "published"
         ORDER BY vd.id DESC
-        LIMIT 15
-        ) A
-        LEFT JOIN fields f ON A.category = f.id
-        JOIN votes_groupes v ON A.voteNumero = v.voteNumero AND A.legislature = v.legislature AND v.organeRef = ?
-        LEFT JOIN votes_info vi ON A.voteNumero = vi.voteNumero AND A.legislature = vi.legislature
-        LEFT JOIN readings r ON r.id = A.reading
-        ORDER BY vi.dateScrutin DESC
-        LIMIT ?
-      ';
-      return $this->db->query($sql, array($groupe_id, $limit))->result_array();
-    }
-
-    public function get_votes_datan_groupe_field($groupe_id, $field, $limit){
-      $sql = 'SELECT A.*, f.name AS category_libelle, v.positionMajoritaire AS vote, date_format(vi.dateScrutin, "%d %M %Y") as dateScrutinFR, vi.legislature, r.name AS reading
-        FROM
-        (
-          SELECT vd.id, vd. voteNumero, vd.legislature, vd.title AS vote_titre, vd.slug, vd.category, vd.reading
-          FROM votes_datan vd
-          LEFT JOIN fields f ON vd.category = f.id
-          WHERE vd.state = "published" AND f.slug = '.$this->db->escape($field).'
-          ORDER BY vd.id DESC
-          LIMIT 15
         ) A
         LEFT JOIN fields f ON A.category = f.id
         JOIN votes_groupes v ON A.voteNumero = v.voteNumero AND A.legislature = v.legislature AND v.organeRef = ?
@@ -457,11 +435,10 @@
         LEFT JOIN readings r ON r.id = A.reading
         ORDER BY vi.dateScrutin DESC
       ';
-      if ($limit) {
+      if ($limit){
         $sql .= ' LIMIT ' . $this->db->escape($limit);
       }
-      return $this->db->query($sql, array($groupe_id))->result_array();
-
+      return $this->db->query($sql, $groupe_id)->result_array();
     }
 
     public function get_key_votes_mp($mpId){

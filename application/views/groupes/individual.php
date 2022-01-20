@@ -5,12 +5,12 @@
 <div class="container pg-groupe-individual">
   <div class="row">
     <div class="col-12 col-md-8 col-lg-4 offset-md-2 offset-lg-0">
-      <?php $this->load->view('groupes/partials/card_individual.php') ?>
+      <?php $this->load->view('groupes/partials/card_individual.php', array('tag' => 'h1')) ?>
     </div> <!-- END COL -->
     <div class="col-md-10 col-lg-8 offset-md-1 offset-lg-0 pl-lg-5">
       <!-- BIO & ELECTION -->
       <div class="bloc-bio mt-5">
-        <h2 class="mb-4">En quelques mots</h2>
+        <h2 class="mb-4 title-center">En quelques mots</h2>
         <?php if ($groupe['libelleAbrev'] == "NI"): ?>
           <p>Les <?= mb_strtolower($title) ?> (NI) ne sont pas membres d'un groupe politique.</p>
           <p>Ces députés peuvent cependant être membres d'un parti politique. Le parti politique est un groupement constitué hors de l'Assemblée nationale, alors que le <a href="http://www2.assemblee-nationale.fr/15/les-groupes-politiques/" target="_blank">groupe politique</a> est un organe officiel de l'Assemblée qui comporte au minimum 15 députés. Certains groupes, comme <a href="<?= base_url() ?>groupes/legislature-15/udi_i" target="_blank">UDI_I</a>, regroupent ainsi des députés venant de partis différents.</p>
@@ -23,14 +23,14 @@
             Le groupe <b><?= $groupe['libelle'] ?></b> (<?= $groupe['libelleAbrev'] ?>) <?= $active ? 'est' : 'était' ?> un groupe classé <?= $infos_groupes[$groupe['libelleAbrev']]['edited'] ?> de l'échiquier politique.
             Il a été créé en <?= $dateDebutMois ?><?= $edito['creation'] ?>.
             <?php if (!$active): ?>
-              Le groupe a été dissout le <?= $groupe['dateFinFr'] ?>.
+              Le groupe a été dissout le <?= $groupe['dateFinFR'] ?>.
             <?php endif; ?>
           </p>
           <p>
             <?= ucfirst($president['son']) ?> président<?= $president['e'] ?> <?= $active ? 'est' : 'était' ?> <a href="<?= base_url(); ?>deputes/<?= $president['dptSlug'] ?>/depute_<?= $president['nameUrl'] ?>"><?= $president['nameFirst']." ".$president['nameLast'] ?></a>, à ce poste depuis le <?= $president['dateDebutFR'] ?>.
           </p>
           <p>
-            Le groupe s'est déclaré comme faisant partie de <b><?= $edito['opposition'] ?></b>
+            Le groupe s'est déclaré comme faisant partie de <b><?= $edito['opposition'] ?></b>.
             <?php if ($groupe['positionPolitique'] != 'Majoritaire'): ?>
               S'il n'est pas majoritaire, un groupe peut soit appartenir à l'opposition, soit être allié à la majorité présidentielle. Dans les deux cas, l'Assemblée nationale leur octroie <a href="http://www.assemblee-nationale.fr/connaissance/reglement/reforme-reglement-2009-4-11.pdf" target="_blank">des droits particuliers</a>, notamment au niveau de la prise de parole en séance publique.
             <?php endif; ?>
@@ -43,7 +43,7 @@
             <div class="row">
               <div class="col-12">
                 <div class="d-flex justify-content-between mb-4">
-                  <h2>Derniers votes</h2>
+                  <h2 class="title-center">Derniers votes</h2>
                   <div class="bloc-carousel-votes">
                     <a class="btn see-all-votes mx-2" href="<?= base_url() ?>groupes/legislature-<?= $groupe['legislature'] ?>/<?= mb_strtolower($groupe['libelleAbrev']) ?>/votes">
                       <span>VOIR TOUS</span>
@@ -78,7 +78,7 @@
         <?php endif; ?>
         <!-- BLOC CHIFFRES -->
         <div class="bloc-chiffres mt-5">
-          <h2 class="mb-3">En chiffres</h2>
+          <h2 class="mb-3 title-center">En chiffres</h2>
           <div class="row">
             <div class="col-sm-6">
               <div class="card">
@@ -105,7 +105,11 @@
                     <span><?= $groupe['age'] ?> ans</span>
                   </div>
                   <div class="explanation">
-                    <p>Les députés membres du groupe <?= $groupe['libelleAbrev'] ?> ont en moyenne <?= $groupe['age'] ?> ans. C'est plus <?= $ageEdited ?> que la moyenne de l'Assemblée nationale, qui est de <?= $ageMean ?> ans.</p>
+                    <?php if ($groupe['legislature'] == legislature_current()): ?>
+                      <p>Les députés <?= !$active ? "qui étaient" : NULL ?> membres du groupe <?= $groupe['libelleAbrev'] ?> ont en moyenne <?= $groupe['age'] ?> ans. C'est plus <?= $ageEdited ?> que la moyenne de l'Assemblée nationale, qui est de <?= $ageMean ?> ans.</p>
+                      <?php else: ?>
+                      <p>Les députés qui étaient membres du groupe <?= $groupe['libelleAbrev'] ?> avaient en moyenne <?= $groupe['age'] ?> ans lors de la fin de la <?= $groupe['legislature'] ?><sup>ème</sup> législature. C'est <?= $ageEdited ?> que la moyenne de l'Assemblée nationale, qui était de <?= $ageMean ?> ans.</p>
+                    <?php endif; ?>
                   </div>
                 </div>
               </div>
@@ -120,32 +124,38 @@
                     <span><?= $groupe['womenPct'] ?> %</span>
                   </div>
                   <div class="explanation">
-                    <p>Le groupe <?= $groupe['libelleAbrev'] ?> compte <?= $groupe['womenN'] ?> députées femmes parmi ses rangs, soit <?= $groupe['womenPct'] ?> % de ses effectifs. C'est <?= $womenEdited ?> que la moyenne de l'Assemblée nationale, qui est de <?= $womenPctTotal ?>%.</p>
+                    <?php if ($groupe['legislature'] == legislature_current()): ?>
+                      <p>Le groupe <?= $groupe['libelleAbrev'] ?> <?= $active ? "compte" : "comptait" ?> <?= $groupe['womenN'] ?> députées femmes dans ses rangs, soit <?= $groupe['womenPct'] ?> % de ses effectifs. C'est <?= $womenEdited ?> que la moyenne de l'Assemblée nationale, qui est de <?= $womenPctTotal ?>%.</p>
+                      <?php else: ?>
+                      <p>Le groupe <?= $groupe['libelleAbrev'] ?> comptait <?= $groupe['womenN'] ?> députées femmes, soit <?= $groupe['womenPct'] ?> % de ses effectifs. C'est <?= $womenEdited ?> que la moyenne de l'Assemblée nationale lors de la <?= $groupe['legislature'] ?><sup>ème</sup> législature, qui était de <?= $womenPctTotal ?> %.</p>
+                    <?php endif; ?>
                   </div>
                 </div>
               </div>
             </div>
-            <div class="col-sm-6">
-              <div class="card">
-                <div class="card-body">
-                  <h3>Origine sociale des députés</h3>
-                  <div class="stat">
-                    <span><?= $origineSociale['pct'] ?> %</span>
-                  </div>
-                  <div class="explanation">
-                    <p>
-                      <?= $origineSociale['n'] > 0 ? $origineSociale['n'] : "Aucun" ?> député<?= $origineSociale['n'] > 1 ? "s" : NULL ?> du groupe <?= $groupe['libelleAbrev'] ?> (soit <?= $origineSociale['pct'] ?> %) apparten<?= $origineSociale['n'] > 1 ? "aient" : "ait" ?> à la catégorie <b><u><?= mb_strtolower($origineSociale['famille']) ?></u></b>.
-                      C'est <?= $origineSociale['edited'] ?> que dans la population française (<?= round($origineSociale['population']) ?> %).
-                    </p>
+            <?php if ($active): ?>
+              <div class="col-sm-6">
+                <div class="card">
+                  <div class="card-body">
+                    <h3>Origine sociale des députés</h3>
+                    <div class="stat">
+                      <span><?= $origineSociale['pct'] ?> %</span>
+                    </div>
+                    <div class="explanation">
+                      <p>
+                        <?= $origineSociale['n'] > 0 ? $origineSociale['n'] : "Aucun" ?> député<?= $origineSociale['n'] > 1 ? "s" : NULL ?> du groupe <?= $groupe['libelleAbrev'] ?> (soit <?= $origineSociale['pct'] ?> %) apparten<?= $origineSociale['n'] > 1 ? "aient" : "ait" ?> à la catégorie <b><u><?= mb_strtolower($origineSociale['famille']) ?></u></b>.
+                        C'est <?= $origineSociale['edited'] ?> que dans la population française (<?= round($origineSociale['population']) ?> %).
+                      </p>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
+            <?php endif; ?>
           </div>
         </div> <!-- // END BLOC CHIFFRES -->
         <!-- BLOC STATISTIQUES -->
         <div class="bloc-statistiques mt-5">
-          <h2 class="mb-3">Comportement politique</h2>
+          <h2 class="mb-3 title-center">Comportement politique</h2>
           <!-- CARD PARTICIPATION -->
           <div class="card card-statistiques my-4">
             <div class="card-body">
@@ -279,7 +289,7 @@
                             <?php else: ?>
                             Les <?= mb_strtolower($title) ?> ont
                           <?php endif; ?>
-                          voté en accord avec le groupe de la majorité présidentielle (<a href="<?= base_url(); ?>groupes/legislature-15/larem" target="_blank"?>LREM</a>) dans <?= $stats['majorite'] ?> % des cas.
+                          voté en accord avec le groupe de la majorité présidentielle dans <?= $stats['majorite'] ?> % des cas.
                         </p>
                         <p>
                           <?php if ($groupe['libelleAbrev'] != "NI"): ?>
@@ -320,7 +330,7 @@
                 <?php else: ?>
                 <div class="row">
                   <div class="col-10 offset-2">
-                    <h4><?= $title ?> vote <b>souvent</b> avec :</h4>
+                    <h4>Le groupe <?= $active ? "vote" : "votait" ?> <b>souvent</b> avec</h4>
                   </div>
                 </div>
                 <div class="row mt-1 bar-container stats pr-2">
@@ -370,7 +380,7 @@
                 </div>
                 <div class="row mt-5">
                   <div class="col-10 offset-2">
-                    <h4><?= $title ?> vote <b>rarement</b> avec :</h4>
+                    <h4>Le groupe <?= $active ? "vote" : "votait" ?> <b>rarement</b> avec</h4>
                   </div>
                 </div>
                 <div class="row mt-1 bar-container stats pr-2">
@@ -409,7 +419,7 @@
                         <?php else: ?>
                           <?= $edito_proximite['first2']['maj_pres'] ?>.
                       <?php endif; ?>
-                      Il <?= $active ? "vote" : "votait" ?> également très peu avec <a href="<?= base_url() ?>groupes/legislature-<?= $edito_proximite['last2']['legislature'] ?>/<?= mb_strtolower($edito_proximite['last2']['libelleAbrev']) ?>" target="_blank"><?= $edito_proximite['last2']['libelle'] ?> </a>,
+                      Il <?= $active ? "vote" : "votait" ?> également très peu avec <a href="<?= base_url() ?>groupes/legislature-<?= $edito_proximite['last2']['legislature'] ?>/<?= mb_strtolower($edito_proximite['last2']['libelleAbrev']) ?>" target="_blank"><?= $edito_proximite['last2']['libelle'] ?></a>,
                       <?php if ($edito_proximite['last2']['libelleAbrev'] != "NI"): ?>
                         <?= $edito_proximite['last2']['maj_pres'] ?> classé <?= $edito_proximite['last2']['ideology'] ?>.
                         <?php else: ?>
@@ -443,7 +453,7 @@
                           <tr>
                             <th scope="row"><?= $i ?></th>
                             <td><?= $group['libelle'] ?> (<?= $group['libelleAbrev'] ?>)</td>
-                            <td><?= $group['accord'] ?> %</td>
+                            <td><?= $group['score'] ?> %</td>
                             <td><?= $group['ended'] == 1 ? "Oui" : "" ?></td>
                             <td><?= $group['votesN'] ?></td>
                           </tr>
@@ -459,38 +469,41 @@
         </div> <!-- // END BLOC STATISTIQUES -->
         <!-- BLOC PARTAGEZ -->
         <div class="bloc-social mt-5">
-          <h2 class="subtitle mb-4">Partagez cette page</h2>
+          <h2 class="mb-4 title-center">Partagez cette page</h2>
           <?php $this->load->view('partials/share.php') ?>
         </div>
         <!-- BLOC SOCIAL-MEDIA -->
-        <div class="bloc-links p-lg-0 p-md-2 mt-5">
-          <h2>En savoir plus</h2>
-          <div class="row mt-4">
-            <?php if (isset($groupe['website'])): ?>
-              <div class="col-12 col-sm-6 mt-2 d-flex justify-content-center">
-                <span class="url_obf btn btn-website" url_obf="<?= url_obfuscation($groupe['website']) ?>">
-                    Site internet
-                </span>
-              </div>
-            <?php endif; ?>
-            <?php if (isset($groupe['facebook'])): ?>
-              <div class="col-12 col-sm-6 mt-2 d-flex justify-content-center">
-                <span class="url_obf btn btn-fcb" url_obf="<?= url_obfuscation("https://www.facebook.com/" . $groupe['facebook']) ?>">
-                    <?= file_get_contents(base_url().'/assets/imgs/logos/facebook_svg.svg') ?>
-                    <span class="ml-3">Profil Facebook</span>
-                </span>
-              </div>
-            <?php endif; ?>
-            <?php if (isset($groupe['twitter'])): ?>
-              <div class="col-12 col-sm-6 mt-2 d-flex justify-content-center">
-                <span class="url_obf btn btn-twitter" url_obf="<?= url_obfuscation("https://twitter.com/" . $groupe['twitter']) ?>">
-                    <?= file_get_contents(base_url().'/assets/imgs/logos/twitter_svg.svg') ?>
-                    <span class="ml-3">Profil Twitter</span>
-                </span>
-              </div>
-            <?php endif; ?>
-          </div>
-        </div> <!-- END BLOC SOCIAL MEDIA -->
+        <?php if (isset($groupe['website']) || isset($groupe['facebook']) || isset($groupe['twitter'])): ?>
+          <div class="bloc-links p-lg-0 p-md-2 mt-5">
+            <h2 class="title-center">En savoir plus</h2>
+            <div class="row mt-4">
+              <?php if (isset($groupe['website'])): ?>
+                <div class="col-12 col-sm-6 mt-2 d-flex justify-content-center">
+                  <span class="url_obf btn btn-website" url_obf="<?= url_obfuscation($groupe['website']) ?>">
+                      Site internet
+                  </span>
+                </div>
+              <?php endif; ?>
+              <?php if (isset($groupe['facebook'])): ?>
+                <div class="col-12 col-sm-6 mt-2 d-flex justify-content-center">
+                  <span class="url_obf btn btn-fcb" url_obf="<?= url_obfuscation("https://www.facebook.com/" . $groupe['facebook']) ?>">
+                      <?= file_get_contents(base_url().'/assets/imgs/logos/facebook_svg.svg') ?>
+                      <span class="ml-3">Profil Facebook</span>
+                  </span>
+                </div>
+              <?php endif; ?>
+              <?php if (isset($groupe['twitter'])): ?>
+                <div class="col-12 col-sm-6 mt-2 d-flex justify-content-center">
+                  <span class="url_obf btn btn-twitter" url_obf="<?= url_obfuscation("https://twitter.com/" . $groupe['twitter']) ?>">
+                      <?= file_get_contents(base_url().'/assets/imgs/logos/twitter_svg.svg') ?>
+                      <span class="ml-3">Profil Twitter</span>
+                  </span>
+                </div>
+              <?php endif; ?>
+            </div>
+          </div> <!-- END BLOC SOCIAL MEDIA -->
+        <?php endif; ?>
+
     </div>
   </div>
 </div> <!-- END CONTAINER -->
@@ -511,7 +524,7 @@
     <?php endif; ?>
     <div class="row">
       <div class="col-12">
-        <h2>Tous les députés membres du groupe <?= $title ?></h2>
+        <h2>Les députés membres du groupe <?= $title ?></h2>
         <div class="row mt-3">
           <?php foreach ($membres as $key => $membre): ?>
             <div class="col-6 col-md-3 py-2">
@@ -543,7 +556,7 @@
     <?php endif; ?>
     <div class="row">
       <div class="col-12">
-        <h2>Tous les groupes parlementaires en activité de la 15e législature</h2>
+        <h2>Tous les groupes parlementaires en activité de la <?= $groupe['legislature'] ?><sup>ème</sup> législature</h2>
         <div class="row mt-3">
           <?php foreach ($groupesActifs as $group): ?>
             <div class="col-6 col-md-4 py-2">
@@ -552,7 +565,11 @@
           <?php endforeach; ?>
         </div>
         <div class="mt-3">
-          <a href="<?= base_url() ?>groupes">Voir tous les groupes parlementaires de la 15e législature</a>
+          <?php if ($groupe['legislature'] == legislature_current()): ?>
+            <a href="<?= base_url() ?>groupes">Voir tous les groupes parlementaires de la <?= $groupe['legislature'] ?><sup>ème</sup> législature</a>
+            <?php else: ?>
+            <a href="<?= base_url() ?>groupes/legislature-<?= $groupe['legislature'] ?>">Voir tous les groupes parlementaires de la <?= $groupe['legislature'] ?><sup>ème</sup> législature</a>
+          <?php endif; ?>
         </div>
       </div>
     </div>

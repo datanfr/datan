@@ -15,9 +15,23 @@
     }
 
     //INDEX - Homepage with all groups//
-    public function actifs(){
+    public function index($legislature = NULL){
+
+      if ($legislature == legislature_current()) {
+        redirect('groupes');
+      }
+
+      if ($legislature == NULL) {
+        $legislature = legislature_current();
+      }
+
+      if ($legislature < 14) {
+        show_404($this->functions_datan->get_404_infos());
+      }
+
       $data['active'] = TRUE;
-      $data['groupes'] = $this->groupes_model->get_groupes_all($data['active'], legislature_current());
+      $data['legislature'] = $legislature;
+      $data['groupes'] = $this->groupes_model->get_groupes_all($data['active'], $data['legislature']);
       $data['number_groupes_inactive'] = $this->groupes_model->get_number_inactive_groupes();
       $data['number'] = $this->groupes_model->get_number_active_groupes();
       $data['number_in_groupes'] = $this->groupes_model->get_number_mps_groupes();
@@ -28,20 +42,40 @@
         $data['groupes'][$key]['couleurAssociee'] = $this->groupes_model->get_groupe_color(array($value['libelleAbrev'], $value['couleurAssociee']));
       }
 
-      // Meta
+      // Meta and Breadcrum
       $data['url'] = $this->meta_model->get_url();
-      $data['title_meta'] = "Groupes Parlementaires - Assemblée Nationale | Datan";
-      $data['description_meta'] = "Retrouvez tous les groupes parlementaires en activité de la 15e législature. Résultats de vote et analyses pour chaque groupe parlementaire.";
-      $data['title'] = "Les groupes politiques de l'Assemblée nationale";
-      // Breadcrumb
-      $data['breadcrumb'] = array(
-        array(
-          "name" => "Datan", "url" => base_url(), "active" => FALSE
-        ),
-        array(
-          "name" => "Groupes", "url" => base_url()."groupes", "active" => TRUE
-        )
-      );
+      if ($data['legislature'] == legislature_current()) {
+        // Meta
+        $data['title_meta'] = "Groupes Parlementaires - Assemblée Nationale | Datan";
+        $data['description_meta'] = "Retrouvez tous les groupes parlementaires en activité de la " . $data['legislature'] . "ème législature. Résultats de vote et analyses pour chaque groupe.";
+        $data['title'] = "Les groupes politiques à l'Assemblée nationale";
+        // Breadcrum
+        $data['breadcrumb'] = array(
+          array(
+            "name" => "Datan", "url" => base_url(), "active" => FALSE
+          ),
+          array(
+            "name" => "Groupes", "url" => base_url()."groupes", "active" => TRUE
+          )
+        );
+      } else {
+        // Meta
+        $data['title_meta'] = "Groupes Parlementaires " . $data['legislature'] . "ème legislature - Assemblée Nationale | Datan";
+        $data['description_meta'] = "Retrouvez tous les groupes parlementaires de la " . $data['legislature'] . "ème législature. Résultats de vote et analyses pour chaque groupe.";
+        $data['title'] = "Les groupes politiques de la " . $data['legislature'] . "ème législature";
+        // Breadcrum
+        $data['breadcrumb'] = array(
+          array(
+            "name" => "Datan", "url" => base_url(), "active" => FALSE
+          ),
+          array(
+            "name" => "Groupes", "url" => base_url()."groupes", "active" => FALSE
+          ),
+          array(
+            "name" => "Législature " . $data['legislature'], "url" => base_url()."groupes/legislature-" . $data['legislature'], "active" => TRUE
+          )
+        );
+      }
       $data['breadcrumb_json'] = $this->breadcrumb_model->breadcrumb_json($data['breadcrumb']);
       //Open Graph
       $controller = $this->router->fetch_class()."/".$this->router->fetch_method();
@@ -58,6 +92,7 @@
     //INDEX - Homepage with all inactive groups //
     public function inactifs(){
       $data['active'] = FALSE;
+      $data['legislature'] = legislature_current();
       $data['groupes'] = $this->groupes_model->get_groupes_all($data['active'], legislature_current());
       $data['number_groupes_inactive'] = $this->groupes_model->get_number_inactive_groupes();
       $data['number_groupes_active'] = $this->groupes_model->get_number_active_groupes();
@@ -69,9 +104,9 @@
 
       // Meta
       $data['url'] = $this->meta_model->get_url();
-      $data['title_meta'] = "Groupes Parlementaires plus en activité - Assemblée Nationale | Datan";
-      $data['description_meta'] = "Retrouvez tous les groupes parlementaires plus en activité de la 15e législature. Résultats de vote et analyses pour chaque groupe parlementaire.";
-      $data['title'] = "Les groupes politiques plus en activité";
+      $data['title_meta'] = "Anciens groupes politiques - Assemblée Nationale | Datan";
+      $data['description_meta'] = "Retrouvez tous les anciens groupes parlementaires de la " . legislature_current() . "ème législature. Résultats de vote et analyses pour chaque groupe.";
+      $data['title'] = "Les anciens groupes politiques de la " . legislature_current() . "ème législature";
       // Breadcrumb
       $data['breadcrumb'] = array(
         array(
@@ -81,7 +116,7 @@
           "name" => "Groupes", "url" => base_url()."groupes", "active" => FALSE
         ),
         array(
-          "name" => "Groupes plus en activité", "url" => base_url()."groupes/inactifs", "active" => TRUE
+          "name" => "Anciens groupes", "url" => base_url()."groupes/inactifs", "active" => TRUE
         ),
       );
       $data['breadcrumb_json'] = $this->breadcrumb_model->breadcrumb_json($data['breadcrumb']);
@@ -102,7 +137,7 @@
       $data['legislature'] = $legislature;
       $legislature = $data['legislature'];
 
-      if ($legislature < 15) {
+      if ($legislature < 14) {
         show_404($this->functions_datan->get_404_infos());
       }
 
@@ -127,7 +162,6 @@
       }
 
       setlocale(LC_TIME, 'french');
-      $data['dateDebut'] = strftime('%d %B %Y', strtotime($data['groupe']['dateDebut']));
       $data['dateDebutMois'] = strftime('%B %Y', strtotime($data['groupe']['dateDebut']));
       $groupe_uid = $data['groupe']['uid'];
       $groupe_ab = $data['groupe']['libelleAbrev'];
@@ -135,7 +169,7 @@
       $data['infos_groupes'] = groups_position_edited();
 
       // Query 2 Membres du groupe
-      $data['president'] = $this->groupes_model->get_groupes_president($groupe_uid, $data['active']);
+      $data['president'] = $this->groupes_model->get_groupes_president($groupe_uid, $legislature, $data['active']);
       if (!empty($data['president'])) {
         $data['president'] = array_merge($data['president'], gender($data['president']['civ']));
       }
@@ -162,7 +196,7 @@
       // Get mean age in the National Assembly
       $data['ageMean'] = $this->stats_model->get_age_mean($legislature);
       $data['ageMean'] = round($data['ageMean']);
-      $data['ageEdited'] = $this->functions_datan->old_young($data['groupe']['age'], $data['ageMean']);
+      $data['ageEdited'] = $this->functions_datan->more_less($data['groupe']['age'], $data['ageMean']);
       // Get mean of women in the National Assembly
       $data['womenPctTotal'] = $this->deputes_model->get_deputes_gender($legislature);
       $data['womenPctTotal'] = $data['womenPctTotal'][1]['percentage'];
@@ -218,14 +252,22 @@
       // ACCORD AVEC GROUPES
       $data['accord_groupes_actifs'] = $this->groupes_model->get_stats_proximite($groupe_uid); // PROXIMITÉ TOUS LES GROUPES
       $data['accord_groupes_all'] = $this->groupes_model->get_stats_proximite_all($groupe_uid);
-      $accord_groupes_n = count($data['accord_groupes_actifs']);
+
+      if ($data['groupe']['legislature'] == legislature_current()) {
+        $data['accord_groupes_featured'] = $data['accord_groupes_actifs'];
+      } else {
+        $data['accord_groupes_featured'] = $data['accord_groupes_all'];
+      }
+
+
+      $accord_groupes_n = count($data['accord_groupes_featured']);
       $accord_groupes_divided = round($accord_groupes_n / 2, 0, PHP_ROUND_HALF_UP);
-      $data['accord_groupes_first'] = array_slice($data['accord_groupes_actifs'], 0, $accord_groupes_divided);
+      $data['accord_groupes_first'] = array_slice($data['accord_groupes_featured'], 0, $accord_groupes_divided);
       $data['accord_groupes_first'] = array_slice($data['accord_groupes_first'], 0, 3);
-      $data['accord_groupes_last'] = array_slice($data['accord_groupes_actifs'], $accord_groupes_divided, $accord_groupes_n);
+      $data['accord_groupes_last'] = array_slice($data['accord_groupes_featured'], $accord_groupes_divided, $accord_groupes_n);
       $data['accord_groupes_last'] = array_slice($data['accord_groupes_last'], -3);
-      if (!empty($data['accord_groupes_actifs'])) {
-        $data['edito_proximite'] = $this->groupes_edito->proximite($data['accord_groupes_actifs'], $data['infos_groupes']);
+      if (!empty($data['accord_groupes_featured'])) {
+        $data['edito_proximite'] = $this->groupes_edito->proximite($data['accord_groupes_featured'], $data['infos_groupes']);
         $data['no_proximite'] = FALSE;
       } else {
         $data['no_proximite'] = TRUE;
@@ -251,17 +293,34 @@
         $data['title'] = $data['groupe']['libelle'];
       }
       // Breadcrumb
-      $data['breadcrumb'] = array(
-        array(
-          "name" => "Datan", "url" => base_url(), "active" => FALSE
-        ),
-        array(
-          "name" => "Groupes", "url" => base_url()."groupes", "active" => FALSE
-        ),
-        array(
-          "name" => $data['groupe']['libelle'], "url" => base_url()."groupes/legislature-".$data['groupe']['legislature']."/".mb_strtolower($data['groupe']['libelleAbrev']), "active" => TRUE
-        ),
-      );
+      if ($legislature == legislature_current()) {
+        $data['breadcrumb'] = array(
+          array(
+            "name" => "Datan", "url" => base_url(), "active" => FALSE
+          ),
+          array(
+            "name" => "Groupes", "url" => base_url()."groupes", "active" => FALSE
+          ),
+          array(
+            "name" => $data['groupe']['libelle'], "url" => base_url()."groupes/legislature-".$data['groupe']['legislature']."/".mb_strtolower($data['groupe']['libelleAbrev']), "active" => TRUE
+          ),
+        );
+      } else {
+        $data['breadcrumb'] = array(
+          array(
+            "name" => "Datan", "url" => base_url(), "active" => FALSE
+          ),
+          array(
+            "name" => "Groupes", "url" => base_url()."groupes", "active" => FALSE
+          ),
+          array(
+            "name" => "Législature " . $legislature, "url" => base_url()."groupes/legislature-" . $legislature, "active" => FALSE
+          ),
+          array(
+            "name" => $data['groupe']['libelle'], "url" => base_url()."groupes/legislature-".$data['groupe']['legislature']."/".mb_strtolower($data['groupe']['libelleAbrev']), "active" => TRUE
+          ),
+        );
+      }
       $data['breadcrumb_json'] = $this->breadcrumb_model->breadcrumb_json($data['breadcrumb']);
       //Open Graph
       $controller = $this->router->fetch_class()."/".$this->router->fetch_method();
@@ -302,7 +361,7 @@
     }
 
     public function individual_membres($legislature, $groupe){
-      if ($legislature < 15) {
+      if ($legislature < 14) {
         show_404($this->functions_datan->get_404_infos());
       }
 
@@ -320,7 +379,7 @@
       }
 
       $groupe_uid = $data['groupe']['uid'];
-      $data['president'] = $this->groupes_model->get_groupes_president($groupe_uid, $data['active']);
+      $data['president'] = $this->groupes_model->get_groupes_president($groupe_uid, $legislature, $data['active']);
       $data['membres'] = $this->groupes_model->get_groupe_membres($groupe_uid, $data['active']);
       $data['apparentes'] = $this->groupes_model->get_groupe_apparentes($groupe_uid, $data['active']);
 
@@ -335,24 +394,44 @@
         $data['title'] = "Députés non incrits (NI)";
       } else {
         $data['title_meta'] = "Députés ".$data['groupe']['libelle']." - Assemblée Nationale | Datan";
-        $data['description_meta'] = "Retrouvez tous les députés en activité du groupe parlementaire ".$data['groupe']['libelle']." (".$data['groupe']['libelleAbrev'].").";
+        $data['description_meta'] = "Retrouvez tous les députés membres du groupe parlementaire ".$data['groupe']['libelle']." (".$data['groupe']['libelleAbrev'].").";
         $data['title'] = "Députés membres du groupe ".$data['groupe']['libelle']. " (".$data['groupe']['libelleAbrev'].")";
       }
       // Breadcrumb
-      $data['breadcrumb'] = array(
-        array(
-          "name" => "Datan", "url" => base_url(), "active" => FALSE
-        ),
-        array(
-          "name" => "Groupes", "url" => base_url()."groupes", "active" => FALSE
-        ),
-        array(
-          "name" => $data['groupe']['libelle'], "url" => base_url()."groupes/legislature-".$data['groupe']['legislature']."/".mb_strtolower($data['groupe']['libelleAbrev']), "active" => FALSE
-        ),
-        array(
-          "name" => "Membres", "url" => base_url()."groupes/legislature-".$data['groupe']['legislature']."/".mb_strtolower($data['groupe']['libelleAbrev'])."/membres", "active" => TRUE
-        )
-      );
+      if ($legislature == legislature_current()) {
+        $data['breadcrumb'] = array(
+          array(
+            "name" => "Datan", "url" => base_url(), "active" => FALSE
+          ),
+          array(
+            "name" => "Groupes", "url" => base_url()."groupes", "active" => FALSE
+          ),
+          array(
+            "name" => $data['groupe']['libelle'], "url" => base_url()."groupes/legislature-".$data['groupe']['legislature']."/".mb_strtolower($data['groupe']['libelleAbrev']), "active" => FALSE
+          ),
+          array(
+            "name" => "Membres", "url" => base_url()."groupes/legislature-".$data['groupe']['legislature']."/".mb_strtolower($data['groupe']['libelleAbrev'])."/membres", "active" => TRUE
+          )
+        );
+      } else {
+        $data['breadcrumb'] = array(
+          array(
+            "name" => "Datan", "url" => base_url(), "active" => FALSE
+          ),
+          array(
+            "name" => "Groupes", "url" => base_url()."groupes", "active" => FALSE
+          ),
+          array(
+            "name" => "Législature " . $legislature, "url" => base_url()."groupes/legislature-" . $legislature, "active" => FALSE
+          ),
+          array(
+            "name" => $data['groupe']['libelle'], "url" => base_url()."groupes/legislature-".$data['groupe']['legislature']."/".mb_strtolower($data['groupe']['libelleAbrev']), "active" => FALSE
+          ),
+          array(
+            "name" => "Membres", "url" => base_url()."groupes/legislature-".$data['groupe']['legislature']."/".mb_strtolower($data['groupe']['libelleAbrev'])."/membres", "active" => TRUE
+          )
+        );
+      }
       $data['breadcrumb_json'] = $this->breadcrumb_model->breadcrumb_json($data['breadcrumb']);
       //Open Graph
       $controller = $this->router->fetch_class()."/".$this->router->fetch_method();
@@ -408,7 +487,7 @@
       // Variables about the group (1. dateDebut / 2. membres du groupe / 3. other groups)
       setlocale(LC_TIME, 'french');
       $data['dateDebut'] = strftime('%d %B %Y', strtotime($data['groupe']['dateDebut']));
-      $data['president'] = $this->groupes_model->get_groupes_president($groupe_uid, $data['active']);
+      $data['president'] = $this->groupes_model->get_groupes_president($groupe_uid, $legislature, $data['active']);
       if (!empty($data['president'])) {
         $data['president'] = array_merge($data['president'], gender($data['president']['civ']));
       }
@@ -422,27 +501,11 @@
       }
       $data['groupesActifs'] = $this->groupes_model->get_groupes_all(TRUE, legislature_current());
 
-      // Query - get active fields + votes by field + check the logos
+      // Get active fields
       $data['fields'] = $this->fields_model->get_active_fields();
-      foreach ($data['fields'] as $key => $field) {
-        // Get votes by field
-        $x[$field["slug"]] = $this->votes_model->get_votes_datan_groupe_field($groupe_uid, $field['slug'], 2);
-        if (!empty($x[$field["slug"]])) {
-          $data['fields_voted'][] = $field;
-        }
-        $x[$field["slug"]] = array_slice($x[$field["slug"]], 0, 2);
-      }
-      // Check the logos
-      if ($data["fields_voted"]){
-        foreach ($data["fields_voted"] as $key => $value) {
-          if ($this->functions_datan->get_http_response_code(base_url().'/assets/imgs/fields/'.$value["slug"].'.svg') != "200"){
-            $data['fields_voted'][$key]["logo"] = FALSE;
-          } else {
-            $data['fields_voted'][$key]["logo"] = TRUE;
-          }
-        }
-      }
-      $data['by_field'] = $x;
+
+      // Get votes
+      $data['votes'] = $this->votes_model->get_votes_datan_groupe($groupe_uid);
 
       // Edito
       $data['edito'] = $this->groupes_edito->edito($groupe_ab, $groupe_opposition);
@@ -478,6 +541,10 @@
       $controller = $this->router->fetch_class()."/".$this->router->fetch_method();
       $data['ogp'] = $this->meta_model->get_ogp($controller, $data['title_meta'], $data['description_meta'], $data['url'], $data);
       // JS
+      $data['js_to_load_before_datan'] = array("isotope.pkgd.min");
+      $data['js_to_load']= array("datan/sorting");
+      // CSS
+      // Preloads
       $data['preloads'] = array(
         array("href" => asset_url()."imgs/cover/hemicycle-front-375.jpg", "as" => "image", "media" => "(max-width: 575.98px)"),
         array("href" => asset_url()."imgs/cover/hemicycle-front-768.jpg", "as" => "image", "media" => "(min-width: 576px) and (max-width: 970px)"),
@@ -485,114 +552,8 @@
       );
       // Load Views
       $this->load->view('templates/header', $data);
+      $this->load->view('templates/button_up');
       $this->load->view('groupes/votes_datan', $data);
-      $this->load->view('templates/breadcrumb', $data);
-      $this->load->view('templates/footer');
-    }
-
-    /* page: groupes/x/votes/field */
-    public function individual_votes_datan_field($legislature, $groupe, $field){
-      if ($legislature < 15) {
-        show_404($this->functions_datan->get_404_infos());
-      };
-
-      $data['groupe'] = $this->groupes_model->get_groupes_individal($groupe, $legislature);
-
-      if (empty($data['groupe'])) {
-        show_404($this->functions_datan->get_404_infos());
-      };
-
-      $groupe_uid = $data['groupe']['uid'];
-      $groupe_ab = $data['groupe']['libelleAbrev'];
-      $groupe_opposition = $data['groupe']['positionPolitique'];
-      $data['infos_groupes'] = groups_position_edited();
-
-      // Query - get active votes
-      $data['votes'] = $this->votes_model->get_votes_datan_groupe_field($groupe_uid, $field, NULL);
-
-      if (empty($data['votes'])) {
-        show_404($this->functions_datan->get_404_infos());
-      }
-
-      // Query active
-      if ($data['groupe']['dateFin'] == NULL) {
-        $data['active'] = TRUE;
-      } else {
-        $data['active'] = FALSE;
-      }
-      // Query effectif inactifs
-      if (!$data['active']) {
-        $data['effectif'] = $this->groupes_model->get_effectif_inactif($groupe_uid);
-      }
-
-      // Query get group_color
-      $data['groupe']['couleurAssociee'] = $this->groupes_model->get_groupe_color(array($data['groupe']['libelleAbrev'], $data['groupe']['couleurAssociee']));
-
-      // Variables about the group (1. dateDebut / 2. membres du groupe / 3. other groups)
-      setlocale(LC_TIME, 'french');
-      $data['dateDebut'] = strftime('%d %B %Y', strtotime($data['groupe']['dateDebut']));
-      $data['president'] = $this->groupes_model->get_groupes_president($groupe_uid, $data['active']);
-      if (!empty($data['president'])) {
-        $data['president'] = array_merge($data['president'], gender($data['president']['civ']));
-      }
-      $data['membres'] = $this->groupes_model->get_groupe_membres($groupe_uid, $data['active']);
-      if (!in_array($data['groupe']['uid'], groupes_NI())) {
-        $data['membres'] = array_slice($data['membres'], 0, 20);
-      }
-      $data['apparentes'] = $this->groupes_model->get_groupe_apparentes($groupe_uid, $data['active']);
-      if (!in_array($data['groupe']['uid'], groupes_NI())) {
-        $data['apparentes'] = array_slice($data['apparentes'], 0, 20);
-      }
-      $data['groupesActifs'] = $this->groupes_model->get_groupes_all(TRUE, legislature_current());
-
-      // Query fields
-      $data['field'] = $this->fields_model->get_field($field);
-
-      // Edito
-      $data['edito'] = $this->groupes_edito->edito($groupe_ab, $groupe_opposition);
-
-      // Meta
-      $data['url'] = $this->meta_model->get_url();
-      if ($data['groupe']['libelleAbrev'] == "NI") {
-        $data['title_meta'] = "Députés non incrits - Votes | Datan";
-        $data['description_meta'] = "Retrouvez toutes les positions de vote des députés non inscrits (NI) concernant ".$data['field']['libelle'].".";
-        $data['title'] = "Députés non inscrits";
-      } else {
-        $data['title_meta'] = "Groupe ".$data['groupe']['libelle']." - Votes | Datan";
-        $data['description_meta'] = "Retrouvez toutes les positions de vote du groupe ".$data['groupe']['libelle']." (".$data['groupe']['libelleAbrev'].") concernant ".$data['field']['libelle'].".";
-        $data['title'] = $data['groupe']['libelle'];
-      }
-      // Breadcrumb
-      $data['breadcrumb'] = array(
-        array(
-          "name" => "Datan", "url" => base_url(), "active" => FALSE
-        ),
-        array(
-          "name" => "Groupes", "url" => base_url()."groupes", "active" => FALSE
-        ),
-        array(
-          "name" => $data['groupe']['libelle'], "url" => base_url()."groupes/legislature-".$data['groupe']['legislature']."/".mb_strtolower($data['groupe']['libelleAbrev']), "active" => FALSE
-        ),
-        array(
-          "name" => "Votes", "url" => base_url()."groupes/legislature-".$data['groupe']['legislature']."/".mb_strtolower($data['groupe']['libelleAbrev'])."/votes", "active" => FALSE
-        ),
-        array(
-          "name" => $data['field']['name'], "url" => base_url()."groupes/legislature-".$data['groupe']['legislature']."/".mb_strtolower($data['groupe']['libelleAbrev'])."/votes".NULL."/".$data['field']['slug'], "active" => TRUE
-        )
-      );
-      $data['breadcrumb_json'] = $this->breadcrumb_model->breadcrumb_json($data['breadcrumb']);
-      //Open Graph
-      $controller = $this->router->fetch_class()."/".$this->router->fetch_method();
-      $data['ogp'] = $this->meta_model->get_ogp($controller, $data['title_meta'], $data['description_meta'], $data['url'], $data);
-      // JS
-      $data['preloads'] = array(
-        array("href" => asset_url()."imgs/cover/hemicycle-front-375.jpg", "as" => "image", "media" => "(max-width: 575.98px)"),
-        array("href" => asset_url()."imgs/cover/hemicycle-front-768.jpg", "as" => "image", "media" => "(min-width: 576px) and (max-width: 970px)"),
-        array("href" => asset_url()."imgs/cover/hemicycle-front.jpg", "as" => "image", "media" => "(min-width: 970.1px)"),
-      );
-      // Load Views
-      $this->load->view('templates/header', $data);
-      $this->load->view('groupes/votes_datan_field', $data);
       $this->load->view('templates/breadcrumb', $data);
       $this->load->view('templates/footer');
     }
@@ -628,7 +589,7 @@
       // Variables about the group (1. dateDebut / 2. membres du groupe / 3. other groups)
       setlocale(LC_TIME, 'french');
       $data['dateDebut'] = strftime('%d %B %Y', strtotime($data['groupe']['dateDebut']));
-      $data['president'] = $this->groupes_model->get_groupes_president($groupe_uid, $data['active']);
+      $data['president'] = $this->groupes_model->get_groupes_president($groupe_uid, $legislature, $data['active']);
       // Edito
       $data['edito'] = $this->groupes_edito->edito($groupe_ab, $groupe_opposition);
 
