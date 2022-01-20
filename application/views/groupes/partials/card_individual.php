@@ -1,5 +1,5 @@
-<div class="sticky-top" style="margin-top: -110px; top: 110px;">
-  <div class="card card-profile">
+<div class="sticky-top" style="margin-top: -130px; top: 130px;">
+  <div class="card card-profile groupe">
     <div class="card-body">
       <!-- IMAGE GROUPE -->
       <div class="img">
@@ -13,15 +13,21 @@
       </div>
       <!-- INFOS GENERALES -->
       <div class="bloc-infos">
-        <h1 class="text-center text-lg-left"><?= $title ?></h1>
+        <<?= $tag ?> class="title d-block text-lg-left"><?= $title ?></<?= $tag ?>>
       </div>
       <!-- BIOGRAPHIE -->
       <div class="bloc-bref mt-3 d-flex justify-content-center justify-content-lg-start">
         <ul>
           <li class="first">
             <div class="label">Création</div>
-            <div class="value"><?= $dateDebut ?></div>
+            <div class="value"><?= $groupe['dateDebutFR'] ?></div>
           </li>
+          <?php if ($groupe['dateFin']): ?>
+            <li>
+              <div class="label">Dissolution</div>
+              <div class="value"><?= $groupe['dateFinFR'] ?></div>
+            </li>
+          <?php endif; ?>
           <li>
             <div class="label">Effectif</div>
             <div class="value"><?= $groupe['effectif'] ?> membres</div>

@@ -86,13 +86,13 @@ $route['sitemap-partis-politiques-1.xml'] = "sitemap/parties";
 // COMMISSION
 $route['commissions'] = 'commissions/index';
 // GROUPES
-$route['groupes/inactifs'] = 'groupes/inactifs';
 $route['groupes/legislature-(:any)/(:any)/membres'] = 'groupes/individual_membres/$1/$2';
 $route['groupes/legislature-(:any)/(:any)/votes'] = 'groupes/individual_votes_datan/$1/$2';
 $route['groupes/legislature-(:any)/(:any)/votes/all'] = 'groupes/individual_votes_all/$1/$2';
-$route['groupes/legislature-(:any)/(:any)/votes/(:any)'] = 'groupes/individual_votes_datan_field/$1/$2/$3';
 $route['groupes/legislature-(:any)/(:any)'] = 'groupes/individual/$1/$2';
-$route['groupes'] = 'groupes/actifs';
+$route['groupes/inactifs'] = 'groupes/inactifs';
+$route['groupes/legislature-(:any)'] = 'groupes/index/$1';
+$route['groupes'] = 'groupes/index';
 // PARTIS POLITIQUES
 $route['partis-politiques/(:any)'] = 'parties/individual/$1';
 $route['partis-politiques'] = 'parties/index';

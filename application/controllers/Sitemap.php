@@ -90,15 +90,19 @@ class Sitemap extends CI_Controller {
 
   /* 5. sitemap-groupes-inactifs-1.xml */
   function groupes_inactifs(){
-    $results = $this->groupes_model->get_groupes_all(FALSE, legislature_current());
+    $results_current = $this->groupes_model->get_groupes_all(FALSE, legislature_current());
+    $results14 = $this->groupes_model->get_groupes_all(TRUE, 14);
+    $results = array_merge($results_current, $results14);
 
     $urls = array();
     foreach ($results as $result) {
       $libelleAbrev = mb_strtolower($result['libelleAbrev']);
       $urls[]["url"] = base_url()."groupes/legislature-".$result['legislature']."/".$libelleAbrev;
       $urls[]["url"] = base_url()."groupes/legislature-".$result['legislature']."/".$libelleAbrev."/membres";
-      $urls[]["url"] = base_url()."groupes/legislature-".$result['legislature']."/".$libelleAbrev."/votes";
-      $urls[]["url"] = base_url()."groupes/legislature-".$result['legislature']."/".$libelleAbrev."/votes/all";
+      if ($result['legislature'] >= 15) {
+        $urls[]["url"] = base_url()."groupes/legislature-".$result['legislature']."/".$libelleAbrev."/votes";
+        $urls[]["url"] = base_url()."groupes/legislature-".$result['legislature']."/".$libelleAbrev."/votes/all";
+      }
     }
 
     $data['urls'] = $urls;
