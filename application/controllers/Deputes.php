@@ -104,7 +104,7 @@
         $legislature = legislature_current();
       }
 
-      if (!in_array($legislature, array(14, 15))) {
+      if ($legislature < 14) {
         show_404($this->functions_datan->get_404_infos());
       }
 
@@ -189,7 +189,7 @@
       $data['legislature'] = legislature_current();
       $data['deputes'] = $this->deputes_model->get_deputes_all(legislature_current(), $data['active'], NULL);
       $data['groupes'] = $this->deputes_model->get_groupes_inactifs();
-      $data["number_inactive"] = count($data['deputes']);
+      $data['number_inactive'] = count($data['deputes']);
 
       // Groupe_color
       foreach ($data['deputes'] as $key => $value) {

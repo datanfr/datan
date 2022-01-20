@@ -24,7 +24,7 @@
       <<?= $tag ?> class="title d-block text-center"><?= $title ?></<?= $tag ?>>
       <?php if (!empty($depute['libelle'])) : ?>
         <div class="link-group text-center mt-1">
-          <?php if ($legislature >= 15): ?>
+          <?php if ($legislature >= 14): ?>
             <a href="<?= base_url() ?>groupes/legislature-<?= $depute['legislature'] ?>/<?= mb_strtolower($depute['libelleAbrev']) ?>" style="color: <?= $depute['couleurAssociee'] ?>; --color-group: <?= $depute['couleurAssociee'] ?>">
               <?= $depute['libelle'] ?>
             </a>

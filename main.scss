@@ -1062,6 +1062,15 @@ input#quicksearch[type=text]{
     font-weight: 600;
   }
 }
+.card-profile {
+  &.groupe{
+    .bloc-bref{
+      .label{
+        width: 110px;
+      }
+    }
+  }
+}
 /*
 ################
                TABLES
@@ -1750,7 +1759,7 @@ ul.ui-menu{
   h2{
     font-size: $h2-font-size;
     font-weight: 800;
-    color: $text-gray;
+    color: $text-black;
   }
   .bloc-titre{
     margin-top: 3rem;
@@ -1781,13 +1790,13 @@ ul.ui-menu{
     font-size: $h1-font-size*1.1;
     font-weight: 800;
   }
-
+  .title-center{
+    font-size: $h2-font-size;
+    font-weight: 800;
+    color: $text-gray;
+  }
   .bloc-statistiques, .bloc-votes, .bloc-bio, .bloc-election, .bloc-links, .bloc-chiffres, .bloc-key-votes, .bloc-mandats, .bloc-social, .bloc-elections-history {
-    h2{
-      font-size: $h2-font-size;
-      font-weight: 800;
-      color: $text-gray;
-    }
+
     h3 {
       font-size: $h5-font-size;
       font-weight: 800;
@@ -1965,19 +1974,12 @@ ul.ui-menu{
                PAGE GROUPE INDIVIDUAL (pg-groupe-individual)
 ################
 */
-.pg-groupe-individual{
-  .bloc-bref{
-    .label{
-      width: 110px;
-    }
-  }
-}
 /*
 ################
-               PAGE DEPUTE VOTES DATAN (pg-depute-votes) (decryptes and all)
+               PAGE DEPUTE/GROUPES VOTES DATAN (pg-depute-votes) (decryptes and all)
 ################
 */
-.pg-depute-votes {
+.pg-depute-votes, .pg-groupe-votes {
   h1 {
     font-size: $h2-font-size;
     font-weight: 800;
@@ -2001,19 +2003,6 @@ ul.ui-menu{
       font-weight: 800;
       color: $primary;
     }
-    .badges-categories{
-      .badge {
-        padding: 7px 12px;
-        border-radius: 10px;
-        color: $white;
-        font-weight: 600;
-        display: inline-block;
-        margin: 0 3px 8px 3px;
-        span{
-          font-weight: 700;
-        }
-      }
-    }
     .logo{
       svg{
         width: 50px;
@@ -2022,7 +2011,7 @@ ul.ui-menu{
     }
   }
 }
-.banner-depute-mobile{
+.banner-depute-mobile, .banner-groupe-mobile{
   color: #fff;
   .title{
     font-weight: 800;
@@ -2046,13 +2035,13 @@ ul.ui-menu{
     color: $text-black;
   }
   h2{
-    color: $text-black;
     font-size: $h2-font-size;
-    font-weight: 600;
+    font-weight: 800;
+    color: $text-black;
   }
   // END HN //
   .bloc-titre{
-    margin-top: 4rem;
+    margin-top: 3rem;
   }
 }
 /*

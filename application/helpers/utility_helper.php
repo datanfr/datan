@@ -59,13 +59,23 @@
       "UDI-AGIR" => $center,
       "LR" => $right,
       "UDI-A-I" => $right,
+      "UDI-I" => $right,
+      "LC" => $right,
       "NI" => NULL,
       "LT" => $center,
       "EDS" => $center,
       "AGIR-E" => $center,
       "UDI_I" => $center,
       "NG" => $left,
-      "DEM" => $center
+      "DEM" => $center,
+      "ECOLO" => $center,
+      "LES-REP" => $right,
+      "RRDP" => $left,
+      "R-UMP" => $right,
+      "SER" => $left,
+      "SRC" => $left,
+      "UDI" => $right,
+      "UMP" => $right
     );
     return $array;
   }

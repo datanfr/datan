@@ -1,7 +1,7 @@
   <div class="container-fluid bloc-img-deputes d-flex async_background" id="container-always-fluid" style="min-height: 13em">
     <div class="container banner-depute-mobile d-flex d-lg-none flex-column justify-content-center py-2">
       <div class="row">
-        <div class="col-12">
+        <div class="col-md-10 offset-md-1">
           <a class="btn btn-primary text-border mb-2" href="<?= base_url() ?>deputes/<?= $depute['dptSlug'] ?>/depute_<?= $depute['nameUrl'] ?>">
             <?= file_get_contents(asset_url().'imgs/icons/arrow_left.svg') ?>
             Retour profil
