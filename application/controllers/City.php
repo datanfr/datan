@@ -101,7 +101,6 @@
         $de = "de ";
       }
 
-
       // Get all big cities from the department
       $data['communes_dpt'] = $this->city_model->get_communes_population($departement);
 
@@ -127,6 +126,17 @@
       }
 
       // Get elections
+      // 2017 _ Législatives _ 2nd tour
+      $data['results_2017_leg_2'] = $this->city_model->get_results_2017_leg_2($data['ville']['dpt'], $data['ville']['insee_city']);
+      $arr = array();
+      foreach ($data['results_2017_leg_2'] as $key => $item) {
+         $arr[$item['circo']][$key] = $item;
+      }
+      ksort($arr, SORT_NUMERIC);
+      $data['results_2017_leg_2'] = $arr;
+      $data['results_2017_leg_2_first_element'] = reset($data['results_2017_leg_2']);
+      $data['results_2017_leg_2_first_element'] = reset($data['results_2017_leg_2_first_element']);
+
       // 1. 2017 _ Presidentielles _ 2nd tour
       $data['results_2017_pres_2'] = $this->city_model->get_results_2017_pres_2($data['ville']['dpt'], $data['ville']['insee_city']);
       // 2. 2019 _ Européennes
@@ -137,10 +147,10 @@
       $data['title_meta'] = "Député(s) ".$commune_nom." ".$code_postal." | Datan";
       if (!$data['noMP']) {
         $data['description_meta'] = "Découvrez le".$s." député".$s." élu".$s." dans la ville ".$de."".$commune_nom." (".$dpt_code.") et tous ".$ses." résultats de vote : taux de participation, loyauté avec ".$son." groupe, proximité avec la majorité présidentielle.";
-        $data['title'] = "Découvrez ".$le." ".$depute_writing." ".$elu_writing." dans la ville ".$de."".$commune_nom;
+        $data['title'] = ucfirst($depute_writing)." ".$elu_writing." dans la ville ".$de."".$commune_nom;
       } else {
         $data['description_meta'] = "Découvrez les députés élus dans la ville ".$de."".$commune_nom." (".$dpt_code.") et tous ses résultats de vote : taux de participation, loyauté avec leur groupe, proximité avec la majorité présidentielle.";
-        $data['title'] = "Découvrez les députés élus dans la ville ".$de."".$commune_nom;
+        $data['title'] = "Députés élus dans la ville ".$de."".$commune_nom;
       }
 
       // Breadcrumb
