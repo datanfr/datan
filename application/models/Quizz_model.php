@@ -103,18 +103,26 @@
 
       $questions = $query->result_array();
 
-      $arguments = array('for1', 'for2', 'for3', 'against1', 'against2', 'against3');
+      $arguments = array(
+        array('type' => 'POUR', 'name' => 'for1'),
+        array('type' => 'POUR', 'name' => 'for2'),
+        array('type' => 'POUR', 'name' => 'for3'),
+        array('type' => 'CONTRE', 'name' => 'against1'),
+        array('type' => 'CONTRE', 'name' => 'against2'),
+        array('type' => 'CONTRE', 'name' => 'against3')
+      );
 
       foreach ($questions as $key => $value) {
         $array = array();
         foreach ($arguments as $argument) {
-          array_push($array, array("opinion" => "POUR", "texte" => $value[$argument]));
+          array_push($array, array("opinion" => $argument['type'], "texte" => $value[$argument['name']]));
         }
         $questions[$key]['arguments'] = $array;
 
         foreach ($arguments as $argument) {
-          unset($questions[$key][$argument]);
+          unset($questions[$key][$argument['name']]);
         }
+
       }
 
       return $questions;
