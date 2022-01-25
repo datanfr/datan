@@ -44,6 +44,16 @@
               <a class="btn btn-primary my-3" href="../cache/delete_all" role="button">Delete all caching</a>
               <div class="card">
                 <div class="card-body">
+                  <h5 class="card-title">Update database : Dashboard quizz</h5>
+                  <h6 class="card-subtitle text-muted">January 18, 2022</h6>
+                  <p class="card-text">
+                    <a class="btn btn-danger my-3" href="update_dataset/20220118_dashboard-quizz.php" role="button">UPDATE DATABASE</a>
+                  </p>
+                </div>
+              </div>
+              <hr>
+              <div class="card">
+                <div class="card-body">
                   <h5 class="card-title">Update database : elections // change table 'elect_libelle'</h5>
                   <h6 class="card-subtitle text-muted">November 22, 2021</h6>
                   <p class="card-text">
