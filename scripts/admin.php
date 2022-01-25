@@ -45,7 +45,18 @@
               <div class="card">
                 <div class="card-body">
                   <h5 class="card-title">Update database : new table with electoral results</h5>
-                  <h6 class="card-subtitle text-muted">November 22, 2021</h6>
+                  <h6 class="card-subtitle text-muted">November 26, 2021</h6>
+                  <p class="card-text">
+                    New table 'cities_adjacentes' with closed cities
+                    <a class="btn btn-danger my-3" href="update_dataset/20220126_elections.php" role="button">UPDATE DATABASE</a>
+                  </p>
+                </div>
+              </div>
+              <hr>
+              <div class="card">
+                <div class="card-body">
+                  <h5 class="card-title">Update database : new table with electoral results</h5>
+                  <h6 class="card-subtitle text-muted">November 25, 2021</h6>
                   <p class="card-text">
                     New table 'elect_2017_leg_results_communes' with electoral result for 2017 legislative elections per city
                     <a class="btn btn-danger my-3" href="update_dataset/20220125_elections.php" role="button">UPDATE DATABASE</a>
