@@ -2,9 +2,9 @@
       <div class="container d-flex flex-column justify-content-center py-2 pg-commune">
         <div class="row title">
           <div class="col-12">
-            <p class="city mb-0"><?= $ville['commune_nom'] ?></p>
+            <p class="city mb-0 text-center"><?= $ville['commune_nom'] ?></p>
             <?php if ($n_circos > 1): ?>
-              <span class="department mb-0"><?= $ville['dpt_nom'] ?> (<?= $ville['dpt'] ?>) -
+              <p class="department text-center mb-0"><?= $ville['dpt_nom'] ?> (<?= $ville['dpt'] ?>) -
                 Circonscriptions :
                 <?php foreach ($circos as $key => $circo): ?>
                   <?= $circo["number"] ?>
@@ -13,90 +13,107 @@
                     /
                   <?php endif; ?>
                 <?php endforeach; ?>
+                </p>
               <?php else: ?>
-              <span class="department mb-0"><?= $ville['dpt_nom'] ?> (<?= $ville['dpt'] ?>) - <?= $ville['circo'] ?><sup><?= $ville['circo_abbrev'] ?></sup> circonscription</span>
+              <p class="department text-center mb-0"><?= $ville['dpt_nom'] ?> (<?= $ville['dpt'] ?>) - <?= $ville['circo'] ?><sup><?= $ville['circo_abbrev'] ?></sup> circonscription</p>
             <?php endif; ?>
           </div>
         </div>
       </div>
     </div>
-    <div class="container pb-4 pg-commune">
-      <!-- TITLE OF THE PAGE -->
-      <div class="row my-5">
-        <div class="col-12">
-          <h1 class="text-center"><?= $title ?></h1>
-        </div>
-      </div> <!-- // END TITLE OF THE PAGE -->
-      <!-- MPS FROM THE CITY -->
+    <div class="container-fluid bg-secondary text-white py-2 d-flex justify-content-center align-items-center">
+      <!-- https://dribbble.com/shots/9713325-Near-you-Result-page -->
+      <span class="my-0 mx-3">Communes voisines :</span>
+      <button type="button" class="btn btn-outline-light btn-sm mx-2" style="border-radius: 10px; height: 30px">Beaucé</button>
+      <button type="button" class="btn btn-outline-light btn-sm mx-2" style="border-radius: 10px; height: 30px">Javené</button>
+      <button type="button" class="btn btn-outline-light btn-sm mx-2" style="border-radius: 10px; height: 30px">Lécousse</button>
+    </div>
+    <div class="container pg-commune">
       <div class="row">
-        <?php if ($noMP): ?>
-          <div class="col-12">
+        <div class="col-lg-3 pt-5 bloc-infos" style="background-color: #e9e9e9; color: black!important">
+          <p><b><?= $ville["commune_nom"] ?></b> est une commune située <?= $ville["libelle_1"] ?><?= $ville["dpt_nom"] ?> (<?= $ville["dpt"] ?>), dans la région <?= $ville['region_name'] ?>.</p>
+          <?php if (!empty($ville["pop2007"])): ?>
+            <p><?= $ville["commune_nom"] ?> compte <b><?= $ville["pop2017_format"] ?> habitants</b>. La population de la commune a <b><?= $ville['evol10_text'] ?></b> de <?= round($ville['evol10_edited'], 1) ?> % depuis 10 ans.</p>
+          <?php endif; ?>
+          <?php if (!empty($mayor["nameFirst"])): ?>
+            <p><?= ucfirst($mayor["gender_le"]) ?> maire de <?= $ville["commune_nom"] ?> est <b><?= $mayor["nameFirst"]." ".ucfirst(mb_strtolower($mayor["nameLast"])) ?></b>.</p>
+          <?php endif; ?>
+          <?php if ($n_circos == 1 && $noMP == FALSE): ?>
+            <p>
+              <?= $ville['commune_nom'] ?> fait partie de la <?= $ville['circo'] ?><sup><?= $ville['circo_abbrev'] ?></sup> circonscription du département <?= $ville['dpt_nom'] ?>.
+            </p>
+            <p>
+              <?= ucfirst($gender['le']) ?> <?= $gender['depute'] ?> élu<?= $gender['e'] ?> dans cette circonscription est <?= $depute_commune['nameFirst'] ?> <?= $depute_commune['nameLast'] ?>.
+            </p>
+          <?php endif; ?>
+        </div>
+        <div class="col-lg-9 pt-5 pb-5">
+          <h1 class="text-center"><?= $title ?></h1>
+          <?php if ($noMP): ?>
             <div class="text-center alert alert-danger">
               Il n'y a actuellement aucun député représentant à l'Assemblée nationale les citoyens habitant dans cette ville.
             </div>
-          </div>
-          <?php else: ?>
-            <?php if ($n_circos == 1): ?>
-              <div class="col-12 d-flex justify-content-center">
-                <?php $this->load->view('deputes/partials/card_home.php', array('depute' => $depute_commune, 'tag' => 'h2', 'cat' => true, 'logo' => true)) ?>
-              </div>
             <?php else: ?>
-              <div class="col-12 d-flex flex-wrap justify-content-around">
-                <?php foreach ($deputes_commune as $depute_commune): ?>
+              <?php if ($n_circos == 1): ?>
+                <div class="d-flex justify-content-center">
                   <?php $this->load->view('deputes/partials/card_home.php', array('depute' => $depute_commune, 'tag' => 'h2', 'cat' => true, 'logo' => true)) ?>
-                <?php endforeach; ?>
-              </div>
-            <?php endif; ?>
-        <?php endif; ?>
-      </div><!-- // END MPS FROM THE CITY -->
-    </div>
-    <!-- INFOS ON THE CITY -->
-    <div class="container-fluid pg-commune py-5 my-5" id="pattern_background">
-      <div class="container">
-        <div class="row">
-          <div class="col-12">
-            <h2 class="text-center">Quelques informations sur <?= $ville["commune_nom"] ?></h2>
-          </div>
+                </div>
+              <?php else: ?>
+                <div class="d-flex flex-wrap justify-content-around">
+                  <?php foreach ($deputes_commune as $depute_commune): ?>
+                    <?php $this->load->view('deputes/partials/card_home.php', array('depute' => $depute_commune, 'tag' => 'h2', 'cat' => true, 'logo' => true)) ?>
+                  <?php endforeach; ?>
+                </div>
+              <?php endif; ?>
+          <?php endif; ?>
         </div>
-        <div class="row mt-5">
-          <div class="col-lg-4 d-flex align-items-center">
-            <div>
-              <p><b><?= $ville["commune_nom"] ?></b> est une commune située <?= $ville["libelle_1"] ?><?= $ville["dpt_nom"] ?> (<?= $ville["dpt"] ?>). Elle se trouve dans la région <?= $ville['region_name'] ?>.</p>
-              <?php if (!empty($ville["pop2007"])): ?>
-                <p><?= $ville["commune_nom"] ?> compte environ <b><?= $ville["pop2017_format"] ?> habitants</b>. La population de la commune a <b><?= $ville['evol10_text'] ?></b> de <?= round($ville['evol10_edited'], 1) ?> % depuis 10 ans.</p>
-              <?php endif; ?>
-              <?php if (!empty($mayor["nameFirst"])): ?>
-                <p><?= ucfirst($mayor["gender_le"]) ?> maire de <?= $ville["commune_nom"] ?> est <?= $mayor["nameFirst"]." ".ucfirst(mb_strtolower($mayor["nameLast"])) ?>.</p>
-              <?php endif; ?>
+      </div>
+    </div>
+    <!-- ELECTIONS LEGISLATIVES IN THE CITY -->
+    <?php if ($results_2017_leg_2): ?>
+      <div class="container-fluid pg-commune py-5" id="pattern_background">
+        <div class="container">
+          <div class="row">
+            <div class="col-12">
+              <h2 class="text-center">L'élection législative de 2017 à <?= $ville['commune_nom'] ?></h2>
             </div>
           </div>
-          <div class="col-lg-8 mt-5 mt-lg-0">
-            <div class="row bloc-elections">
-              <div class="col-md-6">
-                <div class="card">
+          <div class="row mt-5">
+            <div class="<?= $n_circos == 1 ? 'col-lg-7' : 'col-lg-12' ?> d-flex flex-column justify-content-center">
+              <p class="text-primary font-weight-bold">Le contexte</p>
+              <p>Les dernières élections législatives se sont tenues en juin 2017. Elles ont permis d'élire <a href="<?= base_url() ?>deputes">les députés</a> qui composent l'Assemblée nationale. Ces élections et ont fait suite à l'élection présidentielle, qui a vu la victoire d'Emmanuel Macron.</p>
+              <p>Les <a href="<?= base_url() ?>elections/legislatives-2022">prochaines élections législatives</a> se tiendront en 2022.</p>
+              <p class="text-primary font-weight-bold">L'élection à <?= $ville['commune_nom'] ?></p>
+              <?php if ($n_circos == 1): ?>
+                <p>Pour le second tour des législatives, la ville de <?= $ville['commune_nom'] ?> comptait <?= number_format($results_2017_leg_2_first_element['inscrits'], 0, ',', ' ') ?> personnes inscrites sur les listes électorales. Seuls <?= number_format($results_2017_leg_2_first_element['votants'], 0, ',', ' ') ?> habitants se sont déplacés aux urnes. Le <b>taux d'abstention était de <?= round($results_2017_leg_2_first_element['abs'] / $results_2017_leg_2_first_element['inscrits'] * 100)  ?> %</b>, contre 57 % au niveau national.</p>
+                <p>En tête, <?= $results_2017_leg_2_first_element['prenom'] ?> <?= ucfirst(mb_strtolower($results_2017_leg_2_first_element['nom'])) ?> a récolté <?= number_format($results_2017_leg_2_first_element['voix'], 0, ',', ' ') ?> voix, soit <?= $results_2017_leg_2_first_element['pct'] ?> % des votants.</p>
+              <?php endif; ?>
+              <?php if ($n_circos > 1): ?>
+                <p><?= $ville['commune_nom'] ?> étant une ville de taille importante, elle compte plusieurs députés. Découvrez ci-dessous les parlementaires élus pour la ville de <?= $ville['commune_nom'] ?>.</p>
+              <?php endif; ?>
+            </div>
+            <div class="<?= $n_circos == 1 ? 'col-lg-5' : 'col-lg-12' ?> d-flex flex-wrap justify-content-center bloc-elections">
+              <?php foreach ($results_2017_leg_2 as $key => $value): ?>
+                <div class="card mx-3 my-3">
                   <div class="card-body pb-0">
-                    <h3>Élection présidentielle 2017</h3>
+                    <h3>Élection législative 2017</h3>
                     <span class="round">2<sup>nd</sup> tour</span>
                     <div class="chart mt-3">
                       <div class="results d-flex flex-row justify-content-center align-items-center">
-                        <div class="bar d-flex flex-row justify-content-center align-items-end">
-                          <div class="element d-flex align-items-center justify-content-center" style="height: <?= round($results_2017_pres_2['macron_pct']) ?>%">
-                            <span class="score"><?= round($results_2017_pres_2['macron_pct']) ?>%</span>
+                        <?php foreach ($value as $candidate): ?>
+                          <div class="bar d-flex flex-row justify-content-center align-items-end">
+                            <div class="element d-flex align-items-center justify-content-center" style="height: <?= $candidate['pct'] ?>%">
+                              <span class="score"><?= round($candidate['pct']) ?>%</span>
+                            </div>
                           </div>
-                        </div>
-                        <div class="bar d-flex flex-row justify-content-center align-items-end">
-                          <div class="element d-flex align-items-center justify-content-center" style="height: <?= round($results_2017_pres_2['lePen_pct']) ?>%">
-                            <span class="score"><?= round($results_2017_pres_2['lePen_pct']) ?>%</span>
-                          </div>
-                        </div>
+                        <?php endforeach; ?>
                       </div>
                       <div class="names d-flex flex-row justify-content-center align-items-center">
-                        <div class="name">
-                          <p class="text-center">Emmanuel Macron</p>
-                        </div>
-                        <div class="name">
-                          <p class="text-center">Marine Le Pen</p>
-                        </div>
+                        <?php foreach ($value as $candidate): ?>
+                          <div class="name">
+                            <p class="text-center"><?= $candidate['prenom'] . ' ' . ucfirst(mb_strtolower($candidate['nom'])) ?></p>
+                          </div>
+                        <?php endforeach; ?>
                       </div>
                     </div>
                   </div>
@@ -106,44 +123,91 @@
                     </div>
                   </a>
                 </div>
-              </div>
-              <div class="col-md-6 mt-5 mt-md-0">
-                <div class="card">
-                  <div class="card-body pb-0">
-                    <h3>Élections européennes 2019</h3>
-                    <span class="round">3 premiers partis politiques</span>
-                    <div class="chart mt-3">
-                      <div class="results d-flex flex-row justify-content-center align-items-center">
-                        <?php foreach ($results_2019_europe as $list): ?>
-                          <div class="bar d-flex flex-row justify-content-center align-items-end">
-                            <div class="element d-flex align-items-center justify-content-center" style="height: <?= round($list['value']) ?>%">
-                              <span class="score" style="color: #fff"><?= round($list['value']) ?>%</span>
-                            </div>
-                          </div>
-                        <?php endforeach; ?>
+              <?php endforeach; ?>
+            </div>
+          </div>
+        </div>
+      </div> <!-- // END ELECTION LEGISLATIVE IN THE CITY -->
+    <?php endif; ?>
+    <!-- ALL ELECTIONS -->
+    <div class="container-fluid pg-commune">
+      <div class="container mt-5">
+        <div class="row">
+          <div class="col-12">
+            <h2 class="text-center">Les dernières élections à <?= $ville["commune_nom"] ?></h2>
+          </div>
+        </div>
+        <div class="row mt-5 pb-3 bloc-elections">
+          <div class="col-md-6 d-flex justify-content-center">
+            <div class="card">
+              <div class="card-body pb-0">
+                <h3>Élection présidentielle 2017</h3>
+                <span class="round">2<sup>nd</sup> tour</span>
+                <div class="chart mt-3">
+                  <div class="results d-flex flex-row justify-content-center align-items-center">
+                    <div class="bar d-flex flex-row justify-content-center align-items-end">
+                      <div class="element d-flex align-items-center justify-content-center" style="height: <?= round($results_2017_pres_2['macron_pct']) ?>%">
+                        <span class="score"><?= round($results_2017_pres_2['macron_pct']) ?>%</span>
                       </div>
-                      <div class="names d-flex flex-row justify-content-center align-items-center">
-                        <?php foreach ($results_2019_europe as $list): ?>
-                          <div class="name">
-                            <p class="text-center"><?= $list["partiName"] ?></p>
-                          </div>
-                        <?php endforeach; ?>
+                    </div>
+                    <div class="bar d-flex flex-row justify-content-center align-items-end">
+                      <div class="element d-flex align-items-center justify-content-center" style="height: <?= round($results_2017_pres_2['lePen_pct']) ?>%">
+                        <span class="score"><?= round($results_2017_pres_2['lePen_pct']) ?>%</span>
                       </div>
                     </div>
                   </div>
-                  <a href="https://www.interieur.gouv.fr/Elections/Les-resultats/Europeennes/elecresult__europeennes-2019/(path)/europeennes-2019/<?= $ville_insee["region"] ?>/<?= $ville_insee["dpt"] ?>/<?= $ville_insee["insee"] ?>.html" target="_blank" rel="noopener" class="no-decoration">
-                    <div class="card-footer">
-                      <p class="text-center mb-0">Plus d'infos</p>
+                  <div class="names d-flex flex-row justify-content-center align-items-center">
+                    <div class="name">
+                      <p class="text-center">Emmanuel Macron</p>
                     </div>
-                  </a>
+                    <div class="name">
+                      <p class="text-center">Marine Le Pen</p>
+                    </div>
+                  </div>
                 </div>
               </div>
+              <a href="https://www.interieur.gouv.fr/Elections/Les-resultats/Presidentielles/elecresult__presidentielle-2017/(path)/presidentielle-2017/<?= $ville_insee["region"] ?>/<?= $ville_insee["dpt"] ?>/<?= $ville_insee["old_insee"] ?>.html" target="_blank" rel="noopener" class="no-decoration">
+                <div class="card-footer">
+                  <p class="text-center mb-0">Plus d'infos</p>
+                </div>
+              </a>
+            </div>
+          </div>
+          <div class="col-md-6 d-flex justify-content-center">
+            <div class="card">
+              <div class="card-body pb-0">
+                <h3>Élections européennes 2019</h3>
+                <span class="round">Les 3 premiers partis politiques</span>
+                <div class="chart mt-3">
+                  <div class="results d-flex flex-row justify-content-center align-items-center">
+                    <?php foreach ($results_2019_europe as $list): ?>
+                      <div class="bar d-flex flex-row justify-content-center align-items-end">
+                        <div class="element d-flex align-items-center justify-content-center" style="height: <?= round($list['value']) ?>%">
+                          <span class="score" style="color: #fff"><?= round($list['value']) ?>%</span>
+                        </div>
+                      </div>
+                    <?php endforeach; ?>
+                  </div>
+                  <div class="names d-flex flex-row justify-content-center align-items-center">
+                    <?php foreach ($results_2019_europe as $list): ?>
+                      <div class="name">
+                        <p class="text-center"><?= $list["partiName"] ?></p>
+                      </div>
+                    <?php endforeach; ?>
+                  </div>
+                </div>
+              </div>
+              <a href="https://www.interieur.gouv.fr/Elections/Les-resultats/Europeennes/elecresult__europeennes-2019/(path)/europeennes-2019/<?= $ville_insee["region"] ?>/<?= $ville_insee["dpt"] ?>/<?= $ville_insee["insee"] ?>.html" target="_blank" rel="noopener" class="no-decoration">
+                <div class="card-footer">
+                  <p class="text-center mb-0">Plus d'infos</p>
+                </div>
+              </a>
             </div>
           </div>
         </div>
       </div>
-    </div> <!-- // END INFOS ON THE CITY -->
-    <div class="container pg-commune">
+    </div> <!-- // END ALL ELECTIONS -->
+    <div class="container pg-commune mt-5">
       <!-- OTHER MPS FROM THE SAME DEPARTMENT -->
       <?php if (!empty($deputes_dpt)): ?>
         <div class="row mt-4">
