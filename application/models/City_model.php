@@ -157,6 +157,18 @@
       return $query->row_array();
     }
 
+    public function get_results_2017_leg_2($dpt, $insee){
+      $sql = 'SELECT *,
+          ROUND(voix / exprimes * 100) AS pct
+        FROM elect_2017_leg_results_communes res
+        WHERE dpt = ? AND commune = ?
+        ORDER BY voix DESC
+      ';
+      $query = $this->db->query($sql, array($dpt, $insee));
+
+      return $query->result_array();
+    }
+
     public function get_results_2017_pres_2($dpt, $insee){
       $where = array(
         'dpt' => $dpt,
