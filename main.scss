@@ -1674,10 +1674,16 @@ ul.ui-menu{
   .department{
     font-size: $h5-font-size;
   }
+  .bloc-infos{
+    color: #fff;
+    padding-left: 2.2rem;
+    padding-right: 2.2rem;
+  }
   .bloc-elections{
     .card{
       border: 0;
       box-shadow: $card-box-shadow;
+      width: 350px;
     }
     .card-footer{
       font-weight: 800;
