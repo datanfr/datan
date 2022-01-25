@@ -3,17 +3,22 @@ class Api extends CI_Controller
 {
     // FORBIDDEN LIST
     private $modelAllowed = array();
-    private $methodAllowed = array('newsletter/create_newsletter', 'votes/get_last_votes_datan', 'votes/request_vote_datan', 'votes/get_vote_deputes', 'votes/get_vote_groupes_simplified');
+    private $methodAllowed = array(
+      'newsletter/create_newsletter',
+      'votes/get_last_votes_datan',
+      'votes/request_vote_datan',
+      'votes/get_vote_deputes',
+      'votes/get_vote_groupes_simplified',
+      'quizz/get_questions_api'
+    );
     private $methodForbidden = array();
 
     public function __construct()
     {
         parent::__construct();
-        $this->load->model('departement_model');
-        $this->load->model('deputes_model');
-        $this->load->model('groupes_model');
         $this->load->model('votes_model');
         $this->load->model('newsletter_model');
+        $this->load->model('quizz_model');
     }
 
     private function response($data, $code = 200)
@@ -21,7 +26,7 @@ class Api extends CI_Controller
         return $this->output
             ->set_content_type('application/json')
             ->set_status_header($code)
-            ->set_output(json_encode($data));
+            ->set_output(json_encode($data, JSON_PRETTY_PRINT));
     }
 
     public function index($model, $method)

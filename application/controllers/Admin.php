@@ -11,6 +11,7 @@
       $this->load->model('elections_model');
       $this->load->model('newsletter_model');
       $this->load->model('faq_model');
+      $this->load->model('quizz_model');
       $this->load->model('readings_model');
       $this->load->model('votes_model');
       $this->password_model->security();
@@ -487,6 +488,98 @@
         } else {
           $this->faq_model->modify($id, $user_id);
           redirect('admin/faq');
+        }
+      }
+    }
+
+    public function quizz_list(){
+      $data['username'] = $this->session->userdata('username');
+      $data['usernameType'] = $this->session->userdata('type');
+      $data['title'] = 'Liste des questions pour les quizz';
+
+      $data['questions'] = $this->quizz_model->get_questions();
+
+      $this->load->view('dashboard/header', $data);
+      $this->load->view('dashboard/quizz/list', $data);
+      $this->load->view('dashboard/footer');
+    }
+
+    public function create_quizz(){
+      $data['username'] = $this->session->userdata('username');
+      $user_id = $this->session->userdata('user_id');
+      $data['title'] = 'Créer une question de quizz';
+      $data['categories'] = $this->fields_model->get_fields();
+
+      //Form valiation
+      $this->form_validation->set_rules('title', 'Title', 'required');
+      $this->form_validation->set_rules('quizzNumero', 'QuizzNumero', 'required');
+      $this->form_validation->set_rules('voteNumero', 'VoteNumero', 'required');
+      $this->form_validation->set_rules('legislature', 'Legislature', 'required');
+
+      if ($this->form_validation->run() === FALSE) {
+        $this->load->view('dashboard/header', $data);
+        $this->load->view('dashboard/quizz/create', $data);
+        $this->load->view('dashboard/footer');
+      } else {
+        $this->quizz_model->create($user_id);
+        redirect('admin/quizz');
+      }
+    }
+
+    public function modify_quizz($id){
+      $data['username'] = $this->session->userdata('username');
+      $data['usernameType'] = $this->session->userdata('type');
+      $user_id = $this->session->userdata('user_id');
+      $data['title'] = 'Modifier une question de quizz';
+      $data['question'] = $this->quizz_model->get_question($id);
+
+      if (empty($data['question'])) {
+        redirect('admin/quizz');
+      }
+
+      if ($data['question']['state'] == "published" && $data['usernameType'] != "admin") {
+        redirect('admin/quizz');
+      } else {
+        $data['categories'] = $this->fields_model->get_fields();
+
+        //Form valiation
+        $this->form_validation->set_rules('title', 'Title', 'required');
+        $this->form_validation->set_rules('quizzNumero', 'QuizzNumero', 'required');
+        $this->form_validation->set_rules('voteNumero', 'VoteNumero', 'required');
+        $this->form_validation->set_rules('legislature', 'Legislature', 'required');
+
+        if ($this->form_validation->run() === FALSE) {
+          $this->load->view('dashboard/header', $data);
+          $this->load->view('dashboard/quizz/modify', $data);
+          $this->load->view('dashboard/footer');
+        } else {
+          $this->quizz_model->modify($id, $user_id);
+          redirect('admin/quizz');
+        }
+      }
+    }
+
+    public function delete_quizz($id){
+      $data['usernameType'] = $this->session->userdata("type");
+
+      if ($data['usernameType'] != "admin") {
+        redirect();
+      } else {
+        $data['username'] = $this->session->userdata('username');
+
+        $data['title'] = 'Supprimer une question de quizz';
+        $data['question'] = $this->quizz_model->get_question($id);
+
+        //Form validation
+        $this->form_validation->set_rules('delete', 'Delete', 'required');
+
+        if ($this->form_validation->run() === FALSE) {
+          $this->load->view('dashboard/header', $data);
+          $this->load->view('dashboard/quizz/delete', $data);
+          $this->load->view('dashboard/footer');
+        } else {
+          $this->quizz_model->delete($id);
+          redirect('admin/quizz');
         }
       }
     }
