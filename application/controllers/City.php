@@ -117,6 +117,9 @@
       $data['ville']['evol10_edited'] = str_replace("-", "", $data['ville']['evol10']);
       $data['ville_insee'] = $this->city_model->get_insee($data['ville']['codeRegion'], $data['ville']['dpt'], $data['ville']['insee_city']);
 
+      // Get city adjacentes
+      $data['adjacentes'] = $this->city_model->get_adjacentes($data['ville_insee']['insee'], 4);
+
       // Get city mayor
       $data['mayor'] = $this->city_model->get_mayor($data['ville']['dpt'], $data['ville']['code_insee'], $data['ville']['commune']);
       if ($data['mayor']['gender'] == "F") {
@@ -135,7 +138,10 @@
       ksort($arr, SORT_NUMERIC);
       $data['results_2017_leg_2'] = $arr;
       $data['results_2017_leg_2_first_element'] = reset($data['results_2017_leg_2']);
-      $data['results_2017_leg_2_first_element'] = reset($data['results_2017_leg_2_first_element']);
+      if ($data['results_2017_leg_2_first_element']) {
+        $data['results_2017_leg_2_first_element'] = reset($data['results_2017_leg_2_first_element']);
+      }
+
 
       // 1. 2017 _ Presidentielles _ 2nd tour
       $data['results_2017_pres_2'] = $this->city_model->get_results_2017_pres_2($data['ville']['dpt'], $data['ville']['insee_city']);

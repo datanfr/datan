@@ -21,13 +21,15 @@
         </div>
       </div>
     </div>
-    <div class="container-fluid bg-secondary text-white py-2 d-flex justify-content-center align-items-center">
-      <!-- https://dribbble.com/shots/9713325-Near-you-Result-page -->
-      <span class="my-0 mx-3">Communes voisines :</span>
-      <button type="button" class="btn btn-outline-light btn-sm mx-2" style="border-radius: 10px; height: 30px">Beaucé</button>
-      <button type="button" class="btn btn-outline-light btn-sm mx-2" style="border-radius: 10px; height: 30px">Javené</button>
-      <button type="button" class="btn btn-outline-light btn-sm mx-2" style="border-radius: 10px; height: 30px">Lécousse</button>
-    </div>
+    <?php if ($adjacentes): ?>
+      <div class="container-fluid bg-secondary text-white py-2 d-flex justify-content-center align-items-center">
+        <!-- https://dribbble.com/shots/9713325-Near-you-Result-page -->
+        <span class="my-0 mx-3">Communes voisines :</span>
+        <?php foreach ($adjacentes as $adjacente): ?>
+          <a role="button" class="btn btn-outline-light btn-sm mx-2" href="<?= base_url() ?>deputes/<?= $adjacente['slug'] ?>/ville_<?= $adjacente['commune_slug'] ?>" style="border-radius: 10px; height: 30px"><?= $adjacente['commune_nom'] ?></a>
+        <?php endforeach; ?>
+      </div>
+    <?php endif; ?>
     <div class="container pg-commune">
       <div class="row">
         <div class="col-lg-3 pt-5 bloc-infos" style="background-color: #e9e9e9; color: black!important">
