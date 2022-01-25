@@ -209,6 +209,7 @@
     }
 
     public function get_insee($region, $dpt, $city){
+      /*
       if ($dpt < 10) {
         $new_dpt = "0".$dpt;
       } elseif($dpt < 100) {
@@ -216,9 +217,41 @@
       } else {
         $new_dpt = $dpt;
       }
+      */
+      $new_dpt = $dpt; // BE CAREFUL HERE
 
       if ($dpt == "987") {
         $new_city = "0" . $city;
+      } elseif ($dpt == "971") {
+        $new_city = $city - 100;
+        if ($new_city < 10) {
+          $new_city = "0".$new_city;
+        }
+      } elseif ($dpt == "972") {
+        $new_city = $city - 200;
+        if ($new_city < 10) {
+          $new_city = "0".$new_city;
+        }
+      } elseif ($dpt == "973") {
+        $new_city = $city - 300;
+        if ($new_city < 10) {
+          $new_city = "0".$new_city;
+        }
+      } elseif ($dpt == "974") {
+        $new_city = $city - 400;
+        if ($new_city < 10) {
+          $new_city = "0".$new_city;
+        }
+      } elseif ($dpt == "976") {
+        $new_city = $city - 600;
+        if ($new_city < 10) {
+          $new_city = "0".$new_city;
+        }
+      } elseif ($dpt == "988") {
+        $new_city = $city - 800;
+        if ($new_city < 10) {
+          $new_city = "0".$new_city;
+        }
       } elseif ($city < 10) {
         $new_city = "00".$city;
       } elseif ($city < 100) {
@@ -254,4 +287,22 @@
 
       return $array;
     }
+
+    public function get_adjacentes($insee, $limit = FALSE){
+      $sql = 'SELECT a.* , c.*, d.*
+        FROM cities_adjacentes a
+        LEFT JOIN circos c ON a.adjacente = c.insee
+        LEFT JOIN cities_infos ci ON ci.insee = c.insee
+        LEFT JOIN departement d ON c.dpt = d.departement_code
+        WHERE a.insee = ?
+        GROUP BY c.commune_slug
+        ORDER BY ci.pop2017 DESC
+      ';
+      if ($limit){
+        $sql .= ' LIMIT ' . $limit;
+      }
+      $query = $this->db->query($sql, $insee);
+      return $query->result_array();
+    }
+
   }
