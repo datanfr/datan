@@ -25,7 +25,7 @@
         $data['deputes'][$key]['cardCenter'] = $data['deputes'][$key]['circo']."<sup>".$data['deputes'][$key]['circoAbbrev']."</sup> circonscription";
       }
 
-      $data['communes'] = $this->city_model->get_communes_population($slug);
+      $data['communes'] = $this->city_model->get_communes_population($slug, 30);
 
       if (empty($data['deputes'])) {
         show_404($this->functions_datan->get_404_infos());
