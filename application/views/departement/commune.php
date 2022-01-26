@@ -26,7 +26,7 @@
         <!-- https://dribbble.com/shots/9713325-Near-you-Result-page -->
         <span class="my-0 mx-3">Communes voisines :</span>
         <?php foreach ($adjacentes as $adjacente): ?>
-          <a role="button" class="btn btn-outline-light btn-sm mx-2" href="<?= base_url() ?>deputes/<?= $adjacente['slug'] ?>/ville_<?= $adjacente['commune_slug'] ?>" style="border-radius: 10px; height: 30px"><?= $adjacente['commune_nom'] ?></a>
+          <a role="button" class="url_obf btn btn-outline-light btn-sm mx-2" url_obf="<?= url_obfuscation(base_url()."deputes/".$adjacente['slug']."/ville_".$adjacente['commune_slug']) ?>" style="border-radius: 10px; height: 30px"><?= $adjacente['commune_nom'] ?></a>
         <?php endforeach; ?>
       </div>
     <?php endif; ?>
@@ -119,7 +119,7 @@
                       </div>
                     </div>
                   </div>
-                  <a href="https://www.interieur.gouv.fr/Elections/Les-resultats/Presidentielles/elecresult__presidentielle-2017/(path)/presidentielle-2017/<?= $ville_insee["region"] ?>/<?= $ville_insee["dpt"] ?>/<?= $ville_insee["old_insee"] ?>.html" target="_blank" rel="noopener" class="no-decoration">
+                  <a href="https://www.interieur.gouv.fr/Elections/Les-resultats/Presidentielles/elecresult__presidentielle-2017/(path)/presidentielle-2017/REGION/DPT/INSEE.html" target="_blank" rel="noopener" class="no-decoration">
                     <div class="card-footer">
                       <p class="text-center mb-0">Plus d'infos</p>
                     </div>
@@ -168,7 +168,7 @@
                   </div>
                 </div>
               </div>
-              <a href="https://www.interieur.gouv.fr/Elections/Les-resultats/Presidentielles/elecresult__presidentielle-2017/(path)/presidentielle-2017/<?= $ville_insee["region"] ?>/<?= $ville_insee["dpt"] ?>/<?= $ville_insee["old_insee"] ?>.html" target="_blank" rel="noopener" class="no-decoration">
+              <a href="https://www.interieur.gouv.fr/Elections/Les-resultats/Presidentielles/elecresult__presidentielle-2017/(path)/presidentielle-2017/REGION/DPT/INSEE.html" target="_blank" rel="noopener" class="no-decoration">
                 <div class="card-footer">
                   <p class="text-center mb-0">Plus d'infos</p>
                 </div>
@@ -199,7 +199,7 @@
                   </div>
                 </div>
               </div>
-              <a href="https://www.interieur.gouv.fr/Elections/Les-resultats/Europeennes/elecresult__europeennes-2019/(path)/europeennes-2019/<?= $ville_insee["region"] ?>/<?= $ville_insee["dpt"] ?>/<?= $ville_insee["insee"] ?>.html" target="_blank" rel="noopener" class="no-decoration">
+              <a href="https://www.interieur.gouv.fr/Elections/Les-resultats/Europeennes/elecresult__europeennes-2019/(path)/europeennes-2019/REGION/DPT/INSEE.html" target="_blank" rel="noopener" class="no-decoration">
                 <div class="card-footer">
                   <p class="text-center mb-0">Plus d'infos</p>
                 </div>
