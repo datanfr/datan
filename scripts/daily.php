@@ -119,7 +119,7 @@ class Script
     public function fillDeputes()
     {
         echo "fillDeputes starting \n";
-        $file = __DIR__ . '/tmp_acteurs_organes.zip';
+        $file = __DIR__ . '/AMO30_tous_acteurs_tous_mandats_tous_organes_historique.xml.zip';
         $zip = new ZipArchive();
         if ($zip->open($file) !== TRUE) {
             exit("cannot open <$file>\n");
@@ -1086,7 +1086,7 @@ class Script
 
         // SCRAPPING DEPENDING ON LEGISLATURE
         if ($this->legislature_to_get == 15) {
-            $file = __DIR__ . '/tmp_Scrutins_XV.zip';
+            $file = __DIR__ . '/Scrutins_XV.xml.zip';
             $zip = new ZipArchive();
             if ($zip->open($file) !== TRUE) {
                 exit("cannot open <$file>\n");
@@ -2367,7 +2367,7 @@ class Script
         $dossier = [];
         $dossiers = [];
         if ($this->legislature_to_get == 15) {
-            $file = __DIR__ . '/tmp_dossiers.zip';
+            $file = __DIR__ . '/Dossiers_Legislatifs_XV.xml.zip';
             $zip = new ZipArchive();
 
             if ($zip->open($file) !== TRUE) {
@@ -2462,7 +2462,7 @@ class Script
         $n = 1;
 
         if ($this->legislature_to_get == 15) {
-            $file = __DIR__ . '/tmp_dossiers.zip';
+            $file = __DIR__ . '/Dossiers_Legislatifs_XV.xml.zip';
 
             $zip = new ZipArchive();
             if ($zip->open($file) !== TRUE) {
@@ -2653,7 +2653,7 @@ class Script
       $insert = [];
 
       if ($this->legislature_to_get == 15) {
-        $file = __DIR__ . '/tmp_dossiers.zip';
+        $file = __DIR__ . '/Dossiers_Legislatifs_XV.xml.zip';
 
         $zip = new ZipArchive();
         if ($zip->open($file) !== TRUE) {
