@@ -101,7 +101,6 @@
     }
 
     public function get_results_2017_leg_2($insee){
-      echo $insee;
       $sql = 'SELECT *, ROUND(voix / exprimes * 100) AS pct
         FROM elect_2017_leg_results_communes res
         WHERE insee = ?

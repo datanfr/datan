@@ -131,7 +131,6 @@
       // Get elections
       // 1. 2017 _ Législatives _ 2nd tour
       $data['results_2017_leg_2'] = $this->city_model->get_results_2017_leg_2($insee);
-      print_r($data['results_2017_leg_2']);
       $arr = array();
       foreach ($data['results_2017_leg_2'] as $key => $item) {
          $arr[$item['circo']][$key] = $item;
