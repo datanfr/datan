@@ -81,7 +81,7 @@
             </div>
           </div>
           <div class="row mt-5">
-            <div class="<?= $n_circos == 1 ? 'col-lg-7' : 'col-lg-12' ?> d-flex flex-column justify-content-center">
+            <div class="<?= $n_circos == 1 ? 'col-lg-7' : 'col-lg-8 offset-lg-2' ?> d-flex flex-column justify-content-center">
               <p class="text-primary font-weight-bold">Le contexte</p>
               <p>Les dernières élections législatives se sont tenues en juin 2017. Elles ont permis d'élire <a href="<?= base_url() ?>deputes">les députés</a> qui composent l'Assemblée nationale. Ces élections et ont fait suite à l'élection présidentielle, qui a vu la victoire d'Emmanuel Macron.</p>
               <p>Les <a href="<?= base_url() ?>elections/legislatives-2022">prochaines élections législatives</a> se tiendront en 2022.</p>
@@ -94,7 +94,7 @@
                 <p><?= $ville['commune_nom'] ?> étant une ville de taille importante, elle compte plusieurs députés. Découvrez ci-dessous les parlementaires élus pour la ville de <?= $ville['commune_nom'] ?>.</p>
               <?php endif; ?>
             </div>
-            <div class="<?= $n_circos == 1 ? 'col-lg-5' : 'col-lg-12' ?> d-flex flex-wrap justify-content-center bloc-elections">
+            <div class="<?= $n_circos == 1 ? 'col-lg-5' : 'col-lg-12 justify-content-around mt-5' ?> d-flex flex-wrap bloc-elections">
               <?php foreach ($results_2017_leg_2 as $key => $value): ?>
                 <div class="card mx-3 my-3">
                   <div class="card-body pb-0">
@@ -140,8 +140,8 @@
           </div>
         </div>
         <div class="row mt-5 pb-3 bloc-elections">
-          <div class="col-md-6 d-flex justify-content-center">
-            <div class="card">
+          <div class="col-12 d-flex justify-content-around">
+            <div class="card mx-3">
               <div class="card-body pb-0">
                 <h3>Élection présidentielle 2017</h3>
                 <span class="round">2<sup>nd</sup> tour</span>
@@ -174,9 +174,7 @@
                 </div>
               </a>
             </div>
-          </div>
-          <div class="col-md-6 d-flex justify-content-center">
-            <div class="card">
+            <div class="card mx-3">
               <div class="card-body pb-0">
                 <h3>Élections européennes 2019</h3>
                 <span class="round">Les 3 premiers partis politiques</span>
@@ -205,6 +203,9 @@
                 </div>
               </a>
             </div>
+          </div>
+          <div class="col-md-6 d-flex justify-content-center">
+
           </div>
         </div>
       </div>
