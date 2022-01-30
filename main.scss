@@ -1683,7 +1683,7 @@ ul.ui-menu{
     .card{
       border: 0;
       box-shadow: $card-box-shadow;
-      width: 350px;
+      width: 330px;
     }
     .card-footer{
       font-weight: 800;
@@ -1735,6 +1735,14 @@ ul.ui-menu{
           }
         }
       }
+    }
+  }
+  &.bloc-adjacentes{
+    background-color: #536878;
+    a {
+      border-radius: 7px;
+      height: 30px;
+      color: white;
     }
   }
 }
