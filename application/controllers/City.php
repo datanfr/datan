@@ -24,6 +24,7 @@
       $dpt_code = $v['dpt'];
       $departement = $v['dpt_slug'];
       $code_postal = $v['code_postal'];
+      $insee = $v['insee'];
 
       // GET THE MPs
       // If only one district
@@ -101,9 +102,8 @@
         $de = "de ";
       }
 
-
       // Get all big cities from the department
-      $data['communes_dpt'] = $this->city_model->get_communes_population($departement);
+      $data['communes_dpt'] = $this->city_model->get_communes_population($departement, 30);
 
       // Clean infos on the city
       $data['ville'] = $data['ville'][0];
@@ -116,10 +116,12 @@
         $data['ville']['evol10_text'] = 'diminué';
       }
       $data['ville']['evol10_edited'] = str_replace("-", "", $data['ville']['evol10']);
-      $data['ville_insee'] = $this->city_model->get_insee($data['ville']['codeRegion'], $data['ville']['dpt'], $data['ville']['insee_city']);
+
+      // Get city adjacentes
+      $data['adjacentes'] = $this->city_model->get_adjacentes($insee, 4);
 
       // Get city mayor
-      $data['mayor'] = $this->city_model->get_mayor($data['ville']['dpt'], $data['ville']['code_insee'], $data['ville']['commune']);
+      $data['mayor'] = $this->city_model->get_mayor($data['ville']['dpt'], $insee, $data['ville']['commune']);
       if ($data['mayor']['gender'] == "F") {
         $data['mayor']['gender_le'] = "la";
       } else {
@@ -127,9 +129,22 @@
       }
 
       // Get elections
-      // 1. 2017 _ Presidentielles _ 2nd tour
-      $data['results_2017_pres_2'] = $this->city_model->get_results_2017_pres_2($data['ville']['dpt'], $data['ville']['insee_city']);
-      // 2. 2019 _ Européennes
+      // 1. 2017 _ Législatives _ 2nd tour
+      $data['results_2017_leg_2'] = $this->city_model->get_results_2017_leg_2($insee);
+      $arr = array();
+      foreach ($data['results_2017_leg_2'] as $key => $item) {
+         $arr[$item['circo']][$key] = $item;
+      }
+      ksort($arr, SORT_NUMERIC);
+      $data['results_2017_leg_2'] = $arr;
+      $data['results_2017_leg_2_first_element'] = reset($data['results_2017_leg_2']);
+      if ($data['results_2017_leg_2_first_element']) {
+        $data['results_2017_leg_2_first_element'] = reset($data['results_2017_leg_2_first_element']);
+      }
+
+      // 2. 2017 _ Presidentielles _ 2nd tour
+      $data['results_2017_pres_2'] = $this->city_model->get_results_2017_pres_2($data['ville']['dpt'], $insee);
+      // 3. 2019 _ Européennes
       $data['results_2019_europe'] = $this->city_model->get_results_2019_europe($data['ville']);
 
       // Meta
@@ -137,10 +152,10 @@
       $data['title_meta'] = "Député(s) ".$commune_nom." ".$code_postal." | Datan";
       if (!$data['noMP']) {
         $data['description_meta'] = "Découvrez le".$s." député".$s." élu".$s." dans la ville ".$de."".$commune_nom." (".$dpt_code.") et tous ".$ses." résultats de vote : taux de participation, loyauté avec ".$son." groupe, proximité avec la majorité présidentielle.";
-        $data['title'] = "Découvrez ".$le." ".$depute_writing." ".$elu_writing." dans la ville ".$de."".$commune_nom;
+        $data['title'] = ucfirst($depute_writing)." ".$elu_writing." dans la ville ".$de."".$commune_nom;
       } else {
         $data['description_meta'] = "Découvrez les députés élus dans la ville ".$de."".$commune_nom." (".$dpt_code.") et tous ses résultats de vote : taux de participation, loyauté avec leur groupe, proximité avec la majorité présidentielle.";
-        $data['title'] = "Découvrez les députés élus dans la ville ".$de."".$commune_nom;
+        $data['title'] = "Députés élus dans la ville ".$de."".$commune_nom;
       }
 
       // Breadcrumb
