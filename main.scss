@@ -1674,10 +1674,16 @@ ul.ui-menu{
   .department{
     font-size: $h5-font-size;
   }
+  .bloc-infos{
+    color: #fff;
+    padding-left: 2.2rem;
+    padding-right: 2.2rem;
+  }
   .bloc-elections{
     .card{
       border: 0;
       box-shadow: $card-box-shadow;
+      width: 330px;
     }
     .card-footer{
       font-weight: 800;
@@ -1729,6 +1735,14 @@ ul.ui-menu{
           }
         }
       }
+    }
+  }
+  &.bloc-adjacentes{
+    background-color: #536878;
+    a {
+      border-radius: 7px;
+      height: 30px;
+      color: white;
     }
   }
 }
