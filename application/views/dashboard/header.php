@@ -274,7 +274,29 @@ scratch. This page gets rid of all links and provides the needed markup only.
                </li>
              </ul>
            </li>
-
+           <!-- Quizz -->
+           <li class="nav-item has-treeview">
+             <a href="#" class="nav-link">
+               <p>
+                 Quizz
+                 <i class="fas fa-angle-left right"></i>
+               </p>
+             </a>
+             <ul class="nav nav-treeview">
+               <li class="nav-item">
+                 <a href="<?= base_url() ?>admin/quizz" class="nav-link">
+                   <i class="far fa-circle nav-icon"></i>
+                   <p>Toutes les questions</p>
+                 </a>
+               </li>
+               <li class="nav-item">
+                 <a href="<?= base_url() ?>admin/quizz/create" class="nav-link">
+                   <i class="far fa-circle nav-icon"></i>
+                   <p>Créer une question</p>
+                 </a>
+               </li>
+             </ul>
+           </li>
           </ul>
         </nav>
         <!-- /.sidebar-menu -->
