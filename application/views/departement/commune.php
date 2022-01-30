@@ -22,17 +22,22 @@
       </div>
     </div>
     <?php if ($adjacentes): ?>
-      <div class="container-fluid bg-secondary text-white py-2 d-flex justify-content-center align-items-center">
-        <!-- https://dribbble.com/shots/9713325-Near-you-Result-page -->
-        <span class="my-0 mx-3">Communes voisines :</span>
-        <?php foreach ($adjacentes as $adjacente): ?>
-          <a role="button" class="url_obf btn btn-outline-light btn-sm mx-2" url_obf="<?= url_obfuscation(base_url()."deputes/".$adjacente['slug']."/ville_".$adjacente['commune_slug']) ?>" style="border-radius: 10px; height: 30px"><?= $adjacente['commune_nom'] ?></a>
-        <?php endforeach; ?>
+      <div class="container-fluid pg-commune bloc-adjacentes py-2 d-flex flex-column flex-md-row justify-content-center align-items-center">
+        <span class="my-0 mx-3 text-white">Communes voisines :</span>
+        <div class="d-flex justify-content-around flex-wrap mt-1 mt-md-0">
+          <?php $i = 1 ?>
+          <?php foreach ($adjacentes as $adjacente): ?>
+            <div class="<?= $i > 2 ? 'd-none d-md-flex' : 'd-flex' ?> justify-content-center">
+              <a role="button" class="url_obf btn btn-outline-light btn-sm mx-1 my-1" url_obf="<?= url_obfuscation(base_url()."deputes/".$adjacente['slug']."/ville_".$adjacente['commune_slug']) ?>"><?= $adjacente['commune_nom'] ?></a>
+            </div>
+            <?php $i++ ?>
+          <?php endforeach; ?>
+        </div>
       </div>
     <?php endif; ?>
     <div class="container pg-commune">
       <div class="row">
-        <div class="col-lg-3 pt-5 bloc-infos" style="background-color: #e9e9e9; color: black!important">
+        <div class="col-lg-3 col-md-4 pt-md-5 pt-3 bloc-infos" style="background-color: #e9e9e9; color: black!important">
           <p><b><?= $ville["commune_nom"] ?></b> est une commune située <?= $ville["libelle_1"] ?><?= $ville["dpt_nom"] ?> (<?= $ville["dpt"] ?>), dans la région <?= $ville['region_name'] ?>.</p>
           <?php if (!empty($ville["pop2007"])): ?>
             <p><?= $ville["commune_nom"] ?> compte <b><?= $ville["pop2017_format"] ?> habitants</b>. La population de la commune a <b><?= $ville['evol10_text'] ?></b> de <?= round($ville['evol10_edited'], 1) ?> % depuis 10 ans.</p>
@@ -42,14 +47,11 @@
           <?php endif; ?>
           <?php if ($n_circos == 1 && $noMP == FALSE): ?>
             <p>
-              <?= $ville['commune_nom'] ?> fait partie de la <?= $ville['circo'] ?><sup><?= $ville['circo_abbrev'] ?></sup> circonscription du département <?= $ville['dpt_nom'] ?>.
-            </p>
-            <p>
               <?= ucfirst($gender['le']) ?> <?= $gender['depute'] ?> élu<?= $gender['e'] ?> dans cette circonscription est <?= $depute_commune['nameFirst'] ?> <?= $depute_commune['nameLast'] ?>.
             </p>
           <?php endif; ?>
         </div>
-        <div class="col-lg-9 pt-5 pb-5">
+        <div class="col-lg-9 col-md-8 pt-5 pb-5">
           <h1 class="text-center"><?= $title ?></h1>
           <?php if ($noMP): ?>
             <div class="text-center alert alert-danger">
@@ -94,9 +96,9 @@
                 <p><?= $ville['commune_nom'] ?> étant une ville de taille importante, elle compte plusieurs députés. Découvrez ci-dessous les parlementaires élus pour la ville de <?= $ville['commune_nom'] ?>.</p>
               <?php endif; ?>
             </div>
-            <div class="<?= $n_circos == 1 ? 'col-lg-5' : 'col-lg-12 justify-content-around mt-5' ?> d-flex flex-wrap bloc-elections">
+            <div class="<?= $n_circos == 1 ? 'col-lg-5 justify-content-center' : 'col-lg-12 justify-content-around' ?> mt-4 d-flex flex-wrap bloc-elections">
               <?php foreach ($results_2017_leg_2 as $key => $value): ?>
-                <div class="card mx-3 my-3">
+                <div class="card mx-1 my-2">
                   <div class="card-body pb-0">
                     <h3>Élection législative 2017</h3>
                     <span class="round">2<sup>nd</sup> tour</span>
@@ -139,73 +141,68 @@
             <h2 class="text-center">Les dernières élections à <?= $ville["commune_nom"] ?></h2>
           </div>
         </div>
-        <div class="row mt-5 pb-3 bloc-elections">
-          <div class="col-12 d-flex justify-content-around">
-            <div class="card mx-3">
-              <div class="card-body pb-0">
-                <h3>Élection présidentielle 2017</h3>
-                <span class="round">2<sup>nd</sup> tour</span>
-                <div class="chart mt-3">
-                  <div class="results d-flex flex-row justify-content-center align-items-center">
-                    <div class="bar d-flex flex-row justify-content-center align-items-end">
-                      <div class="element d-flex align-items-center justify-content-center" style="height: <?= round($results_2017_pres_2['macron_pct']) ?>%">
-                        <span class="score"><?= round($results_2017_pres_2['macron_pct']) ?>%</span>
-                      </div>
-                    </div>
-                    <div class="bar d-flex flex-row justify-content-center align-items-end">
-                      <div class="element d-flex align-items-center justify-content-center" style="height: <?= round($results_2017_pres_2['lePen_pct']) ?>%">
-                        <span class="score"><?= round($results_2017_pres_2['lePen_pct']) ?>%</span>
-                      </div>
+        <div class="d-flex justify-content-around flex-wrap mt-4 pb-3 bloc-elections">
+          <div class="card mx-1 my-2">
+            <div class="card-body pb-0">
+              <h3>Élection présidentielle 2017</h3>
+              <span class="round">2<sup>nd</sup> tour</span>
+              <div class="chart mt-3">
+                <div class="results d-flex flex-row justify-content-center align-items-center">
+                  <div class="bar d-flex flex-row justify-content-center align-items-end">
+                    <div class="element d-flex align-items-center justify-content-center" style="height: <?= round($results_2017_pres_2['macron_pct']) ?>%">
+                      <span class="score"><?= round($results_2017_pres_2['macron_pct']) ?>%</span>
                     </div>
                   </div>
-                  <div class="names d-flex flex-row justify-content-center align-items-center">
-                    <div class="name">
-                      <p class="text-center">Emmanuel Macron</p>
+                  <div class="bar d-flex flex-row justify-content-center align-items-end">
+                    <div class="element d-flex align-items-center justify-content-center" style="height: <?= round($results_2017_pres_2['lePen_pct']) ?>%">
+                      <span class="score"><?= round($results_2017_pres_2['lePen_pct']) ?>%</span>
                     </div>
-                    <div class="name">
-                      <p class="text-center">Marine Le Pen</p>
-                    </div>
+                  </div>
+                </div>
+                <div class="names d-flex flex-row justify-content-center align-items-center">
+                  <div class="name">
+                    <p class="text-center">Emmanuel Macron</p>
+                  </div>
+                  <div class="name">
+                    <p class="text-center">Marine Le Pen</p>
                   </div>
                 </div>
               </div>
-              <a href="https://www.interieur.gouv.fr/Elections/Les-resultats/Presidentielles/elecresult__presidentielle-2017/(path)/presidentielle-2017/REGION/DPT/INSEE.html" target="_blank" rel="noopener" class="no-decoration">
-                <div class="card-footer">
-                  <p class="text-center mb-0">Plus d'infos</p>
-                </div>
-              </a>
             </div>
-            <div class="card mx-3">
-              <div class="card-body pb-0">
-                <h3>Élections européennes 2019</h3>
-                <span class="round">Les 3 premiers partis politiques</span>
-                <div class="chart mt-3">
-                  <div class="results d-flex flex-row justify-content-center align-items-center">
-                    <?php foreach ($results_2019_europe as $list): ?>
-                      <div class="bar d-flex flex-row justify-content-center align-items-end">
-                        <div class="element d-flex align-items-center justify-content-center" style="height: <?= round($list['value']) ?>%">
-                          <span class="score" style="color: #fff"><?= round($list['value']) ?>%</span>
-                        </div>
-                      </div>
-                    <?php endforeach; ?>
-                  </div>
-                  <div class="names d-flex flex-row justify-content-center align-items-center">
-                    <?php foreach ($results_2019_europe as $list): ?>
-                      <div class="name">
-                        <p class="text-center"><?= $list["partiName"] ?></p>
-                      </div>
-                    <?php endforeach; ?>
-                  </div>
-                </div>
+            <a href="https://www.interieur.gouv.fr/Elections/Les-resultats/Presidentielles/elecresult__presidentielle-2017/(path)/presidentielle-2017/REGION/DPT/INSEE.html" target="_blank" rel="noopener" class="no-decoration">
+              <div class="card-footer">
+                <p class="text-center mb-0">Plus d'infos</p>
               </div>
-              <a href="https://www.interieur.gouv.fr/Elections/Les-resultats/Europeennes/elecresult__europeennes-2019/(path)/europeennes-2019/REGION/DPT/INSEE.html" target="_blank" rel="noopener" class="no-decoration">
-                <div class="card-footer">
-                  <p class="text-center mb-0">Plus d'infos</p>
-                </div>
-              </a>
-            </div>
+            </a>
           </div>
-          <div class="col-md-6 d-flex justify-content-center">
-
+          <div class="card mx-1 my-2">
+            <div class="card-body pb-0">
+              <h3>Élections européennes 2019</h3>
+              <span class="round">Les 3 premiers partis politiques</span>
+              <div class="chart mt-3">
+                <div class="results d-flex flex-row justify-content-center align-items-center">
+                  <?php foreach ($results_2019_europe as $list): ?>
+                    <div class="bar d-flex flex-row justify-content-center align-items-end">
+                      <div class="element d-flex align-items-center justify-content-center" style="height: <?= round($list['value']) ?>%">
+                        <span class="score" style="color: #fff"><?= round($list['value']) ?>%</span>
+                      </div>
+                    </div>
+                  <?php endforeach; ?>
+                </div>
+                <div class="names d-flex flex-row justify-content-center align-items-center">
+                  <?php foreach ($results_2019_europe as $list): ?>
+                    <div class="name">
+                      <p class="text-center"><?= $list["partiName"] ?></p>
+                    </div>
+                  <?php endforeach; ?>
+                </div>
+              </div>
+            </div>
+            <a href="https://www.interieur.gouv.fr/Elections/Les-resultats/Europeennes/elecresult__europeennes-2019/(path)/europeennes-2019/REGION/DPT/INSEE.html" target="_blank" rel="noopener" class="no-decoration">
+              <div class="card-footer">
+                <p class="text-center mb-0">Plus d'infos</p>
+              </div>
+            </a>
           </div>
         </div>
       </div>
