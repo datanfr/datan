@@ -166,8 +166,8 @@
       <h2 class="mt-4">Contactez-nous</h2>
       <p>info[at]datan.fr</p>
       <h2 class="mt-4">Ils contribuent au projet</h2>
-      <p><b>Datan</b> est un site en construction qui ne reçoit aucune aide financière. Plusieurs personnes contribuent ou ont contribué au projet de manière bénévole. Merci à eux !</p>
-      <p>Si vous souhaitez contribuer au projet, n'hésitez pas à nous envoyer un email : info[at]datan.fr</p>
+      <p><b>Datan</b> est un site en construction qui ne reçoit aucune aide financière. Plusieurs personnes contribuent ou ont contribué au projet et à l'association de manière bénévole. Merci à eux !</p>
+      <p>Si vous souhaitez contribuer, n'hésitez pas à nous envoyer un email : info[at]datan.fr</p>
       <div class="row mt-3">
         <!-- Team 1 -->
         <div class="col-lg-3 col-md-4 col-6">
@@ -308,12 +308,12 @@
         <div class="col-lg-3 col-md-4 col-6 mt-3 mt-md-0">
           <div class="card my-2 card-team">
             <div class="img-profile">
-              <img class="card-img-top" src="<?= asset_url() ?>imgs/team/philippe1.jpg" alt="Photo Alexis">
+              <img class="card-img-top" src="<?= asset_url() ?>imgs/team/philippe.jpg" alt="Photo Alexis">
               <div class="overlay"></div>
             </div>
             <div class="card-body d-flex flex-column align-items-center">
               <h3 class="card-title">Philippe</h3>
-              <p class="card-text text-center">Trésorier de l'association</p>
+              <p class="card-text text-center">Trésorier</p>
               <div class="social-media d-flex justify-content-center">
                 <a href="mailto:tresorier@datan.fr">
                   <img src="<?= asset_url() ?>imgs/icons/envelope-circle.svg" width="30" height="30" alt="Logo Linkedin">
