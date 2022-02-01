@@ -99,7 +99,7 @@
       $this->db->select($select);
       $this->db->join('fields', 'quizz.category = fields.id', 'left');
       $this->db->join('votes_info vi', 'quizz.legislature = vi.legislature AND quizz.voteNumero = vi.voteNumero', 'left');
-      $query = $this->db->get_where('quizz', array('quizz' => $quizz));
+      $query = $this->db->get_where('quizz', array('quizz' => $quizz, 'state' => 'published'));
 
       $questions = $query->result_array();
 
