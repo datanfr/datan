@@ -5,6 +5,7 @@ class Api extends CI_Controller
     private $modelAllowed = array();
     private $methodAllowed = array(
       'newsletter/create_newsletter',
+      'deputes/get_deputes_last',
       'votes/get_last_votes_datan',
       'votes/request_vote_datan',
       'votes/get_vote_deputes',
@@ -19,6 +20,7 @@ class Api extends CI_Controller
         $this->load->model('votes_model');
         $this->load->model('newsletter_model');
         $this->load->model('quizz_model');
+        $this->load->model('deputes_model');
     }
 
     private function response($data, $code = 200)
