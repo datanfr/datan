@@ -39,7 +39,7 @@
           $data['noMP'] = FALSE;
           $data['depute_commune'] = $data['deputes_commune'][0];
           $data['depute_commune']['couleurAssociee'] = $this->groupes_model->get_groupe_color(array($data['depute_commune']['libelleAbrev'], $data['depute_commune']['couleurAssociee']));
-          $data['depute_commune']['electionCircoAbbrev'] = $this->functions_datan->abbrev_n($data['depute_commune']['electionCirco'], TRUE);
+          $data['depute_commune']['electionCircoAbbrev'] = abbrev_n($data['depute_commune']['electionCirco'], TRUE);
           $data['depute_commune']['cardCenter'] = $data['depute_commune']['electionCirco']."<sup>".$data['depute_commune']['electionCircoAbbrev']."</sup> circonscription";
           $data['gender'] = gender($data['depute_commune']['civ']);
         }
@@ -52,14 +52,14 @@
         foreach ($data['ville'] as $key => $value) {
           $circo[] = $value['circo'];
           $circo_edited[$key]["number"] = $value['circo'];
-          $circo_edited[$key]["abbrev"] = $this->functions_datan->abbrev_n($value['circo'], TRUE);
+          $circo_edited[$key]["abbrev"] = abbrev_n($value['circo'], TRUE);
         }
         $data['circos'] = $circo_edited;
         $data['n_circos'] = $n_circos;
         $data['deputes_commune'] = $this->city_model->get_mps($departement, $circo, legislature_current());
         foreach ($data['deputes_commune'] as $key => $value) {
           $data['deputes_commune'][$key]['couleurAssociee'] = $this->groupes_model->get_groupe_color(array($value['libelleAbrev'], $value['couleurAssociee']));
-          $data['deputes_commune'][$key]['electionCircoAbbrev'] = $this->functions_datan->abbrev_n($value['electionCirco'], TRUE);
+          $data['deputes_commune'][$key]['electionCircoAbbrev'] = abbrev_n($value['electionCirco'], TRUE);
           $data['deputes_commune'][$key]['cardCenter'] = $data['deputes_commune'][$key]['electionCirco']."<sup>".$data['deputes_commune'][$key]['electionCircoAbbrev']."</sup> circonscription";
         }
       }
@@ -72,7 +72,7 @@
       $data['deputes_dpt'] = $this->city_model->get_mps_dpt($departement, $deputes_commune, legislature_current());
       foreach ($data['deputes_dpt'] as $key => $value) {
         $data['deputes_dpt'][$key]['couleurAssociee'] = $this->groupes_model->get_groupe_color(array($value['libelleAbrev'], $value['couleurAssociee']));
-        $data['deputes_dpt'][$key]['electionCircoAbbrev'] = $this->functions_datan->abbrev_n($value['electionCirco'], TRUE);
+        $data['deputes_dpt'][$key]['electionCircoAbbrev'] = abbrev_n($value['electionCirco'], TRUE);
         $data['deputes_dpt'][$key]['cardCenter'] = $data['deputes_dpt'][$key]['electionCirco']."<sup>".$data['deputes_dpt'][$key]['electionCircoAbbrev']."</sup> circonscription";
       }
 
@@ -107,7 +107,7 @@
 
       // Clean infos on the city
       $data['ville'] = $data['ville'][0];
-      $data['ville']['circo_abbrev'] = $this->functions_datan->abbrev_n($data['ville']['circo'], TRUE);
+      $data['ville']['circo_abbrev'] = abbrev_n($data['ville']['circo'], TRUE);
       $data['ville']['pop2017'] = $this->functions_datan->dec_round($data['ville']['pop2017'], mb_strlen($data['ville']['pop2017']) - 4);
       $data['ville']['pop2017_format'] = number_format($data['ville']['pop2017'], 0, ',', ' ');
       if ($data['ville']['evol10'] > 0) {

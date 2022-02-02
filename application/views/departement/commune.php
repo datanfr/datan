@@ -101,7 +101,7 @@
                 <div class="card mx-1 my-2">
                   <div class="card-body pb-0">
                     <h3>Élection législative 2017</h3>
-                    <span class="round">2<sup>nd</sup> tour</span>
+                    <span class="round"><?= reset($value)['circo'] ?><sup><?= abbrev_n(reset($value)['circo'], TRUE) ?></sup> circonscription - 2<sup>nd</sup> tour</span>
                     <div class="chart mt-3">
                       <div class="results d-flex flex-row justify-content-center align-items-center">
                         <?php foreach ($value as $candidate): ?>
@@ -121,11 +121,11 @@
                       </div>
                     </div>
                   </div>
-                  <a href="https://www.interieur.gouv.fr/Elections/Les-resultats/Presidentielles/elecresult__presidentielle-2017/(path)/presidentielle-2017/REGION/DPT/INSEE.html" target="_blank" rel="noopener" class="no-decoration">
+                  <span url_obf="<?= url_obfuscation("https://www.interieur.gouv.fr/Elections/Les-resultats/Presidentielles/elecresult__presidentielle-2017/(path)/presidentielle-2017/REGION/DPT/INSEE.html") ?>" class="url_obf no-decoration">
                     <div class="card-footer">
                       <p class="text-center mb-0">Plus d'infos</p>
                     </div>
-                  </a>
+                  </span>
                 </div>
               <?php endforeach; ?>
             </div>
@@ -169,11 +169,11 @@
                 </div>
               </div>
             </div>
-            <a href="https://www.interieur.gouv.fr/Elections/Les-resultats/Presidentielles/elecresult__presidentielle-2017/(path)/presidentielle-2017/REGION/DPT/INSEE.html" target="_blank" rel="noopener" class="no-decoration">
+            <span url_obf="<?= url_obfuscation("https://www.interieur.gouv.fr/Elections/Les-resultats/Presidentielles/elecresult__presidentielle-2017/(path)/presidentielle-2017/REGION/DPT/INSEE.html") ?>" class="url_obf no-decoration">
               <div class="card-footer">
                 <p class="text-center mb-0">Plus d'infos</p>
               </div>
-            </a>
+            </span>
           </div>
           <div class="card mx-1 my-2">
             <div class="card-body pb-0">
@@ -198,11 +198,11 @@
                 </div>
               </div>
             </div>
-            <a href="https://www.interieur.gouv.fr/Elections/Les-resultats/Europeennes/elecresult__europeennes-2019/(path)/europeennes-2019/REGION/DPT/INSEE.html" target="_blank" rel="noopener" class="no-decoration">
+            <span url_obf="<?= url_obfuscation("https://www.interieur.gouv.fr/Elections/Les-resultats/Europeennes/elecresult__europeennes-2019/(path)/europeennes-2019/REGION/DPT/INSEE.html") ?>" class="url_obf no-decoration">
               <div class="card-footer">
                 <p class="text-center mb-0">Plus d'infos</p>
               </div>
-            </a>
+            </span>
           </div>
         </div>
       </div>

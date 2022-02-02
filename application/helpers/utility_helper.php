@@ -174,4 +174,38 @@
     }
   }
 
+  // Abbreviation of numbers (1er / 2e )
+  function abbrev_n($n, $fem){
+    if ($fem) {
+      switch ($n) {
+        case 1:
+          return "re";
+          break;
+
+        case 2:
+          return "de";
+          break;
+
+          default:
+            return "e";
+            break;
+      }
+    } else {
+      switch ($n) {
+        case 1:
+          return "er";
+          break;
+
+        case 1:
+          return "d";
+          break;
+
+          default:
+            return "e";
+            break;
+
+      }
+    }
+  }
+
 ?>

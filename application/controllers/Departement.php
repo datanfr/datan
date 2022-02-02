@@ -21,7 +21,7 @@
 
       foreach ($data['deputes'] as $key => $value) {
         $data['deputes'][$key]['couleurAssociee'] = $this->groupes_model->get_groupe_color(array($value['libelleAbrev'], $value['couleurAssociee']));
-        $data['deputes'][$key]['circoAbbrev'] = $this->functions_datan->abbrev_n($value['circo'], TRUE);
+        $data['deputes'][$key]['circoAbbrev'] = abbrev_n($value['circo'], TRUE);
         $data['deputes'][$key]['cardCenter'] = $data['deputes'][$key]['circo']."<sup>".$data['deputes'][$key]['circoAbbrev']."</sup> circonscription";
       }
 
