@@ -3021,6 +3021,7 @@ class Script
     }
 
     public function parrainages(){
+      // 1. Create table if not exists
       $this->bdd->query("CREATE TABLE IF NOT EXISTS `parrainages` (
           `civ` VARCHAR(5) NOT NULL ,
           `nameLast` VARCHAR(75) NOT NULL ,
@@ -3037,6 +3038,7 @@ class Script
           INDEX `mpId_idx` (`mpId`)) ENGINE = MyISAM;
       ");
 
+      // 2. Get and insert open data
       $json = file_get_contents("https://www.data.gouv.fr/fr/datasets/r/4b261e7d-b901-4f2a-af3a-195862de49fd");
       $obj = json_decode($json, false);
 
@@ -3081,6 +3083,35 @@ class Script
 
       $this->insertAll('parrainages', $parrainagesFields, $parrainages);
 
+      // 3. Add mpId when we find it
+
+      $query = $this->bdd->query('SELECT * FROM parrainages');
+
+      while ($parrainage = $query->fetch()) {
+        if (($parrainage['mandat'] == 'député' || $parrainage['mandat'] == 'députée') && is_null($parrainage['mpId'])) {
+
+          $queryMatch = $this->bdd->query('SELECT *
+            FROM deputes_last
+            WHERE nameFirst = "' . $parrainage['nameFirst'] . '" AND nameLast = "' . $parrainage['nameLast'] . '" AND legislature = 15
+          ');
+
+          if ($queryMatch->rowCount() == 1) {
+            while ($match = $queryMatch->fetch()) {
+              $mpId = $match['mpId'];
+
+              $this->bdd->query('UPDATE parrainages SET mpId = "'.$mpId.'"
+                WHERE civ = "'.$parrainage['civ'].'"
+                AND nameLast = "'.$parrainage['nameLast'].'"
+                AND nameFirst = "'.$parrainage['nameFirst'].'"
+                AND mandat = "'.$parrainage['mandat'].'"
+                AND dpt = "'.$parrainage['dpt'].'"
+                AND candidat = "'.$parrainage['candidat'].'" ');
+
+            }
+          }
+        }
+
+      }
 
     }
 
