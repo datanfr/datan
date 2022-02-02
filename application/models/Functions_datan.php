@@ -3,40 +3,6 @@
     public function __construct(){
     }
 
-    public function abbrev_n($n, $fem){
-      if ($fem) {
-        switch ($n) {
-          case 1:
-            return "re";
-            break;
-
-          case 2:
-            return "de";
-            break;
-
-            default:
-              return "e";
-              break;
-
-        }
-      } else {
-        switch ($n) {
-          case 1:
-            return "er";
-            break;
-
-          case 1:
-            return "d";
-            break;
-
-            default:
-              return "e";
-              break;
-
-        }
-      }
-    }
-
     public function more_less($x, $y){
       if ($x > $y) {
         return("plus");
