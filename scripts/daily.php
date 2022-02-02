@@ -3020,6 +3020,70 @@ class Script
         ');
     }
 
+    public function parrainages(){
+      $this->bdd->query("CREATE TABLE IF NOT EXISTS `parrainages` (
+          `civ` VARCHAR(5) NOT NULL ,
+          `nameLast` VARCHAR(75) NOT NULL ,
+          `nameFirst` VARCHAR(75) NOT NULL ,
+          `mandat` VARCHAR(100) NOT NULL ,
+          `circo` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL ,
+          `dpt` VARCHAR(100) NOT NULL ,
+          `candidat` VARCHAR(100) NOT NULL ,
+          `datePublication` DATE NOT NULL ,
+          `year` INT NOT NULL ,
+          `mpId` VARCHAR(35) NULL DEFAULT NULL ,
+          `dateMaj` DATE  ,
+          PRIMARY KEY (`nameLast`, `nameFirst`, `dpt`) ,
+          INDEX `mpId_idx` (`mpId`)) ENGINE = MyISAM;
+      ");
+
+      $json = file_get_contents("https://www.data.gouv.fr/fr/datasets/r/4b261e7d-b901-4f2a-af3a-195862de49fd");
+      $obj = json_decode($json, false);
+
+      $i = 1;
+      $parrainagesFields = array('civ', 'nameLast', 'nameFirst', 'mandat', 'circo', 'dpt', 'candidat', 'datePublication', 'year', 'dateMaj');
+      $parrainages = [];
+      $parrainage = [];
+
+      foreach ($obj as $key => $value) {
+        $year = 2022;
+        $civ = $value->Civilite;
+        $nameFirst = $value->Prenom;
+        $nameLast = ucfirst(mb_strtolower($value->Nom));
+        $mandat =  mb_strtolower($value->Mandat);
+        $circo = !empty($value->Circonscription) ? $value->Circonscription : NULL;
+        $dpt = $value->Departement;
+        $candidat = $value->Candidat;
+        $datePublication = substr($value->DatePublication, 0, 10);
+
+        $parrainage = array(
+          'civ' => $civ,
+          'nameLast' => $nameLast,
+          'nameFirst' => $nameFirst,
+          'mandat' => $mandat,
+          'circo' => $circo,
+          'dpt' => $dpt,
+          'candidat' => $candidat,
+          'datePublication' => $datePublication,
+          'year' => $year,
+          'dateMaj' => $this->dateMaj
+        );
+        $parrainages = array_merge($parrainages, array_values($parrainage));
+
+        if ($i % 10 === 0) {
+            echo "Let's import until parrainage n " . $i . "\n";
+            $this->insertAll('parrainages', $parrainagesFields, $parrainages);
+            $parrainages = [];
+        }
+        $i++;
+
+      }
+
+      $this->insertAll('parrainages', $parrainagesFields, $parrainages);
+
+
+    }
+
     public function opendata_activeMPs()
     {
       $query = "SELECT
@@ -3170,6 +3234,7 @@ if (isset($argv[1])) {
 } else {
     $script = new Script();
 }
+/*
 $script->fillDeputes();
 $script->deputeAll();
 $script->deputeLast();
@@ -3208,7 +3273,10 @@ $script->classLoyauteSix();
 $script->deputeAccordCleaned();
 $script->historyMpsAverage();
 $script->historyPerMpsAverage();
+$script->parrainages();
 $script->opendata_activeMPs();
 $script->opendata_activeGroupes();
 $script->opendata_historyMPs();
 $script->opendata_historyGroupes();
+*/
+$script->parrainages();
