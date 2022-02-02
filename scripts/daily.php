@@ -3023,6 +3023,7 @@ class Script
     public function parrainages(){
       // 1. Create table if not exists
       $this->bdd->query("CREATE TABLE IF NOT EXISTS `parrainages` (
+          `id` INT NOT NULL AUTO_INCREMENT ,
           `civ` VARCHAR(5) NOT NULL ,
           `nameLast` VARCHAR(75) NOT NULL ,
           `nameFirst` VARCHAR(75) NOT NULL ,
@@ -3034,7 +3035,8 @@ class Script
           `year` INT NOT NULL ,
           `mpId` VARCHAR(35) NULL DEFAULT NULL ,
           `dateMaj` DATE  ,
-          PRIMARY KEY (`nameLast`, `nameFirst`, `dpt`) ,
+          PRIMARY KEY (`id`) ,
+          UNIQUE INDEX (`nameLast`, `nameFirst`, `dpt`) ,
           INDEX `mpId_idx` (`mpId`)) ENGINE = MyISAM;
       ");
 
@@ -3099,13 +3101,7 @@ class Script
             while ($match = $queryMatch->fetch()) {
               $mpId = $match['mpId'];
 
-              $this->bdd->query('UPDATE parrainages SET mpId = "'.$mpId.'"
-                WHERE civ = "'.$parrainage['civ'].'"
-                AND nameLast = "'.$parrainage['nameLast'].'"
-                AND nameFirst = "'.$parrainage['nameFirst'].'"
-                AND mandat = "'.$parrainage['mandat'].'"
-                AND dpt = "'.$parrainage['dpt'].'"
-                AND candidat = "'.$parrainage['candidat'].'" ');
+              $this->bdd->query('UPDATE parrainages SET mpId = "'.$mpId.'" WHERE id = "'.$parrainage['id'].'"');
 
             }
           }
@@ -3265,6 +3261,7 @@ if (isset($argv[1])) {
 } else {
     $script = new Script();
 }
+/*
 $script->fillDeputes();
 $script->deputeAll();
 $script->deputeLast();
@@ -3308,3 +3305,5 @@ $script->opendata_activeMPs();
 $script->opendata_activeGroupes();
 $script->opendata_historyMPs();
 $script->opendata_historyGroupes();
+*/
+$script->parrainages();
