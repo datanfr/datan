@@ -74,6 +74,7 @@ $route['admin/quizz'] = 'admin/quizz_list';
 $route['admin/quizz/create'] = 'admin/create_quizz';
 $route['admin/quizz/modify/(:any)'] = 'admin/modify_quizz/$1';
 $route['admin/quizz/delete/(:any)'] = 'admin/delete_quizz/$1';
+$route['admin/parrainages'] = 'admin/parrainages';
 // SEO
 $route['sitemap.xml'] = "sitemap/index";
 $route['sitemap-deputes-1.xml'] = "sitemap/deputes";
