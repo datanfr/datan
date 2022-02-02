@@ -31,6 +31,7 @@ function EXPORT_TABLES($host, $user, $pass, $name, $tables = false, $backup_name
       'fields',
       'hatvp',
       'insee',
+      'parrainages',
       'posts',
       'quizz',
       'readings',
