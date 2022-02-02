@@ -101,7 +101,7 @@
                 <div class="card mx-1 my-2">
                   <div class="card-body pb-0">
                     <h3>Élection législative 2017</h3>
-                    <span class="round">2<sup>nd</sup> tour</span>
+                    <span class="round"><?= reset($value)['circo'] ?><sup><?= abbrev_n(reset($value)['circo'], TRUE) ?></sup> circonscription - 2<sup>nd</sup> tour</span>
                     <div class="chart mt-3">
                       <div class="results d-flex flex-row justify-content-center align-items-center">
                         <?php foreach ($value as $candidate): ?>

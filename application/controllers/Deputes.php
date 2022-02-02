@@ -284,7 +284,7 @@
 
       // General infos
       $data['depute']['dateNaissanceFr'] = utf8_encode(strftime('%d %B %Y', strtotime($data['depute']['birthDate']))); // birthdate
-      $data['depute']['circo_abbrev'] = $this->functions_datan->abbrev_n($data['depute']['circo'], TRUE); // circo number
+      $data['depute']['circo_abbrev'] = abbrev_n($data['depute']['circo'], TRUE); // circo number
       $data['politicalParty'] = $this->deputes_model->get_political_party($mpId); // political party
       $data['election_canceled'] = NULL;
       if ($legislature == 15) { // Get election if 15th legislature
@@ -466,7 +466,7 @@
       $data['legislature'] = $legislature;
       $legislature = $data['depute']['legislature'];
       $data["depute"]["dateNaissanceFr"] = utf8_encode(strftime('%d %B %Y', strtotime($data['depute']['birthDate']))); // birthdate
-      $data['depute']['circo_abbrev'] = $this->functions_datan->abbrev_n($data['depute']['circo'], TRUE); // circo number
+      $data['depute']['circo_abbrev'] = abbrev_n($data['depute']['circo'], TRUE); // circo number
       $data['mandats'] = $this->deputes_model->get_historique_mandats($mpId);
       $data['mandatsReversed'] = array_reverse($data['mandats']);
       $groupe_id = $data['depute']['groupeId'];
