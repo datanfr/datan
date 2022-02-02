@@ -14,6 +14,7 @@
       $this->load->model('quizz_model');
       $this->load->model('readings_model');
       $this->load->model('votes_model');
+      $this->load->model('parrainages_model');
       $this->password_model->security();
     }
 
@@ -582,6 +583,19 @@
           redirect('admin/quizz');
         }
       }
+    }
+
+    public function parrainages(){
+      $data['username'] = $this->session->userdata('username');
+      $data['usernameType'] = $this->session->userdata('type');
+      $data['title'] = 'Liste des parrainages de députés en 2022';
+
+      $data['parrainages'] = $this->parrainages_model->get_parrainages(2022, TRUE);
+      //print_r($data['parrainages']);
+
+      $this->load->view('dashboard/header', $data);
+      $this->load->view('dashboard/parrainages/list', $data);
+      $this->load->view('dashboard/footer');
     }
 
   }
