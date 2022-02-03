@@ -11,11 +11,21 @@
       </div> <!-- END COL -->
       <div class="col-md-10 col-lg-8 offset-md-1 offset-lg-0 pl-lg-5">
         <div class="bloc-bio mt-5">
+          <!-- Election Feature 2022 -->
           <?php if ($electionFeature): ?>
             <div class="card card-election-feature mb-4">
               <div class="card-body">
-                <h2>Présidentielle 2022</h2>
+                <h2>🗳️ Présidentielle 2022</h2>
                 <?= $title ?> est candidat<?= $gender['e'] ?> à l'élection présidentielle 2022.
+              </div>
+            </div>
+          <?php endif; ?>
+          <!-- Parrainage -->
+          <?php if ($parrainage): ?>
+            <div class="card card-election-feature mb-4">
+              <div class="card-body">
+                <h2>🗳️ Présidentielle 2022</h2>
+                <?= $title ?> a accordé son parrainage à <b><?= $parrainage['candidat'] ?></b>.
               </div>
             </div>
           <?php endif; ?>

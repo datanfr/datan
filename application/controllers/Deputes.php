@@ -10,6 +10,7 @@
       $this->load->model('fields_model');
       $this->load->model('elections_model');
       $this->load->model('jobs_model');
+      $this->load->model('parrainages_model');
       //$this->password_model->security_password(); Former login protection
     }
 
@@ -348,7 +349,11 @@
           $data['elections'][$key]['electedColor'] = '';
         }
       }
-      $data['electionFeature'] = $this->elections_model->get_candidate_election($mpId, 3); /*Présidentielle-2022*/
+      $data['electionFeature'] = $this->elections_model->get_candidate_election($mpId, 3); /* Présidentielle-2022 */
+      $data['parrainage'] = $this->parrainages_model->get_mp_parrainage($mpId, 2022); /* Parrainage for presidentielle 2022 */
+      if ($data['parrainage']) {
+        $data['parrainage']['candidat'] = $this->parrainages_model->change_candidate_name($data['parrainage']['candidat']);
+      }
 
       // Statistiques
       $data = $this->get_statistiques($data, $legislature, $mpId, $groupe_id);
