@@ -3261,7 +3261,6 @@ if (isset($argv[1])) {
 } else {
     $script = new Script();
 }
-/*
 $script->fillDeputes();
 $script->deputeAll();
 $script->deputeLast();
@@ -3305,5 +3304,3 @@ $script->opendata_activeMPs();
 $script->opendata_activeGroupes();
 $script->opendata_historyMPs();
 $script->opendata_historyGroupes();
-*/
-$script->parrainages();
