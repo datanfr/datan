@@ -28,6 +28,7 @@
                     <th>circo</th>
                     <th>dpt</th>
                     <th>candidat</th>
+                    <th>mpId</th>
                     <th>page Datan</th>
                     <th></th>
                   </tr>
@@ -41,13 +42,12 @@
                     <td><?= $x['circo'] ?></td>
                     <td><?= $x['dpt'] ?></td>
                     <td><?= $x['candidat'] ?></td>
+                    <td class="<?= $x['mpId'] ?: "bg-danger" ?>"><?= $x['mpId'] ?></td>
                     <td>
                       <a href="<?= base_url() ?>deputes/<?= $x['dptSlug'] ?>/depute_<?= $x['nameUrl'] ?>" target="_blank">Page datan</a>
                     </td>
-
-
                     <td>
-                      <a href="<?= base_url() ?>admin/quizz/modify/" ?>modifier</a>
+                      <a href="<?= base_url() ?>admin/parrainages/modify/<?= $x['id'] ?>" ?>modifier</a>
                     </td>
                   </tr>
                 <?php endforeach; ?>
