@@ -3041,8 +3041,22 @@ class Script
       ");
 
       // 2. Get and insert open data
-      $json = file_get_contents("https://www.data.gouv.fr/fr/datasets/r/4b261e7d-b901-4f2a-af3a-195862de49fd");
-      $obj = json_decode($json, false);
+      //$json = file_get_contents("https://www.data.gouv.fr/fr/datasets/r/4b261e7d-b901-4f2a-af3a-195862de49fd"); //Old one using Data Gouv
+      function remove_utf8_bom($text) {
+        $bom = pack('H*','EFBBBF');
+        $text = preg_replace("/^$bom/", '', $text);
+        return $text;
+      }
+      $context = stream_context_create(
+          array(
+              "http" => array(
+                  "header" => "User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.102 Safari/537.36"
+              )
+          )
+      );
+      $json = file_get_contents("https://presidentielle2022.conseil-constitutionnel.fr/telechargement/parrainagestotal.json", false, $context); // New one from the Conseil constitutionnel website
+      $json = remove_utf8_bom($json);
+      $obj = json_decode($json);
 
       $i = 1;
       $parrainagesFields = array('civ', 'nameLast', 'nameFirst', 'mandat', 'circo', 'dpt', 'candidat', 'datePublication', 'year', 'dateMaj');
