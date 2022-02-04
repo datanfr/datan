@@ -30,7 +30,7 @@ class Api extends CI_Controller
         return $this->output
             ->set_content_type('application/json')
             ->set_status_header($code)
-            ->set_output(json_encode($data, JSON_PRETTY_PRINT));
+            ->set_output(json_encode($data));
     }
 
     public function index($model, $method)
