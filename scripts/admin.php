@@ -44,8 +44,19 @@
               <a class="btn btn-primary my-3" href="../cache/delete_all" role="button">Delete all caching</a>
               <div class="card">
                 <div class="card-body">
+                  <h5 class="card-title">Update database : New indexes</h5>
+                  <h6 class="card-subtitle text-muted">February 4, 2022</h6>
+                  <p class="card-text">
+                    New indexes on some tables.
+                    <a class="btn btn-danger my-3" href="update_dataset/20220204_indexes.php" role="button">UPDATE DATABASE</a>
+                  </p>
+                </div>
+              </div>
+              <hr>
+              <div class="card">
+                <div class="card-body">
                   <h5 class="card-title">Update database : reupload tables that I changed (reformat dpt/insee/city codes)</h5>
-                  <h6 class="card-subtitle text-muted">January 28, 2021</h6>
+                  <h6 class="card-subtitle text-muted">January 28, 2022</h6>
                   <p class="card-text">
                     <a class="btn btn-danger my-3" href="update_dataset/20220128_upload.php" role="button">UPDATE DATABASE</a>
                   </p>
@@ -55,7 +66,7 @@
               <div class="card">
                 <div class="card-body">
                   <h5 class="card-title">Update database : new 'insee' field to 'circos' table</h5>
-                  <h6 class="card-subtitle text-muted">January 27, 2021</h6>
+                  <h6 class="card-subtitle text-muted">January 27, 2022</h6>
                   <p class="card-text">
                     Add insee to circos table
                     <a class="btn btn-danger my-3" href="update_dataset/20220127_circos.php" role="button">UPDATE DATABASE</a>
@@ -66,7 +77,7 @@
               <div class="card">
                 <div class="card-body">
                   <h5 class="card-title">Update database : new table with electoral results</h5>
-                  <h6 class="card-subtitle text-muted">January 26, 2021</h6>
+                  <h6 class="card-subtitle text-muted">January 26, 2022</h6>
                   <p class="card-text">
                     New table 'cities_adjacentes' with closed cities
                     <a class="btn btn-danger my-3" href="update_dataset/20220126_elections.php" role="button">UPDATE DATABASE</a>
@@ -77,7 +88,7 @@
               <div class="card">
                 <div class="card-body">
                   <h5 class="card-title">Update database : new table with electoral results</h5>
-                  <h6 class="card-subtitle text-muted">January 25, 2021</h6>
+                  <h6 class="card-subtitle text-muted">January 25, 2022</h6>
                   <p class="card-text">
                     New table 'elect_2017_leg_results_communes' with electoral result for 2017 legislative elections per city
                     <a class="btn btn-danger my-3" href="update_dataset/20220125_elections.php" role="button">UPDATE DATABASE</a>
