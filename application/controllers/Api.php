@@ -10,7 +10,8 @@ class Api extends CI_Controller
       'votes/request_vote_datan',
       'votes/get_vote_deputes',
       'votes/get_vote_groupes_simplified',
-      'quizz/get_questions_api'
+      'quizz/get_questions_api',
+      'city/get_mps_city'
     );
     private $methodForbidden = array();
 
@@ -21,6 +22,7 @@ class Api extends CI_Controller
         $this->load->model('newsletter_model');
         $this->load->model('quizz_model');
         $this->load->model('deputes_model');
+        $this->load->model('city_model');
     }
 
     private function response($data, $code = 200)

@@ -161,4 +161,17 @@
       return $query->result_array();
     }
 
+    public function get_mps_city($legislature){
+      $sql = 'SELECT dl.mpId, dl.nameFirst, dl.nameLast, dl.legislature, dl.departementCode, dl.departementNom, dl.circo, c.insee, c.commune_nom AS communeNom, i.postal AS codePostal
+        FROM deputes_last dl
+        LEFT JOIN circos c ON c.dpt = dl.departementCode AND c.circo = dl.circo
+        LEFT JOIN insee i ON i.insee = c.insee
+        WHERE dl.legislature = ?
+        GROUP BY c.commune_nom, dl.mpId
+        LIMIT 100';
+
+      $query = $this->db->query($sql, $legislature);
+      return $query->result_array();
+    }
+
   }
