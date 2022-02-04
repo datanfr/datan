@@ -144,6 +144,40 @@
       return $query->result_array();
     }
 
+    public function get_format_interieurGouv($city){
+      $array = [];
+
+      // 1. Departement
+      switch ($city['dpt']) {
+        case '2a':
+          $array['dpt'] = '2A';
+          break;
+
+        case '2b':
+          $array['dpt'] = '2B';
+          break;
+
+        default:
+          $array['dpt'] = $city['dpt'];
+          break;
+      }
+
+      if ($array['dpt'] < 100) {
+        $array['dpt'] = '0'.$array['dpt'];
+      } else {
+        $array['dpt'] = $array['dpt'];
+      }
+
+      // 2. City code
+      if ($city['dpt'] == 976) {
+        $array['commune'] = $city['commune'] - 100;
+      } else {
+        $array['commune'] = $city['commune'];
+      }
+
+      return $array;
+    }
+
     public function get_adjacentes($insee, $limit = FALSE){
       $sql = 'SELECT a.* , c.*, d.*
         FROM cities_adjacentes a
