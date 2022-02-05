@@ -141,6 +141,7 @@
       if ($data['results_2017_leg_2_first_element']) {
         $data['results_2017_leg_2_first_element'] = reset($data['results_2017_leg_2_first_element']);
       }
+      $data['ville']['interieurGouv'] = $this->city_model->get_format_interieurGouv($data['ville']);
 
       // 2. 2017 _ Presidentielles _ 2nd tour
       $data['results_2017_pres_2'] = $this->city_model->get_results_2017_pres_2($data['ville']['dpt'], $insee);
