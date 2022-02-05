@@ -175,6 +175,15 @@
         $array['commune'] = $city['commune'];
       }
 
+      // 3. REGION
+      if (is_null($city['codeRegion'])) {
+        $array['region'] = '000';
+      } elseif ($city['codeRegion'] < 10) {
+        $array['region'] = '00'.$city['codeRegion'];
+      } else {
+        $array['region'] = '0'.$city['codeRegion'];
+      }
+
       return $array;
     }
 
