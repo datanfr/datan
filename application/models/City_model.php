@@ -175,6 +175,13 @@
         $array['commune'] = $city['commune'];
       }
 
+      // 2. City code Européennes
+      if ($city['dpt'] == 987) {
+        $array['commune_europeennes'] = $city['commune'] + 700;
+      } else {
+        $array['commune_europeennes'] = $city['commune'];
+      }
+
       // 3. REGION
       if (is_null($city['codeRegion'])) {
         $array['region'] = '000';
