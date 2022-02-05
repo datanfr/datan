@@ -144,6 +144,56 @@
       return $query->result_array();
     }
 
+    public function get_format_interieurGouv($city){
+      $array = [];
+
+      // 1. Departement
+      switch ($city['dpt']) {
+        case '2a':
+          $array['dpt'] = '2A';
+          break;
+
+        case '2b':
+          $array['dpt'] = '2B';
+          break;
+
+        default:
+          $array['dpt'] = $city['dpt'];
+          break;
+      }
+
+      if ($array['dpt'] < 100) {
+        $array['dpt'] = '0'.$array['dpt'];
+      } else {
+        $array['dpt'] = $array['dpt'];
+      }
+
+      // 2. City code
+      if ($city['dpt'] == 976) {
+        $array['commune'] = $city['commune'] - 100;
+      } else {
+        $array['commune'] = $city['commune'];
+      }
+
+      // 2. City code Européennes
+      if ($city['dpt'] == 987) {
+        $array['commune_europeennes'] = $city['commune'] + 700;
+      } else {
+        $array['commune_europeennes'] = $city['commune'];
+      }
+
+      // 3. REGION
+      if (is_null($city['codeRegion'])) {
+        $array['region'] = '000';
+      } elseif ($city['codeRegion'] < 10) {
+        $array['region'] = '00'.$city['codeRegion'];
+      } else {
+        $array['region'] = '0'.$city['codeRegion'];
+      }
+
+      return $array;
+    }
+
     public function get_adjacentes($insee, $limit = FALSE){
       $sql = 'SELECT a.* , c.*, d.*
         FROM cities_adjacentes a

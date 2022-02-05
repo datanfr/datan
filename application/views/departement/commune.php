@@ -121,7 +121,7 @@
                       </div>
                     </div>
                   </div>
-                  <span url_obf="<?= url_obfuscation("https://www.interieur.gouv.fr/Elections/Les-resultats/Presidentielles/elecresult__presidentielle-2017/(path)/presidentielle-2017/REGION/DPT/INSEE.html") ?>" class="url_obf no-decoration">
+                  <span url_obf="<?= url_obfuscation("https://www.interieur.gouv.fr/Elections/Les-resultats/Legislatives/elecresult__legislatives-2017/(path)/legislatives-2017/".$ville['interieurGouv']['dpt']."/".$ville['interieurGouv']['dpt']."0".reset($value)['circo']."".$ville['interieurGouv']['commune'].".html") ?>" class="url_obf no-decoration">
                     <div class="card-footer">
                       <p class="text-center mb-0">Plus d'infos</p>
                     </div>
@@ -169,7 +169,7 @@
                 </div>
               </div>
             </div>
-            <span url_obf="<?= url_obfuscation("https://www.interieur.gouv.fr/Elections/Les-resultats/Presidentielles/elecresult__presidentielle-2017/(path)/presidentielle-2017/REGION/DPT/INSEE.html") ?>" class="url_obf no-decoration">
+            <span url_obf="<?= url_obfuscation("https://www.interieur.gouv.fr/Elections/Les-resultats/Presidentielles/elecresult__presidentielle-2017/(path)/presidentielle-2017/".$ville['interieurGouv']['region']."/".$ville['interieurGouv']['dpt']."/".$ville['interieurGouv']['dpt']."".$ville['interieurGouv']['commune'].".html") ?>" class="url_obf no-decoration">
               <div class="card-footer">
                 <p class="text-center mb-0">Plus d'infos</p>
               </div>
@@ -198,7 +198,7 @@
                 </div>
               </div>
             </div>
-            <span url_obf="<?= url_obfuscation("https://www.interieur.gouv.fr/Elections/Les-resultats/Europeennes/elecresult__europeennes-2019/(path)/europeennes-2019/REGION/DPT/INSEE.html") ?>" class="url_obf no-decoration">
+            <span url_obf="<?= url_obfuscation("https://www.interieur.gouv.fr/Elections/Les-resultats/Europeennes/elecresult__europeennes-2019/(path)/europeennes-2019/".$ville['interieurGouv']['region']."/".$ville['interieurGouv']['dpt']."/".$ville['interieurGouv']['dpt']."".$ville['interieurGouv']['commune_europeennes'].".html") ?>" class="url_obf no-decoration">
               <div class="card-footer">
                 <p class="text-center mb-0">Plus d'infos</p>
               </div>
