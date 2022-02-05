@@ -77,6 +77,14 @@ class Api extends CI_Controller
             return $this->response(array('error' => true, 'message' => $e->getMessage()), 500);
         }
 
+        // Caching
+        if(!in_array($_SERVER['REMOTE_ADDR'], localhost()) && !$this->session->userdata('logged_in')){
+          if ($method == 'get_mps_city') {
+            $this->output->cache("4320"); // Caching enable for 3 days (1440 minutes per day)
+          }
+        }
+
+
         // Header
         header("Access-Control-Allow-Origin: https://datan-quiz.web.app");
         header("Access-Control-Allow-Methods: GET");
