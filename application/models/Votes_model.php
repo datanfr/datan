@@ -306,7 +306,7 @@
     }
 
     public function get_vote_groupes_simplified($num, $legislature){
-      $sql = 'SELECT o.libelleAbrev, vg.*
+      $sql = 'SELECT o.libelleAbrev, o.libelle, o.uid, vg.*
         FROM votes_groupes vg
         LEFT JOIN organes o ON vg.organeRef = o.uid
         WHERE vg.voteNumero = ? AND vg.legislature = ?
