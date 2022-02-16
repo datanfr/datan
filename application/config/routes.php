@@ -147,6 +147,8 @@ $route['newsletter/delete/(:any)'] = 'newsletter/delete/$1';
 $route['newsletter/votes'] = 'newsletter/votes/$1';
 $route['newsletter/votes/(:any)'] = 'newsletter/votes/$1';
 $route['newsletter'] = 'newsletter/register';
+// PARRAINAGES
+$route['parrainages-2022'] = 'parrainages/index';
 // FAQ
 $route['faq'] = 'faq/index';
 // API

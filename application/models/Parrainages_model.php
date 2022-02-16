@@ -62,5 +62,21 @@
       return $array[$name];
     }
 
+    public function get_500($year){
+      $sql = 'SELECT A.*
+        FROM
+        (
+          SELECT candidat, count(*) AS n
+	        FROM parrainages
+          WHERE year = ?
+          GROUP BY candidat
+          ORDER BY count(*) DESC
+        ) A
+        WHERE A.n > 500
+      ';
+
+      return $this->db->query($sql, $year)->result_array();
+    }
+
   }
 ?>
