@@ -3036,7 +3036,7 @@ class Script
           `mpId` VARCHAR(35) NULL DEFAULT NULL ,
           `dateMaj` DATE  ,
           PRIMARY KEY (`id`) ,
-          UNIQUE INDEX (`nameLast`, `nameFirst`, `dpt`) ,
+          UNIQUE INDEX (`nameLast`, `nameFirst`, `dpt`, `datePublication`, `mandat`) ,
           INDEX `mpId_idx` (`mpId`)) ENGINE = MyISAM;
       ");
 
