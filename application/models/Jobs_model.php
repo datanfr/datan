@@ -96,7 +96,7 @@
       $sql = 'SELECT *
         FROM
         (
-        SELECT dl.groupeId, dl.libelle, dl.libelleAbrev, COUNT(mpId) AS n, ge.effectif AS total, ROUND(COUNT(mpId) / ge.effectif * 100) AS pct
+        SELECT dl.groupeId, dl.libelle, dl.libelleAbrev, COUNT(mpId) AS n, ge.effectif AS total, ROUND(COUNT(mpId) / ge.effectif * 100) AS pct, ge.legislature
         FROM deputes_last dl
         LEFT JOIN groupes_effectif ge ON dl.groupeId = ge.organeRef
         WHERE dl.legislature = ? AND dl.active AND dl.famSocPro = ? AND dl.libelleAbrev != "NI"
