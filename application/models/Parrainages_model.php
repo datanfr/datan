@@ -78,5 +78,17 @@
       return $this->db->query($sql, $year)->result_array();
     }
 
+    public function get_candidates($year, $onlyMps = FALSE){
+      $this->db->where('year', $year);
+      if ($onlyMps) {
+        $this->db->where_in('mandat', array('député', 'députée'));
+      }
+      $this->db->select('candidat AS name, count(*) AS parrainages');
+      $this->db->order_by('count(*)', 'DESC');
+      $this->db->group_by('candidat');
+      $query = $this->db->get('parrainages');
+      return $query->result_array();
+    }
+
   }
 ?>
