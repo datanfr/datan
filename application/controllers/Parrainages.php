@@ -12,6 +12,9 @@
         $data['candidates_selected'][$key]['candidat'] = $this->parrainages_model->change_candidate_name($value['candidat']);
       }
       $data['parrainages'] = $this->parrainages_model->get_parrainages(2022, TRUE);
+      foreach ($data['parrainages'] as $key => $value) {
+        $data['parrainages'][$key]['candidat'] = $this->parrainages_model->change_candidate_name($value['candidat']);
+      }
       $data['candidates'] = $this->parrainages_model->get_candidates(2022, TRUE);
       foreach ($data['candidates'] as $key => $value) {
         $data['candidates'][$key]['name'] = $this->parrainages_model->change_candidate_name($value['name']);

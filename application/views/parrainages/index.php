@@ -74,7 +74,38 @@
     <div class="col-12 test-border">
       <h2 class="my-4">Découvrez les parrainages accordez par tous les députés</h2>
       <p>Texte ici de présentation !</p>
-      <p>Tableau (syle vote)</p>
+      <table class="table table-striped table-vote-individual" id="table-vote-individual-deputes" style="width: 100%">
+        <thead>
+          <tr>
+            <th class="all">Député</th>
+            <th>Département</th>
+            <th class="all">Groupe politique</th>
+            <th class="text-center min-tablet">Candidat parrainé</th>
+          </tr>
+        </thead>
+        <tbody>
+          <?php foreach ($parrainages as $parrainage): ?>
+            <tr>
+              <td class="all">
+                <span class="url_obf" url_obf="<?= url_obfuscation(base_url()."deputes/".$parrainage['dptSlug']."/depute_".$parrainage['nameUrl']) ?>">
+                  <?= $parrainage['nameFirst'] ?> <?= $parrainage['nameLast'] ?>
+                </span>
+              </td>
+              <td><?= $parrainage['departementNom'] ?> (<?= $parrainage['departementCode'] ?>)</td>
+              <td><?= $parrainage['groupLibelle'] ?></td>
+              <td class="all"><?= $parrainage['candidat'] ?></td>
+            </tr>
+          <?php endforeach; ?>
+        </tbody>
+        <tfoot>
+            <tr>
+                <th>Député</th>
+                <th>Département</th>
+                <th>Groupe politique</th>
+                <th>Candidat parrainé</th>
+            </tr>
+        </tfoot>
+      </table>
     </div>
   </div>
 </div>
