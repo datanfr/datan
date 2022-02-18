@@ -9,7 +9,7 @@
       if ($onlyMps) {
         $this->db->where_in('mandat', array('député', 'députée'));
       }
-      $this->db->select('p.*, d.dptSlug, d.nameUrl');
+      $this->db->select('p.*, d.dptSlug, d.nameUrl, d.departementNom, d.departementCode, d.libelle AS groupLibelle');
       $this->db->join('deputes_last d', 'd.mpId = p.mpId', 'left');
       $this->db->order_by('p.nameLast ASC, p.nameFirst ASC');
       $query = $this->db->get('parrainages p');
