@@ -64,12 +64,12 @@
         Il est suivi de <b><?= $candidates[1]['name'] ?></b> (<?= $candidates[1]['parrainages'] ?> parrainages) et de <b><?= $candidates[2]['name'] ?></b> (<?= $candidates[2]['parrainages'] ?> parrainages).
       </p>
       <p>Découvrez ci-dessous l'ensemble des parrainages accordés par les députés.</p>
-      <p>Chart HERE</p>
-    </div>
-    <div class="col-12 test-border">
-      <h2 class="my-4">Les parrainages à la présidentielle par groupe politique</h2>
-      <p>Texte ici de présentation !</p>
-      <p>Différents charts (un par groupe)</p>
+      <div class="card mt-5">
+        <div class="card-body px-5">
+          <h3 class="mt-4 mb-5">Parrainages accordés par les députés</h3>
+          <canvas id="myChart" width="400" height="180"></canvas>
+        </div>
+      </div>
     </div>
     <div class="col-12 test-border">
       <h2 class="my-4">Découvrez les parrainages accordez par tous les députés</h2>
@@ -78,3 +78,53 @@
     </div>
   </div>
 </div>
+<script>
+  const labels = [
+    <?php foreach ($candidates as $x) {
+      echo "[";
+      echo '"'.$x['name'].'",';
+      echo "],";
+    } ?>
+  ];
+  var ctx = document.getElementById('myChart');
+  var myChart = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: labels,
+        datasets: [{
+            label: 'Nombre de parrainages de députés',
+            data: [
+              <?php foreach ($candidates as $x) {
+                echo '"'.$x['parrainages'].'",';
+              } ?>
+            ],
+            backgroundColor: 'rgb(0, 183, 148)',
+        }]
+      },
+      options: {
+        scales: {
+            yAxes: [{
+                ticks: {
+                    beginAtZero: true
+                }
+            }]
+        },
+        responsive: true,
+        plugins: {
+          datalabels: {
+            anchor: "end",
+            backgroundColor: function(context){
+              return context.dataset.backgroundColor;
+            },
+            borderColor: "white",
+            borderRadius: 25,
+            borderWidth: 1,
+            color: "white",
+            font: {
+              size: 14
+            }
+          }
+        }
+      }
+  });
+</script>
