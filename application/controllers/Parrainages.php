@@ -32,14 +32,26 @@
       $data['breadcrumb_json'] = $this->breadcrumb_model->breadcrumb_json($data['breadcrumb']);
       // Meta
       $data['url'] = $this->meta_model->get_url();
-      $data['title_meta'] = "Statistiques et classements - Assemblée nationale | Datan";
-      $data['description_meta'] = "Classements des députés et des groupes. ";
+      $data['title_meta'] = "Élection présidentielle 2022 : les parrainages des députés | Datan";
+      $data['description_meta'] = "Les députés peuvent accorder leur parrainage à un candidat à l'élection présidentielle. Découvrez sur Datan les parrainages accordés par les députés en 2022.";
       $data['title'] = "Élection présidentielle 2022 : découvrez les parrainages des députés";
       //Open Graph
       $controller = $this->router->fetch_class()."/".$this->router->fetch_method();
       $data['ogp'] = $this->meta_model->get_ogp($controller, $data['title_meta'], $data['description_meta'], $data['url'], $data);
+      // CSS
+      $data['css_to_load']= array(
+        array(
+          "url" => css_url()."chart.min.css",
+          "async" => FALSE
+        ),
+        array(
+          "url" => css_url()."datatables.bootstrap4.min.css",
+          "async" => TRUE
+        )
+      );
       // JS
       $data['js_to_load_up'] = array("chart.min.js", "chartjs-plugin-datalabels@0.7.js");
+      $data['js_to_load']= array("moment.min", "datatable-datan.min", "datetime-moment", "flickity.pkgd.min");
       // Views
       $this->load->view('templates/header', $data);
       $this->load->view('parrainages/index', $data);
