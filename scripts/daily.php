@@ -3029,7 +3029,7 @@ class Script
           `nameFirst` VARCHAR(75) NOT NULL ,
           `mandat` VARCHAR(100) NOT NULL ,
           `circo` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL ,
-          `dpt` VARCHAR(100) NOT NULL ,
+          `dpt` VARCHAR(80) NOT NULL ,
           `candidat` VARCHAR(100) NOT NULL ,
           `datePublication` DATE NOT NULL ,
           `year` INT NOT NULL ,
