@@ -3,7 +3,7 @@
 
  const french = {
      processing:     "Traitement en cours...",
-     search:         "Rechercher un député&nbsp;:",
+     search:         "Recherche :",
      lengthMenu:    "Afficher _MENU_ votes",
      info:           "Affichage des votes _START_ &agrave; _END_ sur _TOTAL_ votes",
      infoEmpty:      "Affichage de l'&eacute;lement 0 &agrave; 0 sur 0 &eacute;l&eacute;ments",
@@ -49,6 +49,42 @@
       }],
       language: french
     });
+
+    // TABLE PAGE parrainages
+    $('#table-parrainages-deputes').DataTable( {
+      "paging" : true,
+      "ordering": false,
+      "info": false,
+      responsive: {
+        details: false
+      },
+      initComplete: function () {
+          this.api().columns().every( function (i) {
+            var column = this;
+            if (screen.width > 767) {
+              if (i == 1 | i == 2 | i == 3) {
+                $(column.header()).append("</br>");
+                var select = $('<select style="margin-top: 12px; margin-bottom: 5px" class="form-control"><option value=""></option></select>')
+                    .appendTo( $(column.header()) )
+                    .on( 'change', function () {
+                        var val = $.fn.dataTable.util.escapeRegex(
+                            $(this).val()
+                        );
+
+                        column
+                            .search( val ? '^'+val+'$' : '', true, false )
+                            .draw();
+                    } );
+
+                    column.data().unique().sort().each( function ( d, j ) {
+                        select.append( '<option value="'+d+'">'+d+'</option>' )
+                    } );
+              }
+            }
+        });
+      },
+      language: french
+    } );
 
     // TABLE PAGE votes/x -> deputes
     $('#table-vote-individual-deputes').DataTable( {
