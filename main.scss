@@ -2460,8 +2460,8 @@ ul.ui-menu{
     font-weight: 800;
   }
   .bloc-titre{
-    margin-top: 4rem;
-    margin-bottom: 4rem;
+    margin-top: 3rem;
+    margin-bottom: 3rem;
   }
   &.infosIndividual{
     background-color: $bleu;
@@ -2475,6 +2475,17 @@ ul.ui-menu{
     }
     .card{
       color: $text-black;
+    }
+  }
+  .wrapper{
+    @include media-breakpoint-down(md) {
+      height: 400px;
+    }
+    @include media-breakpoint-up(md) {
+      height: 350px;
+    }
+    @include media-breakpoint-up(lg) {
+      height: 450px;
     }
   }
 }
