@@ -2440,6 +2440,57 @@ ul.ui-menu{
 }
 /*
 ################
+               PAGE PARRAINAGES (pg-parrainages)
+################
+*/
+.pg-parrainages{
+  h1{
+    font-size: 3em;
+    font-weight: 800;
+    color: $text-black;
+  }
+  h2{
+    font-size: 1.8em;
+    color: $text-black;
+    font-weight: 800;
+  }
+  h3{
+    font-size: 1.6em;
+    color: $text-black;
+    font-weight: 800;
+  }
+  .bloc-titre{
+    margin-top: 3rem;
+    margin-bottom: 3rem;
+  }
+  &.infosIndividual{
+    background-color: $bleu;
+    color: #fff;
+    h2, a{
+      color: #fff;
+    }
+    h2{
+      font-size: 2.2em;
+      margin-bottom: 1.5rem;
+    }
+    .card{
+      color: $text-black;
+    }
+  }
+  .wrapper{
+    @include media-breakpoint-down(md) {
+      height: 400px;
+    }
+    @include media-breakpoint-up(md) {
+      height: 350px;
+    }
+    @include media-breakpoint-up(lg) {
+      height: 450px;
+    }
+  }
+}
+/*
+################
                PAGE ELECTIONS (pg-elections-index & pg-elections-candidats)
 ################
 */
