@@ -9,7 +9,7 @@
       if ($onlyMps) {
         $this->db->where_in('mandat', array('député', 'députée'));
       }
-      $this->db->select('p.*, d.dptSlug, d.nameUrl');
+      $this->db->select('p.*, d.dptSlug, d.nameUrl, d.departementNom, d.departementCode, d.libelle AS groupLibelle');
       $this->db->join('deputes_last d', 'd.mpId = p.mpId', 'left');
       $this->db->order_by('p.nameLast ASC, p.nameFirst ASC');
       $query = $this->db->get('parrainages p');
@@ -60,6 +60,34 @@
         'ZEMMOUR Éric' => 'Éric Zemmour'
       );
       return $array[$name];
+    }
+
+    public function get_500($year){
+      $sql = 'SELECT A.*
+        FROM
+        (
+          SELECT candidat, count(*) AS n
+	        FROM parrainages
+          WHERE year = ?
+          GROUP BY candidat
+          ORDER BY count(*) DESC
+        ) A
+        WHERE A.n > 500
+      ';
+
+      return $this->db->query($sql, $year)->result_array();
+    }
+
+    public function get_candidates($year, $onlyMps = FALSE){
+      $this->db->where('year', $year);
+      if ($onlyMps) {
+        $this->db->where_in('mandat', array('député', 'députée'));
+      }
+      $this->db->select('candidat AS name, count(*) AS parrainages');
+      $this->db->order_by('count(*)', 'DESC');
+      $this->db->group_by('candidat');
+      $query = $this->db->get('parrainages');
+      return $query->result_array();
     }
 
   }
