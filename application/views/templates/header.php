@@ -212,7 +212,7 @@
                     <a class="nav-link no-decoration" href="<?= base_url() ?>elections">Élections</a>
                   </li>
                   <li class="nav-item">
-                    <a class="nav-link no-decoration" href="<?= base_url(); ?>a-propos">À propos</a>
+                    <a class="nav-link no-decoration" href="<?= base_url() ?>parrainages-2022">Parrainages 2022</a>
                   </li>
                   <li class="nav-item dropdown follow-us">
                     <a class="nav-link dropdown-toggle no-decoration" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
