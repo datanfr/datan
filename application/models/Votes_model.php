@@ -94,10 +94,11 @@
       return $this->db->get('votes_info')->row_array();
     }
 
-    public function get_last_vote(){
+    public function get_last_vote($legislature){
+      $where = array('legislature' => $legislature);
       $this->db->select('voteNumero');
       $this->db->order_by('voteNumero', 'DESC');
-      return $this->db->get_where('votes_info', array('legislature' => legislature_current()), 1)->row_array();
+      return $this->db->get_where('votes_info', $where, 1)->row_array();
     }
 
     public function get_votes_datan_category($field){

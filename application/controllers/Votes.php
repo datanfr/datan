@@ -489,7 +489,8 @@
         $data['vote_previous'] = FALSE;
       }
 
-      $last_vote = $this->votes_model->get_last_vote();
+      $last_vote = $this->votes_model->get_last_vote($legislature);
+      
       if ($num != $last_vote['voteNumero']) {
         $next = $num + 1;
         $next_result = TRUE;
