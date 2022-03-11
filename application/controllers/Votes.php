@@ -463,6 +463,8 @@
       // Amendement link
       if ($data['vote']['voteType'] == 'amendement' && !empty($data['amdt'])) {
         $data['documentLegislatif'] = $this->votes_model->get_document_legislatif($data['amdt']['texteLegislatifRef']);
+        // Clean numNotice
+        $data['documentLegislatif']['numNotice'] = $data['documentLegislatif']['numNotice'] < 1000 ? '0'.$data['documentLegislatif']['numNotice'] : $data['documentLegislatif']['numNotice'];
       }
 
       // Votes - groupes
@@ -490,7 +492,7 @@
       }
 
       $last_vote = $this->votes_model->get_last_vote($legislature);
-      
+
       if ($num != $last_vote['voteNumero']) {
         $next = $num + 1;
         $next_result = TRUE;
