@@ -183,7 +183,7 @@
       <div class="row pb-5">
         <div class="col-12 d-flex justify-content-center">
           <a href="<?= base_url();?>elections/presidentielle-2022" class="no-decoration">
-            <button type="button" class="btn btn-primary">Découvrez les députés élus</button>
+            <button type="button" class="btn btn-primary">Découvrez les députés candidats</button>
           </a>
         </div>
       </div>
@@ -241,6 +241,9 @@
           <span class="url_obf" url_obf="<?= url_obfuscation("https://ram05.fr/podcasts/journal/29-novembre-2021-7") ?>">
             <img class="mx-2 my-3 img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="75" height="50" data-src="<?= asset_url() ?>imgs/media/ram05.png" alt="Radio Ram05">
           </span>
+          <a href="https://france3-regions.francetvinfo.fr/auvergne-rhone-alpes/rhone/lyon/presidentielle-je-les-mets-tous-dans-le-meme-sac-la-derniere-interview-politique-de-l-ancien-depute-lrem-bruno-bonnell-2439886.html" target="_blank" rel="noopener">
+            <img class="mx-2 my-3 img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="136" height="26" data-src="<?= asset_url() ?>imgs/media/france3.png" alt="France 3">
+          </a>
         </div>
       </div>
     </div>
