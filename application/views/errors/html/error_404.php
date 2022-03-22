@@ -2,7 +2,7 @@
 <html lang="fr">
 <meta charset="utf-8">
 <META NAME="ROBOTS" CONTENT="NOINDEX, NOFOLLOW">
-<link rel="icon" type="image/png" href="<?= asset_url() ?>/imgs/icons/datan_favicon.ico" />
+<link rel="icon" type="image/png" href="<?= asset_url() ?>/imgs/favicon/datan_favicon.ico" />
 <head>
   <title>404 Page non trouvée</title>
   <style>
