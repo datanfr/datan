@@ -14,7 +14,7 @@
     })(window,document,'script','dataLayer','GTM-K3QQNK2');</script>
     <!-- End Google Tag Manager -->
 
-    <link rel="icon" type="image/png" href="<?= asset_url() ?>/imgs/icons/datan_favicon_ie.ico" />
+    <link rel="icon" type="image/png" href="<?= asset_url() ?>imgs/icons/datan_favicon.ico" />
     <!-- CSS -->
     <link rel="stylesheet" href="<?= asset_url(); ?>css/main.css">
     <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Open+Sans:400,600,800" />
