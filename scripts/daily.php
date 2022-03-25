@@ -3314,7 +3314,7 @@ $script->classLoyauteSix();
 $script->deputeAccordCleaned();
 $script->historyMpsAverage();
 $script->historyPerMpsAverage();
-$script->parrainages();
+//$script->parrainages();
 $script->opendata_activeMPs();
 $script->opendata_activeGroupes();
 $script->opendata_historyMPs();
