@@ -139,6 +139,20 @@
       }
     }
 
+    public function compte(){
+      if (!$this->session->userdata('logged_in')) {
+        redirect('login');
+      }
+      $user_id = $this->session->userdata('user_id');
+
+      $data['title'] = "Compte - XXXX";
+      $data['title_meta'] = "Mon compte - A FAIRE";
+      $data['url'] = $this->meta_model->get_url();
+
+      $this->load->view('templates/header', $data);
+      $this->load->view('templates/footer', $data);
+    }
+
     // LOGOUT //
     public function logout(){
       // Unset user data
