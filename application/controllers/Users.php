@@ -143,13 +143,14 @@
       if (!$this->session->userdata('logged_in')) {
         redirect('login');
       }
-      $user_id = $this->session->userdata('user_id');
+      $data['user'] = $this->session->userdata();
 
-      $data['title'] = "Compte - XXXX";
-      $data['title_meta'] = "Mon compte - A FAIRE";
+      $data['title'] = 'Mon compte - ' . $data['user']['username'];
+      $data['title_meta'] = 'Mon compte - A FAIRE';
       $data['url'] = $this->meta_model->get_url();
 
       $this->load->view('templates/header', $data);
+      $this->load-> view('users/moncompte', $data);
       $this->load->view('templates/footer', $data);
     }
 
