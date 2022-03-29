@@ -2925,7 +2925,20 @@ ul.ui-menu{
 .footer-data{
   background-color: $bg-colour;
 }
-
+/*
+################
+FAQ
+################
+*/
+.pg-compte{
+  background-color: $bg-colour;
+  border-top-left-radius: $card-border-radius;
+  border-top-right-radius: $card-border-radius;
+  h1{
+    font-weight: 800;
+    color: $primary;
+  }
+}
 /*
 ################
 FAQ
