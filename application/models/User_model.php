@@ -20,7 +20,6 @@
 
     //LOGIN//
     public function login($username){
-
       $this->db->where('username', $username);
       $result_user = $this->db->get('users');
 
@@ -57,6 +56,10 @@
       } else {
         return false;
       }
+    }
+
+    public function get_user($user_id){
+      return $this->db->get_where('users', array('id' => $user_id))->row_array();
     }
 
   }

@@ -143,9 +143,10 @@
       if (!$this->session->userdata('logged_in')) {
         redirect('login');
       }
-      $data['user'] = $this->session->userdata();
+      $data['userdata'] = $this->session->userdata();
+      $data['user'] = $this->user_model->get_user($data['userdata']['user_id']);
 
-      $data['title'] = 'Mon compte - ' . $data['user']['username'];
+      $data['title'] = 'Mon compte - ' . $data['userdata']['username'];
       $data['title_meta'] = 'Mon compte - A FAIRE';
       $data['url'] = $this->meta_model->get_url();
 
