@@ -9,8 +9,8 @@
       <div class="card">
         <div class="card-body">
           <h5 class="card-title font-weight-bold">Mes données personnelles</h5>
-          <p class="mb-0">Username : <?= $user['username'] ?></p>
-          <p class="mb-0">Code psotal : <?= $user['zipcode'] ?></p>
+          <p class="mb-0">Prénom : <?= $user['name'] ?></p>
+          <p class="mb-0">Code postal : <?= $user['zipcode'] ?></p>
           <p>Type de compte : <?= $user['type'] ?></p>
           <div class="mt-3">
             <a href="<?= base_url() ?>mon-compte/modifier-donnees-personnelles" class="card-link">Modifier</a>
@@ -23,6 +23,7 @@
         <div class="card-body">
           <h5 class="card-title font-weight-bold">Mes données de connexion</h5>
           <p class="mb-0">Email : <?= $user['email'] ?></p>
+          <p class="mb-0">Pseudo : <?= $user['username'] ?></p>
           <p class="mb-0">●●●●●●●●●</p>
           <div class="mt-3">
             <a href="<?= base_url() ?>mon-compte/modifier-donnees-connexion" class="card-link">Modifier</a>
