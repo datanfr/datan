@@ -65,9 +65,6 @@
         $data['title_meta'] = 'Datan : Se connecter';
         $this->form_validation->set_rules('username', 'Username', 'required');
         $this->form_validation->set_rules('password', 'Password', 'required');
-        // echo $this->session->userdata('attempt');
-        // $this->session->set_tempdata('penalty', false);
-        // $this->session->set_userdata('attempt', 0);
 
         // If penalty
         if ($this->session->tempdata('penalty') === true) {
@@ -140,9 +137,7 @@
     }
 
     public function compte(){
-      if (!$this->session->userdata('logged_in')) {
-        redirect('login');
-      }
+      $this->password_model->is_logged_in();
       $data['userdata'] = $this->session->userdata();
       $data['user'] = $this->user_model->get_user($data['userdata']['user_id']);
 
@@ -151,8 +146,23 @@
       $data['url'] = $this->meta_model->get_url();
 
       $this->load->view('templates/header', $data);
-      $this->load-> view('users/moncompte', $data);
+      $this->load-> view('users/mon-compte', $data);
       $this->load->view('templates/footer', $data);
+    }
+
+    public function modify_personal_data(){
+      $this->password_model->is_logged_in();
+      $data['userdata'] = $this->session->userdata();
+      $data['user'] = $this->user_model->get_user($data['userdata']['user_id']);
+
+      $data['title'] = 'Modifier mes données personnelles';
+      $data['title_meta'] = 'Mon compte - A FAIRE';
+      $data['url'] = $this->meta_model->get_url();
+
+      $this->load->view('templates/header', $data);
+      $this->load-> view('users/modify-personal-data', $data);
+      $this->load->view('templates/footer', $data);
+
     }
 
     // LOGOUT //
