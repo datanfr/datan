@@ -8,20 +8,21 @@
     </div>
     <div class="col-12" >
       <?= validation_errors(); ?>
-      <?= form_open('register'); ?>
+      <?= form_open('mon-compte/modifier-donnees-personnelles'); ?>
       <div class="login_form">
         <div class="form-group">
-          <label class="font-weight-bold">Nom</label>
-          <input type="text" class="form-control" name="name" placeholder="Nom">
+          <label class="font-weight-bold">Nom *</label>
+          <input type="text" class="form-control" name="name" value="<?= $user['name'] ?>">
         </div>
         <div class="form-group">
-          <label class="font-weight-bold">Code postal</label>
-          <input type="text" class="form-control" name="zipcode" placeholder="Code postal">
+          <label class="font-weight-bold">Code postal *</label>
+          <input type="text" class="form-control" name="zipcode" value="<?= $user['zipcode'] ?>">
         </div>
         <button type="submit" class="btn btn-primary">Sauvegardez</button>
         <a href="<?= base_url() ?>mon-compte" class="btn btn-secondary">Annuler</a>
       </div>
       <?= form_close(); ?>
+      <p class="mt-3 font-italic">* Champs obligatoires</p>
     </div>
   </div>
 </div>
