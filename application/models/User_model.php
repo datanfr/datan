@@ -14,8 +14,16 @@
         'password' => $enc_password,
         'zipcode' => $this->input->post('zipcode')
       );
-      // Insert user
       return $this->db->insert('users', $data);
+    }
+
+    public function modify_personal_data($id){
+      $data = array(
+        'name' => $this->input->post('name'),
+        'zipcode' => $this->input->post('zipcode')
+      );
+      $this->db->where('id', $id);
+      $this->db->update('users', $data);
     }
 
     //LOGIN//

@@ -159,10 +159,17 @@
       $data['title_meta'] = 'Mon compte - A FAIRE';
       $data['url'] = $this->meta_model->get_url();
 
-      $this->load->view('templates/header', $data);
-      $this->load-> view('users/modify-personal-data', $data);
-      $this->load->view('templates/footer', $data);
+      $this->form_validation->set_rules('name', 'Nom', 'required');
+      $this->form_validation->set_rules('zipcode', 'Code postal', 'required');
 
+      if ($this->form_validation->run() === FALSE) {
+        $this->load->view('templates/header', $data);
+        $this->load-> view('users/modify-personal-data', $data);
+        $this->load->view('templates/footer', $data);
+      } else {
+          $this->user_model->modify_personal_data($data['user']['id']);
+          redirect(base_url().'mon-compte');
+      }
     }
 
     // LOGOUT //
