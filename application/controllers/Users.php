@@ -159,6 +159,8 @@
       $data['title_meta'] = 'Mon compte - A FAIRE';
       $data['url'] = $this->meta_model->get_url();
 
+      $this->form_validation->set_rules('email', 'Email', 'required');
+      $this->form_validation->set_rules('pseudo', 'Pseudo', 'required');
       $this->form_validation->set_rules('name', 'Nom', 'required');
       $this->form_validation->set_rules('zipcode', 'Code postal', 'required');
 
