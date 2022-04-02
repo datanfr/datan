@@ -6,7 +6,6 @@
       $this->load->model('captcha_model');
     }
 
-    // REGISTER //
     public function register(){
       $this->password_model->security();
       $data['title'] = 'Créez votre compte';
@@ -35,7 +34,6 @@
       }
     }
 
-    // CHECK IF USERNAME EXISTS //
     function check_username_exists($username){
       $this->form_validation->set_message('check_username_exists', "Ce pseudo est déjà pris. Merci d'en choisir un autre.");
 
@@ -46,7 +44,6 @@
       }
     }
 
-    // CHECK IF EMAILS EXISTS //
     public function check_email_exists($email){
       $this->form_validation->set_message('check_email_exists', "Cet email est déjà pris. Merci d'en choisir un autre.");
 
@@ -57,7 +54,6 @@
       }
     }
 
-    // LOGIN //
     public function login(){
       if ($this->session->userdata('logged_in')) {
       redirect();
@@ -157,7 +153,7 @@
       $data['user'] = $this->user_model->get_user($data['userdata']['user_id']);
 
       $data['title'] = 'Modifier mes données personnelles';
-      $data['title_meta'] = 'Mon compte - A FAIRE';
+      $data['title_meta'] = 'Modifier mes données personnelles - A FAIRE';
       $data['url'] = $this->meta_model->get_url();
 
       $this->form_validation->set_rules('email', 'Email', 'required|valid_email');
@@ -175,7 +171,22 @@
       }
     }
 
-    // LOGOUT //
+    public function modify_password(){
+
+      $data['title'] = 'Modifier mont mot de passe';
+      $data['title_meta'] = 'Modifier mon mot de passe- A FAIRE';
+      $data['url'] = $this->meta_model->get_url();
+
+      if ($this->form_validation->run() === FALSE) {
+        $this->load->view('templates/header', $data);
+        $this->load-> view('users/modify-password', $data);
+        $this->load->view('templates/footer', $data);
+      } else {
+        $this->user_model->modify_personal_data($data['user']['id']);
+        redirect(base_url().'mon-compte');
+      }
+    }
+
     public function logout(){
       // Unset user data
       $this->session->unset_userdata('logged_in');

@@ -79,6 +79,7 @@ $route['admin/parrainages/modify/(:any)'] = 'admin/modify_parrainage/$1';
 // USERS
 $route['mon-compte'] = 'users/compte';
 $route['mon-compte/modifier-donnees-personnelles'] = 'users/modify_personal_data';
+$route['mon-compte/modifier-password'] = 'users/modify_password';
 // SEO
 $route['sitemap.xml'] = "sitemap/index";
 $route['sitemap-deputes-1.xml'] = "sitemap/deputes";
