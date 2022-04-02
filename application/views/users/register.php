@@ -1,7 +1,6 @@
 <div class="container-fluid" id="container-always-fluid">
   <div class="row">
     <div class="col-lg-6 col-md-7 col-12" >
-      <?= validation_errors(); ?>
       <?= form_open('register'); ?>
       <div class="row mt-4">
         <div class="col-lg-4 col-md-5 col-8 offset-2 offset-md-0">
@@ -22,6 +21,9 @@
             </div>
             <div class="row mt-5 d-flex justify-content-center login_form">
               <h3 class="text-center my-4"><?= $title ?></h3>
+              <div class="mt-2">
+                <?= validation_errors(); ?>
+              </div>
               <div class="form-group">
                 <label>Name</label>
                 <input type="text" class="form-control" name="name" placeholder="Nom">

@@ -14,10 +14,11 @@
       $data['no_offset'] = TRUE;
 
       $this->form_validation->set_rules('name', 'Name', 'required');
-      $this->form_validation->set_rules('username', 'Username', 'required|callback_check_username_exists');
-      $this->form_validation->set_rules('email', 'Email', 'required|callback_check_email_exists');
-      $this->form_validation->set_rules('password', 'Password', 'required');
-      $this->form_validation->set_rules('password2', 'Confirm Password', 'matches[password]');
+      $this->form_validation->set_rules('username', 'Pseudo', 'required|callback_check_username_exists');
+      $this->form_validation->set_rules('email', 'Email', 'required|callback_check_email_exists|valid_email');
+      $this->form_validation->set_rules('password', 'Mot de passe', 'required');
+      $this->form_validation->set_rules('password2', 'Confirmation du mot de passe', 'matches[password]');
+      $this->form_validation->set_rules('zipcode', 'Code postal', 'required|is_natural');
 
       if ($this->form_validation->run() === FALSE) {
 
@@ -159,18 +160,18 @@
       $data['title_meta'] = 'Mon compte - A FAIRE';
       $data['url'] = $this->meta_model->get_url();
 
-      $this->form_validation->set_rules('email', 'Email', 'required');
-      $this->form_validation->set_rules('pseudo', 'Pseudo', 'required');
+      $this->form_validation->set_rules('email', 'Email', 'required|valid_email');
+      $this->form_validation->set_rules('pseudo', 'Pseudo', 'required|alpha_dash');
       $this->form_validation->set_rules('name', 'Nom', 'required');
-      $this->form_validation->set_rules('zipcode', 'Code postal', 'required');
+      $this->form_validation->set_rules('zipcode', 'Code postal', 'required|is_natural');
 
       if ($this->form_validation->run() === FALSE) {
         $this->load->view('templates/header', $data);
         $this->load-> view('users/modify-personal-data', $data);
         $this->load->view('templates/footer', $data);
       } else {
-          $this->user_model->modify_personal_data($data['user']['id']);
-          redirect(base_url().'mon-compte');
+        $this->user_model->modify_personal_data($data['user']['id']);
+        redirect(base_url().'mon-compte');
       }
     }
 
