@@ -26,7 +26,7 @@
           <h5 class="card-title font-weight-bold">Mon mot de passe</h5>
           <p class="mb-0">●●●●●●●●●</p>
           <div class="mt-3">
-            <a href="<?= base_url() ?>mon-compte/modifier-donnees-connexion" class="card-link">Modifier</a>
+            <a href="<?= base_url() ?>mon-compte/modifier-password" class="card-link">Modifier</a>
           </div>
         </div>
       </div>
