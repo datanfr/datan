@@ -11,6 +11,14 @@
       <?= form_open('mon-compte/modifier-donnees-personnelles'); ?>
       <div class="login_form">
         <div class="form-group">
+          <label class="font-weight-bold">Email *</label>
+          <input type="text" class="form-control" name="email" value="<?= $user['email'] ?>">
+        </div>
+        <div class="form-group">
+          <label class="font-weight-bold">Pseudo *</label>
+          <input type="text" class="form-control" name="pseudo" value="<?= $user['username'] ?>">
+        </div>
+        <div class="form-group">
           <label class="font-weight-bold">Nom *</label>
           <input type="text" class="form-control" name="name" value="<?= $user['name'] ?>">
         </div>

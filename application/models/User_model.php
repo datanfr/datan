@@ -19,6 +19,8 @@
 
     public function modify_personal_data($id){
       $data = array(
+        'email' => $this->input->post('email'),
+        'username' => $this->input->post('pseudo'),
         'name' => $this->input->post('name'),
         'zipcode' => $this->input->post('zipcode')
       );
