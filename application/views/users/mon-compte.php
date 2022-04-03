@@ -4,6 +4,11 @@
   <div class="row">
     <div class="col-12">
       <h1 class="mb-5"><?= $title ?></h1>
+      <?php if ($this->session->flashdata('change_success')): ?>
+        <div class="alert alert-success mb-4 text-center" role="alert">
+          <?= ($this->session->flashdata('change_success')) ?>
+        </div>
+      <?php endif; ?>
     </div>
     <div class="col-12">
       <div class="card">
