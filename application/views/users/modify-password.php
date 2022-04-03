@@ -7,20 +7,25 @@
       <a href="<?= base_url() ?>mon-compte">Retour vers mon compte</a>
     </div>
     <div class="col-12" >
+      <?php if ($this->session->flashdata('login_failed')): ?>
+        <div class="alert alert-danger mb-4 text-center" role="alert">
+          <?= ($this->session->flashdata('login_failed')) ?>
+        </div>
+      <?php endif; ?>    
       <?= validation_errors(); ?>
-      <?= form_open('mon-compte/modifier-donnees-personnelles'); ?>
+      <?= form_open('mon-compte/modifier-password'); ?>
       <div class="login_form">
         <div class="form-group">
           <label class="font-weight-bold">Mot de passe actuel</label>
-          <input type="text" class="form-control" name="password">
+          <input type="password" class="form-control" name="current" required>
         </div>
         <div class="form-group">
           <label class="font-weight-bold">Nouveau mot de passe</label>
-          <input type="text" class="form-control" name="pseudo">
+          <input type="password" class="form-control" name="new" required>
         </div>
         <div class="form-group">
           <label class="font-weight-bold">Confirmez le mot de passe</label>
-          <input type="text" class="form-control" name="name">
+          <input type="password" class="form-control" name="new_confirmation" required>
         </div>
         <button type="submit" class="btn btn-primary">Sauvegardez</button>
         <a href="<?= base_url() ?>mon-compte" class="btn btn-secondary">Annuler</a>
