@@ -76,5 +76,10 @@
       return $this->db->get_where('users', array('id' => $user_id))->row_array();
     }
 
+    public function delete_account($id){
+      $this->db->where('id', $id);
+      $this->db->delete('users');
+    }
+
   }
 ?>

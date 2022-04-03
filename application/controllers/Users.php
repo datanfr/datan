@@ -175,7 +175,7 @@
       $data['userdata'] = $this->session->userdata();
       $data['user'] = $this->user_model->get_user($data['userdata']['user_id']);
 
-      $data['title'] = 'Modifier mont mot de passe';
+      $data['title'] = 'Modifier mon mot de passe';
       $data['title_meta'] = 'Modifier mon mot de passe- A FAIRE';
       $data['url'] = $this->meta_model->get_url();
 
@@ -203,6 +203,28 @@
           redirect('mon-compte/modifier-password');
         }
       }
+    }
+
+    public function delete_account(){
+      $this->password_model->is_logged_in();
+      $data['userdata'] = $this->session->userdata();
+      $data['user'] = $this->user_model->get_user($data['userdata']['user_id']);
+
+      $data['title'] = 'Supprimer mon compte Datan';
+      $data['title_meta'] = 'Supprimer mon compte';
+      $data['url'] = $this->meta_model->get_url();
+
+      $this->load->view('templates/header', $data);
+      $this->load-> view('users/delete-account', $data);
+      $this->load->view('templates/footer', $data);
+    }
+
+    public function delete_account_confirmed(){
+      $this->password_model->is_logged_in();
+      $data['userdata'] = $this->session->userdata();
+      $data['user'] = $this->user_model->get_user($data['userdata']['user_id']);
+      $this->user_model->delete_account($data['user']['id']);
+      redirect('logout');
     }
 
     public function logout(){
