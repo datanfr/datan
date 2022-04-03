@@ -28,7 +28,11 @@
       $this->db->update('users', $data);
     }
 
-    //LOGIN//
+    public function update_password($id, $password){
+      $this->db->where('id', $id);
+      $this->db->update('users', array('password' => $password));
+    }
+
     public function login($username){
       $this->db->where('username', $username);
       $result_user = $this->db->get('users');

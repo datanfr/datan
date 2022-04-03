@@ -78,11 +78,9 @@
             } else {
               $data['captcha'] = FALSE;
             }
-
             $this->load->view('templates/header_no_navbar', $data);
             $this->load->view('users/login', $data);
             $this->load->view('templates/footer_no_navbar');
-
           } elseif (!($this->session->flashdata('login_failed'))) {
             $username = $this->input->post('username');
             $password = $this->input->post('password');
@@ -167,23 +165,43 @@
         $this->load->view('templates/footer', $data);
       } else {
         $this->user_model->modify_personal_data($data['user']['id']);
+        $this->session->set_flashdata('change_success', "Vos données personnelles ont été changées.");
         redirect(base_url().'mon-compte');
       }
     }
 
     public function modify_password(){
+      $this->password_model->is_logged_in();
+      $data['userdata'] = $this->session->userdata();
+      $data['user'] = $this->user_model->get_user($data['userdata']['user_id']);
 
       $data['title'] = 'Modifier mont mot de passe';
       $data['title_meta'] = 'Modifier mon mot de passe- A FAIRE';
       $data['url'] = $this->meta_model->get_url();
+
+      $this->form_validation->set_rules('current', 'Mot de passe actuel', 'required');
+      $this->form_validation->set_rules('new', 'Nouveau mot de passe', 'required');
+      $this->form_validation->set_rules('new_confirmation', 'Confirmation du nouveau de mot de passe', 'required|matches[new]');
 
       if ($this->form_validation->run() === FALSE) {
         $this->load->view('templates/header', $data);
         $this->load-> view('users/modify-password', $data);
         $this->load->view('templates/footer', $data);
       } else {
-        $this->user_model->modify_personal_data($data['user']['id']);
-        redirect(base_url().'mon-compte');
+        $current = $this->input->post('current');
+        $new = $this->input->post('new');
+        $new_confirmation = $this->input->post('new_confirmation');
+
+        // Test current password
+        if (password_verify($current, $data['user']['password'])) {
+          $enc_password = password_hash($new, PASSWORD_DEFAULT);
+          $this->user_model->update_password($data['user']['id'], $enc_password);
+          $this->session->set_flashdata('change_success', "Le mot de passe a été changé.");
+          redirect('mon-compte');
+        } else {
+          $this->session->set_flashdata('login_failed', "Votre mot de passe actuel n'est pas le bon.");
+          redirect('mon-compte/modifier-password');
+        }
       }
     }
 
