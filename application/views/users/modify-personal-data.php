@@ -12,19 +12,19 @@
       <div class="login_form">
         <div class="form-group">
           <label class="font-weight-bold">Email *</label>
-          <input type="text" class="form-control" name="email" value="<?= $user['email'] ?>">
+          <input type="text" class="form-control" name="email" value="<?= $user['email'] ?>" required>
         </div>
         <div class="form-group">
           <label class="font-weight-bold">Pseudo *</label>
-          <input type="text" class="form-control" name="pseudo" value="<?= $user['username'] ?>">
+          <input type="text" class="form-control" name="pseudo" value="<?= $user['username'] ?>" required>
         </div>
         <div class="form-group">
           <label class="font-weight-bold">Nom *</label>
-          <input type="text" class="form-control" name="name" value="<?= $user['name'] ?>">
+          <input type="text" class="form-control" name="name" value="<?= $user['name'] ?>" required>
         </div>
         <div class="form-group">
           <label class="font-weight-bold">Code postal *</label>
-          <input type="text" class="form-control" name="zipcode" value="<?= $user['zipcode'] ?>">
+          <input type="text" class="form-control" name="zipcode" value="<?= $user['zipcode'] ?>" required>
         </div>
         <button type="submit" class="btn btn-primary">Sauvegardez</button>
         <a href="<?= base_url() ?>mon-compte" class="btn btn-secondary">Annuler</a>
