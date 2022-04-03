@@ -80,6 +80,8 @@ $route['admin/parrainages/modify/(:any)'] = 'admin/modify_parrainage/$1';
 $route['mon-compte'] = 'users/compte';
 $route['mon-compte/modifier-donnees-personnelles'] = 'users/modify_personal_data';
 $route['mon-compte/modifier-password'] = 'users/modify_password';
+$route['mon-compte/supprimer-compte'] = 'users/delete_account';
+$route['mon-compte/supprimer-compte/confirmed'] = 'users/delete_account_confirmed';
 // SEO
 $route['sitemap.xml'] = "sitemap/index";
 $route['sitemap-deputes-1.xml'] = "sitemap/deputes";
