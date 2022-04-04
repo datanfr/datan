@@ -11,6 +11,7 @@
       $data['title'] = 'Créez votre compte';
       $data['title_meta'] = "Datan: S'inscrire";
       $data['no_offset'] = TRUE;
+      $data['seoNoFollow'] = TRUE;
 
       $this->form_validation->set_rules('name', 'Name', 'required');
       $this->form_validation->set_rules('username', 'Pseudo', 'required|callback_check_username_exists');
@@ -59,7 +60,8 @@
       redirect();
       } else {
         $data['title'] = 'Connectez-vous à votre compte';
-        $data['title_meta'] = 'Datan : Se connecter';
+        $data['title_meta'] = 'Se connecter | Datan';
+        $data['seoNoFollow'] = TRUE;
         $this->form_validation->set_rules('username', 'Username', 'required');
         $this->form_validation->set_rules('password', 'Password', 'required');
 
@@ -139,6 +141,7 @@
       $data['title'] = 'Gérer mon compte - ' . $data['userdata']['username'];
       $data['title_meta'] = 'Gérer mon compte | Datan';
       $data['url'] = $this->meta_model->get_url();
+      $data['seoNoFollow'] = TRUE;
 
       $this->load->view('templates/header', $data);
       $this->load-> view('users/mon-compte', $data);
@@ -153,6 +156,7 @@
       $data['title'] = 'Modifier mes données personnelles';
       $data['title_meta'] = 'Modifier mes données personnelles | Datan';
       $data['url'] = $this->meta_model->get_url();
+      $data['seoNoFollow'] = TRUE;
 
       $this->form_validation->set_rules('email', 'Email', 'required|valid_email');
       $this->form_validation->set_rules('pseudo', 'Pseudo', 'required|alpha_dash');
@@ -178,6 +182,7 @@
       $data['title'] = 'Modifier mon mot de passe';
       $data['title_meta'] = 'Modifier mon mot de passe | Datan';
       $data['url'] = $this->meta_model->get_url();
+      $data['seoNoFollow'] = TRUE;
 
       $this->form_validation->set_rules('current', 'Mot de passe actuel', 'required');
       $this->form_validation->set_rules('new', 'Nouveau mot de passe', 'required');
@@ -213,6 +218,7 @@
       $data['title'] = 'Supprimer mon compte Datan';
       $data['title_meta'] = 'Supprimer mon compte | Datan';
       $data['url'] = $this->meta_model->get_url();
+      $data['seoNoFollow'] = TRUE;
 
       $this->load->view('templates/header', $data);
       $this->load-> view('users/delete-account', $data);
