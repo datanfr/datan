@@ -2867,7 +2867,6 @@ class Script
                 WHERE dl.active
             ) C,
             (SELECT @s:= 0) AS s
-            WHERE C.votesN > 5
             ORDER BY C.score DESC, C.votesN DESC;
             ALTER TABLE class_participation_six ADD PRIMARY KEY (id);
             ALTER TABLE class_participation_six ADD INDEX idx_mpId (mpId);
