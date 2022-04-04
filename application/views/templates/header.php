@@ -202,10 +202,9 @@
           </a>
           <!-- NAVBAR IF LOGGED IN -->
           <?php if ($this->session->userdata('logged_in')): ?>
-            <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <nav class="navbar navbar-expand navbar-light py-1" id="navbar-logged-in">
               <div class="container p-0">
-                <div class="collapse navbar-collapse" id="navbarNav">
-                  <ul class="navbar-nav">
+                  <ul class="navbar-nav ml-auto">
                     <li class="nav-item dropdown">
                       <a class="nav-link dropdown-toggle no-decoration" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         <?= file_get_contents(base_url() . '/assets/imgs/icons/person-fill.svg') ?>
@@ -223,7 +222,6 @@
                       </div>
                     </li>
                   </ul>
-                </div>
               </div>
             </nav>
           <?php endif; ?>
