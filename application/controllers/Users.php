@@ -136,8 +136,8 @@
       $data['userdata'] = $this->session->userdata();
       $data['user'] = $this->user_model->get_user($data['userdata']['user_id']);
 
-      $data['title'] = 'Mon compte - ' . $data['userdata']['username'];
-      $data['title_meta'] = 'Mon compte - A FAIRE';
+      $data['title'] = 'Gérer mon compte - ' . $data['userdata']['username'];
+      $data['title_meta'] = 'Gérer mon compte | Datan';
       $data['url'] = $this->meta_model->get_url();
 
       $this->load->view('templates/header', $data);
@@ -151,7 +151,7 @@
       $data['user'] = $this->user_model->get_user($data['userdata']['user_id']);
 
       $data['title'] = 'Modifier mes données personnelles';
-      $data['title_meta'] = 'Modifier mes données personnelles - A FAIRE';
+      $data['title_meta'] = 'Modifier mes données personnelles | Datan';
       $data['url'] = $this->meta_model->get_url();
 
       $this->form_validation->set_rules('email', 'Email', 'required|valid_email');
@@ -176,7 +176,7 @@
       $data['user'] = $this->user_model->get_user($data['userdata']['user_id']);
 
       $data['title'] = 'Modifier mon mot de passe';
-      $data['title_meta'] = 'Modifier mon mot de passe- A FAIRE';
+      $data['title_meta'] = 'Modifier mon mot de passe | Datan';
       $data['url'] = $this->meta_model->get_url();
 
       $this->form_validation->set_rules('current', 'Mot de passe actuel', 'required');
@@ -211,7 +211,7 @@
       $data['user'] = $this->user_model->get_user($data['userdata']['user_id']);
 
       $data['title'] = 'Supprimer mon compte Datan';
-      $data['title_meta'] = 'Supprimer mon compte';
+      $data['title_meta'] = 'Supprimer mon compte | Datan';
       $data['url'] = $this->meta_model->get_url();
 
       $this->load->view('templates/header', $data);
