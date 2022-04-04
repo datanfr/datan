@@ -2,7 +2,11 @@
 <html lang="fr" dir="ltr" prefix="og: http://ogp.me/ns#">
   <head>
     <meta charset="utf-8">
-    <meta name="robots" content="index,follow">
+    <?php if (isset($seoNoFollow) && $seoNoFollow === TRUE): ?>
+      <meta name="robots" content="noindex, nofollow">
+      <?php else: ?>
+      <meta name="robots" content="index,follow">
+    <?php endif; ?>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title><?= $title_meta ?></title>
     <meta name="title" content="<?= $title_meta ?>">
