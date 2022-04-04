@@ -200,6 +200,33 @@
               <span>Soutenez-nous !</span>
             </div>
           </a>
+          <!-- NAVBAR IF LOGGED IN -->
+          <?php if ($this->session->userdata('logged_in')): ?>
+            <nav class="navbar navbar-expand-lg navbar-light bg-light">
+              <div class="container p-0">
+                <div class="collapse navbar-collapse" id="navbarNav">
+                  <ul class="navbar-nav">
+                    <li class="nav-item dropdown">
+                      <a class="nav-link dropdown-toggle no-decoration" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <?= file_get_contents(base_url() . '/assets/imgs/icons/person-fill.svg') ?>
+                        <?= $this->session->userdata('username') ?>
+                      </a>
+                      <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                        <a href="<?= base_url(); ?>mon-compte" class="dropdown-item no-decoration">Mon compte</a>
+                        <?php if (($this->session->userdata('type') == 'admin') || ($this->session->userdata('type') == 'writer')): ?>
+                          <a class="dropdown-item no-decoration" href="<?= base_url(); ?>admin/">Dashboard</a>
+                        <?php endif; ?>
+                        <?php if (($this->session->userdata('type') == 'admin')): ?>
+                          <a class="dropdown-item no-decoration" href="<?= base_url(); ?>scripts/">Scripts</a>
+                        <?php endif; ?>
+                        <a href="<?= base_url(); ?>logout" class="dropdown-item no-decoration">Déconnexion</a>
+                      </div>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </nav>
+          <?php endif; ?>
           <!-- NAVBAR -->
           <nav class="navbar navbar-expand-lg navbar-light" id="navbar-datan">
             <div class="container p-0">
@@ -239,26 +266,6 @@
                       <span class="dropdown-item no-decoration cursor-pointer" data-toggle="modal" data-target="#newsletter">Newsletter</span>
                     </div>
                   </li>
-                  <?php if (($this->session->userdata('type') == 'admin') || ($this->session->userdata('type') == 'writer')): ?>
-                    <li class="nav-item dropdown">
-                      <a class="nav-link dropdown-toggle no-decoration" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        Admin
-                      </a>
-                      <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <?php if (($this->session->userdata('type') == 'admin') || ($this->session->userdata('type') == 'writer')): ?>
-                          <a class="dropdown-item no-decoration" href="<?= base_url(); ?>admin/">Dashboard</a>
-                        <?php endif; ?>
-                        <?php if (($this->session->userdata('type') == 'admin')): ?>
-                          <div class="dropdown-divider"></div>
-                          <a class="dropdown-item no-decoration" href="<?= base_url(); ?>scripts/">Scripts</a>
-                        <?php endif; ?>
-                        <?php if ($this->session->userdata('logged_in')): ?>
-                          <div class="dropdown-divider"></div>
-                          <a href="<?= base_url(); ?>logout" class="dropdown-item no-decoration">Déconnexion</a>
-                        <?php endif; ?>
-                      </div>
-                    </li>
-                    <?php endif; ?>
                 </ul>
               </div>
             </div>
