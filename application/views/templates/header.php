@@ -202,11 +202,11 @@
           </a>
           <!-- NAVBAR IF LOGGED IN -->
           <?php if ($this->session->userdata('logged_in')): ?>
-            <nav class="navbar navbar-expand navbar-light py-1" id="navbar-logged-in">
+            <nav class="navbar navbar-expand navbar-light py-0" id="navbar-logged-in">
               <div class="container p-0">
                   <ul class="navbar-nav ml-auto">
                     <li class="nav-item dropdown">
-                      <a class="nav-link dropdown-toggle no-decoration" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      <a class="nav-link dropdown-toggle no-decoration py-1" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         <?= file_get_contents(base_url() . '/assets/imgs/icons/person-fill.svg') ?>
                         <?= $this->session->userdata('username') ?>
                       </a>
