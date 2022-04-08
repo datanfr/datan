@@ -1128,11 +1128,13 @@ input#quicksearch[type=text]{
 ################
 */
 body{
-  padding-top: 100px;
+  //padding-top: 100px; No longer used.
 }
 #navbar-logged-in {
   background-color: $bg-colour;
-  border-bottom: 1px solid $text-black;
+  border-bottom: 1px solid $text-gray-light;
+  padding-top: 0;
+  padding-bottom: 0;
 }
 #navbar-datan{
   background-color: $bg-colour;
