@@ -1,7 +1,6 @@
 <?php
   class User_model extends CI_Model{
     public function __construct() {
-      //$this->db_admin = $this->load->database('admin', TRUE);
     }
 
     //REGISTER//
@@ -74,6 +73,10 @@
 
     public function get_user($user_id){
       return $this->db->get_where('users', array('id' => $user_id))->row_array();
+    }
+
+    public function get_user_by_email($email){
+      return $this->db->get_where('users', array('email' => $email))->row_array();
     }
 
     public function delete_account($id){
