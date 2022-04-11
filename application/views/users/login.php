@@ -36,7 +36,7 @@
               <?php $this->view('captcha/index') ?>
             <?php endif; ?>
             <button type="submit" class="btn btn-primary btn-block">Se connecter</button>
-            <p class="mt-4">Pas encore de compte sur Datan ? <a href="<?= base_url(); ?>register">S'incrire</a></p>
+            <a class="mt-4" href="<?= base_url() ?>password">Mot de passe oublié ?</a>
           </div>
         </div>
         <?= form_close(); ?>
