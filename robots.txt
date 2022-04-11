@@ -8,6 +8,8 @@ User-agent: *
 Disallow: /admin
 Disallow: /login
 Disallow: /register
+Disallow /mon-compte
+Disallow: /mon-compte/*
 Disallow: /assets/js/datan/url_obf2.js
 Disallow: /assets/js/datan/url_obf2.min.js
 #Sitemap

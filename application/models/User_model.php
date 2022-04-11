@@ -14,13 +14,26 @@
         'password' => $enc_password,
         'zipcode' => $this->input->post('zipcode')
       );
-      // Insert user
       return $this->db->insert('users', $data);
     }
 
-    //LOGIN//
-    public function login($username){
+    public function modify_personal_data($id){
+      $data = array(
+        'email' => $this->input->post('email'),
+        'username' => $this->input->post('pseudo'),
+        'name' => $this->input->post('name'),
+        'zipcode' => $this->input->post('zipcode')
+      );
+      $this->db->where('id', $id);
+      $this->db->update('users', $data);
+    }
 
+    public function update_password($id, $password){
+      $this->db->where('id', $id);
+      $this->db->update('users', array('password' => $password));
+    }
+
+    public function login($username){
       $this->db->where('username', $username);
       $result_user = $this->db->get('users');
 
@@ -57,6 +70,15 @@
       } else {
         return false;
       }
+    }
+
+    public function get_user($user_id){
+      return $this->db->get_where('users', array('id' => $user_id))->row_array();
+    }
+
+    public function delete_account($id){
+      $this->db->where('id', $id);
+      $this->db->delete('users');
     }
 
   }
