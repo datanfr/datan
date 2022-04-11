@@ -55,9 +55,36 @@
       }
     }
 
+    public function password_lost(){
+      if ($this->session->userdata('logged_in')) {
+        redirect();
+      } else {
+        $data['title'] = 'Réinitialisez votre mot de passe';
+        $data['title_meta'] = 'Mot de passe oublié | Datan';
+
+        $this->form_validation->set_rules('email', 'Email', 'required|valid_email');
+
+        if ($this->form_validation->run() === FALSE) {
+          $this->load->view('templates/header_no_navbar', $data);
+          $this->load->view('users/password_lost', $data);
+          $this->load->view('templates/footer_no_navbar');
+        } else {
+          $email = $this->input->post('email');
+          $noEmail = $this->user_model->check_email_exists($email);
+          if (!$noEmail) {
+            // SEND AN EMAIL HERE !
+            $this->session->set_flashdata('success', 'true');
+          } else {
+            $this->session->set_flashdata('failure', 'true');
+          }
+          redirect(base_url().'password');
+        }
+      }
+    }
+
     public function login(){
       if ($this->session->userdata('logged_in')) {
-      redirect();
+        redirect();
       } else {
         $data['title'] = 'Connectez-vous à votre compte';
         $data['title_meta'] = 'Se connecter | Datan';
