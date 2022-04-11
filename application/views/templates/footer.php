@@ -1,6 +1,6 @@
     </div>
     </main>
-    <!-- Modal -->
+    <!-- Modal Newsletter -->
     <div class="modal fade" id="newsletter" tabindex="-1" role="dialog" aria-labelledby="newsletterLabel" aria-hidden="true">
       <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
         <div class="modal-content">
