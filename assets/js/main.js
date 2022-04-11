@@ -365,3 +365,18 @@ jQuery(".social-share.whatsapp").on("click", function() {
     var url = "whatsapp://send?text=" + whatsappMessage;
     socialWindow(url);
 })
+
+/*
+##########
+Shrink navbar
+##########
+*/
+$(window).scroll(function() {
+  if ($(document).scrollTop() > 50) {
+    $('#navbar-datan').addClass('navbar-shrink');
+    $('.navbar-brand-img').addClass('shrink');
+  } else {
+    $('#navbar-datan').removeClass('navbar-shrink');
+    $('.navbar-brand-img').removeClass('shrink');
+  }
+});
