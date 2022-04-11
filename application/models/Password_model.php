@@ -21,7 +21,13 @@
     public function is_admin(){
       if (($this->session->userdata('type') == 'admin')) {
         return TRUE;
-      } 
+      }
+    }
+
+    public function is_logged_in(){
+      if (!$this->session->userdata('logged_in')) {
+        redirect('login');
+      }
     }
   }
 ?>

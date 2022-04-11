@@ -1128,17 +1128,31 @@ input#quicksearch[type=text]{
 ################
 */
 body{
-  padding-top: 100px;
+  //padding-top: 100px; No longer used.
+}
+#navbar-logged-in {
+  background-color: $bg-colour;
+  border-bottom: 1px solid $text-gray-light;
+  padding-top: 0;
+  padding-bottom: 0;
 }
 #navbar-datan{
   background-color: $bg-colour;
+  box-shadow: 0 2px 10px -2px rgba(0, 0, 0, .1);
+  -webkit-transition: all 0.4s ease;
+  transition: all 0.4s ease;
+  padding-top: 15px;
+  padding-bottom: 15px;
   .navbar-brand{
-    img{
+
+    .navbar-brand-img{
+      -webkit-transition: all 0.4s ease;
+      transition: all 0.4s ease;
       width: 9em;
       height: auto;
     }
-    svg{
-      width: 9em;
+    .shrink{
+      width: 7em;
       height: auto;
     }
   }
@@ -1154,38 +1168,10 @@ body{
   .nav-item{
     text-align: center;
   }
-  box-shadow: 0 2px 10px 0 rgba(0,0,0,.1);
-  .follow-us{
-    @include media-breakpoint-up(lg) {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      background-color: $primary;
-      margin-top: -15px;
-      margin-bottom: -15px;
-      margin-left: 1.5rem;
-      min-width: 10rem;
-      .nav-link{
-        color: #fff;
-      }
-      a:hover{
-        text-decoration: underline;
-      }
-      .dropdown-menu{
-        border-radius: 0;
-        margin: 0;
-        border: 0;
-      }
-      .dropdown-item{
-        @include hover-focus(){
-          background: none;
-          background-color: transparent;
-          color: $primary;
-        }
-      }
-    }
-  }
-
+}
+.navbar-shrink{
+  padding-top: 5px !important;
+  padding-bottom: 5px !important;
 }
 /*
 ################
@@ -2925,7 +2911,20 @@ ul.ui-menu{
 .footer-data{
   background-color: $bg-colour;
 }
-
+/*
+################
+FAQ
+################
+*/
+.pg-compte{
+  background-color: $bg-colour;
+  border-top-left-radius: $card-border-radius;
+  border-top-right-radius: $card-border-radius;
+  h1{
+    font-weight: 800;
+    color: $primary;
+  }
+}
 /*
 ################
 FAQ

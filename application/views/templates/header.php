@@ -2,7 +2,11 @@
 <html lang="fr" dir="ltr" prefix="og: http://ogp.me/ns#">
   <head>
     <meta charset="utf-8">
-    <meta name="robots" content="index,follow">
+    <?php if (isset($seoNoFollow) && $seoNoFollow === TRUE): ?>
+      <meta name="robots" content="noindex, nofollow">
+      <?php else: ?>
+      <meta name="robots" content="index,follow">
+    <?php endif; ?>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title><?= $title_meta ?></title>
     <meta name="title" content="<?= $title_meta ?>">
@@ -187,79 +191,76 @@
   }
   ?>
   <body class="<?= $mentions ?>" data-spy="scroll" data-target="#navScrollspy" data-offset="90">
-    <header>
-      <section>
-        <div class="fixed-top">
-          <!-- DON -->
-          <a href="https://www.helloasso.com/associations/datan/formulaires/1" target="_blank" rel="noopener" class="no-decoration">
-            <div class="don d-flex justify-content-center align-items-center p-1">
-              <span>Soutenez-nous !</span>
-            </div>
-          </a>
-          <!-- NAVBAR -->
-          <nav class="navbar navbar-expand-lg navbar-light" id="navbar-datan">
-            <div class="container p-0">
-              <a class="navbar-brand mx-auto p-0 no-decoration" href="<?= base_url(); ?>" style="text-align: center">
-                <img src="<?= asset_url() ?>imgs/datan/logo_svg.svg" width="937" height="204" alt="Logo Datan">
-              </a>
-              <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar_datan" aria-controls="navbar_datan" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-              </button>
-              <div class="collapse navbar-collapse" id="navbar_datan">
-                <ul class="nav navbar-nav ml-auto mt-2 mt-lg-0">
-                  <li class="nav-item">
-                    <a class="nav-link no-decoration" href="<?= base_url(); ?>deputes">Députés</span></a>
-                  </li>
-                  <li class="nav-item">
-                    <a class="nav-link no-decoration" href="<?= base_url() ?>groupes">Groupes</a>
-                  </li>
-                  <li class="nav-item">
-                    <a class="nav-link no-decoration" href="<?= base_url() ?>votes">Votes</a>
-                  </li>
-                  <li class="nav-item">
-                    <a class="nav-link no-decoration" href="<?= base_url() ?>statistiques">En chiffres</a>
-                  </li>
-                  <li class="nav-item">
-                    <a class="nav-link no-decoration" href="<?= base_url() ?>elections">Élections</a>
-                  </li>
-                  <li class="nav-item">
-                    <a class="nav-link no-decoration" href="<?= base_url() ?>parrainages-2022">Parrainages 2022</a>
-                  </li>
-                  <li class="nav-item dropdown follow-us">
-                    <a class="nav-link dropdown-toggle no-decoration" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                      Suivez-nous
-                    </a>
-                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                      <a class="dropdown-item no-decoration" href="https://twitter.com/datanFR" target="_blank" rel="noopener">Twitter</a>
-                      <a class="dropdown-item no-decoration" href="https://www.facebook.com/datanFR/" target="_blank" rel="noopener">Facebook</a>
-                      <span class="dropdown-item no-decoration cursor-pointer" data-toggle="modal" data-target="#newsletter">Newsletter</span>
-                    </div>
-                  </li>
-                  <?php if (($this->session->userdata('type') == 'admin') || ($this->session->userdata('type') == 'writer')): ?>
-                    <li class="nav-item dropdown">
-                      <a class="nav-link dropdown-toggle no-decoration" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        Admin
-                      </a>
-                      <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <?php if (($this->session->userdata('type') == 'admin') || ($this->session->userdata('type') == 'writer')): ?>
-                          <a class="dropdown-item no-decoration" href="<?= base_url(); ?>admin/">Dashboard</a>
-                        <?php endif; ?>
-                        <?php if (($this->session->userdata('type') == 'admin')): ?>
-                          <div class="dropdown-divider"></div>
-                          <a class="dropdown-item no-decoration" href="<?= base_url(); ?>scripts/">Scripts</a>
-                        <?php endif; ?>
-                        <?php if ($this->session->userdata('logged_in')): ?>
-                          <div class="dropdown-divider"></div>
-                          <a href="<?= base_url(); ?>logout" class="dropdown-item no-decoration">Déconnexion</a>
-                        <?php endif; ?>
-                      </div>
-                    </li>
-                    <?php endif; ?>
-                </ul>
-              </div>
-            </div>
-          </nav>
+    <!-- DON -->
+    <div class="">
+      <a href="https://www.helloasso.com/associations/datan/formulaires/1" target="_blank" rel="noopener" class="no-decoration">
+        <div class="don d-flex justify-content-center align-items-center p-1">
+          <span>Soutenez-nous !</span>
         </div>
-      </section>
-    </header>
+      </a>
+    </div>
+    <div class="sticky-top" style="">
+      <!-- NAVBAR IF LOGGED IN -->
+    </div>
+    <!-- MAIN NAVBAR -->
+    <?php if ($this->session->userdata('logged_in')): ?>
+      <nav class="navbar navbar-expand navbar-light" id="navbar-logged-in">
+        <div class="container">
+            <ul class="navbar-nav ml-auto">
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle no-decoration py-1" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  <?= file_get_contents(base_url() . '/assets/imgs/icons/person-fill.svg') ?>
+                  <?= $this->session->userdata('username') ?>
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink" style="z-index: 9999 !important">
+                  <a href="<?= base_url(); ?>mon-compte" class="dropdown-item no-decoration">Mon compte</a>
+                  <?php if (($this->session->userdata('type') == 'admin') || ($this->session->userdata('type') == 'writer')): ?>
+                    <a class="dropdown-item no-decoration" href="<?= base_url(); ?>admin/">Dashboard</a>
+                  <?php endif; ?>
+                  <?php if (($this->session->userdata('type') == 'admin')): ?>
+                    <a class="dropdown-item no-decoration" href="<?= base_url(); ?>scripts/">Scripts</a>
+                  <?php endif; ?>
+                  <a href="<?= base_url(); ?>logout" class="dropdown-item no-decoration">Déconnexion</a>
+                </div>
+              </li>
+            </ul>
+        </div>
+      </nav>
+    <?php endif; ?>
+    <nav class="navbar navbar-expand-lg navbar-light sticky-top" id="navbar-datan">
+      <div class="container p-0">
+        <a class="navbar-brand mx-auto p-0 no-decoration" href="<?= base_url(); ?>" style="text-align: center">
+          <img class="navbar-brand-img" src="<?= asset_url() ?>imgs/datan/logo_svg.svg" width="937" height="204" alt="Logo Datan">
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar_datan" aria-controls="navbar_datan" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbar_datan">
+          <ul class="nav navbar-nav ml-auto mt-2 mt-lg-0">
+            <li class="nav-item">
+              <a class="nav-link no-decoration" href="<?= base_url(); ?>deputes">Députés</span></a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link no-decoration" href="<?= base_url() ?>groupes">Groupes</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link no-decoration" href="<?= base_url() ?>votes">Votes</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link no-decoration" href="<?= base_url() ?>statistiques">En chiffres</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link no-decoration" href="<?= base_url() ?>elections">Élections</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link no-decoration" href="<?= base_url() ?>parrainages-2022">Parrainages 2022</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link no-decoration" href="<?= base_url() ?>a-propos">À propos</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+    <div class="d-none" id="navbar-logged-in"></div>
     <main>
