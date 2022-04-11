@@ -163,6 +163,7 @@ $route['api/(:any)/(:any)'] = 'api/index/$1/$2';
 $route['login'] = 'users/login';
 $route['register'] = 'users/register';
 $route['logout'] = 'users/logout';
+$route['password'] = 'users/password_lost';
 // REDIRECTION
 $route['classements'] = 'redirection/redir/statistiques';
 $route['search/(:any)/(:any)'] = 'redirect/cities/$1/$2';
