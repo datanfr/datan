@@ -230,7 +230,7 @@
     <nav class="navbar navbar-expand-lg navbar-light sticky-top" id="navbar-datan">
       <div class="container p-0">
         <a class="navbar-brand mx-auto p-0 no-decoration" href="<?= base_url(); ?>" style="text-align: center">
-          <img src="<?= asset_url() ?>imgs/datan/logo_svg.svg" width="937" height="204" alt="Logo Datan">
+          <img class="navbar-brand-img" src="<?= asset_url() ?>imgs/datan/logo_svg.svg" width="937" height="204" alt="Logo Datan">
         </a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar_datan" aria-controls="navbar_datan" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
@@ -255,15 +255,8 @@
             <li class="nav-item">
               <a class="nav-link no-decoration" href="<?= base_url() ?>parrainages-2022">Parrainages 2022</a>
             </li>
-            <li class="nav-item dropdown follow-us">
-              <a class="nav-link dropdown-toggle no-decoration" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                Suivez-nous
-              </a>
-              <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                <a class="dropdown-item no-decoration" href="https://twitter.com/datanFR" target="_blank" rel="noopener">Twitter</a>
-                <a class="dropdown-item no-decoration" href="https://www.facebook.com/datanFR/" target="_blank" rel="noopener">Facebook</a>
-                <span class="dropdown-item no-decoration cursor-pointer" data-toggle="modal" data-target="#newsletter">Newsletter</span>
-              </div>
+            <li class="nav-item">
+              <a class="nav-link no-decoration" href="<?= base_url() ?>a-propos">À propos</a>
             </li>
           </ul>
         </div>
