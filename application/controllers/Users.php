@@ -72,7 +72,13 @@
           $email = $this->input->post('email');
           $noEmail = $this->user_model->check_email_exists($email);
           if (!$noEmail) {
-            // SEND AN EMAIL HERE !
+            $user = $this->user_model->get_user_by_email($email);
+            // Send an email
+            $templateId = 3862755; /* Template password_forgot */
+            $variables = array(
+              "name" => $user['name'],
+            );
+            sendMail($email, 'Changez votre mot de passe Datan', NULL, TRUE, $templateId, $variables);
             $this->session->set_flashdata('success', 'true');
           } else {
             $this->session->set_flashdata('failure', 'true');
@@ -153,8 +159,6 @@
               $this->session->set_flashdata("login_failed", "L'identifiant ou le mot de passe sont erronés. Veuillez réessayer.");
               redirect('login');
             }
-
-
           }
         }
       }
