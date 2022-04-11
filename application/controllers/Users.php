@@ -72,11 +72,16 @@
           $email = $this->input->post('email');
           $noEmail = $this->user_model->check_email_exists($email);
           if (!$noEmail) {
+            // Get user infos
             $user = $this->user_model->get_user_by_email($email);
+            // Create token in password_resets table
+            $token = bin2hex(random_bytes(50));
+            $this->user_model->create_token_password_lost($email, $token);
             // Send an email
             $templateId = 3862755; /* Template password_forgot */
             $variables = array(
-              "name" => $user['name'],
+              'name' => $user['name'],
+              'token' => $token
             );
             sendMail($email, 'Changez votre mot de passe Datan', NULL, TRUE, $templateId, $variables);
             $this->session->set_flashdata('success', 'true');

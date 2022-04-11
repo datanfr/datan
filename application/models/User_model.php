@@ -84,5 +84,13 @@
       $this->db->delete('users');
     }
 
+    public function create_token_password_lost($email, $token){
+      $data = array(
+        'email' => $email,
+        'token' => $token
+      );
+      $this->db->insert('password_resets', $data);
+    }
+
   }
 ?>
