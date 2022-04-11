@@ -55,7 +55,7 @@
       }
     }
 
-    public function password_lost(){
+    public function password_lost_request(){
       if ($this->session->userdata('logged_in')) {
         redirect();
       } else {
@@ -90,6 +90,14 @@
           }
           redirect(base_url().'password');
         }
+      }
+    }
+
+    public function password_lost_change($token){
+      if ($this->session->userdata('logged_in')) {
+        redirect();
+      } else {
+        echo $token;
       }
     }
 
