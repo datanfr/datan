@@ -66,7 +66,7 @@
 
         if ($this->form_validation->run() === FALSE) {
           $this->load->view('templates/header_no_navbar', $data);
-          $this->load->view('users/password_lost', $data);
+          $this->load->view('users/password-lost', $data);
           $this->load->view('templates/footer_no_navbar');
         } else {
           $email = $this->input->post('email');
@@ -97,7 +97,20 @@
       if ($this->session->userdata('logged_in')) {
         redirect();
       } else {
-        echo $token;
+        $user = $this->user_model->get_token_password_lost($token);
+
+        if (empty($user)) {
+          show_404();
+        } else {
+          $data['title'] = 'Créez un nouveau mot de passe';
+          $data['title_meta'] = 'Créez un nouveau mot de passe | Datan';
+
+          // ICI ! 
+
+          $this->load->view('templates/header_no_navbar', $data);
+          $this->load->view('users/password-change', $data);
+          $this->load->view('templates/footer_no_navbar');
+        }
       }
     }
 

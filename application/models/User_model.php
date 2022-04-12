@@ -92,5 +92,11 @@
       $this->db->insert('password_resets', $data);
     }
 
+    public function get_token_password_lost($token){
+      $this->db->where('token', $token);
+      $this->db->where('created_at >= TIME(DATE_SUB(NOW(), INTERVAL 1 HOUR))');
+      return $this->db->get('password_resets')->row_array();
+    }
+
   }
 ?>
