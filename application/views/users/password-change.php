@@ -20,21 +20,10 @@
                 </div>
               </div>
             <?php endif; ?>
-            <?php if ($this->session->flashdata('flash')): ?>
-              <div class="alert alert-danger mb-4 text-center" role="alert">
-                <?= ($this->session->flashdata('flash')) ?>
-              </div>
-            <?php endif; ?>
             <?php if ($this->session->flashdata('success')): ?>
               <div class="alert alert-success mb-4 text-center" role="alert">
-                <p class="font-weight-bold">Un e-mail vient de vous être envoyé.</p>
-                <p><b>ATTENTION :</b> Le lien sera désactivé dans vingt-quatre heures.</p>
-              </div>
-            <?php endif; ?>
-            <?php if ($this->session->flashdata('failure')): ?>
-              <div class="alert alert-danger mb-4 text-center" role="alert">
-                <p class="font-weight-bold">Nous ne trouvons pas votre email.</p>
-                <p>Essayez de rentrer un nouvel email.</p>
+                <p class="font-weight-bold"><?= $this->session->flashdata('success') ?></p>
+                <a href="<?= base_url() ?>login">Connectez-vous à Datan</a>
               </div>
             <?php endif; ?>
             <div class="form-group">

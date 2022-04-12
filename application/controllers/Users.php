@@ -97,19 +97,33 @@
       if ($this->session->userdata('logged_in')) {
         redirect();
       } else {
-        $user = $this->user_model->get_token_password_lost($token);
-
-        if (empty($user)) {
+        $checkToken = $this->user_model->get_token_password_lost($token);
+        if (empty($checkToken)) {
           show_404();
-        } else {
+        } elseif (strtotime($checkToken['created_at']) > strtotime('-1 hour')) {
           $data['title'] = 'Créez un nouveau mot de passe';
           $data['title_meta'] = 'Créez un nouveau mot de passe | Datan';
+          $data['user'] = $this->user_model->get_user_by_email($checkToken['email']);
 
-          // ICI ! 
+          $this->form_validation->set_rules('new', 'Nouveau mot de passe', 'required');
+          $this->form_validation->set_rules('new_confirmation', 'Confirmation du nouveau de mot de passe', 'required|matches[new]');
 
-          $this->load->view('templates/header_no_navbar', $data);
-          $this->load->view('users/password-change', $data);
-          $this->load->view('templates/footer_no_navbar');
+          if ($this->form_validation->run() === FALSE) {
+            $this->load->view('templates/header_no_navbar', $data);
+            $this->load-> view('users/password-change', $data);
+            $this->load->view('templates/footer_no_navbar', $data);
+          } else {
+            $new = $this->input->post('new');
+            $new_confirmation = $this->input->post('new_confirmation');
+
+            $enc_password = password_hash($new, PASSWORD_DEFAULT);
+            $this->user_model->update_password($data['user']['id'], $enc_password);
+            $this->session->set_flashdata('success', 'Le mot de passe a été changé.');
+            redirect('password/' . $token);
+          }
+        } else {
+          $this->session->set_flashdata('flash_failure', 'Ce lien ne fonctionne plus. Veuillez en redemander un nouveau.');
+          redirect('password/');
         }
       }
     }
