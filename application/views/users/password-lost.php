@@ -21,9 +21,9 @@
                 </div>
               </div>
             <?php endif; ?>
-            <?php if ($this->session->flashdata('flash')): ?>
+            <?php if ($this->session->flashdata('flash_failure')): ?>
               <div class="alert alert-danger mb-4 text-center" role="alert">
-                <?= ($this->session->flashdata('flash')) ?>
+                <p class="font-weight-bold"><?= $this->session->flashdata('flash_failure') ?></p>
               </div>
             <?php endif; ?>
             <?php if ($this->session->flashdata('success')): ?>
