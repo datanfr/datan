@@ -20,22 +20,28 @@
 
     // Dashboard homepage
     public function index(){
-      print_r($this->session->userdata());
       $data['username'] = $this->session->userdata('username');
       $user_id = $this->session->userdata('user_id');
 
-      $data['votesUnpublished'] = $this->admin_model->get_votes_datan_user($user_id, false);
-      $data['votesLast'] = $this->admin_model->get_votes_datan_user($user_id, true);
-      $data['groupes'] = $this->groupes_model->get_groupes_all(true, 15);
-      $data['deputes_entrants'] = $this->deputes_model->get_deputes_entrants(5);
-      $data['groupes_entrants'] = $this->deputes_model->get_groupes_entrants(5);
-      $data['newsletter_total'] = $this->newsletter_model->get_number_registered("general");
-      $data['newsletter_month'] = $this->newsletter_model->get_registered_month("general");
-      $data['votes_requested'] = $this->votes_model->get_requested_votes();
+      // IF A TEAM MEMBER
+      if ($this->password_model->is_team()) {
+        $data['votesUnpublished'] = $this->admin_model->get_votes_datan_user($user_id, false);
+        $data['votesLast'] = $this->admin_model->get_votes_datan_user($user_id, true);
+        $data['groupes'] = $this->groupes_model->get_groupes_all(true, 15);
+        $data['deputes_entrants'] = $this->deputes_model->get_deputes_entrants(5);
+        $data['groupes_entrants'] = $this->deputes_model->get_groupes_entrants(5);
+        $data['newsletter_total'] = $this->newsletter_model->get_number_registered("general");
+        $data['newsletter_month'] = $this->newsletter_model->get_registered_month("general");
+        $data['votes_requested'] = $this->votes_model->get_requested_votes();
 
-      $this->load->view('dashboard/header', $data);
-      $this->load->view('dashboard/index', $data);
-      $this->load->view('dashboard/footer');
+        $this->load->view('dashboard/header', $data);
+        $this->load->view('dashboard/index', $data);
+        $this->load->view('dashboard/footer');
+
+      } else {
+        // IF AN MP
+        echo "TO DO ! ";
+      }
     }
 
     public function election_candidates($slug){
