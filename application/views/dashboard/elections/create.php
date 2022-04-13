@@ -23,7 +23,7 @@
           <?php endif; ?>
           <div class="card">
             <div class="card-body">
-              <?= form_open_multipart('admin/elections/candidat/create?election=' . $election['slug']); ?>
+              <?= form_open_multipart('dashboard/elections/candidat/create?election=' . $election['slug']); ?>
               <div class="form-group">
                 <label>Député</label>
                 <input name="depute_url" type="text" class="form-control" autocomplete="off" placeholder="ex: http://datan.fr/deputes/maine-et-loire-49/depute_matthieu-orphelin">

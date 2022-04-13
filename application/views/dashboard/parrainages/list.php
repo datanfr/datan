@@ -47,7 +47,7 @@
                       <a href="<?= base_url() ?>deputes/<?= $x['dptSlug'] ?>/depute_<?= $x['nameUrl'] ?>" target="_blank">Page datan</a>
                     </td>
                     <td>
-                      <a href="<?= base_url() ?>admin/parrainages/modify/<?= $x['id'] ?>" ?>modifier</a>
+                      <a href="<?= base_url() ?>dashboard/parrainages/modify/<?= $x['id'] ?>" ?>modifier</a>
                     </td>
                   </tr>
                 <?php endforeach; ?>

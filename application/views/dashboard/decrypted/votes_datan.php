@@ -54,12 +54,12 @@
                       <td>
                         <?php if ($vote['state'] == "published" && $usernameType != "admin"): ?>
                           <?php else: ?>
-                          <a href="<?= base_url() ?>admin/votes/modify/<?= $vote['id'] ?>" ?>modifier</a>
+                          <a href="<?= base_url() ?>dashboard/votes/modify/<?= $vote['id'] ?>" ?>modifier</a>
                         <?php endif; ?>
                       </td>
                       <td>
                         <?php if ($usernameType == "admin"): ?>
-                          <a href="<?= base_url() ?>admin/votes/delete/<?= $vote['id'] ?>">supprimer</a>
+                          <a href="<?= base_url() ?>dashboard/votes/delete/<?= $vote['id'] ?>">supprimer</a>
                         <?php endif; ?>
                       </td>
                     </tr>

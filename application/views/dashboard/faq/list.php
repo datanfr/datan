@@ -48,12 +48,12 @@
                     <td>
                       <?php if ($x['state'] == "published" && $usernameType != "admin"): ?>
                         <?php else: ?>
-                        <a href="<?= base_url() ?>admin/faq/modify/<?= $x['id'] ?>" ?>modifier</a>
+                        <a href="<?= base_url() ?>dashboard/faq/modify/<?= $x['id'] ?>" ?>modifier</a>
                       <?php endif; ?>
                     </td>
                     <td>
                       <?php if ($usernameType == "admin"): ?>
-                        <a href="<?= base_url() ?>admin/faq/delete/<?= $x['id'] ?>">supprimer</a>
+                        <a href="<?= base_url() ?>dashboard/faq/delete/<?= $x['id'] ?>">supprimer</a>
                       <?php endif; ?>
                     </td>
                   </tr>

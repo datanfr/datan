@@ -27,7 +27,7 @@
                 <p><b>Candidat parrainé : </b><?= $parrainage['candidat'] ?></p>
                 <p><b>Année de l'élection : </b><?= $parrainage['year'] ?></p>
                 <hr>
-                <?php echo form_open_multipart('admin/parrainages/modify/'.$parrainage['id']); ?>
+                <?php echo form_open_multipart('dashboard/parrainages/modify/'.$parrainage['id']); ?>
                   <div class="form-group">
                     <label>ID du député</label>
                     <input type="text" class="form-control" autocomplete="off" name="mpId" value="<?= $parrainage['mpId'] ?>">

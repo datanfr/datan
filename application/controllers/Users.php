@@ -115,7 +115,7 @@
               );
               $this->session->set_userdata($user_data);
               $this->session->set_userdata('attempt', 0);
-              redirect('admin');
+              redirect();
             } else {
               $attempt = $this->session->userdata('attempt');
               $attempt++;

@@ -1,5 +1,5 @@
 <?php
-  class Admin extends CI_Controller{
+  class Dashboard extends CI_Controller{
 
     public function __construct() {
       parent::__construct();
@@ -20,6 +20,7 @@
 
     // Dashboard homepage
     public function index(){
+      print_r($this->session->userdata());
       $data['username'] = $this->session->userdata('username');
       $user_id = $this->session->userdata('user_id');
 
@@ -61,7 +62,7 @@
 
     public function create_candidat(){
       if (!isset($_GET['election'])) {
-        redirect('admin');
+        redirect('dashboard');
       }
       $slug = $_GET['election'];
       $data['election'] = $this->elections_model->get_election($slug);
@@ -99,7 +100,7 @@
         if ($depute) {
           $this->admin_model->create_candidat($user_id, $depute);
           $election = $this->elections_model->get_election_by_id($this->input->post('election'));
-          redirect('admin/elections/' . $election['slug']);
+          redirect('dashboard/elections/' . $election['slug']);
         } else {
           $this->load->view('dashboard/header', $data);
           $this->load->view('dashboard/elections/create', $data);
@@ -111,7 +112,7 @@
 
     public function modify_candidat($candidateMpId){
       if (!isset($_GET['election'])) {
-        redirect('admin');
+        redirect('dashboard');
       }
       $slug = $_GET['election'];
       $data['election'] = $this->elections_model->get_election($slug);
@@ -128,7 +129,7 @@
       $data['candidat']['districtLibelle'] = $district['libelle'];
 
       if (empty($data['candidat'])) {
-        redirect('admin/elections/' . $data['election']['slug']);
+        redirect('dashboard/elections/' . $data['election']['slug']);
       }
 
       if ($data['election']['libelleAbrev'] == 'Présidentielle') {
@@ -151,14 +152,14 @@
       } else {
           $this->admin_model->modify_candidat();
           $election = $this->elections_model->get_election_by_id($this->input->post('election'));
-          redirect('admin/elections/' . $election['slug']);
+          redirect('dashboard/elections/' . $election['slug']);
       }
 
     }
 
     public function delete_candidat($candidateMpId){
       if (!isset($_GET['election'])) {
-        redirect('admin');
+        redirect('dashboard');
       }
       $slug = $_GET['election'];
       $data['election'] = $this->elections_model->get_election($slug);
@@ -190,7 +191,7 @@
         } else {
           $this->admin_model->delete_candidat();
           $election = $this->elections_model->get_election_by_id($this->input->post('election'));
-          redirect('admin/elections/' . $election['slug']);
+          redirect('dashboard/elections/' . $election['slug']);
         }
       }
 
@@ -229,7 +230,7 @@
         $this->load->view('dashboard/footer');
       } else {
         $this->admin_model->create_vote($user_id);
-        redirect('admin/votes');
+        redirect('dashboard/votes');
       }
     }
 
@@ -243,11 +244,11 @@
       $data['title'] = 'Modifier un vote décrypté';
       $data['vote'] = $this->admin_model->get_vote_datan($vote);
       if (empty($data['vote'])) {
-        redirect('admin/votes');
+        redirect('dashboard/votes');
       }
 
       if ($data['vote']['state'] == "published" && $data['usernameType'] != "admin") {
-        redirect('admin/votes');
+        redirect('dashboard/votes');
       } else {
         $data['categories'] = $this->fields_model->get_fields();
 
@@ -261,7 +262,7 @@
           $this->load->view('dashboard/footer');
         } else {
           $this->admin_model->modify_vote($vote,$user_id);
-          redirect('admin/votes');
+          redirect('dashboard/votes');
         }
       }
     }
@@ -289,7 +290,7 @@
           $this->load->view('dashboard/footer');
         } else {
           $this->admin_model->delete_vote($vote);
-          redirect('admin/votes');
+          redirect('dashboard/votes');
         }
       }
 
@@ -435,7 +436,7 @@
           $this->load->view('dashboard/footer');
         } else {
           $this->faq_model->delete($id);
-          redirect('admin/faq');
+          redirect('dashboard/faq');
         }
       }
     }
@@ -457,7 +458,7 @@
         $this->load->view('dashboard/footer');
       } else {
         $this->faq_model->create($user_id);
-        redirect('admin/faq');
+        redirect('dashboard/faq');
       }
     }
 
@@ -469,11 +470,11 @@
       $data['article'] = $this->faq_model->get_article($id);
 
       if (empty($data['article'])) {
-        redirect('admin/faq');
+        redirect('dashboard/faq');
       }
 
       if ($data['article']['state'] == "published" && $data['usernameType'] != "admin") {
-        redirect('admin/faq');
+        redirect('dashboard/faq');
       } else {
         $data['categories'] = $this->faq_model->get_categories();
 
@@ -488,7 +489,7 @@
           $this->load->view('dashboard/footer');
         } else {
           $this->faq_model->modify($id, $user_id);
-          redirect('admin/faq');
+          redirect('dashboard/faq');
         }
       }
     }
@@ -523,7 +524,7 @@
         $this->load->view('dashboard/footer');
       } else {
         $this->quizz_model->create($user_id);
-        redirect('admin/quizz');
+        redirect('dashboard/quizz');
       }
     }
 
@@ -535,11 +536,11 @@
       $data['question'] = $this->quizz_model->get_question($id);
 
       if (empty($data['question'])) {
-        redirect('admin/quizz');
+        redirect('dashboard/quizz');
       }
 
       if ($data['question']['state'] == "published" && $data['usernameType'] != "admin") {
-        redirect('admin/quizz');
+        redirect('dashboard/quizz');
       } else {
         $data['categories'] = $this->fields_model->get_fields();
 
@@ -555,7 +556,7 @@
           $this->load->view('dashboard/footer');
         } else {
           $this->quizz_model->modify($id, $user_id);
-          redirect('admin/quizz');
+          redirect('dashboard/quizz');
         }
       }
     }
@@ -580,7 +581,7 @@
           $this->load->view('dashboard/footer');
         } else {
           $this->quizz_model->delete($id);
-          redirect('admin/quizz');
+          redirect('dashboard/quizz');
         }
       }
     }
@@ -606,7 +607,7 @@
       $data['parrainage'] = $this->parrainages_model->get_parrainage($id);
 
       if (empty($data['parrainage'])) {
-        redirect('admin/parrainages');
+        redirect('dashboard/parrainages');
       }
 
       //Form valiation
@@ -618,7 +619,7 @@
         $this->load->view('dashboard/footer');
       } else {
         $this->parrainages_model->modify($id, $user_id);
-        redirect('admin/parrainages');
+        redirect('dashboard/parrainages');
       }
     }
   }
