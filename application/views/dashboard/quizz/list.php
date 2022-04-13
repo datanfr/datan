@@ -52,12 +52,12 @@
                     <td>
                       <?php if ($x['state'] == "published" && $usernameType != "admin"): ?>
                         <?php else: ?>
-                        <a href="<?= base_url() ?>admin/quizz/modify/<?= $x['id'] ?>" ?>modifier</a>
+                        <a href="<?= base_url() ?>dashboard/quizz/modify/<?= $x['id'] ?>" ?>modifier</a>
                       <?php endif; ?>
                     </td>
                     <td>
                       <?php if ($usernameType == "admin"): ?>
-                        <a href="<?= base_url() ?>admin/quizz/delete/<?= $x['id'] ?>">supprimer</a>
+                        <a href="<?= base_url() ?>dashboard/quizz/delete/<?= $x['id'] ?>">supprimer</a>
                       <?php endif; ?>
                     </td>
                   </tr>

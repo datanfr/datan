@@ -21,7 +21,7 @@
           <div class="col-lg-12">
             <div class="card">
               <div class="card-body">
-                <?= form_open_multipart('admin/votes/create'); ?>
+                <?= form_open_multipart('dashboard/votes/create'); ?>
                   <div class="form-group">
                     <label>Titre</label>
                     <input type="text" class="form-control" autocomplete="off" name="title" placeholder="Ajouter un titre">
@@ -33,7 +33,7 @@
                     </select>
                   </div>
                   <div class="form-group">
-                    <label for="">Vote ID --> <a href="<?= base_url() ?>admin/votes_an/position/" target="_blank">check list of votes</a></label>
+                    <label for="">Vote ID --> <a href="<?= base_url() ?>dashboard/votes_an/position/" target="_blank">check list of votes</a></label>
                     <input type="text" class="form-control" autocomplete="off" name="vote_id" placeholder="Exemple: 156">
                   </div>
                   <div class="form-group">
