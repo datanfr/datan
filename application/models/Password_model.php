@@ -24,6 +24,12 @@
       }
     }
 
+    public function is_team(){
+      if (($this->session->userdata('type') == 'admin') || $this->session->userdata('type') == 'writer') {
+        return TRUE;
+      }
+    }
+
     public function is_logged_in(){
       if (!$this->session->userdata('logged_in')) {
         redirect('login');
