@@ -51,31 +51,33 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 */
 
 // ADMIN
-$route['admin'] = 'admin/index';
-$route['admin/votes'] = 'admin/votes';
-$route['admin/elections/(:any)'] = 'admin/election_candidates/$1';
-$route['admin/elections/candidat/create'] = 'admin/create_candidat';
-$route['admin/elections/candidat/modify/(:any)'] = 'admin/modify_candidat/$1';
-$route['admin/elections/candidat/delete/(:any)'] = 'admin/delete_candidat/$1';
-$route['admin/votes/create'] = 'admin/create_vote';
-$route['admin/votes/modify/(:any)'] = 'admin/modify_vote/$1';
-$route['admin/votes/delete/(:any)'] = 'admin/delete_vote/$1';
-$route['admin/votes_an/position'] = 'admin/votes_an_position';
-$route['admin/votes_an/cohesion'] = 'admin/votes_an_cohesion';
-$route['admin/votes_an/em_lost'] = 'admin/votes_an_em_lost';
-$route['admin/analyses/(:any)'] = 'admin/analyses/$1';
-$route['admin/socialmedia/historique/(:any)'] = 'admin/socialmedia/historique/$1';
-$route['admin/socialmedia/(:any)'] = 'admin/socialmedia/$1/NULL';
-$route['admin/faq'] = 'admin/faq_list';
-$route['admin/faq/create'] = 'admin/create_faq';
-$route['admin/faq/modify/(:any)'] = 'admin/modify_faq/$1';
-$route['admin/faq/delete/(:any)'] = 'admin/delete_faq/$1';
-$route['admin/quizz'] = 'admin/quizz_list';
-$route['admin/quizz/create'] = 'admin/create_quizz';
-$route['admin/quizz/modify/(:any)'] = 'admin/modify_quizz/$1';
-$route['admin/quizz/delete/(:any)'] = 'admin/delete_quizz/$1';
-$route['admin/parrainages'] = 'admin/parrainages';
-$route['admin/parrainages/modify/(:any)'] = 'admin/modify_parrainage/$1';
+$route['dashboard'] = 'dashboard/index';
+$route['dashboard/votes'] = 'dashboard/votes';
+$route['dashboard/elections/(:any)'] = 'dashboard/election_candidates/$1';
+$route['dashboard/elections/candidat/create'] = 'dashboard/create_candidat';
+$route['dashboard/elections/candidat/modify/(:any)'] = 'dashboard/modify_candidat/$1';
+$route['dashboard/elections/candidat/delete/(:any)'] = 'dashboard/delete_candidat/$1';
+$route['dashboard/votes/create'] = 'dashboard/create_vote';
+$route['dashboard/votes/modify/(:any)'] = 'dashboard/modify_vote/$1';
+$route['dashboard/votes/delete/(:any)'] = 'dashboard/delete_vote/$1';
+$route['dashboard/votes_an/position'] = 'dashboard/votes_an_position';
+$route['dashboard/votes_an/cohesion'] = 'dashboard/votes_an_cohesion';
+$route['dashboard/votes_an/em_lost'] = 'dashboard/votes_an_em_lost';
+$route['dashboard/analyses/(:any)'] = 'dashboard/analyses/$1';
+$route['dashboard/socialmedia/historique/(:any)'] = 'dashboard/socialmedia/historique/$1';
+$route['dashboard/socialmedia/(:any)'] = 'dashboard/socialmedia/$1/NULL';
+$route['dashboard/faq'] = 'dashboard/faq_list';
+$route['dashboard/faq/create'] = 'dashboard/create_faq';
+$route['dashboard/faq/modify/(:any)'] = 'dashboard/modify_faq/$1';
+$route['dashboard/faq/delete/(:any)'] = 'dashboard/delete_faq/$1';
+$route['dashboard/quizz'] = 'dashboard/quizz_list';
+$route['dashboard/quizz/create'] = 'dashboard/create_quizz';
+$route['dashboard/quizz/modify/(:any)'] = 'dashboard/modify_quizz/$1';
+$route['dashboard/quizz/delete/(:any)'] = 'dashboard/delete_quizz/$1';
+$route['dashboard/parrainages'] = 'dashboard/parrainages';
+$route['dashboard/parrainages/modify/(:any)'] = 'dashboard/modify_parrainage/$1';
+// MpDashboard
+$route['mp/dashboard'] = 'mpDashboard/index';
 // USERS
 $route['mon-compte'] = 'users/compte';
 $route['mon-compte/modifier-donnees-personnelles'] = 'users/modify_personal_data';
@@ -169,7 +171,7 @@ $route['search/(:any)/(:any)'] = 'redirect/cities/$1/$2';
 // CACHE
 $route['cache/delete_all'] = 'cache/delete_all';
 // CI LOGS
-$route['admin/logs'] = 'logViewerController/index';
+$route['dashboard/logs'] = 'logViewerController/index';
 // PAGES
 $route['(:any)'] = 'pages/view/$1';
 $route['translate_uri_dashes'] = FALSE;

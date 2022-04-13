@@ -46,12 +46,15 @@ scratch. This page gets rid of all links and provides the needed markup only.
         <li class="nav-item d-none d-sm-inline-block">
           <a href="<?= base_url () ?>cache/delete_all" class="nav-link">Delete cache</a>
         </li>
+        <li class="nav-item d-none d-sm-inline-block">
+          <a href="<?= base_url () ?>mon-compte" class="nav-link">Mon compte</a>
+        </li>
         <?php if (($this->session->userdata('type') == 'admin')): ?>
           <li class="nav-item d-none d-sm-inline-block">
             <a href="<?= base_url () ?>scripts" class="nav-link">Scripts</a>
           </li>
           <li class="nav-item d-none d-sm-inline-block">
-            <a href="<?= base_url () ?>admin/logs" class="nav-link">CI Logs</a>
+            <a href="<?= base_url () ?>dashboard/logs" class="nav-link">CI Logs</a>
           </li>
         <?php endif; ?>
       </ul>
@@ -99,13 +102,13 @@ scratch. This page gets rid of all links and provides the needed markup only.
              </a>
              <ul class="nav nav-treeview">
                <li class="nav-item">
-                 <a href="<?= base_url() ?>admin/votes" class="nav-link">
+                 <a href="<?= base_url() ?>dashboard/votes" class="nav-link">
                    <i class="far fa-circle nav-icon"></i>
                    <p>Tous les votes</p>
                  </a>
                </li>
                <li class="nav-item">
-                 <a href="<?= base_url() ?>admin/votes/create" class="nav-link">
+                 <a href="<?= base_url() ?>dashboard/votes/create" class="nav-link">
                    <i class="far fa-circle nav-icon"></i>
                    <p>Créer un vote</p>
                  </a>
@@ -122,13 +125,13 @@ scratch. This page gets rid of all links and provides the needed markup only.
              </a>
              <ul class="nav nav-treeview">
                <li class="nav-item">
-                 <a href="<?= base_url() ?>admin/votes_an/position" class="nav-link">
+                 <a href="<?= base_url() ?>dashboard/votes_an/position" class="nav-link">
                    <i class="far fa-circle nav-icon"></i>
                    <p>Votes_AN (positions)</p>
                  </a>
                </li>
                <li class="nav-item">
-                 <a href="<?= base_url() ?>admin/votes_an/cohesion" class="nav-link">
+                 <a href="<?= base_url() ?>dashboard/votes_an/cohesion" class="nav-link">
                    <i class="far fa-circle nav-icon"></i>
                    <p>Votes_AN (cohesion)</p>
                  </a>
@@ -145,14 +148,14 @@ scratch. This page gets rid of all links and provides the needed markup only.
              </a>
              <ul class="nav nav-treeview">
                <li class="nav-item">
-                 <a href="<?= base_url() ?>admin/votes_an/em_lost" class="nav-link">
+                 <a href="<?= base_url() ?>dashboard/votes_an/em_lost" class="nav-link">
                    <i class="far fa-circle nav-icon"></i>
                    <p>LREM perd</p>
                  </a>
                </li>
                <?php foreach((array) $groupes as $groupe) : ?>
                <li class="nav-item">
-                 <a href="<?= base_url() ?>admin/analyses/class_loyaute_group?group=<?= $groupe['libelleAbrev']?>" class="nav-link">
+                 <a href="<?= base_url() ?>dashboard/analyses/class_loyaute_group?group=<?= $groupe['libelleAbrev']?>" class="nav-link">
                    <i class="far fa-circle nav-icon"></i>
                    <p>Class. loyaute <?= $groupe['libelleAbrev'] ?></p>
                  </a>
@@ -170,29 +173,29 @@ scratch. This page gets rid of all links and provides the needed markup only.
              </a>
              <ul class="nav nav-treeview">
                <li class="nav-item">
-                 <a href="<?= base_url() ?>admin/socialmedia/deputes_entrants" class="nav-link">
+                 <a href="<?= base_url() ?>dashboard/socialmedia/deputes_entrants" class="nav-link">
                    <i class="far fa-circle nav-icon"></i>
                    <p>Députés entrants</p>
                  </a>
                </li>
                <li class="nav-item">
-                 <a href="<?= base_url() ?>admin/socialmedia/deputes_sortants" class="nav-link">
+                 <a href="<?= base_url() ?>dashboard/socialmedia/deputes_sortants" class="nav-link">
                    <i class="far fa-circle nav-icon"></i>
                    <p>Députés sortants</p>
                  </a>
                </li>
                <li class="nav-item">
-                 <a href="<?= base_url() ?>admin/socialmedia/postes_assemblee" class="nav-link">
+                 <a href="<?= base_url() ?>dashboard/socialmedia/postes_assemblee" class="nav-link">
                    <i class="far fa-circle nav-icon"></i>
                    <p>Postes Assemblée</p>
                  </a>
                </li>
                <li class="nav-item">
-                 <a href="<?= base_url() ?>admin/socialmedia/groupes_entrants" class="nav-link">
+                 <a href="<?= base_url() ?>dashboard/socialmedia/groupes_entrants" class="nav-link">
                    <i class="far fa-circle nav-icon"></i>
                    <p>Groupe nouveau membre</p>
                  </a>
-                 <a href="<?= base_url() ?>admin/socialmedia/historique" class="nav-link">
+                 <a href="<?= base_url() ?>dashboard/socialmedia/historique" class="nav-link">
                    <i class="far fa-circle nav-icon"></i>
                    <p>Historique députés</p>
                  </a>
@@ -232,13 +235,13 @@ scratch. This page gets rid of all links and provides the needed markup only.
              </a>
              <ul class="nav nav-treeview">
                <li class="nav-item">
-                 <a href="<?= base_url() ?>admin/faq" class="nav-link">
+                 <a href="<?= base_url() ?>dashboard/faq" class="nav-link">
                    <i class="far fa-circle nav-icon"></i>
                    <p>Tous les articles</p>
                  </a>
                </li>
                <li class="nav-item">
-                 <a href="<?= base_url() ?>admin/faq/create" class="nav-link">
+                 <a href="<?= base_url() ?>dashboard/faq/create" class="nav-link">
                    <i class="far fa-circle nav-icon"></i>
                    <p>Créer un article</p>
                  </a>
@@ -255,19 +258,19 @@ scratch. This page gets rid of all links and provides the needed markup only.
              </a>
              <ul class="nav nav-treeview">
                <li class="nav-item">
-                 <a href="<?= base_url() ?>admin/elections/presidentielle-2022" class="nav-link">
+                 <a href="<?= base_url() ?>dashboard/elections/presidentielle-2022" class="nav-link">
                    <i class="far fa-circle nav-icon"></i>
                    <p>Présidentielle 2022</p>
                  </a>
                </li>
                <li class="nav-item">
-                 <a href="<?= base_url() ?>admin/elections/legislatives-2022" class="nav-link">
+                 <a href="<?= base_url() ?>dashboard/elections/legislatives-2022" class="nav-link">
                    <i class="far fa-circle nav-icon"></i>
                    <p>Législatives 2022</p>
                  </a>
                </li>
                <li class="nav-item">
-                 <a href="<?= base_url() ?>admin/elections/regionales-2021" class="nav-link disabled">
+                 <a href="<?= base_url() ?>dashboard/elections/regionales-2021" class="nav-link disabled">
                    <i class="far fa-circle nav-icon"></i>
                    <p>Régionales 2021</p>
                  </a>
@@ -284,7 +287,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
              </a>
              <ul class="nav nav-treeview">
                <li class="nav-item">
-                 <a href="<?= base_url() ?>admin/parrainages" class="nav-link">
+                 <a href="<?= base_url() ?>dashboard/parrainages" class="nav-link">
                    <i class="far fa-circle nav-icon"></i>
                    <p>Liste</p>
                  </a>
@@ -301,13 +304,13 @@ scratch. This page gets rid of all links and provides the needed markup only.
              </a>
              <ul class="nav nav-treeview">
                <li class="nav-item">
-                 <a href="<?= base_url() ?>admin/quizz" class="nav-link">
+                 <a href="<?= base_url() ?>dashboard/quizz" class="nav-link">
                    <i class="far fa-circle nav-icon"></i>
                    <p>Toutes les questions</p>
                  </a>
                </li>
                <li class="nav-item">
-                 <a href="<?= base_url() ?>admin/quizz/create" class="nav-link">
+                 <a href="<?= base_url() ?>dashboard/quizz/create" class="nav-link">
                    <i class="far fa-circle nav-icon"></i>
                    <p>Créer une question</p>
                  </a>

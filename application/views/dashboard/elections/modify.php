@@ -24,7 +24,7 @@
           <div class="card">
             <div class="card-body">
               <?php
-                echo form_open_multipart('admin/elections/candidat/modify/'.$candidat['mpId'].'?election='.$election['slug']);
+                echo form_open_multipart('dashboard/elections/candidat/modify/'.$candidat['mpId'].'?election='.$election['slug']);
               ?>
               <div class="form-group">
                 <label>Député</label>

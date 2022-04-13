@@ -59,10 +59,10 @@
             </div> <!-- /.card-body -->
             <div class="card-footer">
               <div class="float-left">
-                <button type="button" onclick="window.location.href = '<?= base_url() ?>admin/quizz';" class="btn btn-default"> Annuler</button>
+                <button type="button" onclick="window.location.href = '<?= base_url() ?>dashboard/quizz';" class="btn btn-default"> Annuler</button>
               </div>
               <div class="float-right">
-                <?php echo form_open_multipart('admin/quizz/delete/'.$question['id']); ?>
+                <?php echo form_open_multipart('dashboard/quizz/delete/'.$question['id']); ?>
                   <input type="hidden" name="delete" value="deleted">
                   <button type="submit" class="btn btn-danger">Supprimer</button>
                 </form>
