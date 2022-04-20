@@ -40,7 +40,11 @@
 
       } else {
         // IF AN MP
-        echo "TO DO ! ";
+        $data['depute'] = $this->deputes_model->get_depute_by_mpId($this->session->userdata('mpId'));
+
+        $this->load->view('dashboard/header', $data);
+        $this->load->view('dashboard/index_mp', $data);
+        $this->load->view('dashboard/footer');
       }
     }
 
