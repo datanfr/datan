@@ -11,32 +11,30 @@
       </div>
       <div class="row mt-5">
         <div class="col-lg-8 col-md-10 col-10 offset-lg-2 offset-md-1 offset-1">
-          <div class="row login_links">
-            <a href="<?= base_url(); ?>login" class="py-3 active">
-              SE CONNECTER
-            </a>
-            <a href="<?= base_url(); ?>register" class="py-3 inactive">
-              S'INSCRIRE
-            </a>
-          </div>
           <div class="row mt-5 d-flex flex-column justify-content-center login_form">
-            <h1 class="text-center my-4"><?= $title ?></h1>
-            <?php if ($this->session->flashdata('login_failed')): ?>
-              <div class="alert alert-danger mb-4 text-center" role="alert">
-                <?= ($this->session->flashdata('login_failed')) ?>
+            <h1 class="text-center mt-4 mb-5"><?= $title ?></h1>
+            <?php if (validation_errors()): ?>
+              <div class="mt-2">
+                <div class="alert alert-danger text-center">
+                  <?= validation_errors(); ?>
+                </div>
+              </div>
+            <?php endif; ?>
+            <?php if ($this->session->flashdata('success')): ?>
+              <div class="alert alert-success mb-4 text-center" role="alert">
+                <p class="font-weight-bold"><?= $this->session->flashdata('success') ?></p>
+                <a href="<?= base_url() ?>login">Connectez-vous à Datan</a>
               </div>
             <?php endif; ?>
             <div class="form-group">
-              <input type="text" name="username" class="form-control" placeholder="Pseudo ou Email" required autofocus>
+              <label class="font-weight-bold">Nouveau mot de passe</label>
+              <input type="password" class="form-control" name="new" required>
             </div>
             <div class="form-group">
-              <input type="password" name="password" class="form-control" placeholder="Mot de passe" required autofocus>
+              <label class="font-weight-bold">Confirmez le mot de passe</label>
+              <input type="password" class="form-control" name="new_confirmation" required>
             </div>
-            <?php if ($captcha): ?>
-              <?php $this->view('captcha/index') ?>
-            <?php endif; ?>
-            <button type="submit" class="btn btn-primary btn-block">Se connecter</button>
-            <a class="mt-4" href="<?= base_url() ?>password">Mot de passe oublié ?</a>
+            <button type="submit" class="btn btn-primary btn-block">Valider</button>
           </div>
         </div>
         <?= form_close(); ?>

@@ -1,7 +1,6 @@
 <?php
   class User_model extends CI_Model{
     public function __construct() {
-      //$this->db_admin = $this->load->database('admin', TRUE);
     }
 
     //REGISTER//
@@ -76,9 +75,26 @@
       return $this->db->get_where('users', array('id' => $user_id))->row_array();
     }
 
+    public function get_user_by_email($email){
+      return $this->db->get_where('users', array('email' => $email))->row_array();
+    }
+
     public function delete_account($id){
       $this->db->where('id', $id);
       $this->db->delete('users');
+    }
+
+    public function create_token_password_lost($email, $token){
+      $data = array(
+        'email' => $email,
+        'token' => $token
+      );
+      $this->db->insert('password_resets', $data);
+    }
+
+    public function get_token_password_lost($token){
+      $this->db->where('token', $token);
+      return $this->db->get('password_resets')->row_array();
     }
 
   }

@@ -55,9 +55,82 @@
       }
     }
 
+    public function password_lost_request(){
+      if ($this->session->userdata('logged_in')) {
+        redirect();
+      } else {
+        $data['title'] = 'Réinitialisez votre mot de passe';
+        $data['title_meta'] = 'Mot de passe oublié | Datan';
+
+        $this->form_validation->set_rules('email', 'Email', 'required|valid_email');
+
+        if ($this->form_validation->run() === FALSE) {
+          $this->load->view('templates/header_no_navbar', $data);
+          $this->load->view('users/password-lost', $data);
+          $this->load->view('templates/footer_no_navbar');
+        } else {
+          $email = $this->input->post('email');
+          $noEmail = $this->user_model->check_email_exists($email);
+          if (!$noEmail) {
+            // Get user infos
+            $user = $this->user_model->get_user_by_email($email);
+            // Create token in password_resets table
+            $token = bin2hex(random_bytes(50));
+            $this->user_model->create_token_password_lost($email, $token);
+            // Send an email
+            $templateId = 3862755; /* Template password_forgot */
+            $variables = array(
+              'name' => $user['name'],
+              'token' => $token
+            );
+            sendMail($email, 'Changez votre mot de passe Datan', NULL, TRUE, $templateId, $variables);
+            $this->session->set_flashdata('success', 'true');
+          } else {
+            $this->session->set_flashdata('failure', 'true');
+          }
+          redirect(base_url().'password');
+        }
+      }
+    }
+
+    public function password_lost_change($token){
+      if ($this->session->userdata('logged_in')) {
+        redirect();
+      } else {
+        $checkToken = $this->user_model->get_token_password_lost($token);
+        if (empty($checkToken)) {
+          show_404();
+        } elseif (strtotime($checkToken['created_at']) > strtotime('-1 hour')) {
+          $data['title'] = 'Créez un nouveau mot de passe';
+          $data['title_meta'] = 'Créez un nouveau mot de passe | Datan';
+          $data['user'] = $this->user_model->get_user_by_email($checkToken['email']);
+
+          $this->form_validation->set_rules('new', 'Nouveau mot de passe', 'required');
+          $this->form_validation->set_rules('new_confirmation', 'Confirmation du nouveau de mot de passe', 'required|matches[new]');
+
+          if ($this->form_validation->run() === FALSE) {
+            $this->load->view('templates/header_no_navbar', $data);
+            $this->load-> view('users/password-change', $data);
+            $this->load->view('templates/footer_no_navbar', $data);
+          } else {
+            $new = $this->input->post('new');
+            $new_confirmation = $this->input->post('new_confirmation');
+
+            $enc_password = password_hash($new, PASSWORD_DEFAULT);
+            $this->user_model->update_password($data['user']['id'], $enc_password);
+            $this->session->set_flashdata('success', 'Le mot de passe a été changé.');
+            redirect('password/' . $token);
+          }
+        } else {
+          $this->session->set_flashdata('flash_failure', 'Ce lien ne fonctionne plus. Veuillez en redemander un nouveau.');
+          redirect('password/');
+        }
+      }
+    }
+
     public function login(){
       if ($this->session->userdata('logged_in')) {
-      redirect();
+        redirect();
       } else {
         $data['title'] = 'Connectez-vous à votre compte';
         $data['title_meta'] = 'Se connecter | Datan';
@@ -126,8 +199,6 @@
               $this->session->set_flashdata("login_failed", "L'identifiant ou le mot de passe sont erronés. Veuillez réessayer.");
               redirect('login');
             }
-
-
           }
         }
       }
