@@ -117,7 +117,7 @@
       ';
       return $this->db->query($sql, array($nameUrl, $dpt))->row_array();
     }
-
+    
     public function get_hatvp_url($mpId){
       $where = array(
         "mpId" => $mpId

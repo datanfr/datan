@@ -30,6 +30,12 @@
       }
     }
 
+    public function is_mp(){
+      if (($this->session->userdata('type') == 'mp')) {
+        return TRUE;
+      }
+    }
+
     public function is_logged_in(){
       if (!$this->session->userdata('logged_in')) {
         redirect('login');
