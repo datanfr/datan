@@ -107,12 +107,16 @@
             // Test password
             if (password_verify($password, $user->password)) {
               // Create session
+
               $user_data = array(
                 'user_id' => $user->id,
                 'username' => $username,
                 'logged_in' => true,
-                'type' => $user->type
+                'type' => $user->type,
               );
+              if ($user->mpId) {
+                $user_data['mpId'] = $user->mpId;
+              }
               $this->session->set_userdata($user_data);
               $this->session->set_userdata('attempt', 0);
               redirect();

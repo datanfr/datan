@@ -38,25 +38,27 @@ scratch. This page gets rid of all links and provides the needed markup only.
           <a class="nav-link" data-widget="pushmenu" href="#"><i class="fas fa-bars"></i></a>
         </li>
         <li class="nav-item d-none d-sm-inline-block">
-          <a href="<?= base_url() ?>admin" class="nav-link">Admin</a>
+          <a href="<?= base_url () ?>" class="nav-link font-weight-bold text-primary">Datan</a>
         </li>
-        <li class="nav-item d-none d-sm-inline-block">
-          <a href="<?= base_url () ?>" class="nav-link">Datan</a>
-        </li>
-        <li class="nav-item d-none d-sm-inline-block">
-          <a href="<?= base_url () ?>cache/delete_all" class="nav-link">Delete cache</a>
-        </li>
-        <li class="nav-item d-none d-sm-inline-block">
-          <a href="<?= base_url () ?>mon-compte" class="nav-link">Mon compte</a>
-        </li>
-        <?php if (($this->session->userdata('type') == 'admin')): ?>
+        <?php if ($this->password_model->is_mp()): ?>
+          <li class="nav-item d-none d-sm-inline-block">
+            <a href="<?= base_url() ?>deputes/<?= $depute['dptSlug'] ?>/depute_<?= $depute['nameUrl'] ?>" class="nav-link">Page député</a>
+          </li>
+        <?php endif; ?>
+        <?php if ($this->password_model->is_admin()): ?>
           <li class="nav-item d-none d-sm-inline-block">
             <a href="<?= base_url () ?>scripts" class="nav-link">Scripts</a>
+          </li>
+          <li class="nav-item d-none d-sm-inline-block">
+            <a href="<?= base_url () ?>cache/delete_all" class="nav-link">Delete cache</a>
           </li>
           <li class="nav-item d-none d-sm-inline-block">
             <a href="<?= base_url () ?>dashboard/logs" class="nav-link">CI Logs</a>
           </li>
         <?php endif; ?>
+        <li class="nav-item d-none d-sm-inline-block">
+          <a href="<?= base_url () ?>mon-compte" class="nav-link">Mon compte</a>
+        </li>
       </ul>
 
       <!-- SEARCH FORM -->
@@ -93,161 +95,210 @@ scratch. This page gets rid of all links and provides the needed markup only.
         <!-- Sidebar Menu -->
         <nav class="mt-2">
           <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
-           <li class="nav-item has-treeview">
-             <a href="#" class="nav-link">
-               <p>
-                 Votes_datan
-                 <i class="fas fa-angle-left right"></i>
-               </p>
-             </a>
-             <ul class="nav nav-treeview">
-               <li class="nav-item">
-                 <a href="<?= base_url() ?>dashboard/votes" class="nav-link">
-                   <i class="far fa-circle nav-icon"></i>
-                   <p>Tous les votes</p>
-                 </a>
-               </li>
-               <li class="nav-item">
-                 <a href="<?= base_url() ?>dashboard/votes/create" class="nav-link">
-                   <i class="far fa-circle nav-icon"></i>
-                   <p>Créer un vote</p>
-                 </a>
-               </li>
-             </ul>
-           </li>
-           <!-- Votes_AN -->
-           <li class="nav-item has-treeview">
-             <a href="#" class="nav-link">
-               <p>
-                 Votes_AN
-                 <i class="fas fa-angle-left right"></i>
-               </p>
-             </a>
-             <ul class="nav nav-treeview">
-               <li class="nav-item">
-                 <a href="<?= base_url() ?>dashboard/votes_an/position" class="nav-link">
-                   <i class="far fa-circle nav-icon"></i>
-                   <p>Votes_AN (positions)</p>
-                 </a>
-               </li>
-               <li class="nav-item">
-                 <a href="<?= base_url() ?>dashboard/votes_an/cohesion" class="nav-link">
-                   <i class="far fa-circle nav-icon"></i>
-                   <p>Votes_AN (cohesion)</p>
-                 </a>
-               </li>
-             </ul>
-           </li>
-           <!-- TABLEAUX ANALYSE -->
-           <li class="nav-item has-treeview">
-             <a href="#" class="nav-link">
-               <p>
-                 Tableaux analyse
-                 <i class="fas fa-angle-left right"></i>
-               </p>
-             </a>
-             <ul class="nav nav-treeview">
-               <li class="nav-item">
-                 <a href="<?= base_url() ?>dashboard/votes_an/em_lost" class="nav-link">
-                   <i class="far fa-circle nav-icon"></i>
-                   <p>LREM perd</p>
-                 </a>
-               </li>
-               <?php foreach((array) $groupes as $groupe) : ?>
-               <li class="nav-item">
-                 <a href="<?= base_url() ?>dashboard/analyses/class_loyaute_group?group=<?= $groupe['libelleAbrev']?>" class="nav-link">
-                   <i class="far fa-circle nav-icon"></i>
-                   <p>Class. loyaute <?= $groupe['libelleAbrev'] ?></p>
-                 </a>
-               </li>
-               <?php endforeach ?>
-             </ul>
-           </li>
-           <!-- TABLEAUX SOCIAL MEDIA -->
-           <li class="nav-item has-treeview">
-             <a href="#" class="nav-link">
-               <p>
-                 Tableaux social_media
-                 <i class="fas fa-angle-left right"></i>
-               </p>
-             </a>
-             <ul class="nav nav-treeview">
-               <li class="nav-item">
-                 <a href="<?= base_url() ?>dashboard/socialmedia/deputes_entrants" class="nav-link">
-                   <i class="far fa-circle nav-icon"></i>
-                   <p>Députés entrants</p>
-                 </a>
-               </li>
-               <li class="nav-item">
-                 <a href="<?= base_url() ?>dashboard/socialmedia/deputes_sortants" class="nav-link">
-                   <i class="far fa-circle nav-icon"></i>
-                   <p>Députés sortants</p>
-                 </a>
-               </li>
-               <li class="nav-item">
-                 <a href="<?= base_url() ?>dashboard/socialmedia/postes_assemblee" class="nav-link">
-                   <i class="far fa-circle nav-icon"></i>
-                   <p>Postes Assemblée</p>
-                 </a>
-               </li>
-               <li class="nav-item">
-                 <a href="<?= base_url() ?>dashboard/socialmedia/groupes_entrants" class="nav-link">
-                   <i class="far fa-circle nav-icon"></i>
-                   <p>Groupe nouveau membre</p>
-                 </a>
-                 <a href="<?= base_url() ?>dashboard/socialmedia/historique" class="nav-link">
-                   <i class="far fa-circle nav-icon"></i>
-                   <p>Historique députés</p>
-                 </a>
-               </li>
-             </ul>
-           </li>
-           <!-- Blog posts -->
-           <li class="nav-item has-treeview">
-             <a href="#" class="nav-link">
-               <p>
-                 Blog posts
-                 <i class="fas fa-angle-left right"></i>
-               </p>
-             </a>
-             <ul class="nav nav-treeview">
-               <li class="nav-item">
-                 <a href="<?= base_url() ?>blog" class="nav-link">
-                   <i class="far fa-circle nav-icon"></i>
-                   <p>Tous les posts</p>
-                 </a>
-               </li>
-               <li class="nav-item">
-                 <a href="<?= base_url() ?>posts/create" class="nav-link">
-                   <i class="far fa-circle nav-icon"></i>
-                   <p>Créer un post</p>
-                 </a>
-               </li>
-             </ul>
-           </li>
-           <!-- Blog posts -->
-           <li class="nav-item has-treeview">
-             <a href="#" class="nav-link">
-               <p>
-                 FAQ
-                 <i class="fas fa-angle-left right"></i>
-               </p>
-             </a>
-             <ul class="nav nav-treeview">
-               <li class="nav-item">
-                 <a href="<?= base_url() ?>dashboard/faq" class="nav-link">
-                   <i class="far fa-circle nav-icon"></i>
-                   <p>Tous les articles</p>
-                 </a>
-               </li>
-               <li class="nav-item">
-                 <a href="<?= base_url() ?>dashboard/faq/create" class="nav-link">
-                   <i class="far fa-circle nav-icon"></i>
-                   <p>Créer un article</p>
-                 </a>
-               </li>
-             </ul>
-           </li>
+          <?php if ($this->password_model->is_team()): ?>
+            <!-- Votes datan -->
+            <li class="nav-item has-treeview">
+              <a href="#" class="nav-link">
+                <p>
+                  Votes_datan
+                  <i class="fas fa-angle-left right"></i>
+                </p>
+              </a>
+              <ul class="nav nav-treeview">
+                <li class="nav-item">
+                  <a href="<?= base_url() ?>dashboard/votes" class="nav-link">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Tous les votes</p>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="<?= base_url() ?>dashboard/votes/create" class="nav-link">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Créer un vote</p>
+                  </a>
+                </li>
+              </ul>
+            </li>
+            <!-- Votes_AN -->
+            <li class="nav-item has-treeview">
+              <a href="#" class="nav-link">
+                <p>
+                  Votes_AN
+                  <i class="fas fa-angle-left right"></i>
+                </p>
+              </a>
+              <ul class="nav nav-treeview">
+                <li class="nav-item">
+                  <a href="<?= base_url() ?>dashboard/votes_an/position" class="nav-link">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Votes_AN (positions)</p>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="<?= base_url() ?>dashboard/votes_an/cohesion" class="nav-link">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Votes_AN (cohesion)</p>
+                  </a>
+                </li>
+              </ul>
+            </li>
+            <!-- TABLEAUX ANALYSE -->
+            <li class="nav-item has-treeview">
+              <a href="#" class="nav-link">
+                <p>
+                  Tableaux analyse
+                  <i class="fas fa-angle-left right"></i>
+                </p>
+              </a>
+              <ul class="nav nav-treeview">
+                <li class="nav-item">
+                  <a href="<?= base_url() ?>dashboard/votes_an/em_lost" class="nav-link">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>LREM perd</p>
+                  </a>
+                </li>
+                <?php foreach((array) $groupes as $groupe) : ?>
+                <li class="nav-item">
+                  <a href="<?= base_url() ?>dashboard/analyses/class_loyaute_group?group=<?= $groupe['libelleAbrev']?>" class="nav-link">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Class. loyaute <?= $groupe['libelleAbrev'] ?></p>
+                  </a>
+                </li>
+                <?php endforeach ?>
+              </ul>
+            </li>
+            <!-- TABLEAUX SOCIAL MEDIA -->
+            <li class="nav-item has-treeview">
+              <a href="#" class="nav-link">
+                <p>
+                  Tableaux social_media
+                  <i class="fas fa-angle-left right"></i>
+                </p>
+              </a>
+              <ul class="nav nav-treeview">
+                <li class="nav-item">
+                  <a href="<?= base_url() ?>dashboard/socialmedia/deputes_entrants" class="nav-link">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Députés entrants</p>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="<?= base_url() ?>dashboard/socialmedia/deputes_sortants" class="nav-link">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Députés sortants</p>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="<?= base_url() ?>dashboard/socialmedia/postes_assemblee" class="nav-link">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Postes Assemblée</p>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="<?= base_url() ?>dashboard/socialmedia/groupes_entrants" class="nav-link">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Groupe nouveau membre</p>
+                  </a>
+                  <a href="<?= base_url() ?>dashboard/socialmedia/historique" class="nav-link">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Historique députés</p>
+                  </a>
+                </li>
+              </ul>
+            </li>
+            <!-- Blog posts -->
+            <li class="nav-item has-treeview">
+              <a href="#" class="nav-link">
+                <p>
+                  Blog posts
+                  <i class="fas fa-angle-left right"></i>
+                </p>
+              </a>
+              <ul class="nav nav-treeview">
+                <li class="nav-item">
+                  <a href="<?= base_url() ?>blog" class="nav-link">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Tous les posts</p>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="<?= base_url() ?>posts/create" class="nav-link">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Créer un post</p>
+                  </a>
+                </li>
+              </ul>
+            </li>
+            <!-- FAQ -->
+            <li class="nav-item has-treeview">
+              <a href="#" class="nav-link">
+                <p>
+                  FAQ
+                  <i class="fas fa-angle-left right"></i>
+                </p>
+              </a>
+              <ul class="nav nav-treeview">
+                <li class="nav-item">
+                  <a href="<?= base_url() ?>dashboard/faq" class="nav-link">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Tous les articles</p>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="<?= base_url() ?>dashboard/faq/create" class="nav-link">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Créer un article</p>
+                  </a>
+                </li>
+              </ul>
+            </li>
+            <!-- Parrainages -->
+            <li class="nav-item has-treeview">
+              <a href="#" class="nav-link">
+                <p>
+                  Parrainages 2022
+                  <i class="fas fa-angle-left right"></i>
+                </p>
+              </a>
+              <ul class="nav nav-treeview">
+                <li class="nav-item">
+                  <a href="<?= base_url() ?>dashboard/parrainages" class="nav-link">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Liste</p>
+                  </a>
+                </li>
+              </ul>
+            </li>
+            <!-- Quizz -->
+            <li class="nav-item has-treeview">
+              <a href="#" class="nav-link">
+                <p>
+                  Quizz
+                  <i class="fas fa-angle-left right"></i>
+                </p>
+              </a>
+              <ul class="nav nav-treeview">
+                <li class="nav-item">
+                  <a href="<?= base_url() ?>dashboard/quizz" class="nav-link">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Toutes les questions</p>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="<?= base_url() ?>dashboard/quizz/create" class="nav-link">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Créer une question</p>
+                  </a>
+                </li>
+              </ul>
+            </li>
+          <?php endif; ?>
+
+
+
+
+
+
            <!-- Election -->
            <li class="nav-item has-treeview">
              <a href="#" class="nav-link">
@@ -277,46 +328,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
                </li>
              </ul>
            </li>
-           <!-- Parrainages -->
-           <li class="nav-item has-treeview">
-             <a href="#" class="nav-link">
-               <p>
-                 Parrainages 2022
-                 <i class="fas fa-angle-left right"></i>
-               </p>
-             </a>
-             <ul class="nav nav-treeview">
-               <li class="nav-item">
-                 <a href="<?= base_url() ?>dashboard/parrainages" class="nav-link">
-                   <i class="far fa-circle nav-icon"></i>
-                   <p>Liste</p>
-                 </a>
-               </li>
-             </ul>
-           </li>
-           <!-- Quizz -->
-           <li class="nav-item has-treeview">
-             <a href="#" class="nav-link">
-               <p>
-                 Quizz
-                 <i class="fas fa-angle-left right"></i>
-               </p>
-             </a>
-             <ul class="nav nav-treeview">
-               <li class="nav-item">
-                 <a href="<?= base_url() ?>dashboard/quizz" class="nav-link">
-                   <i class="far fa-circle nav-icon"></i>
-                   <p>Toutes les questions</p>
-                 </a>
-               </li>
-               <li class="nav-item">
-                 <a href="<?= base_url() ?>dashboard/quizz/create" class="nav-link">
-                   <i class="far fa-circle nav-icon"></i>
-                   <p>Créer une question</p>
-                 </a>
-               </li>
-             </ul>
-           </li>
+
+
           </ul>
         </nav>
         <!-- /.sidebar-menu -->
