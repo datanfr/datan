@@ -19,7 +19,7 @@
           <div class="col-lg-12">
             <div class="card">
               <div class="card-body">
-                <?php echo form_open_multipart('dashboard/quizz/create'); ?>
+                <?php echo form_open_multipart('admin/quizz/create'); ?>
                   <div class="form-group">
                     <label>Titre de la question</label>
                     <input type="text" class="form-control" autocomplete="off" name="title" placeholder="Ajouter un titre">

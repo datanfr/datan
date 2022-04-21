@@ -44,8 +44,8 @@
                         <tr>
                           <td><?= $vote['voteNumero'] ?></td>
                           <td><?= $vote['title'] ?></td>
-                          <td><a href="<?= base_url() ?>dashboard/votes/modify/<?= $vote['id'] ?>" class="btn btn-primary">Modifier</a></td>
-                          <td><a href="<?= base_url() ?>dashboard/votes/delete/<?= $vote['id'] ?>" class="btn btn-danger">Supprimer</a></td>
+                          <td><a href="<?= base_url() ?>admin/votes/modify/<?= $vote['id'] ?>" class="btn btn-primary">Modifier</a></td>
+                          <td><a href="<?= base_url() ?>admin/votes/delete/<?= $vote['id'] ?>" class="btn btn-danger">Supprimer</a></td>
                         </tr>
                       <?php endforeach; ?>
                     </tbody>
@@ -53,8 +53,8 @@
                 <?php endif; ?>
               </div>
               <div class="card-footer d-flex justify-content-around">
-                <a href="<?= base_url() ?>dashboard/votes/create" class="btn btn-primary">Créer un vote</a>
-                <a href="<?= base_url() ?>dashboard/votes" class="btn btn-primary">Tous les votes</a>
+                <a href="<?= base_url() ?>admin/votes/create" class="btn btn-primary">Créer un vote</a>
+                <a href="<?= base_url() ?>admin/votes" class="btn btn-primary">Tous les votes</a>
               </div>
             </div><!-- /.card -->
           </div>

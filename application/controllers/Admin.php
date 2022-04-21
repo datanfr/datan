@@ -1,5 +1,5 @@
 <?php
-  class Dashboard extends CI_Controller{
+  class Admin extends CI_Controller{
 
     public function __construct() {
       parent::__construct();
@@ -18,7 +18,7 @@
       $this->password_model->security();
     }
 
-    // Dashboard homepage
+    // Admin homepage
     public function index(){
       $data['username'] = $this->session->userdata('username');
       $user_id = $this->session->userdata('user_id');
@@ -73,7 +73,7 @@
 
     public function create_candidat(){
       if (!isset($_GET['election'])) {
-        redirect('dashboard');
+        redirect('admin');
       }
       $slug = $_GET['election'];
       $data['election'] = $this->elections_model->get_election($slug);
@@ -116,7 +116,7 @@
         if ($depute) {
           $this->admin_model->create_candidat($user_id, $depute);
           $election = $this->elections_model->get_election_by_id($this->input->post('election'));
-          redirect('dashboard/elections/' . $election['slug']);
+          redirect('admin/elections/' . $election['slug']);
         } else {
           $this->load->view('dashboard/header', $data);
           $this->load->view('dashboard/elections/create', $data);
@@ -128,7 +128,7 @@
 
     public function modify_candidat($candidateMpId){
       if (!isset($_GET['election'])) {
-        redirect('dashboard');
+        redirect('admin');
       }
       $slug = $_GET['election'];
       $data['election'] = $this->elections_model->get_election($slug);
@@ -180,7 +180,7 @@
 
     public function delete_candidat($candidateMpId){
       if (!isset($_GET['election'])) {
-        redirect('dashboard');
+        redirect('admin');
       }
       $slug = $_GET['election'];
       $data['election'] = $this->elections_model->get_election($slug);
@@ -253,7 +253,7 @@
         $this->load->view('dashboard/footer');
       } else {
         $this->admin_model->create_vote($user_id);
-        redirect('dashboard/votes');
+        redirect('admin/votes');
       }
     }
 
@@ -267,7 +267,7 @@
       $data['title'] = 'Modifier un vote décrypté';
       $data['vote'] = $this->admin_model->get_vote_datan($vote);
       if (empty($data['vote'])) {
-        redirect('dashboard/votes');
+        redirect('admin/votes');
       }
 
       if ($data['vote']['state'] == "published" && $data['usernameType'] != "admin") {
@@ -285,7 +285,7 @@
           $this->load->view('dashboard/footer');
         } else {
           $this->admin_model->modify_vote($vote,$user_id);
-          redirect('dashboard/votes');
+          redirect('admin/votes');
         }
       }
     }
@@ -313,7 +313,7 @@
           $this->load->view('dashboard/footer');
         } else {
           $this->admin_model->delete_vote($vote);
-          redirect('dashboard/votes');
+          redirect('admin/votes');
         }
       }
 
@@ -459,7 +459,7 @@
           $this->load->view('dashboard/footer');
         } else {
           $this->faq_model->delete($id);
-          redirect('dashboard/faq');
+          redirect('admin/faq');
         }
       }
     }
@@ -481,7 +481,7 @@
         $this->load->view('dashboard/footer');
       } else {
         $this->faq_model->create($user_id);
-        redirect('dashboard/faq');
+        redirect('admin/faq');
       }
     }
 
@@ -493,11 +493,11 @@
       $data['article'] = $this->faq_model->get_article($id);
 
       if (empty($data['article'])) {
-        redirect('dashboard/faq');
+        redirect('admin/faq');
       }
 
       if ($data['article']['state'] == "published" && $data['usernameType'] != "admin") {
-        redirect('dashboard/faq');
+        redirect('admin/faq');
       } else {
         $data['categories'] = $this->faq_model->get_categories();
 
@@ -512,7 +512,7 @@
           $this->load->view('dashboard/footer');
         } else {
           $this->faq_model->modify($id, $user_id);
-          redirect('dashboard/faq');
+          redirect('admin/faq');
         }
       }
     }
@@ -547,7 +547,7 @@
         $this->load->view('dashboard/footer');
       } else {
         $this->quizz_model->create($user_id);
-        redirect('dashboard/quizz');
+        redirect('admin/quizz');
       }
     }
 
@@ -559,11 +559,11 @@
       $data['question'] = $this->quizz_model->get_question($id);
 
       if (empty($data['question'])) {
-        redirect('dashboard/quizz');
+        redirect('admin/quizz');
       }
 
       if ($data['question']['state'] == "published" && $data['usernameType'] != "admin") {
-        redirect('dashboard/quizz');
+        redirect('admin/quizz');
       } else {
         $data['categories'] = $this->fields_model->get_fields();
 
@@ -579,7 +579,7 @@
           $this->load->view('dashboard/footer');
         } else {
           $this->quizz_model->modify($id, $user_id);
-          redirect('dashboard/quizz');
+          redirect('admin/quizz');
         }
       }
     }
@@ -604,7 +604,7 @@
           $this->load->view('dashboard/footer');
         } else {
           $this->quizz_model->delete($id);
-          redirect('dashboard/quizz');
+          redirect('admin/quizz');
         }
       }
     }
@@ -630,7 +630,7 @@
       $data['parrainage'] = $this->parrainages_model->get_parrainage($id);
 
       if (empty($data['parrainage'])) {
-        redirect('dashboard/parrainages');
+        redirect('admin/parrainages');
       }
 
       //Form valiation
@@ -642,7 +642,7 @@
         $this->load->view('dashboard/footer');
       } else {
         $this->parrainages_model->modify($id, $user_id);
-        redirect('dashboard/parrainages');
+        redirect('admin/parrainages');
       }
     }
   }
