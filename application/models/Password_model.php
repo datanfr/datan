@@ -8,13 +8,19 @@
 
     public function security(){
       if (empty($this->session->userdata('type'))) {
-        redirect('login');
+        redirect();
       }
     }
 
     public function security_only_admin(){
-      if ((!$this->session->userdata('type') == 'admin')) {
-        redirect('login');
+      if ($this->session->userdata('type') != 'admin') {
+        redirect();
+      }
+    }
+
+    public function security_only_team(){
+      if ($this->session->userdata('type') != 'admin' && $this->session->userdata('type') != 'writer') {
+        redirect();
       }
     }
 
