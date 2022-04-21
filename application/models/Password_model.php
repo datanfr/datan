@@ -8,19 +8,25 @@
 
     public function security(){
       if (empty($this->session->userdata('type'))) {
-        redirect();
+        show_404();
       }
     }
 
     public function security_only_admin(){
       if ($this->session->userdata('type') != 'admin') {
-        redirect();
+        show_404();
       }
     }
 
     public function security_only_team(){
       if ($this->session->userdata('type') != 'admin' && $this->session->userdata('type') != 'writer') {
-        redirect();
+        show_404();
+      }
+    }
+
+    public function security_only_mp(){
+      if ($this->session->userdata('type') != 'mp') {
+        show_404();
       }
     }
 

@@ -77,7 +77,7 @@ $route['admin/quizz/delete/(:any)'] = 'admin/delete_quizz/$1';
 $route['admin/parrainages'] = 'admin/parrainages';
 $route['admin/parrainages/modify/(:any)'] = 'admin/modify_parrainage/$1';
 // MpDashboard
-$route['mp/dashboard'] = 'mpDashboard/index';
+$route['dashboard-mp'] = 'dashboardMP/index';
 // USERS
 $route['mon-compte'] = 'users/compte';
 $route['mon-compte/modifier-donnees-personnelles'] = 'users/modify_personal_data';
