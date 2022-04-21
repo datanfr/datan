@@ -292,36 +292,42 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 </li>
               </ul>
             </li>
+            <!-- Election -->
+            <li class="nav-item has-treeview">
+              <a href="#" class="nav-link">
+                <p>
+                  Elections
+                  <i class="fas fa-angle-left right"></i>
+                </p>
+              </a>
+              <ul class="nav nav-treeview">
+                <li class="nav-item">
+                  <a href="<?= base_url() ?>admin/elections/legislatives-2022" class="nav-link">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Législatives 2022</p>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="<?= base_url() ?>admin/elections/presidentielle-2022" class="nav-link">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Présidentielle 2022</p>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="<?= base_url() ?>admin/elections/regionales-2021" class="nav-link">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Régionales 2021</p>
+                  </a>
+                </li>
+              </ul>
+            </li>
           <?php endif; ?>
-           <!-- Election -->
-           <li class="nav-item has-treeview">
-             <a href="#" class="nav-link">
-               <p>
-                 Elections
-                 <i class="fas fa-angle-left right"></i>
-               </p>
-             </a>
-             <ul class="nav nav-treeview">
-               <li class="nav-item">
-                 <a href="<?= base_url() ?>admin/elections/legislatives-2022" class="nav-link">
-                   <i class="far fa-circle nav-icon"></i>
-                   <p>Législatives 2022</p>
-                 </a>
-               </li>
-               <li class="nav-item">
-                 <a href="<?= base_url() ?>admin/elections/presidentielle-2022" class="nav-link">
-                   <i class="far fa-circle nav-icon"></i>
-                   <p>Présidentielle 2022</p>
-                 </a>
-               </li>
-               <li class="nav-item">
-                 <a href="<?= base_url() ?>admin/elections/regionales-2021" class="nav-link">
-                   <i class="far fa-circle nav-icon"></i>
-                   <p>Régionales 2021</p>
-                 </a>
-               </li>
-             </ul>
-           </li>
+          <?php if ($this->password_model->is_mp()): ?>
+            <!-- Election -->
+            <li class="nav-item">
+              <a class="nav-link" href="<?= base_url() ?>">Législatives 2022</a>
+            </li>
+          <?php endif; ?>
           </ul>
         </nav>
         <!-- /.sidebar-menu -->
