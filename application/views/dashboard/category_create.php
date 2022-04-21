@@ -21,7 +21,7 @@
           <div class="col-lg-12">
             <div class="card">
               <div class="card-body">
-                <?= form_open_multipart('dashboard/categories/create'); ?>
+                <?= form_open_multipart('admin/categories/create'); ?>
                   <div class="form-group">
                     <label>Nom</label>
                     <input type="text" class="form-control" autocomplete="off" name="name" placeholder="Ajouter un nom">

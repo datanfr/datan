@@ -66,10 +66,10 @@
               </div> <!-- /.card-body -->
               <div class="card-footer">
                 <div class="float-left">
-                  <button type="button" onclick="window.location.href = '<?= base_url() ?>dashboard/votes';" class="btn btn-default"> Annuler</button>
+                  <button type="button" onclick="window.location.href = '<?= base_url() ?>admin/votes';" class="btn btn-default"> Annuler</button>
                 </div>
                 <div class="float-right">
-                  <?= form_open_multipart('dashboard/votes/delete/'.$vote['id']); ?>
+                  <?= form_open_multipart('admin/votes/delete/'.$vote['id']); ?>
                     <input type="hidden" name="delete" value="deleted">
                     <button type="submit" class="btn btn-danger">Supprimer</button>
                   </form>

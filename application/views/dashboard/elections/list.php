@@ -17,7 +17,7 @@
     <div class="col-lg-12">
       <div class="card">
         <div class="card-body">
-          <a class="btn btn-primary" role="button" href="<?= base_url() ?>dashboard/elections/candidat/create?election=<?= $election['slug'] ?>">Ajouter un candidat</a>
+          <a class="btn btn-primary" role="button" href="<?= base_url() ?>admin/elections/candidat/create?election=<?= $election['slug'] ?>">Ajouter un candidat</a>
           <a class="btn btn-warning my-3" href="<?= base_url() ?>cache/delete_all" role="button">Supprimer cache après avoir ajouté un candidat</a>
         </div>
       </div>
@@ -61,8 +61,8 @@
                   <td><?= $candidat['visible'] ?></td>
                   <td><?= $candidat['modified_at'] ?></td>
                   <td>
-                    <a class="btn btn-link" href="<?= base_url() ?>dashboard/elections/candidat/modify/<?= $candidat['mpId'] ?>?election=<?= $election['slug'] ?>" ?>modifier</a><br/>
-                    <a class="btn btn-link" href="<?= base_url() ?>dashboard/elections/candidat/delete/<?= $candidat['mpId'] ?>?election=<?= $election['slug'] ?>">supprimer</a><br/>
+                    <a class="btn btn-link" href="<?= base_url() ?>admin/elections/candidat/modify/<?= $candidat['mpId'] ?>?election=<?= $election['slug'] ?>" ?>modifier</a><br/>
+                    <a class="btn btn-link" href="<?= base_url() ?>admin/elections/candidat/delete/<?= $candidat['mpId'] ?>?election=<?= $election['slug'] ?>">supprimer</a><br/>
                     <a class="btn btn-link" target="_blank" href="<?= base_url(); ?>deputes/<?= $candidat['dptSlug'].'/depute_'.$candidat['nameUrl'].'?regionales2021' ?>">preview</a><br/>
                   </td>
                 </tr>
