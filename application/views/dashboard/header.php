@@ -293,12 +293,6 @@ scratch. This page gets rid of all links and provides the needed markup only.
               </ul>
             </li>
           <?php endif; ?>
-
-
-
-
-
-
            <!-- Election -->
            <li class="nav-item has-treeview">
              <a href="#" class="nav-link">
@@ -309,27 +303,25 @@ scratch. This page gets rid of all links and provides the needed markup only.
              </a>
              <ul class="nav nav-treeview">
                <li class="nav-item">
-                 <a href="<?= base_url() ?>dashboard/elections/presidentielle-2022" class="nav-link">
-                   <i class="far fa-circle nav-icon"></i>
-                   <p>Présidentielle 2022</p>
-                 </a>
-               </li>
-               <li class="nav-item">
                  <a href="<?= base_url() ?>dashboard/elections/legislatives-2022" class="nav-link">
                    <i class="far fa-circle nav-icon"></i>
                    <p>Législatives 2022</p>
                  </a>
                </li>
                <li class="nav-item">
-                 <a href="<?= base_url() ?>dashboard/elections/regionales-2021" class="nav-link disabled">
+                 <a href="<?= base_url() ?>dashboard/elections/presidentielle-2022" class="nav-link">
+                   <i class="far fa-circle nav-icon"></i>
+                   <p>Présidentielle 2022</p>
+                 </a>
+               </li>
+               <li class="nav-item">
+                 <a href="<?= base_url() ?>dashboard/elections/regionales-2021" class="nav-link">
                    <i class="far fa-circle nav-icon"></i>
                    <p>Régionales 2021</p>
                  </a>
                </li>
              </ul>
            </li>
-
-
           </ul>
         </nav>
         <!-- /.sidebar-menu -->

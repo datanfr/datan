@@ -51,7 +51,7 @@
     public function election_candidates($slug){
       $data['election'] = $this->elections_model->get_election($slug);
 
-      if (empty($data['election']) || !$data['election']['candidates']) {
+      if (empty($data['election'])) {
         show_404($this->functions_datan->get_404_infos());
       }
 
@@ -62,6 +62,7 @@
       $data['candidats'] = $this->elections_model->get_all_candidate($data['election']['id']);
       foreach ($data['candidats'] as $key => $value) {
         $district = $this->elections_model->get_district($value['election_libelleAbrev'], $value['district']);
+        //print_r($district);
         $data['candidats'][$key]['districtLibelle'] = $district['libelle'];
       }
 
@@ -82,7 +83,9 @@
 
       if ($data['election']['libelleAbrev'] == 'Présidentielle') {
         $data['requiredFields'] = array();
-      } else {
+      } elseif ($data['election']['libelleAbrev'] == 'Législatives') {
+        $data['requiredFields'] = array('district');
+      } elseif ($data['election']['libelleAbrev'] == 'Régionales') {
         $data['requiredFields'] = array('district', 'position');
       }
 
@@ -91,13 +94,16 @@
 
       $data['title'] = 'Créer un nouveau candidat pour les ' . $data['election']['libelleAbrev'] . ' ' . $data['election']['dateYear'];
       $data['positions'] = array('', 'Tête de liste', 'Colistier');
-
       $data['districts'] = $this->elections_model->get_all_districts($data['election']['id']);
+      echo $data['election']['id'];
 
       //Form valiation
       $this->form_validation->set_rules('depute_url', 'député', 'required');
-      if ($data['election']['libelleAbrev'] != 'Présidentielle') {
+      if ($data['election']['libelleAbrev'] == 'Régionales') {
         $this->form_validation->set_rules('district', 'région de candidature', 'required');
+      }
+      if ($data['election']['libelleAbrev'] == 'Législatives') {
+        $this->form_validation->set_rules('district', 'circonscription', 'required');
       }
       if ($this->form_validation->run() === FALSE) {
         $this->load->view('dashboard/header', $data);
@@ -144,7 +150,9 @@
 
       if ($data['election']['libelleAbrev'] == 'Présidentielle') {
         $data['requiredFields'] = array();
-      } else {
+      } elseif ($data['election']['libelleAbrev'] == 'Législatives') {
+        $data['requiredFields'] = array('district');
+      } elseif ($data['election']['libelleAbrev'] == 'Régionales') {
         $data['requiredFields'] = array('district', 'position');
       }
 
@@ -152,8 +160,11 @@
       $data['districts'] = $this->elections_model->get_all_districts($data['election']['id']);
       //Form valiation
       $this->form_validation->set_rules('mpId', 'mpId', 'required');
-      if ($data['election']['libelleAbrev'] != 'Présidentielle') {
+      if ($data['election']['libelleAbrev'] == 'Régionales') {
         $this->form_validation->set_rules('district', 'région de candidature', 'required');
+      }
+      if ($data['election']['libelleAbrev'] == 'Législatives') {
+        //$this->form_validation->set_rules('district', 'circonscription', 'required');
       }
       if ($this->form_validation->run() === FALSE) {
         $this->load->view('dashboard/header', $data);
@@ -182,7 +193,9 @@
 
       if ($data['election']['libelleAbrev'] == 'Présidentielle') {
         $data['requiredFields'] = array();
-      } else {
+      } elseif ($data['election']['libelleAbrev'] == 'Législatives') {
+        $data['requiredFields'] = array('district');
+      } elseif ($data['election']['libelleAbrev'] == 'Régionales') {
         $data['requiredFields'] = array('district', 'position');
       }
 

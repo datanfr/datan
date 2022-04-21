@@ -36,6 +36,7 @@
                 <div class="form-group">
                   <label for="">Circonscription de candidature</label>
                   <select class="form-control" name="district">
+                    <option value="0">Ne sais pas</option>
                     <?php foreach ($districts as $district): ?>
                       <option value="<?= $district['id'] ?>"><?= $district['libelle'] ?></option>
                     <?php endforeach; ?>
