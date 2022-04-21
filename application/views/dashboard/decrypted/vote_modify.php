@@ -21,7 +21,7 @@
           <div class="col-lg-12">
             <div class="card">
               <div class="card-body">
-                <?= form_open_multipart('dashboard/votes/modify/'.$vote['id']); ?>
+                <?= form_open_multipart('admin/votes/modify/'.$vote['id']); ?>
                   <div class="form-group">
                     <label>Titre</label>
                     <input type="text" class="form-control" autocomplete="off" name="title" value="<?= $vote['title'] ?>">

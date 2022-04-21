@@ -23,7 +23,7 @@
               <div class="card-body">
                 <?php foreach ($deputes as $depute): ?>
                   <p>
-                    <a href="<?= base_url() ?>dashboard/socialmedia/historique/<?= $depute['mpId'] ?>"><?= $depute['nameFirst'] ?> <?= $depute['nameLast'] ?></a>
+                    <a href="<?= base_url() ?>admin/socialmedia/historique/<?= $depute['mpId'] ?>"><?= $depute['nameFirst'] ?> <?= $depute['nameLast'] ?></a>
                   </p>
                 <?php endforeach; ?>
               </div>
