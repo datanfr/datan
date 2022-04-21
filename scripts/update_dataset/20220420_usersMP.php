@@ -8,3 +8,5 @@
     `mpId` VARCHAR(11) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL ,
     INDEX `user_idx` (`user`)
   ) ENGINE = MyISAM;");
+
+  $bdd->query('ALTER TABLE `elect_deputes_candidats` CHANGE `district` `district` VARCHAR(5) NULL DEFAULT NULL;');

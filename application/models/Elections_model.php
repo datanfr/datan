@@ -185,7 +185,7 @@
         $this->db->order_by('libelle', 'ASC');
         $query = $this->db->get('regions');
         return $query->result_array();
-      } elseif ($election == 2 /*departementales 2021*/) {
+      } elseif (in_array($election, array(2, 4))/*departementales 2021 & législatives 2022*/) {
         $this->db->select('departement_code AS id, CONCAT(departement_code, " - ", departement_nom) AS libelle');
         $this->db->order_by('departement_code', 'ASC');
         $query = $this->db->get('departement');
@@ -199,6 +199,15 @@
         $array = array(
           'id' => $result['id'],
           'libelle' => $result['libelle']
+        );
+        return $array;
+      }
+
+      if ($type == 'Législatives') {
+        $result = $this->db->get_where('departement', array('departement_code' => $district))->row_array();
+        $array = array(
+          'id' => $result['departement_code'],
+          'libelle' => $result['departement_nom']
         );
         return $array;
       }
