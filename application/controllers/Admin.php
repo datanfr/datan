@@ -15,7 +15,7 @@
       $this->load->model('readings_model');
       $this->load->model('votes_model');
       $this->load->model('parrainages_model');
-      $this->password_model->security();
+      $this->password_model->security_only_team();
     }
 
     // Admin homepage
