@@ -33,8 +33,6 @@
                 <th>député</th>
                 <th>district</th>
                 <th>position</th>
-                <th>nuance</th>
-                <th>source</th>
                 <th>second round</th>
                 <th>elected</th>
                 <th>visible</th>
@@ -49,10 +47,6 @@
                   <td><a target="_blank" href="<?= base_url(); ?>deputes/<?= $candidat['dptSlug'].'/depute_'.$candidat['nameUrl'] ?>"><?= $candidat['nameFirst'] .' ' . $candidat['nameLast'] ?></a></td>
                   <td><?= $candidat['districtLibelle'] ?></td>
                   <td><?= $candidat['position'] ?></td>
-                  <td><?= $candidat['nuance'] ?></td>
-                  <td>
-                    <a href="<?= $candidat['source'] ?>" target="_blank" rel="nofollow noopener noreferrer"><?= $candidat['source'] ?></a>
-                  </td>
                   <td>
                     <?php if ($candidat['secondRound'] == NULL): ?>
                     <?php else: ?>
