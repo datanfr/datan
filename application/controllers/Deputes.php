@@ -349,7 +349,7 @@
           $data['elections'][$key]['electedColor'] = '';
         }
       }
-      $data['electionFeature'] = $this->elections_model->get_candidate_election($mpId, 3); /* Présidentielle-2022 */
+      $data['electionFeature'] = $this->elections_model->get_candidate_election($mpId, 4); /* Législative-2022 */
       $data['parrainage'] = $this->parrainages_model->get_mp_parrainage($mpId, 2022); /* Parrainage for presidentielle 2022 */
       if ($data['parrainage']) {
         $data['parrainage']['candidat'] = $this->parrainages_model->change_candidate_name($data['parrainage']['candidat']);
