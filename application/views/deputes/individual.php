@@ -15,17 +15,9 @@
           <?php if ($electionFeature): ?>
             <div class="card card-election-feature mb-4">
               <div class="card-body">
-                <h2>🗳️ Présidentielle 2022</h2>
-                <?= $title ?> est candidat<?= $gender['e'] ?> à l'élection présidentielle 2022.
-              </div>
-            </div>
-          <?php endif; ?>
-          <!-- Parrainage -->
-          <?php if ($parrainage): ?>
-            <div class="card card-election-feature mb-4">
-              <div class="card-body">
-                <h2>🗳️ Présidentielle 2022</h2>
-                <?= $title ?> a accordé son parrainage à <b><?= $parrainage['candidat'] ?></b>.
+                <h2>🗳️ Législatives 2022</h2>
+                <p class="mb-0"><?= $title ?> est candidat<?= $gender['e'] ?> aux élections législatives 2022.</p>
+                <a href="#" class="text-white">Plus d'infos</a>
               </div>
             </div>
           <?php endif; ?>
@@ -779,7 +771,7 @@
         <!-- BLOC ELECTIONS -->
         <?php if ($elections): ?>
           <div class="bloc-elections-history mt-5">
-            <h2 class="mb-4">Ses participations électorales</h2>
+            <h2 class="mb-4 title-center">Ses participations électorales</h2>
             <p>
               <?= $title ?> a été candidat<?= $gender['e'] ?> <?= count($elections) > 1 ? 'à plusieurs élections' : 'à une élection' ?> alors qu'<?= $gender['pronom'] ?> était député<?= $gender['e'] ?>.
             </p>
@@ -795,6 +787,23 @@
                 <?php endforeach; ?>
               </tbody>
             </table>
+          </div>
+        <?php endif; ?>
+        <!-- BLOC PARRAINAGES -->
+        <?php if ($parrainage): ?>
+          <div class="mt-5 bloc-elections-history">
+            <h2 class="mb-4 title-center">Ses parrainages présidentiels</h2>
+            <p>
+              <?= $title ?> a déjà parrainé un candidat à l'élection présidentiel pendant son mandat de député<?= $gender['e'] ?>.
+              <table class="table">
+                <tbody>
+                  <tr>
+                    <td class="font-weight-bold">Élection présidentielle 2022</td>
+                    <td>Parrainagé accordé à <b><?= $parrainage['candidat'] ?></b></td>
+                  </tr>
+                </tbody>
+              </table>
+            </p>
           </div>
         <?php endif; ?>
         <!-- BLOC PARTAGEZ -->
