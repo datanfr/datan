@@ -10,3 +10,4 @@
   ) ENGINE = MyISAM;");
 
   $bdd->query('ALTER TABLE `elect_deputes_candidats` CHANGE `district` `district` VARCHAR(5) NULL DEFAULT NULL;');
+  $bdd->query('ALTER TABLE `elect_deputes_candidats` ADD `candidature` INT(5) NULL DEFAULT '1' AFTER `election`;');

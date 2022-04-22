@@ -59,6 +59,37 @@ class Admin_model extends CI_Model
     $this->db->update('elect_deputes_candidats');
   }
 
+  public function modify_candidat_as_mp($mpId, $election)
+  {
+
+    // Check if MP is already in the database
+    $query = $this->db->get_where(
+      'elect_deputes_candidats',
+      array('mpId' => $mpId, 'election' => $election)
+    );
+
+    if ($query->num_rows() > 0) {
+      // Modify a candidate
+      $data = array(
+        'district' => $this->input->post('district'),
+        'candidature' => $this->input->post('candidature'),
+      );
+      $this->db->set($data);
+      $this->db->where('mpId', $mpId);
+      $this->db->where('election', $election);
+      $this->db->update('elect_deputes_candidats');
+    } else {
+      // Create a candidate
+      $data = array(
+        'mpId' => $mpId,
+        'election' => $election,
+        'district' => $this->input->post('district'),
+        'candidature' => $this->input->post('candidature'),
+      );
+      $this->db->insert('elect_deputes_candidats', $data);
+    }
+  }
+
   public function delete_candidat()
   {
     $this->db->where('mpId', $this->input->post('mpId'));

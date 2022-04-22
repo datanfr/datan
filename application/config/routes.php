@@ -79,6 +79,7 @@ $route['admin/parrainages/modify/(:any)'] = 'admin/modify_parrainage/$1';
 // MpDashboard
 $route['dashboard-mp'] = 'dashboardMP/index';
 $route['dashboard-mp/elections/(:any)'] = 'dashboardMP/elections/$1';
+$route['dashboard-mp/elections/(:any)/modifier'] = 'dashboardMP/elections_modify/$1';
 // USERS
 $route['mon-compte'] = 'users/compte';
 $route['mon-compte/modifier-donnees-personnelles'] = 'users/modify_personal_data';
