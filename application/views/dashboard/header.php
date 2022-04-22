@@ -88,7 +88,12 @@ scratch. This page gets rid of all links and provides the needed markup only.
             <!--<img src="#" class="img-circle elevation-2" alt="User Image">-->
           </div>
           <div class="info">
-            <a href="<?= base_url() ?>admin" class="d-block"><?= $username ?></a>
+            <?php if ($this->password_model->is_team()): ?>
+              <a href="<?= base_url() ?>admin" class="d-block"><?= $username ?></a>
+            <?php endif; ?>
+            <?php if ($this->password_model->is_mp()): ?>
+              <a href="<?= base_url() ?>dashboard-mp" class="d-block"><?= $username ?></a>
+            <?php endif; ?>
           </div>
         </div>
 
@@ -325,7 +330,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
           <?php if ($this->password_model->is_mp()): ?>
             <!-- Election -->
             <li class="nav-item">
-              <a class="nav-link" href="<?= base_url() ?>">Législatives 2022</a>
+              <a class="nav-link" href="<?= base_url() ?>dashboard-mp/elections/legislatives-2022">Législatives 2022</a>
             </li>
           <?php endif; ?>
           </ul>
