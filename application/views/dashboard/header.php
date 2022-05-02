@@ -310,6 +310,12 @@ scratch. This page gets rid of all links and provides the needed markup only.
               </a>
               <ul class="nav nav-treeview">
                 <li class="nav-item">
+                  <a href="<?= base_url() ?>admin/elections/modifications-mps" class="nav-link bg-danger">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Modifs par députés</p>
+                  </a>
+                </li>
+                <li class="nav-item">
                   <a href="<?= base_url() ?>admin/elections/legislatives-2022" class="nav-link">
                     <i class="far fa-circle nav-icon"></i>
                     <p>Législatives 2022</p>

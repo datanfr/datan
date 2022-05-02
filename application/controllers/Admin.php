@@ -216,7 +216,18 @@
           redirect('dashboard/elections/' . $election['slug']);
         }
       }
+    }
 
+    public function election_modifications_mps(){
+      $data['username'] = $this->session->userdata('username');
+      $data['usernameType'] = $this->session->userdata('type');
+      $data['title'] = 'Modifications apportées par les députés';
+
+      $data['modifs'] = $this->table_history_model->get_history('elect_deputes_candidats');
+
+      $this->load->view('dashboard/header', $data);
+      $this->load->view('dashboard/elections/modifs', $data);
+      $this->load->view('dashboard/footer');
     }
 
     public function votes(){

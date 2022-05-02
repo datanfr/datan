@@ -35,7 +35,7 @@
 
     public function login($username){
       $this->db->where('username', $username);
-      $this->db->join('usersMP', 'users.id = usersMP.user', 'left');
+      $this->db->join('users_mp', 'users.id = users_mp.user', 'left');
       $result_user = $this->db->get('users');
 
       if ($result_user->num_rows() == 1) {
