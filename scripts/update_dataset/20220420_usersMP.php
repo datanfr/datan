@@ -3,10 +3,10 @@
 
   // Create table usersMP
   try {
-    $bdd->query('SELECT 1 FROM usersMP LIMIT 1');
-    echo "table usersMP already exists<br>";
+    $bdd->query('SELECT 1 FROM users_mp LIMIT 1');
+    echo "table users_mp already exists<br>";
   } catch (Exception $e) {
-    $bdd->query("CREATE TABLE `usersMP` (
+    $bdd->query("CREATE TABLE `users_mp` (
       `user` INT(11) NOT NULL ,
       `mpId` VARCHAR(11) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL ,
       INDEX `user_idx` (`user`)
