@@ -356,4 +356,15 @@ class Admin_model extends CI_Model
 
     return $query->result_array();
   }
+
+  public function table_changes($table, $toInsert){
+    $data = array(
+      'table' => $table,
+      'user' => $toInsert['user'],
+      'col' => $toInsert['col'],
+      'value_old' => $toInsert['value_old'],
+      'value_new' => $toInsert['value_new']
+    );
+    $this->db->insert('table_changes', $data);
+  }
 }
