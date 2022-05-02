@@ -59,6 +59,9 @@ scratch. This page gets rid of all links and provides the needed markup only.
         <li class="nav-item d-none d-sm-inline-block">
           <a href="<?= base_url () ?>mon-compte" class="nav-link">Mon compte</a>
         </li>
+        <li class="nav-item d-none d-sm-inline-block">
+          <a href="<?= base_url(); ?>logout" class="nav-link">Déconnexion</a>
+        </li>
       </ul>
 
       <!-- SEARCH FORM -->
