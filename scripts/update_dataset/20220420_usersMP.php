@@ -3,10 +3,9 @@
 
   // Create table usersMP
   try {
-    $bdd->query("SELECT 1 FROM usersMP LIMIT 1");
+    $bdd->query('SELECT 1 FROM usersMP LIMIT 1');
+    echo "table usersMP already exists<br>";
   } catch (Exception $e) {
-    // We got an exception (table not found)
-    //return FALSE;
     $bdd->query("CREATE TABLE `usersMP` (
       `user` INT(11) NOT NULL ,
       `mpId` VARCHAR(11) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL ,
@@ -18,6 +17,7 @@
 
   try {
     $bdd->query("SELECT candidature FROM elect_deputes_candidats LIMIT 1");
+    echo "field candidature already exists<br>";
   } catch (\Exception $e) {
     $bdd->query('ALTER TABLE `elect_deputes_candidats` ADD `candidature` INT(5) NULL DEFAULT 1 AFTER `election`;');
   }
@@ -33,3 +33,19 @@
     FROM elect_deputes_candidats edc
     LEFT JOIN deputes_last dl ON edc.mpId = dl.mpId
     LEFT JOIN elect_libelle el ON edc.election = el.id;');
+
+  try {
+    $bdd->query('SELECT 1 FROM table_changes LIMIT 1');
+    echo "table table_changes already exists<br>";
+  } catch (\Exception $e) {
+    $bdd->query('CREATE TABLE `table_changes` (
+      `id` INT NOT NULL ,
+      `table` VARCHAR(50) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL ,
+      `col` VARCHAR(50) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL ,
+      `value_old` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL ,
+      `value_new` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL ,
+      `user` INT NOT NULL ,
+      `modified_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ,
+      PRIMARY KEY (`id`)) ENGINE = MyISAM;'
+    );
+  }
