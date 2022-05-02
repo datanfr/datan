@@ -144,7 +144,7 @@
       $data['candidat']['districtLibelle'] = $district['libelle'];
 
       if (empty($data['candidat'])) {
-        redirect('dashboard/elections/' . $data['election']['slug']);
+        redirect('admin/elections/' . $data['election']['slug']);
       }
 
       if ($data['election']['libelleAbrev'] == 'Présidentielle') {
@@ -172,7 +172,7 @@
       } else {
           $this->admin_model->modify_candidat();
           $election = $this->elections_model->get_election_by_id($this->input->post('election'));
-          redirect('dashboard/elections/' . $election['slug']);
+          redirect('admin/elections/' . $election['slug']);
       }
 
     }
@@ -270,7 +270,7 @@
       }
 
       if ($data['vote']['state'] == "published" && $data['usernameType'] != "admin") {
-        redirect('dashboard/votes');
+        redirect('admin/votes');
       } else {
         $data['categories'] = $this->fields_model->get_fields();
 
