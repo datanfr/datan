@@ -14,7 +14,14 @@
               <h5 class="m-0">Candidature aux <?= mb_strtolower($election['libelle']) ?> de <?= $election['dateYear'] ?></h5>
             </div>
             <div class="card-body">
-              <p>Pour les <?= mb_strtolower($election['libelle']) ?> de <?= $election['dateYear'] ?>, le statut de votre candidature est :</p>
+              <p>Pour les <?= mb_strtolower($election['libelle']) ?> de <?= $election['dateYear'] ?>, le statut de votre candidature est</p>
+              <?php if ($candidate): ?>
+                <p class="font-weight-bold"><?= $candidate['candidature'] == 1 ? 'Candidat' : 'Non candidat' ?><?= $depute['gender']['e'] ?></p>
+                <p>Département de candidature : <span class="font-weight-bold"><?= $candidate['district']['libelle'] ? $candidate['district']['libelle'] : 'Non renseigné' ?></span></p>
+              <?php else: ?>
+                <p class="font-weight-bold">Non renseigné</p>
+              <?php endif; ?>
+              <p class="font-italic">Attention, vous pouvez modifier le statut de votre candidature uniquement jusqu'au vendredi précédent le premier tour des élections.</p>
             </div>
             <div class="card-footer d-flex justify-content-around">
               <a href="<?= base_url() ?>dashboard-mp/elections/<?= $election['slug'] ?>/modifier" class="btn btn-primary">Modifier le statut de ma candidature</a>

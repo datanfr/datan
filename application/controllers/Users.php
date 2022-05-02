@@ -244,6 +244,7 @@
       $this->session->unset_userdata('username');
       $this->session->unset_userdata('type');
       $this->session->unset_userdata('attempt');
+      $this->session->unset_userdata('mpId');
 
       // Set message
       redirect();
