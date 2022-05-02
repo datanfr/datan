@@ -35,11 +35,11 @@
     LEFT JOIN elect_libelle el ON edc.election = el.id;');
 
   try {
-    $bdd->query('SELECT 1 FROM table_changes LIMIT 1');
+    $bdd->query('SELECT 1 FROM table_history LIMIT 1');
     echo "table table_changes already exists<br>";
   } catch (\Exception $e) {
-    $bdd->query('CREATE TABLE `table_changes` (
-      `id` INT NOT NULL ,
+    $bdd->query('CREATE TABLE `table_history` (
+      `id` INT NOT NULL AUTO_INCREMENT ,
       `table` VARCHAR(50) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL ,
       `col` VARCHAR(50) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL ,
       `value_old` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL ,
