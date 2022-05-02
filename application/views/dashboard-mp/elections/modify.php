@@ -25,6 +25,9 @@
                   <div class="form-group">
                     <label for="">Département de candidature</label>
                     <select class="form-control" name="district">
+                      <?php if ($candidate['district']): ?>
+                        <option value="<?= $candidate['district']['id'] ?>" selected="selected">Selectionné : <?= $candidate['district']['libelle'] ?></option>
+                      <?php endif; ?>
                       <option value=""></option>
                       <?php foreach ($districts as $district): ?>
                         <option value="<?= $district['id'] ?>"><?= $district['libelle'] ?></option>
@@ -35,13 +38,13 @@
                     <p class="font-weight-bold">Candidature</p>
                     <div class="d-flex">
                       <div class="form-check flex-fill font-weight-bold" >
-                        <input class="form-check-input" type="radio" name="candidature" value="1" id="candidature1">
+                        <input class="form-check-input" type="radio" name="candidature" value="1" id="candidature1" <?= $candidate['candidature'] == 1 ? " checked" : NULL ?>>
                         <label class="form-check-label" for="candidature1">
                           Je suis candidat.e
                         </label>
                       </div>
                       <div class="form-check flex-fill">
-                        <input class="form-check-input" type="radio" name="candidature" id="candidature2" value="0" checked>
+                        <input class="form-check-input" type="radio" name="candidature" id="candidature2" value="0" <?= $candidate['candidature'] == 0 ? " checked" : NULL ?>>
                         <label class="form-check-label" for="candidature2">
                           Je ne suis pas candidat.e
                         </label>
