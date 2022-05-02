@@ -46,6 +46,7 @@ class Admin_model extends CI_Model
   public function modify_candidat()
   {
     $data = array(
+      'candidature' => $this->input->post('candidature'),
       'district' => $this->input->post('district'),
       'position' =>  $this->input->post('position'),
       'secondRound' => $this->input->post('secondRound') == 99 ?  NULL : $this->input->post('secondRound'),
