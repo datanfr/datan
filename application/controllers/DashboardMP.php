@@ -26,7 +26,7 @@
     public function elections($slug){
       $data['election'] = $this->elections_model->get_election($slug);
 
-      if (empty($data['election'])) {
+      if (empty($data['election']) || !in_array($data['election']['id'], array(4))) {
         show_404($this->functions_datan->get_404_infos());
       }
 
@@ -49,7 +49,7 @@
     public function elections_modify($slug){
       $data['election'] = $this->elections_model->get_election($slug);
 
-      if (empty($data['election'])) {
+      if (empty($data['election']) || !in_array($data['election']['id'], array(4))) {
         show_404($this->functions_datan->get_404_infos());
       }
 
