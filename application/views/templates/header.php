@@ -214,11 +214,14 @@
                 </a>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink" style="z-index: 9999 !important">
                   <a href="<?= base_url(); ?>mon-compte" class="dropdown-item no-decoration">Mon compte</a>
-                  <?php if (($this->session->userdata('type') == 'admin') || ($this->session->userdata('type') == 'writer') || ($this->session->userdata('type') == 'mp')): ?>
-                    <a class="dropdown-item no-decoration" href="<?= base_url(); ?>admin/">Dashboard</a>
+                  <?php if (($this->session->userdata('type') == 'admin') || ($this->session->userdata('type') == 'writer')): ?>
+                    <a class="dropdown-item no-decoration" href="<?= base_url(); ?>admin">Dashboard</a>
+                  <?php endif; ?>
+                  <?php if ($this->password_model->is_mp()): ?>
+                    <a class="dropdown-item no-decoration" href="<?= base_url(); ?>dashboard-mp">Dashboard</a>
                   <?php endif; ?>
                   <?php if (($this->session->userdata('type') == 'admin')): ?>
-                    <a class="dropdown-item no-decoration" href="<?= base_url(); ?>scripts/">Scripts</a>
+                    <a class="dropdown-item no-decoration" href="<?= base_url(); ?>scripts">Scripts</a>
                   <?php endif; ?>
                   <a href="<?= base_url(); ?>logout" class="dropdown-item no-decoration">Déconnexion</a>
                 </div>

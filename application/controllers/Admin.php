@@ -62,7 +62,6 @@
       $data['candidats'] = $this->elections_model->get_all_candidate($data['election']['id']);
       foreach ($data['candidats'] as $key => $value) {
         $district = $this->elections_model->get_district($value['election_libelleAbrev'], $value['district']);
-        //print_r($district);
         $data['candidats'][$key]['districtLibelle'] = $district['libelle'];
       }
 

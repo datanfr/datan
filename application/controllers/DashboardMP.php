@@ -12,6 +12,11 @@
     public function index(){
       $data['username'] = $this->session->userdata('username');
       $data['depute'] = $this->deputes_model->get_depute_by_mpId($this->session->userdata('mpId'));
+      $data['depute']['gender'] = gender($data['depute']['civ']);
+      $data['candidate'] = $this->elections_model->get_candidate_election($data['depute']['mpId'], 4); /* Législative-2022 */
+      if ($data['candidate']) {
+        $data['candidate']['district'] = $this->elections_model->get_district('Législatives', $data['candidate']['district']);
+      }
 
       $this->load->view('dashboard/header', $data);
       $this->load->view('dashboard-mp/index', $data);
@@ -27,6 +32,12 @@
 
       $data['username'] = $this->session->userdata('username');
       $data['depute'] = $this->deputes_model->get_depute_by_mpId($this->session->userdata('mpId'));
+      $data['depute']['gender'] = gender($data['depute']['civ']);
+      $data['candidate'] = $this->elections_model->get_candidate_election($data['depute']['mpId'], 4); /* Législative-2022 */
+      if ($data['candidate']) {
+        $data['candidate']['district'] = $this->elections_model->get_district($data['election']['libelleAbrev'], $data['candidate']['district']);
+      }
+
       $data['title'] = "Candidature pour les élections " . mb_strtolower($data['election']['libelleAbrev']). " ".$data['election']['dateYear'];
 
       $this->load->view('dashboard/header', $data);
@@ -42,8 +53,20 @@
         show_404($this->functions_datan->get_404_infos());
       }
 
+      $firstRound = new DateTime($data['election']['dateFirstRound']);
+      $today = new DateTime('now');
+      $interval = $firstRound->diff($today);
+
+      if ($interval->days <= 2) {
+        show_404($this->functions_datan->get_404_infos());
+      }
+
       $data['username'] = $this->session->userdata('username');
       $data['depute'] = $this->deputes_model->get_depute_by_mpId($this->session->userdata('mpId'));
+      $data['candidate'] = $this->elections_model->get_candidate_election($data['depute']['mpId'], 4); /* Législative-2022 */
+      if ($data['candidate']) {
+        $data['candidate']['district'] = $this->elections_model->get_district($data['election']['libelleAbrev'], $data['candidate']['district']);
+      }
       $data['title'] = "Modifier la candidature pour les élections " . mb_strtolower($data['election']['libelleAbrev']). " ".$data['election']['dateYear'];
 
       $data['districts'] = $this->elections_model->get_all_districts($data['election']['id']);
