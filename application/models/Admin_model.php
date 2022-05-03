@@ -28,7 +28,9 @@ class Admin_model extends CI_Model
       'election' => $this->input->post('election'),
       'district' => $this->input->post('district'),
       'position' =>  $this->input->post('position'),
-      'visible' => $this->input->post('visible') ? true : false
+      'visible' => $this->input->post('visible') ? true : false,
+      'candidature' => $this->input->post('candidature'),
+      'link' => $this->input->post('link')
     );
 
     $query = $this->db->get_where(
@@ -51,6 +53,7 @@ class Admin_model extends CI_Model
       'position' =>  $this->input->post('position'),
       'secondRound' => $this->input->post('secondRound') == 99 ?  NULL : $this->input->post('secondRound'),
       'elected' => $this->input->post('elected') == 99 ?  NULL : $this->input->post('elected'),
+      'link' => $this->input->post('link'),
       'visible' => $this->input->post('visible') ? true : false
     );
 

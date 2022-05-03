@@ -92,6 +92,10 @@
                 </select>
               </div>
               <div class="form-group p-3" style="background-color: rgba(0, 183, 148, 0.3)">
+                <label>Lien vers site de campagne</label>
+                <input type="text" class="form-control" autocomplete="off" name="link" value="<?= $candidat['link'] ?>">
+              </div>
+              <div class="form-group p-3" style="background-color: rgba(0, 183, 148, 0.3)">
                 <label>Visible</label>
                 <input name="visible" class="form-control" type="checkbox" <?= $candidat['visible'] ? 'checked': ''?> value="true"></input>
               </div>

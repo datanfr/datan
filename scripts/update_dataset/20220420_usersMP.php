@@ -27,7 +27,7 @@
   $bdd->query('DROP VIEW IF EXISTS `candidate_full`;');
 
   $bdd->query('CREATE VIEW candidate_full AS SELECT
-    edc.mpId as mpId, `election`, `district`, `candidature`, `position`, `nuance`, `source`, `visible`, `secondRound`, `elected`,
+    edc.mpId as mpId, `election`, `district`, `candidature`, `position`, `nuance`, `source`, `link`, `visible`, `secondRound`, `elected`,
     `legislature`, `nameUrl`, `civ`, `nameFirst`, `nameLast`, `age`, `dptSlug`, `departementNom`, `departementCode`, `circo`, `mandatId`, dl.`libelle` as "depute_libelle", dl.`libelleAbrev` as "depute_libelleAbrev", `groupeId`, `groupeMandat`, `couleurAssociee`, `dateFin`, `datePriseFonction`, `causeFin`, `img`, `imgOgp`, `dateMaj`, `libelle_1`, `libelle_2`, `active`,
     el.`id` as "election_id", el.`libelle` as "election_libelle", el.`libelleAbrev` as "election_libelleAbrev", `dateYear`, `dateFirstRound`, `dateSecondRound`, edc.`modified_at`
     FROM elect_deputes_candidats edc
