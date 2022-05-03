@@ -36,6 +36,7 @@
                 <th>position</th>
                 <th>second round</th>
                 <th>elected</th>
+                <th>link</th>
                 <th>visible</th>
                 <th>dernière modif</th>
                 <th></th>
@@ -49,30 +50,31 @@
                   <td><?= $candidat['districtLibelle'] ?></td>
                   <td>
                     <?php if ($candidat['candidature'] == 1): ?>
-                      <span class="text-success font-weight-bold">oui</span>
+                      <span class="text-success font-weight-bold">Oui</span>
                     <?php endif; ?>
                     <?php if ($candidat['candidature'] == 0): ?>
-                      <span class="text-danger font-weight-bold">non</span>
+                      <span class="text-danger font-weight-bold">Non</span>
                     <?php endif; ?>
                   </td>
                   <td><?= $candidat['position'] ?></td>
                   <td>
-                    <?php if ($candidat['secondRound'] == NULL): ?>
-                    <?php else: ?>
+                    <?php if ($candidat['secondRound'] != NULL): ?>
                       <span class="<?= $candidat['secondRound'] == 1 ? "text-success" : "text-danger" ?> font-weight-bold"><?= $candidat['secondRound'] == 1 ? "Se maintient" : "Non" ?></span>
                     <?php endif; ?>
                   </td>
                   <td>
-                    <?php if ($candidat['elected'] == NULL): ?>
-                    <?php else: ?>
-                      <span class="<?= $candidat['elected'] == 1 ? "text-success" : "text-danger" ?> font-weight-bold"><?= $candidat['elected'] == 1 ? "Élu" : "Non" ?></span>
+                  <?php if ($candidat['elected'] != NULL): ?>
+                    <span class="<?= $candidat['elected'] == 1 ? "text-success" : "text-danger" ?> font-weight-bold"><?= $candidat['elected'] == 1 ? "Élu" : "Non" ?></span>
+                  <?php endif; ?>
+                  <td>
+                    <?php if ($candidat['link']): ?>
+                      <a href="<?= $candidat['link'] ?>" target="_blank"><?= $candidat['link'] ?></a>
                     <?php endif; ?>
                   <td><?= $candidat['visible'] ?></td>
                   <td><?= $candidat['modified_at'] ?></td>
                   <td>
                     <a class="btn btn-link" href="<?= base_url() ?>admin/elections/candidat/modify/<?= $candidat['mpId'] ?>?election=<?= $election['slug'] ?>" ?>modifier</a><br/>
                     <a class="btn btn-link" href="<?= base_url() ?>admin/elections/candidat/delete/<?= $candidat['mpId'] ?>?election=<?= $election['slug'] ?>">supprimer</a><br/>
-                    <a class="btn btn-link" target="_blank" href="<?= base_url(); ?>deputes/<?= $candidat['dptSlug'].'/depute_'.$candidat['nameUrl'].'?regionales2021' ?>">preview</a><br/>
                   </td>
                 </tr>
               <?php endforeach; ?>
