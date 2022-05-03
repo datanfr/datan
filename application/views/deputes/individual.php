@@ -17,8 +17,8 @@
               <div class="card-body">
                 <h2>🗳️ Législatives 2022</h2>
                 <p class="mb-0"><?= $title ?> <span class="font-weight-bold"><?= $electionFeature['candidature'] == 1 ? "est candidat" : "n'est pas candidat" ?><?= $gender['e'] ?></span> à sa réélection.</p>
-                <?php if ($electionFeature['candidature'] == 1): ?>
-                  <a class="mt-3 btn btn-light no-decoration" href="#">Suivre sa campagne</a>
+                <?php if ($electionFeature['candidature'] == 1 && $electionFeature['link']): ?>
+                  <span class="mt-3 url_obf btn btn-light" url_obf="<?= url_obfuscation($electionFeature['link']) ?>">Suivre sa campagne</span>
                 <?php endif; ?>
               </div>
             </div>
