@@ -213,7 +213,7 @@
         } else {
           $this->admin_model->delete_candidat();
           $election = $this->elections_model->get_election_by_id($this->input->post('election'));
-          redirect('dashboard/elections/' . $election['slug']);
+          redirect('admin/elections/' . $election['slug']);
         }
       }
     }
