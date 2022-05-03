@@ -55,10 +55,9 @@
       $data['deputes'] = $this->elections_model->get_all_candidate($data['election']['id'], TRUE);
       foreach ($data['deputes'] as $key => $value) {
         $district = $this->elections_model->get_district($value['election_libelleAbrev'], $value['district']);
-        $data['deputes'][$key]['cardCenter'] = isset($district['libelle']) ? $district['libelle'] : NULL;
+        $data['deputes'][$key]['cardCenter'] = isset($district['libelle']) ? $district['libelle']. ' ('.$district['id'].')' : NULL;
         $data['deputes'][$key]['districtId'] = isset($district['id']) ? $district['id'] : NULL;
       }
-
 
       $data['districts'] = $this->elections_model->get_all_districts($data['election']['id']);
       $data['electionInfos'] = $this->elections_model->get_election_infos($data['election']['libelleAbrev']);

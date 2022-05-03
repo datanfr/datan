@@ -253,10 +253,7 @@
               <a class="nav-link no-decoration" href="<?= base_url() ?>statistiques">En chiffres</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link no-decoration" href="<?= base_url() ?>elections">Élections</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link no-decoration" href="<?= base_url() ?>parrainages-2022">Parrainages 2022</a>
+              <a class="nav-link no-decoration text-primary" href="<?= base_url() ?>elections/legislatives-2022">Législatives 2022</a>
             </li>
             <li class="nav-item">
               <a class="nav-link no-decoration" href="<?= base_url() ?>a-propos">À propos</a>
