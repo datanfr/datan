@@ -1143,6 +1143,7 @@ body{
   transition: all 0.4s ease;
   padding-top: 15px;
   padding-bottom: 15px;
+  z-index: 9999!important;
   .navbar-brand{
 
     .navbar-brand-img{
