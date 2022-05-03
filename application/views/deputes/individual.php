@@ -13,14 +13,19 @@
         <div class="bloc-bio mt-5">
           <!-- Election Feature 2022 -->
           <?php if ($electionFeature): ?>
-            <div class="card card-election-feature mb-4">
+            <div class="card card-election-feature <?= $electionFeature['candidature'] == 1 ? 'candidate' : 'not-candidate' ?> mb-4 border-0" style="overflow: hidden">
               <div class="card-body">
                 <h2>🗳️ Législatives 2022</h2>
-                <p class="mb-0"><?= $title ?> est candidat<?= $gender['e'] ?> aux élections législatives 2022.</p>
-                <a href="#" class="text-white">Plus d'infos</a>
+                <p class="mb-0"><?= $title ?> <span class="font-weight-bold"><?= $electionFeature['candidature'] == 1 ? "est candidat" : "n'est pas candidat" ?><?= $gender['e'] ?></span> à sa réélection.</p>
+                <?php if ($electionFeature['candidature'] == 1): ?>
+                  <a class="mt-3 btn btn-light no-decoration" href="#">Suivre sa campagne</a>
+                <?php endif; ?>
               </div>
             </div>
           <?php endif; ?>
+          <!-- For critical css -->
+          <div class="card card-election-feature not-candidate d-none"></div>
+          <div class="card card-election-feature candidate d-none"></div>
           <h2 class="mb-4 title-center">Qui est-<?= ($gender['pronom']) ?> ?</h2>
           <!-- Paragraphe introductif -->
           <?php if ($active) : ?>

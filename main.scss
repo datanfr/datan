@@ -7,6 +7,7 @@
 $orange: #ff661a;
 $vert: #00B794;
 $bleu: #00668E;
+$yellow: #ffba4a;
 $text-gray: #4D5755;
 $text-gray-light: #AAAAAA;
 $text-black: #4C4C4C;
@@ -1806,12 +1807,18 @@ ul.ui-menu{
   /* FIN HN */
   /* Bloc election feature */
   .card-election-feature{
-    background-color: $bleu;
-    color: #fff;
-    //border-radius: 0;
+    &.candidate{
+      background-color: $bleu;
+      h2, p{
+        color: #fff;
+      }
+    }
+    &.not-candidate{
+      background-color: $yellow;
+      color: $text-black;
+    }
     h2{
       font-weight: 800;
-      color: #fff;
     }
   }
   /* Bloc biographie */
