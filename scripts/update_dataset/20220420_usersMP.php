@@ -49,3 +49,5 @@
       PRIMARY KEY (`id`)) ENGINE = MyISAM;'
     );
   }
+
+  $bdd->query('UPDATE `elect_libelle` SET `candidates` = 1 WHERE `elect_libelle`.`id` = 4');
