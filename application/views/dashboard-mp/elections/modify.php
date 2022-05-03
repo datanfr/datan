@@ -51,6 +51,22 @@
                       </div>
                     </div>
                   </div>
+                  <div class="mt-4 p-4" style="background-color: rgba(0, 183, 148, 0.3)">
+                    <div class="form-group mt-3">
+                      <label>Lien vers site de campagne</label>
+                      <input type="text" class="form-control" autocomplete="off" name="link" value="<?= $candidate['link'] ?>">
+                    </div>
+                    <hr class="my-5">
+                    <div class="row">
+                      <div class="col-md-4">
+                        <p class="font-weight-bold font-italic text-primary">Plus d'infos</p>
+                        <p>Le lien vers le site de campagne permet de mettre, dans le bloc consacré aux élections sur votre page personnelle, d'ajouter un bouton vers votre site de campagne.</p>
+                      </div>
+                      <div class="col-md-8">
+                        <img src="<?= asset_url() ?>imgs/photos/election-example-btn.png" width="750px" alt="Example bouton" class="img-thumbnail">
+                      </div>
+                    </div>
+                  </div>
                   <button type="submit" class="btn btn-primary mt-4">Submit</button>
               </form>
               </div>

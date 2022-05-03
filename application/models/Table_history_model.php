@@ -9,7 +9,7 @@
         $data = array(
           'table' => $table,
           'col' => $col,
-          'value_old' => $old,
+          'value_old' => $old == NULL ? '' : $old,
           'value_new' => $new,
           'user' => $user
         );

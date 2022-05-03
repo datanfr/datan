@@ -62,7 +62,6 @@ class Admin_model extends CI_Model
 
   public function modify_candidat_as_mp($mpId, $election)
   {
-
     // Check if MP is already in the database
     $query = $this->db->get_where(
       'elect_deputes_candidats',
@@ -74,6 +73,7 @@ class Admin_model extends CI_Model
       $data = array(
         'district' => $this->input->post('district'),
         'candidature' => $this->input->post('candidature'),
+        'link' => $this->input->post('link')
       );
       $this->db->set($data);
       $this->db->where('mpId', $mpId);
