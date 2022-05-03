@@ -56,8 +56,8 @@
         </div>
       </div>
       <div class="row mt-2">
-        <div class="pb-4 col-lg-3 search-element sticky-top sticky-top-lg">
-          <div class="sticky-top sticky-offset">
+        <div class="pb-4 col-lg-3 search-element sticky-top-lg* test-border">
+          <div class="sticky-top sticky-offset sticky-top-lg test-border">
             <!-- Groupes -->
             <div class="d-flex flex-column d-lg-none">
               <?php if ($active): ?>
