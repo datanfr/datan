@@ -61,6 +61,7 @@
                       <div class="col-md-4">
                         <p class="font-weight-bold font-italic text-primary">Plus d'infos</p>
                         <p>Le lien vers le site de campagne permet de mettre, dans le bloc consacré aux élections sur votre page personnelle, d'ajouter un bouton vers votre site de campagne.</p>
+                        <p>Ce lien peut être un lien vers votre site internet, votre page Facebook ou Twitter, ou vers un document de campagne.</p>
                       </div>
                       <div class="col-md-8">
                         <img src="<?= asset_url() ?>imgs/photos/election-example-btn.png" width="750px" alt="Example bouton" class="img-thumbnail">
