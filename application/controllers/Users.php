@@ -7,7 +7,7 @@
     }
 
     public function register(){
-      $this->password_model->security();
+      $this->password_model->security_only_admin();
       $data['title'] = 'Créez votre compte';
       $data['title_meta'] = "Datan: S'inscrire";
       $data['no_offset'] = TRUE;
@@ -29,9 +29,17 @@
         // Encrypt password
         $enc_password = password_hash($this->input->post('password'), PASSWORD_DEFAULT);
         $this->user_model->register($enc_password);
+        // Send email
+        $email = $this->input->post('email');
+        $variables = array(
+          "email" => $email,
+          "username" => $this->input->post('username'),
+          "email_encode" => urlencode($email)
+        );
+        sendMail($email, 'Votre compte Datan a été créé', NULL, TRUE, 3909605, $variables);
         // Set message
-        $this->session->set_flashdata('user_registered', 'Vous êtes maintenant inscrit et pouvez vous connecter');
-        redirect('login');
+        $this->session->set_flashdata('registered', 1);
+        redirect('register');
       }
     }
 
