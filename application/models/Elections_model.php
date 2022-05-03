@@ -168,6 +168,7 @@
 
     public function count_candidats($id, $second = FALSE, $end = FALSE){
       $this->db->where('election', $id);
+      $this->db->where('visible', 1);
 
       if ($second === TRUE) {
         $this->db->where('secondRound', 1);
