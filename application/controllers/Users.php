@@ -68,13 +68,21 @@
       }
     }
 
-    public function register(){
-      $data['title'] = 'Créez votre compte';
-      $data['title_meta'] = "Datan: S'inscrire";
-      $data['seoNoFollow'] = TRUE;
+    public function register($token = FALSE){
+      $data['token'] = $token;
+
+      if ($token) {
+        $mpId = $this->user_model->get_mpId_by_token($token);
+        if (!$mpId) {
+          show_404();
+        }
+      } else {
+        $mpId = FALSE;
+        redirect(); // The register system is for now opened only for MPs. 
+      }
 
       $this->form_validation->set_rules('name', 'Name', 'required');
-      $this->form_validation->set_rules('username', 'Pseudo', 'required|callback_check_username_exists');
+      $this->form_validation->set_rules('username', 'Pseudo', 'required|callback_check_username_exists|max_length[10]|alpha_numeric');
       $this->form_validation->set_rules('email', 'Email', 'required|callback_check_email_exists|valid_email');
       $this->form_validation->set_rules('password', 'Mot de passe', 'required');
       $this->form_validation->set_rules('password2', 'Confirmation du mot de passe', 'matches[password]');
@@ -82,13 +90,38 @@
 
       if ($this->form_validation->run() === FALSE) {
 
+        if ($mpId) {
+          $data['depute'] = $this->deputes_model->get_depute_by_mpId($mpId);
+          $data['depute']['name'] = $data['depute']['nameFirst'] . ' ' . $data['depute']['nameLast'];
+          $data['depute']['contacts'] = $this->deputes_model->get_depute_contacts($mpId);
+          $data['title'] = 'Créez votre compte en tant que député';
+          $data['mp'] = TRUE;
+        } else {
+          $data['title'] = 'Créez votre compte Datan';
+          $data['mp'] = FALSE;
+        }
+
+        $data['title_meta'] = "Datan: S'inscrire";
+        $data['seoNoFollow'] = TRUE;
+
         $this->load->view('templates/header_no_navbar', $data);
         $this->load->view('users/register', $data);
         $this->load->view('templates/footer_no_navbar');
+
       } else {
         // Encrypt password
         $enc_password = password_hash($this->input->post('password'), PASSWORD_DEFAULT);
-        $this->user_model->register($enc_password);
+        if ($mpId) {
+          $type = 'mp';
+        } else {
+          $type = '';
+        }
+        $this->user_model->register($enc_password, $type);
+        // Insert into users_mp
+        if ($mpId) {
+          $user = $this->user_model->login($this->input->post('username'));
+          $this->user_model->insert_users_mp($mpId, $user->id);
+        }
         // Send email
         $email = $this->input->post('email');
         $variables = array(
