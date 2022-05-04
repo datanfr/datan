@@ -5,14 +5,15 @@
     }
 
     //REGISTER//
-    public function register($enc_password){
+    public function register($enc_password, $type){
       // User data array
       $data = array(
         'name' => $this->input->post('name'),
         'email' => $this->input->post('email'),
         'username' => $this->input->post('username'),
         'password' => $enc_password,
-        'zipcode' => $this->input->post('zipcode')
+        'zipcode' => $this->input->post('zipcode'),
+        'type' => $type
       );
       return $this->db->insert('users', $data);
     }
@@ -91,6 +92,21 @@
         'token' => $token
       );
       $this->db->insert('users_mp_link', $data);
+    }
+
+    public function get_mpId_by_token($token){
+      $this->db->where('token', $token);
+      $this->db->where('created_at > DATE_SUB(NOW(), INTERVAL 24 HOUR)');
+      $query = $this->db->get('users_mp_link', 1);
+      return $query->row() ? $query->row()->mpId : NULL;
+    }
+
+    public function insert_users_mp($mpId, $user){
+      $data = array(
+        'mpId' => $mpId,
+        'user' => $user
+      );
+      return $this->db->insert('users_mp', $data);
     }
 
   }
