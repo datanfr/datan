@@ -4,6 +4,7 @@
     public function __construct(){
       parent::__construct();
       $this->load->model('captcha_model');
+      $this->load->model('deputes_model');
     }
 
     public function demande_mp(){
@@ -31,10 +32,30 @@
         }
 
       } else {
-        $this->password_model->security_captcha('demande-compte-depute');
+        //$this->password_model->security_captcha('demande-compte-depute');
+        // Working with PA332228
 
-        echo "TO DO ! ";
+        $email = $this->input->post('email');
+        $data['depute'] = $this->deputes_model->get_depute_by_email($email);
+        print_r($data['depute']);
 
+        if (!$data['depute']) {
+          $this->session->set_flashdata('error', "Nous ne vous trouvons pas dans notre base de données. N'hésitez pas à nous contacter : info@datan.fr.");
+          redirect('demande-compte-depute');
+        }
+
+        if ($this->user_model->check_mp_has_account($data['depute']['mpId'])) {
+          $this->session->set_flashdata('error', "Vous avez déjà un compte Datan. Connectez-vous en <a href='".base_url()."login'>cliquant ici</a>.");
+          redirect('demande-compte-depute');
+        }
+
+        $this->user_model->inset_mp_demand_link($data['depute']['mpId']);
+
+        // Send email
+        // A FAIRE !!! 
+
+        $this->session->set_flashdata('success', "Un email avec un lien d'activation a été envoyé à votre adresse email. Attention, ce lien ne sera actif que 24 heures.");
+        redirect('demande-compte-depute');
       }
     }
 
@@ -255,6 +276,7 @@
       $data['userdata'] = $this->session->userdata();
       $data['user'] = $this->user_model->get_user($data['userdata']['user_id']);
       $this->user_model->delete_account($data['user']['id']);
+      $this->user_model->delete_account_mp($data['user']['id']);
       redirect('logout');
     }
 

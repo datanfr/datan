@@ -92,6 +92,14 @@
       return $this->db->get_where('deputes_last', $where, 1)->row_array();
     }
 
+    public function get_depute_by_email($email){
+      $where = array(
+        'mailAn' => $email
+      );
+      $this->db->join('deputes_last', 'deputes_last.mpId = deputes_contacts.mpId', 'right');
+      return $this->db->get_where('deputes_contacts', $where, 1)->row_array();
+    }
+
     public function get_depute_by_legislature($mpId, $legislature){
       $where = array(
         'mpId' => $mpId,
@@ -117,7 +125,7 @@
       ';
       return $this->db->query($sql, array($nameUrl, $dpt))->row_array();
     }
-    
+
     public function get_hatvp_url($mpId){
       $where = array(
         "mpId" => $mpId

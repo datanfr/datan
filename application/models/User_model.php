@@ -66,6 +66,11 @@
       return empty($query->row_array()) ? false : true;
     }
 
+    public function check_mp_has_account($mpId){
+      $query = $this->db->get_where('users_mp', array('mpId' => $mpId));
+      return $query->row_array() ? true : false;
+    }
+
     public function get_user($user_id){
       return $this->db->get_where('users', array('id' => $user_id))->row_array();
     }
@@ -73,6 +78,20 @@
     public function delete_account($id){
       $this->db->where('id', $id);
       $this->db->delete('users');
+    }
+
+    public function delete_account_mp($id){
+      $this->db->where('user', $id);
+      $this->db->delete('users_mp');
+    }
+
+    public function inset_mp_demand_link($mpId){
+      $token = bin2hex(random_bytes(50));
+      $data = array(
+        'mpId' => $mpId,
+        'token' => $token
+      );
+      $this->db->insert('users_mp_link', $data);
     }
 
   }
