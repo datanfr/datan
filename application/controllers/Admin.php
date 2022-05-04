@@ -94,7 +94,6 @@
       $data['title'] = 'Créer un nouveau candidat pour les ' . $data['election']['libelleAbrev'] . ' ' . $data['election']['dateYear'];
       $data['positions'] = array('', 'Tête de liste', 'Colistier');
       $data['districts'] = $this->elections_model->get_all_districts($data['election']['id']);
-      echo $data['election']['id'];
 
       //Form valiation
       $this->form_validation->set_rules('depute_url', 'député', 'required');
