@@ -8,8 +8,8 @@
     }
 
     public function demande_mp(){
-      $data['title'] = 'Demandez un compte député';
-      $data['title_meta'] = 'Datan : Demandez un compte député';
+      $data['title'] = 'Inscrivez-vous en tant que député';
+      $data['title_meta'] = 'Datan : demande de compte député';
       $data['seoNoFollow'] = TRUE;
 
       $this->form_validation->set_rules('email', 'Email', 'required|callback_check_mp_email');
@@ -63,7 +63,7 @@
         );
         sendMail($email, "Lien d'activation pour créer un compte Datan", NULL, TRUE, $templateId, $variables);
 
-        $this->session->set_flashdata('success', "Un email avec un lien d'activation a été envoyé à votre adresse email. Attention, ce lien ne sera actif que 24 heures.");
+        $this->session->set_flashdata('success', "Un email avec un lien d'activation vient de vous être envoyé. Attention, ce lien ne sera actif que 24 heures.");
         redirect('demande-compte-depute');
       }
     }
