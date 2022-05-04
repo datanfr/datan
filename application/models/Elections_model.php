@@ -35,7 +35,7 @@
           SUM(case when secondRound = 1 then 1 else 0 end) as secondRoundN,
           SUM(case when elected = 1 then 1 else 0 end) as electedN
         FROM elect_deputes_candidats
-        WHERE visible = 1
+        WHERE visible = 1 AND candidature = 1
         GROUP BY election) c ON e.id = c.election
       ORDER BY e.dateYear DESC
       ');
@@ -110,21 +110,33 @@
       }
     }
 
-    public function get_candidate_election($mpId, $election){
+    public function get_candidate_election($mpId, $election, $visible = FALSE, $candidature = FALSE){
       $where = array(
         'mpId' => $mpId,
         'election' => $election
       );
+      if ($visible) {
+        $where['visible'] = 1;
+      }
+      if ($candidature) {
+        $where['candidature'] = 1;
+      }
 
       $query = $this->db->get_where('elect_deputes_candidats', $where, 1);
 
       return $query->row_array();
     }
 
-    public function get_candidate_elections($mpId){
+    public function get_candidate_elections($mpId, $visible = FALSE, $candidature = FALSE){
       $where = array(
-        'mpId' => $mpId
+        'mpId' => $mpId,
       );
+      if ($visible) {
+        $where['visible'] = 1;
+      }
+      if ($candidature) {
+        $where['candidature'] = 1;
+      }
 
       $this->db->join('elect_libelle', 'elect_libelle.id = elect_deputes_candidats.election', 'left');
       $this->db->order_by('dateYear', 'DESC');
@@ -143,10 +155,13 @@
     }
 
 
-    public function get_all_candidate($election, $visible = FALSE, $state = FALSE){
+    public function get_all_candidate($election, $visible = FALSE, $candidature = FALSE, $state = FALSE){
       $where['election'] = $election;
-      if ($visible != FALSE) {
+      if ($visible) {
         $where['visible'] = 1;
+      }
+      if ($candidature) {
+        $where['candidature'] = 1;
       }
 
       if ($state == 'second') {
@@ -168,6 +183,8 @@
 
     public function count_candidats($id, $second = FALSE, $end = FALSE){
       $this->db->where('election', $id);
+      $this->db->where('visible', 1);
+      $this->db->where('candidature', 1);
 
       if ($second === TRUE) {
         $this->db->where('secondRound', 1);
@@ -185,7 +202,7 @@
         $this->db->order_by('libelle', 'ASC');
         $query = $this->db->get('regions');
         return $query->result_array();
-      } elseif ($election == 2 /*departementales 2021*/) {
+      } elseif (in_array($election, array(2, 4))/*departementales 2021 & législatives 2022*/) {
         $this->db->select('departement_code AS id, CONCAT(departement_code, " - ", departement_nom) AS libelle');
         $this->db->order_by('departement_code', 'ASC');
         $query = $this->db->get('departement');
@@ -199,6 +216,15 @@
         $array = array(
           'id' => $result['id'],
           'libelle' => $result['libelle']
+        );
+        return $array;
+      }
+
+      if ($type == 'Législatives') {
+        $result = $this->db->get_where('departement', array('departement_code' => $district))->row_array();
+        $array = array(
+          'id' => $result['departement_code'],
+          'libelle' => $result['departement_nom']
         );
         return $array;
       }

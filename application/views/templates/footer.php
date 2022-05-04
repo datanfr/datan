@@ -78,6 +78,9 @@
                     <a href="<?= base_url(); ?>blog" class="no-decoration underline">Actualités</a>
                   </p>
                   <p>
+                    <a href="<?= base_url(); ?>parrainages-2022" class="no-decoration underline">Parrainages 2022</a>
+                  </p>
+                  <p>
                     <a href="<?= base_url(); ?>login" class="no-decoration underline">Connexion</a>
                   </p>
                   <p>

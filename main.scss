@@ -7,6 +7,7 @@
 $orange: #ff661a;
 $vert: #00B794;
 $bleu: #00668E;
+$yellow: #ffba4a;
 $text-gray: #4D5755;
 $text-gray-light: #AAAAAA;
 $text-black: #4C4C4C;
@@ -1143,6 +1144,7 @@ body{
   transition: all 0.4s ease;
   padding-top: 15px;
   padding-bottom: 15px;
+  z-index: 9998!important;
   .navbar-brand{
 
     .navbar-brand-img{
@@ -1795,8 +1797,7 @@ ul.ui-menu{
     font-weight: 800;
     color: $text-gray;
   }
-  .bloc-statistiques, .bloc-votes, .bloc-bio, .bloc-election, .bloc-links, .bloc-chiffres, .bloc-key-votes, .bloc-mandats, .bloc-social, .bloc-elections-history {
-
+  .bloc-statistiques, .bloc-votes, .bloc-bio, .bloc-election, .bloc-links, .bloc-chiffres, .bloc-key-votes, .bloc-mandats, .bloc-social {
     h3 {
       font-size: $h5-font-size;
       font-weight: 800;
@@ -1806,12 +1807,18 @@ ul.ui-menu{
   /* FIN HN */
   /* Bloc election feature */
   .card-election-feature{
-    background-color: $bleu;
-    color: #fff;
-    //border-radius: 0;
+    &.candidate{
+      background-color: $bleu;
+      h2, p{
+        color: #fff;
+      }
+    }
+    &.not-candidate{
+      background-color: $yellow;
+      color: $text-black;
+    }
     h2{
       font-weight: 800;
-      color: #fff;
     }
   }
   /* Bloc biographie */

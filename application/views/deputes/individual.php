@@ -13,22 +13,19 @@
         <div class="bloc-bio mt-5">
           <!-- Election Feature 2022 -->
           <?php if ($electionFeature): ?>
-            <div class="card card-election-feature mb-4">
+            <div class="card card-election-feature <?= $electionFeature['candidature'] == 1 ? 'candidate' : 'not-candidate' ?> mb-4 border-0" style="overflow: hidden">
               <div class="card-body">
-                <h2>🗳️ Présidentielle 2022</h2>
-                <?= $title ?> est candidat<?= $gender['e'] ?> à l'élection présidentielle 2022.
+                <h2>🗳️ Législatives 2022</h2>
+                <p class="mb-0"><?= $title ?> <span class="font-weight-bold"><?= $electionFeature['candidature'] == 1 ? "est candidat" : "n'est pas candidat" ?><?= $gender['e'] ?></span> à sa réélection.</p>
+                <?php if ($electionFeature['candidature'] == 1 && $electionFeature['link']): ?>
+                  <span class="mt-3 url_obf btn btn-light" url_obf="<?= url_obfuscation($electionFeature['link']) ?>">Suivre sa campagne</span>
+                <?php endif; ?>
               </div>
             </div>
           <?php endif; ?>
-          <!-- Parrainage -->
-          <?php if ($parrainage): ?>
-            <div class="card card-election-feature mb-4">
-              <div class="card-body">
-                <h2>🗳️ Présidentielle 2022</h2>
-                <?= $title ?> a accordé son parrainage à <b><?= $parrainage['candidat'] ?></b>.
-              </div>
-            </div>
-          <?php endif; ?>
+          <!-- For critical css -->
+          <div class="card card-election-feature not-candidate d-none"></div>
+          <div class="card card-election-feature candidate d-none"></div>
           <h2 class="mb-4 title-center">Qui est-<?= ($gender['pronom']) ?> ?</h2>
           <!-- Paragraphe introductif -->
           <?php if ($active) : ?>
@@ -779,7 +776,7 @@
         <!-- BLOC ELECTIONS -->
         <?php if ($elections): ?>
           <div class="bloc-elections-history mt-5">
-            <h2 class="mb-4">Ses participations électorales</h2>
+            <h2 class="mb-4 title-center">Ses participations électorales</h2>
             <p>
               <?= $title ?> a été candidat<?= $gender['e'] ?> <?= count($elections) > 1 ? 'à plusieurs élections' : 'à une élection' ?> alors qu'<?= $gender['pronom'] ?> était député<?= $gender['e'] ?>.
             </p>
@@ -795,6 +792,23 @@
                 <?php endforeach; ?>
               </tbody>
             </table>
+          </div>
+        <?php endif; ?>
+        <!-- BLOC PARRAINAGES -->
+        <?php if ($parrainage): ?>
+          <div class="mt-5 bloc-elections-history">
+            <h2 class="mb-4 title-center">Ses parrainages présidentiels</h2>
+            <p>
+              <?= $title ?> a déjà parrainé un candidat à l'élection présidentiel pendant son mandat de député<?= $gender['e'] ?>.
+              <table class="table">
+                <tbody>
+                  <tr>
+                    <td class="font-weight-bold">Élection présidentielle 2022</td>
+                    <td>Parrainagé accordé à <b><?= $parrainage['candidat'] ?></b></td>
+                  </tr>
+                </tbody>
+              </table>
+            </p>
           </div>
         <?php endif; ?>
         <!-- BLOC PARTAGEZ -->

@@ -335,7 +335,7 @@
       }
 
       // Elections
-      $data['elections'] = $this->elections_model->get_candidate_elections($mpId);
+      $data['elections'] = $this->elections_model->get_candidate_elections($mpId, TRUE, TRUE);
       foreach ($data['elections'] as $key => $value) {
         $data['elections'][$key]['district'] = $this->elections_model->get_district($value['libelleAbrev'], $value['district']);
         if ($value['elected'] === "1") {
@@ -349,7 +349,7 @@
           $data['elections'][$key]['electedColor'] = '';
         }
       }
-      $data['electionFeature'] = $this->elections_model->get_candidate_election($mpId, 3); /* Présidentielle-2022 */
+      $data['electionFeature'] = $this->elections_model->get_candidate_election($mpId, 4, TRUE, FALSE); /* Législative-2022 */
       $data['parrainage'] = $this->parrainages_model->get_mp_parrainage($mpId, 2022); /* Parrainage for presidentielle 2022 */
       if ($data['parrainage']) {
         $data['parrainage']['candidat'] = $this->parrainages_model->change_candidate_name($data['parrainage']['candidat']);

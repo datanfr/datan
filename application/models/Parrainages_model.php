@@ -57,7 +57,10 @@
         'POUTOU Philippe' => 'Philippe Poutou',
         'ROUSSEL Fabien' => 'Fabien Roussel',
         'THOUY Hélène' => 'Hélène Thouy',
-        'ZEMMOUR Éric' => 'Éric Zemmour'
+        'ZEMMOUR Éric' => 'Éric Zemmour',
+        'TAUBIRA Christiane' => 'Christiane Taubira',
+        'KOENIG Gaspard' => 'Gaspar Koenig',
+        'HERROU Cédric' => 'Cédric Herrou'
       );
       return $array[$name];
     }
