@@ -165,7 +165,7 @@
     <div class="container p-md-0">
       <div class="row py-4">
         <div class="col-12">
-          <h2 class="text-center my-4">Députés candidats aux élections législatives de 2022</h2>
+          <h2 class="text-center my-4">Élections législatives 2022 : les députés candidats à leur réélection</h2>
         </div>
       </div>
       <div class="row pt-2 pb-5">
