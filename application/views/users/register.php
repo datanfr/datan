@@ -21,13 +21,16 @@
           </div>
           <?php if ($this->session->flashdata('registered') == 1): ?>
             <div class="row mt-5">
-              <div class="alert alert-success" role="alert">
+              <div class="alert alert-success">
                 Vous êtes désormais inscrit. Vous pouvez vous connecter en <a href="<?= base_url() ?>login">cliquant ici.</a>
               </div>
             </div>
             <?php else: ?>
               <div class="row mt-5 d-flex justify-content-center login_form">
                 <h3 class="text-center my-4"><?= $title ?></h3>
+                <div class="alert alert-danger">
+                  Attention, <b>si vous êtes député</b>, veuillez d'aborder demander un lien d'activation en <a href="<?= base_url() ?>demande-compte-depute">cliquant ici.</a>
+                </div>
                 <div class="mt-2">
                   <?= validation_errors(); ?>
                 </div>
@@ -57,6 +60,7 @@
                 </div>
                 <button type="submit" class="btn btn-primary btn-block">Confirmez</button>
                 <p class="mt-4">Déjà un compte sur Datan ? <a href="<?= base_url(); ?>login">Se connnecter</a></p>
+                <p>Vous êtes député et vous n'avez pas encore un compte Datan ? <a href="<?= base_url(); ?>demande-compte-depute">Demandez-le !</a></p>
               </div>
           <?php endif; ?>
         </div>

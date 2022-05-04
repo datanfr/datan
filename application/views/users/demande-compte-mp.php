@@ -11,33 +11,24 @@
       </div>
       <div class="row mt-5">
         <div class="col-lg-8 col-md-10 col-10 offset-lg-2 offset-md-1 offset-1">
-          <div class="row login_links">
-            <a href="<?= base_url(); ?>login" class="py-3 active">
-              SE CONNECTER
-            </a>
-            <a href="<?= base_url(); ?>register" class="py-3 inactive">
-              S'INSCRIRE
-            </a>
-          </div>
           <div class="row mt-5 d-flex flex-column justify-content-center login_form">
             <h1 class="text-center my-4"><?= $title ?></h1>
-            <?php if ($this->session->flashdata('login_failed')): ?>
+            <?php if ($this->session->flashdata('error')): ?>
               <div class="alert alert-danger mb-4 text-center" role="alert">
-                <?= ($this->session->flashdata('login_failed')) ?>
+                <?= ($this->session->flashdata('error')) ?>
               </div>
             <?php endif; ?>
-            <div class="form-group">
-              <input type="text" name="username" class="form-control" placeholder="Pseudo ou Email" required autofocus>
+            <div class="mt-2">
+              <?= validation_errors(); ?>
             </div>
             <div class="form-group">
-              <input type="password" name="password" class="form-control" placeholder="Mot de passe" required autofocus>
+              <label class="font-weight-bold">Email de l'Assemblée nationale se terminant par : @assemblee-nationale.fr</label>
+              <input type="email" name="email" class="form-control" placeholder="Email" required autofocus>
             </div>
-            <?php if ($captcha): ?>
-              <?php $this->view('captcha/index') ?>
-            <?php endif; ?>
-            <button type="submit" class="btn btn-primary btn-block">Se connecter</button>
-            <p class="mt-4">Pas encore de compte sur Datan ? <a href="<?= base_url(); ?>register">S'incrire</a></p>
-            <p>Vous êtes député et vous n'avez pas encore un compte Datan ? <a href="<?= base_url(); ?>demande-compte-depute">Demandez-le !</a></p>
+            <?php $this->view('captcha/index') ?>
+            <div class="alert alert-danger mb-4 text-center">Attention, le lien d'activation ne sera valide que 24 heures.</div>
+            <button type="submit" class="btn btn-primary btn-block">Demandez un lien d'activation</button>
+            <p class="mt-4">Déjà un compte Datan ? <a href="<?= base_url(); ?>login">Se connecter</a></p>
           </div>
         </div>
         <?= form_close(); ?>

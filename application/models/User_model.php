@@ -51,26 +51,19 @@
       }
     }
 
-    //CHECK USERNAME EXISTS//
     public function check_username_exists($username){
       $query = $this->db->get_where('users', array('username' => $username));
-
-      if (empty($query->row_array())) {
-        return true;
-      } else {
-        return false;
-      }
+      return empty($query->row_array()) ? false : true;
     }
 
-    //CHECK EMAIL EXISTS//
     public function check_email_exists($email){
       $query = $this->db->get_where('users', array('email' => $email));
+      return empty($query->row_array()) ? false : true;
+    }
 
-      if (empty($query->row_array())) {
-        return true;
-      } else {
-        return false;
-      }
+    public function check_mp_email($email){
+      $query = $this->db->get_where('deputes_contacts', array('mailAn' => $email));
+      return empty($query->row_array()) ? false : true;
     }
 
     public function get_user($user_id){
