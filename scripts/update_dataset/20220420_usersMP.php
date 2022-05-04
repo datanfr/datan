@@ -22,6 +22,13 @@
     $bdd->query('ALTER TABLE `elect_deputes_candidats` ADD `candidature` INT(5) NULL DEFAULT 1 AFTER `election`;');
   }
 
+  try {
+    $bdd->query('SELECT link FROM elect_deputes_candidats LIMIT 1');
+    echo "column link already exists<br>";
+  } catch (\Exception $e) {
+    $bdd->query('ALTER TABLE `elect_deputes_candidats` ADD `link` VARCHAR(1000) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL AFTER `elected`;');
+  }
+
   $bdd->query('ALTER TABLE users ADD UNIQUE (username);');
 
   $bdd->query('DROP VIEW IF EXISTS `candidate_full`;');
@@ -51,13 +58,6 @@
   }
 
   $bdd->query('UPDATE `elect_libelle` SET `candidates` = 1 WHERE `elect_libelle`.`id` = 4');
-
-  try {
-    $bdd->query('SELECT link FROM elect_deputes_candidats LIMIT 1');
-    echo "column link already exists<br>";
-  } catch (\Exception $e) {
-    $bdd->query('ALTER TABLE `elect_deputes_candidats` ADD `link` VARCHAR(1000) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL AFTER `elected`;');
-  }
 
   try {
     $bdd->query('SELECT 1 FROM users_mp_link LIMIT 1');
