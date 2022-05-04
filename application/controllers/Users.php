@@ -49,10 +49,19 @@
           redirect('demande-compte-depute');
         }
 
-        $this->user_model->inset_mp_demand_link($data['depute']['mpId']);
+        // Create token
+        $token = bin2hex(random_bytes(50));
+
+        // Insert token in database
+        $this->user_model->inset_mp_demand_link($data['depute']['mpId'], $token);
 
         // Send email
-        // A FAIRE !!! 
+        $templateId = 3912299; /* Template mp-demande-compte */
+        $variables = array(
+          'name' => $data['depute']['nameFirst'] . ' ' . $data['depute']['nameLast'],
+          'token' => $token
+        );
+        sendMail($email, "Lien d'activation pour créer un compte Datan", NULL, TRUE, $templateId, $variables);
 
         $this->session->set_flashdata('success', "Un email avec un lien d'activation a été envoyé à votre adresse email. Attention, ce lien ne sera actif que 24 heures.");
         redirect('demande-compte-depute');

@@ -85,8 +85,7 @@
       $this->db->delete('users_mp');
     }
 
-    public function inset_mp_demand_link($mpId){
-      $token = bin2hex(random_bytes(50));
+    public function inset_mp_demand_link($mpId, $token){
       $data = array(
         'mpId' => $mpId,
         'token' => $token
