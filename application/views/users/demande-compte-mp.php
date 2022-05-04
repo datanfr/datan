@@ -18,6 +18,11 @@
                 <?= ($this->session->flashdata('error')) ?>
               </div>
             <?php endif; ?>
+            <?php if ($this->session->flashdata('success')): ?>
+              <div class="alert alert-success mb-4 text-center" role="alert">
+                <?= ($this->session->flashdata('success')) ?>
+              </div>
+            <?php endif; ?>
             <div class="mt-2">
               <?= validation_errors(); ?>
             </div>

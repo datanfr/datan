@@ -58,3 +58,15 @@
   } catch (\Exception $e) {
     $bdd->query('ALTER TABLE `elect_deputes_candidats` ADD `link` VARCHAR(1000) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL AFTER `elected`;');
   }
+
+  try {
+    $bdd->query('SELECT 1 FROM users_mp_link LIMIT 1');
+    echo "table users_mp_link already exists <br>";
+  } catch (\Exception $e) {
+    $bdd->query('CREATE TABLE `users_mp_link` (
+      `id` INT NOT NULL AUTO_INCREMENT ,
+      `mpId` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL ,
+      `token` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL ,
+      `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ,
+      PRIMARY KEY (`id`), UNIQUE `token` (`token`)) ENGINE = MyISAM;');
+  }
