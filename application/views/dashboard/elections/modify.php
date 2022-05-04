@@ -61,6 +61,20 @@
                   </select>
                 </div>
               <?php endif; ?>
+              <div class="d-flex p-3 my-3" style="background-color: rgba(0, 183, 148, 0.3)">
+                <div class="form-check flex-fill font-weight-bold" >
+                  <input class="form-check-input" type="radio" name="candidature" value="1" id="candidature1" <?= $candidat['candidature'] == 1 ? " checked" : NULL ?>>
+                  <label class="form-check-label" for="candidature1">
+                    Candidat
+                  </label>
+                </div>
+                <div class="form-check flex-fill">
+                  <input class="form-check-input" type="radio" name="candidature" id="candidature2" value="0" <?= $candidat['candidature'] == 0 ? " checked" : NULL ?>>
+                  <label class="form-check-label" for="candidature2">
+                    Non candidat
+                  </label>
+                </div>
+              </div>
               <div class="form-group p-3" style="background-color: rgba(0, 183, 148, 0.3)">
                 <label>Se maintient au 2nd tour ?</label>
                 <select class="form-control" name="secondRound">
@@ -76,6 +90,10 @@
                   <option value="1" <?= $candidat['elected'] === "1" ? " selected='selected'" : NULL ?>>Oui</option>
                   <option value="0" <?= $candidat['elected'] === "0" ? " selected='selected'" : NULL ?>>Non</option>
                 </select>
+              </div>
+              <div class="form-group p-3" style="background-color: rgba(0, 183, 148, 0.3)">
+                <label>Lien vers site de campagne</label>
+                <input type="text" class="form-control" autocomplete="off" name="link" value="<?= $candidat['link'] ?>">
               </div>
               <div class="form-group p-3" style="background-color: rgba(0, 183, 148, 0.3)">
                 <label>Visible</label>

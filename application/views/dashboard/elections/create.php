@@ -26,7 +26,7 @@
               <?= form_open_multipart('admin/elections/candidat/create?election=' . $election['slug']); ?>
               <div class="form-group">
                 <label>Député</label>
-                <input name="depute_url" type="text" class="form-control" autocomplete="off" placeholder="ex: http://datan.fr/deputes/maine-et-loire-49/depute_matthieu-orphelin">
+                <input name="depute_url" type="text" class="form-control" autocomplete="off" placeholder="ex: https://datan.fr/deputes/maine-et-loire-49/depute_matthieu-orphelin">
               </div>
               <div class="form-group">
                 <label>Election</label>
@@ -36,6 +36,7 @@
                 <div class="form-group">
                   <label for="">Circonscription de candidature</label>
                   <select class="form-control" name="district">
+                    <option value="0">Ne sais pas</option>
                     <?php foreach ($districts as $district): ?>
                       <option value="<?= $district['id'] ?>"><?= $district['libelle'] ?></option>
                     <?php endforeach; ?>
@@ -52,6 +53,24 @@
                   </select>
                 </div>
               <?php endif; ?>
+              <div class="d-flex p-3 my-3" style="background-color: rgba(0, 183, 148, 0.3)">
+                <div class="form-check flex-fill font-weight-bold" >
+                  <input class="form-check-input" type="radio" name="candidature" value="1" id="candidature1" checked>
+                  <label class="form-check-label" for="candidature1">
+                    Candidat
+                  </label>
+                </div>
+                <div class="form-check flex-fill">
+                  <input class="form-check-input" type="radio" name="candidature" id="candidature2" value="0">
+                  <label class="form-check-label" for="candidature2">
+                    Non candidat
+                  </label>
+                </div>
+              </div>
+              <div class="form-group p-3" style="background-color: rgba(0, 183, 148, 0.3)">
+                <label>Lien vers site de campagne</label>
+                <input type="text" class="form-control" autocomplete="off" name="link" value="">
+              </div>
               <div class="form-group">
                 <label>Visible</label>
                 <input name="visible" class="form-control" type="checkbox" value="true"></input>

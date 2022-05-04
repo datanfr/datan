@@ -5,11 +5,8 @@
 <p>Les Républicains, le deuxième parti arrivé en tête, a obtenu 112 députés (19 %). Le Parti Socialiste, majoritaire lors de la législature précédente, n'a obtenu que 30 sièges (5 %).</p>
 <p>Avec l'arrivée du nouveau parti En Marche dans le jeu politique français, l'Assemblée nationale a été fortement renouvelée. En effet, la grande majorité des députés élus (415 sur 577) n'avaient jamais siégé à l'Assemblée nationale auparavent. L'Assemblée nationale s'est également fortement féminisée. Aujourd'hui, <a href="<?= base_url() ?>statistiques"><?= $women_mean ?> % des députés sont des femmes</a>.</p>
 <h2 class="mt-5">La composition de l'Assemblée nationale aujourd'hui</h2>
-<div class="mt-3">
+<div class="mt-3 mb-4">
   <canvas id="chartHemycicle"></canvas>
-</div>
-<div class="alert alert-danger mt-5">
-  Nous n'avons pas encore commencé à répertorié les députés candidats aux législatives 2022.
 </div>
 
 <script type="text/javascript">

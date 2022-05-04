@@ -22,16 +22,15 @@ class Admin_model extends CI_Model
   public function create_candidat($user_id, $depute)
   {
     $url = parse_url($this->input->post('depute_url'));
-    $source = $this->input->post('source') != "" ? $this->input->post('source') : NULL;
 
     $data = array(
       'mpId' => $depute['mpId'],
       'election' => $this->input->post('election'),
       'district' => $this->input->post('district'),
       'position' =>  $this->input->post('position'),
-      'nuance' =>  $this->input->post('nuance'),
-      'source' =>  $source,
-      'visible' => $this->input->post('visible') ? true : false
+      'visible' => $this->input->post('visible') ? true : false,
+      'candidature' => $this->input->post('candidature'),
+      'link' => $this->input->post('link')
     );
 
     $query = $this->db->get_where(
@@ -49,12 +48,12 @@ class Admin_model extends CI_Model
   public function modify_candidat()
   {
     $data = array(
+      'candidature' => $this->input->post('candidature'),
       'district' => $this->input->post('district'),
       'position' =>  $this->input->post('position'),
-      'nuance' =>  $this->input->post('nuance'),
-      'source' =>  $this->input->post('source'),
       'secondRound' => $this->input->post('secondRound') == 99 ?  NULL : $this->input->post('secondRound'),
       'elected' => $this->input->post('elected') == 99 ?  NULL : $this->input->post('elected'),
+      'link' => $this->input->post('link'),
       'visible' => $this->input->post('visible') ? true : false
     );
 
@@ -62,6 +61,37 @@ class Admin_model extends CI_Model
     $this->db->where('mpId', $this->input->post('mpId'));
     $this->db->where('election', $this->input->post('election'));
     $this->db->update('elect_deputes_candidats');
+  }
+
+  public function modify_candidat_as_mp($mpId, $election)
+  {
+    // Check if MP is already in the database
+    $query = $this->db->get_where(
+      'elect_deputes_candidats',
+      array('mpId' => $mpId, 'election' => $election)
+    );
+
+    if ($query->num_rows() > 0) {
+      // Modify a candidate
+      $data = array(
+        'district' => $this->input->post('district'),
+        'candidature' => $this->input->post('candidature'),
+        'link' => $this->input->post('link')
+      );
+      $this->db->set($data);
+      $this->db->where('mpId', $mpId);
+      $this->db->where('election', $election);
+      $this->db->update('elect_deputes_candidats');
+    } else {
+      // Create a candidate
+      $data = array(
+        'mpId' => $mpId,
+        'election' => $election,
+        'district' => $this->input->post('district'),
+        'candidature' => $this->input->post('candidature'),
+      );
+      $this->db->insert('elect_deputes_candidats', $data);
+    }
   }
 
   public function delete_candidat()
@@ -328,5 +358,16 @@ class Admin_model extends CI_Model
       ');
 
     return $query->result_array();
+  }
+
+  public function table_changes($table, $toInsert){
+    $data = array(
+      'table' => $table,
+      'user' => $toInsert['user'],
+      'col' => $toInsert['col'],
+      'value_old' => $toInsert['value_old'],
+      'value_new' => $toInsert['value_new']
+    );
+    $this->db->insert('table_changes', $data);
   }
 }
