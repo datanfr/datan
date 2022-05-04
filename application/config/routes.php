@@ -166,6 +166,7 @@ $route['faq'] = 'faq/index';
 $route['api/(:any)/(:any)'] = 'api/index/$1/$2';
 // LOGIN & REGISTER
 $route['login'] = 'users/login';
+$route['register/(:any)'] = 'users/register/$1';
 $route['register'] = 'users/register';
 $route['logout'] = 'users/logout';
 $route['demande-compte-depute'] = 'users/demande_mp';
