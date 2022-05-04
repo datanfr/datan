@@ -53,6 +53,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 // ADMIN
 $route['admin'] = 'admin/index';
 $route['admin/votes'] = 'admin/votes';
+$route['admin/elections/modifications-mps'] = 'admin/election_modifications_mps';
 $route['admin/elections/(:any)'] = 'admin/election_candidates/$1';
 $route['admin/elections/candidat/create'] = 'admin/create_candidat';
 $route['admin/elections/candidat/modify/(:any)'] = 'admin/modify_candidat/$1';
@@ -76,6 +77,10 @@ $route['admin/quizz/modify/(:any)'] = 'admin/modify_quizz/$1';
 $route['admin/quizz/delete/(:any)'] = 'admin/delete_quizz/$1';
 $route['admin/parrainages'] = 'admin/parrainages';
 $route['admin/parrainages/modify/(:any)'] = 'admin/modify_parrainage/$1';
+// MpDashboard
+$route['dashboard-mp'] = 'dashboardMP/index';
+$route['dashboard-mp/elections/(:any)'] = 'dashboardMP/elections/$1';
+$route['dashboard-mp/elections/(:any)/modifier'] = 'dashboardMP/elections_modify/$1';
 // USERS
 $route['mon-compte'] = 'users/compte';
 $route['mon-compte/modifier-donnees-personnelles'] = 'users/modify_personal_data';
@@ -161,10 +166,12 @@ $route['faq'] = 'faq/index';
 $route['api/(:any)/(:any)'] = 'api/index/$1/$2';
 // LOGIN & REGISTER
 $route['login'] = 'users/login';
+$route['register/(:any)'] = 'users/register/$1';
 $route['register'] = 'users/register';
 $route['logout'] = 'users/logout';
 $route['password'] = 'users/password_lost_request';
 $route['password/(:any)'] = 'users/password_lost_change/$1';
+$route['demande-compte-depute'] = 'users/demande_mp';
 // REDIRECTION
 $route['classements'] = 'redirection/redir/statistiques';
 $route['search/(:any)/(:any)'] = 'redirect/cities/$1/$2';

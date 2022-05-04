@@ -4,17 +4,85 @@
     public function __construct(){
       parent::__construct();
       $this->load->model('captcha_model');
+      $this->load->model('deputes_model');
     }
 
-    public function register(){
-      $this->password_model->security();
-      $data['title'] = 'Créez votre compte';
-      $data['title_meta'] = "Datan: S'inscrire";
-      $data['no_offset'] = TRUE;
+    public function demande_mp(){
+      $data['title'] = 'Inscrivez-vous en tant que député';
+      $data['title_meta'] = 'Datan : demande de compte député';
       $data['seoNoFollow'] = TRUE;
 
+      $this->form_validation->set_rules('email', 'Email', 'required|callback_check_mp_email');
+      $this->form_validation->set_rules('captcha', 'Image captcha', 'required');
+
+      if ($this->form_validation->run() === FALSE) {
+
+        if ($this->session->tempdata('penalty')) {
+          $this->load->view('templates/header_no_navbar', $data);
+          $this->load->view('users/blocked');
+          $this->load->view('templates/footer_no_navbar');
+        } else {
+          // Captcha
+          $data['captcha'] = TRUE;
+          $data['captchaImg'] = $this->captcha_model->generateCaptcha();
+
+          $this->load->view('templates/header_no_navbar', $data);
+          $this->load->view('users/demande-compte-mp', $data);
+          $this->load->view('templates/footer_no_navbar');
+        }
+
+      } else {
+        //$this->password_model->security_captcha('demande-compte-depute');
+        // Working with PA332228
+
+        $email = $this->input->post('email');
+        $data['depute'] = $this->deputes_model->get_depute_by_email($email);
+        print_r($data['depute']);
+
+        if (!$data['depute']) {
+          $this->session->set_flashdata('error', "Nous ne vous trouvons pas dans notre base de données. N'hésitez pas à nous contacter : info@datan.fr.");
+          redirect('demande-compte-depute');
+        }
+
+        if ($this->user_model->check_mp_has_account($data['depute']['mpId'])) {
+          $this->session->set_flashdata('error', "Vous avez déjà un compte Datan. Connectez-vous en <a href='".base_url()."login'>cliquant ici</a>.");
+          redirect('demande-compte-depute');
+        }
+
+        // Create token
+        $token = bin2hex(random_bytes(50));
+
+        // Insert token in database
+        $this->user_model->inset_mp_demand_link($data['depute']['mpId'], $token);
+
+        // Send email
+        $templateId = 3912299; /* Template mp-demande-compte */
+        $variables = array(
+          'name' => $data['depute']['nameFirst'] . ' ' . $data['depute']['nameLast'],
+          'token' => $token
+        );
+        sendMail($email, "Lien d'activation pour créer un compte Datan", NULL, TRUE, $templateId, $variables);
+
+        $this->session->set_flashdata('success', "Un email avec un lien d'activation vient de vous être envoyé. Attention, ce lien ne sera actif que 24 heures.");
+        redirect('demande-compte-depute');
+      }
+    }
+
+    public function register($token = FALSE){
+      $data['token'] = $token;
+
+      if ($token) {
+        $mpId = $this->user_model->get_mpId_by_token($token);
+        if (!$mpId) {
+          show_404();
+        }
+      } else {
+        $mpId = FALSE;
+        redirect(); // The register system is for now opened only for MPs. 
+      }
+
       $this->form_validation->set_rules('name', 'Name', 'required');
-      $this->form_validation->set_rules('username', 'Pseudo', 'required|callback_check_username_exists');
+      $this->form_validation->set_rules('username', 'Pseudo', 'required|callback_check_username_exists|max_length[10]|alpha_numeric');
       $this->form_validation->set_rules('email', 'Email', 'required|callback_check_email_exists|valid_email');
       $this->form_validation->set_rules('password', 'Mot de passe', 'required');
       $this->form_validation->set_rules('password2', 'Confirmation du mot de passe', 'matches[password]');
@@ -22,37 +90,65 @@
 
       if ($this->form_validation->run() === FALSE) {
 
+        if ($mpId) {
+          $data['depute'] = $this->deputes_model->get_depute_by_mpId($mpId);
+          $data['depute']['name'] = $data['depute']['nameFirst'] . ' ' . $data['depute']['nameLast'];
+          $data['depute']['contacts'] = $this->deputes_model->get_depute_contacts($mpId);
+          $data['title'] = 'Créez votre compte en tant que député';
+          $data['mp'] = TRUE;
+        } else {
+          $data['title'] = 'Créez votre compte Datan';
+          $data['mp'] = FALSE;
+        }
+
+        $data['title_meta'] = "Datan: S'inscrire";
+        $data['seoNoFollow'] = TRUE;
+
         $this->load->view('templates/header_no_navbar', $data);
         $this->load->view('users/register', $data);
         $this->load->view('templates/footer_no_navbar');
+
       } else {
         // Encrypt password
         $enc_password = password_hash($this->input->post('password'), PASSWORD_DEFAULT);
-        $this->user_model->register($enc_password);
+        if ($mpId) {
+          $type = 'mp';
+        } else {
+          $type = '';
+        }
+        $this->user_model->register($enc_password, $type);
+        // Insert into users_mp
+        if ($mpId) {
+          $user = $this->user_model->login($this->input->post('username'));
+          $this->user_model->insert_users_mp($mpId, $user->id);
+        }
+        // Send email
+        $email = $this->input->post('email');
+        $variables = array(
+          "email" => $email,
+          "username" => $this->input->post('username'),
+          "email_encode" => urlencode($email)
+        );
+        sendMail($email, 'Votre compte Datan a été créé', NULL, TRUE, 3909605, $variables);
         // Set message
-        $this->session->set_flashdata('user_registered', 'Vous êtes maintenant inscrit et pouvez vous connecter');
-        redirect('login');
+        $this->session->set_flashdata('registered', 1);
+        redirect('register');
       }
     }
 
-    function check_username_exists($username){
+    public function check_username_exists($username){
       $this->form_validation->set_message('check_username_exists', "Ce pseudo est déjà pris. Merci d'en choisir un autre.");
+      return $this->user_model->check_username_exists($username) ? false : true;
+    }
 
-      if ($this->user_model->check_username_exists($username)) {
-        return true;
-      } else {
-        return false;
-      }
+    public  function check_mp_email($email){
+      $this->form_validation->set_message("check_mp_email", "Cet email n'est pas dans notre base. Merci de réessayer. Si l'erreur persiste, merci de nous contacter : info@datan.fr");
+      return $this->user_model->check_mp_email($email) ? true : false;
     }
 
     public function check_email_exists($email){
       $this->form_validation->set_message('check_email_exists', "Cet email est déjà pris. Merci d'en choisir un autre.");
-
-      if ($this->user_model->check_email_exists($email)) {
-        return true;
-      } else {
-        return false;
-      }
+      return $this->user_model->check_email_exists($email) ? false : true;
     }
 
     public function password_lost_request(){
@@ -163,18 +259,7 @@
 
             // Test captcha
             if ($this->input->post('captcha') !== null) {
-              $inputCaptcha = $this->input->post('captcha');
-              $sessCaptcha = $this->session->userdata('captchaCode');
-              if (!($inputCaptcha === $sessCaptcha)) {
-                $attempt = $this->session->userdata('attempt');
-                $attempt++;
-                $this->session->set_userdata('attempt', $attempt);
-                if ($this->session->userdata('attempt') >= 5) {
-                  $this->session->set_tempdata('penalty', true, 300);
-                }
-                $this->session->set_flashdata("login_failed", "Le code captcha est erroné. Veuillez réessayer.");
-                redirect('login');
-              }
+              $this->password_model->security_captcha('login');
             }
 
             // Test password
@@ -184,11 +269,14 @@
                 'user_id' => $user->id,
                 'username' => $username,
                 'logged_in' => true,
-                'type' => $user->type
+                'type' => $user->type,
               );
+              if ($user->mpId) {
+                $user_data['mpId'] = $user->mpId;
+              }
               $this->session->set_userdata($user_data);
               $this->session->set_userdata('attempt', 0);
-              redirect('admin');
+              redirect();
             } else {
               $attempt = $this->session->userdata('attempt');
               $attempt++;
@@ -301,19 +389,17 @@
       $data['userdata'] = $this->session->userdata();
       $data['user'] = $this->user_model->get_user($data['userdata']['user_id']);
       $this->user_model->delete_account($data['user']['id']);
+      $this->user_model->delete_account_mp($data['user']['id']);
       redirect('logout');
     }
 
     public function logout(){
-      // Unset user data
-      $this->session->unset_userdata('logged_in');
-      $this->session->unset_userdata('user_id');
-      $this->session->unset_userdata('username');
-      $this->session->unset_userdata('type');
-      $this->session->unset_userdata('attempt');
-
-      // Set message
+      $user_data = $this->session->all_userdata();
+      foreach ($user_data as $key => $value) {
+        if ($key != 'session_id' && $key != 'ip_address' && $key != 'user_agent' && $key != 'last_activity') {
+          $this->session->unset_userdata($key);
+        }
+      }
       redirect();
     }
-
   }

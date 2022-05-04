@@ -15,32 +15,43 @@
       $this->load->model('readings_model');
       $this->load->model('votes_model');
       $this->load->model('parrainages_model');
-      $this->password_model->security();
+      $this->password_model->security_only_team();
     }
 
-    // Dashboard homepage
+    // Admin homepage
     public function index(){
       $data['username'] = $this->session->userdata('username');
       $user_id = $this->session->userdata('user_id');
 
-      $data['votesUnpublished'] = $this->admin_model->get_votes_datan_user($user_id, false);
-      $data['votesLast'] = $this->admin_model->get_votes_datan_user($user_id, true);
-      $data['groupes'] = $this->groupes_model->get_groupes_all(true, 15);
-      $data['deputes_entrants'] = $this->deputes_model->get_deputes_entrants(5);
-      $data['groupes_entrants'] = $this->deputes_model->get_groupes_entrants(5);
-      $data['newsletter_total'] = $this->newsletter_model->get_number_registered("general");
-      $data['newsletter_month'] = $this->newsletter_model->get_registered_month("general");
-      $data['votes_requested'] = $this->votes_model->get_requested_votes();
+      // IF A TEAM MEMBER
+      if ($this->password_model->is_team()) {
+        $data['votesUnpublished'] = $this->admin_model->get_votes_datan_user($user_id, false);
+        $data['votesLast'] = $this->admin_model->get_votes_datan_user($user_id, true);
+        $data['groupes'] = $this->groupes_model->get_groupes_all(true, 15);
+        $data['deputes_entrants'] = $this->deputes_model->get_deputes_entrants(5);
+        $data['groupes_entrants'] = $this->deputes_model->get_groupes_entrants(5);
+        $data['newsletter_total'] = $this->newsletter_model->get_number_registered("general");
+        $data['newsletter_month'] = $this->newsletter_model->get_registered_month("general");
+        $data['votes_requested'] = $this->votes_model->get_requested_votes();
 
-      $this->load->view('dashboard/header', $data);
-      $this->load->view('dashboard/index', $data);
-      $this->load->view('dashboard/footer');
+        $this->load->view('dashboard/header', $data);
+        $this->load->view('dashboard/index', $data);
+        $this->load->view('dashboard/footer');
+
+      } else {
+        // IF AN MP
+        $data['depute'] = $this->deputes_model->get_depute_by_mpId($this->session->userdata('mpId'));
+
+        $this->load->view('dashboard/header', $data);
+        $this->load->view('dashboard/index_mp', $data);
+        $this->load->view('dashboard/footer');
+      }
     }
 
     public function election_candidates($slug){
       $data['election'] = $this->elections_model->get_election($slug);
 
-      if (empty($data['election']) || !$data['election']['candidates']) {
+      if (empty($data['election'])) {
         show_404($this->functions_datan->get_404_infos());
       }
 
@@ -71,7 +82,9 @@
 
       if ($data['election']['libelleAbrev'] == 'Présidentielle') {
         $data['requiredFields'] = array();
-      } else {
+      } elseif ($data['election']['libelleAbrev'] == 'Législatives') {
+        $data['requiredFields'] = array('district');
+      } elseif ($data['election']['libelleAbrev'] == 'Régionales') {
         $data['requiredFields'] = array('district', 'position');
       }
 
@@ -80,13 +93,16 @@
 
       $data['title'] = 'Créer un nouveau candidat pour les ' . $data['election']['libelleAbrev'] . ' ' . $data['election']['dateYear'];
       $data['positions'] = array('', 'Tête de liste', 'Colistier');
-
       $data['districts'] = $this->elections_model->get_all_districts($data['election']['id']);
+      echo $data['election']['id'];
 
       //Form valiation
       $this->form_validation->set_rules('depute_url', 'député', 'required');
-      if ($data['election']['libelleAbrev'] != 'Présidentielle') {
+      if ($data['election']['libelleAbrev'] == 'Régionales') {
         $this->form_validation->set_rules('district', 'région de candidature', 'required');
+      }
+      if ($data['election']['libelleAbrev'] == 'Législatives') {
+        $this->form_validation->set_rules('district', 'circonscription', 'required');
       }
       if ($this->form_validation->run() === FALSE) {
         $this->load->view('dashboard/header', $data);
@@ -133,7 +149,9 @@
 
       if ($data['election']['libelleAbrev'] == 'Présidentielle') {
         $data['requiredFields'] = array();
-      } else {
+      } elseif ($data['election']['libelleAbrev'] == 'Législatives') {
+        $data['requiredFields'] = array('district');
+      } elseif ($data['election']['libelleAbrev'] == 'Régionales') {
         $data['requiredFields'] = array('district', 'position');
       }
 
@@ -141,8 +159,11 @@
       $data['districts'] = $this->elections_model->get_all_districts($data['election']['id']);
       //Form valiation
       $this->form_validation->set_rules('mpId', 'mpId', 'required');
-      if ($data['election']['libelleAbrev'] != 'Présidentielle') {
+      if ($data['election']['libelleAbrev'] == 'Régionales') {
         $this->form_validation->set_rules('district', 'région de candidature', 'required');
+      }
+      if ($data['election']['libelleAbrev'] == 'Législatives') {
+        //$this->form_validation->set_rules('district', 'circonscription', 'required');
       }
       if ($this->form_validation->run() === FALSE) {
         $this->load->view('dashboard/header', $data);
@@ -171,7 +192,9 @@
 
       if ($data['election']['libelleAbrev'] == 'Présidentielle') {
         $data['requiredFields'] = array();
-      } else {
+      } elseif ($data['election']['libelleAbrev'] == 'Législatives') {
+        $data['requiredFields'] = array('district');
+      } elseif ($data['election']['libelleAbrev'] == 'Régionales') {
         $data['requiredFields'] = array('district', 'position');
       }
 
@@ -193,7 +216,18 @@
           redirect('admin/elections/' . $election['slug']);
         }
       }
+    }
 
+    public function election_modifications_mps(){
+      $data['username'] = $this->session->userdata('username');
+      $data['usernameType'] = $this->session->userdata('type');
+      $data['title'] = 'Modifications apportées par les députés';
+
+      $data['modifs'] = $this->table_history_model->get_history('elect_deputes_candidats');
+
+      $this->load->view('dashboard/header', $data);
+      $this->load->view('dashboard/elections/modifs', $data);
+      $this->load->view('dashboard/footer');
     }
 
     public function votes(){

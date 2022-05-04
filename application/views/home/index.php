@@ -165,14 +165,13 @@
     <div class="container p-md-0">
       <div class="row py-4">
         <div class="col-12">
-          <h2 class="text-center my-4">Députés candidats à l'élection présidentielle</h2>
+          <h2 class="text-center my-4">Députés candidats aux élections législatives de 2022</h2>
         </div>
       </div>
       <div class="row pt-2 pb-5">
         <div class="col-md-7 d-flex flex-column justify-content-center">
-          <p>L'élection présidentielle se déroulera les dimanches <b>10 et 24 avril 2022</b>.</p>
-          <p>Un député peut se présenter à l'élection présidentielle. Il devra alors quitter son siège de député s'il est élu président.</p>
-          <p>Au total, <span class="font-weight-bold text-primary"><?= $candidatsN ?> députés sont candidats</span> à l'élection présidentielle de 2022.</p>
+          <p>Les élections législatives prochaines se dérouleront les dimanches <b>12 et 19 juin 2022</b>.</p>
+          <p>Au total, <span class="font-weight-bold text-primary"><?= $candidatsN ?> députés sont candidats</span> à leur réélection.</p>
         </div>
         <div class="col-md-5 mt-5 mt-md-0">
           <div class="d-flex justify-content-center">
@@ -182,7 +181,7 @@
       </div>
       <div class="row pb-5">
         <div class="col-12 d-flex justify-content-center">
-          <a href="<?= base_url();?>elections/presidentielle-2022" class="no-decoration">
+          <a href="<?= base_url();?>elections/legislatives-2022" class="no-decoration">
             <button type="button" class="btn btn-primary">Découvrez les députés candidats</button>
           </a>
         </div>
