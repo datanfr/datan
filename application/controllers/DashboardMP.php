@@ -82,6 +82,8 @@
         $this->admin_model->modify_candidat_as_mp($data['depute']['mpId'], $data['election']['id']);
         $this->table_history_model->insert($data['candidate']['candidature'], $this->input->post('candidature'), 'elect_deputes_candidats', 'candidature', $this->session->userdata('user_id'));
         $this->table_history_model->insert($data['candidate']['district']['id'], $this->input->post('district'), 'elect_deputes_candidats', 'district', $this->session->userdata('user_id'));
+        $this->table_history_model->insert($data['candidate']['link'], $this->input->post('link'), 'elect_deputes_candidats', 'link', $this->session->userdata('user_id'));
+        delete_all_cache();
         redirect('dashboard-mp/elections/' . $slug);
       }
     }
