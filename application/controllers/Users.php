@@ -6,11 +6,41 @@
       $this->load->model('captcha_model');
     }
 
+    public function demande_mp(){
+      $data['title'] = 'Demandez un compte député';
+      $data['title_meta'] = 'Datan : Demandez un compte député';
+      $data['seoNoFollow'] = TRUE;
+
+      $this->form_validation->set_rules('email', 'Email', 'required|callback_check_mp_email');
+      $this->form_validation->set_rules('captcha', 'Image captcha', 'required');
+
+      if ($this->form_validation->run() === FALSE) {
+
+        if ($this->session->tempdata('penalty')) {
+          $this->load->view('templates/header_no_navbar', $data);
+          $this->load->view('users/blocked');
+          $this->load->view('templates/footer_no_navbar');
+        } else {
+          // Captcha
+          $data['captcha'] = TRUE;
+          $data['captchaImg'] = $this->captcha_model->generateCaptcha();
+
+          $this->load->view('templates/header_no_navbar', $data);
+          $this->load->view('users/demande-compte-mp', $data);
+          $this->load->view('templates/footer_no_navbar');
+        }
+
+      } else {
+        $this->password_model->security_captcha('demande-compte-depute');
+
+        echo "TO DO ! ";
+
+      }
+    }
+
     public function register(){
-      $this->password_model->security_only_admin();
       $data['title'] = 'Créez votre compte';
       $data['title_meta'] = "Datan: S'inscrire";
-      $data['no_offset'] = TRUE;
       $data['seoNoFollow'] = TRUE;
 
       $this->form_validation->set_rules('name', 'Name', 'required');
@@ -43,24 +73,19 @@
       }
     }
 
-    function check_username_exists($username){
+    public function check_username_exists($username){
       $this->form_validation->set_message('check_username_exists', "Ce pseudo est déjà pris. Merci d'en choisir un autre.");
+      return $this->user_model->check_username_exists($username) ? false : true;
+    }
 
-      if ($this->user_model->check_username_exists($username)) {
-        return true;
-      } else {
-        return false;
-      }
+    public  function check_mp_email($email){
+      $this->form_validation->set_message("check_mp_email", "Cet email n'est pas dans notre base. Merci de réessayer. Si l'erreur persiste, merci de nous contacter : info@datan.fr");
+      return $this->user_model->check_mp_email($email) ? true : false;
     }
 
     public function check_email_exists($email){
       $this->form_validation->set_message('check_email_exists', "Cet email est déjà pris. Merci d'en choisir un autre.");
-
-      if ($this->user_model->check_email_exists($email)) {
-        return true;
-      } else {
-        return false;
-      }
+      return $this->user_model->check_email_exists($email) ? false : true;
     }
 
     public function login(){
@@ -98,24 +123,12 @@
 
             // Test captcha
             if ($this->input->post('captcha') !== null) {
-              $inputCaptcha = $this->input->post('captcha');
-              $sessCaptcha = $this->session->userdata('captchaCode');
-              if (!($inputCaptcha === $sessCaptcha)) {
-                $attempt = $this->session->userdata('attempt');
-                $attempt++;
-                $this->session->set_userdata('attempt', $attempt);
-                if ($this->session->userdata('attempt') >= 5) {
-                  $this->session->set_tempdata('penalty', true, 300);
-                }
-                $this->session->set_flashdata("login_failed", "Le code captcha est erroné. Veuillez réessayer.");
-                redirect('login');
-              }
+              $this->password_model->security_captcha('login');
             }
 
             // Test password
             if (password_verify($password, $user->password)) {
               // Create session
-
               $user_data = array(
                 'user_id' => $user->id,
                 'username' => $username,
@@ -246,16 +259,12 @@
     }
 
     public function logout(){
-      // Unset user data
-      $this->session->unset_userdata('logged_in');
-      $this->session->unset_userdata('user_id');
-      $this->session->unset_userdata('username');
-      $this->session->unset_userdata('type');
-      $this->session->unset_userdata('attempt');
-      $this->session->unset_userdata('mpId');
-
-      // Set message
+      $user_data = $this->session->all_userdata();
+      foreach ($user_data as $key => $value) {
+        if ($key != 'session_id' && $key != 'ip_address' && $key != 'user_agent' && $key != 'last_activity') {
+          $this->session->unset_userdata($key);
+        }
+      }
       redirect();
     }
-
   }

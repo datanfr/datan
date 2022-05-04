@@ -53,5 +53,23 @@
         redirect('login');
       }
     }
+
+    public function security_captcha($redirect){
+      $inputCaptcha = $this->input->post('captcha');
+      $sessCaptcha = $this->session->userdata('captchaCode');
+      if (!($inputCaptcha === $sessCaptcha)) {
+        $attempt = $this->session->userdata('attempt');
+        $attempt++;
+        $this->session->set_userdata('attempt', $attempt);
+        if ($this->session->userdata('attempt') >= 5) {
+          $this->session->set_tempdata('penalty', true, 300);
+          $this->session->set_userdata('attempt', 0);
+        }
+        $this->session->set_flashdata('error', "Le code captcha est erroné. Veuillez réessayer.");
+        redirect($redirect);
+      } else {
+        $this->session->set_userdata('attempt', 0);
+      }
+    }
   }
 ?>
