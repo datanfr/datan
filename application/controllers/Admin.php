@@ -59,7 +59,7 @@
       $data['usernameType'] = $this->session->userdata('type');
       $data['title'] = 'Liste candidats aux élections ' . $data['election']['libelleAbrev']. ' '.$data['election']['dateYear'];
 
-      $data['candidats'] = $this->elections_model->get_all_candidate($data['election']['id']);
+      $data['candidats'] = $this->elections_model->get_all_candidates($data['election']['id']);
       foreach ($data['candidats'] as $key => $value) {
         $district = $this->elections_model->get_district($value['election_libelleAbrev'], $value['district']);
         $data['candidats'][$key]['districtLibelle'] = $district['libelle'];
@@ -70,11 +70,35 @@
       $this->load->view('dashboard/footer');
     }
 
+    public function election_candidates_not_done($slug){
+      $data['election'] = $this->elections_model->get_election($slug);
+
+      if (empty($data['election'])) {
+        show_404($this->functions_datan->get_404_infos());
+      }
+
+      $data['username'] = $this->session->userdata('username');
+      $data['usernameType'] = $this->session->userdata('type');
+      $data['title'] = 'Liste députés non renseignés pour les élections ' . $data['election']['libelleAbrev']. ' '.$data['election']['dateYear'];
+
+      $data['mps'] = $this->elections_model->get_mps_not_done($data['election']['id']);
+      foreach ($data['mps'] as $key => $value) {
+        $data['mps'][$key]['url'] = base_url() . 'deputes/' . $value['dptSlug'] . '/depute_' . $value['nameUrl'];
+      }
+
+      $this->load->view('dashboard/header', $data);
+      $this->load->view('dashboard/elections/list_not_candidates', $data);
+      $this->load->view('dashboard/footer');
+    }
+
     public function create_candidat(){
       if (!isset($_GET['election'])) {
         redirect('admin');
       }
       $slug = $_GET['election'];
+      if (isset($_GET['mp'])) {
+        $data['mp'] = $_GET['mp'];
+      }
       $data['election'] = $this->elections_model->get_election($slug);
       if (empty($data['election'])) {
         show_404($this->functions_datan->get_404_infos());
