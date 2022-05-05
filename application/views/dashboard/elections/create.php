@@ -26,7 +26,7 @@
               <?= form_open_multipart('admin/elections/candidat/create?election=' . $election['slug']); ?>
               <div class="form-group">
                 <label>Député</label>
-                <input name="depute_url" type="text" class="form-control" autocomplete="off" placeholder="ex: https://datan.fr/deputes/maine-et-loire-49/depute_matthieu-orphelin">
+                <input name="depute_url" type="text" class="form-control" autocomplete="off" <?= isset($mp) ? 'value="'.$mp.'"' : 'placeholder="ex : https://datan.fr/deputes/maine-et-loire-49/depute_matthieu-orphelin"' ?>>
               </div>
               <div class="form-group">
                 <label>Election</label>
