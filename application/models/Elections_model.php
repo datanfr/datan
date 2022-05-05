@@ -155,7 +155,7 @@
     }
 
 
-    public function get_all_candidate($election, $visible = FALSE, $candidature = FALSE, $state = FALSE){
+    public function get_all_candidates($election, $visible = FALSE, $candidature = FALSE, $state = FALSE){
       $where['election'] = $election;
       if ($visible) {
         $where['visible'] = 1;
@@ -179,6 +179,19 @@
       $query = $this->db->get_where('candidate_full', $where);
 
       return $query->result_array();
+    }
+
+    public function get_mps_not_done($election){
+      $sql = 'SELECT *
+        FROM deputes_last dl
+        WHERE dl.legislature = ?
+        AND dl.mpId NOT IN (
+          SELECT c.mpId
+          FROM candidate_full c
+          WHERE c.election = ?
+        )
+      ';
+      return $this->db->query($sql, array(legislature_current(), $election))->result_array();
     }
 
     public function count_candidats($id, $second = FALSE, $end = FALSE){
