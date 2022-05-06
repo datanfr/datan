@@ -32,8 +32,7 @@
         }
 
       } else {
-        //$this->password_model->security_captcha('demande-compte-depute');
-        // Working with PA332228
+        $this->password_model->security_captcha('demande-compte-depute');
 
         $email = $this->input->post('email');
         $data['depute'] = $this->deputes_model->get_depute_by_email($email);
@@ -78,7 +77,7 @@
         }
       } else {
         $mpId = FALSE;
-        redirect(); // The register system is for now opened only for MPs. 
+        redirect(); // The register system is for now opened only for MPs.
       }
 
       $this->form_validation->set_rules('name', 'Name', 'required');
