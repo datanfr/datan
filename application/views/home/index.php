@@ -243,6 +243,9 @@
           <a href="https://france3-regions.francetvinfo.fr/auvergne-rhone-alpes/rhone/lyon/presidentielle-je-les-mets-tous-dans-le-meme-sac-la-derniere-interview-politique-de-l-ancien-depute-lrem-bruno-bonnell-2439886.html" target="_blank" rel="noopener">
             <img class="mx-2 my-3 img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="136" height="26" data-src="<?= asset_url() ?>imgs/media/france3.png" alt="France 3">
           </a>
+          <a href="https://www.marianne.net/politique/lrem/benjamin-griveaux-agnes-buzyn-cedric-villani-ces-six-espoirs-evapores-de-la-macronie-saison-1" target="_blank" rel="noopener">
+            <img class="mx-2 my-3 img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="120" height="40" data-src="<?= asset_url() ?>imgs/media/marianne.png" alt="Marianne">
+          </a>
         </div>
       </div>
     </div>
