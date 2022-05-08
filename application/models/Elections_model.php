@@ -210,6 +210,16 @@
       return $this->db->count_all_results('candidate_full');
     }
 
+    public function count_non_candidats($id){
+      $where = array(
+        'election' => $id,
+        'visible' => 1,
+        'candidature'=> 0
+      );
+      $this->db->where($where);
+      return $this->db->count_all_results('candidate_full');
+    }
+
     public function get_all_districts($election){
       if ($election == 1/*regionales 2021*/) {
         $this->db->order_by('libelle', 'ASC');
