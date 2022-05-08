@@ -45,8 +45,22 @@
       </div>
       <!-- Filters state -->
       <div class="filters stateChange mt-md-5 d-none d-lg-block">
+        <input class="radio-btn" name="state" id="radio-200" type="radio" checked value="*">
+        <label for="radio-200" class="radio-label d-flex align-items-center">
+          <span class="d-flex align-items-center"><b>Tous les députés</b></span>
+        </label>
+        <input class="radio-btn" name="state" id="radio-201" type="radio" value=".candidate">
+        <label for="radio-201" class="radio-label d-flex align-items-center">
+          <span class="d-flex align-items-center"><b>Députés candidats</b></span>
+        </label>
+        <input class="radio-btn" name="state" id="radio-202" type="radio" value=".not-candidate">
+        <label for="radio-202" class="radio-label d-flex align-items-center">
+          <span class="d-flex align-items-center"><b>Députés non candidats</b></span>
+        </label>
+      </div>
+      <div class="filters stateChange mt-md-5 d-none d-lg-block">
         <?php if ($state > 0): ?>
-          <input class="radio-btn" name="state" id="radio-100" type="radio" checked="" value="*">
+          <input class="radio-btn" name="state" id="radio-100" type="radio" checked value="*">
           <label for="radio-100" class="radio-label d-flex align-items-center">
             <span class="d-flex align-items-center"><b>Tous les députés</b></span>
           </label>
@@ -72,7 +86,7 @@
   <div class="col-lg-9 col-md-12">
     <div class="row mt-2 sorting">
       <?php foreach ($deputes as $depute): ?>
-        <div class="col-md-6 col-xl-4 sorting-item <?= strtolower($depute['districtId']) ?> <?= strtolower($depute['electionState']) ?>">
+        <div class="col-md-6 col-xl-4 sorting-item <?= $depute['candidature'] == 1 ? 'candidate' : 'not-candidate' ?> <?= strtolower($depute['districtId']) ?> <?= strtolower($depute['electionState']) ?>">
           <div class="d-flex justify-content-center">
             <?php $this->load->view('deputes/partials/card_home.php', array('depute' => $depute, 'tag' => 'h3', 'cat' => false, 'logo' => false)) ?>
           </div>
