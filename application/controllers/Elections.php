@@ -62,6 +62,7 @@
       $data['districts'] = $this->elections_model->get_all_districts($data['election']['id']);
       $data['electionInfos'] = $this->elections_model->get_election_infos($data['election']['libelleAbrev']);
       $data['candidatsN'] = $this->elections_model->count_candidats($data['election']['id'], FALSE, FALSE);
+      $data['nonCandidatsN'] = $this->elections_model->count_non_candidats($data['election']['id'], FALSE, FALSE);
       $data['candidatsN_second'] = $this->elections_model->count_candidats($data['election']['id'], TRUE, FALSE);
       $data['candidatsN_elected'] = $this->elections_model->count_candidats($data['election']['id'], TRUE, TRUE);
       $data['mapLegend'] = $this->elections_model->get_map_legend($data['election']['id']);
