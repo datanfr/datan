@@ -52,7 +52,7 @@
       }
 
       // Data
-      $data['deputes'] = $this->elections_model->get_all_candidates($data['election']['id'], TRUE, TRUE);
+      $data['deputes'] = $this->elections_model->get_all_candidates($data['election']['id'], TRUE, FALSE);
       foreach ($data['deputes'] as $key => $value) {
         $district = $this->elections_model->get_district($value['election_libelleAbrev'], $value['district']);
         $data['deputes'][$key]['cardCenter'] = isset($district['libelle']) ? $district['libelle']. ' ('.$district['id'].')' : NULL;
@@ -80,11 +80,7 @@
         $state = $this->elections_model->get_state($value['secondRound'], $value['elected']);
         $data['deputes'][$key]['electionState'] = $state;
         if ($state == 'lost') {
-          if ($value["civ"] == "Mme") {
-            $data['deputes'][$key]['badgeCenter'] = "Éliminée";
-          } else {
-            $data['deputes'][$key]['badgeCenter'] = "Éliminé";
-          }
+          $data['deputes'][$key]['badgeCenter'] = 'Éliminé' . gender($value['civ'])['e'];
           $data['deputes'][$key]['badgeCenterColor'] = "badge-danger";
         }
         if ($state == 'second') {
@@ -92,12 +88,13 @@
           $data['deputes'][$key]['badgeCenterColor'] = "badge-secondary";
         }
         if ($state == 'elected') {
+          $data['deputes'][$key]['badgeCenter'] = 'Élu' . gender($value['civ'])['e'];
           $data['deputes'][$key]['badgeCenterColor'] = "badge-primary";
-          if ($value["civ"] == "Mme") {
-            $data['deputes'][$key]['badgeCenter'] = "Élue";
-          } else {
-            $data['deputes'][$key]['badgeCenter'] = "Élu";
-          }
+        }
+        if (!isset($data['deputes'][$key]['badgeCenter'])) {
+          $data['deputes'][$key]['badgeCenter'] = $value['candidature'] == 1 ? 'Candidat' : 'Non candidat';
+          $data['deputes'][$key]['badgeCenter'] .= gender($value['civ'])['e'];
+          $data['deputes'][$key]['badgeCenterColor'] = $value['candidature'] == 1 ? 'badge-primary' : 'badge-danger';
         }
       }
 
