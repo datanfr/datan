@@ -52,7 +52,7 @@
       }
 
       // Data
-      $data['deputes'] = $this->elections_model->get_all_candidates($data['election']['id'], TRUE, TRUE);
+      $data['deputes'] = $this->elections_model->get_all_candidates($data['election']['id'], TRUE, FALSE);
       foreach ($data['deputes'] as $key => $value) {
         $district = $this->elections_model->get_district($value['election_libelleAbrev'], $value['district']);
         $data['deputes'][$key]['cardCenter'] = isset($district['libelle']) ? $district['libelle']. ' ('.$district['id'].')' : NULL;
@@ -62,6 +62,7 @@
       $data['districts'] = $this->elections_model->get_all_districts($data['election']['id']);
       $data['electionInfos'] = $this->elections_model->get_election_infos($data['election']['libelleAbrev']);
       $data['candidatsN'] = $this->elections_model->count_candidats($data['election']['id'], FALSE, FALSE);
+      $data['nonCandidatsN'] = $this->elections_model->count_non_candidats($data['election']['id'], FALSE, FALSE);
       $data['candidatsN_second'] = $this->elections_model->count_candidats($data['election']['id'], TRUE, FALSE);
       $data['candidatsN_elected'] = $this->elections_model->count_candidats($data['election']['id'], TRUE, TRUE);
       $data['mapLegend'] = $this->elections_model->get_map_legend($data['election']['id']);
@@ -80,11 +81,7 @@
         $state = $this->elections_model->get_state($value['secondRound'], $value['elected']);
         $data['deputes'][$key]['electionState'] = $state;
         if ($state == 'lost') {
-          if ($value["civ"] == "Mme") {
-            $data['deputes'][$key]['badgeCenter'] = "Éliminée";
-          } else {
-            $data['deputes'][$key]['badgeCenter'] = "Éliminé";
-          }
+          $data['deputes'][$key]['badgeCenter'] = 'Éliminé' . gender($value['civ'])['e'];
           $data['deputes'][$key]['badgeCenterColor'] = "badge-danger";
         }
         if ($state == 'second') {
@@ -92,12 +89,13 @@
           $data['deputes'][$key]['badgeCenterColor'] = "badge-secondary";
         }
         if ($state == 'elected') {
+          $data['deputes'][$key]['badgeCenter'] = 'Élu' . gender($value['civ'])['e'];
           $data['deputes'][$key]['badgeCenterColor'] = "badge-primary";
-          if ($value["civ"] == "Mme") {
-            $data['deputes'][$key]['badgeCenter'] = "Élue";
-          } else {
-            $data['deputes'][$key]['badgeCenter'] = "Élu";
-          }
+        }
+        if (!isset($data['deputes'][$key]['badgeCenter'])) {
+          $data['deputes'][$key]['badgeCenter'] = $value['candidature'] == 1 ? 'Candidat' : 'Non candidat';
+          $data['deputes'][$key]['badgeCenter'] .= gender($value['civ'])['e'];
+          $data['deputes'][$key]['badgeCenterColor'] = $value['candidature'] == 1 ? 'badge-primary' : 'badge-danger';
         }
       }
 
