@@ -216,15 +216,6 @@
             <h3 class="subtitle">Partagez ce vote</h3>
             <?php $this->load->view('partials/share.php') ?>
           </div>
-          <div class="bloc-nos-lois d-none d-md-block mt-5">
-            <h3 class="subtitle">Prenez position</h3>
-            <p>Vous aimez Datan ? Alors vous aimerez sûrement <b>Nos Lois</b>, une application permettant de donner son avis sur les textes en discussion à l'Assemblée.</p>
-            <div class="d-flex justify-content-center">
-              <div class="card align-items-center link nos-lois url_obf my-2 p-2" url_obf="<?= url_obfuscation("https://www.noslois.fr/") ?>" >
-                <img src="<?= asset_url() ?>imgs/logos/nos-lois.png" alt="Logo Nos Lois">
-              </div>
-            </div>
-          </div>
         </div>
       </div>
     </div>
@@ -421,15 +412,6 @@
                 <img src="<?= asset_url() ?>imgs/logos/whatsapp-no-round.png" alt="Partagez sur Whatsapp">
                 <span>Whatsapp</span>
               </button>
-            </div>
-          </div>
-          <div class="bloc-nos-lois d-md-none mt-4">
-            <h3 class="subtitle">Prenez position</h3>
-            <p>Vous aimez Datan ? Alors vous aimerez sûrement <b>Nos Lois</b>, une application permettant de donner son avis sur les textes en discussion à l'Assemblée.</p>
-            <div class="d-flex justify-content-center">
-              <div class="card align-items-center link nos-lois url_obf my-2 p-2" url_obf="<?= url_obfuscation("https://www.noslois.fr/") ?>" >
-                <img src="<?= asset_url() ?>imgs/logos/nos-lois.png" alt="Logo Nos Lois">
-              </div>
             </div>
           </div>
         </div>
