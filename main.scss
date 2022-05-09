@@ -2148,24 +2148,6 @@ ul.ui-menu{
                PAGE VOTES INDIVIDUAL (pg-vote-individual)
 ################
 */
-.nos-lois{
-  background-color: #009CF3;
-  box-shadow: $card-box-shadow;
-  transition: 0.3s;
-  width: 100%;
-  span{
-    font-size: 1.15em;
-    color: #fff;
-    font-weight: 600;
-  }
-  &:hover{
-    box-shadow: $card-box-shadow-hover;
-  }
-  img{
-    width: 150px;
-    height: auto;
-  }
-}
 .pg-vote-individual{
   .category{
     font-weight: 800;
