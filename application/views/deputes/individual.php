@@ -5,7 +5,7 @@
   <div class="container pg-depute-individual">
     <div class="row">
       <div class="col-12 col-md-8 col-lg-4 offset-md-2 offset-lg-0">
-        <div class="sticky-top" style="margin-top: -130px; top: 130px;">
+        <div class="sticky-top" style="margin-top: -150px; top: 80px;">
           <?php $this->load->view('deputes/partials/card_individual.php', array('historique' => FALSE, 'last_legislature' => $depute['legislature'], 'legislature' => $depute['legislature'], 'tag' => 'h1')) ?>
         </div>
       </div> <!-- END COL -->
