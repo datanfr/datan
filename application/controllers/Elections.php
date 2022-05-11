@@ -54,9 +54,14 @@
       // Data
       $data['deputes'] = $this->elections_model->get_all_candidates($data['election']['id'], TRUE, FALSE);
       foreach ($data['deputes'] as $key => $value) {
-        $district = $this->elections_model->get_district($value['election_libelleAbrev'], $value['district']);
-        $data['deputes'][$key]['cardCenter'] = isset($district['libelle']) ? $district['libelle']. ' ('.$district['id'].')' : NULL;
-        $data['deputes'][$key]['districtId'] = isset($district['id']) ? $district['id'] : NULL;
+        if ($value['candidature'] == 1) {
+          $district = $this->elections_model->get_district($value['election_libelleAbrev'], $value['district']);
+          $data['deputes'][$key]['cardCenter'] = isset($district['libelle']) ? $district['libelle']. ' ('.$district['id'].')' : NULL;
+          $data['deputes'][$key]['districtId'] = isset($district['id']) ? $district['id'] : NULL;
+        } else {
+          $data['deputes'][$key]['cardCenter'] = $value['departementNom'] . ' (' . $value['departementCode'] . ')';
+          $data['deputes'][$key]['districtId'] = $value['departementCode'];
+        }
       }
 
       $data['districts'] = $this->elections_model->get_all_districts($data['election']['id']);
