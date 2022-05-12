@@ -96,11 +96,11 @@
           <span class="d-flex align-items-center"><b>Députés non candidats</b></span>
         </label>
       </div>
-      <div class="filters stateChange mt-md-5 d-none d-lg-block">
+      <div class="filters stateChange mt-md-3 d-none d-lg-block">
         <?php if ($state > 0): ?>
           <input class="radio-btn" name="state" id="radio-100" type="radio" checked value="*">
           <label for="radio-100" class="radio-label d-flex align-items-center">
-            <span class="d-flex align-items-center"><b>Tous les députés</b></span>
+            <span class="d-1lex align-items-center"><b>Tous les députés</b></span>
           </label>
           <input class="radio-btn" name="state" id="radio-101" type="radio" value=".elected">
           <label for="radio-101" class="radio-label d-flex align-items-center">
@@ -111,11 +111,18 @@
             <span class="d-flex align-items-center">Éliminé</span>
           </label>
         <?php endif; ?>
-        <p class="surtitre mt-5">Filtrer par département</p>
+        <p class="surtitre mt-3">Filtrer par département</p>
         <select class="custom-select filters" id="districtChange" onchange="districtChange()">
           <option selected value="*">Tous les députés</option>
           <?php foreach ($districts as $district): ?>
             <option value=".<?= $district['id'] ?>"><?= $district['libelle'] ?></option>
+          <?php endforeach; ?>
+        </select>
+        <p class="surtitre mt-3">Filtrer par groupe</p>
+        <select class="custom-select filters" id="groupChange" onchange="groupChange()">
+          <option selected value="*">Tous les députés</option>
+          <?php foreach ($groupes as $group): ?>
+            <option value=".gp-<?= mb_strtolower($group['libelleAbrev']) ?>"><?= $group['libelle'] ?></option>
           <?php endforeach; ?>
         </select>
       </div>
@@ -124,7 +131,7 @@
   <div class="col-lg-9 col-md-12">
     <div class="row mt-2 sorting">
       <?php foreach ($deputes as $depute): ?>
-        <div class="col-md-6 col-xl-4 sorting-item <?= $depute['candidature'] == 1 ? 'candidate' : 'not-candidate' ?> <?= strtolower($depute['districtId']) ?> <?= strtolower($depute['electionState']) ?>">
+        <div class="col-md-6 col-xl-4 sorting-item <?= $depute['candidature'] == 1 ? 'candidate' : 'not-candidate' ?> <?= strtolower($depute['districtId']) ?> <?= strtolower($depute['electionState']) ?> gp-<?= mb_strtolower($depute['libelleAbrev']) ?>">
           <div class="d-flex justify-content-center">
             <?php $this->load->view('deputes/partials/card_home.php', array('depute' => $depute, 'tag' => 'h3', 'cat' => false, 'logo' => false)) ?>
           </div>
