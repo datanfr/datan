@@ -1,5 +1,6 @@
 var qsRegex;
 var districtFilter = "*";
+var groupFilter = "*";
 var stateFilter;
 
 // init Isotope
@@ -10,6 +11,7 @@ var $grid = $('.sorting').isotope({
     var $this = $(this);
     var searchResult = qsRegex ? $this.text().match( qsRegex ) : true;
     var districtResult = districtFilter ? $this.is( districtFilter ) : true;
+    var districtResult = groupFilter ? $this.is( groupFilter ) : true;
     var stateResult = stateFilter ? $this.is( stateFilter ) : true;
     return searchResult && districtResult && stateResult;
   }
@@ -18,6 +20,12 @@ var $grid = $('.sorting').isotope({
 function districtChange() {
   var selectBox = document.getElementById("districtChange");
   districtFilter = selectBox.options[selectBox.selectedIndex].value;
+  $grid.isotope();
+}
+
+function groupChange() {
+  var selectBox = document.getElementById("groupChange");
+  groupFilter = selectBox.options[selectBox.selectedIndex].value;
   $grid.isotope();
 }
 
