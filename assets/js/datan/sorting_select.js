@@ -11,9 +11,9 @@ var $grid = $('.sorting').isotope({
     var $this = $(this);
     var searchResult = qsRegex ? $this.text().match( qsRegex ) : true;
     var districtResult = districtFilter ? $this.is( districtFilter ) : true;
-    var districtResult = groupFilter ? $this.is( groupFilter ) : true;
+    var groupResult = groupFilter ? $this.is( groupFilter ) : true;
     var stateResult = stateFilter ? $this.is( stateFilter ) : true;
-    return searchResult && districtResult && stateResult;
+    return searchResult && groupResult && districtResult && stateResult;
   }
 });
 
