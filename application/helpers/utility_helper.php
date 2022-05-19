@@ -8,7 +8,7 @@
   }
 
   function get_version(){
-    return 54;
+    return 55;
   }
 
   function legislature_current(){
