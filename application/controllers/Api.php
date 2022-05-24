@@ -87,6 +87,7 @@ class Api extends CI_Controller
 
         // Header
         header("Access-Control-Allow-Origin: https://datan-quiz.web.app");
+        header("Access-Control-Allow-Origin: https://quizz.datan.fr");
         header("Access-Control-Allow-Methods: GET");
         // Return
         return $this->response($data);
