@@ -84,11 +84,13 @@ class Api extends CI_Controller
           }
         }
 
-
         // Header
-        header("Access-Control-Allow-Origin: https://datan-quiz.web.app");
-        header("Access-Control-Allow-Origin: https://quizz.datan.fr");
-        header("Access-Control-Allow-Methods: GET");
+        $valid_cors = array("https://datan-quiz.web.app","https://quizz.datan.fr");
+        if (isset($_SERVER['HTTP_ORIGIN']) && in_array($_SERVER['HTTP_ORIGIN'], array_map(function ($domain) { return $domain; }, $valid_cors), true)) {
+            header('Access-Control-Allow-Origin: {$valid_cors}', false);
+            header("Access-Control-Allow-Methods: GET");
+            header("Access-Control-Allow-Headers: Content-Type");
+        }
         // Return
         return $this->response($data);
     }
