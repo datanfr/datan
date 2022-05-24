@@ -87,7 +87,7 @@ class Api extends CI_Controller
         // Header
         $valid_cors = array("https://datan-quiz.web.app","https://quizz.datan.fr");
         if (isset($_SERVER['HTTP_ORIGIN']) && in_array($_SERVER['HTTP_ORIGIN'], array_map(function ($domain) { return $domain; }, $valid_cors), true)) {
-            header('Access-Control-Allow-Origin: {$valid_cors}', false);
+            header('Access-Control-Allow-Origin: ' . $_SERVER['HTTP_ORIGIN'], false);
             header("Access-Control-Allow-Methods: GET");
             header("Access-Control-Allow-Headers: Content-Type");
         }
