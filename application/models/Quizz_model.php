@@ -45,6 +45,7 @@
         'against2' => $this->input->post('against2'),
         'against3' => $this->input->post('against3'),
         'category' => $this->input->post('category'),
+        'swap' => $this->input->post('swap') ? true : false,
         'created_by' => $user_id,
         'created_at' => date("Y-m-d H:i:s"),
         'state' => 'draft',
