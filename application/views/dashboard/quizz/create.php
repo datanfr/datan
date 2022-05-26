@@ -44,6 +44,10 @@
                       <?php endforeach; ?>
                     </select>
                   </div>
+                  <div class="form-group">
+                    <label for="">Swap (changer "pours" et "contres")</label>
+                    <input name="swap" class="form-control" type="checkbox" value="true"></input>
+                  </div>
                   <hr>
                   <h4 class="text-success">Arguments pour</h4>
                   <div class="form-group">
