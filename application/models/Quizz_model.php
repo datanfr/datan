@@ -89,6 +89,7 @@
         'quizz.legislature',
         'fields.name AS category_name',
         'fields.slug AS category_slug',
+        'quizz.swap',
         'vi.sortCode AS sortCode',
         'vi.voteId AS vote_id',
         'quizz.for1',
