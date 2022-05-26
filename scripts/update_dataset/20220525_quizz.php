@@ -5,5 +5,5 @@
     $bdd->query("SELECT swap FROM quizz LIMIT 1");
     echo "field 'swap' already exists<br>";
   } catch (\Exception $e) {
-    $bdd->query('ALTER TABLE `quizz` ADD `swap` TINYINT NOT NULL DEFAULT 0 AFTER `category`');
+    $bdd->query('ALTER TABLE `quizz` ADD `swap` TINYINT(1) NOT NULL DEFAULT 0 AFTER `category`');
   }
