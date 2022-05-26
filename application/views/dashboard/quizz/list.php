@@ -28,6 +28,7 @@
                     <th>Title</th>
                     <th>Catégorie</th>
                     <th>State</th>
+                    <th>Swap</th>
                     <th>créé le</th>
                     <th>créé par</th>
                     <th>modifié le</th>
@@ -45,6 +46,7 @@
                     <td><?= $x['title'] ?></td>
                     <td><?= $x['category_name'] ?></td>
                     <td><?= $x['state'] ?></td>
+                    <td><?= $x['swap'] ?></td>
                     <td><?= $x['created_at'] ?></td>
                     <td><?= $x['created_by_name'] ?></td>
                     <td><?= $x['modified_at'] ?></td>
