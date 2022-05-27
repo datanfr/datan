@@ -127,6 +127,8 @@
           unset($questions[$key][$argument['name']]);
         }
 
+        $questions[$key]['swap'] = $value['swap'] == 1 ? true : false;
+
       }
 
       return $questions;
