@@ -52,6 +52,11 @@
                     <input name="swap" class="form-control" type="checkbox" <?= $question['swap'] ? 'checked': ''?> value="true"></input>
                   </div>
                   <hr>
+                  <div class="form-group">
+                    <label>Phrase d'explication</label>
+                    <textarea type="text" class="form-control" autocomplete="off" name="explication"><?= $question['explication'] ?></textarea>
+                  </div>
+                  <hr>
                   <h4 class="text-success">Arguments pour</h4>
                   <div class="form-group">
                     <label>Argument 1</label>
