@@ -85,6 +85,7 @@
     public function get_questions_api($quizz){
       $select = array(
         'quizz.title AS voteTitre',
+        'quizz.explication',
         'vi.dateScrutin AS dateScrutin',
         'date_format(vi.dateScrutin, "%d %M %Y") AS dateScrutinFR',
         'quizz.voteNumero',
