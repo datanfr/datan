@@ -253,7 +253,10 @@
               <a class="nav-link no-decoration" href="<?= base_url() ?>statistiques">En chiffres</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link no-decoration text-primary" href="<?= base_url() ?>elections/legislatives-2022">Législatives 2022</a>
+              <a class="nav-link no-decoration" href="<?= base_url() ?>elections/legislatives-2022">Législatives 2022</a>
+            </li>
+            <li class="nav-item">
+              <a class="url_obf nav-link no-decoration text-primary" url_obf="<?= url_obfuscation("https://quiz.datan.fr") ?>" target="_blank">Le quiz</a>
             </li>
             <li class="nav-item">
               <a class="nav-link no-decoration" href="<?= base_url() ?>a-propos">À propos</a>

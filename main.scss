@@ -292,6 +292,25 @@ body:not(.pg-mentions) #tarteaucitronIcon {
                A CLASSER
 ################
 */
+.quizBanner {
+  background-color: $vert;
+  text-decoration: none !important;
+  span {
+    font-size: $h5-font-size;
+    color: #fff;
+  }
+  .text {
+    font-weight: 400;
+  }
+  .quizz {
+    font-weight: 800;
+  }
+  @include hover-focus(){
+    span {
+      text-decoration: underline;
+    }
+  }
+}
 .don{
   height: 30px;
   background-color: $bleu;
@@ -1430,6 +1449,18 @@ body{
     }
     span {
       font-weight: 600;
+    }
+  }
+  .bloc-quiz{
+    background-color: $bleu;
+    color: #fff !important;
+    h2 {
+      color: #ffffff;
+    }
+    h3 {
+      font-weight: 800;
+      font-size: $h4-font-size;
+      color: #ffffff;
     }
   }
   .bloc-hasard{
