@@ -1432,6 +1432,18 @@ body{
       font-weight: 600;
     }
   }
+  .bloc-quiz{
+    background-color: $bleu;
+    color: #fff !important;
+    h2 {
+      color: #ffffff;
+    }
+    h3 {
+      font-weight: 800;
+      font-size: $h4-font-size;
+      color: #ffffff;
+    }
+  }
   .bloc-hasard{
     background: linear-gradient(136.67deg, #246B96 17.99%, #00B794 86.12%);
     h2 {
