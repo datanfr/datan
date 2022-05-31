@@ -1,3 +1,9 @@
+<a href="https://quiz.datan.fr" target="_blank">
+  <div class="container-fluid quizBanner d-flex justify-content-center align-items-center py-4">
+    <span class="text">Avez-vous les mêmes idées que ce groupe ?&nbsp;</span>
+    <span class="quizz">👉 Faites le quiz !</span>
+  </div>
+</a>
 <div class="container-fluid bloc-img-deputes async_background" id="container-always-fluid" style="height: 13em"></div>
 <?php if (!empty($groupe['couleurAssociee'])): ?>
   <div class="liseret-groupe" style="background-color: <?= $groupe['couleurAssociee'] ?>"></div>

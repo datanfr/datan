@@ -292,6 +292,24 @@ body:not(.pg-mentions) #tarteaucitronIcon {
                A CLASSER
 ################
 */
+.quizBanner {
+  background-color: $bleu;
+  span {
+    font-size: $h5-font-size;
+    color: #fff;
+  }
+  .text {
+    font-weight: 400;
+  }
+  .quizz {
+    font-weight: 800;
+  }
+  @include hover-focus(){
+    span {
+      text-decoration: underline;
+    }
+  }
+}
 .don{
   height: 30px;
   background-color: $bleu;
