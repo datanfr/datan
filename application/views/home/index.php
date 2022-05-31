@@ -84,7 +84,7 @@
             <div class="d-flex flex-column align-items-center justify-content-around col-md-6 col-xl-5 offset-xl-2 col-12 mt-5 mt-md-0">
               <h3 class="mb-3 text-center my-3">Ai-je les mêmes positions que mon député ?</h3>
               <p class="text-center my-3">Prenez position sur 20 votes de l'Assemblée nationale et découvrez votre proximité avec votre député.</p>
-              <a class="btn btn-primary my-3" href="https://quiz.datan.fr" target="_blank">Je fais le quiz !</a>
+              <span class="url_obf btn btn-primary my-3" target="_blank" url_obf="<?= url_obfuscation("https://quiz.datan.fr") ?>">Je fais le quiz !</span>
             </div>
           </div>
         </div>
