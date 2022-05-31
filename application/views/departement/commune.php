@@ -1,9 +1,7 @@
-    <a href="https://quiz.datan.fr" target="_blank">
-      <div class="container-fluid quizBanner d-flex justify-content-center align-items-center py-4">
-        <span class="text">Avez-vous les mêmes idées que le député élu à <?= $ville['commune_nom'] ?> ?&nbsp;</span>
-        <span class="quizz">👉 Faites le quiz !</span>
-      </div>
-    </a>
+    <div class="url_obf container-fluid quizBanner d-flex justify-content-center align-items-center py-4" url_obf="<?= url_obfuscation("https://quiz.datan.fr") ?>">
+      <span class="text">Avez-vous les mêmes idées que le député élu à <?= $ville['commune_nom'] ?> ?&nbsp;</span>
+      <span class="quizz">👉 Faites le quiz !</span>
+    </div>
     <div class="container-fluid bloc-img-deputes bloc-img d-flex async_background" id="container-always-fluid" style="height: 13em">
       <div class="container d-flex flex-column justify-content-center py-2 pg-commune">
         <div class="row title">
