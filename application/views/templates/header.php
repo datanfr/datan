@@ -256,7 +256,7 @@
               <a class="nav-link no-decoration" href="<?= base_url() ?>elections/legislatives-2022">Législatives 2022</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link no-decoration text-primary" href="https://quiz.datan.fr" target="_blank">Quiz électoral</a>
+              <a class="nav-link no-decoration text-primary" href="https://quiz.datan.fr" target="_blank">Le quiz</a>
             </li>
             <li class="nav-item">
               <a class="nav-link no-decoration" href="<?= base_url() ?>a-propos">À propos</a>
