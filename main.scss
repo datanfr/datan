@@ -293,7 +293,8 @@ body:not(.pg-mentions) #tarteaucitronIcon {
 ################
 */
 .quizBanner {
-  background-color: $bleu;
+  background-color: $vert;
+  text-decoration: none !important;
   span {
     font-size: $h5-font-size;
     color: #fff;
