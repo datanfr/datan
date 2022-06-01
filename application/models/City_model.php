@@ -220,7 +220,15 @@
         GROUP BY c.commune_nom, dl.mpId';
 
       $query = $this->db->query($sql, $legislature);
-      return $query->result_array();
+      $results = $query->result_array();
+
+      foreach ($results as $key => $value) {
+        if ($value['communeNom'] == 'Paris' ) {
+          $results[$key]['codePostal'] = '75000/75001/75002/75003/75004/75005/75006/75007/75008/75009/75010/75011/75012/75013/75014/75015/75016/75017/75018/75019/75020';
+        }
+      }
+
+      return $results;
     }
 
   }
