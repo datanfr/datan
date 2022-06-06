@@ -91,7 +91,7 @@
         }
         if ($state == 'second') {
           $data['deputes'][$key]['badgeCenter'] = "Second tour";
-          $data['deputes'][$key]['badgeCenterColor'] = "badge-secondary";
+          $data['deputes'][$key]['badgeCenterColor'] = "badge-primary";
         }
         if ($state == 'elected') {
           $data['deputes'][$key]['badgeCenter'] = 'Élu' . gender($value['civ'])['e'];
@@ -100,7 +100,7 @@
         if (!isset($data['deputes'][$key]['badgeCenter'])) {
           $data['deputes'][$key]['badgeCenter'] = $value['candidature'] == 1 ? 'Candidat' : 'Non candidat';
           $data['deputes'][$key]['badgeCenter'] .= gender($value['civ'])['e'];
-          $data['deputes'][$key]['badgeCenterColor'] = $value['candidature'] == 1 ? 'badge-primary' : 'badge-danger';
+          $data['deputes'][$key]['badgeCenterColor'] = $value['candidature'] == 1 ? 'badge-secondary' : 'badge-danger';
         }
       }
 
