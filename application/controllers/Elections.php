@@ -69,6 +69,8 @@
       $data['nonCandidatsN'] = $this->elections_model->count_non_candidats($data['election']['id'], FALSE, FALSE);
       $data['candidatsN_second'] = $this->elections_model->count_candidats($data['election']['id'], TRUE, FALSE);
       $data['candidatsN_elected'] = $this->elections_model->count_candidats($data['election']['id'], TRUE, TRUE);
+      $data['candidatsN_eliminated'] = $this->elections_model->count_candidats_eliminated($data['election']['id']);
+      $data['candidatsN_eliminated'] = count($data['candidatsN_eliminated']);
       $data['mapLegend'] = $this->elections_model->get_map_legend($data['election']['id']);
       $data['today'] = date("Y-m-d");
       $data['women_mean'] = $this->deputes_model->get_deputes_gender(legislature_current());
