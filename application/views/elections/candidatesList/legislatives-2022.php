@@ -11,7 +11,7 @@
         <span class="candidatsN"><?= $candidatsN ?></span>
       </div>
       <div class="d-flex align-items-center ml-1">
-        <span>députés <b>candidats à leur réélection</b></span>
+        <span>député<?= $candidatsN > 1 ? "s" : "" ?> <b>candidat<?= $candidatsN > 1 ? "s" : "" ?> à leur réélection</b></span>
       </div>
     </div>
     <div class="d-flex flex-even px-2">
@@ -19,7 +19,7 @@
         <span class="candidatsN"><?= $nonCandidatsN ?></span>
       </div>
       <div class="d-flex align-items-center ml-1">
-        <span>députés non candidats</span>
+        <span>député<?= $nonCandidatsN > 1 ? "s" : "" ?> non candidat<?= $nonCandidatsN > 1 ? "s" : "" ?></span>
       </div>
     </div>
     <?php if ($state > 0): ?>
@@ -28,37 +28,7 @@
           <span class="candidatsN"><?= $candidatsN_second ?></span>
         </div>
         <div class="d-flex align-items-center ml-1">
-          <span>députés maintenus pour le <b>second tour</b></span>
-        </div>
-      </div>
-    <?php endif; ?>
-    <?php if ($state > 1): ?>
-      <div class="d-flex flex-even px-2">
-        <div class="d-flex align-items-center">
-          <span class="candidatsN"><?= $candidatsN_elected ?></span>
-        </div>
-        <div class="d-flex align-items-center ml-1">
-          <span><b>députés élus</b></span>
-        </div>
-      </div>
-    <?php endif; ?>
-  </div>
-  <div class="col-12 d-flex flex-column flex-lg-row">
-    <?php if ($state > 0): ?>
-      <div class="d-flex flex-even px-2">
-        <div class="d-flex align-items-center">
-          <span class="candidatsN"><?= $candidatsN ?></span>
-        </div>
-        <div class="d-flex align-items-center ml-1">
-          <span>députés candidats au <b>premier tour</b></span>
-        </div>
-      </div>
-      <div class="d-flex flex-even px-2">
-        <div class="d-flex align-items-center">
-          <span class="candidatsN"><?= $candidatsN_second ?></span>
-        </div>
-        <div class="d-flex align-items-center ml-1">
-          <span>députés maintenus pour le <b>second tour</b></span>
+          <span>député<?= $candidatsN_second > 1 ? "s" : "" ?> maintenu<?= $candidatsN_second > 1 ? "s" : "" ?> pour le <b>second tour</b></span>
         </div>
       </div>
     <?php endif; ?>
@@ -95,22 +65,16 @@
         <label for="radio-202" class="radio-label d-flex align-items-center">
           <span class="d-flex align-items-center"><b>Députés non candidats</b></span>
         </label>
+        <input class="radio-btn" name="state" id="radio-203" type="radio" value=".second">
+        <label for="radio-203" class="radio-label d-flex align-items-center">
+          <span class="d-flex align-items-center"><b>Second tour</b></span>
+        </label>
+        <input class="radio-btn" name="state" id="radio-204" type="radio" value=".lost">
+        <label for="radio-204" class="radio-label d-flex align-items-center">
+          <span class="d-flex align-items-center"><b>Éliminé</b></span>
+        </label>
       </div>
       <div class="filters stateChange mt-md-3 d-none d-lg-block">
-        <?php if ($state > 0): ?>
-          <input class="radio-btn" name="state" id="radio-100" type="radio" checked value="*">
-          <label for="radio-100" class="radio-label d-flex align-items-center">
-            <span class="d-1lex align-items-center"><b>Tous les députés</b></span>
-          </label>
-          <input class="radio-btn" name="state" id="radio-101" type="radio" value=".elected">
-          <label for="radio-101" class="radio-label d-flex align-items-center">
-            <span class="d-flex align-items-center">Élu</span>
-          </label>
-          <input class="radio-btn" name="state" id="radio-102" type="radio" value=".lost">
-          <label for="radio-102" class="radio-label d-flex align-items-center">
-            <span class="d-flex align-items-center">Éliminé</span>
-          </label>
-        <?php endif; ?>
         <p class="surtitre mt-3">Filtrer par département</p>
         <select class="custom-select filters" id="districtChange" onchange="districtChange()">
           <option selected value="*">Tous les députés</option>

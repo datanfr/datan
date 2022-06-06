@@ -47,9 +47,8 @@
 
       // STATE
       $data['state'] = 0;
-      if ($data['election']['id'] == '1') {
-        $data['state'] = 2;
-      }
+      $data['state'] = $data['election']['id'] == 1 ? 2 : $data['state']; // Régionales 2021
+      $data['state'] = $data['election']['id'] == 4 ? 1 : $data['state']; // Législatives 2022
 
       // Data
       $data['deputes'] = $this->elections_model->get_all_candidates($data['election']['id'], TRUE, FALSE);
@@ -91,7 +90,7 @@
         }
         if ($state == 'second') {
           $data['deputes'][$key]['badgeCenter'] = "Second tour";
-          $data['deputes'][$key]['badgeCenterColor'] = "badge-secondary";
+          $data['deputes'][$key]['badgeCenterColor'] = "badge-primary";
         }
         if ($state == 'elected') {
           $data['deputes'][$key]['badgeCenter'] = 'Élu' . gender($value['civ'])['e'];
@@ -100,7 +99,7 @@
         if (!isset($data['deputes'][$key]['badgeCenter'])) {
           $data['deputes'][$key]['badgeCenter'] = $value['candidature'] == 1 ? 'Candidat' : 'Non candidat';
           $data['deputes'][$key]['badgeCenter'] .= gender($value['civ'])['e'];
-          $data['deputes'][$key]['badgeCenterColor'] = $value['candidature'] == 1 ? 'badge-primary' : 'badge-danger';
+          $data['deputes'][$key]['badgeCenterColor'] = $value['candidature'] == 1 ? 'badge-secondary' : 'badge-danger';
         }
       }
 
