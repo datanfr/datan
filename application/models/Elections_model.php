@@ -210,6 +210,19 @@
       return $this->db->count_all_results('candidate_full');
     }
 
+    public function count_candidats_eliminated($id){
+      $sql = 'SELECT *
+        FROM candidate_full c
+        WHERE c.election = ?
+          AND candidature = 1
+          AND visible = 1
+          AND (
+            elected = 0 OR secondRound = 0
+          )
+      ';
+      return $this->db->query($sql, $id)->result_array();
+    }
+
     public function count_non_candidats($id){
       $where = array(
         'election' => $id,
