@@ -47,9 +47,8 @@
 
       // STATE
       $data['state'] = 0;
-      if ($data['election']['id'] == '1') {
-        $data['state'] = 2;
-      }
+      $data['state'] = $data['election']['id'] == 1 ? 2 : $data['state']; // Régionales 2021
+      $data['state'] = $data['election']['id'] == 4 ? 1 : $data['state']; // Législatives 2022
 
       // Data
       $data['deputes'] = $this->elections_model->get_all_candidates($data['election']['id'], TRUE, FALSE);
