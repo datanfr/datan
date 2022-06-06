@@ -273,6 +273,9 @@
           <a href="https://www.lepopulaire.fr/limoges-87000/actualites/desenclavement-emploi-gilets-jaunes-montee-du-rn-quel-bilan-pour-les-deputes-lrem-de-haute-vienne_14127678/" target="_blank" rel="noopener">
             <img class="mx-2 my-3 img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="120" height="36" data-src="<?= asset_url() ?>imgs/media/populaire-centre.png" alt="Le Populaire du Centre">
           </a>
+          <a href="https://www.petitbleu.fr/2022/06/06/legislatives-en-lot-et-garonne-michel-lauzzana-un-bilan-deux-satisfactions-et-deux-regrets-10341292.php" target="_blank" rel="noopener">
+            <img class="mx-2 my-3 img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="129" height="34" data-src="<?= asset_url() ?>imgs/media/petit-bleu.png" alt="Le Peitit bleu d'Agen">
+          </a>
         </div>
       </div>
     </div>
