@@ -14,14 +14,6 @@
         <span>député<?= $candidatsN > 1 ? "s" : "" ?> <b>candidat<?= $candidatsN > 1 ? "s" : "" ?> à leur réélection</b></span>
       </div>
     </div>
-    <div class="d-flex flex-even px-2">
-      <div class="d-flex align-items-center">
-        <span class="candidatsN"><?= $nonCandidatsN ?></span>
-      </div>
-      <div class="d-flex align-items-center ml-1">
-        <span>député<?= $nonCandidatsN > 1 ? "s" : "" ?> non candidat<?= $nonCandidatsN > 1 ? "s" : "" ?></span>
-      </div>
-    </div>
     <?php if ($state > 0): ?>
       <div class="d-flex flex-even px-2">
         <div class="d-flex align-items-center">
@@ -31,14 +23,12 @@
           <span>député<?= $candidatsN_second > 1 ? "s" : "" ?> maintenu<?= $candidatsN_second > 1 ? "s" : "" ?> pour le <b>second tour</b></span>
         </div>
       </div>
-    <?php endif; ?>
-    <?php if ($state > 1): ?>
       <div class="d-flex flex-even px-2">
         <div class="d-flex align-items-center">
-          <span class="candidatsN"><?= $candidatsN_elected ?></span>
+          <span class="candidatsN"><?= $candidatsN_eliminated ?></span>
         </div>
         <div class="d-flex align-items-center ml-1">
-          <span><b>députés élus</b></span>
+          <span>député<?= $candidatsN_eliminated > 1 ? "s" : "" ?> <b>éliminé<?= $candidatsN_eliminated > 1 ? "s" : "" ?></b></span>
         </div>
       </div>
     <?php endif; ?>
