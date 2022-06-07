@@ -3022,3 +3022,39 @@ MODAL
     color: #fff;
   }
 }
+/*
+################
+dialogueBoxQuiz
+################
+*/
+#dialogueBoxQuiz{
+  display:none;
+  background-color: $primary;
+  z-index: 1;
+  position: fixed;
+  color: #ffffff;
+  @include media-breakpoint-down(md) {
+    width: 100%;
+    bottom: 0;
+  }
+  @include media-breakpoint-up(md) {
+    width: 350px;
+    height: 400px;
+    border-top-right-radius: 10px;
+    bottom: 0;
+    left: 0;
+  }
+  #closeDialogueBoxQuiz{
+    padding: 10px;
+    position: absolute;
+    right: 0;
+    top: 0;
+  }
+  .text {
+    font-size: $h4-font-size;
+  }
+  .text-container{
+    height: 100%;
+    padding: 1rem;
+  }
+}
