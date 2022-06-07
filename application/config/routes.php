@@ -180,6 +180,8 @@ $route['search/(:any)/(:any)'] = 'redirect/cities/$1/$2';
 $route['cache/delete_all'] = 'cache/delete_all';
 // CI LOGS
 $route['admin/logs'] = 'logViewerController/index';
+// EXPORT
+$route['export/set_session/(:any)'] = 'export/set_session/$1';
 // PAGES
 $route['(:any)'] = 'pages/view/$1';
 $route['translate_uri_dashes'] = FALSE;
