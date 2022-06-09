@@ -219,7 +219,7 @@
           <span class="url_obf" url_obf="<?= url_obfuscation("https://www.franceculture.fr/emissions/les-enjeux-des-reseaux-sociaux/la-lutte-contre-l-abstention-passe-par-les-reseaux") ?>">
             <img class="mx-2 my-3 img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="70" height="70" data-src="<?= asset_url() ?>imgs/media/france_culture.png" alt="France Culture">
           </span>
-          <span class="url_obf" url_obf="<?= url_obfuscation("https://www.ouest-france.fr/pays-de-la-loire/chateaubriant-44110/legislatives-yves-daniel-un-depute-laboureur-a-l-action-discrete-47ce6f94-5b56-11ec-8d8b-3f378dbb8f2c") ?>">
+          <span class="url_obf" url_obf="<?= url_obfuscation("https://www.ouest-france.fr/elections/legislatives/lannion-paimpol-quel-bilan-pour-le-depute-eric-bothorel-0f349264-e100-11ec-8469-165462e4a30b") ?>">
             <img class="mx-2 my-3 img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="120" height="38" data-src="<?= asset_url() ?>imgs/media/ouest_france.png" alt="Ouest France">
           </span>
           <a href="https://theconversation.com/reintroduction-des-pesticides-neonicotino-des-comment-nos-deputes-ont-ils-vote-et-pourquoi-155158" target="_blank" rel="noopener">
