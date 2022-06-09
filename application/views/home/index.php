@@ -240,7 +240,7 @@
           <span class="url_obf" url_obf="<?= url_obfuscation("https://www.franceculture.fr/emissions/les-enjeux-des-reseaux-sociaux/la-lutte-contre-l-abstention-passe-par-les-reseaux") ?>">
             <img class="mx-2 my-3 img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="70" height="70" data-src="<?= asset_url() ?>imgs/media/france_culture.png" alt="France Culture">
           </span>
-          <span class="url_obf" url_obf="<?= url_obfuscation("https://www.ouest-france.fr/pays-de-la-loire/chateaubriant-44110/legislatives-yves-daniel-un-depute-laboureur-a-l-action-discrete-47ce6f94-5b56-11ec-8d8b-3f378dbb8f2c") ?>">
+          <span class="url_obf" url_obf="<?= url_obfuscation("https://www.ouest-france.fr/elections/legislatives/lannion-paimpol-quel-bilan-pour-le-depute-eric-bothorel-0f349264-e100-11ec-8469-165462e4a30b") ?>">
             <img class="mx-2 my-3 img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="120" height="38" data-src="<?= asset_url() ?>imgs/media/ouest_france.png" alt="Ouest France">
           </span>
           <a href="https://theconversation.com/reintroduction-des-pesticides-neonicotino-des-comment-nos-deputes-ont-ils-vote-et-pourquoi-155158" target="_blank" rel="noopener">
@@ -261,7 +261,7 @@
           <span class="url_obf" url_obf="<?= url_obfuscation("https://ram05.fr/podcasts/journal/29-novembre-2021-7") ?>">
             <img class="mx-2 my-3 img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="75" height="50" data-src="<?= asset_url() ?>imgs/media/ram05.png" alt="Radio Ram05">
           </span>
-          <a href="https://france3-regions.francetvinfo.fr/auvergne-rhone-alpes/rhone/lyon/presidentielle-je-les-mets-tous-dans-le-meme-sac-la-derniere-interview-politique-de-l-ancien-depute-lrem-bruno-bonnell-2439886.html" target="_blank" rel="noopener">
+          <a href="https://france3-regions.francetvinfo.fr/occitanie/haute-garonne/toulouse/legislatives-2022-top-5-de-l-activite-a-l-assemblee-il-a-fait-quoi-mon-depute-pendant-5-ans-2552692.html" target="_blank" rel="noopener">
             <img class="mx-2 my-3 img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="136" height="26" data-src="<?= asset_url() ?>imgs/media/france3.png" alt="France 3">
           </a>
           <a href="https://www.marianne.net/politique/lrem/benjamin-griveaux-agnes-buzyn-cedric-villani-ces-six-espoirs-evapores-de-la-macronie-saison-1" target="_blank" rel="noopener">
