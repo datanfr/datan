@@ -144,6 +144,10 @@
           <div class="col-12">
             <h2 class="text-center">Les dernières élections à <?= $ville["commune_nom"] ?></h2>
           </div>
+          <div class="col-lg-7 mt-4">
+            <p class="text-primary font-weight-bold">Élection présidentielle 2022</p>
+            <p><?= $results_pres_edited ?></p>
+          </div>
         </div>
         <div class="d-flex justify-content-around flex-wrap mt-4 pb-3 bloc-elections">
           <div class="card mx-1 my-2">
@@ -152,24 +156,20 @@
               <span class="round">2<sup>nd</sup> tour</span>
               <div class="chart mt-3">
                 <div class="results d-flex flex-row justify-content-center align-items-center">
-                  <div class="bar d-flex flex-row justify-content-center align-items-end">
-                    <div class="element d-flex align-items-center justify-content-center" style="height: <?= round($results_2017_pres_2['macron_pct']) ?>%">
-                      <span class="score"><?= round($results_2017_pres_2['macron_pct']) ?>%</span>
+                  <?php foreach ($results_pres_2017 as $key => $value): ?>
+                    <div class="bar d-flex flex-row justify-content-center align-items-end">
+                      <div class="element d-flex align-items-center justify-content-center" style="height: <?= round($value['share']) ?>%">
+                        <span class="score"><?= round($value['share']) ?>%</span>
+                      </div>
                     </div>
-                  </div>
-                  <div class="bar d-flex flex-row justify-content-center align-items-end">
-                    <div class="element d-flex align-items-center justify-content-center" style="height: <?= round($results_2017_pres_2['lePen_pct']) ?>%">
-                      <span class="score"><?= round($results_2017_pres_2['lePen_pct']) ?>%</span>
-                    </div>
-                  </div>
+                  <?php endforeach; ?>
                 </div>
                 <div class="names d-flex flex-row justify-content-center align-items-center">
-                  <div class="name">
-                    <p class="text-center">Emmanuel Macron</p>
-                  </div>
-                  <div class="name">
-                    <p class="text-center">Marine Le Pen</p>
-                  </div>
+                  <?php foreach ($results_pres_2017 as $key => $value): ?>
+                    <div class="name">
+                      <p class="text-center"><?= $value['candidate'] ?></p>
+                    </div>
+                  <?php endforeach; ?>
                 </div>
               </div>
             </div>
@@ -203,6 +203,35 @@
               </div>
             </div>
             <span url_obf="<?= url_obfuscation("https://www.interieur.gouv.fr/Elections/Les-resultats/Europeennes/elecresult__europeennes-2019/(path)/europeennes-2019/".$ville['interieurGouv']['region']."/".$ville['interieurGouv']['dpt']."/".$ville['interieurGouv']['dpt']."".$ville['interieurGouv']['commune_europeennes'].".html") ?>" class="url_obf no-decoration">
+              <div class="card-footer">
+                <p class="text-center mb-0">Plus d'infos</p>
+              </div>
+            </span>
+          </div>
+          <div class="card mx-1 my-2">
+            <div class="card-body pb-0">
+              <h3>Élection présidentielle 2022</h3>
+              <span class="round">2<sup>nd</sup> tour</span>
+              <div class="chart mt-3">
+                <div class="results d-flex flex-row justify-content-center align-items-center">
+                  <?php foreach ($results_pres_2022 as $key => $value): ?>
+                    <div class="bar d-flex flex-row justify-content-center align-items-end">
+                      <div class="element d-flex align-items-center justify-content-center" style="height: <?= round($value['share']) ?>%">
+                        <span class="score"><?= round($value['share']) ?>%</span>
+                      </div>
+                    </div>
+                  <?php endforeach; ?>
+                </div>
+                <div class="names d-flex flex-row justify-content-center align-items-center">
+                  <?php foreach ($results_pres_2022 as $key => $value): ?>
+                    <div class="name">
+                      <p class="text-center"><?= $value['candidate'] ?></p>
+                    </div>
+                  <?php endforeach; ?>
+                </div>
+              </div>
+            </div>
+            <span url_obf="<?= url_obfuscation("https://www.interieur.gouv.fr/Elections/Les-resultats/Presidentielles/elecresult__presidentielle-2017/(path)/presidentielle-2017/".$ville['interieurGouv']['region']."/".$ville['interieurGouv']['dpt']."/".$ville['interieurGouv']['dpt']."".$ville['interieurGouv']['commune'].".html") ?>" class="url_obf no-decoration">
               <div class="card-footer">
                 <p class="text-center mb-0">Plus d'infos</p>
               </div>
