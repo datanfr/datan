@@ -146,7 +146,9 @@
       // 2. 2017 _ Presidentielles _ 2nd tour
       $data['results_pres_2017'] = $this->city_model->get_results_pres_2($data['ville']['dpt'], $data['ville']['commune'], 2017);
       $data['results_pres_2022'] = $this->city_model->get_results_pres_2($data['ville']['dpt'], $data['ville']['commune'], 2022);
-      $data['results_pres_edited'] = $this->city_model->get_results_pres_edited($data['ville'], $data['results_pres_2017'], $data['results_pres_2022']);
+      if ($data['results_pres_2017'][0]['votants'] > 0 && $data['results_pres_2022'][0]['votants'] > 0) {
+        $data['results_pres_edited'] = $this->city_model->get_results_pres_edited($data['ville'], $data['results_pres_2017'], $data['results_pres_2022']);
+      }
       // 3. 2019 _ Européennes
       $data['results_2019_europe'] = $this->city_model->get_results_2019_europe($data['ville']);
 
