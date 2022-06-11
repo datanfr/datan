@@ -111,19 +111,54 @@
       return $query->result_array();
     }
 
-    public function get_results_2017_pres_2($dpt, $insee){
+    public function get_results_pres_2($dpt, $city, $election){
+      // Correction for Mayotte
+      if ($dpt == 976 && $election == 2017) {
+        $city = $city - 100;
+      }
+      // Correction for Polynésie française
+      if ($dpt == 987 && $election == 2022) {
+        $city = $city + 700;
+      }
       $where = array(
         'dpt' => $dpt,
-        'commune' => $insee
+        'commune' => $city,
+        'election' => $election
       );
-      $this->db->select('macron_n, macron_pct, lePen_n, lePen_pct');
-      $query = $this->db->get('elect_2017_pres_2', $where, 1);
+      $this->db->order_by('share','DESC');
+      $query = $this->db->get_where('elect_pres_2', $where);
 
-      $array = $query->row_array();
-      $array['macron_n'] = number_format($array['macron_n'], 0, ',', ' ');
-      $array['lePen_n'] = number_format($array['lePen_n'], 0, ',', ' ');
+      $array = $query->result_array();
+
+      foreach ($array as $key => $value) {
+        $array[$key]['candidate'] = $array[$key]['candidate'] == 'Macron' ? 'Emmanuel Macron' : 'Marine Le Pen';
+      }
 
       return $array;
+    }
+
+    public function get_results_pres_edited($ville, $results17, $results22){
+      foreach ($results17 as $key => $value) {
+        $results17[$key]['gender'] = $value['candidate'] == 'Emmanuel Macron' ? 'h' : 'f';
+        $results17[$value['candidate']] = $results17[$key];
+        unset($results17[$key]);
+      }
+      foreach ($results22 as $key => $value) {
+        $results22[$key]['gender'] = $value['candidate'] == 'Emmanuel Macron' ? 'h' : 'f';
+        $results22[$value['candidate']] = $results22[$key];
+        unset($results22[$key]);
+      }
+
+      $first = key($results22);
+
+      $text = "<b>" . $results22[$first]["candidate"] . "</b> est arrivé";
+      $text .= $results22[$first]["gender"] == "f" ? "e" : "";
+      $text .= " en tête à l'élection présidentielle 2022 à " . $ville["commune_nom"] . ".";
+      $text .= $results22[$first]["gender"] == "f" ? " Elle" : " Il";
+      $text .= " a récolté " . round($results22[$first]["share"]) . "% des voix.";
+      $text .= " C'est " . $this->functions_datan->more_less(round($results22[$first]["share"]), round($results17[$first]["share"])) . " que son score en 2017, qui était de " . round($results17[$first]["share"]) . "%.";;
+
+      return $text;
     }
 
     public function get_results_2019_europe($array){
