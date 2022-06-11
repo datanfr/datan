@@ -111,17 +111,24 @@
       return $query->result_array();
     }
 
-    public function get_results_pres_2($dpt, $insee, $election){
+    public function get_results_pres_2($dpt, $city, $election){
+      // Correction for Mayotte
+      if ($dpt == 976 && $election == 2017) {
+        $city = $city - 100;
+      }
+      // Correction for Polynésie française
+      if ($dpt == 987 && $election == 2022) {
+        $city = $city + 700;
+      }
       $where = array(
         'dpt' => $dpt,
-        'commune' => $insee,
+        'commune' => $city,
         'election' => $election
       );
       $this->db->order_by('share','DESC');
       $query = $this->db->get_where('elect_pres_2', $where);
 
       $array = $query->result_array();
-      //$array['macron_n'] = number_format($array['macron_n'], 0, ',', ' ');
 
       foreach ($array as $key => $value) {
         $array[$key]['candidate'] = $array[$key]['candidate'] == 'Macron' ? 'Emmanuel Macron' : 'Marine Le Pen';
@@ -144,7 +151,7 @@
 
       $first = key($results22);
 
-      $text = $results22[$first]["candidate"] . " est arrivé";
+      $text = "<b>" . $results22[$first]["candidate"] . "</b> est arrivé";
       $text .= $results22[$first]["gender"] == "f" ? "e" : "";
       $text .= " en tête à l'élection présidentielle 2022 à " . $ville["commune_nom"] . ".";
       $text .= $results22[$first]["gender"] == "f" ? " Elle" : " Il";
