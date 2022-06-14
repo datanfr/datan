@@ -20,7 +20,7 @@
           <span class="candidatsN"><?= $candidatsN_second ?></span>
         </div>
         <div class="d-flex align-items-center ml-1">
-          <span>député<?= $candidatsN_second > 1 ? "s" : "" ?> maintenu<?= $candidatsN_second > 1 ? "s" : "" ?> pour le <b>second tour</b></span>
+          <span>maintenu<?= $candidatsN_second > 1 ? "s" : "" ?> pour le <b>second tour</b></span>
         </div>
       </div>
       <div class="d-flex flex-even px-2">
@@ -28,7 +28,15 @@
           <span class="candidatsN"><?= $candidatsN_eliminated ?></span>
         </div>
         <div class="d-flex align-items-center ml-1">
-          <span>député<?= $candidatsN_eliminated > 1 ? "s" : "" ?> <b>éliminé<?= $candidatsN_eliminated > 1 ? "s" : "" ?></b></span>
+          <span><b>éliminé<?= $candidatsN_eliminated > 1 ? "s" : "" ?></b></span>
+        </div>
+      </div>
+      <div class="d-flex flex-even px-2">
+        <div class="d-flex align-items-center">
+          <span class="candidatsN"><?= $candidatsN_elected ?></span>
+        </div>
+        <div class="d-flex align-items-center ml-1">
+          <span><b>élu<?= $candidatsN_elected > 1 ? "s" : "" ?></b></span>
         </div>
       </div>
     <?php endif; ?>
@@ -59,8 +67,12 @@
         <label for="radio-203" class="radio-label d-flex align-items-center">
           <span class="d-flex align-items-center"><b>Second tour</b></span>
         </label>
-        <input class="radio-btn" name="state" id="radio-204" type="radio" value=".lost">
+        <input class="radio-btn" name="state" id="radio-204" type="radio" value=".elected">
         <label for="radio-204" class="radio-label d-flex align-items-center">
+          <span class="d-flex align-items-center"><b>Élu</b></span>
+        </label>
+        <input class="radio-btn" name="state" id="radio-205" type="radio" value=".lost">
+        <label for="radio-205" class="radio-label d-flex align-items-center">
           <span class="d-flex align-items-center"><b>Éliminé</b></span>
         </label>
       </div>
