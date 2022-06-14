@@ -1838,14 +1838,20 @@ ul.ui-menu{
   /* FIN HN */
   /* Bloc election feature */
   .card-election-feature{
-    &.candidate{
+    &.information-success{
       background-color: $bleu;
-      h2, p{
-        color: #fff;
-      }
+      color: #fff;
     }
-    &.not-candidate{
+    &.information-fail{
       background-color: $yellow;
+      color: $text-black;
+    }
+    &.results-success{
+      background-color: $primary;
+      color: #fff;
+    }
+    &.results-fail{
+      background-color: #FB9486;
       color: $text-black;
     }
     h2{
