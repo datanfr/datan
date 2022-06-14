@@ -366,12 +366,6 @@
         show_404($this->functions_datan->get_404_infos());
       }
 
-      // Caching --> Has been disable to allow for captcha
-      /*
-      if(!in_array($_SERVER['REMOTE_ADDR'], localhost()) && !$this->session->userdata('logged_in')){
-          $this->output->cache("4320"); // Caching enable for 3 days (1440 minutes per day)
-      } */
-
       // Vote edited
       $data['vote'] = $this->votes_model->get_individual_vote_edited($data['vote']);
       $data['vote']['description'] = text_url_obfuscation($data['vote']['description']);
