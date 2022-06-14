@@ -394,7 +394,7 @@ $(document).scroll(function () {
 });
 $("#closeDialogueBoxQuiz").click(function(){
   $('#dialogueBoxQuiz').fadeOut();
-  $.get("export/set_session/" + 1, function (result) {
+  $.get(get_base_url() + "/export/set_session/" + 1, function (result) {
     console.log(result);
   })
 })
