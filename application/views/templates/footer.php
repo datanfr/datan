@@ -1,5 +1,4 @@
     </div>
-    <?php var_dump($this->session->userdata()) ?>
     <div class="shadow py-md-3" id="dialogueBoxQuiz" displayed="false" already_closed="<?= $this->session->userdata("already_closed") !== null ? $this->session->userdata("already_closed") : "0" ?>">
       <span class="close cursor-pointer" id="closeDialogueBoxQuiz">
         <span aria-hidden="true">&times;</span>
