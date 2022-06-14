@@ -3035,8 +3035,8 @@ dialogueBoxQuiz
 */
 #dialogueBoxQuiz{
   display:none;
-  background-color: $primary;
-  z-index: 1;
+  background-color: $bleu;
+  z-index: 9999;
   position: fixed;
   color: #ffffff;
   @include media-breakpoint-down(md) {
@@ -3045,10 +3045,10 @@ dialogueBoxQuiz
   }
   @include media-breakpoint-up(md) {
     width: 350px;
-    height: 400px;
-    border-top-right-radius: 10px;
+    height: 290px;
+    border-top-left-radius: 10px;
     bottom: 0;
-    left: 0;
+    right: 0;
   }
   #closeDialogueBoxQuiz{
     padding: 10px;
@@ -3061,6 +3061,5 @@ dialogueBoxQuiz
   }
   .text-container{
     height: 100%;
-    padding: 1rem;
   }
 }
