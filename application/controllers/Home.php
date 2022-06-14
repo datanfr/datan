@@ -65,7 +65,7 @@
       }
 
       // Get elections
-      $data['candidats'] = $this->elections_model->get_all_candidates(4, TRUE, TRUE);
+      $data['candidats'] = $this->elections_model->get_all_candidates(4, TRUE, TRUE, 'second');
       $data['candidatsN'] = count($data['candidats']);
       $randKey = array_rand($data['candidats']);
       $data['candidatRandom'] = $data['candidats'][$randKey];
