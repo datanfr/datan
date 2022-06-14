@@ -1697,6 +1697,11 @@ ul.ui-menu{
     color: #fff;
     padding-left: 2.2rem;
     padding-right: 2.2rem;
+    h2{
+      font-weight: 800;
+      font-size: $h5-font-size;
+      color: $primary;
+    }
   }
   .bloc-elections{
     .card{

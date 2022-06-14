@@ -11,8 +11,7 @@
               <p class="department text-center mb-0"><?= $ville['dpt_nom'] ?> (<?= $ville['dpt'] ?>) -
                 Circonscriptions :
                 <?php foreach ($circos as $key => $circo): ?>
-                  <?= $circo["number"] ?>
-                  <sup><?= $circo["abbrev"] ?></sup>
+                  <?= $circo["number"] ?><sup><?= $circo["abbrev"] ?></sup>
                   <?php if ($key < count($circos) - 1): ?>
                     /
                   <?php endif; ?>
@@ -48,6 +47,17 @@
           <?php endif; ?>
           <?php if (!empty($mayor["nameFirst"])): ?>
             <p><?= ucfirst($mayor["gender_le"]) ?> maire de <?= $ville["commune_nom"] ?> est <b><?= $mayor["nameFirst"]." ".ucfirst(mb_strtolower($mayor["nameLast"])) ?></b>.</p>
+          <?php endif; ?>
+          <h2 class="mt-4"><?= $n_circos == 1 ? 'La' : 'Les' ?> circonscription<?= $n_circos == 1 ? '' : 's' ?> de <?= $ville['commune_nom'] ?></h2>
+          <?php if ($n_circos == 1): ?>
+            <p><?= $ville['commune_nom'] ?> fait partie de la <?= $ville['circo'] ?><sup><?= $ville['circo_abbrev'] ?></sup> circonscription électorale de <?= $ville['libelle_2'] ?><?= $ville['dpt_nom'] ?> (<?= $ville['dpt'] ?>).</p>
+            <?php else: ?>
+            <p><?= $ville['commune_nom'] ?> est une grande ville qui comprend plusieurs circonscriptions électorales.</p>
+            <ul>
+              <?php foreach ($circos as $key => $circo): ?>
+                <li><?= $circo['number'] ?><sup><?= $circo['abbrev'] ?></sup> circonscription <?= $ville['libelle_2'] ?><?= $ville['dpt_nom'] ?></li>
+              <?php endforeach; ?>
+            </ul>
           <?php endif; ?>
           <?php if ($n_circos == 1 && $noMP == FALSE): ?>
             <p>
