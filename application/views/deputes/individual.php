@@ -17,10 +17,18 @@
         <div class="bloc-bio mt-5">
           <!-- Election Feature 2022 -->
           <?php if ($electionFeature): ?>
-            <div class="card card-election-feature <?= $electionFeature['candidature'] == 1 ? 'candidate' : 'not-candidate' ?> mb-4 border-0" style="overflow: hidden">
+            <div class="card card-election-feature <?= $electionFeature['color'] ?> mb-4 border-0" style="overflow: hidden">
               <div class="card-body">
                 <h2>🗳️ Législatives 2022</h2>
-                <p class="mb-0"><?= $title ?> <span class="font-weight-bold"><?= $electionFeature['candidature'] == 1 ? "est candidat" : "n'est pas candidat" ?><?= $gender['e'] ?></span> à sa réélection.</p>
+                <?php if ($electionFeature['elected'] == "1"): ?>
+                  <p class="mb-0"><?= $title ?> était candidat<?= $gender['e'] ?> à sa réélection. <span class="font-weight-bold"><?= ucfirst($gender['pronom']) ?> a été réélu<?= $gender['e'] ?></span>.</p>
+                <?php elseif ($electionFeature['secondRound'] == "1"): ?>
+                  <p class="mb-0"><?= $title ?> est candidat<?= $gender['e'] ?> à sa réélection. <span class="font-weight-bold"><?= ucfirst($gender['pronom']) ?> a été qualifié<?= $gender['e'] ?></span> pour le second tour.</p>
+                <?php elseif ($electionFeature['secondRound'] == "0"): ?>
+                  <p class="mb-0"><?= $title ?> était candidat<?= $gender['e'] ?> à sa réélection. <span class="font-weight-bold"><?= ucfirst($gender['pronom']) ?> n'a pas a été qualifié<?= $gender['e'] ?></span> pour le second tour.</p>
+                <?php elseif ($electionFeature['candidature'] == "0") : ?>
+                  <p class="mb-0"><?= $title ?> <span class="font-weight-bold"> n'est pas candidat<?= $gender['e'] ?></span> à sa réélection.</p>
+                <?php endif; ?>
                 <?php if ($electionFeature['candidature'] == 1 && $electionFeature['link']): ?>
                   <span class="mt-3 url_obf btn btn-light" url_obf="<?= url_obfuscation($electionFeature['link']) ?>">Suivre sa campagne</span>
                 <?php endif; ?>

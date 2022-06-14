@@ -350,6 +350,15 @@
         }
       }
       $data['electionFeature'] = $this->elections_model->get_candidate_election($mpId, 4, TRUE, FALSE); /* Législative-2022 */
+      if ($data['electionFeature']['elected'] == "1" || $data['electionFeature']['secondRound'] == "1") {
+        $data['electionFeature']['color'] = 'results-success';
+      } elseif ($data['electionFeature']['elected'] == "0" || $data['electionFeature']['secondRound'] == "0") {
+        $data['electionFeature']['color'] = 'results-fail';
+      } elseif ($data['electionFeature']['candidature'] == "1") {
+        $data['electionFeature']['color'] = 'information-success';
+      } elseif ($data['electionFeature']['candidature'] == "0") {
+        $data['electionFeature']['color'] = 'information-fail';
+      }
       $data['parrainage'] = $this->parrainages_model->get_mp_parrainage($mpId, 2022); /* Parrainage for presidentielle 2022 */
       if ($data['parrainage']) {
         $data['parrainage']['candidat'] = $this->parrainages_model->change_candidate_name($data['parrainage']['candidat']);
