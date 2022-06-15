@@ -50,7 +50,7 @@
           <?php endif; ?>
           <h2 class="mt-4"><?= $n_circos == 1 ? 'La' : 'Les' ?> circonscription<?= $n_circos == 1 ? '' : 's' ?> de <?= $ville['commune_nom'] ?></h2>
           <?php if ($n_circos == 1): ?>
-            <p><?= $ville['commune_nom'] ?> fait partie de la <?= $ville['circo'] ?><sup><?= $ville['circo_abbrev'] ?></sup> circonscription électorale de <?= $ville['libelle_2'] ?><?= $ville['dpt_nom'] ?> (<?= $ville['dpt'] ?>).</p>
+            <p><?= $ville['commune_nom'] ?> fait partie de la <?= $ville['circo'] ?><sup><?= $ville['circo_abbrev'] ?></sup> circonscription électorale <?= $ville['libelle_2'] ?><?= $ville['dpt_nom'] ?> (<?= $ville['dpt'] ?>).</p>
             <?php else: ?>
             <p><?= $ville['commune_nom'] ?> est une grande ville qui comprend plusieurs circonscriptions électorales.</p>
             <ul>
