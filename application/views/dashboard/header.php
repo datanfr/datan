@@ -49,6 +49,16 @@ scratch. This page gets rid of all links and provides the needed markup only.
           <li class="nav-item d-none d-sm-inline-block">
             <a href="<?= base_url () ?>scripts" class="nav-link">Scripts</a>
           </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              Logs scripts
+            </a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+              <a class="dropdown-item" href="<?= base_url() ?>admin/logs-scripts/daily">Daily</a>
+              <a class="dropdown-item" href="<?= base_url() ?>admin/logs-scripts/weekly">Weekly</a>
+              <a class="dropdown-item" href="<?= base_url() ?>admin/logs-scripts/newsletter_votes">Newsletter votes</a>
+            </div>
+          </li>
           <li class="nav-item d-none d-sm-inline-block">
             <a href="<?= base_url () ?>cache/delete_all" class="nav-link">Delete cache</a>
           </li>
