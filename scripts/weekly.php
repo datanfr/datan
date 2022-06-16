@@ -13,7 +13,7 @@ class Script
     {
         ini_set('memory_limit', '2048M');
         $this->legislature_to_get = $legislature;
-        $this->dateMaj = date('Y-m-d');
+        $this->dateMaj = date('Y-m-d H:i:s');
         echo date('Y-m-d') . " : Launching the daily script for legislature " . $this->legislature_to_get . "\n";
         $this->time_pre = microtime(true);;
         try {
@@ -140,7 +140,7 @@ class Script
                   'dateFin' => $dateFin
                 );
                 $array = array_merge($array, array_values($item));
-                if ($i % 10 === 0) {
+                if ($i % 20 === 0) {
                   echo "Let's import until n " . $i . "\n";
                   $this->insertAll('hatvp', $fields, $array);
                   $array = [];
