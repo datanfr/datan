@@ -228,11 +228,14 @@ class Newsletter extends CI_Controller
           foreach ($emails as $email) {
             sendMail($email['email'], $title, $templateHtml = $html, $templateLanguage = TRUE, $templateId = NULL, $variables = NULL);
           }
+
+          echo date('Y-m-d H:i:s') ."\n";
+          echo "Emails have been sent (" . $action . "). \n";
         }
 
-
       } else {
-        echo "Not enough votes in the database for this month!";
+        echo date('Y-m-d H:i:s') ."\n";
+        echo "Not enough votes in the database for this month. \n";
       }
     }
 }
