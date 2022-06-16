@@ -91,7 +91,7 @@ class Script
       curl_close($ch);
     }
 
-    private function insertAll($table, $fields, $datas)
+    private function insertAll($table, $fields, $datas, $print = TRUE)
     {
         if (count($datas) > 0) {
             try {
@@ -106,7 +106,7 @@ class Script
                     . " ON DUPLICATE KEY UPDATE " . $update;
                 $stmt = $this->bdd->prepare($sql);
                 $stmt->execute($datas);
-                echo $table . " inserted\n";
+                $print ? $table . " inserted\n" : NULL;
             } catch (Exception $e) {
                 echo "Error inserting : " . $table . "\n" . $e->getMessage() . "\n";
                 die;
@@ -2774,8 +2774,8 @@ class Script
                   $amdt = array('id' => $id, 'dossier' => $dossier,  'legislature' => $legislature, 'texteLegislatifRef' => $texteLegislatifRef, 'num' => $num, 'numOrdre' => $numOrdre, 'seanceRef' => $seanceRef, 'expose' => $expose);
                   $insert = array_merge($insert, array_values($amdt));
                   if (($i + 1) % 1000 === 0) {
-                      echo "Let's insert until " . $i . "\n";
-                      $this->insertAll('amendements', $fields, $insert);
+                      echo "Insert until : " . $i . " | ";
+                      $this->insertAll('amendements', $fields, $insert, FALSE);
                       $insert = [];
                   }
                 }
@@ -2826,8 +2826,8 @@ class Script
                   $insertAuteur = array('id' => $id, 'type' => $type,  'acteurRef' => $acteurRef, 'groupeId' => $groupeId, 'auteurOrgane' => $auteurOrgane);
                   $insertAll = array_merge($insertAll, array_values($insertAuteur));
                   if (($i + 1) % 1000 === 0) {
-                      echo "Let's insert until " . $i . "\n";
-                      $this->insertAll('amendements_auteurs', $fields, $insertAll);
+                      echo "Insert until : " . $i . " | ";
+                      $this->insertAll('amendements_auteurs', $fields, $insertAll, FALSE);
                       $insertAll = [];
                   }
                 }
