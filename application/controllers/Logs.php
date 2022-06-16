@@ -5,9 +5,9 @@
       $this->password_model->security_only_admin();
     }
 
-    public function index(){
+    public function index($name){
       //$file = file_get_contents( "C:/wamp64/www/files_datan/logs/daily.log" );
-      echo dirname($_SERVER['DOCUMENT_ROOT']);
+      $file = dirname($_SERVER['DOCUMENT_ROOT']) . '/logs/' . $name . '.log';
       //echo '<pre>' . $file . '</pre>';
 
     }

@@ -180,7 +180,7 @@ $route['search/(:any)/(:any)'] = 'redirect/cities/$1/$2';
 $route['cache/delete_all'] = 'cache/delete_all';
 // LOGS
 $route['admin/logs'] = 'logViewerController/index';
-$route['admin/logs-scripts'] = 'logs/index';
+$route['admin/logs-scripts/(:any)'] = 'logs/index/$1';
 // EXPORT
 $route['export/set_session/(:any)'] = 'export/set_session/$1';
 // PAGES
