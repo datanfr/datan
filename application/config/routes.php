@@ -178,8 +178,9 @@ $route['classements'] = 'redirection/redir/statistiques';
 $route['search/(:any)/(:any)'] = 'redirect/cities/$1/$2';
 // CACHE
 $route['cache/delete_all'] = 'cache/delete_all';
-// CI LOGS
+// LOGS
 $route['admin/logs'] = 'logViewerController/index';
+$route['admin/logs-scripts'] = 'logs/index';
 // EXPORT
 $route['export/set_session/(:any)'] = 'export/set_session/$1';
 // PAGES
