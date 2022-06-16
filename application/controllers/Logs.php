@@ -6,8 +6,8 @@
     }
 
     public function index(){
-      $file = file_get_contents( "C:/wamp64/www/files_datan/logs/daily.log" );
-      echo $_SERVER['DOCUMENT_ROOT'];
+      //$file = file_get_contents( "C:/wamp64/www/files_datan/logs/daily.log" );
+      echo dirname($_SERVER['DOCUMENT_ROOT']);
       //echo '<pre>' . $file . '</pre>';
 
     }
