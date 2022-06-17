@@ -759,8 +759,7 @@ class Script
                     $groupeMandat = $mandatGroupe['groupeMandat'];
                 }
             } else {
-                echo "ERROR -- ";
-                echo $mpId . " -- " . $legislature . "\n";
+                echo "No group for " . $mpId . " (" . $nameFirst . " " . $nameLast . ") - Legislature: " . $legislature . "\n";
                 $libelle = NULL;
                 $libelleAbrev = NULL;
                 $groupeId = NULL;
@@ -796,7 +795,7 @@ class Script
               'dateMaj' => $this->dateMaj);
             $deputes = array_merge($deputes, array_values($depute));
             if ($i % 1000 === 0) {
-                echo "Let's import until vote n " . $i . "\n";
+                echo "Let's import until n " . $i . "\n";
                 $this->insertAll('deputes_all', $deputeFields, $deputes);
                 $deputes = [];
             }
