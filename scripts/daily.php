@@ -12,11 +12,13 @@ class Script
     // export the variables in environment
     public function __construct($legislature = 15)
     {
+        date_default_timezone_set('Europe/Paris');
         ini_set('memory_limit', '2048M');
         $this->legislature_to_get = $legislature;
         $this->dateMaj = date('Y-m-d');
         $this->legislature_current = 15;
-        echo date('Y-m-d') . " : Launching the daily script for legislature " . $this->legislature_to_get . "\n";
+        $this->intro = "[" . date('Y-m-d h:i:s') . "] ";
+        echo $this->intro . "Launching the daily script for legislature " . $this->legislature_to_get . "\n";
         $this->time_pre = microtime(true);;
         try {
             $this->bdd = new PDO(
@@ -37,7 +39,7 @@ class Script
     {
         $time_post = microtime(true);
         $exec_time = $time_post - $this->time_pre;
-        echo ("Script is over ! It took: " . round($exec_time, 2) . " seconds.\n");
+        echo "Script is over ! It took: " . round($exec_time, 2) . " seconds.\n";
     }
 
     private function opendata($query, $csv_filename, $dataset, $resource)
