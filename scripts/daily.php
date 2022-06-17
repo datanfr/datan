@@ -496,11 +496,15 @@ class Script
 
         $originalFolder = __DIR__ . "/../assets/imgs/deputes_original/";
         if (!file_exists($originalFolder)) mkdir($originalFolder);
+
         while ($d = $donnees->fetch()) {
+
             $uid = substr($d['uid'], 2);
             $filename = __DIR__ . "/../assets/imgs/deputes_original/depute_" . $uid . ".png";
             $legislature = $d['legislature'];
             $url = 'https://www2.assemblee-nationale.fr/static/tribun/' . $legislature . '/photos/' . $uid . '.jpg';
+
+            // 1. Download original photo in deputes_original folder
 
             if (!file_exists($filename)) {
                 if (substr(get_headers($url)[12], 9, 3) != '404' && substr(get_headers($url)[0], 9, 3) != '404') {
@@ -515,11 +519,13 @@ class Script
                         $thumb = imagecreatetruecolor($newwidth, $newheight);
                         imagecopyresampled($thumb, $img, 0, 0, 0, 0, $newwidth, $newheight, $width, $height);
                         imagepng($thumb, __DIR__ . '/../assets/imgs/deputes_original/depute_' . $uid . '.png', $quality);
-                        echo "one image was just downloaded\n";
+                        echo "one image was just downloaded \n";
                     }
                 }
             }
-            //$nobg => no background
+
+            // 2. Remove background of the image in deputes_original folder
+
             $nobgFolder = __DIR__ . "/../assets/imgs/deputes_nobg_import/";
             if (!file_exists($nobgFolder)) mkdir($nobgFolder);
             $liveUrl = 'https://datan.fr/assets/imgs/deputes_nobg_import/depute_' . $uid . '.png';
@@ -528,7 +534,7 @@ class Script
                 $nobgLive = file_get_contents($liveUrl);
                 if ($nobgLive) {
                     file_put_contents($nobgfilename, $nobgLive);
-                    echo "one nobg image was just downloaded from datan.fr\n";
+                    echo "one nobg image was just downloaded from datan.fr \n";
                 } else if (getenv('API_KEY_NOBG')) {
                     $ch = curl_init('https://api.remove.bg/v1.0/removebg');
                     curl_setopt($ch, CURLOPT_HEADER, false);
@@ -546,10 +552,10 @@ class Script
                     $nobg = curl_exec($ch);
                     $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
                     $version = curl_getinfo($ch, CURLINFO_HTTP_VERSION);
-                    echo "VERSON" . $version . "\n";
+                    echo "VERSION" . $version . "\n";
                     if ($nobg && $httpCode == 200) {
                         file_put_contents($nobgfilename, $nobg);
-                        echo "one nobg image was just downloaded from remove.bg\n";
+                        echo "one nobg image was just downloaded from remove.bg \n";
                     } else {
                         echo "Error while downloading from remove.bg httpCode:" . $httpCode . "\n";
                         echo curl_error($ch);
@@ -569,7 +575,7 @@ class Script
         $files = scandir($dir);
         unset($files[0]);
         unset($files[1]);
-        echo "Number of photos in the deputes_original ==> " . count($files) . "\n";
+        echo "Number of photos in the deputes_original ==> " . count($files) . " \n";
 
         if (!file_exists($newdir)) mkdir($newdir);
         foreach ($files as $file) {
