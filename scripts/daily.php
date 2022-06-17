@@ -738,7 +738,7 @@ class Script
                     $datePriseFonction = $mandat['datePriseFonction'];
                 }
             } else {
-                echo "ERROR";
+                echo "ERROR (no mandat principal)";
             }
 
             $mandatGroupes = $this->bdd->query('
