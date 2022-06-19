@@ -65,10 +65,11 @@
       }
 
       // Get elections
-      $data['candidats'] = $this->elections_model->get_all_candidates(4, TRUE, TRUE, 'second');
-      $data['candidatsN'] = count($data['candidats']);
-      $randKey = array_rand($data['candidats']);
-      $data['candidatRandom'] = $data['candidats'][$randKey];
+      $data['candidatsN'] = $this->elections_model->count_candidats(4, FALSE, FALSE);
+      $data['elected'] = $this->elections_model->get_all_candidates(4, TRUE, TRUE, 'elected');
+      $data['electedN'] = count($data['elected']);
+      $randKey = array_rand($data['elected']);
+      $data['candidatRandom'] = $data['elected'][$randKey];
       $district = $this->elections_model->get_district($data['candidatRandom']['election_libelleAbrev'], $data['candidatRandom']['district']);
       $data['candidatRandom']['cardCenter'] = $district['libelle'] != '' ? $district['libelle'] . ' (' . $district['id'] . ')' : '';
 

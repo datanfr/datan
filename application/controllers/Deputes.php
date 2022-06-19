@@ -350,11 +350,13 @@
         }
       }
       $data['electionFeature'] = $this->elections_model->get_candidate_election($mpId, 4, TRUE, FALSE); /* Législative-2022 */
-      if ($data['electionFeature']['elected'] == "1" || $data['electionFeature']['secondRound'] == "1") {
+      if ($data['electionFeature']['elected'] == "1") {
         $data['electionFeature']['color'] = 'results-success';
       } elseif ($data['electionFeature']['elected'] == "0" || $data['electionFeature']['secondRound'] == "0") {
         $data['electionFeature']['color'] = 'results-fail';
-      } elseif ($data['electionFeature']['candidature'] == "1") {
+      } elseif ($data['electionFeature']['secondRound'] == "1") {
+        $data['electionFeature']['color'] = 'results-success';
+      } else if ($data['electionFeature']['candidature'] == "1") {
         $data['electionFeature']['color'] = 'information-success';
       } elseif ($data['electionFeature']['candidature'] == "0") {
         $data['electionFeature']['color'] = 'information-fail';
