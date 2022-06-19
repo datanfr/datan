@@ -186,13 +186,14 @@
     <div class="container p-md-0">
       <div class="row py-4">
         <div class="col-12">
-          <h2 class="text-center my-4"><span class="text-primary">Élections législatives 2022</span><span style="display: block" class="mt-3">Les députés qualifiés au second tour</span></h2>
+          <h2 class="text-center my-4"><span class="text-primary">Élections législatives 2022</span><span style="display: block" class="mt-3">Découvrez les députés réélus</span></h2>
         </div>
       </div>
       <div class="row pt-2 pb-5">
         <div class="col-md-7 d-flex flex-column justify-content-center">
-          <p>Les élections législatives prochaines se dérouleront les dimanches <b>12 et 19 juin 2022</b>.</p>
-          <p>Au total, <span class="font-weight-bold text-primary"><?= $candidatsN ?> députés</span> se sont maintenus au second tour.</p>
+          <p>Les élections législatives prochaines se sont déroulées les dimanches <b>12 et 19 juin 2022</b>.</p>
+          <p>Aux élections législatives, <?= $candidatsN ?> députés étaient candidats à leur réélection.</p>
+          <p>Au total, <span class="font-weight-bold text-primary"><?= $electedN ?> députés</span> ont été réélus pendant les législatives de 2022.</p>
         </div>
         <div class="col-md-5 mt-5 mt-md-0">
           <div class="d-flex justify-content-center">
@@ -203,7 +204,7 @@
       <div class="row pb-5">
         <div class="col-12 d-flex justify-content-center">
           <a href="<?= base_url();?>elections/legislatives-2022" class="no-decoration">
-            <button type="button" class="btn btn-primary">Découvrez les députés au second tour</button>
+            <button type="button" class="btn btn-primary">Découvrez les députés réélus</button>
           </a>
         </div>
       </div>
