@@ -5,7 +5,7 @@
 <p>La Nouvelle Union populaire écologique et sociale (NUPES) est arrivée en second position, avec 131 sièges. Cette coalition de gauche comprend les partis La France insoumise, Europe Écologie Les Verts, le Parti socialiste et le Parti communiste.</p>
 <p>Le Rassemblement national, qui n'avait qu'une dizaine de parlementaires dans l'Assemblée sortante, gagne 89 députés, un record pour le parti d'extrême droite.</p>
 <p>Enfin, le parti de droite Les Républicains arrive en quatrième position et obtient 64 sièges.</p>
-<h2 class="mt-5">La composition de l'Assemblée nationale aujourd'hui</h2>
+<h2 class="mt-5">Résultats des législatives 2022 en nombre de sièges</h2>
 <p class="font-italic">Source : Le Monde</p>
 <div class="mt-3 mb-4">
   <canvas id="chartHemycicle"></canvas>
