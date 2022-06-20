@@ -1,9 +1,10 @@
-<h2 class="my-4">Résultats des élections législatives de 2017</h2>
-<p>Les élections législatives de 2017 se sont déroulées 11 et 18 juin 2017, quelques semaines après l'élection présidentielle et la victoire d'Emmanuel Macron.</p>
-<p>Le scrutin a été marqué par un taux d'abstention record. En effet, 51 % des inscrits ne se sont pas rendus aux urnes lors du premier tour, un taux qui monte à 57 % pour le second tour.</p>
-<p>Le parti du nouveau président Emmanuel Macron, En Marche, a obstenu la majorité absolue, avec 308 sièges (53 % des sièges).</p>
-<p>Les Républicains, le deuxième parti arrivé en tête, a obtenu 112 députés (19 %). Le Parti Socialiste, majoritaire lors de la législature précédente, n'a obtenu que 30 sièges (5 %).</p>
-<p>Avec l'arrivée du nouveau parti En Marche dans le jeu politique français, l'Assemblée nationale a été fortement renouvelée. En effet, la grande majorité des députés élus (415 sur 577) n'avaient jamais siégé à l'Assemblée nationale auparavent. L'Assemblée nationale s'est également fortement féminisée. Aujourd'hui, <a href="<?= base_url() ?>statistiques"><?= $women_mean ?> % des députés sont des femmes</a>.</p>
+<h2 class="my-4">Résultats des élections législatives de 2022</h2>
+<p>Les élections législatives se sont déroulées en juin 2022, quelques semaines après <a href="<?= base_url() ?>elections/presidentielle-2022">l'élection présidentielle</a> et la victoire d'Emmanuel Macron.</p>
+<p>Le scrutin a été marqué par un faible taux de participation. En effet, seulement 46% des inscrits ont voté pendant le second tour. L'abstention (54%) a toutefois reculé depuis les dernières élections législatives : elle était de 57% en 2017.</p>
+<p>Le parti du nouveau président Emmanuel Macron, En Marche, a obtenu une majorité relative, avec 245 sièges (42 % des sièges). Sans majorité absolue, Emmanuel Macron et le gouvernement devront créer des alliances sur chaque texte afin de pouvoir faire voter des lois.</p>
+<p>La Nouvelle Union populaire écologique et sociale (NUPES) est arrivée en second position, avec 131 sièges. Cette coalition de gauche comprend les partis La France insoumise, Europe Écologie Les Verts, le Parti socialiste et le Parti communiste.</p>
+<p>Le Rassemblement national, qui n'avait qu'une dizaine de parlementaires dans l'Assemblée sortante, gagne 89 députés, un record pour le parti d'extrême droite.</p>
+<p>Enfin, le parti de droite Les Républicains arrive en quatrième position et obtient 64 sièges.</p>
 <h2 class="mt-5">La composition de l'Assemblée nationale aujourd'hui</h2>
 <div class="mt-3 mb-4">
   <canvas id="chartHemycicle"></canvas>
