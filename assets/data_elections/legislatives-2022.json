@@ -1,0 +1,52 @@
+[
+  {
+    "libelle" : "NUPES",
+    "couleurAssociee": "#A11870",
+    "effectif": 142
+  },
+  {
+    "libelle" : "Divers gauche",
+    "couleurAssociee": "#DA679E",
+    "effectif": 13
+  },
+  {
+    "libelle" : "Ensemble",
+    "couleurAssociee": "#FF9F0E",
+    "effectif": 246
+  },
+  {
+    "libelle" : "Régionalistes",
+    "couleurAssociee": "#78668D",
+    "effectif": 6
+  },
+  {
+    "libelle" : "Centre",
+    "couleurAssociee": "#E1B000",
+    "effectif": 6
+  },
+  {
+    "libelle" : "LR-UDI",
+    "couleurAssociee": "#0890C5",
+    "effectif": 64
+  },
+  {
+    "libelle" : "Droite",
+    "couleurAssociee": "#0890C5",
+    "effectif": 9
+  },
+  {
+    "libelle" : "Rassemblement national",
+    "couleurAssociee": "#8D6026",
+    "effectif": 89
+  },
+  {
+    "libelle" : "Extrême droite",
+    "couleurAssociee": "#654519",
+    "effectif": 3
+  },
+  {
+    "libelle" : "Divers",
+    "couleurAssociee": "#957CB5",
+    "effectif": 3
+  }
+]
