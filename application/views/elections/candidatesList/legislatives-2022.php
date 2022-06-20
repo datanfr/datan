@@ -63,10 +63,6 @@
         <label for="radio-202" class="radio-label d-flex align-items-center">
           <span class="d-flex align-items-center"><b>Députés non candidats</b></span>
         </label>
-        <input class="radio-btn" name="state" id="radio-203" type="radio" value=".second">
-        <label for="radio-203" class="radio-label d-flex align-items-center">
-          <span class="d-flex align-items-center"><b>Second tour</b></span>
-        </label>
         <input class="radio-btn" name="state" id="radio-204" type="radio" value=".elected">
         <label for="radio-204" class="radio-label d-flex align-items-center">
           <span class="d-flex align-items-center"><b>Élu</b></span>
