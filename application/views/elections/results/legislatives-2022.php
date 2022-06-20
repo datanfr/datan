@@ -6,6 +6,7 @@
 <p>Le Rassemblement national, qui n'avait qu'une dizaine de parlementaires dans l'Assemblée sortante, gagne 89 députés, un record pour le parti d'extrême droite.</p>
 <p>Enfin, le parti de droite Les Républicains arrive en quatrième position et obtient 64 sièges.</p>
 <h2 class="mt-5">La composition de l'Assemblée nationale aujourd'hui</h2>
+<p class="font-italic">Source : Le Monde</p>
 <div class="mt-3 mb-4">
   <canvas id="chartHemycicle"></canvas>
 </div>
@@ -18,7 +19,7 @@ document.addEventListener('DOMContentLoaded', function(){
   var libelles = [
     <?php
     foreach ($groupesSorted as $groupe) {
-      echo '"'.$groupe["libelleAbrev"].'",';
+      echo '"'.$groupe["libelle"].'",';
     }
      ?>
   ];
@@ -27,7 +28,7 @@ document.addEventListener('DOMContentLoaded', function(){
       labels: [
         <?php
         foreach ($groupesSorted as $groupe) {
-          echo '"'.$groupe["libelle"].' ('.$groupe['libelleAbrev'].')",';
+          echo '"'.$groupe["libelle"].'",';
         }
          ?>
       ],
