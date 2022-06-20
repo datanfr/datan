@@ -48,7 +48,7 @@
       // STATE
       $data['state'] = 0;
       $data['state'] = $data['election']['id'] == 1 ? 2 : $data['state']; // Régionales 2021
-      $data['state'] = $data['election']['id'] == 4 ? 1 : $data['state']; // Législatives 2022
+      $data['state'] = $data['election']['id'] == 4 ? 2 : $data['state']; // Législatives 2022
 
       // Data
       $data['deputes'] = $this->elections_model->get_all_candidates($data['election']['id'], TRUE, FALSE);
@@ -78,8 +78,14 @@
 
       // If legislative
       if ($data['election']['slug'] == 'legislatives-2022') {
-        $data['groupes'] = $this->groupes_model->get_groupes_all(TRUE, legislature_current());
-        $data['groupesSorted'] = $this->groupes_model->get_groupes_sorted($data['groupes']);
+        // OLD DATA FOR PREVIOUS ELECTION
+        //$data['groupes'] = $this->groupes_model->get_groupes_all(TRUE, legislature_current());
+        //$data['groupesSorted'] = $this->groupes_model->get_groupes_sorted($data['groupes']);
+
+        // NEW DATA FOR 2022 LEGISLATIVE RESULTS
+        $file = file_get_contents(asset_url() . "data_elections/" . $data['election']['slug'] . ".json");
+        $array = json_decode($file, true);
+        $data['groupesSorted'] = $array;
       }
 
       // badgeCenter
