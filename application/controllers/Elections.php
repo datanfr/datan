@@ -78,8 +78,14 @@
 
       // If legislative
       if ($data['election']['slug'] == 'legislatives-2022') {
-        $data['groupes'] = $this->groupes_model->get_groupes_all(TRUE, legislature_current());
-        $data['groupesSorted'] = $this->groupes_model->get_groupes_sorted($data['groupes']);
+        // OLD DATA FOR PREVIOUS ELECTION
+        //$data['groupes'] = $this->groupes_model->get_groupes_all(TRUE, legislature_current());
+        //$data['groupesSorted'] = $this->groupes_model->get_groupes_sorted($data['groupes']);
+
+        // NEW DATA FOR 2022 LEGISLATIVE RESULTS
+        $file = file_get_contents(asset_url() . "data_elections/" . $data['election']['slug'] . ".json");
+        $array = json_decode($file, true);
+        $data['groupesSorted'] = $array;
       }
 
       // badgeCenter
