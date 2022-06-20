@@ -38,7 +38,7 @@
       <div class="col-md-4 col-lg-5 d-flex justify-content-center align-items-center">
         <?php if (!empty($election['resultsUrl'])): ?>
           <span class="url_obf btn btn-light btn-lg" url_obf="<?= url_obfuscation($election['resultsUrl']) ?>">
-            Résultats
+            Résultats de l'élection
           </span>
         <?php endif; ?>
       </div>
