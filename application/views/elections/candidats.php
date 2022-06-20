@@ -28,6 +28,9 @@
               De ces candidats, <b><?= $candidatsN_second ?> député<?= $candidatsN_second > 1 ? "s se sont maintenus" : " s'est maintenu" ?> pour le second tour</b>.
             </p>
           <?php endif; ?>
+          <?php if ($state == 2): ?>
+            <p>Au total, <b><?= $candidatsN_elected ?></b> députés en exercice ont été élus lors des <?= mb_strtolower($election['libelle']) ?> de <?= $election['dateYear'] ?>.</p>
+          <?php endif; ?>
           </p>
           <p>Un député candidat ne se trouve pas dans la liste ? N'hésitez pas à nous envoyer un email : info[at]datan.fr !</p>
         <?php endif; ?>
