@@ -64,6 +64,62 @@
               </table>
             </div>
           </div>
+          <div class="card mt-5 card-primary card-outline">
+            <div class="card-header">
+              <h2 class="font-weight-bold text-primary h4">Rédigez l'explication de vote</h2>
+            </div>
+            <div class="card-body">
+              <?= form_open_multipart('admin/votes/create'); ?>
+                <div class="form-group">
+                  <label>Explication de vote (maximum XX mots)</label>
+                  <textarea id="editor1" name="description" class="form-control" placeholder="Description du vote"></textarea>
+                  <script>
+                    ClassicEditor
+                            .create( document.querySelector( '#editor1' ), {
+                              link: {
+                                decorators: {
+                                  isExternal: {
+                                    mode: 'automatic',
+                                    callback: url => (!url.startsWith( 'https://datan.fr' )),
+                                    attributes: {
+                                      target: '_blank',
+                                      rel: 'noopener noreferrer'
+                                    }
+                                  }
+                                }
+                              }
+                            } )
+                            .then( editor => {
+                                    console.log( editor );
+                            } )
+                            .catch( error => {
+                                    console.error( error );
+                            } );
+                  </script>
+                </div>
+                <div class="form-group">
+                  <div class="form-check">
+                    <input class="form-check-input" type="radio" name="state" value="draft" checked="">
+                    <label class="form-check-label">Brouillon</label>
+                  </div>
+                  <div class="form-check">
+                    <input class="form-check-input" type="radio" name="state" value="published">
+                    <label class="form-check-label">Publié</label>
+                  </div>
+                </div>
+                <button type="submit" class="btn btn-primary">Submit</button>
+              </form>
+
+              <!--
+              <p class="card-text">
+                Some quick example text to build on the card title and make up the bulk of the card's
+                content.
+              </p>
+              <a href="#" class="card-link">Card link</a>
+              <a href="#" class="card-link">Another link</a>
+              -->
+            </div>
+          </div>
         </div>
       </div>
       <!-- /.row -->
