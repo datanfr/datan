@@ -10,6 +10,9 @@
       <div class="row">
         <div class="col-12 mt-5">
           <a class="btn btn-secondary" href="<?= base_url() ?>dashboard-mp/explications">Retour</a>
+          <?php if ($this->session->flashdata('flash_failure')): ?>
+            <div class="alert alert-danger font-weight-bold my-4 text-center" role="alert"><?= $this->session->flashdata('flash_failure') ?></div>
+          <?php endif; ?>
           <h1 class="font-weight-bold mt-4"><?= $title ?></h1>
           <p>Pour rappel, vous pouvez renseigner une explication de vote sur les <b>votes contextualisés par Datan</b>. Ces votes sont expliqués, vulgarisés et contextualisés par notre équipe. Ce sont ces votes qui sont mis en avant sur votre page personnelle de député.e.</p>
           <table class="table mt-5">
