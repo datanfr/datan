@@ -348,7 +348,9 @@ scratch. This page gets rid of all links and provides the needed markup only.
             </li>
           <?php endif; ?>
           <?php if ($this->password_model->is_mp()): ?>
-            <!-- Election -->
+            <li class="nav-item">
+              <a class="nav-link" href="<?= base_url() ?>dashboard-mp/explications">Explications de vote</a>
+            </li>
             <li class="nav-item">
               <a class="nav-link" href="<?= base_url() ?>dashboard-mp/elections/legislatives-2022">Législatives 2022</a>
             </li>

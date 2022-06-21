@@ -88,5 +88,17 @@
       }
     }
 
+    public function explications(){
+      $data['username'] = $this->session->userdata('username');
+      $data['depute'] = $this->deputes_model->get_depute_by_mpId($this->session->userdata('mpId'));
+      $data['depute']['gender'] = gender($data['depute']['civ']);
+
+      $data['title'] = "Vos explications de vote";
+
+      $this->load->view('dashboard/header', $data);
+      $this->load->view('dashboard-mp/explications/index', $data);
+      $this->load->view('dashboard/footer');
+    }
+
   }
 ?>
