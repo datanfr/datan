@@ -13,11 +13,15 @@
           <h1 class="font-weight-bold mt-4"><?= $title ?></h1>
           <div class="card mt-5 card-primary card-outline">
             <div class="card-header">
-              <h2 class="font-weight-bold text-primary h4"><?= $vote['title'] ?></h2>
+              <h2 class="font-weight-bold text-primary h4">Rappel du vote</h2>
             </div>
             <div class="card-body">
               <table class="table mt-1">
                 <tbody>
+                  <tr>
+                    <th>Titre</th>
+                    <th><?= $vote['title'] ?></th>
+                  </tr>
                   <tr>
                     <th>Législature</th>
                     <td><?= $vote['legislature'] ?></td>
