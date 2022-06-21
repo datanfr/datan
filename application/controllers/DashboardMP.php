@@ -131,7 +131,8 @@
       $data['vote_depute'] = $this->votes_model->get_individual_vote_depute($data['depute']['mpId'], $data['vote']['legislature'], $data['vote']['voteNumero']);
 
       if (empty($data['vote_depute'])) {
-        show_404($this->functions_datan->get_404_infos());
+        $this->session->set_flashdata('flash_failure', "Vous n'avez pas pris part au vote n° " . $data["vote"]["voteNumero"] . ". Merci de choisir un scrutin dans cette liste.");
+        redirect('dashboard-mp/explications/liste');
       }
 
       $data['vote_depute']['vote'] = vote_edited($data['vote_depute']['vote']);
