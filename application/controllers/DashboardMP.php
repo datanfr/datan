@@ -6,6 +6,7 @@
       $this->load->model('admin_model');
       $this->load->model('deputes_model');
       $this->load->model('elections_model');
+      $this->load->model('dashboardMP_model');
       $this->password_model->security_only_mp();
     }
 
@@ -97,6 +98,20 @@
 
       $this->load->view('dashboard/header', $data);
       $this->load->view('dashboard-mp/explications/index', $data);
+      $this->load->view('dashboard/footer');
+    }
+
+    public function explications_liste(){
+      $data['username'] = $this->session->userdata('username');
+      $data['depute'] = $this->deputes_model->get_depute_by_mpId($this->session->userdata('mpId'));
+      $data['depute']['gender'] = gender($data['depute']['civ']);
+
+      $data['votes_without'] = $this->dashboardMP_model->get_votes_explanation($data['depute']['mpId']);
+
+      $data['title'] = "Choisissez un scrutin";
+
+      $this->load->view('dashboard/header', $data);
+      $this->load->view('dashboard-mp/explications/liste', $data);
       $this->load->view('dashboard/footer');
     }
 
