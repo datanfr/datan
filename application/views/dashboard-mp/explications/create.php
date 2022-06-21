@@ -9,34 +9,57 @@
     <div class="container-fluid">
       <div class="row">
         <div class="col-12 mt-5">
-          <a class="btn btn-secondary" href="<?= base_url() ?>dashboard-mp/explications">Retour</a>
+          <a class="btn btn-secondary" href="<?= base_url() ?>dashboard-mp/explications/liste">Retour</a>
           <h1 class="font-weight-bold mt-4"><?= $title ?></h1>
-          <p>Pour rappel, vous pouvez renseigner une explication de vote sur les <b>votes contextualisés par Datan</b>. Ces votes sont expliqués, vulgarisés et contextualisés par notre équipe. Ce sont ces votes qui sont mis en avant sur votre page personnelle de député.e.</p>
-          <table class="table mt-5">
-            <thead>
-              <tr>
-                <th scope="col">Vote</th>
-                <th scope="col">Dossier</th>
-                <th class="text-center">Date</th>
-                <th class="text-center">Position</th>
-                <th></th>
-                <th></th>
-                <th></th>
-              </tr>
-            </thead>
-            <tbody>
-              <?php foreach ($votes_without as $key => $value): ?>
-                <tr>
-                  <td><a href="<?= base_url() ?>votes/legislature-<?= $value['legislature'] ?>/vote_<?= $value['voteNumero'] ?>" target="_blank"><?= $value['vote_titre'] ?></a></td>
-                  <td><?= $value['dossier'] ?></td>
-                  <td class="text-center"><?= $value['dateScrutinFR'] ?></td>
-                  <td class="text-center"><?= $value['vote_depute'] ?></td>
-                  <td><a class="btn btn-secondary" href="#" target="_blank">Lien AN</a></td>
-                  <td><a class="btn btn-primary" href="<?= base_url() ?>dashboard-mp/explications/create/l<?= $value['legislature'] ?>v<?= $value['voteNumero'] ?>">Explication de vote</a></td>
-                </tr>
-              <?php endforeach; ?>
-            </tbody>
-          </table>
+          <div class="card mt-5 card-primary card-outline">
+            <div class="card-header">
+              <h2 class="font-weight-bold text-primary h4"><?= $vote['title'] ?></h2>
+            </div>
+            <div class="card-body">
+              <table class="table mt-1">
+                <tbody>
+                  <tr>
+                    <th>Législature</th>
+                    <td><?= $vote['legislature'] ?></td>
+                  </tr>
+                  <tr>
+                    <th>Vote n°</th>
+                    <td><?= $vote['voteNumero'] ?></td>
+                  </tr>
+                  <tr>
+                    <th>Date du scrutin</th>
+                    <td><?= $vote['dateScrutin'] ?></td>
+                  </tr>
+                  <tr>
+                    <th>Sort du vote</th>
+                    <td><?= ucfirst($vote['sortCode']) ?></td>
+                  </tr>
+                  <tr>
+                    <th>Votre position</th>
+                    <td><?= ucfirst($vote_depute['vote']) ?></td>
+                  </tr>
+                  <tr>
+                    <th>Position de votre groupe (XX)</th>
+                    <td><?= ucfirst($vote_depute['positionGroup']) ?></td>
+                  </tr>
+                  <tr>
+                    <th>Titre du scrutin</th>
+                    <td><?= ucfirst($vote['titre']) ?></td>
+                  </tr>
+                  <tr>
+                    <th>Dossier</th>
+                    <td>
+                      <a href="<?= $vote['dossierUrl'] ?>" target="_blank"><?= $vote['dossier_titre'] ?></a>
+                    </td>
+                  </tr>
+                  <tr>
+                    <th>Catégorie</th>
+                    <td><?= $vote['category'] ?></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
         </div>
       </div>
       <!-- /.row -->
