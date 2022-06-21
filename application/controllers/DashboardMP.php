@@ -7,6 +7,7 @@
       $this->load->model('deputes_model');
       $this->load->model('elections_model');
       $this->load->model('dashboardMP_model');
+      $this->load->model('votes_model');
       $this->password_model->security_only_mp();
     }
 
@@ -112,6 +113,34 @@
 
       $this->load->view('dashboard/header', $data);
       $this->load->view('dashboard-mp/explications/liste', $data);
+      $this->load->view('dashboard/footer');
+    }
+
+    public function explications_create($legislature, $voteNumero){
+
+      $data['vote'] = $this->votes_model->get_individual_vote($legislature, $voteNumero);
+
+      if (empty($data['vote'])) {
+        show_404($this->functions_datan->get_404_infos());
+      }
+
+      $data['username'] = $this->session->userdata('username');
+      $data['depute'] = $this->deputes_model->get_depute_by_mpId($this->session->userdata('mpId'));
+      $data['depute']['gender'] = gender($data['depute']['civ']);
+
+      $data['vote_depute'] = $this->votes_model->get_individual_vote_depute($data['depute']['mpId'], $data['vote']['legislature'], $data['vote']['voteNumero']);
+
+      if (empty($data['vote_depute'])) {
+        show_404($this->functions_datan->get_404_infos());
+      }
+
+      $data['vote_depute']['vote'] = vote_edited($data['vote_depute']['vote']);
+      $data['vote_depute']['positionGroup'] = vote_edited($data['vote_depute']['positionGroup']);
+
+      $data['title'] = "Rédigez une explication de vote";
+
+      $this->load->view('dashboard/header', $data);
+      $this->load->view('dashboard-mp/explications/create', $data);
       $this->load->view('dashboard/footer');
     }
 

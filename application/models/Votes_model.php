@@ -350,7 +350,6 @@
       return $this->db->query($sql, array($num, $legislature))->result_array();
     }
 
-
     public function get_votes_datan_depute($depute_id, $limit = FALSE){
       $sql = 'SELECT vd.voteNumero, vd.legislature, vd.title AS vote_titre, vd.category, f.name AS category_libelle, f.slug AS category_slug, vi.sortCode, date_format(vi.dateScrutin, "%d %M %Y") as dateScrutinFR, r.name AS reading,
         CASE
@@ -372,6 +371,15 @@
         $sql .= ' LIMIT ' . $this->db->escape($limit);
       }
       return $this->db->query($sql, array($depute_id))->result_array();
+    }
+
+    public function get_individual_vote_depute($depute_id, $legislature, $num){
+      $where = array(
+        'mpId' => $depute_id,
+        'legislature' => $legislature,
+        'voteNumero' => $num
+      );
+      return $this->db->get_where('votes_scores', $where, 1)->row_array();
     }
 
     public function get_votes_all_depute($depute_id, $legislature){
