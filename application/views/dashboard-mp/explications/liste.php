@@ -15,11 +15,10 @@
           <table class="table mt-5">
             <thead>
               <tr>
-                <th scope="col">Législature - numéro de vote</th>
-                <th scope="col">Titre vote Datan</th>
+                <th scope="col">Vote</th>
                 <th scope="col">Dossier</th>
-                <th>Position</th>
-                <th>Date du vote</th>
+                <th class="text-center">Date</th>
+                <th class="text-center">Position</th>
                 <th></th>
                 <th></th>
                 <th></th>
@@ -28,11 +27,10 @@
             <tbody>
               <?php foreach ($votes_without as $key => $value): ?>
                 <tr>
-                  <th scope="row"><?= $value['legislature'] ?> - <?= $value['voteNumero'] ?></th>
                   <td><?= $value['vote_titre'] ?></td>
                   <td><?= $value['dossier'] ?></td>
-                  <td><?= $value['vote_depute'] ?></td>
-                  <td><?= $value['dateScrutinFR'] ?></td>
+                  <td class="text-center"><?= $value['dateScrutinFR'] ?></td>
+                  <td class="text-center"><?= $value['vote_depute'] ?></td>
                   <td>Lien AN</td>
                   <td>Lien Datan</td>
                   <td>Créez une explication</td>
