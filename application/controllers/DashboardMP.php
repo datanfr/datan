@@ -107,6 +107,7 @@
       $data['depute']['gender'] = gender($data['depute']['civ']);
 
       $data['votes_without'] = $this->dashboardMP_model->get_votes_explanation($data['depute']['mpId']);
+      var_dump($data['votes_without'][0]);
 
       $data['title'] = "Choisissez un scrutin";
 

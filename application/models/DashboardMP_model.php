@@ -5,7 +5,7 @@ class DashboardMP_model extends CI_Model
   }
 
   public function get_votes_explanation($depute_id){
-    $sql = 'SELECT vd.voteNumero, vd.legislature, vd.title AS vote_titre, vd.category, f.name AS category_libelle, f.slug AS category_slug, vi.sortCode, date_format(vi.dateScrutin, "%d %M %Y") as dateScrutinFR, r.name AS reading,
+    $sql = 'SELECT vd.voteNumero, vd.legislature, vd.title AS vote_titre, vi.sortCode, date_format(vi.dateScrutin, "%d %M %Y") as dateScrutinFR, r.name AS reading, doss.titre AS dossier,
       CASE
         WHEN vs.vote = 0 THEN "abstention"
         WHEN vs.vote = 1 THEN "pour"
@@ -14,10 +14,11 @@ class DashboardMP_model extends CI_Model
         ELSE vs.vote
       END AS vote_depute
       FROM votes_datan vd
-      LEFT JOIN fields f ON vd.category = f.id
       LEFT JOIN votes_scores vs ON vd.voteNumero = vs.voteNumero AND vd.legislature = vs.legislature AND vs.mpId = ?
       LEFT JOIN votes_info vi ON vd.voteNumero = vi.voteNumero AND vd.legislature = vi.legislature
       LEFT JOIN readings r ON r.id = vd.reading
+      LEFT JOIN votes_dossiers vdoss ON vd.legislature = vdoss.legislature AND vd.voteNumero = vdoss.voteNumero
+      LEFT JOIN dossiers doss ON vdoss.dossier = doss.titreChemin
       WHERE vd.state = "published" AND vs.vote IS NOT NULL
       ORDER BY vi.dateScrutin DESC
     ';
