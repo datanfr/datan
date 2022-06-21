@@ -57,7 +57,7 @@
       $today = new DateTime('now');
       $interval = $firstRound->diff($today);
 
-      if ($interval->days <= 2) {
+      if ($interval->days >= 2) {
         show_404($this->functions_datan->get_404_infos());
       }
 
