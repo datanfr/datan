@@ -14,9 +14,8 @@ class Script
     {
         date_default_timezone_set('Europe/Paris');
         ini_set('memory_limit', '2048M');
-        $this->legislature_to_get = $legislature;
         $this->dateMaj = date('Y-m-d');
-        $this->legislature_current = 15;
+        $this->legislature_current = 16;
         $this->intro = "[" . date('Y-m-d h:i:s') . "] ";
         echo $this->intro . "Launching the daily script for legislature " . $this->legislature_to_get . "\n";
         $this->time_pre = microtime(true);;
@@ -819,7 +818,7 @@ class Script
         $this->bdd->exec('
             CREATE TABLE deputes_last AS
             SELECT da.*, dpt.libelle_1, dpt.libelle_2,
-            CASE WHEN (legislature = 15 AND dateFin IS NULL) THEN 1 ELSE 0 END AS active
+            CASE WHEN (legislature = "' . $this->legislature_current . '" AND dateFin IS NULL) THEN 1 ELSE 0 END AS active
             FROM deputes_all da
             JOIN (
             SELECT mpId, MAX(legislature) AS legislatureLast
@@ -842,7 +841,7 @@ class Script
         $reponse = $this->bdd->query('
         SELECT da.mpId, da.nameFirst, da.nameLast, da.nameUrl, da.dptSlug
         FROM deputes_last da
-        WHERE da.legislature IN (14,15)
+        WHERE da.legislature >= 14
         ');
 
         $array = array();
@@ -881,7 +880,7 @@ class Script
         $reponse = $this->bdd->query('
             SELECT *
             FROM organes
-            WHERE legislature IN(14,15) AND coteType = "GP"
+            WHERE legislature >= 14 AND coteType = "GP"
         ');
 
         while ($data = $reponse->fetch()) {
@@ -892,7 +891,7 @@ class Script
               $age_response = $this->bdd->query('
                   SELECT da.groupeId AS organeRef, ROUND(AVG(age), 2) AS age, COUNT(age) as n
                   FROM deputes_all da
-                  WHERE da.groupeId = "' . $groupeId . '" AND da.legislature = 15 AND da.dateFin IS NULL
+                  WHERE da.groupeId = "' . $groupeId . '" AND da.legislature = "' . $this->legislature_current . '" AND da.dateFin IS NULL
               ');
             } elseif ($data['legislature'] == $this->legislature_current && $data['dateFin'] != NULL) {
               $age_response = $this->bdd->query('
@@ -2964,7 +2963,7 @@ class Script
         echo "historyMpsAverage starting \n";
         $this->bdd->query('DROP TABLE IF EXISTS history_mps_average;');
         $this->bdd->query('CREATE TABLE `history_mps_average` ( `id` TINYINT NOT NULL AUTO_INCREMENT , `legislature` TINYINT NOT NULL , `length` DECIMAL(4,2) NOT NULL , PRIMARY KEY (`id`)) ENGINE = MyISAM;');
-        $terms = array(14, 15);
+        $terms = array(14, 15, 16);
         foreach ($terms as $term) {
             echo "Getting average for term => " . $term . "\n";
             $this->bdd->query('
@@ -3282,46 +3281,47 @@ if (isset($argv[1])) {
 } else {
     $script = new Script();
 }
+
 $script->fillDeputes();
 $script->deputeAll();
 $script->deputeLast();
-$script->downloadPictures();
-$script->webpPictures();
-$script->resmushPictures();
+//$script->downloadPictures();
+//$script->webpPictures();
+//$script->resmushPictures();
 $script->groupeEffectif();
 $script->deputeJson();
 $script->groupeStats();
 $script->parties();
 $script->legislature();
-$script->vote();
-$script->updateVoteInfo();
-$script->voteScore();
-$script->groupeCohesion();
-$script->groupeAccord();
-$script->deputeAccord();
-$script->voteParticipation();
-$script->votesDossiers();
-$script->dossier();
-$script->dossiersActeurs();
-$script->documentsLegislatifs();
-$script->amendements();
-$script->amendementsAuteurs();
-$script->voteParticipationCommission();
+$script->vote(); // Depend on the legislature
+$script->updateVoteInfo(); // Depend on the legislature
+$script->voteScore(); // Depend on the legislature
+$script->groupeCohesion(); // Depend on the legislature
+$script->groupeAccord(); // Depend on the legislature
+$script->deputeAccord(); // Depend on the legislature
+$script->voteParticipation(); // Depend on the legislature
+$script->votesDossiers(); // Depend on the legislature
+$script->dossier(); // Depend on the legislature
+$script->dossiersActeurs(); // Depend on the legislature
+$script->documentsLegislatifs(); // Depend on the legislature
+//$script->amendements(); // Check for legislature 16
+//$script->amendementsAuteurs(); // Check for legislature 16
+$script->voteParticipationCommission(); // Depend on the legislature
 $script->classParticipation();
-$script->classParticipationCommission();
+$script->classParticipationCommission(); // Depend on the legislature
 $script->classParticipationSolennels();
 $script->deputeLoyaute();
 $script->classLoyaute();
 $script->classMajorite();
 $script->classGroups();
 $script->classGroupsProximite();
-$script->classParticipationSix();
-$script->classLoyauteSix();
+$script->classParticipationSix(); // Depend on the legislature
+$script->classLoyauteSix(); // Depend on the legislature
 $script->deputeAccordCleaned();
 $script->historyMpsAverage();
 $script->historyPerMpsAverage();
 //$script->parrainages();
-$script->opendata_activeMPs();
-$script->opendata_activeGroupes();
-$script->opendata_historyMPs();
-$script->opendata_historyGroupes();
+//$script->opendata_activeMPs();
+//$script->opendata_activeGroupes();
+//$script->opendata_historyMPs();
+//$script->opendata_historyGroupes();
