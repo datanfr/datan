@@ -117,7 +117,8 @@
 
       $data['legislature'] = $legislature;
       $data['deputes'] = $this->deputes_model->get_deputes_all($legislature, $data['active'], NULL);
-      $data['groupes'] = $this->groupes_model->get_groupes_all($data['active'], $legislature);
+      $data['groupes'] = $this->groupes_model->get_groupes_from_mp_array($data['deputes']);
+      $data['groupes_mobile'] = $this->groupes_model->get_groupes_all($data['active'], $legislature);
       $number_gender = $this->deputes_model->get_deputes_gender($legislature);
       foreach ($number_gender as $gender) {
         if ($gender["gender"] == "male") {
@@ -128,7 +129,7 @@
           $data["female"]["percentage"] = $gender["percentage"];
         }
       }
-      $data['number_inactive'] = $this->deputes_model->get_n_deputes_inactive();
+      $data['number_inactive'] = $this->deputes_model->get_n_deputes_inactive($legislature);
 
       // Groupe_color
       foreach ($data['deputes'] as $key => $value) {
