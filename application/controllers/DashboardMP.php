@@ -153,6 +153,8 @@
 
       $data['title'] = "Rédigez une explication de vote";
 
+      $data['js_to_load'] = array('dashboard/countChar');
+
       $this->load->view('dashboard/header', $data);
       $this->load->view('dashboard-mp/explications/create', $data);
       $this->load->view('dashboard/footer');
