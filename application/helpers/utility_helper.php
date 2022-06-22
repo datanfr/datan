@@ -16,7 +16,7 @@
   }
 
   function legislature_all(){
-    return array(14, 15);
+    return array(14, 15, 16);
   }
 
   function formatNumber($x){
