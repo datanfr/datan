@@ -51,8 +51,8 @@
       return $this->db->query($sql, $id)->result_array();
     }
 
-    public function get_n_deputes_inactive(){
-      $this->db->where('legislature = 15');
+    public function get_n_deputes_inactive($legislature){
+      $this->db->where('legislature', $legislature);
       $this->db->where('dateFin IS NOT NULL');
       return $this->db->count_all_results('deputes_all');
     }
