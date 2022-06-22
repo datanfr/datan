@@ -42,9 +42,11 @@
               <?php endif; ?>
               <p class="font-italic mt-3">Attention, vous pouvez modifier le statut de votre candidature uniquement jusqu'au vendredi précédent le premier tour des élections.</p>
             </div>
-            <div class="card-footer d-flex justify-content-around">
-              <a href="<?= base_url() ?>dashboard-mp/elections/<?= $election['slug'] ?>/modifier" class="btn btn-primary">Modifier le statut de ma candidature</a>
-            </div>
+            <?php if ($candidate['modify'] == 1): ?>
+              <div class="card-footer d-flex justify-content-around">
+                <a href="<?= base_url() ?>dashboard-mp/elections/<?= $election['slug'] ?>/modifier" class="btn btn-primary">Modifier le statut de ma candidature</a>
+              </div>
+            <?php endif; ?>
           </div>
         </div>
       </div>
