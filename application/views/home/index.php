@@ -120,67 +120,71 @@
     <div class="container pt-0">
       <div class="row py-5">
         <!-- DEPUTE AU HASARD CARD -->
-        <div class="col-md-6 py-4">
+        <div class="<?= $groupe_random ? "col-md-6" : "col-md-12" ?> py-4">
           <h2>DÉPUTÉ<?= mb_strtoupper($depute_random['e']) ?> AU HASARD</h2>
           <div class="d-flex justify-content-center">
             <?php $this->load->view('deputes/partials/card_home.php', array('depute' => $depute_random, 'tag' => 'span', 'cat' => true, 'logo' => true)) ?>
           </div>
         </div>
         <!-- GROUPE AU HASARD CARD -->
-        <div class="col-md-6 py-4">
-          <h2>GROUPE AU HASARD</h2>
-          <div class="d-flex justify-content-center">
-            <?php $this->load->view('groupes/partials/card_home.php', array('groupe' => $groupe_random, 'tag' => 'span', 'active' => TRUE, 'cat' => true)) ?>
+        <?php if ($groupe_random): ?>
+          <div class="col-md-6 py-4">
+            <h2>GROUPE AU HASARD</h2>
+            <div class="d-flex justify-content-center">
+              <?php $this->load->view('groupes/partials/card_home.php', array('groupe' => $groupe_random, 'tag' => 'span', 'active' => TRUE, 'cat' => true)) ?>
+            </div>
           </div>
-        </div>
+        <?php endif; ?>
       </div>
     </div>
   </div>
   <!-- BLOC STATS -->
-  <div class="row bloc-statistiques">
-    <div class="container py-3">
-      <div class="row pt-5 pb-4">
-        <div class="col-12">
-          <h2 class="text-center">Ces 12 derniers mois</h2>
+  <?php if ($stats): ?>
+    <div class="row bloc-statistiques">
+      <div class="container py-3">
+        <div class="row pt-5 pb-4">
+          <div class="col-12">
+            <h2 class="text-center">Ces 12 derniers mois</h2>
+          </div>
+        </div>
+        <div class="row pb-5">
+          <!-- VOTE LE PLUS -->
+          <div class="col-xl-3 col-md-6 py-4">
+            <h3>VOTE LE <span class="plus">PLUS</span></h3>
+            <div class="d-flex justify-content-center">
+              <?php $this->load->view('deputes/partials/card_home.php', array('depute' => $depute_vote_plus, 'tag' => 'span', 'cat' => true, 'logo' => true)) ?>
+            </div>
+          </div>
+          <!-- VOTE LE MOINS -->
+          <div class="col-xl-3 col-md-6 py-4">
+            <h3>VOTE LE <span class="minus">MOINS</span></h3>
+            <div class="d-flex justify-content-center">
+              <?php $this->load->view('deputes/partials/card_home.php', array('depute' => $depute_vote_moins, 'tag' => 'span', 'cat' => true, 'logo' => true)) ?>
+            </div>
+          </div>
+          <!-- PLUS LOYAL -->
+          <div class="col-xl-3 col-md-6 py-4">
+            <h3><?= mb_strtoupper($depute_loyal_plus['le']) ?> <span class="plus">PLUS</span> LOYAL<?= mb_strtoupper($depute_loyal_plus['e']) ?></h3>
+            <div class="d-flex justify-content-center">
+              <?php $this->load->view('deputes/partials/card_home.php', array('depute' => $depute_loyal_plus, 'tag' => 'span', 'cat' => true, 'logo' => true)) ?>
+            </div>
+          </div>
+          <!-- MOINS LOYAL -->
+          <div class="col-xl-3 col-md-6 py-4">
+            <h3><?= mb_strtoupper($depute_loyal_moins['le']) ?> <span class="minus">MOINS</span> LOYAL<?= mb_strtoupper($depute_loyal_moins['e']) ?></h3>
+            <div class="d-flex justify-content-center">
+              <?php $this->load->view('deputes/partials/card_home.php', array('depute' => $depute_loyal_moins, 'tag' => 'span', 'cat' => true, 'logo' => true)) ?>
+            </div>
+          </div>
+        </div>
+        <div class="pb-5 d-flex justify-content-center">
+          <a href="<?= base_url();?>statistiques" class="no-decoration">
+            <button type="button" class="btn btn-outline-primary">Découvrez nos statistiques</button>
+          </a>
         </div>
       </div>
-      <div class="row pb-5">
-        <!-- VOTE LE PLUS -->
-        <div class="col-xl-3 col-md-6 py-4">
-          <h3>VOTE LE <span class="plus">PLUS</span></h3>
-          <div class="d-flex justify-content-center">
-            <?php $this->load->view('deputes/partials/card_home.php', array('depute' => $depute_vote_plus, 'tag' => 'span', 'cat' => true, 'logo' => true)) ?>
-          </div>
-        </div>
-        <!-- VOTE LE MOINS -->
-        <div class="col-xl-3 col-md-6 py-4">
-          <h3>VOTE LE <span class="minus">MOINS</span></h3>
-          <div class="d-flex justify-content-center">
-            <?php $this->load->view('deputes/partials/card_home.php', array('depute' => $depute_vote_moins, 'tag' => 'span', 'cat' => true, 'logo' => true)) ?>
-          </div>
-        </div>
-        <!-- PLUS LOYAL -->
-        <div class="col-xl-3 col-md-6 py-4">
-          <h3><?= mb_strtoupper($depute_loyal_plus['le']) ?> <span class="plus">PLUS</span> LOYAL<?= mb_strtoupper($depute_loyal_plus['e']) ?></h3>
-          <div class="d-flex justify-content-center">
-            <?php $this->load->view('deputes/partials/card_home.php', array('depute' => $depute_loyal_plus, 'tag' => 'span', 'cat' => true, 'logo' => true)) ?>
-          </div>
-        </div>
-        <!-- MOINS LOYAL -->
-        <div class="col-xl-3 col-md-6 py-4">
-          <h3><?= mb_strtoupper($depute_loyal_moins['le']) ?> <span class="minus">MOINS</span> LOYAL<?= mb_strtoupper($depute_loyal_moins['e']) ?></h3>
-          <div class="d-flex justify-content-center">
-            <?php $this->load->view('deputes/partials/card_home.php', array('depute' => $depute_loyal_moins, 'tag' => 'span', 'cat' => true, 'logo' => true)) ?>
-          </div>
-        </div>
-      </div>
-      <div class="pb-5 d-flex justify-content-center">
-        <a href="<?= base_url();?>statistiques" class="no-decoration">
-          <button type="button" class="btn btn-outline-primary">Découvrez nos statistiques</button>
-        </a>
-      </div>
-    </div>
-  </div> <!-- // END BLOC STATS -->
+    </div> <!-- // END BLOC STATS -->
+  <?php endif; ?>
   <!-- BLOC ELECTION -->
   <div class="row bloc-election" id="pattern_background">
     <div class="container p-md-0">
@@ -281,43 +285,46 @@
       </div>
     </div>
   </div> <!-- // END BLOC ILS PARLENT DE NOUS -->
-  <div class="row bloc-pie" id="pattern_background">
-    <div class="container py-3">
-      <div class="row pt-5">
-        <div class="col-12">
-          <h2 class="text-center">Composition de l'Assemblée nationale</h2>
+  <?php if ($composition): ?>
+    <div class="row bloc-pie" id="pattern_background">
+      <div class="container py-3">
+        <div class="row pt-5">
+          <div class="col-12">
+            <h2 class="text-center">Composition de l'Assemblée nationale</h2>
+          </div>
         </div>
-      </div>
-      <div class="row pt-3">
-        <div class="col-12">
-          <p class="text-center">Découvrez le nombre de députés par groupe parlementaire.</p>
+        <div class="row pt-3">
+          <div class="col-12">
+            <p class="text-center">Découvrez le nombre de députés par groupe parlementaire.</p>
+          </div>
         </div>
-      </div>
-      <div class="row mt-5 mb-5">
-        <div class="col-lg-7 d-flex justify-content-center align-items-center">
-          <canvas id="chartHemycicle"></canvas>
-        </div>
-        <div class="col-lg-5 d-flex justify-content-center mt-5 mt-lg-0">
-          <table class="tableGroupes">
-            <tbody>
-              <?php foreach ($groupes as $groupe): ?>
-                <tr>
-                  <td>
-                    <div class="square" style="background-color: <?= $groupe['couleurAssociee'] ?>">
-                    </div>
-                  </td>
-                  <td id="table<?= $groupe['libelleAbrev'] ?>">
-                    <a href="<?= base_url() ?>groupes/legislature-<?= $groupe['legislature'] ?>/<?= mb_strtolower($groupe['libelleAbrev']) ?>" class="no-decoration underline"><?= $groupe['libelle'] ?></a>
-                  </td>
-                  <td class="effectif"><?= $groupe['effectif'] ?></td>
-                </tr>
-              <?php endforeach; ?>
-            </tbody>
-          </table>
+        <div class="row mt-5 mb-5">
+          <div class="col-lg-7 d-flex justify-content-center align-items-center">
+            <canvas id="chartHemycicle"></canvas>
+          </div>
+          <div class="col-lg-5 d-flex justify-content-center mt-5 mt-lg-0">
+            <table class="tableGroupes">
+              <tbody>
+                <?php foreach ($groupes as $groupe): ?>
+                  <tr>
+                    <td>
+                      <div class="square" style="background-color: <?= $groupe['couleurAssociee'] ?>">
+                      </div>
+                    </td>
+                    <td id="table<?= $groupe['libelleAbrev'] ?>">
+                      <a href="<?= base_url() ?>groupes/legislature-<?= $groupe['legislature'] ?>/<?= mb_strtolower($groupe['libelleAbrev']) ?>" class="no-decoration underline"><?= $groupe['libelle'] ?></a>
+                    </td>
+                    <td class="effectif"><?= $groupe['effectif'] ?></td>
+                  </tr>
+                <?php endforeach; ?>
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
     </div>
-  </div>
+  <?php endif; ?>
+
   <!-- BLOC POSTS -->
   <div class="row">
     <div class="container p-md-0">
