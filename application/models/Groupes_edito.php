@@ -182,7 +182,15 @@
       }
 
       return $array;
+    }
 
+    public function get_ni($legislature){
+      if ($legislature == 15) {
+        return "
+        <p>Pendant la 15ème législature, le parti politique le plus représenté parmi les députés non-inscrits était le Rassemblement national (avec par exemple <a href='" . base_url() . "deputes/pas-de-calais-62/depute_marine-lepen' target='_blank'>Marine Le Pen</a>). Avec seulement 7 députés, les élus du Rassemblement nationale n'ont pas réussi à atteindre les 15 députés nécessaires pour former leur propre groupe politique.</p>
+        <p>Pendant cette législature, on retrouvait également parmi les non-inscrits <a href='" .  base_url() . "deputes/essonne-91/depute_nicolas-dupontaignan' target='_blank'>Nicolas Dupont-Aignan</a>, du parti politique Debout La France, <a href='" .  base_url() . "deputes/deux-sevres-79/depute_delphine-batho' target='_blank'>Delphine Batho</a>, du parti écologiste Génération écologie, ainsi que d'anciens membres du groupe La République en Marche, comme <a href='" . base_url() . "deputes/indre-et-loire-37/depute_sabine-thillaye' target='_blank'>Sabine Thillaye</a> ou <a href='" . base_url() . "deputes/nord-59/depute_jennifer-detemmerman' target='_blank'>Jennifer de Temmerman</a>.</p>
+        ";
+      }
     }
 
   }

@@ -23,7 +23,7 @@
           (
             SELECT d.age
             FROM deputes_last d
-            WHERE d.legislature = ? AND d.dateFin IS NOT NULL
+            WHERE d.legislature = ? AND d.dateFin IS NULL
           ) A
         ';
         $result = $this->db->query($sql, $legislature)->row_array();

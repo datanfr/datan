@@ -34,7 +34,7 @@
   }
 
   function groupes_NI(){
-    return array("PO723569");
+    return array("PO266900", "PO387155", "PO645633", "PO723569", "PO793087");
   }
 
   function majority_group(){
