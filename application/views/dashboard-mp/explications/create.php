@@ -71,31 +71,11 @@
             <div class="card-body">
               <?= form_open_multipart('admin/votes/create'); ?>
                 <div class="form-group">
-                  <label>Explication de vote (maximum XX mots)</label>
-                  <textarea id="editor1" name="description" class="form-control" placeholder="Description du vote"></textarea>
-                  <script>
-                    ClassicEditor
-                            .create( document.querySelector( '#editor1' ), {
-                              link: {
-                                decorators: {
-                                  isExternal: {
-                                    mode: 'automatic',
-                                    callback: url => (!url.startsWith( 'https://datan.fr' )),
-                                    attributes: {
-                                      target: '_blank',
-                                      rel: 'noopener noreferrer'
-                                    }
-                                  }
-                                }
-                              }
-                            } )
-                            .then( editor => {
-                                    console.log( editor );
-                            } )
-                            .catch( error => {
-                                    console.error( error );
-                            } );
-                  </script>
+                  <label>Explication de vote (maximum 100 mots)</label>
+                  <textarea id="textbox" name="explication" class="form-control" placeholder="Votre explication de vote" rows="5"></textarea>
+                  <div class="d-flex justify-content-end">
+                    <span id="char_count">0/100</span>
+                  </div>
                 </div>
                 <div class="form-group">
                   <div class="form-check">
@@ -109,15 +89,6 @@
                 </div>
                 <button type="submit" class="btn btn-primary">Submit</button>
               </form>
-
-              <!--
-              <p class="card-text">
-                Some quick example text to build on the card title and make up the bulk of the card's
-                content.
-              </p>
-              <a href="#" class="card-link">Card link</a>
-              <a href="#" class="card-link">Another link</a>
-              -->
             </div>
           </div>
         </div>
