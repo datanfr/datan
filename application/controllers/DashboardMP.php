@@ -15,9 +15,17 @@
       $data['username'] = $this->session->userdata('username');
       $data['depute'] = $this->deputes_model->get_depute_by_mpId($this->session->userdata('mpId'));
       $data['depute']['gender'] = gender($data['depute']['civ']);
+
+      // Legislatives 2022
+      $data['election'] = $this->elections_model->get_election_by_id(4);
       $data['candidate'] = $this->elections_model->get_candidate_election($data['depute']['mpId'], 4); /* Législative-2022 */
       if ($data['candidate']) {
         $data['candidate']['district'] = $this->elections_model->get_district('Législatives', $data['candidate']['district']);
+
+        $firstRound = new DateTime($data['election']['dateFirstRound']);
+        $today = new DateTime('now');
+        $interval = $firstRound->diff($today);
+        $data['candidate']['modify'] = $interval->days >= 2 ? 0 : 1;
       }
 
       $this->load->view('dashboard/header', $data);
@@ -38,6 +46,11 @@
       $data['candidate'] = $this->elections_model->get_candidate_election($data['depute']['mpId'], 4); /* Législative-2022 */
       if ($data['candidate']) {
         $data['candidate']['district'] = $this->elections_model->get_district($data['election']['libelleAbrev'], $data['candidate']['district']);
+
+        $firstRound = new DateTime($data['election']['dateFirstRound']);
+        $today = new DateTime('now');
+        $interval = $firstRound->diff($today);
+        $data['candidate']['modify'] = $interval->days >= 2 ? 0 : 1;
       }
 
       $data['title'] = "Candidature pour les élections " . mb_strtolower($data['election']['libelleAbrev']). " ".$data['election']['dateYear'];
