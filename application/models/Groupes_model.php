@@ -35,6 +35,20 @@
       return $query->result_array();
     }
 
+    public function get_groupes_from_mp_array($input){
+      $groupes = array();
+      foreach ($input as $mp) {
+        if ($mp['libelleAbrev']) {
+          $libelleAbrev = $mp['libelleAbrev'];
+          $groupes[$libelleAbrev]["libelle"] = $mp['libelle'];
+          $groupes[$libelleAbrev]["libelleAbrev"] = $libelleAbrev;
+          $groupes[$libelleAbrev]["effectif"] = isset($groupes[$libelleAbrev]["effectif"]) ? $groupes[$libelleAbrev]["effectif"] + 1 : 1;
+        }
+      }
+      array_multisort( array_column($groupes, "effectif"), SORT_DESC, $groupes );
+      return $groupes;
+    }
+
     public function get_groupes_sorted($groupes){
       $groupesLibelle = array_column($groupes, 'libelleAbrev');
       function cmp(array $a) {
