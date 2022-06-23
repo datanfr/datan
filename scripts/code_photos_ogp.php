@@ -38,7 +38,7 @@
         $donnees = $bdd->query('
             SELECT d.mpId AS uid, d.nameFirst AS prenom, d.nameLast AS nom
             FROM deputes_last d
-            WHERE d.legislature IN (14, 15)
+            WHERE d.legislature IN (14, 15, 16)
           ');
 
         while ($mp = $donnees->fetch()) {

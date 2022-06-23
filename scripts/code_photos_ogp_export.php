@@ -9,7 +9,7 @@
   <meta name="author" content="">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
   <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Open+Sans&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@600;800&display=swap" rel="stylesheet">
   <style media="screen">
     body{
       font-family: 'Open Sans', sans-serif;
@@ -22,6 +22,7 @@
       display: flex;
     }
     .container{
+      position: relative;
       display: flex;
       flex-direction: row;
       justify-content: space-between;
@@ -31,63 +32,70 @@
     .bottom{
       display: flex;
     }
-    .left{
-      width: 20%;
-      display: flex;
-      justify-content: flex-start;
-      align-items: flex-start;
-    }
-    .right{
-      width: 80%;
-      display: flex;
-      justify-content: flex-start;
-      align-items: flext-start;
-    }
-    .inside{
-      margin-top: 30px;
+    .content {
       width: 100%;
+      height: 100%;
+      position: absolute;
     }
-    .inside_right{
-      display: flex;
-      flex-direction: row;
-      justify-content: space-around;
-      align-items:center;
-      padding-right: 100px;
+    .logo-container {
+      position: absolute;
+      right: 0px;
+      top: 0px;
+      background-color: #fff;
+      border-bottom-left-radius: 35px;
     }
     #logo{
-      width: 200px;
+      width: 240px;
       height: auto;
       margin-left: 30px;
+      margin-top: 10px;
+    }
+    .inside{
+      width: 100%;
+      display: flex;
+      flex-direction: row;
+      justify-content: start;
+      align-items:center;
+      padding-left: 100px;
     }
     #photo{
       width: 300px;
       height: auto;
-      border-radius: 15px;
+      border-radius: 25px;
     }
     .titre{
-      padding: 75px;
-      display: flex;
-      flex-direction: column;
-      align-items: flex-end;
-
-    }
-    .prenom{
+      margin-left: 50px;
       color: white;
-      font-size: 60px;
+    }
+    .prenom {
       display: block;
+      line-height: 50px;
+      font-size: 80px;
       font-weight: 400;
       padding: 0;
       margin: 0;
-      text-align: right;
+      text-align: left;
     }
     .nom{
-      color: white;
-      font-size: 60px;
-      display: block;
+      font-size: 100px;
       font-weight: 800;
       padding: 0;
       margin: 0;
-      text-align: right;
+      text-align: left;
+    }
+    .dpt {
+      font-size: 35px;
+      margin: 0;
+    }
+    .groupe {
+      font-size: 25px;
+      margin-top: 15px;
+    }
+    .groupeBorder{
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+      height: 30px;
     }
   </style>
 </head>
@@ -99,14 +107,13 @@
   $uid_url = $_GET['uid'];
 
   $donnees = $bdd->query('
-    SELECT d.mpId AS uid, d.nameFirst AS prenom, d.nameLast AS nom
+    SELECT d.mpId AS uid, d.nameFirst AS prenom, d.nameLast AS nom, d.active, d.civ,
+      d.libelle_2 AS dpt_libelle, d.departementNom, d.departementCode, d.libelle AS groupe, d.libelleAbrev AS groupeAbrev,
+      d.couleurAssociee AS groupeColor
     FROM deputes_last d
     WHERE d.mpId = "'.$uid_url.'"
-    GROUP BY d.mpId
     LIMIT 1
   ');
-
-  // PA332228
 
 ?>
 
@@ -115,32 +122,36 @@
   <?php
     while ($d = $donnees->fetch()) {
 
+      //print_r($d);
+
       // Check if exists in the file.
 
       $uid = $d['uid'];
       $prenom = $d['prenom'];
       $nom = $d['nom'];
-      echo $uid;
-      echo substr($uid, 2);
 
       ?>
 
       <div id="element">
         <div class="container">
-          <div class="left">
-            <div class="inside">
-              <img src="../assets/imgs/datan/logo_white_transp.png" alt="" id="logo">
-            </div>
+          <div class="logo-container">
+            <img src="../assets/imgs/datan/logo_datan.png" alt="" id="logo" style="top: 0">
           </div>
-          <div class="right">
-            <div class="inside inside_right">
-              <div class="titre">
-                <h1 class="prenom"><?= $prenom ?></h1>
-                <h1 class="nom"><?= $nom ?></h1>
-              </div>
-              <div class="image">
-                <img src="../assets/imgs/deputes_original/depute_<?= substr($uid, 2) ?>.png" alt="img" id="photo">
-              </div>
+          <?php if ($d['groupeColor']): ?>
+            <div class="groupeBorder" style="background-color: <?= $d['groupeColor'] ?>"></div>
+          <?php endif; ?>
+          <div class="inside">
+            <div class="image">
+              <img src="../assets/imgs/deputes_original/depute_<?= substr($uid, 2) ?>.png" alt="img" id="photo">
+            </div>
+            <div class="titre">
+              <h1><span class="prenom"><?= $prenom ?></span> <span class="nom"><?= $nom ?></span> </h1>
+              <?php if ($d['active' == 0]): ?>
+                <h2 class="dpt"><?= $d['civ'] == 'Mme' ? 'Ancienne députée' : 'Ancien député' ?> <?= $d['dpt_libelle'] ?> <?= $d['departementNom'] ?> (<?= $d['departementCode'] ?>)</h2>
+              <?php else: ?>
+                <h2 class="dpt"><?= $d['civ'] == 'Mme' ? 'Députée' : 'Député' ?> <?= $d['dpt_libelle'] ?> <?= $d['departementNom'] ?> (<?= $d['departementCode'] ?>)</h2>
+              <?php endif; ?>
+              <h3 class="groupe"><?= $d['groupe'] ?> (<?= $d['groupeAbrev'] ?>)</h3>
             </div>
           </div>
         </div>
@@ -164,6 +175,7 @@
     //var name = "temp"
     //debugger;
 
+
     html2canvas(document.querySelector("#element"), {letterRendering: 1, allowTaint: true, useCORS: true, logging: true} ).then(function (canvas) {
       var dataURL = canvas.toDataURL("image/jpg", 1.0);
       var a = document.createElement('a');
@@ -173,6 +185,7 @@
       document.body.appendChild(canvas)
       a.click();
     })
+
   });
 
   </script>
