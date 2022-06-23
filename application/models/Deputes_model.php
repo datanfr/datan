@@ -291,8 +291,9 @@
     }
 
     public function get_average_length_as_mp($legislature){
+      $where = array('legislature' => $legislature);
       $this->db->select('length');
-      $result = $this->db->get('history_mps_average', 1)->row_array();
+      $result = $this->db->get_where('history_mps_average', $where, 1)->row_array();
       return $result['length'];
     }
 
