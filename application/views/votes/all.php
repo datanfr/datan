@@ -81,7 +81,7 @@
       <!-- ALL THE VOTES -->
       <div class="row">
         <div class="container py-5">
-          <div class="row pb-5">
+          <div class="row pb-2">
             <div class="col-12">
               <h2>Derniers votes non-decryptés de l'Assemblée nationale</h2>
             </div>
@@ -123,47 +123,49 @@
         </div>
       </div>
       <!-- ARCHIVES -->
-      <div class="row" id="pattern_background">
-        <div class="container py-5">
-          <div class="row pb-5">
-            <div class="col-12">
-              <h2>Archives</h2>
+      <?php if ($years): ?>
+        <div class="row" id="pattern_background">
+          <div class="container py-5">
+            <div class="row pb-5">
+              <div class="col-12">
+                <h2>Archives</h2>
+              </div>
             </div>
-          </div>
-          <div class="row pb-4">
-            <div class="col-12 text-center">
-              <span>
-                Pour voir tous les votes,
-                <a href="<?= base_url() ?>votes/legislature-<?= legislature_current() ?>">cliquez ici</a>.
-              </span>
+            <div class="row pb-4">
+              <div class="col-12 text-center">
+                <span>
+                  Pour voir tous les votes,
+                  <a href="<?= base_url() ?>votes/legislature-<?= legislature_current() ?>">cliquez ici</a>.
+                </span>
+              </div>
             </div>
-          </div>
-          <div class="row">
-            <div class="col-12 d-flex flex-row flex-wrap">
-              <?php foreach ($years as $year): ?>
-                <div class="flex-fill text-center px-1 py-2">
-                  <div class="year d-flex flex-column align-items-center">
-                    <div class="my-2 d-flex justify-content-center align-items-center">
-                      <div class="d-flex justify-content-center align-items-center">
-                        <span><a href="<?= base_url() ?>votes/legislature-<?= legislature_current() ?>/<?= $year?>" class="no-decoration underline-blue"><?= $year ?></a></span>
+            <div class="row">
+              <div class="col-12 d-flex flex-row flex-wrap">
+                <?php foreach ($years as $year): ?>
+                  <div class="flex-fill text-center px-1 py-2">
+                    <div class="year d-flex flex-column align-items-center">
+                      <div class="my-2 d-flex justify-content-center align-items-center">
+                        <div class="d-flex justify-content-center align-items-center">
+                          <span><a href="<?= base_url() ?>votes/legislature-<?= legislature_current() ?>/<?= $year?>" class="no-decoration underline-blue"><?= $year ?></a></span>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                  <div class="months mt-4 d-flex flex-column align-items-center">
-                    <?php foreach ($months as $month): ?>
-                      <?php if ($month['years'] == $year): ?>
-                        <div class="my-2 d-flex justify-content-center align-items-center">
-                          <div class="d-flex justify-content-center align-items-center">
-                            <a href="<?= base_url() ?>votes/legislature-<?= legislature_current() ?>/<?= $year?>/<?= $month['index'] ?>" class="no-decoration underline-blue"><?= ucfirst($month["month"]) ?></a>
+                    <div class="months mt-4 d-flex flex-column align-items-center">
+                      <?php foreach ($months as $month): ?>
+                        <?php if ($month['years'] == $year): ?>
+                          <div class="my-2 d-flex justify-content-center align-items-center">
+                            <div class="d-flex justify-content-center align-items-center">
+                              <a href="<?= base_url() ?>votes/legislature-<?= legislature_current() ?>/<?= $year?>/<?= $month['index'] ?>" class="no-decoration underline-blue"><?= ucfirst($month["month"]) ?></a>
+                            </div>
                           </div>
-                        </div>
-                      <?php endif; ?>
-                    <?php endforeach; ?>
+                        <?php endif; ?>
+                      <?php endforeach; ?>
+                    </div>
                   </div>
-                </div>
-              <?php endforeach; ?>
+                <?php endforeach; ?>
+              </div>
             </div>
           </div>
         </div>
-      </div>
+      <?php endif; ?>
     </div>
