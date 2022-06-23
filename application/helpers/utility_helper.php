@@ -12,11 +12,11 @@
   }
 
   function legislature_current(){
-    return 15;
+    return 16;
   }
 
   function legislature_all(){
-    return array(14, 15);
+    return array(14, 15, 16);
   }
 
   function formatNumber($x){
@@ -34,7 +34,7 @@
   }
 
   function groupes_NI(){
-    return array("PO723569");
+    return array("PO266900", "PO387155", "PO645633", "PO723569", "PO793087");
   }
 
   function majority_group(){

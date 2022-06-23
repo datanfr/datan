@@ -51,8 +51,8 @@
       return $this->db->query($sql, $id)->result_array();
     }
 
-    public function get_n_deputes_inactive(){
-      $this->db->where('legislature = 15');
+    public function get_n_deputes_inactive($legislature){
+      $this->db->where('legislature', $legislature);
       $this->db->where('dateFin IS NOT NULL');
       return $this->db->count_all_results('deputes_all');
     }
@@ -291,8 +291,9 @@
     }
 
     public function get_average_length_as_mp($legislature){
+      $where = array('legislature' => $legislature);
       $this->db->select('length');
-      $result = $this->db->get('history_mps_average', 1)->row_array();
+      $result = $this->db->get_where('history_mps_average', $where, 1)->row_array();
       return $result['length'];
     }
 
