@@ -99,9 +99,12 @@ if (isset($argv[1])) {
     $script = new Script();
 }
 
+/*
+ONLY AFTER NEW LEGISLATURE
 $script->remove_deputes('deputes_original');
 $script->remove_deputes('deputes_nobg');
 $script->remove_deputes('deputes_nobg_import');
 $script->remove_deputes('deputes_ogp');
 $script->remove_deputes('deputes_webp');
 $script->remove_deputes('deputes_nobg_webp');
+*/
