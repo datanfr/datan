@@ -60,7 +60,7 @@
         }
 
         // PROXIMITY WITH ALL GROUPS
-        if ($legislature == legislature_current()) /*LEGISLATURE 15*/ {
+        if ($legislature == legislature_current()) /*LEGISLATURE 16*/ {
           $data['accord_groupes'] = $this->deputes_model->get_accord_groupes_actifs($mpId, legislature_current());
           $data['accord_groupes_all'] = $this->deputes_model->get_accord_groupes_all($mpId, legislature_current());
           // Positionnement politique
@@ -392,7 +392,7 @@
       // Historique du député
       $data['depute']['datePriseFonctionLettres'] = utf8_encode(strftime('%B %Y', strtotime($data['depute']['datePriseFonction'])));
       $data['mandat_edito'] = $this->depute_edito->get_nbr_lettre($data['depute']['mandatesN']);
-      $data['history_average'] = round($this->deputes_model->get_average_length_as_mp($mpId));
+      $data['history_average'] = round($this->deputes_model->get_average_length_as_mp(legislature_current()));
       $data['history_edito'] = $this->depute_edito->history(round($data['depute']['mpLength']/365), $data['history_average']);
       $data['mandats'] = $this->deputes_model->get_historique_mandats($mpId);
       $data['mandatsReversed'] = array_reverse($data['mandats']);
