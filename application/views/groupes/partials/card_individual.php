@@ -28,10 +28,6 @@
               <div class="value"><?= $groupe['dateFinFR'] ?></div>
             </li>
           <?php endif; ?>
-          <li>
-            <div class="label">Effectif</div>
-            <div class="value"><?= $groupe['effectif'] ?> membres</div>
-          </li>
           <?php if ($groupe['libelleAbrev'] != "NI"): ?>
             <li>
               <div class="label">Président</div>
@@ -46,7 +42,7 @@
       </div>
       <div class="text-center mt-4">
         <a class="btn btn-outline-primary" href="<?= base_url() ?>groupes/legislature-<?= $groupe['legislature'] ?>/<?= mb_strtolower($groupe['libelleAbrev']) ?>/membres">
-          Voir tous les membres
+          Voir les <?= $groupe['effectif'] ?> membres
         </a>
       </div>
     </div>

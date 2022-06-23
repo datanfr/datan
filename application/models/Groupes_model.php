@@ -11,14 +11,14 @@
             CASE WHEN o.libelle = "Non inscrit" THEN "Députés non inscrits" ELSE o.libelle END AS libelle
             FROM organes o
             LEFT JOIN groupes_effectif e ON o.uid = e.organeRef
-            WHERE o.legislature = '.$this->db->escape(legislature_current()).' AND o.coteType = "GP" AND o.dateFin IS NULL
+            WHERE o.legislature = '.$this->db->escape(legislature_current()).' AND o.coteType = "GP" AND o.dateFin IS NULL AND o.libelleAbrev != "NI"
             ORDER BY e.effectif DESC, o.libelle
           ');
         } else {
           $query = $this->db->query('SELECT *, o.legislature AS legislature, date_format(dateDebut, "%d %M %Y") as dateDebutFR,
             CASE WHEN o.libelle = "Non inscrit" THEN "Députés non inscrits" ELSE o.libelle END AS libelle
             FROM organes o
-            WHERE o.legislature = '.$this->db->escape($legislature).' AND o.coteType = "GP"
+            WHERE o.legislature = '.$this->db->escape($legislature).' AND o.coteType = "GP" AND o.libelleAbrev != "NI"
             ORDER BY o.libelle
           ');
         }
@@ -27,12 +27,26 @@
           CASE WHEN o.libelle = "Non inscrit" THEN "Députés non inscrits" ELSE o.libelle END AS libelle
           FROM organes o
           LEFT JOIN groupes_effectif e ON o.uid = e.organeRef
-          WHERE o.legislature = 15 AND o.coteType = "GP" AND o.dateFin IS NOT NULL
+          WHERE o.legislature = 15 AND o.coteType = "GP" AND o.dateFin IS NOT NULL AND o.libelleAbrev != "NI"
           ORDER BY e.effectif DESC, o.libelle
         ');
       }
 
       return $query->result_array();
+    }
+
+    public function get_groupes_from_mp_array($input){
+      $groupes = array();
+      foreach ($input as $mp) {
+        if ($mp['libelleAbrev']) {
+          $libelleAbrev = $mp['libelleAbrev'];
+          $groupes[$libelleAbrev]["libelle"] = $mp['libelle'];
+          $groupes[$libelleAbrev]["libelleAbrev"] = $libelleAbrev;
+          $groupes[$libelleAbrev]["effectif"] = isset($groupes[$libelleAbrev]["effectif"]) ? $groupes[$libelleAbrev]["effectif"] + 1 : 1;
+        }
+      }
+      array_multisort( array_column($groupes, "effectif"), SORT_DESC, $groupes );
+      return $groupes;
     }
 
     public function get_groupes_sorted($groupes){
@@ -141,8 +155,8 @@
       return $query->row_array();
     }
 
-    public function get_groupe_membres($groupe_uid, $active){
-      if ($active) {
+    public function get_groupe_membres($groupe_uid, $dateFin){
+      if (!$dateFin) {
         $where = array(
           'mandat_groupe.organeRef' => $groupe_uid,
           'mandat_groupe.dateFin' => NULL,
@@ -161,13 +175,13 @@
           (
           SELECT mg.mpId, mg.dateFin, mg.codeQualite, mg.libQualiteSex
           FROM mandat_groupe mg
-          WHERE mg.organeRef = ? AND mg.nominPrincipale = 1 AND mg.preseance IN (20, 28)
+          WHERE mg.organeRef = ? AND mg.nominPrincipale = 1 AND mg.preseance IN (20, 28) AND ? BETWEEN mg.dateDebut AND mg.dateFin
           GROUP BY mg.mpId
           ) A
           LEFT JOIN deputes_last da ON da.mpId = A.mpId
           ORDER BY da.nameLast ASC, da.nameFirst ASC
         ';
-        $query = $this->db->query($sql, $groupe_uid);
+        $query = $this->db->query($sql, array($groupe_uid, $dateFin));
       }
 
 
@@ -206,23 +220,6 @@
 
 
       return $query->result_array();
-    }
-
-    public function get_effectif_inactif($groupe_uid){
-      $sql = 'SELECT COUNT(A.mpId) AS effectif
-        FROM
-        (
-        SELECT mg.mpId
-        FROM mandat_groupe mg
-        LEFT JOIN organes o ON mg.organeRef = o.uid
-        WHERE mg.organeRef = ? AND mg.dateFin = o.dateFin
-        GROUP BY mg.mpId
-        ) A
-      ';
-      $query = $this->db->query($sql, $groupe_uid);
-
-      $result = $query->row_array();
-      return $result['effectif'];
     }
 
     public function get_groupe_social_media($groupe){

@@ -47,7 +47,7 @@
       $data['by_field'] = $x;
 
       // Get all votes
-      $data['votes'] = $this->votes_model->get_all_votes(legislature_current(), NULL, NULL, 10);
+      $data['votes'] = $this->votes_model->get_all_votes(NULL, NULL, NULL, 10);
       // Archives
       $data['years'] = $this->votes_model->get_years_archives(legislature_current());
       $data['years'] = array_column($data['years'], 'votes_year');
@@ -309,10 +309,10 @@
       }
 
       /* Get year */
-      $data['years'] = $this->votes_model->get_years_archives(legislature_current());
+      $data['years'] = $this->votes_model->get_years_archives($legislature);
       $data['years'] = array_column($data['years'], 'votes_year');
       /* Get months */
-      $data['months'] = $this->votes_model->get_months_archives(legislature_current());
+      $data['months'] = $this->votes_model->get_months_archives($legislature);
 
       // CSS
       $data['css_to_load']= array(

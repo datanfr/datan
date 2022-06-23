@@ -23,7 +23,7 @@
           (
             SELECT d.age
             FROM deputes_last d
-            WHERE d.legislature = ? AND d.dateFin IS NOT NULL
+            WHERE d.legislature = ? AND d.dateFin IS NULL
           ) A
         ';
         $result = $this->db->query($sql, $legislature)->row_array();
@@ -154,7 +154,7 @@
           FROM groupes_stats gs
           LEFT JOIN organes o ON o.uid = gs.organeRef
           LEFT JOIN groupes_effectif ge ON ge.organeRef  = gs.organeRef
-          WHERE dateFin IS NULL AND o.legislature = ?
+          WHERE dateFin IS NULL AND o.legislature = ? AND o.libelleAbrev != "NI"
         ) A,
         (SELECT @s:= 0) AS s
         ORDER BY A.age DESC
@@ -308,6 +308,12 @@
           "year_start" => "2017",
           "year_end" => "2022",
           "pct" => 41
+        ),
+        array(
+          "term" => 16,
+          "year_start" => "2022",
+          "year_end" => "2027",
+          "pct" => 37
         )
       );
 

@@ -56,7 +56,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
               <a class="dropdown-item" href="<?= base_url() ?>admin/logs-scripts/daily">Daily</a>
               <a class="dropdown-item" href="<?= base_url() ?>admin/logs-scripts/weekly">Weekly</a>
-              <a class="dropdown-item" href="<?= base_url() ?>admin/logs-scripts/download">Download</a>
+              <a class="dropdown-item" href="<?= base_url() ?>admin/logs-scripts/get_files">Get files</a>
               <a class="dropdown-item" href="<?= base_url() ?>admin/logs-scripts/newsletter_votes">Newsletter votes</a>
             </div>
           </li>

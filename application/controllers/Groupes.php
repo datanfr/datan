@@ -33,7 +33,7 @@
       $data['legislature'] = $legislature;
       $data['groupes'] = $this->groupes_model->get_groupes_all($data['active'], $data['legislature']);
       $data['number_groupes_inactive'] = $this->groupes_model->get_number_inactive_groupes();
-      $data['number'] = $this->groupes_model->get_number_active_groupes();
+      $data['number'] = count($data['groupes']);
       $data['number_in_groupes'] = $this->groupes_model->get_number_mps_groupes();
       $data['number_unattached'] = $this->groupes_model->get_number_mps_unattached();
 
@@ -173,23 +173,18 @@
       if (!empty($data['president'])) {
         $data['president'] = array_merge($data['president'], gender($data['president']['civ']));
       }
-      $data['membres'] = $this->groupes_model->get_groupe_membres($groupe_uid, $data['active']);
-      if (!in_array($data['groupe']['uid'], groupes_NI())) {
-        $data['membres'] = array_slice($data['membres'], 0, 20);
-      }
+      $data['membres'] = $this->groupes_model->get_groupe_membres($groupe_uid, $data['groupe']['dateFin']);
+      // Effectif
+      $data['groupe']['effectif'] = count($data['membres']);
+      $data['groupe']['effectifShare'] = round($data['groupe']['effectif'] / 577 * 100);
+      // Print membres
+      $data['membres'] = array_slice($data['membres'], 0, 20);
       $data['apparentes'] = $this->groupes_model->get_groupe_apparentes($groupe_uid, $data['active']);
-      if (!in_array($data['groupe']['uid'], groupes_NI())) {
-       $data['apparentes'] = array_slice($data['apparentes'], 0, 20);
-      }
+      $data['apparentes'] = array_slice($data['apparentes'], 0, 20);
 
       // Query get group_color
       $data['groupe']['couleurAssociee'] = $this->groupes_model->get_groupe_color(array($data['groupe']['libelleAbrev'], $data['groupe']['couleurAssociee']));
 
-      // Query effectif inactifs
-      if (!$data['active']) {
-        $data['groupe']['effectif'] = $this->groupes_model->get_effectif_inactif($groupe_uid);
-        $data['groupe']['effectifShare'] = round(($data['groupe']['effectif'] / 577) * 100);
-      }
       // Query nbr of groups
       $data['groupesN'] = $this->groupes_model->get_number_active_groupes();
       $data['groupesN'] = $data['groupesN']['n'];
@@ -259,7 +254,6 @@
         $data['accord_groupes_featured'] = $data['accord_groupes_all'];
       }
 
-
       $accord_groupes_n = count($data['accord_groupes_featured']);
       $accord_groupes_divided = round($accord_groupes_n / 2, 0, PHP_ROUND_HALF_UP);
       $data['accord_groupes_first'] = array_slice($data['accord_groupes_featured'], 0, $accord_groupes_divided);
@@ -280,6 +274,11 @@
       $data['edito'] = $this->groupes_edito->edito($groupe_ab, $groupe_opposition);
       // GET ALL OTHER GROUPES
       $data['groupesActifs'] = $this->groupes_model->get_groupes_all(TRUE, $legislature);
+
+      // If NI : edito
+      if ($data['groupe']['libelleAbrev'] == "NI") {
+        $data['groupe']['ni_edited'] = $this->groupes_edito->get_ni($legislature);
+      }
 
       // Meta
       $data['url'] = $this->meta_model->get_url();
@@ -380,7 +379,7 @@
 
       $groupe_uid = $data['groupe']['uid'];
       $data['president'] = $this->groupes_model->get_groupes_president($groupe_uid, $legislature, $data['active']);
-      $data['membres'] = $this->groupes_model->get_groupe_membres($groupe_uid, $data['active']);
+      $data['membres'] = $this->groupes_model->get_groupe_membres($groupe_uid, $data['groupe']['dateFin']);
       $data['apparentes'] = $this->groupes_model->get_groupe_apparentes($groupe_uid, $data['active']);
 
       // Query get group_color
@@ -476,10 +475,11 @@
       } else {
         $data['active'] = FALSE;
       }
-      // Query effectif inactifs
-      if (!$data['active']) {
-        $data['effectif'] = $this->groupes_model->get_effectif_inactif($groupe_uid);
-      }
+
+      // Effectifs
+      $data['membres'] = $this->groupes_model->get_groupe_membres($groupe_uid, $data['groupe']['dateFin']);
+      $data['groupe']['effectif'] = count($data['membres']);
+      $data['groupe']['effectifShare'] = round($data['groupe']['effectif'] / 577 * 100);
 
       // Query get group_color
       $data['groupe']['couleurAssociee'] = $this->groupes_model->get_groupe_color(array($data['groupe']['libelleAbrev'], $data['groupe']['couleurAssociee']));
@@ -491,7 +491,7 @@
       if (!empty($data['president'])) {
         $data['president'] = array_merge($data['president'], gender($data['president']['civ']));
       }
-      $data['membres'] = $this->groupes_model->get_groupe_membres($groupe_uid, $data['active']);
+      $data['membres'] = $this->groupes_model->get_groupe_membres($groupe_uid, $data['groupe']['dateFin']);
       if (!in_array($data['groupe']['uid'], groupes_NI())) {
         $data['membres'] = array_slice($data['membres'], 0, 20);
       }
@@ -581,10 +581,11 @@
       } else {
         $data['active'] = FALSE;
       }
-      // Query effectif inactifs
-      if (!$data['active']) {
-        $data['effectif'] = $this->groupes_model->get_effectif_inactif($groupe_uid);
-      }
+
+      // Effectifs
+      $data['membres'] = $this->groupes_model->get_groupe_membres($groupe_uid, $data['groupe']['dateFin']);
+      $data['groupe']['effectif'] = count($data['membres']);
+      $data['groupe']['effectifShare'] = round($data['groupe']['effectif'] / 577 * 100);
 
       // Variables about the group (1. dateDebut / 2. membres du groupe / 3. other groups)
       setlocale(LC_TIME, 'french');
@@ -594,7 +595,7 @@
       $data['edito'] = $this->groupes_edito->edito($groupe_ab, $groupe_opposition);
 
       // Query - get all votes
-      $data['votes'] = $this->votes_model->get_votes_all_groupe($groupe_uid, legislature_current());
+      $data['votes'] = $this->votes_model->get_votes_all_groupe($groupe_uid, $legislature);
 
       // Meta
       $data['url'] = $this->meta_model->get_url();

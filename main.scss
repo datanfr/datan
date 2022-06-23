@@ -434,7 +434,7 @@ body.modal-open {
 }
 @include media-breakpoint-up(lg){
   .sticky-offset{
-    top: 120px;
+    top: 80px;
   }
 }
 @include media-breakpoint-down(md) {
@@ -733,7 +733,6 @@ body.modal-open {
       font-weight: 600;
       margin: 0 auto 5px;
       padding: 0px 5px 0px 65px;
-      margin: 10px 0px 10px 0px;
       position: relative;
       transition: .3s ease all;
       width: 100%;

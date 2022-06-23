@@ -48,10 +48,12 @@
             <div class="label"><?= file_get_contents(base_url() . '/assets/imgs/icons/person-fill.svg') ?></div>
             <div class="value"><?= $depute['age'] ?> ans</div>
           </li>
-          <li class="mb-0">
-            <div class="label"><?= file_get_contents(base_url() . '/assets/imgs/icons/briefcase-fill.svg') ?></div>
-            <div class="value">Commission <?= $commission_parlementaire['commissionAbrege'] ?></div>
-          </li>
+          <?php if ($commission_parlementaire): ?>
+            <li class="mb-0">
+              <div class="label"><?= file_get_contents(base_url() . '/assets/imgs/icons/briefcase-fill.svg') ?></div>
+              <div class="value">Commission <?= $commission_parlementaire['commissionAbrege'] ?></div>
+            </li>
+          <?php endif; ?>
         <?php endif; ?>
         <?php if (!$active || $historique): ?>
           <li class="mb-0">
