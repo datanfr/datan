@@ -493,7 +493,7 @@ class Script
         $donnees = $this->bdd->query('
             SELECT d.mpId AS uid, d.legislature
             FROM deputes_last d
-            WHERE legislature IN (14, 15)
+            WHERE legislature IN (14, 15, 16)
         ');
 
         $originalFolder = __DIR__ . "/../assets/imgs/deputes_original/";
@@ -509,6 +509,7 @@ class Script
             // 1. Download original photo in deputes_original folder
 
             if (!file_exists($filename)) {
+                echo "Download MP " . $uid."\n";
                 if (substr(get_headers($url)[12], 9, 3) != '404' && substr(get_headers($url)[0], 9, 3) != '404') {
                     $content = file_get_contents($url);
                     if ($content) {
@@ -553,8 +554,7 @@ class Script
                     ));
                     $nobg = curl_exec($ch);
                     $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-                    $version = curl_getinfo($ch, CURLINFO_HTTP_VERSION);
-                    echo "VERSION" . $version . "\n";
+                    //$version = curl_getinfo($ch, CURLINFO_HTTP_VERSION);
                     if ($nobg && $httpCode == 200) {
                         file_put_contents($nobgfilename, $nobg);
                         echo "one nobg image was just downloaded from remove.bg \n";
@@ -577,6 +577,7 @@ class Script
         $files = scandir($dir);
         unset($files[0]);
         unset($files[1]);
+        unset($files[2]);
         echo "Number of photos in the deputes_original ==> " . count($files) . " \n";
 
         if (!file_exists($newdir)) mkdir($newdir);
@@ -601,6 +602,7 @@ class Script
         $files = scandir($dir);
         unset($files[0]);
         unset($files[1]);
+        unset($files[2]);
         echo "Number of photos in the deputes_nobg_import ==> " . count($files) . "\n";
 
         if (!file_exists($newdir)) mkdir($newdir);
@@ -626,7 +628,7 @@ class Script
         $donnees = $this->bdd->query('
             SELECT d.mpId AS uid, d.legislature
             FROM deputes_last d
-            WHERE legislature IN (14, 15)
+            WHERE legislature IN (14, 15, 16)
         ');
 
         while ($d = $donnees->fetch()) {
@@ -3299,19 +3301,18 @@ if (isset($argv[1])) {
 } else {
     $script = new Script();
 }
-/*
+
 $script->fillDeputes();
 $script->deputeAll();
 $script->deputeLast();
-//$script->downloadPictures();
-//$script->webpPictures();
-//$script->resmushPictures();
+$script->downloadPictures();
+$script->webpPictures();
+$script->resmushPictures();
 $script->groupeEffectif();
 $script->deputeJson();
 $script->groupeStats();
 $script->parties();
 $script->legislature();
-*/
 $script->vote(); // Depend on the legislature
 $script->updateVoteInfo(); // Depend on the legislature
 $script->voteScore(); // Depend on the legislature
@@ -3339,9 +3340,8 @@ $script->classGroupsProximite();
 $script->deputeAccordCleaned();
 $script->historyMpsAverage();
 $script->historyPerMpsAverage();
-//$script->parrainages();
-//$script->opendata_activeMPs();
-//$script->opendata_activeGroupes();
-//$script->opendata_historyMPs();
-//$script->opendata_historyGroupes();
-/*
+//$script->parrainages(); // No long used
+//$script->opendata_activeMPs(); Need to be introduced later
+//$script->opendata_activeGroupes(); Need to be introduced later
+//$script->opendata_historyMPs(); Need to be introduced later
+//$script->opendata_historyGroupes(); Need to be introduced later
