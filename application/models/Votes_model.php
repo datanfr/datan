@@ -5,21 +5,31 @@
     }
 
     public function get_all_votes($legislature, $year, $month, $limit){
-      $sql = '
-      SELECT vi.*, date_format(vi.dateScrutin, "%d %M %Y") as dateScrutinFR,
-      REPLACE(vi.titre, "n?", "n°") AS titre,
-      vd.title, vd.slug, vd.category
-      FROM votes_info vi
-      LEFT JOIN votes_datan vd ON vi.voteId = vd.vote_id AND vd.state = "published"
-      WHERE vi.legislature = '.$this->db->escape($legislature).'
-      ';
-      $sql .= $year ? ' AND YEAR(vi.dateScrutin) = "'.$this->db->escape_str($year).'"' : '';
-      $sql .= $month ? ' AND MONTH(vi.dateScrutin) = "'.$this->db->escape_str($month).'"' : '';
-      $sql .= ' ORDER BY vi.voteNumero DESC';
-      if ($limit != FALSE) {
-        $sql .= ' LIMIT ' . $this->db->escape_str($limit);
+      $where = array();
+
+      if ($legislature) {
+        $where['vi.legislature'] = $legislature;
       }
-      return $this->db->query($sql)->result_array();
+
+      if ($year) {
+        $where['YEAR(vi.dateScrutin)'] = $year;
+      }
+
+      if ($month) {
+        $where['MONTH(vi.dateScrutin)'] = $month;
+      }
+
+      if ($limit) {
+        $this->db->limit($limit);
+      }
+
+      $this->db->select('vi.*, date_format(vi.dateScrutin, "%d %M %Y") as dateScrutinFR');
+      $this->db->select('vd.title, vd.slug, vd.category');
+      $this->db->select('REPLACE(vi.titre, "n?", "n°") AS titre');
+      $this->db->order_by('vi.dateScrutin', 'DESC');
+      $this->db->join('votes_datan vd', 'vi.voteId = vd.vote_id AND vd.state = "published"', 'left');
+      $query = $this->db->get_where('votes_info vi', $where);
+      return $query->result_array();
     }
 
     public function get_last_votes_datan($limit = FALSE){
