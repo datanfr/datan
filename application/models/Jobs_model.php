@@ -31,14 +31,14 @@
       $sql = 'SELECT fam.famille, round(A.n / A.total * 100, 2) AS mps, A.n AS mpsCount, fam.population
         FROM
         (
-        	SELECT da.famSocPro, count(da.mpId) AS n,
+        	SELECT CASE WHEN da.famSocPro IN ("", "Autres personnes sans activité professionnelle", "Sans profession déclarée") THEN "Autre" ELSE da.famSocPro END AS famSocPro, count(da.mpId) AS n,
         	(
         		SELECT COUNT(*) AS total
         		FROM deputes_last
-        		WHERE legislature = ? AND dateFin IS NULL AND famSocPro NOT IN ("", "Autres personnes sans activité professionnelle", "Sans profession déclarée")
+        		WHERE legislature = ? AND dateFin IS NULL
         	) AS total
         	FROM deputes_all da
-        	WHERE da.famSocPro NOT IN ("", "Autres personnes sans activité professionnelle", "Sans profession déclarée") AND da.legislature = ? AND da.dateFin IS NULL
+        	WHERE da.legislature = ? AND da.dateFin IS NULL
         	GROUP BY da.famSocPro
         ) A
         RIGHT JOIN famsocpro fam ON A.famSocPro = fam.famille
