@@ -347,7 +347,6 @@
           $rows = array();
           $test = array();
 
-
           foreach ($groups as $row) {
 
             if (!in_array($row['libelleAbrev'], $columns)) {
