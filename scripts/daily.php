@@ -3341,7 +3341,7 @@ $script->deputeAccordCleaned();
 $script->historyMpsAverage();
 $script->historyPerMpsAverage();
 //$script->parrainages(); // No long used
-//$script->opendata_activeMPs(); Need to be introduced later
-//$script->opendata_activeGroupes(); Need to be introduced later
-//$script->opendata_historyMPs(); Need to be introduced later
-//$script->opendata_historyGroupes(); Need to be introduced later
+$script->opendata_activeMPs();
+$script->opendata_activeGroupes();
+$script->opendata_historyMPs();
+$script->opendata_historyGroupes();
