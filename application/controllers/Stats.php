@@ -20,61 +20,71 @@
       $data['groups_women_less'] = $this->stats_model->get_groups_women_less();
       $data['women_mean'] = $this->deputes_model->get_deputes_gender(legislature_current());
       $data['mps_loyalty'] = $this->stats_model->get_mps_loyalty(legislature_current());
-      $data['mps_loyalty_more'] = array_slice($data['mps_loyalty'], 0, 3);
-      $data['mps_loyalty_less'] = array_slice($data['mps_loyalty'], -3);
+      if ($data['mps_loyalty']) {
+        $data['mps_loyalty_more'] = array_slice($data['mps_loyalty'], 0, 3);
+        $data['mps_loyalty_less'] = array_slice($data['mps_loyalty'], -3);
+      }
       $data['loyalty_mean'] = $this->stats_model->get_loyalty_mean(legislature_current());
       $data['groups_age'] = $this->stats_model->get_groups_age();
-      $data['groups_age_edited'] = array(
-        'first' => array(
-          'title' => 'Le plus âgé',
-          'group' => $data['groups_age'][0],
-          'stat' => $data['groups_age'][0]['age'].' ans'
-        ),
-        'second' => array(
-          'title' => 'Le plus jeune',
-          'group' => end($data['groups_age']),
-          'stat' => end($data['groups_age'])['age'].' ans'
-        )
-      );
+      if ($data['groups_age']) {
+        $data['groups_age_edited'] = array(
+          'first' => array(
+            'title' => 'Le plus âgé',
+            'group' => $data['groups_age'][0],
+            'stat' => $data['groups_age'][0]['age'].' ans'
+          ),
+          'second' => array(
+            'title' => 'Le plus jeune',
+            'group' => end($data['groups_age']),
+            'stat' => end($data['groups_age'])['age'].' ans'
+          )
+        );
+      }
       $data['women_history'] = $this->stats_model->get_women_history();
       $data['women_history'] = array_slice($data['women_history'], -6);
       $data['groups_cohesion'] = $this->stats_model->get_groups_cohesion();
-      foreach ($data['groups_cohesion'] as $key => $value) {
-        if ($value['libelleAbrev'] == 'NI') {
-          $keyRemoveNI = $key;
+      if ($data['groups_cohesion']) {
+        foreach ($data['groups_cohesion'] as $key => $value) {
+          if ($value['libelleAbrev'] == 'NI') {
+            $keyRemoveNI = $key;
+          }
         }
+        unset($data['groups_cohesion'][$keyRemoveNI]);
+        $data['groups_cohesion_edited'] = array(
+          'first' => array(
+            'title' => 'Le plus divisé',
+            'group' => end($data['groups_cohesion']),
+            'stat' => round(end($data['groups_cohesion'])['cohesion'], 2)
+          ),
+          'second' => array(
+            'title' => 'Le plus uni',
+            'group' => $data['groups_cohesion'][0],
+            'stat' => round($data['groups_cohesion'][0]['cohesion'], 2)
+          )
+        );
       }
-      unset($data['groups_cohesion'][$keyRemoveNI]);
-      $data['groups_cohesion_edited'] = array(
-        'first' => array(
-          'title' => 'Le plus divisé',
-          'group' => end($data['groups_cohesion']),
-          'stat' => round(end($data['groups_cohesion'])['cohesion'], 2)
-        ),
-        'second' => array(
-          'title' => 'Le plus uni',
-          'group' => $data['groups_cohesion'][0],
-          'stat' => round($data['groups_cohesion'][0]['cohesion'], 2)
-        )
-      );
       $data['mps_participation'] = $this->stats_model->get_mps_participation_solennels();
-      $data['mps_participation_first'] = array_slice($data['mps_participation'], 0, 3);
-      $data['mps_participation_last'] = array_slice($data['mps_participation'], -3);
-      $data['mps_participation_mean'] = $this->stats_model->get_mps_participation_solennels_mean(legislature_current());
-      $data['mps_participation_mean'] = $data['mps_participation_mean']['mean'];
+      if ($data['mps_participation']) {
+        $data['mps_participation_first'] = array_slice($data['mps_participation'], 0, 3);
+        $data['mps_participation_last'] = array_slice($data['mps_participation'], -3);
+        $data['mps_participation_mean'] = $this->stats_model->get_mps_participation_solennels_mean(legislature_current());
+        $data['mps_participation_mean'] = $data['mps_participation_mean']['mean'];
+      }
       $data['groups_participation'] = $this->stats_model->get_groups_participation();
-      $data['groups_participation_edited'] = array(
-        'first' => array(
-          'title' => 'Vote le moins',
-          'group' => end($data['groups_participation']),
-          'stat' => end($data['groups_participation'])['participation'].' %'
-        ),
-        'second' => array(
-          'title' => 'Vote le plus',
-          'group' => $data['groups_participation'][0],
-          'stat' => $data['groups_participation'][0]['participation'].' %'
-        )
-      );
+      if ($data['groups_participation']) {
+        $data['groups_participation_edited'] = array(
+          'first' => array(
+            'title' => 'Vote le moins',
+            'group' => end($data['groups_participation']),
+            'stat' => end($data['groups_participation'])['participation'].' %'
+          ),
+          'second' => array(
+            'title' => 'Vote le plus',
+            'group' => $data['groups_participation'][0],
+            'stat' => $data['groups_participation'][0]['participation'].' %'
+          )
+        );
+      }
       $data['famSocPro'] = $this->jobs_model->get_stats_all_mp(legislature_current());
       foreach ($data['famSocPro'] as $key => $value) {
         if ($value['famille'] == "Cadres et professions intellectuelles supérieures") {
@@ -84,32 +94,35 @@
         $data['famSocPro'][$key]['familleCut'] = explode("\n", $str);
       }
       $data['groups_cadres'] = $this->jobs_model->get_groups_category("Cadres et professions intellectuelles supérieures");
-      $data['groups_cadres_edited'] = array(
-        'first' => array(
-          'title' => 'Le moins de cadres',
-          'group' => end($data['groups_cadres']),
-          'stat' => end($data['groups_cadres'])['pct']. " %"
-        ),
-        'second' => array(
-          'title' => 'Le plus de cadres',
-          'group' => $data['groups_cadres'][0],
-          'stat' => $data['groups_cadres'][0]['pct']." %"
-        ),
-      );
+      if ($data['groups_cadres']) {
+        $data['groups_cadres_edited'] = array(
+          'first' => array(
+            'title' => 'Le moins de cadres',
+            'group' => end($data['groups_cadres']),
+            'stat' => end($data['groups_cadres'])['pct']. " %"
+          ),
+          'second' => array(
+            'title' => 'Le plus de cadres',
+            'group' => $data['groups_cadres'][0],
+            'stat' => $data['groups_cadres'][0]['pct']." %"
+          ),
+        );
+      }
       $data['groups_rose'] = $this->jobs_model->get_groups_rose();
-      $data['groups_rose_edited'] = array(
-        'first' => array(
-          'title' => 'Le moins représentatif',
-          'group' => end($data['groups_rose']),
-          'stat' => end($data['groups_rose'])['rose_index']
-        ),
-        'second' => array(
-          'title' => 'Le plus représentatif',
-          'group' => $data['groups_rose'][0],
-          'stat' => $data['groups_rose'][0]['rose_index']
-        ),
-      );
-
+      if ($data['groups_rose']) {
+        $data['groups_rose_edited'] = array(
+          'first' => array(
+            'title' => 'Le moins représentatif',
+            'group' => end($data['groups_rose']),
+            'stat' => end($data['groups_rose'])['rose_index']
+          ),
+          'second' => array(
+            'title' => 'Le plus représentatif',
+            'group' => $data['groups_rose'][0],
+            'stat' => $data['groups_rose'][0]['rose_index']
+          ),
+        );
+      }
       // Breadcrumb
       $data['breadcrumb'] = array(
         array(
