@@ -128,7 +128,7 @@
       $prenom = $d['prenom'];
       $nom = $d['nom'];
 
-      $filename = __DIR__ . "/../assets/imgs/deputes_ogp/ogp_deputes_" . $uid . ".png";
+      $filename = __DIR__ . "/../assets/imgs/deputes_ogp/original/ogp_deputes_" . $uid . ".png";
 
       ?>
 
