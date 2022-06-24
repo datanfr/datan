@@ -188,7 +188,7 @@
     ajax.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 
     // set the image type to "img/jpeg" and quality to 1 (100%)
-    ajax.send("image=" + canvas.toDataURL("image/jpeg", 1) + "&mpId=" + uid);
+    ajax.send("image=" + canvas.toDataURL("image/png", 1) + "&mpId=" + uid);
 
     ajax.onreadystatechange = function () {
       if (this.readyState == 4 && this.status == 200) {
