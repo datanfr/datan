@@ -103,12 +103,14 @@
 
   include 'bdd-connexion.php';
 
+  $uid = $_GET['uid'];
+
   $donnees = $bdd->query('
     SELECT d.mpId AS uid, d.nameFirst AS prenom, d.nameLast AS nom, d.active, d.civ,
       d.libelle_2 AS dpt_libelle, d.departementNom, d.departementCode, d.libelle AS groupe, d.libelleAbrev AS groupeAbrev,
       d.couleurAssociee AS groupeColor
     FROM deputes_last d
-    ORDER BY RAND()
+    WHERE mpId = "' . $uid . '"
   ');
 
 ?>
@@ -182,7 +184,7 @@
     var ajax = new XMLHttpRequest();
 
     // set the method to use, the backend file and set it requst as asynchrounous
-    ajax.open('POST', 'save_og_img.php', true);
+    ajax.open('POST', 'code_photos_ogb_save.php', true);
 
     // set the request headers
     ajax.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
