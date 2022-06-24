@@ -1,3 +1,5 @@
+<!-- NO LONGER USED -->
+
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
 
@@ -38,7 +40,7 @@
         $donnees = $bdd->query('
             SELECT d.mpId AS uid, d.nameFirst AS prenom, d.nameLast AS nom
             FROM deputes_last d
-            WHERE d.legislature IN (14, 15)
+            WHERE d.legislature IN (14, 15, 16)
           ');
 
         while ($mp = $donnees->fetch()) {
@@ -49,7 +51,7 @@
         ?>
 
             <p>
-              <a href="https://datan.fr/scripts/code_photos_ogp_export.php?uid=<?= $mp['uid'] ?>" target="_blank"><?= $mp['prenom'] ?> <?= $mp['nom'] ?> - <?= $mp['uid'] ?></a>
+              <a href="#" target="_blank"><?= $mp['prenom'] ?> <?= $mp['nom'] ?> - <?= $mp['uid'] ?></a>
             </p>
 
           <?php
