@@ -19,7 +19,7 @@ $screenshotImage = str_replace(" ", "+", $screenshotImage);
 $screenshotImage = base64_decode($screenshotImage);
 
 // save the image as filename.jpeg
-file_put_contents("../assets/imgs/deputes_ogp/ogp_deputes_" . $mpId . ".png", $screenshotImage);
+file_put_contents("../assets/imgs/deputes_ogp/original/ogp_deputes_" . $mpId . ".png", $screenshotImage);
 
 // provide a response to the front-end
 echo "Done";

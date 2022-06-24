@@ -14,7 +14,7 @@ async function run() {
     console.log(url);
 
     await page.goto(url, { waitUntil: 'networkidle2', timeout: 0 });
-    await page.waitFor(100);
+    await page.waitFor(20);
   }
   await browser.close();
 }
