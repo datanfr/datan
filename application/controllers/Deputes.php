@@ -565,7 +565,7 @@
       }
 
       // Check if it is in legislature
-      if (!in_array($data['depute']['legislature'], array(15))) {
+      if (!$data['depute']['legislature'] >= 15) {
         show_404($this->functions_datan->get_404_infos());
       }
 
