@@ -150,7 +150,7 @@
                   <span class="prenom" style="font-size: <?= 3.5 / (strlen($nom) ** 0.30) ?>em;"><?= $prenom ?></span>
                   <span class="nom" style="font-size: <?= 5 / (strlen($nom) ** 0.30) ?>em;"><?= $nom ?></span>
                 </h1>
-                <?php if ($d['active' == 0]): ?>
+                <?php if ($d['active'] == 0): ?>
                   <h2 class="dpt"><?= $d['civ'] == 'Mme' ? 'Ancienne députée' : 'Ancien député' ?> <?= $d['dpt_libelle'] ?><?= $d['departementNom'] ?> (<?= $d['departementCode'] ?>)</h2>
                 <?php else: ?>
                   <h2 class="dpt"><?= $d['civ'] == 'Mme' ? 'Députée' : 'Député' ?> <?= $d['dpt_libelle'] ?> <?= $d['departementNom'] ?> (<?= $d['departementCode'] ?>)</h2>
