@@ -395,7 +395,7 @@
           SELECT *,
           CONCAT(da.departementNom, " (", da.departementCode, ")") AS cardCenter
           FROM deputes_all da
-          WHERE legislature = ? AND dateFin IS NULL
+          WHERE legislature = ? AND dateFin IS NULL AND da.libelleAbrev = "LR"
           ORDER BY RAND()
           LIMIT 1
         ) A
