@@ -144,6 +144,7 @@
       // Query 1 Informations principales
       $groupe_slug = mb_strtoupper($groupe_slug);
       $data['groupe'] = $this->groupes_model->get_groupes_individal($groupe_slug, $legislature);
+      print_r($data['groupe']);
 
       if (empty($data['groupe'])) {
         show_404($this->functions_datan->get_404_infos());
@@ -175,7 +176,6 @@
       }
       $data['membres'] = $this->groupes_model->get_groupe_membres($groupe_uid, $data['groupe']['dateFin']);
       // Effectif
-      $data['groupe']['effectif'] = count($data['membres']);
       $data['groupe']['effectifShare'] = round($data['groupe']['effectif'] / 577 * 100);
       // Print membres
       $data['membres'] = array_slice($data['membres'], 0, 20);
