@@ -886,6 +886,7 @@ input#quicksearch[type=text]{
   .img-group-cat{
     img {
       height: 85px;
+      border-radius: 10px;
       width: auto;
     }
   }
@@ -910,7 +911,6 @@ input#quicksearch[type=text]{
   .card-avatar{
     border-radius: 10%;
     padding: 10px;
-    background-color: #fff;
     img{
       margin-top: -5px;
     }
@@ -1087,6 +1087,10 @@ input#quicksearch[type=text]{
       .label{
         width: 110px;
       }
+    }
+    picture {
+      border-radius: 10px;
+      overflow: hidden;
     }
   }
 }
