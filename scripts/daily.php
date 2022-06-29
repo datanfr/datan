@@ -940,7 +940,7 @@ class Script
                   SELECT groupeId, COUNT(mpId) AS n,
                   SUM(if(civ = "Mme", 1, 0)) AS female
                   FROM deputes_all
-                  WHERE groupeId = "' . $groupeId . '" AND legislature = 15 AND dateFin IS NULL
+                  WHERE groupeId = "' . $groupeId . '" AND legislature = "' . $this->legislature_current . '" AND dateFin IS NULL
                   GROUP BY groupeId
                   ) A
               ');
