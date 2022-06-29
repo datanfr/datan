@@ -208,4 +208,14 @@
     }
   }
 
+  function groupe_card_background($legislature, $groupe){
+    $colour = "#fff";
+
+    if ($legislature == 16 && $groupe == "LR") {
+      $colour = "#002A54";
+    }
+
+    return $colour;
+  }
+
 ?>
