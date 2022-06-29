@@ -12,7 +12,7 @@
         </div>
       </div>
       <!-- INFOS GENERALES -->
-      <div class="bloc-infos">
+      <div class="bloc-infos mt-3">
         <<?= $tag ?> class="title d-block text-lg-left"><?= $title ?></<?= $tag ?>>
       </div>
       <!-- BIOGRAPHIE -->
