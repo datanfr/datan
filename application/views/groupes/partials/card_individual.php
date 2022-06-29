@@ -5,14 +5,14 @@
       <div class="img">
         <div class="d-flex justify-content-center">
           <picture>
-            <source srcset="<?= asset_url(); ?>imgs/groupes/webp/<?= $groupe['libelleAbrev'] ?>.webp" type="image/webp">
-            <source srcset="<?= asset_url(); ?>imgs/groupes/<?= $groupe['libelleAbrev'] ?>.png" type="image/png">
-            <img src="<?= asset_url(); ?>imgs/groupes/<?= $groupe['libelleAbrev'] ?>.png" width="150" height="150" alt="<?= $groupe['libelle'] ?>">
+            <source srcset="<?= asset_url(); ?>imgs/groupes/<?= $groupe['legislature'] ?>/webp/<?= $groupe['libelleAbrev'] ?>.webp" type="image/webp">
+            <source srcset="<?= asset_url(); ?>imgs/groupes/<?= $groupe['legislature'] ?>/<?= $groupe['libelleAbrev'] ?>.png" type="image/png">
+            <img src="<?= asset_url(); ?>imgs/groupes/<?= $groupe['legislature'] ?>/<?= $groupe['libelleAbrev'] ?>.png" width="150" height="150" alt="<?= $groupe['libelle'] ?>">
           </picture>
         </div>
       </div>
       <!-- INFOS GENERALES -->
-      <div class="bloc-infos">
+      <div class="bloc-infos mt-3">
         <<?= $tag ?> class="title d-block text-lg-left"><?= $title ?></<?= $tag ?>>
       </div>
       <!-- BIOGRAPHIE -->
