@@ -83,7 +83,7 @@
       $data['posts'] = $this->post_model->get_last_posts();
 
       // Composition
-      $data['composition'] = FALSE;
+      $data['composition'] = TRUE;
 
       //Meta
       $data['url'] = $this->meta_model->get_url();
