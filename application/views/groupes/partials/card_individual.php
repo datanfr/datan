@@ -40,7 +40,7 @@
           <?php endif; ?>
         </ul>
       </div>
-      <div class="text-center mt-4">
+      <div class="text-center mt-2">
         <a class="btn btn-outline-primary" href="<?= base_url() ?>groupes/legislature-<?= $groupe['legislature'] ?>/<?= mb_strtolower($groupe['libelleAbrev']) ?>/membres">
           Voir les <?= $groupe['effectif'] ?> membres
         </a>
