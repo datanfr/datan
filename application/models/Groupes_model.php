@@ -52,7 +52,7 @@
     public function get_groupes_sorted($groupes){
       $groupesLibelle = array_column($groupes, 'libelleAbrev');
       function cmp(array $a) {
-        $order = array("GDR", "FI", "SOC", "DEM", "LAREM", "AGIR-E", "LT", "UDI_I", "LR", "NI");
+        $order = array("GDR", "LFI", "SOC", "ECOLO", "RENAIS", "MODEM", "HORIZONS", "LIOT", "LR", "RN");
         foreach ($order as $x) {
           $y[] = array_search($x, $a);
         }
