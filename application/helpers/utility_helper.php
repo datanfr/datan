@@ -68,14 +68,19 @@
       "UDI_I" => $center,
       "NG" => $left,
       "DEM" => $center,
-      "ECOLO" => $center,
+      "ECOLO" => $left,
       "LES-REP" => $right,
       "RRDP" => $left,
       "R-UMP" => $right,
       "SER" => $left,
       "SRC" => $left,
       "UDI" => $right,
-      "UMP" => $right
+      "UMP" => $right,
+      "RENAIS" => $center,
+      "RN" => $right,
+      "LFI" => $left,
+      "HORIZONS" => $right,
+      "LIOT" => $center
     );
     return $array;
   }
