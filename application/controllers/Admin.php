@@ -453,8 +453,13 @@
           $this->load->view('dashboard/header', $data);
           $this->load->view('dashboard/socialmedia/table', $data);
           $this->load->view('dashboard/footer');
-
         }
+      } elseif ($page == "twitter") {
+        $data['deputes'] = $this->deputes_model->get_twitter_accounts(legislature_current());
+        $data['title'] = "Comptes Twitter des députés";
+        $this->load->view('dashboard/header', $data);
+        $this->load->view('dashboard/socialmedia/twitter', $data);
+        $this->load->view('dashboard/footer');
       } else {
         show_404($this->functions_datan->get_404_infos());
       }

@@ -218,9 +218,17 @@ scratch. This page gets rid of all links and provides the needed markup only.
                     <i class="far fa-circle nav-icon"></i>
                     <p>Groupe nouveau membre</p>
                   </a>
+                </li>
+                <li class="nav-item">
                   <a href="<?= base_url() ?>admin/socialmedia/historique" class="nav-link">
                     <i class="far fa-circle nav-icon"></i>
                     <p>Historique députés</p>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="<?= base_url() ?>admin/socialmedia/twitter" class="nav-link">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Comptes Twitter députés</p>
                   </a>
                 </li>
               </ul>
