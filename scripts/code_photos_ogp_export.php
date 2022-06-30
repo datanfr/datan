@@ -184,7 +184,7 @@
     var ajax = new XMLHttpRequest();
 
     // set the method to use, the backend file and set it requst as asynchrounous
-    ajax.open('POST', 'code_photos_ogb_save.php', true);
+    ajax.open('POST', 'code_photos_ogp_save.php', true);
 
     // set the request headers
     ajax.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
