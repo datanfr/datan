@@ -682,4 +682,14 @@
       return($result['score']);
     }
 
+    public function get_twitter_accounts($legislature){
+      $where = array(
+        'd.legislature' => $legislature,
+        'd.active' => 1
+      );
+      $this->db->order_by('d.nameLast', 'ASC');
+      $this->db->join('deputes_contacts dc', 'dc.mpId = d.mpId', 'left');
+      return $this->db->get_where('deputes_last d', $where)->result_array();
+    }
+
   }
