@@ -188,6 +188,13 @@
       return $this->db->get_where('mandat_groupe', $where, 1)->row_array();
     }
 
+    public function get_president_an(){
+      $this->db->where('m.codeQualite', 'Président');
+      $this->db->where('m.dateFin IS NULL');
+      $this->db->join('deputes_last da', 'da.mpId = m.mpId', 'left');
+      return $this->db->get('mandat_principal m', 1)->row_array();
+    }
+
     public function get_commission_parlementaire($depute_uid){
       $sql = 'SELECT
         ms.libQualiteSex AS commissionCodeQualiteGender, o.libelle AS commissionLibelle, o.libelleAbrege AS commissionAbrege
