@@ -1,11 +1,13 @@
 <div class="container-fluid pg-depute-all mb-5" id="container-always-fluid">
   <div class="row">
     <div class="container">
-      <div class="row row-grid bloc-titre">
+      <div class="row bloc-titre">
         <div class="col-12">
           <h1><?= $title ?></h1>
         </div>
-        <div class="col-lg-8">
+      </div>
+      <div class="row row-grid mt-5">
+        <div class="col-md-7">
           <?php if ($legislature == legislature_current()): ?>
             <p>
               L'Assemblée nationale compte <b>577 députés</b>. Ils sont élus tous les 5 ans lors des élections législatives. Les dernières ont eu lieu en juin 2022 et les prochaines se tiendront en 2027, quelques semaines après l'élection présidentielle.
@@ -23,10 +25,12 @@
                   Depuis le début de la <?= legislature_current() ?><sup>ème</sup> législature, <b><?= $number_inactive ?> députés ont quitté l'Assemblée</b> pour cause de nomination au Gouvernement, de démission ou de décès. Pour découvrir ces députés qui ne sont plus en activité, <a href="<?= base_url() ?>deputes/inactifs" ?>cliquez ici</a>.
                 </p>
               <?php endif; ?>
-              <div class="d-flex flex-wrap justify-content-around mt-5">
-                <a href="<?= base_url() ?>deputes/legislature-15" class="btn btn-secondary my-2">Députés de la 15<sup>ème</sup> législature</a>
-                <a href="<?= base_url() ?>deputes/legislature-14" class="btn btn-secondary my-2">Députés de la 14<sup>ème</sup> législature</a>
-              </div>
+              <?php if ($president): ?>
+                <h2 class="mt-5">Président<?= $president['gender']['e'] ?> de l'Assemblée nationale</h2>
+                <p>
+                  <?= ucfirst($president['gender']['le']) ?> président<?= $president['gender']['e'] ?> de l'Assemblée nationale est <a href="<?= base_url() ?>deputes/<?= $president['dptSlug'] ?>/depute_<?= $president['nameUrl'] ?>"><?= $president['nameFirst'] . ' ' . $president['nameLast'] ?></a>.
+                </p>
+              <?php endif; ?>
             <?php else: ?>
               <p>
                 Depuis leur élection, <?= $number_inactive ?> députés ont quitté l'Assemblée pour cause de nomination au Gouvernement, de démission, ou de décès. Découvrez sur cette page les députés plus en activité.
@@ -47,12 +51,28 @@
             </p>
           <?php endif; ?>
         </div>
+        <div class="col-md-3 offset-md-1">
+          <h3><?= $legislature == legislature_current() ? 'Historique' : 'Toutes les législatures' ?></h3>
+          <p>La législature actuelle est la 16<sup>ème</sup> législature. Elle a débuté en 2022, à la suite des <a href="<?= base_url() ?>elections/legislatives-2022">élections législatives</a>, et se terminera en 2027.</p>
+          <?php if ($legislature == legislature_current()): ?>
+            <p>Découvrez les députés des législatures précédentes.</p>
+          <?php else: ?>
+            <p>Découvrez sur Datan les députés de toutes les législatures.</p>
+          <?php endif; ?>
+          <div class="d-flex flex-wrap">
+            <?php if ($legislature != legislature_current()): ?>
+              <a href="<?= base_url() ?>deputes/legislature-16" class="btn btn-secondary my-2">16<sup>ème</sup> législature</a>
+            <?php endif; ?>
+            <a href="<?= base_url() ?>deputes/legislature-15" class="btn btn-secondary my-2">15<sup>ème</sup> législature</a>
+            <a href="<?= base_url() ?>deputes/legislature-14" class="btn btn-secondary my-2">14<sup>ème</sup> législature</a>
+          </div>
+        </div>
       </div>
       <div class="row mt-5">
         <div class="col-12">
           <?php if ($legislature == legislature_current()): ?>
             <?php if ($active): ?>
-              <h2>Les députés en activité de la <?= $legislature ?><sup>ème</sup> législature (2022-2027)</h2>
+              <h2>Les <span class="text-primary">577 députés</span> de la 16<sup>ème</sup> législature</h2>
               <?php else: ?>
               <h2>Les <span class="text-primary"><?= count($deputes) ?> anciens députés</span> de la <?= $legislature ?><sup>ème</sup> législature</h2>
             <?php endif; ?>
