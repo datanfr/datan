@@ -111,6 +111,10 @@
 
       if ($legislature == legislature_current()) {
         $data['active'] = TRUE;
+        $data['president'] = $this->deputes_model->get_president_an();
+        if ($data['president']) {
+          $data['president']['gender'] = gender($data['president']['civ']);
+        }
       } else {
         $data['active'] = FALSE;
       }
