@@ -379,22 +379,3 @@ $(window).scroll(function() {
     $('.navbar-brand-img').removeClass('shrink');
   }
 });
-
-/*
-##########
-DIALOGUE BOX QUIZ
-##########
-*/
-$(document).scroll(function () {
-  var y = $(this).scrollTop();
-  if (y > 400 && $("#dialogueBoxQuiz").attr("displayed") === "false" && $("#dialogueBoxQuiz").attr("already_closed") === "0") {
-    $('#dialogueBoxQuiz').fadeIn();
-    $("#dialogueBoxQuiz").attr("displayed", "true");
-  }
-});
-$("#closeDialogueBoxQuiz").click(function(){
-  $('#dialogueBoxQuiz').fadeOut();
-  $.get(get_base_url() + "/export/set_session/" + 1, function (result) {
-    console.log(result);
-  })
-})
