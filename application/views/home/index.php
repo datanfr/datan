@@ -363,7 +363,7 @@
     <div class="container p-md-0">
       <div class="row py-5">
         <div class="col-lg-6 col-12 bloc-map mt-4 mt-lg-0 offset-lg-3">
-          <h2 class="text-center pb-5">Explorer les députés par département</h2>
+          <h2 class="text-center pb-5">Explorez les députés par département</h2>
           <div class="map map_france mt-3">
             <?= file_get_contents(asset_url()."imgs/france_map/map.svg"); ?>
           </div>
