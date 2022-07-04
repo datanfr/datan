@@ -57,7 +57,7 @@
           <?php if ($legislature == legislature_current()): ?>
             <p>Découvrez les députés des législatures précédentes.</p>
           <?php else: ?>
-            <p>Découvrez sur Datan les députés de toutes les législatures.</p>
+            <p>Découvrez les députés de toutes les législatures.</p>
           <?php endif; ?>
           <div class="d-flex flex-wrap">
             <?php if ($legislature != legislature_current()): ?>
