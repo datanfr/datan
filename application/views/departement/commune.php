@@ -1,6 +1,3 @@
-    <div class="container-fluid d-flex justify-content-center align-items-center py-4 bg-danger">
-      <span class="text-center text-white"><b>Attention</b>, l'Assemblée nationale n'a pas publié d'informations sur les députés élus en juin 2022. Cette page sera mise à jour prochainement.</span>
-    </div>
     <div class="container-fluid bloc-img-deputes bloc-img d-flex async_background" id="container-always-fluid" style="height: 13em">
       <div class="container d-flex flex-column justify-content-center py-2 pg-commune">
         <div class="row title">
