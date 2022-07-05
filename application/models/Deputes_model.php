@@ -233,37 +233,37 @@
       return $this->db->get_where('mandat_principal', $where)->row_array();
     }
 
-    public function get_election_result($dpt, $circo, $nom){
+    public function get_election_result($dpt, $circo, $nom, $year){
       $sql = 'SELECT candidat, voix, pct_exprimes,
         CASE
           WHEN tour = 2 THEN "2ème"
           WHEN tour = 1 THEN "1er"
         END AS tour_election
-        FROM elect_2017_leg_results
-        WHERE dpt = ? AND circo = ? AND elected = 1 AND candidat LIKE "%'.$this->db->escape_like_str($nom).'%"
+        FROM elect_legislatives_results
+        WHERE dpt = ? AND circo = ? AND year = ? AND elected = 1 AND candidat LIKE "%'.$this->db->escape_like_str($nom).'%"
         LIMIT 1
       ';
-      return $this->db->query($sql, array($dpt, $circo))->row_array();
+      return $this->db->query($sql, array($dpt, $circo, $year))->row_array();
     }
 
-    public function get_election_opponent($dpt, $circo){
+    public function get_election_opponent($dpt, $circo, $year){
       $sql = 'SELECT candidat, voix, pct_exprimes,
         CASE
           WHEN tour = 2 THEN "2ème"
           WHEN tour = 1 THEN "1er"
         END AS tour_election
-        FROM elect_2017_leg_results
-        WHERE dpt = ? AND circo = ? AND elected = 0
+        FROM elect_legislatives_results
+        WHERE dpt = ? AND circo = ? AND year = ? AND elected = 0
       ';
-      return $this->db->query($sql, array($dpt, $circo))->result_array();
+      return $this->db->query($sql, array($dpt, $circo, $year))->result_array();
     }
 
-    public function get_election_infos($dpt, $circo){
+    public function get_election_infos($dpt, $circo, $year){
       $sql = 'SELECT *
-        FROM elect_2017_leg_infos
-        WHERE dpt = ? AND circo = ?
+        FROM elect_legislatives_infos
+        WHERE dpt = ? AND circo = ? AND year = ?
       ';
-      return $this->db->query($sql, array($dpt, $circo))->row_array();
+      return $this->db->query($sql, array($dpt, $circo, $year))->row_array();
     }
 
     public function get_other_deputes($groupe_id, $depute_name, $depute_uid, $active, $legislature){
