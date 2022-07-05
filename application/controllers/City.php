@@ -129,28 +129,31 @@
       }
 
       // Get elections
-      // 1. 2017 _ Législatives _ 2nd tour
-      $data['results_2017_leg_2'] = $this->city_model->get_results_2017_leg_2($insee);
+      // 1. 2022 _ Législatives _ 2nd tour
+      $data['results_legislatives_last'] = $this->city_model->get_results_legislatives($insee, 2022);
       $arr = array();
-      foreach ($data['results_2017_leg_2'] as $key => $item) {
+      foreach ($data['results_legislatives_last'] as $key => $item) {
          $arr[$item['circo']][$key] = $item;
       }
       ksort($arr, SORT_NUMERIC);
-      $data['results_2017_leg_2'] = $arr;
-      $data['results_2017_leg_2_first_element'] = reset($data['results_2017_leg_2']);
-      if ($data['results_2017_leg_2_first_element']) {
-        $data['results_2017_leg_2_first_element'] = reset($data['results_2017_leg_2_first_element']);
+      $data['results_legislatives_last'] = $arr;
+      $data['results_legislatives_last_first'] = reset($data['results_legislatives_last']);
+      if ($data['results_legislatives_last_first']) {
+        $data['results_legislatives_last_first'] = reset($data['results_legislatives_last_first']);
       }
       $data['ville']['interieurGouv'] = $this->city_model->get_format_interieurGouv($data['ville']);
 
       // 2. 2017 _ Presidentielles _ 2nd tour
-      $data['results_pres_2017'] = $this->city_model->get_results_pres_2($data['ville']['dpt'], $data['ville']['commune'], 2017);
-      $data['results_pres_2022'] = $this->city_model->get_results_pres_2($data['ville']['dpt'], $data['ville']['commune'], 2022);
+      $data['results_pres_2017'] = $this->city_model->get_results_presidentielle($data['ville']['dpt'], $data['ville']['commune'], 2017);
+      $data['results_pres_2022'] = $this->city_model->get_results_presidentielle($data['ville']['dpt'], $data['ville']['commune'], 2022);
       if ($data['results_pres_2017'][0]['votants'] > 0 && $data['results_pres_2022'][0]['votants'] > 0) {
         $data['results_pres_edited'] = $this->city_model->get_results_pres_edited($data['ville'], $data['results_pres_2017'], $data['results_pres_2022']);
       }
       // 3. 2019 _ Européennes
       $data['results_2019_europe'] = $this->city_model->get_results_2019_europe($data['ville']);
+
+      // 4. 2018 _ Législatvies _ 2017 _ 2nd tour
+      $data['results_leg_2017'] = $this->city_model->get_results_legislatives($insee, 2017);
 
       // Meta
       $data['url'] = $this->meta_model->get_url();
