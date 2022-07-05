@@ -149,7 +149,7 @@ module.exports = function (grunt) {
           height: 1900
         },
         // The source file
-        src: 'http://localhost/datan/deputes/maine-et-loire-49/depute_matthieu-orphelin',
+        src: 'http://localhost/datan/deputes/reunion-974/depute_karine-lebon',
         // The destination file
         dest: 'assets/css/critical/depute_individual.css'
       },
@@ -164,7 +164,7 @@ module.exports = function (grunt) {
           height: 3200
         },
         // The source file
-        src: 'http://localhost/datan/deputes/maine-et-loire-49/depute_matthieu-orphelin',
+        src: 'http://localhost/datan/deputes/reunion-974/depute_karine-lebon',
         // The destination file
         dest: 'assets/css/critical/depute_individual-mobile.css'
       },

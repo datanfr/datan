@@ -100,18 +100,16 @@
       return $query->row_array();
     }
 
-    public function get_results_2017_leg_2($insee){
-      $sql = 'SELECT *, ROUND(voix / exprimes * 100) AS pct
-        FROM elect_2017_leg_results_communes res
-        WHERE insee = ?
-        ORDER BY circo DESC, voix DESC
-      ';
-      $query = $this->db->query($sql, $insee);
-
-      return $query->result_array();
+    public function get_results_legislatives($insee, $year){
+      $this->db->select('*, ROUND(voix / exprimes * 100) AS pct');
+      $this->db->where('insee', $insee);
+      $this->db->where('year', $year);
+      $this->db->order_by('circo', 'DESC');
+      $this->db->order_by('voix', 'DESC');
+      return $this->db->get('elect_legislatives_cities')->result_array();
     }
 
-    public function get_results_pres_2($dpt, $city, $election){
+    public function get_results_presidentielle($dpt, $city, $election){
       // Correction for Mayotte
       if ($dpt == 976 && $election == 2017) {
         $city = $city - 100;

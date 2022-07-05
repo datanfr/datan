@@ -8,7 +8,7 @@
   }
 
   function get_version(){
-    return 60;
+    return 61;
   }
 
   function legislature_current(){
@@ -80,7 +80,11 @@
       "RN" => $right,
       "LFI" => $left,
       "HORIZONS" => $right,
-      "LIOT" => $center
+      "LIOT" => $center,
+      "RE" => $center,
+      "LFI-NUPES" => $left,
+      "HOR" => $right,
+      "GDR-NUPES" => $left
     );
     return $array;
   }
