@@ -3,6 +3,7 @@
 
   $bdd->query('DROP TABLE IF EXISTS elect_2017_leg_results');
   $bdd->query('DROP TABLE IF EXISTS elect_2017_leg_infos');
+  $bdd->query('DROP TABLE IF EXISTS elect_2017_leg_results_communes');
 
   $file = file_get_contents('sql/elect_legislatives_infos.sql');
   $bdd->exec($file);
