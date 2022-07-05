@@ -84,33 +84,33 @@
       </div>
     </div>
     <!-- ELECTIONS LEGISLATIVES IN THE CITY -->
-    <?php if ($results_2017_leg_2): ?>
+    <?php if ($results_legislatives_last): ?>
       <div class="container-fluid pg-commune py-5" id="pattern_background">
         <div class="container">
           <div class="row">
             <div class="col-12">
-              <h2 class="text-center">L'élection législative de 2017 à <?= $ville['commune_nom'] ?></h2>
+              <h2 class="text-center">Les élections législatives de 2022 à <?= $ville['commune_nom'] ?></h2>
             </div>
           </div>
           <div class="row mt-5">
             <div class="<?= $n_circos == 1 ? 'col-lg-7' : 'col-lg-8 offset-lg-2' ?> d-flex flex-column justify-content-center">
               <p class="text-primary font-weight-bold">Le contexte</p>
-              <p>Les dernières élections législatives se sont tenues en juin 2017. Elles ont permis d'élire <a href="<?= base_url() ?>deputes">les députés</a> qui composent l'Assemblée nationale. Ces élections et ont fait suite à l'élection présidentielle, qui a vu la victoire d'Emmanuel Macron.</p>
-              <p>Les <a href="<?= base_url() ?>elections/legislatives-2022">prochaines élections législatives</a> se tiendront en 2022.</p>
+              <p>Les <a href="<?= base_url() ?>elections/legislatives-2022">dernières élections législatives</a> se sont tenues en juin 2022. Elles ont permis d'élire <a href="<?= base_url() ?>deputes">les députés</a> qui composent l'Assemblée nationale. Ces élections ont fait suite à l'élection présidentielle, qui a vu la victoire d'Emmanuel Macron.</p>
+              <p>Les prochaines élections législatives se tiendront en 2027.</p>
               <p class="text-primary font-weight-bold">L'élection à <?= $ville['commune_nom'] ?></p>
               <?php if ($n_circos == 1): ?>
-                <p>Pour le second tour des législatives, la ville de <?= $ville['commune_nom'] ?> comptait <?= number_format($results_2017_leg_2_first_element['inscrits'], 0, ',', ' ') ?> personnes inscrites sur les listes électorales. Seuls <?= number_format($results_2017_leg_2_first_element['votants'], 0, ',', ' ') ?> habitants se sont déplacés aux urnes. Le <b>taux d'abstention était de <?= round($results_2017_leg_2_first_element['abs'] / $results_2017_leg_2_first_element['inscrits'] * 100)  ?> %</b>, contre 57 % au niveau national.</p>
-                <p>En tête, <?= $results_2017_leg_2_first_element['prenom'] ?> <?= ucfirst(mb_strtolower($results_2017_leg_2_first_element['nom'])) ?> a récolté <?= number_format($results_2017_leg_2_first_element['voix'], 0, ',', ' ') ?> voix, soit <?= $results_2017_leg_2_first_element['pct'] ?> % des votants.</p>
+                <p>Pour le second tour des législatives, la ville de <?= $ville['commune_nom'] ?> comptait <?= number_format($results_legislatives_last_first['inscrits'], 0, ',', ' ') ?> personnes inscrites sur les listes électorales. Seuls <?= number_format($results_legislatives_last_first['votants'], 0, ',', ' ') ?> habitants se sont déplacés aux urnes. Le <b>taux d'abstention était de <?= round($results_legislatives_last_first['abs'] / $results_legislatives_last_first['inscrits'] * 100)  ?> %</b>, contre 54 % au niveau national.</p>
+                <p>En tête, <?= $results_legislatives_last_first['prenom'] ?> <?= ucfirst(mb_strtolower($results_legislatives_last_first['nom'])) ?> a récolté <?= number_format($results_legislatives_last_first['voix'], 0, ',', ' ') ?> voix, soit <?= $results_legislatives_last_first['pct'] ?> % des votants.</p>
               <?php endif; ?>
               <?php if ($n_circos > 1): ?>
                 <p><?= $ville['commune_nom'] ?> étant une ville de taille importante, elle compte plusieurs députés. Découvrez ci-dessous les parlementaires élus pour la ville de <?= $ville['commune_nom'] ?>.</p>
               <?php endif; ?>
             </div>
             <div class="<?= $n_circos == 1 ? 'col-lg-5 justify-content-center' : 'col-lg-12 justify-content-around' ?> mt-4 d-flex flex-wrap bloc-elections">
-              <?php foreach ($results_2017_leg_2 as $key => $value): ?>
-                <div class="card mx-1 my-2">
+              <?php foreach ($results_legislatives_last as $key => $value): ?>
+                <div class="card mx-1 my-4">
                   <div class="card-body pb-0">
-                    <h3>Élection législative 2017</h3>
+                    <h3>Élection législative 2022</h3>
                     <span class="round"><?= reset($value)['circo'] ?><sup><?= abbrev_n(reset($value)['circo'], TRUE) ?></sup> circonscription - 2<sup>nd</sup> tour</span>
                     <div class="chart mt-3">
                       <div class="results d-flex flex-row justify-content-center align-items-center">
@@ -131,7 +131,7 @@
                       </div>
                     </div>
                   </div>
-                  <span url_obf="<?= url_obfuscation("https://www.interieur.gouv.fr/Elections/Les-resultats/Legislatives/elecresult__legislatives-2017/(path)/legislatives-2017/".$ville['interieurGouv']['dpt']."/".$ville['interieurGouv']['dpt']."0".reset($value)['circo']."".$ville['interieurGouv']['commune'].".html") ?>" class="url_obf no-decoration">
+                  <span url_obf="<?= url_obfuscation("https://www.interieur.gouv.fr/Elections/Les-resultats/Legislatives/elecresult__legislatives-2022/(path)/legislatives-2017/".$ville['interieurGouv']['dpt']."/".$ville['interieurGouv']['dpt']."0".reset($value)['circo']."".$ville['interieurGouv']['commune'].".html") ?>" class="url_obf no-decoration">
                     <div class="card-footer">
                       <p class="text-center mb-0">Plus d'infos</p>
                     </div>
@@ -158,8 +158,68 @@
           <?php endif; ?>
         </div>
         <div class="d-flex justify-content-around flex-wrap mt-4 pb-3 bloc-elections">
+          <?php if ($results_pres_2022[0]['votants'] > 0): ?>
+            <div class="card mx-1 my-4">
+              <div class="card-body pb-0">
+                <h3>Élection présidentielle 2022</h3>
+                <span class="round">2<sup>nd</sup> tour</span>
+                <div class="chart mt-3">
+                  <div class="results d-flex flex-row justify-content-center align-items-center">
+                    <?php foreach ($results_pres_2022 as $key => $value): ?>
+                      <div class="bar d-flex flex-row justify-content-center align-items-end">
+                        <div class="element d-flex align-items-center justify-content-center" style="height: <?= round($value['share']) ?>%">
+                          <span class="score"><?= round($value['share']) ?>%</span>
+                        </div>
+                      </div>
+                    <?php endforeach; ?>
+                  </div>
+                  <div class="names d-flex flex-row justify-content-center align-items-center">
+                    <?php foreach ($results_pres_2022 as $key => $value): ?>
+                      <div class="name">
+                        <p class="text-center"><?= $value['candidate'] ?></p>
+                      </div>
+                    <?php endforeach; ?>
+                  </div>
+                </div>
+              </div>
+              <span url_obf="<?= url_obfuscation("https://www.interieur.gouv.fr/Elections/Les-resultats/Presidentielles/elecresult__presidentielle-2017/(path)/presidentielle-2017/".$ville['interieurGouv']['region']."/".$ville['interieurGouv']['dpt']."/".$ville['interieurGouv']['dpt']."".$ville['interieurGouv']['commune'].".html") ?>" class="url_obf no-decoration">
+                <div class="card-footer">
+                  <p class="text-center mb-0">Plus d'infos</p>
+                </div>
+              </span>
+            </div>
+          <?php endif; ?>
+          <div class="card mx-1 my-4">
+            <div class="card-body pb-0">
+              <h3>Élections européennes 2019</h3>
+              <span class="round">Les 3 premiers partis politiques</span>
+              <div class="chart mt-3">
+                <div class="results d-flex flex-row justify-content-center align-items-center">
+                  <?php foreach ($results_2019_europe as $list): ?>
+                    <div class="bar d-flex flex-row justify-content-center align-items-end">
+                      <div class="element d-flex align-items-center justify-content-center" style="height: <?= round($list['value']) ?>%">
+                        <span class="score" style="color: #fff"><?= round($list['value']) ?>%</span>
+                      </div>
+                    </div>
+                  <?php endforeach; ?>
+                </div>
+                <div class="names d-flex flex-row justify-content-center align-items-center">
+                  <?php foreach ($results_2019_europe as $list): ?>
+                    <div class="name">
+                      <p class="text-center"><?= $list["partiName"] ?></p>
+                    </div>
+                  <?php endforeach; ?>
+                </div>
+              </div>
+            </div>
+            <span url_obf="<?= url_obfuscation("https://www.interieur.gouv.fr/Elections/Les-resultats/Europeennes/elecresult__europeennes-2019/(path)/europeennes-2019/".$ville['interieurGouv']['region']."/".$ville['interieurGouv']['dpt']."/".$ville['interieurGouv']['dpt']."".$ville['interieurGouv']['commune_europeennes'].".html") ?>" class="url_obf no-decoration">
+              <div class="card-footer">
+                <p class="text-center mb-0">Plus d'infos</p>
+              </div>
+            </span>
+          </div>
           <?php if ($results_pres_2017[0]['votants'] > 0): ?>
-            <div class="card mx-1 my-2">
+            <div class="card mx-1 my-4">
               <div class="card-body pb-0">
                 <h3>Élection présidentielle 2017</h3>
                 <span class="round">2<sup>nd</sup> tour</span>
@@ -189,60 +249,31 @@
               </span>
             </div>
           <?php endif; ?>
-          <div class="card mx-1 my-2">
-            <div class="card-body pb-0">
-              <h3>Élections européennes 2019</h3>
-              <span class="round">Les 3 premiers partis politiques</span>
-              <div class="chart mt-3">
-                <div class="results d-flex flex-row justify-content-center align-items-center">
-                  <?php foreach ($results_2019_europe as $list): ?>
-                    <div class="bar d-flex flex-row justify-content-center align-items-end">
-                      <div class="element d-flex align-items-center justify-content-center" style="height: <?= round($list['value']) ?>%">
-                        <span class="score" style="color: #fff"><?= round($list['value']) ?>%</span>
-                      </div>
-                    </div>
-                  <?php endforeach; ?>
-                </div>
-                <div class="names d-flex flex-row justify-content-center align-items-center">
-                  <?php foreach ($results_2019_europe as $list): ?>
-                    <div class="name">
-                      <p class="text-center"><?= $list["partiName"] ?></p>
-                    </div>
-                  <?php endforeach; ?>
-                </div>
-              </div>
-            </div>
-            <span url_obf="<?= url_obfuscation("https://www.interieur.gouv.fr/Elections/Les-resultats/Europeennes/elecresult__europeennes-2019/(path)/europeennes-2019/".$ville['interieurGouv']['region']."/".$ville['interieurGouv']['dpt']."/".$ville['interieurGouv']['dpt']."".$ville['interieurGouv']['commune_europeennes'].".html") ?>" class="url_obf no-decoration">
-              <div class="card-footer">
-                <p class="text-center mb-0">Plus d'infos</p>
-              </div>
-            </span>
-          </div>
-          <?php if ($results_pres_2022[0]['votants'] > 0): ?>
-            <div class="card mx-1 my-2">
+          <?php if ($results_leg_2017 && $n_circos == 1): ?>
+            <div class="card mx-1 my-4">
               <div class="card-body pb-0">
-                <h3>Élection présidentielle 2022</h3>
-                <span class="round">2<sup>nd</sup> tour</span>
+                <h3>Élections législatives 2017</h3>
+                <span class="round"><?= $results_leg_2017[0]['circo'] ?><sup>e</sup> circonscription - 2<sup>nd</sup> tour</span>
                 <div class="chart mt-3">
                   <div class="results d-flex flex-row justify-content-center align-items-center">
-                    <?php foreach ($results_pres_2022 as $key => $value): ?>
+                    <?php foreach ($results_leg_2017 as $candidate): ?>
                       <div class="bar d-flex flex-row justify-content-center align-items-end">
-                        <div class="element d-flex align-items-center justify-content-center" style="height: <?= round($value['share']) ?>%">
-                          <span class="score"><?= round($value['share']) ?>%</span>
+                        <div class="element d-flex align-items-center justify-content-center" style="height: <?= $candidate['pct'] ?>%">
+                          <span class="score"><?= round($candidate['pct']) ?>%</span>
                         </div>
                       </div>
                     <?php endforeach; ?>
                   </div>
                   <div class="names d-flex flex-row justify-content-center align-items-center">
-                    <?php foreach ($results_pres_2022 as $key => $value): ?>
+                    <?php foreach ($results_leg_2017 as $candidate): ?>
                       <div class="name">
-                        <p class="text-center"><?= $value['candidate'] ?></p>
+                        <p class="text-center"><?= $candidate['prenom'] . ' ' . ucfirst(mb_strtolower($candidate['nom'])) ?></p>
                       </div>
                     <?php endforeach; ?>
                   </div>
                 </div>
               </div>
-              <span url_obf="<?= url_obfuscation("https://www.interieur.gouv.fr/Elections/Les-resultats/Presidentielles/elecresult__presidentielle-2017/(path)/presidentielle-2017/".$ville['interieurGouv']['region']."/".$ville['interieurGouv']['dpt']."/".$ville['interieurGouv']['dpt']."".$ville['interieurGouv']['commune'].".html") ?>" class="url_obf no-decoration">
+              <span url_obf="<?= url_obfuscation("https://www.interieur.gouv.fr/Elections/Les-resultats/Legislatives/elecresult__legislatives-2017/(path)/legislatives-2017/".$ville['interieurGouv']['dpt']."/".$ville['interieurGouv']['dpt']."0".$results_leg_2017[0]['circo']."".$ville['interieurGouv']['commune'].".html") ?>" class="url_obf no-decoration">
                 <div class="card-footer">
                   <p class="text-center mb-0">Plus d'infos</p>
                 </div>
