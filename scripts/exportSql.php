@@ -18,7 +18,7 @@ function EXPORT_TABLES($host, $user, $pass, $name, $tables = false, $backup_name
       'departement',
       'elect_legislatives_infos',
       'elect_legislatives_results',
-      'elect_2017_leg_results_communes',
+      'elect_legislatives_cities',
       'elect_2017_pres_2',
       'elect_2019_europe',
       'elect_2019_europe_clean',

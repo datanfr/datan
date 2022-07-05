@@ -9,3 +9,6 @@
 
   $file = file_get_contents('sql/elect_legislatives_results.sql');
   $bdd->exec($file);
+
+  $file = file_get_contents('sql/elect_legislatives_cities.sql');
+  $bdd->exec($file);
