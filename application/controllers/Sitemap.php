@@ -156,7 +156,7 @@ class Sitemap extends CI_Controller {
     $urls = array();
     foreach ($departements as $dpt) {
       $slug = $dpt['slug'];
-      $cities = $this->city_model->get_communes_population($slug, 30);
+      $cities = $this->city_model->get_communes_by_dpt($slug, 4000);
       $dpt_slug = $dpt['slug'];
       foreach ($cities as $city) {
         if ($city['commune_slug'] != NULL) {
