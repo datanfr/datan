@@ -4,20 +4,16 @@
       $this->load->database();
     }
 
-    public function get_communes_population($slug, $limit = FALSE){
-      $sql = 'SELECT d.*, c.*
-        FROM circos c
-        LEFT JOIN departement d ON d.departement_code = c.dpt
-        LEFT JOIN cities_infos city ON c.insee = city.insee
-        WHERE d.slug = ?
-        GROUP BY c.commune_nom
-        ORDER BY city.pop2017 DESC
-      ';
-      if ($limit){
-        $sql .= ' LIMIT ' . $limit;
+    public function get_communes_by_dpt($slug, $max_population = FALSE){
+      if ($max_population) {
+        $this->db->where('city.pop2017 >', $max_population);
       }
-      $query = $this->db->query($sql, $slug);
-
+      $this->db->where('d.slug', $slug);
+      $this->db->join('departement d', 'd.departement_code = c.dpt');
+      $this->db->join('cities_infos city', 'c.insee = city.insee');
+      $this->db->group_by('c.commune_nom');
+      $this->db->order_by('city.pop2017', 'DESC');
+      $query = $this->db->get('circos c');
       return $query->result_array();
     }
 
