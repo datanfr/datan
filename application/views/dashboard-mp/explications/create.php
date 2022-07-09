@@ -11,6 +11,16 @@
         <div class="col-12 mt-5">
           <a class="btn btn-secondary" href="<?= base_url() ?>dashboard-mp/explications/liste">Retour</a>
           <h1 class="font-weight-bold mt-4"><?= $title ?></h1>
+          <?php if (!empty(validation_errors())): ?>
+            <div class="card bg-danger my-5">
+              <div class="card-header">
+                <h5>Champs non renseignés</h5>
+              </div>
+              <div class="card-body">
+                <?= validation_errors(); ?>
+              </div>
+            </div>
+          <?php endif; ?>
           <div class="card mt-5 card-primary card-outline">
             <div class="card-header">
               <h2 class="font-weight-bold text-primary h4">Rappel du vote</h2>
@@ -69,12 +79,12 @@
               <h2 class="font-weight-bold text-primary h4">Rédigez l'explication de vote</h2>
             </div>
             <div class="card-body">
-              <?= form_open_multipart('admin/votes/create'); ?>
+              <?= form_open_multipart('dashboard-mp/explications/create/l' . $legislature . 'v' . $voteNumero); ?>
                 <div class="form-group">
                   <label>Explication de vote (maximum 100 mots)</label>
                   <textarea id="textbox" name="explication" class="form-control" placeholder="Votre explication de vote" rows="5"></textarea>
                   <div class="d-flex justify-content-end">
-                    <span id="char_count">0/100</span>
+                    <span id="char_count">0/500</span>
                   </div>
                 </div>
                 <div class="form-group">
@@ -99,47 +109,3 @@
   <!-- /.content -->
 </div>
 <!-- /.content-wrapper -->
-
-<!-- Modal Create new vote -->
-<div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-  <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h4 class="modal-title font-weight-bold h5" id="exampleModalLongTitle">Cherchez un scrutin à expliquer</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <table class="table">
-          <thead>
-            <tr>
-              <th scope="col">Législature - numéro de vote</th>
-              <th scope="col">Titre vote Datan</th>
-              <th scope="col">Dossier</th>
-              <th></th>
-              <th></th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody>
-            <?php foreach ($votes_without as $key => $value): ?>
-              <tr>
-                <th scope="row"><?= $value['legislature'] ?> - <?= $value['voteNumero'] ?></th>
-                <td><?= $value['vote_titre'] ?></td>
-                <td>Dossier (A faire)</td>
-                <td>Lien AN</td>
-                <td>Lien Datan</td>
-                <td>Créez une explication</td>
-              </tr>
-            <?php endforeach; ?>
-          </tbody>
-        </table>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Save changes</button>
-      </div>
-    </div>
-  </div>
-</div>

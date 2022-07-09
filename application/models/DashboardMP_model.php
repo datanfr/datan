@@ -25,4 +25,8 @@ class DashboardMP_model extends CI_Model
     return $this->db->query($sql, array($depute_id))->result_array();
   }
 
+  public function create_explication(){
+    echo "yes";
+  }
+
 }
