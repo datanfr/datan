@@ -137,6 +137,8 @@
         show_404($this->functions_datan->get_404_infos());
       }
 
+      $data['legislature'] = $legislature;
+      $data['voteNumero'] = $voteNumero;
       $data['username'] = $this->session->userdata('username');
       $data['depute'] = $this->deputes_model->get_depute_by_mpId($this->session->userdata('mpId'));
       $data['depute']['gender'] = gender($data['depute']['civ']);
@@ -153,11 +155,20 @@
 
       $data['title'] = "Rédigez une explication de vote";
 
+      // Form valiation
+      $this->form_validation->set_rules('explication', 'Explication', 'required|max_length[500]');
+
+      // JS TO LOAD
       $data['js_to_load'] = array('dashboard/countChar');
 
-      $this->load->view('dashboard/header', $data);
-      $this->load->view('dashboard-mp/explications/create', $data);
-      $this->load->view('dashboard/footer');
+      if ($this->form_validation->run() === FALSE) {
+        $this->load->view('dashboard/header', $data);
+        $this->load->view('dashboard-mp/explications/create', $data);
+        $this->load->view('dashboard/footer');
+      } else {
+        $this->dashboardMP_model->create_explication();
+      }
+
     }
 
   }
