@@ -34,8 +34,13 @@
                   <td><?= $value['dossier'] ?></td>
                   <td class="text-center"><?= $value['dateScrutinFR'] ?></td>
                   <td class="text-center"><?= $value['vote_depute'] ?></td>
-                  <td><a class="btn btn-secondary" href="https://www2.assemblee-nationale.fr/scrutins/detail/(legislature)/<?= $value['legislature'] ?>/(num)/<?= $value['voteNumero'] ?>" target="_blank">Lien AN</a></td>
-                  <td><a class="btn btn-primary" href="<?= base_url() ?>dashboard-mp/explications/create/l<?= $value['legislature'] ?>v<?= $value['voteNumero'] ?>">Explication de vote</a></td>
+                  <td>
+                    <a class="btn btn-secondary d-flex align-items-center" href="https://www2.assemblee-nationale.fr/scrutins/detail/(legislature)/<?= $value['legislature'] ?>/(num)/<?= $value['voteNumero'] ?>" target="_blank">
+                      <?= file_get_contents(asset_url()."imgs/icons/box-arrow-up-right.svg") ?>
+                      <span class="ml-3">Assemblée</span>
+                    </a>
+                  </td>
+                  <td><a class="btn btn-primary" href="<?= base_url() ?>dashboard-mp/explications/create/l<?= $value['legislature'] ?>v<?= $value['voteNumero'] ?>">Explication</a></td>
                 </tr>
               <?php endforeach; ?>
             </tbody>
