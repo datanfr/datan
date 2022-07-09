@@ -44,6 +44,16 @@
               <a class="btn btn-primary my-3" href="../cache/delete_all" role="button">Delete all caching</a>
               <div class="card">
                 <div class="card-body">
+                  <h5 class="card-title">Update database : Add new table explications_mps</h5>
+                  <h6 class="card-subtitle text-muted">July 09, 2022</h6>
+                  <p class="card-text">
+                    <a class="btn btn-danger my-3" href="update_dataset/20220709_explications_mps.php" role="button">UPDATE DATABASE</a>
+                  </p>
+                </div>
+              </div>
+              <hr>
+              <div class="card">
+                <div class="card-body">
                   <h5 class="card-title">Update database : Add url for Legislatives 2022</h5>
                   <h6 class="card-subtitle text-muted">June 20, 2022</h6>
                   <p class="card-text">
