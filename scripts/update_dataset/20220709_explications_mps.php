@@ -5,7 +5,7 @@
     `id` INT NOT NULL AUTO_INCREMENT ,
     `voteNumero` INT NOT NULL ,
     `legislature` INT NOT NULL ,
-    `mpId` INT NOT NULL ,
+    `mpId` VARCHAR(15) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL ,
     `text` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL ,
     `state` VARCHAR(15) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL ,
     PRIMARY KEY (`id`))

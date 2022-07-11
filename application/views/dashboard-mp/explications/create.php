@@ -89,11 +89,11 @@
                 </div>
                 <div class="form-group">
                   <div class="form-check">
-                    <input class="form-check-input" type="radio" name="state" value="draft" checked="">
+                    <input class="form-check-input" type="radio" name="state" value="0" checked="">
                     <label class="form-check-label">Brouillon</label>
                   </div>
                   <div class="form-check">
-                    <input class="form-check-input" type="radio" name="state" value="published">
+                    <input class="form-check-input" type="radio" name="state" value="1">
                     <label class="form-check-label">Publié</label>
                   </div>
                 </div>

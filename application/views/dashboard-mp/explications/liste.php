@@ -40,7 +40,12 @@
                       <span class="ml-3">Assemblée</span>
                     </a>
                   </td>
-                  <td><a class="btn btn-primary" href="<?= base_url() ?>dashboard-mp/explications/create/l<?= $value['legislature'] ?>v<?= $value['voteNumero'] ?>">Explication</a></td>
+                  <td>
+                    <a class="btn btn-primary d-flex align-items-center" href="<?= base_url() ?>dashboard-mp/explications/create/l<?= $value['legislature'] ?>v<?= $value['voteNumero'] ?>">
+                      <?= file_get_contents(asset_url()."imgs/icons/pencil-square.svg") ?>
+                      <span class="ml-3">Explication</span>
+                    </a>
+                  </td>
                 </tr>
               <?php endforeach; ?>
             </tbody>
