@@ -239,6 +239,5 @@
 
     return $colour;
   }
-  }
 
 ?>
