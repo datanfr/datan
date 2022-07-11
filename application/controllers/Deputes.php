@@ -60,7 +60,7 @@
         }
 
         // PROXIMITY WITH ALL GROUPS
-        if ($legislature == legislature_current()) /*LEGISLATURE 15*/ {
+        if ($legislature == legislature_current()) /*LEGISLATURE 16*/ {
           $data['accord_groupes'] = $this->deputes_model->get_accord_groupes_actifs($mpId, legislature_current());
           $data['accord_groupes_all'] = $this->deputes_model->get_accord_groupes_all($mpId, legislature_current());
           // Positionnement politique
@@ -111,13 +111,18 @@
 
       if ($legislature == legislature_current()) {
         $data['active'] = TRUE;
+        $data['president'] = $this->deputes_model->get_president_an();
+        if ($data['president']) {
+          $data['president']['gender'] = gender($data['president']['civ']);
+        }
       } else {
         $data['active'] = FALSE;
       }
 
       $data['legislature'] = $legislature;
       $data['deputes'] = $this->deputes_model->get_deputes_all($legislature, $data['active'], NULL);
-      $data['groupes'] = $this->groupes_model->get_groupes_all($data['active'], $legislature);
+      $data['groupes'] = $this->groupes_model->get_groupes_from_mp_array($data['deputes']);
+      $data['groupes_mobile'] = $this->groupes_model->get_groupes_all($data['active'], $legislature);
       $number_gender = $this->deputes_model->get_deputes_gender($legislature);
       foreach ($number_gender as $gender) {
         if ($gender["gender"] == "male") {
@@ -128,7 +133,7 @@
           $data["female"]["percentage"] = $gender["percentage"];
         }
       }
-      $data['number_inactive'] = $this->deputes_model->get_n_deputes_inactive();
+      $data['number_inactive'] = $this->deputes_model->get_n_deputes_inactive($legislature);
 
       // Groupe_color
       foreach ($data['deputes'] as $key => $value) {
@@ -288,7 +293,7 @@
       $data['depute']['circo_abbrev'] = abbrev_n($data['depute']['circo'], TRUE); // circo number
       $data['politicalParty'] = $this->deputes_model->get_political_party($mpId); // political party
       $data['election_canceled'] = NULL;
-      if ($legislature == 15) { // Get election if 15th legislature
+      if ($legislature == 16) { // Get election if 16th legislature
         $data['election_canceled'] = $this->deputes_model->get_election_canceled($mpId, 15);
         $canceled = array(
           "Annulation de l'élection sur décision du Conseil constitutionnel",
@@ -296,10 +301,10 @@
         );
         if (!in_array($data['election_canceled']['causeFin'], $canceled)) {
           $data['election_canceled']['cause'] = NULL;
-          $data['election_result'] = $this->deputes_model->get_election_result($data['depute']['departementCode'], $data['depute']['circo'], $nameLast); // electoral result
+          $data['election_result'] = $this->deputes_model->get_election_result($data['depute']['departementCode'], $data['depute']['circo'], $nameLast, 2022); // electoral result
           if ($data['election_result']) { // Get electoral infos & mandat not canceled
-            $data['election_opponents'] = $this->deputes_model->get_election_opponent($data['depute']['departementCode'], $data['depute']['circo']);
-            $data['election_infos'] = $this->deputes_model->get_election_infos($data['depute']['departementCode'], $data['depute']['circo']);
+            $data['election_opponents'] = $this->deputes_model->get_election_opponent($data['depute']['departementCode'], $data['depute']['circo'], 2022);
+            $data['election_infos'] = $this->deputes_model->get_election_infos($data['depute']['departementCode'], $data['depute']['circo'], 2022);
             $data['election_infos']['abstention_rate'] = round($data['election_infos']['abstentions'] * 100 / $data['election_infos']['inscrits']);
             if ($data['election_infos']['tour'] == 2) { // elected at second round
               if ($data['election_opponents']) {
@@ -391,7 +396,7 @@
       // Historique du député
       $data['depute']['datePriseFonctionLettres'] = utf8_encode(strftime('%B %Y', strtotime($data['depute']['datePriseFonction'])));
       $data['mandat_edito'] = $this->depute_edito->get_nbr_lettre($data['depute']['mandatesN']);
-      $data['history_average'] = round($this->deputes_model->get_average_length_as_mp($mpId));
+      $data['history_average'] = round($this->deputes_model->get_average_length_as_mp(legislature_current()));
       $data['history_edito'] = $this->depute_edito->history(round($data['depute']['mpLength']/365), $data['history_average']);
       $data['mandats'] = $this->deputes_model->get_historique_mandats($mpId);
       $data['mandatsReversed'] = array_reverse($data['mandats']);
@@ -564,7 +569,7 @@
       }
 
       // Check if it is in legislature
-      if (!in_array($data['depute']['legislature'], array(15))) {
+      if (!$data['depute']['legislature'] >= 15) {
         show_404($this->functions_datan->get_404_infos());
       }
 
@@ -656,7 +661,7 @@
       }
 
       // Check if it is in legislature
-      if (!in_array($data['depute']['legislature'], array(15))) {
+      if (!$data['depute']['legislature'] >= 15) {
         show_404($this->functions_datan->get_404_infos());
       }
 

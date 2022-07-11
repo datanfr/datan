@@ -434,7 +434,7 @@ body.modal-open {
 }
 @include media-breakpoint-up(lg){
   .sticky-offset{
-    top: 120px;
+    top: 80px;
   }
 }
 @include media-breakpoint-down(md) {
@@ -733,7 +733,6 @@ body.modal-open {
       font-weight: 600;
       margin: 0 auto 5px;
       padding: 0px 5px 0px 65px;
-      margin: 10px 0px 10px 0px;
       position: relative;
       transition: .3s ease all;
       width: 100%;
@@ -887,6 +886,7 @@ input#quicksearch[type=text]{
   .img-group-cat{
     img {
       height: 85px;
+      border-radius: 10px;
       width: auto;
     }
   }
@@ -911,7 +911,6 @@ input#quicksearch[type=text]{
   .card-avatar{
     border-radius: 10%;
     padding: 10px;
-    background-color: #fff;
     img{
       margin-top: -5px;
     }
@@ -1088,6 +1087,10 @@ input#quicksearch[type=text]{
       .label{
         width: 110px;
       }
+    }
+    picture {
+      border-radius: 10px;
+      overflow: hidden;
     }
   }
 }
@@ -1799,6 +1802,11 @@ ul.ui-menu{
     font-weight: 800;
     color: $text-black;
   }
+  h3{
+    font-weight: 800;
+    color: $primary;
+    font-size: $h5-font-size;
+  }
   .bloc-titre{
     margin-top: 3rem;
   }
@@ -2087,6 +2095,11 @@ ul.ui-menu{
     font-size: $h2-font-size;
     font-weight: 800;
     color: $text-black;
+  }
+  h3{
+    font-weight: 800;
+    color: $primary;
+    font-size: $h5-font-size;
   }
   // END HN //
   .bloc-titre{

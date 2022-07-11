@@ -5,14 +5,14 @@
       <div class="img">
         <div class="d-flex justify-content-center">
           <picture>
-            <source srcset="<?= asset_url(); ?>imgs/groupes/webp/<?= $groupe['libelleAbrev'] ?>.webp" type="image/webp">
-            <source srcset="<?= asset_url(); ?>imgs/groupes/<?= $groupe['libelleAbrev'] ?>.png" type="image/png">
-            <img src="<?= asset_url(); ?>imgs/groupes/<?= $groupe['libelleAbrev'] ?>.png" width="150" height="150" alt="<?= $groupe['libelle'] ?>">
+            <source srcset="<?= asset_url(); ?>imgs/groupes/<?= $groupe['legislature'] ?>/webp/<?= $groupe['libelleAbrev'] ?>.webp" type="image/webp">
+            <source srcset="<?= asset_url(); ?>imgs/groupes/<?= $groupe['legislature'] ?>/<?= $groupe['libelleAbrev'] ?>.png" type="image/png">
+            <img src="<?= asset_url(); ?>imgs/groupes/<?= $groupe['legislature'] ?>/<?= $groupe['libelleAbrev'] ?>.png" width="150" height="150" alt="<?= $groupe['libelle'] ?>">
           </picture>
         </div>
       </div>
       <!-- INFOS GENERALES -->
-      <div class="bloc-infos">
+      <div class="bloc-infos mt-3">
         <<?= $tag ?> class="title d-block text-lg-left"><?= $title ?></<?= $tag ?>>
       </div>
       <!-- BIOGRAPHIE -->
@@ -28,10 +28,6 @@
               <div class="value"><?= $groupe['dateFinFR'] ?></div>
             </li>
           <?php endif; ?>
-          <li>
-            <div class="label">Effectif</div>
-            <div class="value"><?= $groupe['effectif'] ?> membres</div>
-          </li>
           <?php if ($groupe['libelleAbrev'] != "NI"): ?>
             <li>
               <div class="label">Président</div>
@@ -44,9 +40,9 @@
           <?php endif; ?>
         </ul>
       </div>
-      <div class="text-center mt-4">
+      <div class="text-center mt-2">
         <a class="btn btn-outline-primary" href="<?= base_url() ?>groupes/legislature-<?= $groupe['legislature'] ?>/<?= mb_strtolower($groupe['libelleAbrev']) ?>/membres">
-          Voir tous les membres
+          Voir les <?= $groupe['effectif'] ?> membres
         </a>
       </div>
     </div>

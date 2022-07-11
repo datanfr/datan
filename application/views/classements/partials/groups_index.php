@@ -7,9 +7,9 @@
       <div class="score mb-4">
         <div class="avatar">
           <picture>
-            <source srcset="<?= asset_url(); ?>imgs/groupes/webp/<?= $first["group"]["libelleAbrev"] ?>.webp" type="image/webp">
-            <source srcset="<?= asset_url(); ?>imgs/groupes/<?= $first["group"]["libelleAbrev"] ?>.png" type="image/png">
-            <img class="img" src="<?= asset_url(); ?>imgs/groupes/<?= $first["group"]["libelleAbrev"] ?>.png" width="150" height="150" alt="<?= $first["group"]["libelle"] ?>">
+            <source srcset="<?= asset_url(); ?>imgs/groupes/<?= $first["group"]["legislature"] ?>/webp/<?= $first["group"]["libelleAbrev"] ?>.webp" type="image/webp">
+            <source srcset="<?= asset_url(); ?>imgs/groupes/<?= $first["group"]["legislature"] ?>/<?= $first["group"]["libelleAbrev"] ?>.png" type="image/png">
+            <img class="img" src="<?= asset_url(); ?>imgs/groupes/<?= $first["group"]["legislature"] ?>/<?= $first["group"]["libelleAbrev"] ?>.png" width="150" height="150" alt="<?= $first["group"]["libelle"] ?>">
           </picture>
         </div>
         <div class="age">
@@ -29,9 +29,9 @@
       <div class="score mb-4">
         <div class="avatar">
           <picture>
-            <source srcset="<?= asset_url(); ?>imgs/groupes/webp/<?= $second["group"]['libelleAbrev'] ?>.webp" type="image/webp">
-            <source srcset="<?= asset_url(); ?>imgs/groupes/<?= $second["group"]['libelleAbrev'] ?>.png" type="image/png">
-            <img class="img" src="<?= asset_url(); ?>imgs/groupes/<?= $second["group"]['libelleAbrev'] ?>.png" width="150" height="150" alt="<?= $second["group"]['libelle'] ?>">
+            <source srcset="<?= asset_url(); ?>imgs/groupes/<?= $second["group"]["legislature"] ?>/webp/<?= $second["group"]['libelleAbrev'] ?>.webp" type="image/webp">
+            <source srcset="<?= asset_url(); ?>imgs/groupes/<?= $second["group"]["legislature"] ?>/<?= $second["group"]['libelleAbrev'] ?>.png" type="image/png">
+            <img class="img" src="<?= asset_url(); ?>imgs/groupes/<?= $second["group"]["legislature"] ?>/<?= $second["group"]['libelleAbrev'] ?>.png" width="150" height="150" alt="<?= $second["group"]['libelle'] ?>">
           </picture>
         </div>
         <div class="age">

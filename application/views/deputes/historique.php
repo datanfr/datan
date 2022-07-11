@@ -182,7 +182,7 @@
             </div>
           </div> <!-- END CARD LOYAUTE -->
           <!-- CARD MAJORITE -->
-          <?php if ($depute['libelleAbrev'] != "LAREM") : ?>
+          <?php if (!in_array($depute['groupeId'], majority_groups())): ?>
             <div class="card card-statistiques my-4">
               <div class="card-body">
                 <div class="row">

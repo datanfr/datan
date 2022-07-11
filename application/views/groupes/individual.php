@@ -1,7 +1,3 @@
-<div class="url_obf container-fluid quizBanner d-flex justify-content-center align-items-center py-4" url_obf="<?= url_obfuscation("https://quiz.datan.fr") ?>">
-  <span class="text">Avez-vous les mêmes idées que ce groupe ?&nbsp;</span>
-  <span class="quizz">👉 Faites le quiz !</span>
-</div>
 <div class="container-fluid bloc-img-deputes async_background" id="container-always-fluid" style="height: 13em"></div>
 <?php if (!empty($groupe['couleurAssociee'])): ?>
   <div class="liseret-groupe" style="background-color: <?= $groupe['couleurAssociee'] ?>"></div>
@@ -20,8 +16,7 @@
           <p>Ces députés peuvent cependant être membres d'un parti politique. Le parti politique est un groupement constitué hors de l'Assemblée nationale, alors que le <a href="http://www2.assemblee-nationale.fr/15/les-groupes-politiques/" target="_blank">groupe politique</a> est un organe officiel de l'Assemblée qui comporte au minimum 15 députés. Certains groupes, comme <a href="<?= base_url() ?>groupes/legislature-15/udi_i" target="_blank">UDI_I</a>, regroupent ainsi des députés venant de partis différents.</p>
           <p>Les <?= mb_strtolower($title) ?> ne sont pas représentés à la <a href="http://www2.assemblee-nationale.fr/15/la-conference-des-presidents" target="_blank">conférence des présidents</a> ni au <a href="http://www2.assemblee-nationale.fr/15/le-bureau-de-l-assemblee-nationale" target="_blank">bureau de l'Assemblée nationale</a>.</p>
           <p>Cependant, ils disposent de certains droits, comme l'attribution de temps de parole pour la discussion des textes (<i>art. 49</i> du <a href="http://www.assemblee-nationale.fr/connaissance/reglement.pdf" target="_blank">règlement de l'Assemblée nationale</a>).</p>
-          <p>Actuellement, le parti politique le plus représenté parmi les <?= mb_strtolower($title) ?> est le Rassemblement national (avec par exemple <a href="<?= base_url() ?>deputes/pas-de-calais-62/depute_marine-lepen" target="_blank">Marine Le Pen</a>). Avec seulement 7 députés, les élus du Rassemblement nationale n'atteignent pas les 15 députés nécessaires pour former leur propre groupe politique.</p>
-          <p>Parmi les <?= mb_strtolower($title) ?>, on retrouve également <a href="<?= base_url() ?>deputes/essonne-91/depute_nicolas-dupontaignan" target="_blank">Nicolas Dupont-Aignan</a>, du parti politique Debout La France, <a href="<?= base_url() ?>deputes/deux-sevres-79/depute_delphine-batho" target="_blank">Delphine Batho</a>, du parti écologiste Génération écologie, ainsi que d'anciens membres du groupe La République en Marche, comme <a href="<?= base_url() ?>deputes/indre-et-loire-37/depute_sabine-thillaye" target="_blank">Sabine Thillaye</a> ou <a href="<?= base_url() ?>deputes/nord-59/depute_jennifer-detemmerman" target="_blank">Jennifer de Temmerman</a>.</p>
+          <?= $groupe['ni_edited'] ?>
         <?php else: ?>
           <p>
             Le groupe <b><?= $groupe['libelle'] ?></b> (<?= $groupe['libelleAbrev'] ?>) <?= $active ? 'est' : 'était' ?> un groupe classé <?= $infos_groupes[$groupe['libelleAbrev']]['edited'] ?> de l'échiquier politique.
@@ -110,7 +105,7 @@
                   </div>
                   <div class="explanation">
                     <?php if ($groupe['legislature'] == legislature_current()): ?>
-                      <p>Les députés <?= !$active ? "qui étaient" : NULL ?> membres du groupe <?= $groupe['libelleAbrev'] ?> ont en moyenne <?= $groupe['age'] ?> ans. C'est plus <?= $ageEdited ?> que la moyenne de l'Assemblée nationale, qui est de <?= $ageMean ?> ans.</p>
+                      <p>Les députés <?= !$active ? "qui étaient" : NULL ?> membres du groupe <?= $groupe['libelleAbrev'] ?> ont en moyenne <?= $groupe['age'] ?> ans. C'est <?= $ageEdited ?> que la moyenne de l'Assemblée nationale, qui est de <?= $ageMean ?> ans.</p>
                       <?php else: ?>
                       <p>Les députés qui étaient membres du groupe <?= $groupe['libelleAbrev'] ?> avaient en moyenne <?= $groupe['age'] ?> ans lors de la fin de la <?= $groupe['legislature'] ?><sup>ème</sup> législature. C'est <?= $ageEdited ?> que la moyenne de l'Assemblée nationale, qui était de <?= $ageMean ?> ans.</p>
                     <?php endif; ?>
@@ -560,7 +555,7 @@
     <?php endif; ?>
     <div class="row">
       <div class="col-12">
-        <h2>Tous les groupes parlementaires en activité de la <?= $groupe['legislature'] ?><sup>ème</sup> législature</h2>
+        <h2>Tous les groupes parlementaires <?= $legislature == legislature_current() ? "en activité" : "" ?> de la <?= $groupe['legislature'] ?><sup>ème</sup> législature</h2>
         <div class="row mt-3">
           <?php foreach ($groupesActifs as $group): ?>
             <div class="col-6 col-md-4 py-2">

@@ -1,16 +1,4 @@
     </div>
-    <div class="shadow py-md-3" id="dialogueBoxQuiz" displayed="false" already_closed="<?= $this->session->userdata("already_closed") !== null ? $this->session->userdata("already_closed") : "0" ?>">
-      <span class="close cursor-pointer" id="closeDialogueBoxQuiz">
-        <span aria-hidden="true">&times;</span>
-      </span>
-      <div class="text-container d-flex flex-column justify-content-around">
-        <object class="d-none d-md-block" style="height: 110px" data="<?= asset_url()."imgs/quiz/phone.svg" ?>" type="image/svg+xml"></object>
-        <span class="text text-center font-weight-bold mt-2 mt-md-0">Êtes-vous proche de votre député ?</span>
-        <div class="d-flex justify-content-center">
-          <a class="btn btn-light url_obf text-center text-dark my-3 my-md-0" url_obf="<?= url_obfuscation("https://quiz.datan.fr") ?>">Faites le quiz !</a>
-        </div>
-      </div>
-    </div>
     </main>
     <!-- Modal Newsletter -->
     <div class="modal fade" id="newsletter" tabindex="-1" role="dialog" aria-labelledby="newsletterLabel" aria-hidden="true">
@@ -80,6 +68,9 @@
                   </p>
                   <p>
                     <a href="<?= base_url(); ?>statistiques/aide" class="no-decoration underline">Nos statistiques</a>
+                  </p>
+                  <p>
+                    <a href="<?= base_url(); ?>partis-politiques" class="no-decoration underline">Partis politiques</a>
                   </p>
                   <p>
                     <a href="https://www.helloasso.com/associations/datan/formulaires/1" target="_blank" rel="noopener" class="no-decoration underline">Dons</a>

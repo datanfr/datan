@@ -4,20 +4,16 @@
       $this->load->database();
     }
 
-    public function get_communes_population($slug, $limit = FALSE){
-      $sql = 'SELECT d.*, c.*
-        FROM circos c
-        LEFT JOIN departement d ON d.departement_code = c.dpt
-        LEFT JOIN cities_infos city ON c.insee = city.insee
-        WHERE d.slug = ?
-        GROUP BY c.commune_nom
-        ORDER BY city.pop2017 DESC
-      ';
-      if ($limit){
-        $sql .= ' LIMIT ' . $limit;
+    public function get_communes_by_dpt($slug, $max_population = FALSE){
+      if ($max_population) {
+        $this->db->where('city.pop2017 >', $max_population);
       }
-      $query = $this->db->query($sql, $slug);
-
+      $this->db->where('d.slug', $slug);
+      $this->db->join('departement d', 'd.departement_code = c.dpt');
+      $this->db->join('cities_infos city', 'c.insee = city.insee');
+      $this->db->group_by('c.commune_nom');
+      $this->db->order_by('city.pop2017', 'DESC');
+      $query = $this->db->get('circos c');
       return $query->result_array();
     }
 
@@ -100,18 +96,16 @@
       return $query->row_array();
     }
 
-    public function get_results_2017_leg_2($insee){
-      $sql = 'SELECT *, ROUND(voix / exprimes * 100) AS pct
-        FROM elect_2017_leg_results_communes res
-        WHERE insee = ?
-        ORDER BY circo DESC, voix DESC
-      ';
-      $query = $this->db->query($sql, $insee);
-
-      return $query->result_array();
+    public function get_results_legislatives($insee, $year){
+      $this->db->select('*, ROUND(voix / exprimes * 100) AS pct');
+      $this->db->where('insee', $insee);
+      $this->db->where('year', $year);
+      $this->db->order_by('circo', 'DESC');
+      $this->db->order_by('voix', 'DESC');
+      return $this->db->get('elect_legislatives_cities')->result_array();
     }
 
-    public function get_results_pres_2($dpt, $city, $election){
+    public function get_results_presidentielle($dpt, $city, $election){
       // Correction for Mayotte
       if ($dpt == 976 && $election == 2017) {
         $city = $city - 100;
