@@ -150,6 +150,13 @@
         redirect('dashboard-mp/explications/liste');
       }
 
+      // Check if already an explanation
+      $data['explication'] = $this->votes_model->get_explication($data['depute']['mpId'], $legislature, $voteNumero);
+      if ($data['explication']) {
+        $this->session->set_flashdata('flash_failure', "Vous avez déjà rédigé une explication pour ce vote n° " . $data["vote"]["voteNumero"] . ". Vous pouvez le modifier en <a href='".base_url()."dashboard-mp/explications/modify/l".$legislature."v".$voteNumero."'>cliquant ici</a>.");
+        redirect('dashboard-mp/explications/liste');
+      }
+
       $data['vote_depute']['vote'] = vote_edited($data['vote_depute']['vote']);
       $data['vote_depute']['positionGroup'] = vote_edited($data['vote_depute']['positionGroup']);
 
@@ -166,7 +173,8 @@
         $this->load->view('dashboard-mp/explications/create', $data);
         $this->load->view('dashboard/footer');
       } else {
-        $this->dashboardMP_model->create_explication();
+        $this->dashboardMP_model->create_explication($data);
+        redirect('dashboard-mp/explications');
       }
 
     }

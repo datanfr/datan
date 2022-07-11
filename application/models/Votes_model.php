@@ -640,4 +640,13 @@
       return $this->db->query($sql)->result_array();
     }
 
+    public function get_explication($mpId, $legislature, $voteNumero){
+      $where = array(
+        'mpId' => $mpId,
+        'legislature' => $legislature,
+        'voteNumero' => $voteNumero
+      );
+      return $this->db->get_where('explications_mp', $where, 1)->row_array();
+    }
+
   }

@@ -19,14 +19,22 @@ class DashboardMP_model extends CI_Model
       LEFT JOIN readings r ON r.id = vd.reading
       LEFT JOIN votes_dossiers vdoss ON vd.legislature = vdoss.legislature AND vd.voteNumero = vdoss.voteNumero
       LEFT JOIN dossiers doss ON vdoss.dossier = doss.titreChemin
-      WHERE vd.state = "published" AND vs.vote IS NOT NULL
+      LEFT JOIN explications_mp e ON vd.legislature = e.legislature AND vd.voteNumero = e.voteNumero AND e.mpId = ?
+      WHERE vd.state = "published" AND vs.vote IS NOT NULL AND e.text IS NULL
       ORDER BY vi.dateScrutin DESC
     ';
-    return $this->db->query($sql, array($depute_id))->result_array();
+    return $this->db->query($sql, array($depute_id, $depute_id))->result_array();
   }
 
-  public function create_explication(){
-    echo "yes";
+  public function create_explication($input){
+    $data = array(
+      'voteNumero' => $input['voteNumero'],
+      'legislature' => $input['legislature'],
+      'mpId' => $input['depute']['mpId'],
+      'text' =>  $this->input->post('explication'),
+      'state' => $this->input->post('state'),
+    );
+    return $this->db->insert('explications_mp', $data);
   }
 
 }
