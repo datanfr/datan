@@ -9,7 +9,7 @@
   <meta name="author" content="">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
   <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Open+Sans&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@600;800&display=swap" rel="stylesheet">
   <style media="screen">
     body{
       font-family: 'Open Sans', sans-serif;
@@ -22,6 +22,7 @@
       display: flex;
     }
     .container{
+      position: relative;
       display: flex;
       flex-direction: row;
       justify-content: space-between;
@@ -31,63 +32,69 @@
     .bottom{
       display: flex;
     }
-    .left{
-      width: 20%;
-      display: flex;
-      justify-content: flex-start;
-      align-items: flex-start;
-    }
-    .right{
-      width: 80%;
-      display: flex;
-      justify-content: flex-start;
-      align-items: flext-start;
-    }
-    .inside{
-      margin-top: 30px;
+    .content {
       width: 100%;
+      height: 100%;
+      position: absolute;
     }
-    .inside_right{
-      display: flex;
-      flex-direction: row;
-      justify-content: space-around;
-      align-items:center;
-      padding-right: 100px;
+    .logo-container {
+      position: absolute;
+      right: 0px;
+      top: 0px;
+      background-color: #fff;
+      border-bottom-left-radius: 35px;
     }
     #logo{
-      width: 200px;
+      width: 240px;
       height: auto;
       margin-left: 30px;
+      margin-top: 10px;
+    }
+    .inside{
+      width: 100%;
+      display: flex;
+      flex-direction: row;
+      justify-content: start;
+      align-items:center;
+      padding-left: 100px;
     }
     #photo{
       width: 300px;
       height: auto;
-      border-radius: 15px;
+      border-radius: 25px;
     }
     .titre{
-      padding: 75px;
-      display: flex;
-      flex-direction: column;
-      align-items: flex-end;
-
-    }
-    .prenom{
+      margin-left: 50px;
       color: white;
-      font-size: 60px;
+    }
+    .prenom {
       display: block;
+      line-height: 1;
       font-weight: 400;
       padding: 0;
       margin: 0;
-      text-align: right;
+      text-align: left;
     }
     .nom{
-      color: white;
-      font-size: 60px;
-      display: block;
       font-weight: 800;
+      line-height: 1;
       padding: 0;
       margin: 0;
-      text-align: right;
+      text-align: left;
+    }
+    .dpt {
+      font-size: 35px;
+      margin: 0;
+    }
+    .groupe {
+      font-size: 25px;
+      margin-top: 15px;
+    }
+    .groupeBorder{
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+      height: 30px;
     }
   </style>
 </head>
@@ -96,17 +103,15 @@
 
   include 'bdd-connexion.php';
 
-  $uid_url = $_GET['uid'];
+  $uid = $_GET['uid'];
 
   $donnees = $bdd->query('
-    SELECT d.mpId AS uid, d.nameFirst AS prenom, d.nameLast AS nom
+    SELECT d.mpId AS uid, d.nameFirst AS prenom, d.nameLast AS nom, d.active, d.civ,
+      d.libelle_2 AS dpt_libelle, d.departementNom, d.departementCode, d.libelle AS groupe, d.libelleAbrev AS groupeAbrev,
+      d.couleurAssociee AS groupeColor
     FROM deputes_last d
-    WHERE d.mpId = "'.$uid_url.'"
-    GROUP BY d.mpId
-    LIMIT 1
+    WHERE mpId = "' . $uid . '"
   ');
-
-  // PA332228
 
 ?>
 
@@ -115,36 +120,51 @@
   <?php
     while ($d = $donnees->fetch()) {
 
+      //print_r($d);
+
       // Check if exists in the file.
 
       $uid = $d['uid'];
       $prenom = $d['prenom'];
       $nom = $d['nom'];
-      echo $uid;
-      echo substr($uid, 2);
+
+      $filename = __DIR__ . "/../assets/imgs/deputes_ogp/original/ogp_deputes_" . $uid . ".png";
 
       ?>
 
-      <div id="element">
-        <div class="container">
-          <div class="left">
-            <div class="inside">
-              <img src="../assets/imgs/datan/logo_white_transp.png" alt="" id="logo">
+      <?php if (!file_exists($filename)): ?>
+        <div id="element">
+          <div class="container">
+            <div class="logo-container">
+              <img src="../assets/imgs/datan/logo_datan.png" alt="" id="logo" style="top: 0">
             </div>
-          </div>
-          <div class="right">
-            <div class="inside inside_right">
-              <div class="titre">
-                <h1 class="prenom"><?= $prenom ?></h1>
-                <h1 class="nom"><?= $nom ?></h1>
-              </div>
+            <?php if ($d['groupeColor']): ?>
+              <div class="groupeBorder" style="background-color: <?= $d['groupeColor'] ?>"></div>
+            <?php endif; ?>
+            <div class="inside">
               <div class="image">
                 <img src="../assets/imgs/deputes_original/depute_<?= substr($uid, 2) ?>.png" alt="img" id="photo">
+              </div>
+              <div class="titre">
+                <h1>
+                  <span class="prenom" style="font-size: <?= 3.5 / (strlen($nom) ** 0.30) ?>em;"><?= $prenom ?></span>
+                  <span class="nom" style="font-size: <?= 5 / (strlen($nom) ** 0.30) ?>em;"><?= $nom ?></span>
+                </h1>
+                <?php if ($d['active'] == 0): ?>
+                  <h2 class="dpt"><?= $d['civ'] == 'Mme' ? 'Ancienne députée' : 'Ancien député' ?> <?= $d['dpt_libelle'] ?><?= $d['departementNom'] ?> (<?= $d['departementCode'] ?>)</h2>
+                <?php else: ?>
+                  <h2 class="dpt"><?= $d['civ'] == 'Mme' ? 'Députée' : 'Député' ?> <?= $d['dpt_libelle'] ?> <?= $d['departementNom'] ?> (<?= $d['departementCode'] ?>)</h2>
+                <?php endif; ?>
+                <h3 class="groupe"><?= $d['groupe'] ?> (<?= $d['groupeAbrev'] ?>)</h3>
               </div>
             </div>
           </div>
         </div>
-      </div>
+        <?php break; ?>
+      <?php else: ?>
+        Og img already exists.
+      <?php endif; ?>
+
 
       <?php
     }
@@ -153,27 +173,35 @@
 <div class="render" id="render">
 </div>
 
+
 <script>
-  $( document ).ready(function() {
-    //alert("yes");
+  let div = document.getElementById('element'); // getting special div
+  let uid = '<?php echo $uid ?>';
 
-    //var elem = $('#element').get(0);
-    //var leba = "600";
-    //var ting = "400";
-    //var type = "bmp";
-    //var name = "temp"
-    //debugger;
+  html2canvas(div).then(canvas => {
 
-    html2canvas(document.querySelector("#element"), {letterRendering: 1, allowTaint: true, useCORS: true, logging: true} ).then(function (canvas) {
-      var dataURL = canvas.toDataURL("image/jpg", 1.0);
-      var a = document.createElement('a');
-      a.href = dataURL;
-      a.download = 'ogp_deputes_<?= $uid ?>.png';
-      document.body.appendChild(a);
-      document.body.appendChild(canvas)
-      a.click();
-    })
-  });
+    // create a new AJAX object
+    var ajax = new XMLHttpRequest();
+
+    // set the method to use, the backend file and set it requst as asynchrounous
+    ajax.open('POST', 'code_photos_ogp_save.php', true);
+
+    // set the request headers
+    ajax.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+
+    // set the image type to "img/jpeg" and quality to 1 (100%)
+    ajax.send("image=" + canvas.toDataURL("image/png", 1) + "&mpId=" + uid);
+
+    ajax.onreadystatechange = function () {
+      if (this.readyState == 4 && this.status == 200) {
+
+        // display the response sent from server
+        console.log(this.responseText);
+
+      }
+    }
+
+  })
 
   </script>
 

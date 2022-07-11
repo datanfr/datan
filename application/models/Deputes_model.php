@@ -51,8 +51,8 @@
       return $this->db->query($sql, $id)->result_array();
     }
 
-    public function get_n_deputes_inactive(){
-      $this->db->where('legislature = 15');
+    public function get_n_deputes_inactive($legislature){
+      $this->db->where('legislature', $legislature);
       $this->db->where('dateFin IS NOT NULL');
       return $this->db->count_all_results('deputes_all');
     }
@@ -188,6 +188,13 @@
       return $this->db->get_where('mandat_groupe', $where, 1)->row_array();
     }
 
+    public function get_president_an(){
+      $this->db->where('m.codeQualite', 'Président');
+      $this->db->where('m.dateFin IS NULL');
+      $this->db->join('deputes_last da', 'da.mpId = m.mpId', 'left');
+      return $this->db->get('mandat_principal m', 1)->row_array();
+    }
+
     public function get_commission_parlementaire($depute_uid){
       $sql = 'SELECT
         ms.libQualiteSex AS commissionCodeQualiteGender, o.libelle AS commissionLibelle, o.libelleAbrege AS commissionAbrege
@@ -226,37 +233,37 @@
       return $this->db->get_where('mandat_principal', $where)->row_array();
     }
 
-    public function get_election_result($dpt, $circo, $nom){
+    public function get_election_result($dpt, $circo, $nom, $year){
       $sql = 'SELECT candidat, voix, pct_exprimes,
         CASE
           WHEN tour = 2 THEN "2ème"
           WHEN tour = 1 THEN "1er"
         END AS tour_election
-        FROM elect_2017_leg_results
-        WHERE dpt = ? AND circo = ? AND elected = 1 AND candidat LIKE "%'.$this->db->escape_like_str($nom).'%"
+        FROM elect_legislatives_results
+        WHERE dpt = ? AND circo = ? AND year = ? AND elected = 1 AND candidat LIKE "%'.$this->db->escape_like_str($nom).'%"
         LIMIT 1
       ';
-      return $this->db->query($sql, array($dpt, $circo))->row_array();
+      return $this->db->query($sql, array($dpt, $circo, $year))->row_array();
     }
 
-    public function get_election_opponent($dpt, $circo){
+    public function get_election_opponent($dpt, $circo, $year){
       $sql = 'SELECT candidat, voix, pct_exprimes,
         CASE
           WHEN tour = 2 THEN "2ème"
           WHEN tour = 1 THEN "1er"
         END AS tour_election
-        FROM elect_2017_leg_results
-        WHERE dpt = ? AND circo = ? AND elected = 0
+        FROM elect_legislatives_results
+        WHERE dpt = ? AND circo = ? AND year = ? AND elected = 0
       ';
-      return $this->db->query($sql, array($dpt, $circo))->result_array();
+      return $this->db->query($sql, array($dpt, $circo, $year))->result_array();
     }
 
-    public function get_election_infos($dpt, $circo){
+    public function get_election_infos($dpt, $circo, $year){
       $sql = 'SELECT *
-        FROM elect_2017_leg_infos
-        WHERE dpt = ? AND circo = ?
+        FROM elect_legislatives_infos
+        WHERE dpt = ? AND circo = ? AND year = ?
       ';
-      return $this->db->query($sql, array($dpt, $circo))->row_array();
+      return $this->db->query($sql, array($dpt, $circo, $year))->row_array();
     }
 
     public function get_other_deputes($groupe_id, $depute_name, $depute_uid, $active, $legislature){
@@ -291,8 +298,9 @@
     }
 
     public function get_average_length_as_mp($legislature){
+      $where = array('legislature' => $legislature);
       $this->db->select('length');
-      $result = $this->db->get('history_mps_average', 1)->row_array();
+      $result = $this->db->get_where('history_mps_average', $where, 1)->row_array();
       return $result['length'];
     }
 
@@ -679,6 +687,16 @@
       }
       $result = $this->db->get('class_majorite c')->row_array();
       return($result['score']);
+    }
+
+    public function get_twitter_accounts($legislature){
+      $where = array(
+        'd.legislature' => $legislature,
+        'd.active' => 1
+      );
+      $this->db->order_by('d.nameLast', 'ASC');
+      $this->db->join('deputes_contacts dc', 'dc.mpId = d.mpId', 'left');
+      return $this->db->get_where('deputes_last d', $where)->result_array();
     }
 
   }

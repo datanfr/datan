@@ -8,15 +8,15 @@
   }
 
   function get_version(){
-    return 58;
+    return 61;
   }
 
   function legislature_current(){
-    return 15;
+    return 16;
   }
 
   function legislature_all(){
-    return array(14, 15);
+    return array(14, 15, 16);
   }
 
   function formatNumber($x){
@@ -34,7 +34,7 @@
   }
 
   function groupes_NI(){
-    return array("PO723569");
+    return array("PO266900", "PO387155", "PO645633", "PO723569", "PO793087");
   }
 
   function majority_group(){
@@ -68,14 +68,23 @@
       "UDI_I" => $center,
       "NG" => $left,
       "DEM" => $center,
-      "ECOLO" => $center,
+      "ECOLO" => $left,
       "LES-REP" => $right,
       "RRDP" => $left,
       "R-UMP" => $right,
       "SER" => $left,
       "SRC" => $left,
       "UDI" => $right,
-      "UMP" => $right
+      "UMP" => $right,
+      "RENAIS" => $center,
+      "RN" => $right,
+      "LFI" => $left,
+      "HORIZONS" => $right,
+      "LIOT" => $center,
+      "RE" => $center,
+      "LFI-NUPES" => $left,
+      "HOR" => $right,
+      "GDR-NUPES" => $left
     );
     return $array;
   }
@@ -219,6 +228,17 @@
       $output = NULL;
     }
     return $output;
+  }
+
+  function groupe_card_background($legislature, $groupe){
+    $colour = "#fff";
+
+    if ($legislature == 16 && $groupe == "LR") {
+      $colour = "#002A54";
+    }
+
+    return $colour;
+  }
   }
 
 ?>

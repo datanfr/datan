@@ -10,13 +10,13 @@ class Script
     private $legislature_current;
 
     // export the variables in environment
-    public function __construct($legislature = 15)
+    public function __construct($legislature = 16)
     {
         date_default_timezone_set('Europe/Paris');
         ini_set('memory_limit', '2048M');
-        $this->legislature_to_get = $legislature;
         $this->dateMaj = date('Y-m-d');
-        $this->legislature_current = 15;
+        $this->legislature_current = 16;
+        $this->legislature_to_get = $legislature;
         $this->intro = "[" . date('Y-m-d h:i:s') . "] ";
         echo $this->intro . "Launching the daily script for legislature " . $this->legislature_to_get . "\n";
         $this->time_pre = microtime(true);;
@@ -493,7 +493,7 @@ class Script
         $donnees = $this->bdd->query('
             SELECT d.mpId AS uid, d.legislature
             FROM deputes_last d
-            WHERE legislature IN (14, 15)
+            WHERE legislature IN (14, 15, 16)
         ');
 
         $originalFolder = __DIR__ . "/../assets/imgs/deputes_original/";
@@ -509,6 +509,7 @@ class Script
             // 1. Download original photo in deputes_original folder
 
             if (!file_exists($filename)) {
+                echo "Download MP " . $uid."\n";
                 if (substr(get_headers($url)[12], 9, 3) != '404' && substr(get_headers($url)[0], 9, 3) != '404') {
                     $content = file_get_contents($url);
                     if ($content) {
@@ -553,8 +554,7 @@ class Script
                     ));
                     $nobg = curl_exec($ch);
                     $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-                    $version = curl_getinfo($ch, CURLINFO_HTTP_VERSION);
-                    echo "VERSION" . $version . "\n";
+                    //$version = curl_getinfo($ch, CURLINFO_HTTP_VERSION);
                     if ($nobg && $httpCode == 200) {
                         file_put_contents($nobgfilename, $nobg);
                         echo "one nobg image was just downloaded from remove.bg \n";
@@ -577,6 +577,7 @@ class Script
         $files = scandir($dir);
         unset($files[0]);
         unset($files[1]);
+        unset($files[2]);
         echo "Number of photos in the deputes_original ==> " . count($files) . " \n";
 
         if (!file_exists($newdir)) mkdir($newdir);
@@ -601,6 +602,7 @@ class Script
         $files = scandir($dir);
         unset($files[0]);
         unset($files[1]);
+        unset($files[2]);
         echo "Number of photos in the deputes_nobg_import ==> " . count($files) . "\n";
 
         if (!file_exists($newdir)) mkdir($newdir);
@@ -626,7 +628,7 @@ class Script
         $donnees = $this->bdd->query('
             SELECT d.mpId AS uid, d.legislature
             FROM deputes_last d
-            WHERE legislature IN (14, 15)
+            WHERE legislature IN (14, 15, 16)
         ');
 
         while ($d = $donnees->fetch()) {
@@ -819,7 +821,7 @@ class Script
         $this->bdd->exec('
             CREATE TABLE deputes_last AS
             SELECT da.*, dpt.libelle_1, dpt.libelle_2,
-            CASE WHEN (legislature = 15 AND dateFin IS NULL) THEN 1 ELSE 0 END AS active
+            CASE WHEN (legislature = "' . $this->legislature_current . '" AND dateFin IS NULL) THEN 1 ELSE 0 END AS active
             FROM deputes_all da
             JOIN (
             SELECT mpId, MAX(legislature) AS legislatureLast
@@ -842,7 +844,7 @@ class Script
         $reponse = $this->bdd->query('
         SELECT da.mpId, da.nameFirst, da.nameLast, da.nameUrl, da.dptSlug
         FROM deputes_last da
-        WHERE da.legislature IN (14,15)
+        WHERE da.legislature >= 14
         ');
 
         $array = array();
@@ -881,7 +883,7 @@ class Script
         $reponse = $this->bdd->query('
             SELECT *
             FROM organes
-            WHERE legislature IN(14,15) AND coteType = "GP"
+            WHERE legislature >= 14 AND coteType = "GP"
         ');
 
         while ($data = $reponse->fetch()) {
@@ -892,7 +894,7 @@ class Script
               $age_response = $this->bdd->query('
                   SELECT da.groupeId AS organeRef, ROUND(AVG(age), 2) AS age, COUNT(age) as n
                   FROM deputes_all da
-                  WHERE da.groupeId = "' . $groupeId . '" AND da.legislature = 15 AND da.dateFin IS NULL
+                  WHERE da.groupeId = "' . $groupeId . '" AND da.legislature = "' . $this->legislature_current . '" AND da.dateFin IS NULL
               ');
             } elseif ($data['legislature'] == $this->legislature_current && $data['dateFin'] != NULL) {
               $age_response = $this->bdd->query('
@@ -938,7 +940,7 @@ class Script
                   SELECT groupeId, COUNT(mpId) AS n,
                   SUM(if(civ = "Mme", 1, 0)) AS female
                   FROM deputes_all
-                  WHERE groupeId = "' . $groupeId . '" AND legislature = 15 AND dateFin IS NULL
+                  WHERE groupeId = "' . $groupeId . '" AND legislature = "' . $this->legislature_current . '" AND dateFin IS NULL
                   GROUP BY groupeId
                   ) A
               ');
@@ -1092,8 +1094,12 @@ class Script
         echo "From " . $number_to_import . "\n";
 
         // SCRAPPING DEPENDING ON LEGISLATURE
-        if ($this->legislature_to_get == 15) {
-            $file = __DIR__ . '/Scrutins_XV.xml.zip';
+        if ($this->legislature_to_get >= 15) {
+            if ($this->legislature_to_get == 15) {
+              $file = __DIR__ . '/Scrutins_XV.xml.zip';
+            } elseif ($this->legislature_to_get == 16) {
+              $file = __DIR__ . '/Scrutins.xml.zip';
+            }
             $zip = new ZipArchive();
             if ($zip->open($file) !== TRUE) {
                 exit("cannot open <$file>\n");
@@ -1988,14 +1994,14 @@ class Script
                 )
                 ORDER BY voteNumero ASC
             ');
-        } elseif ($this->legislature_to_get == 15) {
+        } elseif ($this->legislature_to_get >= 15) {
             $votesLeft = $this->bdd->query('
                 SELECT voteNumero
                 FROM votes_info
-                WHERE legislature = 15 AND voteNumero NOT IN (
+                WHERE legislature = "' . $this->legislature_to_get . '" AND voteNumero NOT IN (
                     SELECT DISTINCT(voteNumero)
                     FROM votes_participation
-                    WHERE legislature = 15 AND voteNumero
+                    WHERE legislature = "' . $this->legislature_to_get . '" AND voteNumero
                 )
                 ORDER BY voteNumero ASC
             ');
@@ -2041,10 +2047,11 @@ class Script
     public function voteParticipationCommission()
     {
         echo "voteParticipationCommission starting \n";
-        if ($this->legislature_to_get == 15) {
+        if ($this->legislature_to_get >= 15) {
             $result = $this->bdd->query('
             SELECT voteNumero
             FROM votes_participation_commission
+            WHERE legislature = "' . $this->legislature_to_get . '"
             ORDER BY voteNumero DESC
             LIMIT 1
             ');
@@ -2052,7 +2059,6 @@ class Script
             $last = $result->fetch();
             $last_vote = isset($last['voteNumero']) ? $last['voteNumero'] + 1 : 1;
             echo 'Vote participation commission from : ' . $last_vote . "\n";
-            $legislature = 15;
 
             $votes = $this->bdd->query('
                 SELECT vi.voteNumero, vi.legislature, vi.dateScrutin, d.*, o.libelleAbrev
@@ -2060,7 +2066,7 @@ class Script
                 LEFT JOIN votes_dossiers vd ON vi.voteNumero = vd.voteNumero AND vi.legislature = vd.legislature
                 LEFT JOIN dossiers d ON vd.dossier = d.titreChemin AND d.legislature = vi.legislature
                 LEFT JOIN organes o ON d.commissionFond = o.uid
-                WHERE vi.voteNumero > "' . $last_vote . '" AND vi.legislature = 15
+                WHERE vi.voteNumero > "' . $last_vote . '" AND vi.legislature = "' . $this->legislature_to_get . '"
                 ORDER BY vi.voteNumero ASC
             ');
 
@@ -2374,8 +2380,13 @@ class Script
         $dossierFields = array('dossierId', 'legislature', 'titre', 'titreChemin', 'senatChemin', 'procedureParlementaireCode', 'procedureParlementaireLibelle', 'commissionFond');
         $dossier = [];
         $dossiers = [];
-        if ($this->legislature_to_get == 15) {
-            $file = __DIR__ . '/Dossiers_Legislatifs_XV.xml.zip';
+        if ($this->legislature_to_get >= 15) {
+            if ($this->legislature_to_get == 15) {
+              $file = __DIR__ . '/Dossiers_Legislatifs_XV.xml.zip';
+            } elseif ($this->legislature_to_get == 16) {
+              $file = __DIR__ . '/Dossiers_Legislatifs.xml.zip';
+            }
+
             $zip = new ZipArchive();
 
             if ($zip->open($file) !== TRUE) {
@@ -2469,8 +2480,12 @@ class Script
         $dossiersActeurs = [];
         $n = 1;
 
-        if ($this->legislature_to_get == 15) {
-            $file = __DIR__ . '/Dossiers_Legislatifs_XV.xml.zip';
+        if ($this->legislature_to_get >= 15) {
+            if ($this->legislature_to_get == 15) {
+              $file = __DIR__ . '/Dossiers_Legislatifs_XV.xml.zip';
+            } elseif ($this->legislature_to_get == 16) {
+              $file = __DIR__ . '/Dossiers_Legislatifs.xml.zip';
+            }
 
             $zip = new ZipArchive();
             if ($zip->open($file) !== TRUE) {
@@ -2660,8 +2675,12 @@ class Script
       $fields = array('id', 'dossierId', 'numNotice', 'titre', 'titreCourt');
       $insert = [];
 
-      if ($this->legislature_to_get == 15) {
-        $file = __DIR__ . '/Dossiers_Legislatifs_XV.xml.zip';
+      if ($this->legislature_to_get >= 15) {
+        if ($this->legislature_to_get == 15) {
+          $file = __DIR__ . '/Dossiers_Legislatifs_XV.xml.zip';
+        } elseif ($this->legislature_to_get == 16) {
+          $file = __DIR__ . '/Dossiers_Legislatifs.xml.zip';
+        }
 
         $zip = new ZipArchive();
         if ($zip->open($file) !== TRUE) {
@@ -2964,7 +2983,7 @@ class Script
         echo "historyMpsAverage starting \n";
         $this->bdd->query('DROP TABLE IF EXISTS history_mps_average;');
         $this->bdd->query('CREATE TABLE `history_mps_average` ( `id` TINYINT NOT NULL AUTO_INCREMENT , `legislature` TINYINT NOT NULL , `length` DECIMAL(4,2) NOT NULL , PRIMARY KEY (`id`)) ENGINE = MyISAM;');
-        $terms = array(14, 15);
+        $terms = array(14, 15, 16);
         foreach ($terms as $term) {
             echo "Getting average for term => " . $term . "\n";
             $this->bdd->query('
@@ -3282,6 +3301,7 @@ if (isset($argv[1])) {
 } else {
     $script = new Script();
 }
+
 $script->fillDeputes();
 $script->deputeAll();
 $script->deputeLast();
@@ -3293,34 +3313,34 @@ $script->deputeJson();
 $script->groupeStats();
 $script->parties();
 $script->legislature();
-$script->vote();
-$script->updateVoteInfo();
-$script->voteScore();
-$script->groupeCohesion();
-$script->groupeAccord();
-$script->deputeAccord();
-$script->voteParticipation();
-$script->votesDossiers();
-$script->dossier();
-$script->dossiersActeurs();
-$script->documentsLegislatifs();
-$script->amendements();
-$script->amendementsAuteurs();
-$script->voteParticipationCommission();
+$script->vote(); // Depend on the legislature
+$script->updateVoteInfo(); // Depend on the legislature
+$script->voteScore(); // Depend on the legislature
+$script->groupeCohesion(); // Depend on the legislature
+$script->groupeAccord(); // Depend on the legislature
+$script->deputeAccord(); // Depend on the legislature
+$script->voteParticipation(); // Depend on the legislature
+//$script->votesDossiers(); // Depend on the legislature --> reintroduce after first vote
+$script->dossier(); // Depend on the legislature
+$script->dossiersActeurs(); // Depend on the legislature
+$script->documentsLegislatifs(); // Depend on the legislature
+//$script->amendements(); // Need to be checked for leg 16
+//$script->amendementsAuteurs(); // Need to be checked for leg 16
+$script->voteParticipationCommission(); // Depend on the legislature
 $script->classParticipation();
-$script->classParticipationCommission();
+//$script->classParticipationCommission(); // Will need to be changed w/ leg 16
 $script->classParticipationSolennels();
 $script->deputeLoyaute();
 $script->classLoyaute();
 $script->classMajorite();
 $script->classGroups();
 $script->classGroupsProximite();
-$script->classParticipationSix();
-$script->classLoyauteSix();
+//$script->classParticipationSix(); // Will need to be changed w/ leg 16
+//$script->classLoyauteSix(); // Will need to be changed w/ leg 16
 $script->deputeAccordCleaned();
 $script->historyMpsAverage();
 $script->historyPerMpsAverage();
-//$script->parrainages();
+//$script->parrainages(); // No long used
 $script->opendata_activeMPs();
 $script->opendata_activeGroupes();
 $script->opendata_historyMPs();

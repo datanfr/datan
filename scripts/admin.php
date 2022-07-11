@@ -54,6 +54,16 @@
               <hr>
               <div class="card">
                 <div class="card-body">
+                  <h5 class="card-title">Update database : Electoral data (legislatives)</h5>
+                  <h6 class="card-subtitle text-muted">July 05, 2022</h6>
+                  <p class="card-text">
+                    <a class="btn btn-danger my-3" href="update_dataset/20220705_electoral_data.php" role="button">UPDATE DATABASE</a>
+                  </p>
+                </div>
+              </div>
+              <hr>
+              <div class="card">
+                <div class="card-body">
                   <h5 class="card-title">Update database : Add url for Legislatives 2022</h5>
                   <h6 class="card-subtitle text-muted">June 20, 2022</h6>
                   <p class="card-text">
