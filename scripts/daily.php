@@ -1091,7 +1091,7 @@ class Script
 
         $dernier_vote = $response_vote->fetch();
         $number_to_import = isset($dernier_vote['voteNumero']) ? $dernier_vote['voteNumero'] + 1 : 1;
-        echo "From " . $number_to_import . "\n";
+        echo "From vote n° " . $number_to_import . "\n";
 
         // SCRAPPING DEPENDING ON LEGISLATURE
         if ($this->legislature_to_get >= 15) {
@@ -1112,10 +1112,10 @@ class Script
                 $votesGroupe = [];
 
                 while (1) {
-                    $file_to_import = 'VTANR5L15V' . $number_to_import++;
+                    $file_to_import = 'VTANR5L' . $this->legislature_to_get . 'V' . $number_to_import++;
                     $xml_string = $zip->getFromName('xml/' . $file_to_import . '.xml');
                     if ($xml_string == false) { // Check if the AN file forgot to include one vote
-                      $file_to_import = 'VTANR5L15V' . ($number_to_import + 1);
+                      $file_to_import = 'VTANR5L' .  $this->legislature_to_get . 'V' . ($number_to_import + 1);
                       $xml_string = $zip->getFromName('xml/' . $file_to_import . '.xml');
                     }
                     if ($xml_string != false) {
