@@ -462,8 +462,8 @@
       }
 
       // Votes - groupes
-      $data['groupes'] = $this->votes_model->get_vote_groupes($data['vote']['voteNumero'], $data['vote']['dateScrutin'], $legislature);
-
+      $data['groupes'] = $this->votes_model->get_vote_groupes($data['vote']['voteNumero'], $legislature);
+      
       // Votes - députés
       $data['deputes'] = $this->votes_model->get_vote_deputes($data['vote']['voteNumero'], $legislature);
       // OTHER VOTES
