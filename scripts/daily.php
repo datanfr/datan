@@ -1765,7 +1765,7 @@ class Script
               WHERE v.voteType = "decompteNominatif" AND v.voteNumero >= "' . $lastVote . '" AND v.legislature = "' . $this->legislature_to_get . '"
               ) A
             LEFT JOIN votes_groupes vg ON vg.organeRef = A.organeRef AND vg.voteNumero = A.voteNumero AND vg.legislature = A.legislature
-            LEFT JOIN votes_groupes gvt ON gvt.organeRef IN ("PO730964", "PO713077", "PO656002") AND gvt.voteNumero = A.voteNumero AND gvt.legislature = A.legislature
+            LEFT JOIN votes_groupes gvt ON gvt.organeRef IN ("PO730964", "PO713077", "PO656002", "PO800538") AND gvt.voteNumero = A.voteNumero AND gvt.legislature = A.legislature
           ) B
         ');
         echo "requete ok\n";
@@ -2274,7 +2274,7 @@ class Script
                 SELECT ga.organeRef, ROUND(AVG(ga.accord), 3) AS majoriteAccord, COUNT(ga.accord) AS votesN
                 FROM groupes_accord ga
                 LEFT JOIN organes o ON o.uid = ga.organeRef
-                WHERE organeRefAccord IN ("PO730964", "PO713077", "PO656002")
+                WHERE organeRefAccord IN ("PO730964", "PO713077", "PO656002", "PO800538")
                 GROUP BY ga.organeRef
             ) m ON m.organeRef = c.organeRef;
             ALTER TABLE class_groups ADD INDEX idx_organeRef (organeRef);
