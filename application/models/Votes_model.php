@@ -309,11 +309,11 @@
         LEFT JOIN (
         SELECT organeRef, COUNT(*) AS n
         FROM mandat_groupe
-        WHERE legislature = 15 AND dateDebut <= ? AND (dateFin >= ? OR dateFin IS NULL) AND preseance != 1
+        WHERE legislature = ? AND dateDebut <= ? AND (dateFin >= ? OR dateFin IS NULL) AND preseance != 1
         GROUP BY organeRef) C
         ON B.organeRef = C.organeRef
       ';
-      return $this->db->query($sql, array($num, $legislature, $date, $date))->result_array();
+      return $this->db->query($sql, array($num, $legislature, $legislature, $date, $date))->result_array();
     }
 
     public function get_vote_groupes_simplified($num, $legislature){
