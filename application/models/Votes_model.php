@@ -292,28 +292,23 @@
       return $x;
     }
 
-    public function get_vote_groupes($num, $date, $legislature){
-      $sql = 'SELECT B.*, C.n AS total_deputes, ROUND((B.nombreVotants * 100) / C.n, 1) AS percentageVotants
-        FROM
-        (
-        SELECT A.*, A.nombrePours + A.nombreContres + A.nombreAbstentions AS nombreVotants, ROUND(gc.cohesion, 2) AS cohesion, gc.scoreGagnant, o.libelle, o.libelleAbrev, o.dateFin, o.positionPolitique, o.couleurAssociee
-        FROM
-        (
-        	SELECT *
-          FROM votes_groupes vg
-        	WHERE vg.voteNumero = ? AND vg.legislature = ?
+    public function get_vote_groupes($num, $legislature){
+      $sql = 'SELECT A.*,
+        CASE
+          WHEN A.pct < 0 THEN 0
+          WHEN A.pct IS NULL THEN 0
+          ELSE A.pct
+        END AS percentageVotants
+        FROM (
+          SELECT o.uid, o.libelle, o.libelleAbrev, o.legislature, vi.dateScrutin, vg.nombreMembresGroupe, vg.positionMajoritaire, vg.nombrePours, vg.nombreContres, vg.nombreAbstentions, vg.nonVotants, vg.nonVotantsVolontaires, gc.cohesion, gc.scoreGagnant, ROUND((vg.nombrePours + vg.nombreContres + vg.nombreAbstentions - vg.nonVotants) / vg.nombreMembresGroupe * 100) AS pct
+          FROM votes_info vi
+          LEFT JOIN organes o ON o.legislature = vi.legislature AND o.coteType = "GP" AND o.dateDebut <= vi.dateScrutin AND (o.dateFin >= vi.dateScrutin OR o.dateFin IS NULL)
+          LEFT JOIN votes_groupes vg ON vg.legislature = vi.legislature AND vg.voteNumero = vi.voteNumero AND vg.organeRef = o.uid
+          LEFT JOIN groupes_cohesion gc ON gc.legislature = vi.legislature AND gc.voteNumero = vi.voteNumero AND gc.organeRef = o.uid
+          WHERE vi.legislature = ? AND vi.voteNumero = ?
         ) A
-        LEFT JOIN groupes_cohesion gc ON A.voteNumero = gc.voteNumero AND A.organeRef = gc.organeRef
-        LEFT JOIN organes o ON A.organeRef = o.uid
-        ) B
-        LEFT JOIN (
-        SELECT organeRef, COUNT(*) AS n
-        FROM mandat_groupe
-        WHERE legislature = ? AND dateDebut <= ? AND (dateFin >= ? OR dateFin IS NULL) AND preseance != 1
-        GROUP BY organeRef) C
-        ON B.organeRef = C.organeRef
       ';
-      return $this->db->query($sql, array($num, $legislature, $legislature, $date, $date))->result_array();
+      return $this->db->query($sql, array($legislature, $num))->result_array();
     }
 
     public function get_vote_groupes_simplified($num, $legislature){
