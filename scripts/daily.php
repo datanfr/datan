@@ -1293,7 +1293,7 @@ class Script
                     } else {
                         break;
                     }
-                    if ($number_to_import % 50 === 0) {
+                    if ($number_to_import % 5 === 0) {
                         echo "Let's insert to scrutin from " . $number_to_import . "\n";
                         // insert votes
                         $this->insertAll('votes', $voteMainFields, $votesMain);
