@@ -1,8 +1,3 @@
-    <?php if ($legislature == 16): ?>
-      <div class="bg-danger py-3 px-5 d-flex justify-content-center">
-        <span class="font-weight-bold text-white text-center">Attention, du fait du début de la législature, les données fournies par l'Assemblée nationale ne sont pas encore toutes correctes. Nous travaillons à régler ce problème.</span>
-      </div>
-    <?php endif; ?>
     <div class="container-fluid bloc-img-deputes bloc-img d-flex async_background" id="container-always-fluid" style="position: relative">
       <?php if ($vote['edited']): ?>
         <div class="container pg-vote-individual d-none d-md-flex flex-column justify-content-end">
