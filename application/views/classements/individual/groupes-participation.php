@@ -26,7 +26,7 @@
             <?php $this->load->view('groupes/partials/card_home.php', array('groupe' => $groupsFirst, 'tag' => 'span', 'active' => TRUE, 'stats' => "Participation : " . round($groupsFirst["participation"], 2) . " %", 'cat' => true)) ?>
           </div>
           <div class="col-md-6 py-3">
-            <h2 class="text-center">Le plus divisé</h2>
+            <h2 class="text-center">Participe le moins</h2>
             <?php $this->load->view('groupes/partials/card_home.php', array('groupe' => $groupsLast, 'tag' => 'span', 'active' => TRUE, 'stats' => "Participation : " . round($groupsLast["participation"], 2) . " %", 'cat' => true)) ?>
           </div>
         </div>
