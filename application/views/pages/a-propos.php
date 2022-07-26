@@ -49,8 +49,8 @@
               </div>
             </div>
             <div class="card-body">
-              <h3 class="card-title president">Olivier Costa</h3>
-              <span class="font-italic"> - Président</span>
+              <h3 class="card-title president mb-0">Olivier Costa</h3>
+              <span class="font-italic d-block">Président</span>
               <span>Directeur de recherche au CNRS, CEVIPOF, Sciences Po Paris</span>
             </div>
           </div>
