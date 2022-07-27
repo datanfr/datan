@@ -277,7 +277,7 @@
 
         case 'LT':
         case 'LIOT':
-          $groupe['twitter'] = 'GroupeLibTerrAN';
+          $groupe['twitter'] = 'GroupeLIOT_An';
           $groupe['facebook'] = 'Groupe-Libertés-et-Territoires-à-lAssemblée-nationale-1898196496883591';
           break;
 
@@ -293,7 +293,7 @@
 
         case 'HOR':
           $groupe['website'] = 'https://horizonsleparti.fr/';
-          $groupe['twitter'] = 'HorizonsLeParti';
+          $groupe['twitter'] = 'Horizons_AN';
           $groupe['facebook'] = 'horizonsleparti';
 
         case 'ECOLO':
