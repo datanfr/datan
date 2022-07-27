@@ -257,6 +257,7 @@
           break;
 
         case 'FI':
+        case 'LFI-NUPES':
           $groupe['twitter'] = 'FiAssemblee';
           $groupe['facebook'] = 'FiAssemblee';
           break;
@@ -268,15 +269,37 @@
           break;
 
         case 'GDR':
+        case 'GDR-NUPES':
           $groupe['website'] = 'http://www.groupe-communiste.assemblee-nationale.fr/';
           $groupe['facebook'] = 'LesDeputesCommunistes';
           $groupe['twitter'] = 'deputesPCF';
           break;
 
         case 'LT':
+        case 'LIOT':
           $groupe['twitter'] = 'GroupeLibTerrAN';
           $groupe['facebook'] = 'Groupe-Libertés-et-Territoires-à-lAssemblée-nationale-1898196496883591';
           break;
+
+        case 'RE':
+          $groupe['twitter'] = 'LaREM_AN';
+          $groupe['facebook'] = 'deputesRenaissance';
+          break;
+
+        case 'RN':
+          $groupe['twitter'] = 'rnational_off';
+          $groupe['facebook'] = 'RassemblementNational';
+          break;
+
+        case 'HOR':
+          $groupe['website'] = 'https://horizonsleparti.fr/';
+          $groupe['twitter'] = 'HorizonsLeParti';
+          $groupe['facebook'] = 'horizonsleparti';
+
+        case 'ECOLO':
+          $groupe['website'] = 'https://www.eelv.fr/';
+          $groupe['twitter'] = 'EELV';
+          $groupe['facebook'] = 'eelv.fr';
 
         default:
           // code...
