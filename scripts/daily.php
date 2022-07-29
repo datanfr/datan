@@ -2084,7 +2084,7 @@ class Script
                       SELECT *
                       FROM votes_participation vp
                       LEFT JOIN mandat_secondaire ms ON vp.mpId = ms.mpId
-                      WHERE vp.voteNumero = "' . $voteNumero . '" AND ms.typeOrgane = "COMPER" AND ms.codeQualite = "Membre" AND ms.organeRef = "' . $commissionFond . '" AND ((DATE_ADD(ms.dateDebut, INTERVAL 1 MONTH) <= "' . $voteDate . '" AND ms.dateFin >= "' . $voteDate . '") OR (DATE_ADD(ms.dateDebut, INTERVAL 1 MONTH) <= "' . $voteDate . '" AND ms.dateFin IS NULL)) AND vp.participation IS NOT NULL
+                      WHERE vp.voteNumero = "' . $voteNumero . '" AND vp.legislature = "'.$this->legislature_to_get.'" AND ms.typeOrgane = "COMPER" AND ms.codeQualite = "Membre" AND ms.organeRef = "' . $commissionFond . '" AND ms.legislature = "' . $this->legislature_to_get . '" AND ((ms.dateDebut <= "' . $voteDate . '" AND ms.dateFin >= "' . $voteDate . '") OR (ms.dateDebut <= "' . $voteDate . '" AND ms.dateFin IS NULL)) AND vp.participation IS NOT NULL
                   ');
                     if ($deputes->rowCount() > 0) {
                         while ($depute = $deputes->fetch()) {
@@ -2140,22 +2140,22 @@ class Script
     public function classParticipationCommission()
     {
         echo "classParticipationCommission starting \n";
-        if ($this->legislature_to_get == 15) {
+        if ($this->legislature_to_get >= 15) {
             $this->bdd->query('
                 DROP TABLE IF EXISTS class_participation_commission;
                 CREATE TABLE class_participation_commission
-                SELECT A.*, da.legislature,
+                SELECT A.*,
                 CASE WHEN da.dateFin IS NULL THEN 1 ELSE 0 END AS active,
                 curdate() AS dateMaj
                 FROM
                 (
-                SELECT v.mpId, ROUND(AVG(v.participation),2) AS score, COUNT(v.participation) AS votesN, ROUND(COUNT(v.participation)/100) AS "index"
+                SELECT v.mpId, v.legislature, ROUND(AVG(v.participation),2) AS score, COUNT(v.participation) AS votesN, ROUND(COUNT(v.participation)/100) AS "index"
                 FROM votes_participation_commission v
                 WHERE v.participation IS NOT NULL
-                GROUP BY v.mpId
+                GROUP BY v.mpId, v.legislature
                 ORDER BY ROUND(COUNT(v.participation)/100) DESC, AVG(v.participation) DESC
                 ) A
-                LEFT JOIN deputes_all da ON da.mpId = A.mpId AND da.legislature = 15;
+                LEFT JOIN deputes_all da ON da.mpId = A.mpId AND da.legislature = A.legislature;
                 ALTER TABLE class_participation_commission ADD INDEX idx_mpId (mpId);
                 ALTER TABLE class_participation_commission ADD INDEX idx_active (active);
             ');
@@ -2343,11 +2343,11 @@ class Script
                         } else {
                             if (strpos($href, ".asp") !== false) {
                                 //echo "3";
-                                $dossier1 = str_replace('https://www.assemblee-nationale.fr/15/dossiers/', '', $href);
+                                $dossier1 = str_replace('https://www.assemblee-nationale.fr/'.$this->legislature_to_get.'/dossiers/', '', $href);
                                 $dossier = str_replace('.asp', '', $dossier1);
                             } else {
                                 //echo "4";
-                                $dossier = str_replace('https://www.assemblee-nationale.fr/dyn/15/dossiers/', '', $href);
+                                $dossier = str_replace('https://www.assemblee-nationale.fr/dyn/'.$this->legislature_to_get.'/dossiers/', '', $href);
                             }
                         }
                     }
@@ -2358,8 +2358,8 @@ class Script
 
                 $voteDossier = array('offset_num' => $offset, 'legislature' => $this->legislature_to_get, 'voteNumero' => $voteNumero, 'href' => $href, 'dossier' => $dossier);
                 $voteDossiers = array_merge($voteDossiers, array_values($voteDossier));
-                if ($i % 1000 === 0) {
-                    echo "Let's insert 1000 rows\n";
+                if ($i % 100 === 0) {
+                    echo "Let's insert 100 rows\n";
                     $this->insertAll('votes_dossiers', $voteDossiersFields, $voteDossiers);
                     $voteDossiers = [];
                 }
@@ -3320,7 +3320,7 @@ $script->groupeCohesion(); // Depend on the legislature
 $script->groupeAccord(); // Depend on the legislature
 $script->deputeAccord(); // Depend on the legislature
 $script->voteParticipation(); // Depend on the legislature
-//$script->votesDossiers(); // Depend on the legislature --> reintroduce after first vote
+$script->votesDossiers(); // Depend on the legislature
 $script->dossier(); // Depend on the legislature
 $script->dossiersActeurs(); // Depend on the legislature
 $script->documentsLegislatifs(); // Depend on the legislature
@@ -3328,7 +3328,7 @@ $script->documentsLegislatifs(); // Depend on the legislature
 //$script->amendementsAuteurs(); // Need to be checked for leg 16
 $script->voteParticipationCommission(); // Depend on the legislature
 $script->classParticipation();
-//$script->classParticipationCommission(); // Will need to be changed w/ leg 16
+$script->classParticipationCommission(); // Will need to be changed w/ leg 16
 $script->classParticipationSolennels();
 $script->deputeLoyaute();
 $script->classLoyaute();
