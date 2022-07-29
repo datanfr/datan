@@ -166,11 +166,11 @@
       $query = $this->db->query('SELECT @s:=@s+1 AS "rank", A.*
         FROM
         (
-          SELECT cg.organeRef, cg.cohesion, cg.active, o.libelle, o.libelleAbrev, o.couleurAssociee, o.legislature, ge.effectif
+          SELECT cg.organeRef, cg.value AS cohesion, cg.active, o.libelle, o.libelleAbrev, o.couleurAssociee, o.legislature, ge.effectif
           FROM class_groups cg
           LEFT JOIN organes o ON cg.organeRef = o.uid
           LEFT JOIN groupes_effectif ge ON ge.organeRef  = cg.organeRef
-          WHERE cg.active = 1
+          WHERE cg.active = 1 AND cg.stat = "cohesion"
         ) A,
         (SELECT @s:= 0) AS s
         ORDER BY A.cohesion DESC
@@ -246,14 +246,14 @@
       $query = $this->db->query('SELECT @s:=@s+1 AS "rank", A.*
         FROM
         (
-        SELECT cg.organeRef, ROUND(cg.participation * 100) AS participation, o.libelle, o.libelleAbrev, o.couleurAssociee, o.legislature, ge.effectif
+        SELECT cg.organeRef, cg.value, round(cg.value * 100) AS participation, o.libelle, o.libelleAbrev, o.couleurAssociee, o.legislature, ge.effectif
         FROM class_groups cg
         LEFT JOIN organes o ON cg.organeRef = o.uid
         LEFT JOIN groupes_effectif ge ON cg.organeRef = ge.organeRef
-        WHERE cg.active = 1
+        WHERE cg.active = 1 AND cg.stat = "participation"
         ) A,
         (SELECT @s:= 0) AS s
-        ORDER BY A.participation DESC
+        ORDER BY A.value DESC
       ');
 
       return $query->result_array();
