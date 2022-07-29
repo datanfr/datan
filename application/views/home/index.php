@@ -218,6 +218,9 @@
       </div>
       <div class="row pb-5">
         <div class="col-lg-8 offset-lg-2 d-flex flex-wrap justify-content-around align-items-center">
+          <a href="https://www.bfmtv.com/politique/infographie-assemblee-nationale-qui-sont-les-groupes-parlementaires-les-plus-proches_AV-202207260568.html" target="_blank" rel="noopener">
+            <img class="mx-2 my-3 img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="80" height="50" data-src="<?= asset_url() ?>imgs/media/bfm.jpg" alt="BFM TV">
+          </a>
           <span class="url_obf" url_obf="<?= url_obfuscation("https://www.leparisien.fr/info-paris-ile-de-france-oise/vote-assiduite-loyaute-comment-se-comportent-vos-deputes-franciliens-et-oisiens-21-01-2021-8420482.php") ?>">
             <img class="mx-2 my-3 img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="120" height="38" data-src="<?= asset_url() ?>imgs/media/le_parisien.png" alt="Le Parisien">
           </span>
