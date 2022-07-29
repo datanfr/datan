@@ -2241,46 +2241,103 @@ class Script
     public function classGroups()
     {
         echo "classGroups starting \n";
-        $this->bdd->query('
-            DROP TABLE IF EXISTS class_groups;
-            CREATE TABLE class_groups AS
-            SELECT c.organeRef, c.legislature, c.active, c.cohesion, c.votesN_cohesion, p.participation, p.votesN_participation, m.majoriteAccord, m.votesN AS votesN_majorite, curdate() AS dateMaj
-            FROM
-            (
-                SELECT gc.organeRef, gc.legislature, ROUND(AVG(gc.cohesion),3) AS cohesion, COUNT(voteNumero) AS votesN_cohesion,
-                CASE WHEN o.dateFin IS NULL THEN 1 ELSE 0 END AS active
-                FROM groupes_cohesion gc
-                LEFT JOIN organes o ON o.uid = gc.organeRef
-                GROUP BY gc.organeRef
-            ) c
-            LEFT JOIN
-            (
-            SELECT B.organeRef, AVG(B.participation_rate) AS participation, COUNT(voteNumero) AS votesN_participation
-            FROM
-            (
-                SELECT A.*, A.total / (A.n - A.nv) AS participation_rate
-                FROM
-                (
-                    SELECT vg.voteNumero, vg.organeRef, vg.nombreMembresGroupe as n, vg.nombrePours as pour, vg.nombreContres as contre, vg.nombreAbstentions as abstention, CASE WHEN vg.nonVotants IS NULL THEN 0 ELSE vg.nonVotants END AS nv, vg.nonVotantsVolontaires as nvv, vg.nombrePours+vg.nombreContres+vg.nombreAbstentions as total
-                    FROM votes_groupes vg
-                    LEFT JOIN votes_info vi ON vg.voteNumero = vi.voteNumero AND vg.legislature = vi.legislature
-                    WHERE vi.codeTypeVote = "SPS"
-                ) A
-            ) B
-            GROUP BY B.organeRef
-            ) p ON p.organeRef = c.organeRef
-            LEFT JOIN
-            (
-                SELECT ga.organeRef, ROUND(AVG(ga.accord), 3) AS majoriteAccord, COUNT(ga.accord) AS votesN
-                FROM groupes_accord ga
-                LEFT JOIN organes o ON o.uid = ga.organeRef
-                WHERE organeRefAccord IN ("PO730964", "PO713077", "PO656002", "PO800538")
-                GROUP BY ga.organeRef
-            ) m ON m.organeRef = c.organeRef;
-            ALTER TABLE class_groups ADD INDEX idx_organeRef (organeRef);
-            ALTER TABLE class_groups ADD INDEX idx_active (active);
-            ALTER TABLE class_groups ADD INDEX idx_legislature (legislature);
+
+        $this->bdd->query('DROP TABLE IF EXISTS `class_groups`');
+        $this->bdd->query('CREATE TABLE IF NOT EXISTS `class_groups` (
+            `organeRef` varchar(15) NOT NULL,
+            `legislature` int(5) NOT NULL,
+            `active` int(1) NOT NULL DEFAULT "0",
+            `stat` varchar(25) NOT NULL,
+            `value` decimal(6,3) NULL DEFAULT NULL,
+            `votes` bigint(21) NULL DEFAULT NULL,
+            `dateMaj` date NOT NULL,
+            KEY `idx_organeRef` (`organeRef`),
+            KEY `idx_active` (`active`),
+            KEY `idx_legislature` (`legislature`)
+          ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
         ');
+
+        $fields = array('organeRef', 'legislature', 'active', 'stat', 'value', 'votes', 'dateMaj');
+
+        $groups = $this->bdd->query('SELECT * FROM organes WHERE coteType = "GP" AND legislature >= 14 ORDER BY legislature ASC');
+
+        while ($group = $groups->fetch()) {
+          $uid = $group['uid'];
+
+          echo "data for " . $group['libelle'] . " (" . $group['libelleAbrev'] . ") - legislature : " . $group['legislature'] . " \n";
+
+          $active = $group['dateFin'] ? 0 : 1;
+
+          /// --- COHESION --- ///
+          $cohesionQuery = $this->bdd->query('SELECT organeRef, round(avg(cohesion), 3) AS mean, count(cohesion) AS n
+            FROM groupes_cohesion
+            WHERE organeRef = "' . $uid . '"
+            LIMIT 1
+          ');
+          $cohesion = $cohesionQuery->fetch();
+
+          /// --- MAJORITE --- ///
+          $majorityQuery = $this->bdd->query('SELECT organeRef, ROUND(AVG(accord), 3) AS mean,  COUNT(accord) AS n
+            FROM groupes_accord
+            WHERE organeRefAccord IN ("PO730964", "PO713077", "PO656002", "PO800538") AND organeRef = "' . $uid . '"
+            LIMIT 1
+          ');
+          $majority = $majorityQuery->fetch();
+
+          /// --- PARTICIPATION ALL --- ///
+          $participationQuery = $this->bdd->query('SELECT organeRef, ROUND(avg(B.participation_rate), 3) AS mean, COUNT(B.participation_rate) AS n
+            FROM
+            (
+              SELECT A.*, round(A.total / (A.n - A.nv), 3) AS participation_rate
+              FROM
+              (
+              	SELECT vg.voteNumero, vg.organeRef, vg.nombreMembresGroupe as n, vg.nombrePours as pour, vg.nombreContres as contre, vg.nombreAbstentions as abstention, CASE WHEN vg.nonVotants IS NULL THEN 0 ELSE vg.nonVotants END AS nv, vg.nonVotantsVolontaires as nvv, vg.nombrePours+vg.nombreContres+vg.nombreAbstentions as total
+              	FROM votes_groupes vg
+              	WHERE vg.organeRef = "' . $uid . '"
+              ) A
+            ) B
+          ');
+          $participation = $participationQuery->fetch();
+
+          /// --- PARTICIPATION SOLENNELS --- ///
+          $participationSPSQuery = $this->bdd->query('SELECT organeRef, ROUND(avg(B.participation_rate), 3) AS mean, COUNT(B.participation_rate) AS n
+            FROM
+            (
+              SELECT A.*, round(A.total / (A.n - A.nv), 3) AS participation_rate
+              FROM
+              (
+              	SELECT vg.voteNumero, vg.organeRef, vg.nombreMembresGroupe as n, vg.nombrePours as pour, vg.nombreContres as contre, vg.nombreAbstentions as abstention, CASE WHEN vg.nonVotants IS NULL THEN 0 ELSE vg.nonVotants END AS nv, vg.nonVotantsVolontaires as nvv, vg.nombrePours+vg.nombreContres+vg.nombreAbstentions as total
+              	FROM votes_groupes vg
+                LEFT JOIN votes_info vi ON vg.voteNumero = vi.voteNumero AND vg.legislature = vi.legislature
+              	WHERE vg.organeRef = "' . $uid . '" AND codeTypeVote = "SPS"
+              ) A
+            ) B
+          ');
+          $participationSPS = $participationSPSQuery->fetch();
+
+          /// --- PARTICIPATION COMMISSION --- ///
+          $participationCommissionQuery = $this->bdd->query('SELECT round(avg(score), 3) AS mean, round(avg(votesN)) as n
+            FROM class_participation_commission c
+            LEFT JOIN deputes_all d ON d.mpId = c.mpId AND d.legislature = c.legislature
+            WHERE d.groupeId = "' . $uid . '"
+          ');
+          $participationCommission = $participationCommissionQuery->fetch();
+
+          /// --- INSERT THE DATA --- ///
+          // Cohesion
+          $insertCohesion = array($uid, $group['legislature'], $active, 'cohesion', $cohesion['mean'], $cohesion['n'], $this->dateMaj);
+          $this->insertAll('class_groups', $fields, $insertCohesion);
+          $insertMajority = array($uid, $group['legislature'], $active, 'majority', $majority['mean'], $majority['n'], $this->dateMaj);
+          $this->insertAll('class_groups', $fields, $insertMajority);
+          $insertParticipation = array($uid, $group['legislature'], $active, 'participation', $participation['mean'], $participation['n'], $this->dateMaj);
+          $this->insertAll('class_groups', $fields, $insertParticipation);
+          $insertParticipationSPS = array($uid, $group['legislature'], $active, 'participationSPS', $participationSPS['mean'], $participationSPS['n'], $this->dateMaj);
+          $this->insertAll('class_groups', $fields, $insertParticipationSPS);
+          $insertParticipationCommission = array($uid, $group['legislature'], $active, 'participationCommission', $participationCommission['mean'], $participationCommission['n'], $this->dateMaj);
+          $this->insertAll('class_groups', $fields, $insertParticipationCommission);
+
+        }
+
     }
 
     public function classGroupsProximite()
@@ -3195,7 +3252,7 @@ class Script
 
     public function opendata_activeGroupes()
     {
-      $query = "SELECT
+      $query = 'SELECT
       	o.uid AS id,
       	o.legislature,
           o.libelle,
@@ -3208,16 +3265,18 @@ class Script
           gs.womenPct as women,
           gs.age AS age,
           gs.rose_index AS scoreRose,
-          class.cohesion AS socreCohesion,
-          ROUND(class.participation, 3) AS scoreParticipation,
-          class.majoriteAccord AS scoreMajorite,
+          cohesion.value AS socreCohesion,
+          participation.value AS scoreParticipation,
+          majority.value AS scoreMajorite,
           curdate() as dateMaj
       FROM organes o
       LEFT JOIN groupes_stats gs ON gs.organeRef = o.uid
       LEFT JOIN groupes_effectif ge ON ge.organeRef = o.uid
-      LEFT JOIN class_groups class ON class.organeRef = o.uid
-      WHERE o.coteType = 'GP' AND o.dateFin IS NULL
-      ";
+      LEFT JOIN class_groups cohesion ON cohesion.organeRef = o.uid AND cohesion.stat = "cohesion"
+      LEFT JOIN class_groups participation ON participation.organeRef = o.uid AND participation.stat = "participation"
+      LEFT JOIN class_groups majority ON majority.organeRef = o.uid AND majority.stat = "majority"
+      WHERE o.coteType = "GP" AND o.dateFin IS NULL
+      ';
 
       $this->opendata($query, "groupes_active.csv", "60ed57a9f0c7c3a1eb29733f", "4612d596-9a78-4ec6-b60c-ccc1ee11f8c0");
     }
@@ -3266,7 +3325,7 @@ class Script
 
     public function opendata_historyGroupes()
     {
-      $query = "SELECT
+      $query = 'SELECT
       	o.uid AS id,
       	o.legislature,
           o.libelle,
@@ -3279,17 +3338,19 @@ class Script
           gs.womenPct as women,
           gs.age AS age,
           gs.rose_index AS scoreRose,
-          class.cohesion AS socreCohesion,
-          ROUND(class.participation, 3) AS scoreParticipation,
-          class.majoriteAccord AS scoreMajorite,
+          cohesion.value AS socreCohesion,
+          participation.value AS scoreParticipation,
+          majority.value AS scoreMajorite,
           CASE WHEN o.dateFin IS NULL THEN 1 ELSE 0 END AS active,
           curdate() as dateMaj
       FROM organes o
       LEFT JOIN groupes_stats gs ON gs.organeRef = o.uid
       LEFT JOIN groupes_effectif ge ON ge.organeRef = o.uid
-      LEFT JOIN class_groups class ON class.organeRef = o.uid
-      WHERE o.coteType = 'GP' AND o.legislature >= 14
-      ";
+      LEFT JOIN class_groups cohesion ON cohesion.organeRef = o.uid AND cohesion.stat = "cohesion"
+      LEFT JOIN class_groups participation ON participation.organeRef = o.uid AND participation.stat = "participation"
+      LEFT JOIN class_groups majority ON majority.organeRef = o.uid AND majority.stat = "majority"
+      WHERE o.coteType = "GP" AND o.legislature >= 14
+      ';
 
       $this->opendata($query, "groupes-historique.csv", "60f30419135bec6a5e480086", "530940ab-45f3-41e3-8de3-759568c728b8");
     }
