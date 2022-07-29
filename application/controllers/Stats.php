@@ -296,7 +296,15 @@
         $data['title'] = "La participation des députés";
       } elseif ($url == "groupes-participation") {
         // Data
-        $data['groups'] = $this->stats_model->get_groups_participation();
+        $data['votes_sps'] = $this->stats_model->get_groups_participation_sps();
+        $data['votes_commission'] = $this->stats_model->get_groups_participation_commission();
+        $data['votes_all'] = $this->stats_model->get_groups_participation();
+        $data['average'] = $this->groupes_model->get_stats_avg(legislature_current());
+
+        $data['n_sps'] = $this->votes_model->get_n_votes(legislature_current(), NULL, NULL, 'SPS');
+        $data['votesN'] = $this->votes_model->get_n_votes(legislature_current(), NULL, NULL);
+
+        $data['groups'] = $data['n_sps'] < 10 ? $data['votes_all'] : $data['votes_sps'];
         if ($data['groups']) {
           $data['groupsFirst'] = $data['groups'][0];
           $data['groupsFirst']['couleurAssociee'] = $this->groupes_model->get_groupe_color(array($data['groupsFirst']['libelleAbrev'], $data['groupsFirst']['couleurAssociee']));
