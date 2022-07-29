@@ -309,29 +309,35 @@
     }
 
     public function get_stats($groupe_uid){
-      $sql = 'SELECT *,
-        ROUND(cohesion, 2) AS cohesion,
-        ROUND(participation * 100) AS participation,
-        ROUND(majoriteAccord * 100) AS majorite
-        FROM class_groups
-        WHERE organeRef = ?
-      ';
-      $query = $this->db->query($sql, $groupe_uid);
+      $query = $this->db->get_where('class_groups', array('organeRef' => $groupe_uid));
+      $results = $query->result_array();
 
-      return $query->row_array();
+      foreach ($results as $key => $value) {
+        if ($value['stat'] == 'cohesion') {
+          $return[$value['stat']] = array('value' => $value['value'], 'votes' => $value['votes']);
+        } else {
+          $return[$value['stat']] = array('value' => round($value['value'] * 100), 'votes' => $value['votes']);
+        }
+      }
+      return $return;
     }
 
     public function get_stats_avg($legislature){
-      $sql = 'SELECT
-        ROUND(AVG(cohesion), 2) AS cohesion,
-        ROUND(AVG(participation) * 100) AS participation,
-        ROUND(AVG(majoriteAccord) * 100) AS majorite
+      $sql = 'SELECT stat, ROUND(AVG(value), 3) AS mean
         FROM class_groups
         WHERE legislature = ?
+        GROUP BY stat
       ';
       $query = $this->db->query($sql, $legislature);
-
-      return $query->row_array();
+      $results = $query->result_array();
+      foreach ($results as $key => $value) {
+        if ($value['stat'] == 'cohesion') {
+          $return[$value['stat']] = $value['mean'];
+        } else {
+          $return[$value['stat']] = round($value['mean'] * 100);
+        }
+      }
+      return $return;
     }
 
 
