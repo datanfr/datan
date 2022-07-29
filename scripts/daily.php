@@ -2337,7 +2337,7 @@ class Script
           $this->insertAll('class_groups', $fields, $insertParticipationCommission);
 
         }
-        
+
     }
 
     public function classGroupsProximite()
@@ -3252,7 +3252,7 @@ class Script
 
     public function opendata_activeGroupes()
     {
-      $query = "SELECT
+      $query = 'SELECT
       	o.uid AS id,
       	o.legislature,
           o.libelle,
@@ -3265,16 +3265,18 @@ class Script
           gs.womenPct as women,
           gs.age AS age,
           gs.rose_index AS scoreRose,
-          class.cohesion AS socreCohesion,
-          ROUND(class.participation, 3) AS scoreParticipation,
-          class.majoriteAccord AS scoreMajorite,
+          cohesion.value AS socreCohesion,
+          participation.value AS scoreParticipation,
+          majority.value AS scoreMajorite,
           curdate() as dateMaj
       FROM organes o
       LEFT JOIN groupes_stats gs ON gs.organeRef = o.uid
       LEFT JOIN groupes_effectif ge ON ge.organeRef = o.uid
-      LEFT JOIN class_groups class ON class.organeRef = o.uid
-      WHERE o.coteType = 'GP' AND o.dateFin IS NULL
-      ";
+      LEFT JOIN class_groups cohesion ON cohesion.organeRef = o.uid AND cohesion.stat = "cohesion"
+      LEFT JOIN class_groups participation ON participation.organeRef = o.uid AND participation.stat = "participation"
+      LEFT JOIN class_groups majority ON majority.organeRef = o.uid AND majority.stat = "majority"
+      WHERE o.coteType = "GP" AND o.dateFin IS NULL
+      ';
 
       $this->opendata($query, "groupes_active.csv", "60ed57a9f0c7c3a1eb29733f", "4612d596-9a78-4ec6-b60c-ccc1ee11f8c0");
     }
@@ -3323,7 +3325,7 @@ class Script
 
     public function opendata_historyGroupes()
     {
-      $query = "SELECT
+      $query = 'SELECT
       	o.uid AS id,
       	o.legislature,
           o.libelle,
@@ -3336,17 +3338,19 @@ class Script
           gs.womenPct as women,
           gs.age AS age,
           gs.rose_index AS scoreRose,
-          class.cohesion AS socreCohesion,
-          ROUND(class.participation, 3) AS scoreParticipation,
-          class.majoriteAccord AS scoreMajorite,
+          cohesion.value AS socreCohesion,
+          participation.value AS scoreParticipation,
+          majority.value AS scoreMajorite,
           CASE WHEN o.dateFin IS NULL THEN 1 ELSE 0 END AS active,
           curdate() as dateMaj
       FROM organes o
       LEFT JOIN groupes_stats gs ON gs.organeRef = o.uid
       LEFT JOIN groupes_effectif ge ON ge.organeRef = o.uid
-      LEFT JOIN class_groups class ON class.organeRef = o.uid
-      WHERE o.coteType = 'GP' AND o.legislature >= 14
-      ";
+      LEFT JOIN class_groups cohesion ON cohesion.organeRef = o.uid AND cohesion.stat = "cohesion"
+      LEFT JOIN class_groups participation ON participation.organeRef = o.uid AND participation.stat = "participation"
+      LEFT JOIN class_groups majority ON majority.organeRef = o.uid AND majority.stat = "majority"
+      WHERE o.coteType = "GP" AND o.legislature >= 14
+      ';
 
       $this->opendata($query, "groupes-historique.csv", "60f30419135bec6a5e480086", "530940ab-45f3-41e3-8de3-759568c728b8");
     }
@@ -3358,7 +3362,7 @@ if (isset($argv[1])) {
 } else {
     $script = new Script();
 }
-/*
+
 $script->fillDeputes();
 $script->deputeAll();
 $script->deputeLast();
@@ -3390,9 +3394,7 @@ $script->classParticipationSolennels();
 $script->deputeLoyaute();
 $script->classLoyaute();
 $script->classMajorite();
-*/
 $script->classGroups();
-/*
 $script->classGroupsProximite();
 //$script->classParticipationSix(); // Will need to be changed w/ leg 16
 //$script->classLoyauteSix(); // Will need to be changed w/ leg 16
