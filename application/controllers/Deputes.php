@@ -111,7 +111,8 @@
 
       if ($legislature == legislature_current()) {
         $data['active'] = TRUE;
-        $data['president'] = $this->deputes_model->get_president_an();
+        //$data['president'] = $this->deputes_model->get_president_an(); THE OPEN DATA FROM THE AN IS NOT UPDATED!
+        $data['president'] = $this->deputes_model->get_depute_by_mpId('PA721908');
         if ($data['president']) {
           $data['president']['gender'] = gender($data['president']['civ']);
         }
