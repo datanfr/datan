@@ -63,7 +63,7 @@
           )
         );
       }
-      $data['mps_participation'] = $this->stats_model->get_mps_participation_solennels();
+      $data['mps_participation'] = $this->stats_model->get_mps_participation_solennels(legislature_current());
       if ($data['mps_participation']) {
         $data['mps_participation_first'] = array_slice($data['mps_participation'], 0, 3);
         $data['mps_participation_last'] = array_slice($data['mps_participation'], -3);
@@ -276,9 +276,9 @@
           $data['participationCommissionMean'] = $data['participationCommissionMean']['mean'];
           $data['participationSolennelsMean'] = $this->stats_model->get_mps_participation_solennels_mean(legislature_current());
           $data['participationSolennelsMean'] = $data['participationSolennelsMean']['mean'];
-          $data['mpsSolennels'] = $this->stats_model->get_mps_participation_solennels();
+          $data['mpsSolennels'] = $this->stats_model->get_mps_participation_solennels(legislature_current());
           $data['votesN'] = $this->votes_model->get_n_votes(legislature_current());
-          $data['mpsCommission'] = $this->stats_model->get_mps_participation_commission();
+          $data['mpsCommission'] = $this->stats_model->get_mps_participation_commission(legislature_current());
           $data['mpActive'] = array_slice($data['mpsSolennels'], 0, 1);
           $data['mpActive'] = $data['mpActive'][0];
           $data['mpActive']['name'] = $data['mpActive']['nameFirst']." ".$data['mpActive']['nameLast'];
