@@ -14,9 +14,9 @@
         <div class="col-md-8 col-12 bloc-card-vote">
           <div class="card card-vote-infos">
             <div class="card-body">
-              <span class="num">VOTE n° <?= $vote['voteNumero'] ?></span>
+              <span class="num">LÉGISLATURE <?= $vote['legislature'] ?> - VOTE n° <?= $vote['voteNumero'] ?></span>
               <?php if ($vote['title'] != "" & $vote['state'] == "published"): ?>
-                <h1 class="title"><?= ucfirst($vote['title']) ?></h1>
+                <h1 class="title mt-2"><?= ucfirst($vote['title']) ?></h1>
                 <?php else: ?>
                 <h1 class="title"><?= ucfirst($vote['titre']) ?></h1>
               <?php endif; ?>
