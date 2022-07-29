@@ -79,12 +79,15 @@
       return $this->db->count_all_results('votes_datan vd');
     }
 
-    public function get_n_votes($legislature, $year = NULL, $month = NULL){
+    public function get_n_votes($legislature, $year = NULL, $month = NULL, $type = NULL){
       if (!is_null($year)) {
         $this->db->where('YEAR(dateScrutin)', $year);
       }
       if (!is_null($month)) {
         $this->db->where('MONTH(dateScrutin)', $month);
+      }
+      if (!is_null($type)) {
+        $this->db->where('codeTypeVote', $type);
       }
       $this->db->where('legislature', $legislature);
       return $this->db->count_all_results('votes_info');
