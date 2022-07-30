@@ -45,7 +45,7 @@
         }
 
         // PROXIMITY WITH MAJORITY
-        if (!in_array($groupe_id, majority_groups())) {
+        if (!in_array($groupe_id, $this->groupes_model->get_all_groupes_majority())) {
           $data['majorite'] = $this->deputes_model->get_stats_majorite($mpId, $legislature);
           if ($data['majorite']['votesN'] < 75) {
             $data['no_majorite'] = TRUE;

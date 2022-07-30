@@ -557,7 +557,7 @@
               </div>
             </div> <!-- END CARD LOYAUTE -->
             <!-- CARD MAJORITE -->
-            <?php if (!in_array($depute['groupeId'], majority_groups())): ?>
+            <?php if (!in_array($depute['groupeId'], $this->groupes_model->get_all_groupes_majority())): ?>
               <div class="card card-statistiques my-4">
                 <div class="card-body">
                   <div class="row">
