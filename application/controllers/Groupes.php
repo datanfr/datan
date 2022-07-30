@@ -326,7 +326,7 @@
       $controller = $this->router->fetch_class()."/".$this->router->fetch_method();
       $data['ogp'] = $this->meta_model->get_ogp($controller, $data['title_meta'], $data['description_meta'], $data['url'], $data);
       // Microdata Person
-      if (!in_array($data['groupe']['uid'], groupes_NI())) {
+      if (!in_array($data['groupe']['uid'], $this->groupes_model->get_all_groupes_ni())) {
         $data['schema'] = $this->groupes_model->get_organization_schema($data['groupe'], $data['president'], NULL);
       }
       // CSS
@@ -437,7 +437,7 @@
       $controller = $this->router->fetch_class()."/".$this->router->fetch_method();
       $data['ogp'] = $this->meta_model->get_ogp($controller, $data['title_meta'], $data['description_meta'], $data['url'], $data);
       // Microdata Person
-      if (!in_array($data['groupe']['uid'], groupes_NI())) {
+      if (!in_array($data['groupe']['uid'], $this->groupes_model->get_all_groupes_ni())) {
         $data['schema'] = $this->groupes_model->get_organization_schema($data['groupe'], $data['president'], array('members' => $data['membres'], 'apparentes' => $data['apparentes']));
       }
       // JS
@@ -493,11 +493,11 @@
         $data['president'] = array_merge($data['president'], gender($data['president']['civ']));
       }
       $data['membres'] = $this->groupes_model->get_groupe_membres($groupe_uid, $data['groupe']['dateFin']);
-      if (!in_array($data['groupe']['uid'], groupes_NI())) {
+      if (!in_array($data['groupe']['uid'], $this->groupes_model->get_all_groupes_ni())) {
         $data['membres'] = array_slice($data['membres'], 0, 20);
       }
       $data['apparentes'] = $this->groupes_model->get_groupe_apparentes($groupe_uid, $data['active']);
-      if (!in_array($data['groupe']['uid'], groupes_NI())) {
+      if (!in_array($data['groupe']['uid'], $this->groupes_model->get_all_groupes_ni())) {
         $data['apparentes'] = array_slice($data['apparentes'], 0, 20);
       }
       $data['groupesActifs'] = $this->groupes_model->get_groupes_all(TRUE, legislature_current());
