@@ -42,6 +42,16 @@ class Script
         echo "Script is over ! It took: " . round($exec_time, 2) . " seconds.\n";
     }
 
+    private function majorityGroups()
+    {
+      $query = $this->bdd->query('SELECT * FROM organes WHERE coteType = "GP" AND positionPolitique = "Majoritaire"');
+      $results = $query->fetchAll();
+      foreach ($results as $key => $value) {
+        $return[] = $value['uid'];
+      }
+      return $return;
+    }
+
     private function opendata($query, $csv_filename, $dataset, $resource)
     {
       echo "createCsvFile starting = ". $csv_filename ." \n";
@@ -1700,6 +1710,9 @@ class Script
     {
         echo "voteScore starting \n";
 
+        $majorityGroups = $this->majorityGroups();
+        $majorityGroups = implode('","', $majorityGroups);
+
         $reponse_last_vote = $this->bdd->query('
             SELECT voteNumero AS lastVote
             FROM votes_scores
@@ -1712,7 +1725,7 @@ class Script
         $lastVote = isset($donnees_last_vote['lastVote']) ? $donnees_last_vote['lastVote'] + 1 : 1;
         echo "Vote score from " . $lastVote . "\n";
 
-        $reponseVote = $this->bdd->query('SELECT B.voteNumero, B.legislature, B.mpId, B.vote, B.mandatId, B.sortCode, B.positionGroup, B.gvtPosition AS positionGvt,
+        $query = 'SELECT B.voteNumero, B.legislature, B.mpId, B.vote, B.mandatId, B.sortCode, B.positionGroup, B.gvtPosition AS positionGvt,
           CASE
           	 WHEN B.vote = "nv" THEN NULL
              WHEN B.vote = B.positionGroup THEN 1
@@ -1765,9 +1778,10 @@ class Script
               WHERE v.voteType = "decompteNominatif" AND v.voteNumero >= "' . $lastVote . '" AND v.legislature = "' . $this->legislature_to_get . '"
               ) A
             LEFT JOIN votes_groupes vg ON vg.organeRef = A.organeRef AND vg.voteNumero = A.voteNumero AND vg.legislature = A.legislature
-            LEFT JOIN votes_groupes gvt ON gvt.organeRef IN ("PO730964", "PO713077", "PO656002", "PO800538") AND gvt.voteNumero = A.voteNumero AND gvt.legislature = A.legislature
-          ) B
-        ');
+            LEFT JOIN votes_groupes gvt ON gvt.organeRef IN ("' . $majorityGroups . '") AND gvt.voteNumero = A.voteNumero AND gvt.legislature = A.legislature
+          ) B' ;
+
+        $reponseVote = $this->bdd->query($query);
         echo "requete ok\n";
 
         $votesScore = [];
@@ -2277,9 +2291,11 @@ class Script
           $cohesion = $cohesionQuery->fetch();
 
           /// --- MAJORITE --- ///
+          $majorityGroups = $this->majorityGroups();
+          $majorityGroups = implode('","', $majorityGroups);
           $majorityQuery = $this->bdd->query('SELECT organeRef, ROUND(AVG(accord), 3) AS mean,  COUNT(accord) AS n
             FROM groupes_accord
-            WHERE organeRefAccord IN ("PO730964", "PO713077", "PO656002", "PO800538") AND organeRef = "' . $uid . '"
+            WHERE organeRefAccord IN ("'.$majorityGroups.'") AND organeRef = "' . $uid . '"
             LIMIT 1
           ');
           $majority = $majorityQuery->fetch();
