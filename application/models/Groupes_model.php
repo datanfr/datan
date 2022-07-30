@@ -47,6 +47,18 @@
       return $return;
     }
 
+    public function get_all_groupes_ni($legislature = NULL){
+      $this->db->where(array('coteType' => 'GP', 'libelleAbrev' => 'NI'));
+      if ($legislature) {
+        $this->db->where('legislature', $legislature);
+      }
+      $results = $this->db->get('organes')->result_array();
+      foreach ($results as $key => $value) {
+        $return[] = $value['uid'];
+      }
+      return $return;
+    }
+
     public function get_groupes_from_mp_array($input){
       $groupes = array();
       foreach ($input as $mp) {
