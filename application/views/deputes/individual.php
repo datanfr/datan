@@ -557,7 +557,7 @@
               </div>
             </div> <!-- END CARD LOYAUTE -->
             <!-- CARD MAJORITE -->
-            <?php if (!in_array($depute['groupeId'], majority_groups())): ?>
+            <?php if (!in_array($depute['groupeId'], $this->groupes_model->get_all_groupes_majority())): ?>
               <div class="card card-statistiques my-4">
                 <div class="card-body">
                   <div class="row">
@@ -589,30 +589,16 @@
                       </div>
                       <div class="col-lg-8 infos mt-4 mt-lg-2">
                         <div class="texte ml-md-3 pl-md-3 mt-md-0 mt-3">
-                          <?php if ($depute['legislature'] == legislature_current()): ?>
+                          <p>
+                            <?= $title ?> a voté comme la majorité présidentielle (<a href="<?= base_url() ?>groupes/legislature-<?= $groupMajority['legislature'] ?>/<?= mb_strtolower($groupMajority['libelleAbrev']) ?>"><?= $groupMajority['libelle'] ?></a>) dans <?= $majorite['score'] ?>% des cas.
+                          </p>
+                          <p>
+                            <?= ucfirst($gender['pronom']) ?> <?= $active ? "est" : "était" ?> <b><?= $edito_majorite['all'] ?></b> de la majorité présidentielle que la moyenne des députés non membres de la majorité (<?= $majorite['all'] ?>%).
+                          </p>
+                          <?php if ($majorite['group']): ?>
                             <p>
-                              <?= $title ?> a voté comme la majorité présidentielle (<a href="<?= base_url() ?>groupes/legislature-15/larem">La République en Marche</a>) dans <?= $majorite['score'] ?>% des cas.
+                              De plus, <?= $title ?> <?= $active ? "est" : "était" ?> <b><?= $edito_majorite['group'] ?></b> de la majorité présidentielle que la moyenne des députés de son groupe politique (<?= $majorite['group'] ?>%).
                             </p>
-                            <p>
-                              <?= ucfirst($gender['pronom']) ?> <?= $active ? "est" : "était" ?> <b><?= $edito_majorite['all'] ?></b> de la majorité présidentielle que la moyenne des députés non membres de la majorité (<?= $majorite['all'] ?>%).
-                            </p>
-                            <?php if ($majorite['group']): ?>
-                              <p>
-                                De plus, <?= $title ?> <?= $active ? "est" : "était" ?> <b><?= $edito_majorite['group'] ?></b> de la majorité présidentielle que la moyenne des députés de son groupe politique (<?= $majorite['group'] ?>%).
-                              </p>
-                            <?php endif; ?>
-                          <?php else: ?>
-                            <p>
-                              Pendant la <?= $depute['legislature'] ?><sup></sup> législature, <?= $title ?> a voté comme le groupe de la majorité présidentielle dans <?= $majorite['score'] ?>% des cas.
-                            </p>
-                            <p>
-                              <?= ucfirst($gender['pronom']) ?> <?= $active ? "est" : "était" ?> <b><?= $edito_majorite['all'] ?></b> de la majorité présidentielle que la moyenne des députés, qui est de <?= $majorite['all'] ?>%.
-                            </p>
-                            <?php if ($majorite['group']): ?>
-                              <p>
-                                De plus, <?= $title ?> <?= $active ? "est" : "était" ?> <b><?= $edito_majorite['group'] ?></b> de la majorité présidentielle que la moyenne des députés de son groupe politique (<?= $majorite['group'] ?>%).
-                              </p>
-                            <?php endif; ?>
                           <?php endif; ?>
                         </div>
                       </div>

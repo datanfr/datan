@@ -288,7 +288,7 @@
                             <?php else: ?>
                             Les <?= mb_strtolower($title) ?> ont
                           <?php endif; ?>
-                          voté en accord avec le groupe de la majorité présidentielle dans <?= $stats['majority']['value'] ?> % des cas.
+                          voté en accord avec le groupe de la majorité présidentielle (<a href="<?= base_url() ?>groupes/legislature-<?= $groupMajority['legislature'] ?>/<?= mb_strtolower($groupMajority['libelleAbrev']) ?>"><?= $groupMajority['libelle'] ?></a>) dans <?= $stats['majority']['value'] ?> % des cas.
                         </p>
                         <p>
                           <?php if ($groupe['libelleAbrev'] != "NI"): ?>
