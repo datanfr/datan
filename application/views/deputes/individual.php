@@ -508,7 +508,7 @@
                           </p>
                           <?php if ($loyaute['group']): ?>
                             <p>
-                              De plus, <?= $title ?> <?= $active ? "est" : "était" ?> <b><?= $edito_loyaute['group'] ?></b> que la moyenne des députés de son groupe politique, qui est <?= $edito_participation['group'] == "autant" ? "également" : "" ?> de <?= $loyaute['group'] ?>%.
+                              De plus, <?= $title ?> <?= $active ? "est" : "était" ?> <b><?= $edito_loyaute['group'] ?></b> que la moyenne des députés de son groupe politique, qui est <?= $edito_loyaute['group'] == "autant" ? "également" : "" ?> de <?= $loyaute['group'] ?>%.
                             </p>
                           <?php endif; ?>
                         <?php else: ?>
