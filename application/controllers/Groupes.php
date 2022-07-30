@@ -205,6 +205,9 @@
         $data['origineSociale']['edited'] = 'autant';
       }
 
+      // Get majority group
+      $data['groupMajority'] = $this->groupes_model->get_majority_group($legislature);
+
       // Social Media du groupe
       $data['groupe'] = $this->groupes_model->get_groupe_social_media($data['groupe']);
 
