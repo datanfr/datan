@@ -47,6 +47,24 @@
       return $return;
     }
 
+    public function get_majority_group($legislature = NULL){
+      $legislature = $legislature ? $legislature : legislature_current();
+      $sql = 'SELECT A.*
+        FROM
+        (
+          SELECT *, CASE WHEN dateFin IS NULL THEN curdate() ELSE dateFin END AS dateFinSorted
+          FROM organes
+          WHERE coteType = "GP" AND legislature = ? AND positionPolitique = "majoritaire"
+        ) A
+        ORDER BY dateFinSorted DESC
+        LIMIT 1
+      ';
+
+      $query = $this->db->query($sql, $legislature, 1);
+
+      return $query->row_array();
+    }
+
     public function get_all_groupes_ni($legislature = NULL){
       $this->db->where(array('coteType' => 'GP', 'libelleAbrev' => 'NI'));
       if ($legislature) {
