@@ -205,6 +205,9 @@
         $data['origineSociale']['edited'] = 'autant';
       }
 
+      // Get majority group
+      $data['groupMajority'] = $this->groupes_model->get_majority_group($legislature);
+
       // Social Media du groupe
       $data['groupe'] = $this->groupes_model->get_groupe_social_media($data['groupe']);
 
@@ -212,9 +215,11 @@
       $data['stats'] = $this->groupes_model->get_stats($groupe_uid);
       $data['statsAverage'] = $this->groupes_model->get_stats_avg($legislature);
 
+      //print_r($data['statsAverage']);
+
       if (!empty($data['stats']['cohesion'])) {
         $data['cohesionAverage'] = $data['statsAverage']['cohesion'];
-        $data['edito_cohesion'] = $this->groupes_edito->cohesion($data['stats']['cohesion'], $data['cohesionAverage']);
+        $data['edito_cohesion'] = $this->groupes_edito->cohesion($data['stats']['cohesion']['value'], $data['cohesionAverage']);
         $data['no_cohesion'] = FALSE;
       } else {
         $data['no_cohesion'] = TRUE;
@@ -222,15 +227,15 @@
 
       if (!empty($data['stats']['participation'])) {
         $data['participationAverage'] = $data['statsAverage']['participation'];
-        $data['edito_participation'] = $this->groupes_edito->cohesion($data['stats']['participation'], $data['participationAverage']);
+        $data['edito_participation'] = $this->groupes_edito->participation($data['stats']['participation']['value'], $data['participationAverage']);
         $data['no_participation'] = FALSE;
       } else {
         $data['no_participation'] = TRUE;
       }
 
-      if (!empty($data['stats']['majorite'])) {
-        $data['majoriteAverage'] = $data['statsAverage']['majorite'];
-        $data['edito_majorite'] = $this->groupes_edito->cohesion($data['stats']['majorite'], $data['majoriteAverage']);
+      if (!empty($data['stats']['majority'])) {
+        $data['majoriteAverage'] = $data['statsAverage']['majority'];
+        $data['edito_majorite'] = $this->groupes_edito->majority($data['stats']['majority']['value'], $data['majoriteAverage']);
         $data['no_majorite'] = FALSE;
       } else {
         $data['no_majorite'] = TRUE;
@@ -324,7 +329,7 @@
       $controller = $this->router->fetch_class()."/".$this->router->fetch_method();
       $data['ogp'] = $this->meta_model->get_ogp($controller, $data['title_meta'], $data['description_meta'], $data['url'], $data);
       // Microdata Person
-      if (!in_array($data['groupe']['uid'], groupes_NI())) {
+      if (!in_array($data['groupe']['uid'], $this->groupes_model->get_all_groupes_ni())) {
         $data['schema'] = $this->groupes_model->get_organization_schema($data['groupe'], $data['president'], NULL);
       }
       // CSS
@@ -435,7 +440,7 @@
       $controller = $this->router->fetch_class()."/".$this->router->fetch_method();
       $data['ogp'] = $this->meta_model->get_ogp($controller, $data['title_meta'], $data['description_meta'], $data['url'], $data);
       // Microdata Person
-      if (!in_array($data['groupe']['uid'], groupes_NI())) {
+      if (!in_array($data['groupe']['uid'], $this->groupes_model->get_all_groupes_ni())) {
         $data['schema'] = $this->groupes_model->get_organization_schema($data['groupe'], $data['president'], array('members' => $data['membres'], 'apparentes' => $data['apparentes']));
       }
       // JS
@@ -491,11 +496,11 @@
         $data['president'] = array_merge($data['president'], gender($data['president']['civ']));
       }
       $data['membres'] = $this->groupes_model->get_groupe_membres($groupe_uid, $data['groupe']['dateFin']);
-      if (!in_array($data['groupe']['uid'], groupes_NI())) {
+      if (!in_array($data['groupe']['uid'], $this->groupes_model->get_all_groupes_ni())) {
         $data['membres'] = array_slice($data['membres'], 0, 20);
       }
       $data['apparentes'] = $this->groupes_model->get_groupe_apparentes($groupe_uid, $data['active']);
-      if (!in_array($data['groupe']['uid'], groupes_NI())) {
+      if (!in_array($data['groupe']['uid'], $this->groupes_model->get_all_groupes_ni())) {
         $data['apparentes'] = array_slice($data['apparentes'], 0, 20);
       }
       $data['groupesActifs'] = $this->groupes_model->get_groupes_all(TRUE, legislature_current());

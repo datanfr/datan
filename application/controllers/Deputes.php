@@ -31,7 +31,7 @@
 
         // LOYALTY
         $data['loyaute'] = $this->deputes_model->get_stats_loyaute($mpId, $legislature);
-        if ($data['loyaute']['votesN'] < 10) {
+        if ($data['loyaute']['votesN'] < 5) {
           $data['no_loyaute'] = TRUE;
         } else {
           $data['no_loyaute'] = FALSE;
@@ -45,9 +45,9 @@
         }
 
         // PROXIMITY WITH MAJORITY
-        if (!in_array($groupe_id, majority_groups())) {
+        if (!in_array($groupe_id, $this->groupes_model->get_all_groupes_majority())) {
           $data['majorite'] = $this->deputes_model->get_stats_majorite($mpId, $legislature);
-          if ($data['majorite']['votesN'] < 75) {
+          if ($data['majorite']['votesN'] < 5) {
             $data['no_majorite'] = TRUE;
           } else {
             $data['no_majorite'] = FALSE;
@@ -111,7 +111,8 @@
 
       if ($legislature == legislature_current()) {
         $data['active'] = TRUE;
-        $data['president'] = $this->deputes_model->get_president_an();
+        //$data['president'] = $this->deputes_model->get_president_an(); THE OPEN DATA FROM THE AN IS NOT UPDATED!
+        $data['president'] = $this->deputes_model->get_depute_by_mpId('PA721908');
         if ($data['president']) {
           $data['president']['gender'] = gender($data['president']['civ']);
         }
@@ -331,6 +332,9 @@
         }
       }
 
+      // Get majority group
+      $data['groupMajority'] = $this->groupes_model->get_majority_group();
+
       // Get pct famSocPro
       $data['famSocPro'] = $this->jobs_model->get_stats_individual($data['depute']['famSocPro'], $legislature);
 
@@ -497,6 +501,9 @@
 
       // Statistiques
       $data = $this->get_statistiques($data, $legislature, $mpId, $groupe_id);
+
+      // Get majority group
+      $data['groupMajority'] = $this->groupes_model->get_majority_group($legislature);
 
       // Meta
       $data['url'] = $this->meta_model->get_url();

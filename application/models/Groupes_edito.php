@@ -100,8 +100,6 @@
     }
 
     public function participation($groupe, $average){
-      $average = $average*100;
-
       if ($groupe > $average) {
         $phrase = "plus";
       } elseif ($groupe < $average) {
@@ -113,8 +111,6 @@
     }
 
     public function cohesion($groupe, $average){
-      $groupe = round($groupe, 2);
-      $average = round($average, 2);
       if ($groupe > $average) {
         $array["relative"] = "plus";
         $array["absolute"] = "très";
@@ -125,13 +121,10 @@
         $array["relative"] = "aussi";
         $array["absolute"] = "relativement bien";
       }
-
       return $array;
     }
 
-    public function majorite($groupe, $average){
-      $average = $average*100;
-
+    public function majority($groupe, $average){
       if ($groupe > $average) {
         $phrase = "plus";
       } elseif ($groupe < $average) {
