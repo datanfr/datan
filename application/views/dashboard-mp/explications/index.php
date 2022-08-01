@@ -18,8 +18,38 @@
             <div class="card-header">
               <h2 class="font-weight-bold text-primary h4">Vos positions déjà renseignées</h2>
             </div>
+            <?php $total = count($votes_explained) ?>
             <div class="card-body">
-              <p>A faire</p>
+              <table class="table mt-5">
+                <thead>
+                  <tr>
+                    <th scope="col">#</th>
+                    <th>Vote</th>
+                    <th class="text-center">Position</th>
+                    <th class="text-center">Explication</th>
+                    <th class="text-center">État</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <?php foreach ($votes_explained as $key => $value): ?>
+                    <tr>
+                      <td><?= $total ?></td>
+                      <td><a href="<?= base_url() ?>votes/legislature-<?= $value['legislature'] ?>/vote_<?= $value['voteNumero'] ?>" target="_blank"><?= $value['vote_titre'] ?></a></td>
+                      <td class="text-center"><?= $value['vote_depute'] ?></td>
+                      <td><?= word_limiter($value['explication'], 30) ?></td>
+                      <td class="text-center"><?= ucfirst($value['state']) ?></td>
+                      <td>
+                        <a class="btn btn-primary d-flex align-items-center" href="<?= base_url() ?>dashboard-mp/explications/create/l<?= $value['legislature'] ?>v<?= $value['voteNumero'] ?>">
+                          <?= file_get_contents(asset_url()."imgs/icons/pencil-square.svg") ?>
+                          <span class="ml-3">Modifier</span>
+                        </a>
+                      </td>
+                    </tr>
+                    <?php $total = $total - 1 ?>
+                  <?php endforeach; ?>
+                </tbody>
+              </table>
             </div>
           </div>
         </div>
