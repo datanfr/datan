@@ -38,7 +38,7 @@
                       <td><a href="<?= base_url() ?>votes/legislature-<?= $value['legislature'] ?>/vote_<?= $value['voteNumero'] ?>" target="_blank"><?= $value['vote_titre'] ?></a></td>
                       <td class="text-center"><?= $value['vote_depute'] ?></td>
                       <td><?= word_limiter($value['explication'], 30) ?></td>
-                      <td class="text-center"><?= ucfirst($value['state']) ?></td>
+                      <td class="text-center <?= $value['state'] == 'brouillon' ? 'text-danger' : 'text-success' ?> font-weight-bold"><?= ucfirst($value['state']) ?></td>
                       <td>
                         <a class="btn btn-primary d-flex align-items-center" href="<?= base_url() ?>dashboard-mp/explications/modify/l<?= $value['legislature'] ?>v<?= $value['voteNumero'] ?>">
                           <?= file_get_contents(asset_url()."imgs/icons/pencil-square.svg") ?>
