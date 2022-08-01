@@ -85,6 +85,7 @@ $route['dashboard-mp/elections/(:any)/modifier'] = 'dashboardMP/elections_modify
 $route['dashboard-mp/explications'] = 'dashboardMP/explications';
 $route['dashboard-mp/explications/liste'] = 'dashboardMP/explications_liste';
 $route['dashboard-mp/explications/create/l(:any)v(:any)'] = 'dashboardMP/explications_create/$1/$2';
+$route['dashboard-mp/explications/modify/l(:any)v(:any)'] = 'dashboardMP/explications_modify/$1/$2';
 // USERS
 $route['mon-compte'] = 'users/compte';
 $route['mon-compte/modifier-donnees-personnelles'] = 'users/modify_personal_data';
