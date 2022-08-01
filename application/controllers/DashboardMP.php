@@ -162,7 +162,7 @@
       $data['vote_depute']['positionGroup'] = vote_edited($data['vote_depute']['positionGroup']);
 
       $data['title'] = "Rédigez une explication de vote";
-      $data['page'] = 'title';
+      $data['page'] = 'create';
 
       // Form valiation
       $this->form_validation->set_rules('explication', 'Explication', 'required|max_length[500]');
