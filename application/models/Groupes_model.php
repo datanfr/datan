@@ -35,6 +35,48 @@
       return $query->result_array();
     }
 
+    public function get_all_groupes_majority($legislature = NULL){
+      $this->db->where(array('coteType' => 'GP', 'positionPolitique' => 'majoritaire'));
+      if ($legislature) {
+        $this->db->where('legislature', $legislature);
+      }
+      $results = $this->db->get('organes')->result_array();
+      foreach ($results as $key => $value) {
+        $return[] = $value['uid'];
+      }
+      return $return;
+    }
+
+    public function get_majority_group($legislature = NULL){
+      $legislature = $legislature ? $legislature : legislature_current();
+      $sql = 'SELECT A.*
+        FROM
+        (
+          SELECT *, CASE WHEN dateFin IS NULL THEN curdate() ELSE dateFin END AS dateFinSorted
+          FROM organes
+          WHERE coteType = "GP" AND legislature = ? AND positionPolitique = "majoritaire"
+        ) A
+        ORDER BY dateFinSorted DESC
+        LIMIT 1
+      ';
+
+      $query = $this->db->query($sql, $legislature, 1);
+
+      return $query->row_array();
+    }
+
+    public function get_all_groupes_ni($legislature = NULL){
+      $this->db->where(array('coteType' => 'GP', 'libelleAbrev' => 'NI'));
+      if ($legislature) {
+        $this->db->where('legislature', $legislature);
+      }
+      $results = $this->db->get('organes')->result_array();
+      foreach ($results as $key => $value) {
+        $return[] = $value['uid'];
+      }
+      return $return;
+    }
+
     public function get_groupes_from_mp_array($input){
       $groupes = array();
       foreach ($input as $mp) {
@@ -257,6 +299,7 @@
           break;
 
         case 'FI':
+        case 'LFI-NUPES':
           $groupe['twitter'] = 'FiAssemblee';
           $groupe['facebook'] = 'FiAssemblee';
           break;
@@ -268,15 +311,37 @@
           break;
 
         case 'GDR':
+        case 'GDR-NUPES':
           $groupe['website'] = 'http://www.groupe-communiste.assemblee-nationale.fr/';
           $groupe['facebook'] = 'LesDeputesCommunistes';
           $groupe['twitter'] = 'deputesPCF';
           break;
 
         case 'LT':
-          $groupe['twitter'] = 'GroupeLibTerrAN';
+        case 'LIOT':
+          $groupe['twitter'] = 'GroupeLIOT_An';
           $groupe['facebook'] = 'Groupe-Libertés-et-Territoires-à-lAssemblée-nationale-1898196496883591';
           break;
+
+        case 'RE':
+          $groupe['twitter'] = 'LaREM_AN';
+          $groupe['facebook'] = 'deputesRenaissance';
+          break;
+
+        case 'RN':
+          $groupe['twitter'] = 'rnational_off';
+          $groupe['facebook'] = 'RassemblementNational';
+          break;
+
+        case 'HOR':
+          $groupe['website'] = 'https://horizonsleparti.fr/';
+          $groupe['twitter'] = 'Horizons_AN';
+          $groupe['facebook'] = 'horizonsleparti';
+
+        case 'ECOLO':
+          $groupe['website'] = 'https://www.eelv.fr/';
+          $groupe['twitter'] = 'EELV';
+          $groupe['facebook'] = 'eelv.fr';
 
         default:
           // code...
@@ -286,29 +351,35 @@
     }
 
     public function get_stats($groupe_uid){
-      $sql = 'SELECT *,
-        ROUND(cohesion, 2) AS cohesion,
-        ROUND(participation * 100) AS participation,
-        ROUND(majoriteAccord * 100) AS majorite
-        FROM class_groups
-        WHERE organeRef = ?
-      ';
-      $query = $this->db->query($sql, $groupe_uid);
+      $query = $this->db->get_where('class_groups', array('organeRef' => $groupe_uid));
+      $results = $query->result_array();
 
-      return $query->row_array();
+      foreach ($results as $key => $value) {
+        if ($value['stat'] == 'cohesion') {
+          $return[$value['stat']] = array('value' => $value['value'], 'votes' => $value['votes']);
+        } else {
+          $return[$value['stat']] = array('value' => round($value['value'] * 100), 'votes' => $value['votes']);
+        }
+      }
+      return $return;
     }
 
     public function get_stats_avg($legislature){
-      $sql = 'SELECT
-        ROUND(AVG(cohesion), 2) AS cohesion,
-        ROUND(AVG(participation) * 100) AS participation,
-        ROUND(AVG(majoriteAccord) * 100) AS majorite
+      $sql = 'SELECT stat, ROUND(AVG(value), 3) AS mean
         FROM class_groups
         WHERE legislature = ?
+        GROUP BY stat
       ';
       $query = $this->db->query($sql, $legislature);
-
-      return $query->row_array();
+      $results = $query->result_array();
+      foreach ($results as $key => $value) {
+        if ($value['stat'] == 'cohesion') {
+          $return[$value['stat']] = $value['mean'];
+        } else {
+          $return[$value['stat']] = round($value['mean'] * 100);
+        }
+      }
+      return $return;
     }
 
 

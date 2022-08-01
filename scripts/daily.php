@@ -42,6 +42,16 @@ class Script
         echo "Script is over ! It took: " . round($exec_time, 2) . " seconds.\n";
     }
 
+    private function majorityGroups()
+    {
+      $query = $this->bdd->query('SELECT * FROM organes WHERE coteType = "GP" AND positionPolitique = "Majoritaire"');
+      $results = $query->fetchAll();
+      foreach ($results as $key => $value) {
+        $return[] = $value['uid'];
+      }
+      return $return;
+    }
+
     private function opendata($query, $csv_filename, $dataset, $resource)
     {
       echo "createCsvFile starting = ". $csv_filename ." \n";
@@ -1091,7 +1101,7 @@ class Script
 
         $dernier_vote = $response_vote->fetch();
         $number_to_import = isset($dernier_vote['voteNumero']) ? $dernier_vote['voteNumero'] + 1 : 1;
-        echo "From " . $number_to_import . "\n";
+        echo "From vote n° " . $number_to_import . "\n";
 
         // SCRAPPING DEPENDING ON LEGISLATURE
         if ($this->legislature_to_get >= 15) {
@@ -1112,10 +1122,10 @@ class Script
                 $votesGroupe = [];
 
                 while (1) {
-                    $file_to_import = 'VTANR5L15V' . $number_to_import++;
+                    $file_to_import = 'VTANR5L' . $this->legislature_to_get . 'V' . $number_to_import++;
                     $xml_string = $zip->getFromName('xml/' . $file_to_import . '.xml');
                     if ($xml_string == false) { // Check if the AN file forgot to include one vote
-                      $file_to_import = 'VTANR5L15V' . ($number_to_import + 1);
+                      $file_to_import = 'VTANR5L' .  $this->legislature_to_get . 'V' . ($number_to_import + 1);
                       $xml_string = $zip->getFromName('xml/' . $file_to_import . '.xml');
                     }
                     if ($xml_string != false) {
@@ -1293,7 +1303,7 @@ class Script
                     } else {
                         break;
                     }
-                    if ($number_to_import % 50 === 0) {
+                    if ($number_to_import % 5 === 0) {
                         echo "Let's insert to scrutin from " . $number_to_import . "\n";
                         // insert votes
                         $this->insertAll('votes', $voteMainFields, $votesMain);
@@ -1700,6 +1710,9 @@ class Script
     {
         echo "voteScore starting \n";
 
+        $majorityGroups = $this->majorityGroups();
+        $majorityGroups = implode('","', $majorityGroups);
+
         $reponse_last_vote = $this->bdd->query('
             SELECT voteNumero AS lastVote
             FROM votes_scores
@@ -1712,7 +1725,7 @@ class Script
         $lastVote = isset($donnees_last_vote['lastVote']) ? $donnees_last_vote['lastVote'] + 1 : 1;
         echo "Vote score from " . $lastVote . "\n";
 
-        $reponseVote = $this->bdd->query('SELECT B.voteNumero, B.legislature, B.mpId, B.vote, B.mandatId, B.sortCode, B.positionGroup, B.gvtPosition AS positionGvt,
+        $query = 'SELECT B.voteNumero, B.legislature, B.mpId, B.vote, B.mandatId, B.sortCode, B.positionGroup, B.gvtPosition AS positionGvt,
           CASE
           	 WHEN B.vote = "nv" THEN NULL
              WHEN B.vote = B.positionGroup THEN 1
@@ -1765,9 +1778,10 @@ class Script
               WHERE v.voteType = "decompteNominatif" AND v.voteNumero >= "' . $lastVote . '" AND v.legislature = "' . $this->legislature_to_get . '"
               ) A
             LEFT JOIN votes_groupes vg ON vg.organeRef = A.organeRef AND vg.voteNumero = A.voteNumero AND vg.legislature = A.legislature
-            LEFT JOIN votes_groupes gvt ON gvt.organeRef IN ("PO730964", "PO713077", "PO656002") AND gvt.voteNumero = A.voteNumero AND gvt.legislature = A.legislature
-          ) B
-        ');
+            LEFT JOIN votes_groupes gvt ON gvt.organeRef IN ("' . $majorityGroups . '") AND gvt.voteNumero = A.voteNumero AND gvt.legislature = A.legislature
+          ) B' ;
+
+        $reponseVote = $this->bdd->query($query);
         echo "requete ok\n";
 
         $votesScore = [];
@@ -2084,7 +2098,7 @@ class Script
                       SELECT *
                       FROM votes_participation vp
                       LEFT JOIN mandat_secondaire ms ON vp.mpId = ms.mpId
-                      WHERE vp.voteNumero = "' . $voteNumero . '" AND ms.typeOrgane = "COMPER" AND ms.codeQualite = "Membre" AND ms.organeRef = "' . $commissionFond . '" AND ((DATE_ADD(ms.dateDebut, INTERVAL 1 MONTH) <= "' . $voteDate . '" AND ms.dateFin >= "' . $voteDate . '") OR (DATE_ADD(ms.dateDebut, INTERVAL 1 MONTH) <= "' . $voteDate . '" AND ms.dateFin IS NULL)) AND vp.participation IS NOT NULL
+                      WHERE vp.voteNumero = "' . $voteNumero . '" AND vp.legislature = "'.$this->legislature_to_get.'" AND ms.typeOrgane = "COMPER" AND ms.codeQualite = "Membre" AND ms.organeRef = "' . $commissionFond . '" AND ms.legislature = "' . $this->legislature_to_get . '" AND ((ms.dateDebut <= "' . $voteDate . '" AND ms.dateFin >= "' . $voteDate . '") OR (ms.dateDebut <= "' . $voteDate . '" AND ms.dateFin IS NULL)) AND vp.participation IS NOT NULL
                   ');
                     if ($deputes->rowCount() > 0) {
                         while ($depute = $deputes->fetch()) {
@@ -2140,22 +2154,22 @@ class Script
     public function classParticipationCommission()
     {
         echo "classParticipationCommission starting \n";
-        if ($this->legislature_to_get == 15) {
+        if ($this->legislature_to_get >= 15) {
             $this->bdd->query('
                 DROP TABLE IF EXISTS class_participation_commission;
                 CREATE TABLE class_participation_commission
-                SELECT A.*, da.legislature,
+                SELECT A.*,
                 CASE WHEN da.dateFin IS NULL THEN 1 ELSE 0 END AS active,
                 curdate() AS dateMaj
                 FROM
                 (
-                SELECT v.mpId, ROUND(AVG(v.participation),2) AS score, COUNT(v.participation) AS votesN, ROUND(COUNT(v.participation)/100) AS "index"
+                SELECT v.mpId, v.legislature, ROUND(AVG(v.participation),2) AS score, COUNT(v.participation) AS votesN, ROUND(COUNT(v.participation)/100) AS "index"
                 FROM votes_participation_commission v
                 WHERE v.participation IS NOT NULL
-                GROUP BY v.mpId
+                GROUP BY v.mpId, v.legislature
                 ORDER BY ROUND(COUNT(v.participation)/100) DESC, AVG(v.participation) DESC
                 ) A
-                LEFT JOIN deputes_all da ON da.mpId = A.mpId AND da.legislature = 15;
+                LEFT JOIN deputes_all da ON da.mpId = A.mpId AND da.legislature = A.legislature;
                 ALTER TABLE class_participation_commission ADD INDEX idx_mpId (mpId);
                 ALTER TABLE class_participation_commission ADD INDEX idx_active (active);
             ');
@@ -2241,46 +2255,105 @@ class Script
     public function classGroups()
     {
         echo "classGroups starting \n";
-        $this->bdd->query('
-            DROP TABLE IF EXISTS class_groups;
-            CREATE TABLE class_groups AS
-            SELECT c.organeRef, c.legislature, c.active, c.cohesion, c.votesN_cohesion, p.participation, p.votesN_participation, m.majoriteAccord, m.votesN AS votesN_majorite, curdate() AS dateMaj
-            FROM
-            (
-                SELECT gc.organeRef, gc.legislature, ROUND(AVG(gc.cohesion),3) AS cohesion, COUNT(voteNumero) AS votesN_cohesion,
-                CASE WHEN o.dateFin IS NULL THEN 1 ELSE 0 END AS active
-                FROM groupes_cohesion gc
-                LEFT JOIN organes o ON o.uid = gc.organeRef
-                GROUP BY gc.organeRef
-            ) c
-            LEFT JOIN
-            (
-            SELECT B.organeRef, AVG(B.participation_rate) AS participation, COUNT(voteNumero) AS votesN_participation
-            FROM
-            (
-                SELECT A.*, A.total / (A.n - A.nv) AS participation_rate
-                FROM
-                (
-                    SELECT vg.voteNumero, vg.organeRef, vg.nombreMembresGroupe as n, vg.nombrePours as pour, vg.nombreContres as contre, vg.nombreAbstentions as abstention, CASE WHEN vg.nonVotants IS NULL THEN 0 ELSE vg.nonVotants END AS nv, vg.nonVotantsVolontaires as nvv, vg.nombrePours+vg.nombreContres+vg.nombreAbstentions as total
-                    FROM votes_groupes vg
-                    LEFT JOIN votes_info vi ON vg.voteNumero = vi.voteNumero AND vg.legislature = vi.legislature
-                    WHERE vi.codeTypeVote = "SPS"
-                ) A
-            ) B
-            GROUP BY B.organeRef
-            ) p ON p.organeRef = c.organeRef
-            LEFT JOIN
-            (
-                SELECT ga.organeRef, ROUND(AVG(ga.accord), 3) AS majoriteAccord, COUNT(ga.accord) AS votesN
-                FROM groupes_accord ga
-                LEFT JOIN organes o ON o.uid = ga.organeRef
-                WHERE organeRefAccord IN ("PO730964", "PO713077", "PO656002")
-                GROUP BY ga.organeRef
-            ) m ON m.organeRef = c.organeRef;
-            ALTER TABLE class_groups ADD INDEX idx_organeRef (organeRef);
-            ALTER TABLE class_groups ADD INDEX idx_active (active);
-            ALTER TABLE class_groups ADD INDEX idx_legislature (legislature);
+
+        $this->bdd->query('DROP TABLE IF EXISTS `class_groups`');
+        $this->bdd->query('CREATE TABLE IF NOT EXISTS `class_groups` (
+            `organeRef` varchar(15) NOT NULL,
+            `legislature` int(5) NOT NULL,
+            `active` int(1) NOT NULL DEFAULT "0",
+            `stat` varchar(25) NOT NULL,
+            `value` decimal(6,3) NULL DEFAULT NULL,
+            `votes` bigint(21) NULL DEFAULT NULL,
+            `dateMaj` date NOT NULL,
+            KEY `idx_organeRef` (`organeRef`),
+            KEY `idx_active` (`active`),
+            KEY `idx_legislature` (`legislature`)
+          ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
         ');
+
+        $fields = array('organeRef', 'legislature', 'active', 'stat', 'value', 'votes', 'dateMaj');
+
+        $groups = $this->bdd->query('SELECT * FROM organes WHERE coteType = "GP" AND legislature >= 14 ORDER BY legislature ASC');
+
+        while ($group = $groups->fetch()) {
+          $uid = $group['uid'];
+
+          echo "data for " . $group['libelle'] . " (" . $group['libelleAbrev'] . ") - legislature : " . $group['legislature'] . " \n";
+
+          $active = $group['dateFin'] ? 0 : 1;
+
+          /// --- COHESION --- ///
+          $cohesionQuery = $this->bdd->query('SELECT organeRef, round(avg(cohesion), 3) AS mean, count(cohesion) AS n
+            FROM groupes_cohesion
+            WHERE organeRef = "' . $uid . '"
+            LIMIT 1
+          ');
+          $cohesion = $cohesionQuery->fetch();
+
+          /// --- MAJORITE --- ///
+          $majorityGroups = $this->majorityGroups();
+          $majorityGroups = implode('","', $majorityGroups);
+          $majorityQuery = $this->bdd->query('SELECT organeRef, ROUND(AVG(accord), 3) AS mean,  COUNT(accord) AS n
+            FROM groupes_accord
+            WHERE organeRefAccord IN ("'.$majorityGroups.'") AND organeRef = "' . $uid . '"
+            LIMIT 1
+          ');
+          $majority = $majorityQuery->fetch();
+
+          /// --- PARTICIPATION ALL --- ///
+          $participationQuery = $this->bdd->query('SELECT organeRef, ROUND(avg(B.participation_rate), 3) AS mean, COUNT(B.participation_rate) AS n
+            FROM
+            (
+              SELECT A.*, round(A.total / (A.n - A.nv), 3) AS participation_rate
+              FROM
+              (
+              	SELECT vg.voteNumero, vg.organeRef, vg.nombreMembresGroupe as n, vg.nombrePours as pour, vg.nombreContres as contre, vg.nombreAbstentions as abstention, CASE WHEN vg.nonVotants IS NULL THEN 0 ELSE vg.nonVotants END AS nv, vg.nonVotantsVolontaires as nvv, vg.nombrePours+vg.nombreContres+vg.nombreAbstentions as total
+              	FROM votes_groupes vg
+              	WHERE vg.organeRef = "' . $uid . '"
+              ) A
+            ) B
+          ');
+          $participation = $participationQuery->fetch();
+
+          /// --- PARTICIPATION SOLENNELS --- ///
+          $participationSPSQuery = $this->bdd->query('SELECT organeRef, ROUND(avg(B.participation_rate), 3) AS mean, COUNT(B.participation_rate) AS n
+            FROM
+            (
+              SELECT A.*, round(A.total / (A.n - A.nv), 3) AS participation_rate
+              FROM
+              (
+              	SELECT vg.voteNumero, vg.organeRef, vg.nombreMembresGroupe as n, vg.nombrePours as pour, vg.nombreContres as contre, vg.nombreAbstentions as abstention, CASE WHEN vg.nonVotants IS NULL THEN 0 ELSE vg.nonVotants END AS nv, vg.nonVotantsVolontaires as nvv, vg.nombrePours+vg.nombreContres+vg.nombreAbstentions as total
+              	FROM votes_groupes vg
+                LEFT JOIN votes_info vi ON vg.voteNumero = vi.voteNumero AND vg.legislature = vi.legislature
+              	WHERE vg.organeRef = "' . $uid . '" AND codeTypeVote = "SPS"
+              ) A
+            ) B
+          ');
+          $participationSPS = $participationSPSQuery->fetch();
+
+          /// --- PARTICIPATION COMMISSION --- ///
+          $participationCommissionQuery = $this->bdd->query('SELECT round(avg(score), 3) AS mean, round(avg(votesN)) as n
+            FROM class_participation_commission c
+            LEFT JOIN deputes_all d ON d.mpId = c.mpId AND d.legislature = c.legislature
+            WHERE d.groupeId = "' . $uid . '"
+          ');
+          $participationCommission = $participationCommissionQuery->fetch();
+
+          /// --- INSERT THE DATA --- ///
+          // Cohesion
+          $insertCohesion = array($uid, $group['legislature'], $active, 'cohesion', $cohesion['mean'], $cohesion['n'], $this->dateMaj);
+          $this->insertAll('class_groups', $fields, $insertCohesion);
+          $insertMajority = array($uid, $group['legislature'], $active, 'majority', $majority['mean'], $majority['n'], $this->dateMaj);
+          $this->insertAll('class_groups', $fields, $insertMajority);
+          $insertParticipation = array($uid, $group['legislature'], $active, 'participation', $participation['mean'], $participation['n'], $this->dateMaj);
+          $this->insertAll('class_groups', $fields, $insertParticipation);
+          $insertParticipationSPS = array($uid, $group['legislature'], $active, 'participationSPS', $participationSPS['mean'], $participationSPS['n'], $this->dateMaj);
+          $this->insertAll('class_groups', $fields, $insertParticipationSPS);
+          $insertParticipationCommission = array($uid, $group['legislature'], $active, 'participationCommission', $participationCommission['mean'], $participationCommission['n'], $this->dateMaj);
+          $this->insertAll('class_groups', $fields, $insertParticipationCommission);
+
+        }
+
     }
 
     public function classGroupsProximite()
@@ -2343,11 +2416,11 @@ class Script
                         } else {
                             if (strpos($href, ".asp") !== false) {
                                 //echo "3";
-                                $dossier1 = str_replace('https://www.assemblee-nationale.fr/15/dossiers/', '', $href);
+                                $dossier1 = str_replace('https://www.assemblee-nationale.fr/'.$this->legislature_to_get.'/dossiers/', '', $href);
                                 $dossier = str_replace('.asp', '', $dossier1);
                             } else {
                                 //echo "4";
-                                $dossier = str_replace('https://www.assemblee-nationale.fr/dyn/15/dossiers/', '', $href);
+                                $dossier = str_replace('https://www.assemblee-nationale.fr/dyn/'.$this->legislature_to_get.'/dossiers/', '', $href);
                             }
                         }
                     }
@@ -2358,8 +2431,8 @@ class Script
 
                 $voteDossier = array('offset_num' => $offset, 'legislature' => $this->legislature_to_get, 'voteNumero' => $voteNumero, 'href' => $href, 'dossier' => $dossier);
                 $voteDossiers = array_merge($voteDossiers, array_values($voteDossier));
-                if ($i % 1000 === 0) {
-                    echo "Let's insert 1000 rows\n";
+                if ($i % 100 === 0) {
+                    echo "Let's insert 100 rows\n";
                     $this->insertAll('votes_dossiers', $voteDossiersFields, $voteDossiers);
                     $voteDossiers = [];
                 }
@@ -3195,7 +3268,7 @@ class Script
 
     public function opendata_activeGroupes()
     {
-      $query = "SELECT
+      $query = 'SELECT
       	o.uid AS id,
       	o.legislature,
           o.libelle,
@@ -3208,16 +3281,18 @@ class Script
           gs.womenPct as women,
           gs.age AS age,
           gs.rose_index AS scoreRose,
-          class.cohesion AS socreCohesion,
-          ROUND(class.participation, 3) AS scoreParticipation,
-          class.majoriteAccord AS scoreMajorite,
+          cohesion.value AS socreCohesion,
+          participation.value AS scoreParticipation,
+          majority.value AS scoreMajorite,
           curdate() as dateMaj
       FROM organes o
       LEFT JOIN groupes_stats gs ON gs.organeRef = o.uid
       LEFT JOIN groupes_effectif ge ON ge.organeRef = o.uid
-      LEFT JOIN class_groups class ON class.organeRef = o.uid
-      WHERE o.coteType = 'GP' AND o.dateFin IS NULL
-      ";
+      LEFT JOIN class_groups cohesion ON cohesion.organeRef = o.uid AND cohesion.stat = "cohesion"
+      LEFT JOIN class_groups participation ON participation.organeRef = o.uid AND participation.stat = "participation"
+      LEFT JOIN class_groups majority ON majority.organeRef = o.uid AND majority.stat = "majority"
+      WHERE o.coteType = "GP" AND o.dateFin IS NULL
+      ';
 
       $this->opendata($query, "groupes_active.csv", "60ed57a9f0c7c3a1eb29733f", "4612d596-9a78-4ec6-b60c-ccc1ee11f8c0");
     }
@@ -3266,7 +3341,7 @@ class Script
 
     public function opendata_historyGroupes()
     {
-      $query = "SELECT
+      $query = 'SELECT
       	o.uid AS id,
       	o.legislature,
           o.libelle,
@@ -3279,17 +3354,19 @@ class Script
           gs.womenPct as women,
           gs.age AS age,
           gs.rose_index AS scoreRose,
-          class.cohesion AS socreCohesion,
-          ROUND(class.participation, 3) AS scoreParticipation,
-          class.majoriteAccord AS scoreMajorite,
+          cohesion.value AS socreCohesion,
+          participation.value AS scoreParticipation,
+          majority.value AS scoreMajorite,
           CASE WHEN o.dateFin IS NULL THEN 1 ELSE 0 END AS active,
           curdate() as dateMaj
       FROM organes o
       LEFT JOIN groupes_stats gs ON gs.organeRef = o.uid
       LEFT JOIN groupes_effectif ge ON ge.organeRef = o.uid
-      LEFT JOIN class_groups class ON class.organeRef = o.uid
-      WHERE o.coteType = 'GP' AND o.legislature >= 14
-      ";
+      LEFT JOIN class_groups cohesion ON cohesion.organeRef = o.uid AND cohesion.stat = "cohesion"
+      LEFT JOIN class_groups participation ON participation.organeRef = o.uid AND participation.stat = "participation"
+      LEFT JOIN class_groups majority ON majority.organeRef = o.uid AND majority.stat = "majority"
+      WHERE o.coteType = "GP" AND o.legislature >= 14
+      ';
 
       $this->opendata($query, "groupes-historique.csv", "60f30419135bec6a5e480086", "530940ab-45f3-41e3-8de3-759568c728b8");
     }
@@ -3320,7 +3397,7 @@ $script->groupeCohesion(); // Depend on the legislature
 $script->groupeAccord(); // Depend on the legislature
 $script->deputeAccord(); // Depend on the legislature
 $script->voteParticipation(); // Depend on the legislature
-//$script->votesDossiers(); // Depend on the legislature --> reintroduce after first vote
+$script->votesDossiers(); // Depend on the legislature
 $script->dossier(); // Depend on the legislature
 $script->dossiersActeurs(); // Depend on the legislature
 $script->documentsLegislatifs(); // Depend on the legislature
@@ -3328,7 +3405,7 @@ $script->documentsLegislatifs(); // Depend on the legislature
 //$script->amendementsAuteurs(); // Need to be checked for leg 16
 $script->voteParticipationCommission(); // Depend on the legislature
 $script->classParticipation();
-//$script->classParticipationCommission(); // Will need to be changed w/ leg 16
+$script->classParticipationCommission(); // Will need to be changed w/ leg 16
 $script->classParticipationSolennels();
 $script->deputeLoyaute();
 $script->classLoyaute();
