@@ -11,8 +11,9 @@
         <div class="col-12 mt-5">
           <a class="btn btn-secondary" href="<?= base_url() ?>dashboard-mp/explications/liste">Retour</a>
           <h1 class="font-weight-bold mt-4"><?= $title ?></h1>
-          <?php if ($page = 'modify'): ?>
+          <?php if ($page == 'modify'): ?>
             <h2 class="text-secondary"><?= ucfirst($vote['titre']) ?></h2>
+            <div class="alert alert-warning font-weight-bold my-4 text-center" role="alert">Si vous ne souhaitez plus rédiger une explication de vote pour ce scrutin, changez l'état de l'explication en « brouillon ».</div>
           <?php endif; ?>
           <?php if (!empty(validation_errors())): ?>
             <div class="card bg-danger my-5">
@@ -95,20 +96,20 @@
                   <?php if ($page == 'modify'): ?>
                     <div class="form-check">
                       <input class="form-check-input" type="radio" name="state" value="0" <?= $vote['state'] == 0 ? 'checked=""' : '' ?>>
-                      <label class="form-check-label">Brouillon</label>
+                      <label class="form-check-label text-danger font-weight-bold">Brouillon</label>
                     </div>
                     <div class="form-check">
                       <input class="form-check-input" type="radio" name="state" value="1" <?= $vote['state'] == 1 ? 'checked=""' : '' ?>>
-                      <label class="form-check-label">Publié</label>
+                      <label class="form-check-label text-success font-weight-bold">Publié</label>
                     </div>
                   <?php else: ?>
                     <div class="form-check">
                       <input class="form-check-input" type="radio" name="state" value="0" checked="">
-                      <label class="form-check-label">Brouillon</label>
+                      <label class="form-check-label text-danger font-weight-bold">Brouillon</label>
                     </div>
                     <div class="form-check">
                       <input class="form-check-input" type="radio" name="state" value="1">
-                      <label class="form-check-label">Publié</label>
+                      <label class="form-check-label text-success font-weight-bold">Publié</label>
                     </div>
                   <?php endif; ?>
                 </div>
