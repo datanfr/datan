@@ -4,8 +4,8 @@ class DashboardMP_model extends CI_Model
   public function __construct() {
   }
 
-  public function get_votes_explanation($depute_id){
-    $sql = 'SELECT vd.voteNumero, vd.legislature, vd.title AS vote_titre, vi.sortCode, date_format(vi.dateScrutin, "%d %M %Y") as dateScrutinFR, r.name AS reading, doss.titre AS dossier,
+  public function get_votes_to_explain($depute_id){
+    $sql = 'SELECT vd.voteNumero, vd.legislature, vd.title AS vote_titre, vi.sortCode, date_format(vi.dateScrutin, "%d %M %Y") as dateScrutinFR, doss.titre AS dossier,
       CASE
         WHEN vs.vote = 0 THEN "abstention"
         WHEN vs.vote = 1 THEN "pour"
@@ -16,7 +16,6 @@ class DashboardMP_model extends CI_Model
       FROM votes_datan vd
       LEFT JOIN votes_scores vs ON vd.voteNumero = vs.voteNumero AND vd.legislature = vs.legislature AND vs.mpId = ?
       LEFT JOIN votes_info vi ON vd.voteNumero = vi.voteNumero AND vd.legislature = vi.legislature
-      LEFT JOIN readings r ON r.id = vd.reading
       LEFT JOIN votes_dossiers vdoss ON vd.legislature = vdoss.legislature AND vd.voteNumero = vdoss.voteNumero
       LEFT JOIN dossiers doss ON vdoss.dossier = doss.titreChemin
       LEFT JOIN explications_mp e ON vd.legislature = e.legislature AND vd.voteNumero = e.voteNumero AND e.mpId = ?
@@ -24,6 +23,27 @@ class DashboardMP_model extends CI_Model
       ORDER BY vi.dateScrutin DESC
     ';
     return $this->db->query($sql, array($depute_id, $depute_id))->result_array();
+  }
+
+  public function get_votes_explained($mpId){
+    $sql = 'SELECT e.id, e.voteNumero, e.legislature, e.text AS explication, vd.title AS vote_titre,
+      CASE WHEN e.state = 1 THEN "publié" ELSE "brouillon" END AS state,
+      CASE
+        WHEN vs.vote = 0 THEN "abstention"
+        WHEN vs.vote = 1 THEN "pour"
+        WHEN vs.vote = -1 THEN "contre"
+        WHEN vs.vote IS NULL THEN "absent"
+        ELSE vs.vote
+      END AS vote_depute
+      FROM explications_mp e
+      LEFT JOIN votes_scores vs ON e.voteNumero = vs.voteNumero AND e.legislature = vs.legislature AND vs.mpId = e.mpId
+      LEFT JOIN votes_datan vd ON e.voteNumero = vd.voteNumero AND e.legislature = vd.legislature
+      LEFT JOIN votes_info vi ON e.voteNumero = vi.voteNumero AND e.legislature = vi.legislature
+      WHERE e.mpId = ?
+      ORDER BY e.id DESC
+    ';
+    $query = $this->db->query($sql, $mpId);
+    return $query->result_array();
   }
 
   public function create_explication($input){

@@ -107,6 +107,7 @@
       $data['username'] = $this->session->userdata('username');
       $data['depute'] = $this->deputes_model->get_depute_by_mpId($this->session->userdata('mpId'));
       $data['depute']['gender'] = gender($data['depute']['civ']);
+      $data['votes_explained'] = $this->dashboardMP_model->get_votes_explained($data['depute']['mpId']);
 
       $data['title'] = "Vos explications de vote";
 
@@ -120,7 +121,7 @@
       $data['depute'] = $this->deputes_model->get_depute_by_mpId($this->session->userdata('mpId'));
       $data['depute']['gender'] = gender($data['depute']['civ']);
 
-      $data['votes_without'] = $this->dashboardMP_model->get_votes_explanation($data['depute']['mpId']);
+      $data['votes_without'] = $this->dashboardMP_model->get_votes_to_explain($data['depute']['mpId']);
 
       $data['title'] = "Choisissez un scrutin";
 
