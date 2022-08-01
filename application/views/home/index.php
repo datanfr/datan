@@ -70,27 +70,6 @@
       </div>
     </div>
   </div>
-  <!-- NEW BLOC QUIS -->
-  <div class="row bloc-quiz py-4">
-    <div class="container p-md-0">
-      <div class="row py-4">
-        <div class="col-12">
-          <h2 class="text-center pb-4">Mon député et moi</h2>
-          <h3 class="text-center pb-4">Le <span class="text-primary">quiz</span> spécial élections législatives 2022</h3>
-          <div class="row pt-4">
-            <div class="d-flex align-items-start justify-content-center col-lg-5 col-md-6 col-12 offset-lg-1">
-              <object style="height: 20rem" data="<?= asset_url()."imgs/quiz/phone.svg" ?>" type="image/svg+xml"></object>
-            </div>
-            <div class="d-flex flex-column align-items-center justify-content-around col-md-6 col-lg-5 col-12 mt-5 mt-md-0">
-              <h3 class="mb-3 text-center my-3">Ai-je les mêmes positions que mon député ?</h3>
-              <p class="text-center my-3">Prenez position sur 20 votes de l'Assemblée nationale et découvrez votre proximité avec votre député.</p>
-              <span class="url_obf btn btn-primary my-3" target="_blank" url_obf="<?= url_obfuscation("https://quiz.datan.fr") ?>">Je fais le quiz !</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
   <!-- VOTES CARDS -->
   <div class="row bloc-votes" id="pattern_background">
     <div class="container p-md-0">
@@ -239,6 +218,9 @@
       </div>
       <div class="row pb-5">
         <div class="col-lg-8 offset-lg-2 d-flex flex-wrap justify-content-around align-items-center">
+          <a href="https://www.bfmtv.com/politique/infographie-assemblee-nationale-qui-sont-les-groupes-parlementaires-les-plus-proches_AV-202207260568.html" target="_blank" rel="noopener">
+            <img class="mx-2 my-3 img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="80" height="50" data-src="<?= asset_url() ?>imgs/media/bfm.jpg" alt="BFM TV">
+          </a>
           <span class="url_obf" url_obf="<?= url_obfuscation("https://www.leparisien.fr/info-paris-ile-de-france-oise/vote-assiduite-loyaute-comment-se-comportent-vos-deputes-franciliens-et-oisiens-21-01-2021-8420482.php") ?>">
             <img class="mx-2 my-3 img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="120" height="38" data-src="<?= asset_url() ?>imgs/media/le_parisien.png" alt="Le Parisien">
           </span>

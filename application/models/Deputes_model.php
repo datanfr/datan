@@ -666,9 +666,10 @@
     }
 
     public function get_stats_majorite_all($legislature){
+      $majority_groups = $this->groupes_model->get_all_groupes_majority();
       $this->db->select('ROUND(AVG(c.score*100)) AS score');
       $this->db->where('c.legislature', $legislature);
-      $this->db->where_not_in('da.groupeId', majority_groups());
+      $this->db->where_not_in('da.groupeId', $majority_groups);
       $this->db->join('deputes_all da', 'da.mpId = c.mpId AND da.legislature = c.legislature', 'left');
       if ($legislature == legislature_current()) {
         $this->db->where('da.dateFin IS NULL');

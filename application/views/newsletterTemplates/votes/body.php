@@ -44,7 +44,7 @@
           <?php foreach ($vote['groupes'] as $group): ?>
             <?php if ($group['positionMajoritaire'] == 'pour'): ?>
               <mj-column width="20%">
-                <mj-image padding="5px 10px" href="https://datan.fr/legislature-15/groupes/<?= mb_strtolower($group['libelleAbrev']) ?>" src="https://datan.fr/assets/imgs/groupes/<?= $group['libelleAbrev'] ?>.png" />
+                <mj-image padding="5px 10px" href="https://datan.fr/legislature-15/groupes/<?= mb_strtolower($group['libelleAbrev']) ?>" src="https://datan.fr/assets/imgs/groupes/<?= $group['legislature'] ?>/<?= $group['libelleAbrev'] ?>.png" />
               </mj-column>
             <?php endif; ?>
           <?php endforeach; ?>
