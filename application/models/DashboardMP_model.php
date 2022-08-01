@@ -4,7 +4,7 @@ class DashboardMP_model extends CI_Model
   public function __construct() {
   }
 
-  public function get_votes_to_explain($depute_id){
+  public function get_votes_to_explain($mpId){
     $sql = 'SELECT vd.voteNumero, vd.legislature, vd.title AS vote_titre, vi.sortCode, date_format(vi.dateScrutin, "%d %M %Y") as dateScrutinFR, doss.titre AS dossier,
       CASE
         WHEN vs.vote = 0 THEN "abstention"
@@ -22,7 +22,7 @@ class DashboardMP_model extends CI_Model
       WHERE vd.state = "published" AND vs.vote IS NOT NULL AND e.text IS NULL
       ORDER BY vi.dateScrutin DESC
     ';
-    return $this->db->query($sql, array($depute_id, $depute_id))->result_array();
+    return $this->db->query($sql, array($mpId, $mpId))->result_array();
   }
 
   public function get_votes_explained($mpId){
@@ -46,6 +46,27 @@ class DashboardMP_model extends CI_Model
     return $query->result_array();
   }
 
+  public function get_vote_explained($mpId, $legislature, $voteNumero){
+    echo $voteNumero;
+    $sql = 'SELECT e.id, e.voteNumero, e.legislature, e.text AS explication, vd.title AS vote_titre,
+      CASE WHEN e.state = 1 THEN "publié" ELSE "brouillon" END AS state,
+      CASE
+        WHEN vs.vote = 0 THEN "abstention"
+        WHEN vs.vote = 1 THEN "pour"
+        WHEN vs.vote = -1 THEN "contre"
+        WHEN vs.vote IS NULL THEN "absent"
+        ELSE vs.vote
+      END AS vote_depute
+      FROM explications_mp e
+      LEFT JOIN votes_scores vs ON e.voteNumero = vs.voteNumero AND e.legislature = vs.legislature AND vs.mpId = e.mpId
+      LEFT JOIN votes_datan vd ON e.voteNumero = vd.voteNumero AND e.legislature = vd.legislature
+      LEFT JOIN votes_info vi ON e.voteNumero = vi.voteNumero AND e.legislature = vi.legislature
+      WHERE e.mpId = ? AND e.legislature = ? AND e.voteNumero = ?
+    ';
+    $query = $this->db->query($sql, array($mpId, $legislature, $voteNumero));
+    return $query->row_array();
+  }
+
   public function create_explication($input){
     $data = array(
       'voteNumero' => $input['voteNumero'],
@@ -55,6 +76,18 @@ class DashboardMP_model extends CI_Model
       'state' => $this->input->post('state'),
     );
     return $this->db->insert('explications_mp', $data);
+  }
+
+  public function modify_explication($input){
+    $data = array(
+      'text' => $this->input->post('explication'),
+      'state' => $this->input->post('state')
+    );
+    $this->db->set($data);
+    $this->db->where('mpId', $input['depute']['mpId']);
+    $this->db->where('legislature', $input['legislature']);
+    $this->db->where('voteNumero', $input['voteNumero']);
+    $this->db->update('explications_mp');
   }
 
 }
