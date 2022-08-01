@@ -162,6 +162,7 @@
       $data['vote_depute']['positionGroup'] = vote_edited($data['vote_depute']['positionGroup']);
 
       $data['title'] = "Rédigez une explication de vote";
+      $data['page'] = 'title';
 
       // Form valiation
       $this->form_validation->set_rules('explication', 'Explication', 'required|max_length[500]');
@@ -175,6 +176,49 @@
         $this->load->view('dashboard/footer');
       } else {
         $this->dashboardMP_model->create_explication($data);
+        redirect('dashboard-mp/explications');
+      }
+
+    }
+
+    public function explications_modify($legislature, $voteNumero){
+      $data['depute'] = $this->deputes_model->get_depute_by_mpId($this->session->userdata('mpId'));
+      $data['explication'] = $this->votes_model->get_explication($data['depute']['mpId'], $legislature, $voteNumero);
+
+      if (empty($data['explication'])) {
+        $this->session->set_flashdata('flash_failure', "Vous n'avez pas encore rédigé une explication pour le vote n° " . $voteNumero . ". Vous pouvez en créer une en <a href='".base_url()."dashboard-mp/explications/create/l".$legislature."v".$voteNumero."'>cliquant ici</a>.");
+        redirect('dashboard-mp/explications/liste');
+      }
+
+      $data['vote'] = $this->votes_model->get_individual_vote($legislature, $voteNumero);
+
+      if (empty($data['explication']) || empty($data['vote'])) {
+        show_404($this->functions_datan->get_404_infos());
+      }
+
+      $data['legislature'] = $legislature;
+      $data['voteNumero'] = $voteNumero;
+      $data['username'] = $this->session->userdata('username');
+
+      $data['vote_depute'] = $this->votes_model->get_individual_vote_depute($data['depute']['mpId'], $data['vote']['legislature'], $data['vote']['voteNumero']);
+      $data['vote_depute']['vote'] = vote_edited($data['vote_depute']['vote']);
+      $data['vote_depute']['positionGroup'] = vote_edited($data['vote_depute']['positionGroup']);
+
+      $data['title'] = "Modifiez l'explication du vote";
+      $data['page'] = 'modify';
+
+      // Form valiation
+      $this->form_validation->set_rules('explication', 'Explication', 'required|max_length[500]');
+
+      // JS TO LOAD
+      $data['js_to_load'] = array('dashboard/countChar');
+
+      if ($this->form_validation->run() === FALSE) {
+        $this->load->view('dashboard/header', $data);
+        $this->load->view('dashboard-mp/explications/create', $data);
+        $this->load->view('dashboard/footer');
+      } else {
+        $this->dashboardMP_model->modify_explication($data);
         redirect('dashboard-mp/explications');
       }
 
