@@ -1963,7 +1963,10 @@ class Script
 
         $query = $this->bdd->query('
         SELECT vs.voteNumero, vs.legislature, vs.mpId, gc.organeRef,
-        CASE WHEN vs.vote = gc.positionGroupe THEN 1 ELSE 0 END AS accord
+        CASE
+          WHEN vs.vote = "nv" THEN NULL
+          WHEN vs.vote = gc.positionGroupe THEN 1
+          ELSE 0 END AS accord
         FROM votes_scores vs
         LEFT JOIN groupes_cohesion gc ON vs.voteNumero = gc.voteNumero AND vs.legislature = gc.legislature
         WHERE vs.legislature = "' . $this->legislature_to_get . '" AND vs.voteNumero >= "' . $lastVote . '"
