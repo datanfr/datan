@@ -387,7 +387,7 @@
       $data['other_deputes_dpt'] = $this->deputes_model->get_deputes_all(legislature_current(), TRUE, $depute_dpt);
 
       // Get votes datan
-      if ($legislature == legislature_current()) {
+      if ($legislature >= 15) {
         // Get edited votes
         $data['votes_datan'] = $this->votes_model->get_votes_datan_depute($mpId, 5);
         // Get key votes
