@@ -969,3 +969,27 @@
       </div>
     </div>
   </div>
+  <!-- EXPLICATIONS DE VOTE -->
+  <?php foreach ($votes_datan as $key => $value): ?>
+    <?php if ($value['explication']): ?>
+      <!-- Modal -->
+      <div class="modal fade" id="explication-l<?= $value['legislature'] ?>-v<?= $value['voteNumero'] ?>" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLongTitle">L'explication de vote de <?= $title ?></h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <?= $value['explication'] ?>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    <?php endif; ?>
+  <?php endforeach; ?>
