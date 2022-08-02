@@ -9,7 +9,7 @@
   </div>
   <div class="card-body d-flex flex-column justify-content-center">
     <span class="title">
-      <a href="<?= base_url() ?>votes/legislature-<?= $vote['legislature'] ?>/vote_<?= $vote['voteNumero'] ?>" class="stretched-link no-decoration"><?= $vote['vote_titre'] ?></a>
+      <a href="<?= base_url() ?>votes/legislature-<?= $vote['legislature'] ?>/vote_<?= $vote['voteNumero'] ?>" class="stretched-link* no-decoration"><?= $vote['vote_titre'] ?></a>
     </span>
     <?php if ($vote['reading']): ?>
       <span class="reading mt-2">
@@ -17,7 +17,15 @@
       </span>
     <?php endif; ?>
   </div>
-  <div class="card-footer">
-    <span class="field badge badge-primary py-1 px-2"><?= $vote['category_libelle'] ?></span>
-  </div>
+  <?php if ($vote['explication']): ?>
+    <div class="card-footer d-flex justify-content-end">
+      <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#explication-l<?= $vote['legislature'] ?>-v<?= $vote['voteNumero'] ?>">
+        L'explication
+      </button>
+    </div>
+  <?php else: ?>
+    <div class="card-footer">
+      <span class="field badge badge-primary py-1 px-2"><?= $vote['category_libelle'] ?></span>
+    </div>
+  <?php endif; ?>
 </div>

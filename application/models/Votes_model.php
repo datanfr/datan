@@ -366,12 +366,14 @@
         	WHEN vs.vote = -1 THEN "contre"
         	WHEN vs.vote IS NULL THEN "absent"
         	ELSE vs.vote
-        END AS vote_depute
+        END AS vote_depute,
+        e.text AS explication
         FROM votes_datan vd
         LEFT JOIN fields f ON vd.category = f.id
         LEFT JOIN votes_scores vs ON vd.voteNumero = vs.voteNumero AND vd.legislature = vs.legislature AND vs.mpId = ?
         LEFT JOIN votes_info vi ON vd.voteNumero = vi.voteNumero AND vd.legislature = vi.legislature
         LEFT JOIN readings r ON r.id = vd.reading
+        LEFT JOIN explications_mp e ON e.mpId = vs.mpId AND e.legislature = vd.legislature AND e.voteNumero = vd.voteNumero AND e.state = 1
         WHERE vd.state = "published" AND vs.vote IS NOT NULL
         ORDER BY vi.dateScrutin DESC
       ';
