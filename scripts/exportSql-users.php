@@ -65,7 +65,9 @@ function EXPORT_TABLES($host, $user, $pass, $name, $tables = false, $backup_name
     $tablesData = array(
       'users',
       'newsletter',
-      'votes_datan'
+      'votes_datan',
+      'users_mp',
+      'explications_mp'
     );
     $mysqli = new mysqli($host, $user, $pass, $name);
     $mysqli->select_db($name);
@@ -146,7 +148,7 @@ function EXPORT_TABLES($host, $user, $pass, $name, $tables = false, $backup_name
     if(!is_file($file)){
       file_put_contents($file, "");
 
-      $contentFinal = " /* DATABASE BACKUP FOR THE FOLLOWING TABLES : users, newsletter, votes_datan \n";
+      $contentFinal = " /* DATABASE BACKUP FOR THE FOLLOWING TABLES : users, newsletter, votes_datan, users_mp, explications_mp \n";
       $contentFinal .= " Date of the backup: " . $date . " */ \n";
       $contentFinal .= $content;
 
