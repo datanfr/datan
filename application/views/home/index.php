@@ -218,6 +218,9 @@
       </div>
       <div class="row pb-5">
         <div class="col-lg-8 offset-lg-2 d-flex flex-wrap justify-content-around align-items-center">
+          <a href="https://www.lejdd.fr/Politique/interventions-textes-qui-sont-les-deputes-les-plus-actifs-de-ce-debut-de-legislature-4126439" target="_blank" rel="noopener">
+            <img class="mx-2 my-3 img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="150" height="35" data-src="<?= asset_url() ?>imgs/media/jdd.png" alt="JDD">
+          </a>
           <a href="https://www.bfmtv.com/politique/infographie-assemblee-nationale-qui-sont-les-groupes-parlementaires-les-plus-proches_AV-202207260568.html" target="_blank" rel="noopener">
             <img class="mx-2 my-3 img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="80" height="50" data-src="<?= asset_url() ?>imgs/media/bfm.jpg" alt="BFM TV">
           </a>
@@ -236,6 +239,9 @@
           <span class="url_obf" url_obf="<?= url_obfuscation("https://www.sudouest.fr/redaction/le-cercle-sud-ouest-des-idees/reintroduction-des-pesticides-neonicotinoides-comment-nos-deputes-ont-ils-vote-et-pourquoi-1400279.php") ?>">
             <img class="mx-2 my-3 img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="65" height="59" data-src="<?= asset_url() ?>imgs/media/sud_ouest.png" alt="Sud Ouest">
           </span>
+          <a href="https://www.capital.fr/economie-politique/classement-les-deputes-les-plus-bosseurs-et-ceux-qui-en-font-le-moins-1438612" target="_blank" rel="noopener">
+            <img class="mx-2 my-3 img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="122" height="40" data-src="<?= asset_url() ?>imgs/media/capital.png" alt="Capital">
+          </a>
           <span class="url_obf" url_obf="<?= url_obfuscation("https://www.tv78.com/78-journal-info-yvelines-actu-edition-25-janvier-2021/") ?>">
             <img class="mx-2 my-3 img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="150" height="72" data-src="<?= asset_url() ?>imgs/media/tv78.png" alt="TV 78">
           </span>
@@ -244,6 +250,9 @@
           </span>
           <a href="https://www.latribune.fr/opinions/tribunes/apres-trois-votes-de-confiance-la-majorite-presidentielle-s-erode-t-elle-a-l-assemblee-nationale-853748.html" target="_blank" rel="noopener">
             <img class="mx-2 my-3 img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="100" height="45" data-src="<?= asset_url() ?>imgs/media/la_tribune.png" alt="La Tribune">
+          </a>
+          <a href="https://www.letelegramme.fr/finistere/morlaix/legislatives-a-morlaix-quel-est-le-bilan-de-sandrine-le-feur-08-06-2022-13061024.php" target="_blank" rel="noopener">
+            <img class="mx-2 my-3 img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="135" height="19" data-src="<?= asset_url() ?>imgs/media/telegramme.png" alt="Le Télégramme">
           </a>
           <span class="url_obf" url_obf="<?= url_obfuscation("https://ram05.fr/podcasts/journal/29-novembre-2021-7") ?>">
             <img class="mx-2 my-3 img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="75" height="50" data-src="<?= asset_url() ?>imgs/media/ram05.png" alt="Radio Ram05">
@@ -262,6 +271,9 @@
           </a>
           <a href="https://www.petitbleu.fr/2022/06/06/legislatives-en-lot-et-garonne-michel-lauzzana-un-bilan-deux-satisfactions-et-deux-regrets-10341292.php" target="_blank" rel="noopener">
             <img class="mx-2 my-3 img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="129" height="34" data-src="<?= asset_url() ?>imgs/media/petit-bleu.png" alt="Le Peitit bleu d'Agen">
+          </a>
+          <a href="https://www.lamontagne.fr/clermont-ferrand-63000/actualites/a-la-veille-des-legislatives-quel-bilan-pour-les-cinq-deputes-sortants-du-puy-de-dome_14137540/" target="_blank" rel="noopener">
+            <img class="mx-2 my-3 img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="148" height="17" data-src="<?= asset_url() ?>imgs/media/montagne.png" alt="La Montagne">
           </a>
         </div>
       </div>
