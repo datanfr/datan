@@ -218,6 +218,9 @@
       </div>
       <div class="row pb-5">
         <div class="col-lg-8 offset-lg-2 d-flex flex-wrap justify-content-around align-items-center">
+          <a href="https://www.lejdd.fr/Politique/interventions-textes-qui-sont-les-deputes-les-plus-actifs-de-ce-debut-de-legislature-4126439" target="_blank" rel="noopener">
+            <img class="mx-2 my-3 img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="150" height="35" data-src="<?= asset_url() ?>imgs/media/jdd.png" alt="JDD">
+          </a>
           <a href="https://www.bfmtv.com/politique/infographie-assemblee-nationale-qui-sont-les-groupes-parlementaires-les-plus-proches_AV-202207260568.html" target="_blank" rel="noopener">
             <img class="mx-2 my-3 img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="80" height="50" data-src="<?= asset_url() ?>imgs/media/bfm.jpg" alt="BFM TV">
           </a>
