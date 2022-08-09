@@ -266,6 +266,9 @@
           <a href="https://www.petitbleu.fr/2022/06/06/legislatives-en-lot-et-garonne-michel-lauzzana-un-bilan-deux-satisfactions-et-deux-regrets-10341292.php" target="_blank" rel="noopener">
             <img class="mx-2 my-3 img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="129" height="34" data-src="<?= asset_url() ?>imgs/media/petit-bleu.png" alt="Le Peitit bleu d'Agen">
           </a>
+          <a href="https://www.lamontagne.fr/clermont-ferrand-63000/actualites/a-la-veille-des-legislatives-quel-bilan-pour-les-cinq-deputes-sortants-du-puy-de-dome_14137540/" target="_blank" rel="noopener">
+            <img class="mx-2 my-3 img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="148" height="17" data-src="<?= asset_url() ?>imgs/media/montagne.png" alt="La Montagne">
+          </a>
         </div>
       </div>
     </div>
