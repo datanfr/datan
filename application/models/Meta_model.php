@@ -7,7 +7,6 @@
     }
 
     public function get_ogp($type, $title, $description, $url, $data){
-      //print_r($data);
 
       $array['title'] = $title;
       $array['description'] = $description;
@@ -21,14 +20,27 @@
 
 
       if ($type == "deputes/individual" || $type == "deputes/historique") {
-        $uid = $data['depute']['mpId'];
-        if ($data['depute']['imgOgp']) {
-          $array['img'] = asset_url()."imgs/deputes_ogp/ogp_deputes_".$uid.".png";
-          $array['twitter_img'] = asset_url()."imgs/deputes_ogp/ogp_deputes_".$uid.".png";
+
+        /// --- IF MP PAGE --- ///
+        $uid = $data["depute"]["mpId"];
+        $gender['e'] = $data['depute']['civ'] == 'M.' ? '' : 'e';
+        $gender['ancien'] = $data['depute']['civ'] == 'M.' ? 'ancien' : 'ancienne';
+        $dpt = 'député' . $gender['e'] . ' '  . $data['depute']['dptLibelle2'] . '' . $data['depute']['departementNom'] . ' (' . $data['depute']['departementCode'] . ')';
+        if ($data['depute']['active'] == 0) {
+          $dpt = ucfirst($gender['ancien']) . ' ' . $dpt;
         } else {
-          $array['img'] = asset_url()."imgs/datan/logo_social_media.png";
-          $array['twitter_img'] = asset_url()."imgs/datan/logo_social_media.png";
+          $dpt = ucfirst($dpt);
         }
+
+        $img = "https://og-image-datan.vercel.app/" . str_replace(" ", "%20", $dpt);
+        $img .= "?prenom=" . str_replace(" ", "%20", $data["depute"]["nameFirst"]);
+        $img .= "&nom=" . str_replace(" ", "%20", $data["depute"]["nameLast"]);
+        $img .= "&group=" . str_replace(" ", "%20", $data["depute"]["libelle"]);
+        $img .= "&couleur=" . str_replace("#", "", $data["depute"]["couleurAssociee"]);
+        $img .= "&template=mp";
+        $img .= "&id=" . $data["depute"]["mpId"];
+        $array['img'] = $img;
+        $array['twitter_img'] = $img;
         $array['img_width'] = 1200;
         $array['img_height'] = 630;
         $array['img_type'] = "image/png";
@@ -36,6 +48,7 @@
         $array['type'] = 'profile';
         $array['type_first_name'] = $data['depute']['nameFirst'];
         $array['type_last_name'] = $data['depute']['nameLast'];
+
       } elseif ($type == "posts/view") {
         $id = $data['post']['id'];
         $slug = $data['post']['slug'];
