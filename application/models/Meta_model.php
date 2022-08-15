@@ -39,6 +39,11 @@
         $img .= "&couleur=" . str_replace("#", "", $data["depute"]["couleurAssociee"]);
         $img .= "&template=mp";
         $img .= "&id=" . $data["depute"]["mpId"];
+        if ($data["depute"]["img"]) {
+          $img .= "&img=1";
+        } else {
+          $img .= "&img=0";
+        }
         $array['img'] = $img;
         $array['twitter_img'] = $img;
         $array['img_width'] = 1200;
