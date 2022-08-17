@@ -46,14 +46,34 @@
         }
         $array['img'] = $img;
         $array['twitter_img'] = $img;
-        $array['img_width'] = 1200;
-        $array['img_height'] = 630;
+        $array['img_width'] = 2048;
+        $array['img_height'] = 1170;
         $array['img_type'] = "image/png";
         // PROFILE
         $array['type'] = 'profile';
         $array['type_first_name'] = $data['depute']['nameFirst'];
         $array['type_last_name'] = $data['depute']['nameLast'];
 
+      } elseif ($type == "groupes/individual") {
+        if ($data["active"]) {
+          $description = "Groupe de l'Assemblée nationale";
+        } else {
+          $description = "Ancien groupe de l'Assemblée nationale";
+        }
+        //print_r($data);
+        /// --- IF GROUP PAGE --- ///
+        $img = "https://og-image-datan.vercel.app/" . str_replace(" ", "%20", $description);
+        $img .= "?template=group";
+        $img .= "&group=" . str_replace(" ", "%20", $data["groupe"]["libelle"]);
+        $img .= "&abrev=" . $data["groupe"]["libelleAbrev"];
+        $img .= "&couleur=" . str_replace("#", "", $data["groupe"]["couleurAssociee"]);
+        $img .= "&legislature=" . $data["groupe"]["legislature"];
+        $array['img'] = $img;
+        $array['twitter_img'] = $img;
+        $array['img_width'] = 2048;
+        $array['img_height'] = 1170;
+        $array['img_type'] = 'image/png';
+        $array['type'] = 'website';
       } elseif ($type == "posts/view") {
         $id = $data['post']['id'];
         $slug = $data['post']['slug'];
