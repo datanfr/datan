@@ -7,7 +7,6 @@
     }
 
     public function get_ogp($type, $title, $description, $url, $data){
-      //print_r($data);
 
       $array['title'] = $title;
       $array['description'] = $description;
@@ -21,21 +20,59 @@
 
 
       if ($type == "deputes/individual" || $type == "deputes/historique") {
-        $uid = $data['depute']['mpId'];
-        if ($data['depute']['imgOgp']) {
-          $array['img'] = asset_url()."imgs/deputes_ogp/ogp_deputes_".$uid.".png";
-          $array['twitter_img'] = asset_url()."imgs/deputes_ogp/ogp_deputes_".$uid.".png";
+
+        /// --- IF MP PAGE --- ///
+        $uid = $data["depute"]["mpId"];
+        $gender['e'] = $data['depute']['civ'] == 'M.' ? '' : 'e';
+        $gender['ancien'] = $data['depute']['civ'] == 'M.' ? 'ancien' : 'ancienne';
+        $dpt = 'député' . $gender['e'] . ' '  . $data['depute']['dptLibelle2'] . '' . $data['depute']['departementNom'] . ' (' . $data['depute']['departementCode'] . ')';
+        if ($data['depute']['active'] == 0) {
+          $dpt = ucfirst($gender['ancien']) . ' ' . $dpt;
         } else {
-          $array['img'] = asset_url()."imgs/datan/logo_social_media.png";
-          $array['twitter_img'] = asset_url()."imgs/datan/logo_social_media.png";
+          $dpt = ucfirst($dpt);
         }
-        $array['img_width'] = 1200;
-        $array['img_height'] = 630;
+
+        $img = "https://og-image-datan.vercel.app/" . str_replace(" ", "%20", $dpt);
+        $img .= "?prenom=" . str_replace(" ", "%20", $data["depute"]["nameFirst"]);
+        $img .= "&nom=" . str_replace(" ", "%20", $data["depute"]["nameLast"]);
+        $img .= "&group=" . str_replace(" ", "%20", $data["depute"]["libelle"]);
+        $img .= "&couleur=" . str_replace("#", "", $data["depute"]["couleurAssociee"]);
+        $img .= "&template=mp";
+        $img .= "&id=" . $data["depute"]["mpId"];
+        if ($data["depute"]["img"]) {
+          $img .= "&img=1";
+        } else {
+          $img .= "&img=0";
+        }
+        $array['img'] = $img;
+        $array['twitter_img'] = $img;
+        $array['img_width'] = 2048;
+        $array['img_height'] = 1170;
         $array['img_type'] = "image/png";
         // PROFILE
         $array['type'] = 'profile';
         $array['type_first_name'] = $data['depute']['nameFirst'];
         $array['type_last_name'] = $data['depute']['nameLast'];
+
+      } elseif ($type == "groupes/individual") {
+        if ($data["active"]) {
+          $description = "Groupe de l'Assemblée nationale";
+        } else {
+          $description = "Ancien groupe de l'Assemblée nationale";
+        }
+        /// --- IF GROUP PAGE --- ///
+        $img = "https://og-image-datan.vercel.app/" . str_replace(" ", "%20", $description);
+        $img .= "?template=group";
+        $img .= "&group=" . str_replace(" ", "%20", $data["groupe"]["libelle"]);
+        $img .= "&abrev=" . $data["groupe"]["libelleAbrev"];
+        $img .= "&couleur=" . str_replace("#", "", $data["groupe"]["couleurAssociee"]);
+        $img .= "&legislature=" . $data["groupe"]["legislature"];
+        $array['img'] = $img;
+        $array['twitter_img'] = $img;
+        $array['img_width'] = 2048;
+        $array['img_height'] = 1170;
+        $array['img_type'] = 'image/png';
+        $array['type'] = 'website';
       } elseif ($type == "posts/view") {
         $id = $data['post']['id'];
         $slug = $data['post']['slug'];
@@ -46,9 +83,22 @@
         $array['img_type'] = "image/png";
         $array['type'] = 'website';
       } elseif ($type == "votes/individual") {
-        if (isset($data['vote']['og_image'])) {
-          $array['img'] = $data['vote']['og_image'];
-          $array['twitter_img'] = $data['vote']['og_image'];
+
+        /// --- INDIVIDUAL VOTE PAGE --- ///
+
+        //var_dump($data);
+        if ($data['vote']['title'] || $data['vote']['voteType'] == "final") {
+          $img = "https://og-image-datan.vercel.app/" . str_replace(" ", "%20", $data['vote']['title']);
+          $img .= "?voteN=" . $data['vote']['voteNumero'];
+          $img .= "&legislature=" . $data['vote']['legislature'];
+          $img .= "&date=" . str_replace(" ", "%20", $data['vote']['date_edited']);
+          $img .= "&pour=" . $data['vote']['pour'];
+          $img .= "&abs=" . $data['vote']['abstention'];
+          $img .= "&contre=" . $data['vote']['contre'];
+          $img .= "&sort=" . $data['vote']['sortCode'];
+          $img .= "&template=vote";
+          $array['img'] = $img;
+          $array['twitter_img'] = $img;
           $array['img_width'] = 2048;
           $array['img_height'] = 1170;
         } else {

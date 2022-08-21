@@ -507,12 +507,12 @@
       return $this->db->query($sql, $voteNumeros)->result_array();
     }
 
-    public function get_vote_schema($vote){
+    public function get_vote_schema($vote, $img){
       $schema = [
         "@context" => "http://schema.org",
         "@type" => "NewsArticle",
         "headline" => "Vote à l'Assemblée : " . $vote['title'],
-        "image" => $vote['og_image'],
+        "image" => $img,
       ];
 
       if ($vote['created_at']) {
