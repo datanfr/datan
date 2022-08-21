@@ -60,7 +60,6 @@
         } else {
           $description = "Ancien groupe de l'Assemblée nationale";
         }
-        //print_r($data);
         /// --- IF GROUP PAGE --- ///
         $img = "https://og-image-datan.vercel.app/" . str_replace(" ", "%20", $description);
         $img .= "?template=group";
@@ -84,9 +83,22 @@
         $array['img_type'] = "image/png";
         $array['type'] = 'website';
       } elseif ($type == "votes/individual") {
-        if (isset($data['vote']['og_image'])) {
-          $array['img'] = $data['vote']['og_image'];
-          $array['twitter_img'] = $data['vote']['og_image'];
+
+        /// --- INDIVIDUAL VOTE PAGE --- ///
+
+        //var_dump($data);
+        if ($data['vote']['title'] || $data['vote']['voteType'] == "final") {
+          $img = "https://og-image-datan.vercel.app/" . str_replace(" ", "%20", $data['vote']['title']);
+          $img .= "?voteN=" . $data['vote']['voteNumero'];
+          $img .= "&legislature=" . $data['vote']['legislature'];
+          $img .= "&date=" . str_replace(" ", "%20", $data['vote']['date_edited']);
+          $img .= "&pour=" . $data['vote']['pour'];
+          $img .= "&abs=" . $data['vote']['abstention'];
+          $img .= "&contre=" . $data['vote']['contre'];
+          $img .= "&sort=" . $data['vote']['sortCode'];
+          $img .= "&template=vote";
+          $array['img'] = $img;
+          $array['twitter_img'] = $img;
           $array['img_width'] = 2048;
           $array['img_height'] = 1170;
         } else {
