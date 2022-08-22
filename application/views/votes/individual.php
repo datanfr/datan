@@ -103,11 +103,11 @@
                     <div class="card-body d-flex align-items-center justify-content-around flex-wrap">
                       <?php foreach ($groupes as $groupe): ?>
                         <?php if ($groupe['positionMajoritaire'] == 'pour'): ?>
-                          <div class="card-vote-groupe my-1 mx-1" data-toggle="tooltip" data-placement="top" title="<?= $groupe['libelle'] ?> (<?= $groupe['libelleAbrev'] ?>)">
+                          <div class="card-vote-groupe my-1 mx-1" data-toggle="tooltip" data-placement="top" title="<?= name_group($groupe['libelle']) ?> (<?= $groupe['libelleAbrev'] ?>)">
                             <picture>
                               <source srcset="<?= asset_url(); ?>imgs/groupes/<?= $groupe['legislature'] ?>/webp/<?= $groupe['libelleAbrev'] ?>.webp" type="image/webp">
                               <source srcset="<?= asset_url(); ?>imgs/groupes/<?= $groupe['legislature'] ?>/<?= $groupe['libelleAbrev'] ?>.png" type="image/png">
-                              <img class="img" src="<?= asset_url(); ?>imgs/groupes/<?= $groupe['legislature'] ?>/<?= $groupe['libelleAbrev'] ?>.png" width="150" height="150" alt="<?= $groupe['libelle'] ?>">
+                              <img class="img" src="<?= asset_url(); ?>imgs/groupes/<?= $groupe['legislature'] ?>/<?= $groupe['libelleAbrev'] ?>.png" width="150" height="150" alt="<?= name_group($groupe['libelle']) ?>">
                             </picture>
                           </div>
                         <?php endif; ?>
@@ -128,11 +128,11 @@
                     <div class="card-body d-flex align-items-center justify-content-around flex-wrap">
                       <?php foreach ($groupes as $groupe): ?>
                         <?php if ($groupe['positionMajoritaire'] == 'contre'): ?>
-                          <div class="card-vote-groupe my-1 mx-1" data-toggle="tooltip" data-placement="top" title="<?= $groupe['libelle'] ?> (<?= $groupe['libelleAbrev'] ?>)">
+                          <div class="card-vote-groupe my-1 mx-1" data-toggle="tooltip" data-placement="top" title="<?= name_group($groupe['libelle']) ?> (<?= $groupe['libelleAbrev'] ?>)">
                             <picture>
                               <source srcset="<?= asset_url(); ?>imgs/groupes/<?= $groupe['legislature'] ?>/webp/<?= $groupe['libelleAbrev'] ?>.webp" type="image/webp">
                               <source srcset="<?= asset_url(); ?>imgs/groupes/<?= $groupe['legislature'] ?>/<?= $groupe['libelleAbrev'] ?>.png" type="image/png">
-                              <img class="img" src="<?= asset_url(); ?>imgs/groupes/<?= $groupe['legislature'] ?>/<?= $groupe['libelleAbrev'] ?>.png" width="150" height="150" alt="<?= $groupe['libelle'] ?>">
+                              <img class="img" src="<?= asset_url(); ?>imgs/groupes/<?= $groupe['legislature'] ?>/<?= $groupe['libelleAbrev'] ?>.png" width="150" height="150" alt="<?= name_group($groupe['libelle']) ?>">
                             </picture>
                           </div>
                         <?php endif; ?>
@@ -318,7 +318,7 @@
                       <tr>
                         <td class="name">
                           <a href="<?= base_url() ?>groupes/legislature-<?= $v_groupe['legislature'] ?>/<?= mb_strtolower($v_groupe['libelleAbrev']) ?>" target="_blank" class="no-decoration underline">
-                            <?= $v_groupe['libelle'] ?> (<?= $v_groupe['libelleAbrev'] ?>)
+                            <?= name_group($v_groupe['libelle']) ?> (<?= $v_groupe['libelleAbrev'] ?>)
                           </a>
                         </td>
                         <td class="text-center vote sort-<?= $v_groupe['positionMajoritaire'] ?>">
@@ -355,7 +355,7 @@
                         <td class="name">
                           <a href="<?= base_url() ?>deputes/<?= $v_depute['dptSlug'] ?>/depute_<?= $v_depute['nameUrl'] ?>" target="_blank" class="no-decoration underline"><?= $v_depute['nameFirst'].' '.$v_depute['nameLast'] ?></a>
                         </td>
-                        <td class="text-center"><?= $v_depute['libelle'] ?></td>
+                        <td class="text-center"><?= name_group($v_depute['libelle']) ?></td>
                         <td class="text-center vote sort-<?= $v_depute['vote_libelle'] ?>"><?= mb_strtoupper($v_depute['vote_libelle']) ?></td>
                         <td class="text-center sort-<?= $v_depute['loyaute_libelle'] ?>"><?= mb_strtoupper($v_depute['loyaute_libelle']) ?></td>
                       </tr>
