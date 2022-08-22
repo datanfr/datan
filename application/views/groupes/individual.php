@@ -88,7 +88,7 @@
                   </div>
                   <div class="explanation">
                     <?php if (!$active): ?>
-                      <p>Avec <?= $groupe['effectif'] ?> députés, le groupe <?= $title ?> représentait <?= $groupe['effectifShare'] ?>% du nombre total de députés à l'Assemblée nationale, qui est de 577.</p>
+                      <p>Avec <?= $groupe['effectif'] ?> députés, le groupe <?= $groupe['libelleAbrev'] ?> représentait <?= $groupe['effectifShare'] ?>% du nombre total de députés à l'Assemblée nationale, qui est de 577.</p>
                       <?php else: ?>
                       <p>Avec <?= $groupe['effectif'] ?> députés, le groupe <?= $groupe['libelleAbrev'] ?> est le <?= $groupe['classement'] != "1" ? $groupe['classement'].'<sup>e</sup> ' : '' ?>groupe le plus important (sur <?= $groupesN ?> groupes). Il représente <?= $groupe['effectifShare'] ?>% du nombre total de députés à l'Assemblée nationale.</p>
                     <?php endif; ?>
@@ -171,7 +171,7 @@
               <div class="row">
                 <?php if ($no_participation): ?>
                   <div class="col-12 mt-2">
-                    <p>Du fait d'un nombre insuffisant de votes de la part du groupe <?= $title ?>, aucune statistique n'a pu être produite.</p>
+                    <p>Du fait d'un nombre insuffisant de votes de la part du groupe <?= name_group($title) ?>, aucune statistique n'a pu être produite.</p>
                   </div>
                   <?php else: ?>
                     <div class="col-lg-3 offset-lg-1 mt-2">
@@ -221,7 +221,7 @@
               <div class="row">
                 <?php if ($no_cohesion): ?>
                   <div class="col-12 mt-2">
-                    <p>Du fait d'un nombre insuffisant de votes de la part du groupe <?= $title ?>, aucune statistique n'a pu être produite.</p>
+                    <p>Du fait d'un nombre insuffisant de votes de la part du groupe <?= name_group($title) ?>, aucune statistique n'a pu être produite.</p>
                   </div>
                   <?php else: ?>
                   <div class="col-lg-3 offset-lg-1 mt-2">
@@ -266,7 +266,7 @@
                 <div class="row">
                   <?php if ($no_participation): ?>
                     <div class="col-12 mt-2">
-                      <p>Du fait d'un nombre insuffisant de votes de la part du groupe <?= $title ?>, aucune statistique n'a pu être produite.</p>
+                      <p>Du fait d'un nombre insuffisant de votes de la part du groupe <?= name_group($title) ?>, aucune statistique n'a pu être produite.</p>
                     </div>
                     <?php else: ?>
                     <div class="col-lg-3 offset-lg-1 mt-2">
@@ -323,7 +323,7 @@
               <?php if ($no_proximite): ?>
                 <div class="row">
                   <div class="col-10 offset-2">
-                    <p>Du fait d'un nombre insuffisant de votes de la part du groupe <?= $title ?>, aucune statistique n'a pu être produite.</p>
+                    <p>Du fait d'un nombre insuffisant de votes de la part du groupe <?= name_group($title) ?>, aucune statistique n'a pu être produite.</p>
                   </div>
                 </div>
                 <?php else: ?>
@@ -512,7 +512,7 @@
     <?php if ($groupe['libelleAbrev'] != "NI"): ?>
       <div class="row">
         <div class="col-12">
-          <h2>Président du groupe <?= $title ?></h2>
+          <h2>Président du groupe <?= name_group($title) ?></h2>
           <div class="row mt-3">
             <div class="col-6 col-md-3 py-2">
               <a class="membre no-decoration underline" href="<?= base_url(); ?>deputes/<?= $president['dptSlug'] ?>/depute_<?= $president['nameUrl'] ?>"><?= $president['nameFirst']." ".$president['nameLast'] ?></a>
@@ -523,7 +523,7 @@
     <?php endif; ?>
     <div class="row">
       <div class="col-12">
-        <h2>Les députés membres du groupe <?= $title ?></h2>
+        <h2>Les députés membres du groupe <?= name_group($title) ?></h2>
         <div class="row mt-3">
           <?php foreach ($membres as $key => $membre): ?>
             <div class="col-6 col-md-3 py-2">
@@ -539,7 +539,7 @@
     <?php if (!empty($apparentes)): ?>
       <div class="row">
         <div class="col-12">
-          <h2>Tous les députés apparentés du groupe <?= $title ?></h2>
+          <h2>Tous les députés apparentés du groupe <?= name_group($title) ?></h2>
           <div class="row mt-3">
             <?php foreach ($apparentes as $key => $mp): ?>
               <div class="col-6 col-md-3 py-2">
