@@ -3,10 +3,10 @@
           <p>Quel est le député le plus âgé ? Qui est le moins jeune ?</p>
           <p>Si vous attachez de l'importance à la représentativité « sociale » du parlement, l'âge est un facteur à prendre en compte. Par exemple, certains estiment que les jeunes seront moins bien représentés si aucun député n'est issu de cette classe d'âge.</p>
           <p>Les chercheurs montrent que les députés, partout dans le monde, sont en moyenne plus âgés que la population. En France, <b>la moyenne d'âge des députés est de <?= $ageMean ?> ans</b>. C'est <?= $ageDiffStr ?> que la <a href="<?= base_url() ?>statistiques/aide#ageMoyen">moyenne d'âge des Français éligibles</a> (plus de 18 ans), qui est de <?= $ageMeanPop ?> ans.</p>
-          <p><?= ucfirst($mpOldestGender['le']) ?> <?= $mpOldestGender['depute'] ?> en activité le plus âgé<?= $mpOldestGender['e'] ?> est <a href="<?= base_url() ?>deputes/<?= $mpOldest['dptSlug'] ?>/depute_<?= $mpOldest['nameUrl'] ?>" target="_blank"><?= $mpOldest['name'] ?></a> (<?= $mpOldest['age'] ?> ans), membre du groupe <?= $mpOldest["libelle"] ?>.</p>
+          <p><?= ucfirst($mpOldestGender['le']) ?> <?= $mpOldestGender['depute'] ?> en activité le plus âgé<?= $mpOldestGender['e'] ?> est <a href="<?= base_url() ?>deputes/<?= $mpOldest['dptSlug'] ?>/depute_<?= $mpOldest['nameUrl'] ?>" target="_blank"><?= $mpOldest['name'] ?></a> (<?= $mpOldest['age'] ?> ans), membre du groupe <?= name_group($mpOldest["libelle"]) ?>.</p>
           <p>
             <a href="<?= base_url() ?>deputes/<?= $mpYoungest['dptSlug'] ?>/depute_<?= $mpYoungest['nameUrl'] ?>" target="_blank"><?= $mpYoungest['name'] ?></a> (<?= $mpYoungest['age'] ?> ans) est <?= $mpYoungestGender['le'] ?> <?= $mpYoungestGender['depute'] ?> <?= $mpYoungestGender['le'] ?> plus jeune.
-            <?= ucfirst($mpYoungestGender['pronom']) ?> est membre du groupe <?= $mpYoungest['libelle'] ?>.
+            <?= ucfirst($mpYoungestGender['pronom']) ?> est membre du groupe <?= name_group($mpYoungest['libelle']) ?>.
           </p>
         </div>
       </div>

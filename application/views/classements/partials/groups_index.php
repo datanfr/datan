@@ -9,7 +9,7 @@
           <picture>
             <source srcset="<?= asset_url(); ?>imgs/groupes/<?= $first["group"]["legislature"] ?>/webp/<?= $first["group"]["libelleAbrev"] ?>.webp" type="image/webp">
             <source srcset="<?= asset_url(); ?>imgs/groupes/<?= $first["group"]["legislature"] ?>/<?= $first["group"]["libelleAbrev"] ?>.png" type="image/png">
-            <img class="img" src="<?= asset_url(); ?>imgs/groupes/<?= $first["group"]["legislature"] ?>/<?= $first["group"]["libelleAbrev"] ?>.png" width="150" height="150" alt="<?= $first["group"]["libelle"] ?>">
+            <img class="img" src="<?= asset_url(); ?>imgs/groupes/<?= $first["group"]["legislature"] ?>/<?= $first["group"]["libelleAbrev"] ?>.png" width="150" height="150" alt="<?= name_group($first["group"]["libelle"]) ?>">
           </picture>
         </div>
         <div class="age">
@@ -18,7 +18,7 @@
       </div>
     </a>
     <div class="description text-center">
-      <a href="<?= base_url() ?>groupes/legislature-<?= $first["group"]["legislature"] ?>/<?= mb_strtolower($first["group"]["libelleAbrev"]) ?>" class="no-decoration underline"><?= $first["group"]["libelle"] ?></a>
+      <a href="<?= base_url() ?>groupes/legislature-<?= $first["group"]["legislature"] ?>/<?= mb_strtolower($first["group"]["libelleAbrev"]) ?>" class="no-decoration underline"><?= name_group($first["group"]["libelle"]) ?></a>
     </div>
   </div>
   <div class="col-sm-6 d-flex flex-column align-items-center">
@@ -31,7 +31,7 @@
           <picture>
             <source srcset="<?= asset_url(); ?>imgs/groupes/<?= $second["group"]["legislature"] ?>/webp/<?= $second["group"]['libelleAbrev'] ?>.webp" type="image/webp">
             <source srcset="<?= asset_url(); ?>imgs/groupes/<?= $second["group"]["legislature"] ?>/<?= $second["group"]['libelleAbrev'] ?>.png" type="image/png">
-            <img class="img" src="<?= asset_url(); ?>imgs/groupes/<?= $second["group"]["legislature"] ?>/<?= $second["group"]['libelleAbrev'] ?>.png" width="150" height="150" alt="<?= $second["group"]['libelle'] ?>">
+            <img class="img" src="<?= asset_url(); ?>imgs/groupes/<?= $second["group"]["legislature"] ?>/<?= $second["group"]['libelleAbrev'] ?>.png" width="150" height="150" alt="<?= name_group($second['group']['libelle']) ?>">
           </picture>
         </div>
         <div class="age">
@@ -39,8 +39,8 @@
         </div>
       </div>
     </a>
-    <div class="description">
-      <a href="<?= base_url() ?>groupes/legislature-<?= $second["group"]["legislature"] ?>/<?= mb_strtolower($second["group"]["libelleAbrev"]) ?>" class="no-decoration underline"><?= $second["group"]["libelle"] ?></a>
+    <div class="description text-center">
+      <a href="<?= base_url() ?>groupes/legislature-<?= $second["group"]["legislature"] ?>/<?= mb_strtolower($second["group"]["libelleAbrev"]) ?>" class="no-decoration underline"><?= name_group($second['group']['libelle']) ?></a>
     </div>
   </div>
 </div>
