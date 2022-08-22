@@ -6,7 +6,7 @@
             <?= file_get_contents(asset_url().'imgs/icons/arrow_left.svg') ?>
             Retour profil
           </a>
-          <span class="title d-block"><?= $title ?> (<?= $groupe['libelleAbrev'] ?>)</span>
+          <span class="title d-block"><?= name_group($title) ?> (<?= $groupe['libelleAbrev'] ?>)</span>
         </div>
       </div>
     </div>
@@ -88,7 +88,7 @@
         </div>
         <div class="row mt-4">
           <div class="col-12">
-            <h1 class="mb-0">Les votes du groupe <?= $title ?></h1>
+            <h1 class="mb-0">Les votes du groupe <?= name_group($title) ?></h1>
           </div>
         </div>
         <div class="row mt-4">
@@ -97,10 +97,10 @@
               L'équipe de Datan décrypte pour vous les votes les plus intéressants de la législature. Il s'agit des votes qui ont fait l'objet d'attention médiatique, ou sur lesquels un ou plusieurs groupes parlementaires étaient fortement divisés. Ces votes font l'objet d'une reformulation et d'une contextualisation, afin de les rendre plus compréhensibles.
             </p>
             <p>
-              Vous trouverez sur cette page les positions de <b><?= $title ?></b> sur ces votes.
+              Vous trouverez sur cette page les positions de <b><?= name_group($title) ?></b> sur ces votes.
             </p>
             <p>
-              Pour avoir accès à tous les votes de <?= $title ?> à l'Assemblée nationale, <a href="<?= base_url() ?>groupes/legislature-<?= $groupe['legislature'] ?>/<?= mb_strtolower($groupe['libelleAbrev']) ?>/votes/all">cliquez ici</a>.
+              Pour avoir accès à tous les votes de <?= name_group($title) ?> à l'Assemblée nationale, <a href="<?= base_url() ?>groupes/legislature-<?= $groupe['legislature'] ?>/<?= mb_strtolower($groupe['libelleAbrev']) ?>/votes/all">cliquez ici</a>.
             </p>
           </div>
         </div>
@@ -127,7 +127,7 @@
       <?php if ($groupe['libelleAbrev'] != "NI"): ?>
         <div class="row">
           <div class="col-12">
-            <h2>Président du groupe <?= $title ?></h2>
+            <h2>Président du groupe <?= name_group($title) ?></h2>
             <div class="row mt-3">
               <div class="col-6 col-md-3 py-2">
                 <a class="membre no-decoration underline" href="<?= base_url(); ?>deputes/<?= $president['dptSlug'] ?>/depute_<?= $president['nameUrl'] ?>"><?= $president['nameFirst']." ".$president['nameLast'] ?></a>
@@ -138,7 +138,7 @@
       <?php endif; ?>
       <div class="row">
         <div class="col-12">
-          <h2>Tous les députés membres du groupe <?= $title ?></h2>
+          <h2>Tous les députés membres du groupe <?= name_group($title) ?></h2>
           <div class="row mt-3">
             <?php foreach ($membres as $key => $membre): ?>
               <div class="col-6 col-md-3 py-2">
@@ -154,7 +154,7 @@
       <?php if (!empty($apparentes)): ?>
         <div class="row">
           <div class="col-12">
-            <h2>Tous les députés apparentés du groupe <?= $title ?></h2>
+            <h2>Tous les députés apparentés du groupe <?= name_group($title) ?></h2>
             <div class="row mt-3">
               <?php foreach ($apparentes as $key => $mp): ?>
                 <div class="col-6 col-md-3 py-2">
