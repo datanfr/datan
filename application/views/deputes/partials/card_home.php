@@ -33,7 +33,7 @@
         <picture>
           <source srcset="<?= asset_url(); ?>imgs/groupes/<?= $depute['legislature'] ?>/webp/<?= $depute['libelleAbrev'] ?>.webp" type="image/webp">
           <source srcset="<?= asset_url(); ?>imgs/groupes/<?= $depute['legislature'] ?>/<?= $depute['libelleAbrev'] ?>.png" type="image/png">
-          <img src="<?= asset_url(); ?>imgs/groupes/<?= $depute['legislature'] ?>/<?= $depute['libelleAbrev'] ?>.png" alt="<?= $depute['libelle'] ?>">
+          <img src="<?= asset_url(); ?>imgs/groupes/<?= $depute['legislature'] ?>/<?= $depute['libelleAbrev'] ?>.png" alt="<?= name_group($depute['libelle']) ?>">
         </picture>
       </div>
     <?php endif; ?>
@@ -44,7 +44,7 @@
     </div>
     <?php else: ?>
       <div class="card-footer d-flex justify-content-center align-items-center">
-        <span><?= $depute["libelle"] ?> (<?= $depute["libelleAbrev"] ?>)</span>
+        <span><?= name_group($depute["libelle"]) ?> (<?= $depute["libelleAbrev"] ?>)</span>
       </div>
   <?php endif; ?>
 </div>

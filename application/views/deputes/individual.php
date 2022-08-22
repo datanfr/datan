@@ -102,14 +102,14 @@
               </p>
             <?php else : ?>
               <p>
-                À l'Assemblée nationale, <?= $gender['pronom'] ?> siège avec le groupe <a href="<?= base_url() ?>groupes/legislature-<?= $depute['legislature'] ?>/<?= mb_strtolower($depute['libelleAbrev']) ?>"><?= $depute['libelle'] ?></a> (<?= $depute["libelleAbrev"] ?>), un groupe <b>classé <?= $infos_groupes[$depute['libelleAbrev']]['edited'] ?></b> de l'échiquier politique.
+                À l'Assemblée nationale, <?= $gender['pronom'] ?> siège avec le groupe <a href="<?= base_url() ?>groupes/legislature-<?= $depute['legislature'] ?>/<?= mb_strtolower($depute['libelleAbrev']) ?>"><?= name_group($depute['libelle']) ?></a> (<?= $depute["libelleAbrev"] ?>), un groupe <b>classé <?= $infos_groupes[$depute['libelleAbrev']]['edited'] ?></b> de l'échiquier politique.
                 <?php if ($isGroupPresident) : ?><?= $title ?> en est <?= $gender['le'] ?> président<?= $gender['e'] ?>.<?php endif; ?>
               </p>
             <?php endif; ?>
           <?php else : ?>
             <?php if (!empty($depute['libelle'])) : ?>
               <p>
-                Au cours de son dernier mandat, pendant la <?= $depute['legislature'] ?><sup>e</sup> législature, <?= $title ?> a siégé avec le groupe <?= $depute['libelle'] ?> (<?= $depute['libelleAbrev'] ?>).
+                Au cours de son dernier mandat, pendant la <?= $depute['legislature'] ?><sup>e</sup> législature, <?= $title ?> a siégé avec le groupe <?= name_group($depute['libelle']) ?> (<?= $depute['libelleAbrev'] ?>).
               </p>
             <?php endif; ?>
           <?php endif; ?>
@@ -540,7 +540,7 @@
                                 <?php foreach ($loyaute_history as $y) : ?>
                                   <tr>
                                     <td>
-                                      <a href="<?= base_url() ?>groupes/legislature-<?= $depute['legislature'] ?>/<?= mb_strtolower($y['libelleAbrev']) ?>" class="no-decoration underline"><?= $y['libelle'] ?></a>
+                                      <a href="<?= base_url() ?>groupes/legislature-<?= $depute['legislature'] ?>/<?= mb_strtolower($y['libelleAbrev']) ?>" class="no-decoration underline"><?= name_group($y['libelle']) ?></a>
                                     </td>
                                     <td class="text-center"><?= $y['score'] ?>%</td>
                                   </tr>
@@ -590,7 +590,7 @@
                       <div class="col-lg-8 infos mt-4 mt-lg-2">
                         <div class="texte ml-md-3 pl-md-3 mt-md-0 mt-3">
                           <p>
-                            <?= $title ?> a voté comme la majorité présidentielle (<a href="<?= base_url() ?>groupes/legislature-<?= $groupMajority['legislature'] ?>/<?= mb_strtolower($groupMajority['libelleAbrev']) ?>"><?= $groupMajority['libelle'] ?></a>) dans <?= $majorite['score'] ?>% des cas.
+                            <?= $title ?> a voté comme la majorité présidentielle (<a href="<?= base_url() ?>groupes/legislature-<?= $groupMajority['legislature'] ?>/<?= mb_strtolower($groupMajority['libelleAbrev']) ?>"><?= name_group($groupMajority['libelle']) ?></a>) dans <?= $majorite['score'] ?>% des cas.
                           </p>
                           <p>
                             <?= ucfirst($gender['pronom']) ?> <?= $active ? "est" : "était" ?> <b><?= $edito_majorite['all'] ?></b> de la majorité présidentielle que la moyenne des députés non membres de la majorité (<?= $majorite['all'] ?>%).
@@ -751,7 +751,7 @@
                             <?php foreach ($accord_groupes_all as $group) : ?>
                               <tr>
                                 <th scope="row"><?= $i ?></th>
-                                <td><?= $group['libelle'] ?> (<?= $group['libelleAbrev'] ?>)</td>
+                                <td><?= name_group($group['libelle']) ?> (<?= $group['libelleAbrev'] ?>)</td>
                                 <td><?= $group['accord'] ?> %</td>
                                 <td><?= $group['ended'] == 1 ? "Oui" : "" ?></td>
                                 <td><?= $group['votesN'] ?></td>
@@ -929,7 +929,7 @@
             <?php if ($depute['legislature'] != legislature_current()) : ?>
               <h2>Les autres députés de la <?= $depute['legislature'] ?><sup>e</sup> législature</h2>
             <?php elseif ($active) : ?>
-              <h2>Les autres députés <?= $depute['libelle'] ?> (<?= $depute['libelleAbrev'] ?>)</h2>
+                <h2>Les autres députés <?= name_group($depute['libelle']) ?> (<?= $depute['libelleAbrev'] ?>)</h2>
             <?php else : ?>
               <h2>Les autres députés plus en activité</h2>
             <?php endif; ?>
@@ -944,7 +944,7 @@
               <?php if ($depute['legislature'] != legislature_current()) : ?>
                 <a href="<?= base_url(); ?>deputes/legislature-<?= $depute['legislature'] ?>">Tous les députés de la législature <?= $depute['legislature'] ?></a>
               <?php elseif ($active) : ?>
-                <a href="<?= base_url() ?>groupes/legislature-<?= $depute['legislature'] ?>/<?= mb_strtolower($depute['libelleAbrev']) ?>/membres">Voir tous les députés membres du groupe <?= $depute['libelle'] ?> (<?= $depute['libelleAbrev'] ?>)</a>
+                <a href="<?= base_url() ?>groupes/legislature-<?= $depute['legislature'] ?>/<?= mb_strtolower($depute['libelleAbrev']) ?>/membres">Voir tous les députés membres du groupe <?= name_group($depute['libelle']) ?> (<?= $depute['libelleAbrev'] ?>)</a>
               <?php else : ?>
                 <a href="<?= base_url(); ?>deputes/inactifs">Tous les députés plus en activité</a>
               <?php endif; ?>

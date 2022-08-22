@@ -14,10 +14,10 @@
           <?php endif; ?>
           <?php if ($groups): ?>
             <p>
-              Le groupe parlementaire le plus actif au moment de voter est <a href="<?= base_url() ?>groupes/legislature-<?= $groupsFirst["legislature"] ?>/<?= mb_strtolower($groupsFirst["libelleAbrev"]) ?>"><?= $groupsFirst["libelle"] ?></a> (<?= $groupsFirst["libelleAbrev"] ?>). Son taux moyen de participation est de <?= $groupsFirst["participation"] ?> %. Autrement dit, en moyenne, les députés membres de ce groupe parlementaire participent à <?= $groupsFirst["participation"] ?> % des scrutins.
+              Le groupe parlementaire le plus actif au moment de voter est <a href="<?= base_url() ?>groupes/legislature-<?= $groupsFirst["legislature"] ?>/<?= mb_strtolower($groupsFirst["libelleAbrev"]) ?>"><?= name_group($groupsFirst["libelle"]) ?></a> (<?= $groupsFirst["libelleAbrev"] ?>). Son taux moyen de participation est de <?= $groupsFirst["participation"] ?> %. Autrement dit, en moyenne, les députés membres de ce groupe parlementaire participent à <?= $groupsFirst["participation"] ?> % des scrutins.
             </p>
             <p>
-              Le groupe avec le taux de participation le plus faible est <a href="<?= base_url() ?>groupes/legislature-<?= $groupsLast["legislature"] ?>/<?= mb_strtolower($groupsLast["libelleAbrev"]) ?>"><?= $groupsLast["libelle"] ?></a> (<?= $groupsLast["libelleAbrev"] ?>). En moyenne, les députés membres de ce groupe parlementaire participent à <?= $groupsLast["participation"] ?> % des scrutins.
+              Le groupe avec le taux de participation le plus faible est <a href="<?= base_url() ?>groupes/legislature-<?= $groupsLast["legislature"] ?>/<?= mb_strtolower($groupsLast["libelleAbrev"]) ?>"><?= name_group($groupsLast["libelle"]) ?></a> (<?= $groupsLast["libelleAbrev"] ?>). En moyenne, les députés membres de ce groupe parlementaire participent à <?= $groupsLast["participation"] ?> % des scrutins.
             </p>
           <?php endif; ?>
         </div>
@@ -74,7 +74,7 @@
                     <tr>
                       <td class="text-center"><?= $group["rank"] ?></td>
                       <td class="text-center">
-                        <a href="<?= base_url() ?>groupes/legislature-<?= $group["legislature"] ?>/<?= mb_strtolower($group["libelleAbrev"]) ?>" class="no-decoration underline"><?= $group["libelle"] ?> (<?= $group["libelleAbrev"] ?>)</a>
+                        <a href="<?= base_url() ?>groupes/legislature-<?= $group["legislature"] ?>/<?= mb_strtolower($group["libelleAbrev"]) ?>" class="no-decoration underline"><?= name_group($group["libelle"]) ?> (<?= $group["libelleAbrev"] ?>)</a>
                       </td>
                       <td class="text-center"><?= $group["participation"] ?> %</td>
                     </tr>
@@ -103,7 +103,7 @@
                     <tr>
                       <td class="text-center"><?= $group["rank"] ?></td>
                       <td class="text-center">
-                        <a href="<?= base_url() ?>groupes/legislature-<?= $group["legislature"] ?>/<?= mb_strtolower($group["libelleAbrev"]) ?>" class="no-decoration underline"><?= $group["libelle"] ?> (<?= $group["libelleAbrev"] ?>)</a>
+                        <a href="<?= base_url() ?>groupes/legislature-<?= $group["legislature"] ?>/<?= mb_strtolower($group["libelleAbrev"]) ?>" class="no-decoration underline"><?= name_group($group["libelle"]) ?> (<?= $group["libelleAbrev"] ?>)</a>
                       </td>
                       <td class="text-center"><?= $group["participation"] ?> %</td>
                     </tr>
@@ -132,7 +132,7 @@
                     <tr>
                       <td class="text-center"><?= $group["rank"] ?></td>
                       <td class="text-center">
-                        <a href="<?= base_url() ?>groupes/legislature-<?= $group["legislature"] ?>/<?= mb_strtolower($group["libelleAbrev"]) ?>" class="no-decoration underline"><?= $group["libelle"] ?> (<?= $group["libelleAbrev"] ?>)</a>
+                        <a href="<?= base_url() ?>groupes/legislature-<?= $group["legislature"] ?>/<?= mb_strtolower($group["libelleAbrev"]) ?>" class="no-decoration underline"><?= name_group($group["libelle"]) ?> (<?= $group["libelleAbrev"] ?>)</a>
                       </td>
                       <td class="text-center"><?= $group["participation"] ?> %</td>
                     </tr>

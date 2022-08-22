@@ -446,7 +446,7 @@
             "familyName" => $president['nameLast'],
             "givenName" => $president['nameFirst'],
             "url" => base_url().'deputes/'.$president['dptSlug'].'/depute_'.$president['nameUrl'],
-            "jobTitle" => "Député français et président du groupe " . $groupe['libelle']
+            "jobTitle" => "Député français et président du groupe " . name_group($groupe['libelle'])
           ]
         ],
         "foundingDate" => $groupe['dateDebut'],

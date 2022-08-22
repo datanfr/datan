@@ -6,7 +6,7 @@
 
     public function get_ranking_age(){
       $sql = 'SELECT @s:=@s+1 AS "rank",
-        da.civ, da.nameFirst, da.nameLast, da.nameUrl, da.img, da.libelle AS libelle, da.libelleAbrev AS libelleAbrev, da.mpId, da.dptSlug, da.age, da.couleurAssociee,
+        da.civ, da.nameFirst, da.nameLast, da.nameUrl, da.legislature, da.img, da.libelle AS libelle, da.libelleAbrev AS libelleAbrev, da.mpId, da.dptSlug, da.age, da.couleurAssociee,
         CONCAT(da.departementNom, " (", da.departementCode, ")") AS cardCenter
         FROM deputes_all da,
         (SELECT @s:= 0) AS s
@@ -126,7 +126,7 @@
       $sql = 'SELECT @s:=@s+1 AS "rank", A.*
         FROM
         (
-        SELECT cl.mpId, ROUND(cl.score*100) AS score, cl.votesN, da.civ, da.nameLast, da.nameFirst, da.nameUrl, da.img, da.libelle AS libelle, da.libelleAbrev AS libelleAbrev, da.dptSlug, da.couleurAssociee, da.departementNom, da.departementCode,
+        SELECT cl.mpId, ROUND(cl.score*100) AS score, cl.votesN, da.civ, da.nameLast, da.nameFirst, da.nameUrl, da.legislature, da.img, da.libelle AS libelle, da.libelleAbrev AS libelleAbrev, da.dptSlug, da.couleurAssociee, da.departementNom, da.departementCode,
         CONCAT(da.departementNom, " (", da.departementCode, ")") AS cardCenter
         FROM class_loyaute cl
         LEFT JOIN deputes_all da ON cl.mpId = da.mpId AND cl.legislature = da.legislature
