@@ -4,12 +4,12 @@
     <picture>
       <source srcset="<?= asset_url(); ?>imgs/groupes/<?= $groupe['legislature'] ?>/webp/<?= $groupe['libelleAbrev'] ?>.webp" type="image/webp">
       <source srcset="<?= asset_url(); ?>imgs/groupes/<?= $groupe['legislature'] ?>/<?= $groupe['libelleAbrev'] ?>.png" type="image/png">
-      <img src="<?= asset_url(); ?>imgs/groupes/<?= $groupe['legislature'] ?>/<?= $groupe['libelleAbrev'] ?>.png" width="150" height="150" alt="<?= $groupe['libelle'] ?>">
+      <img src="<?= asset_url(); ?>imgs/groupes/<?= $groupe['legislature'] ?>/<?= $groupe['libelleAbrev'] ?>.png" width="150" height="150" alt="<?= name_group($groupe['libelle']) ?>">
     </picture>
   </div>
   <div class="card-body d-flex flex-column justify-content-center align-items-center">
     <<?= $tag ?> class="d-block card-title">
-      <a href="<?= base_url() ?>groupes/legislature-<?= $groupe['legislature'] ?>/<?= mb_strtolower($groupe['libelleAbrev']) ?>" class="stretched-link no-decoration"><?= $groupe['libelle'] ?></a>
+      <a href="<?= base_url() ?>groupes/legislature-<?= $groupe['legislature'] ?>/<?= mb_strtolower($groupe['libelleAbrev']) ?>" class="stretched-link no-decoration"><?= name_group($groupe['libelle']) ?></a>
     </<?= $tag ?>>
     <span class="d-block libelle"><?= $groupe["libelleAbrev"] ?></span>
     <?php if (isset($stats)): ?>

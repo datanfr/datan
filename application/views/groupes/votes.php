@@ -17,19 +17,19 @@
         </div>
         <div class="row mt-4">
           <div class="col-12">
-            <h1>Tous les votes du groupe <?= $title ?> à l'Assemblée</h1>
+            <h1>Tous les votes du groupe <?= name_group($title) ?> à l'Assemblée</h1>
           </div>
         </div>
         <div class="row mt-4">
           <div class="col-lg-10">
             <p>
-              Cette page présente les positions du groupe <?= $title ?> (<?= $groupe["libelleAbrev"] ?>) sur tous les votes de l'Assemblée nationale.
+              Cette page présente les positions du groupe <?= name_group($title) ?> (<?= $groupe["libelleAbrev"] ?>) sur tous les votes de l'Assemblée nationale.
             </p>
             <p>
               Les données de ces votes sont automatiquement récupérées sur le site de l'Assemblée, et ne font donc pas l'objet d'une analyse et d'une recontextualisation. La signification de ces votes peut donc être complexe à comprendre au premier abord.
             </p>
             <p>
-              C'est pourquoi l'équipe de Datan contextualise et reformule certains scrutins. Pour découvrir les positions du groupe <b><?= $title ?></b> sur ces votes, <a href="<?= base_url() ?>groupes/legislature-<?= $groupe['legislature'] ?>/<?= mb_strtolower($groupe['libelleAbrev']) ?>/votes">cliquez ici</a>.
+              C'est pourquoi l'équipe de Datan contextualise et reformule certains scrutins. Pour découvrir les positions du groupe <b><?= name_group($title) ?></b> sur ces votes, <a href="<?= base_url() ?>groupes/legislature-<?= $groupe['legislature'] ?>/<?= mb_strtolower($groupe['libelleAbrev']) ?>/votes">cliquez ici</a>.
             </p>
           </div>
         </div>
