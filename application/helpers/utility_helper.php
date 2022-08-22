@@ -215,8 +215,23 @@
     if ($legislature == 16 && $groupe == "LR") {
       $colour = "#002A54";
     }
-
     return $colour;
+  }
+
+  function name_group($name){
+    switch ($name) {
+      case 'La France insoumise - Nouvelle Union Populaire écologique et sociale':
+        return 'La France insoumise - NUPES';
+        break;
+
+      case 'Socialistes et apparentés (membre de l’intergroupe NUPES)':
+        return 'Socialistes et apparentés - NUPES';
+        break;
+
+      default:
+        return $name;
+        break;
+    }
   }
 
 ?>
