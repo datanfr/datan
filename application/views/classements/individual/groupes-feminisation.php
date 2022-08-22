@@ -4,8 +4,8 @@
           <p>Le genre, tout comme l'âge ou le parcours social d'un parlementaire, est un élément clé de la représentation politique. Pour certains, la composition du parlement doit être similaire à la composition de la société. Les chercheurs ont montré que, plus les femmes sont présentes dans les parlements, plus leurs intérêts sont pris en compte dans les politiques adoptées.</p>
           <p>Il y a <b><?= $womenMean["n"] ?> députées femmes</b>. Cela représente <?= $womenMean["pct"] ?> % des effectifs de l'Assemblée nationale. C'est <?= $womenMean["diff"] ?> points de moins que le pourcentage de femmes dans la société française (<?= $womenMean['nSociety'] ?> %).</p>
           <?php if ($groupsWomen): ?>
-            <p>Le groupe parlementaire avec le taux de féminisation le plus élevé est <a href="<?= base_url() ?>groupes/legislature-<?= $groupsWomenFirst["legislature"] ?>/<?= mb_strtolower($groupsWomenFirst["libelleAbrev"]) ?>"><?= $groupsWomenFirst["libelle"] ?></a> (<?= $groupsWomenFirst["libelleAbrev"] ?>), qui compte <?= $groupsWomenFirst["female"] ?> députées femmes dans ses rangs (<?= $groupsWomenFirst["pct"] ?> % de ses effectifs).</p>
-            <p><a href="<?= base_url() ?>groupes/legislature-<?= $groupsWomenLast["legislature"] ?>/<?= mb_strtolower($groupsWomenLast["libelleAbrev"]) ?>"><?= $groupsWomenLast["libelle"] ?></a> (<?= $groupsWomenLast["libelleAbrev"] ?>) est le groupe avec le taux de féminisation le plus faible. Il ne compte que <?= $groupsWomenLast["female"] ?> députées femmes dans ses rangs (<?= $groupsWomenLast["pct"] ?> % de ses effectifs).</p>
+            <p>Le groupe parlementaire avec le taux de féminisation le plus élevé est <a href="<?= base_url() ?>groupes/legislature-<?= $groupsWomenFirst["legislature"] ?>/<?= mb_strtolower($groupsWomenFirst["libelleAbrev"]) ?>"><?= name_group($groupsWomenFirst["libelle"]) ?></a> (<?= $groupsWomenFirst["libelleAbrev"] ?>), qui compte <?= $groupsWomenFirst["female"] ?> députées femmes dans ses rangs (<?= $groupsWomenFirst["pct"] ?> % de ses effectifs).</p>
+            <p><a href="<?= base_url() ?>groupes/legislature-<?= $groupsWomenLast["legislature"] ?>/<?= mb_strtolower($groupsWomenLast["libelleAbrev"]) ?>"><?= name_group($groupsWomenLast["libelle"]) ?></a> (<?= $groupsWomenLast["libelleAbrev"] ?>) est le groupe avec le taux de féminisation le plus faible. Il ne compte que <?= $groupsWomenLast["female"] ?> députées femmes dans ses rangs (<?= $groupsWomenLast["pct"] ?> % de ses effectifs).</p>
           <?php endif; ?>
         </div>
       </div>
@@ -42,7 +42,7 @@
                 <tr>
                   <td class="text-center"><?= $group["rank"] ?></td>
                   <td class="text-center">
-                    <a href="<?= base_url() ?>groupes/legislature-<?= $group["legislature"] ?>/<?= mb_strtolower($group["libelleAbrev"]) ?>" class="no-decoration underline"><?= $group["libelle"] ?></a>
+                    <a href="<?= base_url() ?>groupes/legislature-<?= $group["legislature"] ?>/<?= mb_strtolower($group["libelleAbrev"]) ?>" class="no-decoration underline"><?= name_group($group["libelle"]) ?></a>
                   </td>
                   <td class="text-center"><?= $group["pct"] ?> %</td>
                   <td class="text-center"><?= $group["female"] ?></td>

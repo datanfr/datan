@@ -177,7 +177,7 @@
                       <?php foreach ($groups_women_more as $group): ?>
                         <tr>
                           <th scope="row"><?= $group['rank'] ?></th>
-                          <td><?= $group['libelle'].' ('.$group['libelleAbrev'].')' ?></td>
+                          <td><?= name_group($group['libelle']) . ' ('.$group['libelleAbrev'].')' ?></td>
                           <td><?= round($group['pct']) ?> %</td>
                         </tr>
                       <?php endforeach; ?>
