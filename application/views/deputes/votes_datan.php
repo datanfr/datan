@@ -7,7 +7,7 @@
             Retour profil
           </a>
           <span class="title d-block"><?= $title ?></span>
-          <p class="subtitle"><?= $depute['libelle'] ?></p>
+          <p class="subtitle"><?= name_group($depute['libelle']) ?></p>
           <p><?= $depute['departementNom'] ?> (<?= $depute['departementCode'] ?>)</p>
         </div>
       </div>
@@ -128,7 +128,7 @@
       <div class="row">
         <div class="col-12">
           <?php if ($active): ?>
-            <h2>Les autres députés <?= $depute['libelle'] ?> (<?= $depute['libelleAbrev'] ?>)</h2>
+            <h2>Les autres députés <?= name_group($depute['libelle']) ?> (<?= $depute['libelleAbrev'] ?>)</h2>
             <?php else: ?>
             <h2>Les autres députés plus en activité</h2>
           <?php endif; ?>
@@ -141,7 +141,7 @@
           </div>
           <div class="mt-3">
             <?php if ($active): ?>
-              <a href="<?= base_url() ?>groupes/legislature-<?= $depute['legislature'] ?>/<?= mb_strtolower($depute['libelleAbrev']) ?>/membres">Voir tous les députés membres du groupe <?= $depute['libelle'] ?> (<?= $depute['libelleAbrev'] ?>)</a>
+              <a href="<?= base_url() ?>groupes/legislature-<?= $depute['legislature'] ?>/<?= mb_strtolower($depute['libelleAbrev']) ?>/membres">Voir tous les députés membres du groupe <?= name_group($depute['libelle']) ?> (<?= $depute['libelleAbrev'] ?>)</a>
               <?php else: ?>
               <a href="<?= base_url(); ?>deputes/inactifs">Tous les députés plus en activité</a>
             <?php endif; ?>
