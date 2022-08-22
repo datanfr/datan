@@ -306,7 +306,7 @@
                       </div>
                     </td>
                     <td id="table<?= $groupe['libelleAbrev'] ?>">
-                      <a href="<?= base_url() ?>groupes/legislature-<?= $groupe['legislature'] ?>/<?= mb_strtolower($groupe['libelleAbrev']) ?>" class="no-decoration underline"><?= $groupe['libelle'] ?></a>
+                      <a href="<?= base_url() ?>groupes/legislature-<?= $groupe['legislature'] ?>/<?= mb_strtolower($groupe['libelleAbrev']) ?>" class="no-decoration underline"><?= name_group($groupe['libelle']) ?></a>
                     </td>
                     <td class="effectif"><?= $groupe['effectif'] ?></td>
                   </tr>
@@ -392,7 +392,7 @@ document.addEventListener('DOMContentLoaded', function(){
       labels: [
         <?php
         foreach ($groupesSorted as $groupe) {
-          echo '"'.$groupe["libelle"].' ('.$groupe['libelleAbrev'].')",';
+          echo '"'.name_group($groupe["libelle"]).' ('.$groupe['libelleAbrev'].')",';
         }
          ?>
       ],
