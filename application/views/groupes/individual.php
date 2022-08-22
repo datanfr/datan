@@ -19,7 +19,7 @@
           <?= $groupe['ni_edited'] ?>
         <?php else: ?>
           <p>
-            Le groupe <b><?= $groupe['libelle'] ?></b> (<?= $groupe['libelleAbrev'] ?>) <?= $active ? 'est' : 'était' ?> un groupe classé <?= $infos_groupes[$groupe['libelleAbrev']]['edited'] ?> de l'échiquier politique.
+            Le groupe <b><?= name_group($groupe['libelle']) ?></b> (<?= $groupe['libelleAbrev'] ?>) <?= $active ? 'est' : 'était' ?> un groupe classé <?= $infos_groupes[$groupe['libelleAbrev']]['edited'] ?> de l'échiquier politique.
             Il a été créé en <?= $dateDebutMois ?><?= $edito['creation'] ?>.
             <?php if (!$active): ?>
               Le groupe a été dissout le <?= $groupe['dateFinFR'] ?>.
@@ -362,13 +362,13 @@
                 <div class="row mt-3">
                   <div class="col-10 offset-2 ">
                     <p>
-                      Le groupe avec lequel le groupe <?= $groupe['libelleAbrev'] ?> <?= $active ? "est" : "était" ?> le plus proche est <a href="<?= base_url() ?>groupes/legislature-<?= $edito_proximite['first1']['legislature'] ?>/<?= mb_strtolower($edito_proximite['first1']['libelleAbrev']) ?>" target="_blank"><?= $edito_proximite['first1']['libelle'] ?></a>,
+                      Le groupe avec lequel le groupe <?= $groupe['libelleAbrev'] ?> <?= $active ? "est" : "était" ?> le plus proche est <a href="<?= base_url() ?>groupes/legislature-<?= $edito_proximite['first1']['legislature'] ?>/<?= mb_strtolower($edito_proximite['first1']['libelleAbrev']) ?>" target="_blank"><?= name_group($edito_proximite['first1']['libelle']) ?></a>,
                       <?php if ($edito_proximite['first1']['libelleAbrev'] != "NI"): ?>
                         <?= $edito_proximite['first1']['maj_pres'] ?> classé <?= $edito_proximite['first1']['ideology'] ?> de l'échiquier politique.
                         <?php else: ?>
                           <?= $edito_proximite['first1']['maj_pres'] ?>.
                       <?php endif; ?>
-                      Il <?= $active ? "est" : "était" ?> également proche du groupe <a href="<?= base_url() ?>groupes/legislature-<?= $edito_proximite['first2']['legislature'] ?>/<?= mb_strtolower($edito_proximite['first2']['libelleAbrev']) ?>" target="_blank"><?= $edito_proximite['first2']['libelle'] ?></a>,
+                      Il <?= $active ? "est" : "était" ?> également proche du groupe <a href="<?= base_url() ?>groupes/legislature-<?= $edito_proximite['first2']['legislature'] ?>/<?= mb_strtolower($edito_proximite['first2']['libelleAbrev']) ?>" target="_blank"><?= name_group($edito_proximite['first2']['libelle']) ?></a>,
                       <?php if ($edito_proximite['first2']['libelleAbrev'] != "NI"): ?>
                         <?= $edito_proximite['first2']['maj_pres'] ?> classé <?= $edito_proximite['first2']['ideology'] ?>.
                         <?php else: ?>
@@ -412,13 +412,13 @@
                 <div class="row mt-3">
                   <div class="col-10 offset-2">
                     <p>
-                      À l'opposé, le groupe avec lequel le groupe <?= $groupe['libelleAbrev'] ?> <?= $active ? "est" : "était" ?> le moins proche est <a href="<?= base_url() ?>groupes/legislature-<?= $edito_proximite['last1']['legislature'] ?>/<?= mb_strtolower($edito_proximite['last1']['libelleAbrev']) ?>" target="_blank"><?= $edito_proximite['last1']['libelle'] ?></a>,
+                      À l'opposé, le groupe avec lequel le groupe <?= $groupe['libelleAbrev'] ?> <?= $active ? "est" : "était" ?> le moins proche est <a href="<?= base_url() ?>groupes/legislature-<?= $edito_proximite['last1']['legislature'] ?>/<?= mb_strtolower($edito_proximite['last1']['libelleAbrev']) ?>" target="_blank"><?= name_group($edito_proximite['last1']['libelle']) ?></a>,
                       <?php if ($edito_proximite['last1']['libelleAbrev'] != "NI"): ?>
                         <?= $edito_proximite['last1']['maj_pres'] ?> classé <?= $edito_proximite['last1']['ideology'] ?> de l'échiquier politique.
                         <?php else: ?>
                           <?= $edito_proximite['first2']['maj_pres'] ?>.
                       <?php endif; ?>
-                      Il <?= $active ? "vote" : "votait" ?> également très peu avec <a href="<?= base_url() ?>groupes/legislature-<?= $edito_proximite['last2']['legislature'] ?>/<?= mb_strtolower($edito_proximite['last2']['libelleAbrev']) ?>" target="_blank"><?= $edito_proximite['last2']['libelle'] ?></a>,
+                      Il <?= $active ? "vote" : "votait" ?> également très peu avec <a href="<?= base_url() ?>groupes/legislature-<?= $edito_proximite['last2']['legislature'] ?>/<?= mb_strtolower($edito_proximite['last2']['libelleAbrev']) ?>" target="_blank"><?= name_group($edito_proximite['last2']['libelle']) ?></a>,
                       <?php if ($edito_proximite['last2']['libelleAbrev'] != "NI"): ?>
                         <?= $edito_proximite['last2']['maj_pres'] ?> classé <?= $edito_proximite['last2']['ideology'] ?>.
                         <?php else: ?>
@@ -451,7 +451,7 @@
                         <?php foreach ($accord_groupes_all as $group): ?>
                           <tr>
                             <th scope="row"><?= $i ?></th>
-                            <td><?= $group['libelle'] ?> (<?= $group['libelleAbrev'] ?>)</td>
+                            <td><?= name_group($group['libelle']) ?> (<?= $group['libelleAbrev'] ?>)</td>
                             <td><?= $group['score'] ?> %</td>
                             <td><?= $group['ended'] == 1 ? "Oui" : "" ?></td>
                             <td><?= $group['votesN'] ?></td>
@@ -559,7 +559,7 @@
         <div class="row mt-3">
           <?php foreach ($groupesActifs as $group): ?>
             <div class="col-6 col-md-4 py-2">
-              <a class="membre no-decoration underline" href="<?= base_url() ?>groupes/legislature-<?= $group['legislature'] ?>/<?= mb_strtolower($group['libelleAbrev']) ?>"><?= $group['libelle']." (".$group['libelleAbrev'].")" ?></a>
+              <a class="membre no-decoration underline" href="<?= base_url() ?>groupes/legislature-<?= $group['legislature'] ?>/<?= mb_strtolower($group['libelleAbrev']) ?>"><?= name_group($group['libelle'])." (".$group['libelleAbrev'].")" ?></a>
             </div>
           <?php endforeach; ?>
         </div>
