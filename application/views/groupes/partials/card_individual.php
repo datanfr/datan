@@ -7,13 +7,13 @@
           <picture>
             <source srcset="<?= asset_url(); ?>imgs/groupes/<?= $groupe['legislature'] ?>/webp/<?= $groupe['libelleAbrev'] ?>.webp" type="image/webp">
             <source srcset="<?= asset_url(); ?>imgs/groupes/<?= $groupe['legislature'] ?>/<?= $groupe['libelleAbrev'] ?>.png" type="image/png">
-            <img src="<?= asset_url(); ?>imgs/groupes/<?= $groupe['legislature'] ?>/<?= $groupe['libelleAbrev'] ?>.png" width="150" height="150" alt="<?= $groupe['libelle'] ?>">
+            <img src="<?= asset_url(); ?>imgs/groupes/<?= $groupe['legislature'] ?>/<?= $groupe['libelleAbrev'] ?>.png" width="150" height="150" alt="<?= name_group($groupe['libelle']) ?>">
           </picture>
         </div>
       </div>
       <!-- INFOS GENERALES -->
       <div class="bloc-infos mt-3">
-        <<?= $tag ?> class="title d-block text-lg-left"><?= $title ?></<?= $tag ?>>
+        <<?= $tag ?> class="title d-block text-lg-left"><?= name_group($title) ?></<?= $tag ?>>
       </div>
       <!-- BIOGRAPHIE -->
       <div class="bloc-bref mt-3 d-flex justify-content-center justify-content-lg-start">
