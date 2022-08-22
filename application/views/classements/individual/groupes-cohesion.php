@@ -5,8 +5,8 @@
           <p>Les groupes parlementaires ayant un taux de cohésion proche de 1 affichent une forte unité quand il s'agit de voter. Au contraire, les groupes politiques avec un taux de cohésion proche de 0 sont souvent divisés lors des scrutins à l'Assemblée nationale. Pour plus d'information sur la manière dont est calculé le taux de cohésion, <a href="<?= base_url() ?>statistiques/aide#cohesion" target="_blank">cliquez ici</a>.</p>
           <?php if ($groups): ?>
             <p>
-              Le groupe parlement qui affiche la plus grande cohésion est <a href="<?= base_url() ?>groupes/legislature-<?= $groupsFirst["legislature"] ?>/<?= mb_strtolower($groupsFirst["libelleAbrev"]) ?>"><?= $groupsFirst["libelle"] ?></a> (<?= $groupsFirst["libelleAbrev"] ?>), avec un taux de cohésion de <b><?= round($groupsFirst['cohesion'], 2) ?></b>.
-              À l'opposé, le groupe parlementaire avec le plus faible taux de cohésion est <a href="<?= base_url() ?>groupes/legislature-<?= $groupsLast["legislature"] ?>/<?= mb_strtolower($groupsLast["libelleAbrev"]) ?>"><?= $groupsLast["libelle"] ?></a> (<?= $groupsLast["libelleAbrev"] ?>).</p>
+              Le groupe parlementaire qui affiche la plus grande cohésion est <a href="<?= base_url() ?>groupes/legislature-<?= $groupsFirst["legislature"] ?>/<?= mb_strtolower($groupsFirst["libelleAbrev"]) ?>"><?= name_group($groupsFirst["libelle"]) ?></a> (<?= $groupsFirst["libelleAbrev"] ?>), avec un taux de cohésion de <b><?= round($groupsFirst['cohesion'], 2) ?></b>.
+              À l'opposé, le groupe parlementaire avec le plus faible taux de cohésion est <a href="<?= base_url() ?>groupes/legislature-<?= $groupsLast["legislature"] ?>/<?= mb_strtolower($groupsLast["libelleAbrev"]) ?>"><?= name_group($groupsLast["libelle"]) ?></a> (<?= $groupsLast["libelleAbrev"] ?>).</p>
             <p>Le taux de cohésion moyen de tous les groupes parlementaires de la législature actuelle est de <?= $cohesionMean ?>.</p>
           <?php endif; ?>
         </div>
@@ -42,7 +42,7 @@
                 <tr>
                   <td class="text-center"><?= $group["rank"] ?></td>
                   <td class="text-center">
-                    <a href="<?= base_url() ?>groupes/legislature-<?= $group["legislature"] ?>/<?= mb_strtolower($group["libelleAbrev"]) ?>" class="no-decoration underline"><?= $group["libelle"] ?> (<?= $group["libelleAbrev"] ?>)</a>
+                    <a href="<?= base_url() ?>groupes/legislature-<?= $group["legislature"] ?>/<?= mb_strtolower($group["libelleAbrev"]) ?>" class="no-decoration underline"><?= name_group($group["libelle"]) ?> (<?= $group["libelleAbrev"] ?>)</a>
                   </td>
                   <td class="text-center"><?= $group["cohesion"] ?></td>
                 </tr>
