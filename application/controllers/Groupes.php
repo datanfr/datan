@@ -291,8 +291,8 @@
         $data['description_meta'] = "Découvrez les résultats de vote des députés non inscrits (NI) : taux de participation, cohésion au sein groupe, proximité avec les autres groupes parlementaires.";
         $data['title'] = 'Députés non inscrits';
       } else {
-        $data['title_meta'] = $data['groupe']['libelle']." - Assemblée Nationale | Datan";
-        $data['description_meta'] = "Découvrez les résultats de vote du groupe ".$data['groupe']['libelle']." (".$data['groupe']['libelleAbrev'].") : taux de participation, cohésion au sein groupe, proximité avec les autres groupes parlementaires.";
+        $data['title_meta'] = name_group($data['groupe']['libelle'])." - Assemblée Nationale | Datan";
+        $data['description_meta'] = "Découvrez les résultats de vote du groupe " . name_group($data['groupe']['libelle']) . " (".$data['groupe']['libelleAbrev'].") : taux de participation, cohésion au sein groupe, proximité avec les autres groupes parlementaires.";
         $data['title'] = $data['groupe']['libelle'];
       }
       // Breadcrumb
@@ -305,7 +305,7 @@
             "name" => "Groupes", "url" => base_url()."groupes", "active" => FALSE
           ),
           array(
-            "name" => $data['groupe']['libelle'], "url" => base_url()."groupes/legislature-".$data['groupe']['legislature']."/".mb_strtolower($data['groupe']['libelleAbrev']), "active" => TRUE
+            "name" => name_group($data['groupe']['libelle']), "url" => base_url()."groupes/legislature-".$data['groupe']['legislature']."/".mb_strtolower($data['groupe']['libelleAbrev']), "active" => TRUE
           ),
         );
       } else {
@@ -320,7 +320,7 @@
             "name" => "Législature " . $legislature, "url" => base_url()."groupes/legislature-" . $legislature, "active" => FALSE
           ),
           array(
-            "name" => $data['groupe']['libelle'], "url" => base_url()."groupes/legislature-".$data['groupe']['legislature']."/".mb_strtolower($data['groupe']['libelleAbrev']), "active" => TRUE
+            "name" => name_group($data['groupe']['libelle']), "url" => base_url()."groupes/legislature-".$data['groupe']['legislature']."/".mb_strtolower($data['groupe']['libelleAbrev']), "active" => TRUE
           ),
         );
       }
@@ -396,9 +396,9 @@
         $data['description_meta'] = "Retrouvez tous les députés en activité non inscrits (NI) de la 15e législature.";
         $data['title'] = "Députés non incrits (NI)";
       } else {
-        $data['title_meta'] = "Députés ".$data['groupe']['libelle']." - Assemblée Nationale | Datan";
-        $data['description_meta'] = "Retrouvez tous les députés membres du groupe parlementaire ".$data['groupe']['libelle']." (".$data['groupe']['libelleAbrev'].").";
-        $data['title'] = "Députés membres du groupe ".$data['groupe']['libelle']. " (".$data['groupe']['libelleAbrev'].")";
+        $data['title_meta'] = "Députés " . name_group($data['groupe']['libelle']) . " - Assemblée Nationale | Datan";
+        $data['description_meta'] = "Retrouvez tous les députés membres du groupe parlementaire " . name_group($data['groupe']['libelle']) . " (".$data['groupe']['libelleAbrev'].").";
+        $data['title'] = "Députés membres du groupe " . name_group($data['groupe']['libelle']) . " (".$data['groupe']['libelleAbrev'].")";
       }
       // Breadcrumb
       if ($legislature == legislature_current()) {
@@ -410,7 +410,7 @@
             "name" => "Groupes", "url" => base_url()."groupes", "active" => FALSE
           ),
           array(
-            "name" => $data['groupe']['libelle'], "url" => base_url()."groupes/legislature-".$data['groupe']['legislature']."/".mb_strtolower($data['groupe']['libelleAbrev']), "active" => FALSE
+            "name" => name_group($data['groupe']['libelle']), "url" => base_url()."groupes/legislature-".$data['groupe']['legislature']."/".mb_strtolower($data['groupe']['libelleAbrev']), "active" => FALSE
           ),
           array(
             "name" => "Membres", "url" => base_url()."groupes/legislature-".$data['groupe']['legislature']."/".mb_strtolower($data['groupe']['libelleAbrev'])."/membres", "active" => TRUE
@@ -428,7 +428,7 @@
             "name" => "Législature " . $legislature, "url" => base_url()."groupes/legislature-" . $legislature, "active" => FALSE
           ),
           array(
-            "name" => $data['groupe']['libelle'], "url" => base_url()."groupes/legislature-".$data['groupe']['legislature']."/".mb_strtolower($data['groupe']['libelleAbrev']), "active" => FALSE
+            "name" => name_group($data['groupe']['libelle']), "url" => base_url()."groupes/legislature-".$data['groupe']['legislature']."/".mb_strtolower($data['groupe']['libelleAbrev']), "active" => FALSE
           ),
           array(
             "name" => "Membres", "url" => base_url()."groupes/legislature-".$data['groupe']['legislature']."/".mb_strtolower($data['groupe']['libelleAbrev'])."/membres", "active" => TRUE
@@ -521,8 +521,8 @@
         $data['description_meta'] = "Retrouvez toutes les positions des députés non inscrits (NI) quand ils votent à l'Assemblée nationale.";
         $data['title'] = "Députés non inscrits";
       } else {
-        $data['title_meta'] = "Groupe ".$data['groupe']['libelle']." - Votes | Datan";
-        $data['description_meta'] = "Retrouvez toutes les positions du groupe ".$data['groupe']['libelle']." (".$data['groupe']['libelleAbrev'].") quand il vote à l'Assemblée nationale.";
+        $data['title_meta'] = "Groupe " . name_group($data['groupe']['libelle']) . " - Votes | Datan";
+        $data['description_meta'] = "Retrouvez toutes les positions du groupe " . name_group($data['groupe']['libelle']) . " (".$data['groupe']['libelleAbrev'].") quand il vote à l'Assemblée nationale.";
         $data['title'] = $data['groupe']['libelle'];
       }
       // Breadcrumb
@@ -534,7 +534,7 @@
           "name" => "Groupes", "url" => base_url()."groupes", "active" => FALSE
         ),
         array(
-          "name" => $data['groupe']['libelle'], "url" => base_url()."groupes/legislature-".$data['groupe']['legislature']."/".mb_strtolower($data['groupe']['libelleAbrev']), "active" => FALSE
+          "name" => name_group($data['groupe']['libelle']), "url" => base_url()."groupes/legislature-".$data['groupe']['legislature']."/".mb_strtolower($data['groupe']['libelleAbrev']), "active" => FALSE
         ),
         array(
           "name" => "Votes", "url" => base_url()."groupes/legislature-".$data['groupe']['legislature']."/".mb_strtolower($data['groupe']['libelleAbrev'])."/votes", "active" => TRUE
@@ -608,8 +608,8 @@
         $data['description_meta'] = "Retrouvez tous les votes des députés non inscrits (NI) : positions politiques, cohésion interne, participation.";
         $data['title'] = "Députés non inscrits";
       } else {
-        $data['title_meta'] = "Groupe ".$data['groupe']['libelle']." - Votes | Datan";
-        $data['description_meta'] = "Retrouvez tous les votes du groupe ".$data['groupe']['libelle']." (".$data['groupe']['libelleAbrev'].") : ses positions politiques, sa cohésion interne, sa participation.";
+        $data['title_meta'] = "Groupe " . name_group($data['groupe']['libelle']) . " - Votes | Datan";
+        $data['description_meta'] = "Retrouvez tous les votes du groupe " . name_group($data['groupe']['libelle']) . " (".$data['groupe']['libelleAbrev'].") : ses positions politiques, sa cohésion interne, sa participation.";
         $data['title'] = $data['groupe']['libelle'];
       }
       // Breadcrumb
@@ -621,7 +621,7 @@
           "name" => "Groupes", "url" => base_url()."groupes", "active" => FALSE
         ),
         array(
-          "name" => $data['groupe']['libelle'], "url" => base_url()."groupes/legislature-".$data['groupe']['legislature']."/".mb_strtolower($data['groupe']['libelleAbrev']), "active" => FALSE
+          "name" => name_group($data['groupe']['libelle']), "url" => base_url()."groupes/legislature-".$data['groupe']['legislature']."/".mb_strtolower($data['groupe']['libelleAbrev']), "active" => FALSE
         ),
         array(
           "name" => "Votes", "url" => base_url()."groupes/legislature-".$data['groupe']['legislature']."/".mb_strtolower($data['groupe']['libelleAbrev'])."/votes", "active" => FALSE
