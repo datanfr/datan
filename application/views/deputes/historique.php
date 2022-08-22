@@ -15,7 +15,7 @@
           Pendant la <?= $legislature ?><sup>ème</sup> législature, <?= $gender['pronom'] ?> a été <?= $gender['le'] ?> <?= $gender['depute'] ?> de la <?= $depute["circo"] ?><sup><?= $depute["circo_abbrev"] ?></sup> circonscription <?= $depute['dptLibelle2'] ?><a href="<?= base_url() ?>deputes/<?= $depute['dptSlug'] ?>"><?= $depute['departementNom'] . ' (' . $depute['departementCode'] . ')' ?></a>.
         </p>
         <p>
-          Pendant ce mandat, <?= $title ?> siégeait avec le groupe <?= $depute['libelle'] ?> (<?= $depute['libelleAbrev'] ?>).
+          Pendant ce mandat, <?= $title ?> siégeait avec le groupe <?= name_group($depute['libelle']) ?> (<?= $depute['libelleAbrev'] ?>).
         </p>
         <p>
           La dernière législature au cours de laquelle <?= $gender['le'] ?> <?= $gender['depute'] ?> a siégé est la <?= $depute_last['legislature'] ?><sum>ème</sup>.
@@ -165,7 +165,7 @@
                               <?php foreach ($loyaute_history as $y) : ?>
                                 <tr>
                                   <td>
-                                    <?= $y['libelle'] ?>
+                                    <?= name_group($y['libelle']) ?>
                                   </td>
                                   <td><?= $y['score'] ?> %</td>
                                 </tr>
@@ -215,7 +215,7 @@
                     <div class="col-lg-8 infos mt-4 mt-lg-2">
                       <div class="texte ml-md-3 pl-md-3 mt-md-0 mt-3">
                         <p>
-                          <?= $title ?> a voté comme la majorité présidentielle (<a href="<?= base_url() ?>groupes/legislature-15/<?= mb_strtolower($groupMajority['libelleAbrev']) ?>"><?= $groupMajority['libelle'] ?></a>) dans <?= $majorite['score'] ?>% des cas.
+                          <?= $title ?> a voté comme la majorité présidentielle (<a href="<?= base_url() ?>groupes/legislature-15/<?= mb_strtolower($groupMajority['libelleAbrev']) ?>"><?= name_group($groupMajority['libelle']) ?></a>) dans <?= $majorite['score'] ?>% des cas.
                         </p>
                         <p>
                           <?= ucfirst($gender['pronom']) ?> <?= $active ? "est" : "était" ?> <b><?= $edito_majorite['all'] ?></b> de la majorité présidentielle que la moyenne des députés non membres de la majorité (<?= $majorite['all'] ?>%).
@@ -346,7 +346,7 @@
                           <?php foreach ($accord_groupes_all as $group) : ?>
                             <tr>
                               <th scope="row"><?= $i ?></th>
-                              <td><?= $group['libelle'] ?> (<?= $group['libelleAbrev'] ?>)</td>
+                              <td><?= name_group($group['libelle']) ?> (<?= $group['libelleAbrev'] ?>)</td>
                               <td><?= $group['accord'] ?> %</td>
                               <td><?= $group['ended'] == 1 ? "Oui" : "" ?></td>
                               <td><?= $group['votesN'] ?></td>
