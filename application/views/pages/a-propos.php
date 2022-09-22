@@ -43,7 +43,7 @@
                 <a href="https://twitter.com/oliviercosta" title="Profil Twitter" target="_blank">
                   <img src="<?= asset_url() ?>imgs/logos/twitter.png" width="30" height="30" alt="Logo Twitter">
                 </a>
-                <a href="https://durkheim.u-bordeaux.fr/Notre-equipe/Chercheur-e-s-et-enseignant-e-s-chercheur-e-s/CV/Olivier-Costa" title="Site internet" target="_blank">
+                <a href="https://sciences-po.academia.edu/OlivierCOSTA" title="Site internet" target="_blank">
                   <img src="<?= asset_url() ?>imgs/icons/link.svg" alt="Website">
                 </a>
               </div>
@@ -51,7 +51,7 @@
             <div class="card-body">
               <h3 class="card-title president mb-0">Olivier Costa</h3>
               <span class="font-italic d-block">Président</span>
-              <span>Directeur de recherche au CNRS, CEVIPOF, Sciences Po Paris</span>
+              <span>Directeur de recherche CNRS, CEVIPOF, Sciences Po Paris</span>
             </div>
           </div>
         </div>
@@ -110,14 +110,14 @@
                 <a href="https://twitter.com/iguinaudeau" title="Profil Twitter" target="_blank">
                   <img src="<?= asset_url() ?>imgs/logos/twitter.png" width="30" height="30" alt="Logo Twitter">
                 </a>
-                <a href="https://durkheim.u-bordeaux.fr/Notre-equipe/Chercheur-e-s-et-enseignant-e-s-chercheur-e-s/CV/Isabelle-Guinaudeau" title="Site internet" target="_blank">
+                <a href="https://www.sciencespo.fr/centre-etudes-europeennes/fr/chercheur/isabelle-guinaudeau.html" title="Site internet" target="_blank">
                   <img src="<?= asset_url() ?>imgs/icons/link.svg" alt="Website">
                 </a>
               </div>
             </div>
             <div class="card-body">
               <h3 class="card-title">Isabelle Guinaudeau</h3>
-              <span>Chargée de recherche au CNRS, Centre Émile Durkheim, Sciences Po Bordeaux</span>
+              <span>Chargée de recherche CNRS, Centre d'études européennes, Sciences Po Paris</span>
             </div>
           </div>
         </div>
