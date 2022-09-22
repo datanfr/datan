@@ -30,6 +30,7 @@ grunt watch
 
 ## 2. Base de données
 * Importer le fichier SQL principal. Le fichier contient la structure de la base de données, ainsi que les données essentielles. Importer le fichier de backup le plus récent se trouvant dans le dossier suivant : *https://datan.fr/assets/dataset_backup/general/*
+* Plus d'infos sur la base de donnée se trouve dans le dossier suivant : https://github.com/datanfr/datan/tree/master/scripts/update_dataset/infos 
 
 ## 3. Variables environnement
 * Dupliquer *.htaccess.dist* et renomer le nouveau fichier en *.htaccess*  
