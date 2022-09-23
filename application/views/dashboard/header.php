@@ -42,7 +42,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
         </li>
         <?php if ($this->password_model->is_mp()): ?>
           <li class="nav-item d-none d-sm-inline-block">
-            <a href="<?= base_url() ?>deputes/<?= $depute['dptSlug'] ?>/depute_<?= $depute['nameUrl'] ?>" class="nav-link">Page député</a>
+            <a href="<?= base_url() ?>deputes/<?= $depute['dptSlug'] ?>/depute_<?= $depute['nameUrl'] ?>" class="nav-link" target="_blank">Page député</a>
           </li>
         <?php endif; ?>
         <?php if ($this->password_model->is_admin()): ?>
@@ -75,7 +75,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
         </li>
       </ul>
 
-      <!-- SEARCH FORM 
+      <!-- SEARCH FORM
       <form class="form-inline ml-3">
         <div class="input-group input-group-sm">
           <input class="form-control form-control-navbar" type="search" placeholder="Search" aria-label="Search">
