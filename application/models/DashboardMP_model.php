@@ -25,7 +25,7 @@ class DashboardMP_model extends CI_Model
     return $this->db->query($sql, array($mpId, $mpId))->result_array();
   }
 
-  public function get_votes_explained($mpId){
+  public function get_votes_explained($mpId, $draft = NULL){
     $sql = 'SELECT e.id, e.voteNumero, e.legislature, e.text AS explication, vd.title AS vote_titre,
       CASE WHEN e.state = 1 THEN "publié" ELSE "brouillon" END AS state,
       CASE
@@ -40,8 +40,11 @@ class DashboardMP_model extends CI_Model
       LEFT JOIN votes_datan vd ON e.voteNumero = vd.voteNumero AND e.legislature = vd.legislature
       LEFT JOIN votes_info vi ON e.voteNumero = vi.voteNumero AND e.legislature = vi.legislature
       WHERE e.mpId = ?
-      ORDER BY e.id DESC
     ';
+    if ($draft) {
+      $sql .= ' AND e.state = 0';
+    }
+    $sql .= ' ORDER BY e.id DESC';
     $query = $this->db->query($sql, $mpId);
     return $query->result_array();
   }

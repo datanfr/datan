@@ -28,6 +28,9 @@
         $data['candidate']['modify'] = $interval->days >= 2 ? 0 : 1;
       }
 
+      // Explications
+      $data['votes_explained'] = $this->dashboardMP_model->get_votes_explained($data['depute']['mpId'], TRUE);
+
       $this->load->view('dashboard/header', $data);
       $this->load->view('dashboard-mp/index', $data);
       $this->load->view('dashboard/footer');
