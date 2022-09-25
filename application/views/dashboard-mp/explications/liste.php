@@ -1,27 +1,34 @@
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
-  <!-- Content Header (Page header) -->
-
-  <!-- /.content-header -->
-
   <!-- Main content -->
   <div class="content">
     <div class="container-fluid">
       <div class="row">
-        <div class="col-12 mt-5">
-          <a class="btn btn-secondary" href="<?= base_url() ?>dashboard-mp/explications">Retour</a>
+        <div class="col-lg-7 col-12 mt-5">
+          <a class="btn btn-outline-secondary font-weight-bold" href="<?= base_url() ?>dashboard-mp/explications">
+            <?= file_get_contents(asset_url()."imgs/icons/arrow_left.svg") ?>
+            Retour
+          </a>
           <?php if ($this->session->flashdata('flash_failure')): ?>
             <div class="alert alert-danger font-weight-bold my-4 text-center" role="alert"><?= $this->session->flashdata('flash_failure') ?></div>
           <?php endif; ?>
           <h1 class="font-weight-bold mt-4"><?= $title ?></h1>
-          <p>Pour rappel, vous pouvez renseigner une explication de vote sur les <b>votes contextualisés par Datan</b>. Ces votes sont expliqués, vulgarisés et contextualisés par notre équipe. Ce sont ces votes qui sont mis en avant sur votre page personnelle de député.e.</p>
-          <table class="table mt-5">
-            <thead>
+          <h5 class="mt-5 font-weight-bold">Infos</h5>
+          <p>Vous pouvez rédiger une explication de vote pour expliquer à vos électeurs les <b>raisons de votre position</b>. Cette explication sera visible sur votre page Datan.</p>
+          <p>Cette fonctionnalité n'est disponible que pour les <b>votes contextualisés par Datan</b>. Il s'agit des votes qui que notre équipe vulgarise et contextualise et qui sont mis en avant sur les pages personnelles des parlementaires.</p>
+        </div>
+      </div>
+      <div class="row mt-5">
+          <div class="col-12">
+            <h5 class="font-weight-bold">Sélectionnez un vote à expliquer</h5>
+          <table class="table mt-4" style="background-color: white">
+            <thead class="thead-dark">
               <tr>
-                <th scope="col">Vote</th>
+                <th scope="col">Législature</th>
+                <th scope="col">Scrutin</th>
+                <th scope="col" class="text-center">Vote</th>
                 <th scope="col">Dossier</th>
                 <th class="text-center">Date</th>
-                <th class="text-center">Position</th>
                 <th></th>
                 <th></th>
                 <th></th>
@@ -30,18 +37,19 @@
             <tbody>
               <?php foreach ($votes_without as $key => $value): ?>
                 <tr>
-                  <td><a href="<?= base_url() ?>votes/legislature-<?= $value['legislature'] ?>/vote_<?= $value['voteNumero'] ?>" target="_blank"><?= $value['vote_titre'] ?></a></td>
+                  <td><?= $value['legislature'] ?></td>
+                  <td class="font-weight-bold"><?= $value['vote_titre'] ?></td>
+                  <td class="text-center"><span class="badge badge<?= ucfirst($value['vote_depute']) ?>" style="font-size: 16px"><?= ucfirst($value['vote_depute']) ?></span></td>
                   <td><?= $value['dossier'] ?></td>
-                  <td class="text-center"><?= $value['dateScrutinFR'] ?></td>
-                  <td class="text-center"><?= $value['vote_depute'] ?></td>
+                  <td class="text-center"><?= months_abbrev($value['dateScrutinFR']) ?></td>
                   <td>
-                    <a class="btn btn-secondary d-flex align-items-center" href="https://www2.assemblee-nationale.fr/scrutins/detail/(legislature)/<?= $value['legislature'] ?>/(num)/<?= $value['voteNumero'] ?>" target="_blank">
+                    <a class="btn btn-light d-flex align-items-center font-weight-bold" href="<?= base_url() ?>votes/legislature-<?= $value['legislature'] ?>/vote_<?= $value['voteNumero'] ?>" target="_blank">
                       <?= file_get_contents(asset_url()."imgs/icons/box-arrow-up-right.svg") ?>
-                      <span class="ml-3">Assemblée</span>
+                      <span class="ml-3">Infos</span>
                     </a>
                   </td>
                   <td>
-                    <a class="btn btn-primary d-flex align-items-center" href="<?= base_url() ?>dashboard-mp/explications/create/l<?= $value['legislature'] ?>v<?= $value['voteNumero'] ?>">
+                    <a class="btn btn-primary d-flex align-items-center font-weight-bold" href="<?= base_url() ?>dashboard-mp/explications/create/l<?= $value['legislature'] ?>v<?= $value['voteNumero'] ?>">
                       <?= file_get_contents(asset_url()."imgs/icons/pencil-square.svg") ?>
                       <span class="ml-3">Explication</span>
                     </a>

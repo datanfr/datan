@@ -25,26 +25,26 @@
           <div class="col-lg-8">
             <div class="card card-primary card-outline">
               <div class="card-header">
-                <h5 class="mt-0">Vos explications de vote à publier</h5>
+                <h5 class="mt-0 font-weight-bold">Vos explications de vote en brouillon</h5>
               </div>
               <div class="card-body">
                 <?php if ($votes_explained): ?>
-                  <p>Vous avez un ou plusieurs votes en brouillon. N'hésitez pas à terminer et à publier leur explication.</p>
-                  <table class="table">
-                    <thead>
+                  <p>Vous avez une ou plusieurs explications de vote en brouillon. N'hésitez pas à les terminer pour les publier sur votre page Datan.</p>
+                  <table class="table mt-4">
+                    <thead class="thead-dark">
                       <tr>
-                        <th scope="col">Vote</th>
-                        <th scope="col">Position</th>
+                        <th scope="col">Scrutin</th>
+                        <th scope="col"></th>
                         <th scope="col"></th>
                       </tr>
                     </thead>
                     <tbody>
                       <?php foreach ($votes_explained as $key => $value): ?>
                         <tr>
-                          <td><a href="<?= base_url() ?>votes/legislature-<?= $value['legislature'] ?>/vote_<?= $value['voteNumero'] ?>" target="_blank"><?= $value['vote_titre'] ?></a></td>
-                          <td class="text-center"><?= $value['vote_depute'] ?></td>
+                          <td class="font-weight-bold"><?= $value['vote_titre'] ?></td>
+                          <td class="text-center"><span class="badge badge<?= ucfirst($value['vote_depute']) ?>" style="font-size: 16px"><?= ucfirst($value['vote_depute']) ?></span></td>
                           <td>
-                            <a class="btn btn-primary d-flex align-items-center justify-content-center" href="<?= base_url() ?>dashboard-mp/explications/modify/l<?= $value['legislature'] ?>v<?= $value['voteNumero'] ?>">
+                            <a class="btn btn-primary d-flex align-items-center justify-content-center font-weight-bold" href="<?= base_url() ?>dashboard-mp/explications/modify/l<?= $value['legislature'] ?>v<?= $value['voteNumero'] ?>">
                               <?= file_get_contents(asset_url()."imgs/icons/pencil-square.svg") ?>
                               <span class="ml-3">Modifier</span>
                             </a>
@@ -54,11 +54,11 @@
                     </tbody>
                   </table>
                 <?php else: ?>
-                  e
+                  <p>Vous n'avez pas d'explication de vote en brouillon. N'hésitez pas à en créer une nouvelle.</p>
                 <?php endif; ?>
               </div>
               <div class="card-footer d-flex justify-content-center align-items-center">
-                <a class="btn btn-primary font-weight-bold" href="#" role="button">Créer une nouvelle explication de vote</a>
+                <a class="btn btn-primary font-weight-bold" href="<?= base_url() ?>dashboard-mp/explications" role="button">Voir toutes vos explications de vote</a>
               </div>
             </div>
           </div>
