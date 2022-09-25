@@ -169,7 +169,7 @@
         END AS title_meta
         FROM
         (
-           SELECT vi.voteId, vi.voteNumero, vi.legislature, vi.dateScrutin, vi.seanceRef, vi.libelleTypeVote, vi.typeMajorite, vi.sortCode, vi.demandeur, vi.nombreVotants, vi.suffragesExprimes, vi.nbrSuffragesRequis, vi.decomptePour AS pour, vi.decompteContre AS contre, vi.decompteAbs AS abstention, vi.decompteNv AS nonVotant, vi.voteType, vi.amdt, vi.article, vi.bister, vi.posArticle,
+           SELECT vi.voteId, vi.voteNumero, vi.legislature, vi.dateScrutin, date_format(vi.dateScrutin, "%d %M %Y") as dateScrutinFR, vi.seanceRef, vi.libelleTypeVote, vi.typeMajorite, vi.sortCode, vi.demandeur, vi.nombreVotants, vi.suffragesExprimes, vi.nbrSuffragesRequis, vi.decomptePour AS pour, vi.decompteContre AS contre, vi.decompteAbs AS abstention, vi.decompteNv AS nonVotant, vi.voteType, vi.amdt, vi.article, vi.bister, vi.posArticle,
           REPLACE(vi.titre, "n?", "n°") AS titre, vdos.href AS dossierUrl, vdos.dossier, doss.dossierId, doss.legislature AS dossierLegislature, doss.titre AS dossier_titre, doss.senatChemin, doss.procedureParlementaireLibelle,
           vd.title, vd.description, vd.state, f.name AS category, f.slug AS category_slug, vd.created_at, vd.modified_at
           FROM votes_info vi
@@ -385,11 +385,14 @@
 
     public function get_individual_vote_depute($depute_id, $legislature, $num){
       $where = array(
-        'mpId' => $depute_id,
-        'legislature' => $legislature,
-        'voteNumero' => $num
+        'vs.mpId' => $depute_id,
+        'vs.legislature' => $legislature,
+        'vs.voteNumero' => $num
       );
-      return $this->db->get_where('votes_scores', $where, 1)->row_array();
+      $this->db->select('vs.*, o.libelleAbrev');
+      $this->db->join('mandat_groupe mg', 'vs.mandatId = mg.mandatId');
+      $this->db->join('organes o', 'mg.organeRef = o.uid');
+      return $this->db->get_where('votes_scores vs', $where, 1)->row_array();
     }
 
     public function get_votes_all_depute($depute_id, $legislature){

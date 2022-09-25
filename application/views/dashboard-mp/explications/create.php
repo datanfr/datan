@@ -1,15 +1,14 @@
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
-  <!-- Content Header (Page header) -->
-
-  <!-- /.content-header -->
-
   <!-- Main content -->
   <div class="content">
     <div class="container-fluid">
       <div class="row">
         <div class="col-12 mt-5">
-          <a class="btn btn-secondary" href="<?= base_url() ?>dashboard-mp/explications/liste">Retour</a>
+          <a class="btn btn-outline-secondary font-weight-bold" href="<?= base_url() ?>dashboard-mp/explications">
+            <?= file_get_contents(asset_url()."imgs/icons/arrow_left.svg") ?>
+            Retour
+          </a>
           <h1 class="font-weight-bold mt-4"><?= $title ?></h1>
           <?php if ($page == 'modify'): ?>
             <h2 class="text-secondary"><?= ucfirst($vote['titre']) ?></h2>
@@ -22,60 +21,11 @@
               </div>
             </div>
           <?php endif; ?>
-          <div class="card mt-5 card-primary card-outline">
-            <div class="card-header">
-              <h2 class="font-weight-bold text-primary h4">Rappel du vote</h2>
-            </div>
-            <div class="card-body">
-              <table class="table mt-1">
-                <tbody>
-                  <tr>
-                    <th>Titre</th>
-                    <th><?= $vote['title'] ?></th>
-                  </tr>
-                  <tr>
-                    <th>Législature</th>
-                    <td><?= $vote['legislature'] ?></td>
-                  </tr>
-                  <tr>
-                    <th>Vote n°</th>
-                    <td><?= $vote['voteNumero'] ?></td>
-                  </tr>
-                  <tr>
-                    <th>Date du scrutin</th>
-                    <td><?= $vote['dateScrutin'] ?></td>
-                  </tr>
-                  <tr>
-                    <th>Sort du vote</th>
-                    <td><?= ucfirst($vote['sortCode']) ?></td>
-                  </tr>
-                  <tr>
-                    <th>Votre position</th>
-                    <td><?= ucfirst($vote_depute['vote']) ?></td>
-                  </tr>
-                  <tr>
-                    <th>Position de votre groupe (XX)</th>
-                    <td><?= ucfirst($vote_depute['positionGroup']) ?></td>
-                  </tr>
-                  <tr>
-                    <th>Titre du scrutin</th>
-                    <td><?= ucfirst($vote['titre']) ?></td>
-                  </tr>
-                  <tr>
-                    <th>Dossier</th>
-                    <td>
-                      <a href="<?= $vote['dossierUrl'] ?>" target="_blank"><?= $vote['dossier_titre'] ?></a>
-                    </td>
-                  </tr>
-                  <tr>
-                    <th>Catégorie</th>
-                    <td><?= $vote['category'] ?></td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-          <div class="card mt-5 card-primary card-outline">
+        </div>
+      </div>
+      <div class="row mt-4">
+        <div class="col-lg-6">
+          <div class="card card-primary card-outline">
             <div class="card-header">
               <h2 class="font-weight-bold text-primary h4"><?= $page == "modify" ? "Modifiez l'explication de vote" : "Rédigez l'explication de vote" ?></h2>
             </div>
@@ -115,6 +65,71 @@
                 </div>
                 <button type="submit" class="btn btn-primary">Submit</button>
               </form>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-6">
+          <div id="accordion">
+            <div class="card">
+              <div class="card-header" id="headingOne">
+                <h5 class="mb-0">
+                  <button class="btn btn-link" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                    Informations sur le scrutin
+                  </button>
+                </h5>
+              </div>
+              <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">
+                <div class="card-body">
+                  <table class="table table-striped mt-1">
+                    <tbody>
+                      <tr>
+                        <th>Titre du scrutin sur Datan</th>
+                        <th><?= $vote['title'] ?></th>
+                      </tr>
+                      <tr>
+                        <th>Description</th>
+                        <td><?= ucfirst($vote['titre']) ?></td>
+                      </tr>
+                      <tr>
+                        <th>Infos</th>
+                        <td>Scrutin n° <?= $vote['legislature'] ?> - Législature n° <?= $vote['legislature'] ?></td>
+                      </tr>
+                      <tr>
+                        <th>Date du vote</th>
+                        <td><?= $vote['dateScrutinFR'] ?></td>
+                      </tr>
+                      <tr>
+                        <th>Sort</th>
+                        <td class="color<?= $vote['sortCode'] == 'adopté' ? 'Pour' : 'Contre' ?> font-weight-bold"><?= ucfirst($vote['sortCode']) ?></td>
+                      </tr>
+                      <tr>
+                        <th>Votre position</th>
+                        <td class="color<?= ucfirst($vote_depute['vote']) ?> font-weight-bold"><?= ucfirst($vote_depute['vote']) ?></td>
+                      </tr>
+                      <tr>
+                        <th>Position de votre groupe (<?= $vote_depute['libelleAbrev'] ?>)</th>
+                        <td class="color<?= ucfirst($vote_depute['positionGroup']) ?> font-weight-bold"><?= ucfirst($vote_depute['positionGroup']) ?></td>
+                      </tr>
+
+                      <tr>
+                        <th>Dossier</th>
+                        <td>
+                          <a href="<?= $vote['dossierUrl'] ?>" target="_blank"><?= $vote['dossier_titre'] ?></a>
+                        </td>
+                      </tr>
+                      <tr>
+                        <th>Catégorie</th>
+                        <td><?= $vote['category'] ?></td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+                <div class="card-footer d-flex justify-content-around">
+                  <a class="btn btn-primary" href="#" role="button">Lien Datan vote</a>
+                  <a class="btn btn-primary" href="#" role="button">Lien AN vote</a>
+                  <a class="btn btn-primary" href="#" role="button">Lien AN dossier</a>
+                </div>
+              </div>
             </div>
           </div>
         </div>

@@ -29,7 +29,7 @@
       }
 
       // Explications
-      $data['votes_explained'] = $this->dashboardMP_model->get_votes_explained($data['depute']['mpId'], TRUE);
+      $data['votes_explained'] = $this->dashboardMP_model->get_votes_explained($data['depute']['mpId'], FALSE);
 
       $this->load->view('dashboard/header', $data);
       $this->load->view('dashboard-mp/index', $data);
@@ -110,7 +110,8 @@
       $data['username'] = $this->session->userdata('username');
       $data['depute'] = $this->deputes_model->get_depute_by_mpId($this->session->userdata('mpId'));
       $data['depute']['gender'] = gender($data['depute']['civ']);
-      $data['votes_explained'] = $this->dashboardMP_model->get_votes_explained($data['depute']['mpId']);
+      $data['votes_published'] = $this->dashboardMP_model->get_votes_explained($data['depute']['mpId'], TRUE);
+      $data['votes_draft'] = $this->dashboardMP_model->get_votes_explained($data['depute']['mpId'], FALSE);
 
       $data['title'] = "Vos explications de vote";
 
@@ -126,7 +127,7 @@
 
       $data['votes_without'] = $this->dashboardMP_model->get_votes_to_explain($data['depute']['mpId']);
 
-      $data['title'] = "Choisissez un scrutin";
+      $data['title'] = "Créez une explication de vote";
 
       $this->load->view('dashboard/header', $data);
       $this->load->view('dashboard-mp/explications/liste', $data);
@@ -207,7 +208,7 @@
       $data['vote_depute']['vote'] = vote_edited($data['vote_depute']['vote']);
       $data['vote_depute']['positionGroup'] = vote_edited($data['vote_depute']['positionGroup']);
 
-      $data['title'] = "Modifiez l'explication du vote";
+      $data['title'] = "Modifiez une explication du vote";
       $data['page'] = 'modify';
 
       // Form valiation
