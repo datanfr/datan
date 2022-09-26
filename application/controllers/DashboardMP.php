@@ -208,7 +208,7 @@
       $data['vote_depute']['vote'] = vote_edited($data['vote_depute']['vote']);
       $data['vote_depute']['positionGroup'] = vote_edited($data['vote_depute']['positionGroup']);
 
-      $data['title'] = "Modifiez une explication du vote";
+      $data['title'] = 'Modifiez une explication du vote';
       $data['page'] = 'modify';
 
       // Form valiation
@@ -225,6 +225,47 @@
         $this->dashboardMP_model->modify_explication($data);
         redirect('dashboard-mp/explications');
       }
+
+    }
+
+    public function explications_delete($legislature, $voteNumero){
+      $data['depute'] = $this->deputes_model->get_depute_by_mpId($this->session->userdata('mpId'));
+      $data['explication'] = $this->votes_model->get_explication($data['depute']['mpId'], $legislature, $voteNumero);
+
+      if (empty($data['explication'])) {
+        $this->session->set_flashdata('flash_failure', "Vous n'avez pas encore rédigé une explication pour le vote n° " . $voteNumero . ". Vous pouvez en créer une en <a href='".base_url()."dashboard-mp/explications/create/l".$legislature."v".$voteNumero."'>cliquant ici</a>.");
+        redirect('dashboard-mp/explications/liste');
+      }
+
+      $data['vote'] = $this->votes_model->get_individual_vote($legislature, $voteNumero);
+
+      if (empty($data['explication']) || empty($data['vote'])) {
+        show_404($this->functions_datan->get_404_infos());
+      }
+
+      $data['legislature'] = $legislature;
+      $data['voteNumero'] = $voteNumero;
+      $data['username'] = $this->session->userdata('username');
+
+      $data['vote_depute'] = $this->votes_model->get_individual_vote_depute($data['depute']['mpId'], $data['vote']['legislature'], $data['vote']['voteNumero']);
+      $data['vote_depute']['vote'] = vote_edited($data['vote_depute']['vote']);
+      $data['vote_depute']['positionGroup'] = vote_edited($data['vote_depute']['positionGroup']);
+
+      $data['title'] = 'Supprimer une explication de vote';
+
+      //Form validation
+      $this->form_validation->set_rules('delete', 'Delete', 'required');
+
+      if ($this->form_validation->run() === FALSE) {
+        $this->load->view('dashboard/header', $data);
+        $this->load->view('dashboard-mp/explications/delete', $data);
+        $this->load->view('dashboard/footer');
+      } else {
+        $this->dashboardMP_model->delete_explanation($data);
+        $this->session->set_flashdata('flash', "L'explication de vote pour le scrutin n°" . $voteNumero . " a bien été supprimé");
+        redirect('dashboard-mp/explications');
+      }
+
 
     }
 

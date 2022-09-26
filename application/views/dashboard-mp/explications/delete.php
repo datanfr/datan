@@ -28,44 +28,22 @@
         <div class="col-lg-6">
           <div class="card card-primary card-outline">
             <div class="card-header">
-              <h2 class="font-weight-bold text-primary h4"><?= $page == "modify" ? "Modifiez l'explication de vote" : "Rédigez l'explication de vote" ?></h2>
+              <h2 class="font-weight-bold text-primary h4">Explication de vote à supprimer</h2>
             </div>
             <div class="card-body">
-              <?php if ($page == 'create'): ?>
-                <?= form_open_multipart('dashboard-mp/explications/create/l' . $legislature . 'v' . $voteNumero); ?>
-                <?php else: ?>
-                <?= form_open_multipart('dashboard-mp/explications/modify/l' . $legislature . 'v' . $voteNumero); ?>
-              <?php endif; ?>
-                <div class="form-group">
-                  <label>Explication de vote (maximum 100 mots)</label>
-                  <textarea id="textbox" name="explication" class="form-control" placeholder="Votre explication de vote" rows="5"><?= $page == 'modify' ? $explication['text'] : '' ?></textarea>
-                  <div class="d-flex justify-content-end">
-                    <span id="char_count"><?= $page == 'modify' ? strlen($explication['text']) : 0 ?>/500</span>
-                  </div>
-                </div>
-                <div class="form-group">
-                  <?php if ($page == 'modify'): ?>
-                    <div class="form-check">
-                      <input class="form-check-input" type="radio" name="state" value="0" <?= $vote['state'] == 0 ? 'checked=""' : '' ?>>
-                      <label class="form-check-label text-danger font-weight-bold">Brouillon</label>
-                    </div>
-                    <div class="form-check">
-                      <input class="form-check-input" type="radio" name="state" value="1" <?= $vote['state'] == 1 ? 'checked=""' : '' ?>>
-                      <label class="form-check-label text-success font-weight-bold">Publié</label>
-                    </div>
-                  <?php else: ?>
-                    <div class="form-check">
-                      <input class="form-check-input" type="radio" name="state" value="0" checked="">
-                      <label class="form-check-label text-danger font-weight-bold">Brouillon</label>
-                    </div>
-                    <div class="form-check">
-                      <input class="form-check-input" type="radio" name="state" value="1">
-                      <label class="form-check-label text-success font-weight-bold">Publié</label>
-                    </div>
-                  <?php endif; ?>
-                </div>
-                <button type="submit" class="btn btn-primary">Submit</button>
-              </form>
+              <h5 class="font-weight-bold text-secondary">Explication</h5>
+              <p><?= $explication['text'] ?></p>
+            </div>
+            <div class="card-footer">
+              <div class="float-left">
+                <button type="button" onclick="window.location.href = '<?= base_url() ?>admin/votes';" class="btn btn-default"> Annuler</button>
+              </div>
+              <div class="float-right">
+                <?= form_open_multipart('dashboard-mp/explications/delete/l' . $legislature . 'v' . $voteNumero); ?>
+                  <input type="hidden" name="delete" value="deleted">
+                  <button type="submit" class="btn btn-danger">Supprimer</button>
+                </form>
+              </div>
             </div>
           </div>
         </div>
@@ -142,11 +120,6 @@
               </div>
             </div>
           </div>
-          <?php if ($page == 'modify'): ?>
-            <div class="d-flex justify-content-center mt-5">
-              <a class="btn btn-outline-danger font-weight-bold" href="<?= base_url() ?>dashboard-mp/explications/delete/l<?= $vote['legislature'] ?>v<?= $vote['voteNumero'] ?>">Supprimer cette explication</a>
-            </div>
-          <?php endif; ?>
         </div>
       </div>
     </div>

@@ -95,4 +95,11 @@ class DashboardMP_model extends CI_Model
     $this->db->update('explications_mp');
   }
 
+  public function delete_explanation($input){
+    $this->db->where('mpId', $input['depute']['mpId']);
+    $this->db->where('legislature', $input['legislature']);
+    $this->db->where('voteNumero', $input['voteNumero']);
+    $this->db->delete('explications_mp');
+  }
+
 }
