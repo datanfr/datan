@@ -33,6 +33,9 @@
 
       // Meta
       $data['title_meta'] = 'Dashboard | Datan';
+      $data['breadcrumb'] = array(
+        array('name' => 'Dashboard', 'url' => base_url().'dashboard-mp', 'active' => TRUE)
+      );
 
       // Views
       $this->load->view('dashboard/header', $data);
@@ -63,7 +66,11 @@
       $data['title'] = "Candidature pour les élections " . mb_strtolower($data['election']['libelleAbrev']). " ".$data['election']['dateYear'];
 
       // Meta
-      $data['title_meta'] = 'Elections - Dashboard | Datan';
+      $data['title_meta'] = 'Élections - Dashboard | Datan';
+      $data['breadcrumb'] = array(
+        array('name' => 'Dashboard', 'url' => base_url().'dashboard-mp', 'active' => FALSE),
+        array('name' => 'Élections ' . mb_strtolower($data['election']['libelleAbrev']) . ' ' . $data['election']['dateYear'], 'url' => base_url().'dashboard-mp/elections/' . $slug, 'active' => TRUE),
+      );
 
       // Views
       $this->load->view('dashboard/header', $data);
@@ -103,6 +110,11 @@
       if ($this->form_validation->run() === FALSE) {
         // Meta
         $data['title_meta'] = 'Modifier une élection - Dashboard | Datan';
+        $data['breadcrumb'] = array(
+          array('name' => 'Dashboard', 'url' => base_url().'dashboard-mp', 'active' => FALSE),
+          array('name' => 'Élections ' . mb_strtolower($data['election']['libelleAbrev']) . ' ' . $data['election']['dateYear'], 'url' => base_url().'dashboard-mp/elections/' . $slug, 'active' => FALSE),
+          array('name' => 'Modifier', 'url' => base_url().'dashboard-mp/elections/'. $slug . '/modifier', 'active' => TRUE),
+        );
 
         // Views
         $this->load->view('dashboard/header', $data);
@@ -129,6 +141,10 @@
 
       // Meta
       $data['title_meta'] = 'Explications de vote - Dashboard | Datan';
+      $data['breadcrumb'] = array(
+        array('name' => 'Dashboard', 'url' => base_url().'dashboard-mp', 'active' => FALSE),
+        array('name' => 'Explications de vote', 'url' => base_url().'dashboard-mp/explications', 'active' => TRUE),
+      );
 
       // Views
       $this->load->view('dashboard/header', $data);
@@ -147,6 +163,11 @@
 
       // Meta
       $data['title_meta'] = 'Liste des votes à expliquer - Dashboard | Datan';
+      $data['breadcrumb'] = array(
+        array('name' => 'Dashboard', 'url' => base_url().'dashboard-mp', 'active' => FALSE),
+        array('name' => 'Explications de vote', 'url' => base_url().'dashboard-mp/explications', 'active' => FALSE),
+        array('name' => 'Liste', 'url' => base_url().'dashboard-mp/explications/liste', 'active' => TRUE),
+      );
 
       // Views
       $this->load->view('dashboard/header', $data);
@@ -197,7 +218,11 @@
       if ($this->form_validation->run() === FALSE) {
         // Meta
         $data['title_meta'] = 'Rédigez une explication de vote - Dashboard | Datan';
-
+        $data['breadcrumb'] = array(
+          array('name' => 'Dashboard', 'url' => base_url().'dashboard-mp', 'active' => FALSE),
+          array('name' => 'Explications de vote', 'url' => base_url().'dashboard-mp/explications', 'active' => FALSE),
+          array('name' => 'Rédiger', 'url' => base_url().'dashboard-mp/explications/create/l' . $legislature . 'v' . $voteNumero, 'active' => TRUE),
+        );
         // Views
         $this->load->view('dashboard/header', $data);
         $this->load->view('dashboard-mp/explications/create', $data);
@@ -244,7 +269,11 @@
       if ($this->form_validation->run() === FALSE) {
         // Meta
         $data['title_meta'] = 'Modifiez de vote - Dashboard | Datan';
-
+        $data['breadcrumb'] = array(
+          array('name' => 'Dashboard', 'url' => base_url().'dashboard-mp', 'active' => FALSE),
+          array('name' => 'Explications de vote', 'url' => base_url().'dashboard-mp/explications', 'active' => FALSE),
+          array('name' => 'Modifier', 'url' => base_url().'dashboard-mp/explications/modify/l' . $legislature . 'v' . $voteNumero, 'active' => TRUE),
+        );
         // Views
         $this->load->view('dashboard/header', $data);
         $this->load->view('dashboard-mp/explications/create', $data);
@@ -287,7 +316,11 @@
       if ($this->form_validation->run() === FALSE) {
         // Meta
         $data['title_meta'] = 'Supprimer une explication de vote - Dashboard | Datan';
-
+        $data['breadcrumb'] = array(
+          array('name' => 'Dashboard', 'url' => base_url().'dashboard-mp', 'active' => FALSE),
+          array('name' => 'Explications de vote', 'url' => base_url().'dashboard-mp/explications', 'active' => FALSE),
+          array('name' => 'Supprimer', 'url' => base_url().'dashboard-mp/explications/delete/l' . $legislature . 'v' . $voteNumero, 'active' => TRUE),
+        );
         // Views
         $this->load->view('dashboard/header', $data);
         $this->load->view('dashboard-mp/explications/delete', $data);

@@ -1,24 +1,19 @@
-  <!-- Content Wrapper. Contains page content -->
   <div class="content-wrapper">
-    <!-- Content Header (Page header) -->
     <div class="content-header">
       <div class="container-fluid">
+        <div class="row">
+          <div class="col-12">
+            <?php $this->load->view('dashboard-mp/partials/breadcrumb.php', $breadcrumb) ?>
+          </div>
+        </div>
         <div class="row mb-2">
-          <div class="col-sm-6">
+          <div class="col-lg-6">
             <h1 class="m-0 text-dark font-weight-bold">Espace personnel - <?= $depute['nameFirst'] ?> <?= $depute['nameLast'] ?></h1>
             <p class="mt-3">Bienvenu sur votre espace personnel sur Datan. Cet espace vous permet d'avoir accès à des fonctionnalités dédiés aux parlementaires. Si vous avez des questions, n'hésitez pas à nous contacter : <i>info@datan.fr</i></p>
-          </div><!-- /.col -->
-          <div class="col-sm-6">
-            <ol class="breadcrumb float-sm-right">
-              <li class="breadcrumb-item"><a href="#">Dashboard</a></li>
-              <li class="breadcrumb-item active">Starter Page</li>
-            </ol>
-          </div><!-- /.col -->
-        </div><!-- /.row -->
-      </div><!-- /.container-fluid -->
+          </div>
+        </div>
+      </div>
     </div>
-    <!-- /.content-header -->
-    <!-- Main content -->
     <div class="content">
       <div class="container-fluid">
         <div class="row">
@@ -104,18 +99,6 @@
             </div>
           </div>
         </div>
-      </div><!-- /.container-fluid -->
+      </div>
     </div>
-    <!-- /.content -->
   </div>
-  <!-- /.content-wrapper -->
-
-  <!-- Control Sidebar -->
-  <aside class="control-sidebar control-sidebar-dark">
-    <!-- Control sidebar content goes here -->
-    <div class="p-3">
-      <h5>Title</h5>
-      <p>Sidebar content</p>
-    </div>
-  </aside>
-  <!-- /.control-sidebar -->
