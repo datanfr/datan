@@ -1,10 +1,17 @@
-<!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
-  <!-- Main content -->
+  <div class="content-header">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-12">
+          <?php $this->load->view('dashboard-mp/partials/breadcrumb.php', $breadcrumb) ?>
+        </div>
+      </div>
+    </div>
+  </div>
   <div class="content">
     <div class="container-fluid">
       <div class="row">
-        <div class="col-12 mt-5">
+        <div class="col-12">
           <a class="btn btn-outline-secondary font-weight-bold" href="<?= base_url() ?>dashboard-mp/explications">
             <?= file_get_contents(asset_url()."imgs/icons/arrow_left.svg") ?>
             Retour
@@ -62,14 +69,9 @@
           </table>
         </div>
       </div>
-      <!-- /.row -->
-    </div><!-- /.container-fluid -->
+    </div>
   </div>
-  <!-- /.content -->
 </div>
-<!-- /.content-wrapper -->
-
-<!-- Modal Create new vote -->
 <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
   <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
     <div class="modal-content">
