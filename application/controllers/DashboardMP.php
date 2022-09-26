@@ -31,6 +31,10 @@
       // Explications
       $data['votes_explained'] = $this->dashboardMP_model->get_votes_explained($data['depute']['mpId'], FALSE);
 
+      // Meta
+      $data['title_meta'] = 'Dashboard | Datan';
+
+      // Views
       $this->load->view('dashboard/header', $data);
       $this->load->view('dashboard-mp/index', $data);
       $this->load->view('dashboard/footer');
@@ -58,6 +62,10 @@
 
       $data['title'] = "Candidature pour les élections " . mb_strtolower($data['election']['libelleAbrev']). " ".$data['election']['dateYear'];
 
+      // Meta
+      $data['title_meta'] = 'Elections - Dashboard | Datan';
+
+      // Views
       $this->load->view('dashboard/header', $data);
       $this->load->view('dashboard-mp/elections/index', $data);
       $this->load->view('dashboard/footer');
@@ -93,6 +101,10 @@
       $this->form_validation->set_rules('candidature', 'Candidature', 'required');
 
       if ($this->form_validation->run() === FALSE) {
+        // Meta
+        $data['title_meta'] = 'Modifier une élection - Dashboard | Datan';
+
+        // Views
         $this->load->view('dashboard/header', $data);
         $this->load->view('dashboard-mp/elections/modify', $data);
         $this->load->view('dashboard/footer');
@@ -115,6 +127,10 @@
 
       $data['title'] = "Vos explications de vote";
 
+      // Meta
+      $data['title_meta'] = 'Explications de vote - Dashboard | Datan';
+
+      // Views
       $this->load->view('dashboard/header', $data);
       $this->load->view('dashboard-mp/explications/index', $data);
       $this->load->view('dashboard/footer');
@@ -127,8 +143,12 @@
 
       $data['votes_without'] = $this->dashboardMP_model->get_votes_to_explain($data['depute']['mpId']);
 
-      $data['title'] = "Créez une explication de vote";
+      $data['title'] = 'Créez une explication de vote';
 
+      // Meta
+      $data['title_meta'] = 'Liste des votes à expliquer - Dashboard | Datan';
+
+      // Views
       $this->load->view('dashboard/header', $data);
       $this->load->view('dashboard-mp/explications/liste', $data);
       $this->load->view('dashboard/footer');
@@ -175,6 +195,10 @@
       $data['js_to_load'] = array('dashboard/countChar');
 
       if ($this->form_validation->run() === FALSE) {
+        // Meta
+        $data['title_meta'] = 'Rédigez une explication de vote - Dashboard | Datan';
+
+        // Views
         $this->load->view('dashboard/header', $data);
         $this->load->view('dashboard-mp/explications/create', $data);
         $this->load->view('dashboard/footer');
@@ -218,6 +242,10 @@
       $data['js_to_load'] = array('dashboard/countChar');
 
       if ($this->form_validation->run() === FALSE) {
+        // Meta
+        $data['title_meta'] = 'Modifiez de vote - Dashboard | Datan';
+
+        // Views
         $this->load->view('dashboard/header', $data);
         $this->load->view('dashboard-mp/explications/create', $data);
         $this->load->view('dashboard/footer');
@@ -257,6 +285,10 @@
       $this->form_validation->set_rules('delete', 'Delete', 'required');
 
       if ($this->form_validation->run() === FALSE) {
+        // Meta
+        $data['title_meta'] = 'Supprimer une explication de vote - Dashboard | Datan';
+
+        // Views
         $this->load->view('dashboard/header', $data);
         $this->load->view('dashboard-mp/explications/delete', $data);
         $this->load->view('dashboard/footer');
