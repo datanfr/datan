@@ -329,12 +329,9 @@
       if ($data['usernameType'] != "admin") {
         redirect();
       } else {
-        $data["username"] = $this->session->userdata('username');
-
+        $data['username'] = $this->session->userdata('username');
         $data['title'] = 'Supprimer un vote décrypté';
-
         $data['vote'] = $this->admin_model->get_vote_datan($vote);
-
         $data['groupes'] = $this->groupes_model->get_groupes_all(true, 15);
 
         //Form validation
