@@ -57,7 +57,7 @@ class Script
 
       if ($this->legislature_to_get == 16) {
         $file = 'https://data.assemblee-nationale.fr/static/openData/repository/16/loi/dossiers_legislatifs/Dossiers_Legislatifs.xml.zip';
-        $newfile = __DIR__ . '/Dossiers_Legislatifs.xml.zip';
+        $newfile = __DIR__ . '/Dossiers_Legislatifs_XVI.xml.zip';
       } else {
         $file = 'https://data.assemblee-nationale.fr/static/openData/repository/15/loi/dossiers_legislatifs/Dossiers_Legislatifs_XV.xml.zip';
         $newfile = __DIR__ . '/Dossiers_Legislatifs_XV.xml.zip';
@@ -76,7 +76,7 @@ class Script
 
       if ($this->legislature_to_get == 16) {
         $file = 'https://data.assemblee-nationale.fr/static/openData/repository/16/loi/scrutins/Scrutins.xml.zip';
-        $newfile = __DIR__ . '/Scrutins.xml.zip';
+        $newfile = __DIR__ . '/Scrutins_XVI.xml.zip';
       } else {
         $file = 'https://data.assemblee-nationale.fr/static/openData/repository/15/loi/scrutins/Scrutins_XV.xml.zip';
         $newfile = __DIR__ . '/Scrutins_XV.xml.zip';
@@ -95,10 +95,10 @@ class Script
 
       if ($this->legislature_to_get == 16) {
         $file = 'https://data.assemblee-nationale.fr/static/openData/repository/16/amo/tous_acteurs_mandats_organes_xi_legislature/AMO30_tous_acteurs_tous_mandats_tous_organes_historique.xml.zip';
-        $newfile = __DIR__ . '/AMO30_tous_acteurs_tous_mandats_tous_organes_historique.xml.zip';
+        $newfile = __DIR__ . '/AMO30_tous_acteurs_tous_mandats_tous_organes_historique_XVI.xml.zip';
       } else {
         $file = 'https://data.assemblee-nationale.fr/static/openData/repository/15/amo/tous_acteurs_mandats_organes_xi_legislature/AMO30_tous_acteurs_tous_mandats_tous_organes_historique.xml.zip';
-        $newfile = __DIR__ . '/AMO30_tous_acteurs_tous_mandats_tous_organes_historique.xml.zip';
+        $newfile = __DIR__ . '/AMO30_tous_acteurs_tous_mandats_tous_organes_historique_XV.xml.zip';
       }
 
       if ($this->chunked_copy($file, $newfile)) {
@@ -112,8 +112,13 @@ class Script
     public function amendements(){
       echo "downloading amendements starting \n";
 
-      $file = 'http://data.assemblee-nationale.fr/static/openData/repository/15/loi/amendements_legis/Amendements_XV.xml.zip';
-      $newfile = __DIR__ . '/tmp_amendements.zip';
+      if ($this->legislature_to_get == 16) {
+        $file = 'http://data.assemblee-nationale.fr/static/openData/repository/16/loi/amendements_div_legis/Amendements.xml.zip';
+        $newfile = __DIR__ . '/tmp_amendements_16.zip';
+      } elseif ($this->legislature_to_get == 15) {
+        $file = 'http://data.assemblee-nationale.fr/static/openData/repository/15/loi/amendements_legis/Amendements_XV.xml.zip';
+        $newfile = __DIR__ . '/tmp_amendements_15.zip';
+      }
 
       if ($this->chunked_copy($file, $newfile)) {
         echo "Success. Copied $newfile \n";
