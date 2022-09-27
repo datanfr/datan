@@ -131,7 +131,11 @@ class Script
     public function fillDeputes()
     {
         echo "fillDeputes starting \n";
-        $file = __DIR__ . '/AMO30_tous_acteurs_tous_mandats_tous_organes_historique.xml.zip';
+        if ($this->legislature_to_get == 16) {
+          $file = __DIR__ . '/AMO30_tous_acteurs_tous_mandats_tous_organes_historique_XVI.xml.zip';
+        } elseif ($this->legislature_to_get == 15) {
+          $file = __DIR__ . '/AMO30_tous_acteurs_tous_mandats_tous_organes_historique_XV.xml.zip';
+        }
         $zip = new ZipArchive();
         if ($zip->open($file) !== TRUE) {
             exit("cannot open <$file>\n");
@@ -1108,7 +1112,7 @@ class Script
             if ($this->legislature_to_get == 15) {
               $file = __DIR__ . '/Scrutins_XV.xml.zip';
             } elseif ($this->legislature_to_get == 16) {
-              $file = __DIR__ . '/Scrutins.xml.zip';
+              $file = __DIR__ . '/Scrutins_XVI.xml.zip';
             }
             $zip = new ZipArchive();
             if ($zip->open($file) !== TRUE) {
@@ -1329,7 +1333,7 @@ class Script
 
             $file = 'https://data.assemblee-nationale.fr/static/openData/repository/14/loi/scrutins/Scrutins_XIV.xml.zip';
             $file = trim($file);
-            $newfile = __DIR__ . '/tmp_Scrutins_XIV.xml.zip';
+            $newfile = __DIR__ . '/Scrutins_XIV.xml.zip';
             if (!copy($file, $newfile)) {
                 echo "failed to copy $file...\n";
             }
@@ -2460,7 +2464,7 @@ class Script
             if ($this->legislature_to_get == 15) {
               $file = __DIR__ . '/Dossiers_Legislatifs_XV.xml.zip';
             } elseif ($this->legislature_to_get == 16) {
-              $file = __DIR__ . '/Dossiers_Legislatifs.xml.zip';
+              $file = __DIR__ . '/Dossiers_Legislatifs_XVI.xml.zip';
             }
 
             $zip = new ZipArchive();
@@ -2506,7 +2510,7 @@ class Script
             // Online file
             $file = 'https://data.assemblee-nationale.fr/static/openData/repository/14/loi/dossiers_legislatifs/Dossiers_Legislatifs_XIV.xml.zip';
             $file = trim($file);
-            $newfile = __DIR__ . '/tmp_dossiers_14.zip';
+            $newfile = __DIR__ . '/Dossiers_Legislatifs_XIV.xml.zip';
             if (!copy($file, $newfile)) {
                 echo "failed to copy $file...\n";
             }
@@ -2560,7 +2564,7 @@ class Script
             if ($this->legislature_to_get == 15) {
               $file = __DIR__ . '/Dossiers_Legislatifs_XV.xml.zip';
             } elseif ($this->legislature_to_get == 16) {
-              $file = __DIR__ . '/Dossiers_Legislatifs.xml.zip';
+              $file = __DIR__ . '/Dossiers_Legislatifs_XVI.xml.zip';
             }
 
             $zip = new ZipArchive();
@@ -2656,7 +2660,7 @@ class Script
             // Online file
             $file = 'https://data.assemblee-nationale.fr/static/openData/repository/14/loi/dossiers_legislatifs/Dossiers_Legislatifs_XIV.xml.zip';
             $file = trim($file);
-            $newfile = __DIR__ . '/tmp_dossiers_14.zip';
+            $newfile = __DIR__ . '/Dossiers_Legislatifs_XIV.xml.zip';
             if (!copy($file, $newfile)) {
                 echo "failed to copy $file...\n";
             }
@@ -2755,7 +2759,7 @@ class Script
         if ($this->legislature_to_get == 15) {
           $file = __DIR__ . '/Dossiers_Legislatifs_XV.xml.zip';
         } elseif ($this->legislature_to_get == 16) {
-          $file = __DIR__ . '/Dossiers_Legislatifs.xml.zip';
+          $file = __DIR__ . '/Dossiers_Legislatifs_XVI.xml.zip';
         }
 
         $zip = new ZipArchive();
@@ -2799,7 +2803,7 @@ class Script
 
         $file = 'https://data.assemblee-nationale.fr/static/openData/repository/14/loi/dossiers_legislatifs/Dossiers_Legislatifs_XIV.xml.zip';
         $file = trim($file);
-        $newfile = __DIR__ . '/tmp_dossiers_14.zip';
+        $newfile = __DIR__ . '/Dossiers_Legislatifs_XIV.xml.zip';
         if (!copy($file, $newfile)) {
             echo "failed to copy $file...\n";
         }
