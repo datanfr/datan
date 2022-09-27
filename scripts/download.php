@@ -91,7 +91,7 @@ class Script
     }
 
     public function acteurs_organes(){
-      echo "downloading scrutins starting \n";
+      echo "downloading acteurs_organes starting \n";
 
       if ($this->legislature_to_get == 16) {
         $file = 'https://data.assemblee-nationale.fr/static/openData/repository/16/amo/tous_acteurs_mandats_organes_xi_legislature/AMO30_tous_acteurs_tous_mandats_tous_organes_historique.xml.zip';
