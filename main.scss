@@ -693,6 +693,37 @@ body.modal-open {
       font-size: 0.9em;
     }
   }
+  .explication{
+    background-color: $primary;
+    border-bottom-left-radius: $card-border-radius;
+    border-bottom-right-radius: $card-border-radius;
+    border: 1px solid transparent;
+    transition: .3s ease all;
+    span {
+      font-weight: bold;
+      color: #fff;
+      font-size: $h5-font-size;
+      position: relative;
+      z-index: 2;
+    }
+    .icon{
+      color: #fff;
+    }
+    &:focus, &:active{
+      outline: none;
+      box-shadow: none;
+    }
+    &:hover{
+      background-color: #fff;
+      border: 1px solid $primary;
+      span{
+        color: $primary;
+      }
+      .icon{
+        color: $primary;
+      }
+    }
+  }
   // HOVER //
   &:hover{
     box-shadow: $card-box-shadow-hover;
