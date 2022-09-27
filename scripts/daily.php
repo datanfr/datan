@@ -2842,7 +2842,11 @@ class Script
         echo "amendements starting \n";
 
         $fields = array('id', 'dossier', 'legislature', 'texteLegislatifRef', 'num', 'numordre', 'seanceRef', 'expose');
-        $file = __DIR__ . '/Amendements_XV.xml.zip';
+        if ($this->legislature_to_get == 15) {
+          $file = __DIR__ . '/Amendements_XV.xml.zip';
+        } elseif ($this->legislature_to_get == 16) {
+          $file = __DIR__ . '/Amendements.xml.zip';
+        }
         $zip = new ZipArchive();
         $insert = [];
 
@@ -2896,7 +2900,11 @@ class Script
         echo "amendementsAuteurs starting \n";
 
         $fields = array('id', 'type', 'acteurRef', 'groupeId', 'auteurOrgane');
-        $file = __DIR__ . '/Amendements_XV.xml.zip';
+        if ($this->legislature_to_get == 15) {
+          $file = __DIR__ . '/Amendements_XV.xml.zip';
+        } elseif ($this->legislature_to_get == 16) {
+          $file = __DIR__ . '/Amendements.xml.zip';
+        }
         $zip = new ZipArchive();
         $insertAll = [];
 
@@ -3408,8 +3416,8 @@ $script->votesDossiers(); // Depend on the legislature
 $script->dossier(); // Depend on the legislature
 $script->dossiersActeurs(); // Depend on the legislature
 $script->documentsLegislatifs(); // Depend on the legislature
-//$script->amendements(); // Need to be checked for leg 16
-//$script->amendementsAuteurs(); // Need to be checked for leg 16
+$script->amendements(); // Depend on the legislature
+$script->amendementsAuteurs(); // Depend on the legislature
 $script->voteParticipationCommission(); // Depend on the legislature
 $script->classParticipation();
 $script->classParticipationCommission(); // Will need to be changed w/ leg 16
