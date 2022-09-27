@@ -46,7 +46,7 @@
                 <?= form_open_multipart('dashboard-mp/explications/modify/l' . $legislature . 'v' . $voteNumero); ?>
               <?php endif; ?>
                 <div class="form-group">
-                  <label>Explication de vote (maximum 100 mots)</label>
+                  <label>Explication de vote (maximum 500 caractères)</label>
                   <textarea id="textbox" name="explication" class="form-control" placeholder="Votre explication de vote" rows="5"><?= $page == 'modify' ? $explication['text'] : '' ?></textarea>
                   <div class="d-flex justify-content-end">
                     <span id="char_count"><?= $page == 'modify' ? strlen($explication['text']) : 0 ?>/500</span>
