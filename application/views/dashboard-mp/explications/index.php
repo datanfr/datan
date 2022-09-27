@@ -36,33 +36,35 @@
             </div>
             <div class="card-body">
               <?php if ($votes_draft): ?>
-                <table class="table mt-2">
-                  <thead class="thead-dark">
-                    <tr>
-                      <th>Législature</th>
-                      <th>Scrutin</th>
-                      <th class="text-center">Vote</th>
-                      <th class="text-center">Explication</th>
-                      <th></th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <?php foreach ($votes_draft as $key => $value): ?>
+                <div class="table-responsive">
+                  <table class="table mt-2">
+                    <thead class="thead-dark">
                       <tr>
-                        <td><?= $value['legislature'] ?></td>
-                        <td class="font-weight-bold"><?= $value['vote_titre'] ?></td>
-                        <td class="text-center"><span class="badge badge<?= ucfirst($value['vote_depute']) ?>" style="font-size: 16px"><?= ucfirst($value['vote_depute']) ?></span></td>
-                        <td><?= word_limiter($value['explication'], 30) ?></td>
-                        <td>
-                          <a class="btn btn-primary d-flex align-items-center justify-content-center font-weight-bold" href="<?= base_url() ?>dashboard-mp/explications/modify/l<?= $value['legislature'] ?>v<?= $value['voteNumero'] ?>">
-                            <?= file_get_contents(asset_url()."imgs/icons/pencil-square.svg") ?>
-                            <span class="ml-3">Modifier</span>
-                          </a>
-                        </td>
+                        <th>Législature</th>
+                        <th>Scrutin</th>
+                        <th class="text-center">Vote</th>
+                        <th class="text-center d-none d-lg-table-cell">Explication</th>
+                        <th></th>
                       </tr>
-                    <?php endforeach; ?>
-                  </tbody>
-                </table>
+                    </thead>
+                    <tbody>
+                      <?php foreach ($votes_draft as $key => $value): ?>
+                        <tr>
+                          <td><?= $value['legislature'] ?></td>
+                          <td class="font-weight-bold"><?= $value['vote_titre'] ?></td>
+                          <td class="text-center"><span class="badge badge<?= ucfirst($value['vote_depute']) ?>" style="font-size: 16px"><?= ucfirst($value['vote_depute']) ?></span></td>
+                          <td class="d-none d-lg-table-cell"><?= word_limiter($value['explication'], 30) ?></td>
+                          <td>
+                            <a class="btn btn-primary d-flex align-items-center justify-content-center font-weight-bold" href="<?= base_url() ?>dashboard-mp/explications/modify/l<?= $value['legislature'] ?>v<?= $value['voteNumero'] ?>">
+                              <?= file_get_contents(asset_url()."imgs/icons/pencil-square.svg") ?>
+                              <span class="ml-3">Modifier</span>
+                            </a>
+                          </td>
+                        </tr>
+                      <?php endforeach; ?>
+                    </tbody>
+                  </table>
+                </div>
                 <?php else: ?>
                 <p>Vous n'avez pas encore d'explications de vote en brouillon.</p>
               <?php endif; ?>
@@ -74,33 +76,35 @@
             </div>
             <div class="card-body">
               <?php if ($votes_published): ?>
-                <table class="table mt-2">
-                  <thead class="thead-dark">
-                    <tr>
-                      <th>Législature</th>
-                      <th>Scrutin</th>
-                      <th class="text-center">Vote</th>
-                      <th class="text-center">Explication</th>
-                      <th></th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <?php foreach ($votes_published as $key => $value): ?>
+                <div class="table-responsive">
+                  <table class="table mt-2">
+                    <thead class="thead-dark">
                       <tr>
-                        <td><?= $value['legislature'] ?></td>
-                        <td class="font-weight-bold"><?= $value['vote_titre'] ?></td>
-                        <td class="text-center"><span class="badge badge<?= ucfirst($value['vote_depute']) ?>" style="font-size: 16px"><?= ucfirst($value['vote_depute']) ?></span></td>
-                        <td><?= word_limiter($value['explication'], 30) ?></td>
-                        <td>
-                          <a class="btn btn-primary d-flex align-items-center justify-content-center font-weight-bold" href="<?= base_url() ?>dashboard-mp/explications/modify/l<?= $value['legislature'] ?>v<?= $value['voteNumero'] ?>">
-                            <?= file_get_contents(asset_url()."imgs/icons/pencil-square.svg") ?>
-                            <span class="ml-3">Modifier</span>
-                          </a>
-                        </td>
+                        <th>Législature</th>
+                        <th>Scrutin</th>
+                        <th class="text-center">Vote</th>
+                        <th class="text-center d-none d-lg-table-cell">Explication</th>
+                        <th></th>
                       </tr>
-                    <?php endforeach; ?>
-                  </tbody>
-                </table>
+                    </thead>
+                    <tbody>
+                      <?php foreach ($votes_published as $key => $value): ?>
+                        <tr>
+                          <td><?= $value['legislature'] ?></td>
+                          <td class="font-weight-bold"><?= $value['vote_titre'] ?></td>
+                          <td class="text-center"><span class="badge badge<?= ucfirst($value['vote_depute']) ?>" style="font-size: 16px"><?= ucfirst($value['vote_depute']) ?></span></td>
+                          <td class="d-none d-lg-table-cell"><?= word_limiter($value['explication'], 30) ?></td>
+                          <td>
+                            <a class="btn btn-primary d-flex align-items-center justify-content-center font-weight-bold" href="<?= base_url() ?>dashboard-mp/explications/modify/l<?= $value['legislature'] ?>v<?= $value['voteNumero'] ?>">
+                              <?= file_get_contents(asset_url()."imgs/icons/pencil-square.svg") ?>
+                              <span class="ml-3">Modifier</span>
+                            </a>
+                          </td>
+                        </tr>
+                      <?php endforeach; ?>
+                    </tbody>
+                  </table>
+                </div>
                 <?php else: ?>
                 <p>Vous n'avez pas encore publié d'explications de vote.</p>
               <?php endif; ?>
