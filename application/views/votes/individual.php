@@ -201,11 +201,17 @@
               <div class="d-flex flex-column flex-lg-row">
                 <?php if ($vote['dossierUrl']): ?>
                   <span class="d-flex justify-content-center align-items-center url_obf btn btn-secondary link my-1 my-lg-0 mx-lg-1" url_obf="<?= url_obfuscation($vote['dossierUrl']) ?>">
+                    <div class="mr-1">
+                      <?= file_get_contents(base_url().'/assets/imgs/icons/arrow_external_right.svg') ?>
+                    </div>
                     <span class="text">Le dossier</span>
                   </span>
                 <?php endif; ?>
                 <?php if ($vote['voteType'] == 'amendement' && !empty($documentLegislatif)): ?>
                   <span class="d-flex justify-content-center align-items-center url_obf btn btn-secondary link my-1 my-lg-0 mx-lg-1" url_obf="<?= url_obfuscation("https://www.assemblee-nationale.fr/dyn/" . $amdt['legislature'] . "/amendements/" . $documentLegislatif['numNotice'] ."/AN/".$amdt['numOrdre']) ?>">
+                    <div class="mr-1">
+                      <?= file_get_contents(base_url().'/assets/imgs/icons/arrow_external_right.svg') ?>
+                    </div>
                     <span class="text">L'amendement</span>
                   </span>
                 <?php endif; ?>
