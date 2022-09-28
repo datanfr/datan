@@ -89,6 +89,10 @@
             </table>
           </div>
           <div class="mt-5">
+            <h2>Résumé de l'amendement</h2>
+            <p>Le texte doit aller ici ! </p>
+          </div>
+          <div class="mt-5">
             <h2>La position des groupes</h2>
             <div class="mt-4 bloc-groupes d-flex flex-column flex-lg-row">
               <!-- POUR -->
@@ -145,7 +149,7 @@
           </div>
           <?php if ($description): ?>
             <div class="mt-5">
-              <h2>Pour mieux comprendre</h2>
+              <h2>Mieux comprendre le vote</h2>
               <div class="card mt-4">
                 <div class="card-body">
                   <div class="read-more-container">
@@ -379,6 +383,18 @@
               </div>
             </div>
           </div>
+          <?php if ($vote['voteType'] == 'amendement' && !empty($documentLegislatif) && $amdt['expose']): ?>
+            <div class="mt-5">
+              <h2>Exposé des motifs de l'amendement</h2>
+              <p class="mt-4 font-italic">L'objectif d'un amendement est de modifier ou d'ajouter une mesure d'un projet ou d'une proposition de loi. Le ou les députés qui rédigent l'amendement écrivent également un exposé des motifs.</p>
+              <div class="card">
+                <div class="card-body">
+                  <?= $amdt['expose']  ?>
+                </div>
+              </div>
+              <p class="mt-3">Source : <span class="url_obf" url_obf="<?= url_obfuscation("https://www.assemblee-nationale.fr/dyn/" . $amdt['legislature'] . "/amendements/" . $documentLegislatif['numNotice'] ."/AN/".$amdt['numOrdre']) ?>">Amendement sur le site de l'Assemblée nationale</span></p>
+            </div>
+          <?php endif; ?>
           <div class="bloc-savoir-plus d-md-none mt-5">
             <h3 class="subtitle">En savoir plus</h3>
             <div class="bloc-links">
