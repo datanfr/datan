@@ -388,7 +388,7 @@
               <h2>Exposé des motifs de l'amendement</h2>
               <p class="mt-4 font-italic">L'objectif d'un amendement est de modifier ou d'ajouter une mesure d'un projet ou d'une proposition de loi. Le ou les députés qui rédigent l'amendement écrivent également un exposé des motifs.</p>
               <div class="card">
-                <div class="card-body">
+                <div class="card-body" id="exposeMotifs">
                   <?= $amdt['expose']  ?>
                 </div>
               </div>
@@ -414,7 +414,6 @@
           </div>
           <div class="bloc-social d-md-none mt-4">
             <h3 class="subtitle">Partagez ce vote</h3>
-            <!-- DESIGN https://feralvoice.com/social-media-sharing-buttons/ -->
             <!-- Linkedin does not work -->
             <!-- Whatsapp à faire -->
             <div class="d-flex flex-row flex-wrap social-share-bloc">
