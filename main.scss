@@ -292,6 +292,19 @@ body:not(.pg-mentions) #tarteaucitronIcon {
                A CLASSER
 ################
 */
+.modalExplication{
+  .modal-content{
+    border: none;
+  }
+  .modal-header{
+    background-color: #F0F0F0;
+  }
+  .modal-title{
+    font-weight: bold;
+    font-size: $h5-font-size;
+    color: $text-black;
+  }
+}
 .quizBanner {
   background-color: $vert;
   text-decoration: none !important;
