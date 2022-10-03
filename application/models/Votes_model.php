@@ -459,8 +459,7 @@
         ELSE NULL
         END AS vote_libelle
         FROM votes_scores vs
-        WHERE vs.voteNumero IN (2814, 2940, 3254) AND vs.mpId = ?
-        GROUP BY vs.voteNumero
+        WHERE vs.voteNumero IN (105, 184) AND vs.legislature = 16 AND vs.mpId = ?
       ';
       $query = $this->db->query($sql, $mpId);
 

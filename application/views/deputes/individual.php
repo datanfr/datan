@@ -202,43 +202,43 @@
                 <h2 class="mb-4 title-center">Ses positions importantes</h2>
                 <div class="card">
                   <div class="card-body key-votes">
-                    <?php if (isset($key_votes[3254])) : ?>
+                    <?php if (isset($key_votes[105])) : ?>
                       <div class="row">
                         <div class="col-md-3 libelle d-flex align-items-center justify-content-md-center">
-                          <span class="sort-<?= $key_votes[3254]["vote_libelle"] ?>"><?= mb_strtoupper($key_votes[3254]["vote_libelle"]) ?></span>
+                          <span class="sort-<?= $key_votes[105]["vote_libelle"] ?>"><?= mb_strtoupper($key_votes[105]["vote_libelle"]) ?></span>
                         </div>
                         <div class="col-md-9 value">
                           <?= $title ?><b>
-                            <?php if ($key_votes[3254]["vote"] === "1") : ?>
+                            <?php if ($key_votes[105]["vote"] === "1") : ?>
                               a voté en faveur de
-                            <?php elseif ($key_votes[3254]["vote"] === "-1") : ?>
+                            <?php elseif ($key_votes[105]["vote"] === "-1") : ?>
                               a voté contre
                             <?php else : ?>
                               s'est abstenu<?= $gender["e"] ?> lors du vote sur
                             <?php endif; ?>
-                            la proposition de loi Sécurité globale</b>.
-                          <?= ucfirst($gender["le"]) ?> député<?= $gender["e"] ?> <?= $key_votes[3254]["loyaute"] === "1" ? "a été loyal" : "n'a pas été loyal" ?><?= $gender['e'] ?> a son groupe.
-                          <a href="<?= base_url() ?>votes/legislature-15/vote_3254" class="font-italic">Voir le vote</a>
+                            la création d'une taxe sur les super-profits des entreprises pétrolières</b>.
+                          <?= ucfirst($gender["le"]) ?> député<?= $gender["e"] ?> <?= $key_votes[105]["loyaute"] === "1" ? "a été loyal" : "n'a pas été loyal" ?><?= $gender['e'] ?> a son groupe.
+                          <a href="<?= base_url() ?>votes/legislature-16/vote_105" class="font-italic">Voir le vote</a>
                         </div>
                       </div>
                     <?php endif; ?>
-                    <?php if (isset($key_votes[2940])) : ?>
+                    <?php if (isset($key_votes[184])) : ?>
                       <div class="row">
                         <div class="col-md-3 libelle d-flex align-items-center justify-content-md-center">
-                          <span class="sort-<?= $key_votes[2940]["vote_libelle"] ?>"><?= mb_strtoupper($key_votes[2940]["vote_libelle"]) ?></span>
+                          <span class="sort-<?= $key_votes[184]["vote_libelle"] ?>"><?= mb_strtoupper($key_votes[184]["vote_libelle"]) ?></span>
                         </div>
                         <div class="col-md-9 value">
-                          <?= $title ?> a voté <b>
-                            <?php if ($key_votes[2940]["vote"] === "1") : ?>
+                          <?= $title ?><b>
+                            <?php if ($key_votes[184]["vote"] === "1") : ?>
                               a voté en faveur de
-                            <?php elseif ($key_votes[2940]["vote"] === "-1") : ?>
+                            <?php elseif ($key_votes[184]["vote"] === "-1") : ?>
                               a voté contre
                             <?php else : ?>
                               s'est abstenu<?= $gender["e"] ?> sur le vote concernant
                             <?php endif; ?>
-                            la réintroduction des pesticides néonicotinoïdes</b> jusqu'en 2023</b>.
-                          <?= ucfirst($gender['pronom']) ?> <?= $key_votes[2940]["loyaute"] === "1" ? "a été loyal" : "n'a pas été loyal" ?><?= $gender['e'] ?> a son groupe.
-                          <a href="<?= base_url() ?>votes/legislature-15/vote_2940" class="font-italic">Voir le vote</a>
+                            la ratification de l'accord pour l'adhésion de la Suède et de la Finlande à l'OTAN</b>.
+                          <?= ucfirst($gender['pronom']) ?> <?= $key_votes[184]["loyaute"] === "1" ? "a été loyal" : "n'a pas été loyal" ?><?= $gender['e'] ?> a son groupe.
+                          <a href="<?= base_url() ?>votes/legislature-15/vote_184" class="font-italic">Voir le vote</a>
                         </div>
                       </div>
                     <?php endif; ?>
