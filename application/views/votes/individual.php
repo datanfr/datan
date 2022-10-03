@@ -88,7 +88,7 @@
               </tbody>
             </table>
           </div>
-          <?php if ($expose): ?>
+          <?php if ($expose['exposeSummaryPublished']): ?>
             <div class="mt-5">
               <h2>Résumé de l'amendement</h2>
               <div class="card mt-4">
