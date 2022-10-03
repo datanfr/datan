@@ -13,6 +13,14 @@
       return $this->db->get_where('exposes', array('id' => $id))->row_array();
     }
 
+    public function get_expose_by_vote($legislature, $voteNumero){
+      $where = array(
+        'legislature' => $legislature,
+        'voteNumero' => $voteNumero
+      );
+      return $this->db->get_where('exposes', $where)->row_array();
+    }
+
     public function modify($legislature, $voteNumero){
       $data = array(
         'exposeSummaryPublished' => $this->input->post('exposeSummary'),

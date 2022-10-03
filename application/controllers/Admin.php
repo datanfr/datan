@@ -710,7 +710,7 @@
       }
 
       //Form valiation
-      $this->form_validation->set_rules('exposeSummary', 'exposeSummary', 'required|max_length[150]');
+      $this->form_validation->set_rules('exposeSummary', 'exposeSummary', 'required');
 
       // JS TO LOAD
       $data['js_to_load'] = array('dashboard/countChar');

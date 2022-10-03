@@ -88,10 +88,16 @@
               </tbody>
             </table>
           </div>
-          <div class="mt-5">
-            <h2>Résumé de l'amendement</h2>
-            <p>Le texte doit aller ici ! </p>
-          </div>
+          <?php if ($expose): ?>
+            <div class="mt-5">
+              <h2>Résumé de l'amendement</h2>
+              <div class="card mt-4">
+                <div class="card-body">
+                  <p class="mb-0"><?= $expose['exposeSummaryPublished'] ?></p>
+                </div>
+              </div>
+            </div>
+          <?php endif; ?>
           <div class="mt-5">
             <h2>La position des groupes</h2>
             <div class="mt-4 bloc-groupes d-flex flex-column flex-lg-row">

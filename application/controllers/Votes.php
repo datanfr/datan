@@ -8,6 +8,7 @@
       $this->load->model('deputes_model');
       $this->load->model('organes_model');
       $this->load->model('captcha_model');
+      $this->load->model('exposes_model');
       //$this->password_model->security_password(); Former login protection
     }
 
@@ -467,6 +468,9 @@
           $data['documentLegislatif']['numNotice'] = $data['documentLegislatif']['numNotice'];
         }
       }
+
+      // Get exposes
+      $data['expose'] = $this->exposes_model->get_expose_by_vote($legislature, $num);
 
       // Votes - groupes
       $data['groupes'] = $this->votes_model->get_vote_groupes($data['vote']['voteNumero'], $legislature);
