@@ -78,6 +78,8 @@ $route['admin/quizz/modify/(:any)'] = 'admin/modify_quizz/$1';
 $route['admin/quizz/delete/(:any)'] = 'admin/delete_quizz/$1';
 $route['admin/parrainages'] = 'admin/parrainages';
 $route['admin/parrainages/modify/(:any)'] = 'admin/modify_parrainage/$1';
+$route['admin/exposes'] = 'admin/exposes';
+$route['admin/exposes/modify/(:any)'] = 'admin/exposes_modify/$1';
 // MpDashboard
 $route['dashboard-mp'] = 'dashboardMP/index';
 $route['dashboard-mp/elections/(:any)'] = 'dashboardMP/elections/$1';
