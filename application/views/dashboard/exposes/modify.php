@@ -32,7 +32,7 @@
                     <h6 class="font-weight-bold">Exposé final</h6>
                     <?php echo form_open_multipart('admin/exposes/modify/' . $expose['id']) ?>
                       <div class="form-group">
-                        <textarea name="exposeSummary" class="form-control"><?= $expose['exposeSummaryPublished'] ?></textarea>
+                        <textarea name="exposeSummary" class="form-control" rows="10"><?= $expose['exposeSummaryPublished'] ?></textarea>
                         <div class="d-flex justify-content-end">
                           <span id="char_count"><?= $expose['exposeSummaryPublished'] ? strlen($expose['exposeSummaryPublished']) : 0 ?>/100</span>
                         </div>
