@@ -15,6 +15,7 @@
       $this->load->model('readings_model');
       $this->load->model('votes_model');
       $this->load->model('parrainages_model');
+      $this->load->model('exposes_model');
       $this->password_model->security_only_team();
     }
 
@@ -682,6 +683,48 @@
         $this->parrainages_model->modify($id, $user_id);
         redirect('admin/parrainages');
       }
+    }
+
+    public function exposes(){
+      $data['username'] = $this->session->userdata('username');
+      $data['usernameType'] = $this->session->userdata('type');
+      $user_id = $this->session->userdata('user_id');
+      $data['title'] = 'Liste des exposés des motifs';
+      $data['exposes'] = $this->exposes_model->get_all_exposes();
+
+      $this->load->view('dashboard/header', $data);
+      $this->load->view('dashboard/exposes/list', $data);
+      $this->load->view('dashboard/footer');
+    }
+
+    public function exposes_modify($id){
+      $data['username'] = $this->session->userdata('username');
+      $data['usernameType'] = $this->session->userdata('type');
+      $user_id = $this->session->userdata('user_id');
+      $data['title'] = 'Modifier un exposé des motifs';
+
+      $data['expose'] = $this->exposes_model->get_expose($id);
+
+      if (empty($data['expose'])) {
+        redirect('admin/parrainages');
+      }
+
+      //Form valiation
+      $this->form_validation->set_rules('exposeSummary', 'exposeSummary', 'required');
+
+      // JS TO LOAD
+      $data['js_to_load'] = array('dashboard/countChar');
+
+      if ($this->form_validation->run() === FALSE) {
+        $this->load->view('dashboard/header', $data);
+        $this->load->view('dashboard/exposes/modify', $data);
+        $this->load->view('dashboard/footer', $data);
+      } else {
+        $this->exposes_model->modify($data['expose']['legislature'], $data['expose']['voteNumero']);
+        redirect('admin/exposes');
+      }
+
+
     }
   }
 ?>

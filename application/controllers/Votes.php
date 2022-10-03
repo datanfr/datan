@@ -8,6 +8,7 @@
       $this->load->model('deputes_model');
       $this->load->model('organes_model');
       $this->load->model('captcha_model');
+      $this->load->model('exposes_model');
       //$this->password_model->security_password(); Former login protection
     }
 
@@ -378,10 +379,11 @@
           $data['vote']['edited'] = TRUE;
         }
       }
+
       // Info about the author
       if ($data['vote']['dossier'] && $legislature >= 15) {
         if ($data['vote']['voteType'] == 'amendement' || $data['vote']['voteType'] == 'sous-amendement') { // If the vote is an amendment
-          $data['authorMeta']['title'] = "amendement";
+          $data['authorMeta']['title'] = 'amendement';
           $data['amdt'] = $this->votes_model->get_amendement($legislature, $data['vote']['dossierId'], $data['vote']['seanceRef'], $data['vote']['amdt']);
           if ($data['amdt']) { // If amendment is working properly :)
             $data['amdtAuthor'] = $this->votes_model->get_amendement_author($data['amdt']['id']);
@@ -411,7 +413,7 @@
                   if ($data['amdtAuthor']['type'] == 'Rapporteur' || strpos($data['vote']['titre'], 'commission') !== false) {
                     $data['author'] = $author;
                     $data['author']['cardCenter'] = $data['author']['departementNom'] . ' (' . $data['author']['departementCode'] . ')';
-                    $data['authorMeta']['type'] = "mp";
+                    $data['authorMeta']['type'] = 'mp';
                     $data['amdt'] = $newSeance;
                     break 2;
                   }
@@ -419,7 +421,7 @@
                   $author = $this->organes_model->get_organe($data['amdtAuthor']['acteurRef']);
                   if (strpos($data['vote']['titre'], 'Gouvernement') !== false) {
                     $data['author'] = $author;
-                    $data['authorMeta']['type'] = "gvt";
+                    $data['authorMeta']['type'] = 'gvt';
                     $data['amdt'] = $newSeance;
                     break 2;
                   }
@@ -437,7 +439,7 @@
             $data['authorMeta']['title'] = 'rapporteur';
           }
         } else {
-          $data['authorMeta']['type'] = "mps";
+          $data['authorMeta']['type'] = 'mps';
           $data['author'] = $this->votes_model->get_dossier_mp_rapporteurs($data['vote']['dossierId'], $legislature);
           $data['authorMeta']['title'] = 'rapporteur';
         }
@@ -458,8 +460,17 @@
       if ($data['vote']['voteType'] == 'amendement' && !empty($data['amdt'])) {
         $data['documentLegislatif'] = $this->votes_model->get_document_legislatif($data['amdt']['texteLegislatifRef']);
         // Clean numNotice
-        $data['documentLegislatif']['numNotice'] = $data['documentLegislatif']['numNotice'] < 1000 ? '0'.$data['documentLegislatif']['numNotice'] : $data['documentLegislatif']['numNotice'];
+        if ($data['documentLegislatif']['numNotice'] < 100) {
+          $data['documentLegislatif']['numNotice'] = '00' . $data['documentLegislatif']['numNotice'];
+        } elseif ($data['documentLegislatif']['numNotice'] < 1000) {
+          $data['documentLegislatif']['numNotice'] = '0' . $data['documentLegislatif']['numNotice'];
+        } else {
+          $data['documentLegislatif']['numNotice'] = $data['documentLegislatif']['numNotice'];
+        }
       }
+
+      // Get exposes
+      $data['expose'] = $this->exposes_model->get_expose_by_vote($legislature, $num);
 
       // Votes - groupes
       $data['groupes'] = $this->votes_model->get_vote_groupes($data['vote']['voteNumero'], $legislature);

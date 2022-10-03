@@ -88,6 +88,16 @@
               </tbody>
             </table>
           </div>
+          <?php if ($expose): ?>
+            <div class="mt-5">
+              <h2>Résumé de l'amendement</h2>
+              <div class="card mt-4">
+                <div class="card-body">
+                  <p class="mb-0"><?= $expose['exposeSummaryPublished'] ?></p>
+                </div>
+              </div>
+            </div>
+          <?php endif; ?>
           <div class="mt-5">
             <h2>La position des groupes</h2>
             <div class="mt-4 bloc-groupes d-flex flex-column flex-lg-row">
@@ -145,7 +155,7 @@
           </div>
           <?php if ($description): ?>
             <div class="mt-5">
-              <h2>Pour mieux comprendre</h2>
+              <h2>Mieux comprendre le vote</h2>
               <div class="card mt-4">
                 <div class="card-body">
                   <div class="read-more-container">
@@ -201,11 +211,17 @@
               <div class="d-flex flex-column flex-lg-row">
                 <?php if ($vote['dossierUrl']): ?>
                   <span class="d-flex justify-content-center align-items-center url_obf btn btn-secondary link my-1 my-lg-0 mx-lg-1" url_obf="<?= url_obfuscation($vote['dossierUrl']) ?>">
+                    <div class="mr-1">
+                      <?= file_get_contents(base_url().'/assets/imgs/icons/arrow_external_right.svg') ?>
+                    </div>
                     <span class="text">Le dossier</span>
                   </span>
                 <?php endif; ?>
                 <?php if ($vote['voteType'] == 'amendement' && !empty($documentLegislatif)): ?>
                   <span class="d-flex justify-content-center align-items-center url_obf btn btn-secondary link my-1 my-lg-0 mx-lg-1" url_obf="<?= url_obfuscation("https://www.assemblee-nationale.fr/dyn/" . $amdt['legislature'] . "/amendements/" . $documentLegislatif['numNotice'] ."/AN/".$amdt['numOrdre']) ?>">
+                    <div class="mr-1">
+                      <?= file_get_contents(base_url().'/assets/imgs/icons/arrow_external_right.svg') ?>
+                    </div>
                     <span class="text">L'amendement</span>
                   </span>
                 <?php endif; ?>
@@ -373,6 +389,18 @@
               </div>
             </div>
           </div>
+          <?php if ($vote['voteType'] == 'amendement' && !empty($documentLegislatif) && $amdt['expose']): ?>
+            <div class="mt-5">
+              <h2>Exposé des motifs de l'amendement</h2>
+              <p class="mt-4 font-italic">L'objectif d'un amendement est de modifier ou d'ajouter une mesure d'un projet ou d'une proposition de loi. Le ou les députés qui rédigent l'amendement écrivent également un exposé des motifs.</p>
+              <div class="card">
+                <div class="card-body" id="exposeMotifs">
+                  <?= $amdt['expose']  ?>
+                </div>
+              </div>
+              <p class="mt-3">Source : <span class="url_obf" url_obf="<?= url_obfuscation("https://www.assemblee-nationale.fr/dyn/" . $amdt['legislature'] . "/amendements/" . $documentLegislatif['numNotice'] ."/AN/".$amdt['numOrdre']) ?>">Amendement sur le site de l'Assemblée nationale</span></p>
+            </div>
+          <?php endif; ?>
           <div class="bloc-savoir-plus d-md-none mt-5">
             <h3 class="subtitle">En savoir plus</h3>
             <div class="bloc-links">
@@ -392,7 +420,6 @@
           </div>
           <div class="bloc-social d-md-none mt-4">
             <h3 class="subtitle">Partagez ce vote</h3>
-            <!-- DESIGN https://feralvoice.com/social-media-sharing-buttons/ -->
             <!-- Linkedin does not work -->
             <!-- Whatsapp à faire -->
             <div class="d-flex flex-row flex-wrap social-share-bloc">

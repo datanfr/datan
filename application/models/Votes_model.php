@@ -533,7 +533,7 @@
         'seanceRef' => $seanceRef,
         'numOrdre' => $num
       );
-      $this->db->select('id, legislature, num, numOrdre, texteLegislatifRef');
+      $this->db->select('id, legislature, num, numOrdre, texteLegislatifRef, expose');
       $this->db->limit(1);
       return $this->db->get_where('amendements', $where)->row_array();
     }
@@ -544,7 +544,7 @@
         'dossier' => $dossier,
         'numOrdre' => $num
       );
-      $this->db->select('id, legislature, num, numOrdre, texteLegislatifRef');
+      $this->db->select('id, legislature, num, numOrdre, texteLegislatifRef, expose');
       return $this->db->get_where('amendements', $where)->result_array();
     }
 

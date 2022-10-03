@@ -354,6 +354,14 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 </li>
               </ul>
             </li>
+            <!-- Exposé des motifs -->
+            <li class="nav-item">
+              <a href="<?= base_url() ?>admin/exposes" class="nav-link">
+                <p>
+                  Exposés des motifs
+                </p>
+              </a>
+            </li>
           <?php endif; ?>
           <?php if ($this->password_model->is_mp()): ?>
             <!-- Election -->
