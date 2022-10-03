@@ -17,32 +17,26 @@
               <table id="table_votes_datan" class="table table-bordered table-striped">
                 <thead>
                   <tr>
-                    <th>id</th>
-                    <th>nom</th>
-                    <th>mandat</th>
-                    <th>circo</th>
-                    <th>dpt</th>
-                    <th>candidat</th>
-                    <th>mpId</th>
-                    <th>page Datan</th>
+                    <th>Législature</th>
+                    <th>Vote</th>
+                    <th>Exposé original</th>
+                    <th>Exposé publié</th>
+                    <th></th>
                     <th></th>
                   </tr>
                 </thead>
               <tbody>
-                <?php foreach ($parrainages as $x): ?>
+                <?php foreach ($exposes as $x): ?>
                   <tr>
-                    <td><?= $x['id'] ?></td>
-                    <td><?= $x['nameFirst'] ?> <?= $x['nameLast'] ?></td>
-                    <td><?= $x['mandat'] ?></td>
-                    <td><?= $x['circo'] ?></td>
-                    <td><?= $x['dpt'] ?></td>
-                    <td><?= $x['candidat'] ?></td>
-                    <td class="<?= $x['mpId'] ?: "bg-danger" ?>"><?= $x['mpId'] ?></td>
+                    <td><?= $x['legislature'] ?></td>
+                    <td><?= $x['voteNumero'] ?></td>
+                    <td><?= word_limiter($x['exposeOriginal'], 30) ?></td>
+                    <td><?= word_limiter($x['exposeSummaryPublished'], 30) ?></td>
                     <td>
-                      <a href="<?= base_url() ?>deputes/<?= $x['dptSlug'] ?>/depute_<?= $x['nameUrl'] ?>" target="_blank">Page datan</a>
+                      <a href="<?= base_url() ?>votes/legislature-<?= $x['legislature'] ?>/vote_<?= $x['voteNumero'] ?>" target="_blank">Voir le vote</a>
                     </td>
                     <td>
-                      <a href="<?= base_url() ?>admin/parrainages/modify/<?= $x['id'] ?>" ?>modifier</a>
+                      <a href="<?= base_url() ?>admin/exposes/modify/<?= $x['id'] ?>">Modifier</a>
                     </td>
                   </tr>
                 <?php endforeach; ?>
