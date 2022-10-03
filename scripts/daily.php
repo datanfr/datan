@@ -3234,9 +3234,7 @@ class Script
             }
           }
         }
-
       }
-
     }
 
     public function opendata_activeMPs()
@@ -3432,7 +3430,7 @@ $script->classGroupsProximite();
 $script->deputeAccordCleaned();
 $script->historyMpsAverage();
 $script->historyPerMpsAverage();
-//$script->parrainages(); // No long used
+//$script->parrainages(); // No longer used
 $script->opendata_activeMPs();
 $script->opendata_activeGroupes();
 $script->opendata_historyMPs();
