@@ -410,7 +410,7 @@
                     $data['amdt'] = $newSeance;
                     break 2;
                   }
-                  if ($data['amdtAuthor']['type'] == 'Rapporteur' || strpos($data['vote']['titre'], 'commission') !== false) {
+                  if ($data['amdtAuthor']['type'] == 'Rapporteur' && strpos($data['vote']['titre'], 'commission') !== false) {
                     $data['author'] = $author;
                     $data['author']['cardCenter'] = $data['author']['departementNom'] . ' (' . $data['author']['departementCode'] . ')';
                     $data['authorMeta']['type'] = 'mp';
