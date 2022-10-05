@@ -20,15 +20,11 @@
                 <p><?= $expose['exposeOriginal'] ?></p>
                 <hr>
                 <div class="row">
-                  <div class="col-lg-4 border">
-                    <h6 class="font-weight-bold">Exposé n° 1</h6>
-                    <p><?= $expose['exposeSummary1'] ?></p>
+                  <div class="col-lg-6 border">
+                    <h6 class="font-weight-bold">Exposé Open AI</h6>
+                    <p><?= $expose['exposeSummary'] ?></p>
                   </div>
-                  <div class="col-lg-4 border">
-                    <h6 class="font-weight-bold">Exposé n° 2</h6>
-                    <p><?= $expose['exposeSummary2'] ?></p>
-                  </div>
-                  <div class="col-lg-4 border">
+                  <div class="col-lg-6 border">
                     <h6 class="font-weight-bold">Exposé final</h6>
                     <?php echo form_open_multipart('admin/exposes/modify/' . $expose['id']) ?>
                       <div class="form-group">
