@@ -9,8 +9,7 @@
       `legislature` INT(5) NOT NULL ,
       `voteNumero` INT(5) NOT NULL ,
       `exposeOriginal` TEXT NULL DEFAULT NULL ,
-      `exposeSummary1` TEXT NULL DEFAULT NULL ,
-      `exposeSummary2` TEXT NULL DEFAULT NULL ,
+      `exposeSummary` TEXT NULL DEFAULT NULL ,
       `exposeSummaryPublished` TEXT NULL DEFAULT NULL ,
       `dateMaj` datetime default current_timestamp  ,
       PRIMARY KEY (`id`) ,
@@ -43,48 +42,43 @@
 
       // CURL
 
-      for ($i=1; $i <= 2; $i++) {
+      $ch = curl_init();
 
+      curl_setopt($ch, CURLOPT_URL, 'https://api.openai.com/v1/completions');
+      curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+      curl_setopt($ch, CURLOPT_POST, 1);
+      curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
+      curl_setopt($ch, CURLOPT_POSTFIELDS, "{\"model\": \"text-davinci-002\", \"prompt\": \"Réécrire ce texte en 100 mots : " . $exposeMotifs . "\", \"temperature\": 0.7, \"max_tokens\": 256, \"top_p\": 1, \"frequency_penalty\": 0.5, \"presence_penalty\": 0.55}");
 
-        $ch = curl_init();
+      $headers = array();
+      $headers[] = 'Content-Type: application/json';
+      $headers[] = 'Authorization: Bearer ' . $_SERVER['OPEN_AI_KEY'];
+      curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
 
-        curl_setopt($ch, CURLOPT_URL, 'https://api.openai.com/v1/completions');
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_POST, 1);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, "{\"model\": \"text-davinci-002\", \"prompt\": \"Réécrire ce texte en 100 mots : " . $exposeMotifs . "\", \"temperature\": 0.7, \"max_tokens\": 256, \"top_p\": 1, \"frequency_penalty\": 0.5, \"presence_penalty\": 0.55}");
+      $result = curl_exec($ch);
 
-        $headers = array();
-        $headers[] = 'Content-Type: application/json';
-        $headers[] = 'Authorization: Bearer ' . $_SERVER['OPEN_AI_KEY'];
-        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+      if (curl_errno($ch)) {
+        echo 'Error:' . curl_error($ch);
 
-        $result = curl_exec($ch);
+      } else {
+        echo "Open AI worked \n";
+        $response = json_decode($result, TRUE);
 
-        if (curl_errno($ch)) {
-          echo 'Error:' . curl_error($ch);
-          $text[$i] = NULL;
-        } else {
-          echo "Open AI worked \n";
-          $response = json_decode($result, TRUE);
+        $text = $response['choices'][0]['text'];
 
-          $text[$i] = $response['choices'][0]['text'];
-
-        }
-
-        curl_close($ch);
+        // Insert into database
+        $insert = $bdd->prepare('INSERT INTO exposes (legislature, voteNumero, exposeOriginal, exposeSummary) VALUES (:legislature, :voteNumero, :exposeOriginal, :expose)');
+        $insert->execute(array(
+          'legislature' => $legislature,
+          'voteNumero' => $voteNumero,
+          'exposeOriginal' => $exposeMotifs,
+          'expose' => $text,
+        ));
 
       }
 
-      // Insert into database
-      $insert = $bdd->prepare('INSERT INTO exposes (legislature, voteNumero, exposeOriginal, exposeSummary1, exposeSummary2) VALUES (:legislature, :voteNumero, :exposeOriginal, :expose1, :expose2)');
-      $insert->execute(array(
-        'legislature' => $legislature,
-        'voteNumero' => $voteNumero,
-        'exposeOriginal' => $exposeMotifs,
-        'expose1' => $text[1],
-        'expose2' => $text[2]
-      ));
+      curl_close($ch);
+
 
     }
 
