@@ -77,7 +77,7 @@
       $randKey = array_rand($data['elected']);
       $data['candidatRandom'] = $data['elected'][$randKey];
       $district = $this->elections_model->get_district($data['candidatRandom']['election_libelleAbrev'], $data['candidatRandom']['district']);
-      $data['candidatRandom']['cardCenter'] = $district['libelle'] != '' ? $district['libelle'] . ' (' . $district['id'] . ')' : '';
+      $data['candidatRandom']['cardCenter'] = isset($district['libelle']) && $district['libelle'] != '' ? $district['libelle'] . ' (' . $district['id'] . ')' : '';
 
       //Get posts (needs to be cached)
       $data['posts'] = $this->post_model->get_last_posts();
