@@ -209,15 +209,6 @@
     }
   }
 
-  function groupe_card_background($legislature, $groupe){
-    $colour = "#fff";
-
-    if ($legislature == 16 && $groupe == "LR") {
-      $colour = "#002A54";
-    }
-    return $colour;
-  }
-
   function name_group($name){
     switch ($name) {
       case 'La France insoumise - Nouvelle Union Populaire écologique et sociale':
