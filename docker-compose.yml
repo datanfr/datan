@@ -2,6 +2,7 @@ version: '3.8'
 services:
 
   apache:
+    container_name: datan
     build:
       context: .
       dockerfile: Dockerfile
@@ -17,16 +18,17 @@ services:
         - dev
 
   db:
-    image: mysql:8.0
+    build:
+      context: .
+      dockerfile: DockerfileSQL
     hostname: localhost
     ports:
       - "3306:3306" # mysql connection port
     env_file:
       - .env
-    volumes:
-      - ./mysql-dump:/docker-entrypoint-initdb.d
     networks:
         - dev
+    command: --sql_mode=''
 
   phpmyadmin:
         image: phpmyadmin
