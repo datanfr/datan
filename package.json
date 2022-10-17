@@ -6,10 +6,10 @@
   "devDependencies": {
     "@babel/core": "^7.13.10",
     "@babel/preset-env": "^7.13.10",
-    "grunt": "^1.3.0",
+    "grunt": "^1.5.3",
     "grunt-babel": "^8.0.0",
     "grunt-contrib-concat": "^1.0.1",
-    "grunt-contrib-uglify": "^5.0.0",
+    "grunt-contrib-uglify": "^5.2.2",
     "grunt-contrib-watch": "^1.1.0",
     "grunt-critical": "^2.0.0",
     "grunt-purifycss": "^0.1.2",
@@ -17,7 +17,11 @@
     "purify-css": "^1.2.5"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "docker-daily": "docker exec -it datan php scripts/download.php && php scripts/daily.php",
+    "docker-grunt": "docker exec -it datan grunt",
+    "docker-grunt-watch": "docker exec -it datan grunt watch",
+    "dgw": "npm run docker-grunt-watch"
   },
   "author": "Awenig Marié",
   "license": "ISC",
