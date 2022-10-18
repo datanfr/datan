@@ -2,7 +2,7 @@
 <footer class="main-footer">
   <!-- To the right -->
   <div class="float-right d-none d-sm-inline">
-    ***
+    Dashboard Datan
   </div>
   <!-- Default to the left -->
   <strong>Copyright &copy; 2014-2019 <a href="https://adminlte.io">AdminLTE.io</a>.</strong> All rights reserved.
@@ -33,7 +33,7 @@
 <!-- Tempusdominus Bootstrap 4 -->
 <!-- <script src="plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js"></script> -->
 <!-- Summernote -->
-<!-- <script src="<?= asset_url() ?>js/dashboard/summernote-bs4.min.js"></script> -->
+<!-- <script src="js/dashboard/summernote-bs4.min.js"></script> -->
 <!-- overlayScrollbars -->
 <!-- <script src="plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js"></script> -->
 <!-- AdminLTE App -->
@@ -45,6 +45,13 @@
 <script src="<?= asset_url() ?>js/dashboard/dataTables.fixedHeader.min.js"></script>
 <script src="<?= asset_url() ?>js/dashboard/dataTables.buttons.min.js"></script>
 <script src="<?= asset_url() ?>js/dashboard/buttons.colVis.min.js"></script>
+
+<!-- JS TO LOAD -->
+<?php if (isset($js_to_load)) : ?>
+  <?php foreach ($js_to_load as $file) : ?>
+    <script type="text/javascript" src="<?= asset_url() ?>js/<?= $file ?>.js"></script>
+  <?php endforeach; ?>
+<?php endif; ?>
 
 
 <script>

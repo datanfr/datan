@@ -8,7 +8,7 @@
   }
 
   function get_version(){
-    return 61;
+    return 62;
   }
 
   function legislature_current(){
@@ -207,6 +207,19 @@
 
       }
     }
+  }
+
+  function vote_edited($input){
+    if ($input == 1) {
+      $output = "pour";
+    } elseif ($input == -1) {
+      $output = "contre";
+    } elseif ($input == 0) {
+      $output = "abstention";
+    } else {
+      $output = NULL;
+    }
+    return $output;
   }
 
   function name_group($name){
