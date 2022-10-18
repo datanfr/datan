@@ -5,3 +5,23 @@
 .card-footer::after{
   content: none;
 }
+.colorPour, .colorAdopté{
+  color: #00B794
+}
+.colorContre{
+  color: #C5283D;
+}
+.colorAbstention{
+  color: #FFBA49;
+}
+.badgePour{
+  background-color: #00B794;
+  color: #fff;
+}
+.badgeContre{
+  background-color: #C5283D;
+  color: #fff;
+}
+.badgeAbstention{
+  background-color: #FFBA49;
+}
