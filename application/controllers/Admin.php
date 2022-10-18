@@ -24,29 +24,22 @@
       $data['username'] = $this->session->userdata('username');
       $user_id = $this->session->userdata('user_id');
 
-      // IF A TEAM MEMBER
-      if ($this->password_model->is_team()) {
-        $data['votesUnpublished'] = $this->admin_model->get_votes_datan_user($user_id, false);
-        $data['votesLast'] = $this->admin_model->get_votes_datan_user($user_id, true);
-        $data['groupes'] = $this->groupes_model->get_groupes_all(true, 15);
-        $data['deputes_entrants'] = $this->deputes_model->get_deputes_entrants(5);
-        $data['groupes_entrants'] = $this->deputes_model->get_groupes_entrants(5);
-        $data['newsletter_total'] = $this->newsletter_model->get_number_registered("general");
-        $data['newsletter_month'] = $this->newsletter_model->get_registered_month("general");
-        $data['votes_requested'] = $this->votes_model->get_requested_votes();
+      $data['votesUnpublished'] = $this->admin_model->get_votes_datan_user($user_id, false);
+      $data['votesLast'] = $this->admin_model->get_votes_datan_user($user_id, true);
+      $data['groupes'] = $this->groupes_model->get_groupes_all(true, 15);
+      $data['deputes_entrants'] = $this->deputes_model->get_deputes_entrants(5);
+      $data['groupes_entrants'] = $this->deputes_model->get_groupes_entrants(5);
+      $data['newsletter_total'] = $this->newsletter_model->get_number_registered("general");
+      $data['newsletter_month'] = $this->newsletter_model->get_registered_month("general");
+      $data['votes_requested'] = $this->votes_model->get_requested_votes();
 
-        $this->load->view('dashboard/header', $data);
-        $this->load->view('dashboard/index', $data);
-        $this->load->view('dashboard/footer');
+      // Meta
+      $data['title_meta'] = 'Dashboard | Datan';
 
-      } else {
-        // IF AN MP
-        $data['depute'] = $this->deputes_model->get_depute_by_mpId($this->session->userdata('mpId'));
-
-        $this->load->view('dashboard/header', $data);
-        $this->load->view('dashboard/index_mp', $data);
-        $this->load->view('dashboard/footer');
-      }
+      // Views
+      $this->load->view('dashboard/header', $data);
+      $this->load->view('dashboard/index', $data);
+      $this->load->view('dashboard/footer');
     }
 
     public function election_candidates($slug){
@@ -66,6 +59,10 @@
         $data['candidats'][$key]['districtLibelle'] = $district['libelle'];
       }
 
+      // Meta
+      $data['title_meta'] = 'Liste des candidats aux élections - Dashboard | Datan';
+
+      // Views
       $this->load->view('dashboard/header', $data);
       $this->load->view('dashboard/elections/list', $data);
       $this->load->view('dashboard/footer');
@@ -80,13 +77,17 @@
 
       $data['username'] = $this->session->userdata('username');
       $data['usernameType'] = $this->session->userdata('type');
-      $data['title'] = 'Liste députés non renseignés pour les élections ' . $data['election']['libelleAbrev']. ' '.$data['election']['dateYear'];
+      $data['title'] = 'Liste des députés non renseignés pour les élections ' . $data['election']['libelleAbrev']. ' '.$data['election']['dateYear'];
 
       $data['mps'] = $this->elections_model->get_mps_not_done($data['election']['id']);
       foreach ($data['mps'] as $key => $value) {
         $data['mps'][$key]['url'] = base_url() . 'deputes/' . $value['dptSlug'] . '/depute_' . $value['nameUrl'];
       }
 
+      // Meta
+      $data['title_meta'] = 'Liste des députés non renseignés - Dashboard | Datan';
+
+      // Views
       $this->load->view('dashboard/header', $data);
       $this->load->view('dashboard/elections/list_not_candidates', $data);
       $this->load->view('dashboard/footer');
@@ -129,6 +130,9 @@
         $this->form_validation->set_rules('district', 'circonscription', 'required');
       }
       if ($this->form_validation->run() === FALSE) {
+        // Meta
+        $data['title_meta'] = 'Créer un nouveau député candidat - Dashboard | Datan';
+        // Views
         $this->load->view('dashboard/header', $data);
         $this->load->view('dashboard/elections/create', $data);
         $this->load->view('dashboard/footer');
@@ -190,6 +194,9 @@
         //$this->form_validation->set_rules('district', 'circonscription', 'required');
       }
       if ($this->form_validation->run() === FALSE) {
+        // Meta
+        $data['title_meta'] = 'Modifier un député candidat - Dashboard | Admin';
+        // Views
         $this->load->view('dashboard/header', $data);
         $this->load->view('dashboard/elections/modify', $data);
         $this->load->view('dashboard/footer');
@@ -231,6 +238,9 @@
         //Form valiation
         $this->form_validation->set_rules('mpId', 'mpId', 'required');
         if ($this->form_validation->run() === FALSE) {
+          // Meta
+          $data['title_meta'] = 'Supprimer un député candidat - Dashboard | Datan';
+          // Views
           $this->load->view('dashboard/header', $data);
           $this->load->view('dashboard/elections/delete', $data);
           $this->load->view('dashboard/footer');
@@ -249,6 +259,10 @@
 
       $data['modifs'] = $this->table_history_model->get_history('elect_deputes_candidats');
 
+      // Meta
+      $data['title_meta'] = 'Modifications apportées par les députés - Dashboard | Datan';
+
+      // Views
       $this->load->view('dashboard/header', $data);
       $this->load->view('dashboard/elections/modifs', $data);
       $this->load->view('dashboard/footer');
@@ -262,6 +276,10 @@
       $data['votes'] = $this->admin_model->get_votes_datan();
       $data['groupes'] = $this->groupes_model->get_groupes_all(true, 15);
 
+      // Meta
+      $data['title_meta'] = 'Tous les votes décryptés - Dashboard | Datan';
+
+      // Views
       $this->load->view('dashboard/header', $data);
       $this->load->view('dashboard/decrypted/votes_datan', $data);
       $this->load->view('dashboard/footer');
@@ -282,6 +300,9 @@
       $this->form_validation->set_rules('category', 'Category', 'required');
 
       if ($this->form_validation->run() === FALSE) {
+        // Meta
+        $data['title_meta'] = 'Créer un vote décrypté - Dashboard | Datan';
+        // Views
         $this->load->view('dashboard/header', $data);
         $this->load->view('dashboard/decrypted/vote_create', $data);
         $this->load->view('dashboard/footer');
@@ -314,6 +335,9 @@
         $this->form_validation->set_rules('category', 'Category', 'required');
 
         if ($this->form_validation->run() === FALSE) {
+          // Meta
+          $data['title_meta'] = 'Modifier un vote décrypté - Dashboard | Datan';
+          // Views
           $this->load->view('dashboard/header', $data);
           $this->load->view('dashboard/decrypted/vote_modify', $data);
           $this->load->view('dashboard/footer');
@@ -330,18 +354,18 @@
       if ($data['usernameType'] != "admin") {
         redirect();
       } else {
-        $data["username"] = $this->session->userdata('username');
-
+        $data['username'] = $this->session->userdata('username');
         $data['title'] = 'Supprimer un vote décrypté';
-
         $data['vote'] = $this->admin_model->get_vote_datan($vote);
-
         $data['groupes'] = $this->groupes_model->get_groupes_all(true, 15);
 
         //Form validation
         $this->form_validation->set_rules('delete', 'Delete', 'required');
 
         if ($this->form_validation->run() === FALSE) {
+          // Meta
+          $data['title_meta'] = 'Supprimer un vote décrypté - Dashboard | Datan';
+          // Views
           $this->load->view('dashboard/header', $data);
           $this->load->view('dashboard/decrypted/vote_delete', $data);
           $this->load->view('dashboard/footer');
@@ -359,6 +383,11 @@
 
       $data['groupes'] = $this->groupes_model->get_groupes_all(true, 15);
       $data['votes'] = $this->admin_model->get_votes_an_position();
+
+      // Meta
+      $data['title_meta'] = 'Votes décryptés (position) - Dashboard | Datan';
+
+      // Views
       $this->load->view('dashboard/header', $data);
       $this->load->view('dashboard/votes_an', $data);
       $this->load->view('dashboard/footer');
@@ -370,6 +399,10 @@
       $data['groupes'] = $this->groupes_model->get_groupes_all(true, 15);
       $data['votes'] = $this->admin_model->get_votes_an_cohesion();
 
+      // Meta
+      $data['title_meta'] = 'Votes décryptés (cohesion) - Dashboard | Datan';
+
+      // Views
       $this->load->view('dashboard/header', $data);
       $this->load->view('dashboard/votes_an', $data);
       $this->load->view('dashboard/footer');
@@ -383,10 +416,14 @@
         } else {
           $data['groupes'] = $this->groupes_model->get_groupes_all(true, 15);
           $libelle = $_GET["group"];
-          $data['title'] = 'Classement loyauté pour le groupe '.$libelle;
+          $data['title'] = 'Classement loyauté pour le groupe ' . $libelle;
 
           $data['table'] = $this->admin_model->get_classement_loyaute_group($libelle);
 
+          // Meta
+          $data['title_meta'] = $data['title'] . ' - Dashboard | Datan';
+
+          // Views
           $this->load->view('dashboard/header', $data);
           $this->load->view('dashboard/analysis/table_all', $data);
           $this->load->view('dashboard/footer');
@@ -403,6 +440,10 @@
 
       $data['votes'] = $this->admin_model->get_votes_em_lost();
 
+      // Meta
+      $data['title_meta'] = $data['title'] . ' - Dashboard | Datan';
+
+      // Views
       $this->load->view('dashboard/header', $data);
       $this->load->view('dashboard/analysis/table', $data);
       $this->load->view('dashboard/footer');
@@ -416,6 +457,10 @@
         $data['title'] = 'Liste des députés entrants (datePriseFonction)';
         $data['deputes'] = $this->deputes_model->get_deputes_entrants();
 
+        // Meta
+        $data['title_meta'] = $data['title'] . ' - Dashboard | Datan';
+
+        // Views
         $this->load->view('dashboard/header', $data);
         $this->load->view('dashboard/socialmedia/table', $data);
         $this->load->view('dashboard/footer');
@@ -423,6 +468,10 @@
         $data['title'] = 'Liste des députés sortants (dateFin)';
         $data['deputes'] = $this->deputes_model->get_deputes_sortants();
 
+        // Meta
+        $data['title_meta'] = $data['title'] . ' - Dashboard | Datan';
+
+        // Views
         $this->load->view('dashboard/header', $data);
         $this->load->view('dashboard/socialmedia/table', $data);
         $this->load->view('dashboard/footer');
@@ -430,12 +479,21 @@
         $data['title'] = 'Nouveaux postes Assemblée (dateDebut)';
         $data['deputes'] = $this->deputes_model->get_postes_assemblee();
 
+        // Meta
+        $data['title_meta'] = $data['title'] . ' - Dashboard | Datan';
+
+        // Views
         $this->load->view('dashboard/header', $data);
         $this->load->view('dashboard/socialmedia/table', $data);
         $this->load->view('dashboard/footer');
       } elseif ($page == "groupes_entrants") {
         $data['title'] = 'Groupes entrants (dateDebut)';
         $data['deputes'] = $this->deputes_model->get_groupes_entrants();
+
+        // Meta
+        $data['title_meta'] = $data['title'] . ' - Dashboard | Datan';
+
+        // Views
         $this->load->view('dashboard/header', $data);
         $this->load->view('dashboard/socialmedia/table', $data);
         $this->load->view('dashboard/footer');
@@ -443,6 +501,11 @@
         if ($id == "NULL") {
           $data['deputes'] = $this->deputes_model->get_deputes_all(legislature_current(), NULL, NULL);
           $data['title'] = "Historique des groupes par député - ".legislature_current()."e législature";
+
+          // Meta
+          $data['title_meta'] = $data['title'] . ' - Dashboard | Datan';
+
+          // Views
           $this->load->view('dashboard/header', $data);
           $this->load->view('dashboard/socialmedia/list', $data);
           $this->load->view('dashboard/footer');
@@ -451,6 +514,11 @@
           $data['title'] = "Historique pour le député ".$data['depute']['nameFirst']." ".$data['depute']['nameLast'];
           $data['historique'] = $this->deputes_model->get_historique($id);
           $data['deputes'] = $data['historique'];
+
+          // Meta
+          $data['title_meta'] = $data['title'] . ' - Dashboard | Datan';
+
+          // Views
           $this->load->view('dashboard/header', $data);
           $this->load->view('dashboard/socialmedia/table', $data);
           $this->load->view('dashboard/footer');
@@ -458,6 +526,11 @@
       } elseif ($page == "twitter") {
         $data['deputes'] = $this->deputes_model->get_twitter_accounts(legislature_current());
         $data['title'] = "Comptes Twitter des députés";
+
+        // Meta
+        $data['title_meta'] = $data['title'] . ' - Dashboard | Datan';
+
+        // Views
         $this->load->view('dashboard/header', $data);
         $this->load->view('dashboard/socialmedia/twitter', $data);
         $this->load->view('dashboard/footer');
@@ -473,6 +546,10 @@
 
       $data['articles'] = $this->faq_model->get_articles();
 
+      // Meta
+      $data['title_meta'] = $data['title'] . ' - Dashboard | Datan';
+
+      // Views
       $this->load->view('dashboard/header', $data);
       $this->load->view('dashboard/faq/list', $data);
       $this->load->view('dashboard/footer');
@@ -493,6 +570,9 @@
         $this->form_validation->set_rules('delete', 'Delete', 'required');
 
         if ($this->form_validation->run() === FALSE) {
+          // Meta
+          $data['title_meta'] = $data['title'] . ' - Dashboard | Datan';
+          // Views
           $this->load->view('dashboard/header', $data);
           $this->load->view('dashboard/faq/delete', $data);
           $this->load->view('dashboard/footer');
@@ -515,6 +595,9 @@
       $this->form_validation->set_rules('category', 'Category', 'required');
 
       if ($this->form_validation->run() === FALSE) {
+        // Meta
+        $data['title_meta'] = $data['title'] . ' - Dashboard | Datan';
+        // Views
         $this->load->view('dashboard/header', $data);
         $this->load->view('dashboard/faq/create', $data);
         $this->load->view('dashboard/footer');
@@ -546,6 +629,9 @@
         $this->form_validation->set_rules('category', 'Category', 'required');
 
         if ($this->form_validation->run() === FALSE) {
+          // Meta
+          $data['title_meta'] = $data['title'] . ' - Dashboard | Datan';
+          // Views
           $this->load->view('dashboard/header', $data);
           $this->load->view('dashboard/faq/modify', $data);
           $this->load->view('dashboard/footer');
@@ -563,6 +649,10 @@
 
       $data['questions'] = $this->quizz_model->get_questions();
 
+      // Meta
+      $data['title_meta'] = $data['title'] . ' - Dashboard | Datan';
+
+      // Views
       $this->load->view('dashboard/header', $data);
       $this->load->view('dashboard/quizz/list', $data);
       $this->load->view('dashboard/footer');
@@ -581,6 +671,9 @@
       $this->form_validation->set_rules('legislature', 'Legislature', 'required');
 
       if ($this->form_validation->run() === FALSE) {
+        // Meta
+        $data['title_meta'] = $data['title'] . ' - Dashboard | Datan';
+        // Views
         $this->load->view('dashboard/header', $data);
         $this->load->view('dashboard/quizz/create', $data);
         $this->load->view('dashboard/footer');
@@ -613,6 +706,9 @@
         $this->form_validation->set_rules('legislature', 'Legislature', 'required');
 
         if ($this->form_validation->run() === FALSE) {
+          // Meta
+          $data['title_meta'] = $data['title'] . ' - Dashboard | Datan';
+          // Views
           $this->load->view('dashboard/header', $data);
           $this->load->view('dashboard/quizz/modify', $data);
           $this->load->view('dashboard/footer');
@@ -638,6 +734,9 @@
         $this->form_validation->set_rules('delete', 'Delete', 'required');
 
         if ($this->form_validation->run() === FALSE) {
+          // Meta
+          $data['title_meta'] = $data['title'] . ' - Dashboard | Datan';
+          // Views
           $this->load->view('dashboard/header', $data);
           $this->load->view('dashboard/quizz/delete', $data);
           $this->load->view('dashboard/footer');
@@ -654,8 +753,11 @@
       $data['title'] = 'Liste des parrainages de députés en 2022';
 
       $data['parrainages'] = $this->parrainages_model->get_parrainages(2022, TRUE);
-      //print_r($data['parrainages']);
 
+      // Meta
+      $data['title_meta'] = $data['title'] . ' - Dashboard | Datan';
+
+      // Views
       $this->load->view('dashboard/header', $data);
       $this->load->view('dashboard/parrainages/list', $data);
       $this->load->view('dashboard/footer');
@@ -676,6 +778,9 @@
       $this->form_validation->set_rules('mpId', 'MpId', 'required');
 
       if ($this->form_validation->run() === FALSE) {
+        // Meta
+        $data['title_meta'] = $data['title'] . ' - Dashboard | Datan';
+        // Views
         $this->load->view('dashboard/header', $data);
         $this->load->view('dashboard/parrainages/modify', $data);
         $this->load->view('dashboard/footer');

@@ -1,6 +1,11 @@
   <div class="content-wrapper">
     <div class="content-header">
       <div class="container-fluid">
+        <div class="row">
+          <div class="col-12">
+            <?php $this->load->view('dashboard-mp/partials/breadcrumb.php', $breadcrumb) ?>
+          </div>
+        </div>
         <div class="row mb-2">
           <div class="col-sm-6">
             <h1 class="m-0 text-dark"><?= $title ?></h1>

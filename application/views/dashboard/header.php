@@ -1,8 +1,4 @@
 <!DOCTYPE html>
-<!--
-This is a starter template page. Use this page to start your new project from
-scratch. This page gets rid of all links and provides the needed markup only.
--->
 <html lang="en">
 <head>
   <meta charset="utf-8">
@@ -10,7 +6,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
   <meta http-equiv="x-ua-compatible" content="ie=edge">
   <meta name="robots" content="noindex,nofollow">
 
-  <title>Dashboard | Datan</title>
+  <title><?= $title_meta ?></title>
 
   <!-- Font Awesome Icons -->
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.0/css/all.css" integrity="sha384-lKuwvrZot6UHsBSfcMvOkWwlCMgc0TaWr+30HWe3a4ltaBwTZhyTEggF5tJv8tbt" crossorigin="anonymous">
@@ -42,7 +38,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
         </li>
         <?php if ($this->password_model->is_mp()): ?>
           <li class="nav-item d-none d-sm-inline-block">
-            <a href="<?= base_url() ?>deputes/<?= $depute['dptSlug'] ?>/depute_<?= $depute['nameUrl'] ?>" class="nav-link">Page député</a>
+            <a href="<?= base_url() ?>deputes/<?= $depute['dptSlug'] ?>/depute_<?= $depute['nameUrl'] ?>" class="nav-link" target="_blank">Page député</a>
           </li>
         <?php endif; ?>
         <?php if ($this->password_model->is_admin()): ?>
@@ -75,7 +71,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
         </li>
       </ul>
 
-      <!-- SEARCH FORM -->
+      <!-- SEARCH FORM
       <form class="form-inline ml-3">
         <div class="input-group input-group-sm">
           <input class="form-control form-control-navbar" type="search" placeholder="Search" aria-label="Search">
@@ -86,6 +82,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
           </div>
         </div>
       </form>
+      -->
 
     </nav>
     <!-- /.navbar -->
@@ -364,7 +361,9 @@ scratch. This page gets rid of all links and provides the needed markup only.
             </li>
           <?php endif; ?>
           <?php if ($this->password_model->is_mp()): ?>
-            <!-- Election -->
+            <li class="nav-item">
+              <a class="nav-link" href="<?= base_url() ?>dashboard-mp/explications">Explications de vote</a>
+            </li>
             <li class="nav-item">
               <a class="nav-link" href="<?= base_url() ?>dashboard-mp/elections/legislatives-2022">Législatives 2022</a>
             </li>
