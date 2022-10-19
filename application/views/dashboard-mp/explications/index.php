@@ -24,7 +24,7 @@
           <h1 class="font-weight-bold"><?= $title ?></h1>
           <h5 class="mt-4 font-weight-bold">Infos</h5>
           <p>Vous pouvez rédiger une explication de vote pour expliquer à vos électeurs les <b>raisons de votre position</b>. Pourquoi avez-vous votez contre cet amendement ? Pourquoi avez-vous soutenu cette proposition de loi ? Cette explication sera visible sur votre page Datan.</p>
-          <p>Cette fonctionnalité n'est disponible que pour les <b>votes contextualisés par Datan</b>. Il s'agit des votes qui que notre équipe vulgarise et contextualise et qui sont mis en avant sur les pages personnelles des parlementaires.</p>
+          <p>Cette fonctionnalité n'est disponible que pour les <b>votes contextualisés par Datan</b>. Les votes contextualisés sont les scrutins que l'équipe de Datan vulgarise et met en avant sur le site internet, et notamment sur les pages des députés.</p>
           <a class="btn btn-primary font-weight-bold mt-3" href="<?= base_url() ?>dashboard-mp/explications/liste">Créez une nouvelle explication de vote</a>
         </div>
       </div>
