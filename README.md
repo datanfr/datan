@@ -2,8 +2,41 @@
 Datan is a website anlaysing the voting behaviour of French MPs.
 Datan est un site internet analysant les votes des députés français (Assemblée nationale).
 
-# Installation
+# Installation Docker
+Suivez les étapes suivantes pour installer Datan avec Docker.
+
+## 1. Installez docker et docker-compose
+https://docs.docker.com/compose/install/
+
+## 2. Builder le projet
+```
+docker-compose build
+```
+
+## 3. Lancer le projet
+```
+docker-compose up
+```
+
+## 4. Mettre à jour la base de données
+```
+npm run docker-daily
+```
+
+## Aide Docker
+Arrêtez les instances avec Ctrl+C
+Pour fermer les instances ```docker-compose down```
+Reinstaller et retélécharger la base de données avec ```docker-compose build```
+
+## Assets
+Générez les assets avec ```npm run docker-grunt```
+Ou en continue avec ```npm run docker-grunt-watch # (ou npm run dgw)```
+
+# Installation from scratch
 Suivez les étapes suivantes pour installer Datan en local.
+
+# PHPMyAdmin
+You can access to this here : http://localhost:8080/
 
 ## 1. Assets
 * Installez les dépendances en lancant les commandes suivantes :
@@ -40,7 +73,9 @@ grunt watch
 * Lancer les scripts suivants via la ligne de commande :
 
 ```
+php /scripts/download.php  
 php /scripts/daily.php  
+php /scripts/daily.php 15  
 php /scripts/daily.php 14  
 ```
 ## 5. Problème supplémentaire avec Windows
