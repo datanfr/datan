@@ -55,11 +55,11 @@
                 <div class="form-group">
                   <?php if ($page == 'modify'): ?>
                     <div class="form-check">
-                      <input class="form-check-input" type="radio" name="state" value="0" <?= $vote['state'] == 0 ? 'checked=""' : '' ?>>
+                      <input class="form-check-input" type="radio" name="state" value="0" <?= $explication['state'] == 0 ? 'checked=""' : '' ?>>
                       <label class="form-check-label text-danger font-weight-bold">Brouillon</label>
                     </div>
                     <div class="form-check">
-                      <input class="form-check-input" type="radio" name="state" value="1" <?= $vote['state'] == 1 ? 'checked=""' : '' ?>>
+                      <input class="form-check-input" type="radio" name="state" value="1" <?= $explication['state'] == 1 ? 'checked=""' : '' ?>>
                       <label class="form-check-label text-success font-weight-bold">Publié</label>
                     </div>
                   <?php else: ?>
