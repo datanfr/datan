@@ -110,7 +110,7 @@
         FROM groupes_stats gs
         LEFT JOIN organes o ON gs.organeRef = o.uid
         LEFT JOIN groupes_effectif ge ON gs.organeRef = ge.organeRef
-        WHERE o.legislature = 15 and o.dateFin IS NULL AND o.libelleAbrev != "NI"
+        WHERE o.legislature = 16 and o.dateFin IS NULL AND o.libelleAbrev != "NI"
         ORDER BY gs.rose_index DESC
       ';
 
