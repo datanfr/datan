@@ -902,6 +902,7 @@ class Script
 
         while ($data = $reponse->fetch()) {
             $groupeId = $data['uid'];
+            $legislature = $data['legislature'];
 
             // 1. AGE
             if ($data['legislature'] == $this->legislature_current && $data['dateFin'] == NULL) {
@@ -987,12 +988,12 @@ class Script
               (
                 SELECT famille, round(population / 100, 3) AS population, round(count(mpId) / total, 3) AS x
                 FROM famsocpro fam
-                LEFT JOIN deputes_last dl ON dl.famSocPro = fam.famille AND dl.groupeId = "' . $groupeId . '" AND dl.active AND dl.legislature = 15
+                LEFT JOIN deputes_last dl ON dl.famSocPro = fam.famille AND dl.groupeId = "' . $groupeId . '" AND dl.active AND dl.legislature = "' . $legislature . '"
                 LEFT JOIN (
                   SELECT groupeId, count(*) AS total
                   FROM famsocpro fam
                   LEFT JOIN deputes_last dl ON dl.famSocPro = fam.famille
-                  WHERE dl.legislature = 15 AND dl.active AND groupeId = "' . $groupeId . '"
+                  WHERE dl.legislature = "' . $legislature . '" AND dl.active AND groupeId = "' . $groupeId . '"
                 ) A ON A.groupeId = dl.groupeId
                 GROUP BY famille
               ) B
