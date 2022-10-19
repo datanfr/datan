@@ -16,6 +16,8 @@ services:
       - db
     networks:
         - dev
+    env_file:
+      - .env
 
   db:
     build:

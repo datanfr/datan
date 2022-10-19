@@ -120,8 +120,9 @@ function EXPORT_TABLES($host, $user, $pass, $name, $tables = false, $backup_name
 
     $date = date("Y-m-d");
     $file = date("Ymd") . '.sql';
+    $file = $_SERVER['ABSOLUTE_PATH'] . '/assets/dataset_backup/general/' . date("Ymd") .'.sql';
     // just a copy with the latest
-    $latest = 'latest.sql';
+    $latest = $_SERVER['ABSOLUTE_PATH'] . '/assets/dataset_backup/general/latest.sql';
 
     if (!is_file($file)) {
         file_put_contents($file, "");
