@@ -126,6 +126,7 @@
         $this->table_history_model->insert($data['candidate']['district']['id'], $this->input->post('district'), 'elect_deputes_candidats', 'district', $this->session->userdata('user_id'));
         $this->table_history_model->insert($data['candidate']['link'], $this->input->post('link'), 'elect_deputes_candidats', 'link', $this->session->userdata('user_id'));
         delete_all_cache();
+        $this->db->cache_delete_all();
         redirect('dashboard-mp/elections/' . $slug);
       }
     }
@@ -229,6 +230,8 @@
         $this->load->view('dashboard/footer');
       } else {
         $this->dashboardMP_model->create_explication($data);
+        delete_all_cache();
+        $this->db->cache_delete_all();
         redirect('dashboard-mp/explications');
       }
 
@@ -280,6 +283,8 @@
         $this->load->view('dashboard/footer');
       } else {
         $this->dashboardMP_model->modify_explication($data);
+        delete_all_cache();
+        $this->db->cache_delete_all();
         redirect('dashboard-mp/explications');
       }
 
@@ -327,10 +332,11 @@
         $this->load->view('dashboard/footer');
       } else {
         $this->dashboardMP_model->delete_explanation($data);
+        delete_all_cache();
+        $this->db->cache_delete_all();
         $this->session->set_flashdata('flash', "L'explication de vote pour le scrutin n°" . $voteNumero . " a bien été supprimé");
         redirect('dashboard-mp/explications');
       }
-
 
     }
 
