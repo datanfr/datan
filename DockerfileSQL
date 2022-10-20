@@ -1,3 +1,5 @@
 FROM mysql:8.0
+ARG DATABASE_BACKUP
+ENV DATABASE_BACKUP $DATABASE_BACKUP
 # download and send
 RUN curl https://datan.fr/assets/dataset_backup/general/${DATABASE_BACKUP} --output /docker-entrypoint-initdb.d/init.sql

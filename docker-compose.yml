@@ -20,9 +20,12 @@ services:
       - .env
 
   db:
+    container_name: datan-db
     build:
       context: .
       dockerfile: DockerfileSQL
+      args:
+        - DATABASE_BACKUP=${DATABASE_BACKUP}
     hostname: localhost
     ports:
       - "3306:3306" # mysql connection port
