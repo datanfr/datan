@@ -1,5 +1,5 @@
 {
-  "name": "Datan",
+  "name": "datan",
   "version": "1.0.0",
   "description": "Datan - Mieux comprendre l'Assemblee nationale",
   "main": "index.js",
@@ -18,7 +18,8 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "docker-daily": "docker exec -it datan php scripts/download.php && php scripts/daily.php",
+    "docker-download": "docker exec -it datan php scripts/download.php",
+    "docker-daily": "docker exec -it datan php scripts/daily.php",
     "docker-grunt": "docker exec -it datan grunt",
     "docker-grunt-watch": "docker exec -it datan grunt watch",
     "dgw": "npm run docker-grunt-watch"

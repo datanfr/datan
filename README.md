@@ -8,18 +8,24 @@ Suivez les étapes suivantes pour installer Datan avec Docker.
 ## 1. Installez docker et docker-compose
 https://docs.docker.com/compose/install/
 
-## 2. Builder le projet
+## 2. Créez .env
+Copiez .env.dist en .env
+
+## 3. Builder le projet
 ```
 docker-compose build
 ```
 
-## 3. Lancer le projet
+## 4. Lancer le projet
 ```
 docker-compose up
 ```
+Pour le premier lancement, il faut attendre quelques minutes que la base de données se charge complètement avant de lancer la commande suivante.
 
-## 4. Mettre à jour la base de données
+## 5. Mettre à jour la base de données
+Commandes à faire à chaque fois que vous voulez rafraichir les données
 ```
+npm run docker-download
 npm run docker-daily
 ```
 
@@ -32,11 +38,12 @@ Reinstaller et retélécharger la base de données avec ```docker-compose build`
 Générez les assets avec ```npm run docker-grunt```
 Ou en continue avec ```npm run docker-grunt-watch # (ou npm run dgw)```
 
+## PHPMyAdmin
+You can access to this here : http://localhost:8080/
+
 # Installation from scratch
 Suivez les étapes suivantes pour installer Datan en local.
 
-# PHPMyAdmin
-You can access to this here : http://localhost:8080/
 
 ## 1. Assets
 * Installez les dépendances en lancant les commandes suivantes :
