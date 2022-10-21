@@ -2,14 +2,19 @@
 FROM php:7.4-apache
 
 #install php and docker lib
-RUN apt-get update && apt-get install -y git libzip-dev libicu-dev libpng-dev zlib1g-dev 
-RUN docker-php-ext-configure intl \
-    && docker-php-ext-install mysqli pdo pdo_mysql zip intl gd \
-    && docker-php-ext-enable pdo_mysql
+RUN apt-get update && apt-get install -y git libzip-dev libicu-dev libpng-dev libjpeg-dev zlib1g-dev 
+RUN docker-php-ext-configure intl 
+RUN docker-php-ext-install mysqli pdo pdo_mysql zip intl 
+RUN docker-php-ext-configure gd \
+--with-jpeg \
+&& docker-php-ext-install gd
+RUN docker-php-ext-enable pdo_mysql
 
-RUN a2enmod rewrite
+COPY conf/000-default.conf /etc/apache2/sites-available/000-default.conf
 
 COPY . /var/www/html
+
+RUN a2enmod rewrite
 
 #install and run composer
 RUN curl -sSk https://getcomposer.org/installer | php -- --disable-tls && \

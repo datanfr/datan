@@ -105,6 +105,7 @@ function EXPORT_TABLES($host, $user, $pass, $name, $tables = false, $backup_name
         $res = $mysqli->query('SHOW CREATE TABLE candidate_full');
         $TableMLine = $res->fetch_row();
         $content = (!isset($content) ? '' : $content) . "\n\n" . $TableMLine[1] . ";\n\n";
+        $content = preg_replace('/(DEFINER=(\S)*)/', '', $content);
         $content .= "\n\n\n";
 
     } catch (Exception $e) {
