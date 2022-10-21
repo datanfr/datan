@@ -12,6 +12,9 @@ RUN docker-php-ext-enable pdo_mysql
 
 COPY conf/000-default.conf /etc/apache2/sites-available/000-default.conf
 
+COPY conf/entrypoint.sh /
+RUN chmod +x /entrypoint.sh
+
 COPY . /var/www/html
 
 RUN a2enmod rewrite
