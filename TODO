@@ -1,7 +1,4 @@
-Export SQL
-Mettre
-CREATE ALGORITHM=UNDEFINED DEFINER=`teft0095_admin`@`localhost` SQL SECURITY DEFINER VIEW `candidate_full` AS select `edc`.`mpId` AS `mpId`,`edc`.`election` AS `election`,`edc`.`district` AS `district`,`edc`.`candidature` AS `candidature`,`edc`.`position` AS `position`,`edc`.`nuance` AS `nuance`,`edc`.`source` AS `source`,`edc`.`link` AS `link`,`edc`.`visible` AS `visible`,`edc`.`secondRound` AS `secondRound`,`edc`.`elected` AS `elected`,`dl`.`legislature` AS `legislature`,`dl`.`nameUrl` AS `nameUrl`,`dl`.`civ` AS `civ`,`dl`.`nameFirst` AS `nameFirst`,`dl`.`nameLast` AS `nameLast`,`dl`.`age` AS `age`,`dl`.`dptSlug` AS `dptSlug`,`dl`.`departementNom` AS `departementNom`,`dl`.`departementCode` AS `departementCode`,`dl`.`circo` AS `circo`,`dl`.`mandatId` AS `mandatId`,`dl`.`libelle` AS `depute_libelle`,`dl`.`libelleAbrev` AS `depute_libelleAbrev`,`dl`.`groupeId` AS `groupeId`,`dl`.`groupeMandat` AS `groupeMandat`,`dl`.`couleurAssociee` AS `couleurAssociee`,`dl`.`dateFin` AS `dateFin`,`dl`.`datePriseFonction` AS `datePriseFonction`,`dl`.`causeFin` AS `causeFin`,`dl`.`img` AS `img`,`dl`.`imgOgp` AS `imgOgp`,`dl`.`dateMaj` AS `dateMaj`,`dl`.`libelle_1` AS `libelle_1`,`dl`.`libelle_2` AS `libelle_2`,`dl`.`active` AS `active`,`el`.`id` AS `election_id`,`el`.`libelle` AS `election_libelle`,`el`.`libelleAbrev` AS `election_libelleAbrev`,`el`.`dateYear` AS `dateYear`,`el`.`dateFirstRound` AS `dateFirstRound`,`el`.`dateSecondRound` AS `dateSecondRound`,`edc`.`modified_at` AS `modified_at` from ((`elect_deputes_candidats` `edc` left join `deputes_last` `dl` on(`edc`.`mpId` = `dl`.`mpId`)) left join `elect_libelle` `el` on(`edc`.`election` = `el`.`id`));
-à la fin du sql.
-erreur sur elect_deputes_candidats insert : Incorrect integer value: '' for column 'elected'
-Incorrect integer value: '' for column 'secondRound'
-
+Mettre les variables au démarrage de docker-compose up :
+Décommenter les lignes et commenter celles qui sont en dures
+Trouver comment lancer le script entrypoint.sh sans que le container exit au démarrage
+Débugger les 2 lignes commentées du entrypoint.sh
