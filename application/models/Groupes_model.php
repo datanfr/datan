@@ -340,7 +340,7 @@
 
         case 'ECOLO':
           $groupe['website'] = 'https://www.eelv.fr/';
-          $groupe['twitter'] = 'EELV';
+          $groupe['twitter'] = 'EcologistesAN';
           $groupe['facebook'] = 'eelv.fr';
 
         default:
