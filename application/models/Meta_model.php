@@ -87,8 +87,12 @@
         /// --- INDIVIDUAL VOTE PAGE --- ///
 
         //var_dump($data);
-        if ($data['vote']['title'] || $data['vote']['voteType'] == "final") {
-          $img = "https://og-image-datan.vercel.app/" . str_replace(" ", "%20", $data['vote']['title']);
+        if ($data['vote']['title'] || in_array($data['vote']['voteType'], array("final"))) {
+          if ($data['vote']['title'] == 'final') {
+            $img = "https://og-image-datan.vercel.app/" . str_replace(" ", "%20", $data['vote']['title']);
+          } else {
+            $img = "https://og-image-datan.vercel.app/" . str_replace(" ", "%20", ucfirst($data['vote']['titre']));
+          }
           $img .= "?voteN=" . $data['vote']['voteNumero'];
           $img .= "&legislature=" . $data['vote']['legislature'];
           $img .= "&date=" . str_replace(" ", "%20", $data['vote']['date_edited']);
