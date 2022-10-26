@@ -267,7 +267,7 @@
         FROM class_groups cg
         LEFT JOIN organes o ON cg.organeRef = o.uid
         LEFT JOIN groupes_effectif ge ON cg.organeRef = ge.organeRef
-        WHERE cg.active = 1 AND cg.stat = "participation"
+        WHERE cg.active = 1 AND cg.stat = "participationCommission"
         ) A,
         (SELECT @s:= 0) AS s
         ORDER BY A.value DESC
