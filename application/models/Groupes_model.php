@@ -365,7 +365,7 @@
     }
 
     public function get_stats_history($groups){
-      $this->db->select('cg.*, o.libelle, o.libelleAbrev, couleurAssociee, active');
+      $this->db->select('cg.*, o.libelle, o.libelleAbrev, o.couleurAssociee, cg.active, o.positionPolitique');
       $this->db->where_in('cg.organeRef', $groups);
       $this->db->join('organes o', 'o.uid = cg.organeRef', 'left');
       $this->db->order_by('cg.legislature', 'ASC');

@@ -203,35 +203,37 @@
                     </div>
                   </div>
                 </div>
-                <div class="row mt-4">
-                  <div class="col-12">
-                    <div class="text-center">
-                      <a class="btn btn-primary" id="btn-ranking" data-toggle="collapse" href="#collapseParticipation" role="button" aria-expanded="false" aria-controls="collapseParticipation">
-                        Voir l'historique
-                      </a>
-                    </div>
-                    <div class="collapse mt-3" id="collapseParticipation">
-                      <table class="table">
-                        <thead>
-                          <tr>
-                            <th scope="col">Groupe</th>
-                            <th scope="col">Legislature</th>
-                            <th scope="col">Score</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          <?php foreach ($stats_history['participation'] as $group): ?>
+                <?php if (isset($stats_history['participation'])): ?>
+                  <div class="row mt-4">
+                    <div class="col-12">
+                      <div class="text-center">
+                        <a class="btn btn-primary" id="btn-ranking" data-toggle="collapse" href="#collapseParticipation" role="button" aria-expanded="false" aria-controls="collapseParticipation">
+                          Voir l'historique
+                        </a>
+                      </div>
+                      <div class="collapse mt-3" id="collapseParticipation">
+                        <table class="table">
+                          <thead>
                             <tr>
-                              <th scope="row"><?= $group['libelle'] ?></th>
-                              <td><?= $group['legislature'] ?></td>
-                              <td><?= round($group['value'] * 100) ?> %</td>
+                              <th scope="col">Groupe</th>
+                              <th scope="col">Legislature</th>
+                              <th scope="col">Score</th>
                             </tr>
-                          <?php endforeach; ?>
-                        </tbody>
-                      </table>
+                          </thead>
+                          <tbody>
+                            <?php foreach ($stats_history['participation'] as $group): ?>
+                              <tr>
+                                <th scope="row"><?= $group['libelle'] ?></th>
+                                <td><?= $group['legislature'] ?></td>
+                                <td><?= round($group['value'] * 100) ?> %</td>
+                              </tr>
+                            <?php endforeach; ?>
+                          </tbody>
+                        </table>
+                      </div>
                     </div>
                   </div>
-                </div>
+                <?php endif; ?>
               <?php endif; ?>
             </div>
           </div> <!-- END CARD PARTICIPATION -->
@@ -278,35 +280,37 @@
                     </div>
                   </div>
                 </div>
-                <div class="row mt-4">
-                  <div class="col-12">
-                    <div class="text-center">
-                      <a class="btn btn-primary" id="btn-ranking" data-toggle="collapse" href="#collapseCohesion" role="button" aria-expanded="false" aria-controls="collapseCohesion">
-                        Voir l'historique
-                      </a>
-                    </div>
-                    <div class="collapse mt-3" id="collapseCohesion">
-                      <table class="table">
-                        <thead>
-                          <tr>
-                            <th scope="col">Groupe</th>
-                            <th scope="col">Legislature</th>
-                            <th scope="col">Score</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          <?php foreach ($stats_history['cohesion'] as $group): ?>
+                <?php if (isset($stats_history['cohesion'])): ?>
+                  <div class="row mt-4">
+                    <div class="col-12">
+                      <div class="text-center">
+                        <a class="btn btn-primary" id="btn-ranking" data-toggle="collapse" href="#collapseCohesion" role="button" aria-expanded="false" aria-controls="collapseCohesion">
+                          Voir l'historique
+                        </a>
+                      </div>
+                      <div class="collapse mt-3" id="collapseCohesion">
+                        <table class="table">
+                          <thead>
                             <tr>
-                              <th scope="row"><?= $group['libelle'] ?></th>
-                              <td><?= $group['legislature'] ?></td>
-                              <td><?= round($group['value'], 2) ?></td>
+                              <th scope="col">Groupe</th>
+                              <th scope="col">Legislature</th>
+                              <th scope="col">Score</th>
                             </tr>
-                          <?php endforeach; ?>
-                        </tbody>
-                      </table>
+                          </thead>
+                          <tbody>
+                            <?php foreach ($stats_history['cohesion'] as $group): ?>
+                              <tr>
+                                <th scope="row"><?= $group['libelle'] ?></th>
+                                <td><?= $group['legislature'] ?></td>
+                                <td><?= round($group['value'], 2) ?></td>
+                              </tr>
+                            <?php endforeach; ?>
+                          </tbody>
+                        </table>
+                      </div>
                     </div>
                   </div>
-                </div>
+                <?php endif; ?>
               <?php endif; ?>
             </div>
           </div> <!-- END CARD COHESION -->
@@ -364,35 +368,39 @@
                       </div>
                     </div>
                   </div>
-                  <div class="row mt-4">
-                    <div class="col-12">
-                      <div class="text-center">
-                        <a class="btn btn-primary" id="btn-ranking" data-toggle="collapse" href="#collapseMajority" role="button" aria-expanded="false" aria-controls="collapseMajority">
-                          Voir l'historique
-                        </a>
-                      </div>
-                      <div class="collapse mt-3" id="collapseMajority">
-                        <table class="table">
-                          <thead>
-                            <tr>
-                              <th scope="col">Groupe</th>
-                              <th scope="col">Legislature</th>
-                              <th scope="col">Score</th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            <?php foreach ($stats_history['majority'] as $group): ?>
+                  <?php if (isset($stats_history['majority'])): ?>
+                    <div class="row mt-4">
+                      <div class="col-12">
+                        <div class="text-center">
+                          <a class="btn btn-primary" id="btn-ranking" data-toggle="collapse" href="#collapseMajority" role="button" aria-expanded="false" aria-controls="collapseMajority">
+                            Voir l'historique
+                          </a>
+                        </div>
+                        <div class="collapse mt-3" id="collapseMajority">
+                          <table class="table">
+                            <thead>
                               <tr>
-                                <th scope="row"><?= $group['libelle'] ?></th>
-                                <td><?= $group['legislature'] ?></td>
-                                <td><?= round($group['value'] * 100) ?> %</td>
+                                <th scope="col">Groupe</th>
+                                <th scope="col">Legislature</th>
+                                <th scope="col">Score</th>
                               </tr>
-                            <?php endforeach; ?>
-                          </tbody>
-                        </table>
+                            </thead>
+                            <tbody>
+                              <?php foreach ($stats_history['majority'] as $group): ?>
+                                <?php if ($group['positionPolitique'] != 'Majoritaire'): ?>
+                                  <tr>
+                                    <th scope="row"><?= $group['libelle'] ?></th>
+                                    <td><?= $group['legislature'] ?></td>
+                                    <td><?= round($group['value'] * 100) ?> %</td>
+                                  </tr>
+                                <?php endif; ?>
+                              <?php endforeach; ?>
+                            </tbody>
+                          </table>
+                        </div>
                       </div>
                     </div>
-                  </div>
+                  <?php endif; ?>
                 <?php endif; ?>
               </div>
             </div> <!-- END CARD MAJORITE -->
