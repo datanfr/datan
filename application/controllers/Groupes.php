@@ -214,8 +214,9 @@
 
       //Query 3 Statistiques
       $data['stats'] = $this->groupes_model->get_stats($groupe_uid);
-      $data['stats_history'] = $this->groupes_model->get_stats_history($data['history']);
-      var_dump($data['stats_history']);
+      if ($data['history']) {
+        $data['stats_history'] = $this->groupes_model->get_stats_history($data['history']);
+      }
       $data['statsAverage'] = $this->groupes_model->get_stats_avg($legislature);
 
       if (!empty($data['stats']['cohesion'])) {
