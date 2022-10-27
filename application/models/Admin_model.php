@@ -289,10 +289,10 @@ class Admin_model extends CI_Model
     return $query->result_array();
   }
 
-  public function get_votes_em_lost()
+  public function get_votes_majo_lost()
   {
     $query = $this->db->query('
-      SELECT B.voteNumero, B.positionMajoritaire AS positionGroupe, B.sortCode AS sortVote, B.dateScrutin AS dateVote, B.pour, B.contre, B.abstention, gc.cohesion, B.titre, B.voteType, gc.cohesion, CASE WHEN vd.title IS NOT NULL THEN "vote_datan" ELSE NULL END AS vote_datan
+      SELECT B.voteNumero, B.positionMajoritaire AS positionGroupe, B.sortCode AS sortVote, B.dateScrutin AS dateVote, gc.cohesion, B.titre, B.voteType, gc.cohesion, CASE WHEN vd.title IS NOT NULL THEN "vote_datan" ELSE NULL END AS vote_datan
       FROM
       (
       SELECT A.*, CASE WHEN A.positionMajoritaire = A.sortCode THEN 1 ELSE 0 END AS winning
@@ -301,14 +301,14 @@ class Admin_model extends CI_Model
       SELECT vi.voteId, vg.voteNumero, vg.legislature, vg.positionMajoritaire, vg.nombrePours AS pour, vg.nombreContres AS contre, vg.nombreAbstentions AS abstention, date_format(vi.dateScrutin, "%d %M %Y") AS dateScrutin, CASE WHEN vi.sortCode = "rejeté" THEN "contre" ELSE "pour" END AS sortCode, REPLACE(vi.titre, "n?", "n°") AS titre, vi.voteType
       FROM votes_groupes vg
       LEFT JOIN votes_info vi ON vg.voteNumero = vi.voteNumero AND vg.legislature = vi.legislature
-      WHERE vg.organeRef = "PO730964"
+      WHERE vg.organeRef = "PO800538"
       ) A
       ) B
-      LEFT JOIN groupes_cohesion gc ON B.voteNumero = gc.voteNumero AND gc.organeRef = "PO730964"
+      LEFT JOIN groupes_cohesion gc ON B.voteNumero = gc.voteNumero AND gc.organeRef = "PO800538"
       LEFT JOIN votes_datan vd ON B.voteNumero = vd.voteNumero AND B.legislature = vd.legislature
       WHERE B.winning = 0
       ORDER BY B.voteNumero DESC
-      ');
+    ');
 
     return $query->result_array();
   }
