@@ -364,6 +364,21 @@
       return $return;
     }
 
+    public function get_stats_history($groups){
+      $this->db->select('cg.*, o.libelle, o.libelleAbrev, couleurAssociee, active');
+      $this->db->where_in('cg.organeRef', $groups);
+      $this->db->join('organes o', 'o.uid = cg.organeRef', 'left');
+      $this->db->order_by('cg.legislature', 'ASC');
+      $query = $this->db->get('class_groups cg');
+      $results = $query->result_array();
+
+      foreach ($results as $key => $value) {
+        $return[$value['stat']][] = $value;
+      }
+
+      return $return;
+    }
+
     public function get_stats_avg($legislature){
       $sql = 'SELECT stat, ROUND(AVG(value), 3) AS mean
         FROM class_groups
@@ -531,6 +546,22 @@
       }
 
       return $schema;
+    }
+
+    public function get_history($id){
+      $families = array(
+        array('PO800538', 'PO730964'), // Renaissance
+        array('PO758835', 'PO389507', 'PO656002', 'PO713077', 'PO270907', 'PO800496') // Socialistes
+      );
+
+      foreach ($families as $family) {
+        foreach ($family as $group) {
+          if ($group == $id) {
+            return $family;
+          }
+        }
+      }
+
     }
 
   }
