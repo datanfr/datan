@@ -168,41 +168,71 @@
                   </h3>
                 </div>
               </div>
-              <div class="row">
-                <?php if ($no_participation): ?>
+              <?php if ($no_participation): ?>
+                <div class="row">
                   <div class="col-12 mt-2">
                     <p>Du fait d'un nombre insuffisant de votes de la part du groupe <?= name_group($title) ?>, aucune statistique n'a pu être produite.</p>
                   </div>
-                  <?php else: ?>
-                    <div class="col-lg-3 offset-lg-1 mt-2">
-                      <div class="d-flex justify-content-center align-items-center">
-                        <div class="c100 p<?= $stats['participation']['value'] ?> m-0">
-                            <span><?= $stats['participation']['value'] ?> %</span>
-                            <div class="slice">
-                                <div class="bar"></div>
-                                <div class="fill"></div>
-                            </div>
+                </div>
+                <?php else: ?>
+                <div class="row">
+                  <div class="col-lg-3 offset-lg-1 mt-2">
+                    <div class="d-flex justify-content-center align-items-center">
+                      <div class="c100 p<?= $stats['participation']['value'] ?> m-0">
+                        <span><?= $stats['participation']['value'] ?> %</span>
+                        <div class="slice">
+                          <div class="bar"></div>
+                          <div class="fill"></div>
                         </div>
                       </div>
                     </div>
-                    <div class="col-lg-8 infos mt-4 mt-lg-2">
-                      <div class="texte ml-md-3 pl-md-3 mt-md-0 mt-3">
-                        <p>
-                          En moyenne, <?= $stats['participation']['value'] ?>% <?php if ($groupe['libelleAbrev'] != "NI"): ?>des députés du groupe <?= $groupe['libelleAbrev'] ?><?php else: ?>des <?= mb_strtolower($title) ?><?php endif; ?> <?= $active ? 'prennent' : 'prenaient' ?> part aux scrutins solennels.
-                        </p>
-                        <p>
-                          <?php if ($groupe['libelleAbrev'] != "NI"): ?>Le groupe <b><?= $active ? 'participe' : 'participait' ?> <?php else: ?>Les <?= mb_strtolower($title) ?> <b>participent <?php endif; ?> <?= $edito_participation ?></b> que la moyenne <?= $active ? "des autres groupes" : "de tous les groupes de l'Assemblée" ?>, qui est <?php if ($edito_participation == "autant"): ?>
-                            aussi
-                          <?php endif; ?> de <?= $participationAverage ?> %.
-                        </p>
-                        <p>
-                          Les votes solennels sont les votes considérés comme importants pour lesquels les députés connaissent à l'avance le jour et l'heure du vote.
-                        </p>
-                        <!-- <span><a href="#" target="_blank">> Voir le classement général</a></span> -->
-                      </div>
+                  </div>
+                  <div class="col-lg-8 infos mt-4 mt-lg-2">
+                    <div class="texte ml-md-3 pl-md-3 mt-md-0 mt-3">
+                      <p>
+                        En moyenne, <?= $stats['participation']['value'] ?>% <?php if ($groupe['libelleAbrev'] != "NI"): ?>des députés du groupe <?= $groupe['libelleAbrev'] ?><?php else: ?>des <?= mb_strtolower($title) ?><?php endif; ?> <?= $active ? 'prennent' : 'prenaient' ?> part aux scrutins solennels.
+                      </p>
+                      <p>
+                        <?php if ($groupe['libelleAbrev'] != "NI"): ?>Le groupe <b><?= $active ? 'participe' : 'participait' ?> <?php else: ?>Les <?= mb_strtolower($title) ?> <b>participent <?php endif; ?> <?= $edito_participation ?></b> que la moyenne <?= $active ? "des autres groupes" : "de tous les groupes de l'Assemblée" ?>, qui est <?php if ($edito_participation == "autant"): ?>
+                          aussi
+                        <?php endif; ?> de <?= $participationAverage ?> %.
+                      </p>
+                      <p>
+                        Les votes solennels sont les votes considérés comme importants pour lesquels les députés connaissent à l'avance le jour et l'heure du vote.
+                      </p>
                     </div>
-                <?php endif; ?>
-              </div>
+                  </div>
+                </div>
+                <div class="row mt-4">
+                  <div class="col-12">
+                    <div class="text-center">
+                      <a class="btn btn-primary" id="btn-ranking" data-toggle="collapse" href="#collapseParticipation" role="button" aria-expanded="false" aria-controls="collapseParticipation">
+                        Voir l'historique
+                      </a>
+                    </div>
+                    <div class="collapse mt-3" id="collapseParticipation">
+                      <table class="table">
+                        <thead>
+                          <tr>
+                            <th scope="col">Groupe</th>
+                            <th scope="col">Legislature</th>
+                            <th scope="col">Score</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <?php foreach ($stats_history['participation'] as $group): ?>
+                            <tr>
+                              <th scope="row"><?= $group['libelle'] ?></th>
+                              <td><?= $group['legislature'] ?></td>
+                              <td><?= round($group['value'] * 100) ?> %</td>
+                            </tr>
+                          <?php endforeach; ?>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              <?php endif; ?>
             </div>
           </div> <!-- END CARD PARTICIPATION -->
           <!-- CARD COHESION -->
@@ -218,16 +248,18 @@
                   </h3>
                 </div>
               </div>
-              <div class="row">
-                <?php if ($no_cohesion): ?>
+              <?php if ($no_cohesion): ?>
+                <div class="row">
                   <div class="col-12 mt-2">
                     <p>Du fait d'un nombre insuffisant de votes de la part du groupe <?= name_group($title) ?>, aucune statistique n'a pu être produite.</p>
                   </div>
-                  <?php else: ?>
+                </div>
+                <?php else: ?>
+                <div class="row">
                   <div class="col-lg-3 offset-lg-1 mt-2">
                     <div class="d-flex justify-content-center align-items-center">
                       <div class="c100 p<?= round($stats['cohesion']['value'] * 100) ?> m-0">
-                          <span><?= $stats['cohesion']['value'] ?></span>
+                          <span><?= round($stats['cohesion']['value'], 2) ?></span>
                           <div class="slice">
                               <div class="bar"></div>
                               <div class="fill"></div>
@@ -238,15 +270,44 @@
                   <div class="col-lg-8 infos mt-4 mt-lg-2">
                     <div class="texte ml-md-3 pl-md-3 mt-md-0 mt-3">
                       <p>
-                        Avec un taux de cohésion de <?= $stats['cohesion']['value'] ?>,<?php if ($groupe['libelleAbrev'] != "NI"): ?> le groupe <?= $groupe['libelleAbrev'] ?> peut être considéré<?php else: ?> les <?= mb_strtolower($title) ?> peuvent être considérés<?php endif; ?> comme <b><?= $edito_cohesion["absolute"] ?> soudé<?php if ($groupe['libelleAbrev'] == "NI"): ?>s<?php endif; ?></b> quand il <?= $active ? "s'agit" : "s'agissait" ?> de voter.
+                        Avec un taux de cohésion de <?= round($stats['cohesion']['value'], 2) ?>,<?php if ($groupe['libelleAbrev'] != "NI"): ?> le groupe <?= $groupe['libelleAbrev'] ?> peut être considéré<?php else: ?> les <?= mb_strtolower($title) ?> peuvent être considérés<?php endif; ?> comme <b><?= $edito_cohesion["absolute"] ?> soudé<?php if ($groupe['libelleAbrev'] == "NI"): ?>s<?php endif; ?></b> quand il <?= $active ? "s'agit" : "s'agissait" ?> de voter.
                       </p>
                       <p>
-                        Le groupe <?= $active ? "est" : "était" ?> en effet <b><?= $edito_cohesion["relative"] ?> uni</b> que la moyenne de tous les groupes, qui est de <?= $cohesionAverage ?>.
+                        Le groupe <?= $active ? "est" : "était" ?> en effet <b><?= $edito_cohesion['relative'] ?> uni</b> que la moyenne de tous les groupes, qui est de <?= round($cohesionAverage, 2) ?>.
                       </p>
                     </div>
                   </div>
-                <?php endif; ?>
-              </div>
+                </div>
+                <div class="row mt-4">
+                  <div class="col-12">
+                    <div class="text-center">
+                      <a class="btn btn-primary" id="btn-ranking" data-toggle="collapse" href="#collapseCohesion" role="button" aria-expanded="false" aria-controls="collapseCohesion">
+                        Voir l'historique
+                      </a>
+                    </div>
+                    <div class="collapse mt-3" id="collapseCohesion">
+                      <table class="table">
+                        <thead>
+                          <tr>
+                            <th scope="col">Groupe</th>
+                            <th scope="col">Legislature</th>
+                            <th scope="col">Score</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <?php foreach ($stats_history['cohesion'] as $group): ?>
+                            <tr>
+                              <th scope="row"><?= $group['libelle'] ?></th>
+                              <td><?= $group['legislature'] ?></td>
+                              <td><?= round($group['value'], 2) ?></td>
+                            </tr>
+                          <?php endforeach; ?>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              <?php endif; ?>
             </div>
           </div> <!-- END CARD COHESION -->
           <!-- CARD MAJORITE -->
@@ -263,12 +324,14 @@
                     </h3>
                   </div>
                 </div>
-                <div class="row">
-                  <?php if ($no_participation): ?>
+                <?php if ($no_participation): ?>
+                  <div class="row">
                     <div class="col-12 mt-2">
                       <p>Du fait d'un nombre insuffisant de votes de la part du groupe <?= name_group($title) ?>, aucune statistique n'a pu être produite.</p>
                     </div>
-                    <?php else: ?>
+                  </div>
+                  <?php else: ?>
+                  <div class="row">
                     <div class="col-lg-3 offset-lg-1 mt-2">
                       <div class="d-flex justify-content-center align-items-center">
                         <div class="c100 p<?= $stats['majority']['value'] ?> m-0">
@@ -300,8 +363,37 @@
                         </p>
                       </div>
                     </div>
-                  <?php endif; ?>
-                </div>
+                  </div>
+                  <div class="row mt-4">
+                    <div class="col-12">
+                      <div class="text-center">
+                        <a class="btn btn-primary" id="btn-ranking" data-toggle="collapse" href="#collapseMajority" role="button" aria-expanded="false" aria-controls="collapseMajority">
+                          Voir l'historique
+                        </a>
+                      </div>
+                      <div class="collapse mt-3" id="collapseMajority">
+                        <table class="table">
+                          <thead>
+                            <tr>
+                              <th scope="col">Groupe</th>
+                              <th scope="col">Legislature</th>
+                              <th scope="col">Score</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <?php foreach ($stats_history['majority'] as $group): ?>
+                              <tr>
+                                <th scope="row"><?= $group['libelle'] ?></th>
+                                <td><?= $group['legislature'] ?></td>
+                                <td><?= round($group['value'] * 100) ?> %</td>
+                              </tr>
+                            <?php endforeach; ?>
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  </div>
+                <?php endif; ?>
               </div>
             </div> <!-- END CARD MAJORITE -->
           <?php endif; ?>

@@ -144,6 +144,7 @@
       // Query 1 Informations principales
       $groupe_slug = mb_strtoupper($groupe_slug);
       $data['groupe'] = $this->groupes_model->get_groupes_individal($groupe_slug, $legislature);
+      $data['history'] = $this->groupes_model->get_history($data['groupe']['uid']);
 
       if (empty($data['groupe'])) {
         show_404($this->functions_datan->get_404_infos());
@@ -213,9 +214,9 @@
 
       //Query 3 Statistiques
       $data['stats'] = $this->groupes_model->get_stats($groupe_uid);
+      $data['stats_history'] = $this->groupes_model->get_stats_history($data['history']);
+      var_dump($data['stats_history']);
       $data['statsAverage'] = $this->groupes_model->get_stats_avg($legislature);
-
-      //print_r($data['statsAverage']);
 
       if (!empty($data['stats']['cohesion'])) {
         $data['cohesionAverage'] = $data['statsAverage']['cohesion'];
