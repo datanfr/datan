@@ -532,10 +532,11 @@
     }
 
     public function get_postes_assemblee(){
-      $sql = 'SELECT d.nameFirst, d.nameLast, mp.mpId AS id, mp.dateDebut, mp.dateFin, mp.codeQualite, mp.libQualiteSex
-        FROM mandat_principal mp
+      $sql = 'SELECT d.nameFirst, d.nameLast, mp.mpId AS id, mp.dateDebut, mp.dateFin, mp.codeQualite, o.libelle, o.libelleAbrev, o.libelleAbrege
+        FROM mandat_secondaire mp
         LEFT JOIN deputes d ON mp.mpId = d.mpId
-        WHERE mp.legislature = ? AND codeQualite != "membre"
+        LEFT JOIN organes o ON o.uid = mp.organeRef
+        WHERE mp.legislature = ?
         ORDER BY mp.dateDebut DESC
       ';
       return $this->db->query($sql, legislature_current())->result_array();
