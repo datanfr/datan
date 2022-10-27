@@ -17,16 +17,21 @@
       $this->load->model('parrainages_model');
       $this->load->model('exposes_model');
       $this->password_model->security_only_team();
+
+      $this->data = array(
+        'username' => $this->session->userdata('username'),
+        'usernameType' => $this->session->userdata('type'),
+        'groupes' => $this->groupes_model->get_groupes_all(true, legislature_current())
+      );
     }
 
     // Admin homepage
     public function index(){
-      $data['username'] = $this->session->userdata('username');
+      $data = $this->data;
       $user_id = $this->session->userdata('user_id');
 
       $data['votesUnpublished'] = $this->admin_model->get_votes_datan_user($user_id, false);
       $data['votesLast'] = $this->admin_model->get_votes_datan_user($user_id, true);
-      $data['groupes'] = $this->groupes_model->get_groupes_all(true, 15);
       $data['deputes_entrants'] = $this->deputes_model->get_deputes_entrants(5);
       $data['groupes_entrants'] = $this->deputes_model->get_groupes_entrants(5);
       $data['newsletter_total'] = $this->newsletter_model->get_number_registered("general");
@@ -43,14 +48,13 @@
     }
 
     public function election_candidates($slug){
+      $data = $this->data;
       $data['election'] = $this->elections_model->get_election($slug);
 
       if (empty($data['election'])) {
         show_404($this->functions_datan->get_404_infos());
       }
 
-      $data['username'] = $this->session->userdata('username');
-      $data['usernameType'] = $this->session->userdata('type');
       $data['title'] = 'Liste candidats aux élections ' . $data['election']['libelleAbrev']. ' '.$data['election']['dateYear'];
 
       $data['candidats'] = $this->elections_model->get_all_candidates($data['election']['id']);
@@ -69,14 +73,13 @@
     }
 
     public function election_candidates_not_done($slug){
+      $data = $this->data;
       $data['election'] = $this->elections_model->get_election($slug);
 
       if (empty($data['election'])) {
         show_404($this->functions_datan->get_404_infos());
       }
 
-      $data['username'] = $this->session->userdata('username');
-      $data['usernameType'] = $this->session->userdata('type');
       $data['title'] = 'Liste des députés non renseignés pour les élections ' . $data['election']['libelleAbrev']. ' '.$data['election']['dateYear'];
 
       $data['mps'] = $this->elections_model->get_mps_not_done($data['election']['id']);
@@ -94,6 +97,8 @@
     }
 
     public function create_candidat(){
+      $data = $this->data;
+
       if (!isset($_GET['election'])) {
         redirect('admin');
       }
@@ -114,7 +119,6 @@
         $data['requiredFields'] = array('district', 'position');
       }
 
-      $data['username'] = $this->session->userdata('username');
       $user_id = $this->session->userdata('user_id');
 
       $data['title'] = 'Créer un nouveau candidat pour les ' . $data['election']['libelleAbrev'] . ' ' . $data['election']['dateYear'];
@@ -154,6 +158,8 @@
     }
 
     public function modify_candidat($candidateMpId){
+      $data = $this->data;
+
       if (!isset($_GET['election'])) {
         redirect('admin');
       }
@@ -162,8 +168,6 @@
       if (empty($data['election'])) {
         show_404($this->functions_datan->get_404_infos());
       }
-
-      $data['username'] = $this->session->userdata('username');
 
       $data['title'] = 'Modifier un candidat pour les ' . $data['election']['libelleAbrev'] . ' ' . $data['election']['dateYear'];
       $data['candidat'] = $this->elections_model->get_candidate_full($candidateMpId, $data['election']['id']);
@@ -209,6 +213,8 @@
     }
 
     public function delete_candidat($candidateMpId){
+      $data = $this->data;
+
       if (!isset($_GET['election'])) {
         redirect('admin');
       }
@@ -217,9 +223,6 @@
       if (empty($data['election'])) {
         show_404($this->functions_datan->get_404_infos());
       }
-
-      $data['username'] = $this->session->userdata('username');
-      $data['usernameType'] = $this->session->userdata("type");
 
       if ($data['election']['libelleAbrev'] == 'Présidentielle') {
         $data['requiredFields'] = array();
@@ -253,8 +256,7 @@
     }
 
     public function election_modifications_mps(){
-      $data['username'] = $this->session->userdata('username');
-      $data['usernameType'] = $this->session->userdata('type');
+      $data = $this->data;
       $data['title'] = 'Modifications apportées par les députés';
 
       $data['modifs'] = $this->table_history_model->get_history('elect_deputes_candidats');
@@ -269,12 +271,10 @@
     }
 
     public function votes(){
-      $data['username'] = $this->session->userdata('username');
-      $data['usernameType'] = $this->session->userdata('type');
+      $data = $this->data;
       $data['title'] = 'Tous les votes datan (décryptés)';
 
       $data['votes'] = $this->admin_model->get_votes_datan();
-      $data['groupes'] = $this->groupes_model->get_groupes_all(true, 15);
 
       // Meta
       $data['title_meta'] = 'Tous les votes décryptés - Dashboard | Datan';
@@ -286,11 +286,10 @@
     }
 
     public function create_vote(){
-      $data['username'] = $this->session->userdata('username');
+      $data = $this->data;
       $user_id = $this->session->userdata('user_id');
       $data['title'] = 'Créer un nouveau vote décrypté';
       $data['categories'] = $this->fields_model->get_fields();
-      $data['groupes'] = $this->groupes_model->get_groupes_all(true, 15);
       $data['readings'] = $this->readings_model->get();
 
       //Form valiation
@@ -313,10 +312,8 @@
     }
 
     public function modify_vote($vote){
-      $data['username'] = $this->session->userdata('username');
-      $data['usernameType'] = $this->session->userdata("type");
+      $data = $this->data;
       $user_id = $this->session->userdata('user_id');
-      $data['groupes'] = $this->groupes_model->get_groupes_all(true, 15);
       $data['readings'] = $this->readings_model->get();
 
       $data['title'] = 'Modifier un vote décrypté';
@@ -349,15 +346,13 @@
     }
 
     public function delete_vote($vote){
-      $data['usernameType'] = $this->session->userdata("type");
+      $data = $this->data;
 
       if ($data['usernameType'] != "admin") {
         redirect();
       } else {
-        $data['username'] = $this->session->userdata('username');
         $data['title'] = 'Supprimer un vote décrypté';
         $data['vote'] = $this->admin_model->get_vote_datan($vote);
-        $data['groupes'] = $this->groupes_model->get_groupes_all(true, 15);
 
         //Form validation
         $this->form_validation->set_rules('delete', 'Delete', 'required');
@@ -378,10 +373,8 @@
     }
 
     public function votes_an_position(){
-      $data['username'] = $this->session->userdata('username');
+      $data = $this->data;
       $data['title'] = 'Tous les votes_an (position)';
-
-      $data['groupes'] = $this->groupes_model->get_groupes_all(true, 15);
       $data['votes'] = $this->admin_model->get_votes_an_position();
 
       // Meta
@@ -394,9 +387,8 @@
     }
 
     public function votes_an_cohesion(){
-      $data['username'] = $this->session->userdata('username');
+      $data = $this->data;
       $data['title'] = 'Tous les votes_an (cohesion)';
-      $data['groupes'] = $this->groupes_model->get_groupes_all(true, 15);
       $data['votes'] = $this->admin_model->get_votes_an_cohesion();
 
       // Meta
@@ -409,12 +401,11 @@
     }
 
     public function analyses($url){
-      $data['username'] = $this->session->userdata('username');
+      $data = $this->data;
       if ($url == "class_loyaute_group") {
         if (!isset($_GET["group"])) {
           echo "Indiquez le nom du groupe (lrem, fi, etc.) après ?group=lrem dans l'URL ";
         } else {
-          $data['groupes'] = $this->groupes_model->get_groupes_all(true, 15);
           $libelle = $_GET["group"];
           $data['title'] = 'Classement loyauté pour le groupe ' . $libelle;
 
@@ -433,12 +424,10 @@
       }
     }
 
-    public function votes_an_em_lost(){
-      $data['username'] = $this->session->userdata('username');
-      $data['title'] = 'Votes où En Marche (LAREM) a perdu';
-      $data['groupes'] = $this->groupes_model->get_groupes_all(true, 15);
-
-      $data['votes'] = $this->admin_model->get_votes_em_lost();
+    public function votes_an_majo_lost(){
+      $data = $this->data;
+      $data['title'] = 'Votes où majorité présidentielle a perdu';
+      $data['votes'] = $this->admin_model->get_votes_majo_lost();
 
       // Meta
       $data['title_meta'] = $data['title'] . ' - Dashboard | Datan';
@@ -450,8 +439,7 @@
     }
 
     public function socialmedia($page, $id){
-      $data['username'] = $this->session->userdata('username');
-      $data['groupes'] = $this->groupes_model->get_groupes_all(true, 15);
+      $data = $this->data;
 
       if ($page == "deputes_entrants") {
         $data['title'] = 'Liste des députés entrants (datePriseFonction)';
@@ -540,10 +528,8 @@
     }
 
     public function faq_list(){
-      $data['username'] = $this->session->userdata('username');
-      $data['usernameType'] = $this->session->userdata('type');
+      $data = $this->data;
       $data['title'] = 'Liste des articles FAQ';
-
       $data['articles'] = $this->faq_model->get_articles();
 
       // Meta
@@ -556,13 +542,11 @@
     }
 
     public function delete_faq($id){
-      $data['usernameType'] = $this->session->userdata("type");
+      $data = $this->data;
 
       if ($data['usernameType'] != "admin") {
         redirect();
       } else {
-        $data['username'] = $this->session->userdata('username');
-
         $data['title'] = 'Supprimer un article de FAQ';
         $data['article'] = $this->faq_model->get_article($id);
 
@@ -584,7 +568,7 @@
     }
 
     public function create_faq(){
-      $data['username'] = $this->session->userdata('username');
+      $data = $this->data;
       $user_id = $this->session->userdata('user_id');
       $data['title'] = 'Créer un article de FAQ';
       $data['categories'] = $this->faq_model->get_categories();
@@ -608,8 +592,7 @@
     }
 
     public function modify_faq($id){
-      $data['username'] = $this->session->userdata('username');
-      $data['usernameType'] = $this->session->userdata('type');
+      $data = $this->data;
       $user_id = $this->session->userdata('user_id');
       $data['title'] = 'Modifier un article de FAQ';
       $data['article'] = $this->faq_model->get_article($id);
@@ -643,10 +626,8 @@
     }
 
     public function quizz_list(){
-      $data['username'] = $this->session->userdata('username');
-      $data['usernameType'] = $this->session->userdata('type');
+      $data = $this->data;
       $data['title'] = 'Liste des questions pour les quizz';
-
       $data['questions'] = $this->quizz_model->get_questions();
 
       // Meta
@@ -659,7 +640,7 @@
     }
 
     public function create_quizz(){
-      $data['username'] = $this->session->userdata('username');
+      $data = $this->data;
       $user_id = $this->session->userdata('user_id');
       $data['title'] = 'Créer une question de quizz';
       $data['categories'] = $this->fields_model->get_fields();
@@ -684,8 +665,7 @@
     }
 
     public function modify_quizz($id){
-      $data['username'] = $this->session->userdata('username');
-      $data['usernameType'] = $this->session->userdata('type');
+      $data = $this->data;
       $user_id = $this->session->userdata('user_id');
       $data['title'] = 'Modifier une question de quizz';
       $data['question'] = $this->quizz_model->get_question($id);
@@ -720,13 +700,11 @@
     }
 
     public function delete_quizz($id){
-      $data['usernameType'] = $this->session->userdata("type");
+      $data = $this->data;
 
       if ($data['usernameType'] != "admin") {
         redirect();
       } else {
-        $data['username'] = $this->session->userdata('username');
-
         $data['title'] = 'Supprimer une question de quizz';
         $data['question'] = $this->quizz_model->get_question($id);
 
@@ -748,10 +726,8 @@
     }
 
     public function parrainages(){
-      $data['username'] = $this->session->userdata('username');
-      $data['usernameType'] = $this->session->userdata('type');
+      $data = $this->data;
       $data['title'] = 'Liste des parrainages de députés en 2022';
-
       $data['parrainages'] = $this->parrainages_model->get_parrainages(2022, TRUE);
 
       // Meta
@@ -764,8 +740,7 @@
     }
 
     public function modify_parrainage($id){
-      $data['username'] = $this->session->userdata('username');
-      $data['usernameType'] = $this->session->userdata('type');
+      $data = $this->data;
       $user_id = $this->session->userdata('user_id');
       $data['title'] = 'Modifier un parrainage';
       $data['parrainage'] = $this->parrainages_model->get_parrainage($id);
@@ -791,8 +766,7 @@
     }
 
     public function exposes(){
-      $data['username'] = $this->session->userdata('username');
-      $data['usernameType'] = $this->session->userdata('type');
+      $data = $this->data;
       $user_id = $this->session->userdata('user_id');
       $data['title'] = 'Liste des exposés des motifs';
       $data['exposes'] = $this->exposes_model->get_all_exposes();
@@ -803,11 +777,9 @@
     }
 
     public function exposes_modify($id){
-      $data['username'] = $this->session->userdata('username');
-      $data['usernameType'] = $this->session->userdata('type');
+      $data = $this->data;
       $user_id = $this->session->userdata('user_id');
       $data['title'] = 'Modifier un exposé des motifs';
-
       $data['expose'] = $this->exposes_model->get_expose($id);
 
       if (empty($data['expose'])) {
@@ -828,7 +800,6 @@
         $this->exposes_model->modify($data['expose']['legislature'], $data['expose']['voteNumero']);
         redirect('admin/exposes');
       }
-
 
     }
   }
