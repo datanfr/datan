@@ -168,9 +168,9 @@
               </a>
               <ul class="nav nav-treeview">
                 <li class="nav-item">
-                  <a href="<?= base_url() ?>admin/votes_an/em_lost" class="nav-link">
+                  <a href="<?= base_url() ?>admin/votes_an/majo_lost" class="nav-link">
                     <i class="far fa-circle nav-icon"></i>
-                    <p>LREM perd</p>
+                    <p>Majo perd</p>
                   </a>
                 </li>
                 <?php foreach((array) $groupes as $groupe) : ?>
