@@ -222,35 +222,7 @@
                               </button>
                             </div>
                             <div class="modal-body p-0">
-                              <div class="container-fluid">
-                                <div class="row bar-container stats" style="margin-left: -15px; margin-right: -15px;">
-                                  <div class="col-10 offset-2">
-                                    <div class="chart">
-                                      <div class="chart-grid">
-                                        <div id="ticks">
-                                          <div class="tick" style="height: 50%;"><p>100 %</p></div>
-                                          <div class="tick" style="height: 50%;"><p>50 %</p></div>
-                                          <div class="tick" style="height: 0;"><p>0 %</p></div>
-                                        </div>
-                                      </div>
-                                      <div class="bar-chart d-flex flex-row justify-content-between align-items-end">
-                                        <?php foreach ($stats_history['participation'] as $group): ?>
-                                          <div class="bars mx-1 mx-md-3" style="height: <?= round($group['value'] * 100) ?>%">
-                                            <span class="score"><?= round($group['value'] * 100) ?>%</span>
-                                          </div>
-                                        <?php endforeach; ?>
-                                      </div>
-                                    </div>
-                                  </div>
-                                  <div class="col-10 offset-2 d-flex justify-content-between mt-2">
-                                    <?php foreach ($stats_history['participation'] as $group): ?>
-                                      <div class="legend-element d-flex align-items-center justify-content-center">
-                                        <span class="font-weight-bold"><?= $group['libelleAbrev'] ?></span>
-                                      </div>
-                                    <?php endforeach; ?>
-                                  </div>
-                                </div>
-                              </div>
+                              <?php $this->load->view('groupes/partials/stats_history.php', array('stats_history_chart' => $stats_history['participation'])) ?>
                             </div>
                             <div class="modal-footer">
                               <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
@@ -311,29 +283,28 @@
                   <div class="row mt-4">
                     <div class="col-12">
                       <div class="text-center">
-                        <a class="btn btn-primary" id="btn-ranking" data-toggle="collapse" href="#collapseCohesion" role="button" aria-expanded="false" aria-controls="collapseCohesion">
+                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalCohesion">
                           Voir l'historique
-                        </a>
+                        </button>
                       </div>
-                      <div class="collapse mt-3" id="collapseCohesion">
-                        <table class="table">
-                          <thead>
-                            <tr>
-                              <th scope="col">Groupe</th>
-                              <th scope="col">Legislature</th>
-                              <th scope="col">Score</th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            <?php foreach ($stats_history['cohesion'] as $group): ?>
-                              <tr>
-                                <th scope="row"><?= $group['libelle'] ?></th>
-                                <td><?= $group['legislature'] ?></td>
-                                <td><?= round($group['value'], 2) ?></td>
-                              </tr>
-                            <?php endforeach; ?>
-                          </tbody>
-                        </table>
+                      <!-- Modal -->
+                      <div class="modal fade" id="modalCohesion" tabindex="-1" role="dialog" aria-labelledby="modalCohesionTitle" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <span class="h5 modal-title font-weight-bold" id="exampleModalLongTitle">Historique de cohésion pour <?= $groupe['libelleAbrev'] ?></span>
+                              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                              </button>
+                            </div>
+                            <div class="modal-body p-0">
+                              <?php $this->load->view('groupes/partials/stats_history.php', array('stats_history_chart' => $stats_history['cohesion'])) ?>
+                            </div>
+                            <div class="modal-footer">
+                              <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+                            </div>
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -399,31 +370,28 @@
                     <div class="row mt-4">
                       <div class="col-12">
                         <div class="text-center">
-                          <a class="btn btn-primary" id="btn-ranking" data-toggle="collapse" href="#collapseMajority" role="button" aria-expanded="false" aria-controls="collapseMajority">
+                          <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalMajority">
                             Voir l'historique
-                          </a>
+                          </button>
                         </div>
-                        <div class="collapse mt-3" id="collapseMajority">
-                          <table class="table">
-                            <thead>
-                              <tr>
-                                <th scope="col">Groupe</th>
-                                <th scope="col">Legislature</th>
-                                <th scope="col">Score</th>
-                              </tr>
-                            </thead>
-                            <tbody>
-                              <?php foreach ($stats_history['majority'] as $group): ?>
-                                <?php if ($group['positionPolitique'] != 'Majoritaire'): ?>
-                                  <tr>
-                                    <th scope="row"><?= $group['libelle'] ?></th>
-                                    <td><?= $group['legislature'] ?></td>
-                                    <td><?= round($group['value'] * 100) ?> %</td>
-                                  </tr>
-                                <?php endif; ?>
-                              <?php endforeach; ?>
-                            </tbody>
-                          </table>
+                        <!-- Modal -->
+                        <div class="modal fade" id="modalMajority" tabindex="-1" role="dialog" aria-labelledby="modalMajorityTitle" aria-hidden="true">
+                          <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                            <div class="modal-content">
+                              <div class="modal-header">
+                                <span class="h5 modal-title font-weight-bold" id="exampleModalLongTitle">Historique de proximité avec la majorité pour <?= $groupe['libelleAbrev'] ?></span>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                  <span aria-hidden="true">&times;</span>
+                                </button>
+                              </div>
+                              <div class="modal-body p-0">
+                                <?php $this->load->view('groupes/partials/stats_history.php', array('stats_history_chart' => $stats_history['majority'])) ?>
+                              </div>
+                              <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+                              </div>
+                            </div>
+                          </div>
                         </div>
                       </div>
                     </div>
