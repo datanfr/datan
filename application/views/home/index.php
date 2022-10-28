@@ -207,7 +207,7 @@
           <a href="https://theconversation.com/reintroduction-des-pesticides-neonicotino-des-comment-nos-deputes-ont-ils-vote-et-pourquoi-155158" target="_blank" rel="noopener">
             <img class="mx-2 my-3 img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="220" height="17" data-src="<?= asset_url() ?>imgs/media/the_conversation.png" alt="The Conversation">
           </a>
-          <span class="url_obf" url_obf="<?= url_obfuscation("https://www.sudouest.fr/redaction/le-cercle-sud-ouest-des-idees/reintroduction-des-pesticides-neonicotinoides-comment-nos-deputes-ont-ils-vote-et-pourquoi-1400279.php") ?>">
+          <span class="url_obf" url_obf="<?= url_obfuscation("https://www.sudouest.fr/pyrenees-atlantiques/pau/assemblee-nationale-le-rn-pointe-le-manque-d-assiduite-de-david-habib-il-repond-qu-il-y-a-trop-d-amendements-futiles-12739495.php") ?>">
             <img class="mx-2 my-3 img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="65" height="59" data-src="<?= asset_url() ?>imgs/media/sud_ouest.png" alt="Sud Ouest">
           </span>
           <a href="https://www.capital.fr/economie-politique/classement-les-deputes-les-plus-bosseurs-et-ceux-qui-en-font-le-moins-1438612" target="_blank" rel="noopener">
