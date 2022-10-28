@@ -213,6 +213,9 @@
           <a href="https://www.capital.fr/economie-politique/classement-les-deputes-les-plus-bosseurs-et-ceux-qui-en-font-le-moins-1438612" target="_blank" rel="noopener">
             <img class="mx-2 my-3 img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="122" height="40" data-src="<?= asset_url() ?>imgs/media/capital.png" alt="Capital">
           </a>
+          <span class="url_obf" url_obf="<?= url_obfuscation("https://www.lepoint.fr/politique/budget-pourquoi-lr-fait-l-assemblee-buissonniere-20-10-2022-2494617_20.php") ?>">
+            <img class="mx-2 my-3 img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="144" height="34" data-src="<?= asset_url() ?>imgs/media/le-point.png" alt="Le Point">
+          </span>
           <span class="url_obf" url_obf="<?= url_obfuscation("https://www.tv78.com/78-journal-info-yvelines-actu-edition-25-janvier-2021/") ?>">
             <img class="mx-2 my-3 img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="150" height="72" data-src="<?= asset_url() ?>imgs/media/tv78.png" alt="TV 78">
           </span>
