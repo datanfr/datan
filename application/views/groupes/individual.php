@@ -207,29 +207,56 @@
                   <div class="row mt-4">
                     <div class="col-12">
                       <div class="text-center">
-                        <a class="btn btn-primary" id="btn-ranking" data-toggle="collapse" href="#collapseParticipation" role="button" aria-expanded="false" aria-controls="collapseParticipation">
+                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalParticipation">
                           Voir l'historique
-                        </a>
+                        </button>
                       </div>
-                      <div class="collapse mt-3" id="collapseParticipation">
-                        <table class="table">
-                          <thead>
-                            <tr>
-                              <th scope="col">Groupe</th>
-                              <th scope="col">Legislature</th>
-                              <th scope="col">Score</th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            <?php foreach ($stats_history['participation'] as $group): ?>
-                              <tr>
-                                <th scope="row"><?= $group['libelle'] ?></th>
-                                <td><?= $group['legislature'] ?></td>
-                                <td><?= round($group['value'] * 100) ?> %</td>
-                              </tr>
-                            <?php endforeach; ?>
-                          </tbody>
-                        </table>
+                      <!-- Modal -->
+                      <div class="modal fade" id="modalParticipation" tabindex="-1" role="dialog" aria-labelledby="modalParticipationTitle" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <span class="h5 modal-title font-weight-bold" id="exampleModalLongTitle">Historique de participation pour <?= $groupe['libelleAbrev'] ?></span>
+                              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                              </button>
+                            </div>
+                            <div class="modal-body p-0">
+                              <div class="container-fluid">
+                                <div class="row bar-container stats" style="margin-left: -15px; margin-right: -15px;">
+                                  <div class="col-10 offset-2">
+                                    <div class="chart">
+                                      <div class="chart-grid">
+                                        <div id="ticks">
+                                          <div class="tick" style="height: 50%;"><p>100 %</p></div>
+                                          <div class="tick" style="height: 50%;"><p>50 %</p></div>
+                                          <div class="tick" style="height: 0;"><p>0 %</p></div>
+                                        </div>
+                                      </div>
+                                      <div class="bar-chart d-flex flex-row justify-content-between align-items-end">
+                                        <?php foreach ($stats_history['participation'] as $group): ?>
+                                          <div class="bars mx-1 mx-md-3" style="height: <?= round($group['value'] * 100) ?>%">
+                                            <span class="score"><?= round($group['value'] * 100) ?>%</span>
+                                          </div>
+                                        <?php endforeach; ?>
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <div class="col-10 offset-2 d-flex justify-content-between mt-2">
+                                    <?php foreach ($stats_history['participation'] as $group): ?>
+                                      <div class="legend-element d-flex align-items-center justify-content-center">
+                                        <span class="font-weight-bold"><?= $group['libelleAbrev'] ?></span>
+                                      </div>
+                                    <?php endforeach; ?>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="modal-footer">
+                              <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+                            </div>
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </div>

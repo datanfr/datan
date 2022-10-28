@@ -215,6 +215,9 @@ body:not(.pg-mentions) #tarteaucitronIcon {
       color: #fff;
     }
   }
+  &.history{
+     background-color: #E8E8E8;
+  }
   &.election{
     flex-grow: 1;
     .title{
