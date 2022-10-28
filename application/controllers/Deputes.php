@@ -447,7 +447,7 @@
           "async" => TRUE
         ),
         array(
-          "url" => "https://unpkg.com/flickity@2/dist/flickity.min.css",
+          "url" => "https://unpkg.com/flickity@2.3.0/dist/flickity.min.css",
           "async" => TRUE
         )
       );
@@ -550,7 +550,7 @@
           "async" => TRUE
         ),
         array(
-          "url" => "https://unpkg.com/flickity@2/dist/flickity.min.css",
+          "url" => "https://unpkg.com/flickity@2.3.0/dist/flickity.min.css",
           "async" => TRUE
         )
       );
