@@ -431,7 +431,7 @@ document.addEventListener('DOMContentLoaded', function(){
         var element = this.getElementsAtEvent(e);
         var idx = element[0]['_index'];
         var group = libelles[idx];
-        location.href = 'https://datan.fr/groupes/' + group;
+        location.href = 'https://datan.fr/groupes/legislature-16/' + group;
       }
     },
     hover: {
