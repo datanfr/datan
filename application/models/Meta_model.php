@@ -91,7 +91,7 @@
           if ($data['vote']['title'] == 'final') {
             $img = "https://og-image-datan.vercel.app/" . str_replace(" ", "%20", $data['vote']['title']);
           } else {
-            $img = "https://og-image-datan.vercel.app/" . str_replace(" ", "%20", ucfirst($data['vote']['titre']));
+            $img = "https://og-image-datan.vercel.app/" . str_replace(" ", "%20", ucfirst($data['vote']['title']));
           }
           $img .= "?voteN=" . $data['vote']['voteNumero'];
           $img .= "&legislature=" . $data['vote']['legislature'];
