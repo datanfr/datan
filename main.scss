@@ -2076,9 +2076,16 @@ ul.ui-menu{
 }
 /*
 ################
-               PAGE GROUPE INDIVIDUAL (pg-groupe-individual)
+               PAGE GROUPES STATS
 ################
 */
+.pg-groupe-stats{
+  h1 {
+    font-size: $h2-font-size;
+    font-weight: 800;
+    color: $text-gray;
+  }
+}
 /*
 ################
                PAGE DEPUTE/GROUPES VOTES DATAN (pg-depute-votes) (decryptes and all)
