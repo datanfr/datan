@@ -14,7 +14,7 @@
   <?php if (!empty($groupe['couleurAssociee'])): ?>
     <div class="liseret-groupe" style="background-color: <?= $groupe['couleurAssociee'] ?>"></div>
   <?php endif; ?>
-  <div class="d-none d-lg-none justify-content-between align-items-center sticky-top p-3" data-toggle="modal" data-target="#filterModal" id="filterBanner" style="top: 100px">
+  <div class="d-none d-lg-none justify-content-between align-items-center sticky-top p-3" data-toggle="modal" data-target="#filterModal" id="filterBanner" style="top: 50px">
     <span class="text-white font-weight-bold">Filtrer par catégorie</span>
     <?= file_get_contents(asset_url().'imgs/icons/funnel-fill.svg') ?>
   </div>
