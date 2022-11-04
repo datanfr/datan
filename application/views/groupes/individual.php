@@ -6,7 +6,7 @@
   <div class="row">
     <div class="col-12 col-md-8 col-lg-4 offset-md-2 offset-lg-0">
       <?php $this->load->view('groupes/partials/card_individual.php', array('tag' => 'h1')) ?>
-    </div> <!-- END COL -->
+    </div>
     <div class="col-md-10 col-lg-8 offset-md-1 offset-lg-0 pl-lg-5">
       <!-- BIO & ELECTION -->
       <div class="bloc-bio mt-5">
@@ -601,71 +601,4 @@
     </div>
   </div>
 </div> <!-- END CONTAINER -->
-<!-- AUTRES DEPUTES -->
-<div class="container-fluid pg-groupe-individual bloc-others-container mt-5">
-  <div class="container bloc-others">
-    <?php if ($groupe['libelleAbrev'] != "NI"): ?>
-      <div class="row">
-        <div class="col-12">
-          <h2>Président du groupe <?= name_group($title) ?></h2>
-          <div class="row mt-3">
-            <div class="col-6 col-md-3 py-2">
-              <a class="membre no-decoration underline" href="<?= base_url(); ?>deputes/<?= $president['dptSlug'] ?>/depute_<?= $president['nameUrl'] ?>"><?= $president['nameFirst']." ".$president['nameLast'] ?></a>
-            </div>
-          </div>
-        </div>
-      </div>
-    <?php endif; ?>
-    <div class="row">
-      <div class="col-12">
-        <h2>Les députés membres du groupe <?= name_group($title) ?></h2>
-        <div class="row mt-3">
-          <?php foreach ($membres as $key => $membre): ?>
-            <div class="col-6 col-md-3 py-2">
-              <a class="membre no-decoration underline" href="<?= base_url(); ?>deputes/<?= $membre['dptSlug'] ?>/depute_<?= $membre['nameUrl'] ?>"><?= $membre['nameFirst']." ".$membre['nameLast'] ?></a>
-            </div>
-          <?php endforeach; ?>
-        </div>
-        <div class="mt-3">
-          <a href="<?= base_url() ?>groupes/legislature-<?= $groupe['legislature'] ?>/<?= mb_strtolower($groupe['libelleAbrev']) ?>/membres">Voir tous les députés membres du groupe <?= $groupe['libelleAbrev'] ?></a>
-        </div>
-      </div>
-    </div>
-    <?php if (!empty($apparentes)): ?>
-      <div class="row">
-        <div class="col-12">
-          <h2>Tous les députés apparentés du groupe <?= name_group($title) ?></h2>
-          <div class="row mt-3">
-            <?php foreach ($apparentes as $key => $mp): ?>
-              <div class="col-6 col-md-3 py-2">
-                <a class="membre no-decoration underline" href="<?= base_url(); ?>deputes/<?= $mp['dptSlug'] ?>/depute_<?= $mp['nameUrl'] ?>"><?= $mp['nameFirst']." ".$mp['nameLast'] ?></a>
-              </div>
-            <?php endforeach; ?>
-          </div>
-          <div class="mt-3">
-            <a href="<?= base_url() ?>groupes/legislature-<?= $groupe['legislature'] ?>/<?= mb_strtolower($groupe['libelleAbrev']) ?>/membres">Voir tous les députés apparentés au groupe <?= $groupe['libelleAbrev'] ?></a>
-          </div>
-        </div>
-      </div>
-    <?php endif; ?>
-    <div class="row">
-      <div class="col-12">
-        <h2>Tous les groupes parlementaires <?= $legislature == legislature_current() ? "en activité" : "" ?> de la <?= $groupe['legislature'] ?><sup>ème</sup> législature</h2>
-        <div class="row mt-3">
-          <?php foreach ($groupesActifs as $group): ?>
-            <div class="col-6 col-md-4 py-2">
-              <a class="membre no-decoration underline" href="<?= base_url() ?>groupes/legislature-<?= $group['legislature'] ?>/<?= mb_strtolower($group['libelleAbrev']) ?>"><?= name_group($group['libelle'])." (".$group['libelleAbrev'].")" ?></a>
-            </div>
-          <?php endforeach; ?>
-        </div>
-        <div class="mt-3">
-          <?php if ($groupe['legislature'] == legislature_current()): ?>
-            <a href="<?= base_url() ?>groupes">Voir tous les groupes parlementaires de la <?= $groupe['legislature'] ?><sup>ème</sup> législature</a>
-            <?php else: ?>
-            <a href="<?= base_url() ?>groupes/legislature-<?= $groupe['legislature'] ?>">Voir tous les groupes parlementaires de la <?= $groupe['legislature'] ?><sup>ème</sup> législature</a>
-          <?php endif; ?>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
+<?php $this->load->view('groupes/partials/mps_footer.php') ?>
