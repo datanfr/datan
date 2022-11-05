@@ -24,7 +24,12 @@
         <?= file_get_contents(asset_url().'imgs/icons/arrow_left.svg') ?>
         Retour profil
       </a>
-      <h1 class="mb-0 mt-4">Les statistiques du groupe <?= name_group($title) ?></h1>
+      <h1 class="mb-4 mt-4">Les statistiques du groupe <?= name_group($title) ?></h1>
+      <p>Sur cette page, vous trouverez le détail des <b>statistiques de vote</b> du groupe <?= name_group($title) ?>.</p>
+      <p>Quelle est la cohésion interne du groupe ? Les députés du groupe participent-ils souvent aux scrutins ? Quelle est la proximité idéologique entre le groupe <?= name_group($title) ?> et les autres groupes de l'Assemblée nationale ?</p>
+      <p>Vous trouverez sur cette page un <b>historique</b> des statistiques du groupe <?= name_group($title) ?>. Ce groupe est présent à l'Assemblée nationale depuis XXX (XXème législature). Pour avoir plus d'information sur l'historique du groupe, <a href="#">cliquez ici</a>.</p>
+      <p>Ces statistiques sont développées par l'équipe de Datan. Pour plus d'information sur nos statistiques, <a href="<?= base_url() ?>statistiques/aide">cliquez ici</a>.</p>
+      <h2>Historique du groupe <?= name_group($title) ?> [A faire]</h2>
     </div>
   </div>
 </div>
