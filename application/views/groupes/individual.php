@@ -597,7 +597,6 @@
             </div>
           </div> <!-- END BLOC SOCIAL MEDIA -->
         <?php endif; ?>
-
     </div>
   </div>
 </div> <!-- END CONTAINER -->

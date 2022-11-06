@@ -23,7 +23,7 @@
         </div>
         <?php if ($groups_rose): ?>
           <div class="col-12">
-            <?php $this->load->view('groupes/partials/card_home.php', array('groupe' => $rose_first, 'tag' => 'span', 'active' => TRUE, 'stats' => "Score : " . $rose_first['rose_index'] . " ans", 'cat' => true)) ?>
+            <?php $this->load->view('groupes/partials/card_home.php', array('groupe' => $rose_first, 'tag' => 'span', 'active' => TRUE, 'stats' => "Score : " . $rose_first['rose_index'] . " ans", 'cat' => false)) ?>
           </div>
           <div class="col-12 mt-5">
             <p>Découvrez ci-dessous le classement des groupes en fonction de leur représentativité sociale.</p>

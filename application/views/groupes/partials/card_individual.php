@@ -31,7 +31,9 @@
           <?php if ($groupe['libelleAbrev'] != "NI"): ?>
             <li>
               <div class="label">Président</div>
-              <div class="value"><?= $president['nameFirst']." ".$president['nameLast'] ?></div>
+              <div class="value">
+                <a class="no-decoration underline" href="<?= base_url() ?>deputes/<?= $president['dptSlug'] ?>/depute_<?= $president['nameUrl'] ?>"><?= $president['nameFirst']." ".$president['nameLast'] ?></a>
+              </div>
             </li>
             <li>
               <div class="label">Position</div>
