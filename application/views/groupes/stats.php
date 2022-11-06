@@ -27,9 +27,19 @@
       <h1 class="mb-4 mt-4">Les statistiques du groupe <?= name_group($title) ?></h1>
       <p>Sur cette page, vous trouverez le détail des <b>statistiques de vote</b> du groupe <?= name_group($title) ?>.</p>
       <p>Quelle est la cohésion interne du groupe ? Les députés du groupe participent-ils souvent aux scrutins ? Quelle est la proximité idéologique entre le groupe <?= name_group($title) ?> et les autres groupes de l'Assemblée nationale ?</p>
-      <p>Vous trouverez sur cette page un <b>historique</b> des statistiques du groupe <?= name_group($title) ?>. Ce groupe est présent à l'Assemblée nationale depuis XXX (XXème législature). Pour avoir plus d'information sur l'historique du groupe, <a href="#">cliquez ici</a>.</p>
+      <p>Vous trouverez sur cette page un <b>historique</b> des statistiques du groupe <?= name_group($title) ?>. Pour avoir plus d'information sur l'historique du groupe, <a href="#link-stats">cliquez ici</a>.</p>
       <p>Ces statistiques sont développées par l'équipe de Datan. Pour plus d'information sur nos statistiques, <a href="<?= base_url() ?>statistiques/aide">cliquez ici</a>.</p>
-      <h2>Historique du groupe <?= name_group($title) ?> [A faire]</h2>
+      <h2 class="anchor" id="link-stats">Historique du groupe <?= name_group($title) ?></h2>
+      <p>Sur cette page, vous trouvez un historique des statistiques du groupe. Pour chaque groupe politique, nous avons répertorié les anciens ou nouveaux groupes qui leur sont liés.</p>
+      <p>Sur Datan, nous récupérons les statistiques de l'Assemblée nationale depuis la 14<sup>ème</sup> législature (2012).</p>
+      <p>Vous trouverez ci-dessous la liste des groupes analysés sur le site Datan et liés au groupe <?= name_group($title) ?>.</p>
+      <div class="row">
+        <?php foreach ($history_list as $key => $value): ?>
+          <div class="col-6">
+            <?php $this->load->view('groupes/partials/card_home.php', array('groupe' => $value, 'tag' => 'span', 'cat' => $value['legislature'].'<sup>ème</sup> législature')) ?>
+          </div>
+        <?php endforeach; ?>
+      </div>
     </div>
   </div>
 </div>

@@ -165,6 +165,10 @@
       return $query->row_array();
     }
 
+    public function get_groupe_by_id($id){
+      return $this->db->get_where('organes', array('uid' => $id))->row_array();
+    }
+
     public function get_groupes_president($groupe_uid, $legislature, $active){
       if ($active) {
         $where = array(
