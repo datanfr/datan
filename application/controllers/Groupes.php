@@ -598,6 +598,24 @@
 
       $data = $this->get_data($data);
 
+      $data['history'] = $this->groupes_model->get_history($data['groupe']['uid']);
+      foreach ($data['history'] as $key => $value) {
+        if ($value != $data['groupe']['uid']) {
+          $get = $this->groupes_model->get_groupe_by_id($value);
+          if ($get['legislature'] >= 14) {
+            $data['history_list'][] = $get;
+          }
+        }
+      }
+
+      function date_compare($a, $b) {
+        $t1 = strtotime($a['dateDebut']);
+        $t2 = strtotime($b['dateDebut']);
+        return $t1 - $t2;
+      }
+      usort($data['history_list'], 'date_compare');
+
+
       // Meta
       $data['url'] = $this->meta_model->get_url();
       if ($data['groupe']['libelleAbrev'] == "NI") {

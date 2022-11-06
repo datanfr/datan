@@ -110,7 +110,7 @@
           <div class="col-md-6 py-4">
             <h2>GROUPE AU HASARD</h2>
             <div class="d-flex justify-content-center">
-              <?php $this->load->view('groupes/partials/card_home.php', array('groupe' => $groupe_random, 'tag' => 'span', 'active' => TRUE, 'cat' => true)) ?>
+              <?php $this->load->view('groupes/partials/card_home.php', array('groupe' => $groupe_random, 'tag' => 'span', 'active' => TRUE, 'cat' => $groupe_random['effectif'] . ' membres')) ?>
             </div>
           </div>
         <?php endif; ?>
