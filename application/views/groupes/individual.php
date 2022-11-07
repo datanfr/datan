@@ -190,7 +190,7 @@
                   <div class="col-lg-8 infos mt-4 mt-lg-2">
                     <div class="texte ml-md-3 pl-md-3 mt-md-0 mt-3">
                       <p>
-                        En moyenne, <?= $stats['participation']['value'] ?>% <?php if ($groupe['libelleAbrev'] != "NI"): ?>des députés du groupe <?= $groupe['libelleAbrev'] ?><?php else: ?>des <?= mb_strtolower($title) ?><?php endif; ?> <?= $active ? 'prennent' : 'prenaient' ?> part aux scrutins solennels.
+                        En moyenne, <?= $stats['participation']['value'] ?>% <?php if ($groupe['libelleAbrev'] != "NI"): ?>des députés du groupe <?= $groupe['libelleAbrev'] ?><?php else: ?>des <?= mb_strtolower($title) ?><?php endif; ?> <?= $active ? 'prennent' : 'prenaient' ?> part aux scrutins publics de l'Assemblée nationale.
                       </p>
                       <p>
                         <?php if ($groupe['libelleAbrev'] != "NI"): ?>Le groupe <b><?= $active ? 'participe' : 'participait' ?> <?php else: ?>Les <?= mb_strtolower($title) ?> <b>participent <?php endif; ?> <?= $edito_participation ?></b> que la moyenne <?= $active ? "des autres groupes" : "de tous les groupes de l'Assemblée" ?>, qui est <?php if ($edito_participation == "autant"): ?>
@@ -198,7 +198,7 @@
                         <?php endif; ?> de <?= $participationAverage ?> %.
                       </p>
                       <p>
-                        Les votes solennels sont les votes considérés comme importants pour lesquels les députés connaissent à l'avance le jour et l'heure du vote.
+                        Ce score de participation prend en compte tous les scrutins publics. Ce score est faible du fait de l'organisation du travail à l'Assemblée nationale. Pour découvrir d'autres scores de participation, <a href="<?= base_url() ?>/statistiques/groupes-participation">cliquez ici</a>.
                       </p>
                     </div>
                   </div>
