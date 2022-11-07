@@ -2086,9 +2086,12 @@ ul.ui-menu{
     color: $text-gray;
   }
   h2{
-    font-size: $h5-font-size;
+    font-size: $h2-font-size;
     font-weight: 800;
     color: $text-gray;
+  }
+  .card{
+    border: none;
   }
 }
 /*

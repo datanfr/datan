@@ -39,6 +39,34 @@
       return $data;
     }
 
+    public function get_data_stats($data){
+      $data['stats'] = $this->groupes_model->get_stats($data['groupe']['uid']);
+      $data['statsAverage'] = $this->groupes_model->get_stats_avg($data['groupe']['legislature']);
+      if (!empty($data['stats']['cohesion'])) {
+        $data['cohesionAverage'] = $data['statsAverage']['cohesion'];
+        $data['edito_cohesion'] = $this->groupes_edito->cohesion($data['stats']['cohesion']['value'], $data['cohesionAverage']);
+        $data['no_cohesion'] = FALSE;
+      } else {
+        $data['no_cohesion'] = TRUE;
+      }
+      if (!empty($data['stats']['participation'])) {
+        $data['participationAverage'] = $data['statsAverage']['participation'];
+        $data['edito_participation'] = $this->groupes_edito->participation($data['stats']['participation']['value'], $data['participationAverage']);
+        $data['no_participation'] = FALSE;
+      } else {
+        $data['no_participation'] = TRUE;
+      }
+      if (!empty($data['stats']['majority'])) {
+        $data['majoriteAverage'] = $data['statsAverage']['majority'];
+        $data['edito_majorite'] = $this->groupes_edito->majority($data['stats']['majority']['value'], $data['majoriteAverage']);
+        $data['no_majorite'] = FALSE;
+      } else {
+        $data['no_majorite'] = TRUE;
+      }
+
+      return $data;
+    }
+
     //INDEX - Homepage with all groups//
     public function index($legislature = NULL){
 
@@ -212,43 +240,11 @@
       $data['groupe'] = $this->groupes_model->get_groupe_social_media($data['groupe']);
 
       //Query 3 Statistiques
-      $data['stats'] = $this->groupes_model->get_stats($data['groupe']['uid']);
+      $data = $this->get_data_stats($data);
       if ($data['history']) {
         $data['stats_history'] = $this->groupes_model->get_stats_history($data['history']);
       }
-      $data['statsAverage'] = $this->groupes_model->get_stats_avg($legislature);
 
-      if (!empty($data['stats']['cohesion'])) {
-        $data['cohesionAverage'] = $data['statsAverage']['cohesion'];
-        $data['edito_cohesion'] = $this->groupes_edito->cohesion($data['stats']['cohesion']['value'], $data['cohesionAverage']);
-        $data['no_cohesion'] = FALSE;
-      } else {
-        $data['no_cohesion'] = TRUE;
-      }
-
-      if (!empty($data['stats']['participation'])) {
-        $data['participationAverage'] = $data['statsAverage']['participation'];
-        $data['edito_participation'] = $this->groupes_edito->participation($data['stats']['participation']['value'], $data['participationAverage']);
-        $data['no_participation'] = FALSE;
-      } else {
-        $data['no_participation'] = TRUE;
-      }
-
-      if (!empty($data['stats']['majority'])) {
-        $data['majoriteAverage'] = $data['statsAverage']['majority'];
-        $data['edito_majorite'] = $this->groupes_edito->majority($data['stats']['majority']['value'], $data['majoriteAverage']);
-        $data['no_majorite'] = FALSE;
-      } else {
-        $data['no_majorite'] = TRUE;
-      }
-
-      if (isset($data['stats_majorite'])) {
-        $data['stats_majorite_moyenne'] = $this->groupes_model->get_stats_majorite_moyenne($data['active']);
-        $data['edito_majorite'] = $this->groupes_edito->majorite($data['stats_majorite']['score'], $data['stats_majorite_moyenne']['moyenne']);
-        $data['no_majorite'] = FALSE;
-      } else {
-        $data['no_majorite'] = TRUE;
-      }
       // ACCORD AVEC GROUPES
       $data['accord_groupes_actifs'] = $this->groupes_model->get_stats_proximite($data['groupe']['uid']); // PROXIMITÉ TOUS LES GROUPES
       $data['accord_groupes_all'] = $this->groupes_model->get_stats_proximite_all($data['groupe']['uid']);
@@ -598,6 +594,7 @@
 
       $data = $this->get_data($data);
 
+      // Get history data
       $data['history'] = $this->groupes_model->get_history($data['groupe']['uid']);
       foreach ($data['history'] as $key => $value) {
         if ($value != $data['groupe']['uid']) {
@@ -607,6 +604,11 @@
           }
         }
       }
+      $data['stats_history'] = $this->groupes_model->get_stats_history($data['history']);
+
+      // Get individual stats data
+      $data = $this->get_data_stats($data);
+
 
       function date_compare($a, $b) {
         $t1 = strtotime($a['dateDebut']);
