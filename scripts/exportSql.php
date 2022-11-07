@@ -9,34 +9,35 @@ EXPORT_TABLES($_SERVER['DATABASE_HOST'], $_SERVER['DATABASE_USERNAME'], $_SERVER
 function EXPORT_TABLES($host, $user, $pass, $name, $tables = false, $backup_name = false)
 {
     $tablesData = array(
-        'categories',
-        'circos',
-        'cities_adjacentes',
-        'cities_infos',
-        'cities_mayors',
-        'departement',
-        'elect_legislatives_infos',
-        'elect_legislatives_results',
-        'elect_legislatives_cities',
-        'elect_pres_2',
-        'elect_2019_europe',
-        'elect_2019_europe_clean',
-        'elect_2019_europe_listes',
-        'elect_deputes_candidats',
-        'elect_libelle',
-        'famsocpro',
-        'faq_categories',
-        'faq_posts',
-        'fields',
-        'hatvp',
-        'insee',
-        'parrainages',
-        'posts',
-        'quizz',
-        'readings',
-        'regions',
-        'votes_datan',
-        'votes_datan_requested'
+      'categories',
+      'circos',
+      'cities_adjacentes',
+      'cities_infos',
+      'cities_mayors',
+      'departement',
+      'elect_legislatives_infos',
+      'elect_legislatives_results',
+      'elect_legislatives_cities',
+      'elect_pres_2',
+      'elect_2019_europe',
+      'elect_2019_europe_clean',
+      'elect_2019_europe_listes',
+      'elect_deputes_candidats',
+      'elect_libelle',
+      'famsocpro',
+      'faq_categories',
+      'faq_posts',
+      'fields',
+      'hatvp',
+      'insee',
+      'parrainages',
+      'posts',
+      'quizz',
+      'readings',
+      'regions',
+      'votes_datan',
+      'votes_datan_requested',
+      'mysql_v'
     );
     $mysqli = new mysqli($host, $user, $pass, $name);
     $mysqli->select_db($name);
@@ -100,7 +101,7 @@ function EXPORT_TABLES($host, $user, $pass, $name, $tables = false, $backup_name
                     }
                 }
                 $content .= "\n\n\n";
-            } 
+            }
         }
         $res = $mysqli->query('SHOW CREATE TABLE candidate_full');
         $TableMLine = $res->fetch_row();
