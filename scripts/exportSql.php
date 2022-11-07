@@ -36,7 +36,8 @@ function EXPORT_TABLES($host, $user, $pass, $name, $tables = false, $backup_name
         'readings',
         'regions',
         'votes_datan',
-        'votes_datan_requested'
+        'votes_datan_requested',
+        'mysql_v'
     );
     $mysqli = new mysqli($host, $user, $pass, $name);
     $mysqli->select_db($name);
@@ -100,7 +101,7 @@ function EXPORT_TABLES($host, $user, $pass, $name, $tables = false, $backup_name
                     }
                 }
                 $content .= "\n\n\n";
-            } 
+            }
         }
         $res = $mysqli->query('SHOW CREATE TABLE candidate_full');
         $TableMLine = $res->fetch_row();
