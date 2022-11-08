@@ -31,13 +31,26 @@
       <p>Ces statistiques sont développées par l'équipe de Datan. Pour plus d'information sur nos statistiques, <a href="<?= base_url() ?>statistiques/aide">cliquez ici</a>.</p>
       <div class="mt-5 test-border">
         <h2>Participation aux votes</h2>
-        <p>En moyenne, <span class="font-weight-bold text-primary"><?= $stats['participation']['value'] ?>%</span> des députés du groupe <i><?= name_group($title) ?></i> prennent part aux scrutins solennels. Le groupe participe <?= $edito_participation ?> que la moyenne des autres groupes, qui est de 42%.</p>
+        <p>En moyenne, <span class="font-weight-bold text-primary"><?= $stats['participation']['value'] ?>%</span> des députés du groupe <i><?= name_group($title) ?></i> prennent part aux scrutins solennels. Le groupe participe <?= $edito_participation ?> que la moyenne des autres groupes, qui est de <?= $statsAverage['participation'] ?>%.</p>
         <p>Retrouvez ci-dessous l'historique du taux de participation aux scrutins du groupe <i><?= name_group($title) ?></i>.</p>
         <div class="card">
           <div class="card-body pb-0">
             <h3>Historique par législature</h3>
             <p>CCCC</p>
-            <?php $this->load->view('groupes/partials/stats_history.php', array('stats_history_chart' => $stats_history['participation'])) ?>
+            <?php $this->load->view('groupes/partials/stats_history.php', array('stats_history_chart' => $stats_history['participation'], 'type' => 'participation')) ?>
+          </div>
+        </div>
+      </div>
+      <div class="mt-5 test-border">
+        <h2>Cohésion au sein du groupe</h2>
+        <p>Le taux de cohésion du groupe <i><?= name_group($title) ?></i> est de <span class="font-weight-bold text-primary"><?= round($stats['cohesion']['value'], 2) ?></span>. Plus le score de cohésion est proche de 1, plus le groupe est uni quand il s'agit de voter dans l'hémicycle.</p>
+        <p>Le groupe <i><?= name_group($title) ?></i> peut être considéré comme <?= $edito_cohesion['absolute'] ?> soudé quand il s'agit de voter. En effet, le groupe est <?= $edito_cohesion['relative'] ?> soudé que la moyenne des autres groupes, qui est de <?= round($statsAverage['cohesion'], 2) ?>.</p>
+        <p>Retrouvez ci-dessous l'historique du taux de cohésion du groupe groupe <i><?= name_group($title) ?></i>.</p>
+        <div class="card">
+          <div class="card-body pb-0">
+            <h3>Historique par législature</h3>
+            <p>CCCC</p>
+            <?php $this->load->view('groupes/partials/stats_history.php', array('stats_history_chart' => $stats_history['cohesion'], 'type' => 'cohesion')) ?>
           </div>
         </div>
       </div>
