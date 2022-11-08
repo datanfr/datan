@@ -19,8 +19,10 @@
   </div>
   <div class="col-10 offset-2 d-flex justify-content-between mt-2">
     <?php foreach ($stats_history_chart as $group): ?>
-      <div class="legend-element d-flex align-items-center justify-content-center">
-        <span class="font-weight-bold"><?= $group['libelleAbrev'] ?></span>
+      <div class="legend-element text-center">
+        <p class="font-weight-bold"><?= $group['libelleAbrev'] ?></p>
+        <p class="font-italic h6 mb-0"><?= $group['legislature'] ?><sup>ème</sup> législature</p>
+        <p class="font-italic h6">(<?= date('Y', strtotime($group['dateDebut'])) ?> - <?= $group['dateFin'] ? date('Y', strtotime($group['dateFin'])) : 'En cours' ?>)</p>
       </div>
     <?php endforeach; ?>
   </div>
