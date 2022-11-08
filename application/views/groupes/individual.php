@@ -271,7 +271,7 @@
                   <div class="col-lg-8 infos mt-4 mt-lg-2">
                     <div class="texte ml-md-3 pl-md-3 mt-md-0 mt-3">
                       <p>
-                        Avec un taux de cohésion de <?= round($stats['cohesion']['value'], 2) ?>,<?php if ($groupe['libelleAbrev'] != "NI"): ?> le groupe <?= $groupe['libelleAbrev'] ?> peut être considéré<?php else: ?> les <?= mb_strtolower($title) ?> peuvent être considérés<?php endif; ?> comme <b><?= $edito_cohesion["absolute"] ?> soudé<?php if ($groupe['libelleAbrev'] == "NI"): ?>s<?php endif; ?></b> quand il <?= $active ? "s'agit" : "s'agissait" ?> de voter.
+                        Avec un taux de cohésion de <?= round($stats['cohesion']['value'], 2) ?>,<?php if ($groupe['libelleAbrev'] != 'NI'): ?> le groupe <?= $groupe['libelleAbrev'] ?> peut être considéré<?php else: ?> les <?= mb_strtolower($title) ?> peuvent être considérés<?php endif; ?> comme <b><?= $edito_cohesion['absolute'] ?> soudé<?php if ($groupe['libelleAbrev'] == "NI"): ?>s<?php endif; ?></b> quand il <?= $active ? "s'agit" : "s'agissait" ?> de voter.
                       </p>
                       <p>
                         Le groupe <?= $active ? "est" : "était" ?> en effet <b><?= $edito_cohesion['relative'] ?> uni</b> que la moyenne de tous les groupes, qui est de <?= round($cohesionAverage, 2) ?>.

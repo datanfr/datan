@@ -63,7 +63,6 @@
       } else {
         $data['no_majorite'] = TRUE;
       }
-
       return $data;
     }
 
