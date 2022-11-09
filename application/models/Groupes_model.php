@@ -335,12 +335,12 @@
           break;
 
         case 'RE':
-          $groupe['twitter'] = 'LaREM_AN';
+          $groupe['twitter'] = 'DeputesRE';
           $groupe['facebook'] = 'deputesRenaissance';
           break;
 
         case 'RN':
-          $groupe['twitter'] = 'rnational_off';
+          $groupe['twitter'] = 'groupeRN_off';
           $groupe['facebook'] = 'RassemblementNational';
           break;
 
@@ -348,10 +348,11 @@
           $groupe['website'] = 'https://horizonsleparti.fr/';
           $groupe['twitter'] = 'Horizons_AN';
           $groupe['facebook'] = 'horizonsleparti';
+          break;
 
         case 'ECOLO':
           $groupe['website'] = 'https://www.eelv.fr/';
-          $groupe['twitter'] = 'EELV';
+          $groupe['twitter'] = 'EcologistesAN';
           $groupe['facebook'] = 'eelv.fr';
 
         default:
