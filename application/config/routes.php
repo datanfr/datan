@@ -111,7 +111,7 @@ $route['sitemap-partis-politiques-1.xml'] = "sitemap/parties";
 // COMMISSION
 $route['commissions'] = 'commissions/index';
 // GROUPES
-$route['groupes/legislature-(:any)/(:any)/stats'] = 'groupes/individual_stats/$1/$2';
+$route['groupes/legislature-(:any)/(:any)/statistiques'] = 'groupes/individual_stats/$1/$2';
 $route['groupes/legislature-(:any)/(:any)/membres'] = 'groupes/individual_membres/$1/$2';
 $route['groupes/legislature-(:any)/(:any)/votes'] = 'groupes/individual_votes_datan/$1/$2';
 $route['groupes/legislature-(:any)/(:any)/votes/all'] = 'groupes/individual_votes_all/$1/$2';
