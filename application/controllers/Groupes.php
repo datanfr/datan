@@ -605,6 +605,13 @@
       }
       $data['stats_history'] = $this->groupes_model->get_stats_history($data['history']);
 
+      // Remove majoritaire for Majority stats
+      foreach ($data['stats_history']['majority'] as $key => $value) {
+        if ($value['positionPolitique'] === 'Majoritaire') {
+          unset($data['stats_history']['majority'][$key]);
+        }
+      }
+
       // Get individual stats data
       $data = $this->get_data_stats($data);
 
