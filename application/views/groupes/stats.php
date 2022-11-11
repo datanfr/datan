@@ -54,19 +54,22 @@
           </div>
         </div>
       </div>
-      <div class="mt-5 test-border">
-        <h2>Proximité avec la majorité présidentielle</h2>
-        <p>Pour la législature actuelle, le groupe <i><?= name_group($title) ?></i> a voté sur la même ligne que la majorité présidentielle dans <span class="font-weight-bold text-primary"><?= $stats['majority']['value'] ?>%</span> des cas.</p>
-        <p>Le groupe est <?= $edito_majorite ?> proche de la majorité présidentielle que la moyenne des autres groupes politiques, qui est de <?= $statsAverage['majority'] ?>%.</p>
-        <p>Retrouvez ci-dessous l'historique de la proximité avec la majorité présidentielle du groupe <i><?= name_group($title) ?></i>.</p>
-        <div class="card">
-          <div class="card-body pb-0">
-            <h3>Historique par législature</h3>
-            <p>CCCC</p>
-            <?php $this->load->view('groupes/partials/stats_history.php', array('stats_history_chart' => $stats_history['majority'], 'type' => 'pct')) ?>
+      <?php if ($stats_history['majority']): ?>
+        <div class="mt-5 test-border">
+          <h2>Proximité avec la majorité présidentielle</h2>
+
+          <p>Pour la législature actuelle, le groupe <i><?= name_group($title) ?></i> a voté sur la même ligne que la majorité présidentielle dans <span class="font-weight-bold text-primary"><?= $stats['majority']['value'] ?>%</span> des cas.</p>
+          <p>Le groupe est <?= $edito_majorite ?> proche de la majorité présidentielle que la moyenne des autres groupes politiques, qui est de <?= $statsAverage['majority'] ?>%.</p>
+          <p>Retrouvez ci-dessous l'historique de la proximité avec la majorité présidentielle du groupe <i><?= name_group($title) ?></i>.</p>
+          <div class="card">
+            <div class="card-body pb-0">
+              <h3>Historique par législature</h3>
+              <p>CCCC</p>
+              <?php $this->load->view('groupes/partials/stats_history.php', array('stats_history_chart' => $stats_history['majority'], 'type' => 'pct')) ?>
+            </div>
           </div>
         </div>
-      </div>
+      <?php endif; ?>
       <div class="mt-5 test-border">
         <h2 class="anchor" id="link-stats">Historique du groupe <?= name_group($title) ?></h2>
         <p>Sur cette page, vous trouvez un historique des statistiques du groupe. Pour chaque groupe politique, nous avons répertorié les anciens ou nouveaux groupes qui leur sont liés.</p>
