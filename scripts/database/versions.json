@@ -2,5 +2,9 @@
   {
     "version": 1,
     "object": "This is the first version of the database"
+  },
+  {
+    "version": 2,
+    "object": "Create new table: class_groups_month"
   }
 ]
