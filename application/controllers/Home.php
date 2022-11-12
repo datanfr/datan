@@ -29,10 +29,10 @@
       //Get groups (cached)
       if(!in_array($_SERVER['REMOTE_ADDR'], localhost())){
         $this->db->cache_on();
-        $data['groupes'] = $this->groupes_model->get_groupes_all(TRUE, legislature_current());
+        $data['groupes'] = $this->groupes_model->get_groupes_hemicycle();
         $this->db->cache_off();
       } else {
-        $data['groupes'] = $this->groupes_model->get_groupes_all(TRUE, legislature_current());
+        $data['groupes'] = $this->groupes_model->get_groupes_hemicycle();
       }
       $data['groupesSorted'] = $this->groupes_model->get_groupes_sorted($data['groupes']);
 
@@ -95,7 +95,7 @@
       $data['critical_css'] = "index";
       $data['css_to_load']= array(
         array(
-          "url" => "https://unpkg.com/flickity@2/dist/flickity.min.css",
+          "url" => "https://unpkg.com/flickity@2.3.0/dist/flickity.min.css",
           "async" => TRUE
         )
       );

@@ -35,6 +35,17 @@
       return $query->result_array();
     }
 
+    public function get_groupes_hemicycle(){
+      $query = $this->db->query('SELECT *, o.legislature AS legislature, date_format(dateDebut, "%d %M %Y") as dateDebutFR, e.effectif,
+        CASE WHEN o.libelle = "Non inscrit" THEN "Députés non inscrits" ELSE o.libelle END AS libelle
+        FROM organes o
+        LEFT JOIN groupes_effectif e ON o.uid = e.organeRef
+        WHERE o.legislature = '.$this->db->escape(legislature_current()).' AND o.coteType = "GP" AND o.dateFin IS NULL
+        ORDER BY e.effectif DESC, o.libelle
+      ');
+      return $query->result_array();
+    }
+
     public function get_all_groupes_majority($legislature = NULL){
       $this->db->where(array('coteType' => 'GP', 'positionPolitique' => 'majoritaire'));
       if ($legislature) {
@@ -94,7 +105,7 @@
     public function get_groupes_sorted($groupes){
       $groupesLibelle = array_column($groupes, 'libelleAbrev');
       function cmp(array $a) {
-        $order = array("GDR-NUPES", "LFI-NUPES", "SOC", "ECOLO", "RE", "DEM", "HOR", "LIOT", "LR", "RN");
+        $order = array("GDR-NUPES", "LFI-NUPES", "SOC", "ECOLO", "RE", "DEM", "HOR", "LIOT", "LR", "RN", "NI");
         foreach ($order as $x) {
           $y[] = array_search($x, $a);
         }
@@ -328,12 +339,12 @@
           break;
 
         case 'RE':
-          $groupe['twitter'] = 'LaREM_AN';
+          $groupe['twitter'] = 'DeputesRE';
           $groupe['facebook'] = 'deputesRenaissance';
           break;
 
         case 'RN':
-          $groupe['twitter'] = 'rnational_off';
+          $groupe['twitter'] = 'groupeRN_off';
           $groupe['facebook'] = 'RassemblementNational';
           break;
 
@@ -341,10 +352,11 @@
           $groupe['website'] = 'https://horizonsleparti.fr/';
           $groupe['twitter'] = 'Horizons_AN';
           $groupe['facebook'] = 'horizonsleparti';
+          break;
 
         case 'ECOLO':
           $groupe['website'] = 'https://www.eelv.fr/';
-          $groupe['twitter'] = 'EELV';
+          $groupe['twitter'] = 'EcologistesAN';
           $groupe['facebook'] = 'eelv.fr';
 
         default:
