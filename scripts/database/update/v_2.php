@@ -31,6 +31,7 @@
       `legislature` INT(2) NOT NULL ,
       `active` INT(1) NOT NULL ,
       `dateValue` DATE NOT NULL ,
+      `stat`VARCHAR(25) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL ,
       `value` DECIMAL(6,3) NOT NULL ,
       `votes` BIGINT(21) NOT NULL ,
       `dateMaj` DATE NOT NULL
