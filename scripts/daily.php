@@ -2395,6 +2395,21 @@ class Script
           $this->insertAll('class_groups_month', $fields, $insertCohesion);
         }
 
+        /// --- 2) MAJORITE --- ///
+        $majorityGroups = $this->majorityGroups();
+        $majorityGroups = implode('","', $majorityGroups);
+        $majorityQuery = $this->bdd->query('SELECT ga.organeRef, ga.legislature, CONCAT(DATE_FORMAT(vi.dateScrutin, "%Y-%m"), "-01") AS dateValue, ROUND(AVG(ga.accord), 3) AS mean,  COUNT(ga.accord) AS n, vi.dateScrutin
+          FROM groupes_accord ga
+          LEFT JOIN votes_info vi ON ga.voteNumero = vi.voteNumero AND ga.legislature = vi.legislature
+          WHERE ga.organeRefAccord IN ("'.$majorityGroups.'") AND ga.organeRef = "' . $uid . '"
+          GROUP BY YEAR(vi.dateScrutin), MONTH(vi.dateScrutin)
+          ORDER BY YEAR(vi.dateScrutin), MONTH(vi.dateScrutin)
+        ');
+        while ($majority = $majorityQuery->fetch()) {
+          $insertMajority = array($uid, $group['legislature'], $active, $majority['dateValue'], 'cohesion', $majority['mean'], $majority['n'], $this->dateMaj);
+          $this->insertAll('class_groups_month', $fields, $insertMajority);
+        }
+
       }
 
     }
