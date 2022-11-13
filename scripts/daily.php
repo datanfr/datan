@@ -2398,7 +2398,7 @@ class Script
         /// --- 2) MAJORITE --- ///
         $majorityGroups = $this->majorityGroups();
         $majorityGroups = implode('","', $majorityGroups);
-        $majorityQuery = $this->bdd->query('SELECT ga.organeRef, ga.legislature, CONCAT(DATE_FORMAT(vi.dateScrutin, "%Y-%m"), "-01") AS dateValue, ROUND(AVG(ga.accord), 3) AS mean,  COUNT(ga.accord) AS n, vi.dateScrutin
+        $majorityQuery = $this->bdd->query('SELECT ga.organeRef, ga.legislature, CONCAT(DATE_FORMAT(vi.dateScrutin, "%Y-%m"), "-01") AS dateValue, ROUND(AVG(ga.accord), 3) AS mean,  COUNT(ga.accord) AS n
           FROM groupes_accord ga
           LEFT JOIN votes_info vi ON ga.voteNumero = vi.voteNumero AND ga.legislature = vi.legislature
           WHERE ga.organeRefAccord IN ("'.$majorityGroups.'") AND ga.organeRef = "' . $uid . '"
@@ -2408,6 +2408,25 @@ class Script
         while ($majority = $majorityQuery->fetch()) {
           $insertMajority = array($uid, $group['legislature'], $active, $majority['dateValue'], 'cohesion', $majority['mean'], $majority['n'], $this->dateMaj);
           $this->insertAll('class_groups_month', $fields, $insertMajority);
+        }
+
+        /// --- 3) PARTICIPATION ALL --- ///
+        $participationQuery = $this->bdd->query('SELECT B.organeRef, B.legislature, CONCAT(DATE_FORMAT(vi.dateScrutin, "%Y-%m"), "-01") AS dateValue, ROUND(avg(B.participation_rate), 3) AS mean, COUNT(B.participation_rate) AS n
+          FROM (
+            SELECT A.*, round(A.total / (A.n - A.nv), 3) AS participation_rate
+            FROM (
+              SELECT vg.legislature, vg.voteNumero, vg.organeRef, vg.nombreMembresGroupe as n, CASE WHEN vg.nonVotants IS NULL THEN 0 ELSE vg.nonVotants END AS nv, vg.nombrePours+vg.nombreContres+vg.nombreAbstentions as total
+              FROM votes_groupes vg
+              WHERE vg.organeRef = "PO730964"
+            ) A
+          ) B
+          LEFT JOIN votes_info vi ON vi.legislature = B.legislature AND vi.voteNumero = B.voteNumero
+          GROUP BY YEAR(vi.dateScrutin), MONTH(vi.dateScrutin)
+          ORDER BY YEAR(vi.dateScrutin), MONTH(vi.dateScrutin)
+        ');
+        while ($participation = $participationQuery->fetch()) {
+          $insertParticipation = array($uid, $group['legislature'], $active, $participation['dateValue'], 'participation', $participation['mean'], $participation['n'], $this->dateMaj);
+          $this->insertAll('class_groups_month', $fields, $insertParticipation);
         }
 
       }
