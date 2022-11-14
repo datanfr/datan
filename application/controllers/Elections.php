@@ -150,10 +150,7 @@
       // JS
       $data['js_to_load_before_datan'] = array('isotope.pkgd.min');
       if ($data['election']['slug'] == 'legislatives-2022') {
-        $data['js_to_load_up_defer'] = array(
-          "chart.min.js",
-          "chartjs-plugin-datalabels@0.7.js"
-        );
+        $data['js_to_load_up_defer'] = array('chart.min.js', 'chartjs-plugin-datalabels@2.1.js');
       }
       $data['js_to_load'] = array();
       if ($data['districts']) {

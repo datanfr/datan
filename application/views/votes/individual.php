@@ -484,31 +484,33 @@
     <script type="text/javascript">
     // Pie chart
     new Chart(document.getElementById("pie-chart"), {
-        type: 'pie',
-        data: {
-          labels: ["Pour", "Abstention", "Contre"],
-          datasets: [{
-            label: "Population (millions)",
-            backgroundColor: ["#00B794", "#FFBA49","#C5283D"],
-            data: [<?= $vote['pour'] ?>, <?= $vote['abstention'] ?>, <?= $vote['contre'] ?>]
-          }]
+      type: 'pie',
+      data: {
+        labels: ["Pour", "Abstention", "Contre"],
+        datasets: [{
+          label: "Population (millions)",
+          backgroundColor: ["#00B794", "#FFBA49","#C5283D"],
+          data: [<?= $vote['pour'] ?>, <?= $vote['abstention'] ?>, <?= $vote['contre'] ?>]
+        }]
+      },
+      options: {
+        title: {
+          display: false
         },
-        options: {
-          title: {
-            display: false
-          },
+        layout: {
+          padding: {
+            left: 0,
+            right: 0,
+            top: 0,
+            bottom: 0
+          }
+        },
+        plugins:{
           legend: {
             display: false
           },
-          layout: {
-              padding: {
-                left: 0,
-                right: 0,
-                top: 0,
-                bottom: 0
-              }
-          }
         }
+      }
     });
 
     </script>

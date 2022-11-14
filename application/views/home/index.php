@@ -356,7 +356,7 @@
 
 document.addEventListener('DOMContentLoaded', function(){
 
-  Chart.plugins.unregister(ChartDataLabels);
+  Chart.register(ChartDataLabels);
   var libelles = [
     <?php
     foreach ($groupesSorted as $groupe) {
@@ -400,16 +400,14 @@ document.addEventListener('DOMContentLoaded', function(){
   };
 
   var ctx = document.getElementById("chartHemycicle");
-
   // And for a doughnut chart
   var chartOptions = {
     responsive: true,
     maintainAspectRatio: true,
-    rotation: 1 * Math.PI,
-    circumference: 1 * Math.PI,
-    legend: false,
-    layout: {
-      padding: 10
+    circumference: 180,
+    rotation: 270,
+    layout:{
+      padding: 15
     },
     plugins: {
       datalabels: {
@@ -424,22 +422,10 @@ document.addEventListener('DOMContentLoaded', function(){
         font: {
           size: 10
         }
-      }
-    },
-    onClick: function(e){
-      if (screen.width >= 960) {
-        var element = this.getElementsAtEvent(e);
-        var idx = element[0]['_index'];
-        var group = libelles[idx];
-        location.href = 'https://datan.fr/groupes/legislature-16/' + group;
-      }
-    },
-    hover: {
-      onHover: function(x, y){
-        const section = y[0];
-        const currentStyle = x.target.style;
-        currentStyle.cursor = section ? 'pointer' : 'default';
-      }
+      },
+      legend: {
+        display: false
+      },
     }
   }
 
