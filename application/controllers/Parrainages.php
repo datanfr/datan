@@ -50,7 +50,7 @@
         )
       );
       // JS
-      $data['js_to_load_up'] = array("chart.min.js", "chartjs-plugin-datalabels@0.7.js");
+      $data['js_to_load_up_defer'] = array('chart.min.js', 'chartjs-plugin-datalabels@2.1.js');
       $data['js_to_load']= array("moment.min", "datatable-datan.min", "datetime-moment", "flickity.pkgd.min");
       // Views
       $this->load->view('templates/header', $data);

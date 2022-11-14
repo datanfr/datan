@@ -46,18 +46,25 @@
         <p>Pour la législature actuelle, le taux de cohésion du groupe <i><?= name_group($title) ?></i> est de <span class="font-weight-bold text-primary"><?= round($stats['cohesion']['value'], 2) ?></span>. Plus le score de cohésion est proche de 1, plus le groupe est uni quand il s'agit de voter dans l'hémicycle.</p>
         <p>Le groupe <i><?= name_group($title) ?></i> peut être considéré comme <?= $edito_cohesion['absolute'] ?> soudé quand il s'agit de voter. En effet, le groupe est <?= $edito_cohesion['relative'] ?> soudé que la moyenne des autres groupes, qui est de <?= round($statsAverage['cohesion'], 2) ?>.</p>
         <p>Retrouvez ci-dessous l'historique du taux de cohésion du groupe <i><?= name_group($title) ?></i>.</p>
-        <div class="card">
+        <div class="card mt-5">
           <div class="card-body pb-0">
             <h3>Historique par législature</h3>
             <p>CCCC</p>
             <?php $this->load->view('groupes/partials/stats_history.php', array('stats_history_chart' => $stats_history['cohesion'], 'type' => 'score')) ?>
           </div>
         </div>
+        <div class="card mt-5">
+          <div class="card-body pb-0">
+            <h3>Historique par mois</h3>
+            <p>Législature XX</p>
+            <p>CCCC</p>
+            
+          </div>
+        </div>
       </div>
       <?php if ($stats_history['majority']): ?>
         <div class="mt-5 test-border">
           <h2>Proximité avec la majorité présidentielle</h2>
-
           <p>Pour la législature actuelle, le groupe <i><?= name_group($title) ?></i> a voté sur la même ligne que la majorité présidentielle dans <span class="font-weight-bold text-primary"><?= $stats['majority']['value'] ?>%</span> des cas.</p>
           <p>Le groupe est <?= $edito_majorite ?> proche de la majorité présidentielle que la moyenne des autres groupes politiques, qui est de <?= $statsAverage['majority'] ?>%.</p>
           <p>Retrouvez ci-dessous l'historique de la proximité avec la majorité présidentielle du groupe <i><?= name_group($title) ?></i>.</p>
