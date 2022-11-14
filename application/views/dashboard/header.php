@@ -364,9 +364,6 @@
             <li class="nav-item">
               <a class="nav-link" href="<?= base_url() ?>dashboard-mp/explications">Explications de vote</a>
             </li>
-            <li class="nav-item">
-              <a class="nav-link" href="<?= base_url() ?>dashboard-mp/elections/legislatives-2022">Législatives 2022</a>
-            </li>
           <?php endif; ?>
           </ul>
         </nav>
