@@ -7,15 +7,15 @@
 <p>Enfin, le parti de droite Les Républicains arrive en quatrième position et obtient 64 sièges.</p>
 <h2 class="mt-5">Résultats des législatives 2022 en nombre de sièges</h2>
 <p class="font-italic">Source : Le Monde</p>
-<div class="mt-3 mb-4">
-  <canvas id="chartHemycicle"></canvas>
+<div class="mt-1 mb-1">
+  <canvas width="100" height="100" id="chartHemycicle"></canvas>
 </div>
 
 <script type="text/javascript">
 
 document.addEventListener('DOMContentLoaded', function(){
 
-  Chart.plugins.unregister(ChartDataLabels);
+  Chart.register(ChartDataLabels);
   var libelles = [
     <?php
     foreach ($groupesSorted as $groupe) {
@@ -64,9 +64,9 @@ document.addEventListener('DOMContentLoaded', function(){
   var chartOptions = {
     responsive: true,
     maintainAspectRatio: true,
-    rotation: 1 * Math.PI,
-    circumference: 1 * Math.PI,
-    legend: false,
+    rotation: 270,
+    circumference: 180,
+    aspectRatio: 2,
     layout: {
       padding: 10
     },
@@ -83,22 +83,10 @@ document.addEventListener('DOMContentLoaded', function(){
         font: {
           size: 10
         }
-      }
-    },
-    onClick: function(e){
-      if (screen.width >= 960) {
-        var element = this.getElementsAtEvent(e);
-        var idx = element[0]['_index'];
-        var group = libelles[idx];
-        location.href = 'https://datan.fr/groupes/' + group;
-      }
-    },
-    hover: {
-      onHover: function(x, y){
-        const section = y[0];
-        const currentStyle = x.target.style;
-        currentStyle.cursor = section ? 'pointer' : 'default';
-      }
+      },
+      legend: {
+        display: false
+      },
     }
   }
 

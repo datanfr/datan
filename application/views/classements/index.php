@@ -522,7 +522,7 @@
       const cut = 10;
       var ctx = document.getElementById('chartOrigineSociale');
       var myChart = new Chart(ctx, {
-        type: 'horizontalBar',
+        type: 'bar',
         data: data,
         options: options
       });
