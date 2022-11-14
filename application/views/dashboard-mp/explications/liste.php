@@ -32,10 +32,10 @@
         </div>
       </div>
       <div class="row mt-5">
-        <div class="col-12">
+        <div class="col-12 mb-5">
           <h5 class="font-weight-bold">Sélectionnez un vote à expliquer</h5>
           <div class="table-responsive">
-            <table class="table mt-4" style="background-color: white">
+            <table id="table_votes_datan" class="table mt-4" style="background-color: white">
               <thead class="thead-dark">
                 <tr>
                   <th scope="col">Législature</th>
@@ -43,7 +43,6 @@
                   <th scope="col" class="text-center">Vote</th>
                   <th scope="col">Dossier</th>
                   <th class="text-center">Date</th>
-                  <th></th>
                   <th></th>
                   <th></th>
                 </tr>
