@@ -22,16 +22,20 @@
         </div>
         <div class="col-lg-7 col-12 mt-4">
           <h1 class="font-weight-bold"><?= $title ?></h1>
-          <h5 class="mt-4 font-weight-bold">Infos</h5>
-          <p>Vous pouvez rédiger une explication de vote pour expliquer à vos électeurs les <b>raisons de votre position</b>. Cette explication sera visible sur votre page Datan.</p>
-          <p>Cette fonctionnalité n'est disponible que pour les <b>votes contextualisés par Datan</b>. Les votes contextualisés sont les scrutins que l'équipe de Datan vulgarise et met en avant sur le site internet, et notamment sur les pages des députés.</p>
+          <div class="card mt-5">
+            <div class="card-body">
+              <h5 class="font-weight-bold">Infos</h5>
+              <p>Vous pouvez rédiger une explication de vote pour expliquer à vos électeurs les <b>raisons de votre position</b>. Cette explication sera visible sur votre page Datan.</p>
+              <p>Cette fonctionnalité n'est disponible que pour les <b>votes contextualisés par Datan</b>. Les votes contextualisés sont les scrutins que l'équipe de Datan vulgarise et met en avant sur le site internet, et notamment sur les pages des députés.</p>
+            </div>
+          </div>
         </div>
       </div>
-      <div class="row mt-4">
-        <div class="col-12">
+      <div class="row mt-5">
+        <div class="col-12 mb-5">
           <h5 class="font-weight-bold">Sélectionnez un vote à expliquer</h5>
           <div class="table-responsive">
-            <table class="table mt-4" style="background-color: white">
+            <table id="table_votes_datan" class="table mt-4" style="background-color: white">
               <thead class="thead-dark">
                 <tr>
                   <th scope="col">Législature</th>
@@ -39,7 +43,6 @@
                   <th scope="col" class="text-center">Vote</th>
                   <th scope="col">Dossier</th>
                   <th class="text-center">Date</th>
-                  <th></th>
                   <th></th>
                   <th></th>
                 </tr>
