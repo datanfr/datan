@@ -334,7 +334,7 @@
         $this->dashboardMP_model->delete_explanation($data);
         delete_all_cache();
         $this->db->cache_delete_all();
-        $this->session->set_flashdata('flash', "L'explication de vote pour le scrutin n°" . $voteNumero . " a bien été supprimé");
+        $this->session->set_flashdata('flash', "L'explication de vote pour le scrutin n°" . $voteNumero . " a bien été supprimée.");
         redirect('dashboard-mp/explications');
       }
 

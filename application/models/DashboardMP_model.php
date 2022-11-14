@@ -19,7 +19,7 @@ class DashboardMP_model extends CI_Model
       LEFT JOIN votes_dossiers vdoss ON vd.legislature = vdoss.legislature AND vd.voteNumero = vdoss.voteNumero
       LEFT JOIN dossiers doss ON vdoss.dossier = doss.titreChemin
       LEFT JOIN explications_mp e ON vd.legislature = e.legislature AND vd.voteNumero = e.voteNumero AND e.mpId = ?
-      WHERE vd.state = "published" AND vs.vote IS NOT NULL AND e.text IS NULL
+      WHERE vd.state = "published" AND vs.vote IS NOT NULL AND e.text IS NULL AND vd.legislature >= 16
       ORDER BY vi.dateScrutin DESC
     ';
     return $this->db->query($sql, array($mpId, $mpId))->result_array();
