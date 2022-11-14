@@ -72,10 +72,10 @@
                     <tbody>
                       <tr>
                         <th>Titre du scrutin sur Datan</th>
-                        <th><?= $vote['title'] ?></th>
+                        <th><a href="<?= base_url() ?>votes/legislature-<?= $vote['legislature'] ?>/vote_<?= $vote['voteNumero'] ?>" target="_blank"><?= $vote['title'] ?></a></th>
                       </tr>
                       <tr>
-                        <th>Description</th>
+                        <th>Titre Assemblée nationale</th>
                         <td><?= ucfirst($vote['titre']) ?></td>
                       </tr>
                       <tr>
@@ -113,15 +113,15 @@
                   </table>
                 </div>
                 <div class="card-footer d-flex justify-content-around">
-                  <a class="btn btn-secondary mx-1" href="<?= base_url() ?>votes/legislature-<?= $vote['legislature'] ?>/vote_<?= $vote['voteNumero'] ?>" target="_blank" role="button">
+                  <a class="btn btn-secondary mx-1 font-weight-bold" href="<?= base_url() ?>votes/legislature-<?= $vote['legislature'] ?>/vote_<?= $vote['voteNumero'] ?>" target="_blank" role="button">
                     <?= file_get_contents(asset_url()."imgs/icons/box-arrow-up-right.svg") ?>
                     Lien Datan
                   </a>
-                  <a class="btn btn-secondary mx-1" href="https://www2.assemblee-nationale.fr/scrutins/detail/(legislature)/<?= $vote['legislature'] ?>/(num)/<?= $vote['voteNumero'] ?>" target="_blank" role="button">
+                  <a class="btn btn-secondary mx-1 font-weight-bold" href="https://www2.assemblee-nationale.fr/scrutins/detail/(legislature)/<?= $vote['legislature'] ?>/(num)/<?= $vote['voteNumero'] ?>" target="_blank" role="button">
                     <?= file_get_contents(asset_url()."imgs/icons/box-arrow-up-right.svg") ?>
                     Lien Assemblée
                   </a>
-                  <a class="btn btn-secondary mx-1" href="<?= $vote['dossierUrl'] ?>" target="_blank" role="button">
+                  <a class="btn btn-secondary mx-1 font-weight-bold" href="<?= $vote['dossierUrl'] ?>" target="_blank" role="button">
                     <?= file_get_contents(asset_url()."imgs/icons/box-arrow-up-right.svg") ?>
                     Dossier
                   </a>

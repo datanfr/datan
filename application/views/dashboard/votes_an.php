@@ -38,7 +38,7 @@
                     </tr>
                   </thead>
                 <tbody>
-                  <?php foreach ($votes as $vote): 
+                  <?php foreach ($votes as $vote):
                     ?>
                     <tr class="<?= $vote['vote_datan'] ?>">
                       <td><a href="http://www2.assemblee-nationale.fr/scrutins/detail/(legislature)/15/(num)/<?= $vote['voteNumero'] ?>" target="_blank"><?= $vote['voteNumero'] ?></a></td>
