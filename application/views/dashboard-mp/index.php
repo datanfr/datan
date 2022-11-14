@@ -53,7 +53,7 @@
                 <?php endif; ?>
               </div>
               <div class="card-footer d-flex justify-content-center align-items-center">
-                <a class="btn btn-primary font-weight-bold" href="<?= base_url() ?>dashboard-mp/explications" role="button">Voir toutes vos explications de vote</a>
+                <a class="btn btn-primary font-weight-bold" style="font-size: 1.1rem" href="<?= base_url() ?>dashboard-mp/explications" role="button">Voir toutes vos explications de vote</a>
               </div>
             </div>
           </div>
