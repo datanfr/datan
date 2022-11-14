@@ -85,6 +85,7 @@
                         <th class="text-center">Vote</th>
                         <th class="text-center d-none d-lg-table-cell">Explication</th>
                         <th></th>
+                        <th></th>
                       </tr>
                     </thead>
                     <tbody>
@@ -94,6 +95,12 @@
                           <td class="font-weight-bold"><?= $value['vote_titre'] ?></td>
                           <td class="text-center"><span class="badge badge<?= ucfirst($value['vote_depute']) ?>" style="font-size: 16px"><?= ucfirst($value['vote_depute']) ?></span></td>
                           <td class="d-none d-lg-table-cell"><?= word_limiter($value['explication'], 30) ?></td>
+                          <td>
+                            <a class="btn btn-success d-flex align-items-center justify-content-center font-weight-bold" href="<?= base_url() ?>votes/legislature-<?= $value['legislature'] ?>/vote_<?= $value['voteNumero'] ?>" target="_blank">
+                              <?= file_get_contents(asset_url()."imgs/icons/box-arrow-up-right.svg") ?>
+                              <span class="ml-3">Vote publié</span>
+                            </a>
+                          </td>
                           <td>
                             <a class="btn btn-primary d-flex align-items-center justify-content-center font-weight-bold" href="<?= base_url() ?>dashboard-mp/explications/modify/l<?= $value['legislature'] ?>v<?= $value['voteNumero'] ?>">
                               <?= file_get_contents(asset_url()."imgs/icons/pencil-square.svg") ?>
