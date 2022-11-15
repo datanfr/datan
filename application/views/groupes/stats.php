@@ -45,7 +45,7 @@
             <h3>Historique par mois</h3>
             <p>Législature XX</p>
             <p>CCCC</p>
-            <?php $this->load->view('groupes/partials/stats_monthly.php', array('stats_history_chart' => $stats_monthly['participation'], 'type' => 'participation')) ?>
+            <?php $this->load->view('groupes/partials/stats_monthly.php', array('stats_history_chart' => $stats_monthly['participation'], 'type' => 'participation', 'max' => 100)) ?>
           </div>
         </div>
       </div>
@@ -66,7 +66,7 @@
             <h3>Historique par mois</h3>
             <p>Législature XX</p>
             <p>CCCC</p>
-            <?php $this->load->view('groupes/partials/stats_monthly.php', array('stats_history_chart' => $stats_monthly['cohesion'], 'type' => 'cohesion')) ?>
+            <?php $this->load->view('groupes/partials/stats_monthly.php', array('stats_history_chart' => $stats_monthly['cohesion'], 'type' => 'cohesion', 'max' => 1)) ?>
           </div>
         </div>
       </div>
@@ -88,7 +88,7 @@
               <h3>Historique par mois</h3>
               <p>Législature XX</p>
               <p>CCCC</p>
-              <?php $this->load->view('groupes/partials/stats_monthly.php', array('stats_history_chart' => $stats_monthly['majority'], 'type' => 'majority')) ?>
+              <?php $this->load->view('groupes/partials/stats_monthly.php', array('stats_history_chart' => $stats_monthly['majority'], 'type' => 'majority', 'max' => 100)) ?>
             </div>
           </div>
         </div>

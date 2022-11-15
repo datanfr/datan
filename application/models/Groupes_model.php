@@ -398,6 +398,9 @@
       $results = $this->db->get('class_groups_month')->result_array();
 
       foreach ($results as $key => $value) {
+        if (in_array($value['stat'], array('participation', 'majority'))) {
+          $value['value'] = round($value['value'] * 100);
+        }
         $return[$value['stat']][] = $value;
       }
 
