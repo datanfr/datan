@@ -2406,7 +2406,7 @@ class Script
           ORDER BY YEAR(vi.dateScrutin), MONTH(vi.dateScrutin)
         ');
         while ($majority = $majorityQuery->fetch()) {
-          $insertMajority = array($uid, $group['legislature'], $active, $majority['dateValue'], 'cohesion', $majority['mean'], $majority['n'], $this->dateMaj);
+          $insertMajority = array($uid, $group['legislature'], $active, $majority['dateValue'], 'majority', $majority['mean'], $majority['n'], $this->dateMaj);
           $this->insertAll('class_groups_month', $fields, $insertMajority);
         }
 
