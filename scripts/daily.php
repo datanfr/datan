@@ -2417,7 +2417,7 @@ class Script
             FROM (
               SELECT vg.legislature, vg.voteNumero, vg.organeRef, vg.nombreMembresGroupe as n, CASE WHEN vg.nonVotants IS NULL THEN 0 ELSE vg.nonVotants END AS nv, vg.nombrePours+vg.nombreContres+vg.nombreAbstentions as total
               FROM votes_groupes vg
-              WHERE vg.organeRef = "PO730964"
+              WHERE vg.organeRef = "' . $uid . '"
             ) A
           ) B
           LEFT JOIN votes_info vi ON vi.legislature = B.legislature AND vi.voteNumero = B.voteNumero
