@@ -41,10 +41,6 @@
       // CSS
       $data['css_to_load']= array(
         array(
-          "url" => css_url()."chart.min.css",
-          "async" => FALSE
-        ),
-        array(
           "url" => css_url()."datatables.bootstrap4.min.css",
           "async" => TRUE
         )
