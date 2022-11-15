@@ -33,6 +33,14 @@
           display: false
         },
       },
+      scales: {
+        y: {
+          afterDataLimits: (scale) => {
+            scale.max = <?= $max ?>;
+            scale.min = 0;
+          }
+        }
+      }
     }
 
     // Init the chart
@@ -44,14 +52,4 @@
 
   });
 
-  /* ADD
-
-  scales: {
-    y: {
-      min: 0,
-      max: 100
-    }
-  }
-
-  */
 </script>
