@@ -337,10 +337,6 @@
           "async" => FALSE
         ),
         array(
-          "url" => css_url()."chart.min.css",
-          "async" => FALSE
-        ),
-        array(
           "url" => "https://unpkg.com/flickity@2.3.0/dist/flickity.min.css",
           "async" => TRUE
         )
@@ -604,6 +600,9 @@
         }
       }
       $data['stats_history'] = $this->groupes_model->get_stats_history($data['history']);
+
+      // Get monthly data
+      $data['stats_monthly'] = $this->groupes_model->get_stats_monthly($data['groupe']['uid']);
 
       // Remove majoritaire for Majority stats
       foreach ($data['stats_history']['majority'] as $key => $value) {

@@ -367,8 +367,7 @@
     }
 
     public function get_stats($groupe_uid){
-      $query = $this->db->get_where('class_groups', array('organeRef' => $groupe_uid));
-      $results = $query->result_array();
+      $results = $this->db->get_where('class_groups', array('organeRef' => $groupe_uid))->result_array();
 
       foreach ($results as $key => $value) {
         if ($value['stat'] == 'cohesion') {
@@ -385,8 +384,18 @@
       $this->db->where_in('cg.organeRef', $groups);
       $this->db->join('organes o', 'o.uid = cg.organeRef', 'left');
       $this->db->order_by('cg.legislature', 'ASC');
-      $query = $this->db->get('class_groups cg');
-      $results = $query->result_array();
+      $results = $this->db->get('class_groups cg')->result_array();
+
+      foreach ($results as $key => $value) {
+        $return[$value['stat']][] = $value;
+      }
+
+      return $return;
+    }
+
+    public function get_stats_monthly($groupe_uid){
+      $this->db->where('organeRef', $groupe_uid);
+      $results = $this->db->get('class_groups_month')->result_array();
 
       foreach ($results as $key => $value) {
         $return[$value['stat']][] = $value;

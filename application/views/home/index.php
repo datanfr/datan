@@ -295,7 +295,6 @@
       </div>
     </div>
   <?php endif; ?>
-
   <!-- BLOC POSTS -->
   <div class="row">
     <div class="container p-md-0">
