@@ -40,6 +40,14 @@
             <?php $this->load->view('groupes/partials/stats_history.php', array('stats_history_chart' => $stats_history['participation'], 'type' => 'pct')) ?>
           </div>
         </div>
+        <div class="card mt-5">
+          <div class="card-body pb-0">
+            <h3>Historique par mois</h3>
+            <p>Législature XX</p>
+            <p>CCCC</p>
+            <?php $this->load->view('groupes/partials/stats_monthly.php', array('stats_history_chart' => $stats_monthly['participation'], 'type' => 'participation')) ?>
+          </div>
+        </div>
       </div>
       <div class="mt-5 test-border">
         <h2>Cohésion au sein du groupe</h2>
@@ -58,7 +66,7 @@
             <h3>Historique par mois</h3>
             <p>Législature XX</p>
             <p>CCCC</p>
-            
+            <?php $this->load->view('groupes/partials/stats_monthly.php', array('stats_history_chart' => $stats_monthly['cohesion'], 'type' => 'cohesion')) ?>
           </div>
         </div>
       </div>
@@ -73,6 +81,14 @@
               <h3>Historique par législature</h3>
               <p>CCCC</p>
               <?php $this->load->view('groupes/partials/stats_history.php', array('stats_history_chart' => $stats_history['majority'], 'type' => 'pct')) ?>
+            </div>
+          </div>
+          <div class="card mt-5">
+            <div class="card-body pb-0">
+              <h3>Historique par mois</h3>
+              <p>Législature XX</p>
+              <p>CCCC</p>
+              <?php $this->load->view('groupes/partials/stats_monthly.php', array('stats_history_chart' => $stats_monthly['majority'], 'type' => 'majority')) ?>
             </div>
           </div>
         </div>
