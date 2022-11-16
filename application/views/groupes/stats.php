@@ -76,7 +76,7 @@
           <p>Pour la législature actuelle, le groupe <i><?= name_group($title) ?></i> a voté sur la même ligne que la majorité présidentielle dans <span class="font-weight-bold text-primary"><?= $stats['majority']['value'] ?>%</span> des cas.</p>
           <p>Le groupe est <?= $edito_majorite ?> proche de la majorité présidentielle que la moyenne des autres groupes politiques, qui est de <?= $statsAverage['majority'] ?>%.</p>
           <p>Retrouvez ci-dessous l'historique de la proximité avec la majorité présidentielle du groupe <i><?= name_group($title) ?></i>.</p>
-          <div class="card">
+          <div class="card mt-5">
             <div class="card-body pb-0">
               <h3>Historique par législature</h3>
               <p>CCCC</p>
@@ -93,6 +93,23 @@
           </div>
         </div>
       <?php endif; ?>
+      <div class="mt-5 test-border">
+        <h2>Proximité avec chaque groupe politique</h2>
+        <p>Le groupe <i><?= name_group($title) ?></i> vote-t-il souvent avec les autres groupes politiques qui composent l'Assemblée nationale ?</p>
+        <p>Nous mesurons la proximité entre deux groupes au moment du vote. Deux groupes sont considérés comme proches s'ils votent souvent ensemble dans l'hémicycle.</p>
+        <p>
+          Pour la législature actuelle, le groupe avec lequel le groupe <i><?= name_group($title) ?></i> est le plus proche est <i><?= name_group($accord_groupes_first['libelle']) ?></i>.
+          En effet, les deux groupes ont eu la même position dans <span class="font-weight-bold text-primary"><?= $accord_groupes_first['score'] ?>%</span> des cas.</p>
+        <p>Retrouvez ci-dessous l'historique de proximité du groupe <i><?= name_group($title) ?></i>.</p>
+        <div class="card mt-5">
+          <div class="card-body pb-0">
+            <h3>Historique par mois</h3>
+            <p>Législature XX</p>
+            <p>CCCC</p>
+            <?php $this->load->view('groupes/partials/stats_monthly_proximity.php') ?>
+          </div>
+        </div>
+      </div>
       <div class="mt-5 test-border">
         <h2 class="anchor" id="link-stats">Historique du groupe <?= name_group($title) ?></h2>
         <p>Sur cette page, vous trouvez un historique des statistiques du groupe. Pour chaque groupe politique, nous avons répertorié les anciens ou nouveaux groupes qui leur sont liés.</p>

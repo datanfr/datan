@@ -407,6 +407,17 @@
       return $return;
     }
 
+    public function get_stat_proximity_history($groupe_uid){
+      $this->db->where('organeRef', $groupe_uid);
+      $results = $this->db->get('class_groups_proximite_month')->result_array();
+
+      foreach ($results as $key => $value) {
+        $return[$value['prox_group']][] = $value;
+      }
+
+      return $return;
+    }
+
     public function get_stats_avg($legislature){
       $sql = 'SELECT stat, ROUND(AVG(value), 3) AS mean
         FROM class_groups

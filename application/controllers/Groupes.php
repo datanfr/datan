@@ -614,6 +614,22 @@
       // Get individual stats data
       $data = $this->get_data_stats($data);
 
+      // Get overall proximity stats
+      $data['accord_groupes_actifs'] = $this->groupes_model->get_stats_proximite($data['groupe']['uid']);
+      $data['accord_groupes_all'] = $this->groupes_model->get_stats_proximite_all($data['groupe']['uid']);
+      if ($data['groupe']['legislature'] == legislature_current()) {
+        $data['accord_groupes_featured'] = $data['accord_groupes_actifs'];
+      } else {
+        $data['accord_groupes_featured'] = $data['accord_groupes_all'];
+      }
+      $data['accord_groupes_first'] = $data['accord_groupes_featured'][0];
+      $data['accord_groupes_last'] = end($data['accord_groupes_featured']);
+
+      // Get history proximity stats
+      $data['proximity_history'] = $this->groupes_model->get_stat_proximity_history($data['groupe']['uid']);
+
+      var_dump($data['proximity_history']);
+
 
       function date_compare($a, $b) {
         $t1 = strtotime($a['dateDebut']);
