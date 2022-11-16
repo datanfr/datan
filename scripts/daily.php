@@ -2375,8 +2375,25 @@ class Script
         `votes` BIGINT(21) NOT NULL ,
         `dateMaj` DATE NOT NULL
       )');
+      $this->bdd->query('CREATE INDEX idx_organeRef ON class_groups_month(organeRef)');
+      $this->bdd->query('CREATE INDEX idx_stat ON class_groups_month(stat)');
+
+      $this->bdd->query('DROP TABLE IF EXISTS `class_groups_proximite_month`');
+      $this->bdd->query('CREATE TABLE `datan`.`class_groups_proximite_month`(
+        `organeRef` VARCHAR(15) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL ,
+        `legislature` INT(2) NOT NULL ,
+        `active` INT(1) NOT NULL ,
+        `dateValue` DATE NOT NULL ,
+        `prox_group` VARCHAR(15) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL ,
+        `score` DECIMAL(6,3) NOT NULL ,
+        `votes` BIGINT(21) NOT NULL ,
+        `dateMaj` DATE NOT NULL
+      )');
+      $this->bdd->query('CREATE INDEX idx_organeRef ON class_groups_proximite_month(organeRef)');
+      $this->bdd->query('CREATE INDEX idx_legislature ON class_groups_month(legislature)');
 
       $fields = array('organeRef', 'legislature', 'active', 'dateValue', 'stat', 'value', 'votes', 'dateMaj');
+      $fieldsProximity = array('organeRef', 'legislature', 'active', 'dateValue', 'prox_group', 'score', 'votes', 'dateMaj');
       $groups = $this->bdd->query('SELECT * FROM organes WHERE coteType = "GP" AND legislature >= 14 ORDER BY legislature ASC');
       while ($group = $groups->fetch()) {
         $uid = $group['uid'];
@@ -2427,6 +2444,19 @@ class Script
         while ($participation = $participationQuery->fetch()) {
           $insertParticipation = array($uid, $group['legislature'], $active, $participation['dateValue'], 'participation', $participation['mean'], $participation['n'], $this->dateMaj);
           $this->insertAll('class_groups_month', $fields, $insertParticipation);
+        }
+
+        /// --- 4) CLASS GROUPS PROXIMITE --- ///
+        $proximityQuery = $this->bdd->query('SELECT  ga.organeRef, ga.legislature, ga.organeRefAccord AS prox_group, ROUND(AVG(accord), 4) AS score, COUNT(accord) AS n, CONCAT(DATE_FORMAT(vi.dateScrutin, "%Y-%m"), "-01") AS dateValue
+          FROM groupes_accord ga
+          LEFT JOIN votes_info vi ON vi.legislature = ga.legislature AND vi.voteNumero = ga.voteNumero
+          WHERE ga.organeRef != ga.organeRefAccord AND ga.organeRef = "' . $uid . '"
+          GROUP BY ga.organeRef, ga.organeRefAccord, YEAR(vi.dateScrutin), MONTH(vi.dateScrutin)
+          ORDER BY ga.organeRef, YEAR(vi.dateScrutin), MONTH(vi.dateScrutin)
+        ');
+        while ($proximity = $proximityQuery->fetch()) {
+          $insertProximity = array($uid, $group['legislature'], $active, $proximity['dateValue'], $proximity['prox_group'], $proximity['score'], $proximity['n'], $this->dateMaj);
+          $this->insertAll('class_groups_proximite_month', $fieldsProximity, $insertProximity);
         }
 
       }
