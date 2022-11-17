@@ -30,8 +30,9 @@ RUN a2enmod rewrite && \
     npm && \
     npm install npm@latest -g && \
     npm install n -g && \
-    n latest && \
-    npm install && \
+    n latest 
+    
+    RUN npm install && \
 
 #install and run grunt
     npm install -g grunt-cli && \
