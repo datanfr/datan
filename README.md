@@ -33,7 +33,7 @@ docker-compose up
 Pour le premier lancement, il faut attendre quelques minutes que la base de données se charge complètement avant de lancer la commande suivante.
 
 ## 5. Mettre à jour la base de données
-Commandes à faire à chaque fois que vous voulez rafraichir les données
+Commandes à faire la première fois et à chaque fois que vous voulez rafraichir les données
 ```
 npm run docker-download
 npm run docker-daily
