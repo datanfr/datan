@@ -2405,6 +2405,16 @@ ul.ui-menu{
       }
     }
   }
+
+  .explain{
+    a{
+      color: $primary;
+      font-weight: 600;
+    }
+    img{
+      height: 3rem;
+    }
+  }
 }
 /*
 ################

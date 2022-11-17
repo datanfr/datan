@@ -651,4 +651,16 @@
       return $this->db->get_where('explications_mp', $where, 1)->row_array();
     }
 
+    public function get_explications($legislature, $voteNumero){
+      $where = array(
+        'd.legislature' => $legislature,
+        'voteNumero' => $voteNumero
+      );
+      $this->db->select('d.civ, d.nameFirst, d.nameLast, d.nameUrl, d.dptSlug, e.text, 
+      substr(d.mpId, 3) AS idImage, d.img');
+      $this->db->join('deputes_all d', 'e.mpId = d.mpId', 'left');
+
+      return $this->db->get_where('explications_mp e', $where)->result_array();
+    }
+
   }

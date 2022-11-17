@@ -380,6 +380,9 @@
         }
       }
 
+      // Vote mp explain
+      $data['explain'] = $this->votes_model->get_explications($legislature, $data['vote']['voteNumero']);
+
       // Info about the author
       if ($data['vote']['dossier'] && $legislature >= 15) {
         if ($data['vote']['voteType'] == 'amendement' || $data['vote']['voteType'] == 'sous-amendement') { // If the vote is an amendment
@@ -580,6 +583,7 @@
         array("href" => asset_url()."imgs/cover/hemicycle-front-768.jpg", "as" => "image", "media" => "(min-width: 576px) and (max-width: 970px)"),
         array("href" => asset_url()."imgs/cover/hemicycle-front.jpg", "as" => "image", "media" => "(min-width: 970.1px)"),
       );
+
       // Load Views
       $this->load->view('templates/header', $data);
       $this->load->view('templates/button_up');
