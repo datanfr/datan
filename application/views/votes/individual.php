@@ -9,7 +9,7 @@
     </div>
   <?php endif; ?>
 </div>
-<div class="container pg-vote-individual">
+<div class="container pg-vote-individual mb-5">
   <div class="row">
     <div class="col-md-8 col-12 bloc-card-vote">
       <div class="card card-vote-infos">
@@ -174,37 +174,6 @@
           </div>
         </div>
       <?php endif; ?>
-      <?php if (count($explain)): ?>
-        <div class="explain my-5">
-          <h2>La parole est aux députés</h2>
-          <div class="card mt-4">
-            <div class="card-body">
-              <div>
-                <?php foreach ($explain as $exp) : ?>
-                  <div>
-                    <span class="depute-img-circle">
-                      <?php if ($exp['img']) : ?>
-                        <picture>
-                          <source srcset="<?= asset_url(); ?>imgs/deputes_nobg_webp/depute_<?= $exp['idImage'] ?>_webp.webp" type="image/webp">
-                          <source srcset="<?= asset_url(); ?>imgs/deputes_nobg/depute_<?= $exp['idImage'] ?>.png" type="image/png">
-                          <img src="<?= asset_url(); ?>imgs/deputes_original/depute_<?= $exp['idImage'] ?>.png" width="150" height="192" alt="<?= $title ?>">
-                        </picture>
-                      <?php else : ?>
-                        <picture>
-                          <source srcset="<?= asset_url() ?>imgs/placeholder/placeholder-face-2.png" type="image/png">
-                          <img src="<?= asset_url() ?>imgs/placeholder/placeholder-face-2.png" alt="<?= $title ?>">
-                        </picture>
-                      <?php endif; ?>
-                    </span>
-                    <a href="<?= base_url() . "deputes/" . $exp['dptSlug'] . '/depute_' . $exp['nameUrl'] ?>" class="pg-depute-all">
-                      <?= $exp['civ'] . ' ' . $exp['nameFirst'] . ' ' . $exp['nameLast'] ?></a> - <?= $exp['text'] ?>
-                  </div>
-                <?php endforeach ?>
-              </div>
-            </div>
-          </div>
-        </div>
-      <?php endif; ?>
     </div>
     <div class="col-lg-4 col-md-4 col-12">
       <div class="bloc-infos d-none d-md-block mt-5 mt-md-0">
@@ -264,8 +233,78 @@
     </div>
   </div>
 </div>
+<?php if (count($explain)): ?>
+  <div class="container-fluid py-5" id="pattern_background">
+    <div class="container pg-vote-individual">
+      <div class="row explain">
+        <div class="col-12 mb-4">
+          <h2 class="text-center">La parole aux députés</h2>
+          <p class="mt-5 text-center">Sur <b>Datan</b>, les députés peuvent donner leur explication de vote. Pourquoi ont-ils voté pour ou contre ce texte ? Découvrez ci-dessous les explications des députés.</p>
+        </div>
+        <div class="col-md-6 test-border">
+          <p class="text-center font-weight-bold sort-adopté h5">LES DÉPUTÉS POUR</p>
+          <div class="card mt-4">
+            <div class="card-body">
+              <?php foreach ($explain as $exp) : ?>
+                <div class="d-flex align-items-center test-border my-2">
+                  <div class="depute-img-circle">
+                    <?php if ($exp['img']) : ?>
+                      <picture>
+                        <source srcset="<?= asset_url(); ?>imgs/deputes_nobg_webp/depute_<?= $exp['idImage'] ?>_webp.webp" type="image/webp">
+                        <source srcset="<?= asset_url(); ?>imgs/deputes_nobg/depute_<?= $exp['idImage'] ?>.png" type="image/png">
+                        <img src="<?= asset_url(); ?>imgs/deputes_original/depute_<?= $exp['idImage'] ?>.png" width="150" height="192" alt="<?= $title ?>">
+                      </picture>
+                    <?php else : ?>
+                      <picture>
+                        <source srcset="<?= asset_url() ?>imgs/placeholder/placeholder-face-2.png" type="image/png">
+                        <img src="<?= asset_url() ?>imgs/placeholder/placeholder-face-2.png" alt="<?= $title ?>">
+                      </picture>
+                    <?php endif; ?>
+                  </div>
+                  <div class="ml-1">
+                    <a href="<?= base_url() . "deputes/" . $exp['dptSlug'] . '/depute_' . $exp['nameUrl'] ?>" class="pg-depute-all">
+                      <?= $exp['civ'] . ' ' . $exp['nameFirst'] . ' ' . $exp['nameLast'] ?></a> - <?= $exp['text'] ?>
+                  </div>
+                </div>
+              <?php endforeach ?>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6 test-border mt-4 mt-md-0">
+          <p class="text-center font-weight-bold sort-rejeté h5">LES DÉPUTÉS CONTRE</p>
+          <div class="card mt-4">
+            <div class="card-body">
+              <?php foreach ($explain as $exp) : ?>
+                <div class="d-flex align-items-center test-border my-2">
+                  <div class="depute-img-circle">
+                    <?php if ($exp['img']) : ?>
+                      <picture>
+                        <source srcset="<?= asset_url(); ?>imgs/deputes_nobg_webp/depute_<?= $exp['idImage'] ?>_webp.webp" type="image/webp">
+                        <source srcset="<?= asset_url(); ?>imgs/deputes_nobg/depute_<?= $exp['idImage'] ?>.png" type="image/png">
+                        <img src="<?= asset_url(); ?>imgs/deputes_original/depute_<?= $exp['idImage'] ?>.png" width="150" height="192" alt="<?= $title ?>">
+                      </picture>
+                    <?php else : ?>
+                      <picture>
+                        <source srcset="<?= asset_url() ?>imgs/placeholder/placeholder-face-2.png" type="image/png">
+                        <img src="<?= asset_url() ?>imgs/placeholder/placeholder-face-2.png" alt="<?= $title ?>">
+                      </picture>
+                    <?php endif; ?>
+                  </div>
+                  <div class="ml-1">
+                    <a href="<?= base_url() . "deputes/" . $exp['dptSlug'] . '/depute_' . $exp['nameUrl'] ?>" class="pg-depute-all">
+                      <?= $exp['civ'] . ' ' . $exp['nameFirst'] . ' ' . $exp['nameLast'] ?></a> - <?= $exp['text'] ?>
+                  </div>
+                </div>
+              <?php endforeach ?>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+<?php endif; ?>
 <?php if (!empty($author)) : ?>
-  <div class="container-fluid pg-vote-individual bloc-author mt-5 py-4">
+  <div class="container-fluid pg-vote-individual bloc-author py-4">
     <div class="container">
       <div class="row">
         <?php if (in_array($authorMeta['type'], array("mp", "gvt")) || ($authorMeta['type'] == "mps" && count($author) == 1)) : ?>
