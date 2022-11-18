@@ -1083,21 +1083,6 @@ input#quicksearch[type=text]{
   .card-body{
     padding: 1.5rem 1.8rem;
   }
-  .img{
-    .depute-img-circle{
-      width: 150px;
-      height: 150px;
-      overflow: hidden;
-      position: relative;
-      border-radius: 50%;
-      background: linear-gradient(#99BDDA, white);
-      text-align: center;
-      img{
-        width: 80%;
-        height: auto;
-      }
-    }
-  }
   .bloc-bref{
     ul{
       padding-inline-start: 0;
@@ -1124,6 +1109,19 @@ input#quicksearch[type=text]{
   .link-group{
     font-size: $h5-font-size;
     font-weight: 600;
+  }
+}
+.depute-img-circle{
+  width: 150px;
+  height: 150px;
+  overflow: hidden;
+  position: relative;
+  border-radius: 50%;
+  background: linear-gradient(#99BDDA, white);
+  text-align: center;
+  img{
+    width: 80%;
+    height: auto;
   }
 }
 .card-profile {
@@ -2411,8 +2409,9 @@ ul.ui-menu{
       color: $primary;
       font-weight: 600;
     }
-    img{
-      height: 3rem;
+    .depute-img-circle{
+      flex: 0 0 1rem;
+      height: auto;
     }
   }
 }
