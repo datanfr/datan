@@ -401,6 +401,9 @@
         if (in_array($value['stat'], array('participation', 'majority'))) {
           $value['value'] = round($value['value'] * 100);
         }
+        if (in_array($value['stat'], array('cohesion'))) {
+          $value['value'] = round($value['value'], 2);
+        }
         $return[$value['stat']][] = $value;
       }
 
