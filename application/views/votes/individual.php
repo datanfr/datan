@@ -241,12 +241,12 @@
           <h2 class="text-center">La parole aux députés</h2>
           <p class="mt-5 text-center">Sur <b>Datan</b>, les députés peuvent donner leur explication de vote. Pourquoi ont-ils voté pour ou contre ce texte ? Découvrez ci-dessous les explications des députés.</p>
         </div>
-        <div class="col-md-6 test-border">
+        <div class="col-md-6">
           <p class="text-center font-weight-bold sort-adopté h5">LES DÉPUTÉS POUR</p>
           <div class="card mt-4">
             <div class="card-body">
-              <?php foreach ($explain as $exp) : ?>
-                <div class="d-flex align-items-center test-border my-2">
+              <?php foreach ($explain[1] as $exp) : ?>
+                <div class="d-flex align-items-start my-4">
                   <div class="depute-img-circle">
                     <?php if ($exp['img']) : ?>
                       <picture>
@@ -261,21 +261,25 @@
                       </picture>
                     <?php endif; ?>
                   </div>
-                  <div class="ml-1">
-                    <a href="<?= base_url() . "deputes/" . $exp['dptSlug'] . '/depute_' . $exp['nameUrl'] ?>" class="pg-depute-all">
-                      <?= $exp['civ'] . ' ' . $exp['nameFirst'] . ' ' . $exp['nameLast'] ?></a> - <?= $exp['text'] ?>
+                  <div class="ml-3" >
+                    <p class="collapse mb-0" id="collapse<?= $exp['idImage'] ?>">
+                      <a class="font-weight-bold no-decoration underline" href="<?= base_url() . "deputes/" . $exp['dptSlug'] . '/depute_' . $exp['nameUrl'] ?>" class="pg-depute-all">
+                        <?= $exp['nameFirst'] . ' ' . $exp['nameLast'] ?> -
+                      </a>
+                      <?= $exp['text'] ?></p>
+                    <a class="read collapsed" data-toggle="collapse" href="#collapse<?= $exp['idImage'] ?>" aria-expanded="false" aria-controls="collapse<?= $exp['idImage'] ?>"></a>
                   </div>
                 </div>
               <?php endforeach ?>
             </div>
           </div>
         </div>
-        <div class="col-md-6 test-border mt-4 mt-md-0">
+        <div class="col-md-6 mt-5 mt-md-0">
           <p class="text-center font-weight-bold sort-rejeté h5">LES DÉPUTÉS CONTRE</p>
           <div class="card mt-4">
             <div class="card-body">
-              <?php foreach ($explain as $exp) : ?>
-                <div class="d-flex align-items-center test-border my-2">
+              <?php foreach ($explain[-1] as $exp) : ?>
+                <div class="d-flex align-items-start my-4">
                   <div class="depute-img-circle">
                     <?php if ($exp['img']) : ?>
                       <picture>
@@ -290,9 +294,13 @@
                       </picture>
                     <?php endif; ?>
                   </div>
-                  <div class="ml-1">
-                    <a href="<?= base_url() . "deputes/" . $exp['dptSlug'] . '/depute_' . $exp['nameUrl'] ?>" class="pg-depute-all">
-                      <?= $exp['civ'] . ' ' . $exp['nameFirst'] . ' ' . $exp['nameLast'] ?></a> - <?= $exp['text'] ?>
+                  <div class="ml-3" >
+                    <p class="collapse mb-0" id="collapse<?= $exp['idImage'] ?>">
+                      <a class="font-weight-bold no-decoration underline" href="<?= base_url() . "deputes/" . $exp['dptSlug'] . '/depute_' . $exp['nameUrl'] ?>" class="pg-depute-all">
+                        <?= $exp['nameFirst'] . ' ' . $exp['nameLast'] ?> -
+                      </a>
+                      <?= $exp['text'] ?></p>
+                    <a class="read collapsed" data-toggle="collapse" href="#collapse<?= $exp['idImage'] ?>" aria-expanded="false" aria-controls="collapse<?= $exp['idImage'] ?>"></a>
                   </div>
                 </div>
               <?php endforeach ?>
