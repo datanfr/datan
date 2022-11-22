@@ -5,51 +5,34 @@
 <script type="text/javascript">
   document.addEventListener('DOMContentLoaded', function(){
 
-    var jsonfile = JSON.parse(<?= json_encode($proximity_history) ?>);
-    console.log(jsonfile);
+    const jsonfile = Object.values(JSON.parse(<?= json_encode($proximity_history) ?>));
 
-    var labels = Object.keys(jsonfile);
-    console.log(labels);
+    // Labels
+    const firstKey = Object.keys(jsonfile)[0];
+    const labels = jsonfile[firstKey].set_data.map(v => v.month);
 
-    var data = {
-      labels: labels,
-      datasets: [
-        {
-          data: [
-            <?php foreach ($stats_history_chart as $value) {
-              echo $value['value'].",";
-            } ?>
-          ]
-        }
-      ]
-    };
+    // Data
+    const dataSets = [];
+    jsonfile.forEach(o => dataSets.push({
+      label: o.groupe,
+      data: o.set_data.map(v => v.score),
+      borderColor: o.color,
+      borderWidth: 1,
+      fill: false
+    }));
+
     var ctx = document.getElementById('proximity');
     var chartOptions = {
-      responsive: true,
-      maintainAspectRatio: true,
-      aspectRatio: 2,
-      layout:{
-        padding: 10
-      },
-      plugins: {
-        legend: {
-          display: false
-        },
-      },
-      scales: {
-        y: {
-          afterDataLimits: (scale) => {
-            scale.max = <?= $max ?>;
-            scale.min = 0;
-          }
-        }
-      }
+      responsive: true
     }
 
     // Init the chart
-    var pieChart = new Chart(ctx, {
+    new Chart(ctx, {
       type: 'line',
-      data: data,
+      data: {
+        labels: labels,
+        datasets: dataSets
+      },
       options: chartOptions,
     });
 
