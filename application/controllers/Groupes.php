@@ -627,8 +627,12 @@
 
       // Get history proximity stats
       $data['proximity_history'] = $this->groupes_model->get_stat_proximity_history($data['groupe']['uid']);
+      $data['proximity_history'] = json_encode($data['proximity_history']);
 
-      var_dump($data['proximity_history']);
+      echo $data['proximity_history'];
+
+      //var_dump($data['proximity_history']);
+
 
 
       function date_compare($a, $b) {
