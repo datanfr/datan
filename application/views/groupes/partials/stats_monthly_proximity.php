@@ -4,12 +4,15 @@
 
 <script type="text/javascript">
   document.addEventListener('DOMContentLoaded', function(){
+
+    var jsonfile = JSON.parse(<?= json_encode($proximity_history) ?>);
+    console.log(jsonfile);
+
+    var labels = Object.keys(jsonfile);
+    console.log(labels);
+
     var data = {
-      labels: [
-        <?php foreach ($stats_history_chart as $value) {
-          echo '"'.$value['dateValue'].'",';
-        } ?>
-      ],
+      labels: labels,
       datasets: [
         {
           data: [
