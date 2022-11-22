@@ -182,19 +182,20 @@ $(function () {
   var $el, $ps, $up, totalHeight;
   $(".read-more-container .btn").click(function () {
     // IE 7 doesn't even get this far. I didn't feel like dicking with it.
-    totalHeight = 0;
+    var totalHeight = 0;
     var margin = 0;
     $el = $(this);
     var $p = $el.parent();
+    var buttonHeight = parseInt($p.css("padding"), 10) * 2 + $p.height();
     $up = $p.parent();
-    $ps = $up.find("p:not('.read-more-button')"); // measure how tall inside should be by adding together heights of all inside paragraphs (except read-more paragraph)
+    $ps = $up.children(); // measure how tall inside should be by adding together heights of all inside paragraphs (except read-more paragraph)
 
     $ps.each(function () {
       totalHeight += $(this).outerHeight();
-      margin = parseInt($(this).css("margin-bottom"), 10);
+      margin = parseInt($(this).css("margin-bottom"), 10) + parseInt($(this).css("margin-top"), 10);
       totalHeight = totalHeight + margin;
     });
-    totalHeight = totalHeight - margin;
+    totalHeight = totalHeight - buttonHeight;
     $up.css({
       // Set height to prevent instant jumpdown when max height is removed
       "height": $up.height(),
