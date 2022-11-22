@@ -111,6 +111,24 @@
         </div>
       </div>
       <div class="mt-5 test-border">
+        <h2>Le nombre de députés membre du groupe <?= $groupe['libelleAbrev'] ?></h2>
+        <p>XXXX</p>
+        <p>Retrouvez ci-dessous un aperçu du nombre de députés membres du groupe politique <?= $groupe['libelleAbrev'] ?>.</p>
+        <p>A FAIRE</p>
+      </div>
+      <div class="mt-5 test-border">
+        <h2>L'âge moyen des députés du groupe <?= $groupe['libelleAbrev'] ?></h2>
+        <p>XXXX</p>
+        <p>Retrouvez ci-dessous un aperçu de l'âge moyen des députés membres du groupe politique <?= $groupe['libelleAbrev'] ?>.</p>
+        <p>A FAIRE</p>
+      </div>
+      <div class="mt-5 test-border">
+        <h2>Le taux de féminisation au sein du groupe <?= $groupe['libelleAbrev'] ?></h2>
+        <p>XXXX</p>
+        <p>Retrouvez ci-dessous un aperçu de la féminisation du groupe groupe politique <?= $groupe['libelleAbrev'] ?>.</p>
+        <p>A FAIRE</p>
+      </div>
+      <div class="mt-5 test-border">
         <h2 class="anchor" id="link-stats">Historique du groupe <?= name_group($title) ?></h2>
         <p>Sur cette page, vous trouvez un historique des statistiques du groupe. Pour chaque groupe politique, nous avons répertorié les anciens ou nouveaux groupes qui leur sont liés.</p>
         <p>Sur Datan, nous récupérons les statistiques de l'Assemblée nationale depuis la 14<sup>ème</sup> législature (2012).</p>
