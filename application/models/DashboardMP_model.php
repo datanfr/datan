@@ -86,7 +86,8 @@ class DashboardMP_model extends CI_Model
   public function modify_explication($input){
     $data = array(
       'text' => $this->input->post('explication'),
-      'state' => $this->input->post('state')
+      'state' => $this->input->post('state'),
+      'modified_at' => date("Y-m-d H:i:s")
     );
     $this->db->set($data);
     $this->db->where('mpId', $input['depute']['mpId']);
