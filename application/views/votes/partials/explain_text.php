@@ -1,4 +1,4 @@
-<div class="d-flex align-items-start my-4">
+<div class="d-flex align-items-start py-3">
     <div class="depute-img-circle">
         <?php if ($exp['img']) : ?>
             <picture>
@@ -14,7 +14,7 @@
         <?php endif; ?>
     </div>
     <div class="ml-3">
-        <p>
+        <p class="mb-0">
             <a class="font-weight-bold no-decoration underline" href="<?= base_url() . "deputes/" . $exp['dptSlug'] . '/depute_' . $exp['nameUrl'] ?>" class="pg-depute-all">
                 <?= $exp['nameFirst'] . ' ' . $exp['nameLast'] ?> -
             </a>
