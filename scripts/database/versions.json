@@ -2,5 +2,9 @@
   {
     "version": 1,
     "object": "This is the first version of the database"
+  },
+  {
+    "version": 2,
+    "object": "Add created_at and modified_at fields in explications_mp table"
   }
 ]
