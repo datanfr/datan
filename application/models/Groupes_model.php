@@ -411,7 +411,7 @@
     }
 
     public function get_stat_proximity_history($groupe_uid){
-      $this->db->select('c.organeRef, c.dateValue, c.score, c.prox_group AS proxGroup, o.couleurAssociee, o.libelleAbrev AS proxGoupLibelle');
+      $this->db->select('c.organeRef, date_format(c.dateValue, "%M %Y") as dateValue, c.score, c.prox_group AS proxGroup, o.couleurAssociee, o.libelleAbrev AS proxGoupLibelle');
       $this->db->where('c.organeRef', $groupe_uid);
       $this->db->where('o.libelleAbrev !=', 'Ni');
       $this->db->join('organes o', 'o.uid = c.prox_group');
@@ -419,9 +419,9 @@
       foreach ($results as $key => $value) {
         $return[$value['proxGroup']]['groupe'] = $value['proxGoupLibelle'];
         $return[$value['proxGroup']]['color'] = $value['couleurAssociee'];
-        $return[$value['proxGroup']]['set_data'][] = array('month' => $value['dateValue'], 'score' => round($value['score'] * 100));
+        $return[$value['proxGroup']]['set_data'][] = array('month' => ucfirst(months_abbrev($value['dateValue'])), 'score' => round($value['score'] * 100));
       }
-      
+
       return $return;
     }
 
