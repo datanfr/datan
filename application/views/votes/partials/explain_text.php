@@ -1,4 +1,3 @@
-
 <div class="d-flex align-items-start my-4">
     <div class="depute-img-circle">
         <?php if ($exp['img']) : ?>

@@ -659,8 +659,9 @@
       $this->db->select('d.civ, d.nameFirst, d.nameLast, d.nameUrl, d.dptSlug, substr(d.mpId, 3) AS idImage, d.img, e.text, v.vote');
       $this->db->join('deputes_last d', 'e.mpId = d.mpId', 'left');
       $this->db->join('votes_scores v', 'v.legislature = e.legislature AND v.voteNumero = e.voteNumero AND v.mpId = e.mpId', );
+      $this->db->order_by('e.id', 'des');
+      $this->db->where('state', 1);
       $results = $this->db->get_where('explications_mp e', $where)->result_array();
-      shuffle($results);
       foreach ($results as $key => $value) {
         $return[$value['vote']][] = $value;
       }
