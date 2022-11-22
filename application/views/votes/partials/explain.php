@@ -19,7 +19,7 @@ $widthCol = isset($explain[0]) ? 4 : 6;
                         <?php else : ?>
                             <i>Aucun député <b>pour</b> ne sait encore exprimé.</i>
                         <?php endif ?>
-                    <a class="read-more-button"><button class="btn">Lire plus</button></a>
+                        <p class="read-more-button"><a href="#" class="btn btn-primary">Lire plus</a></p>
                     </div>
                 </div>
             </div>
