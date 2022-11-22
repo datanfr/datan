@@ -662,11 +662,12 @@
       $this->db->order_by('e.modified_at', 'DESC');
       $this->db->where('state', 1);
       $results = $this->db->get_where('explications_mp e', $where)->result_array();
-      foreach ($results as $key => $value) {
-        $return[$value['vote']][] = $value;
+      if ($results) {
+        foreach ($results as $key => $value) {
+          $return[$value['vote']][] = $value;
+        }
+        return $return;
       }
-
-      return $return;
     }
-
+    
   }

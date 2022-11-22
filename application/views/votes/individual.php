@@ -233,7 +233,7 @@
     </div>
   </div>
 </div>
-<?php if (count($explain)):  
+<?php if ($explain):  
     $this->load->view('votes/partials/explain.php', $explain);
 endif; ?>
 <?php if (!empty($author)) : ?>
