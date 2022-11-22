@@ -660,9 +660,11 @@
       $this->db->join('deputes_last d', 'e.mpId = d.mpId', 'left');
       $this->db->join('votes_scores v', 'v.legislature = e.legislature AND v.voteNumero = e.voteNumero AND v.mpId = e.mpId', );
       $results = $this->db->get_where('explications_mp e', $where)->result_array();
+      shuffle($results);
       foreach ($results as $key => $value) {
         $return[$value['vote']][] = $value;
       }
+
       return $return;
     }
 

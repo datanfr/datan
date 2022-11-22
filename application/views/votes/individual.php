@@ -233,84 +233,9 @@
     </div>
   </div>
 </div>
-<?php if (count($explain)): ?>
-  <div class="container-fluid py-5" id="pattern_background">
-    <div class="container pg-vote-individual">
-      <div class="row explain">
-        <div class="col-12 mb-4">
-          <h2 class="text-center">La parole aux députés</h2>
-          <p class="mt-5 text-center">Sur <b>Datan</b>, les députés peuvent donner leur explication de vote. Pourquoi ont-ils voté pour ou contre ce texte ? Découvrez ci-dessous les explications des députés.</p>
-        </div>
-        <div class="col-md-6">
-          <p class="text-center font-weight-bold sort-adopté h5">LES DÉPUTÉS POUR</p>
-          <div class="card mt-4">
-            <div class="card-body">
-              <?php foreach ($explain[1] as $exp) : ?>
-                <div class="d-flex align-items-start my-4">
-                  <div class="depute-img-circle">
-                    <?php if ($exp['img']) : ?>
-                      <picture>
-                        <source srcset="<?= asset_url(); ?>imgs/deputes_nobg_webp/depute_<?= $exp['idImage'] ?>_webp.webp" type="image/webp">
-                        <source srcset="<?= asset_url(); ?>imgs/deputes_nobg/depute_<?= $exp['idImage'] ?>.png" type="image/png">
-                        <img src="<?= asset_url(); ?>imgs/deputes_original/depute_<?= $exp['idImage'] ?>.png" width="150" height="192" alt="<?= $title ?>">
-                      </picture>
-                    <?php else : ?>
-                      <picture>
-                        <source srcset="<?= asset_url() ?>imgs/placeholder/placeholder-face-2.png" type="image/png">
-                        <img src="<?= asset_url() ?>imgs/placeholder/placeholder-face-2.png" alt="<?= $title ?>">
-                      </picture>
-                    <?php endif; ?>
-                  </div>
-                  <div class="ml-3" >
-                    <p class="collapse mb-0" id="collapse<?= $exp['idImage'] ?>">
-                      <a class="font-weight-bold no-decoration underline" href="<?= base_url() . "deputes/" . $exp['dptSlug'] . '/depute_' . $exp['nameUrl'] ?>" class="pg-depute-all">
-                        <?= $exp['nameFirst'] . ' ' . $exp['nameLast'] ?> -
-                      </a>
-                      <?= $exp['text'] ?></p>
-                    <a class="read collapsed" data-toggle="collapse" href="#collapse<?= $exp['idImage'] ?>" aria-expanded="false" aria-controls="collapse<?= $exp['idImage'] ?>"></a>
-                  </div>
-                </div>
-              <?php endforeach ?>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-6 mt-5 mt-md-0">
-          <p class="text-center font-weight-bold sort-rejeté h5">LES DÉPUTÉS CONTRE</p>
-          <div class="card mt-4">
-            <div class="card-body">
-              <?php foreach ($explain[-1] as $exp) : ?>
-                <div class="d-flex align-items-start my-4">
-                  <div class="depute-img-circle">
-                    <?php if ($exp['img']) : ?>
-                      <picture>
-                        <source srcset="<?= asset_url(); ?>imgs/deputes_nobg_webp/depute_<?= $exp['idImage'] ?>_webp.webp" type="image/webp">
-                        <source srcset="<?= asset_url(); ?>imgs/deputes_nobg/depute_<?= $exp['idImage'] ?>.png" type="image/png">
-                        <img src="<?= asset_url(); ?>imgs/deputes_original/depute_<?= $exp['idImage'] ?>.png" width="150" height="192" alt="<?= $title ?>">
-                      </picture>
-                    <?php else : ?>
-                      <picture>
-                        <source srcset="<?= asset_url() ?>imgs/placeholder/placeholder-face-2.png" type="image/png">
-                        <img src="<?= asset_url() ?>imgs/placeholder/placeholder-face-2.png" alt="<?= $title ?>">
-                      </picture>
-                    <?php endif; ?>
-                  </div>
-                  <div class="ml-3" >
-                    <p class="collapse mb-0" id="collapse<?= $exp['idImage'] ?>">
-                      <a class="font-weight-bold no-decoration underline" href="<?= base_url() . "deputes/" . $exp['dptSlug'] . '/depute_' . $exp['nameUrl'] ?>" class="pg-depute-all">
-                        <?= $exp['nameFirst'] . ' ' . $exp['nameLast'] ?> -
-                      </a>
-                      <?= $exp['text'] ?></p>
-                    <a class="read collapsed" data-toggle="collapse" href="#collapse<?= $exp['idImage'] ?>" aria-expanded="false" aria-controls="collapse<?= $exp['idImage'] ?>"></a>
-                  </div>
-                </div>
-              <?php endforeach ?>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-<?php endif; ?>
+<?php if (count($explain)):  
+    $this->load->view('votes/partials/explain.php', $explain);
+endif; ?>
 <?php if (!empty($author)) : ?>
   <div class="container-fluid pg-vote-individual bloc-author py-4">
     <div class="container">
