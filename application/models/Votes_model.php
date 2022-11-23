@@ -656,7 +656,7 @@
         'e.legislature' => $legislature,
         'e.voteNumero' => $voteNumero
       );
-      $this->db->select('d.civ, d.nameFirst, d.nameLast, d.nameUrl, d.dptSlug, substr(d.mpId, 3) AS idImage, d.img, e.text, v.vote');
+      $this->db->select('d.civ, d.nameFirst, d.nameLast, d.nameUrl, d.dptSlug, d.libelleAbrev, d.couleurAssociee, substr(d.mpId, 3) AS idImage, d.img, e.text, v.vote');
       $this->db->join('deputes_last d', 'e.mpId = d.mpId', 'left');
       $this->db->join('votes_scores v', 'v.legislature = e.legislature AND v.voteNumero = e.voteNumero AND v.mpId = e.mpId', );
       $this->db->order_by('e.modified_at', 'DESC');
@@ -669,5 +669,5 @@
         return $return;
       }
     }
-    
+
   }
