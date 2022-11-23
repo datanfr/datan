@@ -112,9 +112,15 @@
       </div>
       <div class="mt-5 test-border">
         <h2>Le nombre de députés membre du groupe <?= $groupe['libelleAbrev'] ?></h2>
-        <p>XXXX</p>
+        <p>Le groupe <i><?= name_group($title) ?></i> compte actuellement <span class="font-weight-bold text-primary"><?= $groupe['effectif'] ?> députés</span>. Cela représente <?= $groupe['effectifShare'] ?>% des députés de l'Assemblée nationale. Pour rappel, l'Assemblée compte 577 députés.</p>
         <p>Retrouvez ci-dessous un aperçu du nombre de députés membres du groupe politique <?= $groupe['libelleAbrev'] ?>.</p>
-        <p>A FAIRE</p>
+        <div class="card">
+          <div class="card-body pb-0">
+            <h3>Classement des groupes de la <?= $groupe['legislature'] ?><sup>ème</sup> législature</h3>
+            <p>CCCC</p>
+            <?php print_r($members) ?>
+          </div>
+        </div>
       </div>
       <div class="mt-5 test-border">
         <h2>L'âge moyen des députés du groupe <?= $groupe['libelleAbrev'] ?></h2>

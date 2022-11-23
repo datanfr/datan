@@ -636,6 +636,8 @@
       }
       usort($data['history_list'], 'date_compare');
 
+      // Get membership data by group
+      $data['members'] = $this->groupes_model->get_groupes_all(TRUE, $data['groupe']['legislature']);
 
       // Meta
       $data['url'] = $this->meta_model->get_url();
