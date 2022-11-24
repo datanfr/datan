@@ -137,9 +137,15 @@
       </div>
       <div class="mt-5 test-border">
         <h2>Le taux de féminisation au sein du groupe <?= $groupe['libelleAbrev'] ?></h2>
-        <p>XXXX</p>
+        <p>Il y a <span class="font-weight-bold text-primary"><?= $groupe['womenN'] ?> députées femmes</span> au sein du groupe <i><?= name_group($title) ?></i>. Cela représente <?= $groupe['womenPct'] ?>% des de l'ensemble des membres du groupe. C'est <?= $womenEdited ?> que la moyenne de l'Assemblée nationale, qui est de <?= $womenPctTotal ?>%.</p>
         <p>Retrouvez ci-dessous un aperçu de la féminisation du groupe groupe politique <?= $groupe['libelleAbrev'] ?>.</p>
-        <p>A FAIRE</p>
+        <div class="card">
+          <div class="card-body pb-0">
+            <h3>Classement des groupes de la <?= $groupe['legislature'] ?><sup>ème</sup> législature</h3>
+            <p>CCCC</p>
+            <?php $this->load->view('groupes/partials/stats_vertical.php', array('stats_history_chart' => $women, 'type' => 'pct', 'max' => 100, 'terms' => FALSE, 'divided_by' => $women_max, 'grid' => FALSE)) ?>
+          </div>
+        </div>
       </div>
       <div class="mt-5 test-border">
         <h2 class="anchor" id="link-stats">Historique du groupe <?= name_group($title) ?></h2>
