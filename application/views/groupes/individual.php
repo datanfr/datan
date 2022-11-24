@@ -222,7 +222,7 @@
                               </button>
                             </div>
                             <div class="modal-body p-0">
-                              <?php $this->load->view('groupes/partials/stats_history.php', array('stats_history_chart' => $stats_history['participation'])) ?>
+                              <?php $this->load->view('groupes/partials/stats_vertical.php', array('stats_history_chart' => $stats_history['participation'], 'grid' => TRUE, 'type' => 'pct', 'divided_by' => 1, 'terms' => FALSE)) ?>
                             </div>
                             <div class="modal-footer">
                               <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
@@ -298,7 +298,7 @@
                               </button>
                             </div>
                             <div class="modal-body p-0">
-                              <?php $this->load->view('groupes/partials/stats_history.php', array('stats_history_chart' => $stats_history['cohesion'])) ?>
+                              <?php $this->load->view('groupes/partials/stats_vertical.php', array('stats_history_chart' => $stats_history['cohesion'], 'grid' => TRUE, 'type' => 'pct', 'divided_by' => 1, 'terms' => FALSE)) ?>
                             </div>
                             <div class="modal-footer">
                               <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
@@ -385,7 +385,7 @@
                                 </button>
                               </div>
                               <div class="modal-body p-0">
-                                <?php $this->load->view('groupes/partials/stats_history.php', array('stats_history_chart' => $stats_history['majority'])) ?>
+                                <?php $this->load->view('groupes/partials/stats_vertical.php', array('stats_history_chart' => $stats_history['majority'], 'grid' => TRUE, 'type' => 'pct', 'divided_by' => 1, 'terms' => FALSE)) ?>
                               </div>
                               <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
