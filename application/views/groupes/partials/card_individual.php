@@ -30,7 +30,7 @@
           <?php endif; ?>
           <?php if ($groupe['libelleAbrev'] != "NI"): ?>
             <li>
-              <div class="label">Président</div>
+              <div class="label">Président<?= $president['civ'] == 'Mme' ? 'e' : '' ?></div>
               <div class="value">
                 <a class="no-decoration underline" href="<?= base_url() ?>deputes/<?= $president['dptSlug'] ?>/depute_<?= $president['nameUrl'] ?>"><?= $president['nameFirst']." ".$president['nameLast'] ?></a>
               </div>
