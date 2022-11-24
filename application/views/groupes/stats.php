@@ -124,9 +124,16 @@
       </div>
       <div class="mt-5 test-border">
         <h2>L'âge moyen des députés du groupe <?= $groupe['libelleAbrev'] ?></h2>
-        <p>XXXX</p>
+        <p>L'âge moyen des députés membres du groupe <i><?= name_group($title) ?></i> est de <span class="font-weight-bold text-primary"><?= $groupe['age'] ?> ans</span>.</p>
+        <p>L'âge moyen des députés de l'Assemblée nationale est de <?= $ageMean ?> ans. Les députés du groupe <i><?= name_group($title) ?></i> sont donc <?= $ageEdited ?> âgés que la moyenne de l'Assemblée.</p>
         <p>Retrouvez ci-dessous un aperçu de l'âge moyen des députés membres du groupe politique <?= $groupe['libelleAbrev'] ?>.</p>
-        <p>A FAIRE</p>
+        <div class="card">
+          <div class="card-body pb-0">
+            <h3>Classement des groupes de la <?= $groupe['legislature'] ?><sup>ème</sup> législature</h3>
+            <p>CCCC</p>
+            <?php $this->load->view('groupes/partials/stats_vertical.php', array('stats_history_chart' => $age, 'type' => 'score', 'max' => 100, 'terms' => FALSE, 'divided_by' => $age_max, 'grid' => FALSE)) ?>
+          </div>
+        </div>
       </div>
       <div class="mt-5 test-border">
         <h2>Le taux de féminisation au sein du groupe <?= $groupe['libelleAbrev'] ?></h2>

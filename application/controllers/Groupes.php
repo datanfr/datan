@@ -63,6 +63,9 @@
       } else {
         $data['no_majorite'] = TRUE;
       }
+      $data['ageMean'] = $this->stats_model->get_age_mean($data['groupe']['legislature']);
+      $data['ageMean'] = round($data['ageMean']);
+      $data['ageEdited'] = $this->functions_datan->more_less($data['groupe']['age'], $data['ageMean']);
       return $data;
     }
 
@@ -214,10 +217,6 @@
       // Query nbr of groups
       $data['groupesN'] = $this->groupes_model->get_number_active_groupes();
       $data['groupesN'] = $data['groupesN']['n'];
-      // Get mean age in the National Assembly
-      $data['ageMean'] = $this->stats_model->get_age_mean($legislature);
-      $data['ageMean'] = round($data['ageMean']);
-      $data['ageEdited'] = $this->functions_datan->more_less($data['groupe']['age'], $data['ageMean']);
       // Get mean of women in the National Assembly
       $data['womenPctTotal'] = $this->deputes_model->get_deputes_gender($legislature);
       $data['womenPctTotal'] = $data['womenPctTotal'][1]['percentage'];
@@ -642,6 +641,14 @@
         $data['members'][$key]['value'] = $value['effectif'];
       }
       $data['members_max'] = $data['members'][0]['effectif'];
+
+      // Get age data
+      $data['age'] = $this->stats_model->get_groups_age();
+      foreach ($data['age'] as $key => $value) {
+        $data['age'][$key]['value'] = $value['age'];
+      }
+      $data['age_max'] = $data['age'][0]['age'];
+      print_r($data['age']);
 
       // Meta
       $data['url'] = $this->meta_model->get_url();
