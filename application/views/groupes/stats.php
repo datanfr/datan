@@ -37,7 +37,7 @@
           <div class="card-body pb-0">
             <h3>Historique par législature</h3>
             <p>CCCC</p>
-            <?php $this->load->view('groupes/partials/stats_vertical.php', array('stats_history_chart' => $stats_history['participation'], 'type' => 'pct')) ?>
+            <?php $this->load->view('groupes/partials/stats_vertical.php', array('stats_history_chart' => $stats_history['participation'], 'type' => 'pct', 'terms' => TRUE, 'divided_by' => 1, 'grid' => TRUE)) ?>
           </div>
         </div>
         <div class="card mt-5">
@@ -58,7 +58,7 @@
           <div class="card-body pb-0">
             <h3>Historique par législature</h3>
             <p>CCCC</p>
-            <?php $this->load->view('groupes/partials/stats_vertical.php', array('stats_history_chart' => $stats_history['cohesion'], 'type' => 'score')) ?>
+            <?php $this->load->view('groupes/partials/stats_vertical.php', array('stats_history_chart' => $stats_history['cohesion'], 'type' => 'score', 'terms' => TRUE, 'divided_by' => 1, 'grid' => TRUE)) ?>
           </div>
         </div>
         <div class="card mt-5">
@@ -80,7 +80,7 @@
             <div class="card-body pb-0">
               <h3>Historique par législature</h3>
               <p>CCCC</p>
-              <?php $this->load->view('groupes/partials/stats_vertical.php', array('stats_history_chart' => $stats_history['majority'], 'type' => 'pct')) ?>
+              <?php $this->load->view('groupes/partials/stats_vertical.php', array('stats_history_chart' => $stats_history['majority'], 'type' => 'pct', 'terms' => TRUE, 'divided_by' => 1, 'grid' => TRUE)) ?>
             </div>
           </div>
           <div class="card mt-5">
@@ -118,7 +118,7 @@
           <div class="card-body pb-0">
             <h3>Classement des groupes de la <?= $groupe['legislature'] ?><sup>ème</sup> législature</h3>
             <p>CCCC</p>
-            <?php //$this->load->view('groupes/partials/stats_horizontal.php', array('stats_history_chart' => $members, 'type' => 'score', 'max' => 100)) ?>
+            <?php $this->load->view('groupes/partials/stats_vertical.php', array('stats_history_chart' => $members, 'type' => 'score', 'max' => 100, 'terms' => FALSE, 'divided_by' => $members_max, 'grid' => FALSE)) ?>
           </div>
         </div>
       </div>
