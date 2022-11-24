@@ -638,6 +638,10 @@
 
       // Get membership data by group
       $data['members'] = $this->groupes_model->get_groupes_all(TRUE, $data['groupe']['legislature']);
+      foreach ($data['members'] as $key => $value) {
+        $data['members'][$key]['value'] = $value['effectif'];
+      }
+      $data['members_max'] = $data['members'][0]['effectif'];
 
       // Meta
       $data['url'] = $this->meta_model->get_url();
