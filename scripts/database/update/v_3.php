@@ -28,12 +28,11 @@
     /* 2. MAKE YOUR CHANGE TO THE DATABASE */
     $prepare = $bdd->prepare("CREATE TABLE `groupes_stats_history`(
       `organeRef` VARCHAR(15) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL ,
-      `active` INT(1) NOT NULL ,
       `stat` VARCHAR(15) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL ,
       `type` VARCHAR(15) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL ,
       `legislature` INT(2) NOT NULL ,
       `dateValue` DATE NOT NULL ,
-      `value` DECIMAL(4,2) NULL DEFAULT NULL ,
+      `value` VARCHAR(15) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL ,
       `dateMaj` DATE NOT NULL
     )");
 

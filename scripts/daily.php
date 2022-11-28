@@ -1010,6 +1010,41 @@ class Script
         }
     }
 
+    public function groupeStatsHistory(){
+
+      $this->bdd->query('TRUNCATE TABLE groupes_stats_history');
+
+      $reponse = $this->bdd->query('SELECT * FROM organes WHERE legislature >= 14 AND coteType = "GP" ORDER BY legislature ASC');
+
+      while ($data = $reponse->fetch()) {
+        $groupeId = $data['uid'];
+        $legislature = $data['legislature'];
+
+        /// --- 1. Feminisation --- ///
+        $feminisation = $this->bdd->query('SELECT round(AVG(A.woman) * 100, 2) AS pct, SUM(A.woman) AS n
+          FROM (
+            SELECT CASE WHEN d.civ = "Mme" THEN 1 ELSE 0 END AS woman
+            FROM mandat_groupe m
+            LEFT JOIN deputes_last d ON d.mpId = m.mpId
+            WHERE m.organeRef = "' . $groupeId . '"
+            GROUP BY m.mpId
+          ) A
+        ')->fetch(PDO::FETCH_ASSOC);
+
+        // Insert N
+        $sql = $this->bdd->prepare('INSERT INTO groupes_stats_history (organeRef, stat, type, legislature, dateValue, value, dateMaj) VALUES (:organeRef, :stat, :type, :legislature, :dateValue, :value, :dateMaj)');
+        $sql->execute(array('organeRef' => $groupeId, 'stat' => 'womenN', 'type' => 'legislature', 'legislature' => $legislature, 'dateValue' => $data['dateDebut'], 'value' => $feminisation['n'], 'dateMaj' => $this->dateMaj));
+
+        // Insert pct
+        $sql = $this->bdd->prepare('INSERT INTO groupes_stats_history (organeRef, stat, type, legislature, dateValue, value, dateMaj) VALUES (:organeRef, :stat, :type, :legislature, :dateValue, :value, :dateMaj)');
+        $sql->execute(array('organeRef' => $groupeId, 'stat' => 'womePct', 'type' => 'legislature', 'legislature' => $legislature, 'dateValue' => $data['dateDebut'], 'value' => $feminisation['pct'], 'dateMaj' => $this->dateMaj));
+
+
+      }
+
+
+    }
+
     public function parties()
     {
         echo "parties starting \n";
@@ -3492,6 +3527,7 @@ if (isset($argv[1])) {
     $script = new Script();
 }
 
+/*
 $script->fillDeputes();
 $script->deputeAll();
 $script->deputeLast();
@@ -3501,6 +3537,9 @@ $script->resmushPictures();
 $script->groupeEffectif();
 $script->deputeJson();
 $script->groupeStats();
+*/
+$script->groupeStatsHistory();
+/*
 $script->parties();
 $script->legislature();
 $script->vote(); // Depend on the legislature
