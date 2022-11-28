@@ -1037,7 +1037,7 @@ class Script
 
         // Insert pct
         $sql = $this->bdd->prepare('INSERT INTO groupes_stats_history (organeRef, stat, type, legislature, dateValue, value, dateMaj) VALUES (:organeRef, :stat, :type, :legislature, :dateValue, :value, :dateMaj)');
-        $sql->execute(array('organeRef' => $groupeId, 'stat' => 'womePct', 'type' => 'legislature', 'legislature' => $legislature, 'dateValue' => $data['dateDebut'], 'value' => $feminisation['pct'], 'dateMaj' => $this->dateMaj));
+        $sql->execute(array('organeRef' => $groupeId, 'stat' => 'womenPct', 'type' => 'legislature', 'legislature' => $legislature, 'dateValue' => $data['dateDebut'], 'value' => $feminisation['pct'], 'dateMaj' => $this->dateMaj));
 
 
       }
