@@ -6,5 +6,9 @@
   {
     "version": 2,
     "object": "Create new table: class_groups_month"
-  }
+  },
+  {
+    "version": 3,
+    "object": "Create new table: groupes_stats_history"
+  },
 ]

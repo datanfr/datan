@@ -13,7 +13,7 @@
   include '../../bdd-connexion.php';
 
   /* 1. CHANGE THE new_v VALUE */
-  $new_v = 2;
+  $new_v = 3;
 
   $last_v_installed = $bdd->query('SELECT version FROM mysql_v ORDER BY version DESC LIMIT 1');
   $last_v_installed = $last_v_installed->fetchAll(PDO::FETCH_ASSOC);
@@ -23,17 +23,17 @@
   echo "Last version installed = " . $last_v_installed . "<br>";
 
   if ($new_v > $last_v_installed) {
-    echo "Install the new table: class_groups_month <br>";
+    echo "Create the new table: groupes_stats_history <br>";
 
     /* 2. MAKE YOUR CHANGE TO THE DATABASE */
-    $prepare = $bdd->prepare("CREATE TABLE `class_groups_month`(
+    $prepare = $bdd->prepare("CREATE TABLE `groupes_stats_history`(
       `organeRef` VARCHAR(15) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL ,
-      `legislature` INT(2) NOT NULL ,
       `active` INT(1) NOT NULL ,
+      `stat` VARCHAR(15) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL ,
+      `type` VARCHAR(15) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL ,
+      `legislature` INT(2) NOT NULL ,
       `dateValue` DATE NOT NULL ,
-      `stat`VARCHAR(25) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL ,
-      `value` DECIMAL(6,3) NOT NULL ,
-      `votes` BIGINT(21) NOT NULL ,
+      `value` DECIMAL(4,2) NULL DEFAULT NULL ,
       `dateMaj` DATE NOT NULL
     )");
 
