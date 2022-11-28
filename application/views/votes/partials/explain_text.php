@@ -1,4 +1,4 @@
-<div class="d-flex align-items-start my-3">
+<div class="d-flex align-items-start my-4">
     <div class="depute-img-circle">
         <?php if ($exp['img']) : ?>
             <a href="<?= base_url() . "deputes/" . $exp['dptSlug'] . '/depute_' . $exp['nameUrl'] ?>">
@@ -16,12 +16,13 @@
         <?php endif; ?>
     </div>
     <div class="ml-3">
-        <p class="mb-0">
+        <p class="mb-0 collapse" id="collapse<?= $exp['idImage'] ?>">
             <a class="font-weight-bold no-decoration underline" href="<?= base_url() . "deputes/" . $exp['dptSlug'] . '/depute_' . $exp['nameUrl'] ?>" class="pg-depute-all">
                 <?= $exp['nameFirst'] . ' ' . $exp['nameLast'] ?>
             </a>
             - <span style="color: <?= $exp['couleurAssociee'] ?>"><?= $exp['libelleAbrev'] ?></span>
             - <?= $exp['text'] ?>
         </p>
+        <a class="read collapsed" data-toggle="collapse" href="#collapse<?= $exp['idImage'] ?>" aria-expanded="false" aria-controls="collapse<?= $exp['idImage'] ?>"></a>
     </div>
 </div>
