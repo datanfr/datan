@@ -636,6 +636,9 @@
       }
       usort($data['history_list'], 'date_compare');
 
+      // Get group orga stats history
+      $data['orga_history'] = $this->groupes_model->get_orga_stats_history($data['history']);
+
       // Get membership data by group
       $data['members'] = $this->groupes_model->get_groupes_all(TRUE, $data['groupe']['legislature']);
       foreach ($data['members'] as $key => $value) {

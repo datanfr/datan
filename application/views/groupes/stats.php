@@ -146,6 +146,13 @@
             <?php $this->load->view('groupes/partials/stats_vertical.php', array('stats_history_chart' => $women, 'type' => 'pct', 'max' => 100, 'terms' => FALSE, 'divided_by' => $women_max, 'grid' => FALSE)) ?>
           </div>
         </div>
+        <div class="card mt-5">
+          <div class="card-body pb-0">
+            <h3>Historique par législature</h3>
+            <p>CCCC</p>
+            <?php $this->load->view('groupes/partials/stats_vertical.php', array('stats_history_chart' => $orga_history['womenPct'], 'type' => 'pct', 'max' => 100, 'terms' => FALSE, 'divided_by' => 1, 'grid' => FALSE)) ?>
+          </div>
+        </div>
       </div>
       <div class="mt-5 test-border">
         <h2 class="anchor" id="link-stats">Historique du groupe <?= name_group($title) ?></h2>

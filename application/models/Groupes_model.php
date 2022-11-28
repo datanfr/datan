@@ -410,6 +410,24 @@
       return $return;
     }
 
+    public function get_orga_stats_history($groups){
+      $this->db->select('stats.type, stats.legislature, stats.stat, stats.value, o.libelleAbrev');
+      $this->db->where('stats.type', 'legislature');
+      $this->db->where_in('stats.organeRef', $groups);
+      $this->db->order_by('stats.legislature', 'ASC');
+      $this->db->join('organes o', 'o.uid = stats.organeRef');
+      $results = $this->db->get('groupes_stats_history stats')->result_array();
+
+      foreach ($results as $key => $value) {
+        $return[$value['stat']][] = $value;
+      }
+      foreach ($return['womenPct'] as $key => $value) {
+        $return['womenPct'][$key]['value'] = $value['value'] / 100;
+      }
+
+      return $return;
+    }
+
     public function get_stat_proximity_history($groupe_uid){
       $this->db->select('c.organeRef, date_format(c.dateValue, "%M %Y") as dateValue, c.score, c.prox_group AS proxGroup, o.couleurAssociee, o.libelleAbrev AS proxGoupLibelle');
       $this->db->where('c.organeRef', $groupe_uid);
