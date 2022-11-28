@@ -472,7 +472,7 @@
         ELSE NULL
         END AS vote_libelle
         FROM votes_scores vs
-        WHERE vs.voteNumero IN (105, 184) AND vs.legislature = 16 AND vs.mpId = ?
+        WHERE vs.voteNumero IN (184, 269, 629) AND vs.legislature = 16 AND vs.mpId = ?
       ';
       $query = $this->db->query($sql, $mpId);
 
