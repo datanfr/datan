@@ -179,26 +179,6 @@
                 <h2 class="mb-4 title-center">Ses positions importantes</h2>
                 <div class="card">
                   <div class="card-body key-votes">
-                    <?php if (isset($key_votes[105])) : ?>
-                      <div class="row">
-                        <div class="col-md-3 libelle d-flex align-items-center justify-content-md-center">
-                          <span class="sort-<?= $key_votes[105]["vote_libelle"] ?>"><?= mb_strtoupper($key_votes[105]["vote_libelle"]) ?></span>
-                        </div>
-                        <div class="col-md-9 value">
-                          <?= $title ?><b>
-                            <?php if ($key_votes[105]["vote"] === "1") : ?>
-                              a voté en faveur de
-                            <?php elseif ($key_votes[105]["vote"] === "-1") : ?>
-                              a voté contre
-                            <?php else : ?>
-                              s'est abstenu<?= $gender["e"] ?> lors du vote sur
-                            <?php endif; ?>
-                            la création d'une taxe sur les super-profits des entreprises pétrolières</b>.
-                          <?= ucfirst($gender["le"]) ?> député<?= $gender["e"] ?> <?= $key_votes[105]["loyaute"] === "1" ? "a été loyal" : "n'a pas été loyal" ?><?= $gender['e'] ?> a son groupe.
-                          <a href="<?= base_url() ?>votes/legislature-16/vote_105" class="font-italic">Voir le vote</a>
-                        </div>
-                      </div>
-                    <?php endif; ?>
                     <?php if (isset($key_votes[184])) : ?>
                       <div class="row">
                         <div class="col-md-3 libelle d-flex align-items-center justify-content-md-center">
@@ -219,23 +199,43 @@
                         </div>
                       </div>
                     <?php endif; ?>
-                    <?php if (isset($key_votes[2814])) : ?>
+                    <?php if (isset($key_votes[269])) : ?>
                       <div class="row">
                         <div class="col-md-3 libelle d-flex align-items-center justify-content-md-center">
-                          <span class="sort-<?= $key_votes[2814]["vote_libelle"] ?>"><?= mb_strtoupper($key_votes[2814]["vote_libelle"]) ?></span>
+                          <span class="sort-<?= $key_votes[269]["vote_libelle"] ?>"><?= mb_strtoupper($key_votes[269]["vote_libelle"]) ?></span>
                         </div>
                         <div class="col-md-9 value">
-                          <?= $title ?> <b>
-                            <?php if ($key_votes[2814]["vote"] === "1") : ?>
-                              a accordé sa confiance
-                            <?php elseif ($key_votes[2814]["vote"] === "-1") : ?>
-                              n'a pas accordé sa confiance
+                          <?= $title ?><b>
+                            <?php if ($key_votes[269]["vote"] === "1") : ?>
+                              a voté en faveur de
+                            <?php elseif ($key_votes[269]["vote"] === "-1") : ?>
+                              a voté contre
                             <?php else : ?>
-                              s'est abstenu<?= $gender["e"] ?> lors du vote de confiance
+                              s'est abstenu<?= $gender["e"] ?> sur le vote concernant
                             <?php endif; ?>
-                            au Premier ministre Jean Castex</b>.
-                          <?= ucfirst($gender['pronom']) ?> <?= $key_votes[2814]["loyaute"] === "1" ? "a été loyal" : "n'a pas été loyal" ?><?= $gender['e'] ?> a son groupe politique.
-                          <a href="<?= base_url() ?>votes/legislature-15/vote_2814" class="font-italic">Voir le vote</a>
+                            la création d'une taxe temporaire sur les super-dividendes distribués par les grandes entreprises</b>.
+                          <?= ucfirst($gender['pronom']) ?> <?= $key_votes[269]["loyaute"] === "1" ? "a été loyal" : "n'a pas été loyal" ?><?= $gender['e'] ?> a son groupe.
+                          <a href="<?= base_url() ?>votes/legislature-15/vote_269" class="font-italic">Voir le vote</a>
+                        </div>
+                      </div>
+                    <?php endif; ?>
+                    <?php if (isset($key_votes[629])) : ?>
+                      <div class="row">
+                        <div class="col-md-3 libelle d-flex align-items-center justify-content-md-center">
+                          <span class="sort-<?= $key_votes[629]["vote_libelle"] ?>"><?= mb_strtoupper($key_votes[629]["vote_libelle"]) ?></span>
+                        </div>
+                        <div class="col-md-9 value">
+                          <?= $title ?><b>
+                            <?php if ($key_votes[629]["vote"] === "1") : ?>
+                              a voté en faveur de
+                            <?php elseif ($key_votes[629]["vote"] === "-1") : ?>
+                              a voté contre
+                            <?php else : ?>
+                              s'est abstenu<?= $gender["e"] ?> sur le vote concernant
+                            <?php endif; ?>
+                            l'inscription de l'interruption volontaire de grossesse (IVG) dans la Constitution</b>.
+                          <?= ucfirst($gender['pronom']) ?> <?= $key_votes[629]["loyaute"] === "1" ? "a été loyal" : "n'a pas été loyal" ?><?= $gender['e'] ?> a son groupe.
+                          <a href="<?= base_url() ?>votes/legislature-15/vote_629" class="font-italic">Voir le vote</a>
                         </div>
                       </div>
                     <?php endif; ?>
