@@ -134,6 +134,13 @@
             <?php $this->load->view('groupes/partials/stats_vertical.php', array('stats_history_chart' => $age, 'type' => 'score', 'max' => 100, 'terms' => FALSE, 'divided_by' => $age_max, 'grid' => FALSE)) ?>
           </div>
         </div>
+        <div class="card mt-5">
+          <div class="card-body pb-0">
+            <h3>Classement des groupes de la <?= $groupe['legislature'] ?><sup>ème</sup> législature</h3>
+            <p>CCCC</p>
+            <?php $this->load->view('groupes/partials/stats_vertical.php', array('stats_history_chart' => $orga_history['age'], 'type' => 'score', 'max' => 100, 'terms' => FALSE, 'divided_by' => $age_max, 'grid' => FALSE)) ?>
+          </div>
+        </div>
       </div>
       <div class="mt-5 test-border">
         <h2>Le taux de féminisation au sein du groupe <?= $groupe['libelleAbrev'] ?></h2>
