@@ -1019,6 +1019,7 @@ class Script
       while ($data = $reponse->fetch()) {
         $groupeId = $data['uid'];
         $legislature = $data['legislature'];
+        $dateDebut = $data['dateDebut'];
 
         /// --- 1. Feminisation --- ///
         $feminisation = $this->bdd->query('SELECT round(AVG(A.woman) * 100, 2) AS pct, SUM(A.woman) AS n
@@ -1039,6 +1040,20 @@ class Script
         $sql = $this->bdd->prepare('INSERT INTO groupes_stats_history (organeRef, stat, type, legislature, dateValue, value, dateMaj) VALUES (:organeRef, :stat, :type, :legislature, :dateValue, :value, :dateMaj)');
         $sql->execute(array('organeRef' => $groupeId, 'stat' => 'womenPct', 'type' => 'legislature', 'legislature' => $legislature, 'dateValue' => $data['dateDebut'], 'value' => $feminisation['pct'], 'dateMaj' => $this->dateMaj));
 
+        /// --- 2. Age --- ///
+        $age = $this->bdd->query('SELECT ROUND(AVG(A.age), 2) AS age
+          FROM (
+            SELECT m.mpId, m.dateDebut, d.birthDate,
+            YEAR(m.dateDebut) - YEAR(d.birthDate) - CASE WHEN MONTH(m.dateDebut) < MONTH(d.birthDate) OR (MONTH(m.dateDebut) = MONTH(d.birthDate) AND DAY(m.dateDebut) < DAY(d.birthDate)) THEN 1 ELSE 0 END AS age
+            FROM mandat_groupe m
+            LEFT JOIN deputes d ON m.mpId = d.mpId
+            WHERE m.organeRef = "' . $groupeId . '" AND YEAR(m.dateDebut) = YEAR("' . $dateDebut . '") AND MONTH(m.dateDebut) = MONTH("' . $dateDebut . '")
+          ) A'
+        )->fetch(PDO::FETCH_ASSOC);
+
+        // Insert age
+        $sql = $this->bdd->prepare('INSERT INTO groupes_stats_history (organeRef, stat, type, legislature, dateValue, value, dateMaj) VALUES (:organeRef, :stat, :type, :legislature, :dateValue, :value, :dateMaj)');
+        $sql->execute(array('organeRef' => $groupeId, 'stat' => 'age', 'type' => 'legislature', 'legislature' => $legislature, 'dateValue' => $data['dateDebut'], 'value' => $age['age'], 'dateMaj' => $this->dateMaj));
 
       }
 
