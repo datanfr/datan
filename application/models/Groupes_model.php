@@ -424,6 +424,9 @@
       foreach ($return['womenPct'] as $key => $value) {
         $return['womenPct'][$key]['value'] = $value['value'] / 100;
       }
+      foreach ($return['age'] as $key => $value) {
+        $return['age'][$key]['value'] = round($value['value']);
+      }
 
       return $return;
     }
