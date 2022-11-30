@@ -1012,7 +1012,20 @@ class Script
 
     public function groupeStatsHistory(){
 
+      $this->bdd->query('CREATE TABLE IF NOT EXISTS `groupes_stats_history`(
+        `organeRef` VARCHAR(15) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL ,
+        `stat` VARCHAR(15) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL ,
+        `type` VARCHAR(15) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL ,
+        `legislature` INT(2) NOT NULL ,
+        `dateValue` DATE NOT NULL ,
+        `value` VARCHAR(15) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL ,
+        `dateMaj` DATE NOT NULL ,
+        INDEX `idx_organeRef` (`organeRef`) ,
+        INDEX `idx_type` (`type`)
+      )');
       $this->bdd->query('TRUNCATE TABLE groupes_stats_history');
+
+
 
       $reponse = $this->bdd->query('SELECT * FROM organes WHERE legislature >= 14 AND coteType = "GP" ORDER BY legislature ASC');
 
@@ -2414,8 +2427,7 @@ class Script
 
       echo "classGroupsMonth starting \n";
 
-      $this->bdd->query('DROP TABLE IF EXISTS `class_groups_month`');
-      $this->bdd->query('CREATE TABLE `datan`.`class_groups_month`(
+      $this->bdd->query('CREATE TABLE IF NOT EXISTS `datan`.`class_groups_month`(
         `organeRef` VARCHAR(15) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL ,
         `legislature` INT(2) NOT NULL ,
         `active` INT(1) NOT NULL ,
@@ -2423,13 +2435,13 @@ class Script
         `stat`VARCHAR(25) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL ,
         `value` DECIMAL(6,3) NOT NULL ,
         `votes` BIGINT(21) NOT NULL ,
-        `dateMaj` DATE NOT NULL
+        `dateMaj` DATE NOT NULL,
+        INDEX `idx_organeRef` (`organeRef`),
+        INDEX `idx_stat` (`stat`)
       )');
-      $this->bdd->query('CREATE INDEX idx_organeRef ON class_groups_month(organeRef)');
-      $this->bdd->query('CREATE INDEX idx_stat ON class_groups_month(stat)');
+      $this->bdd->query('TRUNCATE TABLE class_groups_month');
 
-      $this->bdd->query('DROP TABLE IF EXISTS `class_groups_proximite_month`');
-      $this->bdd->query('CREATE TABLE `datan`.`class_groups_proximite_month`(
+      $this->bdd->query('CREATE TABLE IF NOT EXISTS `datan`.`class_groups_proximite_month`(
         `organeRef` VARCHAR(15) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL ,
         `legislature` INT(2) NOT NULL ,
         `active` INT(1) NOT NULL ,
@@ -2437,10 +2449,11 @@ class Script
         `prox_group` VARCHAR(15) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL ,
         `score` DECIMAL(6,3) NOT NULL ,
         `votes` BIGINT(21) NOT NULL ,
-        `dateMaj` DATE NOT NULL
+        `dateMaj` DATE NOT NULL,
+        INDEX `idx_organeRef` (`organeRef`),
+        INDEX `idx_legislature` (`legislature`)
       )');
-      $this->bdd->query('CREATE INDEX idx_organeRef ON class_groups_proximite_month(organeRef)');
-      $this->bdd->query('CREATE INDEX idx_legislature ON class_groups_month(legislature)');
+      $this->bdd->query('TRUNCATE TABLE class_groups_proximite_month');
 
       $fields = array('organeRef', 'legislature', 'active', 'dateValue', 'stat', 'value', 'votes', 'dateMaj');
       $fieldsProximity = array('organeRef', 'legislature', 'active', 'dateValue', 'prox_group', 'score', 'votes', 'dateMaj');
@@ -3578,7 +3591,9 @@ $script->deputeLoyaute();
 $script->classLoyaute();
 $script->classMajorite();
 $script->classGroups();
+*/
 $script->classGroupsMonth();
+/*
 $script->classGroupsProximite();
 //$script->classParticipationSix(); // Will need to be changed w/ leg 16
 //$script->classLoyauteSix(); // Will need to be changed w/ leg 16
