@@ -1012,6 +1012,8 @@ class Script
 
     public function groupeStatsHistory(){
 
+      echo "groupeStatsHistory starting \n";
+
       $this->bdd->query('CREATE TABLE IF NOT EXISTS `groupes_stats_history`(
         `organeRef` VARCHAR(15) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL ,
         `stat` VARCHAR(15) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL ,
@@ -1024,8 +1026,6 @@ class Script
         INDEX `idx_type` (`type`)
       )');
       $this->bdd->query('TRUNCATE TABLE groupes_stats_history');
-
-
 
       $reponse = $this->bdd->query('SELECT * FROM organes WHERE legislature >= 14 AND coteType = "GP" ORDER BY legislature ASC');
 
@@ -1070,6 +1070,62 @@ class Script
 
       }
 
+    }
+
+    public function groupeMembersHistory(){
+
+      echo "groupeMembersHistory starting \n";
+
+      $this->bdd->query('CREATE TABLE IF NOT EXISTS `groupes_effectif_history`(
+        `organeRef` VARCHAR(15) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL ,
+        `dateValue` DATE NOT NULL ,
+        `effectif` INT(3) NOT NULL ,
+        `dateMaj` DATE NOT NULL ,
+        PRIMARY KEY (`organeRef`, `dateValue`)
+      )');
+
+      $fields = array('organeRef', 'dateValue', 'effectif', 'dateMaj');
+      $effectifs = [];
+      $i = 1;
+
+      $reponse = $this->bdd->query('SELECT * FROM organes WHERE legislature >= 14 AND coteType = "GP" ORDER BY legislature ASC');
+
+      while ($data = $reponse->fetch()) {
+        $groupeId = $data['uid'];
+
+        $until = $this->bdd->query('SELECT * FROM groupes_effectif_history WHERE organeRef = "'.$groupeId.'" ORDER BY dateValue DESC LIMIT 1')->fetch(PDO::FETCH_ASSOC);
+        $last = $until['dateValue'];
+        if ($last) {
+          $dateDebut = new DateTime($last . ' + 1day');
+        } else {
+          $dateDebut = new DateTime($data['dateDebut']);
+        }
+
+        $dateFin = new DateTime($data['dateFin']);
+        $interval = DateInterval::createFromDateString('1 day');
+        $period = new DatePeriod($dateDebut, $interval, $dateFin);
+
+        foreach ($period as $dt) {
+          $day = $dt->format("Y-m-d");
+
+          $query = $this->bdd->query('SELECT organeRef, count(mpId) AS effectif
+            FROM mandat_groupe
+            WHERE codeQualite != "Président" AND organeRef = "' . $groupeId . '" AND dateDebut <= "' . $day . '" AND (dateFin IS NULL OR dateFin >= "' . $day . '")
+          ')->fetch(PDO::FETCH_ASSOC);
+
+          $effectif = array('organeRef' => $groupeId, 'dateValue' => $day, 'effectif' => $query['effectif'], 'dateMaj' => $this->dateMaj);
+          $effectifs = array_merge($effectifs, array_values($effectif));
+
+          if ($i % 1000 === 0) {
+            echo "Let's insert until " . $i . "\n";
+            $this->insertAll('groupes_effectif_history', $fields, $effectifs);
+            $effectifs = [];
+          }
+          $i++;
+        }
+      }
+      echo "Let's insert until the end : " . $i . "\n";
+      $this->insertAll('groupes_effectif_history', $fields, $effectifs);
 
     }
 
@@ -2008,10 +2064,8 @@ class Script
             }
             $i++;
         }
-        if ($i % 1000 !== 0) {
-            echo "Let's insert what's left \n";
-            $this->insertAll('groupes_accord', $groupeAccordFields, $groupesAccord);
-        }
+        echo "Let's insert what's left \n";
+        $this->insertAll('groupes_accord', $groupeAccordFields, $groupesAccord);
     }
 
     public function deputeAccord()
@@ -3555,7 +3609,6 @@ if (isset($argv[1])) {
     $script = new Script();
 }
 
-/*
 $script->fillDeputes();
 $script->deputeAll();
 $script->deputeLast();
@@ -3565,9 +3618,8 @@ $script->resmushPictures();
 $script->groupeEffectif();
 $script->deputeJson();
 $script->groupeStats();
-*/
 $script->groupeStatsHistory();
-/*
+$script->groupeMembersHistory();
 $script->parties();
 $script->legislature();
 $script->vote(); // Depend on the legislature
@@ -3591,9 +3643,7 @@ $script->deputeLoyaute();
 $script->classLoyaute();
 $script->classMajorite();
 $script->classGroups();
-*/
 $script->classGroupsMonth();
-/*
 $script->classGroupsProximite();
 //$script->classParticipationSix(); // Will need to be changed w/ leg 16
 //$script->classLoyauteSix(); // Will need to be changed w/ leg 16
