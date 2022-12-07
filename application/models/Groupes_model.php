@@ -634,7 +634,19 @@
           }
         }
       }
+    }
 
+    public function get_effectif_history($groups){
+      $this->db->select('g.*, g.effectif AS value');
+      $this->db->where_in('g.organeRef', $groups);
+      $this->db->order_by('g.dateValue', 'ASC');
+      return $this->db->get('groupes_effectif_history g')->result_array();
+    }
+
+    public function get_effectif_history_max($groups){
+      $this->db->where_in('g.organeRef', $groups);
+      $this->db->order_by('g.effectif', 'DESC');
+      return $this->db->get('groupes_effectif_history g', 1)->row_array()['effectif'];
     }
 
   }
