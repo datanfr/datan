@@ -121,6 +121,15 @@
             <?php $this->load->view('groupes/partials/stats_vertical.php', array('stats_history_chart' => $members, 'type' => 'score', 'max' => 100, 'terms' => FALSE, 'divided_by' => $members_max, 'grid' => FALSE)) ?>
           </div>
         </div>
+        <div class="card mt-5">
+          <div class="card-body pb-0">
+            <h3>Historique par mois</h3>
+            <p>Législature XX</p>
+            <p>CCCC</p>
+            <?php $members_history[0]['effectif'] ?>
+            <?php $this->load->view('groupes/partials/stats_chartJS.php', array('stats_history_chart' => $members_history, 'type' => 'members', 'max' => $members_max_history + 10)) ?>
+          </div>
+        </div>
       </div>
       <div class="mt-5 test-border">
         <h2>L'âge moyen des députés du groupe <?= $groupe['libelleAbrev'] ?></h2>
