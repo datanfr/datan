@@ -646,6 +646,8 @@
       }
       $data['members_max'] = $data['members'][0]['value'];
       $data['members_history'] = $this->groupes_model->get_effectif_history($data['history']);
+      $data['members_history_labels'] = json_encode($data['members_history']['labels']);
+      $data['members_history_data'] = json_encode($data['members_history']['data']);
       $data['members_max_history'] = $this->groupes_model->get_effectif_history_max($data['history']);
 
       // Get age data

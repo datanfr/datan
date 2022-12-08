@@ -637,10 +637,20 @@
     }
 
     public function get_effectif_history($groups){
-      $this->db->select('g.*, g.effectif AS value');
+      $this->db->select('g.*, g.effectif AS value, o.libelleAbrev, o.couleurAssociee');
       $this->db->where_in('g.organeRef', $groups);
+      $this->db->where('g.effectif >', '0');
       $this->db->order_by('g.dateValue', 'ASC');
-      return $this->db->get('groupes_effectif_history g')->result_array();
+      $this->db->group_by(array('YEAR(g.dateValue)', 'MONTH(g.dateValue)'));
+      $this->db->join('organes o', 'o.uid = g.organeRef', 'left');
+      $results = $this->db->get('groupes_effectif_history g')->result_array();
+      foreach ($results as $key => $value) {
+        $return['labels'][] = $value['dateValue'];
+        $return['data'][$value['organeRef']]['groupe'] = $value['libelleAbrev'];
+        $return['data'][$value['organeRef']]['color'] = $value['couleurAssociee'];
+        $return['data'][$value['organeRef']]['set_data'][] = array('dateValue' => $value['dateValue'], 'effectif' => $value['effectif']);
+      }
+      return $return;
     }
 
     public function get_effectif_history_max($groups){

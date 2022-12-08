@@ -106,7 +106,7 @@
             <h3>Historique par mois</h3>
             <p>Législature XX</p>
             <p>CCCC</p>
-            <?php $this->load->view('groupes/partials/stats_chartJS_multiline.php') ?>
+            <?php $this->load->view('groupes/partials/stats_chartJS_multiline_proximity.php') ?>
           </div>
         </div>
       </div>
@@ -126,8 +126,7 @@
             <h3>Historique par mois</h3>
             <p>Législature XX</p>
             <p>CCCC</p>
-            <?php $members_history[0]['effectif'] ?>
-            <?php $this->load->view('groupes/partials/stats_chartJS.php', array('stats_history_chart' => $members_history, 'type' => 'members', 'max' => $members_max_history + 10)) ?>
+            <?php $this->load->view('groupes/partials/stats_chartJS_multiline_members.php') ?>
           </div>
         </div>
       </div>
@@ -145,7 +144,7 @@
         </div>
         <div class="card mt-5">
           <div class="card-body pb-0">
-            <h3>Classement des groupes de la <?= $groupe['legislature'] ?><sup>ème</sup> législature</h3>
+            <h3>Historique des législatures</h3>
             <p>CCCC</p>
             <?php $this->load->view('groupes/partials/stats_vertical.php', array('stats_history_chart' => $orga_history['age'], 'type' => 'score', 'max' => 100, 'terms' => FALSE, 'divided_by' => $age_max, 'grid' => FALSE)) ?>
           </div>
