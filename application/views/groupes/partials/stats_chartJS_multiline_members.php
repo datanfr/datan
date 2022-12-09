@@ -12,7 +12,12 @@
     const dataSets = [];
     jsondata.forEach(o => dataSets.push({
       label: o.groupe,
-      data: o.set_data.map(v => v.effectif),
+      data: o.set_data.map(row => {
+        return {
+          "x": row.dateValue,
+          "y": row.effectif,
+        }
+      }),
       borderColor: o.color,
       borderWidth: 1,
       fill: false
