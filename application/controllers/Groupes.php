@@ -671,7 +671,7 @@
         $data['description_meta'] = "Retrouvez toutes les statistiques des députés non inscrits (NI) : participation aux votes, cohésion, proximité avec la majorité présidentielle.";
         $data['title'] = "Députés non inscrits";
       } else {
-        $data['title_meta'] = "Groupe " . name_group($data['groupe']['libelle']) . " - Statistiques | Datan";
+        $data['title_meta'] = "Statistiques du groupe " . name_group($data['groupe']['libelle']) . " | Datan";
         $data['description_meta'] = "Retrouvez toutes les statistiques du groupe " . name_group($data['groupe']['libelle']) . " (".$data['groupe']['libelleAbrev'].") : participation aux votes, cohésion, proximité avec la majorité présidentielle.";
         $data['title'] = $data['groupe']['libelle'];
       }
