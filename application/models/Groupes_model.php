@@ -625,6 +625,7 @@
         array('PO656014', 'PO800526'), // Ecologiste
         array('PO270915', 'PO389635', 'PO656018', 'PO730940', 'PO800502'), // Communistes
         array('PO759900', 'PO800532'), // Libertés et territoires
+        array('PO793087', 'PO723569', 'PO645633', 'PO387155', 'PO266900') // NI
       );
 
       foreach ($families as $family) {
