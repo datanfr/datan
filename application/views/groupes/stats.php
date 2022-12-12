@@ -122,16 +122,20 @@
       </div>
       <div class="mt-5 test-border">
         <h2 class="anchor" id="effectif">L'effectif du groupe <?= $groupe['libelleAbrev'] ?></h2>
-        <p>Le groupe <i><?= name_group($title) ?></i> compte actuellement <span class="font-weight-bold text-primary"><?= $groupe['effectif'] ?> députés</span>. Cela représente <?= $groupe['effectifShare'] ?>% des députés de l'Assemblée nationale. Pour rappel, l'Assemblée compte 577 députés.</p>
+        <?php if (isset($members)): ?>
+          <p>Le groupe <i><?= name_group($title) ?></i> compte actuellement <span class="font-weight-bold text-primary"><?= $groupe['effectif'] ?> députés</span>. Cela représente <?= $groupe['effectifShare'] ?>% des députés de l'Assemblée nationale. Pour rappel, l'Assemblée compte 577 députés.</p>
+        <?php endif; ?>
         <p>Retrouvez ci-dessous un aperçu du nombre de députés membres du groupe politique <?= $groupe['libelleAbrev'] ?>.</p>
-        <div class="card">
-          <div class="card-body pb-0">
-            <h3>Classement des groupes de la <?= $groupe['legislature'] ?><sup>ème</sup> législature</h3>
-            <p>CCCC</p>
-            <?php $this->load->view('groupes/partials/stats_vertical.php', array('stats_history_chart' => $members, 'type' => 'score', 'max' => 100, 'terms' => FALSE, 'divided_by' => $members_max, 'grid' => FALSE)) ?>
+        <?php if (isset($members)): ?>
+          <div class="card">
+            <div class="card-body pb-0">
+              <h3>Classement des groupes de la <?= $groupe['legislature'] ?><sup>ème</sup> législature</h3>
+              <p>CCCC</p>
+              <?php $this->load->view('groupes/partials/stats_vertical.php', array('stats_history_chart' => $members, 'type' => 'score', 'max' => 100, 'terms' => FALSE, 'divided_by' => $members_max, 'grid' => FALSE)) ?>
+            </div>
           </div>
-        </div>
-        <div class="card mt-5">
+        <?php endif; ?>
+        <div class="card <?= isset($members) ? 'mt-5' : '' ?>">
           <div class="card-body pb-0">
             <h3>Historique par mois</h3>
             <p>Législature XX</p>
