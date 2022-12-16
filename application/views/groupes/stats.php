@@ -26,9 +26,9 @@
       </a>
       <h1 class="mb-4 mt-4">Les statistiques du groupe <?= name_group($title) ?></h1>
       <p>Cette page présente en détail les <b>statistiques</b> du groupe <i><?= name_group($title) ?></i>.</p>
-      <p>Quelle est la cohésion au sein du groupe ? Les députés du groupe participent-ils souvent aux scrutins ? Quelle est la proximité du groupe avec les autres groupes de l'Assemblée nationale ?</p>
-      <p>Cette page présente un <b>historique</b> des statistiques du groupe <?= name_group($title) ?>. Pour avoir plus d'information sur l'historique du groupe, <a href="#link-stats">cliquez ici</a>.</p>
-      <p>Ces statistiques sont développées par l'équipe de Datan. Pour plus d'information sur nos statistiques, <a href="<?= base_url() ?>statistiques/aide">cliquez ici</a>.</p>
+      <p>Quelle est la cohésion au sein du groupe ? Ses députés participent-ils souvent aux scrutins ? Quelle est sa proximité avec les autres groupes de l'Assemblée nationale ?</p>
+      <p>Cette page présente un <b>historique</b> des statistiques du groupe <i><?= name_group($title) ?></i>. Pour en savoir plus sur l'historique du groupe, <a href="#link-stats">cliquez ici</a>.</p>
+      <p>Ces <a href="<?= base_url() ?>statistiques/aide">statistiques</a> sont développées par l'équipe de Datan.</p>
       <div class="mt-5">
         <p class="h4 font-weight-bold text-primary">Accès rapide aux statistiques</p>
         <a class="btn btn-primary my-1" href="<?= base_url() ?>groupes/legislature-<?= $groupe['legislature'] ?>/<?= mb_strtolower($groupe['libelleAbrev']) ?>/statistiques#participation">Participation aux votes</a>
@@ -40,17 +40,20 @@
         <a class="btn btn-primary my-1" href="<?= base_url() ?>groupes/legislature-<?= $groupe['legislature'] ?>/<?= mb_strtolower($groupe['libelleAbrev']) ?>/statistiques#feminisation">Taux de féminisation</a>
       </div>
       <div class="mt-5 test-border">
-        <h2 class="anchor" id="participation">Participation aux votes</h2>
-        <p>Depuis le début de la législature, le taux de participation moyen du groupe <i><?= name_group($title) ?></i> est de <span class="font-weight-bold text-primary"><?= $stats['participation']['value'] ?>%</span>. Autrement dit, en moyenne, <?= $stats['participation']['value'] ?>% des députés du groupe prennent part aux scrutins solennels. Le groupe participe <?= $edito_participation ?> que la moyenne des autres groupes, qui est de <?= $statsAverage['participation'] ?>%.</p>
-        <p>Retrouvez ci-dessous l'historique du taux de participation aux scrutins du groupe <i><?= name_group($title) ?></i>.</p>
-        <div class="card">
+        <h2 class="anchor mb-3" id="participation">Participation aux votes</h2>
+        <p>
+          <?= $active ? 'Depuis le début de' : 'Pendant la' ?> <?= $groupe['legislature'] ?>ème législature, le taux de participation moyen du groupe <i><?= name_group($title) ?></i> <?= $active ? 'est' : 'était' ?> de <span class="font-weight-bold text-primary"><?= $stats['participation']['value'] ?>%</span>.
+          Autrement dit, en moyenne, <?= $stats['participation']['value'] ?>% des députés du groupe ont pris part aux scrutins solennels.
+        </p>
+        <p>Le groupe <b><?= $active ? 'participe' : 'participait' ?> <?= $edito_participation ?></b> que les autres groupes politiques. La moyenne de l'Assemblée nationale <?= $active ? 'est' : 'était' ?> de <?= $statsAverage['participation'] ?>%.</p>
+        <div class="card mt-4">
           <div class="card-body pb-0">
             <h3>Historique par législature</h3>
             <p>CCCC</p>
             <?php $this->load->view('groupes/partials/stats_vertical.php', array('stats_history_chart' => $stats_history['participation'], 'type' => 'pct', 'terms' => TRUE, 'divided_by' => 1, 'grid' => TRUE)) ?>
           </div>
         </div>
-        <div class="card mt-5">
+        <div class="card mt-4">
           <div class="card-body pb-0">
             <h3>Historique par mois</h3>
             <p>Législature XX</p>
