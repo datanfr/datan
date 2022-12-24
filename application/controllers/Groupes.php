@@ -640,7 +640,7 @@
       $data['orga_history'] = $this->groupes_model->get_orga_stats_history($data['history']);
 
       // Get membership data by group (IF == current_legislature)
-      if ($data['groupe']['legislature'] === legislature_current()) {
+      if ($data['groupe']['legislature'] == legislature_current()) {
         $data['members'] = $this->groupes_model->get_groupes_all(TRUE, $data['groupe']['legislature']);
         foreach ($data['members'] as $key => $value) {
           $data['members'][$key]['value'] = $value['effectif'];
