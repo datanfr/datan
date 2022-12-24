@@ -35,7 +35,7 @@
         <a class="btn btn-primary my-1" href="<?= base_url() ?>groupes/legislature-<?= $groupe['legislature'] ?>/<?= mb_strtolower($groupe['libelleAbrev']) ?>/statistiques#cohesion">Cohesion interne</a>
         <a class="btn btn-primary my-1" href="<?= base_url() ?>groupes/legislature-<?= $groupe['legislature'] ?>/<?= mb_strtolower($groupe['libelleAbrev']) ?>/statistiques#majorite">Proximité avec la majorité</a>
         <a class="btn btn-primary my-1" href="<?= base_url() ?>groupes/legislature-<?= $groupe['legislature'] ?>/<?= mb_strtolower($groupe['libelleAbrev']) ?>/statistiques#proximite">Proximité avec chaque groupe</a>
-        <a class="btn btn-primary my-1" href="<?= base_url() ?>groupes/legislature-<?= $groupe['legislature'] ?>/<?= mb_strtolower($groupe['libelleAbrev']) ?>/statistiques#effectif">Effectif du groupe</a>
+        <a class="btn btn-primary my-1" href="<?= base_url() ?>groupes/legislature-<?= $groupe['legislature'] ?>/<?= mb_strtolower($groupe['libelleAbrev']) ?>/statistiques#effectifs">Effectifs du groupe</a>
         <a class="btn btn-primary my-1" href="<?= base_url() ?>groupes/legislature-<?= $groupe['legislature'] ?>/<?= mb_strtolower($groupe['libelleAbrev']) ?>/statistiques#age">Âge moyen des députés</a>
         <a class="btn btn-primary my-1" href="<?= base_url() ?>groupes/legislature-<?= $groupe['legislature'] ?>/<?= mb_strtolower($groupe['libelleAbrev']) ?>/statistiques#feminisation">Taux de féminisation</a>
       </div>
@@ -63,11 +63,11 @@
         </div>
       </div>
       <div class="mt-5 test-border">
-        <h2 class="anchor" id="cohesion">Cohésion interne au groupe</h2>
+        <h2 class="anchor mb-3" id="cohesion">Cohésion interne au groupe</h2>
         <p>
           <?= $active ? 'Depuis le début de' : 'Pendant la' ?> <?= $groupe['legislature'] ?>ème législature, le taux de cohésion du groupe <i><?= name_group($title) ?></i> <?= $active ? 'est' : 'était' ?> de <span class="font-weight-bold text-primary"><?= round($stats['cohesion']['value'], 2) ?></span>. Plus ce score de cohésion est proche de 1, plus le groupe est uni quand il s'agit de voter en séance publique.
         </p>
-        <p>Le groupe <i><?= name_group($title) ?></i> <?= $active ? 'peut' : 'pouvait' ?> être considéré comme <b><?= $edito_cohesion['absolute'] ?> soudé</b> quand il s'<?= $active ? 'agit' : 'agissait' ?> de voter. En effet, le groupe est <?= $edito_cohesion['relative'] ?> soudé que la moyenne des autres groupes, qui est de <?= round($statsAverage['cohesion'], 2) ?>.</p>
+        <p>Le groupe <i><?= name_group($title) ?></i> <?= $active ? 'peut' : 'pouvait' ?> être considéré comme <b><?= $edito_cohesion['absolute'] ?> soudé</b> quand il s'<?= $active ? 'agit' : 'agissait' ?> de voter. En effet, le groupe <?= $active ? 'est' : 'était' ?> <?= $edito_cohesion['relative'] ?> soudé que la moyenne des autres groupes, qui <?= $active ? 'est' : 'était' ?> de <?= round($statsAverage['cohesion'], 2) ?>.</p>
         <div class="card mt-4">
           <div class="card-body pb-0">
             <h3>Historique par législature</h3>
@@ -86,18 +86,19 @@
       </div>
       <?php if ($stats_history['majority']): ?>
         <div class="mt-5 test-border">
-          <h2 class="anchor" id="majorite">Proximité avec la majorité présidentielle</h2>
-          <p>Pour la législature actuelle, le groupe <i><?= name_group($title) ?></i> a voté sur la même ligne que la majorité présidentielle dans <span class="font-weight-bold text-primary"><?= $stats['majority']['value'] ?>%</span> des cas.</p>
-          <p>Le groupe est <?= $edito_majorite ?> proche de la majorité présidentielle que la moyenne des autres groupes politiques, qui est de <?= $statsAverage['majority'] ?>%.</p>
-          <p>Retrouvez ci-dessous l'historique de la proximité avec la majorité présidentielle du groupe <i><?= name_group($title) ?></i>.</p>
-          <div class="card mt-5">
+          <h2 class="anchor mb-3" id="majorite">Proximité avec la majorité présidentielle</h2>
+          <p>
+            <?= $active ? 'Depuis le début de' : 'Pendant la' ?> <?= $groupe['legislature'] ?>ème législature, le groupe <i><?= name_group($title) ?></i> a voté sur la même ligne que la majorité présidentielle dans <span class="font-weight-bold text-primary"><?= $stats['majority']['value'] ?>%</span> des cas.
+          </p>
+          <p>Le groupe <?= $active ? 'est' : 'était' ?> <b><?= $edito_majorite ?> proche</b> de la majorité présidentielle que la moyenne des autres groupes politiques, qui <?= $active ? 'est' : 'était' ?> de <?= $statsAverage['majority'] ?>%.</p>
+          <div class="card mt-4">
             <div class="card-body pb-0">
               <h3>Historique par législature</h3>
               <p>CCCC</p>
               <?php $this->load->view('groupes/partials/stats_vertical.php', array('stats_history_chart' => $stats_history['majority'], 'type' => 'pct', 'terms' => TRUE, 'divided_by' => 1, 'grid' => TRUE)) ?>
             </div>
           </div>
-          <div class="card mt-5">
+          <div class="card mt-4">
             <div class="card-body pb-0">
               <h3>Historique par mois</h3>
               <p>Législature XX</p>
@@ -108,14 +109,12 @@
         </div>
       <?php endif; ?>
       <div class="mt-5 test-border">
-        <h2 class="anchor" id="proximite">Proximité avec chaque groupe politique</h2>
-        <p>Le groupe <i><?= name_group($title) ?></i> vote-t-il souvent avec les autres groupes politiques qui composent l'Assemblée nationale ?</p>
-        <p>Nous mesurons la proximité entre deux groupes au moment du vote. Deux groupes sont considérés comme proches s'ils votent souvent ensemble dans l'hémicycle.</p>
+        <h2 class="anchor mb-3" id="proximite">Proximité avec chaque groupe politique</h2>
+        <p>Le groupe <i><?= name_group($title) ?></i> <?= $active ? 'vote' : 'votait' ?>-t-il souvent avec les autres groupes politiques qui <?= $active ? 'compose' : 'composait' ?> l'Assemblée nationale ? Deux groupes sont considérés proches s'ils ont les mêmes positions lorsqu'ils votent en séance publique.</p>
         <p>
-          Pour la législature actuelle, le groupe avec lequel le groupe <i><?= name_group($title) ?></i> est le plus proche est <i><?= name_group($accord_groupes_first['libelle']) ?></i>.
-          En effet, les deux groupes ont eu la même position dans <span class="font-weight-bold text-primary"><?= $accord_groupes_first['score'] ?>%</span> des cas.</p>
-        <p>Retrouvez ci-dessous l'historique de proximité du groupe <i><?= name_group($title) ?></i>.</p>
-        <div class="card mt-5">
+          <?= $active ? 'Depuis le début de' : 'Pendant la' ?> <?= $groupe['legislature'] ?>ème législature, le groupe <i><?= name_group($title) ?></i> est le plus proche du groupe <i><?= name_group($accord_groupes_first['libelle']) ?></i>.
+          Ces deux groupes ont eu la même position dans <span class="font-weight-bold text-primary"><?= $accord_groupes_first['score'] ?>%</span> des cas.</p>
+        <div class="card mt-4">
           <div class="card-body pb-0">
             <h3>Historique par mois</h3>
             <p>Législature XX</p>
@@ -125,13 +124,14 @@
         </div>
       </div>
       <div class="mt-5 test-border">
-        <h2 class="anchor" id="effectif">L'effectif du groupe <?= $groupe['libelleAbrev'] ?></h2>
+        <h2 class="anchor mb-3" id="effectifs">Les effectifs du groupe <?= $groupe['libelleAbrev'] ?></h2>
         <?php if (isset($members)): ?>
-          <p>Le groupe <i><?= name_group($title) ?></i> compte actuellement <span class="font-weight-bold text-primary"><?= $groupe['effectif'] ?> députés</span>. Cela représente <?= $groupe['effectifShare'] ?>% des députés de l'Assemblée nationale. Pour rappel, l'Assemblée compte 577 députés.</p>
+          <p>Le groupe <i><?= name_group($title) ?></i> compte actuellement <span class="font-weight-bold text-primary"><?= $groupe['effectif'] ?> députés</span>. Cela représente <b><?= $groupe['effectifShare'] ?>%</b> des députés de l'Assemblée nationale. Pour rappel, l'Assemblée compte 577 députés.</p>
+          <?php else: ?>
+          <p>Retrouvez ci-dessous l'historique du nombre de députés membres du groupe <i><?= name_group($title) ?></i>.</p>
         <?php endif; ?>
-        <p>Retrouvez ci-dessous un aperçu du nombre de députés membres du groupe politique <?= $groupe['libelleAbrev'] ?>.</p>
         <?php if (isset($members)): ?>
-          <div class="card">
+          <div class="card mt-4">
             <div class="card-body pb-0">
               <h3>Classement des groupes de la <?= $groupe['legislature'] ?><sup>ème</sup> législature</h3>
               <p>CCCC</p>
@@ -139,7 +139,7 @@
             </div>
           </div>
         <?php endif; ?>
-        <div class="card <?= isset($members) ? 'mt-5' : '' ?>">
+        <div class="card mt-4">
           <div class="card-body pb-0">
             <h3>Historique par mois</h3>
             <p>Législature XX</p>
@@ -149,18 +149,17 @@
         </div>
       </div>
       <div class="mt-5 test-border">
-        <h2 class="anchor" id="age">L'âge moyen des députés du groupe <?= $groupe['libelleAbrev'] ?></h2>
-        <p>L'âge moyen des députés membres du groupe <i><?= name_group($title) ?></i> est de <span class="font-weight-bold text-primary"><?= $groupe['age'] ?> ans</span>.</p>
-        <p>L'âge moyen des députés de l'Assemblée nationale est de <?= $ageMean ?> ans. Les députés du groupe <i><?= name_group($title) ?></i> sont donc <?= $ageEdited ?> âgés que la moyenne de l'Assemblée.</p>
-        <p>Retrouvez ci-dessous un aperçu de l'âge moyen des députés membres du groupe politique <?= $groupe['libelleAbrev'] ?>.</p>
-        <div class="card">
+        <h2 class="anchor mb-3" id="age">L'âge moyen des députés du groupe <?= $groupe['libelleAbrev'] ?></h2>
+        <p>L'âge moyen des députés membres du groupe <i><?= name_group($title) ?></i> <?= $active ? 'est' : 'était' ?> de <span class="font-weight-bold text-primary"><?= $groupe['age'] ?> ans</span>.</p>
+        <p><?= !$active ? 'Pendant la ' . $groupe['legislature'] . 'ème législature' : 'En moyenne' ?>, les députés du groupe <i><?= name_group($title) ?></i> <?= $active ? 'sont' : 'était' ?> <b><?= $ageEdited ?> âgés</b> que la moyenne de l'Assemblée nationale, qui <?= $active ? 'est' : 'était' ?> de <?= $ageMean ?> ans.</p>
+        <div class="card mt-4">
           <div class="card-body pb-0">
             <h3>Classement des groupes de la <?= $groupe['legislature'] ?><sup>ème</sup> législature</h3>
             <p>CCCC</p>
             <?php $this->load->view('groupes/partials/stats_vertical.php', array('stats_history_chart' => $age, 'type' => 'score', 'max' => 100, 'terms' => FALSE, 'divided_by' => $age_max, 'grid' => FALSE)) ?>
           </div>
         </div>
-        <div class="card mt-5">
+        <div class="card mt-4">
           <div class="card-body pb-0">
             <h3>Historique des législatures</h3>
             <p>CCCC</p>
@@ -169,17 +168,19 @@
         </div>
       </div>
       <div class="mt-5 test-border">
-        <h2 class="anchor" id="feminisation">Le taux de féminisation du groupe <?= $groupe['libelleAbrev'] ?></h2>
-        <p>Il y a <span class="font-weight-bold text-primary"><?= $groupe['womenN'] ?> députées femmes</span> au sein du groupe <i><?= name_group($title) ?></i>. Cela représente <?= $groupe['womenPct'] ?>% des de l'ensemble des membres du groupe. C'est <?= $womenEdited ?> que la moyenne de l'Assemblée nationale, qui est de <?= $womenPctTotal ?>%.</p>
-        <p>Retrouvez ci-dessous un aperçu de la féminisation du groupe groupe politique <?= $groupe['libelleAbrev'] ?>.</p>
-        <div class="card">
+        <h2 class="anchor mb-3" id="feminisation">Le taux de féminisation du groupe <?= $groupe['libelleAbrev'] ?></h2>
+        <p>
+          <?= !$active ? 'Pendant la ' . $groupe['legislature'] . 'ème législature, il y avait' : 'Il y a' ?> <span class="font-weight-bold text-primary"><?= $groupe['womenN'] ?> députées femmes</span> au sein du groupe <i><?= name_group($title) ?></i>.
+          Cela <?= $active ? 'représente' : 'représentait' ?> <?= $groupe['womenPct'] ?>% des effectifs du groupe.
+          C'est <b><?= $womenEdited ?></b> que la moyenne de l'Assemblée nationale, qui <?= $active ? 'est' : 'était' ?> de <?= $womenPctTotal ?>%.</p>
+        <div class="card mt-4">
           <div class="card-body pb-0">
             <h3>Classement des groupes de la <?= $groupe['legislature'] ?><sup>ème</sup> législature</h3>
             <p>CCCC</p>
             <?php $this->load->view('groupes/partials/stats_vertical.php', array('stats_history_chart' => $women, 'type' => 'pct', 'max' => 100, 'terms' => FALSE, 'divided_by' => $women_max, 'grid' => FALSE)) ?>
           </div>
         </div>
-        <div class="card mt-5">
+        <div class="card mt-4">
           <div class="card-body pb-0">
             <h3>Historique par législature</h3>
             <p>CCCC</p>
@@ -188,10 +189,10 @@
         </div>
       </div>
       <div class="mt-5 test-border">
-        <h2 class="anchor" id="link-stats">Historique du groupe <?= name_group($title) ?></h2>
-        <p>Sur cette page, vous trouvez un historique des statistiques du groupe. Pour chaque groupe politique, nous avons répertorié les anciens ou nouveaux groupes qui leur sont liés.</p>
-        <p>Sur Datan, nous récupérons les statistiques de l'Assemblée nationale depuis la 14<sup>ème</sup> législature (2012).</p>
-        <p>Vous trouverez ci-dessous la liste des groupes analysés sur le site Datan et liés au groupe <i><?= name_group($title) ?></i>.</p>
+        <h2 class="anchor mb-3" id="link-stats">Historique du groupe <?= $groupe['libelleAbrev'] ?></h2>
+        <p>Sur cette page, vous trouvez un historique des statistiques du groupe <i><?= name_group($title) ?></i>. Pour chaque groupe politique, nous avons répertorié les anciens ou nouveaux groupes qui leur sont liés.</p>
+        <p>Sur Datan, nous récupérons les statistiques de l'Assemblée nationale depuis la 14<sup>ème</sup> législature (depuis 2012).</p>
+        <p>Voici les différents groupes liés au groupe <i><?= name_group($title) ?></i> :</p>
         <div class="row">
           <?php foreach ($history_list as $key => $value): ?>
             <div class="col-6">
