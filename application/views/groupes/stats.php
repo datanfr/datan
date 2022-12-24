@@ -43,7 +43,7 @@
         <h2 class="anchor mb-3" id="participation">Participation aux votes</h2>
         <p>
           <?= $active ? 'Depuis le début de' : 'Pendant la' ?> <?= $groupe['legislature'] ?>ème législature, le taux de participation moyen du groupe <i><?= name_group($title) ?></i> <?= $active ? 'est' : 'était' ?> de <span class="font-weight-bold text-primary"><?= $stats['participation']['value'] ?>%</span>.
-          Autrement dit, en moyenne, <?= $stats['participation']['value'] ?>% des députés du groupe ont pris part aux scrutins solennels.
+          Autrement dit, en moyenne, pour chaque scrutin en séance publique, <?= $stats['participation']['value'] ?>% des députés du groupe ont pris part au vote.
         </p>
         <p>Le groupe <b><?= $active ? 'participe' : 'participait' ?> <?= $edito_participation ?></b> que les autres groupes politiques. La moyenne de l'Assemblée nationale <?= $active ? 'est' : 'était' ?> de <?= $statsAverage['participation'] ?>%.</p>
         <div class="card mt-4">
@@ -64,17 +64,18 @@
       </div>
       <div class="mt-5 test-border">
         <h2 class="anchor" id="cohesion">Cohésion interne au groupe</h2>
-        <p>Pour la législature actuelle, le taux de cohésion du groupe <i><?= name_group($title) ?></i> est de <span class="font-weight-bold text-primary"><?= round($stats['cohesion']['value'], 2) ?></span>. Plus le score de cohésion est proche de 1, plus le groupe est uni quand il s'agit de voter dans l'hémicycle.</p>
-        <p>Le groupe <i><?= name_group($title) ?></i> peut être considéré comme <?= $edito_cohesion['absolute'] ?> soudé quand il s'agit de voter. En effet, le groupe est <?= $edito_cohesion['relative'] ?> soudé que la moyenne des autres groupes, qui est de <?= round($statsAverage['cohesion'], 2) ?>.</p>
-        <p>Retrouvez ci-dessous l'historique du taux de cohésion du groupe <i><?= name_group($title) ?></i>.</p>
-        <div class="card mt-5">
+        <p>
+          <?= $active ? 'Depuis le début de' : 'Pendant la' ?> <?= $groupe['legislature'] ?>ème législature, le taux de cohésion du groupe <i><?= name_group($title) ?></i> <?= $active ? 'est' : 'était' ?> de <span class="font-weight-bold text-primary"><?= round($stats['cohesion']['value'], 2) ?></span>. Plus ce score de cohésion est proche de 1, plus le groupe est uni quand il s'agit de voter en séance publique.
+        </p>
+        <p>Le groupe <i><?= name_group($title) ?></i> <?= $active ? 'peut' : 'pouvait' ?> être considéré comme <b><?= $edito_cohesion['absolute'] ?> soudé</b> quand il s'<?= $active ? 'agit' : 'agissait' ?> de voter. En effet, le groupe est <?= $edito_cohesion['relative'] ?> soudé que la moyenne des autres groupes, qui est de <?= round($statsAverage['cohesion'], 2) ?>.</p>
+        <div class="card mt-4">
           <div class="card-body pb-0">
             <h3>Historique par législature</h3>
             <p>CCCC</p>
             <?php $this->load->view('groupes/partials/stats_vertical.php', array('stats_history_chart' => $stats_history['cohesion'], 'type' => 'score', 'terms' => TRUE, 'divided_by' => 1, 'grid' => TRUE)) ?>
           </div>
         </div>
-        <div class="card mt-5">
+        <div class="card mt-4">
           <div class="card-body pb-0">
             <h3>Historique par mois</h3>
             <p>Législature XX</p>
