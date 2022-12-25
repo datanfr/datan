@@ -186,5 +186,15 @@
       }
     }
 
+    public function get_evolution_edited($first, $second){
+      if ($first > $second) {
+        return 'en hausse';
+      } elseif ($second > $first) {
+        return 'en baisse';
+      } else {
+        return 'stable';
+      }
+    }
+
   }
 ?>

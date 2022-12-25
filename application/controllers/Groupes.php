@@ -11,6 +11,7 @@
       $this->load->model('functions_datan');
       $this->load->model('fields_model');
       $this->load->model('jobs_model');
+      $this->load->model('legislature_model');
       //$this->password_model->security_password(); Former login protection
       setlocale(LC_TIME, 'french');
     }
@@ -588,6 +589,9 @@
       };
 
       $data = $this->get_data($data);
+
+      $data['legislature'] = $this->legislature_model->get_legislature($data['groupe']['legislature']);
+      
 
       // Get history data
       $data['history'] = $this->groupes_model->get_history($data['groupe']['uid']);
