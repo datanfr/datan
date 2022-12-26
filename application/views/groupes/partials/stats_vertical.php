@@ -1,5 +1,5 @@
 <div class="row bar-container stats" style="margin-left: -20px; margin-right: -20px;">
-  <div class="<?= $grid ? 'col-10 offset-2' : 'col-12' ?>">
+  <div class="<?= $grid ? 'col-11 offset-1' : 'col-12' ?>">
     <div class="chart">
       <?php if ($grid): ?>
         <div class="chart-grid">
@@ -33,7 +33,7 @@
       </div>
     </div>
   </div>
-  <div class="<?= $grid ? 'col-10 offset-2' : 'col-12' ?> d-flex justify-content-between mt-2">
+  <div class="<?= $grid ? 'col-11 offset-1' : 'col-12' ?> d-flex justify-content-between mt-2">
     <?php foreach ($stats_history_chart as $group): ?>
       <div class="legend-element text-center">
         <p class="font-weight-bold"><?= $group['libelleAbrev'] ?></p>

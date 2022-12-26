@@ -1,4 +1,4 @@
-<div class="test-border" style="width: 100%;">
+<div style="width: 100%;">
   <canvas id="members"></canvas>
 </div>
 
