@@ -238,4 +238,21 @@
     }
   }
 
+  function ordinaux($x){
+    $array = array(
+      1 => 'premier',
+      2 => 'deuxième',
+      3 => 'troisième',
+      4 => 'quatrième',
+      5 => 'cinquième',
+      6 => 'sixième',
+      7 => 'septième',
+      8 => 'huitième',
+      9 => 'neuvième',
+      10 => 'dixième',
+      11 => 'onzième'
+    );
+    return $array[$x];
+  }
+
 ?>
