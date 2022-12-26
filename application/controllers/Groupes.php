@@ -591,7 +591,7 @@
       $data = $this->get_data($data);
 
       $data['legislature'] = $this->legislature_model->get_legislature($data['groupe']['legislature']);
-      
+
 
       // Get history data
       $data['history'] = $this->groupes_model->get_history($data['groupe']['uid']);
@@ -650,6 +650,21 @@
           $data['members'][$key]['value'] = $value['effectif'];
         }
         $data['members_max'] = $data['members'][0]['value'];
+
+        // Get the effectif ranking
+        $x = 1;
+        foreach ($data['members'] as $key => $value) {
+          if ($value['uid'] == $data['groupe']['uid']) {
+            $data['effectifRank']['number'] = $x;
+          }
+          $x++;
+        }
+        if ($data['effectifRank']['number'] == count($data['members'])) {
+          $data['effectifRank']['last'] = TRUE;
+        } else {
+          $data['effectifRank']['last'] = FALSE;
+        }
+
       }
       $data['members_history'] = $this->groupes_model->get_effectif_history($data['history']);
       $data['members_history_labels'] = json_encode($data['members_history']['labels']);
@@ -663,12 +678,44 @@
       }
       $data['age_max'] = $data['age'][0]['value'];
 
+      // Get age ranking
+      if ($data['active']) {
+        $x = 1;
+        foreach ($data['age'] as $key => $value) {
+          if ($value['organeRef'] == $data['groupe']['uid']) {
+            $data['ageRanking']['number'] = $x;
+          }
+          $x++;
+        }
+        if ($data['ageRanking']['number'] == count($data['age'])) {
+          $data['ageRanking']['last'] = TRUE;
+        } else {
+          $data['ageRanking']['last'] = FALSE;
+        }
+      }
+
       // Get women data
       $data['women'] = $this->stats_model->get_groups_women();
       foreach ($data['women'] as $key => $value) {
         $data['women'][$key]['value'] = round($value['pct'] / 100, 2);
       }
       $data['women_max'] = $data['women'][0]['value'];
+
+      // Get women ranking
+      if ($data['active']) {
+        $x = 1;
+        foreach ($data['women'] as $key => $value) {
+          if ($value['uid'] == $data['groupe']['uid']) {
+            $data['womenRanking']['number'] = $x;
+          }
+          $x++;
+        }
+        if ($data['womenRanking']['number'] == count($data['women'])) {
+          $data['womenRanking']['last'] = TRUE;
+        } else {
+          $data['womenRanking']['last'] = FALSE;
+        }
+      }
 
       // Meta
       $data['url'] = $this->meta_model->get_url();
