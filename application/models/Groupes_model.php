@@ -411,7 +411,7 @@
     }
 
     public function get_orga_stats_history($groups){
-      $this->db->select('stats.type, stats.legislature, stats.stat, stats.value, o.libelleAbrev');
+      $this->db->select('stats.type, stats.legislature, stats.stat, stats.value, o.libelleAbrev, o.uid AS organeRef, o.dateDebut, o.dateFin');
       $this->db->where('stats.type', 'legislature');
       $this->db->where_in('stats.organeRef', $groups);
       $this->db->order_by('stats.legislature', 'ASC');
