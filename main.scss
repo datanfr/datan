@@ -280,8 +280,8 @@ body:not(.pg-mentions) #tarteaucitronIcon {
         .score{
           font-weight: 800;
         }
-        &:hover{
-          background-color: #fff;
+        &.white{
+          background-color: #D3D3D3;
           color: $text-black;
         }
       }
@@ -2092,6 +2092,13 @@ ul.ui-menu{
   }
   .card{
     border: none;
+  }
+  .card-stats{
+    h3{
+      color: black;
+      font-weight: 600;
+      font-size: $h4-font-size;
+    }
   }
 }
 /*

@@ -20,12 +20,12 @@
       <div class="bar-chart d-flex flex-row justify-content-between align-items-end">
         <?php foreach ($stats_history_chart as $group): ?>
           <?php if ($type === 'pct'): ?>
-            <div class="bars mx-1 mx-md-3" style="height: <?= round($group['value'] / $divided_by * 100) ?>%">
+            <div class="bars <?= $group['organeRef'] != $organeRef ? 'white' : '' ?> mx-1 mx-md-3" style="height: <?= round($group['value'] / $divided_by * 100) ?>%">
               <span class="score"><?= round($group['value'] * 100) ?>%</span>
             </div>
           <?php endif; ?>
           <?php if ($type === 'score'): ?>
-            <div class="bars mx-1 mx-md-3" style="height: <?= round($group['value'] / $divided_by * 100) ?>%">
+            <div class="bars <?= $group['organeRef'] != $organeRef ? 'white' : '' ?> mx-1 mx-md-3" style="height: <?= round($group['value'] / $divided_by * 100) ?>%">
               <span class="score"><?= round($group['value'], 2) ?></span>
             </div>
           <?php endif; ?>
@@ -39,7 +39,7 @@
         <p class="font-weight-bold"><?= $group['libelleAbrev'] ?></p>
         <?php if ($terms): ?>
           <p class="font-italic h6 mb-0"><?= $group['legislature'] ?><sup>ème</sup> législature</p>
-          <p class="font-italic h6">(<?= date('Y', strtotime($group['dateDebut'])) ?> - <?= $group['dateFin'] ? date('Y', strtotime($group['dateFin'])) : 'En cours' ?>)</p>
+          <p class="font-italic h6">(<?= date('Y', strtotime($group['dateDebut'])) ?> - <?= $group['dateFin'] ? date('Y', strtotime($group['dateFin'])) : 'en cours' ?>)</p>
         <?php endif; ?>
       </div>
     <?php endforeach; ?>
