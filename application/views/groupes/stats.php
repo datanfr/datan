@@ -155,7 +155,7 @@
                 <h3>Le <?= ordinaux($effectifRank['number']) ?> plus grand groupe de l'Assemblée</h3>
               <?php endif; ?>
               <p>Classement des groupes de la <?= $groupe['legislature'] ?><sup>ème</sup> législature en fonction de leurs effectifs</p>
-              <?php $this->load->view('groupes/partials/stats_vertical.php', array('stats_history_chart' => $members, 'type' => 'score', 'max' => 100, 'terms' => FALSE, 'divided_by' => $members_max, 'grid' => FALSE, 'organeRef' => $groupe['uid'])) ?>
+              <?php $this->load->view('groupes/partials/stats_horizontal.php', array('stats_history_chart' => $members, 'type' => 'score', 'max' => 100, 'terms' => FALSE, 'divided_by' => $members_max, 'grid' => FALSE, 'organeRef' => $groupe['uid'])) ?>
             </div>
           </div>
         <?php endif; ?>
@@ -182,7 +182,7 @@
                 <h3>Le <?= ordinaux($ageRanking['number']) ?> groupe avec les députés les plus âgés</h3>
               <?php endif; ?>
               <p>Classement des groupes de la <?= $groupe['legislature'] ?>ème législature en fonction de leurs effectifs</p>
-              <?php $this->load->view('groupes/partials/stats_vertical.php', array('stats_history_chart' => $age, 'type' => 'score', 'max' => 100, 'terms' => FALSE, 'divided_by' => $age_max, 'grid' => FALSE, 'organeRef' => $groupe['uid'])) ?>
+              <?php $this->load->view('groupes/partials/stats_horizontal.php', array('stats_history_chart' => $age, 'type' => 'score', 'max' => 100, 'terms' => FALSE, 'divided_by' => $age_max, 'grid' => FALSE, 'organeRef' => $groupe['uid'])) ?>
             </div>
           </div>
         <?php endif; ?>
@@ -212,7 +212,7 @@
                 <h3>Le <?= ordinaux($womenRanking['number']) ?> groupe avec la part de députées femmes la plus forte</h3>
               <?php endif; ?>
               <p>Classement des groupes de la <?= $groupe['legislature'] ?>ème législature en fonction du taux de féminisation</p>
-              <?php $this->load->view('groupes/partials/stats_vertical.php', array('stats_history_chart' => $women, 'type' => 'pct', 'max' => 100, 'terms' => FALSE, 'divided_by' => $women_max, 'grid' => FALSE, 'organeRef' => $groupe['uid'])) ?>
+              <?php $this->load->view('groupes/partials/stats_horizontal.php', array('stats_history_chart' => $women, 'type' => 'pct', 'max' => 100, 'terms' => FALSE, 'divided_by' => $women_max, 'grid' => FALSE, 'organeRef' => $groupe['uid'])) ?>
             </div>
           </div>
         <?php endif; ?>
@@ -221,7 +221,7 @@
             <div class="mb-3 mt-1" style="border-top: 7px solid #00b794; width: 60px"></div>
             <h3>Historique de la part de femmes au sein du groupe</h3>
             <p>Évolution de la part de députées femmes au sein du groupe <?= $groupe['libelleAbrev'] ?> par législature</p>
-            <?php $this->load->view('groupes/partials/stats_vertical.php', array('stats_history_chart' => $orga_history['womenPct'], 'type' => 'pct', 'max' => 100, 'terms' => TRUE, 'divided_by' => 1, 'grid' => FALSE, 'organeRef' => $groupe['uid'])) ?>
+            <?php $this->load->view('groupes/partials/stats_vertical.php', array('stats_history_chart' => $orga_history['womenPct'], 'type' => 'pct', 'max' => 100, 'terms' => TRUE, 'divided_by' => 1, 'grid' => TRUE, 'organeRef' => $groupe['uid'])) ?>
           </div>
         </div>
       </div>
