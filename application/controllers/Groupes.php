@@ -676,7 +676,7 @@
       foreach ($data['age'] as $key => $value) {
         $data['age'][$key]['value'] = $value['age'];
       }
-      $data['age_max'] = $data['age'][0]['value'];
+      $data['age_max'] = $data['age'][0]['value'] + 5;
 
       // Get age ranking
       if ($data['active']) {
