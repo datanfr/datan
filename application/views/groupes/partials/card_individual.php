@@ -12,7 +12,7 @@
         </div>
       </div>
       <!-- INFOS GENERALES -->
-      <div class="bloc-infos mt-3">
+      <div class="bloc-infos mt-2">
         <<?= $tag ?> class="title d-block text-lg-left"><?= name_group($title) ?></<?= $tag ?>>
       </div>
       <!-- BIOGRAPHIE -->
@@ -34,10 +34,6 @@
               <div class="value">
                 <a class="no-decoration underline" href="<?= base_url() ?>deputes/<?= $president['dptSlug'] ?>/depute_<?= $president['nameUrl'] ?>"><?= $president['nameFirst']." ".$president['nameLast'] ?></a>
               </div>
-            </li>
-            <li>
-              <div class="label">Position</div>
-              <div class="value"><?= ucfirst($infos_groupes[$groupe['libelleAbrev']]['libelle']) ?></div>
             </li>
           <?php endif; ?>
         </ul>
