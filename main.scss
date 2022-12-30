@@ -2111,6 +2111,13 @@ ul.ui-menu{
     font-weight: 800;
     color: $text-gray;
   }
+  .title{
+    p{
+      font-size: $h5-font-size;
+      font-weight: 800;
+      color: $text-gray-light;
+    }
+  }
   .card{
     border: none;
   }
