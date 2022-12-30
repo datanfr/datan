@@ -591,7 +591,12 @@
       $data = $this->get_data($data);
 
       $data['legislature'] = $this->legislature_model->get_legislature($data['groupe']['legislature']);
-
+      $data['legislature']['edito'] = $data['groupe']['legislature'] . '<sup>ème</sup> législature (' . date("Y", strtotime($data['legislature']['dateDebut'])) . ' - ';
+      if ($data['active']) {
+        $data['legislature']['edito'] .= '<i>en cours</i>)';
+      } else {
+        $data['legislature']['edito'] .= date("Y", strtotime($data['legislature']['dateFin'])) . ')';
+      }
 
       // Get history data
       $data['history'] = $this->groupes_model->get_history($data['groupe']['uid']);
