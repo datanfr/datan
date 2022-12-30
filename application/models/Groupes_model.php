@@ -394,6 +394,7 @@
     }
 
     public function get_stats_monthly($groupe_uid){
+
       $this->db->where('organeRef', $groupe_uid);
       $results = $this->db->get('class_groups_month')->result_array();
 
@@ -404,6 +405,9 @@
         if (in_array($value['stat'], array('cohesion'))) {
           $value['value'] = round($value['value'], 2);
         }
+        $month = months_abbrev(utf8_encode(strftime('%B', strtotime($value['dateValue']))));
+        $year = substr(date('Y', strtotime($value['dateValue'])), 2, 2);
+        $value += [ 'dateValue_edited' => $month . ' ' . $year ];
         $return[$value['stat']][] = $value;
       }
 
