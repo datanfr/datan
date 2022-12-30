@@ -7,7 +7,7 @@
     var data = {
       labels: [
         <?php foreach ($stats_history_chart as $value) {
-          echo '"'.$value['dateValue'].'",';
+          echo '"'.$value['dateValue_edited'].'",';
         } ?>
       ],
       datasets: [
