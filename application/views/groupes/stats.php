@@ -24,7 +24,10 @@
         <?= file_get_contents(asset_url().'imgs/icons/arrow_left.svg') ?>
         Retour profil
       </a>
-      <h1 class="mb-4 mt-4">Les statistiques du groupe <?= name_group($title) ?></h1>
+      <div class="title my-4">
+        <h1>Les statistiques du groupe <?= name_group($title) ?></h1>
+        <p><?= $legislature['edito'] ?></p>
+      </div>
       <p>Cette page présente en détail les <b>statistiques</b> du groupe <i><?= name_group($title) ?></i>.</p>
       <p>Quelle est la cohésion au sein du groupe ? Ses députés participent-ils souvent aux scrutins ? Quelle est sa proximité avec les autres groupes de l'Assemblée nationale ?</p>
       <p>Cette page présente un <b>historique</b> des statistiques du groupe <i><?= name_group($title) ?></i>. Pour en savoir plus sur l'historique du groupe, <a href="#link-stats">cliquez ici</a>.</p>
@@ -62,7 +65,7 @@
           <div class="card-body card-stats pb-0">
             <div class="mb-3 mt-1" style="border-top: 7px solid #00b794; width: 60px"></div>
             <h3>Évolution de la participation sur la dernière législature</h3>
-            <p><?= $groupe['legislature'] ?><sup>ème</sup> législature (<?= date("Y", strtotime($legislature['dateDebut'])) ?> - <?= $active ? '<i>en cours</i>' : date("Y", strtotime($legislature['dateFin'])) ?>)</p>
+            <p><?= $legislature['edito'] ?></p>
             <?php $this->load->view('groupes/partials/stats_chartJS.php', array('stats_history_chart' => $stats_monthly['participation'], 'type' => 'graphParticipation', 'max' => 100)) ?>
           </div>
         </div>
@@ -89,7 +92,7 @@
           <div class="card-body pb-0">
             <div class="mb-3 mt-1" style="border-top: 7px solid #00b794; width: 60px"></div>
             <h3>Évolution de la cohésion sur la dernière législature</h3>
-            <p><?= $groupe['legislature'] ?><sup>ème</sup> législature (<?= date("Y", strtotime($legislature['dateDebut'])) ?> - <?= $active ? '<i>en cours</i>' : date("Y", strtotime($legislature['dateFin'])) ?>)</p>
+            <p><?= $legislature['edito'] ?></p>
             <?php $this->load->view('groupes/partials/stats_chartJS.php', array('stats_history_chart' => $stats_monthly['cohesion'], 'type' => 'graphCohesion', 'max' => 1)) ?>
           </div>
         </div>
@@ -117,7 +120,7 @@
             <div class="card-body pb-0">
               <div class="mb-3 mt-1" style="border-top: 7px solid #00b794; width: 60px"></div>
               <h3>Évolution de la proximité avec la majorité sur la dernière législature</h3>
-              <p><?= $groupe['legislature'] ?><sup>ème</sup> législature (<?= date("Y", strtotime($legislature['dateDebut'])) ?> - <?= $active ? '<i>en cours</i>' : date("Y", strtotime($legislature['dateFin'])) ?>)</p>
+              <p><?= $legislature['edito'] ?></p>
               <?php $this->load->view('groupes/partials/stats_chartJS.php', array('stats_history_chart' => $stats_monthly['majority'], 'type' => 'graphMajority', 'max' => 100)) ?>
             </div>
           </div>
@@ -133,7 +136,7 @@
           <div class="card-body pb-0">
             <div class="mb-3 mt-1" style="border-top: 7px solid #00b794; width: 60px"></div>
             <h3>Historique de la proximité avec chaque groupe</h3>
-            <p><?= $groupe['legislature'] ?><sup>ème</sup> législature (<?= date("Y", strtotime($legislature['dateDebut'])) ?> - <?= $active ? '<i>en cours</i>' : date("Y", strtotime($legislature['dateFin'])) ?>)</p>
+            <p><?= $legislature['edito'] ?></p>
             <?php $this->load->view('groupes/partials/stats_chartJS_multiline_proximity.php') ?>
           </div>
         </div>
