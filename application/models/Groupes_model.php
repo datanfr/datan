@@ -650,10 +650,13 @@
       $this->db->join('organes o', 'o.uid = g.organeRef', 'left');
       $results = $this->db->get('groupes_effectif_history g')->result_array();
       foreach ($results as $key => $value) {
-        $return['labels'][] = $value['dateValue'];
+        $month = months_abbrev(utf8_encode(strftime('%B', strtotime($value['dateValue']))));
+        $year = substr(date('Y', strtotime($value['dateValue'])), 2, 2);
+        $date = $month . ' ' . $year ;
+        $return['labels'][] =  $date;
         $return['data'][$value['organeRef']]['groupe'] = $value['libelleAbrev'];
         $return['data'][$value['organeRef']]['color'] = $value['couleurAssociee'];
-        $return['data'][$value['organeRef']]['set_data'][] = array('dateValue' => $value['dateValue'], 'effectif' => $value['effectif']);
+        $return['data'][$value['organeRef']]['set_data'][] = array('dateValue' => $date, 'effectif' => $value['effectif']);
       }
       return $return;
     }
