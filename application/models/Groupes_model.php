@@ -444,7 +444,7 @@
       foreach ($results as $key => $value) {
         $return[$value['proxGroup']]['groupe'] = $value['proxGoupLibelle'];
         $return[$value['proxGroup']]['color'] = $value['couleurAssociee'];
-        $return[$value['proxGroup']]['set_data'][] = array('month' => ucfirst(months_abbrev($value['dateValue'])), 'score' => round($value['score'] * 100));
+        $return[$value['proxGroup']]['set_data'][] = array('month' => months_abbrev($value['dateValue']), 'score' => round($value['score'] * 100));
       }
 
       return $return;
@@ -652,7 +652,7 @@
       foreach ($results as $key => $value) {
         $month = months_abbrev(utf8_encode(strftime('%B', strtotime($value['dateValue']))));
         $year = substr(date('Y', strtotime($value['dateValue'])), 2, 2);
-        $date = $month . ' ' . $year ;
+        $date = mb_strtolower($month . ' ' . $year);
         $return['labels'][] =  $date;
         $return['data'][$value['organeRef']]['groupe'] = $value['libelleAbrev'];
         $return['data'][$value['organeRef']]['color'] = $value['couleurAssociee'];

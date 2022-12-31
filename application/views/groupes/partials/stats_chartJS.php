@@ -16,7 +16,8 @@
             <?php foreach ($stats_history_chart as $value) {
               echo $value['value'].",";
             } ?>
-          ]
+          ],
+          borderColor: "#00b794"
         }
       ]
     };
@@ -39,6 +40,11 @@
           afterDataLimits: (scale) => {
             scale.max = <?= $max ?>;
             scale.min = 0;
+          }
+        },
+        x: {
+          grid: {
+            display: false
           }
         }
       }
