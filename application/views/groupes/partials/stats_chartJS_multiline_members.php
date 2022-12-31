@@ -18,14 +18,20 @@
           "y": row.effectif,
         }
       }),
+      radius: 0,
+      tension: 0.4,
       borderColor: o.color,
-      borderWidth: 1,
+      borderWidth: 4,
       fill: false
     }));
 
     var ctx = document.getElementById('members');
     var chartOptions = {
-      responsive: true
+      responsive: true,
+      plugins: {
+        tooltip: {enabled: false},
+        hover: {mode: null}
+      }
     }
 
     // Init the chart
