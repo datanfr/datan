@@ -25,6 +25,7 @@
       responsive: true,
       maintainAspectRatio: true,
       aspectRatio: 2,
+      tension: 0.4,
       layout:{
         padding: 10
       },
