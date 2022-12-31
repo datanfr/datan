@@ -18,7 +18,8 @@
       data: o.set_data.map(v => v.score),
       borderColor: o.color,
       borderWidth: 1,
-      fill: false
+      fill: false,
+      tension: 0.4
     }));
 
     var ctx = document.getElementById('proximity');
