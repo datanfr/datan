@@ -31,6 +31,11 @@
       plugins: {
         tooltip: {enabled: false},
         hover: {mode: null}
+      },
+      scales: {
+        y: {
+          min: 0
+        }
       }
     }
 
