@@ -46,7 +46,7 @@
               <h3>Historique de la participation du groupe <?= $groupe['libelleAbrev'] ?></h3>
             <?php endif; ?>
             <p>Évolution du taux de participation du groupe <?= $groupe['libelleAbrev'] ?> sur les dernières législatures</p>
-            <?php $this->load->view('groupes/partials/stats_vertical.php', array('stats_history_chart' => $stats_history['participation'], 'type' => 'pct', 'terms' => TRUE, 'divided_by' => 1, 'grid' => TRUE, 'organeRef' => $groupe['uid'])) ?>
+            <?php $this->load->view('groupes/partials/stats_vertical.php', array('stats_history_chart' => $stats_history['participation'], 'type' => 'pct', 'terms' => TRUE, 'divided_by' => 1, 'grid' => TRUE, 'organeRef' => $groupe['uid'], 'tooltip' => TRUE)) ?>
           </div>
         </div>
         <div class="card mt-4">
@@ -73,7 +73,7 @@
                 <h3>Historique de la cohésion du groupe <?= $groupe['libelleAbrev'] ?></h3>
             <?php endif; ?>
             <p>Évolution du taux de cohésion du groupe <?= $groupe['libelleAbrev'] ?> sur les dernières législatures</p>
-            <?php $this->load->view('groupes/partials/stats_vertical.php', array('stats_history_chart' => $stats_history['cohesion'], 'type' => 'score', 'terms' => TRUE, 'divided_by' => 1, 'grid' => TRUE, 'organeRef' => $groupe['uid'])) ?>
+            <?php $this->load->view('groupes/partials/stats_vertical.php', array('stats_history_chart' => $stats_history['cohesion'], 'type' => 'score', 'terms' => TRUE, 'divided_by' => 1, 'grid' => TRUE, 'organeRef' => $groupe['uid'], 'tooltip' => TRUE)) ?>
           </div>
         </div>
         <div class="card card-stats mt-4">
@@ -101,7 +101,7 @@
                 <h3>Historique de la proximité avec la majorité</h3>
               <?php endif; ?>
               <p>Évolution de la proximité avec la majorité du groupe <?= $groupe['libelleAbrev'] ?> sur les dernières législatures</p>
-              <?php $this->load->view('groupes/partials/stats_vertical.php', array('stats_history_chart' => $stats_history['majority'], 'type' => 'pct', 'terms' => TRUE, 'divided_by' => 1, 'grid' => TRUE, 'organeRef' => $groupe['uid'])) ?>
+              <?php $this->load->view('groupes/partials/stats_vertical.php', array('stats_history_chart' => $stats_history['majority'], 'type' => 'pct', 'terms' => TRUE, 'divided_by' => 1, 'grid' => TRUE, 'organeRef' => $groupe['uid'], 'tooltip' => TRUE)) ?>
             </div>
           </div>
           <div class="card card-stats mt-4">
@@ -182,7 +182,7 @@
             <div class="mb-3 mt-1" style="border-top: 7px solid #00b794; width: 60px"></div>
             <h3>Historique de l'âge moyen au sein du groupe</h3>
             <p>Évolution de l'âge moyen des députés du groupe <?= $groupe['libelleAbrev'] ?> par législature</p>
-            <?php $this->load->view('groupes/partials/stats_vertical.php', array('stats_history_chart' => $orga_history['age'], 'type' => 'score', 'max' => 100, 'terms' => TRUE, 'divided_by' => $age_max, 'grid' => FALSE, 'organeRef' => $groupe['uid'])) ?>
+            <?php $this->load->view('groupes/partials/stats_vertical.php', array('stats_history_chart' => $orga_history['age'], 'type' => 'score', 'max' => 100, 'terms' => TRUE, 'divided_by' => $age_max, 'grid' => FALSE, 'organeRef' => $groupe['uid'], 'tooltip' => TRUE)) ?>
           </div>
         </div>
       </div>
@@ -212,7 +212,7 @@
             <div class="mb-3 mt-1" style="border-top: 7px solid #00b794; width: 60px"></div>
             <h3>Historique de la part de femmes au sein du groupe</h3>
             <p>Évolution de la part de députées femmes au sein du groupe <?= $groupe['libelleAbrev'] ?> par législature</p>
-            <?php $this->load->view('groupes/partials/stats_vertical.php', array('stats_history_chart' => $orga_history['womenPct'], 'type' => 'pct', 'max' => 100, 'terms' => TRUE, 'divided_by' => 1, 'grid' => TRUE, 'organeRef' => $groupe['uid'])) ?>
+            <?php $this->load->view('groupes/partials/stats_vertical.php', array('stats_history_chart' => $orga_history['womenPct'], 'type' => 'pct', 'max' => 100, 'terms' => TRUE, 'divided_by' => 1, 'grid' => TRUE, 'organeRef' => $groupe['uid'], 'tooltip' => TRUE)) ?>
           </div>
         </div>
       </div>

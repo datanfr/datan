@@ -4,7 +4,9 @@
       <div class="row row-chart my-1">
         <div class="col-3 d-flex align-items-center justify-content-center">
           <div class="text-center">
-            <p class="font-weight-bold mb-0"><?= $group['libelleAbrev'] ?></p>
+            <p class="font-weight-bold mb-0">
+              <span class="tooltipHelp tooltipDashed" data-toggle="tooltip" data-placement="top" title="<?= $group['libelle'] ?>"><?= $group['libelleAbrev'] ?></span>
+            </p>
             <?php if ($terms): ?>
               <p class="font-italic h6 mb-0"><?= $group['legislature'] ?><sup>ème</sup> législature</p>
               <p class="font-italic h6">(<?= date('Y', strtotime($group['dateDebut'])) ?> - <?= $group['dateFin'] ? date('Y', strtotime($group['dateFin'])) : 'en cours' ?>)</p>
