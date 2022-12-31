@@ -202,6 +202,14 @@ body:not(.pg-mentions) #tarteaucitronIcon {
                GRAPHS ==> BAR (bar-container)
 ################
 */
+.tooltipHelp{
+  @include hover(){
+    cursor: help;
+  }
+}
+.tooltipDashed{
+  border-bottom: 1px dashed;
+}
 .bar-container{
   &.stats{
     padding: 3rem 0 1.5rem 0;
@@ -2788,17 +2796,10 @@ ul.ui-menu{
     height: auto;
   }
   .bar-container{
-    .bars{
-      @include hover(){
-        cursor: help;
-      }
-    }
     .legend-element{
       span{
         color: $text-gray;
         font-size: 0.9em;
-        border-bottom: 1px dotted;
-        cursor: help;
       }
     }
   }
