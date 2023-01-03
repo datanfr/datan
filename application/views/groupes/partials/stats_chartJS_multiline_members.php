@@ -5,50 +5,56 @@
 <script type="text/javascript">
   document.addEventListener('DOMContentLoaded', function(){
 
-    const jsonlabels = Object.values(JSON.parse(<?= json_encode($members_history_labels) ?>));
-    const jsondata = Object.values(JSON.parse(<?= json_encode($members_history_data) ?>));
-
-    // Data
-    const dataSets = [];
-    jsondata.forEach(o => dataSets.push({
-      label: o.groupe,
-      data: o.set_data.map(row => {
-        return {
-          "x": row.dateValue,
-          "y": row.effectif,
+  var options = {
+    type: 'bar',
+    data: {
+      labels: [<?php foreach ($members_history['legislatures'] as $value) { echo '"'.$value['name'].'",'; } ?>],
+      datasets: [{
+          data: [<?php foreach ($members_history['data'][1]['data'] as $value) { echo '"'.$value.'",'; } ?>],
+          year: [<?php foreach ($members_history['data'][1]['year'] as $value) { echo '"'.$value.'",'; } ?>],
+        },
+        {
+          data: [<?php foreach ($members_history['data'][2]['data'] as $value) { echo '"'.$value.'",'; } ?>],
+          year: [<?php foreach ($members_history['data'][2]['year'] as $value) { echo '"'.$value.'",'; } ?>],
+        },
+        {
+          data: [<?php foreach ($members_history['data'][3]['data'] as $value) { echo '"'.$value.'",'; } ?>],
+          year: [<?php foreach ($members_history['data'][3]['year'] as $value) { echo '"'.$value.'",'; } ?>],
+        },
+        {
+          data: [<?php foreach ($members_history['data'][4]['data'] as $value) { echo '"'.$value.'",'; } ?>],
+          year: [<?php foreach ($members_history['data'][4]['year'] as $value) { echo '"'.$value.'",'; } ?>],
+        },
+        {
+          data: [<?php foreach ($members_history['data'][5]['data'] as $value) { echo '"'.$value.'",'; } ?>],
+          year: [<?php foreach ($members_history['data'][5]['year'] as $value) { echo '"'.$value.'",'; } ?>],
+        },
+        {
+          data: [<?php foreach ($members_history['data'][6]['data'] as $value) { echo '"'.$value.'",'; } ?>],
+          year: [<?php foreach ($members_history['data'][6]['year'] as $value) { echo '"'.$value.'",'; } ?>],
         }
-      }),
-      radius: 0,
-      tension: 0.4,
-      borderColor: o.color,
-      borderWidth: 4,
-      fill: false
-    }));
-
-    var ctx = document.getElementById('members');
-    var chartOptions = {
-      responsive: true,
+      ]
+    },
+    options: {
+      backgroundColor: "#00b794",
       plugins: {
-        tooltip: {enabled: false},
-        hover: {mode: null}
-      },
-      scales: {
-        y: {
-          min: 0
+        legend: {
+          display: false
+        },
+        tooltip: {
+          callbacks: {
+            title: function(context, data) {
+              return context[0].dataset.year[context[0].dataIndex];
+            }
+          }
         }
       }
     }
+  }
 
-    // Init the chart
-    new Chart(ctx, {
-      type: 'line',
-      data: {
-        labels: jsonlabels,
-        datasets: dataSets
-      },
-      options: chartOptions,
-    });
+  var ctx = document.getElementById('members');
+  new Chart(ctx, options);
 
-  });
+});
 
 </script>

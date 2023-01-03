@@ -8,5 +8,10 @@
       return $this->db->get_where('legislature', array('legislatureNumber' => $legislature))->row_array();
     }
 
+    public function get_legislatures($legislatures){
+      $this->db->where_in('legislatureNumber', $legislatures);
+      return $this->db->get('legislature')->result_array();
+    }
+
   }
 ?>

@@ -643,7 +643,10 @@
         $t2 = strtotime($b['dateDebut']);
         return $t1 - $t2;
       }
-      usort($data['history_list'], 'date_compare');
+      if (isset($data['history_list'])) {
+        usort($data['history_list'], 'date_compare');
+      }
+
 
       // Get group orga stats history
       $data['orga_history'] = $this->groupes_model->get_orga_stats_history($data['history']);
@@ -672,9 +675,6 @@
 
       }
       $data['members_history'] = $this->groupes_model->get_effectif_history($data['history']);
-      $data['members_history_labels'] = json_encode($data['members_history']['labels']);
-      $data['members_history_data'] = json_encode($data['members_history']['data']);
-      $data['members_max_history'] = $this->groupes_model->get_effectif_history_max($data['history']);
 
       // Get age data
       $data['age'] = $this->stats_model->get_groups_age();

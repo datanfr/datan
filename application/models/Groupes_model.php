@@ -639,33 +639,54 @@
           }
         }
       }
+
+      return array($id);
+
     }
 
     public function get_effectif_history($groups){
-      $this->db->select('g.*, g.effectif AS value, o.libelleAbrev, o.couleurAssociee');
+      $this->db->select('o.legislature, YEAR(g.dateValue) AS dateYear, g.dateValue, MAX(g.effectif) AS value');
       $this->db->where_in('g.organeRef', $groups);
-      $this->db->where('g.effectif >', '0');
-      $this->db->order_by('g.dateValue', 'ASC');
-      $this->db->group_by(array('YEAR(g.dateValue)', 'MONTH(g.dateValue)'));
+      $this->db->order_by('o.legislature ASC, YEAR(g.dateValue) ASC');
+      $this->db->group_by('o.legislature, YEAR(g.dateValue)');
       $this->db->join('organes o', 'o.uid = g.organeRef', 'left');
       $results = $this->db->get('groupes_effectif_history g')->result_array();
-      foreach ($results as $key => $value) {
-        $month = months_abbrev(utf8_encode(strftime('%B', strtotime($value['dateValue']))));
-        $year = substr(date('Y', strtotime($value['dateValue'])), 2, 2);
-        $date = mb_strtolower($month . ' ' . $year);
-        $return['labels'][] =  $date;
-        $return['data'][$value['organeRef']]['groupe'] = $value['libelleAbrev'];
-        $return['data'][$value['organeRef']]['color'] = $value['couleurAssociee'];
-        $return['data'][$value['organeRef']]['set_data'][] = array('dateValue' => $date, 'effectif' => $value['effectif']);
+
+      $leg = array_column($results, 'legislature');
+      $leg = array_unique($leg);
+      $leg = $this->legislature_model->get_legislatures($leg);
+
+      foreach ($leg as $key => $value) {
+        $return['legislatures'][$key]['legislature'] = $value['legislatureNumber'];
+        $return['legislatures'][$key]['yearStart'] = substr(date('Y', strtotime($value['dateDebut'])), 2, 2);
+        $return['legislatures'][$key]['yearEnd'] = $value['dateFin'] ? substr(date('Y', strtotime($value['dateFin'])), 2, 2) : "en cours";
+        $return['legislatures'][$key]['name'] = 'Leg. ' . $value['legislatureNumber'] . ' (' . $return['legislatures'][$key]['yearStart'] . ' - ' . $return['legislatures'][$key]['yearEnd'] . ')';
+      }
+
+      $years = array(1, 2, 3, 4, 5, 6);
+      $legislatures = array(
+        12 => array(2002, 2003, 2004, 2005, 2006, 2007),
+        13 => array(2007, 2008, 2009, 2010, 2011, 2012),
+        14 => array(2012, 2013, 2014, 2015, 2016, 2017),
+        15 => array(2017, 2018, 2019, 2020, 2021, 2022),
+        16 => array(2022, 2023, 2024, 2025, 2026, 2027),
+      );
+
+      foreach ($years as $year) {
+        $return['data'][$year] = array();
+        foreach ($return['legislatures'] as $legislature) {
+          $leg = $legislature['legislature'];
+          $return['data'][$year]['year'][] = $legislatures[$leg][$year - 1];
+          $return['data'][$year]['data'][$leg] = null;
+          foreach ($results as $key => $value) {
+            if ($value['legislature'] == $leg & $value['dateYear'] == $legislatures[$leg][$year - 1]) {
+              $return['data'][$year]['data'][$leg] = $value['value'];
+            }
+          }
+        }
       }
       return $return;
     }
-
-    public function get_effectif_history_max($groups){
-      $this->db->where_in('g.organeRef', $groups);
-      $this->db->order_by('g.effectif', 'DESC');
-      return $this->db->get('groupes_effectif_history g', 1)->row_array()['effectif'];
-    }
-
+    
   }
 ?>
