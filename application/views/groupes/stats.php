@@ -37,18 +37,20 @@
           Autrement dit, en moyenne, pour chaque scrutin en séance publique, <?= $stats['participation']['value'] ?>% des députés du groupe ont pris part au vote.
         </p>
         <p>Le groupe <b><?= $active ? 'participe' : 'participait' ?> <?= $edito_participation ?></b> que les autres groupes politiques. La moyenne de l'Assemblée nationale <?= $active ? 'est' : 'était' ?> de <?= $statsAverage['participation'] ?>%.</p>
-        <div class="card card-stats mt-4">
-          <div class="card-body pb-0">
-            <div class="mb-3 mt-1" style="border-top: 7px solid #00b794; width: 60px"></div>
-            <?php if ($active): ?>
-              <h3>La participation du groupe <?= $this->groupes_edito->get_evolution_edited(round($stats_history['participation'][count($stats_history['participation'])-1]['value'] * 100), round($stats_history['participation'][count($stats_history['participation'])-2]['value'] * 100)) ?></h3>
-            <?php else: ?>
-              <h3>Historique de la participation du groupe <?= $groupe['libelleAbrev'] ?></h3>
-            <?php endif; ?>
-            <p>Évolution du taux de participation du groupe <?= $groupe['libelleAbrev'] ?> sur les dernières législatures</p>
-            <?php $this->load->view('groupes/partials/stats_vertical.php', array('stats_history_chart' => $stats_history['participation'], 'type' => 'pct', 'terms' => TRUE, 'divided_by' => 1, 'grid' => TRUE, 'organeRef' => $groupe['uid'], 'tooltip' => TRUE)) ?>
+        <?php if (count($stats_history['participation']) > 1): ?>
+          <div class="card card-stats mt-4">
+            <div class="card-body pb-0">
+              <div class="mb-3 mt-1" style="border-top: 7px solid #00b794; width: 60px"></div>
+              <?php if ($active): ?>
+                <h3>La participation du groupe <?= $this->groupes_edito->get_evolution_edited(round($stats_history['participation'][count($stats_history['participation'])-1]['value'] * 100), round($stats_history['participation'][count($stats_history['participation'])-2]['value'] * 100)) ?></h3>
+              <?php else: ?>
+                <h3>Historique de la participation du groupe <?= $groupe['libelleAbrev'] ?></h3>
+              <?php endif; ?>
+              <p>Évolution du taux de participation du groupe <?= $groupe['libelleAbrev'] ?> sur les dernières législatures</p>
+              <?php $this->load->view('groupes/partials/stats_vertical.php', array('stats_history_chart' => $stats_history['participation'], 'type' => 'pct', 'terms' => TRUE, 'divided_by' => 1, 'grid' => TRUE, 'organeRef' => $groupe['uid'], 'tooltip' => TRUE)) ?>
+            </div>
           </div>
-        </div>
+        <?php endif; ?>
         <div class="card mt-4">
           <div class="card-body card-stats pb-0">
             <div class="mb-3 mt-1" style="border-top: 7px solid #00b794; width: 60px"></div>
@@ -64,18 +66,20 @@
           <?= $active ? 'Depuis le début de' : 'Pendant la' ?> <?= $groupe['legislature'] ?>ème législature, le taux de cohésion du groupe <i><?= name_group($title) ?></i> <?= $active ? 'est' : 'était' ?> de <span class="font-weight-bold text-primary"><?= round($stats['cohesion']['value'], 2) ?></span>. Plus ce score de cohésion est proche de 1, plus le groupe est uni quand il s'agit de voter en séance publique.
         </p>
         <p>Le groupe <i><?= name_group($title) ?></i> <?= $active ? 'peut' : 'pouvait' ?> être considéré comme <b><?= $edito_cohesion['absolute'] ?> soudé</b> quand il s'<?= $active ? 'agit' : 'agissait' ?> de voter. En effet, le groupe <?= $active ? 'est' : 'était' ?> <?= $edito_cohesion['relative'] ?> soudé que la moyenne des autres groupes, qui <?= $active ? 'est' : 'était' ?> de <?= round($statsAverage['cohesion'], 2) ?>.</p>
-        <div class="card card-stats mt-4">
-          <div class="card-body pb-0">
-            <div class="mb-3 mt-1" style="border-top: 7px solid #00b794; width: 60px"></div>
-            <?php if ($active): ?>
-              <h3>La cohésion du groupe <?= $this->groupes_edito->get_evolution_edited(round($stats_history['cohesion'][count($stats_history['cohesion'])-1]['value'] * 100), round($stats_history['cohesion'][count($stats_history['cohesion'])-2]['value'] * 100)) ?></h3>
-            <?php else: ?>
-                <h3>Historique de la cohésion du groupe <?= $groupe['libelleAbrev'] ?></h3>
-            <?php endif; ?>
-            <p>Évolution du taux de cohésion du groupe <?= $groupe['libelleAbrev'] ?> sur les dernières législatures</p>
-            <?php $this->load->view('groupes/partials/stats_vertical.php', array('stats_history_chart' => $stats_history['cohesion'], 'type' => 'score', 'terms' => TRUE, 'divided_by' => 1, 'grid' => TRUE, 'organeRef' => $groupe['uid'], 'tooltip' => TRUE)) ?>
+        <?php if (count($stats_history['cohesion']) > 1): ?>
+          <div class="card card-stats mt-4">
+            <div class="card-body pb-0">
+              <div class="mb-3 mt-1" style="border-top: 7px solid #00b794; width: 60px"></div>
+              <?php if ($active): ?>
+                <h3>La cohésion du groupe <?= $this->groupes_edito->get_evolution_edited(round($stats_history['cohesion'][count($stats_history['cohesion'])-1]['value'] * 100), round($stats_history['cohesion'][count($stats_history['cohesion'])-2]['value'] * 100)) ?></h3>
+              <?php else: ?>
+                  <h3>Historique de la cohésion du groupe <?= $groupe['libelleAbrev'] ?></h3>
+              <?php endif; ?>
+              <p>Évolution du taux de cohésion du groupe <?= $groupe['libelleAbrev'] ?> sur les dernières législatures</p>
+              <?php $this->load->view('groupes/partials/stats_vertical.php', array('stats_history_chart' => $stats_history['cohesion'], 'type' => 'score', 'terms' => TRUE, 'divided_by' => 1, 'grid' => TRUE, 'organeRef' => $groupe['uid'], 'tooltip' => TRUE)) ?>
+            </div>
           </div>
-        </div>
+        <?php endif; ?>
         <div class="card card-stats mt-4">
           <div class="card-body pb-0">
             <div class="mb-3 mt-1" style="border-top: 7px solid #00b794; width: 60px"></div>
@@ -92,18 +96,21 @@
             <?= $active ? 'Depuis le début de' : 'Pendant la' ?> <?= $groupe['legislature'] ?>ème législature, le groupe <i><?= name_group($title) ?></i> a voté sur la même ligne que la majorité présidentielle dans <span class="font-weight-bold text-primary"><?= $stats['majority']['value'] ?>%</span> des cas.
           </p>
           <p>Le groupe <?= $active ? 'est' : 'était' ?> <b><?= $edito_majorite ?> proche</b> de la majorité présidentielle que la moyenne des autres groupes politiques, qui <?= $active ? 'est' : 'était' ?> de <?= $statsAverage['majority'] ?>%.</p>
-          <div class="card card-stats mt-4">
-            <div class="card-body pb-0">
-              <div class="mb-3 mt-1" style="border-top: 7px solid #00b794; width: 60px"></div>
-              <?php if ($active): ?>
-                <h3>La proximité avec la majorité <?= $this->groupes_edito->get_evolution_edited(round(array_slice($stats_history['majority'], -1, 1)[0]['value'] * 100), round(array_slice($stats_history['majority'], -2, 1)[0]['value'] * 100)) ?></h3>
-              <?php else: ?>
-                <h3>Historique de la proximité avec la majorité</h3>
-              <?php endif; ?>
-              <p>Évolution de la proximité avec la majorité du groupe <?= $groupe['libelleAbrev'] ?> sur les dernières législatures</p>
-              <?php $this->load->view('groupes/partials/stats_vertical.php', array('stats_history_chart' => $stats_history['majority'], 'type' => 'pct', 'terms' => TRUE, 'divided_by' => 1, 'grid' => TRUE, 'organeRef' => $groupe['uid'], 'tooltip' => TRUE)) ?>
+          <?php if (count($stats_history['majority']) > 1): ?>
+            <div class="card card-stats mt-4">
+              <div class="card-body pb-0">
+                <div class="mb-3 mt-1" style="border-top: 7px solid #00b794; width: 60px"></div>
+                <?php if ($active): ?>
+                  <h3>La proximité avec la majorité <?= $this->groupes_edito->get_evolution_edited(round(array_slice($stats_history['majority'], -1, 1)[0]['value'] * 100), round(array_slice($stats_history['majority'], -2, 1)[0]['value'] * 100)) ?></h3>
+                <?php else: ?>
+                  <h3>Historique de la proximité avec la majorité</h3>
+                <?php endif; ?>
+                <p>Évolution de la proximité avec la majorité du groupe <?= $groupe['libelleAbrev'] ?> sur les dernières législatures</p>
+                <?php $this->load->view('groupes/partials/stats_vertical.php', array('stats_history_chart' => $stats_history['majority'], 'type' => 'pct', 'terms' => TRUE, 'divided_by' => 1, 'grid' => TRUE, 'organeRef' => $groupe['uid'], 'tooltip' => TRUE)) ?>
+              </div>
             </div>
-          </div>
+          <?php endif; ?>
+
           <div class="card card-stats mt-4">
             <div class="card-body pb-0">
               <div class="mb-3 mt-1" style="border-top: 7px solid #00b794; width: 60px"></div>
@@ -151,11 +158,35 @@
           </div>
         <?php endif; ?>
         <div class="card card-stats mt-4">
-          <div class="card-body pb-0">
+          <div class="card-body pb-3">
             <div class="mb-3 mt-1" style="border-top: 7px solid #00b794; width: 60px"></div>
             <h3>Historique des effectifs du groupe</h3>
             <p>Évolution des effectifs du groupe <?= $groupe['libelleAbrev'] ?> par mois</p>
             <?php $this->load->view('groupes/partials/stats_chartJS_multiline_members.php') ?>
+            <p class="mt-4 small">Le graphique donne le nombre de députés membres des différents groupes liés au groupe <i><?= name_group($groupe['libelle']) ?></i>. Il s'agit des groupes suivants :</p>
+            <table class="table table-sm small">
+              <thead>
+                <tr>
+                  <th scope="col">Groupe</th>
+                  <th scope="col">Législature</th>
+                  <th scope="col">Date d'activité</th>
+                </tr>
+              </thead>
+              <tbody>
+                <?php foreach ($history_list as $key => $value): ?>
+                  <tr>
+                    <th scope="row"><?= name_group($value['libelle']) ?> (<?= $value['libelleAbrev'] ?>)</th>
+                    <td><?= $value['legislature'] ?></td>
+                    <td><?= date('Y', strtotime($value['dateDebut'])) ?> - <?= date('Y', strtotime($value['dateFin'])) ?></td>
+                  </tr>
+                <?php endforeach; ?>
+                <tr>
+                  <th scope="row"><?= name_group($groupe['libelle']) ?> (<?= $groupe['libelleAbrev'] ?>)</th>
+                  <td><?= $groupe['legislature'] ?></td>
+                  <td><?= date('Y', strtotime($groupe['dateDebut'])) ?> - <i>en cours</i></td>
+                </tr>
+              </tbody>
+            </table>
           </div>
         </div>
       </div>
@@ -177,14 +208,16 @@
             </div>
           </div>
         <?php endif; ?>
-        <div class="card card-stats mt-4">
-          <div class="card-body pb-0">
-            <div class="mb-3 mt-1" style="border-top: 7px solid #00b794; width: 60px"></div>
-            <h3>Historique de l'âge moyen au sein du groupe</h3>
-            <p>Évolution de l'âge moyen des députés du groupe <?= $groupe['libelleAbrev'] ?> par législature</p>
-            <?php $this->load->view('groupes/partials/stats_vertical.php', array('stats_history_chart' => $orga_history['age'], 'type' => 'score', 'max' => 100, 'terms' => TRUE, 'divided_by' => $age_max, 'grid' => FALSE, 'organeRef' => $groupe['uid'], 'tooltip' => TRUE)) ?>
+        <?php if (count($orga_history['age']) > 1): ?>
+          <div class="card card-stats mt-4">
+            <div class="card-body pb-0">
+              <div class="mb-3 mt-1" style="border-top: 7px solid #00b794; width: 60px"></div>
+              <h3>Historique de l'âge moyen au sein du groupe</h3>
+              <p>Évolution de l'âge moyen des députés du groupe <?= $groupe['libelleAbrev'] ?> par législature</p>
+              <?php $this->load->view('groupes/partials/stats_vertical.php', array('stats_history_chart' => $orga_history['age'], 'type' => 'score', 'max' => 100, 'terms' => TRUE, 'divided_by' => $age_max, 'grid' => FALSE, 'organeRef' => $groupe['uid'], 'tooltip' => TRUE)) ?>
+            </div>
           </div>
-        </div>
+        <?php endif; ?>
       </div>
       <div class="mt-5">
         <h2 class="anchor mb-3" id="feminisation">Le taux de féminisation du groupe <?= $groupe['libelleAbrev'] ?></h2>
@@ -207,27 +240,35 @@
             </div>
           </div>
         <?php endif; ?>
-        <div class="card card-stats mt-4">
-          <div class="card-body pb-0">
-            <div class="mb-3 mt-1" style="border-top: 7px solid #00b794; width: 60px"></div>
-            <h3>Historique de la part de femmes au sein du groupe</h3>
-            <p>Évolution de la part de députées femmes au sein du groupe <?= $groupe['libelleAbrev'] ?> par législature</p>
-            <?php $this->load->view('groupes/partials/stats_vertical.php', array('stats_history_chart' => $orga_history['womenPct'], 'type' => 'pct', 'max' => 100, 'terms' => TRUE, 'divided_by' => 1, 'grid' => TRUE, 'organeRef' => $groupe['uid'], 'tooltip' => TRUE)) ?>
+        <?php if (count($orga_history['womenPct']) > 1): ?>
+          <div class="card card-stats mt-4">
+            <div class="card-body pb-0">
+              <div class="mb-3 mt-1" style="border-top: 7px solid #00b794; width: 60px"></div>
+              <h3>Historique de la part de femmes au sein du groupe</h3>
+              <p>Évolution de la part de députées femmes au sein du groupe <?= $groupe['libelleAbrev'] ?> par législature</p>
+              <?php $this->load->view('groupes/partials/stats_vertical.php', array('stats_history_chart' => $orga_history['womenPct'], 'type' => 'pct', 'max' => 100, 'terms' => TRUE, 'divided_by' => 1, 'grid' => TRUE, 'organeRef' => $groupe['uid'], 'tooltip' => TRUE)) ?>
+            </div>
           </div>
-        </div>
+        <?php endif; ?>
       </div>
       <div class="mt-5">
         <h2 class="anchor mb-3" id="link-stats">Historique du groupe <?= $groupe['libelleAbrev'] ?></h2>
         <p>Sur cette page, vous trouvez un historique des statistiques du groupe <i><?= name_group($title) ?></i>. Pour chaque groupe politique, nous avons répertorié les anciens ou nouveaux groupes qui leur sont liés.</p>
         <p>Sur Datan, nous récupérons les statistiques de l'Assemblée nationale depuis la 14<sup>ème</sup> législature (depuis 2012).</p>
-        <p>Voici les différents groupes liés au groupe <i><?= name_group($title) ?></i> :</p>
-        <div class="row">
-          <?php foreach ($history_list as $key => $value): ?>
-            <div class="col-6">
-              <?php $this->load->view('groupes/partials/card_home.php', array('groupe' => $value, 'tag' => 'span', 'cat' => $value['legislature'].'<sup>ème</sup> législature', 'stats' => NULL)) ?>
-            </div>
-          <?php endforeach; ?>
-        </div>
+        <?php if (isset($history_list)): ?>
+          <p>Voici les différents groupes liés au groupe <i><?= name_group($title) ?></i> :</p>
+          <div class="row">
+            <?php foreach ($history_list as $key => $value): ?>
+              <div class="col-6">
+                <?php $this->load->view('groupes/partials/card_home.php', array('groupe' => $value, 'tag' => 'span', 'cat' => $value['legislature'].'<sup>ème</sup> législature', 'stats' => NULL)) ?>
+              </div>
+            <?php endforeach; ?>
+          </div>
+        <?php else: ?>
+          <div class="alert alert-warning">
+            Nous n'avons pas associé d'autres groupes au groupe <?= $groupe['libelleAbrev'] ?> (celui-ci n'a pas de groupes proches antérieurs ou futurs).
+          </div>
+        <?php endif; ?>
       </div>
     </div>
   </div>
