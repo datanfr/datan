@@ -174,18 +174,13 @@
                 </tr>
               </thead>
               <tbody>
-                <?php foreach ($history_list as $key => $value): ?>
+                <?php foreach ($history_list_all as $key => $value): ?>
                   <tr>
                     <th scope="row"><?= name_group($value['libelle']) ?> (<?= $value['libelleAbrev'] ?>)</th>
                     <td><?= $value['legislature'] ?></td>
-                    <td><?= date('Y', strtotime($value['dateDebut'])) ?> - <?= date('Y', strtotime($value['dateFin'])) ?></td>
+                    <td><?= date('Y', strtotime($value['dateDebut'])) ?> - <?= $value['dateFin'] ? date('Y', strtotime($value['dateFin'])) : '<i>En cours</i>' ?></td>
                   </tr>
                 <?php endforeach; ?>
-                <tr>
-                  <th scope="row"><?= name_group($groupe['libelle']) ?> (<?= $groupe['libelleAbrev'] ?>)</th>
-                  <td><?= $groupe['legislature'] ?></td>
-                  <td><?= date('Y', strtotime($groupe['dateDebut'])) ?> - <i>en cours</i></td>
-                </tr>
               </tbody>
             </table>
           </div>
