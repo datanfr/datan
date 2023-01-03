@@ -52,7 +52,7 @@
           </div>
         <?php endif; ?>
         <div class="card mt-4">
-          <div class="card-body card-stats pb-0">
+          <div class="card-body card-stats pb-2">
             <div class="mb-3 mt-1" style="border-top: 7px solid #00b794; width: 60px"></div>
             <h3>Évolution de la participation sur la dernière législature</h3>
             <p><?= $legislature['edito'] ?></p>
@@ -81,7 +81,7 @@
           </div>
         <?php endif; ?>
         <div class="card card-stats mt-4">
-          <div class="card-body pb-0">
+          <div class="card-body pb-2">
             <div class="mb-3 mt-1" style="border-top: 7px solid #00b794; width: 60px"></div>
             <h3>Évolution de la cohésion sur la dernière législature</h3>
             <p><?= $legislature['edito'] ?></p>
@@ -128,10 +128,11 @@
           <?= $active ? 'Depuis le début de' : 'Pendant la' ?> <?= $groupe['legislature'] ?>ème législature, le groupe <i><?= name_group($title) ?></i> est le plus proche du groupe <i><?= name_group($accord_groupes_first['libelle']) ?></i>.
           Ces deux groupes ont eu la même position dans <span class="font-weight-bold text-primary"><?= $accord_groupes_first['score'] ?>%</span> des cas.</p>
         <div class="card card-stats mt-4">
-          <div class="card-body pb-0">
+          <div class="card-body pb-3">
             <div class="mb-3 mt-1" style="border-top: 7px solid #00b794; width: 60px"></div>
             <h3>Historique de la proximité avec chaque groupe</h3>
             <p><?= $legislature['edito'] ?></p>
+            <p class="small">Ce graphique donne un historique de la proximité entre le groupe <i><?= name_group($groupe['libelle']) ?></i> et les autres groupes de l'Assemblée. Cliquez sur les différents groupes pour faire apparaître les données de proximité.</p>
             <?php $this->load->view('groupes/partials/stats_chartJS_multiline_proximity.php') ?>
           </div>
         </div>
@@ -158,7 +159,7 @@
           </div>
         <?php endif; ?>
         <div class="card card-stats mt-4">
-          <div class="card-body pb-3">
+          <div class="card-body pb-2">
             <div class="mb-3 mt-1" style="border-top: 7px solid #00b794; width: 60px"></div>
             <h3>Historique des effectifs du groupe</h3>
             <p>Évolution des effectifs du groupe <?= $groupe['libelleAbrev'] ?> par mois</p>
