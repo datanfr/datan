@@ -5,11 +5,8 @@
 <script type="text/javascript">
   document.addEventListener('DOMContentLoaded', function(){
 
-    const jsonfile = Object.values(JSON.parse(<?= json_encode($proximity_history) ?>));
-
-    // Labels
-    const firstKey = Object.keys(jsonfile)[0];
-    const labels = jsonfile[firstKey].set_data.map(v => v.month);
+    const jsonfile = Object.values(JSON.parse(<?= json_encode($proximity_history_data) ?>));
+    const months = Object.values(JSON.parse(<?= json_encode($proximity_history_months) ?>));
 
     var random = jsonfile[Math.floor(Math.random()*jsonfile.length)].groupeId;
 
@@ -18,8 +15,8 @@
 
     jsonfile.forEach(o => dataSets.push({
       label: o.groupe,
-      data: o.set_data.map(v => v.score),
-      borderColor: o.color,
+      data: Object.entries(o.set_data).map( ([key_date, value]) => value.score),
+      borderColor: o.color ? o.color : '#' + Math.floor(Math.random()*16777215).toString(16),
       borderWidth: 2,
       fill: false,
       tension: 0.4,
@@ -35,7 +32,7 @@
     new Chart(ctx, {
       type: 'line',
       data: {
-        labels: labels,
+        labels: months,
         datasets: dataSets
       },
       options: chartOptions,

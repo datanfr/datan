@@ -601,13 +601,28 @@
       // Get history data
       $data['history'] = $this->groupes_model->get_history($data['groupe']['uid']);
       foreach ($data['history'] as $key => $value) {
-        if ($value != $data['groupe']['uid']) {
-          $get = $this->groupes_model->get_groupe_by_id($value);
-          if ($get['legislature'] >= 14) {
+        $get = $this->groupes_model->get_groupe_by_id($value);
+        if ($get['legislature'] >= 14) {
+          if ($value == $data['groupe']['uid']) {
+            $data['history_list_all'][] = $get;
+          } else {
             $data['history_list'][] = $get;
+            $data['history_list_all'][] = $get;
           }
         }
       }
+      function date_compare($a, $b) {
+        $t1 = strtotime($a['dateDebut']);
+        $t2 = strtotime($b['dateDebut']);
+        return $t1 - $t2;
+      }
+      if (isset($data['history_list'])) {
+        usort($data['history_list'], 'date_compare');
+      }
+      if (isset($data['history_list_all'])) {
+        usort($data['history_list_all'], 'date_compare');
+      }
+
       $data['stats_history'] = $this->groupes_model->get_stats_history($data['history']);
 
       // Get monthly data
@@ -636,18 +651,8 @@
 
       // Get history proximity stats
       $data['proximity_history'] = $this->groupes_model->get_stat_proximity_history($data['groupe']['uid']);
-
-      $data['proximity_history'] = json_encode($data['proximity_history']);
-
-      function date_compare($a, $b) {
-        $t1 = strtotime($a['dateDebut']);
-        $t2 = strtotime($b['dateDebut']);
-        return $t1 - $t2;
-      }
-      if (isset($data['history_list'])) {
-        usort($data['history_list'], 'date_compare');
-      }
-
+      $data['proximity_history_months'] = json_encode($data['proximity_history']['months']);
+      $data['proximity_history_data'] = json_encode($data['proximity_history']['data']);
 
       // Get group orga stats history
       $data['orga_history'] = $this->groupes_model->get_orga_stats_history($data['history']);
