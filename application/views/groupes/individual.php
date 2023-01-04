@@ -200,39 +200,14 @@
                       <p>
                         Ce score de participation prend en compte tous les scrutins publics. Ce score est faible du fait de l'organisation du travail à l'Assemblée nationale. Pour découvrir d'autres scores de participation, <a href="<?= base_url() ?>/statistiques/groupes-participation">cliquez ici</a>.
                       </p>
+                      <div class="d-flex justify-content-center mt-3">
+                        <a href="<?= base_url() ?>groupes/legislature-<?= $groupe['legislature'] ?>/<?= mb_strtolower($groupe['libelleAbrev']) ?>/statistiques#participation" class="btn btn-outline-primary text-center">
+                          Voir l'historique
+                        </a>
+                      </div>
                     </div>
                   </div>
                 </div>
-                <?php if (isset($stats_history['participation'])): ?>
-                  <div class="row mt-4">
-                    <div class="col-12">
-                      <div class="text-center">
-                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalParticipation">
-                          Voir l'historique
-                        </button>
-                      </div>
-                      <!-- Modal -->
-                      <div class="modal fade" id="modalParticipation" tabindex="-1" role="dialog" aria-labelledby="modalParticipationTitle" aria-hidden="true">
-                        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
-                          <div class="modal-content">
-                            <div class="modal-header">
-                              <span class="h5 modal-title font-weight-bold" id="exampleModalLongTitle">Historique de participation pour <?= $groupe['libelleAbrev'] ?></span>
-                              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                              </button>
-                            </div>
-                            <div class="modal-body p-0">
-                              <?php $this->load->view('groupes/partials/stats_vertical.php', array('stats_history_chart' => $stats_history['participation'], 'grid' => TRUE, 'type' => 'pct', 'divided_by' => 1, 'terms' => FALSE)) ?>
-                            </div>
-                            <div class="modal-footer">
-                              <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                <?php endif; ?>
               <?php endif; ?>
             </div>
           </div> <!-- END CARD PARTICIPATION -->
@@ -276,39 +251,14 @@
                       <p>
                         Le groupe <?= $active ? "est" : "était" ?> en effet <b><?= $edito_cohesion['relative'] ?> uni</b> que la moyenne de tous les groupes, qui est de <?= round($cohesionAverage, 2) ?>.
                       </p>
+                      <div class="d-flex justify-content-center mt-3">
+                        <a href="<?= base_url() ?>groupes/legislature-<?= $groupe['legislature'] ?>/<?= mb_strtolower($groupe['libelleAbrev']) ?>/statistiques#cohesion" class="btn btn-outline-primary text-center">
+                          Voir l'historique
+                        </a>
+                      </div>
                     </div>
                   </div>
                 </div>
-                <?php if (isset($stats_history['cohesion'])): ?>
-                  <div class="row mt-4">
-                    <div class="col-12">
-                      <div class="text-center">
-                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalCohesion">
-                          Voir l'historique
-                        </button>
-                      </div>
-                      <!-- Modal -->
-                      <div class="modal fade" id="modalCohesion" tabindex="-1" role="dialog" aria-labelledby="modalCohesionTitle" aria-hidden="true">
-                        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
-                          <div class="modal-content">
-                            <div class="modal-header">
-                              <span class="h5 modal-title font-weight-bold" id="exampleModalLongTitle">Historique de cohésion pour <?= $groupe['libelleAbrev'] ?></span>
-                              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                              </button>
-                            </div>
-                            <div class="modal-body p-0">
-                              <?php $this->load->view('groupes/partials/stats_vertical.php', array('stats_history_chart' => $stats_history['cohesion'], 'grid' => TRUE, 'type' => 'pct', 'divided_by' => 1, 'terms' => FALSE)) ?>
-                            </div>
-                            <div class="modal-footer">
-                              <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                <?php endif; ?>
               <?php endif; ?>
             </div>
           </div> <!-- END CARD COHESION -->
@@ -363,6 +313,11 @@
                           <?php endif; ?>
                           <b><?= $edito_majorite ?> souvent</b> avec la majorité présidentielle que la moyenne des autres groupes, qui est de <?= $majoriteAverage ?> %.
                         </p>
+                        <div class="d-flex justify-content-center mt-3">
+                          <a href="<?= base_url() ?>groupes/legislature-<?= $groupe['legislature'] ?>/<?= mb_strtolower($groupe['libelleAbrev']) ?>/statistiques#majorite" class="btn btn-outline-primary text-center">
+                            Voir l'historique
+                          </a>
+                        </div>
                       </div>
                     </div>
                   </div>
