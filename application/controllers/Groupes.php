@@ -241,9 +241,6 @@
 
       //Query 3 Statistiques
       $data = $this->get_data_stats($data);
-      if ($data['history']) {
-        $data['stats_history'] = $this->groupes_model->get_stats_history($data['history']);
-      }
 
       // ACCORD AVEC GROUPES
       $data['accord_groupes_actifs'] = $this->groupes_model->get_stats_proximite($data['groupe']['uid']); // PROXIMITÉ TOUS LES GROUPES
