@@ -176,7 +176,7 @@
               <tbody>
                 <?php foreach ($history_list_all as $key => $value): ?>
                   <tr>
-                    <th scope="row"><?= name_group($value['libelle']) ?> (<?= $value['libelleAbrev'] ?>)</th>
+                    <th scope="row"><a class="no-decoration underline" href="<?= base_url() ?>groupes/legislature-<?= $value['legislature'] ?>/<?= mb_strtolower($value['libelleAbrev']) ?>"><?= name_group($value['libelle']) ?> (<?= $value['libelleAbrev'] ?>)</a></th>
                     <td><?= $value['legislature'] ?></td>
                     <td><?= date('Y', strtotime($value['dateDebut'])) ?> - <?= $value['dateFin'] ? date('Y', strtotime($value['dateFin'])) : '<i>En cours</i>' ?></td>
                   </tr>
