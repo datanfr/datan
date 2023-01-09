@@ -46,16 +46,20 @@
     <?php endif; ?>
     <div class="row">
       <div class="col-12">
-        <h2>Tous les groupes parlementaires en activité de la 15e législature</h2>
+        <?php if ($groupe['legislature'] == legislature_current()): ?>
+          <h2>Tous les groupes parlementaires en activité de la <?= $groupe['legislature'] ?><sup>ème</sup> législature</h2>
+        <?php else: ?>
+          <h2>Les groupes parlementaires de la <?= $groupe['legislature'] ?><sup>ème</sup> législature</h2>
+        <?php endif; ?>
         <div class="row mt-3">
-          <?php foreach ($groupesActifs as $group): ?>
+          <?php foreach ($groupesActifs as $value): ?>
             <div class="col-6 col-md-4 py-2">
-              <a class="membre no-decoration underline" href="<?= base_url(); ?>groupes/legislature-<?= $groupe['legislature'] ?>/<?= mb_strtolower($group['libelleAbrev']) ?>"><?= $group['libelle']." (".$group['libelleAbrev'].")" ?></a>
+              <a class="membre no-decoration underline" href="<?= base_url(); ?>groupes/legislature-<?= $value['legislature'] ?>/<?= mb_strtolower($value['libelleAbrev']) ?>"><?= $value['libelle']." (".$value['libelleAbrev'].")" ?></a>
             </div>
           <?php endforeach; ?>
         </div>
         <div class="mt-3">
-          <a href="<?= base_url() ?>groupes">Voir tous les groupes parlementaires de la 15e législature</a>
+          <a href="<?= base_url() ?>groupes">Voir tous les groupes parlementaires de la <?= $groupe['legislature'] ?><sup>ème</sup> législature</a>
         </div>
       </div>
     </div>
