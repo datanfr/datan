@@ -50,7 +50,7 @@
       (
         SELECT A.*,
         ROUND(female / n * 100) AS pct,
-        o.couleurAssociee, o.legislature, ge.effectif
+        o.uid AS organeRef, o.couleurAssociee, o.legislature, o.uid, ge.effectif
         FROM
         (
           SELECT libelle, libelleAbrev, COUNT(mpId) AS n, groupeId,

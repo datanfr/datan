@@ -102,53 +102,58 @@
   </div>
 </div>
 <script>
-  const labels = [
-    <?php foreach ($candidates as $x) {
-      echo "[";
-      echo '"'.$x['name'].'",';
-      echo "],";
-    } ?>
-  ];
-  var ctx = document.getElementById('myChart');
-  var myChart = new Chart(ctx, {
-      type: 'bar',
-      data: {
-        labels: labels,
-        datasets: [{
-            label: 'Nombre de parrainages de députés',
-            data: [
-              <?php foreach ($candidates as $x) {
-                echo '"'.$x['parrainages'].'",';
-              } ?>
-            ],
-            backgroundColor: 'rgb(0, 183, 148)',
-        }]
-      },
-      options: {
-        scales: {
-            yAxes: [{
-                ticks: {
-                    beginAtZero: true
-                }
-            }]
+  document.addEventListener('DOMContentLoaded', function(){
+
+    Chart.register(ChartDataLabels);
+
+    const labels = [
+      <?php foreach ($candidates as $x) {
+        echo "[";
+        echo '"'.$x['name'].'",';
+        echo "],";
+      } ?>
+    ];
+    var ctx = document.getElementById('myChart');
+    var myChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: labels,
+          datasets: [{
+              label: 'Nombre de parrainages de députés',
+              data: [
+                <?php foreach ($candidates as $x) {
+                  echo '"'.$x['parrainages'].'",';
+                } ?>
+              ],
+              backgroundColor: 'rgb(0, 183, 148)',
+          }]
         },
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-          datalabels: {
-            anchor: "end",
-            backgroundColor: function(context){
-              return context.dataset.backgroundColor;
-            },
-            borderColor: "white",
-            borderRadius: 25,
-            borderWidth: 1,
-            color: "white",
-            font: {
-              size: 14
+        options: {
+          scales: {
+              yAxes: [{
+                  ticks: {
+                      beginAtZero: true
+                  }
+              }]
+          },
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            datalabels: {
+              anchor: "end",
+              backgroundColor: function(context){
+                return context.dataset.backgroundColor;
+              },
+              borderColor: "white",
+              borderRadius: 25,
+              borderWidth: 1,
+              color: "white",
+              font: {
+                size: 14
+              }
             }
           }
         }
-      }
+    });
   });
 </script>

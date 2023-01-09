@@ -202,6 +202,14 @@ body:not(.pg-mentions) #tarteaucitronIcon {
                GRAPHS ==> BAR (bar-container)
 ################
 */
+.tooltipHelp{
+  @include hover(){
+    cursor: help;
+  }
+}
+.tooltipDashed{
+  border-bottom: 1px dashed;
+}
 .bar-container{
   &.stats{
     padding: 3rem 0 1.5rem 0;
@@ -214,6 +222,56 @@ body:not(.pg-mentions) #tarteaucitronIcon {
       align-items: center;
       color: #fff;
     }
+    .chart{
+      width: auto;
+      height: 150px;
+      .chart-grid{
+        height: 150px;
+        left: 0;
+        right: 0;
+        position: absolute;
+        z-index: 1;
+        #ticks {
+          width: 100%;
+          display: block;
+          position: relative;
+          height: 100%;
+          font-size: 11px;
+          font-weight: 600;
+          color: $text-black;
+        }
+        #ticks .tick {
+          width: 100%;
+          position: relative;
+          border-top: 1px solid $text-black;
+        }
+        #ticks .tick p {
+          position: absolute;
+          left: -4.5em;
+          top: -0.8em;
+          margin: 0 0 0 0.5em;
+        }
+      }
+      .bar-chart{
+        z-index: 10;
+        position: relative;
+        height: 150px;
+        .bars{
+          background-color: $primary;
+          width: 100%;
+          .score{
+            font-weight: 800;
+          }
+          &.white{
+            background-color: #D3D3D3;
+            color: $text-black;
+          }
+        }
+      }
+    }
+  }
+  &.history{
+     background-color: #E8E8E8;
   }
   &.election{
     flex-grow: 1;
@@ -236,51 +294,25 @@ body:not(.pg-mentions) #tarteaucitronIcon {
       }
     }
   }
-  .chart{
-    width: auto;
-    height: 150px;
-    .chart-grid{
-      height: 150px;
-      left: 0;
-      right: 0;
-      position: absolute;
-      z-index: 1;
-      #ticks {
-        width: 100%;
-        display: block;
-        position: relative;
-        height: 100%;
-        font-size: 11px;
-        font-weight: 600;
-        color: $text-black;
-      }
-      #ticks .tick {
-        width: 100%;
-        position: relative;
-        border-top: 1px solid $text-black;
-      }
-      #ticks .tick p {
-        position: absolute;
-        left: -4.5em;
-        top: -0.8em;
-        margin: 0 0 0 0.5em;
-      }
+  &.stats-horizontal{
+    padding: 1rem;
+    background-color: #E8E8E8;
+    .row-chart{
+      min-height: 35px;
     }
-    .bar-chart{
-      z-index: 10;
-      position: relative;
-      height: 150px;
-      .bars{
-        background-color: $primary;
-        width: 100%;
-        transition: 0.3s;
-        .score{
-          font-weight: 800;
-        }
-        &:hover{
-          background-color: #fff;
-          color: $text-black;
-        }
+    .bars{
+      height: 25px;
+      background-color: $primary;
+      color: #fff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      .score{
+        font-weight: 800;
+      }
+      &.white{
+        background-color: #D3D3D3;
+        color: $text-black;
       }
     }
   }
@@ -1081,7 +1113,7 @@ input#quicksearch[type=text]{
     }
   }
   .card-body{
-    padding: 1.5rem 1.8rem;
+    padding: 1.1rem 1.8rem;
   }
   .img{
     .depute-img-circle{
@@ -1107,7 +1139,7 @@ input#quicksearch[type=text]{
     li{
       list-style: none;
       display: flex;
-      margin-bottom: 8px;
+      margin-bottom: 5px;
       .label{
         min-width: 30px;
       }
@@ -2073,9 +2105,38 @@ ul.ui-menu{
 }
 /*
 ################
-               PAGE GROUPE INDIVIDUAL (pg-groupe-individual)
+               PAGE GROUPES STATS
 ################
 */
+.pg-groupe-stats{
+  h1 {
+    font-size: $h2-font-size;
+    font-weight: 800;
+    color: $text-gray;
+  }
+  h2{
+    font-size: $h2-font-size;
+    font-weight: 800;
+    color: $text-gray;
+  }
+  .title{
+    p{
+      font-size: $h5-font-size;
+      font-weight: 800;
+      color: $text-gray-light;
+    }
+  }
+  .card{
+    border: none;
+  }
+  .card-stats{
+    h3{
+      color: black;
+      font-weight: 600;
+      font-size: $h4-font-size;
+    }
+  }
+}
 /*
 ################
                PAGE DEPUTE/GROUPES VOTES DATAN (pg-depute-votes) (decryptes and all)
@@ -2735,17 +2796,10 @@ ul.ui-menu{
     height: auto;
   }
   .bar-container{
-    .bars{
-      @include hover(){
-        cursor: help;
-      }
-    }
     .legend-element{
       span{
         color: $text-gray;
         font-size: 0.9em;
-        border-bottom: 1px dotted;
-        cursor: help;
       }
     }
   }

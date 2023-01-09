@@ -558,10 +558,6 @@
       // CSS
       $data['css_to_load']= array(
         array(
-          "url" => css_url()."chart.min.css",
-          "async" => FALSE
-        ),
-        array(
           "url" => "https://unpkg.com/flickity@2/dist/flickity.min.css",
           "async" => TRUE
         ),
@@ -571,7 +567,7 @@
         )
       );
       // JS UP
-      $data['js_to_load_up'] = array("chart.min.js", "chartjs-plugin-annotation.js");
+      $data['js_to_load_up'] = array('chart.min.js');
       // JS
       $data['js_to_load']= array("moment.min", "datatable-datan.min", "datetime-moment", "flickity.pkgd.min");
       // Preloads

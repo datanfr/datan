@@ -6,7 +6,7 @@
   <div class="row">
     <div class="col-12 col-md-8 col-lg-4 offset-md-2 offset-lg-0">
       <?php $this->load->view('groupes/partials/card_individual.php', array('tag' => 'h1')) ?>
-    </div> <!-- END COL -->
+    </div>
     <div class="col-md-10 col-lg-8 offset-md-1 offset-lg-0 pl-lg-5">
       <!-- BIO & ELECTION -->
       <div class="bloc-bio mt-5">
@@ -168,41 +168,47 @@
                   </h3>
                 </div>
               </div>
-              <div class="row">
-                <?php if ($no_participation): ?>
+              <?php if ($no_participation): ?>
+                <div class="row">
                   <div class="col-12 mt-2">
                     <p>Du fait d'un nombre insuffisant de votes de la part du groupe <?= name_group($title) ?>, aucune statistique n'a pu être produite.</p>
                   </div>
-                  <?php else: ?>
-                    <div class="col-lg-3 offset-lg-1 mt-2">
-                      <div class="d-flex justify-content-center align-items-center">
-                        <div class="c100 p<?= $stats['participation']['value'] ?> m-0">
-                            <span><?= $stats['participation']['value'] ?> %</span>
-                            <div class="slice">
-                                <div class="bar"></div>
-                                <div class="fill"></div>
-                            </div>
+                </div>
+                <?php else: ?>
+                <div class="row">
+                  <div class="col-lg-3 offset-lg-1 mt-2">
+                    <div class="d-flex justify-content-center align-items-center">
+                      <div class="c100 p<?= $stats['participation']['value'] ?> m-0">
+                        <span><?= $stats['participation']['value'] ?> %</span>
+                        <div class="slice">
+                          <div class="bar"></div>
+                          <div class="fill"></div>
                         </div>
                       </div>
                     </div>
-                    <div class="col-lg-8 infos mt-4 mt-lg-2">
-                      <div class="texte ml-md-3 pl-md-3 mt-md-0 mt-3">
-                        <p>
-                          En moyenne, <?= $stats['participation']['value'] ?>% <?php if ($groupe['libelleAbrev'] != "NI"): ?>des députés du groupe <?= $groupe['libelleAbrev'] ?><?php else: ?>des <?= mb_strtolower($title) ?><?php endif; ?> <?= $active ? 'prennent' : 'prenaient' ?> part aux scrutins solennels.
-                        </p>
-                        <p>
-                          <?php if ($groupe['libelleAbrev'] != "NI"): ?>Le groupe <b><?= $active ? 'participe' : 'participait' ?> <?php else: ?>Les <?= mb_strtolower($title) ?> <b>participent <?php endif; ?> <?= $edito_participation ?></b> que la moyenne <?= $active ? "des autres groupes" : "de tous les groupes de l'Assemblée" ?>, qui est <?php if ($edito_participation == "autant"): ?>
-                            aussi
-                          <?php endif; ?> de <?= $participationAverage ?> %.
-                        </p>
-                        <p>
-                          Les votes solennels sont les votes considérés comme importants pour lesquels les députés connaissent à l'avance le jour et l'heure du vote.
-                        </p>
-                        <!-- <span><a href="#" target="_blank">> Voir le classement général</a></span> -->
+                  </div>
+                  <div class="col-lg-8 infos mt-4 mt-lg-2">
+                    <div class="texte ml-md-3 pl-md-3 mt-md-0 mt-3">
+                      <p>
+                        En moyenne, <?= $stats['participation']['value'] ?>% <?php if ($groupe['libelleAbrev'] != "NI"): ?>des députés du groupe <?= $groupe['libelleAbrev'] ?><?php else: ?>des <?= mb_strtolower($title) ?><?php endif; ?> <?= $active ? 'prennent' : 'prenaient' ?> part aux scrutins publics de l'Assemblée nationale.
+                      </p>
+                      <p>
+                        <?php if ($groupe['libelleAbrev'] != "NI"): ?>Le groupe <b><?= $active ? 'participe' : 'participait' ?> <?php else: ?>Les <?= mb_strtolower($title) ?> <b>participent <?php endif; ?> <?= $edito_participation ?></b> que la moyenne <?= $active ? "des autres groupes" : "de tous les groupes de l'Assemblée" ?>, qui est <?php if ($edito_participation == "autant"): ?>
+                          aussi
+                        <?php endif; ?> de <?= $participationAverage ?> %.
+                      </p>
+                      <p>
+                        Ce score de participation prend en compte tous les scrutins publics. Ce score est faible du fait de l'organisation du travail à l'Assemblée nationale. Pour découvrir d'autres scores de participation, <a href="<?= base_url() ?>/statistiques/groupes-participation">cliquez ici</a>.
+                      </p>
+                      <div class="d-flex justify-content-center mt-3">
+                        <a href="<?= base_url() ?>groupes/legislature-<?= $groupe['legislature'] ?>/<?= mb_strtolower($groupe['libelleAbrev']) ?>/statistiques#participation" class="btn btn-outline-primary text-center">
+                          Voir l'historique
+                        </a>
                       </div>
                     </div>
-                <?php endif; ?>
-              </div>
+                  </div>
+                </div>
+              <?php endif; ?>
             </div>
           </div> <!-- END CARD PARTICIPATION -->
           <!-- CARD COHESION -->
@@ -218,16 +224,18 @@
                   </h3>
                 </div>
               </div>
-              <div class="row">
-                <?php if ($no_cohesion): ?>
+              <?php if ($no_cohesion): ?>
+                <div class="row">
                   <div class="col-12 mt-2">
                     <p>Du fait d'un nombre insuffisant de votes de la part du groupe <?= name_group($title) ?>, aucune statistique n'a pu être produite.</p>
                   </div>
-                  <?php else: ?>
+                </div>
+                <?php else: ?>
+                <div class="row">
                   <div class="col-lg-3 offset-lg-1 mt-2">
                     <div class="d-flex justify-content-center align-items-center">
                       <div class="c100 p<?= round($stats['cohesion']['value'] * 100) ?> m-0">
-                          <span><?= $stats['cohesion']['value'] ?></span>
+                          <span><?= round($stats['cohesion']['value'], 2) ?></span>
                           <div class="slice">
                               <div class="bar"></div>
                               <div class="fill"></div>
@@ -238,15 +246,20 @@
                   <div class="col-lg-8 infos mt-4 mt-lg-2">
                     <div class="texte ml-md-3 pl-md-3 mt-md-0 mt-3">
                       <p>
-                        Avec un taux de cohésion de <?= $stats['cohesion']['value'] ?>,<?php if ($groupe['libelleAbrev'] != "NI"): ?> le groupe <?= $groupe['libelleAbrev'] ?> peut être considéré<?php else: ?> les <?= mb_strtolower($title) ?> peuvent être considérés<?php endif; ?> comme <b><?= $edito_cohesion["absolute"] ?> soudé<?php if ($groupe['libelleAbrev'] == "NI"): ?>s<?php endif; ?></b> quand il <?= $active ? "s'agit" : "s'agissait" ?> de voter.
+                        Avec un taux de cohésion de <?= round($stats['cohesion']['value'], 2) ?>,<?php if ($groupe['libelleAbrev'] != 'NI'): ?> le groupe <?= $groupe['libelleAbrev'] ?> peut être considéré<?php else: ?> les <?= mb_strtolower($title) ?> peuvent être considérés<?php endif; ?> comme <b><?= $edito_cohesion['absolute'] ?> soudé<?php if ($groupe['libelleAbrev'] == "NI"): ?>s<?php endif; ?></b> quand il <?= $active ? "s'agit" : "s'agissait" ?> de voter.
                       </p>
                       <p>
-                        Le groupe <?= $active ? "est" : "était" ?> en effet <b><?= $edito_cohesion["relative"] ?> uni</b> que la moyenne de tous les groupes, qui est de <?= $cohesionAverage ?>.
+                        Le groupe <?= $active ? "est" : "était" ?> en effet <b><?= $edito_cohesion['relative'] ?> uni</b> que la moyenne de tous les groupes, qui est de <?= round($cohesionAverage, 2) ?>.
                       </p>
+                      <div class="d-flex justify-content-center mt-3">
+                        <a href="<?= base_url() ?>groupes/legislature-<?= $groupe['legislature'] ?>/<?= mb_strtolower($groupe['libelleAbrev']) ?>/statistiques#cohesion" class="btn btn-outline-primary text-center">
+                          Voir l'historique
+                        </a>
+                      </div>
                     </div>
                   </div>
-                <?php endif; ?>
-              </div>
+                </div>
+              <?php endif; ?>
             </div>
           </div> <!-- END CARD COHESION -->
           <!-- CARD MAJORITE -->
@@ -263,12 +276,14 @@
                     </h3>
                   </div>
                 </div>
-                <div class="row">
-                  <?php if ($no_participation): ?>
+                <?php if ($no_participation): ?>
+                  <div class="row">
                     <div class="col-12 mt-2">
                       <p>Du fait d'un nombre insuffisant de votes de la part du groupe <?= name_group($title) ?>, aucune statistique n'a pu être produite.</p>
                     </div>
-                    <?php else: ?>
+                  </div>
+                  <?php else: ?>
+                  <div class="row">
                     <div class="col-lg-3 offset-lg-1 mt-2">
                       <div class="d-flex justify-content-center align-items-center">
                         <div class="c100 p<?= $stats['majority']['value'] ?> m-0">
@@ -298,10 +313,45 @@
                           <?php endif; ?>
                           <b><?= $edito_majorite ?> souvent</b> avec la majorité présidentielle que la moyenne des autres groupes, qui est de <?= $majoriteAverage ?> %.
                         </p>
+                        <div class="d-flex justify-content-center mt-3">
+                          <a href="<?= base_url() ?>groupes/legislature-<?= $groupe['legislature'] ?>/<?= mb_strtolower($groupe['libelleAbrev']) ?>/statistiques#majorite" class="btn btn-outline-primary text-center">
+                            Voir l'historique
+                          </a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <?php if (isset($stats_history['majority'])): ?>
+                    <div class="row mt-4">
+                      <div class="col-12">
+                        <div class="text-center">
+                          <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalMajority">
+                            Voir l'historique
+                          </button>
+                        </div>
+                        <!-- Modal -->
+                        <div class="modal fade" id="modalMajority" tabindex="-1" role="dialog" aria-labelledby="modalMajorityTitle" aria-hidden="true">
+                          <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                            <div class="modal-content">
+                              <div class="modal-header">
+                                <span class="h5 modal-title font-weight-bold" id="exampleModalLongTitle">Historique de proximité avec la majorité pour <?= $groupe['libelleAbrev'] ?></span>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                  <span aria-hidden="true">&times;</span>
+                                </button>
+                              </div>
+                              <div class="modal-body p-0">
+                                <?php $this->load->view('groupes/partials/stats_vertical.php', array('stats_history_chart' => $stats_history['majority'], 'grid' => TRUE, 'type' => 'pct', 'divided_by' => 1, 'terms' => FALSE)) ?>
+                              </div>
+                              <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
                       </div>
                     </div>
                   <?php endif; ?>
-                </div>
+                <?php endif; ?>
               </div>
             </div> <!-- END CARD MAJORITE -->
           <?php endif; ?>
@@ -502,75 +552,7 @@
             </div>
           </div> <!-- END BLOC SOCIAL MEDIA -->
         <?php endif; ?>
-
     </div>
   </div>
 </div> <!-- END CONTAINER -->
-<!-- AUTRES DEPUTES -->
-<div class="container-fluid pg-groupe-individual bloc-others-container mt-5">
-  <div class="container bloc-others">
-    <?php if ($groupe['libelleAbrev'] != "NI"): ?>
-      <div class="row">
-        <div class="col-12">
-          <h2>Président du groupe <?= name_group($title) ?></h2>
-          <div class="row mt-3">
-            <div class="col-6 col-md-3 py-2">
-              <a class="membre no-decoration underline" href="<?= base_url(); ?>deputes/<?= $president['dptSlug'] ?>/depute_<?= $president['nameUrl'] ?>"><?= $president['nameFirst']." ".$president['nameLast'] ?></a>
-            </div>
-          </div>
-        </div>
-      </div>
-    <?php endif; ?>
-    <div class="row">
-      <div class="col-12">
-        <h2>Les députés membres du groupe <?= name_group($title) ?></h2>
-        <div class="row mt-3">
-          <?php foreach ($membres as $key => $membre): ?>
-            <div class="col-6 col-md-3 py-2">
-              <a class="membre no-decoration underline" href="<?= base_url(); ?>deputes/<?= $membre['dptSlug'] ?>/depute_<?= $membre['nameUrl'] ?>"><?= $membre['nameFirst']." ".$membre['nameLast'] ?></a>
-            </div>
-          <?php endforeach; ?>
-        </div>
-        <div class="mt-3">
-          <a href="<?= base_url() ?>groupes/legislature-<?= $groupe['legislature'] ?>/<?= mb_strtolower($groupe['libelleAbrev']) ?>/membres">Voir tous les députés membres du groupe <?= $groupe['libelleAbrev'] ?></a>
-        </div>
-      </div>
-    </div>
-    <?php if (!empty($apparentes)): ?>
-      <div class="row">
-        <div class="col-12">
-          <h2>Tous les députés apparentés du groupe <?= name_group($title) ?></h2>
-          <div class="row mt-3">
-            <?php foreach ($apparentes as $key => $mp): ?>
-              <div class="col-6 col-md-3 py-2">
-                <a class="membre no-decoration underline" href="<?= base_url(); ?>deputes/<?= $mp['dptSlug'] ?>/depute_<?= $mp['nameUrl'] ?>"><?= $mp['nameFirst']." ".$mp['nameLast'] ?></a>
-              </div>
-            <?php endforeach; ?>
-          </div>
-          <div class="mt-3">
-            <a href="<?= base_url() ?>groupes/legislature-<?= $groupe['legislature'] ?>/<?= mb_strtolower($groupe['libelleAbrev']) ?>/membres">Voir tous les députés apparentés au groupe <?= $groupe['libelleAbrev'] ?></a>
-          </div>
-        </div>
-      </div>
-    <?php endif; ?>
-    <div class="row">
-      <div class="col-12">
-        <h2>Tous les groupes parlementaires <?= $legislature == legislature_current() ? "en activité" : "" ?> de la <?= $groupe['legislature'] ?><sup>ème</sup> législature</h2>
-        <div class="row mt-3">
-          <?php foreach ($groupesActifs as $group): ?>
-            <div class="col-6 col-md-4 py-2">
-              <a class="membre no-decoration underline" href="<?= base_url() ?>groupes/legislature-<?= $group['legislature'] ?>/<?= mb_strtolower($group['libelleAbrev']) ?>"><?= name_group($group['libelle'])." (".$group['libelleAbrev'].")" ?></a>
-            </div>
-          <?php endforeach; ?>
-        </div>
-        <div class="mt-3">
-          <?php if ($groupe['legislature'] == legislature_current()): ?>
-            <a href="<?= base_url() ?>groupes">Voir tous les groupes parlementaires de la <?= $groupe['legislature'] ?><sup>ème</sup> législature</a>
-            <?php else: ?>
-            <a href="<?= base_url() ?>groupes/legislature-<?= $groupe['legislature'] ?>">Voir tous les groupes parlementaires de la <?= $groupe['legislature'] ?><sup>ème</sup> législature</a>
-          <?php endif; ?>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
+<?php $this->load->view('groupes/partials/mps_footer.php') ?>

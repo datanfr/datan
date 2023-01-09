@@ -176,6 +176,10 @@
       return $query->row_array();
     }
 
+    public function get_groupe_by_id($id){
+      return $this->db->get_where('organes', array('uid' => $id))->row_array();
+    }
+
     public function get_groupes_president($groupe_uid, $legislature, $active){
       if ($active) {
         $where = array(
@@ -363,8 +367,7 @@
     }
 
     public function get_stats($groupe_uid){
-      $query = $this->db->get_where('class_groups', array('organeRef' => $groupe_uid));
-      $results = $query->result_array();
+      $results = $this->db->get_where('class_groups', array('organeRef' => $groupe_uid))->result_array();
 
       foreach ($results as $key => $value) {
         if ($value['stat'] == 'cohesion') {
@@ -373,6 +376,99 @@
           $return[$value['stat']] = array('value' => round($value['value'] * 100), 'votes' => $value['votes']);
         }
       }
+      return $return;
+    }
+
+    public function get_stats_history($groups){
+      $this->db->select('cg.*, o.libelle, o.libelleAbrev, o.couleurAssociee, cg.active, o.positionPolitique, o.dateDebut, o.dateFin');
+      $this->db->where_in('cg.organeRef', $groups);
+      $this->db->join('organes o', 'o.uid = cg.organeRef', 'left');
+      $this->db->order_by('cg.legislature', 'ASC');
+      $results = $this->db->get('class_groups cg')->result_array();
+
+      foreach ($results as $key => $value) {
+        $return[$value['stat']][] = $value;
+      }
+
+      return $return;
+    }
+
+    public function get_stats_monthly($groupe_uid){
+
+      $this->db->where('organeRef', $groupe_uid);
+      $results = $this->db->get('class_groups_month')->result_array();
+
+      foreach ($results as $key => $value) {
+        if (in_array($value['stat'], array('participation', 'majority'))) {
+          $value['value'] = round($value['value'] * 100);
+        }
+        if (in_array($value['stat'], array('cohesion'))) {
+          $value['value'] = round($value['value'], 2);
+        }
+        $month = months_abbrev(utf8_encode(strftime('%B', strtotime($value['dateValue']))));
+        $year = substr(date('Y', strtotime($value['dateValue'])), 2, 2);
+        $value += [ 'dateValue_edited' => $month . ' ' . $year ];
+        $return[$value['stat']][] = $value;
+      }
+
+      return $return;
+    }
+
+    public function get_orga_stats_history($groups){
+      $this->db->select('stats.type, stats.legislature, stats.stat, stats.value, o.libelleAbrev, o.uid AS organeRef, o.libelle, o.dateDebut, o.dateFin');
+      $this->db->where('stats.type', 'legislature');
+      $this->db->where_in('stats.organeRef', $groups);
+      $this->db->order_by('stats.legislature', 'ASC');
+      $this->db->join('organes o', 'o.uid = stats.organeRef');
+      $results = $this->db->get('groupes_stats_history stats')->result_array();
+
+      foreach ($results as $key => $value) {
+        $return[$value['stat']][] = $value;
+      }
+      foreach ($return['womenPct'] as $key => $value) {
+        $return['womenPct'][$key]['value'] = $value['value'] / 100;
+      }
+      foreach ($return['age'] as $key => $value) {
+        $return['age'][$key]['value'] = round($value['value']);
+      }
+
+      return $return;
+    }
+
+    public function get_stat_proximity_history($groupe_uid){
+      $this->db->select('c.organeRef, c.dateValue AS dateValue, date_format(c.dateValue, "%M %Y") as dateValue_edited, c.score, c.prox_group AS proxGroup, o.couleurAssociee, o.uid AS proxGoupId, o.libelleAbrev AS proxGoupLibelle');
+      $this->db->where('c.organeRef', $groupe_uid);
+      $this->db->where('o.libelleAbrev !=', 'Ni');
+      $this->db->join('organes o', 'o.uid = c.prox_group');
+      $results = $this->db->get('class_groups_proximite_month c')->result_array();
+
+      $months = array_column($results, 'dateValue');
+      $months = array_unique($months);
+      sort($months);
+
+      foreach ($months as $key => $value) {
+        $month = months_abbrev(utf8_encode(strftime('%B', strtotime($value))));
+        $year = substr(date('Y', strtotime($value)), 2, 2);
+        $return['months'][] = $month . ' ' . $year;
+      }
+
+      foreach ($months as $month) {
+        foreach ($results as $key => $value) {
+          $return['data'][$value['proxGroup']]['groupeId'] = $value['proxGoupId'];
+          $return['data'][$value['proxGroup']]['groupe'] = $value['proxGoupLibelle'];
+          $return['data'][$value['proxGroup']]['color'] = $value['couleurAssociee'];
+          if ($month == $value['dateValue']) {
+            $return['data'][$value['proxGroup']]['set_data'][$month] = array('month' => months_abbrev($month), 'score' => round($value['score'] * 100));
+          } else {
+            if (isset($return['data'][$value['proxGroup']]['set_data'][$month])) {
+              $return['data'][$value['proxGroup']]['set_data'][$month] = $return['data'][$value['proxGroup']]['set_data'][$month];
+            } else {
+              $return['data'][$value['proxGroup']]['set_data'][$month] = array('month' => $month, 'score' => null);
+            }
+          }
+        }
+      }
+
       return $return;
     }
 
@@ -543,6 +639,75 @@
       }
 
       return $schema;
+    }
+
+    public function get_history($id){
+      $families = array(
+        array('PO800538', 'PO730964'), // Renaissance
+        array('PO730958', 'PO800490'), // France insoumise
+        array('PO270903', 'PO389395', 'PO656006', 'PO707869', 'PO730934', 'PO800508', 'PO684957'), // Les Républicains
+        array('PO730970', 'PO774834', 'PO800484'), // Modem
+        array('PO758835', 'PO730946', 'PO389507', 'PO656002', 'PO713077', 'PO270907', 'PO800496'), // Socialistes
+        array('PO656014', 'PO800526'), // Ecologiste
+        array('PO270915', 'PO389635', 'PO656018', 'PO730940', 'PO800502'), // Communistes
+        array('PO759900', 'PO800532'), // Libertés et territoires
+        array('PO793087', 'PO723569', 'PO645633', 'PO387155', 'PO266900') // NI
+      );
+
+      foreach ($families as $family) {
+        foreach ($family as $group) {
+          if ($group == $id) {
+            return $family;
+          }
+        }
+      }
+
+      return array($id);
+
+    }
+
+    public function get_effectif_history($groups){
+      $this->db->select('o.legislature, YEAR(g.dateValue) AS dateYear, g.dateValue, MAX(g.effectif) AS value');
+      $this->db->where_in('g.organeRef', $groups);
+      $this->db->order_by('o.legislature ASC, YEAR(g.dateValue) ASC');
+      $this->db->group_by('o.legislature, YEAR(g.dateValue)');
+      $this->db->join('organes o', 'o.uid = g.organeRef', 'left');
+      $results = $this->db->get('groupes_effectif_history g')->result_array();
+
+      $leg = array_column($results, 'legislature');
+      $leg = array_unique($leg);
+      $leg = $this->legislature_model->get_legislatures($leg);
+
+      foreach ($leg as $key => $value) {
+        $return['legislatures'][$key]['legislature'] = $value['legislatureNumber'];
+        $return['legislatures'][$key]['yearStart'] = substr(date('Y', strtotime($value['dateDebut'])), 2, 2);
+        $return['legislatures'][$key]['yearEnd'] = $value['dateFin'] ? substr(date('Y', strtotime($value['dateFin'])), 2, 2) : "en cours";
+        $return['legislatures'][$key]['name'] = 'Leg. ' . $value['legislatureNumber'] . ' (' . $return['legislatures'][$key]['yearStart'] . ' - ' . $return['legislatures'][$key]['yearEnd'] . ')';
+      }
+
+      $years = array(1, 2, 3, 4, 5, 6);
+      $legislatures = array(
+        12 => array(2002, 2003, 2004, 2005, 2006, 2007),
+        13 => array(2007, 2008, 2009, 2010, 2011, 2012),
+        14 => array(2012, 2013, 2014, 2015, 2016, 2017),
+        15 => array(2017, 2018, 2019, 2020, 2021, 2022),
+        16 => array(2022, 2023, 2024, 2025, 2026, 2027),
+      );
+
+      foreach ($years as $year) {
+        $return['data'][$year] = array();
+        foreach ($return['legislatures'] as $legislature) {
+          $leg = $legislature['legislature'];
+          $return['data'][$year]['year'][] = $legislatures[$leg][$year - 1];
+          $return['data'][$year]['data'][$leg] = null;
+          foreach ($results as $key => $value) {
+            if ($value['legislature'] == $leg & $value['dateYear'] == $legislatures[$leg][$year - 1]) {
+              $return['data'][$year]['data'][$leg] = $value['value'];
+            }
+          }
+        }
+      }
+      return $return;
     }
 
   }

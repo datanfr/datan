@@ -142,7 +142,7 @@
       $controller = $this->router->fetch_class()."/".$this->router->fetch_method();
       $data['ogp'] = $this->meta_model->get_ogp($controller, $data['title_meta'], $data['description_meta'], $data['url'], $data);
       // JS
-      $data['js_to_load_up'] = array("chart.min.js");
+      $data['js_to_load_up'] = array('chart.min.js');
       // Views
       $this->load->view('templates/header', $data);
       $this->load->view('classements/index', $data);
@@ -334,7 +334,7 @@
         $data['description_meta'] = "Quel groupe parlementaire est le plus actif au moment de voter ? Quel groupe a le plus faible taux de participation ? Découvrez le classement sur Datan.";
         $data['title'] = "L'origine sociale des députés";
         // JS
-        $data['js_to_load_up'] = array("chart.min.js");
+        $data['js_to_load_up'] = array('chart.min.js');
       } elseif ($url == "groupes-origine-sociale") {
         // Data
         $data['famSocPro'] = $this->jobs_model->get_stats_all_mp(legislature_current());
