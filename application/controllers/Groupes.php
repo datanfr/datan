@@ -36,7 +36,7 @@
       if (!in_array($data['groupe']['uid'], $this->groupes_model->get_all_groupes_ni())) {
         $data['apparentes'] = array_slice($data['apparentes'], 0, 20);
       }
-      $data['groupesActifs'] = $this->groupes_model->get_groupes_all(TRUE, legislature_current());
+      $data['groupesActifs'] = $this->groupes_model->get_groupes_all(TRUE, $data['groupe']['legislature']);
       return $data;
     }
 
@@ -270,9 +270,6 @@
 
       // Query 5 - Edito
       $data['edito'] = $this->groupes_edito->edito($data['groupe']['libelleAbrev'], $data['groupe']['positionPolitique']);
-
-      // GET ALL OTHER GROUPES
-      $data['groupesActifs'] = $this->groupes_model->get_groupes_all(TRUE, $legislature);
 
       // If NI : edito
       if ($data['groupe']['libelleAbrev'] == "NI") {
