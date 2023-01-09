@@ -3609,6 +3609,7 @@ if (isset($argv[1])) {
     $script = new Script();
 }
 
+/*
 $script->fillDeputes();
 $script->deputeAll();
 $script->deputeLast();
@@ -3643,7 +3644,12 @@ $script->deputeLoyaute();
 $script->classLoyaute();
 $script->classMajorite();
 $script->classGroups();
+
+*/
+
 $script->classGroupsMonth();
+
+/*
 $script->classGroupsProximite();
 //$script->classParticipationSix(); // Will need to be changed w/ leg 16
 //$script->classLoyauteSix(); // Will need to be changed w/ leg 16
