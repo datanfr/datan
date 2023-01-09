@@ -1010,6 +1010,125 @@ class Script
         }
     }
 
+    public function groupeStatsHistory(){
+
+      echo "groupeStatsHistory starting \n";
+
+      $this->bdd->query('CREATE TABLE IF NOT EXISTS `groupes_stats_history`(
+        `organeRef` VARCHAR(15) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL ,
+        `stat` VARCHAR(15) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL ,
+        `type` VARCHAR(15) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL ,
+        `legislature` INT(2) NOT NULL ,
+        `dateValue` DATE NOT NULL ,
+        `value` VARCHAR(15) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL ,
+        `dateMaj` DATE NOT NULL ,
+        INDEX `idx_organeRef` (`organeRef`) ,
+        INDEX `idx_type` (`type`)
+      )');
+      $this->bdd->query('TRUNCATE TABLE groupes_stats_history');
+
+      $reponse = $this->bdd->query('SELECT * FROM organes WHERE legislature >= 14 AND coteType = "GP" ORDER BY legislature ASC');
+
+      while ($data = $reponse->fetch()) {
+        $groupeId = $data['uid'];
+        $legislature = $data['legislature'];
+        $dateDebut = $data['dateDebut'];
+
+        /// --- 1. Feminisation --- ///
+        $feminisation = $this->bdd->query('SELECT round(AVG(A.woman) * 100, 2) AS pct, SUM(A.woman) AS n
+          FROM (
+            SELECT CASE WHEN d.civ = "Mme" THEN 1 ELSE 0 END AS woman
+            FROM mandat_groupe m
+            LEFT JOIN deputes_last d ON d.mpId = m.mpId
+            WHERE m.organeRef = "' . $groupeId . '"
+            GROUP BY m.mpId
+          ) A
+        ')->fetch(PDO::FETCH_ASSOC);
+
+        // Insert N
+        $sql = $this->bdd->prepare('INSERT INTO groupes_stats_history (organeRef, stat, type, legislature, dateValue, value, dateMaj) VALUES (:organeRef, :stat, :type, :legislature, :dateValue, :value, :dateMaj)');
+        $sql->execute(array('organeRef' => $groupeId, 'stat' => 'womenN', 'type' => 'legislature', 'legislature' => $legislature, 'dateValue' => $data['dateDebut'], 'value' => $feminisation['n'], 'dateMaj' => $this->dateMaj));
+
+        // Insert pct
+        $sql = $this->bdd->prepare('INSERT INTO groupes_stats_history (organeRef, stat, type, legislature, dateValue, value, dateMaj) VALUES (:organeRef, :stat, :type, :legislature, :dateValue, :value, :dateMaj)');
+        $sql->execute(array('organeRef' => $groupeId, 'stat' => 'womenPct', 'type' => 'legislature', 'legislature' => $legislature, 'dateValue' => $data['dateDebut'], 'value' => $feminisation['pct'], 'dateMaj' => $this->dateMaj));
+
+        /// --- 2. Age --- ///
+        $age = $this->bdd->query('SELECT ROUND(AVG(A.age), 2) AS age
+          FROM (
+            SELECT m.mpId, m.dateDebut, d.birthDate,
+            YEAR(m.dateDebut) - YEAR(d.birthDate) - CASE WHEN MONTH(m.dateDebut) < MONTH(d.birthDate) OR (MONTH(m.dateDebut) = MONTH(d.birthDate) AND DAY(m.dateDebut) < DAY(d.birthDate)) THEN 1 ELSE 0 END AS age
+            FROM mandat_groupe m
+            LEFT JOIN deputes d ON m.mpId = d.mpId
+            WHERE m.organeRef = "' . $groupeId . '" AND YEAR(m.dateDebut) = YEAR("' . $dateDebut . '") AND MONTH(m.dateDebut) = MONTH("' . $dateDebut . '")
+          ) A'
+        )->fetch(PDO::FETCH_ASSOC);
+
+        // Insert age
+        $sql = $this->bdd->prepare('INSERT INTO groupes_stats_history (organeRef, stat, type, legislature, dateValue, value, dateMaj) VALUES (:organeRef, :stat, :type, :legislature, :dateValue, :value, :dateMaj)');
+        $sql->execute(array('organeRef' => $groupeId, 'stat' => 'age', 'type' => 'legislature', 'legislature' => $legislature, 'dateValue' => $data['dateDebut'], 'value' => $age['age'], 'dateMaj' => $this->dateMaj));
+
+      }
+
+    }
+
+    public function groupeMembersHistory(){
+
+      echo "groupeMembersHistory starting \n";
+
+      $this->bdd->query('CREATE TABLE IF NOT EXISTS `groupes_effectif_history`(
+        `organeRef` VARCHAR(15) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL ,
+        `dateValue` DATE NOT NULL ,
+        `effectif` INT(3) NOT NULL ,
+        `dateMaj` DATE NOT NULL ,
+        PRIMARY KEY (`organeRef`, `dateValue`)
+      )');
+
+      $fields = array('organeRef', 'dateValue', 'effectif', 'dateMaj');
+      $effectifs = [];
+      $i = 1;
+
+      $reponse = $this->bdd->query('SELECT * FROM organes WHERE legislature >= 14 AND coteType = "GP" ORDER BY legislature ASC');
+
+      while ($data = $reponse->fetch()) {
+        $groupeId = $data['uid'];
+
+        $until = $this->bdd->query('SELECT * FROM groupes_effectif_history WHERE organeRef = "'.$groupeId.'" ORDER BY dateValue DESC LIMIT 1')->fetch(PDO::FETCH_ASSOC);
+        $last = $until['dateValue'];
+        if ($last) {
+          $dateDebut = new DateTime($last . ' + 1day');
+        } else {
+          $dateDebut = new DateTime($data['dateDebut']);
+        }
+
+        $dateFin = new DateTime($data['dateFin']);
+        $interval = DateInterval::createFromDateString('1 day');
+        $period = new DatePeriod($dateDebut, $interval, $dateFin);
+
+        foreach ($period as $dt) {
+          $day = $dt->format("Y-m-d");
+
+          $query = $this->bdd->query('SELECT organeRef, count(mpId) AS effectif
+            FROM mandat_groupe
+            WHERE codeQualite != "Président" AND organeRef = "' . $groupeId . '" AND dateDebut <= "' . $day . '" AND (dateFin IS NULL OR dateFin >= "' . $day . '")
+          ')->fetch(PDO::FETCH_ASSOC);
+
+          $effectif = array('organeRef' => $groupeId, 'dateValue' => $day, 'effectif' => $query['effectif'], 'dateMaj' => $this->dateMaj);
+          $effectifs = array_merge($effectifs, array_values($effectif));
+
+          if ($i % 1000 === 0) {
+            echo "Let's insert until " . $i . "\n";
+            $this->insertAll('groupes_effectif_history', $fields, $effectifs);
+            $effectifs = [];
+          }
+          $i++;
+        }
+      }
+      echo "Let's insert until the end : " . $i . "\n";
+      $this->insertAll('groupes_effectif_history', $fields, $effectifs);
+
+    }
+
     public function parties()
     {
         echo "parties starting \n";
@@ -1945,10 +2064,8 @@ class Script
             }
             $i++;
         }
-        if ($i % 1000 !== 0) {
-            echo "Let's insert what's left \n";
-            $this->insertAll('groupes_accord', $groupeAccordFields, $groupesAccord);
-        }
+        echo "Let's insert what's left \n";
+        $this->insertAll('groupes_accord', $groupeAccordFields, $groupesAccord);
     }
 
     public function deputeAccord()
@@ -2280,14 +2397,11 @@ class Script
         ');
 
         $fields = array('organeRef', 'legislature', 'active', 'stat', 'value', 'votes', 'dateMaj');
-
         $groups = $this->bdd->query('SELECT * FROM organes WHERE coteType = "GP" AND legislature >= 14 ORDER BY legislature ASC');
 
         while ($group = $groups->fetch()) {
           $uid = $group['uid'];
-
           echo "data for " . $group['libelle'] . " (" . $group['libelleAbrev'] . ") - legislature : " . $group['legislature'] . " \n";
-
           $active = $group['dateFin'] ? 0 : 1;
 
           /// --- COHESION --- ///
@@ -2348,7 +2462,6 @@ class Script
           $participationCommission = $participationCommissionQuery->fetch();
 
           /// --- INSERT THE DATA --- ///
-          // Cohesion
           $insertCohesion = array($uid, $group['legislature'], $active, 'cohesion', $cohesion['mean'], $cohesion['n'], $this->dateMaj);
           $this->insertAll('class_groups', $fields, $insertCohesion);
           $insertMajority = array($uid, $group['legislature'], $active, 'majority', $majority['mean'], $majority['n'], $this->dateMaj);
@@ -2361,6 +2474,109 @@ class Script
           $this->insertAll('class_groups', $fields, $insertParticipationCommission);
 
         }
+
+    }
+
+    public function classGroupsMonth(){
+
+      echo "classGroupsMonth starting \n";
+
+      $this->bdd->query('CREATE TABLE IF NOT EXISTS `datan`.`class_groups_month`(
+        `organeRef` VARCHAR(15) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL ,
+        `legislature` INT(2) NOT NULL ,
+        `active` INT(1) NOT NULL ,
+        `dateValue` DATE NOT NULL ,
+        `stat`VARCHAR(25) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL ,
+        `value` DECIMAL(6,3) NOT NULL ,
+        `votes` BIGINT(21) NOT NULL ,
+        `dateMaj` DATE NOT NULL,
+        INDEX `idx_organeRef` (`organeRef`),
+        INDEX `idx_stat` (`stat`)
+      )');
+      $this->bdd->query('TRUNCATE TABLE class_groups_month');
+
+      $this->bdd->query('CREATE TABLE IF NOT EXISTS `datan`.`class_groups_proximite_month`(
+        `organeRef` VARCHAR(15) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL ,
+        `legislature` INT(2) NOT NULL ,
+        `active` INT(1) NOT NULL ,
+        `dateValue` DATE NOT NULL ,
+        `prox_group` VARCHAR(15) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL ,
+        `score` DECIMAL(6,3) NOT NULL ,
+        `votes` BIGINT(21) NOT NULL ,
+        `dateMaj` DATE NOT NULL,
+        INDEX `idx_organeRef` (`organeRef`),
+        INDEX `idx_legislature` (`legislature`)
+      )');
+      $this->bdd->query('TRUNCATE TABLE class_groups_proximite_month');
+
+      $fields = array('organeRef', 'legislature', 'active', 'dateValue', 'stat', 'value', 'votes', 'dateMaj');
+      $fieldsProximity = array('organeRef', 'legislature', 'active', 'dateValue', 'prox_group', 'score', 'votes', 'dateMaj');
+      $groups = $this->bdd->query('SELECT * FROM organes WHERE coteType = "GP" AND legislature >= 14 ORDER BY legislature ASC');
+      while ($group = $groups->fetch()) {
+        $uid = $group['uid'];
+        echo "data for " . $group['libelle'] . " (" . $group['libelleAbrev'] . ") - legislature : " . $group['legislature'] . " \n";
+        $active = $group['dateFin'] ? 0 : 1;
+
+        /// --- 1) COHESION --- ///
+        $cohesionQuery = $this->bdd->query('SELECT gc.organeRef, gc.legislature, CONCAT(DATE_FORMAT(vi.dateScrutin, "%Y-%m"), "-01") AS dateValue, round(avg(gc.cohesion), 3) AS mean, count(gc.cohesion) AS n
+          FROM groupes_cohesion gc
+          LEFT JOIN votes_info vi ON gc.legislature = vi.legislature AND gc.voteNumero = vi.voteNumero
+          WHERE gc.organeRef = "' . $uid . '"
+          GROUP BY YEAR(vi.dateScrutin), MONTH(vi.dateScrutin)
+        ');
+        while ($cohesion = $cohesionQuery->fetch()) {
+          $insertCohesion = array($uid, $group['legislature'], $active, $cohesion['dateValue'], 'cohesion', $cohesion['mean'], $cohesion['n'], $this->dateMaj);
+          $this->insertAll('class_groups_month', $fields, $insertCohesion);
+        }
+
+        /// --- 2) MAJORITE --- ///
+        $majorityGroups = $this->majorityGroups();
+        $majorityGroups = implode('","', $majorityGroups);
+        $majorityQuery = $this->bdd->query('SELECT ga.organeRef, ga.legislature, CONCAT(DATE_FORMAT(vi.dateScrutin, "%Y-%m"), "-01") AS dateValue, ROUND(AVG(ga.accord), 3) AS mean,  COUNT(ga.accord) AS n
+          FROM groupes_accord ga
+          LEFT JOIN votes_info vi ON ga.voteNumero = vi.voteNumero AND ga.legislature = vi.legislature
+          WHERE ga.organeRefAccord IN ("'.$majorityGroups.'") AND ga.organeRef = "' . $uid . '"
+          GROUP BY YEAR(vi.dateScrutin), MONTH(vi.dateScrutin)
+          ORDER BY YEAR(vi.dateScrutin), MONTH(vi.dateScrutin)
+        ');
+        while ($majority = $majorityQuery->fetch()) {
+          $insertMajority = array($uid, $group['legislature'], $active, $majority['dateValue'], 'majority', $majority['mean'], $majority['n'], $this->dateMaj);
+          $this->insertAll('class_groups_month', $fields, $insertMajority);
+        }
+
+        /// --- 3) PARTICIPATION ALL --- ///
+        $participationQuery = $this->bdd->query('SELECT B.organeRef, B.legislature, CONCAT(DATE_FORMAT(vi.dateScrutin, "%Y-%m"), "-01") AS dateValue, ROUND(avg(B.participation_rate), 3) AS mean, COUNT(B.participation_rate) AS n
+          FROM (
+            SELECT A.*, round(A.total / (A.n - A.nv), 3) AS participation_rate
+            FROM (
+              SELECT vg.legislature, vg.voteNumero, vg.organeRef, vg.nombreMembresGroupe as n, CASE WHEN vg.nonVotants IS NULL THEN 0 ELSE vg.nonVotants END AS nv, vg.nombrePours+vg.nombreContres+vg.nombreAbstentions as total
+              FROM votes_groupes vg
+              WHERE vg.organeRef = "' . $uid . '"
+            ) A
+          ) B
+          LEFT JOIN votes_info vi ON vi.legislature = B.legislature AND vi.voteNumero = B.voteNumero
+          GROUP BY YEAR(vi.dateScrutin), MONTH(vi.dateScrutin)
+          ORDER BY YEAR(vi.dateScrutin), MONTH(vi.dateScrutin)
+        ');
+        while ($participation = $participationQuery->fetch()) {
+          $insertParticipation = array($uid, $group['legislature'], $active, $participation['dateValue'], 'participation', $participation['mean'], $participation['n'], $this->dateMaj);
+          $this->insertAll('class_groups_month', $fields, $insertParticipation);
+        }
+
+        /// --- 4) CLASS GROUPS PROXIMITE --- ///
+        $proximityQuery = $this->bdd->query('SELECT  ga.organeRef, ga.legislature, ga.organeRefAccord AS prox_group, ROUND(AVG(accord), 4) AS score, COUNT(accord) AS n, CONCAT(DATE_FORMAT(vi.dateScrutin, "%Y-%m"), "-01") AS dateValue
+          FROM groupes_accord ga
+          LEFT JOIN votes_info vi ON vi.legislature = ga.legislature AND vi.voteNumero = ga.voteNumero
+          WHERE ga.organeRef != ga.organeRefAccord AND ga.organeRef = "' . $uid . '"
+          GROUP BY ga.organeRef, ga.organeRefAccord, YEAR(vi.dateScrutin), MONTH(vi.dateScrutin)
+          ORDER BY ga.organeRef, YEAR(vi.dateScrutin), MONTH(vi.dateScrutin)
+        ');
+        while ($proximity = $proximityQuery->fetch()) {
+          $insertProximity = array($uid, $group['legislature'], $active, $proximity['dateValue'], $proximity['prox_group'], $proximity['score'], $proximity['n'], $this->dateMaj);
+          $this->insertAll('class_groups_proximite_month', $fieldsProximity, $insertProximity);
+        }
+
+      }
 
     }
 
@@ -3402,6 +3618,8 @@ $script->resmushPictures();
 $script->groupeEffectif();
 $script->deputeJson();
 $script->groupeStats();
+$script->groupeStatsHistory();
+$script->groupeMembersHistory();
 $script->parties();
 $script->legislature();
 $script->vote(); // Depend on the legislature
@@ -3425,6 +3643,7 @@ $script->deputeLoyaute();
 $script->classLoyaute();
 $script->classMajorite();
 $script->classGroups();
+$script->classGroupsMonth();
 $script->classGroupsProximite();
 //$script->classParticipationSix(); // Will need to be changed w/ leg 16
 //$script->classLoyauteSix(); // Will need to be changed w/ leg 16
