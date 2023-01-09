@@ -1,5 +1,5 @@
-<div class="row bar-container stats" style="margin-left: -20px; margin-right: -20px;">
-  <div class="<?= $grid ? 'col-11 offset-1' : 'col-12' ?>">
+<div class="row bar-container stats pr-2" style="margin-left: -20px; margin-right: -20px;">
+  <div class="<?= $grid ? 'col-10 offset-2' : 'col-12' ?>">
     <div class="chart">
       <?php if ($grid): ?>
         <div class="chart-grid">
@@ -18,30 +18,30 @@
         </div>
       <?php endif; ?>
       <div class="bar-chart d-flex flex-row justify-content-between align-items-end">
-        <?php foreach ($stats_history_chart as $group): ?>
+        <?php foreach ($stats_history_chart as $value): ?>
           <?php if ($type === 'pct'): ?>
-            <div class="bars <?= $tooltip ? 'tooltipHelp' : '' ?> <?= $group['organeRef'] != $organeRef ? 'white' : '' ?> mx-1 mx-md-3" <?= $tooltip ? 'data-toggle="tooltip" data-placement="top" title="'.$group['libelle'].'"' : '' ?> style="height: <?= round($group['value'] / $divided_by * 100) ?>%">
-              <span class="score"><?= round($group['value'] * 100) ?>%</span>
+            <div class="bars <?= $tooltip ? 'tooltipHelp' : '' ?> <?= $value['organeRef'] != $organeRef ? 'white' : '' ?> mx-1 mx-md-3" <?= $tooltip ? 'data-toggle="tooltip" data-placement="top" title="'.$value['libelle'].'"' : '' ?> style="height: <?= round($value['value'] / $divided_by * 100) ?>%">
+              <span class="score"><?= round($value['value'] * 100) ?>%</span>
             </div>
           <?php endif; ?>
           <?php if ($type === 'score'): ?>
-            <div class="bars <?= $tooltip ? 'tooltipHelp' : '' ?> <?= $group['organeRef'] != $organeRef ? 'white' : '' ?> mx-1 mx-md-3" <?= $tooltip ? 'data-toggle="tooltip" data-placement="top" title="'.$group['libelle'].'"' : '' ?> style="height: <?= round($group['value'] / $divided_by * 100) ?>%">
-              <span class="score"><?= round($group['value'], 2) ?></span>
+            <div class="bars <?= $tooltip ? 'tooltipHelp' : '' ?> <?= $value['organeRef'] != $organeRef ? 'white' : '' ?> mx-1 mx-md-3" <?= $tooltip ? 'data-toggle="tooltip" data-placement="top" title="'.$value['libelle'].'"' : '' ?> style="height: <?= round($value['value'] / $divided_by * 100) ?>%">
+              <span class="score"><?= round($value['value'], 2) ?></span>
             </div>
           <?php endif; ?>
         <?php endforeach; ?>
       </div>
     </div>
   </div>
-  <div class="<?= $grid ? 'col-11 offset-1' : 'col-12' ?> d-flex justify-content-between mt-2">
-    <?php foreach ($stats_history_chart as $group): ?>
+  <div class="<?= $grid ? 'col-10 offset-2' : 'col-12' ?> d-flex justify-content-between mt-2">
+    <?php foreach ($stats_history_chart as $value): ?>
       <div class="legend-element text-center">
         <p class="font-weight-bold">
-          <span <?= $tooltip ? 'class="tooltipHelp tooltipDashed" data-toggle="tooltip" data-placement="bottom" title="'.$group['libelle'].'" ' : '' ?> ><?= $group['libelleAbrev'] ?></span>
+          <span <?= $tooltip ? 'class="tooltipHelp tooltipDashed" data-toggle="tooltip" data-placement="bottom" title="'.$value['libelle'].'" ' : '' ?> ><?= $value['libelleAbrev'] ?></span>
         </p>
         <?php if ($terms): ?>
-          <p class="font-italic h6 mb-0"><?= $group['legislature'] ?><sup>ème</sup> législature</p>
-          <p class="font-italic h6">(<?= date('Y', strtotime($group['dateDebut'])) ?> - <?= $group['dateFin'] ? date('Y', strtotime($group['dateFin'])) : 'en cours' ?>)</p>
+          <p class="font-italic small mb-0">Leg. <?= $value['legislature'] ?></p>
+          <p class="font-italic small">(<?= substr(date('Y', strtotime($value['dateDebut'])), 2, 2) ?>-<?= $value['dateFin'] ? substr(date('Y', strtotime($value['dateFin'])), 2, 2) : 'en cours' ?>)</p>
         <?php endif; ?>
       </div>
     <?php endforeach; ?>

@@ -169,16 +169,16 @@
               <thead>
                 <tr>
                   <th scope="col">Groupe</th>
-                  <th scope="col">Législature</th>
-                  <th scope="col">Date d'activité</th>
+                  <th scope="col" class="text-center">Législature</th>
+                  <th scope="col" class="text-center">Date d'activité</th>
                 </tr>
               </thead>
               <tbody>
                 <?php foreach ($history_list_all as $key => $value): ?>
                   <tr>
                     <th scope="row"><a class="no-decoration underline" href="<?= base_url() ?>groupes/legislature-<?= $value['legislature'] ?>/<?= mb_strtolower($value['libelleAbrev']) ?>"><?= name_group($value['libelle']) ?> (<?= $value['libelleAbrev'] ?>)</a></th>
-                    <td><?= $value['legislature'] ?></td>
-                    <td><?= date('Y', strtotime($value['dateDebut'])) ?> - <?= $value['dateFin'] ? date('Y', strtotime($value['dateFin'])) : '<i>En cours</i>' ?></td>
+                    <td class="text-center"><?= $value['legislature'] ?></td>
+                    <td class="text-center"><?= date('Y', strtotime($value['dateDebut'])) ?> - <?= $value['dateFin'] ? date('Y', strtotime($value['dateFin'])) : '<i>En cours</i>' ?></td>
                   </tr>
                 <?php endforeach; ?>
               </tbody>
@@ -255,7 +255,7 @@
           <p>Voici les différents groupes liés au groupe <i><?= name_group($title) ?></i> :</p>
           <div class="row">
             <?php foreach ($history_list as $key => $value): ?>
-              <div class="col-6">
+              <div class="col-md-6">
                 <?php $this->load->view('groupes/partials/card_home.php', array('groupe' => $value, 'tag' => 'span', 'cat' => $value['legislature'].'<sup>ème</sup> législature', 'stats' => NULL)) ?>
               </div>
             <?php endforeach; ?>
@@ -269,4 +269,4 @@
     </div>
   </div>
 </div>
-<?php $this->load->view('groupes/partials/mps_footer.php') ?>
+<?php $this->load->view('groupes/partials/mps_footer.php', array('groupe' => $groupe)) ?>
