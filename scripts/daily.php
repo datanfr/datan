@@ -2481,7 +2481,7 @@ class Script
 
       echo "classGroupsMonth starting \n";
 
-      $this->bdd->query('CREATE TABLE IF NOT EXISTS `datan`.`class_groups_month`(
+      $this->bdd->query('CREATE TABLE IF NOT EXISTS `class_groups_month`(
         `organeRef` VARCHAR(15) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL ,
         `legislature` INT(2) NOT NULL ,
         `active` INT(1) NOT NULL ,
@@ -2495,7 +2495,7 @@ class Script
       )');
       $this->bdd->query('TRUNCATE TABLE class_groups_month');
 
-      $this->bdd->query('CREATE TABLE IF NOT EXISTS `datan`.`class_groups_proximite_month`(
+      $this->bdd->query('CREATE TABLE IF NOT EXISTS `class_groups_proximite_month`(
         `organeRef` VARCHAR(15) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL ,
         `legislature` INT(2) NOT NULL ,
         `active` INT(1) NOT NULL ,
