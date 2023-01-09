@@ -12,7 +12,7 @@
         </div>
       </div>
       <!-- INFOS GENERALES -->
-      <div class="bloc-infos mt-3">
+      <div class="bloc-infos mt-2">
         <<?= $tag ?> class="title d-block text-lg-left"><?= name_group($title) ?></<?= $tag ?>>
       </div>
       <!-- BIOGRAPHIE -->
@@ -30,12 +30,10 @@
           <?php endif; ?>
           <?php if ($groupe['libelleAbrev'] != "NI"): ?>
             <li>
-              <div class="label">Président</div>
-              <div class="value"><?= $president['nameFirst']." ".$president['nameLast'] ?></div>
-            </li>
-            <li>
-              <div class="label">Position</div>
-              <div class="value"><?= ucfirst($infos_groupes[$groupe['libelleAbrev']]['libelle']) ?></div>
+              <div class="label">Président<?= $president['civ'] == 'Mme' ? 'e' : '' ?></div>
+              <div class="value">
+                <a class="no-decoration underline" href="<?= base_url() ?>deputes/<?= $president['dptSlug'] ?>/depute_<?= $president['nameUrl'] ?>"><?= $president['nameFirst']." ".$president['nameLast'] ?></a>
+              </div>
             </li>
           <?php endif; ?>
         </ul>

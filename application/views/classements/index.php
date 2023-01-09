@@ -137,7 +137,7 @@
                     </div>
                     <div class="bar-chart d-flex flex-row justify-content-between align-items-end">
                       <?php foreach ($women_history as $key => $term): ?>
-                        <div class="bars mx-1 <?= $key < 1 ? "d-none d-sm-flex" : "d-flex" ?>" style="height: <?= $term['pct'] ?>%" data-toggle="tooltip" data-placement="top" title="<?= $term['term'] ?>e législature (<?= $term['year_start'] ?> - <?= $term['year_end'] ?>)">
+                        <div class="bars tooltipHelp mx-1 <?= $key < 1 ? "d-none d-sm-flex" : "d-flex" ?>" style="height: <?= $term['pct'] ?>%" data-toggle="tooltip" data-placement="top" title="<?= $term['term'] ?>e législature (<?= $term['year_start'] ?> - <?= $term['year_end'] ?>)">
                           <span class="score"><?= $term['pct'] ?>%</span>
                         </div>
                       <?php endforeach; ?>
@@ -147,7 +147,7 @@
                 <div class="col-10 offset-2 d-flex justify-content-between mt-2">
                   <?php foreach ($women_history as $key => $term): ?>
                     <div class="legend-element <?= $key < 1 ? "d-none d-sm-flex" : "d-flex" ?> align-items-center justify-content-center text-center" data-toggle="tooltip" data-placement="bottom" title="<?= $term['term'] ?>e législature (<?= $term['year_start'] ?> - <?= $term['year_end'] ?>)">
-                      <span><?= $term['year_start'] ?>-<?= substr($term['year_end'], 2, 2) ?></span>
+                      <span class="tooltipHelp tooltipDashed"><?= $term['year_start'] ?>-<?= substr($term['year_end'], 2, 2) ?></span>
                     </div>
                   <?php endforeach; ?>
                 </div>
@@ -522,7 +522,7 @@
       const cut = 10;
       var ctx = document.getElementById('chartOrigineSociale');
       var myChart = new Chart(ctx, {
-        type: 'horizontalBar',
+        type: 'bar',
         data: data,
         options: options
       });
