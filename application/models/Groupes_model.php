@@ -645,7 +645,7 @@
       $families = array(
         array('PO800538', 'PO730964'), // Renaissance
         array('PO730958', 'PO800490'), // France insoumise
-        array('PO270903', 'PO389395', 'PO656006', 'PO707869', 'PO730934', 'PO800508'), // Les Républicains
+        array('PO270903', 'PO389395', 'PO656006', 'PO707869', 'PO730934', 'PO800508', 'PO684957'), // Les Républicains
         array('PO730970', 'PO774834', 'PO800484'), // Modem
         array('PO758835', 'PO730946', 'PO389507', 'PO656002', 'PO713077', 'PO270907', 'PO800496'), // Socialistes
         array('PO656014', 'PO800526'), // Ecologiste
