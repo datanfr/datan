@@ -31,9 +31,6 @@
     if (!count($bdd->query("SHOW COLUMNS FROM `amendements` LIKE 'sort'")->fetchAll())) {
       $bdd->query('ALTER TABLE `amendements` ADD `sort` VARCHAR(25) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL AFTER `expose`');
     }
-    if (!count($bdd->query("SHOW COLUMNS FROM `amendements` LIKE 'sortDate'")->fetchAll())) {
-      $bdd->query('ALTER TABLE `amendements` ADD `sortDate` DATE NULL DEFAULT NULL AFTER `expose`');
-    }
     if (!count($bdd->query("SHOW COLUMNS FROM `amendements` LIKE 'state'")->fetchAll())) {
       $bdd->query('ALTER TABLE `amendements` ADD `state` VARCHAR(25) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL AFTER `expose`');
     }
