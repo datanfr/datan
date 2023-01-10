@@ -2,5 +2,9 @@
   {
     "version": 1,
     "object": "This is the first version of the database"
+  },
+  {
+    "version": 2,
+    "object": "This is the first version of the database"
   }
 ]

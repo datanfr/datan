@@ -3058,7 +3058,7 @@ class Script
     {
         echo "amendements starting \n";
 
-        $fields = array('id', 'dossier', 'legislature', 'texteLegislatifRef', 'num', 'numordre', 'seanceRef', 'expose');
+        $fields = array('id', 'dossier', 'legislature', 'texteLegislatifRef', 'num', 'numordre', 'seanceRef', 'expose', 'state', 'sort');
         if ($this->legislature_to_get == 15) {
           $file = __DIR__ . '/Amendements_XV.xml.zip';
         } elseif ($this->legislature_to_get == 16) {
@@ -3089,16 +3089,19 @@ class Script
                   $numOrdre = $xml->identification->numeroOrdreDepot;
                   $seanceRef = $xml->seanceDiscussionRef;
                   $expose = $xml->corps->contenuAuteur->exposeSommaire;
+                  $sort = $xml->cycleDeVie->sort;
+                  $sortDate = $xml->cycleDeVie->dateSort;
+                  $state = $xml->cycleDeVie->etatDesTraitements->etat->libelle;
 
                   // Insert NULL values
                   $seanceRef = $seanceRef == "" ? NULL : $seanceRef;
                   $expose = $expose == "" ? NULL : $expose;
 
-                  //echo $id . ' - ' . $dossier . ' - ' . $legislature . ' - ' . $texteLegislatifRef . ' - ' . $num . ' - ' . $numOrdre . ' - ' . $seanceRef;
+                  //echo $id . ' - ' . $dossier . ' - ' . $legislature . ' - ' . $texteLegislatifRef . ' - ' . $num . ' - ' . $numOrdre . ' - ' . $seanceRef . ' - ' . $sort . ' - ' . $state;
                   //echo ' - ' . $expose;
                   //echo '<br><br>';
 
-                  $amdt = array('id' => $id, 'dossier' => $dossier,  'legislature' => $legislature, 'texteLegislatifRef' => $texteLegislatifRef, 'num' => $num, 'numOrdre' => $numOrdre, 'seanceRef' => $seanceRef, 'expose' => $expose);
+                  $amdt = array('id' => $id, 'dossier' => $dossier,  'legislature' => $legislature, 'texteLegislatifRef' => $texteLegislatifRef, 'num' => $num, 'numOrdre' => $numOrdre, 'seanceRef' => $seanceRef, 'expose' => $expose, 'state' => $state, 'sort' => $sort);
                   $insert = array_merge($insert, array_values($amdt));
                   if (($i + 1) % 1000 === 0) {
                       echo "Insert until : " . $i . " | ";
