@@ -2152,21 +2152,21 @@ class Script
         $voteParticipationFields = array('legislature', 'voteNumero', 'mpId', 'participation');
         while ($vote = $votesLeft->fetch()) {
 
-            $voteQuery = $this->bdd->query('
-                SELECT A.*, v.vote,
-                CASE
-                    WHEN vote IN ("1", "0", "-1") THEN 1
-                    WHEN vote = "nv" THEN NULL
-                    ELSE 0
-                END AS participation
-                FROM
-                (
-                SELECT vi.voteNumero, vi.legislature, mp.mpId
+            $voteQuery = $this->bdd->query('SELECT A.*, v.vote,
+              CASE
+                WHEN vote IN ("1", "0", "-1") THEN 1
+                WHEN vote = "nv" THEN NULL
+                WHEN A.mpId = "PA721908" AND A.dateScrutin > "2022-06-22" THEN NULL
+                ELSE 0
+              END AS participation
+              FROM
+              (
+                SELECT vi.voteNumero, vi.legislature, mp.mpId, vi.dateScrutin
                 FROM votes_info vi
                 LEFT JOIN mandat_principal mp ON ((vi.dateScrutin BETWEEN mp.datePriseFonction AND mp.dateFin) OR (mp.datePriseFonction < vi.dateScrutin AND mp.dateFin IS NULL))
                 WHERE vi.legislature = "' . $this->legislature_to_get . '" AND vi.voteNumero = "' . $vote['voteNumero'] . '"
-                ) A
-                LEFT JOIN votes_scores v ON A.mpId = v.mpId AND A.legislature = v.legislature AND A.voteNumero = v.voteNumero
+              ) A
+              LEFT JOIN votes_scores v ON A.mpId = v.mpId AND A.legislature = v.legislature AND A.voteNumero = v.voteNumero
             ');
 
             while ($mp = $voteQuery->fetch()) {
