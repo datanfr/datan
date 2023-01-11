@@ -44,7 +44,7 @@
           <?php foreach ($vote['groupes'] as $group): ?>
             <?php if ($group['positionMajoritaire'] == 'pour'): ?>
               <mj-column width="20%">
-                <mj-image padding="5px 10px" href="https://datan.fr/legislature-15/groupes/<?= mb_strtolower($group['libelleAbrev']) ?>" src="https://datan.fr/assets/imgs/groupes/<?= $group['legislature'] ?>/<?= $group['libelleAbrev'] ?>.png" />
+                <mj-image padding="5px 10px" href="https://datan.fr/groupes/legislature-<?= $group['legislature'] ?>/<?= mb_strtolower($group['libelleAbrev']) ?>" src="https://datan.fr/assets/imgs/groupes/<?= $group['legislature'] ?>/<?= $group['libelleAbrev'] ?>.png" />
               </mj-column>
             <?php endif; ?>
           <?php endforeach; ?>
@@ -56,11 +56,11 @@
         </mj-text>
         <mj-text padding-top="0">
           <?= word_limiter($vote['description'], 30) ?>
-          <a href="https://datan.fr/votes/legislature-15/vote_<?= $vote['voteNumero'] ?>" target="_blank">Lire plus</a>
+          <a href="https://datan.fr/votes/legislature-<?= $vote['legislature'] ?>/vote_<?= $vote['voteNumero'] ?>" target="_blank">Lire plus</a>
         </mj-text>
       <?php endif; ?>
 
-      <mj-button padding-top="40px" padding-bottom="30px" href="https://datan.fr/votes/legislature-15/vote_<?= $vote['voteNumero'] ?>">
+      <mj-button padding-top="40px" padding-bottom="30px" href="https://datan.fr/votes/legislature-<?= $vote['legislature'] ?>/vote_<?= $vote['voteNumero'] ?>">
         Découvre la position de ton député
       </mj-button>
     </mj-column>
