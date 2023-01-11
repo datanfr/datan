@@ -383,7 +383,7 @@
       $this->db->select('cg.*, o.libelle, o.libelleAbrev, o.couleurAssociee, cg.active, o.positionPolitique, o.dateDebut, o.dateFin');
       $this->db->where_in('cg.organeRef', $groups);
       $this->db->join('organes o', 'o.uid = cg.organeRef', 'left');
-      $this->db->order_by('cg.legislature', 'ASC');
+      $this->db->order_by('cg.legislature ASC, o.dateDebut ASC');
       $results = $this->db->get('class_groups cg')->result_array();
 
       foreach ($results as $key => $value) {
