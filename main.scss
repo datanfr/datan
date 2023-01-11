@@ -286,6 +286,7 @@ body:not(.pg-mentions) #tarteaucitronIcon {
     }
     .bars{
       position: relative;
+      color: $text-black;
       .score{
         position: absolute;
         top: -30px;
@@ -1970,12 +1971,6 @@ ul.ui-menu{
     .card{
       border: none;
       overflow: hidden;
-    }
-    .row-chart-election{
-      margin-right: -21px;
-      @include media-breakpoint-down(sm) {
-        margin-left: -21px;
-      }
     }
     .subtitle{
       font-weight: 800;
