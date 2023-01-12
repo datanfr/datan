@@ -293,6 +293,29 @@ body:not(.pg-mentions) #tarteaucitronIcon {
                A CLASSER
 ################
 */
+.quoted{
+  padding-left: 1em;
+  padding-top: 1em;
+}
+.quoted:before{
+  content: open-quote;
+  font-weight: bold;
+  font-size: 36px;
+  line-height: 1px;
+  color: $primary;
+  position: relative;
+  top: -0.1em;
+  left: -0.2em;
+}
+.quoted:after{
+  content: close-quote;
+  font-weight: bold;
+  font-size: 36px;
+  line-height: 1px;
+  color: $primary;
+  position: relative;
+  bottom: -0.2em;
+}
 .modalExplication{
   .modal-content{
     border: none;
@@ -961,14 +984,12 @@ input#quicksearch[type=text]{
     }
   }
 }
-.card-depute{
-  .card-avatar{
-    border-radius: 50%;
-    padding: 0;
-    background: linear-gradient(#99BDDA, white);
-    img{
-      width: 80%;
-    }
+.card-avatar-depute{
+  border-radius: 50%;
+  padding: 0;
+  background: linear-gradient(#99BDDA, white);
+  img{
+    width: 80%;
   }
 }
 // Large devices (desktops, 992px and up)
@@ -1122,6 +1143,10 @@ input#quicksearch[type=text]{
   img{
     width: 80%;
     height: auto;
+  }
+  &.depute-img-circle-explication{
+    width: 50px;
+    height: 50px;
   }
 }
 .card-profile {
