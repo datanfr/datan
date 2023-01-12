@@ -112,6 +112,18 @@
       return $this->db->get_where('deputes_contacts', array('mpId' => $mpId), 1)->row_array();
     }
 
+    public function update_facebook($data){
+      switch ($data['mpId']) {
+        case 'PA794434': // Christophe Bentz
+          return 'ChristopheBentzDepute';
+          break;
+
+        default:
+          return $data['facebook'];
+          break;
+      }
+    }
+
     public function get_depute_individual($nameUrl, $dpt){
       $sql = 'SELECT
         dl.*, dl.libelle_2 AS dptLibelle2,
@@ -127,7 +139,9 @@
         WHERE dl.nameUrl = ? AND dl.dptSlug = ?
         LIMIT 1
       ';
-      return $this->db->query($sql, array($nameUrl, $dpt))->row_array();
+      $results = $this->db->query($sql, array($nameUrl, $dpt))->row_array();
+      $results['facebook'] = $this->update_facebook($results);
+      return $results;
     }
 
     public function get_hatvp_url($mpId){
