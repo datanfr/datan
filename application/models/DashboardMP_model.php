@@ -5,7 +5,7 @@ class DashboardMP_model extends CI_Model
   }
 
   public function get_votes_to_explain($mpId){
-    $sql = 'SELECT vd.voteNumero, vd.legislature, vd.title AS vote_titre, vi.sortCode, date_format(vi.dateScrutin, "%d %M %Y") as dateScrutinFR, doss.titre AS dossier,
+    $sql = 'SELECT vd.voteNumero, vd.legislature, vd.title AS vote_titre, vi.sortCode, vi.dateScrutin, date_format(vi.dateScrutin, "%d %M %Y") as dateScrutinFR, doss.titre AS dossier, vi.nombreVotants,
       CASE
         WHEN vs.vote = 0 THEN "abstention"
         WHEN vs.vote = 1 THEN "pour"
@@ -23,6 +23,12 @@ class DashboardMP_model extends CI_Model
       ORDER BY vi.dateScrutin DESC
     ';
     return $this->db->query($sql, array($mpId, $mpId))->result_array();
+  }
+
+  public function get_votes_to_explain_suggestion($array){
+    array_multisort(array_column($array, 'nombreVotants'), SORT_DESC, $array);
+    $array = array_slice($array, 0, 2);
+    return $array;
   }
 
   public function get_votes_explained($mpId, $published = NULL){

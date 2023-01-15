@@ -138,6 +138,9 @@
       $data['votes_published'] = $this->dashboardMP_model->get_votes_explained($data['depute']['mpId'], TRUE);
       $data['votes_draft'] = $this->dashboardMP_model->get_votes_explained($data['depute']['mpId'], FALSE);
 
+      $data['votes_without'] = $this->dashboardMP_model->get_votes_to_explain($data['depute']['mpId']);
+      $data['votes_without_suggestion'] = $this->dashboardMP_model->get_votes_to_explain_suggestion($data['votes_without']);
+
       $data['title'] = "Vos explications de vote";
 
       // Meta
@@ -159,6 +162,7 @@
       $data['depute']['gender'] = gender($data['depute']['civ']);
 
       $data['votes_without'] = $this->dashboardMP_model->get_votes_to_explain($data['depute']['mpId']);
+      $data['votes_without_suggestion'] = $this->dashboardMP_model->get_votes_to_explain_suggestion($data['votes_without']);
 
       $data['title'] = 'Créez une explication de vote';
 

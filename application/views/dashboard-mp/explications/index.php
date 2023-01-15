@@ -11,35 +11,41 @@
   <div class="content">
     <div class="container-fluid">
       <div class="row">
-        <div class="col-md-4 col-12">
+        <div class="col-12">
           <a class="btn btn-outline-secondary font-weight-bold" href="<?= base_url() ?>dashboard-mp">
             <?= file_get_contents(asset_url() . "imgs/icons/arrow_left.svg") ?>
             Retour
           </a>
+        </div>
+        <div class="col-lg-7 mt-4">
           <?php if ($this->session->flashdata('flash')) : ?>
             <div class="alert alert-primary font-weight-bold text-center mt-4" role="alert"><?= $this->session->flashdata('flash') ?></div>
           <?php endif; ?>
-          <h1 class="font-weight-bold mt-2"><?= $title ?></h1>
-          <div class="mt-5">
-            <a class="h2 btn btn-primary font-weight-bold" style="font-size: 1.1rem" href="<?= base_url() ?>dashboard-mp/explications/liste">
-              <?= file_get_contents(asset_url() . "imgs/icons/pencil-square.svg") ?>
-              <span class="ml-3">Créez une nouvelle explication de vote</span>
-            </a>
-          </div>
-        </div>
-        <div class=" col-md-8 col-12">
-          <div class="card">
+          <h1 class="font-weight-bold mt-2 text-black"><?= $title ?></h1>
+          <div class="card mt-5 mb-0">
             <div class="card-body">
               <h5 class="font-weight-bold">Infos</h5>
               <p>Vous pouvez rédiger une explication de vote pour expliquer à vos électeurs les <b>raisons de votre position</b>. Pourquoi avez-vous voté contre cet amendement ? Pourquoi avez-vous soutenu cette proposition de loi ? Cette explication sera visible sur votre page Datan.</p>
               <p>Cette fonctionnalité n'est disponible que pour les <b>votes contextualisés par Datan</b>. Les votes contextualisés sont les scrutins que l'équipe de Datan vulgarise et met en avant sur le site internet, et notamment sur les pages des députés.</p>
             </div>
           </div>
+          <a class="h2 btn btn-primary font-weight-bold mb-0 mt-5" style="font-size: 1.1rem" href="<?= base_url() ?>dashboard-mp/explications/liste">
+            <?= file_get_contents(asset_url() . "imgs/icons/pencil-square.svg") ?>
+            <span class="ml-3">Créez une nouvelle explication de vote</span>
+          </a>
         </div>
       </div>
+      <div class="d-flex flex-column justify-content-center align-items-center my-5 py-5" id="pattern_background" style="margin-left: -15px; margin-right: -15px">
+        <h2 class="font-weight-bold text-black text-center">Suggestion de votes à expliquer</h2>
+        <?php $this->load->view('dashboard-mp/explications/partials/suggestions.php') ?>
+        <a class="h2 btn btn-outline-primary font-weight-bold mb-0 mt-5" style="font-size: 1.1rem" href="<?= base_url() ?>dashboard-mp/explications/liste">
+          <?= file_get_contents(asset_url() . "imgs/icons/pencil-square.svg") ?>
+          <span class="ml-3">Créez une explication pour un autre scrutin</span>
+        </a>
+      </div>
       <div class="row">
-        <div class="col-12 col-md-6">
-          <div class="card mt-5 card-danger card-outline">
+        <div class="col-12 col-lg-6">
+          <div class="card card-danger card-outline">
             <div class="card-header">
               <h4 class="font-weight-bold text-danger">Vos explications de vote en brouillon</h4>
             </div>
@@ -80,8 +86,8 @@
             </div>
           </div>
         </div>
-        <div class="col-12 col-md-6">
-          <div class="card mt-5 card-success card-outline">
+        <div class="col-12 col-lg-6">
+          <div class="card card-success card-outline">
             <div class="card-header">
               <h4 class="font-weight-bold text-success">Vos explications de vote publiées</h4>
             </div>
