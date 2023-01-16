@@ -171,5 +171,25 @@
       }
     }
 
+    public function get_explication($vote, $gender){
+      switch ($vote) {
+        case "pour":
+          return "a voté pour";
+          break;
+
+        case "contre":
+          return "a voté contre";
+          break;
+
+        case "abstention":
+          return "s'est abstenu" . $gender["e"] . " sur";
+          break;
+
+        default:
+          return "";
+          break;
+      }
+    }
+
   }
 ?>
