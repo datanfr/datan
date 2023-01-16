@@ -32,7 +32,7 @@
           <div class="row bloc-sort">
             <div class="col-lg-3 d-none d-lg-block bloc-search">
               <div class="mt-md-4 sticky-top search-element">
-                <div class="filters d-lg-block mt-md-4">
+                <div class="filters d-lg-block mt-md-4" id="filter">
                   <input class="radio-btn" name="radio-collection" id="radio-1" type="radio" checked="" value="*">
                   <label for="radio-1" class="radio-label d-flex align-items-center">
                     <span class="d-flex align-items-center"><b>Tous les votes décryptés</b></span>
