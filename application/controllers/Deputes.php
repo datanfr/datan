@@ -404,6 +404,12 @@
         $data['key_votes'] = NULL;
       }
 
+      // Get last explication
+      $data['explication'] = $this->deputes_model->get_last_explication($mpId, $legislature);
+      if ($data['explication']) {
+        $data['explication']['vote_depute_edito'] = $this->depute_edito->get_explication($data['explication']['vote_depute'], $data['gender']);
+      }
+
       // Historique du député
       $data['depute']['datePriseFonctionLettres'] = utf8_encode(strftime('%B %Y', strtotime($data['depute']['datePriseFonction'])));
       $data['mandat_edito'] = $this->depute_edito->get_nbr_lettre($data['depute']['mandatesN']);

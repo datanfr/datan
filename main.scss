@@ -304,8 +304,8 @@ body:not(.pg-mentions) #tarteaucitronIcon {
   line-height: 1px;
   color: $primary;
   position: relative;
-  top: -0.1em;
-  left: -0.2em;
+  top: 0.1em;
+  left: -0.1em;
 }
 .quoted:after{
   content: close-quote;
@@ -315,6 +315,7 @@ body:not(.pg-mentions) #tarteaucitronIcon {
   color: $primary;
   position: relative;
   bottom: -0.2em;
+  right: -0.1em;
 }
 .modalExplication{
   .modal-content{
@@ -433,11 +434,14 @@ body.modal-open {
 .badge{
   padding: 0.4em 0.6em;
   color: #fff;
-  &.badge-adopté{
+  &.badge-adopté, &.badge-pour{
     background-color: $adopted;
   }
-  &.badge-rejeté{
+  &.badge-rejeté, &.badge-contre{
     background-color: $rejected;
+  }
+  &.badge-abstention{
+    background-color: $abstention;
   }
 }
 .sort-pour, .sort-adopté, .sort-loyal{
@@ -1954,6 +1958,21 @@ ul.ui-menu{
       .row:not(:first-child){
         margin-top: 1rem;
       }
+    }
+  }
+  /* Bloc explication */
+  .bloc-explication{
+    .card-header{
+      background-color: transparent;
+    }
+    .title{
+      font-weight: 800;
+      color: $text-black;
+      font-size: $h5-font-size;
+    }
+    .date{
+      font-weight: 400;
+      color: $text-gray-light;
     }
   }
   /* Bloc election */
