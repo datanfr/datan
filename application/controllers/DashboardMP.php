@@ -150,6 +150,8 @@
         array('name' => 'Explications de vote', 'url' => base_url().'dashboard-mp/explications', 'active' => TRUE),
       );
 
+      $data['js_to_load'] = array('datan/dashboard-mp-social-share');
+
       // Views
       $this->load->view('dashboard/header', $data);
       $this->load->view('dashboard-mp/explications/index', $data);
