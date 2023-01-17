@@ -21,8 +21,8 @@ class DashboardMP_model extends CI_Model
       LEFT JOIN votes_dossiers vdoss ON vd.legislature = vdoss.legislature AND vd.voteNumero = vdoss.voteNumero
       LEFT JOIN dossiers doss ON vdoss.dossier = doss.titreChemin
       LEFT JOIN explications_mp e ON vd.legislature = e.legislature AND vd.voteNumero = e.voteNumero AND e.mpId = ?
-      LEFT JOIN ( SELECT voteNumero, COUNT(*) as "totalExplication" FROM explications_mp GROUP BY voteNumero) e2
-        ON vd.voteNumero = e2.voteNumero
+      LEFT JOIN ( SELECT legislature, voteNumero, COUNT(*) as "totalExplication" FROM explications_mp WHERE state = 1 GROUP BY legislature, voteNumero) e2
+        ON vd.voteNumero = e2.voteNumero AND vd.legislature = e2.legislature
       WHERE vd.state = "published" AND vs.vote IS NOT NULL AND e.text IS NULL AND vd.legislature >= 16
       ORDER BY vi.dateScrutin DESC
     ';
