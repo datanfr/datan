@@ -11,9 +11,10 @@
           <span class="date"><?= months_abbrev($value['dateScrutinFR']) ?></span>
         </div>
         <div class="card-body d-flex flex-column justify-content-center">
-          <span class="title">
-            <p href="https://datan.fr/votes/legislature-<?= $value['legislature'] ?>/vote_<?= $value['voteNumero'] ?>"><?= $value['vote_titre'] ?></p>
-          </span>
+          <p class="title" href="https://datan.fr/votes/legislature-<?= $value['legislature'] ?>/vote_<?= $value['voteNumero'] ?>"><?= $value['vote_titre'] ?></p>
+          <?php if ($value['totalExplication']) : ?>
+          <p><i><?= $value['totalExplication'] ?> députés ont déjà donné leur raison.</i></p>
+          <?php endif ?>
         </div>
         <div class="card-footer d-flex justify-content-end">
           <a class="btn btn-primary d-flex align-items-center font-weight-bold stretched-link" href="<?= base_url() ?>dashboard-mp/explications/create/l<?= $value['legislature'] ?>v<?= $value['voteNumero'] ?>">
