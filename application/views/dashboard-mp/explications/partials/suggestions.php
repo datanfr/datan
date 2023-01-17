@@ -13,7 +13,7 @@
         <div class="card-body d-flex flex-column justify-content-center">
           <p class="title" href="https://datan.fr/votes/legislature-<?= $value['legislature'] ?>/vote_<?= $value['voteNumero'] ?>"><?= $value['vote_titre'] ?></p>
           <?php if ($value['totalExplication']) : ?>
-          <p><i><?= $value['totalExplication'] ?> députés ont déjà donné leur raison.</i></p>
+          <p><i><?= $value['totalExplication'] ?> députés ont déjà donné leur explication.</i></p>
           <?php endif ?>
         </div>
         <div class="card-footer d-flex justify-content-end">
