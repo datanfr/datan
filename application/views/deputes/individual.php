@@ -967,7 +967,7 @@
     <?php if ($value['explication']): ?>
       <!-- Modal -->
       <div class="modal modalExplication fade" id="explication-l<?= $value['legislature'] ?>-v<?= $value['voteNumero'] ?>" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
           <div class="modal-content">
             <div class="modal-header">
               <div class="d-flex flex-row align-items-center">
