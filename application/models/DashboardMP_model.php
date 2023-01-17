@@ -5,7 +5,9 @@ class DashboardMP_model extends CI_Model
   }
 
   public function get_votes_to_explain($mpId){
-    $sql = 'SELECT vd.voteNumero, vd.legislature, vd.title AS vote_titre, vi.sortCode, vi.dateScrutin, date_format(vi.dateScrutin, "%d %M %Y") as dateScrutinFR, doss.titre AS dossier, vi.nombreVotants,
+    $sql = 'SELECT vd.voteNumero, vd.legislature, vd.title AS vote_titre, vi.sortCode,
+    vi.dateScrutin, date_format(vi.dateScrutin, "%d %M %Y") as dateScrutinFR, doss.titre AS dossier,
+    vi.nombreVotants, e2.totalExplication,
       CASE
         WHEN vs.vote = 0 THEN "abstention"
         WHEN vs.vote = 1 THEN "pour"
@@ -19,10 +21,13 @@ class DashboardMP_model extends CI_Model
       LEFT JOIN votes_dossiers vdoss ON vd.legislature = vdoss.legislature AND vd.voteNumero = vdoss.voteNumero
       LEFT JOIN dossiers doss ON vdoss.dossier = doss.titreChemin
       LEFT JOIN explications_mp e ON vd.legislature = e.legislature AND vd.voteNumero = e.voteNumero AND e.mpId = ?
+      LEFT JOIN ( SELECT voteNumero, COUNT(*) as "totalExplication" FROM explications_mp GROUP BY voteNumero) e2
+        ON vd.voteNumero = e2.voteNumero
       WHERE vd.state = "published" AND vs.vote IS NOT NULL AND e.text IS NULL AND vd.legislature >= 16
       ORDER BY vi.dateScrutin DESC
     ';
-    return $this->db->query($sql, array($mpId, $mpId))->result_array();
+
+return $this->db->query($sql, array($mpId, $mpId))->result_array();
   }
 
   public function get_votes_to_explain_suggestion($array){
@@ -54,6 +59,7 @@ class DashboardMP_model extends CI_Model
     }
     $sql .= ' ORDER BY e.id DESC';
     $query = $this->db->query($sql, $mpId);
+
     return $query->result_array();
   }
 
