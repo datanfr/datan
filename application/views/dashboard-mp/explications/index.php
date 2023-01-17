@@ -44,7 +44,7 @@
         </a>
       </div>
       <div class="row">
-        <div class="col-12 col-lg-6">
+        <div class="col-12">
           <div class="card card-danger card-outline">
             <div class="card-header">
               <h4 class="font-weight-bold text-danger">Vos explications de vote en brouillon</h4>
@@ -86,7 +86,7 @@
             </div>
           </div>
         </div>
-        <div class="col-12 col-lg-6">
+        <div class="col-12">
           <div class="card card-success card-outline">
             <div class="card-header">
               <h4 class="font-weight-bold text-success">Vos explications de vote publiées</h4>
@@ -97,10 +97,11 @@
                   <table class="table mt-2">
                     <thead class="thead-dark">
                       <tr>
-                        <th>Législature</th>
+                        <th>Leg.</th>
                         <th>Scrutin</th>
                         <th class="text-center">Vote</th>
                         <th class="text-center d-none d-lg-table-cell">Explication</th>
+                        <th></th>
                         <th></th>
                         <th></th>
                       </tr>
@@ -115,7 +116,7 @@
                           <td>
                             <a class="btn btn-success d-flex align-items-center justify-content-center font-weight-bold" href="<?= base_url() ?>votes/legislature-<?= $value['legislature'] ?>/vote_<?= $value['voteNumero'] ?>" target="_blank">
                               <?= file_get_contents(asset_url() . "imgs/icons/box-arrow-up-right.svg") ?>
-                              <span class="ml-3">Vote publié</span>
+                              <span class="ml-3">Scrutin</span>
                             </a>
                           </td>
                           <td>
@@ -123,6 +124,12 @@
                               <?= file_get_contents(asset_url() . "imgs/icons/pencil-square.svg") ?>
                               <span class="ml-3">Modifier</span>
                             </a>
+                          </td>
+                          <td>
+                            <button type="button" name="button" class="btn social-share twitter twitter-bg d-flex">
+                              <img src="http://localhost/datan/assets/imgs/logos/twitter-no-round.png" alt="Partagez sur Twitter">
+                              <span>Tweeter</span>
+                            </button>
                           </td>
                         </tr>
                       <?php endforeach; ?>

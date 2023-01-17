@@ -33,6 +33,27 @@
   color: #4C4C4C;
 }
 
+/* Social media */
+.twitter-bg{
+  background-color: #1DA1F2;
+  color: #fff;
+}
+.social-share{
+  padding: 0.2rem 0.6rem;
+  marign: 0.2rem;
+  transition: 0.3s;
+}
+.social-share span{
+  font-size: .85em;
+  margin-left: .25rem;
+  font-weight: 800;
+}
+.social-share:hover{
+  color: #fff;
+  box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.08);
+}
+
+
 /* Card vote */
 .card-vote {
 	 width: 265px;
