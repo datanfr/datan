@@ -228,6 +228,9 @@
           array('name' => 'Explications de vote', 'url' => base_url().'dashboard-mp/explications', 'active' => FALSE),
           array('name' => 'Rédiger', 'url' => base_url().'dashboard-mp/explications/create/l' . $legislature . 'v' . $voteNumero, 'active' => TRUE),
         );
+
+        $data['explication']['text'] = $this->input->post('explication');
+
         // Views
         $this->load->view('dashboard/header', $data);
         $this->load->view('dashboard-mp/explications/create', $data);

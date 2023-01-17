@@ -47,7 +47,7 @@
               <?php endif; ?>
                 <div class="form-group">
                   <label>Explication de vote (maximum 500 caractères)</label>
-                  <textarea id="textbox" name="explication" class="form-control" placeholder="Votre explication de vote" rows="5"><?= $page == 'modify' ? $explication['text'] : '' ?></textarea>
+                  <textarea id="textbox" name="explication" class="form-control" placeholder="Votre explication de vote" rows="5"><?= $explication['text'] ? $explication['text'] : '' ?></textarea>
                   <div class="d-flex justify-content-end">
                     <span id="char_count"><?= $page == 'modify' ? strlen($explication['text']) : 0 ?>/500</span>
                   </div>
