@@ -38,7 +38,7 @@ return $this->db->query($sql, array($mpId, $mpId))->result_array();
 
   public function get_votes_explained($mpId, $published = NULL){
     $sql = 'SELECT e.id, e.voteNumero, e.legislature, e.text AS explication, vd.title AS vote_titre,
-      CASE WHEN e.state = 1 THEN "publié" ELSE "brouillon" END AS state,
+      CASE WHEN e.state = 1 THEN "publié" ELSE "brouillon" END AS state, vs.vote,
       CASE
         WHEN vs.vote = 0 THEN "abstention"
         WHEN vs.vote = 1 THEN "pour"
@@ -58,9 +58,29 @@ return $this->db->query($sql, array($mpId, $mpId))->result_array();
       $sql .= ' AND e.state = 0';
     }
     $sql .= ' ORDER BY e.id DESC';
-    $query = $this->db->query($sql, $mpId);
+    $results = $this->db->query($sql, $mpId)->result_array();
 
-    return $query->result_array();
+    foreach ($results as $key => $value) {
+      switch ($value['vote']) {
+        case 0:
+          $results[$key]['position_tweeter'] = "je me suis abstenu";
+          break;
+
+        case 1:
+          $results[$key]['position_tweeter'] = "j'ai voté pour";
+          break;
+
+        case -1:
+          $results[$key]['position_tweeter'] = "j'ai voté contre";
+          break;
+
+        default:
+          $results[$key]['position_tweeter'] = "";
+          break;
+      }
+    }
+
+    return $results;
   }
 
   public function get_vote_explained($mpId, $legislature, $voteNumero){

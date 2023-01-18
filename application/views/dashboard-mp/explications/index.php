@@ -126,7 +126,7 @@
                             </a>
                           </td>
                           <td>
-                            <button type="button" name="button" class="btn social-share twitter twitter-bg d-flex">
+                            <button type="button" name="button" class="btn social-share twitter twitter-bg d-flex" data-legislature="<?= $value['legislature'] ?>" data-voteNumero="<?= $value['voteNumero'] ?>" data-position="<?= $value['position_tweeter'] ?>" data-title="<?= $value['vote_titre'] ?>">
                               <img src="http://localhost/datan/assets/imgs/logos/twitter-no-round.png" alt="Partagez sur Twitter">
                               <span>Tweeter</span>
                             </button>
