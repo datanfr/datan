@@ -422,7 +422,7 @@ body.modal-open {
   }
 }
 .follow-us{
-  background-color: $primary;
+  background-color: $bleu;
   .btn{
     max-width: 200px;
   }
@@ -1763,6 +1763,9 @@ ul.ui-menu{
     font-size: 1.2em;
     font-weight: 800;
     color: $text-black;
+  }
+  &.bloc-contact{
+    background-color: $bleu;
   }
   .title{
     color: #fff;
