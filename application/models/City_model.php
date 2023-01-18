@@ -51,9 +51,9 @@
     }
 
     public function get_mps($departement, $circos, $legislature){
-      $sql = 'SELECT d.*, d.circo AS electionCirco,
-        d.libelle, d.libelleAbrev
+      $sql = 'SELECT d.*, d.circo AS electionCirco, dc.mailAn
         FROM deputes_all d
+        LEFT JOIN deputes_contacts dc ON d.mpId = dc.mpId
         WHERE d.dptSlug = ? AND d.circo IN ? AND d.legislature = ? AND d.dateFin IS NULL
       ';
       $query = $this->db->query($sql, array($departement, $circos, $legislature));
