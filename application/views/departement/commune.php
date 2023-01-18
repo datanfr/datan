@@ -67,32 +67,59 @@
             <div class="text-center alert alert-danger">
               Il n'y a actuellement aucun député représentant à l'Assemblée nationale les citoyens habitant dans cette ville.
             </div>
+          <?php else: ?>
+            <?php if ($n_circos == 1): ?>
+              <div class="d-flex justify-content-center">
+                <?php $this->load->view('deputes/partials/card_home.php', array('depute' => $depute_commune, 'tag' => 'h2', 'cat' => true, 'logo' => true)) ?>
+              </div>
             <?php else: ?>
-              <?php if ($n_circos == 1): ?>
-                <div class="d-flex justify-content-center">
+              <div class="d-flex flex-wrap justify-content-around">
+                <?php foreach ($deputes_commune as $depute_commune): ?>
                   <?php $this->load->view('deputes/partials/card_home.php', array('depute' => $depute_commune, 'tag' => 'h2', 'cat' => true, 'logo' => true)) ?>
-                </div>
-              <?php else: ?>
-                <div class="d-flex flex-wrap justify-content-around">
-                  <?php foreach ($deputes_commune as $depute_commune): ?>
-                    <?php $this->load->view('deputes/partials/card_home.php', array('depute' => $depute_commune, 'tag' => 'h2', 'cat' => true, 'logo' => true)) ?>
-                  <?php endforeach; ?>
-                </div>
-              <?php endif; ?>
+                <?php endforeach; ?>
+              </div>
+            <?php endif; ?>
           <?php endif; ?>
         </div>
       </div>
     </div>
+    <!-- CONTACT YOUR MP -->
+    <?php if (!$noMP): ?>
+      <div class="container-fluid py-5 pg-commune bloc-contact">
+        <div class="row">
+          <div class="col-lg-8 offset-lg-2">
+            <?php if ($n_circos == 1): ?>
+              <h2 class="text-center text-white mb-4">Je contacte mon député</h2>
+              <p class="text-center text-white mb-0">
+                Pour contacter votre député <b><?= $depute_commune['nameFirst'] . ' ' .$depute_commune['nameLast'] ?></b>, nous vous conseillons de lui envoyer un email à son adresse :
+                <a class="text-white" href="mailto:<?= mb_strtolower($depute_commune['mailAn']) ?>"><?= mb_strtolower($depute_commune['mailAn']) ?></a>
+              </p>
+            <?php else: ?>
+              <h2 class="text-center text-white font-weight-bold mb-4">Je contacte un député</h2>
+              <p class="text-center text-white">
+                <?= $ville['commune_nom'] ?> est une grande ville et plusieurs députés y sont élus. Nous vous conseillons de contacter un des députés de <?= $ville['commune_nom'] ?> par email :
+              </p>
+              <?php foreach ($deputes_commune as $key => $value): ?>
+                <p class="text-center text-white mb-1">
+                  <?= $value['nameFirst'] . ' ' . $value['nameLast'] ?> :
+                  <a class="text-white text-center" href="mailto:<?= mb_strtolower($value['mailAn']) ?>"><?= mb_strtolower($value['mailAn']) ?></a>
+                </p>
+              <?php endforeach; ?>
+            <?php endif; ?>
+          </div>
+        </div>
+      </div>
+    <?php endif; ?>
     <!-- ELECTIONS LEGISLATIVES IN THE CITY -->
     <?php if ($results_legislatives_last): ?>
-      <div class="container-fluid pg-commune py-5" id="pattern_background">
+      <div class="container-fluid pg-commune py-5">
         <div class="container">
-          <div class="row">
+          <div class="row mt-2">
             <div class="col-12">
-              <h2 class="text-center">Les élections législatives de 2022 à <?= $ville['commune_nom'] ?></h2>
+              <h2 class="text-center">L' élection législative de 2022 à <?= $ville['commune_nom'] ?></h2>
             </div>
           </div>
-          <div class="row mt-5">
+          <div class="row mt-3">
             <div class="<?= $n_circos == 1 ? 'col-lg-7' : 'col-lg-8 offset-lg-2' ?> d-flex flex-column justify-content-center">
               <p class="text-primary font-weight-bold">Le contexte</p>
               <p>Les <a href="<?= base_url() ?>elections/legislatives-2022">dernières élections législatives</a> se sont tenues en juin 2022. Elles ont permis d'élire <a href="<?= base_url() ?>deputes">les députés</a> qui composent l'Assemblée nationale. Ces élections ont fait suite à l'élection présidentielle, qui a vu la victoire d'Emmanuel Macron.</p>
@@ -144,9 +171,9 @@
       </div> <!-- // END ELECTION LEGISLATIVE IN THE CITY -->
     <?php endif; ?>
     <!-- ALL ELECTIONS -->
-    <div class="container-fluid pg-commune">
-      <div class="container mt-5">
-        <div class="row">
+    <div class="container-fluid pg-commune py-5" id="pattern_background">
+      <div class="container">
+        <div class="row mt-2">
           <div class="col-12">
             <h2 class="text-center">Les dernières élections à <?= $ville["commune_nom"] ?></h2>
           </div>
@@ -157,7 +184,7 @@
             </div>
           <?php endif; ?>
         </div>
-        <div class="d-flex justify-content-around flex-wrap mt-4 pb-3 bloc-elections">
+        <div class="d-flex justify-content-around flex-wrap mt-4 bloc-elections">
           <?php if ($results_pres_2022[0]['votants'] > 0): ?>
             <div class="card mx-1 my-4">
               <div class="card-body pb-0">
