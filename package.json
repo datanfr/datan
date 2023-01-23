@@ -20,6 +20,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "docker-download": "docker exec -it datan php scripts/download.php",
     "docker-daily": "docker exec -it datan php scripts/daily.php",
+    "docker-profession": "docker exec -it datan php scripts/profession.php",
     "docker-grunt": "docker exec -it datan grunt",
     "docker-grunt-watch": "docker exec -it datan grunt watch",
     "dgw": "npm run docker-grunt-watch"
