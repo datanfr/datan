@@ -332,7 +332,7 @@
           "async" => FALSE
         ),
         array(
-          "url" => "https://unpkg.com/flickity@2.3.0/dist/flickity.min.css",
+          "url" => asset_url() . "css/flickity.min.css",
           "async" => TRUE
         )
       );

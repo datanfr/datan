@@ -10,7 +10,7 @@ Disallow: /login
 Disallow: /register
 Disallow: /password
 Disallow: /password/*
-Disallow /mon-compte
+Disallow: /mon-compte
 Disallow: /mon-compte/*
 Disallow: /assets/js/datan/url_obf2.js
 Disallow: /assets/js/datan/url_obf2.min.js
