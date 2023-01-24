@@ -33,7 +33,7 @@
         <picture>
           <source srcset="<?= asset_url(); ?>imgs/groupes/<?= $depute['legislature'] ?>/webp/<?= $depute['libelleAbrev'] ?>.webp" type="image/webp">
           <source srcset="<?= asset_url(); ?>imgs/groupes/<?= $depute['legislature'] ?>/<?= $depute['libelleAbrev'] ?>.png" type="image/png">
-          <img src="<?= asset_url(); ?>imgs/groupes/<?= $depute['legislature'] ?>/<?= $depute['libelleAbrev'] ?>.png" alt="<?= name_group($depute['libelle']) ?>">
+          <img src="<?= asset_url(); ?>imgs/groupes/<?= $depute['legislature'] ?>/<?= $depute['libelleAbrev'] ?>.png" width="85" height="85" alt="<?= name_group($depute['libelle']) ?>">
         </picture>
       </div>
     <?php endif; ?>
