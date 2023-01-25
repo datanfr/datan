@@ -44,6 +44,7 @@ module.exports = function (grunt) {
         dest: 'assets/css/main.css'
       }
     },
+    // babel the main.js
     babel: {
       options: {
         sourceMap: true,
@@ -55,6 +56,7 @@ module.exports = function (grunt) {
         },
       },
     },
+    // uglify the js 
     uglify: {
       options: {
         compress: true,
