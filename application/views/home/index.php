@@ -310,7 +310,7 @@
                 <div class="card card-post my-3">
                   <div class="row no-gutters">
                     <div class="col-auto img-wrap d-none d-lg-block">
-                      <img class="img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder.png" data-src="<?= asset_url() ?>imgs/posts/img_post_<?= $post['id'] ?>.png" alt="Image post <?= $post['id'] ?>">
+                      <img class="img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder.png" data-src="<?= asset_url() ?>imgs/posts/img_post_<?= $post['id'] ?>.png" alt="Image post <?= $post['id'] ?>" width="480" height="240">
                     </div>
                     <div class="col">
                       <div class="card-block p-3">
