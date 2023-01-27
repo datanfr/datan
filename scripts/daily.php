@@ -886,6 +886,13 @@ class Script
             echo "JSON created \n";
         }
         fclose($fp);
+
+        $file_destination = __DIR__ . "/../assets/data/deputes_json.gz";
+        $fp = gzopen($file_destination, 'wb');
+        if (gzwrite($fp, $json)) {
+            echo "JSON zipped created \n";
+        }
+        gzclose($fp);
     }
 
     public function groupeStats()
