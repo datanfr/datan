@@ -1,7 +1,7 @@
 <div class="card card-groupe">
   <div class="liseret" style="background-color: <?= $groupe["couleurAssociee"] ?>"></div>
   <?php if ($groupe['legislature'] >= 14): ?>
-    <div class="card-avatar" style="background-color: #fff">
+    <div class="card-avatar">
       <picture>
         <source srcset="<?= asset_url(); ?>imgs/groupes/<?= $groupe['legislature'] ?>/webp/<?= $groupe['libelleAbrev'] ?>.webp" type="image/webp">
         <source srcset="<?= asset_url(); ?>imgs/groupes/<?= $groupe['legislature'] ?>/<?= $groupe['libelleAbrev'] ?>.png" type="image/png">
