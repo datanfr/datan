@@ -1142,28 +1142,27 @@ class Script
 
         $this->bdd->exec('DROP TABLE IF EXISTS parties');
 
-        $this->bdd->exec('
-        CREATE TABLE parties AS
-        SELECT A.*, B.effectif
-        FROM
-        (
-        SELECT o.uid, o.libelleAbrev, o.libelle, o.dateFin, COUNT(ms.mpId) AS effectifTotal
-        FROM organes o
-        LEFT JOIN mandat_secondaire ms ON o.uid = ms.organeRef
-        LEFT JOIN deputes_all da ON da.mpId = ms.mpId
-        WHERE o.coteType = "PARPOL" AND da.legislature = 15
-        GROUP BY o.uid
-        ) A
-        LEFT JOIN
-        (
-        SELECT o.uid, o.libelle, o.libelleAbrev, COUNT(ms.mpId) AS effectif
-        FROM deputes_all da
-        LEFT JOIN mandat_secondaire ms ON ms.mpId = da.mpId
-        LEFT JOIN organes o ON o.uid = ms.organeRef
-        WHERE ms.typeOrgane = "PARPOL" AND ms.dateFin IS NULL AND da.legislature = 15 AND da.dateFin IS NULL
-        GROUP BY ms.organeRef
-        ) B ON A.uid = B.uid
-        ORDER BY B.effectif DESC
+        $this->bdd->exec('CREATE TABLE parties AS
+          SELECT A.*, B.effectif
+          FROM
+          (
+            SELECT o.uid, o.libelleAbrev, o.libelle, o.dateFin, COUNT(dl.mpId) AS effectifTotal
+            FROM organes o
+            LEFT JOIN mandat_secondaire ms ON o.uid = ms.organeRef
+            LEFT JOIN deputes_last dl ON dl.mpId = ms.mpId
+            WHERE o.coteType = "PARPOL"
+            GROUP BY o.uid
+          ) A
+          LEFT JOIN
+          (
+            SELECT o.uid, o.libelle, o.libelleAbrev, COUNT(dl.mpId) AS effectif
+            FROM deputes_all dl
+            LEFT JOIN mandat_secondaire ms ON ms.mpId = dl.mpId
+            LEFT JOIN organes o ON o.uid = ms.organeRef
+            WHERE ms.typeOrgane = "PARPOL" AND ms.dateFin IS NULL AND dl.dateFin IS NULL
+            GROUP BY ms.organeRef
+          ) B ON A.uid = B.uid
+          ORDER BY B.effectif DESC
         ');
 
         $this->bdd->exec('
