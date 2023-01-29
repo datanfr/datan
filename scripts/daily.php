@@ -3619,7 +3619,6 @@ if (isset($argv[1])) {
     $script = new Script();
 }
 
-/*
 $script->fillDeputes();
 $script->deputeAll();
 $script->deputeLast();
@@ -3627,9 +3626,7 @@ $script->downloadPictures();
 $script->webpPictures();
 $script->resmushPictures();
 $script->groupeEffectif();
-*/
 $script->deputeJson();
-/*
 $script->groupeStats();
 $script->groupeStatsHistory();
 $script->groupeMembersHistory();
