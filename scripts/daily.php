@@ -887,12 +887,13 @@ class Script
         }
         fclose($fp);
 
-        $file_destination = __DIR__ . "/../assets/data/deputes_json.gz";
-        $fp = gzopen($file_destination, 'wb');
-        if (gzwrite($fp, $json)) {
-            echo "JSON zipped created \n";
+        // save file
+        $file_destination = __DIR__ . "/../assets/data/deputes_json.txt";
+        $fp = fopen($file_destination, 'w');
+        if (fputs($fp, $json)) {
+            echo "JSON created \n";
         }
-        gzclose($fp);
+        fclose($fp);
     }
 
     public function groupeStats()
@@ -3618,6 +3619,7 @@ if (isset($argv[1])) {
     $script = new Script();
 }
 
+/*
 $script->fillDeputes();
 $script->deputeAll();
 $script->deputeLast();
@@ -3625,7 +3627,9 @@ $script->downloadPictures();
 $script->webpPictures();
 $script->resmushPictures();
 $script->groupeEffectif();
+*/
 $script->deputeJson();
+/*
 $script->groupeStats();
 $script->groupeStatsHistory();
 $script->groupeMembersHistory();
