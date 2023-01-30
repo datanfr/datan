@@ -5,6 +5,7 @@ class Script
 {
     private $bdd;
     private $legislature_to_get;
+    private $electionId;
     private $dateMaj;
     private $time_pre;
     private $legislature_current;
@@ -19,6 +20,7 @@ class Script
         $this->legislature_current = 16;
         $this->legislature_to_get = $legislature;
         $this->intro = "[" . date('Y-m-d h:i:s') . "] ";
+        $this->electionId = 4;
         echo $this->intro . "Launching the profession de foi script for legislature " . $this->legislature_to_get . "\n";
         echo getenv('DATABASE_USERNAME');
         if ($legislature == 16) {
@@ -43,9 +45,10 @@ class Script
 
     public function execute()
     {
+        $circos = $this->bdd->prepare('SELECT * FROM circos WHERE dpt = 1 GROUP BY circo, dpt'); // FOR TESTING
         $circos = $this->bdd->prepare('SELECT * FROM circos GROUP BY circo, dpt');
         $circos->execute();
-        $fields = array("mpId", "file", "tour", "score");
+        $fields = array("mpId", "file", "electionId", "tour", "score");
         foreach ($circos as $key => $circo) {
             $deputes = $this->bdd->prepare("SELECT * FROM `deputes_all` WHERE `legislature`=" . $this->legislature_to_get . " AND `departementCode`=" . $circo['dpt'] . " AND `circo`=" . $circo['circo']);
             $deputes->execute();
@@ -67,12 +70,15 @@ class Script
                                 if (!isset($programs[$depute["mpId"]]["score"]) || $scoreMatch > $programs[$depute["mpId"]]["score"]){
                                     $programs[$depute["mpId"]]["mpId"] = $depute["mpId"];
                                     $programs[$depute["mpId"]]["file"] = $url;
-                                    $programs[$depute["mpId"]]["tour"] = $tour;
+                                    $programs[$depute["mpId"]]["electionId"] = $electionId;
+                                    $programs[$depute["mpId"]]["tour"] = $this->electionId;
                                     $programs[$depute["mpId"]]["score"] = $scoreMatch;
                                 }
                             }
                         } else {
                             echo "This url doesn't exists \n";
+                            echo $url;
+                            die();
                         }
                     }
                 }
@@ -81,7 +87,7 @@ class Script
                 try{
                     $filename = basename($program["file"]);
                     file_put_contents('assets/data/professions/' . $filename, file_get_contents($program["file"]));
-                    $sql = "INSERT INTO `profession_foi` (" . implode(",", $fields) . ") VALUES (?, ?, ?, ?)";
+                    $sql = "INSERT INTO `profession_foi` (" . implode(",", $fields) . ") VALUES (?, ?, ?, ?, ?)";
                     $stmt = $this->bdd->prepare($sql);
                     $stmt->execute(array($program["mpId"],$filename, $program["score"], $program["tour"]));
                     echo $program["file"] . " a ete ajoute pour " . $program["mpId"];
