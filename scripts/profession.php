@@ -45,7 +45,7 @@ class Script
     {
         $circos = $this->bdd->prepare('SELECT * FROM circos GROUP BY circo, dpt');
         $circos->execute();
-        $fields = array("depute_mpid", "file", "tour", "score");
+        $fields = array("mpId", "file", "tour", "score");
         foreach ($circos as $key => $circo) {
             $deputes = $this->bdd->prepare("SELECT * FROM `deputes_all` WHERE `legislature`=" . $this->legislature_to_get . " AND `departementCode`=" . $circo['dpt'] . " AND `circo`=" . $circo['circo']);
             $deputes->execute();
@@ -65,9 +65,9 @@ class Script
                                 echo "with  " . $depute['nameLast'] . "\n";
                                 $scoreMatch = $this->searchText($text, $depute);
                                 if (!isset($programs[$depute["mpId"]]["score"]) || $scoreMatch > $programs[$depute["mpId"]]["score"]){
-                                    $programs[$depute["mpId"]]["depute_mpid"] = $depute["mpId"];
+                                    $programs[$depute["mpId"]]["mpId"] = $depute["mpId"];
                                     $programs[$depute["mpId"]]["file"] = $url;
-                                    $programs[$depute["mpId"]]["tour"] = $tour;    
+                                    $programs[$depute["mpId"]]["tour"] = $tour;
                                     $programs[$depute["mpId"]]["score"] = $scoreMatch;
                                 }
                             }
@@ -83,7 +83,7 @@ class Script
                     file_put_contents('assets/data/professions/' . $filename, file_get_contents($program["file"]));
                     $sql = "INSERT INTO `profession_foi` (" . implode(",", $fields) . ") VALUES (?, ?, ?, ?)";
                     $stmt = $this->bdd->prepare($sql);
-                    $stmt->execute(array($program["depute_mpid"],$filename, $program["score"], $program["tour"]));
+                    $stmt->execute(array($program["mpId"],$filename, $program["score"], $program["tour"]));
                     echo $program["file"] . " a ete ajoute pour " . $program["mpId"];
                 } catch (\Exception $e){
                     echo "Error : " . $e->getMessage(). "\n";
