@@ -26,7 +26,7 @@
     echo "Install the new version <br>";
 
     /* 2. MAKE YOUR CHANGE TO THE DATABASE */
-    $prepare = $bdd->prepare("CREATE TABLE `datan`.`profession_foi` 
+    $prepare = $bdd->prepare("CREATE TABLE `profession_foi` 
     (`id` INT NOT NULL AUTO_INCREMENT , `depute_mpid` INT NOT NULL , `file` VARCHAR(255) NOT NULL ,
     `tour` INT NOT NULL , `score` INT NOT NULL , PRIMARY KEY (`id`));");
 
