@@ -78,7 +78,6 @@ class Script
                         } else {
                             echo "This url doesn't exists \n";
                             echo $url;
-                            die();
                         }
                     }
                 }
