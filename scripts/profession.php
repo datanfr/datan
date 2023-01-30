@@ -29,9 +29,9 @@ class Script
         $this->time_pre = microtime(true);;
         try {
             $this->bdd = new PDO(
-                'mysql:host=db;dbname=' . 'datan',
-                'datan',
-                'datan',
+                'mysql:host=' . getenv('DATABASE_HOST') . ';dbname=' . getenv('DATABASE_NAME'),
+                getenv('DATABASE_USERNAME'),
+                getenv('DATABASE_PASSWORD'),
                 array(
                     PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION, PDO::ATTR_PERSISTENT => true, PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8",
                 )
@@ -45,25 +45,48 @@ class Script
     {
         $circos = $this->bdd->prepare('SELECT * FROM circos GROUP BY circo, dpt');
         $circos->execute();
+        $fields = array("depute_mpid", "file", "tour", "score");
         foreach ($circos as $key => $circo) {
             $deputes = $this->bdd->prepare("SELECT * FROM `deputes_all` WHERE `legislature`=" . $this->legislature_to_get . " AND `departementCode`=" . $circo['dpt'] . " AND `circo`=" . $circo['circo']);
             $deputes->execute();
             $deputes = $deputes->fetchAll();
+            $programs = [];
             if (count($deputes) > 0) {
-                for ($i = 1; $i < 10; $i++) {
-                    $url = $this->urlPDF . "2-" . $circo['dpt'] . "-" . sprintf('%02d', $circo['circo']) . "-" . $i . ".pdf";
-                    echo "checking " . $url . "\n";
-                    $a = new PDF2Text();
-                    $a->setFilename($url);
-                    $a->decodePDF();
-                    if ($text = strtolower($a->output())) {
-                        foreach ($deputes as $depute) {
-                            echo "with  " . $depute['nameLast'] . "\n";
-                            $scoreMatch = $this->searchText($text, $depute);
+                for ($tour = 1; $tour < 3; $tour++) {
+                    for ($i = 1; $i < 10; $i++) {
+                        $url = $this->urlPDF . $tour . "-" . $circo['dpt'] . "-" . sprintf('%02d', $circo['circo']) . "-" . $i . ".pdf";
+                        echo "checking " . $url . "\n";
+                        $a = new PDF2Text();
+                        $a->setFilename($url);
+                        $a->decodePDF();
+                        if ($text = strtolower($a->output())) {
+                            foreach ($deputes as $depute) {
+                                echo $depute["mpId"];
+                                echo "with  " . $depute['nameLast'] . "\n";
+                                $scoreMatch = $this->searchText($text, $depute);
+                                if (!isset($programs[$depute["mpId"]]["score"]) || $scoreMatch > $programs[$depute["mpId"]]["score"]){
+                                    $programs[$depute["mpId"]]["depute_mpid"] = $depute["mpId"];
+                                    $programs[$depute["mpId"]]["file"] = $url;
+                                    $programs[$depute["mpId"]]["tour"] = $tour;    
+                                    $programs[$depute["mpId"]]["score"] = $scoreMatch;
+                                }
+                            }
+                        } else {
+                            echo "This url doesn't exists \n";
                         }
-                    } else {
-                        echo "This url doesn't exists \n";
                     }
+                }
+            }
+            foreach($programs as $program){
+                try{
+                    $filename = basename($program["file"]);
+                    file_put_contents('assets/data/professions/' . $filename, file_get_contents($program["file"]));
+                    $sql = "INSERT INTO `profession_foi` (" . implode(",", $fields) . ") VALUES (?, ?, ?, ?)";
+                    $stmt = $this->bdd->prepare($sql);
+                    $stmt->execute(array($program["depute_mpid"],$filename, $program["score"], $program["tour"]));
+                    echo $program["file"] . " a ete ajoute pour " . $program["mpId"];
+                } catch (\Exception $e){
+                    echo "Error : " . $e->getMessage(). "\n";
                 }
             }
         }
@@ -76,7 +99,7 @@ class Script
             echo "This work for " . $firstname . ' ' . $lastname . "\n";
             return 10;
         } else if (strpos($text, $lastname) !== false) {
-            echo "This may work for " . $firstname . ' ' . $lastname. "\n";
+            echo "This may work for " . $firstname . ' ' . $lastname . "\n";
             return 3;
         }
         return 1;
