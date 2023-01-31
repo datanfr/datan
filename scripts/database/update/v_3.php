@@ -27,8 +27,8 @@
 
     /* 2. MAKE YOUR CHANGE TO THE DATABASE */
     $prepare = $bdd->prepare("CREATE TABLE `profession_foi`
-    (`id` INT NOT NULL AUTO_INCREMENT , `mpId` INT NOT NULL , `file` VARCHAR(255) NOT NULL ,
-    `electionId` INT NOT NULL, `tour` INT NOT NULL , `score` INT NOT NULL , PRIMARY KEY (`id`));");
+    (`id` INT NOT NULL AUTO_INCREMENT , `mpId` VARCHAR(255) NOT NULL , `file` VARCHAR(255) NOT NULL ,
+    `electionId` INT NOT NULL, `tour` INT NOT NULL ,  PRIMARY KEY (`id`));");
 
     if (!$prepare->execute()) {
       echo "The update did not work <br>";

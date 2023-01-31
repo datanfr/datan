@@ -1,6 +1,4 @@
 <?php
-include "include/pdf2text.php";
-
 class Script
 {
     private $bdd;
@@ -10,7 +8,9 @@ class Script
     private $time_pre;
     private $legislature_current;
     private $intro;
-    private $urlPDF;
+    private $urlAjax;
+    private $urlPdf;
+    private $fields;
 
     // export the variables in environment
     public function __construct($legislature = 16)
@@ -21,19 +21,21 @@ class Script
         $this->legislature_to_get = $legislature;
         $this->intro = "[" . date('Y-m-d h:i:s') . "] ";
         $this->electionId = 4;
+        $this->fields = array("depute_mpid", "file", "tour", "electionId");
         echo $this->intro . "Launching the profession de foi script for legislature " . $this->legislature_to_get . "\n";
-        echo getenv('DATABASE_USERNAME');
         if ($legislature == 16) {
-            $this->urlPDF = "https://programme-candidats.interieur.gouv.fr/elections-legislatives-2022/data-pdf-propagandes/";
+            $this->urlAjax = "https://programme-candidats.interieur.gouv.fr/elections-legislatives-2022/ajax/";
+            $this->urlPdf = "https://programme-candidats.interieur.gouv.fr/elections-legislatives-2022/data-pdf-propagandes/";
         } else {
-            $this->urlPDF = "https://programme-candidats.interieur.gouv.fr/elections-legislatives-2022/data-pdf-propagandes/";
+            $this->urlAjax = "https://programme-candidats.interieur.gouv.fr/elections-legislatives-2022/ajax/";
+            $this->urlPdf = "https://programme-candidats.interieur.gouv.fr/elections-legislatives-2022/data-pdf-propagandes/";
         }
         $this->time_pre = microtime(true);;
         try {
             $this->bdd = new PDO(
-                'mysql:host=' . getenv('DATABASE_HOST') . ';dbname=' . getenv('DATABASE_NAME'),
-                getenv('DATABASE_USERNAME'),
-                getenv('DATABASE_PASSWORD'),
+                'mysql:host=db;dbname=' . 'datan',
+                'datan',
+                'datan',
                 array(
                     PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION, PDO::ATTR_PERSISTENT => true, PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8",
                 )
@@ -45,69 +47,48 @@ class Script
 
     public function execute()
     {
-        $circos = $this->bdd->prepare('SELECT * FROM circos WHERE dpt = 1 GROUP BY circo, dpt'); // FOR TESTING
         $circos = $this->bdd->prepare('SELECT * FROM circos GROUP BY circo, dpt');
         $circos->execute();
-        $fields = array("mpId", "file", "electionId", "tour", "score");
-        foreach ($circos as $key => $circo) {
-            $deputes = $this->bdd->prepare("SELECT * FROM `deputes_all` WHERE `legislature`=" . $this->legislature_to_get . " AND `departementCode`=" . $circo['dpt'] . " AND `circo`=" . $circo['circo']);
-            $deputes->execute();
-            $deputes = $deputes->fetchAll();
-            $programs = [];
-            if (count($deputes) > 0) {
-                for ($tour = 1; $tour < 3; $tour++) {
-                    for ($i = 1; $i < 10; $i++) {
-                        $url = $this->urlPDF . $tour . "-" . $circo['dpt'] . "-" . sprintf('%02d', $circo['circo']) . "-" . $i . ".pdf";
-                        echo "checking " . $url . "\n";
-                        $a = new PDF2Text();
-                        $a->setFilename($url);
-                        $a->decodePDF();
-                        if ($text = strtolower($a->output())) {
-                            foreach ($deputes as $depute) {
-                                echo $depute["mpId"];
-                                echo "with  " . $depute['nameLast'] . "\n";
-                                $scoreMatch = $this->searchText($text, $depute);
-                                if (!isset($programs[$depute["mpId"]]["score"]) || $scoreMatch > $programs[$depute["mpId"]]["score"]){
-                                    $programs[$depute["mpId"]]["mpId"] = $depute["mpId"];
-                                    $programs[$depute["mpId"]]["file"] = $url;
-                                    $programs[$depute["mpId"]]["electionId"] = $electionId;
-                                    $programs[$depute["mpId"]]["tour"] = $this->electionId;
-                                    $programs[$depute["mpId"]]["score"] = $scoreMatch;
-                                }
-                            }
-                        } else {
-                            echo "This url doesn't exists \n";
-                            echo $url;
-                        }
+        foreach ($circos as $circo) {
+            for ($tour = 1; $tour < 3; $tour++) {
+                $data = $this->getData($tour, $circo);
+                foreach ($data as $d) {
+                    $q = $this->bdd->prepare("SELECT * FROM `deputes_all` WHERE `legislature`=" . $this->legislature_to_get 
+                    . " AND `departementCode`=" . $circo['dpt'] . " AND `circo`=" . $circo['circo'] 
+                    . " AND LOWER(`nameLast`)=LOWER('" . $d['candidatNom']. "') AND LOWER(`nameFirst`)=LOWER('" . $d['candidatPrenom']. "')");
+                    $q->execute();
+                    $depute = $q->fetch();
+                    if($depute){
+                        $this->saveProfession($depute, $d, $tour);
                     }
-                }
-            }
-            foreach($programs as $program){
-                try{
-                    $filename = basename($program["file"]);
-                    file_put_contents('assets/data/professions/' . $filename, file_get_contents($program["file"]));
-                    $sql = "INSERT INTO `profession_foi` (" . implode(",", $fields) . ") VALUES (?, ?, ?, ?, ?)";
-                    $stmt = $this->bdd->prepare($sql);
-                    $stmt->execute(array($program["mpId"],$filename, $program["score"], $program["tour"]));
-                    echo $program["file"] . " a ete ajoute pour " . $program["mpId"];
-                } catch (\Exception $e){
-                    echo "Error : " . $e->getMessage(). "\n";
                 }
             }
         }
     }
-    private function searchText($text, $depute)
-    {
-        $firstname = strtolower($depute['nameFirst']);
-        $lastname = strtolower($depute['nameLast']);
-        if (strpos($text, $firstname . ' ' . $lastname) !== false) {
-            echo "This work for " . $firstname . ' ' . $lastname . "\n";
-            return 10;
-        } else if (strpos($text, $lastname) !== false) {
-            echo "This may work for " . $firstname . ' ' . $lastname . "\n";
-            return 3;
+    
+    private function saveProfession($depute, $d, $tour){
+        try {
+            $filename = $d['pdf'] . ".pdf";
+            file_put_contents('assets/data/professions/' . $filename, file_get_contents($this->urlPdf . $filename));
+            $sql = "INSERT INTO `profession_foi` (" . implode(",", $this->fields) . ") VALUES (?, ?, ?, ?)";
+            $stmt = $this->bdd->prepare($sql);
+            $stmt->execute(array($depute["mpId"], $filename, $tour, $this->electionId));
+            echo $filename . " a ete ajoute pour " . $depute["nameLast"];
+        } catch (\Exception $e) {
+            echo "Error : " . $e->getMessage() . "\n";
         }
-        return 1;
+    }
+
+    private function getData($tour, $circo)
+    {
+        $url = $this->urlAjax . $tour . '_candidats_circo_' . $circo['dpt'] . '-0' . $circo['circo'] . '.json';
+        $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_HTTPGET, true);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        $response_json = curl_exec($ch);
+        curl_close($ch);
+        echo "check " .$url . "\n";
+        return json_decode($response_json, true)["data"];
     }
 }
 
