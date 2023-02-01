@@ -21,7 +21,7 @@ class Script
         $this->legislature_to_get = $legislature;
         $this->intro = "[" . date('Y-m-d h:i:s') . "] ";
         $this->electionId = 4;
-        $this->fields = array("depute_mpid", "file", "tour", "electionId");
+        $this->fields = array("mpId", "file", "tour", "electionId");
         echo $this->intro . "Launching the profession de foi script for legislature " . $this->legislature_to_get . "\n";
         if ($legislature == 16) {
             $this->urlAjax = "https://programme-candidats.interieur.gouv.fr/elections-legislatives-2022/ajax/";
@@ -47,14 +47,16 @@ class Script
         foreach ($circos as $circo) {
             for ($tour = 1; $tour < 3; $tour++) {
                 $data = $this->getData($tour, $circo);
-                foreach ($data as $d) {
-                    $q = $this->bdd->prepare("SELECT * FROM `deputes_all` WHERE `legislature`=" . $this->legislature_to_get
-                    . " AND `departementCode`=" . $circo['dpt'] . " AND `circo`=" . $circo['circo']
-                    . " AND LOWER(`nameLast`)=LOWER('" . $d['candidatNom']. "') AND LOWER(`nameFirst`)=LOWER('" . $d['candidatPrenom']. "')");
-                    $q->execute();
-                    $depute = $q->fetch();
-                    if($depute){
-                        $this->saveProfession($depute, $d, $tour);
+                if ($data) {
+                    foreach ($data as $d) {
+                        $q = $this->bdd->prepare("SELECT * FROM `deputes_all` WHERE `legislature`=" . $this->legislature_to_get
+                        . " AND `departementCode`=" . $circo['dpt'] . " AND `circo`=" . $circo['circo']
+                        . " AND LOWER(`nameLast`)=LOWER('" . $d['candidatNom']. "') AND LOWER(`nameFirst`)=LOWER('" . $d['candidatPrenom']. "')");
+                        $q->execute();
+                        $depute = $q->fetch();
+                        if($depute){
+                            $this->saveProfession($depute, $d, $tour);
+                        }
                     }
                 }
             }
@@ -80,7 +82,11 @@ class Script
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_HTTPGET, true);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
         $response_json = curl_exec($ch);
+        if(curl_exec($ch) === false) {
+          echo 'Curl error: ' . curl_error($ch);
+        }
         curl_close($ch);
         echo "check " .$url . "\n";
         return json_decode($response_json, true)["data"];
