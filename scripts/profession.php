@@ -70,7 +70,7 @@ class Script
             $sql = "INSERT INTO `profession_foi` (" . implode(",", $this->fields) . ") VALUES (?, ?, ?, ?)";
             $stmt = $this->bdd->prepare($sql);
             $stmt->execute(array($depute["mpId"], $filename, $tour, $this->electionId));
-            echo $filename . " a ete ajoute pour " . $depute["nameLast"];
+            echo $filename . " a ete ajoute pour " . $depute["nameLast"] . "\n";
         } catch (\Exception $e) {
             echo "Error : " . $e->getMessage() . "\n";
         }
