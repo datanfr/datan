@@ -32,16 +32,11 @@ class Script
         }
         $this->time_pre = microtime(true);;
         try {
-            $this->bdd = new PDO(
-                'mysql:host=db;dbname=' . 'datan',
-                'datan',
-                'datan',
-                array(
-                    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION, PDO::ATTR_PERSISTENT => true, PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8",
-                )
-            );
+          $this->bdd = new PDO('mysql:host='. $_SERVER['DATABASE_HOST'] . ';dbname='.$_SERVER['DATABASE_NAME'], $_SERVER['DATABASE_USERNAME'], $_SERVER['DATABASE_PASSWORD'], array(
+            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION, PDO::ATTR_PERSISTENT => true, PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8",
+          ));
         } catch (Exception $e) {
-            die('Erreur : ' . $e->getMessage());
+          die('Erreur : ' . $e->getMessage());
         }
     }
 
@@ -53,8 +48,8 @@ class Script
             for ($tour = 1; $tour < 3; $tour++) {
                 $data = $this->getData($tour, $circo);
                 foreach ($data as $d) {
-                    $q = $this->bdd->prepare("SELECT * FROM `deputes_all` WHERE `legislature`=" . $this->legislature_to_get 
-                    . " AND `departementCode`=" . $circo['dpt'] . " AND `circo`=" . $circo['circo'] 
+                    $q = $this->bdd->prepare("SELECT * FROM `deputes_all` WHERE `legislature`=" . $this->legislature_to_get
+                    . " AND `departementCode`=" . $circo['dpt'] . " AND `circo`=" . $circo['circo']
                     . " AND LOWER(`nameLast`)=LOWER('" . $d['candidatNom']. "') AND LOWER(`nameFirst`)=LOWER('" . $d['candidatPrenom']. "')");
                     $q->execute();
                     $depute = $q->fetch();
@@ -65,7 +60,7 @@ class Script
             }
         }
     }
-    
+
     private function saveProfession($depute, $d, $tour){
         try {
             $filename = $d['pdf'] . ".pdf";
