@@ -209,7 +209,7 @@
       return $this->db->get('mandat_principal m', 1)->row_array();
     }
 
-    public function get_commission_parlementaire($depute_uid){
+    public function get_commission_parlementaire($depute_uid, $legislature){
       $sql = 'SELECT
         ms.libQualiteSex AS commissionCodeQualiteGender, o.libelle AS commissionLibelle, o.libelleAbrege AS commissionAbrege
         FROM mandat_secondaire ms
@@ -218,9 +218,9 @@
         AND ms.preseance IN (
           SELECT min(t1.preseance)
           FROM mandat_secondaire t1
-          WHERE t1.mpId = ms.mpId AND typeOrgane = "COMPER" AND legislature = 15
+          WHERE t1.mpId = ms.mpId AND typeOrgane = "COMPER" AND legislature = ?
       )';
-      return $this->db->query($sql, $depute_uid, 1)->row_array();
+      return $this->db->query($sql, array($depute_uid, $legislature), 1)->row_array();
     }
 
     public function get_political_party($depute_uid){
