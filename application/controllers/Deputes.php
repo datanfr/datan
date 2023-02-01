@@ -340,7 +340,7 @@
 
       // Get commission parlementaire
       if ($data['active']) {
-        $data['commission_parlementaire'] = $this->deputes_model->get_commission_parlementaire($mpId);
+        $data['commission_parlementaire'] = $this->deputes_model->get_commission_parlementaire($mpId, $legislature);
       }
 
       // All elections
