@@ -51,8 +51,8 @@ class Script
                     foreach ($data as $d) {
                         $q = $this->bdd->prepare("SELECT * FROM `deputes_all` WHERE `legislature`=" . $this->legislature_to_get
                         . " AND `departementCode`=" . $circo['dpt'] . " AND `circo`=" . $circo['circo']
-                        . " AND LOWER(`nameLast`)=LOWER('" . $d['candidatNom']. "') AND LOWER(`nameFirst`)=LOWER('" . $d['candidatPrenom']. "')");
-                        $q->execute();
+                        . " AND LOWER(`nameLast`)=LOWER(?) AND LOWER(`nameFirst`)=LOWER(?)");
+                        $q->execute(array($d['candidatNom'], $d['candidatPrenom']));
                         $depute = $q->fetch();
                         if($depute){
                             $this->saveProfession($depute, $d, $tour);
