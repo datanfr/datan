@@ -2194,26 +2194,24 @@ class Script
     {
         echo "voteParticipationCommission starting \n";
         if ($this->legislature_to_get >= 15) {
-            $result = $this->bdd->query('
-            SELECT voteNumero
-            FROM votes_participation_commission
-            WHERE legislature = "' . $this->legislature_to_get . '"
-            ORDER BY voteNumero DESC
-            LIMIT 1
+            $result = $this->bdd->query('SELECT voteNumero
+              FROM votes_participation_commission
+              WHERE legislature = "' . $this->legislature_to_get . '"
+              ORDER BY voteNumero DESC
+              LIMIT 1
             ');
 
             $last = $result->fetch();
             $last_vote = isset($last['voteNumero']) ? $last['voteNumero'] + 1 : 1;
             echo 'Vote participation commission from : ' . $last_vote . "\n";
 
-            $votes = $this->bdd->query('
-                SELECT vi.voteNumero, vi.legislature, vi.dateScrutin, d.*, o.libelleAbrev
-                FROM votes_info vi
-                LEFT JOIN votes_dossiers vd ON vi.voteNumero = vd.voteNumero AND vi.legislature = vd.legislature
-                LEFT JOIN dossiers d ON vd.dossier = d.titreChemin AND d.legislature = vi.legislature
-                LEFT JOIN organes o ON d.commissionFond = o.uid
-                WHERE vi.voteNumero > "' . $last_vote . '" AND vi.legislature = "' . $this->legislature_to_get . '"
-                ORDER BY vi.voteNumero ASC
+            $votes = $this->bdd->query('SELECT vi.voteNumero, vi.legislature, vi.dateScrutin, d.*, o.libelleAbrev
+              FROM votes_info vi
+              LEFT JOIN votes_dossiers vd ON vi.voteNumero = vd.voteNumero AND vi.legislature = vd.legislature
+              LEFT JOIN dossiers d ON vd.dossier = d.titreChemin AND d.legislature = vi.legislature
+              LEFT JOIN organes o ON d.commissionFond = o.uid
+              WHERE vi.voteNumero > "' . $last_vote . '" AND vi.legislature = "' . $this->legislature_to_get . '"
+              ORDER BY vi.voteNumero ASC
             ');
 
             $votesCommissionParticipation = [];
@@ -2226,8 +2224,7 @@ class Script
                 $commissionFond = $vote['commissionFond'];
 
                 if ($commissionFond != NULL) {
-                    $deputes = $this->bdd->query('
-                      SELECT *
+                    $deputes = $this->bdd->query('SELECT *
                       FROM votes_participation vp
                       LEFT JOIN mandat_secondaire ms ON vp.mpId = ms.mpId
                       WHERE vp.voteNumero = "' . $voteNumero . '" AND vp.legislature = "'.$this->legislature_to_get.'" AND ms.typeOrgane = "COMPER" AND ms.codeQualite = "Membre" AND ms.organeRef = "' . $commissionFond . '" AND ms.legislature = "' . $this->legislature_to_get . '" AND ((ms.dateDebut <= "' . $voteDate . '" AND ms.dateFin >= "' . $voteDate . '") OR (ms.dateDebut <= "' . $voteDate . '" AND ms.dateFin IS NULL)) AND vp.participation IS NOT NULL
