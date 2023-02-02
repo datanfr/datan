@@ -194,7 +194,7 @@ class Newsletter extends CI_Controller
 
         // Get most active MP
         if ($data['votesN'] > 25) {
-          $data['depute'] = $this->deputes_model->get_depute_vote_plus_month(legislature_current(), $year, $month);
+          $data['depute'] = $this->deputes_model->get_depute_vote_plus_month(legislature_current(), $year, $month, 3);
           $data['depute']['gender'] = gender($data['depute']['civ']);
         }
 
