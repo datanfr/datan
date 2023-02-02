@@ -444,7 +444,7 @@
       return $this->db->query($sql, legislature_current())->row_array();
     }
 
-    public function get_depute_vote_plus_month($legislature, $year, $month){
+    public function get_depute_vote_plus_month($legislature, $year, $month, $limit){
       $sql = 'SELECT A.*, da.civ, da.nameFirst, da.nameLast, da.nameUrl, da.dptSlug, da.couleurAssociee, da.img, da.libelle, da.libelleAbrev, da.groupeId AS organeRef, da.departementNom AS electionDepartement, da.departementCode AS electionDepartementNumero
         FROM
         (
@@ -456,9 +456,10 @@
         ) A
         LEFT JOIN deputes_all da ON da.mpId = A.mpId AND da.legislature = ?
         ORDER BY score DESC
+        WHERE A.votesN >= ?
         LIMIT 1
       ';
-      return $this->db->query($sql, array($legislature, $year, $month, $legislature))->row_array();
+      return $this->db->query($sql, array($legislature, $year, $month, $legislature, $limit))->row_array();
     }
 
     public function get_depute_vote_moins(){
