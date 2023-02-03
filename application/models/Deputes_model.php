@@ -455,8 +455,8 @@
           GROUP BY vp.mpId
         ) A
         LEFT JOIN deputes_all da ON da.mpId = A.mpId AND da.legislature = ?
-        ORDER BY score DESC
         WHERE A.votesN >= ?
+        ORDER BY score DESC
         LIMIT 1
       ';
       return $this->db->query($sql, array($legislature, $year, $month, $legislature, $limit))->row_array();
