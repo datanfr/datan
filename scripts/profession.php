@@ -4,9 +4,6 @@ class Script
     private $bdd;
     private $legislature_to_get;
     private $electionId;
-    private $dateMaj;
-    private $time_pre;
-    private $legislature_current;
     private $intro;
     private $urlAjax;
     private $urlPdf;
@@ -54,7 +51,7 @@ class Script
                         . " AND LOWER(`nameLast`)=LOWER(?) AND LOWER(`nameFirst`)=LOWER(?)");
                         $q->execute(array($d['candidatNom'], $d['candidatPrenom']));
                         $depute = $q->fetch();
-                        if($depute){
+                        if($depute && $d['pdf'] != "0"){
                             $this->saveProfession($depute, $d, $tour);
                         }
                     }
