@@ -39,17 +39,29 @@ class Script
 
     public function execute()
     {
-        $circos = $this->bdd->prepare('SELECT * FROM circos GROUP BY circo, dpt');
+        $circos = $this->bdd->prepare('SELECT A.*, d.mpId, d.nameFirst, d.nameLast, p.file
+          FROM
+          (
+            SELECT c.dpt, c.dpt_nom, c.insee, c.circo FROM circos c GROUP BY c.circo, c.dpt
+          ) A
+          LEFT JOIN deputes_last d ON d.departementCode = A.dpt AND d.circo = A.circo AND d.legislature = 16 AND d.active = 1
+          LEFT JOIN profession_foi p ON p.mpId = d.mpId
+          WHERE p.file IS NULL
+        ');
         $circos->execute();
         foreach ($circos as $circo) {
             for ($tour = 1; $tour < 3; $tour++) {
                 $data = $this->getData($tour, $circo);
                 if ($data) {
                     foreach ($data as $d) {
-                        $q = $this->bdd->prepare("SELECT * FROM `deputes_all` WHERE `legislature`=" . $this->legislature_to_get
-                        . " AND `departementCode`=" . $circo['dpt'] . " AND `circo`=" . $circo['circo']
-                        . " AND LOWER(`nameLast`)=LOWER(?) AND LOWER(`nameFirst`)=LOWER(?)");
-                        $q->execute(array($d['candidatNom'], $d['candidatPrenom']));
+                        $q = $this->bdd->prepare("SELECT A.*
+                           FROM (
+                             SELECT * FROM  deputes_last WHERE legislature=? AND departementCode=? AND circo=? AND LOWER(nameLast)=LOWER(?) AND LOWER(nameFirst)=LOWER(?)
+                           ) A
+                           LEFT JOIN profession_foi p ON A.mpId = p.mpId AND p.electionId = ? AND p.tour = ?
+                           WHERE p.file IS NULL
+                           ");
+                        $q->execute(array($this->legislature_to_get, $circo['dpt'], $circo['circo'], $d['candidatNom'], $d['candidatPrenom'], $this->electionId, $tour));
                         $depute = $q->fetch();
                         if($depute && $d['pdf'] != "0"){
                             $this->saveProfession($depute, $d, $tour);
