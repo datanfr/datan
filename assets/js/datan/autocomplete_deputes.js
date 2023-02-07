@@ -1,5 +1,5 @@
 
-fetch('assets/data/deputes_json.json').then(function (response) {
+fetch('assets/data/deputes_json.txt').then(function (response) {
   return response.json();
 }).then(function (obj) {
   //console.log(obj);

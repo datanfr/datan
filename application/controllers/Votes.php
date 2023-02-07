@@ -75,7 +75,7 @@
       // CSS
       $data['css_to_load']= array(
         array(
-          "url" => "https://unpkg.com/flickity@2/dist/flickity.min.css",
+          "url" => asset_url() . "css/flickity.min.css",
           "async" => TRUE
         )
       );
@@ -558,7 +558,7 @@
       // CSS
       $data['css_to_load']= array(
         array(
-          "url" => "https://unpkg.com/flickity@2/dist/flickity.min.css",
+          "url" => asset_url() . "css/flickity.min.css",
           "async" => TRUE
         ),
         array(
