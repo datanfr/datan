@@ -42,7 +42,7 @@ class Script
         $circos = $this->bdd->prepare('SELECT A.*, d.mpId, d.nameFirst, d.nameLast, p.file
           FROM
           (
-            SELECT c.dpt, c.dpt_nom, c.insee, c.circo FROM circos c GROUP BY c.circo, c.dpt
+            SELECT c.dpt, c.dpt_nom, c.insee, c.circo FROM circos c GROUP BY c.circo, c.dpt ORDER BY c.dpt, c.circo
           ) A
           LEFT JOIN deputes_last d ON d.departementCode = A.dpt AND d.circo = A.circo AND d.legislature = 16 AND d.active = 1
           LEFT JOIN profession_foi p ON p.mpId = d.mpId
@@ -87,7 +87,11 @@ class Script
 
     private function getData($tour, $circo)
     {
-        $url = $this->urlAjax . $tour . '_candidats_circo_' . $circo['dpt'] . '-0' . $circo['circo'] . '.json';
+        if ($circo['circo'] < 10) {
+          $circo['circo'] = '0' . $circo['circo'];
+        }
+
+        $url = $this->urlAjax . $tour . '_candidats_circo_' . $circo['dpt'] . '-' . $circo['circo'] . '.json';
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_HTTPGET, true);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
