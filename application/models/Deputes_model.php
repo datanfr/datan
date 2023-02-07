@@ -209,7 +209,7 @@
       return $this->db->get('mandat_principal m', 1)->row_array();
     }
 
-    public function get_commission_parlementaire($depute_uid){
+    public function get_commission_parlementaire($depute_uid, $legislature){
       $sql = 'SELECT
         ms.libQualiteSex AS commissionCodeQualiteGender, o.libelle AS commissionLibelle, o.libelleAbrege AS commissionAbrege
         FROM mandat_secondaire ms
@@ -218,9 +218,9 @@
         AND ms.preseance IN (
           SELECT min(t1.preseance)
           FROM mandat_secondaire t1
-          WHERE t1.mpId = ms.mpId AND typeOrgane = "COMPER" AND legislature = 15
+          WHERE t1.mpId = ms.mpId AND typeOrgane = "COMPER" AND legislature = ?
       )';
-      return $this->db->query($sql, $depute_uid, 1)->row_array();
+      return $this->db->query($sql, array($depute_uid, $legislature), 1)->row_array();
     }
 
     public function get_political_party($depute_uid){
@@ -444,7 +444,7 @@
       return $this->db->query($sql, legislature_current())->row_array();
     }
 
-    public function get_depute_vote_plus_month($legislature, $year, $month){
+    public function get_depute_vote_plus_month($legislature, $year, $month, $limit){
       $sql = 'SELECT A.*, da.civ, da.nameFirst, da.nameLast, da.nameUrl, da.dptSlug, da.couleurAssociee, da.img, da.libelle, da.libelleAbrev, da.groupeId AS organeRef, da.departementNom AS electionDepartement, da.departementCode AS electionDepartementNumero
         FROM
         (
@@ -455,10 +455,11 @@
           GROUP BY vp.mpId
         ) A
         LEFT JOIN deputes_all da ON da.mpId = A.mpId AND da.legislature = ?
+        WHERE A.votesN >= ?
         ORDER BY score DESC
         LIMIT 1
       ';
-      return $this->db->query($sql, array($legislature, $year, $month, $legislature))->row_array();
+      return $this->db->query($sql, array($legislature, $year, $month, $legislature, $limit))->row_array();
     }
 
     public function get_depute_vote_moins(){

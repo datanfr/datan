@@ -6,7 +6,11 @@
 <p>Au second tour, <b>Emmanuel Macron</b> a été élu président avec 59 % des suffrages exprimés.</p>
 <div class="resultsPresidentielle d-flex flex-column mt-4">
   <div class="d-flex align-items-center">
-    <img src="<?= asset_url() ?>imgs/photos/macron.jpg" alt="Photo Emmanuel Macron">
+    <picture>
+      <source srcset="<?= asset_url() ?>imgs/photos/macron.webp" type="image/webp">
+      <source srcset="<?= asset_url() ?>imgs/photos/macron.jpg" type="image/jpg">
+      <img src="<?= asset_url() ?>imgs/photos/macron.jpg" width="100" height="143" alt="Photo Emmanuel Macron">
+    </picture>
     <div class="d-flex flex-column ml-3 w-100">
       <p>Emmanuel Macron</p>
       <div class="chart-election test-border" style="width: 100%; height: 40px;">
@@ -19,7 +23,11 @@
     </div>
   </div>
   <div class="d-flex align-items-center mt-3">
-    <img src="<?= asset_url() ?>imgs/photos/le-pen.jpg" alt="Photo Marine Le Pen">
+    <picture>
+      <source srcset="<?= asset_url() ?>imgs/photos/le-pen.webp" type="image/webp">
+      <source srcset="<?= asset_url() ?>imgs/photos/le-pen.jpg" type="image/jpg">
+      <img src="<?= asset_url() ?>imgs/photos/le-pen.jpg" width="100" height="137" alt="Photo Marine Le Pen">
+    </picture>
     <div class="d-flex flex-column ml-3 w-100">
       <p>Marine Le Pen</p>
       <div class="chart-election" style="width: 100%; height: 40px;">
