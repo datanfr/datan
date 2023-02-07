@@ -963,9 +963,7 @@ input#quicksearch[type=text]{
   }
   .img-group-cat{
     img {
-      height: 85px;
       border-radius: 10px;
-      width: auto;
     }
   }
   .libelle{
@@ -989,6 +987,7 @@ input#quicksearch[type=text]{
   .card-avatar{
     border-radius: 10%;
     padding: 10px;
+    background-color: #ffffff;
     img{
       margin-top: -5px;
     }
@@ -1520,7 +1519,7 @@ body{
   /* Bloc constat */
   .bloc-constats{
     h3{
-      color: $text-gray-light;
+      color: $primary;
       text-align: center;
       font-size: $h4-font-size;
       font-weight: 800;

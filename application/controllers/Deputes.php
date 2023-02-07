@@ -340,7 +340,7 @@
 
       // Get commission parlementaire
       if ($data['active']) {
-        $data['commission_parlementaire'] = $this->deputes_model->get_commission_parlementaire($mpId);
+        $data['commission_parlementaire'] = $this->deputes_model->get_commission_parlementaire($mpId, $legislature);
       }
 
       // All elections
@@ -447,7 +447,7 @@
           "async" => TRUE
         ),
         array(
-          "url" => "https://unpkg.com/flickity@2.3.0/dist/flickity.min.css",
+          "url" => asset_url() . "css/flickity.min.css",
           "async" => TRUE
         )
       );
@@ -550,7 +550,7 @@
           "async" => TRUE
         ),
         array(
-          "url" => "https://unpkg.com/flickity@2.3.0/dist/flickity.min.css",
+          "url" => asset_url() . "css/flickity.min.css",
           "async" => TRUE
         )
       );
@@ -598,7 +598,7 @@
       $data['depute']['couleurAssociee'] = $this->groupes_model->get_groupe_color(array($data['depute']['libelleAbrev'], $data['depute']['couleurAssociee']));
 
       // Commission parlementaire
-      $data['commission_parlementaire'] = $this->deputes_model->get_commission_parlementaire($mpId);
+      $data['commission_parlementaire'] = $this->deputes_model->get_commission_parlementaire($mpId, $legislature);
 
       // Get active fields
       $data['fields'] = $this->fields_model->get_active_fields();
@@ -683,13 +683,14 @@
       $nameLast = $data['depute']['nameLast'];
       $nameUrl = $input_depute;
       $data['active'] = $data['depute']['active'];
+      $legislature = $data['depute']['legislature'];
       $groupe_id = $data['depute']['groupeId'];
 
       // Group color
       $data['depute']['couleurAssociee'] = $this->groupes_model->get_groupe_color(array($data['depute']['libelleAbrev'], $data['depute']['couleurAssociee']));
 
       // Commission parlementaire
-      $data['commission_parlementaire'] = $this->deputes_model->get_commission_parlementaire($mpId);
+      $data['commission_parlementaire'] = $this->deputes_model->get_commission_parlementaire($mpId, $legislature);
 
       // Query - get all votes
       $data['votes'] = $this->votes_model->get_votes_all_depute($mpId, legislature_current());
