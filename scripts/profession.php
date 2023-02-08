@@ -19,6 +19,7 @@ class Script
         $this->intro = "[" . date('Y-m-d h:i:s') . "] ";
         $this->electionId = 4;
         $this->fields = array("mpId", "file", "tour", "electionId");
+        $this->time_pre = microtime(true);;
         echo $this->intro . "Launching the profession de foi script for legislature " . $this->legislature_to_get . "\n";
         if ($legislature == 16) {
             $this->urlAjax = "https://programme-candidats.interieur.gouv.fr/elections-legislatives-2022/ajax/";
@@ -37,31 +38,24 @@ class Script
         }
     }
 
+    function __destruct()
+    {
+        $time_post = microtime(true);
+        $exec_time = $time_post - $this->time_pre;
+        echo "Script is over ! It took: " . round($exec_time, 2) . " seconds.\n";
+    }
+
     public function execute()
     {
-        $circos = $this->bdd->prepare('SELECT A.*, d.mpId, d.nameFirst, d.nameLast, p.file
-          FROM
-          (
-            SELECT c.dpt, c.dpt_nom, c.insee, c.circo FROM circos c GROUP BY c.circo, c.dpt ORDER BY c.dpt, c.circo
-          ) A
-          LEFT JOIN deputes_last d ON d.departementCode = A.dpt AND d.circo = A.circo AND d.legislature = 16 AND d.active = 1
-          LEFT JOIN profession_foi p ON p.mpId = d.mpId
-          WHERE p.file IS NULL
-        ');
+        $circos = $this->bdd->prepare('SELECT c.dpt, c.dpt_nom, c.insee, c.circo FROM circos c GROUP BY c.circo, c.dpt ORDER BY c.dpt, c.circo');
         $circos->execute();
         foreach ($circos as $circo) {
             for ($tour = 1; $tour < 3; $tour++) {
                 $data = $this->getData($tour, $circo);
                 if ($data) {
                     foreach ($data as $d) {
-                        $q = $this->bdd->prepare("SELECT A.*
-                           FROM (
-                             SELECT * FROM  deputes_last WHERE legislature=? AND departementCode=? AND circo=? AND LOWER(nameLast)=LOWER(?) AND LOWER(nameFirst)=LOWER(?)
-                           ) A
-                           LEFT JOIN profession_foi p ON A.mpId = p.mpId AND p.electionId = ? AND p.tour = ?
-                           WHERE p.file IS NULL
-                           ");
-                        $q->execute(array($this->legislature_to_get, $circo['dpt'], $circo['circo'], $d['candidatNom'], $d['candidatPrenom'], $this->electionId, $tour));
+                        $q = $this->bdd->prepare("SELECT * FROM  deputes_last WHERE legislature=? AND departementCode=? AND circo=? AND LOWER(nameLast)=LOWER(?) AND LOWER(nameFirst)=LOWER(?)");
+                        $q->execute(array($this->legislature_to_get, $circo['dpt'], $circo['circo'], $d['candidatNom'], $d['candidatPrenom']));
                         $depute = $q->fetch();
                         if($depute && $d['pdf'] != "0"){
                             $this->saveProfession($depute, $d, $tour);
