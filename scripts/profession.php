@@ -57,8 +57,10 @@ class Script
                         $q = $this->bdd->prepare("SELECT * FROM  deputes_last WHERE legislature=? AND departementCode=? AND circo=? AND LOWER(nameLast)=LOWER(?) AND LOWER(nameFirst)=LOWER(?)");
                         $q->execute(array($this->legislature_to_get, $circo['dpt'], $circo['circo'], $d['candidatNom'], $d['candidatPrenom']));
                         $depute = $q->fetch();
-                        if($depute && $d['pdf'] != "0"){
-                            $this->saveProfession($depute, $d, $tour);
+                        $filename = $d['pdf'] != "0" ? $d['pdf'] : (isset($d['pdf_acc']) 
+                        && $d['pdf_acc'] != "0" ? $d['pdf_acc'] : false);
+                        if($depute && $filename){
+                            $this->saveProfession($depute, $filename, $tour);
                         }
                     }
                 }
@@ -66,9 +68,9 @@ class Script
         }
     }
 
-    private function saveProfession($depute, $d, $tour){
+    private function saveProfession($depute, $filename, $tour){
         try {
-            $filename = $d['pdf'] . ".pdf";
+            $filename .= ".pdf";
             file_put_contents('assets/data/professions/' . $filename, file_get_contents($this->urlPdf . $filename));
             $sql = "INSERT INTO `profession_foi` (" . implode(",", $this->fields) . ") VALUES (?, ?, ?, ?)";
             $stmt = $this->bdd->prepare($sql);
@@ -92,6 +94,7 @@ class Script
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
         curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
         $response_json = curl_exec($ch);
+        // check if curl_exec was successful, else return an error message
         if(curl_exec($ch) === false) {
           echo 'Curl error: ' . curl_error($ch);
         }
