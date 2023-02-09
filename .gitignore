@@ -44,6 +44,6 @@ assets/imgs/deputes_nobg_webp/
 assets/imgs/posts/
 assets/imgs/captcha/*.jpg
 assets/data/*.json
-assets/data/professions/*.pdf
+assets/data/professions/election_4/*.pdf
 assets/data/*.txt
 assets/css/bootstrap*
