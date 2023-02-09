@@ -1,4 +1,12 @@
 <?php
+
+/*
+
+This script saves all 'professions de foi' for the following election: 2022 legislative election in France.
+The id of this election on datan.fr is '4'
+
+*/
+
 class Script
 {
     private $bdd;
@@ -72,7 +80,7 @@ class Script
     private function saveProfession($depute, $filename, $tour){
         try {
             $filename .= ".pdf";
-            file_put_contents('assets/data/professions/' . $filename, file_get_contents($this->urlPdf . $filename));
+            file_put_contents('assets/data/professions/election_' . $this->electionId . '/' . $filename, file_get_contents($this->urlPdf . $filename));
             $sql = "INSERT INTO `profession_foi` (" . implode(",", $this->fields) . ") VALUES (?, ?, ?, ?)";
             $stmt = $this->bdd->prepare($sql);
             $stmt->execute(array($depute["mpId"], $filename, $tour, $this->electionId));
