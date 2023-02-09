@@ -716,4 +716,11 @@
       return $this->db->get_where('deputes_last d', $where)->result_array();
     }
 
+    public function get_professions($mpId){
+      $where = array(
+        'mpId' => $mpId
+      );
+      return $this->db->get_where('profession_foi', $where)->result_array();
+    }
+
   }
