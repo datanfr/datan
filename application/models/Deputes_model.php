@@ -718,9 +718,28 @@
 
     public function get_professions($mpId){
       $where = array(
-        'mpId' => $mpId
+        'p.mpId' => $mpId
       );
-      return $this->db->get_where('profession_foi', $where)->result_array();
+      $this->db->select('e.id, e.libelle, e.dateYear, p.file, p.tour');
+      $this->db->join('elect_libelle e', 'e.id = p.electionId', 'left');
+      $this->db->order_by('e.dateYear', 'DESC');
+      $results = $this->db->get_where('profession_foi p', $where)->result_array();
+
+      if ($results) {
+        foreach ($results as $key => $value) {
+          $return[$value['id']]['election'] = $value['libelle'] . ' ' . $value['dateYear'];
+          if ($value['tour'] == 1) {
+            $return[$value['id']]['round1'] = asset_url() . "data/professions/election_" . $value['id'] . "/" . $value['file'];
+          }
+          if ($value['tour'] == 2) {
+            $return[$value['id']]['round2'] = asset_url() . "data/professions/election_" . $value['id'] . "/" . $value['file'];
+          }
+        }
+      } else {
+        $return = NULL;
+      }
+
+      return $return;
     }
 
   }

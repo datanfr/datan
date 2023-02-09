@@ -771,6 +771,36 @@
           <div class="mt-5">
             <h2 class="mb-4 title-center">Ses professions de foi</h2>
             <p>[ICI : explication sur ce que sont les professions de foi]</p>
+            <table class="table table-bordered">
+              <thead class="thead-dark">
+                <th>Élection</th>
+                <th></th>
+                <th></th>
+              </thead>
+              <tbody>
+                <?php foreach ($professions_foi as $key => $value): ?>
+                  <tr class="bg-white">
+                    <td class="font-weight-bold align-middle"><?= $value['election'] ?></td>
+                    <td class="text-center align-middle">
+                      <?php if ($value['round1']): ?>
+                        <a class="btn btn-outline-primary" href="<?= $value['round1'] ?>" target="_blank">
+                          <?= file_get_contents(base_url().'/assets/imgs/icons/arrow_external_right.svg') ?>
+                          Profession 1er tour
+                        </a>
+                      <?php endif; ?>
+                    </td>
+                    <td class="text-center align-middle">
+                      <?php if ($value['round2']): ?>
+                        <a class="btn btn-outline-primary" href="<?= $value['round2'] ?>" target="_blank">
+                          <?= file_get_contents(base_url().'/assets/imgs/icons/arrow_external_right.svg') ?>
+                          Profession 2nd tour
+                        </a>
+                      <?php endif; ?>
+                    </td>
+                  </tr>
+                <?php endforeach; ?>
+              </tbody>
+            </table>
           </div>
         <?php endif; ?>
         <!-- BLOC PARRAINAGES -->
