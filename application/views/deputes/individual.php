@@ -766,6 +766,13 @@
             </table>
           </div>
         <?php endif; ?>
+        <!-- BLOG PROFESSIONS DE FOI -->
+        <?php if ($professions_foi): ?>
+          <div class="mt-5">
+            <h2 class="mb-4 title-center">Ses professions de foi</h2>
+            <p>[ICI : explication sur ce que sont les professions de foi]</p>
+          </div>
+        <?php endif; ?>
         <!-- BLOC PARRAINAGES -->
         <?php if ($parrainage): ?>
           <div class="mt-5 bloc-elections-history">
