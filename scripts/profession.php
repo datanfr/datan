@@ -18,6 +18,7 @@ class Script
         $this->legislature_to_get = $legislature;
         $this->intro = "[" . date('Y-m-d h:i:s') . "] ";
         $this->electionId = 4;
+        $this->legislatures = array($legislature - 1, $legislature);
         $this->fields = array("mpId", "file", "tour", "electionId");
         $this->time_pre = microtime(true);;
         echo $this->intro . "Launching the profession de foi script for legislature " . $this->legislature_to_get . "\n";
@@ -54,10 +55,10 @@ class Script
                 $data = $this->getData($tour, $circo);
                 if ($data) {
                     foreach ($data as $d) {
-                        $q = $this->bdd->prepare("SELECT * FROM  deputes_last WHERE legislature=? AND departementCode=? AND circo=? AND LOWER(nameLast)=LOWER(?) AND LOWER(nameFirst)=LOWER(?)");
-                        $q->execute(array($this->legislature_to_get, $circo['dpt'], $circo['circo'], $d['candidatNom'], $d['candidatPrenom']));
+                        $q = $this->bdd->prepare("SELECT * FROM  deputes_last WHERE legislature IN ? AND departementCode=? AND circo=? AND LOWER(nameLast)=LOWER(?) AND LOWER(nameFirst)=LOWER(?)");
+                        $q->execute(array($this->legislatures, $circo['dpt'], $circo['circo'], $d['candidatNom'], $d['candidatPrenom']));
                         $depute = $q->fetch();
-                        $filename = $d['pdf'] != "0" ? $d['pdf'] : (isset($d['pdf_acc']) 
+                        $filename = $d['pdf'] != "0" ? $d['pdf'] : (isset($d['pdf_acc'])
                         && $d['pdf_acc'] != "0" ? $d['pdf_acc'] : false);
                         if($depute && $filename){
                             $this->saveProfession($depute, $filename, $tour);
