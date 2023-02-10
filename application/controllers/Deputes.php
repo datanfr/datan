@@ -376,6 +376,9 @@
       }
       */
 
+      // Get professions de foi
+      $data['professions_foi'] = $this->deputes_model->get_professions($mpId);
+
       // Parrainages
       $data['parrainage'] = $this->parrainages_model->get_mp_parrainage($mpId, 2022); /* Parrainage for presidentielle 2022 */
       if ($data['parrainage']) {
