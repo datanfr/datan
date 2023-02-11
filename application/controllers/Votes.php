@@ -338,7 +338,7 @@
 
     }
 
-    public function individual($legislature, $num){
+    public function individual($legislature, $num, $explication = FALSE){
       // Check if legislature is numeric
       if (!is_numeric($legislature)) {
         show_404($this->functions_datan->get_404_infos());
@@ -354,7 +354,6 @@
 
       $data['legislature'] = $legislature;
 
-
       // Get vote
       $data['vote'] = $this->votes_model->get_individual_vote($legislature, $num);
       if ($data['vote']['title']) {
@@ -365,6 +364,14 @@
 
       if (empty($data['vote'])) {
         show_404($this->functions_datan->get_404_infos());
+      }
+
+      // Get MP's explication from URL
+      if ($explication) {
+        $data['explication'] = $this->deputes_model->get_explication($explication, $legislature, $num);
+        if (!$data['explication']) {
+          redirect('votes/legislature-' . $legislature . '/vote_' . $num);
+        }
       }
 
       // Vote edited

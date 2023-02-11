@@ -136,6 +136,7 @@ $route['deputes'] = 'deputes/index';
 $route['index_departements'] = 'departement/liste';
 // VOTES
 $route['votes/legislature-(:any)/vote_(:any)'] = 'votes/individual/$1/$2';
+$route['votes/legislature-(:any)/vote_(:any)/explication_(:any)'] = 'votes/individual/$1/$2/$3';
 $route['votes/legislature-(:any)'] = 'votes/all/$1';
 $route['votes/decryptes/(:any)'] = 'votes/field/$1';
 $route['votes/decryptes'] = 'votes/decryptes//';

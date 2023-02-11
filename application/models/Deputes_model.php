@@ -713,4 +713,15 @@
       return $this->db->get('explications_mp e')->row_array();
     }
 
+    public function get_explication($mpId, $legislature, $voteNumero){
+      $where = array(
+        'e.mpId' => $mpId,
+        'e.legislature' => $legislature,
+        'e.voteNumero' => $voteNumero,
+        'e.state' => 1
+      );
+      $this->db->join('deputes_all d', 'e.mpId = d.mpId AND e.legislature = d.legislature', 'left');
+      return $this->db->get_where('explications_mp e', $where, 1)->row_array();
+    }
+
   }
