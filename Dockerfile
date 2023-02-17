@@ -12,9 +12,6 @@ RUN apt-get update && apt-get install -y git libzip-dev libicu-dev libpng-dev li
 
 COPY conf/000-default.conf /etc/apache2/sites-available/000-default.conf
 
-COPY conf/entrypoint.sh /
-RUN chmod +x /entrypoint.sh
-
 COPY . /var/www/html
 
 RUN a2enmod rewrite && \
@@ -30,9 +27,9 @@ RUN a2enmod rewrite && \
     npm && \
     npm install npm@latest -g && \
     npm install n -g && \
-    n latest 
-    
-    RUN npm install && \
+    n latest
+
+RUN npm install && \
 
 #install and run grunt
     npm install -g grunt-cli && \
@@ -48,3 +45,7 @@ RUN a2enmod rewrite && \
     export DATABASE_HOST=${DATABASE_HOST} && \
     export DATABASE_USERNAME=${DATABASE_USERNAME} && \
     export DATABASE_PASSWORD=${DATABASE_PASSWORD} 
+
+
+COPY conf/entrypoint.sh /
+RUN chmod +x /entrypoint.sh
