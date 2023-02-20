@@ -73,10 +73,10 @@
 </IfModule>
 
 <IfModule mod_env.c>
-    SetEnv DATABASE_USERNAME username_example
-    SetEnv DATABASE_PASSWORD password_example
-    SetEnv DATABASE_NAME datan
-    SetEnv DATABASE_HOST localhost
+    SetEnv MYSQL_USERNAME username_example
+    SetEnv MYSQL_PASSWORD password_example
+    SetEnv MYSQL_NAME datan
+    SetEnv MYSQL_HOST localhost
     SetEnv CI_ENV production
     SetEnv BASE_URL http://localhost/datan
     SetEnv ABSOLUTE_PATH your absolute path of the folder in which this file is located
