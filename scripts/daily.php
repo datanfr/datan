@@ -3619,9 +3619,9 @@ if (isset($argv[1])) {
 $script->fillDeputes();
 $script->deputeAll();
 $script->deputeLast();
-// $script->downloadPictures();
-// $script->webpPictures();
-// $script->resmushPictures();
+$script->downloadPictures();
+$script->webpPictures();
+$script->resmushPictures();
 $script->groupeEffectif();
 $script->deputeJson();
 $script->groupeStats();
