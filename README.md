@@ -11,6 +11,16 @@ https://docs.docker.com/compose/install/
 ## 2. Créez .env
 Copiez .env.dist en .env
 
+### (facultatif) a. URL personnalisée
+Modifiez BASE_URL par "dev-datan.fr"
+Ajoutez la ligne suivante dans votre fichier /etc/hosts
+```
+#datan
+127.0.0.1 dev-datan.fr
+```
+Ca vous permettra d'accéder au site en tapant dev-datan.fr au lieu de localhost
+
+
 ## 3. Builder le projet
 ```
 docker-compose build
@@ -23,7 +33,7 @@ docker-compose up
 Pour le premier lancement, il faut attendre quelques minutes que la base de données se charge complètement avant de lancer la commande suivante.
 
 ## 5. Mettre à jour la base de données
-Commandes à faire à chaque fois que vous voulez rafraichir les données
+Commandes à faire la première fois et à chaque fois que vous voulez rafraichir les données
 ```
 npm run docker-download
 npm run docker-daily
@@ -39,7 +49,7 @@ Générez les assets avec ```npm run docker-grunt```
 Ou en continue avec ```npm run docker-grunt-watch # (ou npm run dgw)```
 
 ## PHPMyAdmin
-You can access to this here : http://localhost:8080/
+Vous pouvez y accéder ici : http://localhost:8080/ ou http://dev-datan.fr:8080/
 
 # Installation from scratch
 Suivez les étapes suivantes pour installer Datan en local.

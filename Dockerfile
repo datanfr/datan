@@ -2,48 +2,50 @@
 FROM php:7.4-apache
 
 #install php and docker lib
-RUN apt-get update && apt-get install -y git libzip-dev libicu-dev libpng-dev libjpeg-dev zlib1g-dev 
-RUN docker-php-ext-configure intl 
-RUN docker-php-ext-install mysqli pdo pdo_mysql zip intl 
-RUN docker-php-ext-configure gd \
---with-jpeg \
-&& docker-php-ext-install gd
-RUN docker-php-ext-enable pdo_mysql
+RUN apt-get update && apt-get install -y git libzip-dev libicu-dev libpng-dev libjpeg-dev zlib1g-dev && \
+    docker-php-ext-configure intl && \
+    docker-php-ext-install mysqli pdo pdo_mysql zip intl && \
+    docker-php-ext-configure gd \
+    --with-jpeg \
+    && docker-php-ext-install gd && \
+    docker-php-ext-enable pdo_mysql
 
 COPY conf/000-default.conf /etc/apache2/sites-available/000-default.conf
 
 COPY . /var/www/html
 
-RUN a2enmod rewrite
+RUN a2enmod rewrite && \
 
 #install and run composer
-RUN curl -sSk https://getcomposer.org/installer | php -- --disable-tls && \
-    mv composer.phar /usr/local/bin/composer
-RUN composer update && composer install
+    curl -sSk https://getcomposer.org/installer | php -- --disable-tls && \
+    mv composer.phar /usr/local/bin/composer && \
+    composer update && composer install && \
 
 #install and run npm 
-RUN apt-get install -y \
+    apt-get install -y \
     software-properties-common \
-    npm
-RUN npm install npm@latest -g && \
+    npm && \
+    npm install npm@latest -g && \
     npm install n -g && \
     n latest
-RUN npm install
+
+RUN npm install && \
 
 #install and run grunt
-RUN npm install -g grunt-cli
-RUN apt-get install -y ruby-dev
-RUN npm install grunt-contrib-sass --save-dev
-RUN gem install sass
-RUN npm install --save-dev sass
-RUN apt-get install -y ca-certificates fonts-liberation libappindicator3-1 libasound2 libatk-bridge2.0-0 libatk1.0-0 libc6 libcairo2 libcups2 libdbus-1-3 libexpat1 libfontconfig1 libgbm1 libgcc1 libglib2.0-0 libgtk-3-0 libnspr4 libnss3 libpango-1.0-0 libpangocairo-1.0-0 libstdc++6 libx11-6 libx11-xcb1 libxcb1 libxcomposite1 libxcursor1 libxdamage1 libxext6 libxfixes3 libxi6 libxrandr2 libxrender1 libxss1 libxtst6 lsb-release wget xdg-utils
+    npm install -g grunt-cli && \
+    apt-get install -y ruby-dev && \
+    npm install grunt-contrib-sass --save-dev && \
+    gem install sass && \
+    npm install --save-dev sass && \
+    apt-get install -y ca-certificates fonts-liberation libappindicator3-1 libasound2 libatk-bridge2.0-0 libatk1.0-0 libc6 libcairo2 libcups2 libdbus-1-3 libexpat1 libfontconfig1 libgbm1 libgcc1 libglib2.0-0 libgtk-3-0 libnspr4 libnss3 libpango-1.0-0 libpangocairo-1.0-0 libstdc++6 libx11-6 libx11-xcb1 libxcb1 libxcomposite1 libxcursor1 libxdamage1 libxext6 libxfixes3 libxi6 libxrandr2 libxrender1 libxss1 libxtst6 lsb-release wget xdg-utils && \
 
-# vérifier pour les erreurs de connexion
-# RUN grunt --force
+# TO DO vérifier pour les erreurs de connexion
+    grunt --force && \
 
-RUN export DATABASE_HOST=${DATABASE_HOST}
-RUN export DATABASE_USERNAME=${DATABASE_USERNAME}
-RUN export DATABASE_PASSWORD=${DATABASE_PASSWORD}
+    export DATABASE_HOST=${DATABASE_HOST} && \
+    export DATABASE_USERNAME=${DATABASE_USERNAME} && \
+    export DATABASE_PASSWORD=${DATABASE_PASSWORD} 
 
-RUN php scripts/download.php
-RUN php scripts/daily.php
+
+COPY conf/entrypoint.sh /
+RUN chmod +x /entrypoint.sh
