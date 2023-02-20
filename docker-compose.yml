@@ -18,6 +18,7 @@ services:
         - dev
     env_file:
       - .env
+    # command: ["/entrypoint.sh"]
 
   db:
     container_name: datan-db
