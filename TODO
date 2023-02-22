@@ -1,4 +1,2 @@
 Mettre les variables au démarrage de docker-compose up :
 Décommenter les lignes et commenter celles qui sont en dures
-Trouver comment lancer le script entrypoint.sh sans que le container exit au démarrage
-Débugger les 2 lignes commentées du entrypoint.sh
