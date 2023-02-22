@@ -261,6 +261,9 @@
           <a href="https://www.radioevasion.net/2022/10/24/datan-vous-permet-de-suivre-de-pres-votre-deputee-ou-depute/" target="_blank" rel="noopener">
             <img class="mx-2 my-3 img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="70" height="70" data-src="<?= asset_url() ?>imgs/media/radio-evasion.png" alt="Radio Evasion">
           </a>
+          <a href="https://www.20minutes.fr/politique/4010231-20221119-assemblee-regarde-regulierement-deputes-accros-stats-comme-joueurs-foot" target="_blank" rel="noopener">
+            <img class="mx-2 my-3 img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="70" height="70" data-src="<?= asset_url() ?>imgs/media/20_minutes.png" alt="20 Minutes">
+          </a>
         </div>
       </div>
     </div>
