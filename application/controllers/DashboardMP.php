@@ -138,6 +138,10 @@
       $data['votes_published'] = $this->dashboardMP_model->get_votes_explained($data['depute']['mpId'], TRUE);
       $data['votes_draft'] = $this->dashboardMP_model->get_votes_explained($data['depute']['mpId'], FALSE);
 
+      foreach ($data['votes_published'] as $key => $value) {
+        $data['votes_published'][$key]['socialMediaUrl'] = base_url() . "votes/legislature-" . $value['legislature'] . "/vote_" . $value['voteNumero'] . "/explication_" . $data['depute']['mpId'];
+      }
+
       $data['votes_without'] = $this->dashboardMP_model->get_votes_to_explain($data['depute']['mpId']);
       $data['votes_without_suggestion'] = $this->dashboardMP_model->get_votes_to_explain_suggestion($data['votes_without']);
 

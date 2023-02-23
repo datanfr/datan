@@ -81,7 +81,7 @@
                   </table>
                 </div>
               <?php else : ?>
-                <p>Vous n'avez pas encore d'explications de vote en brouillon.</p>
+                <p>Vous n'avez pas d'explications de vote en brouillon.</p>
               <?php endif; ?>
             </div>
           </div>
@@ -114,7 +114,7 @@
                           <td class="text-center"><span class="badge badge<?= ucfirst($value['vote_depute']) ?>" style="font-size: 16px"><?= ucfirst($value['vote_depute']) ?></span></td>
                           <td class="d-none d-lg-table-cell"><?= word_limiter($value['explication'], 30) ?></td>
                           <td>
-                            <a class="btn btn-success d-flex align-items-center justify-content-center font-weight-bold" href="<?= base_url() ?>votes/legislature-<?= $value['legislature'] ?>/vote_<?= $value['voteNumero'] ?>" target="_blank">
+                            <a class="btn btn-secondary d-flex align-items-center justify-content-center font-weight-bold" href="<?= base_url() ?>votes/legislature-<?= $value['legislature'] ?>/vote_<?= $value['voteNumero'] ?>" target="_blank">
                               <?= file_get_contents(asset_url() . "imgs/icons/box-arrow-up-right.svg") ?>
                               <span class="ml-3">Scrutin</span>
                             </a>
@@ -126,9 +126,13 @@
                             </a>
                           </td>
                           <td>
-                            <button type="button" name="button" class="btn social-share twitter twitter-bg d-flex" data-legislature="<?= $value['legislature'] ?>" data-voteNumero="<?= $value['voteNumero'] ?>" data-position="<?= $value['position_tweeter'] ?>" data-title="<?= $value['vote_titre'] ?>">
-                              <img src="http://localhost/datan/assets/imgs/logos/twitter-no-round.png" alt="Partagez sur Twitter">
+                            <button type="button" name="button" class="btn social-share twitter twitter-bg d-flex justify-content-center align-items-center" data-url="<?= $value['socialMediaUrl'] ?>" data-legislature="<?= $value['legislature'] ?>" data-voteNumero="<?= $value['voteNumero'] ?>" data-position="<?= $value['position_tweeter'] ?>" data-title="<?= $value['vote_titre'] ?>">
+                              <img src="<?= asset_url() ?>imgs/logos/twitter-no-round.png" alt="Partagez sur Twitter">
                               <span>Tweeter</span>
+                            </button>
+                            <button type="button" name="button" class="btn social-share facebook fcb-bg d-flex justify-content-center align-items-center mt-2" data-legislature="<?= $value['legislature'] ?>" data-voteNumero="<?= $value['voteNumero'] ?>" data-position="<?= $value['position_tweeter'] ?>" data-title="<?= $value['vote_titre'] ?>" data-mpId = "<?= $depute["mpId"] ?>">
+                              <img src="<?= asset_url() ?>imgs/logos/facebook-no-round.png" alt="Partagez sur Twitter">
+                              <span>Facebook</span>
                             </button>
                           </td>
                         </tr>
