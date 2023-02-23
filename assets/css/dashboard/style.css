@@ -38,10 +38,18 @@
   background-color: #1DA1F2;
   color: #fff;
 }
+.fcb-bg{
+  background-color: #4267B2;
+  color: #fff;
+}
 .social-share{
   padding: 0.2rem 0.6rem;
   marign: 0.2rem;
   transition: 0.3s;
+}
+.social-share img{
+  height: 18px;
+  width: auto;
 }
 .social-share span{
   font-size: .85em;
