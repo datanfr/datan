@@ -644,11 +644,17 @@
 
     public function get_explication($mpId, $legislature, $voteNumero){
       $where = array(
-        'mpId' => $mpId,
-        'legislature' => $legislature,
-        'voteNumero' => $voteNumero
+        'e.mpId' => $mpId,
+        'e.legislature' => $legislature,
+        'e.voteNumero' => $voteNumero
       );
-      return $this->db->get_where('explications_mp', $where, 1)->row_array();
+      $this->db->select('d.civ, d.nameFirst, d.nameLast, d.nameUrl, d.dptSlug, d.libelleAbrev, d.libelle, d.couleurAssociee, substr(d.mpId, 3) AS idImage, d.img, e.text, v.vote');
+      $this->db->join('deputes_last d', 'e.mpId = d.mpId', 'left');
+      $this->db->join('votes_scores v', 'v.legislature = e.legislature AND v.voteNumero = e.voteNumero AND v.mpId = e.mpId', );
+      $this->db->order_by('e.modified_at', 'DESC');
+      $this->db->where('state', 1);
+
+      return $this->db->get_where('explications_mp e', $where)->row_array();
     }
 
     public function get_explications($legislature, $voteNumero){

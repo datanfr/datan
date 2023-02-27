@@ -95,7 +95,9 @@
             $img .= "&group=" . str_replace(" ", "%20", $data['explication']['libelleAbrev']);
             $img .= "&couleur=" . str_replace("#", "", $data['explication']['couleurAssociee']);
             $img .= "&template=explication";
-            $img .= "&id=" . $data['explication']['mpId'];
+            if(isset($data['explication']['mpId'])){
+              $img .= "&id=" . $data['explication']['mpId'];
+            }
             $img .= "&img=" . $data['explication']['img'];
           } else {
             $img = "https://og-image-datan.vercel.app/" . str_replace(" ", "%20", ucfirst($data['vote']['title']));

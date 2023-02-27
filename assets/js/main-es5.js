@@ -294,6 +294,15 @@ $('#voteDatanRequestedForm').on('submit', function (e) {
 });
 /*
 ##########
+VOTE DATAN MODAL EXPLAIN OPEN BY DEFAULT
+##########
+*/
+
+$(window).on('load', function () {
+  $('#modalExplain').modal('show');
+});
+/*
+##########
 FAQ
 ##########
 */

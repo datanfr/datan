@@ -368,7 +368,8 @@
 
       // Get MP's explication from URL
       if ($explication) {
-        $data['explication'] = $this->deputes_model->get_explication($explication, $legislature, $num);
+        $data['explication'] = $this->votes_model->get_explication($explication, $legislature, $num);
+
         if (!$data['explication']) {
           redirect('votes/legislature-' . $legislature . '/vote_' . $num);
         }
