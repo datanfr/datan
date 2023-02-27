@@ -19,12 +19,10 @@ class Script
         $this->legislature_to_get = $legislature;
         $this->intro = "[" . date('Y-m-d h:i:s') . "] ";
         echo $this->intro . "Launching the daily script for legislature " . $this->legislature_to_get . "\n";
-        $this->time_pre = microtime(true);;
+        $this->time_pre = microtime(true);
         try {
             $this->bdd = new PDO(
-                'mysql:host=' . getenv('DATABASE_HOST') . ';dbname=' . getenv('DATABASE_NAME'),
-                getenv('DATABASE_USER'),
-                getenv('DATABASE_PASSWORD'),
+                'mysql:host=' . $_SERVER['DATABASE_HOST'] . ';dbname=' . $_SERVER['DATABASE_NAME'], $_SERVER['DATABASE_USERNAME'], $_SERVER['DATABASE_PASSWORD'],
                 array(
                     PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION, PDO::ATTR_PERSISTENT => true, PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8",
                 )
