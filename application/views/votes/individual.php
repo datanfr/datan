@@ -233,12 +233,12 @@
     </div>
   </div>
 </div>
-<?php if ($explain): 
-        $this->load->view('votes/partials/explain.php', $explain);
-        if($explication):
-          $this->load->view('votes/partials/modal_explain.php', $explication);
-        endif;
-      endif; ?>
+<?php if ($explain):
+  $this->load->view('votes/partials/explain.php', $explain);
+  if($explication):
+    $this->load->view('votes/partials/modal_explain.php', $explication);
+  endif;
+endif; ?>
 <?php if (!empty($author)) : ?>
   <div class="container-fluid pg-vote-individual bloc-author py-4">
     <div class="container">
