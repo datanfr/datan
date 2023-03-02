@@ -40,7 +40,7 @@
           // GET ALL DATA FOR LOYALTY
           $data['loyaute']['all'] = $this->deputes_model->get_stats_loyaute_all($legislature);
           $data['loyaute']['group'] = $this->deputes_model->get_stats_loyaute_group($legislature, $groupe_id);
-          if (isset($data['edite_loyaute']['score'])){
+          if (isset($data['loyaute']['score'])){
             $data['edito_loyaute']['all'] = $this->depute_edito->loyaute($data['loyaute']['score'], $data['loyaute']['all']); // edited for ALL
             $data['edito_loyaute']['group'] = $this->depute_edito->loyaute($data['loyaute']['score'], $data['loyaute']['group']); //edited for GROUP
           }
