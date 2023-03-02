@@ -968,6 +968,6 @@
   <?php foreach ($votes_datan as $key => $value): ?>
     <?php if ($value['explication']): ?>
       <!-- Modal explain -->
-      <?php $this->load->view('votes/modals/explain.php', array('id' => 'explication-l' . $value['legislature'] . '-v' . $value['voteNumero'], 'title' => "L'avis de " . $title, 'value' => $value, 'vote_titre' => $value['vote_titre'], 'explication' => $value['explication'])) ?>
+      <?php $this->load->view('votes/modals/explain.php', array('id' => 'explication-l' . $value['legislature'] . '-v' . $value['voteNumero'], 'title' => "L'avis de " . $title, 'value' => $value, 'vote_titre' => $value['vote_titre'], 'explication' => $value['explication'], 'img' => $depute['idImage'])) ?>
     <?php endif; ?>
   <?php endforeach; ?>
