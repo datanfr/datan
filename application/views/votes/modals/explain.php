@@ -4,11 +4,11 @@
       <div class="modal-header">
         <div class="d-flex flex-row align-items-center">
           <div class="depute-img-circle depute-img-circle-explication mr-3">
-            <?php if ($depute['img']) : ?>
+            <?php if ($img != NULL) : ?>
               <picture>
-                <source srcset="<?= asset_url(); ?>imgs/deputes_nobg_webp/depute_<?= $depute['idImage'] ?>_webp.webp" type="image/webp">
-                <source srcset="<?= asset_url(); ?>imgs/deputes_nobg/depute_<?= $depute['idImage'] ?>.png" type="image/png">
-                <img src="<?= asset_url(); ?>imgs/deputes_original/depute_<?= $depute['idImage'] ?>.png" width="150" height="192" alt="<?= $title ?>">
+                <source srcset="<?= asset_url(); ?>imgs/deputes_nobg_webp/depute_<?= $img ?>_webp.webp" type="image/webp">
+                <source srcset="<?= asset_url(); ?>imgs/deputes_nobg/depute_<?= $img ?>.png" type="image/png">
+                <img src="<?= asset_url(); ?>imgs/deputes_original/depute_<?= $img ?>.png" width="150" height="192" alt="Photo du député">
               </picture>
             <?php else : ?>
               <picture>
