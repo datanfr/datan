@@ -967,43 +967,7 @@
   <!-- EXPLICATIONS DE VOTE -->
   <?php foreach ($votes_datan as $key => $value): ?>
     <?php if ($value['explication']): ?>
-      <!-- Modal -->
-      <div class="modal modalExplication fade" id="explication-l<?= $value['legislature'] ?>-v<?= $value['voteNumero'] ?>" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
-          <div class="modal-content">
-            <div class="modal-header">
-              <div class="d-flex flex-row align-items-center">
-                <div class="depute-img-circle depute-img-circle-explication mr-3">
-                  <?php if ($depute['img']) : ?>
-                    <picture>
-                      <source srcset="<?= asset_url(); ?>imgs/deputes_nobg_webp/depute_<?= $depute['idImage'] ?>_webp.webp" type="image/webp">
-                      <source srcset="<?= asset_url(); ?>imgs/deputes_nobg/depute_<?= $depute['idImage'] ?>.png" type="image/png">
-                      <img src="<?= asset_url(); ?>imgs/deputes_original/depute_<?= $depute['idImage'] ?>.png" width="150" height="192" alt="<?= $title ?>">
-                    </picture>
-                  <?php else : ?>
-                    <picture>
-                      <source srcset="<?= asset_url() ?>imgs/placeholder/placeholder-face-2.png" type="image/png">
-                      <img src="<?= asset_url() ?>imgs/placeholder/placeholder-face-2.png" alt="<?= $title ?>">
-                    </picture>
-                  <?php endif; ?>
-                </div>
-                <p class="modal-title">L'avis de <?= $title ?></p>
-              </div>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
-            </div>
-            <div class="modal-body">
-              <p class="mb-2 font-italic font-weight-bold"><?= $value['vote_titre'] ?></p>
-              <p class="quoted">
-                <?= $value['explication'] ?>
-              </p>
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
-            </div>
-          </div>
-        </div>
-      </div>
+      <!-- Modal explain -->
+      <?php $this->load->view('votes/modals/explain.php', array('id' => 'explication-l' . $value['legislature'] . '-v' . $value['voteNumero'], 'title' => "L'avis de " . $title, 'value' => $value, 'vote_titre' => $value['vote_titre'], 'explication' => $value['explication'])) ?>
     <?php endif; ?>
   <?php endforeach; ?>
