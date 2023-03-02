@@ -236,9 +236,7 @@
 <?php if ($explain):
   $this->load->view('votes/partials/explain.php', $explain);
   if($explication):
-    var_dump($vote);
-    var_dump($explication);
-    $this->load->view('votes/modals/explain.php', array('id' => 'modalExplain', 'title' => "L'avis de " . $explication['nameFirst'] . " " . $explication['nameLast'], 'vote_titre' => $vote['title'], 'explication' => $explication['text']));
+    $this->load->view('votes/modals/explain.php', array('id' => 'modalExplain', 'title' => "L'avis de " . $explication['nameFirst'] . " " . $explication['nameLast'], 'vote_titre' => $vote['title'], 'explication' => $explication['text'], 'img' => $explication['idImage']));
   endif;
 endif; ?>
 <?php if (!empty($author)) : ?>
