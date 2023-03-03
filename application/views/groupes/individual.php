@@ -120,13 +120,13 @@
                 <div class="card-body">
                   <h3>Taux de féminisation</h3>
                   <div class="stat">
-                    <span><?= $groupe['womenPct'] ?> %</span>
+                    <span><?= $groupe['womenPct'] ?>%</span>
                   </div>
                   <div class="explanation">
                     <?php if ($groupe['legislature'] == legislature_current()): ?>
-                      <p>Le groupe <?= $groupe['libelleAbrev'] ?> <?= $active ? "compte" : "comptait" ?> <?= $groupe['womenN'] ?> députées femmes dans ses rangs, soit <?= $groupe['womenPct'] ?> % de ses effectifs. C'est <?= $womenEdited ?> que la moyenne de l'Assemblée nationale, qui est de <?= $womenPctTotal ?>%.</p>
+                      <p>Le groupe <?= $groupe['libelleAbrev'] ?> <?= $active ? "compte" : "comptait" ?> <?= $groupe['womenN'] ?> députées femmes dans ses rangs, soit <?= $groupe['womenPct'] ?>% de ses effectifs. C'est <?= $womenEdited ?> que la moyenne de l'Assemblée nationale, qui est de <?= $womenPctTotal ?>%.</p>
                       <?php else: ?>
-                      <p>Le groupe <?= $groupe['libelleAbrev'] ?> comptait <?= $groupe['womenN'] ?> députées femmes, soit <?= $groupe['womenPct'] ?> % de ses effectifs. C'est <?= $womenEdited ?> que la moyenne de l'Assemblée nationale lors de la <?= $groupe['legislature'] ?><sup>ème</sup> législature, qui était de <?= $womenPctTotal ?> %.</p>
+                      <p>Le groupe <?= $groupe['libelleAbrev'] ?> comptait <?= $groupe['womenN'] ?> députées femmes, soit <?= $groupe['womenPct'] ?>% de ses effectifs. C'est <?= $womenEdited ?> que la moyenne de l'Assemblée nationale lors de la <?= $groupe['legislature'] ?><sup>ème</sup> législature, qui était de <?= $womenPctTotal ?>%.</p>
                     <?php endif; ?>
                   </div>
                 </div>
@@ -138,12 +138,12 @@
                   <div class="card-body">
                     <h3>Origine sociale des députés</h3>
                     <div class="stat">
-                      <span><?= $origineSociale['pct'] ?> %</span>
+                      <span><?= $origineSociale['pct'] ?>%</span>
                     </div>
                     <div class="explanation">
                       <p>
-                        <?= $origineSociale['n'] > 0 ? $origineSociale['n'] : "Aucun" ?> député<?= $origineSociale['n'] > 1 ? "s" : NULL ?> du groupe <?= $groupe['libelleAbrev'] ?> (soit <?= $origineSociale['pct'] ?> %) apparten<?= $origineSociale['n'] > 1 ? "aient" : "ait" ?> à la catégorie <b><u><?= mb_strtolower($origineSociale['famille']) ?></u></b>.
-                        C'est <?= $origineSociale['edited'] ?> que dans la population française (<?= round($origineSociale['population']) ?> %).
+                        <?= $origineSociale['n'] > 0 ? $origineSociale['n'] : "Aucun" ?> député<?= $origineSociale['n'] > 1 ? "s" : NULL ?> du groupe <?= $groupe['libelleAbrev'] ?> (soit <?= $origineSociale['pct'] ?>%) apparten<?= $origineSociale['n'] > 1 ? "aient" : "ait" ?> à la catégorie <b><u><?= mb_strtolower($origineSociale['famille']) ?></u></b>.
+                        C'est <?= $origineSociale['edited'] ?> que dans la population française (<?= round($origineSociale['population']) ?>%).
                       </p>
                     </div>
                   </div>
@@ -179,7 +179,7 @@
                   <div class="col-lg-3 offset-lg-1 mt-2">
                     <div class="d-flex justify-content-center align-items-center">
                       <div class="c100 p<?= $stats['participation']['value'] ?> m-0">
-                        <span><?= $stats['participation']['value'] ?> %</span>
+                        <span><?= $stats['participation']['value'] ?>%</span>
                         <div class="slice">
                           <div class="bar"></div>
                           <div class="fill"></div>
@@ -195,7 +195,7 @@
                       <p>
                         <?php if ($groupe['libelleAbrev'] != "NI"): ?>Le groupe <b><?= $active ? 'participe' : 'participait' ?> <?php else: ?>Les <?= mb_strtolower($title) ?> <b>participent <?php endif; ?> <?= $edito_participation ?></b> que la moyenne <?= $active ? "des autres groupes" : "de tous les groupes de l'Assemblée" ?>, qui est <?php if ($edito_participation == "autant"): ?>
                           aussi
-                        <?php endif; ?> de <?= $participationAverage ?> %.
+                        <?php endif; ?> de <?= $participationAverage ?>%.
                       </p>
                       <p>
                         Ce score de participation prend en compte tous les scrutins publics. Ce score est faible du fait de l'organisation du travail à l'Assemblée nationale. Pour découvrir d'autres scores de participation, <a href="<?= base_url() ?>/statistiques/groupes-participation">cliquez ici</a>.
@@ -287,7 +287,7 @@
                     <div class="col-lg-3 offset-lg-1 mt-2">
                       <div class="d-flex justify-content-center align-items-center">
                         <div class="c100 p<?= $stats['majority']['value'] ?> m-0">
-                            <span><?= $stats['majority']['value'] ?> %</span>
+                            <span><?= $stats['majority']['value'] ?>%</span>
                             <div class="slice">
                                 <div class="bar"></div>
                                 <div class="fill"></div>
@@ -303,7 +303,7 @@
                             <?php else: ?>
                             Les <?= mb_strtolower($title) ?> ont
                           <?php endif; ?>
-                          voté en accord avec le groupe de la majorité présidentielle (<a href="<?= base_url() ?>groupes/legislature-<?= $groupMajority['legislature'] ?>/<?= mb_strtolower($groupMajority['libelleAbrev']) ?>"><?= $groupMajority['libelle'] ?></a>) dans <?= $stats['majority']['value'] ?> % des cas.
+                          voté en accord avec le groupe de la majorité présidentielle (<a href="<?= base_url() ?>groupes/legislature-<?= $groupMajority['legislature'] ?>/<?= mb_strtolower($groupMajority['libelleAbrev']) ?>"><?= $groupMajority['libelle'] ?></a>) dans <?= $stats['majority']['value'] ?>% des cas.
                         </p>
                         <p>
                           <?php if ($groupe['libelleAbrev'] != "NI"): ?>
@@ -311,7 +311,7 @@
                             <?php else: ?>
                             Les députés <?= $groupe['libelleAbrev'] ?> votent
                           <?php endif; ?>
-                          <b><?= $edito_majorite ?> souvent</b> avec la majorité présidentielle que la moyenne des autres groupes, qui est de <?= $majoriteAverage ?> %.
+                          <b><?= $edito_majorite ?> souvent</b> avec la majorité présidentielle que la moyenne des autres groupes, qui est de <?= $majoriteAverage ?>%.
                         </p>
                         <div class="d-flex justify-content-center mt-3">
                           <a href="<?= base_url() ?>groupes/legislature-<?= $groupe['legislature'] ?>/<?= mb_strtolower($groupe['libelleAbrev']) ?>/statistiques#majorite" class="btn btn-outline-primary text-center">
@@ -502,7 +502,7 @@
                           <tr>
                             <th scope="row"><?= $i ?></th>
                             <td><?= name_group($group['libelle']) ?> (<?= $group['libelleAbrev'] ?>)</td>
-                            <td><?= $group['score'] ?> %</td>
+                            <td><?= $group['score'] ?>%</td>
                             <td><?= $group['ended'] == 1 ? "Oui" : "" ?></td>
                             <td><?= $group['votesN'] ?></td>
                           </tr>
