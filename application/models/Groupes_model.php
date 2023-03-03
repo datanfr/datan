@@ -710,5 +710,18 @@
       return $return;
     }
 
+    public function get_effectif_history_start($group, $date){
+      $date = DateTime::createFromFormat("Y-m-d", $date);
+      $year = $date->format("Y");
+      $month = $date->format("m");
+      $where = array(
+        'organeRef' => $group,
+        'YEAR(dateValue)' => $year,
+        'MONTH(dateValue)' => $month
+      );
+      $this->db->order_by('effectif', 'DESC');
+      return $this->db->get_where('groupes_effectif_history', $where, 1)->row_array();
+    }
+
   }
 ?>

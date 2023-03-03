@@ -58,14 +58,35 @@
     }
 
     public function get_deputes_gender($legislature){
-      $this->db->select('COUNT(civ) AS n, ROUND(COUNT(civ)*100/577) AS percentage');
-      $this->db->select('CASE WHEN civ = "M." THEN "male" WHEN civ = "Mme" THEN "female" END AS gender', FALSE);
-      $this->db->where('legislature', $legislature);
+      $datePriseFonction = array(
+        12 => "2002-06-19",
+        13 => "2007-06-20",
+        14 => "2012-06-20",
+        15 => "2017-06-21",
+        16 => "2022-06-22"
+      );
+      $this->db->select('COUNT(d.civ) AS n');
+      $this->db->select('CASE WHEN d.civ = "M." THEN "male" WHEN civ = "Mme" THEN "female" END AS gender', FALSE);
+      $this->db->where('m.legislature', $legislature);
       if ($legislature == legislature_current()) {
-        $this->db->where('dateFin IS NULL');
+        $this->db->where('m.dateFin IS NULL');
+      } else {
+        $this->db->where('m.datePriseFonction', $datePriseFonction[$legislature]);
       }
-      $this->db->group_by('civ');
-      return $this->db->get('deputes_all')->result_array();
+      $this->db->join('deputes_all d', 'd.mpId = m.mpId AND d.legislature = m.legislature', 'left');
+      $this->db->group_by('d.civ');
+      $return = $this->db->get('mandat_principal m')->result_array();
+
+      $total = 0;
+      foreach ($return as $key => $value) {
+        $total += $value['n'];
+      }
+      foreach ($return as $key => $value) {
+        $return[$key]['total'] = $total;
+        $return[$key]['percentage'] = round($value['n'] / $total * 100);
+      }
+
+      return $return;
     }
 
     public function get_groupes_inactifs(){
