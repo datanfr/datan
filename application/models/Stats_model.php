@@ -341,14 +341,8 @@
           "term" => 15,
           "year_start" => "2017",
           "year_end" => "2022",
-          "pct" => 41
+          "pct" => 39
         ),
-        array(
-          "term" => 16,
-          "year_start" => "2022",
-          "year_end" => "2027",
-          "pct" => 37
-        )
       );
 
       return $array;
