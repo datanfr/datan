@@ -73,8 +73,6 @@
       $data['candidatsN_eliminated'] = count($data['candidatsN_eliminated']);
       $data['mapLegend'] = $this->elections_model->get_map_legend($data['election']['id']);
       $data['today'] = date("Y-m-d");
-      $data['women_mean'] = $this->deputes_model->get_deputes_gender(legislature_current());
-      $data['women_mean'] = $data['women_mean'][1]['percentage'];
 
       // If legislative
       if ($data['election']['slug'] == 'legislatives-2022') {
