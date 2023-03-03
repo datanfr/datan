@@ -121,8 +121,7 @@
                   Cela représente <b><?= $women_mean[1]['percentage'] ?> %</b> des effectifs des parlementaires.
                 </p>
                 <p>
-                  Entre la législature précédente et la législature actuelle, le nombre de femmes députées a baissé.
-                  En effet, entre 2017 et 2022, il y avait 270 femmes à l'Assemblée nationale.
+                  Entre la législature précédente et la législature actuelle, le nombre de femmes députées a légèrement baissé.
                  </p>
               </div>
               <div class="row mt-lg-3 bar-container stats pr-2">

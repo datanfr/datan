@@ -41,6 +41,8 @@
         );
       }
       $data['women_history'] = $this->stats_model->get_women_history();
+      $data['women_history'][] = array('term' => 16, 'year_start' => '2022', 'year_end' => '2027', 'pct' => $data['women_mean'][1]['percentage']);
+
       $data['women_history'] = array_slice($data['women_history'], -6);
       $data['groups_cohesion'] = $this->stats_model->get_groups_cohesion();
       if ($data['groups_cohesion']) {
