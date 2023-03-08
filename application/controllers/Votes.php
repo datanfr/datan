@@ -534,7 +534,11 @@
       // Meta
       $data['url'] = $this->meta_model->get_url();
       $data['title_meta'] = "Vote n°".$data['vote']['voteNumero']." - ".ucfirst($data['vote']['title_meta']). " - ".$legislature."e législature | Datan";
-      $data['description_meta'] = "Découvrez le vote n° ".$data['vote']['voteNumero']." : ".ucfirst($data['vote']['title_meta'])." - ".$legislature."e législature. Détails et analyses des résultats du vote.";
+      if ($explication) {
+        $data['description_meta'] = "Découvrez l'explication de vote de " . $data['explication']['nameFirst'] . " " . $data['explication']['nameLast'] . ".";
+      } else {
+        $data['description_meta'] = "Découvrez le vote n° ".$data['vote']['voteNumero']." : ".ucfirst($data['vote']['title_meta'])." - ".$legislature."e législature. Détails et analyses des résultats du vote.";
+      }
       $data['title'] = $data['vote']['titre'];
       // Breadcrumb
       $data['breadcrumb'] = array(
@@ -555,7 +559,7 @@
       //Open Graph
       $controller = $this->router->fetch_class()."/".$this->router->fetch_method();
       if ($voteDatan) {
-        $title_ogp = "Votes Assemblée nationale : " . $data['vote']['title'] . " | Datan";
+        $title_ogp = "Vote Assemblée nationale : " . $data['vote']['title'] . " | Datan";
       } elseif($data['vote']['voteType'] == "final") {
         $title_ogp = "Assemblée nationale : " . $data['vote']['dossier_titre'] . " - Vote final";
       } else {
