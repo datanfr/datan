@@ -138,6 +138,13 @@
       $data['votes_published'] = $this->dashboardMP_model->get_votes_explained($data['depute']['mpId'], TRUE);
       $data['votes_draft'] = $this->dashboardMP_model->get_votes_explained($data['depute']['mpId'], FALSE);
 
+      foreach ($data['votes_published'] as $key => $value) {
+        $data['votes_published'][$key]['socialMediaUrl'] = base_url() . "votes/legislature-" . $value['legislature'] . "/vote_" . $value['voteNumero'] . "/explication_" . $data['depute']['mpId'];
+      }
+
+      $data['votes_without'] = $this->dashboardMP_model->get_votes_to_explain($data['depute']['mpId']);
+      $data['votes_without_suggestion'] = $this->dashboardMP_model->get_votes_to_explain_suggestion($data['votes_without']);
+
       $data['title'] = "Vos explications de vote";
 
       // Meta
@@ -146,6 +153,8 @@
         array('name' => 'Dashboard', 'url' => base_url().'dashboard-mp', 'active' => FALSE),
         array('name' => 'Explications de vote', 'url' => base_url().'dashboard-mp/explications', 'active' => TRUE),
       );
+
+      $data['js_to_load'] = array('datan/dashboard-mp-social-share');
 
       // Views
       $this->load->view('dashboard/header', $data);
@@ -159,6 +168,7 @@
       $data['depute']['gender'] = gender($data['depute']['civ']);
 
       $data['votes_without'] = $this->dashboardMP_model->get_votes_to_explain($data['depute']['mpId']);
+      $data['votes_without_suggestion'] = $this->dashboardMP_model->get_votes_to_explain_suggestion($data['votes_without']);
 
       $data['title'] = 'Créez une explication de vote';
 
@@ -224,6 +234,9 @@
           array('name' => 'Explications de vote', 'url' => base_url().'dashboard-mp/explications', 'active' => FALSE),
           array('name' => 'Rédiger', 'url' => base_url().'dashboard-mp/explications/create/l' . $legislature . 'v' . $voteNumero, 'active' => TRUE),
         );
+
+        $data['explication']['text'] = $this->input->post('explication');
+
         // Views
         $this->load->view('dashboard/header', $data);
         $this->load->view('dashboard-mp/explications/create', $data);

@@ -338,7 +338,7 @@
 
     }
 
-    public function individual($legislature, $num){
+    public function individual($legislature, $num, $explication = FALSE){
       // Check if legislature is numeric
       if (!is_numeric($legislature)) {
         show_404($this->functions_datan->get_404_infos());
@@ -354,7 +354,6 @@
 
       $data['legislature'] = $legislature;
 
-
       // Get vote
       $data['vote'] = $this->votes_model->get_individual_vote($legislature, $num);
       if ($data['vote']['title']) {
@@ -365,6 +364,14 @@
 
       if (empty($data['vote'])) {
         show_404($this->functions_datan->get_404_infos());
+      }
+
+      // Get MP's explication from URL
+      if ($explication) {
+        $data['explication'] = $this->votes_model->get_explication($explication, $legislature, $num);
+        if (!$data['explication']) {
+          redirect('votes/legislature-' . $legislature . '/vote_' . $num);
+        }
       }
 
       // Vote edited
@@ -379,6 +386,9 @@
           $data['vote']['edited'] = TRUE;
         }
       }
+
+      // Vote mp explain
+      $data['explain'] = $this->votes_model->get_explications($legislature, $data['vote']['voteNumero']);
 
       // Info about the author
       if ($data['vote']['dossier'] && $legislature >= 15) {
@@ -477,6 +487,7 @@
 
       // Votes - députés
       $data['deputes'] = $this->votes_model->get_vote_deputes($data['vote']['voteNumero'], $legislature);
+
       // OTHER VOTES
       if ($num != 1) {
         $previous = $num - 1;
@@ -523,7 +534,11 @@
       // Meta
       $data['url'] = $this->meta_model->get_url();
       $data['title_meta'] = "Vote n°".$data['vote']['voteNumero']." - ".ucfirst($data['vote']['title_meta']). " - ".$legislature."e législature | Datan";
-      $data['description_meta'] = "Découvrez le vote n° ".$data['vote']['voteNumero']." : ".ucfirst($data['vote']['title_meta'])." - ".$legislature."e législature. Détails et analyses des résultats du vote.";
+      if ($explication) {
+        $data['description_meta'] = "Découvrez l'explication de vote de " . $data['explication']['nameFirst'] . " " . $data['explication']['nameLast'] . ".";
+      } else {
+        $data['description_meta'] = "Découvrez le vote n° ".$data['vote']['voteNumero']." : ".ucfirst($data['vote']['title_meta'])." - ".$legislature."e législature. Détails et analyses des résultats du vote.";
+      }
       $data['title'] = $data['vote']['titre'];
       // Breadcrumb
       $data['breadcrumb'] = array(
@@ -544,7 +559,7 @@
       //Open Graph
       $controller = $this->router->fetch_class()."/".$this->router->fetch_method();
       if ($voteDatan) {
-        $title_ogp = "Votes Assemblée nationale : " . $data['vote']['title'] . " | Datan";
+        $title_ogp = "Vote Assemblée nationale : " . $data['vote']['title'] . " | Datan";
       } elseif($data['vote']['voteType'] == "final") {
         $title_ogp = "Assemblée nationale : " . $data['vote']['dossier_titre'] . " - Vote final";
       } else {
@@ -576,6 +591,7 @@
         array("href" => asset_url()."imgs/cover/hemicycle-front-768.jpg", "as" => "image", "media" => "(min-width: 576px) and (max-width: 970px)"),
         array("href" => asset_url()."imgs/cover/hemicycle-front.jpg", "as" => "image", "media" => "(min-width: 970.1px)"),
       );
+
       // Load Views
       $this->load->view('templates/header', $data);
       $this->load->view('templates/button_up');

@@ -326,6 +326,30 @@ body:not(.pg-mentions) #tarteaucitronIcon {
                A CLASSER
 ################
 */
+.quoted{
+  padding-left: 1em;
+  padding-top: 1em;
+}
+.quoted:before{
+  content: open-quote;
+  font-weight: bold;
+  font-size: 36px;
+  line-height: 1px;
+  color: $primary;
+  position: relative;
+  top: 0.1em;
+  left: -0.1em;
+}
+.quoted:after{
+  content: close-quote;
+  font-weight: bold;
+  font-size: 36px;
+  line-height: 1px;
+  color: $primary;
+  position: relative;
+  bottom: -0.2em;
+  right: -0.1em;
+}
 .modalExplication{
   .modal-content{
     border: none;
@@ -443,11 +467,14 @@ body.modal-open {
 .badge{
   padding: 0.4em 0.6em;
   color: #fff;
-  &.badge-adopté{
+  &.badge-adopté, &.badge-pour{
     background-color: $adopted;
   }
-  &.badge-rejeté{
+  &.badge-rejeté, &.badge-contre{
     background-color: $rejected;
+  }
+  &.badge-abstention{
+    background-color: $abstention;
   }
 }
 .sort-pour, .sort-adopté, .sort-loyal{
@@ -993,14 +1020,12 @@ input#quicksearch[type=text]{
     }
   }
 }
-.card-depute{
-  .card-avatar{
-    border-radius: 50%;
-    padding: 0;
-    background: linear-gradient(#99BDDA, white);
-    img{
-      width: 80%;
-    }
+.card-avatar-depute{
+  border-radius: 50%;
+  padding: 0;
+  background: linear-gradient(#99BDDA, white);
+  img{
+    width: 80%;
   }
 }
 // Large devices (desktops, 992px and up)
@@ -1115,21 +1140,6 @@ input#quicksearch[type=text]{
   .card-body{
     padding: 1.1rem 1.8rem;
   }
-  .img{
-    .depute-img-circle{
-      width: 150px;
-      height: 150px;
-      overflow: hidden;
-      position: relative;
-      border-radius: 50%;
-      background: linear-gradient(#99BDDA, white);
-      text-align: center;
-      img{
-        width: 80%;
-        height: auto;
-      }
-    }
-  }
   .bloc-bref{
     ul{
       padding-inline-start: 0;
@@ -1156,6 +1166,23 @@ input#quicksearch[type=text]{
   .link-group{
     font-size: $h5-font-size;
     font-weight: 600;
+  }
+}
+.depute-img-circle{
+  width: 150px;
+  height: 150px;
+  overflow: hidden;
+  position: relative;
+  border-radius: 50%;
+  background: linear-gradient(#99BDDA, white);
+  text-align: center;
+  img{
+    width: 80%;
+    height: auto;
+  }
+  &.depute-img-circle-explication{
+    width: 50px;
+    height: 50px;
   }
 }
 .card-profile {
@@ -1968,6 +1995,21 @@ ul.ui-menu{
       }
     }
   }
+  /* Bloc explication */
+  .bloc-explication{
+    .card-header{
+      background-color: transparent;
+    }
+    .title{
+      font-weight: 800;
+      color: $text-black;
+      font-size: $h5-font-size;
+    }
+    .date{
+      font-weight: 400;
+      color: $text-gray-light;
+    }
+  }
   /* Bloc election */
   .bloc-election{
     .card{
@@ -2461,6 +2503,31 @@ ul.ui-menu{
       i{
         margin: 0 0.25rem;
       }
+    }
+  }
+
+  .explain{
+    p.collapse:not(.show){
+      height: 70px !important;
+      overflow: hidden;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+    }
+    p.collapsing{
+      min-height: 70px !important;
+    }
+    a.read{
+      &.collapsed:after{
+        content: "+ Lire plus";
+      }
+      &:not(.collapsed):after{
+        content: "- Lire moins";
+      }
+    }
+    .depute-img-circle{
+      flex: 0 0 3.75rem;
+      height: auto;
     }
   }
 }
@@ -3116,6 +3183,19 @@ MODAL
     font-weight: 800;
   }
 }
+.modal {
+  z-index: 9999;
+}
+
+/*
+################
+MODAL EXPLAIN
+################
+*/
+.quote-img{
+  float:left;
+}
+
 /*
 ################
 MODAL

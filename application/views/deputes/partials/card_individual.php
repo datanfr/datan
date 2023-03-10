@@ -1,22 +1,20 @@
 <div class="card card-profile">
   <div class="card-body">
     <!-- IMAGE MP -->
-    <div class="img">
-      <div class="d-flex justify-content-center">
-        <div class="depute-img-circle">
-          <?php if ($depute['img']) : ?>
-            <picture>
-              <source srcset="<?= asset_url(); ?>imgs/deputes_nobg_webp/depute_<?= $depute['idImage'] ?>_webp.webp" type="image/webp">
-              <source srcset="<?= asset_url(); ?>imgs/deputes_nobg/depute_<?= $depute['idImage'] ?>.png" type="image/png">
-              <img src="<?= asset_url(); ?>imgs/deputes_original/depute_<?= $depute['idImage'] ?>.png" width="150" height="192" alt="<?= $title ?>">
-            </picture>
-          <?php else : ?>
-            <picture>
-              <source srcset="<?= asset_url() ?>imgs/placeholder/placeholder-face-2.png" type="image/png">
-              <img src="<?= asset_url() ?>imgs/placeholder/placeholder-face-2.png" alt="<?= $title ?>">
-            </picture>
-          <?php endif; ?>
-        </div>
+    <div class="d-flex justify-content-center">
+      <div class="depute-img-circle">
+        <?php if ($depute['img']) : ?>
+          <picture>
+            <source srcset="<?= asset_url(); ?>imgs/deputes_nobg_webp/depute_<?= $depute['idImage'] ?>_webp.webp" type="image/webp">
+            <source srcset="<?= asset_url(); ?>imgs/deputes_nobg/depute_<?= $depute['idImage'] ?>.png" type="image/png">
+            <img src="<?= asset_url(); ?>imgs/deputes_original/depute_<?= $depute['idImage'] ?>.png" width="150" height="192" alt="<?= $title ?>">
+          </picture>
+        <?php else : ?>
+          <picture>
+            <source srcset="<?= asset_url() ?>imgs/placeholder/placeholder-face-2.png" type="image/png">
+            <img src="<?= asset_url() ?>imgs/placeholder/placeholder-face-2.png" alt="<?= $title ?>">
+          </picture>
+        <?php endif; ?>
       </div>
     </div>
     <!-- INFOS GENERALES -->

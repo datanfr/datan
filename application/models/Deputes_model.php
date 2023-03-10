@@ -336,7 +336,7 @@
       $where = array('legislature' => $legislature);
       $this->db->select('length');
       $result = $this->db->get_where('history_mps_average', $where, 1)->row_array();
-      return $result['length'];
+      return isset($result['length']) ?$result['length'] : 0;
     }
 
     public function get_accord_groupes_actifs($depute_uid, $legislature){
@@ -761,6 +761,29 @@
       }
 
       return $return;
+    }
+
+    public function get_last_explication($mpId, $legislature){
+      $this->db->select('e.*, vd.title, date_format(vi.dateScrutin, "%d %M %Y") as dateScrutinFR');
+      $this->db->select('CASE WHEN vs.vote = 0 THEN "abstention" WHEN vs.vote = 1 THEN "pour" WHEN vs.vote = -1 THEN "contre" WHEN vs.vote IS NULL THEN "absent" ELSE vs.vote END AS vote_depute', FALSE);
+      $this->db->where('e.mpId', $mpId);
+      $this->db->where('e.state', 1);
+      $this->db->join('votes_info vi', 'vi.legislature = e.legislature AND vi.voteNumero = e.voteNumero');
+      $this->db->join('votes_datan vd', 'vd.legislature = e.legislature AND vd.voteNumero = e.voteNumero');
+      $this->db->join('votes_scores vs', 'vs.legislature = e.legislature AND vs.voteNumero = e.voteNumero AND vs.mpId = e.mpId');
+      $this->db->order_by('e.id', 'DESC');
+      return $this->db->get('explications_mp e')->row_array();
+    }
+
+    public function get_explication($mpId, $legislature, $voteNumero){
+      $where = array(
+        'e.mpId' => $mpId,
+        'e.legislature' => $legislature,
+        'e.voteNumero' => $voteNumero,
+        'e.state' => 1
+      );
+      $this->db->join('deputes_all d', 'e.mpId = d.mpId AND e.legislature = d.legislature', 'left');
+      return $this->db->get_where('explications_mp e', $where, 1)->row_array();
     }
 
   }
