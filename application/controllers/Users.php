@@ -34,13 +34,7 @@
         $this->password_model->security_captcha('demande-compte-depute');
 
         $email = $this->input->post('email');
-
-        if ($email == 'awenig@datan.fr') {
-          $data['depute'] = $this->deputes_model->get_depute_by_email('timothee.houssin@assemblee-nationale.fr');
-        } else {
-          echo "no";
-          $data['depute'] = $this->deputes_model->get_depute_by_email($email);
-        }
+        $data['depute'] = $this->deputes_model->get_depute_by_email($email);
 
         if (!$data['depute']) {
           $this->session->set_flashdata('error', "Nous ne vous trouvons pas dans notre base de données. N'hésitez pas à nous contacter : info@datan.fr.");
@@ -146,7 +140,7 @@
 
     public  function check_mp_email($email){
       $this->form_validation->set_message('check_mp_email', "Cet email n'est pas dans notre base. Merci de réessayer. Si l'erreur persiste, merci de nous contacter : info@datan.fr");
-      return $this->user_model->check_mp_email($email) || $email == 'awenig@datan.fr' ? true : false;
+      return $this->user_model->check_mp_email($email) ? true : false;
     }
 
     public function check_email_exists($email){
