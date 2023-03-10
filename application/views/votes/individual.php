@@ -501,8 +501,10 @@ endif; ?>
       title: {
         display: false
       },
-      legend: {
-        display: false
+      plugins: {
+        legend: {
+          display: false
+        }
       },
       layout: {
         padding: {
