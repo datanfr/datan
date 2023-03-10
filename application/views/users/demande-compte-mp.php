@@ -11,7 +11,7 @@
       </div>
       <div class="row mt-5">
         <div class="col-lg-8 col-md-10 col-10 offset-lg-2 offset-md-1 offset-1">
-          <div class="row mt-5 d-flex flex-column justify-content-center login_form">
+          <div class="row mt-1 d-flex flex-column justify-content-center login_form">
             <h1 class="text-center my-4"><?= $title ?></h1>
             <?php if ($this->session->flashdata('error')): ?>
               <div class="alert alert-danger mb-4 text-center" role="alert">
@@ -23,9 +23,13 @@
                 <?= ($this->session->flashdata('success')) ?>
               </div>
             <?php endif; ?>
-            <div class="mt-2">
-              <?= validation_errors(); ?>
-            </div>
+            <?php if (validation_errors()): ?>
+              <div class="mt-2">
+                <div class="alert alert-danger mb-4 text-center" role="alert">
+                  <?= validation_errors(); ?>
+                </div>
+              </div>
+            <?php endif; ?>
             <div class="form-group">
               <label class="font-weight-bold">Email de l'Assemblée nationale se terminant par : @assemblee-nationale.fr</label>
               <input type="email" name="email" class="form-control" placeholder="Email" required autofocus>
