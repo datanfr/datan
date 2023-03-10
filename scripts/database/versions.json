@@ -5,10 +5,14 @@
   },
   {
     "version": 2,
-    "object": "This is the first version of the database"
+    "object": "Changes to amendements database"
   },
   {
     "version": 3,
     "object": "Add profession_foi table"
+  },
+  {
+    "version": 4,
+    "object": "Add created_at and modified_at fields in explications_mp table"
   }
 ]

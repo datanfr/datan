@@ -38,7 +38,6 @@
     $prepare = $bdd->prepare("INSERT INTO mysql_v (version) VALUES (:new_version)");
     $prepare->execute(array('new_version' => $new_v));
 
-
   } else {
     echo "The last version installed is already up to date <br>";
     die();
