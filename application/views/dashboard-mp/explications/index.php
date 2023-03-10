@@ -13,38 +13,44 @@
       <div class="row">
         <div class="col-12">
           <a class="btn btn-outline-secondary font-weight-bold" href="<?= base_url() ?>dashboard-mp">
-            <?= file_get_contents(asset_url()."imgs/icons/arrow_left.svg") ?>
+            <?= file_get_contents(asset_url() . "imgs/icons/arrow_left.svg") ?>
             Retour
           </a>
-          <?php if ($this->session->flashdata('flash')): ?>
+        </div>
+        <div class="col-lg-7 mt-4">
+          <?php if ($this->session->flashdata('flash')) : ?>
             <div class="alert alert-primary font-weight-bold text-center mt-4" role="alert"><?= $this->session->flashdata('flash') ?></div>
           <?php endif; ?>
-        </div>
-        <div class="col-lg-7 col-12 mt-5">
-          <h1 class="font-weight-bold"><?= $title ?></h1>
-          <div class="card mt-5">
+          <h1 class="font-weight-bold mt-2 text-black"><?= $title ?></h1>
+          <div class="card mt-5 mb-0">
             <div class="card-body">
               <h5 class="font-weight-bold">Infos</h5>
               <p>Vous pouvez rédiger une explication de vote pour expliquer à vos électeurs les <b>raisons de votre position</b>. Pourquoi avez-vous voté contre cet amendement ? Pourquoi avez-vous soutenu cette proposition de loi ? Cette explication sera visible sur votre page Datan.</p>
               <p>Cette fonctionnalité n'est disponible que pour les <b>votes contextualisés par Datan</b>. Les votes contextualisés sont les scrutins que l'équipe de Datan vulgarise et met en avant sur le site internet, et notamment sur les pages des députés.</p>
             </div>
           </div>
-          <div class="mt-5 d-flex justify-content-center">
-            <a class="h2 btn btn-primary font-weight-bold" style="font-size: 1.1rem" href="<?= base_url() ?>dashboard-mp/explications/liste">
-              <?= file_get_contents(asset_url()."imgs/icons/pencil-square.svg") ?>
-              <span class="ml-3">Créez une nouvelle explication de vote</span>
-            </a>
-          </div>
+          <a class="h2 btn btn-primary font-weight-bold mb-0 mt-5" style="font-size: 1.1rem" href="<?= base_url() ?>dashboard-mp/explications/liste">
+            <?= file_get_contents(asset_url() . "imgs/icons/pencil-square.svg") ?>
+            <span class="ml-3">Créez une nouvelle explication de vote</span>
+          </a>
         </div>
+      </div>
+      <div class="d-flex flex-column justify-content-center align-items-center my-5 py-5" id="pattern_background" style="margin-left: -15px; margin-right: -15px">
+        <h2 class="font-weight-bold text-black text-center">Suggestion de votes à expliquer</h2>
+        <?php $this->load->view('dashboard-mp/explications/partials/suggestions.php') ?>
+        <a class="h2 btn btn-outline-primary font-weight-bold mb-0 mt-5" style="font-size: 1.1rem" href="<?= base_url() ?>dashboard-mp/explications/liste">
+          <?= file_get_contents(asset_url() . "imgs/icons/pencil-square.svg") ?>
+          <span class="ml-3">Créez une explication pour un autre scrutin</span>
+        </a>
       </div>
       <div class="row">
         <div class="col-12">
-          <div class="card mt-5 card-danger card-outline">
+          <div class="card card-danger card-outline">
             <div class="card-header">
               <h4 class="font-weight-bold text-danger">Vos explications de vote en brouillon</h4>
             </div>
             <div class="card-body">
-              <?php if ($votes_draft): ?>
+              <?php if ($votes_draft) : ?>
                 <div class="table-responsive">
                   <table class="table mt-2">
                     <thead class="thead-dark">
@@ -57,7 +63,7 @@
                       </tr>
                     </thead>
                     <tbody>
-                      <?php foreach ($votes_draft as $key => $value): ?>
+                      <?php foreach ($votes_draft as $key => $value) : ?>
                         <tr>
                           <td><?= $value['legislature'] ?></td>
                           <td class="font-weight-bold"><?= $value['vote_titre'] ?></td>
@@ -65,7 +71,7 @@
                           <td class="d-none d-lg-table-cell"><?= word_limiter($value['explication'], 30) ?></td>
                           <td>
                             <a class="btn btn-primary d-flex align-items-center justify-content-center font-weight-bold" href="<?= base_url() ?>dashboard-mp/explications/modify/l<?= $value['legislature'] ?>v<?= $value['voteNumero'] ?>">
-                              <?= file_get_contents(asset_url()."imgs/icons/pencil-square.svg") ?>
+                              <?= file_get_contents(asset_url() . "imgs/icons/pencil-square.svg") ?>
                               <span class="ml-3">Modifier</span>
                             </a>
                           </td>
@@ -74,54 +80,67 @@
                     </tbody>
                   </table>
                 </div>
-                <?php else: ?>
-                <p>Vous n'avez pas encore d'explications de vote en brouillon.</p>
+              <?php else : ?>
+                <p>Vous n'avez pas d'explications de vote en brouillon.</p>
               <?php endif; ?>
             </div>
           </div>
-          <div class="card mt-5 card-success card-outline">
+        </div>
+        <div class="col-12">
+          <div class="card card-success card-outline">
             <div class="card-header">
               <h4 class="font-weight-bold text-success">Vos explications de vote publiées</h4>
             </div>
             <div class="card-body">
-              <?php if ($votes_published): ?>
+              <?php if ($votes_published) : ?>
                 <div class="table-responsive">
                   <table class="table mt-2">
                     <thead class="thead-dark">
                       <tr>
-                        <th>Législature</th>
+                        <th>Leg.</th>
                         <th>Scrutin</th>
                         <th class="text-center">Vote</th>
                         <th class="text-center d-none d-lg-table-cell">Explication</th>
                         <th></th>
                         <th></th>
+                        <th></th>
                       </tr>
                     </thead>
                     <tbody>
-                      <?php foreach ($votes_published as $key => $value): ?>
+                      <?php foreach ($votes_published as $key => $value) : ?>
                         <tr>
                           <td><?= $value['legislature'] ?></td>
                           <td class="font-weight-bold"><?= $value['vote_titre'] ?></td>
                           <td class="text-center"><span class="badge badge<?= ucfirst($value['vote_depute']) ?>" style="font-size: 16px"><?= ucfirst($value['vote_depute']) ?></span></td>
                           <td class="d-none d-lg-table-cell"><?= word_limiter($value['explication'], 30) ?></td>
                           <td>
-                            <a class="btn btn-success d-flex align-items-center justify-content-center font-weight-bold" href="<?= base_url() ?>votes/legislature-<?= $value['legislature'] ?>/vote_<?= $value['voteNumero'] ?>" target="_blank">
-                              <?= file_get_contents(asset_url()."imgs/icons/box-arrow-up-right.svg") ?>
-                              <span class="ml-3">Vote publié</span>
+                            <a class="btn btn-secondary d-flex align-items-center justify-content-center font-weight-bold" href="<?= base_url() ?>votes/legislature-<?= $value['legislature'] ?>/vote_<?= $value['voteNumero'] ?>" target="_blank">
+                              <?= file_get_contents(asset_url() . "imgs/icons/box-arrow-up-right.svg") ?>
+                              <span class="ml-3">Scrutin</span>
                             </a>
                           </td>
                           <td>
                             <a class="btn btn-primary d-flex align-items-center justify-content-center font-weight-bold" href="<?= base_url() ?>dashboard-mp/explications/modify/l<?= $value['legislature'] ?>v<?= $value['voteNumero'] ?>">
-                              <?= file_get_contents(asset_url()."imgs/icons/pencil-square.svg") ?>
+                              <?= file_get_contents(asset_url() . "imgs/icons/pencil-square.svg") ?>
                               <span class="ml-3">Modifier</span>
                             </a>
+                          </td>
+                          <td>
+                            <button type="button" name="button" class="btn social-share twitter twitter-bg d-flex justify-content-center align-items-center" data-url="<?= $value['socialMediaUrl'] ?>" data-legislature="<?= $value['legislature'] ?>" data-voteNumero="<?= $value['voteNumero'] ?>" data-position="<?= $value['position_tweeter'] ?>" data-title="<?= $value['vote_titre'] ?>">
+                              <img src="<?= asset_url() ?>imgs/logos/twitter-no-round.png" alt="Partagez sur Twitter">
+                              <span>Tweeter</span>
+                            </button>
+                            <button type="button" name="button" class="btn social-share facebook fcb-bg d-flex justify-content-center align-items-center mt-2" data-legislature="<?= $value['legislature'] ?>" data-voteNumero="<?= $value['voteNumero'] ?>" data-position="<?= $value['position_tweeter'] ?>" data-title="<?= $value['vote_titre'] ?>" data-mpId = "<?= $depute["mpId"] ?>">
+                              <img src="<?= asset_url() ?>imgs/logos/facebook-no-round.png" alt="Partagez sur Twitter">
+                              <span>Facebook</span>
+                            </button>
                           </td>
                         </tr>
                       <?php endforeach; ?>
                     </tbody>
                   </table>
                 </div>
-                <?php else: ?>
+              <?php else : ?>
                 <p>Vous n'avez pas encore publié d'explications de vote.</p>
               <?php endif; ?>
             </div>

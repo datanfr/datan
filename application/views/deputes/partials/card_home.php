@@ -2,7 +2,7 @@
   <?php if (isset($depute['couleurAssociee'])): ?>
     <div class="liseret" style="background-color: <?= $depute["couleurAssociee"] ?>"></div>
   <?php endif; ?>
-  <div class="card-avatar">
+  <div class="card-avatar-depute card-avatar">
     <?php if ($depute['img']): ?>
       <img class="img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-face-2.png" width="130" height="166" data-src="<?= base_url(); ?>assets/imgs/deputes_nobg/depute_<?= substr($depute["mpId"], 2) ?>.png" alt="<?= $depute['nameFirst'].' '.$depute['nameLast'] ?>">
       <?php else: ?>

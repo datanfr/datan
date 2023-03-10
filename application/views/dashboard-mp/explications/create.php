@@ -22,6 +22,10 @@
               <h5 class="font-weight-bold text-primary">Scrutin n° <?= $vote['voteNumero'] ?></h5>
               <h3 class="font-weight-bold"><?= $vote['title'] ?></h3>
               <p class="text-secondary mb-0"><?= ucfirst($vote['titre']) ?></p>
+              <a class="btn btn-secondary font-weight-bold mt-4" href="<?= base_url() ?>votes/legislature-<?= $vote['legislature'] ?>/vote_<?= $vote['voteNumero'] ?>" target="_blank" role="button">
+                <?= file_get_contents(asset_url()."imgs/icons/box-arrow-up-right.svg") ?>
+                <span class="ml-2">Voir le vote</span>
+              </a>
             </div>
           </div>
           <?php if (!empty(validation_errors())): ?>
@@ -47,7 +51,7 @@
               <?php endif; ?>
                 <div class="form-group">
                   <label>Explication de vote (maximum 500 caractères)</label>
-                  <textarea id="textbox" name="explication" class="form-control" placeholder="Votre explication de vote" rows="5"><?= $page == 'modify' ? $explication['text'] : '' ?></textarea>
+                  <textarea id="textbox" name="explication" class="form-control" placeholder="Votre explication de vote" rows="5"><?= $explication['text'] ? $explication['text'] : '' ?></textarea>
                   <div class="d-flex justify-content-end">
                     <span id="char_count"><?= $page == 'modify' ? strlen($explication['text']) : 0 ?>/500</span>
                   </div>
@@ -137,15 +141,15 @@
                 <div class="card-footer d-flex justify-content-around">
                   <a class="btn btn-secondary mx-1 font-weight-bold" href="<?= base_url() ?>votes/legislature-<?= $vote['legislature'] ?>/vote_<?= $vote['voteNumero'] ?>" target="_blank" role="button">
                     <?= file_get_contents(asset_url()."imgs/icons/box-arrow-up-right.svg") ?>
-                    Lien Datan
+                    <span class="ml-2">Lien Datan</span>
                   </a>
                   <a class="btn btn-secondary mx-1 font-weight-bold" href="https://www2.assemblee-nationale.fr/scrutins/detail/(legislature)/<?= $vote['legislature'] ?>/(num)/<?= $vote['voteNumero'] ?>" target="_blank" role="button">
                     <?= file_get_contents(asset_url()."imgs/icons/box-arrow-up-right.svg") ?>
-                    Lien Assemblée
+                    <span class="ml-2">Lien Assemblée</span>
                   </a>
                   <a class="btn btn-secondary mx-1 font-weight-bold" href="<?= $vote['dossierUrl'] ?>" target="_blank" role="button">
                     <?= file_get_contents(asset_url()."imgs/icons/box-arrow-up-right.svg") ?>
-                    Dossier
+                    <span class="ml-2">Dossier</span>
                   </a>
                 </div>
               </div>

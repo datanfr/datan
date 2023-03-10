@@ -1,5 +1,6 @@
 <?php
   class Meta_model extends CI_Model {
+
     public function get_url(){
       $protocol = ((!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off') || $_SERVER['SERVER_PORT'] == 443) ? "https://" : "http://";
       $url = $protocol . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
@@ -86,17 +87,26 @@
 
         /// --- INDIVIDUAL VOTE PAGE --- ///
 
-        //var_dump($data);
         if ($data['vote']['title']) {
-          $img = "https://og-image-datan.vercel.app/" . str_replace(" ", "%20", ucfirst($data['vote']['title']));
-          $img .= "?voteN=" . $data['vote']['voteNumero'];
-          $img .= "&legislature=" . $data['vote']['legislature'];
-          $img .= "&date=" . str_replace(" ", "%20", $data['vote']['date_edited']);
-          $img .= "&pour=" . $data['vote']['pour'];
-          $img .= "&abs=" . $data['vote']['abstention'];
-          $img .= "&contre=" . $data['vote']['contre'];
-          $img .= "&sort=" . $data['vote']['sortCode'];
-          $img .= "&template=vote";
+          if (isset($data['explication'])) {
+            $img = "https://og-image-datan.vercel.app/" . str_replace(" ", "%20", ucfirst($data['vote']['title']));
+            $img .= "?prenom=" . str_replace(" ", "%20", $data['explication']['nameFirst']);
+            $img .= "&nom=" . str_replace(" ", "%20", $data['explication']['nameLast']);
+            $img .= "&template=explication";
+            $img .= "&id=PA" . $data['explication']['idImage'];
+            $img .= "&sort=" . $data['explication']['vote'];
+            $img .= "&img=" . $data['explication']['img'];
+          } else {
+            $img = "https://og-image-datan.vercel.app/" . str_replace(" ", "%20", ucfirst($data['vote']['title']));
+            $img .= "?voteN=" . $data['vote']['voteNumero'];
+            $img .= "&legislature=" . $data['vote']['legislature'];
+            $img .= "&date=" . str_replace(" ", "%20", $data['vote']['date_edited']);
+            $img .= "&pour=" . $data['vote']['pour'];
+            $img .= "&abs=" . $data['vote']['abstention'];
+            $img .= "&contre=" . $data['vote']['contre'];
+            $img .= "&sort=" . $data['vote']['sortCode'];
+            $img .= "&template=vote";
+          }
           $array['img'] = $img;
           $array['twitter_img'] = $img;
           $array['img_width'] = 2048;
