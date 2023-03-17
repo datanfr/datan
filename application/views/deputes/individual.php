@@ -159,7 +159,6 @@
                   </div>
                 </div>
               </div>
-
             <?php endif; ?>
           <?php endif; ?>
           <?php if ($depute['mailAn'] !== NULL && $active): ?>
@@ -951,7 +950,8 @@
         <!-- END BLOC SOCIAL MEDIA -->
       </div>
     </div>
-  </div> <!-- END CONTAINER -->
+  </div> <!-- END ROW -->
+</div> <!-- END CONTAINER -->
   <!-- CONTAINER FOLLOW US -->
   <?php $this->load->view('partials/follow-us.php') ?>
   <!-- AUTRES DEPUTES -->
