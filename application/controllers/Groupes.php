@@ -290,7 +290,7 @@
         $data['description_meta'] = "Découvrez les résultats de vote des députés non inscrits (NI) : taux de participation, cohésion au sein groupe, proximité avec les autres groupes parlementaires.";
         $data['title'] = 'Députés non inscrits';
       } else {
-        $data['title_meta'] = name_group($data['groupe']['libelle'])." - Assemblée Nationale | Datan";
+        $data['title_meta'] = name_group($data['groupe']['libelle'])." (" . $data['groupe']['libelleAbrev'] . ") - Assemblée Nationale | Datan";
         $data['description_meta'] = "Découvrez les résultats de vote du groupe " . name_group($data['groupe']['libelle']) . " (".$data['groupe']['libelleAbrev'].") : taux de participation, cohésion au sein groupe, proximité avec les autres groupes parlementaires.";
         $data['title'] = $data['groupe']['libelle'];
       }
