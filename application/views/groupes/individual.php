@@ -10,7 +10,7 @@
     <div class="col-md-10 col-lg-8 offset-md-1 offset-lg-0 pl-lg-5">
       <!-- BIO & ELECTION -->
       <div class="bloc-bio mt-5">
-        <h2 class="mb-4 title-center">En quelques mots</h2>
+        <h2 class="mb-4 title-center">Le groupe <?= $groupe['libelleAbrev'] ?> en quelques mots</h2>
         <?php if ($groupe['libelleAbrev'] == "NI"): ?>
           <p>Les <?= mb_strtolower($title) ?> (NI) ne sont pas membres d'un groupe politique.</p>
           <p>Ces députés peuvent cependant être membres d'un parti politique. Le parti politique est un groupement constitué hors de l'Assemblée nationale, alors que le <a href="http://www2.assemblee-nationale.fr/15/les-groupes-politiques/" target="_blank">groupe politique</a> est un organe officiel de l'Assemblée qui comporte au minimum 15 députés. Certains groupes, comme <a href="<?= base_url() ?>groupes/legislature-15/udi_i" target="_blank">UDI_I</a>, regroupent ainsi des députés venant de partis différents.</p>
