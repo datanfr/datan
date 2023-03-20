@@ -396,7 +396,6 @@
     }
 
     public function get_individual_vote_depute_participation($depute_id, $legislature, $num){
-      echo $depute_id;
       $where = array(
         'vp.mpId' => $depute_id,
         'vp.legislature' => $legislature,
