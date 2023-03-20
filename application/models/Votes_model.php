@@ -395,6 +395,24 @@
       return $this->db->get_where('votes_scores vs', $where, 1)->row_array();
     }
 
+    public function get_individual_vote_depute_participation($depute_id, $legislature, $num){
+      echo $depute_id;
+      $where = array(
+        'vp.mpId' => $depute_id,
+        'vp.legislature' => $legislature,
+        'vp.voteNumero' => $num
+      );
+      $this->db->select('vp.mpId, vp.legislature, vp.voteNumero, vp.participation');
+      $this->db->select('CASE
+        WHEN vs.vote = 1 THEN "pour"
+        WHEN vs.vote = -1 THEN "contre"
+        WHEN vs.vote = 0 THEN "abstention"
+        WHEN vs.vote IS NULL THEN "absent"
+        ELSE NULL END AS vote', FALSE);
+      $this->db->join('votes_scores vs', 'vs.legislature = vp.legislature AND vs.voteNumero = vp.voteNumero AND vs.mpId = vp.mpId', 'left');
+      return $this->db->get_where('votes_participation vp', $where, 1)->row_array();
+    }
+
     public function get_votes_all_depute($depute_id, $legislature){
       $sql = 'SELECT A.voteId, A.voteNumero, A.dateScrutin, A.titre, A.title, A.legislature,
         CASE
