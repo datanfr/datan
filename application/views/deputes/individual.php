@@ -10,6 +10,7 @@
         </div>
       </div> <!-- END COL -->
       <div class="col-md-10 col-lg-8 offset-md-1 offset-lg-0 pl-lg-5">
+        <?php $this->view('deputes/partials/voteFeature.php') ?>
         <div class="bloc-bio mt-5">
           <!-- For critical css -->
           <div class="card card-election-feature not-candidate d-none"></div>
