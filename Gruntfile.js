@@ -56,7 +56,7 @@ module.exports = function (grunt) {
         },
       },
     },
-    // uglify the js 
+    // uglify the js
     uglify: {
       options: {
         compress: true,
@@ -163,7 +163,7 @@ module.exports = function (grunt) {
               'assets/css/main.css'
           ],
           width: 375,
-          height: 3200
+          height: 3500
         },
         // The source file
         src: 'http://localhost/datan/deputes/reunion-974/depute_karine-lebon',
