@@ -1978,6 +1978,28 @@ ul.ui-menu{
       font-weight: 800;
     }
   }
+  /* Bloc election feature */
+  .card-vote-feature{
+    span{
+      font-weight: 800;
+    }
+    &.pour{
+      border: 2px solid $adopted;
+      span{
+        color: $adopted;
+      }
+    }
+    &.contre, &.absent, &.abstention{
+      border: 2px solid $rejected;
+      span{
+        color: $rejected;
+      }
+    }
+    h2{
+      font-weight: 800;
+      font-size: $h3-font-size;
+    }
+  }
   /* Bloc biographie */
   .bloc-bio{
     max-width: 575px;
