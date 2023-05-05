@@ -32,11 +32,11 @@
     }
 
     public function get_historique($id){
-      $sql = 'SELECT d.nameFirst, d.nameLast, mg.mpId AS id, mg.dateDebut, mg.dateFin, mg.codeQualite, o.libelle
+      $sql = 'SELECT d.nameFirst, d.nameLast, mg.dateDebut, mg.dateFin, mg.codeQualite, o.libelle
         FROM mandat_groupe mg
         LEFT JOIN deputes d ON mg.mpId = d.mpId
         LEFT JOIN organes o ON mg.organeRef = o.uid
-        WHERE mg.legislature = 15 AND mg.mpId = ?
+        WHERE mg.legislature >= 15 AND mg.mpId = ?
         ORDER BY mg.dateDebut DESC
       ';
       return $this->db->query($sql, $id)->result_array();
