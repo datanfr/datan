@@ -194,7 +194,7 @@
                               s'est abstenu<?= $gender["e"] ?> sur le vote concernant
                             <?php endif; ?>
                             l'inscription de l'interruption volontaire de grossesse (IVG) dans la Constitution</b>.
-                          <?= ucfirst($gender['pronom']) ?> <?= $key_votes[629]["loyaute"] === "1" ? "a été loyal" : "n'a pas été loyal" ?><?= $gender['e'] ?> a son groupe.
+                          <?= ucfirst($gender['pronom']) ?> <?= $key_votes[629]["loyaute"] === "1" ? "a été loyal" : "n'a pas été loyal" ?><?= $gender['e'] ?> à son groupe.
                           <a href="<?= base_url() ?>votes/legislature-16/vote_629" class="font-italic">Voir le vote</a>
                         </div>
                       </div>
@@ -214,7 +214,7 @@
                               s'est abstenu<?= $gender["e"] ?> sur le vote concernant
                             <?php endif; ?>
                             la création d'une taxe temporaire sur les super-dividendes distribués par les grandes entreprises</b>.
-                          <?= ucfirst($gender['pronom']) ?> <?= $key_votes[269]["loyaute"] === "1" ? "a été loyal" : "n'a pas été loyal" ?><?= $gender['e'] ?> a son groupe.
+                          <?= ucfirst($gender['pronom']) ?> <?= $key_votes[269]["loyaute"] === "1" ? "a été loyal" : "n'a pas été loyal" ?><?= $gender['e'] ?> à son groupe.
                           <a href="<?= base_url() ?>votes/legislature-16/vote_269" class="font-italic">Voir le vote</a>
                         </div>
                       </div>
@@ -234,7 +234,7 @@
                               s'est abstenu<?= $gender["e"] ?> sur le vote concernant
                             <?php endif; ?>
                             la ratification de l'accord pour l'adhésion de la Suède et de la Finlande à l'OTAN</b>.
-                          <?= ucfirst($gender['pronom']) ?> <?= $key_votes[184]["loyaute"] === "1" ? "a été loyal" : "n'a pas été loyal" ?><?= $gender['e'] ?> a son groupe.
+                          <?= ucfirst($gender['pronom']) ?> <?= $key_votes[184]["loyaute"] === "1" ? "a été loyal" : "n'a pas été loyal" ?><?= $gender['e'] ?> à son groupe.
                           <a href="<?= base_url() ?>votes/legislature-16/vote_184" class="font-italic">Voir le vote</a>
                         </div>
                       </div>

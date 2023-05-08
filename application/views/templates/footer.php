@@ -109,7 +109,11 @@
                       <img class="img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="542" height="542" data-src="<?= asset_url() ?>imgs/logos/linkedin_datan.png" alt="Logo Linkedin">
                       Linkedin
                     </a>
-                    <?php else: ?>
+                    <a href="https://www.instagram.com/datanfr/" target="_blank" class="no-decoration my-1" rel="noreferrer">
+                      <img class="img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="542" height="542" data-src="<?= asset_url() ?>imgs/logos/instagram_datan.png" alt="Logo Instagram">
+                      Instagram
+                    </a>
+                  <?php else: ?>
                     <span class="url_obf no-decoration text-white my-1" url_obf="<?= url_obfuscation("https://www.facebook.com/datanFR/") ?>">
                       <img class="img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="542" height="542" data-src="<?= asset_url() ?>imgs/logos/facebook_datan.png" alt="Logo Facebook">
                       Facebook
@@ -121,6 +125,10 @@
                     <span class="url_obf no-decoration text-white my-1" url_obf="<?= url_obfuscation("https://www.linkedin.com/company/datanfr/") ?>">
                       <img class="img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="542" height="542" data-src="<?= asset_url() ?>imgs/logos/linkedin_datan.png" alt="Logo Linkedin">
                       Linkedin
+                    </span>
+                    <span class="url_obf no-decoration text-white my-1" url_obf="<?= url_obfuscation("https://www.instagram.com/datanfr/") ?>">
+                      <img class="img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="542" height="542" data-src="<?= asset_url() ?>imgs/logos/instagram_datan.png" alt="Logo Instagram">
+                      Instagram
                     </span>
                   <?php endif; ?>
                 </div>
