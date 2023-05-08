@@ -499,7 +499,7 @@
           $this->load->view('dashboard/footer');
         } else {
           $data['depute'] = $this->deputes_model->get_infos($id);
-          $data['title'] = "Historique pour le député ".$data['depute']['nameFirst']." ".$data['depute']['nameLast'];
+          $data['title'] = "Historique pour le député ".$data['depute']['nameFirst']." ".$data['depute']['nameLast'] . " (" . $data['depute']['mpId'] . ")";
           $data['historique'] = $this->deputes_model->get_historique($id);
           $data['deputes'] = $data['historique'];
 
