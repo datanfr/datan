@@ -147,7 +147,8 @@
 
     public function get_depute_individual($nameUrl, $dpt){
       $sql = 'SELECT
-        dl.*, dl.libelle_2 AS dptLibelle2,
+        dl.*, mg.preseance AS preseanceGroupe,
+        dl.libelle_2 AS dptLibelle2,
         substr(dl.mpId, 3) AS idImage,
         h.mandatesN, h.mpLength, h.lengthEdited,
         dc.facebook, dc.twitter, dc.website, dc.mailAn,
@@ -157,6 +158,7 @@
         LEFT JOIN history_per_mps_average h ON dl.mpId = h.mpId
         LEFT JOIN deputes_contacts dc ON dl.mpId = dc.mpId
         LEFT JOIN deputes d ON dl.mpId = d.mpId
+        LEFT JOIN mandat_groupe mg ON mg.mandatId = dl.groupeMandat AND mg.nominPrincipale = 1
         WHERE dl.nameUrl = ? AND dl.dptSlug = ?
         LIMIT 1
       ';
