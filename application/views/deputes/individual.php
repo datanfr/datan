@@ -80,8 +80,9 @@
               </p>
             <?php else : ?>
               <p>
-                À l'Assemblée nationale, <?= $gender['pronom'] ?> siège avec le groupe <a href="<?= base_url() ?>groupes/legislature-<?= $depute['legislature'] ?>/<?= mb_strtolower($depute['libelleAbrev']) ?>"><?= name_group($depute['libelle']) ?></a> (<?= $depute["libelleAbrev"] ?>), un groupe <b>classé <?= $infos_groupes[$depute['libelleAbrev']]['edited'] ?></b> de l'échiquier politique.
-                <?php if ($isGroupPresident) : ?><?= $title ?> en est <?= $gender['le'] ?> président<?= $gender['e'] ?>.<?php endif; ?>
+                À l'Assemblée, <?= $title ?> siège avec le groupe <a href="<?= base_url() ?>groupes/legislature-<?= $depute['legislature'] ?>/<?= mb_strtolower($depute['libelleAbrev']) ?>"><?= name_group($depute['libelle']) ?></a> (<?= $depute["libelleAbrev"] ?>), un groupe <b>classé <?= $infos_groupes[$depute['libelleAbrev']]['edited'] ?></b> de l'échiquier politique.
+                <?php if ($depute['preseanceGroupe'] == 24): ?><?= $title  ?> n'est pas membre mais <b>apparenté<?= $gender['e'] ?></b> au groupe <?= $depute['libelleAbrev'] ?> : <?= $gender['pronom'] ?> est donc associé<?= $gender['e'] ?> au groupe tout en gardant une marge de liberté.<?php endif; ?>
+                <?php if ($isGroupPresident) : ?><?= $title ?> en est <?= $gender['le'] ?> <b>président<?= $gender['e'] ?></b>.<?php endif; ?>
               </p>
             <?php endif; ?>
           <?php else : ?>
