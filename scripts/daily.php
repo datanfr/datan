@@ -3618,6 +3618,7 @@ if (isset($argv[1])) {
     $script = new Script();
 }
 
+/*
 $script->fillDeputes();
 $script->deputeAll();
 $script->deputeLast();
@@ -3639,7 +3640,9 @@ $script->groupeAccord(); // Depend on the legislature
 $script->deputeAccord(); // Depend on the legislature
 $script->voteParticipation(); // Depend on the legislature
 $script->votesDossiers(); // Depend on the legislature
+*/
 $script->dossier(); // Depend on the legislature
+/*
 $script->dossiersActeurs(); // Depend on the legislature
 $script->documentsLegislatifs(); // Depend on the legislature
 $script->amendements(); // Depend on the legislature
@@ -3664,3 +3667,4 @@ $script->opendata_activeMPs();
 $script->opendata_activeGroupes();
 $script->opendata_historyMPs();
 $script->opendata_historyGroupes();
+*/
