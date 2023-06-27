@@ -189,6 +189,9 @@
       </div>
       <div class="row pb-5">
         <div class="col-lg-8 offset-lg-2 d-flex flex-wrap justify-content-around align-items-center">
+          <a href="https://www.lemonde.fr/politique/article/2023/06/23/le-rn-premier-opposant-a-emmanuel-macron-mais-soutien-regulier-a-l-assemblee-nationale_6178892_823448.html" target="_blank" rel="noopener">
+            <img class="mx-2 my-3 img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="150" height="35" data-src="<?= asset_url() ?>imgs/media/le_monde.png" alt="Le Monde">
+          </a>
           <a href="https://www.lejdd.fr/Politique/interventions-textes-qui-sont-les-deputes-les-plus-actifs-de-ce-debut-de-legislature-4126439" target="_blank" rel="noopener">
             <img class="mx-2 my-3 img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="150" height="35" data-src="<?= asset_url() ?>imgs/media/jdd.png" alt="JDD">
           </a>
@@ -207,8 +210,11 @@
           <span class="url_obf" url_obf="<?= url_obfuscation("https://www.ouest-france.fr/elections/legislatives/lannion-paimpol-quel-bilan-pour-le-depute-eric-bothorel-0f349264-e100-11ec-8469-165462e4a30b") ?>">
             <img class="mx-2 my-3 img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="120" height="38" data-src="<?= asset_url() ?>imgs/media/ouest_france.png" alt="Ouest France">
           </span>
-          <a href="https://theconversation.com/reintroduction-des-pesticides-neonicotino-des-comment-nos-deputes-ont-ils-vote-et-pourquoi-155158" target="_blank" rel="noopener">
-            <img class="mx-2 my-3 img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="220" height="17" data-src="<?= asset_url() ?>imgs/media/the_conversation.png" alt="The Conversation">
+          <span class="url_obf" url_obf="<?= url_obfuscation("https://www.la-croix.com/France/lhemicycle-Rassemblement-national-attend-heure-2023-06-01-1201269583") ?>">
+            <img class="mx-2 my-3 img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="150" height="30" data-src="<?= asset_url() ?>imgs/media/la_croix.png" alt="La Croix">
+          </span>
+          <a href="https://france3-regions.francetvinfo.fr/occitanie/haute-garonne/toulouse/legislatives-2022-top-5-de-l-activite-a-l-assemblee-il-a-fait-quoi-mon-depute-pendant-5-ans-2552692.html" target="_blank" rel="noopener">
+            <img class="mx-2 my-3 img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="136" height="26" data-src="<?= asset_url() ?>imgs/media/france3.png" alt="France 3">
           </a>
           <span class="url_obf" url_obf="<?= url_obfuscation("https://www.sudouest.fr/pyrenees-atlantiques/pau/assemblee-nationale-le-rn-pointe-le-manque-d-assiduite-de-david-habib-il-repond-qu-il-y-a-trop-d-amendements-futiles-12739495.php") ?>">
             <img class="mx-2 my-3 img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="65" height="59" data-src="<?= asset_url() ?>imgs/media/sud_ouest.png" alt="Sud Ouest">
@@ -219,9 +225,9 @@
           <span class="url_obf" url_obf="<?= url_obfuscation("https://www.lepoint.fr/politique/budget-pourquoi-lr-fait-l-assemblee-buissonniere-20-10-2022-2494617_20.php") ?>">
             <img class="mx-2 my-3 img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="144" height="34" data-src="<?= asset_url() ?>imgs/media/le-point.png" alt="Le Point">
           </span>
-          <span class="url_obf" url_obf="<?= url_obfuscation("https://www.tv78.com/78-journal-info-yvelines-actu-edition-25-janvier-2021/") ?>">
-            <img class="mx-2 my-3 img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="150" height="72" data-src="<?= asset_url() ?>imgs/media/tv78.png" alt="TV 78">
-          </span>
+          <a href="https://www.20minutes.fr/politique/assemblee_nationale/4042426-20230623-assemblee-nationale-rn-veut-poursuivre-lente-marche-vers-normalisation" target="_blank" rel="noopener">
+            <img class="mx-2 my-3 img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="70" height="70" data-src="<?= asset_url() ?>imgs/media/20_minutes.png" alt="20 Minutes">
+          </a>
           <span class="url_obf" url_obf="<?= url_obfuscation("https://www.ladepeche.fr/2021/01/23/comment-votent-vos-deputes-a-lassemblee-nationale-9328626.php") ?>">
             <img class="mx-2 my-3 img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="150" height="37" data-src="<?= asset_url() ?>imgs/media/depeche.png" alt="La Dépêche Ouest">
           </span>
@@ -231,14 +237,14 @@
           <a href="https://www.letelegramme.fr/finistere/morlaix/legislatives-a-morlaix-quel-est-le-bilan-de-sandrine-le-feur-08-06-2022-13061024.php" target="_blank" rel="noopener">
             <img class="mx-2 my-3 img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="135" height="19" data-src="<?= asset_url() ?>imgs/media/telegramme.png" alt="Le Télégramme">
           </a>
-          <span class="url_obf" url_obf="<?= url_obfuscation("https://ram05.fr/podcasts/journal/29-novembre-2021-7") ?>">
-            <img class="mx-2 my-3 img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="75" height="50" data-src="<?= asset_url() ?>imgs/media/ram05.png" alt="Radio Ram05">
-          </span>
-          <a href="https://france3-regions.francetvinfo.fr/occitanie/haute-garonne/toulouse/legislatives-2022-top-5-de-l-activite-a-l-assemblee-il-a-fait-quoi-mon-depute-pendant-5-ans-2552692.html" target="_blank" rel="noopener">
-            <img class="mx-2 my-3 img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="136" height="26" data-src="<?= asset_url() ?>imgs/media/france3.png" alt="France 3">
+          <a href="https://theconversation.com/reintroduction-des-pesticides-neonicotino-des-comment-nos-deputes-ont-ils-vote-et-pourquoi-155158" target="_blank" rel="noopener">
+            <img class="mx-2 my-3 img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="220" height="17" data-src="<?= asset_url() ?>imgs/media/the_conversation.png" alt="The Conversation">
           </a>
           <a href="https://www.marianne.net/politique/lrem/benjamin-griveaux-agnes-buzyn-cedric-villani-ces-six-espoirs-evapores-de-la-macronie-saison-1" target="_blank" rel="noopener">
             <img class="mx-2 my-3 img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="120" height="40" data-src="<?= asset_url() ?>imgs/media/marianne.png" alt="Marianne">
+          </a>
+          <a href="https://tnova.fr/democratie/politique-institutions/eric-ciotti-dans-ses-oeuvres/" target="_blank" rel="noopener">
+            <img class="mx-2 my-3 img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="119" height="71" data-src="<?= asset_url() ?>imgs/media/terra-nova.png" alt="Terra Nova">
           </a>
           <span class="url_obf" url_obf="<?= url_obfuscation("https://abonne.lunion.fr/id371931/article/2022-05-16/legislatives-le-bilan-de-la-deputee-valerie-beauvais-la-loupe") ?>">
             <img class="mx-2 my-3 img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="119" height="33" data-src="<?= asset_url() ?>imgs/media/lunion.png" alt="L'Union">
@@ -255,17 +261,23 @@
           <span class="url_obf" url_obf="<?= url_obfuscation("https://www.contrepoints.org/2022/10/28/441739-motion-de-censure-un-coup-declat-tout-sauf-historique") ?>">
             <img class="mx-2 my-3 img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="128" height="21" data-src="<?= asset_url() ?>imgs/media/contrepoints.png" alt="Contrepoints">
           </span>
-          <a href="https://tnova.fr/democratie/politique-institutions/eric-ciotti-dans-ses-oeuvres/" target="_blank" rel="noopener">
-            <img class="mx-2 my-3 img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="119" height="71" data-src="<?= asset_url() ?>imgs/media/terra-nova.png" alt="Terra Nova">
-          </a>
           <a href="https://www.radioevasion.net/2022/10/24/datan-vous-permet-de-suivre-de-pres-votre-deputee-ou-depute/" target="_blank" rel="noopener">
             <img class="mx-2 my-3 img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="70" height="70" data-src="<?= asset_url() ?>imgs/media/radio-evasion.png" alt="Radio Evasion">
           </a>
-          <a href="https://www.20minutes.fr/politique/4010231-20221119-assemblee-regarde-regulierement-deputes-accros-stats-comme-joueurs-foot" target="_blank" rel="noopener">
-            <img class="mx-2 my-3 img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="70" height="70" data-src="<?= asset_url() ?>imgs/media/20_minutes.png" alt="20 Minutes">
+          <span class="url_obf" url_obf="<?= url_obfuscation("https://www.tv78.com/78-journal-info-yvelines-actu-edition-25-janvier-2021/") ?>">
+            <img class="mx-2 my-3 img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="150" height="72" data-src="<?= asset_url() ?>imgs/media/tv78.png" alt="TV 78">
+          </span>
+          <a href="https://www.laprovence.com/article/legislatives-2022/6788904/legislatives-2022-un-quiz-pour-savoir-si-vous-avez-les-memes-convictions-que-votre-depute.html" target="_blank" rel="noopener">
+            <img class="mx-2 my-3 img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="183" height="28" data-src="<?= asset_url() ?>imgs/media/la_provence.png" alt="La Provence">
           </a>
+          <span class="url_obf" url_obf="<?= url_obfuscation("https://www.lemondedesados.fr/elections-legislatives-a-quoi-servent-les-deputes/") ?>">
+            <img class="mx-2 my-3 img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="85" height="40" data-src="<?= asset_url() ?>imgs/media/mda.png" alt="Le Monde des Ados">
+          </span>
           <span class="url_obf" url_obf="<?= url_obfuscation("https://www.republicain-lorrain.fr/politique/2023/02/02/etre-depute-c-est-du-temps-plein") ?>">
             <img class="mx-2 my-3 img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="123" height="40" data-src="<?= asset_url() ?>imgs/media/republicain_lorrain.png" alt="Républicain Lorrain">
+          </span>
+          <span class="url_obf" url_obf="<?= url_obfuscation("https://ram05.fr/podcasts/journal/29-novembre-2021-7") ?>">
+            <img class="mx-2 my-3 img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="75" height="50" data-src="<?= asset_url() ?>imgs/media/ram05.png" alt="Radio Ram05">
           </span>
         </div>
       </div>
