@@ -207,6 +207,9 @@
           <span class="url_obf" url_obf="<?= url_obfuscation("https://www.ouest-france.fr/elections/legislatives/lannion-paimpol-quel-bilan-pour-le-depute-eric-bothorel-0f349264-e100-11ec-8469-165462e4a30b") ?>">
             <img class="mx-2 my-3 img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="120" height="38" data-src="<?= asset_url() ?>imgs/media/ouest_france.png" alt="Ouest France">
           </span>
+          <span class="url_obf" url_obf="<?= url_obfuscation("https://www.la-croix.com/France/lhemicycle-Rassemblement-national-attend-heure-2023-06-01-1201269583") ?>">
+            <img class="mx-2 my-3 img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="150" height="30" data-src="<?= asset_url() ?>imgs/media/la_croix.png" alt="La Croix">
+          </span>
           <a href="https://theconversation.com/reintroduction-des-pesticides-neonicotino-des-comment-nos-deputes-ont-ils-vote-et-pourquoi-155158" target="_blank" rel="noopener">
             <img class="mx-2 my-3 img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="220" height="17" data-src="<?= asset_url() ?>imgs/media/the_conversation.png" alt="The Conversation">
           </a>
