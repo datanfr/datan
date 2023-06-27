@@ -189,6 +189,9 @@
       </div>
       <div class="row pb-5">
         <div class="col-lg-8 offset-lg-2 d-flex flex-wrap justify-content-around align-items-center">
+          <a href="https://www.lemonde.fr/politique/article/2023/06/23/le-rn-premier-opposant-a-emmanuel-macron-mais-soutien-regulier-a-l-assemblee-nationale_6178892_823448.html" target="_blank" rel="noopener">
+            <img class="mx-2 my-3 img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="150" height="35" data-src="<?= asset_url() ?>imgs/media/le_monde.png" alt="Le Monde">
+          </a>
           <a href="https://www.lejdd.fr/Politique/interventions-textes-qui-sont-les-deputes-les-plus-actifs-de-ce-debut-de-legislature-4126439" target="_blank" rel="noopener">
             <img class="mx-2 my-3 img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="150" height="35" data-src="<?= asset_url() ?>imgs/media/jdd.png" alt="JDD">
           </a>
@@ -267,6 +270,12 @@
           <a href="https://www.20minutes.fr/politique/assemblee_nationale/4042426-20230623-assemblee-nationale-rn-veut-poursuivre-lente-marche-vers-normalisation" target="_blank" rel="noopener">
             <img class="mx-2 my-3 img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="70" height="70" data-src="<?= asset_url() ?>imgs/media/20_minutes.png" alt="20 Minutes">
           </a>
+          <a href="https://www.laprovence.com/article/legislatives-2022/6788904/legislatives-2022-un-quiz-pour-savoir-si-vous-avez-les-memes-convictions-que-votre-depute.html" target="_blank" rel="noopener">
+            <img class="mx-2 my-3 img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="183" height="28" data-src="<?= asset_url() ?>imgs/media/la_provence.png" alt="La Provence">
+          </a>
+          <span class="url_obf" url_obf="<?= url_obfuscation("https://www.lemondedesados.fr/elections-legislatives-a-quoi-servent-les-deputes/") ?>">
+            <img class="mx-2 my-3 img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="85" height="40" data-src="<?= asset_url() ?>imgs/media/mda.png" alt="Le Monde des Ados">
+          </span>
           <span class="url_obf" url_obf="<?= url_obfuscation("https://www.republicain-lorrain.fr/politique/2023/02/02/etre-depute-c-est-du-temps-plein") ?>">
             <img class="mx-2 my-3 img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="123" height="40" data-src="<?= asset_url() ?>imgs/media/republicain_lorrain.png" alt="Républicain Lorrain">
           </span>
