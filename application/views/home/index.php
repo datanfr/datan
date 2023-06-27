@@ -261,7 +261,7 @@
           <a href="https://www.radioevasion.net/2022/10/24/datan-vous-permet-de-suivre-de-pres-votre-deputee-ou-depute/" target="_blank" rel="noopener">
             <img class="mx-2 my-3 img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="70" height="70" data-src="<?= asset_url() ?>imgs/media/radio-evasion.png" alt="Radio Evasion">
           </a>
-          <a href="https://www.20minutes.fr/politique/4010231-20221119-assemblee-regarde-regulierement-deputes-accros-stats-comme-joueurs-foot" target="_blank" rel="noopener">
+          <a href="https://www.20minutes.fr/politique/assemblee_nationale/4042426-20230623-assemblee-nationale-rn-veut-poursuivre-lente-marche-vers-normalisation" target="_blank" rel="noopener">
             <img class="mx-2 my-3 img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="70" height="70" data-src="<?= asset_url() ?>imgs/media/20_minutes.png" alt="20 Minutes">
           </a>
           <span class="url_obf" url_obf="<?= url_obfuscation("https://www.republicain-lorrain.fr/politique/2023/02/02/etre-depute-c-est-du-temps-plein") ?>">
