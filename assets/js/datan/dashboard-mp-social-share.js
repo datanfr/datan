@@ -10,7 +10,7 @@ jQuery(".social-share.twitter").on("click", function() {
   let title = $(this).attr("data-title");
   let url = $(this).attr("data-url");
   let encodeUrl = encodeURIComponent(url);
-  let tweet = "À l'Assemblée, " + position + " lors du scrutin « " + title + " ». Découvrez mon explication de vote sur Datan ! [hashtagDirectAN]";
+  let tweet = "À l'Assemblée, " + position + " lors du scrutin « " + title + " ». Découvrez mon explication de vote sur Datan ! " + encodeURIComponent('#DirectAN');
   let output = "https://twitter.com/intent/tweet?url=" + encodeUrl + "&text=" + tweet;
   socialWindow(output);
 });
