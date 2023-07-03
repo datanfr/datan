@@ -38,7 +38,7 @@
       <div class="d-flex flex-column justify-content-center align-items-center my-5 py-5" id="pattern_background" style="margin-left: -15px; margin-right: -15px">
         <h2 class="font-weight-bold text-black text-center">Suggestion de votes à expliquer</h2>
         <?php $this->load->view('dashboard-mp/explications/partials/suggestions.php') ?>
-        <a class="h2 btn btn-outline-primary font-weight-bold mb-0 mt-5" style="font-size: 1.1rem" href="<?= base_url() ?>dashboard-mp/explications/liste">
+        <a class="h2 btn btn-primary font-weight-bold mb-0 mt-5" style="font-size: 1.1rem" href="<?= base_url() ?>dashboard-mp/explications/liste">
           <?= file_get_contents(asset_url() . "imgs/icons/pencil-square.svg") ?>
           <span class="ml-3">Créez une explication pour un autre scrutin</span>
         </a>
