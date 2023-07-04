@@ -26,7 +26,7 @@
 
     public function security_only_mp(){
       if ($this->session->userdata('type') != 'mp') {
-        show_404();
+        redirect('login');
       }
     }
 
