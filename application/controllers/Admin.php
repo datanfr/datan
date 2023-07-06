@@ -16,6 +16,7 @@
       $this->load->model('votes_model');
       $this->load->model('parrainages_model');
       $this->load->model('exposes_model');
+      $this->load->model('DashboardMP_model');
       $this->password_model->security_only_team();
 
       $this->data = array(
@@ -37,6 +38,7 @@
       $data['newsletter_total'] = $this->newsletter_model->get_number_registered("general");
       $data['newsletter_month'] = $this->newsletter_model->get_registered_month("general");
       $data['votes_requested'] = $this->votes_model->get_requested_votes();
+      $data['explications'] = $this->DashboardMP_model->get_last_explanations();
 
       // Meta
       $data['title_meta'] = 'Dashboard | Datan';
