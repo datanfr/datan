@@ -27,7 +27,7 @@ class DashboardMP_model extends CI_Model
       ORDER BY vi.dateScrutin DESC
     ';
 
-return $this->db->query($sql, array($mpId, $mpId))->result_array();
+    return $this->db->query($sql, array($mpId, $mpId))->result_array();
   }
 
   public function get_votes_to_explain_suggestion($array){
@@ -133,6 +133,15 @@ return $this->db->query($sql, array($mpId, $mpId))->result_array();
     $this->db->where('legislature', $input['legislature']);
     $this->db->where('voteNumero', $input['voteNumero']);
     $this->db->delete('explications_mp');
+  }
+
+  public function get_last_explanations(){
+    $this->db->select('e.id, e.voteNumero, e.legislature, e.mpId, e.text, e.modified_at, d.nameFirst, d.nameLast, d.libelleAbrev, vd.title AS vote');
+    $this->db->where('e.state', 1);
+    $this->db->order_by('e.created_at', 'DESC');
+    $this->db->join('deputes_last d', 'd.mpId = e.mpId', 'left');
+    $this->db->join('votes_datan vd', 'vd.legislature = e.legislature AND vd.voteNumero = e.voteNumero', 'left');
+    return $this->db->get('explications_mp e')->result_array();
   }
 
 }
