@@ -1,23 +1,19 @@
-  <!-- Content Wrapper. Contains page content -->
   <div class="content-wrapper">
-    <!-- Content Header (Page header) -->
     <div class="content-header">
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
             <h1 class="m-0 text-dark">Dashboard</h1>
-          </div><!-- /.col -->
+          </div>
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
               <li class="breadcrumb-item"><a href="#">Dashboard</a></li>
               <li class="breadcrumb-item active">Starter Page</li>
             </ol>
-          </div><!-- /.col -->
-        </div><!-- /.row -->
-      </div><!-- /.container-fluid -->
+          </div>
+        </div>
+      </div>
     </div>
-    <!-- /.content-header -->
-    <!-- Main content -->
     <div class="content">
       <div class="container-fluid">
         <div class="row">
@@ -56,7 +52,7 @@
                 <a href="<?= base_url() ?>admin/votes/create" class="btn btn-primary">Créer un vote</a>
                 <a href="<?= base_url() ?>admin/votes" class="btn btn-primary">Tous les votes</a>
               </div>
-            </div><!-- /.card -->
+            </div>
           </div>
           <div class="col-lg-6">
             <div class="card card-primary card-outline">
@@ -143,7 +139,7 @@
                     </tbody>
                   </table>
               </div>
-            </div><!-- /.card -->
+            </div>
           </div>
           <div class="col-lg-6">
             <div class="card card-primary card-outline">
@@ -156,7 +152,7 @@
                     <canvas id="barChart" style="height:230px"></canvas>
                   </div>
               </div>
-            </div><!-- /.card -->
+            </div>
           </div>
           <div class="col-lg-6">
             <div class="card card-primary card-outline">
@@ -185,16 +181,42 @@
                     </tbody>
                   </table>
               </div>
-            </div><!-- /.card -->
+            </div>
+          </div>
+          <div class="col-lg-12">
+            <div class="card card-primary card-outline">
+              <div class="card-header">
+                <h5 class="m-0">Dernières explications de vote</h5>
+              </div>
+              <div class="card-body">
+                  <table class="table">
+                    <thead>
+                      <tr>
+                        <th>Député</th>
+                        <th>Vote</th>
+                        <th>Texte</th>
+                        <th>Modification</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <?php foreach ($explications as $e): ?>
+                        <tr>
+                          <td><?= $e['nameFirst'] . ' ' . $e['nameLast'] . ' (' . $e['libelleAbrev'] . ')' ?></td>
+                          <td><a href="<?= base_url() ?>votes/legislature-<?= $e['legislature'] ?>/vote_<?= $e['voteNumero'] ?>" target="_blank"><?= $e['vote'] ?></a></td>
+                          <td><?= $e['text'] ?></td>
+                          <td><?= $e['modified_at'] ?></td>
+                          <td><a href="<?= base_url() ?>votes/legislature-<?= $e['legislature'] ?>/vote_<?= $e['voteNumero'] ?>/explication_<?= $e['mpId'] ?>" target="_blank" class="btn btn-primary">Voir</a></td>
+                        </tr>
+                      <?php endforeach; ?>
+                    </tbody>
+                  </table>
+              </div>
+            </div>
           </div>
         </div>
-      </div><!-- /.container-fluid -->
+      </div>
     </div>
-    <!-- /.content -->
   </div>
-  <!-- /.content-wrapper -->
-
-  <!-- Control Sidebar -->
   <aside class="control-sidebar control-sidebar-dark">
     <!-- Control sidebar content goes here -->
     <div class="p-3">
