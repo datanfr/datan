@@ -270,6 +270,9 @@
           <a href="https://www.laprovence.com/article/legislatives-2022/6788904/legislatives-2022-un-quiz-pour-savoir-si-vous-avez-les-memes-convictions-que-votre-depute.html" target="_blank" rel="noopener">
             <img class="mx-2 my-3 img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="183" height="28" data-src="<?= asset_url() ?>imgs/media/la_provence.png" alt="La Provence">
           </a>
+          <span class="url_obf" url_obf="<?= url_obfuscation("https://www.lest-eclair.fr/id498781/article/2023-06-30/un-apres-les-legislatives-les-republicains-deboussoles") ?>">
+            <img class="mx-2 my-3 img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="145" height="22" data-src="<?= asset_url() ?>imgs/media/est_eclair.png" alt="L'Est eclair">
+          </span>
           <span class="url_obf" url_obf="<?= url_obfuscation("https://www.lemondedesados.fr/elections-legislatives-a-quoi-servent-les-deputes/") ?>">
             <img class="mx-2 my-3 img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="85" height="40" data-src="<?= asset_url() ?>imgs/media/mda.png" alt="Le Monde des Ados">
           </span>
