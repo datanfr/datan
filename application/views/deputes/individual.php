@@ -294,7 +294,7 @@
                 <p class="title mb-1">
                   <a class="no-decoration underline" href="<?= base_url() ?>votes/legislature-<?= $explication['legislature'] ?>/vote_<?= $explication['voteNumero'] ?>"><?= $explication['title'] ?></a>
                 </p>
-                <p class="date mb-4">Scrutin du <?= $vote['dateScrutinFR'] ?></p>
+                <p class="date mb-4">Scrutin du <?= $explication['dateScrutinFR'] ?></p>
                 <p class="mb-2">
                   <span class="badge badge-<?= mb_strtolower($explication['vote_depute']) ?>"><?= mb_strtoupper($explication['vote_depute']) ?></span>
                 </p>
