@@ -771,6 +771,7 @@
       $data = $this->data;
       $user_id = $this->session->userdata('user_id');
       $data['title'] = 'Liste des exposés des motifs';
+      $data['title_meta'] = $data['title'] . ' - Dashboard | Datan';
       $data['exposes'] = $this->exposes_model->get_all_exposes();
 
       $this->load->view('dashboard/header', $data);
@@ -782,6 +783,7 @@
       $data = $this->data;
       $user_id = $this->session->userdata('user_id');
       $data['title'] = 'Modifier un exposé des motifs';
+      $data['title_meta'] = $data['title'] . ' - Dashboard | Datan';
       $data['expose'] = $this->exposes_model->get_expose($id);
 
       if (empty($data['expose'])) {
