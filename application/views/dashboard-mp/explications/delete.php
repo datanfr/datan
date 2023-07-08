@@ -12,7 +12,7 @@
     <div class="container-fluid">
       <div class="row">
         <div class="col-12">
-          <a class="btn btn-outline-secondary font-weight-bold" href="<?= base_url() ?>dashboard-mp/explications">
+          <a class="btn btn-outline-secondary font-weight-bold" href="<?= base_url() ?>dashboard/explications">
             <?= file_get_contents(asset_url()."imgs/icons/arrow_left.svg") ?>
             Retour
           </a>
@@ -48,7 +48,7 @@
                 <button type="button" onclick="window.location.href = '<?= base_url() ?>admin/votes';" class="btn btn-default"> Annuler</button>
               </div>
               <div class="float-right">
-                <?= form_open_multipart('dashboard-mp/explications/delete/l' . $legislature . 'v' . $voteNumero); ?>
+                <?= form_open_multipart('dashboard/explications/delete/l' . $legislature . 'v' . $voteNumero); ?>
                   <input type="hidden" name="delete" value="deleted">
                   <button type="submit" class="btn btn-danger">Supprimer</button>
                 </form>
