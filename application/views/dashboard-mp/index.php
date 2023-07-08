@@ -7,9 +7,9 @@
           </div>
         </div>
         <div class="row mb-2">
-          <div class="col-lg-6">
-            <h1 class="m-0 text-dark font-weight-bold">Espace personnel - <?= $depute['nameFirst'] ?> <?= $depute['nameLast'] ?></h1>
-            <p class="mt-3">Bienvenue sur votre espace personnel sur Datan. Cet espace vous permet d'avoir accès à des fonctionnalités dédiés aux parlementaires. Si vous avez des questions, n'hésitez pas à nous contacter : <i>info@datan.fr</i></p>
+          <div class="col-lg-7">
+            <h1 class="m-0 text-dark font-weight-bold">Bienvenue sur votre dashboard</h1>
+            <p class="mt-3">Ce dashboard vous permet d'avoir accès à des fonctionnalités dédiées aux députés. Si vous avez des questions, n'hésitez pas à nous contacter : <i>info@datan.fr</i></p>
           </div>
         </div>
       </div>
