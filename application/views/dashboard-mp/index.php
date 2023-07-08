@@ -39,7 +39,7 @@
                           <td class="font-weight-bold"><?= $value['vote_titre'] ?></td>
                           <td class="text-center"><span class="badge badge<?= ucfirst($value['vote_depute']) ?>" style="font-size: 16px"><?= ucfirst($value['vote_depute']) ?></span></td>
                           <td>
-                            <a class="btn btn-primary d-flex align-items-center justify-content-center font-weight-bold" href="<?= base_url() ?>dashboard-mp/explications/modify/l<?= $value['legislature'] ?>v<?= $value['voteNumero'] ?>">
+                            <a class="btn btn-primary d-flex align-items-center justify-content-center font-weight-bold" href="<?= base_url() ?>dashboard/explications/modify/l<?= $value['legislature'] ?>v<?= $value['voteNumero'] ?>">
                               <?= file_get_contents(asset_url()."imgs/icons/pencil-square.svg") ?>
                               <span class="ml-3">Modifier</span>
                             </a>
@@ -53,7 +53,7 @@
                 <?php endif; ?>
               </div>
               <div class="card-footer d-flex justify-content-center align-items-center">
-                <a class="btn btn-primary font-weight-bold" style="font-size: 1.1rem" href="<?= base_url() ?>dashboard-mp/explications" role="button">Voir toutes vos explications de vote</a>
+                <a class="btn btn-primary font-weight-bold" style="font-size: 1.1rem" href="<?= base_url() ?>dashboard/explications" role="button">Voir toutes vos explications de vote</a>
               </div>
             </div>
           </div>

@@ -12,7 +12,7 @@
     <div class="container-fluid">
       <div class="row">
         <div class="col-12">
-          <a class="btn btn-outline-secondary font-weight-bold" href="<?= base_url() ?>dashboard-mp/explications">
+          <a class="btn btn-outline-secondary font-weight-bold" href="<?= base_url() ?>dashboard/explications">
             <?= file_get_contents(asset_url()."imgs/icons/arrow_left.svg") ?>
             Retour
           </a>
@@ -66,7 +66,7 @@
                       </a>
                     </td>
                     <td>
-                      <a class="btn btn-primary d-flex align-items-center font-weight-bold" href="<?= base_url() ?>dashboard-mp/explications/create/l<?= $value['legislature'] ?>v<?= $value['voteNumero'] ?>">
+                      <a class="btn btn-primary d-flex align-items-center font-weight-bold" href="<?= base_url() ?>dashboard/explications/create/l<?= $value['legislature'] ?>v<?= $value['voteNumero'] ?>">
                         <?= file_get_contents(asset_url()."imgs/icons/pencil-square.svg") ?>
                         <span class="ml-3">Explication</span>
                       </a>
