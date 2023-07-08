@@ -81,14 +81,14 @@ $route['admin/parrainages/modify/(:any)'] = 'admin/modify_parrainage/$1';
 $route['admin/exposes'] = 'admin/exposes';
 $route['admin/exposes/modify/(:any)'] = 'admin/exposes_modify/$1';
 // MpDashboard
-$route['dashboard-mp'] = 'dashboardMP/index';
-$route['dashboard-mp/elections/(:any)'] = 'dashboardMP/elections/$1';
-$route['dashboard-mp/elections/(:any)/modifier'] = 'dashboardMP/elections_modify/$1';
-$route['dashboard-mp/explications'] = 'dashboardMP/explications';
-$route['dashboard-mp/explications/liste'] = 'dashboardMP/explications_liste';
-$route['dashboard-mp/explications/create/l(:any)v(:any)'] = 'dashboardMP/explications_create/$1/$2';
-$route['dashboard-mp/explications/modify/l(:any)v(:any)'] = 'dashboardMP/explications_modify/$1/$2';
-$route['dashboard-mp/explications/delete/l(:any)v(:any)'] = 'dashboardMP/explications_delete/$1/$2';
+$route['dashboard'] = 'dashboardMP/index';
+$route['dashboard/elections/(:any)'] = 'dashboardMP/elections/$1';
+$route['dashboard/elections/(:any)/modifier'] = 'dashboardMP/elections_modify/$1';
+$route['dashboard/explications'] = 'dashboardMP/explications';
+$route['dashboard/explications/liste'] = 'dashboardMP/explications_liste';
+$route['dashboard/explications/create/l(:any)v(:any)'] = 'dashboardMP/explications_create/$1/$2';
+$route['dashboard/explications/modify/l(:any)v(:any)'] = 'dashboardMP/explications_modify/$1/$2';
+$route['dashboard/explications/delete/l(:any)v(:any)'] = 'dashboardMP/explications_delete/$1/$2';
 // USERS
 $route['mon-compte'] = 'users/compte';
 $route['mon-compte/modifier-donnees-personnelles'] = 'users/modify_personal_data';

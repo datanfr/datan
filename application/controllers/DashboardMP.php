@@ -34,7 +34,7 @@
       // Meta
       $data['title_meta'] = 'Dashboard | Datan';
       $data['breadcrumb'] = array(
-        array('name' => 'Dashboard', 'url' => base_url().'dashboard-mp', 'active' => TRUE)
+        array('name' => 'Dashboard', 'url' => base_url().'dashboard', 'active' => TRUE)
       );
 
       // Views
@@ -68,8 +68,8 @@
       // Meta
       $data['title_meta'] = 'Élections - Dashboard | Datan';
       $data['breadcrumb'] = array(
-        array('name' => 'Dashboard', 'url' => base_url().'dashboard-mp', 'active' => FALSE),
-        array('name' => 'Élections ' . mb_strtolower($data['election']['libelleAbrev']) . ' ' . $data['election']['dateYear'], 'url' => base_url().'dashboard-mp/elections/' . $slug, 'active' => TRUE),
+        array('name' => 'Dashboard', 'url' => base_url().'dashboard', 'active' => FALSE),
+        array('name' => 'Élections ' . mb_strtolower($data['election']['libelleAbrev']) . ' ' . $data['election']['dateYear'], 'url' => base_url().'dashboard/elections/' . $slug, 'active' => TRUE),
       );
 
       // Views
@@ -111,9 +111,9 @@
         // Meta
         $data['title_meta'] = 'Modifier une élection - Dashboard | Datan';
         $data['breadcrumb'] = array(
-          array('name' => 'Dashboard', 'url' => base_url().'dashboard-mp', 'active' => FALSE),
-          array('name' => 'Élections ' . mb_strtolower($data['election']['libelleAbrev']) . ' ' . $data['election']['dateYear'], 'url' => base_url().'dashboard-mp/elections/' . $slug, 'active' => FALSE),
-          array('name' => 'Modifier', 'url' => base_url().'dashboard-mp/elections/'. $slug . '/modifier', 'active' => TRUE),
+          array('name' => 'Dashboard', 'url' => base_url().'dashboard', 'active' => FALSE),
+          array('name' => 'Élections ' . mb_strtolower($data['election']['libelleAbrev']) . ' ' . $data['election']['dateYear'], 'url' => base_url().'dashboard/elections/' . $slug, 'active' => FALSE),
+          array('name' => 'Modifier', 'url' => base_url().'dashboard/elections/'. $slug . '/modifier', 'active' => TRUE),
         );
 
         // Views
@@ -127,7 +127,7 @@
         $this->table_history_model->insert($data['candidate']['link'], $this->input->post('link'), 'elect_deputes_candidats', 'link', $this->session->userdata('user_id'));
         delete_all_cache();
         $this->db->cache_delete_all();
-        redirect('dashboard-mp/elections/' . $slug);
+        redirect('dashboard/elections/' . $slug);
       }
     }
 
@@ -150,8 +150,8 @@
       // Meta
       $data['title_meta'] = 'Explications de vote - Dashboard | Datan';
       $data['breadcrumb'] = array(
-        array('name' => 'Dashboard', 'url' => base_url().'dashboard-mp', 'active' => FALSE),
-        array('name' => 'Explications de vote', 'url' => base_url().'dashboard-mp/explications', 'active' => TRUE),
+        array('name' => 'Dashboard', 'url' => base_url().'dashboard', 'active' => FALSE),
+        array('name' => 'Explications de vote', 'url' => base_url().'dashboard/explications', 'active' => TRUE),
       );
 
       $data['js_to_load'] = array('datan/dashboard-mp-social-share');
@@ -175,9 +175,9 @@
       // Meta
       $data['title_meta'] = 'Liste des votes à expliquer - Dashboard | Datan';
       $data['breadcrumb'] = array(
-        array('name' => 'Dashboard', 'url' => base_url().'dashboard-mp', 'active' => FALSE),
-        array('name' => 'Explications de vote', 'url' => base_url().'dashboard-mp/explications', 'active' => FALSE),
-        array('name' => 'Liste', 'url' => base_url().'dashboard-mp/explications/liste', 'active' => TRUE),
+        array('name' => 'Dashboard', 'url' => base_url().'dashboard', 'active' => FALSE),
+        array('name' => 'Explications de vote', 'url' => base_url().'dashboard/explications', 'active' => FALSE),
+        array('name' => 'Liste', 'url' => base_url().'dashboard/explications/liste', 'active' => TRUE),
       );
 
       // Views
@@ -204,14 +204,14 @@
 
       if (empty($data['vote_depute'])) {
         $this->session->set_flashdata('flash_failure', "Vous n'avez pas pris part au vote n° " . $data["vote"]["voteNumero"] . ". Merci de choisir un scrutin dans cette liste.");
-        redirect('dashboard-mp/explications/liste');
+        redirect('dashboard/explications/liste');
       }
 
       // Check if already an explanation
       $data['explication'] = $this->votes_model->get_explication($data['depute']['mpId'], $legislature, $voteNumero);
       if ($data['explication']) {
-        $this->session->set_flashdata('flash_failure', "Vous avez déjà rédigé une explication pour ce vote n° " . $data["vote"]["voteNumero"] . ". Vous pouvez le modifier en <a href='".base_url()."dashboard-mp/explications/modify/l".$legislature."v".$voteNumero."'>cliquant ici</a>.");
-        redirect('dashboard-mp/explications/liste');
+        $this->session->set_flashdata('flash_failure', "Vous avez déjà rédigé une explication pour ce vote n° " . $data["vote"]["voteNumero"] . ". Vous pouvez le modifier en <a href='".base_url()."dashboard/explications/modify/l".$legislature."v".$voteNumero."'>cliquant ici</a>.");
+        redirect('dashboard/explications/liste');
       }
 
       $data['vote_depute']['vote'] = vote_edited($data['vote_depute']['vote']);
@@ -230,9 +230,9 @@
         // Meta
         $data['title_meta'] = 'Rédigez une explication de vote - Dashboard | Datan';
         $data['breadcrumb'] = array(
-          array('name' => 'Dashboard', 'url' => base_url().'dashboard-mp', 'active' => FALSE),
-          array('name' => 'Explications de vote', 'url' => base_url().'dashboard-mp/explications', 'active' => FALSE),
-          array('name' => 'Rédiger', 'url' => base_url().'dashboard-mp/explications/create/l' . $legislature . 'v' . $voteNumero, 'active' => TRUE),
+          array('name' => 'Dashboard', 'url' => base_url().'dashboard', 'active' => FALSE),
+          array('name' => 'Explications de vote', 'url' => base_url().'dashboard/explications', 'active' => FALSE),
+          array('name' => 'Rédiger', 'url' => base_url().'dashboard/explications/create/l' . $legislature . 'v' . $voteNumero, 'active' => TRUE),
         );
 
         $data['explication']['text'] = $this->input->post('explication');
@@ -245,7 +245,7 @@
         $this->dashboardMP_model->create_explication($data);
         delete_all_cache();
         $this->db->cache_delete_all();
-        redirect('dashboard-mp/explications');
+        redirect('dashboard/explications');
       }
 
     }
@@ -255,8 +255,8 @@
       $data['explication'] = $this->votes_model->get_explication($data['depute']['mpId'], $legislature, $voteNumero);
 
       if (empty($data['explication'])) {
-        $this->session->set_flashdata('flash_failure', "Vous n'avez pas encore rédigé une explication pour le vote n° " . $voteNumero . ". Vous pouvez en créer une en <a href='".base_url()."dashboard-mp/explications/create/l".$legislature."v".$voteNumero."'>cliquant ici</a>.");
-        redirect('dashboard-mp/explications/liste');
+        $this->session->set_flashdata('flash_failure', "Vous n'avez pas encore rédigé une explication pour le vote n° " . $voteNumero . ". Vous pouvez en créer une en <a href='".base_url()."dashboard/explications/create/l".$legislature."v".$voteNumero."'>cliquant ici</a>.");
+        redirect('dashboard/explications/liste');
       }
 
       $data['vote'] = $this->votes_model->get_individual_vote($legislature, $voteNumero);
@@ -286,9 +286,9 @@
         // Meta
         $data['title_meta'] = 'Modifiez de vote - Dashboard | Datan';
         $data['breadcrumb'] = array(
-          array('name' => 'Dashboard', 'url' => base_url().'dashboard-mp', 'active' => FALSE),
-          array('name' => 'Explications de vote', 'url' => base_url().'dashboard-mp/explications', 'active' => FALSE),
-          array('name' => 'Modifier', 'url' => base_url().'dashboard-mp/explications/modify/l' . $legislature . 'v' . $voteNumero, 'active' => TRUE),
+          array('name' => 'Dashboard', 'url' => base_url().'dashboard', 'active' => FALSE),
+          array('name' => 'Explications de vote', 'url' => base_url().'dashboard/explications', 'active' => FALSE),
+          array('name' => 'Modifier', 'url' => base_url().'dashboard/explications/modify/l' . $legislature . 'v' . $voteNumero, 'active' => TRUE),
         );
         // Views
         $this->load->view('dashboard/header', $data);
@@ -298,7 +298,7 @@
         $this->dashboardMP_model->modify_explication($data);
         delete_all_cache();
         $this->db->cache_delete_all();
-        redirect('dashboard-mp/explications');
+        redirect('dashboard/explications');
       }
 
     }
@@ -308,8 +308,8 @@
       $data['explication'] = $this->votes_model->get_explication($data['depute']['mpId'], $legislature, $voteNumero);
 
       if (empty($data['explication'])) {
-        $this->session->set_flashdata('flash_failure', "Vous n'avez pas encore rédigé une explication pour le vote n° " . $voteNumero . ". Vous pouvez en créer une en <a href='".base_url()."dashboard-mp/explications/create/l".$legislature."v".$voteNumero."'>cliquant ici</a>.");
-        redirect('dashboard-mp/explications/liste');
+        $this->session->set_flashdata('flash_failure', "Vous n'avez pas encore rédigé une explication pour le vote n° " . $voteNumero . ". Vous pouvez en créer une en <a href='".base_url()."dashboard/explications/create/l".$legislature."v".$voteNumero."'>cliquant ici</a>.");
+        redirect('dashboard/explications/liste');
       }
 
       $data['vote'] = $this->votes_model->get_individual_vote($legislature, $voteNumero);
@@ -335,9 +335,9 @@
         // Meta
         $data['title_meta'] = 'Supprimer une explication de vote - Dashboard | Datan';
         $data['breadcrumb'] = array(
-          array('name' => 'Dashboard', 'url' => base_url().'dashboard-mp', 'active' => FALSE),
-          array('name' => 'Explications de vote', 'url' => base_url().'dashboard-mp/explications', 'active' => FALSE),
-          array('name' => 'Supprimer', 'url' => base_url().'dashboard-mp/explications/delete/l' . $legislature . 'v' . $voteNumero, 'active' => TRUE),
+          array('name' => 'Dashboard', 'url' => base_url().'dashboard', 'active' => FALSE),
+          array('name' => 'Explications de vote', 'url' => base_url().'dashboard/explications', 'active' => FALSE),
+          array('name' => 'Supprimer', 'url' => base_url().'dashboard/explications/delete/l' . $legislature . 'v' . $voteNumero, 'active' => TRUE),
         );
         // Views
         $this->load->view('dashboard/header', $data);
@@ -348,7 +348,7 @@
         delete_all_cache();
         $this->db->cache_delete_all();
         $this->session->set_flashdata('flash', "L'explication de vote pour le scrutin n°" . $voteNumero . " a bien été supprimée.");
-        redirect('dashboard-mp/explications');
+        redirect('dashboard/explications');
       }
 
     }
