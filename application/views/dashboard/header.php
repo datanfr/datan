@@ -117,7 +117,7 @@
               <a href="<?= base_url() ?>admin" class="d-block"><?= $username ?></a>
             <?php endif; ?>
             <?php if ($this->password_model->is_mp()): ?>
-              <a href="<?= base_url() ?>dashboard-mp" class="d-block"><?= $username ?></a>
+              <a href="<?= base_url() ?>dashboard" class="d-block"><?= $username ?></a>
             <?php endif; ?>
           </div>
         </div>
@@ -376,7 +376,7 @@
           <?php endif; ?>
           <?php if ($this->password_model->is_mp()): ?>
             <li class="nav-item">
-              <a class="nav-link" href="<?= base_url() ?>dashboard-mp/explications">Explications de vote</a>
+              <a class="nav-link" href="<?= base_url() ?>dashboard/explications">Explications de vote</a>
             </li>
           <?php endif; ?>
           </ul>
