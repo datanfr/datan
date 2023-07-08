@@ -19,7 +19,7 @@
           <div class="col-lg-12">
             <div class="card">
               <div class="card-body">
-                <?php echo form_open_multipart('dashboard-mp/elections/'.$election['slug'].'/modifier'); ?>
+                <?php echo form_open_multipart('dashboard/elections/'.$election['slug'].'/modifier'); ?>
                   <div class="form-group">
                     <label for="">Département de candidature</label>
                     <select class="form-control" name="district">

@@ -218,7 +218,7 @@
                     <a class="dropdown-item no-decoration" href="<?= base_url(); ?>admin">Dashboard</a>
                   <?php endif; ?>
                   <?php if ($this->password_model->is_mp()): ?>
-                    <a class="dropdown-item no-decoration" href="<?= base_url(); ?>dashboard-mp">Dashboard</a>
+                    <a class="dropdown-item no-decoration" href="<?= base_url(); ?>dashboard">Dashboard</a>
                   <?php endif; ?>
                   <?php if (($this->session->userdata('type') == 'admin')): ?>
                     <a class="dropdown-item no-decoration" href="<?= base_url(); ?>scripts">Scripts</a>
