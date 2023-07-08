@@ -143,3 +143,19 @@
 	 font-weight: bold;
 	 font-size: 0.9em;
 }
+
+.depute-img-circle{
+  width: 70px;
+  height: 70px;
+  overflow: hidden;
+  position: relative;
+  border-radius: 50%;
+  background: linear-gradient(#99BDDA, #fff);
+  text-align: center;
+  border: 2px solid grey;
+}
+
+.depute-img-circle img{
+  width: 80%;
+  height: auto;
+}

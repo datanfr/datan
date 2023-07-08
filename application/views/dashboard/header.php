@@ -50,9 +50,12 @@
         <li class="nav-item d-none d-sm-inline-block">
           <a href="<?= base_url () ?>" class="nav-link font-weight-bold text-primary">Datan</a>
         </li>
-        <?php if ($this->password_model->is_mp()): ?>
+        <?php if ($type == 'mp'): ?>
           <li class="nav-item d-none d-sm-inline-block">
-            <a href="<?= base_url() ?>deputes/<?= $depute['dptSlug'] ?>/depute_<?= $depute['nameUrl'] ?>" class="nav-link" target="_blank">Page député</a>
+            <a href="<?= base_url() ?>dashboard" class="nav-link">Dashboard</a>
+          </li>
+          <li class="nav-item d-none d-sm-inline-block">
+            <a href="<?= base_url() ?>deputes/<?= $depute['dptSlug'] ?>/depute_<?= $depute['nameUrl'] ?>" class="nav-link" target="_blank">Page député<?= $depute['gender']['e'] ?></a>
           </li>
         <?php endif; ?>
         <?php if ($this->password_model->is_admin()): ?>
@@ -81,22 +84,12 @@
           <a href="<?= base_url () ?>mon-compte" class="nav-link">Mon compte</a>
         </li>
         <li class="nav-item d-none d-sm-inline-block">
-          <a href="<?= base_url(); ?>logout" class="nav-link">Déconnexion</a>
+          <a href="<?= base_url(); ?>logout" class="nav-link text-danger">
+            <?= file_get_contents(base_url() . '/assets/imgs/icons/bi-box-arrow-right.svg') ?>
+            <span class="ml-1">Déconnexion</span>
+          </a>
         </li>
       </ul>
-
-      <!-- SEARCH FORM
-      <form class="form-inline ml-3">
-        <div class="input-group input-group-sm">
-          <input class="form-control form-control-navbar" type="search" placeholder="Search" aria-label="Search">
-          <div class="input-group-append">
-            <button class="btn btn-navbar" type="submit">
-              <i class="fas fa-search"></i>
-            </button>
-          </div>
-        </div>
-      </form>
-      -->
 
     </nav>
     <!-- /.navbar -->
@@ -108,18 +101,28 @@
       <!-- Sidebar -->
       <div class="sidebar">
         <!-- Sidebar user panel (optional) -->
-        <div class="user-panel mt-3 pb-3 mb-3 d-flex">
-          <div class="image">
-            <!--<img src="#" class="img-circle elevation-2" alt="User Image">-->
-          </div>
-          <div class="info">
-            <?php if ($this->password_model->is_team()): ?>
+        <div class="user-panel mt-3 pb-3 mb-3 d-flex justify-content-center">
+          <?php if ($type == 'mp'): ?>
+            <a href="<?= base_url() ?>dashboard">
+              <div class="info d-flex flex-column justify-content-center">
+                <div class="d-flex justify-content-center">
+                  <div class="depute-img-circle d-flex justify-content-center">
+                    <picture>
+                      <source srcset="<?= asset_url() ?>imgs/deputes_nobg_webp/depute_<?= $depute['idImage'] ?>_webp.webp" type="image/webp">
+                      <source srcset="<?= asset_url() ?>imgs/deputes_nobg/depute_<?= $depute['idImage'] ?>.png" type="image/png">
+                      <img src="<?= asset_url() ?>imgs/deputes_original/depute_<?= $depute['idImage'] ?>.png" width="150" height="192" alt="Hendrik Davi">
+                      </picture>
+                    </div>
+                </div>
+                <span class="d-block text-center mt-2 text-white font-weight-bold"><?= $depute['nameFirst'] . ' ' . $depute['nameLast'] ?></span>
+              </div>
+            </a>
+          <?php endif; ?>
+          <?php if ($this->password_model->is_team()): ?>
+            <div class="info">
               <a href="<?= base_url() ?>admin" class="d-block"><?= $username ?></a>
-            <?php endif; ?>
-            <?php if ($this->password_model->is_mp()): ?>
-              <a href="<?= base_url() ?>dashboard" class="d-block"><?= $username ?></a>
-            <?php endif; ?>
-          </div>
+            </div>
+          <?php endif; ?>
         </div>
 
         <!-- Sidebar Menu -->
@@ -365,7 +368,6 @@
                 </li>
               </ul>
             </li>
-            <!-- Exposé des motifs -->
             <li class="nav-item">
               <a href="<?= base_url() ?>admin/exposes" class="nav-link">
                 <p>
@@ -374,14 +376,13 @@
               </a>
             </li>
           <?php endif; ?>
-          <?php if ($this->password_model->is_mp()): ?>
+          <?php if ($type == 'mp'): ?>
             <li class="nav-item">
               <a class="nav-link" href="<?= base_url() ?>dashboard/explications">Explications de vote</a>
             </li>
+
           <?php endif; ?>
           </ul>
         </nav>
-        <!-- /.sidebar-menu -->
       </div>
-      <!-- /.sidebar -->
     </aside>
