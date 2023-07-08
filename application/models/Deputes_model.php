@@ -107,6 +107,7 @@
     }
 
     public function get_depute_by_mpId($mpId) {
+      $this->db->select('*, substr(mpId, 3) AS idImage');
       $where = array(
         'mpId' => $mpId
       );

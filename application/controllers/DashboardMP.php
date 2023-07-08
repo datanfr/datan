@@ -9,13 +9,17 @@
       $this->load->model('dashboardMP_model');
       $this->load->model('votes_model');
       $this->password_model->security_only_mp();
+
+      $this->data = array(
+        'type' => 'mp',
+        'username' => $this->session->userdata('username'),
+        'depute' => $this->deputes_model->get_depute_by_mpId($this->session->userdata('mpId')),
+      );
+      $this->data['depute']['gender'] = gender($this->data['depute']['civ']);
     }
 
     public function index(){
-      $data['username'] = $this->session->userdata('username');
-      $data['depute'] = $this->deputes_model->get_depute_by_mpId($this->session->userdata('mpId'));
-      $data['depute']['gender'] = gender($data['depute']['civ']);
-
+      $data = $this->data;
       // Legislatives 2022
       $data['election'] = $this->elections_model->get_election_by_id(4);
       $data['candidate'] = $this->elections_model->get_candidate_election($data['depute']['mpId'], 4); /* Législative-2022 */
@@ -44,15 +48,13 @@
     }
 
     public function elections($slug){
+      $data = $this->data;
       $data['election'] = $this->elections_model->get_election($slug);
 
       if (empty($data['election']) || !in_array($data['election']['id'], array(4))) {
         show_404($this->functions_datan->get_404_infos());
       }
 
-      $data['username'] = $this->session->userdata('username');
-      $data['depute'] = $this->deputes_model->get_depute_by_mpId($this->session->userdata('mpId'));
-      $data['depute']['gender'] = gender($data['depute']['civ']);
       $data['candidate'] = $this->elections_model->get_candidate_election($data['depute']['mpId'], 4); /* Législative-2022 */
       if ($data['candidate']) {
         $data['candidate']['district'] = $this->elections_model->get_district($data['election']['libelleAbrev'], $data['candidate']['district']);
@@ -80,6 +82,7 @@
     }
 
     public function elections_modify($slug){
+      $data = $this->data;
       $data['election'] = $this->elections_model->get_election($slug);
 
       if (empty($data['election']) || !in_array($data['election']['id'], array(4))) {
@@ -94,8 +97,6 @@
         show_404($this->functions_datan->get_404_infos());
       }
 
-      $data['username'] = $this->session->userdata('username');
-      $data['depute'] = $this->deputes_model->get_depute_by_mpId($this->session->userdata('mpId'));
       $data['candidate'] = $this->elections_model->get_candidate_election($data['depute']['mpId'], 4); /* Législative-2022 */
       if ($data['candidate']) {
         $data['candidate']['district'] = $this->elections_model->get_district($data['election']['libelleAbrev'], $data['candidate']['district']);
@@ -132,9 +133,7 @@
     }
 
     public function explications(){
-      $data['username'] = $this->session->userdata('username');
-      $data['depute'] = $this->deputes_model->get_depute_by_mpId($this->session->userdata('mpId'));
-      $data['depute']['gender'] = gender($data['depute']['civ']);
+      $data = $this->data;
       $data['votes_published'] = $this->dashboardMP_model->get_votes_explained($data['depute']['mpId'], TRUE);
       $data['votes_draft'] = $this->dashboardMP_model->get_votes_explained($data['depute']['mpId'], FALSE);
 
@@ -163,9 +162,7 @@
     }
 
     public function explications_liste(){
-      $data['username'] = $this->session->userdata('username');
-      $data['depute'] = $this->deputes_model->get_depute_by_mpId($this->session->userdata('mpId'));
-      $data['depute']['gender'] = gender($data['depute']['civ']);
+      $data = $this->data;
 
       $data['votes_without'] = $this->dashboardMP_model->get_votes_to_explain($data['depute']['mpId']);
       $data['votes_without_suggestion'] = $this->dashboardMP_model->get_votes_to_explain_suggestion($data['votes_without']);
@@ -187,7 +184,7 @@
     }
 
     public function explications_create($legislature, $voteNumero){
-
+      $data = $this->data;
       $data['vote'] = $this->votes_model->get_individual_vote($legislature, $voteNumero);
 
       if (empty($data['vote'])) {
@@ -196,9 +193,6 @@
 
       $data['legislature'] = $legislature;
       $data['voteNumero'] = $voteNumero;
-      $data['username'] = $this->session->userdata('username');
-      $data['depute'] = $this->deputes_model->get_depute_by_mpId($this->session->userdata('mpId'));
-      $data['depute']['gender'] = gender($data['depute']['civ']);
 
       $data['vote_depute'] = $this->votes_model->get_individual_vote_depute($data['depute']['mpId'], $data['vote']['legislature'], $data['vote']['voteNumero']);
 
@@ -251,7 +245,7 @@
     }
 
     public function explications_modify($legislature, $voteNumero){
-      $data['depute'] = $this->deputes_model->get_depute_by_mpId($this->session->userdata('mpId'));
+      $data = $this->data;
       $data['explication'] = $this->votes_model->get_explication($data['depute']['mpId'], $legislature, $voteNumero);
 
       if (empty($data['explication'])) {
@@ -267,7 +261,6 @@
 
       $data['legislature'] = $legislature;
       $data['voteNumero'] = $voteNumero;
-      $data['username'] = $this->session->userdata('username');
 
       $data['vote_depute'] = $this->votes_model->get_individual_vote_depute($data['depute']['mpId'], $data['vote']['legislature'], $data['vote']['voteNumero']);
       $data['vote_depute']['vote'] = vote_edited($data['vote_depute']['vote']);
@@ -304,7 +297,7 @@
     }
 
     public function explications_delete($legislature, $voteNumero){
-      $data['depute'] = $this->deputes_model->get_depute_by_mpId($this->session->userdata('mpId'));
+      $data = $this->data;
       $data['explication'] = $this->votes_model->get_explication($data['depute']['mpId'], $legislature, $voteNumero);
 
       if (empty($data['explication'])) {
@@ -320,7 +313,6 @@
 
       $data['legislature'] = $legislature;
       $data['voteNumero'] = $voteNumero;
-      $data['username'] = $this->session->userdata('username');
 
       $data['vote_depute'] = $this->votes_model->get_individual_vote_depute($data['depute']['mpId'], $data['vote']['legislature'], $data['vote']['voteNumero']);
       $data['vote_depute']['vote'] = vote_edited($data['vote_depute']['vote']);
