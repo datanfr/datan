@@ -33,7 +33,7 @@
   </div>
   <?php if ($candidate['modify'] == 1): ?>
     <div class="card-footer d-flex justify-content-around">
-      <a href="<?= base_url() ?>dashboard-mp/elections/legislatives-2022/modifier" class="btn btn-primary">Modifier le statut de ma candidature</a>
+      <a href="<?= base_url() ?>dashboard/elections/legislatives-2022/modifier" class="btn btn-primary">Modifier le statut de ma candidature</a>
     </div>
   <?php endif; ?>
 </div>

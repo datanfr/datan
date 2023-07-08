@@ -12,7 +12,7 @@
     <div class="container-fluid">
       <div class="row">
         <div class="col-12">
-          <a class="btn btn-outline-secondary font-weight-bold" href="<?= base_url() ?>dashboard-mp">
+          <a class="btn btn-outline-secondary font-weight-bold" href="<?= base_url() ?>dashboard">
             <?= file_get_contents(asset_url() . "imgs/icons/arrow_left.svg") ?>
             Retour
           </a>
@@ -29,7 +29,7 @@
               <p>Cette fonctionnalité n'est disponible que pour les <b>votes contextualisés par Datan</b>. Les votes contextualisés sont les scrutins que l'équipe de Datan vulgarise et met en avant sur le site internet, et notamment sur les pages des députés.</p>
             </div>
           </div>
-          <a class="h2 btn btn-primary font-weight-bold mb-0 mt-5" style="font-size: 1.1rem" href="<?= base_url() ?>dashboard-mp/explications/liste">
+          <a class="h2 btn btn-primary font-weight-bold mb-0 mt-5" style="font-size: 1.1rem" href="<?= base_url() ?>dashboard/explications/liste">
             <?= file_get_contents(asset_url() . "imgs/icons/pencil-square.svg") ?>
             <span class="ml-3">Créez une nouvelle explication de vote</span>
           </a>
@@ -38,7 +38,7 @@
       <div class="d-flex flex-column justify-content-center align-items-center my-5 py-5" id="pattern_background" style="margin-left: -15px; margin-right: -15px">
         <h2 class="font-weight-bold text-black text-center">Suggestion de votes à expliquer</h2>
         <?php $this->load->view('dashboard-mp/explications/partials/suggestions.php') ?>
-        <a class="h2 btn btn-primary font-weight-bold mb-0 mt-5" style="font-size: 1.1rem" href="<?= base_url() ?>dashboard-mp/explications/liste">
+        <a class="h2 btn btn-primary font-weight-bold mb-0 mt-5" style="font-size: 1.1rem" href="<?= base_url() ?>dashboard/explications/liste">
           <?= file_get_contents(asset_url() . "imgs/icons/pencil-square.svg") ?>
           <span class="ml-3">Créez une explication pour un autre scrutin</span>
         </a>
@@ -70,7 +70,7 @@
                           <td class="text-center"><span class="badge badge<?= ucfirst($value['vote_depute']) ?>" style="font-size: 16px"><?= ucfirst($value['vote_depute']) ?></span></td>
                           <td class="d-none d-lg-table-cell"><?= word_limiter($value['explication'], 30) ?></td>
                           <td>
-                            <a class="btn btn-primary d-flex align-items-center justify-content-center font-weight-bold" href="<?= base_url() ?>dashboard-mp/explications/modify/l<?= $value['legislature'] ?>v<?= $value['voteNumero'] ?>">
+                            <a class="btn btn-primary d-flex align-items-center justify-content-center font-weight-bold" href="<?= base_url() ?>dashboard/explications/modify/l<?= $value['legislature'] ?>v<?= $value['voteNumero'] ?>">
                               <?= file_get_contents(asset_url() . "imgs/icons/pencil-square.svg") ?>
                               <span class="ml-3">Modifier</span>
                             </a>
@@ -120,7 +120,7 @@
                             </a>
                           </td>
                           <td>
-                            <a class="btn btn-primary d-flex align-items-center justify-content-center font-weight-bold" href="<?= base_url() ?>dashboard-mp/explications/modify/l<?= $value['legislature'] ?>v<?= $value['voteNumero'] ?>">
+                            <a class="btn btn-primary d-flex align-items-center justify-content-center font-weight-bold" href="<?= base_url() ?>dashboard/explications/modify/l<?= $value['legislature'] ?>v<?= $value['voteNumero'] ?>">
                               <?= file_get_contents(asset_url() . "imgs/icons/pencil-square.svg") ?>
                               <span class="ml-3">Modifier</span>
                             </a>
