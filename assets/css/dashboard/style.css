@@ -61,7 +61,6 @@
   box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.08);
 }
 
-
 /* Card vote */
 .card-vote {
 	 width: 265px;
@@ -158,4 +157,26 @@
 .depute-img-circle img{
   width: 80%;
   height: auto;
+}
+
+.content-wrapper{
+  padding-right: 2rem;
+  padding-left: 2rem;
+}
+
+.card {
+  border-radius: 0.75rem;
+}
+
+.card-header{
+  border: none;
+  padding: 1.5rem 1.25rem;
+}
+
+.card-body{
+  padding-top: 0;
+}
+
+.card-footer{
+  padding: 1rem 1.25rem;
 }
