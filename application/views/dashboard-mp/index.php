@@ -8,7 +8,7 @@
         </div>
         <div class="row mb-2">
           <div class="col-lg-7">
-            <h1 class="m-0 text-dark font-weight-bold">Bienvenue sur votre dashboard</h1>
+            <h1 class="m-0 text-dark font-weight-bold" style="font-size: 2.5rem">Bienvenue sur votre dashboard</h1>
             <p class="mt-3">Ce dashboard vous permet d'avoir accès à des fonctionnalités dédiées aux députés. Si vous avez des questions, n'hésitez pas à nous contacter : <i>info@datan.fr</i></p>
           </div>
         </div>
@@ -18,9 +18,9 @@
       <div class="container-fluid">
         <div class="row">
           <div class="col-lg-6">
-            <div class="card card-primary card-outline">
-              <div class="card-header">
-                <h5 class="mt-0 font-weight-bold">Vos explications de vote en brouillon</h5>
+            <div class="card">
+              <div class="card-header b-none">
+                <h3 class="m-0 font-weight-bold">Vos explications de vote en brouillon</h3>
               </div>
               <div class="card-body">
                 <?php if ($votes_explained): ?>
