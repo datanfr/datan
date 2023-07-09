@@ -20,15 +20,8 @@
             <div class="alert alert-danger font-weight-bold mt-4 text-center" role="alert"><?= $this->session->flashdata('flash_failure') ?></div>
           <?php endif; ?>
         </div>
-        <div class="col-lg-7 col-12 mt-4">
-          <h1 class="font-weight-bold text-black"><?= $title ?></h1>
-          <div class="card mt-5 mb-0">
-            <div class="card-body">
-              <h5 class="font-weight-bold">Infos</h5>
-              <p>Vous pouvez rédiger une explication de vote pour expliquer à vos électeurs les <b>raisons de votre position</b>. Cette explication sera visible sur votre page Datan.</p>
-              <p>Cette fonctionnalité n'est disponible que pour les <b>votes contextualisés par Datan</b>. Les votes contextualisés sont les scrutins que l'équipe de Datan vulgarise et met en avant sur le site internet, et notamment sur les pages des députés.</p>
-            </div>
-          </div>
+        <div class="col-lg-7 col-12 mt-5">
+          <h1 class="font-weight-bold text-dark"><?= $title ?></h1>
         </div>
       </div>
       <div class="d-flex flex-column justify-content-center align-items-center my-5 py-5" id="pattern_background" style="margin-left: -15px; margin-right: -15px">

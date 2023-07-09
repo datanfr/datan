@@ -43,19 +43,15 @@
   color: #fff;
 }
 .social-share{
-  padding: 0.2rem 0.6rem;
   marign: 0.2rem;
   transition: 0.3s;
+  white-space: nowrap;
 }
 .social-share img{
   height: 18px;
   width: auto;
 }
-.social-share span{
-  font-size: .85em;
-  margin-left: .25rem;
-  font-weight: 800;
-}
+
 .social-share:hover{
   color: #fff;
   box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.08);
