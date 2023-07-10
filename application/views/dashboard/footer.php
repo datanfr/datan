@@ -78,7 +78,7 @@
           sortDescending: ": activer pour trier la colonne par ordre décroissant"
       }
   };
-  
+
   $(document).ready(function() {
 
     $('#table_votes_datan').dataTable({
