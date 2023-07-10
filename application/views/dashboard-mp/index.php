@@ -25,7 +25,7 @@
               <div class="card-body">
                 <?php if ($votes_explained): ?>
                   <p>Vous avez une ou plusieurs explications de vote en brouillon. N'hésitez pas à les terminer pour les publier sur votre page Datan.</p>
-                  <table class="table mt-4">
+                  <table class="table table-responsive mt-4">
                     <thead class="thead-dark">
                       <tr>
                         <th scope="col">Scrutin</th>
