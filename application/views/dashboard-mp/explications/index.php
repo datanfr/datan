@@ -25,7 +25,7 @@
         </div>
       </div>
       <div class="row">
-        <div class="col-lg-7">
+        <div class="col-md-6">
           <div class="card mb-0">
             <div class="card-body py-4">
               <h5 class="font-weight-bold text-primary">Infos</h5>
@@ -34,10 +34,9 @@
             </div>
           </div>
         </div>
-        <div class="col-lg-5 px-5">
+        <div class="col-md-6 px-lg-5 px-md-3 py-md-5 py-lg-0 mt-md-0 mt-4">
           <a class="btn btn-primary font-weight-bold d-flex justify-content-center align-items-center" style="font-size: 1.5rem; height: 100%; width: 100%; display: block" href="<?= base_url() ?>dashboard/explications/liste">
-            <span><?= file_get_contents(asset_url() . "imgs/icons/pencil-square.svg") ?></span>
-            <span class="ml-3">Je créé une nouvelle explication de vote</span>
+            Je créé une nouvelle explication de vote
           </a>
         </div>
       </div>
@@ -58,7 +57,6 @@
                         <th class="text-center">Position</th>
                         <th class="text-center d-none d-lg-table-cell">Explication</th>
                         <th></th>
-                        <th></th>
                       </tr>
                     </thead>
                     <tbody>
@@ -68,14 +66,12 @@
                           <td class="font-weight-bold"><?= $value['vote_titre'] ?></td>
                           <td class="text-center"><span class="badge badge<?= ucfirst($value['vote_depute']) ?>" style="font-size: 16px"><?= ucfirst($value['vote_depute']) ?></span></td>
                           <td class="d-none d-lg-table-cell"><?= word_limiter($value['explication'], 30) ?></td>
-                          <td>
-                            <a class="btn btn-secondary d-flex align-items-center justify-content-center font-weight-bold" href="<?= base_url() ?>votes/legislature-<?= $value['legislature'] ?>/vote_<?= $value['voteNumero'] ?>" target="_blank">
+                          <td class="d-flex flex-column">
+                            <a class="btn btn-secondary d-flex align-items-center justify-content-center font-weight-bold mb-1" href="<?= base_url() ?>votes/legislature-<?= $value['legislature'] ?>/vote_<?= $value['voteNumero'] ?>" style="width: 100%" target="_blank">
                               <?= file_get_contents(asset_url() . "imgs/icons/box-arrow-up-right.svg") ?>
                               <span class="ml-3">Scrutin</span>
                             </a>
-                          </td>
-                          <td>
-                            <a class="btn btn-primary d-flex align-items-center justify-content-center font-weight-bold" href="<?= base_url() ?>dashboard/explications/modify/l<?= $value['legislature'] ?>v<?= $value['voteNumero'] ?>">
+                            <a class="btn btn-primary d-flex align-items-center justify-content-center font-weight-bold mb-1" href="<?= base_url() ?>dashboard/explications/modify/l<?= $value['legislature'] ?>v<?= $value['voteNumero'] ?>" style="width: 100%">
                               <?= file_get_contents(asset_url() . "imgs/icons/pencil-square.svg") ?>
                               <span class="ml-3">Modifier</span>
                             </a>
@@ -107,8 +103,6 @@
                         <th class="text-center">Position</th>
                         <th class="text-center d-none d-lg-table-cell">Explication</th>
                         <th></th>
-                        <th></th>
-                        <th></th>
                       </tr>
                     </thead>
                     <tbody>
@@ -118,20 +112,16 @@
                           <td class="font-weight-bold"><?= $value['vote_titre'] ?></td>
                           <td class="text-center"><span class="badge badge<?= ucfirst($value['vote_depute']) ?>" style="font-size: 16px"><?= ucfirst($value['vote_depute']) ?></span></td>
                           <td class="d-none d-lg-table-cell"><?= word_limiter($value['explication'], 30) ?></td>
-                          <td>
-                            <a class="btn btn-secondary d-flex align-items-center justify-content-center font-weight-bold" href="<?= base_url() ?>votes/legislature-<?= $value['legislature'] ?>/vote_<?= $value['voteNumero'] ?>" target="_blank">
+                          <td class="d-flex flex-column">
+                            <a class="btn btn-secondary d-flex align-items-center justify-content-center font-weight-bold mb-1" href="<?= base_url() ?>votes/legislature-<?= $value['legislature'] ?>/vote_<?= $value['voteNumero'] ?>" target="_blank" style="width: 100%">
                               <?= file_get_contents(asset_url() . "imgs/icons/box-arrow-up-right.svg") ?>
                               <span class="ml-3">Scrutin</span>
                             </a>
-                          </td>
-                          <td>
-                            <a class="btn btn-primary d-flex align-items-center justify-content-center font-weight-bold" href="<?= base_url() ?>dashboard/explications/modify/l<?= $value['legislature'] ?>v<?= $value['voteNumero'] ?>">
+                            <a class="btn btn-primary d-flex align-items-center justify-content-center font-weight-bold mb-1" href="<?= base_url() ?>dashboard/explications/modify/l<?= $value['legislature'] ?>v<?= $value['voteNumero'] ?>" style="width: 100%">
                               <?= file_get_contents(asset_url() . "imgs/icons/pencil-square.svg") ?>
                               <span class="ml-3">Modifier</span>
                             </a>
-                          </td>
-                          <td>
-                            <a type="button" class="btn twitter-bg d-flex align-items-center justify-content-center font-weight-bold social-share text-white" data-toggle="modal" data-target="#modal_l<?= $value['legislature'] ?>_v<?= $value['voteNumero'] ?>">
+                            <a type="button" class="btn twitter-bg d-flex align-items-center justify-content-center font-weight-bold social-share text-white mb-1" data-toggle="modal" data-target="#modal_l<?= $value['legislature'] ?>_v<?= $value['voteNumero'] ?>" style="width: 100%">
                               <img src="<?= asset_url() ?>imgs/logos/twitter-no-round.png" alt="Partagez sur Twitter">
                               <span class="ml-2">Lien partage</span>
                             </a>
@@ -168,14 +158,14 @@
           <p>Partagez sur les réseaux sociaux votre explication de vote avec ce lien.</p>
           <p class="font-italic"><?= $value['socialMediaUrl'] ?></p>
           <div class="d-flex">
-            <a class="btn btn-secondary d-flex align-items-center justify-content-center font-weight-bold" href="<?= $value['socialMediaUrl'] ?>" target="_blank">
+            <a class="btn btn-primary d-flex align-items-center justify-content-center font-weight-bold" href="<?= $value['socialMediaUrl'] ?>" target="_blank">
               <?= file_get_contents(asset_url() . "imgs/icons/box-arrow-up-right.svg") ?>
               <span class="ml-3">Lien de partage</span>
             </a>
           </div>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
         </div>
       </div>
     </div>
