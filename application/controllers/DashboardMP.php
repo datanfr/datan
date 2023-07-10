@@ -167,7 +167,7 @@
       $data['votes_without'] = $this->dashboardMP_model->get_votes_to_explain($data['depute']['mpId']);
       $data['votes_without_suggestion'] = $this->dashboardMP_model->get_votes_to_explain_suggestion($data['votes_without']);
 
-      $data['title'] = 'Créez une explication de vote';
+      $data['title'] = 'Je créé une nouvelle explication de vote';
 
       // Meta
       $data['title_meta'] = 'Liste des votes à expliquer - Dashboard | Datan';

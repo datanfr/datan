@@ -21,7 +21,7 @@
           <?php if ($this->session->flashdata('flash')) : ?>
             <div class="alert alert-primary font-weight-bold text-center mt-4" role="alert"><?= $this->session->flashdata('flash') ?></div>
           <?php endif; ?>
-          <h1 class="font-weight-bold mt-2 text-dark"><?= $title ?></h1>
+          <h1 class="font-weight-bold mb-0 text-dark"><?= $title ?></h1>
         </div>
       </div>
       <div class="row">
