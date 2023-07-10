@@ -1,19 +1,19 @@
 <div class="content-wrapper">
   <div class="content-header">
     <div class="container-fluid">
-      <div class="row mb-2">
+      <div class="row my-4">
         <div class="col-sm-6">
-          <h1 class="m-0 text-dark"><?= $title ?></h1>
+          <h1 class="m-0 text-primary font-weight-bold" style="font-size: 2rem"><?= $title ?></h1>
         </div>
       </div>
     </div>
   </div>
   <div class="content">
     <div class="container-fluid">
-      <div class="row">
+      <div class="row pb-4">
         <div class="col-lg-12">
           <div class="card">
-            <div class="card-body">
+            <div class="card-body py-4">
               <table id="table_votes_datan" class="table table-bordered table-striped">
                 <thead>
                   <tr>

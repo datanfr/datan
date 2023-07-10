@@ -20,6 +20,7 @@
       $this->password_model->security_only_team();
 
       $this->data = array(
+        'type' => 'team',
         'username' => $this->session->userdata('username'),
         'usernameType' => $this->session->userdata('type'),
         'groupes' => $this->groupes_model->get_groupes_all(true, legislature_current())
