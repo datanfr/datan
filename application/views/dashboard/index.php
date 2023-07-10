@@ -1,20 +1,20 @@
   <div class="content-wrapper">
     <div class="content-header">
       <div class="container-fluid">
-        <div class="row mb-2">
-          <div class="col-sm-6">
-            <h1 class="m-0 text-dark">Dashboard</h1>
+        <div class="row my-4">
+          <div class="col-sm-7">
+            <h1 class="m-0 text-primary font-weight-bold" style="font-size: 2.5rem">Bienvenue sur votre dashboard</h1>
           </div>
         </div>
       </div>
     </div>
     <div class="content">
       <div class="container-fluid">
-        <div class="row">
+        <div class="row pb-5">
           <div class="col-lg-6">
-            <div class="card card-primary card-outline">
+            <div class="card">
               <div class="card-header">
-                <h5 class="m-0">Mes votes non publiés</h5>
+                <h4 class="m-0 font-weight-bold">Mes votes non publiés</h4>
               </div>
               <div class="card-body">
                 <?php if (empty($votesUnpublished)): ?>
@@ -49,9 +49,9 @@
             </div>
           </div>
           <div class="col-lg-6">
-            <div class="card card-primary card-outline">
+            <div class="card">
               <div class="card-header">
-                <h5 class="m-0">Mes derniers votes publiés</h5>
+                <h4 class="m-0 font-weight-bold">Mes derniers votes publiés</h4>
               </div>
               <div class="card-body">
                 <?php if (empty($votesLast)): ?>
@@ -84,9 +84,9 @@
             </div>
           </div>
           <div class="col-lg-6">
-            <div class="card card-primary card-outline">
+            <div class="card">
               <div class="card-header">
-                <h5 class="m-0">Nouveaux députés</h5>
+                <h4 class="m-0 font-weight-bold">Nouveaux députés</h4>
               </div>
               <div class="card-body">
                   <table class="table">
@@ -109,9 +109,9 @@
             </div><!-- /.card -->
           </div>
           <div class="col-lg-6">
-            <div class="card card-primary card-outline">
+            <div class="card">
               <div class="card-header">
-                <h5 class="m-0">Nouveaux entrants dans un groupe</h5>
+                <h4 class="m-0 font-weight-bold">Nouveaux entrants dans un groupe</h4>
               </div>
               <div class="card-body">
                   <table class="table">
@@ -136,9 +136,9 @@
             </div>
           </div>
           <div class="col-lg-6">
-            <div class="card card-primary card-outline">
+            <div class="card ">
               <div class="card-header">
-                <h5 class="m-0">Abonnements à la newletter</h5>
+                <h4 class="m-0 font-weight-bold">Abonnements à la newletter</h4>
               </div>
               <div class="card-body">
                   <p>Il y a <b><?= $newsletter_total ?> personnes</b> abonnées à la newsletter générale de Datan.</p>
@@ -149,9 +149,9 @@
             </div>
           </div>
           <div class="col-lg-6">
-            <div class="card card-primary card-outline">
+            <div class="card">
               <div class="card-header">
-                <h5 class="m-0">Ils souhaitent voir ces votes décryptés !</h5>
+                <h4 class="m-0 font-weight-bold">Ils souhaitent voir ces votes décryptés</h4>
               </div>
               <div class="card-body">
                   <table class="table">
@@ -178,32 +178,32 @@
             </div>
           </div>
           <div class="col-lg-12">
-            <div class="card card-primary card-outline">
+            <div class="card">
               <div class="card-header">
-                <h5 class="m-0">Dernières explications de vote</h5>
+                <h4 class="m-0 font-weight-bold">Dernières explications de vote</h4>
               </div>
               <div class="card-body">
-                  <table class="table">
-                    <thead>
+                <table class="table table-responsive">
+                  <thead>
+                    <tr>
+                      <th>Député</th>
+                      <th>Vote</th>
+                      <th>Texte</th>
+                      <th>Modification</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <?php foreach ($explications as $e): ?>
                       <tr>
-                        <th>Député</th>
-                        <th>Vote</th>
-                        <th>Texte</th>
-                        <th>Modification</th>
+                        <td><?= $e['nameFirst'] . ' ' . $e['nameLast'] . ' (' . $e['libelleAbrev'] . ')' ?></td>
+                        <td><a href="<?= base_url() ?>votes/legislature-<?= $e['legislature'] ?>/vote_<?= $e['voteNumero'] ?>" target="_blank"><?= $e['vote'] ?></a></td>
+                        <td><?= $e['text'] ?></td>
+                        <td><?= $e['modified_at'] ?></td>
+                        <td><a href="<?= base_url() ?>votes/legislature-<?= $e['legislature'] ?>/vote_<?= $e['voteNumero'] ?>/explication_<?= $e['mpId'] ?>" target="_blank" class="btn btn-primary">Voir</a></td>
                       </tr>
-                    </thead>
-                    <tbody>
-                      <?php foreach ($explications as $e): ?>
-                        <tr>
-                          <td><?= $e['nameFirst'] . ' ' . $e['nameLast'] . ' (' . $e['libelleAbrev'] . ')' ?></td>
-                          <td><a href="<?= base_url() ?>votes/legislature-<?= $e['legislature'] ?>/vote_<?= $e['voteNumero'] ?>" target="_blank"><?= $e['vote'] ?></a></td>
-                          <td><?= $e['text'] ?></td>
-                          <td><?= $e['modified_at'] ?></td>
-                          <td><a href="<?= base_url() ?>votes/legislature-<?= $e['legislature'] ?>/vote_<?= $e['voteNumero'] ?>/explication_<?= $e['mpId'] ?>" target="_blank" class="btn btn-primary">Voir</a></td>
-                        </tr>
-                      <?php endforeach; ?>
-                    </tbody>
-                  </table>
+                    <?php endforeach; ?>
+                  </tbody>
+                </table>
               </div>
             </div>
           </div>

@@ -1,13 +1,11 @@
-
-
   <!-- Content Wrapper. Contains page content -->
   <div class="content-wrapper">
     <!-- Content Header (Page header) -->
     <div class="content-header">
       <div class="container-fluid">
-        <div class="row mb-2">
-          <div class="col-sm-6">
-            <h1 class="m-0 text-dark"><?= $title ?></h1>
+        <div class="row my-4">
+          <div class="col-sm-7">
+            <h1 class="m-0 text-primary font-weight-bold" style="font-size: 2rem"><?= $title ?></h1>
           </div><!-- /.col -->
         </div><!-- /.row -->
       </div><!-- /.container-fluid -->
@@ -17,10 +15,10 @@
     <!-- Main content -->
     <div class="content">
       <div class="container-fluid">
-        <div class="row">
+        <div class="row pb-4">
           <div class="col-lg-12">
             <div class="card">
-              <div class="card-body">
+              <div class="card-body py-4">
               <?php if(count($table) == 0) :?>
               Pas de données pour ce groupe.
               <?php else : ?>

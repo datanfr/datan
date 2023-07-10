@@ -118,7 +118,7 @@
               </div>
             </a>
           <?php endif; ?>
-          <?php if ($this->password_model->is_team()): ?>
+          <?php if ($type == 'team'): ?>
             <div class="info">
               <a href="<?= base_url() ?>admin" class="d-block"><?= $username ?></a>
             </div>
@@ -128,7 +128,7 @@
         <!-- Sidebar Menu -->
         <nav class="mt-2">
           <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
-          <?php if ($this->password_model->is_team()): ?>
+          <?php if ($type == 'team'): ?>
             <!-- Votes datan -->
             <li class="nav-item has-treeview">
               <a href="#" class="nav-link">
