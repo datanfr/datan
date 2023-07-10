@@ -16,15 +16,21 @@
             <?= file_get_contents(asset_url()."imgs/icons/arrow_left.svg") ?>
             Retour
           </a>
+        </div>
+        <div class="col-lg-7 my-5">
           <h1 class="font-weight-bold mt-4"><?= $title ?></h1>
-          <div class="card mt-5">
-            <div class="card-body">
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-12">
+          <div class="card mb-0">
+            <div class="card-body py-4">
               <h5 class="font-weight-bold text-primary">Scrutin n° <?= $vote['voteNumero'] ?></h5>
               <h3 class="font-weight-bold"><?= $vote['title'] ?></h3>
               <p class="text-secondary mb-0"><?= ucfirst($vote['titre']) ?></p>
               <a class="btn btn-secondary font-weight-bold mt-4" href="<?= base_url() ?>votes/legislature-<?= $vote['legislature'] ?>/vote_<?= $vote['voteNumero'] ?>" target="_blank" role="button">
                 <?= file_get_contents(asset_url()."imgs/icons/box-arrow-up-right.svg") ?>
-                <span class="ml-2">Voir le vote</span>
+                <span class="ml-2">Page du scrutin</span>
               </a>
             </div>
           </div>
@@ -37,7 +43,7 @@
           <?php endif; ?>
         </div>
       </div>
-      <div class="row mt-4">
+      <div class="row mt-5 pb-5">
         <div class="col-lg-6">
           <div class="card card-primary card-outline">
             <div class="card-header">
@@ -82,7 +88,7 @@
             </div>
           </div>
         </div>
-        <div class="col-lg-6">
+        <div class="col-lg-6 mt-4 mt-lg-0">
           <div id="accordion">
             <div class="card">
               <div class="card-header" id="headingOne">

@@ -3,9 +3,9 @@
   <!-- Content Header (Page header) -->
   <div class="content-header">
     <div class="container-fluid">
-      <div class="row mb-2">
+      <div class="row my-4">
         <div class="col-sm-6">
-          <h1 class="m-0 text-dark"><?= $title ?></h1>
+          <h1 class="m-0 text-primary font-weight-bold" style="font-size: 2rem"><?= $title ?></h1>
         </div><!-- /.col -->
       </div><!-- /.row -->
     </div><!-- /.container-fluid -->
@@ -16,7 +16,7 @@
   <div class="row">
     <div class="col-lg-12">
       <div class="card">
-        <div class="card-body">
+        <div class="card-body py-4">
           <a class="btn btn-primary" role="button" href="<?= base_url() ?>admin/elections/candidat/create?election=<?= $election['slug'] ?>">Ajouter un candidat</a>
           <a class="btn btn-warning" role="button" href="<?= base_url() ?>admin/elections/<?= $election['slug'] ?>">Voir les députés candidats</a>
           <a class="btn btn-danger" href="<?= base_url() ?>cache/delete_all" role="button">Supprimer cache après avoir ajouté un candidat</a>
@@ -27,7 +27,7 @@
   <div class="row">
     <div class="col-lg-12">
       <div class="card">
-        <div class="card-body">
+        <div class="card-body py-4">
           <p>Au total, <span class="font-weight-bold text-primary"><?= count($mps) ?> députés</span> de la législature actuelle ne sont pas renseignés.</p>
           <table id="table_votes_datan" class="table table-bordered table-striped" data-order='[[6, "desc"]]'>
             <thead>

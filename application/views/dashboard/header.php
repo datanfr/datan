@@ -10,7 +10,7 @@
 
   <!-- Favicon -->
   <link rel="icon" type="image/png" href="<?= asset_url() ?>imgs/favicon/datan_favicon.ico" />
-  <link rel="shortcut icon" href="#" /> <!-- To solve the following 404 pbm: /favicon.ico || If not try this: https://www.faviconcodegenerator.com/prevent-favicon-404-error.php -->
+  <link rel="shortcut icon" href="#" />
   <!-- Apple icons -->
   <link rel="apple-touch-icon" href="<?= asset_url() ?>imgs/favicon/apple-touch-icon.png" />
   <link rel="apple-touch-icon" sizes="57x57" href="<?= asset_url() ?>imgs/favicon/apple-touch-icon-57x57.png" />
@@ -118,7 +118,7 @@
               </div>
             </a>
           <?php endif; ?>
-          <?php if ($this->password_model->is_team()): ?>
+          <?php if ($type == 'team'): ?>
             <div class="info">
               <a href="<?= base_url() ?>admin" class="d-block"><?= $username ?></a>
             </div>
@@ -128,7 +128,7 @@
         <!-- Sidebar Menu -->
         <nav class="mt-2">
           <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
-          <?php if ($this->password_model->is_team()): ?>
+          <?php if ($type == 'team'): ?>
             <!-- Votes datan -->
             <li class="nav-item has-treeview">
               <a href="#" class="nav-link">
@@ -380,7 +380,9 @@
             <li class="nav-item">
               <a class="nav-link" href="<?= base_url() ?>dashboard/explications">Explications de vote</a>
             </li>
-
+            <li class="nav-item">
+              <a class="nav-link" href="<?= base_url() ?>dashboard/explications/liste">Nouvelle explication</a>
+            </li>
           <?php endif; ?>
           </ul>
         </nav>

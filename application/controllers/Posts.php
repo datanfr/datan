@@ -143,8 +143,10 @@
 
     public function create() {
       $this->password_model->security();
+      $data['type'] = 'team';
       $data['username'] = $this->session->userdata('username');
       $data['title'] = 'Créer un post de blog';
+      $data['title_meta'] = $data['title'] . ' - Dashboard | Datan';
 
       $data['categories'] = $this->category_model->get_categories();
 
@@ -169,7 +171,7 @@
     // DELETE A POST
     public function delete($id){
       $user_type = $this->session->userdata('type');
-
+      $data['type'] = 'team';
       if ($user_type != "admin") {
         redirect();
       } else {
@@ -186,6 +188,7 @@
     // EDIT A POST (display page)
     public function edit($slug){
       $this->password_model->security();
+      $data['type'] = 'team';
       $data['username'] = $this->session->userdata('username');
       $user_type = $this->session->userdata('type');
       $data['post'] = $this->post_model->get_post_edit($slug, $user_type);
@@ -194,6 +197,7 @@
       }
       $data['categories'] = $this->category_model->get_categories();
       $data['title'] = 'Editer un post';
+      $data['title_meta'] = $data['title'] . ' - Dashboard | Datan';
 
       $this->form_validation->set_rules('title', 'Title', 'required');
       $this->form_validation->set_rules('body', 'Body', 'required');
@@ -209,6 +213,7 @@
     // UPDATE A POST
     public function update(){
       $this->password_model->security();
+      $data['type'] = 'team';
       $this->post_model->update_post();
 
       // Set message
