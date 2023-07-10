@@ -20,7 +20,7 @@
             <div class="alert alert-danger font-weight-bold mt-4 text-center" role="alert"><?= $this->session->flashdata('flash_failure') ?></div>
           <?php endif; ?>
         </div>
-        <div class="col-lg-7 col-12 my-5">
+        <div class="col-lg-7 my-5">
           <h1 class="font-weight-bold mb-0 text-dark"><?= $title ?></h1>
         </div>
       </div>
