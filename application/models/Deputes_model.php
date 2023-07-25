@@ -146,6 +146,18 @@
       }
     }
 
+    public function update_website($data){
+      switch ($data['mpId']) {
+        case 'PA794786': // Emmanuel Fernandes
+          return 'emmanuel-fernandes.fr/';
+          break;
+
+        default:
+          return $data['website'];
+          break;
+      }
+    }
+
     public function get_depute_individual($nameUrl, $dpt){
       $sql = 'SELECT
         dl.*, mg.preseance AS preseanceGroupe,
@@ -165,6 +177,7 @@
       ';
       $results = $this->db->query($sql, array($nameUrl, $dpt))->row_array();
       $results['facebook'] = $this->update_facebook($results);
+      $results['website'] = $this->update_website($results);
       return $results;
     }
 
