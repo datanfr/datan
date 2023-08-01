@@ -17,7 +17,7 @@ $widthCol = isset($explain[0]) ? 4 : 6;
                                 $this->load->view('votes/partials/explain_text.php', array('exp' => $exp));
                             endforeach ?>
                         <?php else : ?>
-                            <p class="my-3"><i>Aucun député <b>pour</b> ne sait encore exprimé.</i></p>
+                            <p class="my-3"><i>Aucun député <b>pour</b> ne s'est encore exprimé.</i></p>
                         <?php endif ?>
                     </div>
                 </div>
@@ -31,7 +31,7 @@ $widthCol = isset($explain[0]) ? 4 : 6;
                                 $this->load->view('votes/partials/explain_text.php', array('exp' => $exp));
                             endforeach ?>
                         <?php else : ?>
-                            <p class="my-3"><i>Aucun député <b>contre</b> ne sait encore exprimé.</i></p>
+                            <p class="my-3"><i>Aucun député <b>contre</b> ne s'est encore exprimé.</i></p>
                         <?php endif ?>
                     </div>
                 </div>
