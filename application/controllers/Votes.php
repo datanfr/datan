@@ -362,8 +362,6 @@
         $voteDatan = FALSE;
       }
 
-      var_dump($data['vote']);
-
       if (empty($data['vote'])) {
         show_404($this->functions_datan->get_404_infos());
       }
