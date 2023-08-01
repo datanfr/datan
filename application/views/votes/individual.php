@@ -189,7 +189,6 @@
               <td class="icon"><?= file_get_contents(base_url() . '/assets/imgs/icons/journal.svg') ?></td>
               <td class="label d-none d-lg-table-cell">Type de vote</td>
               <td class="value">
-                <?php var_dump($vote) ?>
                 <?= ucfirst($vote['type_edited']) ?>
                 <a class="ml-1" tabindex="0" role="button" data-toggle="popover" data-trigger="focus" class="question no-decoration" aria-label="Tooltip explication" data-content="<?= $vote['type_edited_explication'] ?>"><?= file_get_contents(asset_url() . "imgs/icons/question_circle.svg") ?></a>
               </td>
