@@ -2427,7 +2427,7 @@ class Script
           $majority = $majorityQuery->fetch();
 
           /// --- SOUTIEN GVT --- ///
-          $supportQuery = $this->bdd->query('SELECT A.organeRef, ROUND(AVG(A.positionGroupe), 3) AS support, count(A.positionGroupe) AS n
+          $supportQuery = $this->bdd->query('SELECT A.organeRef, SUM(A.positionGroupe) AS support, count(A.positionGroupe) AS n
             FROM
               (
                 SELECT gc.legislature, gc.voteNumero, gc.organeRef, CASE WHEN gc.positionGroupe = 1 THEN 1 ELSE 0 END AS positionGroupe
