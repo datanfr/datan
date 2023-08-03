@@ -135,6 +135,30 @@
       return $phrase;
     }
 
+    public function support($groupe, $data){
+      foreach ($data as $key => $value) {
+        if ($value['positionPolitique'] == 'Opposition') {
+          $opposition[] = $value;
+        }
+      }
+      // HERE ORDER BY value
+      $sort = array_column($opposition, 'value');
+      array_multisort($sort, SORT_DESC, $opposition);
+      foreach ($opposition as $key => $value) {
+        if ($value['organeRef'] == $groupe) {
+          $rank = $key + 1;
+        }
+      }
+
+      if ($rank <= 3) {
+        $sentence = "le " . ordinaux($rank) . " groupe d'opposition qui soutien le plus le gouvernement";
+      } else {
+        $sentence = "un des groupes d'opposition qui soutient le moins souvent le gouvernement";
+      }
+
+      return $sentence;
+    }
+
     public function proximite($stats, $positionnement){
       function maj_pres($positionPolitique){
         if ($positionPolitique == "Opposition") {

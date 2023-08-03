@@ -382,14 +382,19 @@
     }
 
     public function get_support_all($legislature){
-      $this->db->select('*, ROUND(value) AS value');
-      $this->db->where('legislature', $legislature);
-      $this->db->where('stat', 'support');
+      $where = array(
+        'c.legislature' => $legislature,
+        'c.stat' => 'support',
+        'o.libelleAbrev !=' => 'NI'
+      );
+      $this->db->select('c.*, o.positionPolitique, o.libelle, o.libelleAbrev, ROUND(c.value) AS value');
+      $this->db->where($where);
       if ($legislature == legislature_current()) {
-        $this->db->where('active', 1);
+        $this->db->where('c.active', 1);
       }
-      $this->db->order_by('value', 'ASC');
-      return $this->db->get('class_groups')->result_array();
+      $this->db->join('organes o', 'o.uid = c.organeRef', 'left');
+      $this->db->order_by('c.value', 'DESC');
+      return $this->db->get('class_groups c')->result_array();
     }
 
     public function get_stats_history($groups){
@@ -451,7 +456,7 @@
     public function get_stat_proximity_history($groupe_uid){
       $this->db->select('c.organeRef, c.dateValue AS dateValue, date_format(c.dateValue, "%M %Y") as dateValue_edited, c.score, c.prox_group AS proxGroup, o.couleurAssociee, o.uid AS proxGoupId, o.libelleAbrev AS proxGoupLibelle');
       $this->db->where('c.organeRef', $groupe_uid);
-      $this->db->where('o.libelleAbrev !=', 'Ni');
+      $this->db->where('o.libelleAbrev !=', 'NI');
       $this->db->join('organes o', 'o.uid = c.prox_group');
       $results = $this->db->get('class_groups_proximite_month c')->result_array();
 
