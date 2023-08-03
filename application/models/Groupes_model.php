@@ -372,11 +372,24 @@
       foreach ($results as $key => $value) {
         if ($value['stat'] == 'cohesion') {
           $return[$value['stat']] = array('value' => $value['value'], 'votes' => $value['votes']);
-        } else {
+        } elseif ($value['stat'] == 'support') {
+          $return[$value['stat']] = array('value' => round($value['value']), 'votes' => $value['votes']);
+        } else  {
           $return[$value['stat']] = array('value' => round($value['value'] * 100), 'votes' => $value['votes']);
         }
       }
       return $return;
+    }
+
+    public function get_support_all($legislature){
+      $this->db->select('*, ROUND(value) AS value');
+      $this->db->where('legislature', $legislature);
+      $this->db->where('stat', 'support');
+      if ($legislature == legislature_current()) {
+        $this->db->where('active', 1);
+      }
+      $this->db->order_by('value', 'ASC');
+      return $this->db->get('class_groups')->result_array();
     }
 
     public function get_stats_history($groups){
