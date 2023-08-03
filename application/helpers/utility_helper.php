@@ -37,6 +37,22 @@
     return array("PO266900", "PO387155", "PO645633", "PO723569", "PO793087");
   }
 
+  function remove_nupes($group){
+    switch ($group) {
+      case 'LFI-NUPES':
+        return 'LFI';
+        break;
+
+      case 'GDR-NUPES':
+        return 'GDR';
+        break;
+
+      default:
+        return $group;
+        break;
+    }
+  }
+
   function groups_position_edited(){
     $left = array("libelle" => "gauche", "edited" => "à gauche");
     $center = array("libelle" => "centre", "edited" => "au centre");
