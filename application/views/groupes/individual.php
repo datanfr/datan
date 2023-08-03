@@ -155,6 +155,28 @@
         <!-- BLOC STATISTIQUES -->
         <div class="bloc-statistiques mt-5">
           <h2 class="mb-3 title-center">Comportement politique</h2>
+          <?php if (!$no_support): ?>
+            <!-- CARD GOVERNMENT -->
+            <div class="card card-statistiques my-4">
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-12 d-flex flex-row align-items-center">
+                    <div class="icon">
+                      <?= file_get_contents(base_url().'/assets/imgs/icons/voting.svg') ?>
+                    </div>
+                    <h3 class="ml-3">SOUTIEN L'ACTION DU GOUVERNEMENT
+                      <a tabindex="0" role="button" data-toggle="popover" data-trigger="focus" class="no-decoration cursor-pointer" title="Taux de soutien au gouvernement" aria-label="Ouvrir l'explication de la statistique sur la soutien au gouvernement" data-content="Ce taux représente le pourcentage de textes portés par le gouvernement qui est voté par ce groupe."><?= file_get_contents(asset_url()."imgs/icons/question_circle.svg") ?></a>
+                    </h3>
+                  </div>
+                </div>
+                Données pour groupe :
+                <?php var_dump($stats['support']) ?>
+                Données pour tous les groupes:
+                <?php var_dump($support_all) ?>
+              </div>
+            </div> <!-- END CARD GOVERNMENT -->
+          <?php endif; ?>
+
           <!-- CARD PARTICIPATION -->
           <div class="card card-statistiques my-4">
             <div class="card-body">
