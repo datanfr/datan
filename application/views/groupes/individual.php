@@ -186,7 +186,7 @@
                   <?php $max = max(array_column($support_all, 'value')) ?>
                   <div class="row mt-1 bar-container stats rounded-bottom py-4">
                     <div class="col-12">
-                      <p class="text-center font-weight-bold mt-2 pb-3 h4 mx-5 px-1 px-md-5 test-border">Les groupes soutenant le plus le gouvernement</p>
+                      <p class="text-center font-weight-bold mt-2 pb-3 h4 mx-5 px-1 px-md-5">Les groupes soutenant le plus le gouvernement</p>
                       <div class="chart">
                         <div class="bar-chart d-flex flex-row justify-content-between align-items-end">
                           <?php foreach ($support_all as $key => $value): ?>
