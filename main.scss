@@ -1606,8 +1606,10 @@ body{
       }
     }
   }
-  /* bloc-newsletter */
-  .bloc-newsletter{}
+  /* bloc-support */
+  .bloc-support{
+    background-color: $bleu;
+  }
   /* BLOC-PIE */
   .bloc-pie{
     .tableGroupes{
