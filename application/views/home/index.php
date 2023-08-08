@@ -179,15 +179,37 @@
       </div>
     </div>
   </div> <!-- NED BLOC NEWSLETTER -->
-  <!-- BLOC ILS PARLENT DE NOUS -->
-  <div class="row">
-    <div class="container">
-      <div class="row">
-        <div class="col-12">
-          <h2 class="text-center my-4">Ils parlent de nous</h2>
+  <div class="row bloc-support">
+    <div class="container py-5">
+      <div class="row mb-5">
+        <div class="col-12 test-border">
+          <h2 class="text-white text-center"> Quels groupes politiques soutiennent le gouvernement ?</h2>
         </div>
       </div>
-      <div class="row pb-5">
+      <div class="row">
+        <div class="col-8 test-border text-white">
+          <p>À l'Assemblée nationale, il existe des groupes membres de la majorité présidentielle et des groupes d'opposition. Les groupes de la majorité soutiennent quasimment tout le temps l'action du gouvernement. De leur côté, les groupes d'opposition, s'ils votent parfois en faveur des textes du gouverneemnt, affichent plus souvent leur opposition.</p>
+          <p>Le gouvernement actuel [XXXX].</p>
+          <p>Depuis le début de la législature, en XXXX, nous avons relevé XX votes ayant eu lieu sur des projets de loi portés par le gouvernement. Découvrez les groupes qui votent le plus souvent en faveur de ces textes gouvernementaux.</p>
+          <p>Parmi les groupes d'opposition, le groupe XXXX (XXX) est celui qui vote le plus fréquemment en faveur des projets de loi du gouvernement.</p>
+        </div>
+        <div class="col-4 test-border">
+          <div class="card">
+            <p>xx</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- BLOC ILS PARLENT DE NOUS -->
+  <div class="row">
+    <div class="container py-5">
+      <div class="row pt-3">
+        <div class="col-12">
+          <h2 class="text-center">Ils parlent de nous</h2>
+        </div>
+      </div>
+      <div class="row mt-5 pb-5">
         <div class="col-lg-8 offset-lg-2 d-flex flex-wrap justify-content-around align-items-center">
           <a href="https://www.lemonde.fr/politique/article/2023/06/23/le-rn-premier-opposant-a-emmanuel-macron-mais-soutien-regulier-a-l-assemblee-nationale_6178892_823448.html" target="_blank" rel="noopener">
             <img class="mx-2 my-3 img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="150" height="35" data-src="<?= asset_url() ?>imgs/media/le_monde.png" alt="Le Monde">
