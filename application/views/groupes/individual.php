@@ -164,30 +164,29 @@
                     <div class="icon">
                       <?= file_get_contents(base_url().'/assets/imgs/icons/voting.svg') ?>
                     </div>
-                    <h3 class="ml-3">SOUTIEN L'ACTION DU GOUVERNEMENT
-                      <a tabindex="0" role="button" data-toggle="popover" data-trigger="focus" class="no-decoration cursor-pointer" title="Taux de soutien au gouvernement" aria-label="Ouvrir l'explication de la statistique sur la soutien au gouvernement" data-content="Ce taux représente le pourcentage de textes portés par le gouvernement qui est voté par ce groupe."><?= file_get_contents(asset_url()."imgs/icons/question_circle.svg") ?></a>
+                    <h3 class="ml-3">SOUTIEN ENVERS LE GOUVERNEMENT
+                      <a tabindex="0" role="button" data-toggle="popover" data-trigger="focus" class="no-decoration cursor-pointer" title="Taux de soutien au gouvernement" aria-label="Ouvrir l'explication de la statistique sur la soutien au gouvernement" data-content="Ce taux représente le pourcentage de textes portés par le gouvernement qui est voté par ce groupe politique."><?= file_get_contents(asset_url()."imgs/icons/question_circle.svg") ?></a>
                     </h3>
                   </div>
                 </div>
                 <div class="row">
                   <div class="col-12">
                     <?php if ($groupe['positionPolitique'] != 'Opposition'): ?>
-                      <p>Le groupe <?= $title ?> est membre de la <b>majorité présidentielle</b>. Le groupe soutient donc l'action du gouvernement et vote fréquemment en faveur des textes qu'il présente.</p>
+                      <p>Le groupe <?= $title ?> <?= $active ? 'est' : 'était' ?> membre de la <b>majorité présidentielle</b>. Le groupe <?= $active ? 'soutient' : 'soutenait' ?> donc l'action du gouvernement et <?= $active ? 'vote' : 'votait' ?> fréquemment en faveur des textes qu'il présente.</p>
                     <?php else: ?>
                       <p>Le groupe <?= $title ?> est un <b>groupe d'opposition</b>. Si l'opposition vote parfois en faveur des textes du gouvernement, son soutien n'est pas systématique.</p>
                     <?php endif; ?>
-                    <p>Sur les <?= $stats['support']['votes'] ?> votes sur des projets de loi (PJL) présentés par le gouvernement, le groupe <?= $groupe['libelleAbrev'] ?> a voté <b>en faveur de <?= $stats['support']['value'] ?> texte<?= $stats['support']['value'] > 1 ? 's' : '' ?></b>. Il a donc soutenu le gouvernement dans <?= round($stats['support']['value'] / $stats['support']['votes'] * 100) ?>% des cas.</p>
-                    <?php if ($groupe['positionPolitique'] == 'Opposition'): ?>
+                    <p>Sur les <?= $stats['support']['votes'] ?> votes sur des projets de loi présentés par le gouvernement, le groupe <?= $groupe['libelleAbrev'] ?> a voté <b>en faveur de <?= $stats['support']['value'] ?> texte<?= $stats['support']['value'] > 1 ? 's' : '' ?></b>. Il a donc soutenu le gouvernement dans <?= round($stats['support']['value'] / $stats['support']['votes'] * 100) ?>% des cas.</p>
+                    <?php if ($groupe['positionPolitique'] == 'Opposition' & $active == 1): ?>
                       <p>Le groupe <?= $groupe['libelleAbrev'] ?> <?= $edito_support ?>.</p>
                     <?php endif; ?>
                   </div>
                 </div>
-
                 <?php if ($legislature == legislature_current()): ?>
                   <?php $max = max(array_column($support_all, 'value')) ?>
                   <div class="row mt-1 bar-container stats rounded-bottom py-4">
                     <div class="col-12">
-                      <p class="text-center font-weight-bold mt-2 pb-3 h4 mx-5">Les groupes politiques soutenant le plus le gouvernement</p>
+                      <p class="text-center font-weight-bold mt-2 pb-3 h4 mx-5 px-1 px-md-5 test-border">Les groupes soutenant le plus le gouvernement</p>
                       <div class="chart">
                         <div class="bar-chart d-flex flex-row justify-content-between align-items-end">
                           <?php foreach ($support_all as $key => $value): ?>
