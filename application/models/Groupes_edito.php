@@ -150,8 +150,8 @@
         }
       }
 
-      if ($rank <= 3) {
-        $sentence = "le " . ordinaux($rank) . " groupe d'opposition qui soutien le plus le gouvernement";
+      if ($rank <= 4) {
+        $sentence = "le " . ordinaux($rank) . " groupe d'opposition qui soutient le plus le gouvernement";
       } else {
         $sentence = "un des groupes d'opposition qui soutient le moins souvent le gouvernement";
       }
