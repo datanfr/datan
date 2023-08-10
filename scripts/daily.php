@@ -2691,9 +2691,7 @@ class Script
     public function dossier()
     {
         echo "dossier starting \n";
-        $this->bdd->query('
-            DELETE FROM dossiers WHERE legislature = "' . $this->legislature_to_get . '"
-        ');
+        //$this->bdd->query('DELETE FROM dossiers WHERE legislature = "' . $this->legislature_to_get . '"');
 
         $dossierFields = array('dossierId', 'legislature', 'titre', 'titreChemin', 'senatChemin', 'procedureParlementaireCode', 'procedureParlementaireLibelle', 'commissionFond');
         $dossier = [];
