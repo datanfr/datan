@@ -179,15 +179,74 @@
       </div>
     </div>
   </div> <!-- NED BLOC NEWSLETTER -->
-  <!-- BLOC ILS PARLENT DE NOUS -->
-  <div class="row">
-    <div class="container">
-      <div class="row">
+  <div class="row bloc-support">
+    <div class="container py-5">
+      <div class="row mb-5">
         <div class="col-12">
-          <h2 class="text-center my-4">Ils parlent de nous</h2>
+          <h2 class="text-white text-center"> Quels groupes politiques soutiennent le gouvernement ?</h2>
         </div>
       </div>
-      <div class="row pb-5">
+      <div class="row">
+        <div class="col-lg-6 col-md-5 d-flex align-items-center text-white">
+          <div>
+            <p>À l'Assemblée nationale, certains groupes sont membres de la majorité tandis que d'autres sont des groupes d'opposition.</p>
+            <p>Les groupes de la majorité soutiennent l'action du gouvernement et votent en faveur des textes qu'il propose. L'opposition, si elle peut parfois soutenir le gouvernement, vote plus souvent contre les projets du gouvernement.</p>
+            <p>Le gouvernement actuel est dirigé par la Première ministre Élisabeth Borne.</p>
+            <p>Le groupe <?= $support_opposition['libelle'] ?> (<?= $support_opposition['libelleAbrev'] ?>) est le groupe d'opposition votant le plus souvent en faveur du gouvernement.</p>
+          </div>
+        </div>
+        <div class="col-lg-6 col-md-7 mt-md-0 mt-4">
+          <?php $max = max(array_column($support, 'value')) ?>
+          <?php $maxVotes = max(array_column($support, 'votes')) ?>
+          <div class="card card-statistiques border-0">
+            <div class="card-body pb-0">
+              <h3 class="text-center font-weight-bold h5">Nombre de textes du gouvernement votés par les groupes</h3>
+              <p class="mt-3">Depuis le début de la législature, en 2022, il y a eu <b><?= $maxVotes ?> votes</b> sur des projets de loi du gouvernement. Découvrez les groupes politiques qui votent le plus souvent en faveur de ces textes.</p>
+              <div class="legend d-flex justify-content-center">
+                <div class="d-flex justify-content-center align-items-center mx-3">
+                  <div class="legendBox" style="background-color: #5199C4"></div>
+                  <span class="ml-2 font-italic">Majorité</span>
+                </div>
+                <div class="d-flex justify-content-center align-items-center mx-3">
+                  <div class="legendBox" style="background-color: #EA9A27"></div>
+                  <span class="ml-2 font-italic">Opposition</span>
+                </div>
+              </div>
+              <div class="row mt-1 bar-container stats rounded-bottom py-4 mt-3">
+                <div class="col-12">
+                  <div class="chart">
+                    <div class="bar-chart d-flex flex-row justify-content-between align-items-end">
+                      <?php foreach ($support as $key => $value): ?>
+                        <div class="bars mx-1 mx-md-2" style="height: <?= round($value['value'] / $max * 100) ?>%; background-color: <?= $value['positionPolitique'] == 'Opposition' ? '#EA9A27' : '#5199C4' ?>">
+                          <span class="score" style="font-size: 0.85rem"><?= $value['value'] ?></span>
+                        </div>
+                      <?php endforeach; ?>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-12 d-flex justify-content-between mt-2">
+                  <?php foreach ($support as $key => $value): ?>
+                    <div class="legend-element d-flex align-items-center justify-content-center">
+                      <span class="font-weight-bold text-center tooltipHelp tooltipDashed" data-toggle="tooltip" data-placement="top" title="<?= $value['libelle'] ?>"><?= remove_nupes($value['libelleAbrev']) ?></span>
+                    </div>
+                  <?php endforeach; ?>
+                </div>
+              </div>
+            </div>
+          </div> <!-- END CARD GOVERNMENT -->
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- BLOC ILS PARLENT DE NOUS -->
+  <div class="row">
+    <div class="container py-5">
+      <div class="row pt-3">
+        <div class="col-12">
+          <h2 class="text-center">Ils parlent de nous</h2>
+        </div>
+      </div>
+      <div class="row mt-5 pb-5">
         <div class="col-lg-8 offset-lg-2 d-flex flex-wrap justify-content-around align-items-center">
           <a href="https://www.lemonde.fr/politique/article/2023/06/23/le-rn-premier-opposant-a-emmanuel-macron-mais-soutien-regulier-a-l-assemblee-nationale_6178892_823448.html" target="_blank" rel="noopener">
             <img class="mx-2 my-3 img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="150" height="35" data-src="<?= asset_url() ?>imgs/media/le_monde.png" alt="Le Monde">
