@@ -381,19 +381,23 @@
       return $return;
     }
 
-    public function get_support_all($legislature){
+    public function get_support_all($legislature, $opposition = FALSE){
       $where = array(
         'c.legislature' => $legislature,
         'c.stat' => 'support',
         'o.libelleAbrev !=' => 'NI'
       );
-      $this->db->select('c.*, o.positionPolitique, o.libelle, o.libelleAbrev, ROUND(c.value) AS value');
+      if ($opposition) {
+        $this->db->where('positionPolitique', 'Opposition');
+      }
+      $this->db->select('c.*, o.positionPolitique, o.libelle, o.libelleAbrev, ROUND(c.value) AS value, ge.effectif');
       $this->db->where($where);
       if ($legislature == legislature_current()) {
         $this->db->where('c.active', 1);
       }
       $this->db->join('organes o', 'o.uid = c.organeRef', 'left');
-      $this->db->order_by('c.value', 'DESC');
+      $this->db->join('groupes_effectif ge', 'ge.organeRef = c.organeRef', 'left');
+      $this->db->order_by('c.value DESC, ge.effectif DESC');
       return $this->db->get('class_groups c')->result_array();
     }
 
