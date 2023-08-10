@@ -1060,6 +1060,13 @@ input#quicksearch[type=text]{
       fill: $orange;
     }
   }
+  .legend{
+    font-size: $h7-font-size;
+    .legendBox{
+      height: 10px;
+      width: 10px;
+    }
+  }
 }
 // Medium devices (tablets, 768px and up)
 @include media-breakpoint-up(lg) {
@@ -1606,8 +1613,10 @@ body{
       }
     }
   }
-  /* bloc-newsletter */
-  .bloc-newsletter{}
+  /* bloc-support */
+  .bloc-support{
+    background-color: $bleu;
+  }
   /* BLOC-PIE */
   .bloc-pie{
     .tableGroupes{

@@ -5,7 +5,7 @@
         <div class="col-3 d-flex align-items-center justify-content-center">
           <div class="text-center">
             <p class="font-weight-bold mb-0">
-              <span class="tooltipHelp tooltipDashed" data-toggle="tooltip" data-placement="top" title="<?= $value['libelle'] ?>"><?= $value['libelleAbrev'] ?></span>
+              <span class="tooltipHelp tooltipDashed" data-toggle="tooltip" data-placement="top" title="<?= $value['libelle'] ?>"><?= remove_nupes($value['libelleAbrev']) ?></span>
             </p>
             <?php if ($terms): ?>
               <p class="font-italic h6 mb-0"><?= $value['legislature'] ?><sup>ème</sup> législature</p>

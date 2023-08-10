@@ -2426,6 +2426,21 @@ class Script
           ');
           $majority = $majorityQuery->fetch();
 
+          /// --- SOUTIEN GVT --- ///
+          $supportQuery = $this->bdd->query('SELECT A.organeRef, SUM(A.positionGroupe) AS support, count(A.positionGroupe) AS n
+            FROM
+              (
+                SELECT gc.legislature, gc.voteNumero, gc.organeRef, CASE WHEN gc.positionGroupe = 1 THEN 1 ELSE 0 END AS positionGroupe
+                FROM groupes_cohesion gc
+                LEFT JOIN votes_info vi ON vi.legislature = gc.legislature AND vi.voteNumero = gc.voteNumero
+                LEFT JOIN votes_dossiers vd ON vd.voteNumero = gc.voteNumero AND vd.legislature = gc.legislature
+                LEFT JOIN dossiers doss ON doss.titreChemin = vd.dossier
+                WHERE gc.organeRef = "' . $uid . '" AND vi.voteType = "final" AND doss.procedureParlementaireCode IN (1, 8, 21)
+              ) A
+          ');
+          $support = $supportQuery->fetch();
+
+
           /// --- PARTICIPATION ALL --- ///
           $participationQuery = $this->bdd->query('SELECT organeRef, ROUND(avg(B.participation_rate), 3) AS mean, COUNT(B.participation_rate) AS n
             FROM
@@ -2470,6 +2485,8 @@ class Script
           $this->insertAll('class_groups', $fields, $insertCohesion);
           $insertMajority = array($uid, $group['legislature'], $active, 'majority', $majority['mean'], $majority['n'], $this->dateMaj);
           $this->insertAll('class_groups', $fields, $insertMajority);
+          $insertSupport = array($uid, $group['legislature'], $active, 'support', $support['support'], $support['n'], $this->dateMaj);
+          $this->insertAll('class_groups', $fields, $insertSupport);
           $insertParticipation = array($uid, $group['legislature'], $active, 'participation', $participation['mean'], $participation['n'], $this->dateMaj);
           $this->insertAll('class_groups', $fields, $insertParticipation);
           $insertParticipationSPS = array($uid, $group['legislature'], $active, 'participationSPS', $participationSPS['mean'], $participationSPS['n'], $this->dateMaj);

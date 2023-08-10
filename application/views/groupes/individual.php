@@ -155,6 +155,61 @@
         <!-- BLOC STATISTIQUES -->
         <div class="bloc-statistiques mt-5">
           <h2 class="mb-3 title-center">Comportement politique</h2>
+          <?php if (!$no_support): ?>
+            <!-- CARD GOVERNMENT -->
+            <div class="card card-statistiques my-4 border-0">
+              <div class="card-body pb-0">
+                <div class="row">
+                  <div class="col-12 d-flex flex-row align-items-center">
+                    <div class="icon">
+                      <?= file_get_contents(base_url().'/assets/imgs/icons/voting.svg') ?>
+                    </div>
+                    <h3 class="ml-3">SOUTIEN ENVERS LE GOUVERNEMENT
+                      <a tabindex="0" role="button" data-toggle="popover" data-trigger="focus" class="no-decoration cursor-pointer" title="Taux de soutien au gouvernement" aria-label="Ouvrir l'explication de la statistique sur la soutien au gouvernement" data-content="Ce taux représente le pourcentage de textes portés par le gouvernement qui est voté par ce groupe politique."><?= file_get_contents(asset_url()."imgs/icons/question_circle.svg") ?></a>
+                    </h3>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-12">
+                    <?php if ($groupe['positionPolitique'] != 'Opposition'): ?>
+                      <p>Le groupe <?= $title ?> <?= $active ? 'est' : 'était' ?> membre de la <b>majorité présidentielle</b>. Le groupe <?= $active ? 'soutient' : 'soutenait' ?> donc l'action du gouvernement et <?= $active ? 'vote' : 'votait' ?> fréquemment en faveur des textes qu'il présente.</p>
+                    <?php else: ?>
+                      <p>Le groupe <?= $title ?> est un <b>groupe d'opposition</b>. Si l'opposition vote parfois en faveur des textes du gouvernement, son soutien n'est pas systématique.</p>
+                    <?php endif; ?>
+                    <p>Sur les <?= $stats['support']['votes'] ?> votes sur des projets de loi présentés par le gouvernement, le groupe <?= $groupe['libelleAbrev'] ?> a voté <b>en faveur de <?= $stats['support']['value'] ?> texte<?= $stats['support']['value'] > 1 ? 's' : '' ?></b>. Il a donc soutenu le gouvernement dans <?= round($stats['support']['value'] / $stats['support']['votes'] * 100) ?>% des cas.</p>
+                    <?php if ($groupe['positionPolitique'] == 'Opposition' & $active == 1): ?>
+                      <p>Le groupe <?= $groupe['libelleAbrev'] ?> <?= $edito_support ?>.</p>
+                    <?php endif; ?>
+                  </div>
+                </div>
+                <?php if ($legislature == legislature_current()): ?>
+                  <?php $max = max(array_column($support_all, 'value')) ?>
+                  <div class="row mt-1 bar-container stats rounded-bottom py-4">
+                    <div class="col-12">
+                      <p class="text-center font-weight-bold mt-2 pb-3 h4 mx-5 px-1 px-md-5">Les groupes soutenant le plus le gouvernement</p>
+                      <div class="chart">
+                        <div class="bar-chart d-flex flex-row justify-content-between align-items-end">
+                          <?php foreach ($support_all as $key => $value): ?>
+                            <div class="bars mx-1 mx-md-2 <?= $value['organeRef'] == $groupe['uid'] ? 'bg-danger' : '' ?>" style="height: <?= round($value['value'] / $max * 100) ?>%">
+                              <span class="score"><?= $value['value'] ?></span>
+                            </div>
+                          <?php endforeach; ?>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-12 d-flex justify-content-between mt-2">
+                      <?php foreach ($support_all as $key => $value): ?>
+                        <div class="legend-element d-flex align-items-center justify-content-center">
+                          <span class="font-weight-bold text-center tooltipHelp tooltipDashed" data-toggle="tooltip" data-placement="top" title="<?= $value['libelle'] ?>"><?= remove_nupes($value['libelleAbrev']) ?></span>
+                        </div>
+                      <?php endforeach; ?>
+                    </div>
+                  </div>
+                <?php endif; ?>
+              </div>
+            </div> <!-- END CARD GOVERNMENT -->
+          <?php endif; ?>
+
           <!-- CARD PARTICIPATION -->
           <div class="card card-statistiques my-4">
             <div class="card-body">
@@ -443,18 +498,18 @@
                         </div>
                       </div>
                       <div class="bar-chart d-flex flex-row justify-content-between align-items-end">
-                        <?php foreach ($accord_groupes_last as $group): ?>
-                          <div class="bars mx-1 mx-md-3" style="height: <?= $group['score'] ?>%">
-                            <span class="score"><?= $group['score'] ?>%</span>
+                        <?php foreach ($accord_groupes_last as $value): ?>
+                          <div class="bars mx-1 mx-md-3" style="height: <?= $value['score'] ?>%">
+                            <span class="score"><?= $value['score'] ?>%</span>
                           </div>
                         <?php endforeach; ?>
                       </div>
                     </div>
                   </div>
                   <div class="col-10 offset-2 d-flex justify-content-between mt-2">
-                    <?php foreach ($accord_groupes_last as $group): ?>
+                    <?php foreach ($accord_groupes_last as $value): ?>
                       <div class="legend-element d-flex align-items-center justify-content-center">
-                        <span class="font-weight-bold"><?= $group['libelleAbrev'] ?></span>
+                        <span class="font-weight-bold"><?= $value['libelleAbrev'] ?></span>
                       </div>
                     <?php endforeach; ?>
                   </div>
