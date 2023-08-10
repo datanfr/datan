@@ -64,6 +64,17 @@
       } else {
         $data['no_majorite'] = TRUE;
       }
+      // Get support data for all groups
+      $data['support_all'] = $this->groupes_model->get_support_all($data['groupe']['legislature']);
+      if (!empty($data['stats']['support'])) {
+        $data['no_support'] = FALSE;
+        if ($data['groupe']['positionPolitique'] == 'Opposition') {
+          $data['edito_support'] = $this->groupes_edito->support($data['groupe']['uid'], $data['support_all']);
+        }
+      } else {
+        $data['no_support'] = TRUE;
+      }
+
       // Get age data
       $data['ageMean'] = $this->stats_model->get_age_mean($data['groupe']['legislature']);
       $data['ageMean'] = round($data['ageMean']);
