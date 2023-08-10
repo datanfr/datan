@@ -60,6 +60,9 @@
         $data['depute_loyal_moins']['couleurAssociee'] = $this->groupes_model->get_groupe_color(array($data['depute_loyal_moins']['libelleAbrev'], $data['depute_loyal_moins']['couleurAssociee']));
       }
       */
+      $data['support'] = $this->groupes_model->get_support_all(legislature_current());
+      $data['support_opposition'] = $this->groupes_model->get_support_all(legislature_current(), TRUE);
+      $data['support_opposition'] = $data['support_opposition'][0];
 
       //Get votes (cached)
       if(!in_array($_SERVER['REMOTE_ADDR'], localhost())){

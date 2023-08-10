@@ -182,21 +182,58 @@
   <div class="row bloc-support">
     <div class="container py-5">
       <div class="row mb-5">
-        <div class="col-12 test-border">
+        <div class="col-12">
           <h2 class="text-white text-center"> Quels groupes politiques soutiennent le gouvernement ?</h2>
         </div>
       </div>
       <div class="row">
-        <div class="col-8 test-border text-white">
-          <p>À l'Assemblée nationale, il existe des groupes membres de la majorité présidentielle et des groupes d'opposition. Les groupes de la majorité soutiennent quasimment tout le temps l'action du gouvernement. De leur côté, les groupes d'opposition, s'ils votent parfois en faveur des textes du gouverneemnt, affichent plus souvent leur opposition.</p>
-          <p>Le gouvernement actuel [XXXX].</p>
-          <p>Depuis le début de la législature, en XXXX, nous avons relevé XX votes ayant eu lieu sur des projets de loi portés par le gouvernement. Découvrez les groupes qui votent le plus souvent en faveur de ces textes gouvernementaux.</p>
-          <p>Parmi les groupes d'opposition, le groupe XXXX (XXX) est celui qui vote le plus fréquemment en faveur des projets de loi du gouvernement.</p>
-        </div>
-        <div class="col-4 test-border">
-          <div class="card">
-            <p>xx</p>
+        <div class="col-lg-6 col-md-5 d-flex align-items-center text-white">
+          <div>
+            <p>À l'Assemblée nationale, certains groupes sont membres de la majorité tandis que d'autres sont des groupes d'opposition.</p>
+            <p>Les groupes de la majorité soutiennent l'action du gouvernement et votent en faveur des textes qu'il propose. L'opposition, si elle peut parfois soutenir le gouvernement, vote plus souvent contre les projets du gouvernement.</p>
+            <p>Le gouvernement actuel est dirigé par la Première ministre Élisabeth Borne.</p>
+            <p>Le groupe <?= $support_opposition['libelle'] ?> (<?= $support_opposition['libelleAbrev'] ?>) est le groupe d'opposition votant le plus souvent en faveur du gouvernement.</p>
           </div>
+        </div>
+        <div class="col-lg-6 col-md-7 mt-md-0 mt-4">
+          <?php $max = max(array_column($support, 'value')) ?>
+          <?php $maxVotes = max(array_column($support, 'votes')) ?>
+          <div class="card card-statistiques border-0">
+            <div class="card-body pb-0">
+              <h3 class="text-center font-weight-bold h5">Nombre de textes du gouvernement votés par les groupes</h3>
+              <p class="mt-3">Depuis le début de la législature, en 2022, il y a eu <b><?= $maxVotes ?> votes</b> sur des projets de loi du gouvernement. Découvrez les groupes politiques qui votent le plus souvent en faveur de ces textes.</p>
+              <div class="legend d-flex justify-content-center">
+                <div class="d-flex justify-content-center align-items-center mx-3">
+                  <div class="legendBox" style="background-color: #5199C4"></div>
+                  <span class="ml-2 font-italic">Majorité</span>
+                </div>
+                <div class="d-flex justify-content-center align-items-center mx-3">
+                  <div class="legendBox" style="background-color: #EA9A27"></div>
+                  <span class="ml-2 font-italic">Opposition</span>
+                </div>
+              </div>
+              <div class="row mt-1 bar-container stats rounded-bottom py-4 mt-3">
+                <div class="col-12">
+                  <div class="chart">
+                    <div class="bar-chart d-flex flex-row justify-content-between align-items-end">
+                      <?php foreach ($support as $key => $value): ?>
+                        <div class="bars mx-1 mx-md-2" style="height: <?= round($value['value'] / $max * 100) ?>%; background-color: <?= $value['positionPolitique'] == 'Opposition' ? '#EA9A27' : '#5199C4' ?>">
+                          <span class="score" style="font-size: 0.85rem"><?= $value['value'] ?></span>
+                        </div>
+                      <?php endforeach; ?>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-12 d-flex justify-content-between mt-2">
+                  <?php foreach ($support as $key => $value): ?>
+                    <div class="legend-element d-flex align-items-center justify-content-center">
+                      <span class="font-weight-bold text-center tooltipHelp tooltipDashed" data-toggle="tooltip" data-placement="top" title="<?= $value['libelle'] ?>"><?= remove_nupes($value['libelleAbrev']) ?></span>
+                    </div>
+                  <?php endforeach; ?>
+                </div>
+              </div>
+            </div>
+          </div> <!-- END CARD GOVERNMENT -->
         </div>
       </div>
     </div>
