@@ -2435,7 +2435,7 @@ class Script
                 LEFT JOIN votes_info vi ON vi.legislature = gc.legislature AND vi.voteNumero = gc.voteNumero
                 LEFT JOIN votes_dossiers vd ON vd.voteNumero = gc.voteNumero AND vd.legislature = gc.legislature
                 LEFT JOIN dossiers doss ON doss.titreChemin = vd.dossier
-                WHERE gc.organeRef = "' . $uid . '" AND vi.voteType = "final" AND doss.procedureParlementaireCode IN (1, 8, 21)
+                WHERE gc.organeRef = "' . $uid . '" AND vi.voteType = "final" AND doss.procedureParlementaireCode IN (1, 21)
               ) A
           ');
           $support = $supportQuery->fetch();
