@@ -1048,7 +1048,7 @@ class Script
             SELECT CASE WHEN d.civ = "Mme" THEN 1 ELSE 0 END AS woman
             FROM mandat_groupe m
             LEFT JOIN deputes_last d ON d.mpId = m.mpId
-            WHERE m.organeRef = "' . $groupeId . '" AND (m.dateFin IS NULL OR m.dateFin < "' . $this->dateFinLast . '")
+            WHERE m.organeRef = "' . $groupeId . '" AND (m.dateFin IS NULL OR m.dateFin <= "' . $this->dateFinLast . '")
             GROUP BY m.mpId
           ) A
         ')->fetch(PDO::FETCH_ASSOC);
