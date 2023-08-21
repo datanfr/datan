@@ -178,7 +178,7 @@
                     <?php endif; ?>
                     <p>Sur les <?= $stats['support']['votes'] ?> votes sur des projets de loi présentés par le gouvernement, le groupe <?= $groupe['libelleAbrev'] ?> a voté <b>en faveur de <?= $stats['support']['value'] ?> texte<?= $stats['support']['value'] > 1 ? 's' : '' ?></b>. Il a donc soutenu le gouvernement dans <?= round($stats['support']['value'] / $stats['support']['votes'] * 100) ?>% des cas.</p>
                     <?php if ($groupe['positionPolitique'] == 'Opposition' & $active == 1): ?>
-                      <p>Le groupe <?= $groupe['libelleAbrev'] ?> <?= $edito_support ?>.</p>
+                      <p>Le groupe <?= $groupe['libelleAbrev'] ?> est <?= $edito_support ?>.</p>
                     <?php endif; ?>
                   </div>
                 </div>
