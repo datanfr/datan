@@ -19,6 +19,11 @@
         // PARTICIPATION
         $data['participation'] = $this->deputes_model->get_stats_participation_solennels($mpId, $legislature);
         var_dump($data['participation']);
+        if ($data['participation']) {
+          echo "yes";
+        } else {
+          echo "no";
+        }
         if (isset($data['participation']) && $data['participation']['votesN'] < 5) {
           $data['no_participation'] = TRUE;
         } else {
