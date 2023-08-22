@@ -18,19 +18,7 @@
       if (in_array($legislature, legislature_all())) {
         // PARTICIPATION
         $data['participation'] = $this->deputes_model->get_stats_participation_solennels($mpId, $legislature);
-        var_dump($data['participation']);
-        if ($data['participation']) {
-          echo "yes";
-        } else {
-          echo "no";
-        }
-        if ($data['participation']['votesN'] < 5) {
-          echo "less";
-        } else {
-          echo "more";
-        }
         if ($data['participation'] && $data['participation']['votesN'] >= 5) {
-          echo 1;
           $data['no_participation'] = FALSE;
           // GET ALL DATA FOR PARTICIPATION
           $data['participation']['all'] = $this->deputes_model->get_stats_participation_solennels_all($legislature);
@@ -40,15 +28,12 @@
             $data['edito_participation']['group'] = $this->depute_edito->participation($data['participation']['score'], $data['participation']['group']); //edited for GROUP
           }
         } else {
-          echo 0;
           $data['no_participation'] = TRUE;
         }
 
         // LOYALTY
         $data['loyaute'] = $this->deputes_model->get_stats_loyaute($mpId, $legislature);
-        if (isset($data['loyaute']) && $data['loyaute']['votesN'] < 5) {
-          $data['no_loyaute'] = TRUE;
-        } else {
+        if ($data['loyaute'] && $data['loyaute']['votesN'] >= 5) {
           $data['no_loyaute'] = FALSE;
           // GET ALL DATA FOR LOYALTY
           $data['loyaute']['all'] = $this->deputes_model->get_stats_loyaute_all($legislature);
@@ -59,6 +44,8 @@
           }
           // loyalty history
           $data['loyaute_history'] = $this->deputes_model->get_stats_loyaute_history($mpId, $legislature);
+        } else {
+          $data['no_loyaute'] = TRUE;
         }
 
         // PROXIMITY WITH MAJORITY
