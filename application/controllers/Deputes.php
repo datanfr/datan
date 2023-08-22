@@ -24,6 +24,11 @@
         } else {
           echo "no";
         }
+        if ($data['participation']['votesN'] < 5) {
+          echo "less";
+        } else {
+          echo "more";
+        }
         if (isset($data['participation']) && $data['participation']['votesN'] < 5) {
           echo "true";
           $data['no_participation'] = TRUE;
