@@ -25,8 +25,10 @@
           echo "no";
         }
         if (isset($data['participation']) && $data['participation']['votesN'] < 5) {
+          echo "true";
           $data['no_participation'] = TRUE;
         } else {
+          echo "false";
           $data['no_participation'] = FALSE;
           // GET ALL DATA FOR PARTICIPATION
           $data['participation']['all'] = $this->deputes_model->get_stats_participation_solennels_all($legislature);
