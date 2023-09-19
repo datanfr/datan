@@ -93,7 +93,14 @@
       $this->db->select('nameFirst, nameLast, gender');
       $query = $this->db->get_where('cities_mayors', $where, 1);
 
-      return $query->row_array();
+      $array = $query->row_array();
+
+      // Manual correcting
+      if ($array['nameLast'] == 'SALVO' && $insee == '13028') {
+        $array = array('nameFirst' => 'Alexandre', 'nameLast' => 'Doriol', 'gender' => 'M');
+      }
+
+      return $array;
     }
 
     public function get_results_legislatives($insee, $year){
