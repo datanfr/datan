@@ -6,7 +6,7 @@
         <div class="col-md-8 col-lg-7">
           <div class="mt-4">
             <p>
-              Quel député vote le plus ? Qui est le plus loyal à son groupe ? Quel groupe parlementaire est le plus divisé ? Ou encore quel député est le plus âgé ?
+              Quel député vote le plus ? Qui vote le plus souvent comme son groupe ? Quel groupe parlementaire est le plus divisé ? Ou encore quel député est le plus âgé ?
             </p>
             <p>
               L'équipe de <b>Datan</b> vous propose une série de classements qui répondent à ces questions. Et si vous avez d'autres idées, n'hésitez pas à nous contacter : info[at]datan.fr !
@@ -212,7 +212,7 @@
       <div class="row mt-5 ">
         <div class="col-12">
           <div class="title_svg">
-            <h2>La loyauté politique</h2>
+            <h2>La proximité au groupe politique</h2>
             <?= file_get_contents(asset_url()."imgs/svg/blob_3.svg") ?>
           </div>
         </div>
@@ -222,7 +222,7 @@
           <div class="card">
             <?php if ($mps_loyalty): ?>
               <div class="card-body">
-                <h3>La loyauté des députés envers leur groupe</h3>
+                <h3>La proximité des députés à leur groupe</h3>
                 <p>
                   Quand ils votent, les députés peuvent décider de suivre la ligne de leur groupe politique. Ils peuvent également décider de voter contre leur groupe, par exemple si leur position personnelle est différente ou si les intérêts de leur circonscription sont contraires à la ligne du groupe.
                 </p>
