@@ -180,66 +180,26 @@
                 <h2 class="mb-4 title-center">Ses positions importantes</h2>
                 <div class="card">
                   <div class="card-body key-votes">
-                    <?php if (isset($key_votes[629])) : ?>
+                    <?php foreach ($key_votes as $key => $value): ?>
                       <div class="row">
                         <div class="col-md-3 libelle d-flex align-items-center justify-content-md-center">
-                          <span class="sort-<?= $key_votes[629]["vote_libelle"] ?>"><?= mb_strtoupper($key_votes[629]["vote_libelle"]) ?></span>
+                          <span class="sort-<?= $value["vote_libelle"] ?>"><?= mb_strtoupper($value["vote_libelle"]) ?></span>
                         </div>
                         <div class="col-md-9 value">
                           <?= $title ?><b>
-                            <?php if ($key_votes[629]["vote"] === "1") : ?>
+                            <?php if ($value['vote'] === "1") : ?>
                               a voté en faveur de
-                            <?php elseif ($key_votes[629]["vote"] === "-1") : ?>
+                            <?php elseif ($value['vote'] === "-1") : ?>
                               a voté contre
                             <?php else : ?>
-                              s'est abstenu<?= $gender["e"] ?> sur le vote concernant
+                              s'est abstenu<?= $gender['e'] ?> sur le vote concernant
                             <?php endif; ?>
-                            l'inscription de l'interruption volontaire de grossesse (IVG) dans la Constitution</b>.
-                          <?= ucfirst($gender['pronom']) ?> <?= $key_votes[629]["loyaute"] === "1" ? "a été loyal" : "n'a pas été loyal" ?><?= $gender['e'] ?> à son groupe.
-                          <a href="<?= base_url() ?>votes/legislature-16/vote_629" class="font-italic">Voir le vote</a>
+                            <?= $value['text'] ?></b>.
+                          <?= ucfirst($gender["pronom"]) ?> <?= $value["scoreLoyaute"] === "1" ? "a voté " : "n'a pas voté " ?>comme son groupe.
+                          <a href="<?= base_url() ?>votes/legislature-16/vote_<?= $value['voteNumero'] ?>" class="font-italic">Voir le vote</a>
                         </div>
                       </div>
-                    <?php endif; ?>
-                    <?php if (isset($key_votes[269])) : ?>
-                      <div class="row">
-                        <div class="col-md-3 libelle d-flex align-items-center justify-content-md-center">
-                          <span class="sort-<?= $key_votes[269]["vote_libelle"] ?>"><?= mb_strtoupper($key_votes[269]["vote_libelle"]) ?></span>
-                        </div>
-                        <div class="col-md-9 value">
-                          <?= $title ?><b>
-                            <?php if ($key_votes[269]["vote"] === "1") : ?>
-                              a voté en faveur de
-                            <?php elseif ($key_votes[269]["vote"] === "-1") : ?>
-                              a voté contre
-                            <?php else : ?>
-                              s'est abstenu<?= $gender["e"] ?> sur le vote concernant
-                            <?php endif; ?>
-                            la création d'une taxe temporaire sur les super-dividendes distribués par les grandes entreprises</b>.
-                          <?= ucfirst($gender['pronom']) ?> <?= $key_votes[269]["loyaute"] === "1" ? "a été loyal" : "n'a pas été loyal" ?><?= $gender['e'] ?> à son groupe.
-                          <a href="<?= base_url() ?>votes/legislature-16/vote_269" class="font-italic">Voir le vote</a>
-                        </div>
-                      </div>
-                    <?php endif; ?>
-                    <?php if (isset($key_votes[184])) : ?>
-                      <div class="row">
-                        <div class="col-md-3 libelle d-flex align-items-center justify-content-md-center">
-                          <span class="sort-<?= $key_votes[184]["vote_libelle"] ?>"><?= mb_strtoupper($key_votes[184]["vote_libelle"]) ?></span>
-                        </div>
-                        <div class="col-md-9 value">
-                          <?= $title ?><b>
-                            <?php if ($key_votes[184]["vote"] === "1") : ?>
-                              a voté en faveur de
-                            <?php elseif ($key_votes[184]["vote"] === "-1") : ?>
-                              a voté contre
-                            <?php else : ?>
-                              s'est abstenu<?= $gender["e"] ?> sur le vote concernant
-                            <?php endif; ?>
-                            la ratification de l'accord pour l'adhésion de la Suède et de la Finlande à l'OTAN</b>.
-                          <?= ucfirst($gender['pronom']) ?> <?= $key_votes[184]["loyaute"] === "1" ? "a été loyal" : "n'a pas été loyal" ?><?= $gender['e'] ?> à son groupe.
-                          <a href="<?= base_url() ?>votes/legislature-16/vote_184" class="font-italic">Voir le vote</a>
-                        </div>
-                      </div>
-                    <?php endif; ?>
+                    <?php endforeach; ?>
                   </div>
               </div>
             </div>
@@ -472,7 +432,7 @@
                     <div class="icon">
                       <?= file_get_contents(base_url() . 'assets/imgs/icons/loyalty.svg') ?>
                     </div>
-                    <h3 class="ml-3">LOYAUTÉ ENVERS SON GROUPE
+                    <h3 class="ml-3">PROXIMITÉ AVEC SON GROUPE
                       <a tabindex="0" role="button" data-toggle="popover" class="no-decoration popover_focus" data-trigger="focus" aria-label="Tooltip loyauté" title="Loyauté envers le groupe politique" data-content="Le taux de loyauté est le <b>pourcentage de votes où le ou la député a voté sur la même ligne que son groupe</b>.<br><br>Attention, dans beaucoup de parlements, y compris l'Assemblée nationale, les députés suivent dans la plupart des cas la ligne officielle du groupe, expliquant des taux de cohésion très élevés. Le mesure proposée ici est intéressante quand elle est comparée avec les taux de cohésion des autres parlementaires.<br><br>Pour plus d'information, <a href='<?= base_url() ?>statistiques/aide#loyalty' target='_blank'>cliquez ici</a>." id="popover_focus"><?= file_get_contents(asset_url() . "imgs/icons/question_circle.svg") ?></a>
                     </h3>
                   </div>
