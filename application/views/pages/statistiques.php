@@ -62,9 +62,9 @@
           <p>
             Par exemple, prenons un groupe parlementaire fictif, qui se nomme <i>Vive la Politique</i>. Ce groupe compte 5 membres. Un des députés membre du groupe participe à 20% des scrutins solennels, un autre à 15%, un autre à 30%, un autre à 5%, et un autre à 35%. Le taux de participation du groupe est la moyenne des taux individuels. Par exemple, <i>(20+15+30+5+35)/5 = 21%.</i> Le taux de participation du groupe est donc de 21%. Aurement dit, les députés membres du groupe <i>Vive la Politique</i> participent <i>en moyenne</i> à 21% des scrutins solennels.
           </p>
-          <h2 id="loyalty" class="anchor">La loyauté envers son groupe</h2>
+          <h2 id="loyalty" class="anchor">La proximité des politiques à leur groupe</h2>
           <p>
-            Les députés membres d'un groupe peuvent soit voter avec la ligne majoritaire de leur groupe, soit contre. Dans le premier cas, il est <b>loyal</b> ; dans le second, il est <b>rebelle</b>.
+            Les députés membres d'un groupe peuvent soit voter avec la ligne majoritaire de leur groupe, soit contre. Le nombre de fois où ils votent avec la ligne de leur groupe détermine leur proximité.
           </p>
           <p>
             La ligne politique du groupe politique correspond à la position qui a dominé parmi les députés qui en sont membres. Par exemple, si le nombre de députés membres du groupe <i>Vive la Politique</i> votant "pour" une proposition de loi est supérieur au nombre de députés membres du groupe votant "contre" ainsi qu'au nombre de députés membres du groupe s'abstenant, le groupe est considéré comme ayant voté "pour".
@@ -73,7 +73,7 @@
             Pour chaque vote auquel un député a pris part, le vote du député est ainsi comparé à la position de son groupe politique. Si la députée Julie Dupont a voté "pour" une proposition de loi, et son groupe parlementaire a également voté "pour", elle est <b>loyale</b>. Par contre, si Julie Dupont a voté "contre" un amendement, alors que son groupe a voté "pour", elle est <b>rebelle</b>.
           </p>
           <p>
-            Le <b>taux de loyauté d'un député</b> est le <b>pourcentage de votes</b> où le député a voté avec la ligne majoritaire du groupe. Si Julie Dupont a participé à 100 votes depuis son élection, et elle a voté avec son groupe sur 85 votes, alors son taux de loyauté est de 85%. Le <b>taux de loyauté d'un groupe</b> est la moyenne des taux de loyauté des députés membres du groupe. Si le groupe <i>Vive la Politique</i> compte 5 membres, et que ces 5 membres ont des taux de loyauté de 80%, 90%, 95%, 100%, 70%, alors le taux de loyauté du groupe <i>Vive la Politique</i> est de 87% (<i>(80+90+95+100+70)/5 = 87</i>).
+            Le <b>taux de proximité d'un député à son groupe</b> (ou taux de loyauté) est le <b>pourcentage de votes</b> où le député a voté avec la ligne majoritaire du groupe. Si Julie Dupont a participé à 100 votes depuis son élection, et elle a voté avec son groupe sur 85 votes, alors son taux de loyauté est de 85%.
           </p>
           <p>
             <b>Attention</b>, il est important de noter que les taux de loyautés sont souvent élevés. Comme dans beaucoup de parlements, les députés français suivent dans la plupart des cas la ligne politique de leur groupe. Un député peut être amené à voter contre son groupe pour plusieurs raisons, par exemple quand son groupe est divisé ou quand la ligne du groupe va à l'encontre des intérêts et préférences de sa circonscription.
