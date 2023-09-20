@@ -21,7 +21,7 @@
           <?php endif; ?>
           <?php if ($page != "deputes-loyaute"): ?>
             <li class="list-group-item">
-              <a href="<?= base_url() ?>statistiques/deputes-loyaute" class="no-decoration underline">La loyauté des députés</a>
+              <a href="<?= base_url() ?>statistiques/deputes-loyaute" class="no-decoration underline">La proximité au groupe</a>
             </li>
           <?php endif; ?>
           <?php if ($page != "groupes-cohesion"): ?>

@@ -495,20 +495,23 @@
 
       $votes = $query->result_array();
 
+      $text = array(
+        629 => "l'inscription de l'interruption volontaire de grossesse (IVG) dans la Constitution",
+        269 => "la création d'une taxe temporaire sur les super-dividendes distribués par les grandes entreprises",
+        184 => "la ratification de l'accord pour l'adhésion de la Suède et de la Finlande à l'OTAN"
+      );
+
       foreach ($votes as $key => $value) {
         $voteNumero = $value["voteNumero"];
-        $array[$voteNumero] = array(
-          "vote" => $value["vote"],
-          "loyaute" => $value["scoreLoyaute"],
-          "vote_libelle" => $value["vote_libelle"]
-        );
+        $votes[$key]["text"] = $text[$voteNumero];
       }
 
-      if (!isset($array)) {
-        $array = NULL;
+      if (!isset($votes)) {
+        $votes = NULL;
       }
 
-      return $array;
+
+      return $votes;
     }
 
     public function get_most_famous_votes($limit = false){
