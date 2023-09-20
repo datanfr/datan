@@ -242,9 +242,9 @@
         }
 
         // Meta
-        $data['title_meta'] = "La loyauté des députés - Assemblée nationale | Datan";
-        $data['description_meta'] = "Quel est le député de l'Assemblée nationale le plus loyal à son groupe ? Le député le plus rebelle ? Découvrez le classement sur Datan.";
-        $data['title'] = "La loyauté politique des députés";
+        $data['title_meta'] = "La loyauté politique des députés - Assemblée nationale | Datan";
+        $data['description_meta'] = "Quel est le député de l'Assemblée nationale le plus proche de son groupe ? Le député le plus rebelle ? Découvrez le classement sur Datan.";
+        $data['title'] = "La proximité des députés à leur groupe";
       } elseif ($url == "groupes-cohesion") {
         $data['groups'] = $this->stats_model->get_groups_cohesion();
         if ($data['groups']) {
