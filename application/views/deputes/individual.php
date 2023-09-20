@@ -433,7 +433,7 @@
                       <?= file_get_contents(base_url() . 'assets/imgs/icons/loyalty.svg') ?>
                     </div>
                     <h3 class="ml-3">PROXIMITÉ AVEC SON GROUPE
-                      <a tabindex="0" role="button" data-toggle="popover" class="no-decoration popover_focus" data-trigger="focus" aria-label="Tooltip loyauté" title="Loyauté envers le groupe politique" data-content="Le taux de loyauté est le <b>pourcentage de votes où le ou la député a voté sur la même ligne que son groupe</b>.<br><br>Attention, dans beaucoup de parlements, y compris l'Assemblée nationale, les députés suivent dans la plupart des cas la ligne officielle du groupe, expliquant des taux de cohésion très élevés. Le mesure proposée ici est intéressante quand elle est comparée avec les taux de cohésion des autres parlementaires.<br><br>Pour plus d'information, <a href='<?= base_url() ?>statistiques/aide#loyalty' target='_blank'>cliquez ici</a>." id="popover_focus"><?= file_get_contents(asset_url() . "imgs/icons/question_circle.svg") ?></a>
+                      <a tabindex="0" role="button" data-toggle="popover" class="no-decoration popover_focus" data-trigger="focus" aria-label="Tooltip loyauté" title="Proximité ou loyauté envers le groupe politique" data-content="Le taux de proximité est le <b>pourcentage de votes où le ou la député a voté sur la même ligne que son groupe</b>.<br><br>Attention, dans beaucoup de parlements, y compris l'Assemblée nationale, les députés suivent dans la plupart des cas la ligne officielle du groupe, expliquant des taux de cohésion très élevés. Le mesure proposée ici est intéressante quand elle est comparée avec les taux de loyauté des autres parlementaires.<br><br>Pour plus d'information, <a href='<?= base_url() ?>statistiques/aide#loyalty' target='_blank'>cliquez ici</a>." id="popover_focus"><?= file_get_contents(asset_url() . "imgs/icons/question_circle.svg") ?></a>
                     </h3>
                   </div>
                 </div>
@@ -461,11 +461,11 @@
                             <?php if (!$active) : ?>Quand <?= $gender['pronom'] ?> était en activité, <?php endif; ?><?= $title ?> a voté sur la même ligne que son groupe politique dans <?= $loyaute['score'] ?>% des cas.
                           </p>
                           <p>
-                            <?= ucfirst($gender['pronom']) ?> <?= $active ? "est" : "était" ?> <b><?= $edito_loyaute['all'] ?><?= $gender['e'] ?></b> que la moyenne des députés, qui est <?= $edito_loyaute['all'] == "aussi loyal" ? "également" : "" ?> de <?= $loyaute['all'] ?>%.
+                            <?= ucfirst($gender['pronom']) ?> <?= $active ? "a" : "avait" ?> un taux de proximité avec son groupe <b><?= $edito_loyaute['all'] ?></b> que la moyenne des députés, qui est <?= $edito_loyaute['all'] == "aussi élevé" ? "également" : "" ?> de <?= $loyaute['all'] ?>%.
                           </p>
                           <?php if ($loyaute['group']): ?>
                             <p>
-                              De plus, <?= $title ?> <?= $active ? "est" : "était" ?> <b><?= $edito_loyaute['group'] ?></b> que la moyenne des députés de son groupe politique, qui est <?= $edito_loyaute['group'] == "autant" ? "également" : "" ?> de <?= $loyaute['group'] ?>%.
+                              De plus, son taux de proximité <?= $active ? "est" : "était" ?> <b><?= $edito_loyaute['group'] ?></b> que la moyenne des députés de son groupe, qui est de <?= $loyaute['group'] ?>%.
                             </p>
                           <?php endif; ?>
                         <?php else: ?>
