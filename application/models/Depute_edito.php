@@ -65,11 +65,11 @@
 
     public function loyaute($depute, $average){
       if ($depute < $average) {
-        $phrase = 'moins loyal';
+        $phrase = 'moins élevé';
       } elseif ($depute > $average) {
-        $phrase = 'plus loyal';
+        $phrase = 'plus élevé';
       } else {
-        $phrase = 'aussi loyal';
+        $phrase = 'aussi élevé';
       }
       return $phrase;
     }
