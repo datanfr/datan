@@ -64,6 +64,9 @@
       $data['support_opposition'] = $this->groupes_model->get_support_all(legislature_current(), TRUE);
       $data['support_opposition'] = $data['support_opposition'][0];
 
+      // Get explications
+      $data['explications'] = $this->votes_model->get_explications_last();
+
       //Get votes (cached)
       if(!in_array($_SERVER['REMOTE_ADDR'], localhost())){
           $this->db->cache_on();

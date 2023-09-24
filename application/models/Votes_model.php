@@ -699,4 +699,16 @@
       }
     }
 
+    public function get_explications_last(){
+      $this->db->select('e.*, d.nameFirst, d.nameLast, d.libelleAbrev, d.couleurAssociee, d.dptSlug, d.nameUrl, v.vote, vd.title');
+      $this->db->select('substr(e.mpId, 3) AS idImage,');
+      $this->db->select('CASE WHEN v.vote = 1 THEN "pour" WHEN v.vote = 0 THEN "contre" ELSE NULL END AS vote', FALSE);
+      $this->db->where('e.state', 1);
+      $this->db->order_by('e.created_at', 'DESC');
+      $this->db->join('deputes_last d', 'e.mpId = d.mpId', 'left');
+      $this->db->join('votes_datan vd', 'vd.legislature = e.legislature AND vd.voteNumero = e.voteNumero');
+      $this->db->join('votes_scores v', 'v.legislature = e.legislature AND v.voteNumero = e.voteNumero AND v.mpId = e.mpId', 'left');
+      return $this->db->get('explications_mp e', 3)->result_array();
+    }
+
   }
