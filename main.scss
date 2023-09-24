@@ -1205,6 +1205,19 @@ input#quicksearch[type=text]{
     }
   }
 }
+/* Card explication on homepage */
+.card-explication-home{
+  border: none;
+  width: 100%;
+  .title{
+    font-weight: bold;
+    font-size: $h5-font-size;
+    color: $text-black;
+  }
+  .card-footer{
+    background-color: transparent;
+  }
+}
 /*
 ################
                TABLES

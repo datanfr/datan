@@ -117,6 +117,50 @@
       </div>
     </div>
   </div>
+  <!-- BLOC EXPLICATIONS -->
+  <div class="row bloc-votes" id="pattern_background">
+    <div class="container p-md-0">
+      <div class="row py-4">
+        <div class="col-12">
+          <h2 class="text-center my-4">Dernières explications de vote</h2>
+        </div>
+        <div class="col-8 offset-2 text-center">
+          <p>Les députés peuvent sur Datan expliquer leurs positions de vote. Pourquoi ont-ils voté pour ou contre un texte ? Découvrez les dernières explications !</p>
+        </div>
+        <div class="col-12 mt-4 mb-4 d-flex flex-md-row flex-column">
+          <?php foreach ($explications as $key => $value): ?>
+            <div class="card card-explication-home mx-md-2 mx-md-0 mb-4">
+              <div class="card-header py-2">
+                <div class="d-flex flex-row align-items-center">
+                  <div class="depute-img-circle depute-img-circle-explication mr-3">
+                    <picture>
+                      <source srcset="<?= asset_url() ?>imgs/deputes_nobg_webp/depute_<?= $value['idImage'] ?>_webp.webp" type="image/webp">
+                      <source srcset="<?= asset_url() ?>imgs/deputes_nobg/depute_<?= $value['idImage'] ?>.png" type="image/png">
+                      <img src="<?= asset_url() ?>imgs/deputes_original/depute_<?= $value['idImage'] ?>.png" width="150" height="192" alt="Photo du député">
+                    </picture>
+                  </div>
+                  <p class="title mb-0">
+                    <a class="no-decoration underline" href="<?= base_url() ?>deputes/<?= $value['dptSlug'] ?>/depute_<?= $value['nameUrl'] ?>"><?= $value['nameFirst'] ?> <?= $value['nameLast'] ?></a> -
+                    <a class="no decoration underline" href="<?= base_url() ?>groupes/legislature-<?= $value['legislature'] ?>/<?= mb_strtolower($value['libelleAbrev']) ?>"><span class="font-weight-bold" style="color: <?= $value['couleurAssociee'] ?>"><?= $value['libelleAbrev'] ?></span></a>
+                  </p>
+                </div>
+              </div>
+              <div class="card-body py-3">
+                <p class="mb-0 font-italic font-weight-bold"><a class="no-decoration underline" href="<?= base_url() ?>votes/legislature-<?= $value['legislature'] ?>/vote_<?= $value['voteNumero'] ?>"><?=  $value['title']?></a></p>
+                <p class="badge badge-<?= $value['vote'] ?> mb-4"><?= mb_strtoupper($value['vote']) ?></p>
+                <p class="quoted mb-0 p-0"><?= word_limiter($value['text'], 20) ?></p>
+              </div>
+              <div class="card-footer pt-0 d-flex justify-content-center align-items-center">
+                <a class="btn btn-primary text-white" role="button" href="<?= base_url() ?>votes/legislature-<?= $value['legislature'] ?>/vote_<?= $value['voteNumero'] ?>/explication_<?= $value['mpId'] ?>">
+                  Lire plus
+                </a>
+              </div>
+            </div>
+          <?php endforeach; ?>
+        </div>
+      </div>
+    </div>
+  </div>
   <!-- BLOC STATS -->
   <?php if ($stats): ?>
     <div class="row bloc-statistiques">
