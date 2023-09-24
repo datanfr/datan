@@ -132,13 +132,15 @@
             <div class="card card-explication-home mx-md-2 mx-md-0 mb-4">
               <div class="card-header py-2">
                 <div class="d-flex flex-row align-items-center">
-                  <div class="depute-img-circle depute-img-circle-explication mr-3">
-                    <picture>
-                      <source srcset="<?= asset_url() ?>imgs/deputes_nobg_webp/depute_<?= $value['idImage'] ?>_webp.webp" type="image/webp">
-                      <source srcset="<?= asset_url() ?>imgs/deputes_nobg/depute_<?= $value['idImage'] ?>.png" type="image/png">
-                      <img src="<?= asset_url() ?>imgs/deputes_original/depute_<?= $value['idImage'] ?>.png" width="150" height="192" alt="Photo du député">
-                    </picture>
-                  </div>
+                  <a href="<?= base_url() ?>deputes/<?= $value['dptSlug'] ?>/depute_<?= $value['nameUrl'] ?>">
+                    <div class="depute-img-circle depute-img-circle-explication mr-3">
+                      <picture>
+                        <source srcset="<?= asset_url() ?>imgs/deputes_nobg_webp/depute_<?= $value['idImage'] ?>_webp.webp" type="image/webp">
+                        <source srcset="<?= asset_url() ?>imgs/deputes_nobg/depute_<?= $value['idImage'] ?>.png" type="image/png">
+                        <img src="<?= asset_url() ?>imgs/deputes_original/depute_<?= $value['idImage'] ?>.png" width="150" height="192" alt="Photo du député">
+                      </picture>
+                    </div>
+                  </a>
                   <p class="title mb-0">
                     <a class="no-decoration underline" href="<?= base_url() ?>deputes/<?= $value['dptSlug'] ?>/depute_<?= $value['nameUrl'] ?>"><?= $value['nameFirst'] ?> <?= $value['nameLast'] ?></a> -
                     <a class="no decoration underline" href="<?= base_url() ?>groupes/legislature-<?= $value['legislature'] ?>/<?= mb_strtolower($value['libelleAbrev']) ?>"><span class="font-weight-bold" style="color: <?= $value['couleurAssociee'] ?>"><?= $value['libelleAbrev'] ?></span></a>
