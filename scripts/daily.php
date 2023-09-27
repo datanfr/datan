@@ -3195,11 +3195,11 @@ class Script
     public function classParticipationSix()
     {
         echo "classParticipationSix starting \n";
-        if ($this->legislature_to_get == 15) {
+        if ($this->legislature_to_get == 16) {
 
-          $this->bdd->query('
-            DROP TABLE IF EXISTS class_participation_six;
-            CREATE TABLE class_participation_six
+          $this->bdd->query('DROP TABLE IF EXISTS class_participation_six');
+
+          $this->bdd->query('CREATE TABLE class_participation_six
             SELECT @s:=@s+1 AS "classement", C.*, curdate() AS dateMaj
             FROM
             (
@@ -3211,8 +3211,8 @@ class Script
                     (
                         SELECT v.mpId, v.participation, vi.dateScrutin
                         FROM votes_participation v
-                        LEFT JOIN votes_info vi ON v.voteNumero = vi.voteNumero
-                        WHERE vi.dateScrutin >= CURDATE() - INTERVAL 12 MONTH AND vi.codeTypeVote = "SPS"
+                        LEFT JOIN votes_info vi ON v.voteNumero = vi.voteNumero AND v.legislature = vi.legislature
+                        WHERE vi.dateScrutin >= CURDATE() - INTERVAL 12 MONTH
                     ) A
                     WHERE A.participation IS NOT NULL
                     GROUP BY A.mpId
@@ -3232,7 +3232,7 @@ class Script
     public function classLoyauteSix()
     {
         echo "classLoyauteSix starting \n";
-        if ($this->legislature_to_get == 15) {
+        if ($this->legislature_to_get == 16) {
             $this->bdd->query('
                 DROP TABLE IF EXISTS class_loyaute_six;
                 CREATE TABLE class_loyaute_six
@@ -3245,30 +3245,28 @@ class Script
                     PRIMARY KEY (id));
                     ALTER TABLE class_loyaute_six ADD INDEX idx_mpId (mpId);
             ');
-            $result = $this->bdd->query('
-                SELECT @s:=@s+1 AS "classement", B.*
+            $result = $this->bdd->query('SELECT @s:=@s+1 AS "classement", B.*
+              FROM (
+              SELECT A.*
+              FROM (
+                SELECT t1.mpId, ROUND(AVG(t1.scoreLoyaute),3) AS score, COUNT(t1.scoreLoyaute) AS votesN
                 FROM (
-                SELECT A.*
-                FROM (
-                    SELECT t1.mpId, ROUND(AVG(t1.scoreLoyaute),3) AS score, COUNT(t1.scoreLoyaute) AS votesN
-                    FROM
-                    (
-                        SELECT v.mpId, v.scoreLoyaute, vi.dateScrutin
-                        FROM votes_scores v
-                        LEFT JOIN votes_info vi ON v.voteNumero = vi.voteNumero
-                        WHERE vi.dateScrutin >= CURDATE() - INTERVAL 12 MONTH
-                    ) t1
-                    WHERE t1.scoreLoyaute IS NOT NULL
-                    GROUP BY t1.mpId
-                ) A
-                WHERE A.mpId IN (
-                    SELECT mpId
-                    FROM deputes_all
-                    WHERE legislature = 15 AND dateFin IS NULL
-                )
-                ) B,
-                (SELECT @s:= 0) AS s
-                ORDER BY B.score DESC, B.votesN DESC
+                  SELECT v.mpId, v.scoreLoyaute, vi.dateScrutin
+                  FROM votes_scores v
+                  LEFT JOIN votes_info vi ON v.voteNumero = vi.voteNumero AND v.legislature = vi.legislature
+                  WHERE vi.dateScrutin >= CURDATE() - INTERVAL 12 MONTH
+                ) t1
+                WHERE t1.scoreLoyaute IS NOT NULL
+                GROUP BY t1.mpId
+              ) A
+              WHERE A.mpId IN (
+                SELECT mpId
+                FROM deputes_last
+                WHERE legislature = 16 AND dateFin IS NULL
+              )
+            ) B,
+            (SELECT @s:= 0) AS s
+            ORDER BY B.score DESC, B.votesN DESC
             ');
 
             $loyauteFields = array('classement', 'mpId', 'score', 'votesN', 'dateMaj');
@@ -3671,8 +3669,8 @@ $script->classMajorite();
 $script->classGroups();
 $script->classGroupsMonth();
 $script->classGroupsProximite();
-//$script->classParticipationSix(); // Will need to be changed w/ leg 16
-//$script->classLoyauteSix(); // Will need to be changed w/ leg 16
+$script->classParticipationSix();
+$script->classLoyauteSix();
 $script->deputeAccordCleaned();
 $script->historyMpsAverage();
 $script->historyPerMpsAverage();
