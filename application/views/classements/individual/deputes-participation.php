@@ -22,13 +22,13 @@
           <div class="col-md-6 py-3">
             <h2 class="text-center">Vote le plus</h2>
             <div class="d-flex justify-content-center">
-              <?php $this->load->view('deputes/partials/card_home.php', array('depute' => $mpActive, 'tag' => 'span', 'stats' => round($mpActive['score'] * 100) . " %", 'cat' => true, 'logo' => true)) ?>
+              <?php $this->load->view('deputes/partials/card_home.php', array('depute' => $mpActive, 'tag' => 'span', 'stat' => round($mpActive['score'] * 100) . " %", 'cat' => true, 'logo' => true)) ?>
             </div>
           </div>
           <div class="col-md-6 py-3">
             <h2 class="text-center">Vote le moins</h2>
             <div class="d-flex justify-content-center">
-              <?php $this->load->view('deputes/partials/card_home.php', array('depute' => $mpInactive, 'tag' => 'span', 'stats' => round($mpInactive['score'] * 100) . " %", 'cat' => true, 'logo' => true)) ?>
+              <?php $this->load->view('deputes/partials/card_home.php', array('depute' => $mpInactive, 'tag' => 'span', 'stat' => round($mpInactive['score'] * 100) . " %", 'cat' => true, 'logo' => true)) ?>
             </div>
           </div>
         </div>

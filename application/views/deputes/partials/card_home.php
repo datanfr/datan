@@ -18,8 +18,8 @@
         <a href="<?= base_url(); ?>deputes/<?= $depute['dptSlug'].'/depute_'.$depute['nameUrl'] ?>" class="stretched-link no-decoration"><?= $depute['nameFirst'] .' ' . $depute['nameLast'] ?></a>
       <?php endif; ?>
       </<?= $tag ?>>
-      <?php if (isset($stats)): ?>
-        <span class="badge badge-stats mb-3"><?= $stats ?></span>
+      <?php if (isset($stat)): ?>
+        <span class="badge badge-stats mb-3"><?= $stat ?></span>
       <?php endif; ?>
       <span class="d-block"><?= $depute["cardCenter"] ?></span>
       <?php if (isset($depute["badgeCenter"])): ?>

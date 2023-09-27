@@ -463,22 +463,20 @@
     }
 
     public function get_depute_vote_plus(){
-      $sql = 'SELECT A.mpId, A.score, A.votesN, da.civ, da.nameFirst, da.nameLast, da.nameUrl, da.dptSlug, da.couleurAssociee, da.img, da.libelle, da.libelleAbrev, da.groupeId AS organeRef, da.departementNom AS electionDepartement, da.departementCode AS electionDepartementNumero,
-      CONCAT(da.departementNom, " (", da.departementCode, ")") AS cardCenter
+      $sql = 'SELECT A.mpId, A.votesN, da.civ, da.nameFirst, da.nameLast, da.nameUrl, da.legislature, da.dptSlug, da.couleurAssociee, da.img, da.libelle, da.libelleAbrev, da.groupeId AS organeRef, da.departementNom AS electionDepartement, da.departementCode AS electionDepartementNumero,
+      CONCAT(da.departementNom, " (", da.departementCode, ")") AS cardCenter,
+      A.score * 100 AS score
         FROM (
           SELECT *
-          FROM class_participation_six
-          WHERE score IN (
-            SELECT MAX(score) AS maximum
-            FROM class_participation_six
-            )
+          FROM class_participation_six c
+          WHERE c.index > (SELECT round(MAX(c.index) * 0.75) AS maxIndex FROM class_participation_six c)
+          ORDER BY c.score DESC
+          LIMIT 1
         ) A
-        LEFT JOIN deputes_all da ON da.mpId = A.mpId
-        WHERE da.legislature = ? AND da.dateFin IS NULL
-        ORDER BY RAND()
-        LIMIT 1
+        LEFT JOIN deputes_last da ON da.mpId = A.mpId
+        WHERE da.dateFin IS NULL
       ';
-      return $this->db->query($sql, legislature_current())->row_array();
+      return $this->db->query($sql)->row_array();
     }
 
     public function get_depute_vote_plus_month($legislature, $year, $month, $limit){
@@ -500,27 +498,26 @@
     }
 
     public function get_depute_vote_moins(){
-      $sql = 'SELECT A.mpId, A.score, A.votesN, da.civ, da.nameFirst, da.nameLast, da.nameUrl, da.dptSlug, da.couleurAssociee, da.img, da.libelle, da.libelleAbrev, da.groupeId AS organeRef, da.departementNom AS electionDepartement, da.departementCode AS electionDepartementNumero,
-      CONCAT(da.departementNom, " (", da.departementCode, ")") AS cardCenter
+      $sql = 'SELECT A.mpId, A.votesN, da.civ, da.nameFirst, da.nameLast, da.nameUrl, da.legislature, da.dptSlug, da.couleurAssociee, da.img, da.libelle, da.libelleAbrev, da.groupeId AS organeRef, da.departementNom AS electionDepartement, da.departementCode AS electionDepartementNumero,
+      CONCAT(da.departementNom, " (", da.departementCode, ")") AS cardCenter,
+      A.score * 100 AS score
         FROM (
           SELECT *
-          FROM class_participation_six
-          WHERE score IN (
-            SELECT MIN(score) AS maximum
-            FROM class_participation_six
-            )
+          FROM class_participation_six c
+          WHERE c.index > (SELECT round(MAX(c.index) * 0.75) AS maxIndex FROM class_participation_six c)
+          ORDER BY c.score ASC
+          LIMIT 1
         ) A
-        LEFT JOIN deputes_all da ON da.mpId = A.mpId
-        WHERE da.legislature = ? AND da.dateFin IS NULL
-        ORDER BY RAND()
-        LIMIT 1
+        LEFT JOIN deputes_last da ON da.mpId = A.mpId
+        WHERE da.dateFin IS NULL
       ';
-      return $this->db->query($sql, legislature_current())->row_array();
+      return $this->db->query($sql)->row_array();
     }
 
     public function get_depute_loyal_plus(){
-      $sql = 'SELECT A.mpId, A.score, A.votesN, da.civ, da.nameFirst, da.nameLast, da.nameUrl, da.dptSlug, da.couleurAssociee, da.img, da.libelle, da.libelleAbrev, da.groupeId AS organeRef, da.departementNom AS electionDepartement, da.departementCode AS electionDepartementNumero,
-      CONCAT(da.departementNom, " (", da.departementCode, ")") AS cardCenter
+      $sql = 'SELECT A.mpId, A.votesN, da.civ, da.nameFirst, da.nameLast, da.nameUrl, da.legislature, da.dptSlug, da.couleurAssociee, da.img, da.libelle, da.libelleAbrev, da.groupeId AS organeRef, da.departementNom AS electionDepartement, da.departementCode AS electionDepartementNumero,
+      CONCAT(da.departementNom, " (", da.departementCode, ")") AS cardCenter,
+      A.score * 100 AS score
         FROM
         (
           SELECT *
@@ -531,17 +528,18 @@
             WHERE votesN > 50
           ) AND votesN > 50
           ) A
-        LEFT JOIN deputes_all da ON da.mpId = A.mpId
-        WHERE da.legislature = ? AND da.dateFin IS NULL
+        LEFT JOIN deputes_last da ON da.mpId = A.mpId
+        WHERE da.dateFin IS NULL
         ORDER BY RAND()
         LIMIT 1
       ';
-      return $this->db->query($sql, legislature_current())->row_array();
+      return $this->db->query($sql)->row_array();
     }
 
     public function get_depute_loyal_moins(){
-      $sql = 'SELECT A.mpId, A.score, A.votesN, da.civ, da.nameFirst, da.nameLast, da.nameUrl, da.dptSlug, da.couleurAssociee, da.img, da.libelle, da.libelleAbrev, da.groupeId AS organeRef, da.departementNom AS electionDepartement, da.departementCode AS electionDepartementNumero,
-      CONCAT(da.departementNom, " (", da.departementCode, ")") AS cardCenter
+      $sql = 'SELECT A.mpId, A.votesN, da.civ, da.nameFirst, da.nameLast, da.nameUrl, da.legislature, da.dptSlug, da.couleurAssociee, da.img, da.libelle, da.libelleAbrev, da.groupeId AS organeRef, da.departementNom AS electionDepartement, da.departementCode AS electionDepartementNumero,
+      CONCAT(da.departementNom, " (", da.departementCode, ")") AS cardCenter,
+      A.score * 100 AS score
         FROM
         (
           SELECT *
@@ -552,12 +550,12 @@
             WHERE votesN > 50
           ) AND votesN > 50
           ) A
-        LEFT JOIN deputes_all da ON da.mpId = A.mpId
-        WHERE da.legislature = ? AND da.dateFin IS NULL
+        LEFT JOIN deputes_last da ON da.mpId = A.mpId
+        WHERE da.dateFin IS NULL
         ORDER BY RAND()
         LIMIT 1
       ';
-      return $this->db->query($sql, legislature_current())->row_array();
+      return $this->db->query($sql)->row_array();
     }
 
     public function get_deputes_entrants($limit = false){
