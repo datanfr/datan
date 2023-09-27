@@ -36,9 +36,8 @@
       }
       $data['groupesSorted'] = $this->groupes_model->get_groupes_sorted($data['groupes']);
 
-      //Get stats ( Has been removed because < 1 years)
-      $data['stats'] = FALSE;
-      /*
+      //Get stats (now working because > 1 year)
+      $data['stats'] = TRUE;
       $data['depute_vote_plus'] = $this->deputes_model->get_depute_vote_plus();
       if (!empty($data['depute_vote_plus'])) {
         $data['depute_vote_plus'] = array_merge($data['depute_vote_plus'], gender($data['depute_vote_plus']['civ']));
@@ -59,7 +58,8 @@
         $data['depute_loyal_moins'] = array_merge($data['depute_loyal_moins'], gender($data['depute_loyal_moins']['civ']));
         $data['depute_loyal_moins']['couleurAssociee'] = $this->groupes_model->get_groupe_color(array($data['depute_loyal_moins']['libelleAbrev'], $data['depute_loyal_moins']['couleurAssociee']));
       }
-      */
+
+      // Get support the gvt
       $data['support'] = $this->groupes_model->get_support_all(legislature_current());
       $data['support_opposition'] = $this->groupes_model->get_support_all(legislature_current(), TRUE);
       $data['support_opposition'] = $data['support_opposition'][0];
