@@ -55,7 +55,7 @@ echo $exposeMotifs;
         "messages" => [
           [
             "role" => "assistant",
-            "content" => "Qui est le président de la France ?"
+            "content" => "Le texte que tu vas lire est l'exposé des motifs d'un amendement écrit par des députés. Peux-tu résumer ce texte en 150 mots maximum : " . $exposeMotifs
             ]
           ],
         "model" => "gpt-3.5-turbo",
@@ -89,12 +89,6 @@ echo $exposeMotifs;
         ],
       ]);
 
-
-      //curl_setopt($ch, CURLOPT_POST, 1);
-      //curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
-      //curl_setopt($ch, CURLOPT_POSTFIELDS, "{\"model\": \"gpt-3.5-turbo\", \"prompt\": \"Peux-tu résumer ce texte politique en 100 mots : " . $exposeMotifs . "\", \"temperature\": 0.7, \"max_tokens\": 256, \"top_p\": 1, \"frequency_penalty\": 0.5, \"presence_penalty\": 0.55}");
-      //curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-
       $response = curl_exec($curl);
       $err = curl_error($curl);
       curl_close($curl);
@@ -102,26 +96,11 @@ echo $exposeMotifs;
       if ($err) {
         echo "Error #: " . $err;
       } else {
-        echo $response;
-      }
-
-      die();
-
-
-
-
-
-      if (curl_errno($ch)) {
-        echo 'Error:' . curl_error($ch);
-
-      } else {
         echo "Open AI worked \n";
-        $response = json_decode($result, TRUE);
-
         var_dump($response);
-
-        $text = $response['choices'][0]['text'];
-
+        $result = json_decode($response, TRUE);
+        var_dump($result);
+        $text = $result['choices'][0]['message']['content'];
         echo $text;
 
         // Insert into database
@@ -129,9 +108,6 @@ echo $exposeMotifs;
         //$insert->execute(array('legislature' => $legislature, 'voteNumero' => $voteNumero, 'exposeOriginal' => $exposeMotifs, 'expose' => $text));
 
       }
-
-      curl_close($ch);
-
 
     }
 
