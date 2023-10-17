@@ -18,7 +18,7 @@
     ) ENGINE = MyISAM;
   ");
 
-  // 1. Get the votes
+  // 2. Get the votes
   $sql = $bdd->query('SELECT vi.*
     FROM votes_info vi
     LEFT JOIN exposes e ON vi.legislature = e.legislature AND vi.voteNumero = e.voteNumero
@@ -30,10 +30,15 @@
     $voteNumero = $vote['voteNumero'];
     $legislature = $vote['legislature'];
 
-    echo $voteNumero;
+    echo "voteNumero => " . $voteNumero . "\n";
+
 
     $html = file_get_html("https://datan.fr/votes/legislature-" . $legislature . "/vote_" . $voteNumero);
     $exposeMotifs = $html->find('#exposeMotifs', 0);
+
+    //$exposeMotifs = "Les auteurs de cet amendement du groupe socialiste souhaitent supprimer la mise en œuvre d'une redevance de 30 euros pour les candidats, notamment ultramarins, de l’examen annuel de capacité professionnelle pour l’accès à la profession de transporteur routier de marchandises, de personnes et de commissionnaires. Instituer une nouvelle redevance dans un contexte d'inflation n'est pas envisageable, en particulier face à la cherté de la vie en outre-mer. La ratification d'un décret ne laissant pas de marge de manœuvre aux parlementaires pour faire varier les conditions dudit décret, il est proposé de supprimer intégralement l'article autorisant la ratification. L'objet est avant tout de protéger les potentiels candidats de cet examen de cette redevance supplémentaire.";
+
+    echo "expose => " . $exposeMotifs . "\n";
 
     if ($exposeMotifs) {
       $exposeMotifs = strip_tags($exposeMotifs);
@@ -42,43 +47,61 @@
 
       // CURL
 
-      $ch = curl_init();
+      $request_body = [
+        "messages" => [
+          [
+            "role" => "assistant",
+            "content" => "Le texte que tu vas lire est l'exposé des motifs d'un amendement écrit par des députés. Peux-tu résumer ce texte en 100 mots maximum ? Peux-tu également indiquer, si tu trouves, quel groupe politique a rédigé cet amendement ? Voici le texte : " . $exposeMotifs
+            ]
+          ],
+        "model" => "gpt-3.5-turbo",
+        "max_tokens" => 200,
+        "temperature" => 0.7,
+        "top_p" => 1,
+        "presence_penalty" => 0.75,
+        "frequency_penalty"=> 0.75,
+        "stream" => false,
+      ];
 
-      curl_setopt($ch, CURLOPT_URL, 'https://api.openai.com/v1/completions');
-      curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-      curl_setopt($ch, CURLOPT_POST, 1);
-      curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
-      curl_setopt($ch, CURLOPT_POSTFIELDS, "{\"model\": \"text-davinci-002\", \"prompt\": \"Réécrire ce texte en 100 mots : " . $exposeMotifs . "\", \"temperature\": 0.7, \"max_tokens\": 256, \"top_p\": 1, \"frequency_penalty\": 0.5, \"presence_penalty\": 0.55}");
+      $postfields = json_encode($request_body);
+      $curl = curl_init();
 
-      $headers = array();
-      $headers[] = 'Content-Type: application/json';
-      $headers[] = 'Authorization: Bearer ' . $_SERVER['OPEN_AI_KEY'];
-      curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+      curl_setopt_array($curl, [
+        CURLOPT_URL => "https://api.openai.com/v1/chat/completions",
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_FOLLOWLOCATION => true,
+        CURLOPT_SSL_VERIFYPEER => false,
+        CURLOPT_ENCODING => "",
+        CURLOPT_MAXREDIRS => 10,
+        CURLOPT_TIMEOUT => 30,
+        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+        CURLOPT_CUSTOMREQUEST => "POST",
+        CURLOPT_POSTFIELDS => $postfields,
+        CURLOPT_HTTPHEADER => [
+          'Content-Type: application/json',
+          'Authorization: Bearer ' . $_SERVER['OPEN_AI_KEY']
+        ],
+      ]);
 
-      $result = curl_exec($ch);
+      $response = curl_exec($curl);
+      $err = curl_error($curl);
+      curl_close($curl);
 
-      if (curl_errno($ch)) {
-        echo 'Error:' . curl_error($ch);
-
+      if ($err) {
+        echo "Error #: " . $err;
       } else {
         echo "Open AI worked \n";
-        $response = json_decode($result, TRUE);
+        var_dump($response);
+        $result = json_decode($response, TRUE);
+        $text = $result['choices'][0]['message']['content'];
 
-        $text = $response['choices'][0]['text'];
+        echo "output => " . $text . "\n";
 
         // Insert into database
         $insert = $bdd->prepare('INSERT INTO exposes (legislature, voteNumero, exposeOriginal, exposeSummary) VALUES (:legislature, :voteNumero, :exposeOriginal, :expose)');
-        $insert->execute(array(
-          'legislature' => $legislature,
-          'voteNumero' => $voteNumero,
-          'exposeOriginal' => $exposeMotifs,
-          'expose' => $text,
-        ));
+        $insert->execute(array('legislature' => $legislature, 'voteNumero' => $voteNumero, 'exposeOriginal' => $exposeMotifs, 'expose' => $text));
 
       }
-
-      curl_close($ch);
-
 
     }
 
