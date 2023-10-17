@@ -18,7 +18,7 @@
     ) ENGINE = MyISAM;
   ");
 
-  // 1. Get the votes
+  // 2. Get the votes
   $sql = $bdd->query('SELECT vi.*
     FROM votes_info vi
     LEFT JOIN exposes e ON vi.legislature = e.legislature AND vi.voteNumero = e.voteNumero
@@ -30,19 +30,15 @@
     $voteNumero = $vote['voteNumero'];
     $legislature = $vote['legislature'];
 
-    echo $voteNumero;
+    echo "voteNumero => " . $voteNumero . "\n";
 
 
-    //$html = file_get_html("https://datan.fr/votes/legislature-" . $legislature . "/vote_" . $voteNumero);
-    //$exposeMotifs = $html->find('#exposeMotifs', 0);
+    $html = file_get_html("https://datan.fr/votes/legislature-" . $legislature . "/vote_" . $voteNumero);
+    $exposeMotifs = $html->find('#exposeMotifs', 0);
 
-    $exposeMotifs = "Les auteurs de cet amendement souhaitent supprimer la mise en œuvre d'une redevance de 30 euros pour les candidats, notamment ultramarins, de l’examen annuel de capacité professionnelle pour l’accès à la profession de transporteur routier de marchandises, de personnes et de commissionnaires. Instituer une nouvelle redevance dans un contexte d'inflation n'est pas envisageable, en particulier face à la cherté de la vie en outre-mer.
+    //$exposeMotifs = "Les auteurs de cet amendement du groupe socialiste souhaitent supprimer la mise en œuvre d'une redevance de 30 euros pour les candidats, notamment ultramarins, de l’examen annuel de capacité professionnelle pour l’accès à la profession de transporteur routier de marchandises, de personnes et de commissionnaires. Instituer une nouvelle redevance dans un contexte d'inflation n'est pas envisageable, en particulier face à la cherté de la vie en outre-mer. La ratification d'un décret ne laissant pas de marge de manœuvre aux parlementaires pour faire varier les conditions dudit décret, il est proposé de supprimer intégralement l'article autorisant la ratification. L'objet est avant tout de protéger les potentiels candidats de cet examen de cette redevance supplémentaire.";
 
-La ratification d'un décret ne laissant pas de marge de manœuvre aux parlementaires pour faire varier les conditions dudit décret, il est proposé de supprimer intégralement l'article autorisant la ratification.
-
-L'objet est avant tout de protéger les potentiels candidats de cet examen de cette redevance supplémentaire.";
-
-echo $exposeMotifs;
+    echo "expose => " . $exposeMotifs . "\n";
 
     if ($exposeMotifs) {
       $exposeMotifs = strip_tags($exposeMotifs);
@@ -55,19 +51,17 @@ echo $exposeMotifs;
         "messages" => [
           [
             "role" => "assistant",
-            "content" => "Le texte que tu vas lire est l'exposé des motifs d'un amendement écrit par des députés. Peux-tu résumer ce texte en 150 mots maximum : " . $exposeMotifs
+            "content" => "Le texte que tu vas lire est l'exposé des motifs d'un amendement écrit par des députés. Peux-tu résumer ce texte en 100 mots maximum ? Peux-tu également indiquer, si tu trouves, quel groupe politique a rédigé cet amendement ? Voici le texte : " . $exposeMotifs
             ]
           ],
         "model" => "gpt-3.5-turbo",
-        "max_tokens" => 100,
+        "max_tokens" => 200,
         "temperature" => 0.7,
         "top_p" => 1,
         "presence_penalty" => 0.75,
         "frequency_penalty"=> 0.75,
         "stream" => false,
       ];
-
-      var_dump($request_body);
 
       $postfields = json_encode($request_body);
       $curl = curl_init();
@@ -99,13 +93,13 @@ echo $exposeMotifs;
         echo "Open AI worked \n";
         var_dump($response);
         $result = json_decode($response, TRUE);
-        var_dump($result);
         $text = $result['choices'][0]['message']['content'];
-        echo $text;
+
+        echo "output => " . $text . "\n";
 
         // Insert into database
         $insert = $bdd->prepare('INSERT INTO exposes (legislature, voteNumero, exposeOriginal, exposeSummary) VALUES (:legislature, :voteNumero, :exposeOriginal, :expose)');
-        //$insert->execute(array('legislature' => $legislature, 'voteNumero' => $voteNumero, 'exposeOriginal' => $exposeMotifs, 'expose' => $text));
+        $insert->execute(array('legislature' => $legislature, 'voteNumero' => $voteNumero, 'exposeOriginal' => $exposeMotifs, 'expose' => $text));
 
       }
 
