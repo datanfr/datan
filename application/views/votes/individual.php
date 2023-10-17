@@ -91,7 +91,8 @@
           <h2>Résumé de l'amendement</h2>
           <div class="card mt-4">
             <div class="card-body">
-              <p class="mb-0"><?= $expose['exposeSummaryPublished'] ?></p>
+              <p><?= $expose['exposeSummaryPublished'] ?></p>
+              <p class="mb-0 font-italic">Ce texte est un résumé de l'exposé des motifs rédigé par l'auteur de l'amendement.</p>
             </div>
           </div>
         </div>
