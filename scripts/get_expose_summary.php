@@ -51,7 +51,7 @@
         "messages" => [
           [
             "role" => "assistant",
-            "content" => "Le texte que tu vas lire est l'exposé des motifs d'un amendement écrit par des députés. Peux-tu résumer ce texte en 100 mots maximum ? Peux-tu également indiquer, si tu trouves, quel groupe politique a rédigé cet amendement ? Voici le texte : " . $exposeMotifs
+            "content" => "Le texte que tu vas lire est l'exposé des motifs d'un amendement écrit par des députés. Peux-tu résumer ce texte en 100 mots maximum ? Voici le texte : " . $exposeMotifs
             ]
           ],
         "model" => "gpt-3.5-turbo",
