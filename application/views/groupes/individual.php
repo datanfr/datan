@@ -571,6 +571,24 @@
             </div>
           </div> <!-- END BLOC PROXIMITY -->
         </div> <!-- // END BLOC STATISTIQUES -->
+        <div class="mt-5"> <!-- BLOC HISTORIQUE -->
+          <h2 class="mb-3">Historique du groupe <?= $groupe['libelleAbrev'] ?></h2>
+          <p>Sur cette page, vous trouvez des informations pour le groupe <i><?= name_group($title) ?></i>. Pour chaque groupe, nous avons répertorié les anciens et nouraux groupes qui leur sont liés depuis la 14<sup>ème</sup> législature (2012).</p>
+          <?php if (isset($history_list)): ?>
+            <p>Voici les différents groupes liés au groupe <i><?= name_group($title) ?></i> :</p>
+            <div class="row">
+              <?php foreach ($history_list as $key => $value): ?>
+                <div class="col-md-6">
+                  <?php $this->load->view('groupes/partials/card_home.php', array('groupe' => $value, 'tag' => 'span', 'cat' => $value['legislature'].'<sup>ème</sup> législature', 'stats' => NULL)) ?>
+                </div>
+              <?php endforeach; ?>
+            </div>
+          <?php else: ?>
+            <div class="alert alert-warning">
+              Nous n'avons pas associé d'autres groupes au groupe <?= $groupe['libelleAbrev'] ?>.
+            </div>
+          <?php endif; ?>
+        </div> <!-- // END BLOC HISTORIQUE -->
         <!-- BLOC PARTAGEZ -->
         <div class="bloc-social mt-5">
           <h2 class="mb-4 title-center">Partagez cette page</h2>
