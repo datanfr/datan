@@ -5,29 +5,32 @@
     }
 
     public function get_groupes_all($active, $legislature) {
-      if ($active && $legislature) {
-        if ($legislature == legislature_current()) {
-          $query = $this->db->query('SELECT *, o.legislature AS legislature, date_format(dateDebut, "%d %M %Y") as dateDebutFR, e.effectif,
-            CASE WHEN o.libelle = "Non inscrit" THEN "Députés non inscrits" ELSE o.libelle END AS libelle
-            FROM organes o
-            LEFT JOIN groupes_effectif e ON o.uid = e.organeRef
-            WHERE o.legislature = '.$this->db->escape(legislature_current()).' AND o.coteType = "GP" AND o.dateFin IS NULL AND o.libelleAbrev != "NI"
-            ORDER BY e.effectif DESC, o.libelle
-          ');
-        } else {
-          $query = $this->db->query('SELECT *, o.legislature AS legislature, date_format(dateDebut, "%d %M %Y") as dateDebutFR,
-            CASE WHEN o.libelle = "Non inscrit" THEN "Députés non inscrits" ELSE o.libelle END AS libelle
-            FROM organes o
-            WHERE o.legislature = '.$this->db->escape($legislature).' AND o.coteType = "GP" AND o.libelleAbrev != "NI"
-            ORDER BY o.libelle
-          ');
-        }
-      } else {
+
+      if ($active && $legislature == legislature_current()) {
+        $query = $this->db->query('SELECT *, o.legislature AS legislature, date_format(dateDebut, "%d %M %Y") as dateDebutFR, e.effectif,
+          CASE WHEN o.libelle = "Non inscrit" THEN "Députés non inscrits" ELSE o.libelle END AS libelle
+          FROM organes o
+          LEFT JOIN groupes_effectif e ON o.uid = e.organeRef
+          WHERE o.legislature = '.$this->db->escape(legislature_current()).' AND o.coteType = "GP" AND o.dateFin IS NULL AND o.libelleAbrev != "NI"
+          ORDER BY e.effectif DESC, o.libelle
+        ');
+      }
+
+      if ($legislature != legislature_current()) {
+        $query = $this->db->query('SELECT *, o.legislature AS legislature, date_format(dateDebut, "%d %M %Y") as dateDebutFR,
+          CASE WHEN o.libelle = "Non inscrit" THEN "Députés non inscrits" ELSE o.libelle END AS libelle
+          FROM organes o
+          WHERE o.legislature = '.$this->db->escape($legislature).' AND o.coteType = "GP" AND o.libelleAbrev != "NI"
+          ORDER BY o.libelle
+        ');
+      }
+
+      if (!$active && $legislature == legislature_current()) {
         $query = $this->db->query('SELECT *, o.legislature, date_format(dateDebut, "%d %M %Y") as dateDebutFR,
           CASE WHEN o.libelle = "Non inscrit" THEN "Députés non inscrits" ELSE o.libelle END AS libelle
           FROM organes o
           LEFT JOIN groupes_effectif e ON o.uid = e.organeRef
-          WHERE o.legislature = 15 AND o.coteType = "GP" AND o.dateFin IS NOT NULL AND o.libelleAbrev != "NI"
+          WHERE o.legislature = '.$this->db->escape(legislature_current()).' AND o.coteType = "GP" AND o.dateFin IS NOT NULL AND o.libelleAbrev != "NI"
           ORDER BY e.effectif DESC, o.libelle
         ');
       }

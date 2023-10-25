@@ -193,6 +193,7 @@
       $data['active'] = FALSE;
       $data['legislature'] = legislature_current();
       $data['groupes'] = $this->groupes_model->get_groupes_all($data['active'], legislature_current());
+      $data['number'] = count($data['groupes']);
       $data['number_groupes_inactive'] = $this->groupes_model->get_number_inactive_groupes();
       $data['number_groupes_active'] = $this->groupes_model->get_number_active_groupes();
 
