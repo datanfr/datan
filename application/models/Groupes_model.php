@@ -302,6 +302,7 @@
           break;
 
         case 'SOC':
+        case 'SOC-A':
           $groupe['twitter'] = 'socialistesAN';
           $groupe['facebook'] = 'socialistesAN';
           break;
@@ -372,15 +373,21 @@
     public function get_stats($groupe_uid){
       $results = $this->db->get_where('class_groups', array('organeRef' => $groupe_uid))->result_array();
 
-      foreach ($results as $key => $value) {
-        if ($value['stat'] == 'cohesion') {
-          $return[$value['stat']] = array('value' => $value['value'], 'votes' => $value['votes']);
-        } elseif ($value['stat'] == 'support') {
-          $return[$value['stat']] = array('value' => round($value['value']), 'votes' => $value['votes']);
-        } else  {
-          $return[$value['stat']] = array('value' => round($value['value'] * 100), 'votes' => $value['votes']);
+      if ($results) {
+        foreach ($results as $key => $value) {
+          if ($value['stat'] == 'cohesion') {
+            $return[$value['stat']] = array('value' => $value['value'], 'votes' => $value['votes']);
+          } elseif ($value['stat'] == 'support') {
+            $return[$value['stat']] = array('value' => round($value['value']), 'votes' => $value['votes']);
+          } else  {
+            $return[$value['stat']] = array('value' => round($value['value'] * 100), 'votes' => $value['votes']);
+          }
         }
+      } else {
+        $return = NULL;
       }
+
+
       return $return;
     }
 
@@ -672,7 +679,7 @@
         array('PO730958', 'PO800490'), // France insoumise
         array('PO270903', 'PO389395', 'PO656006', 'PO707869', 'PO730934', 'PO800508', 'PO684957'), // Les Républicains
         array('PO730970', 'PO774834', 'PO800484'), // Modem
-        array('PO758835', 'PO730946', 'PO389507', 'PO656002', 'PO713077', 'PO270907', 'PO800496'), // Socialistes
+        array('PO758835', 'PO730946', 'PO389507', 'PO656002', 'PO713077', 'PO270907', 'PO800496', 'PO830170'), // Socialistes
         array('PO656014', 'PO800526'), // Ecologiste
         array('PO270915', 'PO389635', 'PO656018', 'PO730940', 'PO800502'), // Communistes
         array('PO759900', 'PO800532'), // Libertés et territoires
