@@ -144,20 +144,22 @@
           <?php else: ?>
           <p>Retrouvez ci-dessous l'historique du nombre de députés membres du groupe <i><?= name_group($title) ?></i>.</p>
         <?php endif; ?>
-        <?php if (isset($members)): ?>
-          <div class="card card-stats mt-4">
-            <div class="card-body pb-0">
-              <div class="mb-3 mt-1" style="border-top: 7px solid #00b794; width: 60px"></div>
-              <?php if ($effectifRank['last']): ?>
-                <h3>Le plus petit groupe politique de l'Assemblée nationale</h3>
-              <?php else: ?>
-                <h3>Le <?= ordinaux($effectifRank['number']) ?> plus grand groupe de l'Assemblée</h3>
-              <?php endif; ?>
-              <p>Classement des groupes de la <?= $groupe['legislature'] ?><sup>ème</sup> législature en fonction de leurs effectifs</p>
-              <?php $this->load->view('groupes/partials/stats_horizontal.php', array('stats_history_chart' => $members, 'type' => 'score', 'max' => 100, 'terms' => FALSE, 'divided_by' => $members_max, 'grid' => FALSE, 'organeRef' => $groupe['uid'])) ?>
+        <?php if ($active): ?>
+          <?php if (isset($members)): ?>
+            <div class="card card-stats mt-4">
+              <div class="card-body pb-0">
+                <div class="mb-3 mt-1" style="border-top: 7px solid #00b794; width: 60px"></div>
+                <?php if ($effectifRank['last']): ?>
+                  <h3>Le plus petit groupe politique de l'Assemblée nationale</h3>
+                <?php else: ?>
+                  <h3>Le <?= ordinaux($effectifRank['number']) ?> plus grand groupe de l'Assemblée</h3>
+                <?php endif; ?>
+                <p>Classement des groupes de la <?= $groupe['legislature'] ?><sup>ème</sup> législature en fonction de leurs effectifs</p>
+                <?php $this->load->view('groupes/partials/stats_horizontal.php', array('stats_history_chart' => $members, 'type' => 'score', 'max' => 100, 'terms' => FALSE, 'divided_by' => $members_max, 'grid' => FALSE, 'organeRef' => $groupe['uid'])) ?>
+              </div>
             </div>
-          </div>
-        <?php endif; ?>
+          <?php endif; ?>
+        <?php endif; ?>        
         <div class="card card-stats mt-4">
           <div class="card-body pb-2">
             <div class="mb-3 mt-1" style="border-top: 7px solid #00b794; width: 60px"></div>
