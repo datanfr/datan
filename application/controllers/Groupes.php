@@ -262,7 +262,7 @@
       $data['dateDebutMois'] = strftime('%B %Y', strtotime($data['groupe']['dateDebut']));
 
       // Query effectifs --> for previous legislatures
-      if (is_null($data['groupe']['effectif']) && $legislature < legislature_current() ) {
+      if (is_null($data['groupe']['effectif'])) {
         $effectif = $this->groupes_model->get_effectif_history_start($data['groupe']['uid'], $data['groupe']['dateDebut']);
         $data['groupe']['effectif'] = $effectif['effectif'];
         $data['groupe']['effectifShare'] = round($effectif['effectif'] / 577 * 100);
@@ -699,7 +699,7 @@
           } else {
             $data['effectifRank']['last'] = FALSE;
           }
-        }        
+        }
       }
 
       $data['members_history'] = $this->groupes_model->get_effectif_history($data['history']);
