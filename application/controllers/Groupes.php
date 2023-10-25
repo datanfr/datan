@@ -685,21 +685,23 @@
         }
         $data['members_max'] = $data['members'][0]['value'];
 
-        // Get the effectif ranking
-        $x = 1;
-        foreach ($data['members'] as $key => $value) {
-          if ($value['uid'] == $data['groupe']['uid']) {
-            $data['effectifRank']['number'] = $x;
+        // Get the effectif ranking if active
+        if ($data['active']) {
+          $x = 1;
+          foreach ($data['members'] as $key => $value) {
+            if ($value['uid'] == $data['groupe']['uid']) {
+              $data['effectifRank']['number'] = $x;
+            }
+            $x++;
           }
-          $x++;
-        }
-        if ($data['effectifRank']['number'] == count($data['members'])) {
-          $data['effectifRank']['last'] = TRUE;
-        } else {
-          $data['effectifRank']['last'] = FALSE;
-        }
-
+          if ($data['effectifRank']['number'] == count($data['members'])) {
+            $data['effectifRank']['last'] = TRUE;
+          } else {
+            $data['effectifRank']['last'] = FALSE;
+          }
+        }        
       }
+
       $data['members_history'] = $this->groupes_model->get_effectif_history($data['history']);
 
       // Get age data
