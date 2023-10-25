@@ -572,7 +572,7 @@
           </div> <!-- END BLOC PROXIMITY -->
         </div> <!-- // END BLOC STATISTIQUES -->
         <div class="mt-5"> <!-- BLOC HISTORIQUE -->
-          <h2 class="mb-3">Historique du groupe <?= $groupe['libelleAbrev'] ?></h2>
+          <h2 class="mb-3 title-center">Historique du groupe <?= $groupe['libelleAbrev'] ?></h2>
           <p>Sur cette page, vous trouvez des informations pour le groupe <i><?= name_group($title) ?></i>. Pour chaque groupe, nous avons répertorié les anciens et nouraux groupes qui leur sont liés depuis la 14<sup>ème</sup> législature (2012).</p>
           <?php if (isset($history_list)): ?>
             <p>Voici les différents groupes liés au groupe <i><?= name_group($title) ?></i> :</p>
