@@ -92,7 +92,8 @@
       "RE" => $center,
       "LFI-NUPES" => $left,
       "HOR" => $right,
-      "GDR-NUPES" => $left
+      "GDR-NUPES" => $left,
+      "SOC-A" => $left
     );
     return $array;
   }
