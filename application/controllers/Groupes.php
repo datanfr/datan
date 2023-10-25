@@ -40,6 +40,33 @@
       return $data;
     }
 
+    public function get_history($data){
+      $data['history'] = $this->groupes_model->get_history($data['groupe']['uid']);
+      foreach ($data['history'] as $key => $value) {
+        $get = $this->groupes_model->get_groupe_by_id($value);
+        if ($get['legislature'] >= 14) {
+          if ($value == $data['groupe']['uid']) {
+            $data['history_list_all'][] = $get;
+          } else {
+            $data['history_list'][] = $get;
+            $data['history_list_all'][] = $get;
+          }
+        }
+      }
+      function date_compare($a, $b) {
+        $t1 = strtotime($a['dateDebut']);
+        $t2 = strtotime($b['dateDebut']);
+        return $t1 - $t2;
+      }
+      if (isset($data['history_list'])) {
+        usort($data['history_list'], 'date_compare');
+      }
+      if (isset($data['history_list_all'])) {
+        usort($data['history_list_all'], 'date_compare');
+      }
+      return $data;
+    }
+
     public function get_data_stats($data){
       $data['stats'] = $this->groupes_model->get_stats($data['groupe']['uid']);
       $data['statsAverage'] = $this->groupes_model->get_stats_avg($data['groupe']['legislature']);
@@ -166,6 +193,7 @@
       $data['active'] = FALSE;
       $data['legislature'] = legislature_current();
       $data['groupes'] = $this->groupes_model->get_groupes_all($data['active'], legislature_current());
+      $data['number'] = count($data['groupes']);
       $data['number_groupes_inactive'] = $this->groupes_model->get_number_inactive_groupes();
       $data['number_groupes_active'] = $this->groupes_model->get_number_active_groupes();
 
@@ -216,7 +244,9 @@
       // Query 1 Informations principales
       $groupe_slug = mb_strtoupper($groupe_slug);
       $data['groupe'] = $this->groupes_model->get_groupes_individal($groupe_slug, $legislature);
-      $data['history'] = $this->groupes_model->get_history($data['groupe']['uid']);
+
+      // Get history data
+      $data = $this->get_history($data);
 
       if (empty($data['groupe'])) {
         show_404($this->functions_datan->get_404_infos());
@@ -232,7 +262,7 @@
       $data['dateDebutMois'] = strftime('%B %Y', strtotime($data['groupe']['dateDebut']));
 
       // Query effectifs --> for previous legislatures
-      if (is_null($data['groupe']['effectif']) && $legislature < legislature_current() ) {
+      if (is_null($data['groupe']['effectif'])) {
         $effectif = $this->groupes_model->get_effectif_history_start($data['groupe']['uid'], $data['groupe']['dateDebut']);
         $data['groupe']['effectif'] = $effectif['effectif'];
         $data['groupe']['effectifShare'] = round($effectif['effectif'] / 577 * 100);
@@ -611,29 +641,7 @@
       }
 
       // Get history data
-      $data['history'] = $this->groupes_model->get_history($data['groupe']['uid']);
-      foreach ($data['history'] as $key => $value) {
-        $get = $this->groupes_model->get_groupe_by_id($value);
-        if ($get['legislature'] >= 14) {
-          if ($value == $data['groupe']['uid']) {
-            $data['history_list_all'][] = $get;
-          } else {
-            $data['history_list'][] = $get;
-            $data['history_list_all'][] = $get;
-          }
-        }
-      }
-      function date_compare($a, $b) {
-        $t1 = strtotime($a['dateDebut']);
-        $t2 = strtotime($b['dateDebut']);
-        return $t1 - $t2;
-      }
-      if (isset($data['history_list'])) {
-        usort($data['history_list'], 'date_compare');
-      }
-      if (isset($data['history_list_all'])) {
-        usort($data['history_list_all'], 'date_compare');
-      }
+      $data = $this->get_history($data);
 
       $data['stats_history'] = $this->groupes_model->get_stats_history($data['history']);
 
@@ -677,21 +685,23 @@
         }
         $data['members_max'] = $data['members'][0]['value'];
 
-        // Get the effectif ranking
-        $x = 1;
-        foreach ($data['members'] as $key => $value) {
-          if ($value['uid'] == $data['groupe']['uid']) {
-            $data['effectifRank']['number'] = $x;
+        // Get the effectif ranking if active
+        if ($data['active']) {
+          $x = 1;
+          foreach ($data['members'] as $key => $value) {
+            if ($value['uid'] == $data['groupe']['uid']) {
+              $data['effectifRank']['number'] = $x;
+            }
+            $x++;
           }
-          $x++;
+          if ($data['effectifRank']['number'] == count($data['members'])) {
+            $data['effectifRank']['last'] = TRUE;
+          } else {
+            $data['effectifRank']['last'] = FALSE;
+          }
         }
-        if ($data['effectifRank']['number'] == count($data['members'])) {
-          $data['effectifRank']['last'] = TRUE;
-        } else {
-          $data['effectifRank']['last'] = FALSE;
-        }
-
       }
+
       $data['members_history'] = $this->groupes_model->get_effectif_history($data['history']);
 
       // Get age data
