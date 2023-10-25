@@ -40,6 +40,33 @@
       return $data;
     }
 
+    public function get_history($data){
+      $data['history'] = $this->groupes_model->get_history($data['groupe']['uid']);
+      foreach ($data['history'] as $key => $value) {
+        $get = $this->groupes_model->get_groupe_by_id($value);
+        if ($get['legislature'] >= 14) {
+          if ($value == $data['groupe']['uid']) {
+            $data['history_list_all'][] = $get;
+          } else {
+            $data['history_list'][] = $get;
+            $data['history_list_all'][] = $get;
+          }
+        }
+      }
+      function date_compare($a, $b) {
+        $t1 = strtotime($a['dateDebut']);
+        $t2 = strtotime($b['dateDebut']);
+        return $t1 - $t2;
+      }
+      if (isset($data['history_list'])) {
+        usort($data['history_list'], 'date_compare');
+      }
+      if (isset($data['history_list_all'])) {
+        usort($data['history_list_all'], 'date_compare');
+      }
+      return $data;
+    }
+
     public function get_data_stats($data){
       $data['stats'] = $this->groupes_model->get_stats($data['groupe']['uid']);
       $data['statsAverage'] = $this->groupes_model->get_stats_avg($data['groupe']['legislature']);
@@ -216,7 +243,9 @@
       // Query 1 Informations principales
       $groupe_slug = mb_strtoupper($groupe_slug);
       $data['groupe'] = $this->groupes_model->get_groupes_individal($groupe_slug, $legislature);
-      $data['history'] = $this->groupes_model->get_history($data['groupe']['uid']);
+
+      // Get history data
+      $data = $this->get_history($data);
 
       if (empty($data['groupe'])) {
         show_404($this->functions_datan->get_404_infos());
@@ -611,29 +640,7 @@
       }
 
       // Get history data
-      $data['history'] = $this->groupes_model->get_history($data['groupe']['uid']);
-      foreach ($data['history'] as $key => $value) {
-        $get = $this->groupes_model->get_groupe_by_id($value);
-        if ($get['legislature'] >= 14) {
-          if ($value == $data['groupe']['uid']) {
-            $data['history_list_all'][] = $get;
-          } else {
-            $data['history_list'][] = $get;
-            $data['history_list_all'][] = $get;
-          }
-        }
-      }
-      function date_compare($a, $b) {
-        $t1 = strtotime($a['dateDebut']);
-        $t2 = strtotime($b['dateDebut']);
-        return $t1 - $t2;
-      }
-      if (isset($data['history_list'])) {
-        usort($data['history_list'], 'date_compare');
-      }
-      if (isset($data['history_list_all'])) {
-        usort($data['history_list_all'], 'date_compare');
-      }
+      $data = $this->get_history($data);
 
       $data['stats_history'] = $this->groupes_model->get_stats_history($data['history']);
 

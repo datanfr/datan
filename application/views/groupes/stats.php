@@ -262,7 +262,7 @@
           </div>
         <?php else: ?>
           <div class="alert alert-warning">
-            Nous n'avons pas associé d'autres groupes au groupe <?= $groupe['libelleAbrev'] ?> (celui-ci n'a pas de groupes proches antérieurs ou futurs).
+            Nous n'avons pas associé d'autres groupes au groupe <?= $groupe['libelleAbrev'] ?>.
           </div>
         <?php endif; ?>
       </div>
