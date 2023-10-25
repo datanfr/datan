@@ -5,29 +5,32 @@
     }
 
     public function get_groupes_all($active, $legislature) {
-      if ($active && $legislature) {
-        if ($legislature == legislature_current()) {
-          $query = $this->db->query('SELECT *, o.legislature AS legislature, date_format(dateDebut, "%d %M %Y") as dateDebutFR, e.effectif,
-            CASE WHEN o.libelle = "Non inscrit" THEN "Députés non inscrits" ELSE o.libelle END AS libelle
-            FROM organes o
-            LEFT JOIN groupes_effectif e ON o.uid = e.organeRef
-            WHERE o.legislature = '.$this->db->escape(legislature_current()).' AND o.coteType = "GP" AND o.dateFin IS NULL AND o.libelleAbrev != "NI"
-            ORDER BY e.effectif DESC, o.libelle
-          ');
-        } else {
-          $query = $this->db->query('SELECT *, o.legislature AS legislature, date_format(dateDebut, "%d %M %Y") as dateDebutFR,
-            CASE WHEN o.libelle = "Non inscrit" THEN "Députés non inscrits" ELSE o.libelle END AS libelle
-            FROM organes o
-            WHERE o.legislature = '.$this->db->escape($legislature).' AND o.coteType = "GP" AND o.libelleAbrev != "NI"
-            ORDER BY o.libelle
-          ');
-        }
-      } else {
+
+      if ($active && $legislature == legislature_current()) {
+        $query = $this->db->query('SELECT *, o.legislature AS legislature, date_format(dateDebut, "%d %M %Y") as dateDebutFR, e.effectif,
+          CASE WHEN o.libelle = "Non inscrit" THEN "Députés non inscrits" ELSE o.libelle END AS libelle
+          FROM organes o
+          LEFT JOIN groupes_effectif e ON o.uid = e.organeRef
+          WHERE o.legislature = '.$this->db->escape(legislature_current()).' AND o.coteType = "GP" AND o.dateFin IS NULL AND o.libelleAbrev != "NI"
+          ORDER BY e.effectif DESC, o.libelle
+        ');
+      }
+
+      if ($legislature != legislature_current()) {
+        $query = $this->db->query('SELECT *, o.legislature AS legislature, date_format(dateDebut, "%d %M %Y") as dateDebutFR,
+          CASE WHEN o.libelle = "Non inscrit" THEN "Députés non inscrits" ELSE o.libelle END AS libelle
+          FROM organes o
+          WHERE o.legislature = '.$this->db->escape($legislature).' AND o.coteType = "GP" AND o.libelleAbrev != "NI"
+          ORDER BY o.libelle
+        ');
+      }
+
+      if (!$active && $legislature == legislature_current()) {
         $query = $this->db->query('SELECT *, o.legislature, date_format(dateDebut, "%d %M %Y") as dateDebutFR,
           CASE WHEN o.libelle = "Non inscrit" THEN "Députés non inscrits" ELSE o.libelle END AS libelle
           FROM organes o
           LEFT JOIN groupes_effectif e ON o.uid = e.organeRef
-          WHERE o.legislature = 15 AND o.coteType = "GP" AND o.dateFin IS NOT NULL AND o.libelleAbrev != "NI"
+          WHERE o.legislature = '.$this->db->escape(legislature_current()).' AND o.coteType = "GP" AND o.dateFin IS NOT NULL AND o.libelleAbrev != "NI"
           ORDER BY e.effectif DESC, o.libelle
         ');
       }
@@ -299,6 +302,7 @@
           break;
 
         case 'SOC':
+        case 'SOC-A':
           $groupe['twitter'] = 'socialistesAN';
           $groupe['facebook'] = 'socialistesAN';
           break;
@@ -369,15 +373,21 @@
     public function get_stats($groupe_uid){
       $results = $this->db->get_where('class_groups', array('organeRef' => $groupe_uid))->result_array();
 
-      foreach ($results as $key => $value) {
-        if ($value['stat'] == 'cohesion') {
-          $return[$value['stat']] = array('value' => $value['value'], 'votes' => $value['votes']);
-        } elseif ($value['stat'] == 'support') {
-          $return[$value['stat']] = array('value' => round($value['value']), 'votes' => $value['votes']);
-        } else  {
-          $return[$value['stat']] = array('value' => round($value['value'] * 100), 'votes' => $value['votes']);
+      if ($results) {
+        foreach ($results as $key => $value) {
+          if ($value['stat'] == 'cohesion') {
+            $return[$value['stat']] = array('value' => $value['value'], 'votes' => $value['votes']);
+          } elseif ($value['stat'] == 'support') {
+            $return[$value['stat']] = array('value' => round($value['value']), 'votes' => $value['votes']);
+          } else  {
+            $return[$value['stat']] = array('value' => round($value['value'] * 100), 'votes' => $value['votes']);
+          }
         }
+      } else {
+        $return = NULL;
       }
+
+
       return $return;
     }
 
@@ -669,7 +679,7 @@
         array('PO730958', 'PO800490'), // France insoumise
         array('PO270903', 'PO389395', 'PO656006', 'PO707869', 'PO730934', 'PO800508', 'PO684957'), // Les Républicains
         array('PO730970', 'PO774834', 'PO800484'), // Modem
-        array('PO758835', 'PO730946', 'PO389507', 'PO656002', 'PO713077', 'PO270907', 'PO800496'), // Socialistes
+        array('PO758835', 'PO730946', 'PO389507', 'PO656002', 'PO713077', 'PO270907', 'PO800496', 'PO830170'), // Socialistes
         array('PO656014', 'PO800526'), // Ecologiste
         array('PO270915', 'PO389635', 'PO656018', 'PO730940', 'PO800502'), // Communistes
         array('PO759900', 'PO800532'), // Libertés et territoires

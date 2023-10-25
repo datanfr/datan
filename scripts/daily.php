@@ -165,12 +165,19 @@ class Script
                         $nameFirst = $xml->etatCivil->ident->prenom;
                         $nameLast = $xml->etatCivil->ident->nom;
                         $birthDate = $xml->etatCivil->infoNaissance->dateNais;
+                        $birthDate = $birthDate == '' ? NULL : $birthDate;
                         $birthCity = $xml->etatCivil->infoNaissance->villeNais;
+                        $birthCity = $birthCity == '' ? NULL : $birthCity;
                         $birthCountry = $xml->etatCivil->infoNaissance->paysNais;
+                        $birthCountry = $birthCountry == '' ? NULL : $birthCountry;
                         $job = $xml->profession->libelleCourant;
+                        $job = $job == '' ? NULL : $job;
                         $catSocPro = $xml->profession->socProcINSEE->catSocPro;
+                        $catSocPro = $catSocPro == '' ? NULL : $catSocPro;
                         $famSocPro = $xml->profession->socProcINSEE->famSocPro;
+                        $famSocPro = $famSocPro == '' ? NULL : $famSocPro;
                         $hatvp = $xml->uri_hatvp;
+                        $hatvp = $hatvp == '' ? NULL : $hatvp;
                         $lastname = Transliterator::createFromRules(
                             ':: Any-Latin;'
                                 . ':: NFD;'
@@ -1041,17 +1048,43 @@ class Script
         $groupeId = $data['uid'];
         $legislature = $data['legislature'];
         $dateDebut = $data['dateDebut'];
+        $dateFin = $data['dateFin'];
 
         /// --- 1. Feminisation --- ///
-        $feminisation = $this->bdd->query('SELECT round(AVG(A.woman) * 100, 2) AS pct, SUM(A.woman) AS n
-          FROM (
-            SELECT CASE WHEN d.civ = "Mme" THEN 1 ELSE 0 END AS woman
-            FROM mandat_groupe m
-            LEFT JOIN deputes_last d ON d.mpId = m.mpId
-            WHERE m.organeRef = "' . $groupeId . '" AND (m.dateFin IS NULL OR m.dateFin <= "' . $this->dateFinLast . '")
-            GROUP BY m.mpId
-          ) A
-        ')->fetch(PDO::FETCH_ASSOC);
+        if ($data['legislature'] == $this->legislature_current) {
+          if (is_null($dateFin)) {
+            $feminisation = $this->bdd->query('SELECT round(AVG(A.woman) * 100, 2) AS pct, SUM(A.woman) AS n
+              FROM (
+                SELECT CASE WHEN d.civ = "Mme" THEN 1 ELSE 0 END AS woman
+                FROM mandat_groupe m
+                LEFT JOIN deputes_last d ON d.mpId = m.mpId
+                WHERE m.organeRef = "' . $groupeId . '" AND m.dateFin IS NULL
+                GROUP BY m.mpId
+              ) A
+            ')->fetch(PDO::FETCH_ASSOC);
+          } else {
+            $feminisation = $this->bdd->query('SELECT round(AVG(A.woman) * 100, 2) AS pct, SUM(A.woman) AS n
+              FROM (
+                SELECT CASE WHEN d.civ = "Mme" THEN 1 ELSE 0 END AS woman
+                FROM mandat_groupe m
+                LEFT JOIN deputes_last d ON d.mpId = m.mpId
+                WHERE m.organeRef = "' . $groupeId . '"
+                GROUP BY m.mpId
+              ) A
+            ')->fetch(PDO::FETCH_ASSOC);
+          }
+
+        } else {
+          $feminisation = $this->bdd->query('SELECT round(AVG(A.woman) * 100, 2) AS pct, SUM(A.woman) AS n
+            FROM (
+              SELECT CASE WHEN d.civ = "Mme" THEN 1 ELSE 0 END AS woman
+              FROM mandat_groupe m
+              LEFT JOIN deputes_last d ON d.mpId = m.mpId
+              WHERE m.organeRef = "' . $groupeId . '"
+              GROUP BY m.mpId
+            ) A
+          ')->fetch(PDO::FETCH_ASSOC);
+        }
 
         // Insert N
         $sql = $this->bdd->prepare('INSERT INTO groupes_stats_history (organeRef, stat, type, legislature, dateValue, value, dateMaj) VALUES (:organeRef, :stat, :type, :legislature, :dateValue, :value, :dateMaj)');
