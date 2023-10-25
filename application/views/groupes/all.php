@@ -13,7 +13,7 @@
               <?php if ($active && $legislature == legislature_current()): ?>
                 <?php if ($number > 0): ?>
                   <p>Le groupe le plus important est <a href="<?= base_url() ?>groupes/legislature-<?= $groupes[0]['legislature'] ?>/<?= mb_strtolower($groupes[0]['libelleAbrev']) ?>"><?= $groupes[0]['libelle'] ?></a>. Il compte <?= $groupes[0]['effectif'] ?> députés membres.</p>
-                  <p>Cette page présente les <?= $number ?> groupes parlementaires en activité dans l'Assemblée nationale. Pour découvrir les <?= $number_groupes_inactive ?> groupes qui ne sont plus en activité, <a href="<?= base_url() ?>groupes/inactifs">cliquez ici</a>.</p>
+                  <p>Cette page présente les <?= $number ?> groupes parlementaires en activité dans l'Assemblée nationale. Pour découvrir les groupes qui ne sont plus en activité, <a href="<?= base_url() ?>groupes/inactifs">cliquez ici</a>.</p>
                 <?php endif; ?>
                 <?php if ($number_in_groupes == 0): ?>
                   <p>Tous les députés sont "non-inscrits".</p>
@@ -22,7 +22,7 @@
                 <?php endif; ?>
               <?php endif; ?>
               <?php if ($active === FALSE): ?>
-                <p>Cette page présente les <?= $number_groupes_inactive ?> groupes de la 15<sup>ème</sup> législature qui ne sont plus en activités. Ce sont des groupes qui ont été dissous depuis leur création.</p>
+                <p>Cette page présente les groupes de la <?= $legislature ?><sup>ème</sup> législature qui ne sont plus en activités. Ce sont des groupes qui ont été dissous depuis leur création.</p>
                 <p>Pour découvrir les <?= $number_groupes_active ?> groupes politiques en activité à l'Assemblée nationale, <a href="<?= base_url() ?>groupes">cliquez ici</a>.</p>
               <?php endif; ?>
               <?php if ($legislature < legislature_current()): ?>
@@ -53,7 +53,11 @@
                   <h2>Les <span class="text-primary"><?= $number ?> groupes</span> parlementaires de l'Assemblée nationale</h2>
                 <?php endif; ?>
                 <?php if ($active === FALSE): ?>
-                  <h2>Les <span class="text-primary"><?= count($groupes) ?> anciens groupes</span> parlementaires de la <?= $legislature ?><sup>ème</sup> législature</h2>
+                  <?php if (count($groupes) > 1): ?>
+                    <h2>Les <span class="text-primary"><?= count($groupes) ?> anciens groupes</span> parlementaires de la <?= $legislature ?><sup>ème</sup> législature</h2>
+                    <?php else: ?>
+                    <h2>Les <span class="text-primary">anciens groupes</span> parlementaires de la <?= $legislature ?><sup>ème</sup> législature</h2>
+                  <?php endif; ?>
                 <?php endif; ?>
                 <?php if ($legislature != legislature_current()): ?>
                   <h2>Les <span class="text-primary"><?= count($groupes) ?> groupes</span> parlementaires de la <?= $legislature ?><sup>ème</sup> législature</h2>
