@@ -93,7 +93,7 @@
       }
       // Get support data for all groups
       $data['support_all'] = $this->groupes_model->get_support_all($data['groupe']['legislature']);
-      if (!empty($data['stats']['support'])) {
+      if (!empty($data['stats']['support']) && $data['stats']['support']['votes'] > 0) {
         $data['no_support'] = FALSE;
         if ($data['groupe']['positionPolitique'] == 'Opposition') {
           $data['edito_support'] = $this->groupes_edito->support($data['groupe']['uid'], $data['support_all']);

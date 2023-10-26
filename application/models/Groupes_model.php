@@ -395,7 +395,8 @@
       $where = array(
         'c.legislature' => $legislature,
         'c.stat' => 'support',
-        'o.libelleAbrev !=' => 'NI'
+        'o.libelleAbrev !=' => 'NI',
+        'c.votes >' => 0
       );
       if ($opposition) {
         $this->db->where('positionPolitique', 'Opposition');
