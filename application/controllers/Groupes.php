@@ -70,21 +70,21 @@
     public function get_data_stats($data){
       $data['stats'] = $this->groupes_model->get_stats($data['groupe']['uid']);
       $data['statsAverage'] = $this->groupes_model->get_stats_avg($data['groupe']['legislature']);
-      if (!empty($data['stats']['cohesion'])) {
+      if (isset($data['stats']['cohesion']) && $data['stats']['cohesion']['votes'] > 0) {
         $data['cohesionAverage'] = $data['statsAverage']['cohesion'];
         $data['edito_cohesion'] = $this->groupes_edito->cohesion($data['stats']['cohesion']['value'], $data['cohesionAverage']);
         $data['no_cohesion'] = FALSE;
       } else {
         $data['no_cohesion'] = TRUE;
       }
-      if (!empty($data['stats']['participation'])) {
+      if (isset($data['stats']['participation']) && $data['stats']['participation']['votes'] > 0) {
         $data['participationAverage'] = $data['statsAverage']['participation'];
         $data['edito_participation'] = $this->groupes_edito->participation($data['stats']['participation']['value'], $data['participationAverage']);
         $data['no_participation'] = FALSE;
       } else {
         $data['no_participation'] = TRUE;
       }
-      if (!empty($data['stats']['majority'])) {
+      if (isset($data['stats']['majority']) && $data['stats']['majority']['votes'] > 0) {
         $data['majoriteAverage'] = $data['statsAverage']['majority'];
         $data['edito_majorite'] = $this->groupes_edito->majority($data['stats']['majority']['value'], $data['majoriteAverage']);
         $data['no_majorite'] = FALSE;

@@ -532,42 +532,42 @@
                     </p>
                   </div>
                 </div>
-              <?php endif; ?>
-              <div class="row mt-4">
-                <div class="col-12">
-                  <div class="text-center">
-                    <a class="btn btn-primary" id="btn-ranking" data-toggle="collapse" href="#collapseProximity" role="button" aria-expanded="false" aria-controls="collapseProximity">
-                      Voir tout le classement
-                    </a>
-                  </div>
-                  <div class="collapse mt-3" id="collapseProximity">
-                    <table class="table">
-                      <thead>
-                        <tr>
-                          <th scope="col"></th>
-                          <th scope="col">Groupe</th>
-                          <th scope="col">Taux de proximité</th>
-                          <th scope="col">Groupe dissout ?</th>
-                          <th scope="col">Nbr de votes</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <?php $i = 1; ?>
-                        <?php foreach ($accord_groupes_all as $group): ?>
+                <div class="row mt-4">
+                  <div class="col-12">
+                    <div class="text-center">
+                      <a class="btn btn-primary" id="btn-ranking" data-toggle="collapse" href="#collapseProximity" role="button" aria-expanded="false" aria-controls="collapseProximity">
+                        Voir tout le classement
+                      </a>
+                    </div>
+                    <div class="collapse mt-3" id="collapseProximity">
+                      <table class="table">
+                        <thead>
                           <tr>
-                            <th scope="row"><?= $i ?></th>
-                            <td><?= name_group($group['libelle']) ?> (<?= $group['libelleAbrev'] ?>)</td>
-                            <td><?= $group['score'] ?>%</td>
-                            <td><?= $group['ended'] == 1 ? "Oui" : "" ?></td>
-                            <td><?= $group['votesN'] ?></td>
+                            <th scope="col"></th>
+                            <th scope="col">Groupe</th>
+                            <th scope="col">Taux de proximité</th>
+                            <th scope="col">Groupe dissout ?</th>
+                            <th scope="col">Nbr de votes</th>
                           </tr>
-                          <?php $i++ ?>
-                        <?php endforeach; ?>
-                      </tbody>
-                    </table>
+                        </thead>
+                        <tbody>
+                          <?php $i = 1; ?>
+                          <?php foreach ($accord_groupes_all as $group): ?>
+                            <tr>
+                              <th scope="row"><?= $i ?></th>
+                              <td><?= name_group($group['libelle']) ?> (<?= $group['libelleAbrev'] ?>)</td>
+                              <td><?= $group['score'] ?>%</td>
+                              <td><?= $group['ended'] == 1 ? "Oui" : "" ?></td>
+                              <td><?= $group['votesN'] ?></td>
+                            </tr>
+                            <?php $i++ ?>
+                          <?php endforeach; ?>
+                        </tbody>
+                      </table>
+                    </div>
                   </div>
                 </div>
-              </div>
+              <?php endif; ?>
             </div>
           </div> <!-- END BLOC PROXIMITY -->
         </div> <!-- // END BLOC STATISTIQUES -->
