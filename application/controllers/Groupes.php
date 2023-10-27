@@ -95,7 +95,7 @@
       $data['support_all'] = $this->groupes_model->get_support_all($data['groupe']['legislature']);
       if (!empty($data['stats']['support']) && $data['stats']['support']['votes'] > 0) {
         $data['no_support'] = FALSE;
-        if ($data['groupe']['positionPolitique'] == 'Opposition') {
+        if ($data['groupe']['positionPolitique'] == 'Opposition' && $data['active']) {
           $data['edito_support'] = $this->groupes_edito->support($data['groupe']['uid'], $data['support_all']);
         }
       } else {
@@ -666,8 +666,11 @@
       } else {
         $data['accord_groupes_featured'] = $data['accord_groupes_all'];
       }
-      $data['accord_groupes_first'] = $data['accord_groupes_featured'][0];
-      $data['accord_groupes_last'] = end($data['accord_groupes_featured']);
+      if ($data['accord_groupes_featured']) {
+        $data['accord_groupes_first'] = $data['accord_groupes_featured'][0];
+        $data['accord_groupes_last'] = end($data['accord_groupes_featured']);
+      }
+
 
       // Get history proximity stats
       $data['proximity_history'] = $this->groupes_model->get_stat_proximity_history($data['groupe']['uid']);
