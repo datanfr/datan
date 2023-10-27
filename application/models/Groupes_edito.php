@@ -140,6 +140,7 @@
     }
 
     public function support($groupe, $data){
+      var_dump($data);
       foreach ($data as $key => $value) {
         if ($value['positionPolitique'] == 'Opposition') {
           $opposition[] = $value;
