@@ -384,6 +384,9 @@
           <span class="url_obf" url_obf="<?= url_obfuscation("https://www.republicain-lorrain.fr/politique/2023/02/02/etre-depute-c-est-du-temps-plein") ?>">
             <img class="mx-2 my-3 img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="123" height="40" data-src="<?= asset_url() ?>imgs/media/republicain_lorrain.png" alt="Républicain Lorrain">
           </span>
+          <span class="url_obf" url_obf="<?= url_obfuscation("https://splann.org/") ?>">
+            <img class="mx-2 my-3 img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="118" height="57" data-src="<?= asset_url() ?>imgs/media/splann.png" alt="Splann!">
+          </span>
           <span class="url_obf" url_obf="<?= url_obfuscation("https://ram05.fr/podcasts/journal/29-novembre-2021-7") ?>">
             <img class="mx-2 my-3 img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="75" height="50" data-src="<?= asset_url() ?>imgs/media/ram05.png" alt="Radio Ram05">
           </span>
