@@ -32,110 +32,134 @@
       </div>
       <div class="mt-5">
         <h2 class="anchor mb-3" id="participation">Participation aux votes</h2>
-        <p>
-          <?= $active ? 'Depuis le début de' : 'Pendant la' ?> <?= $groupe['legislature'] ?>ème législature, le taux de participation moyen du groupe <i><?= name_group($title) ?></i> <?= $active ? 'est' : 'était' ?> de <span class="font-weight-bold text-primary"><?= $stats['participation']['value'] ?>%</span>.
-          Autrement dit, en moyenne, pour chaque scrutin en séance publique, <?= $stats['participation']['value'] ?>% des députés du groupe ont pris part au vote.
-        </p>
-        <p>Le groupe <b><?= $active ? 'participe' : 'participait' ?> <?= $edito_participation ?></b> que les autres groupes politiques. La moyenne de l'Assemblée nationale <?= $active ? 'est' : 'était' ?> de <?= $statsAverage['participation'] ?>%.</p>
-        <?php if (count($stats_history['participation']) > 1): ?>
-          <div class="card card-stats mt-4">
-            <div class="card-body pb-0">
-              <div class="mb-3 mt-1" style="border-top: 7px solid #00b794; width: 60px"></div>
-              <?php if ($active): ?>
-                <h3>La participation du groupe <?= $this->groupes_edito->get_evolution_edited(round($stats_history['participation'][count($stats_history['participation'])-1]['value'] * 100), round($stats_history['participation'][count($stats_history['participation'])-2]['value'] * 100)) ?></h3>
-              <?php else: ?>
-                <h3>Historique de la participation du groupe <?= $groupe['libelleAbrev'] ?></h3>
-              <?php endif; ?>
-              <p>Évolution du taux de participation du groupe <?= $groupe['libelleAbrev'] ?> sur les dernières législatures</p>
-              <?php $this->load->view('groupes/partials/stats_vertical.php', array('stats_history_chart' => $stats_history['participation'], 'type' => 'pct', 'terms' => TRUE, 'divided_by' => 1, 'grid' => TRUE, 'organeRef' => $groupe['uid'], 'tooltip' => TRUE)) ?>
-            </div>
+        <?php if ($stats['participation']['votes'] < 10): ?>
+          <div class="alert alert-warning">
+            Nous n'avons pas encore récolté assez de données pour calculer cette statistique.
           </div>
-        <?php endif; ?>
-        <div class="card mt-4">
-          <div class="card-body card-stats pb-2">
-            <div class="mb-3 mt-1" style="border-top: 7px solid #00b794; width: 60px"></div>
-            <h3>Évolution de la participation sur la dernière législature</h3>
-            <p><?= $legislature['edito'] ?></p>
-            <?php $this->load->view('groupes/partials/stats_chartJS.php', array('stats_history_chart' => $stats_monthly['participation'], 'type' => 'graphParticipation', 'max' => 100)) ?>
-          </div>
-        </div>
-      </div>
-      <div class="mt-5">
-        <h2 class="anchor mb-3" id="cohesion">Cohésion interne au groupe</h2>
-        <p>
-          <?= $active ? 'Depuis le début de' : 'Pendant la' ?> <?= $groupe['legislature'] ?>ème législature, le taux de cohésion du groupe <i><?= name_group($title) ?></i> <?= $active ? 'est' : 'était' ?> de <span class="font-weight-bold text-primary"><?= round($stats['cohesion']['value'], 2) ?></span>. Plus ce score de cohésion est proche de 1, plus le groupe est uni quand il s'agit de voter en séance publique.
-        </p>
-        <p>Le groupe <i><?= name_group($title) ?></i> <?= $active ? 'peut' : 'pouvait' ?> être considéré comme <b><?= $edito_cohesion['absolute'] ?> soudé</b> quand il s'<?= $active ? 'agit' : 'agissait' ?> de voter. En effet, le groupe <?= $active ? 'est' : 'était' ?> <?= $edito_cohesion['relative'] ?> soudé que la moyenne des autres groupes, qui <?= $active ? 'est' : 'était' ?> de <?= round($statsAverage['cohesion'], 2) ?>.</p>
-        <?php if (count($stats_history['cohesion']) > 1): ?>
-          <div class="card card-stats mt-4">
-            <div class="card-body pb-0">
-              <div class="mb-3 mt-1" style="border-top: 7px solid #00b794; width: 60px"></div>
-              <?php if ($active): ?>
-                <h3>La cohésion du groupe <?= $this->groupes_edito->get_evolution_edited(round($stats_history['cohesion'][count($stats_history['cohesion'])-1]['value'] * 100), round($stats_history['cohesion'][count($stats_history['cohesion'])-2]['value'] * 100)) ?></h3>
-              <?php else: ?>
-                  <h3>Historique de la cohésion du groupe <?= $groupe['libelleAbrev'] ?></h3>
-              <?php endif; ?>
-              <p>Évolution du taux de cohésion du groupe <?= $groupe['libelleAbrev'] ?> sur les dernières législatures</p>
-              <?php $this->load->view('groupes/partials/stats_vertical.php', array('stats_history_chart' => $stats_history['cohesion'], 'type' => 'score', 'terms' => TRUE, 'divided_by' => 1, 'grid' => TRUE, 'organeRef' => $groupe['uid'], 'tooltip' => TRUE)) ?>
-            </div>
-          </div>
-        <?php endif; ?>
-        <div class="card card-stats mt-4">
-          <div class="card-body pb-2">
-            <div class="mb-3 mt-1" style="border-top: 7px solid #00b794; width: 60px"></div>
-            <h3>Évolution de la cohésion sur la dernière législature</h3>
-            <p><?= $legislature['edito'] ?></p>
-            <?php $this->load->view('groupes/partials/stats_chartJS.php', array('stats_history_chart' => $stats_monthly['cohesion'], 'type' => 'graphCohesion', 'max' => 1)) ?>
-          </div>
-        </div>
-      </div>
-      <?php if ($stats_history['majority']): ?>
-        <div class="mt-5">
-          <h2 class="anchor mb-3" id="majorite">Proximité avec la majorité présidentielle</h2>
+        <?php else: ?>
           <p>
-            <?= $active ? 'Depuis le début de' : 'Pendant la' ?> <?= $groupe['legislature'] ?>ème législature, le groupe <i><?= name_group($title) ?></i> a voté sur la même ligne que la majorité présidentielle dans <span class="font-weight-bold text-primary"><?= $stats['majority']['value'] ?>%</span> des cas.
+            <?= $active ? 'Depuis le début de' : 'Pendant la' ?> <?= $groupe['legislature'] ?>ème législature, le taux de participation moyen du groupe <i><?= name_group($title) ?></i> <?= $active ? 'est' : 'était' ?> de <span class="font-weight-bold text-primary"><?= $stats['participation']['value'] ?>%</span>.
+            Autrement dit, en moyenne, pour chaque scrutin en séance publique, <?= $stats['participation']['value'] ?>% des députés du groupe ont pris part au vote.
           </p>
-          <p>Le groupe <?= $active ? 'est' : 'était' ?> <b><?= $edito_majorite ?> proche</b> de la majorité présidentielle que la moyenne des autres groupes politiques, qui <?= $active ? 'est' : 'était' ?> de <?= $statsAverage['majority'] ?>%.</p>
-          <?php if (count($stats_history['majority']) > 1): ?>
+          <p>Le groupe <b><?= $active ? 'participe' : 'participait' ?> <?= $edito_participation ?></b> que les autres groupes politiques. La moyenne de l'Assemblée nationale <?= $active ? 'est' : 'était' ?> de <?= $statsAverage['participation'] ?>%.</p>
+          <?php if (count($stats_history['participation']) > 1): ?>
             <div class="card card-stats mt-4">
               <div class="card-body pb-0">
                 <div class="mb-3 mt-1" style="border-top: 7px solid #00b794; width: 60px"></div>
                 <?php if ($active): ?>
-                  <h3>La proximité avec la majorité <?= $this->groupes_edito->get_evolution_edited(round(array_slice($stats_history['majority'], -1, 1)[0]['value'] * 100), round(array_slice($stats_history['majority'], -2, 1)[0]['value'] * 100)) ?></h3>
+                  <h3>La participation du groupe <?= $this->groupes_edito->get_evolution_edited(round($stats_history['participation'][count($stats_history['participation'])-1]['value'] * 100), round($stats_history['participation'][count($stats_history['participation'])-2]['value'] * 100)) ?></h3>
                 <?php else: ?>
-                  <h3>Historique de la proximité avec la majorité</h3>
+                  <h3>Historique de la participation du groupe <?= $groupe['libelleAbrev'] ?></h3>
                 <?php endif; ?>
-                <p>Évolution de la proximité avec la majorité du groupe <?= $groupe['libelleAbrev'] ?> sur les dernières législatures</p>
-                <?php $this->load->view('groupes/partials/stats_vertical.php', array('stats_history_chart' => $stats_history['majority'], 'type' => 'pct', 'terms' => TRUE, 'divided_by' => 1, 'grid' => TRUE, 'organeRef' => $groupe['uid'], 'tooltip' => TRUE)) ?>
+                <p>Évolution du taux de participation du groupe <?= $groupe['libelleAbrev'] ?> sur les dernières législatures</p>
+                <?php $this->load->view('groupes/partials/stats_vertical.php', array('stats_history_chart' => $stats_history['participation'], 'type' => 'pct', 'terms' => TRUE, 'divided_by' => 1, 'grid' => TRUE, 'organeRef' => $groupe['uid'], 'tooltip' => TRUE)) ?>
               </div>
             </div>
           <?php endif; ?>
-
-          <div class="card card-stats mt-4">
-            <div class="card-body pb-0">
+          <div class="card mt-4">
+            <div class="card-body card-stats pb-2">
               <div class="mb-3 mt-1" style="border-top: 7px solid #00b794; width: 60px"></div>
-              <h3>Évolution de la proximité avec la majorité sur la dernière législature</h3>
+              <h3>Évolution de la participation sur la dernière législature</h3>
               <p><?= $legislature['edito'] ?></p>
-              <?php $this->load->view('groupes/partials/stats_chartJS.php', array('stats_history_chart' => $stats_monthly['majority'], 'type' => 'graphMajority', 'max' => 100)) ?>
+              <?php $this->load->view('groupes/partials/stats_chartJS.php', array('stats_history_chart' => $stats_monthly['participation'], 'type' => 'graphParticipation', 'max' => 100)) ?>
             </div>
           </div>
+        <?php endif; ?>
+      </div>
+      <div class="mt-5">
+        <h2 class="anchor mb-3" id="cohesion">Cohésion interne au groupe</h2>
+        <?php if ($stats['cohesion']['votes'] < 10): ?>
+          <div class="alert alert-warning">
+            Nous n'avons pas encore récolté assez de données pour calculer cette statistique.
+          </div>
+        <?php else: ?>
+          <p>
+            <?= $active ? 'Depuis le début de' : 'Pendant la' ?> <?= $groupe['legislature'] ?>ème législature, le taux de cohésion du groupe <i><?= name_group($title) ?></i> <?= $active ? 'est' : 'était' ?> de <span class="font-weight-bold text-primary"><?= round($stats['cohesion']['value'], 2) ?></span>. Plus ce score de cohésion est proche de 1, plus le groupe est uni quand il s'agit de voter en séance publique.
+          </p>
+          <p>Le groupe <i><?= name_group($title) ?></i> <?= $active ? 'peut' : 'pouvait' ?> être considéré comme <b><?= $edito_cohesion['absolute'] ?> soudé</b> quand il s'<?= $active ? 'agit' : 'agissait' ?> de voter. En effet, le groupe <?= $active ? 'est' : 'était' ?> <?= $edito_cohesion['relative'] ?> soudé que la moyenne des autres groupes, qui <?= $active ? 'est' : 'était' ?> de <?= round($statsAverage['cohesion'], 2) ?>.</p>
+          <?php if (count($stats_history['cohesion']) > 1): ?>
+            <div class="card card-stats mt-4">
+              <div class="card-body pb-0">
+                <div class="mb-3 mt-1" style="border-top: 7px solid #00b794; width: 60px"></div>
+                <?php if ($active): ?>
+                  <h3>La cohésion du groupe <?= $this->groupes_edito->get_evolution_edited(round($stats_history['cohesion'][count($stats_history['cohesion'])-1]['value'] * 100), round($stats_history['cohesion'][count($stats_history['cohesion'])-2]['value'] * 100)) ?></h3>
+                <?php else: ?>
+                    <h3>Historique de la cohésion du groupe <?= $groupe['libelleAbrev'] ?></h3>
+                <?php endif; ?>
+                <p>Évolution du taux de cohésion du groupe <?= $groupe['libelleAbrev'] ?> sur les dernières législatures</p>
+                <?php $this->load->view('groupes/partials/stats_vertical.php', array('stats_history_chart' => $stats_history['cohesion'], 'type' => 'score', 'terms' => TRUE, 'divided_by' => 1, 'grid' => TRUE, 'organeRef' => $groupe['uid'], 'tooltip' => TRUE)) ?>
+              </div>
+            </div>
+          <?php endif; ?>
+          <div class="card card-stats mt-4">
+            <div class="card-body pb-2">
+              <div class="mb-3 mt-1" style="border-top: 7px solid #00b794; width: 60px"></div>
+              <h3>Évolution de la cohésion sur la dernière législature</h3>
+              <p><?= $legislature['edito'] ?></p>
+              <?php $this->load->view('groupes/partials/stats_chartJS.php', array('stats_history_chart' => $stats_monthly['cohesion'], 'type' => 'graphCohesion', 'max' => 1)) ?>
+            </div>
+          </div>
+        <?php endif; ?>
+      </div>
+      <?php if ($stats_history['majority']): ?>
+        <div class="mt-5">
+          <h2 class="anchor mb-3" id="majorite">Proximité avec la majorité présidentielle</h2>
+          <?php if ($stats['majority']['votes'] < 10): ?>
+            <div class="alert alert-warning">
+              Nous n'avons pas encore récolté assez de données pour calculer cette statistique.
+            </div>
+          <?php else: ?>
+            <p>
+              <?= $active ? 'Depuis le début de' : 'Pendant la' ?> <?= $groupe['legislature'] ?>ème législature, le groupe <i><?= name_group($title) ?></i> a voté sur la même ligne que la majorité présidentielle dans <span class="font-weight-bold text-primary"><?= $stats['majority']['value'] ?>%</span> des cas.
+            </p>
+            <p>Le groupe <?= $active ? 'est' : 'était' ?> <b><?= $edito_majorite ?> proche</b> de la majorité présidentielle que la moyenne des autres groupes politiques, qui <?= $active ? 'est' : 'était' ?> de <?= $statsAverage['majority'] ?>%.</p>
+            <?php if (count($stats_history['majority']) > 1): ?>
+              <div class="card card-stats mt-4">
+                <div class="card-body pb-0">
+                  <div class="mb-3 mt-1" style="border-top: 7px solid #00b794; width: 60px"></div>
+                  <?php if ($active): ?>
+                    <h3>La proximité avec la majorité <?= $this->groupes_edito->get_evolution_edited(round(array_slice($stats_history['majority'], -1, 1)[0]['value'] * 100), round(array_slice($stats_history['majority'], -2, 1)[0]['value'] * 100)) ?></h3>
+                  <?php else: ?>
+                    <h3>Historique de la proximité avec la majorité</h3>
+                  <?php endif; ?>
+                  <p>Évolution de la proximité avec la majorité du groupe <?= $groupe['libelleAbrev'] ?> sur les dernières législatures</p>
+                  <?php $this->load->view('groupes/partials/stats_vertical.php', array('stats_history_chart' => $stats_history['majority'], 'type' => 'pct', 'terms' => TRUE, 'divided_by' => 1, 'grid' => TRUE, 'organeRef' => $groupe['uid'], 'tooltip' => TRUE)) ?>
+                </div>
+              </div>
+            <?php endif; ?>
+            <div class="card card-stats mt-4">
+              <div class="card-body pb-0">
+                <div class="mb-3 mt-1" style="border-top: 7px solid #00b794; width: 60px"></div>
+                <h3>Évolution de la proximité avec la majorité sur la dernière législature</h3>
+                <p><?= $legislature['edito'] ?></p>
+                <?php $this->load->view('groupes/partials/stats_chartJS.php', array('stats_history_chart' => $stats_monthly['majority'], 'type' => 'graphMajority', 'max' => 100)) ?>
+              </div>
+            </div>
+          <?php endif; ?>
         </div>
       <?php endif; ?>
       <div class="mt-5">
         <h2 class="anchor mb-3" id="proximite">Proximité avec chaque groupe politique</h2>
-        <p>Le groupe <i><?= name_group($title) ?></i> <?= $active ? 'vote' : 'votait' ?>-t-il souvent avec les autres groupes politiques qui <?= $active ? 'compose' : 'composait' ?> l'Assemblée nationale ? Deux groupes sont considérés proches s'ils ont les mêmes positions lorsqu'ils votent en séance publique.</p>
-        <p>
-          <?= $active ? 'Depuis le début de' : 'Pendant la' ?> <?= $groupe['legislature'] ?>ème législature, le groupe <i><?= name_group($title) ?></i> est le plus proche du groupe <i><?= name_group($accord_groupes_first['libelle']) ?></i>.
-          Ces deux groupes ont eu la même position dans <span class="font-weight-bold text-primary"><?= $accord_groupes_first['score'] ?>%</span> des cas.</p>
-        <div class="card card-stats mt-4">
-          <div class="card-body pb-3">
-            <div class="mb-3 mt-1" style="border-top: 7px solid #00b794; width: 60px"></div>
-            <h3>Historique de la proximité avec chaque groupe</h3>
-            <p><?= $legislature['edito'] ?></p>
-            <p class="small">Ce graphique donne un historique de la proximité entre le groupe <i><?= name_group($groupe['libelle']) ?></i> et les autres groupes de l'Assemblée. Cliquez sur les différents groupes pour faire apparaître les données de proximité.</p>
-            <?php $this->load->view('groupes/partials/stats_chartJS_multiline_proximity.php') ?>
+        <?php if (!$accord_groupes_featured): ?>
+          <div class="alert alert-warning">
+            Nous n'avons pas encore récolté assez de données pour calculer cette statistique.
           </div>
-        </div>
+        <?php else: ?>
+          <p>Le groupe <i><?= name_group($title) ?></i> <?= $active ? 'vote' : 'votait' ?>-t-il souvent avec les autres groupes politiques qui <?= $active ? 'compose' : 'composait' ?> l'Assemblée nationale ? Deux groupes sont considérés proches s'ils ont les mêmes positions lorsqu'ils votent en séance publique.</p>
+          <p>
+            <?= $active ? 'Depuis le début de' : 'Pendant la' ?> <?= $groupe['legislature'] ?>ème législature, le groupe <i><?= name_group($title) ?></i> est le plus proche du groupe <i><?= name_group($accord_groupes_first['libelle']) ?></i>.
+            Ces deux groupes ont eu la même position dans <span class="font-weight-bold text-primary"><?= $accord_groupes_first['score'] ?>%</span> des cas.
+          </p>
+          <div class="card card-stats mt-4">
+            <div class="card-body pb-3">
+              <div class="mb-3 mt-1" style="border-top: 7px solid #00b794; width: 60px"></div>
+              <h3>Historique de la proximité avec chaque groupe</h3>
+              <p><?= $legislature['edito'] ?></p>
+              <p class="small">Ce graphique donne un historique de la proximité entre le groupe <i><?= name_group($groupe['libelle']) ?></i> et les autres groupes de l'Assemblée. Cliquez sur les différents groupes pour faire apparaître les données de proximité.</p>
+              <?php $this->load->view('groupes/partials/stats_chartJS_multiline_proximity.php') ?>
+            </div>
+          </div>
+        <?php endif; ?>
       </div>
       <div class="mt-5">
         <h2 class="anchor mb-3" id="effectifs">Les effectifs du groupe <?= $groupe['libelleAbrev'] ?></h2>
@@ -159,7 +183,7 @@
               </div>
             </div>
           <?php endif; ?>
-        <?php endif; ?>        
+        <?php endif; ?>
         <div class="card card-stats mt-4">
           <div class="card-body pb-2">
             <div class="mb-3 mt-1" style="border-top: 7px solid #00b794; width: 60px"></div>
