@@ -418,33 +418,31 @@
       $this->db->join('organes o', 'o.uid = cg.organeRef', 'left');
       $this->db->order_by('cg.legislature ASC, o.dateDebut ASC');
       $results = $this->db->get('class_groups cg')->result_array();
-
       foreach ($results as $key => $value) {
         $return[$value['stat']][] = $value;
       }
-
       return $return;
     }
 
     public function get_stats_monthly($groupe_uid){
-
       $this->db->where('organeRef', $groupe_uid);
       $results = $this->db->get('class_groups_month')->result_array();
 
-      foreach ($results as $key => $value) {
-        if (in_array($value['stat'], array('participation', 'majority'))) {
-          $value['value'] = round($value['value'] * 100);
+      if ($results) {
+        foreach ($results as $key => $value) {
+          if (in_array($value['stat'], array('participation', 'majority'))) {
+            $value['value'] = round($value['value'] * 100);
+          }
+          if (in_array($value['stat'], array('cohesion'))) {
+            $value['value'] = round($value['value'], 2);
+          }
+          $month = months_abbrev(utf8_encode(strftime('%B', strtotime($value['dateValue']))));
+          $year = substr(date('Y', strtotime($value['dateValue'])), 2, 2);
+          $value += [ 'dateValue_edited' => $month . ' ' . $year ];
+          $return[$value['stat']][] = $value;
         }
-        if (in_array($value['stat'], array('cohesion'))) {
-          $value['value'] = round($value['value'], 2);
-        }
-        $month = months_abbrev(utf8_encode(strftime('%B', strtotime($value['dateValue']))));
-        $year = substr(date('Y', strtotime($value['dateValue'])), 2, 2);
-        $value += [ 'dateValue_edited' => $month . ' ' . $year ];
-        $return[$value['stat']][] = $value;
+        return $return;
       }
-
-      return $return;
     }
 
     public function get_orga_stats_history($groups){
@@ -475,34 +473,38 @@
       $this->db->join('organes o', 'o.uid = c.prox_group');
       $results = $this->db->get('class_groups_proximite_month c')->result_array();
 
-      $months = array_column($results, 'dateValue');
-      $months = array_unique($months);
-      sort($months);
+      if ($results) {
+        $months = array_column($results, 'dateValue');
+        $months = array_unique($months);
+        sort($months);
 
-      foreach ($months as $key => $value) {
-        $month = months_abbrev(utf8_encode(strftime('%B', strtotime($value))));
-        $year = substr(date('Y', strtotime($value)), 2, 2);
-        $return['months'][] = $month . ' ' . $year;
-      }
+        foreach ($months as $key => $value) {
+          $month = months_abbrev(utf8_encode(strftime('%B', strtotime($value))));
+          $year = substr(date('Y', strtotime($value)), 2, 2);
+          $return['months'][] = $month . ' ' . $year;
+        }
 
-      foreach ($months as $month) {
-        foreach ($results as $key => $value) {
-          $return['data'][$value['proxGroup']]['groupeId'] = $value['proxGoupId'];
-          $return['data'][$value['proxGroup']]['groupe'] = $value['proxGoupLibelle'];
-          $return['data'][$value['proxGroup']]['color'] = $value['couleurAssociee'];
-          if ($month == $value['dateValue']) {
-            $return['data'][$value['proxGroup']]['set_data'][$month] = array('month' => months_abbrev($month), 'score' => round($value['score'] * 100));
-          } else {
-            if (isset($return['data'][$value['proxGroup']]['set_data'][$month])) {
-              $return['data'][$value['proxGroup']]['set_data'][$month] = $return['data'][$value['proxGroup']]['set_data'][$month];
+        foreach ($months as $month) {
+          foreach ($results as $key => $value) {
+            $return['data'][$value['proxGroup']]['groupeId'] = $value['proxGoupId'];
+            $return['data'][$value['proxGroup']]['groupe'] = $value['proxGoupLibelle'];
+            $return['data'][$value['proxGroup']]['color'] = $value['couleurAssociee'];
+            if ($month == $value['dateValue']) {
+              $return['data'][$value['proxGroup']]['set_data'][$month] = array('month' => months_abbrev($month), 'score' => round($value['score'] * 100));
             } else {
-              $return['data'][$value['proxGroup']]['set_data'][$month] = array('month' => $month, 'score' => null);
+              if (isset($return['data'][$value['proxGroup']]['set_data'][$month])) {
+                $return['data'][$value['proxGroup']]['set_data'][$month] = $return['data'][$value['proxGroup']]['set_data'][$month];
+              } else {
+                $return['data'][$value['proxGroup']]['set_data'][$month] = array('month' => $month, 'score' => null);
+              }
             }
           }
         }
+
+        return $return;
+
       }
 
-      return $return;
     }
 
     public function get_stats_avg($legislature){
