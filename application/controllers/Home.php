@@ -1,4 +1,3 @@
-
 <?php
   class Home extends CI_Controller {
     public function __construct() {
@@ -11,7 +10,7 @@
       $this->load->model('city_model');
       $this->load->model('post_model');
       $this->load->model('elections_model');
-      $this->load->helper('form');
+      //$this->load->helper('form');
       //$this->password_model->security_password(); Former login protection
     }
 
