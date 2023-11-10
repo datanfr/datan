@@ -173,7 +173,7 @@
           <?php endif; ?>
         </div>
         <!-- BLOC POSITIONS CLEFS -->
-        <?php if ($key_votes !== NULL) : ?>
+        <?php if ($key_votes) : ?>
           <div class="bloc-key-votes mt-5">
             <div class="row">
               <div class="col-12">
