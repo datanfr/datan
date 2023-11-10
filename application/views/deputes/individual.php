@@ -97,7 +97,7 @@
             <p><?= $title ?> est <?= mb_strtolower($commission_parlementaire['commissionCodeQualiteGender']) ?> de la <?= $commission_parlementaire['commissionLibelle'] ?>.</p>
           <?php endif; ?>
           <!-- Paragraphe parti politique -->
-          <?php if ($politicalParty['libelle'] != "") : ?>
+          <?php if ($politicalParty && $politicalParty['libelle'] != "") : ?>
             <?php if ($active) : ?>
               <p>
                 <?= $title ?> est rattaché<?= $gender['e'] ?> financièrement au parti politique <a href="<?= base_url() ?>partis-politiques/<?= mb_strtolower($politicalParty['libelleAbrev']) ?>"><?= $politicalParty['libelle'] ?> (<?= $politicalParty['libelleAbrev'] ?>)</a>.
