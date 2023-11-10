@@ -51,15 +51,15 @@
         // PROXIMITY WITH MAJORITY
         if (!in_array($groupe_id, $this->groupes_model->get_all_groupes_majority())) {
           $data['majorite'] = $this->deputes_model->get_stats_majorite($mpId, $legislature);
-          if ($data['majorite']['votesN'] < 5) {
-            $data['no_majorite'] = TRUE;
-          } else {
+          if ($data['majorite'] && $data['majorite']['votesN'] >= 5) {
             $data['no_majorite'] = FALSE;
             // GET ALL DATA FOR PROXIMITY WITH MAJORITY
             $data['majorite']['all'] = $this->deputes_model->get_stats_majorite_all($legislature); // DOUBLE CHECK --> ONLY THOSE NOT FROM THE GROUP OF THE MAJORITY
             $data['edito_majorite']['all'] = $this->depute_edito->majorite($data['majorite']['score'], $data['majorite']['all']); // edited for ALL
             $data['majorite']['group'] = $this->deputes_model->get_stats_majorite_group($legislature, $groupe_id);
             $data['edito_majorite']['group'] = $this->depute_edito->majorite($data['majorite']['score'], $data['majorite']['group']); //edited for GROUP
+          } else {
+            $data['no_majorite'] = TRUE;
           }
         }
 
