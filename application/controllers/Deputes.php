@@ -304,7 +304,7 @@
           "Annulation de l'élection sur décision du Conseil constitutionnel",
           "Démission d'office sur décision du Conseil constitutionnel"
         );
-        if (!in_array($data['election_canceled']['causeFin'], $canceled)) {
+        if (!empty($data['election_canceled']) && !in_array($data['election_canceled']['causeFin'], $canceled)) {
           $data['election_canceled']['cause'] = NULL;
           $data['election_result'] = $this->deputes_model->get_election_result($data['depute']['departementCode'], $data['depute']['circo'], $nameLast, 2022); // electoral result
           if ($data['election_result']) { // Get electoral infos & mandat not canceled
