@@ -6,8 +6,7 @@
       <?php if ($voteFeature['participation'] == 1): ?>
         <p><?= $title ?> <span>a voté <?= $voteFeature['vote'] ?></span> la motion de censure transpartisane.</p>
       <?php else: ?>
-        <p>Pour le vote sur la motion de censure transpartisane, <span><?= $title ?> était absent<?= $gender['e'] ?></span>.</p>
-        <p>Pour être adoptée, une motion de censure doit recueillir la majorité absolue des députés. On considère donc que les députés qui ne votent pas ou qui s'abstiennent soutiennent le gouvernement.</p>
+        <p>Le député <span><?= $title ?> n'a pas participé au vote</span> de la motion de censure transpartisane. Parce qu'il n'est pas possible de voter contre une motion, s'abstenir équivaut à un soutien au gouvernement.</p>
       <?php endif; ?>
       <p>Cette motion, déposée par le groupe LIOT et soutenue par la NUPES, fait suite à l'utilisation par le gouvernement de l'article 49-3, qui a fait adopter la réforme des retraites sans vote.</p>
       <p>Les députés ont voté sur cette motion de censure le lundi 21 mars. Au total, 278 députés ont voté pour. La censure du gouvernement a donc échoué à 9 voix près.</p>
