@@ -2011,10 +2011,16 @@ ul.ui-menu{
         color: $adopted;
       }
     }
-    &.contre, &.absent, &.abstention{
+    &.contre{
       border: 2px solid $rejected;
       span{
         color: $rejected;
+      }
+    }
+    &.abstention{
+      border: 2px solid $abstention;
+      span{
+        color: $abstention;
       }
     }
     h2{
