@@ -412,7 +412,7 @@
       }
 
       // Get featured vote (motion de centure)
-      $data['voteFeature'] = $this->votes_model->get_individual_vote_depute_participation($mpId, 16, 1240);
+      $data['voteFeature'] = $this->votes_model->get_individual_vote_depute_participation($mpId, 16, 3203); // Motion de rejet projet de loi immigration
 
       // Get last explication
       $data['explication'] = $this->deputes_model->get_last_explication($mpId, $legislature);
