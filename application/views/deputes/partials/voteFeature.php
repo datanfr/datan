@@ -1,16 +1,17 @@
 <!-- Election Feature -->
-<?php if ($voteFeature): ?>
+<?php if ($voteFeature['participation'] == 1): ?>
   <div class="card card-vote-feature mt-5 py-2 <?= $voteFeature['vote'] ?>">
     <div class="card-body py-4">
-      <h2 class="mb-4">🗳️ Vote sur la motion de censure transpartisane</h2>
-      <?php if ($voteFeature['participation'] == 1): ?>
-        <p><?= $title ?> <span>a voté <?= $voteFeature['vote'] ?></span> la motion de censure transpartisane.</p>
-      <?php else: ?>
-        <p>Le député <span><?= $title ?> n'a pas participé au vote</span> de la motion de censure transpartisane. Parce qu'il n'est pas possible de voter contre une motion, s'abstenir équivaut à un soutien au gouvernement.</p>
+      <h2 class="mb-4">🗳️ Vote sur la motion de rejet du projet de loi immigration</h2>
+      <?php if ($voteFeature['vote'] == "pour"): ?>
+        <p><?= $title ?> <span>a voté pour</span> la motion de rejet au projet de loi immigration.</p>
+      <?php elseif($voteFeature['vote'] == "contre"): ?>
+        <p><?= $title ?> <span>a voté contre</span> la motion de rejet au projet de loi immigration.</p>
+      <?php elseif($voteFeature['vote'] == "abstention"): ?>
+        <p><?= $title ?> <span>s'est abstenu<?= $gender['e'] ?></span> la motion de rejet au projet de loi immigration.</p>
       <?php endif; ?>
-      <p>Cette motion, déposée par le groupe LIOT et soutenue par la NUPES, fait suite à l'utilisation par le gouvernement de l'article 49-3, qui a fait adopter la réforme des retraites sans vote.</p>
-      <p>Les députés ont voté sur cette motion de censure le lundi 21 mars. Au total, 278 députés ont voté pour. La censure du gouvernement a donc échoué à 9 voix près.</p>
-      <p>Pour rappel, si une motion de censure est adoptée, le Premier ministre doit remettre la démission de son gouvernement.</p>
+      <p>Cette motion de rejet a été adoptée le 11 décembre 2023. Elle a entraîné le rejet du projet de loi sur l'immigration. Le gouvernement a annoncé renvoyer le texte en commission mixte paritaire (CMP), où députés et sénateurs doivent désormais trouver un compromis.</p>
+      <p>La motion de rejet a été adoptée par 270 voix contre 265.</p>
       <a class="mt-2 btn btn-light" href="<?= base_url() ?>votes/legislature-<?= $voteFeature['legislature'] ?>/vote_<?= $voteFeature['voteNumero'] ?>">Découvrir le détail du vote</a>
     </div>
   </div>
