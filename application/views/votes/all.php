@@ -50,26 +50,21 @@
           </div>
           <?php foreach ($by_field as $field): ?>
             <div class="row my-5">
-              <div class="col-2 col-md-1 logo-field d-flex justify-content-center align-items-center my-3 my-lg-0">
-                <?php if ($field["logo"]): ?>
-                  <div class="logo">
-                    <img src="<?= asset_url().'imgs/fields/'.$field['slug'].'.svg' ?>" alt="<?= $field['slug'] ?>" width="792" height="612">
-                  </div>
-                <?php endif; ?>
+              <div class="col-12 col-lg-3 d-flex justify-content-center align-items-center">
+                <h3 class="mb-0 text-center">
+                  <a href="<?= base_url() ?>votes/decryptes/<?= $field['slug'] ?>" class="underline no-decoration"><?= $field['name'] ?></a>
+                </h3>
               </div>
-              <div class="col-10 col-md-11 col-lg-2 d-flex justify-content-start align-items-end align-items-lg-center my-3 my-lg-0">
-                <h3 class="ml-4 ml-lg-0 mb-0"><?= $field['name'] ?></h3>
-              </div>
-              <div class="col-lg-7 col-md-11 offset-md-1 offset-lg-0">
+              <div class="col-lg-7 col-md-12">
                 <div class="row">
                   <?php foreach ($field['votes'] as $vote): ?>
-                    <div class="col-12 col-lg-6 d-flex justify-content-center my-3 my-lg-0">
+                    <div class="col-12 col-md-6 d-flex justify-content-center my-3 my-lg-0">
                       <?php $this->load->view('votes/partials/card_vote.php', array('vote' => $vote)) ?>
                     </div>
                   <?php endforeach; ?>
                 </div>
               </div>
-              <div class="col-md-11 col-lg-2 offset-md-1 offset-lg-0 d-flex justify-content-center align-items-center my-3 my-lg-0">
+              <div class="col-12 col-lg-2 d-flex justify-content-center align-items-center my-3 my-lg-0">
                 <a class="btn see-all-votes py-1" href="<?= base_url() ?>votes/decryptes/<?= $field['slug'] ?>">
                   <span>VOIR TOUS</span>
                 </a>
