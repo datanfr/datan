@@ -123,8 +123,8 @@ class Newsletter extends CI_Controller
           if ($response->success()) {
             $responseLists = $response->getData();
             var_dump($responseLists);
-            die();
             foreach ($responseLists as $responseList) {
+              echo $responseList;
               if (($responseList['ListID'] == $list['mailjet']) && ($responseList['IsUnsub'])) {
                 $this->newsletter_model->update_list($contact['email'], NULL, $list['sql']);
               }
