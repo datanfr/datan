@@ -99,6 +99,12 @@ class Newsletter extends CI_Controller
     }
 
     public function update(){
+
+      // Check if CLI
+      if ((!is_cli() && !$this->password_model->is_admin())) { // ||
+        die("Only command line access"); // Comment for testing with URL newsletter/update
+      }
+
       $lists = array(
         array(
           "sql" => "general",
