@@ -119,9 +119,9 @@ class Newsletter extends CI_Controller
       foreach ($lists as $list) {
         $contactsSql = $this->newsletter_model->get_all_by_list($list['sql']);
         foreach ($contactsSql as $contact) {
-          var_dump($contact);
-          die();
           $response = getContactLists($contact['email']);
+          var_dump($response);
+          die();
           if ($response->success()) {
             $responseLists = $response->getData();
             foreach ($responseLists as $responseList) {
