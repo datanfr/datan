@@ -120,10 +120,10 @@ class Newsletter extends CI_Controller
         $contactsSql = $this->newsletter_model->get_all_by_list($list['sql']);
         foreach ($contactsSql as $contact) {
           $response = getContactLists($contact['email']);
-          var_dump($response);
-          die();
           if ($response->success()) {
             $responseLists = $response->getData();
+            var_dump($responseLists);
+            die();
             foreach ($responseLists as $responseList) {
               if (($responseList['ListID'] == $list['mailjet']) && ($responseList['IsUnsub'])) {
                 $this->newsletter_model->update_list($contact['email'], NULL, $list['sql']);
