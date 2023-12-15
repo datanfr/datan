@@ -732,7 +732,7 @@ class Script
         $i = 1;
         $deputes = [];
         $depute = [];
-        $deputeFields = array('mpId', 'legislature', 'nameUrl', 'civ', 'nameFirst', 'nameLast', 'age', 'job', 'catSocPro', 'famSocPro',  'dptSlug', 'departementNom', 'departementCode', 'circo', 'mandatId', 'libelle', 'libelleAbrev', 'groupeId', 'groupeMandat', 'couleurAssociee', 'datePriseFonction', 'dateFin', 'causeFin', 'img', 'imgOgp', 'dateMaj');
+        $deputeFields = array('mpId', 'legislature', 'nameUrl', 'civ', 'nameFirst', 'nameLast', 'age', 'job', 'catSocPro', 'famSocPro',  'dptSlug', 'departementNom', 'departementCode', 'circo', 'mandatId', 'libelle', 'libelleAbrev', 'groupeId', 'groupeMandat', 'couleurAssociee', 'datePriseFonction', 'dateFin', 'causeFin', 'img', 'dateMaj');
         while ($data = $query->fetch()) {
             $mpId = $data['mpId'];
             $legislature = $data['legislature'];
@@ -745,7 +745,6 @@ class Script
             $catSocPro = $data['catSocPro'];
             $famSocPro = $data['famSocPro'];
             $img = file_exists(__DIR__ . "/../assets/imgs/deputes_nobg_webp/depute_" . substr($mpId, 2) . "_webp.webp") ? 1 : 0;
-            $imgOgp = file_exists(__DIR__ . "/../assets/imgs/deputes_ogp/ogp_deputes_" . $mpId . ".png") ? 1 : 0;
 
             // Get the mandat_principal
             $mandatPrincipal = $this->bdd->query('
@@ -822,7 +821,6 @@ class Script
               'dateFin' => $dateFin,
               'causeFin' => $causeFin,
               'img' => $img,
-              'imgOgp' => $imgOgp,
               'dateMaj' => $this->dateMaj);
             $deputes = array_merge($deputes, array_values($depute));
             if ($i % 1000 === 0) {
