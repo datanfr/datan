@@ -5,18 +5,16 @@
     }
 
     public function get_ranking_age(){
-      $sql = 'SELECT @s:=@s+1 AS "rank", A.*
-        FROM (
-          SELECT da.civ, da.nameFirst, da.nameLast, da.nameUrl, da.legislature, da.img, da.libelle AS libelle, da.libelleAbrev AS libelleAbrev, da.mpId, da.dptSlug, da.age, da.couleurAssociee,
+      $sql = 'SELECT da.civ, da.nameFirst, da.nameLast, da.nameUrl, da.legislature, da.img, da.libelle AS libelle, da.libelleAbrev AS libelleAbrev, da.mpId, da.dptSlug, da.age, da.couleurAssociee,
           CONCAT(da.departementNom, " (", da.departementCode, ")") AS cardCenter
           FROM deputes_all da
           LEFT JOIN deputes d ON da.mpId = d.mpId
           WHERE da.legislature = ? AND da.dateFin IS NULL
-          ORDER BY DATEDIFF(curdate(), d.birthDate) DESC
-        ) A,
-        (SELECT @s:= 0) AS s
-      ';
-      return $this->db->query($sql, legislature_current())->result_array();
+          ORDER BY DATEDIFF(curdate(), d.birthDate) DESC';
+
+      $result = $this->db->query($sql, legislature_current())->result_array();
+      $result = array_map(function($v) use (&$i) { $v['rank'] = ++$i; return $v; }, $result);
+      return $result;
     }
 
     public function get_age_mean($legislature){
