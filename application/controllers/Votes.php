@@ -14,6 +14,7 @@
 
     // Page = datan.fr/votes
     public function index(){
+      echo "yes";
       // FUNCTION
       function number_zero($x){
         if ($x < 10) {
@@ -39,11 +40,6 @@
         $x[$field["slug"]]["votes"] = array_slice($this->votes_model->get_votes_datan_category($field['id']), 0, 2);
         $x[$field["slug"]]["name"] = $field["name"];
         $x[$field["slug"]]["slug"] = $field["slug"];
-        if ($this->functions_datan->get_http_response_code(base_url().'/assets/imgs/fields/'.$field["slug"].'.svg') != "200"){
-          $x[$field["slug"]]["logo"] = FALSE;
-        } else {
-          $x[$field["slug"]]["logo"] = TRUE;
-        }
       }
       $data['by_field'] = $x;
 
