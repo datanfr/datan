@@ -309,6 +309,9 @@
           <a href="https://www.liberation.fr/politique/aurelien-pradie-un-depute-et-conseiller-regional-tres-absent-20221202_M35E54RK2FFEFCGZGR5N6FRYII/" target="_blank" rel="noopener">
             <img class="mx-2 my-3 img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="150" height="55" data-src="<?= asset_url() ?>imgs/media/liberation.png" alt="Libération">
           </a>
+          <span class="url_obf" url_obf="<?= url_obfuscation("https://www.lexpress.fr/politique/lr/loi-immigration-chez-lr-la-chimere-de-lunite-IZEX7VWBL5BO5NIB5OHAGJOSTU/") ?>">
+            <img class="mx-2 my-3 img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="109" height="35" data-src="<?= asset_url() ?>imgs/media/lexpress.png" alt="L'Express">
+          </span>
           <span class="url_obf" url_obf="<?= url_obfuscation("https://www.franceculture.fr/emissions/les-enjeux-des-reseaux-sociaux/la-lutte-contre-l-abstention-passe-par-les-reseaux") ?>">
             <img class="mx-2 my-3 img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="70" height="70" data-src="<?= asset_url() ?>imgs/media/france_culture.png" alt="France Culture">
           </span>
