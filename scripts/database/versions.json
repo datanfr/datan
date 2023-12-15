@@ -18,5 +18,9 @@
   {
     "version": 5,
     "object": "Add new field in 'amendements' table (adopted_by)"
+  },
+  {
+    "version": 6,
+    "object": "Remove imgOgp"
   }
 ]
