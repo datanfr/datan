@@ -14,7 +14,6 @@
 
     // Page = datan.fr/votes
     public function index(){
-      echo "yes";
       // FUNCTION
       function number_zero($x){
         if ($x < 10) {
