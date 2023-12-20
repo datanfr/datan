@@ -1431,6 +1431,11 @@ class Script
                             $organeRef = $groupe->xpath("./*[local-name()='organeRef']");
                             $item['organeRef'] = $organeRef[0];
 
+                            // bug with new socialist group
+                            if ($item['organeRef'] == 'PO800496' & $item['dateScrutin'] >= '2023-10-19' ) {
+                              $item['organeRef'] = 'PO830170';
+                            }
+
                             $nombreMembresGroupe = $groupe->xpath("./*[local-name()='nombreMembresGroupe']");
                             $item['nombreMembresGroupe'] = $nombreMembresGroupe[0];
 
