@@ -533,7 +533,7 @@
       if ($explication) {
         $data['description_meta'] = "Découvrez l'explication de vote de " . $data['explication']['nameFirst'] . " " . $data['explication']['nameLast'] . ".";
       } else {
-        $data['description_meta'] = "Découvrez le vote n° ".$data['vote']['voteNumero']." : ".ucfirst($data['vote']['title_meta'])." - ".$legislature."e législature. Détails et analyses des résultats du vote.";
+        $data['description_meta'] = "Découvrez le vote des députés sur le scrutin : ".ucfirst($data['vote']['title_meta'])." - ".$legislature."e législature. Détail et analyse des résultats du vote n° " . $data['vote']['voteNumero'] . ".";
       }
       $data['title'] = $data['vote']['titre'];
       // Breadcrumb
