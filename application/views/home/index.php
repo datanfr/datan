@@ -315,6 +315,9 @@
           <span class="url_obf" url_obf="<?= url_obfuscation("https://www.franceculture.fr/emissions/les-enjeux-des-reseaux-sociaux/la-lutte-contre-l-abstention-passe-par-les-reseaux") ?>">
             <img class="mx-2 my-3 img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="70" height="70" data-src="<?= asset_url() ?>imgs/media/france_culture.png" alt="France Culture">
           </span>
+          <span class="url_obf" url_obf="<?= url_obfuscation("https://www.lesechos.fr/politique-societe/politique/le-rn-veut-engranger-sur-sa-premiere-annee-a-lassemblee-nationale-1954103") ?>">
+            <img class="mx-2 my-3 img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="119" height="28" data-src="<?= asset_url() ?>imgs/media/les_echos.png" alt="Les Echos">
+          </span>
           <span class="url_obf" url_obf="<?= url_obfuscation("https://www.ouest-france.fr/elections/legislatives/lannion-paimpol-quel-bilan-pour-le-depute-eric-bothorel-0f349264-e100-11ec-8469-165462e4a30b") ?>">
             <img class="mx-2 my-3 img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="120" height="38" data-src="<?= asset_url() ?>imgs/media/ouest_france.png" alt="Ouest France">
           </span>
@@ -353,6 +356,9 @@
           </a>
           <a href="https://tnova.fr/democratie/politique-institutions/eric-ciotti-dans-ses-oeuvres/" target="_blank" rel="noopener">
             <img class="mx-2 my-3 img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="119" height="71" data-src="<?= asset_url() ?>imgs/media/terra-nova.png" alt="Terra Nova">
+          </a>
+          <a href="https://www.lagrandeconversation.com/politique/les-republicains-a-lassemblee-nationale-entre-le-marteau-et-lenclume/" target="_blank" rel="noopener">
+            <img class="mx-2 my-3 img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="105" height="48" data-src="<?= asset_url() ?>imgs/media/grande_conversation.png" alt="La Grande conversation">
           </a>
           <span class="url_obf" url_obf="<?= url_obfuscation("https://abonne.lunion.fr/id371931/article/2022-05-16/legislatives-le-bilan-de-la-deputee-valerie-beauvais-la-loupe") ?>">
             <img class="mx-2 my-3 img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="119" height="33" data-src="<?= asset_url() ?>imgs/media/lunion.png" alt="L'Union">
