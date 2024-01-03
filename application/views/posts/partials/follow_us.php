@@ -17,13 +17,3 @@
         </li>
     </ul>
 </div>
-
-<div class="card card-right-posts mt-3">
-    <div class="card-header">
-        Derniers tweets
-    </div>
-    <div class="card-body m-0 p-0">
-        <a class="twitter-timeline" data-lang="fr" data-theme="light" data-tweet-limit="2" data-chrome="nofooter noborders noheader transparent" href="https://twitter.com/datanFR?ref_src=twsrc%5Etfw">Tweets by datanFR</a>
-        <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
-    </div>
-</div>
