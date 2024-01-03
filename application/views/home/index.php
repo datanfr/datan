@@ -315,6 +315,9 @@
           <span class="url_obf" url_obf="<?= url_obfuscation("https://www.franceculture.fr/emissions/les-enjeux-des-reseaux-sociaux/la-lutte-contre-l-abstention-passe-par-les-reseaux") ?>">
             <img class="mx-2 my-3 img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="70" height="70" data-src="<?= asset_url() ?>imgs/media/france_culture.png" alt="France Culture">
           </span>
+          <span class="url_obf" url_obf="<?= url_obfuscation("https://www.lesechos.fr/politique-societe/politique/le-rn-veut-engranger-sur-sa-premiere-annee-a-lassemblee-nationale-1954103") ?>">
+            <img class="mx-2 my-3 img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="119" height="28" data-src="<?= asset_url() ?>imgs/media/les_echos.png" alt="Les Echos">
+          </span>
           <span class="url_obf" url_obf="<?= url_obfuscation("https://www.ouest-france.fr/elections/legislatives/lannion-paimpol-quel-bilan-pour-le-depute-eric-bothorel-0f349264-e100-11ec-8469-165462e4a30b") ?>">
             <img class="mx-2 my-3 img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="120" height="38" data-src="<?= asset_url() ?>imgs/media/ouest_france.png" alt="Ouest France">
           </span>
