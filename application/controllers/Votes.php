@@ -563,7 +563,7 @@
       $data['ogp'] = $this->meta_model->get_ogp($controller, $title_ogp, $data['description_meta'], $data['url'], $data);
       // Microdata Person
       if ($voteDatan) {
-        $data['vote_schema'] = $this->votes_model->get_vote_schema($data['vote'], $data['ogp']['img']);
+        $data['schema_article'] = $this->votes_model->get_vote_schema($data['vote'], $data['ogp']['img']);
       }
       // CSS
       $data['css_to_load']= array(
