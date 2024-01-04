@@ -137,5 +137,24 @@
 
       return $array;
     }
+
+    public function get_schema_article($post){
+      $schema = [
+        "@context" => "http://schema.org",
+        "@type" => "NewsArticle",
+        "headline" => $post["title"],
+        "image" => asset_url() . "imgs/posts/img_post_" . $post['id'] . ".png",
+      ];
+
+      if ($post['created_at']) {
+        $schema['datePublished'] = $post['created_at'];
+      }
+
+      if ($post['modified_at']) {
+        $schema['dateModified'] = $post['modified_at'];
+      }
+
+      return $schema;
+    }
   }
 ?>
