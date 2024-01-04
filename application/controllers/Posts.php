@@ -131,6 +131,9 @@
       //Open Graph
       $controller = $this->router->fetch_class()."/".$this->router->fetch_method();
       $data['ogp'] = $this->meta_model->get_ogp($controller, $data['title_meta'], $data['description_meta'], $data['url'], $data);
+      // Microdata article
+      $data['schema_article'] = $this->meta_model->get_schema_article($data['post']);
+
       // JS
       //$data['js_to_load']= array("datan/sort_mps");
       // Load views

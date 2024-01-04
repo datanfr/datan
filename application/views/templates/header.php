@@ -61,9 +61,9 @@
       "email" : "info@datan.fr"
     }
     </script>
-    <?php if (isset($vote_schema)): ?>
+    <?php if (isset($schema_article)): ?>
       <script type="application/ld+json">
-        <?= json_encode($vote_schema, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT |  JSON_UNESCAPED_UNICODE); ?>
+        <?= json_encode($schema_article, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT |  JSON_UNESCAPED_UNICODE); ?>
       </script>
     <?php endif; ?>
 
