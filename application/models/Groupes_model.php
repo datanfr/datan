@@ -349,7 +349,7 @@
 
         case 'RN':
           $groupe['twitter'] = 'groupeRN_off';
-          $groupe['facebook'] = 'RassemblementNational';
+          $groupe['facebook'] = 'deputesRN';
           break;
 
         case 'HOR':
