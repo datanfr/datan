@@ -345,6 +345,9 @@
           <a href="https://www.latribune.fr/opinions/tribunes/apres-trois-votes-de-confiance-la-majorite-presidentielle-s-erode-t-elle-a-l-assemblee-nationale-853748.html" target="_blank" rel="noopener">
             <img class="mx-2 my-3 img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="100" height="45" data-src="<?= asset_url() ?>imgs/media/la_tribune.png" alt="La Tribune">
           </a>
+          <span class="url_obf" url_obf="<?= url_obfuscation("https://www.contexte.com/article/pouvoirs/a-lassemblee-nationale-le-rn-prefere-la-cravate-au-cambouis_172092.html") ?>">
+            <img class="mx-2 my-3 img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="118" height="30" data-src="<?= asset_url() ?>imgs/media/contexte.png" alt="Contexte">
+          </span>
           <a href="https://www.letelegramme.fr/finistere/morlaix/legislatives-a-morlaix-quel-est-le-bilan-de-sandrine-le-feur-08-06-2022-13061024.php" target="_blank" rel="noopener">
             <img class="mx-2 my-3 img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="135" height="19" data-src="<?= asset_url() ?>imgs/media/telegramme.png" alt="Le Télégramme">
           </a>
@@ -362,6 +365,9 @@
           </a>
           <span class="url_obf" url_obf="<?= url_obfuscation("https://abonne.lunion.fr/id371931/article/2022-05-16/legislatives-le-bilan-de-la-deputee-valerie-beauvais-la-loupe") ?>">
             <img class="mx-2 my-3 img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="119" height="33" data-src="<?= asset_url() ?>imgs/media/lunion.png" alt="L'Union">
+          </span>
+          <span class="url_obf" url_obf="<?= url_obfuscation("https://www.varmatin.com/politique/boccaletti-ou-chenevard-quel-depute-du-var-vote-vraiment-le-plus-et-le-moins-895830") ?>">
+            <img class="mx-2 my-3 img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="165" height="30" data-src="<?= asset_url() ?>imgs/media/var_matin.png" alt="Var Matin">
           </span>
           <a href="https://www.lepopulaire.fr/limoges-87000/actualites/desenclavement-emploi-gilets-jaunes-montee-du-rn-quel-bilan-pour-les-deputes-lrem-de-haute-vienne_14127678/" target="_blank" rel="noopener">
             <img class="mx-2 my-3 img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="120" height="36" data-src="<?= asset_url() ?>imgs/media/populaire-centre.png" alt="Le Populaire du Centre">
