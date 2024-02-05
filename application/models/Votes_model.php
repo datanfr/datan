@@ -140,6 +140,7 @@
       $sql = 'SELECT DISTINCT(YEAR(dateScrutin)) AS years, (MONTH(dateScrutin)) AS months
         FROM votes_info
         WHERE legislature = ?
+        ORDER BY YEAR(dateScrutin) ASC, MONTH(dateScrutin) ASC
       ';
       $query = $this->db->query($sql, $legislature);
 
