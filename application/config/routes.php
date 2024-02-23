@@ -192,6 +192,8 @@ $route['admin/logs'] = 'logViewerController/index';
 $route['admin/logs-scripts/(:any)'] = 'logs/index/$1';
 // EXPORT
 $route['export/set_session/(:any)'] = 'export/set_session/$1';
+// SEARCH
+$route['search'] = 'search/index';
 // PAGES
 $route['(:any)'] = 'pages/view/$1';
 $route['translate_uri_dashes'] = FALSE;
