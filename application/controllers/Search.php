@@ -20,21 +20,14 @@ class Search extends CI_Controller
         $results = [];
         $search = $this->input->get('q');
 
-        $votes = $this->search_model->searchInVotes($search);
+        $votes = $this->search_model->searchInAll($search);
         foreach($votes as $vote){
             $results[] = [
                 'text' => $vote['title'],
-                'description' => '...' . strip_tags($vote['description']) . '...',
-                'url' => 'votes/legislature-' . $vote['legislature'] .'/vote_'. $vote['voteNumero']
-            ];
-        }
-
-        $deputes = $this->search_model->searchInDeputes($search);
-        foreach($deputes as $depute){
-            $results[] = [
-                'text' => $depute['nameFirst'] . ' ' . $depute['nameLast'],
-                'description' => $depute['libelle'],
-                'url' => 'deputes/' . $depute['dptSlug'] .'/'. $depute['nameUrl']
+                'description' => $vote['description'],
+                'url' => $vote['url'],
+                'source' => $vote['source'],
+                'date' => $vote['date_modified']
             ];
         }
         // Return
