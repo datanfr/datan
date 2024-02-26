@@ -24,7 +24,12 @@ class Script
         $this->time_pre = microtime(true);
         try {
             $this->bdd = new PDO(
-                'mysql:host=' . $_SERVER['DATABASE_HOST'] . ';dbname=' . $_SERVER['DATABASE_NAME'], $_SERVER['DATABASE_USERNAME'], $_SERVER['DATABASE_PASSWORD'],
+                // 'mysql:host=' . getenv('DATABASE_HOST') . ';dbname=' . getenv('DATABASE_NAME'),
+                // getenv('DATABASE_USER'),
+                // getenv('DATABASE_PASSWORD'),
+                'mysql:host=' . 'db' . ';dbname=' . 'datan',
+                'datan',
+                'datan',
                 array(
                     PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION, PDO::ATTR_PERSISTENT => true, PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8",
                 )
@@ -3672,9 +3677,9 @@ if (isset($argv[1])) {
 $script->fillDeputes();
 $script->deputeAll();
 $script->deputeLast();
-$script->downloadPictures();
-$script->webpPictures();
-$script->resmushPictures();
+// $script->downloadPictures();
+// $script->webpPictures();
+// $script->resmushPictures();
 $script->groupeEffectif();
 $script->deputeJson();
 $script->groupeStats();
