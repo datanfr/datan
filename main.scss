@@ -1640,8 +1640,8 @@ body{
       td{
         padding-left: 0.75rem;
         padding-right: 0.75rem;
-        padding-top: 0.4rem;
-        padding-bottom: 0.4rem;
+        padding-top: 0.2rem;
+        padding-top: 0.2rem;
       }
       .square{
         height: 12px;
@@ -1778,6 +1778,22 @@ ul.ui-menu{
     }
   }
 }
+
+.hemycicle{
+  .pct{
+    position: absolute;
+    left: 50%;
+    bottom: 20%;
+    transform: translate(-50%, 0);
+    span{
+      margin-bottom: 0;
+      font-size: $h1-font-size;
+      font-weight: 800;
+      color: $bleu;
+    }
+  }
+}
+
 /*
 ################
                PAGE : DEPARTEMENT (pg-departement)

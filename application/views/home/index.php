@@ -419,14 +419,19 @@
         </div>
         <div class="row pt-3">
           <div class="col-12">
-            <p class="text-center">Découvrez le nombre de députés par groupe parlementaire.</p>
+            <p class="text-center mb-0">Découvrez le nombre de députés par groupe politique.</p>
           </div>
         </div>
-        <div class="row mt-5 mb-5">
-          <div class="col-lg-7 d-flex justify-content-center align-items-center">
-            <canvas id="chartHemycicle"></canvas>
+        <div class="row mt-4 mb-5">
+          <div class="col-lg-7 d-flex flex-column justify-content-center">
+            <div class="hemycicle">
+              <canvas id="chartHemycicle"></canvas>
+              <div class="pct">
+                <span>577 députés</span>
+              </div>
+            </div>
           </div>
-          <div class="col-lg-5 d-flex justify-content-center mt-5 mt-lg-0">
+          <div class="col-lg-5 d-flex flex-column justify-content-center">
             <table class="tableGroupes">
               <tbody>
                 <?php foreach ($groupes as $groupe): ?>
@@ -555,11 +560,16 @@ document.addEventListener('DOMContentLoaded', function(){
   // And for a doughnut chart
   var chartOptions = {
     responsive: true,
-    maintainAspectRatio: true,
+    maintainAspectRatio: false,
     circumference: 180,
     rotation: 270,
     layout:{
-      padding: 15
+      padding: {
+        top: 0,
+        bottom: 0,
+        left: 15,
+        right: 15
+      }
     },
     plugins: {
       datalabels: {
