@@ -419,14 +419,19 @@
         </div>
         <div class="row pt-3">
           <div class="col-12">
-            <p class="text-center">Découvrez le nombre de députés par groupe parlementaire.</p>
+            <p class="text-center mb-0">Découvrez le nombre de députés par groupe politique.</p>
           </div>
         </div>
         <div class="row mt-5 mb-5">
-          <div class="col-lg-7 d-flex justify-content-center align-items-center">
-            <canvas id="chartHemycicle"></canvas>
+          <div class="col-lg-7 d-flex flex-column justify-content-center">
+            <div class="hemicycle">
+              <canvas id="chartHemicycle"></canvas>
+              <div class="n-hemicycle">
+                <span>577 députés</span>
+              </div>
+            </div>
           </div>
-          <div class="col-lg-5 d-flex justify-content-center mt-5 mt-lg-0">
+          <div class="col-lg-5 d-flex flex-column justify-content-center mt-4 mt-lg-0">
             <table class="tableGroupes">
               <tbody>
                 <?php foreach ($groupes as $groupe): ?>
@@ -551,15 +556,20 @@ document.addEventListener('DOMContentLoaded', function(){
           }]
   };
 
-  var ctx = document.getElementById("chartHemycicle");
+  var ctx = document.getElementById("chartHemicycle");
   // And for a doughnut chart
   var chartOptions = {
     responsive: true,
-    maintainAspectRatio: true,
+    maintainAspectRatio: false,
     circumference: 180,
     rotation: 270,
     layout:{
-      padding: 15
+      padding: {
+        top: 0,
+        bottom: 0,
+        left: 15,
+        right: 15
+      }
     },
     plugins: {
       datalabels: {
@@ -572,7 +582,7 @@ document.addEventListener('DOMContentLoaded', function(){
         borderWidth: 1,
         color: "white",
         font: {
-          size: 10
+          size: 14
         }
       },
       legend: {
@@ -585,18 +595,6 @@ document.addEventListener('DOMContentLoaded', function(){
   var pieChart = new Chart(ctx, {
     plugins: [
       ChartDataLabels,
-      {
-        beforeLayout: function(chart) {
-          var showLabels = (chart.width) > 500 ? true : false;
-          chart.options.plugins.datalabels.display = showLabels;
-        }
-      },
-      {
-        onresize: function(chart) {
-          var showLabels = (chart.width) > 500 ? true : false;
-          chart.options.plugins.datalabels.display = showLabels;
-        }
-      }
     ],
     type: 'doughnut',
     data: data,
