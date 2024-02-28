@@ -431,7 +431,7 @@
               </div>
             </div>
           </div>
-          <div class="col-lg-5 d-flex flex-column justify-content-center mt-5 mt-lg-0">
+          <div class="col-lg-5 d-flex flex-column justify-content-center mt-4 mt-lg-0">
             <table class="tableGroupes">
               <tbody>
                 <?php foreach ($groupes as $groupe): ?>
@@ -582,7 +582,7 @@ document.addEventListener('DOMContentLoaded', function(){
         borderWidth: 1,
         color: "white",
         font: {
-          size: 10
+          size: 14
         }
       },
       legend: {
@@ -595,18 +595,6 @@ document.addEventListener('DOMContentLoaded', function(){
   var pieChart = new Chart(ctx, {
     plugins: [
       ChartDataLabels,
-      {
-        beforeLayout: function(chart) {
-          var showLabels = (chart.width) > 500 ? true : false;
-          chart.options.plugins.datalabels.display = showLabels;
-        }
-      },
-      {
-        onresize: function(chart) {
-          var showLabels = (chart.width) > 500 ? true : false;
-          chart.options.plugins.datalabels.display = showLabels;
-        }
-      }
     ],
     type: 'doughnut',
     data: data,

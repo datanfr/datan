@@ -1782,18 +1782,13 @@ ul.ui-menu{
 .hemicycle{
   position: relative;
   @include media-breakpoint-down(sm) {
-    height: 180px;
+    height: 200px;
   }
   .n-hemicycle{
     position: absolute;
     left: 50%;
     transform: translate(-50%, 50%);
-    @include media-breakpoint-down(md) {
-      bottom: 15%;
-    }
-    @include media-breakpoint-up(lg) {
-      bottom: 20%;
-    }
+    bottom: 20%;
     span{
       margin-bottom: 0;
       font-weight: 800;
