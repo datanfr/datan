@@ -422,16 +422,16 @@
             <p class="text-center mb-0">Découvrez le nombre de députés par groupe politique.</p>
           </div>
         </div>
-        <div class="row mt-4 mb-5">
+        <div class="row mt-5 mb-5">
           <div class="col-lg-7 d-flex flex-column justify-content-center">
-            <div class="hemycicle">
-              <canvas id="chartHemycicle"></canvas>
-              <div class="pct">
+            <div class="hemicycle">
+              <canvas id="chartHemicycle"></canvas>
+              <div class="n-hemicycle">
                 <span>577 députés</span>
               </div>
             </div>
           </div>
-          <div class="col-lg-5 d-flex flex-column justify-content-center">
+          <div class="col-lg-5 d-flex flex-column justify-content-center mt-5 mt-lg-0">
             <table class="tableGroupes">
               <tbody>
                 <?php foreach ($groupes as $groupe): ?>
@@ -556,7 +556,7 @@ document.addEventListener('DOMContentLoaded', function(){
           }]
   };
 
-  var ctx = document.getElementById("chartHemycicle");
+  var ctx = document.getElementById("chartHemicycle");
   // And for a doughnut chart
   var chartOptions = {
     responsive: true,

@@ -1779,17 +1779,31 @@ ul.ui-menu{
   }
 }
 
-.hemycicle{
-  .pct{
+.hemicycle{
+  position: relative;
+  @include media-breakpoint-down(sm) {
+    height: 180px;
+  }
+  .n-hemicycle{
     position: absolute;
     left: 50%;
-    bottom: 20%;
-    transform: translate(-50%, 0);
+    transform: translate(-50%, 50%);
+    @include media-breakpoint-down(md) {
+      bottom: 15%;
+    }
+    @include media-breakpoint-up(lg) {
+      bottom: 20%;
+    }
     span{
       margin-bottom: 0;
-      font-size: $h1-font-size;
       font-weight: 800;
       color: $bleu;
+      @include media-breakpoint-up(md) {
+        font-size: $h1-font-size;
+      }
+      @include media-breakpoint-down(sm) {
+        font-size: $h5-font-size;
+      }
     }
   }
 }

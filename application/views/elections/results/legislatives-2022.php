@@ -8,7 +8,7 @@
 <h2 class="mt-5">Résultats des législatives 2022 en nombre de sièges</h2>
 <p class="font-italic">Source : Le Monde</p>
 <div class="mt-1 mb-1">
-  <canvas width="100" height="100" id="chartHemycicle"></canvas>
+  <canvas width="100" height="100" id="chartHemicycle"></canvas>
 </div>
 
 <script type="text/javascript">
@@ -58,7 +58,7 @@ document.addEventListener('DOMContentLoaded', function(){
           }]
   };
 
-  var ctx = document.getElementById("chartHemycicle");
+  var ctx = document.getElementById("chartHemicycle");
 
   // And for a doughnut chart
   var chartOptions = {
