@@ -1640,8 +1640,8 @@ body{
       td{
         padding-left: 0.75rem;
         padding-right: 0.75rem;
-        padding-top: 0.4rem;
-        padding-bottom: 0.4rem;
+        padding-top: 0.2rem;
+        padding-top: 0.2rem;
       }
       .square{
         height: 12px;
@@ -1778,6 +1778,31 @@ ul.ui-menu{
     }
   }
 }
+
+.hemicycle{
+  position: relative;
+  @include media-breakpoint-down(sm) {
+    height: 200px;
+  }
+  .n-hemicycle{
+    position: absolute;
+    left: 50%;
+    transform: translate(-50%, 50%);
+    bottom: 20%;
+    span{
+      margin-bottom: 0;
+      font-weight: 800;
+      color: $bleu;
+      @include media-breakpoint-up(md) {
+        font-size: $h1-font-size;
+      }
+      @include media-breakpoint-down(sm) {
+        font-size: $h5-font-size;
+      }
+    }
+  }
+}
+
 /*
 ################
                PAGE : DEPARTEMENT (pg-departement)
