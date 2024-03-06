@@ -272,4 +272,12 @@
     return $array[$x];
   }
 
+  function is_congress_numero($data){
+    if ($data > 0) {
+      return $data;
+    } else {
+      return "c" . abs($data);
+    }
+  }
+
 ?>
