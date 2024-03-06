@@ -333,10 +333,17 @@
 
     }
 
-    public function individual($legislature, $num, $explication = FALSE){
+    public function individual($legislature, $num, $congress = FALSE, $explication = FALSE){
       // Check if legislature is numeric
       if (!is_numeric($legislature)) {
         show_404($this->functions_datan->get_404_infos());
+      }
+      // Congress == negative voteNumero
+      $num = abs($num);
+      $data['congres'] = FALSE;
+      if ($congress === "cong") {
+        $data['congres'] = TRUE;
+        $num = -$num;
       }
       // Check if vote number is numeric
       if (!is_numeric($num)) {
@@ -484,7 +491,7 @@
       $data['deputes'] = $this->votes_model->get_vote_deputes($data['vote']['voteNumero'], $legislature);
 
       // OTHER VOTES
-      if ($num != 1) {
+      if ($num > 1) {
         $previous = $num - 1;
         $previous_result = TRUE;
         while ($previous_result) {
@@ -528,11 +535,11 @@
       $data['votes_datan'] = $this->votes_model->get_last_votes_datan(7);
       // Meta
       $data['url'] = $this->meta_model->get_url();
-      $data['title_meta'] = "Vote n°".$data['vote']['voteNumero']." - ".ucfirst($data['vote']['title_meta']). " - ".$legislature."e législature | Datan";
+      $data['title_meta'] = "Vote n°".is_congress_numero($data['vote']['voteNumero'])." - ".ucfirst($data['vote']['title_meta']). " - ".$legislature."e législature | Datan";
       if ($explication) {
         $data['description_meta'] = "Découvrez l'explication de vote de " . $data['explication']['nameFirst'] . " " . $data['explication']['nameLast'] . ".";
       } else {
-        $data['description_meta'] = "Découvrez le vote des députés sur le scrutin : ".ucfirst($data['vote']['title_meta'])." - ".$legislature."e législature. Détail et analyse des résultats du vote n° " . $data['vote']['voteNumero'] . ".";
+        $data['description_meta'] = "Découvrez le vote des députés sur le scrutin : ".ucfirst($data['vote']['title_meta'])." - ".$legislature."e législature. Détail et analyse des résultats du vote n° " . is_congress_numero($data['vote']['voteNumero']) . ".";
       }
       $data['title'] = $data['vote']['titre'];
       // Breadcrumb
@@ -547,7 +554,7 @@
           "name" => $legislature."e législature", "url" => base_url()."votes/legislature-".$legislature, "active" => FALSE
         ),
         array(
-          "name" => "Vote n° ".$data['vote']['voteNumero'], "url" => base_url()."votes/legislature-".$legislature."/vote_".$data['vote']['voteNumero'], "active" => TRUE
+          "name" => "Vote n° ".is_congress_numero($data['vote']['voteNumero']), "url" => base_url()."votes/legislature-".$legislature."/vote_".is_congress_numero($data['vote']['voteNumero']), "active" => TRUE
         )
       );
       $data['breadcrumb_json'] = $this->breadcrumb_model->breadcrumb_json($data['breadcrumb']);
