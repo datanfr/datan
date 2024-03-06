@@ -9,15 +9,19 @@ class Script
     private $time_pre;
     private $legislature_current;
     private $dateFinLast;
+    private $congress;
 
     // export the variables in environment
-    public function __construct($legislature = 16)
+    public function __construct($legislature = 16, $congress = FALSE)
     {
         date_default_timezone_set('Europe/Paris');
         ini_set('memory_limit', '2048M');
         $this->dateMaj = date('Y-m-d');
         $this->legislature_current = 16;
         $this->legislature_to_get = $legislature;
+        if ($congress == "cong") {
+          $this->congress = TRUE;
+        }
         $this->intro = "[" . date('Y-m-d h:i:s') . "] ";
         $this->dateFinLast = "2022-06-21";
         echo $this->intro . "Launching the daily script for legislature " . $this->legislature_to_get . "\n";
@@ -1289,10 +1293,23 @@ class Script
                     if ($xml_string == false) { // Check if the AN file forgot to include one vote
                       $file_to_import = 'VTANR5L' .  $this->legislature_to_get . 'V' . ($number_to_import + 1);
                       $xml_string = $zip->getFromName('xml/' . $file_to_import . '.xml');
+                      if ($xml_string == false) {
+                        $congres = array('VTCGR5L16V1');
+                        foreach ($congres as $cong) {
+                          $response_congress = $this->bdd->query('SELECT voteNumero FROM votes WHERE legislature = "' . $this->legislature_to_get . '" AND voteId = "' . $cong . '" LIMIT 1');
+                          $response_congress = $response_congress->fetch();
+                          if (!$response_congress) {
+                            $file_to_import = 'VTCGR5L16V1';
+                            $xml_string = $zip->getFromName('xml/' . $file_to_import . '.xml');
+                          } else {
+                            $xml_string = FALSE;
+                          }
+                        }
+                      }
                     }
                     if ($xml_string != false) {
                         $xml = simplexml_load_string($xml_string);
-                        //vote
+                        //votes
                         foreach ($xml->xpath("//*[local-name()='votant']") as $votant) {
                             $mpId = $votant->xpath("./*[local-name()='acteurRef']");
                             $item['mpId'] = $mpId[0];
@@ -1338,6 +1355,10 @@ class Script
                             $voteNumero = $votant->xpath("./ancestor::*[local-name()='scrutin']/*[local-name()='numero']");
                             $item['voteNumero'] = $voteNumero[0];
 
+                            if (substr($item['voteId'], 0, 4) == "VTCG") {
+                              $item['voteNumero'] = -$item['voteNumero'];
+                            }
+
                             $legislature = $votant->xpath("./ancestor::*[local-name()='scrutin']/*[local-name()='legislature']");
                             $item['legislature'] = $legislature[0];
 
@@ -1347,12 +1368,17 @@ class Script
                             $voteMain = array('mpId' => $item['mpId'], 'vote' => $vote, 'voteNumero' => $item['voteNumero'], 'voteId' => $item['voteId'], 'legislature' => $item['legislature'], 'mandatId' => $item['mandatId'], 'parDelegation' => $item['parDelegation'], 'causePosition' => $item['causePosition'], 'voteType' => $item['voteType']);
                             $votesMain = array_merge($votesMain, array_values($voteMain));
                         }
+                        // votesInfo
                         foreach ($xml->xpath("//*[local-name()='scrutin']") as $scrutin) {
                             $voteId = $scrutin->xpath("./*[local-name()='uid']");
                             $item['voteId'] = $voteId[0];
 
                             $voteNumero = $scrutin->xpath("./*[local-name()='numero']");
                             $item['voteNumero'] = $voteNumero[0];
+
+                            if (substr($item['voteId'], 0, 4) == "VTCG") {
+                              $item['voteNumero'] = -$item['voteNumero'];
+                            }
 
                             $organeRef = $scrutin->xpath("./*[local-name()='organeRef']");
                             $item['organeRef'] = $organeRef[0];
@@ -1417,13 +1443,17 @@ class Script
                             $voteInfo = array('voteId' => $item['voteId'], 'voteNumero' => $item['voteNumero'], 'organeRef' => $item['organeRef'], 'legislature' => $item['legislature'], 'sessionREF' => $item['sessionRef'], 'seanceRef' => $item['seanceRef'], 'dateScrutin' => $item['dateScrutin'], 'quantiemeJourSeance' => $item['quantiemeJourSeance'], 'codeTypeVote' => $item['codeTypeVote'], 'libelleTypeVote' => $item['libelleTypeVote'], 'typeMajorite' => $item['typeMajorite'], 'sortCode' => $item['sortCode'], 'titre' => $item['titre'], 'demandeur' => $item['demandeur'], 'modePublicationDesVotes' => $item['modePublicationDesVotes'], 'nombreVotants' => $item['nombreVotants'], 'suffragesExprimes' => $item['suffragesExprimes'], 'nbrSuffragesRequis' => $item['nbrSuffragesRequis'], 'decomptePour' => $item['decomptePour'], 'decompteContre' => $item['decompteContre'], 'decompteAbs' => $item['decompteAbs'], 'decompteNv' => $item['decompteNv']);
                             $votesInfo = array_merge($votesInfo, array_values($voteInfo));
                         }
-
+                        // votesGroupe
                         foreach ($xml->xpath("//*[local-name()='groupe']") as $groupe) {
                             $voteId = $groupe->xpath("./ancestor::*[local-name()='scrutin']/*[local-name()='uid']");
                             $item['voteId'] = $voteId[0];
 
                             $voteNumero = $groupe->xpath("./ancestor::*[local-name()='scrutin']/*[local-name()='numero']");
                             $item['voteNumero'] = $voteNumero[0];
+
+                            if (substr($item['voteId'], 0, 4) == "VTCG") {
+                              $item['voteNumero'] = -$item['voteNumero'];
+                            }
 
                             $legislature = $groupe->xpath("./ancestor::*[local-name()='scrutin']/*[local-name()='legislature']");
                             $item['legislature'] = $legislature[0];
@@ -1750,6 +1780,8 @@ class Script
                 $type_vote = "motion d'ajournement";
             } elseif (strpos($titre, "conclusions de rejet de la commission")) {
                 $type_vote = "conclusions de rejet de la commission";
+            } elseif (strpos($titre, "projet de loi constitutionnelle")) {
+              $type_vote = "projet de loi constitutionnelle";
             } else {
                 $type_vote = substr($titre, 0, 8);
                 //$type_vote = "REVOIR";
@@ -1880,73 +1912,135 @@ class Script
         $majorityGroups = $this->majorityGroups();
         $majorityGroups = implode('","', $majorityGroups);
 
-        $reponse_last_vote = $this->bdd->query('
-            SELECT voteNumero AS lastVote
-            FROM votes_scores
-            WHERE legislature = "' . $this->legislature_to_get . '"
-            ORDER BY voteNumero DESC
-            LIMIT 1
-        ');
+        if (!$this->congress) {
+          $reponse_last_vote = $this->bdd->query('
+              SELECT voteNumero AS lastVote
+              FROM votes_scores
+              WHERE legislature = "' . $this->legislature_to_get . '"
+              ORDER BY voteNumero DESC
+              LIMIT 1
+          ');
 
-        $donnees_last_vote = $reponse_last_vote->fetch();
-        $lastVote = isset($donnees_last_vote['lastVote']) ? $donnees_last_vote['lastVote'] + 1 : 1;
-        echo "Vote score from " . $lastVote . "\n";
+          $donnees_last_vote = $reponse_last_vote->fetch();
+          $lastVote = isset($donnees_last_vote['lastVote']) ? $donnees_last_vote['lastVote'] + 1 : 1;
+          echo "Vote score from " . $lastVote . "\n";
 
-        $query = 'SELECT B.voteNumero, B.legislature, B.mpId, B.vote, B.mandatId, B.sortCode, B.positionGroup, B.gvtPosition AS positionGvt,
-          CASE
-          	 WHEN B.vote = "nv" THEN NULL
-             WHEN B.vote = B.positionGroup THEN 1
-            ELSE 0
-          END AS scoreLoyaute,
-          CASE
-            WHEN B.vote = "nv" THEN NULL
-            WHEN B.vote = B.sortCode THEN 1
-            ELSE 0
-          END AS scoreGagnant,
-          CASE
-            WHEN B.vote = "nv" THEN NULL
-            WHEN B.vote = B.gvtPosition THEN 1
-          	ELSE 0
-          END AS scoreGvt,
-          CASE
-            WHEN B.vote = "nv" THEN NULL
-            ELSE 1
-          END AS scoreParticipation
-          FROM
-          (
-            SELECT A.*,
+          $query = 'SELECT B.voteNumero, B.legislature, B.mpId, B.vote, B.mandatId, B.sortCode, B.positionGroup, B.gvtPosition AS positionGvt,
             CASE
-              WHEN vg.positionMajoritaire = "pour" THEN 1
-              WHEN vg.positionMajoritaire = "contre" THEN -1
-              WHEN vg.positionMajoritaire = "abstention" THEN 0
-              ELSE "error"
-            END AS positionGroup,
+            	 WHEN B.vote = "nv" THEN NULL
+               WHEN B.vote = B.positionGroup THEN 1
+              ELSE 0
+            END AS scoreLoyaute,
             CASE
-              WHEN gvt.positionMajoritaire = "pour" THEN 1
-              WHEN gvt.positionMajoritaire = "contre" THEN -1
-              WHEN gvt.positionMajoritaire = "abstention" THEN 0
-              ELSE "error"
-            END AS gvtPosition
+              WHEN B.vote = "nv" THEN NULL
+              WHEN B.vote = B.sortCode THEN 1
+              ELSE 0
+            END AS scoreGagnant,
+            CASE
+              WHEN B.vote = "nv" THEN NULL
+              WHEN B.vote = B.gvtPosition THEN 1
+            	ELSE 0
+            END AS scoreGvt,
+            CASE
+              WHEN B.vote = "nv" THEN NULL
+              ELSE 1
+            END AS scoreParticipation
             FROM
             (
-              SELECT v.voteNumero, v.mpId, v.vote,
+              SELECT A.*,
               CASE
-                WHEN sortCode = "adopté" THEN 1
-                WHEN sortCode = "rejeté" THEN -1
-                ELSE 0
-              END AS sortCode,
-              v.legislature, mg.mandatId, mg.organeRef
-              FROM votes v
-              JOIN votes_info vi ON vi.voteNumero = v.voteNumero AND vi.legislature = v.legislature
-              LEFT JOIN mandat_groupe mg ON mg.mpId = v.mpId
-                AND ((vi.dateScrutin BETWEEN mg.dateDebut AND mg.dateFin ) OR (vi.dateScrutin >= mg.dateDebut AND mg.dateFin IS NULL))
-                AND mg.codeQualite IN ("Membre", "Député non-inscrit", "Membre apparenté")
-              LEFT JOIN organes o ON o.uid = vi.organeRef
-              WHERE v.voteType = "decompteNominatif" AND v.voteNumero >= "' . $lastVote . '" AND v.legislature = "' . $this->legislature_to_get . '"
-              ) A
-            LEFT JOIN votes_groupes vg ON vg.organeRef = A.organeRef AND vg.voteNumero = A.voteNumero AND vg.legislature = A.legislature
-            LEFT JOIN votes_groupes gvt ON gvt.organeRef IN ("' . $majorityGroups . '") AND gvt.voteNumero = A.voteNumero AND gvt.legislature = A.legislature
-          ) B' ;
+                WHEN vg.positionMajoritaire = "pour" THEN 1
+                WHEN vg.positionMajoritaire = "contre" THEN -1
+                WHEN vg.positionMajoritaire = "abstention" THEN 0
+                ELSE "error"
+              END AS positionGroup,
+              CASE
+                WHEN gvt.positionMajoritaire = "pour" THEN 1
+                WHEN gvt.positionMajoritaire = "contre" THEN -1
+                WHEN gvt.positionMajoritaire = "abstention" THEN 0
+                ELSE "error"
+              END AS gvtPosition
+              FROM
+              (
+                SELECT v.voteNumero, v.mpId, v.vote,
+                CASE
+                  WHEN sortCode = "adopté" THEN 1
+                  WHEN sortCode = "rejeté" THEN -1
+                  ELSE 0
+                END AS sortCode,
+                v.legislature, mg.mandatId, mg.organeRef
+                FROM votes v
+                JOIN votes_info vi ON vi.voteNumero = v.voteNumero AND vi.legislature = v.legislature
+                LEFT JOIN mandat_groupe mg ON mg.mpId = v.mpId
+                  AND ((vi.dateScrutin BETWEEN mg.dateDebut AND mg.dateFin ) OR (vi.dateScrutin >= mg.dateDebut AND mg.dateFin IS NULL))
+                  AND mg.codeQualite IN ("Membre", "Député non-inscrit", "Membre apparenté")
+                LEFT JOIN organes o ON o.uid = vi.organeRef
+                WHERE v.voteType = "decompteNominatif" AND v.voteNumero >= "' . $lastVote . '" AND v.legislature = "' . $this->legislature_to_get . '"
+                ) A
+              LEFT JOIN votes_groupes vg ON vg.organeRef = A.organeRef AND vg.voteNumero = A.voteNumero AND vg.legislature = A.legislature
+              LEFT JOIN votes_groupes gvt ON gvt.organeRef IN ("' . $majorityGroups . '") AND gvt.voteNumero = A.voteNumero AND gvt.legislature = A.legislature
+            ) B' ;
+
+        } else {
+          // IF CONGRESS
+
+          $query = 'SELECT B.voteNumero, B.legislature, B.mpId, B.vote, B.mandatId, B.sortCode, B.positionGroup, B.gvtPosition AS positionGvt,
+            CASE
+            	 WHEN B.vote = "nv" THEN NULL
+               WHEN B.vote = B.positionGroup THEN 1
+              ELSE 0
+            END AS scoreLoyaute,
+            CASE
+              WHEN B.vote = "nv" THEN NULL
+              WHEN B.vote = B.sortCode THEN 1
+              ELSE 0
+            END AS scoreGagnant,
+            CASE
+              WHEN B.vote = "nv" THEN NULL
+              WHEN B.vote = B.gvtPosition THEN 1
+            	ELSE 0
+            END AS scoreGvt,
+            CASE
+              WHEN B.vote = "nv" THEN NULL
+              ELSE 1
+            END AS scoreParticipation
+            FROM
+            (
+              SELECT A.*,
+              CASE
+                WHEN vg.positionMajoritaire = "pour" THEN 1
+                WHEN vg.positionMajoritaire = "contre" THEN -1
+                WHEN vg.positionMajoritaire = "abstention" THEN 0
+                ELSE "error"
+              END AS positionGroup,
+              CASE
+                WHEN gvt.positionMajoritaire = "pour" THEN 1
+                WHEN gvt.positionMajoritaire = "contre" THEN -1
+                WHEN gvt.positionMajoritaire = "abstention" THEN 0
+                ELSE "error"
+              END AS gvtPosition
+              FROM
+              (
+                SELECT v.voteNumero, v.mpId, v.vote,
+                CASE
+                  WHEN sortCode = "adopté" THEN 1
+                  WHEN sortCode = "rejeté" THEN -1
+                  ELSE 0
+                END AS sortCode,
+                v.legislature, mg.mandatId, mg.organeRef
+                FROM votes v
+                JOIN votes_info vi ON vi.voteNumero = v.voteNumero AND vi.legislature = v.legislature
+                LEFT JOIN mandat_groupe mg ON mg.mpId = v.mpId
+                  AND ((vi.dateScrutin BETWEEN mg.dateDebut AND mg.dateFin ) OR (vi.dateScrutin >= mg.dateDebut AND mg.dateFin IS NULL))
+                  AND mg.codeQualite IN ("Membre", "Député non-inscrit", "Membre apparenté")
+                LEFT JOIN organes o ON o.uid = vi.organeRef
+                WHERE v.voteType = "decompteNominatif" AND v.voteNumero < 0 AND v.legislature = "' . $this->legislature_to_get . '"
+                ) A
+              LEFT JOIN votes_groupes vg ON vg.organeRef = A.organeRef AND vg.voteNumero = A.voteNumero AND vg.legislature = A.legislature
+              LEFT JOIN votes_groupes gvt ON gvt.organeRef IN ("' . $majorityGroups . '") AND gvt.voteNumero = A.voteNumero AND gvt.legislature = A.legislature
+            ) B' ;
+
+        }
 
         $reponseVote = $this->bdd->query($query);
         echo "requete ok\n";
@@ -1988,45 +2082,78 @@ class Script
     public function groupeCohesion()
     {
         echo "groupeCohesion starting \n";
-        $reponse_last_vote = $this->bdd->query('
-            SELECT voteNumero AS lastVote
-            FROM groupes_cohesion
-            WHERE legislature = "' . $this->legislature_to_get . '"
-            ORDER BY voteNumero DESC
-            LIMIT 1
-        ');
 
-        $donnees_last_vote = $reponse_last_vote->fetch();
-        $lastVote = isset($donnees_last_vote['lastVote']) ? $donnees_last_vote['lastVote'] + 1 : 1;
+        if (!$this->congress) {
+          $reponse_last_vote = $this->bdd->query('
+              SELECT voteNumero AS lastVote
+              FROM groupes_cohesion
+              WHERE legislature = "' . $this->legislature_to_get . '"
+              ORDER BY voteNumero DESC
+              LIMIT 1
+          ');
 
-        $reponseVote = $this->bdd->query('
-            SELECT A.*,
-            CASE
-                WHEN A.positionGroup = A.voteResult THEN 1
-                ELSE 0
-            END AS scoreGagnant
-            FROM
-            (
-                SELECT vg.voteNumero, vg.organeRef, o.libelle, vg.legislature, vg.nombrePours, vg.nombreContres, vg.nombreAbstentions,
-                    ROUND((GREATEST(vg.nombrePours,nombreContres, nombreAbstentions)-0.5*((nombrePours + nombreContres + nombreAbstentions)-GREATEST(vg.nombrePours, vg.nombreContres, vg.nombreAbstentions)))/(vg.nombrePours + vg.nombreContres + vg.nombreAbstentions),3) as cohesion,
-                CASE
-                WHEN vg.positionMajoritaire = "pour" THEN 1
-                WHEN vg.positionMajoritaire = "abstention" THEN 0
-                WHEN vg.positionMajoritaire = "contre" THEN -1
-                WHEN vg.positionMajoritaire = "nv" THEN "nv"
-                ELSE "error"
-                END AS positionGroup,
-                CASE
-                WHEN vi.sortCode = "adopté" THEN 1
-                WHEN vi.sortCode = "rejeté" THEN -1
-                ELSE vi.sortCode
-                END AS voteResult
-                FROM votes_groupes vg
-                JOIN organes o ON vg.organeRef = o.uid
-                JOIN votes_info vi ON vi.voteNumero = vg.voteNumero AND vi.legislature = vg.legislature
-                WHERE vg.legislature = "' . $this->legislature_to_get . '" AND (vg.voteNumero >= "' . $lastVote . '")
-            ) A
-        ');
+          $donnees_last_vote = $reponse_last_vote->fetch();
+          $lastVote = isset($donnees_last_vote['lastVote']) ? $donnees_last_vote['lastVote'] + 1 : 1;
+
+          $reponseVote = $this->bdd->query('
+              SELECT A.*,
+              CASE
+                  WHEN A.positionGroup = A.voteResult THEN 1
+                  ELSE 0
+              END AS scoreGagnant
+              FROM
+              (
+                  SELECT vg.voteNumero, vg.organeRef, o.libelle, vg.legislature, vg.nombrePours, vg.nombreContres, vg.nombreAbstentions,
+                      ROUND((GREATEST(vg.nombrePours,nombreContres, nombreAbstentions)-0.5*((nombrePours + nombreContres + nombreAbstentions)-GREATEST(vg.nombrePours, vg.nombreContres, vg.nombreAbstentions)))/(vg.nombrePours + vg.nombreContres + vg.nombreAbstentions),3) as cohesion,
+                  CASE
+                  WHEN vg.positionMajoritaire = "pour" THEN 1
+                  WHEN vg.positionMajoritaire = "abstention" THEN 0
+                  WHEN vg.positionMajoritaire = "contre" THEN -1
+                  WHEN vg.positionMajoritaire = "nv" THEN "nv"
+                  ELSE "error"
+                  END AS positionGroup,
+                  CASE
+                  WHEN vi.sortCode = "adopté" THEN 1
+                  WHEN vi.sortCode = "rejeté" THEN -1
+                  ELSE vi.sortCode
+                  END AS voteResult
+                  FROM votes_groupes vg
+                  JOIN organes o ON vg.organeRef = o.uid
+                  JOIN votes_info vi ON vi.voteNumero = vg.voteNumero AND vi.legislature = vg.legislature
+                  WHERE vg.legislature = "' . $this->legislature_to_get . '" AND (vg.voteNumero >= "' . $lastVote . '")
+              ) A
+          ');
+        } else {
+          $reponseVote = $this->bdd->query('
+              SELECT A.*,
+              CASE
+                  WHEN A.positionGroup = A.voteResult THEN 1
+                  ELSE 0
+              END AS scoreGagnant
+              FROM
+              (
+                  SELECT vg.voteNumero, vg.organeRef, o.libelle, vg.legislature, vg.nombrePours, vg.nombreContres, vg.nombreAbstentions,
+                      ROUND((GREATEST(vg.nombrePours,nombreContres, nombreAbstentions)-0.5*((nombrePours + nombreContres + nombreAbstentions)-GREATEST(vg.nombrePours, vg.nombreContres, vg.nombreAbstentions)))/(vg.nombrePours + vg.nombreContres + vg.nombreAbstentions),3) as cohesion,
+                  CASE
+                  WHEN vg.positionMajoritaire = "pour" THEN 1
+                  WHEN vg.positionMajoritaire = "abstention" THEN 0
+                  WHEN vg.positionMajoritaire = "contre" THEN -1
+                  WHEN vg.positionMajoritaire = "nv" THEN "nv"
+                  ELSE "error"
+                  END AS positionGroup,
+                  CASE
+                  WHEN vi.sortCode = "adopté" THEN 1
+                  WHEN vi.sortCode = "rejeté" THEN -1
+                  ELSE vi.sortCode
+                  END AS voteResult
+                  FROM votes_groupes vg
+                  JOIN organes o ON vg.organeRef = o.uid
+                  JOIN votes_info vi ON vi.voteNumero = vg.voteNumero AND vi.legislature = vg.legislature
+                  WHERE vg.legislature = "' . $this->legislature_to_get . '" AND (vg.voteNumero < 0)
+              ) A
+          ');
+        }
+
 
         $groupesCohesion = [];
         $groupeCohesion = [];
@@ -3662,11 +3789,12 @@ class Script
     }
 }
 
-// Specify the legislature
-if (isset($argv[1])) {
-    $script = new Script($argv[1]);
+if (isset($argv[1]) && isset($argv[2])) {
+  $script = new Script($argv[1], $argv[2]);
+} elseif (isset($argv[1])) {
+  $script = new Script($argv[1]);
 } else {
-    $script = new Script();
+  $script = new Script();
 }
 
 $script->fillDeputes();
