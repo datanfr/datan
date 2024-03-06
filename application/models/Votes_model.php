@@ -500,7 +500,7 @@
         ELSE NULL
         END AS vote_libelle
         FROM votes_scores vs
-        WHERE vs.voteNumero IN (184, 269, 629) AND vs.legislature = 16 AND vs.mpId = ?
+        WHERE vs.voteNumero IN (184, 269, 629, 3213) AND vs.legislature = 16 AND vs.mpId = ?
       ';
       $query = $this->db->query($sql, $mpId);
 
@@ -509,7 +509,8 @@
       $text = array(
         629 => "l'inscription de l'interruption volontaire de grossesse (IVG) dans la Constitution",
         269 => "la création d'une taxe temporaire sur les super-dividendes distribués par les grandes entreprises",
-        184 => "la ratification de l'accord pour l'adhésion de la Suède et de la Finlande à l'OTAN"
+        184 => "la ratification de l'accord pour l'adhésion de la Suède et de la Finlande à l'OTAN",
+        3213 => "du projet de loi immigration en 2023"
       );
 
       foreach ($votes as $key => $value) {
