@@ -14,7 +14,7 @@
     <div class="col-md-8 col-12 bloc-card-vote">
       <div class="card card-vote-infos">
         <div class="card-body">
-          <span class="num">LÉGISLATURE <?= $vote['legislature'] ?> - VOTE n° <?= $vote['voteNumero'] ?></span>
+          <span class="num">LÉGISLATURE <?= $vote['legislature'] ?> - VOTE n° <?= is_congress_numero($vote['voteNumero']) ?></span>
           <?php if ($vote['title'] != "" & $vote['state'] == "published") : ?>
             <h1 class="title mt-2"><?= ucfirst($vote['title']) ?></h1>
           <?php else : ?>
@@ -44,11 +44,11 @@
       <h2>Résultat du vote</h2>
       <div class="row">
         <div class="col-lg-8">
-          <p class="mt-4">Les députés ont <span class="font-weight-bold sort-<?= $vote['sortCode'] ?>"><?= $vote['sortCode'] ?></span> le <?= $vote['date_edited'] ?> <?= $vote['titre'] ?></p>
+          <p class="mt-4">Les députés<?= $congres ? " et sénateurs réunis en Congrès" : "" ?> ont <span class="font-weight-bold sort-<?= $vote['sortCode'] ?>"><?= $vote['sortCode'] ?></span> le <?= $vote['date_edited'] ?> <?= $vote['titre'] ?></p>
           <?php if ($vote['sortCode'] == "adopté") : ?>
-            <p>Au total, <b><?= $vote['nombreVotants'] ?> députés</b> ont pris part au vote : <?= round($vote['pour_pct']) ?> % ont voté en faveur, <?= round($vote['contre_pct']) ?> % ont voté contre, et <?= round($vote['abs_pct']) ?> % se sont abstenus.</p>
+            <p>Au total, <b><?= $vote['nombreVotants'] ?> députés<?= $congres ? " et sénateurs" : "" ?></b> ont pris part au vote : <?= round($vote['pour_pct']) ?> % ont voté en faveur, <?= round($vote['contre_pct']) ?> % ont voté contre, et <?= round($vote['abs_pct']) ?> % se sont abstenus.</p>
           <?php else : ?>
-            <p>Au total, <b><?= $vote['nombreVotants'] ?> députés</b> ont pris part au vote : <?= round($vote['contre_pct']) ?> % ont voté contre, <?= round($vote['pour_pct']) ?> % ont voté en faveur, et <?= round($vote['abs_pct']) ?> % se sont abstenus.</p>
+            <p>Au total, <b><?= $vote['nombreVotants'] ?> députés<?= $congres ? " et sénateurs" : "" ?></b> ont pris part au vote : <?= round($vote['contre_pct']) ?> % ont voté contre, <?= round($vote['pour_pct']) ?> % ont voté en faveur, et <?= round($vote['abs_pct']) ?> % se sont abstenus.</p>
           <?php endif; ?>
         </div>
         <div class="col-lg-4">
@@ -59,6 +59,16 @@
           </div>
         </div>
       </div>
+      <?php if ($congres): ?>
+        <div class="row mt-5">
+          <div class="col-12">
+            <div class="alert alert-primary" role="alert">
+              <p>Il s'agit d'un vote du <b>Congrès pour une révision de la Constitution</b>.</p>
+              <p><span class="font-weight-bold text-primary">Datan</span> étant un site spécialisé sur l'Assemblée nationale, nous récoltons uniquement les données de vote des députés. Si les résultats ci-dessus correspondent à tous les parlementaires (députés et sénateurs), seuls les votes des groupes de l'Assemblée nationale et des députés sont affichés ci-dessous.</p>
+            </div>
+          </div>
+        </div>
+      <?php endif; ?>
       <div class="bloc-infos d-md-none mt-5 mt-md-0">
         <h2>Infos</h2>
         <table class="infos">
@@ -68,14 +78,16 @@
               <td class="label d-none d-lg-table-cell">Date</td>
               <td class="value"><?= $vote['date_edited'] ?></td>
             </tr>
-            <tr>
-              <td class="icon"><?= file_get_contents(base_url() . '/assets/imgs/icons/journal.svg') ?></td>
-              <td class="label d-none d-lg-table-cell">Type de vote</td>
-              <td class="value">
-                <?= ucfirst($vote['type_edited']) ?>
-                <a class="ml-1" tabindex="0" role="button" data-toggle="popover" data-trigger="focus" class="question no-decoration" aria-label="Tooltip explication" data-content="<?= $vote['type_edited_explication'] ?>"><?= file_get_contents(asset_url() . "imgs/icons/question_circle.svg") ?></a>
-              </td>
-            </tr>
+            <?php if ($vote['type_edited']): ?>
+              <tr>
+                <td class="icon"><?= file_get_contents(base_url() . '/assets/imgs/icons/journal.svg') ?></td>
+                <td class="label d-none d-lg-table-cell">Type de vote</td>
+                <td class="value">
+                  <?= ucfirst($vote['type_edited']) ?>
+                  <a class="ml-1" tabindex="0" role="button" data-toggle="popover" data-trigger="focus" class="question no-decoration" aria-label="Tooltip explication" data-content="<?= $vote['type_edited_explication'] ?>"><?= file_get_contents(asset_url() . "imgs/icons/question_circle.svg") ?></a>
+                </td>
+              </tr>
+            <?php endif; ?>
             <?php if ($vote['dossier_titre'] != "") : ?>
               <tr>
                 <td class="icon"><?= file_get_contents(base_url() . '/assets/imgs/icons/folder.svg') ?></td>
@@ -186,14 +198,16 @@
               <td class="label d-none d-lg-table-cell">Date</td>
               <td class="value"><?= $vote['date_edited'] ?></td>
             </tr>
-            <tr>
-              <td class="icon"><?= file_get_contents(base_url() . '/assets/imgs/icons/journal.svg') ?></td>
-              <td class="label d-none d-lg-table-cell">Type de vote</td>
-              <td class="value">
-                <?= ucfirst($vote['type_edited']) ?>
-                <a class="ml-1" tabindex="0" role="button" data-toggle="popover" data-trigger="focus" class="question no-decoration" aria-label="Tooltip explication" data-content="<?= $vote['type_edited_explication'] ?>"><?= file_get_contents(asset_url() . "imgs/icons/question_circle.svg") ?></a>
-              </td>
-            </tr>
+            <?php if ($vote['type_edited']): ?>
+              <tr>
+                <td class="icon"><?= file_get_contents(base_url() . '/assets/imgs/icons/journal.svg') ?></td>
+                <td class="label d-none d-lg-table-cell">Type de vote</td>
+                <td class="value">
+                  <?= ucfirst($vote['type_edited']) ?>
+                  <a class="ml-1" tabindex="0" role="button" data-toggle="popover" data-trigger="focus" class="question no-decoration" aria-label="Tooltip explication" data-content="<?= $vote['type_edited_explication'] ?>"><?= file_get_contents(asset_url() . "imgs/icons/question_circle.svg") ?></a>
+                </td>
+              </tr>
+            <?php endif; ?>
             <?php if ($vote['dossier_titre'] != "") : ?>
               <tr>
                 <td class="icon"><?= file_get_contents(base_url() . '/assets/imgs/icons/folder.svg') ?></td>
@@ -204,29 +218,31 @@
           </tbody>
         </table>
       </div>
-      <div class="bloc-savoir-plus d-none d-md-block mt-5">
-        <h3 class="subtitle">En savoir plus</h3>
-        <div class="bloc-links">
-          <div class="d-flex flex-column flex-lg-row">
-            <?php if ($vote['dossierUrl']) : ?>
-              <span class="d-flex justify-content-center align-items-center url_obf btn btn-secondary link my-1 my-lg-0 mx-lg-1" url_obf="<?= url_obfuscation($vote['dossierUrl']) ?>">
-                <div class="mr-1">
-                  <?= file_get_contents(base_url() . '/assets/imgs/icons/arrow_external_right.svg') ?>
-                </div>
-                <span class="text">Le dossier</span>
-              </span>
-            <?php endif; ?>
-            <?php if ($vote['voteType'] == 'amendement' && !empty($documentLegislatif)) : ?>
-              <span class="d-flex justify-content-center align-items-center url_obf btn btn-secondary link my-1 my-lg-0 mx-lg-1" url_obf="<?= url_obfuscation("https://www.assemblee-nationale.fr/dyn/" . $amdt['legislature'] . "/amendements/" . $documentLegislatif['numNotice'] . "/AN/" . $amdt['numOrdre']) ?>">
-                <div class="mr-1">
-                  <?= file_get_contents(base_url() . '/assets/imgs/icons/arrow_external_right.svg') ?>
-                </div>
-                <span class="text">L'amendement</span>
-              </span>
-            <?php endif; ?>
+      <?php if ($vote['dossierUrl'] || !empty($documentLegislatif)): ?>
+        <div class="bloc-savoir-plus d-none d-md-block mt-5">
+          <h3 class="subtitle">En savoir plus</h3>
+          <div class="bloc-links">
+            <div class="d-flex flex-column flex-lg-row">
+              <?php if ($vote['dossierUrl']) : ?>
+                <span class="d-flex justify-content-center align-items-center url_obf btn btn-secondary link my-1 my-lg-0 mx-lg-1" url_obf="<?= url_obfuscation($vote['dossierUrl']) ?>">
+                  <div class="mr-1">
+                    <?= file_get_contents(base_url() . '/assets/imgs/icons/arrow_external_right.svg') ?>
+                  </div>
+                  <span class="text">Le dossier</span>
+                </span>
+              <?php endif; ?>
+              <?php if ($vote['voteType'] == 'amendement' && !empty($documentLegislatif)) : ?>
+                <span class="d-flex justify-content-center align-items-center url_obf btn btn-secondary link my-1 my-lg-0 mx-lg-1" url_obf="<?= url_obfuscation("https://www.assemblee-nationale.fr/dyn/" . $amdt['legislature'] . "/amendements/" . $documentLegislatif['numNotice'] . "/AN/" . $amdt['numOrdre']) ?>">
+                  <div class="mr-1">
+                    <?= file_get_contents(base_url() . '/assets/imgs/icons/arrow_external_right.svg') ?>
+                  </div>
+                  <span class="text">L'amendement</span>
+                </span>
+              <?php endif; ?>
+            </div>
           </div>
         </div>
-      </div>
+      <?php endif; ?>
       <div class="bloc-social d-none d-md-block mt-5">
         <h3 class="subtitle">Partagez ce vote</h3>
         <?php $this->load->view('partials/share.php') ?>
