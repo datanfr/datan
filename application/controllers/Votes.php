@@ -338,8 +338,11 @@
       if (!is_numeric($legislature)) {
         show_404($this->functions_datan->get_404_infos());
       }
+      // Check if negative num
+      if ($num < 0) {
+        show_404($this->functions_datan->get_404_infos());
+      }
       // Congress == negative voteNumero
-      $num = abs($num);
       $data['congres'] = FALSE;
       if ($congress === "cong") {
         $data['congres'] = TRUE;
