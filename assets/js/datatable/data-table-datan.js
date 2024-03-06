@@ -30,7 +30,6 @@
 
     // TABLE PAGE votes
     $('#table-vote-all').DataTable({
-      "order": [[0, "desc"]],
       language: french
     });
 
@@ -124,7 +123,6 @@
 
     // TABLE PAGE député/votes/all & groupes/votes/all
     $('#table-deputes-groupes-votes-all').DataTable({
-      "order": [[0, "desc"]],
       responsive: {
         details: false
       },

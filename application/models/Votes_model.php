@@ -26,6 +26,7 @@
       $this->db->select('vi.*, date_format(vi.dateScrutin, "%d %M %Y") as dateScrutinFR');
       $this->db->select('vd.title, vd.slug, vd.category');
       $this->db->select('REPLACE(vi.titre, "n?", "n°") AS titre');
+      $this->db->select('CASE WHEN vi.voteNumero < 0 THEN CONCAT("c", abs(vi.voteNumero)) ELSE vi.voteNumero END AS voteNumero', false);
       $this->db->order_by('vi.dateScrutin', 'DESC');
       $this->db->join('votes_datan vd', 'vi.voteId = vd.vote_id AND vd.state = "published"', 'left');
       $query = $this->db->get_where('votes_info vi', $where);
@@ -34,13 +35,14 @@
 
     public function get_last_votes_datan($limit = FALSE){
       $sql = '
-      SELECT vd.title AS voteTitre, vd.description, vi.dateScrutin, vi.voteNumero, vi.legislature, f.name AS category_libelle, f.slug AS category_slug, vi.sortCode, date_format(dateScrutin, "%d %M %Y") as dateScrutinFR, r.name AS reading
+      SELECT vd.title AS voteTitre, vd.description, vi.dateScrutin, vi.voteNumero, vi.legislature, f.name AS category_libelle, f.slug AS category_slug, vi.sortCode, date_format(dateScrutin, "%d %M %Y") as dateScrutinFR, r.name AS reading,
+        CASE WHEN vi.voteNumero < 0 THEN CONCAT("c", abs(vi.voteNumero)) ELSE vi.voteNumero END AS voteNumero
       FROM votes_datan vd
       LEFT JOIN votes_info vi ON vd.voteNumero = vi.voteNumero AND vd.legislature = vi.legislature
       LEFT JOIN fields f ON vd.category = f.id
       LEFT JOIN readings r ON r.id = vd.reading
       WHERE vd.state = "published"
-      ORDER BY vi.legislature DESC, vi.voteNumero DESC'
+      ORDER BY vi.legislature DESC, vi.dateScrutin DESC'
       ;
       $sql .= $limit ? ' LIMIT '.$this->db->escape($limit) : '';
       return $this->db->query($sql)->result_array();
@@ -115,7 +117,8 @@
     }
 
     public function get_votes_datan_category($field){
-      $sql = 'SELECT vd.title AS voteTitre, vd.description, vi.dateScrutin, vi.voteNumero, vi.legislature, f.name AS category_libelle, f.slug AS category_slug, vi.sortCode, date_format(dateScrutin, "%d %M %Y") as dateScrutinFR, r.name AS reading
+      $sql = 'SELECT vd.title AS voteTitre, vd.description, vi.dateScrutin, vi.voteNumero, vi.legislature, f.name AS category_libelle, f.slug AS category_slug, vi.sortCode, date_format(dateScrutin, "%d %M %Y") as dateScrutinFR, r.name AS reading,
+        CASE WHEN vi.voteNumero < 0 THEN CONCAT("c", abs(vi.voteNumero)) ELSE vi.voteNumero END AS voteNumero
         FROM votes_datan vd
         LEFT JOIN votes_info vi ON vd.voteNumero = vi.voteNumero AND vd.legislature = vi.legislature
         LEFT JOIN fields f ON vd.category = f.id
@@ -281,6 +284,9 @@
       } elseif ($x['voteType'] == "motion d'ajournement") {
         $x['type_edited'] = "motion d'ajournement";
         $x['type_edited_explication'] = "Une motion d'ajournement est utilisé que dans le cadre des accords internationaux. Si la motion est adoptée, le texte retourne en commission parlementaire, où il doit être rediscuté.<br><br><a href='https://www.lemonde.fr/blog/cuisines-assemblee/2019/02/18/la-motion-dajournement/' target='_blank'>Plus d'information</a>";
+      } elseif ($x['voteType'] == 'projet de loi constitutionnelle') {
+        $x['type_edited'] = $x['voteType'];
+        $x['type_edited_explication'] = "Un projet de loi constitutionnelle est une proposition visant à modifier la Constitution, c'est à dire la loi fondamentale du pays. Un projet de loi constitutionnelle doit être adoptée à l'identique par les deux chambres (Assemblée nationale et Sénat), réunies pour l'occasion en Congrès. ";
       } else {
         $x['type_edited'] = $x['voteType'];
         $x['type_edited_explication'] = NULL;
@@ -348,7 +354,7 @@
           (
           	SELECT v.mpId, v.vote, v.mandatId, v.scoreLoyaute, v.legislature
           	FROM votes_scores v
-          	WHERE v.voteNumero = ? AND legislature = ?
+          	WHERE v.voteNumero = ? AND legislature = ? AND v.mandatId IS NOT NULL
           ) A
           LEFT JOIN deputes_all da ON da.mpId = A.mpId AND da.legislature = A.legislature
           LEFT JOIN mandat_groupe mg ON mg.mandatId = A.mandatId
@@ -361,6 +367,7 @@
 
     public function get_votes_datan_depute($depute_id, $limit = FALSE){
       $sql = 'SELECT vd.voteNumero, vd.legislature, vd.title AS vote_titre, vd.category, f.name AS category_libelle, f.slug AS category_slug, vi.sortCode, date_format(vi.dateScrutin, "%d %M %Y") as dateScrutinFR, r.name AS reading,
+        CASE WHEN vd.voteNumero < 0 THEN CONCAT("c", abs(vd.voteNumero)) ELSE vd.voteNumero END AS voteNumero,
         CASE
         	WHEN vs.vote = 0 THEN "abstention"
         	WHEN vs.vote = 1 THEN "pour"
@@ -414,7 +421,8 @@
     }
 
     public function get_votes_all_depute($depute_id, $legislature){
-      $sql = 'SELECT A.voteId, A.voteNumero, A.dateScrutin, A.titre, A.title, A.legislature,
+      $sql = 'SELECT A.voteId, A.dateScrutin, A.titre, A.title, A.legislature,
+        CASE WHEN A.voteNumero < 0 THEN CONCAT("c", abs(A.voteNumero)) ELSE A.voteNumero END AS voteNumero,
         CASE
         	WHEN A.vote = 1 THEN "pour"
             WHEN A.vote = -1 THEN "contre"
@@ -435,7 +443,7 @@
         LEFT JOIN votes_datan vd ON vi.voteId = vd.vote_id AND vd.state = "published"
         WHERE vp.mpId = ? AND vp.legislature = ?
         ) A
-        ORDER BY voteNumero DESC
+        ORDER BY A.dateScrutin DESC, A.voteNumero DESC
       ';
       return $this->db->query($sql, array($depute_id, $depute_id, $legislature))->result_array();
     }
@@ -446,7 +454,8 @@
         	WHEN A.positionGroupe = 1 THEN "pour"
         	WHEN A.positionGroupe = -1 THEN "contre"
         	WHEN A.positionGroupe = 0 THEN "abstention"
-        ELSE NULL END AS vote
+        ELSE NULL END AS vote,
+        CASE WHEN A.voteNumero < 0 THEN CONCAT("c", abs(A.voteNumero)) ELSE A.voteNumero END AS voteNumero
         FROM
         (
         SELECT vi.voteId, vi.legislature, gc.voteNumero, gc.cohesion, gc.positionGroupe, vi.dateScrutin, REPLACE(vi.titre, "n?", "n°") AS titre
@@ -455,13 +464,14 @@
         WHERE gc.organeRef = ? AND gc.legislature = ?
         ) A
         LEFT JOIN  votes_datan vd ON A.voteId = vd.vote_id AND A.legislature = vd.legislature AND vd.state = "published"
-        ORDER BY A.voteNumero DESC
+        ORDER BY A.dateScrutin DESC, A.voteNumero
       ';
       return $this->db->query($sql, array($uid, $legislature))->result_array();
     }
 
     public function get_votes_datan_groupe($groupe_id, $limit = FALSE){
-      $sql = 'SELECT A.*, f.name AS category_libelle, f.slug AS category_slug, v.positionMajoritaire AS vote, date_format(vi.dateScrutin, "%d %M %Y") as dateScrutinFR, vi.legislature, r.name AS reading
+      $sql = 'SELECT A.*, f.name AS category_libelle, f.slug AS category_slug, v.positionMajoritaire AS vote, date_format(vi.dateScrutin, "%d %M %Y") as dateScrutinFR, vi.legislature, r.name AS reading,
+        CASE WHEN A.voteNumero < 0 THEN CONCAT("c", abs(A.voteNumero)) ELSE A.voteNumero END AS voteNumero
         FROM
         (
         SELECT vd.id, vd.voteNumero, vd.legislature, vd.title AS vote_titre, vd.slug, vd.category, vd.reading

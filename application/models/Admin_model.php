@@ -107,12 +107,21 @@ class Admin_model extends CI_Model
     $slug = url_title($slug, 'dash', TRUE);
     $reading = $this->input->post('reading') != "" ? $this->input->post('reading') : NULL;
 
+    $legislature = $this->input->post('legislature');
+    $vote_id_post = $this->input->post('vote_id');
+
+    if ($vote_id_post > 0) {
+      $vote_id = "VTANR5L" . $legislature . "V" . $vote_id_post;
+    } elseif (condition) {
+      $vote_id = "VTCGR5L" . $legislature . "V" . abs($vote_id_post);
+    }
+
     $data = array(
       'title' => $this->input->post('title'),
       'slug' => $slug,
-      'legislature' => $this->input->post('legislature'),
+      'legislature' => $legislature,
       'voteNumero' => $this->input->post('vote_id'),
-      'vote_id' => "VTANR5L" . $this->input->post('legislature') . "V" . $this->input->post('vote_id'),
+      'vote_id' => $vote_id,
       'category' => $this->input->post('category'),
       'reading' => $reading,
       'description' => $this->input->post('description'),
