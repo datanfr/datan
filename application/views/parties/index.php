@@ -40,9 +40,11 @@
               <div class="col-lg-4 col-md-6 py-3">
                 <div class="card card-groupe">
                   <div class="liseret" style="background-color: <?= $party['couleurAssociee'] ?>"></div>
-                  <div class="card-avatar group">
-                    <img src="<?= asset_url() ?>imgs/partis/<?= mb_strtolower($party['libelleAbrev']) ?>.png" width="150" height="150" alt="<?= $party['libelle'] ?>">
-                  </div>
+                  <?php if ($party['img']): ?>
+                    <div class="card-avatar group">
+                      <img src="<?= asset_url() ?>imgs/partis/<?= mb_strtolower($party['libelleAbrev']) ?>.png" width="150" height="150" alt="<?= $party['libelle'] ?>">
+                    </div>
+                  <?php endif; ?>
                   <div class="card-body d-flex flex-column justify-content-center align-items-center">
                     <h2 class="d-block card-title">
                       <a href="<?= base_url(); ?>partis-politiques/<?= mb_strtolower($party['libelleAbrev']) ?>" class="stretched-link no-decoration"><?= $party['libelle'] ?></a>
