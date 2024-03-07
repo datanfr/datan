@@ -18,6 +18,15 @@
       // Get other parties
       $data['partiesOther'] = $this->parties_model->get_parties_other();
 
+      // Is there an image
+      foreach ($data['partiesActive'] as $key => $value) {
+        if ($this->functions_datan->get_http_response_code(asset_url().'imgs/partis/'.mb_strtolower($value['libelleAbrev']).'.png') != "200") {
+          $data['partiesActive'][$key]['img'] = FALSE;
+        } else {
+          $data['partiesActive'][$key]['img'] = TRUE;
+        }
+      }
+
       // Meta
       $data['url'] = $this->meta_model->get_url();
       $data['title_meta'] = "Partis politiques | Datan";
