@@ -66,19 +66,19 @@
           break;
 
         case 'NG':
-          $infos['creation'] = " et a été remplacé par le groupe <a href='".base_url()."groupes/soc'>Socialistes et apparentés (SOC)</a>";
+          $infos['creation'] = " et a été remplacé par le groupe <a href='".base_url()."groupes/legislature-15/soc'>Socialistes et apparentés (SOC)</a>";
           break;
 
         case 'LC':
-          $infos['creation'] = " et a été remplacé par le groupe <a href='".base_url()."groupes/udi-agir'>UDI, Agir et indépendants (UDI-AGIR)</a>";
+          $infos['creation'] = " et a été remplacé par le groupe <a href='".base_url()."groupes/legislature-15/udi-agir'>UDI, Agir et indépendants (UDI-AGIR)</a>";
           break;
 
         case 'UDI-AGIR':
-          $infos['creation'] = " et a été remplacé par le groupe <a href='".base_url()."groupes/udi-i'>UDI et Indépendants (UDI-I)</a>";
+          $infos['creation'] = " et a été remplacé par le groupe <a href='".base_url()."groupes/legislature-15/udi-i'>UDI et Indépendants (UDI-I)</a>";
           break;
 
         case 'UDI-I':
-          $infos['creation'] = " et a été remplacé par le groupe <a href='".base_url()."groupes/udi-a-i'>UDI, Agir et Indépendants (UDI-A-I)</a>";
+          $infos['creation'] = " et a été remplacé par le groupe <a href='".base_url()."groupes/legislature-15/udi-a-i'>UDI, Agir et Indépendants (UDI-A-I)</a>";
           break;
 
         case 'EDS':
@@ -86,10 +86,10 @@
           break;
 
         case 'AGIR-E':
-          $infos['creation'] = " par des députés membres du parti politique AGIR. Ils étaient avant alliés aux députés UDI dans le groupe <a href='".base_url()."groupes/udi-a-i'>UDI-A-I</a>";
+          $infos['creation'] = " par des députés membres du parti politique AGIR. Ils étaient avant alliés aux députés UDI dans le groupe <a href='".base_url()."groupes/legislature-15/udi-a-i'>UDI-A-I</a>";
 
         case 'UDI_I':
-          $infos['creation'] = " suite à la dissolution du groupe <a href='".base_url()."groupes/udi-a-i'>UDI-A-I</a>. Ce nouveau groupe UDI ne comporte plus que les députés membres de UDI, les députés AGIR ayant créé leur propre groupe, <a href='".base_url()."groupes/agir-e'>Agir Ensemble</a>";
+          $infos['creation'] = " suite à la dissolution du groupe <a href='".base_url()."groupes/legislature-15/udi-a-i'>UDI-A-I</a>. Ce nouveau groupe UDI ne comporte plus que les députés membres de UDI, les députés AGIR ayant créé leur propre groupe, <a href='".base_url()."groupes/agir-e'>Agir Ensemble</a>";
 
         case 'DEM':
           $infos['creation'] = " suite à la dissolution du groupe <a href='".base_url()."groupes/modem'>MODEM</a>. Ce nouveau groupe centriste a accueilli de nouveaux députés anciennement membres du groupe La République en Marche, comme Sabine Thillaye ou Christophe Jerretie.";
