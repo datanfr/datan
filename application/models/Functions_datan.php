@@ -23,11 +23,6 @@
       }
     }
 
-    public function get_http_response_code($url){
-      $headers = get_headers($url);
-      return substr($headers[0], 9, 3);
-    }
-
     // $precision = 1 (par défaut) pour les dizaines, 2 pour les centaines, 3 pour millier etc...
     function dec_round ($value, $precision = 1)
       {
