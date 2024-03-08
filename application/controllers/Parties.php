@@ -20,10 +20,10 @@
 
       // Is there an image
       foreach ($data['partiesActive'] as $key => $value) {
-        if ($this->functions_datan->get_http_response_code(asset_url().'imgs/partis/'.mb_strtolower($value['libelleAbrev']).'.png') != "200") {
-          $data['partiesActive'][$key]['img'] = FALSE;
-        } else {
+        if (file_exists(FCPATH . "assets/imgs/partis/" . mb_strtolower($value['libelleAbrev']) . ".png")) {
           $data['partiesActive'][$key]['img'] = TRUE;
+        } else {
+          $data['partiesActive'][$key]['img'] = FALSE;
         }
       }
 
