@@ -77,10 +77,10 @@
       }
 
       // Is there an image ?
-      if ($this->functions_datan->get_http_response_code(asset_url().'imgs/partis/'.mb_strtolower($data['party']['libelleAbrev']).'.png') != "200") {
-        $data['party']['img'] = FALSE;
-      } else {
+      if (file_exists(FCPATH . "assets/imgs/partis/" . mb_strtolower($data['party']['libelleAbrev']) . ".png")) {
         $data['party']['img'] = TRUE;
+      } else {
+        $data['party']['img'] = FALSE;
       }
 
       // Get other parties
