@@ -46,6 +46,10 @@
   RewriteRule ^groupes/udi-agir/(.*)$ ./groupes/legislature-15/udi-agir/$1 [R=301,L]
   RewriteRule ^groupes/udi-agir ./groupes/legislature-15/udi-agir [R=301,L]
 
+  # redirection of individaul MPs
+  RewriteRule ^deputes/essonne-91/depute_eva-sas ./deputes/paris-75/depute_eva-sas [R=301,L]
+
+
   # redirection of dashboard-mp
   RewriteRule ^dashboard-mp/(.*)$ ./dashboard/$1 [R=301,L]
   RewriteRule ^dashboard-mp ./dashboard [R=301,L]
