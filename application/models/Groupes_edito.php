@@ -58,7 +58,7 @@
             break;
 
         case 'UDI-A-I':
-          $infos['creation'] = ". Ce nouveau groupe UDI-A-I est la continuité directe de l'<a href='".base_url()."groupes/udi-i'>ancien groupe UDI-I</a>. Il acte le réchauffement des relations entre les députés UDI et AGIR, <a href='https://www.lefigaro.fr/politique/le-scan/a-l-assemblee-le-groupe-udi-agir-au-bord-du-divorce-20190611' target='_blank'>distendues depuis les élections européennes de 2019</a>. Désormais membre de la majorité présidentielle, ce nouveau groupe, UDI-A-I, <a href='https://www.lejdd.fr/Politique/a-lassemblee-jean-christophe-lagarde-et-ludi-sallient-a-la-majorite-3922197' target='_blank'>officiallise également son alliance avec le groupe La République en Marche</a>";
+          $infos['creation'] = ". Ce nouveau groupe UDI-A-I est la continuité directe de l'<a href='".base_url()."groupes/legislature-15/udi-i'>ancien groupe UDI-I</a>. Il acte le réchauffement des relations entre les députés UDI et AGIR, <a href='https://www.lefigaro.fr/politique/le-scan/a-l-assemblee-le-groupe-udi-agir-au-bord-du-divorce-20190611' target='_blank'>distendues depuis les élections européennes de 2019</a>. Désormais membre de la majorité présidentielle, ce nouveau groupe, UDI-A-I, <a href='https://www.lejdd.fr/Politique/a-lassemblee-jean-christophe-lagarde-et-ludi-sallient-a-la-majorite-3922197' target='_blank'>officiallise également son alliance avec le groupe La République en Marche</a>";
           break;
 
         case 'NI':
