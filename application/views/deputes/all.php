@@ -61,7 +61,7 @@
           <?php endif; ?>
           <div class="d-flex flex-wrap">
             <?php if ($legislature != legislature_current()): ?>
-              <a href="<?= base_url() ?>deputes/legislature-16" class="btn btn-secondary my-2">16<sup>ème</sup> législature</a>
+              <a href="<?= base_url() ?>deputes" class="btn btn-secondary my-2">16<sup>ème</sup> législature</a>
             <?php endif; ?>
             <a href="<?= base_url() ?>deputes/legislature-15" class="btn btn-secondary my-2">15<sup>ème</sup> législature</a>
             <a href="<?= base_url() ?>deputes/legislature-14" class="btn btn-secondary my-2">14<sup>ème</sup> législature</a>
