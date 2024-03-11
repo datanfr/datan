@@ -138,7 +138,7 @@ $route['index_departements'] = 'departement/liste';
 // VOTES
 $route['votes/legislature-(:any)/vote_c(:any)'] = 'votes/individual/$1/$2/cong';
 $route['votes/legislature-(:any)/vote_(:any)'] = 'votes/individual/$1/$2';
-$route['votes/legislature-(:any)/vote_(:any)/explication_c(:any)'] = 'votes/individual/$1/$2/cong/$3';
+$route['votes/legislature-(:any)/vote_c(:any)/explication_(:any)'] = 'votes/individual/$1/$2/cong/$3';
 $route['votes/legislature-(:any)/vote_(:any)/explication_(:any)'] = 'votes/individual/$1/$2/false/$3';
 $route['votes/legislature-(:any)'] = 'votes/all/$1';
 $route['votes/decryptes/(:any)'] = 'votes/field/$1';
