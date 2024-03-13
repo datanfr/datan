@@ -714,6 +714,7 @@
     public function get_explications_last(){
       $this->db->select('e.*, d.nameFirst, d.nameLast, d.libelleAbrev, d.couleurAssociee, d.dptSlug, d.nameUrl, v.vote, vd.title');
       $this->db->select('substr(e.mpId, 3) AS idImage,');
+      $this->db->select('CASE WHEN e.voteNumero < 0 THEN CONCAT("c", abs(e.voteNumero)) ELSE e.voteNumero END AS voteNumero', FALSE);
       $this->db->select('CASE WHEN v.vote = 1 THEN "pour" WHEN v.vote = -1 THEN "contre" WHEN v.vote = 0 THEN "abstention" ELSE NULL END AS vote', FALSE);
       $this->db->where('e.state', 1);
       $this->db->order_by('e.created_at', 'DESC');
