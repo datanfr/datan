@@ -61,7 +61,7 @@
       // Get support the gvt
       $data['support'] = $this->groupes_model->get_support_all(legislature_current());
       $data['support_opposition'] = $this->groupes_model->get_support_all(legislature_current(), TRUE);
-      $data['support_opposition'] = $data['support_opposition'][0];
+      $data['support_opposition'] = array_shift($data['support_opposition']);
 
       // Get explications
       $data['explications'] = $this->votes_model->get_explications_last();
