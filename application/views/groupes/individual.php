@@ -182,7 +182,7 @@
                     <?php endif; ?>
                   </div>
                 </div>
-                <?php if ($legislature == legislature_current()): ?>
+                <?php if ($legislature == legislature_current() && $active): ?>
                   <?php $max = max(array_column($support_all, 'value')) ?>
                   <div class="row mt-1 bar-container stats rounded-bottom py-4">
                     <div class="col-12">
