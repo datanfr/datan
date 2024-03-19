@@ -403,13 +403,37 @@
       }
       $this->db->select('c.*, o.positionPolitique, o.libelle, o.libelleAbrev, ROUND(c.value) AS value, ge.effectif');
       $this->db->where($where);
-      if ($legislature == legislature_current()) {
-        $this->db->where('c.active', 1);
-      }
       $this->db->join('organes o', 'o.uid = c.organeRef', 'left');
       $this->db->join('groupes_effectif ge', 'ge.organeRef = c.organeRef', 'left');
-      $this->db->order_by('c.value DESC, ge.effectif DESC');
-      return $this->db->get('class_groups c')->result_array();
+      //$this->db->order_by('c.value DESC, ge.effectif DESC');
+      $this->db->order_by('c.active ASC');
+      $return = $this->db->get('class_groups c')->result_array();
+
+      $array = array();
+      foreach ($return as $x) {
+        $key = $x['organeRef'];
+        $array[$key] = $x;
+      }
+
+      // When legislature is current : change of groups and remove unactive groups
+      if ($legislature == legislature_current()) {
+        // SOC
+        $array['PO830170']['value'] = $array['PO830170']['value'] + $array['PO800496']['value'];
+        unset($array['PO800496']);
+
+        foreach ($array as $key => $value) {
+          if ($value['active'] == 0) {
+            unset($array[$key]);
+          }
+        }
+      }
+
+      array_multisort(
+        array_column($array, 'value'), SORT_DESC,
+        array_column($array, 'effectif'), SORT_DESC,
+        $array);
+
+      return $array;
     }
 
     public function get_stats_history($groups){
