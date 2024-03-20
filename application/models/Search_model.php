@@ -15,8 +15,10 @@ class Search_model extends CI_Model
             CONCAT('votes/legislature-', vd.legislature, '/vote_', vd.voteNumero) as url,
             vd.modified_at AS date_modified
         FROM votes_datan vd
-        WHERE vd.title LIKE '%" . $search . "%' OR vd.description LIKE '%" . $search . "%' LIMIT 5
+        WHERE MATCH(vd.title, vd.description) AGAINST('" . $search . "')
+        LIMIT 5
         )
+        /* require: ALTER TABLE `datan`.`votes_datan` ADD FULLTEXT `idx_search` (`title`, `description`); */
 
         UNION ALL
 
@@ -56,7 +58,7 @@ class Search_model extends CI_Model
           NULL AS date_modified
           FROM circos c
           LEFT JOIN departement d ON c.dpt = d.departement_code
-          WHERE c.commune_nom LIKE '%" . $search . "%'
+          WHERE c.commune_nom LIKE '" . $search . "%'
           GROUP BY c.commune_nom
           LIMIT 5
         )
