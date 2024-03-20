@@ -26,8 +26,12 @@ class Search_model extends CI_Model
             d.libelle AS description,
             CONCAT('deputes/', d.dptSlug, '/depute_', d.nameUrl) as url,
             d.datePriseFonction AS date_modified
-        FROM deputes_all d
-        WHERE d.nameFirst LIKE '%" . $search . "%' OR d.nameLast LIKE '%" . $search . "%' LIMIT 5
+        FROM deputes_last d
+        WHERE d.nameFirst LIKE '%" . $search . "%'
+          OR d.nameLast LIKE '%" . $search . "%'
+          OR CONCAT(d.nameFirst, ' ', d.nameLast) LIKE '%" . $search . "%'
+          OR CONCAT(d.nameLast, ' ', d.nameFirst) LIKE '%" . $search . "%'
+        LIMIT 5
     )
         UNION ALL
         (
