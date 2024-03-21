@@ -108,8 +108,7 @@
       $data['js_to_load_up_defer'] = array('chart.min.js', 'chartjs-plugin-datalabels@2.1.js');
       $data['js_to_load']= array(
         "datan/map_france.min",
-        "datan/autocomplete_deputes",
-        "datan/autocomplete_cities_api",
+        "datan/autocomplete_search",
         "flickity.pkgd.min",
       );
       // Load views

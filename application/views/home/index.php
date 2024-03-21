@@ -7,27 +7,16 @@
     <div class="col-xl-6 col-lg-8 col-md-10 offset-xl-3 offset-lg-2 offset-md-1">
       <div class="card">
         <div class="card-header d-flex flex-row justify-content-center pt-4 pb-1">
-          <h2>JE TROUVE MON DÉPUTÉ</h2>
+          <h2>NOUVELLE BARRE DE RECHERCHE</h2>
         </div>
         <div class="card-header row pb-4">
-          <div class="col-md-6 px-4">
+          <div class="col-12 px-4">
             <div class="input-name pt-1">
-              <form autocomplete="off">
+              <form autocomplete="off" action="search.php", method="GET">
                 <div class="autocomplete">
-                  <label class="pl-2" for="deputesNames">Son nom ?</label>
-                  <input id="deputesNames" type="text" name="depute" placeholder='Exemple : <?= $depute_random['nameFirst'] .' ' . $depute_random['nameLast'] ?>'>
-                </div>
-              </form>
-            </div>
-          </div>
-          <div class="col-md-6 px-4 mt-2 mt-md-0">
-            <div class="input-commune pt-1">
-              <form autocomplete="off">
-                <div class="autocomplete" id="autocomplete">
-                  <label class="pl-2" for="cities">Ma commune ?</label>
-                  <input id="cities" type="text" name="cities" placeholder="Exemple : <?= $commune_random['commune_nom'] ?>">
-                  <div id="citiesNamesautocomplete-list" class="autocomplete-items*">
-                  </div>
+                  <label class="pl-2" for="deputesNames">Je cherche...</label>
+                  <input id="search" type="text" name="depute" placeholder='XXX'>
+                  <div id="search-results" style="position: absolute; z-index: 99; left:0; right:0; background-color: white"></div>
                 </div>
               </form>
             </div>
