@@ -11,12 +11,12 @@
         </div>
         <div class="card-header row pb-4">
           <div class="col-12 px-4">
-            <div class="input-name pt-1">
+            <div id="search-bloc" class="search-bloc pt-1">
               <form autocomplete="off" action="search.php", method="GET">
-                <div class="autocomplete">
+                <div class="search">
                   <label class="pl-2" for="deputesNames">Je cherche...</label>
                   <input id="search" type="text" name="depute" placeholder='XXX'>
-                  <div id="search-results" style="position: absolute; z-index: 99; left:0; right:0; background-color: white"></div>
+                  <div class="search-results" id="search-results"></div>
                 </div>
               </form>
             </div>

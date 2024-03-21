@@ -1694,8 +1694,7 @@ body{
   }
 }
 // SEARCH HOMEPAGE ==> CHECK HERE WHAT NEEDS TO BE REMOVED AND KEPT
-// Search
-.input-name, .input-commune{
+.search-bloc{
   border: 1px solid #ddd;
   border-radius: 8px;
   form{
@@ -1704,35 +1703,6 @@ body{
     > div{
       width: 100%;
     }
-  }
-  .autocomplete{
-    position: relative;
-    display: inline-block;
-  }
-  .autocomplete-items{
-    position: absolute;
-    border: 1px solid #d4d4d4;
-    border-bottom: none;
-    border-top: none;
-    z-index: 99;
-    top: 100%;
-    left: 0;
-    right: 0;
-    div {
-      padding: 10px;
-      cursor: pointer;
-      border-bottom: 1px solid #d4d4d4;
-      background-color: #fff;
-      text-align: center;
-      &:hover{
-        background-color: #e9e9e9;
-      }
-    }
-  }
-  .autocomplete-active{
-    /*when navigating through the items using the arrow keys:*/
-    background-color: DodgerBlue !important;
-    color: #ffffff;
   }
   input{
     border: 1px solid transparent;
@@ -1756,6 +1726,40 @@ body{
     &::placeholder{
       color: $text-gray-light;
     }
+  }
+  .search{
+    position: relative;
+    display: inline-block;
+  }
+  .search-results{
+    position: absolute;
+    z-index: 99;
+    left: 0;
+    right: 0;
+    top: 100%;
+    border: 1px solid #d4d4d4;
+    border-bottom: none;
+    border-top: none;
+    background-color: #ffffff;
+    div:first-child{
+      margin-top: 0.75rem;
+    }
+    div{
+      margin: 0rem 0.75rem 0.5rem 0.75rem;
+      cursor: pointer;
+      &:hover{
+        background-color: #e9e9e9;
+      }
+    }
+  }
+}
+
+// OLD Search to remove
+.input-name, .input-commune{
+  .autocomplete-active{
+    /*when navigating through the items using the arrow keys:*/
+    background-color: DodgerBlue !important;
+    color: #ffffff;
   }
 }
 // SEARCH NEW ELEMENTS (cities autocomplete)
