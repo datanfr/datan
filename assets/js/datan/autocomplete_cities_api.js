@@ -1,3 +1,5 @@
+// NO LONGER USED
+
 $(function() {
   $('#cities').autocomplete({
     source: function(request, response) {
@@ -18,8 +20,6 @@ $(function() {
       document.location.href = "search/" + code + "/" + departement;
     }
   }).autocomplete("instance")._renderItem = function(ul, item) {
-    console.log('test');
-
     var item = $('<div class="list_item_container">' + item.nom + ' (' + item.departement.code + ')</div>')
     return $("<li>").append(item).appendTo(ul);
   };
