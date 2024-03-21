@@ -1704,22 +1704,24 @@ body{
       width: 100%;
     }
   }
-  input{
-    border: 1px solid transparent;
-    background-color: transparent;
-  }
   label{
     font-weight: 800;
     font-size: 16px;
     color: $text-black;
     margin-bottom: 0;
   }
-  input[type=text]{
+  .search{
+    position: relative;
+    display: flex;
+  }
+  input{
     background-color: transparent;
+    border: none;
     width: 100%;
     color: $text-black;
     font-weight: 600;
-    padding-left: 0.5rem;
+    padding: 0.75rem 0;
+    outline: none;
     &:focus{
       outline: none;
     }
@@ -1727,9 +1729,34 @@ body{
       color: $text-gray-light;
     }
   }
-  .search{
-    position: relative;
-    display: inline-block;
+  .search_icon{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+  }
+  .placeholder{
+    position:absolute;
+    right: 0;
+    left: 40px;
+    top: 10px;
+    display: flex;
+    align-items: center;
+    pointer-events: none;
+    color: #989898;
+    .box{
+      margin-right: 5px;
+    }
+    .slider_box{
+      position: relative;
+      flex: 1;
+    }
+    .slider{
+      position: absolute;
+      left: -5px;
+      opacity: 0;
+      transition: 0.5s;
+    }
   }
   .search-results{
     position: absolute;

@@ -11,11 +11,21 @@
         </div>
         <div class="card-header row pb-4">
           <div class="col-12 px-4">
-            <div id="search-bloc" class="search-bloc pt-1">
-              <form autocomplete="off" action="search.php", method="GET">
+            <div id="search-bloc" class="search-bloc">
+              <form autocomplete="off" action="search.php" method="GET">
                 <div class="search">
-                  <label class="pl-2" for="deputesNames">Je cherche...</label>
-                  <input id="search" type="text" name="depute" placeholder='XXX'>
+                  <div class="search_icon">
+                    <?= file_get_contents(asset_url() . "imgs/icons/bi-search.svg") ?>
+                  </div>
+                  <input id="search" type="text">
+                  <div class="placeholder">
+                    <div class="box">
+                      <p class="mb-0">Je cherche</p>
+                    </div>
+                    <div class="slider_box">
+                      <div class="slider"></div>
+                    </div>
+                  </div>
                   <div class="search-results" id="search-results"></div>
                 </div>
               </form>
