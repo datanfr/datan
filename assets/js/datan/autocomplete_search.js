@@ -21,7 +21,6 @@ function searchQuery() {
           div.textContent = result.text;
           div.className = result.source + " no-decoration";
           div.href = "https://datan.fr/" + result.url;
-          div.appendChild(document.createElement("br"));
           let description = document.createElement("div");
           description.className = "description";
           description.textContent = result.description.replace(/<\/?[^>]+(>|$)/g, "");
