@@ -1786,12 +1786,16 @@ body{
         font-size: .85rem;
         font-style: italic;
         color: rgba(0, 0, 0, 0.5);
-      }  
-    }
-    .depute {
-      &:before{
-        content :url('/assets/imgs/icons/person-fill.svg');
       }
+    }
+    .depute:before {
+      content: url("../imgs/icons/person-fill.svg");
+    }
+    .ville:before{
+      content: url("../imgs/icons/house-door-fill.svg")
+    }
+    .blog:before, .vote:before{
+      content: url("../imgs/icons/file-text-fill.svg");
     }
   }
 }
