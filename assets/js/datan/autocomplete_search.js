@@ -18,7 +18,13 @@ function searchQuery() {
         resultsDiv.innerHTML = "";
         data.forEach(result => {
           let div = document.createElement("div");
-          div.textContent = result.text + " - " + result.source;
+          div.textContent = result.text;
+          div.className = result.source + ' result-source';
+          div.appendChild(document.createElement("br"));
+          let description = document.createElement("div");
+          description.className = "description";
+          description.textContent = result.description.replace(/<\/?[^>]+(>|$)/g, "");
+          div.appendChild(description);
           resultsDiv.appendChild(div);
         });
       });
