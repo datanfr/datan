@@ -17,9 +17,10 @@ function searchQuery() {
         let resultsDiv = document.getElementById("search-results");
         resultsDiv.innerHTML = "";
         data.forEach(result => {
-          let div = document.createElement("div");
+          let div = document.createElement("a");
           div.textContent = result.text;
-          div.className = result.source + ' result-source';
+          div.className = result.source + " no-decoration";
+          div.href = "https://datan.fr/" + result.url;
           div.appendChild(document.createElement("br"));
           let description = document.createElement("div");
           description.className = "description";
