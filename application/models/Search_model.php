@@ -21,7 +21,7 @@ class Search_model extends CI_Model
         WHERE MATCH(vd.title, vd.description) AGAINST('" . $search . "')
         LIMIT 5
         )
-        /* require: ALTER TABLE `datan`.`votes_datan` ADD FULLTEXT `idx_search` (`title`, `description`); */
+        /* require: ALTER TABLE `votes_datan` ADD FULLTEXT `idx_search` (`title`, `description`); */
         UNION ALL
 
         (SELECT
@@ -32,6 +32,7 @@ class Search_model extends CI_Model
             MATCH(d.nameFirst, d.nameLast) AGAINST('*" . $search . "*' IN BOOLEAN MODE) as score
         FROM deputes_last d
         WHERE MATCH(d.nameFirst, d.nameLast) AGAINST('*" . $search . "*' IN BOOLEAN MODE)
+        /* require: ALTER TABLE `deputes_last` ADD FULLTEXT `idx_search` (`nameFirst`, `nameLast`); */
         LIMIT 5
     )
         UNION ALL
@@ -44,7 +45,7 @@ class Search_model extends CI_Model
             MATCH(posts.title, posts.body) AGAINST('*" . $search . "*' IN BOOLEAN MODE) as score
             FROM posts
             WHERE MATCH(posts.title, posts.body) AGAINST('*" . $search . "*' IN BOOLEAN MODE) LIMIT 5
-
+            /* require: ALTER TABLE `posts` ADD FULLTEXT `idx_search` (`title`, `body`); */
         )
 
         UNION ALL
