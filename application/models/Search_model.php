@@ -6,20 +6,22 @@ class Search_model extends CI_Model
     }
     public function searchInAll($search)
     {
+        // ALTER TABLE `datan`.`deputes_last` ADD FULLTEXT `idx_search` (`nameFirst`, `nameLast`);
+        // ALTER TABLE `datan`.`posts` ADD FULLTEXT `idx_search` (`title`, `body`);
 
-        $sql = "SELECT * FROM (
+        // Pour tester ajouter `score` dans le select et decommenter cote Home
+        $sql = "SELECT `source`, `title`, `description`, `url` FROM (
         (SELECT
             'vote' AS source,
             vd.title AS title,
             CONCAT('...', SUBSTRING(vd.description, GREATEST(1, LOCATE('" . $search . "', vd.description) - 100), LEAST(LENGTH(vd.description), 200 + LENGTH('" . $search . "'))), '...') AS description,
             CONCAT('votes/legislature-', vd.legislature, '/vote_', vd.voteNumero) as url,
-            vd.modified_at AS date_modified
+            MATCH(vd.title, vd.description) AGAINST('" . $search . "') as score
         FROM votes_datan vd
         WHERE MATCH(vd.title, vd.description) AGAINST('" . $search . "')
         LIMIT 5
         )
         /* require: ALTER TABLE `datan`.`votes_datan` ADD FULLTEXT `idx_search` (`title`, `description`); */
-
         UNION ALL
 
         (SELECT
@@ -27,12 +29,9 @@ class Search_model extends CI_Model
             CONCAT(d.nameFirst, ' ', d.nameLast) AS title,
             d.libelle AS description,
             CONCAT('deputes/', d.dptSlug, '/depute_', d.nameUrl) as url,
-            d.datePriseFonction AS date_modified
+            MATCH(d.nameFirst, d.nameLast) AGAINST('*" . $search . "*' IN BOOLEAN MODE) as score
         FROM deputes_last d
-        WHERE d.nameFirst LIKE '%" . $search . "%'
-          OR d.nameLast LIKE '%" . $search . "%'
-          OR CONCAT(d.nameFirst, ' ', d.nameLast) LIKE '%" . $search . "%'
-          OR CONCAT(d.nameLast, ' ', d.nameFirst) LIKE '%" . $search . "%'
+        WHERE MATCH(d.nameFirst, d.nameLast) AGAINST('*" . $search . "*' IN BOOLEAN MODE)
         LIMIT 5
     )
         UNION ALL
@@ -42,31 +41,34 @@ class Search_model extends CI_Model
             title as title,
             CONCAT('...', SUBSTRING(body, GREATEST(1, LOCATE('" . $search . "', body) - 100), LEAST(LENGTH(body), 200 + LENGTH('" . $search . "'))), '...') AS description,
             CONCAT('blog/rapports/', slug) as url,
-            modified_at as date_modified
+            MATCH(posts.title, posts.body) AGAINST('*" . $search . "*' IN BOOLEAN MODE) as score
             FROM posts
-            WHERE title LIKE '%" . $search . "%' OR body LIKE '%" . $search . "%' LIMIT 5
+            WHERE MATCH(posts.title, posts.body) AGAINST('*" . $search . "*' IN BOOLEAN MODE) LIMIT 5
 
         )
 
         UNION ALL
         (
-          SELECT
-              'ville' as source,
-          c.commune_nom as title,
-          c.commune_nom AS description,
-          CONCAT('deputes/', d.slug, '/ville_', c.commune_slug) as url,
-          NULL AS date_modified
-          FROM circos c
-          LEFT JOIN departement d ON c.dpt = d.departement_code
-          WHERE c.commune_nom LIKE '" . $search . "%'
-          GROUP BY c.commune_nom
-          LIMIT 5
+            SELECT
+                'ville' as source,
+            c.commune_nom as title,
+            c.commune_nom AS description,
+            CONCAT('deputes/', d.slug, '/ville_', c.commune_slug) as url,
+            ci.pop2017/10000 AS score
+            FROM circos c
+            LEFT JOIN departement d ON c.dpt = d.departement_code
+            LEFT JOIN cities_infos ci ON c.insee = ci.insee
+            WHERE c.commune_nom LIKE '" . $search . "%'
+            GROUP BY c.commune_nom
+            ORDER BY ci.pop2017 DESC
+            LIMIT 5
         )
 
     ) AS combined_results
-    ORDER BY date_modified DESC
+    ORDER BY score DESC
     LIMIT 10;";
-        $data = $this->db->query($sql)->result_array();
+
+    $data = $this->db->query($sql)->result_array();
 
         return $data;
     }
