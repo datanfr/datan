@@ -27,7 +27,7 @@ class Search extends CI_Controller
                 'description' => $vote['description'],
                 'url' => $vote['url'],
                 'source' => $vote['source'],
-                'date' => $vote['date_modified']
+                // 'score' => $vote['score']
             ];
         }
         // Return
