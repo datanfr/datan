@@ -6,8 +6,6 @@ class Search_model extends CI_Model
     }
     public function searchInAll($search)
     {
-        // ALTER TABLE `datan`.`deputes_last` ADD FULLTEXT `idx_search` (`nameFirst`, `nameLast`);
-        // ALTER TABLE `datan`.`posts` ADD FULLTEXT `idx_search` (`title`, `body`);
 
         // Pour tester ajouter `score` dans le select et decommenter cote Home
         $sql = "SELECT `source`, `title`, `description`, `url` FROM (
@@ -22,6 +20,22 @@ class Search_model extends CI_Model
         LIMIT 5
         )
         /* require: ALTER TABLE `votes_datan` ADD FULLTEXT `idx_search` (`title`, `description`); */
+        UNION ALL
+
+        (
+          SELECT
+            'groupe' AS source,
+            CONCAT(o.libelle, ' (', o.libelleAbrev, ')') AS title,
+            CONCAT('Législature ', o.legislature) AS description,
+            CONCAT('groupes/legislature-', o.legislature, '/', LOWER(o.libelleAbrev)) AS url,
+            MATCH(o.libelle) AGAINST('*" . $search . "*' IN BOOLEAN MODE) as score
+          FROM organes o
+          WHERE o.coteType = 'GP' AND (MATCH(o.libelle) AGAINST('*" . $search . "*' IN BOOLEAN MODE) OR o.libelleAbrev LIKE '" . $search . "%')
+          ORDER BY o.dateDebut DESC
+          LIMIT 5
+          /* require: ALTER TABLE `organes` ADD FULLTEXT `idx_search` (`libelle`); */
+        )
+
         UNION ALL
 
         (SELECT
