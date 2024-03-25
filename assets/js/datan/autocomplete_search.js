@@ -42,7 +42,7 @@ let slider = document.querySelector(".slider");
 let slider_box = document.querySelector(".slider_box");
 let placeholder = document.querySelector(".placeholder");
 
-let list = ["un député", "une ville", "un vote"];
+let list = ["un député", "une ville", "un groupe politique", "un vote"];
 let word = 0;
 let intervals = "";
 text_animation();
