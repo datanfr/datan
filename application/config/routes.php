@@ -184,7 +184,6 @@ $route['password/(:any)'] = 'users/password_lost_change/$1';
 $route['demande-compte-depute'] = 'users/demande_mp';
 // REDIRECTION
 $route['classements'] = 'redirection/redir/statistiques';
-$route['search/(:any)/(:any)'] = 'redirect/cities/$1/$2';
 // CACHE
 $route['cache/delete_all'] = 'cache/delete_all';
 // LOGS
@@ -193,7 +192,8 @@ $route['admin/logs-scripts/(:any)'] = 'logs/index/$1';
 // EXPORT
 $route['export/set_session/(:any)'] = 'export/set_session/$1';
 // SEARCH
-$route['search'] = 'search/index';
+$route['search_api'] = 'search/index_api';
+$route['search/(:any)'] = 'search/index/$1';
 // PAGES
 $route['(:any)'] = 'pages/view/$1';
 $route['translate_uri_dashes'] = FALSE;

@@ -8,6 +8,7 @@
     }
 
     // Delete all cache
+    // ==> NO LONGER EXISTS
     public function cities($code, $dpt){
       // New caledonie is absent
       // Polynésie française is absent

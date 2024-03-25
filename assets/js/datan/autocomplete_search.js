@@ -11,7 +11,7 @@ function debounce(func, delay) {
 function searchQuery() {
   let query = this.value;
   if (query.length > 0) {
-    fetch(`search?q=${query}`)
+    fetch(`search_api?q=${query}`)
       .then(response => response.json())
       .then(data => {
         let resultsDiv = document.getElementById("search-results");
