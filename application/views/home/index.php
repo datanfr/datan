@@ -12,7 +12,7 @@
         <div class="card-header row pb-4">
           <div class="col-12 px-4">
             <div id="search-bloc" class="search-bloc">
-              <form autocomplete="off" action="search.php" method="GET">
+              <form autocomplete="off" action="search_api.php" method="GET">
                 <div class="search">
                   <div class="search_icon">
                     <?= file_get_contents(asset_url() . "imgs/icons/bi-search.svg") ?>
