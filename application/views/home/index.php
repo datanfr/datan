@@ -26,7 +26,13 @@
                       <div class="slider"></div>
                     </div>
                   </div>
-                  <div class="search-results" id="search-results"></div>
+                  <div class="search-results" id="search-results-bloc" style="display: none">
+                    <div id="search-results-list"></div>
+                    <a id="more-results-link">
+                      <?= file_get_contents(asset_url() . "imgs/icons/bi-search.svg") ?>
+                      Plus de résultats
+                    </a>
+                  </div>
                 </div>
               </form>
             </div>
