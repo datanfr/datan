@@ -14,8 +14,15 @@ function searchQuery() {
     fetch(`search_api?q=${query}`)
       .then(response => response.json())
       .then(data => {
-        let resultsDiv = document.getElementById("search-results");
+        document.getElementById("search-results-bloc").style.display = "block";
+        let resultsDiv = document.getElementById("search-results-list");
         resultsDiv.innerHTML = "";
+        if (data.length > 0) {
+          document.getElementById("search-bloc").style.borderBottomLeftRadius = "0px";
+          document.getElementById("search-bloc").style.borderBottomRightRadius = "0px";
+        } else {
+          document.getElementById("search-bloc").style.borderRadius = "8px";
+        }
         data.forEach(result => {
           let div = document.createElement("a");
           div.textContent = result.text;
@@ -28,8 +35,11 @@ function searchQuery() {
           resultsDiv.appendChild(div);
         });
       });
+      document.getElementById("more-results-link").href = "search/" + query;
   } else {
-    document.getElementById("search-results").innerHTML = "";
+    document.getElementById("search-results-list").innerHTML = "";
+    document.getElementById("search-bloc").style.borderRadius = "8px";
+    document.getElementById("search-results-bloc").style.display = "none";
   }
 }
 
