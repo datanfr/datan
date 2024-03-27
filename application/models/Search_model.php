@@ -87,6 +87,23 @@ class Search_model extends CI_Model
 
         return $data;
     }
+
+    public function sort($input){
+
+      $output = array(
+        'depute' => array('name' => 'Députés', 'results' => array()),
+        'groupe' => array('name' => 'Groupes politiques', 'results' => array()),
+        'ville' => array('name' => 'Villes', 'results' => array()),
+        'vote' => array('name' => 'Votes', 'results' => array()),
+        'blog' => array('name' => 'Articles sur Datan', 'results' => array()),
+      );
+
+      foreach ($input as $key => $value) {
+        array_push($output[$value['source']]['results'], $value);
+      }
+      return $output;
+    }
+
     public function searchInVotes($search)
     {
         $sql = '
