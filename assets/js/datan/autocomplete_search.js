@@ -1,3 +1,5 @@
+var currentFocus = -1;
+
 function debounce(func, delay) {
   let debounceTimer;
   return function() {
@@ -17,6 +19,8 @@ function searchQuery() {
         document.getElementById("search-results-bloc").style.display = "block";
         let resultsDiv = document.getElementById("search-results-list");
         resultsDiv.innerHTML = "";
+        currentFocus = -1;
+        document.getElementById("more-results-link").classList.remove("active");
         if (data.length > 0) {
           document.getElementById("search-bloc").style.borderBottomLeftRadius = "0px";
           document.getElementById("search-bloc").style.borderBottomRightRadius = "0px";
@@ -37,14 +41,74 @@ function searchQuery() {
       });
       document.getElementById("more-results-link").href = "search/" + query;
   } else {
-    document.getElementById("search-results-list").innerHTML = "";
-    document.getElementById("search-bloc").style.borderRadius = "8px";
-    document.getElementById("search-results-bloc").style.display = "none";
+    closeDropdown();
   }
 }
 
 document.getElementById("search").addEventListener("input", debounce(searchQuery, 250)); // 250 ms de délai
 
+// Close the result list if the user clicks outside of it
+window.addEventListener("click", function(event) {
+  if (!event.target.matches('#search')) {
+    closeDropdown();
+    clearInput();
+    startPlaceholderAnimation();
+  }
+});
+
+// Close the result list when pressing escape
+window.addEventListener("keydown", function(event) {
+  if (event.key === "Escape") {
+    closeDropdown();
+    clearInput();
+    startPlaceholderAnimation();
+  }
+});
+
+// System when navigating through the results with keyboard
+document.getElementById("search").addEventListener("keydown", function(e) {
+  var links = document.getElementById("search-results-bloc");
+  if (links) links = links.getElementsByTagName("a");
+  var key = e.key;
+  if (key === "ArrowDown" || key === "ArrowUp") {
+      e.preventDefault();
+    if (key === "ArrowDown") {
+      currentFocus ++;
+      addActive(links);
+    } else if (key === "ArrowUp") {
+      currentFocus --;
+      addActive(links);
+    }
+  } else if (key === "Enter") {
+    e.preventDefault();
+    if (currentFocus === -1) {
+      window.location.href = 'search/' + $('#search').val();
+    } else {
+      links[currentFocus].click();
+    }
+  }
+});
+
+function addActive(x) {
+  if (!x) return false;
+  removeActive(x);
+  if (currentFocus >= x.length) currentFocus = 0;
+  if (currentFocus < 0) currentFocus = (x.length - 1);
+  x[currentFocus].classList.add("active");
+}
+
+function removeActive(x) {
+  for (var i = 0; i < x.length; i++) {
+    x[i].classList.remove("active");
+  }
+}
+
+function closeDropdown(){
+  document.getElementById("search-results-list").innerHTML = "";
+  document.getElementById("search-bloc").style.borderRadius = "8px";
+  document.getElementById("search-results-bloc").style.display = "none";
+  document.getElementById("search").blur();
+}
 
 // Placeholder
 let input = document.querySelector("input");
@@ -65,11 +129,20 @@ input.onfocus = function(){
 }
 input.onblur = function(){
   if (input.value == "") {
-    placeholder.style.display = "flex";
-    word = 0;
-    text_animation();
-    setintervals();
+    startPlaceholderAnimation();
   }
+}
+
+function startPlaceholderAnimation(){
+  placeholder.style.display = "flex";
+  word = 0;
+  text_animation();
+  setintervals();
+}
+
+function clearInput() {
+  var inputElement = document.getElementById("search");
+  inputElement.value = "";
 }
 
 function setintervals(){
@@ -92,8 +165,3 @@ function text_animation(){
     word = 0;
   }
 }
-
-$('#searchForm').on('submit', (e)=>{
-  e.preventDefault();
-  window.location.href = '/search/' + $('#search').val();
-})
