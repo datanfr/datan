@@ -1395,6 +1395,34 @@ body{
 }
 /*
 ################
+               PAGE : SEARCH (pg-search)
+################
+*/
+.pg-search{
+  h1{
+    color: $text-black;
+    font-size: $h4-font-size;
+    font-weight: 800;
+  }
+  h2{
+    color: $bleu;
+    font-size: $h4-font-size;
+    font-weight: 800;
+    span{
+      font-size: .85rem;
+      font-style: italic;
+      color: $text-gray-light;
+      font-weight: 400;
+    }
+  }
+  h3{
+    font-size: $h6-font-size;
+    font-weight: 800;
+    color: $text-gray-light;
+  }
+}
+/*
+################
                PAGE : PAGE (pg-page)
 ################
 */

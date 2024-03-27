@@ -34,9 +34,12 @@ class Search extends CI_Controller
         return $this->response($results);
     }
 
-    public function index($search){
+    public function index($query){
+      $data['query'] = urldecode($query);
+      $data['results'] = $this->search_model->searchInAll($query);
+      $data['count'] = count($data['results']);
 
-      $data['results'] = $this->search_model->searchInAll($search);
+      $data['results'] = $this->search_model->sort($data['results']);
 
       //Meta
       $data['url'] = $this->meta_model->get_url();
