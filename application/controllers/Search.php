@@ -20,7 +20,7 @@ class Search extends CI_Controller
         $results = [];
         $search = $this->input->get('q');
 
-        $return = $this->search_model->searchInAll($search);
+        $return = $this->search_model->searchInAll($search, 5, 10);
         foreach($return as $x){
             $results[] = [
                 'text' => $x['title'],
@@ -36,7 +36,7 @@ class Search extends CI_Controller
 
     public function index($query){
       $data['query'] = urldecode($query);
-      $data['results'] = $this->search_model->searchInAll($query);
+      $data['results'] = $this->search_model->searchInAll($query, NULL, NULL);
       $data['count'] = count($data['results']);
 
       $data['results'] = $this->search_model->sort($data['results']);
