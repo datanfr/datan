@@ -92,3 +92,8 @@ function text_animation(){
     word = 0;
   }
 }
+
+$('#searchForm').on('submit', (e)=>{
+  e.preventDefault();
+  window.location.href = '/search/' + $('#search').val();
+})
