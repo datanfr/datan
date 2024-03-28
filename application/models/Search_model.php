@@ -12,20 +12,20 @@ class Search_model extends CI_Model
         $category_max = $category_max ?? 999999999;
         $total_max = $total_max ?? 999999999;
 
-        $search = $this->db->escape($search);
-        $searchString = $this->db->escape_str($search);
-        $searchLike = $this->db->escape_like_str($search);
+        $search = urldecode($search);
+        $search = $this->db->escape_str($search);
         $category_max = $this->db->escape($category_max);
+        $total_max = $this->db->escape($total_max);
 
         $sql = "SELECT `source`, `title`, `description`, `url` FROM (
         (SELECT
             'vote' AS source,
             vd.title AS title,
-            CONCAT('...', SUBSTRING(vd.description, GREATEST(1, LOCATE(" . $search . ", vd.description) - 100), LEAST(LENGTH(vd.description), 200 + LENGTH(" . $search . "))), '...') AS description,
+            CONCAT('...', SUBSTRING(vd.description, GREATEST(1, LOCATE('" . $search . "', vd.description) - 100), LEAST(LENGTH(vd.description), 200 + LENGTH('" . $search . "'))), '...') AS description,
             CONCAT('votes/legislature-', vd.legislature, '/vote_', vd.voteNumero) as url,
-            MATCH(vd.title, vd.description) AGAINST(" . $search . ") as score
+            MATCH(vd.title, vd.description) AGAINST('" . $search . "') as score
         FROM votes_datan vd
-        WHERE MATCH(vd.title, vd.description) AGAINST(" . $search . ")
+        WHERE MATCH(vd.title, vd.description) AGAINST('" . $search . "')
         LIMIT " . $category_max . "
         )
         /* require: ALTER TABLE `votes_datan` ADD FULLTEXT `idx_search` (`title`, `description`); */
@@ -37,9 +37,9 @@ class Search_model extends CI_Model
             CONCAT(o.libelle, ' (', o.libelleAbrev, ')') AS title,
             CONCAT('Législature ', o.legislature) AS description,
             CONCAT('groupes/legislature-', o.legislature, '/', LOWER(o.libelleAbrev)) AS url,
-            MATCH(o.libelle) AGAINST('*" . $searchString . "*' IN BOOLEAN MODE) as score
+            MATCH(o.libelle) AGAINST('*" . $search . "*' IN BOOLEAN MODE) as score
           FROM organes o
-          WHERE o.coteType = 'GP' AND (MATCH(o.libelle) AGAINST('*" . $searchString . "*' IN BOOLEAN MODE) OR o.libelleAbrev LIKE '" . $searchLike . "%')
+          WHERE o.coteType = 'GP' AND (MATCH(o.libelle) AGAINST('*" . $search . "*' IN BOOLEAN MODE) OR o.libelleAbrev LIKE '" . $search . "%')
           ORDER BY o.dateDebut DESC
           LIMIT " . $category_max . "
           /* require: ALTER TABLE `organes` ADD FULLTEXT `idx_search` (`libelle`); */
@@ -52,9 +52,9 @@ class Search_model extends CI_Model
             CONCAT(d.nameFirst, ' ', d.nameLast) AS title,
             d.libelle AS description,
             CONCAT('deputes/', d.dptSlug, '/depute_', d.nameUrl) as url,
-            MATCH(d.nameFirst, d.nameLast) AGAINST('*" . $searchString . "*' IN BOOLEAN MODE) as score
+            MATCH(d.nameFirst, d.nameLast) AGAINST('*" . $search . "*' IN BOOLEAN MODE) as score
         FROM deputes_last d
-        WHERE MATCH(d.nameFirst, d.nameLast) AGAINST('*" . $searchString . "*' IN BOOLEAN MODE)
+        WHERE MATCH(d.nameFirst, d.nameLast) AGAINST('*" . $search . "*' IN BOOLEAN MODE)
         /* require: ALTER TABLE `deputes_last` ADD FULLTEXT `idx_search` (`nameFirst`, `nameLast`); */
         LIMIT " . $category_max . "
     )
@@ -63,11 +63,11 @@ class Search_model extends CI_Model
             SELECT
                 'blog' as source,
             title as title,
-            CONCAT('...', SUBSTRING(body, GREATEST(1, LOCATE(" . $search . ", body) - 100), LEAST(LENGTH(body), 200 + LENGTH(" . $search . "))), '...') AS description,
+            CONCAT('...', SUBSTRING(body, GREATEST(1, LOCATE('" . $search . "', body) - 100), LEAST(LENGTH(body), 200 + LENGTH('" . $search . "'))), '...') AS description,
             CONCAT('blog/rapports/', slug) as url,
-            MATCH(posts.title, posts.body) AGAINST('*" . $searchString . "*' IN BOOLEAN MODE) as score
+            MATCH(posts.title, posts.body) AGAINST('*" . $search . "*' IN BOOLEAN MODE) as score
             FROM posts
-            WHERE MATCH(posts.title, posts.body) AGAINST('*" . $searchString . "*' IN BOOLEAN MODE)
+            WHERE MATCH(posts.title, posts.body) AGAINST('*" . $search . "*' IN BOOLEAN MODE)
             LIMIT " . $category_max . "
             /* require: ALTER TABLE `posts` ADD FULLTEXT `idx_search` (`title`, `body`); */
         )
@@ -83,7 +83,7 @@ class Search_model extends CI_Model
             FROM circos c
             LEFT JOIN departement d ON c.dpt = d.departement_code
             LEFT JOIN cities_infos ci ON c.insee = ci.insee
-            WHERE c.commune_nom LIKE '" . $searchLike . "%'
+            WHERE c.commune_nom LIKE '" . $search . "%'
             GROUP BY c.commune_nom
             ORDER BY ci.pop2017 DESC
             LIMIT " . $category_max . "
