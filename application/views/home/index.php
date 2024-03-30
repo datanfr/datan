@@ -27,7 +27,7 @@
                   <input id="search" type="text" placeholder="Exemple : <?= $placeholder ?>">
                   <div class="search-results" id="search-results-bloc" style="display: none">
                     <div id="search-results-list"></div>
-                    <a id="more-results-link">
+                    <a class="py-2 no-decoration" id="more-results-link">
                       <?= file_get_contents(asset_url() . "imgs/icons/bi-search.svg") ?>
                       Plus de résultats
                     </a>
