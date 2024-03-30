@@ -2,7 +2,13 @@
   <div class="container test-border">
     <div class="row">
       <div class="col-12">
-        <span>BARRE DE RECHERCHE</span>
+        <h1 class="text-center mb-3">Recherchez sur Datan</h1>
+        <?= form_open('/search', 'id="searchForm" method="GET" autocomplete="off"'); ?>
+          <div class="input-group">
+            <input class="form-control" id="searchInput" type="text" placeholder="<?= $query ?>">
+          </div>
+        </form>
+        <p class="text-center mt-3 mb-0 text-white font-italic">Recherchez un député, un groupe politique, une ville, un vote.</p>
       </div>
     </div>
   </div>
@@ -10,16 +16,16 @@
 <div class="container pg-search test-border py-5">
   <div class="row">
     <div class="col-12">
-      <h1>Résultats : « <?= $query ?> »</h1>
-      <h3><?= $count ?> résultat<?= $count > 1 ? "s" : "" ?></h3>
+      <h2>Résultats : « <?= $query ?> »</h2>
+      <p class="results mb-0"><?= $count ?> résultat<?= $count > 1 ? "s" : "" ?></p>
     </div>
     <div class="col-12 mt-5">
       <?php foreach ($results as $key => $value): ?>
         <?php if ($value['results']): ?>
-          <h2>
+          <h3>
             <?= $value['name'] ?>
             <span>- <?= count($value['results']) ?> résultat<?= count($value['results']) > 1 ? "s" : "" ?></span>
-          </h2>
+          </h3>
           <?php foreach ($value['results'] as $x): ?>
             <p>
               <a href="<?= base_url() . "" . $x['url'] ?>" target="_blank"><?= $x['title'] ?> - <?= $x['source'] ?></a>
@@ -30,3 +36,14 @@
     </div>
   </div>
 </div>
+
+<script>
+    document.getElementById('searchForm').addEventListener('submit', function(event) {
+      event.preventDefault(); // Prevent default form submission
+
+      var query = document.getElementById('searchInput').value.trim();
+      if (query !== '') {
+        window.location.href = encodeURIComponent(query); // Redirect to the desired URL
+      }
+    });
+  </script>

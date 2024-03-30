@@ -1400,11 +1400,15 @@ body{
 */
 .pg-search{
   h1{
+    color: #ffffff;
+    font-weight: 800;
+  }
+  h2{
     color: $text-black;
     font-size: $h4-font-size;
     font-weight: 800;
   }
-  h2{
+  h3{
     color: $bleu;
     font-size: $h4-font-size;
     font-weight: 800;
@@ -1415,10 +1419,15 @@ body{
       font-weight: 400;
     }
   }
-  h3{
+  .results {
     font-size: $h6-font-size;
     font-weight: 800;
     color: $text-gray-light;
+  }
+  #searchForm{
+    #searchInput{
+      border-radius: .50rem;
+    }
   }
 }
 /*
