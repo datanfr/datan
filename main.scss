@@ -1589,9 +1589,30 @@ body{
   .bloc-search-deputes{
     .card{
       box-shadow: $card-box-shadow;
-      h2{
-        font-size: $h5-font-size;
-        font-weight: 600;
+      border-radius: 8px;
+    }
+    .placeholder{
+      color: $bleu;
+      @include media-breakpoint-up(md) {
+        font-size: $h2-font-size;
+      }
+      @include media-breakpoint-down(sm) {
+        font-size: $h4-font-size;
+      }
+      font-weight: 800;
+      .box{
+        margin-right: 5px;
+        width: 100%;
+      }
+      .slider_box{
+        position: relative;
+        width: 100%;
+      }
+      .slider{
+        position: absolute;
+        left: -5px;
+        opacity: 0;
+        transition: 0.5s;
       }
     }
   }
@@ -1766,29 +1787,6 @@ body{
     align-items: center;
     justify-content: center;
     width: 40px;
-  }
-  .placeholder{
-    position:absolute;
-    right: 0;
-    left: 40px;
-    top: 10px;
-    display: flex;
-    align-items: center;
-    pointer-events: none;
-    color: #989898;
-    .box{
-      margin-right: 5px;
-    }
-    .slider_box{
-      position: relative;
-      flex: 1;
-    }
-    .slider{
-      position: absolute;
-      left: -5px;
-      opacity: 0;
-      transition: 0.5s;
-    }
   }
   .search-results{
     position: absolute;

@@ -6,8 +6,15 @@
   <div class="row bloc-search-deputes mt-4">
     <div class="col-xl-6 col-lg-8 col-md-10 offset-xl-3 offset-lg-2 offset-md-1">
       <div class="card">
-        <div class="card-header d-flex flex-row justify-content-center pt-4 pb-1">
-          <h2>NOUVELLE BARRE DE RECHERCHE</h2>
+        <div class="card-header pt-4 pb-1">
+          <div class="placeholder d-flex">
+            <div class="box d-flex justify-content-end">
+              Je cherche
+            </div>
+            <div class="slider_box">
+              <div class="slider"></div>
+            </div>
+          </div>
         </div>
         <div class="card-header row pb-4">
           <div class="col-12 px-4">
@@ -17,15 +24,7 @@
                   <div class="search_icon">
                     <?= file_get_contents(asset_url() . "imgs/icons/bi-search.svg") ?>
                   </div>
-                  <input id="search" type="text">
-                  <div class="placeholder">
-                    <div class="box">
-                      <p class="mb-0">Je cherche</p>
-                    </div>
-                    <div class="slider_box">
-                      <div class="slider"></div>
-                    </div>
-                  </div>
+                  <input id="search" type="text" placeholder="Exemple : <?= $placeholder ?>">
                   <div class="search-results" id="search-results-bloc" style="display: none">
                     <div id="search-results-list"></div>
                     <a id="more-results-link">
