@@ -1,14 +1,26 @@
 <div class="container-fluid pg-search bg-info py-5">
-  <div class="container test-border">
+  <div class="container">
     <div class="row">
       <div class="col-12">
         <h1 class="text-center mb-3">Recherchez sur Datan</h1>
-        <?= form_open('/search', 'id="searchForm" method="GET" autocomplete="off"'); ?>
-          <div class="input-group">
-            <input class="form-control" id="searchInput" type="text" placeholder="<?= $query ?>">
+      </div>
+    </div>
+      <?= form_open('/search', 'id="searchForm" method="GET" autocomplete="off"'); ?>
+        <div class="row">
+          <div class="col-lg-8 offset-lg-1">
+            <input class="form-control" id="searchInput" type="text" value="<?= $query ?>">
           </div>
-        </form>
-        <p class="text-center mt-3 mb-0 text-white font-italic">Recherchez un député, un groupe politique, une ville, un vote.</p>
+          <div class="col-lg-2 mt-3 mt-lg-0 d-flex justify-content-center">
+            <button type="submit" class="btn btn-primary d-flex justify-content-center align-items-center">
+              <?= file_get_contents(asset_url() . "imgs/icons/bi-search.svg") ?><span class="ml-2">Rechercher</span>
+            </button>
+          </div>
+        </div>
+      <?= form_close() ?>
+      <div class="row">
+        <div class="col-12">
+          <p class="text-center mt-3 mb-0 text-white font-italic">Recherchez un député, un groupe politique, une ville, un vote</p>
+        </div>
       </div>
     </div>
   </div>
