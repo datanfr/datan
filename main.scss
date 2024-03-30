@@ -1791,19 +1791,22 @@ body{
   .search-results{
     position: absolute;
     z-index: 99;
-    left: 0;
-    right: 0;
+    left: -1px;
+    right: -1px;
     top: 100%;
     border: 1px solid #d4d4d4;
-    border-bottom: none;
     border-top: none;
     background-color: #ffffff;
+    border-bottom-left-radius: 8px;
+    border-bottom-right-radius: 8px;
     a:first-child{
       margin-top: 0.75rem;
     }
     a {
       display: block;
-      margin: 0rem 0.75rem 0.5rem 0.75rem;
+      margin-bottom: 0.5rem;
+      padding-left: 0.75rem;
+      padding-right: 0.75rem;
       cursor: pointer;
       &:before {
         vertical-align: middle;

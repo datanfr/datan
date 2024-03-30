@@ -77,7 +77,7 @@ class Search_model extends CI_Model
             SELECT
                 'ville' as source,
             c.commune_nom as title,
-            d.departement_nom AS description,
+            CONCAT(d.departement_nom, ' (', d.departement_code,')') AS description,
             CONCAT('deputes/', d.slug, '/ville_', c.commune_slug) as url,
             ci.pop2017/10000 AS score
             FROM circos c
