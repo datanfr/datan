@@ -116,7 +116,7 @@ let slider = document.querySelector(".slider");
 let slider_box = document.querySelector(".slider_box");
 let placeholder = document.querySelector(".placeholder");
 
-let list = ["un député", "une ville", "un groupe politique", "un vote"];
+let list = ["un député", "une ville", "un groupe", "un vote"];
 let word = 0;
 let intervals = "";
 text_animation();
@@ -163,5 +163,25 @@ function text_animation(){
   }, 2000);
   if(list.length == word) {
     word = 0;
+  }
+}
+
+function stopInterval() {
+  clearInterval(intervals);
+}
+
+// Check if the Page Visibility API is supported by the browser
+if (typeof document.hidden !== "undefined") {
+  // Set up event listeners for visibility change
+  document.addEventListener("visibilitychange", handleVisibilityChange);
+}
+
+function handleVisibilityChange() {
+  if (document.hidden) {
+    // Page is hidden, stop or pause the interval
+    stopInterval();
+  } else {
+    // Page is visible again, start the interval
+    setintervals();
   }
 }
