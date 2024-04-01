@@ -1410,7 +1410,7 @@ body{
   }
   h3{
     color: $bleu;
-    font-size: $h4-font-size;
+    font-size: $h5-font-size;
     font-weight: 800;
     span{
       font-size: .85rem;
@@ -1825,7 +1825,10 @@ body{
       content: url("../imgs/icons/person-fill.svg");
     }
     .ville:before{
-      content: url("../imgs/icons/house-door-fill.svg")
+      content: url("../imgs/icons/house-door-fill.svg");
+    }
+    .groupe:before{
+      content: url("../imgs/icons/people-fill.svg");
     }
     .blog:before, .vote:before{
       content: url("../imgs/icons/file-text-fill.svg");

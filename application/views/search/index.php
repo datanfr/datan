@@ -25,24 +25,27 @@
     </div>
   </div>
 </div>
-<div class="container pg-search test-border py-5">
+<div class="container pg-search py-5">
   <div class="row">
     <div class="col-12">
       <h2>Résultats : « <?= $query ?> »</h2>
       <p class="results mb-0"><?= $count ?> résultat<?= $count > 1 ? "s" : "" ?></p>
     </div>
-    <div class="col-12 mt-5">
+    <div class="col-12 mt-4">
       <?php foreach ($results as $key => $value): ?>
         <?php if ($value['results']): ?>
-          <h3>
-            <?= $value['name'] ?>
-            <span>- <?= count($value['results']) ?> résultat<?= count($value['results']) > 1 ? "s" : "" ?></span>
-          </h3>
-          <?php foreach ($value['results'] as $x): ?>
-            <p>
-              <a href="<?= base_url() . "" . $x['url'] ?>" target="_blank"><?= $x['title'] ?> - <?= $x['source'] ?></a>
-            </p>
-          <?php endforeach; ?>
+          <div class="mb-3">
+            <h3>
+              <?= file_get_contents(asset_url() . "imgs/icons/" . $value['icon'] . ".svg") ?>
+              <?= $value['name'] ?>
+              <span>- <?= count($value['results']) ?> résultat<?= count($value['results']) > 1 ? "s" : "" ?></span>
+            </h3>
+            <?php foreach ($value['results'] as $x): ?>
+              <a class="no-decoration underline d-block mb-1" href="<?= base_url() . "" . $x['url'] ?>" target="_blank">
+                <?= $x['title'] ?>
+              </a>
+            <?php endforeach; ?>
+          </div>
         <?php endif; ?>
       <?php endforeach; ?>
     </div>
