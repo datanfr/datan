@@ -17,10 +17,11 @@ class Search_model extends CI_Model
         $category_max = $this->db->escape($category_max);
         $total_max = $this->db->escape($total_max);
 
-        $sql = "SELECT `source`, `title`, `description`, `url` FROM (
+        $sql = "SELECT `source`, `title`, `description_search`, `description`, `url` FROM (
         (SELECT
             'vote' AS source,
             vd.title AS title,
+            '' AS description_search,
             CONCAT('...', SUBSTRING(vd.description, GREATEST(1, LOCATE('" . $search . "', vd.description) - 100), LEAST(LENGTH(vd.description), 200 + LENGTH('" . $search . "'))), '...') AS description,
             CONCAT('votes/legislature-', vd.legislature, '/vote_', vd.voteNumero) as url,
             MATCH(vd.title, vd.description) AGAINST('" . $search . "') as score
@@ -35,6 +36,7 @@ class Search_model extends CI_Model
           SELECT
             'groupe' AS source,
             CONCAT(o.libelle, ' (', o.libelleAbrev, ')') AS title,
+            CONCAT('Leg. ', o.legislature) AS description_search,
             CONCAT('Législature ', o.legislature) AS description,
             CONCAT('groupes/legislature-', o.legislature, '/', LOWER(o.libelleAbrev)) AS url,
             MATCH(o.libelle) AGAINST('*" . $search . "*' IN BOOLEAN MODE) as score
@@ -50,6 +52,7 @@ class Search_model extends CI_Model
         (SELECT
             'depute' AS source,
             CONCAT(d.nameFirst, ' ', d.nameLast) AS title,
+            CONCAT('(', d.libelleAbrev, ')') AS description_search,
             d.libelle AS description,
             CONCAT('deputes/', d.dptSlug, '/depute_', d.nameUrl) as url,
             MATCH(d.nameFirst, d.nameLast) AGAINST('*" . $search . "*' IN BOOLEAN MODE) as score
@@ -63,6 +66,7 @@ class Search_model extends CI_Model
             SELECT
                 'blog' as source,
             title as title,
+            '' AS description_search,
             CONCAT('...', SUBSTRING(body, GREATEST(1, LOCATE('" . $search . "', body) - 100), LEAST(LENGTH(body), 200 + LENGTH('" . $search . "'))), '...') AS description,
             CONCAT('blog/rapports/', slug) as url,
             MATCH(posts.title, posts.body) AGAINST('*" . $search . "*' IN BOOLEAN MODE) as score
@@ -77,6 +81,7 @@ class Search_model extends CI_Model
             SELECT
                 'ville' as source,
             c.commune_nom as title,
+            CONCAT('(', d.departement_code,')') AS description_search,
             CONCAT(d.departement_nom, ' (', d.departement_code,')') AS description,
             CONCAT('deputes/', d.slug, '/ville_', c.commune_slug) as url,
             ci.pop2017/10000 AS score

@@ -32,12 +32,13 @@ function searchQuery() {
           div.textContent = result.text;
           div.className = result.source + " no-decoration";
           div.href = "https://datan.fr/" + result.url;
+          console.log(result);
           if (result.description != "......") {
-            let description = document.createElement("div");
+            let description = document.createElement("span");
             description.className = "description";
-            description.textContent = result.description.replace(/<\/?[^>]+(>|$)/g, "");
+            description.textContent = " " + result.description.replace(/<\/?[^>]+(>|$)/g, "");
             div.appendChild(description);
-          }          
+          }
           resultsDiv.appendChild(div);
         });
       });
