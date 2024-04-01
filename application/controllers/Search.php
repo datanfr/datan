@@ -24,7 +24,7 @@ class Search extends CI_Controller
         foreach($return as $x){
             $results[] = [
                 'text' => $x['title'],
-                'description' => $x['description'],
+                'description' => $x['description_search'],
                 'url' => $x['url'],
                 'source' => $x['source'],
                 // 'score' => $x['score']
