@@ -169,6 +169,7 @@ function text_animation(){
   }
 }
 
+// BELOW TRY SOLVING THINGS
 function stopInterval() {
   clearInterval(intervals);
 }
