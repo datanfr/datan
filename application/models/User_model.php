@@ -42,6 +42,7 @@
         return $result_user->row(0);
       } else {
         $this->db->where('email', $username);
+        $this->db->join('users_mp', 'users.id = users_mp.user', 'left');
         $result_email = $this->db->get('users');
         if ($result_email->num_rows() == 1) {
           return $result_email->row(0);
