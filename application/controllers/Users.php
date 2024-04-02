@@ -264,7 +264,7 @@
               // Create session
               $user_data = array(
                 'user_id' => $user->id,
-                'username' => $username,
+                'username' => $user->username,
                 'logged_in' => true,
                 'type' => $user->type,
               );
