@@ -31,7 +31,7 @@ function searchQuery() {
           let div = document.createElement("a");
           div.textContent = result.text;
           div.className = result.source + " no-decoration";
-          div.href = "https://datan.fr/" + result.url;
+          div.href = get_base_url() + "/" + result.url;
           console.log(result);
           if (result.description != "......") {
             let description = document.createElement("span");

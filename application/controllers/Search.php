@@ -38,6 +38,7 @@ class Search extends CI_Controller
       $data['query'] = urldecode($query);
       $data['results'] = $this->search_model->searchInAll($query, NULL, NULL);
       $data['count'] = count($data['results']);
+      $data['max_entries'] = 10;
 
       $data['results'] = $this->search_model->sort($data['results']);
 
