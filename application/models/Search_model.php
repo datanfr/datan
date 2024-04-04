@@ -41,7 +41,7 @@ class Search_model extends CI_Model
             CONCAT('groupes/legislature-', o.legislature, '/', LOWER(o.libelleAbrev)) AS url,
             MATCH(o.libelle) AGAINST('*" . $search . "*' IN BOOLEAN MODE) as score
           FROM organes o
-          WHERE o.coteType = 'GP' AND (MATCH(o.libelle) AGAINST('*" . $search . "*' IN BOOLEAN MODE) OR o.libelleAbrev LIKE '" . $search . "%')
+          WHERE o.coteType = 'GP' AND (MATCH(o.libelle) AGAINST('*" . $search . "*' IN BOOLEAN MODE) OR o.libelleAbrev LIKE '" . $search . "%') AND o.legislature >= 14
           ORDER BY o.dateDebut DESC
           LIMIT " . $category_max . "
           /* require: ALTER TABLE `organes` ADD FULLTEXT `idx_search` (`libelle`); */
@@ -53,11 +53,11 @@ class Search_model extends CI_Model
             'depute' AS source,
             CONCAT(d.nameFirst, ' ', d.nameLast) AS title,
             CONCAT('(', d.libelleAbrev, ')') AS description_search,
-            d.libelle AS description,
+            CONCAT('Législature ', d.legislature, ' - ', d.libelleAbrev) AS description,
             CONCAT('deputes/', d.dptSlug, '/depute_', d.nameUrl) as url,
             MATCH(d.nameFirst, d.nameLast) AGAINST('*" . $search . "*' IN BOOLEAN MODE) as score
         FROM deputes_last d
-        WHERE MATCH(d.nameFirst, d.nameLast) AGAINST('*" . $search . "*' IN BOOLEAN MODE)
+        WHERE MATCH(d.nameFirst, d.nameLast) AGAINST('*" . $search . "*' IN BOOLEAN MODE) AND d.legislature >= 14
         /* require: ALTER TABLE `deputes_last` ADD FULLTEXT `idx_search` (`nameFirst`, `nameLast`); */
         LIMIT " . $category_max . "
     )
