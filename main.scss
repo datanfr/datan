@@ -1410,7 +1410,7 @@ body{
   }
   h3{
     color: $bleu;
-    font-size: $h5-font-size;
+    font-size: $h4-font-size;
     font-weight: 800;
     span{
       font-size: .85rem;
@@ -1423,6 +1423,38 @@ body{
     font-size: $h6-font-size;
     font-weight: 800;
     color: $text-gray-light;
+  }
+  .card_results{
+    border: none;
+    a{
+      display: flex;
+      padding: 0.6rem 1rem;
+      border-bottom: 1px solid #ccc;
+      .text{
+        flex: 1 1 auto;
+      }
+      .icon{
+        width: 40px;
+        background-image: url('../../assets/imgs/icons/bi-chevron-right.svg');
+        background-position: center;
+        background-repeat: no-repeat;
+      }
+      .title{
+        color: $text-black;
+        font-weight: 800;
+      }
+      .description{
+        display: block;
+        font-style: italic;
+        color: $text-gray-light;
+      }
+      &:hover{
+        background-color: #F2F2F2;
+      }
+    }
+    .progress{
+      width: 200px;
+    }
   }
 }
 /*
