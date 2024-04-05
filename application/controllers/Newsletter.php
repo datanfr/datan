@@ -176,7 +176,7 @@ class Newsletter extends CI_Controller
 
         // Edited text
         if ($data['votesInfos']['adopted'] > $data['votesInfos']['rejected']) {
-          $data['votesInfosEdited'] = "Au total, " . $data['votesInfos']['adopted'] . " votes adoptés par les députés tandis que " . $data['votesInfos']['rejected'] . " votes rejetés.";
+          $data['votesInfosEdited'] = "Au total, " . $data['votesInfos']['adopted'] . " votes ont été adoptés par les députés tandis que " . $data['votesInfos']['rejected'] . " votes ont été rejetés.";
         } elseif ($data['votesInfos']['adopted'] < $data['votesInfos']['rejected']) {
           $data['votesInfosEdited'] = "Au total, " . $data['votesInfos']['rejected'] . " votes ont été rejetés par les députés tandis que  " . $data['votesInfos']['adopted'] . " votes ont été adoptés.";
         } else {
