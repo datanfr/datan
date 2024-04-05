@@ -29,16 +29,10 @@ function searchQuery() {
         }
         data.forEach(result => {
           let div = document.createElement("a");
-          div.textContent = result.text;
+          div.innerHTML = result.text;
           div.className = result.source + " no-decoration";
           div.href = get_base_url() + "/" + result.url;
           console.log(result);
-          if (result.description != "......") {
-            let description = document.createElement("span");
-            description.className = "description";
-            description.textContent = " " + result.description.replace(/<\/?[^>]+(>|$)/g, "");
-            div.appendChild(description);
-          }
           resultsDiv.appendChild(div);
         });
       });
