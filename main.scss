@@ -1426,10 +1426,13 @@ body{
   }
   .card_results{
     border: none;
-    a{
+    box-shadow: $card-box-shadow;
+    a {
       display: flex;
       padding: 0.6rem 1rem;
-      border-bottom: 1px solid #ccc;
+      &:not(:last-child){
+        border-bottom: 1px solid #ccc;
+      }
       .text{
         flex: 1 1 auto;
       }

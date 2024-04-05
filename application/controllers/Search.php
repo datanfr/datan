@@ -40,7 +40,7 @@ class Search extends CI_Controller
       $data['count'] = count($data['results']);
       $data['max_entries'] = 10;
 
-      $data['results'] = $this->search_model->sort($data['results']);
+      $data['results'] = $this->search_model->sort($data['results'], $data['query']);
 
       //Meta
       $data['url'] = $this->meta_model->get_url();
