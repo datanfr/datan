@@ -43,8 +43,8 @@
                 <?php for ($x = 0; $x < min(10, count($value['results'])); $x++): ?>
                   <a class="no-decoration" href="<?= base_url() . "" . $value['results'][$x]['url'] ?>">
                     <div class="text">
-                      <span class="title"><?= $value['results'][$x]['title'] ?></span>
-                      <span class="description"><?= $value['results'][$x]['description'] ?></span>
+                      <div class="title"><?= $value['results'][$x]['title'] ?></div>
+                      <div class="description"><?= $value['results'][$x]['description'] ?></div>
                     </div>
                     <div class="icon">
                     </div>
@@ -96,19 +96,19 @@
         var div_text = document.createElement("div");
         div_text.className = "text";
 
-        var span_title = document.createElement("span");
-        span_title.className = "title";
-        span_title.textContent = elements_sliced[i]['title'];
+        var div_title = document.createElement("div");
+        div_title.className = "title";
+        div_title.innerHTML = elements_sliced[i]['title'];
 
-        var span_description = document.createElement("span");
-        span_description.className = "description";
-        span_description.textContent = elements_sliced[i]['description'];
+        var div_description = document.createElement("div");
+        div_description.className = "description";
+        div_description.innerHTML = elements_sliced[i]['description'];
 
         var div_icon = document.createElement("div");
         div_icon.className = "icon";
 
-        div_text.appendChild(span_title);
-        div_text.appendChild(span_description);
+        div_text.appendChild(div_title);
+        div_text.appendChild(div_description);
 
         new_element.appendChild(div_text);
         new_element.appendChild(div_icon);
