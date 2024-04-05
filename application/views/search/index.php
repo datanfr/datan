@@ -1,37 +1,32 @@
 <div class="container-fluid pg-search bg-info py-5">
   <div class="container">
     <div class="row">
-      <div class="col-12">
+      <div class="col-lg-10 offset-lg-1">
         <h1 class="text-center mb-3">Recherchez sur Datan</h1>
-      </div>
-    </div>
-      <?= form_open('/search', 'id="searchForm" method="GET" autocomplete="off"'); ?>
-        <div class="row">
-          <div class="col-lg-8 offset-lg-1">
-            <input class="form-control" id="searchInput" type="text" value="<?= $query ?>">
+        <?= form_open('/search', 'id="searchForm" method="GET" autocomplete="off"'); ?>
+          <div class="row">
+            <div class="col-lg-10">
+              <input class="form-control" id="searchInput" type="text" value="<?= $query ?>">
+            </div>
+            <div class="col-lg-2">
+              <button type="submit" class="btn btn-primary d-flex justify-content-center align-items-center">
+                <?= file_get_contents(asset_url() . "imgs/icons/bi-search.svg") ?><span class="ml-2">Rechercher</span>
+              </button>
+            </div>
           </div>
-          <div class="col-lg-2 mt-3 mt-lg-0 d-flex justify-content-center">
-            <button type="submit" class="btn btn-primary d-flex justify-content-center align-items-center">
-              <?= file_get_contents(asset_url() . "imgs/icons/bi-search.svg") ?><span class="ml-2">Rechercher</span>
-            </button>
-          </div>
-        </div>
-      <?= form_close() ?>
-      <div class="row">
-        <div class="col-12">
-          <p class="text-center mt-3 mb-0 text-white font-italic">Recherchez un député, un groupe politique, une ville, un vote</p>
-        </div>
+        <?= form_close() ?>
+        <p class="text-center mt-3 mb-0 text-white font-italic">Recherchez un député, un groupe politique, une ville, un vote</p>
       </div>
     </div>
   </div>
 </div>
 <div class="container pg-search py-5">
   <div class="row">
-    <div class="col-12">
+    <div class="col-lg-10 offset-lg-1">
       <h2>Résultats : « <?= $query ?> »</h2>
       <p class="results mb-0"><?= $count ?> résultat<?= $count > 1 ? "s" : "" ?></p>
     </div>
-    <div class="col-12 mt-4">
+    <div class="col-lg-10 offset-lg-1 mt-4">
       <?php foreach ($results as $key => $value): ?>
         <?php if ($value['results']): ?>
           <?php $total = count($value['results']) ?>
@@ -56,17 +51,14 @@
                   </a>
                 <?php endfor; ?>
               </div>
-              <div class="card-footer d-flex flex-column align-items-center bg-info py-3">
-                <p class="text-center text-white mb-0">Vous avez vu <?= $entries ?> résultats sur <?= $total ?></p>
-                <div class="progress mt-3">
-                  <div class="progress-bar" role="progressbar" style="width: <?= $progress ?>%" aria-valuenow="<?= $progress ?>" aria-valuemin="0" aria-valuemax="100"></div>
-                </div>
-                <?php if ($entries != $total): ?>
-                  <div class="d-flex justify-content-center mt-3">
-                    <button class="btn btn-light" onclick="showMore('<?= $key ?>')" id="button_<?= $key ?>" type="button">Show More</button>
+              <?php if ($entries != $total): ?>
+                <div class="card-footer d-flex flex-column align-items-center bg-info py-3">
+                  <p class="text-center text-white mb-0">Vous avez vu <span id="number_<?= $key ?>"><?= $entries ?></span> résultats sur <?= $total ?></p>
+                  <div class="d-flex justify-content-center">
+                    <button class="btn btn-light mt-3" onclick="showMore('<?= $key ?>')" id="button_<?= $key ?>" type="button">Voir plus de résultats</button>
                   </div>
-                <?php endif; ?>
-              </div>
+                </div>
+              <?php endif; ?>
             </div>
           </div>
         <?php endif; ?>
@@ -89,8 +81,10 @@
   function showMore(type){
     var results_name = "results_" + type;
     var button_name = "button_" + type;
+    var number_name = "number_" + type;
     var container = document.getElementById(results_name);
     var elements = <?php echo json_encode($results); ?>;
+    var number = document.getElementById(number_name);
     elements = elements[type].results;
     elements_sliced = elements.slice(max_entries);
     if (elements_sliced.length > 0) {
@@ -122,6 +116,8 @@
 
         max_entries++;
       }
+
+      number.innerText = max_entries;
 
       if (max_entries >= elements.length) {
         document.getElementById(button_name).style.display = "none";

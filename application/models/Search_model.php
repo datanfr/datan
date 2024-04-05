@@ -22,7 +22,7 @@ class Search_model extends CI_Model
             'vote' AS source,
             vd.title AS title,
             '' AS description_search,
-            CONCAT('...', SUBSTRING(vd.description, GREATEST(1, LOCATE('" . $search . "', vd.description) - 100), LEAST(LENGTH(vd.description), 200 + LENGTH('" . $search . "'))), '...') AS description,
+            vd.description AS description,
             CONCAT('votes/legislature-', vd.legislature, '/vote_', vd.voteNumero) as url,
             MATCH(vd.title, vd.description) AGAINST('" . $search . "') as score
         FROM votes_datan vd
@@ -67,7 +67,7 @@ class Search_model extends CI_Model
                 'blog' as source,
             title as title,
             '' AS description_search,
-            CONCAT('...', SUBSTRING(body, GREATEST(1, LOCATE('" . $search . "', body) - 100), LEAST(LENGTH(body), 200 + LENGTH('" . $search . "'))), '...') AS description,
+            body AS description,
             CONCAT('blog/rapports/', slug) as url,
             MATCH(posts.title, posts.body) AGAINST('*" . $search . "*' IN BOOLEAN MODE) as score
             FROM posts
@@ -103,7 +103,7 @@ class Search_model extends CI_Model
         return $data;
     }
 
-    public function sort($input){
+    public function sort($input, $search){
       $output = array(
         'depute' => array('name' => 'Députés', 'icon' => 'person-fill', 'results' => array()),
         'groupe' => array('name' => 'Groupes politiques', 'icon' => 'people-fill', 'results' => array()),
@@ -113,6 +113,22 @@ class Search_model extends CI_Model
       );
 
       foreach ($input as $key => $value) {
+        $value['description'] = strip_tags($value['description']);
+
+        // Return new description field for vote and blog types
+        if (in_array($value['source'], array('vote', 'blog'))) {
+          $position = stripos($value['description'], $search);
+          if ($position) {
+            $start = $position - 100 < 0 ? 0 : $position - 100;
+            $value['description_new'] = substr($value['description'], $start, 200);
+            $value['description_new'] = $start != 0 ? '...' . $value['description_new'] : $value['description_new'];
+            $value['description_new'] = $position + 100 < strlen($value['description']) ? $value['description_new'] . '...' : $value['description_new'];
+            $value['description'] = $value['description_new'];
+
+            $value['description'] = $value['description_new'];
+          }
+        }
+
         array_push($output[$value['source']]['results'], $value);
       }
       return $output;
