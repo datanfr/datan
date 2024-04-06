@@ -8,14 +8,11 @@ class Search_model extends CI_Model
     public function searchInAll($search, $category_max, $total_max)
     {
 
-        // Pour tester ajouter `score` dans le select et decommenter cote Home
-        $category_max = $category_max ?? 999999999;
-        $total_max = $total_max ?? 999999999;
+        $limitCategory = $category_max ? 'LIMIT ' . $category_max : '';
+        $limitMax = $total_max ? 'LIMIT ' . $total_max : '';
 
         $search = urldecode($search);
         $search = $this->db->escape_str($search);
-        $category_max = $this->db->escape($category_max);
-        $total_max = $this->db->escape($total_max);
 
         $sql = "SELECT `source`, `title`, `description_search`, `description`, `url` FROM (
           (
@@ -28,7 +25,7 @@ class Search_model extends CI_Model
           FROM deputes_last d
           WHERE d.legislature >= 14
           AND (CONCAT(d.nameFirst, ' ', d.nameLast) LIKE '" . $search . "%' OR CONCAT(d.nameLast, ' ', d.nameFirst) LIKE '" . $search . "%')
-          LIMIT " . $category_max . "
+          " . $limitCategory . "
         )
 
         UNION ALL
@@ -43,7 +40,7 @@ class Search_model extends CI_Model
           FROM organes o
           WHERE o.coteType = 'GP' AND (MATCH(o.libelle) AGAINST('*" . $search . "*' IN BOOLEAN MODE) OR o.libelleAbrev LIKE '" . $search . "%') AND o.legislature >= 14
           ORDER BY o.dateDebut DESC
-          LIMIT " . $category_max . "
+          " . $limitCategory . "
           /* require: ALTER TABLE `organes` ADD FULLTEXT `idx_search` (`libelle`); */
         )
 
@@ -59,10 +56,10 @@ class Search_model extends CI_Model
           FROM circos c
           LEFT JOIN departement d ON c.dpt = d.departement_code
           LEFT JOIN cities_infos ci ON c.insee = ci.insee
-          WHERE c.commune_nom LIKE '" . $search . "%'
+          WHERE REPLACE(c.commune_nom, '-', ' ') LIKE '". str_replace('-', ' ', $search) . "%'
           GROUP BY c.commune_nom
           ORDER BY LENGTH(c.commune_nom) - LENGTH('" . $search . "'), ci.pop2017 DESC
-          LIMIT " . $category_max . "
+          " . $limitCategory . "
         )
 
         UNION ALL
@@ -77,7 +74,7 @@ class Search_model extends CI_Model
           FROM votes_datan vd
           WHERE MATCH(vd.title, vd.description) AGAINST('" . $search . "')
           ORDER BY MATCH(vd.title, vd.description) AGAINST('*" . $search . "*' IN BOOLEAN MODE) DESC
-          LIMIT " . $category_max . "
+          " . $limitCategory . "
         )
         /* require: ALTER TABLE `votes_datan` ADD FULLTEXT `idx_search` (`title`, `description`); */
 
@@ -93,12 +90,12 @@ class Search_model extends CI_Model
           FROM posts
           WHERE MATCH(posts.title, posts.body) AGAINST('*" . $search . "*' IN BOOLEAN MODE)
           ORDER BY MATCH(posts.title, posts.body) AGAINST('*" . $search . "*' IN BOOLEAN MODE) DESC
-          LIMIT " . $category_max . "
+          " . $limitCategory . "
           /* require: ALTER TABLE `posts` ADD FULLTEXT `idx_search` (`title`, `body`); */
         )
 
       ) AS combined_results
-      LIMIT " . $total_max. "
+      " . $limitMax. "
     ";
 
         $data = $this->db->query($sql)->result_array();
