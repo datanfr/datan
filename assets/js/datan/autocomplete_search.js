@@ -162,24 +162,3 @@ function text_animation(){
     word = 0;
   }
 }
-
-// BELOW TRY SOLVING THINGS
-function stopInterval() {
-  clearInterval(intervals);
-}
-
-// Check if the Page Visibility API is supported by the browser
-if (typeof document.hidden !== "undefined") {
-  // Set up event listeners for visibility change
-  document.addEventListener("visibilitychange", handleVisibilityChange);
-}
-
-function handleVisibilityChange() {
-  if (document.hidden) {
-    // Page is hidden, stop or pause the interval
-    stopInterval();
-  } else {
-    // Page is visible again, start the interval
-    setintervals();
-  }
-}
