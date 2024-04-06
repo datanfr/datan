@@ -8,7 +8,7 @@
             <div class="col-lg-10">
               <input class="form-control" id="searchInput" type="text" value="<?= $query ?>">
             </div>
-            <div class="col-lg-2">
+            <div class="col-lg-2 d-flex justify-content-center mt-3 mt-lg-0">
               <button type="submit" class="btn btn-primary d-flex justify-content-center align-items-center">
                 <?= file_get_contents(asset_url() . "imgs/icons/bi-search.svg") ?><span class="ml-2">Rechercher</span>
               </button>
