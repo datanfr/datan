@@ -70,10 +70,10 @@ document.getElementById("search").addEventListener("keydown", function(e) {
   if (key === "ArrowDown" || key === "ArrowUp") {
       e.preventDefault();
     if (key === "ArrowDown") {
-      currentFocus ++;
+      currentFocus++;
       addActive(links);
     } else if (key === "ArrowUp") {
-      currentFocus --;
+      currentFocus--;
       addActive(links);
     }
   } else if (key === "Enter") {
