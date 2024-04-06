@@ -75,14 +75,6 @@
       return $query->result_array();
     }
 
-    public function get_random(){
-      $this->db->select('commune_nom');
-      $this->db->order_by('id', 'RANDOM');
-      $query = $this->db->get_where('circos', array('commune_nom != ' => '0'), 1);
-
-      return $query->row_array();
-    }
-
     public function get_mayor($dpt, $insee, $commune){
       if ($dpt === "987") {
         $insee = $dpt . "" . $commune;

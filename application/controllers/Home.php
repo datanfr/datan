@@ -15,7 +15,6 @@
 
     public function index() {
       //Get random data
-      $data['commune_random'] = $this->city_model->get_random();
       $data['depute_random'] = $this->deputes_model->get_depute_random();
       $data['depute_random'] = array_merge($data['depute_random'], gender($data['depute_random']['civ']));
       $data['depute_random']['couleurAssociee'] = $this->groupes_model->get_groupe_color(array($data['depute_random']['libelleAbrev'], $data['depute_random']['couleurAssociee']));
@@ -23,6 +22,12 @@
       $data['groupe_random'] = $this->groupes_model->get_groupe_random();
       if (!empty($data['groupe_random'])) {
         $data['groupe_random']['couleurAssociee'] = $this->groupes_model->get_groupe_color(array($data['groupe_random']['libelleAbrev'], $data['groupe_random']['couleurAssociee']));
+      }
+      $rand = rand(0, 10);
+      if ($rand < 5) {
+        $data['placeholder'] = $data['depute_random']['nameFirst'] . " " . $data['depute_random']['nameLast'];
+      } else {
+        $data['placeholder'] = $data['groupe_random']['libelle'] . " (" . $data['groupe_random']['libelleAbrev'] . ")";
       }
 
       //Get groups (cached)
@@ -106,10 +111,9 @@
       );
       // JS
       $data['js_to_load_up_defer'] = array('chart.min.js', 'chartjs-plugin-datalabels@2.1.js');
-      $data['js_to_load']= array(
+      $data['js_to_load'] = array(
         "datan/map_france.min",
-        "datan/autocomplete_deputes",
-        "datan/autocomplete_cities_api",
+        "datan/autocomplete_search",
         "flickity.pkgd.min",
       );
       // Load views
