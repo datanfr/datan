@@ -36,7 +36,7 @@ function searchQuery() {
           resultsDiv.appendChild(div);
         });
       });
-      document.getElementById("more-results-link").href = "search/" + query;
+      document.getElementById("more-results-link").href = "recherche/" + query;
   } else {
     closeDropdown();
   }
@@ -79,7 +79,7 @@ document.getElementById("search").addEventListener("keydown", function(e) {
   } else if (key === "Enter") {
     e.preventDefault();
     if (currentFocus === -1) {
-      window.location.href = 'search/' + $('#search').val();
+      window.location.href = 'recherche/' + $('#search').val();
     } else {
       links[currentFocus].click();
     }
