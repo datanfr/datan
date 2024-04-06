@@ -1,3 +1,4 @@
+// NO LONGER USED
 
 fetch('assets/data/deputes_json.txt').then(function (response) {
   return response.json();
