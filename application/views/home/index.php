@@ -6,27 +6,31 @@
   <div class="row bloc-search-deputes mt-4">
     <div class="col-xl-6 col-lg-8 col-md-10 offset-xl-3 offset-lg-2 offset-md-1">
       <div class="card">
-        <div class="card-header d-flex flex-row justify-content-center pt-4 pb-1">
-          <h2>JE TROUVE MON DÉPUTÉ</h2>
-        </div>
-        <div class="card-header row pb-4">
-          <div class="col-md-6 px-4">
-            <div class="input-name pt-1">
-              <form autocomplete="off">
-                <div class="autocomplete">
-                  <label class="pl-2" for="deputesNames">Son nom ?</label>
-                  <input id="deputesNames" type="text" name="depute" placeholder='Exemple : <?= $depute_random['nameFirst'] .' ' . $depute_random['nameLast'] ?>'>
-                </div>
-              </form>
+        <div class="card-header pt-4 pb-1">
+          <div class="placeholder d-flex">
+            <div class="box d-flex justify-content-end">
+              Je cherche
+            </div>
+            <div class="slider_box">
+              <div class="slider"></div>
             </div>
           </div>
-          <div class="col-md-6 px-4 mt-2 mt-md-0">
-            <div class="input-commune pt-1">
-              <form autocomplete="off">
-                <div class="autocomplete" id="autocomplete">
-                  <label class="pl-2" for="cities">Ma commune ?</label>
-                  <input id="cities" type="text" name="cities" placeholder="Exemple : <?= $commune_random['commune_nom'] ?>">
-                  <div id="citiesNamesautocomplete-list" class="autocomplete-items*">
+        </div>
+        <div class="card-header row pb-4">
+          <div class="col-12 px-4">
+            <div id="search-bloc" class="search-bloc">
+              <form autocomplete="off" action="recherche.php" id="searchForm" method="GET">
+                <div class="search">
+                  <div class="search_icon">
+                    <?= file_get_contents(asset_url() . "imgs/icons/bi-search.svg") ?>
+                  </div>
+                  <input id="search" type="text" placeholder="Exemple : <?= $placeholder ?>">
+                  <div class="search-results" id="search-results-bloc" style="display: none">
+                    <div id="search-results-list"></div>
+                    <a class="py-1 no-decoration text-info font-weight-bold" id="more-results-link">
+                      <?= file_get_contents(asset_url() . "imgs/icons/bi-search.svg") ?>
+                      <span class="ml-1">Plus de résultats</span>
+                    </a>
                   </div>
                 </div>
               </form>
