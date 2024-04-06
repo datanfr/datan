@@ -1781,7 +1781,9 @@ body{
     }
   }
 }
-// SEARCH HOMEPAGE ==> CHECK HERE WHAT NEEDS TO BE REMOVED AND KEPT
+
+
+// Search bloc on homepage
 .search-bloc{
   border: 1px solid #ddd;
   border-radius: 8px;
@@ -1867,6 +1869,30 @@ body{
     }
     .blog:before, .vote:before{
       content: url("../imgs/icons/file-text-fill.svg");
+    }
+  }
+}
+
+.hemicycle{
+  position: relative;
+  @include media-breakpoint-down(sm) {
+    height: 200px;
+  }
+  .n-hemicycle{
+    position: absolute;
+    left: 50%;
+    transform: translate(-50%, 50%);
+    bottom: 20%;
+    span{
+      margin-bottom: 0;
+      font-weight: 800;
+      color: $bleu;
+      @include media-breakpoint-up(md) {
+        font-size: $h1-font-size;
+      }
+      @include media-breakpoint-down(sm) {
+        font-size: $h5-font-size;
+      }
     }
   }
 }
