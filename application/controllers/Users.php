@@ -75,7 +75,7 @@
         }
       } else {
         $mpId = FALSE;
-        //redirect(); // The register system is for now opened only for MPs.
+        redirect(); // The register system is for now opened only for MPs.
       }
 
       $this->form_validation->set_rules('name', 'Name', 'required');
