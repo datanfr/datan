@@ -45,6 +45,7 @@ class Search extends CI_Controller
       $data['url'] = $this->meta_model->get_url();
       $data['title_meta'] = "« " . $data['query'] . " » - Cherchez un député, une ville, un groupe | Datan";
       $data['description_meta'] = "Cherchez votre député, votre ville, un groupe politique, ou un scrutin de l'Assemblée nationale sur Datan.";
+      $data['seoNoFollow'] = TRUE;
       //Open Graph
       $data['ogp'] = $this->meta_model->get_ogp('home', $data['title_meta'], $data['description_meta'], $data['url'], $data);
       // Load views
