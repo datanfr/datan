@@ -1871,34 +1871,6 @@ body{
   }
 }
 
-// OLD Search to remove
-.input-name, .input-commune{
-  .autocomplete-active{
-    /*when navigating through the items using the arrow keys:*/
-    background-color: DodgerBlue !important;
-    color: #ffffff;
-  }
-}
-// SEARCH NEW ELEMENTS (cities autocomplete)
-ul.ui-menu{
-  position: absolute;
-  border: 1px solid #d4d4d4;
-  border-top: none;
-  z-index: 99;
-  background-color: #fff;
-  list-style-type: none;
-  padding: 0;
-  li {
-    padding: 10px;
-    cursor: pointer;
-    border-bottom: 1px solid #d4d4d4;
-    background-color: #fff;
-    text-align: center;
-    &:hover{
-      background-color: #e9e9e9;
-    }
-  }
-}
 /*
 ################
                PAGE : DEPARTEMENT (pg-departement)
