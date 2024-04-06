@@ -193,7 +193,7 @@ $route['admin/logs-scripts/(:any)'] = 'logs/index/$1';
 $route['export/set_session/(:any)'] = 'export/set_session/$1';
 // SEARCH
 $route['search_api'] = 'search/index_api';
-$route['search/(:any)'] = 'search/index/$1';
+$route['recherche/(:any)'] = 'search/index/$1';
 // PAGES
 $route['(:any)'] = 'pages/view/$1';
 $route['translate_uri_dashes'] = FALSE;
