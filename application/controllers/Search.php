@@ -23,8 +23,7 @@ class Search extends CI_Controller
         $return = $this->search_model->searchInAll($search, 5, 10);
         foreach($return as $x){
             $results[] = [
-                'text' => highlight_phrase($x['title'], $search, '<span class="text-primary">', '</span>'),
-                'description' => $x['description_search'],
+                'text' => highlight_phrase($x['title_search'], $search, '<span class="text-primary">', '</span>'),
                 'url' => $x['url'],
                 'source' => $x['source'],
             ];
