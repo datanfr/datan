@@ -123,8 +123,8 @@ class Search_model extends CI_Model
             $value['description_new'] = $start != 0 ? '...' . $value['description_new'] : $value['description_new'];
             $value['description_new'] = $position + 100 < strlen($value['description']) ? $value['description_new'] . '...' : $value['description_new'];
             $value['description'] = $value['description_new'];
-
-            $value['description'] = $value['description_new'];
+          } else {
+            $value['description'] = character_limiter($value['description'], 200, '');
           }
         }
 
