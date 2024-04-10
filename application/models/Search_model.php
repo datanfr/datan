@@ -66,6 +66,21 @@ class Search_model extends CI_Model
 
         (
           SELECT
+            'dpt' as source,
+            CONCAT(d.departement_nom, ' (', d.departement_code, ')') as title,
+            CONCAT(d.departement_nom, ' (', d.departement_code, ')') as title,
+            '' AS description,
+            CONCAT('deputes/', d.slug) as url
+          FROM departement d
+          WHERE (REPLACE(d.departement_nom, '-', ' ') LIKE '". str_replace('-', ' ', $search) . "%' OR d.departement_code LIKE '" . $search . "%')
+          ORDER BY d.departement_nom ASC
+          " . $limitCategory . "
+        )
+
+        UNION ALL
+
+        (
+          SELECT
             'vote' AS source,
             vd.title AS title,
             vd.title AS title_search,
@@ -107,6 +122,7 @@ class Search_model extends CI_Model
         'depute' => array('name' => 'Députés', 'icon' => 'person-fill', 'results' => array()),
         'groupe' => array('name' => 'Groupes politiques', 'icon' => 'people-fill', 'results' => array()),
         'ville' => array('name' => 'Villes', 'icon' => 'house-door-fill', 'results' => array()),
+        'dpt' => array('name' => 'Départements', 'icon' => 'house-door-fill', 'results' => array()),
         'vote' => array('name' => 'Votes', 'icon' => 'file-text-fill', 'results' => array()),
         'blog' => array('name' => 'Articles sur Datan', 'icon' => 'file-text-fill', 'results' => array()),
       );
