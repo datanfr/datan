@@ -14,12 +14,12 @@ class Search_model extends CI_Model
         $search = urldecode($search);
         $search = $this->db->escape_str($search);
 
-        $sql = "SELECT `source`, `title`, `description_search`, `description`, `url` FROM (
+        $sql = "SELECT `source`, `title`, `title_search`, `description`, `url` FROM (
           (
             SELECT
               'depute' AS source,
               CONCAT(d.nameFirst, ' ', d.nameLast) AS title,
-              CONCAT('(', d.libelleAbrev, ')') AS description_search,
+              CONCAT(d.nameFirst, ' ', d.nameLast) AS title_search,
               CONCAT('Législature ', d.legislature, ' - ', d.libelleAbrev) AS description,
               CONCAT('deputes/', d.dptSlug, '/depute_', d.nameUrl) as url
           FROM deputes_last d
@@ -34,7 +34,7 @@ class Search_model extends CI_Model
           SELECT
             'groupe' AS source,
             CONCAT(o.libelle, ' (', o.libelleAbrev, ')') AS title,
-            CONCAT('Leg. ', o.legislature) AS description_search,
+            CONCAT(o.libelle, ' (', o.libelleAbrev, ')') AS title_search,
             CONCAT('Législature ', o.legislature) AS description,
             CONCAT('groupes/legislature-', o.legislature, '/', LOWER(o.libelleAbrev)) AS url
           FROM organes o
@@ -50,7 +50,7 @@ class Search_model extends CI_Model
           SELECT
             'ville' as source,
             c.commune_nom as title,
-            CONCAT('(', d.departement_code,')') AS description_search,
+            CONCAT(c.commune_nom, ' (', d.departement_code,')') AS title_search,
             CONCAT(d.departement_nom, ' (', d.departement_code,')') AS description,
             CONCAT('deputes/', d.slug, '/ville_', c.commune_slug) as url
           FROM circos c
@@ -68,7 +68,7 @@ class Search_model extends CI_Model
           SELECT
             'vote' AS source,
             vd.title AS title,
-            '' AS description_search,
+            vd.title AS title_search,
             vd.description AS description,
             CONCAT('votes/legislature-', vd.legislature, '/vote_', vd.voteNumero) as url
           FROM votes_datan vd
@@ -84,7 +84,7 @@ class Search_model extends CI_Model
           SELECT
             'blog' as source,
             title as title,
-            '' AS description_search,
+            title AS title_search,
             body AS description,
             CONCAT('blog/rapports/', slug) as url
           FROM posts
