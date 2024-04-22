@@ -24,7 +24,7 @@ class Search_model extends CI_Model
               CONCAT('deputes/', d.dptSlug, '/depute_', d.nameUrl) as url
           FROM deputes_last d
           WHERE d.legislature >= 14
-          AND (CONCAT(d.nameFirst, ' ', d.nameLast) LIKE '" . $search . "%' OR CONCAT(d.nameLast, ' ', d.nameFirst) LIKE '" . $search . "%')
+          AND (CONCAT(REPLACE(d.nameFirst, '-', ' '), ' ', REPLACE(d.nameLast, '-', ' ')) LIKE '" . str_replace('-', ' ', $search) . "%' OR CONCAT(REPLACE(d.nameLast, '-', ' '), ' ', REPLACE(d.nameFirst, '-', ' ')) LIKE '" . str_replace('-', ' ', $search) . "%')
           " . $limitCategory . "
         )
 
