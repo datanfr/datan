@@ -1639,15 +1639,9 @@ body{
         margin-right: 5px;
         width: 100%;
       }
-      .slider_box{
+      .slider{
         position: relative;
         width: 100%;
-      }
-      .slider{
-        position: absolute;
-        left: -5px;
-        opacity: 0;
-        transition: 0.5s;
       }
     }
   }

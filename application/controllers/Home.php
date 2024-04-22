@@ -115,6 +115,8 @@
         "datan/map_france.min",
         "datan/autocomplete_search",
         "flickity.pkgd.min",
+        "typed.umd",
+        "datan/typed.datan"
       );
       // Load views
       $this->load->view('templates/header', $data);
