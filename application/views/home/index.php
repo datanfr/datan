@@ -8,11 +8,11 @@
       <div class="card">
         <div class="card-header pt-4 pb-1">
           <div class="placeholder d-flex">
-            <div class="box d-flex justify-content-end">
+            <div class="box d-flex justify-content-end text-slider-items">
               Je cherche
             </div>
-            <div class="slider_box">
-              <div class="slider"></div>
+            <div class="slider">
+              <span class="text-slider"></span>
             </div>
           </div>
         </div>
