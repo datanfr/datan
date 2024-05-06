@@ -26,13 +26,13 @@
           <div class="col-md-6 py-3">
             <h2 class="text-center"><?= ucfirst($mpLoyalGender['le']) ?> plus proche de son groupe</h2>
             <div class="d-flex justify-content-center">
-              <?php $this->load->view('deputes/partials/card_home.php', array('depute' => $mpLoyal, 'tag' => 'span', 'stat' => $mpLoyal['score'] . " %", 'cat' => true, 'logo' => true)) ?>
+              <?php $this->load->view('deputes/partials/card_home.php', array('depute' => $mpLoyal, 'tag' => 'span', 'stat' => $mpLoyal['score'] . " %", 'footer' => 'discover', 'logo' => true)) ?>
             </div>
           </div>
           <div class="col-md-6 py-3">
             <h2 class="text-center"><?= ucfirst($mpRebelGender['le']) ?> moins proche de son groupe</h2>
             <div class="d-flex justify-content-center">
-              <?php $this->load->view('deputes/partials/card_home.php', array('depute' => $mpRebel, 'tag' => 'span', 'stat' => $mpRebel['score'] . " %", 'cat' => true, 'logo' => true)) ?>
+              <?php $this->load->view('deputes/partials/card_home.php', array('depute' => $mpRebel, 'tag' => 'span', 'stat' => $mpRebel['score'] . " %", 'footer' => 'discover', 'logo' => true)) ?>
             </div>
           </div>
         </div>
