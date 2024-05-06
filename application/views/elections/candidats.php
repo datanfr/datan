@@ -10,8 +10,12 @@
     <div class="row">
       <div class="col-md-8 col-lg-7 my-4">
         <h2>Informations</h2>
-        <p>Les <?= mb_strtolower($election['libelle']) ?> <?= $election['dateYear'] ?> se déroulent en deux tours.</p>
-        <p>Le premier tour <?= $today > $election['dateFirstRound'] ? "s'est tenu" : "se tiendra" ?> le <?= $election['dateFirstRoundFr'] ?>, tandis que le second tour <?= $today > $election['dateSecondRound'] ? "s'est déroulé" : "se déroulera" ?> le <?= $election['dateSecondRoundFr'] ?>.</p>
+        <p>Les <?= mb_strtolower($election['libelle']) ?> <?= $election['dateYear'] ?> se déroulent en <?= $election['dateSecondRound'] ? "deux tours" : "un tour" ?>.</p>
+        <?php if ($election['dateSecondRound']): ?>
+          <p>Le premier tour <?= $today > $election['dateFirstRound'] ? "s'est tenu" : "se tiendra" ?> le <?= $election['dateFirstRoundFr'] ?>, tandis que le second tour <?= $today > $election['dateSecondRound'] ? "s'est déroulé" : "se déroulera" ?> le <?= $election['dateSecondRoundFr'] ?>.</p>
+        <?php else: ?>
+          <p>L'élection <?= $today > $election['dateFirstRound'] ? "s'est tenue" : "se tiendra" ?> le <?= $election['dateFirstRoundFr'] ?>.</p>
+        <?php endif; ?>
         <?php if ($election['candidates']): ?>
           <p>
             Découvrez sur cette page les députés candidats aux <?= mb_strtolower($election['libelle']) ?> de <?= $election['dateYear'] ?>.

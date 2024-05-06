@@ -120,6 +120,8 @@
         $data['requiredFields'] = array('district');
       } elseif ($data['election']['libelleAbrev'] == 'Régionales') {
         $data['requiredFields'] = array('district', 'position');
+      } elseif ($data['election']['libelleAbrev'] == 'Européennes') {
+        $data['requiredFields'] = array('');
       }
 
       $user_id = $this->session->userdata('user_id');
