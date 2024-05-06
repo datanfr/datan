@@ -69,7 +69,7 @@
       <?php foreach ($deputes as $depute): ?>
         <div class="col-md-6 col-xl-4 sorting-item <?= strtolower($depute['districtId']) ?> <?= strtolower($depute['electionState']) ?>">
           <div class="d-flex justify-content-center">
-            <?php $this->load->view('deputes/partials/card_home.php', array('depute' => $depute, 'tag' => 'h3', 'cat' => false, 'logo' => false)) ?>
+            <?php $this->load->view('deputes/partials/card_home.php', array('depute' => $depute, 'tag' => 'h3', 'footer' => 'active', 'logo' => false)) ?>
           </div>
         </div>
       <?php endforeach; ?>
