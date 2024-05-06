@@ -12,7 +12,7 @@
   <div class="card-body d-flex flex-column align-items-center justify-content-center">
     <div class="mb-3">
       <<?= $tag ?> class="d-block card-title">
-      <?php if ($cat): ?>
+      <?php if ($footer == 'discover'): ?>
         <?= $depute['nameFirst'] .' ' . $depute['nameLast'] ?>
         <?php else: ?>
         <a href="<?= base_url(); ?>deputes/<?= $depute['dptSlug'].'/depute_'.$depute['nameUrl'] ?>" class="stretched-link no-decoration"><?= $depute['nameFirst'] .' ' . $depute['nameLast'] ?></a>
@@ -28,7 +28,7 @@
         </span>
       <?php endif; ?>
     </div>
-    <?php if ($cat && $logo): ?>
+    <?php if ($footer == 'discover' && $logo): ?>
       <div class="img-group-cat">
         <picture>
           <source srcset="<?= asset_url(); ?>imgs/groupes/<?= $depute['legislature'] ?>/webp/<?= $depute['libelleAbrev'] ?>.webp" type="image/webp">
@@ -38,13 +38,23 @@
       </div>
     <?php endif; ?>
   </div>
-  <?php if ($cat): ?>
+  <?php if ($footer == 'discover'): ?>
     <div class="mb-3">
       <a class="btn btn-cat btn-primary stretched-link" href="<?= base_url(); ?>deputes/<?= $depute['dptSlug'].'/depute_'.$depute['nameUrl'] ?>" role="button">Découvrez son activité</a>
     </div>
-    <?php else: ?>
+    <?php elseif($footer == 'group'): ?>
       <div class="card-footer d-flex justify-content-center align-items-center">
         <span><?= name_group($depute["libelle"]) ?> (<?= $depute["libelleAbrev"] ?>)</span>
       </div>
+    <?php elseif($footer == 'active'): ?>
+      <?php if($depute['active']): ?>
+        <div class="card-footer d-flex justify-content-center align-items-center">
+          <span><?= name_group($depute["libelle"]) ?> (<?= $depute["libelleAbrev"] ?>)</span>
+        </div>
+      <?php else: ?>
+        <div class="card-footer d-flex justify-content-center align-items-center">
+          <span>Ancien<?= $depute['civ'] == "Mme" ? "ne" : "" ?> député<?= $depute['civ'] == "Mme" ? "e" : "" ?></span>
+        </div>
+      <?php endif; ?>
   <?php endif; ?>
 </div>

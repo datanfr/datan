@@ -14,7 +14,7 @@
       </div>
       <div class="col-md-5 mt-5 mt-md-0">
         <div class="d-flex justify-content-center">
-          <?php $this->load->view('deputes/partials/card_home.php', array('depute' => $candidatRandom, 'tag' => 'span', 'cat' => true, 'logo' => false)) ?>
+          <?php $this->load->view('deputes/partials/card_home.php', array('depute' => $candidatRandom, 'tag' => 'span', 'footer' => 'discover', 'logo' => false)) ?>
         </div>
       </div>
     </div>

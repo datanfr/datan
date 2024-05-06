@@ -43,17 +43,6 @@
                   <span>2<sup>nd</sup> tour : <?= $election['dateSecondRoundFr'] ?></span>
                 <?php endif; ?>
               </div>
-              <?php if ($election['candidates']): ?>
-                <div class="card-footer d-flex justify-content-center align-items-center">
-                  <?php if (empty($election['candidatsN'])): ?>
-                    <span class="font-weight-bold">Aucun député candidat</span>
-                    <?php else: ?>
-                    <span class="font-weight-bold"><?= $election['candidatsN'] ?> député<?= $election['candidatsN'] > 1 ? "s" : "" ?> candidat<?= $election['candidatsN'] > 1 ? "s" : "" ?></span>
-                  <?php endif; ?>
-                </div>
-                <?php else: ?>
-                  <div class="card-footer bg-transparent"></div>
-              <?php endif; ?>
             </div>
           <?php endif; ?>
         <?php endforeach; ?>
