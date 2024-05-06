@@ -349,6 +349,12 @@
                   </a>
                 </li>
                 <li class="nav-item">
+                  <a href="<?= base_url() ?>admin/elections/europeennes-2024" class="nav-link">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Européennes 2024</p>
+                  </a>
+                </li>
+                <li class="nav-item">
                   <a href="<?= base_url() ?>admin/elections/legislatives-2022" class="nav-link">
                     <i class="far fa-circle nav-icon"></i>
                     <p>Législatives 2022</p>
