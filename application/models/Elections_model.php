@@ -75,6 +75,11 @@
         <p><b>Comment le président est-il élu ?</b> Pour être candidat, il faut avoir récolté le parrainage de 500 élus (maires, parlementaires, conseillers régionaux, etc.) L'élection se déroule sur deux tours. Lors du premier tour, un candidat peut être élu s'il obtient la majorité des suffrages exprimés (plus de 50%). Si aucun candidat n'y parvient, un second tour est organisé avec les deux candidats arrivés en tête au premier tour. Le vainqueur est le candidat qui arrive en tête du second tour.</p>
         <p>Les rôles du président de la République sont nombreux. Il ou elle est veille au respect de la Constitution, assure le fonctionnement des institutions, nomme le Premier ministre et préside le Conseil des ministres, promulgue les lois, etc. Pour plus d'informations, <a href='https://www.vie-publique.fr/infographie/23816-infographie-quel-est-le-role-du-president-de-la-republique' target='_blank' rel='nofollow noreferrer noopener'>cliquez ici</a>.</p>
         ";
+      } elseif ($type == "Européennes") { 
+        $info = "
+        <p>Les élections européennes ont lieu <b>tous les cinq ans</b>. Elles permettent d'élire les députés européens, qui ont pour rôle d'élire la Commission européenne et d'amender et voter les lois européennes (règlements et directives).</p>
+        <p>En France, les députés européens sont élus au scrutin proportionnel. Les listes obtenant au moins 5% des suffrages exprimés se voient attribuer des sièges, en fonction de leur score électoral.</p>
+        ";
       } else {
         $info = NULL;
       }
