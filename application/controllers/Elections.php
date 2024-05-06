@@ -151,7 +151,7 @@
         $data['js_to_load_up_defer'] = array('chart.min.js', 'chartjs-plugin-datalabels@2.1.js');
       }
       $data['js_to_load'] = array();
-      if ($data['districts']) {
+      if (in_array($data['election']['id'], array(1, 4, 5))) {
         array_push($data['js_to_load'], 'datan/sorting_select');
       }
       array_push($data['js_to_load'], 'jvectormap/jquery-jvectormap-2.0.5.min');
