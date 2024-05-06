@@ -73,6 +73,7 @@
       $data['candidatsN_eliminated'] = count($data['candidatsN_eliminated']);
       $data['mapLegend'] = $this->elections_model->get_map_legend($data['election']['id']);
       $data['today'] = date("Y-m-d");
+      $data['results'] = in_array($data['election']['id'], array(1, 2, 3, 4)) ? true : false;
 
       // If legislative
       if ($data['election']['slug'] == 'legislatives-2022') {
