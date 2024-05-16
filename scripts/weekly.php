@@ -14,7 +14,7 @@ class Script
         ini_set('memory_limit', '2048M');
         $this->legislature_to_get = $legislature;
         $this->dateMaj = date('Y-m-d H:i:s');
-        echo date('Y-m-d') . " : Launching the daily script for legislature " . $this->legislature_to_get . "\n";
+        echo date('Y-m-d') . " : Launching the weekly script for legislature " . $this->legislature_to_get . "\n";
         $this->time_pre = microtime(true);;
         try {
             $this->bdd = new PDO(
