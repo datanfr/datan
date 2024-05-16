@@ -25,6 +25,7 @@ package-lock.json
 ressources
 .htaccess
 .env
+*.code-workspace
 
 #script folder
 scripts/*.zip
