@@ -138,4 +138,4 @@ if (isset($argv[1])) {
 $script->dossiers();
 $script->scrutins();
 $script->acteurs_organes();
-$script->amendements();
+//$script->amendements();
