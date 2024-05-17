@@ -2947,6 +2947,70 @@ class Script
         $this->insertAll('dossiers', $dossierFields, $dossiers);
     }
 
+    public function dossiersVotes(){
+
+        // New script to replace the votersDossiers
+        // It seems to work only for final votes and not amendments
+
+        echo "dossiersVotes starting \n";
+
+        $this->bdd->query('CREATE TABLE IF NOT EXISTS `datan`.`dossiers_votes` (
+            `id` INT NOT NULL AUTO_INCREMENT ,
+            `dossierId` VARCHAR(25) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL ,
+            `legislature` INT(5) NOT NULL ,
+            `voteId` VARCHAR(25) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL ,
+            PRIMARY KEY (`id`)
+        ) ENGINE = MyISAM;');
+        
+        $dossierFields = array('dossierId', 'legislature', 'voteId');
+        $dossier = [];
+        $dossiers = [];
+
+        if ($this->legislature_to_get >= 15) {
+            if ($this->legislature_to_get == 15) {
+              $file = __DIR__ . '/Dossiers_Legislatifs_XV.xml.zip';
+            } elseif ($this->legislature_to_get == 16) {
+              $file = __DIR__ . '/Dossiers_Legislatifs_XVI.xml.zip';
+            }
+
+            $zip = new ZipArchive();
+
+            if ($zip->open($file) !== TRUE) {
+                exit("cannot open <$file>\n");
+            } else {
+
+                for ($i = 0; $i < $zip->numFiles; $i++) {
+                    $filename = $zip->getNameIndex($i);
+                    echo 'Filename: ' . $filename . '<br />';
+                    $sub = substr($filename, 0, 13);
+                    
+                    echo 'sub = ' . $sub.'<br>';
+
+                    if ($sub == 'xml/dossierPa') {
+                        $xml_string = $zip->getFromName($filename);
+
+                        if ($xml_string != false) {
+                            $xml = simplexml_load_string($xml_string);
+
+                            $dossierId = $xml->uid;
+                            $legislature = $xml->legislature;
+
+                            $votes = $xml->xpath("//*[local-name()='voteRef']");
+                            if (!empty($votes)) {
+                                foreach ($votes as $voteId) {
+                                    $dossier = array('dossierId' => $dossierId, 'legislature' => $legislature, 'voteId' => $voteId);
+                                    $dossiers = array_merge($dossiers, array_values($dossier));
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            $this->insertAll('dossiers_votes', $dossierFields, $dossiers);
+        } 
+    }
+
     public function dossiersActeurs()
     {
         echo "dossiersActeurs starting \n";
@@ -3797,6 +3861,7 @@ if (isset($argv[1]) && isset($argv[2])) {
   $script = new Script();
 }
 
+/*
 $script->fillDeputes();
 $script->deputeAll();
 $script->deputeLast();
@@ -3817,8 +3882,11 @@ $script->groupeCohesion(); // Depend on the legislature
 $script->groupeAccord(); // Depend on the legislature
 $script->deputeAccord(); // Depend on the legislature
 $script->voteParticipation(); // Depend on the legislature
-$script->votesDossiers(); // Depend on the legislature
 $script->dossier(); // Depend on the legislature
+
+*/
+$script->dossiersVotes(); // Depend on the legislature
+/*
 $script->dossiersActeurs(); // Depend on the legislature
 $script->documentsLegislatifs(); // Depend on the legislature
 $script->amendements(); // Depend on the legislature
