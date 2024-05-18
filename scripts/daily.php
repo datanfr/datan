@@ -2856,7 +2856,11 @@ class Script
         echo "dossier starting \n";
         //$this->bdd->query('DELETE FROM dossiers WHERE legislature = "' . $this->legislature_to_get . '"');
 
-        $dossierFields = array('dossierId', 'legislature', 'titre', 'titreChemin', 'senatChemin', 'procedureParlementaireCode', 'procedureParlementaireLibelle', 'commissionFond');
+        // If 'titreLoi' does not exist 
+        // ALTER TABLE `dossiers` ADD `titreLoi` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NULL AFTER `titre`;
+
+
+        $dossierFields = array('dossierId', 'legislature', 'titre', 'titreLoi', 'titreChemin', 'senatChemin', 'procedureParlementaireCode', 'procedureParlementaireLibelle', 'commissionFond');
         $dossier = [];
         $dossiers = [];
         if ($this->legislature_to_get >= 15) {
@@ -2898,7 +2902,14 @@ class Script
                                 $commissionFond = NULL;
                             }
 
-                            $dossier = array('dossierId' => $dossierId, 'legislature' => $legislature, 'titre' => $titre, 'titreChemin' => $titreChemin, 'senatChemin' => $senatChemin, 'procedureParlementaireCode' => $procedureParlementaireCode, 'procedureParlementaireLibelle' => $procedureParlementaireLibelle, 'commissionFond' => $commissionFond);
+                            $titreLoi = $xml->xpath("//*[local-name()='titreLoi']");
+                            if (!empty($titreLoi)) {
+                                $titreLoi = $titreLoi[0];
+                            } else {
+                                $titreLoi = NULL;
+                            }
+
+                            $dossier = array('dossierId' => $dossierId, 'legislature' => $legislature, 'titre' => $titre, 'titreLoi' => $titreLoi, 'titreChemin' => $titreChemin, 'senatChemin' => $senatChemin, 'procedureParlementaireCode' => $procedureParlementaireCode, 'procedureParlementaireLibelle' => $procedureParlementaireLibelle, 'commissionFond' => $commissionFond);
                             $dossiers = array_merge($dossiers, array_values($dossier));
                         }
                     }
@@ -2966,6 +2977,34 @@ class Script
         $dossier = [];
         $dossiers = [];
 
+        $query = $this->bdd->query('SELECT dossierId, titreLoi
+            FROM dossiers
+            WHERE legislature = "' . $this->legislature_to_get . '"
+            AND titreLoi IS NOT NULL');
+
+        while ($id = $query->fetch()) {
+            $dossierId = $id['dossierId'];
+            $titreLoi = $id['titreLoi'];
+
+            $query_votes = $this->bdd->query('SELECT voteId, legislature, titre
+                FROM votes_info
+                WHERE titre LIKE "%' . $titreLoi . '%" 
+                AND legislature = "' . $this->legislature_to_get . '"'
+            );
+
+            while($vote = $query_votes->fetch()){
+                $voteId = $vote['voteId'];
+                $legislature = $vote['legislature'];
+
+                $dossier = array('dossierId' => $dossierId, 'legislature' => $legislature, 'voteId' => $voteId);
+                $dossiers = array_merge($dossiers, array_values($dossier));
+            }
+
+        }
+
+        $this->insertAll('dossiers_votes', $dossierFields, $dossiers);
+
+        /*
         if ($this->legislature_to_get >= 15) {
             if ($this->legislature_to_get == 15) {
               $file = __DIR__ . '/Dossiers_Legislatifs_XV.xml.zip';
@@ -3008,7 +3047,7 @@ class Script
             }
 
             $this->insertAll('dossiers_votes', $dossierFields, $dossiers);
-        } 
+        } */
     }
 
     public function dossiersActeurs()
@@ -3882,9 +3921,8 @@ $script->groupeCohesion(); // Depend on the legislature
 $script->groupeAccord(); // Depend on the legislature
 $script->deputeAccord(); // Depend on the legislature
 $script->voteParticipation(); // Depend on the legislature
-$script->dossier(); // Depend on the legislature
-
 */
+$script->dossier(); // Depend on the legislature
 $script->dossiersVotes(); // Depend on the legislature
 /*
 $script->dossiersActeurs(); // Depend on the legislature
