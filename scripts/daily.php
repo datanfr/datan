@@ -3074,7 +3074,7 @@ class Script
         
         $this->insertAll('dossiers_votes', $dossierFields, $dossiers);
 
-        // 3d step ==> get amendmentId from amendmentHref
+        // 3d step ==> get amendmentId from amendmentHref (using scrapping)
         $query = $this->bdd->query('SELECT d.id, d.voteId, d.amendmentHref
             FROM dossiers_votes d
             WHERE d.legislature = "' . $this->legislature_to_get . '"
