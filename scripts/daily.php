@@ -2971,6 +2971,7 @@ class Script
             `legislature` INT(5) NOT NULL ,
             `dossierId` VARCHAR(25) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL ,
             `dossierHref` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL ,
+            `amendmentId` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL ,
             `amendmentHref` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL ,
             PRIMARY KEY (`id`),
             UNIQUE INDEX `idx_voteId` (`voteId`)
@@ -3030,7 +3031,7 @@ class Script
             AND (d.dossierId IS NULL && d.amendmentHref IS NULL)
             AND v.voteNumero > 0
             ORDER BY v.legislature ASC, v.voteNumero ASC
-            LIMIT 100
+            LIMIT 1
         ');
 
         $dossier = [];
@@ -3073,9 +3074,50 @@ class Script
         
         $this->insertAll('dossiers_votes', $dossierFields, $dossiers);
 
-        die();
-
         // 3d step ==> get amendmentId from amendmentHref
+        $query = $this->bdd->query('SELECT d.id, d.voteId, d.amendmentHref
+            FROM dossiers_votes d
+            WHERE d.legislature = "' . $this->legislature_to_get . '"
+            AND d.amendmentHref IS NOT NULL AND d.amendmentId IS NULL
+            ORDER BY d.legislature ASC
+            LIMIT 10
+        ');
+
+        $dossier = [];
+        $dossiers = [];
+
+        while($amdt = $query->fetch()){
+            $url = $amdt['amendmentHref'];
+            $id = $amdt['id'];
+            $html = file_get_html($url);
+
+            if($html !== false){
+                $results = $html->find(".amendement", 0)->find('li');
+                foreach($results as $li){
+                    $plain = $li->find('span', 0)->plaintext;
+                    if($plain == "Version XML"){
+                        $href = $li->find('a', 0)->href;
+                        $segments = explode('/', $href);
+                        $amdtId = str_replace(".xml", "", $segments[3]);
+
+                        $sql = 'UPDATE dossiers_votes
+                            SET amendmentId = :amdtId
+                            WHERE id = :id';
+                        $stmt = $this->bdd->prepare($sql);
+                        $stmt->bindParam(':amdtId', $amdtId, PDO::PARAM_STR);
+                        $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+
+                        if ($stmt->execute()) {
+                            echo "AmendmentId updated successfully.\n";
+                        } else {
+                            echo "Error updating record: " . print_r($stmt->errorInfo(), true);
+                        }
+                    }
+                }
+            }
+        }
+
+        die();
 
 
         // 4th step ==> get dossierId from amendmentId 
