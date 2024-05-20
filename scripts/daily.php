@@ -3073,8 +3073,6 @@ class Script
                     $dossiers = array_merge($dossiers, array_values($dossier));
                 }
 
-                die();
-
             }
 
             if ($n % 50 === 0) {
