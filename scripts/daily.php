@@ -3132,10 +3132,48 @@ class Script
             }
         }
 
-        die();
-
 
         // 4th step ==> get dossierId from amendmentId 
+        $query = $this->bdd->query('SELECT d.id, d.voteId, d.amendmentId
+            FROM dossiers_votes d
+            WHERE d.legislature = "' . $this->legislature_to_get . '"
+            AND d.amendmentId IS NOT NULL AND d.dossierId IS NULL
+        ');
+
+        $dossier = [];
+        $dossiers = [];
+
+        while ($amdt = $query->fetch()) {
+            $amdtId = $amdt['amendmentId'];
+            $id = $amdt['id'];
+
+            $query_amdt = $this->bdd->query('SELECT dossier
+                FROM amendements
+                WHERE id = "' . $amdtId .'"
+                LIMIT 1
+            ');
+
+            $result = $query_amdt->fetch(PDO::FETCH_ASSOC);
+
+            if ($result){
+                $dossierId = $result['dossier'];
+
+                $sql = 'UPDATE dossiers_votes
+                    SET dossierId = :dossierId
+                    WHERE id = :id';
+                $stmt = $this->bdd->prepare($sql);
+                $stmt->bindParam(':dossierId', $dossierId, PDO::PARAM_STR);
+                $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+
+                if ($stmt->execute()) {
+                    echo "dossierId updated successfully.\n";
+                } else {
+                    echo "Error updating record: " . print_r($stmt->errorInfo(), true);
+                }
+            }            
+        }
+
+        die();
 
 
         // 5th ==> check missing votes
