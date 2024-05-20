@@ -3090,7 +3090,6 @@ class Script
             FROM dossiers_votes d
             WHERE d.legislature = "' . $this->legislature_to_get . '"
             AND d.amendmentHref IS NOT NULL AND d.amendmentId IS NULL
-            ORDER BY d.legislature ASC
             LIMIT 50
         ');
 
