@@ -3028,10 +3028,11 @@ class Script
             FROM votes_info v
             LEFT JOIN dossiers_votes d ON v.voteId = d.voteId
             WHERE v.legislature = "' . $this->legislature_to_get . '"
+            AND d.id IS NULL
             AND (d.dossierId IS NULL && d.amendmentHref IS NULL)
             AND v.voteNumero > 0
             ORDER BY v.legislature ASC, v.voteNumero ASC
-            LIMIT 1
+            LIMIT 50
         ');
 
         $dossier = [];
@@ -3039,7 +3040,7 @@ class Script
         $n = 1;
 
         while ($vote = $query->fetch()){
-            echo $n;
+            echo "Scrap AN's website.\n";
             sleep(1); // Is it necessary to run a sleep function?
             $voteId = $vote['voteId'];
             $voteNumero = $vote['voteNumero'];
@@ -3052,15 +3053,25 @@ class Script
                     $link = $element->find('.inner');
                     foreach($link as $x){
                         $href =  $x->href;
+                        $a = FALSE;
+                        $d = FALSE;
                         if(strpos($href, "amendements") !== false){
+                            $a = TRUE;
                             $dossier = array('voteId' => $voteId, 'legislature' => $this->legislature_to_get, 'dossierId' => NULL, 'dossierHref' => NULL, 'amendmentHref' => $href);
                             $dossiers = array_merge($dossiers, array_values($dossier));
                         } elseif(strpos($href, "dossiers") !== false) {
-                            $dossier = array('voteId' => $voteId, 'legislature' => $this->legislature_to_get, 'dossierId' => NULL, 'dossierHref' => $href, 'amendment_href' => $href);
+                            $d = TRUE;
+                            $dossier = array('voteId' => $voteId, 'legislature' => $this->legislature_to_get, 'dossierId' => NULL, 'dossierHref' => $href, 'amendment_href' => NULL);
                             $dossiers = array_merge($dossiers, array_values($dossier));
                         }
                     }
                 }
+
+                if ($a == FALSE && $d == FALSE) {
+                    $dossier = array('voteId' => $voteId, 'legislature' => $this->legislature_to_get, 'dossierId' => NULL, 'dossierHref' => NULL, 'amendment_href' => NULL);
+                    $dossiers = array_merge($dossiers, array_values($dossier));
+                }
+
             }
 
             if ($n % 50 === 0) {
@@ -3080,13 +3091,14 @@ class Script
             WHERE d.legislature = "' . $this->legislature_to_get . '"
             AND d.amendmentHref IS NOT NULL AND d.amendmentId IS NULL
             ORDER BY d.legislature ASC
-            LIMIT 10
+            LIMIT 50
         ');
 
         $dossier = [];
         $dossiers = [];
 
         while($amdt = $query->fetch()){
+            sleep(1); // Is this function necessary?
             $url = $amdt['amendmentHref'];
             $id = $amdt['id'];
             $html = file_get_html($url);
@@ -3094,24 +3106,28 @@ class Script
             if($html !== false){
                 $results = $html->find(".amendement", 0)->find('li');
                 foreach($results as $li){
-                    $plain = $li->find('span', 0)->plaintext;
-                    if($plain == "Version XML"){
-                        $href = $li->find('a', 0)->href;
-                        $segments = explode('/', $href);
-                        $amdtId = str_replace(".xml", "", $segments[3]);
+                    if ($li->find('span', 0) !== null && is_object($li->find('span', 0))) {
+                        $plain = $li->find('span', 0)->plaintext;
+                        if($plain == "Version XML"){
+                            $href = $li->find('a', 0)->href;
+                            $segments = explode('/', $href);
+                            $amdtId = str_replace(".xml", "", $segments[3]);
 
-                        $sql = 'UPDATE dossiers_votes
-                            SET amendmentId = :amdtId
-                            WHERE id = :id';
-                        $stmt = $this->bdd->prepare($sql);
-                        $stmt->bindParam(':amdtId', $amdtId, PDO::PARAM_STR);
-                        $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+                            $sql = 'UPDATE dossiers_votes
+                                SET amendmentId = :amdtId
+                                WHERE id = :id';
+                            $stmt = $this->bdd->prepare($sql);
+                            $stmt->bindParam(':amdtId', $amdtId, PDO::PARAM_STR);
+                            $stmt->bindParam(':id', $id, PDO::PARAM_INT);
 
-                        if ($stmt->execute()) {
-                            echo "AmendmentId updated successfully.\n";
-                        } else {
-                            echo "Error updating record: " . print_r($stmt->errorInfo(), true);
+                            if ($stmt->execute()) {
+                                echo "AmendmentId updated successfully.\n";
+                            } else {
+                                echo "Error updating record: " . print_r($stmt->errorInfo(), true);
+                            }
                         }
+                    }  else {
+                        echo "li element is not an object.\n";
                     }
                 }
             }
