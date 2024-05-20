@@ -3046,6 +3046,8 @@ class Script
             $voteNumero = $vote['voteNumero'];
             $url = "https://www.assemblee-nationale.fr/dyn/" . $this->legislature_to_get . "/scrutins/" . $voteNumero;
             $html = file_get_html($url);
+            $a = FALSE;
+            $d = FALSE;            
 
             if ($html !== false) {
                 $elements = $html->find('.an-bloc');
@@ -3053,8 +3055,6 @@ class Script
                     $link = $element->find('.inner');
                     foreach($link as $x){
                         $href =  $x->href;
-                        $a = FALSE;
-                        $d = FALSE;
                         if(strpos($href, "amendements") !== false){
                             $a = TRUE;
                             $dossier = array('voteId' => $voteId, 'legislature' => $this->legislature_to_get, 'dossierId' => NULL, 'dossierHref' => NULL, 'amendmentHref' => $href);
@@ -3066,11 +3066,14 @@ class Script
                         }
                     }
                 }
+                
 
-                if ($a == FALSE && $d == FALSE) {
+                if ($a === FALSE && $d === FALSE) {
                     $dossier = array('voteId' => $voteId, 'legislature' => $this->legislature_to_get, 'dossierId' => NULL, 'dossierHref' => NULL, 'amendment_href' => NULL);
                     $dossiers = array_merge($dossiers, array_values($dossier));
                 }
+
+                die();
 
             }
 
