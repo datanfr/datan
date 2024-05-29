@@ -3039,7 +3039,7 @@ class Script
             AND a.id IS NULL
             AND v.voteNumero > 0
             ORDER BY v.legislature ASC, v.voteNumero ASC
-            LIMIT 10
+            LIMIT 100
         ');
 
         $fields = array('legislature', 'voteNumero', 'amendmentHref');
