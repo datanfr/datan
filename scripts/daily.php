@@ -2781,76 +2781,6 @@ class Script
         $this->bdd->query("ALTER TABLE class_groups_proximite ADD INDEX idx_legislature (legislature)");
     }
 
-    public function votesDossiers()
-    {
-        echo "votesDossiers starting \n";
-        $this->bdd->query('DELETE FROM votes_dossiers WHERE legislature = "' . $this->legislature_to_get . '"');
-
-        //Until where to go?
-        $until_html = file_get_html("https://www2.assemblee-nationale.fr/scrutins/liste/(legislature)/'.$this->legislature_to_get.'/(type)/TOUS/(idDossier)/TOUS");
-        $pagination = $until_html->find('.pagination-bootstrap ul', 0);
-        $last = $pagination->find('li', -2)->plaintext;
-        $until = ($last - 1) * 100;
-
-        //array urls to get
-        $offsets = range(0, $until, 100);
-
-        $voteDossiers = [];
-        $voteDossier = [];
-        $voteDossiersFields = array('offset_num', 'legislature', 'voteNumero', 'href', 'dossier');
-        $i = 1;
-        foreach ($offsets as $offset) {
-            $url = "https://www2.assemblee-nationale.fr/scrutins/liste/(offset)/" . $offset . "/(legislature)/" . $this->legislature_to_get . "/(type)/TOUS/(idDossier)/TOUS";
-
-            $html = file_get_html($url);
-            foreach ($html->find('tbody tr') as $x) {
-                //echo $x;
-                $voteNumero = $x->find('.denom', 0)->plaintext;
-                $voteNumero = str_replace("*", "", $voteNumero);
-                $href = "";
-                $dossier = "";
-                foreach ($x->find('a') as $a) {
-                    if ($a->plaintext == "dossier") {
-                        $href = $a->href;
-                        if (strpos($href, "/14/") !== false) {
-                            if (strpos($href, ".asp") !== false) {
-                                //echo "1";
-                                $dossier1 = str_replace('https://www.assemblee-nationale.fr/14/dossiers/', '', $href);
-                                $dossier = str_replace('.asp', '', $dossier1);
-                            } else {
-                                //echo "2";
-                                $dossier = str_replace('https://www.assemblee-nationale.fr/dyn/14/dossiers/', '', $href);
-                            }
-                        } else {
-                            if (strpos($href, ".asp") !== false) {
-                                //echo "3";
-                                $dossier1 = str_replace('https://www.assemblee-nationale.fr/'.$this->legislature_to_get.'/dossiers/', '', $href);
-                                $dossier = str_replace('.asp', '', $dossier1);
-                            } else {
-                                //echo "4";
-                                $dossier = str_replace('https://www.assemblee-nationale.fr/dyn/'.$this->legislature_to_get.'/dossiers/', '', $href);
-                            }
-                        }
-                    }
-                }
-
-                $dossier = !empty($dossier) ? "$dossier" : NULL;
-                $href = !empty($href) ? "$href" : NULL;
-
-                $voteDossier = array('offset_num' => $offset, 'legislature' => $this->legislature_to_get, 'voteNumero' => $voteNumero, 'href' => $href, 'dossier' => $dossier);
-                $voteDossiers = array_merge($voteDossiers, array_values($voteDossier));
-                if ($i % 100 === 0) {
-                    echo "Let's insert 100 rows\n";
-                    $this->insertAll('votes_dossiers', $voteDossiersFields, $voteDossiers);
-                    $voteDossiers = [];
-                }
-                $i++;
-            }
-            $html->clear();
-        }
-        $this->insertAll('votes_dossiers', $voteDossiersFields, $voteDossiers);
-    }
-
     public function dossier()
     {
         echo "dossier starting \n";
@@ -2958,36 +2888,30 @@ class Script
         $this->insertAll('dossiers', $dossierFields, $dossiers);
     }
 
-    public function dossiersVotes(){
-
-        // New script to replace the votersDossiers
-        // It seems to work only for final votes and not amendments
-
-        echo "dossiersVotes starting \n";
-
-        $this->bdd->query('CREATE TABLE IF NOT EXISTS `datan`.`dossiers_votes` (
+    public function dossiersSeances(){
+        // For each dossier, get all seances publiques where the dossier was debated/
+        echo "dossiersSeances \n";
+        $this->bdd->query('CREATE TABLE IF NOT EXISTS `datan`.`dossiers_seances` (
             `id` INT NOT NULL AUTO_INCREMENT ,
-            `voteId` VARCHAR(25) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL ,
-            `legislature` INT(5) NOT NULL ,
             `dossierId` VARCHAR(25) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL ,
-            `dossierHref` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL ,
-            `amendmentId` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL ,
-            `amendmentHref` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL ,
-            PRIMARY KEY (`id`),
-            UNIQUE INDEX `idx_voteId` (`voteId`)
+            `legislature` INT NULL DEFAULT NULL ,
+            `seanceId` VARCHAR(25) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL ,
+            `seanceDate` DATE NOT NULL ,
+            `dateMaj` DATE NOT NULL ,
+            PRIMARY KEY (`id`) , 
+            UNIQUE INDEX `idx_unique` (`dossierId`, `seanceId`)
         ) ENGINE = MyISAM;');
-        
-        $dossierFields = array('voteId', 'legislature', 'dossierId', 'dossierHref', 'amendmentHref');
+
+        $dossierFields = array('dossierId', 'legislature', 'seanceId', 'seanceDate', 'dateMaj');
         $dossier = [];
         $dossiers = [];
         $n = 1;
 
-        // 1st step ==> get final votes from dossiers_legislatifs
         if ($this->legislature_to_get >= 15) {
             if ($this->legislature_to_get == 15) {
-              $file = __DIR__ . '/Dossiers_Legislatifs_XV.xml.zip';
+                $file = __DIR__ . '/Dossiers_Legislatifs_XV.xml.zip';
             } elseif ($this->legislature_to_get == 16) {
-              $file = __DIR__ . '/Dossiers_Legislatifs_XVI.xml.zip';
+                $file = __DIR__ . '/Dossiers_Legislatifs_XVI.xml.zip';
             }
 
             $zip = new ZipArchive();
@@ -2995,7 +2919,6 @@ class Script
             if ($zip->open($file) !== TRUE) {
                 exit("cannot open <$file>\n");
             } else {
-
                 for ($i = 0; $i < $zip->numFiles; $i++) {
                     $filename = $zip->getNameIndex($i);
                     $sub = substr($filename, 0, 13);
@@ -3008,46 +2931,125 @@ class Script
 
                             $dossierId = $xml->uid;
                             $legislature = $xml->legislature;
-                            $votes = $xml->xpath("//*[local-name()='voteRef']");
-                            if (!empty($votes)) {
-                                foreach ($votes as $voteId) {
-                                    $dossier = array('voteId' => $voteId, 'legislature' => $this->legislature_to_get, 'dossierId' => $dossierId, 'dossierHref' => NULL, 'amendmentHref' => NULL);
-                                    $dossiers = array_merge($dossiers, array_values($dossier));
-                                }
+
+                            $type = 'DiscussionSeancePublique_Type';
+                            $actes = $xml->xpath("//*[local-name()='acteLegislatif'][@*[local-name()='type']='$type']");
+
+                            foreach ($actes as $acte) {
+                                $seanceId = $acte->reunionRef;
+                                $originalDate = $acte->dateActe;
+                                $originalDate = new DateTime($originalDate);
+                                $seanceDate = $originalDate->format('Y-m-d');
+
+                                $dossier = array('dossierId' => $dossierId, 'legislature' => $legislature, 'seanceId' => $seanceId, 'seanceDate' => $seanceDate, 'dateMaj' => $this->dateMaj);
+                                $dossiers = array_merge($dossiers, array_values($dossier));
                             }
                         }
                     }
                 }
+
+                $this->insertAll('dossiers_seances', $dossierFields, $dossiers);
             }
+        }              
+    }
 
-            $this->insertAll('dossiers_votes', $dossierFields, $dossiers);
-        } 
+    public function dossiersVotes(){
+        echo "dossiersVotes starting \n";
 
-        // 2nd step ==> scrap the AN's website (individual vote page)
-        $query = $this->bdd->query('SELECT v.legislature, v.voteId, v.voteNumero
-            FROM votes_info v
-            LEFT JOIN dossiers_votes d ON v.voteId = d.voteId
-            WHERE v.legislature = "' . $this->legislature_to_get . '"
-            AND d.id IS NULL
-            AND (d.dossierId IS NULL && d.amendmentHref IS NULL)
-            AND v.voteNumero > 0
-            ORDER BY v.legislature ASC, v.voteNumero ASC
-            LIMIT 50
+        // The table dossiers_votes needs to be changed according to the code below 
+        $this->bdd->query('CREATE TABLE IF NOT EXISTS `datan`.`dossiers_votes` (
+            `id` INT NOT NULL AUTO_INCREMENT ,
+            `dossierId` VARCHAR(25) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL ,
+            `documentId` VARCHAR(25) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL ,
+            `legislature` INT(5) NOT NULL ,
+            `voteNumero` VARCHAR(25) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL ,
+            PRIMARY KEY (`id`) ,
+            UNIQUE INDEX `idx_unique` (`voteNumero`, `dossierId`)
+        ) ENGINE = MyISAM;');      
+
+        $query = $this->bdd->query('SELECT d.id, d.dossierId, d.titre, d.legislature, s.seanceDate
+            FROM documents_legislatifs d
+            LEFT JOIN dossiers_seances s ON s.dossierId = d.dossierId
+            WHERE d.titre IS NOT NULL
+            AND left(d.id, 4) IN ("PION", "PNRE", "PRJL")
+            AND d.legislature = "' . $this->legislature_to_get . '"
+            AND d.id NOT LIKE "%BTA%"
+            GROUP BY d.dossierId, d.titre, s.seanceDate
         ');
 
+        $dossierFields = array('dossierId', 'documentId', 'legislature', 'voteNumero');
         $dossier = [];
         $dossiers = [];
-        $n = 1;
+        $i = 1;
+
+        while ($doc = $query->fetch()) {
+            $documentId = $doc['id'];
+            $dossierId = $doc['dossierId'];
+            $titreLoi = '%' . $doc['titre'] . '%';
+            $seanceDate = $doc['seanceDate'];
+            $legislature = $doc['legislature'];
+
+            $stmt_get_votes = $this->bdd->prepare('SELECT voteNumero, legislature, titre
+                FROM votes_info
+                WHERE titre LIKE ? AND legislature = ? AND dateScrutin = ?
+            ');
+            
+            $stmt_get_votes->execute([$titreLoi, $legislature, $seanceDate]);
+
+            foreach($stmt_get_votes->fetchAll() as $vote){
+                $voteNumero = $vote['voteNumero'];
+                $legislature = $vote['legislature'];
+                
+                $dossier = array('dossierId' => $dossierId, 'documentId' => $documentId, 'legislature' => $legislature, 'voteNumero' => $voteNumero);
+                $dossiers = array_merge($dossiers, array_values($dossier));
+                
+                if ($i % 500 === 0) {
+                    echo "let's insert this pack of 500\n";
+                    $this->insertAll('dossiers_votes', $dossierFields, $dossiers);
+                    $dossier = [];
+                    $dossiers = [];
+                }
+
+                $i++;
+            }
+        }
+        $this->insertAll('dossiers_votes', $dossierFields, $dossiers);
+        
+    }
+
+    public function votesAmendments(){
+        echo "votesAmendments starting \n";
+
+        $this->bdd->query('CREATE TABLE IF NOT EXISTS `datan`.`votes_amendments` (
+            `id` INT NOT NULL AUTO_INCREMENT ,
+            `legislature` INT(5) NOT NULL ,
+            `voteNumero` VARCHAR(25) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL ,
+            `amendmentHref` VARCHAR(500) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL ,
+            `amendmentId` VARCHAR(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL ,
+            PRIMARY KEY (`id`) ,
+            UNIQUE INDEX `idx_unique` (`legislature`, `voteNumero`)
+        ) ENGINE = MyISAM;');
+
+        // 1st step ==> scrap the AN's website (individual vote page)
+        echo "1st step starting \n";
+        $query = $this->bdd->query('SELECT v.legislature, v.voteNumero
+            FROM votes_info v
+            LEFT JOIN votes_amendments a ON v.voteNumero = a.voteNumero AND v.legislature = a.legislature
+            WHERE v.legislature = "' . $this->legislature_to_get . '"
+            AND a.id IS NULL
+            AND v.voteNumero > 0
+            ORDER BY v.legislature ASC, v.voteNumero ASC
+            LIMIT 10
+        ');
+
+        $fields = array('legislature', 'voteNumero', 'amendmentHref');
 
         while ($vote = $query->fetch()){
             echo "Scrap AN's website.\n";
-            sleep(1); // Is it necessary to run a sleep function?
-            $voteId = $vote['voteId'];
             $voteNumero = $vote['voteNumero'];
             $url = "https://www.assemblee-nationale.fr/dyn/" . $this->legislature_to_get . "/scrutins/" . $voteNumero;
             $html = file_get_html($url);
-            $a = FALSE;
-            $d = FALSE;            
+            $a = FALSE;       
 
             if ($html !== false) {
                 $elements = $html->find('.an-bloc');
@@ -3057,48 +3059,39 @@ class Script
                         $href =  $x->href;
                         if(strpos($href, "amendements") !== false){
                             $a = TRUE;
-                            $dossier = array('voteId' => $voteId, 'legislature' => $this->legislature_to_get, 'dossierId' => NULL, 'dossierHref' => NULL, 'amendmentHref' => $href);
-                            $dossiers = array_merge($dossiers, array_values($dossier));
-                        } elseif(strpos($href, "dossiers") !== false) {
-                            $d = TRUE;
-                            $dossier = array('voteId' => $voteId, 'legislature' => $this->legislature_to_get, 'dossierId' => NULL, 'dossierHref' => $href, 'amendment_href' => NULL);
-                            $dossiers = array_merge($dossiers, array_values($dossier));
-                        }
+                            $vote_amendment = [];
+                            $vote_amendments = [];
+                            $vote_amendment = array('legislature' => $this->legislature_to_get, 'voteNumero' => $voteNumero, 'amendmentHref' => $href);
+                            $vote_amendments = array_merge($vote_amendments, array_values($vote_amendment));
+                            
+                        } 
                     }
                 }
-                
-
-                if ($a === FALSE && $d === FALSE) {
-                    $dossier = array('voteId' => $voteId, 'legislature' => $this->legislature_to_get, 'dossierId' => NULL, 'dossierHref' => NULL, 'amendment_href' => NULL);
-                    $dossiers = array_merge($dossiers, array_values($dossier));
-                }
-
             }
 
-            if ($n % 50 === 0) {
-                $this->insertAll('dossiers_votes', $dossierFields, $dossiers);
-                $dossier = [];
-                $dossiers = [];
+            if ($a === FALSE) {
+                $vote_amendment = [];
+                $vote_amendments = [];
+                $vote_amendment = array('legislature' => $this->legislature_to_get, 'voteNumero' => $voteNumero, 'amendmentHref' => NULL);
+                $vote_amendments = array_merge($vote_amendments, array_values($vote_amendment));
             }
-            $n++;
 
+            $this->insertAll('votes_amendments', $fields, $vote_amendments);
         }
-        
-        $this->insertAll('dossiers_votes', $dossierFields, $dossiers);
 
-        // 3d step ==> get amendmentId from amendmentHref (using scrapping)
-        $query = $this->bdd->query('SELECT d.id, d.voteId, d.amendmentHref
-            FROM dossiers_votes d
+        echo "2nd step starting \n";
+        $query = $this->bdd->query('SELECT d.id, d.voteNumero, d.legislature, d.amendmentHref
+            FROM votes_amendments d
             WHERE d.legislature = "' . $this->legislature_to_get . '"
-            AND d.amendmentHref IS NOT NULL AND d.amendmentId IS NULL
-            LIMIT 50
+            AND d.amendmentHref IS NOT NULL
+            AND d.amendmentId IS NULL
+            ORDER BY d.voteNumero ASC
         ');
 
-        $dossier = [];
-        $dossiers = [];
+        $vote_amendment = [];
+        $vote_amendments = [];
 
         while($amdt = $query->fetch()){
-            sleep(1); // Is this function necessary?
             $url = $amdt['amendmentHref'];
             $id = $amdt['id'];
             $html = file_get_html($url);
@@ -3113,7 +3106,7 @@ class Script
                             $segments = explode('/', $href);
                             $amdtId = str_replace(".xml", "", $segments[3]);
 
-                            $sql = 'UPDATE dossiers_votes
+                            $sql = 'UPDATE votes_amendments
                                 SET amendmentId = :amdtId
                                 WHERE id = :id';
                             $stmt = $this->bdd->prepare($sql);
@@ -3133,104 +3126,6 @@ class Script
             }
         }
 
-
-        // 4th step ==> get dossierId from amendmentId 
-        $query = $this->bdd->query('SELECT d.id, d.voteId, d.amendmentId
-            FROM dossiers_votes d
-            WHERE d.legislature = "' . $this->legislature_to_get . '"
-            AND d.amendmentId IS NOT NULL AND d.dossierId IS NULL
-        ');
-
-        $dossier = [];
-        $dossiers = [];
-
-        while ($amdt = $query->fetch()) {
-            $amdtId = $amdt['amendmentId'];
-            $id = $amdt['id'];
-
-            $query_amdt = $this->bdd->query('SELECT dossier
-                FROM amendements
-                WHERE id = "' . $amdtId .'"
-                LIMIT 1
-            ');
-
-            $result = $query_amdt->fetch(PDO::FETCH_ASSOC);
-
-            if ($result){
-                $dossierId = $result['dossier'];
-
-                $sql = 'UPDATE dossiers_votes
-                    SET dossierId = :dossierId
-                    WHERE id = :id';
-                $stmt = $this->bdd->prepare($sql);
-                $stmt->bindParam(':dossierId', $dossierId, PDO::PARAM_STR);
-                $stmt->bindParam(':id', $id, PDO::PARAM_INT);
-
-                if ($stmt->execute()) {
-                    echo "dossierId updated successfully.\n";
-                } else {
-                    echo "Error updating record: " . print_r($stmt->errorInfo(), true);
-                }
-            }            
-        }
-
-        die();
-
-
-        // 5th ==> check missing votes
-
-        /* NEED TO WORK WITH DOSSIERS LEGISLATIF !
-        
-
-        $query = $this->bdd->query('SELECT id, dossierId, titre
-            FROM documents_legislatifs
-            WHERE titre IS NOT NULL
-            AND left(id, 4) IN ("PION", "PNRE", "PRJL")
-            AND legislature = "' . $this->legislature_to_get . '"
-            AND id NOT LIKE "%BTA%"
-            GROUP BY dossierId, titre');
-
-        while ($doc = $query->fetch()) {
-            $documentId = $doc['id'];
-            $dossierId = $doc['dossierId'];
-            $titreLoi = '%' . $doc['titre'] . '%';
-
-            //echo $dossierId;
-
-            $stmt = $this->bdd->prepare('SELECT voteNumero, legislature, titre
-                FROM votes_info
-                WHERE titre LIKE ?
-                AND legislature = ?
-            ');
-            
-            $stmt->execute([$titreLoi, $this->legislature_to_get]);
-            $query_vote = $stmt->fetchAll();
-                
-
-            foreach($query_vote as $vote){
-                echo "YES";
-                $voteId = $vote['voteNumero'];
-                $legislature = $vote['legislature'];
-
-                echo "y";
-
-                $dossier = array('dossierId' => $dossierId, 'documentId' => $documentId, 'legislature' => $legislature, 'voteId' => $voteId);
-                $dossiers = array_merge($dossiers, array_values($dossier));
-
-                
-                if ($n % 10 === 0) {
-                    $this->insertAll('dossiers_votes', $dossierFields, $dossiers);
-                    $dossier = [];
-                    $dossiers = [];
-                }
-                $n++;
-                
-            }
-
-        } */
-
-
-        
     }
 
     public function dossiersActeurs()
@@ -4111,14 +4006,13 @@ $script->groupeCohesion(); // Depend on the legislature
 $script->groupeAccord(); // Depend on the legislature
 $script->deputeAccord(); // Depend on the legislature
 $script->voteParticipation(); // Depend on the legislature
-
-
 $script->dossier(); // Depend on the legislature
-*/
+$script->dossiersSeances();
 $script->dossiersVotes(); // Depend on the legislature
-/*
 $script->dossiersActeurs(); // Depend on the legislature
 $script->documentsLegislatifs(); // Depend on the legislature
+*/
+$script->votesAmendments();
 /*
 $script->amendements(); // Depend on the legislature
 $script->amendementsAuteurs(); // Depend on the legislature
