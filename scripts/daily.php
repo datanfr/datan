@@ -3023,7 +3023,7 @@ class Script
         $this->bdd->query('CREATE TABLE IF NOT EXISTS `datan`.`votes_amendments` (
             `id` INT NOT NULL AUTO_INCREMENT ,
             `legislature` INT(5) NOT NULL ,
-            `voteNumero` VARCHAR(25) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL ,
+            `voteNumero` INT(5) NOT NULL ,
             `amendmentHref` VARCHAR(500) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL ,
             `amendmentId` VARCHAR(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL ,
             PRIMARY KEY (`id`) ,
@@ -3039,7 +3039,7 @@ class Script
             AND a.id IS NULL
             AND v.voteNumero > 0
             ORDER BY v.legislature ASC, v.voteNumero ASC
-            LIMIT 100
+            LIMIT 300
         ');
 
         $fields = array('legislature', 'voteNumero', 'amendmentHref');
@@ -3094,7 +3094,7 @@ class Script
         while($amdt = $query->fetch()){
             $url = $amdt['amendmentHref'];
             $id = $amdt['id'];
-            $html = file_get_html($url);
+            $html = @file_get_html($url);
 
             if($html !== false){
                 $results = $html->find(".amendement", 0)->find('li');
@@ -4008,12 +4008,12 @@ $script->deputeAccord(); // Depend on the legislature
 $script->voteParticipation(); // Depend on the legislature
 $script->dossier(); // Depend on the legislature
 $script->dossiersSeances();
+*/
 $script->dossiersVotes(); // Depend on the legislature
+/*
 $script->dossiersActeurs(); // Depend on the legislature
 $script->documentsLegislatifs(); // Depend on the legislature
-*/
 $script->votesAmendments();
-/*
 $script->amendements(); // Depend on the legislature
 $script->amendementsAuteurs(); // Depend on the legislature
 $script->voteParticipationCommission(); // Depend on the legislature

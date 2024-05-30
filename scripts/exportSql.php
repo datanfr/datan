@@ -35,6 +35,7 @@ function EXPORT_TABLES($host, $user, $pass, $name, $tables = false, $backup_name
       'quizz',
       'readings',
       'regions',
+      '	votes_amendments',
       'votes_datan',
       'votes_datan_requested',
       'mysql_v'
