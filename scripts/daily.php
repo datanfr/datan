@@ -2370,9 +2370,9 @@ class Script
 
             $votes = $this->bdd->query('SELECT vi.voteNumero, vi.legislature, vi.dateScrutin, d.*, o.libelleAbrev
               FROM votes_info vi
-              LEFT JOIN votes_dossiers vd ON vi.voteNumero = vd.voteNumero AND vi.legislature = vd.legislature
-              LEFT JOIN dossiers d ON vd.dossier = d.titreChemin AND d.legislature = vi.legislature
-              LEFT JOIN organes o ON d.commissionFond = o.uid
+              LEFT JOIN dossiers_votes vd ON vd.voteNumero = vi.voteNumero AND vd.legislature = vi.legislature
+              LEFT JOIN dossiers d ON d.dossierId = vd.dossierId
+              LEFT JOIN organes o ON o.uid = d.commissionFond
               WHERE vi.voteNumero > "' . $last_vote . '" AND vi.legislature = "' . $this->legislature_to_get . '"
               ORDER BY vi.voteNumero ASC
             ');
@@ -2404,8 +2404,8 @@ class Script
                         }
                     }
                 }
-                if ($i % 1000 === 0) {
-                    echo "let's insert this pack of 1000\n";
+                if ($i % 100 === 0) {
+                    echo "let's insert this pack of 100\n";
                     $this->insertAll('votes_participation_commission', $voteCommissionParticipationFields, $votesCommissionParticipation);
                     $votesCommissionParticipation = [];
                     $voteCommissionParticipation = [];
@@ -2596,8 +2596,8 @@ class Script
                 SELECT gc.legislature, gc.voteNumero, gc.organeRef, CASE WHEN gc.positionGroupe = 1 THEN 1 ELSE 0 END AS positionGroupe
                 FROM groupes_cohesion gc
                 LEFT JOIN votes_info vi ON vi.legislature = gc.legislature AND vi.voteNumero = gc.voteNumero
-                LEFT JOIN votes_dossiers vd ON vd.voteNumero = gc.voteNumero AND vd.legislature = gc.legislature
-                LEFT JOIN dossiers doss ON doss.titreChemin = vd.dossier
+                LEFT JOIN dossiers_votes vd ON vd.voteNumero = gc.voteNumero AND vd.legislature = gc.legislature
+                LEFT JOIN dossiers doss ON doss.dossierId = vd.dossierId
                 WHERE gc.organeRef = "' . $uid . '" AND vi.voteType = "final" AND doss.procedureParlementaireCode IN (1, 21)
               ) A
           ');
@@ -2962,7 +2962,7 @@ class Script
             `dossierId` VARCHAR(25) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL ,
             `documentId` VARCHAR(25) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL ,
             `legislature` INT(5) NOT NULL ,
-            `voteNumero` VARCHAR(25) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL ,
+            `voteNumero` INT(5) NOT NULL ,
             PRIMARY KEY (`id`) ,
             UNIQUE INDEX `idx_unique` (`voteNumero`, `dossierId`)
         ) ENGINE = MyISAM;');      
@@ -2988,6 +2988,7 @@ class Script
             $titreLoi = '%' . $doc['titre'] . '%';
             $seanceDate = $doc['seanceDate'];
             $legislature = $doc['legislature'];
+
 
             $stmt_get_votes = $this->bdd->prepare('SELECT voteNumero, legislature, titre
                 FROM votes_info
@@ -3361,7 +3362,6 @@ class Script
 
                 $id = $xml->uid;
                 $legislature = $xml->legislature;
-                echo $legislature;
 
                 if ($legislature == '') {
                     $legislature = NULL;
@@ -3985,7 +3985,6 @@ if (isset($argv[1]) && isset($argv[2])) {
   $script = new Script();
 }
 
-/*
 $script->fillDeputes();
 $script->deputeAll();
 $script->deputeLast();
@@ -4008,11 +4007,9 @@ $script->deputeAccord(); // Depend on the legislature
 $script->voteParticipation(); // Depend on the legislature
 $script->dossier(); // Depend on the legislature
 $script->dossiersSeances();
-*/
-$script->dossiersVotes(); // Depend on the legislature
-/*
-$script->dossiersActeurs(); // Depend on the legislature
 $script->documentsLegislatifs(); // Depend on the legislature
+$script->dossiersVotes(); // Depend on the legislature
+$script->dossiersActeurs(); // Depend on the legislature
 $script->votesAmendments();
 $script->amendements(); // Depend on the legislature
 $script->amendementsAuteurs(); // Depend on the legislature
