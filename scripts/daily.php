@@ -2548,7 +2548,6 @@ class Script
     {
         echo "classGroups starting \n";
 
-        $this->bdd->query('DROP TABLE IF EXISTS `class_groups`');
         $this->bdd->query('CREATE TABLE IF NOT EXISTS `class_groups` (
             `organeRef` varchar(15) NOT NULL,
             `legislature` int(5) NOT NULL,
@@ -2557,9 +2556,9 @@ class Script
             `value` decimal(6,3) NULL DEFAULT NULL,
             `votes` bigint(21) NULL DEFAULT NULL,
             `dateMaj` date NOT NULL,
-            KEY `idx_organeRef` (`organeRef`),
+            UNIQUE INDEX `idx_unique` (`organeRef`, `stat`),
             KEY `idx_active` (`active`),
-            KEY `idx_legislature` (`legislature`)
+            KEY `idx_legislature` (`legislature`) 
           ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
         ');
 
@@ -2747,7 +2746,7 @@ class Script
           $this->insertAll('class_groups_month', $fields, $insertParticipation);
         }
 
-        /// --- 4) CLASS GROUPS PROXIMITE --- ///
+        /// --- 4) CLASS GROUPS PROXIMITY --- ///
         $proximityQuery = $this->bdd->query('SELECT  ga.organeRef, ga.legislature, ga.organeRefAccord AS prox_group, ROUND(AVG(accord), 4) AS score, COUNT(accord) AS n, CONCAT(DATE_FORMAT(vi.dateScrutin, "%Y-%m"), "-01") AS dateValue
           FROM groupes_accord ga
           LEFT JOIN votes_info vi ON vi.legislature = ga.legislature AND vi.voteNumero = ga.voteNumero
@@ -3467,6 +3466,8 @@ class Script
                   // Insert NULL values
                   $seanceRef = $seanceRef == "" ? NULL : $seanceRef;
                   $expose = $expose == "" ? NULL : $expose;
+                  $expose = strlen($expose) > 65000 ? NULL : $expose;
+
                   $examined_by = $examined_by == "" ? NULL : $examined_by;
 
                   //echo $id . ' - ' . $dossier . ' - ' . $legislature . ' - ' . $texteLegislatifRef . ' - ' . $num . ' - ' . $numOrdre . ' - ' . $seanceRef . ' - ' . $sort . ' - ' . $state;
@@ -3829,151 +3830,155 @@ class Script
 
     public function opendata_activeMPs()
     {
-      $query = "SELECT
-      	da.mpId AS id,
-          da.legislature,
-          da.civ,
-          da.nameLast AS nom,
-          da.nameFirst AS prenom,
-          d.birthCity AS villeNaissance,
-          d.birthDate AS naissance,
-          da.age,
-          da.libelle AS groupe,
-          da.libelleAbrev AS groupeAbrev,
-          da.departementNom,
-          da.departementCode,
-          da.circo,
-          da.datePriseFonction,
-          da.job,
-          dc.mailAn AS mail,
-          dc.twitter,
-          dc.facebook,
-          dc.website,
-          h.mandatesN AS nombreMandats,
-          h.lengthEdited AS experienceDepute,
-          cp.score AS scoreParticipation,
-          cpc.score AS scoreParticipationSpecialite,
-          cl.score AS scoreLoyaute,
-          cm.score AS scoreMajorite,
-          curdate() AS dateMaj
-        FROM deputes_last da
-        LEFT JOIN deputes d ON d.mpId = da.mpId
-        LEFT JOIN deputes_contacts dc ON dc.mpId = da.mpId
-        LEFT JOIN history_per_mps_average h ON da.mpId = h.mpId
-        LEFT JOIN class_participation cp ON da.mpId = cp.mpId AND da.legislature = cp.legislature
-        LEFT JOIN class_participation_commission cpc ON da.mpId = cpc.mpId AND da.legislature = cpc.legislature
-        LEFT JOIN class_loyaute cl ON da.mpId = cl.mpId AND da.legislature = cl.legislature
-        LEFT JOIN class_majorite cm ON da.mpId = cm.mpId AND da.legislature = cm.legislature
-        WHERE da.active
-      ";
+        echo "opendata_activeMPs starting \n";
+        $query = "SELECT
+            da.mpId AS id,
+            da.legislature,
+            da.civ,
+            da.nameLast AS nom,
+            da.nameFirst AS prenom,
+            d.birthCity AS villeNaissance,
+            d.birthDate AS naissance,
+            da.age,
+            da.libelle AS groupe,
+            da.libelleAbrev AS groupeAbrev,
+            da.departementNom,
+            da.departementCode,
+            da.circo,
+            da.datePriseFonction,
+            da.job,
+            dc.mailAn AS mail,
+            dc.twitter,
+            dc.facebook,
+            dc.website,
+            h.mandatesN AS nombreMandats,
+            h.lengthEdited AS experienceDepute,
+            cp.score AS scoreParticipation,
+            cpc.score AS scoreParticipationSpecialite,
+            cl.score AS scoreLoyaute,
+            cm.score AS scoreMajorite,
+            curdate() AS dateMaj
+            FROM deputes_last da
+            LEFT JOIN deputes d ON d.mpId = da.mpId
+            LEFT JOIN deputes_contacts dc ON dc.mpId = da.mpId
+            LEFT JOIN history_per_mps_average h ON da.mpId = h.mpId
+            LEFT JOIN class_participation cp ON da.mpId = cp.mpId AND da.legislature = cp.legislature
+            LEFT JOIN class_participation_commission cpc ON da.mpId = cpc.mpId AND da.legislature = cpc.legislature
+            LEFT JOIN class_loyaute cl ON da.mpId = cl.mpId AND da.legislature = cl.legislature
+            LEFT JOIN class_majorite cm ON da.mpId = cm.mpId AND da.legislature = cm.legislature
+            WHERE da.active
+        ";
 
-      $this->opendata($query, "deputes_active.csv", "5fc8b732d30fbf1ed6648aab", "092bd7bb-1543-405b-b53c-932ebb49bb8e");
+        $this->opendata($query, "deputes_active.csv", "5fc8b732d30fbf1ed6648aab", "092bd7bb-1543-405b-b53c-932ebb49bb8e");
     }
 
     public function opendata_activeGroupes()
     {
-      $query = 'SELECT
-      	o.uid AS id,
-      	o.legislature,
-          o.libelle,
-          o.libelleAbrev,
-          o.libelleAbrege,
-          o.dateDebut,
-          o.positionPolitique,
-          o.couleurAssociee,
-          ge.effectif,
-          gs.womenPct as women,
-          gs.age AS age,
-          gs.rose_index AS scoreRose,
-          cohesion.value AS socreCohesion,
-          participation.value AS scoreParticipation,
-          majority.value AS scoreMajorite,
-          curdate() as dateMaj
-      FROM organes o
-      LEFT JOIN groupes_stats gs ON gs.organeRef = o.uid
-      LEFT JOIN groupes_effectif ge ON ge.organeRef = o.uid
-      LEFT JOIN class_groups cohesion ON cohesion.organeRef = o.uid AND cohesion.stat = "cohesion"
-      LEFT JOIN class_groups participation ON participation.organeRef = o.uid AND participation.stat = "participation"
-      LEFT JOIN class_groups majority ON majority.organeRef = o.uid AND majority.stat = "majority"
-      WHERE o.coteType = "GP" AND o.dateFin IS NULL
-      ';
+        echo "opendata_activeGroupes \n";
+        $query = 'SELECT
+            o.uid AS id,
+            o.legislature,
+            o.libelle,
+            o.libelleAbrev,
+            o.libelleAbrege,
+            o.dateDebut,
+            o.positionPolitique,
+            o.couleurAssociee,
+            ge.effectif,
+            gs.womenPct as women,
+            gs.age AS age,
+            gs.rose_index AS scoreRose,
+            cohesion.value AS socreCohesion,
+            participation.value AS scoreParticipation,
+            majority.value AS scoreMajorite,
+            curdate() as dateMaj
+        FROM organes o
+        LEFT JOIN groupes_stats gs ON gs.organeRef = o.uid
+        LEFT JOIN groupes_effectif ge ON ge.organeRef = o.uid
+        LEFT JOIN class_groups cohesion ON cohesion.organeRef = o.uid AND cohesion.stat = "cohesion"
+        LEFT JOIN class_groups participation ON participation.organeRef = o.uid AND participation.stat = "participation"
+        LEFT JOIN class_groups majority ON majority.organeRef = o.uid AND majority.stat = "majority"
+        WHERE o.coteType = "GP" AND o.dateFin IS NULL
+        ';
 
-      $this->opendata($query, "groupes_active.csv", "60ed57a9f0c7c3a1eb29733f", "4612d596-9a78-4ec6-b60c-ccc1ee11f8c0");
+        $this->opendata($query, "groupes_active.csv", "60ed57a9f0c7c3a1eb29733f", "4612d596-9a78-4ec6-b60c-ccc1ee11f8c0");
     }
 
     public function opendata_historyMPs()
     {
-      $query = "SELECT
-      	da.mpId AS id,
-          da.legislature AS legislatureLast,
-          da.civ,
-          da.nameLast AS nom,
-          da.nameFirst AS prenom,
-          d.birthCity AS villeNaissance,
-          d.birthDate AS naissance,
-          da.age,
-          da.libelle AS groupe,
-          da.libelleAbrev AS groupeAbrev,
-          da.departementNom,
-          da.departementCode,
-          da.circo,
-          da.datePriseFonction,
-          da.job,
-          dc.mailAn AS mail,
-          dc.twitter,
-          dc.facebook,
-          dc.website,
-          h.mandatesN AS nombreMandats,
-          h.lengthEdited AS experienceDepute,
-          cp.score AS scoreParticipation,
-          cpc.score AS scoreParticipationSpecialite,
-          cl.score AS scoreLoyaute,
-          cm.score AS scoreMajorite,
-          da.active,
-          curdate() AS dateMaj
-        FROM deputes_last da
-        LEFT JOIN deputes d ON d.mpId = da.mpId
-        LEFT JOIN deputes_contacts dc ON dc.mpId = da.mpId
-        LEFT JOIN history_per_mps_average h ON da.mpId = h.mpId
-        LEFT JOIN class_participation cp ON da.mpId = cp.mpId AND da.legislature = cp.legislature
-        LEFT JOIN class_participation_commission cpc ON da.mpId = cpc.mpId AND da.legislature = cpc.legislature
-        LEFT JOIN class_loyaute cl ON da.mpId = cl.mpId AND da.legislature = cl.legislature
-        LEFT JOIN class_majorite cm ON da.mpId = cm.mpId AND da.legislature = cm.legislature
-      ";
+        echo "opendata_historyMPs \n";
+        $query = "SELECT
+            da.mpId AS id,
+            da.legislature AS legislatureLast,
+            da.civ,
+            da.nameLast AS nom,
+            da.nameFirst AS prenom,
+            d.birthCity AS villeNaissance,
+            d.birthDate AS naissance,
+            da.age,
+            da.libelle AS groupe,
+            da.libelleAbrev AS groupeAbrev,
+            da.departementNom,
+            da.departementCode,
+            da.circo,
+            da.datePriseFonction,
+            da.job,
+            dc.mailAn AS mail,
+            dc.twitter,
+            dc.facebook,
+            dc.website,
+            h.mandatesN AS nombreMandats,
+            h.lengthEdited AS experienceDepute,
+            cp.score AS scoreParticipation,
+            cpc.score AS scoreParticipationSpecialite,
+            cl.score AS scoreLoyaute,
+            cm.score AS scoreMajorite,
+            da.active,
+            curdate() AS dateMaj
+            FROM deputes_last da
+            LEFT JOIN deputes d ON d.mpId = da.mpId
+            LEFT JOIN deputes_contacts dc ON dc.mpId = da.mpId
+            LEFT JOIN history_per_mps_average h ON da.mpId = h.mpId
+            LEFT JOIN class_participation cp ON da.mpId = cp.mpId AND da.legislature = cp.legislature
+            LEFT JOIN class_participation_commission cpc ON da.mpId = cpc.mpId AND da.legislature = cpc.legislature
+            LEFT JOIN class_loyaute cl ON da.mpId = cl.mpId AND da.legislature = cl.legislature
+            LEFT JOIN class_majorite cm ON da.mpId = cm.mpId AND da.legislature = cm.legislature
+        ";
 
-      $this->opendata($query, "deputes-historique.csv", "60f2ffc8284ff5e8c1ed0655", "817fda38-d616-43e9-852f-790510f4d157");
+        $this->opendata($query, "deputes-historique.csv", "60f2ffc8284ff5e8c1ed0655", "817fda38-d616-43e9-852f-790510f4d157");
     }
 
     public function opendata_historyGroupes()
     {
-      $query = 'SELECT
-      	o.uid AS id,
-      	o.legislature,
-          o.libelle,
-          o.libelleAbrev,
-          o.libelleAbrege,
-          o.dateDebut,
-          o.positionPolitique,
-          o.couleurAssociee,
-          ge.effectif,
-          gs.womenPct as women,
-          gs.age AS age,
-          gs.rose_index AS scoreRose,
-          cohesion.value AS socreCohesion,
-          participation.value AS scoreParticipation,
-          majority.value AS scoreMajorite,
-          CASE WHEN o.dateFin IS NULL THEN 1 ELSE 0 END AS active,
-          curdate() as dateMaj
-      FROM organes o
-      LEFT JOIN groupes_stats gs ON gs.organeRef = o.uid
-      LEFT JOIN groupes_effectif ge ON ge.organeRef = o.uid
-      LEFT JOIN class_groups cohesion ON cohesion.organeRef = o.uid AND cohesion.stat = "cohesion"
-      LEFT JOIN class_groups participation ON participation.organeRef = o.uid AND participation.stat = "participation"
-      LEFT JOIN class_groups majority ON majority.organeRef = o.uid AND majority.stat = "majority"
-      WHERE o.coteType = "GP" AND o.legislature >= 14
-      ';
+        echo "opendata_historyGroupes \n";
+        $query = 'SELECT
+            o.uid AS id,
+            o.legislature,
+            o.libelle,
+            o.libelleAbrev,
+            o.libelleAbrege,
+            o.dateDebut,
+            o.positionPolitique,
+            o.couleurAssociee,
+            ge.effectif,
+            gs.womenPct as women,
+            gs.age AS age,
+            gs.rose_index AS scoreRose,
+            cohesion.value AS socreCohesion,
+            participation.value AS scoreParticipation,
+            majority.value AS scoreMajorite,
+            CASE WHEN o.dateFin IS NULL THEN 1 ELSE 0 END AS active,
+            curdate() as dateMaj
+        FROM organes o
+        LEFT JOIN groupes_stats gs ON gs.organeRef = o.uid
+        LEFT JOIN groupes_effectif ge ON ge.organeRef = o.uid
+        LEFT JOIN class_groups cohesion ON cohesion.organeRef = o.uid AND cohesion.stat = "cohesion"
+        LEFT JOIN class_groups participation ON participation.organeRef = o.uid AND participation.stat = "participation"
+        LEFT JOIN class_groups majority ON majority.organeRef = o.uid AND majority.stat = "majority"
+        WHERE o.coteType = "GP" AND o.legislature >= 14
+        ';
 
-      $this->opendata($query, "groupes-historique.csv", "60f30419135bec6a5e480086", "530940ab-45f3-41e3-8de3-759568c728b8");
+        $this->opendata($query, "groupes-historique.csv", "60f30419135bec6a5e480086", "530940ab-45f3-41e3-8de3-759568c728b8");
     }
 }
 
