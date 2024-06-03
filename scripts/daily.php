@@ -8,7 +8,7 @@ class Script
     private $dateMaj;
     private $time_pre;
     private $legislature_current;
-    private $dateFinLast;
+    private $intro;
     private $congress;
 
     // export the variables in environment
@@ -23,7 +23,6 @@ class Script
           $this->congress = TRUE;
         }
         $this->intro = "[" . date('Y-m-d h:i:s') . "] ";
-        $this->dateFinLast = "2022-06-21";
         echo $this->intro . "Launching the daily script for legislature " . $this->legislature_to_get . "\n";
         $this->time_pre = microtime(true);
         try {
@@ -291,9 +290,7 @@ class Script
 
                                 if ($datePriseFonction == "") {
                                     $datePriseFonction = NULL;
-                                } else {
-                                    $datePriseFonction = $datePriseFonction;
-                                }
+                                } 
                                 $mandatPrincipal = array(
                                     'mandatId' => $mandatId,
                                     'mpId' => $mpId,
