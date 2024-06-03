@@ -224,8 +224,8 @@
           <div class="bloc-links">
             <div class="d-flex flex-column flex-lg-row">
               <?php if ($vote['dossierUrl']) : ?>
-                <span class="d-flex justify-content-center align-items-center url_obf btn btn-secondary link my-1 my-lg-0 mx-lg-1" url_obf="<?= url_obfuscation($vote['dossierUrl']) ?>">
-                  <div class="mr-1">
+                <span class="d-flex justify-content-center align-items-center url_obf btn btn-secondary link my-1 my-lg-0 mx-lg-1" url_obf="<?= url_obfuscation("https://www.assemblee-nationale.fr/dyn/" . $vote['dossierLegislature'] . "/dossiers/" . $vote['dossierUrl']) ?>">
+                  <div class="mr-2">
                     <?= file_get_contents(base_url() . '/assets/imgs/icons/arrow_external_right.svg') ?>
                   </div>
                   <span class="text">Le dossier</span>
@@ -427,7 +427,7 @@ endif; ?>
         <div class="bloc-links">
           <div class="d-flex flex-column flex-lg-row">
             <?php if ($vote['dossierUrl']) : ?>
-              <span class="d-flex justify-content-center align-items-center url_obf btn btn-secondary link my-1 my-lg-0 mx-lg-1" url_obf="<?= url_obfuscation($vote['dossierUrl']) ?>">
+              <span class="d-flex justify-content-center align-items-center url_obf btn btn-secondary link my-1 my-lg-0 mx-lg-1" url_obf="<?= url_obfuscation("https://www.assemblee-nationale.fr/dyn/" . $vote['dossierLegislature'] . "/dossiers/" . $vote['dossierUrl']) ?>">
                 <span class="text">Le dossier</span>
               </span>
             <?php endif; ?>

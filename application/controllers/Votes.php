@@ -396,7 +396,7 @@
       $data['explain'] = $this->votes_model->get_explications($legislature, $data['vote']['voteNumero']);
 
       // Info about the author
-      if ($data['vote']['dossier'] && $legislature >= 15) {
+      if ($data['vote']['dossierId'] && $legislature >= 15) {
         if ($data['vote']['voteType'] == 'amendement' || $data['vote']['voteType'] == 'sous-amendement') { // If the vote is an amendment
           $data['authorMeta']['title'] = 'amendement';
           $data['amdt'] = $this->votes_model->get_amendement($legislature, $data['vote']['dossierId'], $data['vote']['seanceRef'], $data['vote']['amdt']);
