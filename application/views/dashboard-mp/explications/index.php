@@ -113,7 +113,7 @@
                           <td class="text-center"><span class="badge badge<?= ucfirst($value['vote_depute']) ?>" style="font-size: 16px"><?= ucfirst($value['vote_depute']) ?></span></td>
                           <td class="d-none d-lg-table-cell"><?= word_limiter($value['explication'], 30) ?></td>
                           <td class="d-flex flex-column">
-                            <a class="btn btn-secondary d-flex align-items-center justify-content-center font-weight-bold mb-1" href="<?= base_url() ?>votes/legislature-<?= $value['legislature'] ?>/vote_<?= $value['voteNumero'] ?>" target="_blank" style="width: 100%">
+                            <a class="btn btn-secondary d-flex align-items-center justify-content-center font-weight-bold mb-1" href="<?= base_url() ?>votes/legislature-<?= $value['legislature'] ?>/vote_<?= $value['voteNumero'] < 0 ? "c" . abs($value['voteNumero']) : $value['voteNumero'] ?>" target="_blank" style="width: 100%">
                               <?= file_get_contents(asset_url() . "imgs/icons/box-arrow-up-right.svg") ?>
                               <span class="ml-3">Scrutin</span>
                             </a>
