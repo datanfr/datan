@@ -2887,7 +2887,7 @@ class Script
     public function dossiersSeances(){
         // For each dossier, get all seances publiques where the dossier was debated/
         echo "dossiersSeances \n";
-        $this->bdd->query('CREATE TABLE IF NOT EXISTS `datan`.`dossiers_seances` (
+        $this->bdd->query('CREATE TABLE IF NOT EXISTS `dossiers_seances` (
             `id` INT NOT NULL AUTO_INCREMENT ,
             `dossierId` VARCHAR(25) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL ,
             `legislature` INT NULL DEFAULT NULL ,
@@ -2953,7 +2953,7 @@ class Script
         echo "dossiersVotes starting \n";
 
         // The table dossiers_votes needs to be changed according to the code below 
-        $this->bdd->query('CREATE TABLE IF NOT EXISTS `datan`.`dossiers_votes` (
+        $this->bdd->query('CREATE TABLE IF NOT EXISTS `dossiers_votes` (
             `id` INT NOT NULL AUTO_INCREMENT ,
             `dossierId` VARCHAR(25) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL ,
             `documentId` VARCHAR(25) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL ,
@@ -3017,7 +3017,7 @@ class Script
     public function votesAmendments(){
         echo "votesAmendments starting \n";
 
-        $this->bdd->query('CREATE TABLE IF NOT EXISTS `datan`.`votes_amendments` (
+        $this->bdd->query('CREATE TABLE IF NOT EXISTS `votes_amendments` (
             `id` INT NOT NULL AUTO_INCREMENT ,
             `legislature` INT(5) NOT NULL ,
             `voteNumero` INT(5) NOT NULL ,
