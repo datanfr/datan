@@ -398,7 +398,6 @@
       // Get amendment 
       if($legislature >= 15){
         $data['vote']['amendment'] = $this->votes_model->get_amendement($data['vote']['legislature'], $data['vote']['voteNumero']);
-        var_dump($data['vote']);
       }
 
       // Get authors
@@ -430,7 +429,7 @@
           $data['authorMeta']['title'] = 'rapporteur';
         }
       }
-      
+
       // Author Explication
       if (isset($data['authorMeta'])) {
         if ($data['authorMeta']['title'] == 'amendement') {
