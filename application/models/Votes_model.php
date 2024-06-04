@@ -570,16 +570,14 @@
       return $schema;
     }
 
-    public function get_amendement($legislature, $dossier, $seanceRef, $num){
+    public function get_amendement($legislature, $voteNumero){
       $where = array(
-        'legislature' => $legislature,
-        'dossier' => $dossier,
-        'seanceRef' => $seanceRef,
-        'numOrdre' => $num
+        'va.legislature' => $legislature,
+        'va.voteNumero' => $voteNumero
       );
-      $this->db->select('id, legislature, num, numOrdre, texteLegislatifRef, expose');
-      $this->db->limit(1);
-      return $this->db->get_where('amendements', $where)->row_array();
+      $this->db->select('va.amendmentId, va.amendmentHref, a.expose');
+      $this->db->join('amendements a', 'a.id = va.amendmentId', 'left');
+      return $this->db->get_where('votes_amendments va', $where)->row_array();
     }
 
     public function get_amendement_all_seanceRef($legislature, $dossier, $num){
