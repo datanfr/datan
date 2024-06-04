@@ -577,6 +577,7 @@
       );
       $this->db->select('va.amendmentId, va.amendmentHref, a.expose');
       $this->db->join('amendements a', 'a.id = va.amendmentId', 'left');
+      $this->db->limit(1);
       return $this->db->get_where('votes_amendments va', $where)->row_array();
     }
 
