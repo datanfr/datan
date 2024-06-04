@@ -174,11 +174,11 @@
         FROM
         (
            SELECT vi.voteId, vi.voteNumero, vi.legislature, vi.dateScrutin, date_format(vi.dateScrutin, "%d %M %Y") as dateScrutinFR, vi.seanceRef, vi.libelleTypeVote, vi.typeMajorite, vi.sortCode, vi.demandeur, vi.nombreVotants, vi.suffragesExprimes, vi.nbrSuffragesRequis, vi.decomptePour AS pour, vi.decompteContre AS contre, vi.decompteAbs AS abstention, vi.decompteNv AS nonVotant, vi.voteType, vi.amdt, vi.article, vi.bister, vi.posArticle,
-          REPLACE(vi.titre, "n?", "n°") AS titre, vdos.href AS dossierUrl, vdos.dossier, doss.dossierId, doss.legislature AS dossierLegislature, doss.titre AS dossier_titre, doss.senatChemin, doss.procedureParlementaireLibelle,
+          REPLACE(vi.titre, "n?", "n°") AS titre, doss.titre AS dossier_titre, doss.titreChemin AS dossierUrl, vdos.dossierId, doss.procedureParlementaireLibelle, doss.legislature AS dossierLegislature,
           vd.title, vd.description, vd.state, f.name AS category, f.slug AS category_slug, vd.created_at, vd.modified_at
           FROM votes_info vi
-          LEFT JOIN votes_dossiers vdos ON vi.voteNumero = vdos.voteNumero AND vi.legislature = vdos.legislature
-          LEFT JOIN dossiers doss ON vdos.dossier = doss.titreChemin
+          LEFT JOIN dossiers_votes vdos ON vi.voteNumero = vdos.voteNumero AND vi.legislature = vdos.legislature
+          LEFT JOIN dossiers doss ON vdos.dossierId = doss.dossierId
           LEFT JOIN votes_datan vd ON vi.voteId = vd.vote_id AND vi.legislature = vd.legislature AND vd.state = "published"
           LEFT JOIN fields f ON vd.category = f.id
           WHERE vi.legislature = ? AND vi.voteNumero = ?
@@ -570,16 +570,15 @@
       return $schema;
     }
 
-    public function get_amendement($legislature, $dossier, $seanceRef, $num){
+    public function get_amendement($legislature, $voteNumero){
       $where = array(
-        'legislature' => $legislature,
-        'dossier' => $dossier,
-        'seanceRef' => $seanceRef,
-        'numOrdre' => $num
+        'va.legislature' => $legislature,
+        'va.voteNumero' => $voteNumero
       );
-      $this->db->select('id, legislature, num, numOrdre, texteLegislatifRef, expose');
+      $this->db->select('va.amendmentId, va.amendmentHref, a.expose');
+      $this->db->join('amendements a', 'a.id = va.amendmentId', 'left');
       $this->db->limit(1);
-      return $this->db->get_where('amendements', $where)->row_array();
+      return $this->db->get_where('votes_amendments va', $where)->row_array();
     }
 
     public function get_amendement_all_seanceRef($legislature, $dossier, $num){

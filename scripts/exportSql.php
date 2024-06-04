@@ -15,6 +15,7 @@ function EXPORT_TABLES($host, $user, $pass, $name, $tables = false, $backup_name
       'cities_infos',
       'cities_mayors',
       'departement',
+      'dossiers_votes',
       'elect_legislatives_infos',
       'elect_legislatives_results',
       'elect_legislatives_cities',
@@ -35,6 +36,7 @@ function EXPORT_TABLES($host, $user, $pass, $name, $tables = false, $backup_name
       'quizz',
       'readings',
       'regions',
+      'votes_amendments',
       'votes_datan',
       'votes_datan_requested',
       'mysql_v'

@@ -8,7 +8,7 @@ class Script
     private $dateMaj;
     private $time_pre;
     private $legislature_current;
-    private $dateFinLast;
+    private $intro;
     private $congress;
 
     // export the variables in environment
@@ -23,7 +23,6 @@ class Script
           $this->congress = TRUE;
         }
         $this->intro = "[" . date('Y-m-d h:i:s') . "] ";
-        $this->dateFinLast = "2022-06-21";
         echo $this->intro . "Launching the daily script for legislature " . $this->legislature_to_get . "\n";
         $this->time_pre = microtime(true);
         try {
@@ -291,9 +290,7 @@ class Script
 
                                 if ($datePriseFonction == "") {
                                     $datePriseFonction = NULL;
-                                } else {
-                                    $datePriseFonction = $datePriseFonction;
-                                }
+                                } 
                                 $mandatPrincipal = array(
                                     'mandatId' => $mandatId,
                                     'mpId' => $mpId,
@@ -2370,9 +2367,9 @@ class Script
 
             $votes = $this->bdd->query('SELECT vi.voteNumero, vi.legislature, vi.dateScrutin, d.*, o.libelleAbrev
               FROM votes_info vi
-              LEFT JOIN votes_dossiers vd ON vi.voteNumero = vd.voteNumero AND vi.legislature = vd.legislature
-              LEFT JOIN dossiers d ON vd.dossier = d.titreChemin AND d.legislature = vi.legislature
-              LEFT JOIN organes o ON d.commissionFond = o.uid
+              LEFT JOIN dossiers_votes vd ON vd.voteNumero = vi.voteNumero AND vd.legislature = vi.legislature
+              LEFT JOIN dossiers d ON d.dossierId = vd.dossierId
+              LEFT JOIN organes o ON o.uid = d.commissionFond
               WHERE vi.voteNumero > "' . $last_vote . '" AND vi.legislature = "' . $this->legislature_to_get . '"
               ORDER BY vi.voteNumero ASC
             ');
@@ -2404,8 +2401,8 @@ class Script
                         }
                     }
                 }
-                if ($i % 1000 === 0) {
-                    echo "let's insert this pack of 1000\n";
+                if ($i % 100 === 0) {
+                    echo "let's insert this pack of 100\n";
                     $this->insertAll('votes_participation_commission', $voteCommissionParticipationFields, $votesCommissionParticipation);
                     $votesCommissionParticipation = [];
                     $voteCommissionParticipation = [];
@@ -2548,7 +2545,6 @@ class Script
     {
         echo "classGroups starting \n";
 
-        $this->bdd->query('DROP TABLE IF EXISTS `class_groups`');
         $this->bdd->query('CREATE TABLE IF NOT EXISTS `class_groups` (
             `organeRef` varchar(15) NOT NULL,
             `legislature` int(5) NOT NULL,
@@ -2557,9 +2553,9 @@ class Script
             `value` decimal(6,3) NULL DEFAULT NULL,
             `votes` bigint(21) NULL DEFAULT NULL,
             `dateMaj` date NOT NULL,
-            KEY `idx_organeRef` (`organeRef`),
+            UNIQUE INDEX `idx_unique` (`organeRef`, `stat`),
             KEY `idx_active` (`active`),
-            KEY `idx_legislature` (`legislature`)
+            KEY `idx_legislature` (`legislature`) 
           ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
         ');
 
@@ -2596,8 +2592,8 @@ class Script
                 SELECT gc.legislature, gc.voteNumero, gc.organeRef, CASE WHEN gc.positionGroupe = 1 THEN 1 ELSE 0 END AS positionGroupe
                 FROM groupes_cohesion gc
                 LEFT JOIN votes_info vi ON vi.legislature = gc.legislature AND vi.voteNumero = gc.voteNumero
-                LEFT JOIN votes_dossiers vd ON vd.voteNumero = gc.voteNumero AND vd.legislature = gc.legislature
-                LEFT JOIN dossiers doss ON doss.titreChemin = vd.dossier
+                LEFT JOIN dossiers_votes vd ON vd.voteNumero = gc.voteNumero AND vd.legislature = gc.legislature
+                LEFT JOIN dossiers doss ON doss.dossierId = vd.dossierId
                 WHERE gc.organeRef = "' . $uid . '" AND vi.voteType = "final" AND doss.procedureParlementaireCode IN (1, 21)
               ) A
           ');
@@ -2747,7 +2743,7 @@ class Script
           $this->insertAll('class_groups_month', $fields, $insertParticipation);
         }
 
-        /// --- 4) CLASS GROUPS PROXIMITE --- ///
+        /// --- 4) CLASS GROUPS PROXIMITY --- ///
         $proximityQuery = $this->bdd->query('SELECT  ga.organeRef, ga.legislature, ga.organeRefAccord AS prox_group, ROUND(AVG(accord), 4) AS score, COUNT(accord) AS n, CONCAT(DATE_FORMAT(vi.dateScrutin, "%Y-%m"), "-01") AS dateValue
           FROM groupes_accord ga
           LEFT JOIN votes_info vi ON vi.legislature = ga.legislature AND vi.voteNumero = ga.voteNumero
@@ -2781,82 +2777,16 @@ class Script
         $this->bdd->query("ALTER TABLE class_groups_proximite ADD INDEX idx_legislature (legislature)");
     }
 
-    public function votesDossiers()
-    {
-        echo "votesDossiers starting \n";
-        $this->bdd->query('DELETE FROM votes_dossiers WHERE legislature = "' . $this->legislature_to_get . '"');
-
-        //Until where to go?
-        $until_html = file_get_html("https://www2.assemblee-nationale.fr/scrutins/liste/(legislature)/'.$this->legislature_to_get.'/(type)/TOUS/(idDossier)/TOUS");
-        $pagination = $until_html->find('.pagination-bootstrap ul', 0);
-        $last = $pagination->find('li', -2)->plaintext;
-        $until = ($last - 1) * 100;
-
-        //array urls to get
-        $offsets = range(0, $until, 100);
-
-        $voteDossiers = [];
-        $voteDossier = [];
-        $voteDossiersFields = array('offset_num', 'legislature', 'voteNumero', 'href', 'dossier');
-        $i = 1;
-        foreach ($offsets as $offset) {
-            $url = "https://www2.assemblee-nationale.fr/scrutins/liste/(offset)/" . $offset . "/(legislature)/" . $this->legislature_to_get . "/(type)/TOUS/(idDossier)/TOUS";
-
-            $html = file_get_html($url);
-            foreach ($html->find('tbody tr') as $x) {
-                //echo $x;
-                $voteNumero = $x->find('.denom', 0)->plaintext;
-                $voteNumero = str_replace("*", "", $voteNumero);
-                $href = "";
-                $dossier = "";
-                foreach ($x->find('a') as $a) {
-                    if ($a->plaintext == "dossier") {
-                        $href = $a->href;
-                        if (strpos($href, "/14/") !== false) {
-                            if (strpos($href, ".asp") !== false) {
-                                //echo "1";
-                                $dossier1 = str_replace('https://www.assemblee-nationale.fr/14/dossiers/', '', $href);
-                                $dossier = str_replace('.asp', '', $dossier1);
-                            } else {
-                                //echo "2";
-                                $dossier = str_replace('https://www.assemblee-nationale.fr/dyn/14/dossiers/', '', $href);
-                            }
-                        } else {
-                            if (strpos($href, ".asp") !== false) {
-                                //echo "3";
-                                $dossier1 = str_replace('https://www.assemblee-nationale.fr/'.$this->legislature_to_get.'/dossiers/', '', $href);
-                                $dossier = str_replace('.asp', '', $dossier1);
-                            } else {
-                                //echo "4";
-                                $dossier = str_replace('https://www.assemblee-nationale.fr/dyn/'.$this->legislature_to_get.'/dossiers/', '', $href);
-                            }
-                        }
-                    }
-                }
-
-                $dossier = !empty($dossier) ? "$dossier" : NULL;
-                $href = !empty($href) ? "$href" : NULL;
-
-                $voteDossier = array('offset_num' => $offset, 'legislature' => $this->legislature_to_get, 'voteNumero' => $voteNumero, 'href' => $href, 'dossier' => $dossier);
-                $voteDossiers = array_merge($voteDossiers, array_values($voteDossier));
-                if ($i % 100 === 0) {
-                    echo "Let's insert 100 rows\n";
-                    $this->insertAll('votes_dossiers', $voteDossiersFields, $voteDossiers);
-                    $voteDossiers = [];
-                }
-                $i++;
-            }
-            $html->clear();
-        }
-        $this->insertAll('votes_dossiers', $voteDossiersFields, $voteDossiers);
-    }
-
     public function dossier()
     {
         echo "dossier starting \n";
         //$this->bdd->query('DELETE FROM dossiers WHERE legislature = "' . $this->legislature_to_get . '"');
 
-        $dossierFields = array('dossierId', 'legislature', 'titre', 'titreChemin', 'senatChemin', 'procedureParlementaireCode', 'procedureParlementaireLibelle', 'commissionFond');
+        // If 'titreLoi' does not exist 
+        // ALTER TABLE `dossiers` ADD `titreLoi` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NULL AFTER `titre`;
+
+
+        $dossierFields = array('dossierId', 'legislature', 'titre', 'titreLoi', 'titreChemin', 'senatChemin', 'procedureParlementaireCode', 'procedureParlementaireLibelle', 'commissionFond');
         $dossier = [];
         $dossiers = [];
         if ($this->legislature_to_get >= 15) {
@@ -2898,7 +2828,14 @@ class Script
                                 $commissionFond = NULL;
                             }
 
-                            $dossier = array('dossierId' => $dossierId, 'legislature' => $legislature, 'titre' => $titre, 'titreChemin' => $titreChemin, 'senatChemin' => $senatChemin, 'procedureParlementaireCode' => $procedureParlementaireCode, 'procedureParlementaireLibelle' => $procedureParlementaireLibelle, 'commissionFond' => $commissionFond);
+                            $titreLoi = $xml->xpath("//*[local-name()='titreLoi']");
+                            if (!empty($titreLoi)) {
+                                $titreLoi = $titreLoi[0];
+                            } else {
+                                $titreLoi = NULL;
+                            }
+
+                            $dossier = array('dossierId' => $dossierId, 'legislature' => $legislature, 'titre' => $titre, 'titreLoi' => $titreLoi, 'titreChemin' => $titreChemin, 'senatChemin' => $senatChemin, 'procedureParlementaireCode' => $procedureParlementaireCode, 'procedureParlementaireLibelle' => $procedureParlementaireLibelle, 'commissionFond' => $commissionFond);
                             $dossiers = array_merge($dossiers, array_values($dossier));
                         }
                     }
@@ -2945,6 +2882,247 @@ class Script
             }
         }
         $this->insertAll('dossiers', $dossierFields, $dossiers);
+    }
+
+    public function dossiersSeances(){
+        // For each dossier, get all seances publiques where the dossier was debated/
+        echo "dossiersSeances \n";
+        $this->bdd->query('CREATE TABLE IF NOT EXISTS `datan`.`dossiers_seances` (
+            `id` INT NOT NULL AUTO_INCREMENT ,
+            `dossierId` VARCHAR(25) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL ,
+            `legislature` INT NULL DEFAULT NULL ,
+            `seanceId` VARCHAR(25) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL ,
+            `seanceDate` DATE NOT NULL ,
+            `dateMaj` DATE NOT NULL ,
+            PRIMARY KEY (`id`) , 
+            UNIQUE INDEX `idx_unique` (`dossierId`, `seanceId`)
+        ) ENGINE = MyISAM;');
+
+        $dossierFields = array('dossierId', 'legislature', 'seanceId', 'seanceDate', 'dateMaj');
+        $dossier = [];
+        $dossiers = [];
+        $n = 1;
+
+        if ($this->legislature_to_get >= 15) {
+            if ($this->legislature_to_get == 15) {
+                $file = __DIR__ . '/Dossiers_Legislatifs_XV.xml.zip';
+            } elseif ($this->legislature_to_get == 16) {
+                $file = __DIR__ . '/Dossiers_Legislatifs_XVI.xml.zip';
+            }
+
+            $zip = new ZipArchive();
+
+            if ($zip->open($file) !== TRUE) {
+                exit("cannot open <$file>\n");
+            } else {
+                for ($i = 0; $i < $zip->numFiles; $i++) {
+                    $filename = $zip->getNameIndex($i);
+                    $sub = substr($filename, 0, 13);
+
+                    if ($sub == 'xml/dossierPa') {
+                        $xml_string = $zip->getFromName($filename);
+
+                        if ($xml_string != false) {
+                            $xml = simplexml_load_string($xml_string);
+
+                            $dossierId = $xml->uid;
+                            $legislature = $xml->legislature;
+
+                            $type = 'DiscussionSeancePublique_Type';
+                            $actes = $xml->xpath("//*[local-name()='acteLegislatif'][@*[local-name()='type']='$type']");
+
+                            foreach ($actes as $acte) {
+                                $seanceId = $acte->reunionRef;
+                                $originalDate = $acte->dateActe;
+                                $originalDate = new DateTime($originalDate);
+                                $seanceDate = $originalDate->format('Y-m-d');
+
+                                $dossier = array('dossierId' => $dossierId, 'legislature' => $legislature, 'seanceId' => $seanceId, 'seanceDate' => $seanceDate, 'dateMaj' => $this->dateMaj);
+                                $dossiers = array_merge($dossiers, array_values($dossier));
+                            }
+                        }
+                    }
+                }
+
+                $this->insertAll('dossiers_seances', $dossierFields, $dossiers);
+            }
+        }              
+    }
+
+    public function dossiersVotes(){
+        echo "dossiersVotes starting \n";
+
+        // The table dossiers_votes needs to be changed according to the code below 
+        $this->bdd->query('CREATE TABLE IF NOT EXISTS `datan`.`dossiers_votes` (
+            `id` INT NOT NULL AUTO_INCREMENT ,
+            `dossierId` VARCHAR(25) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL ,
+            `documentId` VARCHAR(25) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL ,
+            `legislature` INT(5) NOT NULL ,
+            `voteNumero` INT(5) NOT NULL ,
+            PRIMARY KEY (`id`) ,
+            UNIQUE INDEX `idx_unique` (`voteNumero`, `dossierId`)
+        ) ENGINE = MyISAM;');      
+
+        $query = $this->bdd->query('SELECT d.id, d.dossierId, d.titre, d.legislature, s.seanceDate
+            FROM documents_legislatifs d
+            LEFT JOIN dossiers_seances s ON s.dossierId = d.dossierId
+            WHERE d.titre IS NOT NULL
+            AND left(d.id, 4) IN ("PION", "PNRE", "PRJL")
+            AND d.legislature = "' . $this->legislature_to_get . '"
+            AND d.id NOT LIKE "%BTA%"
+            GROUP BY d.dossierId, d.titre, s.seanceDate
+        ');
+
+        $dossierFields = array('dossierId', 'documentId', 'legislature', 'voteNumero');
+        $dossier = [];
+        $dossiers = [];
+        $i = 1;
+
+        while ($doc = $query->fetch()) {
+            $documentId = $doc['id'];
+            $dossierId = $doc['dossierId'];
+            $titreLoi = '%' . $doc['titre'] . '%';
+            $seanceDate = $doc['seanceDate'];
+            $legislature = $doc['legislature'];
+
+
+            $stmt_get_votes = $this->bdd->prepare('SELECT voteNumero, legislature, titre
+                FROM votes_info
+                WHERE titre LIKE ? AND legislature = ? AND dateScrutin = ?
+            ');
+            
+            $stmt_get_votes->execute([$titreLoi, $legislature, $seanceDate]);
+
+            foreach($stmt_get_votes->fetchAll() as $vote){
+                $voteNumero = $vote['voteNumero'];
+                $legislature = $vote['legislature'];
+                
+                $dossier = array('dossierId' => $dossierId, 'documentId' => $documentId, 'legislature' => $legislature, 'voteNumero' => $voteNumero);
+                $dossiers = array_merge($dossiers, array_values($dossier));
+                
+                if ($i % 500 === 0) {
+                    echo "let's insert this pack of 500\n";
+                    $this->insertAll('dossiers_votes', $dossierFields, $dossiers);
+                    $dossier = [];
+                    $dossiers = [];
+                }
+
+                $i++;
+            }
+        }
+        $this->insertAll('dossiers_votes', $dossierFields, $dossiers);
+        
+    }
+
+    public function votesAmendments(){
+        echo "votesAmendments starting \n";
+
+        $this->bdd->query('CREATE TABLE IF NOT EXISTS `datan`.`votes_amendments` (
+            `id` INT NOT NULL AUTO_INCREMENT ,
+            `legislature` INT(5) NOT NULL ,
+            `voteNumero` INT(5) NOT NULL ,
+            `amendmentHref` VARCHAR(500) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL ,
+            `amendmentId` VARCHAR(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL ,
+            PRIMARY KEY (`id`) ,
+            UNIQUE INDEX `idx_unique` (`legislature`, `voteNumero`)
+        ) ENGINE = MyISAM;');
+
+        // 1st step ==> scrap the AN's website (individual vote page)
+        echo "1st step starting \n";
+        $query = $this->bdd->query('SELECT v.legislature, v.voteNumero
+            FROM votes_info v
+            LEFT JOIN votes_amendments a ON v.voteNumero = a.voteNumero AND v.legislature = a.legislature
+            WHERE v.legislature = "' . $this->legislature_to_get . '"
+            AND a.id IS NULL
+            AND v.voteNumero > 0
+            ORDER BY v.legislature ASC, v.voteNumero ASC
+            LIMIT 300
+        ');
+
+        $fields = array('legislature', 'voteNumero', 'amendmentHref');
+
+        while ($vote = $query->fetch()){
+            echo "Scrap AN's website.\n";
+            $voteNumero = $vote['voteNumero'];
+            $url = "https://www.assemblee-nationale.fr/dyn/" . $this->legislature_to_get . "/scrutins/" . $voteNumero;
+            $html = file_get_html($url);
+            $a = FALSE;       
+
+            if ($html !== false) {
+                $elements = $html->find('.an-bloc');
+                foreach($elements as $element){
+                    $link = $element->find('.inner');
+                    foreach($link as $x){
+                        $href =  $x->href;
+                        if(strpos($href, "amendements") !== false){
+                            $a = TRUE;
+                            $vote_amendment = [];
+                            $vote_amendments = [];
+                            $vote_amendment = array('legislature' => $this->legislature_to_get, 'voteNumero' => $voteNumero, 'amendmentHref' => $href);
+                            $vote_amendments = array_merge($vote_amendments, array_values($vote_amendment));
+                            
+                        } 
+                    }
+                }
+            }
+
+            if ($a === FALSE) {
+                $vote_amendment = [];
+                $vote_amendments = [];
+                $vote_amendment = array('legislature' => $this->legislature_to_get, 'voteNumero' => $voteNumero, 'amendmentHref' => NULL);
+                $vote_amendments = array_merge($vote_amendments, array_values($vote_amendment));
+            }
+
+            $this->insertAll('votes_amendments', $fields, $vote_amendments);
+        }
+
+        echo "2nd step starting \n";
+        $query = $this->bdd->query('SELECT d.id, d.voteNumero, d.legislature, d.amendmentHref
+            FROM votes_amendments d
+            WHERE d.legislature = "' . $this->legislature_to_get . '"
+            AND d.amendmentHref IS NOT NULL
+            AND d.amendmentId IS NULL
+            ORDER BY d.voteNumero ASC
+        ');
+
+        $vote_amendment = [];
+        $vote_amendments = [];
+
+        while($amdt = $query->fetch()){
+            $url = $amdt['amendmentHref'];
+            $id = $amdt['id'];
+            $html = @file_get_html($url);
+
+            if($html !== false){
+                $results = $html->find(".amendement", 0)->find('li');
+                foreach($results as $li){
+                    if ($li->find('span', 0) !== null && is_object($li->find('span', 0))) {
+                        $plain = $li->find('span', 0)->plaintext;
+                        if($plain == "Version XML"){
+                            $href = $li->find('a', 0)->href;
+                            $segments = explode('/', $href);
+                            $amdtId = str_replace(".xml", "", $segments[3]);
+
+                            $sql = 'UPDATE votes_amendments
+                                SET amendmentId = :amdtId
+                                WHERE id = :id';
+                            $stmt = $this->bdd->prepare($sql);
+                            $stmt->bindParam(':amdtId', $amdtId, PDO::PARAM_STR);
+                            $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+
+                            if ($stmt->execute()) {
+                                echo "AmendmentId updated successfully.\n";
+                            } else {
+                                echo "Error updating record: " . print_r($stmt->errorInfo(), true);
+                            }
+                        }
+                    }  else {
+                        echo "li element is not an object.\n";
+                    }
+                }
+            }
+        }
+
     }
 
     public function dossiersActeurs()
@@ -3151,7 +3329,7 @@ class Script
     {
       echo "documentsLegislatifs starting \n";
 
-      $fields = array('id', 'dossierId', 'numNotice', 'titre', 'titreCourt');
+      $fields = array('id', 'legislature', 'dossierId', 'numNotice', 'titre', 'titreCourt');
       $insert = [];
 
       if ($this->legislature_to_get >= 15) {
@@ -3179,13 +3357,19 @@ class Script
                 $xml = simplexml_load_string($xml_string);
 
                 $id = $xml->uid;
+                $legislature = $xml->legislature;
+
+                if ($legislature == '') {
+                    $legislature = NULL;
+                }
+
                 $dossierId = $xml->dossierRef;
                 $numNotice = $xml->notice->numNotice;
                 $titre = $xml->titres->titrePrincipal;
                 $titreCourt = $xml->titres->titrePrincipalCourt;
 
                 //echo $id. ' - ' . $dossierId . ' - ' . $numNotice . ' - ' . $titre . ' - ' . $titreCourt . '<br>';
-                $doc = array('id' => $id, 'dossierId' => $dossierId,  'numNotice' => $numNotice, 'titre' => $titre, 'titreCourt' => $titreCourt);
+                $doc = array('id' => $id, 'legislature' => $legislature, 'dossierId' => $dossierId,  'numNotice' => $numNotice, 'titre' => $titre, 'titreCourt' => $titreCourt);
                 $insert = array_merge($insert, array_values($doc));
                 if (($i + 1) % 500 === 0) {
                     echo "Let's insert until " . $i . "\n";
@@ -3279,6 +3463,8 @@ class Script
                   // Insert NULL values
                   $seanceRef = $seanceRef == "" ? NULL : $seanceRef;
                   $expose = $expose == "" ? NULL : $expose;
+                  $expose = strlen($expose) > 65000 ? NULL : $expose;
+
                   $examined_by = $examined_by == "" ? NULL : $examined_by;
 
                   //echo $id . ' - ' . $dossier . ' - ' . $legislature . ' - ' . $texteLegislatifRef . ' - ' . $num . ' - ' . $numOrdre . ' - ' . $seanceRef . ' - ' . $sort . ' - ' . $state;
@@ -3641,151 +3827,155 @@ class Script
 
     public function opendata_activeMPs()
     {
-      $query = "SELECT
-      	da.mpId AS id,
-          da.legislature,
-          da.civ,
-          da.nameLast AS nom,
-          da.nameFirst AS prenom,
-          d.birthCity AS villeNaissance,
-          d.birthDate AS naissance,
-          da.age,
-          da.libelle AS groupe,
-          da.libelleAbrev AS groupeAbrev,
-          da.departementNom,
-          da.departementCode,
-          da.circo,
-          da.datePriseFonction,
-          da.job,
-          dc.mailAn AS mail,
-          dc.twitter,
-          dc.facebook,
-          dc.website,
-          h.mandatesN AS nombreMandats,
-          h.lengthEdited AS experienceDepute,
-          cp.score AS scoreParticipation,
-          cpc.score AS scoreParticipationSpecialite,
-          cl.score AS scoreLoyaute,
-          cm.score AS scoreMajorite,
-          curdate() AS dateMaj
-        FROM deputes_last da
-        LEFT JOIN deputes d ON d.mpId = da.mpId
-        LEFT JOIN deputes_contacts dc ON dc.mpId = da.mpId
-        LEFT JOIN history_per_mps_average h ON da.mpId = h.mpId
-        LEFT JOIN class_participation cp ON da.mpId = cp.mpId AND da.legislature = cp.legislature
-        LEFT JOIN class_participation_commission cpc ON da.mpId = cpc.mpId AND da.legislature = cpc.legislature
-        LEFT JOIN class_loyaute cl ON da.mpId = cl.mpId AND da.legislature = cl.legislature
-        LEFT JOIN class_majorite cm ON da.mpId = cm.mpId AND da.legislature = cm.legislature
-        WHERE da.active
-      ";
+        echo "opendata_activeMPs starting \n";
+        $query = "SELECT
+            da.mpId AS id,
+            da.legislature,
+            da.civ,
+            da.nameLast AS nom,
+            da.nameFirst AS prenom,
+            d.birthCity AS villeNaissance,
+            d.birthDate AS naissance,
+            da.age,
+            da.libelle AS groupe,
+            da.libelleAbrev AS groupeAbrev,
+            da.departementNom,
+            da.departementCode,
+            da.circo,
+            da.datePriseFonction,
+            da.job,
+            dc.mailAn AS mail,
+            dc.twitter,
+            dc.facebook,
+            dc.website,
+            h.mandatesN AS nombreMandats,
+            h.lengthEdited AS experienceDepute,
+            cp.score AS scoreParticipation,
+            cpc.score AS scoreParticipationSpecialite,
+            cl.score AS scoreLoyaute,
+            cm.score AS scoreMajorite,
+            curdate() AS dateMaj
+            FROM deputes_last da
+            LEFT JOIN deputes d ON d.mpId = da.mpId
+            LEFT JOIN deputes_contacts dc ON dc.mpId = da.mpId
+            LEFT JOIN history_per_mps_average h ON da.mpId = h.mpId
+            LEFT JOIN class_participation cp ON da.mpId = cp.mpId AND da.legislature = cp.legislature
+            LEFT JOIN class_participation_commission cpc ON da.mpId = cpc.mpId AND da.legislature = cpc.legislature
+            LEFT JOIN class_loyaute cl ON da.mpId = cl.mpId AND da.legislature = cl.legislature
+            LEFT JOIN class_majorite cm ON da.mpId = cm.mpId AND da.legislature = cm.legislature
+            WHERE da.active
+        ";
 
-      $this->opendata($query, "deputes_active.csv", "5fc8b732d30fbf1ed6648aab", "092bd7bb-1543-405b-b53c-932ebb49bb8e");
+        $this->opendata($query, "deputes_active.csv", "5fc8b732d30fbf1ed6648aab", "092bd7bb-1543-405b-b53c-932ebb49bb8e");
     }
 
     public function opendata_activeGroupes()
     {
-      $query = 'SELECT
-      	o.uid AS id,
-      	o.legislature,
-          o.libelle,
-          o.libelleAbrev,
-          o.libelleAbrege,
-          o.dateDebut,
-          o.positionPolitique,
-          o.couleurAssociee,
-          ge.effectif,
-          gs.womenPct as women,
-          gs.age AS age,
-          gs.rose_index AS scoreRose,
-          cohesion.value AS socreCohesion,
-          participation.value AS scoreParticipation,
-          majority.value AS scoreMajorite,
-          curdate() as dateMaj
-      FROM organes o
-      LEFT JOIN groupes_stats gs ON gs.organeRef = o.uid
-      LEFT JOIN groupes_effectif ge ON ge.organeRef = o.uid
-      LEFT JOIN class_groups cohesion ON cohesion.organeRef = o.uid AND cohesion.stat = "cohesion"
-      LEFT JOIN class_groups participation ON participation.organeRef = o.uid AND participation.stat = "participation"
-      LEFT JOIN class_groups majority ON majority.organeRef = o.uid AND majority.stat = "majority"
-      WHERE o.coteType = "GP" AND o.dateFin IS NULL
-      ';
+        echo "opendata_activeGroupes \n";
+        $query = 'SELECT
+            o.uid AS id,
+            o.legislature,
+            o.libelle,
+            o.libelleAbrev,
+            o.libelleAbrege,
+            o.dateDebut,
+            o.positionPolitique,
+            o.couleurAssociee,
+            ge.effectif,
+            gs.womenPct as women,
+            gs.age AS age,
+            gs.rose_index AS scoreRose,
+            cohesion.value AS socreCohesion,
+            participation.value AS scoreParticipation,
+            majority.value AS scoreMajorite,
+            curdate() as dateMaj
+        FROM organes o
+        LEFT JOIN groupes_stats gs ON gs.organeRef = o.uid
+        LEFT JOIN groupes_effectif ge ON ge.organeRef = o.uid
+        LEFT JOIN class_groups cohesion ON cohesion.organeRef = o.uid AND cohesion.stat = "cohesion"
+        LEFT JOIN class_groups participation ON participation.organeRef = o.uid AND participation.stat = "participation"
+        LEFT JOIN class_groups majority ON majority.organeRef = o.uid AND majority.stat = "majority"
+        WHERE o.coteType = "GP" AND o.dateFin IS NULL
+        ';
 
-      $this->opendata($query, "groupes_active.csv", "60ed57a9f0c7c3a1eb29733f", "4612d596-9a78-4ec6-b60c-ccc1ee11f8c0");
+        $this->opendata($query, "groupes_active.csv", "60ed57a9f0c7c3a1eb29733f", "4612d596-9a78-4ec6-b60c-ccc1ee11f8c0");
     }
 
     public function opendata_historyMPs()
     {
-      $query = "SELECT
-      	da.mpId AS id,
-          da.legislature AS legislatureLast,
-          da.civ,
-          da.nameLast AS nom,
-          da.nameFirst AS prenom,
-          d.birthCity AS villeNaissance,
-          d.birthDate AS naissance,
-          da.age,
-          da.libelle AS groupe,
-          da.libelleAbrev AS groupeAbrev,
-          da.departementNom,
-          da.departementCode,
-          da.circo,
-          da.datePriseFonction,
-          da.job,
-          dc.mailAn AS mail,
-          dc.twitter,
-          dc.facebook,
-          dc.website,
-          h.mandatesN AS nombreMandats,
-          h.lengthEdited AS experienceDepute,
-          cp.score AS scoreParticipation,
-          cpc.score AS scoreParticipationSpecialite,
-          cl.score AS scoreLoyaute,
-          cm.score AS scoreMajorite,
-          da.active,
-          curdate() AS dateMaj
-        FROM deputes_last da
-        LEFT JOIN deputes d ON d.mpId = da.mpId
-        LEFT JOIN deputes_contacts dc ON dc.mpId = da.mpId
-        LEFT JOIN history_per_mps_average h ON da.mpId = h.mpId
-        LEFT JOIN class_participation cp ON da.mpId = cp.mpId AND da.legislature = cp.legislature
-        LEFT JOIN class_participation_commission cpc ON da.mpId = cpc.mpId AND da.legislature = cpc.legislature
-        LEFT JOIN class_loyaute cl ON da.mpId = cl.mpId AND da.legislature = cl.legislature
-        LEFT JOIN class_majorite cm ON da.mpId = cm.mpId AND da.legislature = cm.legislature
-      ";
+        echo "opendata_historyMPs \n";
+        $query = "SELECT
+            da.mpId AS id,
+            da.legislature AS legislatureLast,
+            da.civ,
+            da.nameLast AS nom,
+            da.nameFirst AS prenom,
+            d.birthCity AS villeNaissance,
+            d.birthDate AS naissance,
+            da.age,
+            da.libelle AS groupe,
+            da.libelleAbrev AS groupeAbrev,
+            da.departementNom,
+            da.departementCode,
+            da.circo,
+            da.datePriseFonction,
+            da.job,
+            dc.mailAn AS mail,
+            dc.twitter,
+            dc.facebook,
+            dc.website,
+            h.mandatesN AS nombreMandats,
+            h.lengthEdited AS experienceDepute,
+            cp.score AS scoreParticipation,
+            cpc.score AS scoreParticipationSpecialite,
+            cl.score AS scoreLoyaute,
+            cm.score AS scoreMajorite,
+            da.active,
+            curdate() AS dateMaj
+            FROM deputes_last da
+            LEFT JOIN deputes d ON d.mpId = da.mpId
+            LEFT JOIN deputes_contacts dc ON dc.mpId = da.mpId
+            LEFT JOIN history_per_mps_average h ON da.mpId = h.mpId
+            LEFT JOIN class_participation cp ON da.mpId = cp.mpId AND da.legislature = cp.legislature
+            LEFT JOIN class_participation_commission cpc ON da.mpId = cpc.mpId AND da.legislature = cpc.legislature
+            LEFT JOIN class_loyaute cl ON da.mpId = cl.mpId AND da.legislature = cl.legislature
+            LEFT JOIN class_majorite cm ON da.mpId = cm.mpId AND da.legislature = cm.legislature
+        ";
 
-      $this->opendata($query, "deputes-historique.csv", "60f2ffc8284ff5e8c1ed0655", "817fda38-d616-43e9-852f-790510f4d157");
+        $this->opendata($query, "deputes-historique.csv", "60f2ffc8284ff5e8c1ed0655", "817fda38-d616-43e9-852f-790510f4d157");
     }
 
     public function opendata_historyGroupes()
     {
-      $query = 'SELECT
-      	o.uid AS id,
-      	o.legislature,
-          o.libelle,
-          o.libelleAbrev,
-          o.libelleAbrege,
-          o.dateDebut,
-          o.positionPolitique,
-          o.couleurAssociee,
-          ge.effectif,
-          gs.womenPct as women,
-          gs.age AS age,
-          gs.rose_index AS scoreRose,
-          cohesion.value AS socreCohesion,
-          participation.value AS scoreParticipation,
-          majority.value AS scoreMajorite,
-          CASE WHEN o.dateFin IS NULL THEN 1 ELSE 0 END AS active,
-          curdate() as dateMaj
-      FROM organes o
-      LEFT JOIN groupes_stats gs ON gs.organeRef = o.uid
-      LEFT JOIN groupes_effectif ge ON ge.organeRef = o.uid
-      LEFT JOIN class_groups cohesion ON cohesion.organeRef = o.uid AND cohesion.stat = "cohesion"
-      LEFT JOIN class_groups participation ON participation.organeRef = o.uid AND participation.stat = "participation"
-      LEFT JOIN class_groups majority ON majority.organeRef = o.uid AND majority.stat = "majority"
-      WHERE o.coteType = "GP" AND o.legislature >= 14
-      ';
+        echo "opendata_historyGroupes \n";
+        $query = 'SELECT
+            o.uid AS id,
+            o.legislature,
+            o.libelle,
+            o.libelleAbrev,
+            o.libelleAbrege,
+            o.dateDebut,
+            o.positionPolitique,
+            o.couleurAssociee,
+            ge.effectif,
+            gs.womenPct as women,
+            gs.age AS age,
+            gs.rose_index AS scoreRose,
+            cohesion.value AS socreCohesion,
+            participation.value AS scoreParticipation,
+            majority.value AS scoreMajorite,
+            CASE WHEN o.dateFin IS NULL THEN 1 ELSE 0 END AS active,
+            curdate() as dateMaj
+        FROM organes o
+        LEFT JOIN groupes_stats gs ON gs.organeRef = o.uid
+        LEFT JOIN groupes_effectif ge ON ge.organeRef = o.uid
+        LEFT JOIN class_groups cohesion ON cohesion.organeRef = o.uid AND cohesion.stat = "cohesion"
+        LEFT JOIN class_groups participation ON participation.organeRef = o.uid AND participation.stat = "participation"
+        LEFT JOIN class_groups majority ON majority.organeRef = o.uid AND majority.stat = "majority"
+        WHERE o.coteType = "GP" AND o.legislature >= 14
+        ';
 
-      $this->opendata($query, "groupes-historique.csv", "60f30419135bec6a5e480086", "530940ab-45f3-41e3-8de3-759568c728b8");
+        $this->opendata($query, "groupes-historique.csv", "60f30419135bec6a5e480086", "530940ab-45f3-41e3-8de3-759568c728b8");
     }
 }
 
@@ -3817,10 +4007,12 @@ $script->groupeCohesion(); // Depend on the legislature
 $script->groupeAccord(); // Depend on the legislature
 $script->deputeAccord(); // Depend on the legislature
 $script->voteParticipation(); // Depend on the legislature
-$script->votesDossiers(); // Depend on the legislature
 $script->dossier(); // Depend on the legislature
-$script->dossiersActeurs(); // Depend on the legislature
+$script->dossiersSeances();
 $script->documentsLegislatifs(); // Depend on the legislature
+$script->dossiersVotes(); // Depend on the legislature
+$script->dossiersActeurs(); // Depend on the legislature
+$script->votesAmendments();
 $script->amendements(); // Depend on the legislature
 $script->amendementsAuteurs(); // Depend on the legislature
 $script->voteParticipationCommission(); // Depend on the legislature
