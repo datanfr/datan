@@ -28,6 +28,7 @@
       $this->db->select('REPLACE(vi.titre, "n?", "n°") AS titre');
       $this->db->select('CASE WHEN vi.voteNumero < 0 THEN CONCAT("c", abs(vi.voteNumero)) ELSE vi.voteNumero END AS voteNumero', false);
       $this->db->order_by('vi.dateScrutin', 'DESC');
+      $this->db->order_by('vi.voteNumero', 'DESC');
       $this->db->join('votes_datan vd', 'vi.voteId = vd.vote_id AND vd.state = "published"', 'left');
       $query = $this->db->get_where('votes_info vi', $where);
       return $query->result_array();

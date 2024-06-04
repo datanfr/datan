@@ -30,6 +30,7 @@
 
     // TABLE PAGE votes
     $('#table-vote-all').DataTable({
+      "ordering": false,
       language: french
     });
 
