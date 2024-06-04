@@ -18,8 +18,8 @@ class DashboardMP_model extends CI_Model
       FROM votes_datan vd
       LEFT JOIN votes_scores vs ON vd.voteNumero = vs.voteNumero AND vd.legislature = vs.legislature AND vs.mpId = ?
       LEFT JOIN votes_info vi ON vd.voteNumero = vi.voteNumero AND vd.legislature = vi.legislature
-      LEFT JOIN votes_dossiers vdoss ON vd.legislature = vdoss.legislature AND vd.voteNumero = vdoss.voteNumero
-      LEFT JOIN dossiers doss ON vdoss.dossier = doss.titreChemin
+      LEFT JOIN dossiers_votes vdoss ON vd.legislature = vdoss.legislature AND vd.voteNumero = vdoss.voteNumero
+      LEFT JOIN dossiers doss ON vdoss.dossierId = doss.dossierId
       LEFT JOIN explications_mp e ON vd.legislature = e.legislature AND vd.voteNumero = e.voteNumero AND e.mpId = ?
       LEFT JOIN ( SELECT legislature, voteNumero, COUNT(*) as "totalExplication" FROM explications_mp WHERE state = 1 GROUP BY legislature, voteNumero) e2
         ON vd.voteNumero = e2.voteNumero AND vd.legislature = e2.legislature
