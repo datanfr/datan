@@ -218,7 +218,7 @@
           </tbody>
         </table>
       </div>
-      <?php if ($vote['dossierUrl'] || !empty($documentLegislatif)): ?>
+      <?php if ($vote['dossierUrl'] || $vote['amendment']['amendmentHref']): ?>
         <div class="bloc-savoir-plus d-none d-md-block mt-5">
           <h3 class="subtitle">En savoir plus</h3>
           <div class="bloc-links">
@@ -231,8 +231,8 @@
                   <span class="text">Le dossier</span>
                 </span>
               <?php endif; ?>
-              <?php if ($vote['voteType'] == 'amendement' && !empty($documentLegislatif)) : ?>
-                <span class="d-flex justify-content-center align-items-center url_obf btn btn-secondary link my-1 my-lg-0 mx-lg-1" url_obf="<?= url_obfuscation("https://www.assemblee-nationale.fr/dyn/" . $amdt['legislature'] . "/amendements/" . $documentLegislatif['numNotice'] . "/AN/" . $amdt['numOrdre']) ?>">
+              <?php if ($vote['amendment']['amendmentHref']) : ?>
+                <span class="d-flex justify-content-center align-items-center url_obf btn btn-secondary link my-1 my-lg-0 mx-lg-1" url_obf="<?= url_obfuscation($vote['amendment']['amendmentHref']) ?>">
                   <div class="mr-1">
                     <?= file_get_contents(base_url() . '/assets/imgs/icons/arrow_external_right.svg') ?>
                   </div>
@@ -410,35 +410,39 @@ endif; ?>
           </div>
         </div>
       </div>
-      <?php if ($vote['voteType'] == 'amendement' && !empty($documentLegislatif) && $amdt['expose']) : ?>
-        <div class="mt-5">
+      <?php if ($vote['amendment']['expose']) : ?>
+        < class="mt-5">
           <h2>Exposé des motifs de l'amendement</h2>
           <p class="mt-4 font-italic">L'objectif d'un amendement est de modifier ou d'ajouter une mesure d'un projet ou d'une proposition de loi. Le ou les députés qui rédigent l'amendement écrivent également un exposé des motifs.</p>
           <div class="card">
             <div class="card-body" id="exposeMotifs">
-              <?= $amdt['expose']  ?>
+              <?= $vote['amendment']['expose']  ?>
             </div>
           </div>
-          <p class="mt-3">Source : <span class="url_obf" url_obf="<?= url_obfuscation("https://www.assemblee-nationale.fr/dyn/" . $amdt['legislature'] . "/amendements/" . $documentLegislatif['numNotice'] . "/AN/" . $amdt['numOrdre']) ?>">Amendement sur le site de l'Assemblée nationale</span></p>
+          <?php if ($vote['amendment']['amendmentHref']) : ?>
+            <p class="mt-3">Source : <span class="url_obf" url_obf="<?= url_obfuscation($vote['amendment']['amendmentHref']) ?>">Amendement sur le site de l'Assemblée nationale</span></p>
+          <?php endif; ?>
         </div>
       <?php endif; ?>
-      <div class="bloc-savoir-plus d-md-none mt-5">
-        <h3 class="subtitle">En savoir plus</h3>
-        <div class="bloc-links">
-          <div class="d-flex flex-column flex-lg-row">
-            <?php if ($vote['dossierUrl']) : ?>
-              <span class="d-flex justify-content-center align-items-center url_obf btn btn-secondary link my-1 my-lg-0 mx-lg-1" url_obf="<?= url_obfuscation("https://www.assemblee-nationale.fr/dyn/" . $vote['dossierLegislature'] . "/dossiers/" . $vote['dossierUrl']) ?>">
-                <span class="text">Le dossier</span>
-              </span>
-            <?php endif; ?>
-            <?php if ($vote['voteType'] == 'amendement' && !empty($documentLegislatif)) : ?>
-              <span class="d-flex justify-content-center align-items-center url_obf btn btn-secondary link my-1 my-lg-0 mx-lg-1" url_obf="<?= url_obfuscation("https://www.assemblee-nationale.fr/dyn/" . $amdt['legislature'] . "/amendements/" . $documentLegislatif['numNotice'] . "/AN/" . $amdt['numOrdre']) ?>">
-                <span class="text">L'amendement</span>
-              </span>
-            <?php endif; ?>
+      <?php if ($vote['dossierUrl'] || $vote['amendment']['amendmentHref']) : ?>
+        <div class="bloc-savoir-plus d-md-none mt-5">
+          <h3 class="subtitle">En savoir plus</h3>
+          <div class="bloc-links">
+            <div class="d-flex flex-column flex-lg-row">
+              <?php if ($vote['dossierUrl']) : ?>
+                <span class="d-flex justify-content-center align-items-center url_obf btn btn-secondary link my-1 my-lg-0 mx-lg-1" url_obf="<?= url_obfuscation("https://www.assemblee-nationale.fr/dyn/" . $vote['dossierLegislature'] . "/dossiers/" . $vote['dossierUrl']) ?>">
+                  <span class="text">Le dossier</span>
+                </span>
+              <?php endif; ?>
+              <?php if ($vote['amendment']['amendmentHref']) : ?>
+                <span class="d-flex justify-content-center align-items-center url_obf btn btn-secondary link my-1 my-lg-0 mx-lg-1" url_obf="<?= url_obfuscation($vote['amendment']['amendmentHref']) ?>">
+                  <span class="text">L'amendement</span>
+                </span>
+              <?php endif; ?>
+            </div>
           </div>
         </div>
-      </div>
+      <?php endif; ?>
       <div class="bloc-social d-md-none mt-4">
         <h3 class="subtitle">Partagez ce vote</h3>
         <!-- Linkedin does not work -->
