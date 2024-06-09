@@ -326,6 +326,19 @@ body:not(.pg-mentions) #tarteaucitronIcon {
                A CLASSER
 ################
 */
+.dissolution-banner{
+  background-color: $rejected;
+  transition: 0.3s;
+  p{
+    color: $white !important;
+  }
+  @include hover-focus(){
+    background-color: $bg-colour;
+    p{
+      color: $black !important;
+    }
+  } 
+}
 .quoted{
   padding-left: 1em;
   padding-top: 1em;
