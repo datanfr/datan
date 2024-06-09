@@ -96,5 +96,12 @@
       return 'URL = ' . $url . ' ||| controller = '. $controller . ' ||| method = ' . $method;
     }
 
+	public function dissolutionCountdown(){
+		$targetDate = new DateTime('2024-06-30');
+		$currentDate = new DateTime();
+		$interval = $currentDate->diff($targetDate);
+		return $interval->format('%a');
+	}
+
   }
 ?>
