@@ -73,18 +73,15 @@
       $data['candidatsN_eliminated'] = count($data['candidatsN_eliminated']);
       $data['mapLegend'] = $this->elections_model->get_map_legend($data['election']['id']);
       $data['today'] = date("Y-m-d");
-      $data['results'] = in_array($data['election']['id'], array(1, 2, 3, 4)) ? true : false;
+      $data['results'] = in_array($data['election']['id'], array(1, 2, 3, 4, 5)) ? true : false;
 
-      // If legislative
+      // Election results 
       if ($data['election']['slug'] == 'legislatives-2022') {
-        // OLD DATA FOR PREVIOUS ELECTION
-        //$data['groupes'] = $this->groupes_model->get_groupes_all(TRUE, legislature_current());
-        //$data['groupesSorted'] = $this->groupes_model->get_groupes_sorted($data['groupes']);
-
-        // NEW DATA FOR 2022 LEGISLATIVE RESULTS
         $file = file_get_contents(asset_url() . "data_elections/" . $data['election']['slug'] . ".json");
-        $array = json_decode($file, true);
-        $data['groupesSorted'] = $array;
+        $data['groupesSorted'] = json_decode($file, true);
+      } elseif ($data['election']['slug'] == 'europeennes-2024') {
+        $file = file_get_contents(asset_url() . "data_elections/" . $data['election']['slug'] . ".json");
+        $data['groupesSorted'] = json_decode($file, true);
       }
 
       // badgeCenter
@@ -148,7 +145,7 @@
       );
       // JS
       $data['js_to_load_before_datan'] = array('isotope.pkgd.min');
-      if ($data['election']['slug'] == 'legislatives-2022') {
+      if (in_array($data['election']['id'], array(4, 5))) {
         $data['js_to_load_up_defer'] = array('chart.min.js', 'chartjs-plugin-datalabels@2.1.js');
       }
       $data['js_to_load'] = array();
