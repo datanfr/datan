@@ -110,6 +110,7 @@
         <div class="col-lg-5 col-12 d-flex flex-column justify-content-center">
           <p>Les élections européennes du 9 juin 2024 ont été marquées en France par la victoire de la liste du Rassemblement national dirigée par Jordan Bardella.</p>
           <p>Suite à ces élections, le président Emmanuel Macron <a href="https://datan.fr/blog/actualite-politique/le-president-emmanuel-macron-annonce-la-dissolution-de-lassemblee-nationale" target="_blank"> décidé de dissoudre l'Assemblée nationale</a>. Des élections législatives sont prévues le 30 juin et 7 juillet 2024.</p>
+          <p>Découvrez les résultats en nombre de sièges au Parlement européen.</p>
         </div>
         <div class="col-lg-7 col-12">
           <div class="my-1">
