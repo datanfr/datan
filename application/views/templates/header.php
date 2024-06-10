@@ -268,11 +268,13 @@
       <div class="container-fluid py-2 dissolution-banner">
         <a class="no-decoration" href="<?= base_url() ?>blog/actualite-politique/le-president-emmanuel-macron-annonce-la-dissolution-de-lassemblee-nationale">
           <div class="row d-flex justify-content-center">
-            <p class="mb-0 font-weight-bold">
-              L'Assemblée nationale a été dissolue.
-              Les élections auront lieu dans <?= $this->functions_datan->dissolutionCountdown() ?> jours.
-              <u>En savoir plus</u>
-            </p>
+            <div class="col-12">
+              <p class="mb-0 font-weight-bold text-center">
+                L'Assemblée nationale a été dissolue.
+                Les élections auront lieu dans <?= $this->functions_datan->dissolutionCountdown() ?> jours.
+                <u>En savoir plus</u>
+              </p>
+            </div>
           </div>
         </a>
       </div>
