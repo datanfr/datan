@@ -270,7 +270,7 @@
           <div class="row d-flex justify-content-center">
             <div class="col-12">
               <p class="mb-0 font-weight-bold text-center">
-                L'Assemblée nationale a été dissolue.
+                L'Assemblée nationale a été dissoute.
                 Les élections auront lieu dans <?= $this->functions_datan->dissolutionCountdown() ?> jours.
                 <u>En savoir plus</u>
               </p>
