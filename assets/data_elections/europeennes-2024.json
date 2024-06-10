@@ -1,0 +1,37 @@
+[
+  {
+    "libelle" : "Rassemblement national (J. Bardella)",
+    "couleurAssociee": "#66230E",
+    "effectif": 30
+  },
+  {
+    "libelle" : "Renaissance (V. Hayer)",
+    "couleurAssociee": "#F7A600",
+    "effectif": 13
+  },
+  {
+    "libelle" : "Place publique (R. Glucksmann)",
+    "couleurAssociee": "#EE7AA3",
+    "effectif": 13
+  },
+  {
+    "libelle" : "France insoumise (M. Aubry)",
+    "couleurAssociee": "#E3051B",
+    "effectif": 9
+  },
+  {
+    "libelle" : "Les Républicains (F.-X. Bellamy)",
+    "couleurAssociee": "#0095D4",
+    "effectif": 6
+  },
+  {
+    "libelle" : "Europe Ecologie (M. Toussaint)",
+    "couleurAssociee": "#65B33A",
+    "effectif": 5
+  },
+  {
+    "libelle" : "Reconquête (M. Maréchal)",
+    "couleurAssociee": "#76632C",
+    "effectif": 5
+  }
+]
