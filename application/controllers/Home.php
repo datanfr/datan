@@ -40,6 +40,10 @@
       }
       $data['groupesSorted'] = $this->groupes_model->get_groupes_sorted($data['groupes']);
 
+      // Get election results 
+      $file = file_get_contents(asset_url() . "data_elections/europeennes-2024.json");
+      $data['europeennes2024'] = json_decode($file, true);
+
       //Get stats (now working because > 1 year)
       $data['stats'] = TRUE;
       $data['depute_vote_plus'] = $this->deputes_model->get_depute_vote_plus();
