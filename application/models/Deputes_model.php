@@ -617,7 +617,7 @@
     public function get_stats_participation_solennels_all($legislature){
       $this->db->select('round(avg(score) * 100) AS score');
       $this->db->where('legislature', $legislature);
-      if ($legislature == legislature_current()) {
+      if ($legislature == legislature_current() && dissolution() === false) {
         $this->db->where('active', 1);
       }
       $result = $this->db->get('class_participation_solennels')->row_array();
@@ -629,7 +629,7 @@
       $this->db->join('deputes_all da', 'da.mpId = cps.mpId AND da.legislature = cps.legislature');
       $this->db->where('da.groupeId', $group);
       $this->db->where('cps.legislature', $legislature);
-      if ($legislature == legislature_current()) {
+      if ($legislature == legislature_current() && dissolution() === false) {
         $this->db->where('cps.active', 1);
       }
       $result = $this->db->get('class_participation_solennels cps')->row_array();
@@ -680,7 +680,7 @@
       $this->db->select('ROUND(AVG(c.score*100)) AS score');
       $this->db->where('c.legislature', $legislature);
       $this->db->join('deputes_all da', 'da.mpId = c.mpId AND da.legislature = c.legislature', 'left');
-      if ($legislature == legislature_current()) {
+      if ($legislature == legislature_current() && dissolution() === false) {
         $this->db->where('da.dateFin IS NULL');
       }
       $result = $this->db->get('class_loyaute c')->row_array();
@@ -692,7 +692,7 @@
       $this->db->where('c.legislature', $legislature);
       $this->db->where('da.groupeId', $group);
       $this->db->join('deputes_all da', 'da.mpId = c.mpId AND da.legislature = c.legislature', 'left');
-      if ($legislature == legislature_current()) {
+      if ($legislature == legislature_current() && dissolution() === false) {
         $this->db->where('da.dateFin IS NULL');
       }
       $result = $this->db->get('class_loyaute c')->row_array();
@@ -723,7 +723,7 @@
       $this->db->where('c.legislature', $legislature);
       $this->db->where_not_in('da.groupeId', $majority_groups);
       $this->db->join('deputes_all da', 'da.mpId = c.mpId AND da.legislature = c.legislature', 'left');
-      if ($legislature == legislature_current()) {
+      if ($legislature == legislature_current() && dissolution() === false) {
         $this->db->where('da.dateFin IS NULL');
       }
       $result = $this->db->get('class_majorite c')->row_array();
@@ -735,7 +735,7 @@
       $this->db->where('c.legislature', $legislature);
       $this->db->where('da.groupeId', $group);
       $this->db->join('deputes_all da', 'da.mpId = c.mpId AND da.legislature = c.legislature', 'left');
-      if ($legislature == legislature_current()) {
+      if ($legislature == legislature_current() && dissolution() === false) {
         $this->db->where('da.dateFin IS NULL');
       }
       $result = $this->db->get('class_majorite c')->row_array();
