@@ -39,14 +39,14 @@
     }
 
     public function get_groupes_hemicycle(){
-      $query = $this->db->query('SELECT *, o.legislature AS legislature, date_format(dateDebut, "%d %M %Y") as dateDebutFR, e.effectif,
-        CASE WHEN o.libelle = "Non inscrit" THEN "Députés non inscrits" ELSE o.libelle END AS libelle
-        FROM organes o
-        LEFT JOIN groupes_effectif e ON o.uid = e.organeRef
-        WHERE o.legislature = '.$this->db->escape(legislature_current()).' AND o.coteType = "GP" AND o.dateFin IS NULL
-        ORDER BY e.effectif DESC, o.libelle
-      ');
-      return $query->result_array();
+      $this->db->select('o.*, date_format(dateDebut, "%d %M %Y") as dateDebutFR, e.effectif');
+      $this->db->select('CASE WHEN o.libelle = "Non inscrit" THEN "Députés non inscrits" ELSE o.libelle END AS libelle', false);
+      $this->db->where('o.legislature', legislature_current());
+      $this->db->where('o.coteType', 'GP');
+      $this->db->where('o.dateFin IS NULL');
+      $this->db->order_by('e.effectif DESC, o.libelle');
+      $this->db->join('groupes_effectif e', 'o.uid = e.organeRef', 'left');
+      return $this->db->get('organes o')->result_array();
     }
 
     public function get_all_groupes_majority($legislature = NULL){
@@ -151,16 +151,17 @@
     }
 
     public function get_groupe_random(){
-      $sql = 'SELECT o.uid, o.libelle, o.libelleAbrev, o.couleurAssociee, o.legislature, e.effectif
-        FROM organes o
-        LEFT JOIN groupes_effectif e ON o.uid = e.organeRef
-        WHERE o.legislature = ? AND o.coteType = "GP" AND o.dateFin IS NULL AND o.libelle != "Non inscrit"
-        ORDER BY RAND()
-        LIMIT 1
-      ';
-      $query = $this->db->query($sql, legislature_current());
-
-      return $query->row_array();
+      $this->db->select('o.uid, o.libelle, o.libelleAbrev, o.couleurAssociee, o.legislature, e.effectif');
+      $this->db->where('o.legislature', legislature_current());
+      $this->db->where('o.coteType', 'GP');
+      $this->db->where('o.libelle !=', 'Non inscrit');
+      if (dissolution() === false) {
+        $this->db->where('o.dateFin IS NULL');
+      }
+      $this->db->join('groupes_effectif e', 'o.uid = e.organeRef', 'left');
+      $this->db->order_by('RAND()');
+      $this->db->limit(1);
+      return $this->db->get('organes o')->row_array();
     }
 
     public function get_groupes_individal($groupe, $legislature){
@@ -421,11 +422,14 @@
         $array['PO830170']['value'] = $array['PO830170']['value'] + $array['PO800496']['value'];
         unset($array['PO800496']);
 
-        foreach ($array as $key => $value) {
-          if ($value['active'] == 0) {
-            unset($array[$key]);
+        // Remove unactive groups when not dissolution 
+        if (dissolution() === false) {
+          foreach ($array as $key => $value) {
+            if ($value['active'] == 0) {
+              unset($array[$key]);
+            }
           }
-        }
+        }        
       }
 
       array_multisort(
