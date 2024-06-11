@@ -17,11 +17,11 @@
     <?php if (isset($stats)): ?>
       <span class="badge badge-primary badge-stats mt-3"><?= $stats ?></span>
     <?php endif; ?>
-    <?php if ($cat): ?>
+    <?php if ($cat !== false): ?>
       <span class="d-block mt-2"><?= $cat ?></span>
     <?php endif; ?>
   </div>
-  <?php if ($cat): ?>
+  <?php if ($cat !== false): ?>
     <div class="mb-3">
       <a class="btn btn-cat btn-primary stretched-link" href="<?= base_url(); ?>groupes/legislature-<?= $groupe['legislature'] ?>/<?= mb_strtolower($groupe['libelleAbrev']) ?>" role="button">Découvrez son activité</a>
     </div>
