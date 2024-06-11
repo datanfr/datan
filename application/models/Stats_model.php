@@ -18,7 +18,7 @@
     }
 
     public function get_age_mean($legislature){
-      if ($legislature == legislature_current()) {
+      if ($legislature == legislature_current() && dissolution() === false) {
         $sql = 'SELECT ROUND(AVG(A.age), 1) AS mean
           FROM
           (
@@ -41,7 +41,7 @@
         ) A';
         $result = $this->db->query($sql, array($legislature, $legislature))->row_array();
       }
-
+      
       return $result['mean'];
     }
 
