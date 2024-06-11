@@ -10,6 +10,7 @@ class Script
     private $legislature_current;
     private $intro;
     private $congress;
+    private $dissolution;
 
     // export the variables in environment
     public function __construct($legislature = 16, $congress = FALSE)
@@ -19,6 +20,7 @@ class Script
         $this->dateMaj = date('Y-m-d');
         $this->legislature_current = 16;
         $this->legislature_to_get = $legislature;
+        $this->dissolution = TRUE;
         if ($congress == "cong") {
           $this->congress = TRUE;
         }
@@ -3548,7 +3550,7 @@ class Script
 
           $this->bdd->query('DROP TABLE IF EXISTS class_participation_six');
 
-          $this->bdd->query('CREATE TABLE class_participation_six
+          $sql = 'CREATE TABLE class_participation_six
             SELECT @s:=@s+1 AS "classement", C.*, curdate() AS dateMaj
             FROM
             (
@@ -3567,14 +3569,17 @@ class Script
                     GROUP BY A.mpId
                     ORDER BY ROUND(COUNT(A.participation)/10) DESC, AVG(A.participation) DESC
                 ) B
-                LEFT JOIN deputes_last dl ON B.mpId = dl.mpId
-                WHERE dl.active
-            ) C,
+                LEFT JOIN deputes_last dl ON B.mpId = dl.mpId'; 
+        if ($this->dissolution === false){
+            $sql .= " WHERE dl.active";
+        }
+        $sql .= ") C,
             (SELECT @s:= 0) AS s
             ORDER BY C.score DESC, C.votesN DESC;
             ALTER TABLE class_participation_six ADD PRIMARY KEY (id);
-            ALTER TABLE class_participation_six ADD INDEX idx_mpId (mpId);
-          ');
+            ALTER TABLE class_participation_six ADD INDEX idx_mpId (mpId);";
+
+        $this->bdd->query($sql);
         }
     }
 
@@ -3594,7 +3599,7 @@ class Script
                     PRIMARY KEY (id));
                     ALTER TABLE class_loyaute_six ADD INDEX idx_mpId (mpId);
             ');
-            $result = $this->bdd->query('SELECT @s:=@s+1 AS "classement", B.*
+            $sql = 'SELECT @s:=@s+1 AS "classement", B.*
               FROM (
               SELECT A.*
               FROM (
@@ -3611,12 +3616,16 @@ class Script
               WHERE A.mpId IN (
                 SELECT mpId
                 FROM deputes_last
-                WHERE legislature = 16 AND dateFin IS NULL
-              )
+                WHERE legislature = 16';
+            if ($this->dissolution === false) {
+                $sql .= " AND dateFin IS NULL";
+            }
+            $sql .= " )
             ) B,
             (SELECT @s:= 0) AS s
-            ORDER BY B.score DESC, B.votesN DESC
-            ');
+            ORDER BY B.score DESC, B.votesN DESC";
+
+            $result = $this->bdd->query($sql);
 
             $loyauteFields = array('classement', 'mpId', 'score', 'votesN', 'dateMaj');
             $loyaute = [];
