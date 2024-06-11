@@ -1177,7 +1177,7 @@ class Script
 
         $this->bdd->exec('DROP TABLE IF EXISTS parties');
 
-        $this->bdd->exec('CREATE TABLE parties AS
+        $sql = 'CREATE TABLE parties AS
           SELECT A.*, B.effectif
           FROM
           (
@@ -1191,14 +1191,18 @@ class Script
           LEFT JOIN
           (
             SELECT o.uid, o.libelle, o.libelleAbrev, COUNT(dl.mpId) AS effectif
-            FROM deputes_all dl
+            FROM deputes_last dl
             LEFT JOIN mandat_secondaire ms ON ms.mpId = dl.mpId
             LEFT JOIN organes o ON o.uid = ms.organeRef
-            WHERE ms.typeOrgane = "PARPOL" AND ms.dateFin IS NULL AND dl.dateFin IS NULL
-            GROUP BY ms.organeRef
+            WHERE ms.typeOrgane = "PARPOL" AND ms.dateFin IS NULL
+        '; 
+        if ($this->dissolution === false) {
+           $sql .= ' AND dl.dateFin IS NULL';
+        }
+        $sql .= 'GROUP BY ms.organeRef
           ) B ON A.uid = B.uid
-          ORDER BY B.effectif DESC
-        ');
+          ORDER BY B.effectif DESC';
+        $this->bdd->exec($sql);
 
         $this->bdd->exec('
         CREATE INDEX idx_uid ON parties (uid);
@@ -3996,6 +4000,7 @@ if (isset($argv[1]) && isset($argv[2])) {
   $script = new Script();
 }
 
+/*
 $script->fillDeputes();
 $script->deputeAll();
 $script->deputeLast();
@@ -4007,7 +4012,9 @@ $script->deputeJson();
 $script->groupeStats();
 $script->groupeStatsHistory();
 $script->groupeMembersHistory();
+*/
 $script->parties();
+/*
 $script->legislature();
 $script->vote(); // Depend on the legislature
 $script->updateVoteInfo(); // Depend on the legislature
