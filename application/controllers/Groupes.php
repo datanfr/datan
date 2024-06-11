@@ -290,11 +290,9 @@
       $data = $this->get_data_stats($data);
 
       // ACCORD AVEC GROUPES
-      $data['accord_groupes_actifs'] = $this->groupes_model->get_stats_proximite($data['groupe']['uid']); // PROXIMITÉ TOUS LES GROUPES
       $data['accord_groupes_all'] = $this->groupes_model->get_stats_proximite_all($data['groupe']['uid']);
-
-      if ($data['groupe']['legislature'] == legislature_current()) {
-        $data['accord_groupes_featured'] = $data['accord_groupes_actifs'];
+      if ($data['groupe']['legislature'] == legislature_current() && dissolution() === false) {
+        $data['accord_groupes_featured'] = $this->groupes_model->get_stats_proximite($data['groupe']['uid']);
       } else {
         $data['accord_groupes_featured'] = $data['accord_groupes_all'];
       }
@@ -658,10 +656,9 @@
       $data = $this->get_data_stats($data);
 
       // Get overall proximity stats
-      $data['accord_groupes_actifs'] = $this->groupes_model->get_stats_proximite($data['groupe']['uid']);
       $data['accord_groupes_all'] = $this->groupes_model->get_stats_proximite_all($data['groupe']['uid']);
-      if ($data['groupe']['legislature'] == legislature_current()) {
-        $data['accord_groupes_featured'] = $data['accord_groupes_actifs'];
+      if ($data['groupe']['legislature'] == legislature_current() && dissolution() === false) {
+        $data['accord_groupes_featured'] = $this->groupes_model->get_stats_proximite($data['groupe']['uid']);
       } else {
         $data['accord_groupes_featured'] = $data['accord_groupes_all'];
       }
