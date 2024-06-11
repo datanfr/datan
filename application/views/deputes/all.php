@@ -9,9 +9,8 @@
       <div class="row row-grid mt-5">
         <div class="col-md-7">
           <?php if ($legislature == legislature_current()): ?>
-            <p>
-              L'Assemblée nationale compte <b>577 députés</b>. Ils sont élus tous les 5 ans lors des élections législatives. Les dernières ont eu lieu en juin 2022 et les prochaines se tiendront en 2027, quelques semaines après l'élection présidentielle.
-            </p>
+            <p>L'Assemblée nationale compte <b>577 députés</b>. Ils sont élus tous les 5 ans lors des élections législatives. Les dernières ont eu lieu en juin 2022.</p>
+            <p>Du fait de la <a href="https://datan.fr/blog/actualite-politique/le-president-emmanuel-macron-annonce-la-dissolution-de-lassemblee-nationale" target="_blank">dissolution de l'Assemblée nationale</a>, décidée le 9 juin 2024 par le président Emmanuel Macron, des nouvelles élections législatives se dérouleront les 30 juin et 7 juillet 2024.<p>
             <?php if ($active): ?>
               <p>
                 L'Assemblée nationale compte actuellement <?= $male["n"] ?> députés hommes (<?= $male["percentage"] ?> %) et <?= $female["n"] ?> femmes (<?= $female["percentage"] ?> %).
@@ -32,12 +31,10 @@
                 </p>
               <?php endif; ?>
             <?php else: ?>
-              <p>
-                Depuis leur élection, <?= $number_inactive ?> députés ont quitté l'Assemblée pour cause de nomination au Gouvernement, de démission, ou de décès. Découvrez sur cette page les députés plus en activité.
-              </p>
-              <p>
-                Pour découvrir les 577 députés actuellement en activité, <a href="<?= base_url() ?>deputes">cliquez ici.</a>
-              </p>
+              <p>Depuis leur élection, <?= $number_inactive ?> députés ont quitté l'Assemblée pour cause de nomination au Gouvernement, de démission, ou de décès. Découvrez sur cette page les députés plus en activité</p>
+              <?php if (dissolution() === false) : ?>
+                <p>Pour découvrir les 577 députés actuellement en activité, <a href="<?= base_url() ?>deputes">cliquez ici.</a></p>
+              <?php endif; ?>
             <?php endif; ?>
           <?php else: ?>
             <p>
