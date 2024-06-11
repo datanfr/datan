@@ -51,28 +51,29 @@
     }
 
     public function get_mps($departement, $circos, $legislature){
-      $sql = 'SELECT d.*, d.circo AS electionCirco, dc.mailAn
-        FROM deputes_all d
-        LEFT JOIN deputes_contacts dc ON d.mpId = dc.mpId
-        WHERE d.dptSlug = ? AND d.circo IN ? AND d.legislature = ? AND d.dateFin IS NULL
-      ';
-      $query = $this->db->query($sql, array($departement, $circos, $legislature));
-
-      return $query->result_array();
+      $this->db->select('d.*, d.circo AS electionCirco, dc.mailAn');
+      $this->db->where('d.dptSlug', $departement);
+      $this->db->where_in('d.circo', $circos);
+      $this->db->where('d.legislature', $legislature);
+      if (dissolution() === false) {
+        $this->db->where('dateFin IS NULL');
+      }
+      $this->db->join('deputes_contacts dc', 'd.mpId = dc.mpId', 'left');
+      return $this->db->get('deputes_all d')->result_array();
     }
 
     public function get_mps_dpt($departement, $deputes_commune, $legislature){
       if (empty($deputes_commune)) {
         $deputes_commune[] = "";
       }
-      $sql = 'SELECT d.*, d.circo AS electionCirco,
-        d.libelle, d.libelleAbrev
-        FROM deputes_all d
-        WHERE d.dptSlug = ? AND d.mpId NOT IN ? AND d.legislature = ? AND d.dateFin IS NULL
-      ';
-      $query = $this->db->query($sql, array($departement, $deputes_commune, $legislature));
-
-      return $query->result_array();
+      $this->db->select('d.*, d.circo AS electionCirco');
+      $this->db->where('d.dptSlug', $departement);
+      $this->db->where_not_in('d.mpId', $deputes_commune);
+      $this->db->where('d.legislature', $legislature);
+      if (dissolution() === false) {
+        $this->db->where('d.dateFin IS NULL');
+      }
+      return $this->db->get('deputes_all d')->result_array();
     }
 
     public function get_mayor($dpt, $insee, $commune){
