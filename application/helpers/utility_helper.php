@@ -15,6 +15,10 @@
     return 16;
   }
 
+  function dissolution(){
+    return true;
+  }
+
   function legislature_all(){
     return array(14, 15, 16);
   }
