@@ -4000,7 +4000,6 @@ if (isset($argv[1]) && isset($argv[2])) {
   $script = new Script();
 }
 
-/*
 $script->fillDeputes();
 $script->deputeAll();
 $script->deputeLast();
@@ -4012,9 +4011,7 @@ $script->deputeJson();
 $script->groupeStats();
 $script->groupeStatsHistory();
 $script->groupeMembersHistory();
-*/
 $script->parties();
-/*
 $script->legislature();
 $script->vote(); // Depend on the legislature
 $script->updateVoteInfo(); // Depend on the legislature
