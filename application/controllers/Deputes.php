@@ -55,8 +55,8 @@
             $data['no_majorite'] = FALSE;
             // GET ALL DATA FOR PROXIMITY WITH MAJORITY
             $data['majorite']['all'] = $this->deputes_model->get_stats_majorite_all($legislature); // DOUBLE CHECK --> ONLY THOSE NOT FROM THE GROUP OF THE MAJORITY
-            $data['edito_majorite']['all'] = $this->depute_edito->majorite($data['majorite']['score'], $data['majorite']['all']); // edited for ALL
             $data['majorite']['group'] = $this->deputes_model->get_stats_majorite_group($legislature, $groupe_id);
+            $data['edito_majorite']['all'] = $this->depute_edito->majorite($data['majorite']['score'], $data['majorite']['all']); // edited for ALL
             $data['edito_majorite']['group'] = $this->depute_edito->majorite($data['majorite']['score'], $data['majorite']['group']); //edited for GROUP
           } else {
             $data['no_majorite'] = TRUE;
@@ -64,7 +64,7 @@
         }
 
         // PROXIMITY WITH ALL GROUPS
-        if ($legislature == legislature_current()) /*LEGISLATURE 16*/ {
+        if ($legislature == legislature_current() && dissolution() === false) /*LEGISLATURE 16*/ {
           $data['accord_groupes'] = $this->deputes_model->get_accord_groupes_actifs($mpId, legislature_current());
           $data['accord_groupes_all'] = $this->deputes_model->get_accord_groupes_all($mpId, legislature_current());
           // Positionnement politique
