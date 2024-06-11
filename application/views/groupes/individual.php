@@ -332,7 +332,7 @@
                     </h3>
                   </div>
                 </div>
-                <?php if ($no_participation): ?>
+                <?php if ($no_majorite): ?>
                   <div class="row">
                     <div class="col-12 mt-2">
                       <p>Du fait d'un nombre insuffisant de votes de la part du groupe <?= name_group($title) ?>, aucune statistique n'a pu être produite.</p>
