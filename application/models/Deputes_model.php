@@ -68,7 +68,7 @@
       $this->db->select('COUNT(d.civ) AS n');
       $this->db->select('CASE WHEN d.civ = "M." THEN "male" WHEN civ = "Mme" THEN "female" END AS gender', FALSE);
       $this->db->where('m.legislature', $legislature);
-      if ($legislature == legislature_current()) {
+      if ($legislature == legislature_current() && dissolution() === false) {
         $this->db->where('m.dateFin IS NULL');
       } else {
         $this->db->where('m.datePriseFonction', $datePriseFonction[$legislature]);
