@@ -100,16 +100,17 @@
     }
 
     public function get_mps_active($organeRef){
-      $sql = 'SELECT ms.organeRef, da.nameFirst, da.nameLast, da.couleurAssociee, da.mpId, da.dptSlug, da.nameUrl, da.circo AS electionCirco, da.libelle AS libelle, da.libelleAbrev AS libelleAbrev, da.img,
-        CONCAT(da.departementNom, " (", da.departementCode, ")") AS cardCenter
-        FROM mandat_secondaire ms
-        LEFT JOIN deputes_all da ON ms.mpId = da.mpId
-        WHERE ms.organeRef = ? AND ms.dateFin IS NULL AND da.legislature = ? AND da.dateFin IS NULL
-        ORDER BY da.nameLast ASC
-      ';
-      $query = $this->db->query($sql, array($organeRef, legislature_current()));
-
-      return $query->result_array();
+      $this->db->select('ms.organeRef, da.nameFirst, da.nameLast, da.couleurAssociee, da.mpId, da.dptSlug, da.nameUrl, da.circo AS electionCirco, da.libelle AS libelle, da.libelleAbrev AS libelleAbrev, da.img');
+      $this->db->select('CONCAT(da.departementNom, " (", da.departementCode, ")") AS cardCenter');
+      $this->db->join('deputes_all da', 'ms.mpId = da.mpId', 'left');
+      $this->db->where('ms.organeRef', $organeRef);
+      $this->db->where('da.legislature', legislature_current());
+      $this->db->where('ms.dateFin IS NULL');
+      if (dissolution() === false) {
+        $this->db->where('da.dateFin IS NULL');
+      }
+      $this->db->order_by('da.nameLast ASC, da.nameFirst ASC');
+      return $this->db->get('mandat_secondaire ms')->result_array();
     }
 
     public function get_organization_schema($party, $members){
