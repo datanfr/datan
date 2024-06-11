@@ -30,7 +30,7 @@
         $data['placeholder'] = $data['groupe_random']['libelle'] . " (" . $data['groupe_random']['libelleAbrev'] . ")";
       }
 
-      //Get groups (cached)
+      //Get groups (cached) 
       if(!in_array($_SERVER['REMOTE_ADDR'], localhost())){
         $this->db->cache_on();
         $data['groupes'] = $this->groupes_model->get_groupes_hemicycle();
@@ -39,6 +39,7 @@
         $data['groupes'] = $this->groupes_model->get_groupes_hemicycle();
       }
       $data['groupesSorted'] = $this->groupes_model->get_groupes_sorted($data['groupes']);
+      
 
       // Get election results 
       $file = file_get_contents(asset_url() . "data_elections/europeennes-2024.json");
@@ -97,7 +98,7 @@
       $data['posts'] = $this->post_model->get_last_posts();
 
       // Composition
-      $data['composition'] = TRUE;
+      $data['composition'] = FALSE;
 
       //Meta
       $data['url'] = $this->meta_model->get_url();

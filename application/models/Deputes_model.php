@@ -447,19 +447,14 @@
     }
 
     public function get_depute_random(){
-      $sql = 'SELECT A.*, d.civ
-        FROM
-        (
-          SELECT *,
-          CONCAT(da.departementNom, " (", da.departementCode, ")") AS cardCenter
-          FROM deputes_all da
-          WHERE legislature = ? AND dateFin IS NULL
-          ORDER BY RAND()
-          LIMIT 1
-        ) A
-        LEFT JOIN deputes d ON d.mpId = A.mpId
-      ';
-      return $this->db->query($sql, legislature_current())->row_array();
+      if (dissolution() === false) {
+        $this->db->where('da.dateFin IS NULL');
+      }
+      $this->db->where('legislature', legislature_current());
+      $this->db->select('da.*, CONCAT(da.departementNom, " (", da.departementCode, ")") AS cardCenter');
+      $this->db->limit(1);
+      $this->db->order_by('rand()');
+      return $this->db->get('deputes_all da')->row_array();
     }
 
     public function get_depute_vote_plus(){
@@ -474,8 +469,10 @@
           LIMIT 1
         ) A
         LEFT JOIN deputes_last da ON da.mpId = A.mpId
-        WHERE da.dateFin IS NULL
       ';
+      if (dissolution() === false) {
+        $sql .= " WHERE da.dateFin IS NULL";
+      }
       return $this->db->query($sql)->row_array();
     }
 
@@ -509,8 +506,10 @@
           LIMIT 1
         ) A
         LEFT JOIN deputes_last da ON da.mpId = A.mpId
-        WHERE da.dateFin IS NULL
       ';
+      if (dissolution() === false) {
+        $sql .= " WHERE da.dateFin IS NULL";
+      }
       return $this->db->query($sql)->row_array();
     }
 
@@ -527,14 +526,15 @@
             FROM class_loyaute_six
             WHERE votesN > 50
           ) AND votesN > 50
-          ) A
+        ) A
         LEFT JOIN deputes_last da ON da.mpId = A.mpId
-        WHERE da.dateFin IS NULL
-        ORDER BY RAND()
-        LIMIT 1
-      ';
-      return $this->db->query($sql)->row_array();
-    }
+    ';
+    if (dissolution() === false) {
+      $sql .= " WHERE da.dateFin IS NULL";
+    } 
+    $sql .= " ORDER BY RAND() LIMIT 1";
+    return $this->db->query($sql)->row_array();
+  }
 
     public function get_depute_loyal_moins(){
       $sql = 'SELECT A.mpId, A.votesN, da.civ, da.nameFirst, da.nameLast, da.nameUrl, da.legislature, da.dptSlug, da.couleurAssociee, da.img, da.libelle, da.libelleAbrev, da.groupeId AS organeRef, da.departementNom AS electionDepartement, da.departementCode AS electionDepartementNumero,
@@ -551,10 +551,11 @@
           ) AND votesN > 50
           ) A
         LEFT JOIN deputes_last da ON da.mpId = A.mpId
-        WHERE da.dateFin IS NULL
-        ORDER BY RAND()
-        LIMIT 1
       ';
+      if (dissolution() === false) {
+        $sql .= " WHERE da.dateFin IS NULL";
+      }
+      $sql .= "ORDER BY RAND() LIMIT 1";
       return $this->db->query($sql)->row_array();
     }
 
