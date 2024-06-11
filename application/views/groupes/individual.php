@@ -8,6 +8,7 @@
       <?php $this->load->view('groupes/partials/card_individual.php', array('tag' => 'h1')) ?>
     </div>
     <div class="col-md-10 col-lg-8 offset-md-1 offset-lg-0 pl-lg-5">
+      <?php $this->view('groupes/partials/dissolutionFeature.php') ?>
       <!-- BIO & ELECTION -->
       <div class="bloc-bio mt-5">
         <h2 class="mb-4 title-center">Le groupe <?= $groupe['libelleAbrev'] ?> en quelques mots</h2>
