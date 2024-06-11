@@ -23,7 +23,9 @@
               <?php endif; ?>
               <?php if ($active === FALSE): ?>
                 <p>Cette page présente les groupes de la <?= $legislature ?><sup>ème</sup> législature qui ne sont plus en activités. Ce sont des groupes qui ont été dissous depuis leur création.</p>
-                <p>Pour découvrir les <?= $number_groupes_active ?> groupes politiques en activité à l'Assemblée nationale, <a href="<?= base_url() ?>groupes">cliquez ici</a>.</p>
+                <?php if (dissolution() === false): ?>
+                  <p>Pour découvrir les <?= $number_groupes_active ?> groupes politiques en activité à l'Assemblée nationale, <a href="<?= base_url() ?>groupes">cliquez ici</a>.</p>
+                <?php endif; ?>
               <?php endif; ?>
               <?php if ($legislature < legislature_current()): ?>
                 <p>Cette page présente les <?= $number ?> groupes politiques de la <?= $legislature ?><sup>ème</sup> législature.</p>

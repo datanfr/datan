@@ -128,7 +128,7 @@
         show_404($this->functions_datan->get_404_infos());
       }
 
-      $data['active'] = TRUE;
+      $data['active'] = dissolution() === false ? true : false;
       $data['legislature'] = $legislature;
       $data['groupes'] = $this->groupes_model->get_groupes_all($data['active'], $data['legislature']);
       $data['number_groupes_inactive'] = $this->groupes_model->get_number_inactive_groupes();
