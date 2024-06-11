@@ -113,7 +113,7 @@
         show_404($this->functions_datan->get_404_infos());
       }
 
-      if ($legislature == legislature_current()) {
+      if ($legislature == legislature_current() && dissolution() === false) {
         $data['active'] = TRUE;
         //$data['president'] = $this->deputes_model->get_president_an(); THE OPEN DATA FROM THE AN IS NOT UPDATED!
         $data['president'] = $this->deputes_model->get_depute_by_mpId('PA721908');
