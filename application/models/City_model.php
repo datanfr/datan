@@ -155,20 +155,20 @@
       return $text;
     }
 
-    public function get_results_2019_europe($array){
+    public function get_results_europe($array, $year){
       $dpt = $array["dpt"];
       $city = $array["commune"];
       if ($dpt == "987") {
         $city = 700 + $city;
       }
       $sql = 'SELECT res.party, res.value, l.name AS listName, l.tete AS listTete, l.parti AS partiName
-        FROM elect_2019_europe_clean res
-        LEFT JOIN elect_2019_europe_listes l ON res.party = l.id
-        WHERE res.dpt = ? AND res.commune = ?
+        FROM elect_europe_results res
+        LEFT JOIN elect_europe_listes l ON res.party = l.id_liste AND res.year = l.year
+        WHERE res.dpt = ? AND res.commune = ? AND res.year = ?
         ORDER BY res.value DESC
         LIMIT 3
       ';
-      $query = $this->db->query($sql, array($dpt, $city));
+      $query = $this->db->query($sql, array($dpt, $city, $year));
 
       return $query->result_array();
     }
