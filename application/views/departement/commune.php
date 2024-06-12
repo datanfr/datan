@@ -185,6 +185,35 @@
           <?php endif; ?>
         </div>
         <div class="d-flex justify-content-around flex-wrap mt-4 bloc-elections">
+          <div class="card mx-1 my-4">
+            <div class="card-body pb-0">
+              <h3>Élections européennes 2024</h3>
+              <span class="round">Les 3 premiers partis politiques</span>
+              <div class="chart mt-3">
+                <div class="results d-flex flex-row justify-content-center align-items-center">
+                  <?php foreach ($results_2024_europe as $list): ?>
+                    <div class="bar d-flex flex-row justify-content-center align-items-end">
+                      <div class="element d-flex align-items-center justify-content-center" style="height: <?= round($list['value']) ?>%">
+                        <span class="score" style="color: #fff"><?= round($list['value']) ?>%</span>
+                      </div>
+                    </div>
+                  <?php endforeach; ?>
+                </div>
+                <div class="names d-flex flex-row justify-content-center align-items-center">
+                  <?php foreach ($results_2024_europe as $list): ?>
+                    <div class="name">
+                      <p class="text-center"><?= $list["partiName"] ?></p>
+                    </div>
+                  <?php endforeach; ?>
+                </div>
+              </div>
+            </div>
+            <span url_obf="<?= url_obfuscation("https://www.resultats-elections.interieur.gouv.fr/europeennes2024/") ?>" class="url_obf no-decoration">
+              <div class="card-footer">
+                <p class="text-center mb-0">Plus d'infos</p>
+              </div>
+            </span>
+          </div>
           <?php if ($results_pres_2022[0]['votants'] > 0): ?>
             <div class="card mx-1 my-4">
               <div class="card-body pb-0">
