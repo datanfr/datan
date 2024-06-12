@@ -150,7 +150,8 @@
         $data['results_pres_edited'] = $this->city_model->get_results_pres_edited($data['ville'], $data['results_pres_2017'], $data['results_pres_2022']);
       }
       // 3. 2019 _ Européennes
-      $data['results_2019_europe'] = $this->city_model->get_results_2019_europe($data['ville']);
+      $data['results_2019_europe'] = $this->city_model->get_results_europe($data['ville'], 2019);
+      $data['results_2024_europe'] = $this->city_model->get_results_europe($data['ville'], 2024);
 
       // 4. 2018 _ Législatvies _ 2017 _ 2nd tour
       $data['results_leg_2017'] = $this->city_model->get_results_legislatives($insee, 2017);
