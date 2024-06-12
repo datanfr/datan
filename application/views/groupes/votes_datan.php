@@ -2,7 +2,7 @@
     <div class="container banner-groupe-mobile d-flex d-lg-none flex-column justify-content-center py-2">
       <div class="row">
         <div class="col-md-10 offset-md-1">
-          <a class="btn btn-primary text-border mb-2" href="<?= base_url() ?>groupes/legislature-<?= $groupe['legislature'] ?>/<?= mb_strtolower($groupe['libelleAbrev']) ?>">
+          <a class="btn btn-light mb-2" href="<?= base_url() ?>groupes/legislature-<?= $groupe['legislature'] ?>/<?= mb_strtolower($groupe['libelleAbrev']) ?>">
             <?= file_get_contents(asset_url().'imgs/icons/arrow_left.svg') ?>
             Retour profil
           </a>

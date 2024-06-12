@@ -236,7 +236,7 @@
               <div class="mb-3 mt-1" style="border-top: 7px solid #00b794; width: 60px"></div>
               <h3>Historique de l'âge moyen au sein du groupe</h3>
               <p>Évolution de l'âge moyen des députés du groupe <?= $groupe['libelleAbrev'] ?> par législature</p>
-              <?php $this->load->view('groupes/partials/stats_vertical.php', array('stats_history_chart' => $orga_history['age'], 'type' => 'score', 'max' => 100, 'terms' => TRUE, 'divided_by' => $age_max, 'grid' => FALSE, 'organeRef' => $groupe['uid'], 'tooltip' => TRUE)) ?>
+              <?php $this->load->view('groupes/partials/stats_vertical.php', array('stats_history_chart' => $orga_history['age'], 'type' => 'score', 'max' => 100, 'terms' => TRUE, 'divided_by' => $orga_history['age_max'], 'grid' => FALSE, 'organeRef' => $groupe['uid'], 'tooltip' => TRUE)) ?>
             </div>
           </div>
         <?php endif; ?>

@@ -7,6 +7,14 @@
       <div class="liseret-groupe" style="background-color: <?= $groupe['couleurAssociee'] ?>"></div>
     <?php endif; ?>
     <div class="container pg-groupe-membres my-4">
+      <div class="row">
+        <div class="col-12">
+          <a class="btn btn-outline-primary mx-2" href="<?= base_url() ?>groupes/legislature-<?= $groupe['legislature'] ?>/<?= mb_strtolower($groupe['libelleAbrev']) ?>">
+            <?= file_get_contents(asset_url().'imgs/icons/arrow_left.svg') ?>
+            Voir le profil du groupe 
+          </a>
+        </div>
+      </div>
       <!-- ROW PRESIDENT -->
       <?php if ($groupe['libelleAbrev'] != 'NI'): ?>
         <div class="row my-5">
