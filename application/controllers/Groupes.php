@@ -676,9 +676,12 @@
       // Get group orga stats history
       $data['orga_history'] = $this->groupes_model->get_orga_stats_history($data['history']);
 
+
+      $data['orga_history']['age_max'] = max(array_column($data['orga_history']['age'], 'value')) + 5;
+
       // Get membership data by group (IF == current_legislature)
       if ($data['groupe']['legislature'] == legislature_current()) {
-        $data['members'] = $this->groupes_model->get_groupes_all(TRUE, $data['groupe']['legislature']);
+        $data['members'] = $this->groupes_model->get_groupes_all($data['active'], $data['groupe']['legislature']);
         foreach ($data['members'] as $key => $value) {
           $data['members'][$key]['value'] = $value['effectif'];
         }
@@ -704,25 +707,27 @@
       $data['members_history'] = $this->groupes_model->get_effectif_history($data['history']);
 
       // Get age data
-      $data['age'] = $this->stats_model->get_groups_age();
-      foreach ($data['age'] as $key => $value) {
-        $data['age'][$key]['value'] = $value['age'];
-      }
-      $data['age_max'] = $data['age'][0]['value'] + 5;
-
-      // Get age ranking
       if ($data['active']) {
-        $x = 1;
+        $data['age'] = $this->stats_model->get_groups_age();
         foreach ($data['age'] as $key => $value) {
-          if ($value['organeRef'] == $data['groupe']['uid']) {
-            $data['ageRanking']['number'] = $x;
-          }
-          $x++;
+          $data['age'][$key]['value'] = $value['age'];
         }
-        if ($data['ageRanking']['number'] == count($data['age'])) {
-          $data['ageRanking']['last'] = TRUE;
-        } else {
-          $data['ageRanking']['last'] = FALSE;
+        $data['age_max'] = $data['age'][0]['value'] + 5;
+
+        // Get age ranking
+        if ($data['active']) {
+          $x = 1;
+          foreach ($data['age'] as $key => $value) {
+            if ($value['organeRef'] == $data['groupe']['uid']) {
+              $data['ageRanking']['number'] = $x;
+            }
+            $x++;
+          }
+          if ($data['ageRanking']['number'] == count($data['age'])) {
+            $data['ageRanking']['last'] = TRUE;
+          } else {
+            $data['ageRanking']['last'] = FALSE;
+          }
         }
       }
 
