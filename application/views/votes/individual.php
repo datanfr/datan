@@ -411,6 +411,7 @@ endif; ?>
         </div>
       </div>
       <?php if ($vote['amendment']['expose']) : ?>
+        <div class="mt-5">
           <h2>Exposé des motifs de l'amendement</h2>
           <p class="mt-4 font-italic">L'objectif d'un amendement est de modifier ou d'ajouter une mesure d'un projet ou d'une proposition de loi. Le ou les députés qui rédigent l'amendement écrivent également un exposé des motifs.</p>
           <div class="card">
