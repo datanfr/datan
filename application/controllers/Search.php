@@ -35,10 +35,18 @@ class Search extends CI_Controller
     public function index($query){
       $data['query'] = urldecode($query);
       $data['results'] = $this->search_model->searchInAll($query, TRUE, NULL, NULL);
+
+      echo "this one is working<br><br>";
+      echo json_encode($data['results'], JSON_UNESCAPED_UNICODE);
+      
       $data['count'] = count($data['results']);
       $data['max_entries'] = 10;
 
       $data['results'] = $this->search_model->sort($data['results'], $data['query']);
+
+      // BUG HERE TO SOLVE!
+      echo "<br><br>this one is not working";
+      echo json_encode($data['results'], JSON_UNESCAPED_UNICODE);
 
       //Meta
       $data['url'] = $this->meta_model->get_url();
