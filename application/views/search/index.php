@@ -83,7 +83,7 @@
     var button_name = "button_" + type;
     var number_name = "number_" + type;
     var container = document.getElementById(results_name);
-    var elements = <?php echo json_encode($results); ?>;
+    var elements = <?php echo $results_json; ?>;
     var number = document.getElementById(number_name);
     elements = elements[type].results;
     elements_sliced = elements.slice(max_entries);
