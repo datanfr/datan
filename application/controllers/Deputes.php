@@ -340,7 +340,7 @@
       $data['groupMajority'] = $this->groupes_model->get_majority_group();
 
       // Get pct famSocPro
-      $data['famSocPro'] = $this->jobs_model->get_stats_individual($data['depute']['famSocPro'], $legislature);
+      $data['famSocPro'] = null;// $this->jobs_model->get_stats_individual($data['depute']['famSocPro'], $legislature);
 
       // Get commission parlementaire
       if ($data['active']) {
