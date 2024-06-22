@@ -96,7 +96,7 @@
       }
       // Some editing for city's name
       $vocals = array('A','E','I','O','U');
-      if (ctype_alpha($commune_nom) && in_array($commune_nom{0}, $vocals)) {
+      if (ctype_alpha($commune_nom) && in_array($commune_nom[0], $vocals)) {
         $de = "d'";
       } else {
         $de = "de ";
