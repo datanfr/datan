@@ -266,13 +266,13 @@
     <div class="d-none" id="navbar-logged-in"></div>
     <main>
       <div class="container-fluid py-2 dissolution-banner">
-        <a class="no-decoration" href="<?= base_url() ?>blog/actualite-politique/le-president-emmanuel-macron-annonce-la-dissolution-de-lassemblee-nationale">
+        <a class="no-decoration" href="https://votefinder.fr/" target="_blank" >
           <div class="row d-flex justify-content-center">
             <div class="col-12">
               <p class="mb-0 font-weight-bold text-center">
                 L'Assemblée nationale a été dissoute.
-                Les élections auront lieu dans <?= $this->functions_datan->dissolutionCountdown() ?> jours.
-                <u>En savoir plus</u>
+                Les élections auront lieu dans <?= $this->functions_datan->dissolutionCountdown() ?> jours. <br>
+                Découvrez le <u>Quiz spécial législatives</u>
               </p>
             </div>
           </div>
