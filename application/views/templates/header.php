@@ -272,7 +272,7 @@
               <p class="mb-0 font-weight-bold text-center">
                 L'Assemblée nationale a été dissoute.
                 Les élections auront lieu dans <?= $this->functions_datan->dissolutionCountdown() ?> jours. <br>
-                Découvrez le <u>Quiz spécial législatives</u>
+                Découvrez le <u>Quiz Législatives de VoteFinder</u>
               </p>
             </div>
           </div>
