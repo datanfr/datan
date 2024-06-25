@@ -2,6 +2,9 @@
 Datan is a website anlaysing the voting behaviour of French MPs.
 Datan est un site internet analysant les votes des députés français (Assemblée nationale).
 
+# Discord
+Si vous voulez contribuer ou que vous avez besoin d'aide, n'hésitez pas à rejoindre. https://discord.gg/79E6SB7W
+
 # Installation Docker
 Suivez les étapes suivantes pour installer Datan avec Docker.
 
