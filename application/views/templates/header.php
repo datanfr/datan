@@ -271,7 +271,7 @@
             <div class="col-12">
               <p class="mb-0 font-weight-bold text-center">
                 L'Assemblée nationale a été dissoute.
-                Les élections auront lieu dans <?= $this->functions_datan->dissolutionCountdown() ?> jours. <br>
+                Le second tour des élections aura lieu dans <?= $this->functions_datan->dissolutionCountdown() ?> jours. <br>
                 Découvrez le <u>Quiz Législatives de VoteFinder</u>
               </p>
             </div>
