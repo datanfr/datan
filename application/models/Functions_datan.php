@@ -97,7 +97,7 @@
     }
 
 	public function dissolutionCountdown(){
-		$targetDate = new DateTime('2024-06-30');
+		$targetDate = new DateTime('2024-07-07');
 		$currentDate = new DateTime();
 		$interval = $currentDate->diff($targetDate);
 		return $interval->format('%a');
