@@ -3468,6 +3468,7 @@ class Script
 
                   // Insert NULL values
                   $seanceRef = $seanceRef == "" ? NULL : $seanceRef;
+                  $expose = html_entity_decode($expose, ENT_QUOTES, 'UTF-8');
                   $expose = $expose == "" ? NULL : $expose;
                   $expose = strlen($expose) > 65000 ? NULL : $expose;
 

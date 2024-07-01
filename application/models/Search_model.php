@@ -5,7 +5,7 @@ class Search_model extends CI_Model
     {
     }
 
-    public function searchInAll($search, $category_max, $total_max)
+    public function searchInAll($search, $full, $category_max, $total_max)
     {
 
         $limitCategory = $category_max ? 'LIMIT ' . $category_max : '';
@@ -22,96 +22,114 @@ class Search_model extends CI_Model
               CONCAT(d.nameFirst, ' ', d.nameLast) AS title_search,
               CONCAT('Législature ', d.legislature, ' - ', d.libelleAbrev) AS description,
               CONCAT('deputes/', d.dptSlug, '/depute_', d.nameUrl) as url
-          FROM deputes_last d
-          WHERE d.legislature >= 14
-          AND (CONCAT(REPLACE(d.nameFirst, '-', ' '), ' ', REPLACE(d.nameLast, '-', ' ')) LIKE '" . str_replace('-', ' ', $search) . "%' OR CONCAT(REPLACE(d.nameLast, '-', ' '), ' ', REPLACE(d.nameFirst, '-', ' ')) LIKE '" . str_replace('-', ' ', $search) . "%')
-          " . $limitCategory . "
-        )
+            FROM deputes_last d
+            WHERE d.legislature >= 14
+            AND (CONCAT(REPLACE(d.nameFirst, '-', ' '), ' ', REPLACE(d.nameLast, '-', ' ')) LIKE '" . str_replace('-', ' ', $search) . "%' OR CONCAT(REPLACE(d.nameLast, '-', ' '), ' ', REPLACE(d.nameFirst, '-', ' ')) LIKE '" . str_replace('-', ' ', $search) . "%')
+            " . $limitCategory . "
+          )
 
-        UNION ALL
+          UNION ALL
 
-        (
-          SELECT
-            'groupe' AS source,
-            CONCAT(o.libelle, ' (', o.libelleAbrev, ')') AS title,
-            CONCAT(o.libelle, ' (', o.libelleAbrev, ')') AS title_search,
-            CONCAT('Législature ', o.legislature) AS description,
-            CONCAT('groupes/legislature-', o.legislature, '/', LOWER(o.libelleAbrev)) AS url
-          FROM organes o
-          WHERE o.coteType = 'GP' AND (MATCH(o.libelle) AGAINST('*" . $search . "*' IN BOOLEAN MODE) OR o.libelleAbrev LIKE '" . $search . "%') AND o.legislature >= 14
-          ORDER BY o.dateDebut DESC
-          " . $limitCategory . "
-          /* require: ALTER TABLE `organes` ADD FULLTEXT `idx_search` (`libelle`); */
-        )
+          (
+            SELECT
+              'groupe' AS source,
+              CONCAT(o.libelle, ' (', o.libelleAbrev, ')') AS title,
+              CONCAT(o.libelle, ' (', o.libelleAbrev, ')') AS title_search,
+              CONCAT('Législature ', o.legislature) AS description,
+              CONCAT('groupes/legislature-', o.legislature, '/', LOWER(o.libelleAbrev)) AS url
+            FROM organes o
+            WHERE o.coteType = 'GP' AND (MATCH(o.libelle) AGAINST('*" . $search . "*' IN BOOLEAN MODE) OR o.libelleAbrev LIKE '" . $search . "%') AND o.legislature >= 14
+            ORDER BY o.dateDebut DESC
+            " . $limitCategory . "
+            /* require: ALTER TABLE `organes` ADD FULLTEXT `idx_search` (`libelle`); */
+          )
 
-        UNION ALL
+          UNION ALL
 
-        (
-          SELECT
-            'ville' as source,
-            c.commune_nom as title,
-            CONCAT(c.commune_nom, ' (', d.departement_code,')') AS title_search,
-            CONCAT(d.departement_nom, ' (', d.departement_code,')') AS description,
-            CONCAT('deputes/', d.slug, '/ville_', c.commune_slug) as url
-          FROM circos c
-          LEFT JOIN departement d ON c.dpt = d.departement_code
-          LEFT JOIN cities_infos ci ON c.insee = ci.insee
-          WHERE REPLACE(c.commune_nom, '-', ' ') LIKE '". str_replace('-', ' ', $search) . "%'
-          GROUP BY c.commune_nom
-          ORDER BY LENGTH(c.commune_nom) - LENGTH('" . $search . "'), ci.pop2017 DESC
-          " . $limitCategory . "
-        )
+          (
+            SELECT
+              'ville' as source,
+              c.commune_nom as title,
+              CONCAT(c.commune_nom, ' (', d.departement_code,')') AS title_search,
+              CONCAT(d.departement_nom, ' (', d.departement_code,')') AS description,
+              CONCAT('deputes/', d.slug, '/ville_', c.commune_slug) as url
+            FROM circos c
+            LEFT JOIN departement d ON c.dpt = d.departement_code
+            LEFT JOIN cities_infos ci ON c.insee = ci.insee
+            WHERE REPLACE(c.commune_nom, '-', ' ') LIKE '". str_replace('-', ' ', $search) . "%'
+            GROUP BY c.commune_nom
+            ORDER BY LENGTH(c.commune_nom) - LENGTH('" . $search . "'), ci.pop2017 DESC
+            " . $limitCategory . "
+          )
 
-        UNION ALL
+          UNION ALL
 
-        (
-          SELECT
-            'dpt' as source,
-            CONCAT(d.departement_nom, ' (', d.departement_code, ')') as title,
-            CONCAT(d.departement_nom, ' (', d.departement_code, ')') as title,
-            '' AS description,
-            CONCAT('deputes/', d.slug) as url
-          FROM departement d
-          WHERE (REPLACE(d.departement_nom, '-', ' ') LIKE '". str_replace('-', ' ', $search) . "%' OR d.departement_code LIKE '" . $search . "%')
-          ORDER BY d.departement_nom ASC
-          " . $limitCategory . "
-        )
+          (
+            SELECT
+              'dpt' as source,
+              CONCAT(d.departement_nom, ' (', d.departement_code, ')') as title,
+              CONCAT(d.departement_nom, ' (', d.departement_code, ')') as title,
+              '' AS description,
+              CONCAT('deputes/', d.slug) as url
+            FROM departement d
+            WHERE (REPLACE(d.departement_nom, '-', ' ') LIKE '". str_replace('-', ' ', $search) . "%' OR d.departement_code LIKE '" . $search . "%')
+            ORDER BY d.departement_nom ASC
+            " . $limitCategory . "
+          )
 
-        UNION ALL
+          UNION ALL
 
-        (
-          SELECT
-            'vote' AS source,
-            vd.title AS title,
-            vd.title AS title_search,
-            vd.description AS description,
-            CONCAT('votes/legislature-', vd.legislature, '/vote_', vd.voteNumero) as url
-          FROM votes_datan vd
-          WHERE MATCH(vd.title, vd.description) AGAINST('" . $search . "')
-          ORDER BY MATCH(vd.title, vd.description) AGAINST('*" . $search . "*' IN BOOLEAN MODE) DESC
-          " . $limitCategory . "
-        )
-        /* require: ALTER TABLE `votes_datan` ADD FULLTEXT `idx_search` (`title`, `description`); */
+          (
+            SELECT
+              'vote' AS source,
+              vd.title AS title,
+              vd.title AS title_search,
+              vd.description AS description,
+              CONCAT('votes/legislature-', vd.legislature, '/vote_', vd.voteNumero) as url
+            FROM votes_datan vd
+            WHERE MATCH(vd.title, vd.description) AGAINST('" . $search . "')
+            ORDER BY MATCH(vd.title, vd.description) AGAINST('*" . $search . "*' IN BOOLEAN MODE) DESC
+            " . $limitCategory . "
+          )
+          /* require: ALTER TABLE `votes_datan` ADD FULLTEXT `idx_search` (`title`, `description`); */
 
-        UNION ALL
+          UNION ALL
 
-        (
-          SELECT
-            'blog' as source,
-            title as title,
-            title AS title_search,
-            body AS description,
-            CONCAT('blog/rapports/', slug) as url
-          FROM posts
-          WHERE MATCH(posts.title, posts.body) AGAINST('*" . $search . "*' IN BOOLEAN MODE)
-          ORDER BY MATCH(posts.title, posts.body) AGAINST('*" . $search . "*' IN BOOLEAN MODE) DESC
-          " . $limitCategory . "
-          /* require: ALTER TABLE `posts` ADD FULLTEXT `idx_search` (`title`, `body`); */
-        )
+          (
+            SELECT
+              'blog' as source,
+              title as title,
+              title AS title_search,
+              body AS description,
+              CONCAT('blog/rapports/', slug) as url
+            FROM posts
+            WHERE MATCH(posts.title, posts.body) AGAINST('*" . $search . "*' IN BOOLEAN MODE)
+            ORDER BY MATCH(posts.title, posts.body) AGAINST('*" . $search . "*' IN BOOLEAN MODE) DESC
+            " . $limitCategory . "
+            /* require: ALTER TABLE `posts` ADD FULLTEXT `idx_search` (`title`, `body`); */
+          )
+        "; 
 
-      ) AS combined_results
-      " . $limitMax. "
-    ";
+        if ($full) {
+          $sql .= "UNION ALL
+            (
+            SELECT 
+              'amendment' as source,
+              CONCAT(UCASE(LEFT(vi.titre, 1)), SUBSTRING(vi.titre, 2)) AS title, 
+              '' AS title_search,
+              expose AS description,
+              CONCAT('votes/legislature-', vi.legislature, '/vote_', vi.voteNumero) as url 
+            FROM votes_info vi
+            LEFT JOIN votes_amendments va ON va.voteNumero = vi.voteNumero AND va.legislature = vi.legislature
+            LEFT JOIN amendements a on a.id = va.amendmentId
+            WHERE MATCH(a.expose) AGAINST ('*" . $search . "*' IN BOOLEAN MODE)
+            ORDER BY MATCH(a.expose) AGAINST ('*" . $search . "*' IN BOOLEAN MODE)
+          )";
+        }
+
+        $sql .= " ) AS combined_results
+          " . $limitMax. "
+        ";
 
         $data = $this->db->query($sql)->result_array();
         return $data;
@@ -124,6 +142,7 @@ class Search_model extends CI_Model
         'ville' => array('name' => 'Villes', 'icon' => 'house-door-fill', 'results' => array()),
         'dpt' => array('name' => 'Départements', 'icon' => 'house-door-fill', 'results' => array()),
         'vote' => array('name' => 'Votes', 'icon' => 'file-text-fill', 'results' => array()),
+        'amendment' => array('name' => 'Amendements', 'icon' => 'file-text-fill', 'results' => array()),
         'blog' => array('name' => 'Articles sur Datan', 'icon' => 'file-text-fill', 'results' => array()),
       );
 
@@ -131,7 +150,7 @@ class Search_model extends CI_Model
         $value['description'] = strip_tags($value['description']);
 
         // Return new description field for vote and blog types
-        if (in_array($value['source'], array('vote', 'blog'))) {
+        if (in_array($value['source'], array('vote', 'amendment', 'blog'))) {
           $position = stripos($value['description'], $search);
           if ($position) {
             $start = $position - 100 < 0 ? 0 : $position - 100;

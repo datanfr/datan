@@ -20,7 +20,7 @@ class Search extends CI_Controller
         $results = [];
         $search = $this->input->get('q');
 
-        $return = $this->search_model->searchInAll($search, 5, 10);
+        $return = $this->search_model->searchInAll($search, FALSE, 5, 10);
         foreach($return as $x){
             $results[] = [
                 'text' => highlight_phrase($x['title_search'], $search, '<span class="text-primary">', '</span>'),
@@ -34,11 +34,19 @@ class Search extends CI_Controller
 
     public function index($query){
       $data['query'] = urldecode($query);
-      $data['results'] = $this->search_model->searchInAll($query, NULL, NULL);
+      $data['results'] = $this->search_model->searchInAll($query, TRUE, NULL, NULL);
+
+      echo "this one is working<br><br>";
+      echo json_encode($data['results'], JSON_UNESCAPED_UNICODE);
+      
       $data['count'] = count($data['results']);
       $data['max_entries'] = 10;
 
       $data['results'] = $this->search_model->sort($data['results'], $data['query']);
+
+      // BUG HERE TO SOLVE!
+      echo "<br><br>this one is not working";
+      echo json_encode($data['results'], JSON_UNESCAPED_UNICODE);
 
       //Meta
       $data['url'] = $this->meta_model->get_url();
