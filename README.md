@@ -11,7 +11,7 @@ Suivez les étapes suivantes pour installer Datan avec Docker.
 ## 1. Installez docker et docker-compose
 https://docs.docker.com/compose/install/
 
-## 2. Créez .env
+## 2. Créer .env
 Copiez .env.dist en .env
 
 ### (facultatif) a. URL personnalisée
@@ -29,11 +29,23 @@ Ca vous permettra d'accéder au site en tapant dev-datan.fr au lieu de localhost
 docker-compose build
 ```
 
+En fonction de la version de docker : 
+
+```
+docker compose build
+```
+
 ## 4. Lancer le projet
 ```
 docker-compose up
 ```
 Pour le premier lancement, il faut attendre quelques minutes que la base de données se charge complètement avant de lancer la commande suivante.
+
+En fonction de la version de docker : 
+
+```
+docker compose up
+```
 
 ## 5. Mettre à jour la base de données
 Commandes à faire la première fois et à chaque fois que vous voulez rafraichir les données
