@@ -28,6 +28,8 @@ class Admin_model extends CI_Model
       'election' => $this->input->post('election'),
       'district' => $this->input->post('district'),
       'position' =>  $this->input->post('position'),
+      'secondRound' => $this->input->post('secondRound') == 99 ?  NULL : $this->input->post('secondRound'),
+      'elected' => $this->input->post('elected') == 99 ?  NULL : $this->input->post('elected'),
       'visible' => $this->input->post('visible') ? true : false,
       'candidature' => $this->input->post('candidature'),
       'link' => $this->input->post('link')
