@@ -327,9 +327,6 @@
       </div>
       <div class="row mt-5 pb-5">
         <div class="col-lg-8 offset-lg-2 d-flex flex-wrap justify-content-around align-items-center">
-          <a href="https://les-enovateurs.com/que-fait-votre-depute-datan-decrypte-sa-participation-politique" target="_blank" rel="noopener">
-            <img class="mx-2 my-3 img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="230" height="70" data-src="<?= asset_url() ?>imgs/media/les-enovateurs.svg" alt="Les Enovateurs">
-          </a>
           <a href="https://www.lemonde.fr/politique/article/2023/06/23/le-rn-premier-opposant-a-emmanuel-macron-mais-soutien-regulier-a-l-assemblee-nationale_6178892_823448.html" target="_blank" rel="noopener">
             <img class="mx-2 my-3 img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="150" height="35" data-src="<?= asset_url() ?>imgs/media/le_monde.png" alt="Le Monde">
           </a>
@@ -435,6 +432,9 @@
           <span class="url_obf" url_obf="<?= url_obfuscation("https://www.republicain-lorrain.fr/politique/2023/02/02/etre-depute-c-est-du-temps-plein") ?>">
             <img class="mx-2 my-3 img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="123" height="40" data-src="<?= asset_url() ?>imgs/media/republicain_lorrain.png" alt="Républicain Lorrain">
           </span>
+          <a href="https://les-enovateurs.com/que-fait-votre-depute-datan-decrypte-sa-participation-politique" target="_blank" rel="noopener">
+            <img class="mx-2 my-3 img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="234" height="65" data-src="<?= asset_url() ?>imgs/media/les-enovateurs.png" alt="Les Enovateurs">
+          </a>
           <span class="url_obf" url_obf="<?= url_obfuscation("https://splann.org/") ?>">
             <img class="mx-2 my-3 img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="118" height="57" data-src="<?= asset_url() ?>imgs/media/splann.png" alt="Splann!">
           </span>
