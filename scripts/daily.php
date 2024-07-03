@@ -862,6 +862,7 @@ class Script
 
     public function deputeJson()
     {
+        // NO LONGER USED
         echo "deputeJson starting \n";
         $reponse = $this->bdd->query('
         SELECT da.mpId, da.nameFirst, da.nameLast, da.nameUrl, da.dptSlug
@@ -1503,7 +1504,7 @@ class Script
                     } else {
                         break;
                     }
-                    if ($number_to_import % 5 === 0) {
+                    if ($number_to_import % 50 === 0) {
                         echo "Let's insert to scrutin from " . $number_to_import . "\n";
                         // insert votes
                         $this->insertAll('votes', $voteMainFields, $votesMain);
@@ -2070,15 +2071,15 @@ class Script
                 'dateMaj' => $this->dateMaj
             );
             $votesScore = array_merge($votesScore, array_values($voteScore));
-            if ($i % 1000 === 0) {
-                echo "Let's import until vote n " . $i . "\n";
+            if ($i % 2000 === 0) {
+                echo "Let's import until vote n " . $i . " \n";
                 $this->insertAll('votes_scores', $voteScoreFields, $votesScore);
                 $votesScore = [];
                 $voteScore = [];
             }
             echo $i++;
         }
-        echo "Let's import until the end vote : " . $i . "\n";
+        echo "Let's import until the end vote : " . $i . " \n";
         $this->insertAll('votes_scores', $voteScoreFields, $votesScore);
     }
 
@@ -4007,7 +4008,7 @@ $script->downloadPictures();
 $script->webpPictures();
 $script->resmushPictures();
 $script->groupeEffectif();
-$script->deputeJson();
+//$script->deputeJson(); // No longer used
 $script->groupeStats();
 $script->groupeStatsHistory();
 $script->groupeMembersHistory();
