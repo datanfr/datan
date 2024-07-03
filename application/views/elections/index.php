@@ -32,7 +32,7 @@
       </div>
       <div class="col-12 mt-3 d-flex flex-wrap">
         <?php foreach ($elections as $election): ?>
-          <?php if (strtotime($election['dateFirstRound']) >= strtotime('-30 days')): ?>
+          <?php if (strtotime($election['dateFirstRound']) >= strtotime('-20 days')): ?>
             <div class="card card-election my-3">
               <div class="card-body d-flex flex-column justify-content-center align-items-center">
                 <h2 class="d-block card-title">
