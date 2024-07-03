@@ -103,24 +103,24 @@
     <div class="container py-4">
       <div class="row">
         <div class="col-12">
-          <h2 class="text-center my-4">Résultats des élections européennes 2024</h2>
+          <h2 class="text-center my-4">Résultats du premier tour des élections législatives 2024</h2>
         </div>
       </div>
       <div class="row">
         <div class="col-lg-5 col-12 d-flex flex-column justify-content-center">
           <p>Les élections européennes du 9 juin 2024 ont été marquées en France par la victoire de la liste du Rassemblement national dirigée par Jordan Bardella.</p>
-          <p>Suite à ces élections, le président Emmanuel Macron <a href="https://datan.fr/blog/actualite-politique/le-president-emmanuel-macron-annonce-la-dissolution-de-lassemblee-nationale" target="_blank"> décidé de dissoudre l'Assemblée nationale</a>. Des élections législatives sont prévues le 30 juin et 7 juillet 2024.</p>
-          <p>Découvrez les résultats en nombre de sièges au Parlement européen.</p>
+          <p>Suite à la <a href="https://datan.fr/blog/actualite-politique/le-president-emmanuel-macron-annonce-la-dissolution-de-lassemblee-nationale" target="_blank"> dissolution de l'Assemblée nationale</a> par le président Emmanual Macron, des élections législatives ont lieu en France en juin 2024.</p>
+          <p>Découvrez les résultats du premier tour, qui s'est tenu le 30 juin 2024. Le second tour se tiendra le dimanche 7 juillet 2024.</p>
         </div>
         <div class="col-lg-7 col-12">
           <div class="my-1">
-            <canvas width="100" height="100" id="chartEuropeennes"></canvas>
+            <canvas width="100" height="100" id="chartLegislatives"></canvas>
           </div>
         </div>
       </div>
       <div class="row mt-4 mb-4">
         <div class="col-12 d-flex justify-content-center">
-          <a href="<?= base_url();?>elections/europeennes-2024" class="btn btn-outline-primary">
+          <a href="<?= base_url();?>elections/legislatives-2024" class="btn btn-outline-primary">
             En savoir plus
           </a>
         </div>
@@ -554,11 +554,11 @@ document.addEventListener('DOMContentLoaded', function(){
 
   // Chart 1 ==> hemicycle (has been removed because of dissolution)
 
-  // Chart 2 ==> Results of 2024 European elections
-  var dataEuropeennes = {
+  // Chart 2 ==> Results of 2024 Legislative elections
+  var dataLegislatives = {
     labels: [
       <?php
-      foreach ($europeennes2024 as $groupe) {
+      foreach ($legislatives2024 as $groupe) {
         echo '"'.$groupe["libelle"].'",';
       }
         ?>
@@ -567,21 +567,21 @@ document.addEventListener('DOMContentLoaded', function(){
       {
         data: [
           <?php
-            foreach ($europeennes2024 as $groupe) {
+            foreach ($legislatives2024 as $groupe) {
               echo $groupe["effectif"].",";
             }
           ?>
         ],
         backgroundColor: [
           <?php
-            foreach ($europeennes2024 as $groupe) {
+            foreach ($legislatives2024 as $groupe) {
               echo '"'.$groupe["couleurAssociee"].'",';
             }
           ?>
         ],
         hoverBackgroundColor: [
           <?php
-            foreach ($europeennes2024 as $groupe) {
+            foreach ($legislatives2024 as $groupe) {
               echo '"'.$groupe["couleurAssociee"].'",';
             }
           ?>
@@ -590,9 +590,9 @@ document.addEventListener('DOMContentLoaded', function(){
     ]
   };
 
-  var chartEuropeennes = document.getElementById("chartEuropeennes");
+  var chartLegislatives = document.getElementById("chartLegislatives");
   
-  var chartEuropennesOptions = {
+  var chartLegislativesOptions = {
     indexAxis: 'y',
     responsive: true,
     maintainAspectRatio: true,
@@ -611,9 +611,12 @@ document.addEventListener('DOMContentLoaded', function(){
         borderWidth: 1,
         color: "white",
         font: {
-          size: 12,
+          size: 13,
           weight: 'bold',
         },
+        formatter: function(value, context){
+          return value + '%'
+        }
       },
       legend: {
         display: false
@@ -621,10 +624,10 @@ document.addEventListener('DOMContentLoaded', function(){
     }
   }
 
-  var chart2 = new Chart(chartEuropeennes, {
+  var chart2 = new Chart(chartLegislatives, {
     type: 'bar',
-    data: dataEuropeennes,
-    options: chartEuropennesOptions,
+    data: dataLegislatives,
+    options: chartLegislativesOptions,
   });
 
 });
