@@ -42,8 +42,8 @@
       
 
       // Get election results 
-      $file = file_get_contents(asset_url() . "data_elections/europeennes-2024.json");
-      $data['europeennes2024'] = json_decode($file, true);
+      $file = file_get_contents(asset_url() . "data_elections/legislatives-2024-1.json");
+      $data['legislatives2024'] = json_decode($file, true);
 
       //Get stats (now working because > 1 year)
       $data['stats'] = TRUE;

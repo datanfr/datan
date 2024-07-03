@@ -1,0 +1,22 @@
+[
+  {
+    "libelle" : "Rassemblement national",
+    "couleurAssociee": "#66230E",
+    "effectif": 33
+  },
+  {
+    "libelle": "Nouveau Front Populaire",
+    "couleurAssociee": "A11870",
+    "effectif": 28
+  },
+  {
+    "libelle" : "Renaissance",
+    "couleurAssociee": "#F7A600",
+    "effectif": 22
+  },
+  {
+    "libelle" : "Les Républicains",
+    "couleurAssociee": "#0095D4",
+    "effectif": 7
+  }
+]
