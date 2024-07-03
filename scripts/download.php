@@ -112,10 +112,10 @@ class Script
 
       if ($this->legislature_to_get == 16) {
         $file = 'http://data.assemblee-nationale.fr/static/openData/repository/16/loi/amendements_div_legis/Amendements.xml.zip';
-        $newfile = __DIR__ . '/tmp_amendements_16.zip';
+        $newfile = __DIR__ . '/Amendements.xml.zip';
       } elseif ($this->legislature_to_get == 15) {
         $file = 'http://data.assemblee-nationale.fr/static/openData/repository/15/loi/amendements_legis/Amendements_XV.xml.zip';
-        $newfile = __DIR__ . '/tmp_amendements_15.zip';
+        $newfile = __DIR__ . '/Amendements_XV.xml.zip';
       }
 
       if ($this->chunked_copy($file, $newfile)) {
