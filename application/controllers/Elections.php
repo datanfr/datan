@@ -49,6 +49,7 @@
       $data['state'] = 0;
       $data['state'] = $data['election']['id'] == 1 ? 2 : $data['state']; // Régionales 2021
       $data['state'] = $data['election']['id'] == 4 ? 2 : $data['state']; // Législatives 2022
+      $data['state'] = $data['election']['id'] == 6 ? 1 : $data['state']; // Législatives 2024
 
       // Data
       $data['deputes'] = $this->elections_model->get_all_candidates($data['election']['id'], TRUE, FALSE);
@@ -73,7 +74,7 @@
       $data['candidatsN_eliminated'] = count($data['candidatsN_eliminated']);
       $data['mapLegend'] = $this->elections_model->get_map_legend($data['election']['id']);
       $data['today'] = date("Y-m-d");
-      $data['results'] = in_array($data['election']['id'], array(1, 2, 3, 4, 5)) ? true : false;
+      $data['results'] = in_array($data['election']['id'], array(1, 2, 3, 4, 5, 6)) ? true : false;
 
       // Election results 
       if ($data['election']['slug'] == 'legislatives-2022') {
@@ -149,7 +150,7 @@
         $data['js_to_load_up_defer'] = array('chart.min.js', 'chartjs-plugin-datalabels@2.1.js');
       }
       $data['js_to_load'] = array();
-      if (in_array($data['election']['id'], array(1, 4, 5))) {
+      if (in_array($data['election']['id'], array(1, 4, 5, 6))) {
         array_push($data['js_to_load'], 'datan/sorting_select');
       }
       array_push($data['js_to_load'], 'jvectormap/jquery-jvectormap-2.0.5.min');
