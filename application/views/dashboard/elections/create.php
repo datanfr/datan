@@ -68,6 +68,22 @@
                 </div>
               </div>
               <div class="form-group p-3" style="background-color: rgba(0, 183, 148, 0.3)">
+                <label>Se maintient au 2nd tour ?</label>
+                <select class="form-control" name="secondRound">
+                  <option value="99">Ne sait pas</option>
+                  <option value="1">Oui</option>
+                  <option value="0">Non</option>
+                </select>
+              </div>
+              <div class="form-group p-3" style="background-color: rgba(0, 183, 148, 0.3)">
+                <label>Elu ?</label>
+                <select class="form-control" name="elected">
+                  <option value="99">Ne sait pas</option>
+                  <option value="1">Oui</option>
+                  <option value="0">Non</option>
+                </select>
+              </div>
+              <div class="form-group p-3" style="background-color: rgba(0, 183, 148, 0.3)">
                 <label>Lien vers site de campagne</label>
                 <input type="text" class="form-control" autocomplete="off" name="link" value="">
               </div>
