@@ -324,7 +324,7 @@
               }
             }
           }
-        } else {
+        } elseif($data['election_canceled'] !== null) {
           switch ($data['election_canceled']['causeFin']) {
             case "Annulation de l'élection sur décision du Conseil constitutionnel":
               $data['election_canceled']['cause'] = "L'élection de " . $depute . ", qui s'est tenue pendant les législatures de juin 2017, a été invalidée par le Conseil constitutionnel en " . $data['election_canceled']['dateFinFR'] . "." ;
@@ -333,6 +333,8 @@
               $data['election_canceled']['cause'] = NULL;
               break;
           }
+        } else {
+          $data['election_canceled']['cause'] = NULL;
         }
       }
 
@@ -364,21 +366,7 @@
       }
 
       // Election feature
-      // --> Has been removed. Something to activat when there is an election
-      /*
-      $data['electionFeature'] = $this->elections_model->get_candidate_election($mpId, 4, TRUE, FALSE);
-      if ($data['electionFeature']['elected'] == "1") {
-        $data['electionFeature']['color'] = 'results-success';
-      } elseif ($data['electionFeature']['elected'] == "0" || $data['electionFeature']['secondRound'] == "0") {
-        $data['electionFeature']['color'] = 'results-fail';
-      } elseif ($data['electionFeature']['secondRound'] == "1") {
-        $data['electionFeature']['color'] = 'results-success';
-      } else if ($data['electionFeature']['candidature'] == "1") {
-        $data['electionFeature']['color'] = 'information-success';
-      } elseif ($data['electionFeature']['candidature'] == "0") {
-        $data['electionFeature']['color'] = 'information-fail';
-      }
-      */
+      $data['electionFeature'] = $this->elections_model->get_candidate_election($mpId, 6, TRUE, FALSE);
 
       // Get professions de foi
       $data['professions_foi'] = $this->deputes_model->get_professions($mpId);
