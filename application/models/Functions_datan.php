@@ -100,7 +100,7 @@
 		$targetDate = new DateTime('2024-07-07');
 		$currentDate = new DateTime();
 		$interval = $currentDate->diff($targetDate);
-		return $interval->format('%a');
+		return $interval->format('%a') + 1;
 	}
 
   }
