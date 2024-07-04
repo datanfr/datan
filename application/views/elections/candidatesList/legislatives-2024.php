@@ -72,15 +72,6 @@
           <span class="d-flex align-items-center"><b>Éliminé</b></span>
         </label>
       </div>
-      <div class="filters stateChange mt-md-3 d-none d-lg-block">
-        <p class="surtitre mt-3">Filtrer par département</p>
-        <select class="custom-select filters" id="districtChange" onchange="districtChange()">
-          <option selected value="*">Tous les députés</option>
-          <?php foreach ($districts as $district): ?>
-            <option value=".<?= $district['id'] ?>"><?= $district['libelle'] ?></option>
-          <?php endforeach; ?>
-        </select>
-      </div>
     </div>
   </div>
   <div class="col-lg-9 col-md-12">
