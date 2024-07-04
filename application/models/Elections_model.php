@@ -132,9 +132,23 @@
         $where['candidature'] = 1;
       }
 
-      $query = $this->db->get_where('elect_deputes_candidats', $where, 1);
+      $result = $this->db->get_where('elect_deputes_candidats', $where, 1)->row_array();
 
-      return $query->row_array();
+      if($result){
+        if ($result['elected'] == "1") {
+          $result['color'] = 'results-success';
+        } elseif ($result['elected'] == "0" || $result['secondRound'] == "0") {
+          $result['color'] = 'results-fail';
+        } elseif ($result['secondRound'] == "1") {
+          $result['color'] = 'information-success';
+        } elseif ($result['candidature'] == "1") {
+          $result['color'] = 'information-success';
+        } elseif ($result['candidature'] == "0") {
+          $result['color'] = 'information-fail';
+        }
+      }      
+
+      return $result;
     }
 
     public function get_candidate_elections($mpId, $visible = FALSE, $candidature = FALSE){

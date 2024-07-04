@@ -191,5 +191,21 @@
       }
     }
 
+    public function get_end_mandate($depute){
+      if(strpos($depute['causeFin'], 'Nomination comme membre du Gouvernement') !== false){
+        return "pour cause de nomination au Gouvernement";
+      } elseif(strpos($depute['causeFin'], 'Décès') !== false) {
+        return "pour cause de décès";
+      } elseif(strpos($depute['causeFin'], "Démission d'office sur décision du Conseil constitutionnel") !== false) {
+        return "pour cause de démission sur décision du Conseil constitutionnel";
+      } elseif(strpos($depute['causeFin'], 'Démission') !== false) {
+        "pour cause de démission";
+      } elseif(strpos($depute['causeFin'], "Annulation de l'élection sur décision du Conseil constitutionnel") !== false){
+        "pour cause d'annulation de l'élection sur décision du Conseil constitutionnel";
+      } elseif(strpos($depute['causeFin'], "Reprise de l'exercice du mandat d'un ancien membre du Gouvernement") !== false){
+        return ". Remplaçant un député nommé au Gouvernement, " . $depute['nameFirst'] . " " . $depute['nameLast'] . " a quitté l'Assemblée lorsque celui-ci est redevenu député";
+      }
+    }
+
   }
 ?>

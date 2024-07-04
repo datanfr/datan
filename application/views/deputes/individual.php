@@ -10,7 +10,7 @@
         </div>
       </div> <!-- END COL -->
       <div class="col-md-10 col-lg-8 offset-md-1 offset-lg-0 pl-lg-5">
-        <?php $this->view('deputes/partials/dissolutionFeature.php') ?>
+        <?php $this->view('deputes/partials/electionFeature.php') ?>
         <div class="bloc-bio mt-5">
           <!-- For critical css -->
           <div class="card card-election-feature not-candidate d-none"></div>
@@ -47,25 +47,10 @@
             </p>
           <?php endif; ?>
           <!-- Paragraphe end -->
-          <?php if ($active) : ?>
-          <?php elseif ($depute['legislature'] == legislature_current()) : ?>
+
+          <?php if ($depute['legislature'] == legislature_current()) : ?>
             <p>
-              <?= ucfirst($gender['pronom']) ?> a quitté l'Assemblée nationale le <?= $depute['dateFinMpFR'] ?>
-              <?php if (strpos($depute['causeFin'], 'Nomination comme membre du Gouvernement') !== false) : ?>
-                pour cause de nomination au Gouvernement.
-              <?php elseif (strpos($depute['causeFin'], 'Décès') !== false) : ?>
-                pour cause de décès.
-              <?php elseif (strpos($depute['causeFin'], "Démission d'office sur décision du Conseil constitutionnel") !== false) : ?>
-                pour cause de démission sur décision du Conseil constitutionnel.
-              <?php elseif (strpos($depute['causeFin'], 'Démission') !== false) : ?>
-                pour cause de démission.
-              <?php elseif (strpos($depute['causeFin'], "Annulation de l'élection sur décision du Conseil constitutionnel") !== false) : ?>
-                pour cause d'annulation de l'élection sur décision du Conseil constitutionnel.
-              <?php elseif (strpos($depute['causeFin'], "Reprise de l'exercice du mandat d'un ancien membre du Gouvernement") !== false) : ?>
-                . Remplaçant un député nommé au Gouvernement, <?= $title ?> a quitté l'Assemblée lorsque celui-ci est redevenu député.
-              <?php else : ?>
-                .
-              <?php endif; ?>
+              <?= ucfirst($gender['pronom']) ?> a quitté l'Assemblée nationale le <?= $depute['dateFinMpFR'] ?><?= $this->depute_edito->get_end_mandate($depute) ?>.
             </p>
           <?php else : ?>
             <p>
@@ -113,7 +98,9 @@
           <?php if ($depute['job'] && !in_array(mb_strtolower($depute['job']), $no_job)): ?>
             <p>
               Avant de devenir <?= $gender['depute'] ?>, <?= $title ?> exerçait le metier <b><?= mb_strtolower($depute['job']) ?></b>.
-              Comme <?= round($famSocPro['pct']) ?>% des députés, <?= $gender['pronom'] ?> fait partie de la famille professionnelle <?= mb_strtolower($depute['famSocPro']) ?>.
+              <?php if($famSocPro !== null): ?>
+                Comme <?= round($famSocPro['pct']) ?>% des députés, <?= $gender['pronom'] ?> fait partie de la famille professionnelle <?= mb_strtolower($depute['famSocPro']) ?>.
+              <?php endif; ?>
               Pour en savoir plus sur l'origine sociale des parlementaires, <a href="<?= base_url() ?>statistiques">cliquez ici</a>.
             </p>
             <?php if ($hatvpJobs): ?>
