@@ -45,11 +45,8 @@
         show_404($this->functions_datan->get_404_infos());
       }
 
-      // STATE
-      $data['state'] = 0;
-      $data['state'] = $data['election']['id'] == 1 ? 2 : $data['state']; // Régionales 2021
-      $data['state'] = $data['election']['id'] == 4 ? 2 : $data['state']; // Législatives 2022
-      $data['state'] = $data['election']['id'] == 6 ? 1 : $data['state']; // Législatives 2024
+      // State of the election
+      $data['state'] = $this->elections_model->get_election_state($data['election']['id']);
 
       // Data
       $data['deputes'] = $this->elections_model->get_all_candidates($data['election']['id'], TRUE, FALSE);

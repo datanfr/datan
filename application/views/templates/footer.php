@@ -141,7 +141,7 @@
           </div>
           <div class="row">
             <div class="col-12">
-              <p>© Datan 2021 - Tous droits réservés</p>
+              <p>© Datan 2024 - Tous droits réservés</p>
             </div>
           </div>
         </div>
