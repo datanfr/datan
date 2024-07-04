@@ -80,13 +80,6 @@
             <option value=".<?= $district['id'] ?>"><?= $district['libelle'] ?></option>
           <?php endforeach; ?>
         </select>
-        <p class="surtitre mt-3">Filtrer par groupe</p>
-        <select class="custom-select filters" id="groupChange" onchange="groupChange()">
-          <option selected value="*">Tous les députés</option>
-          <?php foreach ($groupes as $group): ?>
-            <option value=".gp-<?= mb_strtolower($group['libelleAbrev']) ?>"><?= $group['libelle'] ?></option>
-          <?php endforeach; ?>
-        </select>
       </div>
     </div>
   </div>
