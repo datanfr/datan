@@ -65,11 +65,11 @@
         </label>
         <input class="radio-btn" name="state" id="radio-204" type="radio" value=".elected">
         <label for="radio-204" class="radio-label d-flex align-items-center">
-          <span class="d-flex align-items-center"><b>Élu</b></span>
+          <span class="d-flex align-items-center"><b>Députés élus</b></span>
         </label>
         <input class="radio-btn" name="state" id="radio-205" type="radio" value=".lost">
         <label for="radio-205" class="radio-label d-flex align-items-center">
-          <span class="d-flex align-items-center"><b>Éliminé</b></span>
+          <span class="d-flex align-items-center"><b>Députés éliminés</b></span>
         </label>
       </div>
     </div>
