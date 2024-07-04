@@ -33,17 +33,7 @@
       <div class="col-12 mt-3 d-flex flex-wrap">
         <?php foreach ($elections as $election): ?>
           <?php if (strtotime($election['dateFirstRound']) >= strtotime('-20 days')): ?>
-            <div class="card card-election my-3">
-              <div class="card-body d-flex flex-column justify-content-center align-items-center">
-                <h2 class="d-block card-title">
-                  <a href="<?= base_url(); ?>elections/<?= mb_strtolower($election['slug']) ?>" class="stretched-link no-decoration"><?= $election['libelleAbrev'] ?><br><?= $election['dateYear'] ?></a>
-                </h2>
-                <span class="mt-3">1<sup>er</sup> tour : <?= $election['dateFirstRoundFr'] ?></span>
-                <?php if ($election['dateSecondRound']): ?>
-                  <span>2<sup>nd</sup> tour : <?= $election['dateSecondRoundFr'] ?></span>
-                <?php endif; ?>
-              </div>
-            </div>
+            <?php $this->load->view('elections/partials/card.php', array('election' => $election)) ?>
           <?php endif; ?>
         <?php endforeach; ?>
       </div>
@@ -57,25 +47,8 @@
     </div>
     <div class="col-12 mt-3 d-flex flex-wrap">
       <?php foreach ($elections as $election): ?>
-        <?php if (strtotime($election['dateFirstRound']) < strtotime('-30 days')): ?>
-          <div class="card card-election my-3">
-            <div class="card-body d-flex flex-column justify-content-center align-items-center">
-              <h2 class="d-block card-title">
-                <a href="<?= base_url(); ?>elections/<?= mb_strtolower($election['slug']) ?>" class="stretched-link no-decoration"><?= $election['libelleAbrev'] ?><br><?= $election['dateYear'] ?></a>
-              </h2>
-              <span class="mt-3">1<sup>er</sup> tour : <?= $election['dateFirstRoundFr'] ?></span>
-              <?php if ($election['dateSecondRound']): ?>
-                <span>2<sup>nd</sup> tour : <?= $election['dateSecondRoundFr'] ?></span>
-              <?php endif; ?>
-            </div>
-            <?php if ($election['candidates']): ?>
-              <div class="card-footer d-flex justify-content-center align-items-center">
-                <span class="font-weight-bold"><?= $election['electedN'] ?> député<?= $election['electedN'] > 1 ? "s" : "" ?> élu<?= $election['electedN'] > 1 ? "s" : "" ?></span>
-              </div>
-              <?php else: ?>
-                <div class="card-footer bg-transparent"></div>
-            <?php endif; ?>
-          </div>
+        <?php if (strtotime($election['dateFirstRound']) < strtotime('-20 days')): ?>
+          <?php $this->load->view('elections/partials/card.php', array('election' => $election)) ?>
         <?php endif; ?>
       <?php endforeach; ?>
     </div>

@@ -40,7 +40,12 @@
       ORDER BY e.dateYear DESC
       ');
 
-      return $query->result_array();
+      $results = $query->result_array();
+      foreach($results as $x => $value){
+        $results[$x]['state'] = $this->elections_model->get_election_state($value['id']);
+      }
+
+      return $results;
     }
 
     public function get_election_infos($type){
@@ -127,9 +132,23 @@
         $where['candidature'] = 1;
       }
 
-      $query = $this->db->get_where('elect_deputes_candidats', $where, 1);
+      $result = $this->db->get_where('elect_deputes_candidats', $where, 1)->row_array();
 
-      return $query->row_array();
+      if($result){
+        if ($result['elected'] == "1") {
+          $result['color'] = 'results-success';
+        } elseif ($result['elected'] == "0" || $result['secondRound'] == "0") {
+          $result['color'] = 'results-fail';
+        } elseif ($result['secondRound'] == "1") {
+          $result['color'] = 'information-success';
+        } elseif ($result['candidature'] == "1") {
+          $result['color'] = 'information-success';
+        } elseif ($result['candidature'] == "0") {
+          $result['color'] = 'information-fail';
+        }
+      }      
+
+      return $result;
     }
 
     public function get_candidate_elections($mpId, $visible = FALSE, $candidature = FALSE){
@@ -269,7 +288,43 @@
         );
         return $array;
       }
+    }
 
+    public function get_election_state($id){
+      // State values:
+      // 0 - First round not yet started.
+      // 1 - First round completed.
+      // 2 - Second round completed, or only one round is required.
+
+      switch ($id) {
+        case 1: // Régionales 2021
+          return 2;
+          break;
+
+        case 2: // Départementales 2021
+          return 2;
+          break;
+
+        case 3: // Présidentielle 2022;
+          return 2;
+          break;
+        
+        case 4: // Législatives 2022 
+          return 2;
+          break;
+
+        case 5: // Européennes 2024
+          return 2;
+          break;
+        
+        case 6: // Législatives 2024
+          return 1;
+          break;
+        
+        default:
+          return 0;
+          break;
+      }
     }
 
     public function get_state($second, $elected){
