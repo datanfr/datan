@@ -2,7 +2,7 @@
 <?php if ($electionFeature): ?>
   <div class="card card-election-feature <?= $electionFeature['color'] ?> mt-5 mb-4 border-0" style="overflow: hidden">
     <div class="card-body">
-      <h2>🗳️ Législatives 2022</h2>
+      <h2>🗳️ Législatives 2024</h2>
       <?php if ($electionFeature['elected'] == "1"): ?>
         <p class="mb-0"><?= $title ?> était candidat<?= $gender['e'] ?> à sa réélection. <span class="font-weight-bold"><?= ucfirst($gender['pronom']) ?> a été réélu<?= $gender['e'] ?></span>.</p>
         <p class="mb-0">Sa page Datan sera prochainement mise à jour pour son nouveau mandat.</p>
