@@ -11,7 +11,7 @@
       <?php elseif ($electionFeature['secondRound'] == "1"): ?>
         <p class="mb-0"><?= $title ?> était candidat<?= $gender['e'] ?> à sa réélection. <span class="font-weight-bold"><?= ucfirst($gender['pronom']) ?> a été qualifié<?= $gender['e'] ?></span> pour le second tour.</p>
       <?php elseif ($electionFeature['secondRound'] == "0"): ?>
-        <p class="mb-0"><?= $title ?> était candidat<?= $gender['e'] ?> à sa réélection. <span class="font-weight-bold"><?= ucfirst($gender['pronom']) ?> n'a pas a été qualifié<?= $gender['e'] ?></span> pour le second tour.</p>
+        <p class="mb-0"><?= $title ?> était candidat<?= $gender['e'] ?> à sa réélection. <span class="font-weight-bold"><?= ucfirst($gender['pronom']) ?> ne sera pas présent<?= $gender['e'] ?></span> au second tour.</p>
       <?php elseif ($electionFeature['candidature'] == "0") : ?>
         <p class="mb-0"><?= $title ?> <span class="font-weight-bold"> n'est pas candidat<?= $gender['e'] ?></span> à sa réélection.</p>
       <?php else: ?>
