@@ -1,5 +1,5 @@
 <h2 class="my-4">Résultats des élections législatives de 2024</h2>
-<p>Les élections législatives se déroulent en juin 2024, suite à la <a href="https://datan.fr/blog/actualite-politique/le-president-emmanuel-macron-annonce-la-dissolution-de-lassemblee-nationale">dissolution de l'Assemblée nationale</a> par le président de la République Emmanuel Macron.</p>
+<p>Les élections législatives se sont déroulées en juin 2024, suite à la <a href="https://datan.fr/blog/actualite-politique/le-president-emmanuel-macron-annonce-la-dissolution-de-lassemblee-nationale">dissolution de l'Assemblée nationale</a> par le président de la République Emmanuel Macron.</p>
 <p>Le premier tour a été marqué par une forte mobilisation, avec un taux de participation de 67% (+ 19 points par rapport à 2022).</p>
 <p>Le Rassemblement national (RN) est arrivé en tête du 1er tour (33% des voix), suivi par le Nouveau Front Populaire (NFP), la coalition des partis de gauche (28%). Renaissance, le parti présidentiel, a obtenu 22% des voix, se plaçant en troisième position, suivi des Républicains (7% des voix).</p>
-<p>Découvrez les résultats détaillés du 1er tour en <a href="https://www.lemonde.fr/resultats-elections/" target="_blank" rel="noopener">cliquant ici</a>.</p>
+<p>Découvrez les résultats détaillés du 1<sup>er</sup> tour en <a href="https://www.lemonde.fr/resultats-elections/" target="_blank" rel="noopener">cliquant ici</a>.</p>
