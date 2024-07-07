@@ -318,7 +318,7 @@
           break;
         
         case 6: // Législatives 2024
-          return 1;
+          return 2;
           break;
         
         default:
