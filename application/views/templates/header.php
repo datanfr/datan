@@ -270,9 +270,8 @@
           <div class="row d-flex justify-content-center">
             <div class="col-12">
               <p class="mb-0 font-weight-bold text-center">
-                L'Assemblée nationale a été dissoute.
-                Le second tour des élections a lieu dans aujourd'hui.
-                <u>En savoir plus.</u>
+                Le second tour des élections législatives a eu lieu le dimanche 7 juillet.
+                <u>Découvrez les députés réélus.</u>
               </p>
             </div>
           </div>
