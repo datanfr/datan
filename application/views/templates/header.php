@@ -266,13 +266,13 @@
     <div class="d-none" id="navbar-logged-in"></div>
     <main>
       <div class="container-fluid py-2 dissolution-banner">
-        <a class="no-decoration" href="https://votefinder.fr/" target="_blank" >
+        <a class="no-decoration" href="<?= base_url() ?>elections/legislatives-2024" target="_blank" >
           <div class="row d-flex justify-content-center">
             <div class="col-12">
               <p class="mb-0 font-weight-bold text-center">
                 L'Assemblée nationale a été dissoute.
-                Le second tour des élections aura lieu dans <?= $this->functions_datan->dissolutionCountdown() ?> jour<?= $this->functions_datan->dissolutionCountdown() > 1 ? "s" : "" ?>. <br>
-                Découvrez le <u>Quiz Législatives de VoteFinder</u>
+                Le second tour des élections a lieu dans aujourd'hui.
+                <u>En savoir plus.</u>
               </p>
             </div>
           </div>
