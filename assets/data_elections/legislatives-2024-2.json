@@ -1,0 +1,47 @@
+[
+  {
+    "libelle" : "Nouveau Front Populaire",
+    "couleurAssociee": "#A11870",
+    "effectif": 182
+  },
+  {
+    "libelle" : "Divers gauche",
+    "couleurAssociee": "#DA679E",
+    "effectif": 13
+  },
+  {
+    "libelle" : "Ensemble",
+    "couleurAssociee": "#FF9F0E",
+    "effectif": 168
+  },
+  {
+    "libelle" : "Centre",
+    "couleurAssociee": "#E1B000",
+    "effectif": 6
+  },
+  {
+    "libelle" : "Régionalistes",
+    "couleurAssociee": "#78668D",
+    "effectif": 4
+  },
+  {
+    "libelle" : "LR",
+    "couleurAssociee": "#0890C5",
+    "effectif": 45
+  },
+  {
+    "libelle" : "Divers droite",
+    "couleurAssociee": "#066094",
+    "effectif": 15
+  },
+  {
+    "libelle" : "Rassemblement national & LR-RN",
+    "couleurAssociee": "#8D6026",
+    "effectif": 143
+  },
+  {
+    "libelle" : "Divers",
+    "couleurAssociee": "#957CB5",
+    "effectif": 1
+  }
+]
