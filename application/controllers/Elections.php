@@ -80,6 +80,9 @@
       } elseif ($data['election']['slug'] == 'europeennes-2024') {
         $file = file_get_contents(asset_url() . "data_elections/" . $data['election']['slug'] . ".json");
         $data['groupesSorted'] = json_decode($file, true);
+      } elseif ($data['election']['slug'] == 'legislatives-2024') {
+        $file = file_get_contents(asset_url() . "data_elections/" . $data['election']['slug'] . "-2.json");
+        $data['groupesSorted'] = json_decode($file, true);
       }
 
       // badgeCenter
@@ -143,7 +146,7 @@
       );
       // JS
       $data['js_to_load_before_datan'] = array('isotope.pkgd.min');
-      if (in_array($data['election']['id'], array(4, 5))) {
+      if (in_array($data['election']['id'], array(4, 5, 6))) {
         $data['js_to_load_up_defer'] = array('chart.min.js', 'chartjs-plugin-datalabels@2.1.js');
       }
       $data['js_to_load'] = array();
