@@ -103,14 +103,14 @@
     <div class="container py-4">
       <div class="row">
         <div class="col-12">
-          <h2 class="text-center my-4">Résultats du premier tour des élections législatives 2024</h2>
+          <h2 class="text-center my-4">Résultats des élections législatives 2024</h2>
         </div>
       </div>
       <div class="row">
         <div class="col-lg-5 col-12 d-flex flex-column justify-content-center">
-          <p>Les élections européennes du 9 juin 2024 ont été marquées en France par la victoire de la liste du Rassemblement national dirigée par Jordan Bardella.</p>
-          <p>Suite à la <a href="https://datan.fr/blog/actualite-politique/le-president-emmanuel-macron-annonce-la-dissolution-de-lassemblee-nationale" target="_blank"> dissolution de l'Assemblée nationale</a> par le président Emmanual Macron, des élections législatives ont lieu en France en juin 2024.</p>
-          <p>Découvrez les résultats du premier tour, qui s'est tenu le 30 juin 2024. Le second tour se tiendra le dimanche 7 juillet 2024.</p>
+          <p>Suite à la <a href="https://datan.fr/blog/actualite-politique/le-president-emmanuel-macron-annonce-la-dissolution-de-lassemblee-nationale" target="_blank"> dissolution de l'Assemblée nationale</a> par le président Emmanual Macron, des élections législatives se sont déroulées en juin 2024.</p>
+          <p>C'est le Nouveau Front Populaire (NFP), la coalition des partis de gauche, qui est arrivée en tête avec 182 sièges.</p>
+          <p>Découvrez la composition de la nouvelle Assemblée nationale.</p>
         </div>
         <div class="col-lg-7 col-12">
           <div class="my-1">
@@ -555,13 +555,21 @@ document.addEventListener('DOMContentLoaded', function(){
   // Chart 1 ==> hemicycle (has been removed because of dissolution)
 
   // Chart 2 ==> Results of 2024 Legislative elections
-  var dataLegislatives = {
+  var libelles = [
+    <?php
+    foreach ($legislatives2024 as $groupe) {
+      echo '"'.$groupe["libelle"].'",';
+    }
+     ?>
+  ];
+
+  var data = {
     labels: [
       <?php
-      foreach ($legislatives2024 as $groupe) {
-        echo '"'.$groupe["libelle"].'",';
-      }
-        ?>
+        foreach ($legislatives2024 as $groupe) {
+          echo '"'.$groupe["libelle"].'",';
+        }
+      ?>
     ],
     datasets: [
       {
@@ -590,12 +598,14 @@ document.addEventListener('DOMContentLoaded', function(){
     ]
   };
 
-  var chartLegislatives = document.getElementById("chartLegislatives");
-  
-  var chartLegislativesOptions = {
-    indexAxis: 'y',
+  var ctx = document.getElementById("chartLegislatives");
+
+  // And for a doughnut chart
+  var chartOptions = {
     responsive: true,
     maintainAspectRatio: true,
+    rotation: 270,
+    circumference: 180,
     aspectRatio: 2,
     layout: {
       padding: 10
@@ -611,28 +621,38 @@ document.addEventListener('DOMContentLoaded', function(){
         borderWidth: 1,
         color: "white",
         font: {
-          size: 13,
-          weight: 'bold',
-        },
-        formatter: function(value, context){
-          return value + '%'
+          size: 10
         }
       },
       legend: {
         display: false
-      }
+      },
     }
   }
 
-  var chart2 = new Chart(chartLegislatives, {
-    type: 'bar',
-    data: dataLegislatives,
-    options: chartLegislativesOptions,
+  // Init the chart
+  var pieChart = new Chart(ctx, {
+    plugins: [
+      ChartDataLabels,
+      {
+        beforeLayout: function(chart) {
+          var showLabels = (chart.width) > 500 ? true : false;
+          chart.options.plugins.datalabels.display = showLabels;
+        }
+      },
+      {
+        onresize: function(chart) {
+          var showLabels = (chart.width) > 500 ? true : false;
+          chart.options.plugins.datalabels.display = showLabels;
+        }
+      }
+    ],
+    type: 'doughnut',
+    data: data,
+    options: chartOptions,
   });
 
 });
 
 
 </script>
-
-
