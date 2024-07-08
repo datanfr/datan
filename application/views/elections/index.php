@@ -5,7 +5,7 @@
     </div>
     <div class="col-md-8 col-lg-7 mt-4">
       <p>
-        Les <b>élections</b> sont essentielles. Elles permettent aux citoyens de choisir leurs représentants, qui aurant pour rôle de rédiger et voter la loi.
+        Les <b>élections</b> permettent aux citoyens de choisir leurs représentants, qui ont pour rôle de rédiger et voter la loi.
       </p>
       <p>
         En France, il existe <a href="https://www.diplomatie.gouv.fr/fr/services-aux-francais/voter-a-l-etranger/les-differentes-elections/" target="_blank" rel="nofollow noreferrer noopener">plusieurs types d'élections</a>. La plus importante est <b>l'élection présidentielle</b>, qui se tient tous les cinq ans pour élire le Pésident de la République. Les <b>élections législatives</b> permettent d'élire les <a href="<?= base_url() ?>deputes">577 députés de l'Assemblée nationale</a>.

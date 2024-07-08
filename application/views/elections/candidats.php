@@ -36,7 +36,6 @@
             <p>Au total, <b><?= $candidatsN_elected ?></b> députés en exercice ont été élus lors des <?= mb_strtolower($election['libelle']) ?> de <?= $election['dateYear'] ?>.</p>
           <?php endif; ?>
           </p>
-          <p>Un député candidat ne se trouve pas dans la liste ? N'hésitez pas à nous envoyer un email : info[at]datan.fr !</p>
         <?php endif; ?>
       </div>
       <div class="col-md-4 col-lg-5 d-flex justify-content-center align-items-center">
