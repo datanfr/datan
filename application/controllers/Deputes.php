@@ -339,7 +339,7 @@
       }
 
       // Get majority group
-      $data['groupMajority'] = $this->groupes_model->get_majority_group();
+      $data['groupMajority'] = $this->groupes_model->get_majority_group($legislature);
 
       // Get pct famSocPro
       $data['famSocPro'] = null;// $this->jobs_model->get_stats_individual($data['depute']['famSocPro'], $legislature);
