@@ -1865,11 +1865,14 @@ body{
         color: rgba(0, 0, 0, 0.5);
       }
     }
-    .depute:before {
+    .depute:before{
       content: url("../imgs/icons/person-fill.svg");
     }
-    .ville:before, .dpt:before{
+    .ville:before{
       content: url("../imgs/icons/house-door-fill.svg");
+    }
+    .dpt:before{
+      content: url("../imgs/icons/person-fill.svg");
     }
     .groupe:before{
       content: url("../imgs/icons/people-fill.svg");
