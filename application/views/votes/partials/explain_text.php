@@ -1,6 +1,6 @@
 <div class="d-flex align-items-start my-4">
     <div class="depute-img-circle">
-        <?php if ($exp['img']) : ?>
+        <?php if ($exp['img'] && $this->config->item('mp_photos')) : ?>
             <a href="<?= base_url() . "deputes/" . $exp['dptSlug'] . '/depute_' . $exp['nameUrl'] ?>">
               <picture>
                   <source srcset="<?= asset_url(); ?>imgs/deputes_nobg_webp/depute_<?= $exp['idImage'] ?>_webp.webp" type="image/webp">
@@ -10,8 +10,8 @@
             </a>
         <?php else : ?>
             <picture>
-                <source srcset="<?= asset_url() ?>imgs/placeholder/placeholder-face-2.png" type="image/png">
-                <img src="<?= asset_url() ?>imgs/placeholder/placeholder-face-2.png" alt="<?= $title ?>">
+                <source srcset="<?= asset_url() ?>imgs/placeholder/placeholder-face.png" type="image/png">
+                <img src="<?= asset_url() ?>imgs/placeholder/placeholder-face.png" alt="<?= $title ?>">
             </picture>
         <?php endif; ?>
     </div>
