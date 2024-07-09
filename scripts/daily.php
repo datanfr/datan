@@ -11,6 +11,7 @@ class Script
     private $intro;
     private $congress;
     private $dissolution;
+    private $mp_photos;
 
     // export the variables in environment
     public function __construct($legislature = 16, $congress = FALSE)
@@ -21,6 +22,8 @@ class Script
         $this->legislature_current = 16;
         $this->legislature_to_get = $legislature;
         $this->dissolution = TRUE;
+        $this->$mp_photos = ($_SERVER['CI_ENV'] === "production");
+        //$this->$mp_photos = TRUE; // Use if you want to download all photos
         if ($congress == "cong") {
           $this->congress = TRUE;
         }
@@ -4004,9 +4007,11 @@ if (isset($argv[1]) && isset($argv[2])) {
 $script->fillDeputes();
 $script->deputeAll();
 $script->deputeLast();
-$script->downloadPictures();
-$script->webpPictures();
-$script->resmushPictures();
+if ($mp_photos){
+    $script->downloadPictures();
+    $script->webpPictures();
+    $script->resmushPictures();
+}
 $script->groupeEffectif();
 //$script->deputeJson(); // No longer used
 $script->groupeStats();
