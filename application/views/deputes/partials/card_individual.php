@@ -3,7 +3,7 @@
     <!-- IMAGE MP -->
     <div class="d-flex justify-content-center">
       <div class="depute-img-circle">
-        <?php if ($depute['img']) : ?>
+        <?php if ($depute['img'] && $this->config->item('mp_photos')) : ?>
           <picture>
             <source srcset="<?= asset_url(); ?>imgs/deputes_nobg_webp/depute_<?= $depute['idImage'] ?>_webp.webp" type="image/webp">
             <source srcset="<?= asset_url(); ?>imgs/deputes_nobg/depute_<?= $depute['idImage'] ?>.png" type="image/png">
@@ -11,8 +11,8 @@
           </picture>
         <?php else : ?>
           <picture>
-            <source srcset="<?= asset_url() ?>imgs/placeholder/placeholder-face-2.png" type="image/png">
-            <img src="<?= asset_url() ?>imgs/placeholder/placeholder-face-2.png" alt="<?= $title ?>">
+            <source srcset="<?= asset_url() ?>imgs/placeholder/placeholder-face.png" type="image/png">
+            <img src="<?= asset_url() ?>imgs/placeholder/placeholder-face.png" alt="<?= $title ?>">
           </picture>
         <?php endif; ?>
       </div>
