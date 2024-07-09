@@ -239,6 +239,9 @@
         } elseif ($x['procedureParlementaireLibelle'] == 'Résolution') {
           $x['type_edited'] = 'proposition de résolution';
           $x['type_edited_explication'] = "Une proposition de résolution est un texte non législatif (qui est donc purement symbolique) et qui sert à exprimer la position de l'Assemblée nationale sur un sujet donné.";
+        } else {
+          $x['type_edited'] = NULL;
+          $x['type_edited_explication'] = NULL;
         }
       } elseif ($x['voteType'] == 'amendement' || $x['voteType'] == 'les amen') {
         $x['type_edited'] = 'amendement';
