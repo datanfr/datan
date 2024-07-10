@@ -32,7 +32,7 @@ RUN a2enmod rewrite && \
 RUN npm install && \
 
 #install and run grunt
-    npm install -g grunt-cli && \
+    npm install -g grunt && \
     apt-get install -y ruby-dev && \
     npm install grunt-contrib-sass --save-dev && \
     gem install sass && \
