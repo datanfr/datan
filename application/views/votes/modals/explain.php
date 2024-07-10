@@ -4,7 +4,7 @@
       <div class="modal-header">
         <div class="d-flex flex-row align-items-center">
           <div class="depute-img-circle depute-img-circle-explication mr-3">
-            <?php if ($img != NULL) : ?>
+            <?php if ($img != NULL && $this->config->item('mp_photos')) : ?>
               <picture>
                 <source srcset="<?= asset_url(); ?>imgs/deputes_nobg_webp/depute_<?= $img ?>_webp.webp" type="image/webp">
                 <source srcset="<?= asset_url(); ?>imgs/deputes_nobg/depute_<?= $img ?>.png" type="image/png">
@@ -12,8 +12,8 @@
               </picture>
             <?php else : ?>
               <picture>
-                <source srcset="<?= asset_url() ?>imgs/placeholder/placeholder-face-2.png" type="image/png">
-                <img src="<?= asset_url() ?>imgs/placeholder/placeholder-face-2.png" alt="<?= $title ?>">
+                <source srcset="<?= asset_url() ?>imgs/placeholder/placeholder-face.png" type="image/png">
+                <img src="<?= asset_url() ?>imgs/placeholder/placeholder-face.png" alt="<?= $title ?>">
               </picture>
             <?php endif; ?>
           </div>
