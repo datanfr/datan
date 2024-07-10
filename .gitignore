@@ -16,6 +16,9 @@ application/logs/*
 !application/logs/.htaccess
 /vendor/
 
+#custom config
+application/config/custom_config.php
+
 #root folder
 node_modules
 test
