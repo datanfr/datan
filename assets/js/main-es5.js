@@ -7,7 +7,6 @@
 */
 function get_base_url() {
   var localhost = 'http://localhost/datan';
-
   if (location.hostname === "localhost" || location.hostname === "127.0.0.1") {
     return localhost;
   } else {
@@ -19,7 +18,6 @@ function get_base_url() {
                 A TRIER
 ################
 */
-
 
 $(document).ready(function () {
   // popover
@@ -46,12 +44,12 @@ $(function () {
 $(function () {
   $('[data-toggle="tooltip"]').tooltip();
 });
+
 /*
 ################
                Button UP
 ################
 */
-
 var filterBanner = $('#filterBanner'); // Filter appear on mobile
 
 var btn = $('#btnup');
@@ -73,12 +71,12 @@ btn.on('click', function (e) {
     scrollTop: 0
   }, 2000, 'swing'); // for all browsers
 });
+
 /*
 ################
                Collapse button
 ################
 */
-
 $(document).ready(function () {
   $("#collapseProximity").on("hide.bs.collapse", function () {
     $("#btn-ranking").html('Voir tout le classement');
@@ -87,21 +85,20 @@ $(document).ready(function () {
     $("#btn-ranking").html('Fermer');
   });
 });
+
 /*
 ################
                Flickity
 ################
 */
+
 // init Flickity
 // external js: flickity.pkgd.js
-
 var carouselContainers = document.querySelectorAll('.carousel-container');
-
 for (var i = 0; i < carouselContainers.length; i++) {
   var container = carouselContainers[i];
   initCarouselContainer(container);
 }
-
 function initCarouselContainer(container) {
   var carousel = container.querySelector('.carousel-cards');
   var flkty = new Flickity(carousel, {
@@ -119,17 +116,18 @@ function initCarouselContainer(container) {
     flkty.next();
   });
 }
+
 /*
 ################
                 no-img (votes controller)
 ################
 */
 
-
 var cw = $('.no-img').width();
 $('.no-img').css({
   'height': cw + 'px'
 });
+
 /*
 ################
                 async_home
@@ -137,13 +135,13 @@ $('.no-img').css({
 */
 
 (function () {
-  'use strict'; // Page is loaded
+  'use strict';
 
+  // Page is loaded
   var objects = document.getElementsByClassName('async_home');
   Array.from(objects).map(function (item) {
     // Start loading image
     var img = new Image();
-
     if (window.matchMedia("(max-width: 575.98px)").matches) {
       /*img.src = item.dataset.mobile;
       img.onload = () => {
@@ -155,7 +153,6 @@ $('.no-img').css({
     } else if (window.matchMedia("(max-width: 970px)").matches) {
       // Once image is loaded replace the src of the HTML element
       img.src = item.dataset.tablet;
-
       img.onload = function () {
         item.classList.remove('async_home');
         return item.nodeName === 'IMG' ? item.src = item.dataset.src : item.style.backgroundImage = "linear-gradient(130deg, rgba(0, 183, 148, 0.7) 0.65%, rgba(36, 107, 150, 0.7) 112%), url(".concat(item.dataset.tablet, ")");
@@ -163,7 +160,6 @@ $('.no-img').css({
     } else {
       // Once image is loaded replace the src of the HTML element
       img.src = item.dataset.src;
-
       img.onload = function () {
         item.classList.remove('async_home');
         return item.nodeName === 'IMG' ? item.src = item.dataset.src : item.style.backgroundImage = "linear-gradient(130deg, rgba(0, 183, 148, 0.7) 0.65%, rgba(36, 107, 150, 0.7) 112%), url(".concat(item.dataset.src, ")");
@@ -171,25 +167,27 @@ $('.no-img').css({
     }
   });
 })();
+
 /*
 ################
                 Read more
 ################
 */
 
-
 $(function () {
   var $el, $ps, $up, totalHeight;
   $(".read-more-container .btn").click(function () {
     // IE 7 doesn't even get this far. I didn't feel like dicking with it.
+
     var totalHeight = 0;
     var margin = 0;
     $el = $(this);
     var $p = $el.parent();
     var buttonHeight = parseInt($p.css("padding"), 10) * 2 + $p.height();
     $up = $p.parent();
-    $ps = $up.children(); // measure how tall inside should be by adding together heights of all inside paragraphs (except read-more paragraph)
+    $ps = $up.children();
 
+    // measure how tall inside should be by adding together heights of all inside paragraphs (except read-more paragraph)
     $ps.each(function () {
       totalHeight += $(this).outerHeight();
       margin = parseInt($(this).css("margin-bottom"), 10) + parseInt($(this).css("margin-top"), 10);
@@ -202,20 +200,22 @@ $(function () {
       "max-height": 9999
     }).animate({
       "height": totalHeight
-    }); // fade out read-more
+    });
 
-    $p.fadeOut(); // prevent jump-down
+    // fade out read-more
+    $p.fadeOut();
 
+    // prevent jump-down
     return false;
   });
 });
+
 /*
 ##########
 NEWSLETTER (MODAL)
 ##########
 */
 // Neweletter in header
-
 $('#newsletterForm').on('submit', function (e) {
   e.preventDefault();
   $.ajax({
@@ -239,8 +239,8 @@ $('#newsletterForm').on('submit', function (e) {
     }
   });
   return true;
-}); // Newsletter on datan.fr/newsletter page
-
+});
+// Newsletter on datan.fr/newsletter page
 $('#newsletterPage').on('submit', function (e) {
   e.preventDefault();
   $.ajax({
@@ -262,6 +262,7 @@ $('#newsletterPage').on('submit', function (e) {
   });
   return true;
 });
+
 /*
 ##########
 VOTE DATAN REQUESTED (MODAL)
@@ -292,15 +293,16 @@ $('#voteDatanRequestedForm').on('submit', function (e) {
   });
   return true;
 });
+
 /*
 ##########
 VOTE DATAN MODAL EXPLAIN OPEN BY DEFAULT
 ##########
 */
-
 $(window).on('load', function () {
   $('#modalExplain').modal('show');
 });
+
 /*
 ##########
 FAQ
@@ -318,20 +320,19 @@ $('#searchfaq').on('keyup', function (e) {
     return regex.test($(this).text());
   }).show();
 });
+
 /*
 ##########
 Social media buttons
 ##########
 */
 // Source: https://css-tricks.com/simple-social-sharing-links/
-
 function socialWindow(url) {
   var left = (screen.width - 570) / 2;
   var top = (screen.height - 570) / 2;
   var params = "menubar=no,toolbar=no,status=no,width=570,height=570,top=" + top + ",left=" + left;
   window.open(url, "NewWindow", params);
 }
-
 var pageUrl = encodeURIComponent(document.URL);
 var tweet = encodeURIComponent(jQuery("meta[property='og:description']").attr("content"));
 var whatsappMessage = "Je viens de découvrir un nouveau vote de l'Assemblée nationale sur Datan ! Découvre le aussi : " + document.URL;
@@ -351,12 +352,12 @@ jQuery(".social-share.whatsapp").on("click", function () {
   var url = "whatsapp://send?text=" + whatsappMessage;
   socialWindow(url);
 });
+
 /*
 ##########
 Shrink navbar
 ##########
 */
-
 $(window).scroll(function () {
   if ($(document).scrollTop() > 50) {
     $('#navbar-datan').addClass('navbar-shrink');
