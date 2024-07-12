@@ -14,14 +14,14 @@ class Script
     private $mp_photos;
 
     // export the variables in environment
-    public function __construct($legislature = 16, $congress = FALSE)
+    public function __construct($legislature = 17, $congress = FALSE)
     {
         date_default_timezone_set('Europe/Paris');
         ini_set('memory_limit', '2048M');
         $this->dateMaj = date('Y-m-d');
         $this->legislature_current = 16;
         $this->legislature_to_get = $legislature;
-        $this->dissolution = TRUE;
+        $this->dissolution = FALSE;
         $this->$mp_photos = ($_SERVER['CI_ENV'] === "production");
         //$this->$mp_photos = TRUE; // Use if you want to download all photos
         if ($congress == "cong") {
@@ -139,7 +139,9 @@ class Script
     public function fillDeputes()
     {
         echo "fillDeputes starting \n";
-        if ($this->legislature_to_get == 16) {
+        if ($this->legislature_to_get == 17) {
+          $file = __DIR__ . '/AMO30_tous_acteurs_tous_mandats_tous_organes_historique_XVII.xml.zip';
+        } elseif ($this->legislature_to_get == 16) {
           $file = __DIR__ . '/AMO30_tous_acteurs_tous_mandats_tous_organes_historique_XVI.xml.zip';
         } elseif ($this->legislature_to_get == 15) {
           $file = __DIR__ . '/AMO30_tous_acteurs_tous_mandats_tous_organes_historique_XV.xml.zip';
@@ -1203,7 +1205,7 @@ class Script
         if ($this->dissolution === false) {
            $sql .= ' AND dl.dateFin IS NULL';
         }
-        $sql .= 'GROUP BY ms.organeRef
+        $sql .= ' GROUP BY ms.organeRef
           ) B ON A.uid = B.uid
           ORDER BY B.effectif DESC';
         $this->bdd->exec($sql);
@@ -4004,14 +4006,17 @@ if (isset($argv[1]) && isset($argv[2])) {
   $script = new Script();
 }
 
+
 $script->fillDeputes();
 $script->deputeAll();
 $script->deputeLast();
-if ($mp_photos){
+/*
+if ($mp_photos){ // Check this in a later stage
     $script->downloadPictures();
     $script->webpPictures();
     $script->resmushPictures();
 }
+*/
 $script->groupeEffectif();
 //$script->deputeJson(); // No longer used
 $script->groupeStats();
@@ -4019,36 +4024,36 @@ $script->groupeStatsHistory();
 $script->groupeMembersHistory();
 $script->parties();
 $script->legislature();
-$script->vote(); // Depend on the legislature
-$script->updateVoteInfo(); // Depend on the legislature
-$script->voteScore(); // Depend on the legislature
-$script->groupeCohesion(); // Depend on the legislature
-$script->groupeAccord(); // Depend on the legislature
-$script->deputeAccord(); // Depend on the legislature
-$script->voteParticipation(); // Depend on the legislature
-$script->dossier(); // Depend on the legislature
-$script->dossiersSeances();
-$script->documentsLegislatifs(); // Depend on the legislature
-$script->dossiersVotes(); // Depend on the legislature
-$script->dossiersActeurs(); // Depend on the legislature
-$script->votesAmendments();
-$script->amendements(); // Depend on the legislature
-$script->amendementsAuteurs(); // Depend on the legislature
-$script->voteParticipationCommission(); // Depend on the legislature
-$script->classParticipation();
-$script->classParticipationCommission(); // Will need to be changed w/ leg 16
-$script->classParticipationSolennels();
-$script->deputeLoyaute();
-$script->classLoyaute();
-$script->classMajorite();
-$script->classGroups();
-$script->classGroupsMonth();
-$script->classGroupsProximite();
-$script->classParticipationSix();
-$script->classLoyauteSix();
-$script->deputeAccordCleaned();
-$script->historyMpsAverage();
-$script->historyPerMpsAverage();
+//$script->vote(); // Wait for the first RCV
+//$script->updateVoteInfo(); // Wait for the first RCV
+//$script->voteScore(); // Wait for the first RCV
+//$script->groupeCohesion(); // Wait for the first RCV
+//$script->groupeAccord(); // Wait for the first RCV
+//$script->deputeAccord(); // Wait for the first RCV
+//$script->voteParticipation(); // Wait for the first RCV
+//$script->dossier(); // Wait for the first RCV
+//$script->dossiersSeances(); // Wait for the first RCV
+//$script->documentsLegislatifs(); // Wait for the first RCV
+//$script->dossiersVotes(); // Wait for the first RCV
+//$script->dossiersActeurs(); // Wait for the first RCV
+//$script->votesAmendments(); // Wait for the first RCV
+//$script->amendements(); // Wait for the first RCV
+//$script->amendementsAuteurs(); // Wait for the first RCV
+//$script->voteParticipationCommission(); // Wait for the first RCV
+//$script->classParticipation(); // Wait for the first RCV
+//$script->classParticipationCommission(); // Wait for the first RCV
+//$script->classParticipationSolennels(); // Wait for the first RCV
+//$script->deputeLoyaute(); // Wait for the first RCV
+//$script->classLoyaute(); // Wait for the first RCV
+//$script->classMajorite(); // Wait for the first RCV
+//$script->classGroups(); // Wait for the first RCV
+//$script->classGroupsMonth(); // Wait for the first RCV
+//$script->classGroupsProximite(); // Wait for the first RCV
+//$script->classParticipationSix(); // Wait for the first RCV
+//$script->classLoyauteSix(); // Wait for the first RCV
+//$script->deputeAccordCleaned(); // Wait for the first RCV
+//$script->historyMpsAverage(); // Wait for the first RCV
+//$script->historyPerMpsAverage(); // Wait for the first RCV
 //$script->parrainages(); // No longer used
 $script->opendata_activeMPs();
 $script->opendata_activeGroupes();
