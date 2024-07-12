@@ -64,7 +64,7 @@
         }
 
         // PROXIMITY WITH ALL GROUPS
-        if ($legislature == legislature_current() && dissolution() === false) /*LEGISLATURE 16*/ {
+        if ($legislature == legislature_current() && dissolution() === false) {
           $data['accord_groupes'] = $this->deputes_model->get_accord_groupes_actifs($mpId, legislature_current());
           $data['accord_groupes_all'] = $this->deputes_model->get_accord_groupes_all($mpId, legislature_current());
           // Positionnement politique
@@ -115,11 +115,14 @@
 
       if ($legislature == legislature_current() && dissolution() === false) {
         $data['active'] = TRUE;
+        /* PRESIDENT TO UPDATE LATER
         //$data['president'] = $this->deputes_model->get_president_an(); THE OPEN DATA FROM THE AN IS NOT UPDATED!
         $data['president'] = $this->deputes_model->get_depute_by_mpId('PA721908');
         if ($data['president']) {
           $data['president']['gender'] = gender($data['president']['civ']);
         }
+        */
+        $data['president'] = FALSE;
       } else {
         $data['active'] = FALSE;
       }
@@ -251,8 +254,8 @@
         show_404($this->functions_datan->get_404_infos());
       }
 
-      // Check if it is in legislature 14 or 15
-      if (!in_array($data['depute']['legislature'], legislature_all())) {
+      // Check if legislature > 14
+      if (!$data['depute']['legislature'] >= 14) {
         show_404($this->functions_datan->get_404_infos());
       }
 

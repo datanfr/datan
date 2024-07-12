@@ -8,7 +8,7 @@ class Script
     private $time_pre;
 
     // export the variables in environment
-    public function __construct($legislature = 16)
+    public function __construct($legislature = 17)
     {
         ini_set('memory_limit', '2048M');
         $this->legislature_to_get = $legislature;
@@ -91,7 +91,10 @@ class Script
     public function acteurs_organes(){
       echo "downloading acteurs_organes starting \n";
 
-      if ($this->legislature_to_get == 16) {
+      if ($this->legislature_to_get == 17) {
+        $file = 'https://data.assemblee-nationale.fr/static/openData/repository/17/amo/tous_acteurs_mandats_organes_xi_legislature/AMO30_tous_acteurs_tous_mandats_tous_organes_historique.xml.zip';
+        $newfile = __DIR__ . '/AMO30_tous_acteurs_tous_mandats_tous_organes_historique_XVII.xml.zip';
+      } elseif ($this->legislature_to_get == 16) {
         $file = 'https://data.assemblee-nationale.fr/static/openData/repository/16/amo/tous_acteurs_mandats_organes_xi_legislature/AMO30_tous_acteurs_tous_mandats_tous_organes_historique.xml.zip';
         $newfile = __DIR__ . '/AMO30_tous_acteurs_tous_mandats_tous_organes_historique_XVI.xml.zip';
       } else {
@@ -135,7 +138,7 @@ if (isset($argv[1])) {
     $script = new Script();
 }
 
-$script->dossiers();
-$script->scrutins();
+//$script->dossiers(); // Let's see later during the legislature
+//$script->scrutins(); // Let's see after the first RCV
 $script->acteurs_organes();
 //$script->amendements();
