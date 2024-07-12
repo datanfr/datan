@@ -19,7 +19,7 @@ class Script
         date_default_timezone_set('Europe/Paris');
         ini_set('memory_limit', '2048M');
         $this->dateMaj = date('Y-m-d');
-        $this->legislature_current = 16;
+        $this->legislature_current = 17;
         $this->legislature_to_get = $legislature;
         $this->dissolution = FALSE;
         $this->$mp_photos = ($_SERVER['CI_ENV'] === "production");
@@ -3678,7 +3678,7 @@ class Script
         echo "historyMpsAverage starting \n";
         $this->bdd->query('DROP TABLE IF EXISTS history_mps_average;');
         $this->bdd->query('CREATE TABLE `history_mps_average` ( `id` TINYINT NOT NULL AUTO_INCREMENT , `legislature` TINYINT NOT NULL , `length` DECIMAL(4,2) NOT NULL , PRIMARY KEY (`id`)) ENGINE = MyISAM;');
-        $terms = array(14, 15, 16);
+        $terms = array(14, 15, 16, 17);
         foreach ($terms as $term) {
             echo "Getting average for term => " . $term . "\n";
             $this->bdd->query('
@@ -4052,7 +4052,7 @@ $script->legislature();
 //$script->classParticipationSix(); // Wait for the first RCV
 //$script->classLoyauteSix(); // Wait for the first RCV
 //$script->deputeAccordCleaned(); // Wait for the first RCV
-//$script->historyMpsAverage(); // Wait for the first RCV
+$script->historyMpsAverage(); // Wait for the first RCV
 //$script->historyPerMpsAverage(); // Wait for the first RCV
 //$script->parrainages(); // No longer used
 $script->opendata_activeMPs();
