@@ -47,15 +47,16 @@
             </p>
           <?php endif; ?>
           <!-- Paragraphe end -->
-
-          <?php if ($depute['legislature'] == legislature_current()) : ?>
-            <p>
-              <?= ucfirst($gender['pronom']) ?> a quitté l'Assemblée nationale le <?= $depute['dateFinMpFR'] ?><?= $this->depute_edito->get_end_mandate($depute) ?>.
-            </p>
-          <?php else : ?>
-            <p>
-              <?= ucfirst($gender['pronom']) ?> a quitté l'Assemblée nationale le <?= $depute['dateFinMpFR'] ?>.
-            </p>
+          <?php if(!$active): ?>
+            <?php if ($depute['legislature'] == legislature_current()) : ?>
+              <p>
+                <?= ucfirst($gender['pronom']) ?> a quitté l'Assemblée nationale le <?= $depute['dateFinMpFR'] ?><?= $this->depute_edito->get_end_mandate($depute) ?>.
+              </p>
+            <?php else : ?>
+              <p>
+                <?= ucfirst($gender['pronom']) ?> a quitté l'Assemblée nationale le <?= $depute['dateFinMpFR'] ?>.
+              </p>
+            <?php endif; ?>
           <?php endif; ?>
           <!-- Paragraphe groupe parlementaire -->
           <?php if ($active) : ?>
@@ -268,7 +269,7 @@
                   <?= $title ?> était <?= $gender['le'] ?> député<?= $gender['e'] ?> de la <?= $depute["circo"] ?><sup><?= $depute["circo_abbrev"] ?></sup> circonscription <?= $depute['dptLibelle2'] ?><a href="<?= base_url() ?>deputes/<?= $depute['dptSlug'] ?>"><?= $depute['departementNom'] . ' (' . $depute['departementCode'] . ')' ?></a>.
                 </p>
               <?php endif; ?>
-              <?php if ($election_canceled['cause']): ?>
+              <?php if ($election_canceled && $election_canceled['cause']): ?>
                 <p><?= $election_canceled['cause'] ?></p>
                 <p>Pour découvrir les résultats des élection législatives partielles, organisées après l'invalidation par le Conseil constitutionnel, <span class="url_obf" url_obf="<?= url_obfuscation("https://www.interieur.gouv.fr/Elections/Les-resultats/Partielles/Legislatives") ?>">cliquez ici</span>.</p>
               <?php endif; ?>

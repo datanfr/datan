@@ -12,15 +12,15 @@
   }
 
   function legislature_current(){
-    return 16;
+    return 17;
   }
 
   function dissolution(){
-    return true;
+    return FALSE;
   }
 
   function legislature_all(){
-    return array(14, 15, 16);
+    return array(14, 15, 16, 17);
   }
 
   function formatNumber($x){
