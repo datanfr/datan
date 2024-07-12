@@ -23,7 +23,8 @@
       if (!empty($data['groupe_random'])) {
         $data['groupe_random']['couleurAssociee'] = $this->groupes_model->get_groupe_color(array($data['groupe_random']['libelleAbrev'], $data['groupe_random']['couleurAssociee']));
       }
-      $rand = rand(0, 10);
+      //$rand = rand(0, 10); CHANGE THIS WHEN GROUPS ARE AVAILABLE
+      $rand = 0;
       if ($rand < 5) {
         $data['placeholder'] = $data['depute_random']['nameFirst'] . " " . $data['depute_random']['nameLast'];
       } else {
@@ -45,8 +46,8 @@
       $file = file_get_contents(asset_url() . "data_elections/legislatives-2024-2.json");
       $data['legislatives2024'] = json_decode($file, true);
 
-      //Get stats (now working because > 1 year)
-      $data['stats'] = TRUE;
+      //Get stats - CHANGE THIS WHEN THERE WILL BE VOTES
+      $data['stats'] = FALSE;
       $data['depute_vote_plus'] = $this->deputes_model->get_depute_vote_plus();
       if (!empty($data['depute_vote_plus'])) {
         $data['depute_vote_plus'] = array_merge($data['depute_vote_plus'], gender($data['depute_vote_plus']['civ']));
@@ -69,9 +70,13 @@
       }
 
       // Get support the gvt
+      $data['support'] = FALSE;
+      /*
+      CHANGE THIS WHEN THERE WILL BE VOTES
       $data['support'] = $this->groupes_model->get_support_all(legislature_current());
       $data['support_opposition'] = $this->groupes_model->get_support_all(legislature_current(), TRUE);
       $data['support_opposition'] = array_shift($data['support_opposition']);
+      */
 
       // Get explications
       $data['explications'] = $this->votes_model->get_explications_last();
