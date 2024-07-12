@@ -352,7 +352,6 @@
       $where = array('legislature' => $legislature);
       $this->db->select('length');
       $result = $this->db->get_where('history_mps_average', $where, 1)->row_array();
-      print_r($result);
       return isset($result['length']) ? $result['length'] : 0;
     }
 
