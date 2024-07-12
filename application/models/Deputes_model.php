@@ -352,7 +352,8 @@
       $where = array('legislature' => $legislature);
       $this->db->select('length');
       $result = $this->db->get_where('history_mps_average', $where, 1)->row_array();
-      return isset($result['length']) ?$result['length'] : 0;
+      print_r($result);
+      return isset($result['length']) ? $result['length'] : 0;
     }
 
     public function get_accord_groupes_actifs($depute_uid, $legislature){
@@ -555,7 +556,7 @@
       if (dissolution() === false) {
         $sql .= " WHERE da.dateFin IS NULL";
       }
-      $sql .= "ORDER BY RAND() LIMIT 1";
+      $sql .= " ORDER BY RAND() LIMIT 1";
       return $this->db->query($sql)->row_array();
     }
 
