@@ -790,7 +790,12 @@ class Script
             $job = $data['job'];
             $catSocPro = $data['catSocPro'];
             $famSocPro = $data['famSocPro'];
-            $img = file_exists(__DIR__ . "/../assets/imgs/deputes_nobg_webp/depute_" . substr($mpId, 2) . "_webp.webp") ? 1 : 0;
+            if($legislature >= 17) {
+                $img = file_exists(__DIR__ . "/../assets/imgs/deputes_webp/depute_" . substr($mpId, 2) . "_webp.webp") ? 1 : 0;
+            } else {
+                $img = file_exists(__DIR__ . "/../assets/imgs/deputes_nobg_webp/depute_" . substr($mpId, 2) . "_webp.webp") ? 1 : 0;
+            }
+            
 
             // Get the mandat_principal
             $mandatPrincipal = $this->bdd->query('
