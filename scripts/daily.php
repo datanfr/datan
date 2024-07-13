@@ -697,20 +697,7 @@ class Script
             $uid = substr($d['uid'], 2);
             $output_filename = __DIR__ . "/../assets/imgs/deputes_nobg/depute_" . $uid . ".png";
             $input_filename = __DIR__ . "/../assets/imgs/deputes_nobg_import/depute_" . $uid . ".png";
-
-            // 1. Remove file if $photos_redownload
-            if ($this->$photos_redownload) {
-                echo "yes";
-                if (file_exists($output_filename)) {
-                    if (unlink($output_filename)) {
-                        echo "$uid photo has been deleted \n";
-                    } else {
-                        echo "$uid photo cannot be deleted due to an error \n";
-                    }
-                }
-            }
             
-            // 2. Resmush the photo
             if (!file_exists($output_filename)) {
                 $filename = realpath($input_filename);
                 if (file_exists($input_filename)) {
