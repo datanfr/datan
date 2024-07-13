@@ -23,12 +23,12 @@ class Script
         $this->legislature_current = 17;
         $this->legislature_to_get = $legislature;
         $this->dissolution = FALSE;
-        $this->$mp_photos = ($_SERVER['DATABASE_HOST'] === "localhost"); // TRUE for on server
-        if ($this->$mp_photos) {
+        $this->mp_photos = ($_SERVER['DATABASE_HOST'] === "localhost"); // TRUE for on server
+        if ($this->mp_photos) {
             echo "1. MP_photos is true";
         }
-        //$this->$mp_photos = TRUE; // Use if you want to download all photos in local
-        if ($this->$mp_photos) {
+        //$this->mp_photos = TRUE; // Use if you want to download all photos in local
+        if ($this->mp_photos) {
             echo "2. MP_photos is true";
         }
         $this->$photos_redownload = FALSE; // TRUE if you want to redownload the photos of one legislature
@@ -4047,14 +4047,14 @@ if (isset($argv[1]) && isset($argv[2])) {
 $script->fillDeputes();
 $script->deputeAll();
 $script->deputeLast();
-if ($script->$mp_photos){ // Check this in a later stage
+if ($script->mp_photos) { // Check this in a later stage
     echo "yes";
     $script->downloadPictures();
     $script->webpPictures();
     $script->resmushPictures();
-    } else {
+} else {
         echo "no";
-    }
+}
 $script->groupeEffectif();
 //$script->deputeJson(); // No longer used
 $script->groupeStats();
