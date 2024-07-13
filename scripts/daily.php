@@ -25,7 +25,7 @@ class Script
         $this->dissolution = FALSE;
         $this->$mp_photos = ($_SERVER['CI_ENV'] === "production");
         //$this->$mp_photos = TRUE; // Use if you want to download all photos in local
-        $this->$photos_redownload = TRUE; // TRUE if you want to redownload the photos of one legislature
+        $this->$photos_redownload = FALSE; // TRUE if you want to redownload the photos of one legislature
         if ($congress == "cong") {
           $this->congress = TRUE;
         }
@@ -4044,9 +4044,9 @@ $script->deputeAll();
 $script->deputeLast();
 */
 if ($script->$mp_photos){ // Check this in a later stage
-    //$script->downloadPictures();
+    $script->downloadPictures();
     $script->webpPictures();
-    //$script->resmushPictures();
+    $script->resmushPictures();
 } 
 /*
 $script->groupeEffectif();
