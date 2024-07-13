@@ -12,6 +12,7 @@ class Script
     private $congress;
     private $dissolution;
     private $mp_photos;
+    private $photos_redownload;
 
     // export the variables in environment
     public function __construct($legislature = 17, $congress = FALSE)
@@ -23,7 +24,8 @@ class Script
         $this->legislature_to_get = $legislature;
         $this->dissolution = FALSE;
         $this->$mp_photos = ($_SERVER['CI_ENV'] === "production");
-        //$this->$mp_photos = TRUE; // Use if you want to download all photos
+        //$this->$mp_photos = TRUE; // Use if you want to download all photos in local
+        $this->$photos_redownload = TRUE; // TRUE if you want to redownload the photos of one legislature
         if ($congress == "cong") {
           $this->congress = TRUE;
         }
@@ -514,7 +516,7 @@ class Script
     }
 
     public function downloadPictures()
-    {
+    {        
         echo "downloadPictures starting \n";
         if (!getenv('API_KEY_NOBG')) {
             echo "no API key for nobg\n";
@@ -522,7 +524,7 @@ class Script
         $donnees = $this->bdd->query('
             SELECT d.mpId AS uid, d.legislature
             FROM deputes_last d
-            WHERE legislature IN (14, 15, 16)
+            WHERE legislature = "' . $this->legislature_to_get . '"
         ');
 
         $originalFolder = __DIR__ . "/../assets/imgs/deputes_original/";
@@ -530,13 +532,30 @@ class Script
 
         while ($d = $donnees->fetch()) {
 
+            $square = $d['legislature'] >= 17; // Whether the photo will be square or not
+
             $uid = substr($d['uid'], 2);
             $filename = __DIR__ . "/../assets/imgs/deputes_original/depute_" . $uid . ".png";
             $legislature = $d['legislature'];
-            $url = 'https://www2.assemblee-nationale.fr/static/tribun/' . $legislature . '/photos/' . $uid . '.jpg';
+            if ($square) {
+                $url = 'https://www2.assemblee-nationale.fr/static/tribun/' . $legislature . '/photos/carre/' . $uid . '.jpg';
+            } else {
+                $url = 'https://www2.assemblee-nationale.fr/static/tribun/' . $legislature . '/photos/' . $uid . '.jpg';
+            }
+
+            // O. Delete photo if you want to redownload all photos (photos_redownload)
+            if ($this->$photos_redownload) {
+                if (file_exists($filename)) {
+                    if (unlink($filename)) {
+                        echo "$uid photo has been deleted \n";
+                    } else {
+                        echo "$uid photo cannot be deleted due to an error \n";
+                    }
+                }  
+            }
+                      
 
             // 1. Download original photo in deputes_original folder
-
             if (!file_exists($filename)) {
                 echo "Download MP " . $uid."\n";
                 if (substr(get_headers($url)[12], 9, 3) != '404' && substr(get_headers($url)[0], 9, 3) != '404') {
@@ -555,44 +574,47 @@ class Script
                     }
                 }
             }
+            
 
-            // 2. Remove background of the image in deputes_original folder
+            // 2. Remove background of the image in deputes_original folder for non-square photos (< legislature 17)
 
-            $nobgFolder = __DIR__ . "/../assets/imgs/deputes_nobg_import/";
-            if (!file_exists($nobgFolder)) mkdir($nobgFolder);
-            $liveUrl = 'https://datan.fr/assets/imgs/deputes_nobg_import/depute_' . $uid . '.png';
-            $nobgfilename = __DIR__ . '/../assets/imgs/deputes_nobg_import/depute_' . $uid . '.png';
-            if (!file_exists($nobgfilename)) {
-                $nobgLive = file_get_contents($liveUrl);
-                if ($nobgLive) {
-                    file_put_contents($nobgfilename, $nobgLive);
-                    echo "one nobg image was just downloaded from datan.fr \n";
-                } else if (getenv('API_KEY_NOBG')) {
-                    $ch = curl_init('https://api.remove.bg/v1.0/removebg');
-                    curl_setopt($ch, CURLOPT_HEADER, false);
-                    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-                    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-                    echo "URL:" . $url . "\n";
-                    curl_setopt($ch, CURLOPT_HTTPHEADER, [
-                        'X-Api-Key:' . getenv('API_KEY_NOBG')
-                    ]);
-                    curl_setopt($ch, CURLOPT_POST, 1);
-                    curl_setopt($ch, CURLOPT_POSTFIELDS, array(
-                        'image_url' => $url,
-                        'size' => 'preview'
-                    ));
-                    $nobg = curl_exec($ch);
-                    $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-                    //$version = curl_getinfo($ch, CURLINFO_HTTP_VERSION);
-                    if ($nobg && $httpCode == 200) {
-                        file_put_contents($nobgfilename, $nobg);
-                        echo "one nobg image was just downloaded from remove.bg \n";
-                    } else {
-                        echo "Error while downloading from remove.bg httpCode:" . $httpCode . "\n";
-                        echo curl_error($ch);
-                        var_dump($nobg);
+            if (!$square) {
+                $nobgFolder = __DIR__ . "/../assets/imgs/deputes_nobg_import/";
+                if (!file_exists($nobgFolder)) mkdir($nobgFolder);
+                $liveUrl = 'https://datan.fr/assets/imgs/deputes_nobg_import/depute_' . $uid . '.png';
+                $nobgfilename = __DIR__ . '/../assets/imgs/deputes_nobg_import/depute_' . $uid . '.png';
+                if (!file_exists($nobgfilename)) {
+                    $nobgLive = file_get_contents($liveUrl);
+                    if ($nobgLive) {
+                        file_put_contents($nobgfilename, $nobgLive);
+                        echo "one nobg image was just downloaded from datan.fr \n";
+                    } else if (getenv('API_KEY_NOBG')) {
+                        $ch = curl_init('https://api.remove.bg/v1.0/removebg');
+                        curl_setopt($ch, CURLOPT_HEADER, false);
+                        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+                        echo "URL:" . $url . "\n";
+                        curl_setopt($ch, CURLOPT_HTTPHEADER, [
+                            'X-Api-Key:' . getenv('API_KEY_NOBG')
+                        ]);
+                        curl_setopt($ch, CURLOPT_POST, 1);
+                        curl_setopt($ch, CURLOPT_POSTFIELDS, array(
+                            'image_url' => $url,
+                            'size' => 'preview'
+                        ));
+                        $nobg = curl_exec($ch);
+                        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+                        //$version = curl_getinfo($ch, CURLINFO_HTTP_VERSION);
+                        if ($nobg && $httpCode == 200) {
+                            file_put_contents($nobgfilename, $nobg);
+                            echo "one nobg image was just downloaded from remove.bg \n";
+                        } else {
+                            echo "Error while downloading from remove.bg httpCode:" . $httpCode . "\n";
+                            echo curl_error($ch);
+                            var_dump($nobg);
+                        }
+                        curl_close($ch);
                     }
-                    curl_close($ch);
                 }
             }
         }
@@ -601,18 +623,30 @@ class Script
     public function webpPictures()
     {
         echo "webpPictures starting \n";
+
+        // 1. Normal photos
         $dir = __DIR__ . "/../assets/imgs/deputes_original/";
         $newdir = __DIR__ . "/../assets/imgs/deputes_webp/";
         $files = scandir($dir);
         unset($files[0]);
         unset($files[1]);
         unset($files[2]);
-        echo "Number of photos in the deputes_original ==> " . count($files) . " \n";
-
         if (!file_exists($newdir)) mkdir($newdir);
+        
         foreach ($files as $file) {
             $newfile = str_replace(".png", "", $file);
             $newfile = $newfile . "_webp.webp";
+
+            // Remove file if $photos_redownload
+            if ($this->$photos_redownload) {
+                if (file_exists($newdir . "" . $newfile)) {
+                    if (unlink($newdir . "" . $newfile)) {
+                        echo "$newfile photo has been deleted \n";
+                    } else {
+                        echo "$newfile photo cannot be deleted due to an error \n";
+                    }
+                }  
+            }
 
             if (!file_exists($newdir . "" . $newfile)) {
                 $img = imagecreatefrompng($dir . $file);
@@ -621,18 +655,17 @@ class Script
                 imagesavealpha($img, true);
                 imagewebp($img, $newdir . $newfile, 80);
                 imagedestroy($img);
-                echo $newfile . " image was just converted into webp\n";
+                echo $newfile . " image was just converted into webp \n";
             }
         }
 
-        //Same for nobg png
+        // 2. Nobg photos
         $dir = __DIR__ . "/../assets/imgs/deputes_nobg_import/";
         $newdir = __DIR__ . "/../assets/imgs/deputes_nobg_webp/";
         $files = scandir($dir);
         unset($files[0]);
         unset($files[1]);
         unset($files[2]);
-        echo "Number of photos in the deputes_nobg_import ==> " . count($files) . "\n";
 
         if (!file_exists($newdir)) mkdir($newdir);
         foreach ($files as $file) {
@@ -657,7 +690,7 @@ class Script
         $donnees = $this->bdd->query('
             SELECT d.mpId AS uid, d.legislature
             FROM deputes_last d
-            WHERE legislature IN (14, 15, 16)
+            WHERE legislature = "' . $this->legislature_to_get . '"
         ');
 
         while ($d = $donnees->fetch()) {
@@ -665,6 +698,19 @@ class Script
             $output_filename = __DIR__ . "/../assets/imgs/deputes_nobg/depute_" . $uid . ".png";
             $input_filename = __DIR__ . "/../assets/imgs/deputes_nobg_import/depute_" . $uid . ".png";
 
+            // 1. Remove file if $photos_redownload
+            if ($this->$photos_redownload) {
+                echo "yes";
+                if (file_exists($output_filename)) {
+                    if (unlink($output_filename)) {
+                        echo "$uid photo has been deleted \n";
+                    } else {
+                        echo "$uid photo cannot be deleted due to an error \n";
+                    }
+                }
+            }
+            
+            // 2. Resmush the photo
             if (!file_exists($output_filename)) {
                 $filename = realpath($input_filename);
                 if (file_exists($input_filename)) {
@@ -675,7 +721,6 @@ class Script
                     $data = array(
                         "files" => $output,
                     );
-                    // 2.
                     $ch = curl_init();
                     curl_setopt($ch, CURLOPT_URL, 'http://api.resmush.it/');
                     curl_setopt($ch, CURLOPT_POST, 1);
@@ -694,7 +739,7 @@ class Script
                     if ($arr_result->dest) {
                         file_put_contents($output_filename, file_get_contents($arr_result->dest));
                         $reducedBy = ($arr_result->src_size - $arr_result->dest_size) / $arr_result->src_size * 100;
-                        echo "file size reduced by " . $reducedBy . "% = (src_size-dest_size)/src_size";
+                        echo "$uid file size reduced by " . $reducedBy . "% = (src_size-dest_size)/src_size";
                     }
                 } else {
                     echo $input_filename . " doesn't exists\n";
@@ -4006,17 +4051,17 @@ if (isset($argv[1]) && isset($argv[2])) {
   $script = new Script();
 }
 
-
+/*
 $script->fillDeputes();
 $script->deputeAll();
 $script->deputeLast();
-/*
-if ($mp_photos){ // Check this in a later stage
-    $script->downloadPictures();
-    $script->webpPictures();
-    $script->resmushPictures();
-}
 */
+if ($script->$mp_photos){ // Check this in a later stage
+    $script->downloadPictures();
+    //$script->webpPictures();
+    //$script->resmushPictures();
+} 
+/*
 $script->groupeEffectif();
 //$script->deputeJson(); // No longer used
 $script->groupeStats();
