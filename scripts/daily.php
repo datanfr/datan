@@ -27,7 +27,7 @@ class Script
         if ($this->$mp_photos) {
             echo "1. MP_photos is true";
         }
-        $this->$mp_photos = TRUE; // Use if you want to download all photos in local
+        //$this->$mp_photos = TRUE; // Use if you want to download all photos in local
         if ($this->$mp_photos) {
             echo "2. MP_photos is true";
         }
