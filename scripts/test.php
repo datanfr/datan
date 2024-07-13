@@ -1,4 +1,4 @@
-<? php
+<?php
 if (function_exists("imagewebp")) {
     echo "La fonction imagewebp est disponible.";
 } else {
