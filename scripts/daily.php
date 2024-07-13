@@ -23,6 +23,8 @@ class Script
         $this->legislature_current = 17;
         $this->legislature_to_get = $legislature;
         $this->dissolution = FALSE;
+        echo $_SERVER['CI_ENV'];
+        die();
         $this->$mp_photos = ($_SERVER['CI_ENV'] === "production");
         if ($this->$mp_photos){
             echo "mp_photos is true";
