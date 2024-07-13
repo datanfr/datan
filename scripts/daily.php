@@ -4057,8 +4057,8 @@ $script->deputeAll();
 $script->deputeLast();
 */
 if ($script->$mp_photos){ // Check this in a later stage
-    $script->downloadPictures();
-    //$script->webpPictures();
+    //$script->downloadPictures();
+    $script->webpPictures();
     //$script->resmushPictures();
 } 
 /*
