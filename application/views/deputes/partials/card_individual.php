@@ -2,12 +2,12 @@
   <div class="card-body">
     <!-- IMAGE MP -->
     <div class="d-flex justify-content-center">
-      <div class="depute-img-circle">
+      <div class="<?= !$photo_square ? "depute-img-circle" : "depute-img-square" ?>">
         <?php if ($depute['img'] && $this->config->item('mp_photos')) : ?>
           <picture>
-            <source srcset="<?= asset_url(); ?>imgs/deputes_nobg_webp/depute_<?= $depute['idImage'] ?>_webp.webp" type="image/webp">
-            <source srcset="<?= asset_url(); ?>imgs/deputes_nobg/depute_<?= $depute['idImage'] ?>.png" type="image/png">
-            <img src="<?= asset_url(); ?>imgs/deputes_original/depute_<?= $depute['idImage'] ?>.png" width="150" height="192" alt="<?= $title ?>">
+            <source srcset="<?= asset_url(); ?>imgs/<?= !$photo_square ? "deputes_nobg_webp/" : "deputes_webp/" ?>depute_<?= $depute['idImage'] ?>_webp.webp" type="image/webp">
+            <source srcset="<?= asset_url(); ?>imgs/<?= !$photo_square ? "deputes_nobg/" : "deputes_original/" ?>depute_<?= $depute['idImage'] ?>.png" type="image/png">
+            <img src="<?= asset_url(); ?>imgs/<?= !$photo_square ? "deputes_original/" : "deputes_original/" ?>depute_<?= $depute['idImage'] ?>.png" width="150" height="192" alt="<?= $title ?>">
           </picture>
         <?php else : ?>
           <picture>
