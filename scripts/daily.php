@@ -4053,7 +4053,7 @@ if (isset($argv[1]) && isset($argv[2])) {
 $script->fillDeputes();
 $script->deputeAll();
 $script->deputeLast();
-if ($script->mp_photos) { // Check this in a later stage
+if ($script->getMpPhotos()) { // Check this in a later stage
     echo "yes";
     $script->downloadPictures();
     $script->webpPictures();
