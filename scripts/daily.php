@@ -24,6 +24,7 @@ class Script
         $this->legislature_to_get = $legislature;
         $this->dissolution = FALSE;
         echo $_SERVER['CI_ENV'];
+        echo $_SERVER['DATABASE_HOST'];
         die();
         $this->$mp_photos = ($_SERVER['CI_ENV'] === "production");
         if ($this->$mp_photos){
