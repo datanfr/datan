@@ -1033,10 +1033,12 @@ input#quicksearch[type=text]{
     }
   }
 }
-.card-avatar-depute{
+.card-avatar-depute-circle, .card-avatar-depute-square{
   border-radius: 50%;
   padding: 0;
   background: linear-gradient(#99BDDA, white);
+}
+.card-avatar-depute-circle{
   img{
     width: 80%;
   }

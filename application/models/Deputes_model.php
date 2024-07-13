@@ -6,20 +6,22 @@
 
     public function get_deputes_all($legislature, $active, $departement) {
       if (!is_null($departement)) {
-        $this->db->where('dptSlug', $departement);
+        $this->db->where('da.dptSlug', $departement);
       }
 
       if ($active === TRUE && dissolution() === FALSE) {
-        $this->db->where('dateFin IS NULL');
+        $this->db->where('da.dateFin IS NULL');
       } else {
-        $this->db->where('dateFin IS NOT NULL');
+        $this->db->where('da.dateFin IS NOT NULL');
       }
 
-      $this->db->select('*');
-      $this->db->select('libelle AS libelle, libelleAbrev AS libelleAbrev, CONCAT(departementNom, " (", departementCode, ")") AS cardCenter');
-      $this->db->where('legislature', $legislature);
-      $this->db->order_by('nameLast ASC, nameFirst ASC');
-      return $this->db->get('deputes_all')->result_array();
+      $this->db->select('da.*');
+      $this->db->select('da.libelle AS libelle, da.libelleAbrev AS libelleAbrev, CONCAT(da.departementNom, " (", da.departementCode, ")") AS cardCenter');
+      $this->db->select('dl.legislature AS legislature_last');
+      $this->db->join('deputes_last dl', 'da.mpId = dl.mpId', 'left');
+      $this->db->where('da.legislature', $legislature);
+      $this->db->order_by('da.nameLast ASC, da.nameFirst ASC');
+      return $this->db->get('deputes_all da')->result_array();
     }
 
     public function get_deputes_last($legislature){
