@@ -25,7 +25,7 @@ class Script
         $this->dissolution = FALSE;
         $this->$mp_photos = ($_SERVER['CI_ENV'] === "production");
         //$this->$mp_photos = TRUE; // Use if you want to download all photos in local
-        $this->$photos_redownload = TRUE; // TRUE if you want to redownload the photos of one legislature
+        $this->$photos_redownload = FALSE; // TRUE if you want to redownload the photos of one legislature
         if ($congress == "cong") {
           $this->congress = TRUE;
         }
@@ -697,20 +697,7 @@ class Script
             $uid = substr($d['uid'], 2);
             $output_filename = __DIR__ . "/../assets/imgs/deputes_nobg/depute_" . $uid . ".png";
             $input_filename = __DIR__ . "/../assets/imgs/deputes_nobg_import/depute_" . $uid . ".png";
-
-            // 1. Remove file if $photos_redownload
-            if ($this->$photos_redownload) {
-                echo "yes";
-                if (file_exists($output_filename)) {
-                    if (unlink($output_filename)) {
-                        echo "$uid photo has been deleted \n";
-                    } else {
-                        echo "$uid photo cannot be deleted due to an error \n";
-                    }
-                }
-            }
             
-            // 2. Resmush the photo
             if (!file_exists($output_filename)) {
                 $filename = realpath($input_filename);
                 if (file_exists($input_filename)) {
@@ -4057,9 +4044,9 @@ $script->deputeAll();
 $script->deputeLast();
 */
 if ($script->$mp_photos){ // Check this in a later stage
-    //$script->downloadPictures();
+    $script->downloadPictures();
     $script->webpPictures();
-    //$script->resmushPictures();
+    $script->resmushPictures();
 } 
 /*
 $script->groupeEffectif();
