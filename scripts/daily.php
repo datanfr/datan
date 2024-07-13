@@ -24,13 +24,7 @@ class Script
         $this->legislature_to_get = $legislature;
         $this->dissolution = FALSE;
         $this->mp_photos = ($_SERVER['DATABASE_HOST'] === "localhost"); // TRUE for on server
-        if ($this->mp_photos) {
-            echo "1. MP_photos is true";
-        }
         //$this->mp_photos = TRUE; // Use if you want to download all photos in local
-        if ($this->mp_photos) {
-            echo "2. MP_photos is true";
-        }
         $this->$photos_redownload = FALSE; // TRUE if you want to redownload the photos of one legislature
         if ($congress == "cong") {
           $this->congress = TRUE;
@@ -4054,12 +4048,9 @@ $script->fillDeputes();
 $script->deputeAll();
 $script->deputeLast();
 if ($script->getMpPhotos()) { // Check this in a later stage
-    echo "yes";
     $script->downloadPictures();
     $script->webpPictures();
     $script->resmushPictures();
-} else {
-    echo "no";
 }
 $script->groupeEffectif();
 //$script->deputeJson(); // No longer used
