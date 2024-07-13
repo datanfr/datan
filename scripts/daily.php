@@ -4052,9 +4052,9 @@ if ($script->$mp_photos){ // Check this in a later stage
     $script->downloadPictures();
     $script->webpPictures();
     $script->resmushPictures();
-} echo {
-    echo "no";
-}
+    } else {
+        echo "no";
+    }
 $script->groupeEffectif();
 //$script->deputeJson(); // No longer used
 $script->groupeStats();
