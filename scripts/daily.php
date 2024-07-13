@@ -50,6 +50,12 @@ class Script
         }
     }
 
+    // Adding a public getter method to access private properties
+    public function getMpPhotos()
+    {
+        return $this->mp_photos;
+    }
+
 
     function __destruct()
     {
@@ -4053,7 +4059,7 @@ if ($script->mp_photos) { // Check this in a later stage
     $script->webpPictures();
     $script->resmushPictures();
 } else {
-        echo "no";
+    echo "no";
 }
 $script->groupeEffectif();
 //$script->deputeJson(); // No longer used
