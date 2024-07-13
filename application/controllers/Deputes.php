@@ -274,6 +274,9 @@
       $depute = $data['depute']['nameFirst'].' '.$data['depute']['nameLast'];
       $data['no_job'] = array('autre profession','autres', 'sans profession déclarée', 'sans profession');
 
+      // Photo square
+      $data['photo_square'] = $data['depute']['legislature'] >= 17 ? TRUE : FALSE;
+
       // Gender
       $data['gender'] = gender($data['depute']['civ']);
 
@@ -509,6 +512,9 @@
       $data['mandats'] = $this->deputes_model->get_historique_mandats($mpId);
       $data['mandatsReversed'] = array_reverse($data['mandats']);
       $groupe_id = $data['depute']['groupeId'];
+
+      // Photos square 
+      $data['photo_square'] = $data['depute_last']['legislature'] >= 17 ? TRUE : FALSE;
 
       // Gender
       $data['gender'] = gender($data['depute']['civ']);
