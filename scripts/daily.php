@@ -24,12 +24,6 @@ class Script
         $this->legislature_to_get = $legislature;
         $this->dissolution = FALSE;
         $this->$mp_photos = ($_SERVER['DATABASE_HOST'] === "localhost"); // TRUE for on server
-        if ($this->$mp_photos){
-            echo "mp_photos is true";
-        } else {
-            echo "mp_photos is not true";
-        }
-        die();
         //$this->$mp_photos = TRUE; // Use if you want to download all photos in local
         $this->$photos_redownload = FALSE; // TRUE if you want to redownload the photos of one legislature
         if ($congress == "cong") {
