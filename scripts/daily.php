@@ -4042,9 +4042,12 @@ $script->fillDeputes();
 $script->deputeAll();
 $script->deputeLast();
 if ($script->$mp_photos){ // Check this in a later stage
+    echo "yes";
     $script->downloadPictures();
     $script->webpPictures();
     $script->resmushPictures();
+} echo {
+    echo "no";
 }
 $script->groupeEffectif();
 //$script->deputeJson(); // No longer used
