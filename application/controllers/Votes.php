@@ -408,7 +408,7 @@
       // Get authors
       if($legislature >= 15){
         // 1. If an amendment
-        if ($data['vote']['amendment']['amendmentId']) {
+        if (!empty($data['vote']['amendment']['amendmentId'])) {
           $data['authorMeta']['title'] = 'amendement';
           $data['amdtAuthor'] = $this->votes_model->get_amendement_author($data['vote']['amendment']['amendmentId']);
           if (in_array($data['amdtAuthor']['type'], array('Député', 'Rapporteur'))) {
