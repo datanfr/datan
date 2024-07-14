@@ -187,7 +187,7 @@ class Sitemap extends CI_Controller {
     // Data
     $fields = $this->fields_model->get_active_fields();
     $data['elections'] = $this->elections_model->get_election_all();
-    $legislatures = array(14, 15);
+    $legislatures = array(14, 15, 16, 17);
     foreach ($legislatures as $legislature) {
       $data['votes'][$legislature]['years'] = $this->votes_model->get_years_archives($legislature);
       $data['votes'][$legislature]['months'] = $this->votes_model->get_months_archives($legislature);
