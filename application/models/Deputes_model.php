@@ -452,8 +452,10 @@
       if (dissolution() === false) {
         $this->db->where('da.dateFin IS NULL');
       }
-      $this->db->where('legislature', legislature_current());
+      $this->db->where('da.legislature', legislature_current());
       $this->db->select('da.*, CONCAT(da.departementNom, " (", da.departementCode, ")") AS cardCenter');
+      $this->db->select('dl.legislature AS legislature_last');
+      $this->db->join('deputes_last dl', 'dl.mpId = da.mpId', 'left');
       $this->db->limit(1);
       $this->db->order_by('rand()');
       return $this->db->get('deputes_all da')->row_array();
