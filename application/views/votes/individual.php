@@ -176,16 +176,6 @@
             </div>
           </div>
         </div>
-      <?php else : ?>
-        <div class="mt-5">
-          <h2>Ce vote n'est pas compréhensible ?</h2>
-          <p class="mt-4">Certains votes peuvent être compliqués à comprendre. Comment savoir à quoi correspond un article dans un projet de loi ? Comment connaître le contenu de tel amendement ?</p>
-          <p>Pas de problème, <b>l’équipe de Datan contextualise et simplifie certains votes</b>.</p>
-          <p>Vous souhaitez que l'on vous explique ce vote ? Demandez-nous-le !</p>
-          <div class="d-flex justify-content-center mt-4">
-            <a class="btn bg-primary text-white font-weight-bold cursor-pointer" data-toggle="modal" data-target="#voteDatanRequested">Demandez-nous une explication !</a>
-          </div>
-        </div>
       <?php endif; ?>
     </div>
     <div class="col-lg-4 col-md-4 col-12">
