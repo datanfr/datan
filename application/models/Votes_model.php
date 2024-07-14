@@ -617,6 +617,7 @@
       );
       $this->db->join('deputes_all dl', 'da.ref = dl.mpId');
       $this->db->select('*, CONCAT(departementNom, " (", departementCode, ")") AS cardCenter');
+      $this->db->select('dl.legislature AS legislature_last');
       $this->db->order_by('dl.nameLast', 'ASC');
       $this->db->group_by('dl.mpId');
       return $this->db->get_where('dossiers_acteurs da', $where)->result_array();
@@ -630,6 +631,7 @@
       );
       $this->db->join('deputes_all dl', 'da.ref = dl.mpId');
       $this->db->select('*, CONCAT(departementNom, " (", departementCode, ")") AS cardCenter');
+      $this->db->select('dl.legislature AS legislature_last');
       $this->db->order_by('dl.nameLast', 'ASC');
       $this->db->group_by('dl.mpId');
       return $this->db->get_where('dossiers_acteurs da', $where)->result_array();
@@ -700,11 +702,11 @@
         'e.legislature' => $legislature,
         'e.voteNumero' => $voteNumero
       );
-      $this->db->select('d.civ, d.nameFirst, d.nameLast, d.nameUrl, d.dptSlug, d.libelleAbrev, d.couleurAssociee, substr(d.mpId, 3) AS idImage, d.img, e.text, v.vote');
+      $this->db->select('d.civ, d.nameFirst, d.nameLast, d.nameUrl, d.legislature AS legislature_last, d.dptSlug, d.libelleAbrev, d.couleurAssociee, substr(d.mpId, 3) AS idImage, d.img, e.text, v.vote');
       $this->db->join('deputes_last d', 'e.mpId = d.mpId', 'left');
       $this->db->join('votes_scores v', 'v.legislature = e.legislature AND v.voteNumero = e.voteNumero AND v.mpId = e.mpId', 'left');
       $this->db->order_by('e.modified_at', 'DESC');
-      $this->db->where('state', 1);
+      $this->db->where('e.state', 1);
       $results = $this->db->get_where('explications_mp e', $where)->result_array();
       if ($results) {
         foreach ($results as $key => $value) {
