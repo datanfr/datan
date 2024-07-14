@@ -102,7 +102,9 @@
     public function get_mps_active($organeRef){
       $this->db->select('ms.organeRef, da.nameFirst, da.nameLast, da.couleurAssociee, da.mpId, da.dptSlug, da.nameUrl, da.circo AS electionCirco, da.libelle AS libelle, da.libelleAbrev AS libelleAbrev, da.img');
       $this->db->select('CONCAT(da.departementNom, " (", da.departementCode, ")") AS cardCenter');
+      $this->db->select('dl.legislature AS legislature_last');
       $this->db->join('deputes_all da', 'ms.mpId = da.mpId', 'left');
+      $this->db->join('deputes_last dl', 'ms.mpId = dl.mpId', 'left');
       $this->db->where('ms.organeRef', $organeRef);
       $this->db->where('da.legislature', legislature_current());
       $this->db->where('ms.dateFin IS NULL');

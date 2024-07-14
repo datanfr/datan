@@ -6,20 +6,22 @@
 
     public function get_deputes_all($legislature, $active, $departement) {
       if (!is_null($departement)) {
-        $this->db->where('dptSlug', $departement);
+        $this->db->where('da.dptSlug', $departement);
       }
 
       if ($active === TRUE && dissolution() === FALSE) {
-        $this->db->where('dateFin IS NULL');
+        $this->db->where('da.dateFin IS NULL');
       } else {
-        $this->db->where('dateFin IS NOT NULL');
+        $this->db->where('da.dateFin IS NOT NULL');
       }
 
-      $this->db->select('*');
-      $this->db->select('libelle AS libelle, libelleAbrev AS libelleAbrev, CONCAT(departementNom, " (", departementCode, ")") AS cardCenter');
-      $this->db->where('legislature', $legislature);
-      $this->db->order_by('nameLast ASC, nameFirst ASC');
-      return $this->db->get('deputes_all')->result_array();
+      $this->db->select('da.*');
+      $this->db->select('da.libelle AS libelle, da.libelleAbrev AS libelleAbrev, CONCAT(da.departementNom, " (", da.departementCode, ")") AS cardCenter');
+      $this->db->select('dl.legislature AS legislature_last');
+      $this->db->join('deputes_last dl', 'da.mpId = dl.mpId', 'left');
+      $this->db->where('da.legislature', $legislature);
+      $this->db->order_by('da.nameLast ASC, da.nameFirst ASC');
+      return $this->db->get('deputes_all da')->result_array();
     }
 
     public function get_deputes_last($legislature){
@@ -124,10 +126,13 @@
 
     public function get_depute_by_legislature($mpId, $legislature){
       $where = array(
-        'mpId' => $mpId,
-        'legislature' => $legislature
+        'da.mpId' => $mpId,
+        'da.legislature' => $legislature
       );
-      return $this->db->get_where('deputes_all', $where, 1)->row_array();
+      $this->db->select('da.*');
+      $this->db->select('dl.legislature AS legislature_last');
+      $this->db->join('deputes_last dl', 'dl.mpId = da.mpId', 'left');
+      return $this->db->get_where('deputes_all da', $where, 1)->row_array();
     }
 
     public function get_depute_contacts($mpId){
@@ -450,8 +455,10 @@
       if (dissolution() === false) {
         $this->db->where('da.dateFin IS NULL');
       }
-      $this->db->where('legislature', legislature_current());
+      $this->db->where('da.legislature', legislature_current());
       $this->db->select('da.*, CONCAT(da.departementNom, " (", da.departementCode, ")") AS cardCenter');
+      $this->db->select('dl.legislature AS legislature_last');
+      $this->db->join('deputes_last dl', 'dl.mpId = da.mpId', 'left');
       $this->db->limit(1);
       $this->db->order_by('rand()');
       return $this->db->get('deputes_all da')->row_array();

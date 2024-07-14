@@ -282,8 +282,8 @@ $('#newsletterPage').on('submit', (e) => {
 /*
 ##########
 VOTE DATAN REQUESTED (MODAL)
+HAS BEEN REMOVED
 ##########
-*/
 
 $('#voteDatanRequestedForm').on('submit', (e) => {
   e.preventDefault();
@@ -310,6 +310,7 @@ $('#voteDatanRequestedForm').on('submit', (e) => {
   return true;
 })
 
+*/
 
 /*
 ##########

@@ -7,6 +7,9 @@
       <div class="row mt-2 mb-3">
         <div class="col-12">
           <h2><?= $h2 ?></h2>
+          <?php if(empty($votes)): ?>
+            <p class="text-center mt-4">Il n'y a pas encore eu de scrutins à l'Assemblée nationale pour la <?= $legislature ?><sup>ème</sup> législature.</p>
+          <?php endif; ?>
         </div>
       </div>
       <div class="row mt-2">

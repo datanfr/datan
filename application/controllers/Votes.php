@@ -201,10 +201,6 @@
       // Check if votes
       $data['votes'] = $this->votes_model->get_all_votes($legislature, $year, $month, FALSE);
 
-      if (empty($data['votes'])) {
-        show_404($this->functions_datan->get_404_infos());
-      }
-
       // ALL OR ALL/YEAR OR ALL/YEAR/MONTH ?
       if ($year == NULL && $month == NULL) {
         $data['h2'] = "Liste des votes de la ".$legislature."<sup>e</sup> législature";
@@ -357,6 +353,11 @@
         show_404($this->functions_datan->get_404_infos());
       }
 
+      // Caching
+      if(!in_array($_SERVER['REMOTE_ADDR'], localhost()) && !$this->session->userdata('logged_in')){
+        $this->output->cache("4320"); // Caching enable for 3 days (1440 minutes per day)
+      }
+
       $data['legislature'] = $legislature;
 
       // Get vote
@@ -403,7 +404,7 @@
       // Get authors
       if($legislature >= 15){
         // 1. If an amendment
-        if ($data['vote']['amendment']['amendmentId']) {
+        if (!empty($data['vote']['amendment']['amendmentId'])) {
           $data['authorMeta']['title'] = 'amendement';
           $data['amdtAuthor'] = $this->votes_model->get_amendement_author($data['vote']['amendment']['amendmentId']);
           if (in_array($data['amdtAuthor']['type'], array('Député', 'Rapporteur'))) {
@@ -489,8 +490,8 @@
         $data['vote_next'] = FALSE;
       }
 
-      // Captcha for votes_datan_requested
-      $data['captchaImg'] = $this->captcha_model->generateCaptcha();
+      // Captcha for votes_datan_requested - Has been removed
+      //$data['captchaImg'] = $this->captcha_model->generateCaptcha();
 
       $data['votes_datan'] = $this->votes_model->get_last_votes_datan(7);
       // Meta
