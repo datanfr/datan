@@ -489,8 +489,8 @@
         $data['vote_next'] = FALSE;
       }
 
-      // Captcha for votes_datan_requested
-      $data['captchaImg'] = $this->captcha_model->generateCaptcha();
+      // Captcha for votes_datan_requested - Has been removed
+      //$data['captchaImg'] = $this->captcha_model->generateCaptcha();
 
       $data['votes_datan'] = $this->votes_model->get_last_votes_datan(7);
       // Meta
