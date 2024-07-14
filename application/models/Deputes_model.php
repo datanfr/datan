@@ -126,10 +126,13 @@
 
     public function get_depute_by_legislature($mpId, $legislature){
       $where = array(
-        'mpId' => $mpId,
-        'legislature' => $legislature
+        'da.mpId' => $mpId,
+        'da.legislature' => $legislature
       );
-      return $this->db->get_where('deputes_all', $where, 1)->row_array();
+      $this->db->select('da.*');
+      $this->db->select('dl.legislature AS legislature_last');
+      $this->db->join('deputes_last dl', 'dl.mpId = da.mpId', 'left');
+      return $this->db->get_where('deputes_all da', $where, 1)->row_array();
     }
 
     public function get_depute_contacts($mpId){

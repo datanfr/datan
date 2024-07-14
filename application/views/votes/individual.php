@@ -208,7 +208,7 @@
           </tbody>
         </table>
       </div>
-      <?php if ($vote['dossierUrl'] || $vote['amendment']['amendmentHref']): ?>
+      <?php if ($vote['dossierUrl'] || $vote['amendment']): ?>
         <div class="bloc-savoir-plus d-none d-md-block mt-5">
           <h3 class="subtitle">En savoir plus</h3>
           <div class="bloc-links">
@@ -400,8 +400,8 @@ endif; ?>
           </div>
         </div>
       </div>
-      <?php if ($vote['amendment']['expose']) : ?>
-        < class="mt-5">
+      <?php if (isset($vote['amendment']['expose'])) : ?>
+        <div class="mt-5">
           <h2>Exposé des motifs de l'amendement</h2>
           <p class="mt-4 font-italic">L'objectif d'un amendement est de modifier ou d'ajouter une mesure d'un projet ou d'une proposition de loi. Le ou les députés qui rédigent l'amendement écrivent également un exposé des motifs.</p>
           <div class="card">
@@ -414,7 +414,7 @@ endif; ?>
           <?php endif; ?>
         </div>
       <?php endif; ?>
-      <?php if ($vote['dossierUrl'] || $vote['amendment']['amendmentHref']) : ?>
+      <?php if ($vote['dossierUrl'] || $vote['amendment']) : ?>
         <div class="bloc-savoir-plus d-md-none mt-5">
           <h3 class="subtitle">En savoir plus</h3>
           <div class="bloc-links">
