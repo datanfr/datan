@@ -24,6 +24,7 @@
     </div>
   </div>
 </div>
+<?php /* ?> When there are elections in the future
 <div class="container-fluid pg-elections-index py-5 mt-5 bg-info">
   <div class="container">
     <div class="row">
@@ -40,6 +41,7 @@
     </div>
   </div>
 </div>
+<?php */ ?>
 <div class="container pg-elections-index my-5">
   <div class="row">
     <div class="col-12">
