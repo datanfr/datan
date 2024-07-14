@@ -176,16 +176,6 @@
             </div>
           </div>
         </div>
-      <?php else : ?>
-        <div class="mt-5">
-          <h2>Ce vote n'est pas compréhensible ?</h2>
-          <p class="mt-4">Certains votes peuvent être compliqués à comprendre. Comment savoir à quoi correspond un article dans un projet de loi ? Comment connaître le contenu de tel amendement ?</p>
-          <p>Pas de problème, <b>l’équipe de Datan contextualise et simplifie certains votes</b>.</p>
-          <p>Vous souhaitez que l'on vous explique ce vote ? Demandez-nous-le !</p>
-          <div class="d-flex justify-content-center mt-4">
-            <a class="btn bg-primary text-white font-weight-bold cursor-pointer" data-toggle="modal" data-target="#voteDatanRequested">Demandez-nous une explication !</a>
-          </div>
-        </div>
       <?php endif; ?>
     </div>
     <div class="col-lg-4 col-md-4 col-12">
@@ -218,7 +208,7 @@
           </tbody>
         </table>
       </div>
-      <?php if ($vote['dossierUrl'] || $vote['amendment']['amendmentHref']): ?>
+      <?php if ($vote['dossierUrl'] || $vote['amendment']): ?>
         <div class="bloc-savoir-plus d-none d-md-block mt-5">
           <h3 class="subtitle">En savoir plus</h3>
           <div class="bloc-links">
@@ -410,8 +400,8 @@ endif; ?>
           </div>
         </div>
       </div>
-      <?php if ($vote['amendment']['expose']) : ?>
-        < class="mt-5">
+      <?php if (isset($vote['amendment']['expose'])) : ?>
+        <div class="mt-5">
           <h2>Exposé des motifs de l'amendement</h2>
           <p class="mt-4 font-italic">L'objectif d'un amendement est de modifier ou d'ajouter une mesure d'un projet ou d'une proposition de loi. Le ou les députés qui rédigent l'amendement écrivent également un exposé des motifs.</p>
           <div class="card">
@@ -424,7 +414,7 @@ endif; ?>
           <?php endif; ?>
         </div>
       <?php endif; ?>
-      <?php if ($vote['dossierUrl'] || $vote['amendment']['amendmentHref']) : ?>
+      <?php if ($vote['dossierUrl'] || $vote['amendment']) : ?>
         <div class="bloc-savoir-plus d-md-none mt-5">
           <h3 class="subtitle">En savoir plus</h3>
           <div class="bloc-links">
