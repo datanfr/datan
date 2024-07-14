@@ -296,6 +296,9 @@
       } else {
         $data['accord_groupes_featured'] = $data['accord_groupes_all'];
       }
+      $data['accord_groupes_featured'] = array_values(array_filter($data['accord_groupes_featured'], function($value) {
+        return $value['libelleAbrev'] !== 'NI'; // Remove NI groups
+      }));    
 
       $accord_groupes_n = count($data['accord_groupes_featured']);
       $accord_groupes_divided = round($accord_groupes_n / 2, 0, PHP_ROUND_HALF_UP);
