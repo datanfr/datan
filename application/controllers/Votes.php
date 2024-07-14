@@ -201,10 +201,6 @@
       // Check if votes
       $data['votes'] = $this->votes_model->get_all_votes($legislature, $year, $month, FALSE);
 
-      if (empty($data['votes'])) {
-        show_404($this->functions_datan->get_404_infos());
-      }
-
       // ALL OR ALL/YEAR OR ALL/YEAR/MONTH ?
       if ($year == NULL && $month == NULL) {
         $data['h2'] = "Liste des votes de la ".$legislature."<sup>e</sup> législature";
