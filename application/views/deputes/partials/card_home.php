@@ -2,10 +2,10 @@
   <?php if (isset($depute['couleurAssociee'])): ?>
     <div class="liseret" style="background-color: <?= $depute["couleurAssociee"] ?>"></div>
   <?php endif; ?>
-  <div class="card-avatar-depute card-avatar">
+  <div class="card-avatar-depute<?= $depute['legislature_last'] >= 17 ? '-square' : '-circle' ?> card-avatar">
     <?php if ($depute['img'] && $this->config->item('mp_photos')): ?>
-      <img class="img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-face.png" width="130" height="166" data-src="<?= base_url(); ?>assets/imgs/deputes_nobg/depute_<?= substr($depute["mpId"], 2) ?>.png" alt="<?= $depute['nameFirst'].' '.$depute['nameLast'] ?>">
-      <?php else: ?>
+      <img class="img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-face.png" width="130" height="166" data-src="<?= base_url(); ?>assets/imgs/<?= $depute['legislature_last'] >= 17 ? "deputes_original/" : "deputes_nobg/" ?>depute_<?= substr($depute["mpId"], 2) ?>.png" alt="<?= $depute['nameFirst'].' '.$depute['nameLast'] ?>">
+    <?php else: ?>
       <img class="img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-face.png" width="130" height="166" alt="<?= $depute['nameFirst'].' '.$depute['nameLast'] ?>">
     <?php endif; ?>
   </div>

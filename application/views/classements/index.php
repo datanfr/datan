@@ -445,10 +445,10 @@
                     Les députés sont-ils représentatifs de la population française ?
                   </p>
                   <p>
-                    La grande majorité des parlementaires étaient cadres ou exerçaient une profession intellectuelle supérieure, par exemple avocat, médecin ou ingénieur. Ils représentent <?= round($famSocPro_cadres['mps']) ?> % des députés, alors que seulement <?= round($famSocPro_cadres['population']) ?> % de la population française appartient à cette catégorie.
+                    La grande majorité des parlementaires sont cadres ou exercent une profession intellectuelle supérieure, par exemple avocat, médecin ou ingénieur. Ils représentent <?= round($famSocPro_cadres['mps']) ?>% des députés, alors que seulement <?= round($famSocPro_cadres['population']) ?>% de la population française appartient à cette catégorie.
                   </p>
                   <p>
-                    Au contraire, <b>peu de députés étaient employés ou ouvriers</b>, alors qu'ils représentent un tiers de la population.
+                    Au contraire, <b>peu de députés sont employés ou ouvriers</b>, alors qu'ils représentent un tiers de la population.
                   </p>
                 </div>
                 <div class="col-lg-8">

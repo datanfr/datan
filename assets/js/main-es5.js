@@ -266,17 +266,17 @@ $('#newsletterPage').on('submit', function (e) {
 /*
 ##########
 VOTE DATAN REQUESTED (MODAL)
+HAS BEEN REMOVED
 ##########
-*/
 
-$('#voteDatanRequestedForm').on('submit', function (e) {
+$('#voteDatanRequestedForm').on('submit', (e) => {
   e.preventDefault();
   $.ajax({
     url: get_base_url() + "/api/votes/request_vote_datan",
     type: "POST",
     data: $('#voteDatanRequestedForm').serialize(),
     dataType: 'json',
-    success: function success(ac) {
+    success: function (ac) {
       if (!ac) {
         $('#voteDatanRequestedForm').hide();
         $('#fail').show();
@@ -285,14 +285,16 @@ $('#voteDatanRequestedForm').on('submit', function (e) {
         $('#success').show();
       }
     },
-    error: function error(err) {
-      console.log('err', err);
+    error: function (err) {
+      console.log('err', err)
       $('#voteDatanRequestedForm').hide();
       $('#fail').show();
     }
   });
   return true;
-});
+})
+
+*/
 
 /*
 ##########

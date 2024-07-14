@@ -1033,10 +1033,12 @@ input#quicksearch[type=text]{
     }
   }
 }
-.card-avatar-depute{
+.card-avatar-depute-circle, .card-avatar-depute-square{
   border-radius: 50%;
   padding: 0;
   background: linear-gradient(#99BDDA, white);
+}
+.card-avatar-depute-circle{
   img{
     width: 80%;
   }
@@ -1198,6 +1200,23 @@ input#quicksearch[type=text]{
   text-align: center;
   img{
     width: 80%;
+    height: auto;
+  }
+  &.depute-img-circle-explication{
+    width: 50px;
+    height: 50px;
+  }
+}
+.depute-img-square{
+  width: 150px;
+  height: 150px;
+  overflow: hidden;
+  position: relative;
+  border-radius: 50%;
+  background: linear-gradient(#99BDDA, white);
+  text-align: center;
+  img{
+    width: 100%;
     height: auto;
   }
   &.depute-img-circle-explication{
@@ -2704,7 +2723,7 @@ body{
         content: "- Lire moins";
       }
     }
-    .depute-img-circle{
+    .depute-img{
       flex: 0 0 3.75rem;
       height: auto;
     }

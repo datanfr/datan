@@ -5,21 +5,25 @@
     }
 
     public function get_ranking_age(){
-if(dissolution() === false){
-$sql = 'SELECT da.civ, da.nameFirst, da.nameLast, da.nameUrl, da.legislature, da.img, da.libelle AS libelle, da.libelleAbrev AS libelleAbrev, da.mpId, da.dptSlug, da.age, da.couleurAssociee,
-          CONCAT(da.departementNom, " (", da.departementCode, ")") AS cardCenter
+      if(dissolution() === false) {
+        $sql = 'SELECT da.civ, da.nameFirst, da.nameLast, da.nameUrl, da.legislature, da.img, da.libelle AS libelle, da.libelleAbrev AS libelleAbrev, da.mpId, da.dptSlug, da.age, da.couleurAssociee,
+          CONCAT(da.departementNom, " (", da.departementCode, ")") AS cardCenter,
+          dl.legislature AS legislature_last
           FROM deputes_all da
+          LEFT JOIN deputes_last dl ON dl.mpId = da.mpId
           LEFT JOIN deputes d ON da.mpId = d.mpId
           WHERE da.legislature = ? AND da.dateFin IS NULL
           ORDER BY DATEDIFF(curdate(), d.birthDate) DESC';
-} else {
-$sql = 'SELECT da.civ, da.nameFirst, da.nameLast, da.nameUrl, da.legislature, da.img, da.libelle AS libelle, da.libelleAbrev AS libelleAbrev, da.mpId, da.dptSlug, da.age, da.couleurAssociee,
-          CONCAT(da.departementNom, " (", da.departementCode, ")") AS cardCenter
+      } else {
+        $sql = 'SELECT da.civ, da.nameFirst, da.nameLast, da.nameUrl, da.legislature, da.img, da.libelle AS libelle, da.libelleAbrev AS libelleAbrev, da.mpId, da.dptSlug, da.age, da.couleurAssociee,
+          CONCAT(da.departementNom, " (", da.departementCode, ")") AS cardCenter,
+          dl.legislature AS legislature_last
           FROM deputes_all da
+          LEFT JOIN deputes_last dl ON dl.mpId = da.mpId
           LEFT JOIN deputes d ON da.mpId = d.mpId
           WHERE da.legislature = ?
           ORDER BY DATEDIFF(curdate(), d.birthDate) DESC';
-}
+      }
 
       $result = $this->db->query($sql, legislature_current())->result_array();
       $result = array_map(function($v) use (&$i) { $v['rank'] = ++$i; return $v; }, $result);
