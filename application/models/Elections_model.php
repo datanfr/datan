@@ -198,6 +198,7 @@
 
       $this->db->select('*, candidate_full.depute_libelle AS libelle, candidate_full.depute_libelleAbrev AS libelleAbrev');
       $this->db->select('DATE_FORMAT(modified_at, "%d/%m/%Y") AS modified_at');
+      $this->db->select('legislature AS legislature_last');
       $this->db->order_by('nameLast', 'ASC');
       $this->db->order_by('nameFirst', 'ASC');
       $query = $this->db->get_where('candidate_full', $where);
