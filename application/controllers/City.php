@@ -121,12 +121,13 @@
       $data['adjacentes'] = $this->city_model->get_adjacentes($insee, 4);
 
       // Get city mayor
+      /* NEEDS TO BE IMPROVED
       $data['mayor'] = $this->city_model->get_mayor($data['ville']['dpt'], $insee, $data['ville']['commune']);
       if ($data['mayor']['gender'] == "F") {
         $data['mayor']['gender_le'] = "la";
       } else {
         $data['mayor']['gender_le'] = "le";
-      }
+      } */
 
       // Get elections
       // 1. 2022 _ Législatives _ 2nd tour
