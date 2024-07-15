@@ -30,8 +30,8 @@
 
     // TABLE PAGE votes
     $('#table-vote-all').DataTable({
-      "ordering": false,
-      language: french
+      language: french,
+      order: [[1, 'desc'], [0, 'desc']]
     });
 
     // TABLE PAGE votes/x -> groupes

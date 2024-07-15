@@ -6,7 +6,7 @@
         <div class="modal-content">
           <?= form_open('newsletter', array('id'=> 'newsletterForm')); ?>
             <div class="modal-header">
-              <h2 class="modal-title" id="newsletterLabel">Newsletter</h2>
+              <span class="modal-title h2" id="newsletterLabel">Newsletter</span>
               <span class="close cursor-pointer" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
               </span>
@@ -21,7 +21,7 @@
             <?= form_close() ?>
           <div id="modalSubscription">
             <div class="modal-header">
-              <h2 class="modal-title">Félicitations</h2>
+              <span class="modal-title h2">Félicitations</span>
               <span class="close cursor-pointer" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
               </span>
@@ -35,7 +35,7 @@
           </div>
           <div id="modalFail">
             <div class="modal-header">
-              <h2 class="modal-title">Quelque chose s'est mal passé</h2>
+              <span class="modal-title h2">Quelque chose s'est mal passé</span>
               <span class="close cursor-pointer" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
               </span>
@@ -61,10 +61,18 @@
               <div class="d-flex flex-row liste justify-content-center">
                 <div class="d-flex flex-column mx-1">
                   <p>
-                    <a href="<?= base_url(); ?>a-propos" class="no-decoration underline">À propos</a>
+                    <?php if ($this->router->fetch_class() == "home"): ?> 
+                      <a href="<?= base_url(); ?>a-propos" class="no-decoration underline">À propos</a>
+                    <?php else: ?>
+                      <span class="url_obf no-decoration underline text-white" url_obf="<?= url_obfuscation(base_url() . "a-propos") ?>">À propos</span>
+                    <?php endif; ?>
                   </p>
                   <p>
-                    <a href="<?= base_url(); ?>newsletter" class="no-decoration underline">Newsletter</a>
+                    <?php if ($this->router->fetch_class() == "home"): ?> 
+                      <a href="<?= base_url(); ?>newsletter" class="no-decoration underline">Newsletter</a>
+                    <?php else: ?>
+                      <span class="url_obf no-decoration underline text-white" url_obf="<?= url_obfuscation(base_url() . "newsletter") ?>">Newsletter</span>
+                    <?php endif; ?>
                   </p>
                   <p>
                     <a href="<?= base_url(); ?>statistiques/aide" class="no-decoration underline">Nos statistiques</a>
@@ -87,7 +95,11 @@
                     <a href="<?= base_url(); ?>login" class="no-decoration underline">Connexion</a>
                   </p>
                   <p>
-                    <a href="<?= base_url(); ?>mentions-legales" class="no-decoratio underline">Mentions légales</a>
+                    <?php if ($this->router->fetch_class() == "home"): ?> 
+                      <a href="<?= base_url(); ?>mentions-legales" class="no-decoratio underline">Mentions légales</a>
+                    <?php else: ?>
+                      <span class="url_obf no-decoration underline text-white" url_obf="<?= url_obfuscation(base_url() . "mentions-legales") ?>">Mentions légales</span>
+                    <?php endif; ?>
                   </p>
                 </div>
               </div>
