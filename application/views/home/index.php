@@ -353,9 +353,9 @@
           <span class="url_obf" url_obf="<?= url_obfuscation("https://www.lesechos.fr/politique-societe/politique/le-rn-veut-engranger-sur-sa-premiere-annee-a-lassemblee-nationale-1954103") ?>">
             <img class="mx-2 my-3 img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="119" height="28" data-src="<?= asset_url() ?>imgs/media/les_echos.png" alt="Les Echos">
           </span>
-          <span class="url_obf" url_obf="<?= url_obfuscation("https://www.ouest-france.fr/elections/legislatives/lannion-paimpol-quel-bilan-pour-le-depute-eric-bothorel-0f349264-e100-11ec-8469-165462e4a30b") ?>">
+          <a href="https://www.ouest-france.fr/elections/legislatives/lannion-paimpol-quel-bilan-pour-le-depute-eric-bothorel-0f349264-e100-11ec-8469-165462e4a30b" target="_blank" rel="noopener">
             <img class="mx-2 my-3 img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="120" height="38" data-src="<?= asset_url() ?>imgs/media/ouest_france.png" alt="Ouest France">
-          </span>
+          </a>
           <span class="url_obf" url_obf="<?= url_obfuscation("https://www.la-croix.com/France/lhemicycle-Rassemblement-national-attend-heure-2023-06-01-1201269583") ?>">
             <img class="mx-2 my-3 img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="150" height="30" data-src="<?= asset_url() ?>imgs/media/la_croix.png" alt="La Croix">
           </span>
@@ -428,9 +428,9 @@
           <span class="url_obf" url_obf="<?= url_obfuscation("https://www.lest-eclair.fr/id498781/article/2023-06-30/un-apres-les-legislatives-les-republicains-deboussoles") ?>">
             <img class="mx-2 my-3 img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="145" height="22" data-src="<?= asset_url() ?>imgs/media/est_eclair.png" alt="L'Est eclair">
           </span>
-          <span class="url_obf" url_obf="<?= url_obfuscation("https://www.lemondedesados.fr/elections-legislatives-a-quoi-servent-les-deputes/") ?>">
+          <a href="https://www.lemondedesados.fr/elections-legislatives-a-quoi-servent-les-deputes/" target="_blank" ref="noopener">
             <img class="mx-2 my-3 img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="85" height="40" data-src="<?= asset_url() ?>imgs/media/mda.png" alt="Le Monde des Ados">
-          </span>
+          </a>
           <span class="url_obf" url_obf="<?= url_obfuscation("https://www.republicain-lorrain.fr/politique/2023/02/02/etre-depute-c-est-du-temps-plein") ?>">
             <img class="mx-2 my-3 img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="123" height="40" data-src="<?= asset_url() ?>imgs/media/republicain_lorrain.png" alt="Républicain Lorrain">
           </span>

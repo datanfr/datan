@@ -28,12 +28,10 @@
               <?php foreach ($votes as $vote): ?>
                 <tr data-href="<?= base_url() ?>votes/legislature-<?= $legislature ?>/vote_<?= $vote['voteNumero'] ?>">
                   <td>
-                    <?php if ($archive): ?>
-                      <a href="<?= base_url() ?>votes/legislature-<?= $legislature ?>/vote_<?= $vote['voteNumero'] ?>"><?= $vote['voteNumero'] ?></a>
-                    <?php elseif ($i <= 30): ?>
-                      <a href="<?= base_url() ?>votes/legislature-<?= $legislature ?>/vote_<?= $vote['voteNumero'] ?>"><?= $vote['voteNumero'] ?></a>
+                    <?php if ($i <= 30): ?>
+                      <a href="<?= base_url() ?>votes/legislature-<?= $legislature ?>/vote_<?= $vote['voteNumero'] ?>"><?= str_replace("c", "", $vote['voteNumero']) ?></a>
                     <?php else: ?>
-                      <?= $vote['voteNumero'] ?>
+                      <?= str_replace("c", "", $vote['voteNumero']) ?>
                     <?php endif; ?>
                   </td>
                   <td><?= date("d-m-Y", strtotime($vote['dateScrutin'])) ?></td>

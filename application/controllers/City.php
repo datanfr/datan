@@ -121,12 +121,13 @@
       $data['adjacentes'] = $this->city_model->get_adjacentes($insee, 4);
 
       // Get city mayor
+      /* NEEDS TO BE IMPROVED
       $data['mayor'] = $this->city_model->get_mayor($data['ville']['dpt'], $insee, $data['ville']['commune']);
       if ($data['mayor']['gender'] == "F") {
         $data['mayor']['gender_le'] = "la";
       } else {
         $data['mayor']['gender_le'] = "le";
-      }
+      } */
 
       // Get elections
       // 1. 2022 _ Législatives _ 2nd tour
@@ -158,7 +159,7 @@
 
       // Meta
       $data['url'] = $this->meta_model->get_url();
-      $data['title_meta'] = "Député(s) ".$commune_nom." ".$code_postal." | Datan";
+      $data['title_meta'] = "Députés par circonscription : ".$commune_nom." ".$code_postal." | Datan";
       if (!$data['noMP']) {
         $data['description_meta'] = "Découvrez le".$s." député".$s." élu".$s." dans la ville ".$de."".$commune_nom." (".$dpt_code.") et tous ".$ses." résultats de vote : taux de participation, loyauté avec ".$son." groupe, proximité avec la majorité présidentielle.";
         $data['title'] = ucfirst($depute_writing)." ".$elu_writing." dans la ville ".$de."".$commune_nom;
