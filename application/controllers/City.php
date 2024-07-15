@@ -158,7 +158,7 @@
 
       // Meta
       $data['url'] = $this->meta_model->get_url();
-      $data['title_meta'] = "Député(s) ".$commune_nom." ".$code_postal." | Datan";
+      $data['title_meta'] = "Députés par circonscription : ".$commune_nom." ".$code_postal." | Datan";
       if (!$data['noMP']) {
         $data['description_meta'] = "Découvrez le".$s." député".$s." élu".$s." dans la ville ".$de."".$commune_nom." (".$dpt_code.") et tous ".$ses." résultats de vote : taux de participation, loyauté avec ".$son." groupe, proximité avec la majorité présidentielle.";
         $data['title'] = ucfirst($depute_writing)." ".$elu_writing." dans la ville ".$de."".$commune_nom;
