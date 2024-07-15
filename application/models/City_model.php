@@ -52,13 +52,15 @@
 
     public function get_mps($departement, $circos, $legislature){
       $this->db->select('d.*, d.circo AS electionCirco, dc.mailAn');
+      $this->db->select('dl.legislature AS legislature_last');
       $this->db->where('d.dptSlug', $departement);
       $this->db->where_in('d.circo', $circos);
       $this->db->where('d.legislature', $legislature);
       if (dissolution() === false) {
-        $this->db->where('dateFin IS NULL');
+        $this->db->where('d.dateFin IS NULL');
       }
       $this->db->join('deputes_contacts dc', 'd.mpId = dc.mpId', 'left');
+      $this->db->join('deputes_last dl', 'dl.mpId = d.mpId', 'left');
       return $this->db->get('deputes_all d')->result_array();
     }
 
@@ -67,12 +69,14 @@
         $deputes_commune[] = "";
       }
       $this->db->select('d.*, d.circo AS electionCirco');
+      $this->db->select('dl.legislature AS legislature_last');
       $this->db->where('d.dptSlug', $departement);
       $this->db->where_not_in('d.mpId', $deputes_commune);
       $this->db->where('d.legislature', $legislature);
       if (dissolution() === false) {
         $this->db->where('d.dateFin IS NULL');
       }
+      $this->db->join('deputes_last dl', 'd.mpId = dl.mpId', 'left');
       return $this->db->get('deputes_all d')->result_array();
     }
 
@@ -88,10 +92,14 @@
 
       $array = $query->row_array();
 
+      print_r($array);
+
       // Manual correcting
       if ($array['nameLast'] == 'SALVO' && $insee == '13028') {
         $array = array('nameFirst' => 'Alexandre', 'nameLast' => 'Doriol', 'gender' => 'M');
       }
+
+      print_r($array);
 
       return $array;
     }

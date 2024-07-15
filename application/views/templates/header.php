@@ -255,9 +255,12 @@
             <li class="nav-item">
               <a class="nav-link no-decoration" href="<?= base_url() ?>elections">Élections</a>
             </li>
-
             <li class="nav-item">
-              <a class="nav-link no-decoration" href="<?= base_url() ?>a-propos">À propos</a>
+              <?php if ($this->router->fetch_class() == "home"): ?> 
+                <a class="nav-link no-decoration" href="<?= base_url() ?>a-propos">À propos</a>
+              <?php else: ?>
+                <span class="nav-link url_obf no-decoration underline" url_obf="<?= url_obfuscation(base_url() . "a-propos") ?>">À propos</span>
+              <?php endif; ?>
             </li>
           </ul>
         </div>
