@@ -33,7 +33,7 @@
 
       // Meta
       $data['url'] = $this->meta_model->get_url();
-      $data['title_meta'] = "Députés ".$data['departement']['departement_nom']." ".$data['departement']['departement_code']." | Datan";
+      $data['title_meta'] = "Députés par circonscription : ".$data['departement']['departement_nom']." ".$data['departement']['departement_code']." | Datan";
       $data['description_meta'] = "Découvrez la liste des députés élus dans le département ".$data['departement']['libelle_2']."".$data['departement']['departement_nom']." (".$data['departement']['departement_code']."). Tous les députés des circonscriptions ".$data['departement']['libelle_2']."".$data['departement']['departement_nom'].".";
       if ($data['departement']['departement_code'] == '099') {
         $data['title'] = "Députés ".$data['departement']['libelle_2'];
