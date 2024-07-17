@@ -108,6 +108,8 @@ $route['sitemap-structure-1.xml'] = "sitemap/structure";
 $route['sitemap-categories-1.xml'] = "sitemap/categories";
 $route['sitemap-posts-1.xml'] = "sitemap/posts";
 $route['sitemap-partis-politiques-1.xml'] = "sitemap/parties";
+// LABO
+$route['labo/coalition'] = 'labo/coalition';
 // COMMISSION
 $route['commissions'] = 'commissions/index';
 // GROUPES
