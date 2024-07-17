@@ -3,6 +3,8 @@ module.exports = function (grunt) {
   var date = new Date();
   var today = date.getFullYear() + '' + (date.getMonth() + 1) + '' + date.getDate();
 
+  const base_url = process.env.BASE_URL;
+
 
   grunt.initConfig({
     // First compile main.scss to assets/css/main.css and bootstrap.scss to assets/css/bootstrap.css
@@ -91,7 +93,7 @@ module.exports = function (grunt) {
           height: 1350
         },
         // The source file
-        src: 'http://localhost/datan/',
+        src: base_url,
         // The destination file
         dest: 'assets/css/critical/index.css'
       },
@@ -106,7 +108,7 @@ module.exports = function (grunt) {
           height: 1800
         },
         // The source file
-        src: 'http://localhost/datan/',
+        src: base_url,
         // The destination file
         dest: 'assets/css/critical/index-mobile.css'
       },
@@ -121,7 +123,7 @@ module.exports = function (grunt) {
           height: 1350
         },
         // The source file
-        src: 'http://localhost/datan/deputes/ille-et-vilaine-35/ville_rennes',
+        src: base_url + '/deputes/ille-et-vilaine-35/ville_rennes',
         // The destination file
         dest: 'assets/css/critical/city.css'
       },
@@ -136,7 +138,7 @@ module.exports = function (grunt) {
           height: 812
         },
         // The source file
-        src: 'http://localhost/datan/deputes/ille-et-vilaine-35/ville_rennes',
+        src: base_url + '/deputes/ille-et-vilaine-35/ville_rennes',
         // The destination file
         dest: 'assets/css/critical/city-mobile.css'
       },
@@ -151,7 +153,7 @@ module.exports = function (grunt) {
           height: 1900
         },
         // The source file
-        src: 'http://localhost/datan/deputes/reunion-974/depute_karine-lebon',
+        src: base_url + '/deputes/reunion-974/depute_karine-lebon',
         // The destination file
         dest: 'assets/css/critical/depute_individual.css'
       },
@@ -166,7 +168,7 @@ module.exports = function (grunt) {
           height: 3500
         },
         // The source file
-        src: 'http://localhost/datan/deputes/reunion-974/depute_karine-lebon',
+        src: base_url + '/deputes/reunion-974/depute_karine-lebon',
         // The destination file
         dest: 'assets/css/critical/depute_individual-mobile.css'
       },
@@ -181,7 +183,7 @@ module.exports = function (grunt) {
           height: 1350
         },
         // The source file
-        src: 'http://localhost/datan/groupes/larem',
+        src: base_url + '/groupes/larem',
         // The destination file
         dest: 'assets/css/critical/groupe_individual.css'
       },
@@ -196,7 +198,7 @@ module.exports = function (grunt) {
           height: 1700
         },
         // The source file
-        src: 'http://localhost/datan/groupes/larem',
+        src: base_url + '/groupes/larem',
         // The destination file
         dest: 'assets/css/critical/groupe_individual-mobile.css'
       },
