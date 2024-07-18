@@ -1443,6 +1443,9 @@ body{
     width: 100%;
     max-height: 300px
   }
+  .switch_groups, .custom-control-label{
+    cursor: pointer;
+  }
   #textSeats{
     font-weight: 800;
     background-color: $primary;

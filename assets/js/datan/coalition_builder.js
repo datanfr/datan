@@ -62,20 +62,20 @@ $(document).ready(function(){
 
         // Change state
         if(this.checked) {
-            
-
             addGroup(seats, groupToChange, seatsToChange, colorToChange);
-            updateIndex(seats);
-            updateHemicycle(seats);
-            updateText(seats);            
-
         } else {
             removeGroup(seats, groupToChange);
-            updateIndex(seats);
-            updateHemicycle(seats);
-            updateText(seats);
-
         }
+        updateIndex(seats);
+        updateHemicycle(seats);
+        updateText(seats);  
     })
+
+    $('#custom-reset').on('click', function(){
+        seats = new Array();
+        updateHemicycle(seats);
+        updateText(seats); 
+        $('.switch_groups').prop('checked', false);
+    });
      
 })
