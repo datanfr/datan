@@ -1427,6 +1427,33 @@ body{
 }
 /*
 ################
+               PAGE : OUTILS
+################
+*/
+.pg-outils{
+  h1{
+    font-size: 3em;
+    font-weight: 800;
+    color: $text-black;
+  }
+}
+
+.pg-outils-labo{
+  .containerHemicycle{
+    width: 100%;
+    max-height: 300px
+  }
+  #textSeats{
+    font-weight: 800;
+    background-color: $primary;
+    color: $white;
+    padding: 0.15rem 0.50rem;
+  }
+}
+
+
+/*
+################
                PAGE : SEARCH (pg-search)
 ################
 */
