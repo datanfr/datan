@@ -242,6 +242,7 @@ class Sitemap extends CI_Controller {
       $urls[]["url"] = base_url()."elections/".$election['slug'];
     }
     $urls[]["url"] = base_url()."parrainages-2022";
+    $urls[]["url"] = base_url()."outils/coalition-simulateur";
 
     $data['urls'] = $urls;
     $data['nbUrl'] = count($data['urls']);

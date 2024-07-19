@@ -66,7 +66,7 @@
             <div class="d-flex align-items-start justify-content-center col-md-6 col-xl-5 offset-xl-2 col-12">
               <div>
                 <h3 class="mb-3">Solution</h3>
-                <p>Datan <b>explique les votes</b> <br>des députés et groupes politiques.</p>
+                <p>Datan <b>explique les votes</b> <br>des députés et groupes politiques</p>
               </div>
             </div>
           </div>
@@ -98,7 +98,59 @@
       </div>
     </div>
   </div>
-  <!-- Elections -->
+  <!-- BLOC COALITION SIMULATEUR -->
+  <div class="row">
+    <div class="container py-4">
+      <div class="row">
+        <div class="col-12">
+          <h2 class="text-center my-4">Composez votre coalition à l'Assemblée nationale</h2>
+        </div>
+      </div>
+      <div class="row mt-4 mb-4">
+        <div class="col-lg-6 col-12 d-flex justify-content-center">
+          <a href="<?= base_url() ?>outils/coalition-simulateur">
+          <img src="<?= asset_url() ?>imgs/photos/coalition-simulateur-home.png" alt="..." class="img-thumbnail rounded shadow">
+          </a>
+        </div>
+        <div class="col-lg-6 col-12 mt-5 mt-lg-0 d-flex flex-column justify-content-center">
+          <p>Il faut <span class="font-weight-bold">289 députés</span> pour obtenir une majorité absolue à l'Assemblée nationale.</p>
+          <p>Après les <a href="<?= base_url() ?>elections/legislatives-2024">élections législatives de 2024</a>, aucun groupe n'a réussi à atteindre ce seuil. Les groupes devront donc former des coalitions pour pouvoir adopter des lois.</p>
+          <p>Découvrez notre nouveau simulateur de coalition : saurez-vous créer une majorité ?</p>
+        </div>
+      </div>
+      <div class="row mt-5 mb-4">
+        <div class="col-12 d-flex justify-content-center">
+          <a href="<?= base_url() ?>outils/coalition-simulateur" class="btn btn-outline-primary">
+            Composez votre coalition
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- BLOC-HASARD -->
+  <div class="row bloc-hasard">
+    <div class="container pt-0">
+      <div class="row py-5">
+        <!-- DEPUTE AU HASARD CARD -->
+        <div class="<?= $groupe_random ? "col-md-6" : "col-md-12" ?> py-4">
+          <h2>DÉPUTÉ<?= mb_strtoupper($depute_random['e']) ?> AU HASARD</h2>
+          <div class="d-flex justify-content-center">
+            <?php $this->load->view('deputes/partials/card_home.php', array('depute' => $depute_random, 'tag' => 'span', 'footer' => 'discover', 'logo' => true, 'stats' => FALSE)) ?>
+          </div>
+        </div>
+        <!-- GROUPE AU HASARD CARD -->
+        <?php if ($groupe_random): ?>
+          <div class="col-md-6 py-4">
+            <h2>GROUPE AU HASARD</h2>
+            <div class="d-flex justify-content-center">
+              <?php $this->load->view('groupes/partials/card_home.php', array('groupe' => $groupe_random, 'tag' => 'span', 'active' => TRUE, 'cat' => $groupe_random['effectif'] ? $groupe_random['effectif'] . " membres" : "", 'stats' => FALSE)) ?>
+            </div>
+          </div>
+        <?php endif; ?>
+      </div>
+    </div>
+  </div>
+  <!-- BLOC ELECTIONS -->
   <div class="row">
     <div class="container py-4">
       <div class="row">
@@ -127,29 +179,6 @@
       </div>
     </div>
   </div> 
-  <!-- BLOC-HASARD -->
-  <div class="row bloc-hasard">
-    <div class="container pt-0">
-      <div class="row py-5">
-        <!-- DEPUTE AU HASARD CARD -->
-        <div class="<?= $groupe_random ? "col-md-6" : "col-md-12" ?> py-4">
-          <h2>DÉPUTÉ<?= mb_strtoupper($depute_random['e']) ?> AU HASARD</h2>
-          <div class="d-flex justify-content-center">
-            <?php $this->load->view('deputes/partials/card_home.php', array('depute' => $depute_random, 'tag' => 'span', 'footer' => 'discover', 'logo' => true, 'stats' => FALSE)) ?>
-          </div>
-        </div>
-        <!-- GROUPE AU HASARD CARD -->
-        <?php if ($groupe_random): ?>
-          <div class="col-md-6 py-4">
-            <h2>GROUPE AU HASARD</h2>
-            <div class="d-flex justify-content-center">
-              <?php $this->load->view('groupes/partials/card_home.php', array('groupe' => $groupe_random, 'tag' => 'span', 'active' => TRUE, 'cat' => $groupe_random['effectif'] ? $groupe_random['effectif'] . " membres" : "", 'stats' => FALSE)) ?>
-            </div>
-          </div>
-        <?php endif; ?>
-      </div>
-    </div>
-  </div>
   <!-- BLOC EXPLICATIONS -->
   <div class="row bloc-votes" id="pattern_background">
     <div class="container p-md-0">
