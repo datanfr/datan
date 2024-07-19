@@ -21,6 +21,7 @@
       $data['groupe_random'] = $this->groupes_model->get_groupe_random();
       if (!empty($data['groupe_random'])) {
         $data['groupe_random']['couleurAssociee'] = $this->groupes_model->get_groupe_color(array($data['groupe_random']['libelleAbrev'], $data['groupe_random']['couleurAssociee']));
+        $data['groupe_random']['couleurCard'] = $this->groupes_model->get_groupe_color_card($data['groupe_random']);
       }
       $rand = rand(0, 10);
       if ($rand < 5) {
