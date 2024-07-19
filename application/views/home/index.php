@@ -108,17 +108,21 @@
       </div>
       <div class="row mt-4 mb-4">
         <div class="col-lg-6 col-12 d-flex justify-content-center">
-          <div class="card border-0 shadow" style="width: 20rem;">
-            <img class="card-img-top" src="<?= asset_url() ?>imgs/photos/coalition-simulateur-home.png" alt="Card image cap">
-            <div class="card-body d-flex justify-content-center">
-              <a href="<?= base_url() ?>outils/coalition-simulateur" class="btn btn-primary stretched-link">Découvrez le simulateur</a>
-            </div>
-          </div>
+          <a href="<?= base_url() ?>outils/coalition-simulateur">
+          <img src="<?= asset_url() ?>imgs/photos/coalition-simulateur-home.png" alt="..." class="img-thumbnail rounded shadow">
+          </a>
         </div>
-        <div class="col-lg-6 col-12 d-flex flex-column justify-content-center">
+        <div class="col-lg-6 col-12 mt-5 mt-lg-0 d-flex flex-column justify-content-center">
           <p>Il faut <span class="font-weight-bold">289 députés</span> pour obtenir une majorité absolue à l'Assemblée nationale.</p>
-          <p>Après les <a href="<?= base_url() ?>elections/legislatives-2024">élections législatives de 2024</a>, aucun groupe n'a atteint ce nombre et devront donc former des coalitions pour adopter des lois.</p>
-          <p>Essayez notre nouveau simulateur de coalition : parviendrez-vous à avoir une majorité absolue ?</p>
+          <p>Après les <a href="<?= base_url() ?>elections/legislatives-2024">élections législatives de 2024</a>, aucun groupe n'a réussi à atteindre ce seuil. Les groupes devront donc former des coalitions pour pouvoir adopter des lois.</p>
+          <p>Découvrez notre nouveau simulateur de coalition : saurez-vous créer une majorité ?</p>
+        </div>
+      </div>
+      <div class="row mt-5 mb-4">
+        <div class="col-12 d-flex justify-content-center">
+          <a href="<?= base_url() ?>outils/coalition-simulateur" class="btn btn-outline-primary">
+            Composez votre coalition
+          </a>
         </div>
       </div>
     </div>
