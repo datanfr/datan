@@ -28,6 +28,7 @@
         $data['president'] = array_merge($data['president'], gender($data['president']['civ']));
       }
       $data['groupe']['couleurAssociee'] = $this->groupes_model->get_groupe_color(array($data['groupe']['libelleAbrev'], $data['groupe']['couleurAssociee']));
+      $data['groupe']['couleurCard'] = $this->groupes_model->get_groupe_color_card($data['groupe']);
       $data['membres'] = $this->groupes_model->get_groupe_membres($data['groupe']['uid'], $data['groupe']['dateFin']);
       if (!in_array($data['groupe']['uid'], $this->groupes_model->get_all_groupes_ni())) {
         $data['membres'] = array_slice($data['membres'], 0, 20);
@@ -44,6 +45,8 @@
       $data['history'] = $this->groupes_model->get_history($data['groupe']['uid']);
       foreach ($data['history'] as $key => $value) {
         $get = $this->groupes_model->get_groupe_by_id($value);
+        $get['couleurAssociee'] = $this->groupes_model->get_groupe_color(array($get['libelleAbrev'], $get['couleurAssociee']));
+        $get['couleurCard'] = $this->groupes_model->get_groupe_color_card($get);
         if ($get['legislature'] >= 14) {
           if ($value == $data['groupe']['uid']) {
             $data['history_list_all'][] = $get;
@@ -139,6 +142,7 @@
       // Groupe color
       foreach ($data['groupes'] as $key => $value) {
         $data['groupes'][$key]['couleurAssociee'] = $this->groupes_model->get_groupe_color(array($value['libelleAbrev'], $value['couleurAssociee']));
+        $data['groupes'][$key]['couleurCard'] = $this->groupes_model->get_groupe_color_card($value);
       }
 
       // Meta and Breadcrum
@@ -200,6 +204,7 @@
       // Groupe color
       foreach ($data['groupes'] as $key => $value) {
         $data['groupes'][$key]['couleurAssociee'] = $this->groupes_model->get_groupe_color(array($value['libelleAbrev'], $value['couleurAssociee']));
+        $data['groupes'][$key]['couleurCard'] = $this->groupes_model->get_groupe_color_card($value);
       }
 
       // Meta
