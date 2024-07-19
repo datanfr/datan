@@ -149,36 +149,7 @@
         <?php endif; ?>
       </div>
     </div>
-  </div>
-  <!-- BLOC ELECTIONS -->
-  <div class="row">
-    <div class="container py-4">
-      <div class="row">
-        <div class="col-12">
-          <h2 class="text-center my-4">Résultats des élections législatives 2024</h2>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-lg-5 col-12 d-flex flex-column justify-content-center">
-          <p>Suite à la <a href="https://datan.fr/blog/actualite-politique/le-president-emmanuel-macron-annonce-la-dissolution-de-lassemblee-nationale" target="_blank"> dissolution de l'Assemblée nationale</a> par le président Emmanual Macron, des élections législatives se sont déroulées en juin 2024.</p>
-          <p>C'est le Nouveau Front Populaire (NFP), la coalition des partis de gauche, qui est arrivée en tête avec 182 sièges.</p>
-          <p>Découvrez la composition de la nouvelle Assemblée nationale.</p>
-        </div>
-        <div class="col-lg-7 col-12">
-          <div class="my-1">
-            <canvas width="100" height="100" id="chartLegislatives"></canvas>
-          </div>
-        </div>
-      </div>
-      <div class="row mt-4 mb-4">
-        <div class="col-12 d-flex justify-content-center">
-          <a href="<?= base_url();?>elections/legislatives-2024" class="btn btn-outline-primary">
-            En savoir plus
-          </a>
-        </div>
-      </div>
-    </div>
-  </div> 
+  </div>   
   <!-- BLOC EXPLICATIONS -->
   <div class="row bloc-votes" id="pattern_background">
     <div class="container p-md-0">
@@ -225,6 +196,51 @@
       </div>
     </div>
   </div>
+  <!-- BLOC HEMICYCLE --> 
+  <?php if ($composition): ?>
+    <div class="row bloc-pie" id="pattern_background">
+      <div class="container py-3">
+        <div class="row pt-5">
+          <div class="col-12">
+            <h2 class="text-center">Composition de l'Assemblée nationale</h2>
+          </div>
+        </div>
+        <div class="row pt-3">
+          <div class="col-12">
+            <p class="text-center mb-0">Découvrez le nombre de députés par groupe politique.</p>
+          </div>
+        </div>
+        <div class="row mt-5 mb-5">
+          <div class="col-lg-7 d-flex flex-column justify-content-center">
+            <div class="hemicycle">
+              <canvas id="chartHemicycle"></canvas>
+              <div class="n-hemicycle">
+                <span>577 députés</span>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-5 d-flex flex-column justify-content-center mt-4 mt-lg-0">
+            <table class="tableGroupes">
+              <tbody>
+                <?php foreach ($groupes as $groupe): ?>
+                  <tr>
+                    <td>
+                      <div class="square" style="background-color: <?= $groupe['couleurAssociee'] ?>">
+                      </div>
+                    </td>
+                    <td id="table<?= $groupe['libelleAbrev'] ?>">
+                      <a href="<?= base_url() ?>groupes/legislature-<?= $groupe['legislature'] ?>/<?= mb_strtolower($groupe['libelleAbrev']) ?>" class="no-decoration underline"><?= name_group($groupe['libelle']) ?></a>
+                    </td>
+                    <td class="effectif"><?= $groupe['effectif'] ?></td>
+                  </tr>
+                <?php endforeach; ?>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  <?php endif; ?>
   <!-- BLOC STATS -->
   <?php if ($stats): ?>
     <div class="row bloc-statistiques">
@@ -476,50 +492,6 @@
       </div>
     </div>
   </div> <!-- // END BLOC ILS PARLENT DE NOUS -->
-  <?php if ($composition): ?>
-    <div class="row bloc-pie" id="pattern_background">
-      <div class="container py-3">
-        <div class="row pt-5">
-          <div class="col-12">
-            <h2 class="text-center">Composition de l'Assemblée nationale</h2>
-          </div>
-        </div>
-        <div class="row pt-3">
-          <div class="col-12">
-            <p class="text-center mb-0">Découvrez le nombre de députés par groupe politique.</p>
-          </div>
-        </div>
-        <div class="row mt-5 mb-5">
-          <div class="col-lg-7 d-flex flex-column justify-content-center">
-            <div class="hemicycle">
-              <canvas id="chartHemicycle"></canvas>
-              <div class="n-hemicycle">
-                <span>577 députés</span>
-              </div>
-            </div>
-          </div>
-          <div class="col-lg-5 d-flex flex-column justify-content-center mt-4 mt-lg-0">
-            <table class="tableGroupes">
-              <tbody>
-                <?php foreach ($groupes as $groupe): ?>
-                  <tr>
-                    <td>
-                      <div class="square" style="background-color: <?= $groupe['couleurAssociee'] ?>">
-                      </div>
-                    </td>
-                    <td id="table<?= $groupe['libelleAbrev'] ?>">
-                      <a href="<?= base_url() ?>groupes/legislature-<?= $groupe['legislature'] ?>/<?= mb_strtolower($groupe['libelleAbrev']) ?>" class="no-decoration underline"><?= name_group($groupe['libelle']) ?></a>
-                    </td>
-                    <td class="effectif"><?= $groupe['effectif'] ?></td>
-                  </tr>
-                <?php endforeach; ?>
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-    </div>
-  <?php endif; ?>
   <!-- BLOC POSTS -->
   <div class="row">
     <div class="container p-md-0">
@@ -578,112 +550,87 @@
 
 
 <script type="text/javascript">
+  document.addEventListener('DOMContentLoaded', function(){
 
-document.addEventListener('DOMContentLoaded', function(){
+    Chart.register(ChartDataLabels);
 
-  Chart.register(ChartDataLabels);
-
-  // Chart 1 ==> hemicycle (has been removed because of dissolution)
-
-  // Chart 2 ==> Results of 2024 Legislative elections
-  var libelles = [
-    <?php
-    foreach ($legislatives2024 as $groupe) {
-      echo '"'.$groupe["libelle"].'",';
-    }
-     ?>
-  ];
-
-  var data = {
-    labels: [
-      <?php
-        foreach ($legislatives2024 as $groupe) {
-          echo '"'.$groupe["libelle"].'",';
+    var data = {
+      labels: [
+        <?php
+          foreach ($groupesSorted as $groupe) {
+            echo '"'.name_group($groupe["libelle"]).' ('.$groupe['libelleAbrev'].')",';
+          }
+        ?>
+      ],
+      datasets: [
+        {
+          data: [
+            <?php
+              foreach ($groupesSorted as $groupe) {
+                echo $groupe["effectif"].",";
+              }
+            ?>
+          ],
+          backgroundColor: [
+            <?php
+              foreach ($groupesSorted as $groupe) {
+                echo '"'.$groupe["couleurAssociee"].'",';
+              }
+            ?>
+          ],
+          hoverBackgroundColor: [
+            <?php
+              foreach ($groupesSorted as $groupe) {
+                echo '"'.$groupe["couleurAssociee"].'",';
+              }
+            ?>
+          ]
         }
-      ?>
-    ],
-    datasets: [
-      {
-        data: [
-          <?php
-            foreach ($legislatives2024 as $groupe) {
-              echo $groupe["effectif"].",";
-            }
-          ?>
-        ],
-        backgroundColor: [
-          <?php
-            foreach ($legislatives2024 as $groupe) {
-              echo '"'.$groupe["couleurAssociee"].'",';
-            }
-          ?>
-        ],
-        hoverBackgroundColor: [
-          <?php
-            foreach ($legislatives2024 as $groupe) {
-              echo '"'.$groupe["couleurAssociee"].'",';
-            }
-          ?>
-        ]
-      }
-    ]
-  };
+      ]
+    };
 
-  var ctx = document.getElementById("chartLegislatives");
-
-  // And for a doughnut chart
-  var chartOptions = {
-    responsive: true,
-    maintainAspectRatio: true,
-    rotation: 270,
-    circumference: 180,
-    aspectRatio: 2,
-    layout: {
-      padding: 10
-    },
-    plugins: {
-      datalabels: {
-        anchor: "end",
-        backgroundColor: function(context){
-          return context.dataset.backgroundColor;
+    var ctx = document.getElementById("chartHemicycle");
+    var chartOptions = {
+      responsive: true,
+      maintainAspectRatio: false,
+      circumference: 180,
+      rotation: 270,
+      layout:{
+        padding: {
+          top: 0,
+          bottom: 0,
+          left: 15,
+          right: 15
+        }
+      },
+      plugins: {
+        datalabels: {
+          anchor: "end",
+          backgroundColor: function(context){
+            return context.dataset.backgroundColor;
+          },
+          borderColor: "white",
+          borderRadius: 25,
+          borderWidth: 1,
+          color: "white",
+          font: {
+            size: 14
+          }
         },
-        borderColor: "white",
-        borderRadius: 25,
-        borderWidth: 1,
-        color: "white",
-        font: {
-          size: 10
-        }
-      },
-      legend: {
-        display: false
-      },
-    }
-  }
-
-  // Init the chart
-  var pieChart = new Chart(ctx, {
-    plugins: [
-      ChartDataLabels,
-      {
-        beforeLayout: function(chart) {
-          var showLabels = (chart.width) > 500 ? true : false;
-          chart.options.plugins.datalabels.display = showLabels;
-        }
-      },
-      {
-        onresize: function(chart) {
-          var showLabels = (chart.width) > 500 ? true : false;
-          chart.options.plugins.datalabels.display = showLabels;
-        }
+        legend: {
+          display: false
+        },
       }
-    ],
-    type: 'doughnut',
-    data: data,
-    options: chartOptions,
+    }
+
+    var pieChart = new Chart(ctx, {
+      plugins: [
+        ChartDataLabels,
+      ],
+      type: 'doughnut',
+      data: data,
+      options: chartOptions,
+    });
+
   });
-
-});
-
-
 </script>
