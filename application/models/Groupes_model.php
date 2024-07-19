@@ -38,6 +38,20 @@
       return $query->result_array();
     }
 
+    public function get_groupes_coalition_builder(){
+      $this->db->select('o.libelleAbrev, o.libelle, e.effectif AS seats, o.couleurAssociee');
+      $this->db->order_by('effectif', 'desc');
+      $this->db->join('organes o', 'o.uid = e.organeRef', 'left');
+      $groupes = $this->db->get('groupes_effectif e')->result_array();
+
+      foreach ($groupes as $key => $value) {
+        $return[$value['libelleAbrev']] = $value;
+        $return[$value['libelleAbrev']]['color'] = $this->groupes_model->get_groupe_color(array($value['libelleAbrev'], $value['couleurAssociee']));
+      }
+
+      return $return;
+    }
+
     public function get_groupes_hemicycle(){
       $this->db->select('o.*, date_format(dateDebut, "%d %M %Y") as dateDebutFR, e.effectif');
       $this->db->select('CASE WHEN o.libelle = "Non inscrit" THEN "Députés non inscrits" ELSE o.libelle END AS libelle', false);

@@ -40,4 +40,8 @@
 
 <script>
     var groups = <?php echo json_encode($groups); ?>;
+    Object.keys(groups).forEach(function(key) {
+        var group = groups[key];
+        groups[key].seats = Number(groups[key].seats);
+    });
 </script>
