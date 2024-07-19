@@ -5,7 +5,6 @@
       parent::__construct();
     }
 
-    // Admin homepage
     public function coalition(){
 
       $data['title_meta'] = 'Labo : coalition';
@@ -33,7 +32,7 @@
       $controller = $this->router->fetch_class()."/".$this->router->fetch_method();
       $data['ogp'] = $this->meta_model->get_ogp($controller, $data['title_meta'], $data['description_meta'], $data['url'], $data);
       // JS
-      $data['js_to_load'] = array('datan/coalition_builder');
+      $data['js_to_load'] = array('datan/coalition_builder.min');
       // Load views
       $this->load->view('templates/header', $data);
       $this->load->view('outils/coalition');
