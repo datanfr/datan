@@ -72,7 +72,7 @@ $(document).ready(function(){
     })
 
     $('#custom-reset').on('click', function(){
-        seats = new Array();
+        seats = {};
         updateHemicycle(seats);
         updateText(seats); 
         $('.switch_groups').prop('checked', false);
