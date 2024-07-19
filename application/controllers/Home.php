@@ -18,13 +18,11 @@
       $data['depute_random'] = $this->deputes_model->get_depute_random();
       $data['depute_random'] = array_merge($data['depute_random'], gender($data['depute_random']['civ']));
       $data['depute_random']['couleurAssociee'] = $this->groupes_model->get_groupe_color(array($data['depute_random']['libelleAbrev'], $data['depute_random']['couleurAssociee']));
-      // Remove for the moment
       $data['groupe_random'] = $this->groupes_model->get_groupe_random();
       if (!empty($data['groupe_random'])) {
         $data['groupe_random']['couleurAssociee'] = $this->groupes_model->get_groupe_color(array($data['groupe_random']['libelleAbrev'], $data['groupe_random']['couleurAssociee']));
       }
-      //$rand = rand(0, 10); CHANGE THIS WHEN GROUPS ARE AVAILABLE
-      $rand = 0;
+      $rand = rand(0, 10);
       if ($rand < 5) {
         $data['placeholder'] = $data['depute_random']['nameFirst'] . " " . $data['depute_random']['nameLast'];
       } else {

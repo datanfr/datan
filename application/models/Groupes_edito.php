@@ -13,15 +13,10 @@
       } elseif ($opposition == "Majoritaire") {
         $infos["opposition"] = "la majorité présidentielle";
       } else {
-        $infos["opposition"] = "à faire";
+        $infos["opposition"] = NULL;
       }
 
       $qqjours = ", soit dès la mise en place de la nouvelle législature";
-      $left = "à gauche";
-      $center_left = "au centre-gauche";
-      $center = "au centre";
-      $center_right = "au centre-droit";
-      $right = "à droite";
 
       //Positionnement
       switch ($id) {
