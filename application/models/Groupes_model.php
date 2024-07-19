@@ -368,7 +368,7 @@
         case 'HOR':
           $groupe['website'] = 'https://horizonsleparti.fr/';
           $groupe['twitter'] = 'Horizons_AN';
-          $groupe['facebook'] = 'horizonsleparti';
+          $groupe['facebook'] = 'lesdeputeshorizonsetindep';
           break;
 
         case 'ECOLO':
