@@ -38,8 +38,7 @@
       } else {
         $data['groupes'] = $this->groupes_model->get_groupes_hemicycle();
       }
-      $data['groupesSorted'] = $this->groupes_model->get_groupes_sorted($data['groupes']);
-      
+      $data['groupesSorted'] = $this->groupes_model->get_groupes_sorted($data['groupes']);      
 
       // Get election results 
       $file = file_get_contents(asset_url() . "data_elections/legislatives-2024-2.json");
@@ -102,7 +101,7 @@
       $data['posts'] = $this->post_model->get_last_posts();
 
       // Composition
-      $data['composition'] = FALSE;
+      $data['composition'] = TRUE;
 
       //Meta
       $data['url'] = $this->meta_model->get_url();
