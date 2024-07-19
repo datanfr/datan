@@ -304,9 +304,9 @@
           break;
 
         case 'MODEM':
-          $groupe['website'] = 'https://groupemodem.fr/';
-          $groupe['twitter'] = 'GroupeMoDem';
-          $groupe['facebook'] = 'GroupeMoDem';
+        case 'DEM':
+          $groupe['twitter'] = 'DeputesDem';
+          $groupe['facebook'] = 'DeputesDem';
           break;
 
         case 'SOC':
@@ -373,8 +373,9 @@
 
         case 'ECOLO':
           $groupe['website'] = 'https://www.eelv.fr/';
-          $groupe['twitter'] = 'EcologistesAN';
+          $groupe['twitter'] = 'Gpe_EcoloSocial';
           $groupe['facebook'] = 'eelv.fr';
+          break;
 
           case 'EPR':
             $groupe['twitter'] = 'DeputesEnsemble';
@@ -616,8 +617,12 @@
 
     public function get_groupe_color_card($x){
       switch ($x['uid']) {
-        case 'PO845425':
+        case 'PO845425': // DR
           $couleur = '#0265CB';
+          break;
+
+        case 'PO845454': // DEM
+          $couleur = '#EA552D';
           break;
 
         default:
