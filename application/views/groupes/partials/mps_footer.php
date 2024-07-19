@@ -3,7 +3,7 @@
     <?php if ($groupe['libelleAbrev'] != "NI"): ?>
       <div class="row">
         <div class="col-12">
-          <h2>Président du groupe <?= name_group($title) ?></h2>
+          <h2>Président<?= $president['e'] ?> du groupe <?= name_group($title) ?></h2>
           <div class="row mt-3">
             <div class="col-6 col-md-3 py-2">
               <a class="membre no-decoration underline" href="<?= base_url(); ?>deputes/<?= $president['dptSlug'] ?>/depute_<?= $president['nameUrl'] ?>"><?= $president['nameFirst']." ".$president['nameLast'] ?></a>
