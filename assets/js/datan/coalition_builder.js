@@ -31,28 +31,28 @@ $(document).ready(function(){
     }
 
     function updateText(groups){
-        var textSeats = document.getElementById('textSeats');
-        var textPct = document.getElementById('textPct');
-        var textResult = document.getElementById('textResult');
+        var textSeats = $('#textSeats');
+        var textPct = $('#textPct');
+        var textResult = $('#textResult');
         let total = 0;
         var pct = 0;
-        Object.entries(groups).forEach(([key, group]) => {
-            total = total + group.seats;
-        })
+        $.each(groups, function(key, group) {
+            total += group.seats;
+        });
         pct = Math.round(total / 577 * 100);
-        if(total > 0) {
-            textSeats.textContent = total + ' sièges';
+        if(total >= 1) {
+            textSeats.text(total + ' sièges');
         } else {
-            textSeats.textContent = total + ' siège';
+            textSeats.text(total + ' siège');
         }
         if(total > 289) {
-            textResult.textContent = "Félicitations. Vous avez une majorité";
-            textResult.className = 'text-success';
+            textResult.text("Félicitations. Vous avez une majorité");
+            textResult.attr('class', 'text-success');
         } else {
-            textResult.textContent = "Vous n'avez pas la majorité";
-            textResult.className = 'text-danger';
+            textResult.text("Vous n'avez pas la majorité");
+            textResult.attr('class', 'text-danger');
         }
-        textPct.textContent = pct;
+        textPct.text(pct);
     }
 
     $('.switch_groups').change(function(){
