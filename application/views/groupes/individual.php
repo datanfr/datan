@@ -29,12 +29,14 @@
           <p>
             <?= ucfirst($president['son']) ?> président<?= $president['e'] ?> <?= $active ? 'est' : 'était' ?> <a href="<?= base_url(); ?>deputes/<?= $president['dptSlug'] ?>/depute_<?= $president['nameUrl'] ?>"><?= $president['nameFirst']." ".$president['nameLast'] ?></a>, à ce poste depuis le <?= $president['dateDebutFR'] ?>.
           </p>
-          <p>
-            Le groupe s'est déclaré comme faisant partie de <b><?= $edito['opposition'] ?></b>.
-            <?php if ($groupe['positionPolitique'] != 'Majoritaire'): ?>
-              S'il n'est pas majoritaire, un groupe peut soit appartenir à l'opposition, soit être allié à la majorité présidentielle. Dans les deux cas, l'Assemblée nationale leur octroie <a href="http://www.assemblee-nationale.fr/connaissance/reglement/reforme-reglement-2009-4-11.pdf" target="_blank">des droits particuliers</a>, notamment au niveau de la prise de parole en séance publique.
-            <?php endif; ?>
-          </p>
+          <?php if($edito['opposition']): ?>
+            <p>
+              Le groupe s'est déclaré comme faisant partie de <b><?= $edito['opposition'] ?></b>.
+              <?php if ($groupe['positionPolitique'] != 'Majoritaire'): ?>
+                S'il n'est pas majoritaire, un groupe peut soit appartenir à l'opposition, soit être allié à la majorité présidentielle. Dans les deux cas, l'Assemblée nationale leur octroie <a href="http://www.assemblee-nationale.fr/connaissance/reglement/reforme-reglement-2009-4-11.pdf" target="_blank">des droits particuliers</a>, notamment au niveau de la prise de parole en séance publique.
+              <?php endif; ?>
+            </p>
+          <?php endif; ?>
         <?php endif; ?>
         </div>
         <!-- BLOC VOTES -->
