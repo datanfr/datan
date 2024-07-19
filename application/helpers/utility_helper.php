@@ -257,6 +257,10 @@
         return 'Socialistes et apparentés - NUPES';
         break;
 
+      case 'La France insoumise - Nouveau Front Populaire':
+        return 'La France insoumise - NPF';
+        break;
+
       default:
         return $name;
         break;

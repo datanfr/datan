@@ -297,6 +297,12 @@
           $groupe['facebook'] = 'LesDeputesLesRepublicains';
           break;
 
+        case 'DR':
+          $groupe['website'] = 'https://www.deputes-les-republicains.fr/';
+          $groupe['twitter'] = 'droiterep_an';
+          $groupe['facebook'] = 'LesDeputesLesRepublicains';
+          break;
+
         case 'MODEM':
           $groupe['website'] = 'https://groupemodem.fr/';
           $groupe['twitter'] = 'GroupeMoDem';
@@ -324,6 +330,11 @@
           $groupe['twitter'] = 'FiAssemblee';
           $groupe['facebook'] = 'FiAssemblee';
           break;
+
+        case 'LFI':
+          $groupe['twitter'] = 'FiAssemblee';
+          $groupe['facebook'] = 'FranceInsoumiseAN';
+          break;          
 
         case 'EDS':
           $groupe['website'] = 'https://www.ecologie-democratie-solidarite.fr/';
@@ -364,6 +375,11 @@
           $groupe['website'] = 'https://www.eelv.fr/';
           $groupe['twitter'] = 'EcologistesAN';
           $groupe['facebook'] = 'eelv.fr';
+
+          case 'EPR':
+            $groupe['twitter'] = 'DeputesEnsemble';
+            $groupe['facebook'] = 'deputesEnsemble';
+            break;
 
         default:
           // code...
@@ -593,6 +609,19 @@
 
         default:
           $couleur = $x[1];
+          break;
+      }
+      return $couleur;
+    }
+
+    public function get_groupe_color_card($x){
+      switch ($x['uid']) {
+        case 'PO845425':
+          $couleur = '#0265CB';
+          break;
+
+        default:
+          $couleur = NULL;
           break;
       }
       return $couleur;
