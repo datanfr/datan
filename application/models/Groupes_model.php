@@ -187,15 +187,14 @@
     public function get_groupes_president($groupe_uid, $legislature, $active){
       if ($active) {
         $where = array(
-          'mandat_groupe.organeRef' => $groupe_uid,
-          'mandat_groupe.preseance' => 1,
-          'mandat_groupe.dateFin' => NULL
+          'mg.organeRef' => $groupe_uid,
+          'mg.preseance' => 1,
+          'mg.dateFin' => NULL
         );
-        $this->db->select('*, date_format(dateDebut, "%d %M %Y") as dateDebutFR, da.legislature AS legislature_last');
-        $this->db->select('libelle AS libelle, libelleAbrev AS libelleAbrev');
-        $this->db->select('CONCAT(departementNom, " (", departementCode, ")") AS cardCenter');
-        $this->db->join('deputes_last', 'deputes_last.mpId = mandat_groupe.mpId', 'left');
-        $query = $this->db->get_where('mandat_groupe', $where, 1);
+        $this->db->select('mg.*, dl.*, date_format(dateDebut, "%d %M %Y") as dateDebutFR, dl.legislature AS legislature_last');
+        $this->db->select('CONCAT(dl.departementNom, " (", dl.departementCode, ")") AS cardCenter');
+        $this->db->join('deputes_last dl', 'dl.mpId = mg.mpId', 'left');
+        $query = $this->db->get_where('mandat_groupe mg', $where, 1);
       } else {
         $sql = 'SELECT A.*, da.*, da.legislature AS legislature_last,
           CONCAT(da.departementNom, " (", da.departementCode, ")") AS cardCenter
@@ -254,28 +253,29 @@
     public function get_groupe_apparentes($groupe_uid, $active){
       if ($active) {
         $where = array(
-          'mandat_groupe.organeRef' => $groupe_uid,
-          'mandat_groupe.dateFin' => NULL,
-          'mandat_groupe.nominPrincipale' => 1
+          'mg.organeRef' => $groupe_uid,
+          'mg.dateFin' => NULL,
+          'mg.nominPrincipale' => 1
         );
-        $this->db->select('*, libelle AS libelle, libelleAbrev AS libelleAbrev');
-        $this->db->select('CONCAT(departementNom, " (", departementCode, ")") AS cardCenter');
-        $this->db->where_in('mandat_groupe.preseance', array(24));
-        $this->db->join('deputes_last', 'deputes_last.mpId = mandat_groupe.mpId');
-        $this->db->order_by('nameLast ASC, nameFirst ASC');
-        $query = $this->db->get_where('mandat_groupe', $where);
+        $this->db->select('dl.*, mg.*, dl.legislature AS legislature_last');
+        $this->db->select('CONCAT(dl.departementNom, " (", dl.departementCode, ")") AS cardCenter');
+        $this->db->where_in('mg.preseance', array(24));
+        $this->db->join('deputes_last dl', 'dl.mpId = mg.mpId');
+        $this->db->order_by('dl.nameLast ASC, dl.nameFirst ASC');
+        $query = $this->db->get_where('mandat_groupe mg', $where);
       } else {
-        $sql = 'SELECT A.*, da.*,
-          CONCAT(departementNom, " (", departementCode, ")") AS cardCenter
+        $sql = 'SELECT A.*, dl.*,
+          CONCAT(dl.departementNom, " (", dl.departementCode, ")") AS cardCenter,
+          dl.legislature AS legislature_last
           FROM
           (
-          SELECT mg.mpId, mg.dateFin, mg.codeQualite, mg.libQualiteSex
-          FROM mandat_groupe mg
-          WHERE mg.organeRef = ? AND mg.nominPrincipale = 1 AND mg.preseance = 24
-          GROUP BY mg.mpId
+            SELECT mg.mpId, mg.dateFin, mg.codeQualite, mg.libQualiteSex
+            FROM mandat_groupe mg
+            WHERE mg.organeRef = ? AND mg.nominPrincipale = 1 AND mg.preseance = 24
+            GROUP BY mg.mpId
           ) A
-          LEFT JOIN deputes_last da ON da.mpId = A.mpId
-          ORDER BY da.nameLast ASC, da.nameFirst ASC
+          LEFT JOIN deputes_last dl ON dl.mpId = A.mpId
+          ORDER BY dl.nameLast ASC, dl.nameFirst ASC
         ';
         $query = $this->db->query($sql, $groupe_uid);
       }
@@ -420,8 +420,8 @@
       // When legislature is current : change of groups and remove unactive groups
       if ($legislature == legislature_current()) {
         // SOC
-        $array['PO830170']['value'] = $array['PO830170']['value'] + $array['PO800496']['value'];
-        unset($array['PO800496']);
+        //$array['PO830170']['value'] = $array['PO830170']['value'] + $array['PO800496']['value'];
+        //unset($array['PO800496']);
 
         // Remove unactive groups when not dissolution 
         if (dissolution() === false) {
@@ -544,6 +544,7 @@
       ';
       $query = $this->db->query($sql, $legislature);
       $results = $query->result_array();
+      $return = array();
       foreach ($results as $key => $value) {
         if ($value['stat'] == 'cohesion') {
           $return[$value['stat']] = $value['mean'];
@@ -707,15 +708,17 @@
 
     public function get_history($id){
       $families = array(
-        array('PO800538', 'PO730964'), // Renaissance
-        array('PO730958', 'PO800490'), // France insoumise
-        array('PO270903', 'PO389395', 'PO656006', 'PO707869', 'PO730934', 'PO800508', 'PO684957'), // Les Républicains
-        array('PO730970', 'PO774834', 'PO800484'), // Modem
-        array('PO758835', 'PO730946', 'PO389507', 'PO656002', 'PO713077', 'PO270907', 'PO800496', 'PO830170'), // Socialistes
-        array('PO656014', 'PO800526'), // Ecologiste
-        array('PO270915', 'PO389635', 'PO656018', 'PO730940', 'PO800502'), // Communistes
-        array('PO759900', 'PO800532'), // Libertés et territoires
-        array('PO793087', 'PO723569', 'PO645633', 'PO387155', 'PO266900') // NI
+        array('PO845407', 'PO800538', 'PO730964'), // Renaissance
+        array('PO845413', 'PO730958', 'PO800490'), // France insoumise
+        array('PO845425', 'PO270903', 'PO389395', 'PO656006', 'PO707869', 'PO730934', 'PO800508', 'PO684957'), // Les Républicains
+        array('PO845454', 'PO730970', 'PO774834', 'PO800484'), // Modem
+        array('PO845419', 'PO758835', 'PO730946', 'PO389507', 'PO656002', 'PO713077', 'PO270907', 'PO800496', 'PO830170'), // Socialistes
+        array('PO845439', 'PO656014', 'PO800526'), // Ecologiste
+        array('PO845514', 'PO270915', 'PO389635', 'PO656018', 'PO730940', 'PO800502'), // Communistes
+        array('PO845485', 'PO759900', 'PO800532'), // LIOT
+        array('PO793087', 'PO723569', 'PO645633', 'PO387155', 'PO266900'), // NI
+        array('PO845470', 'PO800514'), // Horizons
+        array('PO845401', 'PO800520') // RN
       );
 
       foreach ($families as $family) {
