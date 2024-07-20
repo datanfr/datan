@@ -258,7 +258,7 @@
         break;
 
       case 'La France insoumise - Nouveau Front Populaire':
-        return 'La France insoumise - NPF';
+        return 'La France insoumise - NFP';
         break;
 
       default:
