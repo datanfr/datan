@@ -198,7 +198,7 @@
   </div>
   <!-- BLOC HEMICYCLE --> 
   <?php if ($composition): ?>
-    <div class="row bloc-pie" id="pattern_background">
+    <div class="row bloc-pie">
       <div class="container py-3">
         <div class="row pt-5">
           <div class="col-12">
