@@ -28,10 +28,10 @@
               <?php foreach ($votes as $vote): ?>
                 <tr data-href="<?= base_url() ?>votes/legislature-<?= $legislature ?>/vote_<?= $vote['voteNumero'] ?>">
                   <td>
-                    <?php if ($i <= 30): ?>
-                      <a href="<?= base_url() ?>votes/legislature-<?= $legislature ?>/vote_<?= $vote['voteNumero'] ?>"><?= str_replace("c", "", $vote['voteNumero']) ?></a>
-                    <?php else: ?>
+                    <?php if ($obfuscation_links && $i > 30): ?>
                       <?= str_replace("c", "", $vote['voteNumero']) ?>
+                    <?php else: ?>
+                      <a class="no-decoration" href="<?= base_url() ?>votes/legislature-<?= $legislature ?>/vote_<?= $vote['voteNumero'] ?>"><?= str_replace("c", "", $vote['voteNumero']) ?></a>
                     <?php endif; ?>
                   </td>
                   <td><?= date("d-m-Y", strtotime($vote['dateScrutin'])) ?></td>
