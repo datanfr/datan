@@ -81,6 +81,7 @@
       "NG" => $left,
       "DEM" => $center,
       "ECOLO" => $left,
+      "ECOS" => $left,
       "LES-REP" => $right,
       "RRDP" => $left,
       "R-UMP" => $right,
