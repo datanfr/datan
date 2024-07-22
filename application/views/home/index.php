@@ -109,7 +109,7 @@
       <div class="row mt-4 mb-4">
         <div class="col-lg-6 col-12 d-flex justify-content-center">
           <a href="<?= base_url() ?>outils/coalition-simulateur">
-          <img src="<?= asset_url() ?>imgs/photos/coalition-simulateur-home.png" alt="Découvrez notre simulateur de coalition." height="271" width="440" class="img-thumbnail rounded shadow">
+          <img class="img-lazy img-thumbnail rounded shadow" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="440" height="271" data-src="<?= asset_url() ?>imgs/photos/coalition-simulateur-home.png" alt="Découvrez notre simulateur de coalition">
           </a>
         </div>
         <div class="col-lg-6 col-12 mt-5 mt-lg-0 d-flex flex-column justify-content-center">
