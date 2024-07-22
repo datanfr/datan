@@ -346,6 +346,7 @@
           break;
 
         case 'LFI':
+        case 'LFI-NFP':
           $groupe['twitter'] = 'FiAssemblee';
           $groupe['facebook'] = 'FranceInsoumiseAN';
           break;          
@@ -385,6 +386,7 @@
           $groupe['facebook'] = 'lesdeputeshorizonsetindep';
           break;
 
+        case 'ECOS':
         case 'ECOLO':
           $groupe['website'] = 'https://www.eelv.fr/';
           $groupe['twitter'] = 'Gpe_EcoloSocial';
