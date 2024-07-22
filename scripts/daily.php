@@ -1051,7 +1051,7 @@ class Script
               SELECT B.*, abs(population - x) AS y
               FROM
               (
-                SELECT famille, round(population / 100, 3) AS population, round(count(mpId) / total, 3) AS x
+                SELECT famille, round(population / 100, 3) AS population, COALESCE(ROUND(COUNT(dl.mpId) / A.total, 3), 0) AS x
                 FROM famsocpro fam
                 LEFT JOIN deputes_last dl ON dl.famSocPro = fam.famille AND dl.groupeId = "' . $groupeId . '" AND dl.active AND dl.legislature = "' . $legislature . '"
                 LEFT JOIN (
