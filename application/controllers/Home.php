@@ -124,7 +124,7 @@
         "datan/autocomplete_search",
         "flickity.pkgd.min",
         "typed.umd",
-        "datan/typed.datan"
+        "datan/typed.datan.min"
       );
       // Load views
       $this->load->view('templates/header', $data);
