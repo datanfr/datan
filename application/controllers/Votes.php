@@ -228,6 +228,7 @@
         // Indexes
         $data['y_index'] = NULL;
         $data['m_index'] = NULL;
+        $data['obfuscation_links'] = TRUE;
       } elseif ($year != NULL && $month == NULL) {
         $data['h2'] = "Liste des votes de la ".$legislature."<sup>e</sup> législature - ".$year;
         // Meta
@@ -257,6 +258,7 @@
         // Indexes
         $data['y_index'] = $year;
         $data['m_index'] = NULL;
+        $data['obfuscation_links'] = TRUE;
       } elseif ($year != NULL && $month != NULL) {
         $month = number($month);
         $data['h2'] = "Liste des votes de la ".$legislature."<sup>e</sup> législature - ".$months[$month-1]." ".$year;
@@ -295,6 +297,7 @@
         // Indexes
         $data['y_index'] = $year;
         $data['m_index'] = $month;
+        $data['obfuscation_links'] = FALSE;
       }
 
       /* Get year */
