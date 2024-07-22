@@ -92,7 +92,11 @@
                     <a href="<?= base_url(); ?>parrainages-2022" class="no-decoration underline">Parrainages 2022</a>
                   </p>
                   <p>
-                    <a href="<?= base_url(); ?>login" class="no-decoration underline">Connexion</a>
+                    <?php if ($this->router->fetch_class() == "home"): ?> 
+                      <a href="<?= base_url(); ?>login" class="no-decoratio underline">Connexion</a>
+                    <?php else: ?>
+                      <span class="url_obf no-decoration underline text-white" url_obf="<?= url_obfuscation(base_url() . "login") ?>">Connexion</span>
+                    <?php endif; ?>
                   </p>
                   <p>
                     <?php if ($this->router->fetch_class() == "home"): ?> 
