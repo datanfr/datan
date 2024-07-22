@@ -109,7 +109,7 @@
       <div class="row mt-4 mb-4">
         <div class="col-lg-6 col-12 d-flex justify-content-center">
           <a href="<?= base_url() ?>outils/coalition-simulateur">
-          <img src="<?= asset_url() ?>imgs/photos/coalition-simulateur-home.png" alt="..." class="img-thumbnail rounded shadow">
+          <img src="<?= asset_url() ?>imgs/photos/coalition-simulateur-home.png" alt="Découvrez notre simulateur de coalition." height="271" width="440" class="img-thumbnail rounded shadow">
           </a>
         </div>
         <div class="col-lg-6 col-12 mt-5 mt-lg-0 d-flex flex-column justify-content-center">
@@ -198,7 +198,7 @@
   </div>
   <!-- BLOC HEMICYCLE --> 
   <?php if ($composition): ?>
-    <div class="row bloc-pie" id="pattern_background">
+    <div class="row bloc-pie">
       <div class="container py-3">
         <div class="row pt-5">
           <div class="col-12">
