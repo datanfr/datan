@@ -95,6 +95,7 @@
       "LIOT" => $center,
       "RE" => $center,
       "LFI-NUPES" => $left,
+      "LFI-NFP" => $left,
       "HOR" => $right,
       "GDR-NUPES" => $left,
       "SOC-A" => $left,
