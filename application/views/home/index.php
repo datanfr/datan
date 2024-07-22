@@ -167,11 +167,7 @@
                 <div class="d-flex flex-row align-items-center">
                   <a href="<?= base_url() ?>deputes/<?= $value['dptSlug'] ?>/depute_<?= $value['nameUrl'] ?>">
                     <div class="depute-img-<?= $value['legislature_last'] >= 17 ? 'square' : 'circle' ?> depute-img-circle-explication mr-3">
-                      <picture>
-                        <source srcset="<?= asset_url() ?>imgs/<?= $value['legislature_last'] >= 17 ? 'deputes_webp/' : 'deputes_nobg_webp/' ?>depute_<?= $value['idImage'] ?>_webp.webp" type="image/webp">
-                        <source srcset="<?= asset_url() ?>imgs/<?= $value['legislature_last'] >= 17 ? 'deputes_original/' : 'deputes_nobg/' ?>depute_<?= $value['idImage'] ?>.png" type="image/png">
-                        <img src="<?= asset_url() ?>imgs/deputes_original/depute_<?= $value['idImage'] ?>.png" width="150" height="192" alt="Photo du député">
-                      </picture>
+                      <img class="img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-face.png" width="150" height="192" data-src="<?= base_url(); ?>assets/imgs/<?= $value['legislature_last'] >= 17 ? "deputes_original/" : "deputes_nobg/" ?>depute_<?= $value["idImage"] ?>.png" alt="Photo <?= $value['nameFirst'].' '.$value['nameLast'] ?>">
                     </div>
                   </a>
                   <p class="title mb-0">
