@@ -46,8 +46,12 @@
         )
       );
       // JS
-      $data['js_to_load_up_defer'] = array('chart.min.js', 'chartjs-plugin-datalabels@2.1.js');
-      $data['js_to_load']= array("moment.min", "datatable-datan.min", "datetime-moment", "flickity.pkgd.min");
+      $data['js_to_load_up_defer'] = array('libraries/chart.js/chart.min.js', 'libraries/chart.js/chartjs-plugin-datalabels@2.1.js');
+      $data['js_to_load']= array(
+        'libraries/moment/moment.min',
+        'dist/datatable-datan.min',
+        'libraries/datetime/datetime-moment',
+        'libraries/flickity.pkgd.min');
       // Views
       $this->load->view('templates/header', $data);
       $this->load->view('parrainages/index', $data);

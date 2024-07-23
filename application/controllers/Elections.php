@@ -145,21 +145,21 @@
         )
       );
       // JS
-      $data['js_to_load_before_datan'] = array('isotope.pkgd.min');
+      $data['js_to_load_before_datan'] = array('libraries/isotope/isotope.pkgd.min');
       if (in_array($data['election']['id'], array(4, 5, 6))) {
-        $data['js_to_load_up_defer'] = array('chart.min.js', 'chartjs-plugin-datalabels@2.1.js');
+        $data['js_to_load_up_defer'] = array('libraries/chart.js/chart.min.js', 'libraries/chart.js/chartjs-plugin-datalabels@2.1.js');
       }
       $data['js_to_load'] = array();
       if (in_array($data['election']['id'], array(1, 4, 5, 6))) {
         array_push($data['js_to_load'], 'datan/sorting_select');
       }
-      array_push($data['js_to_load'], 'jvectormap/jquery-jvectormap-2.0.5.min');
+      array_push($data['js_to_load'], 'libraries/jvectormap/jquery-jvectormap-2.0.5.min');
       if ($data['election']['libelleAbrev'] == 'Régionales') {
-        array_push($data['js_to_load'], 'jvectormap/jquery-jvectormap-fr_regions_2016-merc');
+        array_push($data['js_to_load'], 'libraries/jvectormap/jquery-jvectormap-fr_regions_2016-merc');
       } elseif ($data['election']['libelleAbrev'] == 'Départementales') {
-        array_push($data['js_to_load'], 'jvectormap/jquery-jvectormap-fr-merc');
+        array_push($data['js_to_load'], 'libraries/jvectormap/jquery-jvectormap-fr-merc');
       }
-      array_push($data['js_to_load'], "jvectormap/maps_jvectormap-datan");
+      array_push($data['js_to_load'], "libraries/jvectormap/maps_jvectormap-datan");
       // Load Views
       $this->load->view('templates/header', $data);
       $this->load->view('templates/button_up');
