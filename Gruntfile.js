@@ -72,7 +72,7 @@ module.exports = function (grunt) {
           'assets/js/libraries/datatable/dataTables.responsive.min.js',
           'assets/js/libraries/datatable/data-table-datan.js'
         ],
-        dest: 'assets/js/dis/datatable-datan.min.js'
+        dest: 'assets/js/dist/datatable-datan.min.js'
       },
       main: {
         src: [
