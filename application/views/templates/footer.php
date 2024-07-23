@@ -191,16 +191,16 @@
       </div>
     </footer>
     <!-- JS files -->
-    <script src="<?= asset_url(); ?>js/jquery-3.5.1.min.js"></script>
-    <script src="<?= asset_url(); ?>js/jquery-ui.min.js"></script>
-    <script src="<?= asset_url(); ?>js/popper.min.js"></script>
+    <script src="<?= asset_url(); ?>js/libraries/jquery/jquery-3.5.1.min.js"></script>
+    <script src="<?= asset_url(); ?>js/libraries/jquery/jquery-ui.min.js"></script>
+    <script src="<?= asset_url(); ?>js/libraries/popper/popper.min.js"></script>
     <script type="text/javascript" src="<?= asset_url() ?>js/bootstrap.min.js"></script>
     <?php if (isset($js_to_load_before_datan)) : ?>
       <?php foreach ($js_to_load_before_datan as $file) : ?>
         <script src="<?= asset_url(); ?>js/<?= $file ?>.js"></script>
       <?php endforeach; ?>
     <?php endif; ?>
-    <script type="text/javascript" src="<?= asset_url() ?>js/jquery.unveil.min.js"></script>
+    <script type="text/javascript" src="<?= asset_url() ?>js/libraries/jquery/jquery.unveil.min.js"></script>
 
     <script type="text/javascript">
       var tarteaucitronForceLanguage = "fr";

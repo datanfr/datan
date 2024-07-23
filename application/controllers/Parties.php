@@ -127,8 +127,6 @@
       $data['ogp'] = $this->meta_model->get_ogp($controller, $data['title_meta'], $data['description_meta'], $data['url'], $data);
       // Microdata Person
       $data['schema'] = $this->parties_model->get_organization_schema($data['party'], $data['deputesActive']);
-      // CSS
-      // JS
       // Preloads
       $data['preloads'] = array(
         array("href" => asset_url()."imgs/cover/hemicycle-front-375.jpg", "as" => "image", "media" => "(max-width: 575.98px)"),

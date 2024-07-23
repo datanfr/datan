@@ -36,7 +36,7 @@
   <!-- CKeditor -->
   <script src="https://cdn.ckeditor.com/ckeditor5/26.0.0/classic/ckeditor.js"></script>
   <!-- ChartJS -->
-  <script src="<?= asset_url() ?>js/chart.min.js"></script>
+  <script src="<?= asset_url() ?>js/libraries/chart.js/chart.min.js"></script>
 </head>
 <body class="hold-transition sidebar-mini">
 <div class="wrapper">
