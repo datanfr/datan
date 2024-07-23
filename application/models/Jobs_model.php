@@ -118,13 +118,13 @@
       return $query->result_array();
     }
 
-    public function get_group_category_random($groupe_uid){
+    public function get_group_category_random($groupe){
       $sql = 'SELECT A.famille, A.n, ROUND(A.n / ge.effectif * 100) AS pct, A.population
         FROM
         (
         SELECT fam.famille, fam.population, COUNT(dl.mpId) AS n
         FROM famsocpro fam
-        LEFT JOIN deputes_last dl ON dl.famSocPro = fam.famille AND groupeId = ? AND dl.active AND dl.legislature = 15
+        LEFT JOIN deputes_last dl ON dl.famSocPro = fam.famille AND groupeId = ? AND dl.active AND dl.legislature = ?
         GROUP BY fam.famille
         ORDER BY rand()
         LIMIT 1
@@ -132,7 +132,7 @@
         LEFT JOIN groupes_effectif ge ON ge.organeRef = ?
       ';
 
-      $query = $this->db->query($sql, array($groupe_uid, $groupe_uid));
+      $query = $this->db->query($sql, array($groupe['uid'], $groupe['legislature'], $groupe['uid']));
       return $query->row_array();
     }
 
