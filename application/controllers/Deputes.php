@@ -188,7 +188,7 @@
       $controller = $this->router->fetch_class()."/".$this->router->fetch_method();
       $data['ogp'] = $this->meta_model->get_ogp($controller, $data['title_meta'], $data['description_meta'], $data['url'], $data);
       // JS
-      $data['js_to_load_before_datan'] = array("isotope.pkgd.min");
+      $data['js_to_load_before_datan'] = array("libraries/isotope/isotope.pkgd.min");
       $data['js_to_load']= array("datan/sorting");
       // Load Views
       $this->load->view('templates/header', $data);
@@ -233,7 +233,7 @@
       $controller = $this->router->fetch_class()."/".$this->router->fetch_method();
       $data['ogp'] = $this->meta_model->get_ogp($controller, $data['title_meta'], $data['description_meta'], $data['url'], $data);
       // JS
-      $data['js_to_load_before_datan'] = array("isotope.pkgd.min");
+      $data['js_to_load_before_datan'] = array("libraries/isotope/isotope.pkgd.min");
       $data['js_to_load']= array("datan/sorting");
       // Load views
       $this->load->view('templates/header', $data);
@@ -462,9 +462,7 @@
         )
       );
       // JS UP
-      $data['js_to_load']= array(
-        "flickity.pkgd.min",
-      );
+      $data['js_to_load']= array("libraries/flickity/flickity.pkgd.min");
       // Preloads
       $data['preloads'] = array(
         array("href" => asset_url()."imgs/cover/hemicycle-front-375.jpg", "as" => "image", "media" => "(max-width: 575.98px)"),
@@ -568,9 +566,7 @@
         )
       );
       // JS UP
-      $data['js_to_load']= array(
-        "flickity.pkgd.min",
-      );
+      $data['js_to_load']= array("libraries/flickity/flickity.pkgd.min");
       // Preloads
       $data['preloads'] = array(
         array("href" => asset_url()."imgs/cover/hemicycle-front-375.jpg", "as" => "image", "media" => "(max-width: 575.98px)"),
@@ -606,6 +602,9 @@
       $data['active'] = $data['depute']['active'];
       $legislature = $data['depute']['legislature'];
       $groupe_id = $data['depute']['groupeId'];
+
+      // Photo_square
+      $data['photo_square'] = $data['depute']['legislature'] >= 17 ? TRUE : FALSE;
 
       // Group color
       $data['depute']['couleurAssociee'] = $this->groupes_model->get_groupe_color(array($data['depute']['libelleAbrev'], $data['depute']['couleurAssociee']));
@@ -660,7 +659,7 @@
       $controller = $this->router->fetch_class()."/".$this->router->fetch_method();
       $data['ogp'] = $this->meta_model->get_ogp($controller, $data['title_meta'], $data['description_meta'], $data['url'], $data);
       // JS
-      $data['js_to_load_before_datan'] = array("isotope.pkgd.min");
+      $data['js_to_load_before_datan'] = array("libraries/isotope/isotope.pkgd.min");
       $data['js_to_load']= array("datan/sorting");
       // CSS
       // Preloads
@@ -698,6 +697,9 @@
       $data['active'] = $data['depute']['active'];
       $legislature = $data['depute']['legislature'];
       $groupe_id = $data['depute']['groupeId'];
+
+      // Photo_square
+      $data['photo_square'] = $data['depute']['legislature'] >= 17 ? TRUE : FALSE;
 
       // Group color
       $data['depute']['couleurAssociee'] = $this->groupes_model->get_groupe_color(array($data['depute']['libelleAbrev'], $data['depute']['couleurAssociee']));
@@ -754,7 +756,11 @@
         )
       );
       // JS
-      $data['js_to_load']= array("moment.min", "datatable-datan.min", "datetime-moment");
+      $data['js_to_load']= array(
+        "libraries/moment/moment.min",
+        "dist/datatable-datan.min",
+        "libraries/datetame/datetime-moment"
+      );
       // Preloads
       $data['preloads'] = array(
         array("href" => asset_url()."imgs/cover/hemicycle-front-375.jpg", "as" => "image", "media" => "(max-width: 575.98px)"),

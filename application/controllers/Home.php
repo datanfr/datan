@@ -118,12 +118,15 @@
         )
       );
       // JS
-      $data['js_to_load_up_defer'] = array('chart.min.js', 'chartjs-plugin-datalabels@2.1.js');
+      $data['js_to_load_up_defer'] = array(
+        'libraries/chart.js/chart.min.js',
+        'libraries/chart.js/chartjs-plugin-datalabels@2.1.js'
+      );
       $data['js_to_load'] = array(
         "datan/map_france.min",
         "datan/autocomplete_search",
-        "flickity.pkgd.min",
-        "typed.umd",
+        "libraries/flickity/flickity.pkgd.min",
+        "libraries/typed/typed.umd",
         "datan/typed.datan.min"
       );
       // Load views
