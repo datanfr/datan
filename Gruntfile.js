@@ -102,6 +102,10 @@ module.exports = function (grunt) {
       typed: {
         src: 'assets/js/custom/typed.js',
         dest: 'assets/js/dist/typed.js'
+      },
+      map_france: {
+        src: 'assets/js/custom/map_france.js',
+        dest: 'assets/js/dist/map_france.js'
       }
     },
     critical: {
