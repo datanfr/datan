@@ -94,6 +94,10 @@ module.exports = function (grunt) {
       chart: {
         src: 'assets/js/dist/chart.js',
         dest: 'assets/js/dist/chart.min.js'
+      },
+      autocomplete_search: {
+        src: 'assets/js/custom/autocomplete_search.js',
+        dest: 'assets/js/dist/autocomplete_search.js'
       }
     },
     critical: {
