@@ -547,9 +547,6 @@
 
 <script type="text/javascript">
   document.addEventListener('DOMContentLoaded', function(){
-
-    Chart.register(ChartDataLabels);
-
     var data = {
       labels: [
         <?php
@@ -620,9 +617,6 @@
     }
 
     var pieChart = new Chart(ctx, {
-      plugins: [
-        ChartDataLabels,
-      ],
       type: 'doughnut',
       data: data,
       options: chartOptions,

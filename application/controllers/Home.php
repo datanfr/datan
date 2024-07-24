@@ -118,10 +118,7 @@
         )
       );
       // JS
-      $data['js_to_load_up_defer'] = array(
-        'libraries/chart.js/chart.min.js',
-        'libraries/chart.js/chartjs-plugin-datalabels@2.1.js'
-      );
+      $data['js_to_load_up_defer'] = array('dist/chart.min.js');
       $data['js_to_load'] = array(
         "datan/map_france.min",
         "datan/autocomplete_search",

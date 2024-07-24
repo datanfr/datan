@@ -34,6 +34,9 @@
         legend: {
           display: false
         },
+        datalabels: {
+          display: false
+        }
       },
       scales: {
         y: {

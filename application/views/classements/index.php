@@ -516,6 +516,11 @@
               return data.datasets[tooltipItem.datasetIndex]['data'][tooltipItem.index] + ' %';
             }
           }
+        },
+        plugins: {
+          datalabels: {
+            display: false
+          }
         }
       };
       const cut = 10;

@@ -788,7 +788,7 @@
           "name" => "Statistiques", "url" => base_url()."groupes/legislature-".$data['groupe']['legislature']."/".mb_strtolower($data['groupe']['libelleAbrev'])."/stats", "active" => TRUE
         )
       );
-      $data['js_to_load_up_defer'] = array('libraries/chart.js/chart.min.js');
+      $data['js_to_load_up_defer'] = array('dist/chart.min.js');
       // Load Views
       $this->load->view('templates/header', $data);
       $this->load->view('groupes/stats');
