@@ -32,7 +32,6 @@ function searchQuery() {
           div.innerHTML = result.text;
           div.className = result.source + " no-decoration";
           div.href = get_base_url() + "/" + result.url;
-          console.log(result);
           resultsDiv.appendChild(div);
         });
       });
@@ -49,7 +48,6 @@ window.addEventListener("click", function(event) {
   if (!event.target.matches('#search')) {
     closeDropdown();
     clearInput();
-    startPlaceholderAnimation();
   }
 });
 
@@ -58,7 +56,6 @@ window.addEventListener("keydown", function(event) {
   if (event.key === "Escape") {
     closeDropdown();
     clearInput();
-    startPlaceholderAnimation();
   }
 });
 
@@ -105,4 +102,9 @@ function closeDropdown(){
   document.getElementById("search-bloc").style.borderRadius = "8px";
   document.getElementById("search-results-bloc").style.display = "none";
   document.getElementById("search").blur();
+}
+
+function clearInput() {
+  var inputElement = document.getElementById("search");
+  inputElement.value = "";
 }
