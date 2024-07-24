@@ -7,7 +7,7 @@
     "@babel/core": "^7.13.10",
     "@babel/preset-env": "^7.13.10",
     "@rollup/plugin-node-resolve": "^15.2.3",
-    "chart.js": "^4.4.3",
+    "chart.js": "^4.4.1",
     "chartjs-plugin-datalabels": "^2.2.0",
     "grunt": "^1.5.3",
     "grunt-babel": "^8.0.0",
