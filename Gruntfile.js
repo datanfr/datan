@@ -94,6 +94,18 @@ module.exports = function (grunt) {
       chart: {
         src: 'assets/js/dist/chart.js',
         dest: 'assets/js/dist/chart.min.js'
+      },
+      autocomplete_search: {
+        src: 'assets/js/custom/autocomplete_search.js',
+        dest: 'assets/js/dist/autocomplete_search.js'
+      },
+      typed: {
+        src: 'assets/js/custom/typed.js',
+        dest: 'assets/js/dist/typed.js'
+      },
+      map_france: {
+        src: 'assets/js/custom/map_france.js',
+        dest: 'assets/js/dist/map_france.js'
       }
     },
     critical: {
