@@ -41,6 +41,9 @@
         legend: {
           display: false
         },
+        datalabels: {
+          display: false
+        },
         tooltip: {
           callbacks: {
             title: function(context, data) {

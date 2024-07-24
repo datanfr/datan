@@ -147,7 +147,7 @@
       // JS
       $data['js_to_load_before_datan'] = array('libraries/isotope/isotope.pkgd.min');
       if (in_array($data['election']['id'], array(4, 5, 6))) {
-        $data['js_to_load_up_defer'] = array('libraries/chart.js/chart.min.js', 'libraries/chart.js/chartjs-plugin-datalabels@2.1.js');
+        $data['js_to_load_up_defer'] = array('dist/chart.min.js');
       }
       $data['js_to_load'] = array();
       if (in_array($data['election']['id'], array(1, 4, 5, 6))) {

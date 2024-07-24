@@ -14,7 +14,6 @@
 
 document.addEventListener('DOMContentLoaded', function(){
 
-  Chart.register(ChartDataLabels);
   var libelles = [
     <?php
     foreach ($groupesSorted as $groupe) {
