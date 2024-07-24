@@ -124,7 +124,7 @@
         "dist/autocomplete_search",
         "libraries/flickity/flickity.pkgd.min",
         "libraries/typed/typed.umd",
-        "datan/typed.datan.min"
+        "dist/typed"
       );
       // Load views
       $this->load->view('templates/header', $data);
