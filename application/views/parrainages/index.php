@@ -103,9 +103,7 @@
 </div>
 <script>
   document.addEventListener('DOMContentLoaded', function(){
-
-    Chart.register(ChartDataLabels);
-
+    
     const labels = [
       <?php foreach ($candidates as $x) {
         echo "[";

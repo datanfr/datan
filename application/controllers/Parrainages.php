@@ -46,7 +46,7 @@
         )
       );
       // JS
-      $data['js_to_load_up_defer'] = array('libraries/chart.js/chart.min.js', 'libraries/chart.js/chartjs-plugin-datalabels@2.1.js');
+      $data['js_to_load_up_defer'] = array('dist/chart.min.js');
       $data['js_to_load']= array(
         'libraries/moment/moment.min',
         'dist/datatable-datan.min',
