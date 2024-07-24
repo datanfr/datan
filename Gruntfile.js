@@ -58,7 +58,18 @@ module.exports = function (grunt) {
         },
       },
     },
-    // uglify the js
+    rollup: {
+      options: {
+        plugins: [
+          require('@rollup/plugin-node-resolve').nodeResolve()
+        ]
+      },
+      dist: {
+        files: {
+          'assets/js/dist/chart.js': ['assets/js/custom/import_chartjs.js']
+        }
+      }
+    },
     uglify: {
       options: {
         compress: true,
@@ -79,6 +90,10 @@ module.exports = function (grunt) {
           'assets/js/main-es5.js'
         ],
         dest: 'assets/js/main.min.js'
+      },
+      chart: {
+        src: 'assets/js/dist/chart.js',
+        dest: 'assets/js/dist/chart.min.js'
       }
     },
     critical: {
@@ -230,8 +245,9 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-contrib-concat');
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-babel');
+  grunt.loadNpmTasks('grunt-rollup');
 
   // Default tasks. Mind the order
-  grunt.registerTask('default', ['sass', 'purifycss', 'concat', 'babel', 'uglify', 'critical']);
+  grunt.registerTask('default', ['sass', 'purifycss', 'concat', 'babel', 'rollup', 'uglify', 'critical']);
 
 };

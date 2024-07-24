@@ -25,7 +25,12 @@
 
     var ctx = document.getElementById('proximity');
     var chartOptions = {
-      responsive: true
+      responsive: true,
+      plugins: {
+        datalabels: {
+          display: false
+        }
+      }
     }
 
     // Init the chart
