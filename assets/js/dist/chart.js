@@ -580,9 +580,9 @@ class Color {
 }
 
 /*!
- * Chart.js v4.4.3
+ * Chart.js v4.4.1
  * https://www.chartjs.org
- * (c) 2024 Chart.js Contributors
+ * (c) 2023 Chart.js Contributors
  * Released under the MIT License
  */
 
@@ -1177,13 +1177,6 @@ function unlistenArrayEvents(array, listener) {
  * @private
  */ const _alignStartEnd = (align, start, end)=>align === 'start' ? start : align === 'end' ? end : (start + end) / 2;
 /**
- * Returns `left`, `right` or `(left + right) / 2` depending on `align`. Defaults to `left`
- * @private
- */ const _textX = (align, left, right, rtl)=>{
-    const check = rtl ? 'left' : 'right';
-    return align === check ? right : align === 'center' ? (left + right) / 2 : left;
-};
-/**
  * Return start and count of visible points.
  * @private
  */ function _getStartAndCountOfVisiblePoints(meta, points, animationsDisabled) {
@@ -1713,9 +1706,6 @@ var defaults$1 = /* #__PURE__ */ new Defaults({
 /**
  * Clears the entire canvas.
  */ function clearCanvas(canvas, ctx) {
-    if (!ctx && !canvas) {
-        return;
-    }
     ctx = ctx || canvas.getContext('2d');
     ctx.save();
     // canvas.width and canvas.height do not consider the canvas transform,
@@ -2318,7 +2308,7 @@ function createContext(parentContext, context) {
 const readKey = (prefix, name)=>prefix ? prefix + _capitalize(name) : name;
 const needsSubResolver = (prop, value)=>isObject(value) && prop !== 'adapters' && (Object.getPrototypeOf(value) === null || value.constructor === Object);
 function _cached(target, prop, resolve) {
-    if (Object.prototype.hasOwnProperty.call(target, prop) || prop === 'constructor') {
+    if (Object.prototype.hasOwnProperty.call(target, prop)) {
         return target[prop];
     }
     const value = resolve();
@@ -2750,7 +2740,7 @@ const useOffsetPos = (x, y, target)=>(x > 0 || y > 0) && (!target || !target.sha
 function getContainerSize(canvas, width, height) {
     let maxWidth, maxHeight;
     if (width === undefined || height === undefined) {
-        const container = canvas && _getParentNode(canvas);
+        const container = _getParentNode(canvas);
         if (!container) {
             width = canvas.clientWidth;
             height = canvas.clientHeight;
@@ -3257,9 +3247,9 @@ function styleChanged(style, prevStyle) {
 }
 
 /*!
- * Chart.js v4.4.3
+ * Chart.js v4.4.1
  * https://www.chartjs.org
- * (c) 2024 Chart.js Contributors
+ * (c) 2023 Chart.js Contributors
  * Released under the MIT License
  */
 
@@ -3708,18 +3698,15 @@ function applyStack(stack, value, dsIndex, options = {}) {
     }
     return value;
 }
-function convertObjectDataToArray(data, meta) {
-    const { iScale , vScale  } = meta;
-    const iAxisKey = iScale.axis === 'x' ? 'x' : 'y';
-    const vAxisKey = vScale.axis === 'x' ? 'x' : 'y';
+function convertObjectDataToArray(data) {
     const keys = Object.keys(data);
     const adata = new Array(keys.length);
     let i, ilen, key;
     for(i = 0, ilen = keys.length; i < ilen; ++i){
         key = keys[i];
         adata[i] = {
-            [iAxisKey]: key,
-            [vAxisKey]: data[key]
+            x: key,
+            y: data[key]
         };
     }
     return adata;
@@ -3911,8 +3898,7 @@ class DatasetController {
         const data = dataset.data || (dataset.data = []);
         const _data = this._data;
         if (isObject(data)) {
-            const meta = this._cachedMeta;
-            this._data = convertObjectDataToArray(data, meta);
+            this._data = convertObjectDataToArray(data);
         } else if (_data !== data) {
             if (_data) {
                 unlistenArrayEvents(_data, this);
@@ -4883,7 +4869,7 @@ class BarController extends DatasetController {
         const ilen = rects.length;
         let i = 0;
         for(; i < ilen; ++i){
-            if (this.getParsed(i)[vScale.axis] !== null && !rects[i].hidden) {
+            if (this.getParsed(i)[vScale.axis] !== null) {
                 rects[i].draw(this._ctx);
             }
         }
@@ -5987,14 +5973,10 @@ const eventListenerOptions = supportsEventListenerOptions ? {
     passive: true
 } : false;
 function addListener(node, type, listener) {
-    if (node) {
-        node.addEventListener(type, listener, eventListenerOptions);
-    }
+    node.addEventListener(type, listener, eventListenerOptions);
 }
 function removeListener(chart, type, listener) {
-    if (chart && chart.canvas) {
-        chart.canvas.removeEventListener(type, listener, eventListenerOptions);
-    }
+    chart.canvas.removeEventListener(type, listener, eventListenerOptions);
 }
 function fromNativeEvent(event, chart) {
     const type = EVENT_TYPES[event.type] || event.type;
@@ -6187,7 +6169,7 @@ function createProxyAndListen(chart, type, listener) {
         return getMaximumSize(canvas, width, height, aspectRatio);
     }
  isAttached(canvas) {
-        const container = canvas && _getParentNode(canvas);
+        const container = _getParentNode(canvas);
         return !!(container && container.isConnected);
     }
 }
@@ -8246,7 +8228,7 @@ function needContext(proxy, names) {
     return false;
 }
 
-var version = "4.4.3";
+var version = "4.4.1";
 
 const KNOWN_POSITIONS = [
     'top',
@@ -10021,580 +10003,26 @@ class BarElement extends Element {
     }
 }
 
-const getBoxSize = (labelOpts, fontSize)=>{
-    let { boxHeight =fontSize , boxWidth =fontSize  } = labelOpts;
-    if (labelOpts.usePointStyle) {
-        boxHeight = Math.min(boxHeight, fontSize);
-        boxWidth = labelOpts.pointStyleWidth || Math.min(boxWidth, fontSize);
-    }
-    return {
-        boxWidth,
-        boxHeight,
-        itemHeight: Math.max(fontSize, boxHeight)
-    };
-};
-const itemsEqual = (a, b)=>a !== null && b !== null && a.datasetIndex === b.datasetIndex && a.index === b.index;
-class Legend extends Element {
- constructor(config){
-        super();
-        this._added = false;
-        this.legendHitBoxes = [];
- this._hoveredItem = null;
-        this.doughnutMode = false;
-        this.chart = config.chart;
-        this.options = config.options;
-        this.ctx = config.ctx;
-        this.legendItems = undefined;
-        this.columnSizes = undefined;
-        this.lineWidths = undefined;
-        this.maxHeight = undefined;
-        this.maxWidth = undefined;
-        this.top = undefined;
-        this.bottom = undefined;
-        this.left = undefined;
-        this.right = undefined;
-        this.height = undefined;
-        this.width = undefined;
-        this._margins = undefined;
-        this.position = undefined;
-        this.weight = undefined;
-        this.fullSize = undefined;
-    }
-    update(maxWidth, maxHeight, margins) {
-        this.maxWidth = maxWidth;
-        this.maxHeight = maxHeight;
-        this._margins = margins;
-        this.setDimensions();
-        this.buildLabels();
-        this.fit();
-    }
-    setDimensions() {
-        if (this.isHorizontal()) {
-            this.width = this.maxWidth;
-            this.left = this._margins.left;
-            this.right = this.width;
-        } else {
-            this.height = this.maxHeight;
-            this.top = this._margins.top;
-            this.bottom = this.height;
-        }
-    }
-    buildLabels() {
-        const labelOpts = this.options.labels || {};
-        let legendItems = callback(labelOpts.generateLabels, [
-            this.chart
-        ], this) || [];
-        if (labelOpts.filter) {
-            legendItems = legendItems.filter((item)=>labelOpts.filter(item, this.chart.data));
-        }
-        if (labelOpts.sort) {
-            legendItems = legendItems.sort((a, b)=>labelOpts.sort(a, b, this.chart.data));
-        }
-        if (this.options.reverse) {
-            legendItems.reverse();
-        }
-        this.legendItems = legendItems;
-    }
-    fit() {
-        const { options , ctx  } = this;
-        if (!options.display) {
-            this.width = this.height = 0;
-            return;
-        }
-        const labelOpts = options.labels;
-        const labelFont = toFont(labelOpts.font);
-        const fontSize = labelFont.size;
-        const titleHeight = this._computeTitleHeight();
-        const { boxWidth , itemHeight  } = getBoxSize(labelOpts, fontSize);
-        let width, height;
-        ctx.font = labelFont.string;
-        if (this.isHorizontal()) {
-            width = this.maxWidth;
-            height = this._fitRows(titleHeight, fontSize, boxWidth, itemHeight) + 10;
-        } else {
-            height = this.maxHeight;
-            width = this._fitCols(titleHeight, labelFont, boxWidth, itemHeight) + 10;
-        }
-        this.width = Math.min(width, options.maxWidth || this.maxWidth);
-        this.height = Math.min(height, options.maxHeight || this.maxHeight);
-    }
- _fitRows(titleHeight, fontSize, boxWidth, itemHeight) {
-        const { ctx , maxWidth , options: { labels: { padding  }  }  } = this;
-        const hitboxes = this.legendHitBoxes = [];
-        const lineWidths = this.lineWidths = [
-            0
-        ];
-        const lineHeight = itemHeight + padding;
-        let totalHeight = titleHeight;
-        ctx.textAlign = 'left';
-        ctx.textBaseline = 'middle';
-        let row = -1;
-        let top = -lineHeight;
-        this.legendItems.forEach((legendItem, i)=>{
-            const itemWidth = boxWidth + fontSize / 2 + ctx.measureText(legendItem.text).width;
-            if (i === 0 || lineWidths[lineWidths.length - 1] + itemWidth + 2 * padding > maxWidth) {
-                totalHeight += lineHeight;
-                lineWidths[lineWidths.length - (i > 0 ? 0 : 1)] = 0;
-                top += lineHeight;
-                row++;
-            }
-            hitboxes[i] = {
-                left: 0,
-                top,
-                row,
-                width: itemWidth,
-                height: itemHeight
-            };
-            lineWidths[lineWidths.length - 1] += itemWidth + padding;
-        });
-        return totalHeight;
-    }
-    _fitCols(titleHeight, labelFont, boxWidth, _itemHeight) {
-        const { ctx , maxHeight , options: { labels: { padding  }  }  } = this;
-        const hitboxes = this.legendHitBoxes = [];
-        const columnSizes = this.columnSizes = [];
-        const heightLimit = maxHeight - titleHeight;
-        let totalWidth = padding;
-        let currentColWidth = 0;
-        let currentColHeight = 0;
-        let left = 0;
-        let col = 0;
-        this.legendItems.forEach((legendItem, i)=>{
-            const { itemWidth , itemHeight  } = calculateItemSize(boxWidth, labelFont, ctx, legendItem, _itemHeight);
-            if (i > 0 && currentColHeight + itemHeight + 2 * padding > heightLimit) {
-                totalWidth += currentColWidth + padding;
-                columnSizes.push({
-                    width: currentColWidth,
-                    height: currentColHeight
-                });
-                left += currentColWidth + padding;
-                col++;
-                currentColWidth = currentColHeight = 0;
-            }
-            hitboxes[i] = {
-                left,
-                top: currentColHeight,
-                col,
-                width: itemWidth,
-                height: itemHeight
-            };
-            currentColWidth = Math.max(currentColWidth, itemWidth);
-            currentColHeight += itemHeight + padding;
-        });
-        totalWidth += currentColWidth;
-        columnSizes.push({
-            width: currentColWidth,
-            height: currentColHeight
-        });
-        return totalWidth;
-    }
-    adjustHitBoxes() {
-        if (!this.options.display) {
-            return;
-        }
-        const titleHeight = this._computeTitleHeight();
-        const { legendHitBoxes: hitboxes , options: { align , labels: { padding  } , rtl  }  } = this;
-        const rtlHelper = getRtlAdapter(rtl, this.left, this.width);
-        if (this.isHorizontal()) {
-            let row = 0;
-            let left = _alignStartEnd(align, this.left + padding, this.right - this.lineWidths[row]);
-            for (const hitbox of hitboxes){
-                if (row !== hitbox.row) {
-                    row = hitbox.row;
-                    left = _alignStartEnd(align, this.left + padding, this.right - this.lineWidths[row]);
-                }
-                hitbox.top += this.top + titleHeight + padding;
-                hitbox.left = rtlHelper.leftForLtr(rtlHelper.x(left), hitbox.width);
-                left += hitbox.width + padding;
-            }
-        } else {
-            let col = 0;
-            let top = _alignStartEnd(align, this.top + titleHeight + padding, this.bottom - this.columnSizes[col].height);
-            for (const hitbox of hitboxes){
-                if (hitbox.col !== col) {
-                    col = hitbox.col;
-                    top = _alignStartEnd(align, this.top + titleHeight + padding, this.bottom - this.columnSizes[col].height);
-                }
-                hitbox.top = top;
-                hitbox.left += this.left + padding;
-                hitbox.left = rtlHelper.leftForLtr(rtlHelper.x(hitbox.left), hitbox.width);
-                top += hitbox.height + padding;
-            }
-        }
-    }
-    isHorizontal() {
-        return this.options.position === 'top' || this.options.position === 'bottom';
-    }
-    draw() {
-        if (this.options.display) {
-            const ctx = this.ctx;
-            clipArea(ctx, this);
-            this._draw();
-            unclipArea(ctx);
-        }
-    }
- _draw() {
-        const { options: opts , columnSizes , lineWidths , ctx  } = this;
-        const { align , labels: labelOpts  } = opts;
-        const defaultColor = defaults$1.color;
-        const rtlHelper = getRtlAdapter(opts.rtl, this.left, this.width);
-        const labelFont = toFont(labelOpts.font);
-        const { padding  } = labelOpts;
-        const fontSize = labelFont.size;
-        const halfFontSize = fontSize / 2;
-        let cursor;
-        this.drawTitle();
-        ctx.textAlign = rtlHelper.textAlign('left');
-        ctx.textBaseline = 'middle';
-        ctx.lineWidth = 0.5;
-        ctx.font = labelFont.string;
-        const { boxWidth , boxHeight , itemHeight  } = getBoxSize(labelOpts, fontSize);
-        const drawLegendBox = function(x, y, legendItem) {
-            if (isNaN(boxWidth) || boxWidth <= 0 || isNaN(boxHeight) || boxHeight < 0) {
-                return;
-            }
-            ctx.save();
-            const lineWidth = valueOrDefault(legendItem.lineWidth, 1);
-            ctx.fillStyle = valueOrDefault(legendItem.fillStyle, defaultColor);
-            ctx.lineCap = valueOrDefault(legendItem.lineCap, 'butt');
-            ctx.lineDashOffset = valueOrDefault(legendItem.lineDashOffset, 0);
-            ctx.lineJoin = valueOrDefault(legendItem.lineJoin, 'miter');
-            ctx.lineWidth = lineWidth;
-            ctx.strokeStyle = valueOrDefault(legendItem.strokeStyle, defaultColor);
-            ctx.setLineDash(valueOrDefault(legendItem.lineDash, []));
-            if (labelOpts.usePointStyle) {
-                const drawOptions = {
-                    radius: boxHeight * Math.SQRT2 / 2,
-                    pointStyle: legendItem.pointStyle,
-                    rotation: legendItem.rotation,
-                    borderWidth: lineWidth
-                };
-                const centerX = rtlHelper.xPlus(x, boxWidth / 2);
-                const centerY = y + halfFontSize;
-                drawPointLegend(ctx, drawOptions, centerX, centerY, labelOpts.pointStyleWidth && boxWidth);
-            } else {
-                const yBoxTop = y + Math.max((fontSize - boxHeight) / 2, 0);
-                const xBoxLeft = rtlHelper.leftForLtr(x, boxWidth);
-                const borderRadius = toTRBLCorners(legendItem.borderRadius);
-                ctx.beginPath();
-                if (Object.values(borderRadius).some((v)=>v !== 0)) {
-                    addRoundedRectPath(ctx, {
-                        x: xBoxLeft,
-                        y: yBoxTop,
-                        w: boxWidth,
-                        h: boxHeight,
-                        radius: borderRadius
-                    });
-                } else {
-                    ctx.rect(xBoxLeft, yBoxTop, boxWidth, boxHeight);
-                }
-                ctx.fill();
-                if (lineWidth !== 0) {
-                    ctx.stroke();
-                }
-            }
-            ctx.restore();
-        };
-        const fillText = function(x, y, legendItem) {
-            renderText(ctx, legendItem.text, x, y + itemHeight / 2, labelFont, {
-                strikethrough: legendItem.hidden,
-                textAlign: rtlHelper.textAlign(legendItem.textAlign)
-            });
-        };
-        const isHorizontal = this.isHorizontal();
-        const titleHeight = this._computeTitleHeight();
-        if (isHorizontal) {
-            cursor = {
-                x: _alignStartEnd(align, this.left + padding, this.right - lineWidths[0]),
-                y: this.top + padding + titleHeight,
-                line: 0
-            };
-        } else {
-            cursor = {
-                x: this.left + padding,
-                y: _alignStartEnd(align, this.top + titleHeight + padding, this.bottom - columnSizes[0].height),
-                line: 0
-            };
-        }
-        overrideTextDirection(this.ctx, opts.textDirection);
-        const lineHeight = itemHeight + padding;
-        this.legendItems.forEach((legendItem, i)=>{
-            ctx.strokeStyle = legendItem.fontColor;
-            ctx.fillStyle = legendItem.fontColor;
-            const textWidth = ctx.measureText(legendItem.text).width;
-            const textAlign = rtlHelper.textAlign(legendItem.textAlign || (legendItem.textAlign = labelOpts.textAlign));
-            const width = boxWidth + halfFontSize + textWidth;
-            let x = cursor.x;
-            let y = cursor.y;
-            rtlHelper.setWidth(this.width);
-            if (isHorizontal) {
-                if (i > 0 && x + width + padding > this.right) {
-                    y = cursor.y += lineHeight;
-                    cursor.line++;
-                    x = cursor.x = _alignStartEnd(align, this.left + padding, this.right - lineWidths[cursor.line]);
-                }
-            } else if (i > 0 && y + lineHeight > this.bottom) {
-                x = cursor.x = x + columnSizes[cursor.line].width + padding;
-                cursor.line++;
-                y = cursor.y = _alignStartEnd(align, this.top + titleHeight + padding, this.bottom - columnSizes[cursor.line].height);
-            }
-            const realX = rtlHelper.x(x);
-            drawLegendBox(realX, y, legendItem);
-            x = _textX(textAlign, x + boxWidth + halfFontSize, isHorizontal ? x + width : this.right, opts.rtl);
-            fillText(rtlHelper.x(x), y, legendItem);
-            if (isHorizontal) {
-                cursor.x += width + padding;
-            } else if (typeof legendItem.text !== 'string') {
-                const fontLineHeight = labelFont.lineHeight;
-                cursor.y += calculateLegendItemHeight(legendItem, fontLineHeight) + padding;
-            } else {
-                cursor.y += lineHeight;
-            }
-        });
-        restoreTextDirection(this.ctx, opts.textDirection);
-    }
- drawTitle() {
-        const opts = this.options;
-        const titleOpts = opts.title;
-        const titleFont = toFont(titleOpts.font);
-        const titlePadding = toPadding(titleOpts.padding);
-        if (!titleOpts.display) {
-            return;
-        }
-        const rtlHelper = getRtlAdapter(opts.rtl, this.left, this.width);
-        const ctx = this.ctx;
-        const position = titleOpts.position;
-        const halfFontSize = titleFont.size / 2;
-        const topPaddingPlusHalfFontSize = titlePadding.top + halfFontSize;
-        let y;
-        let left = this.left;
-        let maxWidth = this.width;
-        if (this.isHorizontal()) {
-            maxWidth = Math.max(...this.lineWidths);
-            y = this.top + topPaddingPlusHalfFontSize;
-            left = _alignStartEnd(opts.align, left, this.right - maxWidth);
-        } else {
-            const maxHeight = this.columnSizes.reduce((acc, size)=>Math.max(acc, size.height), 0);
-            y = topPaddingPlusHalfFontSize + _alignStartEnd(opts.align, this.top, this.bottom - maxHeight - opts.labels.padding - this._computeTitleHeight());
-        }
-        const x = _alignStartEnd(position, left, left + maxWidth);
-        ctx.textAlign = rtlHelper.textAlign(_toLeftRightCenter(position));
-        ctx.textBaseline = 'middle';
-        ctx.strokeStyle = titleOpts.color;
-        ctx.fillStyle = titleOpts.color;
-        ctx.font = titleFont.string;
-        renderText(ctx, titleOpts.text, x, y, titleFont);
-    }
- _computeTitleHeight() {
-        const titleOpts = this.options.title;
-        const titleFont = toFont(titleOpts.font);
-        const titlePadding = toPadding(titleOpts.padding);
-        return titleOpts.display ? titleFont.lineHeight + titlePadding.height : 0;
-    }
- _getLegendItemAt(x, y) {
-        let i, hitBox, lh;
-        if (_isBetween(x, this.left, this.right) && _isBetween(y, this.top, this.bottom)) {
-            lh = this.legendHitBoxes;
-            for(i = 0; i < lh.length; ++i){
-                hitBox = lh[i];
-                if (_isBetween(x, hitBox.left, hitBox.left + hitBox.width) && _isBetween(y, hitBox.top, hitBox.top + hitBox.height)) {
-                    return this.legendItems[i];
-                }
-            }
-        }
-        return null;
-    }
- handleEvent(e) {
-        const opts = this.options;
-        if (!isListened(e.type, opts)) {
-            return;
-        }
-        const hoveredItem = this._getLegendItemAt(e.x, e.y);
-        if (e.type === 'mousemove' || e.type === 'mouseout') {
-            const previous = this._hoveredItem;
-            const sameItem = itemsEqual(previous, hoveredItem);
-            if (previous && !sameItem) {
-                callback(opts.onLeave, [
-                    e,
-                    previous,
-                    this
-                ], this);
-            }
-            this._hoveredItem = hoveredItem;
-            if (hoveredItem && !sameItem) {
-                callback(opts.onHover, [
-                    e,
-                    hoveredItem,
-                    this
-                ], this);
-            }
-        } else if (hoveredItem) {
-            callback(opts.onClick, [
-                e,
-                hoveredItem,
-                this
-            ], this);
-        }
-    }
-}
-function calculateItemSize(boxWidth, labelFont, ctx, legendItem, _itemHeight) {
-    const itemWidth = calculateItemWidth(legendItem, boxWidth, labelFont, ctx);
-    const itemHeight = calculateItemHeight(_itemHeight, legendItem, labelFont.lineHeight);
-    return {
-        itemWidth,
-        itemHeight
-    };
-}
-function calculateItemWidth(legendItem, boxWidth, labelFont, ctx) {
-    let legendItemText = legendItem.text;
-    if (legendItemText && typeof legendItemText !== 'string') {
-        legendItemText = legendItemText.reduce((a, b)=>a.length > b.length ? a : b);
-    }
-    return boxWidth + labelFont.size / 2 + ctx.measureText(legendItemText).width;
-}
-function calculateItemHeight(_itemHeight, legendItem, fontLineHeight) {
-    let itemHeight = _itemHeight;
-    if (typeof legendItem.text !== 'string') {
-        itemHeight = calculateLegendItemHeight(legendItem, fontLineHeight);
-    }
-    return itemHeight;
-}
-function calculateLegendItemHeight(legendItem, fontLineHeight) {
-    const labelHeight = legendItem.text ? legendItem.text.length : 0;
-    return fontLineHeight * labelHeight;
-}
-function isListened(type, opts) {
-    if ((type === 'mousemove' || type === 'mouseout') && (opts.onHover || opts.onLeave)) {
-        return true;
-    }
-    if (opts.onClick && (type === 'click' || type === 'mouseup')) {
-        return true;
-    }
-    return false;
-}
-var plugin_legend = {
-    id: 'legend',
- _element: Legend,
-    start (chart, _args, options) {
-        const legend = chart.legend = new Legend({
-            ctx: chart.ctx,
-            options,
-            chart
-        });
-        layouts.configure(chart, legend, options);
-        layouts.addBox(chart, legend);
-    },
-    stop (chart) {
-        layouts.removeBox(chart, chart.legend);
-        delete chart.legend;
-    },
-    beforeUpdate (chart, _args, options) {
-        const legend = chart.legend;
-        layouts.configure(chart, legend, options);
-        legend.options = options;
-    },
-    afterUpdate (chart) {
-        const legend = chart.legend;
-        legend.buildLabels();
-        legend.adjustHitBoxes();
-    },
-    afterEvent (chart, args) {
-        if (!args.replay) {
-            chart.legend.handleEvent(args.event);
-        }
-    },
-    defaults: {
-        display: true,
-        position: 'top',
-        align: 'center',
-        fullSize: true,
-        reverse: false,
-        weight: 1000,
-        onClick (e, legendItem, legend) {
-            const index = legendItem.datasetIndex;
-            const ci = legend.chart;
-            if (ci.isDatasetVisible(index)) {
-                ci.hide(index);
-                legendItem.hidden = true;
-            } else {
-                ci.show(index);
-                legendItem.hidden = false;
-            }
-        },
-        onHover: null,
-        onLeave: null,
-        labels: {
-            color: (ctx)=>ctx.chart.options.color,
-            boxWidth: 40,
-            padding: 10,
-            generateLabels (chart) {
-                const datasets = chart.data.datasets;
-                const { labels: { usePointStyle , pointStyle , textAlign , color , useBorderRadius , borderRadius  }  } = chart.legend.options;
-                return chart._getSortedDatasetMetas().map((meta)=>{
-                    const style = meta.controller.getStyle(usePointStyle ? 0 : undefined);
-                    const borderWidth = toPadding(style.borderWidth);
-                    return {
-                        text: datasets[meta.index].label,
-                        fillStyle: style.backgroundColor,
-                        fontColor: color,
-                        hidden: !meta.visible,
-                        lineCap: style.borderCapStyle,
-                        lineDash: style.borderDash,
-                        lineDashOffset: style.borderDashOffset,
-                        lineJoin: style.borderJoinStyle,
-                        lineWidth: (borderWidth.width + borderWidth.height) / 4,
-                        strokeStyle: style.borderColor,
-                        pointStyle: pointStyle || style.pointStyle,
-                        rotation: style.rotation,
-                        textAlign: textAlign || style.textAlign,
-                        borderRadius: useBorderRadius && (borderRadius || style.borderRadius),
-                        datasetIndex: meta.index
-                    };
-                }, this);
-            }
-        },
-        title: {
-            color: (ctx)=>ctx.chart.options.color,
-            display: false,
-            position: 'center',
-            text: ''
-        }
-    },
-    descriptors: {
-        _scriptable: (name)=>!name.startsWith('on'),
-        labels: {
-            _scriptable: (name)=>![
-                    'generateLabels',
-                    'filter',
-                    'sort'
-                ].includes(name)
-        }
-    }
-};
-
 const positioners$1 = {
  average (items) {
         if (!items.length) {
             return false;
         }
         let i, len;
-        let xSet = new Set();
+        let x = 0;
         let y = 0;
         let count = 0;
         for(i = 0, len = items.length; i < len; ++i){
             const el = items[i].element;
             if (el && el.hasValue()) {
                 const pos = el.tooltipPosition();
-                xSet.add(pos.x);
+                x += pos.x;
                 y += pos.y;
                 ++count;
             }
         }
-        const xAverage = [
-            ...xSet
-        ].reduce((a, b)=>a + b) / xSet.size;
         return {
-            x: xAverage,
+            x: x / count,
             y: y / count
         };
     },
@@ -13805,34 +13233,6 @@ var plugin = {
   }
 };
 
-/*import {
-    Chart,
-    ArcElement,
-    LineElement,
-    BarElement,
-    PointElement,
-    BarController,
-    BubbleController,
-    DoughnutController,
-    LineController,
-    PieController,
-    PolarAreaController,
-    RadarController,
-    ScatterController,
-    CategoryScale,
-    LinearScale,
-    LogarithmicScale,
-    RadialLinearScale,
-    TimeScale,
-    TimeSeriesScale,
-    Decimation,
-    Filler,
-    Legend,
-    Title,
-    Tooltip,
-    SubTitle
-  } from 'chart.js';*/
-
 Chart.register(
     BarElement,
     ArcElement,
@@ -13843,38 +13243,6 @@ Chart.register(
     LineController,
     CategoryScale,
     LinearScale,
-    plugin_legend,
     plugin_tooltip,
     plugin
 );
-
-/*
-Chart.register(
-    ArcElement,
-    LineElement,
-    BarElement,
-    PointElement,
-    BarController,
-    BubbleController,
-    DoughnutController,
-    LineController,
-    PieController,
-    PolarAreaController,
-    RadarController,
-    ScatterController,
-    CategoryScale,
-    LinearScale,
-    LogarithmicScale,
-    RadialLinearScale,
-    TimeScale,
-    TimeSeriesScale,
-    Decimation,
-    Filler,
-    Legend,
-    Title,
-    Tooltip,
-    SubTitle,
-    ChartDataLabels
-);
-  
-*/

@@ -9,7 +9,6 @@ import {
     LineController,
     CategoryScale,
     LinearScale,
-    Legend,
     Tooltip
   } from 'chart.js';
 
@@ -25,7 +24,6 @@ Chart.register(
     LineController,
     CategoryScale,
     LinearScale,
-    Legend,
     Tooltip,
     ChartDataLabels
 );
