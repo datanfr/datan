@@ -121,7 +121,7 @@
       $data['js_to_load_up_defer'] = array('dist/chart.min.js');
       $data['js_to_load'] = array(
         "datan/map_france.min",
-        "datan/autocomplete_search",
+        "dist/autocomplete_search",
         "libraries/flickity/flickity.pkgd.min",
         "libraries/typed/typed.umd",
         "datan/typed.datan.min"
