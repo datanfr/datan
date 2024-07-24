@@ -98,6 +98,10 @@ module.exports = function (grunt) {
       autocomplete_search: {
         src: 'assets/js/custom/autocomplete_search.js',
         dest: 'assets/js/dist/autocomplete_search.js'
+      },
+      typed: {
+        src: 'assets/js/custom/typed.js',
+        dest: 'assets/js/dist/typed.js'
       }
     },
     critical: {
