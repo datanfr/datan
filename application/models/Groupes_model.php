@@ -633,10 +633,6 @@
 
     public function get_groupe_color_card($x){
       switch ($x['uid']) {
-        case 'PO845425': // DR
-          $couleur = '#0265CB';
-          break;
-
         case 'PO845454': // DEM
           $couleur = '#EA552D';
           break;
