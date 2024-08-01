@@ -1,0 +1,1 @@
+In this folder (data/professions/election_6) are saved the 'professions de foi' for the following election: 2024 legislative election in France. We only stored the documents for former legislators or for candidates who were elected during that election.
