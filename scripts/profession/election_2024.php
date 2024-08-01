@@ -52,85 +52,96 @@ class Script
     public function execute()
     {
 
-        // TOUR 1
-        $csv_1 = "data/legislatives-2024-candidatures-france-entiere-tour-1-2024-06-28.csv";
-        $array = $this->csvToArray($csv_1);
+        $tours = array(1, 2);
 
-        //$array = array_splice($array, 760, 80);
-
-
-        echo "<br>";        
-        foreach ($array as $candidate) {
-            //echo "<br>";
-            //print_r($candidate);
-            //echo "<br>";
-            $dpt_source = $candidate['Code département'];
-            $circo_source = $candidate['Code circonscription'];
-            $nameLast = $candidate['Nom du candidat'];
-            $nameFirst = $candidate['Prénom du candidat'];
-            $n = $candidate['Numéro de panneau'];
-
-            // Format 'dpt' and 'circo'
-            if ($dpt_source == '2A' || $dpt_source == '2B') {
-                $dpt = $dpt_source;
-                $circo = mb_substr($circo_source, 2);         
-            } elseif ($dpt_source == "ZX") {
-                $dpt = 977;
-                $circo = mb_substr($circo_source, 2); 
-            } elseif ($dpt_source == "ZZ") {
-                $dpt = "099";
-                $circo = mb_substr($circo_source, 2); 
-            } else if ($dpt_source < 10) {
-                $dpt = "0" . $dpt_source;
-                $circo = mb_substr($circo_source, 1);
-            } elseif (in_array($dpt_source, array(971, 972, 973, 974, 975, 976, 986, 987, 988))) {
-                $dpt = $dpt_source;
-                $circo = mb_substr($circo_source, 3);
-            } else {
-                $dpt = $dpt_source;
-                $circo = mb_substr($circo_source, 2);
+        foreach ($tours as $tour) {
+            // 1. TOUR 1
+            if ($tour == 1) {
+                $csv = "data/legislatives-2024-candidatures-france-entiere-tour-1-2024-06-28.csv";
+            } elseif ($tour == 2) {
+                $csv = "data/legislatives-2024-candidatures-france-entiere-tour-2-2024-07-05.csv";
             }
 
-            $circo = $this->removeLeadingZero($circo);            
+            $array = $this->csvToArray($csv);
+            //$array = array_slice($array, 0, 20);
 
-            $query = $this->bdd->prepare("SELECT * FROM  deputes_last WHERE legislature IN (16, 17) AND departementCode=? AND circo=? AND LOWER(nameLast)=LOWER(?) AND LOWER(nameFirst)=LOWER(?)");
-            $query->execute(array($dpt, $circo, $nameLast, $nameFirst));
-            $depute = $query->fetch();
-
-            if ($depute) {
-                if ($dpt_source == "2A" || $dpt_source == "2B") {
-                    $dpt_source = $dpt_source;
-                    $circo_source = $circo_source;
-                } elseif ($dpt_source < 10) {
-                    $dpt_source = "0" . $dpt_source;
-                    $circo_source = "0" . $circo_source;
+            foreach ($array as $candidate) {
+                $dpt_source = $candidate['Code département'];
+                $circo_source = $candidate['Code circonscription'];
+                $nameLast = $candidate['Nom du candidat'];
+                $nameFirst = $candidate['Prénom du candidat'];
+                $n = $candidate['Numéro de panneau'];
+    
+                // Format 'dpt' and 'circo'
+                if ($dpt_source == '2A' || $dpt_source == '2B') {
+                    $dpt = $dpt_source;
+                    $circo = mb_substr($circo_source, 2);         
+                } elseif ($dpt_source == "ZX") {
+                    $dpt = 977;
+                    $circo = mb_substr($circo_source, 2); 
+                } elseif ($dpt_source == "ZZ") {
+                    $dpt = "099";
+                    $circo = mb_substr($circo_source, 2); 
+                } else if ($dpt_source < 10) {
+                    $dpt = "0" . $dpt_source;
+                    $circo = mb_substr($circo_source, 1);
+                } elseif (in_array($dpt_source, array(971, 972, 973, 974, 975, 976, 986, 987, 988))) {
+                    $dpt = $dpt_source;
+                    $circo = mb_substr($circo_source, 3);
+                } else {
+                    $dpt = $dpt_source;
+                    $circo = mb_substr($circo_source, 2);
                 }
+    
+                $circo = $this->removeLeadingZero($circo);            
+    
+                $query = $this->bdd->prepare("SELECT * FROM  deputes_last WHERE legislature IN (16, 17) AND departementCode=? AND circo=? AND LOWER(nameLast)=LOWER(?) AND LOWER(nameFirst)=LOWER(?)");
+                $query->execute(array($dpt, $circo, $nameLast, $nameFirst));
+                $depute = $query->fetch();
+    
+                if ($depute) {
+                    if ($dpt_source == "2A" || $dpt_source == "2B") {
+                        $dpt_source = $dpt_source;
+                        $circo_source = $circo_source;
+                    } elseif ($dpt_source < 10) {
+                        $dpt_source = "0" . $dpt_source;
+                        $circo_source = "0" . $circo_source;
+                    }
+    
+                    $filename = "https://programme-candidats.interieur.gouv.fr/elections-legislatives-2024/data-pdf-propagandes/" . $tour . "-" . $dpt_source . "-" . $circo_source . "-" . $n . ".pdf";
+    
+                    echo $dpt . " - " . $circo;
+                    echo " - " . $nameFirst . " " . $nameLast;
+                    echo " - <span style='color: red'>" . $depute['nameFirst'] . " " . $depute['nameLast'] . "</span>";
+                    echo " - <a href='".$filename."'>LINK</a> || ";
+    
+                    $this->saveProfession($depute, $filename, $tour);
 
-                $filename = "https://programme-candidats.interieur.gouv.fr/elections-legislatives-2024/data-pdf-propagandes/1-" . $dpt_source . "-" . $circo_source . "-" . $n . ".pdf";
-
-                echo $dpt . " - " . $circo;
-                echo " - " . $nameFirst . " " . $nameLast;
-                echo " - <span style='color: red'>" . $depute['nameFirst'] . " " . $depute['nameLast'] . "</span>";
-                echo " - <a href='".$filename."'>LINK</a>";
-                echo "<br>";
-
-                $this->saveProfession($depute, $filename, $tour);
+                    echo "<br>";
+                }            
+    
             }            
 
         }
-        die();
+        
     }
 
     private function saveProfession($depute, $filename, $tour){
-        try {
+        if ($this->url_exists($filename)) {
+            $currentDir = __DIR__;
+            $basePath = dirname(dirname($currentDir));
+            $targetDir = $basePath . '/assets/data/professions/election_' . $this->electionId;
+
             $name = str_replace("https://programme-candidats.interieur.gouv.fr/elections-legislatives-2024/data-pdf-propagandes/", "", $filename);
-            file_put_contents('assets/data/professions/election_' . $this->electionId . '/1.pdf', file_get_contents($filename));
+
+            file_put_contents($targetDir . '/' . $name, file_get_contents($filename));
+
             $sql = "INSERT INTO `profession_foi` (" . implode(",", $this->fields) . ") VALUES (?, ?, ?, ?)";
             $stmt = $this->bdd->prepare($sql);
             $stmt->execute(array($depute["mpId"], $name, $tour, $this->electionId));
-            echo $name . " a ete ajoute pour " . $depute["nameLast"] . "\n";
-        } catch (\Exception $e) {
-            echo "Error : " . $e->getMessage() . "\n";
+            echo $name . " was added for " . $depute["nameLast"] . "\n";
+        } else {
+            echo "NO PDF";
         }
     }
 
@@ -170,6 +181,11 @@ class Script
         }
         // Return the original string if the first character is not '0'
         return $string;
+    }
+
+    private function url_exists($url) {
+        $headers = get_headers($url);
+        return stripos($headers[0], "200 OK") ? true : false;
     }
 }
 
