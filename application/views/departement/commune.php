@@ -162,7 +162,7 @@
                       </div>
                     </div>
                   </div>
-                  <span url_obf="<?= url_obfuscation("https://www.interieur.gouv.fr/Elections/Les-resultats/Legislatives/elecresult__legislatives-2022/(path)/legislatives-2017/".$ville['interieurGouv']['dpt']."/".$ville['interieurGouv']['dpt']."0".reset($value)['circo']."".$ville['interieurGouv']['commune'].".html") ?>" class="url_obf no-decoration">
+                  <span url_obf="<?= url_obfuscation("https://www.resultats-elections.interieur.gouv.fr/legislatives2024/ensemble_geographique/index.html") ?>" class="url_obf no-decoration">
                     <div class="card-footer">
                       <p class="text-center mb-0">Plus d'infos</p>
                     </div>
@@ -273,7 +273,7 @@
                   </div>
                 </div>
               </div>
-              <span url_obf="<?= url_obfuscation("https://www.interieur.gouv.fr/Elections/Les-resultats/Presidentielles/elecresult__presidentielle-2017/(path)/presidentielle-2017/".$ville['interieurGouv']['region']."/".$ville['interieurGouv']['dpt']."/".$ville['interieurGouv']['dpt']."".$ville['interieurGouv']['commune'].".html") ?>" class="url_obf no-decoration">
+              <span url_obf="<?= url_obfuscation("https://www.archives-resultats-elections.interieur.gouv.fr/resultats/presidentielle-2022/index.php") ?>" class="url_obf no-decoration">
                 <div class="card-footer">
                   <p class="text-center mb-0">Plus d'infos</p>
                 </div>
@@ -303,7 +303,7 @@
                 </div>
               </div>
             </div>
-            <span url_obf="<?= url_obfuscation("https://www.interieur.gouv.fr/Elections/Les-resultats/Europeennes/elecresult__europeennes-2019/(path)/europeennes-2019/".$ville['interieurGouv']['region']."/".$ville['interieurGouv']['dpt']."/".$ville['interieurGouv']['dpt']."".$ville['interieurGouv']['commune_europeennes'].".html") ?>" class="url_obf no-decoration">
+            <span url_obf="<?= url_obfuscation("https://www.archives-resultats-elections.interieur.gouv.fr/resultats/europeennes-2019/index.php") ?>" class="url_obf no-decoration">
               <div class="card-footer">
                 <p class="text-center mb-0">Plus d'infos</p>
               </div>
@@ -333,7 +333,7 @@
                   </div>
                 </div>
               </div>
-              <span url_obf="<?= url_obfuscation("https://www.interieur.gouv.fr/Elections/Les-resultats/Presidentielles/elecresult__presidentielle-2017/(path)/presidentielle-2017/".$ville['interieurGouv']['region']."/".$ville['interieurGouv']['dpt']."/".$ville['interieurGouv']['dpt']."".$ville['interieurGouv']['commune'].".html") ?>" class="url_obf no-decoration">
+              <span url_obf="<?= url_obfuscation("hhttps://www.archives-resultats-elections.interieur.gouv.fr/resultats/presidentielle-2017/index.php") ?>" class="url_obf no-decoration">
                 <div class="card-footer">
                   <p class="text-center mb-0">Plus d'infos</p>
                 </div>
@@ -364,7 +364,7 @@
                   </div>
                 </div>
               </div>
-              <span url_obf="<?= url_obfuscation("https://www.interieur.gouv.fr/Elections/Les-resultats/Legislatives/elecresult__legislatives-2017/(path)/legislatives-2017/".$ville['interieurGouv']['dpt']."/".$ville['interieurGouv']['dpt']."0".$results_leg_2017[0]['circo']."".$ville['interieurGouv']['commune'].".html") ?>" class="url_obf no-decoration">
+              <span url_obf="<?= url_obfuscation("https://www.archives-resultats-elections.interieur.gouv.fr/resultats/legislatives-2017/index.php") ?>" class="url_obf no-decoration">
                 <div class="card-footer">
                   <p class="text-center mb-0">Plus d'infos</p>
                 </div>
