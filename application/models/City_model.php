@@ -104,6 +104,82 @@
       return $array;
     }
 
+    public function get_results_elections($dpt, $commune, $insee){
+      $return = array();
+
+      // 1. Présidentielle 2017
+      $result = [];
+      $result['title'] = 'Élection présidentielle 2017';
+      $result['subtitle'] = 'Résultat du 2<sup>nd</sup> tour';
+      $result['link'] = 'https://www.archives-resultats-elections.interieur.gouv.fr/resultats/presidentielle-2017/index.php';
+      $result['results'] = $this->get_results_presidentielle($dpt, $commune, 2017);
+      foreach($result['results'] as $key => $value) {
+        $result['results'][$key]['label'] = $value['candidate'];
+        $result['results'][$key]['value'] = $value['share'];
+      }
+      $return['pres_2017'] = $result;
+
+      // 2. Législatives 2017
+      $result = [];
+      $result['title'] = 'Élections législatives 2017';
+      $result['subtitle'] = 'Résultat du 2<sup>nd</sup> tour';
+      $result['link'] = 'https://www.archives-resultats-elections.interieur.gouv.fr/resultats/legislatives-2017/index.php';
+      $result['results'] = $this->get_results_legislatives($insee, 2017);
+      foreach($result['results'] as $key => $value) {
+        $result['results'][$key]['label'] = $value['prenom'] . ' ' . ucfirst(strtolower($value['nom']));
+        $result['results'][$key]['value'] = $value['pct'];
+      }
+      $return['leg_2017'] = $result;
+
+      // 3. Européennes 2019
+      $result = [];
+      $result['title'] = 'Élections européennes 2019';
+      $result['subtitle'] = 'Les 3 premiers partis politiques';
+      $result['link'] = 'https://www.archives-resultats-elections.interieur.gouv.fr/resultats/europeennes-2019/index.php';
+      $result['results'] = $this->get_results_europe($dpt, $commune, 2019);
+      foreach($result['results'] as $key => $value) {
+        $result['results'][$key]['label'] = $value['partiName'];
+      }
+      $return['euro_2019'] = $result;
+
+      // 4. Présidentielle 2022
+      $result = [];
+      $result['title'] = 'Élection présidentielle 2022';
+      $result['subtitle'] = 'Résultat du 2<sup>nd</sup> tour';
+      $result['link'] = 'https://www.archives-resultats-elections.interieur.gouv.fr/resultats/presidentielle-2022/index.php';
+      $result['results'] = $this->get_results_presidentielle($dpt, $commune, 2022);
+      foreach($result['results'] as $key => $value) {
+        $result['results'][$key]['label'] = $value['candidate'];
+        $result['results'][$key]['value'] = $value['share'];
+      }
+      $return['pres_2022'] = $result;
+
+      // 5. Législatives 2022
+      $result = [];
+      $result['title'] = 'Élections législatives 2022';
+      $result['subtitle'] = 'Résultat du 2<sup>nd</sup> tour';
+      $result['link'] = 'https://www.archives-resultats-elections.interieur.gouv.fr/resultats/legislatives-2022/index.php';
+      $result['results'] = $this->get_results_legislatives($insee, 2022);
+      foreach($result['results'] as $key => $value) {
+        $result['results'][$key]['label'] = $value['prenom'] . ' ' . ucfirst(strtolower($value['nom']));
+        $result['results'][$key]['value'] = $value['pct'];
+      }
+      $return['leg_2022'] = $result;
+
+      // 6. Européennes 2024
+      $result = [];
+      $result['title'] = 'Élections européennes 2024';
+      $result['subtitle'] = 'Les 3 premiers partis politiques';
+      $result['link'] = 'https://www.archives-resultats-elections.interieur.gouv.fr/resultats/europeennes2024/index.php';
+      $result['results'] = $this->get_results_europe($dpt, $commune, 2024);
+      foreach($result['results'] as $key => $value) {
+        $result['results'][$key]['label'] = $value['partiName'];
+      }
+      $return['euro_2024'] = $result;
+
+      return array_reverse($return);
+    }
+
     public function get_results_legislatives($insee, $year){
       $this->db->select('*, ROUND(voix / exprimes * 100) AS pct');
       $this->db->where('insee', $insee);
@@ -164,9 +240,7 @@
       return $text;
     }
 
-    public function get_results_europe($array, $year){
-      $dpt = $array["dpt"];
-      $city = $array["commune"];
+    public function get_results_europe($dpt, $city, $year){
       if ($dpt == "987") {
         $city = 700 + $city;
       }
