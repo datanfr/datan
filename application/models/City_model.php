@@ -108,6 +108,7 @@
       $this->db->select('*, ROUND(voix / exprimes * 100) AS pct');
       $this->db->where('insee', $insee);
       $this->db->where('year', $year);
+      $this->db->where('tour', 2);
       $this->db->order_by('circo', 'DESC');
       $this->db->order_by('voix', 'DESC');
       return $this->db->get('elect_legislatives_cities')->result_array();
