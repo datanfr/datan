@@ -189,46 +189,37 @@
           <?php endif; ?>
         </div>
         <div class="d-flex justify-content-around flex-wrap mt-4 bloc-elections">
-
-            <?php foreach ($elections as $election) : ?>
-
-              
-              <div class="card mx-1 my-4">
-                <div class="card-body pb-0">
-                  <h3><?= $election['title'] ?></h3>
-                  <span class="round"><?= $election['subtitle'] ?></span>
-                  <div class="chart mt-3">
-                    <div class="results d-flex flex-row justify-content-center align-items-center">
-                      <?php foreach ($election['results'] as $result): ?>
-                        <div class="bar d-flex flex-row justify-content-center align-items-end">
-                          <div class="element d-flex align-items-center justify-content-center" style="height: <?= round($result['value']) ?>%">
-                            <span class="score" style="color: #fff"><?= round($result['value']) ?>%</span>
-                          </div>
+          <?php foreach ($elections as $election) : ?>
+            <div class="card mx-1 my-4">
+              <div class="card-body pb-0">
+                <h3><?= $election['title'] ?></h3>
+                <span class="round"><?= $election['subtitle'] ?></span>
+                <div class="chart mt-3">
+                  <div class="results d-flex flex-row justify-content-center align-items-center">
+                    <?php foreach ($election['results'] as $result): ?>
+                      <div class="bar d-flex flex-row justify-content-center align-items-end">
+                        <div class="element d-flex align-items-center justify-content-center" style="height: <?= round($result['value']) ?>%">
+                          <span class="score" style="color: #fff"><?= round($result['value']) ?>%</span>
                         </div>
-                      <?php endforeach; ?>
-                    </div>
-                    <div class="names d-flex flex-row justify-content-center align-items-center">
-                      <?php foreach ($election['results'] as $result): ?>
-                        <div class="name">
-                          <p class="text-center"><?= $result['label'] ?></p>
-                        </div>
-                      <?php endforeach; ?>
-                    </div>
+                      </div>
+                    <?php endforeach; ?>
+                  </div>
+                  <div class="names d-flex flex-row justify-content-center align-items-center">
+                    <?php foreach ($election['results'] as $result): ?>
+                      <div class="name">
+                        <p class="text-center"><?= $result['label'] ?></p>
+                      </div>
+                    <?php endforeach; ?>
                   </div>
                 </div>
-                <span url_obf="<?= url_obfuscation($election['link']) ?>" class="url_obf no-decoration">
-                  <div class="card-footer">
-                    <p class="text-center mb-0">Plus d'infos</p>
-                  </div>
-                </span>
               </div>
-
-            <?php endforeach; ?>
-
-          
-          
-
-          
+              <span url_obf="<?= url_obfuscation($election['link']) ?>" class="url_obf no-decoration">
+                <div class="card-footer">
+                  <p class="text-center mb-0">Plus d'infos</p>
+                </div>
+              </span> 
+            </div>
+          <?php endforeach; ?>
         </div>
       </div>
     </div> <!-- // END ALL ELECTIONS -->

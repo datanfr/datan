@@ -143,7 +143,7 @@
       }
 
       // Get all other elections 
-      $data['elections'] = $this->city_model->get_results_elections($data['ville']['dpt'], $data['ville']['commune'], $insee);
+      $data['elections'] = $this->city_model->get_results_elections($n_circos, $data['ville']['dpt'], $data['ville']['commune'], $insee);
 
       // Edited presidentielle
       if ($data['elections']['pres_2017']['results'][0]['votants'] > 0 && $data['elections']['pres_2022']['results'][0]['votants'] > 0) {
