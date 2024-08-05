@@ -130,8 +130,8 @@
       } */
 
       // Get elections
-      // 1. 2022 _ Législatives _ 2nd tour
-      $data['results_legislatives_last'] = $this->city_model->get_results_legislatives($insee, 2022);
+      // 1. 2024 _ Législatives _ 2nd tour
+      $data['results_legislatives_last'] = $this->city_model->get_results_legislatives($insee, 2024);
       $arr = array();
       foreach ($data['results_legislatives_last'] as $key => $item) {
          $arr[$item['circo']][$key] = $item;
@@ -154,8 +154,11 @@
       $data['results_2019_europe'] = $this->city_model->get_results_europe($data['ville'], 2019);
       $data['results_2024_europe'] = $this->city_model->get_results_europe($data['ville'], 2024);
 
-      // 4. 2018 _ Législatvies _ 2017 _ 2nd tour
+      // 4. 2017 _ Législatvies _ 2nd tour
       $data['results_leg_2017'] = $this->city_model->get_results_legislatives($insee, 2017);
+
+      // 5. 2022 _ Législatives _ 2nd tour
+      $data['results_leg_2022'] = $this->city_model->get_results_legislatives($insee, 2022);
 
       // Meta
       $data['url'] = $this->meta_model->get_url();
