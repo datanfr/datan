@@ -116,7 +116,7 @@
         <div class="container">
           <div class="row mt-2">
             <div class="col-12">
-              <h2 class="text-center">Les élections législatives 2024 à <?= $ville['commune_nom'] ?></h2>
+              <h2 class="text-center">Résultat des élections législatives 2024 à <?= $ville['commune_nom'] ?></h2>
             </div>
           </div>
           <div class="row mt-3">
@@ -126,8 +126,11 @@
               <p>Les prochaines élections législatives auront lieu en 2029, sauf si l'Assemblée est dissoute avant cette date.</p>
               <p class="text-primary font-weight-bold">L'élection à <?= $ville['commune_nom'] ?></p>
               <?php if ($n_circos == 1): ?>
-                <p>Pour le second tour des législatives, la ville de <?= $ville['commune_nom'] ?> comptait <?= number_format($results_legislatives_last_first['inscrits'], 0, ',', ' ') ?> inscrits sur les listes électorales. Seuls <?= number_format($results_legislatives_last_first['votants'], 0, ',', ' ') ?> habitants se sont rendus aux urnes, soit un <b>taux de participation de <?= 100 - round($results_legislatives_last_first['abs'] / $results_legislatives_last_first['inscrits'] * 100)  ?> %</b>, comparé 67% au niveau national.</p>
-                <p>Dans la ville de <?= $ville['commune_nom'] ?>, <?= $results_legislatives_last_first['prenom'] ?> <?= ucfirst(mb_strtolower($results_legislatives_last_first['nom'])) ?> a récolté le plus grand nombre de voix avec <?= number_format($results_legislatives_last_first['voix'], 0, ',', ' ') ?> votes, soit <?= $results_legislatives_last_first['pct'] ?>% des suffrages.</p>
+                <?php if($results_legislatives_last_first['tour'] == 1): ?>
+                  <p>Dans la ville de <?= $ville['commune_nom'] ?>, il n'y a eu qu'un seul tour. Cela signifique que <?= $results_legislatives_last_first['prenom'] ?> <?= ucfirst(mb_strtolower($results_legislatives_last_first['nom'])) ?> a obtenu plus de la moitié des votes exprimés et au moins un quart des voix des inscrits.</p>
+                <?php endif; ?>
+                <p><?= $ville['commune_nom'] ?> compte <?= number_format($results_legislatives_last_first['inscrits'], 0, ',', ' ') ?> inscrits sur les listes électorales. Seuls <?= number_format($results_legislatives_last_first['votants'], 0, ',', ' ') ?> habitants ont voté, soit un <b>taux de participation de <?= 100 - round($results_legislatives_last_first['abs'] / $results_legislatives_last_first['inscrits'] * 100)  ?> %</b>, comparé 67% au niveau national.</p>
+                <p><?= $results_legislatives_last_first['prenom'] ?> <?= ucfirst(mb_strtolower($results_legislatives_last_first['nom'])) ?> a récolté le plus grand nombre de voix à <?= $ville['commune_nom'] ?> avec <?= number_format($results_legislatives_last_first['voix'], 0, ',', ' ') ?> votes, soit <?= $results_legislatives_last_first['pct'] ?>% des suffrages.</p>
               <?php endif; ?>
               <?php if ($n_circos > 1): ?>
                 <p><?= $ville['commune_nom'] ?> étant une ville de taille importante, elle compte plusieurs députés. Découvrez ci-dessous les parlementaires élus pour la ville de <?= $ville['commune_nom'] ?>.</p>
@@ -141,8 +144,8 @@
                     <span class="round">
                       <?php if(reset($value)['circo']) : ?>
                         <?= reset($value)['circo'] ?><sup><?= abbrev_n(reset($value)['circo'], TRUE) ?></sup> circonscription -
-                      <?php endif; ?>                      
-                      2<sup>nd</sup> tour</span>
+                      <?php endif; ?>   
+                      <?= reset($value)['tour'] == 1 ? '1<sup>er</sup>' : '2<sup>nd</sup>' ?> tour</span>
                     <div class="chart mt-3">
                       <div class="results d-flex flex-row justify-content-center align-items-center">
                         <?php foreach ($value as $candidate): ?>
