@@ -185,13 +185,28 @@
     }
 
     public function get_results_legislatives($insee, $year){
+
       $this->db->select('*, ROUND(voix / exprimes * 100) AS pct');
       $this->db->where('insee', $insee);
       $this->db->where('year', $year);
       $this->db->where('tour', 2);
       $this->db->order_by('circo', 'DESC');
       $this->db->order_by('voix', 'DESC');
-      return $this->db->get('elect_legislatives_cities')->result_array();
+      $return = $this->db->get('elect_legislatives_cities')->result_array();
+
+      if (empty($return)) {
+        $this->db->reset_query();
+        $this->db->select('*, ROUND(voix / exprimes * 100) AS pct');
+        $this->db->where('insee', $insee);
+        $this->db->where('year', $year);
+        $this->db->where('tour', 1);
+        $this->db->order_by('circo', 'DESC');
+        $this->db->order_by('voix', 'DESC');
+        $return = $this->db->get('elect_legislatives_cities', 1)->result_array();
+      } 
+
+      return $return;
+
     }
 
     public function get_results_presidentielle($dpt, $city, $election){
