@@ -280,46 +280,37 @@
       return $this->db->get()->row_array();
     }
 
-    public function get_election_canceled($depute_uid, $legislature){
-      $where = array(
-        'mpId' => $depute_uid,
-        'datePriseFonction' => "2017-06-21"
-      );
-      $this->db->select('causeFin, dateFin, date_format(dateFin, "%M %Y") AS dateFinFR');
-      return $this->db->get_where('mandat_principal', $where)->row_array();
-    }
-
-    public function get_election_result($dpt, $circo, $nom, $year){
-      $sql = 'SELECT candidat, voix, pct_exprimes,
+    public function get_election_result($dpt, $circo, $nom, $year, $tour){
+      $sql = 'SELECT candidat, voix, pct_exprimes, tour,
         CASE
           WHEN tour = 2 THEN "2ème"
           WHEN tour = 1 THEN "1er"
         END AS tour_election
         FROM elect_legislatives_results
-        WHERE dpt = ? AND circo = ? AND year = ? AND elected = 1 AND candidat LIKE "%'.$this->db->escape_like_str($nom).'%"
+        WHERE dpt = ? AND circo = ? AND year = ? AND tour = ? AND elected = 1 AND nameLast LIKE "%'.$this->db->escape_like_str($nom).'%"
         LIMIT 1
       ';
-      return $this->db->query($sql, array($dpt, $circo, $year))->row_array();
+      return $this->db->query($sql, array($dpt, $circo, $year, $tour))->row_array();
     }
 
-    public function get_election_opponent($dpt, $circo, $year){
-      $sql = 'SELECT candidat, voix, pct_exprimes,
+    public function get_election_opponent($dpt, $circo, $year, $tour){
+      $sql = 'SELECT nameLast, nameFirst, sexe, voix, pct_exprimes,
         CASE
           WHEN tour = 2 THEN "2ème"
           WHEN tour = 1 THEN "1er"
         END AS tour_election
         FROM elect_legislatives_results
-        WHERE dpt = ? AND circo = ? AND year = ? AND elected = 0
+        WHERE dpt = ? AND circo = ? AND year = ? AND tour = ? AND elected = 0
       ';
-      return $this->db->query($sql, array($dpt, $circo, $year))->result_array();
+      return $this->db->query($sql, array($dpt, $circo, $year, $tour))->result_array();
     }
 
-    public function get_election_infos($dpt, $circo, $year){
+    public function get_election_infos($dpt, $circo, $year, $tour){
       $sql = 'SELECT *
         FROM elect_legislatives_infos
-        WHERE dpt = ? AND circo = ? AND year = ?
+        WHERE dpt = ? AND circo = ? AND year = ? AND tour = ?
       ';
-      return $this->db->query($sql, array($dpt, $circo, $year))->row_array();
+      return $this->db->query($sql, array($dpt, $circo, $year, $tour))->row_array();
     }
 
     public function get_other_deputes($groupe_id, $depute_name, $depute_uid, $active, $legislature){

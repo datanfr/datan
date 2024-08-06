@@ -104,13 +104,109 @@
       return $array;
     }
 
+    public function get_results_elections($n_circos, $dpt, $commune, $insee){
+      $return = array();
+
+      // 1. Présidentielle 2017
+      $result = [];
+      $result['title'] = 'Élection présidentielle 2017';
+      $result['subtitle'] = 'Résultat du 2<sup>nd</sup> tour';
+      $result['link'] = 'https://www.archives-resultats-elections.interieur.gouv.fr/resultats/presidentielle-2017/index.php';
+      $result['results'] = $this->get_results_presidentielle($dpt, $commune, 2017);
+      foreach($result['results'] as $key => $value) {
+        $result['results'][$key]['label'] = $value['candidate'];
+        $result['results'][$key]['value'] = $value['share'];
+      }
+      $return['pres_2017'] = $result;
+
+      // 2. Législatives 2017
+      if ($n_circos == 1) {
+        $result = [];
+        $result['title'] = 'Élections législatives 2017';
+        $result['subtitle'] = 'Résultat du 2<sup>nd</sup> tour';
+        $result['link'] = 'https://www.archives-resultats-elections.interieur.gouv.fr/resultats/legislatives-2017/index.php';
+        $result['results'] = $this->get_results_legislatives($insee, 2017);
+        foreach($result['results'] as $key => $value) {
+          $result['results'][$key]['label'] = $value['prenom'] . ' ' . ucfirst(strtolower($value['nom']));
+          $result['results'][$key]['value'] = $value['pct'];
+        }
+        $return['leg_2017'] = $result;
+      }      
+
+      // 3. Européennes 2019
+      $result = [];
+      $result['title'] = 'Élections européennes 2019';
+      $result['subtitle'] = 'Les 3 premiers partis politiques';
+      $result['link'] = 'https://www.archives-resultats-elections.interieur.gouv.fr/resultats/europeennes-2019/index.php';
+      $result['results'] = $this->get_results_europe($dpt, $commune, 2019);
+      foreach($result['results'] as $key => $value) {
+        $result['results'][$key]['label'] = $value['partiName'];
+      }
+      $return['euro_2019'] = $result;
+
+      // 4. Présidentielle 2022
+      $result = [];
+      $result['title'] = 'Élection présidentielle 2022';
+      $result['subtitle'] = 'Résultat du 2<sup>nd</sup> tour';
+      $result['link'] = 'https://www.archives-resultats-elections.interieur.gouv.fr/resultats/presidentielle-2022/index.php';
+      $result['results'] = $this->get_results_presidentielle($dpt, $commune, 2022);
+      foreach($result['results'] as $key => $value) {
+        $result['results'][$key]['label'] = $value['candidate'];
+        $result['results'][$key]['value'] = $value['share'];
+      }
+      $return['pres_2022'] = $result;
+
+      // 5. Législatives 2022
+      if ($n_circos == 1) {
+        $result = [];
+        $result['title'] = 'Élections législatives 2022';
+        $result['subtitle'] = 'Résultat du 2<sup>nd</sup> tour';
+        $result['link'] = 'https://www.archives-resultats-elections.interieur.gouv.fr/resultats/legislatives-2022/index.php';
+        $result['results'] = $this->get_results_legislatives($insee, 2022);
+        foreach($result['results'] as $key => $value) {
+          $result['results'][$key]['label'] = $value['prenom'] . ' ' . ucfirst(strtolower($value['nom']));
+          $result['results'][$key]['value'] = $value['pct'];
+        }
+        $return['leg_2022'] = $result;
+      }      
+
+      // 6. Européennes 2024
+      $result = [];
+      $result['title'] = 'Élections européennes 2024';
+      $result['subtitle'] = 'Les 3 premiers partis politiques';
+      $result['link'] = 'https://www.archives-resultats-elections.interieur.gouv.fr/resultats/europeennes2024/index.php';
+      $result['results'] = $this->get_results_europe($dpt, $commune, 2024);
+      foreach($result['results'] as $key => $value) {
+        $result['results'][$key]['label'] = $value['partiName'];
+      }
+      $return['euro_2024'] = $result;
+
+      return array_reverse($return);
+    }
+
     public function get_results_legislatives($insee, $year){
+
       $this->db->select('*, ROUND(voix / exprimes * 100) AS pct');
       $this->db->where('insee', $insee);
       $this->db->where('year', $year);
+      $this->db->where('tour', 2);
       $this->db->order_by('circo', 'DESC');
       $this->db->order_by('voix', 'DESC');
-      return $this->db->get('elect_legislatives_cities')->result_array();
+      $return = $this->db->get('elect_legislatives_cities')->result_array();
+
+      if (empty($return)) {
+        $this->db->reset_query();
+        $this->db->select('*, ROUND(voix / exprimes * 100) AS pct');
+        $this->db->where('insee', $insee);
+        $this->db->where('year', $year);
+        $this->db->where('tour', 1);
+        $this->db->order_by('circo', 'DESC');
+        $this->db->order_by('voix', 'DESC');
+        $return = $this->db->get('elect_legislatives_cities', 1)->result_array();
+      } 
+
+      return $return;
+
     }
 
     public function get_results_presidentielle($dpt, $city, $election){
@@ -163,9 +259,7 @@
       return $text;
     }
 
-    public function get_results_europe($array, $year){
-      $dpt = $array["dpt"];
-      $city = $array["commune"];
+    public function get_results_europe($dpt, $city, $year){
       if ($dpt == "987") {
         $city = 700 + $city;
       }
@@ -179,56 +273,6 @@
       $query = $this->db->query($sql, array($dpt, $city, $year));
 
       return $query->result_array();
-    }
-
-    public function get_format_interieurGouv($city){
-      $array = [];
-
-      // 1. Departement
-      switch ($city['dpt']) {
-        case '2a':
-          $array['dpt'] = '2A';
-          break;
-
-        case '2b':
-          $array['dpt'] = '2B';
-          break;
-
-        default:
-          $array['dpt'] = $city['dpt'];
-          break;
-      }
-
-      if ($array['dpt'] < 100) {
-        $array['dpt'] = '0'.$array['dpt'];
-      } else {
-        $array['dpt'] = $array['dpt'];
-      }
-
-      // 2. City code
-      if ($city['dpt'] == 976) {
-        $array['commune'] = $city['commune'] - 100;
-      } else {
-        $array['commune'] = $city['commune'];
-      }
-
-      // 2. City code Européennes
-      if ($city['dpt'] == 987) {
-        $array['commune_europeennes'] = $city['commune'] + 700;
-      } else {
-        $array['commune_europeennes'] = $city['commune'];
-      }
-
-      // 3. REGION
-      if (is_null($city['codeRegion'])) {
-        $array['region'] = '000';
-      } elseif ($city['codeRegion'] < 10) {
-        $array['region'] = '00'.$city['codeRegion'];
-      } else {
-        $array['region'] = '0'.$city['codeRegion'];
-      }
-
-      return $array;
     }
 
     public function get_adjacentes($insee, $limit = FALSE){
