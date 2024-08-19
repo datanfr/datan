@@ -478,7 +478,8 @@
       setlocale(LC_TIME, 'french');
       // Check with this page : http://localhost/datan/deputes/ille-et-vilaine-35/depute_thierry-benoit/legislature-14
       $data['depute'] = $this->deputes_model->get_depute_individual_historique($nameUrl, $departement, $legislature);
-      $data['depute_last'] = $this->deputes_model->get_depute_individual($nameUrl, $departement);
+      $latest_dpt = $this->deputes_model->get_mp_latest_dpt($data['depute']['mpId'], $departement);
+      $data['depute_last'] = $this->deputes_model->get_depute_individual($nameUrl, $latest_dpt);
 
       // Check if MP exists
       if (empty($data['depute'])) {
