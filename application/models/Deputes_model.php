@@ -163,6 +163,15 @@
       }
     }
 
+    public function get_mp_latest_dpt($mp, $dpt){
+      switch ($mp) {
+        case 'PA610002':
+          $dpt = 'paris-75';
+          break;
+      }
+      return $dpt;
+    }
+
     public function get_depute_individual($nameUrl, $dpt){
       $sql = 'SELECT
         dl.*, mg.preseance AS preseanceGroupe,
