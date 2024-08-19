@@ -240,7 +240,7 @@
             <div class="card border-primary">
               <div class="card-body">
                 <p class="title mb-1">
-                  <a class="no-decoration underline" href="<?= base_url() ?>votes/legislature-<?= $explication['legislature'] ?>/vote_<?= $explication['voteNumero'] ?>"><?= $explication['title'] ?></a>
+                  <a class="no-decoration underline" href="<?= base_url() ?>votes/legislature-<?= $explication['legislature'] ?>/vote_<?= is_congress_numero($explication['voteNumero']) ?>"><?= $explication['title'] ?></a>
                 </p>
                 <p class="date mb-4">Scrutin du <?= $explication['dateScrutinFR'] ?></p>
                 <p class="mb-2">
