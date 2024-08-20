@@ -9,7 +9,7 @@
         $this->db->where('da.dptSlug', $departement);
       }
 
-      if ($active === TRUE && dissolution() === FALSE) {
+      if ($active == TRUE && dissolution() == FALSE) {
         $this->db->where('da.dateFin IS NULL');
       } else {
         $this->db->where('da.dateFin IS NOT NULL');
