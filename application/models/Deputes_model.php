@@ -302,6 +302,17 @@
       return $this->db->query($sql, array($dpt, $circo, $year, $tour))->row_array();
     }
 
+    public function get_election_canceled($depute_uid, $legislature){
+      $where = array(
+        'mpId' => $depute_uid,
+        'datePriseFonction' => '2024-07-01'
+      );
+      $this->db->select('causeFin, dateFin, date_format(dateFin, "%M %Y") AS dateFinFR');
+      $return = $this->db->get_where('mandat_principal', $where)->row_array();
+      $return['cause'] = NULL;
+      return $return;
+    }
+
     public function get_election_opponent($dpt, $circo, $year, $tour){
       $sql = 'SELECT nameLast, nameFirst, sexe, voix, pct_exprimes,
         CASE
