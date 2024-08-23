@@ -41,7 +41,7 @@
             </p>
           <?php else : ?>
             <p>
-              Pour son dernier mendat, pendant la <?= $depute['legislature'] ?><sup>e</sup> législature, <?= $title ?> est entré<?= $gender['e'] ?> en fonction en <?= $depute['datePriseFonctionLettres'] ?>.
+              Pour son dernier mandat, pendant la <?= $depute['legislature'] ?><sup>e</sup> législature, <?= $title ?> est entré<?= $gender['e'] ?> en fonction en <?= $depute['datePriseFonctionLettres'] ?>.
               <?= ucfirst($gender['pronom']) ?> en était à son <?= $mandat_edito ?> mandat.
               Au total, <?= $gender['pronom'] ?> a passé <?= $depute['lengthEdited'] ?> sur les bancs de l’Assemblée nationale.
             </p>

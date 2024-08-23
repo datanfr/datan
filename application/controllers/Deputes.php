@@ -305,40 +305,44 @@
       $data['politicalParty'] = $this->deputes_model->get_political_party($mpId); // political party
       $data['election_canceled'] = NULL;
 
-      $canceled = array(
-        "Annulation de l'élection sur décision du Conseil constitutionnel",
-        "Démission d'office sur décision du Conseil constitutionnel"
-      );
+      if ($legislature == legislature_current()) {
+        $data['election_canceled'] = $this->deputes_model->get_election_canceled($mpId, $legislature);
+        $canceled = array(
+          "Annulation de l'élection sur décision du Conseil constitutionnel",
+          "Démission d'office sur décision du Conseil constitutionnel"
+        );
 
-      if ($data['depute']['datePriseFonction'] == '2024-07-01') { // Elected 1st round
-        $data['election_result'] = $this->deputes_model->get_election_result($data['depute']['departementCode'], $data['depute']['circo'], $nameLast, 2024, 1);
-        $data['election_opponents_all'] = $this->deputes_model->get_election_opponent($data['depute']['departementCode'], $data['depute']['circo'], 2024, 1);
-        $data['election_infos'] = $this->deputes_model->get_election_infos($data['depute']['departementCode'], $data['depute']['circo'], 2024, 1);
-        $data['election_infos']['participation'] = round($data['election_infos']['votants'] * 100 / $data['election_infos']['inscrits']);
-        $data['election_opponents']['all']['voix'] = 0;
-        $data['election_opponents']['all']['candidat'] = "Reste des candidats";
-        foreach ($data['election_opponents_all'] as $x) {
-          $data['election_opponents']['all']['voix'] += $x['voix'];
-        }
-      } elseif ($data['depute']['datePriseFonction'] == '2024-07-08') { // Elected 2nd round
-        $data['election_result'] = $this->deputes_model->get_election_result($data['depute']['departementCode'], $data['depute']['circo'], $nameLast, 2024, 2);
-        $data['election_opponents'] = $this->deputes_model->get_election_opponent($data['depute']['departementCode'], $data['depute']['circo'], 2024, 2);
-        $data['election_infos'] = $this->deputes_model->get_election_infos($data['depute']['departementCode'], $data['depute']['circo'], 2024, 2);
-        $data['election_infos']['participation'] = round($data['election_infos']['votants'] * 100 / $data['election_infos']['inscrits']);
-        if ($data['election_opponents']) {
-          foreach ($data['election_opponents'] as $key => $value) {
-            $data['election_opponents'][$key]['candidat'] = $value['nameFirst'] . ' ' . ucfirst(strtolower($value['nameLast']));
+        if ($data['depute']['datePriseFonction'] == '2024-07-01') { // Elected 1st round
+          $data['election_result'] = $this->deputes_model->get_election_result($data['depute']['departementCode'], $data['depute']['circo'], $nameLast, 2024, 1);
+          $data['election_opponents_all'] = $this->deputes_model->get_election_opponent($data['depute']['departementCode'], $data['depute']['circo'], 2024, 1);
+          $data['election_infos'] = $this->deputes_model->get_election_infos($data['depute']['departementCode'], $data['depute']['circo'], 2024, 1);
+          $data['election_infos']['participation'] = round($data['election_infos']['votants'] * 100 / $data['election_infos']['inscrits']);
+          $data['election_opponents']['all']['voix'] = 0;
+          $data['election_opponents']['all']['candidat'] = "Reste des candidats";
+          foreach ($data['election_opponents_all'] as $x) {
+            $data['election_opponents']['all']['voix'] += $x['voix'];
+          }
+        } elseif ($data['depute']['datePriseFonction'] == '2024-07-08') { // Elected 2nd round
+          $data['election_result'] = $this->deputes_model->get_election_result($data['depute']['departementCode'], $data['depute']['circo'], $nameLast, 2024, 2);
+          $data['election_opponents'] = $this->deputes_model->get_election_opponent($data['depute']['departementCode'], $data['depute']['circo'], 2024, 2);
+          $data['election_infos'] = $this->deputes_model->get_election_infos($data['depute']['departementCode'], $data['depute']['circo'], 2024, 2);
+          $data['election_infos']['participation'] = round($data['election_infos']['votants'] * 100 / $data['election_infos']['inscrits']);
+          if ($data['election_opponents']) {
+            foreach ($data['election_opponents'] as $key => $value) {
+              $data['election_opponents'][$key]['candidat'] = $value['nameFirst'] . ' ' . ucfirst(strtolower($value['nameLast']));
+            }
+          }
+        } elseif (in_array($data['election_canceled']['causeFin'], $canceled)) {
+          switch ($data['depute']['causeFin']) {
+            case "Annulation de l'élection sur décision du Conseil constitutionnel":
+              $data['election_canceled']['cause'] = "L'élection de " . $depute . ", qui s'est tenue pendant les législatures de juin 2017, a été invalidée par le Conseil constitutionnel en " . $data['election_canceled']['dateFinFR'] . "." ;
+              break;
+            default:
+              $data['election_canceled']['cause'] = NULL;
+              break;
           }
         }
-      } elseif (in_array($data['election_canceled']['causeFin'], $canceled)) {
-        switch ($data['depute']['causeFin']) {
-          case "Annulation de l'élection sur décision du Conseil constitutionnel":
-            $data['election_canceled']['cause'] = "L'élection de " . $depute . ", qui s'est tenue pendant les législatures de juin 2017, a été invalidée par le Conseil constitutionnel en " . $data['election_canceled']['dateFinFR'] . "." ;
-            break;
-          default:
-            $data['election_canceled']['cause'] = NULL;
-            break;
-        }
+
       }
 
       // Get majority group
