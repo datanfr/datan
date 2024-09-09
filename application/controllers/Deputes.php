@@ -619,6 +619,7 @@
 
       // Get votes
       $data['votes'] = $this->votes_model->get_votes_datan_depute($mpId);
+      $data['votes_all'] = $this->votes_model->get_votes_all_depute($mpId, FALSE);
 
       // Query - gender
       $data['gender'] = gender($data['depute']['civ']);
@@ -662,8 +663,19 @@
       $data['ogp'] = $this->meta_model->get_ogp($controller, $data['title_meta'], $data['description_meta'], $data['url'], $data);
       // JS
       $data['js_to_load_before_datan'] = array("libraries/isotope/isotope.pkgd.min");
-      $data['js_to_load']= array("datan/sorting");
+      $data['js_to_load']= array(
+        "datan/sorting",
+        "libraries/moment/moment.min",
+        "dist/datatable-datan.min",
+        "libraries/datetime/datetime-moment"
+      );
       // CSS
+      $data['css_to_load']= array(
+        array(
+          "url" => css_url()."datatables.bootstrap4.min.css",
+          "async" => FALSE
+        )
+      );
       // Preloads
       $data['preloads'] = array(
         array("href" => asset_url()."imgs/cover/hemicycle-front-375.jpg", "as" => "image", "media" => "(max-width: 575.98px)"),

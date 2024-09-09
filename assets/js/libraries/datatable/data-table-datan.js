@@ -127,7 +127,8 @@
       responsive: {
         details: false
       },
-      language: french
+      language: french,
+      order: [[2, 'desc'], [1, 'desc']]
     });
 
     // TABLE PAGE stats

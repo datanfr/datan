@@ -424,7 +424,7 @@
       return $this->db->get_where('votes_participation vp', $where, 1)->row_array();
     }
 
-    public function get_votes_all_depute($depute_id, $legislature){
+    public function get_votes_all_depute($depute_id, $legislature = FALSE){
       $sql = 'SELECT A.voteId, A.dateScrutin, A.titre, A.title, A.legislature,
         CASE WHEN A.voteNumero < 0 THEN CONCAT("c", abs(A.voteNumero)) ELSE A.voteNumero END AS voteNumero,
         CASE
@@ -440,16 +440,14 @@
         ELSE NULL END AS loyaute
         FROM
         (
-        SELECT vp.voteNumero, vp.participation, vs.vote, vs.scoreLoyaute, vi.voteId, vi.dateScrutin, vi.legislature, REPLACE(vi.titre, "n?", "n°") AS titre, vd.title AS title
-        FROM votes_participation vp
-        LEFT JOIN votes_scores vs ON (vs.voteNumero = vp.voteNumero AND vs.legislature = vp.legislature AND vs.mpId = ?)
-        LEFT JOIN votes_info vi ON vp.voteNumero = vi.voteNumero AND vp.legislature = vi.legislature
+        SELECT vs.voteNumero, vs.vote, vs.scoreLoyaute, vi.voteId, vi.dateScrutin, vi.legislature, REPLACE(vi.titre, "n?", "n°") AS titre, vd.title AS title
+        FROM votes_scores vs
+        LEFT JOIN votes_info vi ON vs.voteNumero = vi.voteNumero AND vs.legislature = vi.legislature
         LEFT JOIN votes_datan vd ON vi.voteId = vd.vote_id AND vd.state = "published"
-        WHERE vp.mpId = ? AND vp.legislature = ?
-        ) A
-        ORDER BY A.dateScrutin DESC, A.voteNumero DESC
-      ';
-      return $this->db->query($sql, array($depute_id, $depute_id, $legislature))->result_array();
+        WHERE vs.mpId = ? ';
+      $sql .= $legislature ? ' AND vp.legislature = ' . $this->db->escape($legislature) : '';
+      $sql .= ' ) A ORDER BY A.dateScrutin DESC, A.voteNumero DESC ';
+      return $this->db->query($sql, array($depute_id))->result_array();
     }
 
     public function get_votes_all_groupe($uid, $legislature){
