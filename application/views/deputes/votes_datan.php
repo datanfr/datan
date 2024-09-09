@@ -89,19 +89,19 @@
         </div>
         <div class="row mt-4">
           <div class="col-12">
-            <h1 class="mb-0">Les votes de <?= $title ?></h1>
+            <h1 class="mb-0">Les votes de <?= $title ?> à l'Assemblée nationale</h1>
           </div>
         </div>
         <div class="row mt-4">
           <div class="col-12">
             <p>
-              L'équipe de Datan décrypte pour vous les votes les plus intéressants de la législature. Il s'agit des votes qui ont fait l'objet d'attention médiatique, ou sur lesquels un ou plusieurs groupes parlementaires étaient fortement divisés. Ces votes font l'objet d'une reformulation et d'une contextualisation, afin de les rendre plus compréhensibles.
+              Les députés jouent un rôle fondamental dans le processus législatif. <?= $title ?>, comme ses collègues, participe à la création, la modification et l'adoption des lois. À travers ses votes, <?= $gender['pronom'] ?> prend position sur des mesures, amendements ou projets de loi.
             </p>
             <p>
-              Vous trouverez sur cette page les positions de <b><?= $title ?></b> sur ces votes.
+              L'équipe de Datan décrypte les votes les plus marquants de l'Assemblée nationale. Nous mettons en lumière les votes ayant suscité une forte attention médiatique ou provoqué des divisions au sein des groupes parlementaires. Chaque vote est expliqué et replacé dans son contexte pour vous permettre de mieux les comprendre.
             </p>
             <p>
-              Pour avoir accès à tous les votes de <?= $title ?> à l'Assemblée nationale, <a href="<?= base_url() ?>deputes/<?= $depute['dptSlug'] ?>/depute_<?= $depute['nameUrl'] ?>/votes/all">cliquez ici</a>.
+              Découvrez sur cette  page les positions de <b><?= $title ?></b> sur ces votes clés.
             </p>
           </div>
         </div>
@@ -120,10 +120,67 @@
           <?php endforeach; ?>
         </div>
       </div>
-    </div>
+    </div>  
   </div> <!-- END CONTAINER -->
+  <div class="container-fluid mt-5 py-5 pg-depute-votes-all" id="pattern_background">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 offset-lg-2">
+          <h2 class="text-center" style="font-size: 1.6rem">Tous les votes de <?= $title ?></h2>
+          <p class="text-center">L'équipe de Datan n'analyse qu'une partie des votes de l'Assemblée nationale. Pour une vision complète, découvrez ici l'ensemble des scrutins auxquels Thierry Benoit a pris part dans l'hémicycle.</p>
+        </div>
+      </div>
+      <div class="row mt-4"> <!-- ROW WITH TABLE WITH ALL VOTES -->
+        <div class="col-12">
+          <table class="table" id="table-deputes-groupes-votes-all">
+            <thead>
+              <tr>
+                <th class="all">Leg.</th>
+                <th class="all">N°</th>
+                <th class="min-tablet">Date</th>
+                <th class="all">Titre</th>
+                <th class="text-center all">Résultat</th>
+                <th class="text-center all">Loyauté</th>
+              </tr>
+            </thead>
+            <tbody>
+              <?php $i = 1; ?>
+              <?php foreach ($votes_all as $vote): ?>
+                <tr data-href="<?= base_url() ?>votes/legislature-<?= $vote['legislature'] ?>/vote_<?= $vote['voteNumero'] ?>">
+                  <td><?= $vote['legislature'] ?></td>
+                  <td>
+                    <?php if ($i <= 30): ?>
+                      <a href="<?= base_url() ?>votes/legislature-<?= $vote['legislature'] ?>/vote_<?= $vote['voteNumero'] ?>" class="no-decoration"><?= $vote['voteNumero'] ?></a>
+                      <?php else: ?>
+                      <?= $vote['voteNumero'] ?>
+                    <?php endif; ?>
+                  </td>
+                  <td><?= date("d-m-Y", strtotime($vote['dateScrutin'])) ?></td>
+                  <td>
+                    <?php if (!empty($vote['title'])): ?>
+                      <span class="vote-datan-bold"><?= mb_strtoupper($vote['title']) ?></span><br>
+                      <span class="vote-datan-italic"><?= ucfirst($vote['titre']) ?></span>
+                      <?php else: ?>
+                      <?= ucfirst($vote['titre']) ?>
+                    <?php endif; ?>
+                  </td>
+                  <td class="sort text-center sort-<?= $vote['vote'] ?>">
+                    <?= mb_strtoupper($vote['vote']) ?><?= $vote['vote'] == 'absent' ? mb_strtoupper($gender['e']) : NULL ?>
+                  </td>
+                  <td class="sort text-center sort-<?= $vote['loyaute'] ?>">
+                    <?= mb_strtoupper($vote['loyaute']) ?><?= !empty($vote['loyaute']) ? mb_strtoupper($gender['e']) : NULL ?>
+                  </td>
+                </tr>
+                <?php $i++; ?>
+              <?php endforeach; ?>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
   <!-- AUTRES DEPUTES -->
-  <div class="container-fluid bloc-others-container mt-5">
+  <div class="container-fluid bloc-others-container">
     <div class="container bloc-others">
       <div class="row">
         <div class="col-12">
@@ -165,3 +222,15 @@
       </div>
     </div>
   </div>
+  <script type="text/javascript">
+    document.addEventListener("DOMContentLoaded", () => {
+      const rows = document.querySelectorAll("tr[data-href]");
+
+      rows.forEach((row) => {
+        row.addEventListener("click", () => {
+          window.location.href = row.dataset.href;
+        })
+      });
+
+    })
+  </script>
