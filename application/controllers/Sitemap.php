@@ -33,7 +33,6 @@ class Sitemap extends CI_Controller {
       $nameUrl = $result['nameUrl'];
       $urls[]["url"] = base_url()."deputes/".$dpt_slug."/depute_".$nameUrl;
       $urls[]["url"] = base_url()."deputes/".$dpt_slug."/depute_".$nameUrl."/votes";
-      $urls[]["url"] = base_url()."deputes/".$dpt_slug."/depute_".$nameUrl."/votes/all";
       $past14 = $this->deputes_model->check_depute_legislature($result["mpId"], 14);
       if ($past14) {
         $urls[]["url"] = base_url()."deputes/".$dpt_slug."/depute_".$nameUrl."/legislature-14";
