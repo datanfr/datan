@@ -584,7 +584,7 @@
     }
 
     // Pages deputes/(:depute)/votes
-    public function votes_datan($input, $departement){
+    public function votes($input, $departement){
       // Query 1 = infos générales députés
       $input_depute = $input;
       $data['depute'] = $this->deputes_model->get_depute_individual($input, $departement);
@@ -685,104 +685,6 @@
       // Load views
       $this->load->view('templates/header', $data);
       $this->load->view('templates/button_up');
-      $this->load->view('deputes/votes_datan', $data);
-      $this->load->view('templates/breadcrumb', $data);
-      $this->load->view('templates/footer');
-    }
-
-    // Pages deputes/x/votes/all
-    public function votes_all($input, $departement){
-      // Query 1 = infos générales députés
-      $input_depute = $input;
-      $data['depute'] = $this->deputes_model->get_depute_individual($input, $departement);
-
-      if (empty($data['depute'])) {
-        show_404($this->functions_datan->get_404_infos());
-      }
-
-      // Check if it is in legislature
-      if (!$data['depute']['legislature'] >= 15) {
-        show_404($this->functions_datan->get_404_infos());
-      }
-
-      $mpId = $data['depute']['mpId'];
-      $nameLast = $data['depute']['nameLast'];
-      $nameUrl = $input_depute;
-      $data['active'] = $data['depute']['active'];
-      $legislature = $data['depute']['legislature'];
-      $groupe_id = $data['depute']['groupeId'];
-
-      // Photo_square
-      $data['photo_square'] = $data['depute']['legislature'] >= 17 ? TRUE : FALSE;
-
-      // Group color
-      $data['depute']['couleurAssociee'] = $this->groupes_model->get_groupe_color(array($data['depute']['libelleAbrev'], $data['depute']['couleurAssociee']));
-
-      // Commission parlementaire
-      $data['commission_parlementaire'] = $this->deputes_model->get_commission_parlementaire($mpId, $legislature);
-
-      // Query - get all votes
-      $data['votes'] = $this->votes_model->get_votes_all_depute($mpId, legislature_current());
-
-      // Query - gender
-      $data['gender'] = gender($data['depute']['civ']);
-
-      // Historique du député
-      $data['mandat_edito'] = $this->depute_edito->get_nbr_lettre($data['depute']['mandatesN']);
-
-      // Meta
-      $data['url'] = $this->meta_model->get_url();
-      $depute = $data['depute']['nameFirst'].' '.$data['depute']['nameLast'];
-      $data['title_meta'] = $depute." - Votes | Datan";
-      $data['description_meta'] = "Retrouvez tous les votes ".$data['gender']['du']." député".$data['gender']['e']." ".$depute." à l'Assemblée nationale : sa participation, ses positions, sa loyauté envers son groupe parlementaire.";
-      $data['title'] = $depute;
-      $data['title_breadcrumb'] = mb_substr($data['depute']['nameFirst'], 0, 1).'. '.$data['depute']['nameLast'];
-      // Breadcrumb
-      $data['breadcrumb'] = array(
-        array(
-          "name" => "Datan", "url" => base_url(), "active" => FALSE
-        ),
-        array(
-          "name" => "Députés", "url" => base_url()."deputes", "active" => FALSE
-        ),
-        array(
-          "name" => $data['depute']['departementNom']." (".$data['depute']['departementCode'].")", "url" => base_url()."deputes/".$data['depute']['dptSlug'], "active" => FALSE
-        ),
-        array(
-          "name" => $data['title_breadcrumb'], "url" => base_url()."deputes/".$data['depute']['dptSlug']."/depute_".$nameUrl, "active" => FALSE
-        ),
-        array(
-          "name" => "Votes", "url" => base_url()."deputes/".$data['depute']['dptSlug']."/depute_".$nameUrl."/votes", "active" => FALSE
-        ),
-        array(
-          "name" => "Tous les votes à l'Assemblée nationale", "url" => base_url()."deputes/".$data['depute']['dptSlug']."/depute_".$nameUrl."/votes/all", "active" => TRUE
-        )
-      );
-      $data['breadcrumb_json'] = $this->breadcrumb_model->breadcrumb_json($data['breadcrumb']);
-      // Open Graph
-      $controller = $this->router->fetch_class()."/".$this->router->fetch_method();
-      $data['ogp'] = $this->meta_model->get_ogp($controller, $data['title_meta'], $data['description_meta'], $data['url'], $data);
-      // CSS
-      $data['css_to_load']= array(
-        array(
-          "url" => css_url()."datatables.bootstrap4.min.css",
-          "async" => FALSE
-        )
-      );
-      // JS
-      $data['js_to_load']= array(
-        "libraries/moment/moment.min",
-        "dist/datatable-datan.min",
-        "libraries/datetame/datetime-moment"
-      );
-      // Preloads
-      $data['preloads'] = array(
-        array("href" => asset_url()."imgs/cover/hemicycle-front-375.jpg", "as" => "image", "media" => "(max-width: 575.98px)"),
-        array("href" => asset_url()."imgs/cover/hemicycle-front-768.jpg", "as" => "image", "media" => "(min-width: 576px) and (max-width: 970px)"),
-        array("href" => asset_url()."imgs/cover/hemicycle-front.jpg", "as" => "image", "media" => "(min-width: 970.1px)"),
-      );
-      // Load views
-      $this->load->view('templates/header', $data);
       $this->load->view('deputes/votes', $data);
       $this->load->view('templates/breadcrumb', $data);
       $this->load->view('templates/footer');
