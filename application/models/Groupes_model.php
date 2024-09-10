@@ -298,111 +298,113 @@
       return $query->result_array();
     }
 
-    public function get_groupe_social_media($groupe){
-      switch ($groupe['libelleAbrev']) {
+    public function get_groupe_social_media($libelleAbrev){
+      $array = array();
+      switch ($libelleAbrev) {
         case 'LAREM':
-          $groupe['twitter'] = '@LaREM_AN';
-          $groupe['facebook'] = 'deputesLaREM';
+          $array['twitter'] = '@LaREM_AN';
+          $array['facebook'] = 'deputesLaREM';
           break;
 
         case 'LR':
-          $groupe['website'] = 'https://www.deputes-les-republicains.fr/';
-          $groupe['twitter'] = 'Republicains_An';
-          $groupe['facebook'] = 'LesDeputesLesRepublicains';
+          $array['website'] = 'https://www.deputes-les-republicains.fr/';
+          $array['twitter'] = 'Republicains_An';
+          $array['facebook'] = 'LesDeputesLesRepublicains';
           break;
 
         case 'DR':
-          $groupe['website'] = 'https://www.deputes-les-republicains.fr/';
-          $groupe['twitter'] = 'droiterep_an';
-          $groupe['facebook'] = 'LesDeputesLesRepublicains';
+          $array['website'] = 'https://www.deputes-les-republicains.fr/';
+          $array['twitter'] = 'droiterep_an';
+          $array['facebook'] = 'LesDeputesLesRepublicains';
           break;
 
         case 'MODEM':
         case 'DEM':
-          $groupe['twitter'] = 'DeputesDem';
-          $groupe['facebook'] = 'DeputesDem';
+          $array['twitter'] = 'DeputesDem';
+          $array['facebook'] = 'DeputesDem';
           break;
 
         case 'SOC':
         case 'SOC-A':
-          $groupe['twitter'] = 'socialistesAN';
-          $groupe['facebook'] = 'socialistesAN';
+          $array['twitter'] = 'socialistesAN';
+          $array['facebook'] = 'socialistesAN';
           break;
 
         case 'AGIR-E':
-          $groupe['twitter'] = 'AgirEnsemble_AN';
-          $groupe['facebook'] = 'AgirEnsembleAN';
+          $array['twitter'] = 'AgirEnsemble_AN';
+          $array['facebook'] = 'AgirEnsembleAN';
           break;
 
         case 'UDI_I':
-          $groupe['twitter'] = 'deputesudi_ind';
-          $groupe['facebook'] = 'DeputesUDI.Ind';
+          $array['twitter'] = 'deputesudi_ind';
+          $array['facebook'] = 'DeputesUDI.Ind';
           break;
 
         case 'FI':
         case 'LFI-NUPES':
-          $groupe['twitter'] = 'FiAssemblee';
-          $groupe['facebook'] = 'FiAssemblee';
+          $array['twitter'] = 'FiAssemblee';
+          $array['facebook'] = 'FiAssemblee';
           break;
 
         case 'LFI':
         case 'LFI-NFP':
-          $groupe['twitter'] = 'FiAssemblee';
-          $groupe['facebook'] = 'FranceInsoumiseAN';
+          $array['twitter'] = 'FiAssemblee';
+          $array['facebook'] = 'FranceInsoumiseAN';
           break;          
 
         case 'EDS':
-          $groupe['website'] = 'https://www.ecologie-democratie-solidarite.fr/';
-          $groupe['twitter'] = 'EDSAssNat';
-          $groupe['facebook'] = 'EDSAssNat';
+          $array['website'] = 'https://www.ecologie-democratie-solidarite.fr/';
+          $array['twitter'] = 'EDSAssNat';
+          $array['facebook'] = 'EDSAssNat';
           break;
 
         case 'GDR':
         case 'GDR-NUPES':
-          $groupe['website'] = 'http://www.groupe-communiste.assemblee-nationale.fr/';
-          $groupe['facebook'] = 'LesDeputesCommunistes';
-          $groupe['twitter'] = 'deputesPCF';
+          $array['website'] = 'http://www.groupe-communiste.assemblee-nationale.fr/';
+          $array['facebook'] = 'LesDeputesCommunistes';
+          $array['twitter'] = 'deputesPCF';
           break;
 
         case 'LT':
         case 'LIOT':
-          $groupe['twitter'] = 'GroupeLIOT_An';
-          $groupe['facebook'] = 'Groupe-Libertés-et-Territoires-à-lAssemblée-nationale-1898196496883591';
+          $array['twitter'] = 'GroupeLIOT_An';
+          $array['facebook'] = 'Groupe-Libertés-et-Territoires-à-lAssemblée-nationale-1898196496883591';
           break;
 
         case 'RE':
-          $groupe['twitter'] = 'DeputesRE';
-          $groupe['facebook'] = 'deputesRenaissance';
+          $array['twitter'] = 'DeputesRE';
+          $array['facebook'] = 'deputesRenaissance';
           break;
 
         case 'RN':
-          $groupe['twitter'] = 'groupeRN_off';
-          $groupe['facebook'] = 'deputesRN';
+          $array['twitter'] = 'groupeRN_off';
+          $array['facebook'] = 'deputesRN';
           break;
 
         case 'HOR':
-          $groupe['website'] = 'https://horizonsleparti.fr/';
-          $groupe['twitter'] = 'Horizons_AN';
-          $groupe['facebook'] = 'lesdeputeshorizonsetindep';
+          $array['website'] = 'https://horizonsleparti.fr/';
+          $array['twitter'] = 'Horizons_AN';
+          $array['facebook'] = 'lesdeputeshorizonsetindep';
           break;
 
         case 'ECOS':
         case 'ECOLO':
-          $groupe['website'] = 'https://www.eelv.fr/';
-          $groupe['twitter'] = 'Gpe_EcoloSocial';
-          $groupe['facebook'] = 'eelv.fr';
+          $array['website'] = 'https://www.eelv.fr/';
+          $array['twitter'] = 'Gpe_EcoloSocial';
+          $array['facebook'] = 'eelv.fr';
           break;
 
-          case 'EPR':
-            $groupe['twitter'] = 'DeputesEnsemble';
-            $groupe['facebook'] = 'deputesEnsemble';
-            break;
+        case 'EPR':
+          $array['twitter'] = 'DeputesEnsemble';
+          $array['facebook'] = 'deputesEnsemble';
+          $array['wikipedia'] = 'https://fr.wikipedia.org/wiki/Groupe_Ensemble_pour_la_R%C3%A9publique';
+          break;
 
         default:
           // code...
           break;
       }
-      return $groupe;
+      return $array;
     }
 
     public function get_stats($groupe_uid){
