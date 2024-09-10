@@ -402,23 +402,40 @@
         "jobTitle" => "Député français",
         "image" => base_url()."assets/imgs/deputes_original/depute_".$depute['idImage'].".png",
         "memberOf" => [
-          "@type" => "Organization",
-          "name" => "Assemblée nationale",
-          "url" => "http://www.assemblee-nationale.fr/",
-          "foundingDate" => "1958-10-04",
-          "sameAs" => "https://fr.wikipedia.org/wiki/Assembl%C3%A9e_nationale_(France)",
-          "location" => [
-            "@type" => "Place",
-            "address" => [
-              "@type" => "PostalAddress",
-              "addressCountry" => "FR",
-              "addressLocality" => "Paris",
-              "postalCode" => "75355",
-              "streetAddress" => "126 rue de l'Université"
+          [
+            "@type" => "Organization",
+            "name" => "Assemblée nationale",
+            "url" => "http://www.assemblee-nationale.fr/",
+            "foundingDate" => "1958-10-04",
+            "sameAs" => "https://fr.wikipedia.org/wiki/Assembl%C3%A9e_nationale_(France)",
+            "location" => [
+              "@type" => "Place",
+              "address" => [
+                "@type" => "PostalAddress",
+                "addressCountry" => "FR",
+                "addressLocality" => "Paris",
+                "postalCode" => "75355",
+                "streetAddress" => "126 rue de l'Université"
+              ]
             ]
           ]
         ]
       ];
+
+      if($depute['libelleAbrev'] != 'NI') {
+        $links = $this->groupes_model->get_groupe_social_media($depute['libelleAbrev']);
+
+        $party = [
+          '@type' => 'PoliticalParty',
+          'name' => name_group($depute['libelle']),
+          'url' => $links['website'] ?? null,
+          'sameAs' => $links['wikipedia'] ?? null
+        ];
+
+        $party = array_filter($party);
+
+        $schema['memberOf'][] = $party;
+      }
 
       if ($depute['facebook'] != "" & $depute['twitter'] != "" & $depute['website'] != "") {
         $schema["sameAs"] =  array("https://www.facebook.com/".$depute['facebook'], "https://twitter.com/".$depute['twitter'], $depute['website']);

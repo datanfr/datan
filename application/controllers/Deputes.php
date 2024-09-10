@@ -342,7 +342,6 @@
               break;
           }
         }
-
       }
 
       // Get majority group
