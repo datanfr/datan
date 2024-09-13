@@ -696,27 +696,18 @@
         $schema["dissolutionDate"] = $groupe["dateFin"];
       }
 
-      if (isset($groupe['website']) && $groupe['website']) {
-        if (!isset($schema['sameAs'])) {
-          $schema['sameAs'] = array($groupe['website']);
-        }
-      }
+      $sameAs = ['website', 'wikipedia', 'twitter', 'facebook'];
 
-      if (isset($groupe['twitter']) && $groupe['twitter']) {
-        $twitter = "https://twitter.com/" . $groupe['twitter'];
-        if (!isset($schema['sameAs'])) {
-          $schema['sameAs'] = array($twitter);
-        } else {
-          array_push($schema['sameAs'], $twitter);
-        }
-      }
-
-      if (isset($groupe['facebook']) && $groupe['facebook']) {
-        $facebook = "https://www.facebook.com/" . $groupe['facebook'];
-        if (!isset($schema['sameAs'])) {
-          $schema['sameAs'] = array($facebook);
-        } else {
-          array_push($schema['sameAs'], $facebook);
+      foreach ($sameAs as $link) {
+        if (isset($groupe['links'][$link]) && $groupe['links'][$link]) {
+          if($link == 'twitter'){
+            $groupe['links'][$link] = 'https://twitter.com/' . $groupe['links'][$link];
+          }
+          if($link == 'facebook'){
+            $groupe['links'][$link] = 'https://www.facebook.com/' . $groupe['links'][$link];
+          }
+          $schema['sameAs'] = $schema['sameAs'] ?? [];
+          $schema['sameAs'][] = $groupe['links'][$link];
         }
       }
 
