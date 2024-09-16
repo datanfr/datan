@@ -52,8 +52,8 @@
       // Meta
       $data['url'] = $this->meta_model->get_url();
       $data['title_meta'] = "Votes Assemblée Nationale - Résultat et Analyse | Datan";
-      $data['title'] = "Votes de la 15<sup>e</sup> législature";
-      $data['description_meta'] = "Retrouvez tous les votes de l'Assemblée nationale de la 15e législature décryptés par Datan. Détails des votes, résultats des groupes et des députés, statistiques de participation, de loyauté et de cohésion.";
+      $data['title'] = "Votes de la " . legislature_current() . "<sup>e</sup> législature";
+      $data['description_meta'] = "Retrouvez tous les votes de l'Assemblée nationale de la " . legislature_current() . "e législature décryptés par Datan. Détails des votes, résultats des groupes et des députés, statistiques de participation, de loyauté et de cohésion.";
       // Breadcrumb
       $data['breadcrumb'] = array(
         array(
