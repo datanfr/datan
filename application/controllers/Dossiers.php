@@ -2,12 +2,12 @@
   class Dossiers extends CI_Controller {
     public function __construct() {
       parent::__construct();
+      $this->load->model('dossiers_model');
     }
 
     // Page = datan.fr/votes
     public function index(){
-      echo "yes";
-
+      $data['dossiers'] = $this->dossiers_model->get_dossiers();
 
       // Meta
       $data['url'] = $this->meta_model->get_url();
@@ -33,6 +33,7 @@
       $data['js_to_load']= array();
       // Load views
       $this->load->view('templates/header', $data);
+      $this->load->view('dossiers/all');
       $this->load->view('templates/breadcrumb');
       $this->load->view('templates/footer');
     }    
