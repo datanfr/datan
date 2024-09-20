@@ -764,7 +764,8 @@
         array('PO845485', 'PO759900', 'PO800532'), // LIOT
         array('PO793087', 'PO723569', 'PO645633', 'PO387155', 'PO266900'), // NI
         array('PO845470', 'PO800514'), // Horizons
-        array('PO845401', 'PO800520') // RN
+        array('PO845401', 'PO800520'), // RN
+        array('PO845520', 'PO847173') // DR Ciotti
       );
 
       foreach ($families as $family) {
