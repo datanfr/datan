@@ -45,7 +45,7 @@ $(document).ready(function(){
         } else {
             textSeats.text(total + ' siège');
         }
-        if(total > 289) {
+        if(total >= 289) {
             textResult.text("Félicitations. Vous avez une majorité");
             textResult.attr('class', 'text-success');
         } else {
