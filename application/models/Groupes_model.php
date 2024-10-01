@@ -122,7 +122,7 @@
     public function get_groupes_sorted($groupes){
       $groupesLibelle = array_column($groupes, 'libelleAbrev');
       function cmp(array $a) {
-        $order = array("GDR", "LFI-NFP", "SOC", "ECOS", "EPR", "DEM", "HOR", "LIOT", "DR", "AD", "RN", "NI");
+        $order = array("GDR", "LFI-NFP", "SOC", "ECOS", "EPR", "DEM", "HOR", "LIOT", "DR", "UDR", "RN", "NI");
         foreach ($order as $x) {
           $y[] = array_search($x, $a);
         }
