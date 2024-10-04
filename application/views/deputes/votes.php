@@ -127,7 +127,7 @@
       <div class="row">
         <div class="col-lg-8 offset-lg-2">
           <h2 class="text-center" style="font-size: 1.6rem">Tous les votes de <?= $title ?></h2>
-          <p class="text-center">L'équipe de Datan n'analyse qu'une partie des votes de l'Assemblée nationale. Pour une vision complète, découvrez ici l'ensemble des scrutins auxquels Thierry Benoit a pris part dans l'hémicycle.</p>
+          <p class="text-center">L'équipe de Datan n'analyse qu'une partie des votes de l'Assemblée nationale. Pour une vision complète, découvrez ici l'ensemble des scrutins auxquels <?= $title ?> a pris part dans l'hémicycle.</p>
         </div>
       </div>
       <div class="row mt-4"> <!-- ROW WITH TABLE WITH ALL VOTES -->
