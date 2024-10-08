@@ -78,6 +78,9 @@ class Script
       if ($this->legislature_to_get == 16) {
         $file = 'https://data.assemblee-nationale.fr/static/openData/repository/16/loi/scrutins/Scrutins.xml.zip';
         $newfile = __DIR__ . '/Scrutins_XVI.xml.zip';
+      } elseif($this->legislature_to_get == 17) {
+        $file = 'http://data.assemblee-nationale.fr/static/openData/repository/17/loi/scrutins/Scrutins.xml.zip';
+        $newfile = __DIR__ . '/Scrutins_XVII.xml.zip';
       } else {
         $file = 'https://data.assemblee-nationale.fr/static/openData/repository/15/loi/scrutins/Scrutins_XV.xml.zip';
         $newfile = __DIR__ . '/Scrutins_XV.xml.zip';
@@ -142,6 +145,6 @@ if (isset($argv[1])) {
 }
 
 $script->dossiers();
-//$script->scrutins(); // Let's see after the first RCV
+$script->scrutins();
 $script->acteurs_organes();
 //$script->amendements();
