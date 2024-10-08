@@ -4095,7 +4095,8 @@ $script->legislature();
 $script->historyMpsAverage(); // Wait for the first RCV
 //$script->historyPerMpsAverage(); // Wait for the first RCV
 //$script->parrainages(); // No longer used
-$script->opendata_activeMPs();
-$script->opendata_activeGroupes();
-$script->opendata_historyMPs();
-$script->opendata_historyGroupes();
+
+//$script->opendata_activeMPs();
+//$script->opendata_activeGroupes();
+//$script->opendata_historyMPs();
+//$script->opendata_historyGroupes();
