@@ -908,51 +908,6 @@ class Script
         $this->bdd->exec('ALTER TABLE `deputes_last` ADD PRIMARY KEY(`mpId`, `legislature`);');
     }
 
-    public function deputeJson()
-    {
-        // NO LONGER USED
-        echo "deputeJson starting \n";
-        $reponse = $this->bdd->query('
-        SELECT da.mpId, da.nameFirst, da.nameLast, da.nameUrl, da.dptSlug
-        FROM deputes_last da
-        WHERE da.legislature >= 14
-        ');
-
-        $array = array();
-        while ($data = $reponse->fetch()) {
-            $id = $data['mpId'];
-            $name = $data['nameFirst'] . ' ' . $data['nameLast'];
-            $slug = $data['nameUrl'];
-            $dpt = $data['dptSlug'];
-
-            $array[] = [
-                "id" => $id,
-                "name" => $name,
-                "slug" => $slug,
-                "dpt" => $dpt
-            ];
-        }
-
-        $json = json_encode($array, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
-        $json = json_minify($json);
-
-        // save file
-        $file_destination = __DIR__ . "/../assets/data/deputes_json.json";
-        $fp = fopen($file_destination, 'w');
-        if (fputs($fp, $json)) {
-            echo "JSON created \n";
-        }
-        fclose($fp);
-
-        // save file
-        $file_destination = __DIR__ . "/../assets/data/deputes_json.txt";
-        $fp = fopen($file_destination, 'w');
-        if (fputs($fp, $json)) {
-            echo "JSON created \n";
-        }
-        fclose($fp);
-    }
-
     public function groupeStats()
     {
         echo "groupeStats starting \n";
@@ -4058,7 +4013,6 @@ if ($script->getMpPhotos()) { // Check this in a later stage
     $script->resmushPictures();
 }
 $script->groupeEffectif();
-//$script->deputeJson(); // No longer used
 $script->groupeStats();
 $script->groupeStatsHistory();
 $script->groupeMembersHistory();
