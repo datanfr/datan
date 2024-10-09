@@ -373,7 +373,7 @@
       }
 
       // Election feature
-      $data['electionFeature'] = $this->elections_model->get_candidate_election($mpId, 6, TRUE, FALSE);
+      //$data['electionFeature'] = $this->elections_model->get_candidate_election($mpId, 6, TRUE, FALSE);
 
       // Get professions de foi
       $data['professions_foi'] = $this->deputes_model->get_professions($mpId);
