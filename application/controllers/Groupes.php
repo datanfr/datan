@@ -289,7 +289,7 @@
       $data['groupMajority'] = $this->groupes_model->get_majority_group($legislature);
 
       // Social Media du groupe
-      $data['groupe'] = $this->groupes_model->get_groupe_social_media($data['groupe']);
+      $data['groupe']['links'] = $this->groupes_model->get_groupe_social_media($data['groupe']['libelleAbrev']);
 
       //Query 3 Statistiques
       $data = $this->get_data_stats($data);

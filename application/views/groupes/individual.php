@@ -598,28 +598,28 @@
           <?php $this->load->view('partials/share.php') ?>
         </div>
         <!-- BLOC SOCIAL-MEDIA -->
-        <?php if (isset($groupe['website']) || isset($groupe['facebook']) || isset($groupe['twitter'])): ?>
+        <?php if (isset($groupe['links']['website']) || isset($groupe['links']['facebook']) || isset($groupe['links']['twitter'])): ?>
           <div class="bloc-links p-lg-0 p-md-2 mt-5">
             <h2 class="title-center">En savoir plus</h2>
             <div class="row mt-4">
-              <?php if (isset($groupe['website'])): ?>
+              <?php if (isset($groupe['links']['website'])): ?>
                 <div class="col-12 col-sm-6 mt-2 d-flex justify-content-center">
-                  <span class="url_obf btn btn-website" url_obf="<?= url_obfuscation($groupe['website']) ?>">
+                  <span class="url_obf btn btn-website" url_obf="<?= url_obfuscation($groupe['links']['website']) ?>">
                       Site internet
                   </span>
                 </div>
               <?php endif; ?>
-              <?php if (isset($groupe['facebook'])): ?>
+              <?php if (isset($groupe['links']['facebook'])): ?>
                 <div class="col-12 col-sm-6 mt-2 d-flex justify-content-center">
-                  <span class="url_obf btn btn-fcb" url_obf="<?= url_obfuscation("https://www.facebook.com/" . $groupe['facebook']) ?>">
+                  <span class="url_obf btn btn-fcb" url_obf="<?= url_obfuscation("https://www.facebook.com/" . $groupe['links']['facebook']) ?>">
                       <?= file_get_contents(base_url().'/assets/imgs/logos/facebook_svg.svg') ?>
                       <span class="ml-3">Profil Facebook</span>
                   </span>
                 </div>
               <?php endif; ?>
-              <?php if (isset($groupe['twitter'])): ?>
+              <?php if (isset($groupe['links']['twitter'])): ?>
                 <div class="col-12 col-sm-6 mt-2 d-flex justify-content-center">
-                  <span class="url_obf btn btn-twitter" url_obf="<?= url_obfuscation("https://twitter.com/" . $groupe['twitter']) ?>">
+                  <span class="url_obf btn btn-twitter" url_obf="<?= url_obfuscation("https://twitter.com/" . $groupe['links']['twitter']) ?>">
                       <?= file_get_contents(base_url().'/assets/imgs/logos/twitter_svg.svg') ?>
                       <span class="ml-3">Profil Twitter</span>
                   </span>
