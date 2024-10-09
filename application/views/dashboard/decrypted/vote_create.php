@@ -22,8 +22,9 @@
                 <div class="form-group">
                   <label>Legislature</label>
                   <select class="form-control" name="legislature">
-                    <option>15</option>
-                    <option selected="selected">16</option>
+                    <?php for ($i = 15; $i <= legislature_current(); $i++) : ?>
+                      <option value="<?= $i ?>" <?= $i == legislature_current() ? 'selected' : '' ?>><?= $i ?></option>
+                    <?php endfor; ?>
                   </select>
                 </div>
                 <div class="form-group">
