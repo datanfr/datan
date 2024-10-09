@@ -424,6 +424,23 @@
       return $this->db->get_where('votes_participation vp', $where, 1)->row_array();
     }
 
+    public function get_individual_vote_moc($mpId, $legislature, $num){
+      $where = array(
+        'vi.legislature' => $legislature,
+        'vi.voteNumero' => $num
+      );
+      $this->db->select('d.mpId, vi.legislature, vi.voteNumero');
+      $this->db->select('CASE
+        WHEN v.vote = 1 THEN "pour"
+        WHEN v.vote = -1 THEN "contre"
+        WHEN v.vote = 0 THEN "abstention"
+        WHEN v.vote IS NULL THEN "absent" 
+        ELSE NULL END AS vote', FALSE);
+      $this->db->join('deputes_last d', 'd.legislature = vi.legislature AND d.datePriseFonction <= vi.dateScrutin AND (d.dateFin IS NULL OR d.dateFin >= vi.dateScrutin) AND d.mpId = ' . $this->db->escape($mpId));
+      $this->db->join('votes v', 'v.legislature = vi.legislature AND v.voteNumero = vi.voteNumero AND v.mpId = ' . $this->db->escape($mpId), 'left');
+      return $this->db->get_where('votes_info vi', $where, 1)->row_array();
+    }
+
     public function get_votes_all_depute($depute_id, $legislature = FALSE){
       $sql = 'SELECT A.voteId, A.dateScrutin, A.titre, A.title, A.legislature,
         CASE WHEN A.voteNumero < 0 THEN CONCAT("c", abs(A.voteNumero)) ELSE A.voteNumero END AS voteNumero,
