@@ -33,7 +33,7 @@
             </div>
             <div class="col-md-3 offset-md-1">
               <h3><?= $legislature == legislature_current() ? 'Historique' : 'Toutes les législatures' ?></h3>
-              <p>La législature actuelle est la 16<sup>ème</sup> législature. Elle a débuté en 2022, à la suite des <a href="<?= base_url() ?>elections/legislatives-2022">élections législatives</a>, et se terminera en 2027.</p>
+              <p>La législature actuelle est la <?= legislature_current() ?><sup>ème</sup> législature. Elle a débuté en 2024, à la suite des <a href="<?= base_url() ?>elections/legislatives-2024">élections législatives</a>, et se terminera en 2029.</p>
               <?php if ($legislature == legislature_current()): ?>
                 <p>Découvrez les groupes des législatures précédentes.</p>
               <?php else: ?>
