@@ -9,11 +9,11 @@
       <div class="row row-grid mt-5">
         <div class="col-md-7">
           <?php if ($legislature == legislature_current()): ?>
-            <p>L'Assemblée nationale compte <b>577 députés</b>. Ils sont élus tous les 5 ans lors des élections législatives. Les dernières ont eu lieu en juin 2022.</p>
-            <p>Du fait de la <a href="https://datan.fr/blog/actualite-politique/le-president-emmanuel-macron-annonce-la-dissolution-de-lassemblee-nationale" target="_blank">dissolution de l'Assemblée nationale</a>, décidée le 9 juin 2024 par le président Emmanuel Macron, des nouvelles élections législatives se dérouleront les 30 juin et 7 juillet 2024.<p>
+            <p>L'Assemblée nationale compte <b>577 députés</b>. Ils sont élus tous les 5 ans lors des élections législatives. Les dernières ont eu lieu en 2024.</p>
+            <p>Du fait de la <a href="https://datan.fr/blog/actualite-politique/le-president-emmanuel-macron-annonce-la-dissolution-de-lassemblee-nationale" target="_blank">dissolution de l'Assemblée nationale</a>, décidée le 9 juin 2024 par le président Emmanuel Macron, les dernières élections législatives se sont déroulées les 30 juin et 7 juillet 2024.<p>
             <?php if ($active): ?>
               <p>
-                L'Assemblée nationale compte actuellement <?= $male["n"] ?> députés hommes (<?= $male["percentage"] ?> %) et <?= $female["n"] ?> femmes (<?= $female["percentage"] ?> %).
+                L'Assemblée nationale compte actuellement <?= $male["n"] ?> députés hommes (<?= $male["percentage"] ?>%) et <?= $female["n"] ?> femmes (<?= $female["percentage"] ?>%).
               </p>
               <?php if ($number_inactive == 0): ?>
                 <p>
@@ -21,7 +21,7 @@
                 </p>
               <?php else: ?>
                 <p>
-                  Depuis le début de la <?= legislature_current() ?><sup>ème</sup> législature, <b><?= $number_inactive ?> députés ont quitté l'Assemblée</b> pour cause de nomination au Gouvernement, de démission ou de décès. Pour découvrir ces députés qui ne sont plus en activité, <a href="<?= base_url() ?>deputes/inactifs" ?>cliquez ici</a>.
+                  Depuis le début de la <?= legislature_current() ?><sup>ème</sup> législature, <b><?= $number_inactive ?> député<?= $number_inactive > 1 ? 's ont' : ' a' ?> quitté l'Assemblée</b> pour cause de nomination au Gouvernement, de démission ou de décès. Pour découvrir ces députés qui ne sont plus en activité, <a href="<?= base_url() ?>deputes/inactifs" ?>cliquez ici</a>.
                 </p>
               <?php endif; ?>
               <?php if ($president): ?>
@@ -41,7 +41,7 @@
               Cette page présente tous les députés qui ont servi lors de la <?= $legislature ?><sup>ème</sup> législature.
             </p>
             <p>
-              Pendant la <?= $legislature ?><sup>ème</sup> législature, il y avait à l'Assemblée nationale <?= $male["n"] ?> députés hommes (<?= $male["percentage"] ?> %) et <?= $female["n"] ?> femmes (<?= $female["percentage"] ?> %).
+              Pendant la <?= $legislature ?><sup>ème</sup> législature, il y avait à l'Assemblée nationale <?= $male["n"] ?> députés hommes (<?= $male["percentage"] ?>%) et <?= $female["n"] ?> femmes (<?= $female["percentage"] ?>%).
             </p>
             <p>
               Pour découvrir les députés de la législature actuelle, <a href="<?= base_url() ?>deputes">cliquez ici</a>.
@@ -50,19 +50,19 @@
         </div>
         <div class="col-md-3 offset-md-1">
           <h3><?= $legislature == legislature_current() ? 'Historique' : 'Toutes les législatures' ?></h3>
-          <p>La législature actuelle est la 16<sup>ème</sup> législature. Elle a débuté en 2022, à la suite des <a href="<?= base_url() ?>elections/legislatives-2022">élections législatives</a>, et se terminera en 2027.</p>
+          <p>La législature actuelle est la <?= legislature_current() ?><sup>ème</sup> législature. Elle a débuté en 2024, à la suite des <a href="<?= base_url() ?>elections/legislatives-2024">élections législatives</a>, et se terminera en 2029.</p>
           <?php if ($legislature == legislature_current()): ?>
             <p>Découvrez les députés des législatures précédentes.</p>
           <?php else: ?>
             <p>Découvrez les députés de toutes les législatures.</p>
           <?php endif; ?>
-          <div class="d-flex flex-wrap">
+          <div class="d-flex justify-content-center flex-wrap">
             <?php if ($legislature != legislature_current()): ?>
               <a href="<?= base_url() ?>deputes" class="btn btn-secondary my-2">17<sup>ème</sup> législature</a>
             <?php endif; ?>
-            <a href="<?= base_url() ?>deputes/legislature-16" class="btn btn-secondary my-2">16<sup>ème</sup> législature</a>
-            <a href="<?= base_url() ?>deputes/legislature-15" class="btn btn-secondary my-2">15<sup>ème</sup> législature</a>
-            <a href="<?= base_url() ?>deputes/legislature-14" class="btn btn-secondary my-2">14<sup>ème</sup> législature</a>
+            <a href="<?= base_url() ?>deputes/legislature-16" class="btn btn-secondary my-2 mx-2">16<sup>ème</sup> législature</a>
+            <a href="<?= base_url() ?>deputes/legislature-15" class="btn btn-secondary my-2 mx-2">15<sup>ème</sup> législature</a>
+            <a href="<?= base_url() ?>deputes/legislature-14" class="btn btn-secondary my-2 mx-2">14<sup>ème</sup> législature</a>
           </div>
         </div>
       </div>
@@ -70,8 +70,8 @@
         <div class="col-12">
           <?php if ($legislature == legislature_current()): ?>
             <?php if ($active): ?>
-              <h2>Les <span class="text-primary">577 députés</span> de la 16<sup>ème</sup> législature</h2>
-              <?php else: ?>
+              <h2>Les <span class="text-primary">577 députés</span> de la <?= $legislature ?><sup>ème</sup> législature</h2>
+            <?php else: ?>
               <h2>Les <span class="text-primary"><?= count($deputes) ?> anciens députés</span> de la <?= $legislature ?><sup>ème</sup> législature</h2>
             <?php endif; ?>
             <?php else: ?>
