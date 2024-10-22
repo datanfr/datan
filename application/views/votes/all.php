@@ -1,4 +1,3 @@
-    <!-- NEW ELEMENT FROM HERE -->
     <div class="container-fluid pg-vote-all" id="container-always-fluid">
       <div class="row">
         <div class="container">
