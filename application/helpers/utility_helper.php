@@ -102,7 +102,8 @@
       "SOC-A" => $left,
       "AD" => $right,
       "DR" => $right,
-      "EPR" => $center
+      "EPR" => $center,
+      "UDR" => $right
     );
     return $array;
   }

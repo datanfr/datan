@@ -908,51 +908,6 @@ class Script
         $this->bdd->exec('ALTER TABLE `deputes_last` ADD PRIMARY KEY(`mpId`, `legislature`);');
     }
 
-    public function deputeJson()
-    {
-        // NO LONGER USED
-        echo "deputeJson starting \n";
-        $reponse = $this->bdd->query('
-        SELECT da.mpId, da.nameFirst, da.nameLast, da.nameUrl, da.dptSlug
-        FROM deputes_last da
-        WHERE da.legislature >= 14
-        ');
-
-        $array = array();
-        while ($data = $reponse->fetch()) {
-            $id = $data['mpId'];
-            $name = $data['nameFirst'] . ' ' . $data['nameLast'];
-            $slug = $data['nameUrl'];
-            $dpt = $data['dptSlug'];
-
-            $array[] = [
-                "id" => $id,
-                "name" => $name,
-                "slug" => $slug,
-                "dpt" => $dpt
-            ];
-        }
-
-        $json = json_encode($array, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
-        $json = json_minify($json);
-
-        // save file
-        $file_destination = __DIR__ . "/../assets/data/deputes_json.json";
-        $fp = fopen($file_destination, 'w');
-        if (fputs($fp, $json)) {
-            echo "JSON created \n";
-        }
-        fclose($fp);
-
-        // save file
-        $file_destination = __DIR__ . "/../assets/data/deputes_json.txt";
-        $fp = fopen($file_destination, 'w');
-        if (fputs($fp, $json)) {
-            echo "JSON created \n";
-        }
-        fclose($fp);
-    }
-
     public function groupeStats()
     {
         echo "groupeStats starting \n";
@@ -1324,9 +1279,11 @@ class Script
         // SCRAPPING DEPENDING ON LEGISLATURE
         if ($this->legislature_to_get >= 15) {
             if ($this->legislature_to_get == 15) {
-              $file = __DIR__ . '/Scrutins_XV.xml.zip';
+                $file = __DIR__ . '/Scrutins_XV.xml.zip';
             } elseif ($this->legislature_to_get == 16) {
-              $file = __DIR__ . '/Scrutins_XVI.xml.zip';
+                $file = __DIR__ . '/Scrutins_XVI.xml.zip';
+            } elseif($this->legislature_to_get == 17) {
+                $file = __DIR__ . '/Scrutins_XVII.xml.zip';
             }
             $zip = new ZipArchive();
             if ($zip->open($file) !== TRUE) {
@@ -1575,7 +1532,6 @@ class Script
                 }
             }
         } elseif ($this->legislature_to_get == 14) {
-
             $file = 'https://data.assemblee-nationale.fr/static/openData/repository/14/loi/scrutins/Scrutins_XIV.xml.zip';
             $file = trim($file);
             $newfile = __DIR__ . '/Scrutins_XIV.xml.zip';
@@ -2095,14 +2051,12 @@ class Script
         }
 
         $reponseVote = $this->bdd->query($query);
-        echo "requete ok\n";
 
         $votesScore = [];
         $voteScore = [];
         $voteScoreFields = array('voteNumero', 'legislature', 'mpId', 'vote', 'mandatId', 'sortCode', 'positionGroup', 'scoreLoyaute', 'scoreGagnant', 'scoreParticipation', 'positionGvt', 'scoreGvt', 'dateMaj');
         $i = 1;
         while ($x = $reponseVote->fetch(PDO::FETCH_ASSOC)) {
-            echo "ok";
             $voteScore = array(
                 'voteNumero' => $x['voteNumero'],
                 'legislature' => $x['legislature'],
@@ -2363,7 +2317,7 @@ class Script
                     SELECT DISTINCT(voteNumero)
                     FROM votes_participation
                     WHERE legislature = "' . $this->legislature_to_get . '" AND voteNumero
-                )
+                ) AND codeTypeVote != "MOC"
                 ORDER BY voteNumero ASC
             ');
         }
@@ -2664,7 +2618,8 @@ class Script
               (
               	SELECT vg.voteNumero, vg.organeRef, vg.nombreMembresGroupe as n, vg.nombrePours as pour, vg.nombreContres as contre, vg.nombreAbstentions as abstention, CASE WHEN vg.nonVotants IS NULL THEN 0 ELSE vg.nonVotants END AS nv, vg.nonVotantsVolontaires as nvv, vg.nombrePours+vg.nombreContres+vg.nombreAbstentions as total
               	FROM votes_groupes vg
-              	WHERE vg.organeRef = "' . $uid . '"
+                LEFT JOIN votes_info vi ON vg.legislature = vi.legislature AND vg.voteNumero = vi.voteNumero
+              	WHERE vg.organeRef = "' . $uid . '" AND vi.codeTypeVote != "MOC"
               ) A
             ) B
           ');
@@ -2849,6 +2804,8 @@ class Script
               $file = __DIR__ . '/Dossiers_Legislatifs_XV.xml.zip';
             } elseif ($this->legislature_to_get == 16) {
               $file = __DIR__ . '/Dossiers_Legislatifs_XVI.xml.zip';
+            } elseif($this->legislature_to_get == 17) {
+                $file = __DIR__ . '/Dossiers_Legislatifs_XVII.xml.zip';
             }
 
             $zip = new ZipArchive();
@@ -2963,6 +2920,8 @@ class Script
                 $file = __DIR__ . '/Dossiers_Legislatifs_XV.xml.zip';
             } elseif ($this->legislature_to_get == 16) {
                 $file = __DIR__ . '/Dossiers_Legislatifs_XVI.xml.zip';
+            } elseif ($this->legislature_to_get == 17) {
+                $file = __DIR__ . '/Dossiers_Legislatifs_XVII.xml.zip';
             }
 
             $zip = new ZipArchive();
@@ -3194,9 +3153,11 @@ class Script
 
         if ($this->legislature_to_get >= 15) {
             if ($this->legislature_to_get == 15) {
-              $file = __DIR__ . '/Dossiers_Legislatifs_XV.xml.zip';
+                $file = __DIR__ . '/Dossiers_Legislatifs_XV.xml.zip';
             } elseif ($this->legislature_to_get == 16) {
-              $file = __DIR__ . '/Dossiers_Legislatifs_XVI.xml.zip';
+                $file = __DIR__ . '/Dossiers_Legislatifs_XVI.xml.zip';
+            } elseif($this->legislature_to_get == 17) {
+                $file = __DIR__ . '/Dossiers_Legislatifs_XVII.xml.zip';
             }
 
             $zip = new ZipArchive();
@@ -3389,9 +3350,11 @@ class Script
 
       if ($this->legislature_to_get >= 15) {
         if ($this->legislature_to_get == 15) {
-          $file = __DIR__ . '/Dossiers_Legislatifs_XV.xml.zip';
+            $file = __DIR__ . '/Dossiers_Legislatifs_XV.xml.zip';
         } elseif ($this->legislature_to_get == 16) {
-          $file = __DIR__ . '/Dossiers_Legislatifs_XVI.xml.zip';
+            $file = __DIR__ . '/Dossiers_Legislatifs_XVI.xml.zip';
+        } elseif($this->legislature_to_get == 17) {
+            $file = __DIR__ . '/Dossiers_Legislatifs_XVII.xml.zip';
         }
 
         $zip = new ZipArchive();
@@ -4049,6 +4012,7 @@ if (isset($argv[1]) && isset($argv[2])) {
   $script = new Script();
 }
 
+
 $script->fillDeputes();
 $script->deputeAll();
 $script->deputeLast();
@@ -4058,42 +4022,41 @@ if ($script->getMpPhotos()) { // Check this in a later stage
     $script->resmushPictures();
 }
 $script->groupeEffectif();
-//$script->deputeJson(); // No longer used
 $script->groupeStats();
 $script->groupeStatsHistory();
 $script->groupeMembersHistory();
 $script->parties();
 $script->legislature();
-//$script->vote(); // Wait for the first RCV
-//$script->updateVoteInfo(); // Wait for the first RCV
-//$script->voteScore(); // Wait for the first RCV
-//$script->groupeCohesion(); // Wait for the first RCV
-//$script->groupeAccord(); // Wait for the first RCV
-//$script->deputeAccord(); // Wait for the first RCV
-//$script->voteParticipation(); // Wait for the first RCV
-//$script->dossier(); // Wait for the first RCV
-//$script->dossiersSeances(); // Wait for the first RCV
-//$script->documentsLegislatifs(); // Wait for the first RCV
-//$script->dossiersVotes(); // Wait for the first RCV
-//$script->dossiersActeurs(); // Wait for the first RCV
-//$script->votesAmendments(); // Wait for the first RCV
-//$script->amendements(); // Wait for the first RCV
-//$script->amendementsAuteurs(); // Wait for the first RCV
-//$script->voteParticipationCommission(); // Wait for the first RCV
-//$script->classParticipation(); // Wait for the first RCV
-//$script->classParticipationCommission(); // Wait for the first RCV
-//$script->classParticipationSolennels(); // Wait for the first RCV
-//$script->deputeLoyaute(); // Wait for the first RCV
-//$script->classLoyaute(); // Wait for the first RCV
-//$script->classMajorite(); // Wait for the first RCV
-//$script->classGroups(); // Wait for the first RCV
-//$script->classGroupsMonth(); // Wait for the first RCV
-//$script->classGroupsProximite(); // Wait for the first RCV
-//$script->classParticipationSix(); // Wait for the first RCV
-//$script->classLoyauteSix(); // Wait for the first RCV
-//$script->deputeAccordCleaned(); // Wait for the first RCV
-$script->historyMpsAverage(); // Wait for the first RCV
-//$script->historyPerMpsAverage(); // Wait for the first RCV
+$script->vote();
+$script->updateVoteInfo();
+$script->voteScore();
+$script->groupeCohesion();
+$script->groupeAccord();
+$script->deputeAccord();
+$script->voteParticipation();
+$script->dossier();
+$script->dossiersSeances();
+$script->documentsLegislatifs();
+$script->dossiersVotes();
+$script->dossiersActeurs();
+//$script->votesAmendments(); // Needs to include amendments first
+//$script->amendements(); // Needs to include amendments first
+//$script->amendementsAuteurs(); // Needs to include amendments first
+$script->voteParticipationCommission();
+$script->classParticipation();
+$script->classParticipationCommission();
+$script->classParticipationSolennels();
+$script->deputeLoyaute();
+$script->classLoyaute();
+$script->classMajorite();
+$script->classGroups();
+//$script->classGroupsMonth(); // Wait for more votes
+$script->classGroupsProximite();
+//$script->classParticipationSix(); // Wait for more votes
+//$script->classLoyauteSix(); // Wait for more votes
+$script->deputeAccordCleaned();
+$script->historyMpsAverage();
+$script->historyPerMpsAverage();
 //$script->parrainages(); // No longer used
 $script->opendata_activeMPs();
 $script->opendata_activeGroupes();
