@@ -16,13 +16,13 @@
                     <h3><?= $legislature == legislature_current() ? 'Historique' : 'Toutes les législatures' ?></h3>
                     <p>La législature actuelle est la <?= legislature_current() ?><sup>ème</sup> législature. Elle a débuté en 2024, à la suite des <a href="<?= base_url() ?>elections/legislatives-2024">élections législatives</a>, et se terminera en 2029.</p>
                     <?php if ($legislature == legislature_current()): ?>
-                        <p>Découvrez les députés des législatures précédentes.</p>
+                        <p>Découvrez les dossiers des législatures précédentes.</p>
                     <?php else: ?>
-                        <p>Découvrez les députés de toutes les législatures.</p>
+                        <p>Découvrez les dossiers de toutes les législatures.</p>
                     <?php endif; ?>
                     <div class="d-flex justify-content-center flex-wrap">
                         <?php if ($legislature != legislature_current()): ?>
-                            <a href="<?= base_url() ?>deputes" class="btn btn-secondary my-2">17<sup>ème</sup> législature</a>
+                            <a href="<?= base_url() ?>dossiers" class="btn btn-secondary my-2">17<sup>ème</sup> législature</a>
                         <?php endif; ?>
                         <a href="<?= base_url() ?>dossiers/legislature-16" class="btn btn-secondary my-2 mx-2">16<sup>ème</sup> législature</a>
                         <a href="<?= base_url() ?>dossiers/legislature-15" class="btn btn-secondary my-2 mx-2">15<sup>ème</sup> législature</a>
@@ -34,27 +34,27 @@
                     <h2>Les derniers dossiers en discussion à l'Assemblée</h2>
                     <?php foreach($dossiers_last as $dossier): ?>
                         <p>
-                            id = <?= $dossier['id'] ?> -     
                             <?= $dossier['titreChemin'] ?> -
                             <?= $dossier['legislature'] ?> -
                             vote n° <?= $dossier['voteNumero'] ?> -
                             date = <?= $dossier['dateScrutin'] ?> - 
-                            titre = <?= $dossier['titre'] ?>
+                            titre = <?= $dossier['titre'] ?> -
+                            <a href="<?= base_url() ?>dossiers/legislature-<?= $dossier['legislature'] ?>/<?= $dossier['titreChemin'] ?>">link</a>
                         </p>
                     <?php endforeach ?>
                 </div>                
             </div>
             <div class="row mt-5">
                 <div class="col-12">
-                    <h2>Tous les <?= count($dossiers) ?> dossiers de la <?= $legislature ?>ème législature</h2>
-                    <?php foreach($dossiers_last as $dossier): ?>
+                    <h2>L'ensemble des <?= count($dossiers) ?> dossiers de la <?= $legislature ?>ème législature</h2>
+                    <?php foreach($dossiers as $dossier): ?>
                         <p>
-                            id = <?= $dossier['id'] ?> -     
                             <?= $dossier['titreChemin'] ?> -
                             <?= $dossier['legislature'] ?> -
                             vote n° <?= $dossier['voteNumero'] ?> -
                             date = <?= $dossier['dateScrutin'] ?> - 
-                            titre = <?= $dossier['titre'] ?>
+                            titre = <?= $dossier['titre'] ?> -
+                            <a href="<?= base_url() ?>dossiers/legislature-<?= $dossier['legislature'] ?>/<?= $dossier['titreChemin'] ?>">link</a>
                         </p>
                     <?php endforeach ?>
                 </div>                

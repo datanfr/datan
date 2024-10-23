@@ -148,6 +148,8 @@ $route['votes/legislature-(:any)/(:any)/(:any)'] = 'votes/all/$1/$2/$3';
 $route['votes/legislature-(:any)/(:any)'] = 'votes/all/$1/$2';
 $route['votes'] = 'votes/index';
 // DOSSIERS
+$route['dossiers/legislature-(:any)/(:any)'] = 'dossiers/individual/$1/$2';
+$route['dossiers/legislature-(:any)'] = 'dossiers/index/$1';
 $route['dossiers'] = 'dossiers/index';
 // POSTS
 $route['posts/update'] = 'posts/update';
