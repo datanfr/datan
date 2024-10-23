@@ -39,7 +39,7 @@
               <?php else: ?>
                 <p>Découvrez les groupes de toutes les législatures.</p>
               <?php endif; ?>
-              <div class="d-flex flex-wrap">
+              <div class="d-flex justify-content-center flex-wrap">
                 <?php if ($legislature != legislature_current()): ?>
                   <a href="<?= base_url() ?>groupes" class="btn btn-secondary my-2">17<sup>ème</sup> législature</a>
                 <?php endif; ?>

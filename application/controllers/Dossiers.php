@@ -7,13 +7,16 @@
 
     // Page = datan.fr/votes
     public function index(){
-      $data['dossiers'] = $this->dossiers_model->get_dossiers();
+      $data['dossiers'] = $this->dossiers_model->get_dossiers(legislature_current());
+      $data['dossiers_last'] = array_slice($data['dossiers'], 0, 4);
+
+      $data['legislature'] = legislature_current();
 
       // Meta
       $data['url'] = $this->meta_model->get_url();
       $data['title_meta'] = "Dossiers Assemblée Nationale - Projets et propositions de loi | Datan";
-      $data['title'] = "Les dossiers à l'Assemblée nationale";
-      $data['description_meta'] = "Retrouvez tous les dossiers en discussion à l'Assemblée nationale : projets de loi et propositions de loi. Découvrez les votes des députés et groupes sur ces textes.";
+      $data['title'] = "Les dossiers législatifs à l'Assemblée nationale";
+      $data['description_meta'] = "Retrouvez tous les dossiers législatifs en discussion à l'Assemblée nationale : projets de loi et propositions de loi. Découvrez les votes des députés et groupes sur ces textes.";
       // Breadcrumb
       $data['breadcrumb'] = array(
         array(
