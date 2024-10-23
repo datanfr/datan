@@ -298,111 +298,113 @@
       return $query->result_array();
     }
 
-    public function get_groupe_social_media($groupe){
-      switch ($groupe['libelleAbrev']) {
-        case 'LAREM':
-          $groupe['twitter'] = '@LaREM_AN';
-          $groupe['facebook'] = 'deputesLaREM';
-          break;
-
-        case 'LR':
-          $groupe['website'] = 'https://www.deputes-les-republicains.fr/';
-          $groupe['twitter'] = 'Republicains_An';
-          $groupe['facebook'] = 'LesDeputesLesRepublicains';
-          break;
-
+    public function get_groupe_social_media($libelleAbrev){
+      $array = array();
+      switch ($libelleAbrev) {
         case 'DR':
-          $groupe['website'] = 'https://www.deputes-les-republicains.fr/';
-          $groupe['twitter'] = 'droiterep_an';
-          $groupe['facebook'] = 'LesDeputesLesRepublicains';
+        case 'LR':
+          $array['website'] = 'https://www.deputes-les-republicains.fr/';
+          $array['twitter'] = 'droiterep_an';
+          $array['facebook'] = 'droiterepublicaine.an';
+          $array['wikipedia'] = 'https://fr.wikipedia.org/wiki/Groupe_Droite_r%C3%A9publicaine';
           break;
 
         case 'MODEM':
         case 'DEM':
-          $groupe['twitter'] = 'DeputesDem';
-          $groupe['facebook'] = 'DeputesDem';
+          $array['website'] = 'https://www.mouvementdemocrate.fr/';
+          $array['twitter'] = 'DeputesDem';
+          $array['facebook'] = 'DeputesDem';
+          $array['wikpedia'] = 'https://fr.wikipedia.org/wiki/Groupe_Les_D%C3%A9mocrates';
           break;
 
         case 'SOC':
         case 'SOC-A':
-          $groupe['twitter'] = 'socialistesAN';
-          $groupe['facebook'] = 'socialistesAN';
+          $array['website'] = 'https://www.parti-socialiste.fr/';
+          $array['twitter'] = 'socialistesAN';
+          $array['facebook'] = 'socialistesAN';
+          $array['wikipedia'] = 'https://fr.wikipedia.org/wiki/Groupe_socialiste_(Assembl%C3%A9e_nationale)';
           break;
 
         case 'AGIR-E':
-          $groupe['twitter'] = 'AgirEnsemble_AN';
-          $groupe['facebook'] = 'AgirEnsembleAN';
+          $array['twitter'] = 'AgirEnsemble_AN';
+          $array['facebook'] = 'AgirEnsembleAN';
+          $array['wikipedia'] = 'https://fr.wikipedia.org/wiki/Groupe_Agir_ensemble';
           break;
 
         case 'UDI_I':
-          $groupe['twitter'] = 'deputesudi_ind';
-          $groupe['facebook'] = 'DeputesUDI.Ind';
+          $array['website'] = 'https://www.parti-udi.fr/';
+          $array['twitter'] = 'deputesudi_ind';
+          $array['facebook'] = 'DeputesUDI.Ind';
+          $array['wikipedia'] = 'https://fr.wikipedia.org/wiki/Groupe_UDI_et_ind%C3%A9pendants';
           break;
 
         case 'FI':
         case 'LFI-NUPES':
-          $groupe['twitter'] = 'FiAssemblee';
-          $groupe['facebook'] = 'FiAssemblee';
-          break;
-
         case 'LFI':
-        case 'LFI-NFP':
-          $groupe['twitter'] = 'FiAssemblee';
-          $groupe['facebook'] = 'FranceInsoumiseAN';
-          break;          
+        case 'LFI-NFP': 
+          $array['website'] = 'https://lafranceinsoumise.fr/';
+          $array['twitter'] = 'FiAssemblee';
+          $array['facebook'] = 'FiAssemblee';
+          $array['wikipedia'] = 'https://fr.wikipedia.org/wiki/Groupe_La_France_insoumise';
+          break;       
 
         case 'EDS':
-          $groupe['website'] = 'https://www.ecologie-democratie-solidarite.fr/';
-          $groupe['twitter'] = 'EDSAssNat';
-          $groupe['facebook'] = 'EDSAssNat';
+          $array['website'] = 'https://www.ecologie-democratie-solidarite.fr/';
+          $array['twitter'] = 'EDSAssNat';
+          $array['facebook'] = 'EDSAssNat';
+          $array['wikipedia'] = 'https://fr.wikipedia.org/wiki/Groupe_%C3%89cologie_d%C3%A9mocratie_solidarit%C3%A9';
           break;
 
         case 'GDR':
         case 'GDR-NUPES':
-          $groupe['website'] = 'http://www.groupe-communiste.assemblee-nationale.fr/';
-          $groupe['facebook'] = 'LesDeputesCommunistes';
-          $groupe['twitter'] = 'deputesPCF';
+          $array['website'] = 'http://www.groupe-communiste.assemblee-nationale.fr/';
+          $array['facebook'] = 'LesDeputesCommunistes';
+          $array['twitter'] = 'deputesPCF';
+          $array['wikipedia'] = 'https://fr.wikipedia.org/wiki/Groupe_communiste_(Assembl%C3%A9e_nationale)';
           break;
 
         case 'LT':
         case 'LIOT':
-          $groupe['twitter'] = 'GroupeLIOT_An';
-          $groupe['facebook'] = 'Groupe-Libertés-et-Territoires-à-lAssemblée-nationale-1898196496883591';
+          $array['twitter'] = 'GroupeLIOT_An';
+          $array['facebook'] = 'Groupe-Libertés-et-Territoires-à-lAssemblée-nationale-1898196496883591';
+          $array['wikipedia'] = 'https://fr.wikipedia.org/wiki/Groupe_Libert%C3%A9s,_ind%C3%A9pendants,_outre-mer_et_territoires';
           break;
 
         case 'RE':
-          $groupe['twitter'] = 'DeputesRE';
-          $groupe['facebook'] = 'deputesRenaissance';
+        case 'LAREM':
+        case 'EPR':
+          $array['twitter'] = 'DeputesRE';
+          $array['facebook'] = 'deputesRenaissance';
+          $array['wikipedia'] = 'https://fr.wikipedia.org/wiki/Groupe_Ensemble_pour_la_R%C3%A9publique';
           break;
 
         case 'RN':
-          $groupe['twitter'] = 'groupeRN_off';
-          $groupe['facebook'] = 'deputesRN';
+          $array['website'] = 'https://deputes-rn.fr/';
+          $array['twitter'] = 'groupeRN_off';
+          $array['facebook'] = 'deputesRN';
+          $array['wikipedia'] = 'https://fr.wikipedia.org/wiki/Groupe_Rassemblement_national';
           break;
 
         case 'HOR':
-          $groupe['website'] = 'https://horizonsleparti.fr/';
-          $groupe['twitter'] = 'Horizons_AN';
-          $groupe['facebook'] = 'lesdeputeshorizonsetindep';
+          $array['website'] = 'https://horizonsleparti.fr/';
+          $array['twitter'] = 'Horizons_AN';
+          $array['facebook'] = 'lesdeputeshorizonsetindep';
+          $array['wikipedia'] = 'https://fr.wikipedia.org/wiki/Groupe_Horizons_et_ind%C3%A9pendants';
           break;
 
         case 'ECOS':
         case 'ECOLO':
-          $groupe['website'] = 'https://www.eelv.fr/';
-          $groupe['twitter'] = 'Gpe_EcoloSocial';
-          $groupe['facebook'] = 'eelv.fr';
+          $array['website'] = 'https://www.ecologistes-an.fr/';
+          $array['twitter'] = 'Gpe_EcoloSocial';
+          $array['facebook'] = 'eelv.fr';
+          $array['wikipedia'] = 'https://fr.wikipedia.org/wiki/Groupe_%C3%A9cologiste_(Assembl%C3%A9e_nationale)';
           break;
-
-          case 'EPR':
-            $groupe['twitter'] = 'DeputesEnsemble';
-            $groupe['facebook'] = 'deputesEnsemble';
-            break;
 
         default:
           // code...
           break;
       }
-      return $groupe;
+      return $array;
     }
 
     public function get_stats($groupe_uid){
@@ -694,27 +696,18 @@
         $schema["dissolutionDate"] = $groupe["dateFin"];
       }
 
-      if (isset($groupe['website']) && $groupe['website']) {
-        if (!isset($schema['sameAs'])) {
-          $schema['sameAs'] = array($groupe['website']);
-        }
-      }
+      $sameAs = ['website', 'wikipedia', 'twitter', 'facebook'];
 
-      if (isset($groupe['twitter']) && $groupe['twitter']) {
-        $twitter = "https://twitter.com/" . $groupe['twitter'];
-        if (!isset($schema['sameAs'])) {
-          $schema['sameAs'] = array($twitter);
-        } else {
-          array_push($schema['sameAs'], $twitter);
-        }
-      }
-
-      if (isset($groupe['facebook']) && $groupe['facebook']) {
-        $facebook = "https://www.facebook.com/" . $groupe['facebook'];
-        if (!isset($schema['sameAs'])) {
-          $schema['sameAs'] = array($facebook);
-        } else {
-          array_push($schema['sameAs'], $facebook);
+      foreach ($sameAs as $link) {
+        if (isset($groupe['links'][$link]) && $groupe['links'][$link]) {
+          if($link == 'twitter'){
+            $groupe['links'][$link] = 'https://twitter.com/' . $groupe['links'][$link];
+          }
+          if($link == 'facebook'){
+            $groupe['links'][$link] = 'https://www.facebook.com/' . $groupe['links'][$link];
+          }
+          $schema['sameAs'] = $schema['sameAs'] ?? [];
+          $schema['sameAs'][] = $groupe['links'][$link];
         }
       }
 
