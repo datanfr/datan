@@ -4,7 +4,10 @@
       $this->load->database();
     }
 
-    public function get_dossiers(){
+    public function get_dossiers($legislature){
+      $where = array(
+        'dv.legislature' => $legislature
+      );
       $this->db->select('dv.id, dv.dossierId, dv.legislature, d.titreChemin, d.titre, dv.voteNumero'); 
       $this->db->select('vi.dateScrutin');
       $this->db->join('dossiers d', 'dv.dossierId = d.dossierId');
@@ -14,11 +17,8 @@
       );
       $this->db->join('votes_info vi', 'vi.voteNumero = max_vote.voteNumero AND vi.legislature = max_vote.legislature', 'left');
       $this->db->group_by('dv.dossierId');
-      $query = $this->db->get_where('dossiers_votes dv');
+      $query = $this->db->get_where('dossiers_votes dv', $where);
       return $query->result_array();
-
-
-
 
     }
 
