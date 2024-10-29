@@ -119,7 +119,10 @@ class Script
     public function amendements(){
       echo "downloading amendements starting \n";
 
-      if ($this->legislature_to_get == 16) {
+      if ($this->legislature_to_get == 17) {
+        $file = 'http://data.assemblee-nationale.fr/static/openData/repository/17/loi/amendements_div_legis/Amendements.xml.zip';
+        $newfile = __DIR__ . '/Amendements_XVII.xml.zip';
+      } elseif ($this->legislature_to_get == 16) {
         $file = 'http://data.assemblee-nationale.fr/static/openData/repository/16/loi/amendements_div_legis/Amendements.xml.zip';
         $newfile = __DIR__ . '/Amendements.xml.zip';
       } elseif ($this->legislature_to_get == 15) {
@@ -147,4 +150,4 @@ if (isset($argv[1])) {
 $script->dossiers();
 $script->scrutins();
 $script->acteurs_organes();
-//$script->amendements();
+$script->amendements();
