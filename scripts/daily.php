@@ -3444,9 +3444,11 @@ class Script
 
         $fields = array('id', 'dossier', 'legislature', 'texteLegislatifRef', 'num', 'numordre', 'seanceRef', 'expose', 'state', 'sort', 'examined_by');
         if ($this->legislature_to_get == 15) {
-          $file = __DIR__ . '/Amendements_XV.xml.zip';
+            $file = __DIR__ . '/Amendements_XV.xml.zip';
         } elseif ($this->legislature_to_get == 16) {
-          $file = __DIR__ . '/Amendements.xml.zip';
+            $file = __DIR__ . '/Amendements.xml.zip';
+        } elseif ($this->legislature_to_get == 17) {
+            $file = __DIR__ . '/Amendements_XVII.xml.zip';
         }
         $zip = new ZipArchive();
         $insert = [];
@@ -3509,9 +3511,11 @@ class Script
 
         $fields = array('id', 'type', 'acteurRef', 'groupeId', 'auteurOrgane');
         if ($this->legislature_to_get == 15) {
-          $file = __DIR__ . '/Amendements_XV.xml.zip';
+            $file = __DIR__ . '/Amendements_XV.xml.zip';
         } elseif ($this->legislature_to_get == 16) {
-          $file = __DIR__ . '/Amendements.xml.zip';
+            $file = __DIR__ . '/Amendements.xml.zip';
+        } elseif ($this->legislature_to_get == 17) {
+            $file = __DIR__ . '/Amendements_XVII.xml.zip';
         }
         $zip = new ZipArchive();
         $insertAll = [];
@@ -4012,7 +4016,6 @@ if (isset($argv[1]) && isset($argv[2])) {
   $script = new Script();
 }
 
-
 $script->fillDeputes();
 $script->deputeAll();
 $script->deputeLast();
@@ -4039,9 +4042,9 @@ $script->dossiersSeances();
 $script->documentsLegislatifs();
 $script->dossiersVotes();
 $script->dossiersActeurs();
-//$script->votesAmendments(); // Needs to include amendments first
-//$script->amendements(); // Needs to include amendments first
-//$script->amendementsAuteurs(); // Needs to include amendments first
+$script->votesAmendments();
+$script->amendements();
+$script->amendementsAuteurs();
 $script->voteParticipationCommission();
 $script->classParticipation();
 $script->classParticipationCommission();
