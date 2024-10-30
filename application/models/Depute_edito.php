@@ -89,7 +89,9 @@
       $infos = groups_position_edited();
 
       function maj_pres($positionPolitique){
-        if ($positionPolitique == "Opposition") {
+        if (!$positionPolitique) {
+          $maj_pres = NULL;
+        } elseif ($positionPolitique == "Opposition") {
           $maj_pres = "un groupe d'opposition";
         } elseif ($positionPolitique == "Majoritaire") {
           $maj_pres = "le groupe de la majorité présidentielle, qui est";

@@ -77,18 +77,26 @@
 
     public function get_majority_group($legislature = NULL){
       $legislature = $legislature ? $legislature : legislature_current();
-      $sql = 'SELECT A.*
-        FROM
-        (
-          SELECT *, CASE WHEN dateFin IS NULL THEN curdate() ELSE dateFin END AS dateFinSorted
+
+      if ($legislature == 17) { // Issue with majority/opposition groups
+        $sql = 'SELECT *, CASE WHEN dateFin IS NULL THEN curdate() ELSE dateFin END AS dateFinSorted
           FROM organes
-          WHERE coteType = "GP" AND legislature = ? AND positionPolitique = "majoritaire"
-        ) A
+          WHERE uid = "PO845407"
+        ';
+        $query = $this->db->query($sql);
+      } else {
+        $sql = 'SELECT A.*
+          FROM
+          (
+            SELECT *, CASE WHEN dateFin IS NULL THEN curdate() ELSE dateFin END AS dateFinSorted
+            FROM organes
+            WHERE coteType = "GP" AND legislature = ? AND positionPolitique = "majoritaire"
+          ) A
         ORDER BY dateFinSorted DESC
         LIMIT 1
-      ';
-
-      $query = $this->db->query($sql, $legislature, 1);
+        ';
+        $query = $this->db->query($sql, $legislature, 1);
+      }      
 
       return $query->row_array();
     }
