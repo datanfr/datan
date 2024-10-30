@@ -352,7 +352,7 @@
                     <div class="icon">
                       <?= file_get_contents(base_url() . '/assets/imgs/icons/voting.svg') ?>
                     </div>
-                    <h3 class="ml-3">PARTICIPATION AUX VOTES
+                    <h3 class="ml-3 text-uppercase">Participation aux votes
                       <a tabindex="0" role="button" data-toggle="popover" data-trigger="focus" aria-label="Tooltip participation" class="no-decoration popover_focus" title="Taux de participation" data-content="Le taux de participation est le <b>pourcentage de votes auxquels le ou la député a participé</b>.<br><br>Attention, le taux de participation ne mesure pas toute l'activité d'un député ou d'un groupe. Contrairement au <a href='https://www.europarl.europa.eu/about-parliament/fr/organisation-and-rules/how-plenary-works' title='lien'>Parlement européen</a>, les votes à l'Assemblée nationale se déroulent à n'importe quel moment de la semaine. D'autres réunions ont souvent lieu en même temps, expliquant le faible taux de participation des députés et des groupes.<br><br>Pour plus d'information, <a href='<?= base_url() ?>statistiques/aide#participation' target='_blank'>cliquez ici</a>."><?= file_get_contents(asset_url() . "imgs/icons/question_circle.svg") ?></a>
                     </h3>
                   </div>
@@ -424,7 +424,7 @@
                     <div class="icon">
                       <?= file_get_contents(base_url() . 'assets/imgs/icons/loyalty.svg') ?>
                     </div>
-                    <h3 class="ml-3">PROXIMITÉ AVEC SON GROUPE
+                    <h3 class="ml-3 text-uppercase">Proximité avec son groupe
                       <a tabindex="0" role="button" data-toggle="popover" class="no-decoration popover_focus" data-trigger="focus" aria-label="Tooltip loyauté" title="Proximité ou loyauté envers le groupe politique" data-content="Le taux de proximité est le <b>pourcentage de votes où le ou la député a voté sur la même ligne que son groupe</b>.<br><br>Attention, dans beaucoup de parlements, y compris l'Assemblée nationale, les députés suivent dans la plupart des cas la ligne officielle du groupe, expliquant des taux de cohésion très élevés. Le mesure proposée ici est intéressante quand elle est comparée avec les taux de loyauté des autres parlementaires.<br><br>Pour plus d'information, <a href='<?= base_url() ?>statistiques/aide#loyalty' target='_blank'>cliquez ici</a>." id="popover_focus"><?= file_get_contents(asset_url() . "imgs/icons/question_circle.svg") ?></a>
                     </h3>
                   </div>
@@ -514,8 +514,8 @@
                       <div class="icon">
                         <?= file_get_contents(base_url() . '/assets/imgs/icons/elysee.svg') ?>
                       </div>
-                      <h3 class="ml-3">PROXIMITÉ AVEC LA MAJORITÉ PRÉSIDENTIELLE
-                        <a tabindex="0" role="button" data-toggle="popover" class="no-decoration popover_focus" data-trigger="focus" aria-label="Tooltip majorité" title="Proximité avec la majorité présidentielle" data-content="Le <b>taux de proximité avec la majorité présidentielle</b> représente le pourcentage de fois où un député vote la même chose que le groupe présidentiel (La République en Marche).<br><br>Pour plus d'information, <a href='<?= base_url() ?>statistiques/aide#proximity' target='_blank'>cliquez ici</a>." id="popover_focus"><?= file_get_contents(asset_url() . "imgs/icons/question_circle.svg") ?></a>
+                      <h3 class="ml-3 text-uppercase">Proximité avec la majorité gouvernementale
+                        <a tabindex="0" role="button" data-toggle="popover" class="no-decoration popover_focus" data-trigger="focus" aria-label="Tooltip majorité" title="Proximité avec la majorité gouvernementale" data-content="Le <b>taux de proximité avec la majorité gouvernementale</b> représente le pourcentage de fois où un député vote la même chose que le groupe présidentiel (La République en Marche).<br><br>Pour plus d'information, <a href='<?= base_url() ?>statistiques/aide#proximity' target='_blank'>cliquez ici</a>." id="popover_focus"><?= file_get_contents(asset_url() . "imgs/icons/question_circle.svg") ?></a>
                       </h3>
                     </div>
                   </div>
@@ -539,14 +539,14 @@
                       <div class="col-lg-8 infos mt-4 mt-lg-2">
                         <div class="texte ml-md-3 pl-md-3 mt-md-0 mt-3">
                           <p>
-                            <?= $title ?> a voté comme la majorité présidentielle (<a href="<?= base_url() ?>groupes/legislature-<?= $groupMajority['legislature'] ?>/<?= mb_strtolower($groupMajority['libelleAbrev']) ?>"><?= name_group($groupMajority['libelle']) ?></a>) dans <?= $majorite['score'] ?>% des cas.
+                            <?= $title ?> a voté comme la majorité gouvernementale dans <?= $majorite['score'] ?>% des cas. Les votes de <?= $title ?> sont comparés à ceux du groupe politique le plus gros de la majorité (<a href="<?= base_url() ?>groupes/legislature-<?= $groupMajority['legislature'] ?>/<?= mb_strtolower($groupMajority['libelleAbrev']) ?>"><?= name_group($groupMajority['libelle']) ?></a>).
                           </p>
                           <p>
-                            <?= ucfirst($gender['pronom']) ?> <?= $active ? "est" : "était" ?> <b><?= $edito_majorite['all'] ?></b> de la majorité présidentielle que la moyenne des députés non membres de la majorité (<?= $majorite['all'] ?>%).
+                            <?= ucfirst($gender['pronom']) ?> <?= $active ? "est" : "était" ?> <b><?= $edito_majorite['all'] ?></b> de la majorité gouvernementale que la moyenne des députés non membres de la majorité (<?= $majorite['all'] ?>%).
                           </p>
                           <?php if ($majorite['group']): ?>
                             <p>
-                              De plus, <?= $title ?> <?= $active ? "est" : "était" ?> <b><?= $edito_majorite['group'] ?></b> de la majorité présidentielle que la moyenne des députés de son groupe politique (<?= $majorite['group'] ?>%).
+                              De plus, <?= $title ?> <?= $active ? "est" : "était" ?> <b><?= $edito_majorite['group'] ?></b> de la majorité gouvernementale que la moyenne des députés de son groupe politique (<?= $majorite['group'] ?>%).
                             </p>
                           <?php endif; ?>
                         </div>
@@ -565,7 +565,7 @@
                     </div>
                   </div>
                   <div class="col-10">
-                    <h3>PROXIMITÉ AVEC LES GROUPES POLITIQUES
+                    <h3 class="text-uppercase">Proximité avec les groupes politiques 
                       <a tabindex="0" role="button" data-toggle="popover" data-trigger="focus" aria-label="Tooltip proximité" class="no-decoration popover_focus" title="Proximité avec les groupes politiques" data-content="Le <b>taux de proximité avec les groupes</b> représente le pourcentage de fois où un député vote la même chose qu'un groupe parlementaire. Chaque groupe se voit attribuer pour chaque vote une <i>position majoritaire</i>, en fonction du vote de ses membres. Cette position peut soit être 'pour', 'contre', ou 'absention'. Pour chaque vote, nous déterminons si le ou la députée a voté la même chose que la position majoritaire d'un groupe. Le taux de proximité est le pourcentage de fois où le ou la députée a voté de la même façon qu'un groupe.<br><br>Par exemple, si le taux est de 75%, cela signifie que <?= $title ?> a voté avec ce groupe dans 75% des cas.<br><br>Pour plus d'information, <a href='<?= base_url() ?>statistiques/aide#proximity' target='_blank'>cliquez ici</a>." id="popover_focus"><?= file_get_contents(asset_url() . "imgs/icons/question_circle.svg") ?></a>
                     </h3>
                   </div>
@@ -610,7 +610,7 @@
                     </div>
                   </div>
                   <?php if ($depute['legislature'] == legislature_current() && dissolution() === false): ?>
-                    <div class="row mt-3 test-border">
+                    <div class="row mt-3">
                       <div class="offset-2 col-10">
                         
                           <p>
@@ -666,7 +666,7 @@
                     </div>
                   </div>
                   <?php if ($depute['legislature'] == legislature_current() && dissolution() === false): ?>
-                    <div class="row mt-3 test-border">
+                    <div class="row mt-3">
                       <div class="col-10 offset-2 ">
                         
                           <p>

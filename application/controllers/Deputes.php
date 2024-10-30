@@ -61,6 +61,7 @@
           } else {
             $data['no_majorite'] = TRUE;
           }
+          $data['no_majorite'] = TRUE; // THIS NEEDS TO BE SOLVED
         }
 
         // PROXIMITY WITH ALL GROUPS
