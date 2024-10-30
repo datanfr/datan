@@ -60,7 +60,7 @@ class Script
 
     private function majorityGroups()
     {
-      $query = $this->bdd->query('SELECT * FROM organes WHERE coteType = "GP" AND positionPolitique = "Majoritaire"');
+      $query = $this->bdd->query('SELECT * FROM organes WHERE coteType = "GP" AND (positionPolitique = "Majoritaire" OR uid = "PO845407");');
       $results = $query->fetchAll();
       foreach ($results as $key => $value) {
         $return[] = $value['uid'];
