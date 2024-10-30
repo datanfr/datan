@@ -1476,10 +1476,7 @@ class Script
                             }
 
                             $nombreMembresGroupe = $groupe->xpath("./*[local-name()='nombreMembresGroupe']");
-                            $item['nombreMembresGroupe'] = $nombreMembresGroupe[0];
-
-                            $positionMajoritaire = $groupe->xpath("./*[local-name()='vote']/*[local-name()='positionMajoritaire']");
-                            $item['positionMajoritaire'] = $positionMajoritaire[0];
+                            $item['nombreMembresGroupe'] = $nombreMembresGroupe[0];                            
 
                             $nombrePours = $groupe->xpath("./*[local-name()='vote']/*[local-name()='decompteVoix']/*[local-name()='pour']");
                             $item['nombrePours'] = $nombrePours[0];
@@ -1489,6 +1486,23 @@ class Script
 
                             $nombreAbstentions = $groupe->xpath("./*[local-name()='vote']/*[local-name()='decompteVoix']/*[local-name()='abstentions']");
                             $item['nombreAbstentions'] = $nombreAbstentions[0];
+
+                            //$positionMajoritaire = $groupe->xpath("./*[local-name()='vote']/*[local-name()='positionMajoritaire']");
+                            //$item['positionMajoritaire'] = $positionMajoritaire[0];
+
+                            $nombrePours = (int)$item['nombrePours'];
+                            $nombreContres = (int)$item['nombreContres'];
+                            $nombreAbstentions = (int)$item['nombreAbstentions'];
+
+                            if ($nombrePours > $nombreContres && $nombrePours > $nombreAbstentions) {
+                                $item['positionMajoritaire'] = 'pour';
+                            } elseif ($nombreContres > $nombrePours && $nombreContres > $nombreAbstentions) {
+                                $item['positionMajoritaire'] = 'contre';
+                            } elseif ($nombreAbstentions > $nombrePours && $nombreAbstentions > $nombreContres) {
+                                $item['positionMajoritaire'] = 'abstention';
+                            } else {
+                                $item['positionMajoritaire'] = 'nv';
+                            }
 
                             $nonVotants = $groupe->xpath("./*[local-name()='vote']/*[local-name()='decompteVoix']/*[local-name()='nonVotants']");
                             $item['nonVotants'] = $nonVotants[0];
@@ -4015,6 +4029,7 @@ if (isset($argv[1]) && isset($argv[2])) {
 } else {
   $script = new Script();
 }
+
 
 $script->fillDeputes();
 $script->deputeAll();
