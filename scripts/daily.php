@@ -3013,7 +3013,6 @@ class Script
             $seanceDate = $doc['seanceDate'];
             $legislature = $doc['legislature'];
 
-
             $stmt_get_votes = $this->bdd->prepare('SELECT voteNumero, legislature, titre
                 FROM votes_info
                 WHERE titre LIKE ? AND legislature = ? AND dateScrutin = ?
@@ -4029,7 +4028,6 @@ if (isset($argv[1]) && isset($argv[2])) {
 } else {
   $script = new Script();
 }
-
 
 $script->fillDeputes();
 $script->deputeAll();
