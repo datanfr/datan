@@ -406,7 +406,7 @@
       }
 
       // Get featured vote (motion de centure)
-      $data['voteFeature'] = $this->votes_model->get_individual_vote_moc($mpId, 17, 1); // MOC Barnier Octobre 2024
+      $data['voteFeature'] = $this->votes_model->get_individual_vote_moc($mpId, 17, 519); // MOC Barnier Decembre 2024
 
       // Get last explication
       $data['explication'] = $this->deputes_model->get_last_explication($mpId, $legislature);
