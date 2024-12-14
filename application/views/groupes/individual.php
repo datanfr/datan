@@ -174,9 +174,9 @@
                 </div>
                 <div class="row">
                   <div class="col-12">
-                    <?php if ($groupe['positionPolitique'] != 'Opposition'): ?>
+                    <?php if (in_array($groupe['positionPolitique'], array('Minoritaire', 'Majoritaire'))): ?>
                       <p>Le groupe <?= $title ?> <?= $active ? 'est' : 'était' ?> membre de la <b>majorité présidentielle</b>. Le groupe <?= $active ? 'soutient' : 'soutenait' ?> donc l'action du gouvernement et <?= $active ? 'vote' : 'votait' ?> fréquemment en faveur des textes qu'il présente.</p>
-                    <?php else: ?>
+                    <?php elseif ($groupe['positionPolitique'] == 'Opposition'): ?>
                       <p>Le groupe <?= $title ?> est un <b>groupe d'opposition</b>. Si l'opposition vote parfois en faveur des textes du gouvernement, son soutien n'est pas systématique.</p>
                     <?php endif; ?>
                     <p>Sur les <?= $stats['support']['votes'] ?> votes sur des projets de loi présentés par le gouvernement, le groupe <?= $groupe['libelleAbrev'] ?> a voté <b>en faveur de <?= $stats['support']['value'] ?> texte<?= $stats['support']['value'] > 1 ? 's' : '' ?></b>. Il a donc soutenu le gouvernement dans <?= round($stats['support']['value'] / $stats['support']['votes'] * 100) ?>% des cas.</p>
