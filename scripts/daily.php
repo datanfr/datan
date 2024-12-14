@@ -415,7 +415,12 @@ class Script
                             $legislature = NULL;
                         }
 
-                        $positionPolitique = $xml->positionPolitique;
+                        if (isset($xml->positionPolitique) && $xml->positionPolitique != "") {
+                            $positionPolitique = $xml->positionPolitique;
+                        } else {
+                            $positionPolitique = NULL;
+                        }
+
                         $preseance = $xml->preseance;
                         $couleurAssociee = $xml->couleurAssociee;
 
