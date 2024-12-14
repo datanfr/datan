@@ -64,7 +64,7 @@
     }
 
     public function get_all_groupes_majority($legislature = NULL){
-      $this->db->where(array('coteType' => 'GP', 'positionPolitique' => 'majoritaire'));
+      $this->db->where(array('coteType' => 'GP', 'positionPolitique' => 'Majoritaire'));
       if ($legislature) {
         $this->db->where('legislature', $legislature);
       }
@@ -90,7 +90,7 @@
           (
             SELECT *, CASE WHEN dateFin IS NULL THEN curdate() ELSE dateFin END AS dateFinSorted
             FROM organes
-            WHERE coteType = "GP" AND legislature = ? AND positionPolitique = "majoritaire"
+            WHERE coteType = "GP" AND legislature = ? AND positionPolitique = "Majoritaire"
           ) A
         ORDER BY dateFinSorted DESC
         LIMIT 1
