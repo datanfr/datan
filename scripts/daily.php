@@ -60,7 +60,7 @@ class Script
 
     private function majorityGroups()
     {
-      $query = $this->bdd->query('SELECT * FROM organes WHERE coteType = "GP" AND (positionPolitique = "Majoritaire" OR uid = "PO845407");');
+      $query = $this->bdd->query('SELECT * FROM organes WHERE coteType = "GP" AND (positionPolitique = "Majoritaire");');
       $results = $query->fetchAll();
       foreach ($results as $key => $value) {
         $return[] = $value['uid'];
@@ -4073,7 +4073,7 @@ $script->deputeLoyaute();
 $script->classLoyaute();
 $script->classMajorite();
 $script->classGroups();
-//$script->classGroupsMonth(); // Wait for more votes
+$script->classGroupsMonth();
 $script->classGroupsProximite();
 //$script->classParticipationSix(); // Wait for more votes
 //$script->classLoyauteSix(); // Wait for more votes
