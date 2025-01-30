@@ -542,16 +542,6 @@ class Script
 
         // Add the data 
         $file = __DIR__ . "/data/deputes_bluesky.csv"; 
-        echo "Looking for file at: " . realpath($file) . " \n";
-
-        if (!file_exists($file)) {
-            die("File does not exist \n");
-        } elseif (!is_readable($file)) {
-            die("File is not readable \n");
-        } else {
-            echo "File exists and is readable! \n";
-        }
-
         if (($handle = fopen($file, "r")) !== FALSE) {
             while (($row = fgetcsv($handle, 0, ",")) !== FALSE) {
                 $mpId = $row[0];
@@ -562,7 +552,7 @@ class Script
                     if ($row = $dbDeputeContacts->fetch(PDO::FETCH_ASSOC)) {
                         if ($blueSky != $row["bluesky"]){
                             $sql = $this->bdd->prepare('UPDATE deputes_contacts SET bluesky=:bluesky, dateMaj=CURDATE() WHERE mpId = :mpId');
-                            $this->bdd->execute(array("bluesky" => $blueSky, "mpId" => $mpId));
+                            $sql->execute(array("bluesky" => $blueSky, "mpId" => $mpId));
                             echo "included";
                         } 
                     } 
