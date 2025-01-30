@@ -540,12 +540,16 @@ class Script
 
         // Add the data 
         $file = __DIR__ . "/data/deputes_bluesky.csv"; 
-        
+        echo "Looking for file at: " . realpath($file) . " \n";
+
         if (!file_exists($file)) {
-            die("Error: CSV file not found at $file. \n");
+            die("File does not exist \n");
+        } elseif (!is_readable($file)) {
+            die("File is not readable \n");
         } else {
-            echo "CSV file found: $file \n";
+            echo "File exists and is readable! \n";
         }
+
 
         if (($handle = fopen($file, "r")) !== FALSE) {
             while (($row = fgetcsv($handle, 0, ",")) !== FALSE) {
