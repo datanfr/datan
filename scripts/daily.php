@@ -540,6 +540,13 @@ class Script
 
         // Add the data 
         $file = __DIR__ . "/data/deputes_bluesky.csv"; 
+        
+        if (!file_exists($file)) {
+            die("Error: CSV file not found at $file. \n");
+        } else {
+            echo "CSV file found: $file \n";
+        }
+
         if (($handle = fopen($file, "r")) !== FALSE) {
             while (($row = fgetcsv($handle, 0, ",")) !== FALSE) {
                 $mpId = $row[0];
