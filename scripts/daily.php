@@ -1,4 +1,6 @@
 <?php
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
 include "lib/simplehtmldom_1_9/simple_html_dom.php";
 include "include/json_minify.php";
 class Script
@@ -549,7 +551,6 @@ class Script
         } else {
             echo "File exists and is readable! \n";
         }
-
 
         if (($handle = fopen($file, "r")) !== FALSE) {
             while (($row = fgetcsv($handle, 0, ",")) !== FALSE) {
