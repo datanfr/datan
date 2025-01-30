@@ -526,6 +526,40 @@ class Script
         echo "fill Depute finished \n";
     }
 
+    public function addBsky() {
+        echo "addBsky starting \n";
+
+        // Create column bluesky if does not exist 
+        $stmt = $this->bdd->query("SHOW COLUMNS FROM deputes_contacts LIKE 'bluesky'");
+        $columnExists = $stmt->fetch();
+
+        if(!$columnExists){
+            $this->bdd->exec("ALTER TABLE deputes_contacts ADD COLUMN bluesky VARCHAR(255) NULL AFTER facebook");
+            echo "Column 'bluesky' added successfully \n";
+        }
+
+        // Add the data 
+        $file = __DIR__ . "/data/deputes_bluesky.csv"; 
+        if (($handle = fopen($file, "r")) !== FALSE) {
+            while (($row = fgetcsv($handle, 0, ",")) !== FALSE) {
+                $mpId = $row[0];
+                $blueSky = $row[7];
+                if ($blueSky) {
+                    $dbDeputeContacts = $this->bdd->prepare('SELECT bluesky FROM deputes_contacts WHERE mpId = :mpId');
+                    $dbDeputeContacts->execute(['mpId' => $mpId]);
+                    if ($row = $dbDeputeContacts->fetch(PDO::FETCH_ASSOC)) {
+                        if ($blueSky != $row["bluesky"]){
+                            $sql = $this->bdd->prepare('UPDATE deputes_contacts SET bluesky=:bluesky, dateMaj=CURDATE() WHERE mpId = :mpId');
+                            $this->bdd->execute(array("bluesky" => $blueSky, "mpId" => $mpId));
+                            echo "included";
+                        } 
+                    } 
+                }                
+            }
+            fclose($handle);
+        }
+    }
+
     public function downloadPictures()
     {        
         echo "downloadPictures starting \n";
@@ -4037,6 +4071,7 @@ if (isset($argv[1]) && isset($argv[2])) {
 
 
 $script->fillDeputes();
+$script->addBsky();
 $script->deputeAll();
 $script->deputeLast();
 if ($script->getMpPhotos()) { // Check this in a later stage
