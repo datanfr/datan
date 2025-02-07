@@ -62,6 +62,10 @@
             $data['no_majorite'] = TRUE;
           }
         }
+        // No majority if legislature == 17 
+        if ($legislature == 17) {
+          $data['no_majorite'] = TRUE;
+        }
 
         // PROXIMITY WITH ALL GROUPS
         if ($legislature == legislature_current() && dissolution() === false) {
