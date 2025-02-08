@@ -15,4 +15,4 @@ jobs:
         username: ${{ secrets.username }}
         password: ${{ secrets.password }}
         dry-run: true
-        server-dir: public_html/
+        server-dir: test/
