@@ -53,7 +53,7 @@
             </div>
           </nav>
           <div class="tab-content" id="nav-tabContent">
-            <div class="tab-pane fade show active" id="nav-solennels" role="tabpanel" aria-labelledby="nav-votes-solennels">
+            <div class="tab-pane fade <?= $n_sps < 10 ? "" : "show active" ?>" id="nav-solennels" role="tabpanel" aria-labelledby="nav-votes-solennels">
               <p class="my-4">
                 <i>Ce tableau comprend tous les votes solennels en séance publique. Les votes solennels sont des votes sur des dossiers considérés comme importants. Le jour et l'heure du vote sont connus à l'avance, afin de favoriser la présence des députés.</i>
               </p>
@@ -122,7 +122,7 @@
                 </tbody>
               </table>
             </div>
-            <div class="tab-pane fade" id="nav-all" role="tabpanel" aria-labelledby="nav-votes-all">
+            <div class="tab-pane fade <?= $n_sps < 10 ? "show active" : "" ?>" id="nav-all" role="tabpanel" aria-labelledby="nav-votes-all">
               <p class="my-4">
                 <i>Ce tableau comprend tous les votes en séance publique auxquels un député a pu participer. Ce score est souvent plus faible, du fait de l'organisation du travail à l'Assemblée (un vote en séance publique peut se tenir en même temps qu'une réunion de commission). Depuis le début de la législature, il y a eu <?= $votesN ?> votes.</i>
               </p>
