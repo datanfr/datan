@@ -14,4 +14,54 @@ jobs:
         server: ${{ secrets.host }}
         username: ${{ secrets.username }}
         password: ${{ secrets.password }}
-        server-dir: test/
+        server-dir: public_html_test/
+        exclude: | 
+          */config/development
+          */logs/log-*.php
+          !*/logs/index.html
+          */cache/*
+          !*/cache/index.html
+          !*/cache/.htaccess
+          
+          user_guide_src/build/*
+          user_guide_src/cilexer/build/*
+          user_guide_src/cilexer/dist/*
+          user_guide_src/cilexer/pycilexer.egg-info/*
+
+          application/logs/*
+          !application/logs/index.html
+          !application/logs/.htaccess
+          /vendor/
+
+          application/config/custom_config.php
+
+          node_modules
+          test
+          .sass-cache
+          package-lock.json
+          .gitattributes
+          ressources
+          .htaccess
+          .env
+          *.code-workspace
+
+          scripts/*.zip
+          scripts/votes_individual/*.zip
+          scripts/architecture
+          scripts/update_dataset/backup/*.sql
+
+          assets/opendata
+          assets/dataset_backup/general/*.sql
+          assets/imgs/deputes_original/
+          assets/imgs/deputes_ogp/
+          assets/imgs/deputes_webp/
+          assets/imgs/deputes_nobg/
+          assets/imgs/deputes_nobg_import/
+          assets/imgs/deputes_nobg_webp/
+          assets/imgs/posts/
+          assets/imgs/captcha/*.jpg
+          assets/data/*.json
+          assets/data/professions/election_4/*.pdf
+          assets/data/professions/election_6/*.pdf
+          assets/data/*.txt
+          assets/css/bootstrap*
