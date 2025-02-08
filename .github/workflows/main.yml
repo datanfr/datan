@@ -14,5 +14,4 @@ jobs:
         server: ${{ secrets.host }}
         username: ${{ secrets.username }}
         password: ${{ secrets.password }}
-        dry-run: true
         server-dir: test/
