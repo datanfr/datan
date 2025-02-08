@@ -59,8 +59,9 @@
               </p>
               <?php if ($n_sps < 10): ?>
                 <div class="alert alert-danger my-4">
-                La législature venant de commencer et seulement <?= $n_sps ?> votes solennels ayant eu lieu, cette statistique n'est pas encore affichée. Elle le sera après un minimum de 10 scrutins.
+                  La législature venant de commencer et seulement <?= $n_sps ?> votes solennels ayant eu lieu, cette statistique n'est pas encore affichée. Elle le sera après un minimum de 10 scrutins.
                 </div>
+              <?php else: ?>
                 <p>
                   <i>Le taux de participation moyen pour ce score est de <?= $participationSolennelsMean ?> %.</i>
                 </p>
