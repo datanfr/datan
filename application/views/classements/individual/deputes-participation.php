@@ -9,6 +9,11 @@
             <p>Le <u>premier</u> ne concerne que les votes solennels. Les votes solennels sont les votes les plus importants et concernent des projets de loi significatifs et fortement discutés dans les médias. Pour ces votes, le jour et l'heure du vote sont connus à l'avance, favorisant ainsi la présence des parlementaires dans l'hémicycle. Le taux de participation moyen pour ce score est de <?= $participationSolennelsMean ?> %. C'est ce score qui est souvent mis en avant sur Datan.</p>
             <p>Le <u>deuxième</u> ne prend en compte que les votes en lien avec le domaine de spécialisation d'un député. Par exemple, un député avec un score de 100% aura participé, en séance publique, à tous les scrutins sur des textes qui ont été précédemment examinés dans sa commission parlementaire. Ce sont sur ces votes que les élus ont un intérêt et une expertise particulière, et sont donc plus susceptibles de participer aux travaux parlementaires. Le taux de participation moyen pour ce score est de <?= $participationCommissionMean ?> %.</p>
             <p>Le <u>troisième</u> prend en compte tous les votes en séance publique. Le taux de participation moyen pour ce score est de <?= $participationMean ?> %.</p>
+            <?php if ($n_sps < 10): ?>
+              <div class="alert alert-danger my-4">
+                Sur Datan, nous mettons en avant le score de participation aux scrutins solennels. Toutefois, la législature venant de commencer et avec seulement <?= $n_sps ?> votes solennels, cette statistique n'est pas affichée sur cette page. Elle le sera après un minimum de 10 scrutins.
+              </div>
+            <?php endif; ?>
           <?php endif; ?>
         </div>
       </div>
@@ -36,13 +41,13 @@
           <h2 class="mb-5">Classement des députés selon leur taux de participation</h2>
           <nav class="mt-4">
             <div class="nav nav-tabs" id="nav-tab" role="tablist">
-              <a class="nav-item nav-link active no-decoration" id="nav-votes-solennels" data-toggle="tab" href="#nav-solennels" role="tab" aria-controls="nav-commission" aria-selected="true">
+              <a class="nav-item nav-link no-decoration <?= $n_sps < 10 ? "" : "active" ?>" id="nav-votes-solennels" data-toggle="tab" href="#nav-solennels" role="tab" aria-controls="nav-commission" aria-selected="true">
                 <h3>Votes solennels</h3>
               </a>
               <a class="nav-item nav-link no-decoration" id="nav-votes-com" data-toggle="tab" href="#nav-commission" role="tab" aria-controls="nav-commission" aria-selected="true">
                 <h3>Votes par spécialisation</h3>
               </a>
-              <a class="nav-item nav-link no-decoration" id="nav-votes-all" data-toggle="tab" href="#nav-all" role="tab" aria-controls="nav-all" aria-selected="false">
+              <a class="nav-item nav-link no-decoration <?= $n_sps < 10 ? "active" : "" ?>" id="nav-votes-all" data-toggle="tab" href="#nav-all" role="tab" aria-controls="nav-all" aria-selected="false">
                 <h3>Tous les votes</h3>
               </a>
             </div>
@@ -52,31 +57,36 @@
               <p class="my-4">
                 <i>Ce tableau comprend tous les votes solennels en séance publique. Les votes solennels sont des votes sur des dossiers considérés comme importants. Le jour et l'heure du vote sont connus à l'avance, afin de favoriser la présence des députés.</i>
               </p>
-              <p>
-                <i>Le taux de participation moyen pour ce score est de <?= $participationSolennelsMean ?> %.</i>
-              </p>
-              <table class="table table-stats" id="table-stats">
-                <thead>
-                  <tr>
-                    <th class="text-center all">N°</th>
-                    <th class="text-center min-tablet">Député</th>
-                    <th class="text-center all">Groupe</th>
-                    <th class="text-center all">Participation</th>
-                    <th class="text-center all">Nombre de votes</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <?php foreach ($mpsSolennels as $depute): ?>
+              <?php if ($n_sps < 10): ?>
+                <div class="alert alert-danger my-4">
+                La législature venant de commencer et seulement <?= $n_sps ?> votes solennels ayant eu lieu, cette statistique n'est pas encore affichée. Elle le sera après un minimum de 10 scrutins.
+                </div>
+                <p>
+                  <i>Le taux de participation moyen pour ce score est de <?= $participationSolennelsMean ?> %.</i>
+                </p>
+                <table class="table table-stats" id="table-stats">
+                  <thead>
                     <tr>
-                      <td class="text-center"><?= $depute['rank'] ?></td>
-                      <td class="text-center"><?= $depute['nameFirst']." ".$depute['nameLast'] ?></td>
-                      <td class="text-center"><?= $depute['libelleAbrev'] ?></td>
-                      <td class="text-center"><?= $depute['score'] * 100 ?> %</td>
-                      <td class="text-center"><?= $depute['votesN'] ?></td>
+                      <th class="text-center all">N°</th>
+                      <th class="text-center min-tablet">Député</th>
+                      <th class="text-center all">Groupe</th>
+                      <th class="text-center all">Participation</th>
+                      <th class="text-center all">Nombre de votes</th>
                     </tr>
-                  <?php endforeach; ?>
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody>
+                    <?php foreach ($mpsSolennels as $depute): ?>
+                      <tr>
+                        <td class="text-center"><?= $depute['rank'] ?></td>
+                        <td class="text-center"><?= $depute['nameFirst']." ".$depute['nameLast'] ?></td>
+                        <td class="text-center"><?= $depute['libelleAbrev'] ?></td>
+                        <td class="text-center"><?= $depute['score'] * 100 ?> %</td>
+                        <td class="text-center"><?= $depute['votesN'] ?></td>
+                      </tr>
+                    <?php endforeach; ?>
+                  </tbody>
+                </table>
+              <?php endif; ?>              
             </div>
             <div class="tab-pane fade" id="nav-commission" role="tabpanel" aria-labelledby="nav-votes-commission">
               <p class="my-4">
