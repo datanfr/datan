@@ -42,13 +42,13 @@
           <h2 class="mb-5">Classement des groupes en fonction de leur taux de participation moyen</h2>
           <nav class="mt-4">
             <div class="nav nav-tabs" id="nav-tab" role="tablist">
-              <a class="nav-item nav-link no-decoration <?= $n_sps < 10 ? "" : "active" ?>" id="nav-votes-solennels" data-toggle="tab" href="#nav-solennels" role="tab" aria-controls="nav-commission" aria-selected="false">
+              <a class="nav-item nav-link no-decoration <?= $n_sps < 10 ? "" : "active" ?>" id="nav-votes-solennels" data-toggle="tab" href="#nav-solennels" role="tab" aria-controls="nav-commission" aria-selected="<?= $n_sps < 10 ? "false" : "true" ?>">
                 <h3>Votes solennels</h3>
               </a>
               <a class="nav-item nav-link no-decoration" id="nav-votes-com" data-toggle="tab" href="#nav-commission" role="tab" aria-controls="nav-commission" aria-selected="false">
                 <h3>Votes par spécialisation</h3>
               </a>
-              <a class="nav-item nav-link no-decoration <?= $n_sps < 10 ? "active" : "" ?>" id="nav-votes-all" data-toggle="tab" href="#nav-all" role="tab" aria-controls="nav-all" aria-selected="true">
+              <a class="nav-item nav-link no-decoration <?= $n_sps < 10 ? "active" : "" ?>" id="nav-votes-all" data-toggle="tab" href="#nav-all" role="tab" aria-controls="nav-all" aria-selected="<?= $n_sps < 10 ? true : "false" ?>">
                 <h3>Tous les votes</h3>
               </a>
             </div>
