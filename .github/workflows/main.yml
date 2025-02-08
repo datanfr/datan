@@ -1,19 +1,17 @@
-name: Server Deploy 
 on: push
-jobs: 
-  web-deploy: 
-    name: Deploy Website 
+name: 🚀 Deploy website on push
+jobs:
+  web-deploy:
+    name: 🎉 Deploy
     runs-on: ubuntu-latest
-    steps: 
-      - name: deploy
-        uses: appleboy/ssh-action@v1.2.0
-        with: 
-          host: ${{ secrets.HOST }}
-          username: ${{ secrets.USERNAME }}
-          password: ${{ secrets.PASSWORD }}
-          port: 22
-          script:
-            cd public_html 
-            git status      
+    steps:
+    - name: 🚚 Get latest code
+      uses: actions/checkout@v4
 
-
+    - name: 📂 Sync files
+      uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+      with:
+        server: ${{ secrets.host }}
+        username: ${{ secrets.username }}
+        password: ${{ secrets.password }}
+        dry-run: true
