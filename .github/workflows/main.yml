@@ -8,12 +8,12 @@ jobs:
       - name: deploy
         uses: appleboy/ssh-action@v1.2.0
         with: 
-          host: 
-          username:
-          passowrd:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          passowrd: ${{ secrets.PASSWORD }}
           port: 22
           script:
             cd public_html 
-            git pull origin master         
+            git status      
 
 
