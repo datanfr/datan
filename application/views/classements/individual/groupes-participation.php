@@ -9,7 +9,7 @@
           <p>Le <u>troisième</u> prend en compte tous les votes en séance publique. Le taux de participation moyen pour ce score est de <?= $average['participation'] ?> %.</p>
           <?php if ($n_sps < 10): ?>
             <div class="alert alert-danger my-4">
-              Nous mettons en avant sur Datan le score de participation aux scrutins solennels. Cependant, parce que la législature vient de commencer, et qu'il n'y a eu que <?= $n_sps ?> votes solennels, nous mettons en avant sur cette page le score de participation à tous les scrutins.
+              Sur Datan, nous mettons en avant le score de participation aux scrutins solennels. Toutefois, la législature venant de commencer et avec seulement <?= $n_sps ?> votes solennels, cette statistique n'est pas affichée sur cette page. Elle le sera après un minimum de 10 scrutins.
             </div>
           <?php endif; ?>
           <?php if ($groups): ?>
@@ -58,29 +58,35 @@
               <p class="my-4">
                 <i>Ce tableau comprend tous les votes solennels en séance publique. Les votes solennels sont des votes sur des dossiers considérés comme importants. Le jour et l'heure du vote sont connus à l'avance, afin de favoriser la présence des députés.</i>
               </p>
-              <p>
-                <i>Le taux de participation moyen pour ce score est de <?= $average['participationSPS'] ?> %.</i>
-              </p>
-              <table class="table table-stats">
-                <thead>
-                  <tr>
-                    <th class="text-center">N°</th>
-                    <th class="text-center">Groupe</th>
-                    <th class="text-center">Taux de participation moyen</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <?php foreach ($votes_sps as $group): ?>
+              <?php if ($n_sps < 10): ?>
+                <div class="alert alert-danger my-4">
+                  La législature venant de commencer et seulement <?= $n_sps ?> votes solennels ayant eu lieu, cette statistique n'est pas encore affichée. Elle le sera après un minimum de 10 scrutins.
+                </div>
+              <?php else: ?>
+                <p>
+                  <i>Le taux de participation moyen pour ce score est de <?= $average['participationSPS'] ?> %.</i>
+                </p>
+                <table class="table table-stats">
+                  <thead>
                     <tr>
-                      <td class="text-center"><?= $group["rank"] ?></td>
-                      <td class="text-center">
-                        <a href="<?= base_url() ?>groupes/legislature-<?= $group["legislature"] ?>/<?= mb_strtolower($group["libelleAbrev"]) ?>" class="no-decoration underline"><?= name_group($group["libelle"]) ?> (<?= $group["libelleAbrev"] ?>)</a>
-                      </td>
-                      <td class="text-center"><?= $group["participation"] ?> %</td>
+                      <th class="text-center">N°</th>
+                      <th class="text-center">Groupe</th>
+                      <th class="text-center">Taux de participation moyen</th>
                     </tr>
-                  <?php endforeach; ?>
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody>
+                    <?php foreach ($votes_sps as $group): ?>
+                      <tr>
+                        <td class="text-center"><?= $group["rank"] ?></td>
+                        <td class="text-center">
+                          <a href="<?= base_url() ?>groupes/legislature-<?= $group["legislature"] ?>/<?= mb_strtolower($group["libelleAbrev"]) ?>" class="no-decoration underline"><?= name_group($group["libelle"]) ?> (<?= $group["libelleAbrev"] ?>)</a>
+                        </td>
+                        <td class="text-center"><?= $group["participation"] ?> %</td>
+                      </tr>
+                    <?php endforeach; ?>
+                  </tbody>
+                </table>
+              <?php endif; ?>
             </div>
             <div class="tab-pane fade" id="nav-commission" role="tabpanel" aria-labelledby="nav-votes-commission">
               <p class="my-4">
