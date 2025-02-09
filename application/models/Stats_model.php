@@ -237,7 +237,8 @@
         FROM class_participation
         WHERE legislature = ?
       ';
-      return $this->db->query($sql, $legislature)->row_array();
+      $result = $this->db->query($sql, $legislature)->row_array();
+      return $result['mean'] ?? NULL;
     }
 
     public function get_mps_participation_solennels_mean($legislature){
