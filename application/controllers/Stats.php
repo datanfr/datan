@@ -277,7 +277,6 @@
         $data['mps'] = $this->stats_model->get_mps_participation();
         if ($data['mps']) {
           $data['participationMean'] = $this->stats_model->get_mps_participation_mean(legislature_current());
-          $data['participationMean'] = $data['participationMean']['mean'];
 
           $data['participationCommissionMean'] = $this->stats_model->get_mps_participation_commission_mean(legislature_current());
           $data['participationCommissionMean'] = $data['participationCommissionMean']['mean'];
