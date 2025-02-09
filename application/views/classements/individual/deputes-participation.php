@@ -27,7 +27,6 @@
           <div class="col-md-6 py-3">
             <h2 class="text-center">Vote le plus</h2>
             <div class="d-flex justify-content-center">
-              <?php print_r($mpActive); ?>
               <?php $this->load->view('deputes/partials/card_home.php', array('depute' => $mpActive, 'tag' => 'span', 'stat' => round($mpActive['score'] * 100) . " %", 'footer' => 'discover', 'logo' => true)) ?>
             </div>
           </div>
