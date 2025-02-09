@@ -194,7 +194,7 @@
     }
 
     public function get_mps_participation(){
-      $sql = 'SELECT cp.*, da.nameFirst, da.nameLast, da.civ, da.libelle AS libelle, da.libelleAbrev AS libelleAbrev, da.dptSlug, da.nameUrl, da.couleurAssociee, da.departementNom, da.departementCode, da.legislature AS legislature_last
+      $sql = 'SELECT cp.*, da.nameFirst, da.nameLast, da.civ, da.libelle AS libelle, da.libelleAbrev AS libelleAbrev, da.dptSlug, da.nameUrl, da.couleurAssociee, da.img, da.departementNom, da.departementCode, da.legislature AS legislature_last
         FROM class_participation cp
         LEFT JOIN deputes_last da ON cp.mpId = da.mpId AND da.legislature = cp.legislature
         WHERE da.active AND cp.legislature = ? AND cp.votesN > 5
