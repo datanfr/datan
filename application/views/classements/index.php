@@ -313,7 +313,6 @@
               <div class="card-body">
                 <h3>La participation des députés aux votes</h3>
                 <p>En moyenne, les députés participent à <b><?= $mps_participation_mean ?> %</b> des scrutins.</p>
-                <p><b>Attention</b>, à cause de la crise de la Covid-19, les députés ayant rejoint le parlement récemment ont des scores de participation plus faibles que la moyenne.</p>
                 <div class="table_ranking">
                   <table class="table table-striped">
                     <thead>
