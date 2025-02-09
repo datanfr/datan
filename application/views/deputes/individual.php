@@ -360,7 +360,7 @@
                 <div class="row">
                   <?php if ($no_participation) : ?>
                     <div class="col-12 mt-2">
-                      <p>Du fait d'un nombre insuffisant de votes de la part de <?= $title ?>, aucune statistique n'a pu être produite.</p>
+                      <p>Cette statistique sera disponible dès qu'un nombre suffisant de votes sera atteint pour <?= $title ?>.</p>
                     </div>
                   <?php else : ?>
                     <div class="col-lg-3 offset-lg-1 mt-2">
@@ -432,7 +432,7 @@
                 <div class="row">
                   <?php if ($no_loyaute) : ?>
                     <div class="col-12 mt-2">
-                      <p>Du fait d'un nombre insuffisant de votes de la part de <?= $title ?>, aucune statistique n'a pu être produite.</p>
+                      <p>Cette statistique sera disponible dès qu'un nombre suffisant de votes sera atteint pour <?= $title ?>.</p>
                     </div>
                   <?php else : ?>
                     <div class="col-lg-3 offset-lg-1 mt-2">
@@ -522,7 +522,7 @@
                   <div class="row">
                     <?php if ($no_majorite) : ?>
                       <div class="col-12 mt-2">
-                        <p>Du fait d'un nombre insuffisant de votes de la part de <?= $title ?>, aucune statistique n'a pu être produite.</p>
+                        <p>Cette statistique sera disponible dès qu'un nombre suffisant de votes sera atteint pour <?= $title ?>.</p>
                       </div>
                     <?php else : ?>
                       <div class="col-lg-3 offset-lg-1 mt-2">
@@ -715,7 +715,7 @@
                     </div>
                   </div>
                 <?php else : ?>
-                  <p>Du fait d'un nombre insuffisant de votes de la part de <?= $title ?>, aucune statistique n'a pu être produite.</p>
+                  <p>Cette statistique sera disponible dès qu'un nombre suffisant de votes sera atteint pour <?= $title ?>.</p>
                 <?php endif; ?>
               </div>
             </div> <!-- // END BLOC PROXIMITY -->
