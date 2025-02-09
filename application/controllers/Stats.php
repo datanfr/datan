@@ -274,23 +274,31 @@
         if ($data['mps']) {
           $data['participationMean'] = $this->stats_model->get_mps_participation_mean(legislature_current());
           $data['participationMean'] = $data['participationMean']['mean'];
+
           $data['participationCommissionMean'] = $this->stats_model->get_mps_participation_commission_mean(legislature_current());
           $data['participationCommissionMean'] = $data['participationCommissionMean']['mean'];
+
           $data['participationSolennelsMean'] = $this->stats_model->get_mps_participation_solennels_mean(legislature_current());
           $data['participationSolennelsMean'] = $data['participationSolennelsMean']['mean'];
+          
           $data['mpsSolennels'] = $this->stats_model->get_mps_participation_solennels(legislature_current());
           $data['n_sps'] = $this->votes_model->get_n_votes(legislature_current(), NULL, NULL, 'SPS');
           $data['votesN'] = $this->votes_model->get_n_votes(legislature_current());
           $data['mpsCommission'] = $this->stats_model->get_mps_participation_commission(legislature_current());
-          $data['mpActive'] = array_slice($data['mpsSolennels'], 0, 1);
+
+          // Features MPs 
+          $data['mpsFeature'] = ($data['n_sps'] > 10 ? $data['mpsSolennels'] : $data['mps'])
+
+          $data['mpActive'] = array_slice($data['mpsFeature'], 0, 1);
           $data['mpActive'] = $data['mpActive'][0];
           $data['mpActive']['name'] = $data['mpActive']['nameFirst']." ".$data['mpActive']['nameLast'];
           $data['mpActive']['couleurAssociee'] = $this->groupes_model->get_groupe_color(array($data['mpActive']['libelleAbrev'], $data['mpActive']['couleurAssociee']));
-          $data['mpActiveGender'] = gender($data['mpActive']["civ"]);
-          $data['mpInactive'] = end($data['mpsSolennels']);
+          $data['mpActiveGender'] = gender($data['mpActive']['civ']);
+
+          $data['mpInactive'] = end($data['mpsFeature']);
           $data['mpInactive']['name'] = $data['mpInactive']['nameFirst']." ".$data['mpInactive']['nameLast'];
           $data['mpInactive']['couleurAssociee'] = $this->groupes_model->get_groupe_color(array($data['mpInactive']['libelleAbrev'], $data['mpInactive']['couleurAssociee']));
-          $data['mpInactiveGender'] = gender($data['mpInactive']["civ"]);
+          $data['mpInactiveGender'] = gender($data['mpInactive']['civ']);
         }
 
         // Meta
