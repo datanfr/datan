@@ -74,8 +74,7 @@
       if ($data['mps_participation']) {
         $data['mps_participation_first'] = array_slice($data['mps_participation'], 0, 3);
         $data['mps_participation_last'] = array_slice($data['mps_participation'], -3);
-        $data['mps_participation_mean'] = $this->stats_model->get_mps_participation_solennels_mean(legislature_current());
-        $data['mps_participation_mean'] = $data['mps_participation_mean']['mean'];
+        $data['mps_participation_mean'] = $this->stats_model->get_mps_participation_mean(legislature_current());
       }
       $data['groups_participation'] = $this->stats_model->get_groups_participation();
       if ($data['groups_participation']) {
