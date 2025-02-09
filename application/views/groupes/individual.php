@@ -229,7 +229,7 @@
               <?php if ($no_participation): ?>
                 <div class="row">
                   <div class="col-12 mt-2">
-                    <p>Du fait d'un nombre insuffisant de votes de la part du groupe <?= name_group($title) ?>, aucune statistique n'a pu être produite.</p>
+                    <p>Cette statistique sera disponible dès qu'un nombre suffisant de votes sera atteint pour le groupe <?= name_group($title) ?>.</p>
                   </div>
                 </div>
                 <?php else: ?>
@@ -285,7 +285,7 @@
               <?php if ($no_cohesion): ?>
                 <div class="row">
                   <div class="col-12 mt-2">
-                    <p>Du fait d'un nombre insuffisant de votes de la part du groupe <?= name_group($title) ?>, aucune statistique n'a pu être produite.</p>
+                    <p>Cette statistique sera disponible dès qu'un nombre suffisant de votes sera atteint pour le groupe <?= name_group($title) ?>.</p>
                   </div>
                 </div>
                 <?php else: ?>
@@ -337,7 +337,7 @@
                 <?php if ($no_majorite): ?>
                   <div class="row">
                     <div class="col-12 mt-2">
-                      <p>Du fait d'un nombre insuffisant de votes de la part du groupe <?= name_group($title) ?>, aucune statistique n'a pu être produite.</p>
+                      <p>Cette statistique sera disponible dès qu'un nombre suffisant de votes sera atteint pour le groupe <?= name_group($title) ?>.</p>
                     </div>
                   </div>
                   <?php else: ?>
@@ -431,7 +431,7 @@
               <?php if ($no_proximite): ?>
                 <div class="row">
                   <div class="col-10 offset-2">
-                    <p>Du fait d'un nombre insuffisant de votes de la part du groupe <?= name_group($title) ?>, aucune statistique n'a pu être produite.</p>
+                    <p>Cette statistique sera disponible dès qu'un nombre suffisant de votes sera atteint pour le groupe <?= name_group($title) ?>.</p>
                   </div>
                 </div>
                 <?php else: ?>
