@@ -287,7 +287,7 @@
           $data['mpsCommission'] = $this->stats_model->get_mps_participation_commission(legislature_current());
 
           // Features MPs 
-          $data['mpsFeature'] = ($data['n_sps'] > 10 ? $data['mpsSolennels'] : $data['mps'])
+          $data['mpsFeature'] = ($data['n_sps'] > 10 ? $data['mpsSolennels'] : $data['mps']);
 
           $data['mpActive'] = array_slice($data['mpsFeature'], 0, 1);
           $data['mpActive'] = $data['mpActive'][0];
