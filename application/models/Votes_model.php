@@ -306,7 +306,7 @@
       return $x;
     }
 
-    public function get_vote_groupes($num, $legislature){
+    public function get_vote_groupes($num, $legislature, $type){
       $sql = 'SELECT A.*,
         CASE
           WHEN A.pct < 0 THEN 0
@@ -322,7 +322,9 @@
           WHERE vi.legislature = ? AND vi.voteNumero = ?
         ) A
       ';
-      return $this->db->query($sql, array($legislature, $num))->result_array();
+      $result = $this->db->query($sql, array($legislature, $num))->result_array();
+      echo "type => " . $type;
+      return $result;
     }
 
     public function get_vote_groupes_simplified($num, $legislature){
