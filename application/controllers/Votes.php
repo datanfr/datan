@@ -445,7 +445,7 @@
       $data['expose'] = $this->exposes_model->get_expose_by_vote($legislature, $num);
 
       // Votes - groupes
-      $data['groupes'] = $this->votes_model->get_vote_groupes($data['vote']['voteNumero'], $legislature);
+      $data['groupes'] = $this->votes_model->get_vote_groupes($data['vote']['voteNumero'], $legislature, $data['vote']['voteType']);
 
       // Votes - députés
       $data['deputes'] = $this->votes_model->get_vote_deputes($data['vote']['voteNumero'], $legislature);
