@@ -325,6 +325,7 @@
       $results = $this->db->query($sql, array($legislature, $num))->result_array();
 
       // Fix bug for Motion de censure --> positionMajoritaire only when
+      echo $type;
       if ($type == 'motion de censure') {
         foreach($results as $key => $value) {
           if ($value['positionMajoritaire'] == 'pour') {
@@ -335,7 +336,7 @@
         }
       }
 
-      return $result;
+      return $results;
     }
 
     public function get_vote_groupes_simplified($num, $legislature){
