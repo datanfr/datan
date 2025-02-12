@@ -776,6 +776,9 @@
       $data['title'] = 'Liste des exposés des motifs';
       $data['title_meta'] = $data['title'] . ' - Dashboard | Datan';
       $data['exposes'] = $this->exposes_model->get_all_exposes();
+      $data['exposes_n_done'] = $this->exposes_model->get_n_done();
+      $data['exposes_n_pending'] = $this->exposes_model->get_n_pending();
+
 
       $this->load->view('dashboard/header', $data);
       $this->load->view('dashboard/exposes/list', $data);
