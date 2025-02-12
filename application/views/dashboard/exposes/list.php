@@ -4,8 +4,8 @@
       <div class="row my-4">
         <div class="col-sm-6">
           <h1 class="m-0 text-primary font-weight-bold" style="font-size: 2rem"><?= $title ?></h1>
-          <p>✅ Exposés rédigés : <?= $get_n_done ?></p>
-          <p>✍️ Exposés à faire : <?= $get_n_pending ?></p>
+          <p class="mt-2">✅ Exposés rédigés : <?= $exposes_n_done ?></p>
+          <p>✍️ Exposés à faire : <?= $exposes_n_pending ?></p>
         </div>
       </div>
     </div>
