@@ -50,6 +50,11 @@
           <?php else : ?>
             <p>Au total, <b><?= $vote['nombreVotants'] ?> députés<?= $congres ? " et sénateurs" : "" ?></b> ont pris part au vote : <?= round($vote['contre_pct']) ?> % ont voté contre, <?= round($vote['pour_pct']) ?> % ont voté en faveur, et <?= round($vote['abs_pct']) ?> % se sont abstenus.</p>
           <?php endif; ?>
+          <?php if($vote['voteType'] == 'motion de censure') ?>
+            <p>
+              Ce scrutin porte sur une <b>motion de censure</b>. Pour qu'une motion de censure soit adoptée et renverse le gouvernement, elle doit obtenir la majorité absolue des membres de l'Assemblée nationale, soit au moins 289 voix sur 577 députés. Cette motion réuni <?= $vote['pour'] ?> votes en faveur, soit <?= round($vote['pour'] / 577 * 100) ?>% des députés (la majorité absolue est à 50%).
+            </p>
+          <?php endif; ?>
         </div>
         <div class="col-lg-4">
           <div class="d-flex justify-content-center mt-3">
