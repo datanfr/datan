@@ -119,6 +119,11 @@
       <?php endif; ?>
       <div class="mt-5">
         <h2>La position des groupes</h2>
+        <?php if($vote['voteType'] == 'motion de censure'): ?>
+            <p class="mt-3">
+              Seuls les députés en faveur d'une motion de censure prennent part au scrutin et votent "pour". Les députés qui ne votent pas se positionnent donc comme étant contre la censure. Ainsi, sur <b>Datan</b>, un groupe politique dont la majorité des membres ne participe pas au scrutin est considéré comme ayant voté "contre" la motion de censure.
+            </p>
+          <?php endif; ?>
         <div class="mt-4 bloc-groupes d-flex flex-column flex-lg-row">
           <!-- POUR -->
           <?php if (in_array_r("pour", $groupes)) : ?>
