@@ -51,8 +51,17 @@
             <p>Au total, <b><?= $vote['nombreVotants'] ?> députés<?= $congres ? " et sénateurs" : "" ?></b> ont pris part au vote : <?= round($vote['contre_pct']) ?> % ont voté contre, <?= round($vote['pour_pct']) ?> % ont voté en faveur, et <?= round($vote['abs_pct']) ?> % se sont abstenus.</p>
           <?php endif; ?>
           <?php if($vote['voteType'] == 'motion de censure'): ?>
+
+            Une motion de censure est un vote crucial qui peut entraîner la chute du gouvernement. Pour être adoptée et provoquer sa destitution, elle doit recueillir la majorité absolue des voix à l'Assemblée nationale, soit au moins 289 votes sur 577 députés.
+
+Lors de ce scrutin, la motion a obtenu 128 voix en faveur, représentant 22 % des députés. Un seuil encore loin des 50 % nécessaires pour faire tomber le gouvernement.
+
+
             <p>
-              Ce scrutin porte sur une <b>motion de censure</b>. Pour qu'une motion de censure soit adoptée et renverse le gouvernement, elle doit obtenir la majorité absolue des membres de l'Assemblée nationale, soit au moins 289 voix sur 577 députés. Cette motion réuni <?= $vote['pour'] ?> votes en faveur, soit <?= round($vote['pour'] / 577 * 100) ?>% des députés (la majorité absolue est à 50%).
+              Ce scrutin porte sur une <b>motion de censure</b>, un vote crucial qui peut entraîner la chute du gouvernement. Pour être adoptée, elle doit recueillir la majorité absolue des voix à l'Assemblée nationale, soit au moins 289 votes sur 577 députés.
+            </p>
+            <p>
+              Cette motion de censure a obtenu <?= $vote['pour'] ?> voix en faveur, représentant <?= round($vote['pour'] / 577 * 100) ?>% des députés. La majorité absolue est fixée à 50%.
             </p>
           <?php endif; ?>
         </div>
