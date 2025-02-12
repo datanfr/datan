@@ -329,17 +329,13 @@
         foreach($results as $key => $value) {
           $percentage = $value['nombrePours'] / $value['nombreMembresGroupe'];
           if ($percentage >= 0.5) {
-            echo "pour";
             $results[$key]['positionMajoritaire'] = 'pour';
           } else {
-            echo "contre";
             $results[$key]['positionMajoritaire'] = 'contre';
           }
         }
       }
-
-      print_r($results);
-
+      
       return $results;
     }
 
