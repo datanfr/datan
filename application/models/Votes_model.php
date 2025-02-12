@@ -322,8 +322,19 @@
           WHERE vi.legislature = ? AND vi.voteNumero = ?
         ) A
       ';
-      $result = $this->db->query($sql, array($legislature, $num))->result_array();
-      echo "type => " . $type;
+      $results = $this->db->query($sql, array($legislature, $num))->result_array();
+
+      // Fix bug for Motion de censure --> positionMajoritaire only when
+      if ($type == 'motion de censure') {
+        foreach($results as $key => $value) {
+          if ($value['positionMajoritaire'] == 'pour') {
+            if ($value['nombrePours'] / $value['nombreMembresGroupes'] <= 0.5) {
+              $results[$key]['positionMajoritaire'] = 'nv';
+            }
+          }
+        }
+      }
+
       return $result;
     }
 
