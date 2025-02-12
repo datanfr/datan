@@ -327,14 +327,19 @@
       // Fix bug for Motion de censure --> positionMajoritaire only when
       echo $type;
       if ($type == 'motion de censure') {
+        echo "yes";
         foreach($results as $key => $value) {
           if ($value['positionMajoritaire'] == 'pour') {
-            if ($value['nombrePours'] / $value['nombreMembresGroupes'] <= 0.5) {
+            print_r($results[$key]);
+            if (($value['nombrePours'] / $value['nombreMembresGroupes']) <= 0.5) {
+              echo "working";
               $results[$key]['positionMajoritaire'] = 'nv';
             }
           }
         }
       }
+
+      print_r($results);
 
       return $results;
     }
