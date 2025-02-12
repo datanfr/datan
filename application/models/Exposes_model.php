@@ -9,6 +9,16 @@
       return $this->db->get('exposes')->result_array();
     }
 
+    public function get_n_done(){
+      $this->db->where('exposeSummaryPublished IS NOT NULL', NULL, FALSE);
+      return $this->db->count_all_results('exposes'); 
+    }
+
+    public function get_n_pending(){
+      $this->db->where('exposeSummaryPublished IS NULL', null, false);
+      return $this->db->count_all_results('exposes');
+    }
+
     public function get_expose($id){
       return $this->db->get_where('exposes', array('id' => $id))->row_array();
     }
