@@ -325,16 +325,15 @@
       $results = $this->db->query($sql, array($legislature, $num))->result_array();
 
       // Fix bug for Motion de censure --> positionMajoritaire only when
-      echo $type;
       if ($type == 'motion de censure') {
-        echo "yes";
         foreach($results as $key => $value) {
-          if ($value['positionMajoritaire'] == 'pour') {
-            print_r($results[$key]);
-            if (($value['nombrePours'] / $value['nombreMembresGroupes']) <= 0.5) {
-              echo "working";
-              $results[$key]['positionMajoritaire'] = 'nv';
-            }
+          $percentage = $value['nombrePours'] / $value['nombreMembresGroupe'];
+          if ($percentage >= 0.5) {
+            echo "pour";
+            $results[$key]['positionMajoritaire'] = 'pour';
+          } else {
+            echo "contre";
+            $results[$key]['positionMajoritaire'] = 'contre';
           }
         }
       }
