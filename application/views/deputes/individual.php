@@ -360,7 +360,7 @@
                 <div class="row">
                   <?php if ($no_participation) : ?>
                     <div class="col-12 mt-2">
-                      <p>Cette statistique sera disponible dès qu'un nombre suffisant de votes sera atteint pour <?= $title ?>.</p>
+                      <p>Il n'y a pas encore eu suffisamment de votes solennels à l'Assemblée nationale pour afficher cette statistique. Pour consulter la participation des députés à l'ensemble des scrutins, <a href="<?= base_url() ?>statistiques/deputes-participation">cliquez ici</a>.</p>
                     </div>
                   <?php else : ?>
                     <div class="col-lg-3 offset-lg-1 mt-2">
