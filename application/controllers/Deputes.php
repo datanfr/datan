@@ -18,7 +18,7 @@
       if (in_array($legislature, legislature_all())) {
         // PARTICIPATION
         $data['participation'] = $this->deputes_model->get_stats_participation_solennels($mpId, $legislature);
-        if ($data['participation'] && $data['participation']['votesN'] >= 5) {
+        if ($data['participation'] && $data['participation']['votesN'] >= 10) {
           $data['no_participation'] = FALSE;
           // GET ALL DATA FOR PARTICIPATION
           $data['participation']['all'] = $this->deputes_model->get_stats_participation_solennels_all($legislature);
@@ -33,7 +33,7 @@
 
         // LOYALTY
         $data['loyaute'] = $this->deputes_model->get_stats_loyaute($mpId, $legislature);
-        if ($data['loyaute'] && $data['loyaute']['votesN'] >= 5) {
+        if ($data['loyaute'] && $data['loyaute']['votesN'] >= 10) {
           $data['no_loyaute'] = FALSE;
           // GET ALL DATA FOR LOYALTY
           $data['loyaute']['all'] = $this->deputes_model->get_stats_loyaute_all($legislature);
@@ -51,7 +51,7 @@
         // PROXIMITY WITH MAJORITY
         if (!in_array($groupe_id, $this->groupes_model->get_all_groupes_majority())) {
           $data['majorite'] = $this->deputes_model->get_stats_majorite($mpId, $legislature);
-          if ($data['majorite'] && $data['majorite']['votesN'] >= 5) {
+          if ($data['majorite'] && $data['majorite']['votesN'] >= 10) {
             $data['no_majorite'] = FALSE;
             // GET ALL DATA FOR PROXIMITY WITH MAJORITY
             $data['majorite']['all'] = $this->deputes_model->get_stats_majorite_all($legislature); // DOUBLE CHECK --> ONLY THOSE NOT FROM THE GROUP OF THE MAJORITY
