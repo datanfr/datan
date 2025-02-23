@@ -875,6 +875,14 @@
                 </span>
               </div>
             <?php endif; ?>
+            <?php if ($depute['bluesky'] !== NULL) : ?>
+              <div class="col-12 col-sm-4 mt-2 d-flex justify-content-center align-items-center">
+                <span class="url_obf btn btn-twitter" url_obf="<?= url_obfuscation("https://bsky.app/profile/" . $depute['bluesky']) ?>">
+                  <?= file_get_contents(base_url() . '/assets/imgs/logos/twitter_svg.svg') ?>
+                  <span class="ml-3">Bluesky</span>
+                </span>
+              </div>
+            <?php endif; ?>
             <?php if ($depute['twitter'] !== NULL) : ?>
               <div class="col-12 col-sm-4 mt-2 d-flex justify-content-center align-items-center">
                 <span class="url_obf btn btn-twitter" url_obf="<?= url_obfuscation("https://twitter.com/" . ltrim($depute['twitter'], '@')) ?>">
