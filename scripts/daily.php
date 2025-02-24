@@ -3837,7 +3837,10 @@ class Script
                   echo "Filename:" . $filename . " \n";
                   $xml = simplexml_load_string($xml_string);
 
-                  echo $xml->metadonnees->etat;
+                  if ($xml->metadonnees->etat == 'complet') {
+                    echo "parsing";
+                  }
+
                 }
             }
         }
