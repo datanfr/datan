@@ -3837,7 +3837,7 @@ class Script
                   echo "Filename:" . $filename . " \n";
                   $xml = simplexml_load_string($xml_string);
 
-                  echo = $xml->metadonnees->etat;
+                  echo $xml->metadonnees->etat;
                 }
             }
         }
