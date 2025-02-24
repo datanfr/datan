@@ -139,7 +139,7 @@ class Script
     }
 
     public function comptes_rendus(){
-      echo "downloading amendements starting \n";
+      echo "downloading comptes rendus starting \n";
       $file = 'https://data.assemblee-nationale.fr/static/openData/repository/17/vp/syceronbrut/syseron.xml.zip';
       $newfile = __DIR__ . '/comptes_rendus_XVII.xml.zip';
 
@@ -148,7 +148,7 @@ class Script
       } else {
         echo "failed to copy $newfile \n";
       }
-      
+
     }
 
 }
