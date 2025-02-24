@@ -3806,6 +3806,34 @@ class Script
         ');
     }
 
+    public function debatsInfos(){
+        echo "historyPerMpsAverage starting \n";
+
+        // 1. Create table if not exists
+        $this->bdd->query("CREATE TABLE IF NOT EXISTS `debats_infos` (
+            `uid` INT NOT NULL,
+            `seanceRef` VARCHAR(75) NOT NULL,
+            `sessionRef` VARCHAR(75) NOT NULL,
+            `dateSeance` VARCHAR(75) NOT NULL,
+            `numSeanceJour` INT NOT NULL,
+            `legislature` INT NOT NULL,
+            `dateMaj` DATE,
+            PRIMARY KEY (`uid`)
+        ) ENGINE = MyISAM;");
+
+        // 2. Download data
+        $file = __DIR__ . '/comptes_rendus_XVII.xml.zip';
+        $zip = new ZipArchive();
+
+        if ($zip->open($file) !== TRUE) {
+            exit("cannot open <$file>\n");
+        } else {
+            echo "file opened";
+        }
+
+
+    }
+
     public function parrainages(){
       // 1. Create table if not exists
       $this->bdd->query("CREATE TABLE IF NOT EXISTS `parrainages` (
@@ -4071,7 +4099,7 @@ if (isset($argv[1]) && isset($argv[2])) {
   $script = new Script();
 }
 
-
+/*
 $script->fillDeputes();
 $script->addBsky();
 $script->deputeAll();
@@ -4117,6 +4145,9 @@ $script->classGroupsProximite();
 $script->deputeAccordCleaned();
 $script->historyMpsAverage();
 $script->historyPerMpsAverage();
+*/
+$script->debatsInfos();
+/*
 //$script->parrainages(); // No longer used
 $script->opendata_activeMPs();
 $script->opendata_activeGroupes();
