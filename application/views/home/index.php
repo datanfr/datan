@@ -415,6 +415,9 @@
           <a href="https://www.20minutes.fr/politique/assemblee_nationale/4042426-20230623-assemblee-nationale-rn-veut-poursuivre-lente-marche-vers-normalisation" target="_blank" rel="noopener">
             <img class="mx-2 my-3 img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="70" height="70" data-src="<?= asset_url() ?>imgs/media/20_minutes.png" alt="20 Minutes">
           </a>
+          <a href="https://www.francebleu.fr/infos/politique/faible-participation-aux-votes-de-l-assemblee-nationale-le-depute-mayennais-yannick-favennec-s-explique-1836888" target="_blank" rel="noopener">
+            <img class="mx-2 my-3 img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="146" height="38" data-src="<?= asset_url() ?>imgs/media/ici_mayenne.png" alt="Ici Mayenne">
+          </a>
           <span class="url_obf" url_obf="<?= url_obfuscation("https://www.ladepeche.fr/2021/01/23/comment-votent-vos-deputes-a-lassemblee-nationale-9328626.php") ?>">
             <img class="mx-2 my-3 img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="150" height="37" data-src="<?= asset_url() ?>imgs/media/depeche.png" alt="La Dépêche Ouest">
           </span>
@@ -444,6 +447,9 @@
           </span>
           <span class="url_obf" url_obf="<?= url_obfuscation("https://www.varmatin.com/politique/boccaletti-ou-chenevard-quel-depute-du-var-vote-vraiment-le-plus-et-le-moins-895830") ?>">
             <img class="mx-2 my-3 img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="165" height="30" data-src="<?= asset_url() ?>imgs/media/var_matin.png" alt="Var Matin">
+          </span>
+          <span class="url_obf" url_obf="<?= url_obfuscation("https://www.lalsace.fr/politique/2025/02/23/deputes-fantomes-contre-travail-de-fond") ?>">
+            <img class="mx-2 my-3 img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="189" height="35" data-src="<?= asset_url() ?>imgs/media/lalsace.png" alt="L'Alsace">
           </span>
           <a href="https://www.lepopulaire.fr/limoges-87000/actualites/desenclavement-emploi-gilets-jaunes-montee-du-rn-quel-bilan-pour-les-deputes-lrem-de-haute-vienne_14127678/" target="_blank" rel="noopener">
             <img class="mx-2 my-3 img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="120" height="36" data-src="<?= asset_url() ?>imgs/media/populaire-centre.png" alt="Le Populaire du Centre">
