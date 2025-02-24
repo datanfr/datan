@@ -3807,7 +3807,7 @@ class Script
     }
 
     public function debatsInfos(){
-        echo "historyPerMpsAverage starting \n";
+        echo "debatsInfos starting \n";
 
         // 1. Create table if not exists
         $this->bdd->query("CREATE TABLE IF NOT EXISTS `debats_infos` (
@@ -3828,7 +3828,16 @@ class Script
         if ($zip->open($file) !== TRUE) {
             exit("cannot open <$file>\n");
         } else {
-            echo "file opened";
+            for ($i = 0; $i < $zip->numFiles; $i++) {
+                $filename = $zip->getNameIndex($i);
+
+                $xml_string = $zip->getFromName($filename);
+
+                if ($xml_string != false) {
+                  echo "Filename:" . $filename . " \n";
+                  $xml = simplexml_load_string($xml_string);
+                }
+            }
         }
 
 
