@@ -3834,11 +3834,11 @@ class Script
                 $xml_string = $zip->getFromName($filename);
 
                 if ($xml_string != false) {
-                  echo "Filename:" . $filename . " \n";
+                  //echo "Filename:" . $filename . " \n";
                   $xml = simplexml_load_string($xml_string);
 
                   if ($xml->metadonnees->etat == 'complet') {
-                    echo "parsing";
+                    // HERE 
                   }
 
                 }
@@ -4113,7 +4113,6 @@ if (isset($argv[1]) && isset($argv[2])) {
   $script = new Script();
 }
 
-/*
 $script->fillDeputes();
 $script->addBsky();
 $script->deputeAll();
@@ -4159,9 +4158,7 @@ $script->classGroupsProximite();
 $script->deputeAccordCleaned();
 $script->historyMpsAverage();
 $script->historyPerMpsAverage();
-*/
 $script->debatsInfos();
-/*
 //$script->parrainages(); // No longer used
 $script->opendata_activeMPs();
 $script->opendata_activeGroupes();
