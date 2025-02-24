@@ -138,6 +138,19 @@ class Script
 
     }
 
+    public function comptes_rendus(){
+      echo "downloading amendements starting \n";
+      $file = 'https://data.assemblee-nationale.fr/static/openData/repository/17/vp/syceronbrut/syseron.xml.zip';
+      $newfile = __DIR__ . '/comptes_rendus_XVII.xml.zip';
+
+      if ($this->chunked_copy($file, $newfile)) {
+        echo "Success. Copied $newfile \n";
+      } else {
+        echo "failed to copy $newfile \n";
+      }
+      
+    }
+
 }
 
 // Specify the legislature
@@ -151,3 +164,4 @@ $script->dossiers();
 $script->scrutins();
 $script->acteurs_organes();
 $script->amendements();
+$script->comptes_rendus();
