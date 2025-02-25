@@ -3877,7 +3877,7 @@ class Script
         $debatsParas = [];
 
         // 1. Create table if not exists
-        $this->bdd->query("CREATE TABLE IF NOT EXISTS `debats_infos` (
+        $this->bdd->query("CREATE TABLE IF NOT EXISTS `debats_paras` (
             `uid` INT NOT NULL AUTO_INCREMENT,
             `idCr` VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
             `idSyceron` INT DEFAULT NULL,
