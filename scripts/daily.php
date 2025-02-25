@@ -3840,13 +3840,17 @@ class Script
                     $xml = simplexml_load_string($xml_string);
                   
                     if ($xml->metadonnees->etat == 'complet') {
-                        $uid = $xml->uid;
-                        $seanceRef = $xml->seanceRef;
-                        $sessionRef = $xml->sessionRef;
-                        $inputDate = $xml->metadonnees->dateSeance;
-                        $dateSeance = substr($inputDate, 0, 4) . "-" . substr($inputDate, 4, 2) . "-" . substr($inputDate, 6, 2);
-                        $numSeanceJour = $xml->metadonnees->numSeanceJour;
-                        $legislature = $xml->metadonnees->legislature;
+                        $uid = $xml->uid ?? null;
+                        $seanceRef = $xml->seanceRef ?? null;
+                        $sessionRef = $xml->sessionRef ?? null;
+                        $inputDate = $xml->metadonnees->dateSeance ?? null;
+                        if ($inputDate) {
+                            $dateSeance = substr($inputDate, 0, 4) . "-" . substr($inputDate, 4, 2) . "-" . substr($inputDate, 6, 2);
+                        } else {
+                            $dateSeance = null;
+                        }
+                        $numSeanceJour = $xml->metadonnees->numSeanceJour ?? null;
+                        $legislature = $xml->metadonnees->legislature ?? null;
                         $dateMaj = $this->dateMaj;
 
                         $debatsInfo = array('uid' => $uid, 'seanceRef' => $seanceRef, 'sessionRef' => $sessionRef, 'dateSeance' => $dateSeance, 'numSeanceJour' => $numSeanceJour, 'legislature' => $legislature, 'dateMaj' => $dateMaj);
@@ -3864,6 +3868,35 @@ class Script
             $this->insertAll('debats_infos', $fields, $debatsInfos);
             $zip->close();
         }
+    }
+
+    public function debatsParas(){
+        echo "debatsParas starting \n";
+        $fields = array('uid', 'idCr', 'idSyceron', 'acteurId', 'mandatId', 'codeGrammaire', 'roleDebat', 'article', 'adt', 'ssadt', 'texte', 'dateMaj');
+        $debatsPara = [];
+        $debatsParas = [];
+
+        // 1. Create table if not exists
+        $this->bdd->query("CREATE TABLE IF NOT EXISTS `debats_infos` (
+            `uid` INT NOT NULL AUTO_INCREMENT,
+            `idCr` VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+            `idSyceron` INT DEFAULT NULL,
+            `acteurId` VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+            `mandatId` VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+            `codeGrammaire` VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+            `roleDebat` VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+            `article` INT DEFAULT NULL,
+            `adt` INT DEFAULT NULL,
+            `ssadt` INT DEFAULT NULL,
+            `texte` TEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+            `dateMaj` DATE DEFAULT NULL,
+            PRIMARY KEY (`uid`)
+        ) ENGINE = MyISAM;");
+
+        // 2. Download data
+
+        // Remove italic for applaudissements ; 
+
     }
 
     public function parrainages(){
@@ -4131,6 +4164,7 @@ if (isset($argv[1]) && isset($argv[2])) {
   $script = new Script();
 }
 
+/*
 $script->fillDeputes();
 $script->addBsky();
 $script->deputeAll();
@@ -4176,7 +4210,10 @@ $script->classGroupsProximite();
 $script->deputeAccordCleaned();
 $script->historyMpsAverage();
 $script->historyPerMpsAverage();
+*/
 $script->debatsInfos();
+$script->debatsParas();
+/*
 //$script->parrainages(); // No longer used
 $script->opendata_activeMPs();
 $script->opendata_activeGroupes();
