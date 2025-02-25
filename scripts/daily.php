@@ -3808,16 +3808,19 @@ class Script
 
     public function debatsInfos(){
         echo "debatsInfos starting \n";
+        $fields = array('uid', 'seanceRef', 'sessionRef', 'dateSeance', 'numSeanceJour', 'legislature', 'dateMaj');
+        $debatsInfo = [];
+        $debatsInfos = [];
 
         // 1. Create table if not exists
         $this->bdd->query("CREATE TABLE IF NOT EXISTS `debats_infos` (
             `uid` INT NOT NULL,
-            `seanceRef` VARCHAR(75) NOT NULL,
-            `sessionRef` VARCHAR(75) NOT NULL,
-            `dateSeance` VARCHAR(75) NOT NULL,
-            `numSeanceJour` INT NOT NULL,
-            `legislature` INT NOT NULL,
-            `dateMaj` DATE,
+            `seanceRef` VARCHAR(75) DEFAULT NULL,
+            `sessionRef` VARCHAR(75) DEFAULT NULL,
+            `dateSeance` DATE DEFAULT NULL,
+            `numSeanceJour` INT DEFAULT NULL,
+            `legislature` INT DEFAULT NULL,
+            `dateMaj` DATE DEFAULT NULL,
             PRIMARY KEY (`uid`)
         ) ENGINE = MyISAM;");
 
@@ -3834,18 +3837,33 @@ class Script
                 $xml_string = $zip->getFromName($filename);
 
                 if ($xml_string != false) {
-                  //echo "Filename:" . $filename . " \n";
-                  $xml = simplexml_load_string($xml_string);
+                    $xml = simplexml_load_string($xml_string);
+                  
+                    if ($xml->metadonnees->etat == 'complet') {
+                        $uid = $xml->uid;
+                        $seanceRef = $xml->seanceRef;
+                        $sessionRef = $xml->sessionRef;
+                        $inputDate = $xml->metadonnees->dateSeance;
+                        $dateSeance = substr($inputDate, 0, 4) . "-" . substr($inputDate, 4, 2) . "-" . substr($inputDate, 6, 2);
+                        $numSeanceJour = $xml->metadonnees->numSeanceJour;
+                        $legislature = $xml->metadonnees->legislature;
+                        $dateMaj = $this->dateMaj;
 
-                  if ($xml->metadonnees->etat == 'complet') {
-                    // HERE 
-                  }
-
+                        $debatsInfo = array('uid' => $uid, 'seanceRef' => $seanceRef, 'sessionRef' => $sessionRef, 'dateSeance' => $dateSeance, 'numSeanceJour' => $numSeanceJour, 'legislature' => $legislature, 'dateMaj' => $dateMaj);
+                        $debatsInfos = array_merge($debatsInfos, array_values($debatsInfo));
+                
+                        if ($i % 500 === 0) {
+                            echo "let's insert this pack of 500\n";
+                            $this->insertAll('debats_infos', $fields, $debatsInfos);
+                            $debatsInfo = [];
+                            $debatsInfos = [];
+                        }
+                    }
                 }
             }
+            $this->insertAll('debats_infos', $fields, $debatsInfos);
+            $zip->close();
         }
-
-
     }
 
     public function parrainages(){
@@ -4113,6 +4131,7 @@ if (isset($argv[1]) && isset($argv[2])) {
   $script = new Script();
 }
 
+/*
 $script->fillDeputes();
 $script->addBsky();
 $script->deputeAll();
@@ -4158,7 +4177,9 @@ $script->classGroupsProximite();
 $script->deputeAccordCleaned();
 $script->historyMpsAverage();
 $script->historyPerMpsAverage();
+*/
 $script->debatsInfos();
+/*
 //$script->parrainages(); // No longer used
 $script->opendata_activeMPs();
 $script->opendata_activeGroupes();
