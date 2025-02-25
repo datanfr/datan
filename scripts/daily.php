@@ -3814,9 +3814,9 @@ class Script
 
         // 1. Create table if not exists
         $this->bdd->query("CREATE TABLE IF NOT EXISTS `debats_infos` (
-            `uid` INT NOT NULL,
-            `seanceRef` VARCHAR(75) DEFAULT NULL,
-            `sessionRef` VARCHAR(75) DEFAULT NULL,
+            `uid` VARCHAR(255) NOT NULL,
+            `seanceRef` VARCHAR(255) DEFAULT NULL,
+            `sessionRef` VARCHAR(255) DEFAULT NULL,
             `dateSeance` DATE DEFAULT NULL,
             `numSeanceJour` INT DEFAULT NULL,
             `legislature` INT DEFAULT NULL,
