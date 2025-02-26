@@ -3872,13 +3872,13 @@ class Script
 
     public function debatsParas(){
         echo "debatsParas starting \n";
-        $fields = array('uid', 'idCr', 'idSyceron', 'acteurId', 'mandatId', 'codeGrammaire', 'roleDebat', 'article', 'adt', 'ssadt', 'texte', 'dateMaj');
+        $fields = array('idCr', 'idSyceron', 'acteurId', 'mandatId', 'codeGrammaire', 'roleDebat', 'article', 'adt', 'ssadt', 'texte', 'dateMaj');
         $debatsPara = [];
         $debatsParas = [];
 
         // 1. Create table if not exists
         $this->bdd->query("CREATE TABLE IF NOT EXISTS `debats_paras` (
-            `uid` INT NOT NULL AUTO_INCREMENT,
+            `id` INT NOT NULL AUTO_INCREMENT,
             `idCr` VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
             `idSyceron` INT DEFAULT NULL,
             `acteurId` VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
@@ -3890,13 +3890,40 @@ class Script
             `ssadt` INT DEFAULT NULL,
             `texte` TEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
             `dateMaj` DATE DEFAULT NULL,
-            PRIMARY KEY (`uid`)
+            PRIMARY KEY (`id`)
         ) ENGINE = MyISAM;");
 
         // 2. Download data
+        $file = __DIR__ . '/comptes_rendus_XVII.xml.zip';
+        $zip = new ZipArchive();
 
-        // Remove italic for applaudissements ; 
+        if ($zip->open($file) !== TRUE) {
+            exit("cannot open <$file>\n");
+        } else {
+            for ($i = 0; $i < $zip->numFiles; $i++) {
+                $filename = $zip->getNameIndex($i);
+                $xml_string = $zip->getFromName($filename);
 
+                if ($xml_string != false) {
+                    $xml = simplexml_load_string($xml_string);
+                    $xml->registerXPathNamespace('ns', 'http://schemas.assemblee-nationale.fr/referentiel');
+                    
+                    if ($xml->metadonnees->etat == 'complet') {
+                        $idCr = $xml->uid ?? null;
+                        echo $idCr . ' \n';
+                        
+                        $paras = $xml->xpath('//ns:paragraphe');
+                        
+                        foreach ($paras as $para) {
+                            
+                            $idSyceron = (string) $para['id_syceron'];
+                            echo $idSyceron . ' \n\n';
+                        }
+                    }
+                }
+            }
+        }
+        $zip->close();
     }
 
     public function parrainages(){
@@ -4164,6 +4191,7 @@ if (isset($argv[1]) && isset($argv[2])) {
   $script = new Script();
 }
 
+/*
 $script->fillDeputes();
 $script->addBsky();
 $script->deputeAll();
@@ -4210,7 +4238,9 @@ $script->deputeAccordCleaned();
 $script->historyMpsAverage();
 $script->historyPerMpsAverage();
 $script->debatsInfos();
+*/
 $script->debatsParas();
+/*
 //$script->parrainages(); // No longer used
 $script->opendata_activeMPs();
 $script->opendata_activeGroupes();
