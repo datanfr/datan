@@ -3910,14 +3910,14 @@ class Script
                     
                     if ($xml->metadonnees->etat == 'complet') {
                         $idCr = $xml->uid ?? null;
-                        echo $idCr . ' \n';
+                        echo $idCr . " \n";
                         
                         $paras = $xml->xpath('//ns:paragraphe');
                         
                         foreach ($paras as $para) {
                             
                             $idSyceron = (string) $para['id_syceron'];
-                            echo $idSyceron . ' \n\n';
+                            echo $idSyceron . " \n\n";
                         }
                     }
                 }
