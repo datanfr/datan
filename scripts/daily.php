@@ -3910,14 +3910,24 @@ class Script
                     
                     if ($xml->metadonnees->etat == 'complet') {
                         $idCr = $xml->uid ?? null;
-                        echo $idCr . " \n";
                         
                         $paras = $xml->xpath('//ns:paragraphe');
                         
                         foreach ($paras as $para) {
-                            
-                            $idSyceron = (string) $para['id_syceron'];
-                            echo $idSyceron . " \n\n";
+                            $idSyceron = !empty($para['id_syceron']) ? (string) $para['id_syceron'] : null;
+                            $acteurId = !empty($para['id_acteur']) ? (string) $para['id_acteur'] : null;
+                            $mandatId = !empty($para['id_mandat']) ? (string) $para['id_mandat'] : null;
+                            $codeGramaire = !empty($para['code_grammaire']) ? (string) $para['code_grammaire'] : null;
+                            $roleDebat = !empty($para['roledebat']) ? (string) $para['roledebat'] : null;
+                            $article = !empty($para['art']) ? (string) $para['art'] : null;
+                            $adt = !empty($para['adt']) ? (string) $para['act'] : null;
+                            $ssadt = !empty($para['ssadt']) ? (string) $para['ssadt'] : null; $texte = !empty($paragraphe->texte) ? trim((string) $paragraphe->texte) : null;
+                            if($texte !== null) {
+                                $texte = preg_replace('/<italique>.*?<\/italique>/', '', $texte);
+                            }
+                            $dateMaj = $this->dateMaj;
+
+                            echo $idSyceron . " - " . $acteurId . " - " . $texte . " \n\n";
                         }
                     }
                 }
