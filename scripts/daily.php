@@ -3921,7 +3921,7 @@ class Script
                             $roleDebat = !empty($para['roledebat']) ? (string) $para['roledebat'] : null;
                             $article = !empty($para['art']) ? (string) $para['art'] : null;
                             $adt = !empty($para['adt']) ? (string) $para['act'] : null;
-                            $ssadt = !empty($para['ssadt']) ? (string) $para['ssadt'] : null; $texte = !empty($paragraphe->texte) ? trim((string) $paragraphe->texte) : null;
+                            $ssadt = !empty($para['ssadt']) ? (string) $para['ssadt'] : null; $texte = !empty($para->texte) ? trim((string) $para->texte) : null;
                             if($texte !== null) {
                                 $texte = preg_replace('/<italique>.*?<\/italique>/', '', $texte);
                             }
