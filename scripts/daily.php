@@ -3873,7 +3873,6 @@ class Script
     public function debatsParas(){
         echo "debatsParas starting \n";
         $fields = array('idCr', 'idSyceron', 'acteurId', 'mandatId', 'codeGrammaire', 'roleDebat', 'article', 'adt', 'ssadt', 'texte', 'dateMaj');
-        $debatsPara = [];
         $debatsParas = [];
         $n = 1;
 
@@ -3886,9 +3885,9 @@ class Script
             `mandatId` VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
             `codeGrammaire` VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
             `roleDebat` VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-            `article` INT DEFAULT NULL,
-            `adt` INT DEFAULT NULL,
-            `ssadt` INT DEFAULT NULL,
+            `article` VARCHAR(50) DEFAULT NULL,
+            `adt` VARCHAR(50) DEFAULT NULL,
+            `ssadt` VARCHAR(50) DEFAULT NULL,
             `texte` TEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
             `dateMaj` DATE DEFAULT NULL,
             PRIMARY KEY (`id`)
@@ -3920,9 +3919,9 @@ class Script
                             $mandatId = !empty($para['id_mandat']) ? (string) $para['id_mandat'] : null;
                             $codeGrammaire = !empty($para['code_grammaire']) ? (string) $para['code_grammaire'] : null;
                             $roleDebat = !empty($para['roledebat']) ? (string) $para['roledebat'] : null;
-                            $article = !empty($para['art']) ? (string) $para['art'] : null;
-                            $adt = !empty($para['adt']) ? (string) $para['adt'] : null;
-                            $ssadt = !empty($para['ssadt']) ? (string) $para['ssadt'] : null; 
+                            $article = isset($para['art']) ? (string) trim($para['art']) : null;
+                            $adt = isset($para['adt']) ? (string) trim($para['adt']) : null;
+                            $ssadt = isset($para['ssadt']) ? (string) trim($para['ssadt']) : null;
                             $texte = !empty($para->texte) ? trim((string) $para->texte) : null;
                             if($texte !== null) {
                                 $texte = preg_replace('/<italique>.*?<\/italique>/', '', $texte);
@@ -3936,7 +3935,6 @@ class Script
                             if ($n % 500 === 0) {
                                 echo "let's insert this pack of 500\n";
                                 $this->insertAll('debats_paras', $fields, $debatsParas);
-                                $debatsPara = [];
                                 $debatsParas = [];
                             }
                             $n++;
