@@ -3890,7 +3890,8 @@ class Script
             `ssadt` VARCHAR(50) DEFAULT NULL,
             `texte` TEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
             `dateMaj` DATE DEFAULT NULL,
-            PRIMARY KEY (`id`)
+            PRIMARY KEY (`id`),
+            UNIQUE KEY `unique_idSyceron` (`idSyceron`)
         ) ENGINE = MyISAM;");
 
         // 2. Download data
