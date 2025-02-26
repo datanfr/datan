@@ -3873,8 +3873,8 @@ class Script
     public function debatsParas(){
         echo "debatsParas starting \n";
         $fields = array('idCr', 'idSyceron', 'acteurId', 'mandatId', 'codeGrammaire', 'roleDebat', 'article', 'adt', 'ssadt', 'texte', 'dateMaj');
-        $debatsPara = [];
         $debatsParas = [];
+        $n = 1;
 
         // 1. Create table if not exists
         $this->bdd->query("CREATE TABLE IF NOT EXISTS `debats_paras` (
@@ -3885,9 +3885,9 @@ class Script
             `mandatId` VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
             `codeGrammaire` VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
             `roleDebat` VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-            `article` INT DEFAULT NULL,
-            `adt` INT DEFAULT NULL,
-            `ssadt` INT DEFAULT NULL,
+            `article` VARCHAR(50) DEFAULT NULL,
+            `adt` VARCHAR(50) DEFAULT NULL,
+            `ssadt` VARCHAR(50) DEFAULT NULL,
             `texte` TEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
             `dateMaj` DATE DEFAULT NULL,
             PRIMARY KEY (`id`)
@@ -3917,17 +3917,28 @@ class Script
                             $idSyceron = !empty($para['id_syceron']) ? (string) $para['id_syceron'] : null;
                             $acteurId = !empty($para['id_acteur']) ? (string) $para['id_acteur'] : null;
                             $mandatId = !empty($para['id_mandat']) ? (string) $para['id_mandat'] : null;
-                            $codeGramaire = !empty($para['code_grammaire']) ? (string) $para['code_grammaire'] : null;
+                            $codeGrammaire = !empty($para['code_grammaire']) ? (string) $para['code_grammaire'] : null;
                             $roleDebat = !empty($para['roledebat']) ? (string) $para['roledebat'] : null;
-                            $article = !empty($para['art']) ? (string) $para['art'] : null;
-                            $adt = !empty($para['adt']) ? (string) $para['act'] : null;
-                            $ssadt = !empty($para['ssadt']) ? (string) $para['ssadt'] : null; $texte = !empty($para->texte) ? trim((string) $para->texte) : null;
+                            $article = isset($para['art']) ? (string) trim($para['art']) : null;
+                            $adt = isset($para['adt']) ? (string) trim($para['adt']) : null;
+                            $ssadt = isset($para['ssadt']) ? (string) trim($para['ssadt']) : null;
+                            $texte = !empty($para->texte) ? trim((string) $para->texte) : null;
                             if($texte !== null) {
                                 $texte = preg_replace('/<italique>.*?<\/italique>/', '', $texte);
                             }
                             $dateMaj = $this->dateMaj;
 
-                            echo $idSyceron . " - " . $acteurId . " - " . $texte . " \n\n";
+                            $debatsPara = array('idCr' => $idCr, 'idSyceron' => $idSyceron, 'acteurId' => $acteurId, 'mandatId' => $mandatId, 'codeGrammaire' => $codeGrammaire, 'roleDebat' => $roleDebat, 'article' => $article, 'adt' => $adt, 'ssadt' => $ssadt, 'texte' => $texte, 'dateMaj' => $dateMaj);
+                            $debatsParas = array_merge($debatsParas, array_values($debatsPara));
+              
+            
+                            if ($n % 500 === 0) {
+                                echo "let's insert this pack of 500\n";
+                                $this->insertAll('debats_paras', $fields, $debatsParas);
+                                $debatsParas = [];
+                            }
+                            $n++;
+
                         }
                     }
                 }
