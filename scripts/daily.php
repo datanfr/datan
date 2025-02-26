@@ -3945,6 +3945,7 @@ class Script
                 }
             }
         }
+        $this->insertAll('debats_paras', $fields, $debatsParas);
         $zip->close();
     }
 
