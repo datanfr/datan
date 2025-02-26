@@ -3875,6 +3875,7 @@ class Script
         $fields = array('idCr', 'idSyceron', 'acteurId', 'mandatId', 'codeGrammaire', 'roleDebat', 'article', 'adt', 'ssadt', 'texte', 'dateMaj');
         $debatsPara = [];
         $debatsParas = [];
+        $n = 1;
 
         // 1. Create table if not exists
         $this->bdd->query("CREATE TABLE IF NOT EXISTS `debats_paras` (
@@ -3917,17 +3918,29 @@ class Script
                             $idSyceron = !empty($para['id_syceron']) ? (string) $para['id_syceron'] : null;
                             $acteurId = !empty($para['id_acteur']) ? (string) $para['id_acteur'] : null;
                             $mandatId = !empty($para['id_mandat']) ? (string) $para['id_mandat'] : null;
-                            $codeGramaire = !empty($para['code_grammaire']) ? (string) $para['code_grammaire'] : null;
+                            $codeGrammaire = !empty($para['code_grammaire']) ? (string) $para['code_grammaire'] : null;
                             $roleDebat = !empty($para['roledebat']) ? (string) $para['roledebat'] : null;
                             $article = !empty($para['art']) ? (string) $para['art'] : null;
-                            $adt = !empty($para['adt']) ? (string) $para['act'] : null;
-                            $ssadt = !empty($para['ssadt']) ? (string) $para['ssadt'] : null; $texte = !empty($para->texte) ? trim((string) $para->texte) : null;
+                            $adt = !empty($para['adt']) ? (string) $para['adt'] : null;
+                            $ssadt = !empty($para['ssadt']) ? (string) $para['ssadt'] : null; 
+                            $texte = !empty($para->texte) ? trim((string) $para->texte) : null;
                             if($texte !== null) {
                                 $texte = preg_replace('/<italique>.*?<\/italique>/', '', $texte);
                             }
                             $dateMaj = $this->dateMaj;
 
-                            echo $idSyceron . " - " . $acteurId . " - " . $texte . " \n\n";
+                            $debatsPara = array('idCr' => $idCr, 'idSyceron' => $idSyceron, 'acteurId' => $acteurId, 'mandatId' => $mandatId, 'codeGrammaire' => $codeGrammaire, 'roleDebat' => $roleDebat, 'article' => $article, 'adt' => $adt, 'ssadt' => $ssadt, 'texte' => $texte, 'dateMaj' => $dateMaj);
+                            $debatsParas = array_merge($debatsParas, array_values($debatsPara));
+              
+            
+                            if ($n % 500 === 0) {
+                                echo "let's insert this pack of 500\n";
+                                $this->insertAll('debats_paras', $fields, $debatsParas);
+                                $debatsPara = [];
+                                $debatsParas = [];
+                            }
+                            $n++;
+
                         }
                     }
                 }
