@@ -17,7 +17,8 @@ jobs:
         server: ${{ secrets.host }}
         username: ${{ secrets.username }}
         password: ${{ secrets.password }}
-        server-dir: public_htmls/
+        server-dir: public_html/
+        dry-run: true
         exclude: | 
           */config/development
           */logs/log-*.php
