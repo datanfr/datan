@@ -172,4 +172,4 @@ $script->scrutins();
 $script->acteurs_organes();
 $script->amendements();
 $script->comptes_rendus();
-//$script->reunions();
+$script->reunions();
