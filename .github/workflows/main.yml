@@ -17,7 +17,7 @@ jobs:
         server: ${{ secrets.host }}
         username: ${{ secrets.username }}
         password: ${{ secrets.password }}
-        server-dir: public_html/
+        server-dir: public_htmls/
         exclude: | 
           */config/development
           */logs/log-*.php
