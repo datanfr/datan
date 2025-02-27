@@ -3885,9 +3885,9 @@ class Script
             `mandatId` VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
             `codeGrammaire` VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
             `roleDebat` VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-            `article` VARCHAR(50) DEFAULT NULL,
-            `adt` VARCHAR(50) DEFAULT NULL,
-            `ssadt` VARCHAR(50) DEFAULT NULL,
+            `article` VARCHAR(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+            `adt` VARCHAR(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+            `ssadt` VARCHAR(50) DCHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
             `texte` TEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
             `dateMaj` DATE DEFAULT NULL,
             PRIMARY KEY (`id`),
@@ -3947,6 +3947,25 @@ class Script
         }
         $this->insertAll('debats_paras', $fields, $debatsParas);
         $zip->close();
+    }
+
+    public function reunionsInfos() {
+        echo "reunionsInfos starting \n";
+
+        // 1. Create table if not exists
+        $this->bdd->query("CREATE TABLE IF NOT EXISTS `reunions_infos` (
+            `uid` VARCHAR(255) NOT NULL,
+            `timeStart` TIMESTAMP NULL DEFAULT NULL,
+            `timeEnd` TIMESTAMP NULL DEFAULT NULL,
+            `lieuRef` VARCHAR(255) DEFAULT NULL,
+            `lieuLibelle` TEXT DEFAULT NULL,
+            `etat` VARCHAR(55) DEFAULT NULL,
+            `organeReuniRef` VARCHAR(55) DEFAULT NULL,
+            `compteRenduRef` VARCHAR(255) DEFAULT NULL,
+            `formatReunion` VARCHAR(55) DEFAULT NULL,
+            `dateMaj` DATE DEFAULT NULL,
+            PRIMARY KEY (`uid`)
+        ) ENGINE = MyISAM CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;");
     }
 
     public function parrainages(){
@@ -4261,6 +4280,7 @@ $script->historyMpsAverage();
 $script->historyPerMpsAverage();
 $script->debatsInfos();
 $script->debatsParas();
+//$script->reunionsInfos();
 //$script->parrainages(); // No longer used
 $script->opendata_activeMPs();
 $script->opendata_activeGroupes();
