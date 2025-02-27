@@ -69,7 +69,6 @@ class Script
       } else {
         echo "failed to copy $newfile \n";
       }
-
     }
 
     public function scrutins(){
@@ -91,7 +90,6 @@ class Script
       } else {
         echo "failed to copy $newfile \n";
       }
-
     }
 
     public function acteurs_organes(){
@@ -113,7 +111,6 @@ class Script
       } else {
         echo "failed to copy $newfile \n";
       }
-
     }
 
     public function amendements(){
@@ -135,7 +132,6 @@ class Script
       } else {
         echo "failed to copy $newfile \n";
       }
-
     }
 
     public function comptes_rendus(){
@@ -148,7 +144,18 @@ class Script
       } else {
         echo "failed to copy $newfile \n";
       }
+    }
 
+    public function reunions(){
+      echo "downloading reunions starting \n";
+      $file = 'https://data.assemblee-nationale.fr/static/openData/repository/17/vp/reunions/Agenda.xml.zip';
+      $newfile = __DIR__ . '/reunions_XVII.xml.zip';
+
+      if ($this->chunked_copy($file, $newfile)) {
+        echo "Success. Copied $newfile \n";
+      } else {
+        echo "failed to copy $newfile \n";
+      }
     }
 
 }
@@ -165,3 +172,4 @@ $script->scrutins();
 $script->acteurs_organes();
 $script->amendements();
 $script->comptes_rendus();
+$script->reunions();
