@@ -3872,7 +3872,7 @@ class Script
 
     public function debatsParas(){
         echo "debatsParas starting \n";
-        $fields = array('idCr', 'idSyceron', 'acteurId', 'mandatId', 'codeGrammaire', 'roleDebat', 'article', 'adt', 'ssadt', 'texte', 'dateMaj');
+        $fields = array('idCr', 'idSyceron', 'acteurId', 'mandatId', 'codeGrammaire', 'roleDebat', 'id_nomination_op', 'id_nomination_oe', 'article', 'adt', 'ssadt', 'texte', 'dateMaj');
         $debatsParas = [];
         $n = 1;
 
@@ -3885,6 +3885,8 @@ class Script
             `mandatId` VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
             `codeGrammaire` VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
             `roleDebat` VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+            `id_nomination_op` VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+            `id_nomination_oe` VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
             `article` VARCHAR(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
             `adt` VARCHAR(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
             `ssadt` VARCHAR(50) DCHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
@@ -3920,6 +3922,8 @@ class Script
                             $mandatId = !empty($para['id_mandat']) ? (string) $para['id_mandat'] : null;
                             $codeGrammaire = !empty($para['code_grammaire']) ? (string) $para['code_grammaire'] : null;
                             $roleDebat = !empty($para['roledebat']) ? (string) $para['roledebat'] : null;
+                            $id_nomination_op = !empty($para['id_nomination_op']) ? (string) $para['id_nomination_op'] : null;
+                            $id_nomination_oe = !empty($para['id_nomination_oe']) ? (string) $para['id_nomination_oe'] : null;
                             $article = isset($para['art']) ? (string) trim($para['art']) : null;
                             $adt = isset($para['adt']) ? (string) trim($para['adt']) : null;
                             $ssadt = isset($para['ssadt']) ? (string) trim($para['ssadt']) : null;
@@ -3929,7 +3933,7 @@ class Script
                             }
                             $dateMaj = $this->dateMaj;
 
-                            $debatsPara = array('idCr' => $idCr, 'idSyceron' => $idSyceron, 'acteurId' => $acteurId, 'mandatId' => $mandatId, 'codeGrammaire' => $codeGrammaire, 'roleDebat' => $roleDebat, 'article' => $article, 'adt' => $adt, 'ssadt' => $ssadt, 'texte' => $texte, 'dateMaj' => $dateMaj);
+                            $debatsPara = array('idCr' => $idCr, 'idSyceron' => $idSyceron, 'acteurId' => $acteurId, 'mandatId' => $mandatId, 'codeGrammaire' => $codeGrammaire, 'roleDebat' => $roleDebat, 'id_nomination_op' => $id_nomination_op, 'id_nomination_oe' => $id_nomination_oe, 'article' => $article, 'adt' => $adt, 'ssadt' => $ssadt, 'texte' => $texte, 'dateMaj' => $dateMaj);
                             $debatsParas = array_merge($debatsParas, array_values($debatsPara));
               
             
@@ -4233,6 +4237,7 @@ if (isset($argv[1]) && isset($argv[2])) {
   $script = new Script();
 }
 
+/*
 $script->fillDeputes();
 $script->addBsky();
 $script->deputeAll();
@@ -4279,7 +4284,9 @@ $script->deputeAccordCleaned();
 $script->historyMpsAverage();
 $script->historyPerMpsAverage();
 $script->debatsInfos();
+*/
 $script->debatsParas();
+/*
 //$script->reunionsInfos();
 //$script->parrainages(); // No longer used
 $script->opendata_activeMPs();
