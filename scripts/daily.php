@@ -3922,8 +3922,8 @@ class Script
                             $mandatId = !empty($para['id_mandat']) ? (string) $para['id_mandat'] : null;
                             $codeGrammaire = !empty($para['code_grammaire']) ? (string) $para['code_grammaire'] : null;
                             $roleDebat = !empty($para['roledebat']) ? (string) $para['roledebat'] : null;
-                            $id_nomination_op = !empty($para['id_nomination_op']) ? (string) $para['id_nomination_op'] : null;
-                            $id_nomination_oe = !empty($para['id_nomination_oe']) ? (string) $para['id_nomination_oe'] : null;
+                            $id_nomination_op = isset($para['id_nomination_op']) && $para['id_nomination_op'] !== '' ? (string) $para['id_nomination_op'] : null;
+                            $id_nomination_oe = isset($para['id_nomination_oe']) && $para['id_nomination_oe'] !== '' ? (string) $para['id_nomination_oe'] : null;
                             $article = isset($para['art']) ? (string) trim($para['art']) : null;
                             $adt = isset($para['adt']) ? (string) trim($para['adt']) : null;
                             $ssadt = isset($para['ssadt']) ? (string) trim($para['ssadt']) : null;
@@ -4237,6 +4237,7 @@ if (isset($argv[1]) && isset($argv[2])) {
   $script = new Script();
 }
 
+/*
 $script->fillDeputes();
 $script->addBsky();
 $script->deputeAll();
@@ -4283,7 +4284,9 @@ $script->deputeAccordCleaned();
 $script->historyMpsAverage();
 $script->historyPerMpsAverage();
 $script->debatsInfos();
+*/
 $script->debatsParas();
+/*
 //$script->reunionsInfos();
 //$script->parrainages(); // No longer used
 $script->opendata_activeMPs();
