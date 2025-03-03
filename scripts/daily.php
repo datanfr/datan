@@ -4293,6 +4293,7 @@ if (isset($argv[1]) && isset($argv[2])) {
   $script = new Script();
 }
 
+/*
 $script->fillDeputes();
 $script->addBsky();
 $script->deputeAll();
@@ -4340,7 +4341,9 @@ $script->historyMpsAverage();
 $script->historyPerMpsAverage();
 $script->debatsInfos();
 $script->debatsParas();
+*/
 $script->reunionsInfos();
+/*
 //$script->parrainages(); // No longer used
 $script->opendata_activeMPs();
 $script->opendata_activeGroupes();
