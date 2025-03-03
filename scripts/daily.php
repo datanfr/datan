@@ -3955,6 +3955,9 @@ class Script
 
     public function reunionsInfos() {
         echo "reunionsInfos starting \n";
+        $fields = array('uid', 'timeStart', 'timeEnd', 'lieuRef', 'lieuLibelle', 'etat', 'organeReuniRef', 'compteRenduRef', 'formatReunion', 'dateMaj');
+        $reunionInfos = [];
+        $n = 1;
 
         // 1. Create table if not exists
         $this->bdd->query("CREATE TABLE IF NOT EXISTS `reunions_infos` (
@@ -3970,6 +3973,59 @@ class Script
             `dateMaj` DATE DEFAULT NULL,
             PRIMARY KEY (`uid`)
         ) ENGINE = MyISAM CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;");
+
+        // 2. Download data
+        $file = __DIR__ . '/comptes_rendus_XVII.xml.zip';
+        $zip = new ZipArchive();
+
+        if ($zip->open($file) !== TRUE) {
+            throw new Exception("Cannot open <$file>");
+        } else {
+            for ($i = 0; $i < $zip->numFiles; $i++) {
+                $filename = $zip->getNameIndex($i);
+                $xml_string = $zip->getFromName($filename);
+
+                if ($xml_string != false) {
+                    $xml = simplexml_load_string($xml_string);
+
+                    $uid = isset($xml->uid) ? (string) $xml->uid : null;
+                    $start = isset($xml->timeStampDebut) ? (string) $xml->timeStampDebut : null;
+                    if ($start) {
+                        $dtStart = new DateTime($start);
+                        $timeStart = $dtStart->format('Y-m-d H:i:s');
+                    } else {
+                        $timeStart = NULL;
+                    }
+                    $end = isset($xml->timeStampFin) ? (string) $xml->timeStampFin : null;
+                    if ($end) {
+                        $dtEnd = new DateTime($end);
+                        $timeEnd = $dtEnd->format('Y-m-d H:i:s');
+                    } else {
+                        $timeEnd = NULL;
+                    }
+                    $lieuRef = isset($xml->lieu->lieuRef) ? (string) $xml->lieu->lieuRef : null;
+                    $lieuLibelle = isset($xml->lieu->libelleLong) ? (string) $xml->lieu->libelleLong : null;
+                    $etat = isset($xml->cycleDeVie->etat) ? (string) $xml->cycleDeVie->etat : null;
+                    $organeReuniRef = isset($xml->organeReuniRef) ? (string) $xml->organeReuniRef : null;
+                    $compteRenduRef = isset($xml->compteRenduRef) ? (string) $xml->compteRenduRef : null;
+                    $formatReunion = isset($xml->formatReunion) ? (string) $xml->formatReunion : null;
+                    $dateMaj = $this->dateMaj;
+
+                    $reunionsInfo = array('uid' => $uid, 'timeStart' => $timeStart, 'timeEnd' => $timeEnd, 'lieuRef' => $lieuRef, 'lieuLibelle' => $lieuLibelle, 'etat' => $etat, 'organeReuniRef' => $organeReuniRef, 'compteRenduRef' => $compteRenduRef, 'formatReunion' => $formatReunion, 'dateMaj' => $dateMaj);
+                    $reunionInfos = array_merge($reunionInfos, array_values($reunionsInfo));
+
+                    if ($n % 500 === 0) {
+                        echo "let's insert this pack of 500\n";
+                        $this->insertAll('reunions_infos', $fields, $reunionInfos);
+                        $reunionInfos = [];
+                    }
+                    $n++;
+
+                }
+            }   
+        }
+        $this->insertAll('reunions_infos', $fields, $reunionInfos);
+        $zip->close();
     }
 
     public function parrainages(){
@@ -4284,7 +4340,7 @@ $script->historyMpsAverage();
 $script->historyPerMpsAverage();
 $script->debatsInfos();
 $script->debatsParas();
-//$script->reunionsInfos();
+$script->reunionsInfos();
 //$script->parrainages(); // No longer used
 $script->opendata_activeMPs();
 $script->opendata_activeGroupes();
