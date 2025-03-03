@@ -3975,7 +3975,7 @@ class Script
         ) ENGINE = MyISAM CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;");
 
         // 2. Download data
-        $file = __DIR__ . '/comptes_rendus_XVII.xml.zip';
+        $file = __DIR__ . '/reunions_XVII.xml.zip';
         $zip = new ZipArchive();
 
         if ($zip->open($file) !== TRUE) {
