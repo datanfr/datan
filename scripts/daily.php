@@ -3961,7 +3961,7 @@ class Script
 
         // 1. Create table if not exists
         $this->bdd->query("CREATE TABLE IF NOT EXISTS `reunions_infos` (
-            `uid` VARCHAR(255) NOT NULL,
+            `uid` VARCHAR(150) NOT NULL,
             `timeStart` TIMESTAMP NULL DEFAULT NULL,
             `timeEnd` TIMESTAMP NULL DEFAULT NULL,
             `lieuRef` VARCHAR(255) DEFAULT NULL,
