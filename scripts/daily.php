@@ -3988,8 +3988,8 @@ class Script
                 if ($xml_string != false) {
                     $xml = simplexml_load_string($xml_string);
 
-                    $uid = isset($xml->uid) ? (string) $xml->uid : null;
-                    $start = isset($xml->timeStampDebut) ? (string) $xml->timeStampDebut : null;
+                    $uid = $xml->uid ?? null;
+                    $start =  $xml->timeStampDebut ?? null;
                     if ($start) {
                         $dtStart = new DateTime($start);
                         $timeStart = $dtStart->format('Y-m-d H:i:s');
@@ -4003,12 +4003,12 @@ class Script
                     } else {
                         $timeEnd = NULL;
                     }
-                    $lieuRef = isset($xml->lieu->lieuRef) ? (string) $xml->lieu->lieuRef : null;
-                    $lieuLibelle = isset($xml->lieu->libelleLong) ? (string) $xml->lieu->libelleLong : null;
-                    $etat = isset($xml->cycleDeVie->etat) ? (string) $xml->cycleDeVie->etat : null;
-                    $organeReuniRef = isset($xml->organeReuniRef) ? (string) $xml->organeReuniRef : null;
-                    $compteRenduRef = isset($xml->compteRenduRef) ? (string) $xml->compteRenduRef : null;
-                    $formatReunion = isset($xml->formatReunion) ? (string) $xml->formatReunion : null;
+                    $lieuRef = $xml->lieu->lieuRef ?? null;
+                    $lieuLibelle = $xml->lieu->libelleLong ?? null;
+                    $etat = $xml->cycleDeVie->etat ?? null;
+                    $organeReuniRef = $xml->organeReuniRef ?? null;
+                    $compteRenduRef =  $xml->compteRenduRef ?? null;
+                    $formatReunion = $xml->formatReunion ?? null;
                     $dateMaj = $this->dateMaj;
 
                     $reunionsInfo = array('uid' => $uid, 'timeStart' => $timeStart, 'timeEnd' => $timeEnd, 'lieuRef' => $lieuRef, 'lieuLibelle' => $lieuLibelle, 'etat' => $etat, 'organeReuniRef' => $organeReuniRef, 'compteRenduRef' => $compteRenduRef, 'formatReunion' => $formatReunion, 'dateMaj' => $dateMaj);
