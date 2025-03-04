@@ -4030,19 +4030,20 @@ class Script
 
     public function reunionsPresences() {
         echo "reunionsPresences starting \n";
-        $fields = array('uid', 'acteurRef', 'presence', 'dateMaj');
+        $fields = array('reunionId', 'acteurRef', 'presence', 'dateMaj');
         $reunionsPresences = [];
         $n = 1;
-        $x = 1;
         $dateMaj = $this->dateMaj;
 
         // 1. Create table if not exists
         $this->bdd->query("CREATE TABLE IF NOT EXISTS `reunions_presences` (
-            `uid` VARCHAR(150) NOT NULL,
+            `id` INT AUTO_INCREMENT NOT NULL,
+            `reunionId` VARCHAR(150) NOT NULL,
             `acteurRef` VARCHAR(50) DEFAULT NULL,
             `presence` VARCHAR(50) DEFAULT NULL,
             `dateMaj` DATE DEFAULT NULL,
-            PRIMARY KEY (`uid`)
+            PRIMARY KEY (`id`),
+            UNIQUE KEY `unique_reunion_acteur` (`reunionId`, `acteurRef`)
         ) ENGINE = MyISAM CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;");
 
         // 2. Download the data
@@ -4060,25 +4061,23 @@ class Script
                     $xml = simplexml_load_string($xml_string);
                     $xml->registerXPathNamespace('ns', 'http://schemas.assemblee-nationale.fr/referentiel');
 
-                    $uid = $xml->uid ?? null;
+                    $reunionId = $xml->uid ?? null;
                         
                     $participants = $xml->xpath('//ns:participantInterne');
 
                     foreach ($participants as $participant) {
-                        echo $x . " \n";
                         $acteurRef = !empty($participant->acteurRef) ? (string) $participant->acteurRef : null;
                         $presence = !empty($participant->presence) ? (string) $participant->presence : null;
 
-                        $reunionsPresence = array('uid' => $uid, 'acteurRef' => $acteurRef, 'presence' => $presence, 'dateMaj' => $dateMaj);
+                        $reunionsPresence = array('reunionId' => $reunionId, 'acteurRef' => $acteurRef, 'presence' => $presence, 'dateMaj' => $dateMaj);
                         $reunionsPresences = array_merge($reunionsPresences, array_values($reunionsPresence));              
             
-                        if ($n % 500 === 0) {
+                        if ($n % 1000 === 0) {
                             echo "let's insert this pack of 500\n";
                             $this->insertAll('reunions_presences', $fields, $reunionsPresences);
                             $reunionsPresences = [];
                         }
                         $n++;
-                        $x++;
                     }
                 }
             }
