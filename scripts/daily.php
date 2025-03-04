@@ -4033,6 +4033,7 @@ class Script
         $fields = array('uid', 'acteurRef', 'presence', 'dateMaj');
         $reunionsPresences = [];
         $n = 1;
+        $x = 1;
         $dateMaj = $this->dateMaj;
 
         // 1. Create table if not exists
@@ -4064,6 +4065,7 @@ class Script
                     $participants = $xml->xpath('//ns:participantInterne');
 
                     foreach ($participants as $participant) {
+                        echo $x . " \n";
                         $acteurRef = !empty($participant->acteurRef) ? (string) $participant->acteurRef : null;
                         $presence = !empty($participant->presence) ? (string) $participant->presence : null;
 
@@ -4076,6 +4078,7 @@ class Script
                             $reunionsPresences = [];
                         }
                         $n++;
+                        $x++;
                     }
                 }
             }
