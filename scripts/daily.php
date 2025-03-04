@@ -4028,6 +4028,62 @@ class Script
         $zip->close();
     }
 
+    public function reunionsPresences() {
+        echo "reunionsPresences starting \n";
+        $fields = array('uid', 'acteurRef', 'presence', 'dateMaj');
+        $reunionsPresences = [];
+        $n = 1;
+        $dateMaj = $this->dateMaj;
+
+        // 1. Create table if not exists
+        $this->bdd->query("CREATE TABLE IF NOT EXISTS `reunions_presences` (
+            `uid` VARCHAR(150) NOT NULL,
+            `acteurRef` VARCHAR(50) DEFAULT NULL,
+            `presence` VARCHAR(50) DEFAULT NULL,
+            `dateMaj` DATE DEFAULT NULL,
+            PRIMARY KEY (`uid`)
+        ) ENGINE = MyISAM CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;");
+
+        // 2. Download the data
+        $file = __DIR__ . '/reunions_XVII.xml.zip';
+        $zip = new ZipArchive();
+
+        if ($zip->open($file) !== TRUE) {
+            throw new Exception("Cannot open <$file>");
+        } else {
+            for ($i = 0; $i < $zip->numFiles; $i++) {
+                $filename = $zip->getNameIndex($i);
+                $xml_string = $zip->getFromName($filename);
+
+                if ($xml_string != false) {
+                    $xml = simplexml_load_string($xml_string);
+                    $xml->registerXPathNamespace('ns', 'http://schemas.assemblee-nationale.fr/referentiel');
+
+                    $uid = $xml->uid ?? null;
+                        
+                    $participants = $xml->xpath('//ns:participantInterne');
+
+                    foreach ($participants as $participant) {
+                        $acteurRef = !empty($participant->acteurRef) ? (string) $participant->acteurRef : null;
+                        $presence = !empty($participant->presence) ? (string) $participant->presence : null;
+
+                        $reunionsPresence = array('uid' => $uid, 'acteurRef' => $acteurRef, 'presence' => $presence, 'dateMaj' => $dateMaj);
+                        $reunionsPresences = array_merge($reunionsPresences, array_values($reunionsPresence));              
+            
+                        if ($n % 500 === 0) {
+                            echo "let's insert this pack of 500\n";
+                            $this->insertAll('reunions_presences', $fields, $reunionsPresences);
+                            $reunionsPresences = [];
+                        }
+                        $n++;
+                    }
+                }
+            }
+        }
+        $this->insertAll('reunions_presences', $fields, $reunionsPresences);
+        $zip->close();      
+    }
+
     public function parrainages(){
       // 1. Create table if not exists
       $this->bdd->query("CREATE TABLE IF NOT EXISTS `parrainages` (
@@ -4341,8 +4397,9 @@ $script->historyMpsAverage();
 $script->historyPerMpsAverage();
 $script->debatsInfos();
 $script->debatsParas();
-*/
 $script->reunionsInfos();
+*/
+$script->reunionsPresences();
 /*
 //$script->parrainages(); // No longer used
 $script->opendata_activeMPs();
