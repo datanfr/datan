@@ -4073,7 +4073,7 @@ class Script
                         $reunionsPresences = array_merge($reunionsPresences, array_values($reunionsPresence));              
             
                         if ($n % 1000 === 0) {
-                            echo "let's insert this pack of 500\n";
+                            echo "let's insert this pack of 1000\n";
                             $this->insertAll('reunions_presences', $fields, $reunionsPresences);
                             $reunionsPresences = [];
                         }
@@ -4351,7 +4351,6 @@ if (isset($argv[1]) && isset($argv[2])) {
   $script = new Script();
 }
 
-/*
 $script->fillDeputes();
 $script->addBsky();
 $script->deputeAll();
@@ -4400,9 +4399,7 @@ $script->historyPerMpsAverage();
 $script->debatsInfos();
 $script->debatsParas();
 $script->reunionsInfos();
-*/
 $script->reunionsPresences();
-/*
 //$script->parrainages(); // No longer used
 $script->opendata_activeMPs();
 $script->opendata_activeGroupes();
