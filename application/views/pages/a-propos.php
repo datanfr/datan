@@ -253,7 +253,7 @@
             </div>
             <div class="card-body d-flex flex-column align-items-center">
               <h3 class="card-title">Brewalan</h3>
-              <p class="card-text text-center">Analyse et contenu</p>
+              <p class="card-text text-center">Éditorial & communication</p>
               <div class="social-media d-flex justify-content-center">
                 <a href="https://twitter.com/BrewalanM" target="_blank">
                   <img src="<?= asset_url() ?>imgs/logos/twitter.png" width="30" height="30" alt="Logo Twitter">
