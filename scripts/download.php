@@ -159,11 +159,25 @@ class Script
     }
 
     public function questions_gvt() {
-      echo "downloading reunions starting \n";
+      echo "downloading questions_gvt starting \n";
 
       if ($this->legislature_to_get == 17) {
         $file = 'http://data.assemblee-nationale.fr/static/openData/repository/17/questions/questions_gouvernement/Questions_gouvernement.xml.zip';
         $newfile = __DIR__ . '/questions_gvt_XVII.xml.zip';
+        if ($this->chunked_copy($file, $newfile)) {
+          echo "Success. Copied $newfile \n";
+        } else {
+          echo "failed to copy $newfile \n";
+        }
+      }      
+    }
+
+    public function questions_orales() {
+      echo "downloading questions_orales starting \n";
+
+      if ($this->legislature_to_get == 17) {
+        $file = 'http://data.assemblee-nationale.fr/static/openData/repository/17/questions/questions_orales_sans_debat/Questions_orales_sans_debat.xml.zip';
+        $newfile = __DIR__ . '/questions_orales_XVII.xml.zip';
         if ($this->chunked_copy($file, $newfile)) {
           echo "Success. Copied $newfile \n";
         } else {
@@ -187,3 +201,4 @@ $script->amendements();
 $script->comptes_rendus();
 $script->reunions();
 $script->questions_gvt();
+$script->questions_orales();
