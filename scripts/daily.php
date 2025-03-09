@@ -4187,6 +4187,46 @@ class Script
                 }
             }
         }
+        $zip->close(); 
+
+        // 3. Download data ==> questions orales sans débat
+        $file = __DIR__ . '/questions_orales_XVII.xml.zip';
+        $zip = new ZipArchive();
+
+        if ($zip->open($file) !== TRUE) {
+            throw new Exception("Cannot open <$file>");
+        } else {
+            for ($i = 0; $i < $zip->numFiles; $i++) {
+                $filename = $zip->getNameIndex($i);
+                $xml_string = $zip->getFromName($filename);
+
+                if ($xml_string != false) {
+                    $xml = simplexml_load_string($xml_string);
+
+                    $uid = $xml->uid ?? null;
+                    $legislature = $xml->identifiant->legislature ?? null;
+                    $numero = $xml->identifiant->numero ?? null;
+                    $type = $xml->type ?? null;
+                    $rubrique = $xml->indexationAN->rubrique ?? null;
+                    $analyse = $xml->indexationAN->analyses->analyse ?? null;
+                    $mpId = $xml->auteur->identite->acteurRef ?? null;
+                    $mpMandat = $xml->auteur->identite->mandatRef ?? null;
+                    $minInt = $xml->minInt->organeRef ?? null;
+                    $datePublished = $xml->textesQuestion->texteQuestion->infoJO->dateJO ?? null;
+
+                    $question = array('uid' => $uid, 'legislature' => $legislature, 'numero' => $numero, 'type' => $type, 'rubrique' => $rubrique, 'analyse' => $analyse, 'mpId' => $mpId, 'mpMandat' => $mpMandat, 'minInt' => $minInt, 'datePublished' => $datePublished, 'dateMaj' => $dateMaj);
+                    $questions = array_merge($questions, array_values($question));
+
+                    if ($x % 500 === 0) {
+                        echo "let's insert this pack of 500 \n";
+                        $this->insertAll('questions', $fields, $questions);
+                        $questions = [];
+                    }
+
+                    $x++;
+                }
+            }
+        }
         $this->insertAll('questions', $fields, $questions);
         $zip->close();  
 
