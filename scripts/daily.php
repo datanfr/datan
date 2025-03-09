@@ -4089,7 +4089,7 @@ class Script
     public function questions(){
         echo "questions starting \n";
         $dateMaj = $this->dateMaj;
-        $fields = array('uid', 'legislature', 'numero', 'type', 'rubrique', 'analyse', 'mpId', 'mpMandat', 'minInt', 'dateMaj');
+        $fields = array('uid', 'legislature', 'numero', 'type', 'rubrique', 'analyse', 'mpId', 'mpMandat', 'minInt', 'datePublished', 'dateMaj');
         $questions = [];
         $x = 1;
 
