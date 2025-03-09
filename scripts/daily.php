@@ -4086,6 +4086,69 @@ class Script
         $zip->close();      
     }
 
+    public function questions(){
+        echo "questions starting \n";
+        $dateMaj = $this->dateMaj;
+        $fields = array('uid', 'legislature', 'numero', 'type', 'rubrique', 'analyse', 'mpId', 'mpMandat', 'minInt', 'dateMaj');
+        $questions = [];
+        $x = 1;
+
+        // 1. Create table if not exists 
+        $this->bdd->query("CREATE TABLE IF NOT EXISTS `questions` (
+            `uid` VARCHAR(50) NOT NULL,
+            `legislature` INT DEFAULT NULL,
+            `numero` INT DEFAULT NULL,
+            `type` VARCHAR(15) DEFAULT NULL,
+            `rubrique` VARCHAR(255) DEFAULT NULL,
+            `analyse` TEXT DEFAULT NULL,
+            `mpId` VARCHAR(20) DEFAULT NULL,
+            `mpMandat` VARCHAR(20) DEFAULT NULL,
+            `minInt` VARCHAR(20) DEFAULT NULL,
+            `dateMaj` DATE DEFAULT NULL,
+            PRIMARY KEY (`uid`)
+        ) ENGINE = MyISAM CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;");
+
+        // 2. Download data ==> questions govt
+        $file = __DIR__ . '/questions_gvt_XVII.xml.zip';
+        $zip = new ZipArchive();
+
+        if ($zip->open($file) !== TRUE) {
+            throw new Exception("Cannot open <$file>");
+        } else {
+            for ($i = 0; $i < $zip->numFiles; $i++) {
+                $filename = $zip->getNameIndex($i);
+                $xml_string = $zip->getFromName($filename);
+
+                if ($xml_string != false) {
+                    $xml = simplexml_load_string($xml_string);
+
+                    $uid = $xml->uid ?? null;
+                    $legislature = $xml->identifiant->legislature ?? null;
+                    $numero = $xml->identifiant->numero ?? null;
+                    $type = $xml->type ?? null;
+                    $rubrique = $xml->indexationAN->rubrique ?? null;
+                    $analyse = $xml->indexationAN->analyses->analyse ?? null;
+                    $mpId = $xml->auteur->identite->acteurRef ?? null;
+                    $mpMandat = $xml->auteur->identite->mandatRef ?? null;
+                    $minInt = $xml->minInt->organeRef ?? null;
+
+                    $question = array('uid' => $uid, 'legislature' => $legislature, 'numero' => $numero, 'type' => $type, 'rubrique' => $rubrique, 'analyse' => $analyse, 'mpId' => $mpId, 'mpMandat' => $mpMandat, 'minInt' => $minInt, 'dateMaj' => $dateMaj);
+                    $questions = array_merge($questions, array_values($question));
+
+                    if ($x % 500 === 0) {
+                        echo "let's insert this pack of 500 \n";
+                        $this->insertAll('questions', $fields, $questions);
+                        $questions = [];
+                    }
+
+                    $x++;
+                }
+            }
+        }
+        $this->insertAll('questions', $fields, $questions);
+        $zip->close();   
+    }
+
     public function parrainages(){
       // 1. Create table if not exists
       $this->bdd->query("CREATE TABLE IF NOT EXISTS `parrainages` (
@@ -4351,6 +4414,7 @@ if (isset($argv[1]) && isset($argv[2])) {
   $script = new Script();
 }
 
+/*
 $script->fillDeputes();
 $script->addBsky();
 $script->deputeAll();
@@ -4400,6 +4464,9 @@ $script->debatsInfos();
 $script->debatsParas();
 $script->reunionsInfos();
 $script->reunionsPresences();
+*/
+$script->questions();
+/*
 //$script->parrainages(); // No longer used
 $script->opendata_activeMPs();
 $script->opendata_activeGroupes();
