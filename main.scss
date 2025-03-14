@@ -22,6 +22,7 @@ $abstention: #FFBA49;
 $rejected: #C5283D;
 $fcb-color: #4267B2;
 $twitter-color: #1DA1F2;
+$bluesky-color: #0886FE;
 $linkedin-color: #2867B2;
 $whatsapp-color: #128C7E;
 
@@ -2356,6 +2357,26 @@ body{
           }
           svg path{
             fill: $twitter-color;
+          }
+        }
+      }
+      &.btn-bluesky{
+        background-color: $bluesky-color;
+        svg{
+          width: 27px;
+          height: auto;
+          path{
+            fill: #fff;
+          }
+        }
+        &:hover{
+          background-color: #fff;
+          border: 1px solid $bluesky-color;
+          span{
+            color: $bluesky-color;
+          }
+          svg path{
+            fill: $bluesky-color;
           }
         }
       }
