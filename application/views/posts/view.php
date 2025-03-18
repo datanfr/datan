@@ -30,11 +30,15 @@
         <span class="category mr-3"><?= mb_strtoupper($post['category_name']) ?></span>
       </div>
       <div class="img mt-3">
-        <picture>
-          <source srcset="<?= asset_url() ?>imgs/posts/webp/img_post_<?= $post['id'] ?>.webp" type="image/webp">
-          <source srcset="<?= asset_url() ?>imgs/posts/img_post_<?= $post['id'] ?>.png" type="image/png">
-          <img src="<?= asset_url() ?>imgs/posts/img_post_<?= $post['id'] ?>.png" alt="Image post">
-        </picture>
+        <?php if(!empty($post['image_name'])): ?>
+          <img src="<?= asset_url() ?>imgs/posts/<?= $post['image_name'] ?>" alt="<?= $post['title'] ?>" class="img-fluid">
+        <?php else: ?>
+          <picture>
+            <source srcset="<?= asset_url() ?>imgs/posts/webp/img_post_<?= $post['id'] ?>.webp" type="image/webp">
+            <source srcset="<?= asset_url() ?>imgs/posts/img_post_<?= $post['id'] ?>.png" type="image/png">
+            <img src="<?= asset_url() ?>imgs/posts/img_post_<?= $post['id'] ?>.png" alt="Image post">
+          </picture>
+        <?php endif; ?>
       </div>
       <div class="body mt-3">
         <?= $post['body'] ?>
