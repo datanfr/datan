@@ -162,9 +162,11 @@
         $this->load->view('dashboard/footer');
       } else {
 
-        $this->post_model->create_post();
-
-        // Set message
+        $success = $this->post_model->create_post();
+        if (isset($success['error'])) {
+          $this->session->set_flashdata('error', $success['error']);
+          redirect('posts/create');
+        }
         $this->session->set_flashdata('post_created', 'Votre post a été créé');
         redirect('blog');
       }
@@ -217,11 +219,15 @@
     public function update(){
       $this->password_model->security();
       $data['type'] = 'team';
-      $this->post_model->update_post();
-
+      
+      $success = $this->post_model->update_post();
+      
+      if (isset($success['error'])) {
+        $this->session->set_flashdata('error', $success['error']);
+        redirect('posts/create');
+      }
       // Set message
       $this->session->set_flashdata('post_updated', 'Votre post a été modifié');
-
       redirect('blog');
     }
   }

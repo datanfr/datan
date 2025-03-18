@@ -21,6 +21,16 @@
           <div class="col-lg-12">
             <div class="card">
               <div class="card-body py-4">
+                <?php if ($this->session->flashdata('error')): ?>
+                  <div class="alert alert-danger">
+                    <?= $this->session->flashdata('error') ?>
+                  </div>
+                <?php endif; ?>
+                <?php if ($this->session->flashdata('post_created')): ?>
+                  <div class="alert alert-success">
+                    <?= $this->session->flashdata('post_created') ?>
+                  </div>
+                <?php endif; ?>
                 <?= validation_errors();  ?>
                 <?= form_open_multipart('posts/create'); ?>
                   <div class="form-group">
@@ -61,6 +71,14 @@
                         <option value="<?= $category['id'] ?>"><?= $category['name'] ?></option>
                       <?php endforeach; ?>
                     </select>
+                  </div>
+                  <div class="form-group">
+                    <label>Image du post</label>
+                    <div class="custom-file">
+                      <input type="file" class="custom-file-input" id="post_image" name="post_image">
+                      <label class="custom-file-label" for="post_image">Choisir une image</label>
+                      <small class="form-text text-muted">Formats acceptés : jpg, jpeg, png, gif, webp. Taille max : 2MB</small>
+                    </div>
                   </div>
                   <button type="submit" class="btn btn-primary">Submit</button>
                 </form>
