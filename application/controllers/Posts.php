@@ -153,8 +153,8 @@
 
       $data['categories'] = $this->category_model->get_categories();
 
-      $this->form_validation->set_rules('title', 'Title', 'required');
-      $this->form_validation->set_rules('body', 'Body', 'required');
+      $this->form_validation->set_rules('title', 'Titre', 'required');
+      $this->form_validation->set_rules('body', 'Texte', 'required');
 
       if ($this->form_validation->run() === FALSE) {
         $this->load->view('dashboard/header', $data);
@@ -204,8 +204,8 @@
       $data['title'] = 'Editer un post';
       $data['title_meta'] = $data['title'] . ' - Dashboard | Datan';
 
-      $this->form_validation->set_rules('title', 'Title', 'required');
-      $this->form_validation->set_rules('body', 'Body', 'required');
+      $this->form_validation->set_rules('title', 'Titre', 'required');
+      $this->form_validation->set_rules('body', 'Texte', 'required');
 
       if ($this->form_validation->run() === FALSE) {
         $this->load->view('dashboard/header', $data);
