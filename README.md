@@ -120,3 +120,14 @@ php /scripts/daily.php 14
 ```
 ## 5. Problème supplémentaire avec Windows
 * Si problème pour le lancement de la newsletter: https://stackoverflow.com/questions/21114371/php-curl-error-code-60  
+
+
+# Accéder au dashboard
+Pour accéder au dashboard, vous devez créer un utilisateur.
+application/controllers/Users.php, commentez la ligne 78 :
+```php
+// redirect(); // The register system is for now opened only for MPs.
+```
+Une fois inscrit (vous aurez peut-être une erreur Mailjet mais c'est pas grave), votre utilisateur sera dans la base de données.
+Il suffira alors de vous connecter à phpMyAdmin et modifier la colonne type pour votre utilisateur en "admin".
+Déconnectez-vous et connectez-vous à nouveau et vous aurez accès à /admin
