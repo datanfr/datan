@@ -1,18 +1,20 @@
     <div class="container-fluid bloc-img-deputes bloc-img d-flex async_background" id="container-always-fluid" style="height: 14em">
       <div class="container d-flex flex-column justify-content-center py-2">
-        <h1><?= $title ?></h1>
+        <h1 class="text-center"><?= $title ?></h1>
       </div>
     </div>
-    <div class="container pg-vote-all my-4">
-      <div class="row mt-2 mb-3">
+    <div class="container pg-vote-all my-5">
+      <div class="row">
         <div class="col-12">
-          <h2><?= $h2 ?></h2>
+          <h2>Liste des scrutins</h2>
           <?php if(empty($votes)): ?>
-            <p class="text-center mt-4">Il n'y a pas encore eu de scrutins à l'Assemblée nationale pour la <?= $legislature ?><sup>ème</sup> législature.</p>
+            <p class="text-center mt-3 mb-0">Il n'y a pas encore eu de scrutins à l'Assemblée nationale pour la <?= $legislature ?><sup>ème</sup> législature.</p>
+          <?php else: ?>
+            <p class="text-center mt-3 mb-0"><?= $description ?></p>
           <?php endif; ?>
         </div>
       </div>
-      <div class="row mt-2">
+      <div class="row mt-5">
         <div class="col-12">
           <table class="table" id="table-vote-all">
           	<thead>
@@ -54,7 +56,7 @@
       <hr class="mt-5">
       <div class="row my-3 py-3">
         <div class="col-12">
-          <h2 class="surtitre">Archives</h2>
+          <h2 class="surtitre">Archives de la <?= $legislature ?><sup>e</sup> législature</h2>
         </div>
       </div>
       <div class="row">
@@ -87,6 +89,21 @@
               </div>
             </div>
           <?php endforeach; ?>
+        </div>
+      </div>
+      <hr class="mt-5">
+      <div class="row my-3 py-3">
+        <div class="col-12">
+          <h2 class="surtitre">Archives d'autres législatures</h2>
+        </div>
+        <div class="col-12 mt-3">
+          <?php for ($i = 14; $i <= legislature_current(); $i++): ?>
+            <div class="d-flex flex-column align-items-center year text-center">
+              <div class="my-1 d-flex justify-content-center align-items-center">
+                <span><a href="<?= base_url() ?>votes/legislature-<?= $i ?>" class="no-decoration underline-blue"><?= $i ?><sup>e</sup> législature</a></span>                    
+              </div>
+            </div>
+          <?php endfor; ?>
         </div>
       </div>
     </div>
