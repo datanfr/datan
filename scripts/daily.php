@@ -27,7 +27,7 @@ class Script
         $this->dissolution = FALSE;
         $this->mp_photos = ($_SERVER['DATABASE_HOST'] === "localhost"); // TRUE for on server
         //$this->mp_photos = TRUE; // Use if you want to download all photos in local
-        $this->$photos_redownload = FALSE; // TRUE if you want to redownload the photos of one legislature
+        $this->photos_redownload = FALSE; // TRUE if you want to redownload the photos of one legislature
         if ($congress == "cong") {
           $this->congress = TRUE;
         }
@@ -591,7 +591,7 @@ class Script
             }
 
             // O. Delete photo if you want to redownload all photos (photos_redownload)
-            if ($this->$photos_redownload) {
+            if ($this->photos_redownload) {
                 if (file_exists($filename)) {
                     if (unlink($filename)) {
                         echo "$uid photo has been deleted \n";
@@ -685,7 +685,7 @@ class Script
             $newfile = $newfile . "_webp.webp";
 
             // Remove file if $photos_redownload
-            if ($this->$photos_redownload) {
+            if ($this->photos_redownload) {
                 if (file_exists($newdir . "" . $newfile)) {
                     if (unlink($newdir . "" . $newfile)) {
                         echo "$newfile photo has been deleted \n";
@@ -3111,8 +3111,8 @@ class Script
         $fields = array('legislature', 'voteNumero', 'amendmentHref');
 
         while ($vote = $query->fetch()){
-            echo "Scrap AN's website.\n";
             $voteNumero = $vote['voteNumero'];
+            echo "Scrap AN's website. Vote number: " . $voteNumero . "\n";
             $url = "https://www.assemblee-nationale.fr/dyn/" . $this->legislature_to_get . "/scrutins/" . $voteNumero;
             $html = file_get_html($url);
             $a = FALSE;       
@@ -3180,7 +3180,7 @@ class Script
                             $stmt->bindParam(':id', $id, PDO::PARAM_INT);
 
                             if ($stmt->execute()) {
-                                echo "AmendmentId updated successfully.\n";
+                                echo "AmendmentId $amdtId updated successfully.\n";
                             } else {
                                 echo "Error updating record: " . print_r($stmt->errorInfo(), true);
                             }
