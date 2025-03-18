@@ -21,8 +21,18 @@
           <div class="col-lg-12">
             <div class="card">
               <div class="card-body py-4">
+                <?php if ($this->session->flashdata('error')): ?>
+                  <div class="alert alert-danger">
+                    <?= $this->session->flashdata('error') ?>
+                  </div>
+                <?php endif; ?>
+                <?php if ($this->session->flashdata('post_updated')): ?>
+                  <div class="alert alert-success">
+                    <?= $this->session->flashdata('post_updated') ?>
+                  </div>
+                <?php endif; ?>
                 <?= validation_errors();  ?>
-                <?= form_open('posts/update'); ?>
+                <?= form_open_multipart('posts/update'); ?>
                     <input type="hidden" name="id" value="<?= $post['id']; ?>">
                   <div class="form-group">
                     <label>Title</label>
@@ -63,6 +73,20 @@
                         <option value="<?= $category['id'] ?>"><?= $category['name'] ?></option>
                       <?php endforeach; ?>
                     </select>
+                  </div>
+                  <div class="form-group">
+                    <label>Image du post</label>
+                    <?php if(!empty($post['image_name'])): ?>
+                      <div class="mb-2">
+                        <img src="<?= asset_url() ?>imgs/posts/<?= $post['image_name'] ?>" alt="Image du post" style="max-width: 200px; max-height: 200px;" class="img-thumbnail">
+                        <p class="mt-1">Image actuelle : <?= $post['image_name'] ?></p>
+                      </div>
+                    <?php endif; ?>
+                    <div class="custom-file">
+                      <input type="file" class="custom-file-input" id="post_image" name="post_image">
+                      <label class="custom-file-label" for="post_image">Choisir une nouvelle image</label>
+                      <small class="form-text text-muted">Formats acceptés : jpg, jpeg, png, gif, webp. Taille max : 2MB</small>
+                    </div>
                   </div>
                   <?php if ($this->session->userdata('type') == 'admin'): ?>
                     <div class="form-group">

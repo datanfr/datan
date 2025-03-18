@@ -14,11 +14,15 @@
         <div class="card card-post mt-3">
           <div class="row no-gutters">
             <div class="col-auto img-wrap d-none d-lg-block">
-              <picture>
-                <source srcset="<?= asset_url() ?>imgs/posts/webp/img_post_<?= $post['id'] ?>.webp" type="image/webp">
-                <source srcset="<?= asset_url() ?>imgs/posts/img_post_<?= $post['id'] ?>.png" type="image/png">
-                <img src="<?= asset_url() ?>imgs/posts/img_post_<?= $post['id'] ?>.png" alt="Image post">
-              </picture>
+              <?php if(!empty($post['image_name'])): ?>
+                <img src="<?= asset_url() ?>imgs/posts/<?= $post['image_name'] ?>" alt="<?= $post['title'] ?>" class="img-fluid">
+              <?php else: ?>
+                <picture>
+                  <source srcset="<?= asset_url() ?>imgs/posts/webp/img_post_<?= $post['id'] ?>.webp" type="image/webp">
+                  <source srcset="<?= asset_url() ?>imgs/posts/img_post_<?= $post['id'] ?>.png" type="image/png">
+                  <img src="<?= asset_url() ?>imgs/posts/img_post_<?= $post['id'] ?>.png" alt="Image post">
+                </picture>
+              <?php endif; ?>
             </div>
             <div class="col">
               <div class="card-block p-3">
