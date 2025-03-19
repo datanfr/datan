@@ -42,7 +42,7 @@
             <p><?= $ville["commune_nom"] ?> compte <b><?= $ville["pop2017_format"] ?> habitants</b>. La population de la commune a <b><?= $ville['evol10_text'] ?></b> de <?= round($ville['evol10_edited'], 1) ?> % depuis 10 ans.</p>
           <?php endif; ?>
           <?php if (!empty($mayor["nameFirst"])): ?>
-            <p><?= ucfirst($mayor["gender_le"]) ?> maire de <?= $ville["commune_nom"] ?> est <b><?= $mayor["nameFirst"]." ".ucfirst(mb_strtolower($mayor["nameLast"])) ?></b>.</p>
+            <p><?= ucfirst($mayor["gender"]["le"]) ?> maire de <?= $ville["commune_nom"] ?> est <b><?= $mayor["nameFirst"]." ".ucfirst(mb_strtolower($mayor["nameLast"])) ?></b>.</p>
           <?php endif; ?>
           <h2 class="mt-4"><?= $n_circos == 1 ? 'La' : 'Les' ?> circonscription<?= $n_circos == 1 ? '' : 's' ?> de <?= $ville['commune_nom'] ?></h2>
           <?php if ($n_circos == 1): ?>
