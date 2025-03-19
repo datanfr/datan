@@ -92,14 +92,10 @@
 
       $array = $query->row_array();
 
-      print_r($array);
-
       // Manual correcting
       if ($array['nameLast'] == 'SALVO' && $insee == '13028') {
         $array = array('nameFirst' => 'Alexandre', 'nameLast' => 'Doriol', 'gender' => 'M');
       }
-
-      print_r($array);
 
       return $array;
     }
