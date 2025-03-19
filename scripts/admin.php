@@ -79,16 +79,6 @@
               </div>
             </div>
           </div>
-          <div class="row mt-5">
-            <div class="col">
-              <div class="my-4 p-3" style="border: 5px solid #00B794">
-                <h3>Data update</h3>
-                <div class="list-group">
-                  <a href="cities_mayors_update.php" class="list-group-item list-group-item-action list-group-item-primary">Update cities_mayors (the open data source is updated every three month)</a>
-                </div>
-              </div>
-            </div>
-          </div>
         </div>
     </main>
   </body>

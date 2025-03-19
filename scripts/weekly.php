@@ -181,102 +181,62 @@ class Script
 
       $url = "https://www.data.gouv.fr/fr/datasets/r/2876a346-d50c-4911-934e-19ee07b0e503";
       $lines = file($url, FILE_IGNORE_NEW_LINES);
+      array_shift($lines);
 
       $i = 1;
 
       foreach ($lines as $key => $value) {
         $value = utf8_encode($value);
-        $array = preg_split("/[\t]/", $value);
-        if ($array[0] != "Titre du rapport" && $array[0] != "Code du département (Maire)" && $array[0] != "code_departement") {
+        $array = explode(";", $value);
 
-          $dpt = utf8_decode($array[0]);
-          $libelle_dpt = utf8_decode($array[1]);
-          $insee = utf8_decode($array[4]);
-          $libelle_commune = utf8_decode($array[5]);
-          $nameLast = utf8_decode($array[6]);
-          $nameFirst = utf8_decode($array[7]);
-          $gender = utf8_decode($array[8]);
-          $birthDate = utf8_decode($array[9]);
-          $profession = utf8_decode($array[11]);
-          $libelle_profession = utf8_decode($array[12]);
+        $dpt = utf8_decode($array[0]);
+        $libelle_dpt = utf8_decode($array[1]);
+        $insee = utf8_decode($array[4]);
+        $libelle_commune = utf8_decode($array[5]);
+        $nameLast = utf8_decode($array[6]);
+        $nameFirst = utf8_decode($array[7]);
+        $gender = utf8_decode($array[8]);
+        $birthDate = utf8_decode($array[9]);
+        $profession = utf8_decode($array[10]);
+        $libelle_profession = utf8_decode($array[11]);
 
-          $birthDate = str_replace("/", "-", $birthDate);
-          $birthDate = date("Y-m-d", strtotime($birthDate));
+        $birthDate = str_replace("/", "-", $birthDate);
+        $birthDate = date("Y-m-d", strtotime($birthDate));
 
-          if ($profession == "") $profession = null;
+        if ($profession == "") $profession = null;
 
-          if ($libelle_profession == "") $libelle_profession = null;
+        if ($libelle_profession == "") $libelle_profession = null;
 
-          switch ($dpt) {
-            case '2A':
-              $dpt = '2a';
-              break;
-            case '2B':
-              $dpt = '2b';
-              break;
-            case 'ZA':
-              $dpt = 971;
-              break;
-            case 'ZB':
-              $dpt = 972;
-              break;
-            case 'ZC':
-              $dpt = 973;
-              break;
-            case 'ZD':
-              $dpt = 974;
-              break;
-            case 'ZM':
-              $dpt = 976;
-              break;
-            case 'ZN':
-              $dpt = 988;
-              break;
-            case 'ZP':
-              $dpt = 987;
-              break;
-            case 'ZS':
-              $dpt = 975;
-              break;
-            case 'ZW':
-              $dpt = 986;
-              break;
-            case 'ZX':
-              $dpt = 977;
-              break;
-            case 'ZZ':
-              $dpt = "099";
-              break;
-            default:
-              $dpt;
-              break;
-          }
+        $dptMap = [
+          '2A' => '2a', '2B' => '2b', 'ZA' => 971, 'ZB' => 972, 'ZC' => 973,
+          'ZD' => 974, 'ZM' => 976, 'ZN' => 988, 'ZP' => 987, 'ZS' => 975,
+          'ZW' => 986, 'ZX' => 977, 'ZZ' => "099"
+        ];
+        $dpt = $dptMap[$dpt] ?? $dpt; // Keep original value if not in the map
 
+        $item = array(
+          'dpt' => $dpt,
+          'libelle_dpt' => $libelle_dpt,
+          'insee' => $insee,
+          'libelle_commune' => $libelle_commune,
+          'nameLast' => $nameLast,
+          'nameFirst' => $nameFirst,
+          'gender' => $gender,
+          'birthDate' => $birthDate,
+          'profession' => $profession,
+          'libelle_profession' => $libelle_profession,
+          'dateMaj' => $this->dateMaj
+        );
 
-          //echo $i." - ".$dpt." - ".$libelle_dpt." - ".$insee." - ".$libelle_commune." - ".$nameLast." - ".$nameFirst." - ".$gender." - ".$birthDate." - ".$profession." - ".$libelle_profession."<br>";
+        $importArray = array_merge($importArray, array_values($item));
 
-          $item = array(
-            'dpt' => $dpt,
-            'libelle_dpt' => $libelle_dpt,
-            'insee' => $insee,
-            'libelle_commune' => $libelle_commune,
-            'nameLast' => $nameLast,
-            'nameFirst' => $nameFirst,
-            'gender' => $gender,
-            'birthDate' => $birthDate,
-            'profession' => $profession,
-            'libelle_profession' => $libelle_profession,
-            'dateMaj' => $this->dateMaj
-          );
-          $importArray = array_merge($importArray, array_values($item));
-
-          if ($i % 250 === 0) {
-            echo "Let's import until n " . $i . "\n";
-            $this->insertAll('cities_mayors', $fields, $importArray);
-            $importArray = [];
-          }
-          $i++;
+        if ($i % 250 === 0) {
+          echo "Let's import until n " . $i . "\n";
+          $this->insertAll('cities_mayors', $fields, $importArray);
+          $importArray = [];
         }
+        $i++;
+          
       }
       $this->insertAll('cities_mayors', $fields, $importArray);
     }
@@ -290,5 +250,5 @@ if (isset($argv[1])) {
     $script = new Script();
 }
 
-$script->hatvpScrapping();
+//$script->hatvpScrapping();
 $script->mayors();
