@@ -182,25 +182,25 @@
 
   // Gender of actors
   function gender($gender){
-    if ($gender == 'Mme') {
-      return array(
+    $map = [
+      'female' => [
         'depute' => 'députée',
         'pronom' => 'elle',
-        'e' => 'e',
-        'le' => 'la',
-        'son' => 'sa',
-        'du' => 'de la'
-      );
-    } elseif ($gender == 'M.') {
-      return array(
+        'e'      => 'e',
+        'le'     => 'la',
+        'son'    => 'sa',
+        'du'     => 'de la'
+      ],
+      'male' => [
         'depute' => 'député',
         'pronom' => 'il',
-        'e' => '',
-        'le' => 'le',
-        'son' => 'son',
-        'du' => 'du'
-      );
-    }
+        'e'      => '',
+        'le'     => 'le',
+        'son'    => 'son',
+        'du'     => 'du'
+      ]
+    ];
+    return ($gender == 'Mme' || $gender === 'F') ? $map['female'] : $map['male'];
   }
 
   // Abbreviation of numbers (1er / 2e )
