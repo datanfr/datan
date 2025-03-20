@@ -516,7 +516,7 @@ endif; ?>
     data: {
       labels: ["Pour", "Abstention", "Contre"],
       datasets: [{
-        label: "Population (millions)",
+        label: "Nombre de votes",
         backgroundColor: ["#00B794", "#FFBA49", "#C5283D"],
         data: [<?= $vote['pour'] ?>, <?= $vote['abstention'] ?>, <?= $vote['contre'] ?>]
       }]
@@ -527,6 +527,9 @@ endif; ?>
       },
       plugins: {
         legend: {
+          display: false
+        },
+        datalabels: {
           display: false
         }
       },
