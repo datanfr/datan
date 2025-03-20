@@ -348,7 +348,7 @@
         $data['description_meta'] = "Quel groupe parlementaire est le plus actif au moment de voter ? Quel groupe a le plus faible taux de participation ? Découvrez le classement sur Datan.";
         $data['title'] = "L'origine sociale des députés";
         // JS
-        $data['js_to_load_up'] = array('libraries/chart.js/chart.min.js');
+        $data['js_to_load_up'] = array('dist/chart.min.js');
       } elseif ($url == "groupes-origine-sociale") {
         // Data
         $data['famSocPro'] = $this->jobs_model->get_stats_all_mp(legislature_current());
