@@ -6,10 +6,12 @@ import {
     PointElement,
     BarController,
     DoughnutController,
+    PieController,
     LineController,
     CategoryScale,
     LinearScale,
-    Tooltip
+    Tooltip,
+    Legend
   } from 'chart.js';
 
 import ChartDataLabels from 'chartjs-plugin-datalabels';
@@ -21,9 +23,11 @@ Chart.register(
     PointElement,
     BarController,
     DoughnutController,
+    PieController,
     LineController,
     CategoryScale,
     LinearScale,
     Tooltip,
+    Legend,
     ChartDataLabels
 );
