@@ -545,7 +545,7 @@
         )
       );
       // JS UP
-      $data['js_to_load_up'] = array('libraries/chart.js/chart.min.js');
+      $data['js_to_load_up'] = array('dist/chart.min.js');
       // JS
       $data['js_to_load']= array(
         'libraries/moment/moment.min',
