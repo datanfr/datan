@@ -29,6 +29,9 @@
       plugins: {
         datalabels: {
           display: false
+        },
+        legend: {
+          display: true,
         }
       }
     }
