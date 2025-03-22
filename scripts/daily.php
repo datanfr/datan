@@ -1787,7 +1787,7 @@ class Script
                 $type_vote = "final";
             } elseif (strpos($titre, "sous-amendement") || strpos($titre, "sous-amendment")) {
                 $type_vote = "sous-amendement";
-            } elseif (strpos($titre, "'amendement")) {
+            } elseif (strpos($titre, "amendement")) {
                 $type_vote = "amendement";
             } elseif (substr($titre, 0, 8) == "l'articl" || substr($titre, 0, 8) == " l'artic") {
                 $type_vote = "article";
@@ -1817,9 +1817,10 @@ class Script
                 $type_vote = "conclusions de rejet de la commission";
             } elseif (strpos($titre, "projet de loi constitutionnelle")) {
               $type_vote = "projet de loi constitutionnelle";
+            } elseif (strpos($titre, "demande")) {
+                $type_vote = "demande";
             } else {
-                $type_vote = substr($titre, 0, 8);
-                //$type_vote = "REVOIR";
+                $type_vote = NULL;
             }
 
             //variable amdt_n
@@ -1838,6 +1839,8 @@ class Script
             if ($type_vote == "article") {
                 $pos_article = NULL;
                 if (strpos($titre, "article premier")) {
+                    $article_n = 1;
+                } elseif (strpos($titre, "article unique") || strpos($titre, "article liminaire")) {
                     $article_n = 1;
                 } else {
                     $article_n = substr($titre, 0, 20);
