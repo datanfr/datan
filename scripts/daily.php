@@ -1304,18 +1304,7 @@ class Script
     {
         // THIS FUNCTION UPDATE THE FOLLOWING TABLES --> votes ; votes_info ; votes_groupes
         echo "vote starting \n";
-        echo "starting vote\n";
-        $response_vote = $this->bdd->query('
-            SELECT voteNumero
-            FROM votes
-            WHERE legislature = "' . $this->legislature_to_get . '"
-            ORDER BY voteNumero DESC
-            LIMIT 1
-        ');
-
-        $dernier_vote = $response_vote->fetch();
-        $number_to_import = isset($dernier_vote['voteNumero']) ? $dernier_vote['voteNumero'] + 1 : 1;
-        echo "From vote n° " . $number_to_import . "\n";
+        $n = 1;
 
         // SCRAPPING DEPENDING ON LEGISLATURE
         if ($this->legislature_to_get >= 15) {
@@ -1337,29 +1326,11 @@ class Script
                 $votesInfo = [];
                 $votesGroupe = [];
 
-                while (1) {
-                    $file_to_import = 'VTANR5L' . $this->legislature_to_get . 'V' . $number_to_import++;
-                    $xml_string = $zip->getFromName('xml/' . $file_to_import . '.xml');
-                    if ($xml_string == false) { // Check if the AN file forgot to include one vote
-                      $file_to_import = 'VTANR5L' .  $this->legislature_to_get . 'V' . ($number_to_import + 1);
-                      $xml_string = $zip->getFromName('xml/' . $file_to_import . '.xml');
-                      if ($xml_string == false) {
-                        $congres = array('VTCGR5L16V1');
-                        foreach ($congres as $cong) {
-                          $response_congress = $this->bdd->query('SELECT voteNumero FROM votes WHERE legislature = "' . $this->legislature_to_get . '" AND voteId = "' . $cong . '" LIMIT 1');
-                          $response_congress = $response_congress->fetch();
-                          if (!$response_congress) {
-                            $file_to_import = 'VTCGR5L16V1';
-                            $xml_string = $zip->getFromName('xml/' . $file_to_import . '.xml');
-                          } else {
-                            $xml_string = FALSE;
-                          }
-                        }
-                      }
-                    }
+                for ($i = 0; $i < $zip->numFiles; $i++) {
+                    $filename = $zip->getNameIndex($i);
+                    $xml_string = $zip->getFromName($filename);
                     if ($xml_string != false) {
                         $xml = simplexml_load_string($xml_string);
-                        //votes
                         foreach ($xml->xpath("//*[local-name()='votant']") as $votant) {
                             $mpId = $votant->xpath("./*[local-name()='acteurRef']");
                             $item['mpId'] = $mpId[0];
@@ -1564,8 +1535,8 @@ class Script
                     } else {
                         break;
                     }
-                    if ($number_to_import % 50 === 0) {
-                        echo "Let's insert to scrutin from " . $number_to_import . "\n";
+                    if ($n % 50 === 0) {
+                        echo "Let's insert votes \n";
                         // insert votes
                         $this->insertAll('votes', $voteMainFields, $votesMain);
                         // insert votes infos
@@ -1576,9 +1547,10 @@ class Script
                         $votesInfo = [];
                         $votesGroupe = [];
                     }
+                    $n++;
                 }
-                if ($number_to_import % 50 !== 0) {
-                    echo "Let's insert to scrutin until the end the : " . $number_to_import . "\n";
+                if ($n % 50 !== 0) {
+                    echo "Let's insert votes \n";
                     $this->insertAll('votes', $voteMainFields, $votesMain);
                     // insert votes infos
                     $this->insertAll('votes_info', $voteInfoFields, $votesInfo);
@@ -3814,7 +3786,7 @@ class Script
 
         // 1. Create table if not exists
         $this->bdd->query("CREATE TABLE IF NOT EXISTS `debats_infos` (
-            `uid` VARCHAR(255) NOT NULL,
+            `uid` VARCHAR(150) NOT NULL,
             `seanceRef` VARCHAR(255) DEFAULT NULL,
             `sessionRef` VARCHAR(255) DEFAULT NULL,
             `dateSeance` DATE DEFAULT NULL,
