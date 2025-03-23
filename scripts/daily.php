@@ -800,6 +800,7 @@ class Script
             (SELECT @s:= 0) AS s
             ORDER BY A.effectif DESC;
             ALTER TABLE groupes_effectif ADD INDEX idx_organeRef (organeRef);
+            ALTER TABLE groupes_effectif CONVERT TO CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci;
         ');
     }
 
@@ -947,13 +948,14 @@ class Script
         $this->bdd->exec('CREATE INDEX idx_mpId ON deputes_last(mpId)');
         $this->bdd->exec('CREATE INDEX idx_legislature ON deputes_last(legislature);');
         $this->bdd->exec('ALTER TABLE `deputes_last` ADD PRIMARY KEY(`mpId`, `legislature`);');
+        $this->bdd->exec('ALTER TABLE deputes_last CONVERT TO CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci;');
     }
 
     public function groupeStats()
     {
         echo "groupeStats starting \n";
         $this->bdd->query("DROP TABLE IF EXISTS groupes_stats");
-        $this->bdd->query('CREATE TABLE groupes_stats ( organeRef VARCHAR(15) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL , womenPct DECIMAL(4,2) NULL , womenN INT(3) NULL  , age DECIMAL(4,2) NULL, rose_index DECIMAL(4,3) ) ENGINE = MyISAM;');
+        $this->bdd->query('CREATE TABLE groupes_stats ( organeRef VARCHAR(15) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL , womenPct DECIMAL(4,2) NULL , womenN INT(3) NULL  , age DECIMAL(4,2) NULL, rose_index DECIMAL(4,3) ) ENGINE = MyISAM CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci;');
 
         $reponse = $this->bdd->query('
             SELECT *
@@ -1076,16 +1078,16 @@ class Script
       echo "groupeStatsHistory starting \n";
 
       $this->bdd->query('CREATE TABLE IF NOT EXISTS `groupes_stats_history`(
-        `organeRef` VARCHAR(15) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL ,
-        `stat` VARCHAR(15) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL ,
-        `type` VARCHAR(15) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL ,
+        `organeRef` VARCHAR(15) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL ,
+        `stat` VARCHAR(15) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL ,
+        `type` VARCHAR(15) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL ,
         `legislature` INT(2) NOT NULL ,
         `dateValue` DATE NOT NULL ,
-        `value` VARCHAR(15) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL ,
+        `value` VARCHAR(15) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL ,
         `dateMaj` DATE NOT NULL ,
         INDEX `idx_organeRef` (`organeRef`) ,
         INDEX `idx_type` (`type`)
-      )');
+      ) ENGINE = MyISAM CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci;');
       $this->bdd->query('TRUNCATE TABLE groupes_stats_history');
 
       $reponse = $this->bdd->query('SELECT * FROM organes WHERE legislature >= 14 AND coteType = "GP" ORDER BY legislature ASC');
@@ -1164,12 +1166,12 @@ class Script
       echo "groupeMembersHistory starting \n";
 
       $this->bdd->query('CREATE TABLE IF NOT EXISTS `groupes_effectif_history`(
-        `organeRef` VARCHAR(15) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL ,
+        `organeRef` VARCHAR(15) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL ,
         `dateValue` DATE NOT NULL ,
         `effectif` INT(3) NOT NULL ,
         `dateMaj` DATE NOT NULL ,
         PRIMARY KEY (`organeRef`, `dateValue`)
-      )');
+      ) ENGINE = MyISAM CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci;');
 
       $fields = array('organeRef', 'dateValue', 'effectif', 'dateMaj');
       $effectifs = [];
@@ -1257,8 +1259,7 @@ class Script
     public function legislature()
     {
         echo "legislature starting \n";
-        $this->bdd->exec('
-            CREATE TABLE IF NOT EXISTS legislature (
+        $this->bdd->exec('CREATE TABLE IF NOT EXISTS legislature (
             id INT(3) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
             organeRef VARCHAR(30) NOT NULL,
             libelle VARCHAR(255) NOT NULL,
@@ -1268,7 +1269,7 @@ class Script
             dateDebut DATE NOT NULL,
             dateFin DATE NULL,
             dateMaj DATE NOT NULL
-            );
+            ) ENGINE = MyISAM CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci;;
         ');
 
         $this->bdd->query('TRUNCATE TABLE legislature');
@@ -2221,13 +2222,14 @@ class Script
                 id INT(3) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
                 voteNumero INT(6) NOT NULL,
                 legislature TINYINT(2) NOT NULL,
-                organeRef VARCHAR(15) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
-                organeRefAccord VARCHAR(15) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+                organeRef VARCHAR(15) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
+                organeRefAccord VARCHAR(15) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
                 accord TINYINT(2) NULL,
                 dateMaj DATE
             );
             CREATE INDEX idx_organeRef ON groupes_accord(organeRef);
             CREATE INDEX idx_organeRefAccord ON groupes_accord(organeRefAccord);
+            ALTER TABLE groupes_accord CONVERT TO CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci;
         ');
 
         $reponse_last_vote = $this->bdd->query('
@@ -2477,6 +2479,8 @@ class Script
             ALTER TABLE class_participation ADD INDEX idx_mpId (mpId);
             ALTER TABLE class_participation ADD INDEX idx_active (active);
         ');
+
+        $this->bdd->query('ALTER TABLE class_participation CONVERT TO CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci');
     }
 
     public function classParticipationCommission()
@@ -2500,6 +2504,7 @@ class Script
                 LEFT JOIN deputes_all da ON da.mpId = A.mpId AND da.legislature = A.legislature;
                 ALTER TABLE class_participation_commission ADD INDEX idx_mpId (mpId);
                 ALTER TABLE class_participation_commission ADD INDEX idx_active (active);
+                ALTER TABLE class_participation_commission CONVERT TO CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci;
             ');
         }
     }
@@ -2524,6 +2529,7 @@ class Script
             LEFT JOIN deputes_all da ON da.mpId = A.mpId AND da.legislature = A.legislature;
             ALTER TABLE class_participation_solennels ADD INDEX idx_mpId (mpId);
             ALTER TABLE class_participation_solennels ADD INDEX idx_active (active);
+            ALTER TABLE class_participation_solennels CONVERT TO CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci;
         ');
     }
 
@@ -2542,6 +2548,7 @@ class Script
           ALTER TABLE deputes_loyaute ADD INDEX idx_mpId (mpId);
           ALTER TABLE deputes_loyaute ADD INDEX idx_mandatId (mandatId);
           ALTER TABLE deputes_loyaute ADD INDEX idx_legislature (legislature);
+          ALTER TABLE deputes_loyaute CONVERT TO CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci;
         ');
     }
 
@@ -2557,6 +2564,7 @@ class Script
             JOIN deputes_all da ON dl.mpId = da.mpId AND dl.mandatId = da.groupeMandat;
             ALTER TABLE class_loyaute ADD INDEX idx_mpId (mpId);
             ALTER TABLE class_loyaute ADD INDEX idx_legislature (legislature);
+            ALTER TABLE class_loyaute CONVERT TO CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci;
         ');
     }
 
@@ -2577,6 +2585,7 @@ class Script
             ) A;
             ALTER TABLE class_majorite ADD INDEX idx_mpId (mpId);
             ALTER TABLE class_majorite ADD INDEX idx_legislature (legislature);
+            ALTER TABLE class_majorite CONVERT TO CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci;
         ');
     }
 
@@ -2815,6 +2824,8 @@ class Script
 
         $this->bdd->query("ALTER TABLE class_groups_proximite ADD INDEX idx_organeRef (organeRef)");
         $this->bdd->query("ALTER TABLE class_groups_proximite ADD INDEX idx_legislature (legislature)");
+
+        $this->bdd->query("ALTER TABLE class_groups_proximite CONVERT TO CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci");
     }
 
     public function dossier()
@@ -2931,14 +2942,14 @@ class Script
         echo "dossiersSeances \n";
         $this->bdd->query('CREATE TABLE IF NOT EXISTS `dossiers_seances` (
             `id` INT NOT NULL AUTO_INCREMENT ,
-            `dossierId` VARCHAR(25) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL ,
+            `dossierId` VARCHAR(25) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NULL DEFAULT NULL ,
             `legislature` INT NULL DEFAULT NULL ,
-            `seanceId` VARCHAR(25) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL ,
+            `seanceId` VARCHAR(25) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NULL DEFAULT NULL ,
             `seanceDate` DATE NOT NULL ,
             `dateMaj` DATE NOT NULL ,
             PRIMARY KEY (`id`) , 
             UNIQUE INDEX `idx_unique` (`dossierId`, `seanceId`)
-        ) ENGINE = MyISAM;');
+        ) ENGINE = MyISAM CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci;');
 
         $dossierFields = array('dossierId', 'legislature', 'seanceId', 'seanceDate', 'dateMaj');
         $dossier = [];
@@ -3627,7 +3638,8 @@ class Script
             (SELECT @s:= 0) AS s
             ORDER BY C.score DESC, C.votesN DESC;
             ALTER TABLE class_participation_six ADD PRIMARY KEY (id);
-            ALTER TABLE class_participation_six ADD INDEX idx_mpId (mpId);";
+            ALTER TABLE class_participation_six ADD INDEX idx_mpId (mpId);
+            ALTER TABLE class_participation_six CONVERT TO CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci;";
 
         $this->bdd->query($sql);
         }
@@ -3647,7 +3659,9 @@ class Script
                     votesN INT(15) NOT NULL,
                     dateMaj DATE NOT NULL,
                     PRIMARY KEY (id));
-                    ALTER TABLE class_loyaute_six ADD INDEX idx_mpId (mpId);
+                ALTER TABLE class_loyaute_six ADD INDEX idx_mpId (mpId);
+                ALTER TABLE class_loyaute_six CONVERT TO CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci;
+
             ');
             $sql = 'SELECT @s:=@s+1 AS "classement", B.*
               FROM (
@@ -3710,6 +3724,7 @@ class Script
             WHERE A.accord IS NOT NULL;
             ALTER TABLE deputes_accord_cleaned ADD INDEX idx_mpId (mpId);
             ALTER TABLE deputes_accord_cleaned ADD INDEX idx_legislature (legislature);
+            ALTER TABLE deputes_accord_cleaned CONVERT TO CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci;
         ');
     }
 
@@ -3717,7 +3732,7 @@ class Script
     {
         echo "historyMpsAverage starting \n";
         $this->bdd->query('DROP TABLE IF EXISTS history_mps_average;');
-        $this->bdd->query('CREATE TABLE `history_mps_average` ( `id` TINYINT NOT NULL AUTO_INCREMENT , `legislature` TINYINT NOT NULL , `length` DECIMAL(4,2) NOT NULL , PRIMARY KEY (`id`)) ENGINE = MyISAM;');
+        $this->bdd->query('CREATE TABLE `history_mps_average` ( `id` TINYINT NOT NULL AUTO_INCREMENT , `legislature` TINYINT NOT NULL , `length` DECIMAL(4,2) NOT NULL , PRIMARY KEY (`id`)) ENGINE = MyISAM CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci;');
         $terms = array(14, 15, 16, 17);
         foreach ($terms as $term) {
             echo "Getting average for term => " . $term . "\n";
@@ -3778,6 +3793,7 @@ class Script
                         GROUP BY A.mpId
                 ) B;
             ALTER TABLE history_per_mps_average ADD INDEX idx_mpId (mpId);
+            ALTER TABLE history_per_mps_average CONVERT TO CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci;
         ');
     }
 
@@ -3789,15 +3805,15 @@ class Script
 
         // 1. Create table if not exists
         $this->bdd->query("CREATE TABLE IF NOT EXISTS `debats_infos` (
-            `uid` VARCHAR(150) NOT NULL,
-            `seanceRef` VARCHAR(255) DEFAULT NULL,
-            `sessionRef` VARCHAR(255) DEFAULT NULL,
+            `uid` VARCHAR(150) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
+            `seanceRef` VARCHAR(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci DEFAULT NULL,
+            `sessionRef` VARCHAR(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci DEFAULT NULL,
             `dateSeance` DATE DEFAULT NULL,
             `numSeanceJour` INT DEFAULT NULL,
             `legislature` INT DEFAULT NULL,
             `dateMaj` DATE DEFAULT NULL,
             PRIMARY KEY (`uid`)
-        ) ENGINE = MyISAM;");
+        ) ENGINE = MyISA CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci;");
 
         // 2. Download data
         $file = __DIR__ . '/comptes_rendus_XVII.xml.zip';
@@ -3854,22 +3870,22 @@ class Script
         // 1. Create table if not exists
         $this->bdd->query("CREATE TABLE IF NOT EXISTS `debats_paras` (
             `id` INT NOT NULL AUTO_INCREMENT,
-            `idCr` VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+            `idCr` VARCHAR(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci DEFAULT NULL,
             `idSyceron` INT DEFAULT NULL,
-            `acteurId` VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-            `mandatId` VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-            `codeGrammaire` VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-            `roleDebat` VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-            `id_nomination_op` VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-            `id_nomination_oe` VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-            `article` VARCHAR(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-            `adt` VARCHAR(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-            `ssadt` VARCHAR(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-            `texte` TEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+            `acteurId` VARCHAR(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci DEFAULT NULL,
+            `mandatId` VARCHAR(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci DEFAULT NULL,
+            `codeGrammaire` VARCHAR(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci DEFAULT NULL,
+            `roleDebat` VARCHAR(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci DEFAULT NULL,
+            `id_nomination_op` VARCHAR(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci DEFAULT NULL,
+            `id_nomination_oe` VARCHAR(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci DEFAULT NULL,
+            `article` VARCHAR(50) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci DEFAULT NULL,
+            `adt` VARCHAR(50) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci DEFAULT NULL,
+            `ssadt` VARCHAR(50) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci DEFAULT NULL,
+            `texte` TEXT CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci DEFAULT NULL,
             `dateMaj` DATE DEFAULT NULL,
             PRIMARY KEY (`id`),
             UNIQUE KEY `unique_idSyceron` (`idSyceron`)
-        ) ENGINE = MyISAM;");
+        ) ENGINE = MyISAM CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci;");
 
         // 2. Download data
         $file = __DIR__ . '/comptes_rendus_XVII.xml.zip';
@@ -3947,7 +3963,7 @@ class Script
             `formatReunion` VARCHAR(55) DEFAULT NULL,
             `dateMaj` DATE DEFAULT NULL,
             PRIMARY KEY (`uid`)
-        ) ENGINE = MyISAM CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;");
+        ) ENGINE = MyISAM CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci;");
 
         // 2. Download data
         $file = __DIR__ . '/reunions_XVII.xml.zip';
@@ -4019,7 +4035,7 @@ class Script
             `dateMaj` DATE DEFAULT NULL,
             PRIMARY KEY (`id`),
             UNIQUE KEY `unique_reunion_acteur` (`reunionId`, `acteurRef`)
-        ) ENGINE = MyISAM CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;");
+        ) ENGINE = MyISAM CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci;");
 
         // 2. Download the data
         $file = __DIR__ . '/reunions_XVII.xml.zip';
@@ -4082,7 +4098,7 @@ class Script
             `datePublished` DATE DEFAULT NULL,
             `dateMaj` DATE DEFAULT NULL,
             PRIMARY KEY (`uid`)
-        ) ENGINE = MyISAM CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;");
+        ) ENGINE = MyISAM CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci;");
 
         // 2. Download data ==> questions govt
         $file = __DIR__ . '/questions_gvt_XVII.xml.zip';
@@ -4215,7 +4231,7 @@ class Script
           `nameLast` VARCHAR(75) NOT NULL ,
           `nameFirst` VARCHAR(75) NOT NULL ,
           `mandat` VARCHAR(100) NOT NULL ,
-          `circo` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL ,
+          `circo` TEXT CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NULL DEFAULT NULL ,
           `dpt` VARCHAR(80) NOT NULL ,
           `candidat` VARCHAR(100) NOT NULL ,
           `datePublication` DATE NOT NULL ,
@@ -4224,7 +4240,7 @@ class Script
           `dateMaj` DATE  ,
           PRIMARY KEY (`id`) ,
           UNIQUE INDEX (`nameLast`, `nameFirst`, `dpt`, `datePublication`, `mandat`) ,
-          INDEX `mpId_idx` (`mpId`)) ENGINE = MyISAM;
+          INDEX `mpId_idx` (`mpId`)) ENGINE = MyISAM CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci;
       ");
 
       // 2. Get and insert open data
