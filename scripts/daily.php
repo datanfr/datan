@@ -1269,7 +1269,7 @@ class Script
             dateDebut DATE NOT NULL,
             dateFin DATE NULL,
             dateMaj DATE NOT NULL
-            ) ENGINE = MyISAM CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci;;
+            ) ENGINE = MyISAM CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci;
         ');
 
         $this->bdd->query('TRUNCATE TABLE legislature');
@@ -3661,7 +3661,6 @@ class Script
                     PRIMARY KEY (id));
                 ALTER TABLE class_loyaute_six ADD INDEX idx_mpId (mpId);
                 ALTER TABLE class_loyaute_six CONVERT TO CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci;
-
             ');
             $sql = 'SELECT @s:=@s+1 AS "classement", B.*
               FROM (
