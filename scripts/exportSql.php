@@ -40,7 +40,6 @@ function EXPORT_TABLES($host, $user, $pass, $name, $tables = false, $backup_name
       'regions',
       'votes_amendments',
       'votes_datan',
-      'votes_datan_requested',
       'mysql_v'
     );
     $mysqli = new mysqli($host, $user, $pass, $name);
