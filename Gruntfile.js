@@ -210,7 +210,7 @@ module.exports = function (grunt) {
           height: 1350
         },
         // The source file
-        src: base_url + '/groupes/legislature-16/lfi-nupes',
+        src: base_url + '/groupes/legislature-17/rn',
         // The destination file
         dest: 'assets/css/critical/groupe_individual.css'
       },
@@ -225,7 +225,7 @@ module.exports = function (grunt) {
           height: 1700
         },
         // The source file
-        src: base_url + '/groupes/legislature-16/lfi-nupes',
+        src: base_url + '/groupes/legislature-17/rn',
         // The destination file
         dest: 'assets/css/critical/groupe_individual-mobile.css'
       },
