@@ -499,7 +499,9 @@
     <div class="container p-md-0">
       <div class="row py-5">
         <div class="col-lg-12 bloc-posts">
-          <h2 class="text-center">L'actualité du Parlement</h2>
+          <h2 class="text-center">Blog</h2>
+          <h2 class="text-center">Nos analyses et décryptages</h2>
+          <h2 class="text-center">L'actualité de Datan, de l'Assemblée nationale et des parlementaires</h2>
           <div class="row pt-4">
             <?php foreach ($posts as $post): ?>
               <div class="col-12 col-md-6 offset-md-3 col-lg-12 offset-lg-0">
