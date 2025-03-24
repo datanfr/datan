@@ -42,7 +42,7 @@
   </div>
   <div class="mt-4 d-flex flex-column align-items-center">
     <a href="<?= base_url();?>deputes" class="no-decoration">
-      <button type="button" class="btn btn-outline-light">Tous les députés</button>
+      <button type="button" class="btn btn-light">Tous les députés</button>
     </a>
   </div>
 </div>
@@ -52,23 +52,47 @@
   <div class="row bloc-constats py-4">
     <div class="container p-md-0">
       <div class="row py-4">
-        <div class="col-12">
-          <h2 class="text-center pb-4">Datan : un site de <b>vulgarisation parlementaire</b></h2>
-          <div class="row pt-4">
-            <!-- Constat -->
-            <div class="d-flex align-items-start justify-content-center col-xl-5 col-md-6 col-12">
-              <div>
-                <h3 class="mb-3">Constat</h3>
-                <p>Il est difficile de <b>suivre l'activité</b> des députés <br>et de <b>savoir ce qu'ils votent</b></p>
-              </div>
-            </div>
-            <!-- Solution -->
-            <div class="d-flex align-items-start justify-content-center col-md-6 col-xl-5 offset-xl-2 col-12">
-              <div>
-                <h3 class="mb-3">Solution</h3>
-                <p>Datan <b>explique les votes</b> <br>des députés et groupes politiques</p>
-              </div>
-            </div>
+        <div class="col-lg-6">
+          <h2 class="pb-4">Datan : Un outil de vulgarisation parlementaire</h2>
+          <p>
+            Il est difficile de <b>suivre l'activité</b> des députés et de savoir ce qu'ils votent.</b>
+            <span class="text-primary font-weight-bold">Datan</span> explique <b>les votes</b> des députés et groupes politiques.
+          </p>
+          <p class="mb-1">
+            <span class="icon"><?= file_get_contents(asset_url()."imgs/icons/check_circle_fill.svg") ?></span>
+            Scrutins de l'Assemblée en temps réel
+          </p>
+          <p class="mb-1">
+            <span class="icon"><?= file_get_contents(asset_url()."imgs/icons/check_circle_fill.svg") ?></span>
+            Profils détaillés des députés
+          </p>
+          <p class="mb-0">
+            <span class="icon"><?= file_get_contents(asset_url()."imgs/icons/check_circle_fill.svg") ?></span>
+            Statistiques sur la formation des coalitions 
+          </p>
+          <div class="mt-4 d-flex flex-column flex-md-row align-items-start">
+            <a class="btn btn-primary mr-md-4 mb-3 mb-md-0" href="<?= base_url() ?>a-propos">En savoir plus</a>
+            <a class="btn btn-outline-primary" href="<?= base_url() ?>votes">Voir les derniers votes</a>
+          </div>
+        </div>
+        <div class="d-none d-lg-block col-lg-6">
+          <div class="img-container">
+          <img src="<?= asset_url() ?>imgs/cover/assemblee-nationale.jpg" alt="Assemblée nationale - photo de Mathias Reding">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- BLOC DONATIONS -->
+  <div class="row bloc-donations">
+    <div class="container py-4">
+      <div class="row">
+        <div class="col-12 col-lg-8 offset-lg-2 my-4">
+          <div class="icon d-flex justify-content-center"><?= file_get_contents(asset_url()."imgs/icons/heart-fill.svg") ?></div>
+          <h2 class="text-center mb-4 mt-2">Nous soutenir</h2>
+          <p class="text-center">Datan est un <b>outil indépendant</b>. Votre don nous permet de garantir l'accès à des données parlementaires, à jour, précises et accessibles à tous.</p>
+          <div class="d-flex justify-content-center mt-4">
+            <a class="btn btn-primary" href="https://www.helloasso.com/associations/datan/formulaires/1" target="_blank" rel="noopener">Faire un don</a>
           </div>
         </div>
       </div>
@@ -499,7 +523,9 @@
     <div class="container p-md-0">
       <div class="row py-5">
         <div class="col-lg-12 bloc-posts">
-          <h2 class="text-center">L'actualité du Parlement</h2>
+          <h2 class="text-center">Blog</h2>
+          <h2 class="text-center">Nos analyses et décryptages</h2>
+          <h2 class="text-center">L'actualité de Datan, de l'Assemblée nationale et des parlementaires</h2>
           <div class="row pt-4">
             <?php foreach ($posts as $post): ?>
               <div class="col-12 col-md-6 offset-md-3 col-lg-12 offset-lg-0">
