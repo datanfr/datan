@@ -17,6 +17,7 @@ $body-bg: $bg-colour;
 $primary: $vert;
 $info: $bleu;
 $primary_rgb: rgb(0, 183, 148);
+$secondary_rgb: rgb(0, 102, 142);
 $adopted: $vert;
 $abstention: #FFBA49;
 $rejected: #C5283D;
@@ -394,22 +395,6 @@ body:not(.pg-mentions) #tarteaucitronIcon {
     span {
       text-decoration: underline;
     }
-  }
-}
-.don{
-  height: 30px;
-  background-color: $bleu;
-  transition: 0.3s;
-  &:hover{
-    background-color: $bg-colour;
-    span{
-      color: $bleu;
-    }
-  }
-  span{
-    color: #fff;
-    font-size: 1.1em;
-    font-weight: 800;
   }
 }
 body.modal-open {
@@ -1716,11 +1701,41 @@ body{
       font-size: $h4-font-size;
       font-weight: 800;
     }
-    p{
-      text-align: center;
+    .icon{
+      color: $primary;
     }
-    span {
-      font-weight: 600;
+    .img-container{
+      position: relative;
+      display: inline-block;
+      
+      img{
+        display: block;
+        width: 100%;
+        border-radius: $card-border-radius;
+      }
+
+      &::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(100, 100, 100, 0.6);
+        mix-blend-mode: multiply;
+        pointer-events: none;
+        border-radius: $card-border-radius;
+      }
+    }
+  }
+  .bloc-donations{
+    background-color: rgba($secondary_rgb, 0.1);
+    .icon{
+      color: #D93B3B;
+      svg {
+        width: 1.5em;
+        height: 1.5em;
+      }
     }
   }
   .bloc-quiz{
