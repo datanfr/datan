@@ -191,15 +191,7 @@
   }
   ?>
   <body class="<?= $mentions ?>" data-spy="scroll" data-target="#navScrollspy" data-offset="90">
-    <!-- DON -->
-    <div class="">
-      <a href="https://www.helloasso.com/associations/datan/formulaires/1" target="_blank" rel="noopener" class="no-decoration">
-        <div class="don d-flex justify-content-center align-items-center p-1">
-          <span>Soutenez-nous !</span>
-        </div>
-      </a>
-    </div>
-    <div class="sticky-top" style="">
+    <div class="sticky-top">
       <!-- NAVBAR IF LOGGED IN -->
     </div>
     <!-- MAIN NAVBAR -->

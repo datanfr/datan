@@ -62,7 +62,7 @@
         'KOENIG Gaspard' => 'Gaspar Koenig',
         'HERROU Cédric' => 'Cédric Herrou'
       );
-      return $array[$name];
+      return isset($array[$name]) ? $array[$name] : $name;
     }
 
     public function get_500($year){
