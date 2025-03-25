@@ -633,25 +633,13 @@ body.modal-open {
     color: $primary;
   }
 }
-.see-all-carousel{
-  background-color: $primary;
-  border-radius: 12px;
-  color: #fff;
-  font-weight: 800;
-  transition: 0.3s;
-  &:hover{
-    border: 1px solid $primary;
-    background-color: #fff;
-    color: $primary;
-  }
-}
 .carousel-container{
   .carousel-buttons{
     margin-top: 1rem;
   }
   button{
     &.prev, &.prev-all, &.next, &.next-all{
-      border-radius: 12px;
+      border-radius: $btn-border-radius;
       background-color: #E8E8E8;
       width: 50px;
       transition: 0.3s;
@@ -1695,25 +1683,17 @@ body{
   }
   /* Bloc constat */
   .bloc-constats{
-    h3{
-      color: $primary;
-      text-align: center;
-      font-size: $h4-font-size;
-      font-weight: 800;
-    }
     .icon{
       color: $primary;
     }
     .img-container{
       position: relative;
       display: inline-block;
-      
       img{
         display: block;
         width: 100%;
         border-radius: $card-border-radius;
       }
-
       &::after {
         content: "";
         position: absolute;
@@ -1738,26 +1718,8 @@ body{
       }
     }
   }
-  .bloc-quiz{
-    background-color: $bleu;
-    color: #fff !important;
-    h2 {
-      color: #ffffff;
-    }
-    h3 {
-      font-weight: 800;
-      font-size: $h4-font-size;
-      color: #ffffff;
-    }
-  }
   .bloc-hasard{
     background: linear-gradient(136.67deg, #246B96 17.99%, #00B794 86.12%);
-    h2 {
-      color: $white;
-      font-size: $h3-font-size;
-      font-weight: 800;
-      text-align: center;
-    }
   }
   .bloc-election{
     h3{
@@ -1786,11 +1748,9 @@ body{
       }
     }
   }
-  /* bloc-support */
   .bloc-support{
     background-color: $bleu;
   }
-  /* BLOC-PIE */
   .bloc-pie{
     .tableGroupes{
       font-size: $h5-font-size;
@@ -1813,18 +1773,32 @@ body{
     }
   }
   .bloc-posts{
-    img{
-      width: 100%;
-      height: auto;
-    }
-    .category{
+    .surtitle{
+      color: $text-black;
+      text-align: center;
+      font-weight: 600;
+      font-size: $h5-font-size;
       color: $primary;
-      font-size: $h7-font-size;
     }
-    .date{
-      color: $text-gray-light;
-      font-size: $h7-font-size;
-    }
+    .article{
+      img{
+        width: 100%;
+        height: auto;
+        border-radius: 7px;
+      }
+      .title{
+        font-size: $h4-font-size;
+        font-weight: 600;
+      }
+      .category{
+        color: $primary;
+        font-size: $h7-font-size;
+      }
+      .date{
+        color: $text-gray-light;
+        font-size: $h7-font-size;
+      }
+    }    
   }
   .bloc-map{
     .map_france{
