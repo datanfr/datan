@@ -205,7 +205,6 @@
       return $this->db->query($sql, legislature_current())->result_array();
   }
   
-
     public function get_mps_participation_solennels($legislature){
       $sql = 'SELECT cp.*, da.nameFirst, da.nameLast, da.civ, da.libelle AS libelle, da.libelleAbrev AS libelleAbrev, da.dptSlug, da.nameUrl, da.couleurAssociee, da.img,
         CONCAT(da.departementNom, " (", da.departementCode, ")") AS cardCenter, da.legislature AS legislature_last
