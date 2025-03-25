@@ -99,20 +99,20 @@
     </div>
   </div>
   <!-- VOTES CARDS -->
-  <div class="row bloc-votes" id="pattern_background">
+  <div class="row bloc-votes">
     <div class="container p-md-0">
       <div class="row py-4">
         <div class="col-12">
           <h2 class="text-center my-4">Derniers votes décryptés par Datan</h2>
         </div>
-        <div class="col-12 carousel-container bloc-carousel-votes-flickity">
+        <div class="col-12 carousel-container bloc-carousel-votes-flickity mt-4 mb-4">
           <?php $this->load->view('votes/partials/votes_carousel.php', array('votes' => $votes)) ?>
           <div class="carousel-buttons d-flex justify-content-center">
             <button type="button" class="btn prev mr-2 carousel--prev" aria-label="précédent">
               <?= file_get_contents(asset_url()."imgs/icons/arrow_left.svg") ?>
             </button>
-            <a class="btn see-all-carousel mx-2" href="<?= base_url() ?>votes/decryptes">
-              <span>VOIR TOUS LES VOTES</span>
+            <a class="btn btn-primary mx-2" href="<?= base_url() ?>votes">
+              Tous les votes
             </a>
             <button type="button" class="btn next ml-2 carousel--next" aria-label="suivant">
               <?= file_get_contents(asset_url()."imgs/icons/arrow_right.svg") ?>
@@ -123,7 +123,7 @@
     </div>
   </div>
   <!-- BLOC COALITION SIMULATEUR -->
-  <div class="row">
+  <div class="row"id="pattern_background">
     <div class="container py-4">
       <div class="row">
         <div class="col-12">
@@ -150,30 +150,39 @@
         </div>
       </div>
     </div>
-  </div>
-  <!-- BLOC-HASARD -->
-  <div class="row bloc-hasard">
-    <div class="container pt-0">
+  </div>  
+  <!-- BLOC POSTS -->
+  <div class="row">
+    <div class="container p-md-0">
       <div class="row py-5">
-        <!-- DEPUTE AU HASARD CARD -->
-        <div class="<?= $groupe_random ? "col-md-6" : "col-md-12" ?> py-4">
-          <h2>DÉPUTÉ<?= mb_strtoupper($depute_random['e']) ?> AU HASARD</h2>
-          <div class="d-flex justify-content-center">
-            <?php $this->load->view('deputes/partials/card_home.php', array('depute' => $depute_random, 'tag' => 'span', 'footer' => 'discover', 'logo' => true, 'stats' => FALSE)) ?>
+        <div class="col-lg-12 bloc-posts">
+          <h3 class="surtitle text-center">Blog</h3>
+          <h2 class="text-center">Nos analyses et décryptages</h2>
+          <p class="text-center">L'actualité de Datan, de l'Assemblée nationale et des députés</p>
+          <div class="row pt-4">
+            <?php foreach ($posts as $index => $post): ?>
+              <div class="col-md-4 <?= $index > 0 ? 'mt-md-0 mt-4' : '' ?>">
+                <div class="article">
+                  <div class="image">
+                    <img class="img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder.png" data-src="<?= asset_url() ?>imgs/posts/img_post_<?= $post['id'] ?>.png" alt="Image post <?= $post['id'] ?>" width="480" height="240">
+                  </div>
+                  <div class="mt-2 mb-1">
+                    <span class="category mr-2"><?= mb_strtoupper($post['category_name']) ?></span>
+                  </div>
+                  <h3 class="title mb-0">
+                    <a href="<?= base_url() ?>blog/<?= $post['category_slug'] ?>/<?= $post['slug'] ?>" class="stretched-link no-decoration underline"><?= $post['title'] ?></a>
+                  </h3>
+                  <div>
+                    <span class="date"><?= $post['created_at_fr'] ?></span>
+                  </div>
+                </div>
+              </div>
+            <?php endforeach; ?>
           </div>
         </div>
-        <!-- GROUPE AU HASARD CARD -->
-        <?php if ($groupe_random): ?>
-          <div class="col-md-6 py-4">
-            <h2>GROUPE AU HASARD</h2>
-            <div class="d-flex justify-content-center">
-              <?php $this->load->view('groupes/partials/card_home.php', array('groupe' => $groupe_random, 'tag' => 'span', 'active' => TRUE, 'cat' => $groupe_random['effectif'] ? $groupe_random['effectif'] . " membres" : "", 'stats' => FALSE)) ?>
-            </div>
-          </div>
-        <?php endif; ?>
       </div>
     </div>
-  </div>   
+  </div> <!-- // END BLOC POSTS -->
   <!-- BLOC EXPLICATIONS -->
   <div class="row bloc-votes" id="pattern_background">
     <div class="container p-md-0">
@@ -518,41 +527,6 @@
       </div>
     </div>
   </div> <!-- // END BLOC ILS PARLENT DE NOUS -->
-  <!-- BLOC POSTS -->
-  <div class="row">
-    <div class="container p-md-0">
-      <div class="row py-5">
-        <div class="col-lg-12 bloc-posts">
-          <h2 class="text-center">Blog</h2>
-          <h2 class="text-center">Nos analyses et décryptages</h2>
-          <h2 class="text-center">L'actualité de Datan, de l'Assemblée nationale et des parlementaires</h2>
-          <div class="row pt-4">
-            <?php foreach ($posts as $post): ?>
-              <div class="col-12 col-md-6 offset-md-3 col-lg-12 offset-lg-0">
-                <div class="card card-post my-3">
-                  <div class="row no-gutters">
-                    <div class="col-auto img-wrap d-none d-lg-block">
-                      <img class="img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder.png" data-src="<?= asset_url() ?>imgs/posts/img_post_<?= $post['id'] ?>.png" alt="Image post <?= $post['id'] ?>" width="480" height="240">
-                    </div>
-                    <div class="col">
-                      <div class="card-block p-3">
-                        <span class="category mr-2"><?= mb_strtoupper($post['category_name']) ?></span>
-                        <span class="date mr-2">Créé le <?= $post['created_at_fr'] ?></span>
-                        <h2 class="card-title">
-                          <a href="<?= base_url() ?>blog/<?= $post['category_slug'] ?>/<?= $post['slug'] ?>" class="stretched-link no-decoration"><?= $post['title'] ?></a>
-                        </h2>
-                        <p class="card-text"><?= word_limiter(Strip_tags($post['body']), 35) ?></p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            <?php endforeach; ?>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div> <!-- // END BLOC POSTS -->
   <!-- FRANCE MAP -->
   <div class="row" id="pattern_background">
     <div class="container p-md-0">
