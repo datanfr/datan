@@ -44,16 +44,16 @@
       return $query->row_array();
     }
 
-    public function get_last_posts(){
-      $query = $this->db->query('
-        SELECT p.id, date_format(created_at, "%d %M %Y") as created_at_fr, p.title, p.body, p.slug, c.slug AS category_slug, c.name AS category_name
-        FROM posts p
-        LEFT JOIN categories c ON p.category_id = c.id
-        WHERE p.state = "published"
-        ORDER BY created_at DESC
-        LIMIT 5
-      ');
-      return $query->result_array();
+    public function get_last_posts($limit = FALSE){
+      $this->db->select('p.id, DATE_FORMAT(p.created_at, "%d %M %Y") as created_at_fr, p.title, p.body, p.slug, c.slug AS category_slug, c.name AS category_name');
+      $this->db->join('categories c', 'p.category_id = c.id', 'left');
+      $this->db->where('p.state', 'published');
+      $this->db->order_by('p.created_at', 'DESC');
+      if ($limit){
+        $this->db->limit($limit);
+      }
+      
+      return $this->db->get('posts p')->result_array();
     }
 
     public function create_post(){

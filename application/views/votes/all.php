@@ -29,8 +29,8 @@
                 <button type="button" class="btn prev mr-2 carousel--prev" aria-label="précédent">
                   <?= file_get_contents(asset_url()."imgs/icons/arrow_left.svg") ?>
                 </button>
-                <a class="btn see-all-carousel mx-2" href="<?= base_url() ?>votes/decryptes">
-                  <span>VOIR TOUS LES VOTES</span>
+                <a class="btn btn-primary mx-2" href="<?= base_url() ?>votes/decryptes">
+                  Tous les votes
                 </a>
                 <button type="button" class="btn next ml-2 carousel--next" aria-label="suivant">
                   <?= file_get_contents(asset_url()."imgs/icons/arrow_right.svg") ?>
@@ -106,8 +106,8 @@
                 <button type="button" class="btn prev mr-2 carousel--prev" aria-label="précédent">
                   <?= file_get_contents(asset_url()."imgs/icons/arrow_left.svg") ?>
                 </button>
-                <a class="btn see-all-carousel mx-2" href="<?= base_url() ?>votes/decryptes">
-                  <span>VOIR TOUS LES VOTES</span>
+                <a class="btn btn-primary mx-2" href="<?= base_url() ?>votes/decryptes">
+                  Tous les votes
                 </a>
                 <button type="button" class="btn next ml-2 carousel--next" aria-label="suivant">
                   <?= file_get_contents(asset_url()."imgs/icons/arrow_right.svg") ?>
