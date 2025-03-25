@@ -35,13 +35,14 @@
       // Get by category
       $data['fields'] = $this->fields_model->get_active_fields();
       $fields = $data['fields'];
+      $x = [];
       foreach ($fields as $field) {
         $x[$field["slug"]]["votes"] = array_slice($this->votes_model->get_votes_datan_category($field['id']), 0, 2);
         $x[$field["slug"]]["name"] = $field["name"];
         $x[$field["slug"]]["slug"] = $field["slug"];
       }
       $data['by_field'] = $x;
-
+    
       // Get all votes
       $data['votes'] = $this->votes_model->get_all_votes(NULL, NULL, NULL, 10);
       // Archives
