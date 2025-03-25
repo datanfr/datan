@@ -43,7 +43,6 @@
       }
       $data['by_field'] = $x;
     
-
       // Get all votes
       $data['votes'] = $this->votes_model->get_all_votes(NULL, NULL, NULL, 10);
       // Archives
