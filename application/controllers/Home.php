@@ -98,7 +98,7 @@
       $data['candidatRandom']['cardCenter'] = isset($district['libelle']) && $district['libelle'] != '' ? $district['libelle'] . ' (' . $district['id'] . ')' : '';
 
       //Get posts (needs to be cached)
-      $data['posts'] = $this->post_model->get_last_posts();
+      $data['posts'] = $this->post_model->get_last_posts(3);
 
       // Composition
       $data['composition'] = TRUE;
