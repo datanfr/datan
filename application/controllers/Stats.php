@@ -69,7 +69,7 @@
       $data['n_sps'] = $this->votes_model->get_n_votes(legislature_current(), NULL, NULL, 'SPS') ?? 0;
       $data['mps_participation'] = ($data['n_sps'] > 10) 
         ? $this->stats_model->get_mps_participation_solennels(legislature_current()) 
-        : $this->stats_model->get_mps_participation();
+        : $this->stats_model->get_mps_participation(legislature_current());
 
       if ($data['mps_participation']) {
         $data['mps_participation_first'] = array_slice($data['mps_participation'], 0, 3);
