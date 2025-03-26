@@ -193,22 +193,21 @@
       return $query->result_array();
     }
 
-    public function get_mps_participation($legislature){
-      $sql = 'SELECT @s:=@s+1 AS "rank", A.*
-              FROM
-              (
-              SELECT cp.mpId, cp.score, cp.votesN, da.nameFirst, da.nameLast, da.civ, da.libelle,
-                     da.libelleAbrev, da.dptSlug, da.nameUrl, da.couleurAssociee, da.img,
-                     da.departementNom, da.departementCode, da.legislature AS legislature_last
-              FROM class_participation cp
-              LEFT JOIN deputes_last da ON cp.mpId = da.mpId AND da.legislature = cp.legislature
-              WHERE da.active AND cp.legislature = ? AND cp.votesN > 5
-               ) A,
-              (SELECT @s:= 0) AS s
-               ORDER BY A.score DESC, A.votesN DESC
-             ';
-             return $this->db->query($sql, $legislature)->result_array();
-  }
+    public function get_mps_participation() {
+      $sql = 'SELECT @rank := @rank + 1 AS "rank", A.*
+              FROM (
+                  SELECT cp.*, da.nameFirst, da.nameLast, da.civ, da.libelle AS libelle, da.libelleAbrev AS libelleAbrev, 
+                         da.dptSlug, da.nameUrl, da.couleurAssociee, da.img, da.departementNom, da.departementCode, 
+                         da.legislature AS legislature_last
+                  FROM class_participation cp
+                  LEFT JOIN deputes_last da ON cp.mpId = da.mpId AND da.legislature = cp.legislature
+                  WHERE da.active AND cp.legislature = ? AND cp.votesN > 5
+              ) A,
+              (SELECT @rank := 0) AS s
+              ORDER BY A.score DESC, A.votesN DESC';
+  
+      return $this->db->query($sql, legislature_current())->result_array();
+    }
   
     public function get_mps_participation_solennels($legislature){
       $sql = 'SELECT cp.*, da.nameFirst, da.nameLast, da.civ, da.libelle AS libelle, da.libelleAbrev AS libelleAbrev, da.dptSlug, da.nameUrl, da.couleurAssociee, da.img,
