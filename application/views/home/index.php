@@ -91,7 +91,7 @@
           <div class="icon d-flex justify-content-center"><?= file_get_contents(asset_url()."imgs/icons/heart-fill.svg") ?></div>
           <h2 class="text-center mb-4 mt-2">Nous soutenir</h2>
           <p class="text-center">Datan est un <b>outil indépendant</b>.</p>
-          <p>🔍 Rendre accessible l'activité des députés ... Pour continuer, on a besoin de vous ! Soutenez Datan pour faire vivre la transparence démocratique et l'accès aux données parlementaires.</p>
+          <p class="text-center">🔍 Rendre accessible l'activité des députés ... Pour continuer, on a besoin de vous ! Soutenez Datan pour faire vivre la transparence démocratique et l'accès aux données parlementaires.</p>
           <div class="d-flex justify-content-center mt-4">
             <a class="btn btn-primary" href="https://www.helloasso.com/associations/datan/formulaires/1" target="_blank" rel="noopener">Faire un don</a>
           </div>
