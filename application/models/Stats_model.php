@@ -306,21 +306,28 @@
       return $this->db->query($sql, $legislature)->row_array();
     }
 
-    public function get_groups_participation(){
-      $query = $this->db->query('SELECT @s:=@s+1 AS "rank", A.*
-        FROM
-        (
-        SELECT cg.organeRef, cg.value, round(cg.value * 100) AS participation, o.libelle, o.libelleAbrev, o.couleurAssociee, o.legislature, ge.effectif
-        FROM class_groups cg
-        LEFT JOIN organes o ON cg.organeRef = o.uid
-        LEFT JOIN groupes_effectif ge ON cg.organeRef = ge.organeRef
-        WHERE cg.active = 1 AND cg.stat = "participation"
-        ) A,
-        (SELECT @s:= 0) AS s
-        ORDER BY A.value DESC
-      ');
-
-      return $query->result_array();
+    public function get_groups_participation() : array
+    {
+        $sql = 'SELECT 
+                    RANK() OVER (ORDER BY cg.value DESC) AS "rank", 
+                    cg.organeRef, 
+                    cg.value AS participation, 
+                    ROUND(cg.value * 100) AS participation, 
+                    o.libelle, 
+                    o.libelleAbrev, 
+                    o.couleurAssociee, 
+                    o.legislature, 
+                    ge.effectif
+                FROM class_groups cg
+                LEFT JOIN organes o 
+                    ON cg.organeRef = o.uid
+                LEFT JOIN groupes_effectif ge 
+                    ON cg.organeRef = ge.organeRef
+                WHERE cg.active = 1 
+                    AND cg.stat = "participation"
+                ORDER BY participation DESC';
+        
+        return $this->db->query($sql)->result_array();
     }
 
     public function get_groups_participation_commission(){
@@ -340,23 +347,30 @@
       return $query->result_array();
     }
 
-    public function get_groups_participation_sps(){
-      $query = $this->db->query('SELECT @s:=@s+1 AS "rank", A.*
-        FROM
-        (
-        SELECT cg.organeRef, cg.value, round(cg.value * 100) AS participation, o.libelle, o.libelleAbrev, o.couleurAssociee, o.legislature, ge.effectif
-        FROM class_groups cg
-        LEFT JOIN organes o ON cg.organeRef = o.uid
-        LEFT JOIN groupes_effectif ge ON cg.organeRef = ge.organeRef
-        WHERE cg.active = 1 AND cg.stat = "participationSPS"
-        ) A,
-        (SELECT @s:= 0) AS s
-        ORDER BY A.value DESC
-      ');
-
-      return $query->result_array();
+    public function get_groups_participation_sps() : array
+    {
+        $sql = 'SELECT 
+                    RANK() OVER (ORDER BY cg.value DESC) AS "rank", 
+                    cg.organeRef, 
+                    cg.value, 
+                    ROUND(cg.value * 100) AS participation, 
+                    o.libelle, 
+                    o.libelleAbrev, 
+                    o.couleurAssociee, 
+                    o.legislature, 
+                    ge.effectif
+                FROM class_groups cg
+                LEFT JOIN organes o 
+                    ON cg.organeRef = o.uid
+                LEFT JOIN groupes_effectif ge 
+                    ON cg.organeRef = ge.organeRef
+                WHERE cg.active = 1 
+                    AND cg.stat = "participationSPS"
+                ORDER BY participation DESC';
+    
+        return $this->db->query($sql)->result_array();
     }
-
+    
     public function get_women_history(){
       $array = array(
         array(
