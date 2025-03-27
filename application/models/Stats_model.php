@@ -269,16 +269,39 @@
       return $array;
     }
 
-    public function get_mps_participation_commission($legislature){
-      $sql = 'SELECT cp.mpId, cp.score, cp.votesN, da.nameFirst, da.nameLast, da.civ, da.libelle AS libelle, da.libelleAbrev AS libelleAbrev, da.dptSlug, da.nameUrl, da.couleurAssociee, da.departementNom, da.departementCode, o.libelleAbrege AS commission
-        FROM class_participation_commission cp
-        LEFT JOIN deputes_all da ON cp.mpId = da.mpId
-        LEFT JOIN mandat_secondaire ms ON cp.mpId = ms.mpId
-        LEFT JOIN organes o ON ms.organeRef = o.uid
-        WHERE da.legislature = ? AND cp.active = 1 AND ms.typeOrgane = "COMPER" AND ms.codeQualite = "Membre" AND ms.dateFin IS NULL
-        ORDER BY cp.score DESC, cp.votesN DESC
-      ';
-      return $this->db->query($sql, $legislature)->result_array();
+    public function get_mps_participation_commission($legislature): array
+    {
+    $sql = 'SELECT 
+                RANK() OVER (ORDER BY cp.score DESC, cp.votesN DESC) AS "rank",
+                cp.mpId, 
+                cp.score, 
+                cp.votesN, 
+                da.nameFirst, 
+                da.nameLast, 
+                da.civ, 
+                da.libelle AS libelle, 
+                da.libelleAbrev AS libelleAbrev, 
+                da.dptSlug, 
+                da.nameUrl, 
+                da.couleurAssociee, 
+                da.departementNom, 
+                da.departementCode, 
+                o.libelleAbrege AS commission
+            FROM class_participation_commission cp
+            LEFT JOIN deputes_all da 
+                ON cp.mpId = da.mpId
+            LEFT JOIN mandat_secondaire ms 
+                ON cp.mpId = ms.mpId
+            LEFT JOIN organes o 
+                ON ms.organeRef = o.uid
+            WHERE da.legislature = ? 
+                AND cp.active = 1 
+                AND ms.typeOrgane = "COMPER" 
+                AND ms.codeQualite = "Membre" 
+                AND ms.dateFin IS NULL
+            ORDER BY cp.score DESC, cp.votesN DESC';
+
+    return $this->db->query($sql, $legislature)->result_array();
     }
 
     public function get_mps_participation_mean($legislature){
@@ -329,7 +352,7 @@
         
         return $this->db->query($sql)->result_array();
     }
-    
+
     public function get_groups_participation_commission(): array
     {
         $sql = 'SELECT 
