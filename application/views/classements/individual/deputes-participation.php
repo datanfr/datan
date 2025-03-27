@@ -141,16 +141,14 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <?php $i = 1; ?>
                   <?php foreach ($mps as $depute): ?>
                     <tr>
-                      <td class="text-center"><?= $i ?></td>
+                      <td class="text-center"><?= $depute['rank'] ?></td>
                       <td class="text-center"><?= $depute['nameFirst']." ".$depute['nameLast'] ?></td>
                       <td class="text-center"><?= $depute['libelleAbrev'] ?></td>
                       <td class="text-center"><?= $depute['score'] * 100 ?> %</td>
                       <td class="text-center"><?= $depute['votesN'] ?></td>
                     </tr>
-                    <?php $i++; ?>
                   <?php endforeach; ?>
                 </tbody>
               </table>
