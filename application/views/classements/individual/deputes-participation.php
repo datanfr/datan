@@ -65,7 +65,7 @@
                 <p>
                   <i>Le taux de participation moyen pour ce score est de <?= $participationSolennelsMean ?> %.</i>
                 </p>
-                <table class="table table-stats" id="table-stats">
+                <table class="table table-stats" id="table-stats" style="width: 100%;">
                   <thead>
                     <tr>
                       <th class="text-center all">N°</th>
