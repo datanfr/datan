@@ -139,7 +139,7 @@
     public function get_mps_loyalty($legislature) : array
     {
         $sql = 'SELECT 
-                    RANK() OVER (ORDER BY ROUND(cl.score * 100) DESC, cl.votesN DESC) AS "rank", 
+                    RANK() OVER (ORDER BY cl.score DESC, cl.votesN DESC) AS "rank", 
                     cl.mpId, 
                     ROUND(cl.score * 100) AS score, 
                     cl.votesN, 
@@ -162,7 +162,7 @@
                     AND cl.legislature = da.legislature
                 WHERE da.legislature = ? 
                     AND da.dateFin IS NULL
-                ORDER BY score DESC, votesN DESC';
+                ORDER BY cl.score DESC, votesN DESC';
     
         return $this->db->query($sql, $legislature)->result_array();
     }
