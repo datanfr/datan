@@ -136,22 +136,37 @@
       return $this->db->query($sql, legislature_current())->result_array();
     }
 
-    public function get_mps_loyalty($legislature){
-      $sql = 'SELECT @s:=@s+1 AS "rank", A.*
-        FROM
-        (
-        SELECT cl.mpId, ROUND(cl.score*100) AS score, cl.votesN, da.civ, da.nameLast, da.nameFirst, da.nameUrl, da.legislature, da.img, da.libelle AS libelle, da.libelleAbrev AS libelleAbrev, da.dptSlug, da.couleurAssociee, da.departementNom, da.departementCode,
-        CONCAT(da.departementNom, " (", da.departementCode, ")") AS cardCenter
-        FROM class_loyaute cl
-        LEFT JOIN deputes_all da ON cl.mpId = da.mpId AND cl.legislature = da.legislature
-        WHERE da.legislature = ? AND da.dateFin IS NULL
-        ) A,
-        (SELECT @s:= 0) AS s
-        ORDER BY A.score DESC, A.votesN DESC
-      ';
-      return $this->db->query($sql, $legislature)->result_array();
+    public function get_mps_loyalty($legislature) : array
+    {
+        $sql = 'SELECT 
+                    RANK() OVER (ORDER BY ROUND(cl.score * 100) DESC, cl.votesN DESC) AS "rank", 
+                    cl.mpId, 
+                    ROUND(cl.score * 100) AS score, 
+                    cl.votesN, 
+                    da.civ, 
+                    da.nameLast, 
+                    da.nameFirst, 
+                    da.nameUrl, 
+                    da.legislature, 
+                    da.img, 
+                    da.libelle AS libelle, 
+                    da.libelleAbrev AS libelleAbrev, 
+                    da.dptSlug, 
+                    da.couleurAssociee, 
+                    da.departementNom, 
+                    da.departementCode,
+                    CONCAT(da.departementNom, " (", da.departementCode, ")") AS cardCenter
+                FROM class_loyaute cl
+                LEFT JOIN deputes_all da 
+                    ON cl.mpId = da.mpId 
+                    AND cl.legislature = da.legislature
+                WHERE da.legislature = ? 
+                    AND da.dateFin IS NULL
+                ORDER BY score DESC, votesN DESC';
+    
+        return $this->db->query($sql, $legislature)->result_array();
     }
-
+    
     public function get_loyalty_mean($legislature){
       $sql = 'SELECT ROUND(AVG(score)*100) AS mean
         FROM class_loyaute
