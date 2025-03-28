@@ -38,7 +38,9 @@
       } else {
         $data['groupes'] = $this->groupes_model->get_groupes_hemicycle();
       }
-      $data['groupesSorted'] = $this->groupes_model->get_groupes_sorted($data['groupes']);      
+      $data['groupesSorted'] = $this->groupes_model->get_groupes_sorted($data['groupes']);
+      $data['groupesN'] = $this->groupes_model->get_number_active_groupes();
+      $data['blocs'] = $this->groupes_model->get_blocs($data['groupes']);
 
       // Get election results 
       $file = file_get_contents(asset_url() . "data_elections/legislatives-2024-2.json");
