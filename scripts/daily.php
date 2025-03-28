@@ -1952,18 +1952,6 @@ class Script
         $majorityGroups = implode('","', $majorityGroups);
 
         if (!$this->congress) {
-          $reponse_last_vote = $this->bdd->query('
-              SELECT voteNumero AS lastVote
-              FROM votes_scores
-              WHERE legislature = "' . $this->legislature_to_get . '"
-              ORDER BY voteNumero DESC
-              LIMIT 1
-          ');
-
-          $donnees_last_vote = $reponse_last_vote->fetch();
-          $lastVote = isset($donnees_last_vote['lastVote']) ? $donnees_last_vote['lastVote'] + 1 : 1;
-          echo "Vote score from " . $lastVote . "\n";
-
           $query = 'SELECT B.voteNumero, B.legislature, B.mpId, B.vote, B.mandatId, B.sortCode, B.positionGroup, B.gvtPosition AS positionGvt,
             CASE
             	 WHEN B.vote = "nv" THEN NULL
@@ -2014,7 +2002,7 @@ class Script
                   AND ((vi.dateScrutin BETWEEN mg.dateDebut AND mg.dateFin ) OR (vi.dateScrutin >= mg.dateDebut AND mg.dateFin IS NULL))
                   AND mg.codeQualite IN ("Membre", "Député non-inscrit", "Membre apparenté")
                 LEFT JOIN organes o ON o.uid = vi.organeRef
-                WHERE v.voteType = "decompteNominatif" AND v.voteNumero >= "' . $lastVote . '" AND v.legislature = "' . $this->legislature_to_get . '"
+                WHERE v.voteType = "decompteNominatif" AND v.legislature = "' . $this->legislature_to_get . '"
                 ) A
               LEFT JOIN votes_groupes vg ON vg.organeRef = A.organeRef AND vg.voteNumero = A.voteNumero AND vg.legislature = A.legislature
               LEFT JOIN votes_groupes gvt ON gvt.organeRef IN ("' . $majorityGroups . '") AND gvt.voteNumero = A.voteNumero AND gvt.legislature = A.legislature
@@ -2104,15 +2092,15 @@ class Script
                 'dateMaj' => $this->dateMaj
             );
             $votesScore = array_merge($votesScore, array_values($voteScore));
-            if ($i % 2000 === 0) {
-                echo "Let's import until vote n " . $i . " \n";
+            if ($i % 500 === 0) {
+                echo "Let's import until n " . $i . " \n";
                 $this->insertAll('votes_scores', $voteScoreFields, $votesScore);
                 $votesScore = [];
                 $voteScore = [];
             }
-            echo $i++;
+            $i++;
         }
-        echo "Let's import until the end vote : " . $i . " \n";
+        echo "Let's import remaining data : " . $i . " \n";
         $this->insertAll('votes_scores', $voteScoreFields, $votesScore);
     }
 
