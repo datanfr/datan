@@ -88,65 +88,11 @@
                     LEFT JOIN organes o ON A.groupeId = o.uid
                     LEFT JOIN groupes_effectif ge ON A.groupeId = ge.organeRef
                 ) B
-                ORDER BY score DESC;';
+                ORDER BY score DESC, RAND();';
     
         return $this->db->query($sql, legislature_current())->result_array();
     }
     
-    public function get_groups_women_more(){
-      $sql = 'SELECT @s:=@s+1 AS "rank", B.*
-        FROM
-        (
-        SELECT A.*,
-        ROUND(female / n * 100, 2) AS pct
-        FROM
-        (
-        SELECT libelle, libelleAbrev, COUNT(mpId) AS n,
-        SUM(if(civ = "Mme", 1, 0)) AS female
-        FROM deputes_all
-        WHERE libelleAbrev != "NI" AND legislature = ? AND dateFin IS NULL
-        GROUP BY libelle
-        ) A
-        ) B,
-        (SELECT @s:= 0) AS s
-        ORDER BY B.pct DESC
-        LIMIT 3
-      ';
-      return $this->db->query($sql, legislature_current())->result_array();
-    }
-
-    public function get_groups_women_less(){
-      $sql = 'SELECT D.*
-        FROM
-        (
-        SELECT C.*
-        FROM
-        (
-        SELECT @s:=@s+1 AS "rank", B.*
-        FROM
-        (
-        SELECT A.*,
-        ROUND(female / n * 100, 2) AS pct
-        FROM
-        (
-        SELECT libelle, libelleAbrev, COUNT(mpId) AS n,
-        SUM(if(civ = "Mme", 1, 0)) AS female
-        FROM deputes_all
-        WHERE libelleAbrev != "NI" AND legislature = ? AND dateFin IS NULL
-        GROUP BY libelle
-        ) A
-        ) B,
-        (SELECT @s:= 0) AS s
-        ORDER BY B.pct DESC
-        ) C
-        ORDER BY C.rank DESC
-        LIMIT 3
-        ) D
-        ORDER BY D.rank ASC
-      ';
-      return $this->db->query($sql, legislature_current())->result_array();
-    }
-
     public function get_mps_loyalty($legislature) : array
     {
         $sql = 'SELECT 
@@ -173,7 +119,7 @@
                     AND cl.legislature = da.legislature
                 WHERE da.legislature = ? 
                     AND da.dateFin IS NULL
-                ORDER BY cl.score DESC, votesN DESC';
+                ORDER BY cl.score DESC, votesN DESC, RAND()';
     
         return $this->db->query($sql, $legislature)->result_array();
     }
@@ -189,7 +135,7 @@
     public function get_groups_age() : array
     {
         $sql = 'SELECT 
-                    RANK() OVER (ORDER BY ROUND(gs.age) DESC) AS "rank", 
+                    RANK() OVER (ORDER BY gs.age DESC) AS "rank", 
                     gs.organeRef, 
                     ROUND(gs.age) AS age, 
                     o.libelle, 
@@ -205,7 +151,7 @@
                 WHERE dateFin IS NULL 
                     AND o.legislature = ? 
                     AND o.libelleAbrev != "NI"
-                ORDER BY age DESC';
+                ORDER BY gs.age DESC, RAND()';
     
         return $this->db->query($sql, legislature_current())->result_array();
     }
@@ -229,7 +175,7 @@
                     ON ge.organeRef = cg.organeRef
                 WHERE cg.active = 1 
                     AND cg.stat = "cohesion"
-                ORDER BY cohesion DESC';
+                ORDER BY cohesion DESC, RAND()';
     
         return $this->db->query($sql)->result_array();
     }
@@ -258,7 +204,7 @@
                 WHERE da.active 
                     AND cp.legislature = ? 
                     AND cp.votesN > 5
-                ORDER BY cp.score DESC, cp.votesN DESC';
+                ORDER BY cp.score DESC, cp.votesN DESC, RAND()';
     
         return $this->db->query($sql, legislature_current())->result_array();
     }
@@ -285,7 +231,7 @@
                     AND da.legislature = cp.legislature
                 WHERE da.active 
                     AND cp.legislature = ?
-                ORDER BY cp.score DESC, cp.votesN DESC';
+                ORDER BY cp.score DESC, cp.votesN DESC, RAND()';
     
         return $this->db->query($sql, $legislature)->result_array();
     }
@@ -320,7 +266,7 @@
                 AND ms.typeOrgane = "COMPER" 
                 AND ms.codeQualite = "Membre" 
                 AND ms.dateFin IS NULL
-            ORDER BY cp.score DESC, cp.votesN DESC';
+            ORDER BY cp.score DESC, cp.votesN DESC, RAND()';
 
     return $this->db->query($sql, $legislature)->result_array();
     }
@@ -369,7 +315,7 @@
                     ON cg.organeRef = ge.organeRef
                 WHERE cg.active = 1 
                     AND cg.stat = "participation"
-                ORDER BY cg.value DESC';
+                ORDER BY cg.value DESC, RAND()';
         
         return $this->db->query($sql)->result_array();
     }
@@ -393,7 +339,7 @@
                     ON cg.organeRef = ge.organeRef
                 WHERE cg.active = 1 
                     AND cg.stat = "participationCommission"
-                ORDER BY participation DESC';
+                ORDER BY cg.value DESC, RAND()';
     
         return $this->db->query($sql)->result_array();
     }
@@ -417,7 +363,7 @@
                     ON cg.organeRef = ge.organeRef
                 WHERE cg.active = 1 
                     AND cg.stat = "participationSPS"
-                ORDER BY participation DESC';
+                ORDER BY cg.value DESC,RAND()';
     
         return $this->db->query($sql)->result_array();
     }
