@@ -355,7 +355,7 @@
         $sql = 'SELECT 
                     RANK() OVER (ORDER BY cg.value DESC) AS "rank", 
                     cg.organeRef, 
-                    cg.value AS participation, 
+                    cg.value,
                     ROUND(cg.value * 100) AS participation, 
                     o.libelle, 
                     o.libelleAbrev, 
@@ -369,7 +369,7 @@
                     ON cg.organeRef = ge.organeRef
                 WHERE cg.active = 1 
                     AND cg.stat = "participation"
-                ORDER BY participation DESC';
+                ORDER BY cg.value DESC';
         
         return $this->db->query($sql)->result_array();
     }
