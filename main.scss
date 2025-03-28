@@ -17,7 +17,7 @@ $body-bg: $bg-colour;
 $primary: $vert;
 $info: $bleu;
 $primary_rgb: rgb(0, 183, 148);
-$secondary_rgb: rgb(0, 102, 142);
+$bleu_rgb: rgb(0, 102, 142);
 $adopted: $vert;
 $abstention: #FFBA49;
 $rejected: #C5283D;
@@ -1709,7 +1709,7 @@ body{
     }
   }
   .bloc-donations{
-    background-color: rgba($secondary_rgb, 0.1);
+    background-color: rgba($bleu_rgb, 0.1);
     .icon{
       color: #D93B3B;
       svg {
@@ -1752,24 +1752,13 @@ body{
     background-color: $bleu;
   }
   .bloc-pie{
-    .tableGroupes{
-      font-size: $h5-font-size;
-      .tableHover{
-        color: $rejected;
+    .coalition{
+      h2 {
+        font-size: $h4-font-size;
+        color: white;
       }
-      td{
-        padding-left: 0.75rem;
-        padding-right: 0.75rem;
-        padding-top: 0.2rem;
-        padding-top: 0.2rem;
-      }
-      .square{
-        height: 12px;
-        width: 12px;
-      }
-      .effectif{
-        font-weight: 600;
-      }
+      background-color: $bleu;
+      color: white;
     }
   }
   .bloc-posts{
@@ -1936,11 +1925,12 @@ body{
       margin-bottom: 0;
       font-weight: 800;
       color: $bleu;
+      font-size: $h5-font-size;
       @include media-breakpoint-up(md) {
-        font-size: $h1-font-size;
+        font-size: $h4-font-size;
       }
-      @include media-breakpoint-down(sm) {
-        font-size: $h5-font-size;
+      @include media-breakpoint-up(lg) {
+        font-size: $h1-font-size;
       }
     }
   }
