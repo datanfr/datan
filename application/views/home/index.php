@@ -123,35 +123,62 @@
       </div>
     </div>
   </div>
-  <!-- BLOC COALITION SIMULATEUR -->
-  <div class="row"id="pattern_background">
-    <div class="container py-4">
-      <div class="row">
-        <div class="col-12">
-          <h2 class="text-center my-4">Composez votre coalition à l'Assemblée nationale</h2>
+  <!-- BLOC HEMICYCLE --> 
+  <?php if ($composition): ?>
+    <div class="row bloc-pie" id="pattern_background">
+      <div class="container py-3">
+        <div class="row pt-5">
+          <div class="col-12">
+            <h2 class="text-center">Composition de l'Assemblée nationale</h2>
+          </div>
         </div>
-      </div>
-      <div class="row mt-4 mb-4">
-        <div class="col-lg-6 col-12 d-flex justify-content-center">
-          <a href="<?= base_url() ?>outils/coalition-simulateur">
-          <img class="img-lazy img-thumbnail rounded shadow" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="440" height="271" data-src="<?= asset_url() ?>imgs/photos/coalition-simulateur-home.png" alt="Découvrez notre simulateur de coalition">
-          </a>
+        <div class="row pt-3">
+          <div class="col-12">
+            <p class="text-center mb-0">
+              Découvrez les <?= $groupesN ?> groupes politiques de l'Assemblée nationale
+            </p>
+          </div>
         </div>
-        <div class="col-lg-6 col-12 mt-5 mt-lg-0 d-flex flex-column justify-content-center">
-          <p>Il faut <span class="font-weight-bold">289 députés</span> pour obtenir une majorité absolue à l'Assemblée nationale.</p>
-          <p>Après les <a href="<?= base_url() ?>elections/legislatives-2024">élections législatives de 2024</a>, aucun groupe n'a réussi à atteindre ce seuil. Les groupes devront donc former des coalitions pour pouvoir adopter des lois.</p>
-          <p>Découvrez notre nouveau simulateur de coalition : saurez-vous créer une majorité ?</p>
-        </div>
-      </div>
-      <div class="row mt-5 mb-4">
-        <div class="col-12 d-flex justify-content-center">
-          <a href="<?= base_url() ?>outils/coalition-simulateur" class="btn btn-outline-primary">
-            Composez votre coalition
-          </a>
+        <div class="row mt-5 mb-5">
+          <div class="col-lg-5 col-md-6">
+            <p>À l'Assemblée, les députés se regroupent par affinité politique (socialiste, droite, libéral, etc.). Les groupes ont un rôle clé dans l'organisation du travail parlementaire. Actuellement, il y a <?= $groupesN ?> groupes, le plus grand étant le <a href="<?= base_url() ?>groupes/legislature-<?= legislature_current() ?>/<?= mb_strtolower($groupes[0]['libelleAbrev']) ?>"><?= $groupes['0']['libelle'] ?> (<?= $groupes['0']['libelleAbrev'] ?>)</a>, avec <?= $groupes['0']['effectif'] ?> sièges.</p>
+            <p>L'Assemblée peut être divisée en 4 grands blocs ! 👇</p>
+            <ul class="list-unstyled ml-lg-3">
+              <li>🔴 <b>La gauche</b> (NFP) : <?= $blocs['left'] ?> députés</li>
+              <li>🟡 <b>Le bloc central</b> (Renaissance et alliés) : <?= $blocs['central'] ?> 
+              députés</li>
+              <li>🔵 <b>La droite</b> (LR) : <?= $blocs['right'] ?> députés</li>
+              <li>🟤 <b>L'extrême droite</b> (RN et alliés) : <?= $blocs['extreme_right'] ?> députés</li>
+            </ul> 
+            <div class="card coalition d-none d-lg-block mt-4">
+              <div class="card-body">
+                <h2 class="card-title">Composez votre coalition</h2>
+                <p>Depuis les <a class="text-white" href="<?= base_url() ?>elections/legislatives-2024">élections de 2024</a>, aucun groupe n'a la majorité. Ils doivent s'allier pour faire passer des lois. Testez notre simulateur de coalition !</p>
+                <a href="<?= base_url() ?>outils/coalition-simulateur" class="btn btn-light">Formez votre coalition</a>
+              </div>
+            </div>  
+          </div>
+          <div class="col-lg-7 col-md-6 d-flex flex-column justify-content-center mt-3 mt-md-0">
+            <div class="hemicycle">
+              <canvas id="chartHemicycle"></canvas>
+              <div class="n-hemicycle text-center">
+                <span>577 députés</span>
+              </div>
+            </div>
+          </div>
+          <div class="col-12 d-lg-none mt-3">
+            <div class="card coalition">
+              <div class="card-body">
+                <h2 class="card-title">Composez votre coalition</h2>
+                <p>Depuis les <a class="text-white" href="<?= base_url() ?>elections/legislatives-2024">élections de 2024</a>, aucun groupe n'a la majorité. Ils doivent s'allier pour faire passer des lois. Testez notre simulateur de coalition !</p>
+                <a href="<?= base_url() ?>outils/coalition-simulateur" class="btn btn-light">Former votre coalition</a>
+              </div>
+            </div> 
+          </div>
         </div>
       </div>
     </div>
-  </div>  
+  <?php endif; ?>  
   <!-- BLOC POSTS -->
   <div class="row">
     <div class="container p-md-0">
@@ -226,51 +253,6 @@
       </div>
     </div>
   </div>
-  <!-- BLOC HEMICYCLE --> 
-  <?php if ($composition): ?>
-    <div class="row bloc-pie">
-      <div class="container py-3">
-        <div class="row pt-5">
-          <div class="col-12">
-            <h2 class="text-center">Composition de l'Assemblée nationale</h2>
-          </div>
-        </div>
-        <div class="row pt-3">
-          <div class="col-12">
-            <p class="text-center mb-0">Découvrez le nombre de députés par groupe politique.</p>
-          </div>
-        </div>
-        <div class="row mt-5 mb-5">
-          <div class="col-lg-7 d-flex flex-column justify-content-center">
-            <div class="hemicycle">
-              <canvas id="chartHemicycle"></canvas>
-              <div class="n-hemicycle">
-                <span>577 députés</span>
-              </div>
-            </div>
-          </div>
-          <div class="col-lg-5 d-flex flex-column justify-content-center mt-4 mt-lg-0">
-            <table class="tableGroupes">
-              <tbody>
-                <?php foreach ($groupes as $groupe): ?>
-                  <tr>
-                    <td>
-                      <div class="square" style="background-color: <?= $groupe['couleurAssociee'] ?>">
-                      </div>
-                    </td>
-                    <td id="table<?= $groupe['libelleAbrev'] ?>">
-                      <a href="<?= base_url() ?>groupes/legislature-<?= $groupe['legislature'] ?>/<?= mb_strtolower($groupe['libelleAbrev']) ?>" class="no-decoration underline"><?= name_group($groupe['libelle']) ?></a>
-                    </td>
-                    <td class="effectif"><?= $groupe['effectif'] ?></td>
-                  </tr>
-                <?php endforeach; ?>
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-    </div>
-  <?php endif; ?>
   <!-- BLOC STATS -->
   <?php if ($stats): ?>
     <div class="row bloc-statistiques">
@@ -551,7 +533,6 @@
   </div> <!-- // END MAP -->
 </div>
 
-
 <script type="text/javascript">
   document.addEventListener('DOMContentLoaded', function(){
     var data = {
@@ -597,8 +578,8 @@
       rotation: 270,
       layout:{
         padding: {
-          top: 0,
-          bottom: 0,
+          top: 15,
+          bottom: 15,
           left: 15,
           right: 15
         }
