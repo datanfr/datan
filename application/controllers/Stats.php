@@ -16,8 +16,11 @@
       $data['mps_oldest'] = array_slice($data['mps_age'], 0, 3);
       $data['mps_youngest'] = array_slice($data['mps_age'], -3, 3);
       $data['age_mean'] = $this->stats_model->get_age_mean(legislature_current());
-      $data['groups_women_more'] = $this->stats_model->get_groups_women_more();
-      $data['groups_women_less'] = $this->stats_model->get_groups_women_less();
+      $data['groupsWomen'] = $this->stats_model->get_groups_women();
+      if($data['groupsWomen']) {
+        $data['groups_women_more'] = array_slice($data['groupsWomen'], 0, 3);
+        $data['groups_women_less'] = array_slice($data['groupsWomen'], -3);
+      }
       $data['women_mean'] = $this->deputes_model->get_deputes_gender(legislature_current());
       $data['mps_loyalty'] = $this->stats_model->get_mps_loyalty(legislature_current());
       if ($data['mps_loyalty']) {
