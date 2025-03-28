@@ -58,30 +58,41 @@
       return $result['mean'];
     }
 
-    public function get_groups_women(){
-      $sql = 'SELECT @s:=@s+1 AS "rank", B.*
-      FROM
-      (
-        SELECT A.*,
-        ROUND(female / n * 100) AS pct,
-        o.uid AS organeRef, o.couleurAssociee, o.legislature, o.uid, ge.effectif
-        FROM
-        (
-          SELECT libelle, libelleAbrev, COUNT(mpId) AS n, groupeId,
-          SUM(if(civ = "Mme", 1, 0)) AS female
-          FROM deputes_all
-          WHERE libelleAbrev != "NI" AND legislature = ? AND dateFin IS NULL
-          GROUP BY libelle
-        ) A
-        LEFT JOIN organes o ON A.groupeId = o.uid
-        LEFT JOIN groupes_effectif ge ON A.groupeId = ge.organeRef
-      ) B,
-      (SELECT @s:= 0) AS s
-      ORDER BY B.pct DESC
-      ';
-      return $this->db->query($sql, legislature_current())->result_array();
+    public function get_groups_women(): array
+    {
+        $sql = 'SELECT 
+                    RANK() OVER (ORDER BY score DESC) AS "rank",
+                    B.*,
+                    ROUND(score * 100) AS pct
+                FROM (
+                    SELECT 
+                        A.*,
+                        o.uid AS organeRef,
+                        o.couleurAssociee,
+                        o.legislature,
+                        ge.effectif,
+                        (female / n) AS score
+                    FROM (
+                        SELECT 
+                            libelle,
+                            libelleAbrev,
+                            COUNT(mpId) AS n,
+                            groupeId,
+                            SUM(IF(civ = "Mme", 1, 0)) AS female
+                        FROM deputes_all
+                        WHERE libelleAbrev != "NI"
+                          AND legislature = ?
+                          AND dateFin IS NULL
+                        GROUP BY libelle
+                    ) A
+                    LEFT JOIN organes o ON A.groupeId = o.uid
+                    LEFT JOIN groupes_effectif ge ON A.groupeId = ge.organeRef
+                ) B
+                ORDER BY score DESC;';
+    
+        return $this->db->query($sql, legislature_current())->result_array();
     }
-
+    
     public function get_groups_women_more(){
       $sql = 'SELECT @s:=@s+1 AS "rank", B.*
         FROM
