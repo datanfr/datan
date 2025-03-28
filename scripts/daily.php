@@ -4475,7 +4475,6 @@ if (isset($argv[1]) && isset($argv[2])) {
   $script = new Script();
 }
 
-/*
 $script->fillDeputes();
 $script->addBsky();
 $script->deputeAll();
@@ -4493,9 +4492,7 @@ $script->parties();
 $script->legislature();
 $script->vote();
 $script->updateVoteInfo();
-*/
 $script->voteScore();
-/*
 $script->groupeCohesion();
 $script->groupeAccord();
 $script->deputeAccord();
