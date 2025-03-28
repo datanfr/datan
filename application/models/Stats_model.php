@@ -58,100 +58,72 @@
       return $result['mean'];
     }
 
-    public function get_groups_women(){
-      $sql = 'SELECT @s:=@s+1 AS "rank", B.*
-      FROM
-      (
-        SELECT A.*,
-        ROUND(female / n * 100) AS pct,
-        o.uid AS organeRef, o.couleurAssociee, o.legislature, o.uid, ge.effectif
-        FROM
-        (
-          SELECT libelle, libelleAbrev, COUNT(mpId) AS n, groupeId,
-          SUM(if(civ = "Mme", 1, 0)) AS female
-          FROM deputes_all
-          WHERE libelleAbrev != "NI" AND legislature = ? AND dateFin IS NULL
-          GROUP BY libelle
-        ) A
-        LEFT JOIN organes o ON A.groupeId = o.uid
-        LEFT JOIN groupes_effectif ge ON A.groupeId = ge.organeRef
-      ) B,
-      (SELECT @s:= 0) AS s
-      ORDER BY B.pct DESC
-      ';
-      return $this->db->query($sql, legislature_current())->result_array();
+    public function get_groups_women(): array
+    {
+        $sql = 'SELECT 
+                    RANK() OVER (ORDER BY score DESC) AS "rank",
+                    B.*,
+                    ROUND(score * 100) AS pct
+                FROM (
+                    SELECT 
+                        A.*,
+                        o.uid AS organeRef,
+                        o.couleurAssociee,
+                        o.legislature,
+                        ge.effectif,
+                        (female / n) AS score
+                    FROM (
+                        SELECT 
+                            libelle,
+                            libelleAbrev,
+                            COUNT(mpId) AS n,
+                            groupeId,
+                            SUM(IF(civ = "Mme", 1, 0)) AS female
+                        FROM deputes_all
+                        WHERE libelleAbrev != "NI"
+                          AND legislature = ?
+                          AND dateFin IS NULL
+                        GROUP BY libelle
+                    ) A
+                    LEFT JOIN organes o ON A.groupeId = o.uid
+                    LEFT JOIN groupes_effectif ge ON A.groupeId = ge.organeRef
+                ) B
+                ORDER BY score DESC, RAND();';
+    
+        return $this->db->query($sql, legislature_current())->result_array();
     }
-
-    public function get_groups_women_more(){
-      $sql = 'SELECT @s:=@s+1 AS "rank", B.*
-        FROM
-        (
-        SELECT A.*,
-        ROUND(female / n * 100, 2) AS pct
-        FROM
-        (
-        SELECT libelle, libelleAbrev, COUNT(mpId) AS n,
-        SUM(if(civ = "Mme", 1, 0)) AS female
-        FROM deputes_all
-        WHERE libelleAbrev != "NI" AND legislature = ? AND dateFin IS NULL
-        GROUP BY libelle
-        ) A
-        ) B,
-        (SELECT @s:= 0) AS s
-        ORDER BY B.pct DESC
-        LIMIT 3
-      ';
-      return $this->db->query($sql, legislature_current())->result_array();
+    
+    public function get_mps_loyalty($legislature) : array
+    {
+        $sql = 'SELECT 
+                    RANK() OVER (ORDER BY cl.score DESC, cl.votesN DESC) AS "rank", 
+                    cl.mpId, 
+                    ROUND(cl.score * 100) AS score, 
+                    cl.votesN, 
+                    da.civ, 
+                    da.nameLast, 
+                    da.nameFirst, 
+                    da.nameUrl, 
+                    da.legislature, 
+                    da.img, 
+                    da.libelle AS libelle, 
+                    da.libelleAbrev AS libelleAbrev, 
+                    da.dptSlug, 
+                    da.couleurAssociee, 
+                    da.departementNom, 
+                    da.departementCode,
+                    CONCAT(da.departementNom, " (", da.departementCode, ")") AS cardCenter
+                FROM class_loyaute cl
+                LEFT JOIN deputes_all da 
+                    ON cl.mpId = da.mpId 
+                    AND cl.legislature = da.legislature
+                WHERE da.legislature = ? 
+                    AND da.dateFin IS NULL
+                ORDER BY cl.score DESC, votesN DESC, RAND()';
+    
+        return $this->db->query($sql, $legislature)->result_array();
     }
-
-    public function get_groups_women_less(){
-      $sql = 'SELECT D.*
-        FROM
-        (
-        SELECT C.*
-        FROM
-        (
-        SELECT @s:=@s+1 AS "rank", B.*
-        FROM
-        (
-        SELECT A.*,
-        ROUND(female / n * 100, 2) AS pct
-        FROM
-        (
-        SELECT libelle, libelleAbrev, COUNT(mpId) AS n,
-        SUM(if(civ = "Mme", 1, 0)) AS female
-        FROM deputes_all
-        WHERE libelleAbrev != "NI" AND legislature = ? AND dateFin IS NULL
-        GROUP BY libelle
-        ) A
-        ) B,
-        (SELECT @s:= 0) AS s
-        ORDER BY B.pct DESC
-        ) C
-        ORDER BY C.rank DESC
-        LIMIT 3
-        ) D
-        ORDER BY D.rank ASC
-      ';
-      return $this->db->query($sql, legislature_current())->result_array();
-    }
-
-    public function get_mps_loyalty($legislature){
-      $sql = 'SELECT @s:=@s+1 AS "rank", A.*
-        FROM
-        (
-        SELECT cl.mpId, ROUND(cl.score*100) AS score, cl.votesN, da.civ, da.nameLast, da.nameFirst, da.nameUrl, da.legislature, da.img, da.libelle AS libelle, da.libelleAbrev AS libelleAbrev, da.dptSlug, da.couleurAssociee, da.departementNom, da.departementCode,
-        CONCAT(da.departementNom, " (", da.departementCode, ")") AS cardCenter
-        FROM class_loyaute cl
-        LEFT JOIN deputes_all da ON cl.mpId = da.mpId AND cl.legislature = da.legislature
-        WHERE da.legislature = ? AND da.dateFin IS NULL
-        ) A,
-        (SELECT @s:= 0) AS s
-        ORDER BY A.score DESC, A.votesN DESC
-      ';
-      return $this->db->query($sql, $legislature)->result_array();
-    }
-
+    
     public function get_loyalty_mean($legislature){
       $sql = 'SELECT ROUND(AVG(score)*100) AS mean
         FROM class_loyaute
@@ -160,78 +132,143 @@
       return $this->db->query($sql, $legislature)->row_array();
     }
 
-    public function get_groups_age(){
-      $sql = 'SELECT @s:=@s+1 AS "rank", A.*
-        FROM
-        (
-          SELECT gs.organeRef, ROUND(gs.age) AS age, o.libelle, o.libelleAbrev, o.couleurAssociee, o.legislature, ge.effectif
-          FROM groupes_stats gs
-          LEFT JOIN organes o ON o.uid = gs.organeRef
-          LEFT JOIN groupes_effectif ge ON ge.organeRef  = gs.organeRef
-          WHERE dateFin IS NULL AND o.legislature = ? AND o.libelleAbrev != "NI"
-        ) A,
-        (SELECT @s:= 0) AS s
-        ORDER BY A.age DESC
-      ';
-      return $this->db->query($sql, legislature_current())->result_array();
+    public function get_groups_age() : array
+    {
+        $sql = 'SELECT 
+                    RANK() OVER (ORDER BY gs.age DESC) AS "rank", 
+                    gs.organeRef, 
+                    ROUND(gs.age) AS age, 
+                    o.libelle, 
+                    o.libelleAbrev, 
+                    o.couleurAssociee, 
+                    o.legislature, 
+                    ge.effectif
+                FROM groupes_stats gs
+                LEFT JOIN organes o 
+                    ON o.uid = gs.organeRef
+                LEFT JOIN groupes_effectif ge 
+                    ON ge.organeRef = gs.organeRef
+                WHERE dateFin IS NULL 
+                    AND o.legislature = ? 
+                    AND o.libelleAbrev != "NI"
+                ORDER BY gs.age DESC, RAND()';
+    
+        return $this->db->query($sql, legislature_current())->result_array();
     }
 
-    public function get_groups_cohesion(){
-      $query = $this->db->query('SELECT @s:=@s+1 AS "rank", A.*
-        FROM
-        (
-          SELECT cg.organeRef, cg.value AS cohesion, cg.active, o.libelle, o.libelleAbrev, o.couleurAssociee, o.legislature, ge.effectif
-          FROM class_groups cg
-          LEFT JOIN organes o ON cg.organeRef = o.uid
-          LEFT JOIN groupes_effectif ge ON ge.organeRef  = cg.organeRef
-          WHERE cg.active = 1 AND cg.stat = "cohesion"
-        ) A,
-        (SELECT @s:= 0) AS s
-        ORDER BY A.cohesion DESC
-      ');
-
-      return $query->result_array();
+    public function get_groups_cohesion() : array
+    {
+        $sql = 'SELECT 
+                    RANK() OVER (ORDER BY cg.value DESC) AS "rank", 
+                    cg.organeRef, 
+                    cg.value AS cohesion, 
+                    cg.active, 
+                    o.libelle, 
+                    o.libelleAbrev, 
+                    o.couleurAssociee, 
+                    o.legislature, 
+                    ge.effectif
+                FROM class_groups cg
+                LEFT JOIN organes o 
+                    ON cg.organeRef = o.uid
+                LEFT JOIN groupes_effectif ge 
+                    ON ge.organeRef = cg.organeRef
+                WHERE cg.active = 1 
+                    AND cg.stat = "cohesion"
+                ORDER BY cohesion DESC, RAND()';
+    
+        return $this->db->query($sql)->result_array();
     }
-
-    public function get_mps_participation(){
-      $this->db->query('SET @s := 0');
-      $sql = 'SELECT @s := @s + 1 AS "rank", cp.*, da.nameFirst, da.nameLast, da.civ, da.libelle AS libelle, 
-              da.libelleAbrev AS libelleAbrev, da.dptSlug, da.nameUrl, da.couleurAssociee, da.img, 
-              da.departementNom, da.departementCode, da.legislature AS legislature_last
-              FROM class_participation cp
-              LEFT JOIN deputes_last da ON cp.mpId = da.mpId AND da.legislature = cp.legislature
-              WHERE da.active AND cp.legislature = ? AND cp.votesN > 5
-              ORDER BY cp.score DESC, cp.votesN DESC';
-      return $this->db->query($sql, legislature_current())->result_array();
-  }
+    
+    public function get_mps_participation() : array
+    {
+        $sql = 'SELECT 
+                    RANK() OVER (ORDER BY cp.score DESC, cp.votesN DESC) AS "rank", 
+                    cp.*, 
+                    da.nameFirst, 
+                    da.nameLast, 
+                    da.civ, 
+                    da.libelle AS libelle, 
+                    da.libelleAbrev AS libelleAbrev, 
+                    da.dptSlug, 
+                    da.nameUrl, 
+                    da.couleurAssociee, 
+                    da.img, 
+                    da.departementNom, 
+                    da.departementCode, 
+                    da.legislature AS legislature_last
+                FROM class_participation cp
+                LEFT JOIN deputes_last da 
+                    ON cp.mpId = da.mpId 
+                    AND da.legislature = cp.legislature
+                WHERE da.active 
+                    AND cp.legislature = ? 
+                    AND cp.votesN > 5
+                ORDER BY cp.score DESC, cp.votesN DESC, RAND()';
+    
+        return $this->db->query($sql, legislature_current())->result_array();
+    }
   
-    public function get_mps_participation_solennels($legislature){
-      $sql = 'SELECT cp.*, da.nameFirst, da.nameLast, da.civ, da.libelle AS libelle, da.libelleAbrev AS libelleAbrev, da.dptSlug, da.nameUrl, da.couleurAssociee, da.img,
-        CONCAT(da.departementNom, " (", da.departementCode, ")") AS cardCenter, da.legislature AS legislature_last
-        FROM class_participation_solennels cp
-        LEFT JOIN deputes_last da ON cp.mpId = da.mpId AND da.legislature = cp.legislature
-        WHERE da.active AND cp.legislature = ?
-        ORDER BY cp.score DESC, cp.votesN DESC
-      ';
-      $array = $this->db->query($sql, $legislature)->result_array();
-      $i = 1;
-      foreach ($array as $key => $value) {
-        $array[$key]["rank"] = $i;
-        $i++;
-      }
-      return $array;
+    public function get_mps_participation_solennels($legislature): array
+    {
+        $sql = 'SELECT 
+                    RANK() OVER (ORDER BY cp.score DESC, cp.votesN DESC) AS "rank",
+                    cp.*, 
+                    da.nameFirst, 
+                    da.nameLast, 
+                    da.civ, 
+                    da.libelle AS libelle, 
+                    da.libelleAbrev AS libelleAbrev, 
+                    da.dptSlug, 
+                    da.nameUrl, 
+                    da.couleurAssociee, 
+                    da.img, 
+                    CONCAT(da.departementNom, " (", da.departementCode, ")") AS cardCenter, 
+                    da.legislature AS legislature_last
+                FROM class_participation_solennels cp
+                LEFT JOIN deputes_last da 
+                    ON cp.mpId = da.mpId 
+                    AND da.legislature = cp.legislature
+                WHERE da.active 
+                    AND cp.legislature = ?
+                ORDER BY cp.score DESC, cp.votesN DESC, RAND()';
+    
+        return $this->db->query($sql, $legislature)->result_array();
     }
+    
+    public function get_mps_participation_commission($legislature): array
+    {
+    $sql = 'SELECT 
+                RANK() OVER (ORDER BY cp.score DESC, cp.votesN DESC) AS "rank",
+                cp.mpId, 
+                cp.score, 
+                cp.votesN, 
+                da.nameFirst, 
+                da.nameLast, 
+                da.civ, 
+                da.libelle AS libelle, 
+                da.libelleAbrev AS libelleAbrev, 
+                da.dptSlug, 
+                da.nameUrl, 
+                da.couleurAssociee, 
+                da.departementNom, 
+                da.departementCode, 
+                o.libelleAbrege AS commission
+            FROM class_participation_commission cp
+            LEFT JOIN deputes_all da 
+                ON cp.mpId = da.mpId
+            LEFT JOIN mandat_secondaire ms 
+                ON cp.mpId = ms.mpId
+            LEFT JOIN organes o 
+                ON ms.organeRef = o.uid
+            WHERE da.legislature = ? 
+                AND cp.active = 1 
+                AND ms.typeOrgane = "COMPER" 
+                AND ms.codeQualite = "Membre" 
+                AND ms.dateFin IS NULL
+            ORDER BY cp.score DESC, cp.votesN DESC, RAND()';
 
-    public function get_mps_participation_commission($legislature){
-      $sql = 'SELECT cp.mpId, cp.score, cp.votesN, da.nameFirst, da.nameLast, da.civ, da.libelle AS libelle, da.libelleAbrev AS libelleAbrev, da.dptSlug, da.nameUrl, da.couleurAssociee, da.departementNom, da.departementCode, o.libelleAbrege AS commission
-        FROM class_participation_commission cp
-        LEFT JOIN deputes_all da ON cp.mpId = da.mpId
-        LEFT JOIN mandat_secondaire ms ON cp.mpId = ms.mpId
-        LEFT JOIN organes o ON ms.organeRef = o.uid
-        WHERE da.legislature = ? AND cp.active = 1 AND ms.typeOrgane = "COMPER" AND ms.codeQualite = "Membre" AND ms.dateFin IS NULL
-        ORDER BY cp.score DESC, cp.votesN DESC
-      ';
-      return $this->db->query($sql, $legislature)->result_array();
+    return $this->db->query($sql, $legislature)->result_array();
     }
 
     public function get_mps_participation_mean($legislature){
@@ -259,57 +296,78 @@
       return $this->db->query($sql, $legislature)->row_array();
     }
 
-    public function get_groups_participation(){
-      $query = $this->db->query('SELECT @s:=@s+1 AS "rank", A.*
-        FROM
-        (
-        SELECT cg.organeRef, cg.value, round(cg.value * 100) AS participation, o.libelle, o.libelleAbrev, o.couleurAssociee, o.legislature, ge.effectif
-        FROM class_groups cg
-        LEFT JOIN organes o ON cg.organeRef = o.uid
-        LEFT JOIN groupes_effectif ge ON cg.organeRef = ge.organeRef
-        WHERE cg.active = 1 AND cg.stat = "participation"
-        ) A,
-        (SELECT @s:= 0) AS s
-        ORDER BY A.value DESC
-      ');
-
-      return $query->result_array();
+    public function get_groups_participation() : array
+    {
+        $sql = 'SELECT 
+                    RANK() OVER (ORDER BY cg.value DESC) AS "rank", 
+                    cg.organeRef, 
+                    cg.value,
+                    ROUND(cg.value * 100) AS participation, 
+                    o.libelle, 
+                    o.libelleAbrev, 
+                    o.couleurAssociee, 
+                    o.legislature, 
+                    ge.effectif
+                FROM class_groups cg
+                LEFT JOIN organes o 
+                    ON cg.organeRef = o.uid
+                LEFT JOIN groupes_effectif ge 
+                    ON cg.organeRef = ge.organeRef
+                WHERE cg.active = 1 
+                    AND cg.stat = "participation"
+                ORDER BY cg.value DESC, RAND()';
+        
+        return $this->db->query($sql)->result_array();
     }
 
-    public function get_groups_participation_commission(){
-      $query = $this->db->query('SELECT @s:=@s+1 AS "rank", A.*
-        FROM
-        (
-        SELECT cg.organeRef, cg.value, round(cg.value * 100) AS participation, o.libelle, o.libelleAbrev, o.couleurAssociee, o.legislature, ge.effectif
-        FROM class_groups cg
-        LEFT JOIN organes o ON cg.organeRef = o.uid
-        LEFT JOIN groupes_effectif ge ON cg.organeRef = ge.organeRef
-        WHERE cg.active = 1 AND cg.stat = "participationCommission"
-        ) A,
-        (SELECT @s:= 0) AS s
-        ORDER BY A.value DESC
-      ');
-
-      return $query->result_array();
+    public function get_groups_participation_commission(): array
+    {
+        $sql = 'SELECT 
+                    RANK() OVER (ORDER BY cg.value DESC) AS "rank", 
+                    cg.organeRef, 
+                    cg.value, 
+                    ROUND(cg.value * 100) AS participation, 
+                    o.libelle, 
+                    o.libelleAbrev, 
+                    o.couleurAssociee, 
+                    o.legislature, 
+                    ge.effectif
+                FROM class_groups cg
+                LEFT JOIN organes o 
+                    ON cg.organeRef = o.uid
+                LEFT JOIN groupes_effectif ge 
+                    ON cg.organeRef = ge.organeRef
+                WHERE cg.active = 1 
+                    AND cg.stat = "participationCommission"
+                ORDER BY cg.value DESC, RAND()';
+    
+        return $this->db->query($sql)->result_array();
     }
-
-    public function get_groups_participation_sps(){
-      $query = $this->db->query('SELECT @s:=@s+1 AS "rank", A.*
-        FROM
-        (
-        SELECT cg.organeRef, cg.value, round(cg.value * 100) AS participation, o.libelle, o.libelleAbrev, o.couleurAssociee, o.legislature, ge.effectif
-        FROM class_groups cg
-        LEFT JOIN organes o ON cg.organeRef = o.uid
-        LEFT JOIN groupes_effectif ge ON cg.organeRef = ge.organeRef
-        WHERE cg.active = 1 AND cg.stat = "participationSPS"
-        ) A,
-        (SELECT @s:= 0) AS s
-        ORDER BY A.value DESC
-      ');
-
-      return $query->result_array();
+    
+    public function get_groups_participation_sps() : array
+    {
+        $sql = 'SELECT 
+                    RANK() OVER (ORDER BY cg.value DESC) AS "rank", 
+                    cg.organeRef, 
+                    cg.value, 
+                    ROUND(cg.value * 100) AS participation, 
+                    o.libelle, 
+                    o.libelleAbrev, 
+                    o.couleurAssociee, 
+                    o.legislature, 
+                    ge.effectif
+                FROM class_groups cg
+                LEFT JOIN organes o 
+                    ON cg.organeRef = o.uid
+                LEFT JOIN groupes_effectif ge 
+                    ON cg.organeRef = ge.organeRef
+                WHERE cg.active = 1 
+                    AND cg.stat = "participationSPS"
+                ORDER BY cg.value DESC,RAND()';
+    
+        return $this->db->query($sql)->result_array();
     }
-
+    
     public function get_women_history(){
       $array = array(
         array(
