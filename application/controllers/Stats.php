@@ -333,12 +333,14 @@
 
         $data['groups'] = $data['n_sps'] < 10 ? $data['votes_all'] : $data['votes_sps'];
         if ($data['groups']) {
+          foreach ($data['groups'] as &$group) {
+            $group['couleurCard'] = $this->groupes_model->get_groupe_color_card(['uid' => $group['organeRef']]);
+        } 
           $data['groupsFirst'] = $data['groups'][0];
           $data['groupsFirst']['couleurAssociee'] = $this->groupes_model->get_groupe_color(array($data['groupsFirst']['libelleAbrev'], $data['groupsFirst']['couleurAssociee']));
           $data['groupsLast'] = end($data['groups']);
           $data['groupsLast']['couleurAssociee'] = $this->groupes_model->get_groupe_color(array($data['groupsLast']['libelleAbrev'], $data['groupsLast']['couleurAssociee']));
         }
-
         // Meta
         $data['title_meta'] = "La participation des groupes politiques - Assemblée nationale | Datan";
         $data['description_meta'] = "Quel groupe parlementaire est le plus actif au moment de voter ? Quel groupe a le plus faible taux de participation ? Découvrez le classement sur Datan.";
