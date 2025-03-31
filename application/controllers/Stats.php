@@ -200,6 +200,9 @@
         // Data
         $data['ageMeanPop'] = round(mean_age_france());
         $data['groupsAge'] = $this->stats_model->get_groups_age();
+        foreach ($data['groupsAge'] as &$group) {
+          $group['couleurCard'] = $this->groupes_model->get_groupe_color_card(['uid' => $group['organeRef']]);
+      } 
         if ($data['groupsAge']) {
           $data['groupOldest'] = array_slice($data['groupsAge'], 0, 1);
           $data['groupOldest'] = $data['groupOldest'][0];
