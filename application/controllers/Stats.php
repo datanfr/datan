@@ -374,6 +374,12 @@
         }
         $data['groups_rose'] = $this->jobs_model->get_groups_rose();
         if ($data['groups_rose']) {
+
+          foreach ($data['groups_rose'] as $key=> $group) {
+            $data['groups_rose'][$key]['couleurCard'] = $this->groupes_model->get_groupe_color_card([
+                'uid' => $group['organeRef']
+            ]);
+        }
           $data['rose_first'] = $data['groups_rose'][0];
           $data['rose_first']['couleurAssociee'] = $this->groupes_model->get_groupe_color(array($data['rose_first']['libelleAbrev'], $data['rose_first']['couleurAssociee']));
           $groups = $this->jobs_model->get_groups_representativite();
@@ -400,6 +406,11 @@
           $data['groups'] = $test;
           $data['groups_rows'] = $rows;
         }
+
+
+        echo "<pre>";
+        var_dump($data['groups_rose']);
+        echo "</pre>";
 
         // Meta
         $data['title_meta'] = "La représentatité sociale des groupes - Assemblée nationale | Datan";
