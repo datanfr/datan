@@ -228,7 +228,6 @@
         $data['womenMean']['nSociety'] = 52;
         $data['womenMean']['diff'] = abs($women_mean[1]['percentage'] - $data['womenMean']['nSociety']);
         $data['groupsWomen'] = $this->stats_model->get_groups_women();
-        var_dump($data['groupsWomen']);
         foreach ($data['groupsWomen'] as &$group) {
           $group['couleurCard'] = $this->groupes_model->get_groupe_color_card(['uid' => $group['organeRef']]);
       } 
@@ -266,6 +265,7 @@
         $data['groups'] = $this->stats_model->get_groups_cohesion();
         if ($data['groups']) {
           foreach ($data['groups'] as $key => $value) {
+            $data['groups'][$key]['couleurCard'] = $this->groupes_model->get_groupe_color_card(['uid' => $value['organeRef']]);
             if ($value['libelleAbrev'] == 'NI') {
               $keyRemoveNI = $key;
             }
