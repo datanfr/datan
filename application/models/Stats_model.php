@@ -195,7 +195,8 @@
                     da.couleurAssociee, 
                     da.img, 
                     da.departementNom, 
-                    da.departementCode, 
+                    da.departementCode,
+                    CONCAT(da.departementNom, " (", da.departementCode, ")") AS cardCenter,  
                     da.legislature AS legislature_last
                 FROM class_participation cp
                 LEFT JOIN deputes_last da 
