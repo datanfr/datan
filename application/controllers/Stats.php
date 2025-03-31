@@ -18,6 +18,9 @@
       $data['age_mean'] = $this->stats_model->get_age_mean(legislature_current());
       $data['groupsWomen'] = $this->stats_model->get_groups_women();
       if($data['groupsWomen']) {
+        foreach ($data['groupsWomem'] as &$group) {
+          $group['couleurCard'] = $this->groupes_model->get_groupe_color_card(['uid' => $group['organeRef']]);
+      } 
         $data['groups_women_more'] = array_slice($data['groupsWomen'], 0, 3);
         $data['groups_women_less'] = array_slice($data['groupsWomen'], -3);
       }
@@ -225,6 +228,10 @@
         $data['womenMean']['nSociety'] = 52;
         $data['womenMean']['diff'] = abs($women_mean[1]['percentage'] - $data['womenMean']['nSociety']);
         $data['groupsWomen'] = $this->stats_model->get_groups_women();
+        var_dump($data['groupsWomen']);
+        foreach ($data['groupsWomen'] as &$group) {
+          $group['couleurCard'] = $this->groupes_model->get_groupe_color_card(['uid' => $group['organeRef']]);
+      } 
         if ($data['groupsWomen']) {
           $data['groupsWomenFirst'] = $data['groupsWomen'][0];
           $data['groupsWomenFirst']['couleurAssociee'] = $this->groupes_model->get_groupe_color(array($data['groupsWomenFirst']['libelleAbrev'], $data['groupsWomenFirst']['couleurAssociee']));
