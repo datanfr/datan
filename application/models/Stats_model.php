@@ -97,28 +97,27 @@
     {
         $sql = 'SELECT 
                     RANK() OVER (ORDER BY cl.score DESC, cl.votesN DESC) AS "rank", 
-                    cl.mpId, 
+                    cl.*, 
                     ROUND(cl.score * 100) AS score, 
-                    cl.votesN, 
-                    da.civ, 
-                    da.nameLast, 
-                    da.nameFirst, 
-                    da.nameUrl, 
-                    da.legislature, 
-                    da.img, 
-                    da.libelle AS libelle, 
-                    da.libelleAbrev AS libelleAbrev, 
-                    da.dptSlug, 
-                    da.couleurAssociee, 
-                    da.departementNom, 
-                    da.departementCode,
-                    CONCAT(da.departementNom, " (", da.departementCode, ")") AS cardCenter
+                    dl.civ, 
+                    dl.nameLast, 
+                    dl.nameFirst, 
+                    dl.nameUrl, 
+                    dl.legislature AS legislature_last, 
+                    dl.img, 
+                    dl.libelle AS libelle, 
+                    dl.libelleAbrev AS libelleAbrev, 
+                    dl.dptSlug, 
+                    dl.couleurAssociee, 
+                    dl.departementNom, 
+                    dl.departementCode,
+                    CONCAT(dl.departementNom, " (", dl.departementCode, ")") AS cardCenter
                 FROM class_loyaute cl
-                LEFT JOIN deputes_all da 
-                    ON cl.mpId = da.mpId 
-                    AND cl.legislature = da.legislature
-                WHERE da.legislature = ? 
-                    AND da.dateFin IS NULL
+                LEFT JOIN deputes_last dl 
+                    ON cl.mpId = dl.mpId 
+                    AND cl.legislature = dl.legislature
+                WHERE dl.legislature = ? 
+                    AND dl.dateFin IS NULL
                 ORDER BY cl.score DESC, votesN DESC, RAND()';
     
         return $this->db->query($sql, $legislature)->result_array();
