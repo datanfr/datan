@@ -202,7 +202,7 @@
         $data['groupsAge'] = $this->stats_model->get_groups_age();
         if ($data['groupsAge']) {
           foreach ($data['groupsAge'] as &$group) {
-            $group['couleurCard'] = $this->groupes_model->get_groupe_color_card(['uid' => $group['organeRef']]);
+             $group['couleurCard'] = $this->groupes_model->get_groupe_color_card(['uid' => $group['organeRef']]);
         } 
           unset($group);
           $data['groupOldest'] = array_slice($data['groupsAge'], 0, 1);
@@ -341,6 +341,7 @@
           $data['groupsLast'] = end($data['groups']);
           $data['groupsLast']['couleurAssociee'] = $this->groupes_model->get_groupe_color(array($data['groupsLast']['libelleAbrev'], $data['groupsLast']['couleurAssociee']));
         }
+
         // Meta
         $data['title_meta'] = "La participation des groupes politiques - Assemblée nationale | Datan";
         $data['description_meta'] = "Quel groupe parlementaire est le plus actif au moment de voter ? Quel groupe a le plus faible taux de participation ? Découvrez le classement sur Datan.";
@@ -406,6 +407,7 @@
           $data['groups'] = $test;
           $data['groups_rows'] = $rows;
         }
+        
         // Meta
         $data['title_meta'] = "La représentatité sociale des groupes - Assemblée nationale | Datan";
         $data['description_meta'] = "Quel groupe parlementaire est le plus actif au moment de voter ? Quel groupe a le plus faible taux de participation ? Découvrez le classement sur Datan.";
