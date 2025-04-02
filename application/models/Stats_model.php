@@ -98,13 +98,14 @@
         $sql = 'SELECT 
                     RANK() OVER (ORDER BY cl.score DESC, cl.votesN DESC) AS "rank", 
                     cl.mpId, 
-                    ROUND(cl.score * 100) AS score, 
+                    cl.legislature,
+                    ROUND(cl.score * 100) AS score,
                     cl.votesN, 
                     da.civ, 
                     da.nameLast, 
                     da.nameFirst, 
                     da.nameUrl, 
-                    da.legislature, 
+                    da.legislature AS legislature_last, 
                     da.img, 
                     da.libelle AS libelle, 
                     da.libelleAbrev AS libelleAbrev, 
@@ -195,7 +196,8 @@
                     da.couleurAssociee, 
                     da.img, 
                     da.departementNom, 
-                    da.departementCode, 
+                    da.departementCode,
+                    CONCAT(da.departementNom, " (", da.departementCode, ")") AS cardCenter,  
                     da.legislature AS legislature_last
                 FROM class_participation cp
                 LEFT JOIN deputes_last da 
