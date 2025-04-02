@@ -1769,25 +1769,7 @@ body{
       font-size: $h5-font-size;
       color: $primary;
     }
-    .article{
-      img{
-        width: 100%;
-        height: auto;
-        border-radius: 7px;
-      }
-      .title{
-        font-size: $h4-font-size;
-        font-weight: 600;
-      }
-      .category{
-        color: $primary;
-        font-size: $h7-font-size;
-      }
-      .date{
-        color: $text-gray-light;
-        font-size: $h7-font-size;
-      }
-    }    
+      
   }
   .bloc-map{
     .map_france{
@@ -3206,12 +3188,34 @@ body{
 }
 /*
 ################
-               CARD-POST (for datan.fr & datan.fr/blog & datan.fr/blog/categorie/XX )
+               BLOC-POST (for datan.fr & datan.fr/blog & datan.fr/blog/categorie/XX )
 ################
 */
-.card-post{
+.bloc-post{
+  img{
+    width: 100%;
+    height: auto;
+    border-radius: 7px;
+  }
+  .title{
+    font-size: $h4-font-size;
+    font-weight: 600;
+  }
+  .category{
+    color: $primary;
+    font-size: $h7-font-size;
+  }
+  .date{
+    color: $text-gray-light;
+    font-size: $h7-font-size;
+  }
+  .chapo{
+    color: $text-gray;
+  }
+}  
+
+.bloc-post-old{
   box-shadow: $card-box-shadow;
-  border: none;
   .img-wrap{
     width: 50%;
     border-top-left-radius: $card-border-radius;
@@ -3251,7 +3255,30 @@ body{
 ################
 */
 .pg-posts{
-  // EMPTY
+  h1{
+    font-weight: 800;
+    font-size: 2.7em;
+  }
+  h3{
+    font-size: $h6-font-size;
+    line-height: 20px;
+    color: $text-gray;
+  }
+  .menu{
+    border-right: 1px solid rgba(0, 0, 0, 0.15);
+  }
+  .categories{
+    li {
+      margin-top: 0.5em;
+    }
+    &::before{
+      content: "";
+      display: block;
+      width: 50%;
+      border-top: 1px solid rgba(0, 0, 0, 0.15);
+      margin: 0;
+    }
+  }
 }
 /*
 ################

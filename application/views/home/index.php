@@ -190,20 +190,7 @@
           <div class="row pt-4">
             <?php foreach ($posts as $index => $post): ?>
               <div class="col-md-4 <?= $index > 0 ? 'mt-md-0 mt-4' : '' ?>">
-                <div class="article">
-                  <div class="image">
-                    <img class="img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder.png" data-src="<?= asset_url() ?>imgs/posts/img_post_<?= $post['id'] ?>.png" alt="Image post <?= $post['id'] ?>" width="480" height="240">
-                  </div>
-                  <div class="mt-2 mb-1">
-                    <span class="category mr-2"><?= mb_strtoupper($post['category_name']) ?></span>
-                  </div>
-                  <h3 class="title mb-0">
-                    <a href="<?= base_url() ?>blog/<?= $post['category_slug'] ?>/<?= $post['slug'] ?>" class="stretched-link no-decoration underline"><?= $post['title'] ?></a>
-                  </h3>
-                  <div>
-                    <span class="date"><?= $post['created_at_fr'] ?></span>
-                  </div>
-                </div>
+              <?php $this->load->view('posts/partials/bloc-post.php', array('post' => $post, 'chapo' => FALSE)) ?>
               </div>
             <?php endforeach; ?>
           </div>
