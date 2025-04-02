@@ -65,7 +65,6 @@
           <?php endforeach; ?>
         </ul>
       </div>
-      <?php $this->load->view('posts/partials/follow_us.php') ?>
     </div>
   </div>
 </div>
