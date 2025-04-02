@@ -97,8 +97,10 @@
     {
         $sql = 'SELECT 
                     RANK() OVER (ORDER BY cl.score DESC, cl.votesN DESC) AS "rank", 
-                    cl.*, 
-                    ROUND(cl.score * 100) AS score, 
+                    cl.mpId, 
+                    cl.legislature,
+                    ROUND(cl.score * 100) AS score,
+                    cl.votesN, 
                     dl.civ, 
                     dl.nameLast, 
                     dl.nameFirst, 
@@ -113,6 +115,9 @@
                     dl.departementCode,
                     CONCAT(dl.departementNom, " (", dl.departementCode, ")") AS cardCenter
                 FROM class_loyaute cl
+                LEFT JOIN deputes_all da 
+                    ON cl.mpId = da.mpId 
+                    AND cl.legislature = da.legislature
                 LEFT JOIN deputes_last dl 
                     ON cl.mpId = dl.mpId 
                     AND cl.legislature = dl.legislature
