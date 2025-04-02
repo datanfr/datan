@@ -407,7 +407,7 @@
           $data['groups'] = $test;
           $data['groups_rows'] = $rows;
         }
-          
+
         // Meta
         $data['title_meta'] = "La représentatité sociale des groupes - Assemblée nationale | Datan";
         $data['description_meta'] = "Quel groupe parlementaire est le plus actif au moment de voter ? Quel groupe a le plus faible taux de participation ? Découvrez le classement sur Datan.";
