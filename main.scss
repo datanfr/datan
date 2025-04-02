@@ -3180,6 +3180,26 @@ body{
     color: $primary;
     font-weight: 800;
   }
+
+  .card-header {
+    font-weight : 700;
+  }
+  
+.list-group-item {
+  font-weight: 600;
+    &.active {
+      background-color: transparent;
+
+      a {
+        color: $primary;
+        font-weight: 700;
+      }
+    }
+
+    a:hover {
+      color: $primary;
+    }
+  }
 }
 /*
 ################
