@@ -375,11 +375,11 @@
         }
         $data['groups_rose'] = $this->jobs_model->get_groups_rose();
         if ($data['groups_rose']) {
-        foreach ($data['groups_rose'] as &$group) {
-          $group['couleurCard'] = $this->groupes_model->get_groupe_color_card([
-              'uid' => $group['organeRef']
-          ]);
-        }
+          foreach ($data['groups_rose'] as &$group) {
+            $group['couleurCard'] = $this->groupes_model->get_groupe_color_card([
+                'uid' => $group['organeRef']
+            ]);
+          }
           unset($group);
           $data['rose_first'] = $data['groups_rose'][0];
           $data['rose_first']['couleurAssociee'] = $this->groupes_model->get_groupe_color(array($data['rose_first']['libelleAbrev'], $data['rose_first']['couleurAssociee']));
@@ -407,7 +407,7 @@
           $data['groups'] = $test;
           $data['groups_rows'] = $rows;
         }
-        
+          
         // Meta
         $data['title_meta'] = "La représentatité sociale des groupes - Assemblée nationale | Datan";
         $data['description_meta'] = "Quel groupe parlementaire est le plus actif au moment de voter ? Quel groupe a le plus faible taux de participation ? Découvrez le classement sur Datan.";
