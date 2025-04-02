@@ -3191,13 +3191,13 @@ body{
       background-color: transparent;
 
       a {
-        color: #00b794;
+        color: $primary;
         font-weight: 700;
       }
     }
 
     a:hover {
-      color: #00b794;
+      color: $primary;
     }
   }
 }
