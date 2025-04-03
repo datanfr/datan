@@ -3278,6 +3278,25 @@ body{
     color: $text-gray;
   }
   .categories{
+    ul{
+      @include media-breakpoint-down(sm) { // Horizontal menu on phones
+        display: flex;
+        overflow-x: auto;
+        padding: 0;
+        margin: 0;
+        li{
+          flex: 0 0 auto;
+          margin-right: 1em;
+        }
+        &::-webkit-scrollbar {
+          height: 8px;
+        }
+        &::-webkit-scrollbar-thumb {
+          background: rgba(0, 0, 0, 0.3);
+          border-radius: 10px;
+        }
+      }
+    }
     li {
       margin-top: 0.5em;
       &.active a{
@@ -3288,9 +3307,14 @@ body{
     &::before{
       content: "";
       display: block;
-      width: 50%;
+      width: 100%;
       border-top: 1px solid rgba(0, 0, 0, 0.15);
       margin: 0;
+
+      @include media-breakpoint-up(lg) {
+        width: 50%;
+      }
+
     }
   }
 }
