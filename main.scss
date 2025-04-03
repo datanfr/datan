@@ -3255,21 +3255,35 @@ body{
 ################
 */
 .pg-posts{
-  h1{
-    font-weight: 800;
-    font-size: 2.7em;
-  }
-  h3{
-    font-size: $h6-font-size;
-    line-height: 20px;
-    color: $text-gray;
-  }
   .menu{
     border-right: 1px solid rgba(0, 0, 0, 0.15);
+    .title{
+      font-weight: 800;
+      font-size: 2.7em;
+    }
+    .subtitle{
+      font-size: $h6-font-size;
+      line-height: 20px;
+      color: $text-gray;
+    }
+  }
+  .category_title{
+    font-weight: 800;
+    font-size: $h4-font-size;
+    color: $primary;
+  }
+  .category_subtitle{
+    font-weight: 600;
+    font-size: $h6-font-size;
+    color: $text-gray;
   }
   .categories{
     li {
       margin-top: 0.5em;
+      &.active a{
+        color: $primary;
+        font-weight: 800;
+      }
     }
     &::before{
       content: "";

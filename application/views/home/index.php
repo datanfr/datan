@@ -190,7 +190,7 @@
           <div class="row pt-4">
             <?php foreach ($posts as $index => $post): ?>
               <div class="col-md-4 <?= $index > 0 ? 'mt-md-0 mt-4' : '' ?>">
-              <?php $this->load->view('posts/partials/bloc-post.php', array('post' => $post, 'chapo' => FALSE)) ?>
+              <?php $this->load->view('posts/partials/bloc-post.php', array('post' => $post, 'postTitleTag' => 'h3', 'chapo' => FALSE)) ?>
               </div>
             <?php endforeach; ?>
           </div>
