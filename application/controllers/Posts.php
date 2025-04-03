@@ -17,13 +17,19 @@
       $data['posts'] = $this->post_model->get_posts(NULL, $user_type, NULL);
       $data['categories'] = $this->category_model->get_active_categories();
 
+      // Page elements 
+      $data['page'] = 'index';
+      $data['titleTag'] = 'h1';
+      $data['subtitleTag'] = 'h2';
+      $data['postTitleTag'] = 'h3';
+
       // Breadcrumb
       $data['breadcrumb'] = array(
         array(
           "name" => "Datan", "url" => base_url(), "active" => FALSE
         ),
         array(
-          "name" => "Tous les articles", "url" => base_url()."blog", "active" => TRUE
+          "name" => "Blog", "url" => base_url()."blog", "active" => TRUE
         )
       );
       $data['breadcrumb_json'] = $this->breadcrumb_model->breadcrumb_json($data['breadcrumb']);
@@ -31,7 +37,6 @@
       $data['url'] = $this->meta_model->get_url();
       $data['title_meta'] = "Blog | Datan";
       $data['description_meta'] = "Découvrez l'actualité politique de l'Assemblée nationale, du gouvernement et des députés avec les articles de Datan.";
-      $data['title'] = "Tous les articles";
       //Open Graph
       $controller = $this->router->fetch_class()."/".$this->router->fetch_method();
       $data['ogp'] = $this->meta_model->get_ogp($controller, $data['title_meta'], $data['description_meta'], $data['url'], $data);
@@ -60,13 +65,19 @@
       $user_type = $this->session->userdata('type');
       $data['user'] = $user_type;
 
+      // Page elements 
+      $data['page'] = $data['category']['slug'];
+      $data['titleTag'] = 'h3';
+      $data['subtitleTag'] = 'div';
+      $data['postTitleTag'] = 'h4';
+
       // Breadcrumb
       $data['breadcrumb'] = array(
         array(
           "name" => "Datan", "url" => base_url(), "active" => FALSE
         ),
         array(
-          "name" => "Tous les articles", "url" => base_url()."blog", "active" => FALSE
+          "name" => "Blog", "url" => base_url()."blog", "active" => FALSE
         ),
         array(
           "name" => $data['category']['name'], "url" => base_url()."blog/categorie/".$data['category']['slug'], "active" => TRUE
@@ -75,9 +86,8 @@
       $data['breadcrumb_json'] = $this->breadcrumb_model->breadcrumb_json($data['breadcrumb']);
       // Meta
       $data['url'] = $this->meta_model->get_url();
-      $data['title_meta'] = "Articles catégorie ". $data['category']['name']." | Datan";
-      $data['description_meta'] = "A FAIRE ???"; // A FAIRE
-      $data['title'] = "Catégorie ". $data['category']['name'];
+      $data['title_meta'] = $data['category']['name']." - Blog | Datan";
+      $data['description_meta'] = $data['category']['description_meta'];
       //Open Graph
       $controller = $this->router->fetch_class()."/".$this->router->fetch_method();
       $data['ogp'] = $this->meta_model->get_ogp($controller, $data['title_meta'], $data['description_meta'], $data['url'], $data);
@@ -90,7 +100,7 @@
       );
       // Load views
       $this->load->view('templates/header', $data);
-      $this->load->view('posts/index_category', $data);
+      $this->load->view('posts/index', $data);
       $this->load->view('templates/breadcrumb', $data);
       $this->load->view('templates/footer');
 
@@ -113,7 +123,7 @@
           "name" => "Datan", "url" => base_url(), "active" => FALSE
         ),
         array(
-          "name" => "Tous les articles", "url" => base_url()."blog", "active" => FALSE
+          "name" => "Blog", "url" => base_url()."blog", "active" => FALSE
         ),
         array(
           "name" => $data['post']['category_name'], "url" => base_url()."blog/categorie/".$data['post']['category_slug'], "active" => FALSE
