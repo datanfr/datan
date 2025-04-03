@@ -194,6 +194,11 @@
               </div>
             <?php endforeach; ?>
           </div>
+          <div class="row mt-4">
+            <div class="col-12 d-flex justify-content-center">
+              <a class="btn btn-primary" href="<?= base_url() ?>blog">Tous nos articles</a>
+            </div>
+          </div>
         </div>
       </div>
     </div>
