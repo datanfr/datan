@@ -5,9 +5,9 @@
     <div class="mt-2 mb-1">
         <span class="category mr-2"><?= mb_strtoupper($post['category_name']) ?></span>
     </div>
-    <h3 class="title mb-0">
+    <<?= $postTitleTag ?> class="title mb-0">
         <a href="<?= base_url() ?>blog/<?= $post['category_slug'] ?>/<?= $post['slug'] ?>" class="stretched-link no-decoration underline"><?= $post['title'] ?></a>
-    </h3>
+    </<?= $postTitleTag ?>>
     <div>
         <span class="date"><?= $post['created_at_fr'] ?></span>
     </div>
