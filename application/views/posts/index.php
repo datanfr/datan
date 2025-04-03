@@ -1,12 +1,12 @@
 <div class="container my-5 pg-posts">
   <div class="row">
     <!-- Sticky Sidebar -->
-    <div class="menu col-md-3">
+    <div class="menu col-md-4 col-lg-3">
       <div class="sticky-top" style="top: 80px;">
         <<?= $titleTag ?> class="title">Blog</<?= $titleTag ?>>
-        <<?= $subtitleTag ?> class="mt-4 subtitle">Nos analyses et décryptages sur l'Assemblée nationale et les députés</<?= $subtitleTag ?>>
-        <div class="mt-4 categories">
-          <ul class="list-unstyled mt-4">
+        <<?= $subtitleTag ?> class="my-4 subtitle">Nos analyses et décryptages sur l'Assemblée nationale et les députés</<?= $subtitleTag ?>>
+        <div class="categories">
+          <ul class="list-unstyled mt-md-4">
             <li class="<?= $page === 'index' ? 'active' : '' ?>">
               <a href="<?= base_url() ?>blog" class="no-decoration underline">Derniers articles</a>
             </li>
@@ -25,7 +25,7 @@
     </div>
 
     <!-- Main Content -->
-    <div class="col-md-9 pl-5">
+    <div class="col-md-8 col-lg-9 pl-md-5 mt-md-0 mt-5">
       <?php if ($page != 'index'): ?>
         <div class="row">
           <div class="col-12 mb-5">
@@ -36,7 +36,7 @@
       <?php endif; ?>
       <div class="row">
         <?php foreach ($posts as $post): ?>
-          <div class="col-6 mb-5">
+          <div class="col-lg-6 col-12 mb-5">
             <?php $this->load->view('posts/partials/bloc-post.php', array('post' => $post, 'titleTag' => $postTitleTag, 'chapo' => TRUE)) ?>            
           </div>
         <?php endforeach; ?>
