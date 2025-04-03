@@ -14,6 +14,10 @@
     }
 
     public function index() {
+      // Get user data 
+      $user_type = $this->session->userdata('type');
+      $data['user'] = $user_type;
+
       //Get random data
       $data['depute_random'] = $this->deputes_model->get_depute_random();
       $data['depute_random'] = array_merge($data['depute_random'], gender($data['depute_random']['civ']));
