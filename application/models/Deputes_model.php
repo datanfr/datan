@@ -840,4 +840,10 @@
       return $this->db->get_where('explications_mp e', $where, 1)->row_array();
     }
 
+
+    public function get_photo_square($depute)
+    {
+        return $depute['legislature'] >= 17 ? TRUE : FALSE;
+    }
+
   }
