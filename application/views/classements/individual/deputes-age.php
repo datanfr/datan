@@ -38,7 +38,7 @@
           <tbody>
             <?php $i = 1; ?>
             <?php foreach ($deputes as $depute): ?>
-              <tr>
+              <tr class="randomized">
                 <td class="text-center"><?= $depute["rank"] ?></td>
                 <td class="text-center"><?= $depute["nameFirst"]." ".$depute["nameLast"] ?></td>
                 <td class="text-center"><?= $depute["libelleAbrev"] ?></td>

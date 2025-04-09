@@ -131,3 +131,8 @@ application/controllers/Users.php, commentez la ligne 78 :
 Une fois inscrit (vous aurez peut-être une erreur Mailjet mais c'est pas grave), votre utilisateur sera dans la base de données.
 Il suffira alors de vous connecter à phpMyAdmin et modifier la colonne type pour votre utilisateur en "admin".
 Déconnectez-vous et connectez-vous à nouveau et vous aurez accès à /admin
+
+# Test de branche
+```php compare_branch.php fichier_url branche_a_tester```
+example : 
+```php compare_branch.php urls.txt udpate-statistics-card```

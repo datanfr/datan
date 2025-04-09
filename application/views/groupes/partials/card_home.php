@@ -23,7 +23,7 @@
   </div>
   <?php if ($cat !== false): ?>
     <div class="mb-3">
-      <a class="btn btn-cat btn-primary stretched-link" href="<?= base_url(); ?>groupes/legislature-<?= $groupe['legislature'] ?>/<?= mb_strtolower($groupe['libelleAbrev']) ?>" role="button">Découvrez son activité</a>
+      <a class="btn btn-cat btn-primary stretched-link randomized" href="<?= base_url(); ?>groupes/legislature-<?= $groupe['legislature'] ?>/<?= mb_strtolower($groupe['libelleAbrev']) ?>" role="button">Découvrez son activité</a>
     </div>
   <?php else: ?>
     <?php if ($active && $groupe['legislature'] == legislature_current()): ?>

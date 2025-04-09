@@ -77,7 +77,7 @@
                   </thead>
                   <tbody>
                     <?php foreach ($mpsSolennels as $depute): ?>
-                      <tr>
+                      <tr class="randomized">
                         <td class="text-center"><?= $depute['rank'] ?></td>
                         <td class="text-center"><?= $depute['nameFirst']." ".$depute['nameLast'] ?></td>
                         <td class="text-center"><?= $depute['libelleAbrev'] ?></td>
@@ -109,7 +109,7 @@
                 </thead>
                 <tbody>
                   <?php foreach ($mpsCommission as $depute): ?>
-                    <tr>
+                    <tr class="randomized">
                       <td class="text-center"><?= $depute['rank'] ?></td>
                       <td class="text-center"><?= $depute['nameFirst']." ".$depute['nameLast'] ?></td>
                       <td class="text-center"><?= $depute['libelleAbrev'] ?></td>
@@ -140,7 +140,7 @@
                 </thead>
                 <tbody>
                   <?php foreach ($mps as $depute): ?>
-                    <tr>
+                    <tr class="randomized">
                       <td class="text-center"><?= $depute['rank'] ?></td>
                       <td class="text-center"><?= $depute['nameFirst']." ".$depute['nameLast'] ?></td>
                       <td class="text-center"><?= $depute['libelleAbrev'] ?></td>
