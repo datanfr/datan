@@ -212,9 +212,9 @@ function normalizeFileContent(string $content): string {
         $modified_html = $dom->saveHTML();
         
         // Normaliser les espaces blancs et les nouvelles lignes
-        $modified_html = preg_replace('/\s+/', ' ', $modified_html); // Remplacer les séquences d'espaces blancs par un seul espace
-        $modified_html = preg_replace('/\s*>\s*/', '>\n', $modified_html); // Supprimer les espaces avant >
-        $modified_html = preg_replace('/\s*<\s*/', '<', $modified_html); // Supprimer les espaces après <
+        // $modified_html = preg_replace('/\s+/', ' ', $modified_html); // Remplacer les séquences d'espaces blancs par un seul espace
+        // $modified_html = preg_replace('/\s*>\s*/', '>', $modified_html); // Supprimer les espaces avant >
+        // $modified_html = preg_replace('/\s*<\s*/', '<', $modified_html); // Supprimer les espaces après <
         
         return trim($modified_html);
     } else {
