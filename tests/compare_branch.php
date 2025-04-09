@@ -170,7 +170,7 @@ function downloadUrls(array $urls, string $targetDir): bool
  */
 function normalizeFileContent(string $content): string {
     // Normaliser les fins de ligne
-    // $content = str_replace("\r\n", "\n", $content);
+    $content = str_replace("\r\n", "\n", $content);
     
     // Si c'est du HTML, utiliser DOMDocument pour normaliser
     if (preg_match('/<html|<!DOCTYPE html/i', $content)) {
