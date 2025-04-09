@@ -138,7 +138,7 @@
             <?php if ($active): ?>
               <div class="col-sm-6">
                 <div class="card">
-                  <div class="card-body">
+                  <div class="card-body randomized">
                     <h3>Origine sociale des députés</h3>
                     <div class="stat">
                       <span><?= $origineSociale['pct'] ?>%</span>
