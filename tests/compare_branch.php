@@ -274,8 +274,6 @@ function compareDirectories(string $dir1, string $dir2, array $urls): bool
         }
 
         // Si les contenus normalisés sont différents, montrer le diff pour le débogage
-        echo 'DIFFERENCES FOUND' . PHP_EOL;
-        $differences_found = true;
 
         // Créer des fichiers temporaires avec le contenu normalisé pour le diff
         $temp1 = tempnam(sys_get_temp_dir(), 'diff1_');
@@ -288,7 +286,9 @@ function compareDirectories(string $dir1, string $dir2, array $urls): bool
         $return_var = -1;
         exec($command, $output, $return_var);
         if ($output){
-            echo '--- Diff for ' . $filename . ' (URL: ' . $original_url . ') ---' . PHP_EOL;
+            echo 'DIFFERENCES FOUND' . PHP_EOL;
+            $differences_found = true;
+                echo '--- Diff for ' . $filename . ' (URL: ' . $original_url . ') ---' . PHP_EOL;
             echo implode("\n", $output) . PHP_EOL;
             echo '--- End Diff ---' . PHP_EOL;    
         }
