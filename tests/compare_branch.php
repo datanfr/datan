@@ -170,7 +170,7 @@ function downloadUrls(array $urls, string $targetDir): bool
  */
 function normalizeFileContent(string $content): string {
     // Normaliser les fins de ligne
-    $content = str_replace("\r\n", "\n", $content);
+    // $content = str_replace("\r\n", "\n", $content);
     
     // Si c'est du HTML, utiliser DOMDocument pour normaliser
     if (preg_match('/<html|<!DOCTYPE html/i', $content)) {
@@ -207,11 +207,6 @@ function normalizeFileContent(string $content): string {
                 $removedCount++;
             }
         }
-        
-        // Configuration pour ignorer les espaces blancs non significatifs
-        $dom->preserveWhiteSpace = false;
-        $dom->formatOutput = false; // Désactiver le formatage automatique
-        $dom->normalize();
         
         // Save the modified HTML
         $modified_html = $dom->saveHTML();
