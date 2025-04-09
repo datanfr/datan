@@ -213,8 +213,8 @@ function normalizeFileContent(string $content): string {
         
         // Normaliser les espaces blancs et les nouvelles lignes
         // $modified_html = preg_replace('/\s+/', ' ', $modified_html); // Remplacer les séquences d'espaces blancs par un seul espace
-        $modified_html = preg_replace('/\s*>\s*/', '>', $modified_html); // Supprimer les espaces avant >
-        $modified_html = preg_replace('/\s*<\s*/', '<', $modified_html); // Supprimer les espaces après <
+        // $modified_html = preg_replace('/\s*>\s*/', '>', $modified_html); // Supprimer les espaces avant >
+        // $modified_html = preg_replace('/\s*<\s*/', '<', $modified_html); // Supprimer les espaces après <
         
         return trim($modified_html);
     } else {
@@ -283,7 +283,7 @@ function compareDirectories(string $dir1, string $dir2, array $urls): bool
         file_put_contents($temp1, $content1);
         file_put_contents($temp2, $content2);
         // Utiliser la commande 'diff -u' pour obtenir un diff unifié
-        $command = 'diff -u ' . escapeshellarg($temp1) . ' ' . escapeshellarg($temp2);
+        $command = 'diff -u -b -w -B ' . escapeshellarg($temp1) . ' ' . escapeshellarg($temp2);
         $output = [];
         $return_var = -1;
         exec($command, $output, $return_var);
