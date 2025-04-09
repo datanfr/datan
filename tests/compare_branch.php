@@ -283,7 +283,7 @@ function compareDirectories(string $dir1, string $dir2, array $urls): bool
         file_put_contents($temp1, $content1);
         file_put_contents($temp2, $content2);
         // Utiliser la commande 'diff -u' pour obtenir un diff unifié
-        $command = 'diff -u -b ' . escapeshellarg($temp1) . ' ' . escapeshellarg($temp2);
+        $command = 'diff -u -w ' . escapeshellarg($temp1) . ' ' . escapeshellarg($temp2);
         $output = [];
         $return_var = -1;
         exec($command, $output, $return_var);
