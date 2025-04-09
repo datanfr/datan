@@ -266,13 +266,7 @@ function compareDirectories(string $dir1, string $dir2, array $urls): bool
 
         // Normaliser le contenu des fichiers avant comparaison
         $content1 = normalizeFileContent(file_get_contents($file1));
-        if (strpos($content1, 'randomized')) {
-            die('nowat');
-        }
         $content2 = normalizeFileContent(file_get_contents($file2));
-        if (strpos($content2, 'randomized')) {
-            die('nowat2');
-        }
 
         if ($content1 === $content2) {
             echo 'Identical' . PHP_EOL;
@@ -286,12 +280,8 @@ function compareDirectories(string $dir1, string $dir2, array $urls): bool
         // Créer des fichiers temporaires avec le contenu normalisé pour le diff
         $temp1 = tempnam(sys_get_temp_dir(), 'diff1_');
         $temp2 = tempnam(sys_get_temp_dir(), 'diff2_');
-        file_put_contents($temp1, $content1);
-        file_put_contents($temp2, $content2);
-        $file14 = file_get_contents($temp2);
-        if (strpos($file14, 'randomized')) {
-            die('nowat14');
-        }
+        file_put_contents($temp1, normalizeFileContent($content1));
+        file_put_contents($temp2, normalizeFileContent($content2));
         // Utiliser la commande 'diff -u' pour obtenir un diff unifié
         $command = 'diff -u ' . escapeshellarg($temp1) . ' ' . escapeshellarg($temp2);
         $output = [];
