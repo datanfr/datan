@@ -280,8 +280,8 @@ function compareDirectories(string $dir1, string $dir2, array $urls): bool
         // Créer des fichiers temporaires avec le contenu normalisé pour le diff
         $temp1 = tempnam(sys_get_temp_dir(), 'diff1_');
         $temp2 = tempnam(sys_get_temp_dir(), 'diff2_');
-        file_put_contents($temp1, normalizeFileContent($content1));
-        file_put_contents($temp2, normalizeFileContent($content2));
+        file_put_contents($temp1, $content1);
+        file_put_contents($temp2, $content2);
         // Utiliser la commande 'diff -u' pour obtenir un diff unifié
         $command = 'diff -u ' . escapeshellarg($temp1) . ' ' . escapeshellarg($temp2);
         $output = [];
