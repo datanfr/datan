@@ -76,7 +76,7 @@
                   </thead>
                   <tbody>
                     <?php foreach ($votes_sps as $group): ?>
-                      <tr>
+                      <tr class="randomized">
                         <td class="text-center"><?= $group["rank"] ?></td>
                         <td class="text-center">
                           <a href="<?= base_url() ?>groupes/legislature-<?= $group["legislature"] ?>/<?= mb_strtolower($group["libelleAbrev"]) ?>" class="no-decoration underline"><?= name_group($group["libelle"]) ?> (<?= $group["libelleAbrev"] ?>)</a>
@@ -106,7 +106,7 @@
                 <tbody>
                   <?php $i = 1; ?>
                   <?php foreach ($votes_commission as $group): ?>
-                    <tr>
+                    <tr class="randomized">
                       <td class="text-center"><?= $group["rank"] ?></td>
                       <td class="text-center">
                         <a href="<?= base_url() ?>groupes/legislature-<?= $group["legislature"] ?>/<?= mb_strtolower($group["libelleAbrev"]) ?>" class="no-decoration underline"><?= name_group($group["libelle"]) ?> (<?= $group["libelleAbrev"] ?>)</a>
@@ -135,7 +135,7 @@
                 </thead>
                 <tbody>
                   <?php foreach ($votes_all as $group): ?>
-                    <tr>
+                    <tr class="randomized">
                       <td class="text-center"><?= $group["rank"] ?></td>
                       <td class="text-center">
                         <a href="<?= base_url() ?>groupes/legislature-<?= $group["legislature"] ?>/<?= mb_strtolower($group["libelleAbrev"]) ?>" class="no-decoration underline"><?= name_group($group["libelle"]) ?> (<?= $group["libelleAbrev"] ?>)</a>

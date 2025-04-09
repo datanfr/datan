@@ -24,7 +24,7 @@
                   <div class="search_icon">
                     <?= file_get_contents(asset_url() . "imgs/icons/bi-search.svg") ?>
                   </div>
-                  <input id="search" type="text" placeholder="Exemple : <?= $placeholder ?>">
+                  <input id="search" type="text" class="randomized" placeholder="Exemple : <?= $placeholder ?>">
                   <div class="search-results" id="search-results-bloc" style="display: none">
                     <div id="search-results-list"></div>
                     <a class="py-1 no-decoration text-info font-weight-bold" id="more-results-link">
