@@ -115,7 +115,6 @@
         show_404($this->functions_datan->get_404_infos());
       }
       $data['categories'] = $this->category_model->get_active_categories();
-      $data['last_posts'] = $this->post_model->get_last_posts();
 
       // Breadcrumb
       $data['breadcrumb'] = array(
