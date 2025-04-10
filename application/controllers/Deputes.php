@@ -250,10 +250,9 @@
     public function individual($nameUrl, $departement)
     {
       setlocale(LC_TIME, 'french');
-
       // _____________________GET INFOS MP____________________
-      $data['depute'] = $this->deputes_model->get_depute_individual($nameUrl, $departement);
-  
+    $data['depute'] = $this->deputes_model->get_depute_individual($nameUrl, $departement);
+
 
       // ____________________CHECK IF DEPUTE EXISTS__________________
       if (empty($data['depute'])) {
@@ -285,13 +284,12 @@
       $data['photo_square'] = $this->deputes_model->get_photo_square($depute);
   
       // ____________________GET GENDER_________________________________
-      $data['gender'] = gender($depute['civ']);  //--> fonction qui vient de l'utility helper ligne 184; à laisser ici ou mettre dans le depute_model?
+      $data['gender'] = gender($depute['civ']); 
 
     
       // ____________________GET HAVP___________________________________
-      $hatvp_info = $this->deputeservice->get_hatvp_info($mp_id);
-      $depute['hatvp'] = $hatvp_info['hatvp'];
-      $data['hatvpJobs'] = $hatvp_info['hatvpJobs'];
+      $data['depute']['hatvp'] = $this->deputes_model->get_hatvp_url($mp_id);
+      $data['hatvpJobs'] = $this->deputes_model->get_last_hatvp_job($mp_id);
 
 
       // ____________________GET GROUP___________________________________
@@ -317,7 +315,8 @@
     
       // ____________________GET ALL ELECTIONS___________________________
       $data['elections'] = $this->electionservice->get_all_elections($mp_id, $data['gender']);
-
+    
+  
       // ____________________GET ELECTION FEATURE________________________
       //$data['electionFeature'] = $this->elections_model->get_candidate_election($mpId, 6, TRUE, FALSE);
 
@@ -331,22 +330,29 @@
       if ($data['parrainage']) {
         $data['parrainage']['candidat'] = $this->parrainages_model->change_candidate_name($data['parrainage']['candidat']);
       }
-
       
       //____________________GET STATISTICS__________________________________
-      $data = $this->get_statistiques($data, $legislature, $mp_id, $groupe_id);  //A revoir
+      $data = $this->get_statistiques($data, $legislature, $mp_id, $groupe_id); 
 
 
       //___________________GET OTHER MPS____________________________________
       $related_deputes = $this->deputeservice->get_other_mps($legislature, $groupe_id, $name_last, $mp_id, $data['active'], $depute_dpt);
       $data['other_deputes'] = $related_deputes['other_deputes'];
       $data['other_deputes_dpt'] = $related_deputes['other_deputes_dpt'];
+      $data['depute']['dateNaissanceFr'] = utf8_encode(strftime('%d %B %Y', strtotime($data['depute']['birthDate']))); // birthdate
 
     
       //___________________GET VOTES_________________________________________
-      $votes = $this->voteservice->get_votes_by_legislature($mp_id, $legislature);
-      $data['votes_datan'] = $votes['votes_datan'];
-      $data['key_votes'] = $votes['key_votes'];
+      if ($legislature >= 15) {
+        // Get edited votes
+        $data['votes_datan'] = $this->votes_model->get_votes_datan_depute($mp_id, 5);
+        // Get key votes
+        $data['key_votes'] = $this->votes_model->get_key_votes_mp($mp_id);
+      } else {
+        $data['votes_datan'] = NULL;
+        $data['key_votes'] = NULL;
+      }
+
 
       //__________________ Get FEATURED VOTE (motion de centure)_____________
       $data['voteFeature'] = $this->votes_model->get_individual_vote_moc($mp_id, 17, 519); // MOC Barnier Decembre 2024
@@ -357,8 +363,8 @@
 
       // _________________Get MPs HISTORY___________________________
       $data = $this->deputeservice->get_mp_history_data($data, $mp_id, $depute_full_name);
-
-
+      
+      
       // ________________ GET Depute page ressources (meta, css, js...)_______
 
       $data = $this->deputeservice->get_mp_page_resources($data, $depute_full_name, $nameUrl);
