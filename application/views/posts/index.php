@@ -6,17 +6,17 @@
         <<?= $titleTag ?> class="title">Blog</<?= $titleTag ?>>
         <<?= $subtitleTag ?> class="my-4 subtitle">Nos analyses et décryptages sur l'Assemblée nationale et les députés</<?= $subtitleTag ?>>
         <div class="categories">
-          <ul class="list-unstyled mt-md-4">
-            <li class="<?= $page === 'index' ? 'active' : '' ?>">
+          <ul class="list-unstyled mt-md-4 mt-3 row row-cols-2 row-cols-md-1">
+            <li class="col <?= $page === 'index' ? 'active' : '' ?>">
               <a href="<?= base_url() ?>blog" class="no-decoration underline">Derniers articles</a>
             </li>
-            <li class="<?= $page === 'datan' ? 'active' : '' ?>">
+            <li class="col mt-md-2 <?= $page === 'datan' ? 'active' : '' ?>">
               <a href="<?= base_url() ?>blog/categorie/datan" class="no-decoration underline">Datan</a>
             </li>
-            <li class="<?= $page === 'actualite-politique' ? 'active' : '' ?>">
+            <li class="col mt-md-2 mt-1 <?= $page === 'actualite-politique' ? 'active' : '' ?>">
               <a href="<?= base_url() ?>blog/categorie/actualite-politique" class="no-decoration underline">Actualités politiques</a>
             </li>
-            <li class="<?= $page === 'rapports' ? 'active' : '' ?>">
+            <li class="col mt-md-2 mt-1 <?= $page === 'rapports' ? 'active' : '' ?>">
               <a href="<?= base_url() ?>blog/categorie/rapports" class="no-decoration underline">Rapports</a>
             </li>
           </ul>
@@ -25,7 +25,7 @@
     </div>
 
     <!-- Main Content -->
-    <div class="col-md-8 col-lg-9 pl-md-5 mt-md-0 mt-5">
+    <div class="col-md-8 col-lg-9 pl-md-5 mt-md-0 mt-4">
       <?php if ($page != 'index'): ?>
         <div class="row">
           <div class="col-12 mb-5">
