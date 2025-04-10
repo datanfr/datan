@@ -15,26 +15,17 @@ class DeputeService
     }
 
 
-    public function get_hatvp_info(string $mp_id): array
-    {
-        return [
-            'hatvp' => $this->CI->deputes_model->get_hatvp_url($mp_id),
-            'hatvpJobs' => $this->CI->deputes_model->get_last_hatvp_job($mp_id)
-        ];
-    }
-
-
     public function get_group_info(array $data, string $mp_id, string $groupe_id): array 
     {
-    if (!empty($data['depute']['libelle'])) {
-        $data['depute']['couleurAssociee'] = $this->CI->groupes_model->get_groupe_color(array($data['depute']['libelleAbrev'], $data['depute']['couleurAssociee']));
-        
-        $data['group_president'] = $this->CI->deputes_model->depute_group_president($mp_id, $groupe_id);
-        $data['isGroupPresident'] = !empty($data['group_president']) ? TRUE : FALSE;
-    } else {
-        $groupe_id = NULL;
-        $data['isGroupPresident'] = FALSE;  
-    }
+        if (!empty($data['depute']['libelle'])) {
+            $data['depute']['couleurAssociee'] = $this->CI->groupes_model->get_groupe_color(array($data['depute']['libelleAbrev'], $data['depute']['couleurAssociee']));
+            
+            $data['group_president'] = $this->CI->deputes_model->depute_group_president($mp_id, $groupe_id);
+            $data['isGroupPresident'] = !empty($data['group_president']) ? TRUE : FALSE;
+        } else {
+            $groupe_id = NULL;
+            $data['isGroupPresident'] = FALSE;  
+        }
 
     return $data;  
     }
@@ -52,7 +43,6 @@ class DeputeService
         $data['depute']['dateNaissanceFr'] = utf8_encode(
             strftime('%d %B %Y', strtotime($data['depute']['birthDate']))   // birthdate
         );
-    
         $data['depute']['circo_abbrev'] = abbrev_n($data['depute']['circo'], TRUE); // circo number
         $data['politicalParty'] = $this->CI->deputes_model->get_political_party($mp_id); // political party
         $data['election_canceled'] = NULL;

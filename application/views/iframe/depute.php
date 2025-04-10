@@ -1,19 +1,18 @@
-
 <?php
-    if (in_array('positions-importantes', $categories)) {
-        $this->load->view('iframe/sections/positions_importantes');
+    if ($category === 'positions-importantes') {
+        $this->view('deputes/partials/mp_individual/_key_positions.php');
     }
 
-    if (in_array('derniers-votes', $categories)) {
-        $this->load->view('iframe/sections/derniers_votes');
+    if ($category === 'derniers-votes') {
+        $this->view('deputes/partials/mp_individual/_votes.php');
     }
 
-    if (in_array('proximite-groupe', $categories)) {
-        $this->load->view('iframe/sections/proximite_groupe');
+    if ($category === 'election') {
+        $this->view('deputes/partials/mp_individual/_election.php');
     }
 
-    if (in_array('election', $categories)) {
-        $this->load->view('iframe/sections/election');
+    if ($category === 'comportement-politique') {
+        $this->view('deputes/partials/mp_individual/statistics/_index.php');
     }
-    ?>
+?>
 
