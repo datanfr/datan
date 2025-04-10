@@ -107,9 +107,8 @@ $route['sitemap-partis-politiques-1.xml'] = "sitemap/parties";
 // Outils
 $route['outils/coalition-simulateur'] = 'outils/coalition';
 // Iframe
-$route['iframe'] = 'iframe/index';
 $route['iframe/depute'] = 'iframe/depute';
-$route['iframe/depute/(:any)'] = 'iframe/showDeputeIframe/$1';
+$route['iframe/depute/(:any)/(:any)'] = 'IframeController/showDeputeIframe/$1/$2';
 // COMMISSION
 $route['commissions'] = 'commissions/index';
 // GROUPES
