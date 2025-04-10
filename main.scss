@@ -3213,42 +3213,6 @@ body{
     color: $text-gray;
   }
 }  
-
-.bloc-post-old{
-  box-shadow: $card-box-shadow;
-  .img-wrap{
-    width: 50%;
-    border-top-left-radius: $card-border-radius;
-    border-bottom-left-radius: $card-border-radius;
-    img{
-      width: 100%;
-      height: auto;
-      border-top-left-radius: $card-border-radius;
-      border-bottom-left-radius: $card-border-radius;
-    }
-  }
-  .card-title{
-    font-size: $h3-font-size;
-    font-weight: 600;
-    margin-top: 0.75rem;
-    a{
-      color: $text-black;
-      text-decoration: none;
-      &:hover{
-        text-decoration: underline;
-      }
-    }
-  }
-  .card-text{
-    margin-top: 1rem;
-  }
-  .date{
-    color: $text-gray;
-  }
-  .category{
-    color: $primary;
-  }
-}
 /*
 ################
                PAGE POSTS (ALL)
@@ -3305,8 +3269,8 @@ body{
 */
 .pg-post-view{
   h1{
-    font-weight: 600;
-    font-size: 2.7em;
+    font-weight: 700;
+    font-size: 2.5em;
   }
   h2{
     color: $primary;
@@ -3314,39 +3278,22 @@ body{
     font-size: 1.4em;
     font-weight: 800;
   }
-  .hr-title{ // Has been removed for now
-    width: 16em;
-    border-top: 1px solid $primary;
-  }
-  .category{
-    color: $primary;
-    font-size: $h5-font-size;
-  }
-  .date{
-    color: $text-gray-light;
-  }
-  .img{
-    img{
-      width: 100%;
-      height: auto;
-    }
-  }
-  .body{
-    p{
-      &:first-child{
-        &::first-letter{
-          text-transform: uppercase;
-          font-size: 3em;
-          font-weight: bold;
-          letter-spacing: 5px;
-        }
+  .body{   
+    .img{
+      img{
+        width: 100%;
+        height: auto;
+        border-radius: 7px;
       }
     }
-    img{
-      width: 100%;
-      height: auto;
+    .text{
+      font-size: 1.1em;
+      img{
+        width: 100%;
+        height: auto;
+      }
     }
-  }
+  }  
 }
 /*
 ################
