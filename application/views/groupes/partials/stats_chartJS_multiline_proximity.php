@@ -20,7 +20,7 @@
       borderWidth: 2,
       fill: false,
       tension: 0.4,
-      hidden: o.groupeId != random ? true : false
+      hidden: false // Afficher toutes les courbes par défaut
     }));
 
     var ctx = document.getElementById('proximity');
@@ -29,6 +29,9 @@
       plugins: {
         datalabels: {
           display: false
+        },
+        legend: {
+          display: true,
         }
       }
     }

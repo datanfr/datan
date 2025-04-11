@@ -499,8 +499,8 @@ endif; ?>
         <button type="button" class="btn prev mr-2 carousel--prev" aria-label="précédent">
           <?= file_get_contents(asset_url() . "imgs/icons/arrow_left.svg") ?>
         </button>
-        <a class="btn see-all-carousel mx-2" href="<?= base_url() ?>votes/decryptes">
-          <span>VOIR TOUS LES VOTES</span>
+        <a class="btn btn-primary mx-2" href="<?= base_url() ?>votes/decryptes">
+          Tous les votes
         </a>
         <button type="button" class="btn next ml-2 carousel--next" aria-label="suivant">
           <?= file_get_contents(asset_url() . "imgs/icons/arrow_right.svg") ?>
@@ -516,7 +516,7 @@ endif; ?>
     data: {
       labels: ["Pour", "Abstention", "Contre"],
       datasets: [{
-        label: "Population (millions)",
+        label: "Nombre de votes",
         backgroundColor: ["#00B794", "#FFBA49", "#C5283D"],
         data: [<?= $vote['pour'] ?>, <?= $vote['abstention'] ?>, <?= $vote['contre'] ?>]
       }]
@@ -527,6 +527,9 @@ endif; ?>
       },
       plugins: {
         legend: {
+          display: false
+        },
+        datalabels: {
           display: false
         }
       },

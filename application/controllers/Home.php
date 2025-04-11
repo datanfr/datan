@@ -14,6 +14,10 @@
     }
 
     public function index() {
+      // Get user data 
+      $user_type = $this->session->userdata('type');
+      $data['user'] = $user_type;
+
       //Get random data
       $data['depute_random'] = $this->deputes_model->get_depute_random();
       $data['depute_random'] = array_merge($data['depute_random'], gender($data['depute_random']['civ']));
@@ -38,7 +42,9 @@
       } else {
         $data['groupes'] = $this->groupes_model->get_groupes_hemicycle();
       }
-      $data['groupesSorted'] = $this->groupes_model->get_groupes_sorted($data['groupes']);      
+      $data['groupesSorted'] = $this->groupes_model->get_groupes_sorted($data['groupes']);
+      $data['groupesN'] = $this->groupes_model->get_number_active_groupes();
+      $data['blocs'] = $this->groupes_model->get_blocs($data['groupes']);
 
       // Get election results 
       $file = file_get_contents(asset_url() . "data_elections/legislatives-2024-2.json");
@@ -98,7 +104,7 @@
       $data['candidatRandom']['cardCenter'] = isset($district['libelle']) && $district['libelle'] != '' ? $district['libelle'] . ' (' . $district['id'] . ')' : '';
 
       //Get posts (needs to be cached)
-      $data['posts'] = $this->post_model->get_last_posts();
+      $data['posts'] = $this->post_model->get_last_posts(3);
 
       // Composition
       $data['composition'] = TRUE;

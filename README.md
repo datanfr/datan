@@ -26,11 +26,11 @@ Ca vous permettra d'accéder au site en tapant dev-datan.fr au lieu de localhost
 ### Photos des députés
 Le projet doit télécharger plusieurs fois toutes les photos des députés (environ 4.000 photos). Pour alléger l'installation, il est possible de lancer le projet sans l'installation des photos. Pour cela : 
 - Ne rien changer au fichier `daily.php`.
-- Copier `application/config/custom_config.php.dist` en `application/config/custom_config.php.dist` et `mettre $config['mp_photos'] = FALSE`.
+- Copier `application/config/custom_config.php.dist` en `application/config/custom_config.php` et `mettre $config['mp_photos'] = FALSE`.
 
 Si vous souhaitez télécharger les photos : 
 - Décommentez la ligne `$this->$mp_photos = TRUE`
-- Copier `application/config/custom_config.php.dist` en `application/config/custom_config.php.dist` et `mettre $config['mp_photos'] = TRUE`.
+- Copier `application/config/custom_config.php.dist` en `application/config/custom_config.php` et `mettre $config['mp_photos'] = TRUE`.
 
 ## 3. Builder le projet
 ```
@@ -120,3 +120,14 @@ php /scripts/daily.php 14
 ```
 ## 5. Problème supplémentaire avec Windows
 * Si problème pour le lancement de la newsletter: https://stackoverflow.com/questions/21114371/php-curl-error-code-60  
+
+
+# Accéder au dashboard
+Pour accéder au dashboard, vous devez créer un utilisateur.
+application/controllers/Users.php, commentez la ligne 78 :
+```php
+// redirect(); // The register system is for now opened only for MPs.
+```
+Une fois inscrit (vous aurez peut-être une erreur Mailjet mais c'est pas grave), votre utilisateur sera dans la base de données.
+Il suffira alors de vous connecter à phpMyAdmin et modifier la colonne type pour votre utilisateur en "admin".
+Déconnectez-vous et connectez-vous à nouveau et vous aurez accès à /admin

@@ -42,7 +42,7 @@
   </div>
   <div class="mt-4 d-flex flex-column align-items-center">
     <a href="<?= base_url();?>deputes" class="no-decoration">
-      <button type="button" class="btn btn-outline-light">Tous les députés</button>
+      <button type="button" class="btn btn-light">Tous les députés</button>
     </a>
   </div>
 </div>
@@ -52,43 +52,68 @@
   <div class="row bloc-constats py-4">
     <div class="container p-md-0">
       <div class="row py-4">
-        <div class="col-12">
-          <h2 class="text-center pb-4">Datan : un site de <b>vulgarisation parlementaire</b></h2>
-          <div class="row pt-4">
-            <!-- Constat -->
-            <div class="d-flex align-items-start justify-content-center col-xl-5 col-md-6 col-12">
-              <div>
-                <h3 class="mb-3">Constat</h3>
-                <p>Il est difficile de <b>suivre l'activité</b> des députés <br>et de <b>savoir ce qu'ils votent</b></p>
-              </div>
-            </div>
-            <!-- Solution -->
-            <div class="d-flex align-items-start justify-content-center col-md-6 col-xl-5 offset-xl-2 col-12">
-              <div>
-                <h3 class="mb-3">Solution</h3>
-                <p>Datan <b>explique les votes</b> <br>des députés et groupes politiques</p>
-              </div>
-            </div>
+        <div class="col-lg-6">
+          <h2 class="pb-4">Datan : Un outil de vulgarisation parlementaire</h2>
+          <p>
+            Il est difficile de <b>suivre l'activité</b> des députés et de savoir ce qu'ils votent.</b>
+            <span class="text-primary font-weight-bold">Datan</span> explique <b>les votes</b> des députés et groupes politiques.
+          </p>
+          <p class="mb-1">
+            <span class="icon"><?= file_get_contents(asset_url()."imgs/icons/check_circle_fill.svg") ?></span>
+            Scrutins de l'Assemblée en temps réel
+          </p>
+          <p class="mb-1">
+            <span class="icon"><?= file_get_contents(asset_url()."imgs/icons/check_circle_fill.svg") ?></span>
+            Profils détaillés des députés
+          </p>
+          <p class="mb-0">
+            <span class="icon"><?= file_get_contents(asset_url()."imgs/icons/check_circle_fill.svg") ?></span>
+            Statistiques sur la formation des coalitions 
+          </p>
+          <div class="mt-4 d-flex flex-column flex-md-row align-items-start">
+            <a class="btn btn-primary mr-md-4 mb-3 mb-md-0" href="<?= base_url() ?>a-propos">En savoir plus</a>
+            <a class="btn btn-outline-primary" href="<?= base_url() ?>votes">Voir les derniers votes</a>
+          </div>
+        </div>
+        <div class="d-none d-lg-block col-lg-6">
+          <div class="img-container">
+          <img src="<?= asset_url() ?>imgs/cover/assemblee-nationale.jpg" alt="Assemblée nationale - photo de Mathias Reding">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- BLOC DONATIONS -->
+  <div class="row bloc-donations">
+    <div class="container py-4">
+      <div class="row">
+        <div class="col-12 col-lg-8 offset-lg-2 my-4">
+          <div class="icon d-flex justify-content-center"><?= file_get_contents(asset_url()."imgs/icons/heart-fill.svg") ?></div>
+          <h2 class="text-center mb-4 mt-2">Nous soutenir</h2>
+          <p class="text-center">Datan est un <b>outil indépendant</b>.</p>
+          <p class="text-center">🔍 Rendre accessible l'activité des députés ... Pour continuer, on a besoin de vous ! Soutenez Datan pour faire vivre la transparence démocratique et l'accès aux données parlementaires.</p>
+          <div class="d-flex justify-content-center mt-4">
+            <a class="btn btn-primary" href="https://www.helloasso.com/associations/datan/formulaires/1" target="_blank" rel="noopener">Faire un don</a>
           </div>
         </div>
       </div>
     </div>
   </div>
   <!-- VOTES CARDS -->
-  <div class="row bloc-votes" id="pattern_background">
+  <div class="row bloc-votes">
     <div class="container p-md-0">
       <div class="row py-4">
         <div class="col-12">
           <h2 class="text-center my-4">Derniers votes décryptés par Datan</h2>
         </div>
-        <div class="col-12 carousel-container bloc-carousel-votes-flickity">
+        <div class="col-12 carousel-container bloc-carousel-votes-flickity mt-4 mb-4">
           <?php $this->load->view('votes/partials/votes_carousel.php', array('votes' => $votes)) ?>
           <div class="carousel-buttons d-flex justify-content-center">
             <button type="button" class="btn prev mr-2 carousel--prev" aria-label="précédent">
               <?= file_get_contents(asset_url()."imgs/icons/arrow_left.svg") ?>
             </button>
-            <a class="btn see-all-carousel mx-2" href="<?= base_url() ?>votes/decryptes">
-              <span>VOIR TOUS LES VOTES</span>
+            <a class="btn btn-primary mx-2" href="<?= base_url() ?>votes">
+              Tous les votes
             </a>
             <button type="button" class="btn next ml-2 carousel--next" aria-label="suivant">
               <?= file_get_contents(asset_url()."imgs/icons/arrow_right.svg") ?>
@@ -98,58 +123,86 @@
       </div>
     </div>
   </div>
-  <!-- BLOC COALITION SIMULATEUR -->
-  <div class="row">
-    <div class="container py-4">
-      <div class="row">
-        <div class="col-12">
-          <h2 class="text-center my-4">Composez votre coalition à l'Assemblée nationale</h2>
-        </div>
-      </div>
-      <div class="row mt-4 mb-4">
-        <div class="col-lg-6 col-12 d-flex justify-content-center">
-          <a href="<?= base_url() ?>outils/coalition-simulateur">
-          <img class="img-lazy img-thumbnail rounded shadow" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="440" height="271" data-src="<?= asset_url() ?>imgs/photos/coalition-simulateur-home.png" alt="Découvrez notre simulateur de coalition">
-          </a>
-        </div>
-        <div class="col-lg-6 col-12 mt-5 mt-lg-0 d-flex flex-column justify-content-center">
-          <p>Il faut <span class="font-weight-bold">289 députés</span> pour obtenir une majorité absolue à l'Assemblée nationale.</p>
-          <p>Après les <a href="<?= base_url() ?>elections/legislatives-2024">élections législatives de 2024</a>, aucun groupe n'a réussi à atteindre ce seuil. Les groupes devront donc former des coalitions pour pouvoir adopter des lois.</p>
-          <p>Découvrez notre nouveau simulateur de coalition : saurez-vous créer une majorité ?</p>
-        </div>
-      </div>
-      <div class="row mt-5 mb-4">
-        <div class="col-12 d-flex justify-content-center">
-          <a href="<?= base_url() ?>outils/coalition-simulateur" class="btn btn-outline-primary">
-            Composez votre coalition
-          </a>
-        </div>
-      </div>
-    </div>
-  </div>
-  <!-- BLOC-HASARD -->
-  <div class="row bloc-hasard">
-    <div class="container pt-0">
-      <div class="row py-5">
-        <!-- DEPUTE AU HASARD CARD -->
-        <div class="<?= $groupe_random ? "col-md-6" : "col-md-12" ?> py-4">
-          <h2>DÉPUTÉ<?= mb_strtoupper($depute_random['e']) ?> AU HASARD</h2>
-          <div class="d-flex justify-content-center">
-            <?php $this->load->view('deputes/partials/card_home.php', array('depute' => $depute_random, 'tag' => 'span', 'footer' => 'discover', 'logo' => true, 'stats' => FALSE)) ?>
+  <!-- BLOC HEMICYCLE --> 
+  <?php if ($composition): ?>
+    <div class="row bloc-pie" id="pattern_background">
+      <div class="container py-3">
+        <div class="row pt-5">
+          <div class="col-12">
+            <h2 class="text-center">Composition de l'Assemblée nationale</h2>
           </div>
         </div>
-        <!-- GROUPE AU HASARD CARD -->
-        <?php if ($groupe_random): ?>
-          <div class="col-md-6 py-4">
-            <h2>GROUPE AU HASARD</h2>
-            <div class="d-flex justify-content-center">
-              <?php $this->load->view('groupes/partials/card_home.php', array('groupe' => $groupe_random, 'tag' => 'span', 'active' => TRUE, 'cat' => $groupe_random['effectif'] ? $groupe_random['effectif'] . " membres" : "", 'stats' => FALSE)) ?>
+        <div class="row pt-3">
+          <div class="col-12">
+            <p class="text-center mb-0">
+              Découvrez les <?= $groupesN ?> groupes politiques de l'Assemblée nationale
+            </p>
+          </div>
+        </div>
+        <div class="row mt-5 mb-5">
+          <div class="col-lg-5 col-md-6">
+            <p>À l'Assemblée, les députés se regroupent par affinité politique (socialiste, droite, libéral, etc.). Les groupes ont un rôle clé dans l'organisation du travail parlementaire. Actuellement, il y a <?= $groupesN ?> groupes, le plus grand étant le <a href="<?= base_url() ?>groupes/legislature-<?= legislature_current() ?>/<?= mb_strtolower($groupes[0]['libelleAbrev']) ?>"><?= $groupes['0']['libelle'] ?> (<?= $groupes['0']['libelleAbrev'] ?>)</a>, avec <?= $groupes['0']['effectif'] ?> sièges.</p>
+            <p>L'Assemblée peut être divisée en 4 grands blocs ! 👇</p>
+            <ul class="list-unstyled ml-lg-3">
+              <li>🔴 <b>La gauche</b> (NFP) : <?= $blocs['left'] ?> députés</li>
+              <li>🟡 <b>Le bloc central</b> (Renaissance et alliés) : <?= $blocs['central'] ?> 
+              députés</li>
+              <li>🔵 <b>La droite</b> (LR) : <?= $blocs['right'] ?> députés</li>
+              <li>🟤 <b>L'extrême droite</b> (RN et alliés) : <?= $blocs['extreme_right'] ?> députés</li>
+            </ul> 
+            <div class="card coalition d-none d-lg-block mt-4">
+              <div class="card-body">
+                <h2 class="card-title">Composez votre coalition</h2>
+                <p>Depuis les <a class="text-white" href="<?= base_url() ?>elections/legislatives-2024">élections de 2024</a>, aucun groupe n'a la majorité. Ils doivent s'allier pour faire passer des lois. Testez notre simulateur de coalition !</p>
+                <a href="<?= base_url() ?>outils/coalition-simulateur" class="btn btn-light">Formez votre coalition</a>
+              </div>
+            </div>  
+          </div>
+          <div class="col-lg-7 col-md-6 d-flex flex-column justify-content-center mt-3 mt-md-0">
+            <div class="hemicycle">
+              <canvas id="chartHemicycle"></canvas>
+              <div class="n-hemicycle text-center">
+                <span>577 députés</span>
+              </div>
             </div>
           </div>
-        <?php endif; ?>
+          <div class="col-12 d-lg-none mt-3">
+            <div class="card coalition">
+              <div class="card-body">
+                <h2 class="card-title">Composez votre coalition</h2>
+                <p>Depuis les <a class="text-white" href="<?= base_url() ?>elections/legislatives-2024">élections de 2024</a>, aucun groupe n'a la majorité. Ils doivent s'allier pour faire passer des lois. Testez notre simulateur de coalition !</p>
+                <a href="<?= base_url() ?>outils/coalition-simulateur" class="btn btn-light">Former votre coalition</a>
+              </div>
+            </div> 
+          </div>
+        </div>
       </div>
     </div>
-  </div>   
+  <?php endif; ?>  
+  <!-- BLOC POSTS -->
+  <div class="row">
+    <div class="container p-md-0">
+      <div class="row py-5">
+        <div class="col-lg-12 bloc-posts">
+          <h3 class="surtitle text-center">Blog</h3>
+          <h2 class="text-center">Nos analyses et décryptages</h2>
+          <p class="text-center">L'actualité de Datan, de l'Assemblée nationale et des députés</p>
+          <div class="row pt-4">
+            <?php foreach ($posts as $index => $post): ?>
+              <div class="col-md-4 <?= $index > 0 ? 'mt-md-0 mt-4' : '' ?>">
+              <?php $this->load->view('posts/partials/bloc-post.php', array('post' => $post, 'postTitleTag' => 'h3', 'chapo' => FALSE)) ?>
+              </div>
+            <?php endforeach; ?>
+          </div>
+          <div class="row mt-4">
+            <div class="col-12 d-flex justify-content-center">
+              <a class="btn btn-primary" href="<?= base_url() ?>blog">Tous nos articles</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div> <!-- // END BLOC POSTS -->
   <!-- BLOC EXPLICATIONS -->
   <div class="row bloc-votes" id="pattern_background">
     <div class="container p-md-0">
@@ -192,51 +245,6 @@
       </div>
     </div>
   </div>
-  <!-- BLOC HEMICYCLE --> 
-  <?php if ($composition): ?>
-    <div class="row bloc-pie">
-      <div class="container py-3">
-        <div class="row pt-5">
-          <div class="col-12">
-            <h2 class="text-center">Composition de l'Assemblée nationale</h2>
-          </div>
-        </div>
-        <div class="row pt-3">
-          <div class="col-12">
-            <p class="text-center mb-0">Découvrez le nombre de députés par groupe politique.</p>
-          </div>
-        </div>
-        <div class="row mt-5 mb-5">
-          <div class="col-lg-7 d-flex flex-column justify-content-center">
-            <div class="hemicycle">
-              <canvas id="chartHemicycle"></canvas>
-              <div class="n-hemicycle">
-                <span>577 députés</span>
-              </div>
-            </div>
-          </div>
-          <div class="col-lg-5 d-flex flex-column justify-content-center mt-4 mt-lg-0">
-            <table class="tableGroupes">
-              <tbody>
-                <?php foreach ($groupes as $groupe): ?>
-                  <tr>
-                    <td>
-                      <div class="square" style="background-color: <?= $groupe['couleurAssociee'] ?>">
-                      </div>
-                    </td>
-                    <td id="table<?= $groupe['libelleAbrev'] ?>">
-                      <a href="<?= base_url() ?>groupes/legislature-<?= $groupe['legislature'] ?>/<?= mb_strtolower($groupe['libelleAbrev']) ?>" class="no-decoration underline"><?= name_group($groupe['libelle']) ?></a>
-                    </td>
-                    <td class="effectif"><?= $groupe['effectif'] ?></td>
-                  </tr>
-                <?php endforeach; ?>
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-    </div>
-  <?php endif; ?>
   <!-- BLOC STATS -->
   <?php if ($stats): ?>
     <div class="row bloc-statistiques">
@@ -494,39 +502,6 @@
       </div>
     </div>
   </div> <!-- // END BLOC ILS PARLENT DE NOUS -->
-  <!-- BLOC POSTS -->
-  <div class="row">
-    <div class="container p-md-0">
-      <div class="row py-5">
-        <div class="col-lg-12 bloc-posts">
-          <h2 class="text-center">L'actualité du Parlement</h2>
-          <div class="row pt-4">
-            <?php foreach ($posts as $post): ?>
-              <div class="col-12 col-md-6 offset-md-3 col-lg-12 offset-lg-0">
-                <div class="card card-post my-3">
-                  <div class="row no-gutters">
-                    <div class="col-auto img-wrap d-none d-lg-block">
-                      <img class="img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder.png" data-src="<?= asset_url() ?>imgs/posts/img_post_<?= $post['id'] ?>.png" alt="Image post <?= $post['id'] ?>" width="480" height="240">
-                    </div>
-                    <div class="col">
-                      <div class="card-block p-3">
-                        <span class="category mr-2"><?= mb_strtoupper($post['category_name']) ?></span>
-                        <span class="date mr-2">Créé le <?= $post['created_at_fr'] ?></span>
-                        <h2 class="card-title">
-                          <a href="<?= base_url() ?>blog/<?= $post['category_slug'] ?>/<?= $post['slug'] ?>" class="stretched-link no-decoration"><?= $post['title'] ?></a>
-                        </h2>
-                        <p class="card-text"><?= word_limiter(Strip_tags($post['body']), 35) ?></p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            <?php endforeach; ?>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div> <!-- // END BLOC POSTS -->
   <!-- FRANCE MAP -->
   <div class="row" id="pattern_background">
     <div class="container p-md-0">
@@ -549,7 +524,6 @@
     </div>
   </div> <!-- // END MAP -->
 </div>
-
 
 <script type="text/javascript">
   document.addEventListener('DOMContentLoaded', function(){
@@ -596,8 +570,8 @@
       rotation: 270,
       layout:{
         padding: {
-          top: 0,
-          bottom: 0,
+          top: 15,
+          bottom: 15,
           left: 15,
           right: 15
         }

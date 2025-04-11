@@ -65,7 +65,7 @@
                 <p>
                   <i>Le taux de participation moyen pour ce score est de <?= $participationSolennelsMean ?> %.</i>
                 </p>
-                <table class="table table-stats" id="table-stats">
+                <table class="table table-stats" id="table-stats" style="width: 100%;">
                   <thead>
                     <tr>
                       <th class="text-center all">N°</th>
@@ -108,17 +108,15 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <?php $i = 1; ?>
                   <?php foreach ($mpsCommission as $depute): ?>
                     <tr>
-                      <td class="text-center"><?= $i ?></td>
+                      <td class="text-center"><?= $depute['rank'] ?></td>
                       <td class="text-center"><?= $depute['nameFirst']." ".$depute['nameLast'] ?></td>
                       <td class="text-center"><?= $depute['libelleAbrev'] ?></td>
                       <td class="text-center"><?= $depute['score'] * 100 ?> %</td>
                       <td class="text-center"><?= $depute['votesN'] ?></td>
                       <td class="text-center"><?= $depute['commission'] ?></td>
                     </tr>
-                    <?php $i++; ?>
                   <?php endforeach; ?>
                 </tbody>
               </table>
@@ -141,16 +139,14 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <?php $i = 1; ?>
                   <?php foreach ($mps as $depute): ?>
                     <tr>
-                      <td class="text-center"><?= $i ?></td>
+                      <td class="text-center"><?= $depute['rank'] ?></td>
                       <td class="text-center"><?= $depute['nameFirst']." ".$depute['nameLast'] ?></td>
                       <td class="text-center"><?= $depute['libelleAbrev'] ?></td>
                       <td class="text-center"><?= $depute['score'] * 100 ?> %</td>
                       <td class="text-center"><?= $depute['votesN'] ?></td>
                     </tr>
-                    <?php $i++; ?>
                   <?php endforeach; ?>
                 </tbody>
               </table>

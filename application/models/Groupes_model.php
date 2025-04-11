@@ -38,6 +38,17 @@
       return $query->result_array();
     }
 
+    public function get_blocs($groups){
+      $blocs = [
+        'left' => ['LFI-NFP', 'SOC', 'ECOS', 'GDR'],
+        'central' => ['EPR', 'DEM', 'HOR'],
+        'right' => ['DR'],
+        'extreme_right' => ['RN', 'UDR']
+      ];
+      $groupEffectifs = array_column($groups, 'effectif', 'libelleAbrev');
+      return array_map(fn($groupNames) => array_sum(array_intersect_key($groupEffectifs, array_flip($groupNames))), $blocs);
+    }
+
     public function get_groupes_coalition_builder(){
       $this->db->select('o.libelleAbrev, o.libelle, e.effectif AS seats, o.couleurAssociee');
       $this->db->order_by('effectif', 'desc');
