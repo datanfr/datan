@@ -16,8 +16,11 @@
       $data['mps_oldest'] = array_slice($data['mps_age'], 0, 3);
       $data['mps_youngest'] = array_slice($data['mps_age'], -3, 3);
       $data['age_mean'] = $this->stats_model->get_age_mean(legislature_current());
-      $data['groups_women_more'] = $this->stats_model->get_groups_women_more();
-      $data['groups_women_less'] = $this->stats_model->get_groups_women_less();
+      $data['groupsWomen'] = $this->stats_model->get_groups_women();
+      if($data['groupsWomen']) {
+        $data['groups_women_more'] = array_slice($data['groupsWomen'], 0, 3);
+        $data['groups_women_less'] = array_slice($data['groupsWomen'], -3);
+      }
       $data['women_mean'] = $this->deputes_model->get_deputes_gender(legislature_current());
       $data['mps_loyalty'] = $this->stats_model->get_mps_loyalty(legislature_current());
       if ($data['mps_loyalty']) {
@@ -198,6 +201,10 @@
         $data['ageMeanPop'] = round(mean_age_france());
         $data['groupsAge'] = $this->stats_model->get_groups_age();
         if ($data['groupsAge']) {
+          foreach ($data['groupsAge'] as &$group) {
+            $group['couleurCard'] = $this->groupes_model->get_groupe_color_card(['uid' => $group['organeRef']]);
+          } 
+          unset($group);
           $data['groupOldest'] = array_slice($data['groupsAge'], 0, 1);
           $data['groupOldest'] = $data['groupOldest'][0];
           $data['groupOldest']['couleurAssociee'] = $this->groupes_model->get_groupe_color(array($data['groupOldest']['libelleAbrev'], $data['groupOldest']['couleurAssociee']));
@@ -220,6 +227,10 @@
         $data['womenMean']['diff'] = abs($women_mean[1]['percentage'] - $data['womenMean']['nSociety']);
         $data['groupsWomen'] = $this->stats_model->get_groups_women();
         if ($data['groupsWomen']) {
+          foreach ($data['groupsWomen'] as &$group) {
+            $group['couleurCard'] = $this->groupes_model->get_groupe_color_card(['uid' => $group['organeRef']]);
+          } 
+          unset($group);
           $data['groupsWomenFirst'] = $data['groupsWomen'][0];
           $data['groupsWomenFirst']['couleurAssociee'] = $this->groupes_model->get_groupe_color(array($data['groupsWomenFirst']['libelleAbrev'], $data['groupsWomenFirst']['couleurAssociee']));
           $data['groupsWomenLast'] = end($data['groupsWomen']);
@@ -253,6 +264,7 @@
         $data['groups'] = $this->stats_model->get_groups_cohesion();
         if ($data['groups']) {
           foreach ($data['groups'] as $key => $value) {
+            $data['groups'][$key]['couleurCard'] = $this->groupes_model->get_groupe_color_card(['uid' => $value['organeRef']]);
             if ($value['libelleAbrev'] == 'NI') {
               $keyRemoveNI = $key;
             }
@@ -320,6 +332,10 @@
 
         $data['groups'] = $data['n_sps'] < 10 ? $data['votes_all'] : $data['votes_sps'];
         if ($data['groups']) {
+          foreach ($data['groups'] as &$group) {
+            $group['couleurCard'] = $this->groupes_model->get_groupe_color_card(['uid' => $group['organeRef']]);
+          } 
+          unset($group);
           $data['groupsFirst'] = $data['groups'][0];
           $data['groupsFirst']['couleurAssociee'] = $this->groupes_model->get_groupe_color(array($data['groupsFirst']['libelleAbrev'], $data['groupsFirst']['couleurAssociee']));
           $data['groupsLast'] = end($data['groups']);
@@ -348,7 +364,7 @@
         $data['description_meta'] = "Quel groupe parlementaire est le plus actif au moment de voter ? Quel groupe a le plus faible taux de participation ? Découvrez le classement sur Datan.";
         $data['title'] = "L'origine sociale des députés";
         // JS
-        $data['js_to_load_up'] = array('libraries/chart.js/chart.min.js');
+        $data['js_to_load_up'] = array('dist/chart.min.js');
       } elseif ($url == "groupes-origine-sociale") {
         // Data
         $data['famSocPro'] = $this->jobs_model->get_stats_all_mp(legislature_current());
@@ -359,6 +375,12 @@
         }
         $data['groups_rose'] = $this->jobs_model->get_groups_rose();
         if ($data['groups_rose']) {
+          foreach ($data['groups_rose'] as &$group) {
+            $group['couleurCard'] = $this->groupes_model->get_groupe_color_card([
+                'uid' => $group['organeRef']
+            ]);
+          }
+          unset($group);
           $data['rose_first'] = $data['groups_rose'][0];
           $data['rose_first']['couleurAssociee'] = $this->groupes_model->get_groupe_color(array($data['rose_first']['libelleAbrev'], $data['rose_first']['couleurAssociee']));
           $groups = $this->jobs_model->get_groups_representativite();

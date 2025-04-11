@@ -89,8 +89,8 @@
     <link rel="preload" href="https://matomo.datan.fr/1337.js" onload="embedTracker()" type="script" crossorigin>
     <?php
     if (isset($critical_css)): ?>
-      <link rel="stylesheet" media="screen and (max-width: 480px)" href="<?= asset_url() ?>css/critical/<?= $critical_css ?>-mobile.css" />
-      <link rel="stylesheet" media="screen and (min-width: 481px)" href="<?= asset_url() ?>css/critical/<?= $critical_css ?>.css" />
+      <link rel="stylesheet" media="screen and (max-width: 480px)" href="<?= asset_url() ?>css/critical/<?= $critical_css ?>-mobile.css?v=<?= get_version() ?>" />
+      <link rel="stylesheet" media="screen and (min-width: 481px)" href="<?= asset_url() ?>css/critical/<?= $critical_css ?>.css?v=<?= get_version() ?>" />
       <link rel="stylesheet" href="<?= css_url() ?>main.css?v=<?= get_version() ?>" media="print" onload="this.media='all'; this.onload=null;">
       <noscript><link rel="stylesheet" type="text/css" href="<?= css_url() ?>main.css?v=<?= get_version() ?>"></noscript>
       <?php else: ?>
@@ -104,19 +104,19 @@
 
     <?php if (isset($css_to_load)): ?>
       <?php foreach ($css_to_load as $file): ?>
-        <link type="text/css" <?php if ($file['async']): ?> rel="stylesheet" media="print" onload="this.media='all';this.onload=null;" <?php else: ?> rel="stylesheet" <?php endif; ?> href="<?= $file['url'] ?>"/>
+        <link type="text/css" <?php if ($file['async']): ?> rel="stylesheet" media="print" onload="this.media='all';this.onload=null;" <?php else: ?> rel="stylesheet" <?php endif; ?> href="<?= $file['url'] ?>?v=<?= get_version() ?>"/>
       <?php endforeach; ?>
     <?php endif; ?>
 
     <!-- JS_UP -->
     <?php if (isset($js_to_load_up)): ?>
       <?php foreach ($js_to_load_up as $file): ?>
-        <script src="<?= asset_url().'js/'.$file ?>"></script>
+        <script src="<?= asset_url().'js/'.$file ?>?v=<?= get_version() ?>"></script>
       <?php endforeach; ?>
     <?php endif; ?>
     <?php if (isset($js_to_load_up_defer)): ?>
       <?php foreach ($js_to_load_up_defer as $file): ?>
-        <script defer src="<?= asset_url().'js/'.$file ?>"></script>
+        <script defer src="<?= asset_url().'js/'.$file ?>?v=<?= get_version() ?>"></script>
       <?php endforeach; ?>
     <?php endif; ?>
 
@@ -191,15 +191,7 @@
   }
   ?>
   <body class="<?= $mentions ?>" data-spy="scroll" data-target="#navScrollspy" data-offset="90">
-    <!-- DON -->
-    <div class="">
-      <a href="https://www.helloasso.com/associations/datan/formulaires/1" target="_blank" rel="noopener" class="no-decoration">
-        <div class="don d-flex justify-content-center align-items-center p-1">
-          <span>Soutenez-nous !</span>
-        </div>
-      </a>
-    </div>
-    <div class="sticky-top" style="">
+    <div class="sticky-top">
       <!-- NAVBAR IF LOGGED IN -->
     </div>
     <!-- MAIN NAVBAR -->

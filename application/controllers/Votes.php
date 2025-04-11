@@ -35,13 +35,14 @@
       // Get by category
       $data['fields'] = $this->fields_model->get_active_fields();
       $fields = $data['fields'];
+      $x = [];
       foreach ($fields as $field) {
         $x[$field["slug"]]["votes"] = array_slice($this->votes_model->get_votes_datan_category($field['id']), 0, 2);
         $x[$field["slug"]]["name"] = $field["name"];
         $x[$field["slug"]]["slug"] = $field["slug"];
       }
       $data['by_field'] = $x;
-
+    
       // Get all votes
       $data['votes'] = $this->votes_model->get_all_votes(NULL, NULL, NULL, 10);
       // Archives
@@ -171,10 +172,10 @@
 
     // Pages = datan.fr/votes/legislature-(:legislature)/(:year)/(:month)
     public function all($legislature, $year = NULL, $month = NULL) {
-      // Check if legislature is a number
-      if (!is_numeric($legislature)) {
+      // Check if legislature is a number and if >= 14
+      if (!is_numeric($legislature) || $legislature < 14) {
         show_404($this->functions_datan->get_404_infos());
-      }
+    }
       $data['legislature'] = $legislature;
       // Get month array
       $months = get_months();
@@ -199,11 +200,11 @@
 
       // ALL OR ALL/YEAR OR ALL/YEAR/MONTH ?
       if ($year == NULL && $month == NULL) {
-        $data['h2'] = "Liste des votes de la ".$legislature."<sup>e</sup> législature";
+        $data['description'] = "Découvrez tous les scrutins qui ont eu lieu dans l'hémicycle de l'Assemblée nationale lors de la " . $legislature . "<sup>e</sup> législature.";
         // Meta
         $data['url'] = $this->meta_model->get_url();
         $data['title_meta'] = "Votes ".$legislature."e Législature - Assemblée Nationale | Datan";
-        $data['title'] = "Votes de la ".$legislature."<sup>e</sup> législature";
+        $data['title'] = "Votes à l'Assemblée nationale - ".$legislature."<sup>e</sup> législature";
         $data['description_meta'] = "Retrouvez tous les votes de l'Assemblée nationale de la ".$legislature."e législature. Détails des votes, résultats des groupes et des députés, statistiques de participation, de loyauté et de cohésion.";
         // Breadcrumb
         $data['breadcrumb'] = array(
@@ -226,11 +227,11 @@
         $data['m_index'] = NULL;
         $data['obfuscation_links'] = TRUE;
       } elseif ($year != NULL && $month == NULL) {
-        $data['h2'] = "Liste des votes de la ".$legislature."<sup>e</sup> législature - ".$year;
+        $data['description'] = "Découvrez tous les scrutins qui ont eu lieu dans l'hémicycle de l'Assemblée nationale lors de la " . $legislature . "<sup>e</sup> législature, en " . $year . ".";
         // Meta
         $data['url'] = $this->meta_model->get_url();
         $data['title_meta'] = "Votes ".$year." Assemblée Nationale - Résultat et Analyse | Datan";
-        $data['title'] = "Votes à l'Assemblée nationale en ".$year." - ".$legislature."<sup>e</sup> législature";
+        $data['title'] = "Votes à l'Assemblée nationale - ".$year;
         $data['description_meta'] = "Retrouvez tous les votes de l'Assemblée nationale en ".$year.". Détails des votes, résultats de vote des groupes et des députés, statistiques de loyauté et de cohésion.";
         // Breadcrumb
         $data['breadcrumb'] = array(
@@ -257,11 +258,12 @@
         $data['obfuscation_links'] = TRUE;
       } elseif ($year != NULL && $month != NULL) {
         $month = number($month);
-        $data['h2'] = "Liste des votes de la ".$legislature."<sup>e</sup> législature - ".$months[$month-1]." ".$year;
+        $data['description'] = "Découvrez tous les scrutins qui ont eu lieu dans l'hémicycle de l'Assemblée nationale lors de la " . $legislature . "<sup>e</sup> législature, en " . $months[$month-1] . " " . $year . ".";
+        //"Liste des votes de la ".$legislature."<sup>e</sup> législature - ".$months[$month-1]." ".$year;
         // Meta
         $data['url'] = $this->meta_model->get_url();
         $data['title_meta'] = "Votes ".ucfirst($months[$month-1])." ".$year." Assemblée Nationale - Résultat et Analyse | Datan";
-        $data['title'] = "Votes à l'Assemblée nationale en ".$months[$month-1]." ".$year." - ".$legislature."<sup>e</sup> législature";
+        $data['title'] = "Votes à l'Assemblée nationale - " . ucfirst($months[$month-1])." ".$year;
         $data['description_meta'] = "Retrouvez tous les votes de l'Assemblée nationale en ".$months[$month-1]." ".$year.". Détails des votes, résultats de vote des groupes et des députés, statistiques de loyauté et de cohésion.";
         // Breadcrumb
         if ($month < 10 ) {
@@ -544,7 +546,7 @@
         )
       );
       // JS UP
-      $data['js_to_load_up'] = array('libraries/chart.js/chart.min.js');
+      $data['js_to_load_up'] = array('dist/chart.min.js');
       // JS
       $data['js_to_load']= array(
         'libraries/moment/moment.min',

@@ -17,6 +17,7 @@ $body-bg: $bg-colour;
 $primary: $vert;
 $info: $bleu;
 $primary_rgb: rgb(0, 183, 148);
+$bleu_rgb: rgb(0, 102, 142);
 $adopted: $vert;
 $abstention: #FFBA49;
 $rejected: #C5283D;
@@ -396,22 +397,6 @@ body:not(.pg-mentions) #tarteaucitronIcon {
     }
   }
 }
-.don{
-  height: 30px;
-  background-color: $bleu;
-  transition: 0.3s;
-  &:hover{
-    background-color: $bg-colour;
-    span{
-      color: $bleu;
-    }
-  }
-  span{
-    color: #fff;
-    font-size: 1.1em;
-    font-weight: 800;
-  }
-}
 body.modal-open {
     overflow: visible;
 }
@@ -648,25 +633,13 @@ body.modal-open {
     color: $primary;
   }
 }
-.see-all-carousel{
-  background-color: $primary;
-  border-radius: 12px;
-  color: #fff;
-  font-weight: 800;
-  transition: 0.3s;
-  &:hover{
-    border: 1px solid $primary;
-    background-color: #fff;
-    color: $primary;
-  }
-}
 .carousel-container{
   .carousel-buttons{
     margin-top: 1rem;
   }
   button{
     &.prev, &.prev-all, &.next, &.next-all{
-      border-radius: 12px;
+      border-radius: $btn-border-radius;
       background-color: #E8E8E8;
       width: 50px;
       transition: 0.3s;
@@ -1710,39 +1683,43 @@ body{
   }
   /* Bloc constat */
   .bloc-constats{
-    h3{
+    .icon{
       color: $primary;
-      text-align: center;
-      font-size: $h4-font-size;
-      font-weight: 800;
     }
-    p{
-      text-align: center;
-    }
-    span {
-      font-weight: 600;
+    .img-container{
+      position: relative;
+      display: inline-block;
+      img{
+        display: block;
+        width: 100%;
+        border-radius: $card-border-radius;
+      }
+      &::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(100, 100, 100, 0.6);
+        mix-blend-mode: multiply;
+        pointer-events: none;
+        border-radius: $card-border-radius;
+      }
     }
   }
-  .bloc-quiz{
-    background-color: $bleu;
-    color: #fff !important;
-    h2 {
-      color: #ffffff;
-    }
-    h3 {
-      font-weight: 800;
-      font-size: $h4-font-size;
-      color: #ffffff;
+  .bloc-donations{
+    background-color: rgba($bleu_rgb, 0.1);
+    .icon{
+      color: #D93B3B;
+      svg {
+        width: 1.5em;
+        height: 1.5em;
+      }
     }
   }
   .bloc-hasard{
     background: linear-gradient(136.67deg, #246B96 17.99%, #00B794 86.12%);
-    h2 {
-      color: $white;
-      font-size: $h3-font-size;
-      font-weight: 800;
-      text-align: center;
-    }
   }
   .bloc-election{
     h3{
@@ -1771,45 +1748,28 @@ body{
       }
     }
   }
-  /* bloc-support */
   .bloc-support{
     background-color: $bleu;
   }
-  /* BLOC-PIE */
   .bloc-pie{
-    .tableGroupes{
-      font-size: $h5-font-size;
-      .tableHover{
-        color: $rejected;
+    .coalition{
+      h2 {
+        font-size: $h4-font-size;
+        color: white;
       }
-      td{
-        padding-left: 0.75rem;
-        padding-right: 0.75rem;
-        padding-top: 0.2rem;
-        padding-top: 0.2rem;
-      }
-      .square{
-        height: 12px;
-        width: 12px;
-      }
-      .effectif{
-        font-weight: 600;
-      }
+      background-color: $bleu;
+      color: white;
     }
   }
   .bloc-posts{
-    img{
-      width: 100%;
-      height: auto;
-    }
-    .category{
+    .surtitle{
+      color: $text-black;
+      text-align: center;
+      font-weight: 600;
+      font-size: $h5-font-size;
       color: $primary;
-      font-size: $h7-font-size;
     }
-    .date{
-      color: $text-gray-light;
-      font-size: $h7-font-size;
-    }
+      
   }
   .bloc-map{
     .map_france{
@@ -1947,11 +1907,12 @@ body{
       margin-bottom: 0;
       font-weight: 800;
       color: $bleu;
+      font-size: $h5-font-size;
       @include media-breakpoint-up(md) {
-        font-size: $h1-font-size;
+        font-size: $h4-font-size;
       }
-      @include media-breakpoint-down(sm) {
-        font-size: $h5-font-size;
+      @include media-breakpoint-up(lg) {
+        font-size: $h1-font-size;
       }
     }
   }
@@ -3201,6 +3162,26 @@ body{
     color: $primary;
     font-weight: 800;
   }
+
+  .card-header {
+    font-weight : 700;
+  }
+  
+.list-group-item {
+  font-weight: 600;
+    &.active {
+      background-color: transparent;
+
+      a {
+        color: $primary;
+        font-weight: 700;
+      }
+    }
+
+    a:hover {
+      color: $primary;
+    }
+  }
 }
 /*
 ################
@@ -3227,52 +3208,79 @@ body{
 }
 /*
 ################
-               CARD-POST (for datan.fr & datan.fr/blog & datan.fr/blog/categorie/XX )
+               BLOC-POST (for datan.fr & datan.fr/blog & datan.fr/blog/categorie/XX )
 ################
 */
-.card-post{
-  box-shadow: $card-box-shadow;
-  border: none;
-  .img-wrap{
-    width: 50%;
-    border-top-left-radius: $card-border-radius;
-    border-bottom-left-radius: $card-border-radius;
-    img{
-      width: 100%;
-      height: auto;
-      border-top-left-radius: $card-border-radius;
-      border-bottom-left-radius: $card-border-radius;
-    }
+.bloc-post{
+  img{
+    width: 100%;
+    height: auto;
+    border-radius: 7px;
   }
-  .card-title{
-    font-size: $h3-font-size;
+  .title{
+    font-size: $h4-font-size;
     font-weight: 600;
-    margin-top: 0.75rem;
-    a{
-      color: $text-black;
-      text-decoration: none;
-      &:hover{
-        text-decoration: underline;
-      }
-    }
-  }
-  .card-text{
-    margin-top: 1rem;
-  }
-  .date{
-    color: $text-gray;
   }
   .category{
     color: $primary;
+    font-size: $h7-font-size;
   }
-}
+  .date{
+    color: $text-gray-light;
+    font-size: $h7-font-size;
+  }
+  .chapo{
+    color: $text-gray;
+  }
+}  
 /*
 ################
                PAGE POSTS (ALL)
 ################
 */
 .pg-posts{
-  // EMPTY
+  .menu{
+    border-right: 1px solid rgba(0, 0, 0, 0.15);
+    .title{
+      font-weight: 800;
+      font-size: 2.7em;
+    }
+    .subtitle{
+      font-size: $h6-font-size;
+      line-height: 20px;
+      color: $text-gray;
+    }
+  }
+  .category_title{
+    font-weight: 800;
+    font-size: $h4-font-size;
+    color: $primary;
+  }
+  .category_subtitle{
+    font-weight: 600;
+    font-size: $h6-font-size;
+    color: $text-gray;
+  }
+  .categories{ 
+    li {
+      &.active a{
+        color: $primary;
+        font-weight: 800;
+      }
+    }
+    &::before{
+      content: "";
+      display: block;
+      width: 100%;
+      border-top: 1px solid rgba(0, 0, 0, 0.15);
+      margin: 0;
+
+      @include media-breakpoint-up(lg) {
+        width: 50%;
+      }
+
+    }
+  }
 }
 /*
 ################
@@ -3281,8 +3289,8 @@ body{
 */
 .pg-post-view{
   h1{
-    font-weight: 600;
-    font-size: 2.7em;
+    font-weight: 700;
+    font-size: 2.5em;
   }
   h2{
     color: $primary;
@@ -3290,39 +3298,22 @@ body{
     font-size: 1.4em;
     font-weight: 800;
   }
-  .hr-title{ // Has been removed for now
-    width: 16em;
-    border-top: 1px solid $primary;
-  }
-  .category{
-    color: $primary;
-    font-size: $h5-font-size;
-  }
-  .date{
-    color: $text-gray-light;
-  }
-  .img{
-    img{
-      width: 100%;
-      height: auto;
-    }
-  }
-  .body{
-    p{
-      &:first-child{
-        &::first-letter{
-          text-transform: uppercase;
-          font-size: 3em;
-          font-weight: bold;
-          letter-spacing: 5px;
-        }
+  .body{   
+    .img{
+      img{
+        width: 100%;
+        height: auto;
+        border-radius: 7px;
       }
     }
-    img{
-      width: 100%;
-      height: auto;
+    .text{
+      font-size: 1.1em;
+      img{
+        width: 100%;
+        height: auto;
+      }
     }
-  }
+  }  
 }
 /*
 ################

@@ -19,17 +19,24 @@
       </div>
     </div>
   <?php endif; ?>
-  <div class="row">
-    <a href="<?= base_url() ?>blog" class="retour"><i class="fas fa-arrow-left"></i> Tous les articles</a>
-  </div>
-  <div class="row mt-4">
-    <div class="col-md-9">
-      <h1 class="text-center"><?= $title ?></h1>
-      <div class="text-center">
-        <span class="date mr-3"><?= $post['created_at_fr'] ?></span>
-        <span class="category mr-3"><?= mb_strtoupper($post['category_name']) ?></span>
+  <div class="row"> <!-- Title -->
+    <div class="col-lg-2">
+      <a href="<?= base_url() ?>blog" class="btn btn-outline-dark font-weight-normal px-2">
+        <?= file_get_contents(asset_url()."imgs/icons/arrow_left.svg"); ?>
+        Tous les articles
+      </a>
+    </div>
+    <div class="col-lg-10">
+      <div class="mt-lg-0 mt-4">
+        <span>Publié le <?= $post['created_at_fr'] ?></span> -
+        <span><a class="no-decoration underline" href="<?= base_url() ?>blog/categorie/<?= $post['category_slug'] ?>"><?= $post['category_name'] ?></a></span>
       </div>
-      <div class="img mt-3">
+      <h1 class="mt-2 mb-0"><?= $title ?></h1>
+    </div>
+  </div>
+  <div class="row body mt-5"> <!-- Body of article -->
+    <div class="col-lg-8 offset-lg-2">
+      <div class="img">
         <?php if(!empty($post['image_name'])): ?>
           <img src="<?= asset_url() ?>imgs/posts/<?= $post['image_name'] ?>" alt="<?= $post['title'] ?>" class="img-fluid">
         <?php else: ?>
@@ -40,36 +47,9 @@
           </picture>
         <?php endif; ?>
       </div>
-      <div class="body mt-3">
+      <div class="text mt-5">
         <?= $post['body'] ?>
-      </div>
-    </div>
-    <div class="col-md-3">
-      <div class="card card-right-posts">
-        <div class="card-header">
-          Derniers articles
-        </div>
-        <ul class="list-group list-group-flush">
-          <?php foreach ($last_posts as $post): ?>
-            <li class="list-group-item">
-              <a href="<?= base_url() ?>blog/<?= $post['category_slug'] ?>/<?= $post['slug'] ?>" class="no-decoration underline-blue"><?= $post['title'] ?></a>
-            </li>
-          <?php endforeach; ?>
-        </ul>
-      </div>
-      <div class="card card-right-posts mt-3">
-        <div class="card-header">
-          Catégories
-        </div>
-        <ul class="list-group list-group-flush">
-          <?php foreach ($categories as $category): ?>
-            <li class="list-group-item">
-              <a href="<?= base_url() ?>blog/categorie/<?= $category['slug'] ?>" class="no-decoration underline-blue"><?= $category['name'] ?></a>
-            </li>
-          <?php endforeach; ?>
-        </ul>
-      </div>
-      <?php $this->load->view('posts/partials/follow_us.php') ?>
+      </div>   
     </div>
   </div>
 </div>
