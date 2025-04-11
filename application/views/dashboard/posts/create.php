@@ -1,26 +1,31 @@
 
 
-  <!-- Content Wrapper. Contains page content -->
   <div class="content-wrapper">
-    <!-- Content Header (Page header) -->
     <div class="content-header">
       <div class="container-fluid">
         <div class="row my-4">
           <div class="col-sm-7">
             <h1 class="m-0 text-primary font-weight-bold" style="font-size: 2rem"><?= $title ?></h1>
-          </div><!-- /.col -->
-        </div><!-- /.row -->
-      </div><!-- /.container-fluid -->
+          </div>
+        </div>
+      </div>
     </div>
-    <!-- /.content-header -->
-
-    <!-- Main content -->
     <div class="content">
       <div class="container-fluid">
         <div class="row pb-4">
           <div class="col-lg-12">
             <div class="card">
               <div class="card-body py-4">
+                <?php if ($this->session->flashdata('error')): ?>
+                  <div class="alert alert-danger">
+                    <?= $this->session->flashdata('error') ?>
+                  </div>
+                <?php endif; ?>
+                <?php if ($this->session->flashdata('post_created')): ?>
+                  <div class="alert alert-success">
+                    <?= $this->session->flashdata('post_created') ?>
+                  </div>
+                <?php endif; ?>
                 <?= validation_errors();  ?>
                 <?= form_open_multipart('posts/create'); ?>
                   <div class="form-group">
@@ -62,34 +67,37 @@
                       <?php endforeach; ?>
                     </select>
                   </div>
+                  <div class="form-group">
+                    <label>Image du post</label>
+                    <div class="custom-file">
+                      <input type="file" class="custom-file-input" id="post_image" name="post_image">
+                      <label class="custom-file-label" for="post_image">Choisir une image</label>
+                      <small class="form-text text-muted">Formats acceptés : jpg, jpeg, png, gif, webp. Taille max : 2MB</small>
+                    </div>
+                    <button type="button" id="remove_image" class="btn btn-danger mt-2" style="display: none;">Supprimer l'image</button>
+                  </div>
                   <button type="submit" class="btn btn-primary">Submit</button>
                 </form>
-
-              <!--
-                <p class="card-text">
-                  Some quick example text to build on the card title and make up the bulk of the card's
-                  content.
-                </p>
-                <a href="#" class="card-link">Card link</a>
-                <a href="#" class="card-link">Another link</a>
-              -->
               </div>
             </div>
           </div>
         </div>
-        <!-- /.row -->
-      </div><!-- /.container-fluid -->
+      </div>
     </div>
-    <!-- /.content -->
   </div>
-  <!-- /.content-wrapper -->
+<script>
+  document.getElementById('post_image').addEventListener('change', function(e) {
+      var fileName = e.target.files[0] ? e.target.files[0].name : "Choisir une image";
+      this.nextElementSibling.textContent = fileName;
 
-  <!-- Control Sidebar -->
-  <aside class="control-sidebar control-sidebar-dark">
-    <!-- Control sidebar content goes here -->
-    <div class="p-3">
-      <h5>Title</h5>
-      <p>Sidebar content</p>
-    </div>
-  </aside>
-  <!-- /.control-sidebar -->
+      // Show the remove button if a file is selected
+      document.getElementById('remove_image').style.display = fileName !== "Choisir une image" ? 'block' : 'none';
+  });
+
+  document.getElementById('remove_image').addEventListener('click', function() {
+      var fileInput = document.getElementById('post_image');
+      fileInput.value = ""; // Clear the file input
+      fileInput.nextElementSibling.textContent = "Choisir une image"; // Reset label
+      this.style.display = 'none'; // Hide remove button
+  });
+</script>

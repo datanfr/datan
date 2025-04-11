@@ -23,7 +23,6 @@
         </div>
       </div>
     </div>
-
     <!-- Main Content -->
     <div class="col-md-8 col-lg-9 pl-md-5 mt-md-0 mt-4">
       <?php if ($page != 'index'): ?>
