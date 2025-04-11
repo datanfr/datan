@@ -1,6 +1,10 @@
 <div class="bloc-post">
     <div class="image">
-        <img class="img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder.png" data-src="<?= asset_url() ?>imgs/posts/img_post_<?= $post['id'] ?>.png" alt="Image post <?= $post['id'] ?>" width="480" height="240">
+        <?php if(!empty($post['image_name'])): ?>
+            <img src="<?= asset_url() ?>imgs/posts/<?= $post['image_name'] ?>" alt="<?= $post['title'] ?>" class="img-fluid">
+        <?php else: ?>
+            <img class="img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder.png" data-src="<?= asset_url() ?>imgs/posts/img_post_<?= $post['id'] ?>.png" alt="Image post <?= $post['id'] ?>" width="480" height="240">
+        <?php endif; ?>
     </div>
     <div class="mt-2 mb-1">
         <span class="category mr-2"><?= mb_strtoupper($post['category_name']) ?></span>
