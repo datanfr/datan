@@ -15,8 +15,14 @@ class IframeController extends CI_Controller
 
     }
 
-    private function get_statistiques($data, $legislature, $mpId, $groupe_id){
-      // var_dump("LES DATA", $data);
+    public function index()
+    {
+        $this->load->view('iframe/index'); 
+    }
+
+    private function get_statistiques($data, $legislature, $mpId, $groupe_id)
+    {
+  
       if (in_array($legislature, legislature_all())) {
         // PARTICIPATION
         $data['participation'] = $this->deputes_model->get_stats_participation_solennels($mpId, $legislature);
@@ -113,17 +119,17 @@ class IframeController extends CI_Controller
 
 
       // $name = "nadege-abomangoli";
+      //PA795228
 
 
       $data['category'] = $category;
-      $departement = "seine-saint-denis-93";
-
+      // $departement = "seine-saint-denis-93";
+      $departement =  $this->deputes_model->get_dptslug_by_name_url($name);
+    
       $data['depute'] = $this->deputes_model->get_depute_individual($name, $departement);
-
+    
 
         setlocale(LC_TIME, 'french');
-     
-  
   
         // // ____________________CHECK IF DEPUTE EXISTS__________________
         // if (empty($data['depute'])) {
@@ -187,8 +193,10 @@ class IframeController extends CI_Controller
       
         // ________________ LOAD views_______
 
-        $this->load->view('templates/header', $data);
+        $this->load->view('iframe/partials/_header_iframe', $data);
         $this->load->view('iframe/depute', $data);
+        $this->load->view('iframe/partials/_footer_iframe', $data);
+
     }
 
 }
