@@ -67,19 +67,31 @@
                       <?php endforeach; ?>
                     </select>
                   </div>
-                  <div class="form-group">
-                    <label class="mb-0">Image du post</label>
-                    <span class="d-block font-italic mb-2">Taille : 1240px X 620px (ratio: 2:1)</span>
+                  <hr class="mt-4">
+                  <div class="font-weight-bold">Image du post</div>
+                  <div class="font-italic">Taille : 1240px X 620px (ratio: 2:1)</div>
                     <?php if(!empty($post['image_name'])): ?>
                       <div class="mb-2">
-                        <img src="<?= asset_url() ?>imgs/posts/<?= $post['image_name'] ?>" alt="Image du post" style="max-width: 200px; max-height: 200px;" class="img-thumbnail">
+                        <img src="<?= asset_url() ?>imgs/posts/<?= $post['image_name'] ?>.png" alt="Image du post" style="max-width: 200px; max-height: 200px;" class="img-thumbnail">
                         <p class="mt-1">Image actuelle : <?= $post['image_name'] ?></p>
                       </div>
                     <?php endif; ?>
+                  <div class="form-group">
+                    <label class="mb-0">Image PNG</label>
                     <div class="custom-file">
-                      <input type="file" class="custom-file-input" id="post_image" name="post_image">
-                      <label class="custom-file-label" for="post_image">Choisir une nouvelle image</label>
-                      <small class="form-text text-muted">Formats acceptés : jpg, jpeg, png, gif, webp. Taille max : 2MB</small>
+                      <input type="file" class="custom-file-input" id="post_image_png" name="post_image_png">
+                      <label class="custom-file-label" for="post_image_png">Choisir une nouvelle image</label>
+                      <small class="form-text text-muted">Format accepté : png uniquement. Taille max : 2MB</small>
+                      <button type="button" id="remove_image_png" class="btn btn-danger mt-2" style="display: none;">Supprimer l'image</button>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label class="mb-0">Image WEBP</label>
+                    <div class="custom-file">
+                      <input type="file" class="custom-file-input" id="post_image_webp" name="post_image_webp">
+                      <label class="custom-file-label" for="post_image_webp">Choisir une nouvelle image</label>
+                      <small class="form-text text-muted">Format accepté : webp uniquement. Taille max : 2MB</small>
+                      <button type="button" id="remove_image_webp" class="btn btn-danger mt-2" style="display: none;">Supprimer l'image</button>
                     </div>
                   </div>
                   <?php if ($this->session->userdata('type') == 'admin'): ?>
@@ -104,18 +116,30 @@
     </div>
   </div>
   <script>
-  document.getElementById('post_image').addEventListener('change', function(e) {
-      var fileName = e.target.files[0] ? e.target.files[0].name : "Choisir une image";
-      this.nextElementSibling.textContent = fileName;
+  document.addEventListener('DOMContentLoaded', function () {
+    function setupImageUpload(inputId, removeBtnId, defaultLabel = "Choisir une image") {
+      const fileInput = document.getElementById(inputId);
+      const removeBtn = document.getElementById(removeBtnId);
 
-      // Show the remove button if a file is selected
-      document.getElementById('remove_image').style.display = fileName !== "Choisir une image" ? 'block' : 'none';
-  });
+      if (!fileInput || !removeBtn) {
+        console.warn(`Missing element: ${inputId} or ${removeBtnId}`);
+        return;
+      }
 
-  document.getElementById('remove_image').addEventListener('click', function() {
-      var fileInput = document.getElementById('post_image');
-      fileInput.value = ""; // Clear the file input
-      fileInput.nextElementSibling.textContent = "Choisir une image"; // Reset label
-      this.style.display = 'none'; // Hide remove button
+      fileInput.addEventListener('change', function(e) {
+        const fileName = e.target.files[0] ? e.target.files[0].name : defaultLabel;
+        fileInput.nextElementSibling.textContent = fileName;
+        removeBtn.style.display = fileName !== defaultLabel ? 'block' : 'none';
+      });
+
+      removeBtn.addEventListener('click', function() {
+        fileInput.value = '';
+        fileInput.nextElementSibling.textContent = defaultLabel;
+        this.style.display = 'none';
+      });
+    }
+
+    setupImageUpload('post_image_png', 'remove_image_png');
+    setupImageUpload('post_image_webp', 'remove_image_webp');
   });
 </script>

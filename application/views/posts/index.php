@@ -1,5 +1,12 @@
 <div class="container my-5 pg-posts">
   <div class="row">
+    <?php if ($this->session->flashdata('post_deleted')): ?>
+      <div class="col-12">
+        <div class="alert alert-danger">
+          <?= $this->session->flashdata('post_deleted') ?>
+        </div>
+      </div>
+    <?php endif; ?>
     <!-- Sticky Sidebar -->
     <div class="menu col-md-4 col-lg-3">
       <div class="sticky-top" style="top: 80px;">
