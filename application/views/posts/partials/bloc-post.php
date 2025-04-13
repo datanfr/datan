@@ -1,7 +1,7 @@
 <div class="bloc-post">
     <div class="image">
         <?php if(!empty($post['image_name'])): ?>
-            <img src="<?= asset_url() ?>imgs/posts/<?= $post['image_name'] ?>" alt="<?= $post['title'] ?>" class="img-fluid">
+            <img src="<?= asset_url() ?>imgs/posts/<?= $post['image_name'] ?>.png" alt="<?= $post['title'] ?>" class="img-fluid">
         <?php else: ?>
             <img class="img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder.png" data-src="<?= asset_url() ?>imgs/posts/img_post_<?= $post['id'] ?>.png" alt="Image post <?= $post['id'] ?>" width="480" height="240">
         <?php endif; ?>

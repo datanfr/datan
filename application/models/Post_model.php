@@ -45,7 +45,7 @@
     }
 
     public function get_last_posts($limit = FALSE){
-      $this->db->select('p.id, DATE_FORMAT(p.created_at, "%d %M %Y") as created_at_fr, p.title, p.body, p.slug, c.slug AS category_slug, c.name AS category_name, p.image_name');
+      $this->db->select('p.id, DATE_FORMAT(p.created_at, "%d %M %Y") as created_at_fr, p.title, p.body, p.slug, p.state, c.slug AS category_slug, c.name AS category_name, p.image_name');
       $this->db->join('categories c', 'p.category_id = c.id', 'left');
       $this->db->where('p.state', 'published');
       $this->db->order_by('p.created_at', 'DESC');
@@ -62,24 +62,45 @@
       
       // Gestion de l'image
       $image_name = '';
-      if($_FILES['post_image']['name']){
+      // Check that both PNG and WEBP are uploaded
+      if (!$_FILES['post_image_png']['name'] || !$_FILES['post_image_webp']['name']) {
+        return ['error' => 'Les deux fichiers (PNG et WEBP) sont requis.'];
+      } else {
+        // --- Handle PNG upload ---
+
         // Sanitiser le nom du fichier et ajouter un timestamp
-        $filename = pathinfo($_FILES['post_image']['name'], PATHINFO_FILENAME);
+        $filename = pathinfo($_FILES['post_image_png']['name'], PATHINFO_FILENAME);
         $filename = preg_replace('/[^a-zA-Z0-9_-]/', '', $filename); // Supprimer les caractères spéciaux
-        $extension = pathinfo($_FILES['post_image']['name'], PATHINFO_EXTENSION);
-        $new_filename = $filename . '_' . time() . '.' . $extension;
-        
-        $_FILES['post_image']['name'] = $new_filename;
-        $config['upload_path'] = './assets/imgs/posts/';
-        $config['allowed_types'] = 'gif|jpg|png|jpeg|webp';
-        $config['max_size'] = '2048'; // 2MB
-        $config['file_name'] = $new_filename; // Utiliser le nouveau nom de fichier
-        
-        $this->load->library('upload', $config);
-        
-        if(!$this->upload->do_upload('post_image')){
-          return ['error' => $this->upload->display_errors()];
+        $extension_png = pathinfo($_FILES['post_image_png']['name'], PATHINFO_EXTENSION);
+        $base_name = $filename . '_' . time(); // Final base name for both files
+        $new_png_name = $base_name . '.png';
+
+        $_FILES['post_image_png']['name'] = $new_png_name;
+        $config_png['upload_path'] = './assets/imgs/posts/';
+        $config_png['allowed_types'] = 'png';
+        $config_png['max_size'] = '2048'; // 2MB
+        $config_png['file_name'] = $new_png_name; // Utiliser le nouveau nom de fichier
+
+        $this->load->library('upload', $config_png);
+
+        if(!$this->upload->do_upload('post_image_png')){
+          return ['error' => $this->upload->display_errors() . " (image png) "];
         }
+
+        // --- Handle WEBP upload ---
+        $new_webp_name = $base_name . '.webp';
+        $_FILES['post_image_webp']['name'] = $new_webp_name;
+        $config_webp['upload_path'] = './assets/imgs/posts/webp/';
+        $config_webp['allowed_types'] = 'webp';
+        $config_webp['max_size'] = '2048';
+        $config_webp['file_name'] = $new_webp_name;
+
+        $this->upload->initialize($config_webp);
+
+        if (!$this->upload->do_upload('post_image_webp')) {
+          return ['error' => $this->upload->display_errors() . " (image webp) "];
+        }
+
       }
       
       $data = array(
@@ -89,7 +110,7 @@
         'category_id' => $this->input->post('category_id'),
         'user_id' => $this->session->userdata('user_id'),
         'state' => 'draft',
-        'image_name' => $new_filename
+        'image_name' => $base_name
       );
       return $this->db->insert('posts', $data);
     }
@@ -110,36 +131,84 @@
       
       // Gestion de l'image
       $image_name = $current_post['image_name']; // Garder l'image existante par défaut
-      
-      if($_FILES['post_image']['name']){
+      if (
+        ($_FILES['post_image_png']['name'] && !$_FILES['post_image_webp']['name']) || (!$_FILES['post_image_png']['name'] && $_FILES['post_image_webp']['name'])
+      ) {
+        return [
+          'slug' => $slug,
+          'error' => 'Vous devez télécharger les deux fichiers : PNG et WEBP.'
+        ];
+      } elseif ($_FILES['post_image_png']['name'] && $_FILES['post_image_webp']['name']) {
+
+        // Validate PNG file extension
+        $extension_png = pathinfo($_FILES['post_image_png']['name'], PATHINFO_EXTENSION);
+        if (strtolower($extension_png) !== 'png') {
+            return [
+                'slug' => $slug,
+                'error' => 'Le fichier PNG n\'a pas l\'extension correcte. Veuillez télécharger un fichier PNG valide.'
+            ];
+        }
+
+        $extension_webp = pathinfo($_FILES['post_image_webp']['name'], PATHINFO_EXTENSION);
+        if (strtolower($extension_webp) !== 'webp') {
+            return [
+                'slug' => $slug,
+                'error' => 'Le fichier WEBP n\'a pas l\'extension correcte. Veuillez télécharger un fichier WEBP valide.'
+            ];
+        }
+
+        // --- Handle PNG upload ---
+
         // Sanitiser le nom du fichier et ajouter un timestamp
-        $filename = pathinfo($_FILES['post_image']['name'], PATHINFO_FILENAME);
+        $filename = pathinfo($_FILES['post_image_png']['name'], PATHINFO_FILENAME);
         $filename = preg_replace('/[^a-zA-Z0-9_-]/', '', $filename); // Supprimer les caractères spéciaux
-        $extension = pathinfo($_FILES['post_image']['name'], PATHINFO_EXTENSION);
-        $new_filename = $filename . '_' . time() . '.' . $extension;
-        
-        $_FILES['post_image']['name'] = $new_filename;
-        
-        $config['upload_path'] = './assets/imgs/posts/';
-        $config['allowed_types'] = 'gif|jpg|png|jpeg|webp';
-        $config['max_size'] = '2048'; // 2MB
-        $config['file_name'] = $new_filename; // Utiliser le nouveau nom de fichier
-        
-        $this->load->library('upload', $config);
-        
-        if(!$this->upload->do_upload('post_image')){
-          $this->session->set_flashdata('error', 'Erreur lors du téléchargement de l\'image : ' . $this->upload->display_errors());
+        $extension_png = pathinfo($_FILES['post_image_png']['name'], PATHINFO_EXTENSION);
+        $base_name = $filename . '_' . time(); // Final base name for both files
+        $new_png_name = $base_name . '.png';
+
+        $_FILES['post_image_png']['name'] = $new_png_name;
+        $config_png['upload_path'] = './assets/imgs/posts/';
+        $config_png['allowed_types'] = 'png';
+        $config_png['max_size'] = '2048'; // 2MB
+        $config_png['file_name'] = $new_png_name; // Utiliser le nouveau nom de fichier
+
+        $this->load->library('upload', $config_png);
+
+        if(!$this->upload->do_upload('post_image_png')){
+          return [
+            'slug' => $slug,
+            'error' => $this->upload->display_errors() . ' (image png) '
+          ];
           return false;
         }
-        
-        // Si l'upload a réussi, supprimer l'ancienne image et mettre à jour le nom
-        // Supprimer l'ancienne image si elle existe
-        if(!empty($current_post['image_name']) && file_exists('./assets/imgs/posts/'.$current_post['image_name'])){
-          unlink('./assets/imgs/posts/'.$current_post['image_name']);
+
+        if(!empty($current_post['image_name']) && file_exists('./assets/imgs/posts/'.$current_post['image_name'].'.png')){
+          unlink('./assets/imgs/posts/'.$current_post['image_name'].'.png');
+        }
+
+        // --- Handle WEBP upload ---
+        $new_webp_name = $base_name . '.webp';
+        $_FILES['post_image_webp']['name'] = $new_webp_name;
+        $config_webp['upload_path'] = './assets/imgs/posts/webp/';
+        $config_webp['allowed_types'] = 'webp';
+        $config_webp['max_size'] = '2048';
+        $config_webp['file_name'] = $new_webp_name;
+
+        $this->upload->initialize($config_webp);
+
+        if (!$this->upload->do_upload('post_image_webp')) {
+          return [
+            'slug' => $slug,
+            'error' => $this->upload->display_errors() . ' (image webp) '];
+          return false;
+        }
+
+        if(!empty($current_post['image_name']) && file_exists('./assets/imgs/posts/webp/'.$current_post['image_name'].'.webp')){
+          unlink('./assets/imgs/posts/webp/'.$current_post['image_name'].'.webp');
         }
         
-        $upload_data = $this->upload->data();
-        $image_name = $upload_data['file_name'];
+        $image_name = $base_name;
+
       }
       
       $data = array(

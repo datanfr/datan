@@ -115,6 +115,9 @@
         show_404($this->functions_datan->get_404_infos());
       }
       $data['categories'] = $this->category_model->get_active_categories();
+      $data['post']['image_url'] = !empty($data['post']['image_name']) 
+        ? $data['post']['image_name'] 
+        : 'img_post_' . $data['post']['id'];
 
       // Breadcrumb
       $data['breadcrumb'] = array(
@@ -186,7 +189,7 @@
     public function delete($id){
       $user_type = $this->session->userdata('type');
       $data['type'] = 'team';
-      if ($user_type != "admin") {
+      if ($user_type != 'admin') {
         redirect();
       } else {
         $this->password_model->security_only_admin();
@@ -195,7 +198,7 @@
 
         $this->session->set_flashdata('post_deleted', 'Votre post a été supprimé');
 
-        redirect();
+        redirect('blog');
       }
     }
 
@@ -233,7 +236,7 @@
       
       if (isset($success['error'])) {
         $this->session->set_flashdata('error', $success['error']);
-        redirect('posts/create');
+        redirect('posts/edit/' . $success['slug']);
       }
       // Set message
       $this->session->set_flashdata('post_updated', 'Votre post a été modifié');

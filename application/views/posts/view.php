@@ -37,15 +37,11 @@
   <div class="row body mt-5"> <!-- Body of article -->
     <div class="col-lg-8 offset-lg-2">
       <div class="img">
-        <?php if(!empty($post['image_name'])): ?>
-          <img src="<?= asset_url() ?>imgs/posts/<?= $post['image_name'] ?>" alt="<?= $post['title'] ?>" class="img-fluid">
-        <?php else: ?>
-          <picture>
-            <source srcset="<?= asset_url() ?>imgs/posts/webp/img_post_<?= $post['id'] ?>.webp" type="image/webp">
-            <source srcset="<?= asset_url() ?>imgs/posts/img_post_<?= $post['id'] ?>.png" type="image/png">
-            <img src="<?= asset_url() ?>imgs/posts/img_post_<?= $post['id'] ?>.png" alt="Image post">
+        <picture>
+            <source srcset="<?= asset_url() ?>imgs/posts/webp/<?= $post['image_url'] ?>.webp" type="image/webp">
+            <source srcset="<?= asset_url() ?>imgs/posts/<?= $post['image_url'] ?>.png" type="image/png">
+            <img src="<?= asset_url() ?>imgs/posts/<?= $post['image_url'] ?>.png" alt="Image post">
           </picture>
-        <?php endif; ?>
       </div>
       <div class="text mt-5">
         <?= $post['body'] ?>
