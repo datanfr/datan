@@ -75,7 +75,8 @@
                     </select>
                   </div>
                   <div class="form-group">
-                    <label>Image du post</label>
+                    <label class="mb-0">Image du post</label>
+                    <span class="d-block font-italic mb-2">Taille : 1240px X 620px (ratio: 2:1)</span>
                     <?php if(!empty($post['image_name'])): ?>
                       <div class="mb-2">
                         <img src="<?= asset_url() ?>imgs/posts/<?= $post['image_name'] ?>" alt="Image du post" style="max-width: 200px; max-height: 200px;" class="img-thumbnail">
