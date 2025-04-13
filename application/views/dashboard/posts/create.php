@@ -68,7 +68,8 @@
                     </select>
                   </div>
                   <div class="form-group">
-                    <label>Image du post</label>
+                    <label class="mb-0">Image du post</label>
+                    <span class="d-block font-italic mb-2">Taille : 1240px X 620px (ratio: 2:1)</span>
                     <div class="custom-file">
                       <input type="file" class="custom-file-input" id="post_image" name="post_image">
                       <label class="custom-file-label" for="post_image">Choisir une image</label>
