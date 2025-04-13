@@ -151,6 +151,7 @@ $route['votes'] = 'votes/index';
 $route['posts/update'] = 'posts/update';
 $route['posts/create'] = 'posts/create';
 $route['posts/edit/(:any)'] = 'posts/edit/$1';
+$route['posts/delete/(:any)'] = 'posts/delete/$1';
 $route['blog/categorie/(:any)'] = 'posts/category/$1';
 $route['blog/(:any)/(:any)'] = 'posts/view/$2/$1';
 $route['blog'] = 'posts/index';
