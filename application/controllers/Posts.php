@@ -189,12 +189,13 @@
     public function delete($id){
       $user_type = $this->session->userdata('type');
       $data['type'] = 'team';
+      $post = $this->post_model->get_post_by_id($id);
       if ($user_type != 'admin') {
         redirect();
       } else {
         $this->password_model->security_only_admin();
 
-        $this->post_model->delete_post($id);
+        $this->post_model->delete_post($id, $post['image_name']);
 
         $this->session->set_flashdata('post_deleted', 'Votre post a été supprimé');
 
