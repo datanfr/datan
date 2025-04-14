@@ -1,7 +1,15 @@
 <div class="bloc-post">
     <div class="image">
         <?php if(!empty($post['image_name'])): ?>
-            <img src="<?= asset_url() ?>imgs/posts/<?= $post['image_name'] ?>.png" alt="<?= $post['title'] ?>" class="img-fluid">
+            <?php $webp_path = FCPATH . 'assets/imgs/posts/' . $post['image_name'] . '.webp'; ?>
+            <?php if(file_exists($webp_path)): ?>
+            <picture>
+                <source srcset="<?= asset_url() ?>imgs/posts/<?= $post['image_name'] ?>.webp" type="image/webp">
+                <img src="<?= asset_url() ?>imgs/posts/<?= $post['image_name'] ?>.png" alt="<?= $post['title'] ?>" class="img-fluid">
+            </picture>
+            <?php else: ?>
+                <img src="<?= asset_url() ?>imgs/posts/<?= $post['image_name'] ?>.png" alt="<?= $post['title'] ?>" class="img-fluid">
+            <?php endif; ?>
         <?php else: ?>
             <img class="img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder.png" data-src="<?= asset_url() ?>imgs/posts/img_post_<?= $post['id'] ?>.png" alt="Image post <?= $post['id'] ?>" width="480" height="240">
         <?php endif; ?>
