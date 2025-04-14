@@ -90,7 +90,7 @@
         // Chargement de la bibliothèque image_service
         $this->load->library('image_service');
         // Conversion du PNG en WebP
-        $this->image_service->convert_to_webp_with_imagick('./assets/imgs/posts/' . $new_png_name, './assets/imgs/posts/' . $base_name . '.webp');
+        $this->image_service->convert_to_webp_with_imagick('./assets/imgs/posts/' . $new_png_name, './assets/imgs/posts/webp/' . $base_name . '.webp');
       }
       
       $data = array(
@@ -121,21 +121,14 @@
       
       // Gestion de l'image
       $image_name = $current_post['image_name']; // Garder l'image existante par défaut
-      if (
-        ($_FILES['post_image_png']['name']) || (!$_FILES['post_image_png']['name'])
-      ) {
-        return [
-          'slug' => $slug,
-          'error' => 'Vous devez télécharger un fichier PNG.'
-        ];
-      } elseif ($_FILES['post_image_png']['name']) {
+      if ($_FILES['post_image_png']['name']) {
 
         // Validate PNG file extension
         $extension_png = pathinfo($_FILES['post_image_png']['name'], PATHINFO_EXTENSION);
         if (strtolower($extension_png) !== 'png') {
             return [
                 'slug' => $slug,
-                'error' => 'Le fichier PNG n\'a pas l\'extension correcte. Veuillez télécharger un fichier PNG valide.'
+                'error' => 'Le fichier n\' pas l\'extension correcte. Veuillez télécharger un fichier PNG valide.'
             ];
         }
 
@@ -171,10 +164,10 @@
         // --- Handle WEBP upload ---
         $this->load->library('image_service');
         // Conversion du PNG en WebP
-        $this->image_service->convert_to_webp_with_imagick('./assets/imgs/posts/' . $new_png_name, './assets/imgs/posts/' . $base_name . '.webp');
+        $this->image_service->convert_to_webp_with_imagick('./assets/imgs/posts/' . $new_png_name, './assets/imgs/posts/webp/' . $base_name . '.webp');
 
-        if(!empty($current_post['image_name']) && file_exists('./assets/imgs/posts/' . $current_post['image_name'] . '.webp')){
-          unlink('./assets/imgs/posts/' . $current_post['image_name'] . '.webp');
+        if(!empty($current_post['image_name']) && file_exists('./assets/imgs/posts/webp/' . $current_post['image_name'] . '.webp')){
+          unlink('./assets/imgs/posts/webp/' . $current_post['image_name'] . '.webp');
         }
         
         $image_name = $base_name;
