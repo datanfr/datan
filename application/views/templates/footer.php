@@ -92,6 +92,9 @@
                     <a href="<?= base_url(); ?>parrainages-2022" class="no-decoration underline">Parrainages 2022</a>
                   </p>
                   <p>
+                    <a href="<?= base_url(); ?>faq" class="no-decoration underline">Foire aux questions</a>
+                  </p>
+                  <p>
                     <?php if ($this->router->fetch_class() == "home"): ?> 
                       <a href="<?= base_url(); ?>login" class="no-decoratio underline">Connexion</a>
                     <?php else: ?>
