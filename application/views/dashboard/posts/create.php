@@ -73,20 +73,11 @@
                   <div class="form-group mt-3">
                     <label class="mb-0">Image PNG</label>
                     <div class="custom-file">
-                      <input type="file" class="custom-file-input" id="post_image_png" name="post_image_png">
+                      <input type="file" accept="image/png" class="custom-file-input" id="post_image_png" name="post_image_png">
                       <label class="custom-file-label" for="post_image_png">Choisir une image</label>
                       <small class="form-text text-muted">Format accepté : png uniquement. Taille max : 2MB</small>
                     </div>
                     <button type="button" id="remove_image_png" class="btn btn-danger mt-2" style="display: none;">Supprimer l'image</button>
-                  </div>
-                  <div class="form-group mt-3">
-                    <label class="mb-0">Image WEBP</label>
-                    <div class="custom-file">
-                      <input type="file" class="custom-file-input" id="post_image_webp" name="post_image_webp">
-                      <label class="custom-file-label" for="post_image_webp">Choisir une image</label>
-                      <small class="form-text text-muted">Format accepté : webp uniquement. Taille max : 2MB</small>
-                    </div>
-                    <button type="button" id="remove_image_webp" class="btn btn-danger mt-2" style="display: none;">Supprimer l'image</button>
                   </div>
                   <button type="submit" class="btn btn-primary">Submit</button>
                 </form>
@@ -122,6 +113,5 @@
     }
 
     setupImageUpload('post_image_png', 'remove_image_png');
-    setupImageUpload('post_image_webp', 'remove_image_webp');
   });
 </script>
