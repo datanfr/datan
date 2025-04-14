@@ -32,6 +32,10 @@
       }
     }
 
+    public function get_post_by_id($id){
+      return $this->db->get_where('posts', array('id' => $id))->row_array();
+    }
+
     public function get_post_edit($slug){
       $sql = 'SELECT p.id, date_format(created_at, "%d %M %Y") as created_at_fr, c.name AS category_name, c.slug AS category_slug, p.id, p.user_id, p.title, p.slug, p.body, p.created_at, p.state, p.category_id, p.image_name
         FROM posts p
@@ -105,10 +109,25 @@
       return $this->db->insert('posts', $data);
     }
 
-    public function delete_post($id){
+    public function delete_post($id, $image_name){
+      // Delete post
       $this->db->where('id', $id);
       $this->db->delete('posts');
-      return true;
+
+      // Delete image
+
+      if($image_name){
+        $png_path = './assets/imgs/posts/' . $image_name . '.png';
+        $webp_path = './assets/imgs/posts/webp/' . $image_name . '.webp';
+
+        if (file_exists($png_path)) {
+          unlink($png_path);
+        }
+
+        if (file_exists($webp_path)) {
+          unlink($webp_path);
+        }
+      }
     }
 
     public function update_post(){
