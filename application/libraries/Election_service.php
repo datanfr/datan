@@ -1,6 +1,6 @@
 <?php
 
-class ElectionService 
+class Election_service 
 {
     public function __construct() 
     {

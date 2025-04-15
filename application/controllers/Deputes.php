@@ -11,10 +11,9 @@
       $this->load->model('elections_model');
       $this->load->model('jobs_model');
       $this->load->model('parrainages_model');
-      $this->load->library('DeputeService');
-      $this->load->library('GroupService');
-      $this->load->library('ElectionService');
-      $this->load->library('VoteService');
+      $this->load->library('depute_service');
+      $this->load->library('election_service');
+      $this->load->library('group_service');
       //$this->password_model->security_password(); Former login protection
     }
 
@@ -182,7 +181,7 @@
 
       // ____________________CACHING_________________________________
       if(!in_array($_SERVER['REMOTE_ADDR'], localhost()) && !$this->session->userdata('logged_in')){
-        $this->output->cache("4320"); // Caching enable for 3 days (1440 minutes per day)F
+        $this->output->cache("4320"); // Caching enable for 3 days (1440 minutes per day)
       }
 
       // ____________________MAIN VARIABLES___________________________
@@ -209,11 +208,11 @@
 
 
       // ____________________GET GROUP___________________________________
-      $data = $this->deputeservice->get_group_info($data, $mp_id, $groupe_id);
+      $data = $this->group_service->get_group_infos_by_mp($data, $mp_id, $groupe_id);
     
       
       // ____________________GET GENERAL INFOS___________________________
-      $data = $this->deputeservice->get_general_infos($data, $mp_id, $legislature, $name_last, $depute_full_name);
+      $data = $this->depute_service->get_general_infos($data, $mp_id, $legislature, $name_last, $depute_full_name);
 
 
       // ____________________GET MAJORITY GROUP___________________________
@@ -230,7 +229,7 @@
       }
     
       // ____________________GET ALL ELECTIONS___________________________
-      $data['elections'] = $this->electionservice->get_all_elections($mp_id, $data['gender']);
+      $data['elections'] = $this->election_service->get_all_elections($mp_id, $data['gender']);
     
   
       // ____________________GET ELECTION FEATURE________________________
@@ -248,11 +247,11 @@
       }
       
       //____________________GET STATISTICS__________________________________
-      $data = $this->deputeservice->get_statistics($data, $legislature, $mp_id, $groupe_id); 
+      $data = $this->depute_service->get_statistics($data, $legislature, $mp_id, $groupe_id); 
 
 
       //___________________GET OTHER MPS____________________________________
-      $related_deputes = $this->deputeservice->get_other_mps($legislature, $groupe_id, $name_last, $mp_id, $data['active'], $depute_dpt);
+      $related_deputes = $this->depute_service->get_other_mps($legislature, $groupe_id, $name_last, $mp_id, $data['active'], $depute_dpt);
       $data['other_deputes'] = $related_deputes['other_deputes'];
       $data['other_deputes_dpt'] = $related_deputes['other_deputes_dpt'];
       $data['depute']['dateNaissanceFr'] = utf8_encode(strftime('%d %B %Y', strtotime($data['depute']['birthDate']))); // birthdate
@@ -274,16 +273,16 @@
       $data['voteFeature'] = $this->votes_model->get_individual_vote_moc($mp_id, 17, 519); // MOC Barnier Decembre 2024
 
       //__________________GET LAST EXPLICATION_______________________________
-      $data['explication'] = $this->deputeservice->get_explication_details($mp_id, $legislature, $data['gender']);
+      $data['explication'] = $this->depute_service->get_explication_details($mp_id, $legislature, $data['gender']);
 
 
       // _________________Get MPs HISTORY___________________________
-      $data = $this->deputeservice->get_mp_history_data($data, $mp_id, $depute_full_name);
+      $data = $this->depute_service->get_mp_history_data($data, $mp_id);
       
       
       // ________________ GET Depute page ressources (meta, css, js...)_______
 
-      $data = $this->deputeservice->get_mp_page_resources($data, $depute_full_name, $nameUrl);
+      $data = $this->depute_service->get_mp_page_resources($data, $depute_full_name, $nameUrl);
 
 
       // ________________LOAD VIEWS_______________________
@@ -336,7 +335,7 @@
       $data['gender'] = gender($data['depute']['civ']);
 
       // Statistiques
-      $data = $this->deputeservice->get_statistics($data, $legislature, $mpId, $groupe_id);
+      $data = $this->depute_service->get_statistics($data, $legislature, $mpId, $groupe_id);
 
       // Get majority group
       $data['groupMajority'] = $this->groupes_model->get_majority_group($legislature);
