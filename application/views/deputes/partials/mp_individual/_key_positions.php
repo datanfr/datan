@@ -3,7 +3,9 @@
   <div class="bloc-key-votes mt-5">
     <div class="row">
       <div class="col-12">
-        <h2 class="mb-4 title-center">Ses positions importantes</h2>
+        <?php if (!isset($iframe_title_visibility) || $iframe_title_visibility !== 'hidden'): ?>
+          <h2 class="mb-4 title-center">Ses positions importantes</h2>
+        <?php endif; ?>
         <div class="card">
           <div class="card-body key-votes">
             <?php foreach ($key_votes as $key => $value): ?>

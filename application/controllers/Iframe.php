@@ -28,7 +28,8 @@ class Iframe extends CI_Controller
       // $name = "nadege-abomangoli";
       //PA795228
 
-      $data['title_visibility'] = isset($_GET['title']) && $_GET['title'] === 'hide' ? 'hidden' : '';
+      $data['main_title_visibility'] = isset($_GET['main-title']) && $_GET['main-title'] === 'hide' ? 'hidden' : '';
+      $data['iframe_title_visibility'] = isset($_GET['secondary-title']) && $_GET['secondary-title'] === 'hide' ? 'hidden' : '';
 
       $categoriesParam = $this->input->get('categories');
 
