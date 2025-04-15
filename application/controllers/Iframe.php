@@ -2,120 +2,116 @@
 
 class Iframe extends CI_Controller
 {
-    public function __construct() 
-    {
-        parent::__construct();
+  public function __construct()
+  {
+    parent::__construct();
 
 
-        $this->load->library('depute_service');
-        $this->load->library('election_service');
-        $this->load->model('deputes_model');
-        $this->load->model('parrainages_model');
-        $this->load->model('depute_edito');
+    $this->load->library('depute_service');
+    $this->load->library('election_service');
+    $this->load->model('deputes_model');
+    $this->load->model('parrainages_model');
+    $this->load->model('depute_edito');
+  }
 
-    }
-
-    public function index()
-    {
-        $this->load->view('iframe/index'); 
-    }
-
-    
-    public function showDeputeIframe($name)
-    {
+  public function index()
+  {
+    $this->load->view('iframe/index');
+  }
 
 
-      // $name = "nadege-abomangoli";
-      //PA795228
+  public function showDeputeIframe($name)
+  {
 
-      $data['main_title_visibility'] = isset($_GET['main-title']) && $_GET['main-title'] === 'hide' ? 'hidden' : '';
-      $data['iframe_title_visibility'] = isset($_GET['secondary-title']) && $_GET['secondary-title'] === 'hide' ? 'hidden' : '';
 
-      $categoriesParam = $this->input->get('categories');
+    // $name = "nadege-abomangoli";
+    //PA795228
 
-      $categories = $categoriesParam
+    $data['main_title_visibility'] = isset($_GET['main-title']) && $_GET['main-title'] === 'hide' ? 'hidden' : '';
+    $data['iframe_title_visibility'] = isset($_GET['secondary-title']) && $_GET['secondary-title'] === 'hide' ? 'hidden' : '';
+
+    $categoriesParam = $this->input->get('categories');
+
+    $categories = $categoriesParam
       ? explode(',', $categoriesParam)
       : ['positions-importantes', 'derniers-votes', 'election', 'comportement-politique'];
 
 
-      $categories_allowed = ['positions-importantes', 'derniers-votes', 'election', 'comportement-politique'];
-      $categories = array_values(array_intersect($categories, $categories_allowed));
-      $data['categories'] = $categories;
+    $categories_allowed = ['positions-importantes', 'derniers-votes', 'election', 'comportement-politique'];
+    $categories = array_values(array_intersect($categories, $categories_allowed));
+    $data['categories'] = $categories;
 
-      $departement =  $this->deputes_model-> get_dptslug_by_name_url($name);
-      $data['depute'] = $this->deputes_model->get_depute_individual($name, $departement);
-
-  
-
-        setlocale(LC_TIME, 'french');
-  
-        // ____________________CHECK IF DEPUTE EXISTS__________________
-        if (empty($data['depute'])) {
-          show_404($this->functions_datan->get_404_infos());
-        }
-  
-        // ____________________CHECK IF LEGISLATURE > 14_______________
-        if (!$data['depute']['legislature'] >= 14) {
-          show_404($this->functions_datan->get_404_infos());
-        }
-  
-        // ____________________CACHING_________________________________
-        if(!in_array($_SERVER['REMOTE_ADDR'], localhost()) && !$this->session->userdata('logged_in')){
-          $this->output->cache("4320"); // Caching enable for 3 days (1440 minutes per day)F
-        }
-  
-        // // ____________________MAIN VARIABLES___________________________
-        $depute = $data['depute'];
-        $mp_id = $depute['mpId'];
-        $name_last = $depute['nameLast'];
-        $data['active'] = $depute['active'];
-        $legislature = $depute['legislature'];
-        $depute_full_name = $depute['nameFirst'].' '.$depute['nameLast'];
-        $groupe_id = $depute['groupeId'];
-        $data['gender'] = gender($depute['civ']); 
-        $data['mp_full_name'] = $depute_full_name;
-    
+    $departement =  $this->deputes_model->get_dptslug_by_name_url($name);
+    $data['depute'] = $this->deputes_model->get_depute_individual($name, $departement);
 
 
-        // ____________________GET GENERAL INFOS___________________________
-        $data = $this->depute_service->get_general_infos($data, $mp_id, $legislature, $name_last, $depute_full_name);
-  
-  
-        // ____________________GET MAJORITY GROUP___________________________
-        // $data['groupMajority'] = $this->groupes_model->get_majority_group($legislature); 
 
-        // ↳ besoin peut être pour le bloc statistiques(partial statistics/_inter_goup_loyalty) si "Proximité avec la majorité gouvernementale"
-        
-        
-        //____________________GET STATISTICS__________________________________
-        if (in_array('comportement-politique', $categories)) {
-        $data = $this->depute_service->get_statistics($data, $legislature, $mp_id, $groupe_id); 
-        }
-  
-      
-        //___________________GET VOTES_________________________________________
-        if ($legislature >= 15) {
-          // Get edited votes
-          $data['votes_datan'] = $this->votes_model->get_votes_datan_depute($mp_id, 5);
-          // Get key votes
-          $data['key_votes'] = $this->votes_model->get_key_votes_mp($mp_id);
-        } else {
-          $data['votes_datan'] = NULL;
-          $data['key_votes'] = NULL;
-        }
+    setlocale(LC_TIME, 'french');
 
-        // ________________ GET Depute page ressources (meta, css, js...)_______
-
-        $data = $this->depute_service->get_mp_page_resources($data, $depute_full_name, $name);
-
-      
-        // ________________ LOAD views_______
-
-        $this->load->view('iframe/partials/_header_iframe', $data);
-        $this->load->view('iframe/depute', $data);
-        $this->load->view('iframe/partials/_footer_iframe', $data);
-
+    // ____________________CHECK IF DEPUTE EXISTS__________________
+    if (empty($data['depute'])) {
+      show_404($this->functions_datan->get_404_infos());
     }
 
-}
+    // ____________________CHECK IF LEGISLATURE > 14_______________
+    if (!$data['depute']['legislature'] >= 14) {
+      show_404($this->functions_datan->get_404_infos());
+    }
 
+    // ____________________CACHING_________________________________
+    if (!in_array($_SERVER['REMOTE_ADDR'], localhost()) && !$this->session->userdata('logged_in')) {
+      $this->output->cache("4320"); // Caching enable for 3 days (1440 minutes per day)F
+    }
+
+    // // ____________________MAIN VARIABLES___________________________
+    $depute = $data['depute'];
+    $mp_id = $depute['mpId'];
+    $name_last = $depute['nameLast'];
+    $data['active'] = $depute['active'];
+    $legislature = $depute['legislature'];
+    $depute_full_name = $depute['nameFirst'] . ' ' . $depute['nameLast'];
+    $groupe_id = $depute['groupeId'];
+    $data['gender'] = gender($depute['civ']);
+    $data['mp_full_name'] = $depute_full_name;
+
+
+
+    // ____________________GET GENERAL INFOS___________________________
+    $data = $this->depute_service->get_general_infos($data, $mp_id, $legislature, $name_last, $depute_full_name);
+
+
+    // ____________________GET MAJORITY GROUP___________________________
+    // $data['groupMajority'] = $this->groupes_model->get_majority_group($legislature); 
+
+    // ↳ besoin peut être pour le bloc statistiques(partial statistics/_inter_goup_loyalty) si "Proximité avec la majorité gouvernementale"
+
+
+    //____________________GET STATISTICS__________________________________
+    if (in_array('comportement-politique', $categories)) {
+      $data = $this->depute_service->get_statistics($data, $legislature, $mp_id, $groupe_id);
+    }
+
+
+    //___________________GET VOTES_________________________________________
+    if ($legislature >= 15) {
+      // Get edited votes
+      $data['votes_datan'] = $this->votes_model->get_votes_datan_depute($mp_id, 5);
+      // Get key votes
+      $data['key_votes'] = $this->votes_model->get_key_votes_mp($mp_id);
+    } else {
+      $data['votes_datan'] = NULL;
+      $data['key_votes'] = NULL;
+    }
+
+    // ________________ GET Depute page ressources (meta, css, js...)_______
+
+    $data = $this->depute_service->get_mp_page_resources($data, $depute_full_name, $name);
+
+
+    // ________________ LOAD views_______
+
+    $this->load->view('iframe/partials/_header_iframe', $data);
+    $this->load->view('iframe/depute', $data);
+    $this->load->view('iframe/partials/_footer_iframe', $data);
+  }
+}
