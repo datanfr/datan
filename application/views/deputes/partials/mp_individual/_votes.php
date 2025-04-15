@@ -3,7 +3,7 @@
   <div class="bloc-votes carousel-container mt-5">
     <div class="row">
       <div class="col-12">
-        <div class="d-flex justify-content-between mb-4">
+        <div class="d-flex <?= (isset($iframe_title_visibility) && $iframe_title_visibility === 'hidden') ? 'justify-content-end' : 'justify-content-between' ?> mb-4">
           <?php if (!isset($iframe_title_visibility) || $iframe_title_visibility !== 'hidden'): ?>
             <h2 class="title-center">Ses derniers votes</h2>
           <?php endif; ?>
