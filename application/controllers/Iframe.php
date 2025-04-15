@@ -1,6 +1,6 @@
 <?php
 
-class IframeController extends CI_Controller
+class Iframe extends CI_Controller
 {
     public function __construct() 
     {
@@ -37,7 +37,6 @@ class IframeController extends CI_Controller
       : ['positions-importantes', 'derniers-votes', 'election', 'comportement-politique'];
 
 
-      // optionnel, mais plus robuste
       $categories_allowed = ['positions-importantes', 'derniers-votes', 'election', 'comportement-politique'];
       $categories = array_values(array_intersect($categories, $categories_allowed));
       $data['categories'] = $categories;
@@ -45,7 +44,6 @@ class IframeController extends CI_Controller
       $departement =  $this->deputes_model-> get_dptslug_by_name_url($name);
       $data['depute'] = $this->deputes_model->get_depute_individual($name, $departement);
 
-      $data['mp_full_name'] = $data['depute']['nameFirst'].' '.$data['depute']['nameLast'];
   
 
         setlocale(LC_TIME, 'french');
@@ -69,14 +67,12 @@ class IframeController extends CI_Controller
         $depute = $data['depute'];
         $mp_id = $depute['mpId'];
         $name_last = $depute['nameLast'];
-        $depute_dpt = $depute['dptSlug'];
         $data['active'] = $depute['active'];
         $legislature = $depute['legislature'];
-        $data['infos_groupes'] = groups_position_edited();
         $depute_full_name = $depute['nameFirst'].' '.$depute['nameLast'];
-        $data['no_job'] = array('autre profession','autres', 'sans profession déclarée', 'sans profession');
         $groupe_id = $depute['groupeId'];
         $data['gender'] = gender($depute['civ']); 
+        $data['mp_full_name'] = $depute_full_name;
     
 
 
@@ -122,24 +118,3 @@ class IframeController extends CI_Controller
 
 }
 
-
-
-
-
-
-
-
-  // //__________________GET LAST EXPLICATION_______________________________
-        // $data['explication'] = $this->depute_service->get_explication_details($mp_id, $legislature, $data['gender']);
-
-
-                // //___________________GET OTHER MPS____________________________________
-        // $related_deputes = $this->depute_service->get_other_mps($legislature, $groupe_id, $name_last, $mp_id, $data['active'], $depute_dpt);
-        // $data['other_deputes'] = $related_deputes['other_deputes'];
-        // $data['other_deputes_dpt'] = $related_deputes['other_deputes_dpt'];
-        // $data['depute']['dateNaissanceFr'] = utf8_encode(strftime('%d %B %Y', strtotime($data['depute']['birthDate']))); // birthdate
-
-
-        
-        // // ____________________GET GROUP___________________________________
-        // $data = $this->depute_service->get_group_info($data, $mp_id, $groupe_id);
