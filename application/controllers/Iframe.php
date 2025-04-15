@@ -14,13 +14,13 @@ class Iframe extends CI_Controller
     $this->load->model('depute_edito');
   }
 
-  public function index()
+  public function index(): void
   {
     $this->load->view('iframe/index');
   }
 
 
-  public function showDeputeIframe($name)
+  public function showDeputeIframe(string $name): void
   {
 
 
@@ -29,11 +29,12 @@ class Iframe extends CI_Controller
 
     $data['main_title_visibility'] = isset($_GET['main-title']) && $_GET['main-title'] === 'hide' ? 'hidden' : '';
     $data['iframe_title_visibility'] = isset($_GET['secondary-title']) && $_GET['secondary-title'] === 'hide' ? 'hidden' : '';
+    $data['secondary_title_visibility'] =  $data['iframe_title_visibility'];
 
-    $categoriesParam = $this->input->get('categories');
+    $categories_param = $this->input->get('categories');
 
-    $categories = $categoriesParam
-      ? explode(',', $categoriesParam)
+    $categories = $categories_param
+      ? explode(',', $categories_param)
       : ['positions-importantes', 'derniers-votes', 'election', 'comportement-politique'];
 
 

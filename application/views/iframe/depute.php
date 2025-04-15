@@ -1,4 +1,4 @@
-<div class="pg-depute-individual iframe-container <?= $main_title_visibility === 'hidden' ? 'no-title' : '' ?>">
+<div class="pg-depute-individual iframe-container <?= $main_title_visibility === 'hidden' ? 'no-title' : '' ?> <?= $secondary_title_visibility === 'hidden' ? 'no-subtitle' : '' ?>">
   <?php if ($main_title_visibility !== 'hidden'): ?>
     <h1>
       Les données parlementaires et électorales de <?= $mp_full_name; ?>
@@ -18,52 +18,7 @@
   }
   ?>
   <p class="datan-credit">
-    <img src="/assets/imgs/favicon/datan_favicon.ico" alt="logo de Datan" class="datan-logo">
-    Ce service est proposé par le site <a href="https://datan.fr" target="_blank">datan.fr</a>.
+    <img src="/assets/imgs/favicon/datan_favicon.svg" alt="logo de Datan" class="datan-logo">
+    Ce service est proposé par le site <a href="https://datan.fr" target="_blank">datan.fr</a>
   </p>
 </div>
-
-
-
-<style>
-  .iframe-container {
-    padding: 15px;
-
-  }
-
-  .no-title .mt-5:first-of-type {
-    margin-top: 0 !important;
-  }
-
-  .datan-credit {
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    gap: 6px;
-    margin-bottom: 0 !important;
-  }
-
-  .datan-credit .datan-logo {
-    max-width: 100%;
-    max-height: 16px;
-    height: auto;
-  }
-
-
-  @media (max-width: 768px) {
-    .datan-credit {
-      justify-content: center;
-    }
-  }
-
-
-  @media (max-width: 480px) {
-    .datan-credit {
-      font-size: 14px;
-    }
-
-    .datan-credit .datan-logo {
-      height: 14px;
-    }
-  }
-</style>
