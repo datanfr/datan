@@ -15,7 +15,7 @@
       PRIMARY KEY (`id`) ,
       INDEX `legislature_idx` (`legislature`) ,
       INDEX `voteNumero_idx` (`voteNumero`)
-    ) ENGINE = MyISAM;
+    ) ENGINE = InnoDB;
   ");
 
   // 2. Get the votes

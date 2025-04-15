@@ -34,7 +34,7 @@ CREATE TABLE `amendements` (
   `seanceRef` varchar(35) CHARACTER SET utf8 DEFAULT NULL,
   `expose` text CHARACTER SET utf8 DEFAULT NULL,
   `dateMaj` timestamp NOT NULL DEFAULT current_timestamp()
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -49,7 +49,7 @@ CREATE TABLE `amendements_auteurs` (
   `groupeId` varchar(15) CHARACTER SET utf8 DEFAULT NULL,
   `auteurOrgane` varchar(15) CHARACTER SET utf8 DEFAULT NULL,
   `dateMaj` timestamp NOT NULL DEFAULT current_timestamp()
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -143,7 +143,7 @@ CREATE TABLE `circos` (
 CREATE TABLE `cities_adjacentes` (
   `insee` varchar(25) NOT NULL,
   `adjacente` varchar(25) NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -161,7 +161,7 @@ CREATE TABLE `cities_infos` (
   `pop1982` int(11) DEFAULT NULL,
   `pop1975` int(11) DEFAULT NULL,
   `pop1968` int(11) DEFAULT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -181,7 +181,7 @@ CREATE TABLE `cities_mayors` (
   `profession` smallint(6) DEFAULT NULL,
   `libelle_profession` text DEFAULT NULL,
   `dateMaj` date NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -197,7 +197,7 @@ CREATE TABLE `class_groups` (
   `value` decimal(6,3) DEFAULT NULL,
   `votes` bigint(21) DEFAULT NULL,
   `dateMaj` date NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -336,7 +336,7 @@ CREATE TABLE `departement` (
   `libelle_2` varchar(255) CHARACTER SET utf8 DEFAULT NULL,
   `slug` varchar(255) CHARACTER SET utf8 DEFAULT NULL,
   `region` varchar(255) CHARACTER SET utf8 DEFAULT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -358,7 +358,7 @@ CREATE TABLE `deputes` (
   `famSocPro` varchar(255) DEFAULT NULL,
   `hatvp` text DEFAULT NULL,
   `dateMaj` date DEFAULT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -372,7 +372,7 @@ CREATE TABLE `deputes_accord` (
   `mpId` varchar(10) NOT NULL,
   `organeRef` varchar(10) NOT NULL,
   `accord` int(2) DEFAULT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -421,7 +421,7 @@ CREATE TABLE `deputes_all` (
   `img` tinyint(1) NOT NULL,
   `imgOgp` tinyint(1) NOT NULL,
   `dateMaj` date NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -505,7 +505,7 @@ CREATE TABLE `documents_legislatifs` (
   `titre` text CHARACTER SET utf8 NOT NULL,
   `titreCourt` text CHARACTER SET utf8 NOT NULL,
   `dateMaj` timestamp NOT NULL DEFAULT current_timestamp()
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -523,7 +523,7 @@ CREATE TABLE `dossiers` (
   `procedureParlementaireCode` int(5) DEFAULT NULL,
   `procedureParlementaireLibelle` text DEFAULT NULL,
   `commissionFond` varchar(25) CHARACTER SET utf8mb4 DEFAULT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -540,7 +540,7 @@ CREATE TABLE `dossiers_acteurs` (
   `ref` varchar(25) CHARACTER SET utf8 NOT NULL,
   `mandate` varchar(25) CHARACTER SET utf8 DEFAULT NULL,
   `dateMaj` timestamp NOT NULL DEFAULT current_timestamp()
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -620,7 +620,7 @@ CREATE TABLE `elect_2019_europe` (
   `33_pct` varchar(10) DEFAULT NULL,
   `34_n` varchar(10) DEFAULT NULL,
   `34_pct` varchar(10) DEFAULT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -633,7 +633,7 @@ CREATE TABLE `elect_2019_europe_clean` (
   `commune` varchar(10) NOT NULL DEFAULT '',
   `party` varchar(2) CHARACTER SET utf8mb4 NOT NULL DEFAULT '',
   `value` decimal(5,2) DEFAULT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -648,7 +648,7 @@ CREATE TABLE `elect_2019_europe_listes` (
   `name` text DEFAULT NULL,
   `tete` text DEFAULT NULL,
   `parti` text DEFAULT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -669,7 +669,7 @@ CREATE TABLE `elect_deputes_candidats` (
   `elected` tinyint(1) DEFAULT NULL,
   `link` varchar(1000) DEFAULT NULL,
   `modified_at` datetime NOT NULL DEFAULT current_timestamp()
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -696,7 +696,7 @@ CREATE TABLE `elect_legislatives_cities` (
   `prenom` varchar(16) DEFAULT NULL,
   `nuance` varchar(3) DEFAULT NULL,
   `voix` int(11) DEFAULT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -717,7 +717,7 @@ CREATE TABLE `elect_legislatives_infos` (
   `nuls` int(11) DEFAULT NULL,
   `exprimes` int(11) DEFAULT NULL,
   `year` double DEFAULT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -738,7 +738,7 @@ CREATE TABLE `elect_legislatives_results` (
   `pct_inscrits` double DEFAULT NULL,
   `pct_exprimes` double DEFAULT NULL,
   `elected` int(11) DEFAULT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -756,7 +756,7 @@ CREATE TABLE `elect_libelle` (
   `dateSecondRound` date DEFAULT NULL,
   `candidates` tinyint(1) DEFAULT NULL,
   `resultsUrl` text DEFAULT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -773,7 +773,7 @@ CREATE TABLE `elect_pres_2` (
   `voix` int(11) DEFAULT NULL,
   `share` double DEFAULT NULL,
   `election` int(11) DEFAULT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -785,7 +785,7 @@ CREATE TABLE `famsocpro` (
   `id` int(11) NOT NULL,
   `famille` varchar(49) DEFAULT NULL,
   `population` varchar(10) DEFAULT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -797,7 +797,7 @@ CREATE TABLE `faq_categories` (
   `id` int(11) NOT NULL,
   `name` varchar(50) NOT NULL,
   `slug` varchar(50) NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -816,7 +816,7 @@ CREATE TABLE `faq_posts` (
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   `modified_by` varchar(10) DEFAULT NULL,
   `modified_at` timestamp NULL DEFAULT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -860,7 +860,7 @@ CREATE TABLE `groupes_cohesion` (
   `positionGroupe` varchar(5) NOT NULL,
   `voteSort` int(10) DEFAULT NULL,
   `scoreGagnant` int(10) DEFAULT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -889,7 +889,7 @@ CREATE TABLE `groupes_stats` (
   `womenN` int(3) DEFAULT NULL,
   `age` decimal(4,2) DEFAULT NULL,
   `rose_index` decimal(4,3) DEFAULT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -908,7 +908,7 @@ CREATE TABLE `hatvp` (
   `dateDebut` date DEFAULT NULL,
   `dateFin` date DEFAULT NULL,
   `dateMaj` timestamp NOT NULL DEFAULT current_timestamp()
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -920,7 +920,7 @@ CREATE TABLE `history_mps_average` (
   `id` tinyint(4) NOT NULL,
   `legislature` tinyint(4) NOT NULL,
   `length` decimal(4,2) NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -948,7 +948,7 @@ CREATE TABLE `insee` (
   `postal` varchar(30) NOT NULL,
   `dpt` varchar(5) DEFAULT NULL,
   `region` varchar(5) DEFAULT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -1079,7 +1079,7 @@ CREATE TABLE `organes` (
   `preseance` varchar(5) DEFAULT NULL,
   `couleurAssociee` varchar(20) DEFAULT NULL,
   `dateMaj` date DEFAULT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -1100,7 +1100,7 @@ CREATE TABLE `parrainages` (
   `year` int(11) NOT NULL,
   `mpId` varchar(35) DEFAULT NULL,
   `dateMaj` date DEFAULT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -1128,7 +1128,7 @@ CREATE TABLE `password_resets` (
   `email` varchar(255) NOT NULL,
   `token` varchar(255) NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -1175,7 +1175,7 @@ CREATE TABLE `quizz` (
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   `modified_by` smallint(6) DEFAULT NULL,
   `modified_at` timestamp NULL DEFAULT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -1186,7 +1186,7 @@ CREATE TABLE `quizz` (
 CREATE TABLE `readings` (
   `id` int(11) NOT NULL,
   `name` text NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -1201,7 +1201,7 @@ CREATE TABLE `regions` (
   `ncc` varchar(26) DEFAULT NULL,
   `nccner` varchar(45) DEFAULT NULL,
   `libelle` varchar(45) DEFAULT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -1229,7 +1229,7 @@ CREATE TABLE `table_history` (
   `value_new` text CHARACTER SET utf8 NOT NULL,
   `user` int(11) NOT NULL,
   `modified_at` timestamp NOT NULL DEFAULT current_timestamp()
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -1257,7 +1257,7 @@ CREATE TABLE `users` (
 CREATE TABLE `users_mp` (
   `user` int(11) NOT NULL,
   `mpId` varchar(11) CHARACTER SET utf8 NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -1270,7 +1270,7 @@ CREATE TABLE `users_mp_link` (
   `mpId` varchar(255) CHARACTER SET utf8 NOT NULL,
   `token` varchar(255) CHARACTER SET utf8 NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -1288,7 +1288,7 @@ CREATE TABLE `votes` (
   `parDelegation` varchar(10) DEFAULT NULL,
   `causePosition` varchar(10) DEFAULT NULL,
   `voteType` varchar(50) NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -1325,7 +1325,7 @@ CREATE TABLE `votes_datan_requested` (
   `vote` int(11) NOT NULL,
   `email` text DEFAULT NULL,
   `date_requested` timestamp NOT NULL DEFAULT current_timestamp()
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -1340,7 +1340,7 @@ CREATE TABLE `votes_dossiers` (
   `voteNumero` int(11) NOT NULL,
   `href` text DEFAULT NULL,
   `dossier` varchar(300) DEFAULT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -1360,7 +1360,7 @@ CREATE TABLE `votes_groupes` (
   `nombreAbstentions` int(50) NOT NULL,
   `nonVotants` int(10) DEFAULT NULL,
   `nonVotantsVolontaires` int(10) DEFAULT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -1396,7 +1396,7 @@ CREATE TABLE `votes_info` (
   `article` varchar(25) DEFAULT NULL,
   `bister` varchar(15) DEFAULT NULL,
   `posArticle` varchar(15) DEFAULT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -1409,7 +1409,7 @@ CREATE TABLE `votes_participation` (
   `voteNumero` int(15) NOT NULL,
   `mpId` varchar(25) NOT NULL,
   `participation` int(5) DEFAULT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -1422,7 +1422,7 @@ CREATE TABLE `votes_participation_commission` (
   `voteNumero` int(15) NOT NULL,
   `mpId` varchar(25) NOT NULL,
   `participation` int(5) DEFAULT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -1444,7 +1444,7 @@ CREATE TABLE `votes_scores` (
   `positionGvt` varchar(5) CHARACTER SET utf8 DEFAULT NULL,
   `scoreGvt` varchar(5) CHARACTER SET utf8 DEFAULT NULL,
   `dateMaj` date NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 

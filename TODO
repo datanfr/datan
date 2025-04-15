@@ -1,2 +1,7 @@
-Mettre les variables au démarrage de docker-compose up :
-Décommenter les lignes et commenter celles qui sont en dures
+Changer interclassement des tables dans phpmyAdmin pour toutes les tables 
+Operation -> interclassement -> utf8mb4_unicode_ci
+
+lancer v_7.php
+
+Si problème avec les caractères, exécuter la requête suivante (surtout à cause d'une mauvaise configuration docker) :
+UPDATE votes_datan SET title = CONVERT(BINARY CONVERT(title USING latin1) USING utf8mb4) WHERE title LIKE '%Ã%';

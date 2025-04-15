@@ -9,7 +9,7 @@
     `text` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL ,
     `state` VARCHAR(15) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL ,
     PRIMARY KEY (`id`))
-    ENGINE = MyISAM;');
+    ENGINE = InnoDB;');
 
   $bdd->query('ALTER TABLE `explications_mp` ADD INDEX `idx_legislature` (`legislature`)');
   $bdd->query('ALTER TABLE `explications_mp` ADD INDEX `idx_voteNumero` (`voteNumero`)');

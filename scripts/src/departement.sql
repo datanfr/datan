@@ -42,7 +42,7 @@ CREATE TABLE IF NOT EXISTS `departement` (
   KEY `departement_slug` (`departement_slug`),
   KEY `departement_code` (`departement_code`),
   KEY `departement_nom_soundex` (`departement_nom_soundex`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=102;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=102;
 
 --
 -- Dumping data for table `departement`

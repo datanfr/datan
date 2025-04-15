@@ -173,7 +173,7 @@ class Script
           `dateMaj` date NOT NULL,
           KEY `idx_dpt` (`dpt`),
           KEY `idx_insee` (`insee`)
-        ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
       ');
 
       $importArray = [];
