@@ -7,8 +7,8 @@ class IframeController extends CI_Controller
         parent::__construct();
 
 
-        $this->load->library('DeputeService');
-        $this->load->library('ElectionService');
+        $this->load->library('depute_service');
+        $this->load->library('election_service');
         $this->load->model('deputes_model');
         $this->load->model('parrainages_model');
         $this->load->model('depute_edito');
@@ -81,7 +81,7 @@ class IframeController extends CI_Controller
 
 
         // ____________________GET GENERAL INFOS___________________________
-        $data = $this->deputeservice->get_general_infos($data, $mp_id, $legislature, $name_last, $depute_full_name);
+        $data = $this->depute_service->get_general_infos($data, $mp_id, $legislature, $name_last, $depute_full_name);
   
   
         // ____________________GET MAJORITY GROUP___________________________
@@ -92,7 +92,7 @@ class IframeController extends CI_Controller
         
         //____________________GET STATISTICS__________________________________
         if (in_array('comportement-politique', $categories)) {
-        $data = $this->deputeservice->get_statistics($data, $legislature, $mp_id, $groupe_id); 
+        $data = $this->depute_service->get_statistics($data, $legislature, $mp_id, $groupe_id); 
         }
   
       
@@ -109,7 +109,7 @@ class IframeController extends CI_Controller
 
         // ________________ GET Depute page ressources (meta, css, js...)_______
 
-        $data = $this->deputeservice->get_mp_page_resources($data, $depute_full_name, $name);
+        $data = $this->depute_service->get_mp_page_resources($data, $depute_full_name, $name);
 
       
         // ________________ LOAD views_______
@@ -130,11 +130,11 @@ class IframeController extends CI_Controller
 
 
   // //__________________GET LAST EXPLICATION_______________________________
-        // $data['explication'] = $this->deputeservice->get_explication_details($mp_id, $legislature, $data['gender']);
+        // $data['explication'] = $this->depute_service->get_explication_details($mp_id, $legislature, $data['gender']);
 
 
                 // //___________________GET OTHER MPS____________________________________
-        // $related_deputes = $this->deputeservice->get_other_mps($legislature, $groupe_id, $name_last, $mp_id, $data['active'], $depute_dpt);
+        // $related_deputes = $this->depute_service->get_other_mps($legislature, $groupe_id, $name_last, $mp_id, $data['active'], $depute_dpt);
         // $data['other_deputes'] = $related_deputes['other_deputes'];
         // $data['other_deputes_dpt'] = $related_deputes['other_deputes_dpt'];
         // $data['depute']['dateNaissanceFr'] = utf8_encode(strftime('%d %B %Y', strtotime($data['depute']['birthDate']))); // birthdate
@@ -142,4 +142,4 @@ class IframeController extends CI_Controller
 
         
         // // ____________________GET GROUP___________________________________
-        // $data = $this->deputeservice->get_group_info($data, $mp_id, $groupe_id);
+        // $data = $this->depute_service->get_group_info($data, $mp_id, $groupe_id);
