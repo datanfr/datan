@@ -1,6 +1,8 @@
 <!-- BLOC ELECTION -->
 <div class="bloc-election mt-5">
-  <h2 class="mb-4 title-center">Son élection</h2>
+  <?php if (!isset($iframe_title_visibility) || $iframe_title_visibility !== 'hidden'): ?>
+    <h2 class="mb-4 title-center">Son élection</h2>
+  <?php endif; ?>
   <div class="card">
     <div class="card-body pb-0">
       <?php if ($active) : ?>
