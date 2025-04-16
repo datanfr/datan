@@ -405,30 +405,6 @@
       $this->load->view('dashboard/footer');
     }
 
-    public function analyses($url){
-      $data = $this->data;
-      if ($url == "class_loyaute_group") {
-        if (!isset($_GET["group"])) {
-          echo "Indiquez le nom du groupe (lrem, fi, etc.) après ?group=lrem dans l'URL ";
-        } else {
-          $libelle = $_GET["group"];
-          $data['title'] = 'Classement loyauté pour le groupe ' . $libelle;
-
-          $data['table'] = $this->admin_model->get_classement_loyaute_group($libelle);
-
-          // Meta
-          $data['title_meta'] = $data['title'] . ' - Dashboard | Datan';
-
-          // Views
-          $this->load->view('dashboard/header', $data);
-          $this->load->view('dashboard/analysis/table_all', $data);
-          $this->load->view('dashboard/footer');
-      }
-      } else {
-        show_404($this->functions_datan->get_404_infos());
-      }
-    }
-
     public function socialmedia($page, $id){
       $data = $this->data;
 
