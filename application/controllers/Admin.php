@@ -429,20 +429,6 @@
       }
     }
 
-    public function votes_an_majo_lost(){
-      $data = $this->data;
-      $data['title'] = 'Votes où majorité présidentielle a perdu';
-      $data['votes'] = $this->admin_model->get_votes_majo_lost();
-
-      // Meta
-      $data['title_meta'] = $data['title'] . ' - Dashboard | Datan';
-
-      // Views
-      $this->load->view('dashboard/header', $data);
-      $this->load->view('dashboard/analysis/table', $data);
-      $this->load->view('dashboard/footer');
-    }
-
     public function socialmedia($page, $id){
       $data = $this->data;
 
