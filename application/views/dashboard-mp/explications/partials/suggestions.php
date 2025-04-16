@@ -25,7 +25,7 @@
         <div class="card-footer d-flex justify-content-center">
           <a class="btn btn-primary d-flex align-items-center font-weight-bold stretched-link" href="<?= base_url() ?>dashboard/explications/create/l<?= $value['legislature'] ?>v<?= $value['voteNumero'] ?>">
             <?= file_get_contents(asset_url()."imgs/icons/pencil-square.svg") ?>
-            <span class="ml-3">Je créé une explication</span>
+            <span class="ml-3">Je crée une explication</span>
           </a>
         </div>
       </div>
