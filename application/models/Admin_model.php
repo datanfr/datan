@@ -323,30 +323,6 @@ class Admin_model extends CI_Model
     return $this->db->insert('fields', $data);
   }
 
-  public function get_classement_loyaute_group($libelle)
-  {
-    $query = $this->db->query('
-        SELECT @s:=@s+1 AS "ranking", B.*
-        FROM
-        (
-        SELECT ROUND(cl.score * 100, 1) AS score, cl.votesN, a.average, da.nameLast, da.nameFirst, da.mpId, da.libelle, da.libelleAbrev
-        FROM class_loyaute cl
-        LEFT JOIN deputes_all da ON da.mpId = cl.mpId AND da.legislature = cl.legislature
-        JOIN (
-        	SELECT ROUND(AVG(t2.score) * 100, 1) AS average, libelleAbrev
-            FROM class_loyaute t2
-            LEFT JOIN deputes_all da2 ON da2.mpId = t2.mpId AND da2.legislature = t2.legislature
-            WHERE t2.legislature = ' . legislature_current() . ' AND da2.libelleAbrev = \'' . $libelle . '\' AND da2.dateFin IS NULL
-        ) a ON a.libelleAbrev = da.libelleAbrev
-        WHERE cl.legislature = ' . legislature_current() . ' AND da.libelleAbrev = \'' . $libelle . '\' AND da.dateFin IS NULL
-        ORDER BY cl.score DESC
-        ) B,
-        (SELECT @s:= 0) AS s
-      ');
-
-    return $query->result_array();
-  }
-
   public function table_changes($table, $toInsert){
     $data = array(
       'table' => $table,
