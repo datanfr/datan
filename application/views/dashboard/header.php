@@ -347,6 +347,9 @@
             <li class="nav-item">
               <a class="nav-link" href="<?= base_url() ?>dashboard/explications/liste">Nouvelle explication</a>
             </li>
+            <li class="nav-item">
+              <a class="nav-link" href="<?= base_url() ?>dashboard/iframe">Générer un iframe</a>
+            </li>
           <?php endif; ?>
           </ul>
         </nav>
