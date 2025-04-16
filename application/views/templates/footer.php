@@ -156,8 +156,8 @@
             </div>
           </div>
           <div class="row">
-            <div class="col-12">
-              <p>© Datan 2024 - Tous droits réservés</p>
+            <div class="col-12 text-center">
+              <p>© Datan <?= date("Y") ?> - Tous droits réservés</p>
             </div>
           </div>
         </div>
