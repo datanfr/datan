@@ -20,7 +20,7 @@ class Iframe extends CI_Controller
   }
 
 
-  public function showDeputeIframe(string $name): void
+  public function show_depute_iframe(string $name): void
   {
 
 
