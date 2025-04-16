@@ -10,6 +10,7 @@
       $this->load->model('votes_model');
       $this->password_model->security_only_mp();
 
+      $this->session->set_userdata('mpId', 'PA841215'); // A virer ensuite
       $this->data = array(
         'type' => 'mp',
         'username' => $this->session->userdata('username'),
@@ -167,7 +168,7 @@
       $data['votes_without'] = $this->dashboardMP_model->get_votes_to_explain($data['depute']['mpId']);
       $data['votes_without_suggestion'] = $this->dashboardMP_model->get_votes_to_explain_suggestion($data['votes_without']);
 
-      $data['title'] = 'Je créé une nouvelle explication de vote';
+      $data['title'] = 'Je crée une nouvelle explication de vote';
 
       // Meta
       $data['title_meta'] = 'Liste des votes à expliquer - Dashboard | Datan';
@@ -343,6 +344,24 @@
         redirect('dashboard/explications');
       }
 
+    }
+
+    public function generate_iframe() 
+    {
+      $data = $this->data;
+
+      // Meta
+      $data['title_meta'] = 'Explications de vote - Dashboard | Datan';
+      $data['breadcrumb'] = array(
+        array('name' => 'Dashboard', 'url' => base_url().'dashboard', 'active' => FALSE),
+        array('name' => 'Explications de vote', 'url' => base_url().'dashboard/iframe', 'active' => TRUE),
+      );
+
+      $data['js_to_load'] = array('datan/dashboard-mp-social-share');
+
+      $this->load->view('dashboard/header', $data);
+      $this->load->view('dashboard-mp/iframe/index',$data);
+      $this->load->view('dashboard/footer', $data);
     }
 
   }
