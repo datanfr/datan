@@ -133,7 +133,7 @@
             <li class="nav-item has-treeview">
               <a href="#" class="nav-link">
                 <p>
-                  Votes_datan
+                  Votes décryptés
                   <i class="fas fa-angle-left right"></i>
                 </p>
               </a>
@@ -148,29 +148,6 @@
                   <a href="<?= base_url() ?>admin/votes/create" class="nav-link">
                     <i class="far fa-circle nav-icon"></i>
                     <p>Créer un vote</p>
-                  </a>
-                </li>
-              </ul>
-            </li>
-            <!-- Votes_AN -->
-            <li class="nav-item has-treeview">
-              <a href="#" class="nav-link">
-                <p>
-                  Votes_AN
-                  <i class="fas fa-angle-left right"></i>
-                </p>
-              </a>
-              <ul class="nav nav-treeview">
-                <li class="nav-item">
-                  <a href="<?= base_url() ?>admin/votes_an/position" class="nav-link">
-                    <i class="far fa-circle nav-icon"></i>
-                    <p>Votes_AN (positions)</p>
-                  </a>
-                </li>
-                <li class="nav-item">
-                  <a href="<?= base_url() ?>admin/votes_an/cohesion" class="nav-link">
-                    <i class="far fa-circle nav-icon"></i>
-                    <p>Votes_AN (cohesion)</p>
                   </a>
                 </li>
               </ul>

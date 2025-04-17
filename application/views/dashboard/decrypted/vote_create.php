@@ -28,7 +28,7 @@
                   </select>
                 </div>
                 <div class="form-group">
-                  <label for="">Vote ID --> <a href="<?= base_url() ?>admin/votes_an/position/" target="_blank">check list of votes</a></label>
+                  <label for="">Numéro de vote</label>
                   <input type="text" class="form-control" autocomplete="off" name="vote_id" placeholder="Exemple: 156">
                 </div>
                 <div class="form-group">
