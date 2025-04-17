@@ -34,7 +34,7 @@
   <link rel="stylesheet" href="<?= asset_url() ?>css/dashboard/fixedHeader.dataTables.min.css">
   <link rel="stylesheet" href="<?= asset_url() ?>css/dashboard/buttons.dataTables.min.css">
   <!-- CKeditor -->
-  <script src="https://cdn.ckeditor.com/ckeditor5/26.0.0/classic/ckeditor.js"></script>
+  <link rel="stylesheet" href="<?= asset_url() ?>css/dashboard/ckeditor5.css">
   <!-- ChartJS -->
   <script src="<?= asset_url() ?>js/libraries/chart.js/chart.min.js"></script>
 </head>
