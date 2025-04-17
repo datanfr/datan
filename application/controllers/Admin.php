@@ -376,35 +376,7 @@
       }
 
     }
-
-    public function votes_an_position(){
-      $data = $this->data;
-      $data['title'] = 'Tous les votes_an (position)';
-      $data['votes'] = $this->admin_model->get_votes_an_position();
-
-      // Meta
-      $data['title_meta'] = 'Votes décryptés (position) - Dashboard | Datan';
-
-      // Views
-      $this->load->view('dashboard/header', $data);
-      $this->load->view('dashboard/votes_an', $data);
-      $this->load->view('dashboard/footer');
-    }
-
-    public function votes_an_cohesion(){
-      $data = $this->data;
-      $data['title'] = 'Tous les votes_an (cohesion)';
-      $data['votes'] = $this->admin_model->get_votes_an_cohesion();
-
-      // Meta
-      $data['title_meta'] = 'Votes décryptés (cohesion) - Dashboard | Datan';
-
-      // Views
-      $this->load->view('dashboard/header', $data);
-      $this->load->view('dashboard/votes_an', $data);
-      $this->load->view('dashboard/footer');
-    }
-
+    
     public function socialmedia($page, $id){
       $data = $this->data;
 
