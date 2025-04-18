@@ -143,6 +143,8 @@ $route['votes/decryptes'] = 'votes/decryptes//';
 $route['votes/legislature-(:any)/(:any)/(:any)'] = 'votes/all/$1/$2/$3';
 $route['votes/legislature-(:any)/(:any)'] = 'votes/all/$1/$2';
 $route['votes'] = 'votes/index';
+// UPLOAD 
+$route['upload/image'] = 'upload/image';
 // POSTS
 $route['posts/update'] = 'posts/update';
 $route['posts/create'] = 'posts/create';
