@@ -42,6 +42,8 @@
                       }
                     </script>
                     <script type="module">
+                      const csrfTokenName = '<?php echo $this->security->get_csrf_token_name(); ?>';
+                      const csrfTokenValue = '<?php echo $this->security->get_csrf_hash(); ?>';
                       import {
                         ClassicEditor,
                         Essentials,
@@ -63,7 +65,8 @@
                         MediaEmbed,
                         SourceEditing,
                         Undo,
-                        Alignment
+                        Alignment,
+                        SimpleUploadAdapter
                       } from 'ckeditor5';
 
                       ClassicEditor
@@ -88,7 +91,8 @@
                             TableToolbar,
                             MediaEmbed,
                             SourceEditing,
-                            Alignment
+                            Alignment,
+                            SimpleUploadAdapter
                           ],
                           toolbar: [
                             'undo', 'redo', '|',
@@ -108,6 +112,13 @@
                                   rel: 'noopener noreferrer'
                                 }
                               }
+                            }
+                          },
+                          simpleUpload: {
+                            uploadUrl: '<?= base_url() ?>upload/image',
+                            withCredentials: false,
+                            headers: {
+                              'X-CSRF-TOKEN': csrfTokenValue
                             }
                           }
                         }).then( editor => {
