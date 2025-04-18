@@ -156,7 +156,7 @@
             <li class="nav-item has-treeview">
               <a href="#" class="nav-link">
                 <p>
-                  Tableaux social_media
+                  Tableaux analyse
                   <i class="fas fa-angle-left right"></i>
                 </p>
               </a>
