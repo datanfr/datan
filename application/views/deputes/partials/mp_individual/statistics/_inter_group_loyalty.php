@@ -52,13 +52,11 @@
 <div class="card card-statistiques bloc-proximity my-4">
   <div class="card-body">
     <div class="row">
-      <div class="col-2">
+      <div class="col-12 d-flex flex-row align-items-center">
         <div class="icon">
           <?= file_get_contents(base_url() . '/assets/imgs/icons/group.svg') ?>
         </div>
-      </div>
-      <div class="col-10">
-        <h3 class="text-uppercase">Proximité avec les groupes politiques
+        <h3 class="ml-3 text-uppercase">Proximité avec les groupes politiques
           <a tabindex="0" role="button" data-toggle="popover" data-trigger="focus" aria-label="Tooltip proximité" class="no-decoration popover_focus" title="Proximité avec les groupes politiques" data-content="Le <b>taux de proximité avec les groupes</b> représente le pourcentage de fois où un député vote la même chose qu'un groupe parlementaire. Chaque groupe se voit attribuer pour chaque vote une <i>position majoritaire</i>, en fonction du vote de ses membres. Cette position peut soit être 'pour', 'contre', ou 'absention'. Pour chaque vote, nous déterminons si le ou la députée a voté la même chose que la position majoritaire d'un groupe. Le taux de proximité est le pourcentage de fois où le ou la députée a voté de la même façon qu'un groupe.<br><br>Par exemple, si le taux est de 75%, cela signifie que <?= $title ?> a voté avec ce groupe dans 75% des cas.<br><br>Pour plus d'information, <a href='<?= base_url() ?>statistiques/aide#proximity' target='_blank'>cliquez ici</a>." id="popover_focus"><?= file_get_contents(asset_url() . "imgs/icons/question_circle.svg") ?></a>
         </h3>
       </div>
