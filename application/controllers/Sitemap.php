@@ -9,7 +9,6 @@ class Sitemap extends CI_Controller {
     $this->load->model('groupes_model');
     $this->load->model('votes_model');
     $this->load->model('departement_model');
-    $this->load->model('category_model');
     $this->load->model('post_model');
     $this->load->model('fields_model');
     $this->load->model('parties_model');
@@ -250,7 +249,7 @@ class Sitemap extends CI_Controller {
 
   /* 10. sitemap-categories-1.xml */
   function categories(){
-    $results = $this->category_model->get_active_categories();
+    $results = $this->blog->get_categories();
 
     $urls = array();
     foreach ($results as $result) {
