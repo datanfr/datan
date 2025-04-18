@@ -5,18 +5,27 @@
     </h1>
   <?php endif; ?>
   <?php
-  $allViews = [
-    'positions-importantes' => 'deputes/partials/mp_individual/_key_positions.php',
-    'derniers-votes' => 'deputes/partials/mp_individual/_votes.php',
-    'election' => 'deputes/partials/mp_individual/_election.php',
-    'comportement-politique' => 'deputes/partials/mp_individual/statistics/_index.php'
-  ];
-  foreach ($categories as $category) {
-    if (isset($allViews[$category])) {
-      $this->view($allViews[$category]);
-    }
-  }
-  ?>
+
+foreach ($views_to_load as $view): ?>
+  <?php if (strpos($view, 'statistics') !== false && !$title_displayed && $has_comportement_subcategories): ?>
+    <div class="bloc-statistiques mt-5">
+      <?php if (!isset($iframe_title_visibility) || $iframe_title_visibility !== 'hidden'): ?>
+        <h2 class="mb-3 title-center">
+          Son comportement politique
+          <?php if ($depute['legislature'] != legislature_current()): ?>
+            (<?= $depute['legislature'] ?><sup>e</sup> législature)
+          <?php endif; ?>
+        </h2>
+      <?php endif; ?>
+    </div>
+    <?php $title_displayed = true; ?>
+  <?php endif; ?>
+
+  <?php $this->view($view); ?>
+<?php endforeach; ?>
+
+
+
   <p class="datan-credit">
     <img src="/assets/imgs/favicon/datan_favicon.svg" alt="logo de Datan" class="datan-logo">
     Ce service est proposé par le site <a href="https://datan.fr" target="_blank">datan.fr</a>

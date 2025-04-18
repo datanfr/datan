@@ -9,8 +9,6 @@
       $this->load->model('dashboardMP_model');
       $this->load->model('votes_model');
       $this->password_model->security_only_mp();
-
-      $this->session->set_userdata('mpId', 'PA841215'); // A virer ensuite
       $this->data = array(
         'type' => 'mp',
         'username' => $this->session->userdata('username'),
@@ -349,13 +347,22 @@
     public function generate_iframe() 
     {
       $data = $this->data;
+  //  var_dump($data['depute']['nameUrl']);
+  // echo '<pre>';
+  //    var_dump($data['depute']['nameUrl']);
+  //  echo  '</pre>';
+
+   $data['name_url'] = $data['depute']['nameUrl'];
+  
 
       // Meta
-      $data['title_meta'] = 'Explications de vote - Dashboard | Datan';
+      $data['title_meta'] = 'Générateur d\'iframe - Dashboard | Datan';
       $data['breadcrumb'] = array(
         array('name' => 'Dashboard', 'url' => base_url().'dashboard', 'active' => FALSE),
-        array('name' => 'Explications de vote', 'url' => base_url().'dashboard/iframe', 'active' => TRUE),
+        array('name' => 'Générer un iframe', 'url' => base_url().'dashboard/iframe', 'active' => TRUE),
       );
+
+      $data['title'] = "Générer un iframe";
 
       $data['js_to_load'] = array('datan/dashboard-mp-social-share');
 
