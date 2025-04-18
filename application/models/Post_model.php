@@ -2,33 +2,52 @@
   class Post_model extends CI_Model{
     public function __construct(){
       $this->load->database();
+      $this->load->library('blog');
     }
 
-    public function get_posts($slug, $user, $category){
+    public function get_posts($slug, $user, $category_slug){
       if (empty($slug)) {
-        $sql = 'SELECT p.id, date_format(created_at, "%d %M %Y") as created_at_fr, c.name AS category_name, c.slug AS category_slug, p.id, p.user_id, p.title, p.slug, p.body, p.created_at, p.modified_at, p.state, p.category_id, p.image_name
+        $sql = 'SELECT p.id, date_format(created_at, "%d %M %Y") as created_at_fr, p.id, p.user_id, p.title, p.slug, p.body, p.created_at, p.modified_at, p.state, p.category_id, p.image_name
           FROM posts p
-          LEFT JOIN categories c ON p.category_id = c.id
         ';
         if ($user != "admin" && $user != "writer") {
           $sql .= 'WHERE state = "published"';
         }
         $sql .= 'ORDER BY created_at DESC';
         $query = $this->db->query($sql);
+        $posts = $query->result_array();
 
-        return $query->result_array();
+        foreach ($posts as &$post) {
+          $cat = $this->blog->get_category_by_id($post['category_id']);
+          $post['category_name'] = $cat['name'] ?? '';
+          $post['category_slug'] = $cat['slug'] ?? '';
+        }
+
+        return $posts;
       } else {
-        $sql = 'SELECT p.id, date_format(created_at, "%d %M %Y") as created_at_fr, c.name AS category_name, c.slug AS category_slug, p.id, p.user_id, p.title, p.slug, p.body, p.created_at, p.modified_at, p.state, p.category_id, p.image_name
+        $category = $this->blog->get_category_by_slug($category_slug);
+        $sql = 'SELECT p.id, date_format(created_at, "%d %M %Y") as created_at_fr, p.id, p.user_id, p.title, p.slug, p.body, p.created_at, p.modified_at, p.state, p.category_id, p.image_name
           FROM posts p
-          LEFT JOIN categories c ON p.category_id = c.id
-          WHERE p.slug = ? AND c.slug = ?
+          WHERE p.slug = ? AND p.category_id = ?
         ';
         if ($user != "admin" && $user != "writer") {
           $sql .= ' AND p.state = "published"';
         }
-        $query = $this->db->query($sql, array($slug, $category));
+        $query = $this->db->query($sql, array($slug, $category['id']));
+        $post = $query->row_array();
 
-        return $query->row_array();
+        if ($post) {
+          $cat = $this->blog->get_category_by_id($post['category_id']);
+
+          if (!$cat || $cat['slug'] !== $category_slug) {
+              return null;
+          }
+
+          $post['category_name'] = $cat['name'];
+          $post['category_slug'] = $cat['slug'];
+      }
+
+        return $post;
       }
     }
 
@@ -37,27 +56,39 @@
     }
 
     public function get_post_edit($slug){
-      $sql = 'SELECT p.id, date_format(created_at, "%d %M %Y") as created_at_fr, c.name AS category_name, c.slug AS category_slug, p.id, p.user_id, p.title, p.slug, p.body, p.created_at, p.state, p.category_id, p.image_name
+      $sql = 'SELECT p.id, date_format(created_at, "%d %M %Y") as created_at_fr, p.id, p.user_id, p.title, p.slug, p.body, p.created_at, p.state, p.category_id, p.image_name
         FROM posts p
-        LEFT JOIN categories c ON p.category_id = c.id
         WHERE p.slug = ?
         LIMIT 1
       ';
       $query = $this->db->query($sql, $slug);
+      $post = $query->row_array();
 
-      return $query->row_array();
+      if ($post) {
+        $cat = $this->blog->get_category_by_id($post['category_id']);
+        $post['category_name'] = $cat['name'] ?? 'Inconnue';
+        $post['category_slug'] = $cat['slug'] ?? '';
+    }
+
+      return $post;
     }
 
     public function get_last_posts($limit = FALSE){
-      $this->db->select('p.id, DATE_FORMAT(p.created_at, "%d %M %Y") as created_at_fr, p.title, p.body, p.slug, p.state, c.slug AS category_slug, c.name AS category_name, p.image_name');
-      $this->db->join('categories c', 'p.category_id = c.id', 'left');
+      $this->db->select('p.id, p.category_id, DATE_FORMAT(p.created_at, "%d %M %Y") as created_at_fr, p.title, p.body, p.slug, p.state, p.image_name');
       $this->db->where('p.state', 'published');
       $this->db->order_by('p.created_at', 'DESC');
       if ($limit){
         $this->db->limit($limit);
       }
-      
-      return $this->db->get('posts p')->result_array();
+      $posts = $this->db->get('posts p')->result_array();
+
+      foreach ($posts as &$post) {
+        $category = $this->blog->get_category_by_id($post['category_id']);
+        $post['category_name'] = $category['name'] ?? 'Inconnue';
+        $post['category_slug'] = $category['slug'] ?? 'inconnue';
+      }
+
+      return $posts;
     }
 
     public function create_post(){
@@ -207,15 +238,20 @@
     }
 
     public function get_posts_by_category($category){
-      $sql = ' SELECT p.id, date_format(created_at, "%d %M %Y") as created_at_fr, p.title, p.body, p.user_id, c.name AS category_name, c.slug AS category_slug, p.slug, p.state, p.image_name
+      $sql = ' SELECT p.id, date_format(created_at, "%d %M %Y") as created_at_fr, p.title, p.body, p.user_id, p.slug, p.state, p.image_name
         FROM posts p
-        JOIN categories c ON p.category_id = c.id AND c.slug = ?
-        WHERE p.state = "published"
+        WHERE p.state = "published" AND p.category_id = ?
         ORDER BY created_at DESC
       ';
-      $query = $this->db->query($sql, $category);
+      $query = $this->db->query($sql, $category['id']);
+      $posts = $query->result_array();
 
-      return $query->result_array();
+      foreach ($posts as &$post) {
+        $post['category_name'] = $category['name'];
+        $post['category_slug'] = $category['slug'];
+      }
+
+      return $posts;
     }
 
     private function skip_accents( $str, $charset='utf-8' ) {
