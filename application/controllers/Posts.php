@@ -5,7 +5,6 @@
     public function __construct() {
       parent::__construct();
       $this->load->model('post_model');
-      $this->load->model('category_model');
       $this->load->model('fields_model');
       //$this->password_model->security_password(); Former login protection
     }
@@ -15,7 +14,7 @@
       $user_type = $this->session->userdata('type');
       $data['user'] = $user_type;
       $data['posts'] = $this->post_model->get_posts(NULL, $user_type, NULL);
-      $data['categories'] = $this->category_model->get_active_categories();
+      $data['categories'] = $categories = $this->blog->get_categories();
 
       // Page elements 
       $data['page'] = 'index';
@@ -56,12 +55,11 @@
 
     // VIEW CATEGORY PAGE
     public function category($category){
-      $data['category'] = $this->category_model->get_category($category);
-      $data['posts'] = $this->post_model->get_posts_by_category($category);
+      $data['category'] = $this->blog->get_category_by_slug($category);
+      $data['posts'] = $this->post_model->get_posts_by_category($data['category']);
       if (empty($data['posts'])) {
         show_404($this->functions_datan->get_404_infos());
       }
-      $data['categories'] = $this->category_model->get_active_categories();
       $user_type = $this->session->userdata('type');
       $data['user'] = $user_type;
 
@@ -114,7 +112,6 @@
       if (empty($data['post'])) {
         show_404($this->functions_datan->get_404_infos());
       }
-      $data['categories'] = $this->category_model->get_active_categories();
       $data['post']['image_url'] = !empty($data['post']['image_name']) 
         ? $data['post']['image_name'] 
         : 'img_post_' . $data['post']['id'];
@@ -163,7 +160,7 @@
       $data['title'] = 'Créer un post de blog';
       $data['title_meta'] = $data['title'] . ' - Dashboard | Datan';
 
-      $data['categories'] = $this->category_model->get_categories();
+      $data['categories'] = $this->blog->get_categories();
 
       $this->form_validation->set_rules('title', 'Titre', 'required');
       $this->form_validation->set_rules('body', 'Texte', 'required');
@@ -213,7 +210,7 @@
       if (empty($data['post'])) {
         show_404($this->functions_datan->get_404_infos());
       }
-      $data['categories'] = $this->category_model->get_categories();
+      $data['categories'] = $this->blog->get_categories();
       $data['title'] = 'Editer un post';
       $data['title_meta'] = $data['title'] . ' - Dashboard | Datan';
 
