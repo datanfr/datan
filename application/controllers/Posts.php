@@ -6,7 +6,6 @@
       parent::__construct();
       $this->load->model('post_model');
       $this->load->model('fields_model');
-      //$this->password_model->security_password(); Former login protection
     }
 
     // VIEW ALL POSTS
@@ -154,7 +153,7 @@
     }
 
     public function create() {
-      $this->password_model->security();
+      $this->password_model->security_only_team();
       $data['type'] = 'team';
       $data['username'] = $this->session->userdata('username');
       $data['title'] = 'Créer un post de blog';
@@ -184,6 +183,7 @@
 
     // DELETE A POST
     public function delete($id){
+      $this->password_model->security_only_team();
       $user_type = $this->session->userdata('type');
       $data['type'] = 'team';
       $post = $this->post_model->get_post_by_id($id);
@@ -202,7 +202,7 @@
 
     // EDIT A POST (display page)
     public function edit($slug){
-      $this->password_model->security();
+      $this->password_model->security_only_team();
       $data['type'] = 'team';
       $data['username'] = $this->session->userdata('username');
       $user_type = $this->session->userdata('type');
@@ -227,7 +227,7 @@
 
     // UPDATE A POST
     public function update(){
-      $this->password_model->security();
+      $this->password_model->security_only_team();
       $data['type'] = 'team';
       
       $success = $this->post_model->update_post();
