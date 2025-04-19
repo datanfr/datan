@@ -49,8 +49,6 @@
                         Italic,
                         Heading,
                         Link,
-                        List,
-                        Indent,
                         SourceEditing,
                         Undo,
                         Alignment,
@@ -67,8 +65,6 @@
                             Bold,
                             Italic,
                             Link,
-                            List,
-                            Indent,
                             SourceEditing,
                             Alignment,
                             SimpleUploadAdapter
@@ -77,7 +73,6 @@
                             'undo', 'redo', '|',
                             'heading', '|',
                             'bold', 'italic', 'alignment', '|',
-                            'bulletedList', 'numberedList', 'outdent', 'indent', '|',
                             'link', '|',
                             'sourceEditing'
                           ],
