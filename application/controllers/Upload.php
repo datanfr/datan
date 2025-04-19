@@ -7,8 +7,7 @@
     }
 
     public function image(){
-
-      
+      $this->password_model->security_only_team();
 
       if (isset($_FILES['upload']['name'])) {
         $config['upload_path'] = './assets/imgs/posts/inside/';
