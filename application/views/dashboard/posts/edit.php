@@ -34,28 +34,94 @@
                   <div class="form-group">
                     <label>Corps du post</label>
                     <textarea id="editor1" name="body" class="form-control"><?= $post['body'] ?></textarea>
-                    <script>
+                    <script type="importmap">
+                      {
+                        "imports": {
+                          "ckeditor5": "<?= asset_url() ?>js/libraries/ckeditor/ckeditor5.js",
+                          "ckeditor5/": "<?= asset_url() ?>js/libraries/ckeditor/"
+                        }
+                      }
+                    </script>
+                    <script type="module">
+                      import {
+                        ClassicEditor,
+                        Essentials,
+                        Paragraph,
+                        Bold,
+                        Italic,
+                        Heading,
+                        Link,
+                        List,
+                        Indent,
+                        Image,
+                        ImageToolbar,
+                        ImageUpload,
+                        ImageCaption,
+                        ImageStyle,
+                        BlockQuote,
+                        Table,
+                        TableToolbar,
+                        MediaEmbed,
+                        SourceEditing,
+                        Undo,
+                        Alignment,
+                        SimpleUploadAdapter
+                      } from 'ckeditor5';
+
                       ClassicEditor
-                              .create( document.querySelector( '#editor1' ), {
-                                link: {
-                                  decorators: {
-                                    isExternal: {
-                                      mode: 'automatic',
-                                      callback: url => (!url.startsWith( 'https://datan.fr' )),
-                                      attributes: {
-                                        target: '_blank',
-                                        rel: 'noopener noreferrer'
-                                      }
-                                    }
-                                  }
+                        .create( document.querySelector( '#editor1' ), {
+                          licenseKey: 'GPL',
+                          plugins: [
+                            Essentials,
+                            Paragraph,
+                            Heading,
+                            Bold,
+                            Italic,
+                            Link,
+                            List,
+                            Indent,
+                            Image,
+                            ImageToolbar,
+                            ImageUpload,
+                            ImageCaption,
+                            ImageStyle,
+                            BlockQuote,
+                            Table,
+                            TableToolbar,
+                            MediaEmbed,
+                            SourceEditing,
+                            Alignment,
+                            SimpleUploadAdapter
+                          ],
+                          toolbar: [
+                            'undo', 'redo', '|',
+                            'heading', '|',
+                            'bold', 'italic', 'alignment', '|',
+                            'bulletedList', 'numberedList', 'outdent', 'indent', '|',
+                            'link', 'imageUpload', 'blockQuote', 'insertTable', 'mediaEmbed', '|',
+                            'sourceEditing'
+                          ],
+                          link: {
+                            decorators: {
+                              isExternal: {
+                                mode: 'automatic',
+                                callback: url => (!url.startsWith( 'https://datan.fr' )),
+                                attributes: {
+                                  target: '_blank',
+                                  rel: 'noopener noreferrer'
                                 }
-                              } )
-                              .then( editor => {
-                                      console.log( editor );
-                              } )
-                              .catch( error => {
-                                      console.error( error );
-                              } );
+                              }
+                            }
+                          },
+                          simpleUpload: {
+                            uploadUrl: '<?= base_url() ?>upload/image',
+                            withCredentials: false,
+                          }
+                        }).then( editor => {
+                          window.editor = editor;
+                        }).catch( error => {
+                          console.error( error );
+                        });
                     </script>
                   </div>
                   <div class="form-group">

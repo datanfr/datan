@@ -42,8 +42,6 @@
                       }
                     </script>
                     <script type="module">
-                      const csrfTokenName = '<?php echo $this->security->get_csrf_token_name(); ?>';
-                      const csrfTokenValue = '<?php echo $this->security->get_csrf_hash(); ?>';
                       import {
                         ClassicEditor,
                         Essentials,
@@ -117,9 +115,6 @@
                           simpleUpload: {
                             uploadUrl: '<?= base_url() ?>upload/image',
                             withCredentials: false,
-                            headers: {
-                              'X-CSRF-TOKEN': csrfTokenValue
-                            }
                           }
                         }).then( editor => {
                           window.editor = editor;
