@@ -34,29 +34,77 @@
                 <div class="form-group">
                   <label>Description</label>
                   <textarea id="editor1" name="description" class="form-control" placeholder="Description du vote"></textarea>
-                  <script>
-                    ClassicEditor
-                            .create( document.querySelector( '#editor1' ), {
-                              link: {
-                                decorators: {
-                                  isExternal: {
-                                    mode: 'automatic',
-                                    callback: url => (!url.startsWith( 'https://datan.fr' )),
-                                    attributes: {
-                                      target: '_blank',
-                                      rel: 'noopener noreferrer'
-                                    }
-                                  }
+                  <script type="importmap">
+                      {
+                        "imports": {
+                          "ckeditor5": "<?= asset_url() ?>js/libraries/ckeditor/ckeditor5.js",
+                          "ckeditor5/": "<?= asset_url() ?>js/libraries/ckeditor/"
+                        }
+                      }
+                    </script>
+                    <script type="module">
+                      import {
+                        ClassicEditor,
+                        Essentials,
+                        Paragraph,
+                        Bold,
+                        Italic,
+                        Heading,
+                        Link,
+                        List,
+                        Indent,
+                        SourceEditing,
+                        Undo,
+                        Alignment,
+                        SimpleUploadAdapter
+                      } from 'ckeditor5';
+
+                      ClassicEditor
+                        .create( document.querySelector( '#editor1' ), {
+                          licenseKey: 'GPL',
+                          plugins: [
+                            Essentials,
+                            Paragraph,
+                            Heading,
+                            Bold,
+                            Italic,
+                            Link,
+                            List,
+                            Indent,
+                            SourceEditing,
+                            Alignment,
+                            SimpleUploadAdapter
+                          ],
+                          toolbar: [
+                            'undo', 'redo', '|',
+                            'heading', '|',
+                            'bold', 'italic', 'alignment', '|',
+                            'bulletedList', 'numberedList', 'outdent', 'indent', '|',
+                            'link', '|',
+                            'sourceEditing'
+                          ],
+                          link: {
+                            decorators: {
+                              isExternal: {
+                                mode: 'automatic',
+                                callback: url => (!url.startsWith( 'https://datan.fr' )),
+                                attributes: {
+                                  target: '_blank',
+                                  rel: 'noopener noreferrer'
                                 }
                               }
-                            } )
-                            .then( editor => {
-                                    console.log( editor );
-                            } )
-                            .catch( error => {
-                                    console.error( error );
-                            } );
-                  </script>
+                            }
+                          },
+                          simpleUpload: {
+                            uploadUrl: '<?= base_url() ?>upload/image',
+                            withCredentials: false,
+                          }
+                        }).then( editor => {
+                          window.editor = editor;
+                        }).catch( error => {
+                          console.error( error );
+                        });
+                    </script>
                 </div>
                 <div class="form-group">
                   <label for="">Categorie</label>
@@ -77,14 +125,6 @@
                 </div>
                 <button type="submit" class="btn btn-primary">Submit</button>
             </form>
-            <!--
-              <p class="card-text">
-                Some quick example text to build on the card title and make up the bulk of the card's
-                content.
-              </p>
-              <a href="#" class="card-link">Card link</a>
-              <a href="#" class="card-link">Another link</a>
-            -->
             </div>
           </div>
         </div>
