@@ -11,7 +11,6 @@
       $this->load->model('elections_model');
       $this->load->model('jobs_model');
       $this->load->model('parrainages_model');
-      //$this->password_model->security_password(); Former login protection
     }
 
     private function get_statistiques($data, $legislature, $mpId, $groupe_id){

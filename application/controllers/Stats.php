@@ -8,7 +8,6 @@
       $this->load->model('depute_edito');
       $this->load->model('votes_model');
       $this->load->model('jobs_model');
-      //$this->password_model->security_password(); Former login protection
     }
 
     public function index(){

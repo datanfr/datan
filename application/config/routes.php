@@ -62,10 +62,6 @@ $route['admin/elections/candidat/delete/(:any)'] = 'admin/delete_candidat/$1';
 $route['admin/votes/create'] = 'admin/create_vote';
 $route['admin/votes/modify/(:any)'] = 'admin/modify_vote/$1';
 $route['admin/votes/delete/(:any)'] = 'admin/delete_vote/$1';
-$route['admin/votes_an/position'] = 'admin/votes_an_position';
-$route['admin/votes_an/cohesion'] = 'admin/votes_an_cohesion';
-$route['admin/votes_an/majo_lost'] = 'admin/votes_an_majo_lost';
-$route['admin/analyses/(:any)'] = 'admin/analyses/$1';
 $route['admin/socialmedia/historique/(:any)'] = 'admin/socialmedia/historique/$1';
 $route['admin/socialmedia/(:any)'] = 'admin/socialmedia/$1/NULL';
 $route['admin/faq'] = 'admin/faq_list';
@@ -147,10 +143,13 @@ $route['votes/decryptes'] = 'votes/decryptes//';
 $route['votes/legislature-(:any)/(:any)/(:any)'] = 'votes/all/$1/$2/$3';
 $route['votes/legislature-(:any)/(:any)'] = 'votes/all/$1/$2';
 $route['votes'] = 'votes/index';
+// UPLOAD 
+$route['upload/image'] = 'upload/image';
 // POSTS
 $route['posts/update'] = 'posts/update';
 $route['posts/create'] = 'posts/create';
 $route['posts/edit/(:any)'] = 'posts/edit/$1';
+$route['posts/delete/(:any)'] = 'posts/delete/$1';
 $route['blog/categorie/(:any)'] = 'posts/category/$1';
 $route['blog/(:any)/(:any)'] = 'posts/view/$2/$1';
 $route['blog'] = 'posts/index';
