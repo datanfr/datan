@@ -4,7 +4,6 @@
       parent::__construct();
       $this->load->model('parties_model');
       $this->load->model('groupes_model');
-      //$this->password_model->security_password(); Former login protection
     }
 
     //INDEX - Homepage with all parties//

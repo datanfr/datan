@@ -12,7 +12,6 @@
       $this->load->model('fields_model');
       $this->load->model('jobs_model');
       $this->load->model('legislature_model');
-      //$this->password_model->security_password(); Former login protection
       setlocale(LC_TIME, 'french');
     }
 
