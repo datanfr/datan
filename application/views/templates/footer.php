@@ -86,7 +86,7 @@
                 </div>
                 <div class="d-flex flex-column mx-1">
                   <p>
-                    <a href="<?= base_url(); ?>blog" class="no-decoration underline">Actualités</a>
+                    <a href="<?= base_url(); ?>blog" class="no-decoration underline">Blog</a>
                   </p>
                   <p>
                     <a href="<?= base_url(); ?>parrainages-2022" class="no-decoration underline">Parrainages 2022</a>

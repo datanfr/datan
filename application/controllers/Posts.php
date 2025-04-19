@@ -5,9 +5,7 @@
     public function __construct() {
       parent::__construct();
       $this->load->model('post_model');
-      $this->load->model('category_model');
       $this->load->model('fields_model');
-      //$this->password_model->security_password(); Former login protection
     }
 
     // VIEW ALL POSTS
@@ -15,7 +13,7 @@
       $user_type = $this->session->userdata('type');
       $data['user'] = $user_type;
       $data['posts'] = $this->post_model->get_posts(NULL, $user_type, NULL);
-      $data['categories'] = $this->category_model->get_active_categories();
+      $data['categories'] = $categories = $this->blog->get_categories();
 
       // Page elements 
       $data['page'] = 'index';
@@ -56,12 +54,11 @@
 
     // VIEW CATEGORY PAGE
     public function category($category){
-      $data['category'] = $this->category_model->get_category($category);
-      $data['posts'] = $this->post_model->get_posts_by_category($category);
+      $data['category'] = $this->blog->get_category_by_slug($category);
+      $data['posts'] = $this->post_model->get_posts_by_category($data['category']);
       if (empty($data['posts'])) {
         show_404($this->functions_datan->get_404_infos());
       }
-      $data['categories'] = $this->category_model->get_active_categories();
       $user_type = $this->session->userdata('type');
       $data['user'] = $user_type;
 
@@ -114,7 +111,9 @@
       if (empty($data['post'])) {
         show_404($this->functions_datan->get_404_infos());
       }
-      $data['categories'] = $this->category_model->get_active_categories();
+      $data['post']['image_url'] = !empty($data['post']['image_name']) 
+        ? $data['post']['image_name'] 
+        : 'img_post_' . $data['post']['id'];
 
       // Breadcrumb
       $data['breadcrumb'] = array(
@@ -154,16 +153,16 @@
     }
 
     public function create() {
-      $this->password_model->security();
+      $this->password_model->security_only_team();
       $data['type'] = 'team';
       $data['username'] = $this->session->userdata('username');
       $data['title'] = 'Créer un post de blog';
       $data['title_meta'] = $data['title'] . ' - Dashboard | Datan';
 
-      $data['categories'] = $this->category_model->get_categories();
+      $data['categories'] = $this->blog->get_categories();
 
-      $this->form_validation->set_rules('title', 'Title', 'required');
-      $this->form_validation->set_rules('body', 'Body', 'required');
+      $this->form_validation->set_rules('title', 'Titre', 'required');
+      $this->form_validation->set_rules('body', 'Texte', 'required');
 
       if ($this->form_validation->run() === FALSE) {
         $this->load->view('dashboard/header', $data);
@@ -171,9 +170,11 @@
         $this->load->view('dashboard/footer');
       } else {
 
-        $this->post_model->create_post();
-
-        // Set message
+        $success = $this->post_model->create_post();
+        if (isset($success['error'])) {
+          $this->session->set_flashdata('error', $success['error']);
+          redirect('posts/create');
+        }
         $this->session->set_flashdata('post_created', 'Votre post a été créé');
         redirect('blog');
       }
@@ -182,24 +183,26 @@
 
     // DELETE A POST
     public function delete($id){
+      $this->password_model->security_only_team();
       $user_type = $this->session->userdata('type');
       $data['type'] = 'team';
-      if ($user_type != "admin") {
+      $post = $this->post_model->get_post_by_id($id);
+      if ($user_type != 'admin') {
         redirect();
       } else {
         $this->password_model->security_only_admin();
 
-        $this->post_model->delete_post($id);
+        $this->post_model->delete_post($id, $post['image_name']);
 
         $this->session->set_flashdata('post_deleted', 'Votre post a été supprimé');
 
-        redirect();
+        redirect('blog');
       }
     }
 
     // EDIT A POST (display page)
     public function edit($slug){
-      $this->password_model->security();
+      $this->password_model->security_only_team();
       $data['type'] = 'team';
       $data['username'] = $this->session->userdata('username');
       $user_type = $this->session->userdata('type');
@@ -207,12 +210,12 @@
       if (empty($data['post'])) {
         show_404($this->functions_datan->get_404_infos());
       }
-      $data['categories'] = $this->category_model->get_categories();
+      $data['categories'] = $this->blog->get_categories();
       $data['title'] = 'Editer un post';
       $data['title_meta'] = $data['title'] . ' - Dashboard | Datan';
 
-      $this->form_validation->set_rules('title', 'Title', 'required');
-      $this->form_validation->set_rules('body', 'Body', 'required');
+      $this->form_validation->set_rules('title', 'Titre', 'required');
+      $this->form_validation->set_rules('body', 'Texte', 'required');
 
       if ($this->form_validation->run() === FALSE) {
         $this->load->view('dashboard/header', $data);
@@ -224,13 +227,17 @@
 
     // UPDATE A POST
     public function update(){
-      $this->password_model->security();
+      $this->password_model->security_only_team();
       $data['type'] = 'team';
-      $this->post_model->update_post();
-
+      
+      $success = $this->post_model->update_post();
+      
+      if (isset($success['error'])) {
+        $this->session->set_flashdata('error', $success['error']);
+        redirect('posts/edit/' . $success['slug']);
+      }
       // Set message
       $this->session->set_flashdata('post_updated', 'Votre post a été modifié');
-
       redirect('blog');
     }
   }

@@ -3,7 +3,7 @@
 
     public function __construct() {
       parent::__construct();
-      $this->password_model->security();
+      $this->password_model->security_only_team();
     }
 
     // Delete all cache

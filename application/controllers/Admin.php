@@ -376,73 +376,7 @@
       }
 
     }
-
-    public function votes_an_position(){
-      $data = $this->data;
-      $data['title'] = 'Tous les votes_an (position)';
-      $data['votes'] = $this->admin_model->get_votes_an_position();
-
-      // Meta
-      $data['title_meta'] = 'Votes décryptés (position) - Dashboard | Datan';
-
-      // Views
-      $this->load->view('dashboard/header', $data);
-      $this->load->view('dashboard/votes_an', $data);
-      $this->load->view('dashboard/footer');
-    }
-
-    public function votes_an_cohesion(){
-      $data = $this->data;
-      $data['title'] = 'Tous les votes_an (cohesion)';
-      $data['votes'] = $this->admin_model->get_votes_an_cohesion();
-
-      // Meta
-      $data['title_meta'] = 'Votes décryptés (cohesion) - Dashboard | Datan';
-
-      // Views
-      $this->load->view('dashboard/header', $data);
-      $this->load->view('dashboard/votes_an', $data);
-      $this->load->view('dashboard/footer');
-    }
-
-    public function analyses($url){
-      $data = $this->data;
-      if ($url == "class_loyaute_group") {
-        if (!isset($_GET["group"])) {
-          echo "Indiquez le nom du groupe (lrem, fi, etc.) après ?group=lrem dans l'URL ";
-        } else {
-          $libelle = $_GET["group"];
-          $data['title'] = 'Classement loyauté pour le groupe ' . $libelle;
-
-          $data['table'] = $this->admin_model->get_classement_loyaute_group($libelle);
-
-          // Meta
-          $data['title_meta'] = $data['title'] . ' - Dashboard | Datan';
-
-          // Views
-          $this->load->view('dashboard/header', $data);
-          $this->load->view('dashboard/analysis/table_all', $data);
-          $this->load->view('dashboard/footer');
-      }
-      } else {
-        show_404($this->functions_datan->get_404_infos());
-      }
-    }
-
-    public function votes_an_majo_lost(){
-      $data = $this->data;
-      $data['title'] = 'Votes où majorité présidentielle a perdu';
-      $data['votes'] = $this->admin_model->get_votes_majo_lost();
-
-      // Meta
-      $data['title_meta'] = $data['title'] . ' - Dashboard | Datan';
-
-      // Views
-      $this->load->view('dashboard/header', $data);
-      $this->load->view('dashboard/analysis/table', $data);
-      $this->load->view('dashboard/footer');
-    }
-
+    
     public function socialmedia($page, $id){
       $data = $this->data;
 
