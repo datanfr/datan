@@ -10,7 +10,6 @@
       $this->load->model('city_model');
       $this->load->model('post_model');
       $this->load->model('elections_model');
-      //$this->password_model->security_password(); Former login protection
     }
 
     public function index() {
