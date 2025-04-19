@@ -9,7 +9,6 @@
       $this->load->model('organes_model');
       $this->load->model('captcha_model');
       $this->load->model('exposes_model');
-      //$this->password_model->security_password(); Former login protection
     }
 
     // Page = datan.fr/votes

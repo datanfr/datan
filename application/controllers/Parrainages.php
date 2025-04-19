@@ -3,7 +3,6 @@
     public function __construct() {
       parent::__construct();
       $this->load->model('parrainages_model');
-      //$this->password_model->security_password(); Former login protection
     }
 
     public function index(){
