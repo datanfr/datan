@@ -131,8 +131,8 @@
                   <div class="form-group">
                     <label for="">Categorie</label>
                     <select class="form-control" name="category_id">
-                      <?php foreach ($categories as $category): ?>
-                        <option value="<?= $category['id'] ?>"><?= $category['name'] ?></option>
+                      <?php foreach ($categories as $id => $category): ?>
+                        <option value="<?= $id ?>"><?= $category['name'] ?></option>
                       <?php endforeach; ?>
                     </select>
                   </div>
@@ -148,7 +148,7 @@
                     </div>
                     <button type="button" id="remove_image_png" class="btn btn-danger mt-2" style="display: none;">Supprimer l'image</button>
                   </div>
-                  <button type="submit" class="btn btn-primary">Submit</button>
+                  <button type="submit" class="btn btn-primary mt-3">Submit</button>
                 </form>
               </div>
             </div>
