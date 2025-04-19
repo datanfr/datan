@@ -62,8 +62,8 @@
                     <label for="">Categorie</label>
                     <select class="form-control" name="category_id">
                       <option value="<?= $post['category_id'] ?>" selected="selected">Selected: <?= $post['category_name'] ?></option>
-                      <?php foreach ($categories as $category): ?>
-                        <option value="<?= $category['id'] ?>"><?= $category['name'] ?></option>
+                      <?php foreach ($categories as $id => $category): ?>
+                        <option value="<?= $id ?>"><?= $category['name'] ?></option>
                       <?php endforeach; ?>
                     </select>
                   </div>
