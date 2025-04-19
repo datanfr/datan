@@ -1,14 +1,9 @@
 <?php
   class Password_model extends CI_Model {
+    
     public function security_password(){
       if (!$this->session->userdata('logged_in')) {
         redirect('login');
-      }
-    }
-
-    public function security(){
-      if (empty($this->session->userdata('type'))) {
-        show_404();
       }
     }
 

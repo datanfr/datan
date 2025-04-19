@@ -49,6 +49,9 @@ RUN apt-get update && apt-get install -y \
     wget \
     xdg-utils \
     npm \
+    libmagickwand-dev --no-install-recommends \
+    && pecl install imagick \
+    && docker-php-ext-enable imagick \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
@@ -80,7 +83,7 @@ WORKDIR /var/www/html
 COPY composer.json composer.lock ./
 RUN composer install --no-scripts --no-autoloader
 
-COPY package.json package-lock.json ./
+COPY package.json ./
 RUN npm install \
     && npm install grunt-contrib-sass --save-dev \
     && npm install --save-dev sass \
@@ -105,6 +108,7 @@ ENV DATABASE_HOST=${DATABASE_HOST} \
 
 # Setup entrypoint
 COPY conf/entrypoint.sh /
+RUN sed -i 's/\r$//' /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
 ENTRYPOINT ["/entrypoint.sh"]

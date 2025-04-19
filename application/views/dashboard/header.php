@@ -34,7 +34,7 @@
   <link rel="stylesheet" href="<?= asset_url() ?>css/dashboard/fixedHeader.dataTables.min.css">
   <link rel="stylesheet" href="<?= asset_url() ?>css/dashboard/buttons.dataTables.min.css">
   <!-- CKeditor -->
-  <script src="https://cdn.ckeditor.com/ckeditor5/26.0.0/classic/ckeditor.js"></script>
+  <link rel="stylesheet" href="<?= asset_url() ?>css/dashboard/ckeditor5.css">
   <!-- ChartJS -->
   <script src="<?= asset_url() ?>js/libraries/chart.js/chart.min.js"></script>
 </head>
@@ -133,7 +133,7 @@
             <li class="nav-item has-treeview">
               <a href="#" class="nav-link">
                 <p>
-                  Votes_datan
+                  Votes décryptés
                   <i class="fas fa-angle-left right"></i>
                 </p>
               </a>
@@ -152,59 +152,11 @@
                 </li>
               </ul>
             </li>
-            <!-- Votes_AN -->
-            <li class="nav-item has-treeview">
-              <a href="#" class="nav-link">
-                <p>
-                  Votes_AN
-                  <i class="fas fa-angle-left right"></i>
-                </p>
-              </a>
-              <ul class="nav nav-treeview">
-                <li class="nav-item">
-                  <a href="<?= base_url() ?>admin/votes_an/position" class="nav-link">
-                    <i class="far fa-circle nav-icon"></i>
-                    <p>Votes_AN (positions)</p>
-                  </a>
-                </li>
-                <li class="nav-item">
-                  <a href="<?= base_url() ?>admin/votes_an/cohesion" class="nav-link">
-                    <i class="far fa-circle nav-icon"></i>
-                    <p>Votes_AN (cohesion)</p>
-                  </a>
-                </li>
-              </ul>
-            </li>
-            <!-- TABLEAUX ANALYSE -->
-            <li class="nav-item has-treeview">
-              <a href="#" class="nav-link">
-                <p>
-                  Tableaux analyse
-                  <i class="fas fa-angle-left right"></i>
-                </p>
-              </a>
-              <ul class="nav nav-treeview">
-                <li class="nav-item">
-                  <a href="<?= base_url() ?>admin/votes_an/majo_lost" class="nav-link">
-                    <i class="far fa-circle nav-icon"></i>
-                    <p>Majo perd</p>
-                  </a>
-                </li>
-                <?php foreach((array) $groupes as $groupe) : ?>
-                <li class="nav-item">
-                  <a href="<?= base_url() ?>admin/analyses/class_loyaute_group?group=<?= $groupe['libelleAbrev']?>" class="nav-link">
-                    <i class="far fa-circle nav-icon"></i>
-                    <p>Class. loyaute <?= $groupe['libelleAbrev'] ?></p>
-                  </a>
-                </li>
-                <?php endforeach ?>
-              </ul>
-            </li>
             <!-- TABLEAUX SOCIAL MEDIA -->
             <li class="nav-item has-treeview">
               <a href="#" class="nav-link">
                 <p>
-                  Tableaux social_media
+                  Tableaux analyse
                   <i class="fas fa-angle-left right"></i>
                 </p>
               </a>

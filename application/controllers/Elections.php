@@ -5,7 +5,6 @@
       $this->load->model('elections_model');
       $this->load->model('deputes_model');
       $this->load->model('groupes_model');
-      //$this->password_model->security_password(); Former login protection
     }
 
     public function index(){
