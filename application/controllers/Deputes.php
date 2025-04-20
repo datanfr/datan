@@ -166,8 +166,7 @@
     {
       setlocale(LC_TIME, 'french');
       // _____________________GET INFOS MP____________________
-    $data['depute'] = $this->deputes_model->get_depute_individual($nameUrl, $departement);
-
+      $data['depute'] = $this->deputes_model->get_depute_individual($nameUrl, $departement);
 
       // ____________________CHECK IF DEPUTE EXISTS__________________
       if (empty($data['depute'])) {
@@ -200,20 +199,16 @@
   
       // ____________________GET GENDER_________________________________
       $data['gender'] = gender($depute['civ']); 
-
     
       // ____________________GET HAVP___________________________________
       $data['depute']['hatvp'] = $this->deputes_model->get_hatvp_url($mp_id);
       $data['hatvpJobs'] = $this->deputes_model->get_last_hatvp_job($mp_id);
 
-
       // ____________________GET GROUP___________________________________
       $data = $this->group_service->get_group_infos_by_mp($data, $mp_id, $groupe_id);
     
-      
       // ____________________GET GENERAL INFOS___________________________
       $data = $this->depute_service->get_general_infos($data, $mp_id, $legislature, $name_last, $depute_full_name);
-
 
       // ____________________GET MAJORITY GROUP___________________________
       $data['groupMajority'] = $this->groupes_model->get_majority_group($legislature);
@@ -222,7 +217,6 @@
       // ____________________GET PCT FAMSOCPRO___________________________
       $data['famSocPro'] = null;// $this->jobs_model->get_stats_individual($data['depute']['famSocPro'], $legislature);
 
-
       // ____________________GET COMISSION PARLEMENTAIRE_________________
       if ($data['active']) {
         $data['commission_parlementaire'] = $this->deputes_model->get_commission_parlementaire($mp_id, $legislature);
@@ -230,15 +224,12 @@
     
       // ____________________GET ALL ELECTIONS___________________________
       $data['elections'] = $this->election_service->get_all_elections($mp_id, $data['gender']);
-    
-  
+
       // ____________________GET ELECTION FEATURE________________________
       //$data['electionFeature'] = $this->elections_model->get_candidate_election($mpId, 6, TRUE, FALSE);
-
   
       // ____________________GET PROFESSION DE FOI________________________
       $data['professions_foi'] = $this->deputes_model->get_professions($mp_id);
-
 
       // ____________________GET PARRAINNAGES_____________________________
       $data['parrainage'] = $this->parrainages_model->get_mp_parrainage($mp_id, 2022); /* Parrainage for presidentielle 2022 */
@@ -249,14 +240,12 @@
       //____________________GET STATISTICS__________________________________
       $data = $this->depute_service->get_statistics($data, $legislature, $mp_id, $groupe_id); 
 
-
       //___________________GET OTHER MPS____________________________________
       $related_deputes = $this->depute_service->get_other_mps($legislature, $groupe_id, $name_last, $mp_id, $data['active'], $depute_dpt);
       $data['other_deputes'] = $related_deputes['other_deputes'];
       $data['other_deputes_dpt'] = $related_deputes['other_deputes_dpt'];
       $data['depute']['dateNaissanceFr'] = utf8_encode(strftime('%d %B %Y', strtotime($data['depute']['birthDate']))); // birthdate
 
-    
       //___________________GET VOTES_________________________________________
       if ($legislature >= 15) {
         // Get edited votes
@@ -268,22 +257,18 @@
         $data['key_votes'] = NULL;
       }
 
-
       //__________________ Get FEATURED VOTE (motion de centure)_____________
       $data['voteFeature'] = $this->votes_model->get_individual_vote_moc($mp_id, 17, 519); // MOC Barnier Decembre 2024
 
       //__________________GET LAST EXPLICATION_______________________________
       $data['explication'] = $this->depute_service->get_explication_details($mp_id, $legislature, $data['gender']);
 
-
       // _________________Get MPs HISTORY___________________________
       $data = $this->depute_service->get_mp_history_data($data, $mp_id);
-      
       
       // ________________ GET Depute page ressources (meta, css, js...)_______
 
       $data = $this->depute_service->get_mp_page_resources($data, $depute_full_name, $nameUrl);
-
 
       // ________________LOAD VIEWS_______________________
       $this->load->view('templates/header', $data);
