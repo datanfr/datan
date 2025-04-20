@@ -347,14 +347,13 @@
     public function generate_iframe() 
     {
       $data = $this->data;
-  //  var_dump($data['depute']['nameUrl']);
-  // echo '<pre>';
-  //    var_dump($data['depute']['nameUrl']);
-  //  echo  '</pre>';
+      //  var_dump($data['depute']['nameUrl']);
+      // echo '<pre>';
+      //    var_dump($data['depute']['nameUrl']);
+      //  echo  '</pre>';
 
-   $data['name_url'] = $data['depute']['nameUrl'];
+      $data['name_url'] = $data['depute']['nameUrl'];
   
-
       // Meta
       $data['title_meta'] = 'Générateur d\'iframe - Dashboard | Datan';
       $data['breadcrumb'] = array(

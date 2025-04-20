@@ -50,14 +50,13 @@ class Iframe extends CI_Controller
     // $data['categories'] = $categories;
 
 
-
     $categories_param = $this->input->get('categories');
     $subcategory_param = $this->input->get('comportement-politique-subcategory');
     
     $allViews = [
       'positions-importantes' => 'deputes/partials/mp_individual/_key_positions.php',
       'derniers-votes' => 'deputes/partials/mp_individual/_votes.php',
-      'election' => 'deputes/partials/mp_individual/_election.php',
+      'election' => 'deputes/partials/mp_individual/_election_iframe.php',
       'comportement-politique' => [
           'index' => 'deputes/partials/mp_individual/statistics/_index.php',
           'subcategories' => [
