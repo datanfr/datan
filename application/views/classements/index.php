@@ -48,7 +48,7 @@
                   </thead>
                   <tbody>
                     <?php foreach ($mps_oldest as $mp): ?>
-                      <tr>
+                      <tr class="randomized">
                         <th scope="row"><?= $mp['rank'] ?></th>
                         <td>
                           <a href="<?= base_url() ?>deputes/<?= $mp['dptSlug'] ?>/depute_<?= $mp['nameUrl'] ?>" class="no-decoration underline"><?= $mp['nameFirst'].' '.$mp['nameLast'] ?> (<?= $mp['libelleAbrev'] ?>)</a>
@@ -60,7 +60,7 @@
                       <td colspan="3" class="text-center">...</td>
                     </tr>
                     <?php foreach ($mps_youngest as $mp): ?>
-                      <tr>
+                      <tr class="randomized">
                         <th scope="row"><?= $mp['rank'] ?></th>
                         <td>
                           <a href="<?= base_url() ?>deputes/<?= $mp['dptSlug'] ?>/depute_<?= $mp['nameUrl'] ?>" class="no-decoration underline"><?= $mp['nameFirst'].' '.$mp['nameLast'] ?> (<?= $mp['libelleAbrev'] ?>)</a>
@@ -174,7 +174,7 @@
                     </thead>
                     <tbody>
                       <?php foreach ($groups_women_more as $group): ?>
-                        <tr>
+                        <tr class="randomized">
                           <th scope="row"><?= $group['rank'] ?></th>
                           <td><?= name_group($group['libelle']) . ' ('.$group['libelleAbrev'].')' ?></td>
                           <td><?= round($group['pct']) ?> %</td>
@@ -184,7 +184,7 @@
                         <td colspan="3" class="text-center">...</td>
                       </tr>
                       <?php foreach ($groups_women_less as $group): ?>
-                        <tr>
+                        <tr class="randomized">
                           <th scope="row"><?= $group['rank'] ?></th>
                           <td><?= $group['libelle'].' ('.$group['libelleAbrev'].')' ?></td>
                           <td><?= round($group['pct']) ?> %</td>
@@ -240,7 +240,7 @@
                     </thead>
                     <tbody>
                       <?php foreach ($mps_loyalty_more as $mp): ?>
-                        <tr>
+                        <tr class="randomized">
                           <th scope="row"><?= $mp['rank'] ?></th>
                           <td><?= $mp['nameFirst'].' '.$mp['nameLast'] ?> (<?= $mp['libelleAbrev'] ?>)</td>
                           <td><?= $mp['score'] ?> %</td>
@@ -250,7 +250,7 @@
                         <td colspan="3" class="text-center">...</td>
                       </tr>
                       <?php foreach ($mps_loyalty_less as $mp): ?>
-                        <tr>
+                        <tr class="randomized">
                           <th scope="row"><?= $mp['rank'] ?></th>
                           <td><?= $mp['nameFirst'].' '.$mp['nameLast'] ?> (<?= $mp['libelleAbrev'] ?>)</td>
                           <td><?= $mp['score'] ?> %</td>
@@ -324,7 +324,7 @@
                     </thead>
                     <tbody>
                       <?php foreach ($mps_participation_first as $mp): ?>
-                        <tr>
+                        <tr class="randomized">
                           <th scope="row"><?= $mp['rank'] ?></th>
                           <td><?= $mp['nameFirst'].' '.$mp['nameLast'] ?> (<?= $mp['libelleAbrev'] ?>)</td>
                           <td><?= $mp['score'] * 100 ?> %</td>
@@ -334,7 +334,7 @@
                         <td colspan="3" class="text-center">...</td>
                       </tr>
                       <?php foreach ($mps_participation_last as $mp): ?>
-                        <tr>
+                        <tr class="randomized">
                           <th scope="row"><?= $mp['rank'] ?></th>
                           <td><?= $mp['nameFirst'].' '.$mp['nameLast'] ?> (<?= $mp['libelleAbrev'] ?>)</td>
                           <td><?= $mp['score'] * 100 ?> %</td>
