@@ -359,7 +359,7 @@ function cleanup(array $dirs): void
 
 // --- Gestion de la fin du script (nettoyage et retour à la branche) ---
 register_shutdown_function(function () {
-    global $original_branch, $cleanup_enabled;
+    global $original_branch, $cleanup_enabled, $hasStashedChanges;
 
     echo PHP_EOL . '--- Script shutting down ---' . PHP_EOL;
 
@@ -368,6 +368,17 @@ register_shutdown_function(function () {
         echo 'Attempting to restore original branch: ' . $original_branch . PHP_EOL;
         // Utiliser --force peut être dangereux si des modifs ont été faites
         checkoutBranch($original_branch);
+        
+        // 6b. Pop any stashed changes if they existed
+        if (isset($hasStashedChanges) && $hasStashedChanges) {
+            echo PHP_EOL . '--- Popping stashed changes ---' . PHP_EOL;
+            $popCommand = 'git stash pop';
+            echo "Running command: $popCommand" . PHP_EOL;
+            exec($popCommand, $popOutput, $popReturnCode);
+            if ($popReturnCode !== 0) {
+                echo "Warning: Could not restore stashed changes. They may still be in the stash list." . PHP_EOL;
+            }
+        }
     } else {
         echo 'Warning: Could not determine original branch to restore.' . PHP_EOL;
     }
@@ -429,7 +440,15 @@ if (!downloadUrls($urls_to_test, CURRENT_STATE_DIR)) {
     exit(1);  // Sortie gérée par le shutdown handler
 }
 
-// 6. Passer à la branche cible
+// 6. Stash any uncommitted changes
+echo PHP_EOL . '--- Stashing uncommitted changes ---' . PHP_EOL;
+$stashCommand = 'git stash save "Temporary stash for branch comparison"';
+echo "Running command: $stashCommand" . PHP_EOL;
+exec($stashCommand, $stashOutput, $stashReturnCode);
+$hasStashedChanges = !in_array('No local changes to save', $stashOutput);
+echo "Stash created: " . ($hasStashedChanges ? 'Yes' : 'No (nothing to stash)') . PHP_EOL;
+
+// 7. Passer à la branche cible
 if (!checkoutBranch($target_branch)) {
     fwrite(STDERR, "Error checking out target branch '" . $target_branch . "'. Aborting." . PHP_EOL);
     // Le shutdown handler tentera de revenir à l'originale
