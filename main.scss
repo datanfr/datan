@@ -2202,19 +2202,10 @@ body{
   }
   /* Bloc election */
   .bloc-election{
-    .card{
-      border: none;
-      overflow: hidden;
-    }
     .subtitle{
       font-weight: 800;
       color: $text-gray-light;
-    }
-    .legend{
-      span{
-        color: $text-gray-light;
-      }
-    }
+    } 
   }
   /* Bloc elections history */
   .bloc-elections-history{
