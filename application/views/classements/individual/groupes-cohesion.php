@@ -39,7 +39,7 @@
             </thead>
             <tbody>
               <?php foreach ($groups as $group): ?>
-                <tr>
+                <tr class="randomized">
                   <td class="text-center"><?= $group["rank"] ?></td>
                   <td class="text-center">
                     <a href="<?= base_url() ?>groupes/legislature-<?= $group["legislature"] ?>/<?= mb_strtolower($group["libelleAbrev"]) ?>" class="no-decoration underline"><?= name_group($group["libelle"]) ?> (<?= $group["libelleAbrev"] ?>)</a>
