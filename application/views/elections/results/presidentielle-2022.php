@@ -13,7 +13,7 @@
     </picture>
     <div class="d-flex flex-column ml-3 w-100">
       <p>Emmanuel Macron</p>
-      <div class="chart-election test-border" style="width: 100%; height: 40px;">
+      <div class="chart-election" style="width: 100%; height: 40px;">
         <div class="majority d-flex align-items-center" style="flex-basis: 59%">
           <span>59 %</span>
         </div>
