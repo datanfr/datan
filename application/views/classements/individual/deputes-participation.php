@@ -69,17 +69,17 @@
                   <thead>
                     <tr>
                       <th class="text-center all">N°</th>
-                      <th class="text-center min-tablet">Député</th>
+                      <th class="text-center all">Député</th>
                       <th class="text-center all">Groupe</th>
                       <th class="text-center all">Participation</th>
-                      <th class="text-center all">Nombre de votes</th>
+                      <th class="text-center min-tablet">Nombre de votes</th>
                     </tr>
                   </thead>
                   <tbody>
                     <?php foreach ($mpsSolennels as $depute): ?>
                       <tr class="randomized">
                         <td class="text-center"><?= $depute['rank'] ?></td>
-                        <td class="text-center"><?= $depute['nameFirst']." ".$depute['nameLast'] ?></td>
+                        <td class="text-center"><?= $depute['nameFirst'] . " " . $depute['nameLast'] ?></td>
                         <td class="text-center"><?= $depute['libelleAbrev'] ?></td>
                         <td class="text-center"><?= $depute['score'] * 100 ?> %</td>
                         <td class="text-center"><?= $depute['votesN'] ?></td>
@@ -87,7 +87,7 @@
                     <?php endforeach; ?>
                   </tbody>
                 </table>
-              <?php endif; ?>              
+              <?php endif; ?>
             </div>
             <div class="tab-pane fade" id="nav-commission" role="tabpanel" aria-labelledby="nav-votes-commission">
               <p class="my-4">
@@ -100,10 +100,10 @@
                 <thead>
                   <tr>
                     <th class="text-center all">N°</th>
-                    <th class="text-center min-tablet">Député</th>
+                    <th class="text-center all">Député</th>
                     <th class="text-center all">Groupe</th>
                     <th class="text-center all">Participation</th>
-                    <th class="text-center all">Nombre de votes</th>
+                    <th class="text-center min-tablet">Nombre de votes</th>
                     <th class="text-center all">Commission actuelle</th>
                   </tr>
                 </thead>
@@ -111,7 +111,7 @@
                   <?php foreach ($mpsCommission as $depute): ?>
                     <tr class="randomized">
                       <td class="text-center"><?= $depute['rank'] ?></td>
-                      <td class="text-center"><?= $depute['nameFirst']." ".$depute['nameLast'] ?></td>
+                      <td class="text-center"><?= $depute['nameFirst'] . " " . $depute['nameLast'] ?></td>
                       <td class="text-center"><?= $depute['libelleAbrev'] ?></td>
                       <td class="text-center"><?= $depute['score'] * 100 ?> %</td>
                       <td class="text-center"><?= $depute['votesN'] ?></td>
@@ -132,17 +132,17 @@
                 <thead>
                   <tr>
                     <th class="text-center all">N°</th>
-                    <th class="text-center min-tablet">Député</th>
+                    <th class="text-center all">Député</th>
                     <th class="text-center all">Groupe</th>
                     <th class="text-center all">Participation</th>
-                    <th class="text-center all">Nombre de votes</th>
+                    <th class="text-center min-tablet">Nombre de votes</th>
                   </tr>
                 </thead>
                 <tbody>
                   <?php foreach ($mps as $depute): ?>
                     <tr class="randomized">
                       <td class="text-center"><?= $depute['rank'] ?></td>
-                      <td class="text-center"><?= $depute['nameFirst']." ".$depute['nameLast'] ?></td>
+                      <td class="text-center"><?= $depute['nameFirst'] . " " . $depute['nameLast'] ?></td>
                       <td class="text-center"><?= $depute['libelleAbrev'] ?></td>
                       <td class="text-center"><?= $depute['score'] * 100 ?> %</td>
                       <td class="text-center"><?= $depute['votesN'] ?></td>
@@ -154,4 +154,4 @@
           </div>
         </div>
       <?php endif; ?>
-    </div>
+      </div>
