@@ -51,9 +51,23 @@ class Iframe extends CI_Controller
 
 
     $categories_param = $this->input->get('categories');
-    $categories = $categories_param ? explode(',', $categories_param) : ['positions-importantes', 'derniers-votes', 'election', 'comportement-politique'];
-    $data['has_comportement_subcategories'] = false;
+    $subcategory_param = $this->input->get('comportement-politique-subcategory');
+    
+    $allViews = [
+      'positions-importantes' => 'deputes/partials/mp_individual/_key_positions.php',
+      'derniers-votes' => 'deputes/partials/mp_individual/_votes.php',
+      'election' => 'deputes/partials/mp_individual/_election_iframe.php',
+      'comportement-politique' => [
+          'index' => 'deputes/partials/mp_individual/statistics/_index.php',
+          'subcategories' => [
+              'sub1' => 'deputes/partials/mp_individual/statistics/_voting_participation.php',
+              'sub2' => 'deputes/partials/mp_individual/statistics/_intra_group_loyalty.php',
+              'sub3' => 'deputes/partials/mp_individual/statistics/_inter_group_loyalty.php',
+          ]
+      ]
+  ];
 
+  $categories = $categories_param ? explode(',', $categories_param) : ['positions-importantes', 'derniers-votes', 'election', 'comportement-politique'];
 
     $data['views_to_load'] = [];
 

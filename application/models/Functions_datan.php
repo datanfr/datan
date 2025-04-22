@@ -13,16 +13,6 @@
       }
     }
 
-    public function old_young($x, $y){
-      if ($x > $y) {
-        return("vieux");
-      } elseif ($x < $y) {
-        return("jeune");
-      } else {
-        return("xx");
-      }
-    }
-
     // $precision = 1 (par défaut) pour les dizaines, 2 pour les centaines, 3 pour millier etc...
     function dec_round ($value, $precision = 1)
       {
@@ -96,11 +86,16 @@
       return 'URL = ' . $url . ' ||| controller = '. $controller . ' ||| method = ' . $method;
     }
 
-	public function countdown($date){
-		$targetDate = new DateTime($date);
-		$currentDate = new DateTime();
-		$interval = $currentDate->diff($targetDate);
-		return $interval->format('%a') + 1;
+	public function compare_numbers_text($toCompare, $base){
+		if ($toCompare == $base){
+			return 'égal';
+		} elseif ($toCompare > $base){
+			return 'supérieux';	
+		} elseif ($toCompare < $base){
+			return 'inférieur';
+		} else {
+			return '';
+		}
 	}
 
   }
