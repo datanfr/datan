@@ -134,5 +134,7 @@ Déconnectez-vous et connectez-vous à nouveau et vous aurez accès à /admin
 
 # Test de branche
 ```php compare_branch.php fichier_url branche_a_tester```
-example : 
-```php compare_branch.php urls.txt udpate-statistics-card```
+exemple en étant sur votre branche à tester: 
+```npm run docker-test -- master```
+exemple en étant sur votre branche à tester: 
+```npm run docker-test -- mon_nom_de_branche```
