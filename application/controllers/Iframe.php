@@ -31,7 +31,7 @@ class Iframe extends CI_Controller
     $data['iframe_title_visibility'] = isset($_GET['secondary-title']) && $_GET['secondary-title'] === 'hide' ? 'hidden' : '';
     $data['secondary_title_visibility'] =  $data['iframe_title_visibility'];
     $data['title_displayed'] = false;
- 
+
 
     // $categories_param = $this->input->get('categories');
 
@@ -44,60 +44,68 @@ class Iframe extends CI_Controller
     // $categories = array_values(array_intersect($categories, $categories_allowed));
     // $subcategory_params = $this->input->get('comportement-politique-subcategory');
     // $subcategories = $subcategory_params ? explode(',', $subcategory_params) : [];
-    
+
 
 
     // $data['categories'] = $categories;
 
 
     $categories_param = $this->input->get('categories');
-    $subcategory_param = $this->input->get('comportement-politique-subcategory');
-    
-    $allViews = [
-      'positions-importantes' => 'deputes/partials/mp_individual/_key_positions.php',
-      'derniers-votes' => 'deputes/partials/mp_individual/_votes.php',
-      'election' => 'deputes/partials/mp_individual/_election_iframe.php',
-      'comportement-politique' => [
-          'index' => 'deputes/partials/mp_individual/statistics/_index.php',
-          'subcategories' => [
-              'sub1' => 'deputes/partials/mp_individual/statistics/_voting_participation.php',
-              'sub2' => 'deputes/partials/mp_individual/statistics/_intra_group_loyalty.php',
-              'sub3' => 'deputes/partials/mp_individual/statistics/_inter_group_loyalty.php',
-          ]
-      ]
-  ];
+    $categories = $categories_param ? explode(',', $categories_param) : ['positions-importantes', 'derniers-votes', 'election', 'comportement-politique'];
+    $data['has_comportement_subcategories'] = false;
 
-  $categories = $categories_param ? explode(',', $categories_param) : ['positions-importantes', 'derniers-votes', 'election', 'comportement-politique'];
 
-$data['views_to_load'] = [];
+    $data['views_to_load'] = [];
 
-$data['has_comportement_subcategories'] = false;
+    $categories_param = $this->input->get('categories');
+    $categories = $categories_param ? explode(',', $categories_param) : ['positions-importantes', 'derniers-votes', 'election', 'comportement-politique'];
 
-foreach ($categories as $category) {
-  if ($category === 'comportement-politique') {
-      if ($subcategory_param) {
-          $subcategories = explode(',', $subcategory_param);
-          foreach ($subcategories as $sub) {
-              if (isset($allViews['comportement-politique']['subcategories'][$sub])) {
-                  $data['views_to_load'][] = $allViews['comportement-politique']['subcategories'][$sub];
-                  $data['has_comportement_subcategories'] = true;
-              }
-          }
+
+    $data['views_to_load'] = [];
+
+    foreach ($categories as $category) {
+      if (strpos($category, '.') === false) {
+        switch ($category) {
+          case 'positions-importantes':
+            $data['views_to_load'][] = 'deputes/partials/mp_individual/_key_positions.php';
+            break;
+          case 'derniers-votes':
+            $data['views_to_load'][] = 'deputes/partials/mp_individual/_votes.php';
+            break;
+          case 'election':
+            $data['views_to_load'][] = 'deputes/partials/mp_individual/_election_iframe.php';
+            break;
+          case 'comportement-politique':
+            $data['views_to_load'][] = 'deputes/partials/mp_individual/statistics/_index.php';
+            break;
+          default:
+            break;
+        }
       } else {
-          $data['views_to_load'][] = $allViews['comportement-politique']['index'];
+        list($main_category, $sub_category) = explode('.', $category);
+        $data['has_comportement_subcategories'] = true;
+
+        switch ($main_category) {
+          case 'comportement-politique':
+            switch ($sub_category) {
+              case 'participation-votes':
+                $data['views_to_load'][] = 'deputes/partials/mp_individual/statistics/_voting_participation.php';
+                break;
+              case 'proximite-groupe':
+                $data['views_to_load'][] = 'deputes/partials/mp_individual/statistics/_intra_group_loyalty.php';
+                break;
+              case 'proximite-groupes':
+                $data['views_to_load'][] = 'deputes/partials/mp_individual/statistics/_inter_group_loyalty.php';
+                break;
+              default:
+                break;
+            }
+            break;
+          default:
+            break;
+        }
       }
-  } elseif (isset($allViews[$category])) {
-      $data['views_to_load'][] = $allViews[$category];
-  }
-}
-  
-
-
-
-
-
-
-
+    }
 
     $departement =  $this->deputes_model->get_dptslug_by_name_url($name);
     $data['depute'] = $this->deputes_model->get_depute_individual($name, $departement);
@@ -145,9 +153,10 @@ foreach ($categories as $category) {
 
 
     //____________________GET STATISTICS__________________________________
-    if (in_array('comportement-politique', $categories)) {
+    if (in_array('comportement-politique', $categories) || preg_grep('/^comportement-politique\./', $categories)) {
       $data = $this->depute_service->get_statistics($data, $legislature, $mp_id, $groupe_id);
     }
+
 
 
     //___________________GET VOTES_________________________________________

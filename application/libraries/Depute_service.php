@@ -22,11 +22,11 @@ class Depute_service
           if ($data['participation'] && $data['participation']['votesN'] >= 10) {
             $data['no_participation'] = FALSE;
             // GET ALL DATA FOR PARTICIPATION
-            $data['participation']['all'] = $this->deputes_model->get_stats_participation_solennels_all($legislature);
-            $data['participation']['group'] = $this->deputes_model->get_stats_participation_solennels_group($legislature, $groupe_id);
+            $data['participation']['all'] = $this->CI->deputes_model->get_stats_participation_solennels_all($legislature);
+            $data['participation']['group'] = $this->CI->deputes_model->get_stats_participation_solennels_group($legislature, $groupe_id);
             if (isset($data['participation']['score'])){
-              $data['edito_participation']['all'] = $this->depute_edito->participation($data['participation']['score'], $data['participation']['all']); //edited for ALL
-              $data['edito_participation']['group'] = $this->depute_edito->participation($data['participation']['score'], $data['participation']['group']); //edited for GROUP
+              $data['edito_participation']['all'] = $this->CI->depute_edito->participation($data['participation']['score'], $data['participation']['all']); //edited for ALL
+              $data['edito_participation']['group'] = $this->CI->depute_edito->participation($data['participation']['score'], $data['participation']['group']); //edited for GROUP
             }
           } else {
             $data['no_participation'] = TRUE;
