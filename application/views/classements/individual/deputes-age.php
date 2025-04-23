@@ -30,8 +30,8 @@
           <thead>
             <tr>
               <th class="text-center all">N°</th>
-              <th class="text-center min-tablet">Député</th>
-              <th class="text-center all">Groupe</th>
+              <th class="text-center all">Député</th>
+              <th class="text-center min-tablet">Groupe</th>
               <th class="text-center all">Âge</th>
             </tr>
           </thead>
