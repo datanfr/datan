@@ -1,5 +1,8 @@
 <?php
   class Stats extends CI_Controller{
+
+    const SOLEMN_VOTE_THRESHOLD = 30;
+
     public function __construct() {
       parent::__construct();
       $this->load->model('stats_model');
@@ -11,6 +14,7 @@
     }
 
     public function index(){
+      $data['n_sps_treshold'] = self::SOLEMN_VOTE_THRESHOLD;
       $data['mps_age'] = $this->stats_model->get_ranking_age();
       $data['mps_oldest'] = array_slice($data['mps_age'], 0, 3);
       $data['mps_youngest'] = array_slice($data['mps_age'], -3, 3);
@@ -69,14 +73,16 @@
       }
 
       $data['n_sps'] = $this->votes_model->get_n_votes(legislature_current(), NULL, NULL, 'SPS') ?? 0;
-      $data['mps_participation'] = ($data['n_sps'] > 10) 
+      $data['mps_participation'] = ($data['n_sps'] > $data['n_sps_treshold'])
         ? $this->stats_model->get_mps_participation_solennels(legislature_current()) 
         : $this->stats_model->get_mps_participation();
 
       if ($data['mps_participation']) {
         $data['mps_participation_first'] = array_slice($data['mps_participation'], 0, 3);
         $data['mps_participation_last'] = array_slice($data['mps_participation'], -3);
-        $data['mps_participation_mean'] = $this->stats_model->get_mps_participation_mean(legislature_current());
+        $data['mps_participation_mean'] = ($data['n_sps'] > $data['n_sps_treshold'])
+        ? $this->stats_model->get_mps_participation_solennels_mean(legislature_current())['mean']
+        : $this->stats_model->get_mps_participation_mean(legislature_current());  
       }
       $data['groups_participation'] = $this->stats_model->get_groups_participation();
       if ($data['groups_participation']) {
@@ -164,6 +170,8 @@
       }
 
       $data['page'] = $url;
+
+      $data['n_sps_treshold'] = self::SOLEMN_VOTE_THRESHOLD;
 
       if ($url == "deputes-age") {
         // Data
@@ -301,7 +309,7 @@
           $data['mpsCommission'] = $this->stats_model->get_mps_participation_commission(legislature_current());
 
           // Features MPs 
-          $data['mpsFeature'] = ($data['n_sps'] > 10 ? $data['mpsSolennels'] : $data['mps']);
+          $data['mpsFeature'] = ($data['n_sps'] > $data['n_sps_treshold'] ? $data['mpsSolennels'] : $data['mps']);
 
           $data['mpActive'] = array_slice($data['mpsFeature'], 0, 1);
           $data['mpActive'] = $data['mpActive'][0];
@@ -329,7 +337,7 @@
         $data['n_sps'] = $this->votes_model->get_n_votes(legislature_current(), NULL, NULL, 'SPS');
         $data['votesN'] = $this->votes_model->get_n_votes(legislature_current(), NULL, NULL);
 
-        $data['groups'] = $data['n_sps'] < 10 ? $data['votes_all'] : $data['votes_sps'];
+        $data['groups'] = $data['n_sps'] < $data['n_sps_treshold'] ? $data['votes_all'] : $data['votes_sps'];
         if ($data['groups']) {
           foreach ($data['groups'] as &$group) {
             $group['couleurCard'] = $this->groupes_model->get_groupe_color_card(['uid' => $group['organeRef']]);
