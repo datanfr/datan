@@ -46,44 +46,48 @@
               <!-- Partie gauche de la colonne de gauche (Checkbox + Options) -->
               <div class="mb-3">
                 <label class="font-weight-bold">Catégories à afficher</label>
+
                 <div class="form-check">
                   <input class="form-check-input" type="checkbox" value="all" id="cat-all">
                   <label class="form-check-label" for="cat-all">Toutes les catégories</label>
                 </div>
-                <div class="form-check">
-                  <input class="form-check-input category-checkbox" type="checkbox" value="derniers-votes" id="cat1">
-                  <label class="form-check-label" for="cat1">Mes derniers votes</label>
-                </div>
-                <div class="form-check">
-                  <input class="form-check-input category-checkbox" type="checkbox" value="explications" id="cat2">
-                  <label class="form-check-label" for="cat2">Mes positions importantes</label>
-                </div>
-                <div class="form-check">
-                  <input class="form-check-input category-checkbox" type="checkbox" value="election" id="cat3">
-                  <label class="form-check-label" for="cat3">Mon élection</label>
-                </div>
-                <div class="form-check">
-                  <input class="form-check-input category-checkbox" type="checkbox" value="comportement" id="cat4">
-                  <label class="form-check-label" for="cat4">Mon comportement politique</label>
 
-                  <!-- Sous-catégories -->
-                  <div class="subcategory-wrapper">
-                    <div class="form-check">
-                      <input class="form-check-input subcategory-checkbox" type="checkbox" value="sub1" id="subcat-1">
-                      <label class="form-check-label" for="subcat-1">Participation aux votes</label>
-                    </div>
-                    <div class="form-check">
-                      <input class="form-check-input subcategory-checkbox" type="checkbox" value="sub2" id="subcat-2">
-                      <label class="form-check-label" for="subcat-2">Proximité au groupe</label>
-                    </div>
-                    <div class="form-check">
-                      <input class="form-check-input subcategory-checkbox" type="checkbox" value="sub3" id="subcat-3">
-                      <label class="form-check-label" for="subcat-3">Proximité avec les groupes politiques</label>
+                <div style="margin-left: 1rem;">
+                  <div class="form-check">
+                    <input class="form-check-input category-checkbox" type="checkbox" value="derniers-votes" id="cat1">
+                    <label class="form-check-label" for="cat1">Mes derniers votes</label>
+                  </div>
+                  <div class="form-check">
+                    <input class="form-check-input category-checkbox" type="checkbox" value="positions-importantes" id="cat2">
+                    <label class="form-check-label" for="cat2">Mes positions importantes</label>
+                  </div>
+                  <div class="form-check">
+                    <input class="form-check-input category-checkbox" type="checkbox" value="election" id="cat3">
+                    <label class="form-check-label" for="cat3">Mon élection</label>
+                  </div>
+                  <div class="form-check">
+                    <input class="form-check-input category-checkbox" type="checkbox" value="comportement-politique" id="cat4">
+                    <label class="form-check-label" for="cat4">Mon comportement politique</label>
+
+                    <!-- Sous-catégories -->
+                    <div class="subcategory-wrapper ms-3">
+                      <div class="form-check">
+                        <input class="form-check-input subcategory-checkbox" type="checkbox" value="participation-votes" id="subcat-1">
+                        <label class="form-check-label" for="subcat-1">Participation aux votes</label>
+                      </div>
+                      <div class="form-check">
+                        <input class="form-check-input subcategory-checkbox" type="checkbox" value="proximite-groupe" id="subcat-2">
+                        <label class="form-check-label" for="subcat-2">Proximité au groupe</label>
+                      </div>
+                      <div class="form-check">
+                        <input class="form-check-input subcategory-checkbox" type="checkbox" value="proximite-groupes" id="subcat-3">
+                        <label class="form-check-label" for="subcat-3">Proximité avec les groupes politiques</label>
+                      </div>
                     </div>
                   </div>
-                </div>
-
+                </div> <!-- fin du bloc indente -->
               </div>
+
 
               <div class="mb-3">
                 <label class="font-weight-bold">Options d'affichage</label>
@@ -151,161 +155,148 @@
 
 
 <script>
-  const previewButton = document.getElementById('previewButton');
-
-  let iframeUrl = "";
-  const allCategoriesChecked = document.getElementById('cat-all').checked;
-  console.log(allCategoriesChecked);
-
-
-  function initializeIframeUrl() {
-    const slugElement = document.getElementById("iframe-wrapper");
-    if (slugElement) {
-      const slug = slugElement.dataset.slug;
-      return "http://dev-datan.fr/iframe/depute/" + slug;
-    }
-    return "";
-  }
-
-  function getSelectedCategories() {
-    const allCategoriesChecked = document.getElementById('cat-all').checked;
-    const categoryMapping = {
-      'cat1': 'derniers-votes',
-      'cat2': 'positions-importantes',
-      'cat3': 'election',
-      'cat4': 'comportement-politique'
-    };
-
-    const categories = [];
-
-    if (!allCategoriesChecked) {
-      for (const id in categoryMapping) {
-        if (document.getElementById(id).checked) {
-          categories.push(categoryMapping[id]);
-        }
-      }
-    }
-
-    return categories;
-  }
-
-  function getSelectedSubcategories() {
-    const subcategories = [];
-
-    const selectedSubcategories = [];
-    const subcategoryCheckboxes = document.querySelectorAll('.subcategory-checkbox');
-    subcategoryCheckboxes.forEach(checkbox => {
-      if (checkbox.checked) {
-        selectedSubcategories.push(checkbox.value);
-      }
-    });
-
-    if (selectedSubcategories.length > 0) {
-      subcategories.push({
-        category: 'comportement-politique',
-        values: selectedSubcategories
-      });
-    }
-
-
-    return subcategories;
-  }
-
-
-  function validateCategories(categories) {
-    const allCategoriesChecked = document.getElementById('cat-all').checked;
-    if (categories.length === 0 && !allCategoriesChecked) {
-      alert("Veuillez sélectionner au moins une catégorie pour générer l'aperçu.");
-      return false;
-    }
-    return true;
-  }
-
-
-  function getSelectedOptions() {
-    const options = [];
-    if (document.getElementById('hideMainTitle').checked) {
-      options.push('main-title=hide');
-    }
-    if (document.getElementById('hideSecondaryTitle').checked) {
-      options.push('secondary-title=hide');
-    }
-    return options;
-  }
-
-  function buildIframeUrl(categories, options, subcategories) {
-    let iframeUrl = initializeIframeUrl();
-    const params = [];
-
-    const hasCat4 = categories.includes('comportement-politique');
-    const hasSubcategories = subcategories.length > 0;
-
-
-    if (!hasCat4 && hasSubcategories) {
-      categories.push('comportement-politique');
-    }
-
-
-    const uniqueCategories = [...new Set(categories)];
-    if (uniqueCategories.length > 0) {
-      params.push("categories=" + uniqueCategories.join(','));
-    }
-
-
-    if (!hasCat4 && hasSubcategories) {
-      subcategories.forEach(subcat => {
-        const value = subcat.values.join(',');
-        params.push(`${subcat.category}-subcategory=${value}`);
-      });
-    }
-
-
-    if (options.length > 0) {
-      params.push(...options);
-    }
-
-
-    if (params.length > 0) {
-      iframeUrl += "?" + params.join('&');
-    }
-
-
-    return iframeUrl;
-  }
-
-
-
-  function updateIframeAndCode(iframeUrl) {
-    document.getElementById('iframePreview').src = iframeUrl;
-    const iframeCode = `<iframe src="${iframeUrl}" width="400" height="600" frameborder="0"></iframe>`;
-    document.getElementById('iframeCode').value = iframeCode;
-  }
-
-
-
-  function handlePreviewButtonClick() {
-    const categories = getSelectedCategories();
-    const subcategories = getSelectedSubcategories();
-
-    // if (!validateCategories(categories)) {
-    //   return;
-    // }   ---------------> à revoir pour faire en sorte de prendre en compte les sous catégories également
-
-    const options = getSelectedOptions();
-    const finalIframeUrl = buildIframeUrl(categories, options, subcategories);
-    console.log(finalIframeUrl);
-
-    updateIframeAndCode(finalIframeUrl);
-  }
-
-
-  initializeIframeUrl();
-
-  previewButton.addEventListener('click', handlePreviewButtonClick);
-
-
-
   document.addEventListener('DOMContentLoaded', function() {
+    const previewButton = document.getElementById('previewButton');
+
+    let iframeUrl = "";
+    const allCategoriesChecked = document.getElementById('cat-all').checked;
+
+
+    function initializeIframeUrl() {
+      const slugElement = document.getElementById("iframe-wrapper");
+      if (slugElement) {
+        const slug = slugElement.dataset.slug;
+        return "http://dev-datan.fr/iframe/depute/" + slug;
+      }
+      return "";
+    }
+
+    function getSelectedCategories() {
+      const allCategoriesChecked = document.getElementById('cat-all').checked;
+      const categories = [];
+
+
+      if (!allCategoriesChecked) {
+        const categoryCheckboxes = document.querySelectorAll('.category-checkbox');
+        categoryCheckboxes.forEach(checkbox => {
+          if (checkbox.checked) {
+            categories.push(checkbox.value);
+          }
+        });
+      }
+
+      return categories;
+    }
+
+
+    function getSelectedSubcategories() {
+      const subcategories = [];
+      document.querySelectorAll('.subcategory-checkbox').forEach(checkbox => {
+        if (checkbox.checked) {
+          subcategories.push("comportement-politique." + checkbox.value);
+        }
+      });
+      return subcategories;
+    }
+
+
+
+
+    function validateCategories(categories, subcategories) {
+      const allCategoriesChecked = document.getElementById('cat-all').checked;
+
+      if (categories.length === 0 && subcategories.length === 0 && !allCategoriesChecked) {
+        alert("Veuillez sélectionner au moins une catégorie ou une sous-catégorie pour générer l'aperçu.");
+        return false;
+      }
+
+      return true;
+    }
+
+
+
+    function getSelectedOptions() {
+      const options = [];
+      if (document.getElementById('hideMainTitle').checked) {
+        options.push('main-title=hide');
+      }
+      if (document.getElementById('hideSecondaryTitle').checked) {
+        options.push('secondary-title=hide');
+      }
+      return options;
+    }
+
+    function buildIframeUrl() {
+      const allCheckbox = document.getElementById('cat-all');
+      const politicalBehaviorCheckbox = document.getElementById('cat4');
+      const options = getSelectedOptions();
+
+      let iframeUrl = initializeIframeUrl();
+
+
+      if (allCheckbox.checked) {
+        return iframeUrl;
+      }
+
+      // if (politicalBehaviorCheckbox.checked) {
+      //   return iframeUrl + "?categories=comportement-politique";
+      // }-------> à revoir
+
+
+      const categories = getSelectedCategories();
+      const subcategories = getSelectedSubcategories();
+      const allCategories = [...categories, ...subcategories];
+
+      const params = [];
+
+      if (allCategories.length > 0) {
+        params.push("categories=" + allCategories.join(','));
+      }
+
+      if (options.length > 0) {
+        params.push(...options);
+      }
+
+      if (params.length > 0) {
+        iframeUrl += "?" + params.join('&');
+      }
+
+      return iframeUrl;
+    }
+
+
+
+
+
+    function updateIframeAndCode(iframeUrl) {
+      document.getElementById('iframePreview').src = iframeUrl;
+      const iframeCode = `<iframe src="${iframeUrl}" width="400" height="600" frameborder="0"></iframe>`;
+      document.getElementById('iframeCode').value = iframeCode;
+    }
+
+
+
+    function handlePreviewButtonClick() {
+      const categories = getSelectedCategories();
+      const subcategories = getSelectedSubcategories();
+      const options = getSelectedOptions();
+      const finalIframeUrl = buildIframeUrl()
+
+      if (!validateCategories(categories, subcategories)) {
+        return;
+      }
+
+      updateIframeAndCode(finalIframeUrl);
+    }
+
+
+    initializeIframeUrl();
+
+    previewButton.addEventListener('click', handlePreviewButtonClick);
+
+
+
+
     const allCheckbox = document.getElementById('cat-all');
     const categoryCheckboxes = document.querySelectorAll('.category-checkbox');
     const politicalBehaviorCheckbox = document.getElementById('cat4');
@@ -328,12 +319,30 @@
       });
     }
 
-
-
     allCheckbox.addEventListener('change', function() {
-      toggleCategoryCheckboxes(this.checked);
-      // toggleSubCategoryCheckboxes(this.checked);  -----> à revoir
+      const allInputs = document.querySelectorAll('.category-checkbox, .subcategory-checkbox');
+
+      if (this.checked) {
+        allInputs.forEach(input => {
+          input.checked = true;
+          input.disabled = true;
+        });
+      } else {
+        allInputs.forEach(input => {
+          input.checked = false;
+          input.disabled = false;
+        });
+      }
     });
+
+
+
+
+    // allCheckbox.addEventListener('change', function() {
+    //   toggleCategoryCheckboxes(this.checked);
+    //   // toggleSubCategoryCheckboxes(this.checked);
+
+    // });
 
     politicalBehaviorCheckbox.addEventListener('change', function() {
       toggleSubCategoryCheckboxes(this.checked);
