@@ -64,9 +64,9 @@
 
       // Page elements 
       $data['page'] = $data['category']['slug'];
-      $data['titleTag'] = 'h3';
+      $data['titleTag'] = 'div';
       $data['subtitleTag'] = 'div';
-      $data['postTitleTag'] = 'h4';
+      $data['postTitleTag'] = 'h3';
 
       // Breadcrumb
       $data['breadcrumb'] = array(
