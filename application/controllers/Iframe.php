@@ -87,7 +87,7 @@ class Iframe extends CI_Controller
             $data['views_to_load'][] = 'deputes/partials/mp_individual/_votes.php';
             break;
           case 'election':
-            $data['views_to_load'][] = 'deputes/partials/mp_individual/_election_iframe.php';
+            $data['views_to_load'][] = 'deputes/partials/mp_individual/_election.php';
             break;
           case 'comportement-politique':
             $data['views_to_load'][] = 'deputes/partials/mp_individual/statistics/_index.php';
