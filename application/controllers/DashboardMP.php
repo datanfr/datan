@@ -344,29 +344,25 @@
 
     }
 
-    public function generate_iframe() 
+    public function generate_iframe()
     {
       $data = $this->data;
-      //  var_dump($data['depute']['nameUrl']);
-      // echo '<pre>';
-      //    var_dump($data['depute']['nameUrl']);
-      //  echo  '</pre>';
-
+      $mp_id = $data['depute']['mpId'];
+      $data['has_explanation'] = $this->dashboardMP_model->get_explanations_by_mp($mp_id);
       $data['name_url'] = $data['depute']['nameUrl'];
   
       // Meta
       $data['title_meta'] = 'Générateur d\'iframe - Dashboard | Datan';
       $data['breadcrumb'] = array(
-        array('name' => 'Dashboard', 'url' => base_url().'dashboard', 'active' => FALSE),
-        array('name' => 'Générer un iframe', 'url' => base_url().'dashboard/iframe', 'active' => TRUE),
+        array('name' => 'Dashboard', 'url' => base_url() . 'dashboard', 'active' => FALSE),
+        array('name' => 'Générer un iframe', 'url' => base_url() . 'dashboard/iframe', 'active' => TRUE),
       );
-
+  
       $data['title'] = "Générer un iframe";
-
       $data['js_to_load'] = array('datan/dashboard-mp-social-share');
-
+  
       $this->load->view('dashboard/header', $data);
-      $this->load->view('dashboard-mp/iframe/index',$data);
+      $this->load->view('dashboard-mp/iframe/index', $data);
       $this->load->view('dashboard/footer', $data);
     }
 

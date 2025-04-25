@@ -66,7 +66,11 @@
                     <label class="form-check-label" for="cat3">Mon élection</label>
                   </div>
                   <div class="form-check">
-                    <input class="form-check-input category-checkbox" type="checkbox" value="comportement-politique" id="cat4">
+                    <input class="form-check-input category-checkbox" type="checkbox" value="explication" id="cat4">
+                    <label class="form-check-label" for="cat3">Ma dernière explication</label>
+                  </div>
+                  <div class="form-check">
+                    <input class="form-check-input category-checkbox" type="checkbox" value="comportement-politique" id="cat5">
                     <label class="form-check-label" for="cat4">Mon comportement politique</label>
 
                     <!-- Sous-catégories -->
@@ -99,10 +103,6 @@
                   <input class="form-check-input" type="checkbox" value="hide-secondary-title" id="hideSecondaryTitle">
                   <label class="form-check-label" for="hideSecondaryTitle">Cacher le titre secondaire</label>
                 </div>
-              </div>
-
-              <div class="mb-3">
-                <button class="btn btn-primary font-weight-bold" id="previewButton">Générer l'iframe</button>
               </div>
             </div>
 
@@ -143,8 +143,19 @@
         <div class="col-md-6 px-lg-5 px-md-3 py-md-5 py-lg-0 mt-md-0 mt-4">
           <h2 class="font-weight-bold text-black">Aperçu</h2>
           <div id="iframe-wrapper" data-slug="<?= $name_url ?>"></div>
+
+          <?php if (empty($has_explanation)) : ?>
+            <div class="alert alert-warning">
+              Vous n'avez pas encore d'explication.
+              <a href="<?= base_url() ?>dashboard/explications/liste" class="alert-link">
+                Rédigez votre première explication
+              </a>.
+            </div>
+          <?php endif; ?>
+
           <iframe id="iframePreview" src="" width="100%" height="600px" frameborder="1"></iframe>
         </div>
+
       </div>
     </div>
   </div>
@@ -156,11 +167,17 @@
 
 <script>
   document.addEventListener('DOMContentLoaded', function() {
-    const previewButton = document.getElementById('previewButton');
+    const hasExplanation = <?= json_encode(!empty($has_explanation)) ?>;
+    const alertDiv = document.querySelector('.alert-warning');
+    const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+    const allCategoriesCheckbox = document.getElementById("cat-all");
+    const mainCategoriesCount = document.querySelectorAll('.category-checkbox').length;
+    const subcategoriesCount = document.querySelectorAll('.subcategory-checkbox').length;
 
     let iframeUrl = "";
-    const allCategoriesChecked = document.getElementById('cat-all').checked;
-
+    if (alertDiv) {
+      alertDiv.style.display = "none";
+    }
 
     function initializeIframeUrl() {
       const slugElement = document.getElementById("iframe-wrapper");
@@ -172,22 +189,16 @@
     }
 
     function getSelectedCategories() {
-      const allCategoriesChecked = document.getElementById('cat-all').checked;
       const categories = [];
-
-
-      if (!allCategoriesChecked) {
-        const categoryCheckboxes = document.querySelectorAll('.category-checkbox');
-        categoryCheckboxes.forEach(checkbox => {
+      if (!allCategoriesCheckbox.checked) {
+        document.querySelectorAll('.category-checkbox').forEach(checkbox => {
           if (checkbox.checked) {
             categories.push(checkbox.value);
           }
         });
       }
-
       return categories;
     }
-
 
     function getSelectedSubcategories() {
       const subcategories = [];
@@ -198,22 +209,6 @@
       });
       return subcategories;
     }
-
-
-
-
-    function validateCategories(categories, subcategories) {
-      const allCategoriesChecked = document.getElementById('cat-all').checked;
-
-      if (categories.length === 0 && subcategories.length === 0 && !allCategoriesChecked) {
-        alert("Veuillez sélectionner au moins une catégorie ou une sous-catégorie pour générer l'aperçu.");
-        return false;
-      }
-
-      return true;
-    }
-
-
 
     function getSelectedOptions() {
       const options = [];
@@ -227,30 +222,63 @@
     }
 
     function buildIframeUrl() {
-      const allCheckbox = document.getElementById('cat-all');
-      const politicalBehaviorCheckbox = document.getElementById('cat4');
-      const options = getSelectedOptions();
-
       let iframeUrl = initializeIframeUrl();
+      const categories = getSelectedCategories();
+      const subcategories = getSelectedSubcategories();
+      const options = getSelectedOptions();
+      const allCategoriesCheckbox = document.getElementById('cat-all');
+      const politicalBehaviorCategory = document.getElementById("cat5");
+
+      const params = [];
+      let finalCategories = [];
 
 
-      if (allCheckbox.checked) {
+      if (allCategoriesCheckbox.checked) {
+        if (options.length > 0) {
+          params.push(...options);
+        }
+        if (params.length > 0) {
+          iframeUrl += "?" + params.join('&');
+        }
         return iframeUrl;
       }
 
-      // if (politicalBehaviorCheckbox.checked) {
-      //   return iframeUrl + "?categories=comportement-politique";
-      // }-------> à revoir
+      if (categories.length === mainCategoriesCount) {
+        allCategoriesCheckbox.checked = true;
+        toggleCategoryCheckboxes(true);
+        toggleSubCategoryCheckboxes(true);
+        if (options.length > 0) {
+          params.push(...options);
+          iframeUrl += "?" + params.join('&');
+        }
+        return iframeUrl;
+      }
+
+      finalCategories = [...categories];
+
+      subcategories.forEach(subcategory => {
+        if (politicalBehaviorCategory.checked) {
+          return;
+        }
+        finalCategories.push(subcategory);
+      });
 
 
-      const categories = getSelectedCategories();
-      const subcategories = getSelectedSubcategories();
-      const allCategories = [...categories, ...subcategories];
+      if (subcategories.length === subcategoriesCount) {
+        // !! soluce :  Supprime toutes les sous-catégories comportement-politique !!
+        finalCategories = finalCategories.filter(cat => !cat.startsWith("comportement-politique."));
 
-      const params = [];
+        politicalBehaviorCategory.checked = true;
+        toggleSubCategoryCheckboxes(true);
 
-      if (allCategories.length > 0) {
-        params.push("categories=" + allCategories.join(','));
+        if (!finalCategories.includes("comportement-politique")) {
+          finalCategories.push("comportement-politique");
+        }
+      }
+
+
+      if (finalCategories.length > 0) {
+        params.push("categories=" + finalCategories.join(','));
       }
 
       if (options.length > 0) {
@@ -261,102 +289,95 @@
         iframeUrl += "?" + params.join('&');
       }
 
+
       return iframeUrl;
     }
 
-
-
-
-
     function updateIframeAndCode(iframeUrl) {
-      document.getElementById('iframePreview').src = iframeUrl;
-      const iframeCode = `<iframe src="${iframeUrl}" width="400" height="600" frameborder="0"></iframe>`;
-      document.getElementById('iframeCode').value = iframeCode;
-    }
-
-
-
-    function handlePreviewButtonClick() {
       const categories = getSelectedCategories();
       const subcategories = getSelectedSubcategories();
-      const options = getSelectedOptions();
-      const finalIframeUrl = buildIframeUrl()
+      const iframePreview = document.getElementById('iframePreview')
+      const iframeCodeElement = document.getElementById('iframeCode')
 
-      if (!validateCategories(categories, subcategories)) {
-        return;
+      if (allCategoriesCheckbox.checked || categories.length > 0 || subcategories.length > 0) {
+        iframePreview.src = iframeUrl;
+        const iframeCode = `<iframe src="${iframeUrl}" width="400" height="600" frameborder="0"></iframe>`;
+        iframeCodeElement.value = iframeCode;
+      } else {
+        iframePreview.src = '';
+        iframeCodeElement.value = "";
       }
-
-      updateIframeAndCode(finalIframeUrl);
     }
 
+    function handlePreview() {
+      const iframeUrl = buildIframeUrl();
+      const shouldShowAlert = [...checkboxes].some(cb =>
+        cb.checked && (cb.value.includes('all') || cb.value.includes('explication'))
+      );
+      if (alertDiv) {
+        alertDiv.style.display = shouldShowAlert ? "block" : "none";
+      }
 
-    initializeIframeUrl();
-
-    previewButton.addEventListener('click', handlePreviewButtonClick);
-
-
-
-
-    const allCheckbox = document.getElementById('cat-all');
-    const categoryCheckboxes = document.querySelectorAll('.category-checkbox');
-    const politicalBehaviorCheckbox = document.getElementById('cat4');
-
-    const subCategoryCheckboxes = document.querySelectorAll('.subcategory-checkbox');
-
-
+      updateIframeAndCode(iframeUrl);
+    }
 
     function toggleCategoryCheckboxes(disable) {
-      categoryCheckboxes.forEach(cb => {
+      document.querySelectorAll('.category-checkbox').forEach(cb => {
         cb.checked = disable;
         cb.disabled = disable;
       });
     }
 
     function toggleSubCategoryCheckboxes(disable) {
-      subCategoryCheckboxes.forEach(cb => {
+      document.querySelectorAll('.subcategory-checkbox').forEach(cb => {
         cb.checked = disable;
         cb.disabled = disable;
       });
     }
 
-    allCheckbox.addEventListener('change', function() {
-      const allInputs = document.querySelectorAll('.category-checkbox, .subcategory-checkbox');
+    function handlePoliticalBehaviorCategory() {
+      const politicalBehaviorCategory = document.getElementById("cat5");
 
+      politicalBehaviorCategory.addEventListener("change", function() {
+        if (this.checked) {
+          toggleSubCategoryCheckboxes(true);
+        } else {
+          toggleSubCategoryCheckboxes(false);
+        }
+      });
+    }
+
+    //INITIALIZE LOAD PAGE
+
+    allCategoriesCheckbox.addEventListener('change', function() {
       if (this.checked) {
-        allInputs.forEach(input => {
-          input.checked = true;
-          input.disabled = true;
-        });
+        toggleCategoryCheckboxes(true);
+        toggleSubCategoryCheckboxes(true);
       } else {
-        allInputs.forEach(input => {
-          input.checked = false;
-          input.disabled = false;
-        });
+        toggleCategoryCheckboxes(false);
+        toggleSubCategoryCheckboxes(false);
       }
     });
 
+    handlePoliticalBehaviorCategory();
 
 
+    allCategoriesCheckbox.checked = true;
+    toggleCategoryCheckboxes(true);
+    toggleSubCategoryCheckboxes(true);
 
-    // allCheckbox.addEventListener('change', function() {
-    //   toggleCategoryCheckboxes(this.checked);
-    //   // toggleSubCategoryCheckboxes(this.checked);
+    const shouldShowAlert = [...checkboxes].some(cb =>
+      cb.checked && (cb.value.includes('all') || cb.value.includes('explication'))
+    );
+    if (alertDiv) {
+      alertDiv.style.display = shouldShowAlert ? "block" : "none";
+    }
 
-    // });
+    iframeUrl = initializeIframeUrl();
+    updateIframeAndCode(iframeUrl);
 
-    politicalBehaviorCheckbox.addEventListener('change', function() {
-      toggleSubCategoryCheckboxes(this.checked);
-    });
+    checkboxes.forEach(cb => cb.addEventListener('change', handlePreview));
 
-
-
-    categoryCheckboxes.forEach(cb => {
-      cb.addEventListener('change', function() {
-        if (allCheckbox.checked) {
-          allCheckbox.checked = false;
-        }
-      });
-    });
   });
 </script>
 
