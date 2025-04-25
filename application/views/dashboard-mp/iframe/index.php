@@ -134,9 +134,6 @@
             </div>
 
           </div>
-
-
-
         </div>
 
         <!-- Colonne droite -->
@@ -144,11 +141,18 @@
           <h2 class="font-weight-bold text-black">Aperçu</h2>
           <div id="iframe-wrapper" data-slug="<?= $name_url ?>"></div>
 
-          <?php if (empty($has_explanation)) : ?>
+          <?php if (empty($explanations)) : ?>
             <div class="alert alert-warning">
               Vous n'avez pas encore d'explication.
               <a href="<?= base_url() ?>dashboard/explications/liste" class="alert-link">
                 Rédigez votre première explication
+              </a>.
+            </div>
+          <?php elseif ($has_published === false) : ?>
+            <div class="alert alert-warning">
+              Vous n'avez pas encore d'explication publiée.
+              <a href="<?= base_url() ?>dashboard/explications/liste" class="alert-link">
+                Cliquez ici pour gérer vos explications
               </a>.
             </div>
           <?php endif; ?>
@@ -164,25 +168,26 @@
 
 
 
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 <script>
-  document.addEventListener('DOMContentLoaded', function() {
-    const hasExplanation = <?= json_encode(!empty($has_explanation)) ?>;
-    const alertDiv = document.querySelector('.alert-warning');
-    const checkboxes = document.querySelectorAll('input[type="checkbox"]');
-    const allCategoriesCheckbox = document.getElementById("cat-all");
-    const mainCategoriesCount = document.querySelectorAll('.category-checkbox').length;
-    const subcategoriesCount = document.querySelectorAll('.subcategory-checkbox').length;
+  $(document).ready(function() {
+    // const hasExplanation = " + JSON.stringify(!empty($has_explanation)) + ";
+    const alertDiv = $('.alert-warning');
+    const checkboxes = $('input[type="checkbox"]');
+    const allCategoriesCheckbox = $('#cat-all');
+    const mainCategoriesCount = $('.category-checkbox').length;
+    const subcategoriesCount = $('.subcategory-checkbox').length;
 
     let iframeUrl = "";
-    if (alertDiv) {
-      alertDiv.style.display = "none";
+    if (alertDiv.length) {
+      alertDiv.hide();
     }
 
     function initializeIframeUrl() {
-      const slugElement = document.getElementById("iframe-wrapper");
-      if (slugElement) {
-        const slug = slugElement.dataset.slug;
+      const slugElement = $('#iframe-wrapper');
+      if (slugElement.length) {
+        const slug = slugElement.data('slug');
         return "http://dev-datan.fr/iframe/depute/" + slug;
       }
       return "";
@@ -190,11 +195,9 @@
 
     function getSelectedCategories() {
       const categories = [];
-      if (!allCategoriesCheckbox.checked) {
-        document.querySelectorAll('.category-checkbox').forEach(checkbox => {
-          if (checkbox.checked) {
-            categories.push(checkbox.value);
-          }
+      if (!allCategoriesCheckbox.prop('checked')) {
+        $('.category-checkbox:checked').each(function() {
+          categories.push($(this).val());
         });
       }
       return categories;
@@ -202,20 +205,18 @@
 
     function getSelectedSubcategories() {
       const subcategories = [];
-      document.querySelectorAll('.subcategory-checkbox').forEach(checkbox => {
-        if (checkbox.checked) {
-          subcategories.push("comportement-politique." + checkbox.value);
-        }
+      $('.subcategory-checkbox:checked').each(function() {
+        subcategories.push("comportement-politique." + $(this).val());
       });
       return subcategories;
     }
 
     function getSelectedOptions() {
       const options = [];
-      if (document.getElementById('hideMainTitle').checked) {
+      if ($('#hideMainTitle').prop('checked')) {
         options.push('main-title=hide');
       }
-      if (document.getElementById('hideSecondaryTitle').checked) {
+      if ($('#hideSecondaryTitle').prop('checked')) {
         options.push('secondary-title=hide');
       }
       return options;
@@ -226,14 +227,11 @@
       const categories = getSelectedCategories();
       const subcategories = getSelectedSubcategories();
       const options = getSelectedOptions();
-      const allCategoriesCheckbox = document.getElementById('cat-all');
-      const politicalBehaviorCategory = document.getElementById("cat5");
-
+      const politicalBehaviorCategory = $("#cat5");
       const params = [];
       let finalCategories = [];
 
-
-      if (allCategoriesCheckbox.checked) {
+      if (allCategoriesCheckbox.prop('checked')) {
         if (options.length > 0) {
           params.push(...options);
         }
@@ -244,7 +242,7 @@
       }
 
       if (categories.length === mainCategoriesCount) {
-        allCategoriesCheckbox.checked = true;
+        allCategoriesCheckbox.prop('checked', true);
         toggleCategoryCheckboxes(true);
         toggleSubCategoryCheckboxes(true);
         if (options.length > 0) {
@@ -256,39 +254,33 @@
 
       finalCategories = [...categories];
 
-      subcategories.forEach(subcategory => {
-        if (politicalBehaviorCategory.checked) {
+      subcategories.forEach(function(subcategory) {
+        if (politicalBehaviorCategory.prop('checked')) {
           return;
         }
         finalCategories.push(subcategory);
       });
 
-
       if (subcategories.length === subcategoriesCount) {
-        // !! soluce :  Supprime toutes les sous-catégories comportement-politique !!
-        finalCategories = finalCategories.filter(cat => !cat.startsWith("comportement-politique."));
-
-        politicalBehaviorCategory.checked = true;
+        finalCategories = finalCategories.filter(function(cat) {
+          return !cat.startsWith("comportement-politique.");
+        });
+        politicalBehaviorCategory.prop('checked', true);
         toggleSubCategoryCheckboxes(true);
-
         if (!finalCategories.includes("comportement-politique")) {
           finalCategories.push("comportement-politique");
         }
       }
 
-
       if (finalCategories.length > 0) {
         params.push("categories=" + finalCategories.join(','));
       }
-
       if (options.length > 0) {
         params.push(...options);
       }
-
       if (params.length > 0) {
         iframeUrl += "?" + params.join('&');
       }
-
 
       return iframeUrl;
     }
@@ -296,50 +288,48 @@
     function updateIframeAndCode(iframeUrl) {
       const categories = getSelectedCategories();
       const subcategories = getSelectedSubcategories();
-      const iframePreview = document.getElementById('iframePreview')
-      const iframeCodeElement = document.getElementById('iframeCode')
+      const iframePreview = $('#iframePreview');
+      const iframeCodeElement = $('#iframeCode');
 
-      if (allCategoriesCheckbox.checked || categories.length > 0 || subcategories.length > 0) {
-        iframePreview.src = iframeUrl;
+      if (allCategoriesCheckbox.prop('checked') || categories.length > 0 || subcategories.length > 0) {
+        iframePreview.attr('src', iframeUrl);
         const iframeCode = `<iframe src="${iframeUrl}" width="400" height="600" frameborder="0"></iframe>`;
-        iframeCodeElement.value = iframeCode;
+        iframeCodeElement.val(iframeCode);
       } else {
-        iframePreview.src = '';
-        iframeCodeElement.value = "";
+        iframePreview.attr('src', '');
+        iframeCodeElement.val("");
       }
     }
 
     function handlePreview() {
       const iframeUrl = buildIframeUrl();
-      const shouldShowAlert = [...checkboxes].some(cb =>
-        cb.checked && (cb.value.includes('all') || cb.value.includes('explication'))
+      const shouldShowAlert = checkboxes.toArray().some(cb =>
+        $(cb).prop('checked') && ($(cb).val().includes('all') || $(cb).val().includes('explication'))
       );
-      if (alertDiv) {
-        alertDiv.style.display = shouldShowAlert ? "block" : "none";
+      if (alertDiv.length) {
+        alertDiv.toggle(shouldShowAlert);
       }
-
       updateIframeAndCode(iframeUrl);
     }
 
     function toggleCategoryCheckboxes(disable) {
-      document.querySelectorAll('.category-checkbox').forEach(cb => {
-        cb.checked = disable;
-        cb.disabled = disable;
+      $('.category-checkbox').each(function() {
+        $(this).prop('checked', disable);
+        $(this).prop('disabled', disable);
       });
     }
 
     function toggleSubCategoryCheckboxes(disable) {
-      document.querySelectorAll('.subcategory-checkbox').forEach(cb => {
-        cb.checked = disable;
-        cb.disabled = disable;
+      $('.subcategory-checkbox').each(function() {
+        $(this).prop('checked', disable);
+        $(this).prop('disabled', disable);
       });
     }
 
     function handlePoliticalBehaviorCategory() {
-      const politicalBehaviorCategory = document.getElementById("cat5");
-
-      politicalBehaviorCategory.addEventListener("change", function() {
-        if (this.checked) {
+      const politicalBehaviorCategory = $('#cat5');
+      politicalBehaviorCategory.on('change', function() {
+        if ($(this).prop('checked')) {
           toggleSubCategoryCheckboxes(true);
         } else {
           toggleSubCategoryCheckboxes(false);
@@ -347,10 +337,8 @@
       });
     }
 
-    //INITIALIZE LOAD PAGE
-
-    allCategoriesCheckbox.addEventListener('change', function() {
-      if (this.checked) {
+    allCategoriesCheckbox.on('change', function() {
+      if ($(this).prop('checked')) {
         toggleCategoryCheckboxes(true);
         toggleSubCategoryCheckboxes(true);
       } else {
@@ -361,23 +349,23 @@
 
     handlePoliticalBehaviorCategory();
 
-
-    allCategoriesCheckbox.checked = true;
+    allCategoriesCheckbox.prop('checked', true);
     toggleCategoryCheckboxes(true);
     toggleSubCategoryCheckboxes(true);
 
-    const shouldShowAlert = [...checkboxes].some(cb =>
-      cb.checked && (cb.value.includes('all') || cb.value.includes('explication'))
+    const shouldShowAlert = checkboxes.toArray().some(cb =>
+      $(cb).prop('checked') && ($(cb).val().includes('all') || $(cb).val().includes('explication'))
     );
-    if (alertDiv) {
-      alertDiv.style.display = shouldShowAlert ? "block" : "none";
+    if (alertDiv.length) {
+      alertDiv.toggle(shouldShowAlert);
     }
 
     iframeUrl = initializeIframeUrl();
     updateIframeAndCode(iframeUrl);
 
-    checkboxes.forEach(cb => cb.addEventListener('change', handlePreview));
-
+    checkboxes.each(function() {
+      $(this).on('change', handlePreview);
+    });
   });
 </script>
 

@@ -348,7 +348,16 @@
     {
       $data = $this->data;
       $mp_id = $data['depute']['mpId'];
-      $data['has_explanation'] = $this->dashboardMP_model->get_explanations_by_mp($mp_id);
+      $explanations = $this->dashboardMP_model->get_explanations_by_mp($mp_id);
+      $has_published = false;
+      foreach ($explanations as $exp) {
+        if ($exp['state'] == 1) {
+          $has_published = true;
+          break;
+        }
+      }
+      $data['explanations'] = $explanations;
+      $data['has_published'] = $has_published;
       $data['name_url'] = $data['depute']['nameUrl'];
   
       // Meta
