@@ -28,15 +28,3 @@ class Group_service
     }
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
