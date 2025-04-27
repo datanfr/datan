@@ -86,6 +86,13 @@
       return 'URL = ' . $url . ' ||| controller = '. $controller . ' ||| method = ' . $method;
     }
 
+	public function countdown($date){
+		$targetDate = new DateTime($date);
+		$currentDate = new DateTime();
+		$interval = $currentDate->diff($targetDate);
+		return $interval->format('%a') + 1;
+	}
+
 	public function compare_numbers_text($toCompare, $base){
 		if ($toCompare == $base){
 			return 'égal';
