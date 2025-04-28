@@ -194,6 +194,7 @@
       $depute_full_name = $depute['nameFirst'].' '.$depute['nameLast'];
       $data['no_job'] = array('autre profession','autres', 'sans profession déclarée', 'sans profession');
       $groupe_id = $depute['groupeId'];
+      $data['first_person'] = false;
   
       $data['photo_square'] = $this->deputes_model->get_photo_square($depute);
   

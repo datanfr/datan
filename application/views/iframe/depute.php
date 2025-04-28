@@ -1,7 +1,7 @@
 <div class="pg-depute-individual iframe-container <?= $main_title_visibility === 'hidden' ? 'no-title' : '' ?> <?= $secondary_title_visibility === 'hidden' ? 'no-subtitle' : '' ?>">
   <?php if ($main_title_visibility !== 'hidden'): ?>
     <h1>
-      Les données parlementaires et électorales de <?= $mp_full_name; ?>
+      <?= $first_person ? 'Mon activité de députée' : 'L\'activité de députée de ' . $mp_full_name; ?>
     </h1>
   <?php endif; ?>
 

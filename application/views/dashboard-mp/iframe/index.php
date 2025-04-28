@@ -103,13 +103,22 @@
                   <input class="form-check-input" type="checkbox" value="hide-secondary-title" id="hideSecondaryTitle">
                   <label class="form-check-label" for="hideSecondaryTitle">Cacher le titre secondaire</label>
                 </div>
+                <!-- Option première et troisième personne-->
+                <div class="form-check">
+                  <label class="form-check-label" for="first-person">À la première personne</label>
+                  <input type="radio" class="form-check-input" id="first-person" name="person-mode" value="first" checked>
+                </div>
+                <div class="form-check">
+                  <label class="form-check-label" for="second-person">À la troisième personne</label>
+                  <input type="radio" class="form-check-input" id="second-person" name="person-mode" value="second">
+                </div>
               </div>
             </div>
 
 
             <!-- Partie droite de la colonne de gauche (Code à copier) -->
             <div class="col-md-6">
-              <div class="mt-3">
+              <div>
                 <label for="iframeCode" class="form-label font-weight-bold">Code à copier</label>
                 <!-- Zone grisée -->
                 <div class="bg-light mb-3" style="height: 200px; width: 100%;">
@@ -164,7 +173,7 @@
     </div>
   </div>
 </div>
-</div>
+
 
 
 
@@ -219,6 +228,14 @@
       if ($('#hideSecondaryTitle').prop('checked')) {
         options.push('secondary-title=hide');
       }
+      const personMode = $('input[name="person-mode"]:checked').val();
+      console.log("valeur", personMode);
+      if (personMode === 'first') {
+        options.push('first-person=true');
+      } else {
+        options.push('person-mode=third');
+      }
+
       return options;
     }
 
@@ -227,6 +244,7 @@
       const categories = getSelectedCategories();
       const subcategories = getSelectedSubcategories();
       const options = getSelectedOptions();
+      console.log(options)
       const politicalBehaviorCategory = $("#cat5");
       const params = [];
       let finalCategories = [];
@@ -336,6 +354,12 @@
         }
       });
     }
+
+    $('input[name="person-mode"]').on('change', function() {
+      const iframeUrl = buildIframeUrl(); 
+      updateIframeAndCode(iframeUrl); 
+    });
+
 
     allCategoriesCheckbox.on('change', function() {
       if ($(this).prop('checked')) {
