@@ -32,12 +32,12 @@ class Iframe extends CI_Controller
     $data['secondary_title_visibility'] =  $data['iframe_title_visibility'];
     $data['title_displayed'] = false;
     $data['has_comportement_subcategories'] = false;
-
+    $data['first_person'] = isset($_GET['first-person']) && ($_GET['first-person'] === 'true');
+    $first_person =  $data['first_person'];
     $data['views_to_load'] = [];
 
     $categories_param = $this->input->get('categories');
     $categories = $categories_param ? explode(',', $categories_param) : ['positions-importantes', 'derniers-votes', 'election', 'explication', 'comportement-politique'];
-
     foreach ($categories as $category) {
       if (strpos($category, '.') === false) {
         switch ($category) {
@@ -47,14 +47,25 @@ class Iframe extends CI_Controller
           case 'derniers-votes':
             $data['views_to_load'][] = 'deputes/partials/mp_individual/_votes.php';
             break;
-          case 'election':
-            $data['views_to_load'][] = 'deputes/partials/mp_individual/_election.php';
-            break;
+            case 'election':
+              $data['views_to_load'][] = $first_person
+                ? 'iframe/partials/_election_first_person.php'
+                : 'deputes/partials/mp_individual/_election.php';
+              break;
           case 'explication':
             $data['views_to_load'][] = 'deputes/partials/mp_individual/_explanation.php';
             break;
           case 'comportement-politique':
-            $data['views_to_load'][] = 'deputes/partials/mp_individual/statistics/_index.php';
+            $data['views_to_load'][] = $first_person
+            ? 'iframe/partials/_voting_participation_first_person.php'
+            : 'deputes/partials/mp_individual/statistics/_voting_participation.php';
+          $data['views_to_load'][] = $first_person
+            ? 'iframe/partials/_intra_group_loyalty_first_person.php'
+            : 'deputes/partials/mp_individual/statistics/_intra_group_loyalty.php';
+          $data['views_to_load'][] = $first_person
+            ? 'iframe/partials/_inter_group_loyalty_first_person.php'
+            : 'deputes/partials/mp_individual/statistics/_inter_group_loyalty.php';
+          break;
             break;
           default:
             break;
@@ -67,13 +78,19 @@ class Iframe extends CI_Controller
           case 'comportement-politique':
             switch ($sub_category) {
               case 'participation-votes':
-                $data['views_to_load'][] = 'deputes/partials/mp_individual/statistics/_voting_participation.php';
+                $data['views_to_load'][] =  $first_person
+                ? 'iframe/partials/_voting_participation_first_person.php'
+                : 'deputes/partials/mp_individual/statistics/_voting_participation.php';
                 break;
               case 'proximite-groupe':
-                $data['views_to_load'][] = 'deputes/partials/mp_individual/statistics/_intra_group_loyalty.php';
+                $data['views_to_load'][] = $first_person
+                ? 'iframe/partials/_intra_group_loyalty_first_person.php'
+                : 'deputes/partials/mp_individual/statistics/_intra_group_loyalty.php';
                 break;
               case 'proximite-groupes':
-                $data['views_to_load'][] = 'deputes/partials/mp_individual/statistics/_inter_group_loyalty.php';
+                $data['views_to_load'][] = $first_person
+              ? 'iframe/partials/_inter_group_loyalty_first_person.php'
+              : 'deputes/partials/mp_individual/statistics/_inter_group_loyalty.php';
                 break;
               default:
                 break;
