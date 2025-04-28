@@ -5,7 +5,7 @@
       <div class="col-12">
         <div class="d-flex <?= (isset($iframe_title_visibility) && $iframe_title_visibility === 'hidden') ? 'justify-content-end' : 'justify-content-between' ?> mb-4">
           <?php if (!isset($iframe_title_visibility) || $iframe_title_visibility !== 'hidden'): ?>
-            <h2 class="title-center">Ses derniers votes</h2>
+            <h2 class="title-center"><?= $first_person ? 'Mes' : 'Ses' ?> derniers votes</h2>
           <?php endif; ?>
           <div class="bloc-carousel-votes">
             <a class="btn see-all-votes mx-2" href="<?= base_url() ?>deputes/<?= $depute['dptSlug'] ?>/depute_<?= $depute['nameUrl'] ?>/votes">

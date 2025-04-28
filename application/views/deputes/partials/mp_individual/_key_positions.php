@@ -4,7 +4,7 @@
     <div class="row">
       <div class="col-12">
         <?php if (!isset($iframe_title_visibility) || $iframe_title_visibility !== 'hidden'): ?>
-          <h2 class="mb-4 title-center">Ses positions importantes</h2>
+          <h2 class="mb-4 title-center"><?=$first_person ? 'Mes' : 'Ses' ?> positions importantes</h2>
         <?php endif; ?>
         <div class="card">
           <div class="card-body key-votes">
