@@ -1,8 +1,7 @@
 <!-- BLOC ELECTION -->
 <div class="bloc-election mt-5">
-
   <?php if (!isset($iframe_title_visibility) || $iframe_title_visibility !== 'hidden'): ?>
-    <h2 class="mb-4 title-center">Son élection</h2>
+    <h2 class="mb-4 title-center"><?= $first_person ? "Mon élection" : "Son élection" ?></h2>
   <?php endif; ?>
 
   <div class="card">
@@ -10,24 +9,37 @@
 
       <!-- Actuel ou ancien député -->
       <?php if ($active) : ?>
-        <p class="subtitle">Député<?= $gender['e'] ?> de la <?= $depute["circo"] ?><sup><?= $depute["circo_abbrev"] ?></sup> circonscription <?= $depute['dptLibelle2'] ?><?= $depute['departementNom'] . ' (' . $depute['departementCode'] . ')' ?></p>
+        <p class="subtitle">
+          <?= $first_person
+            ? "Je suis député{$gender['e']} de la {$depute["circo"]}<sup>{$depute["circo_abbrev"]}</sup> circonscription {$depute['dptLibelle2']}{$depute['departementNom']} ({$depute['departementCode']})"
+            : "Député{$gender['e']} de la {$depute["circo"]}<sup>{$depute["circo_abbrev"]}</sup> circonscription {$depute['dptLibelle2']}{$depute['departementNom']} ({$depute['departementCode']})"
+          ?>
+        </p>
       <?php else : ?>
-        <p><?= $title ?> était <?= $gender['le'] ?> député<?= $gender['e'] ?> de la <?= $depute["circo"] ?><sup><?= $depute["circo_abbrev"] ?></sup> circonscription <?= $depute['dptLibelle2'] ?><a href="<?= base_url() ?>deputes/<?= $depute['dptSlug'] ?>"><?= $depute['departementNom'] . ' (' . $depute['departementCode'] . ')' ?></a>.</p>
+        <p>
+          <?= $first_person
+            ? "J'étais {$gender['le']} député{$gender['e']} de la {$depute["circo"]}<sup>{$depute["circo_abbrev"]}</sup> circonscription {$depute['dptLibelle2']}<a href=\"" . base_url() . "deputes/{$depute['dptSlug']}\">{$depute['departementNom']} ({$depute['departementCode']})</a>."
+            : "{$title} était {$gender['le']} député{$gender['e']} de la {$depute["circo"]}<sup>{$depute["circo_abbrev"]}</sup> circonscription {$depute['dptLibelle2']}<a href=\"" . base_url() . "deputes/{$depute['dptSlug']}\">{$depute['departementNom']} ({$depute['departementCode']})</a>."
+          ?>
+        </p>
       <?php endif; ?>
 
       <!-- Election invalidée -->
       <?php if ($election_canceled && $election_canceled['cause']): ?>
         <p><?= $election_canceled['cause'] ?></p>
         <p>
-          Pour découvrir les résultats des élection législatives partielles, organisées après l'invalidation par le Conseil constitutionnel,
+          Pour découvrir les résultats des élections législatives partielles, organisées après l'invalidation par le Conseil constitutionnel,
           <span class="url_obf" url_obf="<?= url_obfuscation("https://www.interieur.gouv.fr/Elections/Les-resultats/Partielles/Legislatives") ?>">cliquez ici</span>.
         </p>
       <?php endif; ?>
-      
+
       <!-- Résultats de l'élection -->
       <?php if (isset($election_result)) : ?>
         <p>
-          <?= $title ?> a été élu<?= $gender['e'] ?> <?= $gender['depute'] ?>  lors du <?= $election_result['tour_election'] ?> tour des élections législatives de 2024 avec <b><?= formatNumber($election_result['voix']) ?></b> voix, soit <?= round($election_result['pct_exprimes']) ?>% des suffrages exprimés.
+          <?= $first_person
+            ? "J'ai été élu{$gender['e']} {$gender['depute']} lors du {$election_result['tour_election']} tour des élections législatives de 2024 avec <b>" . formatNumber($election_result['voix']) . "</b> voix, soit " . round($election_result['pct_exprimes']) . "% des suffrages exprimés."
+            : "{$title} a été élu{$gender['e']} {$gender['depute']} lors du {$election_result['tour_election']} tour des élections législatives de 2024 avec <b>" . formatNumber($election_result['voix']) . "</b> voix, soit " . round($election_result['pct_exprimes']) . "% des suffrages exprimés."
+          ?>
         </p>
 
         <!-- Taux de participation not on iframe -->
