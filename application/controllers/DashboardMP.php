@@ -368,7 +368,7 @@
       );
   
       $data['title'] = "Générer un iframe";
-      $data['js_to_load'] = array('datan/dashboard-mp-social-share');
+  
   
       $this->load->view('dashboard/header', $data);
       $this->load->view('dashboard-mp/iframe/index', $data);
