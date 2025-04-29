@@ -104,14 +104,15 @@
                   <label class="form-check-label" for="hideSecondaryTitle">Cacher le titre secondaire</label>
                 </div>
                 <!-- Option première et troisième personne-->
-                <div class="form-check">
-                  <label class="form-check-label" for="first-person">À la première personne</label>
-                  <input type="radio" class="form-check-input" id="first-person" name="person-mode" value="first" checked>
-                </div>
-                <div class="form-check">
-                  <label class="form-check-label" for="second-person">À la troisième personne</label>
-                  <input type="radio" class="form-check-input" id="second-person" name="person-mode" value="second">
-                </div>
+              <div class="form-check form-check-inline">
+                <input type="radio" class="form-check-input" id="first-person" name="person-mode" value="first" checked>
+                <label class="form-check-label" for="first-person">À la première personne</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input type="radio" class="form-check-input" id="second-person" name="person-mode" value="second">
+                <label class="form-check-label" for="second-person">À la troisième personne</label>
+              </div>
+
               </div>
             </div>
 
@@ -160,7 +161,7 @@
           <?php elseif ($has_published === false) : ?>
             <div class="alert alert-warning">
               Vous n'avez pas encore d'explication publiée.
-              <a href="<?= base_url() ?>dashboard/explications/liste" class="alert-link">
+              <a href="<?= base_url() ?>dashboard/explications/" class="alert-link">
                 Cliquez ici pour gérer vos explications
               </a>.
             </div>
@@ -384,7 +385,8 @@
       alertDiv.toggle(shouldShowAlert);
     }
 
-    iframeUrl = initializeIframeUrl();
+    iframeUrl = initializeIframeUrl() + "?first-person=true";
+
     updateIframeAndCode(iframeUrl);
 
     checkboxes.each(function() {
