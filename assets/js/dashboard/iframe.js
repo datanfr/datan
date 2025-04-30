@@ -57,7 +57,7 @@ $(document).ready(function () {
     const categories = getSelectedCategories();
     const subcategories = getSelectedSubcategories();
     const options = getSelectedOptions();
-    const politicalBehaviorCategory = $("#cat5");
+    const politicalBehaviorCategory = $("#cat6");
     const params = [];
     let finalCategories = [];
 
@@ -157,7 +157,7 @@ $(document).ready(function () {
   }
 
   function handlePoliticalBehaviorCategory() {
-    const politicalBehaviorCategory = $("#cat5");
+    const politicalBehaviorCategory = $("#cat6");
     politicalBehaviorCategory.on("change", function () {
       if ($(this).prop("checked")) {
         toggleSubCategoryCheckboxes(true);

@@ -12,6 +12,7 @@ class Iframe extends CI_Controller
     $this->load->model('deputes_model');
     $this->load->model('parrainages_model');
     $this->load->model('depute_edito');
+    $this->load->model('questions_model');
   }
 
   public function index(): void
@@ -46,6 +47,7 @@ class Iframe extends CI_Controller
       'derniers-votes' => 'deputes/partials/mp_individual/_votes.php',
       'election' => 'deputes/partials/mp_individual/_election.php',
       'explication' => 'deputes/partials/mp_individual/_explanation.php',
+      'questions' => 'deputes/partials/mp_individual/_questions.php',
       'comportement-politique' => 'deputes/partials/mp_individual/statistics/_index.php',
     ];
 
@@ -137,6 +139,9 @@ class Iframe extends CI_Controller
       $data['votes_datan'] = NULL;
       $data['key_votes'] = NULL;
     }
+
+    //___________________GET QUESTIONS______________________________________
+    $data['questions'] = $this->questions_model->get_questions_by_mp($mp_id, 3);
 
     // ________________ GET Depute page ressources (meta, css, js...)_______
 
