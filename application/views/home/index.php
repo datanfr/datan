@@ -456,6 +456,9 @@
           <span class="url_obf" url_obf="<?= url_obfuscation("https://www.varmatin.com/politique/boccaletti-ou-chenevard-quel-depute-du-var-vote-vraiment-le-plus-et-le-moins-895830") ?>">
             <img class="mx-2 my-3 img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="165" height="30" data-src="<?= asset_url() ?>imgs/media/var_matin.png" alt="Var Matin">
           </span>
+          <span class="url_obf" url_obf="<?= url_obfuscation("https://www.lavoixdunord.fr/1267941/article/2022-12-16/cambresis-le-depute-guy-bricout-si-proche-que-ca-de-la-majorite") ?>">
+            <img class="mx-2 my-3 img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="82" height="40" data-src="<?= asset_url() ?>imgs/media/voix_nord.png" alt="La Voix du Nord">
+          </span>
           <span class="url_obf" url_obf="<?= url_obfuscation("https://www.lalsace.fr/politique/2025/02/23/deputes-fantomes-contre-travail-de-fond") ?>">
             <img class="mx-2 my-3 img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="162" height="30" data-src="<?= asset_url() ?>imgs/media/lalsace.png" alt="L'Alsace">
           </span>
