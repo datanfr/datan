@@ -4067,7 +4067,7 @@ class Script
     public function questions(){
         echo "questions starting \n";
         $dateMaj = $this->dateMaj;
-        $fields = array('uid', 'legislature', 'numero', 'type', 'rubrique', 'analyse', 'mpId', 'mpMandat', 'minInt', 'datePublished', 'dateMaj');
+        $fields = array('uid', 'legislature', 'numero', 'type', 'rubrique', 'analyse', 'mpId', 'mpMandat', 'minInt', 'content', 'datePublished', 'dateMaj');
         $questions = [];
         $x = 1;
 
@@ -4082,6 +4082,7 @@ class Script
             `mpId` VARCHAR(20) DEFAULT NULL,
             `mpMandat` VARCHAR(20) DEFAULT NULL,
             `minInt` VARCHAR(20) DEFAULT NULL,
+            `content` TEXT DEFAULT NULL,
             `datePublished` DATE DEFAULT NULL,
             `dateMaj` DATE DEFAULT NULL,
             PRIMARY KEY (`uid`)
@@ -4110,9 +4111,10 @@ class Script
                     $mpId = $xml->auteur->identite->acteurRef ?? null;
                     $mpMandat = $xml->auteur->identite->mandatRef ?? null;
                     $minInt = $xml->minInt->organeRef ?? null;
+                    $content = null;
                     $datePublished = $xml->cloture->dateCloture ?? null;
 
-                    $question = array('uid' => $uid, 'legislature' => $legislature, 'numero' => $numero, 'type' => $type, 'rubrique' => $rubrique, 'analyse' => $analyse, 'mpId' => $mpId, 'mpMandat' => $mpMandat, 'minInt' => $minInt, 'datePublished' => $datePublished, 'dateMaj' => $dateMaj);
+                    $question = array('uid' => $uid, 'legislature' => $legislature, 'numero' => $numero, 'type' => $type, 'rubrique' => $rubrique, 'analyse' => $analyse, 'mpId' => $mpId, 'mpMandat' => $mpMandat, 'minInt' => $minInt, 'content' => $content, 'datePublished' => $datePublished, 'dateMaj' => $dateMaj);
                     $questions = array_merge($questions, array_values($question));
 
                     if ($x % 500 === 0) {
@@ -4150,9 +4152,10 @@ class Script
                     $mpId = $xml->auteur->identite->acteurRef ?? null;
                     $mpMandat = $xml->auteur->identite->mandatRef ?? null;
                     $minInt = $xml->minInt->organeRef ?? null;
+                    $content = $xml->textesQuestion->texteQuestion->texte ?? null;
                     $datePublished = $xml->textesQuestion->texteQuestion->infoJO->dateJO ?? null;
 
-                    $question = array('uid' => $uid, 'legislature' => $legislature, 'numero' => $numero, 'type' => $type, 'rubrique' => $rubrique, 'analyse' => $analyse, 'mpId' => $mpId, 'mpMandat' => $mpMandat, 'minInt' => $minInt, 'datePublished' => $datePublished, 'dateMaj' => $dateMaj);
+                    $question = array('uid' => $uid, 'legislature' => $legislature, 'numero' => $numero, 'type' => $type, 'rubrique' => $rubrique, 'analyse' => $analyse, 'mpId' => $mpId, 'mpMandat' => $mpMandat, 'minInt' => $minInt, 'content' => $content,'datePublished' => $datePublished, 'dateMaj' => $dateMaj);
                     $questions = array_merge($questions, array_values($question));
 
                     if ($x % 500 === 0) {
@@ -4192,7 +4195,7 @@ class Script
                     $minInt = $xml->minInt->organeRef ?? null;
                     $datePublished = $xml->textesQuestion->texteQuestion->infoJO->dateJO ?? null;
 
-                    $question = array('uid' => $uid, 'legislature' => $legislature, 'numero' => $numero, 'type' => $type, 'rubrique' => $rubrique, 'analyse' => $analyse, 'mpId' => $mpId, 'mpMandat' => $mpMandat, 'minInt' => $minInt, 'datePublished' => $datePublished, 'dateMaj' => $dateMaj);
+                    $question = array('uid' => $uid, 'legislature' => $legislature, 'numero' => $numero, 'type' => $type, 'rubrique' => $rubrique, 'analyse' => $analyse, 'mpId' => $mpId, 'mpMandat' => $mpMandat, 'minInt' => $minInt, 'content' => $content,'datePublished' => $datePublished, 'dateMaj' => $dateMaj);
                     $questions = array_merge($questions, array_values($question));
 
                     if ($x % 500 === 0) {
