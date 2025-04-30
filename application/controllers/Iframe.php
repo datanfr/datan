@@ -37,52 +37,38 @@ class Iframe extends CI_Controller
     $data['views_to_load'] = [];
 
     $categories_param = $this->input->get('categories');
-    $categories = $categories_param ? explode(',', $categories_param) : ['positions-importantes', 'derniers-votes', 'election', 'explication', 'comportement-politique'];
+    $categories = $categories_param
+      ? explode(',', $categories_param)
+      : ['positions-importantes', 'derniers-votes', 'election', 'explication', 'comportement-politique'];
+
+    $category_views = [
+      'positions-importantes' => 'deputes/partials/mp_individual/_key_positions.php',
+      'derniers-votes' => 'deputes/partials/mp_individual/_votes.php',
+      'election' => 'deputes/partials/mp_individual/_election.php',
+      'explication' => 'deputes/partials/mp_individual/_explanation.php',
+      'comportement-politique' => 'deputes/partials/mp_individual/statistics/_index.php',
+    ];
+
+    $subcategory_views = [
+      'comportement-politique' => [
+        'participation-votes' => 'deputes/partials/mp_individual/statistics/_voting_participation.php',
+        'proximite-groupe' => 'deputes/partials/mp_individual/statistics/_intra_group_loyalty.php',
+        'proximite-groupes' => 'deputes/partials/mp_individual/statistics/_inter_group_loyalty.php',
+      ]
+    ];
+
+    $data['views_to_load'] = [];
+
     foreach ($categories as $category) {
       if (strpos($category, '.') === false) {
-        switch ($category) {
-          case 'positions-importantes':
-            $data['views_to_load'][] = 'deputes/partials/mp_individual/_key_positions.php';
-            break;
-          case 'derniers-votes':
-            $data['views_to_load'][] = 'deputes/partials/mp_individual/_votes.php';
-            break;
-          case 'election':
-            $data['views_to_load'][] = 'deputes/partials/mp_individual/_election.php';
-
-            break;
-          case 'explication':
-            $data['views_to_load'][] = 'deputes/partials/mp_individual/_explanation.php';
-            break;
-          case 'comportement-politique':
-            $data['views_to_load'][] = 'deputes/partials/mp_individual/statistics/_index.php';
-            break;
-
-          default:
-            break;
+        if (isset($category_views[$category])) {
+          $data['views_to_load'][] = $category_views[$category];
         }
       } else {
         list($main_category, $sub_category) = explode('.', $category);
-        $data['has_comportement_subcategories'] = true;
-
-        switch ($main_category) {
-          case 'comportement-politique':
-            switch ($sub_category) {
-              case 'participation-votes':
-                $data['views_to_load'][] = 'deputes/partials/mp_individual/statistics/_voting_participation.php';
-                break;
-              case 'proximite-groupe':
-                $data['views_to_load'][] = 'deputes/partials/mp_individual/statistics/_intra_group_loyalty.php';
-                break;
-              case 'proximite-groupes':
-                $data['views_to_load'][] = 'deputes/partials/mp_individual/statistics/_inter_group_loyalty.php';
-                break;
-              default:
-                break;
-            }
-            break;
-          default:
-            break;
+        if (isset($subcategory_views[$main_category][$sub_category])) {
+          $data['views_to_load'][] = $subcategory_views[$main_category][$sub_category];
+          $data['has_comportement_subcategories'] = true;
         }
       }
     }
@@ -122,10 +108,14 @@ class Iframe extends CI_Controller
 
 
     // ____________________GET GENERAL INFOS___________________________
-    $data = $this->depute_service->get_general_infos($data, $mp_id, $legislature, $name_last, $depute_full_name);
+    // $data = $this->depute_service->get_general_infos($data, $mp_id, $legislature, $name_last, $depute_full_name);
+    $general_infos = $this->depute_service->get_general_infos($data, $mp_id, $legislature, $name_last, $depute_full_name);
+    $data = array_merge($data, $general_infos);
 
     //__________________GET LAST EXPLICATION_______________________________
-    $data['explication'] = $this->depute_service->get_explication_details($mp_id, $legislature, $data['gender']);
+    if (in_array('explication', $categories)) {
+      $data['explication'] = $this->depute_service->get_explication_details($mp_id, $legislature, $data['gender'], $first_person);
+    }
 
 
     // ____________________GET MAJORITY GROUP___________________________
@@ -139,7 +129,7 @@ class Iframe extends CI_Controller
       $data = $this->depute_service->get_statistics($data, $legislature, $mp_id, $groupe_id);
     }
 
-    //___________________GET VOTES_________________________________________
+    //___________________GET VOTES_________________________________________F
     if ($legislature >= 15) {
       // Get edited votes
       $data['votes_datan'] = $this->votes_model->get_votes_datan_depute($mp_id, 5);

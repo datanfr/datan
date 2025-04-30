@@ -1,8 +1,6 @@
 <!-- // CARD GROUPS PROXIMITY -->
 
 <?php
-$first_person = false;
-$active = true;
 
 if ($first_person && $active) {
   $first_section_title = "Je vote <b>souvent</b> avec :";

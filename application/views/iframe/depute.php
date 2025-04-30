@@ -11,7 +11,7 @@
       <div class="bloc-statistiques mt-5">
         <?php if (!isset($iframe_title_visibility) || $iframe_title_visibility !== 'hidden'): ?>
           <h2 class="mb-3 title-center">
-            Son comportement politique
+            <?= $first_person ? 'Mon comportement politique' : 'Son comportement politique' ?>
             <?php if ($depute['legislature'] != legislature_current()): ?>
               (<?= $depute['legislature'] ?><sup>e</sup> législature)
             <?php endif; ?>
