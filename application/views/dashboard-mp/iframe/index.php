@@ -69,11 +69,11 @@
                   </div>
                   <div class="form-check">
                     <input class="form-check-input category-checkbox" type="checkbox" value="explication" id="cat4">
-                    <label class="form-check-label" for="cat3">Ma dernière explication</label>
+                    <label class="form-check-label" for="cat4">Ma dernière explication</label>
                   </div>
                   <div class="form-check">
                     <input class="form-check-input category-checkbox" type="checkbox" value="comportement-politique" id="cat5">
-                    <label class="form-check-label" for="cat4">Mon comportement politique</label>
+                    <label class="form-check-label" for="cat5">Mon comportement politique</label>
 
                     <div class="subcategory-wrapper ms-3">
                       <div class="form-check">
