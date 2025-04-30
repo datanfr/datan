@@ -150,7 +150,6 @@ if ($first_person && $active) {
                         <td class="text-center"><?= $y['score'] ?>%</td>
                       </tr>
                     <?php endforeach; ?>
-                    <?php $i = 1; ?>
                   </tbody>
                 </table>
               </div>

@@ -228,12 +228,12 @@ class Depute_service
 
 
 
-    public function get_explication_details(string $mp_id, string $legislature, array $gender): ?array
+    public function get_explication_details(string $mp_id, string $legislature, array $gender, string $first_person = 'false'): ?array
     {
         $explication = $this->CI->deputes_model->get_last_explication($mp_id, $legislature);
 
         if ($explication) {
-            $explication['vote_depute_edito'] = $this->CI->depute_edito->get_explication($explication['vote_depute'], $gender);
+            $explication['vote_depute_edito'] = $this->CI->depute_edito->get_explication($explication['vote_depute'], $gender, $first_person);
         }
 
         return $explication;
