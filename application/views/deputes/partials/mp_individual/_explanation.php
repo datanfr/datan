@@ -1,7 +1,7 @@
 <!-- BLOC EXPLICATION -->
 <?php if ($explication): ?>
   <div class="bloc-explication mt-5">
-    <h2 class="mb-4 title-center">Sa dernière explication de vote</h2>
+    <h2 class="mb-4 title-center"><?= $first_person ? 'Ma' : 'Sa' ?> dernière explication de vote</h2>
     <div class="card border-primary">
       <div class="card-body">
         <p class="title mb-1">
@@ -12,10 +12,14 @@
           <span class="badge badge-<?= mb_strtolower($explication['vote_depute']) ?>"><?= mb_strtoupper($explication['vote_depute']) ?></span>
         </p>
         <p>
-          <?= ucfirst($gender['le']) ?> <?= $gender['depute'] ?> <span class="font-weight-bold"><?= $title ?></span> <?= $explication['vote_depute_edito'] ?> ce vote.
-          Découvrez son explication.
+          <?= $first_person
+            ? "Je " . $explication['vote_depute_edito'] . " ce vote. Découvrez mon explication."
+            : ucfirst($gender['le']) . " " . $gender['depute'] . " <span class='font-weight-bold'>" . $title . "</span> " . $explication['vote_depute_edito'] . " ce vote. Découvrez son explication."
+          ?>
         </p>
-        <p class="quoted"><?= $explication['text'] ?></p>
+        <blockquote>
+          <p class="quoted"><?= $explication['text'] ?></p>
+        </blockquote>
       </div>
     </div>
   </div>

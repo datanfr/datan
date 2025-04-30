@@ -368,6 +368,8 @@
       );
   
       $data['title'] = "Générer un iframe";
+
+      $data['js_to_load'] = array('dashboard/iframe');
   
   
       $this->load->view('dashboard/header', $data);

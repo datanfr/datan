@@ -8,15 +8,15 @@
     $text_active = "Je suis député{$gender['e']} de la {$depute["circo"]}<sup>{$depute["circo_abbrev"]}</sup> circonscription {$depute['dptLibelle2']}{$depute['departementNom']} ({$depute['departementCode']})";
     $text_inactive = "J'étais {$gender['le']} député{$gender['e']} de la {$depute["circo"]}<sup>{$depute["circo_abbrev"]}</sup> circonscription {$depute['dptLibelle2']}<a href=\"" . base_url() . "deputes/{$depute['dptSlug']}\">{$depute['departementNom']} ({$depute['departementCode']})</a>.";
     $text_elected = isset($election_result)
-    ? "J'ai été élu{$gender['e']} {$gender['depute']} lors du {$election_result['tour_election']} tour ..."
-    : null;
+      ? "J'ai été élu{$gender['e']} {$gender['depute']} lors du {$election_result['tour_election']} tour."
+      : null;
   } else {
     $title_election = "Son élection";
     $text_active = "Député{$gender['e']} de la {$depute["circo"]}<sup>{$depute["circo_abbrev"]}</sup> circonscription {$depute['dptLibelle2']}{$depute['departementNom']} ({$depute['departementCode']})";
     $text_inactive = "{$title} était {$gender['le']} député{$gender['e']} de la {$depute["circo"]}<sup>{$depute["circo_abbrev"]}</sup> circonscription {$depute['dptLibelle2']}<a href=\"" . base_url() . "deputes/{$depute['dptSlug']}\">{$depute['departementNom']} ({$depute['departementCode']})</a>.";
     $text_elected = isset($election_result)
-    ? "{$title} a été élu{$gender['e']} {$gender['depute']} lors du {$election_result['tour_election']} tour des élections législatives de 2024 avec <b>" . formatNumber($election_result['voix']) . "</b> voix, soit " . round($election_result['pct_exprimes']) . "% des suffrages exprimés."
-    : null;
+      ? "{$title} a été élu{$gender['e']} {$gender['depute']} lors du {$election_result['tour_election']} tour des élections législatives de 2024 avec <b>" . formatNumber($election_result['voix']) . "</b> voix, soit " . round($election_result['pct_exprimes']) . "% des suffrages exprimés."
+      : null;
   }
   ?>
 
