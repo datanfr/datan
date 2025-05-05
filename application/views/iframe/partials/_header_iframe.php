@@ -15,71 +15,7 @@
     <?php endif; ?>
     <!-- Color theme -->
     <meta name="theme-color" content="#00668e">
-    <!-- Open Graph -->
-    <!-- https://ogp.me/ -->
-    <?php if (isset($ogp)): ?>
-    <meta property="og:title" content="<?= $ogp['title'] ?>" />
-    <meta property="og:description" content="<?= $ogp['description'] ?>" />
-    <meta property="og:type" content="<?= $ogp['type'] ?>" />
-    <meta property="og:url" content="<?= $ogp['url'] ?>" />
-    <meta property="og:image" content="<?= $ogp['img'] ?>" />
-    <meta property="og:image:secure_url" content="<?= $ogp['img'] ?>" />
-    <meta property="og:image:width" content="<?= $ogp['img_width'] ?>">
-    <meta property="og:image:height" content="<?= $ogp['img_height'] ?>">
-    <meta property="og:image:type" content="<?= $ogp['img_type'] ?>" />
-    <meta property="og:site_name" content="<?= $ogp['site_name'] ?>" />
-    <meta property="og:locale" content="fr_FR" />
-    <meta name="twitter:card" content="<?= $ogp['twitter_card'] ?>">
-    <meta name="twitter:site" content="@datanFR" />
-    <meta name="twitter:title" content="<?= $ogp['twitter_title'] ?>" />
-    <meta name="twitter:description" content="<?= $ogp['twitter_description'] ?>" />
-    <meta name="twitter:image" content="<?= $ogp['twitter_img'] ?>" />
-    <meta name="twitter:creator" content="@awenig">
-    <?php if (isset($ogp['type_first_name'])): ?>
-      <meta property="profile:first_name" content="<?= $ogp['type_first_name'] ?>" />
-      <meta property="profile:last_name" content="<?= $ogp['type_last_name'] ?>" />
-    <?php endif; ?>
-    <?php endif; ?>
-    <?php if (!empty($breadcrumb_json)): ?>
-      <script type="application/ld+json">
-        <?= json_encode($breadcrumb_json, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT |  JSON_UNESCAPED_UNICODE); ?>
-      </script>
-    <?php endif; ?>
-    <?php if (isset($schema)): ?>
-      <script type="application/ld+json">
-        <?= json_encode($schema, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT |  JSON_UNESCAPED_UNICODE); ?>
-      </script>
-    <?php endif; ?>
-    <script type='application/ld+json'>
-    {
-      "@context" : "http://schema.org",
-      "@type" : "Organization",
-      "name" : "Datan",
-      "url" : "https://datan.fr",
-      "logo": "https://datan.fr/assets/imgs/datan/logo_datan.png",
-      "sameAs" : ["https://www.facebook.com/datanFR","https://twitter.com/datanFR"],
-      "email" : "info@datan.fr"
-    }
-    </script>
-    <?php if (isset($schema_article)): ?>
-      <script type="application/ld+json">
-        <?= json_encode($schema_article, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT |  JSON_UNESCAPED_UNICODE); ?>
-      </script>
-    <?php endif; ?>
-
-    <link rel="canonical" href="<?= $url ?>">
-    <link rel="icon" type="image/png" href="<?= asset_url() ?>imgs/favicon/datan_favicon.ico" />
-    <link rel="shortcut icon" href="#" /> <!-- To solve the following 404 pbm: /favicon.ico || If not try this: https://www.faviconcodegenerator.com/prevent-favicon-404-error.php -->
-    <!-- Apple icons -->
-    <link rel="apple-touch-icon" href="<?= asset_url() ?>imgs/favicon/apple-touch-icon.png" />
-    <link rel="apple-touch-icon" sizes="57x57" href="<?= asset_url() ?>imgs/favicon/apple-touch-icon-57x57.png" />
-    <link rel="apple-touch-icon" sizes="72x72" href="<?= asset_url() ?>imgs/favicon/apple-touch-icon-72x72.png" />
-    <link rel="apple-touch-icon" sizes="76x76" href="<?= asset_url() ?>imgs/favicon/apple-touch-icon-76x76.png" />
-    <link rel="apple-touch-icon" sizes="114x114" href="<?= asset_url() ?>imgs/favicon/apple-touch-icon-114x114.png" />
-    <link rel="apple-touch-icon" sizes="120x120" href="<?= asset_url() ?>imgs/favicon/apple-touch-icon-120x120.png" />
-    <link rel="apple-touch-icon" sizes="144x144" href="<?= asset_url() ?>imgs/favicon/apple-touch-icon-144x144.png" />
-    <link rel="apple-touch-icon" sizes="152x152" href="<?= asset_url() ?>imgs/favicon/apple-touch-icon-152x152.png" />
-    <link rel="apple-touch-icon" sizes="180x180" href="<?= asset_url() ?>imgs/favicon/apple-touch-icon-180x180.png" />
+    
     <!-- PRELOAD -->
     <?php if (isset($preloads)): ?>
       <?php foreach ($preloads as $preload): ?>
@@ -191,5 +127,5 @@
   }
   ?>
   <body class="<?= $mentions ?>" data-spy="scroll" data-target="#navScrollspy" data-offset="90">
-   
+
     <main>
