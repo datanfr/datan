@@ -211,4 +211,15 @@ $(document).ready(function () {
   checkboxes.each(function () {
     $(this).on("change", handlePreview);
   });
+
+  $("#copyIframeCode").on("click", function () {
+    const textarea = $("#iframeCode");
+    textarea.select();
+
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(textarea.val());
+    } else if (document.execCommand) {
+      document.execCommand("copy");
+    }
+  });
 });
