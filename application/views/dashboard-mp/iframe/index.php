@@ -149,7 +149,6 @@
           <div id="iframe-wrapper" data-slug="<?= $name_url ?>"></div>
 
           <?php if (empty($explanations)) : ?>
-            <?php var_dump($explanations)?>
             <div class="alert alert-warning">
               Vous n'avez pas encore d'explication.
               <a href="<?= base_url() ?>dashboard/explications/liste" class="alert-link">
@@ -172,7 +171,5 @@
   </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js"></script>
-<script>
-  new ClipboardJS('#copyIframeCode');
+
 </script>
