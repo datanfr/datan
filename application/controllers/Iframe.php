@@ -92,7 +92,7 @@ class Iframe extends CI_Controller
 
     // ____________________CACHING_________________________________
     if (!in_array($_SERVER['REMOTE_ADDR'], localhost()) && !$this->session->userdata('logged_in')) {
-      $this->output->cache("4320"); // Caching enable for 3 days (1440 minutes per day)F
+      $this->output->cache("4320"); // Caching enable for 3 days (1440 minutes per day)
     }
 
     // // ____________________MAIN VARIABLES___________________________
@@ -108,9 +108,7 @@ class Iframe extends CI_Controller
 
 
     // ____________________GET GENERAL INFOS___________________________
-    // $data = $this->depute_service->get_general_infos($data, $mp_id, $legislature, $name_last, $depute_full_name);
-    $general_infos = $this->depute_service->get_general_infos($data, $mp_id, $legislature, $name_last, $depute_full_name);
-    $data = array_merge($data, $general_infos);
+    $data = $this->depute_service->get_general_infos($data, $mp_id, $legislature, $name_last, $depute_full_name);
 
     //__________________GET LAST EXPLICATION_______________________________
     if (in_array('explication', $categories)) {
@@ -129,7 +127,7 @@ class Iframe extends CI_Controller
       $data = $this->depute_service->get_statistics($data, $legislature, $mp_id, $groupe_id);
     }
 
-    //___________________GET VOTES_________________________________________F
+    //___________________GET VOTES_________________________________________
     if ($legislature >= 15) {
       // Get edited votes
       $data['votes_datan'] = $this->votes_model->get_votes_datan_depute($mp_id, 5);

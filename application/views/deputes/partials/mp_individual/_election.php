@@ -108,5 +108,4 @@
       <?php endif; ?>
     </div>
   </div>
-</div>
-<!-- // END BLOC ELECTION →
+</div> <!-- // END BLOC ELECTION -->
