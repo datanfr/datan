@@ -45,9 +45,9 @@ class Iframe extends CI_Controller
     $category_views = [
       'positions-importantes' => 'deputes/partials/mp_individual/_key_positions.php',
       'derniers-votes' => 'deputes/partials/mp_individual/_votes.php',
-      'election' => 'deputes/partials/mp_individual/_election.php',
+      'election' => 'deputes/partials/mp_individual/_election.php', //A terminer
       'explication' => 'deputes/partials/mp_individual/_explanation.php',
-      'questions' => 'deputes/partials/mp_individual/_questions.php',
+      'questions' => 'deputes/partials/mp_individual/_questions.php', // A terminer
       'comportement-politique' => 'deputes/partials/mp_individual/statistics/_index.php',
     ];
 
