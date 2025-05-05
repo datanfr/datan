@@ -13,7 +13,8 @@ $(document).ready(function () {
     const slugElement = $("#iframe-wrapper");
     if (slugElement.length) {
       const slug = slugElement.data("slug");
-      return "http://dev-datan.fr/iframe/depute/" + slug;
+
+      return window.location.origin + "/iframe/depute/" + slug;
     }
     return "";
   }
@@ -47,10 +48,7 @@ $(document).ready(function () {
     const personMode = $('input[name="person-mode"]:checked').val();
     if (personMode === "first") {
       options.push("first-person=true");
-    } else {
-      options.push("person-mode=third");
     }
-
     return options;
   }
 
