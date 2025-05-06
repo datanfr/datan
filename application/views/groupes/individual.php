@@ -620,8 +620,8 @@
               <?php if (isset($groupe['links']['twitter'])): ?>
                 <div class="col-12 col-sm-6 mt-2 d-flex justify-content-center">
                   <span class="url_obf btn btn-twitter" url_obf="<?= url_obfuscation("https://twitter.com/" . $groupe['links']['twitter']) ?>">
-                      <?= file_get_contents(base_url().'/assets/imgs/logos/twitter_svg.svg') ?>
-                      <span class="ml-3">Profil Twitter</span>
+                      <?= file_get_contents(base_url().'/assets/imgs/logos/x-no-round.svg') ?>
+                      <span class="ml-3">Profil</span>
                   </span>
                 </div>
               <?php endif; ?>
