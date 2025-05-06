@@ -2342,6 +2342,28 @@ body{
       }
     }
   }
+  .bloc-questions{
+    .question:not(:last-child){
+      border-bottom: 1px solid $text-gray;
+      padding-bottom: 1rem;
+      margin-bottom: 1rem;
+    }
+    .date{
+      color: $text-gray;
+    }
+    .category{
+      color: $text-gray;
+      font-weight: 600;
+    }
+    .title{
+      font-size: $h5-font-size;
+      font-weight: 600;
+    }
+    .type{
+      background-color: rgba($primary_rgb, 0.2);
+      color: $primary;
+    }
+  }
 }
 /*
 ################
