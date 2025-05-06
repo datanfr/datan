@@ -117,19 +117,19 @@
                   <p class="font-weight-bold mb-1">Nous suivre</p>
                   <?php if ($this->router->fetch_class() == "home"): ?>
                     <a href="https://www.facebook.com/datanFR/" target="_blank" class="no-decoration my-1" rel="noreferrer">
-                      <img class="img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="542" height="542" data-src="<?= asset_url() ?>imgs/logos/facebook_datan.png" alt="Logo Facebook">
+                      <img class="img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="542" height="542" data-src="<?= asset_url() ?>imgs/logos/facebook_datan.svg" alt="Logo Facebook">
                       Facebook
                     </a>
-                    <a href="https://twitter.com/datanFR" target="_blank" class="no-decoration my-1" rel="noreferrer">
-                      <img class="img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="542" height="542" data-src="<?= asset_url() ?>imgs/logos/twitter_datan.png" alt="Logo Twitter">
-                      Twitter
+                    <a href="https://x.com/datanFR" target="_blank" class="no-decoration my-1" rel="noreferrer">
+                      <img class="img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="542" height="542" data-src="<?= asset_url() ?>imgs/logos/x_datan.svg" alt="Logo X">
+                      X
                     </a>
                     <a href="https://www.linkedin.com/company/datanfr" target="_blank" class="no-decoration my-1" rel="noreferrer">
-                      <img class="img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="542" height="542" data-src="<?= asset_url() ?>imgs/logos/linkedin_datan.png" alt="Logo Linkedin">
+                      <img class="img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="542" height="542" data-src="<?= asset_url() ?>imgs/logos/linkedin_datan.svg" alt="Logo Linkedin">
                       Linkedin
                     </a>
                     <a href="https://www.instagram.com/datanfr/" target="_blank" class="no-decoration my-1" rel="noreferrer">
-                      <img class="img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="542" height="542" data-src="<?= asset_url() ?>imgs/logos/instagram_datan.png" alt="Logo Instagram">
+                      <img class="img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="542" height="542" data-src="<?= asset_url() ?>imgs/logos/instagram_datan.svg" alt="Logo Instagram">
                       Instagram
                     </a>
                   <?php else: ?>
@@ -137,16 +137,16 @@
                       <img class="img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="542" height="542" data-src="<?= asset_url() ?>imgs/logos/facebook_datan.png" alt="Logo Facebook">
                       Facebook
                     </span>
-                    <span class="url_obf no-decoration text-white my-1" url_obf="<?= url_obfuscation("https://twitter.com/datanFR") ?>">
-                      <img class="img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="542" height="542" data-src="<?= asset_url() ?>imgs/logos/twitter_datan.png" alt="Logo Twitter">
-                      Twitter
+                    <span class="url_obf no-decoration text-white my-1" url_obf="<?= url_obfuscation("https://x.com/datanFR") ?>">
+                      <img class="img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="542" height="542" data-src="<?= asset_url() ?>imgs/logos/x_datan.svg" alt="Logo X">
+                      X
                     </span>
                     <span class="url_obf no-decoration text-white my-1" url_obf="<?= url_obfuscation("https://www.linkedin.com/company/datanfr/") ?>">
-                      <img class="img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="542" height="542" data-src="<?= asset_url() ?>imgs/logos/linkedin_datan.png" alt="Logo Linkedin">
+                      <img class="img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="542" height="542" data-src="<?= asset_url() ?>imgs/logos/linkedin_datan.svg" alt="Logo Linkedin">
                       Linkedin
                     </span>
                     <span class="url_obf no-decoration text-white my-1" url_obf="<?= url_obfuscation("https://www.instagram.com/datanfr/") ?>">
-                      <img class="img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="542" height="542" data-src="<?= asset_url() ?>imgs/logos/instagram_datan.png" alt="Logo Instagram">
+                      <img class="img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="542" height="542" data-src="<?= asset_url() ?>imgs/logos/instagram_datan.svg" alt="Logo Instagram">
                       Instagram
                     </span>
                   <?php endif; ?>
@@ -179,12 +179,12 @@
               Notre projet est disponible sur
               <?php if ($this->router->fetch_class() == "home"): ?>
                 <a href="https://github.com/datanFR/datan" target="_blank" rel="noreferrer" class="no-decoration underline">
-                  <img src="<?= asset_url() ?>imgs/logos/GitHub-Mark.png" width="25" height="25" alt="Logo GitHub">
+                  <img src="<?= asset_url() ?>imgs/logos/github-mark.svg" width="25" height="25" alt="Logo GitHub">
                   GitHub
                 </a>
                 <?php else: ?>
                   <span class="url_obf no-decoration" url_obf="<?= url_obfuscation("https://github.com/datanFR/datan") ?>">
-                    <img class="img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="25" height="25" data-src="<?= asset_url() ?>imgs/logos/GitHub-Mark.png" alt="Logo GitHub">
+                    <img class="img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="25" height="25" data-src="<?= asset_url() ?>imgs/logos/github-mark.svg" alt="Logo GitHub">
                     GitHub
                   </span>
               <?php endif; ?>
