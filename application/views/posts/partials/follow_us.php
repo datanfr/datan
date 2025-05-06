@@ -10,7 +10,7 @@
             </a>
         </li>
         <li class="list-group-item">
-            <a href="https://twitter.com/datanFR" class="no-decoration underline-blue" target="_blank" rel="nofollow noreferrer noopener">
+            <a href="https://x.com/datanFR" class="no-decoration underline-blue" target="_blank" rel="nofollow noreferrer noopener">
                 <img src="<?= asset_url() ?>imgs/logos/twitter.png" width="30" height="30" alt="logo Twitter">
                 Twitter
             </a>
