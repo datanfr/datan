@@ -40,7 +40,7 @@ class Iframe extends CI_Controller
     $categories_param = $this->input->get('categories');
     $categories = $categories_param
       ? explode(',', $categories_param)
-      : ['positions-importantes', 'derniers-votes', 'election', 'explication', 'comportement-politique'];
+      : ['positions-importantes', 'derniers-votes', 'election', 'explication', 'questions', 'comportement-politique'];
 
     $category_views = [
       'positions-importantes' => 'deputes/partials/mp_individual/_key_positions.php',
