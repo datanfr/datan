@@ -40,7 +40,7 @@
                 <div class="overlay"></div>
               </div>
               <div class="social-media d-flex justify-content-around align-items-center">
-                <a href="https://x.com/oliviercosta" title="Profil Twitter" target="_blank">
+                <a href="https://x.com/oliviercosta" title="Profil X" target="_blank">
                   <img src="<?= asset_url() ?>imgs/logos/x-round-color.svg" width="30" height="30" alt="Logo X">
                 </a>
                 <a href="https://sciences-po.academia.edu/OlivierCOSTA" title="Site internet" target="_blank">
@@ -63,8 +63,8 @@
                 <div class="overlay"></div>
               </div>
               <div class="social-media d-flex justify-content-around align-items-center">
-                <a href="https://x.com/katrinauel" title="Profil Twitter" target="_blank">
-                  <img src="<?= asset_url() ?>imgs/logos/x-round-color.svg" width="30" height="30"alt="Logo X">
+                <a href="https://x.com/katrinauel" title="Profil X" target="_blank">
+                  <img src="<?= asset_url() ?>imgs/logos/x-round-color.svg" width="30" height="30" alt="Logo X">
                 </a>
                 <a href="https://www.ihs.ac.at/people/katrin-auel/" title="Site internet" target="_blank">
                   <img src="<?= asset_url() ?>imgs/icons/link.svg" alt="Website">
@@ -85,7 +85,7 @@
                 <div class="overlay"></div>
               </div>
               <div class="social-media d-flex justify-content-around align-items-center">
-                <a href="https://x.com/NathalieBrack" title="Profil Twitter" target="_blank">
+                <a href="https://x.com/NathalieBrack" title="Profil X" target="_blank">
                   <img src="<?= asset_url() ?>imgs/logos/x-round-color.svg" width="30" height="30" alt="Logo X">
                 </a>
                 <a href="https://cevipol.centresphisoc.ulb.be/fr/user/430" title="Site internet" target="_blank">
@@ -107,7 +107,7 @@
                 <div class="overlay"></div>
               </div>
               <div class="social-media d-flex justify-content-around align-items-center">
-                <a href="https://x.com/iguinaudeau" title="Profil Twitter" target="_blank">
+                <a href="https://x.com/iguinaudeau" title="Profil X" target="_blank">
                   <img src="<?= asset_url() ?>imgs/logos/x-round-color.svg" width="30" height="30" alt="Logo X">
                 </a>
                 <a href="https://www.sciencespo.fr/centre-etudes-europeennes/fr/chercheur/isabelle-guinaudeau.html" title="Site internet" target="_blank">
@@ -279,7 +279,7 @@
                 <a href="https://remikel.fr" title="Site internet" target="_blank">
                   <img src="<?= asset_url() ?>imgs/icons/link.svg" alt="Website">
                 </a>
-                <a href="https://twitter.com/lekimR" target="_blank">
+                <a href="https://x.com/lekimR" target="_blank">
                   <img src="<?= asset_url() ?>imgs/logos/x-round-color.svg" width="30" height="30" alt="Logo X">
                 </a>
               </div>

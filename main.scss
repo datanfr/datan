@@ -2294,7 +2294,7 @@ body{
         }
       }
       &.btn-twitter{
-        background-color: $twitter-color;
+        background-color: $x-color;
         svg{
           width: 27px;
           height: auto;
@@ -2304,12 +2304,12 @@ body{
         }
         &:hover{
           background-color: #fff;
-          border: 1px solid $twitter-color;
+          border: 1px solid $x-color;
           span{
-            color: $twitter-color;
+            color: $x-color;
           }
           svg path{
-            fill: $twitter-color;
+            fill: $x-color;
           }
         }
       }
