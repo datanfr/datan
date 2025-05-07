@@ -6,16 +6,19 @@
     <mj-text padding-top="0">
       <span class="subtitle"><?= ucfirst($month) ?> <?= $year ?></span>
     </mj-text>
-    <mj-text padding-top="40">
+    <mj-text padding-top="40px">
       Il y a eu <b><?= $votesN ?> votes</b> à l'Assemblée nationale en <?= $month.' '.$year ?>. <?= $votesInfosEdited ?>
     </mj-text>
-    <mj-text padding-bottom="40px">
+    <mj-text>
       <b>L'équipe de Datan a sélectionné et <span class="primary">décrypté <?= $votesNDatan ?> vote<?= $votesNDatan > 1 ? "s" : "" ?></span></b>.
       <?php if ($importants): ?>
-        Découvre dans cette newsletter les votes les plus importants !
+        Découvrez dans cette newsletter les votes les plus importants !
         <?php else: ?>
-        Découvre-le<?= $votesNDatan > 1 ? "s" : "" ?> ci-dessous !
+        Découvrez-le<?= $votesNDatan > 1 ? "s" : "" ?> ci-dessous !
       <?php endif; ?>
+    </mj-text>
+    <mj-text padding-bottom="40px">
+      💶 <b>Soutenez-nous</b> : aidez Datan à rendre l’action des députés accessible à toutes et tous ! <a href="https://www.helloasso.com/associations/datan/formulaires/1" target="_blank" style="color:#00b794; text-decoration:underline;">Cliquez ici pour faire un don</a>
     </mj-text>
   </mj-column>
 </mj-section>
@@ -61,7 +64,7 @@
       <?php endif; ?>
 
       <mj-button padding-top="40px" padding-bottom="30px" href="https://datan.fr/votes/legislature-<?= $vote['legislature'] ?>/vote_<?= $vote['voteNumero'] ?>">
-        Découvre la position de ton député
+        Découvrez le vote sur Datan
       </mj-button>
     </mj-column>
   </mj-section>
@@ -95,26 +98,23 @@
   <mj-section padding="10px 0"></mj-section>
 <?php endif; ?>
 
-<mj-section background-color="#ffffff" background-repeat="no-repeat" background-size="auto">
+<mj-section background-color="#00668E" background-repeat="no-repeat" background-size="auto">
   <mj-column vertical-align="top">
-    <mj-text font-size="22px" font-weight="800">
-      <span class="primary">Reste informé !</span>
+    <mj-text font-size="22px" font-weight="800" color="#fff">
+      Soutenez-nous : faites un don sur Datan !
     </mj-text>
-    <mj-text>
-      Tu souhaites rester informé de nos dernières infos ? Tu veux découvrir en temps réel le vote des groupes politiques à l'Assemblée nationale ? <b>Suis-nous sur les réseaux sociaux !</b>
+    <mj-text color="#fff">
+      Datan est un <b>outil indépendant</b> visant à rendre accessible l'activité des députés.
     </mj-text>
-    <mj-section padding-top="15px" padding-bottom="15px">
-      <mj-group padding="0">
-        <mj-column padding="10px" background-color="#3b5998" border-radius="5px" width="40%">
-          <mj-image href="https://www.facebook.com/datanFR/" width="70%" src="https://datan.fr/assets/imgs/logos/facebook_datan.png" />
-        </mj-column>
-        <mj-column padding="10px" background-color="#FFFFFF" width="20%"></mj-column>
-        <mj-column padding="10px" background-color="#00acee" border-radius="5px" width="40%">
-          <mj-image href="https://twitter.com/datanfr?lang=fr" width="70%" src="https://datan.fr/assets/imgs/logos/twitter_datan.png" />
-        </mj-column>
-      </mj-group>
-    </mj-section>
+    <mj-text color="#fff">
+      Pour continuer, on a besoin de vous ! Soutenez Datan pour faire vivre la transparence démocratique et l'accès aux données parlementaires.
+    </mj-text>
   </mj-column>
+  <mj-column width="100%">
+      <mj-button background-color="#00b794" color="#fff" font-weight="800" padding-top="20px" padding-bottom="10px" href="https://www.helloasso.com/associations/datan/formulaires/1">
+        Faire un don
+      </mj-button>
+    </mj-column>
 </mj-section>
 
 <mj-section padding="10px 0"></mj-section>
@@ -122,16 +122,16 @@
 <mj-section background-color="#ffffff" background-repeat="no-repeat" background-size="auto">
   <mj-column vertical-align="top">
     <mj-text font-size="22px" font-weight="800">
-      <span class="primary">Contribue au projet 👨‍💻 🔨</span>
+      <span class="primary">Contribuez au projet 👨‍💻 🔨</span>
     </mj-text>
     <mj-text>
       Datan est géré par <b>une équipe de bénévoles</b>. Notre objectif ? Rendre l'activité parlementaire plus accessible et compréhensible !
     </mj-text>
     <mj-text>
-      Tu as un don pour coder ou pour le design ? Tu es un mordu de politique et souhaite expliquer certains votes de l'Assemblée ?
+      Vous avez un don pour coder ou pour le design ? Vous êtes un mordu de politique et souhaite expliquer certains votes de l'Assemblée ?
     </mj-text>
     <mj-text>
-      Contacte-nous : <a href="mailto:info@datan.fr">info@datan.fr</a>
+      Contactez-nous : <a href="mailto:info@datan.fr">info@datan.fr</a>
     </mj-text>
   </mj-column>
 </mj-section>
