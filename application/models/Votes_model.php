@@ -400,7 +400,7 @@
         LEFT JOIN votes_info vi ON vd.voteNumero = vi.voteNumero AND vd.legislature = vi.legislature
         LEFT JOIN readings r ON r.id = vd.reading
         LEFT JOIN explications_mp e ON e.mpId = vs.mpId AND e.legislature = vd.legislature AND e.voteNumero = vd.voteNumero AND e.state = 1
-        WHERE vd.state = "published" AND vs.vote IS NOT NULL
+        WHERE vd.state = "published" AND vs.vote IS NOT NULL AND vs.vote != "nv"
         ORDER BY vi.dateScrutin DESC
       ';
       if ($limit){
@@ -475,7 +475,7 @@
         FROM votes_scores vs
         LEFT JOIN votes_info vi ON vs.voteNumero = vi.voteNumero AND vs.legislature = vi.legislature
         LEFT JOIN votes_datan vd ON vi.voteId = vd.vote_id AND vd.state = "published"
-        WHERE vs.mpId = ? ';
+        WHERE vs.mpId = ? AND vs.vote != "nv" ';
       $sql .= $legislature ? ' AND vp.legislature = ' . $this->db->escape($legislature) : '';
       $sql .= ' ) A ORDER BY A.dateScrutin DESC, A.voteNumero DESC ';
       return $this->db->query($sql, array($depute_id))->result_array();
