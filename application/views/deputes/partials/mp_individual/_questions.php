@@ -22,7 +22,7 @@
             <?= ucfirst($question['rubrique']) ?>
           </div>
           <div class="mb-2"><?= word_limiter($question['content'], 25) ?></div>
-          <a href="https://www.assemblee-nationale.fr/dyn/<?= $question['legislature'] ?>/questions/<?= $question['uid'] ?>">
+          <a href="https://www.assemblee-nationale.fr/dyn/<?= $question['legislature'] ?>/questions/<?= $question['uid'] ?>"  target="_blank">
             Lire plus
             <?= file_get_contents(asset_url()."imgs/icons/arrow_right.svg") ?>
           </a>
