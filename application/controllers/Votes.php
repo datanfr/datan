@@ -450,6 +450,9 @@
 
       // Votes - députés
       $data['deputes'] = $this->votes_model->get_vote_deputes($data['vote']['voteNumero'], $legislature);
+      $data['groupes'] = array_filter($data['groupes'], function($groupe) {
+          return $groupe['libelleAbrev'] !== 'NI';
+        });
 
       // OTHER VOTES
       if ($num > 1) {
