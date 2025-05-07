@@ -32,7 +32,7 @@
     </div>
 
       <div class="text-center">
-        <a class="btn btn-primary" href="https://www.assemblee-nationale.fr/dyn/deputes/<?= $depute['mpId'] ?>/questions">
+        <a class="btn btn-primary" href="https://www.assemblee-nationale.fr/dyn/deputes/<?= $depute['mpId'] ?>/questions" target="_blank">
           Voir toutes les questions
         </a>
       </div>
