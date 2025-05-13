@@ -225,7 +225,7 @@
         $data['m_index'] = NULL;
         $data['obfuscation_links'] = TRUE;
       } elseif ($year != NULL && $month != NULL) {
-        $month = number($month);
+        $month = $this->number($month);
         $data['description'] = "Découvrez tous les scrutins qui ont eu lieu dans l'hémicycle de l'Assemblée nationale lors de la " . $legislature . "<sup>e</sup> législature, en " . $months[$month-1] . " " . $year . ".";
         //"Liste des votes de la ".$legislature."<sup>e</sup> législature - ".$months[$month-1]." ".$year;
         // Meta
@@ -542,5 +542,12 @@
 
     }
 
+    private function number($x){
+      if ($x < 10) {
+        return substr($x, 1);
+      } else {
+        return $x;
+      }
+    }
   }
 ?>
