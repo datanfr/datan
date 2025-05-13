@@ -82,6 +82,7 @@ RUN composer install --no-scripts --no-autoloader
 
 COPY package.json ./
 RUN npm install \
+    && npm install grunt --save-dev \
     && npm install grunt-contrib-sass --save-dev \
     && npm install --save-dev sass \
     && npm install rollup@2.79.1 --save-dev \
