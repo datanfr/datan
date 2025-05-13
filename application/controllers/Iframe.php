@@ -24,10 +24,6 @@ class Iframe extends CI_Controller
   public function show_depute_iframe(string $name): void
   {
 
-
-    // $name = "nadege-abomangoli";
-    //PA795228
-
     $data['main_title_visibility'] = isset($_GET['main-title']) && $_GET['main-title'] === 'hide' ? 'hidden' : '';
     $data['iframe_title_visibility'] = isset($_GET['secondary-title']) && $_GET['secondary-title'] === 'hide' ? 'hidden' : '';
     $data['secondary_title_visibility'] =  $data['iframe_title_visibility'];
