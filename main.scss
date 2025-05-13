@@ -2202,19 +2202,10 @@ body{
   }
   /* Bloc election */
   .bloc-election{
-    .card{
-      border: none;
-      overflow: hidden;
-    }
     .subtitle{
       font-weight: 800;
       color: $text-gray-light;
-    }
-    .legend{
-      span{
-        color: $text-gray-light;
-      }
-    }
+    } 
   }
   /* Bloc elections history */
   .bloc-elections-history{
@@ -2349,6 +2340,28 @@ body{
           color: $text-black;
         }
       }
+    }
+  }
+  .bloc-questions{
+    .question:not(:last-child){
+      border-bottom: 1px solid $text-gray;
+      padding-bottom: 1rem;
+      margin-bottom: 1rem;
+    }
+    .date{
+      color: $text-gray;
+    }
+    .category{
+      color: $text-gray;
+      font-weight: 600;
+    }
+    .title{
+      font-size: $h5-font-size;
+      font-weight: 600;
+    }
+    .type{
+      background-color: rgba($primary_rgb, 0.2);
+      color: $primary;
     }
   }
 }
@@ -3502,5 +3515,60 @@ dialogueBoxQuiz
   }
   .text-container{
     height: 100%;
+  }
+}
+/*
+################
+               IFRAME
+################
+*/
+.iframe-container {
+  padding: 1rem;
+
+  &.no-title {
+    .mt-5:first-of-type {
+      margin-top: 0 !important;
+    }
+  }
+
+  &.no-subtitle {
+    .card-statistiques.my-4:first-of-type {
+      margin-top: 0 !important;
+    }
+  }
+
+  .datan-credit {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 0.375rem;
+    margin-bottom: 0 !important;
+    margin-top: 1rem;
+
+    .datan-logo {
+      max-width: 100%;
+      max-height: 16px;
+      height: auto;
+    }
+  }
+
+  .card-statistiques.bloc-proximity {
+    margin-bottom: 0 !important;
+  }
+
+  @media (max-width: 768px) {
+    .datan-credit {
+      justify-content: center;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .datan-credit {
+      font-size: 0.875rem;
+    }
+
+    .datan-credit .datan-logo {
+      height: 0.875rem;
+    }
   }
 }
