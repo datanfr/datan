@@ -13,22 +13,6 @@
 
     // Page = datan.fr/votes
     public function index(){
-      // FUNCTION
-      function number_zero($x){
-        if ($x < 10) {
-          return "0".$x;
-        } else {
-          return $x;
-        }
-      }
-      function number($x){
-        if ($x < 10) {
-          return substr($x, 1);
-        } else {
-          return $x;
-        }
-      }
-
       // Get datan_votes
       $data['votes_datan'] = $this->votes_model->get_last_votes_datan(7);
       // Get by category
@@ -178,21 +162,6 @@
       $data['legislature'] = $legislature;
       // Get month array
       $months = get_months();
-      // Create some functions
-      function number_zero($x){
-        if ($x < 10) {
-          return "0".$x;
-        } else {
-          return $x;
-        }
-      }
-      function number($x){
-        if ($x < 10) {
-          return substr($x, 1);
-        } else {
-          return $x;
-        }
-      }
 
       // Check if votes
       $data['votes'] = $this->votes_model->get_all_votes($legislature, $year, $month, FALSE);

@@ -4,6 +4,20 @@
       $this->load->database();
     }
 
+    private function number_zero($x){
+      if ($x < 10) {
+        return "0".$x;
+      } else {
+        return $x;
+      }
+    }
+    private function number($x){
+      if ($x < 10) {
+        return substr($x, 1);
+      } else {
+        return $x;
+      }
+    }
     public function get_all_votes($legislature, $year, $month, $limit){
       $where = array();
 
@@ -153,7 +167,7 @@
       $array = $query->result_array();
       foreach ($array as $key => $value) {
         $array[$key]["month"] = $months[$value['months']-1];
-        $array[$key]["index"] = number_zero($value["months"]);
+        $array[$key]["index"] = $this->number_zero($value["months"]);
       }
 
       return($array);
