@@ -840,4 +840,19 @@
       return $this->db->get_where('explications_mp e', $where, 1)->row_array();
     }
 
+
+    public function get_photo_square($depute)
+    {
+        return $depute['legislature'] >= 17 ? TRUE : FALSE;
+    }
+
+    public function get_dptslug_by_name_url(string $name_url): ?string
+    {
+        $query = $this->db->query("SELECT dptslug FROM deputes_last WHERE nameUrl = ?", array($name_url));
+        $result = $query->row();
+
+        return $result ? $result->dptslug : null;
+    }
+
+
   }
