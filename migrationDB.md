@@ -129,3 +129,8 @@ Même chose pour tous les _class
 Voir pour les regrouper
 
 ## clés étrangères
+
+## Votes
+ ALTER TABLE `votes_info` ADD PRIMARY KEY(`voteId`)
+ ALTER TABLE `votes_info` ADD FOREIGN KEY (`legislature`) REFERENCES `legislatures`(`legislatureId`)
+ ALTER TABLE `votes_info` ADD FOREIGN KEY (`mpId`) REFERENCES `deputes_all`(`mpId`)
