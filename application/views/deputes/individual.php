@@ -15,7 +15,9 @@
         <?php $this->view('deputes/partials/mp_individual/_key_positions.php') ?>
         <?php $this->view('deputes/partials/mp_individual/_explanation.php') ?>
         <?php $this->view('deputes/partials/mp_individual/_votes.php') ?>
-        <?php $this->view('deputes/partials/mp_individual/_election.php') ?>
+        <?php //$this->view('deputes/partials/mp_individual/_election.php') //?>  <!-- A terminer -->
+        <?php $this->view('deputes/partials/mp_individual/_election_partial-original.php') ?> <!-- Partial temporaire -->
+
         <?php $this->view('deputes/partials/mp_individual/statistics/_index.php') ?>
         <?php $this->view('deputes/partials/mp_individual/_elections_participation') ?>
         <?php $this->view('deputes/partials/mp_individual/_manifesto') ?>
@@ -26,15 +28,15 @@
           <h2 class="title-center mb-4">Partagez cette page</h2>
           <?php $this->load->view('partials/share.php') ?>
         </div>
-        <?php $this->view('deputes/partials/mp_individual/_social_media') ?>  
-        <?php $this->view('deputes/partials/mp_individual/_contact') ?>  
+        <?php $this->view('deputes/partials/mp_individual/_social_media') ?>
+        <?php $this->view('deputes/partials/mp_individual/_contact') ?>
       </div>
     </div>
   </div> <!-- END ROW -->
-</div> <!-- END CONTAINER -->
+  </div> <!-- END CONTAINER -->
   <!-- CONTAINER FOLLOW US -->
   <?php $this->load->view('partials/follow-us.php') ?>
-  <?php $this->view('deputes/partials/mp_individual/_other_mps') ?> 
+  <?php $this->view('deputes/partials/mp_individual/_other_mps') ?>
   <!-- EXPLICATIONS DE VOTE -->
   <?php if (is_iterable($votes_datan)): ?>
     <?php foreach ($votes_datan as $key => $value): ?>
