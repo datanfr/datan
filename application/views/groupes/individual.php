@@ -613,7 +613,7 @@
                 <div class="col-12 col-sm-6 mt-2 d-flex justify-content-center">
                   <span class="url_obf btn btn-fcb" url_obf="<?= url_obfuscation("https://www.facebook.com/" . $groupe['links']['facebook']) ?>">
                       <?= file_get_contents(base_url().'/assets/imgs/logos/facebook_svg.svg') ?>
-                      <span class="ml-3">Profil Facebook</span>
+                      <span class="ml-3">Facebook</span>
                   </span>
                 </div>
               <?php endif; ?>
@@ -621,7 +621,6 @@
                 <div class="col-12 col-sm-6 mt-2 d-flex justify-content-center">
                   <span class="url_obf btn btn-twitter" url_obf="<?= url_obfuscation("https://x.com/" . $groupe['links']['twitter']) ?>">
                       <?= file_get_contents(base_url().'/assets/imgs/logos/x-no-round.svg') ?>
-                      <span class="ml-3">Profil</span>
                   </span>
                 </div>
               <?php endif; ?>
