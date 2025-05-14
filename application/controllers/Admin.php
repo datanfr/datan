@@ -450,9 +450,9 @@
           $this->load->view('dashboard/socialmedia/table', $data);
           $this->load->view('dashboard/footer');
         }
-      } elseif ($page == "twitter") {
+      } elseif ($page == "x") {
         $data['deputes'] = $this->deputes_model->get_twitter_accounts(legislature_current());
-        $data['title'] = "Comptes Twitter des députés";
+        $data['title'] = "Comptes X des députés";
 
         // Meta
         $data['title_meta'] = $data['title'] . ' - Dashboard | Datan';

@@ -28,9 +28,8 @@
     <?php endif; ?>
     <?php if ($depute['twitter'] !== NULL) : ?>
       <div class="col-12 col-sm-4 mt-2 d-flex justify-content-center align-items-center">
-        <span class="url_obf btn btn-twitter" url_obf="<?= url_obfuscation("https://twitter.com/" . ltrim($depute['twitter'], '@')) ?>">
-          <?= file_get_contents(base_url() . '/assets/imgs/logos/twitter_svg.svg') ?>
-          <span class="ml-3">Twitter</span>
+        <span class="url_obf btn btn-twitter" url_obf="<?= url_obfuscation("https://x.com/" . ltrim($depute['twitter'], '@')) ?>">
+          <?= file_get_contents(base_url() . '/assets/imgs/logos/x-no-round.svg') ?>
         </span>
       </div>
     <?php endif; ?>
