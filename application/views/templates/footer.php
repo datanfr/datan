@@ -4,21 +4,21 @@
     <div class="modal fade" id="newsletter" tabindex="-1" role="dialog" aria-labelledby="newsletterLabel" aria-hidden="true">
       <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
         <div class="modal-content">
-          <?= form_open('newsletter', array('id'=> 'newsletterForm')); ?>
-            <div class="modal-header">
-              <span class="modal-title h2" id="newsletterLabel">Newsletter</span>
-              <span class="close cursor-pointer" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </span>
-            </div>
-            <div class="modal-body">
-              <p>Souhaitez-vous vous inscrire et recevoir les informations parlementaires et les nouvelles de Datan.fr <b>une fois par mois</b> ?</p>
-              <input type="email" name="email" required class="form-control" placeholder="Votre email">
-            </div>
-            <div class="modal-footer">
-              <button type="submit" class="btn btn-primary">Recevoir la newsletter</button>
-            </div>
-            <?= form_close() ?>
+          <?= form_open('newsletter', array('id' => 'newsletterForm')); ?>
+          <div class="modal-header">
+            <span class="modal-title h2" id="newsletterLabel">Newsletter</span>
+            <span class="close cursor-pointer" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </span>
+          </div>
+          <div class="modal-body">
+            <p>Souhaitez-vous vous inscrire et recevoir les informations parlementaires et les nouvelles de Datan.fr <b>une fois par mois</b> ?</p>
+            <input type="email" name="email" required class="form-control" placeholder="Votre email">
+          </div>
+          <div class="modal-footer">
+            <button type="submit" class="btn btn-primary">Recevoir la newsletter</button>
+          </div>
+          <?= form_close() ?>
           <div id="modalSubscription">
             <div class="modal-header">
               <span class="modal-title h2">Félicitations</span>
@@ -61,14 +61,14 @@
               <div class="d-flex flex-row liste justify-content-center">
                 <div class="d-flex flex-column mx-1">
                   <p>
-                    <?php if ($this->router->fetch_class() == "home"): ?> 
+                    <?php if ($this->router->fetch_class() == "home"): ?>
                       <a href="<?= base_url(); ?>a-propos" class="no-decoration underline">À propos</a>
                     <?php else: ?>
                       <span class="url_obf no-decoration underline text-white" url_obf="<?= url_obfuscation(base_url() . "a-propos") ?>">À propos</span>
                     <?php endif; ?>
                   </p>
                   <p>
-                    <?php if ($this->router->fetch_class() == "home"): ?> 
+                    <?php if ($this->router->fetch_class() == "home"): ?>
                       <a href="<?= base_url(); ?>newsletter" class="no-decoration underline">Newsletter</a>
                     <?php else: ?>
                       <span class="url_obf no-decoration underline text-white" url_obf="<?= url_obfuscation(base_url() . "newsletter") ?>">Newsletter</span>
@@ -95,14 +95,14 @@
                     <a href="<?= base_url(); ?>faq" class="no-decoration underline">Foire aux questions</a>
                   </p>
                   <p>
-                    <?php if ($this->router->fetch_class() == "home"): ?> 
+                    <?php if ($this->router->fetch_class() == "home"): ?>
                       <a href="<?= base_url(); ?>login" class="no-decoratio underline">Connexion</a>
                     <?php else: ?>
                       <span class="url_obf no-decoration underline text-white" url_obf="<?= url_obfuscation(base_url() . "login") ?>">Connexion</span>
                     <?php endif; ?>
                   </p>
                   <p>
-                    <?php if ($this->router->fetch_class() == "home"): ?> 
+                    <?php if ($this->router->fetch_class() == "home"): ?>
                       <a href="<?= base_url(); ?>mentions-legales" class="no-decoratio underline">Mentions légales</a>
                     <?php else: ?>
                       <span class="url_obf no-decoration underline text-white" url_obf="<?= url_obfuscation(base_url() . "mentions-legales") ?>">Mentions légales</span>
@@ -117,38 +117,46 @@
                   <p class="font-weight-bold mb-1">Nous suivre</p>
                   <?php if ($this->router->fetch_class() == "home"): ?>
                     <a href="https://www.facebook.com/datanFR/" target="_blank" class="no-decoration my-1" rel="noreferrer">
-                      <img class="img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="542" height="542" data-src="<?= asset_url() ?>imgs/logos/facebook_datan.png" alt="Logo Facebook">
+                      <img class="img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="542" height="542" data-src="<?= asset_url() ?>imgs/logos/facebook_datan.svg" alt="Logo Facebook">
                       Facebook
                     </a>
-                    <a href="https://twitter.com/datanFR" target="_blank" class="no-decoration my-1" rel="noreferrer">
-                      <img class="img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="542" height="542" data-src="<?= asset_url() ?>imgs/logos/twitter_datan.png" alt="Logo Twitter">
-                      Twitter
+                    <a href="https://x.com/datanFR" target="_blank" class="no-decoration my-1" rel="noreferrer">
+                      <img class="img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="542" height="542" data-src="<?= asset_url() ?>imgs/logos/x_datan.svg" alt="Logo X">
+                      X
                     </a>
                     <a href="https://www.linkedin.com/company/datanfr" target="_blank" class="no-decoration my-1" rel="noreferrer">
-                      <img class="img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="542" height="542" data-src="<?= asset_url() ?>imgs/logos/linkedin_datan.png" alt="Logo Linkedin">
+                      <img class="img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="542" height="542" data-src="<?= asset_url() ?>imgs/logos/linkedin_datan.svg" alt="Logo Linkedin">
                       Linkedin
                     </a>
                     <a href="https://www.instagram.com/datanfr/" target="_blank" class="no-decoration my-1" rel="noreferrer">
-                      <img class="img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="542" height="542" data-src="<?= asset_url() ?>imgs/logos/instagram_datan.png" alt="Logo Instagram">
+                      <img class="img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="542" height="542" data-src="<?= asset_url() ?>imgs/logos/instagram_datan.svg" alt="Logo Instagram">
                       Instagram
+                    </a>
+                    <a href="https://bsky.app/profile/datanfr.bsky.social" target="_blank" class="no-decoration my-1" rel="noreferrer">
+                      <img class="img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="542" height="542" data-src="<?= asset_url() ?>imgs/logos/bluesky_datan.svg" alt="Logo Bluesky">
+                      Bluesky
                     </a>
                   <?php else: ?>
                     <span class="url_obf no-decoration text-white my-1" url_obf="<?= url_obfuscation("https://www.facebook.com/datanFR/") ?>">
                       <img class="img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="542" height="542" data-src="<?= asset_url() ?>imgs/logos/facebook_datan.png" alt="Logo Facebook">
                       Facebook
                     </span>
-                    <span class="url_obf no-decoration text-white my-1" url_obf="<?= url_obfuscation("https://twitter.com/datanFR") ?>">
-                      <img class="img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="542" height="542" data-src="<?= asset_url() ?>imgs/logos/twitter_datan.png" alt="Logo Twitter">
-                      Twitter
+                    <span class="url_obf no-decoration text-white my-1" url_obf="<?= url_obfuscation("https://x.com/datanFR") ?>">
+                      <img class="img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="542" height="542" data-src="<?= asset_url() ?>imgs/logos/x_datan.svg" alt="Logo X">
+                      X
                     </span>
                     <span class="url_obf no-decoration text-white my-1" url_obf="<?= url_obfuscation("https://www.linkedin.com/company/datanfr/") ?>">
-                      <img class="img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="542" height="542" data-src="<?= asset_url() ?>imgs/logos/linkedin_datan.png" alt="Logo Linkedin">
+                      <img class="img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="542" height="542" data-src="<?= asset_url() ?>imgs/logos/linkedin_datan.svg" alt="Logo Linkedin">
                       Linkedin
                     </span>
                     <span class="url_obf no-decoration text-white my-1" url_obf="<?= url_obfuscation("https://www.instagram.com/datanfr/") ?>">
-                      <img class="img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="542" height="542" data-src="<?= asset_url() ?>imgs/logos/instagram_datan.png" alt="Logo Instagram">
+                      <img class="img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="542" height="542" data-src="<?= asset_url() ?>imgs/logos/instagram_datan.svg" alt="Logo Instagram">
                       Instagram
                     </span>
+                    <a href="https://bsky.app/profile/datanfr.bsky.social" target="_blank" class="no-decoration my-1" rel="noreferrer">
+                      <img class="img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="542" height="542" data-src="<?= asset_url() ?>imgs/logos/bluesky_datan.svg" alt="Logo Bluesky">
+                      Bluesky
+                    </a>
                   <?php endif; ?>
                 </div>
                 <div class="col-6 col-md-12 d-flex flex-column mt-0">
@@ -171,7 +179,7 @@
             <div class="col-md-6 text-center">
               <?php if ($this->router->fetch_class() == "home"): ?>
                 Nos données sont disponibles sur le site <a href="https://www.data.gouv.fr/fr/organizations/datan/" target="_blank" rel="noreferrer">data.gouv.fr</a>
-                <?php else: ?>
+              <?php else: ?>
                 Nos données sont disponibles sur le site <span class="url_obf" url_obf="<?= url_obfuscation("https://www.data.gouv.fr/fr/organizations/datan/") ?>">data.gouv.fr</span>
               <?php endif; ?>
             </div>
@@ -179,14 +187,14 @@
               Notre projet est disponible sur
               <?php if ($this->router->fetch_class() == "home"): ?>
                 <a href="https://github.com/datanFR/datan" target="_blank" rel="noreferrer" class="no-decoration underline">
-                  <img src="<?= asset_url() ?>imgs/logos/GitHub-Mark.png" width="25" height="25" alt="Logo GitHub">
+                  <img src="<?= asset_url() ?>imgs/logos/github-mark.svg" width="25" height="25" alt="Logo GitHub">
                   GitHub
                 </a>
-                <?php else: ?>
-                  <span class="url_obf no-decoration" url_obf="<?= url_obfuscation("https://github.com/datanFR/datan") ?>">
-                    <img class="img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="25" height="25" data-src="<?= asset_url() ?>imgs/logos/GitHub-Mark.png" alt="Logo GitHub">
-                    GitHub
-                  </span>
+              <?php else: ?>
+                <span class="url_obf no-decoration" url_obf="<?= url_obfuscation("https://github.com/datanFR/datan") ?>">
+                  <img class="img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="25" height="25" data-src="<?= asset_url() ?>imgs/logos/github-mark.svg" alt="Logo GitHub">
+                  GitHub
+                </span>
               <?php endif; ?>
             </div>
           </div>
