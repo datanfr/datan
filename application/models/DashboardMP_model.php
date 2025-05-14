@@ -144,4 +144,11 @@ class DashboardMP_model extends CI_Model
     return $this->db->get('explications_mp e')->result_array();
   }
 
+  public function get_explanations_by_mp($mpId)
+  {
+    $this->db->where('mpId', $mpId);
+    $query = $this->db->get('explications_mp');
+    return $query->result_array();
+  }
+
 }

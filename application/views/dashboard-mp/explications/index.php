@@ -36,7 +36,7 @@
         </div>
         <div class="col-md-6 px-lg-5 px-md-3 py-md-5 py-lg-0 mt-md-0 mt-4">
           <a class="btn btn-primary font-weight-bold d-flex justify-content-center align-items-center" style="font-size: 1.5rem; height: 100%; width: 100%; display: block" href="<?= base_url() ?>dashboard/explications/liste">
-            Je créé une nouvelle explication de vote
+            Je crée une nouvelle explication de vote
           </a>
         </div>
       </div>
