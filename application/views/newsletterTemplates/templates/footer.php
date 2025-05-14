@@ -6,7 +6,7 @@
     <mj-social align="center" font-family="Ubuntu, Helvetica, Arial, sans-serif" font-size="13px" icon-padding="0px 0px 0px 0px" icon-size="20" line-height="22px" mode="horizontal" padding-left="25px" padding-right="25px" padding="10px 25px 10px 25px" text-decoration="none" text-mode="false">
       <mj-social-element background-color="#000000" href="https://www.instagram.com/datanfr/" name="instagram-noshare" src="https://www.mailjet.com/images/theme/v1/icons/ico-social/instagram.png"></mj-social-element>
       <mj-social-element background-color="#3B5998" href="https://www.facebook.com/datanFR" name="facebook-noshare" src="https://www.mailjet.com/images/theme/v1/icons/ico-social/facebook.png"></mj-social-element>
-      <mj-social-element background-color="#000000" href="https://x.com/datanFR" src="https://datan.fr/assets/imgs/logos/x-round-color.svg"></mj-social-element>
+      <mj-social-element background-color="#000000" href="https://x.com/datanFR" name="twitter-noshare" src="https://www.mailjet.com/images/theme/v1/icons/ico-social/twitter-x.png"></mj-social-element>
       <mj-social-element background-color="#1DA1F2" href="https://www.linkedin.com/company/datanfr" name="linkedin-noshare" src="https://www.mailjet.com/images/theme/v1/icons/ico-social/linkedin.png"></mj-social-element>
       <mj-social-element background-color="#4078C0" href="https://github.com/datanfr/datan" name="github-noshare" src="https://www.mailjet.com/images/theme/v1/icons/ico-social/github.png"></mj-social-element>
     </mj-social>
