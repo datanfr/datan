@@ -4,7 +4,7 @@
       <span style="font-size:16px;text-align:center;background-color:#00b794;color:#ffffff;font-family:Open Sans;"><b>Découvre les votes de ton député !</b></span>
     </mj-button>
     <mj-social align="center" font-family="Ubuntu, Helvetica, Arial, sans-serif" font-size="13px" icon-padding="0px 0px 0px 0px" icon-size="20" line-height="22px" mode="horizontal" padding-left="25px" padding-right="25px" padding="10px 25px 10px 25px" text-decoration="none" text-mode="false">
-      <mj-social-element background-color="#000000" href="https://www.instagram.com/datanfr/" name="instagram-noshare" src="https://www.mailjet.com/images/theme/v1/icons/ico-social/instagram.png"></mj-social-element>
+      <mj-social-element href="https://www.instagram.com/datanfr/" name="instagram-noshare" src="https://www.mailjet.com/images/theme/v1/icons/ico-social/instagram-colored.png"></mj-social-element>
       <mj-social-element background-color="#3B5998" href="https://www.facebook.com/datanFR" name="facebook-noshare" src="https://www.mailjet.com/images/theme/v1/icons/ico-social/facebook.png"></mj-social-element>
       <mj-social-element background-color="#000000" href="https://x.com/datanFR" name="twitter-noshare" src="https://www.mailjet.com/images/theme/v1/icons/ico-social/twitter-x.png"></mj-social-element>
       <mj-social-element background-color="#1DA1F2" href="https://www.linkedin.com/company/datanfr" name="linkedin-noshare" src="https://www.mailjet.com/images/theme/v1/icons/ico-social/linkedin.png"></mj-social-element>
