@@ -9,7 +9,6 @@
       $this->load->model('dashboardMP_model');
       $this->load->model('votes_model');
       $this->password_model->security_only_mp();
-
       $this->data = array(
         'type' => 'mp',
         'username' => $this->session->userdata('username'),
@@ -167,7 +166,7 @@
       $data['votes_without'] = $this->dashboardMP_model->get_votes_to_explain($data['depute']['mpId']);
       $data['votes_without_suggestion'] = $this->dashboardMP_model->get_votes_to_explain_suggestion($data['votes_without']);
 
-      $data['title'] = 'Je créé une nouvelle explication de vote';
+      $data['title'] = 'Je crée une nouvelle explication de vote';
 
       // Meta
       $data['title_meta'] = 'Liste des votes à expliquer - Dashboard | Datan';
@@ -343,6 +342,39 @@
         redirect('dashboard/explications');
       }
 
+    }
+
+    public function generate_iframe()
+    {
+      $data = $this->data;
+      $mp_id = $data['depute']['mpId'];
+      $explanations = $this->dashboardMP_model->get_explanations_by_mp($mp_id);
+      $has_published = false;
+      foreach ($explanations as $exp) {
+        if ($exp['state'] == 1) {
+          $has_published = true;
+          break;
+        }
+      }
+      $data['explanations'] = $explanations;
+      $data['has_published'] = $has_published;
+      $data['name_url'] = $data['depute']['nameUrl'];
+  
+      // Meta
+      $data['title_meta'] = 'Générateur d\'iframe - Dashboard | Datan';
+      $data['breadcrumb'] = array(
+        array('name' => 'Dashboard', 'url' => base_url() . 'dashboard', 'active' => FALSE),
+        array('name' => 'Générer un iframe', 'url' => base_url() . 'dashboard/iframe', 'active' => TRUE),
+      );
+  
+      $data['title'] = "Générer un iframe";
+
+      $data['js_to_load'] = array('dashboard/iframe');
+  
+  
+      $this->load->view('dashboard/header', $data);
+      $this->load->view('dashboard-mp/iframe/index', $data);
+      $this->load->view('dashboard/footer', $data);
     }
 
   }
