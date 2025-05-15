@@ -234,11 +234,7 @@
         $data['title'] = "Votes à l'Assemblée nationale - " . ucfirst($months[$month-1])." ".$year;
         $data['description_meta'] = "Retrouvez tous les votes de l'Assemblée nationale en ".$months[$month-1]." ".$year.". Détails des votes, résultats de vote des groupes et des députés, statistiques de loyauté et de cohésion.";
         // Breadcrumb
-        if ($month < 10 ) {
-          $month_breadcrumb = "0".$month;
-        } else {
-          $month_breadcrumb = $month;
-        }
+        $month_breadcrumb = $this->number_add_zero($month);
         $data['breadcrumb'] = array(
           array(
             "name" => "Datan", "url" => base_url(), "active" => FALSE
