@@ -541,13 +541,5 @@
       $this->load->view('templates/footer');
 
     }
-
-    private function number($x){
-      if ($x < 10) {
-        return substr($x, 1);
-      } else {
-        return $x;
-      }
-    }
   }
 ?>
