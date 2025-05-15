@@ -16,13 +16,13 @@
           </div>
           <div class="col-auto d-flex justify-content-center my-2">
             <span class="d-flex align-items-center url_obf btn btn-light" url_obf="<?= url_obfuscation("https://x.com/datanFR") ?>">
-              <img class="img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" data-src="<?= asset_url() ?>imgs/logos/x-round-color" alt="Logo X" width="30" height="30">
+              <img class="img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" data-src="<?= asset_url() ?>imgs/logos/x-round-color.svg" alt="Logo X" width="30" height="30">
               <span class="ml-3">Suivez-nous <br>sur X</span>
             </span>
           </div>
           <div class="col-auto d-flex justify-content-center my-2">
             <span class="d-flex align-items-center url_obf btn btn-light" url_obf="<?= url_obfuscation("https://bsky.app/profile/datanfr.bsky.social") ?>">
-              <img class="img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" data-src="<?= asset_url() ?>imgs/logos/bluesky-round-color" alt="Logo Bluesky" width="30" height="30">
+              <img class="img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" data-src="<?= asset_url() ?>imgs/logos/bluesky-round-color.svg" alt="Logo Bluesky" width="30" height="30">
               <span class="ml-3">Suivez-nous <br>sur Bluesky</span>
             </span>
           </div>
