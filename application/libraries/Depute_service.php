@@ -135,7 +135,7 @@ class Depute_service
                     2024,
                     1
                 );
-                $data['election_opponents_all'] = $this->CI->deputes_model->get_election_opponent(
+                $opponents = $this->CI->deputes_model->get_election_opponent(
                     $data['depute']['departementCode'],
                     $data['depute']['circo'],
                     2024,
@@ -150,11 +150,38 @@ class Depute_service
                 $data['election_infos']['participation'] = round(
                     $data['election_infos']['votants'] * 100 / $data['election_infos']['inscrits']
                 );
-                $data['election_opponents']['all']['voix'] = 0;
-                $data['election_opponents']['all']['candidat'] = "Reste des candidats";
-                foreach ($data['election_opponents_all'] as $x) {
-                    $data['election_opponents']['all']['voix'] += $x['voix'];
+
+                if (!empty($opponents)) {
+                    array_walk($opponents, function (&$candidate) {
+                        $candidate['candidat'] = $candidate['nameFirst'] . ' ' . ucfirst(strtolower($candidate['nameLast']));
+                    });
                 }
+
+                // Prepare 2 top candidates and group others
+                $topCandidates = array_slice($opponents, 0, 2);
+                $others = array_slice($opponents, 2);
+
+                if (count($others) > 0) {
+                    $totalVoix = 0;
+                    $totalPct = 0.0;
+
+                    foreach ($others as $candidate) {
+                        $totalVoix += $candidate['voix'];
+                        $totalPct += $candidate['pct_exprimes'];
+                    }
+
+                    $topCandidates[] = [
+                        'nameLast' => '',
+                        'nameFirst' => '',
+                        'sexe' => '',
+                        'voix' => $totalVoix,
+                        'pct_exprimes' => $totalPct,
+                        'tour_election' => '1er',
+                        'candidat' => 'Autres candidats'
+                    ];
+
+                }
+                $data['election_opponents'] = $topCandidates;
             } elseif ($data['depute']['datePriseFonction'] == '2024-07-08') { // Elected 2nd round
                 $data['election_result'] = $this->CI->deputes_model->get_election_result(
                     $data['depute']['departementCode'],
@@ -200,8 +227,6 @@ class Depute_service
 
         return $data;
     }
-
-
 
     public function get_other_mps(
         string $legislature,
