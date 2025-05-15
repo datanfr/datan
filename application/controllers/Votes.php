@@ -225,7 +225,7 @@
         $data['m_index'] = NULL;
         $data['obfuscation_links'] = TRUE;
       } elseif ($year != NULL && $month != NULL) {
-        $month = $this->number($month);
+        $month = $this->number_remove_zero($month);
         $data['description'] = "Découvrez tous les scrutins qui ont eu lieu dans l'hémicycle de l'Assemblée nationale lors de la " . $legislature . "<sup>e</sup> législature, en " . $months[$month-1] . " " . $year . ".";
         //"Liste des votes de la ".$legislature."<sup>e</sup> législature - ".$months[$month-1]." ".$year;
         // Meta
