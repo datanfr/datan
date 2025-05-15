@@ -4,20 +4,15 @@
       $this->load->database();
     }
 
-    private function number_zero($x){
-      if ($x < 10) {
-        return "0".$x;
-      } else {
-        return $x;
-      }
+    private function number_add_zero($x){
+      return str_pad((string) $x, 2, "0", STR_PAD_LEFT);
     }
-    private function number($x){
-      if ($x < 10) {
-        return substr($x, 1);
-      } else {
-        return $x;
-      }
+
+    private function number_remove_zero($x){
+      $x = (string) $x;
+      return ltrim($x, '0');
     }
+
     public function get_all_votes($legislature, $year, $month, $limit){
       $where = array();
 
@@ -167,7 +162,7 @@
       $array = $query->result_array();
       foreach ($array as $key => $value) {
         $array[$key]["month"] = $months[$value['months']-1];
-        $array[$key]["index"] = $this->number_zero($value["months"]);
+        $array[$key]["index"] = $this->number_add_zero($value["months"]);
       }
 
       return($array);
