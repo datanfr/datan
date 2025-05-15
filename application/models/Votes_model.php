@@ -4,15 +4,6 @@
       $this->load->database();
     }
 
-    private function number_add_zero($x){
-      return str_pad((string) $x, 2, "0", STR_PAD_LEFT);
-    }
-
-    private function number_remove_zero($x){
-      $x = (string) $x;
-      return ltrim($x, '0');
-    }
-
     public function get_all_votes($legislature, $year, $month, $limit){
       $where = array();
 
