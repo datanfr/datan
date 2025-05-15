@@ -63,18 +63,16 @@
                     <input class="form-check-input category-checkbox" type="checkbox" value="derniers-votes" id="cat1">
                     <label class="form-check-label" for="cat1">Mes derniers votes</label>
                   </div>
-
-                  <!-- Partial à terminer, erreur sur les candidats élus au premier tour -->
-                   <!--<div class="form-check">
+                  <div class="form-check">
                     <input class="form-check-input category-checkbox" type="checkbox" value="election" id="cat3">
                     <label class="form-check-label" for="cat3">Mon élection</label>
-                  </div>-->
+                  </div>
                   <div class="form-check">
                     <input class="form-check-input category-checkbox" type="checkbox" value="explication" id="cat4">
                     <label class="form-check-label" for="cat4">Ma dernière explication</label>
                   </div>
-                    <!-- Partial à terminer -->
-                    <!-- <div class="form-check">
+                  <!-- Partial à terminer -->
+                  <!-- <div class="form-check">
                     <input class="form-check-input category-checkbox" type="checkbox" value="questions" id="cat5">
                     <label class="form-check-label" for="cat5">Mes dernières questions</label>
                   </div>-->
