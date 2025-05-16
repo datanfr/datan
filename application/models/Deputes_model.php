@@ -296,7 +296,7 @@
     public function get_election_result($dpt, $circo, $nom, $year, $tour){
       $sql = 'SELECT candidat, voix, pct_exprimes, tour,
         CASE
-          WHEN tour = 2 THEN "2ème"
+          WHEN tour = 2 THEN "2nd"
           WHEN tour = 1 THEN "1er"
         END AS tour_election
         FROM elect_legislatives_results
@@ -320,11 +320,12 @@
     public function get_election_opponent($dpt, $circo, $year, $tour){
       $sql = 'SELECT nameLast, nameFirst, sexe, voix, pct_exprimes,
         CASE
-          WHEN tour = 2 THEN "2ème"
+          WHEN tour = 2 THEN "2nd"
           WHEN tour = 1 THEN "1er"
         END AS tour_election
         FROM elect_legislatives_results
         WHERE dpt = ? AND circo = ? AND year = ? AND tour = ? AND elected = 0
+        ORDER BY voix DESC
       ';
       return $this->db->query($sql, array($dpt, $circo, $year, $tour))->result_array();
     }

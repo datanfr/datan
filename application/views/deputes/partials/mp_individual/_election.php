@@ -5,10 +5,10 @@
   // Préparer les textes en fonction de $first_person
   if ($first_person) {
     $title_election = "Mon élection";
-    $text_active = "Je suis député{$gender['e']} de la {$depute["circo"]}<sup>{$depute["circo_abbrev"]}</sup> circonscription {$depute['dptLibelle2']}{$depute['departementNom']} ({$depute['departementCode']})";
+    $text_active = "Je suis député{$gender['e']} de la {$depute["circo"]}<sup>{$depute["circo_abbrev"]}</sup> circonscription {$depute['dptLibelle2']}{$depute['departementNom']} ({$depute['departementCode']}).";
     $text_inactive = "J'étais {$gender['le']} député{$gender['e']} de la {$depute["circo"]}<sup>{$depute["circo_abbrev"]}</sup> circonscription {$depute['dptLibelle2']}<a href=\"" . base_url() . "deputes/{$depute['dptSlug']}\">{$depute['departementNom']} ({$depute['departementCode']})</a>.";
     $text_elected = isset($election_result)
-      ? "J'ai été élu{$gender['e']} {$gender['depute']} lors du {$election_result['tour_election']} tour."
+      ? "J'ai été élu{$gender['e']} {$gender['depute']} lors du {$election_result['tour_election']} tour des élections législatives de 2024 avec <b>" . formatNumber($election_result['voix']) . "</b> voix, soit " . round($election_result['pct_exprimes']) . "% des suffrages exprimés."
       : null;
   } else {
     $title_election = "Son élection";
@@ -32,9 +32,9 @@
 
       <!-- Actuel ou ancien député -->
       <?php if ($active) : ?>
-        <p class><?= $text_active ?></p>
+        <p class="<?= $first_person ? "" : "subtitle" ?>"><?= $text_active ?></p>
       <?php else : ?>
-        <p class><?= $text_inactive ?></p>
+        <p><?= $text_inactive ?></p>
       <?php endif; ?>
 
 
@@ -63,7 +63,7 @@
 
         <!-- Résultats détaillés -->
         <div class="mt-4">
-          <p class="subtitle">Résultats du 2ème tour - Élections législatives 2024</p>
+          <p class="subtitle">Résultats du <?= $election_result['tour_election'] ?> tour - Élections législatives 2024</p>
 
 
           <!-- Résultat du député élu -->
@@ -73,13 +73,12 @@
               <strong><?= round($election_result['pct_exprimes'], 1) ?> %</strong>
             </div>
             <div class="d-flex align-items-center mb-1">
-              <small class="text-muted"><?= formatNumber($election_result['voix']) ?> votes</small>
+              <small class="text-muted"><?= formatNumber($election_result['voix']) ?> voix</small>
             </div>
             <div class="progress" style="height: 10px;">
               <div class="progress-bar bg-primary" role="progressbar" style="width: <?= round($election_result['pct_exprimes']) ?>%"></div>
             </div>
           </div>
-
 
           <!-- Résultats des autres candidats -->
           <?php if (isset($election_opponents)): ?>
@@ -90,7 +89,7 @@
                   <strong><?= round($opponent['pct_exprimes'], 1) ?> %</strong>
                 </div>
                 <div class="d-flex align-items-center mb-1">
-                  <small class="text-muted"><?= formatNumber($opponent['voix']) ?> votes</small>
+                  <small class="text-muted"><?= formatNumber($opponent['voix']) ?> voix</small>
                 </div>
                 <div class="progress" style="height: 10px;">
                   <div class="progress-bar bg-primary" role="progressbar" style="width: <?= round($opponent['pct_exprimes']) ?>%"></div>
