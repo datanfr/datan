@@ -8,10 +8,10 @@
     $text_active = "Je suis député{$gender['e']} de la {$depute["circo"]}<sup>{$depute["circo_abbrev"]}</sup> circonscription {$depute['dptLibelle2']}{$depute['departementNom']} ({$depute['departementCode']}).";
     $text_inactive = "J'étais {$gender['le']} député{$gender['e']} de la {$depute["circo"]}<sup>{$depute["circo_abbrev"]}</sup> circonscription {$depute['dptLibelle2']}<a href=\"" . base_url() . "deputes/{$depute['dptSlug']}\">{$depute['departementNom']} ({$depute['departementCode']})</a>.";
     $text_elected = isset($election_result)
-      ? "J'ai été élu{$gender['e']} {$gender['depute']} lors du {$election_result['tour_election']} tour des élections législatives"
+      ? "J'ai été élu{$gender['e']} {$gender['depute']} lors du {$election_result['tour_election']} tour"
         . ($election_result['partielle'] === true
-          ? ' partielle de ' . date('Y', strtotime($election_result['date']))
-          : ' de 2024')
+          ? " d'une élection législative partielle "
+          : " des élections législatives de 2024")
         . " avec <b>" . formatNumber($election_result['voix']) . "</b> voix, soit "
         . round($election_result['pct_exprimes']) . "% des suffrages exprimés."
       : null;
@@ -20,10 +20,10 @@
     $text_active = "Député{$gender['e']} de la {$depute["circo"]}<sup>{$depute["circo_abbrev"]}</sup> circonscription {$depute['dptLibelle2']}{$depute['departementNom']} ({$depute['departementCode']})";
     $text_inactive = "{$title} était {$gender['le']} député{$gender['e']} de la {$depute["circo"]}<sup>{$depute["circo_abbrev"]}</sup> circonscription {$depute['dptLibelle2']}<a href=\"" . base_url() . "deputes/{$depute['dptSlug']}\">{$depute['departementNom']} ({$depute['departementCode']})</a>.";
     $text_elected = isset($election_result)
-    ? "{$title} a été élu{$gender['e']} {$gender['depute']} lors du {$election_result['tour_election']} tour des élections législatives"
+    ? "{$title} a été élu{$gender['e']} {$gender['depute']} lors du {$election_result['tour_election']} tour"
       . ($election_result['partielle'] === true
-         ? ' partielle de ' . date('Y', strtotime($election_result['date']))
-         : ' de 2024')
+         ? " d'une élection législative partielle"
+         : " des élections législatives de 2024")
       . " avec <b>" . formatNumber($election_result['voix']) . "</b> voix, soit "
       . round($election_result['pct_exprimes']) . "% des suffrages exprimés."
     : null;
@@ -61,14 +61,14 @@
 
         <!-- Elections partielles -->
         <?php if ($election_result['partielle']): ?>
-          <p><?= $first_person ? "J'ai été élu" . $gender["e"] : $title . " a été élu" . $gender["e"] ?> lors d'élections partielles. Celles-ci se sont tenus en <?= $election_result['dateFr'] ?>.</p>
+          <p><?= $first_person ? "J'ai été élu" . $gender["e"] : $title . " a été élu" . $gender["e"] ?> lors d'une élection partielle qui s'est tenue en <?= $election_result['dateFr'] ?>.</p>
         <?php endif; ?>
 
 
         <!-- Résultats détaillés -->
         <div class="mt-4">
           <?php if ($election_result['partielle']): ?>
-            <p class="subtitle">Résultats du <?= $election_result['tour_election'] ?> tour - Élections législatives partielles <?= date('Y', strtotime($election_result['date'])) ?></p>
+            <p class="subtitle">Résultats du <?= $election_result['tour_election'] ?> tour - Élection législative partielle <?= date('Y', strtotime($election_result['date'])) ?></p>
           <?php else : ?>
             <p class="subtitle">Résultats du <?= $election_result['tour_election'] ?> tour - Élections législatives 2024</p>
           <?php endif; ?>

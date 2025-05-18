@@ -315,16 +315,14 @@
           FROM elect_legislatives_partielles
           WHERE dpt = ?
             AND circo = ?
-            AND year = ?
             AND elected = 1
             AND nameLast LIKE "%'.$this->db->escape_like_str($nom).'%"
             AND date BETWEEN ? AND ?
           LIMIT 1
         ';
-        $result = $this->db->query($sql, array($dpt, $circo, $year, $legislature['dateDebut'], $legislature['dateFin']))->row_array();
+        $result = $this->db->query($sql, array($dpt, $circo, $legislature['dateDebut'], $legislature['dateFin']))->row_array();
         $result['partielle'] = TRUE;
         $result['dateFr'] = utf8_encode(strftime('%B %Y', strtotime($result['date'])));
-        print_r($result);
       } else {
         $result['partielle'] = FALSE;
       }
@@ -354,13 +352,12 @@
           FROM elect_legislatives_partielles
           WHERE dpt = ?
             AND circo = ?
-            AND year = ?
             AND tour = ?
             AND elected = 0
             AND date BETWEEN ? AND ?
           ORDER BY voix DESC
         ';
-        return $this->db->query($sql, array($dpt, $circo, $year, $tour, $legislature['dateDebut'], $legislature['dateFin']))->result_array();
+        return $this->db->query($sql, array($dpt, $circo, $tour, $legislature['dateDebut'], $legislature['dateFin']))->result_array();
       }
       
     }
