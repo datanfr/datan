@@ -293,41 +293,76 @@
       return $this->db->get()->row_array();
     }
 
-    public function get_election_result($dpt, $circo, $nom, $year, $tour){
+    public function get_election_result($dpt, $circo, $nom, $year, $legislature){
       $sql = 'SELECT candidat, voix, pct_exprimes, tour,
         CASE
           WHEN tour = 2 THEN "2nd"
           WHEN tour = 1 THEN "1er"
         END AS tour_election
         FROM elect_legislatives_results
-        WHERE dpt = ? AND circo = ? AND year = ? AND tour = ? AND elected = 1 AND nameLast LIKE "%'.$this->db->escape_like_str($nom).'%"
+        WHERE dpt = ? AND circo = ? AND year = ? AND elected = 1 AND nameLast LIKE "%'.$this->db->escape_like_str($nom).'%"
         LIMIT 1
       ';
-      return $this->db->query($sql, array($dpt, $circo, $year, $tour))->row_array();
+      $result = $this->db->query($sql, array($dpt, $circo, $year))->row_array();
+
+      if (!$result){ // CHECK FOR ELECTION PARTIELLE
+        $legislature['dateFin'] = $legislature['dateFin'] ?? date('Y-m-d');
+        $sql = 'SELECT nameLast, nameFirst, voix, pct_exprimes, tour, date,
+          CASE
+            WHEN tour = 2 THEN "2nd"
+            WHEN tour = 1 THEN "1er"
+          END AS tour_election
+          FROM elect_legislatives_partielles
+          WHERE dpt = ?
+            AND circo = ?
+            AND year = ?
+            AND elected = 1
+            AND nameLast LIKE "%'.$this->db->escape_like_str($nom).'%"
+            AND date BETWEEN ? AND ?
+          LIMIT 1
+        ';
+        $result = $this->db->query($sql, array($dpt, $circo, $year, $legislature['dateDebut'], $legislature['dateFin']))->row_array();
+        $result['partielle'] = TRUE;
+        $result['dateFr'] = utf8_encode(strftime('%B %Y', strtotime($result['date'])));
+        print_r($result);
+      } else {
+        $result['partielle'] = FALSE;
+      }
+      
+      return $result;
     }
 
-    public function get_election_canceled($depute_uid, $legislature){
-      $where = array(
-        'mpId' => $depute_uid,
-        'datePriseFonction' => '2024-07-01'
-      );
-      $this->db->select('causeFin, dateFin, date_format(dateFin, "%M %Y") AS dateFinFR');
-      $return = $this->db->get_where('mandat_principal', $where)->row_array();
-      $return['cause'] = NULL;
-      return $return;
-    }
-
-    public function get_election_opponent($dpt, $circo, $year, $tour){
-      $sql = 'SELECT nameLast, nameFirst, sexe, voix, pct_exprimes,
-        CASE
-          WHEN tour = 2 THEN "2nd"
-          WHEN tour = 1 THEN "1er"
-        END AS tour_election
-        FROM elect_legislatives_results
-        WHERE dpt = ? AND circo = ? AND year = ? AND tour = ? AND elected = 0
-        ORDER BY voix DESC
-      ';
-      return $this->db->query($sql, array($dpt, $circo, $year, $tour))->result_array();
+    public function get_election_opponent($dpt, $circo, $year, $tour, $legislature, $partielle){
+      if (!$partielle){
+        $sql = 'SELECT nameLast, nameFirst, sexe, voix, pct_exprimes,
+          CASE
+            WHEN tour = 2 THEN "2nd"
+            WHEN tour = 1 THEN "1er"
+          END AS tour_election
+          FROM elect_legislatives_results
+          WHERE dpt = ? AND circo = ? AND year = ? AND tour = ? AND elected = 0
+          ORDER BY voix DESC
+        ';
+        return $this->db->query($sql, array($dpt, $circo, $year, $tour))->result_array();
+      } else {$legislature['dateFin'] = $legislature['dateFin'] ?? date('Y-m-d');
+        $legislature['dateFin'] = $legislature['dateFin'] ?? date('Y-m-d');
+        $sql = 'SELECT nameLast, nameFirst, sexe, voix, pct_exprimes,
+          CASE
+            WHEN tour = 2 THEN "2nd"
+            WHEN tour = 1 THEN "1er"
+          END AS tour_election
+          FROM elect_legislatives_partielles
+          WHERE dpt = ?
+            AND circo = ?
+            AND year = ?
+            AND tour = ?
+            AND elected = 0
+            AND date BETWEEN ? AND ?
+          ORDER BY voix DESC
+        ';
+        return $this->db->query($sql, array($dpt, $circo, $year, $tour, $legislature['dateDebut'], $legislature['dateFin']))->result_array();
+      }
+      
     }
 
     public function get_election_infos($dpt, $circo, $year, $tour){

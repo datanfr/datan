@@ -4259,6 +4259,11 @@ class Script
                 // Create associative array for this row
                 $x = array_combine($fields, $row);
 
+                // Fix decimal separator for pct_exprimes (e.g. "50,89" → "50.89")
+                if (isset($x['pct_exprimes'])) {
+                    $x['pct_exprimes'] = str_replace(',', '.', $x['pct_exprimes']);
+                }
+
                 // Merge into flat array (sequential values)
                 $toInsert = array_merge($toInsert, array_values($x));
 
@@ -4267,8 +4272,6 @@ class Script
         } else {
             echo "Error opening the file.";
         }
-
-        print_r($toInsert);
 
         // Insert into the table 
         $this->insertAll('elect_legislatives_partielles', $fields, $toInsert);
