@@ -8,15 +8,25 @@
     $text_active = "Je suis député{$gender['e']} de la {$depute["circo"]}<sup>{$depute["circo_abbrev"]}</sup> circonscription {$depute['dptLibelle2']}{$depute['departementNom']} ({$depute['departementCode']}).";
     $text_inactive = "J'étais {$gender['le']} député{$gender['e']} de la {$depute["circo"]}<sup>{$depute["circo_abbrev"]}</sup> circonscription {$depute['dptLibelle2']}<a href=\"" . base_url() . "deputes/{$depute['dptSlug']}\">{$depute['departementNom']} ({$depute['departementCode']})</a>.";
     $text_elected = isset($election_result)
-      ? "J'ai été élu{$gender['e']} {$gender['depute']} lors du {$election_result['tour_election']} tour des élections législatives de 2024 avec <b>" . formatNumber($election_result['voix']) . "</b> voix, soit " . round($election_result['pct_exprimes']) . "% des suffrages exprimés."
+      ? "J'ai été élu{$gender['e']} {$gender['depute']} lors du {$election_result['tour_election']} tour des élections législatives"
+        . ($election_result['partielle'] === true
+          ? ' partielle de ' . date('Y', strtotime($election_result['date']))
+          : ' de 2024')
+        . " avec <b>" . formatNumber($election_result['voix']) . "</b> voix, soit "
+        . round($election_result['pct_exprimes']) . "% des suffrages exprimés."
       : null;
   } else {
     $title_election = "Son élection";
     $text_active = "Député{$gender['e']} de la {$depute["circo"]}<sup>{$depute["circo_abbrev"]}</sup> circonscription {$depute['dptLibelle2']}{$depute['departementNom']} ({$depute['departementCode']})";
     $text_inactive = "{$title} était {$gender['le']} député{$gender['e']} de la {$depute["circo"]}<sup>{$depute["circo_abbrev"]}</sup> circonscription {$depute['dptLibelle2']}<a href=\"" . base_url() . "deputes/{$depute['dptSlug']}\">{$depute['departementNom']} ({$depute['departementCode']})</a>.";
     $text_elected = isset($election_result)
-      ? "{$title} a été élu{$gender['e']} {$gender['depute']} lors du {$election_result['tour_election']} tour des élections législatives de 2024 avec <b>" . formatNumber($election_result['voix']) . "</b> voix, soit " . round($election_result['pct_exprimes']) . "% des suffrages exprimés."
-      : null;
+    ? "{$title} a été élu{$gender['e']} {$gender['depute']} lors du {$election_result['tour_election']} tour des élections législatives"
+      . ($election_result['partielle'] === true
+         ? ' partielle de ' . date('Y', strtotime($election_result['date']))
+         : ' de 2024')
+      . " avec <b>" . formatNumber($election_result['voix']) . "</b> voix, soit "
+      . round($election_result['pct_exprimes']) . "% des suffrages exprimés."
+    : null;
   }
   ?>
 
@@ -37,33 +47,31 @@
         <p><?= $text_inactive ?></p>
       <?php endif; ?>
 
-
-      <!-- Election invalidée -->
-      <?php if ($election_canceled && $election_canceled['cause']): ?>
-        <p><?= $election_canceled['cause'] ?></p>
-        <p>
-          Pour découvrir les résultats des élections législatives partielles, organisées après l'invalidation par le Conseil constitutionnel,
-          <span class="url_obf" url_obf="<?= url_obfuscation("https://www.interieur.gouv.fr/Elections/Les-resultats/Partielles/Legislatives") ?>">cliquez ici</span>.
-        </p>
-      <?php endif; ?>
-
-
       <!-- Résultats de l'élection -->
       <?php if (isset($election_result)) : ?>
         <p><?= $text_elected ?></p>
 
 
         <!-- Taux de participation (hors iframe) -->
-        <?php if (!isset($iframe) || !$iframe) : ?>
+        <?php if (isset($election_infos) && (!isset($iframe) || !$iframe)) : ?>
           <p>
             La participation au <?= $election_result['tour_election'] ?> tour a atteint <?= $election_infos['participation'] ?>% dans cette circonscription, un taux <?= $this->functions_datan->compare_numbers_text($election_infos['participation'], 67) ?> à la moyenne nationale (<?= $election_result['tour'] == 1 ? 67 : 67 ?>%).
           </p>
         <?php endif; ?>
 
+        <!-- Elections partielles -->
+        <?php if ($election_result['partielle']): ?>
+          <p><?= $first_person ? "J'ai été élu" . $gender["e"] : $title . " a été élu" . $gender["e"] ?> lors d'élections partielles. Celles-ci se sont tenus en <?= $election_result['dateFr'] ?>.</p>
+        <?php endif; ?>
+
 
         <!-- Résultats détaillés -->
         <div class="mt-4">
-          <p class="subtitle">Résultats du <?= $election_result['tour_election'] ?> tour - Élections législatives 2024</p>
+          <?php if ($election_result['partielle']): ?>
+            <p class="subtitle">Résultats du <?= $election_result['tour_election'] ?> tour - Élections législatives partielles <?= date('Y', strtotime($election_result['date'])) ?></p>
+          <?php else : ?>
+            <p class="subtitle">Résultats du <?= $election_result['tour_election'] ?> tour - Élections législatives 2024</p>
+          <?php endif; ?>
 
 
           <!-- Résultat du député élu -->
