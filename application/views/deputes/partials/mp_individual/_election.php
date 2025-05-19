@@ -108,9 +108,9 @@
 
 
           <!-- Lien vers les résultats officiels -->
-           <?php if ($election_infos['infosURL']): ?>
+           <?php if ($infosURL): ?>
               <div class="mt-4">
-                <span class="url_obf" url_obf="<?= url_obfuscation($election_infos['infosURL']) ?>">🔎 Consultez les résultats complets</span>
+                <span class="url_obf" url_obf="<?= url_obfuscation($infosURL) ?>">🔎 Consultez les résultats complets</span>
               </div>
             <?php endif; ?>
         </div>
