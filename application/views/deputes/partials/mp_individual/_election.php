@@ -11,7 +11,7 @@
       ? "J'ai été élu{$gender['e']} {$gender['depute']} lors du {$election_result['tour_election']} tour"
         . ($election_result['partielle'] === true
           ? " d'une élection législative partielle "
-          : " des élections législatives de 2024")
+          : " des élections législatives de " . $election_infos['year'])
         . " avec <b>" . formatNumber($election_result['voix']) . "</b> voix, soit "
         . round($election_result['pct_exprimes']) . "% des suffrages exprimés."
       : null;
@@ -23,7 +23,7 @@
     ? "{$title} a été élu{$gender['e']} {$gender['depute']} lors du {$election_result['tour_election']} tour"
       . ($election_result['partielle'] === true
          ? " d'une élection législative partielle"
-         : " des élections législatives de 2024")
+         : " des élections législatives de " . $election_infos['year'])
       . " avec <b>" . formatNumber($election_result['voix']) . "</b> voix, soit "
       . round($election_result['pct_exprimes']) . "% des suffrages exprimés."
     : null;
@@ -55,7 +55,7 @@
         <!-- Taux de participation (hors iframe) -->
         <?php if (isset($election_infos) && (!isset($iframe) || !$iframe)) : ?>
           <p>
-            La participation au <?= $election_result['tour_election'] ?> tour a atteint <?= $election_infos['participation'] ?>% dans cette circonscription, un taux <?= $this->functions_datan->compare_numbers_text($election_infos['participation'], 67) ?> à la moyenne nationale (<?= $election_result['tour'] == 1 ? 67 : 67 ?>%).
+            La participation au <?= $election_result['tour_election'] ?> tour a atteint <?= $election_infos['participation'] ?>% dans cette circonscription, un taux <?= $this->functions_datan->compare_numbers_text($election_infos['participation'], $election_infos['participation_nationale']) ?> à la moyenne nationale (<?= $election_infos['participation_nationale'] ?>%).
           </p>
         <?php endif; ?>
 
@@ -70,14 +70,14 @@
           <?php if ($election_result['partielle']): ?>
             <p class="subtitle">Résultats du <?= $election_result['tour_election'] ?> tour - Élection législative partielle <?= date('Y', strtotime($election_result['date'])) ?></p>
           <?php else : ?>
-            <p class="subtitle">Résultats du <?= $election_result['tour_election'] ?> tour - Élections législatives 2024</p>
+            <p class="subtitle">Résultats du <?= $election_result['tour_election'] ?> tour - Élections législatives <?= $election_infos['year'] ?></p>
           <?php endif; ?>
 
 
           <!-- Résultat du député élu -->
           <div class="border border-primary rounded px-3 py-4 mt-4" style="background-color: rgba(0, 183, 148, 0.15);">
             <div class="d-flex justify-content-between">
-              <h6 class="mt-0 font-weight-bold"><?= $title ?><span class="badge badge-primary ml-2">Élu<?= $gender['e'] ?></span></h6>
+              <h6 class="mt-0 font-weight-bold"><?= $election_result['candidat'] ?><span class="badge badge-primary ml-2">Élu<?= $gender['e'] ?></span></h6>
               <strong><?= round($election_result['pct_exprimes'], 1) ?> %</strong>
             </div>
             <div class="d-flex align-items-center mb-1">
@@ -108,9 +108,11 @@
 
 
           <!-- Lien vers les résultats officiels -->
-          <div class="mt-4">
-            <span class="url_obf" url_obf="<?= url_obfuscation("https://www.resultats-elections.interieur.gouv.fr/legislatives2024/ensemble_geographique/index.html") ?>">🔎 Consultez les résultats complets</span>
-          </div>
+           <?php if ($election_infos['infosURL']): ?>
+              <div class="mt-4">
+                <span class="url_obf" url_obf="<?= url_obfuscation($election_infos['infosURL']) ?>">🔎 Consultez les résultats complets</span>
+              </div>
+            <?php endif; ?>
         </div>
       <?php endif; ?>
     </div>
