@@ -187,7 +187,16 @@ class Depute_service
                 }
                 $data['election_opponents'] = $topCandidates;
 
-                } 
+                }
+
+                // Add more info URL 
+                $urlMap = [
+                    17 => "https://www.archives-resultats-elections.interieur.gouv.fr/resultats/legislatives2024/",
+                    16 => "https://www.archives-resultats-elections.interieur.gouv.fr/resultats/legislatives-2022/index.php"
+                ];
+                if (isset($urlMap[$legislature])) {
+                    $data['infosURL'] = $urlMap[$legislature];
+                }
             }          
         }
 

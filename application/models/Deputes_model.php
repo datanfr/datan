@@ -299,7 +299,7 @@
       $legislatureNumber = $legislature['legislatureNumber'];
 
       // Build common parts of SELECT
-      $selectCommon = 'candidat, nameFirst, nameLast, voix, pct_exprimes, tour,
+      $selectCommon = 'nameFirst, nameLast, voix, pct_exprimes, tour,
         CASE
             WHEN tour = 2 THEN "2nd"
             WHEN tour = 1 THEN "1er"
@@ -307,7 +307,7 @@
 
       // Attempt to fetch from main results table
       $searchField = $legislatureNumber >= 17 ? 'nameLast' : 'candidat';
-      $sql = "SELECT $selectCommon
+      $sql = "SELECT candidat, $selectCommon
             FROM elect_legislatives_results
             WHERE dpt = ? AND circo = ? AND year = ? AND elected = 1 AND $searchField LIKE ?
             LIMIT 1";
@@ -341,6 +341,7 @@
       $result = $this->db->query($sql, $params)->row_array();
 
       if ($result) {
+        $result['candidat'] = $result['nameFirst'] . ' ' . ucfirst(strtolower($result['nameLast']));
         $result['partielle'] = true;
         $result['dateFr'] = utf8_encode(strftime('%B %Y', strtotime($result['date'])));
       }
@@ -353,7 +354,7 @@
       $result = [];
 
       // Common SELECT clause
-      $selectFields = 'candidat, nameLast, nameFirst, sexe, voix, pct_exprimes,
+      $selectFields = 'nameLast, nameFirst, sexe, voix, pct_exprimes,
         CASE
             WHEN tour = 2 THEN "2nd"
             WHEN tour = 1 THEN "1er"
@@ -362,7 +363,7 @@
       if (!$partielle){
         // Get data if a normal election
         
-        $sql = "SELECT $selectFields
+        $sql = "SELECT candidat, $selectFields
                 FROM elect_legislatives_results
                 WHERE dpt = ? AND circo = ? AND year = ? AND tour = ? AND elected = 0
                 ORDER BY voix DESC";
@@ -390,6 +391,12 @@
 
         $params = [$dpt, $circo, $tour, $dateDebut, $dateFin];
         $result = $this->db->query($sql, $params)->result_array();
+
+        if (!empty($result)) {
+            foreach ($result as &$row) {
+                $row['candidat'] = $row['nameFirst'] . ' ' . ucfirst(strtolower($row['nameLast']));
+            }
+        }
       }
       return $result;      
     }
@@ -415,15 +422,6 @@
       ];
       if (isset($participationMap[$legislatureNumber][$tour])) {
         $result['participation_nationale'] = $participationMap[$legislatureNumber][$tour];
-      }
-
-      // Add more info URL 
-      $urlMap = [
-        17 => "https://www.archives-resultats-elections.interieur.gouv.fr/resultats/legislatives2024/",
-        16 => "https://www.archives-resultats-elections.interieur.gouv.fr/resultats/legislatives-2022/index.php"
-      ];
-      if (isset($urlMap[$legislatureNumber])) {
-        $result['infosURL'] = $urlMap[$legislatureNumber];
       }
       
       return $result;
