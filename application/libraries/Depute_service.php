@@ -121,15 +121,14 @@ class Depute_service
         $data['depute']['circo_abbrev'] = abbrev_n($data['depute']['circo'], TRUE); // circo number
         $data['politicalParty'] = $this->CI->deputes_model->get_political_party($mp_id); // political party
 
-        if ($legislature == legislature_current()) {
+        if ($legislature >= 16) { // Get electoral data of MP if legislature >= 16
 
             $data['election_result'] = $this->CI->deputes_model->get_election_result(
                 $data['depute']['departementCode'],
                 $data['depute']['circo'],
                 $name_last,
-                2024,
                 $data['legislature']
-            );            
+            );
 
             if ($data['election_result']) {
                 $round = $data['election_result']['tour'];
@@ -137,7 +136,6 @@ class Depute_service
                 $data['election_opponents'] = $this->CI->deputes_model->get_election_opponent(
                     $data['depute']['departementCode'],
                     $data['depute']['circo'],
-                    2024,
                     $round,
                     $data['legislature'],
                     $data['election_result']['partielle']
@@ -147,8 +145,8 @@ class Depute_service
                     $data['election_infos'] = $this->CI->deputes_model->get_election_infos(
                         $data['depute']['departementCode'],
                         $data['depute']['circo'],
-                        2024,
-                        $round
+                        $round,
+                        $data['legislature']
                     );
 
                     $data['election_infos']['participation'] = round(
@@ -189,14 +187,7 @@ class Depute_service
                 }
                 $data['election_opponents'] = $topCandidates;
 
-                } elseif ($round == 2) { // Elected 2nd round
-                    if ($data['election_opponents']) {
-                        foreach ($data['election_opponents'] as $key => $value) {
-                            $data['election_opponents'][$key]['candidat'] = $value['nameFirst'] . ' ' .
-                                ucfirst(strtolower($value['nameLast']));
-                        }
-                    }
-                }
+                } 
             }          
         }
 

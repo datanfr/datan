@@ -293,81 +293,140 @@
       return $this->db->get()->row_array();
     }
 
-    public function get_election_result($dpt, $circo, $nom, $year, $legislature){
-      $sql = 'SELECT candidat, voix, pct_exprimes, tour,
-        CASE
-          WHEN tour = 2 THEN "2nd"
-          WHEN tour = 1 THEN "1er"
-        END AS tour_election
-        FROM elect_legislatives_results
-        WHERE dpt = ? AND circo = ? AND year = ? AND elected = 1 AND nameLast LIKE "%'.$this->db->escape_like_str($nom).'%"
-        LIMIT 1
-      ';
-      $result = $this->db->query($sql, array($dpt, $circo, $year))->row_array();
+    public function get_election_result($dpt, $circo, $nom, $legislature){
+      $year = (new DateTime($legislature['dateDebut']))->format('Y');
+      $escapedNom = '%' . $this->db->escape_like_str($nom) . '%';
+      $legislatureNumber = $legislature['legislatureNumber'];
 
-      if (!$result){ // CHECK FOR ELECTION PARTIELLE
-        $legislature['dateFin'] = $legislature['dateFin'] ?? date('Y-m-d');
-        $sql = 'SELECT nameLast, nameFirst, voix, pct_exprimes, tour, date,
-          CASE
+      // Build common parts of SELECT
+      $selectCommon = 'candidat, nameFirst, nameLast, voix, pct_exprimes, tour,
+        CASE
             WHEN tour = 2 THEN "2nd"
             WHEN tour = 1 THEN "1er"
-          END AS tour_election
-          FROM elect_legislatives_partielles
-          WHERE dpt = ?
-            AND circo = ?
-            AND elected = 1
-            AND nameLast LIKE "%'.$this->db->escape_like_str($nom).'%"
-            AND date BETWEEN ? AND ?
-          LIMIT 1
-        ';
-        $result = $this->db->query($sql, array($dpt, $circo, $legislature['dateDebut'], $legislature['dateFin']))->row_array();
-        $result['partielle'] = TRUE;
-        $result['dateFr'] = utf8_encode(strftime('%B %Y', strtotime($result['date'])));
-      } else {
-        $result['partielle'] = FALSE;
+        END AS tour_election';
+
+      // Attempt to fetch from main results table
+      $searchField = $legislatureNumber >= 17 ? 'nameLast' : 'candidat';
+      $sql = "SELECT $selectCommon
+            FROM elect_legislatives_results
+            WHERE dpt = ? AND circo = ? AND year = ? AND elected = 1 AND $searchField LIKE ?
+            LIMIT 1";
+
+      $params = [$dpt, $circo, $year, $escapedNom];
+      $result = $this->db->query($sql, $params)->row_array();
+
+      if ($result) {
+        // Normalize name only if nameFirst/nameLast are available
+        if (!empty($result['nameFirst']) && !empty(['nameLast'])) {
+            $result['candidat'] = $result['nameFirst'] . ' ' . ucfirst(strtolower($result['nameLast']));
+        }
+        $result['partielle'] = false;
+        return $result;
       }
-      
+
+      // Fallback to partial election results
+      $dateDebut = $legislature['dateDebut'];
+      $dateFin = $legislature['dateFin'] ?? date('Y-m-d');
+
+      $sql = "SELECT $selectCommon, date
+            FROM elect_legislatives_partielles
+            WHERE dpt = ?
+              AND circo = ?
+              AND elected = 1
+              AND nameLast LIKE ?
+              AND date BETWEEN ? AND ?
+            LIMIT 1";
+
+      $params = [$dpt, $circo, $escapedNom, $dateDebut, $dateFin];
+      $result = $this->db->query($sql, $params)->row_array();
+
+      if ($result) {
+        $result['partielle'] = true;
+        $result['dateFr'] = utf8_encode(strftime('%B %Y', strtotime($result['date'])));
+      }
+
       return $result;
     }
 
-    public function get_election_opponent($dpt, $circo, $year, $tour, $legislature, $partielle){
+    public function get_election_opponent($dpt, $circo, $tour, $legislature, $partielle){
+      $year = (new DateTime($legislature['dateDebut']))->format('Y');
+      $result = [];
+
+      // Common SELECT clause
+      $selectFields = 'candidat, nameLast, nameFirst, sexe, voix, pct_exprimes,
+        CASE
+            WHEN tour = 2 THEN "2nd"
+            WHEN tour = 1 THEN "1er"
+        END AS tour_election';      
+
       if (!$partielle){
-        $sql = 'SELECT nameLast, nameFirst, sexe, voix, pct_exprimes,
-          CASE
-            WHEN tour = 2 THEN "2nd"
-            WHEN tour = 1 THEN "1er"
-          END AS tour_election
-          FROM elect_legislatives_results
-          WHERE dpt = ? AND circo = ? AND year = ? AND tour = ? AND elected = 0
-          ORDER BY voix DESC
-        ';
-        return $this->db->query($sql, array($dpt, $circo, $year, $tour))->result_array();
-      } else {$legislature['dateFin'] = $legislature['dateFin'] ?? date('Y-m-d');
-        $legislature['dateFin'] = $legislature['dateFin'] ?? date('Y-m-d');
-        $sql = 'SELECT nameLast, nameFirst, sexe, voix, pct_exprimes,
-          CASE
-            WHEN tour = 2 THEN "2nd"
-            WHEN tour = 1 THEN "1er"
-          END AS tour_election
-          FROM elect_legislatives_partielles
-          WHERE dpt = ?
-            AND circo = ?
-            AND tour = ?
-            AND elected = 0
-            AND date BETWEEN ? AND ?
-          ORDER BY voix DESC
-        ';
-        return $this->db->query($sql, array($dpt, $circo, $tour, $legislature['dateDebut'], $legislature['dateFin']))->result_array();
+        // Get data if a normal election
+        
+        $sql = "SELECT $selectFields
+                FROM elect_legislatives_results
+                WHERE dpt = ? AND circo = ? AND year = ? AND tour = ? AND elected = 0
+                ORDER BY voix DESC";
+
+        $params = [$dpt, $circo, $year, $tour];
+        $result = $this->db->query($sql, $params)->result_array();
+
+        // Format candidate name if legislature number >= 17
+        if (!empty($result) && $legislature['legislatureNumber'] >= 17) {
+            foreach ($result as &$row) {
+                $row['candidat'] = $row['nameFirst'] . ' ' . ucfirst(strtolower($row['nameLast']));
+            }
+        }
+
+      } else {
+        // Election partielle
+        
+        $dateDebut = $legislature['dateDebut'] ?? date('Y-m-d');
+        $dateFin = $legislature['dateFin'] ?? date('Y-m-d');
+
+        $sql = "SELECT $selectFields
+                FROM elect_legislatives_partielles
+                WHERE dpt = ? AND circo = ? AND tour = ? AND elected = 0 AND date BETWEEN ? AND ?
+                ORDER BY voix DESC";
+
+        $params = [$dpt, $circo, $tour, $dateDebut, $dateFin];
+        $result = $this->db->query($sql, $params)->result_array();
       }
-      
+      return $result;      
     }
 
-    public function get_election_infos($dpt, $circo, $year, $tour){
+    public function get_election_infos($dpt, $circo, $tour, $legislature){
+      // Add some data
+      $legislatureNumber = $legislature['legislatureNumber'];
+
+      // Extract year from legislature start date
+      $year = (new DateTime($legislature['dateDebut']))->format('Y');
+
       $sql = 'SELECT *
         FROM elect_legislatives_infos
         WHERE dpt = ? AND circo = ? AND year = ? AND tour = ?
       ';
-      return $this->db->query($sql, array($dpt, $circo, $year, $tour))->row_array();
+      $params = [$dpt, $circo, $year, $tour];
+      $result = $this->db->query($sql, $params)->row_array();
+
+      // Add participation_nationale
+      $participationMap = [
+        17 => [1 => 68, 2 => 67],
+        16 => [1 => 48, 2 => 46],
+      ];
+      if (isset($participationMap[$legislatureNumber][$tour])) {
+        $result['participation_nationale'] = $participationMap[$legislatureNumber][$tour];
+      }
+
+      // Add more info URL 
+      $urlMap = [
+        17 => "https://www.archives-resultats-elections.interieur.gouv.fr/resultats/legislatives2024/",
+        16 => "https://www.archives-resultats-elections.interieur.gouv.fr/resultats/legislatives-2022/index.php"
+      ];
+      if (isset($urlMap[$legislatureNumber])) {
+        $result['infosURL'] = $urlMap[$legislatureNumber];
+      }
+      
+      return $result;
     }
 
     public function get_other_deputes($groupe_id, $depute_name, $depute_uid, $active, $legislature){
