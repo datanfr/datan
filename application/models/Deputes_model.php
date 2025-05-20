@@ -305,26 +305,7 @@
             WHEN tour = 1 THEN "1er"
         END AS tour_election';
 
-      // Attempt to fetch from main results table
-      $searchField = $legislatureNumber >= 17 ? 'nameLast' : 'candidat';
-      $sql = "SELECT candidat, $selectCommon
-            FROM elect_legislatives_results
-            WHERE dpt = ? AND circo = ? AND year = ? AND elected = 1 AND $searchField LIKE ?
-            LIMIT 1";
-
-      $params = [$dpt, $circo, $year, $escapedNom];
-      $result = $this->db->query($sql, $params)->row_array();
-
-      if ($result) {
-        // Normalize name only if nameFirst/nameLast are available
-        if (!empty($result['nameFirst']) && !empty(['nameLast'])) {
-            $result['candidat'] = $result['nameFirst'] . ' ' . ucfirst(strtolower($result['nameLast']));
-        }
-        $result['partielle'] = false;
-        return $result;
-      }
-
-      // Fallback to partial election results
+      // First check if there is an 'election partielle'
       $dateDebut = $legislature['dateDebut'];
       $dateFin = $legislature['dateFin'] ?? date('Y-m-d');
 
@@ -344,9 +325,28 @@
         $result['candidat'] = $result['nameFirst'] . ' ' . ucfirst(strtolower($result['nameLast']));
         $result['partielle'] = true;
         $result['dateFr'] = utf8_encode(strftime('%B %Y', strtotime($result['date'])));
+        return $result;
       }
 
-      return $result;
+      // If no 'election partielle', get main election results
+      $searchField = $legislatureNumber >= 17 ? 'nameLast' : 'candidat';
+      $sql = "SELECT candidat, $selectCommon
+            FROM elect_legislatives_results
+            WHERE dpt = ? AND circo = ? AND year = ? AND elected = 1 AND $searchField LIKE ?
+            LIMIT 1";
+
+      $params = [$dpt, $circo, $year, $escapedNom];
+      $result = $this->db->query($sql, $params)->row_array();
+
+      if ($result) {
+        // Normalize name only if nameFirst/nameLast are available
+        if (!empty($result['nameFirst']) && !empty(['nameLast'])) {
+            $result['candidat'] = $result['nameFirst'] . ' ' . ucfirst(strtolower($result['nameLast']));
+        }
+        $result['partielle'] = false;
+        return $result;
+      }     
+
     }
 
     public function get_election_opponent($dpt, $circo, $tour, $legislature, $partielle){
