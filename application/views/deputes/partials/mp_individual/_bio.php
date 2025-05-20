@@ -45,7 +45,7 @@
   <?php if (!$active): ?>
     <?php if ($depute['legislature'] == legislature_current()) : ?>
       <p>
-        <?= ucfirst($gender['pronom']) ?> a quitté l'Assemblée nationale le <?= $depute['dateFinMpFR'] ?><?= $this->depute_edito->get_end_mandate($depute) ?>.
+        <?= ucfirst($gender['pronom']) ?> a quitté l'Assemblée nationale le <?= $depute['dateFinMpFR'] ?> <?= $this->depute_edito->get_end_mandate($depute) ?>.
       </p>
     <?php else : ?>
       <p>
