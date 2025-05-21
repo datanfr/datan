@@ -174,13 +174,6 @@ class Sitemap extends CI_Controller {
 
   /* 9. sitemap-structure-1.xml */
   function structure(){
-    function number_zero($x){
-      if ($x < 10) {
-        return "0".$x;
-      } else {
-        return $x;
-      }
-    }
 
     // Data
     $fields = $this->fields_model->get_active_fields();
