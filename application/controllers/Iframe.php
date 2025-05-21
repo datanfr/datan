@@ -32,6 +32,7 @@ class Iframe extends CI_Controller
     $data['first_person'] = isset($_GET['first-person']) && ($_GET['first-person'] === 'true');
     $first_person =  $data['first_person'];
     $data['views_to_load'] = [];
+    $data['iframe'] = TRUE;
 
     $categories_param = $this->input->get('categories');
     $categories = $categories_param
@@ -41,7 +42,7 @@ class Iframe extends CI_Controller
     $category_views = [
       'positions-importantes' => 'deputes/partials/mp_individual/_key_positions.php',
       'derniers-votes' => 'deputes/partials/mp_individual/_votes.php',
-      // 'election' => 'deputes/partials/mp_individual/_election.php', //A terminer
+      'election' => 'deputes/partials/mp_individual/_election.php',
       'explication' => 'deputes/partials/mp_individual/_explanation.php',
       // 'questions' => 'deputes/partials/mp_individual/_questions.php', // A terminer
       'comportement-politique' => 'deputes/partials/mp_individual/statistics/_index.php',
