@@ -4,13 +4,6 @@
       $this->load->database();
     }
 
-    private function normalize_dpt_for_foreign_french($dpt, $legislatureNumber) {
-      if ($legislatureNumber == 17 && $dpt == "099") {
-        return "ZZ";
-      }
-      return $dpt;
-    }
-
     public function get_deputes_all($legislature, $active, $departement) {
       if (!is_null($departement)) {
         $this->db->where('da.dptSlug', $departement);
@@ -305,8 +298,6 @@
       $escapedNom = '%' . $this->db->escape_like_str($nom) . '%';
       $legislatureNumber = $legislature['legislatureNumber'];
 
-      $dpt = $this->normalize_dpt_for_foreign_french($dpt, $legislatureNumber);
-
       // Build common parts of SELECT
       $selectCommon = 'nameFirst, nameLast, voix, pct_exprimes, tour,
         CASE
@@ -363,8 +354,6 @@
       $legislatureNumber = $legislature['legislatureNumber'];
       $result = [];
 
-      $dpt = $this->normalize_dpt_for_foreign_french($dpt, $legislatureNumber);
-
       // Common SELECT clause
       $selectFields = 'nameLast, nameFirst, sexe, voix, pct_exprimes,
         CASE
@@ -416,8 +405,6 @@
     public function get_election_infos($dpt, $circo, $tour, $legislature){
       // Add some data
       $legislatureNumber = $legislature['legislatureNumber'];
-
-      $dpt = $this->normalize_dpt_for_foreign_french($dpt, $legislatureNumber);
 
       // Extract year from legislature start date
       $year = (new DateTime($legislature['dateDebut']))->format('Y');
