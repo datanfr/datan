@@ -268,7 +268,6 @@
       $data = $this->depute_service->get_mp_history_data($data, $mp_id);
       
       // ________________ GET Depute page ressources (meta, css, js...)_______
-
       $data = $this->depute_service->get_mp_page_resources($data, $depute_full_name, $nameUrl);
 
       // ________________LOAD VIEWS_______________________
@@ -281,8 +280,8 @@
 
     public function historique($nameUrl, $departement, $legislature){
       setlocale(LC_TIME, 'french');
-      // Check with this page : http://localhost/datan/deputes/ille-et-vilaine-35/depute_thierry-benoit/legislature-14
-      $depute = $this->deputes_model->get_depute_individual_historique($nameUrl, $departement, $legislature);
+      // Check with this page : http://dev-datan.fr/deputes/ille-et-vilaine-35/depute_thierry-benoit/legislature-16
+      $data['depute'] = $this->deputes_model->get_depute_individual_historique($nameUrl, $departement, $legislature);
       $latest_dpt = $this->deputes_model->get_mp_latest_dpt($data['depute']['mpId'], $departement);
       $data['depute_last'] = $this->deputes_model->get_depute_individual($nameUrl, $latest_dpt);
 
@@ -303,8 +302,6 @@
 
       // Main variables
       $mpId = $data['depute']['mpId'];
-      $nameLast = $data['depute']['nameLast'];
-      $depute_dpt = $data['depute']['dptSlug'];
       $data['active'] = $data['depute']['active'];
       $data['legislature'] = $legislature;
       $legislature = $data['depute']['legislature'];
