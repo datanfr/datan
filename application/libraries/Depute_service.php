@@ -121,8 +121,8 @@ class Depute_service
         $data['depute']['circo_abbrev'] = abbrev_n($data['depute']['circo'], TRUE); // circo number
         $data['politicalParty'] = $this->CI->deputes_model->get_political_party($mp_id); // political party
 
+        // Electoral results for this MP
         if ($legislature >= 16) { // Get electoral data of MP if legislature >= 16
-
             $data['election_result'] = $this->CI->deputes_model->get_election_result(
                 $data['depute']['departementCode'],
                 $data['depute']['circo'],
