@@ -15,7 +15,6 @@ class Depute_service
         $this->CI->load->model('legislature_model');
     }
 
-
     public function get_statistics($data, $legislature, $mpId, $groupe_id)
     {
         if (in_array($legislature, legislature_all())) {
@@ -103,8 +102,6 @@ class Depute_service
     }
 
 
-
-
     public function get_general_infos(
         array $data,
         string $mp_id,
@@ -122,13 +119,15 @@ class Depute_service
         $data['politicalParty'] = $this->CI->deputes_model->get_political_party($mp_id); // political party
 
         // Electoral results for this MP
-        if ($legislature >= 16) { // Get electoral data of MP if legislature >= 16
+        if ($legislature >= 15) { // Get electoral data of MP if legislature >= 15
             $data['election_result'] = $this->CI->deputes_model->get_election_result(
                 $data['depute']['departementCode'],
                 $data['depute']['circo'],
                 $name_last,
                 $data['legislature']
             );
+            echo $this->CI->db->last_query();
+            print_r($data['election_result']);
 
             if ($data['election_result']) {
                 $round = $data['election_result']['tour'];
@@ -156,7 +155,7 @@ class Depute_service
 
                 
                 if ($round == 1) { // Elected 1st round                   
-                    if (!empty($data['election_opponents'])) {
+                    if (!empty($data['election_opponents']) && $legislature >= 16) {
                         array_walk($data['election_opponents'], function (&$candidate) {
                             $candidate['candidat'] = $candidate['nameFirst'] . ' ' . ucfirst(strtolower($candidate['nameLast']));
                         });
@@ -192,7 +191,8 @@ class Depute_service
                 // Add more info URL 
                 $urlMap = [
                     17 => "https://www.archives-resultats-elections.interieur.gouv.fr/resultats/legislatives2024/",
-                    16 => "https://www.archives-resultats-elections.interieur.gouv.fr/resultats/legislatives-2022/index.php"
+                    16 => "https://www.archives-resultats-elections.interieur.gouv.fr/resultats/legislatives-2022/index.php",
+                    15 => "https://www.archives-resultats-elections.interieur.gouv.fr/resultats/legislatives-2017/index.php"
                 ];
                 if (isset($urlMap[$legislature])) {
                     $data['infosURL'] = $urlMap[$legislature];
@@ -226,8 +226,6 @@ class Depute_service
         ];
     }
 
-
-
     public function get_explication_details(string $mp_id, string $legislature, array $gender, string $first_person = 'false'): ?array
     {
         $explication = $this->CI->deputes_model->get_last_explication($mp_id, $legislature);
@@ -238,8 +236,6 @@ class Depute_service
 
         return $explication;
     }
-
-
 
     public function get_mp_history_data(array $data, string $mp_id): array
     {
@@ -252,7 +248,6 @@ class Depute_service
 
         return $data;
     }
-
 
     public function get_mp_page_resources(array $data, string $depute_full_name, string $nameUrl): array
     {

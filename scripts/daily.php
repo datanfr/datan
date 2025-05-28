@@ -4543,6 +4543,7 @@ if (isset($argv[1]) && isset($argv[2])) {
   $script = new Script();
 }
 
+/*
 $script->fillDeputes();
 $script->addBsky();
 $script->deputeAll();
@@ -4593,7 +4594,9 @@ $script->debatsParas();
 $script->reunionsInfos();
 $script->reunionsPresences();
 $script->questions();
+*/
 $script->updateLegislativesPartielles();
+/*
 //$script->parrainages(); // No longer used
 $script->opendata_activeMPs();
 $script->opendata_activeGroupes();
