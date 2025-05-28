@@ -416,6 +416,12 @@
         'vs.voteNumero' => $num
       );
       $this->db->select('vs.*, o.libelleAbrev');
+      $this->db->select('CASE
+        WHEN vs.vote = 1 THEN "pour"
+        WHEN vs.vote = -1 THEN "contre"
+        WHEN vs.vote = 0 THEN "abstention"
+        WHEN vs.vote IS NULL THEN "absent"
+        ELSE NULL END AS voteText', FALSE);
       $this->db->join('mandat_groupe mg', 'vs.mandatId = mg.mandatId');
       $this->db->join('organes o', 'mg.organeRef = o.uid');
       return $this->db->get_where('votes_scores vs', $where, 1)->row_array();
@@ -533,7 +539,11 @@
         ELSE NULL
         END AS vote_libelle
         FROM votes_scores vs
-        WHERE vs.voteNumero IN (184, 269, 629, 3213) AND vs.legislature = 16 AND vs.mpId = ?
+        WHERE
+          (
+            vs.voteNumero IN (184, 269, 629, 3213) AND vs.legislature = 16
+          )
+          AND vs.mpId = "PA332228";
       ';
       $query = $this->db->query($sql, $mpId);
 
@@ -554,7 +564,6 @@
       if (!isset($votes)) {
         $votes = NULL;
       }
-
 
       return $votes;
     }
