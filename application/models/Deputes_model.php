@@ -841,9 +841,9 @@
     }
 
 
-    public function get_photo_square($depute)
+    public function get_photo_square($legislature)
     {
-        return $depute['legislature'] >= 17 ? TRUE : FALSE;
+        return $legislature >= 17 ? TRUE : FALSE;
     }
 
     public function get_dptslug_by_name_url(string $name_url): ?string
