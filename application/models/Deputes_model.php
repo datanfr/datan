@@ -420,6 +420,7 @@
       $participationMap = [
         17 => [1 => 68, 2 => 67],
         16 => [1 => 48, 2 => 46],
+        15 => [1 => 49, 2 => 43]
       ];
       if (isset($participationMap[$legislatureNumber][$tour])) {
         $result['participation_nationale'] = $participationMap[$legislatureNumber][$tour];
