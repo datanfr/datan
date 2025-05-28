@@ -196,7 +196,7 @@
       $groupe_id = $depute['groupeId'];
       $data['first_person'] = false;
   
-      $data['photo_square'] = $this->deputes_model->get_photo_square($depute);
+      $data['photo_square'] = $this->deputes_model->get_photo_square($legislature);
   
       // ____________________GET GENDER_________________________________
       $data['gender'] = gender($depute['civ']); 
