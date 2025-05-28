@@ -258,8 +258,9 @@
         $data['key_votes'] = NULL;
       }
 
-      //__________________ Get FEATURED VOTE (motion de centure)_____________
-      $data['voteFeature'] = $this->votes_model->get_individual_vote_moc($mp_id, 17, 519); // MOC Barnier Decembre 2024
+      //__________________ Get FEATURED VOTE ________________________________
+      //$data['voteFeature'] = $this->votes_model->get_individual_vote_moc($mp_id, 17, 519); // MOC Barnier Decembre 2024
+      $data['voteFeature'] = $this->votes_model->get_individual_vote_depute($mp_id, 17, 2107); // PPL Aide à mourir
 
       //__________________GET LAST EXPLICATION_______________________________
       $data['explication'] = $this->depute_service->get_explication_details($mp_id, $legislature, $data['gender']);
