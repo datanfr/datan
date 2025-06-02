@@ -176,8 +176,13 @@
               'name' => $user['name'],
               'token' => $token
             );
-            sendMail($email, 'Changez votre mot de passe Datan', NULL, TRUE, $templateId, $variables);
-            $this->session->set_flashdata('success', 'true');
+            $sent = sendMail($email, 'Changez votre mot de passe Datan', NULL, TRUE, $templateId, $variables);
+
+            if ($sent) {
+              $this->session->set_flashdata('success', 'true');
+            } else {
+              $this->session->set_flashdata('failure', 'true');
+            }
           } else {
             $this->session->set_flashdata('failure', 'true');
           }
