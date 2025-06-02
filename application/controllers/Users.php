@@ -164,7 +164,7 @@
         } else {
           $email = $this->input->post('email');
           $noEmail = $this->user_model->check_email_exists($email);
-          if (!$noEmail) {
+          if ($noEmail) {
             // Get user infos
             $user = $this->user_model->get_user_by_email($email);
             // Create token in password_resets table
