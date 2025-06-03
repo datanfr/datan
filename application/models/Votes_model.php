@@ -532,6 +532,7 @@
 
     public function get_key_votes_mp($mpId){
       $sql =  'SELECT vs.voteNumero, vs.scoreLoyaute, vs.vote,
+        CONCAT("l", vs.legislature, "v", vs.voteNumero) AS voteId,
         CASE
           WHEN vs.vote = 1 THEN "pour"
           WHEN vs.vote = 0 THEN "abstention"
@@ -543,25 +544,25 @@
           (
             vs.voteNumero IN (184, 269, 629, 3213) AND vs.legislature = 16
           )
-          AND vs.mpId = "PA332228";
+          AND vs.mpId = ?;
       ';
       $query = $this->db->query($sql, $mpId);
 
       $votes = $query->result_array();
 
       $text = array(
-        629 => "l'inscription de l'interruption volontaire de grossesse (IVG) dans la Constitution",
-        269 => "la création d'une taxe temporaire sur les super-dividendes distribués par les grandes entreprises",
-        184 => "la ratification de l'accord pour l'adhésion de la Suède et de la Finlande à l'OTAN",
-        3213 => "du projet de loi immigration en 2023"
+        "l16v629" => "l'inscription de l'interruption volontaire de grossesse (IVG) dans la Constitution",
+        "l16v269" => "la création d'une taxe temporaire sur les super-dividendes distribués par les grandes entreprises",
+        "l16v184" => "la ratification de l'accord pour l'adhésion de la Suède et de la Finlande à l'OTAN",
+        "l16v3213" => "du projet de loi immigration en 2023"
       );
 
       foreach ($votes as $key => $value) {
-        $voteNumero = $value["voteNumero"];
-        $votes[$key]["text"] = $text[$voteNumero];
+        $voteId = $value["voteId"];
+        $votes[$key]["text"] = isset($text[$voteId]) ? $text[$voteId] : null;
       }
 
-      if (!isset($votes)) {
+      if (empty($votes)) {
         $votes = NULL;
       }
 
