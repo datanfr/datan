@@ -353,6 +353,28 @@
             </li>
             -->
           <?php endif; ?>
+          <li class="nav-item has-treeview">
+            <a href="#" class="nav-link">
+              <p>
+                Campagnes de dons
+                <i class="fas fa-angle-left right"></i>
+              </p>
+            </a>
+            <ul class="nav nav-treeview">
+              <li class="nav-item">
+                          <a href="<?= base_url() ?>admin/campagnes" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Tous les campagnes</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                  <a href="<?= base_url() ?>admin/campagnes/create" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Créer une campagne</p>
+                </a>
+              </li>
+            </ul>
+          </li>
           </ul>
         </nav>
       </div>
