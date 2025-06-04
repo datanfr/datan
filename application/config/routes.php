@@ -80,6 +80,7 @@ $route['admin/campagnes'] = 'admin/campaigns_list';
 $route['admin/campagnes/create'] = 'admin/create_campaign';
 $route['admin/campagnes/delete/(:any)'] = 'admin/delete_campaign/$1';
 $route['admin/campagnes/edit/(:any)'] = 'admin/edit_campaign/$1';
+$route['admin/campagnes/toggle'] = 'admin/toggle_campaign_active';
 
 
 // MpDashboard

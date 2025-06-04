@@ -40,10 +40,6 @@
                     <td><?= $campaign['end_date'] ?></td>
                   </tr>
                   <tr>
-                    <td>Auteur</td>
-                    <td><?= $campaign['author_name'] ?? $campaign['author'] ?></td>
-                  </tr>
-                  <tr>
                     <td>Position</td>
                     <td><?= $campaign['position'] ?></td>
                   </tr>
