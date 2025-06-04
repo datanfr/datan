@@ -8,7 +8,7 @@ class Campaign_model extends CI_Model
         parent::__construct();
     }
 
-    public function create(int $user_id):bool
+    public function create(int $user_id): bool
     {
         $data = [
             'text' => $this->input->post('message'),
@@ -22,7 +22,7 @@ class Campaign_model extends CI_Model
         return $this->db->insert('campaigns', $data);
     }
 
-    public function get_campaigns():array
+    public function get_campaigns(): array
     {
         $this->db->join('users u', 'u.id = campaigns.author', 'left');
         $this->db->select('campaigns.*, u.name AS author_name');
@@ -34,11 +34,11 @@ class Campaign_model extends CI_Model
     {
         $this->db->where('id', $id);
         $query = $this->db->get('campaigns');
-        
+
         return $query->row_array();
     }
 
-    public function update(int $id):bool
+    public function update(int $id): bool
     {
         $data = [
             'text' => $this->input->post('message'),
@@ -51,9 +51,14 @@ class Campaign_model extends CI_Model
         return $this->db->where('id', $id)->update('campaigns', $data);
     }
 
-    public function delete(int $id):void
+    public function delete(int $id): void
     {
         $this->db->where('id', $id);
         $this->db->delete('campaigns');
+    }
+
+    public function set_active_status(int $id, bool $is_active): bool
+    {
+        return $this->db->where('id', $id)->update('campaigns', ['is_active' => $is_active]);
     }
 }

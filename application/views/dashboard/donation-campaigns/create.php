@@ -26,7 +26,8 @@
             <fieldset class="mb-4">
                 <legend class="fs-5 mb-3 sr-only">Message de la campagne</legend>
                 <label for="campaignMessage" class="form-label">Message de la campagne</label>
-                <textarea class="form-control" id="campaignMessage" name="message" rows="5" placeholder="Écrire le message de la campagne" required></textarea>
+                <textarea class="form-control" id="editor" name="message" rows="5" placeholder="Écrire le message de la campagne"></textarea>
+                <div class="invalid-feedback" id="editor-error">Le message est requis.</div>
             </fieldset>
             <fieldset class="mb-4">
                 <legend class="fs-5 mb-3 sr-only">Position de la bannière</legend>
@@ -51,3 +52,16 @@
         </div>
     </div>
 </div>
+
+<script type="importmap">
+{
+  "imports": {
+    "ckeditor5": "<?= asset_url() ?>js/libraries/ckeditor/ckeditor5.js",
+    "ckeditor5/": "<?= asset_url() ?>js/libraries/ckeditor/"
+  }
+}
+</script>
+
+<script type="module" src="<?= asset_url() ?>js/dashboard/init-ckeditor.js"></script>
+
+

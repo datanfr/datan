@@ -3,7 +3,7 @@
         <div class="container-fluid">
             <div class="row my-4">
                 <div class="col-sm-6">
-                    <h1 class="m-0 text-primary fw-bold fs-3"><?= $title ?></h1>
+                    <h1 class="m-0 text-primary font-weight-bold" style="font-size: 2rem"><?= $title ?></h1>
                 </div>
             </div>
         </div>
@@ -29,7 +29,7 @@
                         <legend class="fs-5 mb-3 sr-only">Message de la campagne</legend>
                         <div class="mb-3">
                             <label for="campaignMessage" class="form-label">Message de la campagne</label>
-                            <textarea class="form-control" id="campaignMessage" name="message" rows="5" required><?= $campaign['text'] ?></textarea>
+                            <textarea id="editor" class="form-control" name="message" rows="5"><?= $campaign['text'] ?></textarea>
                         </div>
                     </fieldset>
                     <fieldset class="mb-4">
@@ -37,11 +37,21 @@
                         <div class="mb-3">
                             <label class="form-label d-block">Position</label>
                             <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="position" id="positionTop" value="top" <?= $campaign['position'] === 'top' ? 'checked' : '' ?>>
+                                <input class="form-check-input"
+                                    type="radio"
+                                    name="position"
+                                    id="positionTop"
+                                    value="haut" <?= $campaign['position'] === 'haut' ? 'checked' : '' ?>
+                                    required>
                                 <label class="form-check-label" for="positionTop">Haut</label>
                             </div>
                             <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="position" id="positionBottom" value="bottom" <?= $campaign['position'] === 'bottom' ? 'checked' : '' ?>>
+                                <input class="form-check-input"
+                                    type="radio"
+                                    name="position"
+                                    id="positionBottom"
+                                    value="bas" <?= $campaign['position'] === 'bas' ? 'checked' : '' ?>
+                                    required>
                                 <label class="form-check-label" for="positionBottom">Bas</label>
                             </div>
                         </div>
@@ -56,3 +66,15 @@
             </div>
         </div>
     </div>
+</div>
+
+<script type="importmap">
+    {
+  "imports": {
+    "ckeditor5": "<?= asset_url() ?>js/libraries/ckeditor/ckeditor5.js",
+    "ckeditor5/": "<?= asset_url() ?>js/libraries/ckeditor/"
+  }
+}
+</script>
+
+<script type="module" src="<?= asset_url() ?>js/dashboard/init-ckeditor.js"></script>

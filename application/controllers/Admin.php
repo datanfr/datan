@@ -749,9 +749,10 @@
     }
 
 
-    // DONNATIONS CAMPAIGNS
-
-    public function campaigns_list() {
+    // DONATIONS CAMPAIGNS
+    
+    public function campaigns_list() 
+    {
       $data = $this->data;
       $data['title'] = 'Liste des campagnes de dons';
       $data['campaigns'] = $this->campaign_model->get_campaigns();
@@ -759,9 +760,11 @@
       // Meta
       $data['title_meta'] = $data['title'] . ' - Dashboard | Datan';
 
+      $data['js_to_load'] = array('dashboard/donation-campaigns');
+
       // Views
       $this->load->view('dashboard/header', $data);
-      $this->load->view('dashboard/donations-campaigns/list', $data);
+      $this->load->view('dashboard/donation-campaigns/list', $data);
       $this->load->view('dashboard/footer');
     }
 
@@ -771,6 +774,8 @@
         $user_id = $this->session->userdata('user_id');
         $data['title'] = 'Créer une campagne';
 
+        $data['js_to_load'] = array('dashboard/donation-campaigns');
+
         $this->form_validation->set_rules('startDate', 'Date de début', 'required');
         $this->form_validation->set_rules('endDate', 'Date de fin', 'required');
         $this->form_validation->set_rules('message', 'Message', 'required');
@@ -778,7 +783,7 @@
         if ($this->form_validation->run() === FALSE) {
             $data['title_meta'] = $data['title'] . ' - Dashboard | Datan';
             $this->load->view('dashboard/header', $data);
-            $this->load->view('dashboard/donations-campaigns/create', $data);
+            $this->load->view('dashboard/donation-campaigns/create', $data);
             $this->load->view('dashboard/footer');
         } else {
             $this->campaign_model->create($user_id);
@@ -793,6 +798,8 @@
       $data['title'] = 'Modifier une campagne';
       $data['campaign'] = $this->campaign_model->get_campaign($id);
 
+      $data['js_to_load'] = array('dashboard/donation-campaigns');
+
       if (empty($data['campaign'])) {
         redirect('admin/campagnes');
       }
@@ -806,7 +813,7 @@
         $data['title_meta'] = $data['title'] . ' - Dashboard | Datan';
         // Views
         $this->load->view('dashboard/header', $data);
-        $this->load->view('dashboard/donations-campaigns/edit', $data);
+        $this->load->view('dashboard/donation-campaigns/edit', $data);
         $this->load->view('dashboard/footer');
       } else {
         $this->campaign_model->update($id);
@@ -824,7 +831,6 @@
         $data['title'] = 'Supprimer une campagne';
         $data['campaign'] = $this->campaign_model->get_campaign($id);
 
-  
         $this->form_validation->set_rules('delete', 'Delete', 'required');
 
         if ($this->form_validation->run() === FALSE) {
@@ -832,7 +838,7 @@
           $data['title_meta'] = $data['title'] . ' - Dashboard | Datan';
           // Views
           $this->load->view('dashboard/header', $data);
-          $this->load->view('dashboard/donations-campaigns/delete', $data);
+          $this->load->view('dashboard/donation-campaigns/delete', $data);
           $this->load->view('dashboard/footer');
         } else {
           $this->campaign_model->delete($id);
@@ -840,5 +846,18 @@
         }
       }
     }
+
+    public function toggle_campaign_active()
+    {
+      $id = $this->input->post('id');
+      $is_active = $this->input->post('is_active') ? 1 : 0;
+
+      if (!$id) {
+          show_error('ID manquant', 400);
+      }
+
+      $this->campaign_model->set_active_status($id, $is_active);
+      redirect('admin/campagnes'); 
+    } 
   }  
 ?>
