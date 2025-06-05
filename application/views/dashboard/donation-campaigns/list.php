@@ -3,7 +3,7 @@
         <div class="container-fluid">
             <div class="row my-4">
                 <div class="col-sm-6">
-                    <h1 class="m-0 text-primary font-weight-bold" style="font-size: 2rem"><?= $title ?></h1>
+                    <h1 class="m-0 text-primary font-weight-bold"><?= $title ?></h1>
 
                 </div>
             </div>
@@ -42,7 +42,6 @@
                                         <td>
                                             <a href="<?= base_url('admin/campagnes/edit/' . $campaign['id']) ?>" class="btn btn-sm btn-warning">Modifier</a>
                                             <a href="<?= base_url('admin/campagnes/delete/' . $campaign['id']) ?>" class="btn btn-sm btn-danger">Supprimer</a>
-                                            <div class="custom-control custom-switch mt-2">
                                                 <?= form_open('/admin/campagnes/toggle', ['class' => 'toggle-form']) ?>
                                                 <input type="hidden" name="id" value="<?= $campaign['id'] ?>">
                                                 <input type="hidden" name="is_active" value="0">
