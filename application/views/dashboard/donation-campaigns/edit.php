@@ -3,7 +3,7 @@
         <div class="container-fluid">
             <div class="row my-4">
                 <div class="col-sm-6">
-                    <h1 class="m-0 text-primary font-weight-bold" style="font-size: 2rem"><?= $title ?></h1>
+                    <h1 class="m-0 text-primary font-weight-bold"><?= $title ?></h1>
                 </div>
             </div>
         </div>
