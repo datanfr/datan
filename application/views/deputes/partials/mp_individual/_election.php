@@ -1,3 +1,5 @@
+<?php if(isset($election_result)) : ?>
+
 <!-- BLOC ELECTION -->
 <div class="bloc-election mt-5">
   <?php
@@ -118,3 +120,5 @@
     </div>
   </div>
 </div> <!-- // END BLOC ELECTION -->
+
+<?php endif; ?>
