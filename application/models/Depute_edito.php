@@ -173,25 +173,23 @@
       }
     }
 
-    public function get_explication($vote, $gender){
+    public function get_explication($vote, $gender, $first_person = false) {
       switch ($vote) {
-        case "pour":
-          return "a voté pour";
-          break;
-
-        case "contre":
-          return "a voté contre";
-          break;
-
-        case "abstention":
-          return "s'est abstenu" . $gender["e"] . " sur";
-          break;
-
-        default:
-          return "";
-          break;
+          case "pour":
+              return $first_person ? "j’ai voté pour" : "a voté pour";
+  
+          case "contre":
+              return $first_person ? "j’ai voté contre" : "a voté contre";
+  
+          case "abstention":
+              return $first_person
+                  ? "me suis abstenu" . $gender["e"]
+                  : "s’est abstenu" . $gender["e"] . " sur";
+  
+          default:
+              return "";
       }
-    }
+  }
 
     public function get_end_mandate($depute){
       if(strpos($depute['causeFin'], 'Nomination comme membre du Gouvernement') !== false){

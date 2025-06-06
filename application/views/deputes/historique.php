@@ -9,10 +9,10 @@
     <div class="col-md-10 col-lg-8 offset-md-1 offset-lg-0 pl-lg-5">
       <!-- BIO & ELECTION -->
       <div class="bloc-bio mt-5">
-        <h1 class="mb-4 title-center">Mandat de <?= $title ?> pendant la <?= $legislature ?><sup>ème</sup> législature</h1>
+        <h1 class="mb-4 title-center">Mandat de <?= $title ?> pendant la <?= $depute['legislature'] ?><sup>ème</sup> législature</h1>
         <p>
           <b><?= $title ?></b> est né<?= $gender['e'] ?> le <?= $depute['dateNaissanceFr'] ?> à <?= $depute['birthCity'] ?>.
-          Pendant la <?= $legislature ?><sup>ème</sup> législature, <?= $gender['pronom'] ?> a été <?= $gender['le'] ?> <?= $gender['depute'] ?> de la <?= $depute["circo"] ?><sup><?= $depute["circo_abbrev"] ?></sup> circonscription <?= $depute['dptLibelle2'] ?><a href="<?= base_url() ?>deputes/<?= $depute['dptSlug'] ?>"><?= $depute['departementNom'] . ' (' . $depute['departementCode'] . ')' ?></a>.
+          Pendant la <?= $depute['legislature'] ?><sup>ème</sup> législature, <?= $gender['pronom'] ?> a été <?= $gender['le'] ?> <?= $gender['depute'] ?> de la <?= $depute["circo"] ?><sup><?= $depute["circo_abbrev"] ?></sup> circonscription <?= $depute['dptLibelle2'] ?><a href="<?= base_url() ?>deputes/<?= $depute['dptSlug'] ?>"><?= $depute['departementNom'] . ' (' . $depute['departementCode'] . ')' ?></a>.
         </p>
         <p>
           Pendant ce mandat, <?= $title ?> siégeait avec le groupe <?= name_group($depute['libelle']) ?> (<?= $depute['libelleAbrev'] ?>).
@@ -22,6 +22,8 @@
           Pour plus d'information sur l'activité de <?= $title ?> au cours de cette législature, <a href="<?= base_url() ?>deputes/<?= $depute_last['dptSlug'] ?>/depute_<?= $depute_last['nameUrl'] ?>">cliquez ici</a>.
         </p>
       </div>
+      <!-- BLOC ELECTION --> 
+      <?php $this->view('deputes/partials/mp_individual/_election.php') ?>
       <!-- BLOC STATISTIQUES -->
       <?php if (in_array($depute['legislature'], legislature_all())) : ?>
         <div class="bloc-statistiques mt-5">

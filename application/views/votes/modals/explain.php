@@ -3,11 +3,11 @@
     <div class="modal-content">
       <div class="modal-header">
         <div class="d-flex flex-row align-items-center">
-          <div class="depute-img-circle depute-img-circle-explication mr-3">
+          <div class="<?= $photoSquare ? "depute-img-square" : "depute-img-circle" ?> depute-img-circle-explication mr-3">
             <?php if ($img != NULL && $this->config->item('mp_photos')) : ?>
               <picture>
-                <source srcset="<?= asset_url(); ?>imgs/deputes_nobg_webp/depute_<?= $img ?>_webp.webp" type="image/webp">
-                <source srcset="<?= asset_url(); ?>imgs/deputes_nobg/depute_<?= $img ?>.png" type="image/png">
+                <source srcset="<?= asset_url(); ?>imgs/<?= $photoSquare ? "deputes_webp" : "deputes_nobg_webp" ?>/depute_<?= $img ?>_webp.webp" type="image/webp">
+                <source srcset="<?= asset_url(); ?>imgs/<? $photoSquare ? "deputes_original" : "deputes_nobg" ?>/depute_<?= $img ?>.png" type="image/png">
                 <img src="<?= asset_url(); ?>imgs/deputes_original/depute_<?= $img ?>.png" width="150" height="192" alt="Photo du député">
               </picture>
             <?php else : ?>

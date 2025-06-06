@@ -164,7 +164,7 @@
         } else {
           $email = $this->input->post('email');
           $noEmail = $this->user_model->check_email_exists($email);
-          if (!$noEmail) {
+          if ($noEmail) {
             // Get user infos
             $user = $this->user_model->get_user_by_email($email);
             // Create token in password_resets table
@@ -176,8 +176,13 @@
               'name' => $user['name'],
               'token' => $token
             );
-            sendMail($email, 'Changez votre mot de passe Datan', NULL, TRUE, $templateId, $variables);
-            $this->session->set_flashdata('success', 'true');
+            $sent = sendMail($email, 'Changez votre mot de passe Datan', NULL, TRUE, $templateId, $variables);
+
+            if ($sent) {
+              $this->session->set_flashdata('success', 'true');
+            } else {
+              $this->session->set_flashdata('failure', 'true');
+            }
           } else {
             $this->session->set_flashdata('failure', 'true');
           }

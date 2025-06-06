@@ -192,9 +192,9 @@
                   </a>
                 </li>
                 <li class="nav-item">
-                  <a href="<?= base_url() ?>admin/socialmedia/twitter" class="nav-link">
+                  <a href="<?= base_url() ?>admin/socialmedia/x" class="nav-link">
                     <i class="far fa-circle nav-icon"></i>
-                    <p>Comptes Twitter députés</p>
+                    <p>Comptes X députés</p>
                   </a>
                 </li>
               </ul>
@@ -347,6 +347,11 @@
             <li class="nav-item">
               <a class="nav-link" href="<?= base_url() ?>dashboard/explications/liste">Nouvelle explication</a>
             </li>
+            <!-- 
+            <li class="nav-item">
+              <a class="nav-link" href="<?= base_url() ?>dashboard/iframe">Générer un iframe</a>
+            </li>
+            -->
           <?php endif; ?>
           </ul>
         </nav>

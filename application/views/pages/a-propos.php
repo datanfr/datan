@@ -40,8 +40,8 @@
                 <div class="overlay"></div>
               </div>
               <div class="social-media d-flex justify-content-around align-items-center">
-                <a href="https://twitter.com/oliviercosta" title="Profil Twitter" target="_blank">
-                  <img src="<?= asset_url() ?>imgs/logos/twitter.png" width="30" height="30" alt="Logo Twitter">
+                <a href="https://x.com/oliviercosta" title="Profil X" target="_blank">
+                  <img src="<?= asset_url() ?>imgs/logos/x-round-color.svg" width="30" height="30" alt="Logo X">
                 </a>
                 <a href="https://sciences-po.academia.edu/OlivierCOSTA" title="Site internet" target="_blank">
                   <img src="<?= asset_url() ?>imgs/icons/link.svg" alt="Website">
@@ -63,8 +63,8 @@
                 <div class="overlay"></div>
               </div>
               <div class="social-media d-flex justify-content-around align-items-center">
-                <a href="https://twitter.com/katrinauel" title="Profil Twitter" target="_blank">
-                  <img src="<?= asset_url() ?>imgs/logos/twitter.png" width="30" height="30"alt="Logo Twitter">
+                <a href="https://x.com/katrinauel" title="Profil X" target="_blank">
+                  <img src="<?= asset_url() ?>imgs/logos/x-round-color.svg" width="30" height="30" alt="Logo X">
                 </a>
                 <a href="https://www.ihs.ac.at/people/katrin-auel/" title="Site internet" target="_blank">
                   <img src="<?= asset_url() ?>imgs/icons/link.svg" alt="Website">
@@ -85,8 +85,8 @@
                 <div class="overlay"></div>
               </div>
               <div class="social-media d-flex justify-content-around align-items-center">
-                <a href="https://twitter.com/NathalieBrack" title="Profil Twitter" target="_blank">
-                  <img src="<?= asset_url() ?>imgs/logos/twitter.png" width="30" height="30" alt="Logo Twitter">
+                <a href="https://x.com/NathalieBrack" title="Profil X" target="_blank">
+                  <img src="<?= asset_url() ?>imgs/logos/x-round-color.svg" width="30" height="30" alt="Logo X">
                 </a>
                 <a href="https://cevipol.centresphisoc.ulb.be/fr/user/430" title="Site internet" target="_blank">
                   <img src="<?= asset_url() ?>imgs/icons/link.svg" alt="Website">
@@ -107,8 +107,8 @@
                 <div class="overlay"></div>
               </div>
               <div class="social-media d-flex justify-content-around align-items-center">
-                <a href="https://twitter.com/iguinaudeau" title="Profil Twitter" target="_blank">
-                  <img src="<?= asset_url() ?>imgs/logos/twitter.png" width="30" height="30" alt="Logo Twitter">
+                <a href="https://x.com/iguinaudeau" title="Profil X" target="_blank">
+                  <img src="<?= asset_url() ?>imgs/logos/x-round-color.svg" width="30" height="30" alt="Logo X">
                 </a>
                 <a href="https://www.sciencespo.fr/centre-etudes-europeennes/fr/chercheur/isabelle-guinaudeau.html" title="Site internet" target="_blank">
                   <img src="<?= asset_url() ?>imgs/icons/link.svg" alt="Website">
@@ -180,11 +180,11 @@
               <h3 class="card-title">Awenig</h3>
               <p class="card-text">Fondateur</p>
               <div class="social-media d-flex justify-content-center">
-                <a href="https://twitter.com/awenig" target="_blank">
-                  <img src="<?= asset_url() ?>imgs/logos/twitter.png" width="30" height="30" alt="Logo Twitter">
+                <a href="https://x.com/awenig" target="_blank">
+                  <img src="<?= asset_url() ?>imgs/logos/x-round-color.svg" width="30" height="30" alt="Logo X">
                 </a>
                 <a href="https://www.linkedin.com/in/awenig-mari%C3%A9-2bb97698" target="_blank">
-                  <img src="<?= asset_url() ?>imgs/logos/linkedin.png" width="30" height="30" alt="Logo Linkedin">
+                  <img src="<?= asset_url() ?>imgs/logos/linkedin-round-color.svg" width="30" height="30" alt="Logo Linkedin">
                 </a>
               </div>
             </div>
@@ -202,7 +202,7 @@
               <p class="card-text">Projet Web</p>
               <div class="social-media d-flex justify-content-center">
                 <a href="https://www.linkedin.com/in/gwennegmarie/" target="_blank">
-                  <img src="<?= asset_url() ?>imgs/logos/linkedin.png" width="30" height="30" alt="Logo Twitter">
+                  <img src="<?= asset_url() ?>imgs/logos/linkedin-round-color.svg" width="30" height="30" alt="Logo X">
                 </a>
               </div>
             </div>
@@ -220,7 +220,7 @@
               <p class="card-text">Communication</p>
               <div class="social-media d-flex justify-content-center">
                 <a href="https://www.linkedin.com/in/chloë-bouvier-408956124/" target="_blank">
-                  <img src="<?= asset_url() ?>imgs/logos/linkedin.png" width="30" height="30" alt="Logo Twitter">
+                  <img src="<?= asset_url() ?>imgs/logos/linkedin-round-color.svg" width="30" height="30" alt="Logo X">
                 </a>
               </div>
             </div>
@@ -238,7 +238,7 @@
               <p class="card-text">Design</p>
               <div class="social-media d-flex justify-content-center">
                 <a href="https://www.linkedin.com/in/hugo-stephan/" target="_blank">
-                  <img src="<?= asset_url() ?>imgs/logos/linkedin.png" width="30" height="30" alt="Logo Twitter">
+                  <img src="<?= asset_url() ?>imgs/logos/linkedin-round-color.svg" width="30" height="30" alt="Logo X">
                 </a>
               </div>
             </div>
@@ -255,8 +255,8 @@
               <h3 class="card-title">Brewalan</h3>
               <p class="card-text text-center">Éditorial & communication</p>
               <div class="social-media d-flex justify-content-center">
-                <a href="https://twitter.com/BrewalanM" target="_blank">
-                  <img src="<?= asset_url() ?>imgs/logos/twitter.png" width="30" height="30" alt="Logo Twitter">
+                <a href="https://x.com/BrewalanM" target="_blank">
+                  <img src="<?= asset_url() ?>imgs/logos/x-round-color.svg" width="30" height="30" alt="Logo X">
                 </a>
               </div>
             </div>
@@ -274,13 +274,13 @@
               <p class="card-text text-center">Développeur</p>
               <div class="social-media d-flex justify-content-center">
                 <a href="https://www.linkedin.com/in/r%C3%A9mi-mikel-85273665/" target="_blank">
-                  <img src="<?= asset_url() ?>imgs/logos/linkedin.png" width="30" height="30" alt="Logo Linkedin">
+                  <img src="<?= asset_url() ?>imgs/logos/linkedin-round-color.svg" width="30" height="30" alt="Logo Linkedin">
                 </a>
                 <a href="https://remikel.fr" title="Site internet" target="_blank">
                   <img src="<?= asset_url() ?>imgs/icons/link.svg" alt="Website">
                 </a>
-                <a href="https://twitter.com/lekimR" target="_blank">
-                  <img src="<?= asset_url() ?>imgs/logos/twitter.png" width="30" height="30" alt="Logo Twitter">
+                <a href="https://x.com/lekimR" target="_blank">
+                  <img src="<?= asset_url() ?>imgs/logos/x-round-color.svg" width="30" height="30" alt="Logo X">
                 </a>
               </div>
             </div>
@@ -298,7 +298,7 @@
               <p class="card-text text-center">Développeur</p>
               <div class="social-media d-flex justify-content-center">
                 <a href="https://www.linkedin.com/in/alexis-brissard-775173aa/?originalSubdomain=fr" target="_blank">
-                  <img src="<?= asset_url() ?>imgs/logos/linkedin.png" width="30" height="30" alt="Logo Linkedin">
+                  <img src="<?= asset_url() ?>imgs/logos/linkedin-round-color.svg" width="30" height="30" alt="Logo Linkedin">
                 </a>
               </div>
             </div>

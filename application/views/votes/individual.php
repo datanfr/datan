@@ -50,7 +50,7 @@
           <?php else : ?>
             <p>Au total, <b><?= $vote['nombreVotants'] ?> députés<?= $congres ? " et sénateurs" : "" ?></b> ont pris part au vote : <?= round($vote['contre_pct']) ?> % ont voté contre, <?= round($vote['pour_pct']) ?> % ont voté en faveur, et <?= round($vote['abs_pct']) ?> % se sont abstenus.</p>
           <?php endif; ?>
-          <?php if($vote['voteType'] == 'motion de censure'): ?>
+          <?php if ($vote['voteType'] == 'motion de censure'): ?>
             <p>
               Ce scrutin porte sur une <b>motion de censure</b>, un vote crucial qui peut entraîner la chute du gouvernement. Pour être adoptée, elle doit recueillir la majorité absolue des voix à l'Assemblée nationale, soit au moins 289 votes sur 577 députés.
             </p>
@@ -119,11 +119,11 @@
       <?php endif; ?>
       <div class="mt-5">
         <h2>La position des groupes</h2>
-        <?php if($vote['voteType'] == 'motion de censure'): ?>
-            <p class="mt-3">
-              Seuls les députés en faveur d'une motion de censure prennent part au scrutin et votent "pour". Les députés qui ne votent pas se positionnent donc comme étant contre la censure. Ainsi, sur <b>Datan</b>, un groupe politique dont la majorité des membres ne participe pas au scrutin est considéré comme ayant voté "contre" la motion de censure.
-            </p>
-          <?php endif; ?>
+        <?php if ($vote['voteType'] == 'motion de censure'): ?>
+          <p class="mt-3">
+            Seuls les députés en faveur d'une motion de censure prennent part au scrutin et votent "pour". Les députés qui ne votent pas se positionnent donc comme étant contre la censure. Ainsi, sur <b>Datan</b>, un groupe politique dont la majorité des membres ne participe pas au scrutin est considéré comme ayant voté "contre" la motion de censure.
+          </p>
+        <?php endif; ?>
         <div class="mt-4 bloc-groupes d-flex flex-column flex-lg-row">
           <!-- POUR -->
           <?php if (in_array_r("pour", $groupes)) : ?>
@@ -255,8 +255,8 @@
 </div>
 <?php if ($explain):
   $this->load->view('votes/partials/explain.php', $explain);
-  if(isset($explication)):
-    $this->load->view('votes/modals/explain.php', array('id' => 'modalExplain', 'title' => "L'avis de " . $explication['nameFirst'] . " " . $explication['nameLast'], 'vote_titre' => $vote['title'], 'explication' => $explication['text'], 'img' => $explication['idImage']));
+  if (isset($explication)):
+    $this->load->view('votes/modals/explain.php', array('id' => 'modalExplain', 'title' => "L'avis de " . $explication['nameFirst'] . " " . $explication['nameLast'], 'vote_titre' => $vote['title'], 'explication' => $explication['text'], 'img' => $explication['idImage'], 'photoSquare' => $explication['photoSquare']));
   endif;
 endif; ?>
 <?php if (!empty($author)) : ?>
@@ -449,14 +449,13 @@ endif; ?>
       <div class="bloc-social d-md-none mt-4">
         <h3 class="subtitle">Partagez ce vote</h3>
         <!-- Linkedin does not work -->
-        <!-- Whatsapp à faire -->
         <div class="d-flex flex-row flex-wrap social-share-bloc">
           <button type="button" name="button" class="btn social-share twitter twitter-bg d-flex">
-            <img src="<?= asset_url() ?>imgs/logos/twitter-no-round.png" alt="Partagez sur Twitter">
-            <span>Twitter</span>
+            <img src="<?= asset_url() ?>imgs/logos/x-no-round.svg" alt="Partagez sur X">
+
           </button>
           <button type="button" name="button" class="btn social-share facebook fcb-bg d-flex">
-            <img src="<?= asset_url() ?>imgs/logos/facebook-no-round.png" alt="Partagez sur Twitter">
+            <img src="<?= asset_url() ?>imgs/logos/facebook-no-round.svg" alt="Partagez sur Facebook">
             <span>Facebook</span>
           </button>
           <button type="button" name="button" class="btn social-share linkedin linkedin-bg d-flex">
