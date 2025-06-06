@@ -1,78 +1,33 @@
-// import {
-//   ClassicEditor,
-//   Essentials,
-//   Paragraph,
-//   Bold,
-//   Italic,
-//   Heading,
-//   Link,
-//   List,
-//   Indent,
-//   SourceEditing,
-//   Undo,
-//   Alignment,
-//   SimpleUploadAdapter,
-// } from "ckeditor5";
 
-// ClassicEditor.create(document.querySelector("#editor"), {
-//   licenseKey: "GPL",
-//   plugins: [
-//     Essentials,
-//     Paragraph,
-//     Heading,
-//     Bold,
-//     Italic,
-//     Link,
-//     List,
-//     Indent,
-//     SourceEditing,
-//     Alignment,
-//     SimpleUploadAdapter,
-//   ],
-//   toolbar: [
-//     "undo",
-//     "redo",
-//     "|",
-//     "heading",
-//     "|",
-//     "bold",
-//     "italic",
-//     "alignment",
-//     "|",
-//     "bulletedList",
-//     "numberedList",
-//     "outdent",
-//     "indent",
-//     "|",
-//     "link",
-//     "|",
-//     "sourceEditing",
-//   ],
-//   link: {
-//     decorators: {
-//       isExternal: {
-//         mode: "automatic",
-//         callback: (url) => !url.startsWith("https://datan.fr"),
-//         attributes: {
-//           target: "_blank",
-//           rel: "noopener noreferrer",
-//         },
-//       },
-//     },
-//   },
-//   simpleUpload: {
-//     uploadUrl: "/upload/image",
-//     withCredentials: false,
-//   },
-// })
-//   .then((editor) => {
-//     window.editor = editor;
-//   })
-//   .catch((error) => {
-//     console.error(error);
-//   });
+/**
+ * Initialisation de CKEditor (mode simple ou avancé)
+ *
+ *À inclure dans la vue :
+ *
+ * 1. Importmap :
+ * <script type="importmap">
+ * {
+ *   "imports": {
+ *     "ckeditor5": "<?= asset_url() ?>js/libraries/ckeditor/ckeditor5.js",
+ *     "ckeditor5/": "<?= asset_url() ?>js/libraries/ckeditor/"
+ *   }
+ * }
+ * </script>
+ *
+ * 2. Script d'initialisation :
+ * <script type="module">
+ *   import { initCkeditor } from "<?= asset_url() ?>js/dashboard/init-ckeditor.js";
+ *   initCkeditor('#editor', 'simple'); // ou 'advanced'
+ * </script>
+ *
+ *  Remarques :
+ * - Le mode "simple" contient les options de base (gras, liste, lien, alignement, etc.).
+ * - Le mode "advanced" ajoute les fonctionnalités enrichies :
+ *   images, tableaux, embed vidéo, blockquotes, etc.
+ *
+ *  Remplace '#editor' par le sélecteur de ton champ.
+ */
 
-console.log("test")
 import {
   ClassicEditor,
   Essentials,
