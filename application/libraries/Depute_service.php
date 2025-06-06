@@ -12,8 +12,8 @@ class Depute_service
         $this->CI->load->model('depute_edito');
         $this->CI->load->model('meta_model');
         $this->CI->load->model('breadcrumb_model');
+        $this->CI->load->model('legislature_model');
     }
-
 
     public function get_statistics($data, $legislature, $mpId, $groupe_id)
     {
@@ -102,106 +102,103 @@ class Depute_service
     }
 
 
-
-
     public function get_general_infos(
         array $data,
         string $mp_id,
         string $legislature,
-        string $name_last,
-        string $depute_full_name
+        string $name_last
     ): array {
+        // Infos legislature 
+        $data['legislature'] = $this->CI->legislature_model->get_legislature($legislature);
         // Infos générales
         $data['depute']['dateNaissanceFr'] = utf8_encode(
             strftime('%d %B %Y', strtotime($data['depute']['birthDate']))   // birthdate
         );
         $data['depute']['circo_abbrev'] = abbrev_n($data['depute']['circo'], TRUE); // circo number
         $data['politicalParty'] = $this->CI->deputes_model->get_political_party($mp_id); // political party
-        $data['election_canceled'] = NULL;
 
-        $canceled = array(
-            "Annulation de l'élection sur décision du Conseil constitutionnel",
-            "Démission d'office sur décision du Conseil constitutionnel"
-        );
+        // Electoral results for this MP
+        if ($legislature >= 15) { // Get electoral data of MP if legislature >= 15
+            $data['election_result'] = $this->CI->deputes_model->get_election_result(
+                $data['depute']['departementCode'],
+                $data['depute']['circo'],
+                $name_last,
+                $data['legislature']
+            );
 
-        if ($legislature == legislature_current()) {
-            $data['election_canceled'] = $this->CI->deputes_model->get_election_canceled($mp_id, $legislature);
+            if ($data['election_result']) {
+                $round = $data['election_result']['tour'];
 
-            if ($data['depute']['datePriseFonction'] == '2024-07-01') { // Elected 1st round
-                $data['election_result'] = $this->CI->deputes_model->get_election_result(
-                    $data['depute']['departementCode'],
-                    $data['depute']['circo'],
-                    $name_last,
-                    2024,
-                    1
-                );
-                $data['election_opponents_all'] = $this->CI->deputes_model->get_election_opponent(
-                    $data['depute']['departementCode'],
-                    $data['depute']['circo'],
-                    2024,
-                    1
-                );
-                $data['election_infos'] = $this->CI->deputes_model->get_election_infos(
-                    $data['depute']['departementCode'],
-                    $data['depute']['circo'],
-                    2024,
-                    1
-                );
-                $data['election_infos']['participation'] = round(
-                    $data['election_infos']['votants'] * 100 / $data['election_infos']['inscrits']
-                );
-                $data['election_opponents']['all']['voix'] = 0;
-                $data['election_opponents']['all']['candidat'] = "Reste des candidats";
-                foreach ($data['election_opponents_all'] as $x) {
-                    $data['election_opponents']['all']['voix'] += $x['voix'];
-                }
-            } elseif ($data['depute']['datePriseFonction'] == '2024-07-08') { // Elected 2nd round
-                $data['election_result'] = $this->CI->deputes_model->get_election_result(
-                    $data['depute']['departementCode'],
-                    $data['depute']['circo'],
-                    $name_last,
-                    2024,
-                    2
-                );
                 $data['election_opponents'] = $this->CI->deputes_model->get_election_opponent(
                     $data['depute']['departementCode'],
                     $data['depute']['circo'],
-                    2024,
-                    2
+                    $round,
+                    $data['legislature'],
+                    $data['election_result']['partielle']
                 );
-                $data['election_infos'] = $this->CI->deputes_model->get_election_infos(
-                    $data['depute']['departementCode'],
-                    $data['depute']['circo'],
-                    2024,
-                    2
-                );
-                $data['election_infos']['participation'] = round(
-                    $data['election_infos']['votants'] * 100 / $data['election_infos']['inscrits']
-                );
-                if ($data['election_opponents']) {
-                    foreach ($data['election_opponents'] as $key => $value) {
-                        $data['election_opponents'][$key]['candidat'] = $value['nameFirst'] . ' ' .
-                            ucfirst(strtolower($value['nameLast']));
+
+                if ($data['election_result']['partielle'] === FALSE) {
+                    $data['election_infos'] = $this->CI->deputes_model->get_election_infos(
+                        $data['depute']['departementCode'],
+                        $data['depute']['circo'],
+                        $round,
+                        $data['legislature']
+                    );
+
+                    $data['election_infos']['participation'] = round(
+                        $data['election_infos']['votants'] * 100 / $data['election_infos']['inscrits']
+                    );
+                }                
+
+                
+                if ($round == 1) { // Elected 1st round                   
+                    if (!empty($data['election_opponents']) && $legislature >= 16) {
+                        array_walk($data['election_opponents'], function (&$candidate) {
+                            $candidate['candidat'] = $candidate['nameFirst'] . ' ' . ucfirst(strtolower($candidate['nameLast']));
+                        });
                     }
+
+                    // Prepare 2 top candidates and group others
+                    $topCandidates = array_slice($data['election_opponents'], 0, 2);
+                    $others = array_slice($data['election_opponents'], 2);
+
+                    if (count($others) > 0) {
+                        $totalVoix = 0;
+                        $totalPct = 0.0;
+
+                    foreach ($others as $candidate) {
+                        $totalVoix += $candidate['voix'];
+                        $totalPct += $candidate['pct_exprimes'];
+                    }
+
+                    $topCandidates[] = [
+                        'nameLast' => '',
+                        'nameFirst' => '',
+                        'sexe' => '',
+                        'voix' => $totalVoix,
+                        'pct_exprimes' => $totalPct,
+                        'tour_election' => '1er',
+                        'candidat' => 'Autres candidats'
+                    ];
                 }
-            } elseif (isset($data['election_canceled']['causeFin']) && in_array($data['election_canceled']['causeFin'], $canceled)) {
-                switch ($data['depute']['causeFin']) {
-                    case "Annulation de l'élection sur décision du Conseil constitutionnel":
-                        $data['election_canceled']['cause'] = "L'élection de " . $depute_full_name .
-                            ", qui s'est tenue pendant les législatures de juin 2017, a été invalidée par le Conseil " .
-                            "constitutionnel en " . $data['election_canceled']['dateFinFR'] . ".";
-                        break;
-                    default:
-                        $data['election_canceled']['cause'] = NULL;
-                        break;
+                $data['election_opponents'] = $topCandidates;
+
                 }
-            }
+
+                // Add more info URL 
+                $urlMap = [
+                    17 => "https://www.archives-resultats-elections.interieur.gouv.fr/resultats/legislatives2024/",
+                    16 => "https://www.archives-resultats-elections.interieur.gouv.fr/resultats/legislatives-2022/index.php",
+                    15 => "https://www.archives-resultats-elections.interieur.gouv.fr/resultats/legislatives-2017/index.php"
+                ];
+                if (isset($urlMap[$legislature])) {
+                    $data['infosURL'] = $urlMap[$legislature];
+                }
+            }          
         }
 
         return $data;
     }
-
-
 
     public function get_other_mps(
         string $legislature,
@@ -226,8 +223,6 @@ class Depute_service
         ];
     }
 
-
-
     public function get_explication_details(string $mp_id, string $legislature, array $gender, string $first_person = 'false'): ?array
     {
         $explication = $this->CI->deputes_model->get_last_explication($mp_id, $legislature);
@@ -238,8 +233,6 @@ class Depute_service
 
         return $explication;
     }
-
-
 
     public function get_mp_history_data(array $data, string $mp_id): array
     {
@@ -252,7 +245,6 @@ class Depute_service
 
         return $data;
     }
-
 
     public function get_mp_page_resources(array $data, string $depute_full_name, string $nameUrl): array
     {

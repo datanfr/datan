@@ -209,7 +209,7 @@
       $data = $this->group_service->get_group_infos_by_mp($data, $mp_id, $groupe_id);
     
       // ____________________GET GENERAL INFOS___________________________
-      $data = $this->depute_service->get_general_infos($data, $mp_id, $legislature, $name_last, $depute_full_name);
+      $data = $this->depute_service->get_general_infos($data, $mp_id, $legislature, $name_last);
 
       // ____________________GET MAJORITY GROUP___________________________
       $data['groupMajority'] = $this->groupes_model->get_majority_group($legislature);
@@ -303,6 +303,7 @@
 
       // Main variables
       $mpId = $data['depute']['mpId'];
+      $name_last = $data['depute']['nameLast'];
       $data['active'] = $data['depute']['active'];
       $data['legislature'] = $legislature;
       $legislature = $data['depute']['legislature'];
@@ -311,6 +312,10 @@
       $data['mandats'] = $this->deputes_model->get_historique_mandats($mpId);
       $data['mandatsReversed'] = array_reverse($data['mandats']);
       $groupe_id = $data['depute']['groupeId'];
+      $data['first_person'] = false;
+
+      // Get general infos (elections)
+      $data = $this->depute_service->get_general_infos($data, $mpId, $legislature, $name_last);
 
       // Photos square 
       $data['photo_square'] = $data['depute_last']['legislature'] >= 17 ? TRUE : FALSE;
