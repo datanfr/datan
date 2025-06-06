@@ -157,7 +157,7 @@ class Newsletter extends CI_Controller
     public function votes($action){
 
       // Check if CLI
-      if ((!is_cli() && !$this->password_model->is_admin()) || (!is_cli() && $action == "send")) { // ||
+      if ((!is_cli() && !$this->password_model->is_admin()) || (!is_cli() && $action == "send")) {
         die("Only command line access"); // Comment for testing with URL newsletter/votes
       }
 
@@ -167,7 +167,7 @@ class Newsletter extends CI_Controller
       $data['year'] = utf8_encode(strftime("%Y", strtotime("- 1 months")));
       $year = date("Y", strtotime("-1 months"));
       $month = date("m", strtotime("-1 months"));
-      //$year = 2025; $month = 4; // For testing
+      //$year = 2025; $month = 1; // For testing
       $data['votesN'] = $this->votes_model->get_n_votes(legislature_current(), $year, $month);
       $data['votesNDatan'] = $this->votes_model->get_n_votes_datan(legislature_current(), $year, $month);
 
