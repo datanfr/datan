@@ -4213,6 +4213,71 @@ class Script
 
     }
 
+    public function updateLegislativesPartielles(){
+        echo "updateLegislativesPartielles starting \n";
+
+        $fields = [
+            'year', 'dpt', 'dpt_url', 'circo', 'circo_url', 'tour', 'date',
+            'nuance', 'nameLast', 'nameFirst', 'sexe', 'voix', 'pct_exprimes',
+            'elected'
+        ];
+        $toInsert = [];
+
+        $this->bdd->query('DROP TABLE IF EXISTS elect_legislatives_partielles');
+
+        // Create table if not exists
+        $this->bdd->query("CREATE TABLE IF NOT EXISTS `elect_legislatives_partielles` (
+            `year` DOUBLE NOT NULL,
+            `dpt` VARCHAR(3) NOT NULL,
+            `dpt_url` VARCHAR(3) NOT NULL,
+            `circo` INT NOT NULL,
+            `circo_url` VARCHAR(2) NOT NULL,            
+            `tour` DOUBLE NOT NULL,
+            `date` DATE NOT NULL,
+            `nuance` VARCHAR(3) NULL DEFAULT NULL,
+            `nameLast` VARCHAR(255) NOT NULL,
+            `nameFirst` VARCHAR(255) NOT NULL,
+            `sexe` VARCHAR(5) NULL DEFAULT NULL,
+            `voix` INT NULL DEFAULT NULL,
+            `pct_exprimes` DECIMAL(5,2) NULL DEFAULT NULL,
+            `elected` INT NULL DEFAULT NULL,
+            `dateMaj` DATE NULL DEFAULT (CURRENT_DATE)
+        ) ENGINE = MyISAM CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci;");
+
+        $dir = __DIR__ . "/../assets/data_elections/";
+        $filename = $dir . "elections-legislatives-partielles.csv";
+        if (($handle = fopen($filename, "r")) !== false) {
+            // Skip the first line (header row)
+            fgetcsv($handle);
+
+            while (($row = fgetcsv($handle, 1000, ",")) !== false) {
+                // Clean the row: empty strings → null
+                $row = array_map(function($v) {
+                    return $v === '' ? null : $v;
+                }, $row);
+
+                // Create associative array for this row
+                $x = array_combine($fields, $row);
+
+                // Fix decimal separator for pct_exprimes (e.g. "50,89" → "50.89")
+                if (isset($x['pct_exprimes'])) {
+                    $x['pct_exprimes'] = str_replace(',', '.', $x['pct_exprimes']);
+                }
+
+                // Merge into flat array (sequential values)
+                $toInsert = array_merge($toInsert, array_values($x));
+
+            }
+            fclose($handle);
+        } else {
+            echo "Error opening the file.";
+        }
+
+        // Insert into the table 
+        $this->insertAll('elect_legislatives_partielles', $fields, $toInsert);
+
+    }
+
     public function parrainages(){
       // 1. Create table if not exists
       $this->bdd->query("CREATE TABLE IF NOT EXISTS `parrainages` (
@@ -4528,6 +4593,7 @@ $script->debatsParas();
 $script->reunionsInfos();
 $script->reunionsPresences();
 $script->questions();
+$script->updateLegislativesPartielles();
 //$script->parrainages(); // No longer used
 $script->opendata_activeMPs();
 $script->opendata_activeGroupes();

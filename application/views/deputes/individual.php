@@ -15,9 +15,7 @@
         <?php $this->view('deputes/partials/mp_individual/_key_positions.php') ?>
         <?php $this->view('deputes/partials/mp_individual/_explanation.php') ?>
         <?php $this->view('deputes/partials/mp_individual/_votes.php') ?>
-        <?php //$this->view('deputes/partials/mp_individual/_election.php') //?>  <!-- A terminer -->
-        <?php $this->view('deputes/partials/mp_individual/_election_partial-original.php') ?> <!-- Partial temporaire -->
-
+        <?php $this->view('deputes/partials/mp_individual/_election.php') ?>
         <?php $this->view('deputes/partials/mp_individual/statistics/_index.php') ?>
         <?php $this->view('deputes/partials/mp_individual/_elections_participation') ?>
         <?php $this->view('deputes/partials/mp_individual/_manifesto') ?>
