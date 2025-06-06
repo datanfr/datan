@@ -126,8 +126,6 @@ class Depute_service
                 $name_last,
                 $data['legislature']
             );
-            echo $this->CI->db->last_query();
-            print_r($data['election_result']);
 
             if ($data['election_result']) {
                 $round = $data['election_result']['tour'];
