@@ -99,7 +99,7 @@
 <?php endif; ?>
 
 <mj-section background-color="#00668E" background-repeat="no-repeat" background-size="auto">
-  <mj-column vertical-align="top">
+  <mj-column vertical-align="top" width="100%">
     <mj-text font-size="22px" font-weight="800" color="#fff">
       Soutenez-nous : faites un don sur Datan !
     </mj-text>
@@ -111,10 +111,10 @@
     </mj-text>
   </mj-column>
   <mj-column width="100%">
-      <mj-button background-color="#00b794" color="#fff" font-weight="800" padding-top="20px" padding-bottom="10px" href="https://www.helloasso.com/associations/datan/formulaires/1">
+    <mj-button background-color="#00b794" color="#fff" font-weight="800" padding-top="20px" padding-bottom="10px" href="https://www.helloasso.com/associations/datan/formulaires/1">
         Faire un don
-      </mj-button>
-    </mj-column>
+    </mj-button>
+  </mj-column>
 </mj-section>
 
 <mj-section padding="10px 0"></mj-section>
