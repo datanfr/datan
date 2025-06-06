@@ -54,14 +54,17 @@
 </div>
 
 <script type="importmap">
-{
-  "imports": {
+    {
+    "imports": {
     "ckeditor5": "<?= asset_url() ?>js/libraries/ckeditor/ckeditor5.js",
     "ckeditor5/": "<?= asset_url() ?>js/libraries/ckeditor/"
-  }
-}
+        }
+    }
 </script>
 
-<script type="module" src="<?= asset_url() ?>js/dashboard/init-ckeditor.js"></script>
-
-
+<script type="module">
+    import {
+        initCkeditor
+    } from "<?= asset_url() ?>js/dashboard/init-ckeditor.js";
+    initCkeditor('#editor', 'simple');
+</script>
