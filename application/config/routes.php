@@ -85,6 +85,8 @@ $route['dashboard/explications/liste'] = 'dashboardMP/explications_liste';
 $route['dashboard/explications/create/l(:any)v(:any)'] = 'dashboardMP/explications_create/$1/$2';
 $route['dashboard/explications/modify/l(:any)v(:any)'] = 'dashboardMP/explications_modify/$1/$2';
 $route['dashboard/explications/delete/l(:any)v(:any)'] = 'dashboardMP/explications_delete/$1/$2';
+$route['dashboard/iframe'] = 'dashboardMP/generate_iframe';
+
 // USERS
 $route['mon-compte'] = 'users/compte';
 $route['mon-compte/modifier-donnees-personnelles'] = 'users/modify_personal_data';
@@ -106,6 +108,9 @@ $route['sitemap-posts-1.xml'] = "sitemap/posts";
 $route['sitemap-partis-politiques-1.xml'] = "sitemap/parties";
 // Outils
 $route['outils/coalition-simulateur'] = 'outils/coalition';
+// Iframe
+$route['iframe'] = 'iframe/index';
+$route['iframe/depute/(:any)'] = 'iframe/show_depute_iframe/$1';
 // COMMISSION
 $route['commissions'] = 'commissions/index';
 // GROUPES

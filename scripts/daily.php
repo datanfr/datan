@@ -4067,7 +4067,7 @@ class Script
     public function questions(){
         echo "questions starting \n";
         $dateMaj = $this->dateMaj;
-        $fields = array('uid', 'legislature', 'numero', 'type', 'rubrique', 'analyse', 'mpId', 'mpMandat', 'minInt', 'datePublished', 'dateMaj');
+        $fields = array('uid', 'legislature', 'numero', 'type', 'rubrique', 'analyse', 'mpId', 'mpMandat', 'minInt', 'content', 'datePublished', 'dateMaj');
         $questions = [];
         $x = 1;
 
@@ -4082,6 +4082,7 @@ class Script
             `mpId` VARCHAR(20) DEFAULT NULL,
             `mpMandat` VARCHAR(20) DEFAULT NULL,
             `minInt` VARCHAR(20) DEFAULT NULL,
+            `content` TEXT DEFAULT NULL,
             `datePublished` DATE DEFAULT NULL,
             `dateMaj` DATE DEFAULT NULL,
             PRIMARY KEY (`uid`)
@@ -4110,9 +4111,10 @@ class Script
                     $mpId = $xml->auteur->identite->acteurRef ?? null;
                     $mpMandat = $xml->auteur->identite->mandatRef ?? null;
                     $minInt = $xml->minInt->organeRef ?? null;
+                    $content = null;
                     $datePublished = $xml->cloture->dateCloture ?? null;
 
-                    $question = array('uid' => $uid, 'legislature' => $legislature, 'numero' => $numero, 'type' => $type, 'rubrique' => $rubrique, 'analyse' => $analyse, 'mpId' => $mpId, 'mpMandat' => $mpMandat, 'minInt' => $minInt, 'datePublished' => $datePublished, 'dateMaj' => $dateMaj);
+                    $question = array('uid' => $uid, 'legislature' => $legislature, 'numero' => $numero, 'type' => $type, 'rubrique' => $rubrique, 'analyse' => $analyse, 'mpId' => $mpId, 'mpMandat' => $mpMandat, 'minInt' => $minInt, 'content' => $content, 'datePublished' => $datePublished, 'dateMaj' => $dateMaj);
                     $questions = array_merge($questions, array_values($question));
 
                     if ($x % 500 === 0) {
@@ -4150,9 +4152,10 @@ class Script
                     $mpId = $xml->auteur->identite->acteurRef ?? null;
                     $mpMandat = $xml->auteur->identite->mandatRef ?? null;
                     $minInt = $xml->minInt->organeRef ?? null;
+                    $content = $xml->textesQuestion->texteQuestion->texte ?? null;
                     $datePublished = $xml->textesQuestion->texteQuestion->infoJO->dateJO ?? null;
 
-                    $question = array('uid' => $uid, 'legislature' => $legislature, 'numero' => $numero, 'type' => $type, 'rubrique' => $rubrique, 'analyse' => $analyse, 'mpId' => $mpId, 'mpMandat' => $mpMandat, 'minInt' => $minInt, 'datePublished' => $datePublished, 'dateMaj' => $dateMaj);
+                    $question = array('uid' => $uid, 'legislature' => $legislature, 'numero' => $numero, 'type' => $type, 'rubrique' => $rubrique, 'analyse' => $analyse, 'mpId' => $mpId, 'mpMandat' => $mpMandat, 'minInt' => $minInt, 'content' => $content,'datePublished' => $datePublished, 'dateMaj' => $dateMaj);
                     $questions = array_merge($questions, array_values($question));
 
                     if ($x % 500 === 0) {
@@ -4192,7 +4195,7 @@ class Script
                     $minInt = $xml->minInt->organeRef ?? null;
                     $datePublished = $xml->textesQuestion->texteQuestion->infoJO->dateJO ?? null;
 
-                    $question = array('uid' => $uid, 'legislature' => $legislature, 'numero' => $numero, 'type' => $type, 'rubrique' => $rubrique, 'analyse' => $analyse, 'mpId' => $mpId, 'mpMandat' => $mpMandat, 'minInt' => $minInt, 'datePublished' => $datePublished, 'dateMaj' => $dateMaj);
+                    $question = array('uid' => $uid, 'legislature' => $legislature, 'numero' => $numero, 'type' => $type, 'rubrique' => $rubrique, 'analyse' => $analyse, 'mpId' => $mpId, 'mpMandat' => $mpMandat, 'minInt' => $minInt, 'content' => $content,'datePublished' => $datePublished, 'dateMaj' => $dateMaj);
                     $questions = array_merge($questions, array_values($question));
 
                     if ($x % 500 === 0) {
@@ -4207,6 +4210,71 @@ class Script
         }
         $this->insertAll('questions', $fields, $questions);
         $zip->close();  
+
+    }
+
+    public function updateLegislativesPartielles(){
+        echo "updateLegislativesPartielles starting \n";
+
+        $fields = [
+            'year', 'dpt', 'dpt_url', 'circo', 'circo_url', 'tour', 'date',
+            'nuance', 'nameLast', 'nameFirst', 'sexe', 'voix', 'pct_exprimes',
+            'elected'
+        ];
+        $toInsert = [];
+
+        $this->bdd->query('DROP TABLE IF EXISTS elect_legislatives_partielles');
+
+        // Create table if not exists
+        $this->bdd->query("CREATE TABLE IF NOT EXISTS `elect_legislatives_partielles` (
+            `year` DOUBLE NOT NULL,
+            `dpt` VARCHAR(3) NOT NULL,
+            `dpt_url` VARCHAR(3) NOT NULL,
+            `circo` INT NOT NULL,
+            `circo_url` VARCHAR(2) NOT NULL,            
+            `tour` DOUBLE NOT NULL,
+            `date` DATE NOT NULL,
+            `nuance` VARCHAR(3) NULL DEFAULT NULL,
+            `nameLast` VARCHAR(255) NOT NULL,
+            `nameFirst` VARCHAR(255) NOT NULL,
+            `sexe` VARCHAR(5) NULL DEFAULT NULL,
+            `voix` INT NULL DEFAULT NULL,
+            `pct_exprimes` DECIMAL(5,2) NULL DEFAULT NULL,
+            `elected` INT NULL DEFAULT NULL,
+            `dateMaj` DATE NULL DEFAULT (CURRENT_DATE)
+        ) ENGINE = MyISAM CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci;");
+
+        $dir = __DIR__ . "/../assets/data_elections/";
+        $filename = $dir . "elections-legislatives-partielles.csv";
+        if (($handle = fopen($filename, "r")) !== false) {
+            // Skip the first line (header row)
+            fgetcsv($handle);
+
+            while (($row = fgetcsv($handle, 1000, ",")) !== false) {
+                // Clean the row: empty strings → null
+                $row = array_map(function($v) {
+                    return $v === '' ? null : $v;
+                }, $row);
+
+                // Create associative array for this row
+                $x = array_combine($fields, $row);
+
+                // Fix decimal separator for pct_exprimes (e.g. "50,89" → "50.89")
+                if (isset($x['pct_exprimes'])) {
+                    $x['pct_exprimes'] = str_replace(',', '.', $x['pct_exprimes']);
+                }
+
+                // Merge into flat array (sequential values)
+                $toInsert = array_merge($toInsert, array_values($x));
+
+            }
+            fclose($handle);
+        } else {
+            echo "Error opening the file.";
+        }
+
+        // Insert into the table 
+        $this->insertAll('elect_legislatives_partielles', $fields, $toInsert);
 
     }
 
@@ -4525,6 +4593,7 @@ $script->debatsParas();
 $script->reunionsInfos();
 $script->reunionsPresences();
 $script->questions();
+$script->updateLegislativesPartielles();
 //$script->parrainages(); // No longer used
 $script->opendata_activeMPs();
 $script->opendata_activeGroupes();

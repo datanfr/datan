@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   version="1.1"
+   width="252.89999"
+   height="252.89999"
+   viewBox="0 0 252.89999 252.89999"
+   xml:space="preserve"
+   id="svg2"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg"><defs
+   id="defs2" />
+<g
+   style="opacity:1;fill:none;fill-rule:nonzero;stroke:none;stroke-width:0;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:10;stroke-dasharray:none"
+   transform="scale(2.81)"
+   id="g2">
+	<path
+   d="m 45,90 v 0 C 20.147,90 0,69.853 0,45 v 0 C 0,20.147 20.147,0 45,0 v 0 c 24.853,0 45,20.147 45,45 v 0 C 90,69.853 69.853,90 45,90 Z"
+   style="opacity:1;fill:#0a7aff;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:10;stroke-dasharray:none"
+   stroke-linecap="round"
+   id="path1" />
+	<path
+   d="M 29.977,25.793 C 36.058,30.358 42.599,39.615 45,44.582 47.402,39.615 53.942,30.358 60.023,25.793 64.411,22.499 71.52,19.95 71.52,28.06 c 0,1.62 -0.929,13.607 -1.473,15.553 -1.893,6.766 -8.792,8.491 -14.929,7.447 10.727,1.826 13.456,7.873 7.562,13.92 C 51.488,76.465 46.593,62.098 45.339,58.417 45.109,57.742 45.002,57.426 45,57.695 44.998,57.427 44.891,57.742 44.661,58.417 43.407,62.098 38.513,76.465 27.32,64.98 21.427,58.933 24.155,52.885 34.882,51.06 28.745,52.104 21.846,50.379 19.953,43.613 19.408,41.667 18.48,29.68 18.48,28.06 c 0,-8.11 7.109,-5.561 11.497,-2.267 z"
+   style="opacity:1;fill:#ffffff;fill-rule:nonzero;stroke:none;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:10;stroke-dasharray:none"
+   stroke-linecap="round"
+   id="path2" />
+</g>
+</svg>

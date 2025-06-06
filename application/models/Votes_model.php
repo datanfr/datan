@@ -400,7 +400,7 @@
         LEFT JOIN votes_info vi ON vd.voteNumero = vi.voteNumero AND vd.legislature = vi.legislature
         LEFT JOIN readings r ON r.id = vd.reading
         LEFT JOIN explications_mp e ON e.mpId = vs.mpId AND e.legislature = vd.legislature AND e.voteNumero = vd.voteNumero AND e.state = 1
-        WHERE vd.state = "published" AND vs.vote IS NOT NULL
+        WHERE vd.state = "published" AND vs.vote IS NOT NULL AND vs.vote != "nv"
         ORDER BY vi.dateScrutin DESC
       ';
       if ($limit){
@@ -416,6 +416,12 @@
         'vs.voteNumero' => $num
       );
       $this->db->select('vs.*, o.libelleAbrev');
+      $this->db->select('CASE
+        WHEN vs.vote = 1 THEN "pour"
+        WHEN vs.vote = -1 THEN "contre"
+        WHEN vs.vote = 0 THEN "abstention"
+        WHEN vs.vote IS NULL THEN "absent"
+        ELSE NULL END AS voteText', FALSE);
       $this->db->join('mandat_groupe mg', 'vs.mandatId = mg.mandatId');
       $this->db->join('organes o', 'mg.organeRef = o.uid');
       return $this->db->get_where('votes_scores vs', $where, 1)->row_array();
@@ -475,7 +481,7 @@
         FROM votes_scores vs
         LEFT JOIN votes_info vi ON vs.voteNumero = vi.voteNumero AND vs.legislature = vi.legislature
         LEFT JOIN votes_datan vd ON vi.voteId = vd.vote_id AND vd.state = "published"
-        WHERE vs.mpId = ? ';
+        WHERE vs.mpId = ? AND vs.vote != "nv" ';
       $sql .= $legislature ? ' AND vp.legislature = ' . $this->db->escape($legislature) : '';
       $sql .= ' ) A ORDER BY A.dateScrutin DESC, A.voteNumero DESC ';
       return $this->db->query($sql, array($depute_id))->result_array();
@@ -526,6 +532,7 @@
 
     public function get_key_votes_mp($mpId){
       $sql =  'SELECT vs.voteNumero, vs.scoreLoyaute, vs.vote,
+        CONCAT("l", vs.legislature, "v", vs.voteNumero) AS voteId,
         CASE
           WHEN vs.vote = 1 THEN "pour"
           WHEN vs.vote = 0 THEN "abstention"
@@ -533,28 +540,31 @@
         ELSE NULL
         END AS vote_libelle
         FROM votes_scores vs
-        WHERE vs.voteNumero IN (184, 269, 629, 3213) AND vs.legislature = 16 AND vs.mpId = ?
+        WHERE
+          (
+            vs.voteNumero IN (184, 269, 629, 3213) AND vs.legislature = 16
+          )
+          AND vs.mpId = ?;
       ';
       $query = $this->db->query($sql, $mpId);
 
       $votes = $query->result_array();
 
       $text = array(
-        629 => "l'inscription de l'interruption volontaire de grossesse (IVG) dans la Constitution",
-        269 => "la création d'une taxe temporaire sur les super-dividendes distribués par les grandes entreprises",
-        184 => "la ratification de l'accord pour l'adhésion de la Suède et de la Finlande à l'OTAN",
-        3213 => "du projet de loi immigration en 2023"
+        "l16v629" => "l'inscription de l'interruption volontaire de grossesse (IVG) dans la Constitution",
+        "l16v269" => "la création d'une taxe temporaire sur les super-dividendes distribués par les grandes entreprises",
+        "l16v184" => "la ratification de l'accord pour l'adhésion de la Suède et de la Finlande à l'OTAN",
+        "l16v3213" => "du projet de loi immigration en 2023"
       );
 
       foreach ($votes as $key => $value) {
-        $voteNumero = $value["voteNumero"];
-        $votes[$key]["text"] = $text[$voteNumero];
+        $voteId = $value["voteId"];
+        $votes[$key]["text"] = isset($text[$voteId]) ? $text[$voteId] : null;
       }
 
-      if (!isset($votes)) {
+      if (empty($votes)) {
         $votes = NULL;
       }
-
 
       return $votes;
     }
@@ -717,7 +727,7 @@
       if ($state) {
         $where['state'] = $state;
       }
-      $this->db->select('d.civ, d.nameFirst, d.nameLast, d.nameUrl, d.dptSlug, d.libelleAbrev, d.libelle, d.couleurAssociee, substr(d.mpId, 3) AS idImage, d.img, e.text, e.state');
+      $this->db->select('d.legislature, d.civ, d.nameFirst, d.nameLast, d.nameUrl, d.dptSlug, d.libelleAbrev, d.libelle, d.couleurAssociee, substr(d.mpId, 3) AS idImage, d.img, e.text, e.state');
       $this->db->select('CASE WHEN v.vote = 0 THEN "abstention" WHEN v.vote = 1 THEN "pour" WHEN v.vote = -1 THEN "contre" WHEN v.vote IS NULL THEN "absent" ELSE v.vote END AS vote', FALSE);
       $this->db->join('deputes_last d', 'e.mpId = d.mpId', 'left');
       $this->db->join('votes_scores v', 'v.legislature = e.legislature AND v.voteNumero = e.voteNumero AND v.mpId = e.mpId', 'left');
