@@ -26,7 +26,7 @@
                     <tr>
                       <th>Numéro</th>
                       <th>Député</th>
-                      <th>Pseudo Twitter</th>
+                      <th>Pseudo X</th>
                       <th>Lien</th>
                     </tr>
                   </thead>
@@ -39,7 +39,7 @@
                       <td><?= $row['twitter'] ?></td>
                       <td>
                         <?php if ($row['twitter']): ?>
-                          <a class="btn btn-primary" href="https://twitter.com/<?= $row['twitter'] ?>" target="_blank">Lien</a>
+                          <a class="btn btn-primary" href="https://x.com/<?= $row['twitter'] ?>" target="_blank">Lien</a>
                         <?php endif; ?>
                       </td>
                     </tr>

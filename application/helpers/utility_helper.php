@@ -24,7 +24,7 @@
   }
 
   function formatNumber($x){
-    return number_format($x, 0, '.', ' ');
+    return number_format($x, 0, '.', '&nbsp;');
   }
 
   function mean_age_france_all(){

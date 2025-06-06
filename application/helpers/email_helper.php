@@ -24,7 +24,7 @@ function sendMail($to, $subject, $templateHtml, $templateLanguage, $templateId, 
             ]
         ]
     ];
-    $response = $mj->post(Resources::$Email, ['body' => $body]);
+    return $mj->post(Resources::$Email, ['body' => $body]);
 }
 
 function sendContactList($email, $list){
