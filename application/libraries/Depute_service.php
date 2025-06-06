@@ -106,8 +106,7 @@ class Depute_service
         array $data,
         string $mp_id,
         string $legislature,
-        string $name_last,
-        string $depute_full_name
+        string $name_last
     ): array {
         // Infos legislature 
         $data['legislature'] = $this->CI->legislature_model->get_legislature($legislature);
