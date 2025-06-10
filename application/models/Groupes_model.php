@@ -638,7 +638,8 @@
     public function get_groupe_color($x){
       switch ($x[0]) {
         case 'SOC':
-          $couleur = "#e30040";
+          // $couleur = "#e30040";
+            $couleur = "#f70059";
           break;
 
         case 'UDI_I':

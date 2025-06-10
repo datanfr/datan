@@ -6,13 +6,20 @@
 */
 // COLORS
 $orange: #ff661a;
-$vert: #00B794;
+// $vert: #00B794;
+// $vert : #00857A;
+// $vert : #007A64;
+// $vert :  #007B66;
+$vert : #008068;
+
 $bleu: #00668E;
 $yellow: #ffba4a;
 $text-gray: #4D5755;
-$text-gray-light: #AAAAAA;
+// $text-gray-light: #AAAAAA;
+$text-gray-light:#585661;
 $text-black: #4C4C4C;
-$bg-colour: #F3F5F6;
+// $bg-colour: #F3F5F6;
+$bg-colour: #FCFCFC;
 $body-bg: $bg-colour;
 $primary: $vert;
 $info: $bleu;
@@ -55,6 +62,7 @@ $navbar-padding-x: 15px;
 // CAROUSEL
 $carousel-caption-width: 100%;
 // BUTTONS
+// $btn-font-weight: 800;
 $btn-font-weight: 800;
 
 @import "node_modules/bootstrap/scss/bootstrap";
@@ -2071,7 +2079,7 @@ body{
     font-weight: 800;
     color: $text-black;
   }
-  h3{
+  h2.history{
     font-weight: 800;
     color: $primary;
     font-size: $h5-font-size;
@@ -2471,7 +2479,7 @@ body{
     font-weight: 800;
     color: $text-black;
   }
-  h3{
+  h2.history{
     font-weight: 800;
     color: $primary;
     font-size: $h5-font-size;
