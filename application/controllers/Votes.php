@@ -225,7 +225,7 @@
         $data['m_index'] = NULL;
         $data['obfuscation_links'] = TRUE;
       } elseif ($year != NULL && $month != NULL) {
-        $month = $this->number_remove_zero($month);
+        $month = ltrim((string) $month, '0');
         $data['description'] = "Découvrez tous les scrutins qui ont eu lieu dans l'hémicycle de l'Assemblée nationale lors de la " . $legislature . "<sup>e</sup> législature, en " . $months[$month-1] . " " . $year . ".";
         //"Liste des votes de la ".$legislature."<sup>e</sup> législature - ".$months[$month-1]." ".$year;
         // Meta
@@ -234,7 +234,7 @@
         $data['title'] = "Votes à l'Assemblée nationale - " . ucfirst($months[$month-1])." ".$year;
         $data['description_meta'] = "Retrouvez tous les votes de l'Assemblée nationale en ".$months[$month-1]." ".$year.". Détails des votes, résultats de vote des groupes et des députés, statistiques de loyauté et de cohésion.";
         // Breadcrumb
-        $month_breadcrumb = $this->number_add_zero($month);
+        $month_breadcrumb = str_pad((string) $month, 2, "0", STR_PAD_LEFT);
         $data['breadcrumb'] = array(
           array(
             "name" => "Datan", "url" => base_url(), "active" => FALSE
