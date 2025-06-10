@@ -153,7 +153,7 @@
       $array = $query->result_array();
       foreach ($array as $key => $value) {
         $array[$key]["month"] = $months[$value['months']-1];
-        $array[$key]["index"] = $this->number_add_zero($value["months"]);
+        $array[$key]["index"] = str_pad((string) $value["months"], 2, "0", STR_PAD_LEFT);
       }
 
       return($array);

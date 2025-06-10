@@ -295,13 +295,4 @@
     }
   }
 
-  function number_add_zero($x){
-    return str_pad((string) $x, 2, "0", STR_PAD_LEFT);
-  }
-
-  function number_remove_zero($x){
-    $x = (string) $x;
-    return ltrim($x, '0');
-  }
-
 ?>
