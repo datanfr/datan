@@ -117,6 +117,61 @@ function initCarouselContainer(container) {
   });
 }
 
+//______________________________________________________________
+
+// init Flickity
+// external js: flickity.pkgd.js
+// const carouselContainers = document.querySelectorAll('.carousel-container');
+// console.log("test")
+
+// for (let i = 0; i < carouselContainers.length; i++) {
+//   const container = carouselContainers[i];
+//   initCarouselContainer(container);
+// }
+
+// function initCarouselContainer(container) {
+//   const carousel = container.querySelector('.carousel-cards');
+//   const flkty = new Flickity(carousel, {
+//     prevNextButtons: false,
+//     pageDots: false,
+//     freeScroll: true,
+//     contain: true
+//   });
+
+//   // Accessibilité : mise à jour aria-hidden et tabindex sur les slides visibles
+//   function updateAccessibility() {
+//     const slides = carousel.querySelectorAll('.carousel-cell');
+//     slides.forEach((slide) => {
+//       const slideRect = slide.getBoundingClientRect();
+//       const carouselRect = carousel.getBoundingClientRect();
+
+//       const isVisible =
+//         slideRect.left < carouselRect.right &&
+//         slideRect.right > carouselRect.left;
+
+//       const links = slide.querySelectorAll('a, button');
+
+//       if (isVisible) {
+//         slide.removeAttribute('aria-hidden');
+//         links.forEach(el => el.tabIndex = 0);
+//       } else {
+//         slide.setAttribute('aria-hidden', 'true');
+//         links.forEach(el => el.tabIndex = -1);
+//       }
+//     });
+//   }
+
+//   flkty.on('scroll', updateAccessibility);
+//   flkty.on('settle', updateAccessibility);
+//   updateAccessibility(); // Initial
+
+//   const previousButton = container.querySelector('.carousel--prev');
+//   previousButton.addEventListener('click', () => flkty.previous());
+
+//   const nextButton = container.querySelector('.carousel--next');
+//   nextButton.addEventListener('click', () => flkty.next());
+// }
+
 /*
 ################
                 no-img (votes controller)
