@@ -750,12 +750,19 @@
 
 
     // DONATIONS CAMPAIGNS
+
+    const POSITION_TOP = 0;
+    const POSITION_BOTTOM = 1;
     
     public function campaigns_list() 
     {
       $data = $this->data;
       $data['title'] = 'Liste des campagnes de dons';
       $data['campaigns'] = $this->campaign_model->get_campaigns();
+      $data['positions_labels'] = [
+          0 => 'Haut',
+          1 => 'Bas'
+      ];
 
       // Meta
       $data['title_meta'] = $data['title'] . ' - Dashboard | Datan';
@@ -773,6 +780,8 @@
         $data = $this->data;
         $user_id = $this->session->userdata('user_id');
         $data['title'] = 'Créer une campagne';
+        $data['POSITION_TOP'] = self::POSITION_TOP;
+        $data['POSITION_BOTTOM'] = self::POSITION_BOTTOM;
 
         $data['js_to_load'] = array('dashboard/donation-campaigns');
 
@@ -797,6 +806,8 @@
       $user_id = $this->session->userdata('user_id');
       $data['title'] = 'Modifier une campagne';
       $data['campaign'] = $this->campaign_model->get_campaign($id);
+      $data['POSITION_TOP'] = self::POSITION_TOP;
+      $data['POSITION_BOTTOM'] = self::POSITION_BOTTOM;
 
       $data['js_to_load'] = array('dashboard/donation-campaigns');
 
