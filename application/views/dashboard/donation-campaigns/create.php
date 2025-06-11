@@ -33,14 +33,14 @@
                 <legend class="fs-5 mb-3 sr-only">Position de la bannière</legend>
                 <div class="mb-3">
                     <label class="form-label d-block">Position</label>
-                    <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="position" id="positionTop" value="haut" checked>
-                        <label class="form-check-label" for="positionTop">Haut</label>
-                    </div>
-                    <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="position" id="positionBottom" value="bas">
-                        <label class="form-check-label" for="positionBottom">Bas</label>
-                    </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="position" id="positionTop" value="<?= $POSITION_TOP ?>" checked>
+                    <label class="form-check-label" for="positionTop">Haut</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="position" id="positionBottom" value="<?= $POSITION_BOTTOM ?>">
+                    <label class="form-check-label" for="positionBottom">Bas</label>
+                </div>
                 </div>
                 <div class="mb-3">
                     <label for="page" class="form-label">Page cible (optionnel)</label>
