@@ -760,8 +760,8 @@
       $data['title'] = 'Liste des campagnes de dons';
       $data['campaigns'] = $this->campaign_model->get_campaigns();
       $data['positions_labels'] = [
-          0 => 'Haut',
-          1 => 'Bas'
+        self::POSITION_TOP => 'Haut',
+        self::POSITION_BOTTOM => 'Bas'
       ];
 
       // Meta
