@@ -13,22 +13,6 @@
 
     // Page = datan.fr/votes
     public function index(){
-      // FUNCTION
-      function number_zero($x){
-        if ($x < 10) {
-          return "0".$x;
-        } else {
-          return $x;
-        }
-      }
-      function number($x){
-        if ($x < 10) {
-          return substr($x, 1);
-        } else {
-          return $x;
-        }
-      }
-
       // Get datan_votes
       $data['votes_datan'] = $this->votes_model->get_last_votes_datan(7);
       // Get by category
@@ -178,21 +162,6 @@
       $data['legislature'] = $legislature;
       // Get month array
       $months = get_months();
-      // Create some functions
-      function number_zero($x){
-        if ($x < 10) {
-          return "0".$x;
-        } else {
-          return $x;
-        }
-      }
-      function number($x){
-        if ($x < 10) {
-          return substr($x, 1);
-        } else {
-          return $x;
-        }
-      }
 
       // Check if votes
       $data['votes'] = $this->votes_model->get_all_votes($legislature, $year, $month, FALSE);
@@ -256,7 +225,7 @@
         $data['m_index'] = NULL;
         $data['obfuscation_links'] = TRUE;
       } elseif ($year != NULL && $month != NULL) {
-        $month = number($month);
+        $month = ltrim((string) $month, '0');
         $data['description'] = "Découvrez tous les scrutins qui ont eu lieu dans l'hémicycle de l'Assemblée nationale lors de la " . $legislature . "<sup>e</sup> législature, en " . $months[$month-1] . " " . $year . ".";
         //"Liste des votes de la ".$legislature."<sup>e</sup> législature - ".$months[$month-1]." ".$year;
         // Meta
@@ -265,11 +234,7 @@
         $data['title'] = "Votes à l'Assemblée nationale - " . ucfirst($months[$month-1])." ".$year;
         $data['description_meta'] = "Retrouvez tous les votes de l'Assemblée nationale en ".$months[$month-1]." ".$year.". Détails des votes, résultats de vote des groupes et des députés, statistiques de loyauté et de cohésion.";
         // Breadcrumb
-        if ($month < 10 ) {
-          $month_breadcrumb = "0".$month;
-        } else {
-          $month_breadcrumb = $month;
-        }
+        $month_breadcrumb = str_pad((string) $month, 2, "0", STR_PAD_LEFT);
         $data['breadcrumb'] = array(
           array(
             "name" => "Datan", "url" => base_url(), "active" => FALSE
@@ -573,6 +538,5 @@
       $this->load->view('templates/footer');
 
     }
-
   }
 ?>
