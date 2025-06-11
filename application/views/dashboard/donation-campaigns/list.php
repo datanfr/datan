@@ -42,21 +42,21 @@
                                         <td>
                                             <a href="<?= base_url('admin/campagnes/edit/' . $campaign['id']) ?>" class="btn btn-sm btn-warning">Modifier</a>
                                             <a href="<?= base_url('admin/campagnes/delete/' . $campaign['id']) ?>" class="btn btn-sm btn-danger">Supprimer</a>
-                                                <?= form_open('/admin/campagnes/toggle', ['class' => 'toggle-form']) ?>
-                                                <input type="hidden" name="id" value="<?= $campaign['id'] ?>">
-                                                <input type="hidden" name="is_active" value="0">
-                                                <div class="custom-control custom-switch mt-2">
-                                                    <input
-                                                        type="checkbox"
-                                                        class="custom-control-input"
-                                                        id="<?= $switchId ?>"
-                                                        name="is_active"
-                                                        value="1"
-                                                        onchange="this.form.submit()"
-                                                        <?= $campaign['is_active'] ? 'checked' : '' ?>>
-                                                    <label class="custom-control-label" for="<?= $switchId ?>">Activer la campagne</label>
-                                                </div>
-                                                <?= form_close() ?>
+                                            <?= form_open('/admin/campagnes/toggle', ['class' => 'toggle-form']) ?>
+                                            <input type="hidden" name="id" value="<?= $campaign['id'] ?>">
+                                            <input type="hidden" name="is_active" value="0">
+                                            <div class="custom-control custom-switch mt-2">
+                                                <input
+                                                    type="checkbox"
+                                                    class="custom-control-input"
+                                                    id="<?= $switchId ?>"
+                                                    name="is_active"
+                                                    value="1"
+                                                    onchange="this.form.submit()"
+                                                    <?= $campaign['is_active'] ? 'checked' : '' ?>>
+                                                <label class="custom-control-label" for="<?= $switchId ?>">Activer la campagne</label>
+                                            </div>
+                                            <?= form_close() ?>
                                         </td>
                                     </tr>
                                 <?php endforeach; ?>
