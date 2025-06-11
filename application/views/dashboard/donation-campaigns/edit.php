@@ -41,7 +41,7 @@
                                     type="radio"
                                     name="position"
                                     id="positionTop"
-                                    value="haut" <?= $campaign['position'] === 'haut' ? 'checked' : '' ?>
+                                    value="<?= $POSITION_TOP ?>" <?= $campaign['position'] == $POSITION_TOP ? 'checked' : '' ?>
                                     required>
                                 <label class="form-check-label" for="positionTop">Haut</label>
                             </div>
@@ -50,7 +50,7 @@
                                     type="radio"
                                     name="position"
                                     id="positionBottom"
-                                    value="bas" <?= $campaign['position'] === 'bas' ? 'checked' : '' ?>
+                                    value="<?= $POSITION_BOTTOM ?>" <?= $campaign['position'] == $POSITION_BOTTOM ? 'checked' : '' ?>
                                     required>
                                 <label class="form-check-label" for="positionBottom">Bas</label>
                             </div>

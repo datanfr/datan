@@ -37,7 +37,7 @@
                                         <td><?= $campaign['start_date'] ?></td>
                                         <td><?= $campaign['end_date'] ?></td>
                                         <td><?= $campaign['author_name'] ?></td>
-                                        <td><?= $campaign['position'] ?></td>
+                                        <td><?= $positions_labels[$campaign['position']] ?? '' ?></td>
                                         <td><?= $campaign['page'] ?></td>
                                         <td>
                                             <a href="<?= base_url('admin/campagnes/edit/' . $campaign['id']) ?>" class="btn btn-sm btn-warning">Modifier</a>
