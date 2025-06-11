@@ -75,10 +75,15 @@
         $array['img_type'] = 'image/png';
         $array['type'] = 'website';
       } elseif ($type == "posts/view") {
+
+        /// --- POSTS/VIEW (individual blog post) PAGE --- ///
+
+
         $id = $data['post']['id'];
         $slug = $data['post']['slug'];
-        $array['img'] = asset_url()."imgs/posts/img_post_".$id.".png";
-        $array['twitter_img'] = asset_url()."imgs/posts/img_post_".$id.".png";
+        $img = $data['post']['image_url'];
+        $array['img'] = asset_url()."imgs/posts/". $img . ".png";
+        $array['twitter_img'] = asset_url()."imgs/posts/". $img . ".png";
         $array['img_width'] = NULL;
         $array['img_height'] = NULL;
         $array['img_type'] = "image/png";
@@ -143,7 +148,7 @@
         "@context" => "http://schema.org",
         "@type" => "NewsArticle",
         "headline" => $post["title"],
-        "image" => asset_url() . "imgs/posts/img_post_" . $post['id'] . ".png",
+        "image" => asset_url() . "imgs/posts/" . $post['image_url'] . ".png",
       ];
 
       if ($post['created_at']) {
