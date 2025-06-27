@@ -61,4 +61,16 @@ class Campaign_model extends CI_Model
     {
         return $this->db->where('id', $id)->update('campaigns', ['is_active' => $is_active]);
     }
+
+    public function get_current_active_campaigns(): array
+    {
+        $today = date('Y-m-d');
+        $this->db->select('campaigns.*');
+        $this->db->where('is_active', true);
+        $this->db->where('start_date <=', $today);
+        $this->db->where('end_date >=', $today);
+        $this->db->order_by('updated_at', 'DESC');
+        $query = $this->db->get('campaigns');
+        return $query->result_array();
+    }
 }
