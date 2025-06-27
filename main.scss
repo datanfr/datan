@@ -3576,3 +3576,14 @@ dialogueBoxQuiz
     }
   }
 }
+
+#campaign {
+  background-color: rgba($bleu_rgb, 0.1)!important;
+  .icon{
+    color: #D93B3B;
+    svg {
+      width: 1.5em;
+      height: 1.5em;
+    }
+  }
+}
