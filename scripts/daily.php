@@ -63,7 +63,12 @@ class Script
     public function executeFunction(callable $func, string $funcName) {
         echo "Function $funcName starting\n";
         $startTime = microtime(true);
-        $result = $func();
+        try {
+            $result = $func();
+        } catch (Exception $e) {
+            $this->log('ERROR', "Function $funcName failed: " . $e->getMessage());
+            throw $e; // Re-throw the exception if you want calling code to handle it
+        }
         $endTime = microtime(true);
         $executionTime = $endTime - $startTime;
         echo "Function $funcName finished. It took " . round($executionTime, 2) . " seconds.\n";
@@ -4516,61 +4521,78 @@ if (isset($argv[1]) && isset($argv[2])) {
   $script = new Script();
 }
 
-executeFunction(function() {
-    $script->fillDeputes();
-}, "fillDeputes");
-$script->addBsky();
-$script->deputeAll();
-$script->deputeLast();
-if ($script->getMpPhotos()) { // Check this in a later stage
-    $script->downloadPictures();
-    $script->webpPictures();
-    $script->resmushPictures();
+// Create a functionsToExecute array
+$functionsToExecute = array(
+    "fillDeputes",
+    "addBsky",
+    "deputeAll",
+    "deputeLast"
+);
+
+// Conditionally add image-related functions
+if ($script->getMpPhotos()) {
+    $functionsToExecute = array_merge($functionsToExecute, array(
+        "downloadPictures",
+        "webpPictures",
+        "resmushPictures"
+    ));
 }
-$script->groupeEffectif();
-$script->groupeStats();
-$script->groupeStatsHistory();
-$script->groupeMembersHistory();
-$script->parties();
-$script->legislature();
-$script->vote();
-$script->updateVoteInfo();
-$script->voteScore();
-$script->groupeCohesion();
-$script->groupeAccord();
-$script->deputeAccord();
-$script->voteParticipation();
-$script->dossier();
-$script->dossiersSeances();
-$script->documentsLegislatifs();
-$script->dossiersVotes();
-$script->dossiersActeurs();
-$script->votesAmendments();
-$script->amendements();
-$script->amendementsAuteurs();
-$script->voteParticipationCommission();
-$script->classParticipation();
-$script->classParticipationCommission();
-$script->classParticipationSolennels();
-$script->deputeLoyaute();
-$script->classLoyaute();
-$script->classMajorite();
-$script->classGroups();
-$script->classGroupsMonth();
-$script->classGroupsProximite();
+
+// Continue adding functions
+$functionsToExecute = array_merge($functionsToExecute, array(
+    "groupeEffectif",
+    "groupeStats",
+    "groupeStatsHistory",
+    "groupeMembersHistory",
+    "parties",
+    "legislature",
+    "vote",
+    "updateVoteInfo",
+    "voteScore",
+    "groupeCohesion",
+    "groupeAccord",
+    "deputeAccord",
+    "voteParticipation",
+    "dossier",
+    "dossiersSeances",
+    "documentsLegislatifs",
+    "dossiersVotes",
+    "dossiersActeurs",
+    "votesAmendments",
+    "amendements",
+    "amendementsAuteurs",
+    "voteParticipationCommission",
+    "classParticipation",
+    "classParticipationCommission",
+    "classParticipationSolennels",
+    "deputeLoyaute",
+    "classLoyaute",
+    "classMajorite",
+    "classGroups",
+    "classGroupsMonth",
+    "classGroupsProximite",
+    "deputeAccordCleaned",
+    "historyMpsAverage",
+    "historyPerMpsAverage",
+    "debatsInfos",
+    "debatsParas",
+    "reunionsInfos",
+    "reunionsPresences",
+    "questions",
+    "updateLegislativesPartielles",
+    "opendata_activeMPs",
+    "opendata_activeGroupes",
+    "opendata_historyMPs",
+    "opendata_historyGroupes"
+));
+
+// Execute all functions
+foreach ($functionsToExecute as $function) {
+    executeFunction(function() use ($script, $function) {
+        $script->$function();
+    }, $function);
+}
+
 //$script->classParticipationSix(); // Wait for more votes
 //$script->classLoyauteSix(); // Wait for more votes
-$script->deputeAccordCleaned();
-$script->historyMpsAverage();
-$script->historyPerMpsAverage();
-$script->debatsInfos();
-$script->debatsParas();
-$script->reunionsInfos();
-$script->reunionsPresences();
-$script->questions();
-$script->updateLegislativesPartielles();
 //$script->parrainages(); // No longer used
-$script->opendata_activeMPs();
-$script->opendata_activeGroupes();
-$script->opendata_historyMPs();
-$script->opendata_historyGroupes();
