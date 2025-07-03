@@ -60,6 +60,16 @@ class Script
         echo "Script is over ! It took: " . round($exec_time, 2) . " seconds.\n";
     }
 
+    public function executeFunction(callable $func, string $funcName) {
+        echo "Function $funcName starting\n";
+        $startTime = microtime(true);
+        $result = $func();
+        $endTime = microtime(true);
+        $executionTime = $endTime - $startTime;
+        echo "Function $funcName finished. It took " . round($executionTime, 2) . " seconds.\n";
+        return $result;
+    }
+
     private function majorityGroups()
     {
       $query = $this->bdd->query('SELECT * FROM organes WHERE coteType = "GP" AND (positionPolitique = "Majoritaire");');
@@ -141,14 +151,14 @@ class Script
                 echo "Error inserting : " . $table . "\n" . $e->getMessage() . "\n";
                 die;
             }
-        } else {
-            echo "Nothing to insert in " . $table . "\n";
         }
     }
 
     public function fillDeputes()
     {
         echo "fillDeputes starting \n";
+        $startTime = microtime(true); // Record the start time
+
         if ($this->legislature_to_get == 17) {
           $file = __DIR__ . '/AMO30_tous_acteurs_tous_mandats_tous_organes_historique_XVII.xml.zip';
         } elseif ($this->legislature_to_get == 16) {
@@ -431,7 +441,6 @@ class Script
                     }
                 }
                 if (($i + 1) % 1000 === 0) {
-                    echo "Let's insert until " . $i . "\n";
                     // insert deputes
                     $this->insertAll('deputes', $deputeFields, $deputes);
                     // insert mandat
@@ -449,7 +458,6 @@ class Script
                     $organes = [];
                 }
             }
-            echo "Let's insert until the end : " . $i . "\n";
             // insert deputes
             $this->insertAll('deputes', $deputeFields, $deputes);
             // insert mandat
@@ -524,8 +532,6 @@ class Script
                 ));
             }
         }
-
-        echo "fill Depute finished \n";
     }
 
     public function addBsky() {
@@ -917,7 +923,6 @@ class Script
               'dateMaj' => $this->dateMaj);
             $deputes = array_merge($deputes, array_values($depute));
             if ($i % 1000 === 0) {
-                echo "Let's import until n " . $i . "\n";
                 $this->insertAll('deputes_all', $deputeFields, $deputes);
                 $deputes = [];
             }
@@ -1206,14 +1211,12 @@ class Script
           $effectifs = array_merge($effectifs, array_values($effectif));
 
           if ($i % 1000 === 0) {
-            echo "Let's insert until " . $i . "\n";
             $this->insertAll('groupes_effectif_history', $fields, $effectifs);
             $effectifs = [];
           }
           $i++;
         }
       }
-      echo "Let's insert until the end : " . $i . "\n";
       $this->insertAll('groupes_effectif_history', $fields, $effectifs);
 
     }
@@ -1537,7 +1540,6 @@ class Script
                         break;
                     }
                     if ($n % 50 === 0) {
-                        echo "Let's insert votes \n";
                         // insert votes
                         $this->insertAll('votes', $voteMainFields, $votesMain);
                         // insert votes infos
@@ -1551,7 +1553,6 @@ class Script
                     $n++;
                 }
                 if ($n % 50 !== 0) {
-                    echo "Let's insert votes \n";
                     $this->insertAll('votes', $voteMainFields, $votesMain);
                     // insert votes infos
                     $this->insertAll('votes_info', $voteInfoFields, $votesInfo);
@@ -1744,7 +1745,6 @@ class Script
                             }
                         }
 
-                        echo "Let's insert scrutins from " . $number_to_import . " to " . $until_number . "\n";
                         // insert votes
                         $this->insertAll('votes', $voteMainFields, $votesMain);
                         // insert votes infos
@@ -2093,14 +2093,12 @@ class Script
             );
             $votesScore = array_merge($votesScore, array_values($voteScore));
             if ($i % 500 === 0) {
-                echo "Let's import until n " . $i . " \n";
                 $this->insertAll('votes_scores', $voteScoreFields, $votesScore);
                 $votesScore = [];
                 $voteScore = [];
             }
             $i++;
         }
-        echo "Let's import remaining data : " . $i . " \n";
         $this->insertAll('votes_scores', $voteScoreFields, $votesScore);
     }
 
@@ -2188,7 +2186,6 @@ class Script
             $groupeCohesion = array('voteNumero' => $donneesVote['voteNumero'], 'legislature' => $donneesVote['legislature'], 'organeRef' => $donneesVote['organeRef'], 'cohesion' => $donneesVote['cohesion'], 'positionGroupe' => $donneesVote['positionGroup'], 'voteSort' => $donneesVote['voteResult'], 'scoreGagnant' => $donneesVote['scoreGagnant']);
             $groupesCohesion = array_merge($groupesCohesion, array_values($groupeCohesion));
             if ($i % 1000 === 0) {
-                echo "Let's insert until a pack of 1000 rows \n";
                 $this->insertAll('groupes_cohesion', $groupeCohesionFields, $groupesCohesion);
                 $groupeCohesion = [];
                 $groupesCohesion = [];
@@ -2196,7 +2193,6 @@ class Script
             $i++;
         }
         if ($i % 1000 !== 0) {
-            echo "Let's insert what's left \n";
             $this->insertAll('groupes_cohesion', $groupeCohesionFields, $groupesCohesion);
         }
     }
@@ -2253,14 +2249,12 @@ class Script
             $groupeAccord = array('voteNumero' => $data['voteNumero'], 'legislature' => $data['legislature'], 'organeRef' => $data['organeRef'], 'organeRefAccord' => $data['organeRefAccord'], 'accord' => $data['accord'], 'dateMaj' => $this->dateMaj);
             $groupesAccord = array_merge($groupesAccord, array_values($groupeAccord));
             if ($i % 1000 === 0) {
-                echo "Let's insert until a pack of 1000 rows \n";
                 $this->insertAll('groupes_accord', $groupeAccordFields, $groupesAccord);
                 $groupesAccord = [];
                 $groupeAccord = [];
             }
             $i++;
         }
-        echo "Let's insert what's left \n";
         $this->insertAll('groupes_accord', $groupeAccordFields, $groupesAccord);
     }
 
@@ -2304,7 +2298,6 @@ class Script
             );
             $deputesAccord = array_merge($deputesAccord, array_values($deputeAccord));
             if ($i % 1000 === 0) {
-                echo "let's insert a pack of 1000\n";
                 $this->insertAll('deputes_accord', $deputeAccordFields, $deputesAccord);
                 $deputesAccord = [];
                 $deputeAccord = [];
@@ -2369,7 +2362,6 @@ class Script
                 $voteParticipation = array('legislature' => $mp['legislature'], 'voteNumero' => $mp['voteNumero'], 'mpId' => $mp['mpId'], 'participation' => $mp['participation']);
                 $votesParticipation = array_merge($votesParticipation, array_values($voteParticipation));
                 if ($i % 1000 === 0) {
-                    echo "let's insert this pack of 1000\n";
                     $this->insertAll('votes_participation', $voteParticipationFields, $votesParticipation);
                     $votesParticipation = [];
                 }
@@ -2431,7 +2423,6 @@ class Script
                     }
                 }
                 if ($i % 100 === 0) {
-                    echo "let's insert this pack of 100\n";
                     $this->insertAll('votes_participation_commission', $voteCommissionParticipationFields, $votesCommissionParticipation);
                     $votesCommissionParticipation = [];
                     $voteCommissionParticipation = [];
@@ -3044,7 +3035,6 @@ class Script
                 $dossiers = array_merge($dossiers, array_values($dossier));
                 
                 if ($i % 500 === 0) {
-                    echo "let's insert this pack of 500\n";
                     $this->insertAll('dossiers_votes', $dossierFields, $dossiers);
                     $dossier = [];
                     $dossiers = [];
@@ -3159,9 +3149,7 @@ class Script
                                 echo "Error updating record: " . print_r($stmt->errorInfo(), true);
                             }
                         }
-                    }  else {
-                        echo "li element is not an object.\n";
-                    }
+                    }  
                 }
             }
         }
@@ -3419,14 +3407,12 @@ class Script
                 $doc = array('id' => $id, 'legislature' => $legislature, 'dossierId' => $dossierId,  'numNotice' => $numNotice, 'titre' => $titre, 'titreCourt' => $titreCourt);
                 $insert = array_merge($insert, array_values($doc));
                 if (($i + 1) % 500 === 0) {
-                    echo "Let's insert until " . $i . "\n";
                     $this->insertAll('documents_legislatifs', $fields, $insert);
                     $insert = [];
                 }
               }
             }
           }
-          echo "Let's insert until the end : " . $i . "\n";
           $this->insertAll('documents_legislatifs', $fields, $insert);
         }
       } elseif ($this->legislature_to_get == 14) {
@@ -3523,14 +3509,12 @@ class Script
                   $amdt = array('id' => $id, 'dossier' => $dossier,  'legislature' => $legislature, 'texteLegislatifRef' => $texteLegislatifRef, 'num' => $num, 'numOrdre' => $numOrdre, 'seanceRef' => $seanceRef, 'expose' => $expose, 'state' => $state, 'sort' => $sort, 'examined_by' => $examined_by);
                   $insert = array_merge($insert, array_values($amdt));
                   if (($i + 1) % 1000 === 0) {
-                      echo "Insert until : " . $i . " | ";
                       $this->insertAll('amendements', $fields, $insert, FALSE);
                       $insert = [];
                   }
                 }
             }
         }
-        echo "Let's insert until the end : " . $i . "\n";
         $this->insertAll('amendements', $fields, $insert);
     }
 
@@ -3581,14 +3565,12 @@ class Script
                   $insertAuteur = array('id' => $id, 'type' => $type,  'acteurRef' => $acteurRef, 'groupeId' => $groupeId, 'auteurOrgane' => $auteurOrgane);
                   $insertAll = array_merge($insertAll, array_values($insertAuteur));
                   if (($i + 1) % 1000 === 0) {
-                      echo "Insert until : " . $i . " | ";
                       $this->insertAll('amendements_auteurs', $fields, $insertAll, FALSE);
                       $insertAll = [];
                   }
                 }
             }
         }
-        echo "Let's insert until the end : " . $i . "\n";
         $this->insertAll('amendements_auteurs', $fields, $insertAll);
     }
 
@@ -3722,7 +3704,6 @@ class Script
         $this->bdd->query('CREATE TABLE `history_mps_average` ( `id` TINYINT NOT NULL AUTO_INCREMENT , `legislature` TINYINT NOT NULL , `length` DECIMAL(4,2) NOT NULL , PRIMARY KEY (`id`)) ENGINE = MyISAM CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci;');
         $terms = array(14, 15, 16, 17);
         foreach ($terms as $term) {
-            echo "Getting average for term => " . $term . "\n";
             $this->bdd->query('
                 INSERT INTO history_mps_average (legislature, length)
                 SELECT "' . $term . '" AS legislature, ROUND(AVG(B.mpLength)/365, 2) as length
@@ -3835,7 +3816,6 @@ class Script
                         $debatsInfos = array_merge($debatsInfos, array_values($debatsInfo));
                 
                         if ($i % 500 === 0) {
-                            echo "let's insert this pack of 500\n";
                             $this->insertAll('debats_infos', $fields, $debatsInfos);
                             $debatsInfo = [];
                             $debatsInfos = [];
@@ -3916,7 +3896,6 @@ class Script
               
             
                             if ($n % 500 === 0) {
-                                echo "let's insert this pack of 500\n";
                                 $this->insertAll('debats_paras', $fields, $debatsParas);
                                 $debatsParas = [];
                             }
@@ -3993,7 +3972,6 @@ class Script
                     $reunionInfos = array_merge($reunionInfos, array_values($reunionsInfo));
 
                     if ($n % 500 === 0) {
-                        echo "let's insert this pack of 500\n";
                         $this->insertAll('reunions_infos', $fields, $reunionInfos);
                         $reunionInfos = [];
                     }
@@ -4051,7 +4029,6 @@ class Script
                         $reunionsPresences = array_merge($reunionsPresences, array_values($reunionsPresence));              
             
                         if ($n % 1000 === 0) {
-                            echo "let's insert this pack of 1000\n";
                             $this->insertAll('reunions_presences', $fields, $reunionsPresences);
                             $reunionsPresences = [];
                         }
@@ -4118,7 +4095,6 @@ class Script
                     $questions = array_merge($questions, array_values($question));
 
                     if ($x % 500 === 0) {
-                        echo "let's insert this pack of 500 \n";
                         $this->insertAll('questions', $fields, $questions);
                         $questions = [];
                     }
@@ -4159,7 +4135,6 @@ class Script
                     $questions = array_merge($questions, array_values($question));
 
                     if ($x % 500 === 0) {
-                        echo "let's insert this pack of 500 \n";
                         $this->insertAll('questions', $fields, $questions);
                         $questions = [];
                     }
@@ -4199,7 +4174,6 @@ class Script
                     $questions = array_merge($questions, array_values($question));
 
                     if ($x % 500 === 0) {
-                        echo "let's insert this pack of 500 \n";
                         $this->insertAll('questions', $fields, $questions);
                         $questions = [];
                     }
@@ -4347,7 +4321,6 @@ class Script
         $parrainages = array_merge($parrainages, array_values($parrainage));
 
         if ($i % 10 === 0) {
-            echo "Let's import until parrainage n " . $i . "\n";
             $this->insertAll('parrainages', $parrainagesFields, $parrainages);
             $parrainages = [];
         }
@@ -4543,7 +4516,9 @@ if (isset($argv[1]) && isset($argv[2])) {
   $script = new Script();
 }
 
-$script->fillDeputes();
+executeFunction(function() {
+    $script->fillDeputes();
+}, "fillDeputes");
 $script->addBsky();
 $script->deputeAll();
 $script->deputeLast();
