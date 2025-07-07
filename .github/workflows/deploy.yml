@@ -11,21 +11,23 @@ on:
   push:
     branches: [ci-cd/ssh-deploiement]
 
-  steps:
-    - name: Get the public IP of the GitHub runner
-      id: ip
-      uses: haythem/public-ip@v1.3
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get the public IP of the GitHub runner
+        id: ip
+        uses: haythem/public-ip@v1.3
 
-    - name: List all whitelisted IPs
-      id: list-ips
-      run: |
-        echo "GitHub Runner Public IP: ${{ steps.ip.outputs.ip }}"
+      - name: List all whitelisted IPs
+        id: list-ips
+        run: |
+          echo "GitHub Runner Public IP: ${{ steps.ip.outputs.ip }}"
 
-        JSON_OUTPUT=$(curl -sX GET "https://${{ secrets.USERNAME }}:${{ secrets.PASSWORD }}@${{ secrets.CPANEL_SERVER }}:2083/frontend/o2switch/o2switch-ssh-whitelist/index.live.php?r=list")
+          JSON_OUTPUT=$(curl -sX GET "https://${{ secrets.USERNAME }}:${{ secrets.PASSWORD }}@${{ secrets.CPANEL_SERVER }}:2083/frontend/o2switch/o2switch-ssh-whitelist/index.live.php?r=list")
 
-        echo "Whitelisted IPs (JSON):"
-        echo "$JSON_OUTPUT" | jq .
+          echo "Whitelisted IPs (JSON):"
+          echo "$JSON_OUTPUT" | jq .
 
-        # Extraire les adresses IP et les stocker dans une variable
-        IPS=$(echo "$JSON_OUTPUT" | jq -r '.data.list[].address' | sort -u | paste -sd "," -)
-        echo "ips=$IPS" >> $GITHUB_OUTPUT
+          IPS=$(echo "$JSON_OUTPUT" | jq -r '.data.list[].address' | sort -u | paste -sd "," -)
+          echo "ips=$IPS" >> $GITHUB_OUTPUT
