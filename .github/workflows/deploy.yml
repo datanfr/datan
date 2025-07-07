@@ -31,3 +31,33 @@ jobs:
 
           IPS=$(echo "$JSON_OUTPUT" | jq -r '.data.list[].address' | sort -u | paste -sd "," -)
           echo "ips=$IPS" >> $GITHUB_OUTPUT
+
+      #Demander confirmation pour les adsresses IP déjà présentes dans le pare-feu
+      # - name: Remove unneeded whitelisted IPs
+      #   run: |
+      #     KEEP_IPS="123.45.67.89 98.76.54.32 ${{ steps.ip.outputs.ipv4 }}"
+
+      #     ALL_IPS=$(curl -sX GET "https://${{ secrets.CPANEL_USERNAME }}:${{ secrets.CPANEL_PASSWORD }}@${{ secrets.CPANEL_SERVER }}:2083/frontend/o2switch/o2switch-ssh-whitelist/index.live.php?r=list" | jq -r '.data.list[].address' | sort -u)
+
+      #     for ip in $ALL_IPS; do
+      #       if [[ ! " $KEEP_IPS " =~ " $ip " ]]; then
+      #         echo "Removing IP: $ip"
+      #         curl -sX GET "https://${{ secrets.CPANEL_USERNAME }}:${{ secrets.CPANEL_PASSWORD }}@${{ secrets.CPANEL_SERVER }}:2083/frontend/o2switch/o2switch-ssh-whitelist/index.live.php?r=remove&address=$ip&direction=in&port=22"
+      #         curl -sX GET "https://${{ secrets.CPANEL_USERNAME }}:${{ secrets.CPANEL_PASSWORD }}@${{ secrets.CPANEL_SERVER }}:2083/frontend/o2switch/o2switch-ssh-whitelist/index.live.php?r=remove&address=$ip&direction=out&port=22"
+      #       else
+      #         echo "Keeping IP: $ip"
+      #       fi
+      #     done
+
+      - name: Add runner IP to whitelist
+        run: |
+          curl -sX POST \
+            -d "whitelist[address]=${{ steps.ip.outputs.ipv4 }}" \
+            -d "whitelist[port]=22" \
+            "https://${{ secrets.CPANEL_USERNAME }}:${{ secrets.CPANEL_PASSWORD }}@${{ secrets.CPANEL_SERVER }}:2083/frontend/o2switch/o2switch-ssh-whitelist/index.live.php?r=add"
+
+      - name: Verify whitelist contains runner IP
+        run: |
+          curl -sX GET \
+            "https://${{ secrets.CPANEL_USERNAME }}:${{ secrets.CPANEL_PASSWORD }}@${{ secrets.CPANEL_SERVER }}:2083/frontend/o2switch/o2switch-ssh-whitelist/index.live.php?r=list" \
+            | grep "${{ steps.ip.outputs.ipv4 }}"
