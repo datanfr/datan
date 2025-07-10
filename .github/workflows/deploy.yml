@@ -32,7 +32,7 @@ jobs:
           IPS=$(echo "$JSON_OUTPUT" | jq -r '.data.list[].address' | sort -u | paste -sd "," -)
           echo "ips=$IPS" >> $GITHUB_OUTPUT
 
-      #Demander confirmation pour les adsresses IP déjà présentes dans le pare-feu
+      #Les adresses IP à conserver dans la liste blanche du serveur sont à définir dans KEEP_IPS
       - name: Remove unneeded whitelisted IPs
         run: |
           KEEP_IPS="109.137.71.77 92.184.106.90 ${{ steps.ip.outputs.ipv4 }}"
