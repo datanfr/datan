@@ -33,21 +33,21 @@ jobs:
           echo "ips=$IPS" >> $GITHUB_OUTPUT
 
       #Demander confirmation pour les adsresses IP déjà présentes dans le pare-feu
-      # - name: Remove unneeded whitelisted IPs
-      #   run: |
-      #     KEEP_IPS="123.45.67.89 98.76.54.32 ${{ steps.ip.outputs.ipv4 }}"
+      - name: Remove unneeded whitelisted IPs
+        run: |
+          KEEP_IPS="109.137.71.77 92.184.106.90 ${{ steps.ip.outputs.ipv4 }}"
 
-      #     ALL_IPS=$(curl -sX GET "https://${{ secrets.CPANEL_USERNAME }}:${{ secrets.CPANEL_PASSWORD }}@${{ secrets.CPANEL_SERVER }}:2083/frontend/o2switch/o2switch-ssh-whitelist/index.live.php?r=list" | jq -r '.data.list[].address' | sort -u)
+          ALL_IPS=$(curl -sX GET "https://${{ secrets.CPANEL_USERNAME }}:${{ secrets.CPANEL_PASSWORD }}@${{ secrets.CPANEL_SERVER }}:2083/frontend/o2switch/o2switch-ssh-whitelist/index.live.php?r=list" | jq -r '.data.list[].address' | sort -u)
 
-      #     for ip in $ALL_IPS; do
-      #       if [[ ! " $KEEP_IPS " =~ " $ip " ]]; then
-      #         echo "Removing IP: $ip"
-      #         curl -sX GET "https://${{ secrets.CPANEL_USERNAME }}:${{ secrets.CPANEL_PASSWORD }}@${{ secrets.CPANEL_SERVER }}:2083/frontend/o2switch/o2switch-ssh-whitelist/index.live.php?r=remove&address=$ip&direction=in&port=22"
-      #         curl -sX GET "https://${{ secrets.CPANEL_USERNAME }}:${{ secrets.CPANEL_PASSWORD }}@${{ secrets.CPANEL_SERVER }}:2083/frontend/o2switch/o2switch-ssh-whitelist/index.live.php?r=remove&address=$ip&direction=out&port=22"
-      #       else
-      #         echo "Keeping IP: $ip"
-      #       fi
-      #     done
+          for ip in $ALL_IPS; do
+            if [[ ! " $KEEP_IPS " =~ " $ip " ]]; then
+              echo "Removing IP: $ip"
+              curl -sX GET "https://${{ secrets.CPANEL_USERNAME }}:${{ secrets.CPANEL_PASSWORD }}@${{ secrets.CPANEL_SERVER }}:2083/frontend/o2switch/o2switch-ssh-whitelist/index.live.php?r=remove&address=$ip&direction=in&port=22"
+              curl -sX GET "https://${{ secrets.CPANEL_USERNAME }}:${{ secrets.CPANEL_PASSWORD }}@${{ secrets.CPANEL_SERVER }}:2083/frontend/o2switch/o2switch-ssh-whitelist/index.live.php?r=remove&address=$ip&direction=out&port=22"
+            else
+              echo "Keeping IP: $ip"
+            fi
+          done
 
       - name: Add runner IP to whitelist
         run: |
@@ -69,3 +69,50 @@ jobs:
           chmod 700 ~/.ssh 
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
           chmod 0400 ~/.ssh/id_rsa
+
+      # - name: Sending data with RSYNC
+      #   run: |
+      #     rsync --timeout=60 -e "ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa" \
+      #       --exclude='*/config/development' \
+      #       --exclude='*/logs/log-*.php' \
+      #       --exclude='*/cache/*' \
+      #       --exclude='user_guide_src/build/*' \
+      #       --exclude='user_guide_src/cilexer/build/*' \
+      #       --exclude='user_guide_src/cilexer/dist/*' \
+      #       --exclude='user_guide_src/cilexer/pycilexer.egg-info/*' \
+      #       --exclude='application/logs/*' \
+      #       --exclude='/vendor/' \
+      #       --exclude='application/config/custom_config.php' \
+      #       --exclude='node_modules' \
+      #       --exclude='test' \
+      #       --exclude='.sass-cache' \
+      #       --exclude='package-lock.json' \
+      #       --exclude='.gitattributes' \
+      #       --exclude='ressources' \
+      #       --exclude='.htaccess' \
+      #       --exclude='.env' \
+      #       --exclude='*.code-workspace' \
+      #       --exclude='scripts/*.zip' \
+      #       --exclude='scripts/votes_individual/*.zip' \
+      #       --exclude='scripts/architecture' \
+      #       --exclude='scripts/update_dataset/backup/*.sql' \
+      #       --exclude='assets/opendata' \
+      #       --exclude='assets/dataset_backup/general/*.sql' \
+      #       --exclude='assets/imgs/deputes_original/' \
+      #       --exclude='assets/imgs/deputes_ogp/' \
+      #       --exclude='assets/imgs/deputes_webp/' \
+      #       --exclude='assets/imgs/deputes_nobg/' \
+      #       --exclude='assets/imgs/deputes_nobg_import/' \
+      #       --exclude='assets/imgs/deputes_nobg_webp/' \
+      #       --exclude='assets/imgs/posts/' \
+      #       --exclude='assets/imgs/captcha/*.jpg' \
+      #       --exclude='assets/data/*.json' \
+      #       --exclude='assets/data/professions/election_4/*.pdf' \
+      #       --exclude='assets/data/professions/election_6/*.pdf' \
+      #       --exclude='assets/data/*.txt' \
+      #       --exclude='assets/css/bootstrap*' \
+      #       -av --delete ./ ${{ secrets.CPANEL_USERNAME }}@${{ secrets.CPANEL_SERVER }}:${{ secrets.DEPLOY_PATH }}
+
+      - name: Cleaning SSH keys
+        if: always()
+        run: rm -fr ~/.ssh
