@@ -13,5 +13,16 @@
       redirect();
     }
 
+    // Cache clear via CLI only (for Github runner)
+    public function clear_cli() {
+      if (!is_cli()) {
+          show_error('Access forbidden', 403);
+      }
+        delete_all_cache();
+        $this->db->cache_delete_all();
+
+        echo "Cache successfully cleared via CLI\n";
+    }
+
   }
 ?>
