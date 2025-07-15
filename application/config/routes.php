@@ -1,5 +1,5 @@
 <?php
-defined('BASEPATH') OR exit('No direct script access allowed');
+defined('BASEPATH') or exit('No direct script access allowed');
 
 /*
 | -------------------------------------------------------------------------
@@ -76,6 +76,13 @@ $route['admin/parrainages'] = 'admin/parrainages';
 $route['admin/parrainages/modify/(:any)'] = 'admin/modify_parrainage/$1';
 $route['admin/exposes'] = 'admin/exposes';
 $route['admin/exposes/modify/(:any)'] = 'admin/exposes_modify/$1';
+$route['admin/campagnes'] = 'admin/campaigns_list';
+$route['admin/campagnes/create'] = 'admin/create_campaign';
+$route['admin/campagnes/delete/(:any)'] = 'admin/delete_campaign/$1';
+$route['admin/campagnes/edit/(:any)'] = 'admin/edit_campaign/$1';
+$route['admin/campagnes/toggle'] = 'admin/toggle_campaign_active';
+
+
 // MpDashboard
 $route['dashboard'] = 'dashboardMP/index';
 $route['dashboard/elections/(:any)'] = 'dashboardMP/elections/$1';
