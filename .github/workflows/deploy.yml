@@ -15,6 +15,10 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
       - name: Get the public IP of the GitHub runner
         id: ip
         uses: haythem/public-ip@v1.3
@@ -22,8 +26,6 @@ jobs:
       - name: List all whitelisted IPs
         id: list-ips
         run: |
-          echo "GitHub Runner Public IP: ${{ steps.ip.outputs.ip }}"
-
           JSON_OUTPUT=$(curl -sX GET "https://${{ secrets.CPANEL_USERNAME }}:${{ secrets.CPANEL_PASSWORD }}@${{ secrets.CPANEL_SERVER }}:2083/frontend/o2switch/o2switch-ssh-whitelist/index.live.php?r=list")
 
           echo "Whitelisted IPs (JSON):"
@@ -72,7 +74,7 @@ jobs:
 
       # - name: Sending data with RSYNC
       #   run: |
-      #     rsync --timeout=60 -e "ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa" \
+      #     rsync --timeout=300 -e "ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa" \
       #       --exclude='*/config/development' \
       #       --exclude='*/logs/log-*.php' \
       #       --exclude='*/cache/*' \
@@ -111,7 +113,7 @@ jobs:
       #       --exclude='assets/data/professions/election_6/*.pdf' \
       #       --exclude='assets/data/*.txt' \
       #       --exclude='assets/css/bootstrap*' \
-      #       -av --delete ./ ${{ secrets.CPANEL_USERNAME }}@${{ secrets.CPANEL_SERVER }}:${{ secrets.DEPLOY_PATH }}
+      #       -av --delete ./ ${{ secrets.CPANEL_USERNAME }}@${{ secrets.CPANEL_SERVER }}:dev.datan.fr
 
       - name: Cleaning SSH keys
         if: always()
