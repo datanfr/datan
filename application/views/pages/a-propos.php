@@ -10,7 +10,7 @@
 <div class="container my-3 pb-5 pg-page">
   <div class="row">
     <div class="col-lg-8 offset-lg-2 col-md-10 offset-md-1">
-      <h2 class="mt-4">En quelques mots</h2>
+      <h2 class="mt-4">En quelques mots (test)</h2>
       <p>
         <b>Datan</b> est un outil indépendant visant à <b>mieux rendre compte de l’activité parlementaire des députés</b>. Pour ce faire, l’accent est mis sur les pratiques de vote, permettant ainsi aux citoyens de comprendre le positionnement réel de leurs parlementaires.
       </p>
