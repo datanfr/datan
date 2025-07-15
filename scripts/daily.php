@@ -3069,7 +3069,7 @@ class Script
 
         while ($vote = $query->fetch()){
             $voteNumero = $vote['voteNumero'];
-            echo "Scrap AN's website. Vote number: " . $voteNumero . "\n";
+            //echo "Scrap AN's website. Vote number: " . $voteNumero . "\n";
             $url = "https://www.assemblee-nationale.fr/dyn/" . $this->legislature_to_get . "/scrutins/" . $voteNumero;
             $html = file_get_html($url);
             $a = FALSE;       
@@ -3137,7 +3137,7 @@ class Script
                             $stmt->bindParam(':id', $id, PDO::PARAM_INT);
 
                             if ($stmt->execute()) {
-                                echo "AmendmentId $amdtId updated successfully.\n";
+                                //echo "AmendmentId $amdtId updated successfully.\n";
                             } else {
                                 echo "Error updating record: " . print_r($stmt->errorInfo(), true);
                             }
