@@ -74,6 +74,7 @@ jobs:
 
       - name: Sending data with RSYNC
         run: |
+          BACKUP_DIR=../backup_datan/$(date +%Y%m%d_%H%M%S)
           rsync --timeout=300 -e "ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa" \
             --exclude='*/config/development' \
             --exclude='*/logs/log-*.php' \
@@ -113,7 +114,8 @@ jobs:
             --exclude='assets/data/professions/election_6/*.pdf' \
             --exclude='assets/data/*.txt' \
             --exclude='assets/css/bootstrap*' \
-            -av --delete ./ ${{ secrets.CPANEL_USERNAME }}@${{ secrets.CPANEL_SERVER }}:dev.datan.fr
+            -av --backup --backup-dir=$BACKUP_DIR --delete ./ ${{ secrets.CPANEL_USERNAME }}@${{ secrets.CPANEL_SERVER }}:dev.datan.fr
+
 
       - name: Cleaning SSH keys
         if: always()
