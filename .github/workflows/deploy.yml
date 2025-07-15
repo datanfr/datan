@@ -18,106 +18,109 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
+      - name: List files with details
+        run: ls -lau
 
-      - name: Get the public IP of the GitHub runner
-        id: ip
-        uses: haythem/public-ip@v1.3
+      # - name: Get the public IP of the GitHub runner
+      #   id: ip
+      #   uses: haythem/public-ip@v1.3
 
-      - name: List all whitelisted IPs
-        id: list-ips
-        run: |
-          JSON_OUTPUT=$(curl -sX GET "https://${{ secrets.CPANEL_USERNAME }}:${{ secrets.CPANEL_PASSWORD }}@${{ secrets.CPANEL_SERVER }}:2083/frontend/o2switch/o2switch-ssh-whitelist/index.live.php?r=list")
+      # - name: List all whitelisted IPs
+      #   id: list-ips
+      #   run: |
+      #     JSON_OUTPUT=$(curl -sX GET "https://${{ secrets.CPANEL_USERNAME }}:${{ secrets.CPANEL_PASSWORD }}@${{ secrets.CPANEL_SERVER }}:2083/frontend/o2switch/o2switch-ssh-whitelist/index.live.php?r=list")
 
-          echo "Whitelisted IPs (JSON):"
-          echo "$JSON_OUTPUT" | jq .
+      #     echo "Whitelisted IPs (JSON):"
+      #     echo "$JSON_OUTPUT" | jq .
 
-          IPS=$(echo "$JSON_OUTPUT" | jq -r '.data.list[].address' | sort -u | paste -sd "," -)
-          echo "ips=$IPS" >> $GITHUB_OUTPUT
+      #     IPS=$(echo "$JSON_OUTPUT" | jq -r '.data.list[].address' | sort -u | paste -sd "," -)
+      #     echo "ips=$IPS" >> $GITHUB_OUTPUT
 
-      #Les adresses IP à conserver dans la liste blanche du serveur sont à définir dans KEEP_IPS
-      - name: Remove unneeded whitelisted IPs
-        run: |
-          KEEP_IPS="109.137.71.77 92.184.106.90 ${{ steps.ip.outputs.ipv4 }}"
+      # #Les adresses IP à conserver dans la liste blanche du serveur sont à définir dans KEEP_IPS
+      # - name: Remove unneeded whitelisted IPs
+      #   run: |
+      #     KEEP_IPS="109.137.71.77 92.184.106.90 ${{ steps.ip.outputs.ipv4 }}"
 
-          ALL_IPS=$(curl -sX GET "https://${{ secrets.CPANEL_USERNAME }}:${{ secrets.CPANEL_PASSWORD }}@${{ secrets.CPANEL_SERVER }}:2083/frontend/o2switch/o2switch-ssh-whitelist/index.live.php?r=list" | jq -r '.data.list[].address' | sort -u)
+      #     ALL_IPS=$(curl -sX GET "https://${{ secrets.CPANEL_USERNAME }}:${{ secrets.CPANEL_PASSWORD }}@${{ secrets.CPANEL_SERVER }}:2083/frontend/o2switch/o2switch-ssh-whitelist/index.live.php?r=list" | jq -r '.data.list[].address' | sort -u)
 
-          for ip in $ALL_IPS; do
-            if [[ ! " $KEEP_IPS " =~ " $ip " ]]; then
-              echo "Removing IP: $ip"
-              curl -sX GET "https://${{ secrets.CPANEL_USERNAME }}:${{ secrets.CPANEL_PASSWORD }}@${{ secrets.CPANEL_SERVER }}:2083/frontend/o2switch/o2switch-ssh-whitelist/index.live.php?r=remove&address=$ip&direction=in&port=22"
-              curl -sX GET "https://${{ secrets.CPANEL_USERNAME }}:${{ secrets.CPANEL_PASSWORD }}@${{ secrets.CPANEL_SERVER }}:2083/frontend/o2switch/o2switch-ssh-whitelist/index.live.php?r=remove&address=$ip&direction=out&port=22"
-            else
-              echo "Keeping IP: $ip"
-            fi
-          done
+      #     for ip in $ALL_IPS; do
+      #       if [[ ! " $KEEP_IPS " =~ " $ip " ]]; then
+      #         echo "Removing IP: $ip"
+      #         curl -sX GET "https://${{ secrets.CPANEL_USERNAME }}:${{ secrets.CPANEL_PASSWORD }}@${{ secrets.CPANEL_SERVER }}:2083/frontend/o2switch/o2switch-ssh-whitelist/index.live.php?r=remove&address=$ip&direction=in&port=22"
+      #         curl -sX GET "https://${{ secrets.CPANEL_USERNAME }}:${{ secrets.CPANEL_PASSWORD }}@${{ secrets.CPANEL_SERVER }}:2083/frontend/o2switch/o2switch-ssh-whitelist/index.live.php?r=remove&address=$ip&direction=out&port=22"
+      #       else
+      #         echo "Keeping IP: $ip"
+      #       fi
+      #     done
 
-      - name: Add runner IP to whitelist
-        run: |
-          curl -sX POST \
-            -d "whitelist[address]=${{ steps.ip.outputs.ipv4 }}" \
-            -d "whitelist[port]=22" \
-            "https://${{ secrets.CPANEL_USERNAME }}:${{ secrets.CPANEL_PASSWORD }}@${{ secrets.CPANEL_SERVER }}:2083/frontend/o2switch/o2switch-ssh-whitelist/index.live.php?r=add"
+      # - name: Add runner IP to whitelist
+      #   run: |
+      #     curl -sX POST \
+      #       -d "whitelist[address]=${{ steps.ip.outputs.ipv4 }}" \
+      #       -d "whitelist[port]=22" \
+      #       "https://${{ secrets.CPANEL_USERNAME }}:${{ secrets.CPANEL_PASSWORD }}@${{ secrets.CPANEL_SERVER }}:2083/frontend/o2switch/o2switch-ssh-whitelist/index.live.php?r=add"
 
-      - name: Verify whitelist contains runner IP
-        run: |
-          curl -sX GET \
-            "https://${{ secrets.CPANEL_USERNAME }}:${{ secrets.CPANEL_PASSWORD }}@${{ secrets.CPANEL_SERVER }}:2083/frontend/o2switch/o2switch-ssh-whitelist/index.live.php?r=list" \
-            | grep "${{ steps.ip.outputs.ipv4 }}"
+      # - name: Verify whitelist contains runner IP
+      #   run: |
+      #     curl -sX GET \
+      #       "https://${{ secrets.CPANEL_USERNAME }}:${{ secrets.CPANEL_PASSWORD }}@${{ secrets.CPANEL_SERVER }}:2083/frontend/o2switch/o2switch-ssh-whitelist/index.live.php?r=list" \
+      #       | grep "${{ steps.ip.outputs.ipv4 }}"
 
-      - name: Installing the SSH Key
-        run: |
-          eval $(ssh-agent -s)
-          mkdir -p ~/.ssh       
-          chmod 700 ~/.ssh 
-          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
-          chmod 0400 ~/.ssh/id_rsa
+      # - name: Installing the SSH Key
+      #   run: |
+      #     eval $(ssh-agent -s)
+      #     mkdir -p ~/.ssh       
+      #     chmod 700 ~/.ssh 
+      #     echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+      #     chmod 0400 ~/.ssh/id_rsa
 
-      - name: Sending data with RSYNC
-        run: |
-          BACKUP_DIR=../backup_datan/$(date +%Y%m%d_%H%M%S)
-          rsync --timeout=300 -e "ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa" \
-            --exclude='*/config/development' \
-            --exclude='*/logs/log-*.php' \
-            --exclude='*/cache/*' \
-            --exclude='user_guide_src/build/*' \
-            --exclude='user_guide_src/cilexer/build/*' \
-            --exclude='user_guide_src/cilexer/dist/*' \
-            --exclude='user_guide_src/cilexer/pycilexer.egg-info/*' \
-            --exclude='application/logs/*' \
-            --exclude='/vendor/' \
-            --exclude='application/config/custom_config.php' \
-            --exclude='node_modules' \
-            --exclude='test' \
-            --exclude='.sass-cache' \
-            --exclude='package-lock.json' \
-            --exclude='.gitattributes' \
-            --exclude='ressources' \
-            --exclude='.htaccess' \
-            --exclude='.env' \
-            --exclude='*.code-workspace' \
-            --exclude='scripts/*.zip' \
-            --exclude='scripts/votes_individual/*.zip' \
-            --exclude='scripts/architecture' \
-            --exclude='scripts/update_dataset/backup/*.sql' \
-            --exclude='assets/opendata' \
-            --exclude='assets/dataset_backup/general/*.sql' \
-            --exclude='assets/imgs/deputes_original/' \
-            --exclude='assets/imgs/deputes_ogp/' \
-            --exclude='assets/imgs/deputes_webp/' \
-            --exclude='assets/imgs/deputes_nobg/' \
-            --exclude='assets/imgs/deputes_nobg_import/' \
-            --exclude='assets/imgs/deputes_nobg_webp/' \
-            --exclude='assets/imgs/posts/' \
-            --exclude='assets/imgs/captcha/*.jpg' \
-            --exclude='assets/data/*.json' \
-            --exclude='assets/data/professions/election_4/*.pdf' \
-            --exclude='assets/data/professions/election_6/*.pdf' \
-            --exclude='assets/data/*.txt' \
-            --exclude='assets/css/bootstrap*' \
-            -av --dry-run --itemize-changes --backup --backup-dir=$BACKUP_DIR --delete ./ ${{ secrets.CPANEL_USERNAME }}@${{ secrets.CPANEL_SERVER }}:dev.datan.fr
+      # - name: Sending data with RSYNC
+      #   run: |
+      #     BACKUP_DIR=../backup_datan/$(date +%Y%m%d_%H%M%S)
+      #     rsync --timeout=300 -e "ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa" \
+      #       --exclude='*/config/development' \
+      #       --exclude='*/logs/log-*.php' \
+      #       --exclude='*/cache/*' \
+      #       --exclude='user_guide_src/build/*' \
+      #       --exclude='user_guide_src/cilexer/build/*' \
+      #       --exclude='user_guide_src/cilexer/dist/*' \
+      #       --exclude='user_guide_src/cilexer/pycilexer.egg-info/*' \
+      #       --exclude='application/logs/*' \
+      #       --exclude='/vendor/' \
+      #       --exclude='application/config/custom_config.php' \
+      #       --exclude='node_modules' \
+      #       --exclude='test' \
+      #       --exclude='.sass-cache' \
+      #       --exclude='package-lock.json' \
+      #       --exclude='.gitattributes' \
+      #       --exclude='ressources' \
+      #       --exclude='.htaccess' \
+      #       --exclude='.env' \
+      #       --exclude='*.code-workspace' \
+      #       --exclude='scripts/*.zip' \
+      #       --exclude='scripts/votes_individual/*.zip' \
+      #       --exclude='scripts/architecture' \
+      #       --exclude='scripts/update_dataset/backup/*.sql' \
+      #       --exclude='assets/opendata' \
+      #       --exclude='assets/dataset_backup/general/*.sql' \
+      #       --exclude='assets/imgs/deputes_original/' \
+      #       --exclude='assets/imgs/deputes_ogp/' \
+      #       --exclude='assets/imgs/deputes_webp/' \
+      #       --exclude='assets/imgs/deputes_nobg/' \
+      #       --exclude='assets/imgs/deputes_nobg_import/' \
+      #       --exclude='assets/imgs/deputes_nobg_webp/' \
+      #       --exclude='assets/imgs/posts/' \
+      #       --exclude='assets/imgs/captcha/*.jpg' \
+      #       --exclude='assets/data/*.json' \
+      #       --exclude='assets/data/professions/election_4/*.pdf' \
+      #       --exclude='assets/data/professions/election_6/*.pdf' \
+      #       --exclude='assets/data/*.txt' \
+      #       --exclude='assets/css/bootstrap*' \
+      #       -avzi --dry-run --backup --backup-dir=$BACKUP_DIR --delete ./ ${{ secrets.CPANEL_USERNAME }}@${{ secrets.CPANEL_SERVER }}:dev.datan.fr
 
 
 
-      - name: Cleaning SSH keys
-        if: always()
-        run: rm -fr ~/.ssh
+
+      # - name: Cleaning SSH keys
+      #   if: always()
+      #   run: rm -fr ~/.ssh
