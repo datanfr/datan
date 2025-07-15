@@ -72,48 +72,48 @@ jobs:
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
           chmod 0400 ~/.ssh/id_rsa
 
-      # - name: Sending data with RSYNC
-      #   run: |
-      #     rsync --timeout=300 -e "ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa" \
-      #       --exclude='*/config/development' \
-      #       --exclude='*/logs/log-*.php' \
-      #       --exclude='*/cache/*' \
-      #       --exclude='user_guide_src/build/*' \
-      #       --exclude='user_guide_src/cilexer/build/*' \
-      #       --exclude='user_guide_src/cilexer/dist/*' \
-      #       --exclude='user_guide_src/cilexer/pycilexer.egg-info/*' \
-      #       --exclude='application/logs/*' \
-      #       --exclude='/vendor/' \
-      #       --exclude='application/config/custom_config.php' \
-      #       --exclude='node_modules' \
-      #       --exclude='test' \
-      #       --exclude='.sass-cache' \
-      #       --exclude='package-lock.json' \
-      #       --exclude='.gitattributes' \
-      #       --exclude='ressources' \
-      #       --exclude='.htaccess' \
-      #       --exclude='.env' \
-      #       --exclude='*.code-workspace' \
-      #       --exclude='scripts/*.zip' \
-      #       --exclude='scripts/votes_individual/*.zip' \
-      #       --exclude='scripts/architecture' \
-      #       --exclude='scripts/update_dataset/backup/*.sql' \
-      #       --exclude='assets/opendata' \
-      #       --exclude='assets/dataset_backup/general/*.sql' \
-      #       --exclude='assets/imgs/deputes_original/' \
-      #       --exclude='assets/imgs/deputes_ogp/' \
-      #       --exclude='assets/imgs/deputes_webp/' \
-      #       --exclude='assets/imgs/deputes_nobg/' \
-      #       --exclude='assets/imgs/deputes_nobg_import/' \
-      #       --exclude='assets/imgs/deputes_nobg_webp/' \
-      #       --exclude='assets/imgs/posts/' \
-      #       --exclude='assets/imgs/captcha/*.jpg' \
-      #       --exclude='assets/data/*.json' \
-      #       --exclude='assets/data/professions/election_4/*.pdf' \
-      #       --exclude='assets/data/professions/election_6/*.pdf' \
-      #       --exclude='assets/data/*.txt' \
-      #       --exclude='assets/css/bootstrap*' \
-      #       -av --delete ./ ${{ secrets.CPANEL_USERNAME }}@${{ secrets.CPANEL_SERVER }}:dev.datan.fr
+      - name: Sending data with RSYNC
+        run: |
+          rsync --timeout=300 -e "ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa" \
+            --exclude='*/config/development' \
+            --exclude='*/logs/log-*.php' \
+            --exclude='*/cache/*' \
+            --exclude='user_guide_src/build/*' \
+            --exclude='user_guide_src/cilexer/build/*' \
+            --exclude='user_guide_src/cilexer/dist/*' \
+            --exclude='user_guide_src/cilexer/pycilexer.egg-info/*' \
+            --exclude='application/logs/*' \
+            --exclude='/vendor/' \
+            --exclude='application/config/custom_config.php' \
+            --exclude='node_modules' \
+            --exclude='test' \
+            --exclude='.sass-cache' \
+            --exclude='package-lock.json' \
+            --exclude='.gitattributes' \
+            --exclude='ressources' \
+            --exclude='.htaccess' \
+            --exclude='.env' \
+            --exclude='*.code-workspace' \
+            --exclude='scripts/*.zip' \
+            --exclude='scripts/votes_individual/*.zip' \
+            --exclude='scripts/architecture' \
+            --exclude='scripts/update_dataset/backup/*.sql' \
+            --exclude='assets/opendata' \
+            --exclude='assets/dataset_backup/general/*.sql' \
+            --exclude='assets/imgs/deputes_original/' \
+            --exclude='assets/imgs/deputes_ogp/' \
+            --exclude='assets/imgs/deputes_webp/' \
+            --exclude='assets/imgs/deputes_nobg/' \
+            --exclude='assets/imgs/deputes_nobg_import/' \
+            --exclude='assets/imgs/deputes_nobg_webp/' \
+            --exclude='assets/imgs/posts/' \
+            --exclude='assets/imgs/captcha/*.jpg' \
+            --exclude='assets/data/*.json' \
+            --exclude='assets/data/professions/election_4/*.pdf' \
+            --exclude='assets/data/professions/election_6/*.pdf' \
+            --exclude='assets/data/*.txt' \
+            --exclude='assets/css/bootstrap*' \
+            -av --delete ./ ${{ secrets.CPANEL_USERNAME }}@${{ secrets.CPANEL_SERVER }}:dev.datan.fr
 
       - name: Cleaning SSH keys
         if: always()
