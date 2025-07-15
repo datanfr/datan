@@ -3,6 +3,36 @@ error_reporting(E_ALL);
 ini_set('display_errors', 1);
 include "lib/simplehtmldom_1_9/simple_html_dom.php";
 include "include/json_minify.php";
+
+// wrapper pour Script
+class LoggingProxy {
+    private $target; // L'objet original
+    private $className;
+
+    public function __construct($target) {
+        $this->target = $target;
+        $this->className = get_class($target);
+    }
+
+    public function __call(string $funcName, array $arguments) {
+        if (!method_exists($this->target, $funcName)) {
+            throw new \BadMethodCallException("La méthode {$funcName} n'existe pas sur la classe {$this->className}");
+        }
+
+        echo "Function {$this->className}::{$funcName} starting\n";
+        $startTime = microtime(true);
+
+        // Appelle la méthode originale sur l'objet cible
+        $result = call_user_func_array([$this->target, $funcName], $arguments);
+
+        $endTime = microtime(true);
+        $executionTime = $endTime - $startTime;
+        echo "Function {$this->className}::{$funcName} finished. It took " . round($executionTime, 2) . " seconds.\n";
+
+    return $result;
+    }
+}
+
 class Script
 {
     private $bdd;
@@ -46,7 +76,6 @@ class Script
         }
     }
 
-    // Adding a public getter method to access private properties
     public function getMpPhotos()
     {
         return $this->mp_photos;
@@ -58,21 +87,6 @@ class Script
         $time_post = microtime(true);
         $exec_time = $time_post - $this->time_pre;
         echo "Script is over ! It took: " . round($exec_time, 2) . " seconds.\n";
-    }
-
-    public function executeFunction(callable $func, string $funcName) {
-        echo "Function $funcName starting\n";
-        $startTime = microtime(true);
-        try {
-            $result = $func();
-        } catch (Exception $e) {
-            $this->log('ERROR', "Function $funcName failed: " . $e->getMessage());
-            throw $e; // Re-throw the exception if you want calling code to handle it
-        }
-        $endTime = microtime(true);
-        $executionTime = $endTime - $startTime;
-        echo "Function $funcName finished. It took " . round($executionTime, 2) . " seconds.\n";
-        return $result;
     }
 
     private function majorityGroups()
@@ -4514,12 +4528,13 @@ class Script
 }
 
 if (isset($argv[1]) && isset($argv[2])) {
-  $script = new Script($argv[1], $argv[2]);
+  $script_raw = new Script($argv[1], $argv[2]);
 } elseif (isset($argv[1])) {
-  $script = new Script($argv[1]);
+  $script_raw = new Script($argv[1]);
 } else {
-  $script = new Script();
+  $script_raw = new Script();
 }
+$script = new LoggingProxy($script_raw);
 
 // Create a functionsToExecute array
 $functionsToExecute = array(
@@ -4588,9 +4603,11 @@ $functionsToExecute = array_merge($functionsToExecute, array(
 
 // Execute all functions
 foreach ($functionsToExecute as $function) {
-    executeFunction(function() use ($script, $function) {
-        $script->$function();
-    }, $function);
+    try {
+        $script->$function(); // Déclenche LoggingProxy::__call()
+    } catch (\Throwable $e) {
+        echo "Erreur lors de l'exécution de la fonction {$function}: " . $e->getMessage() . "\n";
+    }
 }
 
 //$script->classParticipationSix(); // Wait for more votes
