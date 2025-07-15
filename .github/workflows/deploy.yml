@@ -114,7 +114,8 @@ jobs:
             --exclude='assets/data/professions/election_6/*.pdf' \
             --exclude='assets/data/*.txt' \
             --exclude='assets/css/bootstrap*' \
-            -av --backup --backup-dir=$BACKUP_DIR --delete ./ ${{ secrets.CPANEL_USERNAME }}@${{ secrets.CPANEL_SERVER }}:dev.datan.fr
+            -av --dry-run --itemize-changes --backup --backup-dir=$BACKUP_DIR --delete ./ ${{ secrets.CPANEL_USERNAME }}@${{ secrets.CPANEL_SERVER }}:dev.datan.fr
+
 
 
       - name: Cleaning SSH keys
