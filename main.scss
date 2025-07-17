@@ -15,11 +15,10 @@ $vert : #008068;  // test nouvelle couleur
 $bleu: #00668E;
 $yellow: #ffba4a;
 $text-gray: #4D5755;
-// $text-gray-light: #AAAAAA;  -----> couleur d'origine
-$text-gray-light : #697775;// test nouvelle couleur
+$text-gray-light : #475251;
 $text-black: #4C4C4C;
-// $bg-colour: #F3F5F6;   -----> couleur d'origine
-$bg-colour: #FCFCFC; // test nouvelle couleur
+$bg-colour: #F3F5F6;
+//$bg-colour: #FCFCFC; // Clementine's test but pbs w/ cards (back to original color)
 $body-bg: $bg-colour;
 $primary: $vert;
 $info: $bleu;
