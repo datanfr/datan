@@ -210,9 +210,4 @@ $route['default_controller'] = 'home/index';
 // 404 PAGE
 $route['404_override'] = 'errormanager/error404';
 
-$route['test/message/(:any)'] = 'test/message/$1';
-$route['test/message'] = 'test/message';  
-
-
-
 $route['(.*)'] = "none";
