@@ -193,6 +193,7 @@ $route['demande-compte-depute'] = 'users/demande_mp';
 $route['classements'] = 'redirection/redir/statistiques';
 // CACHE
 $route['cache/delete_all'] = 'cache/delete_all';
+$route['cache/clear_cli'] = 'cache/clear_cli';
 // LOGS
 $route['admin/logs'] = 'logViewerController/index';
 $route['admin/logs-scripts/(:any)'] = 'logs/index/$1';
@@ -208,5 +209,10 @@ $route['translate_uri_dashes'] = FALSE;
 $route['default_controller'] = 'home/index';
 // 404 PAGE
 $route['404_override'] = 'errormanager/error404';
+
+$route['test/message/(:any)'] = 'test/message/$1';
+$route['test/message'] = 'test/message';  
+
+
 
 $route['(.*)'] = "none";

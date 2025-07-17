@@ -3,7 +3,9 @@
 
     public function __construct() {
       parent::__construct();
-      $this->password_model->security_only_team();
+      if (!is_cli()) {
+        $this->password_model->security_only_team();
+      }
     }
 
     // Delete all cache
