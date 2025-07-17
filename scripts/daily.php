@@ -8,6 +8,7 @@ include "include/json_minify.php";
 class LoggingProxy {
     private $target; // L'objet original
     private $className;
+    private array $silentMethods = ['getMpPhotos']; // Not trigger 'echo'
 
     public function __construct($target) {
         $this->target = $target;
@@ -17,6 +18,11 @@ class LoggingProxy {
     public function __call(string $funcName, array $arguments) {
         if (!method_exists($this->target, $funcName)) {
             throw new \BadMethodCallException("La méthode {$funcName} n'existe pas sur la classe {$this->className}");
+        }
+
+        // Skip logging for selected methods
+        if (in_array($funcName, $this->silentMethods, true)) {
+            return call_user_func_array([$this->target, $funcName], $arguments);
         }
 
         echo "Function {$this->className}::{$funcName} starting\n";
