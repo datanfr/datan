@@ -180,7 +180,6 @@ class Script
 
     public function fillDeputes()
     {
-        $startTime = microtime(true); // Record the start time
 
         if ($this->legislature_to_get == 17) {
           $file = __DIR__ . '/AMO30_tous_acteurs_tous_mandats_tous_organes_historique_XVII.xml.zip';
