@@ -3,6 +3,42 @@ error_reporting(E_ALL);
 ini_set('display_errors', 1);
 include "lib/simplehtmldom_1_9/simple_html_dom.php";
 include "include/json_minify.php";
+
+// wrapper pour Script
+class LoggingProxy {
+    private $target; // L'objet original
+    private $className;
+    private array $silentMethods = ['getMpPhotos']; // Not trigger 'echo'
+
+    public function __construct($target) {
+        $this->target = $target;
+        $this->className = get_class($target);
+    }
+
+    public function __call(string $funcName, array $arguments) {
+        if (!method_exists($this->target, $funcName)) {
+            throw new \BadMethodCallException("La méthode {$funcName} n'existe pas sur la classe {$this->className}");
+        }
+
+        // Skip logging for selected methods
+        if (in_array($funcName, $this->silentMethods, true)) {
+            return call_user_func_array([$this->target, $funcName], $arguments);
+        }
+
+        echo "Function {$this->className}::{$funcName} starting\n";
+        $startTime = microtime(true);
+
+        // Appelle la méthode originale sur l'objet cible
+        $result = call_user_func_array([$this->target, $funcName], $arguments);
+
+        $endTime = microtime(true);
+        $executionTime = $endTime - $startTime;
+        echo "Done. It took " . round($executionTime, 2) . " seconds.\n";
+
+    return $result;
+    }
+}
+
 class Script
 {
     private $bdd;
@@ -38,7 +74,7 @@ class Script
             $this->bdd = new PDO(
                 'mysql:host=' . $_SERVER['DATABASE_HOST'] . ';dbname=' . $_SERVER['DATABASE_NAME'], $_SERVER['DATABASE_USERNAME'], $_SERVER['DATABASE_PASSWORD'],
                 array(
-                    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION, PDO::ATTR_PERSISTENT => true, PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8",
+                    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION, PDO::ATTR_PERSISTENT => false, PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8",
                 )
             );
         } catch (Exception $e) {
@@ -46,7 +82,6 @@ class Script
         }
     }
 
-    // Adding a public getter method to access private properties
     public function getMpPhotos()
     {
         return $this->mp_photos;
@@ -72,7 +107,6 @@ class Script
 
     private function opendata($query, $csv_filename, $dataset, $resource)
     {
-      echo "createCsvFile starting = ". $csv_filename ." \n";
 
       // query to get data from database
       $query = $this->bdd->query($query);
@@ -141,14 +175,12 @@ class Script
                 echo "Error inserting : " . $table . "\n" . $e->getMessage() . "\n";
                 die;
             }
-        } else {
-            echo "Nothing to insert in " . $table . "\n";
         }
     }
 
     public function fillDeputes()
     {
-        echo "fillDeputes starting \n";
+
         if ($this->legislature_to_get == 17) {
           $file = __DIR__ . '/AMO30_tous_acteurs_tous_mandats_tous_organes_historique_XVII.xml.zip';
         } elseif ($this->legislature_to_get == 16) {
@@ -431,7 +463,6 @@ class Script
                     }
                 }
                 if (($i + 1) % 1000 === 0) {
-                    echo "Let's insert until " . $i . "\n";
                     // insert deputes
                     $this->insertAll('deputes', $deputeFields, $deputes);
                     // insert mandat
@@ -449,7 +480,6 @@ class Script
                     $organes = [];
                 }
             }
-            echo "Let's insert until the end : " . $i . "\n";
             // insert deputes
             $this->insertAll('deputes', $deputeFields, $deputes);
             // insert mandat
@@ -524,13 +554,9 @@ class Script
                 ));
             }
         }
-
-        echo "fill Depute finished \n";
     }
 
     public function addBsky() {
-        echo "addBsky starting \n";
-
         // Create column bluesky if does not exist 
         $stmt = $this->bdd->query("SHOW COLUMNS FROM deputes_contacts LIKE 'bluesky'");
         $columnExists = $stmt->fetch();
@@ -564,7 +590,6 @@ class Script
 
     public function downloadPictures()
     {        
-        echo "downloadPictures starting \n";
         if (!getenv('API_KEY_NOBG')) {
             echo "no API key for nobg\n";
         }
@@ -669,8 +694,6 @@ class Script
 
     public function webpPictures()
     {
-        echo "webpPictures starting \n";
-
         // 1. Normal photos
         $dir = __DIR__ . "/../assets/imgs/deputes_original/";
         $newdir = __DIR__ . "/../assets/imgs/deputes_webp/";
@@ -733,7 +756,6 @@ class Script
 
     public function resmushPictures()
     {
-        echo "resmushPictures starting \n";
         $donnees = $this->bdd->query('
             SELECT d.mpId AS uid, d.legislature
             FROM deputes_last d
@@ -784,7 +806,6 @@ class Script
 
     public function groupeEffectif()
     {
-        echo "groupeEffectif starting \n";
         $this->bdd->query('
             DROP TABLE IF EXISTS groupes_effectif;
             CREATE TABLE groupes_effectif AS
@@ -806,8 +827,6 @@ class Script
 
     public function deputeAll()
     {
-        echo "deputeAll starting \n";
-
         $query = $this->bdd->query('
             SELECT mp.mpId, mp.legislature, d.nameUrl, d.nameFirst, d.nameLast, d.civ,
             YEAR(current_timestamp()) - YEAR(d.birthDate) - CASE WHEN MONTH(current_timestamp()) < MONTH(d.birthDate) OR (MONTH(current_timestamp()) = MONTH(d.birthDate) AND DAY(current_timestamp()) < DAY(d.birthDate)) THEN 1 ELSE 0 END AS age,
@@ -917,7 +936,6 @@ class Script
               'dateMaj' => $this->dateMaj);
             $deputes = array_merge($deputes, array_values($depute));
             if ($i % 1000 === 0) {
-                echo "Let's import until n " . $i . "\n";
                 $this->insertAll('deputes_all', $deputeFields, $deputes);
                 $deputes = [];
             }
@@ -928,7 +946,7 @@ class Script
 
     public function deputeLast()
     {
-        echo "deputeLast starting \n";
+
         $this->bdd->exec('DROP TABLE IF EXISTS deputes_last');
         $this->bdd->exec('
             CREATE TABLE deputes_last AS
@@ -953,7 +971,7 @@ class Script
 
     public function groupeStats()
     {
-        echo "groupeStats starting \n";
+
         $this->bdd->query("DROP TABLE IF EXISTS groupes_stats");
         $this->bdd->query('CREATE TABLE groupes_stats ( organeRef VARCHAR(15) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL , womenPct DECIMAL(4,2) NULL , womenN INT(3) NULL  , age DECIMAL(4,2) NULL, rose_index DECIMAL(4,3) ) ENGINE = MyISAM CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci;');
 
@@ -1075,8 +1093,6 @@ class Script
 
     public function groupeStatsHistory(){
 
-      echo "groupeStatsHistory starting \n";
-
       $this->bdd->query('CREATE TABLE IF NOT EXISTS `groupes_stats_history`(
         `organeRef` VARCHAR(15) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL ,
         `stat` VARCHAR(15) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL ,
@@ -1163,8 +1179,6 @@ class Script
 
     public function groupeMembersHistory(){
 
-      echo "groupeMembersHistory starting \n";
-
       $this->bdd->query('CREATE TABLE IF NOT EXISTS `groupes_effectif_history`(
         `organeRef` VARCHAR(15) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL ,
         `dateValue` DATE NOT NULL ,
@@ -1206,21 +1220,18 @@ class Script
           $effectifs = array_merge($effectifs, array_values($effectif));
 
           if ($i % 1000 === 0) {
-            echo "Let's insert until " . $i . "\n";
             $this->insertAll('groupes_effectif_history', $fields, $effectifs);
             $effectifs = [];
           }
           $i++;
         }
       }
-      echo "Let's insert until the end : " . $i . "\n";
       $this->insertAll('groupes_effectif_history', $fields, $effectifs);
 
     }
 
     public function parties()
     {
-        echo "parties starting \n";
 
         $this->bdd->exec('DROP TABLE IF EXISTS parties');
 
@@ -1258,7 +1269,7 @@ class Script
 
     public function legislature()
     {
-        echo "legislature starting \n";
+        
         $this->bdd->exec('CREATE TABLE IF NOT EXISTS legislature (
             id INT(3) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
             organeRef VARCHAR(30) NOT NULL,
@@ -1303,8 +1314,8 @@ class Script
 
     public function vote()
     {
+
         // THIS FUNCTION UPDATE THE FOLLOWING TABLES --> votes ; votes_info ; votes_groupes
-        echo "vote starting \n";
         $n = 1;
 
         // SCRAPPING DEPENDING ON LEGISLATURE
@@ -1537,7 +1548,6 @@ class Script
                         break;
                     }
                     if ($n % 50 === 0) {
-                        echo "Let's insert votes \n";
                         // insert votes
                         $this->insertAll('votes', $voteMainFields, $votesMain);
                         // insert votes infos
@@ -1551,7 +1561,6 @@ class Script
                     $n++;
                 }
                 if ($n % 50 !== 0) {
-                    echo "Let's insert votes \n";
                     $this->insertAll('votes', $voteMainFields, $votesMain);
                     // insert votes infos
                     $this->insertAll('votes_info', $voteInfoFields, $votesInfo);
@@ -1744,7 +1753,6 @@ class Script
                             }
                         }
 
-                        echo "Let's insert scrutins from " . $number_to_import . " to " . $until_number . "\n";
                         // insert votes
                         $this->insertAll('votes', $voteMainFields, $votesMain);
                         // insert votes infos
@@ -1766,7 +1774,7 @@ class Script
 
     public function updateVoteInfo()
     {
-        echo "updateVoteInfo starting \n";
+
         $results = $this->bdd->query('
             SELECT *
             FROM votes_info
@@ -1946,7 +1954,6 @@ class Script
 
     public function voteScore()
     {
-        echo "voteScore starting \n";
 
         $majorityGroups = $this->majorityGroups();
         $majorityGroups = implode('","', $majorityGroups);
@@ -2093,20 +2100,17 @@ class Script
             );
             $votesScore = array_merge($votesScore, array_values($voteScore));
             if ($i % 500 === 0) {
-                echo "Let's import until n " . $i . " \n";
                 $this->insertAll('votes_scores', $voteScoreFields, $votesScore);
                 $votesScore = [];
                 $voteScore = [];
             }
             $i++;
         }
-        echo "Let's import remaining data : " . $i . " \n";
         $this->insertAll('votes_scores', $voteScoreFields, $votesScore);
     }
 
     public function groupeCohesion()
     {
-        echo "groupeCohesion starting \n";
 
         if (!$this->congress) {
           $reponse_last_vote = $this->bdd->query('
@@ -2188,7 +2192,6 @@ class Script
             $groupeCohesion = array('voteNumero' => $donneesVote['voteNumero'], 'legislature' => $donneesVote['legislature'], 'organeRef' => $donneesVote['organeRef'], 'cohesion' => $donneesVote['cohesion'], 'positionGroupe' => $donneesVote['positionGroup'], 'voteSort' => $donneesVote['voteResult'], 'scoreGagnant' => $donneesVote['scoreGagnant']);
             $groupesCohesion = array_merge($groupesCohesion, array_values($groupeCohesion));
             if ($i % 1000 === 0) {
-                echo "Let's insert until a pack of 1000 rows \n";
                 $this->insertAll('groupes_cohesion', $groupeCohesionFields, $groupesCohesion);
                 $groupeCohesion = [];
                 $groupesCohesion = [];
@@ -2196,14 +2199,12 @@ class Script
             $i++;
         }
         if ($i % 1000 !== 0) {
-            echo "Let's insert what's left \n";
             $this->insertAll('groupes_cohesion', $groupeCohesionFields, $groupesCohesion);
         }
     }
 
     public function groupeAccord()
     {
-        echo "groupeAccord starting \n";
 
         $this->bdd->query('
             CREATE TABLE IF NOT EXISTS groupes_accord (
@@ -2253,20 +2254,18 @@ class Script
             $groupeAccord = array('voteNumero' => $data['voteNumero'], 'legislature' => $data['legislature'], 'organeRef' => $data['organeRef'], 'organeRefAccord' => $data['organeRefAccord'], 'accord' => $data['accord'], 'dateMaj' => $this->dateMaj);
             $groupesAccord = array_merge($groupesAccord, array_values($groupeAccord));
             if ($i % 1000 === 0) {
-                echo "Let's insert until a pack of 1000 rows \n";
                 $this->insertAll('groupes_accord', $groupeAccordFields, $groupesAccord);
                 $groupesAccord = [];
                 $groupeAccord = [];
             }
             $i++;
         }
-        echo "Let's insert what's left \n";
         $this->insertAll('groupes_accord', $groupeAccordFields, $groupesAccord);
     }
 
     public function deputeAccord()
     {
-        echo "deputeAccord starting \n";
+
         $reponse_last_vote = $this->bdd->query('
         SELECT voteNumero AS lastVote
         FROM deputes_accord
@@ -2304,7 +2303,6 @@ class Script
             );
             $deputesAccord = array_merge($deputesAccord, array_values($deputeAccord));
             if ($i % 1000 === 0) {
-                echo "let's insert a pack of 1000\n";
                 $this->insertAll('deputes_accord', $deputeAccordFields, $deputesAccord);
                 $deputesAccord = [];
                 $deputeAccord = [];
@@ -2316,7 +2314,6 @@ class Script
 
     public function voteParticipation()
     {
-        echo "voteParticipation starting \n";
 
         if ($this->legislature_to_get == 14) {
             $votesLeft = $this->bdd->query('
@@ -2369,7 +2366,6 @@ class Script
                 $voteParticipation = array('legislature' => $mp['legislature'], 'voteNumero' => $mp['voteNumero'], 'mpId' => $mp['mpId'], 'participation' => $mp['participation']);
                 $votesParticipation = array_merge($votesParticipation, array_values($voteParticipation));
                 if ($i % 1000 === 0) {
-                    echo "let's insert this pack of 1000\n";
                     $this->insertAll('votes_participation', $voteParticipationFields, $votesParticipation);
                     $votesParticipation = [];
                 }
@@ -2381,7 +2377,7 @@ class Script
 
     public function voteParticipationCommission()
     {
-        echo "voteParticipationCommission starting \n";
+
         if ($this->legislature_to_get >= 15) {
             $result = $this->bdd->query('SELECT voteNumero
               FROM votes_participation_commission
@@ -2431,7 +2427,6 @@ class Script
                     }
                 }
                 if ($i % 100 === 0) {
-                    echo "let's insert this pack of 100\n";
                     $this->insertAll('votes_participation_commission', $voteCommissionParticipationFields, $votesCommissionParticipation);
                     $votesCommissionParticipation = [];
                     $voteCommissionParticipation = [];
@@ -2444,7 +2439,7 @@ class Script
 
     public function classParticipation()
     {
-        echo "classParticipation starting \n";
+
         $this->bdd->query('
             DROP TABLE IF EXISTS class_participation;
         ');
@@ -2473,7 +2468,7 @@ class Script
 
     public function classParticipationCommission()
     {
-        echo "classParticipationCommission starting \n";
+
         if ($this->legislature_to_get >= 15) {
             $this->bdd->query('
                 DROP TABLE IF EXISTS class_participation_commission;
@@ -2499,7 +2494,7 @@ class Script
 
     public function classParticipationSolennels()
     {
-        echo "classParticipationSolennels starting \n";
+
         $this->bdd->query('
             DROP TABLE IF EXISTS class_participation_solennels;
             CREATE TABLE class_participation_solennels
@@ -2523,7 +2518,7 @@ class Script
 
     public function deputeLoyaute()
     {
-        echo "deputeLoyaute starting \n";
+
         $this->bdd->query('DROP TABLE IF EXISTS deputes_loyaute;
           CREATE TABLE deputes_loyaute
           SELECT v.mpId, v.mandatId, ROUND(AVG(v.scoreLoyaute),3) AS score, COUNT(v.scoreLoyaute) AS votesN, v.legislature, curdate() AS dateMaj
@@ -2542,7 +2537,7 @@ class Script
 
     public function classLoyaute()
     {
-        echo "classLoyaute starting \n";
+
         $this->bdd->query('
             DROP TABLE IF EXISTS class_loyaute;
             CREATE TABLE class_loyaute AS
@@ -2558,7 +2553,7 @@ class Script
 
     public function classMajorite()
     {
-        echo "classMajorite starting \n";
+
         $this->bdd->query('
             DROP TABLE IF EXISTS class_majorite;
             CREATE TABLE class_majorite
@@ -2579,7 +2574,6 @@ class Script
 
     public function classGroups()
     {
-        echo "classGroups starting \n";
 
         $this->bdd->query('CREATE TABLE IF NOT EXISTS `class_groups` (
             `organeRef` varchar(15) NOT NULL,
@@ -2696,8 +2690,6 @@ class Script
 
     public function classGroupsMonth(){
 
-      echo "classGroupsMonth starting \n";
-
       $this->bdd->query('CREATE TABLE IF NOT EXISTS `class_groups_month`(
         `organeRef` VARCHAR(15) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL ,
         `legislature` INT(2) NOT NULL ,
@@ -2799,7 +2791,7 @@ class Script
 
     public function classGroupsProximite()
     {
-        echo "classGroupsProximite starting \n";
+
         $this->bdd->query('DROP TABLE IF EXISTS class_groups_proximite');
 
         $this->bdd->query('
@@ -2818,12 +2810,11 @@ class Script
 
     public function dossier()
     {
-        echo "dossier starting \n";
+
         //$this->bdd->query('DELETE FROM dossiers WHERE legislature = "' . $this->legislature_to_get . '"');
 
         // If 'titreLoi' does not exist 
         // ALTER TABLE `dossiers` ADD `titreLoi` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NULL AFTER `titre`;
-
 
         $dossierFields = array('dossierId', 'legislature', 'titre', 'titreLoi', 'titreChemin', 'senatChemin', 'procedureParlementaireCode', 'procedureParlementaireLibelle', 'commissionFond');
         $dossier = [];
@@ -2993,7 +2984,6 @@ class Script
     }
 
     public function dossiersVotes(){
-        echo "dossiersVotes starting \n";
 
         // The table dossiers_votes needs to be changed according to the code below 
         $this->bdd->query('CREATE TABLE IF NOT EXISTS `dossiers_votes` (
@@ -3044,7 +3034,6 @@ class Script
                 $dossiers = array_merge($dossiers, array_values($dossier));
                 
                 if ($i % 500 === 0) {
-                    echo "let's insert this pack of 500\n";
                     $this->insertAll('dossiers_votes', $dossierFields, $dossiers);
                     $dossier = [];
                     $dossiers = [];
@@ -3058,7 +3047,6 @@ class Script
     }
 
     public function votesAmendments(){
-        echo "votesAmendments starting \n";
 
         $this->bdd->query('CREATE TABLE IF NOT EXISTS `votes_amendments` (
             `id` INT NOT NULL AUTO_INCREMENT ,
@@ -3086,7 +3074,7 @@ class Script
 
         while ($vote = $query->fetch()){
             $voteNumero = $vote['voteNumero'];
-            echo "Scrap AN's website. Vote number: " . $voteNumero . "\n";
+            //echo "Scrap AN's website. Vote number: " . $voteNumero . "\n";
             $url = "https://www.assemblee-nationale.fr/dyn/" . $this->legislature_to_get . "/scrutins/" . $voteNumero;
             $html = file_get_html($url);
             $a = FALSE;       
@@ -3154,14 +3142,12 @@ class Script
                             $stmt->bindParam(':id', $id, PDO::PARAM_INT);
 
                             if ($stmt->execute()) {
-                                echo "AmendmentId $amdtId updated successfully.\n";
+                                //echo "AmendmentId $amdtId updated successfully.\n";
                             } else {
                                 echo "Error updating record: " . print_r($stmt->errorInfo(), true);
                             }
                         }
-                    }  else {
-                        echo "li element is not an object.\n";
-                    }
+                    }  
                 }
             }
         }
@@ -3170,7 +3156,7 @@ class Script
 
     public function dossiersActeurs()
     {
-        echo "dossiersActeurs starting \n";
+
         $this->bdd->query('
             DELETE FROM dossiers_acteurs WHERE legislature = "' . $this->legislature_to_get . '"
         ');
@@ -3372,7 +3358,6 @@ class Script
 
     public function documentsLegislatifs()
     {
-      echo "documentsLegislatifs starting \n";
 
       $fields = array('id', 'legislature', 'dossierId', 'numNotice', 'titre', 'titreCourt');
       $insert = [];
@@ -3419,14 +3404,12 @@ class Script
                 $doc = array('id' => $id, 'legislature' => $legislature, 'dossierId' => $dossierId,  'numNotice' => $numNotice, 'titre' => $titre, 'titreCourt' => $titreCourt);
                 $insert = array_merge($insert, array_values($doc));
                 if (($i + 1) % 500 === 0) {
-                    echo "Let's insert until " . $i . "\n";
                     $this->insertAll('documents_legislatifs', $fields, $insert);
                     $insert = [];
                 }
               }
             }
           }
-          echo "Let's insert until the end : " . $i . "\n";
           $this->insertAll('documents_legislatifs', $fields, $insert);
         }
       } elseif ($this->legislature_to_get == 14) {
@@ -3469,7 +3452,6 @@ class Script
 
     public function amendements()
     {
-        echo "amendements starting \n";
 
         $fields = array('id', 'dossier', 'legislature', 'texteLegislatifRef', 'num', 'numordre', 'seanceRef', 'expose', 'state', 'sort', 'examined_by');
         if ($this->legislature_to_get == 15) {
@@ -3523,20 +3505,17 @@ class Script
                   $amdt = array('id' => $id, 'dossier' => $dossier,  'legislature' => $legislature, 'texteLegislatifRef' => $texteLegislatifRef, 'num' => $num, 'numOrdre' => $numOrdre, 'seanceRef' => $seanceRef, 'expose' => $expose, 'state' => $state, 'sort' => $sort, 'examined_by' => $examined_by);
                   $insert = array_merge($insert, array_values($amdt));
                   if (($i + 1) % 1000 === 0) {
-                      echo "Insert until : " . $i . " | ";
                       $this->insertAll('amendements', $fields, $insert, FALSE);
                       $insert = [];
                   }
                 }
             }
         }
-        echo "Let's insert until the end : " . $i . "\n";
         $this->insertAll('amendements', $fields, $insert);
     }
 
     public function amendementsAuteurs()
     {
-        echo "amendementsAuteurs starting \n";
 
         $fields = array('id', 'type', 'acteurRef', 'groupeId', 'auteurOrgane');
         if ($this->legislature_to_get == 15) {
@@ -3581,20 +3560,18 @@ class Script
                   $insertAuteur = array('id' => $id, 'type' => $type,  'acteurRef' => $acteurRef, 'groupeId' => $groupeId, 'auteurOrgane' => $auteurOrgane);
                   $insertAll = array_merge($insertAll, array_values($insertAuteur));
                   if (($i + 1) % 1000 === 0) {
-                      echo "Insert until : " . $i . " | ";
                       $this->insertAll('amendements_auteurs', $fields, $insertAll, FALSE);
                       $insertAll = [];
                   }
                 }
             }
         }
-        echo "Let's insert until the end : " . $i . "\n";
         $this->insertAll('amendements_auteurs', $fields, $insertAll);
     }
 
     public function classParticipationSix()
     {
-        echo "classParticipationSix starting \n";
+
         if ($this->legislature_to_get == 16) {
 
           $this->bdd->query('DROP TABLE IF EXISTS class_participation_six');
@@ -3635,7 +3612,7 @@ class Script
 
     public function classLoyauteSix()
     {
-        echo "classLoyauteSix starting \n";
+
         if ($this->legislature_to_get == 16) {
             $this->bdd->query('
                 DROP TABLE IF EXISTS class_loyaute_six;
@@ -3697,7 +3674,7 @@ class Script
 
     public function deputeAccordCleaned()
     {
-        echo "deputeAccordCleaned starting \n";
+
         $this->bdd->query('
             DROP TABLE IF EXISTS deputes_accord_cleaned;
             CREATE TABLE deputes_accord_cleaned AS
@@ -3717,12 +3694,11 @@ class Script
 
     public function historyMpsAverage()
     {
-        echo "historyMpsAverage starting \n";
+
         $this->bdd->query('DROP TABLE IF EXISTS history_mps_average;');
         $this->bdd->query('CREATE TABLE `history_mps_average` ( `id` TINYINT NOT NULL AUTO_INCREMENT , `legislature` TINYINT NOT NULL , `length` DECIMAL(4,2) NOT NULL , PRIMARY KEY (`id`)) ENGINE = MyISAM CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci;');
         $terms = array(14, 15, 16, 17);
         foreach ($terms as $term) {
-            echo "Getting average for term => " . $term . "\n";
             $this->bdd->query('
                 INSERT INTO history_mps_average (legislature, length)
                 SELECT "' . $term . '" AS legislature, ROUND(AVG(B.mpLength)/365, 2) as length
@@ -3751,7 +3727,7 @@ class Script
 
     public function historyPerMpsAverage()
     {
-        echo "historyPerMpsAverage starting \n";
+
         $this->bdd->query('
             DROP TABLE IF EXISTS history_per_mps_average;
             CREATE TABLE history_per_mps_average AS
@@ -3785,7 +3761,7 @@ class Script
     }
 
     public function debatsInfos(){
-        echo "debatsInfos starting \n";
+
         $fields = array('uid', 'seanceRef', 'sessionRef', 'dateSeance', 'numSeanceJour', 'legislature', 'dateMaj');
         $debatsInfo = [];
         $debatsInfos = [];
@@ -3835,7 +3811,6 @@ class Script
                         $debatsInfos = array_merge($debatsInfos, array_values($debatsInfo));
                 
                         if ($i % 500 === 0) {
-                            echo "let's insert this pack of 500\n";
                             $this->insertAll('debats_infos', $fields, $debatsInfos);
                             $debatsInfo = [];
                             $debatsInfos = [];
@@ -3849,7 +3824,7 @@ class Script
     }
 
     public function debatsParas(){
-        echo "debatsParas starting \n";
+
         $fields = array('idCr', 'idSyceron', 'acteurId', 'mandatId', 'codeGrammaire', 'roleDebat', 'id_nomination_op', 'id_nomination_oe', 'article', 'adt', 'ssadt', 'texte', 'dateMaj');
         $debatsParas = [];
         $n = 1;
@@ -3916,7 +3891,6 @@ class Script
               
             
                             if ($n % 500 === 0) {
-                                echo "let's insert this pack of 500\n";
                                 $this->insertAll('debats_paras', $fields, $debatsParas);
                                 $debatsParas = [];
                             }
@@ -3932,7 +3906,7 @@ class Script
     }
 
     public function reunionsInfos() {
-        echo "reunionsInfos starting \n";
+
         $fields = array('uid', 'timeStart', 'timeEnd', 'lieuRef', 'lieuLibelle', 'etat', 'organeReuniRef', 'compteRenduRef', 'formatReunion', 'dateMaj');
         $reunionInfos = [];
         $n = 1;
@@ -3993,7 +3967,6 @@ class Script
                     $reunionInfos = array_merge($reunionInfos, array_values($reunionsInfo));
 
                     if ($n % 500 === 0) {
-                        echo "let's insert this pack of 500\n";
                         $this->insertAll('reunions_infos', $fields, $reunionInfos);
                         $reunionInfos = [];
                     }
@@ -4007,7 +3980,7 @@ class Script
     }
 
     public function reunionsPresences() {
-        echo "reunionsPresences starting \n";
+
         $fields = array('reunionId', 'acteurRef', 'presence', 'dateMaj');
         $reunionsPresences = [];
         $n = 1;
@@ -4051,7 +4024,6 @@ class Script
                         $reunionsPresences = array_merge($reunionsPresences, array_values($reunionsPresence));              
             
                         if ($n % 1000 === 0) {
-                            echo "let's insert this pack of 1000\n";
                             $this->insertAll('reunions_presences', $fields, $reunionsPresences);
                             $reunionsPresences = [];
                         }
@@ -4065,7 +4037,7 @@ class Script
     }
 
     public function questions(){
-        echo "questions starting \n";
+
         $dateMaj = $this->dateMaj;
         $fields = array('uid', 'legislature', 'numero', 'type', 'rubrique', 'analyse', 'mpId', 'mpMandat', 'minInt', 'content', 'datePublished', 'dateMaj');
         $questions = [];
@@ -4118,7 +4090,6 @@ class Script
                     $questions = array_merge($questions, array_values($question));
 
                     if ($x % 500 === 0) {
-                        echo "let's insert this pack of 500 \n";
                         $this->insertAll('questions', $fields, $questions);
                         $questions = [];
                     }
@@ -4159,7 +4130,6 @@ class Script
                     $questions = array_merge($questions, array_values($question));
 
                     if ($x % 500 === 0) {
-                        echo "let's insert this pack of 500 \n";
                         $this->insertAll('questions', $fields, $questions);
                         $questions = [];
                     }
@@ -4199,7 +4169,6 @@ class Script
                     $questions = array_merge($questions, array_values($question));
 
                     if ($x % 500 === 0) {
-                        echo "let's insert this pack of 500 \n";
                         $this->insertAll('questions', $fields, $questions);
                         $questions = [];
                     }
@@ -4214,7 +4183,6 @@ class Script
     }
 
     public function updateLegislativesPartielles(){
-        echo "updateLegislativesPartielles starting \n";
 
         $fields = [
             'year', 'dpt', 'dpt_url', 'circo', 'circo_url', 'tour', 'date',
@@ -4347,7 +4315,6 @@ class Script
         $parrainages = array_merge($parrainages, array_values($parrainage));
 
         if ($i % 10 === 0) {
-            echo "Let's import until parrainage n " . $i . "\n";
             $this->insertAll('parrainages', $parrainagesFields, $parrainages);
             $parrainages = [];
         }
@@ -4383,7 +4350,7 @@ class Script
 
     public function opendata_activeMPs()
     {
-        echo "opendata_activeMPs starting \n";
+
         $query = "SELECT
             da.mpId AS id,
             da.legislature,
@@ -4536,66 +4503,88 @@ class Script
 }
 
 if (isset($argv[1]) && isset($argv[2])) {
-  $script = new Script($argv[1], $argv[2]);
+  $script_raw = new Script($argv[1], $argv[2]);
 } elseif (isset($argv[1])) {
-  $script = new Script($argv[1]);
+  $script_raw = new Script($argv[1]);
 } else {
-  $script = new Script();
+  $script_raw = new Script();
+}
+$script = new LoggingProxy($script_raw);
+
+// Create a functionsToExecute array
+$functionsToExecute = array(
+    "fillDeputes",
+    "addBsky",
+    "deputeAll",
+    "deputeLast"
+);
+
+// Conditionally add image-related functions
+if ($script->getMpPhotos()) {
+    $functionsToExecute = array_merge($functionsToExecute, array(
+        "downloadPictures",
+        "webpPictures",
+        "resmushPictures"
+    ));
 }
 
-$script->fillDeputes();
-$script->addBsky();
-$script->deputeAll();
-$script->deputeLast();
-if ($script->getMpPhotos()) { // Check this in a later stage
-    $script->downloadPictures();
-    $script->webpPictures();
-    $script->resmushPictures();
+// Continue adding functions
+$functionsToExecute = array_merge($functionsToExecute, array(
+    "groupeEffectif",
+    "groupeStats",
+    "groupeStatsHistory",
+    "groupeMembersHistory",
+    "parties",
+    "legislature",
+    "vote",
+    "updateVoteInfo",
+    "voteScore",
+    "groupeCohesion",
+    "groupeAccord",
+    "deputeAccord",
+    "voteParticipation",
+    "dossier",
+    "dossiersSeances",
+    "documentsLegislatifs",
+    "dossiersVotes",
+    "dossiersActeurs",
+    "votesAmendments",
+    "amendements",
+    "amendementsAuteurs",
+    "voteParticipationCommission",
+    "classParticipation",
+    "classParticipationCommission",
+    "classParticipationSolennels",
+    "deputeLoyaute",
+    "classLoyaute",
+    "classMajorite",
+    "classGroups",
+    "classGroupsMonth",
+    "classGroupsProximite",
+    "deputeAccordCleaned",
+    "historyMpsAverage",
+    "historyPerMpsAverage",
+    "debatsInfos",
+    "debatsParas",
+    "reunionsInfos",
+    "reunionsPresences",
+    "questions",
+    "updateLegislativesPartielles",
+    "opendata_activeMPs",
+    "opendata_activeGroupes",
+    "opendata_historyMPs",
+    "opendata_historyGroupes"
+));
+
+// Execute all functions
+foreach ($functionsToExecute as $function) {
+    try {
+        $script->$function(); // Déclenche LoggingProxy::__call()
+    } catch (\Throwable $e) {
+        echo "Erreur lors de l'exécution de la fonction {$function}: " . $e->getMessage() . "\n";
+    }
 }
-$script->groupeEffectif();
-$script->groupeStats();
-$script->groupeStatsHistory();
-$script->groupeMembersHistory();
-$script->parties();
-$script->legislature();
-$script->vote();
-$script->updateVoteInfo();
-$script->voteScore();
-$script->groupeCohesion();
-$script->groupeAccord();
-$script->deputeAccord();
-$script->voteParticipation();
-$script->dossier();
-$script->dossiersSeances();
-$script->documentsLegislatifs();
-$script->dossiersVotes();
-$script->dossiersActeurs();
-$script->votesAmendments();
-$script->amendements();
-$script->amendementsAuteurs();
-$script->voteParticipationCommission();
-$script->classParticipation();
-$script->classParticipationCommission();
-$script->classParticipationSolennels();
-$script->deputeLoyaute();
-$script->classLoyaute();
-$script->classMajorite();
-$script->classGroups();
-$script->classGroupsMonth();
-$script->classGroupsProximite();
+
 //$script->classParticipationSix(); // Wait for more votes
 //$script->classLoyauteSix(); // Wait for more votes
-$script->deputeAccordCleaned();
-$script->historyMpsAverage();
-$script->historyPerMpsAverage();
-$script->debatsInfos();
-$script->debatsParas();
-$script->reunionsInfos();
-$script->reunionsPresences();
-$script->questions();
-$script->updateLegislativesPartielles();
 //$script->parrainages(); // No longer used
-$script->opendata_activeMPs();
-$script->opendata_activeGroupes();
-$script->opendata_historyMPs();
-$script->opendata_historyGroupes();
