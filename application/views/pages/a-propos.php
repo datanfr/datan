@@ -169,7 +169,7 @@
       <p><b>Datan</b> est un site en construction qui ne reçoit aucune aide financière. Plusieurs personnes contribuent ou ont contribué au projet et à l'association de manière bénévole. Merci à eux !</p>
       <p>Si vous souhaitez contribuer, n'hésitez pas à nous envoyer un email : info[at]datan.fr</p>
       <div class="row mt-3">
-        <!-- Team 1 -->
+        <!-- Team Awenig -->
         <div class="col-lg-3 col-md-4 col-6">
           <div class="card my-2 card-team">
             <div class="img-profile">
@@ -190,79 +190,7 @@
             </div>
           </div>
         </div>
-        <!-- Team 2 -->
-        <div class="col-lg-3 col-md-4 col-6">
-          <div class="card my-2 card-team">
-            <div class="img-profile">
-              <img class="card-img-top" src="<?= asset_url() ?>imgs/team/gwenneg.jpg" alt="Photo Gwenneg">
-              <div class="overlay"></div>
-            </div>
-            <div class="card-body d-flex flex-column align-items-center">
-              <h3 class="card-title">Gwenneg</h3>
-              <p class="card-text">Projet Web</p>
-              <div class="social-media d-flex justify-content-center">
-                <a href="https://www.linkedin.com/in/gwennegmarie/" target="_blank">
-                  <img src="<?= asset_url() ?>imgs/logos/linkedin-round-color.svg" width="30" height="30" alt="Logo X">
-                </a>
-              </div>
-            </div>
-          </div>
-        </div>
-        <!-- Team 3 -->
-        <div class="col-lg-3 col-md-4 col-6 mt-3 mt-md-0">
-          <div class="card my-2 card-team">
-            <div class="img-profile">
-              <img class="card-img-top" src="<?= asset_url() ?>imgs/team/chloe.jpg" alt="Photo Chloë">
-              <div class="overlay"></div>
-            </div>
-            <div class="card-body d-flex flex-column align-items-center">
-              <h3 class="card-title">Chloë</h3>
-              <p class="card-text">Communication</p>
-              <div class="social-media d-flex justify-content-center">
-                <a href="https://www.linkedin.com/in/chloë-bouvier-408956124/" target="_blank">
-                  <img src="<?= asset_url() ?>imgs/logos/linkedin-round-color.svg" width="30" height="30" alt="Logo X">
-                </a>
-              </div>
-            </div>
-          </div>
-        </div>
-        <!-- Team 4 -->
-        <div class="col-lg-3 col-md-4 col-6 mt-3 mt-md-0">
-          <div class="card my-2 card-team">
-            <div class="img-profile">
-              <img class="card-img-top" src="<?= asset_url() ?>imgs/team/hugo.jpg" alt="Photo Hugo">
-              <div class="overlay"></div>
-            </div>
-            <div class="card-body d-flex flex-column align-items-center">
-              <h3 class="card-title">Hugo</h3>
-              <p class="card-text">Design</p>
-              <div class="social-media d-flex justify-content-center">
-                <a href="https://www.linkedin.com/in/hugo-stephan/" target="_blank">
-                  <img src="<?= asset_url() ?>imgs/logos/linkedin-round-color.svg" width="30" height="30" alt="Logo X">
-                </a>
-              </div>
-            </div>
-          </div>
-        </div>
-        <!-- Team 5 -->
-        <div class="col-lg-3 col-md-4 col-6 mt-3 mt-md-0">
-          <div class="card my-2 card-team">
-            <div class="img-profile">
-              <img class="card-img-top" src="<?= asset_url() ?>imgs/team/brewalan.jpg" alt="Photo Brewalan">
-              <div class="overlay"></div>
-            </div>
-            <div class="card-body d-flex flex-column align-items-center">
-              <h3 class="card-title">Brewalan</h3>
-              <p class="card-text text-center">Éditorial & communication</p>
-              <div class="social-media d-flex justify-content-center">
-                <a href="https://x.com/BrewalanM" target="_blank">
-                  <img src="<?= asset_url() ?>imgs/logos/x-round-color.svg" width="30" height="30" alt="Logo X">
-                </a>
-              </div>
-            </div>
-          </div>
-        </div>
-        <!-- Team 6 -->
+        <!-- Team Rémi -->
         <div class="col-lg-3 col-md-4 col-6 mt-3 mt-md-0">
           <div class="card my-2 card-team">
             <div class="img-profile">
@@ -286,25 +214,25 @@
             </div>
           </div>
         </div>
-        <!-- Team 7 -->
+        <!-- Team Brewalan -->
         <div class="col-lg-3 col-md-4 col-6 mt-3 mt-md-0">
           <div class="card my-2 card-team">
             <div class="img-profile">
-              <img class="card-img-top" src="<?= asset_url() ?>imgs/team/alexis.jpg" alt="Photo Alexis">
+              <img class="card-img-top" src="<?= asset_url() ?>imgs/team/brewalan.jpg" alt="Photo Brewalan">
               <div class="overlay"></div>
             </div>
             <div class="card-body d-flex flex-column align-items-center">
-              <h3 class="card-title">Alexis</h3>
-              <p class="card-text text-center">Développeur</p>
+              <h3 class="card-title">Brewalan</h3>
+              <p class="card-text text-center">Éditorial & communication</p>
               <div class="social-media d-flex justify-content-center">
-                <a href="https://www.linkedin.com/in/alexis-brissard-775173aa/?originalSubdomain=fr" target="_blank">
-                  <img src="<?= asset_url() ?>imgs/logos/linkedin-round-color.svg" width="30" height="30" alt="Logo Linkedin">
+                <a href="https://x.com/BrewalanM" target="_blank">
+                  <img src="<?= asset_url() ?>imgs/logos/x-round-color.svg" width="30" height="30" alt="Logo X">
                 </a>
               </div>
             </div>
           </div>
         </div>
-        <!-- Team 8 -->
+        <!-- Team Clementine -->
         <div class="col-lg-3 col-md-4 col-6 mt-3 mt-md-0">
           <div class="card my-2 card-team">
             <div class="img-profile">
@@ -322,7 +250,7 @@
             </div>
           </div>
         </div>
-        <!-- Team 9 -->
+        <!-- Team Philippe -->
         <div class="col-lg-3 col-md-4 col-6 mt-3 mt-md-0">
           <div class="card my-2 card-team">
             <div class="img-profile">
@@ -335,6 +263,78 @@
               <div class="social-media d-flex justify-content-center">
                 <a href="mailto:tresorier@datan.fr">
                   <img src="<?= asset_url() ?>imgs/icons/envelope-circle.svg" width="30" height="30" alt="Logo Linkedin">
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Team Gwenneg -->
+        <div class="col-lg-3 col-md-4 col-6">
+          <div class="card my-2 card-team">
+            <div class="img-profile">
+              <img class="card-img-top" src="<?= asset_url() ?>imgs/team/gwenneg.jpg" alt="Photo Gwenneg">
+              <div class="overlay"></div>
+            </div>
+            <div class="card-body d-flex flex-column align-items-center">
+              <h3 class="card-title">Gwenneg</h3>
+              <p class="card-text">Projet Web/SEO</p>
+              <div class="social-media d-flex justify-content-center">
+                <a href="https://www.linkedin.com/in/gwennegmarie/" target="_blank">
+                  <img src="<?= asset_url() ?>imgs/logos/linkedin-round-color.svg" width="30" height="30" alt="Logo X">
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Team Alexis -->
+        <div class="col-lg-3 col-md-4 col-6 mt-3 mt-md-0">
+          <div class="card my-2 card-team">
+            <div class="img-profile">
+              <img class="card-img-top" src="<?= asset_url() ?>imgs/team/alexis.jpg" alt="Photo Alexis">
+              <div class="overlay"></div>
+            </div>
+            <div class="card-body d-flex flex-column align-items-center">
+              <h3 class="card-title">Alexis</h3>
+              <p class="card-text text-center">Développeur</p>
+              <div class="social-media d-flex justify-content-center">
+                <a href="https://www.linkedin.com/in/alexis-brissard-775173aa/?originalSubdomain=fr" target="_blank">
+                  <img src="<?= asset_url() ?>imgs/logos/linkedin-round-color.svg" width="30" height="30" alt="Logo Linkedin">
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Team Chloë -->
+        <div class="col-lg-3 col-md-4 col-6 mt-3 mt-md-0">
+          <div class="card my-2 card-team">
+            <div class="img-profile">
+              <img class="card-img-top" src="<?= asset_url() ?>imgs/team/chloe.jpg" alt="Photo Chloë">
+              <div class="overlay"></div>
+            </div>
+            <div class="card-body d-flex flex-column align-items-center">
+              <h3 class="card-title">Chloë</h3>
+              <p class="card-text">Communication</p>
+              <div class="social-media d-flex justify-content-center">
+                <a href="https://www.linkedin.com/in/chloë-bouvier-408956124/" target="_blank">
+                  <img src="<?= asset_url() ?>imgs/logos/linkedin-round-color.svg" width="30" height="30" alt="Logo X">
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Team Hugo -->
+        <div class="col-lg-3 col-md-4 col-6 mt-3 mt-md-0">
+          <div class="card my-2 card-team">
+            <div class="img-profile">
+              <img class="card-img-top" src="<?= asset_url() ?>imgs/team/hugo.jpg" alt="Photo Hugo">
+              <div class="overlay"></div>
+            </div>
+            <div class="card-body d-flex flex-column align-items-center">
+              <h3 class="card-title">Hugo</h3>
+              <p class="card-text">Design</p>
+              <div class="social-media d-flex justify-content-center">
+                <a href="https://www.linkedin.com/in/hugo-stephan/" target="_blank">
+                  <img src="<?= asset_url() ?>imgs/logos/linkedin-round-color.svg" width="30" height="30" alt="Logo X">
                 </a>
               </div>
             </div>
