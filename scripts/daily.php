@@ -1314,7 +1314,6 @@ class Script
 
     public function vote()
     {
-
         // THIS FUNCTION UPDATE THE FOLLOWING TABLES --> votes ; votes_info ; votes_groupes
         $n = 1;
 
@@ -1547,25 +1546,17 @@ class Script
                     } else {
                         break;
                     }
-                    if ($n % 50 === 0) {
-                        // insert votes
-                        $this->insertAll('votes', $voteMainFields, $votesMain);
-                        // insert votes infos
-                        $this->insertAll('votes_info', $voteInfoFields, $votesInfo);
-                        // insert votes groupes
-                        $this->insertAll('votes_groupes', $voteGroupeFields, $votesGroupe);
-                        $votesMain = [];
-                        $votesInfo = [];
-                        $votesGroupe = [];
-                    }
-                    $n++;
-                }
-                if ($n % 50 !== 0) {
+                    // insert votes
                     $this->insertAll('votes', $voteMainFields, $votesMain);
                     // insert votes infos
                     $this->insertAll('votes_info', $voteInfoFields, $votesInfo);
                     // insert votes groupes
                     $this->insertAll('votes_groupes', $voteGroupeFields, $votesGroupe);
+                    $votesMain = [];
+                    $votesInfo = [];
+                    $votesGroupe = [];
+                    
+                    $n++;
                 }
             }
         } elseif ($this->legislature_to_get == 14) {
@@ -4500,6 +4491,7 @@ class Script
 
         $this->opendata($query, "groupes-historique.csv", "60f30419135bec6a5e480086", "530940ab-45f3-41e3-8de3-759568c728b8");
     }
+
 }
 
 if (isset($argv[1]) && isset($argv[2])) {
