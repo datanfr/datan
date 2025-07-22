@@ -23,7 +23,6 @@ application/config/custom_config.php
 node_modules
 test
 .sass-cache
-package-lock.json
 .gitattributes
 ressources
 .htaccess
