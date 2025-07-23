@@ -109,16 +109,48 @@ function initCarouselContainer( container ) {
     prevNextButtons: false,
     pageDots: false,
     freeScroll: true,
-    contain: true
+    contain: true,
+    accessibility: false
   } );
+
   var previousButton = container.querySelector('.carousel--prev');
   previousButton.addEventListener('click', function () {
     flkty.previous();
   });
+
   var nextButton = container.querySelector('.carousel--next');
   nextButton.addEventListener('click', function () {
     flkty.next();
   });
+
+  // https://github.com/Accessible360/accessible-carousel-boilerplates/blob/main/Flickity/linked-product-cards.html
+
+  function updateFocusableSlides() {
+    console.log("yes");
+    var slides = carousel.querySelectorAll('.card-vote');
+    var selectedIndex = flkty.selectedIndex;
+    slides.forEach(function (slide, index) {
+      var focusableElements = slide.querySelectorAll('a, button, input, textarea, select');
+      var isVisible = index === selectedIndex; // or customize if multiple visible
+
+      focusableElements.forEach(function (el) {
+        if (isVisible) {
+          el.removeAttribute('aria-hidden');
+          el.removeAttribute('tabindex');
+        } else {
+          el.setAttribute('aria-hidden', 'true');
+          el.setAttribute('tabindex', '-1');
+        }
+      });
+    });
+  }
+
+  flkty.on('ready', function () {
+    updateFocusableSlides();
+    requestAnimationFrame(updateFocusableSlides); // just in case it's needed 
+  });
+  flkty.on('settle', updateFocusableSlides);
+  window.addEventListener('load', updateFocusableSlides); // as fallback
 
 }
 
