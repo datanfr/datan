@@ -138,10 +138,16 @@ $('.no-img').css({
   'use strict';
 
   // Page is loaded
+
+  // Check for WebP support 
+  var supportsWebP = function () {
+    var elem = document.createElement('canvas');
+    return !!(elem.getContext && elem.getContext('2d')) && elem.toDataURL('image/webp').indexOf('data:image/webp') === 0;
+  }();
   var objects = document.getElementsByClassName('async_home');
   Array.from(objects).map(function (item) {
     // Start loading image
-    var img = new Image();
+    var imageUrl;
     if (window.matchMedia("(max-width: 575.98px)").matches) {
       /*img.src = item.dataset.mobile;
       img.onload = () => {
@@ -152,19 +158,26 @@ $('.no-img').css({
       }; */
     } else if (window.matchMedia("(max-width: 970px)").matches) {
       // Once image is loaded replace the src of the HTML element
-      img.src = item.dataset.tablet;
-      img.onload = function () {
-        item.classList.remove('async_home');
-        return item.nodeName === 'IMG' ? item.src = item.dataset.src : item.style.backgroundImage = "linear-gradient(130deg, rgba(0, 183, 148, 0.7) 0.65%, rgba(36, 107, 150, 0.7) 112%), url(".concat(item.dataset.tablet, ")");
-      };
+      imageURL = item.dataset.tablet;
     } else {
       // Once image is loaded replace the src of the HTML element
-      img.src = item.dataset.src;
-      img.onload = function () {
-        item.classList.remove('async_home');
-        return item.nodeName === 'IMG' ? item.src = item.dataset.src : item.style.backgroundImage = "linear-gradient(130deg, rgba(0, 183, 148, 0.7) 0.65%, rgba(36, 107, 150, 0.7) 112%), url(".concat(item.dataset.src, ")");
-      };
+      imageURL = item.dataset.src;
     }
+
+    // Use .webp if supported
+    if (supportsWebP) {
+      imageURL = imageURL.replace(/\.(jpg|jpeg|png)$/i, '.webp');
+    }
+    var img = new Image();
+    img.src = imageURL;
+    img.onload = function () {
+      item.classList.remove('async_home');
+      if (item.nodeName === 'IMG') {
+        item.src = imageURL;
+      } else {
+        item.style.backgroundImage = "linear-gradient(130deg, rgba(0, 183, 148, 0.7) 0.65%, rgba(36, 107, 150, 0.7) 112%), url(".concat(imageURL, ")");
+      }
+    };
   });
 })();
 
