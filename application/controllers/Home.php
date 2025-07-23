@@ -122,6 +122,7 @@
           "async" => TRUE
         )
       );
+      $data['inline_css'] = '.bloc-post { position: relative; } .stretched-link::after { content: ""; position: absolute; inset: 0; z-index: 1; } .stretched-link { display: block; }';
       // JS
       $data['js_to_load_up_defer'] = array('dist/chart.min.js');
       $data['js_to_load'] = array(
