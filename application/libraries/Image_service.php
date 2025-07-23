@@ -18,4 +18,16 @@ class Image_service
         }
     }
 
+    public function resize_image($source_path, $destination_path, $target_width){
+        $imagick = new \Imagick($source_path);
+        $width = $imagick->getImageWidth();
+        $height = $imagick->getImageHeight();
+        $aspect_ratio = $height / $width;
+        $target_height = intval($target_width * $aspect_ratio);
+
+        $imagick->resizeImage($target_width, $target_height, \Imagick::FILTER_LANCZOS, 1);
+        $imagick->writeImage($destination_path);
+        $imagick->destroy();
+    }
+
 }
