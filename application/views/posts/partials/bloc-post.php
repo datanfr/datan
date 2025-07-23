@@ -1,8 +1,8 @@
 <div class="bloc-post">
     <div class="image">
         <picture>
-            <source srcset="<?= asset_url() ?>imgs/posts/webp/<?= $post['image_name'] ?>.webp" type="image/webp">
-            <source srcset="<?= asset_url() ?>imgs/posts/<?= $post['image_name'] ?>.png" type="image/png">
+            <source srcset="<?= asset_url() ?>imgs/posts/webp/<?= $post['image_name'] ?>-360.webp" type="image/webp">
+            <source srcset="<?= asset_url() ?>imgs/posts/<?= $post['image_name'] ?>-360.png" type="image/png">
             <img class="img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder.png" data-src="<?= asset_url() ?>imgs/posts/<?= $post['image_name'] ?>.png" alt="Image post <?= $post['id'] ?>" width="480" height="240">
         </picture>
     </div>
