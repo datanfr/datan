@@ -1,5 +1,8 @@
 <!-- BLOC SEARCHING FOR A MP BLOC-HEMYCICLE-HOME -->
-<div class="container-fluid bloc-hemycicle-home pg-home d-flex flex-column justify-content-around py-4 async_home" data-src="<?= asset_url() ?>imgs/cover/hemicycle-from-back.jpg" data-tablet="<?= asset_url() ?>imgs/cover/hemicycle-from-back-768.jpg" data-mobile="<?= asset_url() ?>imgs/cover/hemicycle-from-back-375.jpg">
+<div class="container-fluid bloc-hemycicle-home pg-home d-flex flex-column justify-content-around py-4 async_home"
+  data-src="<?= asset_url() ?>imgs/cover/hemicycle-from-back.jpg"
+  data-tablet="<?= asset_url() ?>imgs/cover/hemicycle-from-back-768.jpg"
+  data-mobile="<?= asset_url() ?>imgs/cover/hemicycle-from-back-375.jpg">
   <div class="d-flex flex-column align-items-center">
     <h1 class="text-center">L'Assemblée nationale, enfin <span>compréhensible</span></h1>
   </div>
