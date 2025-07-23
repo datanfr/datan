@@ -80,6 +80,10 @@
     <link rel="apple-touch-icon" sizes="144x144" href="<?= asset_url() ?>imgs/favicon/apple-touch-icon-144x144.png" />
     <link rel="apple-touch-icon" sizes="152x152" href="<?= asset_url() ?>imgs/favicon/apple-touch-icon-152x152.png" />
     <link rel="apple-touch-icon" sizes="180x180" href="<?= asset_url() ?>imgs/favicon/apple-touch-icon-180x180.png" />
+    <!-- INLINE CSS -->
+    <?php if (!empty($inline_css)): ?>
+      <style><?= $inline_css ?></style>
+    <?php endif; ?>
     <!-- PRELOAD -->
     <?php if (isset($preloads)): ?>
       <?php foreach ($preloads as $preload): ?>
