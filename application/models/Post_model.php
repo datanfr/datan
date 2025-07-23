@@ -122,10 +122,30 @@
           return ['error' => $this->upload->display_errors() . " (image png) "];
         }
 
+        // Path to original image
+        $original_path = './assets/imgs/posts/' . $new_png_name;
+
         // Chargement de la bibliothèque image_service
         $this->load->library('image_service');
+
         // Conversion du PNG en WebP
-        $this->image_service->convert_to_webp_with_imagick('./assets/imgs/posts/' . $new_png_name, './assets/imgs/posts/webp/' . $base_name . '.webp');
+        $this->image_service->convert_to_webp_with_imagick(
+          $original_path,
+          './assets/imgs/posts/webp/' . $base_name . '.webp');
+
+          // Resize original PNG version (e.g., 360px width)
+        $this->image_service->resize_image(
+          $original_path,
+          './assets/imgs/posts/' . $base_name . '-360.png',
+          360
+        );
+
+        // WebP version of 360px
+        $this->image_service->convert_to_webp_with_imagick(
+          './assets/imgs/posts/' . $base_name . '-360.png',
+          './assets/imgs/posts/webp/' . $base_name . '-360.webp'
+        );
+
       }
       
       $data = array(
