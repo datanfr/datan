@@ -27,6 +27,7 @@
                   <div class="search_icon">
                     <?= file_get_contents(asset_url() . "imgs/icons/bi-search.svg") ?>
                   </div>
+                  <label for="search" class="sr-only">Rechercher sur tout le site (député, vote, groupe, ville, ou autre information parlementaire)</label>
                   <input id="search" type="text" class="randomized" placeholder="Exemple : <?= $placeholder ?>">
                   <div class="search-results" id="search-results-bloc" style="display: none">
                     <div id="search-results-list"></div>
@@ -44,7 +45,7 @@
     </div>
   </div>
   <div class="mt-4 d-flex flex-column align-items-center">
-    <a href="<?= base_url();?>deputes" class="no-decoration">
+    <a href="<?= base_url(); ?>deputes" class="no-decoration">
       <button type="button" class="btn btn-light">Tous les députés</button>
     </a>
   </div>
@@ -62,16 +63,16 @@
             <span class="text-primary font-weight-bold">Datan</span> explique <b>les votes</b> des députés et groupes politiques.
           </p>
           <p class="mb-1">
-            <span class="icon"><?= file_get_contents(asset_url()."imgs/icons/check_circle_fill.svg") ?></span>
+            <span class="icon"><?= file_get_contents(asset_url() . "imgs/icons/check_circle_fill.svg") ?></span>
             Scrutins de l'Assemblée en temps réel
           </p>
           <p class="mb-1">
-            <span class="icon"><?= file_get_contents(asset_url()."imgs/icons/check_circle_fill.svg") ?></span>
+            <span class="icon"><?= file_get_contents(asset_url() . "imgs/icons/check_circle_fill.svg") ?></span>
             Profils détaillés des députés
           </p>
           <p class="mb-0">
-            <span class="icon"><?= file_get_contents(asset_url()."imgs/icons/check_circle_fill.svg") ?></span>
-            Statistiques sur la formation des coalitions 
+            <span class="icon"><?= file_get_contents(asset_url() . "imgs/icons/check_circle_fill.svg") ?></span>
+            Statistiques sur la formation des coalitions
           </p>
           <div class="mt-4 d-flex flex-column flex-md-row align-items-start">
             <a class="btn btn-primary mr-md-4 mb-3 mb-md-0" href="<?= base_url() ?>a-propos">En savoir plus</a>
@@ -80,7 +81,7 @@
         </div>
         <div class="d-none d-lg-block col-lg-6">
           <div class="img-container">
-          <img src="<?= asset_url() ?>imgs/cover/assemblee-nationale.jpg" alt="Assemblée nationale - photo de Mathias Reding">
+            <img src="<?= asset_url() ?>imgs/cover/assemblee-nationale.jpg" alt="Assemblée nationale - photo de Mathias Reding">
           </div>
         </div>
       </div>
@@ -91,7 +92,7 @@
     <div class="container py-4">
       <div class="row">
         <div class="col-12 col-lg-8 offset-lg-2 my-4">
-          <div class="icon d-flex justify-content-center"><?= file_get_contents(asset_url()."imgs/icons/heart-fill.svg") ?></div>
+          <div class="icon d-flex justify-content-center"><?= file_get_contents(asset_url() . "imgs/icons/heart-fill.svg") ?></div>
           <h2 class="text-center mb-4 mt-2">Nous soutenir</h2>
           <p class="text-center">Datan est un <b>outil indépendant</b>.</p>
           <p class="text-center">🔍 Rendre accessible l'activité des députés ... Pour continuer, on a besoin de vous ! Soutenez Datan pour faire vivre la transparence démocratique et l'accès aux données parlementaires.</p>
@@ -113,20 +114,20 @@
           <?php $this->load->view('votes/partials/votes_carousel.php', array('votes' => $votes)) ?>
           <div class="carousel-buttons d-flex justify-content-center">
             <button type="button" class="btn prev mr-2 carousel--prev" aria-label="précédent">
-              <?= file_get_contents(asset_url()."imgs/icons/arrow_left.svg") ?>
+              <?= file_get_contents(asset_url() . "imgs/icons/arrow_left.svg") ?>
             </button>
             <a class="btn btn-primary mx-2" href="<?= base_url() ?>votes">
               Tous les votes
             </a>
             <button type="button" class="btn next ml-2 carousel--next" aria-label="suivant">
-              <?= file_get_contents(asset_url()."imgs/icons/arrow_right.svg") ?>
+              <?= file_get_contents(asset_url() . "imgs/icons/arrow_right.svg") ?>
             </button>
           </div>
         </div>
       </div>
     </div>
   </div>
-  <!-- BLOC HEMICYCLE --> 
+  <!-- BLOC HEMICYCLE -->
   <?php if ($composition): ?>
     <div class="row bloc-pie" id="pattern_background">
       <div class="container py-3">
@@ -148,18 +149,18 @@
             <p>L'Assemblée peut être divisée en 4 grands blocs ! 👇</p>
             <ul class="list-unstyled ml-lg-3">
               <li>🔴 <b>La gauche</b> (NFP) : <?= $blocs['left'] ?> députés</li>
-              <li>🟡 <b>Le bloc central</b> (Renaissance et alliés) : <?= $blocs['central'] ?> 
-              députés</li>
+              <li>🟡 <b>Le bloc central</b> (Renaissance et alliés) : <?= $blocs['central'] ?>
+                députés</li>
               <li>🔵 <b>La droite</b> (LR) : <?= $blocs['right'] ?> députés</li>
               <li>🟤 <b>L'extrême droite</b> (RN et alliés) : <?= $blocs['extreme_right'] ?> députés</li>
-            </ul> 
+            </ul>
             <div class="card coalition d-none d-lg-block mt-4">
               <div class="card-body">
                 <h2 class="card-title">Composez votre coalition</h2>
                 <p>Depuis les <a class="text-white" href="<?= base_url() ?>elections/legislatives-2024">élections de 2024</a>, aucun groupe n'a la majorité. Ils doivent s'allier pour faire passer des lois. Testez notre simulateur de coalition !</p>
                 <a href="<?= base_url() ?>outils/coalition-simulateur" class="btn btn-light">Formez votre coalition</a>
               </div>
-            </div>  
+            </div>
           </div>
           <div class="col-lg-7 col-md-6 d-flex flex-column justify-content-center mt-3 mt-md-0">
             <div class="hemicycle">
@@ -176,12 +177,12 @@
                 <p>Depuis les <a class="text-white" href="<?= base_url() ?>elections/legislatives-2024">élections de 2024</a>, aucun groupe n'a la majorité. Ils doivent s'allier pour faire passer des lois. Testez notre simulateur de coalition !</p>
                 <a href="<?= base_url() ?>outils/coalition-simulateur" class="btn btn-light">Former votre coalition</a>
               </div>
-            </div> 
+            </div>
           </div>
         </div>
       </div>
     </div>
-  <?php endif; ?>  
+  <?php endif; ?>
   <!-- BLOC POSTS -->
   <div class="row">
     <div class="container p-md-0">
@@ -193,7 +194,7 @@
           <div class="row pt-4">
             <?php foreach ($posts as $index => $post): ?>
               <div class="col-md-4 <?= $index > 0 ? 'mt-md-0 mt-4' : '' ?>">
-              <?php $this->load->view('posts/partials/bloc-post.php', array('post' => $post, 'postTitleTag' => 'h3', 'chapo' => FALSE)) ?>
+                <?php $this->load->view('posts/partials/bloc-post.php', array('post' => $post, 'postTitleTag' => 'h3', 'chapo' => FALSE)) ?>
               </div>
             <?php endforeach; ?>
           </div>
@@ -223,17 +224,17 @@
                 <div class="d-flex flex-row align-items-center">
                   <a href="<?= base_url() ?>deputes/<?= $value['dptSlug'] ?>/depute_<?= $value['nameUrl'] ?>">
                     <div class="depute-img-<?= $value['legislature_last'] >= 17 ? 'square' : 'circle' ?> depute-img-circle-explication mr-3">
-                      <img class="img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-face.png" width="150" height="192" data-src="<?= base_url(); ?>assets/imgs/<?= $value['legislature_last'] >= 17 ? "deputes_original/" : "deputes_nobg/" ?>depute_<?= $value["idImage"] ?>.png" alt="Photo <?= $value['nameFirst'].' '.$value['nameLast'] ?>">
+                      <img class="img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-face.png" width="150" height="192" data-src="<?= base_url(); ?>assets/imgs/<?= $value['legislature_last'] >= 17 ? "deputes_original/" : "deputes_nobg/" ?>depute_<?= $value["idImage"] ?>.png" alt="Photo <?= $value['nameFirst'] . ' ' . $value['nameLast'] ?>">
                     </div>
                   </a>
                   <p class="title mb-0">
                     <a class="no-decoration underline" href="<?= base_url() ?>deputes/<?= $value['dptSlug'] ?>/depute_<?= $value['nameUrl'] ?>"><?= $value['nameFirst'] ?> <?= $value['nameLast'] ?></a> -
-                    <a class="no decoration underline" href="<?= base_url() ?>groupes/legislature-<?= $value['legislature'] ?>/<?= mb_strtolower($value['libelleAbrev']) ?>"><span class="font-weight-bold" style="color: <?= $value['couleurAssociee'] ?>"><?= $value['libelleAbrev'] ?></span></a>
+                    <a class="no-decoration underline" href="<?= base_url() ?>groupes/legislature-<?= $value['legislature'] ?>/<?= mb_strtolower($value['libelleAbrev']) ?>"><span class="font-weight-bold" style="color: <?= $value['couleurAssociee'] ?>"><?= $value['libelleAbrev'] ?></span></a>
                   </p>
                 </div>
               </div>
               <div class="card-body py-3">
-                <p class="mb-0 font-italic font-weight-bold"><a class="no-decoration underline" href="<?= base_url() ?>votes/legislature-<?= $value['legislature'] ?>/vote_<?= $value['voteNumero'] ?>"><?=  $value['title']?></a></p>
+                <p class="mb-0 font-italic font-weight-bold"><a class="no-decoration underline" href="<?= base_url() ?>votes/legislature-<?= $value['legislature'] ?>/vote_<?= $value['voteNumero'] ?>"><?= $value['title'] ?></a></p>
                 <p class="badge badge-<?= $value['vote'] ?> mb-4"><?= mb_strtoupper($value['vote']) ?></p>
                 <p class="quoted mb-0 p-0"><?= word_limiter($value['text'], 20) ?></p>
               </div>
@@ -288,7 +289,7 @@
           </div>
         </div>
         <div class="pb-5 d-flex justify-content-center">
-          <a href="<?= base_url();?>statistiques" class="no-decoration">
+          <a href="<?= base_url(); ?>statistiques" class="no-decoration">
             <button type="button" class="btn btn-outline-primary">Découvrez nos statistiques</button>
           </a>
         </div>
@@ -297,7 +298,7 @@
   <?php endif; ?>
   <!-- BLOC NEWSLETTER -->
   <div class="row bloc-newsletter" id="pattern_background">
-    <div class="container py-5" >
+    <div class="container py-5">
       <div class="row py-3">
         <div class="col-lg-8 offset-lg-2">
           <h2 class="text-center">Restez informés !</h2>
@@ -310,7 +311,7 @@
       </div>
     </div>
   </div> <!-- NED BLOC NEWSLETTER -->
-  <?php if($support): ?>
+  <?php if ($support): ?>
     <div class="row bloc-support">
       <div class="container py-5">
         <div class="row mb-5">
@@ -515,13 +516,13 @@
         <div class="col-lg-6 col-12 bloc-map mt-4 mt-lg-0 offset-lg-3">
           <h2 class="text-center pb-5">Explorez les députés par département</h2>
           <div class="map map_france mt-3">
-            <?= file_get_contents(asset_url()."imgs/france_map/map.svg"); ?>
+            <?= file_get_contents(asset_url() . "imgs/france_map/map.svg"); ?>
           </div>
           <div class="map map_outre_mer">
-            <?= file_get_contents(asset_url()."imgs/france_map/outre-mer.svg"); ?>
+            <?= file_get_contents(asset_url() . "imgs/france_map/outre-mer.svg"); ?>
           </div>
           <div class="mt-5 d-flex flex-column align-items-center">
-            <a href="<?= base_url();?>index_departements" class="no-decoration">
+            <a href="<?= base_url(); ?>index_departements" class="no-decoration">
               <button type="button" class="btn btn-primary">Voir tous les départements</button>
             </a>
           </div>
@@ -532,40 +533,38 @@
 </div>
 
 <script type="text/javascript">
-  document.addEventListener('DOMContentLoaded', function(){
+  document.addEventListener('DOMContentLoaded', function() {
     var data = {
       labels: [
         <?php
-          foreach ($groupesSorted as $groupe) {
-            echo '"'.name_group($groupe["libelle"]).' ('.$groupe['libelleAbrev'].')",';
-          }
+        foreach ($groupesSorted as $groupe) {
+          echo '"' . name_group($groupe["libelle"]) . ' (' . $groupe['libelleAbrev'] . ')",';
+        }
         ?>
       ],
-      datasets: [
-        {
-          data: [
-            <?php
-              foreach ($groupesSorted as $groupe) {
-                echo $groupe["effectif"].",";
-              }
-            ?>
-          ],
-          backgroundColor: [
-            <?php
-              foreach ($groupesSorted as $groupe) {
-                echo '"'.$groupe["couleurAssociee"].'",';
-              }
-            ?>
-          ],
-          hoverBackgroundColor: [
-            <?php
-              foreach ($groupesSorted as $groupe) {
-                echo '"'.$groupe["couleurAssociee"].'",';
-              }
-            ?>
-          ]
-        }
-      ]
+      datasets: [{
+        data: [
+          <?php
+          foreach ($groupesSorted as $groupe) {
+            echo $groupe["effectif"] . ",";
+          }
+          ?>
+        ],
+        backgroundColor: [
+          <?php
+          foreach ($groupesSorted as $groupe) {
+            echo '"' . $groupe["couleurAssociee"] . '",';
+          }
+          ?>
+        ],
+        hoverBackgroundColor: [
+          <?php
+          foreach ($groupesSorted as $groupe) {
+            echo '"' . $groupe["couleurAssociee"] . '",';
+          }
+          ?>
+        ]
+      }]
     };
 
     var ctx = document.getElementById("chartHemicycle");
@@ -574,7 +573,7 @@
       maintainAspectRatio: false,
       circumference: 180,
       rotation: 270,
-      layout:{
+      layout: {
         padding: {
           top: 15,
           bottom: 15,
@@ -585,7 +584,7 @@
       plugins: {
         datalabels: {
           anchor: "end",
-          backgroundColor: function(context){
+          backgroundColor: function(context) {
             return context.dataset.backgroundColor;
           },
           borderColor: "white",
