@@ -49,7 +49,7 @@
           <?php endif; ?>
         </div>
         <div class="col-md-3 offset-md-1">
-          <h3><?= $legislature == legislature_current() ? 'Historique' : 'Toutes les législatures' ?></h3>
+          <h2 class="history"><?= $legislature == legislature_current() ? 'Historique' : 'Toutes les législatures' ?></h2>
           <p>La législature actuelle est la <?= legislature_current() ?><sup>ème</sup> législature. Elle a débuté en 2024, à la suite des <a href="<?= base_url() ?>elections/legislatives-2024">élections législatives</a>, et se terminera en 2029.</p>
           <?php if ($legislature == legislature_current()): ?>
             <p>Découvrez les députés des législatures précédentes.</p>
