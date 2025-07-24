@@ -135,7 +135,7 @@
         );
 
         // Définir les tailles à générer
-        $target_widths = [360, 420, 730, 1240];
+        $target_widths = [360, 730];
 
         foreach($target_widths as $width){
           $resized_png_path = './assets/imgs/posts/' . $base_name . '-' . $width . '.png';
