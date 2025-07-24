@@ -96,10 +96,11 @@
             </div>
             <!-- Search -->
             <div class="mt-3 mt-lg-0">
+              <label for="quicksearch" class="sr-only">Recherche un député</label>
               <input type="text" id="quicksearch" placeholder="Recherchez un député..." />
             </div>
             <!-- Filters -->
-            <div class="filters mt-md-2 d-none d-lg-block" id="filter">
+            <fieldset class="filters mt-md-2 d-none d-lg-block" id="filter">
               <input class="radio-btn" name="radio-collection" id="radio-1" type="radio" checked="" value="*">
               <label for="radio-1" class="radio-label d-flex align-items-center">
                 <span class="d-flex align-items-center"><b>Tous les députés</b></span>
@@ -112,7 +113,7 @@
                 </label>
                 <?php $i++ ?>
               <?php endforeach; ?>
-            </div>
+            </fieldset>
             <!-- Députés inactifs bouton -->
             <div class="d-none d-lg-flex justify-content-center mt-md-2">
               <a class="btn btn-outline-primary d-none d-md-block" href="<?= base_url() ?>deputes/inactifs">Liste des <b>anciens députés</b></a>
