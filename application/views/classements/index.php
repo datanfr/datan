@@ -41,9 +41,9 @@
                 <table class="table table-striped">
                   <thead>
                     <tr>
-                      <th></th>
-                      <th>Député</th>
-                      <th>Âge</th>
+                      <td></td>
+                      <th scope="col">Député</th>
+                      <th scope="col">Âge</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -167,7 +167,7 @@
                   <table class="table table-striped">
                     <thead>
                       <tr>
-                        <th scope="col"></th>
+                        <td></td>
                         <th scope="col">Groupe</th>
                         <th scope="col">% de femmes</th>
                       </tr>
@@ -233,7 +233,7 @@
                   <table class="table table-striped">
                     <thead>
                       <tr>
-                        <th scope="col"></th>
+                        <td></td>
                         <th scope="col">Député</th>
                         <th scope="col">Taux de loyauté</th>
                       </tr>
@@ -317,7 +317,7 @@
                   <table class="table table-striped">
                     <thead>
                       <tr>
-                        <th scope="col"></th>
+                        <td></td>
                         <th scope="col">Député</th>
                         <th scope="col">Taux de participation</th>
                       </tr>

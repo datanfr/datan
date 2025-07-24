@@ -79,14 +79,22 @@
           <!-- Résultat du député élu -->
           <div class="border border-primary rounded px-3 py-4 mt-4" style="background-color: rgba(0, 183, 148, 0.15);">
             <div class="d-flex justify-content-between">
-              <h6 class="mt-0 font-weight-bold"><?= $election_result['candidat'] ?><span class="badge badge-primary ml-2">Élu<?= $gender['e'] ?></span></h6>
+              <h3 class="mt-0 font-weight-bold candidate"><?= $election_result['candidat'] ?><span class="badge badge-primary ml-2">Élu<?= $gender['e'] ?></span></^p>
               <strong><?= round($election_result['pct_exprimes'], 1) ?> %</strong>
             </div>
             <div class="d-flex align-items-center mb-1">
               <small class="text-muted"><?= formatNumber($election_result['voix']) ?> voix</small>
             </div>
             <div class="progress" style="height: 10px;">
-              <div class="progress-bar bg-primary" role="progressbar" style="width: <?= round($election_result['pct_exprimes']) ?>%"></div>
+              <div 
+                class="progress-bar bg-primary candidate"
+                role="progressbar"
+                style="width: <?= round($election_result['pct_exprimes']) ?>%;"
+                aria-valuenow="<?= round($election_result['pct_exprimes']) ?>"
+                aria-valuemin="0"
+                aria-valuemax="100"
+                aria-label="Pourcentage de voix remportées par <?= $election_result['candidat'] ?>">
+              </div>
             </div>
           </div>
 
@@ -95,14 +103,22 @@
             <?php foreach ($election_opponents as $opponent): ?>
               <div class="mt-4 px-3">
                 <div class="d-flex justify-content-between">
-                  <h6 class="mt-0 font-weight-bold"><?= $opponent['candidat'] ?></h6>
+                  <h3 class="mt-0 font-weight-bold candidate"><?= $opponent['candidat'] ?></h3>
                   <strong><?= round($opponent['pct_exprimes'], 1) ?> %</strong>
                 </div>
                 <div class="d-flex align-items-center mb-1">
                   <small class="text-muted"><?= formatNumber($opponent['voix']) ?> voix</small>
                 </div>
                 <div class="progress" style="height: 10px;">
-                  <div class="progress-bar bg-primary" role="progressbar" style="width: <?= round($opponent['pct_exprimes']) ?>%"></div>
+                  <div 
+                    class="progress-bar bg-primary"
+                    role="progressbar"
+                    style="width: <?= round($opponent['pct_exprimes']) ?>%;"
+                    aria-valuenow="<?= round($opponent['pct_exprimes']) ?>"
+                    aria-valuemin="0"
+                    aria-valuemax="100"
+                    aria-label="Pourcentage de voix remportées par <?= $opponent['candidat'] ?>">
+                  </div>
                 </div>
               </div>
             <?php endforeach; ?>
@@ -110,7 +126,7 @@
 
 
           <!-- Lien vers les résultats officiels -->
-           <?php if ($infosURL): ?>
+            <?php if ($infosURL): ?>
               <div class="mt-4">
                 <span class="url_obf" url_obf="<?= url_obfuscation($infosURL) ?>">🔎 Consultez les résultats complets</span>
               </div>

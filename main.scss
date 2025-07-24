@@ -2205,6 +2205,9 @@ body{
     .subtitle{
       font-weight: 800;
       color: $text-gray-light;
+    }
+    .candidate {
+      font-size: $h6-font-size;
     } 
   }
   /* Bloc elections history */
