@@ -38,10 +38,35 @@
     <div class="col-lg-8 offset-lg-2">
       <div class="img">
         <picture>
-            <source srcset="<?= asset_url() ?>imgs/posts/webp/<?= $post['image_url'] ?>.webp" type="image/webp">
-            <source srcset="<?= asset_url() ?>imgs/posts/<?= $post['image_url'] ?>.png" type="image/png">
-            <img src="<?= asset_url() ?>imgs/posts/<?= $post['image_url'] ?>.png" alt="Image post">
-          </picture>
+          <!-- Mobile WebP --> 
+          <source
+            media="(max-width: 575.99px)"
+            srcset="<?= asset_url() ?>imgs/posts/webp/<?= $post['image_url'] ?>-360.webp" type="image/webp">
+
+          <!-- Desktop/Tablet WebP -->
+          <source 
+            media="(min-width: 576px)" 
+            srcset="<?= asset_url() ?>imgs/posts/webp/<?= $post['image_url'] ?>-730.webp" 
+            type="image/webp"
+          >
+
+          <!-- Mobile PNG fallback -->
+          <source 
+            media="(max-width: 575.99px)" 
+            srcset="<?= asset_url() ?>imgs/posts/<?= $post['image_url'] ?>-360.png" 
+            type="image/png"
+          >
+
+          <!-- Desktop PNG fallback -->
+          <source 
+            media="(min-width: 600px)" 
+            srcset="<?= asset_url() ?>imgs/posts/<?= $post['image_url'] ?>-730.png" 
+            type="image/png"
+          >
+
+          <!-- Fallback img -->
+          <img src="<?= asset_url() ?>imgs/posts/<?= $post['image_url'] ?>-730.png" alt="Image post" width="730" height="365" />
+        </picture>
       </div>
       <div class="text mt-5">
         <?= $post['body'] ?>
