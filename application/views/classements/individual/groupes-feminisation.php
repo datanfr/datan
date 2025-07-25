@@ -28,13 +28,14 @@
         <div class="mt-5">
           <h2 class="mb-5">Classement des groupes selon leur taux de féminisation</h2>
           <table class="table table-stats">
+            <caption class="sr-only">Classement des groupes selon leur taux de féminisation</caption>
             <thead>
               <tr>
-                <th class="text-center">N°</th>
-                <th class="text-center">Groupe</th>
-                <th class="text-center">Taux de féminisation</th>
-                <th class="text-center">Nombre de femmes</th>
-                <th class="text-center">Effectif du groupe</th>
+                <th scope="col" class="text-center">N°</th>
+                <th scope="col" class="text-center">Groupe</th>
+                <th scope="col" class="text-center">Taux de féminisation</th>
+                <th scope="col" class="text-center">Nombre de femmes</th>
+                <th scope="col" class="text-center">Effectif du groupe</th>
               </tr>
             </thead>
             <tbody>

@@ -39,11 +39,12 @@
               <p>L'âge moyen des députés est de <b><?= $age_mean ?> ans</b>. Découvrez dans ce tableau les trois députés les plus âgés et les trois députés les plus jeunes.</p>
               <div class="table_ranking mt-4">
                 <table class="table table-striped">
+                  <caption class="sr-only">L'âge moyen des députés</caption>
                   <thead>
                     <tr>
-                      <th></th>
-                      <th>Député</th>
-                      <th>Âge</th>
+                      <td></td>
+                      <th scope="col">Député</th>
+                      <th scope="col">Âge</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -165,9 +166,10 @@
                 <p>Certains groupes comptent dans leur rang plus de femmes que d'autres. Découvrez ici les groupes les féminisés et ceux qui le sont moins.</p>
                 <div class="table_ranking">
                   <table class="table table-striped">
+                    <caption class="sr-only">La féminisation des groupes politiques</caption>
                     <thead>
                       <tr>
-                        <th scope="col"></th>
+                        <td></td>
                         <th scope="col">Groupe</th>
                         <th scope="col">% de femmes</th>
                       </tr>
@@ -231,9 +233,10 @@
                 </p>
                 <div class="table_ranking">
                   <table class="table table-striped">
+                    <caption class="sr-only">La proximité des députés à leur groupe</caption>
                     <thead>
                       <tr>
-                        <th scope="col"></th>
+                        <td></td>
                         <th scope="col">Député</th>
                         <th scope="col">Taux de loyauté</th>
                       </tr>
@@ -315,9 +318,10 @@
                 <p>En moyenne, les députés participent à <b><?= $mps_participation_mean ?> %</b> des scrutins.</p>
                 <div class="table_ranking">
                   <table class="table table-striped">
+                    <caption class="sr-only">La participation des députés aux votes</caption>
                     <thead>
                       <tr>
-                        <th scope="col"></th>
+                        <td></td>
                         <th scope="col">Député</th>
                         <th scope="col">Taux de participation</th>
                       </tr>

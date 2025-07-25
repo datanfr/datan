@@ -67,11 +67,12 @@
                   <i>Le taux de participation moyen pour ce score est de <?= $average['participationSPS'] ?> %.</i>
                 </p>
                 <table class="table table-stats">
+                  <caption class="sr-only">Classement des groupes selon leur taux de participation à tous les votes solennels</caption>
                   <thead>
                     <tr>
-                      <th class="text-center">N°</th>
-                      <th class="text-center">Groupe</th>
-                      <th class="text-center">Taux de participation moyen</th>
+                      <th scope="col" class="text-center">N°</th>
+                      <th scope="col" class="text-center">Groupe</th>
+                      <th scope="col" class="text-center">Taux de participation moyen</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -96,11 +97,12 @@
                 <i>Le taux de participation moyen pour ce score est de <?= $average['participationCommission'] ?> %.</i>
               </p>
               <table class="table table-stats" style="width: 100%;">
+                <caption class="sr-only">Classement des groupes selon leur taux de participation à tous les votes par spécialisation</caption>
                 <thead>
                   <tr>
-                    <th class="text-center">N°</th>
-                    <th class="text-center">Groupe</th>
-                    <th class="text-center">Taux de participation moyen</th>
+                    <th scope="col" class="text-center">N°</th>
+                    <th scope="col" class="text-center">Groupe</th>
+                    <th scope="col" class="text-center">Taux de participation moyen</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -126,11 +128,12 @@
                 <i>Le taux de participation moyen pour ce score est de <?= $average['participation'] ?> %.</i>
               </p>
               <table class="table table-stats">
+                <caption class="sr-only">Classement des groupes selon leur taux de participation à tous les votes confondus</caption>
                 <thead>
                   <tr>
-                    <th class="text-center">N°</th>
-                    <th class="text-center">Groupe</th>
-                    <th class="text-center">Taux de participation moyen</th>
+                    <th scope="col" class="text-center">N°</th>
+                    <th scope="col" class="text-center">Groupe</th>
+                    <th scope="col" class="text-center">Taux de participation moyen</th>
                   </tr>
                 </thead>
                 <tbody>

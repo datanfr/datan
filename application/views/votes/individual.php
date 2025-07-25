@@ -338,15 +338,16 @@ endif; ?>
         <div class="tab-content" id="nav-tabContent">
           <div class="tab-pane fade show active" id="nav-groupes" role="tabpanel" aria-labelledby="nav-groupes-tab">
             <table class="table table-striped" id="table-vote-individual-groupes" style="width: 100%">
+              <caption class="sr-only">Les votes des groupes</caption>
               <thead>
                 <tr>
-                  <th class="all">Groupe</th>
-                  <th class="text-center all">Vote</th>
-                  <th class="text-center min-tablet">Pour</th>
-                  <th class="text-center min-tablet">Abstention</th>
-                  <th class="text-center min-tablet">Contre</th>
-                  <th class="text-center">Participation</th>
-                  <th class="text-center min-tablet">
+                  <th scope="col" class="all">Groupe</th>
+                  <th scope="col" class="text-center all">Vote</th>
+                  <th scope="col" class="text-center min-tablet">Pour</th>
+                  <th scope="col" class="text-center min-tablet">Abstention</th>
+                  <th scope="col" class="text-center min-tablet">Contre</th>
+                  <th scope="col" class="text-center">Participation</th>
+                  <th scope="col" class="text-center min-tablet">
                     Cohésion
                     <a tabindex="0" role="button" data-toggle="popover" data-trigger="focus" title="Taux de cohésion" aria-label="Tooltip cohésion" data-content="Le taux de cohésion représente <b>l'unité d'un groupe politique</b> lorsqu'il vote. Il peut prendre des mesures allant de 0 à 1. Un taux proche de 1 signifie que le groupe est très uni.<br><br>Attention, dans beaucoup de parlements, y compris l'Assemblée nationale, les députés suivent dans la plupart des cas la ligne officielle du groupe, expliquant des taux de cohésion très élevés. Le mesure proposée ici est intéressante quand elle est comparée avec les mesures de cohésion des autres groupes.<br><br>Pour plus d'information, <a href='<?= base_url() ?>statistiques/aide#cohesion' target='_blank'>cliquez ici</a>."><?= file_get_contents(asset_url() . "imgs/icons/question_circle.svg") ?></a>
                   </th>
@@ -381,12 +382,13 @@ endif; ?>
           </div>
           <div class="tab-pane fade pt-3" id="nav-deputes" role="tabpanel" aria-labelledby="nav-deputes-tab">
             <table class="table table-striped table-vote-individual" id="table-vote-individual-deputes" style="width: 100%">
+              <caption class="sr-only">Les votes des députés</caption>
               <thead>
                 <tr>
-                  <th class="all" style="vertical-align: top">Député</th>
-                  <th class="text-center min-tablet">Groupe</th>
-                  <th class="text-center all">Vote</th>
-                  <th class="text-center all">Loyauté</th>
+                  <th scope="col" class="all" style="vertical-align: top">Député</th>
+                  <th scope="col" class="text-center min-tablet">Groupe</th>
+                  <th scope="col" class="text-center all">Vote</th>
+                  <th scope="col" class="text-center all">Loyauté</th>
                 </tr>
               </thead>
               <tbody>

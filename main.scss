@@ -10,7 +10,7 @@ $vert: #00B794;
 $bleu: #00668E;
 $yellow: #ffba4a;
 $text-gray: #4D5755;
-$text-gray-light: #AAAAAA;
+$text-gray-light: #475251;
 $text-black: #4C4C4C;
 $bg-colour: #F3F5F6;
 $body-bg: $bg-colour;
@@ -2071,7 +2071,7 @@ body{
     font-weight: 800;
     color: $text-black;
   }
-  h3{
+  h2.history{
     font-weight: 800;
     color: $primary;
     font-size: $h5-font-size;
@@ -2205,6 +2205,9 @@ body{
     .subtitle{
       font-weight: 800;
       color: $text-gray-light;
+    }
+    .candidate {
+      font-size: $h6-font-size;
     } 
   }
   /* Bloc elections history */
@@ -2471,7 +2474,7 @@ body{
     font-weight: 800;
     color: $text-black;
   }
-  h3{
+  h2.history{
     font-weight: 800;
     color: $primary;
     font-size: $h5-font-size;
