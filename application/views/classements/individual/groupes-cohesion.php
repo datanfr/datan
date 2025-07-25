@@ -30,11 +30,12 @@
         <div class="mt-5">
           <h2 class="mb-5">Classement des groupes en fonction de leur taux de cohésion</h2>
           <table class="table table-stats">
+            <caption class="sr-only">Classement des groupes en fonction de leur taux de cohésion</caption>
             <thead>
               <tr>
-                <th class="text-center">N°</th>
-                <th class="text-center">Groupe</th>
-                <th class="text-center">Taux de cohésion</th>
+                <th scope="col" class="text-center">N°</th>
+                <th scope="col" class="text-center">Groupe</th>
+                <th scope="col" class="text-center">Taux de cohésion</th>
               </tr>
             </thead>
             <tbody>

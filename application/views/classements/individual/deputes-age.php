@@ -27,12 +27,13 @@
       <div class="mt-5">
         <h2 class="mb-5">Classement des députés selon leur âge</h2>
         <table class="table table-stats" id="table-stats">
+          <caption class="sr-only">Classement des députés selon leur âge</caption>
           <thead>
             <tr>
-              <th class="text-center all">N°</th>
-              <th class="text-center all">Député</th>
-              <th class="text-center min-tablet">Groupe</th>
-              <th class="text-center all">Âge</th>
+              <th scope="col" class="text-center all">N°</th>
+              <th scope="col" class="text-center all">Député</th>
+              <th scope="col" class="text-center min-tablet">Groupe</th>
+              <th scope="col" class="text-center all">Âge</th>
             </tr>
           </thead>
           <tbody>

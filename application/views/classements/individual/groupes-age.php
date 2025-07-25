@@ -28,11 +28,12 @@
         <div class="mt-5">
           <h2 class="mb-5">Classement des groupes en fonction de l'âge de leurs membres</h2>
           <table class="table table-stats">
+            <caption class="sr-only">Classement des groupes en fonction de l'âge de leurs membres</caption>
             <thead>
               <tr>
-                <th class="text-center">N°</th>
-                <th class="text-center">Groupe</th>
-                <th class="text-center">Âge moyen des députés</th>
+                <th scope="col" class="text-center">N°</th>
+                <th scope="col" class="text-center">Groupe</th>
+                <th scope="col" class="text-center">Âge moyen des députés</th>
               </tr>
             </thead>
             <tbody>

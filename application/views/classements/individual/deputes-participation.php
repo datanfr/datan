@@ -66,13 +66,14 @@
                   <i>Le taux de participation moyen pour ce score est de <?= $participationSolennelsMean ?> %.</i>
                 </p>
                 <table class="table table-stats" id="table-stats" style="width: 100%;">
+                <caption class="sr-only">Classement des députés selon leur taux de participation aux votes solennels</caption>
                   <thead>
                     <tr>
-                      <th class="text-center all">N°</th>
-                      <th class="text-center all">Député</th>
-                      <th class="text-center all">Groupe</th>
-                      <th class="text-center all">Participation</th>
-                      <th class="text-center min-tablet">Nombre de votes</th>
+                      <th scope="col" class="text-center all">N°</th>
+                      <th scope="col" class="text-center all">Député</th>
+                      <th scope="col" class="text-center all">Groupe</th>
+                      <th scope="col" class="text-center all">Participation</th>
+                      <th scope="col" class="text-center min-tablet">Nombre de votes</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -97,14 +98,15 @@
                 <i>Le taux de participation moyen pour ce score est de <?= $participationCommissionMean ?> %.</i>
               </p>
               <table class="table table-stats" id="table-stats2" style="width: 100%;">
+                <caption class="sr-only">Classement des députés selon leur taux de participation aux votes par spécialisation</caption>
                 <thead>
                   <tr>
-                    <th class="text-center all">N°</th>
-                    <th class="text-center all">Député</th>
-                    <th class="text-center all">Groupe</th>
-                    <th class="text-center all">Participation</th>
-                    <th class="text-center min-tablet">Nombre de votes</th>
-                    <th class="text-center all">Commission actuelle</th>
+                    <th scope="col" class="text-center all">N°</th>
+                    <th scope="col" class="text-center all">Député</th>
+                    <th scope="col" class="text-center all">Groupe</th>
+                    <th scope="col" class="text-center all">Participation</th>
+                    <th scope="col" class="text-center min-tablet">Nombre de votes</th>
+                    <th scope="col" class="text-center all">Commission actuelle</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -129,13 +131,14 @@
                 <i>Le taux de participation moyen pour ce score est de <?= $participationMean ?> %.</i>
               </p>
               <table class="table table-stats" id="table-stats3" style="width: 100%;">
+                <caption class="sr-only">Classement des députés selon leur taux de participation à tous les votes confondus</caption>
                 <thead>
                   <tr>
-                    <th class="text-center all">N°</th>
-                    <th class="text-center all">Député</th>
-                    <th class="text-center all">Groupe</th>
-                    <th class="text-center all">Participation</th>
-                    <th class="text-center min-tablet">Nombre de votes</th>
+                    <th scope="col" class="text-center all">N°</th>
+                    <th scope="col" class="text-center all">Député</th>
+                    <th scope="col" class="text-center all">Groupe</th>
+                    <th scope="col" class="text-center all">Participation</th>
+                    <th scope="col" class="text-center min-tablet">Nombre de votes</th>
                   </tr>
                 </thead>
                 <tbody>

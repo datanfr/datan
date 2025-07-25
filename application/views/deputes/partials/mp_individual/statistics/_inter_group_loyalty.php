@@ -206,6 +206,7 @@ if ($first_person && $active) {
           </div>
           <div class="collapse mt-3" id="collapseProximity">
             <table class="table">
+              <caption class="sr-only">Taux de proximité de <?= $title ?> avec tous les groupes politiques</caption>
               <thead>
                 <tr>
                   <th scope="col"></th>
