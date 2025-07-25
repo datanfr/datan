@@ -542,7 +542,8 @@
         FROM votes_scores vs
         WHERE
           (
-            vs.voteNumero IN (184, 269, 629, 3213) AND vs.legislature = 16
+            (vs.voteNumero IN (269, 3213) AND vs.legislature = 16)
+            OR (vs.voteNumero IN (2107) AND vs.legislature = 17)
           )
           AND vs.mpId = ?;
       ';
@@ -552,9 +553,8 @@
 
       $text = array(
         "l16v629" => "l'inscription de l'interruption volontaire de grossesse (IVG) dans la Constitution",
-        "l16v269" => "la création d'une taxe temporaire sur les super-dividendes distribués par les grandes entreprises",
-        "l16v184" => "la ratification de l'accord pour l'adhésion de la Suède et de la Finlande à l'OTAN",
-        "l16v3213" => "du projet de loi immigration en 2023"
+        "l16v3213" => "du projet de loi immigration en 2023",
+        "l17v2107" => "la proposition de loi créant un droit à l'aide à mourir"
       );
 
       foreach ($votes as $key => $value) {
