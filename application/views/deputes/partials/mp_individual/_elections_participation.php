@@ -6,6 +6,15 @@
       <?= $title ?> a été candidat<?= $gender['e'] ?> <?= count($elections) > 1 ? 'à plusieurs élections' : 'à une élection' ?> alors qu'<?= $gender['pronom'] ?> était député<?= $gender['e'] ?>.
     </p>
     <table class="table">
+      <caption class="sr-only">Les participations électorales de <?= $title ?></caption>
+      <thead class="sr-only">
+        <tr>
+          <th scope="col">Année</th>
+          <th scope="col">Élection</th>
+          <th scope="col">Circonscription</th>
+          <th scope="col">Résultat</th>
+        </tr>
+      </thead>
       <tbody>
         <?php foreach ($elections as $election): ?>
           <tr>
