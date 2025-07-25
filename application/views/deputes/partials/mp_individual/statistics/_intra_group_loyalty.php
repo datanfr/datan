@@ -135,6 +135,7 @@ if ($first_person && $active) {
               <p><?= $fourth_phrase ?></p>
               <div class="collapse my-4" id="collapseLoyaute">
                 <table class="table">
+                  <caption class="sr-only">Evolution du taux de loyauté de <?= $title ?> avec ses groupes politiques</caption>
                   <thead>
                     <tr>
                       <th scope="col">Groupe</th>
