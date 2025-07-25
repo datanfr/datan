@@ -27,12 +27,15 @@
           </div>
         </div>
         <table class="table table-striped table-stats mt-4">
+          <caption class="sr-only">
+            Les catégories professionnelles à l'Assemblée et dans la population
+          </caption>
           <thead class="thead-dark">
             <tr>
-              <th class="text-center all">Famille socioprofessionnelle</th>
-              <th class="text-center min-tablet">Nombre de députés</th>
-              <th class="text-center all">Part de députés</th>
-              <th class="text-center all">Part dans la population</th>
+              <th scope="col" class="text-center all">Famille socioprofessionnelle</th>
+              <th scope="col" class="text-center min-tablet">Nombre de députés</th>
+              <th scope="col" class="text-center all">Part de députés</th>
+              <th scope="col" class="text-center all">Part dans la population</th>
             </tr>
           </thead>
           <tbody>
@@ -57,12 +60,15 @@
           </div>
         </div>
         <table class="table table-stats mt-5" id="table-stats-origine-sociale">
+          <caption class="sr-only">
+          Les métiers et catégories professionnelles des députés
+          </caption>
           <thead class="thead-dark">
             <tr>
-              <th class="text-center all">Député</th>
-              <th class="text-center min-tablet">Groupe</th>
-              <th class="text-center all">Ancien métier</th>
-              <th class="text-center all">Catégorie socioprofessionnelle</th>
+              <th scope="col" class="text-center all">Député</th>
+              <th scope="col" class="text-center min-tablet">Groupe</th>
+              <th scope="col" class="text-center all">Ancien métier</th>
+              <th scope="col" class="text-center all">Catégorie socioprofessionnelle</th>
             </tr>
           </thead>
           <tbody>
