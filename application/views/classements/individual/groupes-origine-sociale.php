@@ -28,11 +28,12 @@
           <div class="col-12 mt-5">
             <p>Découvrez ci-dessous le classement des groupes en fonction de leur représentativité sociale.</p>
             <table class="table table-striped table-stats mt-4">
+              <caption class="sr-only">Classement des groupes en fonction de leur représentativité sociale</caption>
               <thead class="thead-dark">
                 <tr>
-                  <th class="text-center all">Groupe politique</th>
-                  <th class="text-center min-tablet">Nombre de députés</th>
-                  <th class="text-center all">Score de représentativité</th>
+                  <th scope="col" class="text-center all">Groupe politique</th>
+                  <th scope="col" class="text-center min-tablet">Nombre de députés</th>
+                  <th scope="col" class="text-center all">Score de représentativité</th>
                 </tr>
               </thead>
               <tbody>
@@ -57,11 +58,12 @@
           <?php if ($groups_rose): ?>
             <p>Dans quel groupe politique y a-t-il le plus de députés avec un parcours d'agriculteur ? Avec le plus de parlementaires ayant effectué une profession de cadre ? D'ouvriers ? Découvrez-le dans le tableau ci-dessous !</p>
             <table class="table table-striped table-stats mt-4">
+              <caption class="sr-only">Part des catégories professionnelles dans chaque groupe</caption>
               <thead class="thead-dark table-sm">
                 <tr>
-                  <th>Catégorie</th>
+                  <th scope="col">Catégorie</th>
                   <?php foreach ($groups as $key => $value): ?>
-                    <th class="text-center"><small><?= $key ?></small></th>
+                    <th scope="col" class="text-center"><small><?= $key ?></small></th>
                     <?php
                       $cols[] = $key;
                     ?>
