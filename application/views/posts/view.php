@@ -38,29 +38,36 @@
     <div class="col-lg-8 offset-lg-2">
       <div class="img">
         <picture>
-          <!-- Mobile WebP --> 
+          <!-- WebP --> 
           <source
-            media="(max-width: 575.99px)"
-            srcset="<?= asset_url() ?>imgs/posts/webp/<?= $post['image_url'] ?>-360.webp" type="image/webp">
-
-          <!-- Desktop/Tablet WebP -->
-          <source 
-            media="(min-width: 576px)" 
-            srcset="<?= asset_url() ?>imgs/posts/webp/<?= $post['image_url'] ?>-730.webp" 
+            srcset="
+            <?= asset_url() ?>imgs/posts/webp/<?= $post['image_url'] ?>-360.webp 360w,
+            <?= asset_url() ?>imgs/posts/webp/<?= $post['image_url'] ?>-420.webp 420w,
+            <?= asset_url() ?>imgs/posts/webp/<?= $post['image_url'] ?>-730.webp 730w,
+            <?= asset_url() ?>imgs/posts/webp/<?= $post['image_url'] ?>-1240.webp 1240w"
+            sizes="
+              (min-width: 1400px) 50vw,
+              (min-width: 1200px) 60vw,
+              (min-width: 992px) 60vw,
+              (min-width: 768px) 90vw,
+              (min-width: 576px) 90vw,
+              90vw"
             type="image/webp"
           >
 
-          <!-- Mobile PNG fallback -->
-          <source 
-            media="(max-width: 575.99px)" 
-            srcset="<?= asset_url() ?>imgs/posts/<?= $post['image_url'] ?>-360.png" 
-            type="image/png"
-          >
-
-          <!-- Desktop PNG fallback -->
-          <source 
-            media="(min-width: 600px)" 
-            srcset="<?= asset_url() ?>imgs/posts/<?= $post['image_url'] ?>-730.png" 
+          <!-- PNG -->
+          <source
+            srcset="
+            <?= asset_url() ?>imgs/posts/<?= $post['image_url'] ?>-360.png 360w,
+            <?= asset_url() ?>imgs/posts/<?= $post['image_url'] ?>-420.png 420w,
+            <?= asset_url() ?>imgs/posts/<?= $post['image_url'] ?>-730.png 730w,
+            <?= asset_url() ?>imgs/posts/<?= $post['image_url'] ?>-1240.png 1240w"
+            sizes="min-width: 1400px) 50vw,
+              (min-width: 1200px) 60vw,
+              (min-width: 992px) 60vw,
+              (min-width: 768px) 90vw,
+              (min-width: 576px) 90vw,
+              90vw"
             type="image/png"
           >
 
