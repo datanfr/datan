@@ -167,14 +167,14 @@
       },
       initComplete: function () {
           this.api().columns().every( function (i) {
-            var column = this;
+            const column = this;
             if (screen.width > 767) {
-              if (i == 1 | i == 2 | i == 3) {
-                $(column.header()).append("</br>");
-                var select = $('<select style="margin-top: 12px; margin-bottom: 5px" class="form-control"><option value=""></option></select>')
+              if (i == 1 || i == 2 || i == 3) {
+                $(column.header()).append("<br>");
+                const select = $('<select aria-label="Filtrer par '+$(column.header()).text()+'" style="margin-top: 12px; margin-bottom: 5px" class="form-control"><option value=""></option></select>')
                     .appendTo( $(column.header()) )
                     .on( 'change', function () {
-                        var val = $.fn.dataTable.util.escapeRegex(
+                        const val = $.fn.dataTable.util.escapeRegex(
                             $(this).val()
                         );
 
