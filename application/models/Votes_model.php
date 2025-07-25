@@ -542,7 +542,7 @@
         FROM votes_scores vs
         WHERE
           (
-            (vs.voteNumero IN (269, 3213) AND vs.legislature = 16)
+            (vs.voteNumero IN (629, 3213) AND vs.legislature = 16)
             OR (vs.voteNumero IN (2107) AND vs.legislature = 17)
           )
           AND vs.mpId = ?;

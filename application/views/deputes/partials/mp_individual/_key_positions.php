@@ -23,8 +23,7 @@
                     <?php else : ?>
                       <?= $first_person ? "Je me suis abstenu{$gender['e']} sur le vote concernant" : "s'est abstenu{$gender['e']} sur le vote concernant" ?>
                     <?php endif; ?>
-                    <?= $value['text'] ?>
-                  </b>.
+                    <?= $value['text'] ?></b>.
                   <?= $first_person
                     ? ($value["scoreLoyaute"] === "1" ? "J'ai voté" : "Je n'ai pas voté") . " comme mon groupe."
                     : ucfirst($gender["pronom"]) . " " . ($value["scoreLoyaute"] === "1" ? "a voté" : "n'a pas voté") . " comme son groupe." ?>
