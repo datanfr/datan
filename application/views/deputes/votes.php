@@ -3,7 +3,7 @@
       <div class="row">
         <div class="col-md-10 offset-md-1">
           <a class="btn btn-primary text-border mb-2" href="<?= base_url() ?>deputes/<?= $depute['dptSlug'] ?>/depute_<?= $depute['nameUrl'] ?>">
-            <?= file_get_contents(asset_url().'imgs/icons/arrow_left.svg') ?>
+            <?= file_get_contents(asset_url() . 'imgs/icons/arrow_left.svg') ?>
             Retour profil
           </a>
           <span class="title d-block"><?= $title ?></span>
@@ -18,7 +18,7 @@
   <?php endif; ?>
   <div class="d-none d-lg-none justify-content-between align-items-center sticky-top p-3" data-toggle="modal" data-target="#filterModal" id="filterBanner" style="top: 50px">
     <span class="text-white font-weight-bold">Filtrer par catégorie</span>
-    <?= file_get_contents(asset_url().'imgs/icons/funnel-fill.svg') ?>
+    <?= file_get_contents(asset_url() . 'imgs/icons/funnel-fill.svg') ?>
   </div>
   <!-- Modal filter only on mobile & tablet -->
   <div class="modal fade" id="filterModal" tabindex="-1" role="dialog" aria-labelledby="filterModalTitle" aria-hidden="true">
@@ -82,7 +82,7 @@
         <div class="row mt-4 d-none d-lg-block">
           <div class="col-12 btn-back text-center text-lg-left">
             <a class="btn btn-outline-primary mx-2" href="<?= base_url() ?>deputes/<?= $depute['dptSlug'] ?>/depute_<?= $depute['nameUrl'] ?>">
-              <?= file_get_contents(asset_url().'imgs/icons/arrow_left.svg') ?>
+              <?= file_get_contents(asset_url() . 'imgs/icons/arrow_left.svg') ?>
               Retour profil
             </a>
           </div>
@@ -101,7 +101,7 @@
               L'équipe de Datan décrypte les votes les plus marquants de l'Assemblée nationale. Nous mettons en lumière les votes ayant suscité une forte attention médiatique ou provoqué des divisions au sein des groupes parlementaires. Chaque vote est expliqué et replacé dans son contexte pour vous permettre de mieux les comprendre.
             </p>
             <p>
-              Découvrez sur cette  page les positions de <b><?= $title ?></b> sur ces votes clés.
+              Découvrez sur cette page les positions de <b><?= $title ?></b> sur ces votes clés.
             </p>
           </div>
         </div>
@@ -120,7 +120,7 @@
           <?php endforeach; ?>
         </div>
       </div>
-    </div>  
+    </div>
   </div> <!-- END CONTAINER -->
   <div class="container-fluid mt-5 py-5 pg-depute-votes-all" id="pattern_background">
     <div class="container">
@@ -151,7 +151,7 @@
                   <td>
                     <?php if ($i <= 30): ?>
                       <a href="<?= base_url() ?>votes/legislature-<?= $vote['legislature'] ?>/vote_<?= $vote['voteNumero'] ?>" class="no-decoration"><?= $vote['voteNumero'] ?></a>
-                      <?php else: ?>
+                    <?php else: ?>
                       <?= $vote['voteNumero'] ?>
                     <?php endif; ?>
                   </td>
@@ -160,7 +160,7 @@
                     <?php if (!empty($vote['title'])): ?>
                       <span class="vote-datan-bold"><?= mb_strtoupper($vote['title']) ?></span><br>
                       <span class="vote-datan-italic"><?= ucfirst($vote['titre']) ?></span>
-                      <?php else: ?>
+                    <?php else: ?>
                       <?= ucfirst($vote['titre']) ?>
                     <?php endif; ?>
                   </td>
@@ -186,20 +186,20 @@
         <div class="col-12">
           <?php if ($active): ?>
             <h2>Les autres députés <?= name_group($depute['libelle']) ?> (<?= $depute['libelleAbrev'] ?>)</h2>
-            <?php else: ?>
+          <?php else: ?>
             <h2>Les autres députés plus en activité</h2>
           <?php endif; ?>
           <div class="row mt-3">
             <?php foreach ($other_deputes as $mp): ?>
               <div class="col-6 col-md-3 py-2">
-                <a class="membre no-decoration underline" href="<?= base_url(); ?>deputes/<?= $mp['dptSlug'] ?>/depute_<?= $mp['nameUrl'] ?>"> <?= $mp['nameFirst'].' '.$mp['nameLast'] ?></a>
+                <a class="membre no-decoration underline" href="<?= base_url(); ?>deputes/<?= $mp['dptSlug'] ?>/depute_<?= $mp['nameUrl'] ?>"> <?= $mp['nameFirst'] . ' ' . $mp['nameLast'] ?></a>
               </div>
             <?php endforeach; ?>
           </div>
           <div class="mt-3">
             <?php if ($active): ?>
               <a href="<?= base_url() ?>groupes/legislature-<?= $depute['legislature'] ?>/<?= mb_strtolower($depute['libelleAbrev']) ?>/membres">Voir tous les députés membres du groupe <?= name_group($depute['libelle']) ?> (<?= $depute['libelleAbrev'] ?>)</a>
-              <?php else: ?>
+            <?php else: ?>
               <a href="<?= base_url(); ?>deputes/inactifs">Tous les députés plus en activité</a>
             <?php endif; ?>
           </div>
@@ -207,11 +207,11 @@
       </div>
       <div class="row mt-5">
         <div class="col-12">
-          <h2>Les députés en activité du département <?= $depute['dptLibelle2'] ?><?= $depute['departementNom'].' ('.$depute['departementCode'].')'?></h2>
+          <h2>Les députés en activité du département <?= $depute['dptLibelle2'] ?><?= $depute['departementNom'] . ' (' . $depute['departementCode'] . ')' ?></h2>
           <div class="row mt-3">
             <?php foreach ($other_deputes_dpt as $mp): ?>
               <div class="col-6 col-md-3 py-2">
-                <a class="membre no-decoration underline" href="<?= base_url(); ?>deputes/<?= $mp['dptSlug'] ?>/depute_<?= $mp['nameUrl'] ?>"> <?= $mp['nameFirst'].' '.$mp['nameLast'] ?></a>
+                <a class="membre no-decoration underline" href="<?= base_url(); ?>deputes/<?= $mp['dptSlug'] ?>/depute_<?= $mp['nameUrl'] ?>"> <?= $mp['nameFirst'] . ' ' . $mp['nameLast'] ?></a>
               </div>
             <?php endforeach; ?>
           </div>
@@ -222,6 +222,23 @@
       </div>
     </div>
   </div>
+  <!-- EXPLICATIONS DE VOTE -->
+  <?php if (is_iterable($votes)): ?>
+    <?php foreach ($votes as $vote): ?>
+      <?php if (!empty($vote['explication'])): ?>
+        <!-- Modal explain -->
+        <?php $this->load->view('votes/modals/explain.php', [
+          'id' => 'explication-l' . $vote['legislature'] . '-v' . $vote['voteNumero'],
+          'title' => "L'avis de " . $title,
+          'value' => $vote,
+          'vote_titre' => $vote['vote_titre'],
+          'explication' => $vote['explication'],
+          'img' => $depute['idImage'],
+          'photoSquare' => $photo_square
+        ]) ?>
+      <?php endif; ?>
+    <?php endforeach; ?>
+  <?php endif; ?>
   <script type="text/javascript">
     document.addEventListener("DOMContentLoaded", () => {
       const rows = document.querySelectorAll("tr[data-href]");
