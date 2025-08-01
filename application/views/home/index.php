@@ -388,6 +388,9 @@
           <a href="https://www.lejdd.fr/Politique/interventions-textes-qui-sont-les-deputes-les-plus-actifs-de-ce-debut-de-legislature-4126439" target="_blank" rel="noopener">
             <img class="mx-2 my-3 img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="150" height="35" data-src="<?= asset_url() ?>imgs/media/jdd.png" alt="JDD">
           </a>
+          <a href="https://www.franceinfo.fr/politique/gouvernement-de-francois-bayrou/moins-producteur-de-lois-plus-souvent-mis-en-minorite-visualisez-en-trois-graphiques-comment-depuis-la-dissolution-le-gouvernement-a-en-partie-perdu-la-main-au-parlement_7291695.html" target="_blank" rel="noopener">
+            <img class="mx-2 my-3 img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="183" height="28" data-src="<?= asset_url() ?>imgs/media/franceinfo.png" alt="France info">
+          </a>
           <a href="https://www.bfmtv.com/politique/infographie-assemblee-nationale-qui-sont-les-groupes-parlementaires-les-plus-proches_AV-202207260568.html" target="_blank" rel="noopener">
             <img class="mx-2 my-3 img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="80" height="50" data-src="<?= asset_url() ?>imgs/media/bfm.jpg" alt="BFM TV">
           </a>
