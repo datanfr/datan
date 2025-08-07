@@ -62,7 +62,7 @@
             <?= asset_url() ?>imgs/posts/<?= $post['image_url'] ?>-420.png 420w,
             <?= asset_url() ?>imgs/posts/<?= $post['image_url'] ?>-730.png 730w,
             <?= asset_url() ?>imgs/posts/<?= $post['image_url'] ?>-1240.png 1240w"
-            sizes="min-width: 1400px) 50vw,
+            sizes="(min-width: 1400px) 50vw,
               (min-width: 1200px) 60vw,
               (min-width: 992px) 60vw,
               (min-width: 768px) 90vw,
