@@ -9,6 +9,25 @@
       $this->load->library('image_service');
     }
 
+    private function resize_images($original_path, $base_name) {
+      foreach ($this->target_widths as $width) {
+        $resized_png_path = './assets/imgs/posts/' . $base_name . '-' . $width . '.png';
+        $resized_webp_path = './assets/imgs/posts/webp/' . $base_name . '-' . $width . '.webp';
+
+        $this->image_service->resize_image($original_path, $resized_png_path, $width);
+        $this->image_service->convert_to_webp($resized_png_path, $resized_webp_path);
+      }
+    }
+
+    private function png_upload_config($file_name) {
+      return [
+        'upload_path'   => './assets/imgs/posts/',
+        'allowed_types' => 'png',
+        'max_size'      => 2048,
+        'file_name'     => $file_name
+      ];
+    }
+
     public function get_posts($slug, $user, $category_slug){
       if (empty($slug)) {
         $sql = 'SELECT p.id, date_format(created_at, "%d %M %Y") as created_at_fr, p.id, p.user_id, p.title, p.slug, p.body, p.created_at, p.modified_at, p.state, p.category_id, p.image_name
@@ -115,10 +134,9 @@
         $new_png_name = $base_name . '-source.png';
 
         $_FILES['post_image_png']['name'] = $new_png_name;
-        $config_png['upload_path'] = './assets/imgs/posts/';
-        $config_png['allowed_types'] = 'png';
-        $config_png['max_size'] = '2048'; // 2MB
-        $config_png['file_name'] = $new_png_name; // Utiliser le nouveau nom de fichier
+
+        // Add PNG config
+        $config_png = $this->png_upload_config($new_png_name);
 
         $this->load->library('upload', $config_png);
 
@@ -135,24 +153,8 @@
           './assets/imgs/posts/webp/' . $base_name . '.webp'
         );
 
-        foreach($this->target_widths as $width){
-          $resized_png_path = './assets/imgs/posts/' . $base_name . '-' . $width . '.png';
-          $resized_webp_path = './assets/imgs/posts/webp/' . $base_name . '-' . $width . '.webp';
-
-          // Remissionner en PNG
-          $this->image_service->resize_image(
-            $original_path,
-            $resized_png_path,
-            $width
-          );
-
-          // Convertir en WebP
-          $this->image_service->convert_to_webp(
-            $resized_png_path,
-            $resized_webp_path
-          );
-
-        }
+        // Resize imges
+        $this->resize_images($original_path, $base_name);
 
       }
       
@@ -221,10 +223,9 @@
         $new_png_name = $base_name . '.png';
 
         $_FILES['post_image_png']['name'] = $new_png_name;
-        $config_png['upload_path'] = './assets/imgs/posts/';
-        $config_png['allowed_types'] = 'png';
-        $config_png['max_size'] = '2048'; // 2MB
-        $config_png['file_name'] = $new_png_name; // Utiliser le nouveau nom de fichier
+
+        // Add PNG config
+        $config_png = $this->png_upload_config($new_png_name);
 
         // Path to original image
         $original_path = './assets/imgs/posts/' . $new_png_name;
@@ -254,25 +255,8 @@
           './assets/imgs/posts/webp/' . $base_name . '.webp'
         );
   
-
-        foreach($this->target_widths as $width){
-          $resized_png_path = './assets/imgs/posts/' . $base_name . '-' . $width . '.png';
-          $resized_webp_path = './assets/imgs/posts/webp/' . $base_name . '-' . $width . '.webp';
-
-          // Remissionner en PNG
-          $this->image_service->resize_image(
-            $original_path,
-            $resized_png_path,
-            $width
-          );
-
-          // Convertir en WebP
-          $this->image_service->convert_to_webp(
-            $resized_png_path,
-            $resized_webp_path
-          );
-
-        }
+        // Resize imges
+        $this->resize_images($original_path, $base_name);
 
         $image_name = $base_name;
 
