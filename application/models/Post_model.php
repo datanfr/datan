@@ -1,8 +1,12 @@
 <?php
   class Post_model extends CI_Model{
+
+    private $target_widths = [360, 420, 730, 1240];
+
     public function __construct(){
       $this->load->database();
       $this->load->library('blog');
+      $this->load->library('image_service');
     }
 
     public function get_posts($slug, $user, $category_slug){
@@ -123,10 +127,7 @@
         }
 
         // Path to original image
-        $original_path = './assets/imgs/posts/' . $new_png_name;
-
-        // Chargement de la bibliothèque image_service
-        $this->load->library('image_service');
+        $original_path = './assets/imgs/posts/' . $new_png_name;        
 
         // Conversion de l'image originale en WebP
         $this->image_service->convert_to_webp(
@@ -134,10 +135,7 @@
           './assets/imgs/posts/webp/' . $base_name . '.webp'
         );
 
-        // Définir les tailles à générer
-        $target_widths = [360, 730];
-
-        foreach($target_widths as $width){
+        foreach($this->target_widths as $width){
           $resized_png_path = './assets/imgs/posts/' . $base_name . '-' . $width . '.png';
           $resized_webp_path = './assets/imgs/posts/webp/' . $base_name . '-' . $width . '.webp';
 
@@ -240,21 +238,16 @@
           ];
         }
 
-        // Définir les tailles à générer
-        $target_widths = [360, 730];
-
         // Delete old image files (original + resized)
         if (!empty($current_post['image_name'])) {
             @unlink('./assets/imgs/posts/' . $current_post['image_name'] . '.png');
             @unlink('./assets/imgs/posts/webp/' . $current_post['image_name'] . '.webp');
-            foreach ($target_widths as $w) {
+            foreach ($this->target_widths as $w) {
                 @unlink('./assets/imgs/posts/' . $current_post['image_name'] . '-' . $w . '.png');
                 @unlink('./assets/imgs/posts/webp/' . $current_post['image_name'] . '-' . $w . '.webp');
             }
         }
 
-        // --- Handle WEBP upload ---
-        $this->load->library('image_service');
         // Conversion du PNG en WebP
         $this->image_service->convert_to_webp(
           $original_path,
@@ -262,7 +255,7 @@
         );
   
 
-        foreach($target_widths as $width){
+        foreach($this->target_widths as $width){
           $resized_png_path = './assets/imgs/posts/' . $base_name . '-' . $width . '.png';
           $resized_webp_path = './assets/imgs/posts/webp/' . $base_name . '-' . $width . '.webp';
 
@@ -280,7 +273,7 @@
           );
 
         }
-                
+
         $image_name = $base_name;
 
       }
