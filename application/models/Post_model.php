@@ -244,7 +244,7 @@
         // --- Handle WEBP upload ---
         $this->load->library('image_service');
         // Conversion du PNG en WebP
-        $this->image_service->convert_to_webp_with('./assets/imgs/posts/' . $new_png_name, './assets/imgs/posts/webp/' . $base_name . '.webp');
+        $this->image_service->convert_to_webp('./assets/imgs/posts/' . $new_png_name, './assets/imgs/posts/webp/' . $base_name . '.webp');
 
         if(!empty($current_post['image_name']) && file_exists('./assets/imgs/posts/webp/' . $current_post['image_name'] . '.webp')){
           unlink('./assets/imgs/posts/webp/' . $current_post['image_name'] . '.webp');
