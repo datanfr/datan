@@ -176,7 +176,6 @@
       $this->db->delete('posts');
 
       // Delete image
-
       if($image_name){
         $png_path = './assets/imgs/posts/' . $image_name . '.png';
         $webp_path = './assets/imgs/posts/webp/' . $image_name . '.webp';
@@ -201,6 +200,8 @@
       
       // Gestion de l'image
       $image_name = $current_post['image_name']; // Garder l'image existante par défaut
+
+      // Handle PNG upload if provided
       if ($_FILES['post_image_png']['name']) {
 
         // Validate PNG file extension
@@ -227,6 +228,9 @@
         $config_png['max_size'] = '2048'; // 2MB
         $config_png['file_name'] = $new_png_name; // Utiliser le nouveau nom de fichier
 
+        // Path to original image
+        $original_path = './assets/imgs/posts/' . $new_png_name;
+
         $this->load->library('upload', $config_png);
 
         if(!$this->upload->do_upload('post_image_png')){
@@ -234,22 +238,49 @@
             'slug' => $slug,
             'error' => $this->upload->display_errors() . ' (image png) '
           ];
-          return false;
         }
 
-        if(!empty($current_post['image_name']) && file_exists('./assets/imgs/posts/'.$current_post['image_name'].'.png')){
-          unlink('./assets/imgs/posts/'.$current_post['image_name'].'.png');
+        // Définir les tailles à générer
+        $target_widths = [360, 730];
+
+        // Delete old image files (original + resized)
+        if (!empty($current_post['image_name'])) {
+            @unlink('./assets/imgs/posts/' . $current_post['image_name'] . '.png');
+            @unlink('./assets/imgs/posts/webp/' . $current_post['image_name'] . '.webp');
+            foreach ($target_widths as $w) {
+                @unlink('./assets/imgs/posts/' . $current_post['image_name'] . '-' . $w . '.png');
+                @unlink('./assets/imgs/posts/webp/' . $current_post['image_name'] . '-' . $w . '.webp');
+            }
         }
 
         // --- Handle WEBP upload ---
         $this->load->library('image_service');
         // Conversion du PNG en WebP
-        $this->image_service->convert_to_webp('./assets/imgs/posts/' . $new_png_name, './assets/imgs/posts/webp/' . $base_name . '.webp');
+        $this->image_service->convert_to_webp(
+          $original_path,
+          './assets/imgs/posts/webp/' . $base_name . '.webp'
+        );
+  
 
-        if(!empty($current_post['image_name']) && file_exists('./assets/imgs/posts/webp/' . $current_post['image_name'] . '.webp')){
-          unlink('./assets/imgs/posts/webp/' . $current_post['image_name'] . '.webp');
+        foreach($target_widths as $width){
+          $resized_png_path = './assets/imgs/posts/' . $base_name . '-' . $width . '.png';
+          $resized_webp_path = './assets/imgs/posts/webp/' . $base_name . '-' . $width . '.webp';
+
+          // Remissionner en PNG
+          $this->image_service->resize_image(
+            $original_path,
+            $resized_png_path,
+            $width
+          );
+
+          // Convertir en WebP
+          $this->image_service->convert_to_webp(
+            $resized_png_path,
+            $resized_webp_path
+          );
+
         }
-        
+                
         $image_name = $base_name;
 
       }
