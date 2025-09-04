@@ -82,7 +82,7 @@
       */
 
       // Get explications
-      $data['explications'] = $this->votes_model->get_explications_last();
+      $data['explications'] = $this->votes_model->get_random_explications_last();
 
       //Get votes (cached)
       if(!in_array($_SERVER['REMOTE_ADDR'], localhost())){
