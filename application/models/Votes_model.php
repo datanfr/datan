@@ -768,4 +768,35 @@
       return $this->db->get('explications_mp e', 3)->result_array();
     }
 
+    public function get_random_explications_last(): array
+    {
+        $sql = "SELECT 
+            e.*, 
+            d.nameFirst, 
+            d.nameLast, 
+            d.legislature AS legislature_last, 
+            d.libelleAbrev, 
+            d.couleurAssociee, 
+            d.dptSlug, 
+            d.nameUrl, 
+            v.vote, 
+            vd.title,
+            SUBSTR(e.mpId, 3) AS idImage,
+            CASE WHEN e.voteNumero < 0 THEN CONCAT('c', ABS(e.voteNumero)) ELSE e.voteNumero END AS voteNumeroFormatted,
+            CASE WHEN v.vote = 1 THEN 'pour' WHEN v.vote = -1 THEN 'contre' WHEN v.vote = 0 THEN 'abstention' ELSE NULL END AS voteLabel
+        FROM (
+            SELECT *
+            FROM explications_mp
+            WHERE state = 1
+            ORDER BY created_at DESC
+            LIMIT 15
+        ) AS e
+        LEFT JOIN deputes_last d ON e.mpId = d.mpId
+        JOIN votes_datan vd ON vd.legislature = e.legislature AND vd.voteNumero = e.voteNumero
+        LEFT JOIN votes_scores v ON v.legislature = e.legislature AND v.voteNumero = e.voteNumero AND v.mpId = e.mpId
+        ORDER BY RAND()
+        LIMIT 3";
+        
+        return $this->db->query($sql)->result_array();
+    }
   }
