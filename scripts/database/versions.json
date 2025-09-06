@@ -22,5 +22,17 @@
   {
     "version": 6,
     "object": "Remove imgOgp"
+  },
+  {
+    "version": 7,
+    "object": "Add column to db 'post'"
+  },
+  {
+    "version": 8,
+    "object": "Create database 'campaigns'"
+  },
+  {
+    "version": 9,
+    "object": "Modify column position in 'campaigns' table"
   }
 ]
