@@ -1,7 +1,7 @@
 <?php
 
   /*
-    With this file, the new version of the database will be => 5
+    With this file, the new version of the database will be => 6
     The name of the file needs to be v_5.php
 
     What needs to be changed in this file:
