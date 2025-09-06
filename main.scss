@@ -3586,4 +3586,10 @@ dialogueBoxQuiz
       height: 1.5em;
     }
   }
+  #campaign-paragraph{
+    p:first-of-type {
+      font-weight: bold;
+      font-size: $h3-font-size;
+    }
+  }
 }

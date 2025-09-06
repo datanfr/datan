@@ -1,6 +1,6 @@
 (async function () {
   try {
-    const res = await fetch("campaign/current_active_campaigns", {
+    const res = await fetch("/campaign/current_active_campaigns", {
       method: "GET",
     });
     if (res.ok) {
