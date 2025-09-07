@@ -10,4 +10,4 @@
   </div>
 </section>
 
-<script src="<?= asset_url() ?>js/campaigns/campaigns.js" type="text/javascript"></script>
+<script src="<?= asset_url() ?>js/datan/campaigns.js" type="text/javascript"></script>
