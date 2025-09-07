@@ -103,7 +103,8 @@
       "AD" => $right,
       "DR" => $right,
       "EPR" => $center,
-      "UDR" => $right
+      "UDR" => $right,
+      "UDDPLR" => $right
     );
     return $array;
   }
