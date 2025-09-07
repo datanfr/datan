@@ -8,6 +8,8 @@
             <a href="<?= base_url() ?>deputes/<?= $mpYoungest['dptSlug'] ?>/depute_<?= $mpYoungest['nameUrl'] ?>" target="_blank"><?= $mpYoungest['name'] ?></a> (<?= $mpYoungest['age'] ?> ans) est <?= $mpYoungestGender['le'] ?> <?= $mpYoungestGender['depute'] ?> <?= $mpYoungestGender['le'] ?> plus jeune.
             <?= ucfirst($mpYoungestGender['pronom']) ?> est membre du groupe <?= name_group($mpYoungest['libelle']) ?>.
           </p>
+          <!-- ADD DONATION CAMPAIGN PARTIAL -->
+          <?php $this->view('partials/campaign.php', array('wrapper_classes' => array('mt-5'))) ?>
         </div>
       </div>
       <div class="row row-grid mt-5">

@@ -7,6 +7,8 @@
             <p>Le groupe <a href="<?= base_url() ?>groupes/legislature-<?= $groupYoungest["legislature"] ?>/<?= mb_strtolower($groupYoungest["libelleAbrev"]) ?>"><?= name_group($groupYoungest["libelle"]) ?></a> est celui avec la moyenne d'âge la plus faible. En effet, les députés membres du groupe <?= $groupYoungest["libelleAbrev"] ?> ont en moyenne <?= $groupYoungest["age"] ?> ans.</p>
           <?php endif; ?>
           <p>La <a href="<?= base_url() ?>statistiques/aide#ageMoyen">moyenne d'âge dans la population française éligible</a> (plus de 18 ans) est de <?= $ageMeanPop ?> ans.</p>
+        <!-- ADD DONATION CAMPAIGN PARTIAL -->
+          <?php $this->view('partials/campaign.php', array('wrapper_classes' => array('mt-5'))) ?>
         </div>
       </div>
       <?php if (!$groupsAge): ?>

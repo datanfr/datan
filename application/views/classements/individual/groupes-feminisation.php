@@ -7,6 +7,8 @@
             <p>Le groupe parlementaire avec le taux de féminisation le plus élevé est <a href="<?= base_url() ?>groupes/legislature-<?= $groupsWomenFirst["legislature"] ?>/<?= mb_strtolower($groupsWomenFirst["libelleAbrev"]) ?>"><?= name_group($groupsWomenFirst["libelle"]) ?></a> (<?= $groupsWomenFirst["libelleAbrev"] ?>), qui compte <?= $groupsWomenFirst["female"] ?> députées femmes dans ses rangs (<?= $groupsWomenFirst["pct"] ?> % de ses effectifs).</p>
             <p><a href="<?= base_url() ?>groupes/legislature-<?= $groupsWomenLast["legislature"] ?>/<?= mb_strtolower($groupsWomenLast["libelleAbrev"]) ?>"><?= name_group($groupsWomenLast["libelle"]) ?></a> (<?= $groupsWomenLast["libelleAbrev"] ?>) est le groupe avec le taux de féminisation le plus faible. Il ne compte que <?= $groupsWomenLast["female"] ?> députées femmes dans ses rangs (<?= $groupsWomenLast["pct"] ?> % de ses effectifs).</p>
           <?php endif; ?>
+          <!-- ADD DONATION CAMPAIGN PARTIAL -->
+          <?php $this->view('partials/campaign.php', array('wrapper_classes' => array('mt-5'))) ?>
         </div>
       </div>
       <?php if (!$groupsWomen): ?>
