@@ -15,9 +15,11 @@
               Pour en savoir plus sur nos statistiques, <a href="<?= base_url() ?>statistiques/aide">cliquez ici</a>.
             </p>
           </div>
+          <!-- ADD DONATION CAMPAIGN PARTIAL -->
+          <?php $this->view('partials/campaign.php', array('wrapper_classes' => array('mt-5'))) ?>
         </div>
-        <div class="col-md-4 offset-lg-1 d-none d-md-flex align-items-center">
-          <div class="px-4">
+        <div class="col-md-4 offset-lg-1 d-none d-md-flex align-items-start">
+          <div class="p-4">
             <?= file_get_contents(asset_url()."imgs/svg/undraw_visual_data_b1wx_2.svg") ?>
           </div>
         </div>
