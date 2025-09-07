@@ -89,7 +89,8 @@
         case 'DEM':
           $infos['creation'] = " suite à la dissolution du groupe <a href='".base_url()."groupes/modem'>MODEM</a>. Ce nouveau groupe centriste a accueilli de nouveaux députés anciennement membres du groupe La République en Marche, comme Sabine Thillaye ou Christophe Jerretie.";
 
-
+        case 'UDDPLR':
+          $infos['creation'] = ". Ce nouveau groupe est la continuité directe de <a href='".base_url()."groupes/legislature-17/udr'>UDR</a>. Il ne s'agit que d'un changement d'intitulé, avec l'ajout de l'expression « pour la République » au nom du groupe.";
 
         default:
           $infos['creation'] = NULL;
