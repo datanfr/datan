@@ -3,10 +3,10 @@
       <div class="row">
         <div class="container">
           <div class="row row-grid bloc-titre mb-5">
-            <div class="col-lg-4 col-md-5 mb-4 mb-md-0">
+            <div class="col-md-7 my-5">
               <h1>Les votes décryptés par Datan</h1>
             </div>
-            <div class="col-lg-4 col-md-7 mt-md-0">
+            <div class="col-md-10 mb-lg-5 mb-4">
               <p>
                 L'équipe de Datan décrypte pour vous les votes les plus intéressants de la législature.
                 Il s'agit des votes qui ont fait l'objet d'attention médiatique, ou sur lesquels un ou plusieurs groupes parlementaires étaient fortement divisés.
@@ -17,11 +17,8 @@
               <p>
                 Si vous voulez avoir accès à <b>tous</b> les votes de l'Assemblée nationale, qu'ils soient décryptés par nos soins ou non, <a href="<?= base_url() ?>votes/legislature-<?= legislature_current() ?>">cliquez ici</a>.
               </p>
-            </div>
-            <div class="col-md-4 d-none d-lg-block">
-              <div class="px-4">
-                <?= file_get_contents(asset_url()."imgs/svg/undraw_voting_nvu7.svg") ?>
-              </div>
+              <!-- ADD DONATION CAMPAIGN PARTIAL -->
+              <?php $this->view('partials/campaign.php', array('wrapper_classes' => array('mt-5'))) ?>
             </div>
             <div class="col-12 carousel-container bloc-carousel-votes-flickity">
               <?php $this->load->view('votes/partials/votes_carousel.php', array('votes' => $votes_datan)) ?>

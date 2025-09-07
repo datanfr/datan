@@ -17,6 +17,8 @@
               <p>
                 Si vous voulez avoir accès à <b>tous les votes de l'Assemblée nationale</b>, qu'ils soient décryptés par nos soins ou non, <a href="<?= base_url() ?>votes/legislature-<?= legislature_current() ?>">cliquez ici</a>.
               </p>
+              <!-- ADD DONATION CAMPAIGN PARTIAL -->
+              <?php $this->view('partials/campaign.php', array('wrapper_classes' => array('mt-5'))) ?>
             </div>
             <div class="col-12 mb-lg-5 mb-4 d-lg-none">
               <h2><span><?= $number_votes ?></span> votes de l'Assemblée nationale décryptés par l'équipe de Datan</h2>
