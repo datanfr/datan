@@ -9,6 +9,8 @@
               À l'opposé, le groupe parlementaire avec le plus faible taux de cohésion est <a href="<?= base_url() ?>groupes/legislature-<?= $groupsLast["legislature"] ?>/<?= mb_strtolower($groupsLast["libelleAbrev"]) ?>"><?= name_group($groupsLast["libelle"]) ?></a> (<?= $groupsLast["libelleAbrev"] ?>).</p>
             <p>Le taux de cohésion moyen de tous les groupes parlementaires de la législature actuelle est de <?= $cohesionMean ?>.</p>
           <?php endif; ?>
+          <!-- ADD DONATION CAMPAIGN PARTIAL -->
+          <?php $this->view('partials/campaign.php', array('wrapper_classes' => array('mt-5'))) ?>
         </div>
       </div>
       <?php if (!$groups): ?>

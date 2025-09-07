@@ -14,6 +14,8 @@
               <?= $mpRebelGender['pronom'] ?> a voté sur la même ligne que son groupe dans <?= $mpRebel['score'] ?> % des cas.
             </p>
           <?php endif; ?>
+          <!-- ADD DONATION CAMPAIGN PARTIAL -->
+          <?php $this->view('partials/campaign.php', array('wrapper_classes' => array('mt-5'))) ?>
         </div>
       </div>
       <?php if (!$deputes): ?>
