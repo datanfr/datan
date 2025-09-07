@@ -177,6 +177,8 @@
           <?php endif; ?>
         </div>
       </div>
+      <!-- ADD DONATION CAMPAIGN PARTIAL -->
+      <?php $this->view('partials/campaign.php', array('wrapper_classes' => array('mt-5'))) ?>
       <?php if ($description) : ?>
         <div class="mt-5">
           <h2>Mieux comprendre le vote</h2>

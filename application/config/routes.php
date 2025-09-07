@@ -213,6 +213,8 @@ $route['(:any)'] = 'pages/view/$1';
 $route['translate_uri_dashes'] = FALSE;
 // HOMEPAGE
 $route['default_controller'] = 'home/index';
+// CAMAPAIGNS
+$route['campaign/current_active_campaigns'] = 'campaign/current_active_campaigns';
 // 404 PAGE
 $route['404_override'] = 'errormanager/error404';
 

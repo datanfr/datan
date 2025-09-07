@@ -33,6 +33,8 @@
               <p>
                 Découvrez ci-dessous la liste de partis politiques ayant au moins un député rattaché financièrement.
               </p>
+              <!-- ADD DONATION CAMPAIGN PARTIAL -->
+              <?php $this->view('partials/campaign.php', array('wrapper_classes' => array('mt-5'))) ?>
             </div>
           </div>
           <div class="row mt-4">

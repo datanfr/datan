@@ -20,6 +20,8 @@
               Le groupe avec le taux de participation le plus faible est <a href="<?= base_url() ?>groupes/legislature-<?= $groupsLast["legislature"] ?>/<?= mb_strtolower($groupsLast["libelleAbrev"]) ?>"><?= name_group($groupsLast["libelle"]) ?></a> (<?= $groupsLast["libelleAbrev"] ?>). En moyenne, les députés membres de ce groupe parlementaire participent à <?= $groupsLast["participation"] ?> % des scrutins.
             </p>
           <?php endif; ?>
+          <!-- ADD DONATION CAMPAIGN PARTIAL -->
+          <?php $this->view('partials/campaign.php', array('wrapper_classes' => array('mt-5'))) ?>
         </div>
       </div>
       <?php if (!$votes_sps): ?>
