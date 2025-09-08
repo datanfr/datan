@@ -36,6 +36,12 @@
         </div>
         
     </div>
+    <div class="row">
+        <div class="col-12">
+            <!-- ADD DONATION CAMPAIGN PARTIAL -->
+            <?php $this->view('partials/campaign.php', array('wrapper_classes' => array('mt-5'))) ?>
+        </div>
+    </div>
 </div>
 
 <script>
