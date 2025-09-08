@@ -22,10 +22,14 @@
         <p>
           La confiance se joue à la majorité simple : il suffit d'avoir plus de voix favorables que de votes contre. Les abstentions profitent au Premier ministre, mais selon les prévisions, celui-ci ne devrait pas obtenir de majorité.
         </p>
+        <p class="subtitle mb-0">En savoir plus</p>
         <p class="mb-1">
-          <a class="" href="<?= base_url() ?>outils/coalition-simulateur">👉 Notre simulateur de coalition</a>
+          👉
+          <a class="" href="<?= base_url() ?>outils/coalition-simulateur">Notre simulateur de coalition</a>
         </p>
-        <p><a href="<?= base_url() ?>outils/coalition-simulateur">👉 Notre analyse sur la censure du gouvernement Bayrou</a></p>
+        <p>
+          👉
+          <a href="<?= base_url() ?>outils/coalition-simulateur">Notre analyse sur la censure du gouvernement Bayrou</a></p>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>

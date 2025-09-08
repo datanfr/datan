@@ -594,13 +594,16 @@ body.modal-open {
   }
 }
 #general-modal {
-  .modal-header, .modal-footer{
+  .modal-header{
+    background-color: $bleu;
+  }
+  .modal-footer{
     background-color: #F0F0F0;
   } 
   .modal-title{
     font-size: $h4-font-size;
     font-weight: 800;
-    color: $bleu;
+    color: #FFFFFF;
   }
   .subtitle{
     font-weight: 800;
