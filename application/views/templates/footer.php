@@ -50,8 +50,13 @@
         </div>
       </div>
     </div>
-    <!-- GENERAL MODEL -->
-    <?php $this->load->view('partials/general-modal.php') ?>
+    <!-- GENERAL MODEL SEEN FIRST TIME SESSION -->
+    <?php
+      $show_popup = isset($this->show_popup) ? $this->show_popup : false;
+      if($show_popup){
+        $this->load->view('partials/general-modal.php');
+      }
+    ?>
     <footer>
       <div class="container-fluid footer">
         <div class="container p-0">
