@@ -50,6 +50,8 @@
         </div>
       </div>
     </div>
+    <!-- GENERAL MODEL -->
+    <?php $this->load->view('partials/general-modal.php') ?>
     <footer>
       <div class="container-fluid footer">
         <div class="container p-0">
