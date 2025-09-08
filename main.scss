@@ -577,6 +577,35 @@ body.modal-open {
     height: 100%;
   }
 }
+#campaign {
+  background-color: rgba($bleu_rgb, 0.1)!important;
+  .icon{
+    color: #D93B3B;
+    svg {
+      width: 1.5em;
+      height: 1.5em;
+    }
+  }
+  #campaign-paragraph{
+    p:first-of-type {
+      font-weight: bold;
+      font-size: $h3-font-size;
+    }
+  }
+}
+#general-modal {
+  .modal-header, .modal-footer{
+    background-color: #F0F0F0;
+  } 
+  .modal-title{
+    font-size: $h4-font-size;
+    font-weight: 800;
+    color: $bleu;
+  }
+  .subtitle{
+    font-weight: 800;
+  }
+}
 /*
 ################
               Social media and social-share
@@ -3577,19 +3606,3 @@ dialogueBoxQuiz
   }
 }
 
-#campaign {
-  background-color: rgba($bleu_rgb, 0.1)!important;
-  .icon{
-    color: #D93B3B;
-    svg {
-      width: 1.5em;
-      height: 1.5em;
-    }
-  }
-  #campaign-paragraph{
-    p:first-of-type {
-      font-weight: bold;
-      font-size: $h3-font-size;
-    }
-  }
-}
