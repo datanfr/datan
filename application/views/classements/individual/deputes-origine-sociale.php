@@ -5,7 +5,7 @@
           <p>La grande majorité des parlementaires étaient des cadres ou exerçaient une profession intellectuelle supérieure. Ils représentent <b><?= round($famSocPro_cadres['mps']) ?> % des députés</b>, alors que seulement <?= round($famSocPro_cadres['population']) ?> % de la population française appartient à cette catégorie.</p>
           <p>Au contraire, l'Assemblée ne compte très peu de députés ouvriers ou employés.</p>
           <p><b>Cela a-t-il un impact ?</b> Les citoyens ne votent pas pour une origine sociale mais pour des idées et un programme politique. Cependant, la sous-représentation de certaines catégories de la population pose question. <span class="url_obf" url_obf="<?= url_obfuscation("https://onlinelibrary.wiley.com/doi/abs/10.1111/ajps.12112") ?>">Plusieurs chercheurs</span> ont montré que l'origine sociale d'un parlementaire a un impact sur ses idées et la façon dont il vote.</p>
-        <!-- ADD DONATION CAMPAIGN PARTIAL -->
+          <!-- ADD DONATION CAMPAIGN PARTIAL -->
           <?php $this->view('partials/campaign.php', array('wrapper_classes' => array('mt-5'))) ?>
         </div>
       </div>
