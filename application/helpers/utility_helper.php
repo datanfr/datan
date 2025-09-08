@@ -296,4 +296,9 @@
     }
   }
 
+  function current_controller_method() {
+    $CI =& get_instance();
+    return $CI->router->fetch_class() . "/" . $CI->router->fetch_method();
+  }
+
 ?>
