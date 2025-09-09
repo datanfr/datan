@@ -16,7 +16,7 @@
         </p>
       </div>
       <div class="modal-footer d-flex justify-content-around">
-        <a href="<?= base_url() ?>blog/actualite-politique/les-deputes-refusent-la-confiance-a-francois-bayrou-et-maintenant" role="button" class="btn btn-primary center" target="_blank">Lire ntore analyse</a>
+        <a href="<?= base_url() ?>blog/actualite-politique/les-deputes-refusent-la-confiance-a-francois-bayrou-et-maintenant" role="button" class="btn btn-primary center" target="_blank">Lire notre analyse</a>
         <a href="<?= base_url() ?>votes/legislature-17/vote_3054" role="button" class="btn btn-primary center" target="_blank">Découvrir le vote</a>
       </div>
     </div>
