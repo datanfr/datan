@@ -260,7 +260,7 @@
 
       //__________________ Get FEATURED VOTE ________________________________
       //$data['voteFeature'] = $this->votes_model->get_individual_vote_moc($mp_id, 17, 519); // MOC Barnier Decembre 2024
-      $data['voteFeature'] = $this->votes_model->get_individual_vote_depute($mp_id, 17, 2957); // PPL Duplomp
+      $data['voteFeature'] = $this->votes_model->get_individual_vote_depute($mp_id, 17, 3054); // Vote confiance Sept 2025
 
       //__________________GET LAST EXPLICATION_______________________________
       $data['explication'] = $this->depute_service->get_explication_details($mp_id, $legislature, $data['gender']);
