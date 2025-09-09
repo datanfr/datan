@@ -10,6 +10,7 @@
       <?php elseif($voteFeature['vote'] == 0): ?>
         <p><?= $title ?> <span>s'est abstenu<?= $gender['e'] ?></span> sur le vote de confiance au Premier ministre François Bayrou.</p>
       <?php endif; ?>
+      <p>La confiance a été refusée à François Bayrou, entraînant la chute de son gouvernement : 194 députés ont voté pour, contre 364 qui s'y sont opposés.</p>
       <a class="mt-2 btn btn-light" href="<?= base_url() ?>votes/legislature-<?= $voteFeature['legislature'] ?>/vote_<?= is_congress_numero($voteFeature['voteNumero']) ?>">Découvrir le détail du vote</a>
     </div>
   </div>
