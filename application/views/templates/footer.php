@@ -53,7 +53,7 @@
     <!-- GENERAL MODEL SEEN FIRST TIME SESSION -->
     <?php
       $show_popup = isset($this->show_popup) ? $this->show_popup : false;
-      if($show_popup && current_controller_method() !== "outils/coalition"){
+      if(!$show_popup && current_controller_method() !== "outils/coalition"){
         $this->load->view('partials/general-modal.php');
       }
     ?>
