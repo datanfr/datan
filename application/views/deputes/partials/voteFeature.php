@@ -10,7 +10,6 @@
       <?php elseif($voteFeature['vote'] == 0): ?>
         <p><?= $title ?> <span>s'est abstenu<?= $gender['e'] ?></span> sur le vote de confiance au Premier ministre François Bayrou.</p>
       <?php endif; ?>
-      <p>Cette proposition de loi <b>a été adoptée</b> par l'Assemblée nationale, avec 316 voix pour et 223 voix contre.</p>
       <a class="mt-2 btn btn-light" href="<?= base_url() ?>votes/legislature-<?= $voteFeature['legislature'] ?>/vote_<?= is_congress_numero($voteFeature['voteNumero']) ?>">Découvrir le détail du vote</a>
     </div>
   </div>
