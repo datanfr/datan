@@ -21,11 +21,11 @@ application/config/custom_config.php
 
 #root folder
 node_modules
-test
+/test
 .sass-cache
 .gitattributes
 ressources
-.htaccess
+/.htaccess
 .env
 *.code-workspace
 
