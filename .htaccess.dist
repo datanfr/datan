@@ -48,6 +48,8 @@
 
   # redirection of individaul MPs
   RewriteRule ^deputes/essonne-91/depute_eva-sas$ ./deputes/paris-75/depute_eva-sas [R=301,L]
+  RewriteRule ^deputes/yvelines-78/depute_benjamin-lucas$ ./deputes/yvelines-78/depute_benjamin-lucaslundy [R=301,L]
+  RewriteRule ^deputes/paris-75/depute_caroline-yadan$ ./deputes/francais-de-letranger/depute_caroline-yadan [R=301,L]
 
   # redirection of votes_all pages
   RewriteRule ^deputes/([^/]+)/([^/]+)/votes/all$ /deputes/$1/$2/votes [R=301,L]
