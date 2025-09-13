@@ -246,21 +246,28 @@ class Depute_service
         return $data;
     }
 
-    public function get_mp_page_resources(array $data, string $depute_full_name, string $nameUrl): array
+    public function get_mp_page_resources($type, array $data, string $depute_full_name, string $nameUrl): array
     {
         // META
         $data['url'] = $this->CI->meta_model->get_url();
-        $data['title_meta'] = $depute_full_name . " - Activité Parlementaire | Datan";
-        $data['description_meta'] = "Découvrez les résultats des votes " . $data['gender']['du'] .
+        
+        if ($type === 'individual') {
+            $data['title_meta'] = $depute_full_name . " - Activité Parlementaire | Datan";
+            $data['description_meta'] = "Découvrez les résultats des votes " . $data['gender']['du'] .
             " député" . $data['gender']['e'] . " " . $depute_full_name .
             " : taux de participation, loyauté avec son groupe, proximité avec la majorité présidentielle.";
+        } elseif ($type === 'history') {
+            $data['title_meta'] = $depute_full_name . " - Historique " . $data['depute']['legislature'] . "ème législature | Datan";
+            $data['description_meta'] = "Découvrez l'historique  ".$data['gender']['du']." député".$data['gender']['e']." ".$depute_full_name." pour la ".$data['depute']['legislature']."ème législature : taux de participation, loyauté avec son groupe, proximité avec la majorité présidentielle.";
+        }
+        
         $data['title'] = $depute_full_name;
         $data['title_breadcrumb'] = mb_substr($data['depute']['nameFirst'], 0, 1) . '. ' .
             $data['depute']['nameLast'];
 
 
         // BREADCRUMB
-        $data['breadcrumb'] = [
+        $breadcrumb_common = [
             [
                 'name'   => 'Datan',
                 'url'    => base_url(),
@@ -279,11 +286,23 @@ class Depute_service
             [
                 'name'   => $data['title_breadcrumb'],
                 'url'    => base_url() . 'deputes/' . $data['depute']['dptSlug'] . '/depute_' . $nameUrl,
-                'active' => true
+                'active' => false
             ]
         ];
 
-        $data['breadcrumb_json'] = $this->CI->breadcrumb_model->breadcrumb_json($data['breadcrumb']);
+        if($type == 'individual'){
+            $breadcrumb = $breadcrumb_common;
+            $breadcrumb[count($breadcrumb) - 1]['active'] = true; // last element active
+        } elseif($type == 'history'){
+            $breadcrumb = $breadcrumb_common;
+            $breadcrumb[] = [
+                'name'   => "Historique " . $data['depute']['legislature'] . "e legislature",
+                'url'    => base_url() . 'deputes/' . $data['depute']['dptSlug'] . '/depute_' . $nameUrl . '/legislature-' . $data['depute']['legislature'],
+                'active' => true
+            ];
+        }
+
+        $data['breadcrumb_json'] = $this->CI->breadcrumb_model->breadcrumb_json($breadcrumb);
 
         // OPEN GRAPH
         $controller = $this->CI->router->fetch_class() . "/" . $this->CI->router->fetch_method();
@@ -293,7 +312,9 @@ class Depute_service
         $data['schema'] = $this->CI->deputes_model->get_person_schema($data['depute']);
 
         // CSS
-        $data['critical_css'] = 'depute_individual';
+        if($type == 'individual'){
+            $data['critical_css'] = 'depute_individual';
+        }
         $data['css_to_load'] = [
             ['url' => css_url() . 'circle.css', 'async' => TRUE],
             ['url' => asset_url() . 'css/flickity.min.css', 'async' => TRUE]
