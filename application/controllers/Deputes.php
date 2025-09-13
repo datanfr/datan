@@ -195,10 +195,7 @@
       $data['no_job'] = array('autre profession','autres', 'sans profession déclarée', 'sans profession');
       $groupe_id = $depute['groupeId'];
       $data['first_person'] = false;
-  
       $data['photo_square'] = $this->deputes_model->get_photo_square($legislature);
-  
-      // ____________________GET GENDER_________________________________
       $data['gender'] = gender($depute['civ']); 
     
       // ____________________GET HAVP___________________________________
@@ -213,7 +210,6 @@
 
       // ____________________GET MAJORITY GROUP___________________________
       $data['groupMajority'] = $this->groupes_model->get_majority_group($legislature);
-
     
       // ____________________GET PCT FAMSOCPRO___________________________
       $data['famSocPro'] = null;// $this->jobs_model->get_stats_individual($data['depute']['famSocPro'], $legislature);
@@ -269,7 +265,7 @@
       $data = $this->depute_service->get_mp_history_data($data, $mp_id);
       
       // ________________ GET Depute page ressources (meta, css, js...)_______
-      $data = $this->depute_service->get_mp_page_resources($data, $depute_full_name, $nameUrl);
+      $data = $this->depute_service->get_mp_page_resources("individual", $data, $depute_full_name, $nameUrl);
 
       // ________________LOAD VIEWS_______________________
       $this->load->view('templates/header', $data);
@@ -281,105 +277,56 @@
 
     public function historique($nameUrl, $departement, $legislature){
       setlocale(LC_TIME, 'french');
-      // Check with this page : http://dev-datan.fr/deputes/ille-et-vilaine-35/depute_thierry-benoit/legislature-16
+      // _____________________GET INFOS MP____________________
       $data['depute'] = $this->deputes_model->get_depute_individual_historique($nameUrl, $departement, $legislature);
       $latest_dpt = $this->deputes_model->get_mp_latest_dpt($data['depute']['mpId'], $departement);
       $data['depute_last'] = $this->deputes_model->get_depute_individual($nameUrl, $latest_dpt);
 
-      // Check if MP exists
+      // ____________________CHECK IF DEPUTE EXISTS__________________
       if (empty($data['depute'])) {
         show_404($this->functions_datan->get_404_infos());
       }
 
-      // Check if it is in legislature 14 or 15
+      // ____________________CHECK IF LEGISLATURE > 14_______________
       if (!in_array($data['depute']['legislature'], legislature_all())) {
         show_404($this->functions_datan->get_404_infos());
       }
 
-      // Redirect if legislature depute and depute_last is the same ==> redirect v/ webpage with last mandate
+      // ____________________REDIRECT IF URL IS LATEST MANDATE_______
       if ($legislature == $data['depute_last']['legislature']) {
         redirect("deputes/" . $data['depute']['dptSlug'] . "/depute_" . $data['depute']['nameUrl']);
       }
 
-      // Main variables
-      $mpId = $data['depute']['mpId'];
-      $name_last = $data['depute']['nameLast'];
-      $data['active'] = $data['depute']['active'];
+      // ____________________MAIN VARIABLES__________________________
+      $depute = $data['depute'];
+      $mp_id = $depute['mpId'];
+      $name_last = $depute['nameLast'];
+      $data['active'] = $depute['active'];
       $data['legislature'] = $legislature;
-      $legislature = $data['depute']['legislature'];
+      $legislature = $depute['legislature'];
+      $depute_full_name = $depute['nameFirst'].' '.$depute['nameLast'];
       $data["depute"]["dateNaissanceFr"] = utf8_encode(strftime('%d %B %Y', strtotime($data['depute']['birthDate']))); // birthdate
       $data['depute']['circo_abbrev'] = abbrev_n($data['depute']['circo'], TRUE); // circo number
-      $data['mandats'] = $this->deputes_model->get_historique_mandats($mpId);
+      $data['mandats'] = $this->deputes_model->get_historique_mandats($mp_id);
       $data['mandatsReversed'] = array_reverse($data['mandats']);
-      $groupe_id = $data['depute']['groupeId'];
+      $groupe_id = $depute['groupeId'];
       $data['first_person'] = false;
+      $data['photo_square'] = $this->deputes_model->get_photo_square($legislature);            
+      $data['gender'] = gender($depute['civ']); 
 
-      // Get general infos (elections)
-      $data = $this->depute_service->get_general_infos($data, $mpId, $legislature, $name_last);
+      // ____________________GET GENERAL INFOS_______________________
+      $data = $this->depute_service->get_general_infos($data, $mp_id, $legislature, $name_last);
+      
+      //____________________GET STATISTICS___________________________
+      $data = $this->depute_service->get_statistics($data, $legislature, $mp_id, $groupe_id);
 
-      // Photos square 
-      $data['photo_square'] = $data['depute_last']['legislature'] >= 17 ? TRUE : FALSE;
-
-      // Gender
-      $data['gender'] = gender($data['depute']['civ']);
-
-      // Statistiques
-      $data = $this->depute_service->get_statistics($data, $legislature, $mpId, $groupe_id);
-
-      // Get majority group
+      // ____________________GET MAJORITY GROUP___________________________
       $data['groupMajority'] = $this->groupes_model->get_majority_group($legislature);
 
-      // Meta
-      $data['url'] = $this->meta_model->get_url();
-      $depute = $data['depute']['nameFirst'].' '.$data['depute']['nameLast'];
-      $data['title_meta'] = $depute." - Historique ".$legislature."ème législature | Datan";
-      $data['description_meta'] = "Découvrez l'historique  ".$data['gender']['du']." député".$data['gender']['e']." ".$depute." pour la ".$legislature."ème législature : taux de participation, loyauté avec son groupe, proximité avec la majorité présidentielle.";
-      $data['title'] = $depute;
-      $data['title_breadcrumb'] = mb_substr($data['depute']['nameFirst'], 0, 1).'. '.$data['depute']['nameLast'];
-      // Breadcrumb
-      $data['breadcrumb'] = array(
-        array(
-          "name" => "Datan", "url" => base_url(), "active" => FALSE
-        ),
-        array(
-          "name" => "Députés", "url" => base_url()."deputes", "active" => FALSE
-        ),
-        array(
-          "name" => $data['depute']['departementNom']." (".$data['depute']['departementCode'].")", "url" => base_url()."deputes/".$data['depute']['dptSlug'], "active" => FALSE
-        ),
-        array(
-          "name" => $data['title_breadcrumb'], "url" => base_url()."deputes/".$data['depute']['dptSlug']."/depute_".$nameUrl, "active" => FALSE
-        ),
-        array(
-          "name" => "Historique ".$legislature . "e legislature", "url" => base_url()."deputes/".$data['depute']['dptSlug']."/depute_".$nameUrl."/legislature-".$legislature, "active" => TRUE
-        ),
-      );
-      $data['breadcrumb_json'] = $this->breadcrumb_model->breadcrumb_json($data['breadcrumb']);
-      // Open Graph
-      $controller = $this->router->fetch_class()."/".$this->router->fetch_method();
-      $data['ogp'] = $this->meta_model->get_ogp($controller, $data['title_meta'], $data['description_meta'], $data['url'], $data);
-      // Microdata Person
-      $data['schema'] = $this->deputes_model->get_person_schema($data['depute']);
-      // CSS
-      $data['css_to_load']= array(
-        array(
-          "url" => css_url()."circle.css",
-          "async" => TRUE
-        ),
-        array(
-          "url" => asset_url() . "css/flickity.min.css",
-          "async" => TRUE
-        )
-      );
-      // JS UP
-      $data['js_to_load']= array("libraries/flickity/flickity.pkgd.min");
-      // Preloads
-      $data['preloads'] = array(
-        array("href" => asset_url()."imgs/cover/hemicycle-front-375.jpg", "as" => "image", "media" => "(max-width: 575.98px)"),
-        array("href" => asset_url()."imgs/cover/hemicycle-front-768.jpg", "as" => "image", "media" => "(min-width: 576px) and (max-width: 970px)"),
-        array("href" => asset_url()."imgs/cover/hemicycle-front.jpg", "as" => "image", "media" => "(min-width: 970.1px)"),
-      );
-      // Load Views
+      // ________________ GET Depute page ressources (meta, css, js...)_______
+      $data = $this->depute_service->get_mp_page_resources("history", $data, $depute_full_name, $nameUrl);
+
+      // ________________ LOAD VIEWS ________________________________
       $this->load->view('templates/header', $data);
       $this->load->view('templates/button_up');
       $this->load->view('deputes/historique', $data);
