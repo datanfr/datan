@@ -14,5 +14,8 @@ class GeneralModalHook {
         } else {
             $CI->show_popup = false;
         }
+
+        // Desactivate general modal 
+        $CI->show_popup = false; // Comment if you do not want to desactivate general modal
     }
 }
