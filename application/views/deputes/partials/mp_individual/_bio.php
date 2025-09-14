@@ -2,7 +2,11 @@
   <!-- For critical css -->
   <div class="card card-election-feature not-candidate d-none"></div>
   <div class="card card-election-feature candidate d-none"></div>
-  <h2 class="mb-4 title-center">Qui est-<?= ($gender['pronom']) ?> ?</h2>
+  <?php if(!$page_history): ?>
+    <h2 class="mb-4 title-center">Qui est-<?= ($gender['pronom']) ?> ?</h2>
+  <?php else: ?> 
+    <h1 class="mb-4 title-center">Mandat de <?= $title ?> pendant la <?= $depute['legislature'] ?><sup>ème</sup> législature</h1>
+  <?php endif; ?>
   <!-- Paragraphe introductif -->
   <?php if ($active) : ?>
     <p>
@@ -21,64 +25,71 @@
     </p>
   <?php endif; ?>
   <!-- Paragraphe historique -->
-  <?php if ($active) : ?>
+  <?php if (!$page_history): ?>
     <p>
-      <?= ucfirst($gender['pronom']) ?> est entré<?= $gender['e'] ?> en fonction en <?= $depute['datePriseFonctionLettres'] ?>
-      et en est à son <?= $mandat_edito ?> mandat.
-      Au total, <?= $title ?> a passé <?= $depute['lengthEdited'] ?> sur les bancs de l’Assemblée nationale, soit <?= $history_edito ?>
-      des députés, qui est de <?= $history_average ?> ans.
-    </p>
-  <?php elseif ($depute['legislature'] == legislature_current()) : ?>
-    <p>
-      Pour son dernier mandat, pendant la <?= legislature_current() ?><sup>e</sup> législature, <?= $title ?> est entré<?= $gender['e'] ?> en fonction en <?= $depute['datePriseFonctionLettres'] ?>.
-      <?= ucfirst($gender['pronom']) ?> en était à son <?= $mandat_edito ?> mandat.
-      Au total, <?= $gender['pronom'] ?> a passé <?= $depute['lengthEdited'] ?> sur les bancs de l’Assemblée nationale.
-    </p>
-  <?php else : ?>
-    <p>
-      Pour son dernier mandat, pendant la <?= $depute['legislature'] ?><sup>e</sup> législature, <?= $title ?> est entré<?= $gender['e'] ?> en fonction en <?= $depute['datePriseFonctionLettres'] ?>.
-      <?= ucfirst($gender['pronom']) ?> en était à son <?= $mandat_edito ?> mandat.
-      Au total, <?= $gender['pronom'] ?> a passé <?= $depute['lengthEdited'] ?> sur les bancs de l’Assemblée nationale.
+      <?php if ($active): ?>
+        <?= ucfirst($gender['pronom']) ?> est entré<?= $gender['e'] ?> en fonction en <?= $depute['datePriseFonctionLettres'] ?>
+        et en est à son <?= $mandat_edito ?> mandat.
+        Au total, <?= $title ?> a passé <?= $depute['lengthEdited'] ?> sur les bancs de l’Assemblée nationale,
+        soit <?= $history_edito ?> des députés, qui est de <?= $history_average ?> ans.
+      <?php else: ?>
+        Pour son dernier mandat, pendant la 
+        <?= $depute['legislature'] == legislature_current() ? legislature_current() : $depute['legislature'] ?><sup>e</sup> législature, 
+        <?= $title ?> est entré<?= $gender['e'] ?> en fonction en <?= $depute['datePriseFonctionLettres'] ?>.
+        <?= ucfirst($gender['pronom']) ?> en était à son <?= $mandat_edito ?> mandat.
+        Au total, <?= $gender['pronom'] ?> a passé <?= $depute['lengthEdited'] ?> sur les bancs de l’Assemblée nationale.
+      <?php endif; ?>
     </p>
   <?php endif; ?>
   <!-- Paragraphe end -->
-  <?php if (!$active): ?>
-    <?php if ($depute['legislature'] == legislature_current()) : ?>
-      <p>
-        <?= ucfirst($gender['pronom']) ?> a quitté l'Assemblée nationale le <?= $depute['dateFinMpFR'] ?> <?= $this->depute_edito->get_end_mandate($depute) ?>.
-      </p>
-    <?php else : ?>
-      <p>
-        <?= ucfirst($gender['pronom']) ?> a quitté l'Assemblée nationale le <?= $depute['dateFinMpFR'] ?>.
-      </p>
-    <?php endif; ?>
+  <?php if (!$page_history && !$active): ?>
+    <p>
+      <?= ucfirst($gender['pronom']) ?> a quitté l'Assemblée nationale le <?= $depute['dateFinMpFR'] ?>
+      <?php if ($depute['legislature'] == legislature_current()): ?>
+        <?= $this->depute_edito->get_end_mandate($depute) ?>
+      <?php endif; ?>.
+    </p>
   <?php endif; ?>
   <!-- Paragraphe groupe parlementaire -->
-  <?php if ($active) : ?>
-    <?php if ($depute['libelleAbrev'] == "NI") : ?>
+  <?php if (!$page_history): ?>
+    <?php if ($active): ?>
       <p>
-        À l'Assemblée nationale, <?= $title ?> n'est pas membre d'un groupe parlementaire, et siège donc en non-inscrit<?= $gender['e'] ?>.
+        <?php if ($depute['libelleAbrev'] === "NI"): ?>
+          À l'Assemblée nationale, <?= $title ?> n'est pas membre d'un groupe parlementaire,
+          et siège donc en non-inscrit<?= $gender['e'] ?>.
+        <?php else: ?>
+          À l'Assemblée, <?= $title ?> siège avec le groupe
+          <a href="<?= base_url() ?>groupes/legislature-<?= $depute['legislature'] ?>/<?= mb_strtolower($depute['libelleAbrev']) ?>">
+            <?= name_group($depute['libelle']) ?>
+          </a> (<?= $depute["libelleAbrev"] ?>),
+          un groupe <b>classé <?= $infos_groupes[$depute['libelleAbrev']]['edited'] ?></b> de l'échiquier politique.
+          <?php if ($depute['preseanceGroupe'] == 24): ?>
+            <?= $title ?> n'est pas membre mais <b>apparenté<?= $gender['e'] ?></b> au groupe <?= $depute['libelleAbrev'] ?> :
+            <?= $gender['pronom'] ?> est donc associé<?= $gender['e'] ?> au groupe tout en gardant une marge de liberté.
+          <?php endif; ?>
+          <?php if ($isGroupPresident): ?>
+            <?= $title ?> en est <?= $gender['le'] ?> <b>président<?= $gender['e'] ?></b>.
+          <?php endif; ?>
+        <?php endif; ?>
       </p>
-    <?php else : ?>
+    <?php elseif (!empty($depute['libelle'])): ?>
       <p>
-        À l'Assemblée, <?= $title ?> siège avec le groupe <a href="<?= base_url() ?>groupes/legislature-<?= $depute['legislature'] ?>/<?= mb_strtolower($depute['libelleAbrev']) ?>"><?= name_group($depute['libelle']) ?></a> (<?= $depute["libelleAbrev"] ?>), un groupe <b>classé <?= $infos_groupes[$depute['libelleAbrev']]['edited'] ?></b> de l'échiquier politique.
-        <?php if ($depute['preseanceGroupe'] == 24): ?><?= $title  ?> n'est pas membre mais <b>apparenté<?= $gender['e'] ?></b> au groupe <?= $depute['libelleAbrev'] ?> : <?= $gender['pronom'] ?> est donc associé<?= $gender['e'] ?> au groupe tout en gardant une marge de liberté.<?php endif; ?>
-        <?php if ($isGroupPresident) : ?><?= $title ?> en est <?= $gender['le'] ?> <b>président<?= $gender['e'] ?></b>.<?php endif; ?>
+        Au cours de son dernier mandat, pendant la <?= $depute['legislature'] ?><sup>e</sup> législature,
+        <?= $title ?> a siégé avec le groupe <?= name_group($depute['libelle']) ?> (<?= $depute['libelleAbrev'] ?>).
       </p>
     <?php endif; ?>
-  <?php else : ?>
-    <?php if (!empty($depute['libelle'])) : ?>
-      <p>
-        Au cours de son dernier mandat, pendant la <?= $depute['legislature'] ?><sup>e</sup> législature, <?= $title ?> a siégé avec le groupe <?= name_group($depute['libelle']) ?> (<?= $depute['libelleAbrev'] ?>).
-      </p>
-    <?php endif; ?>
+  <?php else: ?>
+    <p>
+      Pendant ce mandat, <?= $title ?> siégeait avec le groupe
+      <?= name_group($depute['libelle']) ?> (<?= $depute['libelleAbrev'] ?>).
+    </p>
   <?php endif; ?>
   <!-- Paragraphe commission parlementaire -->
-  <?php if ($active && !empty($commission_parlementaire)) : ?>
+  <?php if ($active && !$page_history && !empty($commission_parlementaire)) : ?>
     <p><?= $title ?> est <?= mb_strtolower($commission_parlementaire['commissionCodeQualiteGender']) ?> de la <?= $commission_parlementaire['commissionLibelle'] ?>.</p>
   <?php endif; ?>
   <!-- Paragraphe parti politique -->
-  <?php if ($politicalParty && $politicalParty['libelle'] != "") : ?>
+  <?php if ($politicalParty && !$page_history && $politicalParty['libelle'] != "") : ?>
     <?php if ($active) : ?>
       <p>
         <?= $title ?> est rattaché<?= $gender['e'] ?> financièrement au parti politique <a href="<?= base_url() ?>partis-politiques/<?= mb_strtolower($politicalParty['libelleAbrev']) ?>"><?= $politicalParty['libelle'] ?> (<?= $politicalParty['libelleAbrev'] ?>)</a>.
@@ -91,7 +102,8 @@
       </p>
     <?php endif; ?>
   <?php endif; ?>
-  <?php if ($depute['job'] && !in_array(mb_strtolower($depute['job']), $no_job)): ?>
+  <!-- Paragraphe job -->
+  <?php if ($depute['job'] && !$page_history && !in_array(mb_strtolower($depute['job']), $no_job)): ?>
     <p>
       Avant de devenir <?= $gender['depute'] ?>, <?= $title ?> exerçait le metier <b><?= mb_strtolower($depute['job']) ?></b>.
       <?php if ($famSocPro !== null): ?>
@@ -146,7 +158,15 @@
       </div>
     <?php endif; ?>
   <?php endif; ?>
-  <?php if ($depute['mailAn'] !== NULL && $active): ?>
+  <!-- Paragraphe history on history pages -->
+  <?php if($page_history): ?>
+    <p>
+      La dernière législature au cours de laquelle <?= $gender['le'] ?> <?= $gender['depute'] ?> a siégé est la <?= $depute_last['legislature'] ?><sum>ème</sup>.
+      Pour plus d'information sur l'activité de <?= $title ?> au cours de cette législature, <a href="<?= base_url() ?>deputes/<?= $depute_last['dptSlug'] ?>/depute_<?= $depute_last['nameUrl'] ?>">cliquez ici</a>.
+    </p>
+  <?php endif; ?>
+  <!-- Bouton contacter le/la député.e -->
+  <?php if ($depute['mailAn'] !== NULL && $active && !$page_history): ?>
     <div class="d-flex justify-content-center mt-5">
       <a href="mailto:<?= $depute['mailAn'] ?>" class="btn btn-primary">
         <?= file_get_contents(asset_url() . "imgs/icons/envelope.svg") ?>
