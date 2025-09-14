@@ -142,7 +142,7 @@ class Iframe extends CI_Controller
 
     // ________________ GET Depute page ressources (meta, css, js...)_______
 
-    $data = $this->depute_service->get_mp_page_resources($data, $depute_full_name, $name);
+    $data = $this->depute_service->get_mp_page_resources("individual", $data, $depute_full_name, $name);
 
 
     // ________________ LOAD views_______

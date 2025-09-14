@@ -233,7 +233,7 @@
         dl.*,
         substr(dl.mpId, 3) AS idImage,
         h.mandatesN, h.mpLength, h.lengthEdited,
-        dc.facebook, dc.twitter, dc.website, dc.mailAn,
+        dc.facebook, dc.twitter, dc.bluesky, dc.website, dc.mailAn,
         date_format(dl.dateFin, "%d %M %Y") AS dateFinMpFR,
         d.birthDate, d.birthCity, last.active, dpt.libelle_1 AS dptLibelle1, dpt.libelle_2 AS dptLibelle2
         FROM deputes_all dl
