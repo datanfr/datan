@@ -196,7 +196,8 @@
       $groupe_id = $depute['groupeId'];
       $data['first_person'] = false;
       $data['photo_square'] = $this->deputes_model->get_photo_square($legislature);
-      $data['gender'] = gender($depute['civ']); 
+      $data['gender'] = gender($depute['civ']);
+      $data['page_history'] = FALSE; 
     
       // ____________________GET HAVP___________________________________
       $data['depute']['hatvp'] = $this->deputes_model->get_hatvp_url($mp_id);
@@ -313,6 +314,7 @@
       $data['first_person'] = false;
       $data['photo_square'] = $this->deputes_model->get_photo_square($legislature);            
       $data['gender'] = gender($depute['civ']); 
+      $data['page_history'] = TRUE;
 
       // ____________________GET GENERAL INFOS_______________________
       $data = $this->depute_service->get_general_infos($data, $mp_id, $legislature, $name_last);
@@ -329,7 +331,7 @@
       // ________________ LOAD VIEWS ________________________________
       $this->load->view('templates/header', $data);
       $this->load->view('templates/button_up');
-      $this->load->view('deputes/historique', $data);
+      $this->load->view('deputes/individual', $data);
       $this->load->view('templates/breadcrumb', $data);
       $this->load->view('templates/footer');
     }
