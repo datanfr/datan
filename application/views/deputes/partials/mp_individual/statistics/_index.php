@@ -11,7 +11,7 @@
     <?php endif; ?>
     <?php $this->view('deputes/partials/mp_individual/statistics/_voting_participation.php') ?>
     <?php $this->view('deputes/partials/mp_individual/statistics/_intra_group_loyalty.php') ?>
-    <?php $this->view('deputes/partials/mp_individual/statistics/_inter_group_loyalty.php') ?>
     <?php $this->view('deputes/partials/mp_individual/statistics/_majority_alignment.php') ?>
+    <?php $this->view('deputes/partials/mp_individual/statistics/_inter_group_loyalty.php') ?>
   </div> <!-- // END BLOC STATISTIQUES -->
 <?php endif; ?>
