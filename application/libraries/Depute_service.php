@@ -302,6 +302,7 @@ class Depute_service
             ];
         }
 
+        $data['breadcrumb'] = $breadcrumb;
         $data['breadcrumb_json'] = $this->CI->breadcrumb_model->breadcrumb_json($breadcrumb);
 
         // OPEN GRAPH

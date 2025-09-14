@@ -1,6 +1,6 @@
 <!-- BLOC CONTACT -->
 <?php if ($depute['mailAn'] !== NULL && $active) : ?>
-  <div class="bloc-links p-lg-0 p-md-2 mt-5">
+  <div class="bloc-links p-lg-0 p-md-2 <?= !$page_history ? "mt-5" : "my-5" ?>">
     <h2 class="title-center">Contactez <?= $title ?></h2>
     <div class="row mt-4">
       <div class="col-12">
