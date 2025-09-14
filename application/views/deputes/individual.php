@@ -6,23 +6,28 @@
     <div class="row">
       <div class="col-12 col-md-8 col-lg-4 offset-md-2 offset-lg-0">
         <div class="sticky-top" style="margin-top: -150px; top: 80px;">
-          <?php $this->load->view('deputes/partials/card_individual.php', array('historique' => FALSE, 'last_legislature' => $depute['legislature'], 'legislature' => $depute['legislature'], 'tag' => 'h1')) ?>
+          <?php $this->load->view('deputes/partials/card_individual.php', array('historique' => $page_history, 'last_legislature' => $depute['legislature'], 'legislature' => $depute['legislature'], 'tag' => 'h1')) ?>
         </div>
-      </div> <!-- END COL -->
+      </div>
       <div class="col-md-10 col-lg-8 offset-md-1 offset-lg-0 pl-lg-5">
-        <?php $this->view('deputes/partials/voteFeature.php') ?>
+        <?php if(!$page_history): ?>
+          <?php $this->view('deputes/partials/voteFeature.php') ?>
+        <?php endif; ?>
         <?php $this->view('partials/campaign.php', array('wrapper_classes' => array('mt-5'))) ?>
         <?php $this->view('deputes/partials/mp_individual/_bio.php') ?>
-        <?php $this->view('deputes/partials/mp_individual/_key_positions.php') ?>
-        <?php $this->view('deputes/partials/mp_individual/_explanation.php') ?>
-        <?php $this->view('deputes/partials/mp_individual/_votes.php') ?>
+        <?php if(!$page_history): ?>
+          <?php $this->view('deputes/partials/mp_individual/_key_positions.php') ?>
+          <?php $this->view('deputes/partials/mp_individual/_explanation.php') ?>
+          <?php $this->view('deputes/partials/mp_individual/_votes.php') ?>
+        <?php endif; ?>
         <?php $this->view('deputes/partials/mp_individual/_election.php') ?>
         <?php $this->view('deputes/partials/mp_individual/statistics/_index.php') ?>
-        <?php $this->view('deputes/partials/mp_individual/_elections_participation') ?>
-        <?php $this->view('deputes/partials/mp_individual/_manifesto') ?>
-        <?php $this->view('deputes/partials/mp_individual/_parrainages') ?>
+        <?php if(!$page_history): ?>
+          <?php $this->view('deputes/partials/mp_individual/_elections_participation') ?>
+          <?php $this->view('deputes/partials/mp_individual/_manifesto') ?>
+          <?php $this->view('deputes/partials/mp_individual/_parrainages') ?>
+        <?php endif; ?>
         <?php $this->view('deputes/partials/mp_individual/_mandate_history') ?>
-        <!-- BLOC PARTAGEZ -->
         <div class="bloc-social mt-5">
           <h2 class="title-center mb-4">Partagez cette page</h2>
           <?php $this->load->view('partials/share.php') ?>
@@ -31,29 +36,28 @@
         <?php $this->view('deputes/partials/mp_individual/_contact') ?>
       </div>
     </div>
-  </div> <!-- END ROW -->
-  </div> <!-- END CONTAINER -->
-  <!-- CONTAINER FOLLOW US -->
-  <?php $this->load->view('partials/follow-us.php') ?>
-  <?php $this->view('deputes/partials/mp_individual/_other_mps') ?>
-  <!-- EXPLICATIONS DE VOTE -->
-  <?php if (is_iterable($votes_datan)): ?>
-    <?php foreach ($votes_datan as $key => $value): ?>
-      <?php if ($value['explication']): ?>
-        <!-- Modal explain -->
-        <?php $this->load->view(
-          'votes/modals/explain.php',
-          [
-            'id' => 'explication-l' . $value['legislature'] . '-v' . $value['voteNumero'],
-            'title' => "L'avis de " . $title,
-            'value' => $value,
-            'vote_titre' => $value['vote_titre'],
-            'explication' => $value['explication'],
-            'img' => $depute['idImage'],
-            'photoSquare' => $photo_square
-          ]
-        );
-        ?>
-      <?php endif; ?>
-    <?php endforeach; ?>
-  <?php endif; ?>
+  </div> 
+  <?php if(!$page_history): ?>
+    <?php $this->load->view('partials/follow-us.php') ?>
+    <?php $this->view('deputes/partials/mp_individual/_other_mps') ?>
+    <?php if (is_iterable($votes_datan)): ?>
+      <?php foreach ($votes_datan as $key => $value): ?>
+        <?php if ($value['explication']): ?>
+          <!-- Modal explain -->
+          <?php $this->load->view(
+            'votes/modals/explain.php',
+            [
+              'id' => 'explication-l' . $value['legislature'] . '-v' . $value['voteNumero'],
+              'title' => "L'avis de " . $title,
+              'value' => $value,
+              'vote_titre' => $value['vote_titre'],
+              'explication' => $value['explication'],
+              'img' => $depute['idImage'],
+              'photoSquare' => $photo_square
+            ]
+          );
+          ?>
+        <?php endif; ?>
+      <?php endforeach; ?>
+    <?php endif; ?>
+  <?php endif; ?>  
