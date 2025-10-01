@@ -175,8 +175,8 @@ class Newsletter extends CI_Controller
         $data['votesInfos'] = $this->votes_model->get_infos_period(legislature_current(), $year, $month);
 
         // Edited text
-        $adopted = $data['votesInfos']['adopted'];
-        $rejected = $data['votesInfos']['rejected'];
+        $adopted = (int) $data['votesInfos']['adopted'];
+        $rejected = (int) $data['votesInfos']['rejected'];
 
         $adoptedWord = $adopted === 1 ? "vote" : "votes";
         $rejectedWord = $rejected === 1 ? "vote" : "votes";
