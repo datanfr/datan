@@ -7,7 +7,7 @@
       <span class="subtitle"><?= ucfirst($month) ?> <?= $year ?></span>
     </mj-text>
     <mj-text padding-top="40px">
-      Il y a eu <b><?= $votesN ?> votes</b> à l'Assemblée nationale en <?= $month.' '.$year ?>. <?= $votesInfosEdited ?>
+      Il y a eu <b><?= $votesN ?> <?= $votesN === 1 ? 'vote' : 'votes' ?></b> à l'Assemblée nationale en <?= $month.' '.$year ?>. <?= $votesInfosEdited ?>
     </mj-text>
     <mj-text>
       <b>L'équipe de Datan a sélectionné et <span class="primary">décrypté <?= $votesNDatan ?> vote<?= $votesNDatan > 1 ? "s" : "" ?></span></b>.
