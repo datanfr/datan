@@ -175,12 +175,21 @@ class Newsletter extends CI_Controller
         $data['votesInfos'] = $this->votes_model->get_infos_period(legislature_current(), $year, $month);
 
         // Edited text
-        if ($data['votesInfos']['adopted'] > $data['votesInfos']['rejected']) {
-          $data['votesInfosEdited'] = "Au total, " . $data['votesInfos']['adopted'] . " votes ont été adoptés par les députés tandis que " . $data['votesInfos']['rejected'] . " votes ont été rejetés.";
-        } elseif ($data['votesInfos']['adopted'] < $data['votesInfos']['rejected']) {
-          $data['votesInfosEdited'] = "Au total, " . $data['votesInfos']['rejected'] . " votes ont été rejetés par les députés tandis que  " . $data['votesInfos']['adopted'] . " votes ont été adoptés.";
+        $adopted = $data['votesInfos']['adopted'];
+        $rejected = $data['votesInfos']['rejected'];
+
+        $adoptedWord = $adopted === 1 ? "vote" : "votes";
+        $rejectedWord = $rejected === 1 ? "vote" : "votes";
+
+        $adoptedText = $adopted === 1 ? "a été adopté" : "ont été adoptés";
+        $rejectedText = $rejected === 1 ? "a été rejeté" : "ont été rejetés";
+
+        if ($adopted > $rejected) {
+            $data['votesInfosEdited'] = "Au total, $adopted $adoptedWord $adoptedText par les députés tandis que $rejected $rejectedWord $rejectedText.";
+        } elseif ($adopted < $rejected) {
+            $data['votesInfosEdited'] = "Au total, $rejected $rejectedWord $rejectedText par les députés tandis que $adopted $adoptedWord $adoptedText.";
         } else {
-          $data['votesInfosEdited'] = NULL;
+            $data['votesInfosEdited'] = null;
         }
 
         // Get votes
