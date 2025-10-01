@@ -178,11 +178,11 @@ class Newsletter extends CI_Controller
         $adopted = (int) $data['votesInfos']['adopted'];
         $rejected = (int) $data['votesInfos']['rejected'];
 
-        $adoptedWord = $adopted === 1 ? "vote" : "votes";
-        $rejectedWord = $rejected === 1 ? "vote" : "votes";
+        $adoptedWord = $adopted <= 1 ? "vote" : "votes";
+        $rejectedWord = $rejected <= 1 ? "vote" : "votes";
 
-        $adoptedText = $adopted === 1 ? "a été adopté" : "ont été adoptés";
-        $rejectedText = $rejected === 1 ? "a été rejeté" : "ont été rejetés";
+        $adoptedText = $adopted <= 1 ? "a été adopté" : "ont été adoptés";
+        $rejectedText = $rejected <= 1 ? "a été rejeté" : "ont été rejetés";
 
         if ($adopted > $rejected) {
             $data['votesInfosEdited'] = "Au total, $adopted $adoptedWord $adoptedText par les députés tandis que $rejected $rejectedWord $rejectedText.";
