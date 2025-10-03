@@ -47,7 +47,7 @@ services:
     ports:
       - 8080:80
     environment:
-      PMA_HOST: datan-db
+      PMA_HOST: db
     networks:
       - dev
 
