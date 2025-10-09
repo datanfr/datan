@@ -1,6 +1,5 @@
-version: '3.8'
+version: "3.8"
 services:
-
   apache:
     container_name: datan
     build:
@@ -8,14 +7,14 @@ services:
       dockerfile: Dockerfile
     hostname: apache
     ports:
-    - "80:80" # normal php port for trafic and functionality
+      - "80:80" # normal php port for trafic and functionality
     volumes:
       - .:/var/www/html
     working_dir: /var/www/html
     depends_on:
       - db
     networks:
-        - dev
+      - dev
     env_file:
       - .env
     # command: ["/entrypoint.sh"]
@@ -27,7 +26,7 @@ services:
       dockerfile: DockerfileSQL
       args:
         - DATABASE_BACKUP=${DATABASE_BACKUP}
-    hostname: localhost
+    hostname: db
     ports:
       - "3306:3306" # mysql connection port
     env_file:
@@ -36,32 +35,30 @@ services:
       - MYSQL_CHARACTER_SET_SERVER=utf8mb4
       - MYSQL_COLLATION_SERVER=utf8mb4_unicode_ci
     networks:
-        - dev
+      - dev
     command: --sql_mode='' --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
 
   phpmyadmin:
-        image: phpmyadmin
-        container_name: datan-phpmyadmin
-        restart: always
-        depends_on:
-            - db
-        ports:
-            - 8080:80
-        environment:
-            PMA_HOST: db
-        networks:
-            - dev
+    image: phpmyadmin
+    container_name: datan-phpmyadmin
+    restart: always
+    depends_on:
+      - db
+    ports:
+      - 8080:80
+    environment:
+      PMA_HOST: db
+    networks:
+      - dev
 
   adminer:
     image: adminer
     restart: always
     ports:
       - 8090:8080
-  
+
 networks:
-    dev:
+  dev:
 
 volumes:
-    db-data:
-
-    
+  db-data:

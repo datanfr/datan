@@ -5,6 +5,7 @@ Datan est un site internet analysant les votes des députés français (Assembl�
 # Discord
 Si vous voulez contribuer ou que vous avez besoin d'aide, n'hésitez pas à rejoindre. https://discord.gg/79E6SB7W
 
+***
 # Installation Docker
 Suivez les étapes suivantes pour installer Datan avec Docker.
 
@@ -14,25 +15,39 @@ https://docs.docker.com/compose/install/
 ## 2. Créer .env
 Copiez .env.dist en .env
 
-### (facultatif) a. URL personnalisée
+```
+cp .env.dist .env
+```
+
+### Créer une URL personnalisée (optionnel)
 Modifiez BASE_URL par "dev-datan.fr"
 Ajoutez la ligne suivante dans votre fichier /etc/hosts
 ```
 #datan
 127.0.0.1 dev-datan.fr
 ```
-Ca vous permettra d'accéder au site en tapant dev-datan.fr au lieu de localhost
+Cela vous permettra d'accéder au site en tapant dev-datan.fr au lieu de localhost
 
-### Photos des députés
-Le projet doit télécharger plusieurs fois toutes les photos des députés (environ 4.000 photos). Pour alléger l'installation, il est possible de lancer le projet sans l'installation des photos. Pour cela : 
-- Ne rien changer au fichier `daily.php`.
-- Copier `application/config/custom_config.php.dist` en `application/config/custom_config.php` et `mettre $config['mp_photos'] = FALSE`.
+## 3. Copie du fichier de configuration
+Copiez le fichier custom_config.php.dist en custom_config.php
 
-Si vous souhaitez télécharger les photos : 
-- Décommentez la ligne `$this->$mp_photos = TRUE`
-- Copier `application/config/custom_config.php.dist` en `application/config/custom_config.php` et `mettre $config['mp_photos'] = TRUE`.
+```
+cp application/config/custom_config.php.dist application/config/custom_config.php
+```
 
-## 3. Builder le projet
+## 4. Photos des députés
+Le projet doit télécharger plusieurs fois toutes les photos des députés (environ 4.000 photos). Pour alléger l'installation, il est possible de lancer le projet sans l'installation des photos. Pour cela :
+
+- Ne rien changer au fichier daily.php.
+- Vérifiez dans `application/config/custom_config.php` que `$config['mp_photos']` est bien à `FALSE`.
+
+Si vous souhaitez télécharger les photos :
+
+- Décommentez la ligne `$this->mp_photos = TRUE;` dans le fichier `scripts/daily.php`
+- Dans le fichier `application/config/custom_config.php`, mettez `$config['mp_photos'] = TRUE`.
+
+## 5. Builder le projet
+
 ```
 docker-compose build
 ```
@@ -43,7 +58,7 @@ En fonction de la version de docker :
 docker compose build
 ```
 
-## 4. Lancer le projet
+## 6. Lancer le projet
 ```
 docker-compose up
 ```
@@ -55,7 +70,7 @@ En fonction de la version de docker :
 docker compose up
 ```
 
-## 5. Mettre à jour la base de données
+## 7. Mettre à jour la base de données
 Commandes à faire la première fois et à chaque fois que vous voulez rafraichir les données
 ```
 npm run docker-download
@@ -73,6 +88,8 @@ Ou en continue avec ```npm run docker-grunt-watch # (ou npm run dgw)```
 
 ## PHPMyAdmin
 Vous pouvez y accéder ici : http://localhost:8080/ ou http://dev-datan.fr:8080/
+
+***
 
 # Installation from scratch
 Suivez les étapes suivantes pour installer Datan en local.
