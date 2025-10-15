@@ -2,9 +2,9 @@
     <div class='row'>
         <div class='col-lg-8 offset-lg-2'>
             <h1 class='text-center'>Formez votre coalition à l'Assemblée nationale</h1>
-            <p class='mt-5 h'><span class='font-weight-bold text-primary'>289</span> : c'est le nombre de députés nécessaire pour obtenir une <span class='font-weight-bold'>majorité absolue</span> à l'Assemblée nationale.</p>
-            <p>Après les <a href="<?= base_url() ?>elections/legislatives-2024">élections législatives de 2024</a>, aucun groupe politique n'a atteint ce nombre. Les groupes devront donc <span class='font-weight-bold'>former des coalitions</span> pour arriver à faire voter des projets et propositions de loi.</p>
-            <p>Essayez notre <span class='font-weight-bold'>simulateur de coalition</span>. Sélectionnez différents groupes de l'Assemblée nationale et découvrez si vous pouvez atteindre les 289 députés nécessaires pour une majorité absolue.</p>
+            <p class='mt-5 h'><span class='font-weight-bold text-primary'>289</span> : c'est le nombre de députés nécessaire pour obtenir la <span class='font-weight-bold'>majorité absolue</span> à l'Assemblée nationale.</p>
+            <p>Après les <a href="<?= base_url() ?>elections/legislatives-2024">élections législatives de 2024</a>, aucun groupe politique n'a atteint ce nombre. Les groupes doivent donc <span class='font-weight-bold'>former des coalitions</span> pour arriver à faire voter des projets et propositions de loi.</p>
+            <p>Essayez notre <span class='font-weight-bold'>simulateur de coalition</span>. Sélectionnez différents groupes de l'Assemblée nationale et découvrez si vous pouvez atteindre les 289 députés nécessaires pour une majorité absolue. Le simulateur utilise les données actualisées de la composition des groupes politiques.</p>
         </div>
         <div class='col-12 mt-5'>
             <div class='containerHemicycle d-flex justify-content-center'>
