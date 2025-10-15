@@ -34,12 +34,34 @@
                 </div>
             </div>
         </div>
-        
     </div>
     <div class="row">
         <div class="col-12">
             <!-- ADD DONATION CAMPAIGN PARTIAL -->
             <?php $this->view('partials/campaign.php', array('wrapper_classes' => array('mt-5'))) ?>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <h2>Qu’est-ce que la majorité absolue à l’Assemblée nationale ?</h2>
+            <p>La <b>majorité absolue à l'Assemblée nationale</b> est de <b>289 sièges</b>, soit plus de la moitié des 577 députés. Cette majorité permet à un gouvernement ou une coalition politique de voter ses projets et propositions de loi sans dépendre d'autres groupes parlementaires, garantissant une gouvernance stable.
+            <p>Aux <a href="<?= base_url() ?>elections/legislatives-2022">élections législatives de 2022</a>, la coalition gouvernementale Renaissance n'a remporté que 245 sièges, bien en deçà de la majorité absolue requise. Cette situation s'est reproduite en <a href="<?= base_url() ?>elections/legislatives-2024">2024</a>, forçant le gouvernement à chercher des alliances avec d'autres groupes pour faire adopter chaque texte.</p> 
+            <h2>Majorité relative vs majorité absolue : quelle différence ?</h2>
+            <p>Un groupe politique a la <b>majorité relative</b> si son nombre de voix est simplement supérieur aux autres groupes, sans pour autant atteindre la moitié des sièges du Parlement. Par exemple, un groupe avec 40% de sièges face à d'autres ayant 35% et 25% dispose d'une majorité relative.</p>
+            <p>La <b>différence majorité relative vs majorité absolue</b> change la dynamique politique. Avec une majorité relative, l'exécutif doit négocier chaque vote et chercher des alliances avec d'autres groupes politiques à l'Assemblée, ralantissant l'adoption des lois et rendant l'action gouvernementale plus fragile. Avec une majorité absolue, le gouvernement vote ses projets de loi librement, garantissant plus de stabilité et une meilleure visibilité politique.</p>
+            <p>Par exemple, après les <b>élections législatives de 2017</b>, la <a href="<?= base_url() ?>groupes/legislature-15/larem">République en Marche (LREM)</a> et le <a href="<?= base_url() ?>groupes/legislature-15/modem">Modem</a> disposaient de 361 sièges (majorité absolue). Les gouvernements d'Édouard Philippe et de Jean Castex ont pu gouverner sans contrainte parlementaire.</p>
+            <h2>Que se passe-t-il sans majorité absolue ?</h2>
+            <p>Quand aucun groupe n'obtient la majorité absolue à l'Assemblée nationale, comme en 2022 et 2024, le <b>paysage politique se fragmente</b> et la gouvernance se complique. Le gouvernement doit alors conclure des alliances avec d'autres groupes pour faire voter ses lois. Cette situation crée une instabilité politique.</p>
+            <p>Le Parlement devient alors un acteur central du jeu politique. Le pouvoir se déplace du gouvernement vers l'Assemblée nationale, où les compromis se négocient texte par texte. Cette situation redonne de l'influence aux groupes politiques et aux députés.</p>
+            <p>En l'absence de coalition ou d'accord, le gouvernement peut recourir à des outils pour adopter des projets sans vote (article 49-3). Mais c'est risqué : une majorité de députés peut alors renverser le gouvernement par une <a href="<?= base_url() ?>blog/actualite-politique/la-censure-est-elle-de-retour-a-lassemblee-nationale">motion de censure</a>.</p>
+            <h2>Qu'est-ce qu'une coalition parlementaire ?</h2>
+            <p>Une coalition est une <b>alliance entre plusieurs groupes politiques</b> qui s'unissent pour former une majorité à l'Assemblée nationale. En l'absence de majorité absolue pour un seul groupe, cette coalition permet de gouverner et faire adopter les lois. Une coalition peut être ponctuelle ou structurée, avec la présence d'un programme de coalition et la participation de chaque parti au gouvernement.</p>            
+            <p>Si la France pratique peu les coalitions, elles sont <b>la norme dans de nombreux pays européens</b> comme l'Allemagne, la Belgique, les Pays-Bas, l'Italie ou au Parlement européen, où droite et gauche coopèrent depuis des décennies.</p>
+            <p>En France, avec une culture du compromis moins ancrée, les coalitions stables et programmatiques sont rares. Depuis la perte de la majorité absolue en 2022 pour <a href="<?= base_url() ?>groupes/legislature-16/re">Renaissance</a>, les accords se font texte par texte, ce qui accentue l'instabilité gouvernementale.</p>
+            <h2>FAQ : Questions courantes sur l'absence de majorité absolue</h2>
+            <p><b>Peut-on gouverner sans majorité absolue ?</b> Oui, mais c'est compliqué. Le gouvernement doit chercher des alliances ponctuelles, ralentissant son action et le rendant plus vulnérable.</p>
+            <p><b>Qu'est-ce qui se passe si le gouvernement est censuré ?</b> Le gouvernement tombe et le Président doit désigner un nouveau Premier ministre.</p>
+            <p><b>Comment empêcher la censure du gouvernement sans majorité absolue ?</b> Le gouvernement cherche des soutiens explicites ou implicites. Un groupe peut par exemple décider de ne pas voter la censure en échange de concessions, ou parce qu'il ne souhaite pas prendre le risque d'une dissolution et donc de nouvelles élections législatives. C'est la logique des alliances ponctuelles.</p>
         </div>
     </div>
 </div>
