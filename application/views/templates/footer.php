@@ -50,7 +50,7 @@
         </div>
       </div>
     </div>
-    <!-- GENERAL MODEL SEEN FIRST TIME SESSION -->
+    <!-- GENERAL MODAL SEEN FIRST TIME SESSION -->
     <?php
       $show_popup = isset($this->show_popup) ? $this->show_popup : false;
       if($show_popup && current_controller_method() !== "outils/coalition"){
@@ -86,6 +86,9 @@
                   </p>
                   <p>
                     <a href="<?= base_url(); ?>partis-politiques" class="no-decoration underline">Partis politiques</a>
+                  </p>
+                  <p>
+                    <a href="<?= base_url(); ?>outils/coalition-simulateur" class="no-decoration underline">Simulateur Assemblée</a>
                   </p>
                   <p>
                     <a href="https://www.helloasso.com/associations/datan/formulaires/1" target="_blank" rel="noopener" class="no-decoration underline">Dons</a>
