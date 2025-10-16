@@ -4554,7 +4554,7 @@ $functionsToExecute = array_merge($functionsToExecute, array(
     "opendata_historyGroupes"
 ));
 
-$functionsToExecute = array('vote'); // For Testing
+//$functionsToExecute = array('vote'); // For Testing
 
 // Execute all functions
 foreach ($functionsToExecute as $function) {
