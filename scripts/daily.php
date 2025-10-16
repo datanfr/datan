@@ -170,12 +170,13 @@ class Script
                     . " ON DUPLICATE KEY UPDATE " . $update;
                 $stmt = $this->bdd->prepare($sql);
                 $stmt->execute($datas);
-                $stmt = null;
-                $print ? $table . " inserted\n" : NULL;
-                usleep(500000); 
+                if ($print) echo $table . " inserted\n";
+                //sleep(0.5);
             } catch (Exception $e) {
                 echo "Error inserting : " . $table . "\n" . $e->getMessage() . "\n";
                 die;
+            } finally {
+                $stmt = null;
             }
         }
     }
