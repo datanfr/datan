@@ -1318,7 +1318,6 @@ class Script
     public function vote()
     {
         // THIS FUNCTION UPDATE THE FOLLOWING TABLES --> votes ; votes_info ; votes_groupes
-        $n = 1;
 
         // SCRAPPING DEPENDING ON LEGISLATURE
         if ($this->legislature_to_get >= 15) {
@@ -1546,21 +1545,35 @@ class Script
                             $voteGroupe = array('voteId' => $item['voteId'], 'voteNumero' => $item['voteNumero'], 'legislature' => $item['legislature'], 'organeRef' => $item['organeRef'], 'nombreMembresGroupe' => $item['nombreMembresGroupe'], 'positionMajoritaire' => $positionMajoritaire, 'nombrePours' => $item['nombrePours'], 'nombreContres' => $item['nombreContres'], 'nombreAbstentions' => $item['nombreAbstentions'], 'nonVotants' => $item['nonVotants'], 'nonVotantsVolontaires' => $item['nonVotantsVolontaires']);
                             $votesGroupe = array_merge($votesGroupe, array_values($voteGroupe));
                         }
+
+                        if (($i + 1) % 100 === 0){
+                            // insert votes
+                            $this->insertAll('votes', $voteMainFields, $votesMain);
+                            // insert votes infos
+                            $this->insertAll('votes_info', $voteInfoFields, $votesInfo);
+                            // insert votes groupes
+                            $this->insertAll('votes_groupes', $voteGroupeFields, $votesGroupe);
+
+                            $votesMain = [];
+                            $votesInfo = [];
+                            $votesGroupe = [];
+
+                            echo "insert" . $i;
+                        }
+
                     } else {
                         break;
                     }
-                    // insert votes
-                    $this->insertAll('votes', $voteMainFields, $votesMain);
-                    // insert votes infos
-                    $this->insertAll('votes_info', $voteInfoFields, $votesInfo);
-                    // insert votes groupes
-                    $this->insertAll('votes_groupes', $voteGroupeFields, $votesGroupe);
-                    $votesMain = [];
-                    $votesInfo = [];
-                    $votesGroupe = [];
-                    
-                    $n++;
                 }
+
+                // Insert remaining data
+                if (count($votesMain) > 0 || count($votesInfo) > 0 || count($votesGroupe) > 0) {
+                    echo "Processing final batch\n";
+                    $this->insertAll('votes', $voteMainFields, $votesMain);
+                    $this->insertAll('votes_info', $voteInfoFields, $votesInfo);
+                    $this->insertAll('votes_groupes', $voteGroupeFields, $votesGroupe);
+                }
+
             }
         } elseif ($this->legislature_to_get == 14) {
             $file = 'https://data.assemblee-nationale.fr/static/openData/repository/14/loi/scrutins/Scrutins_XIV.xml.zip';
@@ -4571,7 +4584,7 @@ $functionsToExecute = array_merge($functionsToExecute, array(
     "opendata_historyGroupes"
 ));
 
-//$functionsToExecute = array('fillDeputes'); // For Testing
+$functionsToExecute = array('vote'); // For Testing
 
 // Execute all functions
 foreach ($functionsToExecute as $function) {
