@@ -170,7 +170,9 @@ class Script
                     . " ON DUPLICATE KEY UPDATE " . $update;
                 $stmt = $this->bdd->prepare($sql);
                 $stmt->execute($datas);
+                $stmt = null;
                 $print ? $table . " inserted\n" : NULL;
+                usleep(500000); 
             } catch (Exception $e) {
                 echo "Error inserting : " . $table . "\n" . $e->getMessage() . "\n";
                 die;
@@ -202,6 +204,7 @@ class Script
             $mandatsGroupe = [];
             $mandatsSecondaire = [];
             $organes = [];
+
             for ($i = 0; $i < $zip->numFiles; $i++) {
                 $filename = $zip->getNameIndex($i);
                 $sub = substr($filename, 0, 13);
@@ -462,7 +465,7 @@ class Script
                         $organes = array_merge($organes, array_values($organe));
                     }
                 }
-                if (($i + 1) % 1000 === 0) {
+                if (($i + 1) % 200 === 0) {
                     // insert deputes
                     $this->insertAll('deputes', $deputeFields, $deputes);
                     // insert mandat
@@ -4567,6 +4570,8 @@ $functionsToExecute = array_merge($functionsToExecute, array(
     "opendata_historyMPs",
     "opendata_historyGroupes"
 ));
+
+//$functionsToExecute = array('fillDeputes'); // For Testing
 
 // Execute all functions
 foreach ($functionsToExecute as $function) {
