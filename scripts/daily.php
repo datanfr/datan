@@ -170,7 +170,7 @@ class Script
                     . " ON DUPLICATE KEY UPDATE " . $update;
                 $stmt = $this->bdd->prepare($sql);
                 $stmt->execute($datas);
-                if ($print) echo $table . " inserted\n";
+                //if ($print) echo $table . " inserted\n";
                 //sleep(0.5);
             } catch (Exception $e) {
                 echo "Error inserting : " . $table . "\n" . $e->getMessage() . "\n";
@@ -1530,8 +1530,6 @@ class Script
                             $votesMain = [];
                             $votesInfo = [];
                             $votesGroupe = [];
-
-                            echo "insert" . $i;
                         }
 
                     } else {
