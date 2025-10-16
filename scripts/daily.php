@@ -1345,208 +1345,180 @@ class Script
                     if ($xml_string != false) {
                         $xml = simplexml_load_string($xml_string);
                         foreach ($xml->xpath("//*[local-name()='votant']") as $votant) {
-                            $mpId = $votant->xpath("./*[local-name()='acteurRef']");
-                            $item['mpId'] = $mpId[0];
-
-                            $mandatId = $votant->xpath("./*[local-name()='mandatRef']");
-                            $item['mandatId'] = $mandatId[0];
+                            $mpId = (string)$votant->xpath("./*[local-name()='acteurRef']")[0];
+                            $mandatId = (string)$votant->xpath("./*[local-name()='mandatRef']")[0];
 
                             $parDelegation = $votant->xpath("./*[local-name()='parDelegation']");
                             if (isset($parDelegation[0])) {
-                                $item['parDelegation'] = $parDelegation[0];
+                                $parDelegation = $parDelegation[0];
                             } else {
-                                $item['parDelegation'] = NULL;
+                                $parDelegation = NULL;
                             }
 
                             $causePosition = $votant->xpath("./*[local-name()='causePositionVote']");
                             if (isset($causePosition[0])) {
-                                $item['causePosition'] = $causePosition[0];
+                                $causePosition = $causePosition[0];
                             } else {
-                                $item['causePosition'] = NULL;
+                                $causePosition = NULL;
                             }
 
-                            $voteMp = $votant->xpath("./parent::*");
-                            $item['voteMp'] = $voteMp[0]->getName();
+                            $voteMpName = $votant->xpath("./parent::*")[0]->getName();
 
-
-                            if ($item['voteMp'] == 'pours' || $item['voteMp'] == 'pour') {
-                                $vote = 1;
-                            } elseif ($item['voteMp'] == 'contres' || $item['voteMp'] == 'contre') {
-                                $vote = -1;
-                            } elseif ($item['voteMp'] == 'abstentions' || $item['voteMp'] == 'abstention') {
-                                $vote = 0;
-                            } elseif ($item['voteMp'] == 'nonVotants' || $item['voteMp'] == 'nonVotant') {
-                                $vote = 'nv';
-                            } elseif ($item['voteMp'] == 'nonVotantsVolontaires' || $item['voteMp'] == 'nonVotantsVolontaire') {
-                                $vote = 'nv';
-                            } else {
-                                $vote = NULL;
+                            // Map vote type to value
+                            switch ($voteMpName) {
+                                case 'pours':
+                                case 'pour':
+                                    $vote = 1;
+                                    break;
+                                case 'contres':
+                                case 'contre':
+                                    $vote = -1;
+                                    break;
+                                case 'abstentions':
+                                case 'abstention':
+                                    $vote = 0;
+                                    break;
+                                case 'nonVotantsVolontaires':
+                                case 'nonVotantsVolontaire':
+                                    $vote = 'nv';
+                                    break;
+                                default:
+                                    $vote = NULL;
                             }
 
-                            $voteId = $votant->xpath("./ancestor::*[local-name()='scrutin']/*[local-name()='uid']");
-                            $item['voteId'] = $voteId[0];
+                            $voteId = (string)$votant->xpath("./ancestor::*[local-name()='scrutin']/*[local-name()='uid']")[0];
+                            $voteNumero = (int)$votant->xpath("./ancestor::*[local-name()='scrutin']/*[local-name()='numero']")[0];
 
-                            $voteNumero = $votant->xpath("./ancestor::*[local-name()='scrutin']/*[local-name()='numero']");
-                            $item['voteNumero'] = $voteNumero[0];
-
-                            if (substr($item['voteId'], 0, 4) == "VTCG") {
-                              $item['voteNumero'] = -$item['voteNumero'];
+                            if (substr($voteId, 0, 4) == "VTCG") {
+                              $voteNumero = -$voteNumero;
                             }
 
-                            $legislature = $votant->xpath("./ancestor::*[local-name()='scrutin']/*[local-name()='legislature']");
-                            $item['legislature'] = $legislature[0];
+                            $legislature = (int)$votant->xpath("./ancestor::*[local-name()='scrutin']/*[local-name()='legislature']")[0];
+                            $voteType = $votant->xpath("./../..")[0]->getName();
 
-                            $miseaupoint = $votant->xpath("./../..");
-                            $item['voteType'] = $miseaupoint[0]->getName();
+                            $votesMain[] = $mpId;
+                            $votesMain[] = $vote;
+                            $votesMain[] = $voteNumero;
+                            $votesMain[] = $voteId;
+                            $votesMain[] = $legislature;
+                            $votesMain[] = $mandatId;
+                            $votesMain[] = $parDelegation;
+                            $votesMain[] = $causePosition;
+                            $votesMain[] = $voteType;
 
-                            $voteMain = array('mpId' => $item['mpId'], 'vote' => $vote, 'voteNumero' => $item['voteNumero'], 'voteId' => $item['voteId'], 'legislature' => $item['legislature'], 'mandatId' => $item['mandatId'], 'parDelegation' => $item['parDelegation'], 'causePosition' => $item['causePosition'], 'voteType' => $item['voteType']);
-                            $votesMain = array_merge($votesMain, array_values($voteMain));
                         }
                         // votesInfo
                         foreach ($xml->xpath("//*[local-name()='scrutin']") as $scrutin) {
-                            $voteId = $scrutin->xpath("./*[local-name()='uid']");
-                            $item['voteId'] = $voteId[0];
+                            $voteId = (string)$scrutin->xpath("./*[local-name()='uid']")[0];
+                            $voteNumero = (int)$scrutin->xpath("./*[local-name()='numero']")[0];
 
-                            $voteNumero = $scrutin->xpath("./*[local-name()='numero']");
-                            $item['voteNumero'] = $voteNumero[0];
-
-                            if (substr($item['voteId'], 0, 4) == "VTCG") {
-                              $item['voteNumero'] = -$item['voteNumero'];
+                            if (substr($voteId, 0, 4) == "VTCG") {
+                              $voteNumero = -$voteNumero;
                             }
 
-                            $organeRef = $scrutin->xpath("./*[local-name()='organeRef']");
-                            $item['organeRef'] = $organeRef[0];
+                            $organeRef = (string)$scrutin->xpath("./*[local-name()='organeRef']")[0];
+                            $legislature = (string)$scrutin->xpath("./*[local-name()='legislature']")[0];
+                            $sessionRef = (string)$scrutin->xpath("./*[local-name()='sessionRef']")[0];
+                            $seanceRef = (string)$scrutin->xpath("./*[local-name()='seanceRef']")[0];
+                            $dateScrutin = (string)$scrutin->xpath("./*[local-name()='dateScrutin']")[0];
+                            $quantiemeJourSeance = (string)$scrutin->xpath("./*[local-name()='quantiemeJourSeance']")[0];
+                            $codeTypeVote = (string)$scrutin->xpath("./*[local-name()='typeVote']/*[local-name()='codeTypeVote']")[0];
+                            $libelleTypeVote = (string)$scrutin->xpath("./*[local-name()='typeVote']/*[local-name()='libelleTypeVote']")[0];
+                            $typeMajorite = (string)$scrutin->xpath("./*[local-name()='typeVote']/*[local-name()='typeMajorite']")[0];
+                            $sortCode = (string)$scrutin->xpath("./*[local-name()='sort']/*[local-name()='code']")[0];
+                            $titre = (string)$scrutin->xpath("./*[local-name()='titre']")[0];
+                            $demandeur = (string)$scrutin->xpath("./*[local-name()='demandeur']/*[local-name()='texte']")[0];
+                            $modePublicationDesVotes = (string)$scrutin->xpath("./*[local-name()='modePublicationDesVotes']")[0];
+                            $nombreVotants = (int)$scrutin->xpath("./*[local-name()='syntheseVote']/*[local-name()='nombreVotants']")[0];
+                            $suffragesExprimes = (int)$scrutin->xpath("./*[local-name()='syntheseVote']/*[local-name()='suffragesExprimes']")[0];
+                            $nbrSuffragesRequis = (int)$scrutin->xpath("./*[local-name()='syntheseVote']/*[local-name()='nbrSuffragesRequis']")[0];
+                            $decomptePour = (int)$scrutin->xpath("./*[local-name()='syntheseVote']/*[local-name()='decompte']/*[local-name()='pour']")[0];
+                            $decompteContre = (int)$scrutin->xpath("./*[local-name()='syntheseVote']/*[local-name()='decompte']/*[local-name()='contre']")[0];
+                            $decompteAbs = (int)$scrutin->xpath("./*[local-name()='syntheseVote']/*[local-name()='decompte']/*[local-name()='abstentions']")[0];
+                            $decompteNv = (int)$scrutin->xpath("./*[local-name()='syntheseVote']/*[local-name()='decompte']/*[local-name()='nonVotants']")[0];
 
-                            $legislature = $scrutin->xpath("./*[local-name()='legislature']");
-                            $item['legislature'] = $legislature[0];
-
-                            $sessionRef = $scrutin->xpath("./*[local-name()='sessionRef']");
-                            $item['sessionRef'] = $sessionRef[0];
-
-                            $seanceRef = $scrutin->xpath("./*[local-name()='seanceRef']");
-                            $item['seanceRef'] = $seanceRef[0];
-
-                            $dateScrutin = $scrutin->xpath("./*[local-name()='dateScrutin']");
-                            $item['dateScrutin'] = $dateScrutin[0];
-
-                            $quantiemeJourSeance = $scrutin->xpath("./*[local-name()='quantiemeJourSeance']");
-                            $item['quantiemeJourSeance'] = $quantiemeJourSeance[0];
-
-                            $codeTypeVote = $scrutin->xpath("./*[local-name()='typeVote']/*[local-name()='codeTypeVote']");
-                            $item['codeTypeVote'] = $codeTypeVote[0];
-
-                            $libelleTypeVote = $scrutin->xpath("./*[local-name()='typeVote']/*[local-name()='libelleTypeVote']");
-                            $item['libelleTypeVote'] = $libelleTypeVote[0];
-
-                            $typeMajorite = $scrutin->xpath("./*[local-name()='typeVote']/*[local-name()='typeMajorite']");
-                            $item['typeMajorite'] = $typeMajorite[0];
-
-                            $sortCode = $scrutin->xpath("./*[local-name()='sort']/*[local-name()='code']");
-                            $item['sortCode'] = $sortCode[0];
-
-                            $titre = $scrutin->xpath("./*[local-name()='titre']");
-                            $item['titre'] = $titre[0];
-
-                            $demandeur = $scrutin->xpath("./*[local-name()='demandeur']/*[local-name()='texte']");
-                            $item['demandeur'] = $demandeur[0];
-
-                            $modePublicationDesVotes = $scrutin->xpath("./*[local-name()='modePublicationDesVotes']");
-                            $item['modePublicationDesVotes'] = $modePublicationDesVotes[0];
-
-                            $nombreVotants = $scrutin->xpath("./*[local-name()='syntheseVote']/*[local-name()='nombreVotants']");
-                            $item['nombreVotants'] = $nombreVotants[0];
-
-                            $suffragesExprimes = $scrutin->xpath("./*[local-name()='syntheseVote']/*[local-name()='suffragesExprimes']");
-                            $item['suffragesExprimes'] = $suffragesExprimes[0];
-
-                            $nbrSuffragesRequis = $scrutin->xpath("./*[local-name()='syntheseVote']/*[local-name()='nbrSuffragesRequis']");
-                            $item['nbrSuffragesRequis'] = $nbrSuffragesRequis[0];
-
-                            $decomptePour = $scrutin->xpath("./*[local-name()='syntheseVote']/*[local-name()='decompte']/*[local-name()='pour']");
-                            $item['decomptePour'] = $decomptePour[0];
-
-                            $decompteContre = $scrutin->xpath("./*[local-name()='syntheseVote']/*[local-name()='decompte']/*[local-name()='contre']");
-                            $item['decompteContre'] = $decompteContre[0];
-
-                            $decompteAbs = $scrutin->xpath("./*[local-name()='syntheseVote']/*[local-name()='decompte']/*[local-name()='abstentions']");
-                            $item['decompteAbs'] = $decompteAbs[0];
-
-                            $decompteNv = $scrutin->xpath("./*[local-name()='syntheseVote']/*[local-name()='decompte']/*[local-name()='nonVotants']");
-                            $item['decompteNv'] = $decompteNv[0];
-
-                            $voteInfo = array('voteId' => $item['voteId'], 'voteNumero' => $item['voteNumero'], 'organeRef' => $item['organeRef'], 'legislature' => $item['legislature'], 'sessionREF' => $item['sessionRef'], 'seanceRef' => $item['seanceRef'], 'dateScrutin' => $item['dateScrutin'], 'quantiemeJourSeance' => $item['quantiemeJourSeance'], 'codeTypeVote' => $item['codeTypeVote'], 'libelleTypeVote' => $item['libelleTypeVote'], 'typeMajorite' => $item['typeMajorite'], 'sortCode' => $item['sortCode'], 'titre' => $item['titre'], 'demandeur' => $item['demandeur'], 'modePublicationDesVotes' => $item['modePublicationDesVotes'], 'nombreVotants' => $item['nombreVotants'], 'suffragesExprimes' => $item['suffragesExprimes'], 'nbrSuffragesRequis' => $item['nbrSuffragesRequis'], 'decomptePour' => $item['decomptePour'], 'decompteContre' => $item['decompteContre'], 'decompteAbs' => $item['decompteAbs'], 'decompteNv' => $item['decompteNv']);
-                            $votesInfo = array_merge($votesInfo, array_values($voteInfo));
+                            $votesInfo[] = $voteId;
+                            $votesInfo[] = $voteNumero;
+                            $votesInfo[] = $organeRef;
+                            $votesInfo[] = $legislature;
+                            $votesInfo[] = $sessionRef;
+                            $votesInfo[] = $seanceRef;
+                            $votesInfo[] = $dateScrutin;
+                            $votesInfo[] = $quantiemeJourSeance;
+                            $votesInfo[] = $codeTypeVote;
+                            $votesInfo[] = $libelleTypeVote;
+                            $votesInfo[] = $typeMajorite;
+                            $votesInfo[] = $sortCode;
+                            $votesInfo[] = $titre;
+                            $votesInfo[] = $demandeur;
+                            $votesInfo[] = $modePublicationDesVotes;
+                            $votesInfo[] = $nombreVotants;
+                            $votesInfo[] = $suffragesExprimes;
+                            $votesInfo[] = $nbrSuffragesRequis;
+                            $votesInfo[] = $decomptePour;
+                            $votesInfo[] = $decompteContre;
+                            $votesInfo[] = $decompteAbs;
+                            $votesInfo[] = $decompteNv;
+                            
                         }
                         // votesGroupe
                         foreach ($xml->xpath("//*[local-name()='groupe']") as $groupe) {
-                            $voteId = $groupe->xpath("./ancestor::*[local-name()='scrutin']/*[local-name()='uid']");
-                            $item['voteId'] = $voteId[0];
+                            $voteId = (string)$groupe->xpath("./ancestor::*[local-name()='scrutin']/*[local-name()='uid']")[0];
+                            $voteNumero = (int)$groupe->xpath("./ancestor::*[local-name()='scrutin']/*[local-name()='numero']")[0];
 
-                            $voteNumero = $groupe->xpath("./ancestor::*[local-name()='scrutin']/*[local-name()='numero']");
-                            $item['voteNumero'] = $voteNumero[0];
-
-                            if (substr($item['voteId'], 0, 4) == "VTCG") {
-                              $item['voteNumero'] = -$item['voteNumero'];
+                            if (substr($voteId, 0, 4) == "VTCG") {
+                              $voteNumero = -$voteNumero;
                             }
 
-                            $legislature = $groupe->xpath("./ancestor::*[local-name()='scrutin']/*[local-name()='legislature']");
-                            $item['legislature'] = $legislature[0];
-
-                            $organeRef = $groupe->xpath("./*[local-name()='organeRef']");
-                            $item['organeRef'] = $organeRef[0];
+                            $legislature = (int)$groupe->xpath("./ancestor::*[local-name()='scrutin']/*[local-name()='legislature']")[0];
+                            $organeRef = (string)$groupe->xpath("./*[local-name()='organeRef']")[0];
 
                             // bug with new socialist group
-                            if ($item['organeRef'] == 'PO800496' & $item['dateScrutin'] >= '2023-10-19' ) {
-                              $item['organeRef'] = 'PO830170';
+                            if ($organeRef == 'PO800496' & $dateScrutin >= '2023-10-19' ) {
+                              $organeRef = 'PO830170';
                             }
 
-                            $nombreMembresGroupe = $groupe->xpath("./*[local-name()='nombreMembresGroupe']");
-                            $item['nombreMembresGroupe'] = $nombreMembresGroupe[0];                            
-
-                            $nombrePours = $groupe->xpath("./*[local-name()='vote']/*[local-name()='decompteVoix']/*[local-name()='pour']");
-                            $item['nombrePours'] = $nombrePours[0];
-
-                            $nombreContres = $groupe->xpath("./*[local-name()='vote']/*[local-name()='decompteVoix']/*[local-name()='contre']");
-                            $item['nombreContres'] = $nombreContres[0];
-
-                            $nombreAbstentions = $groupe->xpath("./*[local-name()='vote']/*[local-name()='decompteVoix']/*[local-name()='abstentions']");
-                            $item['nombreAbstentions'] = $nombreAbstentions[0];
+                            $nombreMembresGroupe = (int)$groupe->xpath("./*[local-name()='nombreMembresGroupe']")[0];
+                            $nombrePours = (int)$groupe->xpath("./*[local-name()='vote']/*[local-name()='decompteVoix']/*[local-name()='pour']")[0];
+                            $nombreContres = (int)$groupe->xpath("./*[local-name()='vote']/*[local-name()='decompteVoix']/*[local-name()='contre']")[0];
+                            $nombreAbstentions = (int)$groupe->xpath("./*[local-name()='vote']/*[local-name()='decompteVoix']/*[local-name()='abstentions']")[0];
 
                             //$positionMajoritaire = $groupe->xpath("./*[local-name()='vote']/*[local-name()='positionMajoritaire']");
                             //$item['positionMajoritaire'] = $positionMajoritaire[0];
 
-                            $nombrePours = (int)$item['nombrePours'];
-                            $nombreContres = (int)$item['nombreContres'];
-                            $nombreAbstentions = (int)$item['nombreAbstentions'];
 
                             if ($nombrePours > $nombreContres && $nombrePours > $nombreAbstentions) {
-                                $item['positionMajoritaire'] = 'pour';
+                                $positionMajoritaire = 'pour';
                             } elseif ($nombreContres > $nombrePours && $nombreContres > $nombreAbstentions) {
-                                $item['positionMajoritaire'] = 'contre';
+                                $positionMajoritaire = 'contre';
                             } elseif ($nombreAbstentions > $nombrePours && $nombreAbstentions > $nombreContres) {
-                                $item['positionMajoritaire'] = 'abstention';
+                                $positionMajoritaire = 'abstention';
                             } else {
-                                $item['positionMajoritaire'] = 'nv';
+                                $positionMajoritaire = 'nv';
                             }
 
-                            $nonVotants = $groupe->xpath("./*[local-name()='vote']/*[local-name()='decompteVoix']/*[local-name()='nonVotants']");
-                            $item['nonVotants'] = $nonVotants[0];
-
-                            $nonVotantsVolontaires = $groupe->xpath("./*[local-name()='vote']/*[local-name()='decompteVoix']/*[local-name()='nonVotantsVolontaires']");
-                            $item['nonVotantsVolontaires'] = $nonVotantsVolontaires[0];
-
-                            $total_votant = $item['nombrePours'] + $item['nombreContres'] + $item['nombreAbstentions'];
+                            $nonVotants = (int)$groupe->xpath("./*[local-name()='vote']/*[local-name()='decompteVoix']/*[local-name()='nonVotants']")[0];
+                            $nonVotantsVolontaires = (int)$groupe->xpath("./*[local-name()='vote']/*[local-name()='decompteVoix']/*[local-name()='nonVotantsVolontaires']")[0];
+                            $total_votant = $nombrePours + $nombreContres + $nombreAbstentions;
                             if ($total_votant == '0') {
                                 $positionMajoritaire = 'nv';
-                            } else {
-                                $positionMajoritaire = $item['positionMajoritaire'];
                             }
 
-                            $voteGroupe = array('voteId' => $item['voteId'], 'voteNumero' => $item['voteNumero'], 'legislature' => $item['legislature'], 'organeRef' => $item['organeRef'], 'nombreMembresGroupe' => $item['nombreMembresGroupe'], 'positionMajoritaire' => $positionMajoritaire, 'nombrePours' => $item['nombrePours'], 'nombreContres' => $item['nombreContres'], 'nombreAbstentions' => $item['nombreAbstentions'], 'nonVotants' => $item['nonVotants'], 'nonVotantsVolontaires' => $item['nonVotantsVolontaires']);
-                            $votesGroupe = array_merge($votesGroupe, array_values($voteGroupe));
+                            $votesGroupe[] = $voteId;
+                            $votesGroupe[] = $voteNumero;
+                            $votesGroupe[] = $legislature;
+                            $votesGroupe[] = $organeRef;
+                            $votesGroupe[] = $nombreMembresGroupe;
+                            $votesGroupe[] = $positionMajoritaire;
+                            $votesGroupe[] = $nombrePours;
+                            $votesGroupe[] = $nombreContres;
+                            $votesGroupe[] = $nombreAbstentions;
+                            $votesGroupe[] = $nonVotants;
+                            $votesGroupe[] = $nonVotantsVolontaires;
+
                         }
 
-                        if (($i + 1) % 10 === 0){
+                        if (($i + 1) % 20 === 0){
                             // insert votes
                             $this->insertAll('votes', $voteMainFields, $votesMain);
                             // insert votes infos
@@ -1568,7 +1540,6 @@ class Script
 
                 // Insert remaining data
                 if (count($votesMain) > 0 || count($votesInfo) > 0 || count($votesGroupe) > 0) {
-                    echo "Processing final batch\n";
                     $this->insertAll('votes', $voteMainFields, $votesMain);
                     $this->insertAll('votes_info', $voteInfoFields, $votesInfo);
                     $this->insertAll('votes_groupes', $voteGroupeFields, $votesGroupe);
