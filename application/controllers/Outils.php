@@ -4,6 +4,7 @@
     public function __construct() {
       parent::__construct();
       $this->load->model('groupes_model');
+      $this->load->model('faq_model');
     }
 
     public function coalition(){
@@ -13,6 +14,13 @@
 
       $data['groups'] = $this->groupes_model->get_groupes_coalition_builder();
 
+      $data["faq"] = [
+        ["title" => "Peut-on gouverner sans majorité absolue ?", "text" => "Oui, mais c'est compliqué. Le gouvernement doit chercher des alliances ponctuelles, ralentissant son action et le rendant plus vulnérable."],
+        ["title" => "Qu'est-ce qui se passe si le gouvernement est censuré ?", "text" => "Le gouvernement tombe et le Président de la République doit désigner un nouveau Premier ministre."],
+        ["title" => "Comment empêcher la censure du gouvernement sans majorité absolue ?", "text" => "Le gouvernement cherche des soutiens explicites ou implicites. Un groupe peut par exemple décider de ne pas voter la censure en échange de concessions, ou parce qu'il ne souhaite pas prendre le risque d'une dissolution et donc de nouvelles élections législatives. C'est la logique des alliances ponctuelles."]
+      ];
+      $data['faq'] = array($data['faq']);
+
       // Meta
       $data['url'] = $this->meta_model->get_url();
       $data['title_meta'] = "Assemblée nationale : formez votre majorité avec notre simulateur de coalition | Datan";
@@ -20,6 +28,8 @@
       // Open graph 
       $controller = $this->router->fetch_class()."/".$this->router->fetch_method();
       $data['ogp'] = $this->meta_model->get_ogp($controller, $data['title_meta'], $data['description_meta'], $data['url'], $data);
+      // FAQ schema
+      $data['schema'] = $this->faq_model->get_faq_schema($data['faq']);
       // JS
       $data['js_to_load'] = array('datan/coalition_builder.min');
       // Load views
