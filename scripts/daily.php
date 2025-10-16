@@ -1546,7 +1546,7 @@ class Script
                             $votesGroupe = array_merge($votesGroupe, array_values($voteGroupe));
                         }
 
-                        if (($i + 1) % 100 === 0){
+                        if (($i + 1) % 10 === 0){
                             // insert votes
                             $this->insertAll('votes', $voteMainFields, $votesMain);
                             // insert votes infos
