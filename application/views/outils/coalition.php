@@ -8,7 +8,7 @@
         </div>
         <div class='col-12 mt-5'>
             <div class='containerHemicycle d-flex justify-content-center'>
-                <?= file_get_contents(asset_url() . '/imgs/hemycicle_position/hemicycle_empty_caseSensitive_2.svg') ?>
+                <?= file_get_contents(asset_url() . '/imgs/hemycicle_position/hemicycle_empty.svg') ?>
             </div>
             <p class='text-center h5 mt-5'>C'est une coalition de <span id='textSeats'>0 siège</span> <small>(<span id='textPct'>0</span> %)</small></p>
             <p class='text-center h5 mb-0'><span id='textResult' class='text-danger'>Vous n'avez pas la majorité</span> <small>(minimum 289 sièges)</small></p>
