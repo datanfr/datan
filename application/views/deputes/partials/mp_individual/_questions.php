@@ -17,15 +17,19 @@
             <span class="type badge"><?= $question['type_libelle'] ?></span>
           </div>
           <div class="title mb-2"><?= $question['analyse'] ?></div>
-          <div class="category mb-2">
-            <?= file_get_contents(asset_url()."imgs/icons/folder-fill.svg") ?>
-            <?= ucfirst($question['rubrique']) ?>
+          <div class="mb-2 d-flex justify-content-between">
+            <div class="category">
+              <?= file_get_contents(asset_url()."imgs/icons/folder-fill.svg") ?>
+              <?= ucfirst($question['rubrique']) ?>
+            </div>
+            <a class="underline" href="https://www.assemblee-nationale.fr/dyn/<?= $question['legislature'] ?>/questions/<?= $question['uid'] ?>"  target="_blank">
+                Lire plus
+                <?= file_get_contents(asset_url()."imgs/icons/arrow_external_right.svg") ?>
+            </a>
           </div>
-          <div class="mb-2"><?= word_limiter($question['content'], 25) ?></div>
-          <a href="https://www.assemblee-nationale.fr/dyn/<?= $question['legislature'] ?>/questions/<?= $question['uid'] ?>"  target="_blank">
-            Lire plus
-            <?= file_get_contents(asset_url()."imgs/icons/arrow_right.svg") ?>
-          </a>
+          <div class="d-flex justify-content-end">
+            
+          </div>
         </div>   
       <?php endforeach; ?>
 

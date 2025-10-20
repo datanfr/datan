@@ -346,7 +346,7 @@
 
     public function generate_iframe()
     {
-      show_404(); // Temporary disallow iframe for MPs (until ready)
+      //show_404(); // Temporary disallow iframe for MPs (until ready)
       $data = $this->data;
       $mp_id = $data['depute']['mpId'];
       $explanations = $this->dashboardMP_model->get_explanations_by_mp($mp_id);

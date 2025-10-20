@@ -2384,7 +2384,7 @@ body{
   }
   .bloc-questions{
     .question:not(:last-child){
-      border-bottom: 1px solid $text-gray;
+      border-bottom: 1px solid #dcdcdc;
       padding-bottom: 1rem;
       margin-bottom: 1rem;
     }
