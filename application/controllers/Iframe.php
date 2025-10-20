@@ -46,6 +46,7 @@ class Iframe extends CI_Controller
       'explication' => 'deputes/partials/mp_individual/_explanation.php',
       'questions' => 'deputes/partials/mp_individual/_questions.php',
       'comportement-politique' => 'deputes/partials/mp_individual/statistics/_index.php',
+      'rapports' => 'deputes/partials/mp_individual/_rapports.php',
     ];
 
     $subcategory_views = [
@@ -139,6 +140,9 @@ class Iframe extends CI_Controller
 
     //___________________GET QUESTIONS______________________________________
     $data['questions'] = $this->questions_model->get_questions_by_mp($mp_id, 3);
+
+    //___________________GET RAPPORTS_______________________________________
+    $data['rapports'] = $this->deputes_model->get_rapports($mp_id, 3);
 
     // ________________ GET Depute page ressources (meta, css, js...)_______
 
