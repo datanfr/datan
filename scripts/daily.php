@@ -3134,6 +3134,10 @@ class Script
     public function dossiersActeurs()
     {
 
+        $this->bdd->query('
+            DELETE FROM dossiers_acteurs WHERE legislature = "' . $this->legislature_to_get . '"
+        ');
+
         $dossierActeursFields = array('id', 'legislature', 'etape', 'value', 'type', 'ref', 'mandate');
         $dossierActeur = [];
         $dossiersActeurs = [];
@@ -3438,6 +3442,10 @@ class Script
             ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb3;"
         );
 
+        $this->bdd->query('
+            DELETE FROM documents_acteurs WHERE legislature = "' . $this->legislature_to_get . '"
+        ');
+
         if ($this->legislature_to_get >= 15) {
             if ($this->legislature_to_get == 15) {
                 $file = __DIR__ . '/Dossiers_Legislatifs_XV.xml.zip';
@@ -3469,10 +3477,23 @@ class Script
                             $legislature = (string) $xml->legislature;
 
                             // Get rapporteurs 
-
                             foreach ($xml->xpath(".//*[local-name()='acteur']") as $acteur) {
                                 $acteurRef = (string)$acteur->acteurRef;
                                 $qualite = (string)$acteur->qualite;
+
+                                $insert[] = $uid;
+                                $insert[] = $legislature;
+                                $insert[] = $qualite;
+                                $insert[] = $acteurRef;
+
+                                $this->insertAll('documents_acteurs', $fields, $insert);
+                                $insert = [];
+                            }
+
+                            // Get organe 
+                            foreach ($xml->xpath(".//*[local-name()='auteur']/*[local-name()='organe']") as $organe) {
+                                $acteurRef = (string)$organe->organeRef;
+                                $qualite = "organe";
 
                                 $insert[] = $uid;
                                 $insert[] = $legislature;
