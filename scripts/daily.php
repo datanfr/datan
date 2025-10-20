@@ -3134,10 +3134,6 @@ class Script
     public function dossiersActeurs()
     {
 
-        $this->bdd->query('
-            DELETE FROM dossiers_acteurs WHERE legislature = "' . $this->legislature_to_get . '"
-        ');
-
         $dossierActeursFields = array('id', 'legislature', 'etape', 'value', 'type', 'ref', 'mandate');
         $dossierActeur = [];
         $dossiersActeurs = [];
@@ -3359,7 +3355,7 @@ class Script
             $split = preg_split("#/#", $filename);
             $type = $split[1];
             $file = $split[2];
-            if ($type == "document" && preg_match("/(PRJL|PION|PNRE)/", $file)) {
+            if ($type == "document" && preg_match("/(PRJL|PION|PNRE|RAPP|RINF|RION)/", $file)) {
               $xml_string = $zip->getFromName($filename);
 
               if ($xml_string != false) {
@@ -3425,6 +3421,76 @@ class Script
           }
         }
       }
+    }
+
+    public function documentsActeurs(){
+        $fields = array('id', 'legislature', 'type', 'ref');
+        $insert = [];
+
+        $this->bdd->query("CREATE TABLE IF NOT EXISTS `documents_acteurs` (
+            `id` varchar(25) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
+            `legislature` int NOT NULL,
+            `type` varchar(25) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
+            `ref` varchar(25) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
+            `dateMaj` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            KEY `idx_id` (`id`),
+            KEY `idx_ref` (`ref`)
+            ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb3;"
+        );
+
+        if ($this->legislature_to_get >= 15) {
+            if ($this->legislature_to_get == 15) {
+                $file = __DIR__ . '/Dossiers_Legislatifs_XV.xml.zip';
+            } elseif ($this->legislature_to_get == 16) {
+                $file = __DIR__ . '/Dossiers_Legislatifs_XVI.xml.zip';
+            } elseif($this->legislature_to_get == 17) {
+                $file = __DIR__ . '/Dossiers_Legislatifs_XVII.xml.zip';
+            }
+
+            $zip = new ZipArchive();
+            if ($zip->open($file) !== TRUE) {
+                exit("cannot open <$file>\n");
+            } else {
+
+                for ($i = 0; $i < $zip->numFiles; $i++) {
+                    $filename = $zip->getNameIndex($i);
+                    $split = preg_split("#/#", $filename);
+                    $type = $split[1];
+                    $file = $split[2];
+
+                    # Check if this is a rapport d'information
+                    if($type == "document" && preg_match("/(RINF)/", $file)){
+                        $xml_string = $zip->getFromName($filename);
+
+                        if ($xml_string != false) {
+                            $xml = simplexml_load_string($xml_string);
+
+                            $uid = (string) $xml->uid;
+                            $legislature = (string) $xml->legislature;
+
+                            // Get rapporteurs 
+
+                            foreach ($xml->xpath(".//*[local-name()='acteur']") as $acteur) {
+                                $acteurRef = (string)$acteur->acteurRef;
+                                $qualite = (string)$acteur->qualite;
+
+                                $insert[] = $uid;
+                                $insert[] = $legislature;
+                                $insert[] = $qualite;
+                                $insert[] = $acteurRef;
+
+                                $this->insertAll('documents_acteurs', $fields, $insert);
+                                $insert = [];
+                            }
+                            
+                        }
+
+                    }
+                }
+
+            }
+        }
+
     }
 
     public function amendements()
@@ -4524,6 +4590,7 @@ $functionsToExecute = array_merge($functionsToExecute, array(
     "dossier",
     "dossiersSeances",
     "documentsLegislatifs",
+    "documentsActeurs",
     "dossiersVotes",
     "dossiersActeurs",
     "votesAmendments",
@@ -4554,7 +4621,7 @@ $functionsToExecute = array_merge($functionsToExecute, array(
     "opendata_historyGroupes"
 ));
 
-//$functionsToExecute = array('vote'); // For Testing
+$functionsToExecute = array('documentsActeurs'); // For Testing
 
 // Execute all functions
 foreach ($functionsToExecute as $function) {
