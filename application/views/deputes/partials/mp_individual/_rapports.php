@@ -16,9 +16,10 @@
               <div class="d-flex justify-content-between mb-2">
                 <div class="date">DATE A FAIRE (dans daily first)</div>
               </div>
-              <div class="title mb-2"><?= ucfirst($rapport['titre']) ?></div>
-              <div class="title mb-2"><?= ucfirst($rapport['documentId']) ?></div>
-              <div class="title mb-2"><?= ucfirst($rapport['commissionAbrev']) ?></div>
+              <div class="title mb-2">titre = <?= ucfirst($rapport['titre']) ?></div>
+              <div class="title mb-2">documentId = <?= ucfirst($rapport['documentId']) ?></div>
+              <div class="title mb-2">COM = <?= ucfirst($rapport['commissionAbrev']) ?></div>
+              <div class="title mb-2">Date = <?= ucfirst($rapport['dateDepot']) ?></div>
               <div class="mb-2 d-flex justify-content-end">
                 <a class="underline" href="https://www.assemblee-nationale.fr/dyn/<?= $rapport['legislature'] ?>/rapports/<?= mb_strtolower($rapport['commissionAbrev']) ?>/l<?= $rapport['legislature'] ?>b<?= $rapport['numNotice'] ?>_rapport-information"  target="_blank">
                     Lire le rapport
