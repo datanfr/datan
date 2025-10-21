@@ -947,11 +947,11 @@
     }
 
     public function get_rapports($mpId, $limit = FALSE){
-      $this->db->select('d.legislature, a.documentId, a.type, a.ref, d.dossierId, d.titre, d.titreCourt, d.numNotice, o.libelleAbrev as commissionAbrev');
+      $this->db->select('d.legislature, a.documentId, a.type, a.ref, d.dossierId, d.titre, d.titreCourt, d.numNotice, d.dateDepot, o.libelleAbrev as commissionAbrev');
       $this->db->where('a.ref', $mpId);
       $this->db->where('a.type', 'rapporteur');
       $this->db->join('documents_legislatifs d', 'a.documentId = d.id', 'left');
-      $this->db->join('documents_acteurs do', "a.id = do.id AND do.type = 'organe'", 'left');
+      $this->db->join('documents_acteurs do', "a.documentId = do.documentId AND do.type = 'organe'", 'left');
       $this->db->join('organes o', "do.ref = o.uid", 'left');
       if ($limit) {
         $this->db->limit($limit);
