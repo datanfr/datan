@@ -3134,11 +3134,22 @@ class Script
     public function dossiersActeurs()
     {
 
-        $this->bdd->query('
-            DELETE FROM dossiers_acteurs WHERE legislature = "' . $this->legislature_to_get . '"
-        ');
+        $this->bdd->query('CREATE TABLE IF NOT EXISTS `dossiers_acteurs` (
+            `id` int NOT NULL AUTO_INCREMENT,
+            `dossierId` varchar(25) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
+            `legislature` int NOT NULL,
+            `etape` varchar(25) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci DEFAULT NULL,
+            `value` varchar(25) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
+            `type` varchar(25) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
+            `ref` varchar(25) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
+            `mandate` varchar(25) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci DEFAULT NULL,
+            `dateMaj` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            PRIMARY KEY (`id`),
+            UNIQUE KEY `unique_idx` (`dossierId`,`ref`)
+            ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb3;'
+        );
 
-        $dossierActeursFields = array('id', 'legislature', 'etape', 'value', 'type', 'ref', 'mandate');
+        $dossierActeursFields = array('dossierId', 'legislature', 'etape', 'value', 'type', 'ref', 'mandate');
         $dossierActeur = [];
         $dossiersActeurs = [];
         $n = 1;
@@ -4642,7 +4653,7 @@ $functionsToExecute = array_merge($functionsToExecute, array(
     "opendata_historyGroupes"
 ));
 
-$functionsToExecute = array('documentsActeurs'); // For Testing
+$functionsToExecute = array('dossiersActeurs'); // For Testing
 
 // Execute all functions
 foreach ($functionsToExecute as $function) {

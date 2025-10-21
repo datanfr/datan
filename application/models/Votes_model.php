@@ -649,7 +649,7 @@
 
     public function get_dossier_mp_authors($id, $legislature){
       $where = array(
-        'da.id' => $id,
+        'da.dossierId' => $id,
         'da.value' => 'initiateur',
         'da.type' => 'acteur',
         'dl.legislature' => $legislature
@@ -664,7 +664,7 @@
 
     public function get_dossier_mp_rapporteurs($id, $legislature){
       $where = array(
-        'da.id' => $id,
+        'da.dossierId' => $id,
         'da.value' => 'rapporteur',
         'dl.legislature' => $legislature
       );
