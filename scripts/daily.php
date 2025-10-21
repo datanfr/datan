@@ -3347,7 +3347,20 @@ class Script
     public function documentsLegislatifs()
     {
 
-      $fields = array('id', 'legislature', 'dossierId', 'numNotice', 'titre', 'titreCourt');
+        $this->bdd->query('CREATE TABLE IF NOT EXISTS `documents_legislatifs` (
+            `id` varchar(55) NOT NULL,
+            `legislature` int DEFAULT NULL,
+            `dossierId` varchar(15) NOT NULL,
+            `numNotice` int DEFAULT NULL,
+            `titre` text NOT NULL,
+            `titreCourt` text NOT NULL,
+            `dateDepot` date DEFAULT NULL,
+            `dateMaj` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            PRIMARY KEY (`id`)
+                ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb3;'
+        );
+
+      $fields = array('id', 'legislature', 'dossierId', 'numNotice', 'titre', 'titreCourt', 'dateDepot');
       $insert = [];
 
       if ($this->legislature_to_get >= 15) {
@@ -3387,10 +3400,12 @@ class Script
                 $numNotice = $xml->notice->numNotice;
                 $titre = $xml->titres->titrePrincipal;
                 $titreCourt = $xml->titres->titrePrincipalCourt;
+                $dateDepot = (isset($xml->cycleDeVie->chrono->dateDepot) && !empty((string)$xml->cycleDeVie->chrono->dateDepot))
+                    ? (new DateTime((string)$xml->cycleDeVie->chrono->dateDepot))->format('Y-m-d')
+                    : null;
 
-                //echo $id. ' - ' . $dossierId . ' - ' . $numNotice . ' - ' . $titre . ' - ' . $titreCourt . '<br>';
-                $doc = array('id' => $id, 'legislature' => $legislature, 'dossierId' => $dossierId,  'numNotice' => $numNotice, 'titre' => $titre, 'titreCourt' => $titreCourt);
-                $insert = array_merge($insert, array_values($doc));
+                array_push($insert, $id, $legislature, $dossierId, $numNotice, $titre, $titreCourt, $dateDepot);
+
                 if (($i + 1) % 500 === 0) {
                     $this->insertAll('documents_legislatifs', $fields, $insert);
                     $insert = [];
@@ -3439,23 +3454,20 @@ class Script
     }
 
     public function documentsActeurs(){
-        $fields = array('id', 'legislature', 'type', 'ref');
+        $fields = array('documentId', 'legislature', 'type', 'ref');
         $insert = [];
 
-        $this->bdd->query("CREATE TABLE IF NOT EXISTS `documents_acteurs` (
-            `id` varchar(25) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
+        $this->bdd->query('CREATE TABLE IF NOT EXISTS `documents_acteurs` (
+            `id` int NOT NULL AUTO_INCREMENT,
+            `documentId` varchar(25) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
             `legislature` int NOT NULL,
             `type` varchar(25) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
             `ref` varchar(25) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
             `dateMaj` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-            KEY `idx_id` (`id`),
-            KEY `idx_ref` (`ref`)
-            ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb3;"
+            PRIMARY KEY (`id`),
+            UNIQUE KEY `unique_idx` (`documentId`,`ref`)
+            ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb3;'
         );
-
-        $this->bdd->query('
-            DELETE FROM documents_acteurs WHERE legislature = "' . $this->legislature_to_get . '"
-        ');
 
         if ($this->legislature_to_get >= 15) {
             if ($this->legislature_to_get == 15) {
@@ -4653,7 +4665,7 @@ $functionsToExecute = array_merge($functionsToExecute, array(
     "opendata_historyGroupes"
 ));
 
-$functionsToExecute = array('dossiersActeurs'); // For Testing
+$functionsToExecute = array('documentsLegislatifs'); // For Testing
 
 // Execute all functions
 foreach ($functionsToExecute as $function) {

@@ -1,9 +1,9 @@
 <!-- BLOC RAPPORT -->
 <!-- CHECK WITH THIS ONE: https://www.assemblee-nationale.fr/dyn/deputes/PA793174 -->
 <?php if($rapports): ?>
-  <div class="bloc-questions mt-5">
+  <div class="bloc-rapports mt-5">
     <?php if (!isset($iframe_title_visibility) || $iframe_title_visibility !== 'hidden'): ?>
-      <h2 class="mb-4 title-center"><?= $first_person ? 'Mes' : 'Ses' ?> rapports d'information</h2>
+      <h2 class="mb-4 title-center"><?= $first_person ? 'Mes' : 'Ses' ?> rapports</h2>
     <?php endif; ?>
 
     <div class="card">
@@ -17,7 +17,7 @@
                 <div class="date">DATE A FAIRE (dans daily first)</div>
               </div>
               <div class="title mb-2"><?= ucfirst($rapport['titre']) ?></div>
-              <div class="title mb-2"><?= ucfirst($rapport['id']) ?></div>
+              <div class="title mb-2"><?= ucfirst($rapport['documentId']) ?></div>
               <div class="title mb-2"><?= ucfirst($rapport['commissionAbrev']) ?></div>
               <div class="mb-2 d-flex justify-content-end">
                 <a class="underline" href="https://www.assemblee-nationale.fr/dyn/<?= $rapport['legislature'] ?>/rapports/<?= mb_strtolower($rapport['commissionAbrev']) ?>/l<?= $rapport['legislature'] ?>b<?= $rapport['numNotice'] ?>_rapport-information"  target="_blank">
