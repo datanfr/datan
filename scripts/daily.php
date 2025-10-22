@@ -3351,6 +3351,8 @@ class Script
             `id` varchar(55) NOT NULL,
             `legislature` int DEFAULT NULL,
             `dossierId` varchar(15) NOT NULL,
+            `classe` varchar(15) DEFAULT NULL,
+            `type` varchar(15) DEFAULT NULL,
             `numNotice` int DEFAULT NULL,
             `titre` text NOT NULL,
             `titreCourt` text NOT NULL,
@@ -3360,7 +3362,7 @@ class Script
                 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb3;'
         );
 
-      $fields = array('id', 'legislature', 'dossierId', 'numNotice', 'titre', 'titreCourt', 'dateDepot');
+      $fields = array('id', 'legislature', 'dossierId', 'classe', 'type', 'numNotice', 'titre', 'titreCourt', 'dateDepot');
       $insert = [];
 
       if ($this->legislature_to_get >= 15) {
@@ -3403,8 +3405,15 @@ class Script
                 $dateDepot = (isset($xml->cycleDeVie->chrono->dateDepot) && !empty((string)$xml->cycleDeVie->chrono->dateDepot))
                     ? (new DateTime((string)$xml->cycleDeVie->chrono->dateDepot))->format('Y-m-d')
                     : null;
+                $classe = (isset($xml->classification->famille->classe->code) && !empty((string)$xml->classification->famille->classe->code))
+                    ? (string)$xml->classification->famille->classe->code
+                    : null;
+                $type = (isset($xml->classification->type->code) && !empty((string)$xml->classification->type->code))
+                    ? (string)$xml->classification->type->code
+                    : null;
 
-                array_push($insert, $id, $legislature, $dossierId, $numNotice, $titre, $titreCourt, $dateDepot);
+
+                array_push($insert, $id, $legislature, $dossierId, $classe, $type, $numNotice, $titre, $titreCourt, $dateDepot);
 
                 if (($i + 1) % 500 === 0) {
                     $this->insertAll('documents_legislatifs', $fields, $insert);
@@ -3490,7 +3499,7 @@ class Script
                     $file = $split[2];
 
                     # Check if this is a rapport d'information
-                    if($type == "document" && preg_match("/(RINF)/", $file)){
+                    if($type == "document" && preg_match("/(RINF|RAPP)/", $file)){
                         $xml_string = $zip->getFromName($filename);
 
                         if ($xml_string != false) {
