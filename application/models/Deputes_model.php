@@ -953,6 +953,7 @@
       $this->db->join('documents_legislatifs d', 'a.documentId = d.id', 'left');
       $this->db->join('documents_acteurs do', "a.documentId = do.documentId AND do.type = 'organe'", 'left');
       $this->db->join('organes o', "do.ref = o.uid", 'left');
+      $this->db->order_by('d.dateDepot', 'DESC');
       if ($limit) {
         $this->db->limit($limit);
       }

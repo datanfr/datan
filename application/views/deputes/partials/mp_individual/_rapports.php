@@ -1,5 +1,5 @@
 <!-- BLOC RAPPORT -->
-<!-- CHECK WITH THIS ONE: https://www.assemblee-nationale.fr/dyn/deputes/PA793174 -->
+<!-- CHECK WITH THIS ONE: https://www.assemblee-nationale.fr/dyn/deputes/PA793174 == check URL of rapports -->
 <?php if($rapports): ?>
   <div class="bloc-rapports mt-5">
     <?php if (!isset($iframe_title_visibility) || $iframe_title_visibility !== 'hidden'): ?>
