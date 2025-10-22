@@ -76,6 +76,10 @@
                     <label class="form-check-label" for="cat5">Mes dernières questions</label>
                   </div>
                   <div class="form-check">
+                    <input class="form-check-input category-checkbox" type="checkbox" value="rapports" id="cat7">
+                    <label class="form-check-label" for="cat7">Mes derniers rapports</label>
+                  </div>
+                  <div class="form-check">
                     <input class="form-check-input category-checkbox" type="checkbox" value="comportement-politique" id="cat6">
                     <label class="form-check-label" for="cat6">Mon comportement politique</label>
 
@@ -94,10 +98,7 @@
                       </div>
                     </div>
                   </div>
-                  <div class="form-check">
-                    <input class="form-check-input category-checkbox" type="checkbox" value="rapports" id="cat7">
-                    <label class="form-check-label" for="cat7">Mes derniers rapports</label>
-                  </div>
+                  
                 </div>
               </div>
 

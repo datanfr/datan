@@ -37,7 +37,7 @@ class Iframe extends CI_Controller
     $categories_param = $this->input->get('categories');
     $categories = $categories_param
       ? explode(',', $categories_param)
-      : ['positions-importantes', 'derniers-votes', 'election', 'explication', 'questions', 'comportement-politique'];
+      : ['positions-importantes', 'derniers-votes', 'election', 'explication', 'questions', 'rapports', 'comportement-politique'];
 
     $category_views = [
       'positions-importantes' => 'deputes/partials/mp_individual/_key_positions.php',
@@ -45,8 +45,8 @@ class Iframe extends CI_Controller
       'election' => 'deputes/partials/mp_individual/_election.php',
       'explication' => 'deputes/partials/mp_individual/_explanation.php',
       'questions' => 'deputes/partials/mp_individual/_questions.php',
-      'comportement-politique' => 'deputes/partials/mp_individual/statistics/_index.php',
       'rapports' => 'deputes/partials/mp_individual/_rapports.php',
+      'comportement-politique' => 'deputes/partials/mp_individual/statistics/_index.php',
     ];
 
     $subcategory_views = [
@@ -75,8 +75,6 @@ class Iframe extends CI_Controller
 
     $departement =  $this->deputes_model->get_dptslug_by_name_url($name);
     $data['depute'] = $this->deputes_model->get_depute_individual($name, $departement);
-
-
 
     setlocale(LC_TIME, 'french');
 
