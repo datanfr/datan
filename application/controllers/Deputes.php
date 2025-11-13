@@ -245,19 +245,11 @@
       $data['depute']['dateNaissanceFr'] = utf8_encode(strftime('%d %B %Y', strtotime($data['depute']['birthDate']))); // birthdate
 
       //___________________GET VOTES_________________________________________
-      if ($legislature >= 15) {
-        // Get edited votes
-        $data['votes_datan'] = $this->votes_model->get_votes_datan_depute($mp_id, 5);
-        // Get key votes
-        $data['key_votes'] = $this->votes_model->get_key_votes_mp($mp_id);
-      } else {
-        $data['votes_datan'] = NULL;
-        $data['key_votes'] = NULL;
-      }
+      $data['votes_datan'] = $legislature >= 15 ? $this->votes_model->get_votes_datan_depute($mp_id, 5) : NULL; // Edited votes by datan
+      $data['key_votes'] = $legislature >= 15 ? $this->votes_model->get_key_votes_mp($mp_id) : NULL; // Key votes 
 
       //__________________ Get FEATURED VOTE ________________________________
-      //$data['voteFeature'] = $this->votes_model->get_individual_vote_moc($mp_id, 17, 519); // MOC Barnier Decembre 2024
-      $data['voteFeature'] = $this->votes_model->get_individual_vote_depute($mp_id, 17, 3054); // Vote confiance Sept 2025
+      $data['voteFeature'] = $this->votes_model->get_individual_vote_depute($mp_id, 17, 3597); // Vote suspension réforme retraite
 
       //__________________GET LAST EXPLICATION_______________________________
       $data['explication'] = $this->depute_service->get_explication_details($mp_id, $legislature, $data['gender']);
