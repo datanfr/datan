@@ -249,7 +249,7 @@
       $data['key_votes'] = $legislature >= 15 ? $this->votes_model->get_key_votes_mp($mp_id) : NULL; // Key votes 
 
       //__________________ Get FEATURED VOTE ________________________________
-      $data['voteFeature'] = $this->votes_model->get_individual_vote_depute($mp_id, 17, 3597); // Vote suspension réforme retraite
+      $data['voteFeature'] = $this->votes_model->get_individual_vote_depute($mp_id, 17, 3684); // Vote suspension réforme retraite
 
       //__________________GET LAST EXPLICATION_______________________________
       $data['explication'] = $this->depute_service->get_explication_details($mp_id, $legislature, $data['gender']);
