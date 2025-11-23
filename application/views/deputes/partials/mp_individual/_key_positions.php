@@ -27,7 +27,7 @@
                   <?= $first_person
                     ? ($value["scoreLoyaute"] === "1" ? "J'ai voté" : "Je n'ai pas voté") . " comme mon groupe."
                     : ucfirst($gender["pronom"]) . " " . ($value["scoreLoyaute"] === "1" ? "a voté" : "n'a pas voté") . " comme son groupe." ?>
-                  <a href="<?= base_url() ?>votes/legislature-16/vote_<?= $value['voteNumero'] ?>" class="font-italic">Voir le vote</a>
+                  <a href="<?= base_url() ?>votes/legislature-<?= $value['legislature'] ?>/vote_<?= $value['voteNumero'] ?>" class="font-italic">Voir le vote</a>
                 </div>
 
               </div>
