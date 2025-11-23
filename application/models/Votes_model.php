@@ -531,7 +531,7 @@
     }
 
     public function get_key_votes_mp($mpId){
-      $sql =  'SELECT vs.voteNumero, vs.scoreLoyaute, vs.vote,
+      $sql =  'SELECT vs.legislature, vs.voteNumero, vs.scoreLoyaute, vs.vote,
         CONCAT("l", vs.legislature, "v", vs.voteNumero) AS voteId,
         CASE
           WHEN vs.vote = 1 THEN "pour"
@@ -556,7 +556,7 @@
         "l16v3213" => "du projet de loi immigration en 2023",
         "l17v2107" => "la proposition de loi créant un droit à l'aide à mourir",
         "l17v3260" => "la proposition du RN visant à dénoncer les accords franco-algériens de 1968",
-        "l17v3300" => "la taxe Zucman sur les patrimoines supérieurs à 100 millions d'euros'"
+        "l17v3300" => "la taxe Zucman sur les patrimoines supérieurs à 100 millions d'euros"
       );
 
       foreach ($votes as $key => $value) {
