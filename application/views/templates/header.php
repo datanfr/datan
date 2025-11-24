@@ -68,7 +68,7 @@
     <?php endif; ?>
 
     <link rel="canonical" href="<?= $url ?>">
-    <link rel="icon" type="image/png" href="<?= asset_url() ?>imgs/favicon/datan_favicon.ico" />
+    <link rel="icon" type="image/x-icon" href="<?= asset_url() ?>imgs/favicon/datan_favicon.ico" />
     <link rel="shortcut icon" href="#" /> <!-- To solve the following 404 pbm: /favicon.ico || If not try this: https://www.faviconcodegenerator.com/prevent-favicon-404-error.php -->
     <!-- Apple icons -->
     <link rel="apple-touch-icon" href="<?= asset_url() ?>imgs/favicon/apple-touch-icon.png" />
