@@ -34,20 +34,111 @@ class Script
         $exec_time = $time_post - $this->time_pre;
         echo ("Script is over ! It took: " . round($exec_time, 2) . " seconds.\n");
     }
-
-    public function chunked_copy($from, $to) {
-      # 1 meg at a time, you can adjust this.
-      $buffer_size = 1048576;
-      $ret = 0;
-      $fin = fopen($from, "rb");
-      $fout = fopen($to, "w");
-      while(!feof($fin)) {
-        $ret += fwrite($fout, fread($fin, $buffer_size));
+    
+    public function chunked_copy($from, $to, $max_retries = 3) {
+      $buffer_size = 1048576; // 1 MB chunks
+      $retry_count = 0;
+      
+      while ($retry_count < $max_retries) {
+        try {
+          echo "Attempt " . ($retry_count + 1) . " of $max_retries...\n";
+            
+          // Create stream context with proper settings
+          $context = stream_context_create([
+            'http' => [
+              'timeout' => 300,  // 5 minutes timeout
+              'user_agent' => 'Mozilla/5.0 (compatible; PHP Script)',
+              'follow_location' => true,
+              'max_redirects' => 5,
+              'ignore_errors' => false
+            ]
+          ]);
+          
+          // Open source with context
+          $fin = @fopen($from, "rb", false, $context);
+          if ($fin === false) {
+            throw new Exception("Failed to open source: $from");
+          }
+            
+          // Set read timeout on the stream
+          stream_set_timeout($fin, 300);
+           
+          // Open destination
+          $fout = @fopen($to, "w");
+          if ($fout === false) {
+            fclose($fin);
+            throw new Exception("Failed to open destination: $to");
+          }
+            
+          $ret = 0;
+          $last_progress = 0;
+            
+          while (!feof($fin)) {
+            // Check for timeout
+            $meta = stream_get_meta_data($fin);
+            if ($meta['timed_out']) {
+              throw new Exception("Stream timeout during download");
+            }
+                
+            // Read chunk
+            $data = fread($fin, $buffer_size);
+            if ($data === false) {
+              throw new Exception("Read error during download");
+            }
+                
+            // Write chunk
+            $written = fwrite($fout, $data);
+            if ($written === false) {
+              throw new Exception("Write error during download");
+            }
+                
+            $ret += $written;
+                
+            // Show progress every 10MB
+            if ($ret - $last_progress >= 10 * 1048576) {
+              echo "Downloaded: " . round($ret / 1048576, 2) . " MB\n";
+              $last_progress = $ret;
+            }
+          }
+            
+          fclose($fin);
+          fclose($fout);
+            
+          echo "Download complete. Size = " . $ret . " bytes (" . round($ret / 1048576, 2) . " MB)\n";
+            
+          // Verify file was actually written
+          if ($ret == 0 || !file_exists($to)) {
+            throw new Exception("Download resulted in empty file");
+          }
+            
+          return true;
+            
+        } catch (Exception $e) {
+          echo "Error: " . $e->getMessage() . "\n";
+            
+          // Clean up partial file
+          if (isset($fout) && is_resource($fout)) {
+            fclose($fout);
+          }
+          if (isset($fin) && is_resource($fin)) {
+            fclose($fin);
+          }
+          if (file_exists($to)) {
+            unlink($to);
+          }
+            
+          $retry_count++;
+            
+          if ($retry_count < $max_retries) {
+            $wait_time = $retry_count * 5; // 5s, 10s, 15s backoff
+            echo "Waiting {$wait_time} seconds before retry...\n";
+            sleep($wait_time);
+          }
+        }
       }
-      fclose($fin);
-      fclose($fout);
-      echo 'size = ' . $ret . '\n'; # return number of bytes written
-      return TRUE;
+      
+      echo "Failed after $max_retries attempts\n";
+      return false;
     }
 
     public function dossiers(){
