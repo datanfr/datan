@@ -1,7 +1,6 @@
 <?php
 /**
  * Script de téléchargement avec reprise automatique
- * Télécharge le fichier Scrutins.json.zip avec gestion des interruptions
  */
 
 class ResumableDownloader {
