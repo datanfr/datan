@@ -35,28 +35,29 @@ class Script
         echo ("Script is over ! It took: " . round($exec_time, 2) . " seconds.\n");
     }
     
-    public function chunked_copy($from, $to, $max_retries = 50) {
-      $retry_count = 0;
-      $backoff = 2; // initial backoff in seconds
+    public function chunked_copy($from, $to, $max_retries = 10, $backoff = 2) {
+      $attempt = 0;
+      $start = file_exists($to) ? filesize($to) : 0;
       
-      while ($retry_count < $max_retries) {
+      while ($attempt < $max_retries) {
+        $beforeSize = file_exists($to) ? filesize($to) : 0;
+        echo "File size before attempt: $beforeSize bytes\n";
+
+        $appendMode = false;
+        $file = null;
+        $ch = null;
+
+        if ($start > 0) {
+          echo "Attempting ". ($attempt + 1) . " to resume download from byte: $start...\n";
+          $headers['Range'] = "bytes=$start-";
+          $appendMode = true;
+        } else {
+          echo "Attempt " . ($attempt + 1) . "...\n";
+        }
+
         try {
-          echo "Attempt " . ($retry_count + 1) . " of $max_retries...\n";
-
-          // Determine start byte if file already partially exists
-          $start = file_exists($to) ? filesize($to) : 0;
-          $appendMode = $start > 0;
-
-          // Open destination file in append or write mode
-          $fout = fopen($to, $appendMode ? 'ab' : 'wb');
-          if ($fout === false) {
-            throw new Exception("Failed to open destination: $to");
-          }
-          
-          // Initialise cURL 
           $ch = curl_init($from);
           curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
-          //curl_setopt($ch, CURLOPT_FILE, $fout);
           curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
           curl_setopt($ch, CURLOPT_MAXREDIRS, 10);
           curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (compatible; PHP Script)');
@@ -68,70 +69,83 @@ class Script
           curl_setopt($ch, CURLOPT_FRESH_CONNECT, true);
           curl_setopt($ch, CURLOPT_FORBID_REUSE, true);
           curl_setopt($ch, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4);
-          curl_setopt($ch, CURLOPT_HTTPHEADER, [
-            'Connection: close',
-            'Accept-Encoding: identity',
-            'Expect:'
-          ]);
           curl_setopt($ch, CURLOPT_ENCODING, 'identity');
-          $downloaded = 0;
-          curl_setopt($ch, CURLOPT_WRITEFUNCTION, function($ch, $chunk) use (&$downloaded, $fout) {
-            $len = strlen($chunk);
-            $downloaded += $len;
-            
-            fwrite($fout, $chunk);
-            echo "Chunk: $len bytes, total: $downloaded bytes\n";
-            
-            return $len;
-          });
 
-          // Resume download if needed
-          if ($appendMode && $start > 0) {
-            echo "start === $start...\n";
-            curl_setopt($ch, CURLOPT_RESUME_FROM, $start);
+          $file = fopen($to, $appendMode ? 'ab' : 'wb');
+          if ($file === false) {
+            throw new Exception("Failed to open destination :$to");
           }
+          
+          curl_setopt($ch, CURLOPT_FILE, $file);
+          $result = curl_exec($ch);
+          $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+          $afterSize = file_exists($to) ? filesize($to) : 0;
+          echo "File size after attempt: $afterSize bytes\n";  
 
-          // Execute download
-          $success = curl_exec($ch);
-          if (!$success) {
+          if ($result === false) {
             $error = curl_error($ch);
-            curl_close($ch);
-            fclose($fout);
             throw new Exception("cURL error: $error");
           }
 
-          // Check HTTP status code
-          $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+          if ($appendMode && $httpCode !== 206) {
+            if ($httpCode === 200) {
+              // Server ignored Range header (Status 200). Restarting full download from byte 0.
+              fclose($file);
+              $file = fopen($to, 'wb');
+              if ($file === false) {
+                throw new Exception("Failed to open file $to for writing");
+              }
+              curl_setopt($ch, CURLOPT_FILE, $file);
+              $result = curl_exec($ch);
+              $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+              if ($result === false) {
+                $error = curl_error($ch);
+                throw new Exception("cURL error: $error");
+              }
+            } else {
+              throw new Exception("Failed to resume fetch with status $httpCode for $from");
+            }
+          } elseif ($start === 0 && $httpCode !== 200) {
+            throw new Exception("Failed to start fetch with status $httpCode for $from");
+          }
+
+          fclose($file);
           curl_close($ch);
-          fclose($fout);
+          return;
 
-          if ($http_code >= 400) {
-            throw new Exception("HTTP error $http_code when downloading $from");
-          }
+        } catch (Exception $error) {
+          if ($file !== null) fclose($file);
+          if ($ch !== null) curl_close($ch);
 
-          // Verify file
-          $filesize = filesize($to);
-          if ($filesize === 0) {
-            throw new Exception("Download resulted in empty file");
-          }
+          $afterSize = file_exists($to) ? filesize($to) : 0;          
 
-          echo "Download complete. Size = $filesize bytes (" . round($filesize / 1048576, 2) . " MB)\n";
-          return true;
-            
-        } catch (Exception $e) {
-          echo "Error: " . $e->getMessage() . "\n";
-          $retry_count++;
+          if($attempt >= $max_retries - 1){
+            echo "Final fetch attempt for $from failed with error: " . $error->getMessage() . "\n";
+            throw $error;
+          } 
 
-          if ($retry_count < $max_retries) {
-            echo "Waiting {$backoff} seconds before retry...\n";
-            sleep($backoff);
-            //$backoff += 5; // exponential backoff
+          echo "Fetch attempt " . ($attempt + 1) . " for $from failed with error: " . $error->getMessage() . "\n";
+
+          $newStart = file_exists($to) ? filesize($to) : 0;
+          if ($newStart > $start) {
+            // Some data was written, resume from new offset
+            $start = $newStart;
+            $max_retries++; // Give an extra attempt since progress was made
+            echo "Resuming fetch at offset $start...\n";
           } else {
-            echo "Failed after $max_retries attempts\n";
-            return false;
+            // No progress, exponential backoff
+            echo "Nothing downloaded ⇒ retrying in " . ($backoff / 1000) . " s at offset $start...\n";
+            usleep($backoff * 1000);
+            $backoff = min($backoff * 2, 60); // Cap backoff at 60 seconds
           }
+          $attempt++;          
         }
       }
+      // Only delete the file if all retries failed and nothing was downloaded
+      if (file_exists($to) && filesize($to) === 0) {
+          unlink($to);
+      }
+      throw new Exception("Failed to fetch $from after $max_retries attempts");
     }
 
     public function dossiers(){
