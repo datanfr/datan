@@ -35,110 +35,103 @@ class Script
         echo ("Script is over ! It took: " . round($exec_time, 2) . " seconds.\n");
     }
     
-    public function chunked_copy($from, $to, $max_retries = 3) {
-      $buffer_size = 1048576; // 1 MB chunks
+    public function chunked_copy($from, $to, $max_retries = 50) {
       $retry_count = 0;
+      $backoff = 2; // initial backoff in seconds
       
       while ($retry_count < $max_retries) {
         try {
           echo "Attempt " . ($retry_count + 1) . " of $max_retries...\n";
-            
-          // Create stream context with proper settings
-          $context = stream_context_create([
-            'http' => [
-              'timeout' => 300,  // 5 minutes timeout
-              'user_agent' => 'Mozilla/5.0 (compatible; PHP Script)',
-              'follow_location' => true,
-              'max_redirects' => 5,
-              'ignore_errors' => false
-            ]
-          ]);
-          
-          // Open source with context
-          $fin = @fopen($from, "rb", false, $context);
-          if ($fin === false) {
-            throw new Exception("Failed to open source: $from");
-          }
-            
-          // Set read timeout on the stream
-          stream_set_timeout($fin, 300);
-           
-          // Open destination
-          $fout = @fopen($to, "w");
+
+          // Determine start byte if file already partially exists
+          $start = file_exists($to) ? filesize($to) : 0;
+          $appendMode = $start > 0;
+
+          // Open destination file in append or write mode
+          $fout = fopen($to, $appendMode ? 'ab' : 'wb');
           if ($fout === false) {
-            fclose($fin);
             throw new Exception("Failed to open destination: $to");
           }
+          
+          // Initialise cURL 
+          $ch = curl_init($from);
+          curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
+          //curl_setopt($ch, CURLOPT_FILE, $fout);
+          curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+          curl_setopt($ch, CURLOPT_MAXREDIRS, 10);
+          curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (compatible; PHP Script)');
+          curl_setopt($ch, CURLOPT_TIMEOUT, 300);
+          curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 60);
+          curl_setopt($ch, CURLOPT_BUFFERSIZE, 128 * 1024); // 128 KB chunks
+          curl_setopt($ch, CURLOPT_LOW_SPEED_LIMIT, 1);
+          curl_setopt($ch, CURLOPT_LOW_SPEED_TIME, 30);
+          curl_setopt($ch, CURLOPT_FRESH_CONNECT, true);
+          curl_setopt($ch, CURLOPT_FORBID_REUSE, true);
+          curl_setopt($ch, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4);
+          curl_setopt($ch, CURLOPT_HTTPHEADER, [
+            'Connection: close',
+            'Accept-Encoding: identity',
+            'Expect:'
+          ]);
+          curl_setopt($ch, CURLOPT_ENCODING, 'identity');
+          $downloaded = 0;
+          curl_setopt($ch, CURLOPT_WRITEFUNCTION, function($ch, $chunk) use (&$downloaded, $fout) {
+            $len = strlen($chunk);
+            $downloaded += $len;
             
-          $ret = 0;
-          $last_progress = 0;
+            fwrite($fout, $chunk);
+            echo "Chunk: $len bytes, total: $downloaded bytes\n";
             
-          while (!feof($fin)) {
-            // Check for timeout
-            $meta = stream_get_meta_data($fin);
-            if ($meta['timed_out']) {
-              throw new Exception("Stream timeout during download");
-            }
-                
-            // Read chunk
-            $data = fread($fin, $buffer_size);
-            if ($data === false) {
-              throw new Exception("Read error during download");
-            }
-                
-            // Write chunk
-            $written = fwrite($fout, $data);
-            if ($written === false) {
-              throw new Exception("Write error during download");
-            }
-                
-            $ret += $written;
-                
-            // Show progress every 10MB
-            if ($ret - $last_progress >= 10 * 1048576) {
-              echo "Downloaded: " . round($ret / 1048576, 2) . " MB\n";
-              $last_progress = $ret;
-            }
+            return $len;
+          });
+
+          // Resume download if needed
+          if ($appendMode && $start > 0) {
+            echo "start === $start...\n";
+            curl_setopt($ch, CURLOPT_RESUME_FROM, $start);
           }
-            
-          fclose($fin);
+
+          // Execute download
+          $success = curl_exec($ch);
+          if (!$success) {
+            $error = curl_error($ch);
+            curl_close($ch);
+            fclose($fout);
+            throw new Exception("cURL error: $error");
+          }
+
+          // Check HTTP status code
+          $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+          curl_close($ch);
           fclose($fout);
-            
-          echo "Download complete. Size = " . $ret . " bytes (" . round($ret / 1048576, 2) . " MB)\n";
-            
-          // Verify file was actually written
-          if ($ret == 0 || !file_exists($to)) {
+
+          if ($http_code >= 400) {
+            throw new Exception("HTTP error $http_code when downloading $from");
+          }
+
+          // Verify file
+          $filesize = filesize($to);
+          if ($filesize === 0) {
             throw new Exception("Download resulted in empty file");
           }
-            
+
+          echo "Download complete. Size = $filesize bytes (" . round($filesize / 1048576, 2) . " MB)\n";
           return true;
             
         } catch (Exception $e) {
           echo "Error: " . $e->getMessage() . "\n";
-            
-          // Clean up partial file
-          if (isset($fout) && is_resource($fout)) {
-            fclose($fout);
-          }
-          if (isset($fin) && is_resource($fin)) {
-            fclose($fin);
-          }
-          if (file_exists($to)) {
-            unlink($to);
-          }
-            
           $retry_count++;
-            
+
           if ($retry_count < $max_retries) {
-            $wait_time = $retry_count * 5; // 5s, 10s, 15s backoff
-            echo "Waiting {$wait_time} seconds before retry...\n";
-            sleep($wait_time);
+            echo "Waiting {$backoff} seconds before retry...\n";
+            sleep($backoff);
+            //$backoff += 5; // exponential backoff
+          } else {
+            echo "Failed after $max_retries attempts\n";
+            return false;
           }
         }
       }
-      
-      echo "Failed after $max_retries attempts\n";
-      return false;
     }
 
     public function dossiers(){
@@ -148,7 +141,7 @@ class Script
         $file = 'https://data.assemblee-nationale.fr/static/openData/repository/16/loi/dossiers_legislatifs/Dossiers_Legislatifs.xml.zip';
         $newfile = __DIR__ . '/Dossiers_Legislatifs_XVI.xml.zip';
       } elseif($this->legislature_to_get == 17) {
-        $file = 'http://data.assemblee-nationale.fr/static/openData/repository/17/loi/dossiers_legislatifs/Dossiers_Legislatifs.xml.zip';
+        $file = 'https://data.assemblee-nationale.fr/static/openData/repository/17/loi/dossiers_legislatifs/Dossiers_Legislatifs.xml.zip';
         $newfile = __DIR__ . '/Dossiers_Legislatifs_XVII.xml.zip';
       } else {
         $file = 'https://data.assemblee-nationale.fr/static/openData/repository/15/loi/dossiers_legislatifs/Dossiers_Legislatifs_XV.xml.zip';
@@ -169,7 +162,7 @@ class Script
         $file = 'https://data.assemblee-nationale.fr/static/openData/repository/16/loi/scrutins/Scrutins.xml.zip';
         $newfile = __DIR__ . '/Scrutins_XVI.xml.zip';
       } elseif($this->legislature_to_get == 17) {
-        $file = 'http://data.assemblee-nationale.fr/static/openData/repository/17/loi/scrutins/Scrutins.xml.zip';
+        $file = 'https://data.assemblee-nationale.fr/static/openData/repository/17/loi/scrutins/Scrutins.xml.zip';
         $newfile = __DIR__ . '/Scrutins_XVII.xml.zip';
       } else {
         $file = 'https://data.assemblee-nationale.fr/static/openData/repository/15/loi/scrutins/Scrutins_XV.xml.zip';
@@ -208,7 +201,7 @@ class Script
       echo "downloading amendements starting \n";
 
       if ($this->legislature_to_get == 17) {
-        $file = 'http://data.assemblee-nationale.fr/static/openData/repository/17/loi/amendements_div_legis/Amendements.xml.zip';
+        $file = 'https://data.assemblee-nationale.fr/static/openData/repository/17/loi/amendements_div_legis/Amendements.xml.zip';
         $newfile = __DIR__ . '/Amendements_XVII.xml.zip';
       } elseif ($this->legislature_to_get == 16) {
         $file = 'http://data.assemblee-nationale.fr/static/openData/repository/16/loi/amendements_div_legis/Amendements.xml.zip';
@@ -253,7 +246,7 @@ class Script
       echo "downloading questions_gvt starting \n";
 
       if ($this->legislature_to_get == 17) {
-        $file = 'http://data.assemblee-nationale.fr/static/openData/repository/17/questions/questions_gouvernement/Questions_gouvernement.xml.zip';
+        $file = 'https://data.assemblee-nationale.fr/static/openData/repository/17/questions/questions_gouvernement/Questions_gouvernement.xml.zip';
         $newfile = __DIR__ . '/questions_gvt_XVII.xml.zip';
         if ($this->chunked_copy($file, $newfile)) {
           echo "Success. Copied $newfile \n";
@@ -267,7 +260,7 @@ class Script
       echo "downloading questions_orales starting \n";
 
       if ($this->legislature_to_get == 17) {
-        $file = 'http://data.assemblee-nationale.fr/static/openData/repository/17/questions/questions_orales_sans_debat/Questions_orales_sans_debat.xml.zip';
+        $file = 'https://data.assemblee-nationale.fr/static/openData/repository/17/questions/questions_orales_sans_debat/Questions_orales_sans_debat.xml.zip';
         $newfile = __DIR__ . '/questions_orales_XVII.xml.zip';
         if ($this->chunked_copy($file, $newfile)) {
           echo "Success. Copied $newfile \n";
@@ -281,7 +274,7 @@ class Script
       echo "downloading questions_ecrites starting \n";
 
       if ($this->legislature_to_get == 17) {
-        $file = 'http://data.assemblee-nationale.fr/static/openData/repository/17/questions/questions_ecrites/Questions_ecrites.xml.zip';
+        $file = 'https://data.assemblee-nationale.fr/static/openData/repository/17/questions/questions_ecrites/Questions_ecrites.xml.zip';
         $newfile = __DIR__ . '/questions_ecrites_XVII.xml.zip';
         if ($this->chunked_copy($file, $newfile)) {
           echo "Success. Copied $newfile \n";
@@ -299,9 +292,10 @@ if (isset($argv[1])) {
     $script = new Script();
 }
 
-$script->dossiers();
-$script->scrutins();
+//$script->dossiers();
+//$script->scrutins();
 $script->acteurs_organes();
+/*
 $script->amendements();
 $script->comptes_rendus();
 $script->reunions();
