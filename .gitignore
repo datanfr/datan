@@ -34,6 +34,7 @@ scripts/*.zip
 scripts/votes_individual/*.zip
 scripts/architecture
 scripts/update_dataset/backup/*.sql
+scripts/backup/*.sql
 
 #assets folder
 assets/opendata
