@@ -3023,7 +3023,7 @@ class Script
         
     }
 
-    public function votesAmendments(){
+    public function votesAmendements(){
 
         $this->bdd->query('CREATE TABLE IF NOT EXISTS `votes_amendments` (
             `id` INT NOT NULL AUTO_INCREMENT ,
@@ -4526,9 +4526,9 @@ $functionsToExecute = array_merge($functionsToExecute, array(
     "documentsLegislatifs",
     "dossiersVotes",
     "dossiersActeurs",
-    "votesAmendments",
-    "amendements",
-    "amendementsAuteurs",
+    //"votesAmendements",
+    //"amendements",
+    //"amendementsAuteurs",
     "voteParticipationCommission",
     "classParticipation",
     "classParticipationCommission",
