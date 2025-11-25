@@ -59,7 +59,7 @@ class Script
         $file = 'https://data.assemblee-nationale.fr/static/openData/repository/16/loi/dossiers_legislatifs/Dossiers_Legislatifs.xml.zip';
         $newfile = __DIR__ . '/Dossiers_Legislatifs_XVI.xml.zip';
       } elseif($this->legislature_to_get == 17) {
-        $file = 'http://data.assemblee-nationale.fr/static/openData/repository/17/loi/dossiers_legislatifs/Dossiers_Legislatifs.xml.zip';
+        $file = 'https://data.assemblee-nationale.fr/static/openData/repository/17/loi/dossiers_legislatifs/Dossiers_Legislatifs.xml.zip';
         $newfile = __DIR__ . '/Dossiers_Legislatifs_XVII.xml.zip';
       } else {
         $file = 'https://data.assemblee-nationale.fr/static/openData/repository/15/loi/dossiers_legislatifs/Dossiers_Legislatifs_XV.xml.zip';
@@ -81,7 +81,7 @@ class Script
         $file = 'https://data.assemblee-nationale.fr/static/openData/repository/16/loi/scrutins/Scrutins.xml.zip';
         $newfile = __DIR__ . '/Scrutins_XVI.xml.zip';
       } elseif($this->legislature_to_get == 17) {
-        $file = 'http://data.assemblee-nationale.fr/static/openData/repository/17/loi/scrutins/Scrutins.xml.zip';
+        $file = 'https://data.assemblee-nationale.fr/static/openData/repository/17/loi/scrutins/Scrutins.xml.zip';
         $newfile = __DIR__ . '/Scrutins_XVII.xml.zip';
       } else {
         $file = 'https://data.assemblee-nationale.fr/static/openData/repository/15/loi/scrutins/Scrutins_XV.xml.zip';
@@ -122,7 +122,7 @@ class Script
       echo "downloading amendements starting \n";
 
       if ($this->legislature_to_get == 17) {
-        $file = 'http://data.assemblee-nationale.fr/static/openData/repository/17/loi/amendements_div_legis/Amendements.xml.zip';
+        $file = 'https://data.assemblee-nationale.fr/static/openData/repository/17/loi/amendements_div_legis/Amendements.xml.zip';
         $newfile = __DIR__ . '/Amendements_XVII.xml.zip';
       } elseif ($this->legislature_to_get == 16) {
         $file = 'http://data.assemblee-nationale.fr/static/openData/repository/16/loi/amendements_div_legis/Amendements.xml.zip';
@@ -170,7 +170,7 @@ class Script
       echo "downloading questions_gvt starting \n";
 
       if ($this->legislature_to_get == 17) {
-        $file = 'http://data.assemblee-nationale.fr/static/openData/repository/17/questions/questions_gouvernement/Questions_gouvernement.xml.zip';
+        $file = 'https://data.assemblee-nationale.fr/static/openData/repository/17/questions/questions_gouvernement/Questions_gouvernement.xml.zip';
         $newfile = __DIR__ . '/questions_gvt_XVII.xml.zip';
         $downloader = new ResumableDownloader($file, $newfile);
         if ($downloader->download()) {
@@ -185,7 +185,7 @@ class Script
       echo "downloading questions_orales starting \n";
 
       if ($this->legislature_to_get == 17) {
-        $file = 'http://data.assemblee-nationale.fr/static/openData/repository/17/questions/questions_orales_sans_debat/Questions_orales_sans_debat.xml.zip';
+        $file = 'https://data.assemblee-nationale.fr/static/openData/repository/17/questions/questions_orales_sans_debat/Questions_orales_sans_debat.xml.zip';
         $newfile = __DIR__ . '/questions_orales_XVII.xml.zip';
         $downloader = new ResumableDownloader($file, $newfile);
         if ($downloader->download()) {
@@ -200,7 +200,7 @@ class Script
       echo "downloading questions_ecrites starting \n";
 
       if ($this->legislature_to_get == 17) {
-        $file = 'http://data.assemblee-nationale.fr/static/openData/repository/17/questions/questions_ecrites/Questions_ecrites.xml.zip';
+        $file = 'https://data.assemblee-nationale.fr/static/openData/repository/17/questions/questions_ecrites/Questions_ecrites.xml.zip';
         $newfile = __DIR__ . '/questions_ecrites_XVII.xml.zip';
         $downloader = new ResumableDownloader($file, $newfile);
         if ($downloader->download()) {
@@ -222,7 +222,7 @@ if (isset($argv[1])) {
 $script->dossiers();
 $script->scrutins();
 $script->acteurs_organes();
-$script->amendements();
+//$script->amendements(); Do not download for the moment
 $script->comptes_rendus();
 $script->reunions();
 $script->questions_gvt();
