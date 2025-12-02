@@ -2991,14 +2991,15 @@ class Script
         while ($doc = $query->fetch()) {
             $documentId = $doc['id'];
             $dossierId = $doc['dossierId'];
-            $titreLoi = '%' . $doc['titre'] . '%';
+            $titreLoi = '%' . str_replace(["'", '’'], '', $doc['titre']) . '%'; // Normalise the title (without any apostrophes)
             $seanceDate = $doc['seanceDate'];
             $legislature = $doc['legislature'];
 
-
             $stmt_get_votes = $this->bdd->prepare('SELECT voteNumero, legislature, titre
                 FROM votes_info
-                WHERE titre LIKE ? AND legislature = ? AND dateScrutin = ?
+                WHERE REPLACE(REPLACE(titre, "\'", ""), \'"\', "") LIKE ?
+                    AND legislature = ?
+                    AND dateScrutin = ?
             ');
             
             $stmt_get_votes->execute([$titreLoi, $legislature, $seanceDate]);
@@ -4554,7 +4555,7 @@ $functionsToExecute = array_merge($functionsToExecute, array(
     "opendata_historyGroupes"
 ));
 
-//$functionsToExecute = array('vote'); // For Testing
+$functionsToExecute = array('dossiersVotes'); // For Testing
 
 // Execute all functions
 foreach ($functionsToExecute as $function) {
