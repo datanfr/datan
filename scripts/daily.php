@@ -2991,15 +2991,18 @@ class Script
         while ($doc = $query->fetch()) {
             $documentId = $doc['id'];
             $dossierId = $doc['dossierId'];
-            $titreLoi = '%' . str_replace(["'", '’'], '', $doc['titre']) . '%'; // Normalise the title (without any apostrophes)
+            $titreLoi = "%" . preg_replace('/[^\p{L}\p{N} ]/u', '', $doc['titre']) . "%"; // Normalise the title (without any apostrophes)
             $seanceDate = $doc['seanceDate'];
             $legislature = $doc['legislature'];
 
-            $stmt_get_votes = $this->bdd->prepare('SELECT voteNumero, legislature, titre
-                FROM votes_info
-                WHERE REPLACE(REPLACE(titre, "\'", ""), \'"\', "") LIKE ?
-                    AND legislature = ?
-                    AND dateScrutin = ?
+            $stmt_get_votes = $this->bdd->prepare('SELECT voteNumero, legislature, titre, dateScrutin
+                FROM (
+                    SELECT *, REGEXP_REPLACE(titre, "[^a-zA-Z0-9àâäæçéèêëïîôùûüÿœÀÂÄÆÇÉÈÊËÏÎÔÙÛÜŸŒ ]", "") AS titre_clean
+                    FROM votes_info 
+                ) A
+                WHERE A.titre_clean LIKE ?
+                    AND A.legislature = ?
+                    AND A.dateScrutin = ?
             ');
             
             $stmt_get_votes->execute([$titreLoi, $legislature, $seanceDate]);
