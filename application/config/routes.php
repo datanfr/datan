@@ -200,6 +200,7 @@ $route['demande-compte-depute'] = 'users/demande_mp';
 $route['classements'] = 'redirection/redir/statistiques';
 // CACHE
 $route['cache/delete_all'] = 'cache/delete_all';
+$route['cache/clear_cli'] = 'cache/clear_cli';
 // LOGS
 $route['admin/logs'] = 'logViewerController/index';
 $route['admin/logs-scripts/(:any)'] = 'logs/index/$1';
@@ -218,4 +219,4 @@ $route['campaign/current_active_campaigns'] = 'campaign/current_active_campaigns
 // 404 PAGE
 $route['404_override'] = 'errormanager/error404';
 
-$route['(.*)'] = 'none';
+$route['(.*)'] = "none";
