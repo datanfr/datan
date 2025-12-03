@@ -115,7 +115,7 @@ jobs:
             --exclude='assets/css/bootstrap*' \
             -av --backup --backup-dir=$BACKUP_DIR --delete ./ ${{ secrets.CPANEL_USERNAME }}@${{ secrets.CPANEL_SERVER }}:public_html
       
-      - name: Clear cache on dev.datan.fr
+      - name: Clear cache on datan.fr
         run: |
           ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa \
             ${{ secrets.CPANEL_USERNAME }}@${{ secrets.CPANEL_SERVER }} \
