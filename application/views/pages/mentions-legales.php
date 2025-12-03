@@ -10,7 +10,7 @@
 <div class="container my-3 pg-page">
   <div class="row">
     <div class="col-lg-8 offset-lg-2 col-md-10 offset-md-1">
-      <h2>Données personnelles</h2>
+      <h2>Données personnelles test</h2>
       <p>Le site <a href="<?= base_url() ?>" target="_blank">www.datan.fr</a> collecte plusieurs types de données :</p>
       <ul>
         <li>Pour les <b>parlementaires</b>, les données récoltés par Datan sont les données publiques venant du site officiel de l'</a href="http://data.assemblee-nationale.fr/#" target="_blank">Assemblée nationale</a>.
@@ -24,8 +24,7 @@
 
       <iframe
         style="border: 0; height: 200px; width: 600px;"
-        src="https://matomo.datan.fr/index.php?module=CoreAdminHome&action=optOut&language=fr&backgroundColor=ffffff&fontColor=000000&fontSize=&fontFamily=Open%20sans"
-        >
+        src="https://matomo.datan.fr/index.php?module=CoreAdminHome&action=optOut&language=fr&backgroundColor=ffffff&fontColor=000000&fontSize=&fontFamily=Open%20sans">
       </iframe>
 
       <h2>Contenu du site</h2>
@@ -33,11 +32,11 @@
       <p>Conformément aux dispositions des articles 6-III et 19 de la Loi n° 2004-575 du 21 juin 2004 pour la Confiance dans l'économie numérique, dite L.C.E.N., nous portons à la connaissance des utilisateurs et visiteurs du site : <a href="<?= base_url() ?>" target="_blank">www.datan.fr</a> les informations suivantes :</p>
 
       <p>Statut du propriétaire : <strong>particulier</strong><br />
-      Propriétaire, responsable de la publication et webmaster : <strong>Awenig Marié</strong><br />
-      Contact : awenig[at]datan.fr<br />
-      Le responsable de la publication est une<strong> personne physique</strong><br />
-      <br />
-      Hebergeur : <strong>o2switch 222-224 Boulevard Gustave Flaubert 63000 Clermont-Ferrand</strong><br />
+        Propriétaire, responsable de la publication et webmaster : <strong>Awenig Marié</strong><br />
+        Contact : awenig[at]datan.fr<br />
+        Le responsable de la publication est une<strong> personne physique</strong><br />
+        <br />
+        Hebergeur : <strong>o2switch 222-224 Boulevard Gustave Flaubert 63000 Clermont-Ferrand</strong><br />
 
       <p>En cas de réclamation, il est recommandé de nous adresser un email à info[at]datan.fr</p>
 
