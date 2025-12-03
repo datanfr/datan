@@ -181,6 +181,21 @@ class Script
         }
     }
 
+    private function correct_votes_title($title){
+        $replacements = [
+            "projet de loi de finances de fin des gestion pour 2024" => "projet de loi de finances de fin de gestion pour 2024",
+            "proposition de loi, adoptée par le Sénat, relative" => "proposition de loi relative",
+            "lutter contre les pannes d'ascenceur non prises en charge" => "lutter contre les pannes d'ascenseurs non prises en charge",
+            "proposition de résolution européenne visant à refuser la ratification de l'accord commercial entre l'Union européenne et le Mercosur" => "proposition de résolution européenne invitant le Gouvernement de la République française à refuser la ratification de l'accord commercial entre l'Union européenne et le Mercosur"
+        ];
+        $correctedTitle = str_replace(
+            array_keys($replacements),
+            array_values($replacements),
+            $title
+        );
+        return $correctedTitle;
+    }
+
     public function fillDeputes()
     {
 
@@ -1763,6 +1778,9 @@ class Script
             $num = $data["voteNumero"];
             $titre = $data["titre"];
 
+            // Correct titre if necessary 
+            $titre = $this->correct_votes_title($titre);
+
             // Change titre if n? instead of n°
             if (strpos($titre, 'n?')) {
               $titre = str_replace('n?', 'n°', $titre);
@@ -2994,6 +3012,8 @@ class Script
             $titreLoi = "%" . preg_replace('/[^\p{L}\p{N} ]/u', '', $doc['titre']) . "%"; // Normalise the title (without any apostrophes)
             $seanceDate = $doc['seanceDate'];
             $legislature = $doc['legislature'];
+
+            //echo $titreLoi; die()
 
             $stmt_get_votes = $this->bdd->prepare('SELECT voteNumero, legislature, titre, dateScrutin
                 FROM (
@@ -4558,7 +4578,7 @@ $functionsToExecute = array_merge($functionsToExecute, array(
     "opendata_historyGroupes"
 ));
 
-$functionsToExecute = array('dossiersVotes'); // For Testing
+$functionsToExecute = array('updateVoteInfo', 'dossiersVotes'); // For Testing
 
 // Execute all functions
 foreach ($functionsToExecute as $function) {
