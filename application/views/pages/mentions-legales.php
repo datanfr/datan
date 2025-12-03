@@ -10,7 +10,7 @@
 <div class="container my-3 pg-page">
   <div class="row">
     <div class="col-lg-8 offset-lg-2 col-md-10 offset-md-1">
-      <h2>Données personnelles test</h2>
+      <h2>Données personnelles</h2>
       <p>Le site <a href="<?= base_url() ?>" target="_blank">www.datan.fr</a> collecte plusieurs types de données :</p>
       <ul>
         <li>Pour les <b>parlementaires</b>, les données récoltés par Datan sont les données publiques venant du site officiel de l'</a href="http://data.assemblee-nationale.fr/#" target="_blank">Assemblée nationale</a>.
