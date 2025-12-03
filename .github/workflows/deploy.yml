@@ -8,7 +8,7 @@ name: Deploy to Production
 
 on:
   push:
-    branches: [ci-cd/ssh-deploiement]
+    branches: [master]
 
 jobs:
   deploy:
@@ -73,7 +73,7 @@ jobs:
 
       - name: Sending data with RSYNC
         run: |
-          BACKUP_DIR=../backup_datan/$(date +%Y%m%d_%H%M%S)
+          BACKUP_DIR=../backup_datan/$(date +%Y%m)
           rsync --timeout=300 -e "ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa" \
             --exclude='*/config/development' \
             --exclude='*/logs/log-*.php' \
@@ -113,13 +113,13 @@ jobs:
             --exclude='assets/data/professions/election_6/*.pdf' \
             --exclude='assets/data/*.txt' \
             --exclude='assets/css/bootstrap*' \
-            -av --backup --backup-dir=$BACKUP_DIR --delete ./ ${{ secrets.CPANEL_USERNAME }}@${{ secrets.CPANEL_SERVER }}:dev.datan.fr
+            -av --backup --backup-dir=$BACKUP_DIR --delete ./ ${{ secrets.CPANEL_USERNAME }}@${{ secrets.CPANEL_SERVER }}:public_html
       
       - name: Clear cache on dev.datan.fr
         run: |
           ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa \
             ${{ secrets.CPANEL_USERNAME }}@${{ secrets.CPANEL_SERVER }} \
-            "php /home/${{ secrets.CPANEL_USERNAME }}/dev.datan.fr/index.php cache clear_cli"
+            "php /home/${{ secrets.CPANEL_USERNAME }}/public_html/index.php cache clear_cli"
 
       - name: Cleaning SSH keys
         if: always()
