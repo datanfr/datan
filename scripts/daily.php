@@ -3013,8 +3013,6 @@ class Script
             $seanceDate = $doc['seanceDate'];
             $legislature = $doc['legislature'];
 
-            //echo $titreLoi; die()
-
             $stmt_get_votes = $this->bdd->prepare('SELECT voteNumero, legislature, titre, dateScrutin
                 FROM (
                     SELECT *, REGEXP_REPLACE(titre, "[^a-zA-Z0-9àâäæçéèêëïîôùûüÿœÀÂÄÆÇÉÈÊËÏÎÔÙÛÜŸŒ ]", "") AS titre_clean
@@ -3044,6 +3042,58 @@ class Script
             }
         }
         $this->insertAll('dossiers_votes', $dossierFields, $dossiers);
+        $dossier = [];
+        $dossiers = [];
+
+
+        // For votes without a dossier ==> Scrape HTML from the National Assembly
+
+        $query = $this->bdd->query('SELECT vi.voteNumero, vi.legislature
+            FROM votes_info vi
+            LEFT JOIN dossiers_votes dv ON dv.legislature = vi.legislature AND dv.voteNumero = vi.voteNumero
+            WHERE vi.legislature = "' . $this->legislature_to_get . '" and dv.id IS NULL
+            LIMIT 5
+        ');
+
+        $i = 1;
+
+        while($vote = $query->fetch()){
+            $voteNumero = $vote['voteNumero'];
+            $legislature = $vote['legislature'];
+            $url = "https://www.assemblee-nationale.fr/dyn/" . $this->legislature_to_get . "/scrutins/" . $voteNumero;
+            $html = file_get_html($url);
+
+            if ($html !== false) {
+                $elements = $html->find('.an-bloc');
+                foreach($elements as $element){
+                    $links = $element->find('.inner');
+                    foreach($links as $x){
+                        $href =  $x->href;
+                        if(strpos($href, "dossiers") !== false){
+                            $dossierUrl = basename($href);
+                            $dossierQuery = $this->bdd->query('select dossierId from dossiers where titreChemin = "' . $dossierUrl . '" limit 1');
+                            $dossierData = $dossierQuery->fetch();
+                            if ($dossierData){
+                                $dossierId = $dossierData['dossierId'];
+
+                                $dossier = array('dossierId' => $dossierId, 'documentId' => NULL, 'legislature' => $legislature, 'voteNumero' => $voteNumero);
+                                $dossiers = array_merge($dossiers, array_values($dossier));
+                            }                            
+                        }
+                    }
+                }
+            }
+
+            if ($i % 500 === 0) {
+                $this->insertAll('dossiers_votes', $dossierFields, $dossiers);
+                $dossier = [];
+                $dossiers = [];
+            }
+
+        }
+
+        $this->insertAll('dossiers_votes', $dossierFields, $dossiers);
+
         
     }
 
