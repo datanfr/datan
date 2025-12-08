@@ -186,7 +186,9 @@ class Script
             "projet de loi de finances de fin des gestion pour 2024" => "projet de loi de finances de fin de gestion pour 2024",
             "proposition de loi, adoptée par le Sénat, relative" => "proposition de loi relative",
             "lutter contre les pannes d'ascenceur non prises en charge" => "lutter contre les pannes d'ascenseurs non prises en charge",
-            "proposition de résolution européenne visant à refuser la ratification de l'accord commercial entre l'Union européenne et le Mercosur" => "proposition de résolution européenne invitant le Gouvernement de la République française à refuser la ratification de l'accord commercial entre l'Union européenne et le Mercosur"
+            "proposition de résolution européenne visant à refuser la ratification de l'accord commercial entre l'Union européenne et le Mercosur" => "proposition de résolution européenne invitant le Gouvernement de la République française à refuser la ratification de l'accord commercial entre l'Union européenne et le Mercosur",
+            ", adoptée par le Sénat," => "",
+            "proposition de loi relative à la sûreté dans les transports" => "proposition de loi relative au renforcement de la sûreté dans les transports "
         ];
         $correctedTitle = str_replace(
             array_keys($replacements),
@@ -3052,7 +3054,7 @@ class Script
             FROM votes_info vi
             LEFT JOIN dossiers_votes dv ON dv.legislature = vi.legislature AND dv.voteNumero = vi.voteNumero
             WHERE vi.legislature = "' . $this->legislature_to_get . '" and dv.id IS NULL
-            LIMIT 5
+            LIMIT 0
         ');
 
         $i = 1;
