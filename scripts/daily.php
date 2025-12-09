@@ -188,7 +188,16 @@ class Script
             "lutter contre les pannes d'ascenceur non prises en charge" => "lutter contre les pannes d'ascenseurs non prises en charge",
             "proposition de résolution européenne visant à refuser la ratification de l'accord commercial entre l'Union européenne et le Mercosur" => "proposition de résolution européenne invitant le Gouvernement de la République française à refuser la ratification de l'accord commercial entre l'Union européenne et le Mercosur",
             ", adoptée par le Sénat," => "",
-            "proposition de loi relative à la sûreté dans les transports" => "proposition de loi relative au renforcement de la sûreté dans les transports "
+            "proposition de loi relative à la sûreté dans les transports" => "proposition de loi relative au renforcement de la sûreté dans les transports",
+            "projet de loi portant diverses dispositions d'adaptation au droit de l'Union européenne en matière économique, financière, environnementale, énergétique, de santé et de circulation des personnes" => "projet de loi portant diverses dispositions d'adaptation au droit de l'Union européenne en matière économique, financière, environnementale, énergétique, de transport, de santé et de circulation des personnes",
+            "proposition de loi relative à l'organisation et aux missions des personnels de santé professionnels et volontaires des services d'incendie et de secours" => "proposition de loi portant création du cadre d'emploi des personnels de santé des services d’incendie et de secours",
+            "endiguer le prolifération" => "endiguer la prolifération",
+            "indivison" => "indivision",
+            "proposition de loi créant une dérogation à la participation minimale pour la maîtrise d'ouvrage  pour les communes rurales" => "proposition de loi créant une dérogation à la participation minimale pour la maîtrise d'ouvrage pour les communes rurales",
+            "proposition de loi visant à lutter contre la disparition des terres agricoles et renforcer la régulation des prix du foncier agricole" => "proposition de loi visant à lutter contre la disparition des terres agricoles et à renforcer la régulation des prix du foncier agricole",
+            "proposition de loi organique fixant le statut du procureur national anti-stupéfiants" => "proposition de loi organique fixant le statut du procureur de la République anti-criminalité organisée",
+            "réformer le mode d'élection du Conseil de Paris et des conseils municipaux de Lyon et Marseille" => "réformer le mode d'élection des membres du Conseil de Paris et des conseils municipaux de Lyon et Marseille",
+            "de Londres de 1966" => "de Londres de 1996"
         ];
         $correctedTitle = str_replace(
             array_keys($replacements),
@@ -3011,13 +3020,13 @@ class Script
         while ($doc = $query->fetch()) {
             $documentId = $doc['id'];
             $dossierId = $doc['dossierId'];
-            $titreLoi = "%" . preg_replace('/[^\p{L}\p{N} ]/u', '', $doc['titre']) . "%"; // Normalise the title (without any apostrophes)
+            $titreLoi = "%" . preg_replace('/[^\p{L}\p{N}]/u', '', $doc['titre']) . "%"; // Normalise the title (without any apostrophes and spaces)
             $seanceDate = $doc['seanceDate'];
             $legislature = $doc['legislature'];
 
             $stmt_get_votes = $this->bdd->prepare('SELECT voteNumero, legislature, titre, dateScrutin
                 FROM (
-                    SELECT *, REGEXP_REPLACE(titre, "[^a-zA-Z0-9àâäæçéèêëïîôùûüÿœÀÂÄÆÇÉÈÊËÏÎÔÙÛÜŸŒ ]", "") AS titre_clean
+                    SELECT *, REGEXP_REPLACE(titre, "[^a-zA-Z0-9àâäæçéèêëïîôùûüÿœÀÂÄÆÇÉÈÊËÏÎÔÙÛÜŸŒ]", "") AS titre_clean
                     FROM votes_info 
                 ) A
                 WHERE A.titre_clean LIKE ?
