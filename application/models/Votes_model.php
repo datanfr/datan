@@ -43,7 +43,7 @@
       LEFT JOIN fields f ON vd.category = f.id
       LEFT JOIN readings r ON r.id = vd.reading
       WHERE vd.state = "published"
-      ORDER BY vi.legislature DESC, vi.dateScrutin DESC'
+      ORDER BY vi.legislature DESC, vi.dateScrutin DESC, vi.voteNumero DESC'
       ;
       $sql .= $limit ? ' LIMIT '.$this->db->escape($limit) : '';
       return $this->db->query($sql)->result_array();
