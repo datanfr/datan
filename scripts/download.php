@@ -222,7 +222,7 @@ if (isset($argv[1])) {
 $script->dossiers();
 $script->scrutins();
 $script->acteurs_organes();
-//$script->amendements(); Do not download for the moment
+$script->amendements();
 $script->comptes_rendus();
 $script->reunions();
 $script->questions_gvt();
