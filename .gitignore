@@ -29,14 +29,6 @@ ressources
 .env
 *.code-workspace
 
-#script folder
-scripts/*.zip
-scripts/backup/*.zip
-scripts/votes_individual/*.zip
-scripts/architecture
-scripts/update_dataset/backup/*.sql
-scripts/backup/*.sql
-
 #assets folder
 assets/opendata
 assets/dataset_backup/general/*.sql
