@@ -236,7 +236,7 @@
                   <span class="text">Le dossier</span>
                 </span>
               <?php endif; ?>
-              <?php if ($vote['amendment']['amendmentHref']) : ?>
+              <?php if (isset($vote['amendment']) && $vote['amendment'] && !empty($vote['amendment']['amendmentHref'])) : ?>
                 <span class="d-flex justify-content-center align-items-center url_obf btn btn-secondary link my-1 my-lg-0 mx-lg-1" url_obf="<?= url_obfuscation($vote['amendment']['amendmentHref']) ?>">
                   <div class="mr-1">
                     <?= file_get_contents(base_url() . '/assets/imgs/icons/arrow_external_right.svg') ?>
