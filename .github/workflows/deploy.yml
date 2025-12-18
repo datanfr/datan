@@ -66,10 +66,14 @@ jobs:
       - name: Installing the SSH Key
         run: |
           eval $(ssh-agent -s)
-          mkdir -p ~/.ssh       
-          chmod 700 ~/.ssh 
+          mkdir -p ~/.ssh
+          chmod 700 ~/.ssh
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
           chmod 0400 ~/.ssh/id_rsa
+
+      - name: Initialize submodules
+        run: |
+          git submodule update --init --recursive
 
       - name: Sending data with RSYNC
         run: |
