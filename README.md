@@ -149,6 +149,7 @@ Une fois inscrit (vous aurez peut-être une erreur Mailjet mais c'est pas grave)
 Il suffira alors de vous connecter à phpMyAdmin et modifier la colonne type pour votre utilisateur en "admin".
 Déconnectez-vous et connectez-vous à nouveau et vous aurez accès à /admin
 
+
 # Test de branche
 ```php compare_branch.php fichier_url branche_a_tester```
 exemple en étant sur votre branche à tester: 
