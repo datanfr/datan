@@ -17,8 +17,6 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          submodules: recursive
-          token: ${{ secrets.SUBMODULE_TOKEN }}
 
       - name: Get the public IP of the GitHub runner
         id: ip
