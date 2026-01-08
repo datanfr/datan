@@ -418,6 +418,9 @@
           <a href="https://france3-regions.francetvinfo.fr/occitanie/haute-garonne/toulouse/legislatives-2022-top-5-de-l-activite-a-l-assemblee-il-a-fait-quoi-mon-depute-pendant-5-ans-2552692.html" target="_blank" rel="noopener">
             <img class="mx-2 my-3 img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="136" height="26" data-src="<?= asset_url() ?>imgs/media/france3.png" alt="France 3">
           </a>
+          <span class="url_obf" url_obf="<?= url_obfuscation("https://www.lopinion.fr/politique/lassemblee-nationale-face-au-reel-ce-que-revele-lexperience-professionnelle-des-deputes") ?>">
+            <img class="mx-2 my-3 img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="108" height="26" data-src="<?= asset_url() ?>imgs/media/lopinion.png" alt="L'Opinion">
+          </span>
           <span class="url_obf" url_obf="<?= url_obfuscation("https://www.sudouest.fr/pyrenees-atlantiques/pau/assemblee-nationale-le-rn-pointe-le-manque-d-assiduite-de-david-habib-il-repond-qu-il-y-a-trop-d-amendements-futiles-12739495.php") ?>">
             <img class="mx-2 my-3 img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="65" height="59" data-src="<?= asset_url() ?>imgs/media/sud_ouest.png" alt="Sud Ouest">
           </span>
