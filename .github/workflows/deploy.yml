@@ -15,11 +15,14 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          submodules: true
+          submodules: recursive
+          token: ${{ secrets.SUBMODULE_TOKEN }}
 
       - name: Get the public IP of the GitHub runner
         id: ip
@@ -73,10 +76,6 @@ jobs:
           chmod 700 ~/.ssh
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
           chmod 0400 ~/.ssh/id_rsa
-
-      - name: Initialize submodules
-        run: |
-          git submodule update --init --recursive
 
       - name: Sending data with RSYNC
         run: |
