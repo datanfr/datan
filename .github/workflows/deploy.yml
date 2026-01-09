@@ -9,6 +9,8 @@ name: Deploy to Production
 on:
   push:
     branches: [master]
+  repository_dispatch:
+    types: [submodule_updated]
 
 jobs:
   deploy:
@@ -17,6 +19,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
+          submodules: true
 
       - name: Get the public IP of the GitHub runner
         id: ip
