@@ -24,6 +24,14 @@ jobs:
           submodules: recursive
           token: ${{ secrets.SUBMODULE_TOKEN }}
 
+      - name: Update scripts submodule to latest master
+        run: |
+          cd scripts
+          git checkout master
+          git pull origin master
+          cd ..
+          echo "Scripts submodule is now at commit: $(git -C scripts rev-parse HEAD)"
+
       - name: Get the public IP of the GitHub runner
         id: ip
         uses: haythem/public-ip@v1.3
