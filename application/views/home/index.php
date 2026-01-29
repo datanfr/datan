@@ -316,15 +316,15 @@
       <div class="container py-5">
         <div class="row mb-5">
           <div class="col-12">
-            <h2 class="text-white text-center"> Quels groupes politiques soutiennent le gouvernement ?</h2>
+            <h2 class="text-white text-center"> Quels groupes soutiennent le gouvernement ?</h2>
           </div>
         </div>
         <div class="row">
           <div class="col-lg-6 col-md-5 d-flex align-items-center text-white">
             <div>
-              <p>À l'Assemblée nationale, certains groupes sont membres de la majorité tandis que d'autres sont des groupes d'opposition.</p>
-              <p>Les groupes de la majorité soutiennent l'action du gouvernement et votent en faveur des textes qu'il propose. L'opposition, si elle peut parfois soutenir le gouvernement, vote plus souvent contre les projets du gouvernement.</p>
-              <p>Le gouvernement actuel est dirigé par la Première ministre Élisabeth Borne.</p>
+              <p>À l'Assemblée, certains groupes politiques sont membres du bloc gouvernemental tandis que d'autres sont des groupes d'opposition.</p>
+              <p>En règle générale, les groupes du bloc gouvernemental soutiennent l'action du gouvernement et votent en faveur des textes qu'il propose. L'opposition, si elle peut parfois soutenir le gouvernement, vote plus souvent contre les projets gouvernementaux.</p>
+              <p>Le gouvernement actuel est dirigé par la Première ministre Sébastien Lecornu.</p>
               <p>Le groupe <?= $support_opposition['libelle'] ?> (<?= $support_opposition['libelleAbrev'] ?>) est le groupe d'opposition votant le plus souvent en faveur du gouvernement.</p>
             </div>
           </div>
@@ -333,7 +333,7 @@
             <?php $maxVotes = max(array_column($support, 'votes')) ?>
             <div class="card card-statistiques border-0">
               <div class="card-body pb-0">
-                <h3 class="text-center font-weight-bold h5">Nombre de textes du gouvernement votés par les groupes</h3>
+                <h3 class="text-center font-weight-bold h5">Nombre de projets gouvernementaux votés par les groupes</h3>
                 <p class="mt-3">Depuis le début de la législature, en 2022, il y a eu <b><?= $maxVotes ?> votes</b> sur des projets de loi du gouvernement. Découvrez les groupes politiques qui votent le plus souvent en faveur de ces textes.</p>
                 <div class="legend d-flex justify-content-center">
                   <div class="d-flex justify-content-center align-items-center mx-3">
