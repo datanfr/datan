@@ -73,13 +73,10 @@
       }
 
       // Get support the gvt
-      $data['support'] = FALSE;
-      /*
-      CHANGE THIS WHEN THERE WILL BE VOTES
+      $data['support'] = TRUE;
       $data['support'] = $this->groupes_model->get_support_all(legislature_current());
-      $data['support_opposition'] = $this->groupes_model->get_support_all(legislature_current(), TRUE);
+      $data['support_opposition'] = $this->groupes_model->get_support_all(legislature_current(), 'opposition');
       $data['support_opposition'] = array_shift($data['support_opposition']);
-      */
 
       // Get explications
       $data['explications'] = $this->votes_model->get_random_explications_last();

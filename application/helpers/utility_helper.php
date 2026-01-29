@@ -41,6 +41,10 @@
     return array("PO266900", "PO387155", "PO645633", "PO723569", "PO793087");
   }
 
+  function groupes_majo(){
+    return ['EPR', 'DEM', 'HOR', 'EPR', 'DR'];
+  }
+
   function remove_nupes($group){
     switch ($group) {
       case 'LFI-NUPES':
