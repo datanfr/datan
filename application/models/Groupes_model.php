@@ -447,44 +447,91 @@
       return $return;
     }
 
-    public function get_support_all($legislature, $opposition = FALSE){
+    public function get_support_all($legislature, $status = FALSE){
+      $groupes_majo = groupes_majo();
+
       $where = array(
         'c.legislature' => $legislature,
         'c.stat' => 'support',
         'o.libelleAbrev !=' => 'NI',
         'c.votes >' => 0
       );
-      if ($opposition) {
-        $this->db->where('positionPolitique', 'Opposition');
-      }
-      $this->db->select('c.*, o.positionPolitique, o.libelle, o.libelleAbrev, ROUND(c.value) AS value, ge.effectif');
+      $this->db->select('c.*, o.libelle, o.libelleAbrev, ROUND(c.value) AS value, ge.effectif');
       $this->db->where($where);
       $this->db->join('organes o', 'o.uid = c.organeRef', 'left');
       $this->db->join('groupes_effectif ge', 'ge.organeRef = c.organeRef', 'left');
-      //$this->db->order_by('c.value DESC, ge.effectif DESC');
       $this->db->order_by('c.active ASC');
+
+      // If $status is 'majority' or 'opposition'
+      if ($status !== FALSE) {
+        if ($status === 'majority'){
+          $this->db->where_in('o.libelleAbrev', $groupes_majo);
+        } elseif ($status === 'opposition') {
+          $this->db->where_not_in('o.libelleAbrev', $groupes_majo);
+        }
+      }
+
       $return = $this->db->get('class_groups c')->result_array();
 
       $array = array();
+
       foreach ($return as $x) {
         $key = $x['organeRef'];
         $array[$key] = $x;
       }
 
+      // Assign 'Majority' or 'Opposition' to each group 
+      foreach ($array as $key => $value) {
+        if (in_array($value['libelleAbrev'], $groupes_majo)) {
+          $array[$key]['positionPolitique'] = 'Majority';
+        } else {
+          $array[$key]['positionPolitique'] = 'Opposition';
+        }
+      }
+
       // When legislature is current : change of groups and remove unactive groups
       if ($legislature == legislature_current()) {
-        // SOC
-        //$array['PO830170']['value'] = $array['PO830170']['value'] + $array['PO800496']['value'];
-        //unset($array['PO800496']);
 
-        // Remove unactive groups when not dissolution 
-        if (dissolution() === false) {
-          foreach ($array as $key => $value) {
-            if ($value['active'] == 0) {
-              unset($array[$key]);
+        $processedGroups = array();
+
+        foreach ($array as $key => $value) {
+
+          $family = $this->get_history($key);
+
+          $representativeKey = null;
+
+          foreach ($family as $groupId) {
+            if (isset($array[$groupId]) && $array[$groupId]['active'] == 1) {
+              $familyRepresentative = $groupId;
+              break;
             }
           }
-        }        
+
+          $sumValue = 0;
+
+          foreach ($family as $groupId) {
+            if (isset($array[$groupId])) {
+              $sumValue += $array[$groupId]['value'];
+              if ($array[$groupId]['active'] == 1) {
+                  $representativeKey = $groupId;
+              }
+            } 
+          }
+
+          // Update the representative group's value
+          if ($representativeKey !== null && isset($array[$representativeKey])) {
+              $array[$representativeKey]['value'] = $sumValue;
+          }
+
+          foreach ($family as $groupId) {
+            if ($groupId !== $representativeKey && isset($array[$groupId])) {
+              unset($array[$groupId]);
+            }
+          }
+
+          $processedGroups[] = $familyRepresentative;
+
+        }
       }
 
       array_multisort(
@@ -789,7 +836,6 @@
       }
 
       return array($id);
-
     }
 
     public function get_effectif_history($groups){
