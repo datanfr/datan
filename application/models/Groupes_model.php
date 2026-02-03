@@ -896,5 +896,18 @@
       return $this->db->get_where('groupes_effectif_history', $where, 1)->row_array();
     }
 
+    public function get_coalitions($group, $limit = FALSE){
+      $where = array(
+        'organeRef' => $group
+      );
+      if($limit !== FALSE) {
+        $this->db->limit($limit);
+      }
+      $this->db->select('coalition, COUNT(coalition) as n');
+      $this->db->group_by('coalition');
+      $this->db->order_by('n', 'desc'); 
+      return $this->db->get_where('coalitions_groupes', $where)->result_array();
+    }
+
   }
 ?>
