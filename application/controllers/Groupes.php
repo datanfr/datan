@@ -317,6 +317,10 @@
         $data['no_proximite'] = TRUE;
       }
 
+      // Coalitions groupes 
+      $data['coalitions'] = $this->groupes_model->get_coalitions($data['groupe']['uid'], 5);
+      print_r($data['coalitions']);
+
       // Query 4 Votes
       $data['votes_datan'] = $this->votes_model->get_votes_datan_groupe($data['groupe']['uid'], 5);
 
