@@ -747,7 +747,7 @@
       if ($data['active']) {
         $x = 1;
         foreach ($data['women'] as $key => $value) {
-          if ($value['uid'] == $data['groupe']['uid']) {
+          if ($value['organeRef'] == $data['groupe']['uid']) {
             $data['womenRanking']['number'] = $x;
           }
           $x++;
