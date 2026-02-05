@@ -173,12 +173,26 @@
       if (!isset($_GET['election'])) {
         redirect('admin');
       }
+
       $slug = $_GET['election'];
       $data['election'] = $this->elections_model->get_election($slug);
+
       if (empty($data['election'])) {
         show_404($this->functions_datan->get_404_infos());
       }
 
+      // Setup election-specific requirements
+      $electionType = $data['election']['libelleAbrev'];
+      $requiredFieldsMap = [
+        'Législatives' => ['district'],
+        'Municipales' => ['district'],
+        'Régionales' => ['district', 'position']
+      ];
+
+      $data['requiredFields'] = $requiredFieldsMap[$electionType] ?? [];
+
+      // Setup view data
+      $user_id = $this->session->userdata('user_id');
       $data['title'] = 'Modifier un candidat pour les ' . $data['election']['libelleAbrev'] . ' ' . $data['election']['dateYear'];
       $data['candidat'] = $this->elections_model->get_candidate_full($candidateMpId, $data['election']['id']);
       $district = $this->elections_model->get_district($data['election']['libelleAbrev'], $data['candidat']['district']);
@@ -189,22 +203,22 @@
         redirect('admin/elections/' . $data['election']['slug']);
       }
 
-      $requiredFieldsMap = [
-          'Législatives' => ['district'],
-          'Régionales' => ['district', 'position']
-      ];
-      $data['requiredFields'] = $requiredFieldsMap[$data['election']['libelleAbrev']] ?? [];
-
       $data['positions'] = array('Tête de liste', 'Colistier');
       $data['districts'] = $this->elections_model->get_all_districts($data['election']['id']);
+      
       //Form valiation
       $this->form_validation->set_rules('mpId', 'mpId', 'required');
-      if ($data['election']['libelleAbrev'] == 'Régionales') {
-        $this->form_validation->set_rules('district', 'région de candidature', 'required');
+
+      if (in_array($electionType, ['Régionales', 'Législatives', 'Municipales'])) {
+        $districtLabelMap = [
+          'Régionales' => 'région',
+          'Législatives' => 'circonscription',
+          'Municipales' => 'commune'
+        ];
+        $districtLabel = $districtLabelMap[$electionType];
+        $this->form_validation->set_rules('district', $districtLabel, 'required');
       }
-      if ($data['election']['libelleAbrev'] == 'Législatives') {
-        //$this->form_validation->set_rules('district', 'circonscription', 'required');
-      }
+
       if ($this->form_validation->run() === FALSE) {
         // Meta
         $data['title_meta'] = 'Modifier un député candidat - Dashboard | Admin';
