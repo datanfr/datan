@@ -37,15 +37,21 @@
               </div>
               <?php if (in_array('district', $requiredFields)): ?>
                 <div class="form-group">
-                  <label for="">Circonscription de candidature</label>
-                  <select class="form-control" name="district">
-                    <option value="<?= $candidat['districtId'] ?>" selected="selected">Selectionné : <?= $candidat['districtLibelle'] ?></option>
-                    <?php foreach ($districts as $district): ?>
-                      <?php if ($district['libelle'] !== $candidat['regionLibelle']): ?>
-                        <option value="<?= $district['id'] ?>"><?= $district['libelle'] ?></option>
-                      <?php endif; ?>
-                    <?php endforeach; ?>
-                  </select>
+                  <?php if($election['libelleAbrev'] === 'Municipales') : ?>
+                    <label class="form-label">Circonscription de candidature</label>
+                    <p>Selected = <b><?= $candidat['districtLibelle'] ?></b></p>
+                    <input value="<?= $candidat['district'] ?>" type="text" class="form-control" name="district" placeholder="Entrez commune (code insee)">
+                  <?php else: ?>
+                    <label for="">Circonscription de candidature</label>
+                    <select class="form-control" name="district">
+                      <option value="<?= $candidat['districtId'] ?>" selected="selected">Selectionné : <?= $candidat['districtLibelle'] ?></option>
+                      <?php foreach ($districts as $district): ?>
+                        <?php if ($district['libelle'] !== $candidat['regionLibelle']): ?>
+                          <option value="<?= $district['id'] ?>"><?= $district['libelle'] ?></option>
+                        <?php endif; ?>
+                      <?php endforeach; ?>
+                    </select>
+                  <?php endif; ?>
                 </div>
               <?php endif; ?>
               <?php if (in_array('position', $requiredFields)): ?>

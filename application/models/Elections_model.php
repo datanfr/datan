@@ -133,6 +133,7 @@
         $where['candidature'] = 1;
       }
 
+      $this->db->join('elect_libelle', 'elect_libelle.id = elect_deputes_candidats.election', 'left');
       $result = $this->db->get_where('elect_deputes_candidats', $where, 1)->row_array();
 
       if($result){
@@ -147,7 +148,7 @@
         } elseif ($result['candidature'] == "0") {
           $result['color'] = 'information-fail';
         }
-      }      
+      }
 
       return $result;
     }
@@ -269,17 +270,11 @@
         $this->db->order_by('departement_code', 'ASC');
         $query = $this->db->get('departement');
         return $query->result_array();
-      } elseif ($election == 7 /* municipales 2026 */) {
-        $cities = $this->city_model->get_communes();
-        print_r($cities);
-        die();
-        $query = $this->db->get('circos c');
-        return $query->result_array();
-      }
+      } 
     }
 
     public function get_district($type, $district){
-      if ($type == 'Régionales') {
+      if ($type === 'Régionales') {
         $result = $this->db->get_where('regions', array('id' => $district))->row_array();
         $array = array(
           'id' => $result['id'],
@@ -288,13 +283,24 @@
         return $array;
       }
 
-      if ($type == 'Législatives') {
+      if ($type === 'Législatives') {
         $result = $this->db->get_where('departement', array('departement_code' => $district))->row_array();
 
         if($result){
           return [
             'id' => $result['departement_code'],
             'libelle' => $result['departement_nom']
+          ];
+        }
+        return null;
+      }
+
+      if ($type === 'Municipales') {
+        $result = $this->city_model->get_city_by_insee($district);
+        if($result){
+          return [
+            'id' => $result['code_insee'],
+            'libelle' => $result['nom_standard']
           ];
         }
         return null;
