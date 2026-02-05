@@ -11,6 +11,7 @@
       </div>
       <div class="col-md-10 col-lg-8 offset-md-1 offset-lg-0 pl-lg-5">
         <?php if(!$page_history): ?>
+          <?php $this->view('deputes/partials/electionFeature.php') ?>
           <?php $this->view('deputes/partials/voteFeature.php') ?>
         <?php endif; ?>
         <?php $this->view('partials/campaign.php', array('wrapper_classes' => array('mt-5'))) ?>
