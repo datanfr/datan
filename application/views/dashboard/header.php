@@ -303,6 +303,12 @@
                     </a>
                   </li>
                   <li class="nav-item">
+                    <a href="<?= base_url() ?>admin/elections/municipales-2026" class="nav-link">
+                      <i class="far fa-circle nav-icon"></i>
+                      <p>Municipales 2026</p>
+                    </a>
+                  </li>
+                  <li class="nav-item">
                     <a href="<?= base_url() ?>admin/elections/legislatives-2024" class="nav-link">
                       <i class="far fa-circle nav-icon"></i>
                       <p>Législatives 2024</p>
