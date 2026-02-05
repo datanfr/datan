@@ -4,6 +4,17 @@
       $this->load->database();
     }
 
+    public function get_city_by_insee($insee) {
+      $where = array(
+        'c.code_insee' => $insee
+      );
+      $this->db->select('c.*, cc.commune_slug, d.slug AS dpt_slug');
+      $this->db->join('circos cc', 'c.code_insee = cc.insee');
+      $this->db->join('departement d', 'c.dep_code = d.departement_code');
+      $this->db->group_by('c.code_insee');
+      return $this->db->get_where('cities c', $where, 1)->row_array();
+    }
+
     public function get_communes_by_dpt($slug, $max_population = FALSE){
       if ($max_population) {
         $this->db->where('city.pop2017 >', $max_population);

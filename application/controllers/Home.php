@@ -46,8 +46,8 @@
       $data['blocs'] = $this->groupes_model->get_blocs($data['groupes']);
 
       // Get election results 
-      $file = file_get_contents(asset_url() . "data_elections/legislatives-2024-2.json");
-      $data['legislatives2024'] = json_decode($file, true);
+      //$file = file_get_contents(asset_url() . "data_elections/legislatives-2024-2.json");
+      //$data['legislatives2024'] = json_decode($file, true);
 
       //Get stats - CHANGE THIS WHEN THERE WILL BE VOTES
       $data['stats'] = FALSE;
@@ -91,13 +91,13 @@
       }
 
       // Get elections
-      $data['candidatsN'] = $this->elections_model->count_candidats(4, FALSE, FALSE);
-      $data['elected'] = $this->elections_model->get_all_candidates(4, TRUE, TRUE, 'elected');
-      $data['electedN'] = count($data['elected']);
-      $randKey = array_rand($data['elected']);
-      $data['candidatRandom'] = $data['elected'][$randKey];
-      $district = $this->elections_model->get_district($data['candidatRandom']['election_libelleAbrev'], $data['candidatRandom']['district']);
-      $data['candidatRandom']['cardCenter'] = isset($district['libelle']) && $district['libelle'] != '' ? $district['libelle'] . ' (' . $district['id'] . ')' : '';
+      $data['candidatsN'] = $this->elections_model->count_candidats(7, FALSE, FALSE);
+      $data['candidats'] = $this->elections_model->get_all_candidates(7, TRUE, TRUE, 'candidat');
+      $randKey = array_rand($data['candidats']);
+      $data['candidatRandom'] = $data['candidats'][$randKey];
+      $data['candidatRandom']['district'] = $this->city_model->get_city_by_insee($data['candidatRandom']['district']);
+      $data['candidatRandom']['gender'] = gender($data['candidatRandom']['civ']);
+      $data['candidatRandom']['cardCenter'] = isset($data['candidatRandom']['district']) && $data['candidatRandom']['district'] != '' ? 'Candidat' . $data['candidatRandom']['gender']['e'] . ' à ' . $data['candidatRandom']['district']['nom_a'] . ' (' . $data['candidatRandom']['district']['dep_code'] . ')' : '';
 
       //Get posts (needs to be cached)
       $data['posts'] = $this->post_model->get_last_posts(3);
