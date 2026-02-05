@@ -10,6 +10,7 @@
     public function index(){
       // Data
       $data['elections'] = $this->elections_model->get_election_all();
+      $data['election_future'] = TRUE; // There is an election in the future
 
       // Breadcrumb
       $data['breadcrumb'] = array(

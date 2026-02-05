@@ -24,24 +24,24 @@
     </div>
   </div>
 </div>
-<?php /* ?> When there are elections in the future
-<div class="container-fluid pg-elections-index py-5 mt-5 bg-info">
-  <div class="container">
-    <div class="row">
-      <div class="col-12">
-        <h2 class="text-white text-center">Députés candidats aux prochaines élections</h2>
-      </div>
-      <div class="col-12 mt-3 d-flex flex-wrap">
-        <?php foreach ($elections as $election): ?>
-          <?php if (strtotime($election['dateFirstRound']) >= strtotime('-20 days')): ?>
-            <?php $this->load->view('elections/partials/card.php', array('election' => $election)) ?>
-          <?php endif; ?>
-        <?php endforeach; ?>
+<?php if($election_future): ?>
+  <div class="container-fluid pg-elections-index py-5 mt-5 bg-info">
+    <div class="container">
+      <div class="row">
+        <div class="col-12">
+          <h2 class="text-white text-center">Députés candidats aux prochaines élections</h2>
+        </div>
+        <div class="col-12 mt-3 d-flex flex-wrap">
+          <?php foreach ($elections as $election): ?>
+            <?php if (strtotime($election['dateFirstRound']) >= strtotime('-20 days')): ?>
+              <?php $this->load->view('elections/partials/card.php', array('election' => $election)) ?>
+            <?php endif; ?>
+          <?php endforeach; ?>
+        </div>
       </div>
     </div>
   </div>
-</div>
-<?php */ ?>
+<?php endif; ?>
 <div class="container pg-elections-index my-5">
   <div class="row">
     <div class="col-12">
