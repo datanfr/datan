@@ -2,6 +2,7 @@
   class Elections_model extends CI_Model {
     public function __construct() {
       $this->load->database();
+      $this->load->model('city_model');
     }
 
     public function get_election($slug){
@@ -268,6 +269,12 @@
         $this->db->order_by('departement_code', 'ASC');
         $query = $this->db->get('departement');
         return $query->result_array();
+      } elseif ($election == 7 /* municipales 2026 */) {
+        $cities = $this->city_model->get_communes();
+        print_r($cities);
+        die();
+        $query = $this->db->get('circos c');
+        return $query->result_array();
       }
     }
 
@@ -283,11 +290,14 @@
 
       if ($type == 'Législatives') {
         $result = $this->db->get_where('departement', array('departement_code' => $district))->row_array();
-        $array = array(
-          'id' => $result['departement_code'],
-          'libelle' => $result['departement_nom']
-        );
-        return $array;
+
+        if($result){
+          return [
+            'id' => $result['departement_code'],
+            'libelle' => $result['departement_nom']
+          ];
+        }
+        return null;
       }
     }
 

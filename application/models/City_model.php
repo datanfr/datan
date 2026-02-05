@@ -4,6 +4,11 @@
       $this->load->database();
     }
 
+    public function get_communes() {
+      return $this->db->get§('circos c');
+      
+    }
+
     public function get_communes_by_dpt($slug, $max_population = FALSE){
       if ($max_population) {
         $this->db->where('city.pop2017 >', $max_population);
