@@ -299,7 +299,7 @@
         $result = $this->city_model->get_city_by_insee($district);
         if($result){
           return [
-            'id' => $result['code_insee'],
+            'id' => $result['dep_code'],
             'libelle' => $result['nom_standard']
           ];
         }
