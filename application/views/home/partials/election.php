@@ -20,7 +20,7 @@
     </div>
     <div class="row pb-5">
       <div class="col-12 d-flex justify-content-center">
-        <a href="<?= base_url();?>elections/legislatives-2022" class="no-decoration">
+        <a href="<?= base_url();?>elections/municipales-2026" class="no-decoration">
           <button type="button" class="btn btn-primary">Découvrez les députés candidats</button>
         </a>
       </div>
