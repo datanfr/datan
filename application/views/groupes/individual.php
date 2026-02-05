@@ -95,7 +95,7 @@
                     <?php if (!$active): ?>
                       <p>Avec <?= $groupe['effectif'] ?> députés, le groupe <?= $groupe['libelleAbrev'] ?> représentait <?= $groupe['effectifShare'] ?>% du nombre total de députés à l'Assemblée nationale, qui est de 577.</p>
                       <?php else: ?>
-                      <p>Avec <?= $groupe['effectif'] ?> députés, le groupe <?= $groupe['libelleAbrev'] ?> est le <?= $groupe['classement'] != "1" ? $groupe['classement'].'<sup>e</sup> ' : '' ?>groupe le plus important (sur <?= $groupesN ?> groupes). Il représente <?= $groupe['effectifShare'] ?>% du nombre total de députés à l'Assemblée nationale.</p>
+                      <p>Avec <?= $groupe['effectif'] ?> députés, le groupe <?= $groupe['libelleAbrev'] ?> est le <?= $groupe['ranking'] != "1" ? $groupe['ranking'].'<sup>e</sup> ' : '' ?>plus gros groupe politique de l'Assemblée nationale (sur <?= $groupesN ?>). Il représente <?= $groupe['effectifShare'] ?>% du nombre total de députés (577).</p>
                     <?php endif; ?>
                   </div>
                 </div>
