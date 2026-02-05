@@ -97,7 +97,7 @@
       $data['candidatRandom'] = $data['candidats'][$randKey];
       $data['candidatRandom']['district'] = $this->city_model->get_city_by_insee($data['candidatRandom']['district']);
       $data['candidatRandom']['gender'] = gender($data['candidatRandom']['civ']);
-      $data['candidatRandom']['cardCenter'] = isset($data['candidatRandom']['district']) && $data['candidatRandom']['district'] != '' ? 'Candidat' . $data['candidatRandom']['gender']['e'] . ' à ' . $data['candidatRandom']['district']['nom_a'] . ' (' . $data['candidatRandom']['district']['dep_code'] . ')' : '';
+      $data['candidatRandom']['cardCenter'] = isset($data['candidatRandom']['district']) && $data['candidatRandom']['district'] != '' ? 'Candidat' . $data['candidatRandom']['gender']['e'] . ' ' . $data['candidatRandom']['district']['nom_a'] . ' (' . $data['candidatRandom']['district']['dep_code'] . ')' : '';
 
       //Get posts (needs to be cached)
       $data['posts'] = $this->post_model->get_last_posts(3);
