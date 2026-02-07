@@ -12,6 +12,7 @@
       $this->load->model('fields_model');
       $this->load->model('jobs_model');
       $this->load->model('legislature_model');
+      $this->load->model('elections_model');
       setlocale(LC_TIME, 'french');
     }
 
@@ -324,6 +325,11 @@
       // If NI : edito
       if ($data['groupe']['libelleAbrev'] == "NI") {
         $data['groupe']['ni_edited'] = $this->groupes_edito->get_ni($legislature);
+      }
+
+      // Get electionFeature 
+      if ($data['groupe']['legislature'] == legislature_current()) {
+        $data['electionFeature'] = $this->elections_model->get_n_candidates_by_group($data['groupe']['uid']);
       }
 
       // Meta
