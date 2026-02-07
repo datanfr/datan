@@ -371,4 +371,15 @@
       return $this->db->get_where('elect_deputes_candidats e', $where)->result_array();
     }
 
+    public function get_n_candidates_by_group($group) {
+      $where = array(
+        'e.election' => 7, // Municipales 2026
+        'e.visible' => 1,
+        'd.groupeId' => $group
+      );
+      $this->db->join('deputes_last d', 'd.mpId = e.mpId', 'left');
+      $this->db->where($where);
+      return $this->db->count_all_results('elect_deputes_candidats e');
+    }
+
   }

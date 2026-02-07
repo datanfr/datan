@@ -20,7 +20,7 @@
                 ]));
                 ?> sont candidats aux élections municipales de 2026 dans la ville <?= $city_info['nom_de'] ?>.</p>
             <?php endif; ?>
-            <a href="<?= base_url() ?>elections/municipales-2026" class="mt-3 btn btn-light">En savoir plus sur l'élection</a>
+            <a href="<?= base_url() ?>elections/municipales-2026" class="mt-3 btn btn-light">En savoir plus sur ces élections</a>
         </div>
     </div>
 <?php endif; ?>

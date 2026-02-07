@@ -7,12 +7,14 @@
     <div class="col-12 col-md-8 col-lg-4 offset-md-2 offset-lg-0">
       <?php $this->load->view('groupes/partials/card_individual.php', array('tag' => 'h1')) ?>
     </div>
-    <div class="col-md-10 col-lg-8 offset-md-1 offset-lg-0 pl-lg-5">
-      <?php $this->view('groupes/partials/dissolutionFeature.php') ?>
+    <div class="col-md-12 col-lg-8 offset-lg-0 pl-lg-5">
       <!-- ADD DONATION CAMPAIGN PARTIAL -->
       <?php $this->view('partials/campaign.php', array('wrapper_classes' => array('mt-5'))) ?>
+      <!-- PARTIAL ELECTIONFEATURE --> 
+      <?php $this->view('groupes/partials/dissolutionFeature.php') ?>
       <!-- BIO & ELECTION -->
       <div class="bloc-bio mt-5">
+        <?php $this->view('groupes/partials/electionFeature.php') ?>
         <h2 class="mb-4 title-center">Le groupe <?= $groupe['libelleAbrev'] ?> en quelques mots</h2>
         <?php if ($groupe['libelleAbrev'] == "NI"): ?>
           <p>Les <?= mb_strtolower($title) ?> (NI) ne sont pas membres d'un groupe politique.</p>
