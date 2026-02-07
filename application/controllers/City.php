@@ -6,6 +6,7 @@
       $this->load->model('groupes_model');
       $this->load->model('depute_edito');
       $this->load->model('city_model');
+      $this->load->model('elections_model');
     }
 
     public function index($input, $departement){
@@ -25,6 +26,9 @@
       $departement = $v['dpt_slug'];
       $code_postal = $v['code_postal'];
       $insee = $v['insee'];
+      
+      // New database with city info 
+      $data['city_info'] = $this->city_model->get_city_by_insee($insee);
 
       // GET THE MPs
       // If only one district
@@ -123,6 +127,9 @@
       // Get city mayor
       $data['mayor'] = $this->city_model->get_mayor($data['ville']['dpt'], $insee, $data['ville']['commune']);
       $data['mayor']['gender'] = gender($data['mayor']['gender']);
+
+      // Get electionFeature       
+      $data['electionFeature'] = $this->elections_model->get_candidates_by_city($insee);
 
       // Get last election (2024 legislatives)
       $data['results_legislatives_last'] = $this->city_model->get_results_legislatives($insee, 2024);

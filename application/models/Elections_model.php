@@ -337,6 +337,10 @@
         case 6: // Législatives 2024
           return 2;
           break;
+
+        case 7: // Municipales 2026
+          return 0;
+          break;
         
         default:
           return 0;
@@ -354,6 +358,17 @@
       } elseif ($elected === "0") {
         return "lost";
       }
+    }
+
+    public function get_candidates_by_city($city){
+      $election = 7; // Municipales 2026
+      $where = array(
+        'e.election' => $election,
+        'e.visible' => 1,
+        'e.district' => $city,
+      );
+      $this->db->join('deputes_last d', 'd.mpId = e.mpId', 'left');
+      return $this->db->get_where('elect_deputes_candidats e', $where)->result_array();
     }
 
   }
