@@ -14,6 +14,8 @@
                 <span class="font-weight-bold"><?= $election['electedN'] ?> député<?= $election['electedN'] > 1 ? "s" : "" ?> élu<?= $election['electedN'] > 1 ? "s" : "" ?></span>
             <?php elseif($election['state'] == 1): ?>
                 <span class="font-weight-bold"><?= $election['secondRoundN'] ?> député<?= $election['secondRoundN'] > 1 ? "s" : "" ?> au second tour</span>
+            <?php elseif($election['state'] == 0): ?>
+                <span class="font-weight-bold"><?= $election['candidatsN'] ?> député<?= $election['candidatsN'] > 1 ? "s" : "" ?> candidats</span>
             <?php endif; ?>
         </div>
     <?php else: ?>
