@@ -19,7 +19,7 @@
       <?php if ($electionFeature['candidature'] == 1 && $electionFeature['link']): ?>
         <span class="mt-3 url_obf btn btn-light" url_obf="<?= url_obfuscation($electionFeature['link']) ?>">Suivre sa campagne</span>
       <?php endif; ?>
-      <a href="<?= base_url() ?>elections/municipales-2026" class="mt-3 btn btn-light">En savoir plus sur l'élection</a>
+      <a href="<?= base_url() ?>elections/municipales-2026" class="mt-3 btn btn-light">En savoir plus sur ces élections</a>
     </div>
   </div>
 <?php endif; ?>
