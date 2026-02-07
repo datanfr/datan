@@ -337,6 +337,10 @@
         case 6: // Législatives 2024
           return 2;
           break;
+
+        case 7: // Municipales 2026
+          return 0;
+          break;
         
         default:
           return 0;
