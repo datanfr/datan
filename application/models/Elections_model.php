@@ -382,4 +382,20 @@
       return $this->db->count_all_results('elect_deputes_candidats e');
     }
 
+    public function get_n_candidates_all_groups() {
+      $this->db->select('d.groupeId, o.libelleAbrev, o.legislature, o.couleurAssociee, ge.effectif, COUNT(*) AS candidates_n');
+      $this->db->select('ROUND(COUNT(*) / ge.effectif * 100) AS candidates_pct', FALSE);
+      $this->db->from('elect_deputes_candidats e');
+      $this->db->join('deputes_last d', 'd.mpId = e.mpId', 'left');
+      $this->db->join('organes o', 'o.uid = d.groupeId', 'left');
+      $this->db->join('groupes_effectif ge', 'ge.organeRef = d.groupeId', 'left');
+      $this->db->where('e.election', 7); // Municipales 2026
+      $this->db->where('e.visible', 1);
+      $this->db->where('o.dateFin IS NULL', NULL, FALSE);
+      $this->db->group_by('d.groupeId');
+      $this->db->order_by('candidates_pct', 'DESC');
+      return $this->db->get()->result_array();
+    }
+
+
   }
