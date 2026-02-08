@@ -128,7 +128,7 @@
     </div>
   </div>
   <!-- BLOC ELECTION -->
-  <?php $this->view('home/partials/election.php') ?>  
+  <?php $this->view('home/partials/election_groups.php') ?>  
   <!-- BLOC POSTS -->
   <div class="row">
     <div class="container p-md-0">
@@ -488,7 +488,7 @@
 
 <script type="text/javascript">
   document.addEventListener('DOMContentLoaded', function() {
-    var data = {
+    var dataHemicycle = {
       labels: [
         <?php
         foreach ($groupesSorted as $groupe) {
@@ -521,8 +521,8 @@
       }]
     };
 
-    var ctx = document.getElementById("chartHemicycle");
-    var chartOptions = {
+    var ctxHemicycle = document.getElementById("chartHemicycle");
+    var optionsHemicycle = {
       responsive: true,
       maintainAspectRatio: false,
       circumference: 180,
@@ -555,10 +555,74 @@
       }
     }
 
-    var pieChart = new Chart(ctx, {
+    var pieChart = new Chart(ctxHemicycle, {
       type: 'doughnut',
-      data: data,
-      options: chartOptions,
+      data: dataHemicycle,
+      options: optionsHemicycle,
+    });
+
+    var dataElection = {
+      labels: [
+        <?php
+          foreach ($election_groups as $groupe) {
+            echo '"' . $groupe["libelleAbrev"] . '",';
+          }
+        ?>
+      ],
+      datasets: [{
+        label: 'Candidats (%)',
+        data: [
+          <?php
+            foreach ($election_groups as $groupe) {
+              echo $groupe["candidates_pct"] . ",";
+            }
+          ?>
+        ],
+        backgroundColor: [
+          <?php
+            foreach ($election_groups as $groupe) {
+              echo '"' . $groupe["couleurAssociee"] . '",';
+            }
+          ?>
+        ],
+        borderWidth: 1
+      }]
+    };
+
+    const ctxElection = document.getElementById('chart_election');
+
+    new Chart(ctxElection, {
+      type: 'bar',
+      data: dataElection,
+      options: {
+        scales: {
+          y: {
+            beginAtZero: true,
+            ticks: {
+              callback: function(value) {
+                return value + '%';
+              }
+            }
+          }
+        },
+        plugins: {
+          legend: {
+            display: false
+          },
+          datalabels: {
+            anchor: 'end',
+            align: 'top',
+            formatter: function(value) {
+              return value + '%';
+            },
+            color: '#000',
+            font: {
+              weight: 'bold',
+              size: 12
+            }
+          }
+        }
+      }
     });
 
   });

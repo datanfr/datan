@@ -1855,6 +1855,15 @@ body{
       }
     }
   }
+  .card-election-groups{
+    border: none;
+    box-shadow: $card-box-shadow;
+    .card-header{
+      font-size: $h5-font-size;
+      background-color: $bleu;
+      color: white
+    }
+  }
 }
 
 
