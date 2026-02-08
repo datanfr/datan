@@ -92,12 +92,20 @@
 
       // Get elections
       $data['candidatsN'] = $this->elections_model->count_candidats(7, FALSE, FALSE);
+      /* WHEN FOCUS IS ON CANDIDATS */
+      /*
       $data['candidats'] = $this->elections_model->get_all_candidates(7, TRUE, TRUE, 'candidat');
       $randKey = array_rand($data['candidats']);
       $data['candidatRandom'] = $data['candidats'][$randKey];
       $data['candidatRandom']['district'] = $this->city_model->get_city_by_insee($data['candidatRandom']['district']);
       $data['candidatRandom']['gender'] = gender($data['candidatRandom']['civ']);
       $data['candidatRandom']['cardCenter'] = isset($data['candidatRandom']['district']) && $data['candidatRandom']['district'] != '' ? 'Candidat' . $data['candidatRandom']['gender']['e'] . ' ' . $data['candidatRandom']['district']['nom_a'] . ' (' . $data['candidatRandom']['district']['dep_code'] . ')' : '';
+      */ 
+      /* WHEN FOCUS IS ON GROUPES */ 
+      $data['election_groups'] = $this->elections_model->get_n_candidates_all_groups();
+      foreach ($data['election_groups'] as $key => $group) {
+        $data['election_groups'][$key]['couleurAssociee'] = $this->groupes_model->get_groupe_color(array($group['libelleAbrev'], $group['couleurAssociee']));
+      }
 
       //Get posts (needs to be cached)
       $data['posts'] = $this->post_model->get_last_posts(3);
