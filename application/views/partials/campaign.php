@@ -6,7 +6,7 @@
   <div class="container d-flex justify-content-center flex-column align-items-center py-4 ">
       <div class="icon"><?= file_get_contents(asset_url() . 'imgs/icons/heart-fill.svg') ?></div>
       <div id="campaign-paragraph" class="text-center my-4"></div>
-      <a class="btn btn-primary" href="https://www.helloasso.com/associations/datan/formulaires/1" target="_blank" rel="noopener">Faire un don</a>
+      <a class="btn btn-primary" href="<?= base_url() ?>soutenir" target="_blank" rel="noopener">Faire un don</a>
   </div>
 </section>
 
