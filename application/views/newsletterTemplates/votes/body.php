@@ -18,7 +18,7 @@
       <?php endif; ?>
     </mj-text>
     <mj-text padding-bottom="40px">
-      💶 <b>Soutenez-nous</b> : aidez Datan à rendre l’action des députés accessible à toutes et tous ! <a href="https://www.helloasso.com/associations/datan/formulaires/1" target="_blank" style="color:#00b794; text-decoration:underline;">Cliquez ici pour faire un don</a>
+      💶 <b>Soutenez-nous</b> : aidez Datan à rendre l’action des députés accessible à toutes et tous ! <a href="<?= base_url() ?>soutenir" target="_blank" style="color:#00b794; text-decoration:underline;">Cliquez ici pour faire un don</a>
     </mj-text>
   </mj-column>
 </mj-section>
@@ -111,7 +111,7 @@
     </mj-text>
   </mj-column>
   <mj-column width="100%">
-    <mj-button background-color="#00b794" color="#fff" font-weight="800" padding-top="20px" padding-bottom="10px" href="https://www.helloasso.com/associations/datan/formulaires/1">
+    <mj-button background-color="#00b794" color="#fff" font-weight="800" padding-top="20px" padding-bottom="10px" href="<?= base_url() ?>soutenir">
         Faire un don
     </mj-button>
   </mj-column>

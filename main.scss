@@ -1556,6 +1556,42 @@ body{
 }
 /*
 ################
+               PAGE : SOUTENEZ-NOUS (pg-dons)
+################
+*/
+.pg-dons{
+  .card-figures{
+    max-width: 800px;
+    border-color: $primary;
+    background-color: #B3E9DF;
+    .figure {
+      font-weight: 800;
+      font-size: 2.5em;
+      color: $primary;
+    }
+    .legend {
+      font-weight: 600;
+      color: $text-black;
+    }
+  }
+  .card-explain{
+    border-color: $bleu;
+    background-color: #B3D1DD;
+    .title {
+      color: $bleu;
+      font-weight: 800;
+      font-size: $h6-font-size;
+    }
+    .legend{
+      font-style: italic;
+      color: $text-gray-light;
+    }
+  }
+}
+
+
+/*
+################
                PAGE : PAGE (pg-page)
 ################
 */
