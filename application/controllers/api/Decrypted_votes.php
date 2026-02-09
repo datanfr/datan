@@ -198,7 +198,7 @@ class Decrypted_votes extends CI_Controller
         $input = $this->api_auth->get_json_input();
 
         // Validation des champs requis
-        $required = array('title', 'legislature', 'vote_id', 'category');
+        $required = array('title', 'legislature', 'voteNumero', 'category');
         foreach ($required as $field) {
             if (empty($input[$field])) {
                 return $this->api_auth->response(array(
@@ -211,7 +211,7 @@ class Decrypted_votes extends CI_Controller
         // Préparer les données pour le modèle
         $_POST['title'] = $input['title'];
         $_POST['legislature'] = $input['legislature'];
-        $_POST['vote_id'] = $input['vote_id'];
+        $_POST['vote_id'] = $input['voteNumero'];
         $_POST['category'] = $input['category'];
         $_POST['description'] = isset($input['description']) ? $input['description'] : '';
         $_POST['reading'] = isset($input['reading']) ? $input['reading'] : '';
@@ -415,7 +415,53 @@ class Decrypted_votes extends CI_Controller
             'success' => true,
             'endpoint' => '/api/decrypted_votes',
             'description' => 'Votes décryptés par Datan (votes_datan)',
-            'methods' => array('GET', 'POST', 'PUT', 'DELETE'),
+            'methods' => array(
+                'GET /api/decrypted_votes' => 'Lister les votes décryptés',
+                'GET /api/decrypted_votes/{id}' => 'Voir un vote décrypté',
+                'POST /api/decrypted_votes' => 'Créer un vote décrypté',
+                'PUT /api/decrypted_votes/{id}' => 'Modifier un vote décrypté',
+                'DELETE /api/decrypted_votes/{id}' => 'Supprimer un vote décrypté (admin uniquement)'
+            ),
+            'post_fields' => array(
+                'required' => array(
+                    'title' => 'Titre du vote',
+                    'legislature' => 'Numéro de législature',
+                    'voteNumero' => 'Numéro du vote dans la législature',
+                    'category' => 'ID de la catégorie (voir categories ci-dessous)'
+                ),
+                'optional' => array(
+                    'description' => 'Description du vote (défaut: vide)',
+                    'reading' => 'ID de la lecture (voir readings ci-dessous, défaut: null)'
+                ),
+                'auto_generated' => array(
+                    'id', 'vote_id', 'slug', 'state (draft)', 'created_at', 'created_by', 'created_by_name'
+                ),
+                'example' => array(
+                    'title' => 'Projet de loi de finances 2025',
+                    'legislature' => '17',
+                    'voteNumero' => '1470',
+                    'category' => '1',
+                    'description' => 'Vote sur le budget général',
+                    'reading' => '1'
+                )
+            ),
+            'put_fields' => array(
+                'optional' => array(
+                    'title' => 'Titre du vote',
+                    'category' => 'ID de la catégorie',
+                    'description' => 'Description du vote',
+                    'reading' => 'ID de la lecture',
+                    'state' => 'État du vote (draft, published)'
+                ),
+                'auto_generated' => array(
+                    'slug', 'modified_at', 'modified_by', 'modified_by_name'
+                ),
+                'notes' => 'Seuls les admins peuvent modifier un vote publié. Seuls les champs envoyés sont modifiés.',
+                'example' => array(
+                    'title' => 'Titre modifié',
+                    'state' => 'published'
+                )
+            ),
             'available_fields' => $this->available_fields,
             'sortable_fields' => $this->sortable_fields,
             'filters' => array(
