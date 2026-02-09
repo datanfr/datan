@@ -215,6 +215,7 @@ class Sitemap extends CI_Controller {
     }
     $urls[]["url"] = base_url()."mentions-legales";
     $urls[]["url"] = base_url()."a-propos";
+    $urls[]["url"] = base_url()."soutenir";
     $urls[]["url"] = base_url()."blog";
     $urls[]["url"] = base_url()."faq";
     $urls[]["url"] = base_url()."statistiques";
