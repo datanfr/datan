@@ -120,7 +120,6 @@
                 </div>
                 <div class="card-body">
                     <p>Utilisez le header <code>Authorization: Bearer &lt;api_key&gt;</code> pour authentifier vos requêtes.</p>
-                    <p class="small text-muted">Chaque endpoint dispose d'une route <code>/meta</code> (ex: <code>/api/votes/meta</code>) pour obtenir la documentation complète des champs et filtres disponibles.</p>
 
                     <h6 class="mt-4">Votes bruts (votes_info) - Lecture seule</h6>
                     <table class="table table-sm">
@@ -189,11 +188,35 @@
                         </tbody>
                     </table>
                     <p class="small text-muted mb-0">
-                        <strong>Paramètres :</strong> page, per_page (max 500), fields, state (draft/published), legislature, category, sort, order
+                        <strong>Paramètres GET :</strong> page, per_page (max 500), fields, state (draft/published), legislature, category, sort, order
                     </p>
                     <p class="small text-muted">
                         <strong>Champs :</strong> id, legislature, voteNumero, vote_id, title, slug, category, category_name, reading, reading_name, description, state, created_at, modified_at, created_by, created_by_name, modified_by, modified_by_name
                     </p>
+                    <div class="row mt-2">
+                        <div class="col-md-6">
+                            <p class="small mb-1"><strong>POST</strong> — Champs obligatoires : <code>title</code>, <code>legislature</code>, <code>voteNumero</code>, <code>category</code></p>
+                            <p class="small text-muted mb-1">Optionnels : <code>description</code>, <code>reading</code></p>
+                            <p class="small text-muted mb-1">Auto-générés : id, vote_id, slug, state (draft), created_at, created_by, created_by_name</p>
+                            <pre class="bg-dark text-white p-2 rounded small">{
+    "title": "Projet de loi de finances 2025",
+    "legislature": "17",
+    "voteNumero": "1470",
+    "category": "1",
+    "description": "Vote sur le budget général",
+    "reading": "1"
+}</pre>
+                        </div>
+                        <div class="col-md-6">
+                            <p class="small mb-1"><strong>PUT</strong> — Tous les champs sont optionnels, seuls ceux envoyés sont modifiés</p>
+                            <p class="small text-muted mb-1">Modifiables : <code>title</code>, <code>category</code>, <code>description</code>, <code>reading</code>, <code>state</code> (draft/published)</p>
+                            <p class="small text-muted mb-1">Auto-générés : slug, modified_at, modified_by, modified_by_name</p>
+                            <pre class="bg-dark text-white p-2 rounded small">{
+    "title": "Titre modifié",
+    "state": "published"
+}</pre>
+                        </div>
+                    </div>
 
                     <h6 class="mt-4">Votes non décryptés - Lecture seule</h6>
                     <table class="table table-sm">
@@ -269,11 +292,33 @@
                         </tbody>
                     </table>
                     <p class="small text-muted mb-0">
-                        <strong>Paramètres :</strong> page, per_page (max 500), fields, legislature, status (pending/done/all), sort, order
+                        <strong>Paramètres GET :</strong> page, per_page (max 500), fields, legislature, status (pending/done/all), sort, order
                     </p>
                     <p class="small text-muted">
                         <strong>Champs :</strong> id, legislature, voteNumero, exposeOriginal, exposeSummary, exposeSummaryPublished, dateMaj
                     </p>
+                    <div class="row mt-2">
+                        <div class="col-md-6">
+                            <p class="small mb-1"><strong>POST</strong> — Champs obligatoires : <code>legislature</code>, <code>voteNumero</code></p>
+                            <p class="small text-muted mb-1">Optionnels : <code>exposeOriginal</code>, <code>exposeSummary</code>, <code>exposeSummaryPublished</code></p>
+                            <p class="small text-muted mb-1">Auto-générés : id, dateMaj</p>
+                            <pre class="bg-dark text-white p-2 rounded small">{
+    "legislature": "17",
+    "voteNumero": "1470",
+    "exposeOriginal": "Texte original...",
+    "exposeSummary": "Résumé..."
+}</pre>
+                        </div>
+                        <div class="col-md-6">
+                            <p class="small mb-1"><strong>PUT</strong> — Tous les champs sont optionnels, seuls ceux envoyés sont modifiés</p>
+                            <p class="small text-muted mb-1">Modifiables : <code>exposeOriginal</code>, <code>exposeSummary</code>, <code>exposeSummaryPublished</code></p>
+                            <p class="small text-muted mb-1">Auto-générés : dateMaj</p>
+                            <pre class="bg-dark text-white p-2 rounded small">{
+    "exposeSummary": "Résumé modifié",
+    "exposeSummaryPublished": "1"
+}</pre>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

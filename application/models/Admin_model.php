@@ -145,7 +145,9 @@ class Admin_model extends CI_Model
   {
     $this->db->join('fields', 'fields.id = votes_datan.category', 'left');
     $this->db->join('readings', 'readings.id = votes_datan.reading', 'left');
-    $this->db->select('votes_datan.*, fields.name AS category_name, readings.name AS reading_name');
+    $this->db->join('users u1', 'u1.id = votes_datan.created_by', 'left');
+    $this->db->join('users u2', 'u2.id = votes_datan.modified_by', 'left');
+    $this->db->select('votes_datan.*, fields.name AS category_name, readings.name AS reading_name, u1.name AS created_by_name, u2.name AS modified_by_name');
     $query = $this->db->get_where('votes_datan', array('votes_datan.id' => $id), 1);
 
     return $query->row_array();
