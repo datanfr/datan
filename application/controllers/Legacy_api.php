@@ -1,5 +1,5 @@
 <?php
-class Api extends CI_Controller
+class Legacy_api extends CI_Controller
 {
     // FORBIDDEN LIST
     private $modelAllowed = array();

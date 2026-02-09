@@ -210,7 +210,7 @@ $route['api/exposes/by_vote/(:num)/(:num)'] = 'api/exposes/by_vote/$1/$2';
 $route['api/exposes/(:num)'] = 'api/exposes/index/$1';
 
 // API (public)
-$route['api/(:any)/(:any)'] = 'api/index/$1/$2';
+$route['api/(:any)/(:any)'] = 'legacy_api/index/$1/$2';
 // LOGIN & REGISTER
 $route['login'] = 'users/login';
 $route['register/(:any)'] = 'users/register/$1';
