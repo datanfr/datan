@@ -113,7 +113,7 @@
                     <!-- Authentification -->
                     <h6 class="font-weight-bold text-primary">Authentification</h6>
                     <p>Ajoutez la clé API dans le header de chaque requête :</p>
-                    <pre class="bg-dark text-light p-2 rounded"><code>X-API-Key: votre_cle_api</code></pre>
+                    <pre class="bg-dark text-light p-2 rounded"><code>Authorization: Bearer votre_cle_api</code></pre>
 
                     <!-- Endpoints -->
                     <h6 class="font-weight-bold text-primary mt-4">Endpoints disponibles</h6>
@@ -215,21 +215,21 @@
                     <!-- Exemples -->
                     <h6 class="font-weight-bold text-primary mt-4">Exemples de requêtes</h6>
                     <pre class="bg-dark text-light p-2 rounded" style="font-size: 12px;"><code># Liste des votes de la législature 17
-curl -H "X-API-Key: VOTRE_CLE" \
+curl -H "Authorization: Bearer VOTRE_CLE" \
   "<?= base_url() ?>api/votes?legislature=17&per_page=10"
 
 # Votes décryptés en brouillon
-curl -H "X-API-Key: VOTRE_CLE" \
+curl -H "Authorization: Bearer VOTRE_CLE" \
   "<?= base_url() ?>api/decrypted_votes?state=draft"
 
 # Créer un vote décrypté
-curl -X POST -H "X-API-Key: VOTRE_CLE" \
+curl -X POST -H "Authorization: Bearer VOTRE_CLE" \
   -H "Content-Type: application/json" \
   -d '{"title":"...", "legislature":17, "vote_id":"...", "category":1}' \
   "<?= base_url() ?>api/decrypted_votes"
 
 # Métadonnées d'un endpoint
-curl -H "X-API-Key: VOTRE_CLE" \
+curl -H "Authorization: Bearer VOTRE_CLE" \
   "<?= base_url() ?>api/votes/meta"</code></pre>
 
                     <!-- Réponses -->
