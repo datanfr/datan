@@ -203,7 +203,7 @@
         </a>
         <ul class="navbar-nav ml-auto flex-row">
           <li class="nav-item d-none d-md-block">
-            <a class="no-decoration btn btn-outline-secondary" href="<?= base_url(); ?>newsletter">
+            <a class="no-decoration btn btn-outline-info" href="<?= base_url(); ?>newsletter">
               <?= file_get_contents(base_url() . '/assets/imgs/icons/envelope.svg') ?>
               <span class="ml-2">S'inscrire à la newsletter</span></a>
           </li>
