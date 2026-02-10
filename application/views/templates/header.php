@@ -196,27 +196,27 @@
   ?>
   <body class="<?= $mentions ?>" data-spy="scroll" data-target="#navScrollspy" data-offset="90">
     <!-- DATAN NAVBAR -->
-    <nav class="navbar navbar-expand-lg navbar-light p-2" id="navbar-datan">
+    <nav class="navbar navbar-light p-2" id="navbar-datan">
       <div class="container p-0">
-        <a class="navbar-brand p-0 no-decoration" href="<?= base_url(); ?>" style="text-align: center">
+        <a class="navbar-brand p-0 m-0 no-decoration" href="<?= base_url(); ?>" style="text-align: center">
           <img class="navbar-brand-img" src="<?= asset_url() ?>imgs/datan/logo_svg.svg" width="937" height="204" alt="Logo Datan">
         </a>
-        <ul class="navbar-nav ml-auto">
-          <li class="nav-item">
+        <ul class="navbar-nav ml-auto flex-row">
+          <li class="nav-item d-none d-md-block">
             <a class="no-decoration btn btn-outline-secondary" href="<?= base_url(); ?>newsletter">
               <?= file_get_contents(base_url() . '/assets/imgs/icons/envelope.svg') ?>
               <span class="ml-2">S'inscrire à la newsletter</span></a>
           </li>
-          <li class="nav-item ml-3">
-            <a class="no-decoration btn btn-info" href="<?= base_url(); ?>soutenir">Soutenir Datan</a>
+          <li class="nav-item ml-md-2">
+            <a class="no-decoration btn btn-info" href="<?= base_url(); ?>soutenir">Nous soutenir</a>
           </li>
           <?php if ($this->session->userdata('logged_in')): ?> 
-            <li class="nav-item dropdown" id="nav-logged-in">
+            <li class="nav-item dropdown ml-1 ml-md-2" id="nav-logged-in">
               <a class="dropdown-toggle no-decoration btn btn-primary" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <?= file_get_contents(base_url() . '/assets/imgs/icons/person-fill.svg') ?>
-                <?= $this->session->userdata('username') ?>
+                <span class="d-none d-lg-inline"><?= $this->session->userdata('username') ?></span>
               </a>
-              <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink" style="z-index: 9999 !important">
+              <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink" style="z-index: 9999 !important">
                 <a href="<?= base_url(); ?>mon-compte" class="dropdown-item no-decoration">Mon compte</a>
                 <?php if (($this->session->userdata('type') == 'admin') || ($this->session->userdata('type') == 'writer')): ?>
                   <a class="dropdown-item no-decoration" href="<?= base_url(); ?>admin">Dashboard</a>
@@ -271,5 +271,4 @@
         </div>
       </div>
     </nav>
-    <div class="d-none" id="navbar-logged-in"></div>
     <main>

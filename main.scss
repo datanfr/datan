@@ -1333,22 +1333,20 @@ input#quicksearch[type=text]{
                Navbar
 ################
 */
+#nav-logged-in{
+  .dropdown-menu{
+    position: absolute
+  }
+}
 #navbar-datan {
   border-bottom: 0.5px solid rgb(225, 225, 225);
   position: relative;
   z-index: 9999 !important;
   .navbar-brand{
     .navbar-brand-img{
-      -webkit-transition: all 0.4s ease;
-      transition: all 0.4s ease;
       width: 7em;
       height: auto;
     }
-  }
-  #nav-logged-in{
-    margin-left: 1rem;
-    padding-left: 1rem;
-    border-left: 1px solid rgb(225, 225, 225);
   }
 }
 #navbar-menu {
