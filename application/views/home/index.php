@@ -156,7 +156,7 @@
   <!-- BLOC HEMICYCLE -->
   <?php $this->view('home/partials/composition.php'); ?>
   <!-- BLOC EXPLICATIONS -->
-  <div class="row bloc-votes" id="pattern_background">
+  <div class="row bloc-votes">
     <div class="container p-md-0">
       <div class="row py-4">
         <div class="col-12">
@@ -253,7 +253,9 @@
           <p class="mt-5 text-center">Retrouvez dans notre newsletter mensuelle un condensé des derniers scrutins de l'Assemblée nationale et des positions des différents groupes politiques.
           <p class="text-center mb-0">Nous vous tiendrons également informé des dernières nouveautés du site internet Datan.</p>
           <div class="text-center">
-            <button class="btn btn-primary mt-5" data-toggle="modal" data-target="#newsletter">Inscrivez-vous à la newsletter</button>
+            <button class="btn btn-primary mt-5" data-toggle="modal" data-target="#newsletter">
+            <?= file_get_contents(base_url() . '/assets/imgs/icons/envelope.svg') ?>  
+            <span class="ml-2">S'inscrire à la newsletter</span></button>
           </div>
         </div>
       </div>
