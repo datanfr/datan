@@ -1354,15 +1354,14 @@ input#quicksearch[type=text]{
   -webkit-transition: all 0.4s ease;
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.07); 
   transition: all 0.4s ease;
-  padding-top: 10px;
-  padding-bottom: 10px;
+  padding-top: 15px;
+  padding-bottom: 15px;
   z-index: 9998!important;
   .nav-link{
     color: $black;
     font-size: 1.3em;
     font-weight: 600;
-    padding-left: 0.5rem;
-    padding-right: 0.5rem;
+    padding: 0 0.5rem 0 0;
     &:hover{
       color: $primary;
       text-decoration: none;
@@ -1383,8 +1382,8 @@ input#quicksearch[type=text]{
   }
 }
 .navbar-shrink{
-  padding-top: 5px !important;
-  padding-bottom: 5px !important;
+  padding-top: 10px !important;
+  padding-bottom: 10px !important;
 }
 /*
 ################
