@@ -235,40 +235,17 @@
       </div>
     </nav>
     <!-- MENU NAVBAR -->
-    <nav class="navbar navbar-expand-lg navbar-light sticky-top" id="navbar-menu">
-      <div class="container p-0">
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar_datan" aria-controls="navbar_datan" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbar_datan">
-          <ul class="navbar-nav mx-auto">
-            <li class="nav-item">
-              <a class="nav-link no-decoration" href="<?= base_url(); ?>deputes">Députés</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link no-decoration" href="<?= base_url() ?>groupes">Groupes</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link no-decoration" href="<?= base_url() ?>votes">Votes</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link no-decoration" href="<?= base_url() ?>statistiques">En chiffres</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link no-decoration" href="<?= base_url() ?>outils/coalition-simulateur">Simulateur coalition</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link no-decoration" href="<?= base_url() ?>elections">Élections</a>
-            </li>
-            <li class="nav-item">
-              <?php if ($this->router->fetch_class() == "home"): ?> 
-                <a class="nav-link no-decoration" href="<?= base_url() ?>a-propos">À propos</a>
-              <?php else: ?>
-                <span class="nav-link url_obf no-decoration underline" url_obf="<?= url_obfuscation(base_url() . "a-propos") ?>">À propos</span>
-              <?php endif; ?>
-            </li>
-          </ul>
-        </div>
+    <nav class="navbar navbar-light sticky-top" id="navbar-menu">
+      <div class="container p-0" style="overflow-x:auto; white-space:nowrap;">
+        <div class="navbar-nav mx-auto flex-row">
+          <a class="nav-item nav-link no-decoration" href="<?= base_url(); ?>deputes">Députés</a>
+          <a class="nav-item nav-link no-decoration" href="<?= base_url() ?>groupes">Groupes</a>
+          <a class="nav-item nav-link no-decoration" href="<?= base_url() ?>votes">Votes</a>
+          <a class="nav-item nav-link no-decoration" href="<?= base_url() ?>statistiques">En chiffres</a>
+          <a class="nav-item nav-link no-decoration" href="<?= base_url() ?>outils/coalition-simulateur">Simulateur coalition</a>
+          <a class="nav-item nav-link no-decoration" href="<?= base_url() ?>elections">Élections</a>
+          <a class="nav-item nav-link no-decoration" href="<?= base_url() ?>a-propos">À propos</a>
+        </div>          
       </div>
     </nav>
     <main>
