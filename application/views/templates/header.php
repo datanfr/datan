@@ -195,49 +195,55 @@
   }
   ?>
   <body class="<?= $mentions ?>" data-spy="scroll" data-target="#navScrollspy" data-offset="90">
-    <div class="sticky-top">
-      <!-- NAVBAR IF LOGGED IN -->
-    </div>
-    <!-- MAIN NAVBAR -->
-    <?php if ($this->session->userdata('logged_in')): ?>
-      <nav class="navbar navbar-expand navbar-light" id="navbar-logged-in">
-        <div class="container">
-            <ul class="navbar-nav ml-auto">
-              <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle no-decoration py-1" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                  <?= file_get_contents(base_url() . '/assets/imgs/icons/person-fill.svg') ?>
-                  <?= $this->session->userdata('username') ?>
-                </a>
-                <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink" style="z-index: 9999 !important">
-                  <a href="<?= base_url(); ?>mon-compte" class="dropdown-item no-decoration">Mon compte</a>
-                  <?php if (($this->session->userdata('type') == 'admin') || ($this->session->userdata('type') == 'writer')): ?>
-                    <a class="dropdown-item no-decoration" href="<?= base_url(); ?>admin">Dashboard</a>
-                  <?php endif; ?>
-                  <?php if ($this->password_model->is_mp()): ?>
-                    <a class="dropdown-item no-decoration" href="<?= base_url(); ?>dashboard">Dashboard</a>
-                  <?php endif; ?>
-                  <?php if (($this->session->userdata('type') == 'admin')): ?>
-                    <a class="dropdown-item no-decoration" href="<?= base_url(); ?>scripts">Scripts</a>
-                  <?php endif; ?>
-                  <a href="<?= base_url(); ?>logout" class="dropdown-item no-decoration">Déconnexion</a>
-                </div>
-              </li>
-            </ul>
-        </div>
-      </nav>
-    <?php endif; ?>
-    <nav class="navbar navbar-expand-lg navbar-light sticky-top" id="navbar-datan">
+    <!-- DATAN NAVBAR -->
+    <nav class="navbar navbar-expand-lg navbar-light p-2" id="navbar-datan">
       <div class="container p-0">
-        <a class="navbar-brand mx-auto p-0 no-decoration" href="<?= base_url(); ?>" style="text-align: center">
+        <a class="navbar-brand p-0 no-decoration" href="<?= base_url(); ?>" style="text-align: center">
           <img class="navbar-brand-img" src="<?= asset_url() ?>imgs/datan/logo_svg.svg" width="937" height="204" alt="Logo Datan">
         </a>
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item">
+            <a class="no-decoration btn btn-outline-secondary" href="<?= base_url(); ?>newsletter">
+              <?= file_get_contents(base_url() . '/assets/imgs/icons/envelope.svg') ?>
+              <span class="ml-2">S'inscrire à la newsletter</span></a>
+          </li>
+          <li class="nav-item ml-3">
+            <a class="no-decoration btn btn-info" href="<?= base_url(); ?>soutenir">Soutenir Datan</a>
+          </li>
+          <?php if ($this->session->userdata('logged_in')): ?> 
+            <li class="nav-item dropdown" id="nav-logged-in">
+              <a class="dropdown-toggle no-decoration btn btn-primary" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <?= file_get_contents(base_url() . '/assets/imgs/icons/person-fill.svg') ?>
+                <?= $this->session->userdata('username') ?>
+              </a>
+              <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink" style="z-index: 9999 !important">
+                <a href="<?= base_url(); ?>mon-compte" class="dropdown-item no-decoration">Mon compte</a>
+                <?php if (($this->session->userdata('type') == 'admin') || ($this->session->userdata('type') == 'writer')): ?>
+                  <a class="dropdown-item no-decoration" href="<?= base_url(); ?>admin">Dashboard</a>
+                <?php endif; ?>
+                <?php if ($this->password_model->is_mp()): ?>
+                  <a class="dropdown-item no-decoration" href="<?= base_url(); ?>dashboard">Dashboard</a>
+                <?php endif; ?>
+                <?php if (($this->session->userdata('type') == 'admin')): ?>
+                  <a class="dropdown-item no-decoration" href="<?= base_url(); ?>scripts">Scripts</a>
+                <?php endif; ?>
+                <a href="<?= base_url(); ?>logout" class="dropdown-item no-decoration">Déconnexion</a>
+              </div>
+            </li>
+          <?php endif; ?>
+        </ul>
+      </div>
+    </nav>
+    <!-- MENU NAVBAR -->
+    <nav class="navbar navbar-expand-lg navbar-light sticky-top" id="navbar-menu">
+      <div class="container p-0">
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar_datan" aria-controls="navbar_datan" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbar_datan">
-          <ul class="nav navbar-nav ml-auto mt-2 mt-lg-0">
+          <ul class="navbar-nav mx-auto">
             <li class="nav-item">
-              <a class="nav-link no-decoration" href="<?= base_url(); ?>deputes">Députés</span></a>
+              <a class="nav-link no-decoration" href="<?= base_url(); ?>deputes">Députés</a>
             </li>
             <li class="nav-item">
               <a class="nav-link no-decoration" href="<?= base_url() ?>groupes">Groupes</a>
