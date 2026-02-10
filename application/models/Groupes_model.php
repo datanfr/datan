@@ -43,7 +43,7 @@
         'left' => ['LFI-NFP', 'SOC', 'ECOS', 'GDR'],
         'central' => ['EPR', 'DEM', 'HOR'],
         'right' => ['DR'],
-        'extreme_right' => ['RN', 'UDR']
+        'extreme_right' => ['RN', 'UDR', 'UDDPLR']
       ];
       $groupEffectifs = array_column($groups, 'effectif', 'libelleAbrev');
       return array_map(fn($groupNames) => array_sum(array_intersect_key($groupEffectifs, array_flip($groupNames))), $blocs);
