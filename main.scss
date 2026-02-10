@@ -1361,13 +1361,25 @@ input#quicksearch[type=text]{
     color: $black;
     font-size: 1.3em;
     font-weight: 600;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
     &:hover{
       color: $primary;
       text-decoration: none;
     }
   }
-  .nav-item{
-    text-align: center;
+  /* Enable smooth scrolling and hide scrollbar */
+  .container{
+    overflow-x: auto;              /* allow horizontal scroll */
+    -webkit-overflow-scrolling: touch; /* smooth scroll on iOS */
+    scrollbar-width: none;         /* Firefox */
+  }
+  /* Hide scrollbar for WebKit (Chrome, Safari, Edge) */
+  .container::-webkit-scrollbar {
+    display: none;
+  }
+  .navbar-nav{
+    flex-wrap: nowrap; /* Keep links in one row */
   }
 }
 .navbar-shrink{
