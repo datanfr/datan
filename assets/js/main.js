@@ -398,10 +398,8 @@ Shrink navbar
 */
 $(window).scroll(function() {
   if ($(document).scrollTop() > 50) {
-    $('#navbar-datan').addClass('navbar-shrink');
-    $('.navbar-brand-img').addClass('shrink');
+    $('#navbar-menu').addClass('navbar-shrink');
   } else {
-    $('#navbar-datan').removeClass('navbar-shrink');
-    $('.navbar-brand-img').removeClass('shrink');
+    $('#navbar-menu').removeClass('navbar-shrink');
   }
 });
