@@ -34,13 +34,18 @@
               </div>
               <?php if (in_array('district', $requiredFields)): ?>
                 <div class="form-group">
-                  <label for="">Circonscription de candidature</label>
-                  <select class="form-control" name="district">
-                    <option value="0">Ne sais pas</option>
-                    <?php foreach ($districts as $district): ?>
-                      <option value="<?= $district['id'] ?>"><?= $district['libelle'] ?></option>
-                    <?php endforeach; ?>
-                  </select>
+                  <?php if($election['libelleAbrev'] === 'Municipales') : ?>
+                    <label for="" class="form-label">Circonscription de candidature</label>
+                    <input type="text" class="form-control" name="district" placeholder="Entrez commune (code insee)">
+                  <?php else: ?>
+                    <label for="">Circonscription de candidature</label>
+                    <select class="form-control" name="district">
+                      <option value="0">Ne sais pas</option>
+                      <?php foreach ($districts as $district): ?>
+                        <option value="<?= $district['id'] ?>"><?= $district['libelle'] ?></option>
+                      <?php endforeach; ?>
+                    </select>
+                  <?php endif; ?>
                 </div>
               <?php endif; ?>
               <?php if (in_array('position', $requiredFields)): ?>

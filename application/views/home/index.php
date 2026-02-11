@@ -97,7 +97,7 @@
           <p class="text-center">Datan est un <b>outil indépendant</b>.</p>
           <p class="text-center">🔍 Rendre accessible l'activité des députés ... Pour continuer, on a besoin de vous ! Soutenez Datan pour faire vivre la transparence démocratique et l'accès aux données parlementaires.</p>
           <div class="d-flex justify-content-center mt-4">
-            <a class="btn btn-primary" href="https://www.helloasso.com/associations/datan/formulaires/1" target="_blank" rel="noopener">Faire un don</a>
+            <a class="btn btn-primary" href="<?= base_url() ?>soutenir" target="_blank" rel="noopener">Faire un don</a>
           </div>
         </div>
       </div>
@@ -127,62 +127,8 @@
       </div>
     </div>
   </div>
-  <!-- BLOC HEMICYCLE -->
-  <?php if ($composition): ?>
-    <div class="row bloc-pie" id="pattern_background">
-      <div class="container py-3">
-        <div class="row pt-5">
-          <div class="col-12">
-            <h2 class="text-center">Composition de l'Assemblée nationale</h2>
-          </div>
-        </div>
-        <div class="row pt-3">
-          <div class="col-12">
-            <p class="text-center mb-0">
-              Découvrez les <?= $groupesN ?> groupes politiques de l'Assemblée nationale
-            </p>
-          </div>
-        </div>
-        <div class="row mt-5 mb-5">
-          <div class="col-lg-5 col-md-6">
-            <p>À l'Assemblée, les députés se regroupent par affinité politique (socialiste, droite, libéral, etc.). Les groupes ont un rôle clé dans l'organisation du travail parlementaire. Actuellement, il y a <?= $groupesN ?> groupes, le plus grand étant le <a href="<?= base_url() ?>groupes/legislature-<?= legislature_current() ?>/<?= mb_strtolower($groupes[0]['libelleAbrev']) ?>"><?= $groupes['0']['libelle'] ?> (<?= $groupes['0']['libelleAbrev'] ?>)</a>, avec <?= $groupes['0']['effectif'] ?> sièges.</p>
-            <p>L'Assemblée peut être divisée en 4 grands blocs ! 👇</p>
-            <ul class="list-unstyled ml-lg-3">
-              <li>🔴 <b>La gauche</b> (NFP) : <?= $blocs['left'] ?> députés</li>
-              <li>🟡 <b>Le bloc central</b> (Renaissance et alliés) : <?= $blocs['central'] ?>
-                députés</li>
-              <li>🔵 <b>La droite</b> (LR) : <?= $blocs['right'] ?> députés</li>
-              <li>🟤 <b>L'extrême droite</b> (RN et alliés) : <?= $blocs['extreme_right'] ?> députés</li>
-            </ul>
-            <div class="card coalition d-none d-lg-block mt-4">
-              <div class="card-body">
-                <h2 class="card-title">Composez votre coalition</h2>
-                <p>Depuis les <a class="text-white" href="<?= base_url() ?>elections/legislatives-2024">élections de 2024</a>, aucun groupe n'a la majorité. Ils doivent s'allier pour faire passer des lois. Testez notre simulateur de coalition !</p>
-                <a href="<?= base_url() ?>outils/coalition-simulateur" class="btn btn-light">Formez votre coalition</a>
-              </div>
-            </div>
-          </div>
-          <div class="col-lg-7 col-md-6 d-flex flex-column justify-content-center mt-3 mt-md-0">
-            <div class="hemicycle">
-              <canvas id="chartHemicycle"></canvas>
-              <div class="n-hemicycle text-center">
-                <span>577 députés</span>
-              </div>
-            </div>
-          </div>
-          <div class="col-12 d-lg-none mt-3">
-            <div class="card coalition">
-              <div class="card-body">
-                <h2 class="card-title">Composez votre coalition</h2>
-                <p>Depuis les <a class="text-white" href="<?= base_url() ?>elections/legislatives-2024">élections de 2024</a>, aucun groupe n'a la majorité. Ils doivent s'allier pour faire passer des lois. Testez notre simulateur de coalition !</p>
-                <a href="<?= base_url() ?>outils/coalition-simulateur" class="btn btn-light">Former votre coalition</a>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  <?php endif; ?>
+  <!-- BLOC ELECTION -->
+  <?php $this->view('home/partials/election_groups.php') ?>  
   <!-- BLOC POSTS -->
   <div class="row">
     <div class="container p-md-0">
@@ -207,8 +153,10 @@
       </div>
     </div>
   </div> <!-- // END BLOC POSTS -->
+  <!-- BLOC HEMICYCLE -->
+  <?php $this->view('home/partials/composition.php'); ?>
   <!-- BLOC EXPLICATIONS -->
-  <div class="row bloc-votes" id="pattern_background">
+  <div class="row bloc-votes">
     <div class="container p-md-0">
       <div class="row py-4">
         <div class="col-12">
@@ -305,7 +253,9 @@
           <p class="mt-5 text-center">Retrouvez dans notre newsletter mensuelle un condensé des derniers scrutins de l'Assemblée nationale et des positions des différents groupes politiques.
           <p class="text-center mb-0">Nous vous tiendrons également informé des dernières nouveautés du site internet Datan.</p>
           <div class="text-center">
-            <button class="btn btn-primary mt-5" data-toggle="modal" data-target="#newsletter">Inscrivez-vous à la newsletter</button>
+            <button class="btn btn-primary mt-5" data-toggle="modal" data-target="#newsletter">
+            <?= file_get_contents(base_url() . '/assets/imgs/icons/envelope.svg') ?>  
+            <span class="ml-2">S'inscrire à la newsletter</span></button>
           </div>
         </div>
       </div>
@@ -540,7 +490,7 @@
 
 <script type="text/javascript">
   document.addEventListener('DOMContentLoaded', function() {
-    var data = {
+    var dataHemicycle = {
       labels: [
         <?php
         foreach ($groupesSorted as $groupe) {
@@ -573,8 +523,8 @@
       }]
     };
 
-    var ctx = document.getElementById("chartHemicycle");
-    var chartOptions = {
+    var ctxHemicycle = document.getElementById("chartHemicycle");
+    var optionsHemicycle = {
       responsive: true,
       maintainAspectRatio: false,
       circumference: 180,
@@ -607,10 +557,74 @@
       }
     }
 
-    var pieChart = new Chart(ctx, {
+    var pieChart = new Chart(ctxHemicycle, {
       type: 'doughnut',
-      data: data,
-      options: chartOptions,
+      data: dataHemicycle,
+      options: optionsHemicycle,
+    });
+
+    var dataElection = {
+      labels: [
+        <?php
+          foreach ($election_groups as $groupe) {
+            echo '"' . $groupe["libelleAbrev"] . '",';
+          }
+        ?>
+      ],
+      datasets: [{
+        label: 'Candidats (%)',
+        data: [
+          <?php
+            foreach ($election_groups as $groupe) {
+              echo $groupe["candidates_pct"] . ",";
+            }
+          ?>
+        ],
+        backgroundColor: [
+          <?php
+            foreach ($election_groups as $groupe) {
+              echo '"' . $groupe["couleurAssociee"] . '",';
+            }
+          ?>
+        ],
+        borderWidth: 1
+      }]
+    };
+
+    const ctxElection = document.getElementById('chart_election');
+
+    new Chart(ctxElection, {
+      type: 'bar',
+      data: dataElection,
+      options: {
+        scales: {
+          y: {
+            beginAtZero: true,
+            ticks: {
+              callback: function(value) {
+                return value + '%';
+              }
+            }
+          }
+        },
+        plugins: {
+          legend: {
+            display: false
+          },
+          datalabels: {
+            anchor: 'end',
+            align: 'top',
+            formatter: function(value) {
+              return value + '%';
+            },
+            color: '#000',
+            font: {
+              weight: 'bold',
+              size: 12
+            }
+          }
+        }
+      }
     });
 
   });

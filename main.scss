@@ -328,6 +328,27 @@ body:not(.pg-mentions) #tarteaucitronIcon {
                A CLASSER
 ################
 */
+.card-election-feature{
+  &.information-success{
+    background-color: $bleu;
+    color: #fff;
+  }
+  &.information-fail{
+    background-color: $yellow;
+    color: $text-black;
+  }
+  &.results-success{
+    background-color: $primary;
+    color: #fff;
+  }
+  &.results-fail{
+    background-color: #FB9486;
+    color: $text-black;
+  }
+  h2{
+    font-weight: 800;
+  }
+}
 .dissolution-banner{
   background-color: $rejected;
   transition: 0.3s;
@@ -1312,52 +1333,57 @@ input#quicksearch[type=text]{
                Navbar
 ################
 */
-body{
-  //padding-top: 100px; No longer used.
+#nav-logged-in{
+  .dropdown-menu{
+    position: absolute
+  }
 }
-#navbar-logged-in {
-  background-color: $bg-colour;
-  border-bottom: 1px solid $text-gray-light;
-  padding-top: 0;
-  padding-bottom: 0;
-}
-#navbar-datan{
-  background-color: $bg-colour;
-  box-shadow: 0 2px 10px -2px rgba(0, 0, 0, .1);
-  -webkit-transition: all 0.4s ease;
-  transition: all 0.4s ease;
-  padding-top: 15px;
-  padding-bottom: 15px;
-  z-index: 9998!important;
+#navbar-datan {
+  border-bottom: 0.5px solid rgb(225, 225, 225);
+  position: relative;
+  z-index: 9999 !important;
   .navbar-brand{
-
     .navbar-brand-img{
-      -webkit-transition: all 0.4s ease;
-      transition: all 0.4s ease;
-      width: 9em;
-      height: auto;
-    }
-    .shrink{
       width: 7em;
       height: auto;
     }
   }
+}
+#navbar-menu {
+  background-color: $bg-colour;
+  -webkit-transition: all 0.4s ease;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.07); 
+  transition: all 0.4s ease;
+  padding-top: 15px;
+  padding-bottom: 15px;
+  z-index: 9998!important;
   .nav-link{
     color: $black;
     font-size: 1.3em;
     font-weight: 600;
+    padding: 0 1.5rem 0 0;
     &:hover{
       color: $primary;
       text-decoration: none;
     }
   }
-  .nav-item{
-    text-align: center;
+  /* Enable smooth scrolling and hide scrollbar */
+  .container{
+    overflow-x: auto;              /* allow horizontal scroll */
+    -webkit-overflow-scrolling: touch; /* smooth scroll on iOS */
+    scrollbar-width: none;         /* Firefox */
+  }
+  /* Hide scrollbar for WebKit (Chrome, Safari, Edge) */
+  .container::-webkit-scrollbar {
+    display: none;
+  }
+  .navbar-nav{
+    flex-wrap: nowrap; /* Keep links in one row */
   }
 }
 .navbar-shrink{
-  padding-top: 5px !important;
-  padding-bottom: 5px !important;
+  padding-top: 10px !important;
+  padding-bottom: 10px !important;
 }
 /*
 ################
@@ -1533,6 +1559,42 @@ body{
     }
   }
 }
+/*
+################
+               PAGE : SOUTENEZ-NOUS (pg-dons)
+################
+*/
+.pg-dons{
+  .card-figures{
+    max-width: 800px;
+    border-color: $primary;
+    background-color: #B3E9DF;
+    .figure {
+      font-weight: 800;
+      font-size: 2.5em;
+      color: $primary;
+    }
+    .legend {
+      font-weight: 600;
+      color: $text-black;
+    }
+  }
+  .card-explain{
+    border-color: $bleu;
+    background-color: #B3D1DD;
+    .title {
+      color: $bleu;
+      font-weight: 800;
+      font-size: $h6-font-size;
+    }
+    .legend{
+      font-style: italic;
+      color: $text-gray-light;
+    }
+  }
+}
+
+
 /*
 ################
                PAGE : PAGE (pg-page)
@@ -1762,9 +1824,9 @@ body{
     h3{
       color: $text-black;
       text-align: center;
-      font-weight: 800;
-      font-size: $h4-font-size;
-      color: $primary;
+      font-weight: 400;
+      font-size: $h5-font-size;
+      font-style: italic;
     }
   }
   .bloc-statistiques{
@@ -1832,6 +1894,15 @@ body{
           }
         }
       }
+    }
+  }
+  .card-election-groups{
+    border: none;
+    box-shadow: $card-box-shadow;
+    .card-header{
+      font-size: $h5-font-size;
+      background-color: $bleu;
+      color: white
     }
   }
 }
@@ -2156,28 +2227,6 @@ body{
   }
   /* FIN HN */
   /* Bloc election feature */
-  .card-election-feature{
-    &.information-success{
-      background-color: $bleu;
-      color: #fff;
-    }
-    &.information-fail{
-      background-color: $yellow;
-      color: $text-black;
-    }
-    &.results-success{
-      background-color: $primary;
-      color: #fff;
-    }
-    &.results-fail{
-      background-color: #FB9486;
-      color: $text-black;
-    }
-    h2{
-      font-weight: 800;
-    }
-  }
-  /* Bloc election feature */
   .card-vote-feature{
     span{
       font-weight: 800;
@@ -2204,10 +2253,6 @@ body{
       font-weight: 800;
       font-size: $h3-font-size;
     }
-  }
-  /* Bloc biographie */
-  .bloc-bio{
-    max-width: 575px;
   }
   /* Bloc key-votes */
   .bloc-key-votes{

@@ -43,7 +43,7 @@
         'left' => ['LFI-NFP', 'SOC', 'ECOS', 'GDR'],
         'central' => ['EPR', 'DEM', 'HOR'],
         'right' => ['DR'],
-        'extreme_right' => ['RN', 'UDR']
+        'extreme_right' => ['RN', 'UDR', 'UDDPLR']
       ];
       $groupEffectifs = array_column($groups, 'effectif', 'libelleAbrev');
       return array_map(fn($groupNames) => array_sum(array_intersect_key($groupEffectifs, array_flip($groupNames))), $blocs);
@@ -199,7 +199,7 @@
 
     public function get_groupes_individal($groupe, $legislature){
       $sql = 'SELECT o.uid, o.coteType, o.libelle, o.libelleEdition, o.libelleAbrev, o.libelleAbrege, o.dateDebut, o.dateFin, o.regime, o.legislature, o.positionPolitique, o.preseance, o.couleurAssociee,
-        ge.classement, ge.effectif, ROUND((ge.effectif / 577) * 100) AS effectifShare,
+        ge.effectif, ROUND((ge.effectif / 577) * 100) AS effectifShare,
         ROUND(gs.age) AS age, ROUND(gs.womenPct) AS womenPct, womenN,
         date_format(dateDebut, "%d %M %Y") as dateDebutFR, date_format(dateFin, "%d %M %Y") as dateFinFR
         FROM organes o
@@ -883,17 +883,24 @@
       return $return;
     }
 
-    public function get_effectif_history_start($group, $date){
-      $date = DateTime::createFromFormat("Y-m-d", $date);
-      $year = $date->format("Y");
-      $month = $date->format("m");
-      $where = array(
-        'organeRef' => $group,
-        'YEAR(dateValue)' => $year,
-        'MONTH(dateValue)' => $month
-      );
-      $this->db->order_by('effectif', 'DESC');
-      return $this->db->get_where('groupes_effectif_history', $where, 1)->row_array();
+    public function get_effectif_ranking($group, $legislature){
+      // Get all groups ranked by effectif
+      $this->db->select('ge.organeRef, ge.effectif, o.libelleAbrev');
+      $this->db->where('ge.legislature', $legislature);
+      $this->db->where('o.libelleAbrev !=', 'NI');
+      $this->db->order_by('ge.effectif', 'DESC');
+      $this->db->join('organes o', 'o.uid = ge.organeRef', 'left');
+      $query = $this->db->get('groupes_effectif ge');
+
+      $ranking = 1;
+      foreach($query->result() as $row){
+        if ($row->organeRef == $group) {
+          return $ranking;
+        }
+        $ranking++;
+      }
+
+      return null;
     }
 
     public function get_coalitions($group, $limit = FALSE){

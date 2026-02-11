@@ -50,7 +50,7 @@
 </div>
 <div class="container pg-elections-candidats mt-4 mb-5">
   <div class="row">
-    <?php if ($results == true): ?>
+    <?php if ($results): ?>
       <div class="col-md-8 col-lg-7">
         <?php $this->load->view('elections/results/'.$election['slug'].'.php') ?>
       </div>
