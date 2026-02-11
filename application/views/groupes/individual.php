@@ -591,9 +591,9 @@
                   <h3>LES COALITIONS LES PLUS FREQUENTES
                     <a tabindex="0" role="button" data-toggle="popover" data-trigger="focus" class="no-decoration cursor-pointer" title="Coalitions les plus fréquentes" aria-label="Ouvrir l'explication de la statistique sur la proximité avec les groupes politiques" data-content="Le <b>taux de proximité entre deux groupes</b> représente le pourcentage de fois où les deux groupes ont voté la même chose. Chaque groupe se voit attribuer une <i>position majoritaire</i>, en fonction du vote de ses membres. Cette position peut soit être 'pour', 'contre', ou 'absention'. Pour chaque vote, nous déterminons si les deux groupes ont la même position majoritaire. Le taux de proximité est le pourcentage de fois où les deux groupes ont cette même position majoritaire.<br><br>Par exemple, si le taux est de 75%, cela signifie que les deux groupes ont voté la même chose dans 75% des cas. <br><br>Pour plus d'information, <a href='<?= base_url() ?>statistiques/aide#proximity' target='_blank'>cliquez ici</a>."><?= file_get_contents(asset_url()."imgs/icons/question_circle.svg") ?></a>
                   </h3>
-                  <p>Dans une Assemblée nationale où aucun groupe n'a la majorité, il est essentiel de s'allier avec d'autres groupes au moment de voter et créer des coalitions. Avec quels groupes le <?= $groupe['libelleAbrev'] ?> s'associe-t-il dans l'hemicycle ?</p>
-                  <p>Résultats</p>
-                  <table class="table">
+                  <p>Dans une Assemblée nationale où aucun groupe n'a la majorité absolue, les coalitions sont essentielles pour faire adopter des textes. Avec quels groupes le <?= $groupe['libelleAbrev'] ?> s'associe-t-il lors des votes ?</p>
+                  <p><?= $coalitions_results ?></p>
+                  <table class="table mt-4">
                     <thead>
                       <tr>
                         <th scope="col">Coalition</th>
