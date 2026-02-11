@@ -598,14 +598,16 @@
                       <tr>
                         <th scope="col">Coalition</th>
                         <th scope="col">Type</th>
-                        <th scope="col">Fréquence</th>
                       </tr>
                     </thead>
                     <tbody>
                       <?php foreach($coalitions as $coalition) : ?>
                         <tr>
-                          <td><?= $coalition['coalition'] ?></td>
-                          <td>Otto</td>
+                          <td>
+                            <?php foreach($coalition['coalition_array'] as $group) : ?>
+                              <span class="badge" style="background-color: <?= $group['couleurAssociee'] ?>"><?= $group['libelleAbrev'] ?></span>
+                            <?php endforeach; ?>
+                          </td>
                           <td><?= $coalition['n'] ?> votes</td>
                         </tr>
                       <?php endforeach; ?>

@@ -197,7 +197,7 @@
       return $this->db->get('organes o')->row_array();
     }
 
-    public function get_groupes_individal($groupe, $legislature){
+    public function get_groupe_by_libelleAbrev($groupe, $legislature){
       $sql = 'SELECT o.uid, o.coteType, o.libelle, o.libelleEdition, o.libelleAbrev, o.libelleAbrege, o.dateDebut, o.dateFin, o.regime, o.legislature, o.positionPolitique, o.preseance, o.couleurAssociee,
         ge.effectif, ROUND((ge.effectif / 577) * 100) AS effectifShare,
         ROUND(gs.age) AS age, ROUND(gs.womenPct) AS womenPct, womenN,
@@ -910,10 +910,43 @@
       if($limit !== FALSE) {
         $this->db->limit($limit);
       }
-      $this->db->select('coalition, COUNT(coalition) as n');
-      $this->db->group_by('coalition');
+      $this->db->select('coalition_libelleAbrev_history AS coalition, coalition_type, COUNT(coalition_libelleAbrev_history) as n');
+      $this->db->group_by('coalition_libelleAbrev_history');
       $this->db->order_by('n', 'desc'); 
       return $this->db->get_where('coalitions_groupes', $where)->result_array();
+    }
+
+    public function format_coalitions($coalitions, $legislature){
+      foreach ($coalitions as $key => $value) {
+        // Step 1: Split coalition string into array
+        $coalitionGroups = explode('|', $value['coalition']);
+
+        // Step 2: Fetch ALL groups in one query (much faster!)
+        $groupsData = $this->db->select('o.uid, o.libelleAbrev, ge.effectif, o.couleurAssociee')
+          ->from('groupes_effectif ge')
+          ->join('organes o', 'o.uid = ge.organeRef', 'left')
+          ->where(['ge.legislature' => $legislature])
+          ->where_in('o.libelleAbrev', $coalitionGroups)
+          ->get()
+          ->result_array();
+
+        // Step 3: Process and index by libelleAbrev
+        $indexed = [];
+        foreach ($groupsData as $groupData) {
+          $abrev = $groupData['libelleAbrev'];
+          $groupData['couleurAssociee'] = $this->groupes_model->get_groupe_color([$abrev, $groupData['couleurAssociee']]);
+          $indexed[$abrev] = $groupData;
+        }
+
+        // Step 4: Sort by effectif (descending)
+        uasort($indexed, function($a, $b) {
+            return $b['effectif'] - $a['effectif'];
+        });
+
+        $coalitions[$key]['coalition_array'] = $indexed;        
+      }
+
+      return $coalitions;
     }
 
   }
