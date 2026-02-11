@@ -10,6 +10,7 @@
     public function index(){
       // Data
       $data['elections'] = $this->elections_model->get_election_all();
+      $data['election_future'] = TRUE; // There is an election in the future
 
       // Breadcrumb
       $data['breadcrumb'] = array(
@@ -50,9 +51,9 @@
       // Data
       $data['deputes'] = $this->elections_model->get_all_candidates($data['election']['id'], TRUE, FALSE);
       foreach ($data['deputes'] as $key => $value) {
-        if ($value['candidature'] == 1) {
+        if ($value['candidature'] == 1 && $value['district']) {
           $district = $this->elections_model->get_district($value['election_libelleAbrev'], $value['district']);
-          $data['deputes'][$key]['cardCenter'] = isset($district['libelle']) ? $district['libelle']. ' ('.$district['id'].')' : NULL;
+          $data['deputes'][$key]['cardCenter'] = isset($district['libelle']) ? 'Candidat' . gender($value['civ'])['e'] . ' à ' . $district['libelle']. ' ('.$district['id'].')' : NULL;
           $data['deputes'][$key]['districtId'] = isset($district['id']) ? $district['id'] : NULL;
         } else {
           $data['deputes'][$key]['cardCenter'] = $value['departementNom'] . ' (' . $value['departementCode'] . ')';
@@ -149,7 +150,7 @@
         $data['js_to_load_up_defer'] = array('dist/chart.min.js');
       }
       $data['js_to_load'] = array();
-      if (in_array($data['election']['id'], array(1, 4, 5, 6))) {
+      if (in_array($data['election']['id'], array(1, 4, 5, 6, 7))) {
         array_push($data['js_to_load'], 'datan/sorting_select');
       }
       array_push($data['js_to_load'], 'libraries/jvectormap/jquery-jvectormap-2.0.5.min');

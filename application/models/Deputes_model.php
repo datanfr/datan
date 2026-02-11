@@ -59,6 +59,11 @@
       return $this->db->count_all_results('deputes_all');
     }
 
+    public function get_n_deputes(){
+      return $this->db->count_all_results('deputes_last');
+    }
+
+
     public function get_deputes_gender($legislature){
       $datePriseFonction = array(
         12 => "2002-06-19",

@@ -2,6 +2,7 @@
   class Elections_model extends CI_Model {
     public function __construct() {
       $this->load->database();
+      $this->load->model('city_model');
     }
 
     public function get_election($slug){
@@ -132,6 +133,7 @@
         $where['candidature'] = 1;
       }
 
+      $this->db->join('elect_libelle', 'elect_libelle.id = elect_deputes_candidats.election', 'left');
       $result = $this->db->get_where('elect_deputes_candidats', $where, 1)->row_array();
 
       if($result){
@@ -146,7 +148,7 @@
         } elseif ($result['candidature'] == "0") {
           $result['color'] = 'information-fail';
         }
-      }      
+      }
 
       return $result;
     }
@@ -268,11 +270,11 @@
         $this->db->order_by('departement_code', 'ASC');
         $query = $this->db->get('departement');
         return $query->result_array();
-      }
+      } 
     }
 
     public function get_district($type, $district){
-      if ($type == 'Régionales') {
+      if ($type === 'Régionales') {
         $result = $this->db->get_where('regions', array('id' => $district))->row_array();
         $array = array(
           'id' => $result['id'],
@@ -281,13 +283,27 @@
         return $array;
       }
 
-      if ($type == 'Législatives') {
+      if ($type === 'Législatives') {
         $result = $this->db->get_where('departement', array('departement_code' => $district))->row_array();
-        $array = array(
-          'id' => $result['departement_code'],
-          'libelle' => $result['departement_nom']
-        );
-        return $array;
+
+        if($result){
+          return [
+            'id' => $result['departement_code'],
+            'libelle' => $result['departement_nom']
+          ];
+        }
+        return null;
+      }
+
+      if ($type === 'Municipales') {
+        $result = $this->city_model->get_city_by_insee($district);
+        if($result){
+          return [
+            'id' => $result['dep_code'],
+            'libelle' => $result['nom_standard']
+          ];
+        }
+        return null;
       }
     }
 
@@ -321,6 +337,10 @@
         case 6: // Législatives 2024
           return 2;
           break;
+
+        case 7: // Municipales 2026
+          return 0;
+          break;
         
         default:
           return 0;
@@ -339,5 +359,43 @@
         return "lost";
       }
     }
+
+    public function get_candidates_by_city($city){
+      $election = 7; // Municipales 2026
+      $where = array(
+        'e.election' => $election,
+        'e.visible' => 1,
+        'e.district' => $city,
+      );
+      $this->db->join('deputes_last d', 'd.mpId = e.mpId', 'left');
+      return $this->db->get_where('elect_deputes_candidats e', $where)->result_array();
+    }
+
+    public function get_n_candidates_by_group($group) {
+      $where = array(
+        'e.election' => 7, // Municipales 2026
+        'e.visible' => 1,
+        'd.groupeId' => $group
+      );
+      $this->db->join('deputes_last d', 'd.mpId = e.mpId', 'left');
+      $this->db->where($where);
+      return $this->db->count_all_results('elect_deputes_candidats e');
+    }
+
+    public function get_n_candidates_all_groups() {
+      $this->db->select('d.groupeId, o.libelleAbrev, o.legislature, o.couleurAssociee, ge.effectif, COUNT(*) AS candidates_n');
+      $this->db->select('ROUND(COUNT(*) / ge.effectif * 100) AS candidates_pct', FALSE);
+      $this->db->from('elect_deputes_candidats e');
+      $this->db->join('deputes_last d', 'd.mpId = e.mpId', 'left');
+      $this->db->join('organes o', 'o.uid = d.groupeId', 'left');
+      $this->db->join('groupes_effectif ge', 'ge.organeRef = d.groupeId', 'left');
+      $this->db->where('e.election', 7); // Municipales 2026
+      $this->db->where('e.visible', 1);
+      $this->db->where('o.dateFin IS NULL', NULL, FALSE);
+      $this->db->group_by('d.groupeId');
+      $this->db->order_by('candidates_pct', 'DESC');
+      return $this->db->get()->result_array();
+    }
+
 
   }

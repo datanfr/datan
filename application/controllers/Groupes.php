@@ -12,6 +12,7 @@
       $this->load->model('fields_model');
       $this->load->model('jobs_model');
       $this->load->model('legislature_model');
+      $this->load->model('elections_model');
       setlocale(LC_TIME, 'french');
     }
 
@@ -265,11 +266,9 @@
 
       $data['dateDebutMois'] = strftime('%B %Y', strtotime($data['groupe']['dateDebut']));
 
-      // Query effectifs --> for previous legislatures
-      if (is_null($data['groupe']['effectif'])) {
-        $effectif = $this->groupes_model->get_effectif_history_start($data['groupe']['uid'], $data['groupe']['dateDebut']);
-        $data['groupe']['effectif'] = $effectif['effectif'];
-        $data['groupe']['effectifShare'] = round($effectif['effectif'] / 577 * 100);
+      // Get effectif ranking
+      if (($data['groupe']['effectif'])) {
+        $data['groupe']['ranking'] = $this->groupes_model->get_effectif_ranking($data['groupe']['uid'], $data['groupe']['legislature']);
       }
 
       // Query nbr of groups
@@ -330,6 +329,11 @@
       // If NI : edito
       if ($data['groupe']['libelleAbrev'] == "NI") {
         $data['groupe']['ni_edited'] = $this->groupes_edito->get_ni($legislature);
+      }
+
+      // Get electionFeature 
+      if ($data['groupe']['legislature'] == legislature_current()) {
+        $data['electionFeature'] = $this->elections_model->get_n_candidates_by_group($data['groupe']['uid']);
       }
 
       // Meta
@@ -753,7 +757,7 @@
       if ($data['active']) {
         $x = 1;
         foreach ($data['women'] as $key => $value) {
-          if ($value['uid'] == $data['groupe']['uid']) {
+          if ($value['organeRef'] == $data['groupe']['uid']) {
             $data['womenRanking']['number'] = $x;
           }
           $x++;
