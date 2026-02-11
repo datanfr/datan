@@ -318,7 +318,10 @@
 
       // Coalitions groupes 
       $data['coalitions'] = $this->groupes_model->get_coalitions($data['groupe']['uid'], 5);
-      $data['coalitions'] = $this->groupes_model->format_coalitions($data['coalitions'], $legislature);
+      if ($data['coalitions']) {
+        $data['coalitions'] = $this->groupes_model->format_coalitions($data['coalitions'], $legislature);
+        $data['coalitions_results'] = $this->groupes_edito->coalitions($data['coalitions'], $data['groupe']);
+      }
 
       // Query 4 Votes
       $data['votes_datan'] = $this->votes_model->get_votes_datan_groupe($data['groupe']['uid'], 5);
