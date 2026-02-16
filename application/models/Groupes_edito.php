@@ -220,5 +220,64 @@
       }
     }
 
+    public function coalitions($coalitions, $groupe){
+      $votesN = $this->votes_model->get_n_votes($groupe['legislature']);
+
+      // Get the coalition array with group data
+      $coalition_array = $coalitions[0]['coalition_array'];
+      $coalition_type = $coalitions[0]['coalition_type'];
+
+      $categories = [
+        'left' => 'de <b>gauche</b>',
+        'bloc_central' => 'du <b>bloc central</b>',
+        'right' => 'de <b>droite</b>',
+        'extreme_right' => "d'<b>extrême droite</b>"
+      ];
+
+      // Define which groups belong to each category
+      $category_groups = [
+        'left' => ["LFI-NFP", "SOC", "ECOS", "GDR"],
+        'bloc_central' => ["EPR", "DEM", "HOR"],
+        'right' => ["DR"],
+        'extreme_right' => ["UDR", "UDDPLR", "RN"]
+      ];
+
+      // Build the text parts
+      $parts = [];
+      $types = explode('|', $coalition_type);
+      
+      foreach ($types as $type) {
+        if (isset($categories[$type])) {
+          // Get groups in this category from the coalition
+          $groups_in_category = [];
+          foreach ($coalition_array as $abrev => $groupData) {
+            if (in_array($abrev, $category_groups[$type])) {
+              $groups_in_category[] = $abrev;
+            }
+          }
+            
+          if (!empty($groups_in_category)) {
+            $parts[] = $categories[$type] . ' (' . implode(', ', $groups_in_category) . ')';
+          }
+        }
+      }
+
+      // Join parts with proper French grammar
+      if (count($parts) > 1) {
+        $last = array_pop($parts);
+        $description = 'de groupes ' . implode(', ', $parts) . ' et ' . $last;
+      } else {
+        $description = 'de groupes ' . $parts[0];
+      }
+
+      $text = "La coalition avec laquelle le groupe " . 
+        $groupe['libelleAbrev'] . " a le plus fréquemment voté (" . 
+        $coalitions[0]['n'] . " scrutins sur " . $votesN . 
+        ") est une coalition composée " . $description . ".";
+    
+      return $text;
+
+    }
+
   }
 ?>

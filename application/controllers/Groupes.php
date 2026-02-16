@@ -248,7 +248,7 @@
 
       // Query 1 Informations principales
       $groupe_slug = mb_strtoupper($groupe_slug);
-      $data['groupe'] = $this->groupes_model->get_groupes_individal($groupe_slug, $legislature);
+      $data['groupe'] = $this->groupes_model->get_groupe_by_libelleAbrev($groupe_slug, $legislature);
 
       // Get history data
       $data = $this->get_history($data);
@@ -314,6 +314,13 @@
         $data['no_proximite'] = FALSE;
       } else {
         $data['no_proximite'] = TRUE;
+      }
+
+      // Coalitions groupes 
+      $data['coalitions'] = $this->groupes_model->get_coalitions($data['groupe']['uid'], 5);
+      if ($data['coalitions']) {
+        $data['coalitions'] = $this->groupes_model->format_coalitions($data['coalitions'], $legislature);
+        $data['coalitions_results'] = $this->groupes_edito->coalitions($data['coalitions'], $data['groupe']);
       }
 
       // Query 4 Votes
@@ -412,7 +419,7 @@
         show_404($this->functions_datan->get_404_infos());
       }
 
-      $data['groupe'] = $this->groupes_model->get_groupes_individal($groupe, $legislature);
+      $data['groupe'] = $this->groupes_model->get_groupe_by_libelleAbrev($groupe, $legislature);
 
       if (empty($data['groupe'])) {
         show_404($this->functions_datan->get_404_infos());
@@ -496,7 +503,7 @@
         show_404($this->functions_datan->get_404_infos());
       };
 
-      $data['groupe'] = $this->groupes_model->get_groupes_individal($groupe, $legislature);
+      $data['groupe'] = $this->groupes_model->get_groupe_by_libelleAbrev($groupe, $legislature);
 
       if (empty($data['groupe'])) {
         show_404($this->functions_datan->get_404_infos());
@@ -564,7 +571,7 @@
         show_404($this->functions_datan->get_404_infos());
       };
 
-      $data['groupe'] = $this->groupes_model->get_groupes_individal($groupe, $legislature);
+      $data['groupe'] = $this->groupes_model->get_groupe_by_libelleAbrev($groupe, $legislature);
 
       if (empty($data['groupe'])) {
         show_404($this->functions_datan->get_404_infos());
@@ -632,7 +639,7 @@
 
     /* page: stats */
     public function individual_stats($legislature, $groupe){
-      $data['groupe'] = $this->groupes_model->get_groupes_individal($groupe, $legislature);
+      $data['groupe'] = $this->groupes_model->get_groupe_by_libelleAbrev($groupe, $legislature);
 
       if (empty($data['groupe'])) {
         show_404($this->functions_datan->get_404_infos());
