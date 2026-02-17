@@ -61,7 +61,7 @@
             </p>
           <?php endif; ?>
         </div>
-        <div class="col-lg-9 col-md-8 pt-5 pb-5 test-border">
+        <div class="col-lg-9 col-md-8 pt-5 pb-5">
           <?php $this->view('departement/partials/electionFeature.php') ?>
           <h1 class="text-center"><?= $title ?></h1>
           <?php if ($noMP): ?>
