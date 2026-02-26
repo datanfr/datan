@@ -18,7 +18,7 @@ class Api_key_model extends CI_Model
             '/api/votes' => array(
                 'GET' => 'Lister les votes (votes_info)'
             ),
-            '/api/votes/{id}' => array(
+            '/api/votes/:id' => array(
                 'GET' => 'Voir un vote (votes_info)'
             ),
             // Votes décryptés (votes_datan)
@@ -26,7 +26,7 @@ class Api_key_model extends CI_Model
                 'GET' => 'Lister les votes décryptés',
                 'POST' => 'Créer un vote décrypté'
             ),
-            '/api/decrypted_votes/{id}' => array(
+            '/api/decrypted_votes/:id' => array(
                 'GET' => 'Voir un vote décrypté',
                 'PUT' => 'Modifier un vote décrypté',
                 'DELETE' => 'Supprimer un vote décrypté'
@@ -40,7 +40,7 @@ class Api_key_model extends CI_Model
                 'GET' => 'Lister les exposés',
                 'POST' => 'Créer un exposé'
             ),
-            '/api/exposes/{id}' => array(
+            '/api/exposes/:id' => array(
                 'GET' => 'Voir un exposé',
                 'PUT' => 'Modifier un exposé',
                 'DELETE' => 'Supprimer un exposé'
@@ -94,8 +94,8 @@ class Api_key_model extends CI_Model
             return true;
         }
 
-        // Normaliser l'endpoint (remplacer les IDs par {id})
-        $normalized_endpoint = preg_replace('/\/\d+$/', '/{id}', $endpoint);
+        // Normaliser l'endpoint (remplacer les IDs numériques par :id)
+        $normalized_endpoint = preg_replace('/\/\d+$/', '/:id', $endpoint);
 
         // Vérifier la permission exacte
         if (isset($permissions[$normalized_endpoint])) {

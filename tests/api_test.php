@@ -253,14 +253,14 @@ echo "  Clé admin créée (permissions: toutes)" . PHP_EOL;
 $writer_key = create_test_api_key($db, $writer_user_id, null);
 echo "  Clé writer créée (permissions: toutes)" . PHP_EOL;
 
-// Clé writer restreinte (pas de {id})
+// Clé writer restreinte (pas de :id)
 $restricted_perms = array(
     '/api/votes' => array('GET'),
     '/api/decrypted_votes' => array('GET', 'POST'),
     '/api/exposes' => array('GET', 'POST')
 );
 $restricted_key = create_test_api_key($db, $writer_user_id, $restricted_perms);
-echo "  Clé restreinte créée (sans endpoints {id})" . PHP_EOL;
+echo "  Clé restreinte créée (sans endpoints :id)" . PHP_EOL;
 
 // ============================================================
 // 1. AUTHENTIFICATION

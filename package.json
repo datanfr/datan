@@ -30,7 +30,8 @@
     "docker-profession": "docker exec -it datan php scripts/profession.php",
     "docker-grunt": "docker exec -it datan grunt",
     "docker-grunt-watch": "docker exec -it datan grunt watch",
-    "docker-test": "docker exec -it datan php tests/compare_branch.php tests/urls.txt",
+    "docker-test-branch": "docker exec -it datan php tests/compare_branch.php tests/urls.txt",
+    "docker-test-api": "docker exec -it datan php tests/api_test.php",
     "dgw": "npm run docker-grunt-watch"
   },
   "author": "Awenig Marié",
