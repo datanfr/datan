@@ -46,7 +46,14 @@
                     <h5 class="card-title mb-0">Permissions de la clé API</h5>
                 </div>
                 <div class="card-body">
-                    <p class="text-muted mb-3">Sélectionnez les endpoints et méthodes autorisés pour cette clé.</p>
+                    <div class="form-check mb-3">
+                        <input type="checkbox" class="form-check-input" id="all_permissions" name="all_permissions" value="1">
+                        <label class="form-check-label font-weight-bold" for="all_permissions">
+                            Toutes les permissions <span class="text-muted font-weight-normal">(accès complet, recommandé pour les admins)</span>
+                        </label>
+                    </div>
+                    <hr>
+                    <p class="text-muted mb-3">Ou sélectionnez les endpoints et méthodes autorisés pour cette clé.</p>
 
                     <?php foreach ($endpoints as $endpoint => $methods): ?>
                     <div class="card mb-2">
@@ -84,7 +91,7 @@
                     <?php endforeach; ?>
 
                     <div class="mt-3">
-                        <button type="button" class="btn btn-sm btn-outline-primary" id="select-all">Tout sélectionner</button>
+                        <button type="button" class="btn btn-sm btn-outline-primary" id="select-all">Sélectionner tous les endpoints actuels</button>
                         <button type="button" class="btn btn-sm btn-outline-secondary" id="deselect-all">Tout désélectionner</button>
                     </div>
                 </div>
@@ -278,6 +285,17 @@ document.addEventListener('DOMContentLoaded', function() {
                 document.getElementById('select_all_' + endpoint).checked = allChecked;
             }
         });
+    });
+
+    // "Toutes les permissions" toggle
+    document.getElementById('all_permissions').addEventListener('change', function() {
+        var disabled = this.checked;
+        document.querySelectorAll('.endpoint-checkbox, .select-all-endpoint').forEach(function(cb) {
+            cb.disabled = disabled;
+            if (disabled) cb.checked = false;
+        });
+        document.getElementById('select-all').disabled = disabled;
+        document.getElementById('deselect-all').disabled = disabled;
     });
 
     // Global select/deselect all

@@ -923,7 +923,7 @@
         $this->load->view('dashboard/api-keys/create', $data);
         $this->load->view('dashboard/footer');
       } else {
-        $permissions = $this->input->post('permissions');
+        $permissions = $this->input->post('all_permissions') ? null : $this->input->post('permissions');
         $result = $this->api_key_model->create_key(
           $this->input->post('user_id'),
           $this->input->post('name'),
