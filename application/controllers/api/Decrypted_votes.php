@@ -63,7 +63,7 @@ class Decrypted_votes extends CI_Controller
                     return $this->api_auth->response(array('error' => true, 'message' => 'Method not allowed'), 405);
             }
         } else {
-            $permission = $this->api_auth->check_permission('/api/decrypted_votes/{id}', $method);
+            $permission = $this->api_auth->check_permission('/api/decrypted_votes/:id', $method);
             if ($permission !== true) {
                 return $this->api_auth->response($permission, $permission['code']);
             }

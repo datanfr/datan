@@ -58,7 +58,7 @@ class Votes extends CI_Controller
             }
             return $this->list_votes();
         } else {
-            $permission = $this->api_auth->check_permission('/api/votes/{id}', $method);
+            $permission = $this->api_auth->check_permission('/api/votes/:id', $method);
             if ($permission !== true) {
                 return $this->api_auth->response($permission, $permission['code']);
             }
