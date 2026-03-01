@@ -5,7 +5,7 @@
             <div class="row">
                 <div class="col-12 d-flex flex-row align-items-center">
                     <div class="icon">
-                        <?= file_get_contents(base_url() . '/assets/imgs/icons/elysee.svg') ?>
+                        <?= file_get_contents(FCPATH . '/assets/imgs/icons/elysee.svg') ?>
                     </div>
                     <h3 class="ml-3 text-uppercase">
                         Proximité avec la majorité gouvernementale
@@ -19,7 +19,7 @@
                             title="Proximité avec la majorité gouvernementale"
                             data-content="Le <b>taux de proximité avec la majorité gouvernementale</b> représente le pourcentage de fois où un député vote la même chose que le groupe présidentiel (La République en Marche).<br><br>Pour plus d'information, <a href='<?= base_url() ?>statistiques/aide#proximity' target='_blank'>cliquez ici</a>."
                             id="popover_focus">
-                            <?= file_get_contents(asset_url() . "imgs/icons/question_circle.svg") ?>
+                            <?= file_get_contents(FCPATH . "assets/imgs/icons/question_circle.svg") ?>
                         </a>
                     </h3>
                 </div>

@@ -169,7 +169,7 @@
   <?php if ($depute['mailAn'] !== NULL && $active && !$page_history): ?>
     <div class="d-flex justify-content-center mt-5">
       <a href="mailto:<?= $depute['mailAn'] ?>" class="btn btn-primary">
-        <?= file_get_contents(asset_url() . "imgs/icons/envelope.svg") ?>
+        <?= file_get_contents(FCPATH . "assets/imgs/icons/envelope.svg") ?>
         <span class="ml-2">Contacter <?= $title ?></span>
       </a>
     </div>

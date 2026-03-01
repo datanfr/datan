@@ -5,7 +5,7 @@
     <div class="row mt-4">
       <div class="col-12">
         <span class="mr-4">
-          <?= file_get_contents(base_url() . '/assets/imgs/icons/envelope-fill.svg') ?>
+          <?= file_get_contents(FCPATH . '/assets/imgs/icons/envelope-fill.svg') ?>
         </span>
         <a href="mailto:<?= $depute['mailAn'] ?>" class="no-decoration underline text-dark"><?= $depute['mailAn'] ?></a>
       </div>

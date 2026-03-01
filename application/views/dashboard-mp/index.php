@@ -40,7 +40,7 @@
                           <td class="text-center"><span class="badge badge<?= ucfirst($value['vote_depute']) ?>" style="font-size: 16px"><?= ucfirst($value['vote_depute']) ?></span></td>
                           <td>
                             <a class="btn btn-primary d-flex align-items-center justify-content-center font-weight-bold" href="<?= base_url() ?>dashboard/explications/modify/l<?= $value['legislature'] ?>v<?= $value['voteNumero'] ?>">
-                              <?= file_get_contents(asset_url()."imgs/icons/pencil-square.svg") ?>
+                              <?= file_get_contents(FCPATH . "assets/imgs/icons/pencil-square.svg") ?>
                               <span class="ml-3">Modifier</span>
                             </a>
                           </td>

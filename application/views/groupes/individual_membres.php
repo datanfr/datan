@@ -10,7 +10,7 @@
       <div class="row">
         <div class="col-12">
           <a class="btn btn-outline-primary mx-2" href="<?= base_url() ?>groupes/legislature-<?= $groupe['legislature'] ?>/<?= mb_strtolower($groupe['libelleAbrev']) ?>">
-            <?= file_get_contents(asset_url().'imgs/icons/arrow_left.svg') ?>
+            <?= file_get_contents(FCPATH . 'assets/imgs/icons/arrow_left.svg') ?>
             Voir le profil du groupe 
           </a>
         </div>
