@@ -104,6 +104,9 @@
         if (!isset($data['deputes'][$key]['badgeCenter'])) {
           $data['deputes'][$key]['badgeCenter'] = $value['candidature'] == 1 ? 'Candidat' : 'Non candidat';
           $data['deputes'][$key]['badgeCenter'] .= gender($value['civ'])['e'];
+          if ($data['election']['slug'] === 'municipales-2026' && $value['position'] === 'Tête de liste') {
+            $data['deputes'][$key]['badgeCenter'] .= ' tête de liste';
+          }
           $data['deputes'][$key]['badgeCenterColor'] = $value['candidature'] == 1 ? 'badge-secondary' : 'badge-danger';
         }
       }
