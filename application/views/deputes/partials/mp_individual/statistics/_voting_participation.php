@@ -46,7 +46,7 @@ if ($first_person && $active) {
     <div class="row">
       <div class="col-12 d-flex flex-row align-items-center">
         <div class="icon">
-          <?= file_get_contents(base_url() . '/assets/imgs/icons/voting.svg') ?>
+          <?= file_get_contents(FCPATH . '/assets/imgs/icons/voting.svg') ?>
         </div>
         <h3 class="ml-3 text-uppercase">
           Participation aux votes
@@ -66,7 +66,7 @@ if ($first_person && $active) {
         D'autres réunions ont souvent lieu en même temps, expliquant le faible taux de
         participation des députés et des groupes.<br><br>Pour plus d'information,
         <a href='<?= base_url() ?>statistiques/aide#participation' target='_blank'>cliquez ici</a>.">
-            <?= file_get_contents(asset_url() . "imgs/icons/question_circle.svg") ?>
+            <?= file_get_contents(FCPATH . "assets/imgs/icons/question_circle.svg") ?>
           </a>
         </h3>
 

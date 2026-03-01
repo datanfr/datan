@@ -20,7 +20,7 @@
   <?php if ($vote['explication']): ?>
     <button class="explication py-2 d-flex justify-content-center align-items-center" data-toggle="modal" data-target="#explication-l<?= $vote['legislature'] ?>-v<?= $vote['voteNumero'] ?>" style="z-index: 2">
       <div class="icon d-flex justify-content-center align-items-center">
-        <?= file_get_contents(asset_url()."imgs/icons/eye-fill.svg") ?>
+        <?= file_get_contents(FCPATH . "assets/imgs/icons/eye-fill.svg") ?>
       </div>
       <span class="ml-2">L'avis <?= $gender['du'] ?> <?= $gender['depute'] ?></span>
     </button>

@@ -10,7 +10,7 @@
             </div>
             <div class="col-lg-2 d-flex justify-content-center mt-3 mt-lg-0">
               <button type="submit" class="btn btn-primary d-flex justify-content-center align-items-center">
-                <?= file_get_contents(asset_url() . "imgs/icons/bi-search.svg") ?><span class="ml-2">Rechercher</span>
+                <?= file_get_contents(FCPATH . "assets/imgs/icons/bi-search.svg") ?><span class="ml-2">Rechercher</span>
               </button>
             </div>
           </div>
@@ -34,7 +34,7 @@
           <?php $progress = round($entries / $total * 100) ?>
           <div class="mb-5">
             <h3>
-              <?= file_get_contents(asset_url() . "imgs/icons/" . $value['icon'] . ".svg") ?>
+              <?= file_get_contents(FCPATH . "assets/imgs/icons/" . $value['icon'] . ".svg") ?>
               <?= $value['name'] ?>
               <span>- <?= $total ?> résultat<?= count($value['results']) > 1 ? "s" : "" ?></span>
             </h3>

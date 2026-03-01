@@ -20,7 +20,7 @@
             <td class="text-center align-middle">
               <?php if ($value['round1']): ?>
                 <a class="btn btn-outline-primary" href="<?= $value['round1'] ?>" target="_blank">
-                  <?= file_get_contents(base_url() . '/assets/imgs/icons/arrow_external_right.svg') ?>
+                  <?= file_get_contents(FCPATH . '/assets/imgs/icons/arrow_external_right.svg') ?>
                   Profession 1er tour
                 </a>
               <?php endif; ?>
@@ -28,7 +28,7 @@
             <td class="text-center align-middle">
               <?php if ($value['round2']): ?>
                 <a class="btn btn-outline-primary" href="<?= $value['round2'] ?>" target="_blank">
-                  <?= file_get_contents(base_url() . '/assets/imgs/icons/arrow_external_right.svg') ?>
+                  <?= file_get_contents(FCPATH . '/assets/imgs/icons/arrow_external_right.svg') ?>
                   Profession 2nd tour
                 </a>
               <?php endif; ?>

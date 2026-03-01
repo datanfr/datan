@@ -3,7 +3,7 @@
       <div class="row">
         <div class="col-md-10 offset-md-1">
           <a class="btn btn-primary text-border mb-2" href="<?= base_url() ?>deputes/<?= $depute['dptSlug'] ?>/depute_<?= $depute['nameUrl'] ?>">
-            <?= file_get_contents(asset_url() . 'imgs/icons/arrow_left.svg') ?>
+            <?= file_get_contents(FCPATH . 'assets/imgs/icons/arrow_left.svg') ?>
             Retour profil
           </a>
           <span class="title d-block"><?= $title ?></span>
@@ -18,7 +18,7 @@
   <?php endif; ?>
   <div class="d-none d-lg-none justify-content-between align-items-center sticky-top p-3" data-toggle="modal" data-target="#filterModal" id="filterBanner" style="top: 50px">
     <span class="text-white font-weight-bold">Filtrer par catégorie</span>
-    <?= file_get_contents(asset_url() . 'imgs/icons/funnel-fill.svg') ?>
+    <?= file_get_contents(FCPATH . 'assets/imgs/icons/funnel-fill.svg') ?>
   </div>
   <!-- Modal filter only on mobile & tablet -->
   <div class="modal fade" id="filterModal" tabindex="-1" role="dialog" aria-labelledby="filterModalTitle" aria-hidden="true">
@@ -82,7 +82,7 @@
         <div class="row mt-4 d-none d-lg-block">
           <div class="col-12 btn-back text-center text-lg-left">
             <a class="btn btn-outline-primary mx-2" href="<?= base_url() ?>deputes/<?= $depute['dptSlug'] ?>/depute_<?= $depute['nameUrl'] ?>">
-              <?= file_get_contents(asset_url() . 'imgs/icons/arrow_left.svg') ?>
+              <?= file_get_contents(FCPATH . 'assets/imgs/icons/arrow_left.svg') ?>
               Retour profil
             </a>
           </div>

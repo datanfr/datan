@@ -20,7 +20,7 @@
         </div>
         <div class="col-md-4 offset-lg-1 d-none d-md-flex align-items-start">
           <div class="p-4">
-            <?= file_get_contents(asset_url()."imgs/svg/undraw_visual_data_b1wx_2.svg") ?>
+            <?= file_get_contents(FCPATH . "imgs/svg/undraw_visual_data_b1wx_2.svg") ?>
           </div>
         </div>
       </div>
@@ -29,7 +29,7 @@
         <div class="col-12">
           <div class="title_svg">
             <h2>L'âge des députés</h2>
-            <?= file_get_contents(asset_url()."imgs/svg/blob_1.svg") ?>
+            <?= file_get_contents(FCPATH ."imgs/svg/blob_1.svg") ?>
           </div>
         </div>
       </div>
@@ -109,7 +109,7 @@
         <div class="col-12">
           <div class="title_svg">
             <h2>Les femmes à l'Assemblée nationale</h2>
-            <?= file_get_contents(asset_url()."imgs/svg/blob_2.svg") ?>
+            <?= file_get_contents(FCPATH ."imgs/svg/blob_2.svg") ?>
           </div>
         </div>
       </div>
@@ -217,7 +217,7 @@
         <div class="col-12">
           <div class="title_svg">
             <h2>La proximité au groupe politique</h2>
-            <?= file_get_contents(asset_url()."imgs/svg/blob_3.svg") ?>
+            <?= file_get_contents(FCPATH ."imgs/svg/blob_3.svg") ?>
           </div>
         </div>
       </div>
@@ -307,7 +307,7 @@
         <div class="col-12">
           <div class="title_svg">
             <h2>La participation politique</h2>
-            <?= file_get_contents(asset_url()."imgs/svg/blob_4.svg") ?>
+            <?= file_get_contents(FCPATH ."imgs/svg/blob_4.svg") ?>
           </div>
         </div>
       </div>
@@ -391,7 +391,7 @@
         <div class="col-12">
           <div class="title_svg">
             <h2>L'origine sociale des députés</h2>
-            <?= file_get_contents(asset_url()."imgs/svg/blob_1.svg") ?>
+            <?= file_get_contents(FCPATH ."imgs/svg/blob_1.svg") ?>
           </div>
         </div>
       </div>

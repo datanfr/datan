@@ -76,7 +76,7 @@ if ($first_person && $active) {
     <div class="row">
       <div class="col-12 d-flex flex-row align-items-center">
         <div class="icon">
-          <?= file_get_contents(base_url() . '/assets/imgs/icons/group.svg') ?>
+          <?= file_get_contents(FCPATH . '/assets/imgs/icons/group.svg') ?>
         </div>
         <h3 class="ml-3 text-uppercase">
           Proximité avec les groupes politiques
@@ -97,7 +97,7 @@ if ($first_person && $active) {
             a voté avec ce groupe dans 75% des cas.<br><br>Pour plus d'information, 
             <a href='<?= base_url() ?>statistiques/aide#proximity' target='_blank'>cliquez ici</a>."
             id="popover_focus">
-            <?= file_get_contents(asset_url() . "imgs/icons/question_circle.svg") ?>
+            <?= file_get_contents(FCPATH . "assets/imgs/icons/question_circle.svg") ?>
           </a>
         </h3>
 

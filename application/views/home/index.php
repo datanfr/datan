@@ -25,14 +25,14 @@
               <form autocomplete="off" action="recherche.php" id="searchForm" method="GET">
                 <div class="search">
                   <div class="search_icon">
-                    <?= file_get_contents(asset_url() . "imgs/icons/bi-search.svg") ?>
+                    <?= file_get_contents(FCPATH . "assets/imgs/icons/bi-search.svg") ?>
                   </div>
                   <label for="search" class="sr-only">Rechercher sur tout le site (député, vote, groupe, ville, ou autre information parlementaire)</label>
                   <input id="search" type="text" class="randomized" placeholder="Exemple : <?= $placeholder ?>">
                   <div class="search-results" id="search-results-bloc" style="display: none">
                     <div id="search-results-list"></div>
                     <a class="py-1 no-decoration text-info font-weight-bold" id="more-results-link">
-                      <?= file_get_contents(asset_url() . "imgs/icons/bi-search.svg") ?>
+                      <?= file_get_contents(FCPATH . "assets/imgs/icons/bi-search.svg") ?>
                       <span class="ml-1">Plus de résultats</span>
                     </a>
                   </div>
@@ -63,15 +63,15 @@
             <span class="text-primary font-weight-bold">Datan</span> explique <b>les votes</b> des députés et groupes politiques.
           </p>
           <p class="mb-1">
-            <span class="icon"><?= file_get_contents(asset_url() . "imgs/icons/check_circle_fill.svg") ?></span>
+            <span class="icon"><?= file_get_contents(FCPATH . "assets/imgs/icons/check_circle_fill.svg") ?></span>
             Scrutins de l'Assemblée en temps réel
           </p>
           <p class="mb-1">
-            <span class="icon"><?= file_get_contents(asset_url() . "imgs/icons/check_circle_fill.svg") ?></span>
+            <span class="icon"><?= file_get_contents(FCPATH . "assets/imgs/icons/check_circle_fill.svg") ?></span>
             Profils détaillés des députés
           </p>
           <p class="mb-0">
-            <span class="icon"><?= file_get_contents(asset_url() . "imgs/icons/check_circle_fill.svg") ?></span>
+            <span class="icon"><?= file_get_contents(FCPATH . "assets/imgs/icons/check_circle_fill.svg") ?></span>
             Statistiques sur la formation des coalitions
           </p>
           <div class="mt-4 d-flex flex-column flex-md-row align-items-start">
@@ -92,7 +92,7 @@
     <div class="container py-4">
       <div class="row">
         <div class="col-12 col-lg-8 offset-lg-2 my-4">
-          <div class="icon d-flex justify-content-center"><?= file_get_contents(asset_url() . "imgs/icons/heart-fill.svg") ?></div>
+          <div class="icon d-flex justify-content-center"><?= file_get_contents(FCPATH . "assets/imgs/icons/heart-fill.svg") ?></div>
           <h2 class="text-center mb-4 mt-2">Nous soutenir</h2>
           <p class="text-center">Datan est un <b>outil indépendant</b>.</p>
           <p class="text-center">🔍 Rendre accessible l'activité des députés ... Pour continuer, on a besoin de vous ! Soutenez Datan pour faire vivre la transparence démocratique et l'accès aux données parlementaires.</p>
@@ -114,13 +114,13 @@
           <?php $this->load->view('votes/partials/votes_carousel.php', array('votes' => $votes)) ?>
           <div class="carousel-buttons d-flex justify-content-center">
             <button type="button" class="btn prev mr-2 carousel--prev" aria-label="précédent">
-              <?= file_get_contents(asset_url() . "imgs/icons/arrow_left.svg") ?>
+              <?= file_get_contents(FCPATH . "assets/imgs/icons/arrow_left.svg") ?>
             </button>
             <a class="btn btn-primary mx-2" href="<?= base_url() ?>votes">
               Tous les votes
             </a>
             <button type="button" class="btn next ml-2 carousel--next" aria-label="suivant">
-              <?= file_get_contents(asset_url() . "imgs/icons/arrow_right.svg") ?>
+              <?= file_get_contents(FCPATH . "assets/imgs/icons/arrow_right.svg") ?>
             </button>
           </div>
         </div>
@@ -254,7 +254,7 @@
           <p class="text-center mb-0">Nous vous tiendrons également informé des dernières nouveautés du site internet Datan.</p>
           <div class="text-center">
             <button class="btn btn-primary mt-5" data-toggle="modal" data-target="#newsletter">
-            <?= file_get_contents(base_url() . '/assets/imgs/icons/envelope.svg') ?>  
+            <?= file_get_contents(FCPATH . '/assets/imgs/icons/envelope.svg') ?>  
             <span class="ml-2">S'inscrire à la newsletter</span></button>
           </div>
         </div>
@@ -472,10 +472,10 @@
         <div class="col-lg-6 col-12 bloc-map mt-4 mt-lg-0 offset-lg-3">
           <h2 class="text-center pb-5">Explorez les députés par département</h2>
           <div class="map map_france mt-3">
-            <?= file_get_contents(asset_url() . "imgs/france_map/map.svg"); ?>
+            <?= file_get_contents(FCPATH . "assets/imgs/france_map/map.svg"); ?>
           </div>
           <div class="map map_outre_mer">
-            <?= file_get_contents(asset_url() . "imgs/france_map/outre-mer.svg"); ?>
+            <?= file_get_contents(FCPATH . "assets/imgs/france_map/outre-mer.svg"); ?>
           </div>
           <div class="mt-5 d-flex flex-column align-items-center">
             <a href="<?= base_url(); ?>index_departements" class="no-decoration">
