@@ -13,7 +13,7 @@
       <div class="row">
         <div class="col-12">
           <a class="btn btn-outline-secondary font-weight-bold" href="<?= base_url() ?>dashboard">
-            <?= file_get_contents(asset_url() . "imgs/icons/arrow_left.svg") ?>
+            <?= file_get_contents(FCPATH . "assets/imgs/icons/arrow_left.svg") ?>
             Retour
           </a>
         </div>

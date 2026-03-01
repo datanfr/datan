@@ -19,7 +19,7 @@
     </div>
     <div class="col-md-4 d-none d-lg-flex align-items-center mt-4">
       <div class="px-4">
-        <?= file_get_contents(asset_url()."imgs/svg/undraw_election_day_datan.svg") ?>
+        <?= file_get_contents(FCPATH . "assets/imgs/svg/undraw_election_day_datan.svg") ?>
       </div>
     </div>
   </div>

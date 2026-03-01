@@ -73,10 +73,10 @@
             <div class="row"> <!-- BUTTONS BELOW -->
               <div class="carousel-buttons col-12 d-flex justify-content-center">
                 <button type="button" class="btn prev mr-2 carousel--prev" aria-label="précédent">
-                  <?= file_get_contents(asset_url()."imgs/icons/arrow_left.svg") ?>
+                  <?= file_get_contents(FCPATH . "assets/imgs/icons/arrow_left.svg") ?>
                 </button>
                 <button type="button" class="btn next ml-2 carousel--next" aria-label="suivant">
-                  <?= file_get_contents(asset_url()."imgs/icons/arrow_right.svg") ?>
+                  <?= file_get_contents(FCPATH . "assets/imgs/icons/arrow_right.svg") ?>
                 </button>
               </div>
             </div>
@@ -169,10 +169,10 @@
                 <div class="row">
                   <div class="col-12 d-flex flex-row align-items-center">
                     <div class="icon">
-                      <?= file_get_contents(base_url().'/assets/imgs/icons/voting.svg') ?>
+                      <?= file_get_contents(FCPATH . '/assets/imgs/icons/voting.svg') ?>
                     </div>
                     <h3 class="ml-3">SOUTIEN ENVERS LE GOUVERNEMENT
-                      <a tabindex="0" role="button" data-toggle="popover" data-trigger="focus" class="no-decoration cursor-pointer" title="Taux de soutien au gouvernement" aria-label="Ouvrir l'explication de la statistique sur la soutien au gouvernement" data-content="Ce taux représente le pourcentage de textes portés par le gouvernement qui est voté par ce groupe politique."><?= file_get_contents(asset_url()."imgs/icons/question_circle.svg") ?></a>
+                      <a tabindex="0" role="button" data-toggle="popover" data-trigger="focus" class="no-decoration cursor-pointer" title="Taux de soutien au gouvernement" aria-label="Ouvrir l'explication de la statistique sur la soutien au gouvernement" data-content="Ce taux représente le pourcentage de textes portés par le gouvernement qui est voté par ce groupe politique."><?= file_get_contents(FCPATH . "assets/imgs/icons/question_circle.svg") ?></a>
                     </h3>
                   </div>
                 </div>
@@ -223,10 +223,10 @@
               <div class="row">
                 <div class="col-12 d-flex flex-row align-items-center">
                   <div class="icon">
-                    <?= file_get_contents(base_url().'/assets/imgs/icons/voting.svg') ?>
+                    <?= file_get_contents(FCPATH . '/assets/imgs/icons/voting.svg') ?>
                   </div>
                   <h3 class="ml-3">PARTICIPATION AUX VOTES
-                    <a tabindex="0" role="button" data-toggle="popover" data-trigger="focus" class="no-decoration cursor-pointer" title="Taux de participation" aria-label="Ouvrir l'explication de la statistique sur la participation aux votes" data-content="Ce taux de participation représente, en moyenne, <b>le pourcentage de députés du groupe participant aux votes</b>.<br><br>Attention, le taux de participation ne mesure pas toute l'activité d'un député ou d'un groupe. Contrairement au <a href='https://www.europarl.europa.eu/about-parliament/fr/organisation-and-rules/how-plenary-works' title='lien'>Parlement européen</a>, les votes à l'Assemblée nationale se déroulent à n'importe quel moment de la semaine. D'autres réunions ont souvent lieu en même temps, expliquant le faible taux de participation des députés et des groupes.<br><br>Pour plus d'information, <a href='<?= base_url() ?>statistiques/aide#participation' target='_blank'>cliquez ici</a>."><?= file_get_contents(asset_url()."imgs/icons/question_circle.svg") ?></a>
+                    <a tabindex="0" role="button" data-toggle="popover" data-trigger="focus" class="no-decoration cursor-pointer" title="Taux de participation" aria-label="Ouvrir l'explication de la statistique sur la participation aux votes" data-content="Ce taux de participation représente, en moyenne, <b>le pourcentage de députés du groupe participant aux votes</b>.<br><br>Attention, le taux de participation ne mesure pas toute l'activité d'un député ou d'un groupe. Contrairement au <a href='https://www.europarl.europa.eu/about-parliament/fr/organisation-and-rules/how-plenary-works' title='lien'>Parlement européen</a>, les votes à l'Assemblée nationale se déroulent à n'importe quel moment de la semaine. D'autres réunions ont souvent lieu en même temps, expliquant le faible taux de participation des députés et des groupes.<br><br>Pour plus d'information, <a href='<?= base_url() ?>statistiques/aide#participation' target='_blank'>cliquez ici</a>."><?= file_get_contents(FCPATH . "assets/imgs/icons/question_circle.svg") ?></a>
                   </h3>
                 </div>
               </div>
@@ -279,10 +279,10 @@
               <div class="row">
                 <div class="col-12 d-flex flex-row align-items-center">
                   <div class="icon">
-                    <?= file_get_contents(base_url().'assets/imgs/icons/loyalty.svg') ?>
+                    <?= file_get_contents(FCPATH . 'assets/imgs/icons/loyalty.svg') ?>
                   </div>
                   <h3 class="ml-3">COHESION AU SEIN DU GROUPE
-                    <a tabindex="0" role="button" data-toggle="popover" data-trigger="focus" class="no-decoration cursor-pointer" title="Taux de cohésion" aria-label="Ouvrir l'explication de la statistique sur la cohésion" data-content="Le taux de cohésion représente <b>l'unité d'un groupe politique</b> lorsqu'il vote. Il peut prendre des mesures allant de 0 à 1. Un taux proche de 1 signifie que le groupe est très uni.<br><br>Attention, dans beaucoup de parlements, y compris l'Assemblée nationale, les députés suivent dans la plupart des cas la ligne officielle du groupe, expliquant des taux de cohésion très élevés. Le mesure proposée ici est intéressante quand elle est comparée avec les mesures de cohésion des autres groupes.<br><br>Pour plus d'information, <a href='<?= base_url() ?>statistiques/aide#cohesion' target='_blank'>cliquez ici</a>."><?= file_get_contents(asset_url()."imgs/icons/question_circle.svg") ?></a>
+                    <a tabindex="0" role="button" data-toggle="popover" data-trigger="focus" class="no-decoration cursor-pointer" title="Taux de cohésion" aria-label="Ouvrir l'explication de la statistique sur la cohésion" data-content="Le taux de cohésion représente <b>l'unité d'un groupe politique</b> lorsqu'il vote. Il peut prendre des mesures allant de 0 à 1. Un taux proche de 1 signifie que le groupe est très uni.<br><br>Attention, dans beaucoup de parlements, y compris l'Assemblée nationale, les députés suivent dans la plupart des cas la ligne officielle du groupe, expliquant des taux de cohésion très élevés. Le mesure proposée ici est intéressante quand elle est comparée avec les mesures de cohésion des autres groupes.<br><br>Pour plus d'information, <a href='<?= base_url() ?>statistiques/aide#cohesion' target='_blank'>cliquez ici</a>."><?= file_get_contents(FCPATH . "assets/imgs/icons/question_circle.svg") ?></a>
                   </h3>
                 </div>
               </div>
@@ -331,10 +331,10 @@
                 <div class="row">
                   <div class="col-12 d-flex flex-row align-items-center">
                     <div class="icon">
-                      <?= file_get_contents(base_url().'/assets/imgs/icons/group.svg') ?>
+                      <?= file_get_contents(FCPATH . '/assets/imgs/icons/group.svg') ?>
                     </div>
                     <h3 class="ml-3">PROXIMITÉ AVEC LA MAJORITE PRESIDENTIELLE
-                      <a tabindex="0" role="button" data-toggle="popover" data-trigger="focus" class="no-decoration cursor-pointer" title="Taux de proximité avec la majorité" aria-label="Ouvrir l'explication de la statistique sur la proximité avec la majorité présidentielle" data-content="Le taux de proximité avec la majorité présidentielle représente le pourcentage de votes où le groupe <b>a voté en accord avec le groupe de la majorité</b> (La République en Marche).<br><br>Pour plus d'information, <a href='<?= base_url() ?>statistiques/aide#proximity' target='_blank'>cliquez ici</a>."><?= file_get_contents(asset_url()."imgs/icons/question_circle.svg") ?></a>
+                      <a tabindex="0" role="button" data-toggle="popover" data-trigger="focus" class="no-decoration cursor-pointer" title="Taux de proximité avec la majorité" aria-label="Ouvrir l'explication de la statistique sur la proximité avec la majorité présidentielle" data-content="Le taux de proximité avec la majorité présidentielle représente le pourcentage de votes où le groupe <b>a voté en accord avec le groupe de la majorité</b> (La République en Marche).<br><br>Pour plus d'information, <a href='<?= base_url() ?>statistiques/aide#proximity' target='_blank'>cliquez ici</a>."><?= file_get_contents(FCPATH . "assets/imgs/icons/question_circle.svg") ?></a>
                     </h3>
                   </div>
                 </div>
@@ -423,12 +423,12 @@
               <div class="row">
                 <div class="col-2">
                   <div class="icon">
-                    <?= file_get_contents(base_url().'/assets/imgs/icons/group.svg') ?>
+                    <?= file_get_contents(FCPATH . '/assets/imgs/icons/group.svg') ?>
                   </div>
                 </div>
                 <div class="col-10">
                   <h3>PROXIMITÉ AVEC LES GROUPES POLITIQUES
-                    <a tabindex="0" role="button" data-toggle="popover" data-trigger="focus" class="no-decoration cursor-pointer" title="Taux de proximité avec les groupes" aria-label="Ouvrir l'explication de la statistique sur la proximité avec les groupes politiques" data-content="Le <b>taux de proximité entre deux groupes</b> représente le pourcentage de fois où les deux groupes ont voté la même chose. Chaque groupe se voit attribuer une <i>position majoritaire</i>, en fonction du vote de ses membres. Cette position peut soit être 'pour', 'contre', ou 'absention'. Pour chaque vote, nous déterminons si les deux groupes ont la même position majoritaire. Le taux de proximité est le pourcentage de fois où les deux groupes ont cette même position majoritaire.<br><br>Par exemple, si le taux est de 75%, cela signifie que les deux groupes ont voté la même chose dans 75% des cas. <br><br>Pour plus d'information, <a href='<?= base_url() ?>statistiques/aide#proximity' target='_blank'>cliquez ici</a>."><?= file_get_contents(asset_url()."imgs/icons/question_circle.svg") ?></a>
+                    <a tabindex="0" role="button" data-toggle="popover" data-trigger="focus" class="no-decoration cursor-pointer" title="Taux de proximité avec les groupes" aria-label="Ouvrir l'explication de la statistique sur la proximité avec les groupes politiques" data-content="Le <b>taux de proximité entre deux groupes</b> représente le pourcentage de fois où les deux groupes ont voté la même chose. Chaque groupe se voit attribuer une <i>position majoritaire</i>, en fonction du vote de ses membres. Cette position peut soit être 'pour', 'contre', ou 'absention'. Pour chaque vote, nous déterminons si les deux groupes ont la même position majoritaire. Le taux de proximité est le pourcentage de fois où les deux groupes ont cette même position majoritaire.<br><br>Par exemple, si le taux est de 75%, cela signifie que les deux groupes ont voté la même chose dans 75% des cas. <br><br>Pour plus d'information, <a href='<?= base_url() ?>statistiques/aide#proximity' target='_blank'>cliquez ici</a>."><?= file_get_contents(FCPATH . "assets/imgs/icons/question_circle.svg") ?></a>
                   </h3>
                 </div>
               </div>
@@ -584,12 +584,12 @@
               <div class="row">
                 <div class="col-2">
                   <div class="icon">
-                    <?= file_get_contents(base_url().'/assets/imgs/icons/group.svg') ?>
+                    <?= file_get_contents(FCPATH . '/assets/imgs/icons/group.svg') ?>
                   </div>
                 </div>
                 <div class="col-10">
                   <h3>LES COALITIONS LES PLUS FREQUENTES
-                    <a tabindex="0" role="button" data-toggle="popover" data-trigger="focus" class="no-decoration cursor-pointer" title="Coalitions les plus fréquentes" aria-label="Ouvrir l'explication de la statistique sur la proximité avec les groupes politiques" data-content="Le <b>taux de proximité entre deux groupes</b> représente le pourcentage de fois où les deux groupes ont voté la même chose. Chaque groupe se voit attribuer une <i>position majoritaire</i>, en fonction du vote de ses membres. Cette position peut soit être 'pour', 'contre', ou 'absention'. Pour chaque vote, nous déterminons si les deux groupes ont la même position majoritaire. Le taux de proximité est le pourcentage de fois où les deux groupes ont cette même position majoritaire.<br><br>Par exemple, si le taux est de 75%, cela signifie que les deux groupes ont voté la même chose dans 75% des cas. <br><br>Pour plus d'information, <a href='<?= base_url() ?>statistiques/aide#proximity' target='_blank'>cliquez ici</a>."><?= file_get_contents(asset_url()."imgs/icons/question_circle.svg") ?></a>
+                    <a tabindex="0" role="button" data-toggle="popover" data-trigger="focus" class="no-decoration cursor-pointer" title="Coalitions les plus fréquentes" aria-label="Ouvrir l'explication de la statistique sur la proximité avec les groupes politiques" data-content="Le <b>taux de proximité entre deux groupes</b> représente le pourcentage de fois où les deux groupes ont voté la même chose. Chaque groupe se voit attribuer une <i>position majoritaire</i>, en fonction du vote de ses membres. Cette position peut soit être 'pour', 'contre', ou 'absention'. Pour chaque vote, nous déterminons si les deux groupes ont la même position majoritaire. Le taux de proximité est le pourcentage de fois où les deux groupes ont cette même position majoritaire.<br><br>Par exemple, si le taux est de 75%, cela signifie que les deux groupes ont voté la même chose dans 75% des cas. <br><br>Pour plus d'information, <a href='<?= base_url() ?>statistiques/aide#proximity' target='_blank'>cliquez ici</a>."><?= file_get_contents(FCPATH . "assets/imgs/icons/question_circle.svg") ?></a>
                   </h3>
                   <p>Dans une Assemblée nationale où aucun groupe n'a la majorité absolue, les coalitions sont essentielles pour faire adopter des textes. Avec quels groupes le <?= $groupe['libelleAbrev'] ?> s'associe-t-il lors des votes ?</p>
                   <p><?= $coalitions_results ?></p>
@@ -657,7 +657,7 @@
               <?php if (isset($groupe['links']['facebook'])): ?>
                 <div class="col-12 col-sm-6 mt-2 d-flex justify-content-center">
                   <span class="url_obf btn btn-fcb" url_obf="<?= url_obfuscation("https://www.facebook.com/" . $groupe['links']['facebook']) ?>">
-                      <?= file_get_contents(base_url().'/assets/imgs/logos/facebook_svg.svg') ?>
+                      <?= file_get_contents(FCPATH . '/assets/imgs/logos/facebook_svg.svg') ?>
                       <span class="ml-3">Facebook</span>
                   </span>
                 </div>
@@ -665,7 +665,7 @@
               <?php if (isset($groupe['links']['twitter'])): ?>
                 <div class="col-12 col-sm-6 mt-2 d-flex justify-content-center">
                   <span class="url_obf btn btn-twitter" url_obf="<?= url_obfuscation("https://x.com/" . $groupe['links']['twitter']) ?>">
-                      <?= file_get_contents(base_url().'/assets/imgs/logos/x-no-round.svg') ?>
+                      <?= file_get_contents(FCPATH . '/assets/imgs/logos/x-no-round.svg') ?>
                   </span>
                 </div>
               <?php endif; ?>

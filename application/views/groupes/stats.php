@@ -9,7 +9,7 @@
     </div>
     <div class="col-md-10 col-lg-8 offset-md-1 offset-lg-0 pl-lg-5">
       <a class="btn btn-outline-primary mx-2 mt-4" href="<?= base_url() ?>groupes/legislature-<?= $groupe['legislature'] ?>/<?= mb_strtolower($groupe['libelleAbrev']) ?>">
-        <?= file_get_contents(asset_url().'imgs/icons/arrow_left.svg') ?>
+        <?= file_get_contents(FCPATH . 'assets/imgs/icons/arrow_left.svg') ?>
         Retour profil
       </a>
       <div class="title my-4">

@@ -22,7 +22,7 @@
   <div class="row"> <!-- Title -->
     <div class="col-lg-2">
       <a href="<?= base_url() ?>blog" class="btn btn-outline-dark font-weight-normal px-2">
-        <?= file_get_contents(asset_url()."imgs/icons/arrow_left.svg"); ?>
+        <?= file_get_contents(FCPATH . "assets/imgs/icons/arrow_left.svg"); ?>
         Tous les articles
       </a>
     </div>
