@@ -12,9 +12,14 @@
       <?php elseif ($electionFeature['secondRound'] == "0"): ?>
         <p class="mb-0"><?= $title ?> était candidat<?= $gender['e'] ?> aux élections municipales dans la commune <a class="text-white" href="<?= base_url() ?>deputes/<?= $electionFeatureDistrict['dpt_slug'] ?>/ville_<?= $electionFeatureDistrict['commune_slug'] ?>"><?= $electionFeatureDistrict['nom_de'] ?></a>. <span class="font-weight-bold"><?= ucfirst($gender['pronom']) ?> ne sera pas présent<?= $gender['e'] ?></span> au second tour.</p>
       <?php elseif ($electionFeature['candidature'] == "0") : ?>
-        <p class="mb-0"><?= $title ?> <span class="font-weight-bold"> n'est pas candidat<?= $gender['e'] ?></span> aux élections .</p>
+        <p class="mb-0"><?= $title ?> <span class="font-weight-bold"> n'est pas candidat<?= $gender['e'] ?></span> aux élections municipales.</p>
       <?php else: ?>
-        <p class="mb-0"><?= $title ?> <span class="font-weight-bold"> est candidat<?= $gender['e'] ?></span> aux élections municipales dans la commune <a class="text-white" href="<?= base_url() ?>deputes/<?= $electionFeatureDistrict['dpt_slug'] ?>/ville_<?= $electionFeatureDistrict['commune_slug'] ?>"><?= $electionFeatureDistrict['nom_de'] ?></a>.</p>
+        <p class="mb-0">
+          <?= $title ?> <span class="font-weight-bold"> est candidat<?= $gender['e'] ?></span> aux élections municipales dans la commune <a class="text-white" href="<?= base_url() ?>deputes/<?= $electionFeatureDistrict['dpt_slug'] ?>/ville_<?= $electionFeatureDistrict['commune_slug'] ?>"><?= $electionFeatureDistrict['nom_de'] ?></a>.
+          <?php if ($electionFeature['position'] === 'Tête de liste'): ?>
+            <?= ucfirst($gender['pronom']) ?> est tête de liste.
+          <?php endif; ?>
+        </p>
       <?php endif; ?>
       <?php if ($electionFeature['candidature'] == 1 && $electionFeature['link']): ?>
         <span class="mt-3 url_obf btn btn-light" url_obf="<?= url_obfuscation($electionFeature['link']) ?>">Suivre sa campagne</span>

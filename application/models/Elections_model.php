@@ -237,6 +237,14 @@
       return $this->db->count_all_results('candidate_full');
     }
 
+    public function count_candidats_leader($id){
+      $this->db->where('election', $id);
+      $this->db->where('visible', 1);
+      $this->db->where('candidature', 1);
+      $this->db->where('position', 'Tête de liste');
+      return $this->db->count_all_results('candidate_full');
+    }
+
     public function count_candidats_eliminated($id){
       $sql = 'SELECT *
         FROM candidate_full c

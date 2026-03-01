@@ -3,7 +3,7 @@
     <h2>Découvrez les députés candidats aux <?= mb_strtolower($election['libelle']) ?> de <?= $election['dateYear'] ?></h2>
   </div>
   <div class="col-lg-9 mt-3">
-    <p>Notre équipe a répertorié <?= $candidatsN ?> député<?= $candidatsN > 1 ? 's' : '' ?> candidat<?= $candidatsN > 1 ? 's' : '' ?> aux élections municipales de 2026. Si un député n'est pas dans la liste, n'hésitez pas à nous envoyer un email : info@datan.fr</p>
+    <p>Notre équipe a répertorié <?= $candidatsN ?> député<?= $candidatsN > 1 ? 's' : '' ?> candidat<?= $candidatsN > 1 ? 's' : '' ?> aux élections municipales de 2026, dont <?= $candidatsNLeaders ?> sont têtes de liste. Si un député n'est pas dans la liste, n'hésitez pas à nous envoyer un email : info@datan.fr</p>
   </div>
   <div class="col-12 d-flex flex-column flex-lg-row">
     <div class="d-flex flex-even px-2">
