@@ -87,7 +87,7 @@
         </li>
         <li class="nav-item d-none d-sm-inline-block">
           <a href="<?= base_url(); ?>logout" class="nav-link text-danger">
-            <?= file_get_contents(base_url() . '/assets/imgs/icons/bi-box-arrow-right.svg') ?>
+            <?= file_get_contents(FCPATH . '/assets/imgs/icons/bi-box-arrow-right.svg') ?>
             <span class="ml-1">Déconnexion</span>
           </a>
         </li>

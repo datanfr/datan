@@ -39,7 +39,7 @@
               <div class="card card-question">
                 <div class="card-header d-flex justify-content-between">
                   <a role="button" data-toggle="collapse" href="#collapse_<?= $x ?>_<?= $y ?>" aria-expanded="true" class="no-decoration">
-                    <?= file_get_contents(base_url() . '/assets/imgs/icons/plus.svg') ?>
+                    <?= file_get_contents(FCPATH . '/assets/imgs/icons/plus.svg') ?>
                     <span class="ml-3"><?= $article['title'] ?></span>
                   </a>
                 </div>

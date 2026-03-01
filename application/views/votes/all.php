@@ -24,13 +24,13 @@
               <?php $this->load->view('votes/partials/votes_carousel.php', array('votes' => $votes_datan)) ?>
               <div class="carousel-buttons d-flex justify-content-center">
                 <button type="button" class="btn prev mr-2 carousel--prev" aria-label="précédent">
-                  <?= file_get_contents(asset_url()."imgs/icons/arrow_left.svg") ?>
+                  <?= file_get_contents(FCPATH . "assets/imgs/icons/arrow_left.svg") ?>
                 </button>
                 <a class="btn btn-primary mx-2" href="<?= base_url() ?>votes/decryptes">
                   Tous les votes
                 </a>
                 <button type="button" class="btn next ml-2 carousel--next" aria-label="suivant">
-                  <?= file_get_contents(asset_url()."imgs/icons/arrow_right.svg") ?>
+                  <?= file_get_contents(FCPATH . "assets/imgs/icons/arrow_right.svg") ?>
                 </button>
               </div>
             </div>
@@ -101,13 +101,13 @@
               </div>
               <div class="carousel-buttons d-flex justify-content-center">
                 <button type="button" class="btn prev mr-2 carousel--prev" aria-label="précédent">
-                  <?= file_get_contents(asset_url()."imgs/icons/arrow_left.svg") ?>
+                  <?= file_get_contents(FCPATH . "assets/imgs/icons/arrow_left.svg") ?>
                 </button>
                 <a class="btn btn-primary mx-2" href="<?= base_url() ?>votes/decryptes">
                   Tous les votes
                 </a>
                 <button type="button" class="btn next ml-2 carousel--next" aria-label="suivant">
-                  <?= file_get_contents(asset_url()."imgs/icons/arrow_right.svg") ?>
+                  <?= file_get_contents(FCPATH . "assets/imgs/icons/arrow_right.svg") ?>
                 </button>
               </div>
             </div>

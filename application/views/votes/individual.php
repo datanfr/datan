@@ -82,23 +82,23 @@
         <table class="infos">
           <tbody>
             <tr>
-              <td class="icon"><?= file_get_contents(base_url() . '/assets/imgs/icons/calendar.svg') ?></td>
+              <td class="icon"><?= file_get_contents(FCPATH . '/assets/imgs/icons/calendar.svg') ?></td>
               <td class="label d-none d-lg-table-cell">Date</td>
               <td class="value"><?= $vote['date_edited'] ?></td>
             </tr>
             <?php if ($vote['type_edited']): ?>
               <tr>
-                <td class="icon"><?= file_get_contents(base_url() . '/assets/imgs/icons/journal.svg') ?></td>
+                <td class="icon"><?= file_get_contents(FCPATH . '/assets/imgs/icons/journal.svg') ?></td>
                 <td class="label d-none d-lg-table-cell">Type de vote</td>
                 <td class="value">
                   <?= ucfirst($vote['type_edited']) ?>
-                  <a class="ml-1" tabindex="0" role="button" data-toggle="popover" data-trigger="focus" class="question no-decoration" aria-label="Tooltip explication" data-content="<?= $vote['type_edited_explication'] ?>"><?= file_get_contents(asset_url() . "imgs/icons/question_circle.svg") ?></a>
+                  <a class="ml-1" tabindex="0" role="button" data-toggle="popover" data-trigger="focus" class="question no-decoration" aria-label="Tooltip explication" data-content="<?= $vote['type_edited_explication'] ?>"><?= file_get_contents(FCPATH . "assets/imgs/icons/question_circle.svg") ?></a>
                 </td>
               </tr>
             <?php endif; ?>
             <?php if ($vote['dossier_titre'] != "") : ?>
               <tr>
-                <td class="icon"><?= file_get_contents(base_url() . '/assets/imgs/icons/folder.svg') ?></td>
+                <td class="icon"><?= file_get_contents(FCPATH . '/assets/imgs/icons/folder.svg') ?></td>
                 <td class="label d-none d-lg-table-cell">Dossier</td>
                 <td class="value"><?= $vote['dossier_titre'] ?></td>
               </tr>
@@ -199,23 +199,23 @@
         <table class="infos">
           <tbody>
             <tr>
-              <td class="icon"><?= file_get_contents(base_url() . '/assets/imgs/icons/calendar.svg') ?></td>
+              <td class="icon"><?= file_get_contents(FCPATH . '/assets/imgs/icons/calendar.svg') ?></td>
               <td class="label d-none d-lg-table-cell">Date</td>
               <td class="value"><?= $vote['date_edited'] ?></td>
             </tr>
             <?php if ($vote['type_edited']): ?>
               <tr>
-                <td class="icon"><?= file_get_contents(base_url() . '/assets/imgs/icons/journal.svg') ?></td>
+                <td class="icon"><?= file_get_contents(FCPATH . '/assets/imgs/icons/journal.svg') ?></td>
                 <td class="label d-none d-lg-table-cell">Type de vote</td>
                 <td class="value">
                   <?= ucfirst($vote['type_edited']) ?>
-                  <a class="ml-1" tabindex="0" role="button" data-toggle="popover" data-trigger="focus" class="question no-decoration" aria-label="Tooltip explication" data-content="<?= $vote['type_edited_explication'] ?>"><?= file_get_contents(asset_url() . "imgs/icons/question_circle.svg") ?></a>
+                  <a class="ml-1" tabindex="0" role="button" data-toggle="popover" data-trigger="focus" class="question no-decoration" aria-label="Tooltip explication" data-content="<?= $vote['type_edited_explication'] ?>"><?= file_get_contents(FCPATH . "assets/imgs/icons/question_circle.svg") ?></a>
                 </td>
               </tr>
             <?php endif; ?>
             <?php if ($vote['dossier_titre'] != "") : ?>
               <tr>
-                <td class="icon"><?= file_get_contents(base_url() . '/assets/imgs/icons/folder.svg') ?></td>
+                <td class="icon"><?= file_get_contents(FCPATH . '/assets/imgs/icons/folder.svg') ?></td>
                 <td class="label d-none d-lg-table-cell">Dossier</td>
                 <td class="value"><?= $vote['dossier_titre'] ?></td>
               </tr>
@@ -231,7 +231,7 @@
               <?php if ($vote['dossierUrl']) : ?>
                 <span class="d-flex justify-content-center align-items-center url_obf btn btn-secondary link my-1 my-lg-0 mx-lg-1" url_obf="<?= url_obfuscation("https://www.assemblee-nationale.fr/dyn/" . $vote['dossierLegislature'] . "/dossiers/" . $vote['dossierUrl']) ?>">
                   <div class="mr-2">
-                    <?= file_get_contents(base_url() . '/assets/imgs/icons/arrow_external_right.svg') ?>
+                    <?= file_get_contents(FCPATH . '/assets/imgs/icons/arrow_external_right.svg') ?>
                   </div>
                   <span class="text">Le dossier</span>
                 </span>
@@ -239,7 +239,7 @@
               <?php if (isset($vote['amendment']) && $vote['amendment'] && !empty($vote['amendment']['amendmentHref'])) : ?>
                 <span class="d-flex justify-content-center align-items-center url_obf btn btn-secondary link my-1 my-lg-0 mx-lg-1" url_obf="<?= url_obfuscation($vote['amendment']['amendmentHref']) ?>">
                   <div class="mr-1">
-                    <?= file_get_contents(base_url() . '/assets/imgs/icons/arrow_external_right.svg') ?>
+                    <?= file_get_contents(FCPATH . '/assets/imgs/icons/arrow_external_right.svg') ?>
                   </div>
                   <span class="text">L'amendement</span>
                 </span>
@@ -310,10 +310,10 @@ endif; ?>
             </div>
             <div class="carousel-buttons d-flex justify-content-center mb-2">
               <button type="button" class="btn prev mr-2 carousel--prev" aria-label="précédent">
-                <?= file_get_contents(asset_url() . "imgs/icons/arrow_left.svg") ?>
+                <?= file_get_contents(FCPATH . "assets/imgs/icons/arrow_left.svg") ?>
               </button>
               <button type="button" class="btn next ml-2 carousel--next" aria-label="suivant">
-                <?= file_get_contents(asset_url() . "imgs/icons/arrow_right.svg") ?>
+                <?= file_get_contents(FCPATH . "assets/imgs/icons/arrow_right.svg") ?>
               </button>
             </div>
           </div>
@@ -351,7 +351,7 @@ endif; ?>
                   <th scope="col" class="text-center">Participation</th>
                   <th scope="col" class="text-center min-tablet">
                     Cohésion
-                    <a tabindex="0" role="button" data-toggle="popover" data-trigger="focus" title="Taux de cohésion" aria-label="Tooltip cohésion" data-content="Le taux de cohésion représente <b>l'unité d'un groupe politique</b> lorsqu'il vote. Il peut prendre des mesures allant de 0 à 1. Un taux proche de 1 signifie que le groupe est très uni.<br><br>Attention, dans beaucoup de parlements, y compris l'Assemblée nationale, les députés suivent dans la plupart des cas la ligne officielle du groupe, expliquant des taux de cohésion très élevés. Le mesure proposée ici est intéressante quand elle est comparée avec les mesures de cohésion des autres groupes.<br><br>Pour plus d'information, <a href='<?= base_url() ?>statistiques/aide#cohesion' target='_blank'>cliquez ici</a>."><?= file_get_contents(asset_url() . "imgs/icons/question_circle.svg") ?></a>
+                    <a tabindex="0" role="button" data-toggle="popover" data-trigger="focus" title="Taux de cohésion" aria-label="Tooltip cohésion" data-content="Le taux de cohésion représente <b>l'unité d'un groupe politique</b> lorsqu'il vote. Il peut prendre des mesures allant de 0 à 1. Un taux proche de 1 signifie que le groupe est très uni.<br><br>Attention, dans beaucoup de parlements, y compris l'Assemblée nationale, les députés suivent dans la plupart des cas la ligne officielle du groupe, expliquant des taux de cohésion très élevés. Le mesure proposée ici est intéressante quand elle est comparée avec les mesures de cohésion des autres groupes.<br><br>Pour plus d'information, <a href='<?= base_url() ?>statistiques/aide#cohesion' target='_blank'>cliquez ici</a>."><?= file_get_contents(FCPATH . "assets/imgs/icons/question_circle.svg") ?></a>
                   </th>
                   <th class="pl-4"></th>
                 </tr>
@@ -479,7 +479,7 @@ endif; ?>
   <div class="row votes-next d-flex flex-row align-items-center justify-content-center py-4">
     <?php if ($vote_previous != FALSE) : ?>
       <a class="btn d-flex align-items-center mx-1 mx-md-2" href="<?= base_url() ?>votes/legislature-<?= $legislature ?>/vote_<?= $vote_previous ?>" role="button">
-        <?= file_get_contents(asset_url() . "imgs/icons/arrow_left.svg") ?>
+        <?= file_get_contents(FCPATH . "assets/imgs/icons/arrow_left.svg") ?>
         <span class="d-none d-md-block ml-2">Précédent</span>
       </a>
     <?php endif; ?>
@@ -487,7 +487,7 @@ endif; ?>
     <?php if ($vote_next != FALSE) : ?>
       <a class="btn d-flex align-items-center mx-1 mx-md-2" href="<?= base_url() ?>votes/legislature-<?= $legislature ?>/vote_<?= $vote_next ?>" role="button">
         <span class="d-none d-md-block mr-2">Suivant</span>
-        <?= file_get_contents(asset_url() . "imgs/icons/arrow_right.svg") ?></a>
+        <?= file_get_contents(FCPATH . "assets/imgs/icons/arrow_right.svg") ?></a>
     <?php endif; ?>
   </div>
 </div>
@@ -500,13 +500,13 @@ endif; ?>
       <?php $this->load->view('votes/partials/votes_carousel.php', array('votes' => $votes_datan)) ?>
       <div class="carousel-buttons d-flex justify-content-center">
         <button type="button" class="btn prev mr-2 carousel--prev" aria-label="précédent">
-          <?= file_get_contents(asset_url() . "imgs/icons/arrow_left.svg") ?>
+          <?= file_get_contents(FCPATH . "assets/imgs/icons/arrow_left.svg") ?>
         </button>
         <a class="btn btn-primary mx-2" href="<?= base_url() ?>votes/decryptes">
           Tous les votes
         </a>
         <button type="button" class="btn next ml-2 carousel--next" aria-label="suivant">
-          <?= file_get_contents(asset_url() . "imgs/icons/arrow_right.svg") ?>
+          <?= file_get_contents(FCPATH . "assets/imgs/icons/arrow_right.svg") ?>
         </button>
       </div>
     </div>

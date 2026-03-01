@@ -18,13 +18,13 @@
           </div>
           <div class="title mb-2"><?= $question['analyse'] ?></div>
           <div class="category mb-2">
-            <?= file_get_contents(asset_url()."imgs/icons/folder-fill.svg") ?>
+            <?= file_get_contents(FCPATH . "assets/imgs/icons/folder-fill.svg") ?>
             <?= ucfirst($question['rubrique']) ?>
           </div>
           <div class="mb-2"><?= word_limiter($question['content'], 25) ?></div>
           <a href="https://www.assemblee-nationale.fr/dyn/<?= $question['legislature'] ?>/questions/<?= $question['uid'] ?>"  target="_blank">
             Lire plus
-            <?= file_get_contents(asset_url()."imgs/icons/arrow_right.svg") ?>
+            <?= file_get_contents(FCPATH . "assets/imgs/icons/arrow_right.svg") ?>
           </a>
         </div>   
       <?php endforeach; ?>

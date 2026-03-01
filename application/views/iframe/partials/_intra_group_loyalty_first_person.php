@@ -3,10 +3,10 @@
     <div class="row">
       <div class="col-12 d-flex flex-row align-items-center">
         <div class="icon">
-          <?= file_get_contents(base_url() . 'assets/imgs/icons/loyalty.svg') ?>
+          <?= file_get_contents(FCPATH . 'assets/imgs/icons/loyalty.svg') ?>
         </div>
         <h3 class="ml-3 text-uppercase">Proximité avec mon groupe
-          <a tabindex="0" role="button" data-toggle="popover" class="no-decoration popover_focus" data-trigger="focus" aria-label="Tooltip loyauté" title="Proximité ou loyauté envers le groupe politique" data-content="Le taux de proximité est le <b>pourcentage de votes où le ou la député a voté sur la même ligne que son groupe</b>.<br><br>Attention, dans beaucoup de parlements, y compris l'Assemblée nationale, les députés suivent dans la plupart des cas la ligne officielle du groupe, expliquant des taux de cohésion très élevés. Le mesure proposée ici est intéressante quand elle est comparée avec les taux de loyauté des autres parlementaires.<br><br>Pour plus d'information, <a href='<?= base_url() ?>statistiques/aide#loyalty' target='_blank'>cliquez ici</a>." id="popover_focus"><?= file_get_contents(asset_url() . "imgs/icons/question_circle.svg") ?></a>
+          <a tabindex="0" role="button" data-toggle="popover" class="no-decoration popover_focus" data-trigger="focus" aria-label="Tooltip loyauté" title="Proximité ou loyauté envers le groupe politique" data-content="Le taux de proximité est le <b>pourcentage de votes où le ou la député a voté sur la même ligne que son groupe</b>.<br><br>Attention, dans beaucoup de parlements, y compris l'Assemblée nationale, les députés suivent dans la plupart des cas la ligne officielle du groupe, expliquant des taux de cohésion très élevés. Le mesure proposée ici est intéressante quand elle est comparée avec les taux de loyauté des autres parlementaires.<br><br>Pour plus d'information, <a href='<?= base_url() ?>statistiques/aide#loyalty' target='_blank'>cliquez ici</a>." id="popover_focus"><?= file_get_contents(FCPATH . "assets/imgs/icons/question_circle.svg") ?></a>
         </h3>
       </div>
     </div>

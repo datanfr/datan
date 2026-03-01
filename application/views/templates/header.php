@@ -204,7 +204,7 @@
         <ul class="navbar-nav ml-auto flex-row">
           <li class="nav-item d-none d-md-block">
             <a class="no-decoration btn btn-outline-info" href="<?= base_url(); ?>newsletter">
-              <?= file_get_contents(base_url() . '/assets/imgs/icons/envelope.svg') ?>
+              <?= file_get_contents(FCPATH . '/assets/imgs/icons/envelope.svg') ?>
               <span class="ml-2">S'inscrire à la newsletter</span></a>
           </li>
           <li class="nav-item ml-md-2">
@@ -213,7 +213,7 @@
           <?php if ($this->session->userdata('logged_in')): ?> 
             <li class="nav-item dropdown ml-1 ml-md-2" id="nav-logged-in">
               <a class="dropdown-toggle no-decoration btn btn-primary" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <?= file_get_contents(base_url() . '/assets/imgs/icons/person-fill.svg') ?>
+                <?= file_get_contents(FCPATH . '/assets/imgs/icons/person-fill.svg') ?>
                 <span class="d-none d-lg-inline"><?= $this->session->userdata('username') ?></span>
               </a>
               <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink" style="z-index: 9999 !important">

@@ -67,7 +67,7 @@ if ($first_person && $active) {
     <div class="row">
       <div class="col-12 d-flex flex-row align-items-center">
         <div class="icon">
-          <?= file_get_contents(base_url() . 'assets/imgs/icons/loyalty.svg') ?>
+          <?= file_get_contents(FCPATH . 'assets/imgs/icons/loyalty.svg') ?>
         </div>
         <h3 class="ml-3 text-uppercase">
           <?= $paragrpah_title ?>
@@ -85,7 +85,7 @@ if ($first_person && $active) {
           La mesure proposée ici est intéressante quand elle est comparée avec les taux de loyauté des autres parlementaires.<br><br>
           Pour plus d'information, <a href='<?= base_url() ?>statistiques/aide#loyalty' target='_blank'>cliquez ici</a>."
             id="popover_focus">
-            <?= file_get_contents(asset_url() . "imgs/icons/question_circle.svg") ?>
+            <?= file_get_contents(FCPATH . "assets/imgs/icons/question_circle.svg") ?>
           </a>
         </h3>
 

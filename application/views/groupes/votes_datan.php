@@ -3,7 +3,7 @@
       <div class="row">
         <div class="col-md-10 offset-md-1">
           <a class="btn btn-light mb-2" href="<?= base_url() ?>groupes/legislature-<?= $groupe['legislature'] ?>/<?= mb_strtolower($groupe['libelleAbrev']) ?>">
-            <?= file_get_contents(asset_url().'imgs/icons/arrow_left.svg') ?>
+            <?= file_get_contents(FCPATH . 'assets/imgs/icons/arrow_left.svg') ?>
             Retour profil
           </a>
           <span class="title d-block"><?= name_group($title) ?> (<?= $groupe['libelleAbrev'] ?>)</span>
@@ -16,7 +16,7 @@
   <?php endif; ?>
   <div class="d-none d-lg-none justify-content-between align-items-center sticky-top p-3" data-toggle="modal" data-target="#filterModal" id="filterBanner" style="top: 50px">
     <span class="text-white font-weight-bold">Filtrer par catégorie</span>
-    <?= file_get_contents(asset_url().'imgs/icons/funnel-fill.svg') ?>
+    <?= file_get_contents(FCPATH . 'assets/imgs/icons/funnel-fill.svg') ?>
   </div>
   <!-- Modal filter only on mobile & tablet -->
   <div class="modal fade" id="filterModal" tabindex="-1" role="dialog" aria-labelledby="filterModalTitle" aria-hidden="true">
@@ -79,7 +79,7 @@
       <div class="col-md-10 col-lg-8 offset-md-1 offset-lg-0 pl-lg-5 bloc-votes-datan">
         <div class="d-none d-lg-block btn-back mt-4">
           <a class="btn btn-outline-primary mx-2" href="<?= base_url() ?>groupes/legislature-<?= $groupe['legislature'] ?>/<?= mb_strtolower($groupe['libelleAbrev']) ?>">
-            <?= file_get_contents(asset_url().'imgs/icons/arrow_left.svg') ?>
+            <?= file_get_contents(FCPATH . 'assets/imgs/icons/arrow_left.svg') ?>
             Retour profil
           </a>
         </div>

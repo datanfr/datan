@@ -13,7 +13,7 @@
       <div class="row">
         <div class="col-12">
           <a class="btn btn-outline-secondary font-weight-bold" href="<?= base_url() ?>dashboard/explications">
-            <?= file_get_contents(asset_url()."imgs/icons/arrow_left.svg") ?>
+            <?= file_get_contents(FCPATH ."assets/imgs/icons/arrow_left.svg") ?>
             Retour
           </a>
         </div>
@@ -120,15 +120,15 @@
                 </div>
                 <div class="card-footer d-flex justify-content-around">
                   <a class="btn btn-secondary mx-1 font-weight-bold" href="<?= base_url() ?>votes/legislature-<?= $vote['legislature'] ?>/vote_<?= $vote['voteNumero'] ?>" target="_blank" role="button">
-                    <?= file_get_contents(asset_url()."imgs/icons/box-arrow-up-right.svg") ?>
+                    <?= file_get_contents(FCPATH . "assets/imgs/icons/box-arrow-up-right.svg") ?>
                     Lien Datan
                   </a>
                   <a class="btn btn-secondary mx-1 font-weight-bold" href="https://www2.assemblee-nationale.fr/scrutins/detail/(legislature)/<?= $vote['legislature'] ?>/(num)/<?= $vote['voteNumero'] ?>" target="_blank" role="button">
-                    <?= file_get_contents(asset_url()."imgs/icons/box-arrow-up-right.svg") ?>
+                    <?= file_get_contents(FCPATH . "assets/imgs/icons/box-arrow-up-right.svg") ?>
                     Lien Assemblée
                   </a>
                   <a class="btn btn-secondary mx-1 font-weight-bold" href="<?= $vote['dossierUrl'] ?>" target="_blank" role="button">
-                    <?= file_get_contents(asset_url()."imgs/icons/box-arrow-up-right.svg") ?>
+                    <?= file_get_contents(FCPATH . "assets/imgs/icons/box-arrow-up-right.svg") ?>
                     Dossier
                   </a>
                 </div>
