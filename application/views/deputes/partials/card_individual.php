@@ -38,7 +38,7 @@
     <div class="bloc-bref mt-3 d-flex justify-content-center justify-content-lg-start">
       <ul>
         <li class="first">
-          <div class="label"><?= file_get_contents(base_url() . '/assets/imgs/icons/geo-alt-fill.svg') ?></div>
+          <div class="label"><?= file_get_contents(FCPATH . '/assets/imgs/icons/geo-alt-fill.svg') ?> x</div>
           <div class="value"><?= $depute['departementNom'] . ' (' . $depute['departementCode'] . ')' ?></div>
         </li>
         <?php if ($active && !$historique) : ?>
