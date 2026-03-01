@@ -22,7 +22,7 @@
           </p>
           <p>
             <?php if ($candidatsN): ?>
-              Nous avons répertorié <b><?= $candidatsN ?> député<?= $candidatsN > 1 ? "s" : NULL ?> candidat<?= $candidatsN > 1 ? "s" : NULL ?></b>.
+              Nous avons répertorié <b><?= $candidatsN ?> député<?= $candidatsN > 1 ? "s" : NULL ?> candidat<?= $candidatsN > 1 ? "s" : NULL ?></b><?php if (isset($candidatsNLeaders) && $candidatsNLeaders > 0): ?>, dont <?= $candidatsNLeaders ?> têtes de liste<?php endif; ?>.
             <?php else: ?>
               Nous avons jusqu'à présent répertorié <span class="font-weight-bold">aucun député candidat</span>.
             <?php endif; ?>

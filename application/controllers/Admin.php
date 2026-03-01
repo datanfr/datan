@@ -118,7 +118,7 @@
       $electionType = $data['election']['libelleAbrev'];
       $requiredFieldsMap = [
         'Législatives' => ['district'],
-        'Municipales' => ['district'],
+        'Municipales' => ['district', 'position'],
         'Régionales' => ['district', 'position']
       ];
 
@@ -185,7 +185,7 @@
       $electionType = $data['election']['libelleAbrev'];
       $requiredFieldsMap = [
         'Législatives' => ['district'],
-        'Municipales' => ['district'],
+        'Municipales' => ['district', 'position'],
         'Régionales' => ['district', 'position']
       ];
 
