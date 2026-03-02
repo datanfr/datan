@@ -175,6 +175,7 @@ $route['questionnaire/resultat']['post'] = 'quiz/result';
 // ELECTIONS
 $route['elections'] = 'elections/index';
 $route['elections/(:any)'] = 'elections/individual/$1';
+$route['elections/resultats/(:any)/(:any)'] = 'elections/results_city/$1/$2';
 // NEWSLETTER
 $route['newsletter/edit/(:any)'] = 'newsletter/edit/$1';
 $route['newsletter/update'] = 'newsletter/update';
