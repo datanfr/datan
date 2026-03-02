@@ -5,6 +5,7 @@
       $this->load->model('elections_model');
       $this->load->model('deputes_model');
       $this->load->model('groupes_model');
+      $this->load->model('city_model');
     }
 
     public function index(){
@@ -170,6 +171,55 @@
       $this->load->view('templates/header', $data);
       $this->load->view('templates/button_up');
       $this->load->view('elections/candidats', $data);
+      $this->load->view('templates/breadcrumb', $data);
+      $this->load->view('templates/footer', $data);
+    }
+
+    public function results_city($dpt, $city) {
+
+      $data['ville'] = $this->city_model->get_individual($city, $dpt);
+
+      if (empty($data['ville'])) {
+        show_404($this->functions_datan->get_404_infos());
+      }
+
+      $data['ville'] = $data['ville'][0];
+      $insee = $data['ville']['insee'];
+      $data['ville_infos'] = $this->city_model->get_city_by_insee($insee);
+      $data['mayor'] = $this->city_model->get_mayor($data['ville']['dpt'], $insee, $data['ville']['commune']);
+      $data['adjacentes'] = $this->city_model->get_adjacentes($insee);
+      $data['communes_dpt'] = $this->city_model->get_communes_by_dpt($data['ville']['dpt_slug'], 4000);
+
+
+      // Breadcrumb
+      $data['breadcrumb'] = array(
+        array(
+          "name" => "Datan", "url" => base_url(), "active" => FALSE
+        ),
+        array(
+          "name" => "Élections", "url" => base_url()."elections", "active" => FALSE
+        ),
+        array(
+          "name" => "Résultats", "url" => base_url()."elections/resultats", "active" => FALSE
+        ),
+        array(
+          "name" => "Ville", "url" => base_url()."elections/resultats/ville", "active" => TRUE
+        ),
+      );
+
+      $data['breadcrumb_json'] = $this->breadcrumb_model->breadcrumb_json($data['breadcrumb']);
+      // Meta
+      $data['url'] = $this->meta_model->get_url();
+      $data['title_page'] = "Les candidats et résultats aux élections municipales 2026 à " . $data['ville']['commune_nom'];
+      $data['title_meta'] = "Les élections en France - Candidats et résultats | Datan";
+      $data['description_meta'] = "Retrouvez les résultats des élections municipales à " . $data['ville']['commune_nom'] . ". Les élections se tiennent les 15 et 22 mars 2026. Découvrez les candidats, le nombre de votants, l'abstention pour cette commune.";
+      $data['title'] = "Élections municipales 2026 à <u>" . $data['ville']['commune_nom'] . "</u> : candidats et résultats";
+      //Open Graph
+      $controller = $this->router->fetch_class()."/".$this->router->fetch_method();
+      $data['ogp'] = $this->meta_model->get_ogp($controller, $data['title_meta'], $data['description_meta'], $data['url'], $data);
+      // Load Views
+      $this->load->view('templates/header', $data);
+      $this->load->view('elections/results_city', $data);
       $this->load->view('templates/breadcrumb', $data);
       $this->load->view('templates/footer', $data);
     }
