@@ -405,5 +405,44 @@
       return $this->db->get()->result_array();
     }
 
+    public function get_municipales_listes($city){
+      $where = array('code_circonscription' => $city);
+      $rows = $this->db->get_where('elect_municipales_listes', $where)->result_array();
+
+      // Build multidimensional array grouped by list
+      $listes = [];
+      foreach ($rows as $row) {
+        $panneau = $row['numero_panneau'];
+
+        // Init the list if not yet seen
+        if (!isset($listes[$panneau])) {
+          $listes[$panneau] = [
+            'numero_panneau'      => $row['numero_panneau'],
+            'libelle_abrege'      => $row['libelle_abrege_liste'],
+            'libelle_liste'       => $row['libelle_liste'],
+            'code_nuance'         => $row['code_nuance'],
+            'nuance'              => $row['nuance'],
+            'tete_de_liste'       => null,
+            'candidats'           => []
+          ];
+        }
+
+        // Store the tête de liste
+        if ($row['tete_de_liste'] === 'OUI') {
+          $listes[$panneau]['tete_de_liste'] = $row['prenom'] . ' ' . $row['nom'];
+        }
+
+        // Add candidate to the list
+        $listes[$panneau]['candidats'][] = [
+          'ordre'       => $row['ordre'],
+          'nom'         => $row['nom'],
+          'prenom'      => $row['prenom'],
+          'sexe'        => $row['sexe'],
+          'nationalite' => $row['nationalite']
+        ];
+      }
+
+      return array_values($listes);
+    }
 
   }

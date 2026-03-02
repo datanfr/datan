@@ -11,7 +11,7 @@
 
     public function index($input, $departement){
       $input_ville = $input;
-      $data['ville'] = $this->city_model->$data['ville'] = $this->city_model->get_individual($input_ville, $departement);($input_ville, $departement);
+      $data['ville'] = $this->city_model->get_individual($input_ville, $departement);
 
       if (empty($data['ville'])) {
         show_404($this->functions_datan->get_404_infos());

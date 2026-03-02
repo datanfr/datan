@@ -3068,8 +3068,62 @@ input#quicksearch[type=text]{
         border-color: #ced4da;
         color: #000;
         text-decoration: none;
+      }
     }
+  }
+  .liste-card{
+    border: 1px solid #e9ecef;
+    border-radius: 10px;
+    overflow: hidden;
+    transition: box-shadow 0.2s ease;
+    @include hover-focus(){
+      box-shadow: 0 2px 12px rgba(0,0,0,0.07);
     }
+  }
+  .liste-header {
+    cursor: pointer;
+    background-color: #f8f9fa;
+    transition: background-color 0.2s ease;
+    user-select: none;
+    @include hover-focus(){
+      background-color: #f1f3f5;
+    }
+  }
+  .partie-dot {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .liste-tete {
+    font-weight: 600;
+    color: $text-black;
+  }
+  .liste-meta {
+    color: $text-gray-light;
+  }
+  .liste-separator {
+    margin: 0 5px;
+  }
+  .chevron-icon {
+    color: #9ca3af;
+    transition: transform 0.25s ease;
+    flex-shrink: 0;
+  }
+
+  .liste-header[aria-expanded="true"] .chevron-icon,
+  .liste-header.open .chevron-icon {
+    transform: rotate(180deg);
+  }
+  .liste-candidates {
+    background-color: #fff;
+  }
+  .candidate-row {
+    color: $text-gray;
+    border-bottom: 1px solid #f1f3f5;
+  }
+  .candidate-row:last-child {
+    border-bottom: none;
   }
 }
 .pg-elections-candidats{
