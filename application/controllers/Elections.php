@@ -190,6 +190,8 @@
       $data['adjacentes'] = $this->city_model->get_adjacentes($insee);
       $data['communes_dpt'] = $this->city_model->get_communes_by_dpt($data['ville']['dpt_slug'], 4000);
 
+      // Get listes
+      $data['listes'] = $this->elections_model->get_municipales_listes($insee);
 
       // Breadcrumb
       $data['breadcrumb'] = array(
