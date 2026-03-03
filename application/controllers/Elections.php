@@ -189,7 +189,7 @@
       $data['ville_infos'] = $this->city_model->get_city_by_insee($insee);
       $data['mayor'] = $this->city_model->get_mayor($data['ville']['dpt'], $insee, $data['ville']['commune']);
       $data['adjacentes'] = $this->city_model->get_adjacentes($insee);
-      $data['communes_dpt'] = $this->city_model->get_communes_by_dpt($data['ville']['dpt_slug'], 4000, FALSE);
+      $data['communes_dpt'] = $this->city_model->get_communes_by_dpt($data['ville']['dpt_slug'], 2000, 30);
 
       // Get listes
       $data['listes'] = $this->elections_model->get_municipales_listes($insee);
