@@ -29,7 +29,7 @@
     <div class="container">
       <div class="row">
         <div class="col-12">
-          <h2 class="text-white text-center">Députés candidats aux prochaines élections</h2>
+          <h2 class="text-white text-center">Prochaines élections en France</h2>
         </div>
         <div class="col-12 mt-3 d-flex flex-wrap">
           <?php foreach ($elections as $election): ?>
