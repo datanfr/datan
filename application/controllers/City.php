@@ -148,7 +148,10 @@
       $data['elections'] = $this->city_model->get_results_elections($n_circos, $data['ville']['dpt'], $data['ville']['commune'], $insee);
 
       // Edited presidentielle
-      if ($data['elections']['pres_2017']['results'][0]['votants'] > 0 && $data['elections']['pres_2022']['results'][0]['votants'] > 0) {
+      if (!empty($data['elections']['pres_2017']['results']) && 
+        !empty($data['elections']['pres_2022']['results']) &&
+        $data['elections']['pres_2017']['results'][0]['votants'] > 0 && 
+        $data['elections']['pres_2022']['results'][0]['votants'] > 0) {
         $data['results_pres_edited'] = $this->city_model->get_results_pres_edited($data['ville'], $data['elections']['pres_2017']['results'], $data['elections']['pres_2022']['results']);
       }
 

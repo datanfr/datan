@@ -4,46 +4,53 @@
       <h1><?= $title ?></h1>
     </div>
   </div>
-  <div class="row my-5 test-border">
-    <div class="col-8 test-border">
-      <p>Découvrez tous les candidats et les résultats des élections municipales 2026 pour <?= $ville['commune_nom'] ?> (<?= $ville_infos['dep_code'] ?>). Le premier tour des élections municipales se tiendra le 15 mars 2026 et le second tour le 22 mars 2026.</p>
-      <div class="alert alert-primary" role="alert">
+  <div class="row my-5">
+    <div class="col-8">
+      <p class="mb-0">Découvrez tous les candidats et les résultats des élections municipales 2026 pour <?= $ville['commune_nom'] ?> (<?= $ville_infos['dep_code'] ?>). Le premier tour des élections municipales se tiendra le 15 mars 2026 et le second tour le 22 mars 2026.</p>
+      <div class="alert alert-primary mt-4 mb-0" role="alert">
         Le premier tour des élections municipales se tiendra le dimanche 15 mars 2026. Les résultats seront diffusés le lendemain sur Datan.
       </div>
+      <div class="mt-4 mb-0">
+        <?php $this->view('departement/partials/electionFeature.php', array('election' => $deputes, 'city_info' => $ville_infos, 'title' => 'Candidature de députés', 'link' => FALSE)) ?>
+      </div>
       <h2 class="mt-5">Listes candidates aux municipales à <?= $ville['commune_nom'] ?></h2>
-
       <div class="mt-4" id="listesAccordion">
-
         <?php foreach($listes as $liste): ?>
           <div class="liste-card mb-3">
             <div class="liste-header d-flex align-items-center px-4 py-3" data-toggle="collapse" data-target="#liste<?= $liste['numero_panneau'] ?>">
-              <div class="partie-dot mr-3" style="background-color: #e63946;"></div>
+              <div class="partie-dot mr-3" style="background-color: <?= $liste['nuance_color'] ?>;"></div>
               <div class="flex-grow-1">
                   <div class="liste-tete"><?= $liste['tete_de_liste'] ?></div>
                   <div class="liste-meta">
-                    <span><?= $liste['libelle_liste'] ?></span>
+                    <span class="nuance"><?= $liste['nuance_edited'] ?></span>
                     <span class="liste-separator">·</span>
-                    <span><?= $liste['nuance'] ?> (<?= $liste['code_nuance'] ?>)</span>
+                    <span><?= $liste['libelle_liste'] ?></span>                    
                   </div>
               </div>
               <svg class="chevron-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-                  <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+                <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
               </svg>
             </div>
             <div id="liste<?= $liste['numero_panneau'] ?>" class="collapse">
               <div class="liste-candidates p-4">
                 <?php foreach($liste['candidats'] as $candidat): ?>
-                  <div class="candidate-row py-2"><?= $candidat['ordre'] ?>. <?= $candidat['prenom']?> <?= $candidat['nom']?></div>
+                  <div class="candidate-row py-2">
+                    <?= $candidat['ordre'] ?>. <?= $candidat['prenom']?> <?= $candidat['nom']?>
+                    <?php if($candidat['code_personnalite'] == 'DEP'): ?>
+                      <span class="badge badge-primary ml-2">Député<?= $candidat['sexe'] == 'F' ? 'e' : '' ?></span>
+                    <?php endif; ?>
+                    <?php if($candidat['code_personnalite'] == 'SEN'): ?>
+                      <span class="badge badge-primary ml-2"><?= $candidat['sexe'] == 'F' ? 'Sénatrice' : 'Sénateur' ?></span>
+                    <?php endif; ?>
+                  </div>
                 <?php endforeach; ?>
               </div>
             </div>
           </div>
         <?php endforeach; ?>
       </div>
-  </div>
-
-
-    <div class="col-4 test-border">
+    </div>
+    <div class="col-4">
       <div class="card card-info border">            
         <div class="card-body py-3">
           <div class="title">Rennes</div>

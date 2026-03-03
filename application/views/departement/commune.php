@@ -62,7 +62,11 @@
           <?php endif; ?>
         </div>
         <div class="col-lg-9 col-md-8 pt-5 pb-5">
-          <?php $this->view('departement/partials/electionFeature.php') ?>
+          <?php if (isset($electionFeature)): ?>
+            <div class="mb-5">
+              <?php $this->view('departement/partials/electionFeature.php', array('election' => $electionFeature, 'city_info' => $city_info, 'title' => '🗳️ Municipales 2026', 'link' => TRUE)) ?>
+            </div>
+          <?php endif; ?>
           <h1 class="text-center"><?= $title ?></h1>
           <?php if ($noMP): ?>
             <div class="text-center alert alert-danger">

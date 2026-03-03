@@ -192,6 +192,10 @@
 
       // Get listes
       $data['listes'] = $this->elections_model->get_municipales_listes($insee);
+      $data['listes'] = $this->elections_model->get_nuances_edited($data['listes']);
+
+      // Get deputes candidates       
+      $data['deputes'] = $this->elections_model->get_candidates_by_city($insee);
 
       // Breadcrumb
       $data['breadcrumb'] = array(
