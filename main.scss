@@ -3139,9 +3139,9 @@ input#quicksearch[type=text]{
     transition: transform 0.25s ease;
     flex-shrink: 0;
   }
-
   .liste-header[aria-expanded="true"] .chevron-icon,
-  .liste-header.open .chevron-icon {
+  .liste-header.open .chevron-icon,
+  #arrondissementDropdown[aria-expanded="true"] .chevron-icon {
     transform: rotate(180deg);
   }
   .liste-candidates {
@@ -3215,6 +3215,26 @@ input#quicksearch[type=text]{
       padding-bottom: 8px;
       margin-bottom: 14px;
     }
+  }
+  #arrondissementDropdown{
+    background-color: #f8f9fa;
+    border: 1px solid #e9ecef;
+    border-radius: 4px;
+    padding: 9px 16px;
+    font-weight: 600;
+    color: $text-black;
+    cursor: pointer;
+  }
+  .dropdown-menu{
+    border: 1px solid #e9ecef;
+    border-radius: 4px;
+    padding: 6px;
+  }
+  .dropdown-item{
+    border-radius: 4px;
+    padding: 8px 12px;
+    text-decoration: none;
+    color: $text-black;
   }
 }
 .pg-elections-candidats{

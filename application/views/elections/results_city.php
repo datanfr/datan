@@ -32,7 +32,39 @@
             <?php $this->view('elections/partials/_lists_accordion.php') ?>
           </div>
           <div class="tab-pane fade" id="arrondissement" role="tabpanel">
-            <p class="text-muted mt-4">Scrutins par arrondissement à venir.</p>
+            <p class="text-muted mt-4">À Paris, Lyon et Marseille, chaque électeur dispose de deux bulletins le jour du vote : un pour élire les conseillers de son arrondissement (ou secteur) et un autre pour élire les conseillers municipaux à l’échelle de toute la ville.</p>
+            <?php if(!empty($arrondissements)): ?>
+              <div class="dropdown mt-3">
+                <?php $firstLabel = array_keys($arrondissements)[0]; ?>
+                <button type="button" id="arrondissementDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <span id="arrondissementDropdownLabel"><?= htmlspecialchars($firstLabel) ?></span>
+                    <svg class="chevron-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                      <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+                  </svg>
+                </button>
+                <div class="dropdown-menu shadow-sm" aria-labelledby="arrondissementDropdown">
+                    <?php foreach($arrondissements as $arrLabel => $lists): ?>
+                        <a class="dropdown-item arrondissement-select-item rounded" href="#"
+                            data-arr="<?= htmlspecialchars($arrLabel) ?>">
+                            <?= $arrLabel ?>
+                        </a>
+                    <?php endforeach; ?>
+                </div>
+            </div>
+              <div id="arrondissementsContent" class="mt-4">
+                <?php $first = true; ?>
+                <?php foreach($arrondissements as $arrLabel => $lists): ?>
+                  <div class="arrondissement-block" data-arr="<?= htmlspecialchars($arrLabel) ?>" <?php if(!$first) echo 'style="display:none"'; ?> >
+                    <?php
+                      $this->view('elections/partials/_lists_accordion.php', array('listes' => $lists));
+                    ?>
+                  </div>
+                  <?php $first = false; ?>
+                <?php endforeach; ?>
+              </div>
+            <?php else: ?>
+              <p class="mt-3">Aucun arrondissement disponible.</p>
+            <?php endif; ?>
           </div>
         </div>
       <?php else: ?>
@@ -120,3 +152,35 @@
     <?php endif; ?>
   </div>
 </div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    var dropdown = document.getElementById('arrondissementDropdown');
+    
+    // Handle dropdown show/hide for chevron rotation
+    $(dropdown).on('show.bs.dropdown', function() {
+      this.setAttribute('aria-expanded', 'true');
+    });
+    
+    $(dropdown).on('hide.bs.dropdown', function() {
+      this.setAttribute('aria-expanded', 'false');
+    });
+    
+    // Handle arrondissement selection
+    var items = document.querySelectorAll('.arrondissement-select-item');
+    items.forEach(function(item) {
+      item.addEventListener('click', function(e) {
+        e.preventDefault();
+        var selected = this.getAttribute('data-arr');
+        document.getElementById('arrondissementDropdownLabel').textContent = selected;
+        document.querySelectorAll('.arrondissement-block').forEach(function(block) {
+          if (block.getAttribute('data-arr') === selected) {
+            block.style.display = '';
+          } else {
+            block.style.display = 'none';
+          }
+        });
+      });
+    });
+  });
+</script>

@@ -226,6 +226,13 @@
       // PLM 
       $data['isPLM'] = in_array($insee, ['75056', '13055', '69123']);
 
+      if($data['isPLM']) {
+        $data['arrondissements'] = $this->elections_model->get_municipales_listes($insee, TRUE);
+        foreach ($data['arrondissements'] as $arr => $lists) {
+          $data['arrondissements'][$arr] = $this->elections_model->get_nuances_edited($lists);
+        }
+      }
+
       // Breadcrumb
       $data['breadcrumb'] = array(
         array(
