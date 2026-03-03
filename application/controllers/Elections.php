@@ -14,6 +14,9 @@
       $data['elections'] = $this->elections_model->get_election_all();
       $data['election_future'] = TRUE; // There is an election in the future
 
+      $data['departements'] = $this->departement_model->get_all_departements();
+      $data['communes'] = $this->city_model->get_communes(FALSE, 30);
+
       // Breadcrumb
       $data['breadcrumb'] = array(
         array(
@@ -36,6 +39,7 @@
       // Load Views
       $this->load->view('templates/header', $data);
       $this->load->view('elections/index', $data);
+      $this->load->view('elections/links_dpt_cities', $data);
       $this->load->view('templates/breadcrumb', $data);
       $this->load->view('templates/footer', $data);
     }
@@ -49,6 +53,10 @@
 
       // State of the election
       $data['state'] = $this->elections_model->get_election_state($data['election']['id']);
+
+      // Get departements and communes for link 
+      $data['departements'] = $this->departement_model->get_all_departements();
+      $data['communes'] = $this->city_model->get_communes(FALSE, 30);
 
       // Data
       $data['deputes'] = $this->elections_model->get_all_candidates($data['election']['id'], TRUE, FALSE);
@@ -172,6 +180,7 @@
       $this->load->view('templates/header', $data);
       $this->load->view('templates/button_up');
       $this->load->view('elections/candidats', $data);
+      $this->load->view('elections/links_dpt_cities', $data);
       $this->load->view('templates/breadcrumb', $data);
       $this->load->view('templates/footer', $data);
     }
