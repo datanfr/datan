@@ -434,15 +434,52 @@
 
         // Add candidate to the list
         $listes[$panneau]['candidats'][] = [
-          'ordre'       => $row['ordre'],
-          'nom'         => $row['nom'],
-          'prenom'      => $row['prenom'],
-          'sexe'        => $row['sexe'],
-          'nationalite' => $row['nationalite']
+          'ordre'             => $row['ordre'],
+          'nom'               => $row['nom'],
+          'prenom'            => $row['prenom'],
+          'sexe'              => $row['sexe'],
+          'nationalite'       => $row['nationalite'],
+          'code_personnalite' => $row['code_personnalite']
         ];
       }
 
       return array_values($listes);
+    }
+
+    public function get_nuances_edited($listes){
+      $nuanceMap = [
+        'LCOM' => ['label' => 'PCF',                    'color' => '#e4001f'],
+        'LDIV' => ['label' => 'Divers',                 'color' => '#888888'],
+        'LDSV' => ['label' => 'Droite souverainiste',   'color' => '#003189'],
+        'LDVC' => ['label' => 'Divers centre',          'color' => '#ffcc00'],
+        'LDVD' => ['label' => 'Divers droite',          'color' => '#0a3ec2'],
+        'LDVG' => ['label' => 'Divers gauche',          'color' => '#ff8c69'],
+        'LECO' => ['label' => 'Divers écologiste',      'color' => '#2e9e44'],
+        'LEXD' => ['label' => 'Extrême droite',         'color' => '#302a6e'],
+        'LFI'  => ['label' => 'LFI',                    'color' => '#cc0000'],
+        'LHOR' => ['label' => 'Horizons',               'color' => '#00a0c8'],
+        'LLR'  => ['label' => 'Les Républicains',       'color' => '#0033a0'],
+        'LMDM' => ['label' => 'MODEM',                  'color' => '#f07800'],
+        'LREC' => ['label' => 'Reconquête !',           'color' => '#0d2f6e'],
+        'LREG' => ['label' => 'Régionalistes',          'color' => '#66bb6a'],
+        'LREN' => ['label' => 'Renaissance',            'color' => '#e8b31a'],
+        'LRN'  => ['label' => 'Rassemblement national', 'color' => '#0d378a'],
+        'LSOC' => ['label' => 'Parti socialiste',       'color' => '#e5007d'],
+        'LUC'  => ['label' => 'Union centre',           'color' => '#ffcc00'],
+        'LUD'  => ['label' => 'Union droite',           'color' => '#0a3ec2'],
+        'LUDI' => ['label' => 'UDI',                    'color' => '#00adef'],
+        'LUDR' => ['label' => 'UDR',                    'color' => '#1a1a6e'],
+        'LUG'  => ['label' => 'Union gauche',           'color' => '#cc0000'],
+        'LUXD' => ['label' => 'Union extrême droite',   'color' => '#302a6e'],
+      ];
+
+      foreach ($listes as $key => $liste) {
+        $nuance = $nuanceMap[$liste['code_nuance']] ?? null;
+        $listes[$key]['nuance_edited'] = $nuance ? $nuance['label'] : $liste['code_nuance'];
+        $listes[$key]['nuance_color']  = $nuance ? $nuance['color'] : '#888888';
+      }
+
+      return $listes;
     }
 
   }

@@ -3032,7 +3032,6 @@ input#quicksearch[type=text]{
 }
 .pg-resultats-ville{
   .card-info{
-    background-color: #f8f9fa;
     border-radius: 15px;
     .title {
       color: $text-black;
@@ -3049,7 +3048,6 @@ input#quicksearch[type=text]{
     }
   }
   .card-nearby{
-    background-color: #f8f9fa;
     border-radius: 15px;
     .title {
       color: $text-black;
@@ -3096,11 +3094,14 @@ input#quicksearch[type=text]{
     flex-shrink: 0;
   }
   .liste-tete {
-    font-weight: 600;
+    font-weight: 800;
     color: $text-black;
   }
   .liste-meta {
     color: $text-gray-light;
+    .nuance{
+      font-weight: 600;
+    }
   }
   .liste-separator {
     margin: 0 5px;
