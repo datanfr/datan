@@ -42,7 +42,7 @@
       </div>
     </div>
     <div class="col-lg-4">
-      <div class="row test-border">
+      <div class="row">
         <div class="col-lg-12 col-md-6">
           <?php if($big_communes): ?>
             <div class="card card-nearby border">            
