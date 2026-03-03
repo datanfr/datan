@@ -23,9 +23,9 @@
             <div class="row">
               <?php foreach($commune_by_letter as $commune): ?>
                 <div class="col-6">
-                  <?php if($commune['pop2017'] > 2000): ?>
+                  <?php if($commune['pop2017'] > $url_obf): ?>
                     <a role="button" href="<?= base_url() ?>elections/resultats/<?= $commune['slug'] ?>/<?= $commune['commune_slug'] ?>" class="city-item d-flex justify-content-between align-items-center mb-3">
-                      <?= $commune['commune_nom'] ?> + 2000
+                      <?= $commune['commune_nom'] ?>
                       <?= file_get_contents(FCPATH . "assets/imgs/icons/bi-chevron-right.svg") ?>
                     </a>
                   <?php else: ?>
