@@ -19,6 +19,9 @@
 
       $n_circos = count($data['ville']);
 
+      // URL OBFUSCATION FOR LINKS >> ELECTIONS
+      $data['url_obf'] = 2000; // Obfuscation for cities < 2.000
+
       //Variables
       $v = $data['ville'][0];
       $commune_nom = $v['commune_nom'];
