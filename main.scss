@@ -3126,6 +3126,27 @@ input#quicksearch[type=text]{
   .candidate-row:last-child {
     border-bottom: none;
   }
+  .nav-tabs{
+    border-bottom: 2px solid #e9ecef;
+  }
+  .nav-tabs .nav-item .nav-link {
+    border: none;
+    border-radius: 8px 8px 0 0;
+    padding: 10px 20px;
+    font-weight: 600;
+    color: $text-gray;
+    transition: color 0.2s ease, background-color 0.2s ease;
+    position: relative;
+    text-decoration: none;
+    @include hover-focus(){
+      color: $text-black;
+      border-bottom: 2.5px solid $bleu;
+    }
+  }
+  .nav-tabs .nav-item .nav-link.active {
+    color: $text-black;
+    border-bottom: 2.5px solid $bleu;
+  }
 }
 .pg-elections-candidats{
   .bloc-titre{
