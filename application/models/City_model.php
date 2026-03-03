@@ -15,17 +15,36 @@
       return $this->db->get_where('cities c', $where, 1)->row_array();
     }
 
-    public function get_communes_by_dpt($slug, $max_population = FALSE){
+    public function get_communes_by_dpt($slug, $max_population = FALSE, $limit = FALSE, $order_by = FALSE){
       if ($max_population) {
         $this->db->where('city.pop2017 >', $max_population);
+      }
+      if ($limit) {
+        $this->db->limit($limit);
       }
       $this->db->where('d.slug', $slug);
       $this->db->join('departement d', 'd.departement_code = c.dpt');
       $this->db->join('cities_infos city', 'c.insee = city.insee');
       $this->db->group_by('c.commune_nom');
-      $this->db->order_by('city.pop2017', 'DESC');
+
+      if ($order_by === 'alpha') {
+        $this->db->order_by('c.commune_nom', 'ASC');
+      } else {
+        $this->db->order_by('city.pop2017', 'DESC');
+      }
+
       $query = $this->db->get('circos c');
       return $query->result_array();
+    }
+
+    public function group_communes_by_letter($communes) {
+      $grouped = [];
+      foreach ($communes as $commune) {
+        $first_letter = mb_strtoupper(mb_substr($commune['commune_nom'], 0, 1, 'UTF-8'), 'UTF-8');
+        $grouped[$first_letter][] = $commune;
+      }
+      ksort($grouped); // sort letters A → Z
+      return $grouped;
     }
 
     public function get_individual($ville, $departement){
@@ -288,7 +307,7 @@
         LEFT JOIN circos c ON a.adjacente = c.insee
         LEFT JOIN cities_infos ci ON ci.insee = c.insee
         LEFT JOIN departement d ON c.dpt = d.departement_code
-        WHERE a.insee = ?
+        WHERE a.insee = ? AND c.id IS NOT NULL
         GROUP BY c.commune_slug
         ORDER BY ci.pop2017 DESC
       ';

@@ -385,6 +385,19 @@
       return $this->db->get_where('elect_deputes_candidats e', $where)->result_array();
     }
 
+    public function get_candidates_by_dpt($dpt){
+      $election = 7; // Municipales 2026
+      $where = array(
+        'e.election' => $election,
+        'e.visible' => 1,
+        'c.dpt' => $dpt
+      );
+      $this->db->join('deputes_last d', 'd.mpId = e.mpId', 'left');
+      $this->db->join('circos c', 'c.insee = e.district', 'left');
+      $this->db->group_by('c.dpt');
+      return $this->db->get_where('elect_deputes_candidats e', $where)->result_array();
+    }
+
     public function get_n_candidates_by_group($group) {
       $where = array(
         'e.election' => 7, // Municipales 2026

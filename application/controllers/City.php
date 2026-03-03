@@ -107,7 +107,7 @@
       }
 
       // Get all big cities from the department
-      $data['communes_dpt'] = $this->city_model->get_communes_by_dpt($departement, 4000);
+      $data['communes_dpt'] = $this->city_model->get_communes_by_dpt($departement, 4000, FALSE);
 
       // Clean infos on the city
       $data['ville'] = $data['ville'][0];

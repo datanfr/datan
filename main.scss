@@ -3006,11 +3006,11 @@ input#quicksearch[type=text]{
 }
 /*
 ################
-               PAGE ELECTIONS (pg-elections-index & pg-elections-candidats & pg-resultats-ville)
+               PAGE ELECTIONS (pg-elections-index & pg-elections-candidats & pg-resultats-ville & .pg-resultats-dpt)
 ################
 */
 
-.pg-elections-index, .pg-elections-candidats, .pg-resultats-ville{
+.pg-elections-index, .pg-elections-candidats, .pg-resultats-ville, .pg-resultats-dpt{
   // HN //
   h1{
     font-size: 3em;
@@ -3030,7 +3030,7 @@ input#quicksearch[type=text]{
     }
   }
 }
-.pg-resultats-ville{
+.pg-resultats-ville, .pg-resultats-dpt {
   .card-info{
     border-radius: 15px;
     .title {
@@ -3054,19 +3054,20 @@ input#quicksearch[type=text]{
       font-weight: 600;
       font-size: $h4-font-size;
     }
-    .city-item {
-      padding: 12px 16px;
-      border: 1px solid #e9ecef;
-      color: #1e293b;
+  }
+  .city-item {
+    padding: 12px 16px;
+    border: 1px solid #e9ecef;
+    color: #1e293b;
+    text-decoration: none;
+    border-radius: 8px;
+    background-color: white;
+    transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+    @include hover-focus(){
+      background-color: #f8f9fa;
+      border-color: #ced4da;
+      color: #000;
       text-decoration: none;
-      border-radius: 8px;
-      transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
-      @include hover-focus(){
-        background-color: #f8f9fa;
-        border-color: #ced4da;
-        color: #000;
-        text-decoration: none;
-      }
     }
   }
   .liste-card{
@@ -3146,6 +3147,47 @@ input#quicksearch[type=text]{
   .nav-tabs .nav-item .nav-link.active {
     color: $text-black;
     border-bottom: 2.5px solid $bleu;
+  }
+  .letter-index {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }  
+  .letter-anchor {
+    position: relative;
+    font-weight: 600;
+    font-size: $h5-font-size;
+    color: $text-gray-light;
+    text-decoration: none;
+    padding-bottom: 3px;
+    transition: color 0.2s ease;
+  }
+  .letter-anchor::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 2px;
+    background-color: $bleu;
+    transition: width 0.2s ease;
+  }
+  .letter-anchor:hover {
+    color: $bleu;
+  }
+  .letter-anchor:hover::after {
+    width: 100%;
+  }
+  .communes-list {
+    .letter-heading{
+      font-size: $h4-font-size;
+      font-weight: 800;
+      color: $bleu;
+      border-bottom: 2px solid #e9ecef;
+      padding-bottom: 8px;
+      margin-bottom: 14px;
+    }
   }
 }
 .pg-elections-candidats{
