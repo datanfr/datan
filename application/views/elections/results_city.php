@@ -14,41 +14,30 @@
         <?php $this->view('departement/partials/electionFeature.php', array('election' => $deputes, 'city_info' => $ville_infos, 'title' => 'Candidature de députés', 'link' => FALSE)) ?>
       </div>
       <h2 class="mt-5">Listes candidates aux municipales à <?= $ville['commune_nom'] ?></h2>
-      <div class="mt-4" id="listesAccordion">
-        <?php foreach($listes as $liste): ?>
-          <div class="liste-card mb-3">
-            <div class="liste-header d-flex align-items-center px-4 py-3" data-toggle="collapse" data-target="#liste<?= $liste['numero_panneau'] ?>">
-              <div class="partie-dot mr-3" style="background-color: <?= $liste['nuance_color'] ?>;"></div>
-              <div class="flex-grow-1">
-                  <div class="liste-tete"><?= $liste['tete_de_liste'] ?></div>
-                  <div class="liste-meta">
-                    <span class="nuance"><?= $liste['nuance_edited'] ?></span>
-                    <span class="liste-separator">·</span>
-                    <span><?= $liste['libelle_liste'] ?></span>                    
-                  </div>
-              </div>
-              <svg class="chevron-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-                <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
-              </svg>
-            </div>
-            <div id="liste<?= $liste['numero_panneau'] ?>" class="collapse">
-              <div class="liste-candidates p-4">
-                <?php foreach($liste['candidats'] as $candidat): ?>
-                  <div class="candidate-row py-2">
-                    <?= $candidat['ordre'] ?>. <?= $candidat['prenom']?> <?= $candidat['nom']?>
-                    <?php if($candidat['code_personnalite'] == 'DEP'): ?>
-                      <span class="badge badge-primary ml-2">Député<?= $candidat['sexe'] == 'F' ? 'e' : '' ?></span>
-                    <?php endif; ?>
-                    <?php if($candidat['code_personnalite'] == 'SEN'): ?>
-                      <span class="badge badge-primary ml-2"><?= $candidat['sexe'] == 'F' ? 'Sénatrice' : 'Sénateur' ?></span>
-                    <?php endif; ?>
-                  </div>
-                <?php endforeach; ?>
-              </div>
-            </div>
+      <?php if($isPLM): ?>
+        <ul class="nav nav-tabs mt-4" id="scrutinTabs" role="tablist">
+          <li class="nav-item">
+            <a class="nav-link active" id="municipal-tab" data-toggle="tab" href="#municipal" role="tab">
+              Scrutin municipal
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" id="arrondissement-tab" data-toggle="tab" href="#arrondissement" role="tab">
+              Scrutins par arrondissement
+            </a>
+          </li>
+        </ul>
+        <div class="tab-content">
+          <div class="tab-pane fade show active" id="municipal" role="tabpanel">
+            <?php $this->view('elections/partials/_lists_accordion.php') ?>
           </div>
-        <?php endforeach; ?>
-      </div>
+          <div class="tab-pane fade" id="arrondissement" role="tabpanel">
+            <p class="text-muted mt-4">Scrutin par arrondissement à venir.</p>
+          </div>
+        </div>
+      <?php else: ?>
+        <?php $this->view('elections/partials/_lists_accordion.php') ?>
+      <?php endif; ?>
     </div>
     <div class="col-4">
       <div class="card card-info border">            
