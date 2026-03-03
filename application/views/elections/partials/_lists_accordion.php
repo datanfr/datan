@@ -6,8 +6,10 @@
             <div class="flex-grow-1">
                 <div class="liste-tete"><?= $liste['tete_de_liste'] ?></div>
                 <div class="liste-meta">
-                <span class="nuance"><?= $liste['nuance_edited'] ?></span>
-                <span class="liste-separator">·</span>
+                <?php if($liste['nuance_edited']): ?>
+                    <span class="nuance"><?= $liste['nuance_edited'] ?></span>
+                    <span class="liste-separator">·</span>
+                <?php endif; ?>
                 <span><?= $liste['libelle_liste'] ?></span>                    
                 </div>
             </div>
