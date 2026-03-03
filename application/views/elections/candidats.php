@@ -35,14 +35,19 @@
           <div class="city-search-block">
             <h2 class="mb-1">Candidats et résultats dans votre commune</h2>
             <p class="text-muted mb-3">Accédez aux listes candidates et aux résultats dans votre commune</p>
-            <div class="city-search-wrapper d-flex">
-              <div class="city-search-input-wrapper flex-grow-1">
-                <div class="city-search-icon">
+            <div id="city-search-bloc" class="search-bloc">
+            <form autocomplete="off" action="recherche.php" id="searchForm" method="GET">
+              <div class="search">
+                <div class="search_icon">
                   <?= file_get_contents(FCPATH . "assets/imgs/icons/bi-search.svg") ?>
                 </div>
-              <input type="text" id="citySearch" class="city-search-input" placeholder="Nom de commune (ex: Rennes, Lyon, Bordeaux...)">
+                <input id="citySearch" type="text" class="randomized" placeholder="Nom de commune (ex : Paris, Lyon, Marseille)">
+                <div class="search-results" id="search-results-bloc" style="display: none">
+                  <div id="search-results-list"></div>
+                  </div>
+                </div>
+              </form>
             </div>
-          </div>
         </div>
         <!-- TOP 10 CITIES -->
         <div class="top-cities mt-5">
@@ -57,6 +62,7 @@
     </div>
   </div>
 </div>
+
 <?php endif; ?>
 <div class="container pg-elections-candidats mt-4 mb-5">
   <div class="row">

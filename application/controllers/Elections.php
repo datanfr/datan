@@ -165,7 +165,9 @@
       if (in_array($data['election']['id'], array(4, 5, 6))) {
         $data['js_to_load_up_defer'] = array('dist/chart.min.js');
       }
-      $data['js_to_load'] = array();
+      $data['js_to_load'] = array(
+        'dist/autocomplete_search',
+      );
       if (in_array($data['election']['id'], array(1, 4, 5, 6, 7))) {
         array_push($data['js_to_load'], 'datan/sorting_select');
       }

@@ -3037,34 +3037,6 @@ input#quicksearch[type=text]{
     border-radius: 12px;
     padding: 24px;
   }
-  .city-search-wrapper {
-      gap: 10px;
-  }
-  .city-search-input-wrapper {
-      position: relative;
-  }
-  .city-search-icon {
-      position: absolute;
-      left: 14px;
-      top: 50%;
-      transform: translateY(-50%);
-      color: #9ca3af;
-  }
-  .city-search-input {
-      width: 100%;
-      padding: 11px 14px 11px 40px;
-      border: 1px solid #dee2e6;
-      border-radius: 8px;
-      font-size: 0.9rem;
-      color: #1e293b;
-      background-color: #fff;
-      outline: none;
-      transition: border-color 0.2s ease, box-shadow 0.2s ease;
-  }
-  .city-search-input:focus {
-      border-color: $bleu;
-      box-shadow: 0 0 0 3px rgba(0, 102, 142, 0.1);
-  }
   .top-cities-label {
     font-weight: 600;
     color: white;
