@@ -37,6 +37,24 @@
       return $query->result_array();
     }
 
+    public function get_communes($max_population = FALSE, $limit = FALSE, $order_by = FALSE){
+      if ($limit) {
+        $this->db->limit($limit);
+      }
+      $this->db->join('departement d', 'd.departement_code = c.dpt');
+      $this->db->join('cities', 'c.insee = cities.code_insee');
+      $this->db->group_by('c.commune_nom');
+
+      if ($order_by === 'alpha') {
+        $this->db->order_by('c.commune_nom', 'ASC');
+      } else {
+        $this->db->order_by('cities.population', 'DESC');
+      }
+
+      $query = $this->db->get('circos c');
+      return $query->result_array();
+    }
+
     public function group_communes_by_letter($communes) {
       $grouped = [];
       foreach ($communes as $commune) {
