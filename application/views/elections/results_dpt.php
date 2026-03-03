@@ -3,7 +3,7 @@
     <div class="col-lg-10">
       <h1><?= $title ?></h1>
       <p class="mt-4">Découvrez tous les candidats et les résultats des élections municipales 2026 <?= $dpt['libelle_1'] ?><?= $dpt['departement_nom'] ?> (<?= $dpt['region'] ?>). Le premier tour des élections municipales se tiendra le 15 mars 2026 et le second tour le 22 mars 2026.</p>
-      <div class="alert alert-primary mt-4 mb-0" role="alert">
+      <div class="alert alert-primary mt-4">
         Le premier tour des élections municipales se tiendra le dimanche 15 mars 2026. Les résultats seront diffusés le lendemain sur Datan.
       </div>
     </div>

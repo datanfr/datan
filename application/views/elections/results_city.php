@@ -1,19 +1,19 @@
 <div class="container pg-resultats-ville">
-  <div class="row my-5">
-    <div class="col-12">
+  <div class="row mt-5">
+    <div class="col-lg-10">
       <h1><?= $title ?></h1>
-    </div>
-  </div>
-  <div class="row my-5">
-    <div class="col-8">
-      <p class="mb-0">Découvrez tous les candidats et les résultats des élections municipales 2026 pour <?= $ville['commune_nom'] ?> (<?= $ville_infos['dep_code'] ?>). Le premier tour des élections municipales se tiendra le 15 mars 2026 et le second tour le 22 mars 2026.</p>
-      <div class="alert alert-primary mt-4 mb-0" role="alert">
+      <p class="mt-4">Découvrez tous les candidats et les résultats des élections municipales 2026 pour <?= $ville['commune_nom'] ?> (<?= $ville_infos['dep_code'] ?>). Le premier tour des élections municipales se tiendra le 15 mars 2026 et le second tour le 22 mars 2026.</p>
+      <div class="alert alert-primary mt-4">
         Le premier tour des élections municipales se tiendra le dimanche 15 mars 2026. Les résultats seront diffusés le lendemain sur Datan.
       </div>
       <div class="mt-4 mb-0">
         <?php $this->view('departement/partials/electionFeature.php', array('election' => $deputes, 'city_info' => $ville_infos, 'title' => 'Candidature de députés', 'link' => FALSE)) ?>
       </div>
-      <h2 class="mt-5">Listes candidates aux municipales à <?= $ville['commune_nom'] ?></h2>
+    </div>
+  </div>
+  <div class="row mt-5">
+    <div class="col-lg-8">
+      <h2>Listes candidates aux municipales à <?= $ville['commune_nom'] ?></h2>
       <?php if($isPLM): ?>
         <ul class="nav nav-tabs mt-4" id="scrutinTabs" role="tablist">
           <li class="nav-item">
@@ -39,52 +39,58 @@
         <?php $this->view('elections/partials/_lists_accordion.php') ?>
       <?php endif; ?>
     </div>
-    <div class="col-4">
-      <div class="card card-info border">            
-        <div class="card-body py-3">
-          <div class="title"><?= $ville['commune_nom'] ?></div>
-          <div>
-            <span class="badge badge-primary"><?= $ville_infos['dep_nom'] ?> - <?= $ville_infos['dep_code'] ?></span>
+    <div class="col-lg-4">
+      <div class="row mt-5 mt-lg-0">
+        <div class="col-lg-12 col-md-6">
+          <div class="card card-info border">            
+            <div class="card-body py-3">
+              <div class="title"><?= $ville['commune_nom'] ?></div>
+              <div>
+                <span class="badge badge-primary"><?= $ville_infos['dep_nom'] ?> - <?= $ville_infos['dep_code'] ?></span>
+              </div>
+              <div class="label text-uppercase mt-4">👥 Population</div>
+              <div class="value"><?= formatNumber($ville_infos['population']) ?></div>
+              <?php if (!empty($mayor["nameFirst"])): ?>
+                <div class="label text-uppercase mt-3">🏛️ Maire</div>
+                <div class="value"><?= $mayor["nameFirst"]." ".ucfirst(mb_strtolower($mayor["nameLast"])) ?></div>
+              <?php endif; ?>
+            </div>
           </div>
-          <div class="label text-uppercase mt-4">👥 Population</div>
-          <div class="value"><?= formatNumber($ville_infos['population']) ?></div>
-          <?php if (!empty($mayor["nameFirst"])): ?>
-            <div class="label text-uppercase mt-3">🏛️ Maire</div>
-            <div class="value"><?= $mayor["nameFirst"]." ".ucfirst(mb_strtolower($mayor["nameLast"])) ?></div>
+        </div>
+        <div class="col-lg-12 col-md-6">
+          <div class="card card-nearby border mt-lg-4 mt-md-0 mt-4">            
+            <div class="card-body py-3">
+              <div class="title">Communes voisines</div>
+              <div class="d-flex flex-column mt-3">
+                <?php foreach($adjacentes as $city): ?>
+                  <a role="button" url_obf="<?= url_obfuscation(base_url() . "elections/resultats/" . $city['slug'] . "/" .  $city['commune_slug']) ?>" class="city-item d-flex justify-content-between align-items-center mb-3 url_obf">
+                    <?= $city['commune_nom'] ?>
+                    <?= file_get_contents(FCPATH . "assets/imgs/icons/bi-chevron-right.svg") ?>
+                  </a>
+                <?php endforeach; ?>
+              </div>
+            </div>
+          </div>
+          <?php if (!empty($deputes_ville)): ?>
+            <div class="card card-nearby mt-5 border">            
+              <div class="card-body py-3">
+                <div class="title"><?= count($deputes_ville) > 1 ? "Députés" : "Député" ?> à <?= $ville['commune_nom'] ?></div>
+                <div class="d-flex flex-column mt-3">
+                  <?php foreach($deputes_ville as $mp): ?>
+                    <a href="<?= base_url() ?>deputes/<?= $mp['dptSlug'] ?>/depute_<?= $mp['nameUrl'] ?>" class="city-item d-flex justify-content-between align-items-center mb-3 no-decoration">
+                    <span>
+                        <?= $mp['nameFirst'] ?> <?= $mp['nameLast'] ?> -
+                        <span style="color: <?= $mp['couleurAssociee'] ?>;"><?= $mp['libelleAbrev'] ?></span>
+                      </span>
+                      <?= file_get_contents(FCPATH . "assets/imgs/icons/bi-chevron-right.svg") ?>                  
+                    </a>
+                  <?php endforeach; ?>
+                </div>
+              </div>
+            </div>
           <?php endif; ?>
         </div>
       </div>
-      <div class="card card-nearby mt-5 border">            
-        <div class="card-body py-3">
-          <div class="title">Communes voisines</div>
-          <div class="d-flex flex-column mt-3">
-            <?php foreach($adjacentes as $city): ?>
-              <a role="button" url_obf="<?= url_obfuscation(base_url() . "elections/resultats/" . $city['slug'] . "/" .  $city['commune_slug']) ?>" class="city-item d-flex justify-content-between align-items-center mb-3 url_obf">
-                <?= $city['commune_nom'] ?>
-                <?= file_get_contents(FCPATH . "assets/imgs/icons/bi-chevron-right.svg") ?>
-              </a>
-            <?php endforeach; ?>
-          </div>
-        </div>
-      </div>
-      <?php if (!empty($deputes_ville)): ?>
-      <div class="card card-nearby mt-5 border">            
-        <div class="card-body py-3">
-          <div class="title"><?= count($deputes_ville) > 1 ? "Députés" : "Député" ?> à <?= $ville['commune_nom'] ?></div>
-          <div class="d-flex flex-column mt-3">
-            <?php foreach($deputes_ville as $mp): ?>
-              <a href="<?= base_url() ?>deputes/<?= $mp['dptSlug'] ?>/depute_<?= $mp['nameUrl'] ?>" class="city-item d-flex justify-content-between align-items-center mb-3 no-decoration">
-               <span>
-                  <?= $mp['nameFirst'] ?> <?= $mp['nameLast'] ?> -
-                  <span style="color: <?= $mp['couleurAssociee'] ?>;"><?= $mp['libelleAbrev'] ?></span>
-                </span>
-                <?= file_get_contents(FCPATH . "assets/imgs/icons/bi-chevron-right.svg") ?>                  
-              </a>
-            <?php endforeach; ?>
-          </div>
-        </div>
-      </div>
-      <?php endif; ?>
     </div>
   </div>  
 </div>

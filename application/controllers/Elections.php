@@ -250,7 +250,7 @@
       $data['url'] = $this->meta_model->get_url();
       $data['title_meta'] = "Les candidats et résultats aux élections municipales 2026 à " . $data['ville']['commune_nom'] . " | Datan";
       $data['description_meta'] = "Retrouvez les résultats des élections municipales à " . $data['ville']['commune_nom'] . ". Les élections se tiennent les 15 et 22 mars 2026. Découvrez les candidats, le nombre de votants, l'abstention pour cette commune.";
-      $data['title'] = "Élections municipales 2026 à <u>" . $data['ville']['commune_nom'] . "</u> : candidats et résultats";
+      $data['title'] = "Élections municipales 2026 à " . $data['ville']['commune_nom'] . "&nbsp;: candidats et résultats";
       //Open Graph
       $controller = $this->router->fetch_class()."/".$this->router->fetch_method();
       $data['ogp'] = $this->meta_model->get_ogp($controller, $data['title_meta'], $data['description_meta'], $data['url'], $data);
