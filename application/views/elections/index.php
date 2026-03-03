@@ -1,5 +1,5 @@
 <div class="container pg-elections-index">
-  <div class="row bloc-titre">
+  <div class="row bloc-titre mt-5">
     <div class="col-md-12">
       <h1><?= $title ?></h1>
     </div>
