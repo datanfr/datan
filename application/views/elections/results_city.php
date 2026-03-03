@@ -42,7 +42,7 @@
     <div class="col-4">
       <div class="card card-info border">            
         <div class="card-body py-3">
-          <div class="title">Rennes</div>
+          <div class="title"><?= $ville['commune_nom'] ?></div>
           <div>
             <span class="badge badge-primary"><?= $ville_infos['dep_nom'] ?> - <?= $ville_infos['dep_code'] ?></span>
           </div>
