@@ -275,6 +275,13 @@
       $data['big_communes'] = $this->city_model->get_communes_by_dpt($dpt, FALSE, 10);
       $data['deputes'] = $this->elections_model->get_candidates_by_dpt($data['dpt']['departement_code']);
 
+      // fetch all current MPs for the department
+      $data['mps_dpt'] = $this->city_model->get_mps_dpt($dpt, array(), legislature_current());
+      foreach ($data['mps_dpt'] as $key => $mp) {
+        $data['mps_dpt'][$key]['couleurAssociee'] = $this->groupes_model->get_groupe_color(array($mp['libelleAbrev'], $mp['couleurAssociee']));
+        $data['mps_dpt'][$key]['electionCircoAbbrev'] = abbrev_n($mp['electionCirco'], TRUE);
+      }
+
       // Breadcrumb
       $data['breadcrumb'] = array(
         array(
