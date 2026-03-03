@@ -82,7 +82,7 @@
         ";
       } elseif($type == "Municipales") {
         $info = "
-        <p>Les élections municipales ont lieu <b>tous les six ans</b> et permettent d'élire les conseillers municipaux de chaque commune, ainsi que le maire et ses adjoints. Le nombre de conseillers varie de 7 à 69 selon la taille de la commune.</p>
+        <p>Les élections municipales ont lieu <b>tous les six ans</b> et permettent d'élire les conseillers municipaux de chaque commune, ainsi que le maire et ses adjoints.</p>
         <p>L'élection se fait au <b>scrutin proportionnel de liste</b>. Si une liste obtient la majorité absolue au premier tour, elle remporte la moitié des sièges, le reste étant réparti entre les listes ayant obtenu au moins 5%. Sinon, un second tour est organisé entre les listes ayant recueilli au moins 10% des suffrages. Le conseil municipal élit ensuite le maire.</p>
         ";
       } else {
@@ -417,45 +417,109 @@
       return $this->db->get()->result_array();
     }
 
-    public function get_municipales_listes($city){
-      $where = array('code_circonscription' => $city);
-      $rows = $this->db->get_where('elect_municipales_listes', $where)->result_array();
+    public function get_municipales_listes($city, $arrondissements = FALSE){
+      
+      if ($arrondissements) {
+        $this->db->like('code_circonscription', $city, 'after'); // starts with $city
+        $this->db->where('code_circonscription !=', $city); // should not be exactly $city
+        $this->db->order_by('code_circonscription', 'ASC');
+        $this->db->order_by('numero_panneau', 'ASC');
+        $this->db->order_by('ordre', 'ASC');
+      } else {
+        $this->db->where('code_circonscription', $city);
+        $this->db->order_by('numero_panneau', 'ASC');
+        $this->db->order_by('ordre', 'ASC');
+      }
 
-      // Build multidimensional array grouped by list
-      $listes = [];
-      foreach ($rows as $row) {
-        $panneau = $row['numero_panneau'];
+      $rows = $this->db->get('elect_municipales_listes')->result_array();
 
-        // Init the list if not yet seen
-        if (!isset($listes[$panneau])) {
-          $listes[$panneau] = [
-            'numero_panneau'      => $row['numero_panneau'],
-            'libelle_abrege'      => $row['libelle_abrege_liste'],
-            'libelle_liste'       => $row['libelle_liste'],
-            'code_nuance'         => $row['code_nuance'],
-            'nuance'              => $row['nuance'],
-            'tete_de_liste'       => null,
-            'candidats'           => []
+      if ($arrondissements) {
+        
+        // 3 dimensional: arrondissement / listes / candidats
+        $result = [];
+        foreach ($rows as $row) {
+          // Extract last 2 digits of code_circonscription e.g. "75056SR01" -> "01"
+          $arr_number = intval(substr($row['code_circonscription'], -2));
+          $arr_label  = $arr_number . 'e arrondissement';
+          $panneau    = $row['code_circonscription'] . '_' . $row['numero_panneau']; // unique key per arrondissement+list
+
+          // Init arrondissement
+          if (!isset($result[$arr_label])) {
+            $result[$arr_label] = [];
+          }
+
+          // Init list inside arrondissement
+          if (!isset($result[$arr_label][$panneau])) {
+            $result[$arr_label][$panneau] = [
+              'numero_panneau' => $row['numero_panneau'],
+              'libelle_abrege' => $row['libelle_abrege_liste'],
+              'libelle_liste'  => $row['libelle_liste'],
+              'code_nuance'    => $row['code_nuance'],
+              'nuance'         => $row['nuance'],
+              'tete_de_liste'  => null,
+              'candidats'      => []
+            ];
+          }
+
+          // Store tête de liste
+          if ($row['tete_de_liste'] === 'OUI') {
+            $result[$arr_label][$panneau]['tete_de_liste'] = $row['prenom'] . ' ' . mb_convert_case(mb_strtolower($row['nom'], 'UTF-8'), MB_CASE_TITLE, 'UTF-8');
+          }
+
+          // Add candidate
+          $result[$arr_label][$panneau]['candidats'][] = [
+            'ordre'             => $row['ordre'],
+            'nom'               => $row['nom'],
+            'prenom'            => $row['prenom'],
+            'sexe'              => $row['sexe'],
+            'nationalite'       => $row['nationalite'],
+            'code_personnalite' => $row['code_personnalite']
           ];
         }
 
-        // Store the tête de liste
-        if ($row['tete_de_liste'] === 'OUI') {
-          $listes[$panneau]['tete_de_liste'] = $row['prenom'] . ' ' . $row['nom'];
+        // Sort by arrondissement number and reindex lists
+        uksort($result, function($a, $b) {
+          return intval($a) - intval($b);
+        });
+
+        return $result;
+      
+      } else {
+        
+        // 2 dimensional: listes / candidats (original behavior)
+        $listes = [];
+        foreach ($rows as $row) {
+          $panneau = $row['numero_panneau'];
+          
+          if (!isset($listes[$panneau])) {
+            $listes[$panneau] = [
+              'numero_panneau' => $row['numero_panneau'],
+              'libelle_abrege' => $row['libelle_abrege_liste'],
+              'libelle_liste'  => $row['libelle_liste'],
+              'code_nuance'    => $row['code_nuance'],
+              'nuance'         => $row['nuance'],
+              'tete_de_liste'  => null,
+              'candidats'      => []
+            ];
+          }
+          
+          if ($row['tete_de_liste'] === 'OUI') {
+            $listes[$panneau]['tete_de_liste'] = $row['prenom'] . ' ' . mb_convert_case(mb_strtolower($row['nom'], 'UTF-8'), MB_CASE_TITLE, 'UTF-8');
+          }
+
+          $listes[$panneau]['candidats'][] = [
+            'ordre'             => $row['ordre'],
+            'nom'               => $row['nom'],
+            'prenom'            => $row['prenom'],
+            'sexe'              => $row['sexe'],
+            'nationalite'       => $row['nationalite'],
+            'code_personnalite' => $row['code_personnalite']
+          ];
         }
 
-        // Add candidate to the list
-        $listes[$panneau]['candidats'][] = [
-          'ordre'             => $row['ordre'],
-          'nom'               => $row['nom'],
-          'prenom'            => $row['prenom'],
-          'sexe'              => $row['sexe'],
-          'nationalite'       => $row['nationalite'],
-          'code_personnalite' => $row['code_personnalite']
-        ];
-      }
+        return array_values($listes);
 
-      return array_values($listes);
+      }
     }
 
     public function get_nuances_edited($listes){
