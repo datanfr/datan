@@ -187,13 +187,13 @@
 
     public function results_city($dpt, $city) {
 
-      $data['ville'] = $this->city_model->get_individual($city, $dpt);
+      $data['ville_all'] = $this->city_model->get_individual($city, $dpt);
 
-      if (empty($data['ville'])) {
+      if (empty($data['ville_all'])) {
         show_404($this->functions_datan->get_404_infos());
       }
 
-      $data['ville'] = $data['ville'][0];
+      $data['ville'] = $data['ville_all'][0];
       $insee = $data['ville']['insee'];
       $data['ville_infos'] = $this->city_model->get_city_by_insee($insee);
       $data['mayor'] = $this->city_model->get_mayor($data['ville']['dpt'], $insee, $data['ville']['commune']);
@@ -206,6 +206,20 @@
 
       // Get deputes candidates       
       $data['deputes'] = $this->elections_model->get_candidates_by_city($insee);
+
+      // Get current MPs
+      $this->load->model('groupes_model');
+      $circo = array();
+      foreach ($data['ville_all'] as $circo_data) {
+        $circo[] = $circo_data['circo'];
+      }
+      $data['deputes_ville'] = $this->city_model->get_mps($data['ville']['dpt_slug'], $circo, legislature_current());
+      if (!empty($data['deputes_ville'])) {
+        foreach ($data['deputes_ville'] as $key => $value) {
+          $data['deputes_ville'][$key]['couleurAssociee'] = $this->groupes_model->get_groupe_color(array($value['libelleAbrev'], $value['couleurAssociee']));
+          $data['deputes_ville'][$key]['electionCircoAbbrev'] = abbrev_n($value['electionCirco'], TRUE);
+        }
+      }
 
       // PLM 
       $data['isPLM'] = in_array($insee, ['75056', '13055', '69123']);

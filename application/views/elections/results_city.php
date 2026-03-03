@@ -67,6 +67,24 @@
           </div>
         </div>
       </div>
+      <?php if (!empty($deputes_ville)): ?>
+      <div class="card card-nearby mt-5 border">            
+        <div class="card-body py-3">
+          <div class="title"><?= count($deputes_ville) > 1 ? "Députés" : "Député" ?> à <?= $ville['commune_nom'] ?></div>
+          <div class="d-flex flex-column mt-3">
+            <?php foreach($deputes_ville as $mp): ?>
+              <a href="<?= base_url() ?>deputes/<?= $mp['dptSlug'] ?>/depute_<?= $mp['nameUrl'] ?>" class="city-item d-flex justify-content-between align-items-center mb-3 no-decoration">
+               <span>
+                  <?= $mp['nameFirst'] ?> <?= $mp['nameLast'] ?> -
+                  <span style="color: <?= $mp['couleurAssociee'] ?>;"><?= $mp['libelleAbrev'] ?></span>
+                </span>
+                <?= file_get_contents(FCPATH . "assets/imgs/icons/bi-chevron-right.svg") ?>                  
+              </a>
+            <?php endforeach; ?>
+          </div>
+        </div>
+      </div>
+      <?php endif; ?>
     </div>
   </div>  
 </div>
