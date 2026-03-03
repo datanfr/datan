@@ -305,7 +305,7 @@
       $data['url'] = $this->meta_model->get_url();
       $data['title_meta'] = "Les candidats et résultats aux élections municipales 2026 " . $data['dpt']['libelle_1'] . "" . $data['dpt']['departement_nom'] . " (" . $data['dpt']['departement_code'] . ") | Datan";
       $data['description_meta'] = "Retrouvez les résultats des élections municipales " . $data['dpt']['libelle_1'] . "" . $data['dpt']['departement_nom'] . " (" . $data['dpt']['departement_code'] . "). Les élections se tiennent les 15 et 22 mars 2026. Découvrez les candidats, le nombre de votants, l'abstention pour les communes de ce département.";
-      $data['title'] = "Élections municipales 2026 " . $data['dpt']['libelle_1'] . "<u>" . $data['dpt']['departement_nom'] . "</u>";
+      $data['title'] = "Élections municipales 2026 " . $data['dpt']['libelle_1'] . "" . $data['dpt']['departement_nom'];
       //Open Graph
       $controller = $this->router->fetch_class()."/".$this->router->fetch_method();
       $data['ogp'] = $this->meta_model->get_ogp($controller, $data['title_meta'], $data['description_meta'], $data['url'], $data);
