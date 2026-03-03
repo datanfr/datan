@@ -86,6 +86,12 @@
         <p>Les élections européennes ont lieu <b>tous les cinq ans</b>. Elles permettent d'élire les députés européens, qui ont pour rôle d'élire la Commission européenne et d'amender et voter les lois européennes (règlements et directives).</p>
         <p>En France, les députés européens sont élus au scrutin proportionnel. Les listes obtenant au moins 5% des suffrages exprimés se voient attribuer des sièges, en fonction de leur score électoral.</p>
         ";
+      } elseif($type == "Municipales") {
+        $info = "
+        <p>Les élections municipales ont lieu <b>tous les six ans</b> et permettent d'élire les conseillers municipaux qui composent le conseil municipal de chaque commune, ainsi que le maire et ses adjoints. Le nombre de conseillers municipaux varie de 7 à 69 en fonction de la taille des communes.</p>
+        <p>Les conseillers municipaux sont élus via un <b>scrutin proportionnel de liste</b>. Au premier tour, si une liste obtient la majorité absolue, elle remporte la moitié des sièges, le reste étant réparti proportionnellement entre toutes les listes ayant obtenu au moins 5% des suffrages. Si aucune liste n'obtient la majorité absolue, un second tour est organisé entre les listes ayant receuilli au moins 10% des suffrages.</p>
+        <p>Le conseil municipal élit ensuite le maire.</p>
+        ";
       } else {
         $info = NULL;
       }
