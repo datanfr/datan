@@ -6,6 +6,7 @@
       $this->load->model('deputes_model');
       $this->load->model('groupes_model');
       $this->load->model('city_model');
+      $this->load->model('departement_model');
     }
 
     public function index(){
@@ -188,7 +189,7 @@
       $data['ville_infos'] = $this->city_model->get_city_by_insee($insee);
       $data['mayor'] = $this->city_model->get_mayor($data['ville']['dpt'], $insee, $data['ville']['commune']);
       $data['adjacentes'] = $this->city_model->get_adjacentes($insee);
-      $data['communes_dpt'] = $this->city_model->get_communes_by_dpt($data['ville']['dpt_slug'], 4000);
+      $data['communes_dpt'] = $this->city_model->get_communes_by_dpt($data['ville']['dpt_slug'], 4000, FALSE);
 
       // Get listes
       $data['listes'] = $this->elections_model->get_municipales_listes($insee);
@@ -212,7 +213,10 @@
           "name" => "Résultats", "url" => base_url()."elections/resultats", "active" => FALSE
         ),
         array(
-          "name" => "Ville", "url" => base_url()."elections/resultats/ville", "active" => TRUE
+          "name" => $data['ville']['dpt_nom'] . " (" . $data['ville']['dpt'] . ")", "url" => base_url()."elections/resultats/" . $dpt, "active" => FALSE
+        ),
+        array(
+          "name" => $data['ville']['commune_nom'], "url" => base_url()."elections/resultats/" . $dpt . "/" . $city, "active" => TRUE
         ),
       );
 
@@ -231,5 +235,51 @@
       $this->load->view('templates/breadcrumb', $data);
       $this->load->view('templates/footer', $data);
     }
+
+    public function results_dpt($dpt) {
+
+      $data['dpt'] = $this->departement_model->get_departement($dpt);
+
+      if (empty($data['dpt'])) {
+        show_404($this->functions_datan->get_404_infos());
+      }
+
+      $communes = $this->city_model->get_communes_by_dpt($dpt, FALSE, FALSE, 'alpha');
+      $data['communes'] = $this->city_model->group_communes_by_letter($communes);
+      $data['big_communes'] = $this->city_model->get_communes_by_dpt($dpt, FALSE, 10);
+      $data['deputes'] = $this->elections_model->get_candidates_by_dpt($data['dpt']['departement_code']);
+
+      // Breadcrumb
+      $data['breadcrumb'] = array(
+        array(
+          "name" => "Datan", "url" => base_url(), "active" => FALSE
+        ),
+        array(
+          "name" => "Élections", "url" => base_url()."elections", "active" => FALSE
+        ),
+        array(
+          "name" => "Résultats", "url" => base_url()."elections/resultats", "active" => FALSE
+        ),
+        array(
+          "name" => $data['dpt']['departement_nom'] . " (" . $data['dpt']['departement_code'] . ")", "url" => base_url()."elections/resultats/" . $dpt, "active" => TRUE
+        ),
+      );
+
+      $data['breadcrumb_json'] = $this->breadcrumb_model->breadcrumb_json($data['breadcrumb']);
+      // Meta
+      $data['url'] = $this->meta_model->get_url();
+      $data['title_meta'] = "Les candidats et résultats aux élections municipales 2026 " . $data['dpt']['libelle_1'] . "" . $data['dpt']['departement_nom'] . " (" . $data['dpt']['departement_code'] . ") | Datan";
+      $data['description_meta'] = "Retrouvez les résultats des élections municipales " . $data['dpt']['libelle_1'] . "" . $data['dpt']['departement_nom'] . " (" . $data['dpt']['departement_code'] . "). Les élections se tiennent les 15 et 22 mars 2026. Découvrez les candidats, le nombre de votants, l'abstention pour les communes de ce département.";
+      $data['title'] = "Élections municipales 2026 " . $data['dpt']['libelle_1'] . "<u>" . $data['dpt']['departement_nom'] . "</u>";
+      //Open Graph
+      $controller = $this->router->fetch_class()."/".$this->router->fetch_method();
+      $data['ogp'] = $this->meta_model->get_ogp($controller, $data['title_meta'], $data['description_meta'], $data['url'], $data);
+      // Load Views
+      $this->load->view('templates/header', $data);
+      $this->load->view('elections/results_dpt', $data);
+      $this->load->view('templates/breadcrumb', $data);
+      $this->load->view('templates/footer', $data);
+    }
+
   }
 ?>
