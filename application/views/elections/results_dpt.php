@@ -62,10 +62,31 @@
           <div class="card-body py-3">
             <div class="title">Députés candidats <?= $dpt['libelle_1'] ?><?= $dpt['departement_nom'] ?></div>
             <div class="d-flex flex-column mt-3">
-              <?php foreach($deputes as $depute): ?>
-                <a role="button" href="<?= base_url() . "deputes/" . $depute['dptSlug'] . "/depute_" .  $depute['nameUrl'] ?>" class="city-item d-flex justify-content-between align-items-center mb-3">
-                  <?= $depute['nameFirst'] ?> <?= $depute['nameLast'] ?>
-                  <?= file_get_contents(FCPATH . "assets/imgs/icons/bi-chevron-right.svg") ?>
+              <?php foreach($deputes as $mp): ?>
+                <a href="<?= base_url() ?>deputes/<?= $mp['dptSlug'] ?>/depute_<?= $mp['nameUrl'] ?>" class="city-item d-flex justify-content-between align-items-center mb-3 no-decoration">
+                  <span>
+                    <?= $mp['nameFirst'] ?> <?= $mp['nameLast'] ?> -
+                    <span style="color: <?= $mp['couleurAssociee'] ?>;"><?= $mp['libelleAbrev'] ?></span>
+                  </span>
+                  <?= file_get_contents(FCPATH . "assets/imgs/icons/bi-chevron-right.svg") ?>                  
+                </a>
+              <?php endforeach; ?>
+            </div>
+          </div>
+        </div>
+      <?php endif; ?>
+      <?php if(!empty($mps_dpt)): ?>
+        <div class="card card-nearby border mt-4">            
+          <div class="card-body py-3">
+            <div class="title">Députés <?= $dpt['libelle_1'] ?><?= $dpt['departement_nom'] ?></div>
+            <div class="d-flex flex-column mt-3">
+              <?php foreach($mps_dpt as $mp): ?>
+                <a href="<?= base_url() ?>deputes/<?= $mp['dptSlug'] ?>/depute_<?= $mp['nameUrl'] ?>" class="city-item d-flex justify-content-between align-items-center mb-3 no-decoration">
+                  <span>
+                    <?= $mp['nameFirst'] ?> <?= $mp['nameLast'] ?> -
+                    <span style="color: <?= $mp['couleurAssociee'] ?>;"><?= $mp['libelleAbrev'] ?></span>
+                  </span>
+                  <?= file_get_contents(FCPATH . "assets/imgs/icons/bi-chevron-right.svg") ?>                  
                 </a>
               <?php endforeach; ?>
             </div>
