@@ -244,6 +244,9 @@
         show_404($this->functions_datan->get_404_infos());
       }
 
+      // URL OBFUSCATION
+      $data['url_obf'] = 2000; // Obfuscation for cities < 2.000
+
       $communes = $this->city_model->get_communes_by_dpt($dpt, FALSE, FALSE, 'alpha');
       $data['communes'] = $this->city_model->group_communes_by_letter($communes);
       $data['big_communes'] = $this->city_model->get_communes_by_dpt($dpt, FALSE, 10);

@@ -23,10 +23,17 @@
             <div class="row">
               <?php foreach($commune_by_letter as $commune): ?>
                 <div class="col-6">
-                  <a role="button" href="<?= base_url() ?>elections/resultats/<?= $commune['slug'] ?>/<?= $commune['commune_slug'] ?>" class="city-item d-flex justify-content-between align-items-center mb-3">
-                   <?= $commune['commune_nom'] ?>
-                   <?= file_get_contents(FCPATH . "assets/imgs/icons/bi-chevron-right.svg") ?>
-                  </a>
+                  <?php if($commune['pop2017'] > 2000): ?>
+                    <a role="button" href="<?= base_url() ?>elections/resultats/<?= $commune['slug'] ?>/<?= $commune['commune_slug'] ?>" class="city-item d-flex justify-content-between align-items-center mb-3">
+                      <?= $commune['commune_nom'] ?> + 2000
+                      <?= file_get_contents(FCPATH . "assets/imgs/icons/bi-chevron-right.svg") ?>
+                    </a>
+                  <?php else: ?>
+                    <a role="button" url_obf="<?= url_obfuscation(base_url() . "elections/resultats/" . $commune['slug'] . "/" . $commune['commune_slug']) ?>" class="city-item d-flex justify-content-between align-items-center mb-3 url_obf">
+                      <?= $commune['commune_nom'] ?>
+                      <?= file_get_contents(FCPATH . "assets/imgs/icons/bi-chevron-right.svg") ?>
+                    </a>
+                  <?php endif; ?>  
                 </div>
               <?php endforeach; ?>
             </div>
@@ -41,7 +48,7 @@
             <div class="title">Les plus grandes communes</div>
             <div class="d-flex flex-column mt-3">
               <?php foreach($big_communes as $city): ?>
-                <a role="button" url_obf="<?= url_obfuscation(base_url() . "elections/resultats/" . $city['slug'] . "/" .  $city['commune_slug']) ?>" class="city-item d-flex justify-content-between align-items-center mb-3 url_obf">
+                <a role="button" href="<?= base_url() . "elections/resultats/" . $city['slug'] . "/" .  $city['commune_slug'] ?>" class="city-item d-flex justify-content-between align-items-center mb-3 url_obf">
                   <?= $city['commune_nom'] ?>
                   <?= file_get_contents(FCPATH . "assets/imgs/icons/bi-chevron-right.svg") ?>
                 </a>
