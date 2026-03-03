@@ -275,12 +275,14 @@
       $data['groupesN'] = $this->groupes_model->get_number_active_groupes();
       // Get origine-sociale
       $data['origineSociale'] = $this->jobs_model->get_group_category_random($data['groupe']);
-      if (round($data['origineSociale']['pct']) > round($data['origineSociale']['population'])) {
-        $data['origineSociale']['edited'] = 'plus';
-      } elseif (round($data['origineSociale']['pct']) < round($data['origineSociale']['population'])) {
-        $data['origineSociale']['edited'] = 'moins';
-      } else {
-        $data['origineSociale']['edited'] = 'autant';
+      if (!empty($data['origineSociale'])) {
+        if (round($data['origineSociale']['pct']) > round($data['origineSociale']['population'])) {
+            $data['origineSociale']['edited'] = 'plus';
+        } elseif (round($data['origineSociale']['pct']) < round($data['origineSociale']['population'])) {
+            $data['origineSociale']['edited'] = 'moins';
+        } else {
+            $data['origineSociale']['edited'] = 'autant';
+        }
       }
 
       // Get majority group
