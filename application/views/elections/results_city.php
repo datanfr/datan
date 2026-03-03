@@ -32,7 +32,7 @@
             <?php $this->view('elections/partials/_lists_accordion.php') ?>
           </div>
           <div class="tab-pane fade" id="arrondissement" role="tabpanel">
-            <p class="text-muted mt-4">Scrutin par arrondissement à venir.</p>
+            <p class="text-muted mt-4">Scrutins par arrondissement à venir.</p>
           </div>
         </div>
       <?php else: ?>
