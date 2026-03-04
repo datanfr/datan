@@ -3,7 +3,7 @@
     <h2>Découvrez les députés candidats à l'élection présidentielle de 2022</h2>
   </div>
   <div class="col-12 mt-3">
-    <p>Au total, nous avons répertorié <?= $candidatsN ?> député<?= $candidatsN > 1 ? 's' : '' ?> candidat<?= $candidatsN > 1 ? 's' : '' ?> à l'élection présidentielle de 2022.</p>
+    <p>Au total, nous avons répertorié <?= $candidatsN ?> député<?= $candidatsN > 1 ? 's' : '' ?> ou ancien<?= $candidatsN > 1 ? 's' : '' ?> député<?= $candidatsN > 1 ? 's' : '' ?> candidat<?= $candidatsN > 1 ? 's' : '' ?> à l'élection présidentielle de 2022.</p>
   </div>
 </div>
 <div class="row">
