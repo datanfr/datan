@@ -141,7 +141,7 @@
 <!-- OTHER CITIES FROM THE DEPARTMENT -->
 <div class="container-fluid bloc-others-container">
   <div class="container bloc-others">
-    <?php if ($ville['dpt'] != '099' && $ville['dpt'] != '975'): ?>
+    <?php if (!in_array($ville['dpt'] , array('099', '975', '75'))): ?>
       <div class="row">
         <div class="col-12">
           <?php if ($ville['dpt_nom'] == "Nouvelle-Calédonie" || $ville['dpt_nom'] == "Polynésie française"): ?>
