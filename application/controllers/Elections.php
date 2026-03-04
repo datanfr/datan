@@ -189,6 +189,14 @@
 
     public function results_city($dpt, $city) {
 
+      // Block direct access to paris-75/ville_paris, force the short URL
+      if ($city == 'paris') {
+        show_404($this->functions_datan->get_404_infos());
+      }
+
+      // Change $city for Paris 
+      $city = ($city === 'ville_paris') ? 'paris' : $city;
+
       $data['ville_all'] = $this->city_model->get_individual($city, $dpt);
 
       if (empty($data['ville_all'])) {
@@ -234,20 +242,28 @@
       }
 
       // Breadcrumb
-      $data['breadcrumb'] = array(
+      $is_paris = ($dpt === 'paris-75');
+      $breadcrumb = array(
         array(
           "name" => "Datan", "url" => base_url(), "active" => FALSE
         ),
         array(
           "name" => "Élections", "url" => base_url()."elections", "active" => FALSE
-        ),
-        array(
-          "name" => $data['ville']['dpt_nom'] . " (" . $data['ville']['dpt'] . ")", "url" => base_url()."elections/resultats/" . $dpt, "active" => FALSE
-        ),
-        array(
-          "name" => $data['ville']['commune_nom'], "url" => base_url()."elections/resultats/" . $dpt . "/" . $city, "active" => TRUE
-        ),
+        )
       );
+      if (!$is_paris) {
+        $breadcrumb[] = array(
+          "name"   => $data['ville']['dpt_nom'] . " (" . $data['ville']['dpt'] . ")",
+          "url"    => base_url()."elections/resultats/" . $dpt,
+          "active" => FALSE
+        );
+      }
+      $breadcrumb[] = array(
+        "name"   => $data['ville']['commune_nom'],
+        "url"    => base_url() . "elections/resultats/" . url_election_paris($dpt . "/ville_" . $city),
+        "active" => TRUE
+      );
+      $data['breadcrumb'] = $breadcrumb;
 
       $data['breadcrumb_json'] = $this->breadcrumb_model->breadcrumb_json($data['breadcrumb']);
       // Meta
@@ -269,7 +285,7 @@
 
       $data['dpt'] = $this->departement_model->get_departement($dpt);
 
-      if (empty($data['dpt'])) {
+      if (empty($data['dpt']) || $dpt == 'paris-75') {
         show_404($this->functions_datan->get_404_infos());
       }
 
