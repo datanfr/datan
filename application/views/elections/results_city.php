@@ -106,7 +106,7 @@
               <div class="title">Communes voisines</div>
               <div class="d-flex flex-column mt-3">
                 <?php foreach($adjacentes as $city): ?>
-                  <a role="button" url_obf="<?= url_obfuscation(base_url() . "elections/resultats/" . $city['slug'] . "/ville_" .  $city['commune_slug']) ?>" class="city-item d-flex justify-content-between align-items-center mb-3 url_obf">
+                  <a role="button" url_obf="<?= url_obfuscation(base_url() . "elections/resultats/" . url_election_paris($city['slug'] . "/ville_" .  $city['commune_slug'])) ?>" class="city-item d-flex justify-content-between align-items-center mb-3 url_obf">
                     <?= $city['commune_nom'] ?>
                     <?= file_get_contents(FCPATH . "assets/imgs/icons/bi-chevron-right.svg") ?>
                   </a>
@@ -141,7 +141,7 @@
 <!-- OTHER CITIES FROM THE DEPARTMENT -->
 <div class="container-fluid bloc-others-container">
   <div class="container bloc-others">
-    <?php if ($ville['dpt'] != '099' && $ville['dpt'] != '975'): ?>
+    <?php if ($ville['dpt'] != '099' && $ville['dpt'] != '975' && $ville['dpt'] != '75'): ?>
       <div class="row">
         <div class="col-12">
           <?php if ($ville['dpt_nom'] == "Nouvelle-Calédonie" || $ville['dpt_nom'] == "Polynésie française"): ?>
@@ -156,7 +156,7 @@
       <div class="row">
         <?php foreach ($communes_dpt as $commune): ?>
           <div class="col-6 col-md-3 py-2">
-            <a class="membre no-decoration underline" href="<?= base_url() ?>elections/resultats/<?= $commune['slug'] ?>/ville_<?= $commune['commune_slug'] ?>" class="no-decoration underline-blue"><?= $commune['commune_nom'] ?></a>
+            <a class="membre no-decoration underline" href="<?= base_url() ?>elections/resultats/<?= url_election_paris($commune['slug'] . "/ville_" . $commune['commune_slug']) ?>" class="no-decoration underline-blue"><?= $commune['commune_nom'] ?></a>
           </div>
         <?php endforeach; ?>
       </div>

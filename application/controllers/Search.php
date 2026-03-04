@@ -33,6 +33,7 @@ class Search extends CI_Controller
                 if (strpos($url, 'deputes/') === 0) {
                     $url = str_replace('deputes/', 'elections/resultats/', $url);
                 }
+                $url = url_election_paris($url); 
             }
             $results[] = [
                 'text' => highlight_phrase($x['title_search'], $search, '<span class="text-primary">', '</span>'),
