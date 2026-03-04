@@ -326,7 +326,6 @@ class Sitemap extends CI_Controller {
     $urls = array();
     foreach ($results as $result) {
       $slug = $result['slug'];
-      if($slug === 'paris-75') continue;
       $urls[]["url"] = base_url()."elections/resultats/".$slug;
     }
 
@@ -348,7 +347,7 @@ class Sitemap extends CI_Controller {
       foreach ($cities as $city) {
         if ($city['commune_slug'] != NULL) {
           $city_slug = $city['commune_slug'];
-          $urls[]['url'] = base_url()."elections/resultats/". url_election_paris($dpt_slug."/ville_".$city_slug);
+          $urls[]['url'] = base_url()."elections/resultats/".$dpt_slug."/ville_".$city_slug;
         }
       }
     }
