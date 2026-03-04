@@ -5,12 +5,17 @@
       $this->load->model('elections_model');
       $this->load->model('deputes_model');
       $this->load->model('groupes_model');
+      $this->load->model('city_model');
+      $this->load->model('departement_model');
     }
 
     public function index(){
       // Data
       $data['elections'] = $this->elections_model->get_election_all();
       $data['election_future'] = TRUE; // There is an election in the future
+
+      $data['departements'] = $this->departement_model->get_all_departements();
+      $data['communes'] = $this->city_model->get_communes(FALSE, 30);
 
       // Breadcrumb
       $data['breadcrumb'] = array(
@@ -31,9 +36,14 @@
       //Open Graph
       $controller = $this->router->fetch_class()."/".$this->router->fetch_method();
       $data['ogp'] = $this->meta_model->get_ogp($controller, $data['title_meta'], $data['description_meta'], $data['url'], $data);
+      // JS
+      $data['js_to_load'] = array(
+        'dist/autocomplete_search',
+      );
       // Load Views
       $this->load->view('templates/header', $data);
       $this->load->view('elections/index', $data);
+      $this->load->view('elections/links_dpt_cities', $data);
       $this->load->view('templates/breadcrumb', $data);
       $this->load->view('templates/footer', $data);
     }
@@ -47,6 +57,10 @@
 
       // State of the election
       $data['state'] = $this->elections_model->get_election_state($data['election']['id']);
+
+      // Get departements and communes for link 
+      $data['departements'] = $this->departement_model->get_all_departements();
+      $data['communes'] = $this->city_model->get_communes(FALSE, 30);
 
       // Data
       $data['deputes'] = $this->elections_model->get_all_candidates($data['election']['id'], TRUE, FALSE);
@@ -155,7 +169,9 @@
       if (in_array($data['election']['id'], array(4, 5, 6))) {
         $data['js_to_load_up_defer'] = array('dist/chart.min.js');
       }
-      $data['js_to_load'] = array();
+      $data['js_to_load'] = array(
+        'dist/autocomplete_search',
+      );
       if (in_array($data['election']['id'], array(1, 4, 5, 6, 7))) {
         array_push($data['js_to_load'], 'datan/sorting_select');
       }
@@ -170,8 +186,141 @@
       $this->load->view('templates/header', $data);
       $this->load->view('templates/button_up');
       $this->load->view('elections/candidats', $data);
+      $this->load->view('elections/links_dpt_cities', $data);
       $this->load->view('templates/breadcrumb', $data);
       $this->load->view('templates/footer', $data);
     }
+
+    public function results_city($dpt, $city) {
+
+      $data['ville_all'] = $this->city_model->get_individual($city, $dpt);
+
+      if (empty($data['ville_all'])) {
+        show_404($this->functions_datan->get_404_infos());
+      }
+
+      $data['ville'] = $data['ville_all'][0];
+      $insee = $data['ville']['insee'];
+      $data['ville_infos'] = $this->city_model->get_city_by_insee($insee);
+      $data['mayor'] = $this->city_model->get_mayor($data['ville']['dpt'], $insee, $data['ville']['commune']);
+      $data['adjacentes'] = $this->city_model->get_adjacentes($insee);
+      $data['communes_dpt'] = $this->city_model->get_communes_by_dpt($data['ville']['dpt_slug'], url_obf_cities_election(), 30);
+
+      // Get listes
+      $data['listes'] = $this->elections_model->get_municipales_listes($insee);
+      $data['listes'] = $this->elections_model->get_nuances_edited($data['listes']);
+
+      // Get deputes candidates       
+      $data['deputes'] = $this->elections_model->get_candidates_by_city($insee);
+
+      // Get current MPs
+      $this->load->model('groupes_model');
+      $circo = array();
+      foreach ($data['ville_all'] as $circo_data) {
+        $circo[] = $circo_data['circo'];
+      }
+      $data['deputes_ville'] = $this->city_model->get_mps($data['ville']['dpt_slug'], $circo, legislature_current());
+      if (!empty($data['deputes_ville'])) {
+        foreach ($data['deputes_ville'] as $key => $value) {
+          $data['deputes_ville'][$key]['couleurAssociee'] = $this->groupes_model->get_groupe_color(array($value['libelleAbrev'], $value['couleurAssociee']));
+          $data['deputes_ville'][$key]['electionCircoAbbrev'] = abbrev_n($value['electionCirco'], TRUE);
+        }
+      }
+
+      // PLM 
+      $data['isPLM'] = in_array($insee, ['75056', '13055', '69123']);
+
+      if($data['isPLM']) {
+        $data['arrondissements'] = $this->elections_model->get_municipales_listes($insee, TRUE);
+        foreach ($data['arrondissements'] as $arr => $lists) {
+          $data['arrondissements'][$arr] = $this->elections_model->get_nuances_edited($lists);
+        }
+      }
+
+      // Breadcrumb
+      $is_paris = ($dpt === 'paris-75');
+      $breadcrumb = array(
+        array(
+          "name" => "Datan", "url" => base_url(), "active" => FALSE
+        ),
+        array(
+          "name" => "Élections", "url" => base_url()."elections", "active" => FALSE
+        )
+      );
+      if (!$is_paris) {
+        $breadcrumb[] = array(
+          "name"   => $data['ville']['dpt_nom'] . " (" . $data['ville']['dpt'] . ")",
+          "url"    => base_url()."elections/resultats/" . $dpt,
+          "active" => FALSE
+        );
+      }
+      $breadcrumb[] = array(
+        "name"   => $data['ville']['commune_nom'],
+        "url"    => base_url() . "elections/resultats/" . $dpt . "/ville_" . $city,
+        "active" => TRUE
+      );
+      $data['breadcrumb'] = $breadcrumb;
+
+      $data['breadcrumb_json'] = $this->breadcrumb_model->breadcrumb_json($data['breadcrumb']);
+      // Meta
+      $data['url'] = $this->meta_model->get_url();
+      $data['title_meta'] = "Les candidats et résultats aux élections municipales 2026 à " . $data['ville']['commune_nom'] . " | Datan";
+      $data['description_meta'] = "Retrouvez les résultats des élections municipales à " . $data['ville']['commune_nom'] . ". Les élections se tiennent les 15 et 22 mars 2026. Découvrez les candidats, le nombre de votants, l'abstention pour cette commune.";
+      $data['title'] = "Élections municipales 2026 à " . $data['ville']['commune_nom'] . "&nbsp;: candidats et résultats";
+      //Open Graph
+      $controller = $this->router->fetch_class()."/".$this->router->fetch_method();
+      $data['ogp'] = $this->meta_model->get_ogp($controller, $data['title_meta'], $data['description_meta'], $data['url'], $data);
+      // Load Views
+      $this->load->view('templates/header', $data);
+      $this->load->view('elections/results_city', $data);
+      $this->load->view('templates/breadcrumb', $data);
+      $this->load->view('templates/footer', $data);
+    }
+
+    public function results_dpt($dpt) {
+
+      $data['dpt'] = $this->departement_model->get_departement($dpt);
+
+      if (empty($data['dpt']) || $dpt == 'paris-75') {
+        show_404($this->functions_datan->get_404_infos());
+      }
+
+      $communes = $this->city_model->get_communes_by_dpt($dpt, FALSE, FALSE, 'alpha');
+      $data['communes'] = $this->city_model->group_communes_by_letter($communes);
+      $data['big_communes'] = $this->city_model->get_communes_by_dpt($dpt, url_obf_cities_election(), 15);
+      $data['big_slugs'] = array();
+      foreach ($data['big_communes'] as $b) {
+        $data['big_slugs'][] = $b['commune_slug'];
+      }
+
+      // Breadcrumb
+      $data['breadcrumb'] = array(
+        array(
+          "name" => "Datan", "url" => base_url(), "active" => FALSE
+        ),
+        array(
+          "name" => "Élections", "url" => base_url()."elections", "active" => FALSE
+        ),
+        array(
+          "name" => $data['dpt']['departement_nom'] . " (" . $data['dpt']['departement_code'] . ")", "url" => base_url()."elections/resultats/" . $dpt, "active" => TRUE
+        ),
+      );
+
+      $data['breadcrumb_json'] = $this->breadcrumb_model->breadcrumb_json($data['breadcrumb']);
+      // Meta
+      $data['url'] = $this->meta_model->get_url();
+      $data['title_meta'] = "Les candidats et résultats aux élections municipales 2026 " . $data['dpt']['libelle_1'] . "" . $data['dpt']['departement_nom'] . " (" . $data['dpt']['departement_code'] . ") | Datan";
+      $data['description_meta'] = "Retrouvez les résultats des élections municipales " . $data['dpt']['libelle_1'] . "" . $data['dpt']['departement_nom'] . " (" . $data['dpt']['departement_code'] . "). Les élections se tiennent les 15 et 22 mars 2026. Découvrez les candidats, le nombre de votants, l'abstention pour les communes de ce département.";
+      $data['title'] = "Élections municipales 2026 " . $data['dpt']['libelle_1'] . "" . $data['dpt']['departement_nom'];
+      //Open Graph
+      $controller = $this->router->fetch_class()."/".$this->router->fetch_method();
+      $data['ogp'] = $this->meta_model->get_ogp($controller, $data['title_meta'], $data['description_meta'], $data['url'], $data);
+      // Load Views
+      $this->load->view('templates/header', $data);
+      $this->load->view('elections/results_dpt', $data);
+      $this->load->view('templates/breadcrumb', $data);
+      $this->load->view('templates/footer', $data);
+    }
+
   }
 ?>

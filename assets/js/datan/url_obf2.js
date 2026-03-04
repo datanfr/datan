@@ -16,7 +16,7 @@ $(document).ready(function(){
     var source1 = $(this).attr("url_obf");
     var source2 = source1.substring(6);
     var url = str_rot13(source2);
-    window.open(url, '_blank');
+    window.location.href = url;
     return false;
   });
 });

@@ -19,12 +19,24 @@ class Search extends CI_Controller
     {
         $results = [];
         $search = $this->input->get('q');
+        $type = $this->input->get('type'); // optional filter
 
         $return = $this->search_model->searchInAll($search, 5, 10);
         foreach($return as $x){
+            if ($type === 'ville' && $x['source'] !== 'ville') {
+                continue; // skip anything but cities
+            }
+            $url = $x['url'];
+            if ($type === 'ville') {
+                // convert deputes/slug/ville_commune to elections/resultats/slug/commune_slug
+                // original pattern: deputes/{dptSlug}/ville_{commune_slug}
+                if (strpos($url, 'deputes/') === 0) {
+                    $url = str_replace('deputes/', 'elections/resultats/', $url);
+                }
+            }
             $results[] = [
                 'text' => highlight_phrase($x['title_search'], $search, '<span class="text-primary">', '</span>'),
-                'url' => $x['url'],
+                'url' => $url,
                 'source' => $x['source'],
             ];
         }

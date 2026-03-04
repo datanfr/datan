@@ -3006,10 +3006,11 @@ input#quicksearch[type=text]{
 }
 /*
 ################
-               PAGE ELECTIONS (pg-elections-index & pg-elections-candidats)
+               PAGE ELECTIONS (pg-elections-index & pg-elections-candidats & pg-resultats-ville & .pg-resultats-dpt)
 ################
 */
-.pg-elections-index, .pg-elections-candidats{
+
+.pg-elections-index, .pg-elections-candidats, .pg-resultats-ville, .pg-resultats-dpt{
   // HN //
   h1{
     font-size: 3em;
@@ -3022,7 +3023,6 @@ input#quicksearch[type=text]{
     font-weight: 800;
   }
   .bloc-titre{
-    margin-top: 4rem;
     svg{
       width: 100%;
       height: auto;
@@ -3030,20 +3030,230 @@ input#quicksearch[type=text]{
   }
 }
 .pg-elections-candidats{
-  .bloc-titre{
-    margin-bottom: 4rem;
+  .city-search-block {
+    background-color: #f8f9fa;
+    border: 1px solid #e9ecef;
+    border-radius: 12px;
+    padding: 24px;
   }
-  &.infosIndividual{
+  .top-cities-label {
+    font-weight: 600;
+    color: white;
+  }
+  .top-city-pill {
+    display: inline-block;
+    padding: 5px 14px;
+    margin: 0 6px 8px 0;
+    border-radius: 12px;
+    border: 1px solid #dee2e6;
+    background-color: #fff;
+    color: #1e293b;
+    text-decoration: none;
+    transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+    @include hover-focus(){
+      background-color: #dee2e6;
+      color: #000;
+      text-decoration: none;
+    }
+  }
+}
+.pg-resultats-ville, .pg-resultats-dpt {
+  .top-city-pill {
+    display: inline-block;
+    padding: 5px 14px;
+    margin: 0 6px 8px 0;
+    border-radius: 12px;
+    border: 1px solid #dee2e6;
+    background-color: #fff;
+    color: #1e293b;
+    text-decoration: none;
+    transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+    @include hover-focus(){
+      background-color: #dee2e6;
+      color: #000;
+      text-decoration: none;
+    }
+  } 
+  .card-info{
+    border-radius: 15px;
+    .title {
+      color: $text-black;
+      font-weight: 800;
+      font-size: $h2-font-size; 
+    }
+    .value{
+      color: $text-black;
+      font-weight: 800;
+      font-size: $h4-font-size;
+    }
+    .badge{
+      font-size: 100%;
+    }
+  }
+  .card-nearby{
+    border-radius: 15px;
+    .title {
+      color: $text-black;
+      font-weight: 600;
+      font-size: $h4-font-size;
+    }
+  }
+  .city-item {
+    padding: 12px 16px;
+    border: 1px solid #e9ecef;
+    color: #1e293b;
+    text-decoration: none;
+    border-radius: 8px;
+    background-color: white;
+    transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+    @include hover-focus(){
+      background-color: #f8f9fa;
+      border-color: #ced4da;
+      color: #000;
+      text-decoration: none;
+    }
+  }
+  .liste-card{
+    border: 1px solid #e9ecef;
+    border-radius: 10px;
+    overflow: hidden;
+    transition: box-shadow 0.2s ease;
+    @include hover-focus(){
+      box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+    }
+  }
+  .liste-header {
+    cursor: pointer;
+    background-color: #f8f9fa;
+    transition: background-color 0.2s ease;
+    user-select: none;
+    @include hover-focus(){
+      background-color: #f1f3f5;
+    }
+  }
+  .partie-dot {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .liste-tete {
+    font-weight: 800;
+    color: $text-black;
+  }
+  .liste-meta {
+    color: $text-gray-light;
+    .nuance{
+      font-weight: 600;
+    }
+  }
+  .liste-separator {
+    margin: 0 5px;
+  }
+  .chevron-icon {
+    color: #9ca3af;
+    transition: transform 0.25s ease;
+    flex-shrink: 0;
+  }
+  .liste-header[aria-expanded="true"] .chevron-icon,
+  .liste-header.open .chevron-icon,
+  #arrondissementDropdown[aria-expanded="true"] .chevron-icon {
+    transform: rotate(180deg);
+  }
+  .liste-candidates {
+    background-color: #fff;
+  }
+  .candidate-row {
+    color: $text-gray;
+    border-bottom: 1px solid #f1f3f5;
+  }
+  .candidate-row:last-child {
+    border-bottom: none;
+  }
+  .nav-tabs{
+    border-bottom: 2px solid #e9ecef;
+  }
+  .nav-tabs .nav-item .nav-link {
+    border: none;
+    border-radius: 8px 8px 0 0;
+    padding: 10px 20px;
+    font-weight: 600;
+    color: $text-gray;
+    transition: color 0.2s ease, background-color 0.2s ease;
+    position: relative;
+    text-decoration: none;
+    @include hover-focus(){
+      color: $text-black;
+      border-bottom: 2.5px solid $bleu;
+    }
+  }
+  .nav-tabs .nav-item .nav-link.active {
+    color: $text-black;
+    border-bottom: 2.5px solid $bleu;
+  }
+  .letter-index {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }  
+  .letter-anchor {
+    position: relative;
+    font-weight: 600;
+    font-size: $h5-font-size;
+    color: $text-gray-light;
+    text-decoration: none;
+    padding-bottom: 3px;
+    transition: color 0.2s ease;
+  }
+  .letter-anchor::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 2px;
     background-color: $bleu;
-    color: #fff;
-    h2, a{
-      color: #fff;
-    }
-    h2{
-      font-size: 2.2em;
-      margin-bottom: 1.5rem;
+    transition: width 0.2s ease;
+  }
+  .letter-anchor:hover {
+    color: $bleu;
+  }
+  .letter-anchor:hover::after {
+    width: 100%;
+  }
+  .communes-list {
+    .letter-heading{
+      font-size: $h4-font-size;
+      font-weight: 800;
+      color: $bleu;
+      border-bottom: 2px solid #e9ecef;
+      padding-bottom: 8px;
+      margin-bottom: 14px;
     }
   }
+  #arrondissementDropdown{
+    background-color: #f8f9fa;
+    border: 1px solid #e9ecef;
+    border-radius: 4px;
+    padding: 9px 16px;
+    font-weight: 600;
+    color: $text-black;
+    cursor: pointer;
+  }
+  .dropdown-menu{
+    border: 1px solid #e9ecef;
+    border-radius: 4px;
+    padding: 6px;
+  }
+  .dropdown-item{
+    border-radius: 4px;
+    padding: 8px 12px;
+    text-decoration: none;
+    color: $text-black;
+  }
+}
+.pg-elections-candidats{
   .infosGeneral{
     border: 1px solid #00b794;
     border-radius: 20px;

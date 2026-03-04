@@ -25,6 +25,11 @@
         <span class="mt-3 url_obf btn btn-light" url_obf="<?= url_obfuscation($electionFeature['link']) ?>">Suivre sa campagne</span>
       <?php endif; ?>
       <a href="<?= base_url() ?>elections/municipales-2026" class="mt-3 btn btn-light">En savoir plus sur ces élections</a>
+      <?php if($electionFeatureDistrict['population'] > url_obf_cities_election()): ?>
+        <a href="<?= base_url() ?>elections/resultats/<?= $electionFeatureDistrict['dpt_slug'] ?>/ville_<?= $electionFeatureDistrict['commune_slug'] ?>" class="mt-3 btn btn-light">Résultats des élections <?= $electionFeatureDistrict['nom_a'] ?></a>
+      <?php else: ?>
+        <a url_obf="<?= url_obfuscation(base_url() . "elections/resultats/" . $electionFeatureDistrict['dpt_slug'] . "/ville_" . $electionFeatureDistrict['commune_slug']) ?>" class="mt-3 btn btn-light url_obf">Résultats des élections <?= $electionFeatureDistrict['nom_a'] ?></a>
+      <?php endif; ?>
     </div>
   </div>
 <?php endif; ?>
