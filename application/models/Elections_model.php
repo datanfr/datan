@@ -220,27 +220,24 @@
       return $this->db->query($sql, array(legislature_current(), $election))->result_array();
     }
 
-    public function count_candidats($id, $second = FALSE, $end = FALSE){
-      $this->db->where('election', $id);
-      $this->db->where('visible', 1);
-      $this->db->where('candidature', 1);
+    public function count_candidats($id, $filters = []) {
+      $defaults = [
+        'election'    => $id,
+        'visible'     => 1,
+        'candidature' => 1,
+      ];
 
-      if ($second === TRUE) {
-        $this->db->where('secondRound', 1);
+      $optional = [
+        'secondRound' => !empty($filters['second']),
+        'elected'     => !empty($filters['end']),
+        'active'      => !empty($filters['active']),
+        'position'    => $filters['position'] ?? null,
+      ];
+
+      foreach (array_merge($defaults, array_filter($optional)) as $key => $value) {
+        $this->db->where($key, $value);
       }
 
-      if ($end === TRUE) {
-        $this->db->where('elected', 1);
-      }
-
-      return $this->db->count_all_results('candidate_full');
-    }
-
-    public function count_candidats_leader($id){
-      $this->db->where('election', $id);
-      $this->db->where('visible', 1);
-      $this->db->where('candidature', 1);
-      $this->db->where('position', 'Tête de liste');
       return $this->db->count_all_results('candidate_full');
     }
 

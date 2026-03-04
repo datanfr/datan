@@ -91,8 +91,8 @@
       }
 
       // Get elections
-      $data['candidatsN'] = $this->elections_model->count_candidats(7, FALSE, FALSE);
-      $data['candidatsNLeaders'] = $this->elections_model->count_candidats_leader(7);
+      $data['candidatsN'] = $this->elections_model->count_candidats(7, ['active' => TRUE]);
+      $data['candidatsNLeaders'] = $this->elections_model->count_candidats(7, ['position' => 'Tête de liste', 'active' => true]);
       /* WHEN FOCUS IS ON CANDIDATS */
       /*
       $data['candidats'] = $this->elections_model->get_all_candidates(7, TRUE, TRUE, 'candidat');
