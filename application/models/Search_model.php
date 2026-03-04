@@ -55,10 +55,10 @@ class Search_model extends CI_Model
             CONCAT('deputes/', d.slug, '/ville_', c.commune_slug) as url
           FROM circos c
           LEFT JOIN departement d ON c.dpt = d.departement_code
-          LEFT JOIN cities_infos ci ON c.insee = ci.insee
+          LEFT JOIN cities cities ON c.insee = cities.code_insee
           WHERE REPLACE(c.commune_nom, '-', ' ') LIKE '". str_replace('-', ' ', $search) . "%'
           GROUP BY c.commune_nom
-          ORDER BY LENGTH(c.commune_nom) - LENGTH('" . $search . "'), ci.pop2017 DESC
+          ORDER BY LENGTH(c.commune_nom) - LENGTH('" . $search . "'), cities.population DESC
           " . $limitCategory . "
         )
 

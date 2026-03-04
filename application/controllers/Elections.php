@@ -200,7 +200,7 @@
       $data['ville_infos'] = $this->city_model->get_city_by_insee($insee);
       $data['mayor'] = $this->city_model->get_mayor($data['ville']['dpt'], $insee, $data['ville']['commune']);
       $data['adjacentes'] = $this->city_model->get_adjacentes($insee);
-      $data['communes_dpt'] = $this->city_model->get_communes_by_dpt($data['ville']['dpt_slug'], 2000, 30);
+      $data['communes_dpt'] = $this->city_model->get_communes_by_dpt($data['ville']['dpt_slug'], url_obf_cities_election(), 30);
 
       // Get listes
       $data['listes'] = $this->elections_model->get_municipales_listes($insee);
@@ -273,12 +273,9 @@
         show_404($this->functions_datan->get_404_infos());
       }
 
-      // URL OBFUSCATION
-      $data['url_obf'] = 2000; // Obfuscation for cities < 2.000
-
       $communes = $this->city_model->get_communes_by_dpt($dpt, FALSE, FALSE, 'alpha');
       $data['communes'] = $this->city_model->group_communes_by_letter($communes);
-      $data['big_communes'] = $this->city_model->get_communes_by_dpt($dpt, 2000, 15);
+      $data['big_communes'] = $this->city_model->get_communes_by_dpt($dpt, url_obf_cities_election(), 15);
       $data['big_slugs'] = array();
       foreach ($data['big_communes'] as $b) {
         $data['big_slugs'][] = $b['commune_slug'];

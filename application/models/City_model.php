@@ -17,20 +17,20 @@
 
     public function get_communes_by_dpt($slug, $max_population = FALSE, $limit = FALSE, $order_by = FALSE){
       if ($max_population) {
-        $this->db->where('city.pop2017 >', $max_population);
+        $this->db->where('cities.population >', $max_population);
       }
       if ($limit) {
         $this->db->limit($limit);
       }
       $this->db->where('d.slug', $slug);
       $this->db->join('departement d', 'd.departement_code = c.dpt');
-      $this->db->join('cities_infos city', 'c.insee = city.insee');
+      $this->db->join('cities', 'c.insee = cities.code_insee');
       $this->db->group_by('c.commune_nom');
 
       if ($order_by === 'alpha') {
         $this->db->order_by('c.commune_nom', 'ASC');
       } else {
-        $this->db->order_by('city.pop2017', 'DESC');
+        $this->db->order_by('cities.population', 'DESC');
       }
 
       $query = $this->db->get('circos c');
@@ -68,8 +68,8 @@
     public function get_individual($ville, $departement){
       $sql = 'SELECT c.*, d.slug AS dpt_slug, d.libelle_1, d.libelle_2, d.region as region_name,
         i.region AS codeRegion,
-        city.pop2007, city.pop2012, city.pop2017,
-        ((city.pop2017 - city.pop2007) / city.pop2007) * 100 AS evol10,
+        cities.population, city.pop2012,
+        ((cities.population - city.pop2012) / city.pop2012) * 100 AS evol10,
         CASE
           WHEN char_length(i.postal) = 4 THEN CONCAT("0", i.postal)
           ELSE i.postal
@@ -77,6 +77,7 @@
       FROM circos c
       LEFT JOIN departement d ON c.dpt = d.departement_code
       LEFT JOIN cities_infos city ON c.insee = city.insee
+      LEFT JOIN cities cities ON c.insee = cities.code_insee
       LEFT JOIN insee i ON c.insee = i.insee
       WHERE c.commune_slug = ? AND d.slug = ?
       GROUP BY c.circo';
@@ -323,11 +324,11 @@
       $sql = 'SELECT a.* , c.*, d.*
         FROM cities_adjacentes a
         LEFT JOIN circos c ON a.adjacente = c.insee
-        LEFT JOIN cities_infos ci ON ci.insee = c.insee
+        LEFT JOIN cities ON cities.code_insee = c.insee
         LEFT JOIN departement d ON c.dpt = d.departement_code
         WHERE a.insee = ? AND c.id IS NOT NULL
         GROUP BY c.commune_slug
-        ORDER BY ci.pop2017 DESC
+        ORDER BY cities.population DESC
       ';
       if ($limit){
         $sql .= ' LIMIT ' . $limit;

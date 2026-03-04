@@ -151,7 +151,7 @@ class Sitemap extends CI_Controller {
     $urls = array();
     foreach ($departements as $dpt) {
       $slug = $dpt['slug'];
-      $cities = $this->city_model->get_communes_by_dpt($slug, 4000, FALSE);
+      $cities = $this->city_model->get_communes_by_dpt($slug, url_obf_cities(), FALSE);
       $dpt_slug = $dpt['slug'];
       foreach ($cities as $city) {
         if ($city['commune_slug'] != NULL) {
@@ -342,7 +342,7 @@ class Sitemap extends CI_Controller {
     $urls = array();
     foreach ($departements as $dpt) {
       $slug = $dpt['slug'];
-      $cities = $this->city_model->get_communes_by_dpt($slug, 2000, FALSE);
+      $cities = $this->city_model->get_communes_by_dpt($slug, url_obf_cities_election(), FALSE);
       $dpt_slug = $dpt['slug'];
       foreach ($cities as $city) {
         if ($city['commune_slug'] != NULL) {

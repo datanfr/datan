@@ -38,8 +38,8 @@
       <div class="row">
         <div class="col-lg-3 col-md-4 pt-md-5 pt-3 bloc-infos" style="background-color: #e9e9e9; color: black!important">
           <p><b><?= $ville["commune_nom"] ?></b> est une commune située <?= $ville["libelle_1"] ?><?= $ville["dpt_nom"] ?> (<?= $ville["dpt"] ?>), dans la région <?= $ville['region_name'] ?>.</p>
-          <?php if (!empty($ville["pop2007"])): ?>
-            <p><?= $ville["commune_nom"] ?> compte <b><?= $ville["pop2017_format"] ?> habitants</b>. La population de la commune a <b><?= $ville['evol10_text'] ?></b> de <?= round($ville['evol10_edited'], 1) ?> % depuis 10 ans.</p>
+          <?php if (!empty($ville["population"])): ?>
+            <p><?= $ville["commune_nom"] ?> compte <b><?= $ville["population_format"] ?> habitants</b>. La population de la commune a <b><?= $ville['evol10_text'] ?></b> de <?= round($ville['evol10_edited'], 1) ?> % depuis 10 ans.</p>
           <?php endif; ?>
           <?php if (!empty($mayor["nameFirst"])): ?>
             <p><?= ucfirst($mayor["gender"]["le"]) ?> maire de <?= $ville["commune_nom"] ?> est <b><?= $mayor["nameFirst"]." ".ucfirst(mb_strtolower($mayor["nameLast"])) ?></b>.</p>
