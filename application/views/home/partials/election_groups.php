@@ -10,7 +10,7 @@
     <div class="row pt-2 pb-5">
       <div class="col-md-5 d-flex flex-column justify-content-center">
         <p>Les élections municipales se dérouleront les dimanches <b>15 et 22 mars 2026</b>.</p>
-        <p>Notre équipe a répertorié <?= $candidatsN ?> député<?= $candidatsN > 1 ? "s" : "" ?> candidat<?= $candidatsN > 1 ? "s" : "" ?> aux élections municipales de 2026.</p>
+        <p>Notre équipe a répertorié <?= $candidatsN ?> député<?= $candidatsN > 1 ? "s" : "" ?> candidat<?= $candidatsN > 1 ? "s" : "" ?> aux élections municipales de 2026, dont <?= $candidatsNLeaders ?> sont têtes de liste.</p>
         <p>Le groupe politique <a href="<?= base_url() ?>groupes/legislature-<?= $election_groups[0]['legislature'] ?>/<?= mb_strtolower($election_groups[0]['libelleAbrev'] )?>"><?= $election_groups[0]['libelleAbrev'] ?></a> compte la plus forte proportion de députés candidats aux municipales 2026 : <b><?= $election_groups[0]['candidates_n'] ?> de ses <?= $election_groups[0]['effectif'] ?> membres se présentent</b>, soit <?= $election_groups[0]['candidates_pct'] ?>%.</p>
       </div>
       <div class="col-md-7 mt-5 mt-md-0">
