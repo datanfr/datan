@@ -24,7 +24,6 @@ class Sitemap extends CI_Controller {
   /* 2. datan/sitemap-deputes-1.xml */
   function deputes(){
     $results = $this->deputes_model->get_deputes_all(legislature_current(), TRUE, NULL);
-    //print_r($results);
 
     $urls = array();
     foreach ($results as $result) {
@@ -48,7 +47,6 @@ class Sitemap extends CI_Controller {
   function deputes_inactifs(){
     $results = $this->deputes_model->get_deputes_all(legislature_current(), FALSE, NULL);
     $deputes14 = $this->deputes_model->get_deputes_last(14);
-    //print_r($results);
 
     $urls = array();
     foreach ($results as $result) {
@@ -69,7 +67,6 @@ class Sitemap extends CI_Controller {
   /* 4. sitemap-groupes-1.xml */
   function groupes(){
     $results = $this->groupes_model->get_groupes_all(TRUE, legislature_current());
-    //print_r($results);
 
     $urls = array();
     foreach ($results as $result) {
@@ -134,7 +131,6 @@ class Sitemap extends CI_Controller {
   /* 7. sitemap-localites-d-1.xml */
   function departements(){
     $results = $this->departement_model->get_all_departements();
-    //print_r($results);
 
     $urls = array();
     foreach ($results as $result) {
@@ -151,12 +147,11 @@ class Sitemap extends CI_Controller {
   /* 8. sitemap-localites-v-1.xml */
   function communes(){
     $departements = $this->departement_model->get_all_departements();
-    //print_r($results);
 
     $urls = array();
     foreach ($departements as $dpt) {
       $slug = $dpt['slug'];
-      $cities = $this->city_model->get_communes_by_dpt($slug, 4000);
+      $cities = $this->city_model->get_communes_by_dpt($slug, url_obf_cities(), FALSE);
       $dpt_slug = $dpt['slug'];
       foreach ($cities as $city) {
         if ($city['commune_slug'] != NULL) {
@@ -177,7 +172,6 @@ class Sitemap extends CI_Controller {
 
     // Data
     $fields = $this->fields_model->get_active_fields();
-    $data['elections'] = $this->elections_model->get_election_all();
     $legislatures = array(14, 15, 16, 17);
     foreach ($legislatures as $legislature) {
       $data['votes'][$legislature]['years'] = $this->votes_model->get_years_archives($legislature);
@@ -229,10 +223,6 @@ class Sitemap extends CI_Controller {
     $urls[]["url"] = base_url()."statistiques/groupes-participation";
     $urls[]["url"] = base_url()."statistiques/deputes-origine-sociale";
     $urls[]["url"] = base_url()."statistiques/groupes-origine-sociale";
-    $urls[]["url"] = base_url()."elections";
-    foreach ($data['elections'] as $election) {
-      $urls[]["url"] = base_url()."elections/".$election['slug'];
-    }
     $urls[]["url"] = base_url()."parrainages-2022";
     $urls[]["url"] = base_url()."outils/coalition-simulateur";
 
@@ -281,8 +271,6 @@ class Sitemap extends CI_Controller {
     $data['nbUrl'] = count($posts);
     $data['posts'] = $posts;
 
-    //print_r($data['posts']);
-
     $this->load->view('sitemap/posts', $data);
 
   }
@@ -291,7 +279,6 @@ class Sitemap extends CI_Controller {
   function parties(){
     $resultsActive = $this->parties_model->get_parties_active();
     $resultsOther = $this->parties_model->get_parties_other();
-    //print_r($results);
 
     $urls = array();
     foreach ($resultsActive as $result) {
@@ -312,6 +299,67 @@ class Sitemap extends CI_Controller {
 
     $this->load->view('sitemap/page', $data);
   }
+
+  /* sitemap-elections-1.xml */
+  function elections(){
+
+    $urls = array();
+
+    $data['elections'] = $this->elections_model->get_election_all();
+
+    $urls[]["url"] = base_url()."elections";
+    foreach ($data['elections'] as $election) {
+      $urls[]["url"] = base_url()."elections/".$election['slug'];
+    }
+
+    $data['urls'] = $urls;
+    $data['nbUrl'] = count($data['urls']);
+
+    $this->load->view('sitemap/page', $data);
+  }
+
+  /* sitemap-elections-d-1.xml */
+  function electionsDepartements(){
+
+    $results = $this->departement_model->get_all_departements();
+
+    $urls = array();
+    foreach ($results as $result) {
+      if ($result['slug'] === 'paris-75') continue;
+      $slug = $result['slug'];
+      $urls[]["url"] = base_url()."elections/resultats/".$slug;
+    }
+
+    $data['urls'] = $urls;
+    $data['nbUrl'] = count($data['urls']);
+
+    $this->load->view('sitemap/page', $data);
+  }
+
+  /* sitemap-elections-v-1.xml */
+  function electionsCommunes(){
+    $departements = $this->departement_model->get_all_departements();
+
+    $urls = array();
+    foreach ($departements as $dpt) {
+      $slug = $dpt['slug'];
+      $cities = $this->city_model->get_communes_by_dpt($slug, url_obf_cities_election(), FALSE);
+      $dpt_slug = $dpt['slug'];
+      foreach ($cities as $city) {
+        if ($city['commune_slug'] != NULL) {
+          $city_slug = $city['commune_slug'];
+          $urls[]['url'] = base_url()."elections/resultats/".$dpt_slug."/ville_".$city_slug;
+        }
+      }
+    }
+
+    $data['urls'] = $urls;
+    $data['nbUrl'] = count($data['urls']);
+
+    $this->load->view('sitemap/page', $data);
+  }
+
+  
 
 }
 ?>

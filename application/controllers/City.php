@@ -107,13 +107,13 @@
       }
 
       // Get all big cities from the department
-      $data['communes_dpt'] = $this->city_model->get_communes_by_dpt($departement, 4000);
+      $data['communes_dpt'] = $this->city_model->get_communes_by_dpt($departement, url_obf_cities(), FALSE);
 
       // Clean infos on the city
       $data['ville'] = $data['ville'][0];
       $data['ville']['circo_abbrev'] = abbrev_n($data['ville']['circo'], TRUE);
-      $data['ville']['pop2017'] = $this->functions_datan->dec_round($data['ville']['pop2017'], mb_strlen($data['ville']['pop2017']) - 4);
-      $data['ville']['pop2017_format'] = number_format($data['ville']['pop2017'], 0, ',', ' ');
+      $data['ville']['population'] = $this->functions_datan->dec_round($data['ville']['population'], mb_strlen($data['ville']['population']) - 4);
+      $data['ville']['population_format'] = number_format($data['ville']['population'], 0, ',', ' ');
       if ($data['ville']['evol10'] > 0) {
         $data['ville']['evol10_text'] = 'augmenté';
       } else {
@@ -148,7 +148,10 @@
       $data['elections'] = $this->city_model->get_results_elections($n_circos, $data['ville']['dpt'], $data['ville']['commune'], $insee);
 
       // Edited presidentielle
-      if ($data['elections']['pres_2017']['results'][0]['votants'] > 0 && $data['elections']['pres_2022']['results'][0]['votants'] > 0) {
+      if (!empty($data['elections']['pres_2017']['results']) && 
+        !empty($data['elections']['pres_2022']['results']) &&
+        $data['elections']['pres_2017']['results'][0]['votants'] > 0 && 
+        $data['elections']['pres_2022']['results'][0]['votants'] > 0) {
         $data['results_pres_edited'] = $this->city_model->get_results_pres_edited($data['ville'], $data['elections']['pres_2017']['results'], $data['elections']['pres_2022']['results']);
       }
 

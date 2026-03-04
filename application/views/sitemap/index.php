@@ -25,9 +25,18 @@
 	<sitemap>
 		<loc><?= base_url() ?>sitemap-localites-v-1.xml</loc>
 	</sitemap>
-  <sitemap>
-    <loc><?= base_url() ?>sitemap-structure-1.xml</loc>
-  </sitemap>
+	<sitemap>
+		<loc><?= base_url() ?>sitemap-elections-1.xml</loc>
+	</sitemap>
+	<sitemap>
+		<loc><?= base_url() ?>sitemap-elections-d-1.xml</loc>
+	</sitemap>
+	<sitemap>
+		<loc><?= base_url() ?>sitemap-elections-v-1.xml</loc>
+	</sitemap>
+	<sitemap>
+		<loc><?= base_url() ?>sitemap-structure-1.xml</loc>
+	</sitemap>
 	<sitemap>
 		<loc><?= base_url() ?>sitemap-categories-1.xml</loc>
 	</sitemap>

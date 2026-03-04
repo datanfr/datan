@@ -109,6 +109,9 @@ $route['sitemap-groupes-inactifs-1.xml'] = "sitemap/groupes_inactifs";
 $route['sitemap-votes-1.xml'] = "sitemap/votes";
 $route['sitemap-localites-d-1.xml'] = "sitemap/departements";
 $route['sitemap-localites-v-1.xml'] = "sitemap/communes";
+$route['sitemap-elections-1.xml'] = "sitemap/elections";
+$route['sitemap-elections-d-1.xml'] = "sitemap/electionsDepartements";
+$route['sitemap-elections-v-1.xml'] = "sitemap/electionsCommunes";
 $route['sitemap-structure-1.xml'] = "sitemap/structure";
 $route['sitemap-categories-1.xml'] = "sitemap/categories";
 $route['sitemap-posts-1.xml'] = "sitemap/posts";
@@ -175,6 +178,8 @@ $route['questionnaire/resultat']['post'] = 'quiz/result';
 // ELECTIONS
 $route['elections'] = 'elections/index';
 $route['elections/(:any)'] = 'elections/individual/$1';
+$route['elections/resultats/(:any)/ville_(:any)'] = 'elections/results_city/$1/$2';
+$route['elections/resultats/(:any)'] = 'elections/results_dpt/$1';
 // NEWSLETTER
 $route['newsletter/edit/(:any)'] = 'newsletter/edit/$1';
 $route['newsletter/update'] = 'newsletter/update';

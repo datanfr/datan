@@ -8,7 +8,7 @@
   }
 
   function get_version(){
-    return 116;
+    return 117;
   }
 
   function legislature_current(){
@@ -303,6 +303,14 @@
   function current_controller_method() {
     $CI =& get_instance();
     return $CI->router->fetch_class() . "/" . $CI->router->fetch_method();
+  }
+
+  function url_obf_cities(){
+    return 4000;
+  }
+
+  function url_obf_cities_election() {
+    return 2000;
   }
 
 ?>

@@ -52,39 +52,38 @@
     public function get_election_infos($type){
       if ($type == "Régionales") {
         $info = "
-        <p><b>Les élections régionales ont lieu tous les six ans</b>, en même temps que les élections départementales.</p>
-        <p>Les élections régionales permettent d'<b>élire les conseillers régionaux</b> qui composent le conseil régional. Ce sont les conseillers régionaux qui décident et votent sur les affaires de la région.</p>
-        <p><b>Les compétences des régions sont multiples</b>. Il s'agit par exemple du développement économique et social, de l'organisation du transport, de la construction des lycées, ou encore de l'organisation de la formation professionnelle.</p>
-        <p>Les candidats se rassemblent sur des listes politiques, en fonction de leur parti d'appartenance. Le jour de l'élection, les électeurs votent donc pour une liste.</p>
-        <p><b>L'élection est organisée en deux tours</b>. Au premier tour, si aucune liste obtient plus de 50% des suffrages exprimés, un second tour est organisé avec uniquement les listes ayant récolté plus de 10% des voix.</p>
-        <p><b>La liste arrivant en tête se voit attribuer 25% des sièges</b> du conseil régional. Pour les sièges restants, ils sont attribués à la proportionnelle entre toutes les listes ayant obtenu au moins 5% des voix.</p>
+        <p>Les élections régionales ont lieu <b>tous les six ans</b>, en même temps que les départementales. Elles permettent d'élire les <b>conseillers régionaux</b> qui composent le conseil régional.</p>
+        <p>Les compétences des régions incluent le développement économique, les transports, la construction des lycées et la formation professionnelle.</p>
+        <p>Les électeurs votent pour une <b>liste politique</b>. L'élection se déroule en <b>deux tours</b> : si aucune liste n'obtient plus de 50% au premier tour, un second tour est organisé entre les listes ayant recueilli au moins <b>10%</b> des suffrages.</p>
+        <p>La liste arrivée en tête reçoit <b>25% des sièges</b>, le reste étant réparti à la proportionnelle entre toutes les listes ayant obtenu au moins <b>5%</b>.</p>
         ";
       } elseif ($type == "Départementales") {
         $info = "
-        <p><b>Les élections départementales ont lieu tous les six ans</b>, en même temps que les élections régionales.</p>
-        <p>Les élections départementales permettent d'<b>élire les conseillers départementaux</b> qui composent le conseil régional. Ce sont les conseillers départementaux qui décident et votent sur les affaires de la région. Avant 2013, les conseillers départementaux étaient appelés conseillers généraux.</p>
-        <p><b>Les compétences des régions sont multiples</b>. La compétence la plus importante est sociale. Les conseils départementaux gèrent l'aide sociale à l'enfant, les politiques d'hebergement et d'insertion des personnes handicapées, ou encore la gestion de maisons de retraite. Les conseils départementaux ont également des compétences en matière d'éducation (construction et entretien de collèges), la voirie départementale, ou encore l'action culturelle et sportive.</p>
-        <p>Les candidats doivent former un <b>binôme mixte</b> (une candidat femme et un candidat homme). Le jours de l'élection, les électeurs votent pour un binôme candidat.</p>
-        <p><b>L'élection est organisée en deux tours</b>. Au premier tour, si un binôme obtient la majorité absolue des voix, alors il est automatiquement élu. Si aucun binôme ne l'emporte, un second tour est organisé.</p>
-        <p>Les binômes ayant obtenu au moins 12,5% des voix des électeurs inscrits peuvent se présenter au second tour. <b>Au second tour, le binôme obtenant le plus de voix l'emporte</b>.
+        <p>Les élections départementales ont lieu <b>tous les six ans</b>, en même temps que les régionales. Elles permettent d'élire les <b>conseillers départementaux</b> qui composent le conseil départemental.</p>
+        <p>Les conseils départementaux ont des compétences variées : action sociale (aide à l'enfance, handicap, maisons de retraite), éducation (construction et entretien des collèges), voirie départementale et action culturelle.</p>
+        <p>Les candidats se présentent en <b>binôme mixte</b> (un homme, une femme). L'élection se déroule en <b>deux tours</b> : un binôme est élu au premier tour s'il obtient la majorité absolue, sinon un second tour est organisé entre les binômes ayant recueilli au moins <b>12,5% des inscrits</b>. Le binôme arrivé en tête l'emporte.</p>
         ";
       } elseif ($type == "Législatives") {
         $info = "
-        <p>Les élections législatives ont lieu <b>tous les cinq ans</b>, quelques semaines après l'élection présidentielle.</p>
-        <p>Les élections législatives permettent <b>d'élire les 577 députés</b> qui composent l'Assemblée nationale.</p>
-        <p><b>Comment les députés sont-ils élus ?</b> Lors du premier tour, un candidat peut être élu s'il obtient la majorité des suffrages exprimés (plus de 50%). Si aucun candidat ne remplit ces conditions, un second tour est organisé. Les candidats ayant reçu un nombre de suffrages supérieur à 12,5% des inscrits peuvent se présenter au second tour. Le vainqueur est le candidat qui arrive en tête au second tour.</p>
-        <p>Les rôles du député sont multiples. Ils votent la loi, contrôlent le gouvernement, et représentent les intérêts de leur circonscription au niveau national. Pour plus d'informations, <a href='https://datan.fr/faq' target='_blank'>cliquez ici</a>.</p>
+        <p>Les élections législatives ont lieu <b>tous les cinq ans</b>, quelques semaines après la présidentielle. Elles permettent d'élire les <b>577 députés</b> de l'Assemblée nationale.</p>
+        <p>L'élection se déroule en <b>deux tours</b> : un candidat est élu au premier tour s'il obtient la majorité absolue, sinon un second tour est organisé entre les candidats ayant recueilli au moins <b>12,5% des inscrits</b>. Le candidat arrivé en tête est élu.</p>
+        <p>Les députés votent la loi, contrôlent le gouvernement et représentent leur circonscription. <a href='https://datan.fr/faq' target='_blank'>En savoir plus</a>.</p>
         ";
       } elseif ($type == "Présidentielle") {
         $info = "
-        <p>L'élection présidentielle a lieu <b>tous les cinq ans</b>, quelques semaines avant les élections législatives. Elle permet d'élire le président de la République.</p>
-        <p><b>Comment le président est-il élu ?</b> Pour être candidat, il faut avoir récolté le parrainage de 500 élus (maires, parlementaires, conseillers régionaux, etc.) L'élection se déroule sur deux tours. Lors du premier tour, un candidat peut être élu s'il obtient la majorité des suffrages exprimés (plus de 50%). Si aucun candidat n'y parvient, un second tour est organisé avec les deux candidats arrivés en tête au premier tour. Le vainqueur est le candidat qui arrive en tête du second tour.</p>
-        <p>Les rôles du président de la République sont nombreux. Il ou elle est veille au respect de la Constitution, assure le fonctionnement des institutions, nomme le Premier ministre et préside le Conseil des ministres, promulgue les lois, etc. Pour plus d'informations, <a href='https://www.vie-publique.fr/infographie/23816-infographie-quel-est-le-role-du-president-de-la-republique' target='_blank' rel='nofollow noreferrer noopener'>cliquez ici</a>.</p>
+        <p>L'élection présidentielle a lieu <b>tous les cinq ans</b>, quelques semaines avant les législatives. Elle permet d'élire le président de la République.</p>
+        <p>Pour être candidat, il faut obtenir le parrainage de <b>500 élus</b>. L'élection se déroule en <b>deux tours</b> : un candidat est élu au premier tour s'il obtient la majorité absolue, sinon un second tour est organisé entre les deux candidats arrivés en tête.</p>
+        <p>Le président veille au respect de la Constitution, nomme le Premier ministre, préside le Conseil des ministres et promulgue les lois. <a href='https://www.vie-publique.fr/infographie/23816-infographie-quel-est-le-role-du-president-de-la-republique' target='_blank' rel='nofollow noreferrer noopener'>En savoir plus</a></p>
         ";
       } elseif ($type == "Européennes") { 
         $info = "
-        <p>Les élections européennes ont lieu <b>tous les cinq ans</b>. Elles permettent d'élire les députés européens, qui ont pour rôle d'élire la Commission européenne et d'amender et voter les lois européennes (règlements et directives).</p>
-        <p>En France, les députés européens sont élus au scrutin proportionnel. Les listes obtenant au moins 5% des suffrages exprimés se voient attribuer des sièges, en fonction de leur score électoral.</p>
+        <p>Les élections européennes ont lieu <b>tous les cinq ans</b> et permettent d'élire les députés européens, chargés d'élire la Commission européenne et de voter les lois européennes (règlements et directives).</p>
+        <p>En France, l'élection se fait au <b>scrutin proportionnel de liste</b>. Les listes obtenant au moins <b>5%</b> des suffrages se voient attribuer des sièges proportionnellement à leur score.</p>
+        ";
+      } elseif($type == "Municipales") {
+        $info = "
+        <p>Les élections municipales ont lieu <b>tous les six ans</b> et permettent d'élire les conseillers municipaux de chaque commune, ainsi que le maire et ses adjoints.</p>
+        <p>L'élection se fait au <b>scrutin proportionnel de liste</b>. Si une liste obtient la majorité absolue au premier tour, elle remporte la moitié des sièges, le reste étant réparti entre les listes ayant obtenu au moins 5%. Sinon, un second tour est organisé entre les listes ayant recueilli au moins 10% des suffrages. Le conseil municipal élit ensuite le maire.</p>
         ";
       } else {
         $info = NULL;
@@ -379,6 +378,19 @@
       return $this->db->get_where('elect_deputes_candidats e', $where)->result_array();
     }
 
+    public function get_candidates_by_dpt($dpt){
+      $election = 7; // Municipales 2026
+      $where = array(
+        'e.election' => $election,
+        'e.visible' => 1,
+        'c.dpt' => $dpt
+      );
+      $this->db->join('deputes_last d', 'd.mpId = e.mpId', 'left');
+      $this->db->join('circos c', 'c.insee = e.district', 'left');
+      $this->db->group_by('c.dpt');
+      return $this->db->get_where('elect_deputes_candidats e', $where)->result_array();
+    }
+
     public function get_n_candidates_by_group($group) {
       $where = array(
         'e.election' => 7, // Municipales 2026
@@ -405,5 +417,146 @@
       return $this->db->get()->result_array();
     }
 
+    public function get_municipales_listes($city, $arrondissements = FALSE){
+      
+      if ($arrondissements) {
+        $this->db->like('code_circonscription', $city, 'after'); // starts with $city
+        $this->db->where('code_circonscription !=', $city); // should not be exactly $city
+        $this->db->order_by('code_circonscription', 'ASC');
+        $this->db->order_by('numero_panneau', 'ASC');
+        $this->db->order_by('ordre', 'ASC');
+      } else {
+        $this->db->where('code_circonscription', $city);
+        $this->db->order_by('numero_panneau', 'ASC');
+        $this->db->order_by('ordre', 'ASC');
+      }
+
+      $rows = $this->db->get('elect_municipales_listes')->result_array();
+
+      if ($arrondissements) {
+        
+        // 3 dimensional: arrondissement / listes / candidats
+        $result = [];
+        foreach ($rows as $row) {
+          // Extract last 2 digits of code_circonscription e.g. "75056SR01" -> "01"
+          $arr_number = intval(substr($row['code_circonscription'], -2));
+          $arr_label  = $arr_number . 'e arrondissement';
+          $panneau    = $row['code_circonscription'] . '_' . $row['numero_panneau']; // unique key per arrondissement+list
+
+          // Init arrondissement
+          if (!isset($result[$arr_label])) {
+            $result[$arr_label] = [];
+          }
+
+          // Init list inside arrondissement
+          if (!isset($result[$arr_label][$panneau])) {
+            $result[$arr_label][$panneau] = [
+              'numero_panneau' => $row['numero_panneau'],
+              'libelle_abrege' => $row['libelle_abrege_liste'],
+              'libelle_liste'  => $row['libelle_liste'],
+              'code_nuance'    => $row['code_nuance'],
+              'nuance'         => $row['nuance'],
+              'tete_de_liste'  => null,
+              'candidats'      => []
+            ];
+          }
+
+          // Store tête de liste
+          if ($row['tete_de_liste'] === 'OUI') {
+            $result[$arr_label][$panneau]['tete_de_liste'] = $row['prenom'] . ' ' . mb_convert_case(mb_strtolower($row['nom'], 'UTF-8'), MB_CASE_TITLE, 'UTF-8');
+          }
+
+          // Add candidate
+          $result[$arr_label][$panneau]['candidats'][] = [
+            'ordre'             => $row['ordre'],
+            'nom'               => $row['nom'],
+            'prenom'            => $row['prenom'],
+            'sexe'              => $row['sexe'],
+            'nationalite'       => $row['nationalite'],
+            'code_personnalite' => $row['code_personnalite']
+          ];
+        }
+
+        // Sort by arrondissement number and reindex lists
+        uksort($result, function($a, $b) {
+          return intval($a) - intval($b);
+        });
+
+        return $result;
+      
+      } else {
+        
+        // 2 dimensional: listes / candidats (original behavior)
+        $listes = [];
+        foreach ($rows as $row) {
+          $panneau = $row['numero_panneau'];
+          
+          if (!isset($listes[$panneau])) {
+            $listes[$panneau] = [
+              'numero_panneau' => $row['numero_panneau'],
+              'libelle_abrege' => $row['libelle_abrege_liste'],
+              'libelle_liste'  => $row['libelle_liste'],
+              'code_nuance'    => $row['code_nuance'],
+              'nuance'         => $row['nuance'],
+              'tete_de_liste'  => null,
+              'candidats'      => []
+            ];
+          }
+          
+          if ($row['tete_de_liste'] === 'OUI') {
+            $listes[$panneau]['tete_de_liste'] = $row['prenom'] . ' ' . mb_convert_case(mb_strtolower($row['nom'], 'UTF-8'), MB_CASE_TITLE, 'UTF-8');
+          }
+
+          $listes[$panneau]['candidats'][] = [
+            'ordre'             => $row['ordre'],
+            'nom'               => $row['nom'],
+            'prenom'            => $row['prenom'],
+            'sexe'              => $row['sexe'],
+            'nationalite'       => $row['nationalite'],
+            'code_personnalite' => $row['code_personnalite']
+          ];
+        }
+
+        return array_values($listes);
+
+      }
+    }
+
+    public function get_nuances_edited($listes){
+      $nuanceMap = [
+        'LCOM' => ['label' => 'PCF',                    'color' => '#e4001f'],
+        'LDIV' => ['label' => 'Divers',                 'color' => '#888888'],
+        'LDSV' => ['label' => 'Droite souverainiste',   'color' => '#003189'],
+        'LDVC' => ['label' => 'Divers centre',          'color' => '#ffcc00'],
+        'LDVD' => ['label' => 'Divers droite',          'color' => '#0a3ec2'],
+        'LDVG' => ['label' => 'Divers gauche',          'color' => '#ff8c69'],
+        'LECO' => ['label' => 'Divers écologiste',      'color' => '#2e9e44'],
+        'LEXD' => ['label' => 'Extrême droite',         'color' => '#302a6e'],
+        'LEXG' => ['label' => 'Extrême gauche',         'color' => '#8B0000'],
+        'LFI'  => ['label' => 'LFI',                    'color' => '#cc0000'],
+        'LHOR' => ['label' => 'Horizons',               'color' => '#00a0c8'],
+        'LLR'  => ['label' => 'Les Républicains',       'color' => '#0033a0'],
+        'LMDM' => ['label' => 'MODEM',                  'color' => '#f07800'],
+        'LREC' => ['label' => 'Reconquête !',           'color' => '#0d2f6e'],
+        'LREG' => ['label' => 'Régionalistes',          'color' => '#66bb6a'],
+        'LREN' => ['label' => 'Renaissance',            'color' => '#e8b31a'],
+        'LRN'  => ['label' => 'Rassemblement national', 'color' => '#0d378a'],
+        'LSOC' => ['label' => 'Parti socialiste',       'color' => '#e5007d'],
+        'LUC'  => ['label' => 'Union centre',           'color' => '#ffcc00'],
+        'LUD'  => ['label' => 'Union droite',           'color' => '#0a3ec2'],
+        'LUDI' => ['label' => 'UDI',                    'color' => '#00adef'],
+        'LUDR' => ['label' => 'UDR',                    'color' => '#1a1a6e'],
+        'LUG'  => ['label' => 'Union gauche',           'color' => '#cc0000'],
+        'LUXD' => ['label' => 'Union extrême droite',   'color' => '#302a6e'],
+      ];
+
+      foreach ($listes as $key => $liste) {
+        $nuance = $nuanceMap[$liste['code_nuance']] ?? null;
+        $listes[$key]['nuance_edited'] = $nuance ? $nuance['label'] : $liste['code_nuance'];
+        $listes[$key]['nuance_color']  = $nuance ? $nuance['color'] : '#888888';
+      }
+
+      return $listes;
+    }
 
   }
