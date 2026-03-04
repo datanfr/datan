@@ -32,7 +32,6 @@ class Search extends CI_Controller
                 // original pattern: deputes/{dptSlug}/ville_{commune_slug}
                 if (strpos($url, 'deputes/') === 0) {
                     $url = str_replace('deputes/', 'elections/resultats/', $url);
-                    $url = str_replace('ville_', '', $url);
                 }
             }
             $results[] = [

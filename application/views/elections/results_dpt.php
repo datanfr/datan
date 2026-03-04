@@ -10,7 +10,7 @@
       <!-- TOP CITIES -->
       <div class="d-flex justify-content-start flex-wrap mt-4">
         <?php foreach($big_communes as $commune): ?>
-          <a href="<?= base_url() ?>elections/resultats/<?= $commune['slug'] ?>/<?= $commune['commune_slug'] ?>" class="top-city-pill"><?= $commune['commune_nom'] ?></a>
+          <a href="<?= base_url() ?>elections/resultats/<?= $commune['slug'] ?>/ville_<?= $commune['commune_slug'] ?>" class="top-city-pill"><?= $commune['commune_nom'] ?></a>
         <?php endforeach; ?>
       </div>
       <div class="letter-index mt-4">
@@ -26,12 +26,12 @@
               <?php foreach($commune_by_letter as $commune): ?>
                 <div class="col-lg-4 col-6">
                   <?php if($commune['pop2017'] > $url_obf && !in_array($commune['commune_slug'], $big_slugs)): ?>
-                    <a role="button" href="<?= base_url() ?>elections/resultats/<?= $commune['slug'] ?>/<?= $commune['commune_slug'] ?>" class="city-item d-flex justify-content-between align-items-center mb-3">
+                    <a role="button" href="<?= base_url() ?>elections/resultats/<?= $commune['slug'] ?>/ville_<?= $commune['commune_slug'] ?>" class="city-item d-flex justify-content-between align-items-center mb-3">
                       <?= $commune['commune_nom'] ?>
                       <?= file_get_contents(FCPATH . "assets/imgs/icons/bi-chevron-right.svg") ?>
                     </a>
                   <?php else: ?>
-                    <a role="button" url_obf="<?= url_obfuscation(base_url() . "elections/resultats/" . $commune['slug'] . "/" . $commune['commune_slug']) ?>" class="city-item d-flex justify-content-between align-items-center mb-3 url_obf">
+                    <a role="button" url_obf="<?= url_obfuscation(base_url() . "elections/resultats/" . $commune['slug'] . "/ville_" . $commune['commune_slug']) ?>" class="city-item d-flex justify-content-between align-items-center mb-3 url_obf">
                       <?= $commune['commune_nom'] ?>
                       <?= file_get_contents(FCPATH . "assets/imgs/icons/bi-chevron-right.svg") ?>
                     </a>

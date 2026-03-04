@@ -347,7 +347,7 @@ class Sitemap extends CI_Controller {
       foreach ($cities as $city) {
         if ($city['commune_slug'] != NULL) {
           $city_slug = $city['commune_slug'];
-          $urls[]['url'] = base_url()."elections/resultats/".$dpt_slug."/".$city_slug;
+          $urls[]['url'] = base_url()."elections/resultats/".$dpt_slug."/ville_".$city_slug;
         }
       }
     }

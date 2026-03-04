@@ -227,7 +227,7 @@
       $data['electionFeature'] = $this->elections_model->get_candidate_election($mp_id, 7, TRUE, FALSE);
       if ($data['electionFeature']) {
         $data['electionFeatureDistrict'] = $this->city_model->get_city_by_insee($data['electionFeature']['district']);
-      }      
+      }  
       
       // ____________________GET PROFESSION DE FOI________________________
       $data['professions_foi'] = $this->deputes_model->get_professions($mp_id);

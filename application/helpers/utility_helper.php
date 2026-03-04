@@ -305,4 +305,12 @@
     return $CI->router->fetch_class() . "/" . $CI->router->fetch_method();
   }
 
+  function url_obf_cities(){
+    return 4000;
+  }
+
+  function url_obf_cities_election() {
+    return 2000;
+  }
+
 ?>
