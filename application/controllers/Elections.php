@@ -36,6 +36,10 @@
       //Open Graph
       $controller = $this->router->fetch_class()."/".$this->router->fetch_method();
       $data['ogp'] = $this->meta_model->get_ogp($controller, $data['title_meta'], $data['description_meta'], $data['url'], $data);
+      // JS
+      $data['js_to_load'] = array(
+        'dist/autocomplete_search',
+      );
       // Load Views
       $this->load->view('templates/header', $data);
       $this->load->view('elections/index', $data);
