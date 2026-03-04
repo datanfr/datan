@@ -242,9 +242,6 @@
           "name" => "Élections", "url" => base_url()."elections", "active" => FALSE
         ),
         array(
-          "name" => "Résultats", "url" => base_url()."elections/resultats", "active" => FALSE
-        ),
-        array(
           "name" => $data['ville']['dpt_nom'] . " (" . $data['ville']['dpt'] . ")", "url" => base_url()."elections/resultats/" . $dpt, "active" => FALSE
         ),
         array(
@@ -298,9 +295,6 @@
         ),
         array(
           "name" => "Élections", "url" => base_url()."elections", "active" => FALSE
-        ),
-        array(
-          "name" => "Résultats", "url" => base_url()."elections/resultats", "active" => FALSE
         ),
         array(
           "name" => $data['dpt']['departement_nom'] . " (" . $data['dpt']['departement_code'] . ")", "url" => base_url()."elections/resultats/" . $dpt, "active" => TRUE
