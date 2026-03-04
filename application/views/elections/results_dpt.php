@@ -25,7 +25,7 @@
             <div class="row">
               <?php foreach($commune_by_letter as $commune): ?>
                 <div class="col-lg-4 col-6">
-                  <?php if($commune['pop2017'] > $url_obf && !in_array($commune['commune_slug'], $big_slugs)): ?>
+                  <?php if($commune['population'] > url_obf_cities_election() && !in_array($commune['commune_slug'], $big_slugs)): ?>
                     <a role="button" href="<?= base_url() ?>elections/resultats/<?= $commune['slug'] ?>/ville_<?= $commune['commune_slug'] ?>" class="city-item d-flex justify-content-between align-items-center mb-3">
                       <?= $commune['commune_nom'] ?>
                       <?= file_get_contents(FCPATH . "assets/imgs/icons/bi-chevron-right.svg") ?>
