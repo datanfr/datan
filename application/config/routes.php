@@ -178,7 +178,6 @@ $route['questionnaire/resultat']['post'] = 'quiz/result';
 // ELECTIONS
 $route['elections'] = 'elections/index';
 $route['elections/(:any)'] = 'elections/individual/$1';
-$route['elections/resultats/ville_paris'] = 'elections/results_city/paris-75/ville_paris'; // Short URL for Paris
 $route['elections/resultats/(:any)/ville_(:any)'] = 'elections/results_city/$1/$2';
 $route['elections/resultats/(:any)'] = 'elections/results_dpt/$1';
 // NEWSLETTER

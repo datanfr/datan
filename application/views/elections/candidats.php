@@ -54,7 +54,7 @@
           <p class="top-cities-label text-center">Grandes villes</p>
           <div class="d-flex justify-content-center flex-wrap">
             <?php foreach(array_slice($communes, 0, 15) as $commune): ?>
-              <a href="<?= base_url() ?>elections/resultats/<?= url_election_paris($commune['slug'] . "/ville_" .$commune['commune_slug']) ?>" class="top-city-pill"><?= $commune['commune_nom'] ?></a>
+              <a href="<?= base_url() ?>elections/resultats/<?= $commune['slug'] ?>/ville_<?= $commune['commune_slug'] ?>" class="top-city-pill"><?= $commune['commune_nom'] ?></a>
             <?php endforeach; ?>
           </div>
         </div>
