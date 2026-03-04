@@ -86,6 +86,17 @@
                 <div class="label text-uppercase mt-3">🏛️ Maire</div>
                 <div class="value"><?= $mayor["nameFirst"]." ".ucfirst(mb_strtolower($mayor["nameLast"])) ?></div>
               <?php endif; ?>
+              <?php if($ville['population'] > url_obf_cities()): ?>
+                <a href="<?= base_url() ?>deputes/<?= $ville['dpt_slug'] ?>/ville_<?= $ville['commune_slug'] ?>" class="city-item d-flex justify-content-between align-items-center mt-4 no-decoration border-primary text-primary font-weight-bold">
+                  <span>Voir la page commune</span>
+                  <?= file_get_contents(FCPATH . "assets/imgs/icons/bi-chevron-right.svg") ?>
+                </a>
+              <?php else: ?>
+                <a url_obf="<?= url_obfuscation(base_url() . "deputes/" . $ville['dpt_slug'] . "/ville_" . $ville['commune_slug']) ?>" class="city-item d-flex justify-content-between align-items-center mt-4 no-decoration border-primary text-primary font-weight-bold url_obf">
+                  <span>Voir la page commune</span>
+                  <?= file_get_contents(FCPATH . "assets/imgs/icons/bi-chevron-right.svg") ?>
+                </a>
+              <?php endif; ?>
             </div>
           </div>
         </div>
