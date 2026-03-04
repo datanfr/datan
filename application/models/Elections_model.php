@@ -532,6 +532,7 @@
         'LDVG' => ['label' => 'Divers gauche',          'color' => '#ff8c69'],
         'LECO' => ['label' => 'Divers écologiste',      'color' => '#2e9e44'],
         'LEXD' => ['label' => 'Extrême droite',         'color' => '#302a6e'],
+        'LEXG' => ['label' => 'Extrême gauche',         'color' => '#8B0000'],
         'LFI'  => ['label' => 'LFI',                    'color' => '#cc0000'],
         'LHOR' => ['label' => 'Horizons',               'color' => '#00a0c8'],
         'LLR'  => ['label' => 'Les Républicains',       'color' => '#0033a0'],
