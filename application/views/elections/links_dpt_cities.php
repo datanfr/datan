@@ -9,7 +9,7 @@
     <div class="row">
       <?php foreach ($communes as $commune): ?>
         <div class="col-6 col-md-4 py-2">
-          <a class="membre no-decoration underline" href="<?= base_url() ?>elections/resultats/<?= $commune['slug'] ?>/<?= $commune['commune_slug'] ?>" class="no-decoration underline-blue"><?= $commune['commune_nom'] ?></a>
+          <a class="membre no-decoration underline" href="<?= base_url() ?>elections/resultats/<?= $commune['slug'] ?>/ville_<?= $commune['commune_slug'] ?>" class="no-decoration underline-blue"><?= $commune['commune_nom'] ?></a>
         </div>
       <?php endforeach; ?>
     </div>

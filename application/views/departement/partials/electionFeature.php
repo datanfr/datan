@@ -22,9 +22,9 @@
         <p>Les élections municipales se tiennent les 15 et 22 mars 2026. Découvrez sur Datan les résultats commune par commune.</p>
         <?php if($link): ?>
                 <?php if($ville['pop2017'] > $url_obf): ?>
-                    <a href="<?= base_url() ?>elections/resultats/<?= $ville['dpt_slug'] ?>/<?= $ville['commune_slug'] ?>" class="mt-2 btn btn-light">Résultats des élections à <?= $ville['commune_nom'] ?></a>
+                    <a href="<?= base_url() ?>elections/resultats/<?= $ville['dpt_slug'] ?>/ville_<?= $ville['commune_slug'] ?>" class="mt-2 btn btn-light">Résultats des élections à <?= $ville['commune_nom'] ?></a>
                 <?php else: ?>
-                    <a url_obf="<?= url_obfuscation(base_url() . "elections/resultats/" . $ville['dpt_slug'] . "/" . $ville['commune_slug']) ?>" class="mt-2 btn btn-light url_obf">Résultats des élections à <?= $ville['commune_nom'] ?></a>
+                    <a url_obf="<?= url_obfuscation(base_url() . "elections/resultats/" . $ville['dpt_slug'] . "/ville_" . $ville['commune_slug']) ?>" class="mt-2 btn btn-light url_obf">Résultats des élections à <?= $ville['commune_nom'] ?></a>
                 <?php endif; ?>
             <?php endif; ?>
     </div>
