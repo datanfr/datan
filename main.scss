@@ -3058,6 +3058,22 @@ input#quicksearch[type=text]{
   }
 }
 .pg-resultats-ville, .pg-resultats-dpt {
+  .top-city-pill {
+    display: inline-block;
+    padding: 5px 14px;
+    margin: 0 6px 8px 0;
+    border-radius: 12px;
+    border: 1px solid #dee2e6;
+    background-color: #fff;
+    color: #1e293b;
+    text-decoration: none;
+    transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+    @include hover-focus(){
+      background-color: #dee2e6;
+      color: #000;
+      text-decoration: none;
+    }
+  } 
   .card-info{
     border-radius: 15px;
     .title {

@@ -50,7 +50,7 @@
             </div>
         </div>
         <!-- TOP 10 CITIES -->
-        <div class="top-cities mt-5">
+        <div class="mt-5">
           <p class="top-cities-label text-center">Grandes villes</p>
           <div class="d-flex justify-content-center flex-wrap">
             <?php foreach(array_slice($communes, 0, 15) as $commune): ?>
