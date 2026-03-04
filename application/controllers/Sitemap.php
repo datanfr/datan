@@ -325,6 +325,7 @@ class Sitemap extends CI_Controller {
 
     $urls = array();
     foreach ($results as $result) {
+      if ($result['slug'] === 'paris-75') continue;
       $slug = $result['slug'];
       $urls[]["url"] = base_url()."elections/resultats/".$slug;
     }
