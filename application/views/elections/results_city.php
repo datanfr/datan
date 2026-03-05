@@ -17,13 +17,13 @@
       <?php if($isPLM): ?>
         <ul class="nav nav-tabs mt-4" id="scrutinTabs" role="tablist">
           <li class="nav-item">
-            <a class="nav-link active" id="municipal-tab" data-toggle="tab" href="#municipal" role="tab">
+            <a class="nav-link active px-3" id="municipal-tab" data-toggle="tab" href="#municipal" role="tab">
               Scrutin municipal
             </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" id="arrondissement-tab" data-toggle="tab" href="#arrondissement" role="tab">
-              Scrutins par arrondissement
+            <a class="nav-link px-3" id="arrondissement-tab" data-toggle="tab" href="#arrondissement" role="tab">
+              Arrondissements
             </a>
           </li>
         </ul>
@@ -42,7 +42,7 @@
                       <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
                   </svg>
                 </button>
-                <div class="dropdown-menu shadow-sm" aria-labelledby="arrondissementDropdown">
+                <div class="dropdown-menu shadow-sm" style="max-height: 300px; overflow-y: auto;" aria-labelledby="arrondissementDropdown">
                     <?php foreach($arrondissements as $arrLabel => $lists): ?>
                         <a class="dropdown-item arrondissement-select-item rounded" href="#"
                             data-arr="<?= htmlspecialchars($arrLabel) ?>">
