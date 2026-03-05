@@ -17,19 +17,19 @@
       <?php if($isPLM): ?>
         <ul class="nav nav-tabs mt-4" id="scrutinTabs" role="tablist">
           <li class="nav-item">
-            <a class="nav-link active" id="municipal-tab" data-toggle="tab" href="#municipal" role="tab">
+            <a class="nav-link active px-3" id="municipal-tab" data-toggle="tab" href="#municipal" role="tab">
               Scrutin municipal
             </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" id="arrondissement-tab" data-toggle="tab" href="#arrondissement" role="tab">
-              Scrutins par arrondissement
+            <a class="nav-link px-3" id="arrondissement-tab" data-toggle="tab" href="#arrondissement" role="tab">
+              Arrondissements
             </a>
           </li>
         </ul>
         <div class="tab-content">
           <div class="tab-pane fade show active" id="municipal" role="tabpanel">
-            <?php $this->view('elections/partials/_lists_accordion.php') ?>
+            <?php $this->view('elections/partials/_lists_accordion.php', array('arrondissements' => FALSE)) ?>
           </div>
           <div class="tab-pane fade" id="arrondissement" role="tabpanel">
             <p class="text-muted mt-4">À Paris, Lyon et Marseille, chaque électeur dispose de deux bulletins le jour du vote : un pour élire les conseillers de son arrondissement (ou secteur) et un autre pour élire les conseillers municipaux à l’échelle de toute la ville.</p>
@@ -42,7 +42,7 @@
                       <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
                   </svg>
                 </button>
-                <div class="dropdown-menu shadow-sm" aria-labelledby="arrondissementDropdown">
+                <div class="dropdown-menu shadow-sm" style="max-height: 300px; overflow-y: auto;" aria-labelledby="arrondissementDropdown">
                     <?php foreach($arrondissements as $arrLabel => $lists): ?>
                         <a class="dropdown-item arrondissement-select-item rounded" href="#"
                             data-arr="<?= htmlspecialchars($arrLabel) ?>">
@@ -56,7 +56,7 @@
                 <?php foreach($arrondissements as $arrLabel => $lists): ?>
                   <div class="arrondissement-block" data-arr="<?= htmlspecialchars($arrLabel) ?>" <?php if(!$first) echo 'style="display:none"'; ?> >
                     <?php
-                      $this->view('elections/partials/_lists_accordion.php', array('listes' => $lists));
+                      $this->view('elections/partials/_lists_accordion.php', array('listes' => $lists, 'arrondissements' => TRUE));
                     ?>
                   </div>
                   <?php $first = false; ?>
@@ -68,7 +68,7 @@
           </div>
         </div>
       <?php else: ?>
-        <?php $this->view('elections/partials/_lists_accordion.php') ?>
+        <?php $this->view('elections/partials/_lists_accordion.php', array('arrondissements' => FALSE)) ?>
       <?php endif; ?>
     </div>
     <div class="col-lg-4">
