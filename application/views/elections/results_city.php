@@ -29,7 +29,7 @@
         </ul>
         <div class="tab-content">
           <div class="tab-pane fade show active" id="municipal" role="tabpanel">
-            <?php $this->view('elections/partials/_lists_accordion.php') ?>
+            <?php $this->view('elections/partials/_lists_accordion.php', array('arrondissements' => FALSE)) ?>
           </div>
           <div class="tab-pane fade" id="arrondissement" role="tabpanel">
             <p class="text-muted mt-4">À Paris, Lyon et Marseille, chaque électeur dispose de deux bulletins le jour du vote : un pour élire les conseillers de son arrondissement (ou secteur) et un autre pour élire les conseillers municipaux à l’échelle de toute la ville.</p>
@@ -56,7 +56,7 @@
                 <?php foreach($arrondissements as $arrLabel => $lists): ?>
                   <div class="arrondissement-block" data-arr="<?= htmlspecialchars($arrLabel) ?>" <?php if(!$first) echo 'style="display:none"'; ?> >
                     <?php
-                      $this->view('elections/partials/_lists_accordion.php', array('listes' => $lists));
+                      $this->view('elections/partials/_lists_accordion.php', array('listes' => $lists, 'arrondissements' => TRUE));
                     ?>
                   </div>
                   <?php $first = false; ?>
@@ -68,7 +68,7 @@
           </div>
         </div>
       <?php else: ?>
-        <?php $this->view('elections/partials/_lists_accordion.php') ?>
+        <?php $this->view('elections/partials/_lists_accordion.php', array('arrondissements' => FALSE)) ?>
       <?php endif; ?>
     </div>
     <div class="col-lg-4">
