@@ -199,6 +199,27 @@
         show_404($this->functions_datan->get_404_infos());
       }
 
+      $data['previous_elections'] = [
+    'election_2020' => [
+        'election_name' => 'Municipales 2020',
+        'election_year' => '2020',
+        'candidates' => [
+            [
+                'name' => 'Jean Dupont',
+                'party' => 'LREM',
+                'percentage' => 45.5,
+                'votes' => 1234
+            ],
+            [
+                'name' => 'Marie Martin',
+                'party' => 'LR',
+                'percentage' => 32.2,
+                'votes' => 876
+            ]
+        ]
+    ]
+];
+
       $data['ville'] = $data['ville_all'][0];
       $insee = $data['ville']['insee'];
       $data['ville_infos'] = $this->city_model->get_city_by_insee($insee);
@@ -219,8 +240,10 @@
       foreach ($data['ville_all'] as $circo_data) {
         $circo[] = $circo_data['circo'];
       }
-      $data['deputes_ville'] = $this->city_model->get_mps($data['ville']['dpt_slug'], $circo, legislature_current());
-      if (!empty($data['deputes_ville'])) {
+      $data['deputes_ville'] = $this->city_model->get_mps(
+        $data['ville']['dpt_slug'], $circo, legislature_current());
+      if
+       (!empty($data['deputes_ville'])) {
         foreach ($data['deputes_ville'] as $key => $value) {
           $data['deputes_ville'][$key]['couleurAssociee'] = $this->groupes_model->get_groupe_color(array($value['libelleAbrev'], $value['couleurAssociee']));
           $data['deputes_ville'][$key]['electionCircoAbbrev'] = abbrev_n($value['electionCirco'], TRUE);
@@ -236,6 +259,10 @@
           $data['arrondissements'][$arr] = $this->elections_model->get_nuances_edited($lists);
         }
       }
+
+      // Previous elections 
+      // HERE !! 
+      //$data['elections'] = $this->city_model->get_results_elections(TRUE, $data['ville']['dpt'], $data['ville']['commune'], $insee);
 
       // Breadcrumb
       $is_paris = ($dpt === 'paris-75');
