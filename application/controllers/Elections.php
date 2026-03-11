@@ -199,27 +199,6 @@
         show_404($this->functions_datan->get_404_infos());
       }
 
-      $data['previous_elections'] = [
-    'election_2020' => [
-        'election_name' => 'Municipales 2020',
-        'election_year' => '2020',
-        'candidates' => [
-            [
-                'name' => 'Jean Dupont',
-                'party' => 'LREM',
-                'percentage' => 45.5,
-                'votes' => 1234
-            ],
-            [
-                'name' => 'Marie Martin',
-                'party' => 'LR',
-                'percentage' => 32.2,
-                'votes' => 876
-            ]
-        ]
-    ]
-];
-
       $data['ville'] = $data['ville_all'][0];
       $insee = $data['ville']['insee'];
       $data['ville_infos'] = $this->city_model->get_city_by_insee($insee);
@@ -261,8 +240,17 @@
       }
 
       // Previous elections 
-      // HERE !! 
-      //$data['elections'] = $this->city_model->get_results_elections(TRUE, $data['ville']['dpt'], $data['ville']['commune'], $insee);
+      $data['previous_elections'] = $this->city_model->get_results_elections_full(1, $insee);
+      $data['election_rounds'] = array(
+        1 => array(
+          'title' => 'Premier tour',
+          'data' => 'round_1'
+        ),
+        2 => array(
+          'title' => 'Second tour',
+          'data' => 'round_2'
+        )
+      );
 
       // Breadcrumb
       $is_paris = ($dpt === 'paris-75');

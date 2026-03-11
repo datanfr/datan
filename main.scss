@@ -114,6 +114,8 @@ a:not(.btn), .url_obf:not(.btn, .card) {
 .url_obf, .cursor-pointer{
   cursor: pointer;
 }
+
+
 /*
 ################
                ADD FLEX CLASS
@@ -3017,7 +3019,7 @@ input#quicksearch[type=text]{
     font-weight: 800;
     color: $text-black;
   }
-  h2{
+  h2, .h2 {
     font-size: 1.8em;
     color: $text-black;
     font-weight: 800;
@@ -3157,6 +3159,7 @@ input#quicksearch[type=text]{
   }
   .liste-header[aria-expanded="true"] .chevron-icon,
   .liste-header.open .chevron-icon,
+  .liste-election .header[aria-expanded="true"] .chevron-icon,
   #arrondissementDropdown[aria-expanded="true"] .chevron-icon {
     transform: rotate(180deg);
   }
@@ -3169,6 +3172,78 @@ input#quicksearch[type=text]{
   }
   .candidate-row:last-child {
     border-bottom: none;
+  }
+  .liste-election{
+    transition: box-shadow 0.2s ease;
+    background-color: white;
+    border-radius: 5px;
+    overflow: hidden;
+    border: 1px solid $primary;
+    @include hover-focus(){
+      box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+    }
+    cursor: pointer;
+    user-select: none;
+    .header{
+      background-color: #E6FBF6;
+    }
+    .title{
+      font-weight: 800;
+      font-size: $h5-font-size;
+      color: $text-black;
+    }
+  }
+  .election-stats {
+    border-bottom: 1px solid #e9ecef;
+    align-items: center;
+  }
+  .election-stat {
+    display: flex;
+    flex-direction: column;
+  }
+  .election-stat-label {
+    font-size: 0.75rem;
+    color: #6c757d;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .election-stat-value {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #212529;
+  }
+  .election-stat-divider {
+    width: 1px;
+    background-color: #dee2e6;
+    align-self: stretch;
+  }
+  .previous-election-round-switch {
+    display: inline-flex;
+    background-color: #f0f0f0;
+    border-radius: 8px;
+    padding: 3px;
+    gap: 2px;
+  }
+  .previous-election-round-btn {
+    border: none;
+    background: transparent;
+    border-radius: 6px;
+    padding: 6px 16px;
+    font-size: $h7-font-size;
+    font-weight: 600;
+    color: #6c757d;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+  }
+  .previous-election-round-btn:hover {
+    color: #212529;
+    background-color: #e2e2e2;
+  }
+  .previous-election-round-btn.active {
+    background-color: #ffffff;
+    color: #212529;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.12);
   }
   .nav-tabs{
     border-bottom: 2px solid #e9ecef;

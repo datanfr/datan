@@ -554,4 +554,46 @@
       return $listes;
     }
 
+    public function get_results_city($election, $city){
+      $where = array(
+        'id_election' => $election,
+        'code_commune' => $city
+      );
+      $this->db->select('*, SUM(voix) as voix_total');
+      $this->db->group_by('no_panneau');
+      $this->db->order_by('voix_total', 'desc');
+      $results = $this->db->get_where('elect_bv_results', $where)->result_array();
+
+      $total = array_sum(array_column($results, 'voix_total'));
+
+      foreach ($results as &$row) {
+        $row['voix_pct'] = $total > 0 ? round($row['voix_total'] / $total * 100, 2) : 0;
+      }
+      
+      return $results;
+    }
+
+    public function get_infos_city($election, $city){
+      $where = array(
+        'id_election' => $election,
+        'code_commune' => $city
+      );
+      $this->db->select('*');
+      $this->db->select('SUM(inscrits) as inscrits');
+      $this->db->select('SUM(abstentions) as abstentions');
+      $this->db->select('SUM(votants) as votants');
+      $this->db->select('SUM(blancs) as blancs');
+      $this->db->select('SUM(nuls) as nuls');
+      $this->db->select('SUM(exprimes) as exprimes');
+      $this->db->group_by('code_commune');
+      $result = $this->db->get_where('elect_bv_infos', $where)->row_array();
+
+      if (!empty($result)) {
+        $result['blancs_nuls'] = $result['blancs'] + $result['nuls'];
+        $result['abstention_pct'] = $result['inscrits'] > 0 ? round($result['abstentions'] / $result['inscrits'] * 100, 2) : 0;
+      }
+
+      return $result;
+    }
+
   }

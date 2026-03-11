@@ -13,7 +13,7 @@
   </div>
   <div class="row mt-5">
     <div class="col-lg-8">
-      <h2>Listes candidates aux municipales à <?= $ville['commune_nom'] ?></h2>
+      <h2>Listes candidates aux municipales 2026 à <?= $ville['commune_nom'] ?></h2>
       <?php if($isPLM): ?>
         <ul class="nav nav-tabs mt-4" id="scrutinTabs" role="tablist">
           <li class="nav-item">
@@ -70,55 +70,91 @@
       <?php else: ?>
         <?php $this->view('elections/partials/_lists_accordion.php', array('arrondissements' => FALSE)) ?>
       <?php endif; ?>
-      <h2 class="mt-5">Résultats des élections précédentes à <?= $ville['commune_nom'] ?></h2>
+      <div class="mt-5 h2">Résultats des élections précédentes à <?= $ville['commune_nom'] ?></div>
       
       <!-- Previous Elections Results -->
       <?php if (!empty($previous_elections)): ?>
         <div class="mt-4" id="previousElectionsAccordion">
-          <?php foreach ($previous_elections as $election_id => $election): ?>
-            <div class="card mb-3 border-0 shadow-sm">
-              <div class="card-header bg-primary border-0 p-0">
-                <h5 class="mb-0">
-                  <a class="btn btn-link text-white text-decoration-none w-100 text-left px-3 py-3" 
-                     data-toggle="collapse" 
-                     href="#collapse<?= $election_id ?>" 
-                     role="button"
-                     aria-expanded="true" 
-                     aria-controls="collapse<?= $election_id ?>">
-                    <?= htmlspecialchars($election['election_name'] ?? 'Election') ?> 
-                    <span class="text-muted small">(<?= htmlspecialchars($election['election_year'] ?? '') ?>)</span>
-                    <svg class="float-right mt-1" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
-                      <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
-                    </svg>
-                  </a>
-                </h5>
+          <?php foreach ($previous_elections as $election): ?>
+            <div class="liste-election mb-3">
+              <div class="d-flex header align-items-center px-4 py-3"
+                   data-toggle="collapse"
+                   data-target="#collapse<?= $election['election_id'] ?>"
+                   aria-controls="collapse<?= $election['election_id'] ?>">
+                <div class="flex-grow-1">
+                  <div class="title"><?= $election['title'] ?></div>
+                </div>
+                <svg class="chevron-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+            </svg>
               </div>
-              <div id="collapse<?= $election_id ?>" class="collapse" data-parent="#previousElectionsAccordion">
-                <div class="card-body">
-                  <?php if (!empty($election['candidates'])): ?>
-                    <div class="list-group list-group-flush">
-                      <?php foreach ($election['candidates'] as $candidate): ?>
-                        <div class="list-group-item d-flex justify-content-between align-items-center px-0 py-3 border-bottom">
-                          <div>
-                            <div class="font-weight-bold"><?= htmlspecialchars($candidate['name'] ?? 'N/A') ?></div>
-                            <?php if (!empty($candidate['party'])): ?>
-                              <small class="text-muted"><?= htmlspecialchars($candidate['party']) ?></small>
-                            <?php endif; ?>
-                          </div>
-                          <div class="text-right">
-                            <div class="font-weight-bold text-primary">
-                              <?= number_format($candidate['percentage'] ?? 0, 2, ',', ' ') ?>%
-                            </div>
-                            <small class="text-muted">
-                              <?= formatNumber($candidate['votes'] ?? 0) ?> vote<?= ($candidate['votes'] ?? 0) > 1 ? 's' : '' ?>
-                            </small>
-                          </div>
-                        </div>
+              <div id="collapse<?= $election['election_id'] ?>" class="collapse" data-parent="#previousElectionsAccordion">
+                <div class="liste-candidates p-4 previous-election-body">
+                  <?php if ($election['has_second_round']): ?>
+                    <div class="previous-election-round-switch mb-4" data-election-id="<?= htmlspecialchars($election['election_id']) ?>">
+                      <?php foreach ($election_rounds as $key => $round): ?>
+                        <button
+                          type="button"
+                          class="previous-election-round-btn <?= $key === 1 ? 'active' : '' ?>"
+                          data-election-id="<?= htmlspecialchars($election['election_id']) ?>"
+                          data-round="<?= htmlspecialchars((string) $key) ?>"
+                          aria-pressed="<?= $key === 1 ? 'true' : 'false' ?>">
+                          <?= $round['title'] ?>
+                        </button>
                       <?php endforeach; ?>
                     </div>
-                  <?php else: ?>
-                    <p class="text-muted mb-0">Aucun résultat disponible pour cette élection.</p>
                   <?php endif; ?>
+
+                  <?php foreach ($election_rounds as $key => $round): ?>
+                    <?php 
+                      $roundInfos = $election[$round['data']]['infos'];
+                      $roundResults =   $election[$round['data']]['results'];
+                    ?>
+                    <div
+                      class="previous-election-round-content"
+                      data-election-id="<?= htmlspecialchars($election['election_id']) ?>"
+                      data-round="<?= (string) $key ?>"
+                      <?php if ((string) $key !== (string) "1") echo 'style="display:none"'; ?>>
+                      <div class="election-stats d-flex mb-3 pb-3">
+                        <div class="election-stat">
+                          <span class="election-stat-label">Nombre de votants</span>
+                          <span class="election-stat-value"><?= formatNumber($roundInfos['votants'] ?? 0) ?></span>
+                        </div>
+                        <div class="election-stat-divider mx-3"></div>
+                        <div class="election-stat">
+                          <span class="election-stat-label">Taux d'abstention</span>
+                          <span class="election-stat-value"><?= number_format($roundInfos['abstention_pct'] ?? 0, 2, ',', ' ') ?>%</span>
+                        </div>
+                        <div class="election-stat-divider mx-3"></div>
+                        <div class="election-stat">
+                          <span class="election-stat-label">Blancs et nuls</span>
+                          <span class="election-stat-value"><?= formatNumber($roundInfos['blancs_nuls'] ?? 0) ?></span>
+                        </div>
+                      </div>
+                      <?php if (!empty($roundResults)): ?>
+                        <?php foreach ($roundResults as $candidate): ?>
+                          <div class="candidate-row d-flex justify-content-between align-items-center py-2">
+                            <div>
+                              <div class="font-weight-bold"><?= $candidate['prenom'] ?> <?= $candidate['nom'] ?></div>
+                              <?php if (!empty($candidate['nuance'])): ?>
+                                <small class="text-muted"><?= $candidate['nuance'] ?></small>
+                              <?php endif; ?>
+                            </div>
+                            <div class="text-right ml-3">
+                              <div class="font-weight-bold">
+                                <?= number_format($candidate['voix_pct'] ?? 0, 2, ',', ' ') ?>%
+                              </div>
+                              <small class="text-muted">
+                                <?= formatNumber($candidate['voix_total'] ?? 0) ?> vote<?= ($candidate['voix_total'] ?? 0) > 1 ? 's' : '' ?>
+                              </small>
+                            </div>
+                          </div>
+                        <?php endforeach; ?>
+                      <?php else: ?>
+                        <p class="text-muted mb-0">Aucun résultat disponible pour ce tour.</p>
+                      <?php endif; ?>
+                    </div>
+                  <?php endforeach; ?>
                 </div>
               </div>
             </div>
@@ -226,30 +262,55 @@
 <script>
   document.addEventListener('DOMContentLoaded', function() {
     var dropdown = document.getElementById('arrondissementDropdown');
-    
-    // Handle dropdown show/hide for chevron rotation
-    $(dropdown).on('show.bs.dropdown', function() {
-      this.setAttribute('aria-expanded', 'true');
-    });
-    
-    $(dropdown).on('hide.bs.dropdown', function() {
-      this.setAttribute('aria-expanded', 'false');
-    });
-    
-    // Handle arrondissement selection
-    var items = document.querySelectorAll('.arrondissement-select-item');
-    items.forEach(function(item) {
-      item.addEventListener('click', function(e) {
-        e.preventDefault();
-        var selected = this.getAttribute('data-arr');
-        document.getElementById('arrondissementDropdownLabel').textContent = selected;
-        document.querySelectorAll('.arrondissement-block').forEach(function(block) {
-          if (block.getAttribute('data-arr') === selected) {
-            block.style.display = '';
-          } else {
-            block.style.display = 'none';
-          }
+
+    if (dropdown) {
+      // Handle dropdown show/hide for chevron rotation
+      $(dropdown).on('show.bs.dropdown', function() {
+        this.setAttribute('aria-expanded', 'true');
+      });
+
+      $(dropdown).on('hide.bs.dropdown', function() {
+        this.setAttribute('aria-expanded', 'false');
+      });
+
+      // Handle arrondissement selection
+      var items = document.querySelectorAll('.arrondissement-select-item');
+      items.forEach(function(item) {
+        item.addEventListener('click', function(e) {
+          e.preventDefault();
+          var selected = this.getAttribute('data-arr');
+          document.getElementById('arrondissementDropdownLabel').textContent = selected;
+          document.querySelectorAll('.arrondissement-block').forEach(function(block) {
+            if (block.getAttribute('data-arr') === selected) {
+              block.style.display = '';
+            } else {
+              block.style.display = 'none';
+            }
+          });
         });
+      });
+    }
+
+    // Handle previous elections round switch (Premier tour / Second tour)
+    var roundSwitchButtons = document.querySelectorAll('.previous-election-round-btn');
+    roundSwitchButtons.forEach(function(button) {
+      button.addEventListener('click', function() {
+        var electionId = this.getAttribute('data-election-id');
+        var round = this.getAttribute('data-round');
+
+        document
+          .querySelectorAll('.previous-election-round-btn[data-election-id="' + electionId + '"]')
+          .forEach(function(btn) {
+            var isActive = btn.getAttribute('data-round') === round;
+            btn.classList.toggle('active', isActive);
+            btn.setAttribute('aria-pressed', isActive ? 'true' : 'false');
+          });
+
+        document
+          .querySelectorAll('.previous-election-round-content[data-election-id="' + electionId + '"]')
+          .forEach(function(content) {
+            content.style.display = content.getAttribute('data-round') === round ? '' : 'none';
+          });
       });
     });
   });
