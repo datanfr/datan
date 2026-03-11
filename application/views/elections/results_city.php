@@ -70,6 +70,65 @@
       <?php else: ?>
         <?php $this->view('elections/partials/_lists_accordion.php', array('arrondissements' => FALSE)) ?>
       <?php endif; ?>
+      <h2 class="mt-5">Résultats des élections précédentes à <?= $ville['commune_nom'] ?></h2>
+      
+      <!-- Previous Elections Results -->
+      <?php if (!empty($previous_elections)): ?>
+        <div class="mt-4" id="previousElectionsAccordion">
+          <?php foreach ($previous_elections as $election_id => $election): ?>
+            <div class="card mb-3 border-0 shadow-sm">
+              <div class="card-header bg-primary border-0 p-0">
+                <h5 class="mb-0">
+                  <a class="btn btn-link text-white text-decoration-none w-100 text-left px-3 py-3" 
+                     data-toggle="collapse" 
+                     href="#collapse<?= $election_id ?>" 
+                     role="button"
+                     aria-expanded="true" 
+                     aria-controls="collapse<?= $election_id ?>">
+                    <?= htmlspecialchars($election['election_name'] ?? 'Election') ?> 
+                    <span class="text-muted small">(<?= htmlspecialchars($election['election_year'] ?? '') ?>)</span>
+                    <svg class="float-right mt-1" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
+                      <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+                    </svg>
+                  </a>
+                </h5>
+              </div>
+              <div id="collapse<?= $election_id ?>" class="collapse" data-parent="#previousElectionsAccordion">
+                <div class="card-body">
+                  <?php if (!empty($election['candidates'])): ?>
+                    <div class="list-group list-group-flush">
+                      <?php foreach ($election['candidates'] as $candidate): ?>
+                        <div class="list-group-item d-flex justify-content-between align-items-center px-0 py-3 border-bottom">
+                          <div>
+                            <div class="font-weight-bold"><?= htmlspecialchars($candidate['name'] ?? 'N/A') ?></div>
+                            <?php if (!empty($candidate['party'])): ?>
+                              <small class="text-muted"><?= htmlspecialchars($candidate['party']) ?></small>
+                            <?php endif; ?>
+                          </div>
+                          <div class="text-right">
+                            <div class="font-weight-bold text-primary">
+                              <?= number_format($candidate['percentage'] ?? 0, 2, ',', ' ') ?>%
+                            </div>
+                            <small class="text-muted">
+                              <?= formatNumber($candidate['votes'] ?? 0) ?> vote<?= ($candidate['votes'] ?? 0) > 1 ? 's' : '' ?>
+                            </small>
+                          </div>
+                        </div>
+                      <?php endforeach; ?>
+                    </div>
+                  <?php else: ?>
+                    <p class="text-muted mb-0">Aucun résultat disponible pour cette élection.</p>
+                  <?php endif; ?>
+                </div>
+              </div>
+            </div>
+          <?php endforeach; ?>
+        </div>
+      <?php else: ?>
+        <div class="alert alert-info mt-4">
+          <p class="mb-0">Aucun résultat d'élection précédente disponible pour cette commune.</p>
+        </div>
+      <?php endif; ?>
     </div>
     <div class="col-lg-4">
       <div class="row mt-5 mt-lg-0">
@@ -135,7 +194,7 @@
         </div>
       </div>
     </div>
-  </div>  
+  </div>
 </div>
 <?php $this->load->view('partials/follow-us.php') ?>
 <!-- OTHER CITIES FROM THE DEPARTMENT -->
