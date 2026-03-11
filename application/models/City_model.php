@@ -149,6 +149,26 @@
       return $array;
     }
 
+
+    public function get_results_elections_full($n_circos, $insee){
+      $return = array();
+
+      // 1. Législative 2024 
+      $result = [];
+      $result['title'] = 'Législatives 2024';
+      $result['election_id'] = '2024_legi';
+      $result['has_second_round'] = TRUE;
+      $result['round_1']['infos'] = $this->elections_model->get_infos_city($result['election_id'] . '_t1', $insee);
+      $result['round_1']['results'] = $this->elections_model->get_results_city($result['election_id'] . '_t1', $insee);
+      $result['round_2']['infos'] = $this->elections_model->get_infos_city($result['election_id'] . '_t2', $insee);
+      $result['round_2']['results'] = $this->elections_model->get_results_city($result['election_id'] . '_t2', $insee);
+
+      $return[] = $result;
+
+      return $return;
+
+    }
+
     public function get_results_elections($n_circos, $dpt, $commune, $insee){
       $return = array();
 
