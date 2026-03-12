@@ -556,13 +556,13 @@
 
     public function get_results_city($election, $city){
       $where = array(
-        'id_election' => $election,
-        'code_commune' => $city
+        'r.id_election' => $election,
+        'r.code_commune' => $city
       );
-      $this->db->select('*, SUM(voix) as voix_total');
-      $this->db->group_by('no_panneau');
+      $this->db->select('r.*, SUM(r.voix) as voix_total');
+      $this->db->group_by('r.no_panneau');
       $this->db->order_by('voix_total', 'desc');
-      $results = $this->db->get_where('elect_bv_results', $where)->result_array();
+      $results = $this->db->get_where('elect_bv_results r', $where)->result_array();
 
       $total = array_sum(array_column($results, 'voix_total'));
 
@@ -573,20 +573,63 @@
       return $results;
     }
 
-    public function get_infos_city($election, $city){
+    public function get_city_circos($election, $city){
       $where = array(
         'id_election' => $election,
         'code_commune' => $city
       );
-      $this->db->select('*');
-      $this->db->select('SUM(inscrits) as inscrits');
-      $this->db->select('SUM(abstentions) as abstentions');
-      $this->db->select('SUM(votants) as votants');
-      $this->db->select('SUM(blancs) as blancs');
-      $this->db->select('SUM(nuls) as nuls');
-      $this->db->select('SUM(exprimes) as exprimes');
-      $this->db->group_by('code_commune');
-      $result = $this->db->get_where('elect_bv_infos', $where)->row_array();
+      $this->db->distinct();
+      $this->db->select('code_circo, libelle_circo');
+      $this->db->order_by('code_circo', 'asc');
+
+      return $this->db->get_where('elect_bv_circo', $where)->result_array();
+    }
+
+    public function get_results_city_legislatives($election, $city, $code_circo = NULL){
+      $where = array(
+        'r.id_election' => $election,
+        'r.code_commune' => $city
+      );
+      $this->db->select('r.*, c.code_circo, c.libelle_circo, SUM(r.voix) as voix_total');
+      $this->db->join(
+        'elect_bv_circo c', 
+        'c.id_election = r.id_election AND c.code_commune = r.code_commune AND c.code_bv = r.code_bv', 
+        'left');
+      if ($code_circo !== NULL) {
+        $this->db->where('c.code_circo', $code_circo);
+      }
+      $this->db->group_by('r.no_panneau');
+      $this->db->order_by('voix_total', 'desc');
+      $results = $this->db->get_where('elect_bv_results r', $where)->result_array();
+
+      $total = array_sum(array_column($results, 'voix_total'));
+      foreach ($results as &$row) {
+          $row['voix_pct'] = $total > 0 ? round($row['voix_total'] / $total * 100, 2) : 0;
+      }
+      
+      return $results;
+    }
+
+    public function get_infos_city($election, $city, $code_circo = NULL){
+      $this->db->select('SUM(i.inscrits) as inscrits');
+      $this->db->select('SUM(i.abstentions) as abstentions');
+      $this->db->select('SUM(i.votants) as votants');
+      $this->db->select('SUM(i.blancs) as blancs');
+      $this->db->select('SUM(i.nuls) as nuls');
+      $this->db->select('SUM(i.exprimes) as exprimes');
+      $this->db->where('i.id_election', $election);
+      $this->db->where('i.code_commune', $city);
+
+      if ($code_circo !== NULL) {
+        $this->db->join(
+          'elect_bv_circo c',
+          'c.id_election = i.id_election AND c.code_commune = i.code_commune AND c.code_bv = i.code_bv',
+          'inner'
+        );
+        $this->db->where('c.code_circo', $code_circo);
+      }
+
+      $result = $this->db->get('elect_bv_infos i')->row_array();
 
       if (!empty($result)) {
         $result['blancs_nuls'] = $result['blancs'] + $result['nuls'];

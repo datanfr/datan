@@ -35,31 +35,28 @@
             <p class="text-muted mt-4">À Paris, Lyon et Marseille, chaque électeur dispose de deux bulletins le jour du vote : un pour élire les conseillers de son arrondissement (ou secteur) et un autre pour élire les conseillers municipaux à l’échelle de toute la ville.</p>
             <?php if(!empty($arrondissements)): ?>
               <div class="dropdown mt-3">
-                <?php $firstLabel = array_keys($arrondissements)[0]; ?>
                 <button type="button" id="arrondissementDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <span id="arrondissementDropdownLabel"><?= htmlspecialchars($firstLabel) ?></span>
+                    <span id="arrondissementDropdownLabel"><?= htmlspecialchars($arrondissements_first_label) ?></span>
                     <svg class="chevron-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
                       <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
                   </svg>
                 </button>
                 <div class="dropdown-menu shadow-sm" style="max-height: 300px; overflow-y: auto;" aria-labelledby="arrondissementDropdown">
-                    <?php foreach($arrondissements as $arrLabel => $lists): ?>
+                    <?php foreach($arrondissements_view as $arrondissement): ?>
                         <a class="dropdown-item arrondissement-select-item rounded" href="#"
-                            data-arr="<?= htmlspecialchars($arrLabel) ?>">
-                            <?= $arrLabel ?>
+                            data-arr="<?= htmlspecialchars($arrondissement['label']) ?>">
+                            <?= $arrondissement['label'] ?>
                         </a>
                     <?php endforeach; ?>
                 </div>
             </div>
               <div id="arrondissementsContent" class="mt-4">
-                <?php $first = true; ?>
-                <?php foreach($arrondissements as $arrLabel => $lists): ?>
-                  <div class="arrondissement-block" data-arr="<?= htmlspecialchars($arrLabel) ?>" <?php if(!$first) echo 'style="display:none"'; ?> >
+                <?php foreach($arrondissements_view as $arrondissement): ?>
+                  <div class="arrondissement-block" data-arr="<?= htmlspecialchars($arrondissement['label']) ?>" <?= $arrondissement['label'] !== $arrondissements_first_label ? 'style="display:none"' : '' ?> >
                     <?php
-                      $this->view('elections/partials/_lists_accordion.php', array('listes' => $lists, 'arrondissements' => TRUE));
+                      $this->view('elections/partials/_lists_accordion.php', array('listes' => $arrondissement['lists'], 'arrondissements' => TRUE));
                     ?>
                   </div>
-                  <?php $first = false; ?>
                 <?php endforeach; ?>
               </div>
             <?php else: ?>
@@ -73,86 +70,113 @@
       <div class="mt-5 h2">Résultats des élections précédentes à <?= $ville['commune_nom'] ?></div>
       
       <!-- Previous Elections Results -->
-      <?php if (!empty($previous_elections)): ?>
+      <?php if (!empty($previous_elections_ui)): ?>
         <div class="mt-4" id="previousElectionsAccordion">
-          <?php foreach ($previous_elections as $election): ?>
+          <?php foreach ($previous_elections_ui as $election): ?>
             <div class="liste-election mb-3">
               <div class="d-flex header align-items-center px-4 py-3"
-                   data-toggle="collapse"
-                   data-target="#collapse<?= $election['election_id'] ?>"
-                   aria-controls="collapse<?= $election['election_id'] ?>">
+                data-toggle="collapse"
+                data-target="#collapse<?= $election['election_id'] ?>"
+                aria-controls="collapse<?= $election['election_id'] ?>">
                 <div class="flex-grow-1">
                   <div class="title"><?= $election['title'] ?></div>
                 </div>
                 <svg class="chevron-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-                <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
-            </svg>
+                  <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+               </svg>
               </div>
               <div id="collapse<?= $election['election_id'] ?>" class="collapse" data-parent="#previousElectionsAccordion">
                 <div class="liste-candidates p-4 previous-election-body">
-                  <?php if ($election['has_second_round']): ?>
-                    <div class="previous-election-round-switch mb-4" data-election-id="<?= htmlspecialchars($election['election_id']) ?>">
-                      <?php foreach ($election_rounds as $key => $round): ?>
+                  <?php if ($election['has_multiple_circos']): ?>
+                    <div class="previous-election-circo-switch mb-3" data-election-id="<?= htmlspecialchars($election['election_id']) ?>">
+                      <?php foreach ($election['circos_ui'] as $circo): ?>
                         <button
                           type="button"
-                          class="previous-election-round-btn <?= $key === 1 ? 'active' : '' ?>"
+                          class="previous-election-circo-btn <?= $circo['is_default'] ? 'active' : '' ?>"
                           data-election-id="<?= htmlspecialchars($election['election_id']) ?>"
-                          data-round="<?= htmlspecialchars((string) $key) ?>"
-                          aria-pressed="<?= $key === 1 ? 'true' : 'false' ?>">
-                          <?= $round['title'] ?>
+                          data-circo-id="<?= htmlspecialchars($circo['id']) ?>"
+                          aria-pressed="<?= $circo['is_default'] ? 'true' : 'false' ?>">
+                          <?= htmlspecialchars($circo['label']) ?>
                         </button>
                       <?php endforeach; ?>
                     </div>
                   <?php endif; ?>
 
-                  <?php foreach ($election_rounds as $key => $round): ?>
-                    <?php 
-                      $roundInfos = $election[$round['data']]['infos'];
-                      $roundResults =   $election[$round['data']]['results'];
-                    ?>
+                  <?php foreach ($election['circos_ui'] as $circo): ?>
                     <div
-                      class="previous-election-round-content"
+                      class="previous-election-circo-content"
                       data-election-id="<?= htmlspecialchars($election['election_id']) ?>"
-                      data-round="<?= (string) $key ?>"
-                      <?php if ((string) $key !== (string) "1") echo 'style="display:none"'; ?>>
-                      <div class="election-stats d-flex mb-3 pb-3">
-                        <div class="election-stat">
-                          <span class="election-stat-label">Nombre de votants</span>
-                          <span class="election-stat-value"><?= formatNumber($roundInfos['votants'] ?? 0) ?></span>
+                      data-circo-id="<?= htmlspecialchars($circo['id']) ?>"
+                      <?= !$circo['is_default'] ? 'style="display:none"' : '' ?>>
+                      <?php if ($election['has_second_round']): ?>
+                        <div class="previous-election-round-switch mb-4" data-election-id="<?= htmlspecialchars($election['election_id']) ?>" data-circo-id="<?= htmlspecialchars($circo['id']) ?>">
+                          <?php foreach ($circo['rounds'] as $round): ?>
+                            <button
+                              type="button"
+                              class="previous-election-round-btn <?= $round['is_default'] ? 'active' : '' ?>"
+                              data-election-id="<?= htmlspecialchars($election['election_id']) ?>"
+                              data-circo-id="<?= htmlspecialchars($circo['id']) ?>"
+                              data-round="<?= htmlspecialchars($round['key']) ?>"
+                              aria-pressed="<?= $round['is_default'] ? 'true' : 'false' ?>">
+                              <?= $round['title'] ?>
+                            </button>
+                          <?php endforeach; ?>
                         </div>
-                        <div class="election-stat-divider mx-3"></div>
-                        <div class="election-stat">
-                          <span class="election-stat-label">Taux d'abstention</span>
-                          <span class="election-stat-value"><?= number_format($roundInfos['abstention_pct'] ?? 0, 2, ',', ' ') ?>%</span>
-                        </div>
-                        <div class="election-stat-divider mx-3"></div>
-                        <div class="election-stat">
-                          <span class="election-stat-label">Blancs et nuls</span>
-                          <span class="election-stat-value"><?= formatNumber($roundInfos['blancs_nuls'] ?? 0) ?></span>
-                        </div>
-                      </div>
-                      <?php if (!empty($roundResults)): ?>
-                        <?php foreach ($roundResults as $candidate): ?>
-                          <div class="candidate-row d-flex justify-content-between align-items-center py-2">
-                            <div>
-                              <div class="font-weight-bold"><?= $candidate['prenom'] ?> <?= $candidate['nom'] ?></div>
-                              <?php if (!empty($candidate['nuance'])): ?>
-                                <small class="text-muted"><?= $candidate['nuance'] ?></small>
-                              <?php endif; ?>
-                            </div>
-                            <div class="text-right ml-3">
-                              <div class="font-weight-bold">
-                                <?= number_format($candidate['voix_pct'] ?? 0, 2, ',', ' ') ?>%
-                              </div>
-                              <small class="text-muted">
-                                <?= formatNumber($candidate['voix_total'] ?? 0) ?> vote<?= ($candidate['voix_total'] ?? 0) > 1 ? 's' : '' ?>
-                              </small>
-                            </div>
-                          </div>
-                        <?php endforeach; ?>
-                      <?php else: ?>
-                        <p class="text-muted mb-0">Aucun résultat disponible pour ce tour.</p>
                       <?php endif; ?>
+
+                      <?php foreach ($circo['rounds'] as $round): ?>
+                        <div
+                          class="previous-election-round-content"
+                          data-election-id="<?= htmlspecialchars($election['election_id']) ?>"
+                          data-circo-id="<?= htmlspecialchars($circo['id']) ?>"
+                          data-round="<?= $round['key'] ?>"
+                          <?= !$round['is_default'] ? 'style="display:none"' : '' ?>>
+                          <?php if ($round['show_no_second_round_alert']): ?>
+                            <div class="alert alert-info mb-0">
+                              Il n'y a pas de second tour car l'élection a été remportée dès le premier tour.
+                            </div>
+                          <?php else: ?>
+                            <div class="election-stats d-flex mb-3 pb-3">
+                              <div class="election-stat">
+                                <span class="election-stat-label">Nombre de votants</span>
+                                <span class="election-stat-value"><?= formatNumber($round['infos']['votants'] ?? 0) ?></span>
+                              </div>
+                              <div class="election-stat-divider mx-3"></div>
+                              <div class="election-stat">
+                                <span class="election-stat-label">Taux d'abstention</span>
+                                <span class="election-stat-value"><?= number_format($round['infos']['abstention_pct'] ?? 0, 2, ',', ' ') ?>%</span>
+                              </div>
+                              <div class="election-stat-divider mx-3"></div>
+                              <div class="election-stat">
+                                <span class="election-stat-label">Blancs et nuls</span>
+                                <span class="election-stat-value"><?= formatNumber($round['infos']['blancs_nuls'] ?? 0) ?></span>
+                              </div>
+                            </div>
+                            <?php if (!empty($round['results'])): ?>
+                              <?php foreach ($round['results'] as $candidate): ?>
+                                <div class="candidate-row d-flex justify-content-between align-items-center py-2">
+                                  <div>
+                                    <div class="font-weight-bold"><?= $candidate['prenom'] ?> <?= $candidate['nom'] ?></div>
+                                    <?php if (!empty($candidate['nuance'])): ?>
+                                      <small class="text-muted"><?= $candidate['nuance'] ?></small>
+                                    <?php endif; ?>
+                                  </div>
+                                  <div class="text-right ml-3">
+                                    <div class="font-weight-bold">
+                                      <?= number_format($candidate['voix_pct'] ?? 0, 2, ',', ' ') ?>%
+                                    </div>
+                                    <small class="text-muted">
+                                      <?= formatNumber($candidate['voix_total'] ?? 0) ?> vote<?= ($candidate['voix_total'] ?? 0) > 1 ? 's' : '' ?>
+                                    </small>
+                                  </div>
+                                </div>
+                              <?php endforeach; ?>
+                            <?php else: ?>
+                              <p class="text-muted mb-0">Aucun résultat disponible pour ce tour.</p>
+                            <?php endif; ?>
+                          <?php endif; ?>
+                        </div>
+                      <?php endforeach; ?>
                     </div>
                   <?php endforeach; ?>
                 </div>
@@ -291,15 +315,43 @@
       });
     }
 
+    // Handle circo switch when a city has multiple circonscriptions
+    var circoSwitchButtons = document.querySelectorAll('.previous-election-circo-btn');
+    circoSwitchButtons.forEach(function(button) {
+      button.addEventListener('click', function() {
+        var electionId = this.getAttribute('data-election-id');
+        var circoId = this.getAttribute('data-circo-id');
+
+        document
+          .querySelectorAll('.previous-election-circo-btn[data-election-id="' + electionId + '"]')
+          .forEach(function(btn) {
+            var isActive = btn.getAttribute('data-circo-id') === circoId;
+            btn.classList.toggle('active', isActive);
+            btn.setAttribute('aria-pressed', isActive ? 'true' : 'false');
+          });
+
+        document
+          .querySelectorAll('.previous-election-circo-content[data-election-id="' + electionId + '"]')
+          .forEach(function(content) {
+            content.style.display = content.getAttribute('data-circo-id') === circoId ? '' : 'none';
+          });
+      });
+    });
+
     // Handle previous elections round switch (Premier tour / Second tour)
     var roundSwitchButtons = document.querySelectorAll('.previous-election-round-btn');
     roundSwitchButtons.forEach(function(button) {
       button.addEventListener('click', function() {
         var electionId = this.getAttribute('data-election-id');
+        var circoId = this.getAttribute('data-circo-id');
         var round = this.getAttribute('data-round');
 
+        if (!round) {
+          return;
+        }
+
         document
-          .querySelectorAll('.previous-election-round-btn[data-election-id="' + electionId + '"]')
+          .querySelectorAll('.previous-election-round-btn[data-election-id="' + electionId + '"][data-circo-id="' + circoId + '"]')
           .forEach(function(btn) {
             var isActive = btn.getAttribute('data-round') === round;
             btn.classList.toggle('active', isActive);
@@ -307,7 +359,7 @@
           });
 
         document
-          .querySelectorAll('.previous-election-round-content[data-election-id="' + electionId + '"]')
+          .querySelectorAll('.previous-election-round-content[data-election-id="' + electionId + '"][data-circo-id="' + circoId + '"]')
           .forEach(function(content) {
             content.style.display = content.getAttribute('data-round') === round ? '' : 'none';
           });

@@ -3245,6 +3245,32 @@ input#quicksearch[type=text]{
     color: #212529;
     box-shadow: 0 1px 4px rgba(0, 0, 0, 0.12);
   }
+  .previous-election-circo-switch {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .previous-election-circo-btn {
+    border: 1px solid #00b794;
+    background-color: #ffffff;
+    border-radius: 6px;
+    padding: 6px 12px;
+    font-size: $h7-font-size;
+    font-weight: 600;
+    color: #00b794;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+  }
+  .previous-election-circo-btn:hover {
+    background-color: #e6fbf6;
+    color: #008f74;
+  }
+  .previous-election-circo-btn.active {
+    background-color: #00b794;
+    color: #ffffff;
+    border-color: #00b794;
+  }
   .nav-tabs{
     border-bottom: 2px solid #e9ecef;
   }
@@ -3307,7 +3333,7 @@ input#quicksearch[type=text]{
       margin-bottom: 14px;
     }
   }
-  #arrondissementDropdown{
+  #arrondissementDropdown {
     background-color: #f8f9fa;
     border: 1px solid #e9ecef;
     border-radius: 4px;
