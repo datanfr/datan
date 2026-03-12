@@ -310,7 +310,7 @@
   }
 
   function url_obf_cities_election() {
-    return 2000;
+    return 500;
   }
 
 ?>
