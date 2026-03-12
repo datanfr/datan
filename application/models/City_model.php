@@ -5,17 +5,34 @@
     }
 
     public function get_city_by_insee($insee) {
-      $where = array(
+      echo $insee;
+      $om = array('975', '986', '977', '978', '987', '988');
+      if (in_array(substr($insee, 0, 3), $om)) {
+        $this->db->select('c.*');
+        $this->db->select('c.dpt AS dep_code');
+        $this->db->select('c.dpt_nom AS dep_nom');
+        $this->db->select('ci.pop2017 AS population');
+        $this->db->select('CONCAT("de ", c.commune_nom) AS nom_de');
+        $this->db->join('departement d', 'c.dpt = d.departement_code');
+        $this->db->join('cities_infos ci', 'ci.insee = c.insee', 'left');
+        $where = array(
+          'c.insee' => $insee
+        );
+        return $this->db->get_where('circos c', $where, 1)->row_array();
+      } else {
+        $where = array(
         'c.code_insee' => $insee
-      );
-      $this->db->select('c.*, cc.commune_slug, d.slug AS dpt_slug');
-      $this->db->join('circos cc', 'c.code_insee = cc.insee');
-      $this->db->join('departement d', 'c.dep_code = d.departement_code');
-      $this->db->group_by('c.code_insee');
-      return $this->db->get_where('cities c', $where, 1)->row_array();
+        );
+        $this->db->select('c.*, cc.commune_slug, d.slug AS dpt_slug');
+        $this->db->join('circos cc', 'c.code_insee = cc.insee');
+        $this->db->join('departement d', 'c.dep_code = d.departement_code');
+        $this->db->group_by('c.code_insee');
+        return $this->db->get_where('cities c', $where, 1)->row_array();
+      } 
     }
 
     public function get_communes_by_dpt($slug, $max_population = FALSE, $limit = FALSE, $order_by = FALSE){
+
       if ($max_population) {
         $this->db->where('cities.population >', $max_population);
       }
@@ -23,8 +40,8 @@
         $this->db->limit($limit);
       }
       $this->db->where('d.slug', $slug);
-      $this->db->join('departement d', 'd.departement_code = c.dpt');
-      $this->db->join('cities', 'c.insee = cities.code_insee');
+      $this->db->join('departement d', 'd.departement_code = c.dpt', 'left');
+      $this->db->join('cities', 'c.insee = cities.code_insee', 'left');
       $this->db->group_by('c.commune_nom');
 
       if ($order_by === 'alpha') {
@@ -142,9 +159,12 @@
       $array = $query->row_array();
 
       // Manual correcting
-      if ($array['nameLast'] == 'SALVO' && $insee == '13028') {
-        $array = array('nameFirst' => 'Alexandre', 'nameLast' => 'Doriol', 'gender' => 'M');
+      if($array) {
+        if ($array['nameLast'] == 'SALVO' && $insee == '13028') {
+          $array = array('nameFirst' => 'Alexandre', 'nameLast' => 'Doriol', 'gender' => 'M');
+        }
       }
+      
 
       return $array;
     }

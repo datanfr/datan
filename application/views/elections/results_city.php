@@ -199,8 +199,10 @@
               <div>
                 <span class="badge badge-primary"><?= $ville_infos['dep_nom'] ?> - <?= $ville_infos['dep_code'] ?></span>
               </div>
-              <div class="label text-uppercase mt-4">👥 Population</div>
-              <div class="value"><?= formatNumber($ville_infos['population']) ?></div>
+              <?php if($ville_infos['population']): ?>
+                <div class="label text-uppercase mt-4">👥 Population</div>
+                <div class="value"><?= formatNumber($ville_infos['population']) ?></div>
+              <?php endif; ?>
               <?php if (!empty($mayor["nameFirst"])): ?>
                 <div class="label text-uppercase mt-3">🏛️ Maire</div>
                 <div class="value"><?= $mayor["nameFirst"]." ".ucfirst(mb_strtolower($mayor["nameLast"])) ?></div>
@@ -220,19 +222,21 @@
           </div>
         </div>
         <div class="col-lg-12 col-md-6">
-          <div class="card card-nearby border mt-lg-4 mt-md-0 mt-4">            
-            <div class="card-body py-3">
-              <div class="title">Communes voisines</div>
-              <div class="d-flex flex-column mt-3">
-                <?php foreach($adjacentes as $city): ?>
-                  <a role="button" url_obf="<?= url_obfuscation(base_url() . "elections/resultats/" . $city['slug'] . "/ville_" .  $city['commune_slug']) ?>" class="city-item d-flex justify-content-between align-items-center mb-3 url_obf">
-                    <?= $city['commune_nom'] ?>
-                    <?= file_get_contents(FCPATH . "assets/imgs/icons/bi-chevron-right.svg") ?>
-                  </a>
-                <?php endforeach; ?>
+          <?php if($adjacentes): ?>
+            <div class="card card-nearby border mt-lg-4 mt-md-0 mt-4">            
+              <div class="card-body py-3">
+                <div class="title">Communes voisines</div>
+                <div class="d-flex flex-column mt-3">
+                  <?php foreach($adjacentes as $city): ?>
+                    <a role="button" url_obf="<?= url_obfuscation(base_url() . "elections/resultats/" . $city['slug'] . "/ville_" .  $city['commune_slug']) ?>" class="city-item d-flex justify-content-between align-items-center mb-3 url_obf">
+                      <?= $city['commune_nom'] ?>
+                      <?= file_get_contents(FCPATH . "assets/imgs/icons/bi-chevron-right.svg") ?>
+                    </a>
+                  <?php endforeach; ?>
+                </div>
               </div>
             </div>
-          </div>
+          <?php endif; ?>
           <?php if (!empty($deputes_ville)): ?>
             <div class="card card-nearby mt-5 border">            
               <div class="card-body py-3">
