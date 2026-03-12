@@ -149,6 +149,50 @@
       return $array;
     }
 
+
+    public function get_results_elections_full($insee){
+      $return = array();
+
+      // 1. Législative 2024 
+      $result = [];
+      $result['title'] = 'Législatives 2024';
+      $result['election_id'] = '2024_legi';
+      $result['has_second_round'] = TRUE;
+
+      $circos = $this->elections_model->get_city_circos($result['election_id'] . '_t1', $insee);
+      if (empty($circos)) {
+        $circos = array(
+          array(
+            'code_circo' => NULL,
+            'libelle_circo' => NULL,
+          )
+        );
+      }
+
+      $result['circos'] = array();
+      foreach ($circos as $circo) {
+        $code_circo = !empty($circo['code_circo']) ? $circo['code_circo'] : NULL;
+
+        $result['circos'][] = array(
+          'code_circo' => $code_circo,
+          'libelle_circo' => !empty($circo['libelle_circo']) ? $circo['libelle_circo'] : NULL,
+          'round_1' => array(
+            'infos' => $this->elections_model->get_infos_city($result['election_id'] . '_t1', $insee, $code_circo),
+            'results' => $this->elections_model->get_results_city_legislatives($result['election_id'] . '_t1', $insee, $code_circo),
+          ),
+          'round_2' => array(
+            'infos' => $this->elections_model->get_infos_city($result['election_id'] . '_t2', $insee, $code_circo),
+            'results' => $this->elections_model->get_results_city_legislatives($result['election_id'] . '_t2', $insee, $code_circo),
+          ),
+        );
+      }
+
+      $return[] = $result;
+
+      return $return;
+
+    }
+
     public function get_results_elections($n_circos, $dpt, $commune, $insee){
       $return = array();
 

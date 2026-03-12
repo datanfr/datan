@@ -199,6 +199,10 @@
         show_404($this->functions_datan->get_404_infos());
       }
 
+      if(!in_array($_SERVER['REMOTE_ADDR'], localhost()) && !$this->session->userdata('logged_in')){
+        $this->output->cache("4320"); // Caching enable for 3 days (1440 minutes per day)
+      }
+
       $data['ville'] = $data['ville_all'][0];
       $insee = $data['ville']['insee'];
       $data['ville_infos'] = $this->city_model->get_city_by_insee($insee);
@@ -219,8 +223,10 @@
       foreach ($data['ville_all'] as $circo_data) {
         $circo[] = $circo_data['circo'];
       }
-      $data['deputes_ville'] = $this->city_model->get_mps($data['ville']['dpt_slug'], $circo, legislature_current());
-      if (!empty($data['deputes_ville'])) {
+      $data['deputes_ville'] = $this->city_model->get_mps(
+        $data['ville']['dpt_slug'], $circo, legislature_current());
+      if
+       (!empty($data['deputes_ville'])) {
         foreach ($data['deputes_ville'] as $key => $value) {
           $data['deputes_ville'][$key]['couleurAssociee'] = $this->groupes_model->get_groupe_color(array($value['libelleAbrev'], $value['couleurAssociee']));
           $data['deputes_ville'][$key]['electionCircoAbbrev'] = abbrev_n($value['electionCirco'], TRUE);
@@ -235,7 +241,30 @@
         foreach ($data['arrondissements'] as $arr => $lists) {
           $data['arrondissements'][$arr] = $this->elections_model->get_nuances_edited($lists);
         }
+
+        $data['arrondissements_view'] = array();
+        foreach ($data['arrondissements'] as $arrLabel => $lists) {
+          $data['arrondissements_view'][] = array(
+            'label' => $arrLabel,
+            'lists' => $lists,
+          );
+        }
+        $data['arrondissements_first_label'] = !empty($data['arrondissements_view']) ? $data['arrondissements_view'][0]['label'] : NULL;
       }
+
+      // Previous elections 
+      $data['previous_elections'] = $this->city_model->get_results_elections_full($insee);
+      $data['election_rounds'] = array(
+        1 => array(
+          'title' => 'Premier tour',
+          'data' => 'round_1'
+        ),
+        2 => array(
+          'title' => 'Second tour',
+          'data' => 'round_2'
+        )
+      );
+      $data['previous_elections_ui'] = $this->prepare_previous_elections_for_view($data['previous_elections'], $data['election_rounds']);
 
       // Breadcrumb
       $is_paris = ($dpt === 'paris-75');
@@ -275,6 +304,63 @@
       $this->load->view('elections/results_city', $data);
       $this->load->view('templates/breadcrumb', $data);
       $this->load->view('templates/footer', $data);
+    }
+
+    private function prepare_previous_elections_for_view($previous_elections, $election_rounds) {
+      $prepared = array();
+
+      foreach ($previous_elections as $election) {
+        $election_ui = $election;
+        $circos = !empty($election['circos']) ? array_values($election['circos']) : array();
+
+        // Backward compatibility for older payloads with direct round_1 / round_2 fields.
+        if (empty($circos) && isset($election['round_1'])) {
+          $circos[] = array(
+            'code_circo' => NULL,
+            'libelle_circo' => NULL,
+            'round_1' => $election['round_1'],
+            'round_2' => isset($election['round_2']) ? $election['round_2'] : array(),
+          );
+        }
+
+        $election_ui['circos_ui'] = array();
+        foreach ($circos as $circo_index => $circo_data) {
+          $circo_id_raw = !empty($circo_data['code_circo']) ? (string) $circo_data['code_circo'] : ('circo_' . $circo_index);
+          $circo_id = preg_replace('/[^a-zA-Z0-9_-]/', '-', $circo_id_raw);
+          $circo_label = !empty($circo_data['libelle_circo'])
+            ? $circo_data['libelle_circo']
+            : (!empty($circo_data['code_circo']) ? 'Circonscription ' . $circo_data['code_circo'] : 'Commune entiere');
+
+          $circo_ui = array(
+            'id' => $circo_id,
+            'label' => $circo_label,
+            'is_default' => $circo_index === 0,
+            'rounds' => array(),
+          );
+
+          foreach ($election_rounds as $round_key => $round_meta) {
+            $round_infos = isset($circo_data[$round_meta['data']]['infos']) ? $circo_data[$round_meta['data']]['infos'] : array();
+            $round_results = isset($circo_data[$round_meta['data']]['results']) ? $circo_data[$round_meta['data']]['results'] : array();
+            $has_round_infos = isset($round_infos['votants']) && $round_infos['votants'] !== NULL;
+
+            $circo_ui['rounds'][] = array(
+              'key' => (string) $round_key,
+              'title' => $round_meta['title'],
+              'is_default' => (string) $round_key === '1',
+              'infos' => $round_infos,
+              'results' => $round_results,
+              'show_no_second_round_alert' => ((string) $round_key === '2') && empty($round_results) && !$has_round_infos,
+            );
+          }
+
+          $election_ui['circos_ui'][] = $circo_ui;
+        }
+
+        $election_ui['has_multiple_circos'] = count($election_ui['circos_ui']) > 1;
+        $prepared[] = $election_ui;
+      }
+
+      return $prepared;
     }
 
     public function results_dpt($dpt) {
