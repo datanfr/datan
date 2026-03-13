@@ -5,7 +5,6 @@
     }
 
     public function get_city_by_insee($insee) {
-      echo $insee;
       $om = array('975', '986', '977', '978', '987', '988');
       if (in_array(substr($insee, 0, 3), $om)) {
         $this->db->select('c.*');
