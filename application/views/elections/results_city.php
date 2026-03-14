@@ -67,7 +67,9 @@
       <?php else: ?>
         <?php $this->view('elections/partials/_lists_accordion.php', array('arrondissements' => FALSE)) ?>
       <?php endif; ?>
+      <?php $this->view('partials/campaign.php', array('wrapper_classes' => array('mt-5'))) ?>
       <div class="mt-5 h2">Résultats des élections précédentes à <?= $ville['commune_nom'] ?></div>
+
       
       <!-- Previous Elections Results -->
       <?php if (!empty($previous_elections_ui)): ?>
