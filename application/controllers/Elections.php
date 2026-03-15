@@ -272,9 +272,11 @@
       $data['previous_elections_ui'] = $this->prepare_previous_elections_for_view($data['previous_elections'], $data['election_rounds']);
 
       // Municipales 2026 - Ministry city results
-      $municipales_results = $this->elections_model->get_results_city_municipales_ministry($insee, "2024_muni_t1");
+      $municipales_results = $this->elections_model->get_results_city_municipales_ministry($insee, "2026_muni_t1");
       $data['municipales_ministry_results'] = $municipales_results['results'];
       $data['municipales_ministry_election_id'] = $municipales_results['id_election'];
+      print_r($data['municipales_ministry_results']);
+      echo $insee;
 
       // Breadcrumb
       $is_paris = ($dpt === 'paris-75');
