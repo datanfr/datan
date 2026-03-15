@@ -199,8 +199,8 @@
         show_404($this->functions_datan->get_404_infos());
       }
 
-      if(!in_array($_SERVER['REMOTE_ADDR'], localhost()) && !$this->session->userdata('logged_in')){
-        $this->output->cache("4320"); // Caching enable for 3 days (1440 minutes per day)
+      if(!in_array($_SERVER['REMOTE_ADDR'], localhost()) && !isset($_COOKIE['datan_session'])){
+        $this->output->cache(5); // 5 minutes
       }
 
       $data['ville'] = $data['ville_all'][0];
