@@ -17,12 +17,17 @@
             <?php if (!empty($municipales_ministry_infos)): ?>
               <div class="election-stats d-flex mb-3 pb-3">
                 <div class="election-stat">
-                  <span class="election-stat-label">Nombre de votants</span>
+                  <span class="election-stat-label">Inscrits</span>
+                  <span class="election-stat-value"><?= formatNumber($municipales_ministry_infos['inscrits'] ?? 0) ?></span>
+                </div>
+                <div class="election-stat-divider mx-3"></div>
+                <div class="election-stat">
+                  <span class="election-stat-label">Votants</span>
                   <span class="election-stat-value"><?= formatNumber($municipales_ministry_infos['votants'] ?? 0) ?></span>
                 </div>
                 <div class="election-stat-divider mx-3"></div>
                 <div class="election-stat">
-                  <span class="election-stat-label">Taux d'abstention</span>
+                  <span class="election-stat-label">Abstention</span>
                   <span class="election-stat-value"><?= number_format($municipales_ministry_infos['abstention_pct'] ?? 0, 2, ',', ' ') ?>%</span>
                 </div>
                 <div class="election-stat-divider mx-3"></div>
@@ -205,12 +210,12 @@
                           <?php else: ?>
                             <div class="election-stats d-flex mb-3 pb-3">
                               <div class="election-stat">
-                                <span class="election-stat-label">Nombre de votants</span>
+                                <span class="election-stat-label">Votants</span>
                                 <span class="election-stat-value"><?= formatNumber($round['infos']['votants'] ?? 0) ?></span>
                               </div>
                               <div class="election-stat-divider mx-3"></div>
                               <div class="election-stat">
-                                <span class="election-stat-label">Taux d'abstention</span>
+                                <span class="election-stat-label">Abstention</span>
                                 <span class="election-stat-value"><?= number_format($round['infos']['abstention_pct'] ?? 0, 2, ',', ' ') ?>%</span>
                               </div>
                               <div class="election-stat-divider mx-3"></div>
