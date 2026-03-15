@@ -12,6 +12,14 @@
     <div class="col-lg-8">
       <h2>Résultats aux municipales 2026 à <?= $ville['commune_nom'] ?></h2>
       <?php if (!empty($municipales_ministry_results)): ?>
+        <?php if (($municipales_ministry_infos['pourvu'] ?? null) === 'T1'): ?>
+          <?php $winningCandidate = $municipales_ministry_results[0]; ?>
+          <div class="card border-primary mt-4">
+            <div class="card-body py-3">
+              La liste dirigée par <b><?= trim(($winningCandidate['prenom'] ?? '') . ' ' . ($winningCandidate['nom'] ?? '')) ?></b> a remporté les élections municipales 2026 <?= $ville_infos['nom_a'] ?> avec <u><?= number_format($winningCandidate['voix_pct'], 2, ',', ' ') ?>%</u> des voix.
+            </div>
+          </div>
+        <?php endif; ?>
         <div class="card border mt-4">
           <div class="card-body py-3">
             <?php if (!empty($municipales_ministry_infos)): ?>
@@ -42,11 +50,16 @@
 
               <div class="candidate-row d-flex flex-wrap align-items-start py-2">
 
-                <div class="col-8 order-1 col-lg-4 order-lg-1 px-0 mb-1 mb-lg-0" style="min-width: 0;">
+                <div class="col-8 order-1 col-lg-6 order-lg-1 px-0 mb-1 mb-lg-0" style="min-width: 0;">
                   <div class="d-flex align-items-center">
                     <div class="partie-dot mr-3 flex-shrink-0" style="background-color: <?= $candidate['nuance_color'] ?>;"></div>
                     <div>
-                      <div class="font-weight-bold"><?= trim(($candidate['prenom'] ?? '') . ' ' . ($candidate['nom'] ?? '')) ?></div>
+                      <div class="font-weight-bold">
+                        <?= trim(($candidate['prenom'] ?? '') . ' ' . ($candidate['nom'] ?? '')) ?>
+                        <?php if (($municipales_ministry_infos['pourvu'] ?? null) === 'T1' && !empty($candidate['seats'])): ?>
+                          <span class="badge badge-primary ml-1"><?= (int) $candidate['seats'] ?> sièges</span>
+                        <?php endif; ?>
+                      </div>
                       <?php if (!empty($candidate['nuance'])): ?>
                         <div style="font-weight: 600"><?= $candidate['nuance_edited'] ?></div>
                       <?php endif; ?>
@@ -54,7 +67,7 @@
                   </div>
                 </div>
 
-                <div class="col-4 order-2 col-lg-3 order-lg-3 px-0 ml-auto text-right mb-1 mb-md-0">
+                <div class="col-4 order-2 col-lg-2 order-lg-3 px-0 text-right mb-1 mb-md-0">
                   <div class="font-weight-bold">
                     <?= number_format($candidate['voix_pct'] ?? 0, 2, ',', ' ') ?>%
                   </div>
@@ -63,7 +76,7 @@
                   </small>
                 </div>
 
-                <div class="col-12 order-3 col-lg-5 px-0 order-lg-2 ml-lg-0 px-lg-5 align-self-lg-center">
+                <div class="col-12 order-3 col-lg-4 px-0 order-lg-2 ml-lg-0 px-lg-5 align-self-lg-center">
                   <div class="progress" style="height: 8px; background-color: #e9ecef">
                     <div
                       class="progress-bar bg-primary"
