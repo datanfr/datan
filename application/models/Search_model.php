@@ -57,7 +57,7 @@ class Search_model extends CI_Model
           LEFT JOIN departement d ON c.dpt = d.departement_code
           LEFT JOIN cities cities ON c.insee = cities.code_insee
           WHERE REPLACE(c.commune_nom, '-', ' ') LIKE '". str_replace('-', ' ', $search) . "%'
-          GROUP BY c.commune_nom
+          GROUP BY c.commune_slug, c.dpt
           ORDER BY LENGTH(c.commune_nom) - LENGTH('" . $search . "'), cities.population DESC
           " . $limitCategory . "
         )
