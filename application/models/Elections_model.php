@@ -615,7 +615,7 @@
     }
 
     public function get_infos_city_municipales_ministry($city, $id_election){
-      $this->db->select('inscrits, abstentions, votants, blancs, nuls, exprimes');
+      $this->db->select('code_commune, inscrits, abstentions, votants, blancs, nuls, exprimes, pourvu');
       $this->db->where('id_election', $id_election);
       $this->db->where('code_commune', $city);
 
