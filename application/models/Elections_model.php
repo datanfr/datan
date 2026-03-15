@@ -537,12 +537,12 @@
         'LREN' => ['label' => 'Renaissance',            'color' => '#e8b31a'],
         'LRN'  => ['label' => 'Rassemblement national', 'color' => '#0d378a'],
         'LSOC' => ['label' => 'Parti socialiste',       'color' => '#e5007d'],
-        'LUC'  => ['label' => 'Union centre',           'color' => '#ffcc00'],
-        'LUD'  => ['label' => 'Union droite',           'color' => '#0a3ec2'],
+        'LUC'  => ['label' => 'Union du centre',           'color' => '#ffcc00'],
+        'LUD'  => ['label' => 'Union de la droite',           'color' => '#0a3ec2'],
         'LUDI' => ['label' => 'UDI',                    'color' => '#00adef'],
         'LUDR' => ['label' => 'UDR',                    'color' => '#1a1a6e'],
-        'LUG'  => ['label' => 'Union gauche',           'color' => '#cc0000'],
-        'LUXD' => ['label' => 'Union extrême droite',   'color' => '#302a6e'],
+        'LUG'  => ['label' => 'Union de la gauche',           'color' => '#cc0000'],
+        'LUXD' => ['label' => 'Union d\'extrême droite',   'color' => '#302a6e'],
       ];
 
       foreach ($listes as $key => $liste) {
@@ -597,13 +597,17 @@
       }, $results));
 
       foreach ($results as &$row) {
+        
         $ratio_exprimes = isset($row['ratio_voix_exprimes']) ? (float) $row['ratio_voix_exprimes'] : NULL;
         $row['voix_pct'] = $ratio_exprimes !== NULL
           ? round($ratio_exprimes, 2)
           : ($total > 0 ? round(((int) ($row['voix'] ?? 0) / $total) * 100, 2) : 0);
+        $row['code_nuance'] = $row['nuance'];        
       }
       unset($row);
 
+      $results = $this->elections_model->get_nuances_edited($results);
+      
       return array(
         'id_election' => $id_election,
         'results' => $results,
