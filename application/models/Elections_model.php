@@ -614,6 +614,31 @@
       );
     }
 
+    public function get_infos_city_municipales_ministry($city, $id_election){
+      $this->db->select('inscrits, abstentions, votants, blancs, nuls, exprimes');
+      $this->db->where('id_election', $id_election);
+      $this->db->where('code_commune', $city);
+
+      $result = $this->db->get('elect_results_cities_ministry_infos')->row_array();
+
+      if (empty($result)) {
+        return array();
+      }
+
+      $result['inscrits'] = isset($result['inscrits']) ? (int) $result['inscrits'] : null;
+      $result['abstentions'] = isset($result['abstentions']) ? (int) $result['abstentions'] : 0;
+      $result['votants'] = isset($result['votants']) ? (int) $result['votants'] : 0;
+      $result['blancs'] = isset($result['blancs']) ? (int) $result['blancs'] : 0;
+      $result['nuls'] = isset($result['nuls']) ? (int) $result['nuls'] : 0;
+      $result['exprimes'] = isset($result['exprimes']) ? (int) $result['exprimes'] : 0;
+      $result['blancs_nuls'] = $result['blancs'] + $result['nuls'];
+      $result['abstention_pct'] = $result['inscrits'] > 0
+        ? round($result['abstentions'] / $result['inscrits'] * 100, 2)
+        : 0;
+
+      return $result;
+    }
+
     public function count_results_cities_ministry($id_election){
       $this->db->select('COUNT(DISTINCT code_commune) AS total', FALSE);
       $this->db->where('id_election', $id_election);
