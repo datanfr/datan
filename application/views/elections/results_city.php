@@ -18,11 +18,17 @@
               <?php $score_pct = max(0, min(100, (float)($candidate['voix_pct'] ?? 0))); ?>
 
               <div class="candidate-row d-flex flex-wrap align-items-start py-2">
+
                 <div class="col-8 order-1 col-lg-4 order-lg-1 px-0 mb-1 mb-lg-0" style="min-width: 0;">
-                  <div class="font-weight-bold"><?= trim(($candidate['prenom'] ?? '') . ' ' . ($candidate['nom'] ?? '')) ?></div>
-                  <?php if (!empty($candidate['nuance'])): ?>
-                    <small class="text-muted"><?= $candidate['nuance'] ?></small>
-                  <?php endif; ?>
+                  <div class="d-flex align-items-center">
+                    <div class="partie-dot mr-3 flex-shrink-0" style="background-color: <?= $candidate['nuance_color'] ?>;"></div>
+                    <div>
+                      <div class="font-weight-bold"><?= trim(($candidate['prenom'] ?? '') . ' ' . ($candidate['nom'] ?? '')) ?></div>
+                      <?php if (!empty($candidate['nuance'])): ?>
+                        <div style="font-weight: 600"><?= $candidate['nuance_edited'] ?></div>
+                      <?php endif; ?>
+                    </div>
+                  </div>
                 </div>
 
                 <div class="col-4 order-2 col-lg-3 order-lg-3 px-0 ml-auto text-right mb-1 mb-md-0">
