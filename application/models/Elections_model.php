@@ -573,6 +573,43 @@
       return $results;
     }
 
+    public function get_results_city_municipales_ministry($city, $id_election){
+
+      $where = array(
+        'id_election' => $id_election,
+        'code_commune' => $city,
+      );
+
+      $this->db->select('id_election, code_commune, no_panneau, voix, ratio_voix_inscrits, ratio_voix_exprimes, nuance, sexe, nom, prenom');
+      $this->db->order_by('voix', 'desc');
+      $this->db->order_by('no_panneau', 'asc');
+      $results = $this->db->get_where('elect_results_cities_ministry', $where)->result_array();
+
+      if (empty($results)) {
+        return array(
+          'id_election' => $id_election,
+          'results' => array(),
+        );
+      }
+
+      $total = array_sum(array_map(function($row) {
+        return (int) ($row['voix'] ?? 0);
+      }, $results));
+
+      foreach ($results as &$row) {
+        $ratio_exprimes = isset($row['ratio_voix_exprimes']) ? (float) $row['ratio_voix_exprimes'] : NULL;
+        $row['voix_pct'] = $ratio_exprimes !== NULL
+          ? round($ratio_exprimes, 2)
+          : ($total > 0 ? round(((int) ($row['voix'] ?? 0) / $total) * 100, 2) : 0);
+      }
+      unset($row);
+
+      return array(
+        'id_election' => $id_election,
+        'results' => $results,
+      );
+    }
+
     public function get_city_circos($election, $city){
       $where = array(
         'id_election' => $election,
