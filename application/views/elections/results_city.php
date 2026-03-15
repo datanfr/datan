@@ -3,9 +3,6 @@
     <div class="col-lg-10">
       <h1><?= $title ?></h1>
       <p class="mt-4">Découvrez tous les candidats et les résultats des élections municipales 2026 pour <?= $ville['commune_nom'] ?> (<?= $ville_infos['dep_code'] ?>). Le premier tour des élections municipales se tiendra le 15 mars 2026 et le second tour le 22 mars 2026.</p>
-      <div class="alert alert-primary mt-4">
-        Le premier tour des élections municipales se tiendra le dimanche 15 mars 2026. Les résultats seront diffusés le lendemain sur Datan.
-      </div>
       <div class="mt-4 mb-0">
         <?php $this->view('departement/partials/electionFeature.php', array('election' => $deputes, 'city_info' => $ville_infos, 'title' => 'Candidature de députés', 'link' => FALSE)) ?>
       </div>
@@ -13,7 +10,52 @@
   </div>
   <div class="row mt-5">
     <div class="col-lg-8">
-      <h2>Listes candidates aux municipales 2026 à <?= $ville['commune_nom'] ?></h2>
+      <h2>Résultats aux municipales 2026 à <?= $ville['commune_nom'] ?></h2>
+      <?php if (!empty($municipales_ministry_results)): ?>
+        <div class="card border mt-4">
+          <div class="card-body py-3">
+            <?php foreach ($municipales_ministry_results as $candidate): ?>
+              <?php $score_pct = max(0, min(100, (float)($candidate['voix_pct'] ?? 0))); ?>
+
+              <div class="candidate-row d-flex flex-wrap align-items-start py-2">
+                <div class="col-8 order-1 col-lg-4 order-lg-1 px-0 mb-1 mb-lg-0" style="min-width: 0;">
+                  <div class="font-weight-bold"><?= trim(($candidate['prenom'] ?? '') . ' ' . ($candidate['nom'] ?? '')) ?></div>
+                  <?php if (!empty($candidate['nuance'])): ?>
+                    <small class="text-muted"><?= $candidate['nuance'] ?></small>
+                  <?php endif; ?>
+                </div>
+
+                <div class="col-4 order-2 col-lg-3 order-lg-3 px-0 ml-auto text-right mb-1 mb-md-0">
+                  <div class="font-weight-bold">
+                    <?= number_format($candidate['voix_pct'] ?? 0, 2, ',', ' ') ?>%
+                  </div>
+                  <small class="text-muted">
+                    <?= formatNumber($candidate['voix'] ?? 0) ?> vote<?= ($candidate['voix'] ?? 0) > 1 ? 's' : '' ?>
+                  </small>
+                </div>
+
+                <div class="col-12 order-3 col-lg-5 px-0 order-lg-2 ml-lg-0 px-lg-5 align-self-lg-center">
+                  <div class="progress" style="height: 8px; background-color: #e9ecef">
+                    <div
+                      class="progress-bar bg-primary"
+                      role="progressbar"
+                      style="width: <?= number_format($score_pct, 2, '.', '') ?>%;"
+                      aria-valuenow="<?= number_format($score_pct, 2, '.', '') ?>"
+                      aria-valuemin="0"
+                      aria-valuemax="100"></div>
+                  </div>
+                </div>
+              </div>
+            <?php endforeach; ?>
+          </div>
+        </div>
+      <?php else: ?>
+        <div class="alert alert-info mt-4">
+          Les bureaux de votes ferment entre 18h et 20h selon les communes. Les premiers résultats seront communiqués une fois qu'ils seront mis en ligne par le Ministère de l'Intérieur.
+        </div>
+      <?php endif; ?>
+
+      <h2 class="mt-5">Listes candidates aux municipales 2026 à <?= $ville['commune_nom'] ?></h2>
       <?php if($isPLM): ?>
         <ul class="nav nav-tabs mt-4" id="scrutinTabs" role="tablist">
           <li class="nav-item">
