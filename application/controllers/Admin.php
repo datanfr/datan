@@ -1,5 +1,5 @@
 <?php
-  class Admin extends CI_Controller{
+  class Admin extends Auth_Controller{
 
     public function __construct() {
       parent::__construct();

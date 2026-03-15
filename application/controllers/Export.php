@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Export extends CI_Controller {
+class Export extends Auth_Controller {
 
     public function set_session($value)
     {

@@ -1,6 +1,6 @@
 <?php
 
-  class Quiz extends CI_Controller {
+  class Quiz extends Auth_Controller {
 
     public function __construct() {
       parent::__construct();
