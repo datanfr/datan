@@ -580,7 +580,7 @@
         'code_commune' => $city,
       );
 
-      $this->db->select('id_election, code_commune, no_panneau, voix, ratio_voix_inscrits, ratio_voix_exprimes, nuance, sexe, nom, prenom');
+      $this->db->select('id_election, code_commune, no_panneau, voix, ratio_voix_inscrits, ratio_voix_exprimes, nuance, sexe, nom, prenom, seats');
       $this->db->order_by('voix', 'desc');
       $this->db->order_by('no_panneau', 'asc');
       $results = $this->db->get_where('elect_results_cities_ministry', $where)->result_array();
