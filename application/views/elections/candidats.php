@@ -14,7 +14,7 @@
         </p>
         <?php if($election['slug'] == 'municipales-2026'): ?>
           <div class="alert alert-primary mt-4" role="alert">
-            Le premier tour des élections municipales se tiendra le dimanche 15 mars 2026. Les résultats seront diffusés le lendemain sur Datan.
+            Résultats disponibles sur Datan pour <b><?= number_format((int) $municipalesResultsCitiesCount, 0, ',', ' ') ?> communes</b>.
           </div>
         <?php endif; ?>
         <div class="mt-5 infosGeneral">

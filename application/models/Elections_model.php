@@ -614,6 +614,17 @@
       );
     }
 
+    public function count_results_cities_ministry($id_election){
+      $this->db->select('COUNT(DISTINCT code_commune) AS total', FALSE);
+      $this->db->where('id_election', $id_election);
+      $this->db->where('code_commune <>', '');
+      $this->db->where('code_commune IS NOT NULL', NULL, FALSE);
+
+      $result = $this->db->get('elect_results_cities_ministry')->row_array();
+
+      return isset($result['total']) ? (int) $result['total'] : 0;
+    }
+
     public function get_city_circos($election, $city){
       $where = array(
         'id_election' => $election,
