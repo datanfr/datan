@@ -70,7 +70,6 @@
       <?php $this->view('partials/campaign.php', array('wrapper_classes' => array('mt-5'))) ?>
       <div class="mt-5 h2">Résultats des élections précédentes à <?= $ville['commune_nom'] ?></div>
 
-      
       <!-- Previous Elections Results -->
       <?php if (!empty($previous_elections_ui)): ?>
         <div class="mt-4" id="previousElectionsAccordion">
@@ -156,14 +155,20 @@
                             </div>
                             <?php if (!empty($round['results'])): ?>
                               <?php foreach ($round['results'] as $candidate): ?>
-                                <div class="candidate-row d-flex justify-content-between align-items-center py-2">
-                                  <div>
+                                <?php $score_pct = max(0, min(100, (float)($candidate['voix_pct'] ?? 0))); ?>
+                                
+                                <div class="candidate-row d-flex flex-wrap align-items-start py-2">
+  
+                                  <!-- Candidate name + nuance -->
+                                  <div class="col-8 order-1 col-lg-4 order-lg-1 px-0 mb-1 mb-lg-0" style="min-width: 0;">
                                     <div class="font-weight-bold"><?= $candidate['prenom'] ?> <?= $candidate['nom'] ?></div>
                                     <?php if (!empty($candidate['nuance'])): ?>
                                       <small class="text-muted"><?= $candidate['nuance'] ?></small>
                                     <?php endif; ?>
                                   </div>
-                                  <div class="text-right ml-3">
+
+                                  <!-- Score (mobile: right of candidate / desktop: far right) -->
+                                  <div class="col-4 order-2 col-lg-3 order-lg-3 px-0 ml-auto text-right mb-1 mb-md-0">
                                     <div class="font-weight-bold">
                                       <?= number_format($candidate['voix_pct'] ?? 0, 2, ',', ' ') ?>%
                                     </div>
@@ -171,7 +176,22 @@
                                       <?= formatNumber($candidate['voix_total'] ?? 0) ?> vote<?= ($candidate['voix_total'] ?? 0) > 1 ? 's' : '' ?>
                                     </small>
                                   </div>
+
+                                  <!-- Progress bar -->
+                                  <div class="col-12 order-3 col-lg-5 px-0 order-lg-2 ml-lg-0 px-lg-5 align-self-lg-center">
+                                    <div class="progress" style="height: 8px; background-color: #e9ecef">
+                                      <div
+                                        class="progress-bar bg-primary"
+                                        role="progressbar"
+                                        style="width: <?= number_format($score_pct, 2, '.', '') ?>%;"
+                                        aria-valuenow="<?= number_format($score_pct, 2, '.', '') ?>"
+                                        aria-valuemin="0"
+                                        aria-valuemax="100"></div>
+                                    </div>
+                                  </div>
+
                                 </div>
+                                
                               <?php endforeach; ?>
                             <?php else: ?>
                               <p class="text-muted mb-0">Aucun résultat disponible pour ce tour.</p>
