@@ -89,6 +89,11 @@
       $data['mapLegend'] = $this->elections_model->get_map_legend($data['election']['id']);
       $data['today'] = date("Y-m-d");
       $data['results'] = in_array($data['election']['id'], array(1, 2, 3, 4, 5, 6)) ? true : false;
+      $data['municipalesResultsCitiesCount'] = 0;
+
+      if ($data['election']['slug'] === 'municipales-2026') {
+        $data['municipalesResultsCitiesCount'] = $this->elections_model->count_results_cities_ministry('2026_muni_t1');
+      }
 
       // Election results 
       if ($data['election']['slug'] == 'legislatives-2022') {
