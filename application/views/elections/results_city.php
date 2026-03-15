@@ -12,6 +12,14 @@
     <div class="col-lg-8">
       <h2>Résultats aux municipales 2026 à <?= $ville['commune_nom'] ?></h2>
       <?php if (!empty($municipales_ministry_results)): ?>
+        <?php if (($municipales_ministry_infos['pourvu'] ?? null) === 'T1'): ?>
+          <?php $winningCandidate = $municipales_ministry_results[0]; ?>
+          <div class="card border-primary mt-4">
+            <div class="card-body py-3">
+              La liste dirigée par <b><?= trim(($winningCandidate['prenom'] ?? '') . ' ' . ($winningCandidate['nom'] ?? '')) ?></b> a remporté les élections municipales 2026 <?= $ville_infos['nom_a'] ?> avec <u><?= number_format($winningCandidate['voix_pct'], 2, ',', ' ') ?>%</u> des voix.
+            </div>
+          </div>
+        <?php endif; ?>
         <div class="card border mt-4">
           <div class="card-body py-3">
             <?php if (!empty($municipales_ministry_infos)): ?>
@@ -48,7 +56,7 @@
                     <div>
                       <div class="font-weight-bold">
                         <?= trim(($candidate['prenom'] ?? '') . ' ' . ($candidate['nom'] ?? '')) ?>
-                        <?php if (!empty($candidate['seats'])): ?>
+                        <?php if (($municipales_ministry_infos['pourvu'] ?? null) === 'T1' && !empty($candidate['seats'])): ?>
                           <span class="badge badge-primary ml-1"><?= (int) $candidate['seats'] ?> sièges</span>
                         <?php endif; ?>
                       </div>
