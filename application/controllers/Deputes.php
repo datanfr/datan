@@ -179,7 +179,7 @@
       }
 
       // ____________________CACHING_________________________________
-      if(!in_array($_SERVER['REMOTE_ADDR'], localhost()) && !$this->session->userdata('logged_in')){
+      if(!in_array($_SERVER['REMOTE_ADDR'], localhost()) && !isset($_COOKIE['datan_session'])){
         $this->output->cache("4320"); // Caching enable for 3 days (1440 minutes per day)
       }
 
