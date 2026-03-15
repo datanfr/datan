@@ -7,6 +7,12 @@ class GeneralModalHook {
     {
         $CI =& get_instance(); // get CodeIgniter instance
 
+        // Only use session if it's loaded (not loaded on public/cacheable pages)
+        if (!isset($CI->session)) {
+            $CI->show_popup = false;
+            return;
+        }
+
         // Check if modal was already shown
         if (!$CI->session->userdata('popup_shown')) {
             $CI->session->set_userdata('popup_shown', true);
