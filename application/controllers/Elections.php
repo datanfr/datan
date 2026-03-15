@@ -275,6 +275,7 @@
       $municipales_results = $this->elections_model->get_results_city_municipales_ministry($insee, "2026_muni_t1");
       $data['municipales_ministry_results'] = $municipales_results['results'];
       $data['municipales_ministry_election_id'] = $municipales_results['id_election'];
+      $data['municipales_ministry_infos'] = $this->elections_model->get_infos_city_municipales_ministry($insee, "2026_muni_t1");
 
       // Breadcrumb
       $is_paris = ($dpt === 'paris-75');

@@ -14,6 +14,24 @@
       <?php if (!empty($municipales_ministry_results)): ?>
         <div class="card border mt-4">
           <div class="card-body py-3">
+            <?php if (!empty($municipales_ministry_infos)): ?>
+              <div class="election-stats d-flex mb-3 pb-3">
+                <div class="election-stat">
+                  <span class="election-stat-label">Nombre de votants</span>
+                  <span class="election-stat-value"><?= formatNumber($municipales_ministry_infos['votants'] ?? 0) ?></span>
+                </div>
+                <div class="election-stat-divider mx-3"></div>
+                <div class="election-stat">
+                  <span class="election-stat-label">Taux d'abstention</span>
+                  <span class="election-stat-value"><?= number_format($municipales_ministry_infos['abstention_pct'] ?? 0, 2, ',', ' ') ?>%</span>
+                </div>
+                <div class="election-stat-divider mx-3"></div>
+                <div class="election-stat">
+                  <span class="election-stat-label">Blancs et nuls</span>
+                  <span class="election-stat-value"><?= formatNumber($municipales_ministry_infos['blancs_nuls'] ?? 0) ?></span>
+                </div>
+              </div>
+            <?php endif; ?>
             <?php foreach ($municipales_ministry_results as $candidate): ?>
               <?php $score_pct = max(0, min(100, (float)($candidate['voix_pct'] ?? 0))); ?>
 
