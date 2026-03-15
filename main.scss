@@ -3182,10 +3182,13 @@ input#quicksearch[type=text]{
     @include hover-focus(){
       box-shadow: 0 2px 12px rgba(0,0,0,0.07);
     }
-    cursor: pointer;
     user-select: none;
     .header{
       background-color: #E6FBF6;
+      cursor: pointer;
+    }
+    .liste-candidates {
+      cursor: default;
     }
     .title{
       font-weight: 800;
