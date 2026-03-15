@@ -1,6 +1,6 @@
 <?php
 
-  class Posts extends CI_Controller {
+  class Posts extends Auth_Controller {
 
     public function __construct() {
       parent::__construct();
