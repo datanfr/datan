@@ -19,6 +19,15 @@
               La liste dirigée par <b><?= trim(($winningCandidate['prenom'] ?? '') . ' ' . ($winningCandidate['nom'] ?? '')) ?></b> a remporté les élections municipales 2026 <?= $ville_infos['nom_a'] ?> avec <u><?= number_format($winningCandidate['voix_pct'], 2, ',', ' ') ?>%</u> des voix.
             </div>
           </div>
+        <?php else: ?>
+          <div class="card border-primary mt-4">
+            <div class="card-body py-3">
+              Un second tour sera organisé à <?= $ville['commune_nom'] ?> le 15 mars.
+              <?php if ($municipales_ministry_qualified_leaders_text !== ''): ?>
+                Les listes portées par <b><?= $municipales_ministry_qualified_leaders_text ?></b> sont qualifiées.
+              <?php endif; ?>
+            </div>
+          </div>
         <?php endif; ?>
         <div class="card border mt-4">
           <div class="card-body py-3">
@@ -58,6 +67,8 @@
                         <?= trim(($candidate['prenom'] ?? '') . ' ' . ($candidate['nom'] ?? '')) ?>
                         <?php if (($municipales_ministry_infos['pourvu'] ?? null) === 'T1' && !empty($candidate['seats'])): ?>
                           <span class="badge badge-primary ml-1"><?= (int) $candidate['seats'] ?> sièges</span>
+                        <?php elseif (($municipales_ministry_infos['pourvu'] ?? null) !== 'T1' && (int) ($candidate['qualified'] ?? 0) === 1): ?>
+                          <span class="badge badge-primary ml-1">Qualifiée</span>
                         <?php endif; ?>
                       </div>
                       <?php if (!empty($candidate['nuance'])): ?>
