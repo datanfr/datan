@@ -276,6 +276,32 @@
       $data['municipales_ministry_results'] = $municipales_results['results'];
       $data['municipales_ministry_election_id'] = $municipales_results['id_election'];
       $data['municipales_ministry_infos'] = $this->elections_model->get_infos_city_municipales_ministry($insee, "2026_muni_t1");
+      $data['municipales_ministry_qualified_leaders_text'] = '';
+
+      $qualifiedLeaders = array();
+      foreach ($data['municipales_ministry_results'] as $candidate) {
+        if ((int) ($candidate['qualified'] ?? 0) !== 1) {
+          continue;
+        }
+
+        $fullName = trim(($candidate['prenom'] ?? '') . ' ' . ($candidate['nom'] ?? ''));
+        if ($fullName === '') {
+          continue;
+        }
+
+        $qualifiedLeaders[] = $fullName;
+      }
+
+      $qualifiedLeaders = array_values(array_unique($qualifiedLeaders));
+      $qualifiedLeadersCount = count($qualifiedLeaders);
+      if ($qualifiedLeadersCount === 1) {
+        $data['municipales_ministry_qualified_leaders_text'] = $qualifiedLeaders[0];
+      } elseif ($qualifiedLeadersCount === 2) {
+        $data['municipales_ministry_qualified_leaders_text'] = $qualifiedLeaders[0] . ' et ' . $qualifiedLeaders[1];
+      } elseif ($qualifiedLeadersCount > 2) {
+        $lastLeader = array_pop($qualifiedLeaders);
+        $data['municipales_ministry_qualified_leaders_text'] = implode(', ', $qualifiedLeaders) . ' et ' . $lastLeader;
+      }
 
       // Breadcrumb
       $is_paris = ($dpt === 'paris-75');
