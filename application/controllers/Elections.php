@@ -298,6 +298,7 @@
       );
 
       $t1Pourvu = ($data['municipales_ministry_rounds']['t1']['infos']['pourvu'] ?? null) === 'T1';
+      $data['municipales_list_fusions_debug'] = array();
 
       if (!$t1Pourvu) {
         $secondRoundListes = $this->elections_model->get_municipales_listes('2026_muni_t2', $insee);
@@ -356,6 +357,11 @@
           'infos' => array(),
           'listes' => $secondRoundListes,
           'qualified_leaders_text' => '',
+        );
+
+        $data['municipales_list_fusions_debug'] = $this->elections_model->detect_list_fusions(
+          $data['municipales_ministry_rounds']['t1']['results'] ?? array(),
+          $secondRoundListes
         );
       }
 
