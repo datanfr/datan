@@ -22,9 +22,16 @@
         }
         $municipalesDefaultRound = $municipales_ministry_default_round ?? 't1';
         $showMunicipalesRoundToggle = !empty($municipales_ministry_show_round_toggle);
-        $municipalesListFusionsDebug = isset($municipales_list_fusions_debug) && is_array($municipales_list_fusions_debug)
-          ? $municipales_list_fusions_debug
+        $listSituations = isset($municipales_list_situations) && is_array($municipales_list_situations)
+          ? $municipales_list_situations
           : array();
+
+        $fusionSituations = array();
+        foreach ($listSituations as $sit) {
+          if (($sit['situation'] ?? '') === 'fusion') {
+            $fusionSituations[] = $sit;
+          }
+        }
       ?>
       <?php if ($hasMunicipalesRoundData): ?>
         <?php
@@ -82,18 +89,6 @@
                 <?php if ($summaryQualifiedLeadersDisplay !== ''): ?>
                   Les listes portées par <?= $summaryQualifiedLeadersDisplay ?> sont qualifiées.
                 <?php endif; ?>
-                <div class="mt-3">
-                  <div class="font-weight-bold mb-1">Fusions</div>
-                  <?php if (!empty($municipalesListFusionsDebug)): ?>
-                    <?php foreach ($municipalesListFusionsDebug as $fusion): ?>
-                      <p class="mb-1">
-                        La liste menée par <b><?= htmlspecialchars($fusion['head_name']) ?></b><?php if (!empty($fusion['first_round_nuance'])): ?> (<?= htmlspecialchars($fusion['first_round_nuance']) ?>)<?php endif; ?> a fusionné avec la liste menée par <b><?= htmlspecialchars($fusion['second_round_head']) ?></b><?php if (!empty($fusion['second_round_nuance'])): ?> (<?= htmlspecialchars($fusion['second_round_nuance']) ?>)<?php endif; ?>.
-                      </p>
-                    <?php endforeach; ?>
-                  <?php else: ?>
-                    <p class="mb-0 text-muted">Aucune fusion de listes dans cette commune.</p>
-                  <?php endif; ?>
-                </div>
               </div>
             </div>
           <?php else: ?>
@@ -105,11 +100,54 @@
             </div>
           <?php endif; ?>
         <?php endif; ?>
-
-        <div class="alert alert-light border mt-3 mb-3">
-          <strong>DEBUG fusions listes (T1 &gt; 5% vers T2)</strong>
-          <pre class="mb-0 mt-2"><?php print_r($municipalesListFusionsDebug); ?></pre>
-        </div>
+        <?php if (!empty($listSituations)): ?>
+          <div class="card border py-1 mt-4 mb-4">
+            <div class="card-body">
+              <div class="h5 text-info mb-3 font-weight-bold">La situation des listes entre les deux tours</div>
+              <table class="table table-sm table-hover table-striped mb-0">
+                  <thead class="thead-light">
+                      <tr>
+                          <th>Liste</th>
+                          <th class="text-right">Score</th>
+                          <th class="text-center">Situation</th>
+                          <th>Détail</th>
+                      </tr>
+                  </thead>
+                  <tbody>
+                      <?php foreach ($listSituations as $sit): ?>
+                      <tr>
+                          <td class="font-weight-bold">
+                            <div><?= htmlspecialchars($sit['head_name']) ?></div>
+                            <div><small class="text-muted"><?= htmlspecialchars($sit['nuance']) ?></small></div>
+                          </td>
+                          <td class="text-right"><?= number_format($sit['voix_pct'], 1, ',', ' ') ?>%</td>
+                          <td class="text-center">
+                              <?php if ($sit['situation'] === 'maintien'): ?>
+                                  <span class="badge badge-success">Maintien</span>
+                              <?php elseif ($sit['situation'] === 'fusion'): ?>
+                                  <span class="badge badge-warning">Fusion</span>
+                              <?php else: ?>
+                                  <span class="badge badge-secondary">Désistement</span>
+                              <?php endif; ?>
+                          </td>
+                          <td>
+                              <?php if ($sit['situation'] === 'fusion'): ?>
+                                  <?php if (($sit['fusion_role'] ?? '') !== 'receiver'): ?>
+                                    Rejoint la liste de <span class="font-weight-bold"><?= htmlspecialchars($sit['fusion_with_head'] ?? '') ?></span>
+                                  <?php else: ?>
+                                    <span class="text-muted">—</span>
+                                  <?php endif; ?>
+                              <?php else: ?>
+                                  <span class="text-muted">—</span>
+                              <?php endif; ?>
+                          </td>
+                      </tr>
+                      <?php endforeach; ?>
+                  </tbody>
+              </table>
+            </div>
+          </div>
+        <?php endif; ?>
 
         <?php if ($showMunicipalesRoundToggle): ?>
           <div class="previous-election-round-switch" data-municipales-switch="true">
@@ -165,8 +203,24 @@
                 <?php endif; ?>
 
                 <?php if ($roundDisplayMode === 'results' && !empty($roundResults)): ?>
+                  <?php
+                    // Build a name-keyed index of situations for quick lookup while iterating candidates
+                    $situationsByName = array();
+                    if ($roundKey === 't1' && !empty($listSituations)) {
+                      foreach ($listSituations as $sit) {
+                        $key = mb_strtolower(trim((string) ($sit['head_name'] ?? '')), 'UTF-8');
+                        if ($key !== '') {
+                          $situationsByName[$key] = $sit;
+                        }
+                      }
+                    }
+                  ?>
                   <?php foreach ($roundResults as $candidate): ?>
-                    <?php $score_pct = max(0, min(100, (float)($candidate['voix_pct'] ?? 0))); ?>
+                    <?php
+                      $score_pct = max(0, min(100, (float)($candidate['voix_pct'] ?? 0)));
+                      $candidateFullName = mb_strtolower(trim(($candidate['prenom'] ?? '') . ' ' . ($candidate['nom'] ?? '')), 'UTF-8');
+                      $candidateSituation = $situationsByName[$candidateFullName] ?? null;
+                    ?>
 
                     <div class="candidate-row d-flex flex-wrap align-items-start py-2">
                       <div class="col-8 order-1 col-lg-6 order-lg-1 px-0 mb-1 mb-lg-0" style="min-width: 0;">
@@ -177,8 +231,14 @@
                               <?= trim(($candidate['prenom'] ?? '') . ' ' . ($candidate['nom'] ?? '')) ?>
                               <?php if ($roundKey === 't1' && ($roundInfos['pourvu'] ?? null) === 'T1' && !empty($candidate['seats'])): ?>
                                 <span class="badge badge-primary ml-1"><?= (int) $candidate['seats'] ?> sièges</span>
-                              <?php elseif ($roundKey === 't1' && ($roundInfos['pourvu'] ?? null) !== 'T1' && (int) ($candidate['qualified'] ?? 0) === 1): ?>
-                                <span class="badge badge-primary ml-1">Qualifiée</span>
+                                <?php elseif ($roundKey === 't1' && ($roundInfos['pourvu'] ?? null) !== 'T1' && $candidateSituation !== null): ?>
+                                  <?php if ($candidateSituation['situation'] === 'maintien'): ?>
+                                    <span class="badge badge-success ml-1">Maintien</span>
+                                  <?php elseif ($candidateSituation['situation'] === 'fusion'): ?>
+                                    <span class="badge badge-warning ml-1">Fusion</span>
+                                  <?php elseif ($candidateSituation['situation'] === 'desistement'): ?>
+                                    <span class="badge badge-secondary ml-1">Désistement</span>
+                                  <?php endif; ?>
                               <?php endif; ?>
                             </div>
                             <?php if (!empty($candidate['nuance'])): ?>
