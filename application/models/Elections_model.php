@@ -412,8 +412,10 @@
       return $this->db->get()->result_array();
     }
 
-    public function get_municipales_listes($city, $arrondissements = FALSE){
+    public function get_municipales_listes($id_election, $city, $arrondissements = FALSE){
       
+      $this->db->where('id_election', $id_election);
+
       if ($arrondissements) {
         $this->db->like('code_circonscription', $city, 'after'); // starts with $city
         $this->db->where('code_circonscription !=', $city); // should not be exactly $city

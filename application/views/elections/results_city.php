@@ -11,157 +11,244 @@
   <div class="row mt-5">
     <div class="col-lg-8">
       <h2>Résultats aux municipales 2026 à <?= $ville['commune_nom'] ?></h2>
-      <?php if (!empty($municipales_ministry_results)): ?>
-        <?php if (($municipales_ministry_infos['pourvu'] ?? null) === 'T1'): ?>
-          <?php $winningCandidate = $municipales_ministry_results[0]; ?>
-          <div class="card border-primary mt-4">
-            <div class="card-body py-3">
-              La liste dirigée par <b><?= trim(($winningCandidate['prenom'] ?? '') . ' ' . ($winningCandidate['nom'] ?? '')) ?></b> a remporté les élections municipales 2026 <?= $ville_infos['nom_a'] ?> avec <u><?= number_format($winningCandidate['voix_pct'], 2, ',', ' ') ?>%</u> des voix.
+      <?php
+        $municipalesRounds = isset($municipales_ministry_rounds) && is_array($municipales_ministry_rounds) ? $municipales_ministry_rounds : array();
+        $hasMunicipalesRoundData = false;
+        foreach ($municipalesRounds as $roundData) {
+          if (!empty($roundData['results']) || !empty($roundData['infos']) || !empty($roundData['listes'])) {
+            $hasMunicipalesRoundData = true;
+            break;
+          }
+        }
+        $municipalesDefaultRound = $municipales_ministry_default_round ?? 't1';
+        $showMunicipalesRoundToggle = !empty($municipales_ministry_show_round_toggle);
+      ?>
+      <?php if ($hasMunicipalesRoundData): ?>
+        <?php
+          $summaryRound = $municipalesRounds['t1'] ?? reset($municipalesRounds);
+          $summaryRoundKey = $summaryRound['key'] ?? '';
+          $summaryResults = $summaryRound['results'] ?? array();
+          $summaryInfos = $summaryRound['infos'] ?? array();
+          $summaryQualifiedLeaders = $summaryRound['qualified_leaders'] ?? array();
+          $summaryQualifiedLeadersText = $summaryRound['qualified_leaders_text'] ?? '';
+          $summaryQualifiedLeadersDisplay = '';
+
+          if (!empty($summaryQualifiedLeaders)) {
+            $summaryLeaderParts = array();
+            foreach ($summaryQualifiedLeaders as $leader) {
+              $leaderName = trim((string) ($leader['name'] ?? ''));
+              if ($leaderName === '') {
+                continue;
+              }
+
+              $leaderNuance = trim((string) ($leader['nuance'] ?? ''));
+              $part = '<b>' . htmlspecialchars($leaderName) . '</b>';
+              if ($leaderNuance !== '') {
+                $part .= ' (' . htmlspecialchars($leaderNuance) . ')';
+              }
+              $summaryLeaderParts[] = $part;
+            }
+
+            $summaryLeadersCount = count($summaryLeaderParts);
+            if ($summaryLeadersCount === 1) {
+              $summaryQualifiedLeadersDisplay = $summaryLeaderParts[0];
+            } elseif ($summaryLeadersCount === 2) {
+              $summaryQualifiedLeadersDisplay = $summaryLeaderParts[0] . ' et ' . $summaryLeaderParts[1];
+            } elseif ($summaryLeadersCount > 2) {
+              $lastSummaryLeader = array_pop($summaryLeaderParts);
+              $summaryQualifiedLeadersDisplay = implode(', ', $summaryLeaderParts) . ' et ' . $lastSummaryLeader;
+            }
+          }
+
+          if ($summaryQualifiedLeadersDisplay === '' && $summaryQualifiedLeadersText !== '') {
+            $summaryQualifiedLeadersDisplay = '<b>' . htmlspecialchars($summaryQualifiedLeadersText) . '</b>';
+          }
+        ?>
+        <?php if (!empty($summaryResults)): ?>
+          <?php if ($summaryRoundKey === 't1' && ($summaryInfos['pourvu'] ?? null) === 'T1'): ?>
+            <?php $winningCandidate = $summaryResults[0]; ?>
+            <div class="card border-primary my-4">
+              <div class="card-body py-3">
+                La liste dirigée par <b><?= trim(($winningCandidate['prenom'] ?? '') . ' ' . ($winningCandidate['nom'] ?? '')) ?></b> a remporté les élections municipales 2026 <?= $ville_infos['nom_a'] ?> avec <u><?= number_format($winningCandidate['voix_pct'], 2, ',', ' ') ?>%</u> des voix.
+              </div>
             </div>
-          </div>
-        <?php else: ?>
-          <div class="card border-primary mt-4">
-            <div class="card-body py-3">
-              Un second tour sera organisé à <?= $ville['commune_nom'] ?> le 15 mars.
-              <?php if ($municipales_ministry_qualified_leaders_text !== ''): ?>
-                Les listes portées par <b><?= $municipales_ministry_qualified_leaders_text ?></b> sont qualifiées.
-              <?php endif; ?>
+          <?php elseif ($summaryRoundKey === 't1'): ?>
+            <div class="card border-primary my-4">
+              <div class="card-body py-3">
+                Un second tour sera organisé à <?= $ville['commune_nom'] ?> le 22 mars.
+                <?php if ($summaryQualifiedLeadersDisplay !== ''): ?>
+                  Les listes portées par <?= $summaryQualifiedLeadersDisplay ?> sont qualifiées.
+                <?php endif; ?>
+              </div>
             </div>
-          </div>
+          <?php else: ?>
+            <?php $winningCandidate = $summaryResults[0]; ?>
+            <div class="card border-primary mt-4">
+              <div class="card-body py-3">
+                Au second tour, la liste dirigée par <b><?= trim(($winningCandidate['prenom'] ?? '') . ' ' . ($winningCandidate['nom'] ?? '')) ?></b> est arrivée en tête à <?= $ville['commune_nom'] ?> avec <u><?= number_format($winningCandidate['voix_pct'], 2, ',', ' ') ?>%</u> des voix.
+              </div>
+            </div>
+          <?php endif; ?>
         <?php endif; ?>
-        <div class="card border mt-4">
-          <div class="card-body py-3">
-            <?php if (!empty($municipales_ministry_infos)): ?>
-              <div class="election-stats d-flex mb-3 pb-3">
-                <div class="election-stat">
-                  <span class="election-stat-label">Inscrits</span>
-                  <span class="election-stat-value"><?= formatNumber($municipales_ministry_infos['inscrits'] ?? 0) ?></span>
-                </div>
-                <div class="election-stat-divider mx-3"></div>
-                <div class="election-stat">
-                  <span class="election-stat-label">Votants</span>
-                  <span class="election-stat-value"><?= formatNumber($municipales_ministry_infos['votants'] ?? 0) ?></span>
-                </div>
-                <div class="election-stat-divider mx-3"></div>
-                <div class="election-stat">
-                  <span class="election-stat-label">Abstention</span>
-                  <span class="election-stat-value"><?= number_format($municipales_ministry_infos['abstention_pct'] ?? 0, 2, ',', ' ') ?>%</span>
-                </div>
-                <div class="election-stat-divider mx-3"></div>
-                <div class="election-stat">
-                  <span class="election-stat-label">Blancs et nuls</span>
-                  <span class="election-stat-value"><?= formatNumber($municipales_ministry_infos['blancs_nuls'] ?? 0) ?></span>
-                </div>
-              </div>
-            <?php endif; ?>
-            <?php foreach ($municipales_ministry_results as $candidate): ?>
-              <?php $score_pct = max(0, min(100, (float)($candidate['voix_pct'] ?? 0))); ?>
 
-              <div class="candidate-row d-flex flex-wrap align-items-start py-2">
-
-                <div class="col-8 order-1 col-lg-6 order-lg-1 px-0 mb-1 mb-lg-0" style="min-width: 0;">
-                  <div class="d-flex align-items-center">
-                    <div class="partie-dot mr-3 flex-shrink-0" style="background-color: <?= $candidate['nuance_color'] ?>;"></div>
-                    <div>
-                      <div class="font-weight-bold">
-                        <?= trim(($candidate['prenom'] ?? '') . ' ' . ($candidate['nom'] ?? '')) ?>
-                        <?php if (($municipales_ministry_infos['pourvu'] ?? null) === 'T1' && !empty($candidate['seats'])): ?>
-                          <span class="badge badge-primary ml-1"><?= (int) $candidate['seats'] ?> sièges</span>
-                        <?php elseif (($municipales_ministry_infos['pourvu'] ?? null) !== 'T1' && (int) ($candidate['qualified'] ?? 0) === 1): ?>
-                          <span class="badge badge-primary ml-1">Qualifiée</span>
-                        <?php endif; ?>
-                      </div>
-                      <?php if (!empty($candidate['nuance'])): ?>
-                        <div style="font-weight: 600"><?= $candidate['nuance_edited'] ?></div>
-                      <?php endif; ?>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="col-4 order-2 col-lg-2 order-lg-3 px-0 text-right mb-1 mb-md-0">
-                  <div class="font-weight-bold">
-                    <?= number_format($candidate['voix_pct'] ?? 0, 2, ',', ' ') ?>%
-                  </div>
-                  <small class="text-muted">
-                    <?= formatNumber($candidate['voix'] ?? 0) ?> vote<?= ($candidate['voix'] ?? 0) > 1 ? 's' : '' ?>
-                  </small>
-                </div>
-
-                <div class="col-12 order-3 col-lg-4 px-0 order-lg-2 ml-lg-0 px-lg-5 align-self-lg-center">
-                  <div class="progress" style="height: 8px; background-color: #e9ecef">
-                    <div
-                      class="progress-bar bg-primary"
-                      role="progressbar"
-                      style="width: <?= number_format($score_pct, 2, '.', '') ?>%;"
-                      aria-valuenow="<?= number_format($score_pct, 2, '.', '') ?>"
-                      aria-valuemin="0"
-                      aria-valuemax="100"></div>
-                  </div>
-                </div>
-              </div>
+        <?php if ($showMunicipalesRoundToggle): ?>
+          <div class="previous-election-round-switch" data-municipales-switch="true">
+            <?php foreach ($municipalesRounds as $round): ?>
+              <button
+                type="button"
+                class="previous-election-round-btn municipales-round-btn <?= (($round['key'] ?? '') === $municipalesDefaultRound) ? 'active' : '' ?>"
+                data-round="<?= htmlspecialchars($round['key'] ?? '') ?>"
+                aria-pressed="<?= (($round['key'] ?? '') === $municipalesDefaultRound) ? 'true' : 'false' ?>">
+                <?= htmlspecialchars($round['title'] ?? '') ?>
+              </button>
             <?php endforeach; ?>
           </div>
-        </div>
+        <?php endif; ?>
+
+        <?php foreach ($municipalesRounds as $round): ?>
+          <?php
+            $roundKey = $round['key'] ?? '';
+            $roundDisplayMode = $round['display_mode'] ?? 'results';
+            $roundResults = $round['results'] ?? array();
+            $roundInfos = $round['infos'] ?? array();
+            $roundListes = $round['listes'] ?? array();
+          ?>
+          <div
+            class="municipales-round-content"
+            data-round="<?= htmlspecialchars($roundKey) ?>"
+            <?= $roundKey !== $municipalesDefaultRound ? 'style="display:none"' : '' ?>>
+            <div class="card border mt-3">
+              <div class="card-body py-3">
+                <div class="h4 font-weight-bold mt-3 mb-3 title"><?= $roundDisplayMode === 'listes' ? 'Listes candidates au ' : 'Résultats du ' ?><?= mb_strtolower($round['title'] ?? '') ?> <?= $ville_infos['nom_a'] ?></div>
+                <?php if ($roundDisplayMode === 'results' && !empty($roundInfos)): ?>
+                  <div class="election-stats d-flex mb-3 pb-3">
+                    <div class="election-stat">
+                      <span class="election-stat-label">Inscrits</span>
+                      <span class="election-stat-value"><?= formatNumber($roundInfos['inscrits'] ?? 0) ?></span>
+                    </div>
+                    <div class="election-stat-divider mx-3"></div>
+                    <div class="election-stat">
+                      <span class="election-stat-label">Votants</span>
+                      <span class="election-stat-value"><?= formatNumber($roundInfos['votants'] ?? 0) ?></span>
+                    </div>
+                    <div class="election-stat-divider mx-3"></div>
+                    <div class="election-stat">
+                      <span class="election-stat-label">Abstention</span>
+                      <span class="election-stat-value"><?= number_format($roundInfos['abstention_pct'] ?? 0, 2, ',', ' ') ?>%</span>
+                    </div>
+                    <div class="election-stat-divider mx-3"></div>
+                    <div class="election-stat">
+                      <span class="election-stat-label">Blancs et nuls</span>
+                      <span class="election-stat-value"><?= formatNumber($roundInfos['blancs_nuls'] ?? 0) ?></span>
+                    </div>
+                  </div>
+                <?php endif; ?>
+
+                <?php if ($roundDisplayMode === 'results' && !empty($roundResults)): ?>
+                  <?php foreach ($roundResults as $candidate): ?>
+                    <?php $score_pct = max(0, min(100, (float)($candidate['voix_pct'] ?? 0))); ?>
+
+                    <div class="candidate-row d-flex flex-wrap align-items-start py-2">
+                      <div class="col-8 order-1 col-lg-6 order-lg-1 px-0 mb-1 mb-lg-0" style="min-width: 0;">
+                        <div class="d-flex align-items-center">
+                          <div class="partie-dot mr-3 flex-shrink-0" style="background-color: <?= $candidate['nuance_color'] ?>;"></div>
+                          <div>
+                            <div class="font-weight-bold">
+                              <?= trim(($candidate['prenom'] ?? '') . ' ' . ($candidate['nom'] ?? '')) ?>
+                              <?php if ($roundKey === 't1' && ($roundInfos['pourvu'] ?? null) === 'T1' && !empty($candidate['seats'])): ?>
+                                <span class="badge badge-primary ml-1"><?= (int) $candidate['seats'] ?> sièges</span>
+                              <?php elseif ($roundKey === 't1' && ($roundInfos['pourvu'] ?? null) !== 'T1' && (int) ($candidate['qualified'] ?? 0) === 1): ?>
+                                <span class="badge badge-primary ml-1">Qualifiée</span>
+                              <?php endif; ?>
+                            </div>
+                            <?php if (!empty($candidate['nuance'])): ?>
+                              <div style="font-weight: 600"><?= $candidate['nuance_edited'] ?></div>
+                            <?php endif; ?>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="col-4 order-2 col-lg-2 order-lg-3 px-0 text-right mb-1 mb-md-0">
+                        <div class="font-weight-bold">
+                          <?= number_format($candidate['voix_pct'] ?? 0, 2, ',', ' ') ?>%
+                        </div>
+                        <small class="text-muted">
+                          <?= formatNumber($candidate['voix'] ?? 0) ?> vote<?= ($candidate['voix'] ?? 0) > 1 ? 's' : '' ?>
+                        </small>
+                      </div>
+
+                      <div class="col-12 order-3 col-lg-4 px-0 order-lg-2 ml-lg-0 px-lg-5 align-self-lg-center">
+                        <div class="progress" style="height: 8px; background-color: #e9ecef">
+                          <div
+                            class="progress-bar bg-primary"
+                            role="progressbar"
+                            style="width: <?= number_format($score_pct, 2, '.', '') ?>%;"
+                            aria-valuenow="<?= number_format($score_pct, 2, '.', '') ?>"
+                            aria-valuemin="0"
+                            aria-valuemax="100"></div>
+                        </div>
+                      </div>
+                    </div>
+                  <?php endforeach; ?>
+                <?php elseif ($roundDisplayMode === 'listes' && !empty($roundListes)): ?>
+                  <div class="mt-4" id="municipalesRoundListesAccordion-<?= htmlspecialchars($roundKey) ?>">
+                    <?php foreach ($roundListes as $liste): ?>
+                      <?php
+                        $headOfList = $liste['tete_de_liste'] ?? '';
+                        if ($headOfList === '' && !empty($liste['candidats'][0])) {
+                          $headCandidate = $liste['candidats'][0];
+                          $headOfList = trim(($headCandidate['prenom'] ?? '') . ' ' . ($headCandidate['nom'] ?? ''));
+                        }
+                        $collapseId = 'municipales-round-' . ($roundKey !== '' ? $roundKey : 'round') . '-liste-' . (int) ($liste['numero_panneau'] ?? 0);
+                      ?>
+                      <div class="liste-card mb-3">
+                        <div class="liste-header d-flex align-items-center px-4 py-3" data-toggle="collapse" data-target="#<?= htmlspecialchars($collapseId) ?>" aria-controls="<?= htmlspecialchars($collapseId) ?>" aria-expanded="false">
+                          <div class="partie-dot mr-3" style="background-color: <?= $liste['nuance_color'] ?>;"></div>
+                          <div class="flex-grow-1">
+                            <div class="liste-tete"><?= htmlspecialchars($headOfList) ?></div>
+                            <div class="liste-meta">
+                              <?php if (!empty($liste['nuance_edited'])): ?>
+                                <span class="nuance"><?= htmlspecialchars($liste['nuance_edited']) ?></span>
+                                <span class="liste-separator">·</span>
+                              <?php endif; ?>
+                              <span><?= htmlspecialchars($liste['libelle_liste']) ?></span>
+                            </div>
+                          </div>
+                          <svg class="chevron-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+                          </svg>
+                        </div>
+                        <div id="<?= htmlspecialchars($collapseId) ?>" class="collapse">
+                          <div class="liste-candidates p-4">
+                            <?php foreach (($liste['candidats'] ?? array()) as $candidat): ?>
+                              <div class="candidate-row py-2">
+                                <?= (int) ($candidat['ordre'] ?? 0) ?>. <?= htmlspecialchars($candidat['prenom'] ?? '') ?> <?= htmlspecialchars($candidat['nom'] ?? '') ?>
+                                <?php if (($candidat['code_personnalite'] ?? '') === 'DEP'): ?>
+                                  <span class="badge badge-primary ml-2">Député<?= ($candidat['sexe'] ?? '') === 'F' ? 'e' : '' ?></span>
+                                <?php endif; ?>
+                                <?php if (($candidat['code_personnalite'] ?? '') === 'SEN'): ?>
+                                  <span class="badge badge-primary ml-2"><?= ($candidat['sexe'] ?? '') === 'F' ? 'Sénatrice' : 'Sénateur' ?></span>
+                                <?php endif; ?>
+                              </div>
+                            <?php endforeach; ?>
+                          </div>
+                        </div>
+                      </div>
+                    <?php endforeach; ?>
+                  </div>
+                <?php else: ?>
+                  <p class="text-muted mb-0"><?= $roundDisplayMode === 'listes' ? 'Aucune liste disponible.' : 'Aucun résultat disponible.' ?></p>
+                <?php endif; ?>
+              </div>
+            </div>
+          </div>
+        <?php endforeach; ?>
       <?php else: ?>
         <div class="alert alert-info mt-4">
           Les bureaux de votes ferment entre 18h et 20h selon les communes. Les premiers résultats seront communiqués une fois qu'ils seront mis en ligne par le Ministère de l'Intérieur.
         </div>
       <?php endif; ?>
-
-      <h2 class="mt-5">Listes candidates aux municipales 2026 à <?= $ville['commune_nom'] ?></h2>
-      <?php if($isPLM): ?>
-        <ul class="nav nav-tabs mt-4" id="scrutinTabs" role="tablist">
-          <li class="nav-item">
-            <a class="nav-link active px-3" id="municipal-tab" data-toggle="tab" href="#municipal" role="tab">
-              Scrutin municipal
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link px-3" id="arrondissement-tab" data-toggle="tab" href="#arrondissement" role="tab">
-              Arrondissements
-            </a>
-          </li>
-        </ul>
-        <div class="tab-content">
-          <div class="tab-pane fade show active" id="municipal" role="tabpanel">
-            <?php $this->view('elections/partials/_lists_accordion.php', array('arrondissements' => FALSE)) ?>
-          </div>
-          <div class="tab-pane fade" id="arrondissement" role="tabpanel">
-            <p class="text-muted mt-4">À Paris, Lyon et Marseille, chaque électeur dispose de deux bulletins le jour du vote : un pour élire les conseillers de son arrondissement (ou secteur) et un autre pour élire les conseillers municipaux à l’échelle de toute la ville.</p>
-            <?php if(!empty($arrondissements)): ?>
-              <div class="dropdown mt-3">
-                <button type="button" id="arrondissementDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <span id="arrondissementDropdownLabel"><?= htmlspecialchars($arrondissements_first_label) ?></span>
-                    <svg class="chevron-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-                      <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
-                  </svg>
-                </button>
-                <div class="dropdown-menu shadow-sm" style="max-height: 300px; overflow-y: auto;" aria-labelledby="arrondissementDropdown">
-                    <?php foreach($arrondissements_view as $arrondissement): ?>
-                        <a class="dropdown-item arrondissement-select-item rounded" href="#"
-                            data-arr="<?= htmlspecialchars($arrondissement['label']) ?>">
-                            <?= $arrondissement['label'] ?>
-                        </a>
-                    <?php endforeach; ?>
-                </div>
-            </div>
-              <div id="arrondissementsContent" class="mt-4">
-                <?php foreach($arrondissements_view as $arrondissement): ?>
-                  <div class="arrondissement-block" data-arr="<?= htmlspecialchars($arrondissement['label']) ?>" <?= $arrondissement['label'] !== $arrondissements_first_label ? 'style="display:none"' : '' ?> >
-                    <?php
-                      $this->view('elections/partials/_lists_accordion.php', array('listes' => $arrondissement['lists'], 'arrondissements' => TRUE));
-                    ?>
-                  </div>
-                <?php endforeach; ?>
-              </div>
-            <?php else: ?>
-              <p class="mt-3">Aucun arrondissement disponible.</p>
-            <?php endif; ?>
-          </div>
-        </div>
-      <?php else: ?>
-        <?php $this->view('elections/partials/_lists_accordion.php', array('arrondissements' => FALSE)) ?>
-      <?php endif; ?>
+      
       <?php $this->view('partials/campaign.php', array('wrapper_classes' => array('mt-5'))) ?>
       <div class="mt-5 h2">Résultats des élections précédentes à <?= $ville['commune_nom'] ?></div>
 
@@ -484,6 +571,28 @@
           .forEach(function(content) {
             content.style.display = content.getAttribute('data-round') === round ? '' : 'none';
           });
+      });
+    });
+
+    // Handle Municipales 2026 round switch (Premier tour / Second tour)
+    var municipalesRoundSwitchButtons = document.querySelectorAll('.municipales-round-btn');
+    municipalesRoundSwitchButtons.forEach(function(button) {
+      button.addEventListener('click', function() {
+        var round = this.getAttribute('data-round');
+        if (!round) {
+          return;
+        }
+
+        document.querySelectorAll('.municipales-round-btn').forEach(function(btn) {
+          var isActive = btn.getAttribute('data-round') === round;
+          btn.classList.toggle('active', isActive);
+          btn.setAttribute('aria-pressed', isActive ? 'true' : 'false');
+        });
+
+        document.querySelectorAll('.municipales-round-content').forEach(function(content) {
+          content.style.display = content.getAttribute('data-round') === round ? '' : 'none';
+        });
+
       });
     });
   });

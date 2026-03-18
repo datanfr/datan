@@ -3060,6 +3060,11 @@ input#quicksearch[type=text]{
   }
 }
 .pg-resultats-ville, .pg-resultats-dpt {
+  .municipales-round-content {
+    .title{
+      color: $text-black;
+    }
+  }
   .top-city-pill {
     display: inline-block;
     padding: 5px 14px;
