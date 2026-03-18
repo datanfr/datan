@@ -215,10 +215,6 @@
       $data['adjacentes'] = $this->city_model->get_adjacentes($insee);
       $data['communes_dpt'] = $this->city_model->get_communes_by_dpt($data['ville']['dpt_slug'], url_obf_cities_election(), 30);
 
-      // Get listes
-      $data['listes'] = $this->elections_model->get_municipales_listes($insee);
-      $data['listes'] = $this->elections_model->get_nuances_edited($data['listes']);
-
       // Get deputes candidates       
       $data['deputes'] = $this->elections_model->get_candidates_by_city($insee);
 
@@ -238,25 +234,6 @@
         }
       }
 
-      // PLM 
-      $data['isPLM'] = in_array($insee, ['75056', '13055', '69123']);
-
-      if($data['isPLM']) {
-        $data['arrondissements'] = $this->elections_model->get_municipales_listes($insee, TRUE);
-        foreach ($data['arrondissements'] as $arr => $lists) {
-          $data['arrondissements'][$arr] = $this->elections_model->get_nuances_edited($lists);
-        }
-
-        $data['arrondissements_view'] = array();
-        foreach ($data['arrondissements'] as $arrLabel => $lists) {
-          $data['arrondissements_view'][] = array(
-            'label' => $arrLabel,
-            'lists' => $lists,
-          );
-        }
-        $data['arrondissements_first_label'] = !empty($data['arrondissements_view']) ? $data['arrondissements_view'][0]['label'] : NULL;
-      }
-
       // Previous elections 
       $data['previous_elections'] = $this->city_model->get_results_elections_full($insee);
       $data['election_rounds'] = array(
@@ -272,36 +249,124 @@
       $data['previous_elections_ui'] = $this->prepare_previous_elections_for_view($data['previous_elections'], $data['election_rounds']);
 
       // Municipales 2026 - Ministry city results
-      $municipales_results = $this->elections_model->get_results_city_municipales_ministry($insee, "2026_muni_t1");
-      $data['municipales_ministry_results'] = $municipales_results['results'];
-      $data['municipales_ministry_election_id'] = $municipales_results['id_election'];
-      $data['municipales_ministry_infos'] = $this->elections_model->get_infos_city_municipales_ministry($insee, "2026_muni_t1");
-      $data['municipales_ministry_qualified_leaders_text'] = '';
+      $buildMunicipalesRoundData = function ($roundKey, $roundTitle, $electionId) use ($insee) {
+        $roundResults = $this->elections_model->get_results_city_municipales_ministry($insee, $electionId);
+        $roundInfos = $this->elections_model->get_infos_city_municipales_ministry($insee, $electionId);
 
-      $qualifiedLeaders = array();
-      foreach ($data['municipales_ministry_results'] as $candidate) {
-        if ((int) ($candidate['qualified'] ?? 0) !== 1) {
-          continue;
+        $qualifiedLeaders = array();
+        foreach ($roundResults['results'] as $candidate) {
+          if ((int) ($candidate['qualified'] ?? 0) !== 1) {
+            continue;
+          }
+
+          $fullName = trim(($candidate['prenom'] ?? '') . ' ' . ($candidate['nom'] ?? ''));
+          if ($fullName === '') {
+            continue;
+          }
+
+          $qualifiedLeaders[] = $fullName;
         }
 
-        $fullName = trim(($candidate['prenom'] ?? '') . ' ' . ($candidate['nom'] ?? ''));
-        if ($fullName === '') {
-          continue;
+        $qualifiedLeaders = array_values(array_unique($qualifiedLeaders));
+        $qualifiedLeadersCount = count($qualifiedLeaders);
+        $qualifiedLeadersText = '';
+
+        if ($qualifiedLeadersCount === 1) {
+          $qualifiedLeadersText = $qualifiedLeaders[0];
+        } elseif ($qualifiedLeadersCount === 2) {
+          $qualifiedLeadersText = $qualifiedLeaders[0] . ' et ' . $qualifiedLeaders[1];
+        } elseif ($qualifiedLeadersCount > 2) {
+          $lastLeader = array_pop($qualifiedLeaders);
+          $qualifiedLeadersText = implode(', ', $qualifiedLeaders) . ' et ' . $lastLeader;
         }
 
-        $qualifiedLeaders[] = $fullName;
+        return array(
+          'key' => $roundKey,
+          'title' => $roundTitle,
+          'display_mode' => 'results',
+          'election_id' => $roundResults['id_election'],
+          'results' => $roundResults['results'],
+          'infos' => $roundInfos,
+          'listes' => array(),
+          'qualified_leaders' => array(),
+          'qualified_leaders_text' => $qualifiedLeadersText,
+        );
+      };
+
+      $data['municipales_ministry_rounds'] = array(
+        't1' => $buildMunicipalesRoundData('t1', 'Premier tour', '2026_muni_t1'),
+      );
+
+      $t1Pourvu = ($data['municipales_ministry_rounds']['t1']['infos']['pourvu'] ?? null) === 'T1';
+
+      if (!$t1Pourvu) {
+        $secondRoundListes = $this->elections_model->get_municipales_listes('2026_muni_t2', $insee);
+        $secondRoundListes = $this->elections_model->get_nuances_edited($secondRoundListes);
+
+        $secondRoundLeaders = array();
+        foreach ($secondRoundListes as $liste) {
+          $headOfList = trim((string) ($liste['tete_de_liste'] ?? ''));
+
+          if ($headOfList === '' && !empty($liste['candidats'][0])) {
+            $firstCandidate = $liste['candidats'][0];
+            $headOfList = trim((string) (($firstCandidate['prenom'] ?? '') . ' ' . ($firstCandidate['nom'] ?? '')));
+          }
+
+          if ($headOfList !== '') {
+            $secondRoundLeaders[] = array(
+              'name' => $headOfList,
+              'nuance' => trim((string) ($liste['nuance_edited'] ?? '')),
+            );
+          }
+        }
+
+        $secondRoundLeadersByKey = array();
+        foreach ($secondRoundLeaders as $leader) {
+          $leaderKey = mb_strtolower($leader['name'], 'UTF-8') . '|' . mb_strtolower($leader['nuance'], 'UTF-8');
+          $secondRoundLeadersByKey[$leaderKey] = $leader;
+        }
+        $secondRoundLeaders = array_values($secondRoundLeadersByKey);
+
+        $secondRoundLeaderNames = array();
+        foreach ($secondRoundLeaders as $leader) {
+          $secondRoundLeaderNames[] = $leader['name'];
+        }
+
+        $secondRoundLeaderNamesCount = count($secondRoundLeaderNames);
+        $secondRoundLeadersText = '';
+
+        if ($secondRoundLeaderNamesCount === 1) {
+          $secondRoundLeadersText = $secondRoundLeaderNames[0];
+        } elseif ($secondRoundLeaderNamesCount === 2) {
+          $secondRoundLeadersText = $secondRoundLeaderNames[0] . ' et ' . $secondRoundLeaderNames[1];
+        } elseif ($secondRoundLeaderNamesCount > 2) {
+          $lastLeader = array_pop($secondRoundLeaderNames);
+          $secondRoundLeadersText = implode(', ', $secondRoundLeaderNames) . ' et ' . $lastLeader;
+        }
+
+        $data['municipales_ministry_rounds']['t1']['qualified_leaders'] = $secondRoundLeaders;
+        $data['municipales_ministry_rounds']['t1']['qualified_leaders_text'] = $secondRoundLeadersText;
+
+        $data['municipales_ministry_rounds']['t2'] = array(
+          'key' => 't2',
+          'title' => 'Second tour',
+          'display_mode' => 'listes',
+          'election_id' => '2026_muni_t2',
+          'results' => array(),
+          'infos' => array(),
+          'listes' => $secondRoundListes,
+          'qualified_leaders_text' => '',
+        );
       }
 
-      $qualifiedLeaders = array_values(array_unique($qualifiedLeaders));
-      $qualifiedLeadersCount = count($qualifiedLeaders);
-      if ($qualifiedLeadersCount === 1) {
-        $data['municipales_ministry_qualified_leaders_text'] = $qualifiedLeaders[0];
-      } elseif ($qualifiedLeadersCount === 2) {
-        $data['municipales_ministry_qualified_leaders_text'] = $qualifiedLeaders[0] . ' et ' . $qualifiedLeaders[1];
-      } elseif ($qualifiedLeadersCount > 2) {
-        $lastLeader = array_pop($qualifiedLeaders);
-        $data['municipales_ministry_qualified_leaders_text'] = implode(', ', $qualifiedLeaders) . ' et ' . $lastLeader;
-      }
+      $hasSecondRoundData =
+        isset($data['municipales_ministry_rounds']['t2']) && (
+          !empty($data['municipales_ministry_rounds']['t2']['results']) ||
+          !empty($data['municipales_ministry_rounds']['t2']['infos']) ||
+          !empty($data['municipales_ministry_rounds']['t2']['listes'])
+        );
+      $data['municipales_ministry_default_round'] = $hasSecondRoundData ? 't2' : 't1';
+      $data['municipales_ministry_show_round_toggle'] = !$t1Pourvu && count($data['municipales_ministry_rounds']) > 1;
 
       // Breadcrumb
       $is_paris = ($dpt === 'paris-75');
