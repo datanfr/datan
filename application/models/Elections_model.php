@@ -412,8 +412,10 @@
       return $this->db->get()->result_array();
     }
 
-    public function get_municipales_listes($city, $arrondissements = FALSE){
+    public function get_municipales_listes($id_election, $city, $arrondissements = FALSE){
       
+      $this->db->where('id_election', $id_election);
+
       if ($arrondissements) {
         $this->db->like('code_circonscription', $city, 'after'); // starts with $city
         $this->db->where('code_circonscription !=', $city); // should not be exactly $city
@@ -602,9 +604,31 @@
         $row['voix_pct'] = $ratio_exprimes !== NULL
           ? round($ratio_exprimes, 2)
           : ($total > 0 ? round(((int) ($row['voix'] ?? 0) / $total) * 100, 2) : 0);
-        $row['code_nuance'] = $row['nuance'];        
+        $row['code_nuance'] = $row['nuance'];
       }
       unset($row);
+
+      // Fallback: if the ministry data didn't populate the `qualified` column for any row,
+      // derive it from ratio_voix_inscrits (French municipal rule: >= 10% of registered voters).
+      $hasAnyQualified = false;
+      foreach ($results as $row) {
+        if ((int) ($row['qualified'] ?? 0) === 1) {
+          $hasAnyQualified = true;
+          break;
+        }
+      }
+      if (!$hasAnyQualified) {
+        foreach ($results as &$row) {
+          $ratioInscrits = isset($row['ratio_voix_inscrits']) ? (float) $row['ratio_voix_inscrits'] : null;
+          if ($ratioInscrits !== null) {
+            $row['qualified'] = $ratioInscrits >= 0.10 ? 1 : 0;
+          } elseif ($row['voix_pct'] >= 10) {
+            // last-resort fallback when ratio_voix_inscrits is also absent
+            $row['qualified'] = 1;
+          }
+        }
+        unset($row);
+      }
 
       $results = $this->elections_model->get_nuances_edited($results);
       
@@ -714,6 +738,156 @@
       }
 
       return $result;
+    }
+
+    /**
+     * Determine the T2 situation of each T1 list head.
+     *
+     * - Maintien   : voix_pct > 10 % AND same panneau exists in T2.
+    * - Fusion     : voix_pct > 5 %  AND panneau absent from T2, but head of list
+    *                appears as a candidate on a different T2 list.
+    *                The receiving list is also labelled fusion.
+    * - Désistement: voix_pct > 10 % AND panneau absent from T2, and head of list
+     *                not found on any T2 list.
+     *
+     * @param  array $t1Results  First-round rows from get_results_city_municipales_ministry().
+     * @param  array $t2Listes   Second-round rows from get_municipales_listes().
+     * @return array             Each element: head_name, nuance, voix_pct, situation,
+     *                           and (for fusion) fusion_with_head, fusion_with_nuance.
+     */
+    public function get_list_situations($t1Results, $t2Listes)
+    {
+      $normalizeName = function ($name) {
+        $name = trim((string) $name);
+        if ($name === '') {
+          return '';
+        }
+        return mb_strtolower(preg_replace('/\s+/u', ' ', $name), 'UTF-8');
+      };
+
+      // Index T2 by panneau number for O(1) lookup
+      $t2ByPanneau = array();
+      foreach ($t2Listes as $liste) {
+        $t2ByPanneau[(string) ($liste['numero_panneau'] ?? '')] = $liste;
+      }
+
+      // Build a normalized-name → liste map for all T2 candidates
+      $t2CandidateToListe = array();
+      foreach ($t2Listes as $liste) {
+        foreach (($liste['candidats'] ?? array()) as $candidat) {
+          $fullName = trim((string) (($candidat['prenom'] ?? '') . ' ' . ($candidat['nom'] ?? '')));
+          $key = $normalizeName($fullName);
+          if ($key !== '') {
+            $t2CandidateToListe[$key] = $liste;
+          }
+        }
+      }
+
+      // First pass: detect donor fusions and build receiver index by panneau
+      $donorFusionByPanneau = array();
+      $receivedByPanneau = array();
+
+      foreach ($t1Results as $candidate) {
+        $score    = (float) ($candidate['voix_pct'] ?? 0);
+        $panneau  = (string) ($candidate['no_panneau'] ?? '');
+        $headName = trim((string) (($candidate['prenom'] ?? '') . ' ' . ($candidate['nom'] ?? '')));
+        $headKey  = $normalizeName($headName);
+        $nuance   = (string) ($candidate['nuance_edited'] ?? $candidate['nuance'] ?? '');
+
+        if ($score <= 5 || isset($t2ByPanneau[$panneau]) || $headKey === '') {
+          continue;
+        }
+
+        if (!isset($t2CandidateToListe[$headKey])) {
+          continue;
+        }
+
+        $fusionListe = $t2CandidateToListe[$headKey];
+        $receiverPanneau = (string) ($fusionListe['numero_panneau'] ?? '');
+
+        if ($receiverPanneau === '' || $receiverPanneau === $panneau) {
+          continue;
+        }
+
+        $fusionHead = trim((string) ($fusionListe['tete_de_liste'] ?? ''));
+        if ($fusionHead === '' && !empty($fusionListe['candidats'][0])) {
+          $fusionHead = trim((string) (($fusionListe['candidats'][0]['prenom'] ?? '') . ' ' . ($fusionListe['candidats'][0]['nom'] ?? '')));
+        }
+
+        $donorFusionByPanneau[$panneau] = array(
+          'head_name'           => $headName,
+          'nuance'              => $nuance,
+          'voix_pct'            => round($score, 2),
+          'situation'           => 'fusion',
+          'fusion_role'         => 'donor',
+          'fusion_with_head'    => $fusionHead,
+          'fusion_with_nuance'  => (string) ($fusionListe['nuance_edited'] ?? $fusionListe['nuance'] ?? ''),
+        );
+
+        if (!isset($receivedByPanneau[$receiverPanneau])) {
+          $receivedByPanneau[$receiverPanneau] = array();
+        }
+        $receivedByPanneau[$receiverPanneau][] = array(
+          'head_name' => $headName,
+          'nuance' => $nuance,
+        );
+      }
+
+      $situations = array();
+
+      foreach ($t1Results as $candidate) {
+        $score    = (float) ($candidate['voix_pct'] ?? 0);
+        $panneau  = (string) ($candidate['no_panneau'] ?? '');
+        $headName = trim((string) (($candidate['prenom'] ?? '') . ' ' . ($candidate['nom'] ?? '')));
+        $nuance   = (string) ($candidate['nuance_edited'] ?? $candidate['nuance'] ?? '');
+
+        if (isset($donorFusionByPanneau[$panneau])) {
+          $situations[] = $donorFusionByPanneau[$panneau];
+          continue;
+        }
+
+        if (isset($t2ByPanneau[$panneau])) {
+          if ($score > 10) {
+            if (!empty($receivedByPanneau[$panneau])) {
+              $fusionFromHeads = array();
+              foreach ($receivedByPanneau[$panneau] as $received) {
+                $fusionFromHeads[] = $received['head_name'];
+              }
+
+              $situations[] = array(
+                'head_name'           => $headName,
+                'nuance'              => $nuance,
+                'voix_pct'            => round($score, 2),
+                'situation'           => 'fusion',
+                'fusion_role'         => 'receiver',
+                'fusion_from_heads'   => $fusionFromHeads,
+                // Kept for backward compatibility where a single counterpart is expected.
+                'fusion_with_head'    => $fusionFromHeads[0] ?? '',
+                'fusion_with_nuance'  => '',
+              );
+            } else {
+              $situations[] = array(
+                'head_name'  => $headName,
+                'nuance'     => $nuance,
+                'voix_pct'   => round($score, 2),
+                'situation'  => 'maintien',
+              );
+            }
+          }
+          continue;
+        }
+
+        if ($score > 10) {
+          $situations[] = array(
+            'head_name'  => $headName,
+            'nuance'     => $nuance,
+            'voix_pct'   => round($score, 2),
+            'situation'  => 'desistement',
+          );
+        }
+      }
+
+      return $situations;
     }
 
   }
