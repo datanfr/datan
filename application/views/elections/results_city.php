@@ -22,6 +22,9 @@
         }
         $municipalesDefaultRound = $municipales_ministry_default_round ?? 't1';
         $showMunicipalesRoundToggle = !empty($municipales_ministry_show_round_toggle);
+        $municipalesListFusionsDebug = isset($municipales_list_fusions_debug) && is_array($municipales_list_fusions_debug)
+          ? $municipales_list_fusions_debug
+          : array();
       ?>
       <?php if ($hasMunicipalesRoundData): ?>
         <?php
@@ -79,6 +82,18 @@
                 <?php if ($summaryQualifiedLeadersDisplay !== ''): ?>
                   Les listes portées par <?= $summaryQualifiedLeadersDisplay ?> sont qualifiées.
                 <?php endif; ?>
+                <div class="mt-3">
+                  <div class="font-weight-bold mb-1">Fusions</div>
+                  <?php if (!empty($municipalesListFusionsDebug)): ?>
+                    <?php foreach ($municipalesListFusionsDebug as $fusion): ?>
+                      <p class="mb-1">
+                        La liste menée par <b><?= htmlspecialchars($fusion['head_name']) ?></b><?php if (!empty($fusion['first_round_nuance'])): ?> (<?= htmlspecialchars($fusion['first_round_nuance']) ?>)<?php endif; ?> a fusionné avec la liste menée par <b><?= htmlspecialchars($fusion['second_round_head']) ?></b><?php if (!empty($fusion['second_round_nuance'])): ?> (<?= htmlspecialchars($fusion['second_round_nuance']) ?>)<?php endif; ?>.
+                      </p>
+                    <?php endforeach; ?>
+                  <?php else: ?>
+                    <p class="mb-0 text-muted">Aucune fusion de listes dans cette commune.</p>
+                  <?php endif; ?>
+                </div>
               </div>
             </div>
           <?php else: ?>
@@ -90,6 +105,11 @@
             </div>
           <?php endif; ?>
         <?php endif; ?>
+
+        <div class="alert alert-light border mt-3 mb-3">
+          <strong>DEBUG fusions listes (T1 &gt; 5% vers T2)</strong>
+          <pre class="mb-0 mt-2"><?php print_r($municipalesListFusionsDebug); ?></pre>
+        </div>
 
         <?php if ($showMunicipalesRoundToggle): ?>
           <div class="previous-election-round-switch" data-municipales-switch="true">
