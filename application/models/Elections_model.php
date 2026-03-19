@@ -639,7 +639,7 @@
     }
 
     public function get_infos_city_municipales_ministry($city, $id_election){
-      $this->db->select('code_commune, inscrits, abstentions, votants, blancs, nuls, exprimes, pourvu');
+      $this->db->select('code_commune, inscrits, abstentions, votants, blancs, nuls, exprimes');
       $this->db->where('id_election', $id_election);
       $this->db->where('code_commune', $city);
 
@@ -661,6 +661,29 @@
         : 0;
 
       return $result;
+    }
+
+    public function isMunicipalesRoundPourvuFromResults($roundResults){
+      $totalExprimes = 0;
+      $maxVoix = 0;
+
+      foreach ((array) $roundResults as $candidate) {
+        $voix = isset($candidate['voix']) ? (int) $candidate['voix'] : 0;
+        if ($voix < 0) {
+          $voix = 0;
+        }
+
+        $totalExprimes += $voix;
+        if ($voix > $maxVoix) {
+          $maxVoix = $voix;
+        }
+      }
+
+      if ($totalExprimes <= 0) {
+        return FALSE;
+      }
+
+      return ($maxVoix / $totalExprimes) > 0.5;
     }
 
     public function count_results_cities_ministry($id_election){
