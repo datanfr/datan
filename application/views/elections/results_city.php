@@ -32,6 +32,61 @@
             $fusionSituations[] = $sit;
           }
         }
+
+        $orderedListSituations = array();
+        $donorSituationsByReceiver = array();
+        $appendedDonorSituationKeys = array();
+
+        foreach ($listSituations as $sit) {
+          if (($sit['situation'] ?? '') !== 'fusion' || ($sit['fusion_role'] ?? '') !== 'donor') {
+            continue;
+          }
+
+          $receiverKey = mb_strtolower(trim((string) ($sit['fusion_with_head'] ?? '')), 'UTF-8');
+          if ($receiverKey === '') {
+            continue;
+          }
+
+          if (!isset($donorSituationsByReceiver[$receiverKey])) {
+            $donorSituationsByReceiver[$receiverKey] = array();
+          }
+
+          $sit['is_fusion_child'] = true;
+          $donorSituationsByReceiver[$receiverKey][] = $sit;
+        }
+
+        foreach ($listSituations as $sit) {
+          if (($sit['situation'] ?? '') === 'fusion' && ($sit['fusion_role'] ?? '') === 'donor') {
+            continue;
+          }
+
+          $sit['is_fusion_child'] = false;
+          $orderedListSituations[] = $sit;
+
+          $headNameKey = mb_strtolower(trim((string) ($sit['head_name'] ?? '')), 'UTF-8');
+          if ($headNameKey === '' || empty($donorSituationsByReceiver[$headNameKey])) {
+            continue;
+          }
+
+          foreach ($donorSituationsByReceiver[$headNameKey] as $donorSituation) {
+            $orderedListSituations[] = $donorSituation;
+            $donorKey = mb_strtolower(trim((string) ($donorSituation['head_name'] ?? '')), 'UTF-8');
+            if ($donorKey !== '') {
+              $appendedDonorSituationKeys[$donorKey] = true;
+            }
+          }
+        }
+
+        foreach ($donorSituationsByReceiver as $donorSituations) {
+          foreach ($donorSituations as $donorSituation) {
+            $donorKey = mb_strtolower(trim((string) ($donorSituation['head_name'] ?? '')), 'UTF-8');
+            if ($donorKey !== '' && isset($appendedDonorSituationKeys[$donorKey])) {
+              continue;
+            }
+
+            $orderedListSituations[] = $donorSituation;
+          }
+        }
       ?>
       <?php if ($hasMunicipalesRoundData): ?>
         <?php
@@ -52,9 +107,9 @@
               }
 
               $leaderNuance = trim((string) ($leader['nuance'] ?? ''));
-              $part = '<b>' . htmlspecialchars($leaderName) . '</b>';
+              $part = '<b>' . $leaderName . '</b>';
               if ($leaderNuance !== '') {
-                $part .= ' (' . htmlspecialchars($leaderNuance) . ')';
+                $part .= ' (' . $leaderNuance . ')';
               }
               $summaryLeaderParts[] = $part;
             }
@@ -71,7 +126,7 @@
           }
 
           if ($summaryQualifiedLeadersDisplay === '' && $summaryQualifiedLeadersText !== '') {
-            $summaryQualifiedLeadersDisplay = '<b>' . htmlspecialchars($summaryQualifiedLeadersText) . '</b>';
+            $summaryQualifiedLeadersDisplay = '<b>' . $summaryQualifiedLeadersText . '</b>';
           }
         ?>
         <?php if (!empty($summaryResults)): ?>
@@ -110,15 +165,24 @@
                           <th>Liste</th>
                           <th class="text-right">Score</th>
                           <th class="text-center">Situation</th>
-                          <th>Détail</th>
                       </tr>
                   </thead>
                   <tbody>
-                      <?php foreach ($listSituations as $sit): ?>
+                      <?php foreach ($orderedListSituations as $sit): ?>
                       <tr>
                           <td class="font-weight-bold">
-                            <div><?= htmlspecialchars($sit['head_name']) ?></div>
-                            <div><small class="text-muted"><?= htmlspecialchars($sit['nuance']) ?></small></div>
+                            <?php if (!empty($sit['is_fusion_child'])): ?>
+                              <div class="d-flex flex-row">
+                                <div class="ml-4">↖️</div>
+                                <div class="ml-2">
+                                  <div><?= $sit['head_name'] ?></div>
+                                  <div><small class="text-muted"><?= $sit['nuance'] ?></small></div>
+                                </div>
+                              </div>
+                            <?php else: ?>
+                              <div class="<?= !empty($sit['is_fusion_child']) ? 'pl-4' : '' ?>"><?= !empty($sit['is_fusion_child']) ? '➡️ ' : '' ?><?= $sit['head_name'] ?></div>
+                              <div class="<?= !empty($sit['is_fusion_child']) ? 'pl-4' : '' ?>"><small class="text-muted"><?= $sit['nuance'] ?></small></div>
+                            <?php endif; ?>
                           </td>
                           <td class="text-right"><?= number_format($sit['voix_pct'], 1, ',', ' ') ?>%</td>
                           <td class="text-center">
@@ -128,17 +192,6 @@
                                   <span class="badge badge-warning">Fusion</span>
                               <?php else: ?>
                                   <span class="badge badge-secondary">Désistement</span>
-                              <?php endif; ?>
-                          </td>
-                          <td>
-                              <?php if ($sit['situation'] === 'fusion'): ?>
-                                  <?php if (($sit['fusion_role'] ?? '') !== 'receiver'): ?>
-                                    Rejoint la liste de <span class="font-weight-bold"><?= htmlspecialchars($sit['fusion_with_head'] ?? '') ?></span>
-                                  <?php else: ?>
-                                    <span class="text-muted">—</span>
-                                  <?php endif; ?>
-                              <?php else: ?>
-                                  <span class="text-muted">—</span>
                               <?php endif; ?>
                           </td>
                       </tr>
@@ -155,9 +208,9 @@
               <button
                 type="button"
                 class="previous-election-round-btn municipales-round-btn <?= (($round['key'] ?? '') === $municipalesDefaultRound) ? 'active' : '' ?>"
-                data-round="<?= htmlspecialchars($round['key'] ?? '') ?>"
+                data-round="<?= $round['key'] ?? '' ?>"
                 aria-pressed="<?= (($round['key'] ?? '') === $municipalesDefaultRound) ? 'true' : 'false' ?>">
-                <?= htmlspecialchars($round['title'] ?? '') ?>
+                <?= $round['title'] ?? '' ?>
               </button>
             <?php endforeach; ?>
           </div>
@@ -173,7 +226,7 @@
           ?>
           <div
             class="municipales-round-content"
-            data-round="<?= htmlspecialchars($roundKey) ?>"
+            data-round="<?= $roundKey ?>"
             <?= $roundKey !== $municipalesDefaultRound ? 'style="display:none"' : '' ?>>
             <div class="card border mt-3">
               <div class="card-body py-3">
@@ -271,7 +324,7 @@
                     </div>
                   <?php endforeach; ?>
                 <?php elseif ($roundDisplayMode === 'listes' && !empty($roundListes)): ?>
-                  <div class="mt-4" id="municipalesRoundListesAccordion-<?= htmlspecialchars($roundKey) ?>">
+                  <div class="mt-4" id="municipalesRoundListesAccordion-<?= $roundKey ?>">
                     <?php foreach ($roundListes as $liste): ?>
                       <?php
                         $headOfList = $liste['tete_de_liste'] ?? '';
@@ -282,27 +335,27 @@
                         $collapseId = 'municipales-round-' . ($roundKey !== '' ? $roundKey : 'round') . '-liste-' . (int) ($liste['numero_panneau'] ?? 0);
                       ?>
                       <div class="liste-card mb-3">
-                        <div class="liste-header d-flex align-items-center px-4 py-3" data-toggle="collapse" data-target="#<?= htmlspecialchars($collapseId) ?>" aria-controls="<?= htmlspecialchars($collapseId) ?>" aria-expanded="false">
+                        <div class="liste-header d-flex align-items-center px-4 py-3" data-toggle="collapse" data-target="#<?= $collapseId ?>" aria-controls="<?= $collapseId ?>" aria-expanded="false">
                           <div class="partie-dot mr-3" style="background-color: <?= $liste['nuance_color'] ?>;"></div>
                           <div class="flex-grow-1">
-                            <div class="liste-tete"><?= htmlspecialchars($headOfList) ?></div>
+                            <div class="liste-tete"><?= $headOfList ?></div>
                             <div class="liste-meta">
                               <?php if (!empty($liste['nuance_edited'])): ?>
-                                <span class="nuance"><?= htmlspecialchars($liste['nuance_edited']) ?></span>
+                                <span class="nuance"><?= $liste['nuance_edited'] ?></span>
                                 <span class="liste-separator">·</span>
                               <?php endif; ?>
-                              <span><?= htmlspecialchars($liste['libelle_liste']) ?></span>
+                              <span><?= $liste['libelle_liste'] ?></span>
                             </div>
                           </div>
                           <svg class="chevron-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
                             <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
                           </svg>
                         </div>
-                        <div id="<?= htmlspecialchars($collapseId) ?>" class="collapse">
+                        <div id="<?= $collapseId ?>" class="collapse">
                           <div class="liste-candidates p-4">
                             <?php foreach (($liste['candidats'] ?? array()) as $candidat): ?>
                               <div class="candidate-row py-2">
-                                <?= (int) ($candidat['ordre'] ?? 0) ?>. <?= htmlspecialchars($candidat['prenom'] ?? '') ?> <?= htmlspecialchars($candidat['nom'] ?? '') ?>
+                                <?= (int) ($candidat['ordre'] ?? 0) ?>. <?= $candidat['prenom'] ?? '' ?> <?= $candidat['nom'] ?? '' ?>
                                 <?php if (($candidat['code_personnalite'] ?? '') === 'DEP'): ?>
                                   <span class="badge badge-primary ml-2">Député<?= ($candidat['sexe'] ?? '') === 'F' ? 'e' : '' ?></span>
                                 <?php endif; ?>
@@ -351,15 +404,15 @@
               <div id="collapse<?= $election['election_id'] ?>" class="collapse" data-parent="#previousElectionsAccordion">
                 <div class="liste-candidates p-4 previous-election-body">
                   <?php if ($election['has_multiple_circos']): ?>
-                    <div class="previous-election-circo-switch mb-3" data-election-id="<?= htmlspecialchars($election['election_id']) ?>">
+                    <div class="previous-election-circo-switch mb-3" data-election-id="<?= $election['election_id'] ?>">
                       <?php foreach ($election['circos_ui'] as $circo): ?>
                         <button
                           type="button"
                           class="previous-election-circo-btn <?= $circo['is_default'] ? 'active' : '' ?>"
-                          data-election-id="<?= htmlspecialchars($election['election_id']) ?>"
-                          data-circo-id="<?= htmlspecialchars($circo['id']) ?>"
+                          data-election-id="<?= $election['election_id'] ?>"
+                          data-circo-id="<?= $circo['id'] ?>"
                           aria-pressed="<?= $circo['is_default'] ? 'true' : 'false' ?>">
-                          <?= htmlspecialchars($circo['label']) ?>
+                          <?= $circo['label'] ?>
                         </button>
                       <?php endforeach; ?>
                     </div>
@@ -368,18 +421,18 @@
                   <?php foreach ($election['circos_ui'] as $circo): ?>
                     <div
                       class="previous-election-circo-content"
-                      data-election-id="<?= htmlspecialchars($election['election_id']) ?>"
-                      data-circo-id="<?= htmlspecialchars($circo['id']) ?>"
+                      data-election-id="<?= $election['election_id'] ?>"
+                      data-circo-id="<?= $circo['id'] ?>"
                       <?= !$circo['is_default'] ? 'style="display:none"' : '' ?>>
                       <?php if ($election['has_second_round']): ?>
-                        <div class="previous-election-round-switch mb-4" data-election-id="<?= htmlspecialchars($election['election_id']) ?>" data-circo-id="<?= htmlspecialchars($circo['id']) ?>">
+                        <div class="previous-election-round-switch mb-4" data-election-id="<?= $election['election_id'] ?>" data-circo-id="<?= $circo['id'] ?>">
                           <?php foreach ($circo['rounds'] as $round): ?>
                             <button
                               type="button"
                               class="previous-election-round-btn <?= $round['is_default'] ? 'active' : '' ?>"
-                              data-election-id="<?= htmlspecialchars($election['election_id']) ?>"
-                              data-circo-id="<?= htmlspecialchars($circo['id']) ?>"
-                              data-round="<?= htmlspecialchars($round['key']) ?>"
+                              data-election-id="<?= $election['election_id'] ?>"
+                              data-circo-id="<?= $circo['id'] ?>"
+                              data-round="<?= $round['key'] ?>"
                               aria-pressed="<?= $round['is_default'] ? 'true' : 'false' ?>">
                               <?= $round['title'] ?>
                             </button>
@@ -390,8 +443,8 @@
                       <?php foreach ($circo['rounds'] as $round): ?>
                         <div
                           class="previous-election-round-content"
-                          data-election-id="<?= htmlspecialchars($election['election_id']) ?>"
-                          data-circo-id="<?= htmlspecialchars($circo['id']) ?>"
+                          data-election-id="<?= $election['election_id'] ?>"
+                          data-circo-id="<?= $circo['id'] ?>"
                           data-round="<?= $round['key'] ?>"
                           <?= !$round['is_default'] ? 'style="display:none"' : '' ?>>
                           <?php if ($round['show_no_second_round_alert']): ?>
