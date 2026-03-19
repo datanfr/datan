@@ -44,7 +44,7 @@
             <?php if(!empty($arrondissements)): ?>
               <div class="dropdown mt-3">
                 <button type="button" id="arrondissementDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <span id="arrondissementDropdownLabel"><?= htmlspecialchars($arrondissements_first_label) ?></span>
+                    <span id="arrondissementDropdownLabel"><?= $arrondissements_first_label ?></span>
                     <svg class="chevron-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
                       <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
                   </svg>
@@ -52,7 +52,7 @@
                 <div class="dropdown-menu shadow-sm" style="max-height: 300px; overflow-y: auto;" aria-labelledby="arrondissementDropdown">
                     <?php foreach($arrondissements_view as $arrondissement): ?>
                         <a class="dropdown-item arrondissement-select-item rounded" href="#"
-                            data-arr="<?= htmlspecialchars($arrondissement['label']) ?>">
+                            data-arr="<?= $arrondissement['label'] ?>">
                             <?= $arrondissement['label'] ?>
                         </a>
                     <?php endforeach; ?>
@@ -60,7 +60,7 @@
             </div>
               <div id="arrondissementsContent" class="mt-4">
                 <?php foreach($arrondissements_view as $arrondissement): ?>
-                  <div class="arrondissement-block" data-arr="<?= htmlspecialchars($arrondissement['label']) ?>" <?= $arrondissement['label'] !== $arrondissements_first_label ? 'style="display:none"' : '' ?> >
+                  <div class="arrondissement-block" data-arr="<?= $arrondissement['label'] ?>" <?= $arrondissement['label'] !== $arrondissements_first_label ? 'style="display:none"' : '' ?> >
                     <?php
                       //$this->view('elections/partials/_lists_accordion.php', array('listes' => $arrondissement['lists'], 'arrondissements' => TRUE));
                     ?>
