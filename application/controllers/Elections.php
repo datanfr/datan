@@ -252,6 +252,7 @@
       $buildMunicipalesRoundData = function ($roundKey, $roundTitle, $electionId) use ($insee) {
         $roundResults = $this->elections_model->get_results_city_municipales_ministry($insee, $electionId);
         $roundInfos = $this->elections_model->get_infos_city_municipales_ministry($insee, $electionId);
+        $roundInfos['pourvu'] = $this->elections_model->isMunicipalesRoundPourvuFromResults($roundResults['results'] ?? array()) ? 'T1' : 'NON';
 
         $qualifiedLeaders = array();
         foreach ($roundResults['results'] as $candidate) {
