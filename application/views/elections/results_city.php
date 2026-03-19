@@ -32,6 +32,61 @@
             $fusionSituations[] = $sit;
           }
         }
+
+        $orderedListSituations = array();
+        $donorSituationsByReceiver = array();
+        $appendedDonorSituationKeys = array();
+
+        foreach ($listSituations as $sit) {
+          if (($sit['situation'] ?? '') !== 'fusion' || ($sit['fusion_role'] ?? '') !== 'donor') {
+            continue;
+          }
+
+          $receiverKey = mb_strtolower(trim((string) ($sit['fusion_with_head'] ?? '')), 'UTF-8');
+          if ($receiverKey === '') {
+            continue;
+          }
+
+          if (!isset($donorSituationsByReceiver[$receiverKey])) {
+            $donorSituationsByReceiver[$receiverKey] = array();
+          }
+
+          $sit['is_fusion_child'] = true;
+          $donorSituationsByReceiver[$receiverKey][] = $sit;
+        }
+
+        foreach ($listSituations as $sit) {
+          if (($sit['situation'] ?? '') === 'fusion' && ($sit['fusion_role'] ?? '') === 'donor') {
+            continue;
+          }
+
+          $sit['is_fusion_child'] = false;
+          $orderedListSituations[] = $sit;
+
+          $headNameKey = mb_strtolower(trim((string) ($sit['head_name'] ?? '')), 'UTF-8');
+          if ($headNameKey === '' || empty($donorSituationsByReceiver[$headNameKey])) {
+            continue;
+          }
+
+          foreach ($donorSituationsByReceiver[$headNameKey] as $donorSituation) {
+            $orderedListSituations[] = $donorSituation;
+            $donorKey = mb_strtolower(trim((string) ($donorSituation['head_name'] ?? '')), 'UTF-8');
+            if ($donorKey !== '') {
+              $appendedDonorSituationKeys[$donorKey] = true;
+            }
+          }
+        }
+
+        foreach ($donorSituationsByReceiver as $donorSituations) {
+          foreach ($donorSituations as $donorSituation) {
+            $donorKey = mb_strtolower(trim((string) ($donorSituation['head_name'] ?? '')), 'UTF-8');
+            if ($donorKey !== '' && isset($appendedDonorSituationKeys[$donorKey])) {
+              continue;
+            }
+
+            $orderedListSituations[] = $donorSituation;
+          }
+        }
       ?>
       <?php if ($hasMunicipalesRoundData): ?>
         <?php
@@ -110,15 +165,24 @@
                           <th>Liste</th>
                           <th class="text-right">Score</th>
                           <th class="text-center">Situation</th>
-                          <th>Détail</th>
                       </tr>
                   </thead>
                   <tbody>
-                      <?php foreach ($listSituations as $sit): ?>
+                      <?php foreach ($orderedListSituations as $sit): ?>
                       <tr>
                           <td class="font-weight-bold">
-                            <div><?= htmlspecialchars($sit['head_name']) ?></div>
-                            <div><small class="text-muted"><?= htmlspecialchars($sit['nuance']) ?></small></div>
+                            <?php if (!empty($sit['is_fusion_child'])): ?>
+                              <div class="d-flex flex-row">
+                                <div class="ml-4">↖️</div>
+                                <div class="ml-2">
+                                  <div><?= htmlspecialchars($sit['head_name']) ?></div>
+                                  <div><small class="text-muted"><?= htmlspecialchars($sit['nuance']) ?></small></div>
+                                </div>
+                              </div>
+                            <?php else: ?>
+                              <div class="<?= !empty($sit['is_fusion_child']) ? 'pl-4' : '' ?>"><?= !empty($sit['is_fusion_child']) ? '➡️ ' : '' ?><?= htmlspecialchars($sit['head_name']) ?></div>
+                              <div class="<?= !empty($sit['is_fusion_child']) ? 'pl-4' : '' ?>"><small class="text-muted"><?= htmlspecialchars($sit['nuance']) ?></small></div>
+                            <?php endif; ?>
                           </td>
                           <td class="text-right"><?= number_format($sit['voix_pct'], 1, ',', ' ') ?>%</td>
                           <td class="text-center">
@@ -128,17 +192,6 @@
                                   <span class="badge badge-warning">Fusion</span>
                               <?php else: ?>
                                   <span class="badge badge-secondary">Désistement</span>
-                              <?php endif; ?>
-                          </td>
-                          <td>
-                              <?php if ($sit['situation'] === 'fusion'): ?>
-                                  <?php if (($sit['fusion_role'] ?? '') !== 'receiver'): ?>
-                                    Rejoint la liste de <span class="font-weight-bold"><?= htmlspecialchars($sit['fusion_with_head'] ?? '') ?></span>
-                                  <?php else: ?>
-                                    <span class="text-muted">—</span>
-                                  <?php endif; ?>
-                              <?php else: ?>
-                                  <span class="text-muted">—</span>
                               <?php endif; ?>
                           </td>
                       </tr>
