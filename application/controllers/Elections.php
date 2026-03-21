@@ -359,9 +359,12 @@
           'qualified_leaders_text' => '',
         );
 
+        $firstRoundListes = $this->elections_model->get_municipales_listes('2026_muni_t1', $insee);
+
         $data['municipales_list_situations'] = $this->elections_model->get_list_situations(
           $data['municipales_ministry_rounds']['t1']['results'] ?? array(),
-          $secondRoundListes
+          $secondRoundListes,
+          $firstRoundListes
         );
       }
 

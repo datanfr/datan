@@ -767,18 +767,20 @@
      * Determine the T2 situation of each T1 list head.
      *
      * - Maintien   : voix_pct > 10 % AND same panneau exists in T2.
-    * - Fusion     : voix_pct > 5 %  AND panneau absent from T2, but head of list
-    *                appears as a candidate on a different T2 list.
-    *                The receiving list is also labelled fusion.
-    * - Désistement: voix_pct > 10 % AND panneau absent from T2, and head of list
-     *                not found on any T2 list.
+     * - Fusion     : voix_pct > 5 %  AND panneau absent from T2, but head of list
+     *                (or any candidate from the T1 list) appears as a candidate on
+     *                a different T2 list.
+     *                The receiving list is also labelled fusion.
+     * - Désistement: voix_pct > 10 % AND panneau absent from T2, and no candidate
+     *                from the T1 list found on any T2 list.
      *
      * @param  array $t1Results  First-round rows from get_results_city_municipales_ministry().
      * @param  array $t2Listes   Second-round rows from get_municipales_listes().
+     * @param  array $t1Listes   First-round rows from get_municipales_listes() (optional).
      * @return array             Each element: head_name, nuance, voix_pct, situation,
      *                           and (for fusion) fusion_with_head, fusion_with_nuance.
      */
-    public function get_list_situations($t1Results, $t2Listes)
+    public function get_list_situations($t1Results, $t2Listes, $t1Listes = array())
     {
       $normalizeName = function ($name) {
         $name = trim((string) $name);
@@ -806,6 +808,22 @@
         }
       }
 
+      // Index T1 listes candidates by panneau for fallback fusion detection
+      $t1CandidatesByPanneau = array();
+      foreach ($t1Listes as $liste) {
+        $panneau = (string) ($liste['numero_panneau'] ?? '');
+        if ($panneau === '') {
+          continue;
+        }
+        foreach (($liste['candidats'] ?? array()) as $candidat) {
+          $fullName = trim((string) (($candidat['prenom'] ?? '') . ' ' . ($candidat['nom'] ?? '')));
+          $key = $normalizeName($fullName);
+          if ($key !== '') {
+            $t1CandidatesByPanneau[$panneau][] = $key;
+          }
+        }
+      }
+
       // First pass: detect donor fusions and build receiver index by panneau
       $donorFusionByPanneau = array();
       $receivedByPanneau = array();
@@ -821,11 +839,23 @@
           continue;
         }
 
-        if (!isset($t2CandidateToListe[$headKey])) {
+        // Try to find a matching T2 list: first by head name, then by any T1 list candidate
+        $fusionListe = null;
+        if (isset($t2CandidateToListe[$headKey])) {
+          $fusionListe = $t2CandidateToListe[$headKey];
+        } elseif (!empty($t1CandidatesByPanneau[$panneau])) {
+          foreach ($t1CandidatesByPanneau[$panneau] as $candidateKey) {
+            if (isset($t2CandidateToListe[$candidateKey])) {
+              $fusionListe = $t2CandidateToListe[$candidateKey];
+              break;
+            }
+          }
+        }
+
+        if ($fusionListe === null) {
           continue;
         }
 
-        $fusionListe = $t2CandidateToListe[$headKey];
         $receiverPanneau = (string) ($fusionListe['numero_panneau'] ?? '');
 
         if ($receiverPanneau === '' || $receiverPanneau === $panneau) {
