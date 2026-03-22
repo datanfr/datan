@@ -33,6 +33,10 @@
           isset($municipalesRounds['t2']['infos']['pct_saisis']) &&
           (float) $municipalesRounds['t2']['infos']['pct_saisis'] === 100.0 &&
           !empty($municipalesRounds['t2']['results']);
+        $hasSecondRoundResults =
+          !empty($municipalesRounds['t2']) &&
+          (($municipalesRounds['t2']['display_mode'] ?? '') === 'results') &&
+          !empty($municipalesRounds['t2']['results']);
         $hasSecondRound = isset($municipalesRounds['t2']);
         $listSituations = isset($municipales_list_situations) && is_array($municipales_list_situations)
           ? $municipales_list_situations
@@ -190,7 +194,7 @@
             </div>
           <?php endif; ?>
         <?php endif; ?>
-        <?php if (!empty($listSituations) && !$hasSecondRoundOfficialResults): ?>
+        <?php if (!empty($listSituations) && !$hasSecondRoundResults): ?>
           <div class="card border py-1 mt-4">
             <div class="card-body">
               <div class="h5 text-info mb-3 font-weight-bold">La situation des listes entre les deux tours</div>
@@ -278,6 +282,11 @@
             <div class="card border mt-3">
               <div class="card-body py-3">
                 <div class="h4 font-weight-bold mt-3 mb-3 title"><?= $roundDisplayMode === 'listes' ? 'Listes candidates au ' : 'Résultats du ' ?><?= mb_strtolower($round['title'] ?? '') ?> <?= $ville_infos['nom_a'] ?></div>
+                <?php if ($roundDisplayMode === 'results' && $roundKey === 't2' && isset($roundInfos['pct_saisis']) && (float) $roundInfos['pct_saisis'] < 100.0): ?>
+                  <div class="alert alert-warning py-2 mb-3">
+                    Résultats provisoires : dépouillement en cours (<?= number_format((float) $roundInfos['pct_saisis'], 0, ',', ' ') ?>%)
+                  </div>
+                <?php endif; ?>
                 <?php if ($roundDisplayMode === 'results' && !empty($roundInfos)): ?>
                   <div class="election-stats d-flex mb-3 pb-3">
                     <div class="election-stat">
@@ -350,28 +359,26 @@
                         </div>
                       </div>
 
-                      <?php if (!$roundIsPartialCount): ?>
-                        <div class="col-4 order-2 col-lg-2 order-lg-3 px-0 text-right mb-1 mb-md-0">
-                          <div class="font-weight-bold">
-                            <?= number_format($candidate['voix_pct'] ?? 0, 2, ',', ' ') ?>%
-                          </div>
-                          <small class="text-muted">
-                            <?= formatNumber($candidate['voix'] ?? 0) ?> vote<?= ($candidate['voix'] ?? 0) > 1 ? 's' : '' ?>
-                          </small>
+                      <div class="col-4 order-2 col-lg-2 order-lg-3 px-0 text-right mb-1 mb-md-0">
+                        <div class="font-weight-bold">
+                          <?= number_format($candidate['voix_pct'] ?? 0, 2, ',', ' ') ?>%
                         </div>
+                        <small class="text-muted">
+                          <?= formatNumber($candidate['voix'] ?? 0) ?> vote<?= ($candidate['voix'] ?? 0) > 1 ? 's' : '' ?>
+                        </small>
+                      </div>
 
-                        <div class="col-12 order-3 col-lg-4 px-0 order-lg-2 ml-lg-0 px-lg-5 align-self-lg-center">
-                          <div class="progress" style="height: 8px; background-color: #e9ecef">
-                            <div
-                              class="progress-bar bg-primary"
-                              role="progressbar"
-                              style="width: <?= number_format($score_pct, 2, '.', '') ?>%;"
-                              aria-valuenow="<?= number_format($score_pct, 2, '.', '') ?>"
-                              aria-valuemin="0"
-                              aria-valuemax="100"></div>
-                          </div>
+                      <div class="col-12 order-3 col-lg-4 px-0 order-lg-2 ml-lg-0 px-lg-5 align-self-lg-center">
+                        <div class="progress" style="height: 8px; background-color: #e9ecef">
+                          <div
+                            class="progress-bar bg-primary"
+                            role="progressbar"
+                            style="width: <?= number_format($score_pct, 2, '.', '') ?>%;"
+                            aria-valuenow="<?= number_format($score_pct, 2, '.', '') ?>"
+                            aria-valuemin="0"
+                            aria-valuemax="100"></div>
                         </div>
-                      <?php endif; ?>
+                      </div>
                     </div>
                   <?php endforeach; ?>
                 <?php elseif ($roundDisplayMode === 'listes' && !empty($roundListes)): ?>
