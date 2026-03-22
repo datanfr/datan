@@ -91,6 +91,9 @@
       <?php if ($hasMunicipalesRoundData): ?>
         <?php
           $summaryRound = $municipalesRounds['t1'] ?? reset($municipalesRounds);
+          if (!empty($municipalesRounds['t2']) && ($municipalesRounds['t2']['display_mode'] ?? '') === 'results' && !empty($municipalesRounds['t2']['results'])) {
+            $summaryRound = $municipalesRounds['t2'];
+          }
           $summaryRoundKey = $summaryRound['key'] ?? '';
           $summaryResults = $summaryRound['results'] ?? array();
           $summaryInfos = $summaryRound['infos'] ?? array();
@@ -284,6 +287,8 @@
                               <?= trim(($candidate['prenom'] ?? '') . ' ' . ($candidate['nom'] ?? '')) ?>
                               <?php if ($roundKey === 't1' && ($roundInfos['pourvu'] ?? null) === 'T1' && !empty($candidate['seats'])): ?>
                                 <span class="badge badge-primary ml-1"><?= (int) $candidate['seats'] ?> sièges</span>
+                                <?php elseif ($roundKey === 't2' && !empty($candidate['seats'])): ?>
+                                  <span class="badge badge-primary ml-1"><?= (int) $candidate['seats'] ?> sièges</span>
                                 <?php elseif ($roundKey === 't1' && ($roundInfos['pourvu'] ?? null) !== 'T1' && $candidateSituation !== null): ?>
                                   <?php if ($candidateSituation['situation'] === 'maintien'): ?>
                                     <span class="badge badge-success ml-1">Maintien</span>
