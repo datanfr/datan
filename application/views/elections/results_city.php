@@ -22,6 +22,10 @@
         }
         $municipalesDefaultRound = $municipales_ministry_default_round ?? 't1';
         $showMunicipalesRoundToggle = !empty($municipales_ministry_show_round_toggle);
+        $hasSecondRoundOfficialResults =
+          !empty($municipalesRounds['t2']) &&
+          (($municipalesRounds['t2']['display_mode'] ?? '') === 'results') &&
+          !empty($municipalesRounds['t2']['results']);
         $listSituations = isset($municipales_list_situations) && is_array($municipales_list_situations)
           ? $municipales_list_situations
           : array();
@@ -158,15 +162,15 @@
             </div>
           <?php endif; ?>
         <?php endif; ?>
-        <?php if (!empty($listSituations)): ?>
-          <div class="card border py-1 mt-4 mb-4">
+        <?php if (!empty($listSituations) && !$hasSecondRoundOfficialResults): ?>
+          <div class="card border py-1 mt-4">
             <div class="card-body">
               <div class="h5 text-info mb-3 font-weight-bold">La situation des listes entre les deux tours</div>
               <table class="table table-sm table-hover table-striped mb-0">
                   <thead class="thead-light">
                       <tr>
                           <th>Liste</th>
-                          <th class="text-right">Score</th>
+                          <th class="text-center">Score 1<sup>er</sup> tour</th>
                           <th class="text-center">Situation</th>
                       </tr>
                   </thead>
@@ -187,7 +191,7 @@
                               <div class="<?= !empty($sit['is_fusion_child']) ? 'pl-4' : '' ?>"><small class="text-muted"><?= $sit['nuance'] ?></small></div>
                             <?php endif; ?>
                           </td>
-                          <td class="text-right"><?= number_format($sit['voix_pct'], 1, ',', ' ') ?>%</td>
+                          <td class="text-center"><?= number_format($sit['voix_pct'], 1, ',', ' ') ?>%</td>
                           <td class="text-center">
                               <?php if ($sit['situation'] === 'maintien'): ?>
                                   <span class="badge badge-success">Maintien</span>
@@ -206,7 +210,7 @@
         <?php endif; ?>
 
         <?php if ($showMunicipalesRoundToggle): ?>
-          <div class="previous-election-round-switch" data-municipales-switch="true">
+          <div class="previous-election-round-switch mt-4" data-municipales-switch="true">
             <?php foreach ($municipalesRounds as $round): ?>
               <button
                 type="button"

@@ -43,21 +43,6 @@
       <div class="mt-3 mt-lg-0">
         <input type="text" id="quicksearch" placeholder="Recherchez un député..." />
       </div>
-      <!-- Filters state -->
-      <div class="filters stateChange mt-md-5 d-none d-lg-block">
-        <input class="radio-btn" name="state" id="radio-100" type="radio" checked="" value="*">
-        <label for="radio-100" class="radio-label d-flex align-items-center">
-          <span class="d-flex align-items-center"><b>Tous les députés</b></span>
-        </label>
-        <input class="radio-btn" name="state" id="radio-101" type="radio" value=".elected">
-        <label for="radio-101" class="radio-label d-flex align-items-center">
-          <span class="d-flex align-items-center">Élu</span>
-        </label>
-        <input class="radio-btn" name="state" id="radio-102" type="radio" value=".lost">
-        <label for="radio-102" class="radio-label d-flex align-items-center">
-          <span class="d-flex align-items-center">Éliminé</span>
-        </label>
-      </div>
     </div>
   </div>
   <div class="col-lg-9 col-md-12">
