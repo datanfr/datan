@@ -305,10 +305,7 @@
         $secondRoundInfos = $this->elections_model->get_infos_city_municipales_ministry($insee, '2026_muni_t2');
         $secondRoundListes = $this->elections_model->get_municipales_listes('2026_muni_t2', $insee);
         $secondRoundListes = $this->elections_model->get_nuances_edited($secondRoundListes);
-        $hasSecondRoundOfficialResults =
-          !empty($secondRoundResults['results']) &&
-          isset($secondRoundInfos['pct_saisis']) &&
-          (float) $secondRoundInfos['pct_saisis'] === 100.0;
+        $hasSecondRoundResults = !empty($secondRoundResults['results']);
 
         $secondRoundLeaders = array();
         foreach ($secondRoundListes as $liste) {
@@ -357,7 +354,7 @@
         $data['municipales_ministry_rounds']['t2'] = array(
           'key' => 't2',
           'title' => 'Second tour',
-          'display_mode' => $hasSecondRoundOfficialResults ? 'results' : 'listes',
+          'display_mode' => $hasSecondRoundResults ? 'results' : 'listes',
           'election_id' => $secondRoundResults['id_election'] ?? '2026_muni_t2',
           'results' => $secondRoundResults['results'] ?? array(),
           'infos' => $secondRoundInfos,
