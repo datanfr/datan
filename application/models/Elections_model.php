@@ -639,7 +639,7 @@
     }
 
     public function get_infos_city_municipales_ministry($city, $id_election){
-      $this->db->select('code_commune, inscrits, abstentions, votants, blancs, nuls, exprimes');
+      $this->db->select('code_commune, inscrits, abstentions, votants, blancs, nuls, exprimes, pct_saisis, pourvu');
       $this->db->where('id_election', $id_election);
       $this->db->where('code_commune', $city);
 
@@ -655,6 +655,7 @@
       $result['blancs'] = isset($result['blancs']) ? (int) $result['blancs'] : 0;
       $result['nuls'] = isset($result['nuls']) ? (int) $result['nuls'] : 0;
       $result['exprimes'] = isset($result['exprimes']) ? (int) $result['exprimes'] : 0;
+      $result['pct_saisis'] = isset($result['pct_saisis']) ? (float) $result['pct_saisis'] : null;
       $result['blancs_nuls'] = $result['blancs'] + $result['nuls'];
       $result['abstention_pct'] = $result['inscrits'] > 0
         ? round($result['abstentions'] / $result['inscrits'] * 100, 2)
