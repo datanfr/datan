@@ -26,6 +26,7 @@
           !empty($municipalesRounds['t2']) &&
           (($municipalesRounds['t2']['display_mode'] ?? '') === 'results') &&
           !empty($municipalesRounds['t2']['results']);
+        $hasSecondRound = isset($municipalesRounds['t2']);
         $listSituations = isset($municipales_list_situations) && is_array($municipales_list_situations)
           ? $municipales_list_situations
           : array();
@@ -92,6 +93,11 @@
           }
         }
       ?>
+      <?php if ($hasSecondRound && !$hasSecondRoundOfficialResults): ?>
+        <div class="alert alert-primary mt-4">
+          Les résultats seront disponibles dès que possible pour la ville de <?= $ville['commune_nom'] ?> à partir de 20h.
+        </div>
+      <?php endif; ?>
       <?php if ($hasMunicipalesRoundData): ?>
         <?php
           $summaryRound = $municipalesRounds['t1'] ?? reset($municipalesRounds);
