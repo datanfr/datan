@@ -92,7 +92,7 @@
       $data['municipalesResultsCitiesCount'] = 0;
 
       if ($data['election']['slug'] === 'municipales-2026') {
-        $data['municipalesResultsCitiesCount'] = $this->elections_model->count_results_cities_ministry('2026_muni_t1');
+        $data['municipalesResultsCitiesCount'] = $this->elections_model->count_results_cities_ministry('2026_muni_t2');
       }
 
       // Election results 
@@ -301,8 +301,11 @@
       $t1Pourvu = ($data['municipales_ministry_rounds']['t1']['infos']['pourvu'] ?? null) === 'T1';
 
       if (!$t1Pourvu) {
+        $secondRoundResults = $this->elections_model->get_results_city_municipales_ministry($insee, '2026_muni_t2');
+        $secondRoundInfos = $this->elections_model->get_infos_city_municipales_ministry($insee, '2026_muni_t2');
         $secondRoundListes = $this->elections_model->get_municipales_listes('2026_muni_t2', $insee);
         $secondRoundListes = $this->elections_model->get_nuances_edited($secondRoundListes);
+        $hasSecondRoundOfficialResults = !empty($secondRoundResults['results']);
 
         $secondRoundLeaders = array();
         foreach ($secondRoundListes as $liste) {
@@ -351,10 +354,10 @@
         $data['municipales_ministry_rounds']['t2'] = array(
           'key' => 't2',
           'title' => 'Second tour',
-          'display_mode' => 'listes',
-          'election_id' => '2026_muni_t2',
-          'results' => array(),
-          'infos' => array(),
+          'display_mode' => $hasSecondRoundOfficialResults ? 'results' : 'listes',
+          'election_id' => $secondRoundResults['id_election'] ?? '2026_muni_t2',
+          'results' => $secondRoundResults['results'] ?? array(),
+          'infos' => $secondRoundInfos,
           'listes' => $secondRoundListes,
           'qualified_leaders_text' => '',
         );
