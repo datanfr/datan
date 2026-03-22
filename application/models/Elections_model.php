@@ -688,21 +688,21 @@
     }
 
     public function count_results_cities_ministry($id_election, $onlyFullyCounted = FALSE){
-      $this->db->select('COUNT(DISTINCT code_commune) AS total', FALSE);
-      $this->db->where('id_election', $id_election);
-      $this->db->where('code_commune <>', '');
-      $this->db->where('code_commune IS NOT NULL', NULL, FALSE);
+      $this->db->select('COUNT(DISTINCT e.code_commune) AS total', FALSE);
+      $this->db->where('e.id_election', $id_election);
+      $this->db->where('e.code_commune <>', '');
+      $this->db->where('e.code_commune IS NOT NULL', NULL, FALSE);
 
       if ($onlyFullyCounted) {
         $this->db->join(
           'elect_results_cities_ministry_infos i',
-          'i.id_election = elect_results_cities_ministry.id_election AND i.code_commune = elect_results_cities_ministry.code_commune',
+          'i.id_election = e.id_election AND i.code_commune = e.code_commune',
           'inner'
         );
         $this->db->where('i.pct_saisis', 100);
       }
 
-      $result = $this->db->get('elect_results_cities_ministry')->row_array();
+      $result = $this->db->get('elect_results_cities_ministry e')->row_array();
 
       return isset($result['total']) ? (int) $result['total'] : 0;
     }
