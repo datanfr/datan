@@ -92,7 +92,7 @@
       $data['municipalesResultsCitiesCount'] = 0;
 
       if ($data['election']['slug'] === 'municipales-2026') {
-        $data['municipalesResultsCitiesCount'] = $this->elections_model->count_results_cities_ministry('2026_muni_t1');
+        $data['municipalesResultsCitiesCount'] = $this->elections_model->count_results_cities_ministry('2026_muni_t2');
       }
 
       // Election results 
