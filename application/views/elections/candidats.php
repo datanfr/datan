@@ -14,7 +14,11 @@
         </p>
         <?php if($election['slug'] == 'municipales-2026'): ?>
           <div class="alert alert-primary mt-4" role="alert">
-            Second tour : résultats disponibles sur Datan pour <b><?= number_format((int) $municipalesResultsCitiesCount, 0, ',', ' ') ?> communes</b>.
+            <?php if ((int) $municipalesResultsCitiesCount === 0): ?>
+              Second tour : Les résultats seront disponibles dès que possible à partir de 20h.
+            <?php else: ?>
+              Second tour : résultats disponibles sur Datan pour <b><?= number_format((int) $municipalesResultsCitiesCount, 0, ',', ' ') ?> communes</b>.
+            <?php endif; ?>
           </div>
         <?php endif; ?>
         <div class="mt-5 infosGeneral">
