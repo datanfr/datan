@@ -28,7 +28,6 @@ class Votes extends CI_Controller
         parent::__construct();
         $this->load->library('api_auth');
         $this->load->model('api_key_model');
-        $this->load->model('votes_model');
 
         $result = $this->api_auth->authenticate();
         if (isset($result['error'])) {
@@ -138,7 +137,7 @@ class Votes extends CI_Controller
 
     /**
      * GET /api/votes/{id}
-     * Récupère un vote par son voteId ou voteNumero, avec les votes des députés
+     * Récupère un vote par son voteId ou voteNumero
      */
     private function get_vote($id)
     {
@@ -159,39 +158,10 @@ class Votes extends CI_Controller
             return $this->api_auth->response(array('error' => true, 'message' => 'Vote not found'), 404);
         }
 
-        // Fetch MP votes for this specific vote using the Votes model
-        $mp_votes = $this->votes_model->get_vote_deputes($vote['voteNumero'], $vote['legislature']);
-
-        // Fetch group votes for this specific vote
-        $group_votes = $this->votes_model->get_vote_groupes($vote['voteNumero'], $vote['legislature'], $vote['voteType']);
-
-        // Fetch dossier info for this specific vote
-        $dossier = $this->votes_model->get_dossier($vote['legislature'], $vote['voteNumero']);
-
-        // Merge specific dossier fields into vote data
-        if ($dossier) {
-            $dossier_fields = array('dossierId', 'titre', 'titreLoi', 'titreChemin', 'senatChemin', 'procedureParlementaireCode', 'procedureParlementaireLibelle', 'commissionFond', 'libelle', 'libelleAbrev');
-            $filtered_dossier = array_intersect_key($dossier, array_flip($dossier_fields));
-            
-            // Rename organes fields
-            if (isset($filtered_dossier['libelle'])) {
-                $filtered_dossier['commissionFondLibelle'] = $filtered_dossier['libelle'];
-                unset($filtered_dossier['libelle']);
-            }
-            if (isset($filtered_dossier['libelleAbrev'])) {
-                $filtered_dossier['commissionFondLibelleAbrev'] = $filtered_dossier['libelleAbrev'];
-                unset($filtered_dossier['libelleAbrev']);
-            }
-            
-            $vote = array_merge($vote, $filtered_dossier);
-        }
-
         return $this->api_auth->response(array(
             'success' => true,
             'fields' => $fields,
-            'data' => $vote,
-            'mp_votes' => $mp_votes,
-            'group_votes' => $group_votes,
+            'data' => $vote
         ));
     }
 
