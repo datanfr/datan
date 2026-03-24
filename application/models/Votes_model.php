@@ -188,16 +188,6 @@
       return $this->db->query($sql, array($legislature, $num))->row_array();
     }
 
-    public function get_dossier($legislature, $num){
-      $this->db->select('d.*, o.*');
-      $this->db->from('dossiers_votes dv');
-      $this->db->join('dossiers d', 'd.dossierId = dv.dossierId', 'left');
-      $this->db->join('organes o', 'o.uid = d.commissionFond', 'left');
-      $this->db->where('dv.legislature', $legislature);
-      $this->db->where('dv.voteNumero', $num);
-      return $this->db->get()->row_array();
-    }
-
     public function get_individual_vote_edited($x){
       //print_r($x);
       if ($x['typeMajorite'] == "majorité absolue des suffrages exprimés") {
