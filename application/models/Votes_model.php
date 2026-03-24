@@ -681,48 +681,6 @@
       return $this->db->get_where('dossiers_acteurs da', $where)->result_array();
     }
 
-    public function request_vote_datan(){
-      $email = $this->input->post('email');
-      $email = empty($email) ? NULL : $email;
-      $legislature = $this->input->post('legislature');
-      $voteNumero = $this->input->post('voteNumero');
-      $newsletter = $this->input->post('newsletter');
-      $captcha = $this->input->post('captcha');
-
-      // Check captcha
-      if ($captcha !== $this->session->userdata('captchaCode')) {
-        return FALSE;
-      } else {
-        // Newsletter
-        if ($newsletter && $email != NULL) {
-          $this->newsletter_model->create_newsletter();
-        }
-
-        // Add data in table 'votes_datan_requested'
-        $data = array(
-          'legislature' => $legislature,
-          'vote' => $voteNumero,
-          'email' => $email
-        );
-        return $this->db->insert('votes_datan_requested', $data);
-      }
-    }
-
-    public function get_requested_votes($limit = NULL){
-      $sql = 'SELECT vr.legislature, vr.vote, COUNT(*) as n
-        FROM votes_datan_requested vr
-        LEFT JOIN votes_datan vd ON vr.vote = vd.voteNumero AND vr.legislature = vd.legislature
-        WHERE vd.voteNumero IS NULL
-        GROUP BY vr.legislature, vr.vote
-        ORDER BY COUNT(*) DESC
-      ';
-      if ($limit){
-        $sql .= ' LIMIT ' . $this->db->escape_like_str($limit);
-      }
-
-      return $this->db->query($sql)->result_array();
-    }
-
     public function get_explication($mpId, $legislature, $voteNumero, $state = NULL){
       $where = array(
         'e.mpId' => $mpId,
