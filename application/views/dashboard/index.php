@@ -151,35 +151,6 @@
           <div class="col-lg-6">
             <div class="card">
               <div class="card-header">
-                <h4 class="m-0 font-weight-bold">Ils souhaitent voir ces votes décryptés</h4>
-              </div>
-              <div class="card-body">
-                  <table class="table">
-                    <thead>
-                      <tr>
-                        <th>Legislature</th>
-                        <th>Vote n°</th>
-                        <th>Nombre</th>
-                        <th></th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <?php foreach ($votes_requested as $vote): ?>
-                        <tr>
-                          <td><?= $vote['legislature'] ?></td>
-                          <td><?= $vote['vote'] ?></td>
-                          <td><?= $vote['n'] ?></td>
-                          <td><a href="<?= base_url() ?>votes/legislature-<?= $vote['legislature'] ?>/vote_<?= $vote['vote'] ?>" class="btn btn-primary">Voir</a></td>
-                        </tr>
-                      <?php endforeach; ?>
-                    </tbody>
-                  </table>
-              </div>
-            </div>
-          </div>
-          <div class="col-lg-12">
-            <div class="card">
-              <div class="card-header">
                 <h4 class="m-0 font-weight-bold">Dernières explications de vote</h4>
               </div>
               <div class="card-body">
