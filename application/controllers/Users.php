@@ -265,7 +265,7 @@
             }
 
             // Test password
-            if (password_verify($password, $user->password)) {
+            if ($user && password_verify($password, $user->password)) {
               // Create session
               $user_data = array(
                 'user_id' => $user->id,
