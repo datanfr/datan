@@ -12,9 +12,12 @@ class Auth_Controller extends CI_Controller {
         parent::__construct();
         $this->load->library('session');
 
-        // Re-enable CSRF for auth pages (was disabled globally in config for LSCache compatibility)
-        // This makes form_open() inject the hidden CSRF field, and verifies POST submissions
+        // Re-enable CSRF for auth pages (was disabled globally in config for LSCache compatibility).
+        // Because csrf_protection was FALSE when CI_Security was constructed, token names
+        // and hash were never initialised. csrf_init() (in MY_Security) does that setup.
         $this->config->set_item('csrf_protection', TRUE);
+        $this->security->csrf_init();
+
         if ($this->input->method() === 'post') {
             $this->security->csrf_verify();
         }
