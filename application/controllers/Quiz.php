@@ -84,9 +84,6 @@
             $deputes[$vote['mpId']]['contre'] = 0;
             $deputes[$vote['mpId']]['abstention'] = 0;
           }
-          if ($vote['nameLast'] == 'Ferrand'){
-            echo '<pre>', var_dump($vote), '</pre>';
-          }
           $deputes[$vote['mpId']]['totalVote'] += 1;
           $deputes[$vote['mpId']]['pour'] += $vote['vote'] == "1" ? 1 :0;
           $deputes[$vote['mpId']]['contre'] += $vote['vote'] == "-1" ? 1 :0;
@@ -109,7 +106,6 @@
       usort($deputes, function($a, $b){
         return $a > $b;
       });
-      echo '<pre>', var_dump($deputes), '</pre>';die('');
       // Breadcrumb
       $data['breadcrumb'] = array(
         array(
