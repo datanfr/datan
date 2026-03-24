@@ -121,6 +121,35 @@
                 <div class="card-body">
                     <p>Utilisez le header <code>Authorization: Bearer &lt;api_key&gt;</code> pour authentifier vos requêtes.</p>
 
+                    <h6 class="mt-4">Tables SQL autorisées - Lecture seule</h6>
+                    <table class="table table-sm">
+                        <thead>
+                            <tr>
+                                <th>Méthode</th>
+                                <th>URL</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><span class="badge badge-primary">GET</span></td>
+                                <td><code>/api/tables</code></td>
+                                <td>Liste les tables SQL autorisées</td>
+                            </tr>
+                            <tr>
+                                <td><span class="badge badge-primary">GET</span></td>
+                                <td><code>/api/tables/{table}</code></td>
+                                <td>Détail d'une table autorisée avec ses champs et ses données</td>
+                            </tr>votes_datan_requested
+                        </tbody>
+                    </table>
+                    <p class="small text-muted mb-0">
+                        <strong>Tables autorisées :</strong> amendements, deputes_last, dossiers, dossiers_votes, organes, votes, votes_amendments, votes_datan, votes_groupes, votes_info, votes_scores
+                    </p>
+                    <p class="small text-muted">
+                        <strong>Paramètres :</strong> page, per_page (max 500), fields, sort, order
+                    </p>
+
                     <h6 class="mt-4">Votes bruts (votes_info) - Lecture seule</h6>
                     <table class="table table-sm">
                         <thead>

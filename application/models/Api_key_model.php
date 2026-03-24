@@ -14,6 +14,13 @@ class Api_key_model extends CI_Model
     public function get_available_endpoints()
     {
         return array(
+            // Tables SQL autorisees - Lecture seule
+            '/api/tables' => array(
+                'GET' => 'Lister les tables SQL autorisees'
+            ),
+            '/api/tables/:table' => array(
+                'GET' => 'Lire une table SQL autorisee'
+            ),
             // Votes bruts (votes_info)
             '/api/votes' => array(
                 'GET' => 'Lister les votes (votes_info)'

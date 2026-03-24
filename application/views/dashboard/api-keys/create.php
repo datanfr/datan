@@ -134,6 +134,16 @@
                         </thead>
                         <tbody>
                             <tr>
+                                <td><code>/api/tables</code></td>
+                                <td><span class="badge badge-primary">GET</span></td>
+                                <td>Liste les tables SQL autorisées</td>
+                            </tr>
+                            <tr>
+                                <td><code>/api/tables/{table}</code></td>
+                                <td><span class="badge badge-primary">GET</span></td>
+                                <td>Retourne les champs et les données d'une table autorisée</td>
+                            </tr>
+                            <tr>
                                 <td><code>/api/votes</code></td>
                                 <td><span class="badge badge-primary">GET</span></td>
                                 <td>Votes bruts de l'Assemblée</td>
@@ -206,6 +216,16 @@
                         <tr><td><code>sort_code</code></td><td>Résultat (adopté, rejeté)</td></tr>
                     </table>
 
+                    <p class="mb-1"><strong>/api/tables/{table}</strong></p>
+                    <table class="table table-sm mb-3">
+                        <tr><td><code>page</code></td><td>Numéro de page (défaut: 1)</td></tr>
+                        <tr><td><code>per_page</code></td><td>Résultats par page (défaut: 50, max: 500)</td></tr>
+                        <tr><td><code>fields</code></td><td>Liste de champs à retourner</td></tr>
+                        <tr><td><code>sort</code></td><td>Champ de tri de la table</td></tr>
+                        <tr><td><code>order</code></td><td><code>ASC</code> ou <code>DESC</code></td></tr>
+                    </table>
+                    <p class="small text-muted mb-3">Tables actuellement autorisées : <code>amendements</code>, <code>deputes_last</code>, <code>dossiers</code>, <code>dossiers_votes</code>, <code>organes</code>, <code>votes</code>, <code>votes_amendments</code>, <code>votes_datan</code>, <code>votes_groupes</code>, <code>votes_info</code>, <code>votes_scores</code></p>
+
                     <p class="mb-1"><strong>/api/decrypted_votes</strong></p>
                     <table class="table table-sm mb-3">
                         <tr><td><code>legislature</code></td><td>Numéro de législature</td></tr>
@@ -224,6 +244,10 @@
                     <pre class="bg-dark text-light p-2 rounded" style="font-size: 12px;"><code># Liste des votes de la législature 17
 curl -H "Authorization: Bearer VOTRE_CLE" \
   "<?= base_url() ?>api/votes?legislature=17&per_page=10"
+
+# Lire la table votes_info
+curl -H "Authorization: Bearer VOTRE_CLE" \
+    "<?= base_url() ?>api/tables/votes_info?per_page=10&sort=voteId&order=DESC"
 
 # Votes décryptés en brouillon
 curl -H "Authorization: Bearer VOTRE_CLE" \

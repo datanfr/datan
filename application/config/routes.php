@@ -190,6 +190,10 @@ $route['parrainages-2022'] = 'parrainages/index';
 // FAQ
 $route['faq'] = 'faq/index';
 // API (secured with API key)
+// Tables SQL autorisees
+$route['api/tables'] = 'api/tables/index';
+$route['api/tables/meta'] = 'api/tables/meta';
+$route['api/tables/(:any)'] = 'api/tables/index/$1';
 // Votes bruts (votes_info)
 $route['api/votes'] = 'api/votes/index';
 $route['api/votes/meta'] = 'api/votes/meta';
