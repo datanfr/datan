@@ -12,12 +12,25 @@
       if (isset($_FILES['upload']['name'])) {
         $config['upload_path'] = './assets/imgs/posts/inside/';
         $config['allowed_types'] = 'jpg|jpeg|png|webp';
-        $config['file_name'] = uniqid('img_');
+        $config['file_name'] = bin2hex(random_bytes(16));
+        $config['max_size'] = 4096; // 4MB
 
         $this->load->library('upload', $config);
 
         if ($this->upload->do_upload('upload')) {
           $uploadData = $this->upload->data();
+
+          // Verify actual MIME type server-side
+          $finfo = new finfo(FILEINFO_MIME_TYPE);
+          $mime = $finfo->file($uploadData['full_path']);
+          $allowed_mimes = ['image/jpeg', 'image/png', 'image/webp'];
+          if (!in_array($mime, $allowed_mimes, true)) {
+            unlink($uploadData['full_path']);
+            http_response_code(400);
+            echo json_encode(['error' => 'Invalid file type.']);
+            return;
+          }
+
           $imageURL = asset_url() . 'imgs/posts/inside/' . $uploadData['file_name'];
 
           // CKEditor expects a JSON object with a `url` key

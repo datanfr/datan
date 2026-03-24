@@ -24,26 +24,26 @@
                 <?php echo form_open_multipart('admin/quizz/modify/'.$question['id']); ?>
                   <div class="form-group">
                     <label>Titre de la question</label>
-                    <input type="text" class="form-control" autocomplete="off" name="title" value="<?= $question['title'] ?>">
+                    <input type="text" class="form-control" autocomplete="off" name="title" value="<?= html_escape($question['title']) ?>">
                   </div>
                   <div class="form-group">
                     <label>N° du quizz</label>
-                    <input type="text" class="form-control" autocomplete="off" name="quizzNumero" value="<?= $question['quizz'] ?>">
+                    <input type="text" class="form-control" autocomplete="off" name="quizzNumero" value="<?= html_escape($question['quizz']) ?>">
                   </div>
                   <div class="form-group">
                     <label>N° du vote</label>
-                    <input type="text" class="form-control" autocomplete="off" name="voteNumero" value="<?= $question['voteNumero'] ?>">
+                    <input type="text" class="form-control" autocomplete="off" name="voteNumero" value="<?= html_escape($question['voteNumero']) ?>">
                   </div>
                   <div class="form-group">
                     <label>Législature</label>
-                    <input type="text" class="form-control" autocomplete="off" name="legislature" value="<?= $question['legislature'] ?>">
+                    <input type="text" class="form-control" autocomplete="off" name="legislature" value="<?= html_escape($question['legislature']) ?>">
                   </div>
                   <div class="form-group">
                     <label for="">Categorie</label>
                     <select class="form-control" name="category">
-                      <option value="<?= $question['category'] ?>" selected="selected">Selected: <?= $question['category_name'] ?></option>
+                      <option value="<?= html_escape($question['category']) ?>" selected="selected">Selected: <?= html_escape($question['category_name']) ?></option>
                       <?php foreach ($categories as $category): ?>
-                        <option value="<?php echo $category['id'] ?>"><?php echo $category['name'] ?></option>
+                        <option value="<?= html_escape($category['id']) ?>"><?= html_escape($category['name']) ?></option>
                       <?php endforeach; ?>
                     </select>
                   </div>
@@ -54,35 +54,35 @@
                   <hr>
                   <div class="form-group">
                     <label>Phrase d'explication</label>
-                    <textarea type="text" class="form-control" autocomplete="off" name="explication"><?= $question['explication'] ?></textarea>
+                    <textarea type="text" class="form-control" autocomplete="off" name="explication"><?= html_escape($question['explication']) ?></textarea>
                   </div>
                   <hr>
                   <h4 class="text-success">Arguments pour</h4>
                   <div class="form-group">
                     <label>Argument 1</label>
-                    <textarea type="text" class="form-control" autocomplete="off" name="for1"><?= $question['for1'] ?></textarea>
+                    <textarea type="text" class="form-control" autocomplete="off" name="for1"><?= html_escape($question['for1']) ?></textarea>
                   </div>
                   <div class="form-group">
                     <label>Argument 2</label>
-                    <textarea type="text" class="form-control" autocomplete="off" name="for2"><?= $question['for2'] ?></textarea>
+                    <textarea type="text" class="form-control" autocomplete="off" name="for2"><?= html_escape($question['for2']) ?></textarea>
                   </div>
                   <div class="form-group">
                     <label>Argument 3</label>
-                    <textarea type="text" class="form-control" autocomplete="off" name="for3"><?= $question['for3'] ?></textarea>
+                    <textarea type="text" class="form-control" autocomplete="off" name="for3"><?= html_escape($question['for3']) ?></textarea>
                   </div>
                   <hr>
                   <h4 class="text-danger">Arguments contre</h4>
                   <div class="form-group">
                     <label>Argument 1</label>
-                    <textarea type="text" class="form-control" autocomplete="off" name="against1"><?= $question['against1'] ?></textarea>
+                    <textarea type="text" class="form-control" autocomplete="off" name="against1"><?= html_escape($question['against1']) ?></textarea>
                   </div>
                   <div class="form-group">
                     <label>Argument 2</label>
-                    <textarea type="text" class="form-control" autocomplete="off" name="against2"><?= $question['against2'] ?></textarea>
+                    <textarea type="text" class="form-control" autocomplete="off" name="against2"><?= html_escape($question['against2']) ?></textarea>
                   </div>
                   <div class="form-group">
                     <label>Argument 3</label>
-                    <textarea type="text" class="form-control" autocomplete="off" name="against3"><?= $question['against3'] ?></textarea>
+                    <textarea type="text" class="form-control" autocomplete="off" name="against3"><?= html_escape($question['against3']) ?></textarea>
                   </div>
                   <hr>
                   <?php if ($this->session->userdata('type') == 'admin'): ?>

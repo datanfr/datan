@@ -6,7 +6,7 @@
         <?= form_open('/search', 'id="searchForm" method="GET" autocomplete="off"'); ?>
           <div class="row">
             <div class="col-lg-10">
-              <input class="form-control" id="searchInput" type="text" value="<?= $query ?>">
+              <input class="form-control" id="searchInput" type="text" value="<?= htmlspecialchars($query, ENT_QUOTES, 'UTF-8') ?>">
             </div>
             <div class="col-lg-2 d-flex justify-content-center mt-3 mt-lg-0">
               <button type="submit" class="btn btn-primary d-flex justify-content-center align-items-center">
@@ -23,7 +23,7 @@
 <div class="container pg-search py-5">
   <div class="row">
     <div class="col-lg-10 offset-lg-1">
-      <h2>Résultats : « <?= $query ?> »</h2>
+      <h2>Résultats : « <?= htmlspecialchars($query, ENT_QUOTES, 'UTF-8') ?> »</h2>
       <p class="results mb-0"><?= $count ?> résultat<?= $count > 1 ? "s" : "" ?></p>
     </div>
     <div class="col-lg-10 offset-lg-1 mt-4">
