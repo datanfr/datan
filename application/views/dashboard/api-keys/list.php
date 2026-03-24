@@ -140,7 +140,7 @@
                                 <td><span class="badge badge-primary">GET</span></td>
                                 <td><code>/api/tables/{table}</code></td>
                                 <td>Détail d'une table autorisée avec ses champs et ses données</td>
-                            </tr>votes_datan_requested
+                            </tr>
                         </tbody>
                     </table>
                     <p class="small text-muted mb-0">
