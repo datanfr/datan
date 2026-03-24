@@ -189,7 +189,6 @@ $route['newsletter'] = 'newsletter/register';
 $route['parrainages-2022'] = 'parrainages/index';
 // FAQ
 $route['faq'] = 'faq/index';
-
 // API (secured with API key)
 // Votes bruts (votes_info)
 $route['api/votes'] = 'api/votes/index';
@@ -210,6 +209,8 @@ $route['api/exposes/stats'] = 'api/exposes/stats';
 $route['api/exposes/by_vote/(:num)/(:num)'] = 'api/exposes/by_vote/$1/$2';
 $route['api/exposes/(:num)'] = 'api/exposes/index/$1';
 
+// API (public)
+$route['api/(:any)/(:any)'] = 'legacy_api/index/$1/$2';
 // LOGIN & REGISTER
 $route['login'] = 'users/login';
 $route['register/(:any)'] = 'users/register/$1';
