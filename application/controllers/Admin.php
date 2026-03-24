@@ -39,7 +39,6 @@
       $data['groupes_entrants'] = $this->deputes_model->get_groupes_entrants(5);
       $data['newsletter_total'] = $this->newsletter_model->get_number_registered("general");
       $data['newsletter_month'] = $this->newsletter_model->get_registered_month("general");
-      $data['votes_requested'] = $this->votes_model->get_requested_votes();
       $data['explications'] = $this->DashboardMP_model->get_last_explanations();
 
       // Meta

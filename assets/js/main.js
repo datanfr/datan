@@ -295,39 +295,6 @@ $('#newsletterPage').on('submit', (e) => {
 
 /*
 ##########
-VOTE DATAN REQUESTED (MODAL)
-HAS BEEN REMOVED
-##########
-
-$('#voteDatanRequestedForm').on('submit', (e) => {
-  e.preventDefault();
-  $.ajax({
-    url: get_base_url() + "/api/votes/request_vote_datan",
-    type: "POST",
-    data: $('#voteDatanRequestedForm').serialize(),
-    dataType: 'json',
-    success: function (ac) {
-      if (!ac) {
-        $('#voteDatanRequestedForm').hide();
-        $('#fail').show();
-      } else {
-        $('#voteDatanRequestedForm').hide();
-        $('#success').show();
-      }
-    },
-    error: function (err) {
-      console.log('err', err)
-      $('#voteDatanRequestedForm').hide();
-      $('#fail').show();
-    }
-  });
-  return true;
-})
-
-*/
-
-/*
-##########
 VOTE DATAN MODAL EXPLAIN OPEN BY DEFAULT
 ##########
 */
