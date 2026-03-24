@@ -7,7 +7,6 @@ class Api extends CI_Controller
       'newsletter/create_newsletter',
       'deputes/get_deputes_last',
       'votes/get_last_votes_datan',
-      'votes/request_vote_datan',
       'votes/get_vote_deputes',
       'votes/get_vote_groupes_simplified',
       'quizz/get_questions_api',
