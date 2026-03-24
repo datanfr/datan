@@ -195,37 +195,7 @@
   }
   ?>
   <body class="<?= $mentions ?>" data-spy="scroll" data-target="#navScrollspy" data-offset="90">
-    <div class="sticky-top">
-      <!-- NAVBAR IF LOGGED IN -->
-    </div>
     <!-- MAIN NAVBAR -->
-    <?php if (isset($this->session) && $this->session->userdata('logged_in')): ?>
-      <nav class="navbar navbar-expand navbar-light" id="navbar-logged-in">
-        <div class="container">
-            <ul class="navbar-nav ml-auto">
-              <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle no-decoration py-1" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                  <?= file_get_contents(base_url() . '/assets/imgs/icons/person-fill.svg') ?>
-                  <?= $this->session->userdata('username') ?>
-                </a>
-                <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink" style="z-index: 9999 !important">
-                  <a href="<?= base_url(); ?>mon-compte" class="dropdown-item no-decoration">Mon compte</a>
-                  <?php if (($this->session->userdata('type') == 'admin') || ($this->session->userdata('type') == 'writer')): ?>
-                    <a class="dropdown-item no-decoration" href="<?= base_url(); ?>admin">Dashboard</a>
-                  <?php endif; ?>
-                  <?php if ($this->password_model->is_mp()): ?>
-                    <a class="dropdown-item no-decoration" href="<?= base_url(); ?>dashboard">Dashboard</a>
-                  <?php endif; ?>
-                  <?php if (($this->session->userdata('type') == 'admin')): ?>
-                    <a class="dropdown-item no-decoration" href="<?= base_url(); ?>scripts">Scripts</a>
-                  <?php endif; ?>
-                  <a href="<?= base_url(); ?>logout" class="dropdown-item no-decoration">Déconnexion</a>
-                </div>
-              </li>
-            </ul>
-        </div>
-      </nav>
-    <?php endif; ?>
     <nav class="navbar navbar-expand-lg navbar-light sticky-top" id="navbar-datan">
       <div class="container p-0">
         <a class="navbar-brand p-0 m-0 no-decoration" href="<?= base_url(); ?>" style="text-align: center">
