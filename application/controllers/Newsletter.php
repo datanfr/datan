@@ -13,6 +13,14 @@ class Newsletter extends CI_Controller
     }
 
     public function edit($email){
+        // This endpoint modifies user subscriptions — enable session + CSRF
+        $this->load->library('session');
+        $this->config->set_item('csrf_protection', TRUE);
+        $this->security->csrf_init();
+        if ($this->input->method() === 'post') {
+            $this->security->csrf_verify();
+        }
+        $this->security->csrf_set_cookie();
 
         if (strpos($email, '@') !== false) {
           redirect('newsletter/edit/' . urlencode($email));
