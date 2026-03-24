@@ -14,7 +14,7 @@
               <p>Vous souhaitez recevoir des informations du projet <b>Datan</b> ? Découvrir les <b>derniers votes</b> à l'Assemblée nationale ? En savoir plus sur <b>l'activité de votre député</b> ?</p>
               <p>N'attendez plus, abonnez-vous à notre newsletter !</p>
             </div>
-            <?php if ($this->session->flashdata('login_failed')): ?>
+            <?php if (isset($this->session) && $this->session->flashdata('login_failed')): ?>
               <div class="alert alert-danger mb-4 text-center" role="alert">
                 <?= ($this->session->flashdata('login_failed')) ?>
               </div>
