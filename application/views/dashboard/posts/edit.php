@@ -26,10 +26,10 @@
                 <?php endif; ?>
                 <?= validation_errors();  ?>
                 <?= form_open_multipart('posts/update'); ?>
-                    <input type="hidden" name="id" value="<?= $post['id']; ?>">
+                    <input type="hidden" name="id" value="<?= html_escape($post['id']); ?>">
                   <div class="form-group">
                     <label>Title</label>
-                    <input type="text" class="form-control" name="title" placeholder="Ajouter un titre" value="<?= $post['title']; ?>">
+                    <input type="text" class="form-control" name="title" placeholder="Ajouter un titre" value="<?= html_escape($post['title']); ?>">
                   </div>
                   <div class="form-group">
                     <label>Corps du post</label>
@@ -127,7 +127,7 @@
                   <div class="form-group">
                     <label for="">Categorie</label>
                     <select class="form-control" name="category_id">
-                      <option value="<?= $post['category_id'] ?>" selected="selected">Selected: <?= $post['category_name'] ?></option>
+                      <option value="<?= html_escape($post['category_id']) ?>" selected="selected">Selected: <?= html_escape($post['category_name']) ?></option>
                       <?php foreach ($categories as $id => $category): ?>
                         <option value="<?= $id ?>"><?= $category['name'] ?></option>
                       <?php endforeach; ?>

@@ -19,7 +19,7 @@
                 <?php echo form_open_multipart('admin/faq/modify/'.$article['id']); ?>
                   <div class="form-group">
                     <label>Titre</label>
-                    <input type="text" class="form-control" autocomplete="off" name="title" value="<?= $article['title'] ?>">
+                    <input type="text" class="form-control" autocomplete="off" name="title" value="<?= html_escape($article['title']) ?>">
                   </div>
                   <div class="form-group">
                     <label>Article</label>
@@ -99,9 +99,9 @@
                   <div class="form-group">
                     <label for="">Categorie</label>
                     <select class="form-control" name="category">
-                      <option value="<?= $article['category'] ?>" selected="selected">Selected: <?= $article['category_name'] ?></option>
+                      <option value="<?= html_escape($article['category']) ?>" selected="selected">Selected: <?= html_escape($article['category_name']) ?></option>
                       <?php foreach ($categories as $category): ?>
-                        <option value="<?php echo $category['id'] ?>"><?php echo $category['name'] ?></option>
+                        <option value="<?= html_escape($category['id']) ?>"><?= html_escape($category['name']) ?></option>
                       <?php endforeach; ?>
                     </select>
                   </div>

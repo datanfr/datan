@@ -18,11 +18,11 @@
                         <legend class="fs-5 mb-3 sr-only">Période de la campagne</legend>
                         <div class="mb-3">
                             <label for="startDate" class="form-label">Date de début</label>
-                            <input type="date" class="form-control" id="startDate" name="startDate" value="<?= $campaign['start_date'] ?>" required>
+                            <input type="date" class="form-control" id="startDate" name="startDate" value="<?= html_escape($campaign['start_date']) ?>" required>
                         </div>
                         <div class="mb-3">
                             <label for="endDate" class="form-label">Date de fin</label>
-                            <input type="date" class="form-control" id="endDate" name="endDate" value="<?= $campaign['end_date'] ?>" required>
+                            <input type="date" class="form-control" id="endDate" name="endDate" value="<?= html_escape($campaign['end_date']) ?>" required>
                         </div>
                     </fieldset>
                     <fieldset class="mb-4">
@@ -57,7 +57,7 @@
                         </div>
                         <div class="mb-3">
                             <label for="page" class="form-label">Page cible (optionnel)</label>
-                            <input type="text" class="form-control" id="page" name="page" value="<?= $campaign['page'] ?>" placeholder="ex : /deputes">
+                            <input type="text" class="form-control" id="page" name="page" value="<?= html_escape($campaign['page']) ?>" placeholder="ex : /deputes">
                         </div>
                     </fieldset>
                     <button type="submit" class="btn btn-primary">Modifier la campagne</button>

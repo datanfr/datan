@@ -7,12 +7,18 @@ class Search_model extends CI_Model
 
     public function searchInAll($search, $category_max, $total_max)
     {
-
-        $limitCategory = $category_max ? 'LIMIT ' . $category_max : '';
-        $limitMax = $total_max ? 'LIMIT ' . $total_max : '';
-
         $search = urldecode($search);
-        $search = $this->db->escape_str($search);
+        $search_spaces = str_replace('-', ' ', $search);
+
+        $limitCategory = $category_max ? 'LIMIT ' . intval($category_max) : '';
+        $limitMax = $total_max ? 'LIMIT ' . intval($total_max) : '';
+
+        // Escape LIKE wildcards then build LIKE patterns
+        $like_spaces = $this->db->escape_like_str($search_spaces) . '%';
+        $like_raw = $this->db->escape_like_str($search) . '%';
+
+        // Escape for MATCH...AGAINST boolean mode: strip special boolean chars
+        $match_safe = preg_replace('/[+\-><()~*\"@]/', ' ', $search);
 
         $sql = "SELECT `source`, `title`, `title_search`, `description`, `url` FROM (
           (
@@ -24,7 +30,7 @@ class Search_model extends CI_Model
               CONCAT('deputes/', d.dptSlug, '/depute_', d.nameUrl) as url
           FROM deputes_last d
           WHERE d.legislature >= 14
-          AND (CONCAT(REPLACE(d.nameFirst, '-', ' '), ' ', REPLACE(d.nameLast, '-', ' ')) LIKE '" . str_replace('-', ' ', $search) . "%' OR CONCAT(REPLACE(d.nameLast, '-', ' '), ' ', REPLACE(d.nameFirst, '-', ' ')) LIKE '" . str_replace('-', ' ', $search) . "%')
+          AND (CONCAT(REPLACE(d.nameFirst, '-', ' '), ' ', REPLACE(d.nameLast, '-', ' ')) LIKE ? OR CONCAT(REPLACE(d.nameLast, '-', ' '), ' ', REPLACE(d.nameFirst, '-', ' ')) LIKE ?)
           " . $limitCategory . "
         )
 
@@ -38,10 +44,9 @@ class Search_model extends CI_Model
             CONCAT('Législature ', o.legislature) AS description,
             CONCAT('groupes/legislature-', o.legislature, '/', LOWER(o.libelleAbrev)) AS url
           FROM organes o
-          WHERE o.coteType = 'GP' AND (MATCH(o.libelle) AGAINST('*" . $search . "*' IN BOOLEAN MODE) OR o.libelleAbrev LIKE '" . $search . "%') AND o.legislature >= 14
+          WHERE o.coteType = 'GP' AND (MATCH(o.libelle) AGAINST(? IN BOOLEAN MODE) OR o.libelleAbrev LIKE ?) AND o.legislature >= 14
           ORDER BY o.dateDebut DESC
           " . $limitCategory . "
-          /* require: ALTER TABLE `organes` ADD FULLTEXT `idx_search` (`libelle`); */
         )
 
         UNION ALL
@@ -56,9 +61,9 @@ class Search_model extends CI_Model
           FROM circos c
           LEFT JOIN departement d ON c.dpt = d.departement_code
           LEFT JOIN cities cities ON c.insee = cities.code_insee
-          WHERE REPLACE(c.commune_nom, '-', ' ') LIKE '". str_replace('-', ' ', $search) . "%'
+          WHERE REPLACE(c.commune_nom, '-', ' ') LIKE ?
           GROUP BY c.commune_slug, c.dpt
-          ORDER BY LENGTH(c.commune_nom) - LENGTH('" . $search . "'), cities.population DESC
+          ORDER BY LENGTH(c.commune_nom) - LENGTH(?), cities.population DESC
           " . $limitCategory . "
         )
 
@@ -72,7 +77,7 @@ class Search_model extends CI_Model
             '' AS description,
             CONCAT('deputes/', d.slug) as url
           FROM departement d
-          WHERE (REPLACE(d.departement_nom, '-', ' ') LIKE '". str_replace('-', ' ', $search) . "%' OR d.departement_code LIKE '" . $search . "%')
+          WHERE (REPLACE(d.departement_nom, '-', ' ') LIKE ? OR d.departement_code LIKE ?)
           ORDER BY d.departement_nom ASC
           " . $limitCategory . "
         )
@@ -87,11 +92,10 @@ class Search_model extends CI_Model
             vd.description AS description,
             CONCAT('votes/legislature-', vd.legislature, '/vote_', vd.voteNumero) as url
           FROM votes_datan vd
-          WHERE MATCH(vd.title, vd.description) AGAINST('" . $search . "')
-          ORDER BY MATCH(vd.title, vd.description) AGAINST('*" . $search . "*' IN BOOLEAN MODE) DESC
+          WHERE MATCH(vd.title, vd.description) AGAINST(? IN BOOLEAN MODE)
+          ORDER BY MATCH(vd.title, vd.description) AGAINST(? IN BOOLEAN MODE) DESC
           " . $limitCategory . "
         )
-        /* require: ALTER TABLE `votes_datan` ADD FULLTEXT `idx_search` (`title`, `description`); */
 
         UNION ALL
 
@@ -103,17 +107,31 @@ class Search_model extends CI_Model
             body AS description,
             CONCAT('blog/rapports/', slug) as url
           FROM posts
-          WHERE MATCH(posts.title, posts.body) AGAINST('*" . $search . "*' IN BOOLEAN MODE)
-          ORDER BY MATCH(posts.title, posts.body) AGAINST('*" . $search . "*' IN BOOLEAN MODE) DESC
+          WHERE MATCH(posts.title, posts.body) AGAINST(? IN BOOLEAN MODE)
+          ORDER BY MATCH(posts.title, posts.body) AGAINST(? IN BOOLEAN MODE) DESC
           " . $limitCategory . "
-          /* require: ALTER TABLE `posts` ADD FULLTEXT `idx_search` (`title`, `body`); */
         )
 
       ) AS combined_results
-      " . $limitMax. "
+      " . $limitMax . "
     ";
 
-        $data = $this->db->query($sql)->result_array();
+        $bindings = array(
+            $like_spaces,       // depute LIKE 1
+            $like_spaces,       // depute LIKE 2
+            $match_safe,        // groupe MATCH
+            $like_raw,          // groupe LIKE
+            $like_spaces,       // ville LIKE
+            $search,            // ville ORDER BY LENGTH
+            $like_spaces,       // dpt LIKE nom
+            $like_raw,          // dpt LIKE code
+            $match_safe,        // vote MATCH WHERE
+            $match_safe,        // vote MATCH ORDER
+            $match_safe,        // blog MATCH WHERE
+            $match_safe,        // blog MATCH ORDER
+        );
+
+        $data = $this->db->query($sql, $bindings)->result_array();
         return $data;
     }
 
