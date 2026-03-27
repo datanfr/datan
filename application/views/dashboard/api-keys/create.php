@@ -189,7 +189,7 @@
                     <h6 class="font-weight-bold text-primary mt-4">Pagination</h6>
                     <table class="table table-sm">
                         <tr><td><code>page</code></td><td>Numéro de page (défaut: 1)</td></tr>
-                        <tr><td><code>per_page</code></td><td>Résultats par page (défaut: 50, max: 500)</td></tr>
+                        <tr><td><code>per_page</code></td><td>Résultats par page (défaut: 50, max: 1000)</td></tr>
                     </table>
 
                     <!-- Tri -->
@@ -219,7 +219,7 @@
                     <p class="mb-1"><strong>/api/tables/{table}</strong></p>
                     <table class="table table-sm mb-3">
                         <tr><td><code>page</code></td><td>Numéro de page (défaut: 1)</td></tr>
-                        <tr><td><code>per_page</code></td><td>Résultats par page (défaut: 50, max: 500)</td></tr>
+                        <tr><td><code>per_page</code></td><td>Résultats par page (défaut: 50, max: 1000)</td></tr>
                         <tr><td><code>fields</code></td><td>Liste de champs à retourner</td></tr>
                         <tr><td><code>sort</code></td><td>Champ de tri de la table</td></tr>
                         <tr><td><code>order</code></td><td><code>ASC</code> ou <code>DESC</code></td></tr>
