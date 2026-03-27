@@ -147,7 +147,7 @@
                         <strong>Tables autorisées :</strong> amendements, deputes_last, dossiers, dossiers_votes, organes, votes, votes_amendments, votes_datan, votes_groupes, votes_info, votes_scores
                     </p>
                     <p class="small text-muted">
-                        <strong>Paramètres :</strong> page, per_page (max 500), fields, sort, order
+                        <strong>Paramètres :</strong> page, per_page (max 1000), fields, sort, order
                     </p>
 
                     <h6 class="mt-4">Votes bruts (votes_info) - Lecture seule</h6>
@@ -173,7 +173,7 @@
                         </tbody>
                     </table>
                     <p class="small text-muted mb-0">
-                        <strong>Paramètres :</strong> page, per_page (max 500), fields, legislature, year, month, vote_type, sort_code, sort, order
+                        <strong>Paramètres :</strong> page, per_page (max 1000), fields, legislature, year, month, vote_type, sort_code, sort, order
                     </p>
                     <p class="small text-muted">
                         <strong>Champs :</strong> voteId, legislature, voteNumero, organeRef, dateScrutin, sessionREF, seanceRef, titre, sortCode, codeTypeVote, libelleTypeVote, nombreVotants, decomptePour, decompteContre, decompteAbs, decompteNv, voteType, amdt, article
@@ -217,7 +217,7 @@
                         </tbody>
                     </table>
                     <p class="small text-muted mb-0">
-                        <strong>Paramètres GET :</strong> page, per_page (max 500), fields, state (draft/published), legislature, category, sort, order
+                        <strong>Paramètres GET :</strong> page, per_page (max 1000), fields, state (draft/published), legislature, category, sort, order
                     </p>
                     <p class="small text-muted">
                         <strong>Champs :</strong> id, legislature, voteNumero, vote_id, title, slug, category, category_name, reading, reading_name, description, state, created_at, modified_at, created_by, created_by_name, modified_by, modified_by_name
@@ -321,7 +321,7 @@
                         </tbody>
                     </table>
                     <p class="small text-muted mb-0">
-                        <strong>Paramètres GET :</strong> page, per_page (max 500), fields, legislature, status (pending/done/all), sort, order
+                        <strong>Paramètres GET :</strong> page, per_page (max 1000), fields, legislature, status (pending/done/all), sort, order
                     </p>
                     <p class="small text-muted">
                         <strong>Champs :</strong> id, legislature, voteNumero, exposeOriginal, exposeSummary, exposeSummaryPublished, dateMaj

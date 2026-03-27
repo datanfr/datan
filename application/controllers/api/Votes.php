@@ -74,7 +74,7 @@ class Votes extends CI_Controller
     {
         // Pagination
         $page = max(1, (int)$this->input->get('page') ?: 1);
-        $per_page = min(500, max(1, (int)$this->input->get('per_page') ?: 50));
+        $per_page = min(1000, max(1, (int)$this->input->get('per_page') ?: 50));
         $offset = ($page - 1) * $per_page;
 
         // Sélection des champs
@@ -228,7 +228,7 @@ class Votes extends CI_Controller
             ),
             'pagination' => array(
                 'page' => 'Numéro de page (défaut: 1)',
-                'per_page' => 'Résultats par page (défaut: 50, max: 500)'
+                'per_page' => 'Résultats par page (défaut: 50, max: 1000)'
             ),
             'sorting' => array(
                 'sort' => 'Champ de tri (défaut: dateScrutin)',
