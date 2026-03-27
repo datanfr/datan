@@ -124,7 +124,13 @@
         'user' => $user
       );
       return $this->db->insert('users_mp', $data);
+    }
 
+    public function get_team_users(){
+      $this->db->select('id, name, username, type');
+      $this->db->where_in('type', array('admin', 'writer'));
+      $this->db->order_by('name', 'ASC');
+      return $this->db->get('users')->result_array();
     }
 
   }

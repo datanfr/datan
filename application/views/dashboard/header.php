@@ -369,6 +369,31 @@
                   </li>
                 </ul>
               </li>
+              <?php if ($this->password_model->is_admin()): ?>
+              <!-- Clés API -->
+              <li class="nav-item has-treeview">
+                <a href="#" class="nav-link">
+                  <p>
+                    Clés API
+                    <i class="fas fa-angle-left right"></i>
+                  </p>
+                </a>
+                <ul class="nav nav-treeview">
+                  <li class="nav-item">
+                    <a href="<?= base_url() ?>admin/api-keys" class="nav-link">
+                      <i class="far fa-circle nav-icon"></i>
+                      <p>Toutes les clés</p>
+                    </a>
+                  </li>
+                  <li class="nav-item">
+                    <a href="<?= base_url() ?>admin/api-keys/create" class="nav-link">
+                      <i class="far fa-circle nav-icon"></i>
+                      <p>Créer une clé</p>
+                    </a>
+                  </li>
+                </ul>
+              </li>
+              <?php endif; ?>
             <?php endif; ?>
             <?php if ($type == 'mp'): ?>
               <li class="nav-item">
