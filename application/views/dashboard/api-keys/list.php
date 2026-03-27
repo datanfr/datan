@@ -147,7 +147,7 @@
                         <strong>Tables autorisées :</strong> amendements, deputes_last, dossiers, dossiers_votes, organes, votes, votes_amendments, votes_datan, votes_groupes, votes_info, votes_scores
                     </p>
                     <p class="small text-muted">
-                        <strong>Paramètres :</strong> page, per_page (max 500), fields, sort, order
+                        <strong>Paramètres :</strong> fields, sort, order
                     </p>
 
                     <h6 class="mt-4">Votes bruts (votes_info) - Lecture seule</h6>
