@@ -114,7 +114,7 @@ class Tables extends CI_Controller
         }
 
         $page = max(1, (int) $this->input->get('page') ?: 1);
-        $per_page = min(10000, max(1, (int) $this->input->get('per_page') ?: 50));
+        $per_page = min(100000, max(1, (int) $this->input->get('per_page') ?: 50));
         $offset = ($page - 1) * $per_page;
 
         $sort = $this->input->get('sort');
@@ -189,7 +189,7 @@ class Tables extends CI_Controller
             ),
             'pagination' => array(
                 'page' => 'Numero de page (defaut: 1)',
-                'per_page' => 'Resultats par page (defaut: 50, max: 10000)'
+                'per_page' => 'Resultats par page (defaut: 50, max: 100000)'
             ),
             'sorting' => array(
                 'sort' => 'Champ de tri de la table',
