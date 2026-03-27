@@ -191,8 +191,6 @@
                         <tr><td><code>page</code></td><td>Numéro de page (défaut: 1)</td></tr>
                         <tr><td><code>per_page</code></td><td>Résultats par page (défaut: 50, max: 500)</td></tr>
                     </table>
-                    <p class="small text-muted mb-0">La pagination s'applique aux endpoints de votes (ex: <code>/api/votes</code>, <code>/api/non_decrypted_votes</code>, <code>/api/decrypted_votes</code>).</p>
-                    <p class="small text-warning">L'endpoint <code>/api/tables/{table}</code> n'accepte pas <code>page</code> ni <code>per_page</code>.</p>
 
                     <!-- Tri -->
                     <h6 class="font-weight-bold text-primary mt-4">Tri</h6>
@@ -220,11 +218,12 @@
 
                     <p class="mb-1"><strong>/api/tables/{table}</strong></p>
                     <table class="table table-sm mb-3">
+                        <tr><td><code>page</code></td><td>Numéro de page (défaut: 1)</td></tr>
+                        <tr><td><code>per_page</code></td><td>Résultats par page (défaut: 50, max: 500)</td></tr>
                         <tr><td><code>fields</code></td><td>Liste de champs à retourner</td></tr>
                         <tr><td><code>sort</code></td><td>Champ de tri de la table</td></tr>
                         <tr><td><code>order</code></td><td><code>ASC</code> ou <code>DESC</code></td></tr>
                     </table>
-                    <p class="small text-warning mb-3"><strong>Note :</strong> Pas de pagination sur cet endpoint (pas de <code>page</code> / <code>per_page</code>).</p>
                     <p class="small text-muted mb-3">Tables actuellement autorisées : <code>amendements</code>, <code>deputes_last</code>, <code>dossiers</code>, <code>dossiers_votes</code>, <code>organes</code>, <code>votes</code>, <code>votes_amendments</code>, <code>votes_datan</code>, <code>votes_groupes</code>, <code>votes_info</code>, <code>votes_scores</code></p>
 
                     <p class="mb-1"><strong>/api/decrypted_votes</strong></p>
@@ -248,7 +247,7 @@ curl -H "Authorization: Bearer VOTRE_CLE" \
 
 # Lire la table votes_info
 curl -H "Authorization: Bearer VOTRE_CLE" \
-    "<?= base_url() ?>api/tables/votes_info?sort=voteId&order=DESC"
+    "<?= base_url() ?>api/tables/votes_info?per_page=10&sort=voteId&order=DESC"
 
 # Votes décryptés en brouillon
 curl -H "Authorization: Bearer VOTRE_CLE" \
@@ -269,7 +268,7 @@ curl -H "Authorization: Bearer VOTRE_CLE" \
                     <p>Les réponses sont en JSON et contiennent :</p>
                     <ul>
                         <li><code>success</code> : booléen</li>
-                        <li><code>pagination</code> : infos de pagination (si l'endpoint la supporte)</li>
+                        <li><code>pagination</code> : infos de pagination</li>
                         <li><code>data</code> : les données demandées</li>
                         <li><code>error</code> / <code>message</code> : en cas d'erreur</li>
                     </ul>
