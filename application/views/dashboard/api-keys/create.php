@@ -224,7 +224,7 @@
                         <tr><td><code>sort</code></td><td>Champ de tri de la table</td></tr>
                         <tr><td><code>order</code></td><td><code>ASC</code> ou <code>DESC</code></td></tr>
                     </table>
-                    <p class="small text-muted mb-3">Tables actuellement autorisées : <code>amendements</code>, <code>deputes_last</code>, <code>dossiers</code>, <code>dossiers_votes</code>, <code>organes</code>, <code>votes</code>, <code>votes_amendments</code>, <code>votes_datan</code>, <code>votes_groupes</code>, <code>votes_info</code>, <code>votes_scores</code></p>
+                    <p class="small text-muted mb-3">Tables actuellement autorisées : <code>amendements</code>, <code>deputes_last</code>, <code>dossiers</code>, <code>dossiers_votes</code>, <code>organes</code>, <code>votes</code>, <code>votes_amendments</code>, <code>votes_datan</code>, <code>votes_groupes</code>, <code>votes_info</code>, <code>votes_scores</code>, <code>amendements_auteurs</code></p>
 
                     <p class="mb-1"><strong>/api/decrypted_votes</strong></p>
                     <table class="table table-sm mb-3">
