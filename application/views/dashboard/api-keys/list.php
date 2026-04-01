@@ -144,7 +144,7 @@
                         </tbody>
                     </table>
                     <p class="small text-muted mb-0">
-                        <strong>Tables autorisées :</strong> amendements, deputes_last, dossiers, dossiers_votes, organes, votes, votes_amendments, votes_datan, votes_groupes, votes_info, votes_scores
+                        <strong>Tables autorisées :</strong> amendements, deputes_last, dossiers, dossiers_votes, organes, votes, votes_amendments, votes_datan, votes_groupes, votes_info, votes_scores, amendements_auteurs
                     </p>
                     <p class="small text-muted">
                         <strong>Paramètres :</strong> page, per_page (max 100000), fields, sort, order
