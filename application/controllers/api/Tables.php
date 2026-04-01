@@ -25,7 +25,8 @@ class Tables extends CI_Controller
         'votes_datan',
         'votes_groupes',
         'votes_info',
-        'votes_scores'
+        'votes_scores',
+        'amendements_auteurs'
     );
 
     public function __construct()
