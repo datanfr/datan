@@ -1,5 +1,5 @@
 <?php
-  class Votes extends CI_Controller {
+  class Votes extends MY_Controller {
     public function __construct() {
       parent::__construct();
       $this->load->model('votes_model');

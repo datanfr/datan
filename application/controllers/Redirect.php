@@ -1,5 +1,5 @@
 <?php
-  class Redirect extends CI_Controller{
+  class Redirect extends MY_Controller {
 
     public function __construct() {
       parent::__construct();

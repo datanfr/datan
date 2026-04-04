@@ -1,5 +1,5 @@
 <?php
-  class Commissions extends CI_Controller{
+  class Commissions extends MY_Controller {
     public function __construct() {
       parent::__construct();
     }

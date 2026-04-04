@@ -1,5 +1,5 @@
 <?php
-  class Stats extends CI_Controller{
+  class Stats extends MY_Controller {
 
     const SOLEMN_VOTE_THRESHOLD = 30;
 

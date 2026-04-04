@@ -1,5 +1,5 @@
 <?php
-class Search extends CI_Controller
+class Search extends MY_Controller
 {
 
     public function __construct()
