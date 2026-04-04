@@ -16,3 +16,51 @@
     </div>
   </div>
 </div>
+
+<script>
+  (function () {
+      var THRESHOLD = 10;
+      var ONE_WEEK_MS = 7 * 24 * 60 * 60 * 1000;
+
+      function getCookie(name) {
+          var match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
+          return match ? decodeURIComponent(match[2]) : null;
+      }
+
+      function setCookie(name, value, ms) {
+          var expires = new Date(Date.now() + ms).toUTCString();
+          document.cookie = name + '=' + encodeURIComponent(value) + '; expires=' + expires + '; path=/';
+      }
+
+      // Track monthly pages
+      var now = new Date();
+      var currentMonth = now.getFullYear() + '-' + (now.getMonth() + 1);
+      var cookieRaw = getCookie('datan_monthly');
+      var data = cookieRaw ? JSON.parse(decodeURIComponent(cookieRaw)) : null;
+
+      if (!data || data.month !== currentMonth) {
+          data = { month: currentMonth, count: 0 };
+      }
+
+      data.count++;
+      setCookie('datan_monthly', JSON.stringify(data), 1000 * 60 * 60 * 24 * 60);
+
+      // Update footer counter
+      var el = document.getElementById('monthly-pages-visited-count');
+      if (el) el.textContent = data.count;
+
+      // Modal logic
+      if (data.count < THRESHOLD) return;
+
+      var lastShown = getCookie('datan_modal_shown');
+      if (lastShown && (Date.now() - parseInt(lastShown, 10)) < ONE_WEEK_MS) return;
+
+      setCookie('datan_modal_shown', Date.now(), ONE_WEEK_MS);
+
+      $(document).ready(function () {
+          $('#modal-page-count').text(data.count);
+          $('#donationModal').modal('show');
+      });
+
+  })();
+</script>
