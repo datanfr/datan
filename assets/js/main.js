@@ -370,3 +370,12 @@ $(window).scroll(function() {
     $('#navbar-menu').removeClass('navbar-shrink');
   }
 });
+
+/*
+##########
+Donation modal
+##########
+*/
+$(document).ready(function () {
+  $('#donationModal').modal('show'); 
+})

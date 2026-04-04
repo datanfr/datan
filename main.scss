@@ -1341,6 +1341,7 @@ input#quicksearch[type=text]{
   }
 }
 #navbar-datan {
+  background-color: $bg-colour;
   border-bottom: 0.5px solid rgb(225, 225, 225);
   position: relative;
   z-index: 9999 !important;

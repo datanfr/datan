@@ -211,6 +211,9 @@
         </div>
       </div>
     </footer>
+
+    <?php $this->load->view('partials/donation-modal'); ?>
+
     <!-- JS files -->
     <script src="<?= asset_url(); ?>js/libraries/jquery/jquery-3.5.1.min.js"></script>
     <script src="<?= asset_url(); ?>js/libraries/jquery/jquery-ui.min.js"></script>
