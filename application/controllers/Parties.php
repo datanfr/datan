@@ -1,5 +1,5 @@
 <?php
-  class Parties extends MY_Controller {
+  class Parties extends CI_Controller{
     public function __construct() {
       parent::__construct();
       $this->load->model('parties_model');

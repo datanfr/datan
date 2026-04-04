@@ -1,5 +1,5 @@
 <?php
-class Errormanager extends MY_Controller
+class Errormanager extends CI_Controller
 {
     public function error404()
     {

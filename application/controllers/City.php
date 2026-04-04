@@ -1,5 +1,5 @@
 <?php
-  class City extends MY_Controller {
+  class City extends CI_Controller {
     public function __construct() {
       parent::__construct();
       $this->load->model('departement_model');

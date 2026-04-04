@@ -1,6 +1,6 @@
 <?php
 
-class Iframe extends MY_Controller
+class Iframe extends CI_Controller
 {
   public function __construct()
   {

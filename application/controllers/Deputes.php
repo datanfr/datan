@@ -1,5 +1,5 @@
 <?php
-  class Deputes extends MY_Controller {
+  class Deputes extends CI_Controller {
     public function __construct() {
       parent::__construct();
       $this->load->model('deputes_model');

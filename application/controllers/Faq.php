@@ -1,5 +1,5 @@
 <?php
-  class Faq extends MY_Controller {
+  class Faq extends CI_Controller {
     public function __construct() {
       parent::__construct();
       $this->load->model('faq_model');

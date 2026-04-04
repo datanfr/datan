@@ -1,5 +1,5 @@
 <?php
-  class LogViewerController extends MY_Controller {
+  class LogViewerController extends CI_Controller{
 
     private $logViewer;
 

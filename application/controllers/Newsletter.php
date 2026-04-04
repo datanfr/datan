@@ -1,6 +1,6 @@
 <?php
 
-class Newsletter extends MY_Controller
+class Newsletter extends CI_Controller
 {
 
     public function __construct()
