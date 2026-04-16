@@ -53,6 +53,7 @@
       $this->db->select('o.libelleAbrev, o.libelle, e.effectif AS seats, o.couleurAssociee');
       $this->db->order_by('effectif', 'desc');
       $this->db->join('organes o', 'o.uid = e.organeRef', 'left');
+      $this->db->where('e.legislature', legislature_current());
       $groupes = $this->db->get('groupes_effectif e')->result_array();
 
       foreach ($groupes as $key => $value) {
