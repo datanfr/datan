@@ -14,3 +14,5 @@ class MY_Controller extends CI_Controller {
     }
 
 }
+
+require_once __DIR__ . '/Auth_Controller.php';

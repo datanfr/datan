@@ -1,5 +1,5 @@
 <?php
-  class Groupes extends CI_Controller{
+  class Groupes extends MY_Controller {
     public function __construct() {
       parent::__construct();
       $this->load->model('groupes_model');
