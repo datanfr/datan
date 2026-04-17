@@ -211,6 +211,10 @@
         </div>
       </div>
     </footer>
+
+    <!-- Donation model --> 
+    <?php $this->view('partials/donation-modal.php') ?>
+
     <!-- JS files -->
     <script src="<?= asset_url(); ?>js/libraries/jquery/jquery-3.5.1.min.js"></script>
     <script src="<?= asset_url(); ?>js/libraries/jquery/jquery-ui.min.js"></script>
@@ -269,6 +273,75 @@
     <script type="text/javascript">
       tarteaucitron.user.googletagmanagerId = 'GTM-K3QQNK2';
       (tarteaucitron.job = tarteaucitron.job || []).push('googletagmanager');
+    </script>
+
+    <script type="text/javascript">
+      // Declare custom Datan tracking service
+      tarteaucitron.services.datantracking = {
+          "key": "datantracking",
+          "type": "other",
+          "name": "Suivi des pages visitées",
+          "uri": "<?= base_url() ?>mentions-legales",
+          "needConsent": true,
+          "cookies": ["datan_monthly", "datan_modal_shown"],
+          "js": function () {
+              // This runs only after user accepts
+              (function () {
+                  var THRESHOLD = 1;
+                  var ONE_WEEK_MS = 7 * 24 * 60 * 60 * 1000;
+
+                  function getCookie(name) {
+                      var match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
+                      return match ? decodeURIComponent(match[2]) : null;
+                  }
+
+                  function setCookie(name, value, ms) {
+                      var expires = new Date(Date.now() + ms).toUTCString();
+                      document.cookie = name + '=' + encodeURIComponent(value) + '; expires=' + expires + '; path=/';
+                  }
+
+                  var now = new Date();
+                  var currentMonth = now.getFullYear() + '-' + (now.getMonth() + 1);
+                  var cookieRaw = getCookie('datan_monthly');
+                  var data = cookieRaw ? JSON.parse(decodeURIComponent(cookieRaw)) : null;
+
+                  if (!data || data.month !== currentMonth) {
+                      data = { month: currentMonth, count: 0 };
+                  }
+
+                  data.count++;
+                  setCookie('datan_monthly', JSON.stringify(data), 1000 * 60 * 60 * 24 * 60);
+
+                  // Update footer counter
+                  var el = document.getElementById('monthly-pages-visited-count');
+                  if (el) el.textContent = data.count;
+
+                  // Modal logic
+                  if (data.count < THRESHOLD) return;
+
+                  //var lastShown = getCookie('datan_modal_shown');
+                  //if (lastShown && (Date.now() - parseInt(lastShown, 10)) < ONE_WEEK_MS) return;
+
+                  //setCookie('datan_modal_shown', Date.now(), ONE_WEEK_MS);
+
+                  $(document).ready(function () {
+                      $('#modal-page-count').text(data.count);
+                      $('#donationModal').modal('show');
+                  });
+              })();
+          },
+          "fallback": function () {
+              // User refused — do nothing
+          }
+      };
+
+      (tarteaucitron.job = tarteaucitron.job || []).push('datantracking');
+    </script>
+
+    <script>
+      $(document).ready(function () {
+        //$('#donationModal').modal('show');
+      });
     </script>
 
     <?php if (isset($js_to_load)) : ?>
