@@ -287,8 +287,8 @@
           "js": function () {
               // This runs only after user accepts
               (function () {
-                  var THRESHOLD = 1;
-                  var ONE_WEEK_MS = 7 * 24 * 60 * 60 * 1000;
+                  var THRESHOLD = 10; // Threshold before showing the modal 
+                  var ONE_WEEK_MS = 7 * 24 * 60 * 60 * 1000; // One week in milliseconds
 
                   function getCookie(name) {
                       var match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
@@ -300,29 +300,35 @@
                       document.cookie = name + '=' + encodeURIComponent(value) + '; expires=' + expires + '; path=/';
                   }
 
+                  // Get current month as a string 
                   var now = new Date();
                   var currentMonth = now.getFullYear() + '-' + (now.getMonth() + 1);
+
+                  // Read the existing tracking cookie and parses it from JSON 
                   var cookieRaw = getCookie('datan_monthly');
                   var data = cookieRaw ? JSON.parse(decodeURIComponent(cookieRaw)) : null;
 
+                  // If no cookie exists or if we are in a new month, reset the counter to 0
                   if (!data || data.month !== currentMonth) {
                       data = { month: currentMonth, count: 0 };
                   }
 
-                  data.count++;
-                  setCookie('datan_monthly', JSON.stringify(data), 1000 * 60 * 60 * 24 * 60);
+                  data.count++; // Increments the page count by 1
+
+                  setCookie('datan_monthly', JSON.stringify(data), 1000 * 60 * 60 * 24 * 60); // Save the updated count back to the cookie, and expires in two months
 
                   // Update footer counter
                   var el = document.getElementById('monthly-pages-visited-count');
                   if (el) el.textContent = data.count;
 
                   // Modal logic
-                  if (data.count < THRESHOLD) return;
 
-                  //var lastShown = getCookie('datan_modal_shown');
-                  //if (lastShown && (Date.now() - parseInt(lastShown, 10)) < ONE_WEEK_MS) return;
+                  if (data.count < THRESHOLD) return; // Stop there if the user hasn't reached the threshold : no modal.
 
-                  //setCookie('datan_modal_shown', Date.now(), ONE_WEEK_MS);
+                  var lastShown = getCookie('datan_modal_shown');
+                  if (lastShown && (Date.now() - parseInt(lastShown, 10)) < ONE_WEEK_MS) return; // If it was seen less than a week : no modal
+
+                  setCookie('datan_modal_shown', Date.now(), ONE_WEEK_MS);
 
                   $(document).ready(function () {
                       $('#modal-page-count').text(data.count);
