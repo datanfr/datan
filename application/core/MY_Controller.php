@@ -2,25 +2,17 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 /**
- * Auth_Controller
- * Base controller for pages requiring session (logged-in users, admin, etc.)
- * Re-enables CSRF protection so that public pages (which extend CI_Controller directly)
- * don't send a Set-Cookie header, allowing LSCache to cache them.
+ * MY_Controller
+ * Base controller for all public pages.
+ * Extends CI_Controller and serves as the parent for Auth_Controller.
+ * Tracking logic is handled client-side (JS) to preserve LSCache compatibility.
  */
-class Auth_Controller extends CI_Controller {
+class MY_Controller extends CI_Controller {
+
     public function __construct() {
         parent::__construct();
-        $this->load->library('session');
-
-        // Re-enable CSRF for auth pages (was disabled globally in config for LSCache compatibility).
-        // Because csrf_protection was FALSE when CI_Security was constructed, token names
-        // and hash were never initialised. csrf_init() (in MY_Security) does that setup.
-        $this->config->set_item('csrf_protection', TRUE);
-        $this->security->csrf_init();
-
-        if ($this->input->method() === 'post') {
-            $this->security->csrf_verify();
-        }
-        $this->security->csrf_set_cookie();
     }
+
 }
+
+require_once __DIR__ . '/Auth_Controller.php';

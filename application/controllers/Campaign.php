@@ -1,5 +1,5 @@
 <?php
-class Campaign extends CI_Controller
+class Campaign extends MY_Controller
 {
     public function __construct()
     {

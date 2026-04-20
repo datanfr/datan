@@ -1,5 +1,5 @@
 <?php
-  class Logs extends CI_Controller{
+  class Logs extends Auth_Controller {
     public function __construct() {
       parent::__construct();
       $this->password_model->security_only_admin();

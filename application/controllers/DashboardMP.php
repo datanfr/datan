@@ -1,5 +1,5 @@
 <?php
-  class DashboardMP extends Auth_Controller{
+  class DashboardMP extends Auth_Controller {
 
     public function __construct() {
       parent::__construct();

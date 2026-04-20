@@ -17,10 +17,24 @@
           Si vous êtes parlementaire, les données recueillies sur votre activité sont exclusivement des données publiques, issues essentiellement des sites officiels de l’Assemblée nationale, du Sénat et du Journal Officiel.
         </li>
         <li>Pour les <b>utilisateurs ayant un compte</b>, les données récoltées sont exclusivement : nom, pseudo, email et, optionnellement, le code postal de résidence.</li>
-        <li>Les <b>cookies</b> déposés dans le navigateur sont les cookies de session.</li>
       </ul>
-      <p>En application des articles 38 et suivants de la loi du 6 janvier 1978 modifiée, vous bénéficiez d’un droit d’accès, d’opposition et de rectification aux informations qui vous concernent. Si vous souhaitez exercer ce droit ou obtenir des informations vous concernant, veuillez nous envoyer un email : info[at]datan.fr</a></p>
+      <p>En application du Règlement Général sur la Protection des Données (RGPD) et de la loi Informatique et Libertés du 6 janvier 1978 modifiée, vous bénéficiez d’un droit d’accès, d’opposition et de rectification aux informations qui vous concernent. Si vous souhaitez exercer ce droit ou obtenir des informations vous concernant, veuillez nous envoyer un email : info[at]datan.fr</a></p>
       <p>Aucune information personnelle de l'utilisateur du site www.datan.fr n'est publiée à l'insu de l'utilisateur, échangée, transférée, cédée ou vendue sur un support quelconque à des tiers.</p>
+
+      <h2>Cookies</h2>
+
+      <p>Ce site utilise plusieurs types de cookies. Conformément à la réglementation en vigeur, les cookies non essentiels ne sont déposés qu'après recueil de votre consentement via notre gestionnaire de cookies.</p>
+
+      <ul>
+        <li><b>Cookies nécessaires</b> (exemptés de consentement). Ces cookies sont indispensables au bon fonctionnement du site et ne peuvent pas être désactivés. Il s'agit des cookies de session PHP et des préférences de consenement aux cookies.
+        </li>
+        <li><b>Cookies de mesure d'audience (Google)</b> (soumis à consentement). Ces cookies nous permettent de mesurer la fréquentation du site et d'améliorer son contenu.</li>
+        <li><b>Cookies fonctionnels</b> (soumis à consentement). Ces cookies mémorisent le nombre de pages visitées au cours du mois en cours, afin d'afficher un message de soutien aux visiteurs réguliers.</li>
+      </ul>
+
+      <p>Vous pouvez à tout moment modifier vos préférences de consentement en cliquant sur le lien Tarte au citron en bas de page.</p>
+
+      <p>Datan utilise également Matomo, un outil de mesure d'audience open source, hébergé sur nos propres serveurs. Notre configuration est conforme aux recommandations de la CNIL, permettant une exemption de consentement. Vous pouvez néanmoins vous opposer au suivi Matomo à tout moment en cochant la case ci-dessous : </p>
 
       <iframe
         style="border: 0; height: 200px; width: 600px;"
