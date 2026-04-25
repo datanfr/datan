@@ -1,0 +1,17 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(wmic process:*)",
+      "Bash(powershell -Command:*)",
+      "Bash(/c/Windows/System32/WindowsPowerShell/v1.0/powershell.exe -Command \"Get-Process -Id 7748 | Select-Object Name,Id,Path\")",
+      "Bash(net stop:*)",
+      "Bash(net start:*)",
+      "Bash(git mv:*)",
+      "Bash(docker info:*)",
+      "Bash(docker exec:*)",
+      "Bash(docker stats:*)",
+      "Bash(grep -r \"foreach\" /c/Users/Remi/workspace/datan/application/controllers/*.php)",
+      "Bash(grep -r \"WHERE.*OR\\\\|UNION\\\\|subquery\\\\|IN \\(\" /c/Users/Remi/workspace/datan/application/models/*.php)"
+    ]
+  }
+}
