@@ -152,6 +152,12 @@
                       <p>Créer un vote</p>
                     </a>
                   </li>
+                  <li class="nav-item">
+                    <a href="<?= base_url() ?>admin/amendements" class="nav-link">
+                      <i class="far fa-circle nav-icon"></i>
+                      <p>Amendements à décrypter</p>
+                    </a>
+                  </li>
                 </ul>
               </li>
               <!-- TABLEAUX SOCIAL MEDIA -->

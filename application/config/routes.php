@@ -52,6 +52,9 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 // ADMIN
 $route['admin'] = 'admin/index';
+$route['admin/amendements'] = 'admin/amendements';
+$route['admin/amendements/decrypt'] = 'admin/amendements_decrypt';
+$route['admin/amendements/batch-summaries'] = 'admin/amendements_batch_summaries';
 $route['admin/votes'] = 'admin/votes';
 $route['admin/elections/modifications-mps'] = 'admin/election_modifications_mps';
 $route['admin/elections/(:any)'] = 'admin/election_candidates/$1';
@@ -191,8 +194,34 @@ $route['newsletter'] = 'newsletter/register';
 $route['parrainages-2022'] = 'parrainages/index';
 // FAQ
 $route['faq'] = 'faq/index';
-// API
-$route['api/(:any)/(:any)'] = 'api/index/$1/$2';
+// API (secured with API key)
+// Tables SQL autorisees
+$route['api/tables'] = 'api/tables/index';
+$route['api/tables/meta'] = 'api/tables/meta';
+$route['api/tables/(:any)'] = 'api/tables/index/$1';
+// Votes bruts (votes_info)
+$route['api/votes'] = 'api/votes/index';
+$route['api/votes/meta'] = 'api/votes/meta';
+$route['api/votes/(:any)'] = 'api/votes/index/$1';
+// Votes décryptés (votes_datan)
+$route['api/decrypted_votes'] = 'api/decrypted_votes/index';
+$route['api/decrypted_votes/meta'] = 'api/decrypted_votes/meta';
+$route['api/decrypted_votes/(:num)'] = 'api/decrypted_votes/index/$1';
+// Votes non décryptés
+$route['api/non_decrypted_votes'] = 'api/non_decrypted_votes/index';
+$route['api/non_decrypted_votes/meta'] = 'api/non_decrypted_votes/meta';
+$route['api/non_decrypted_votes/(:any)'] = 'api/non_decrypted_votes/index/$1';
+// Résumés IA des amendements (écriture depuis PoliticAnalysis)
+$route['api/amendements_ia'] = 'api/amendements_ia/index';
+// Exposés des motifs
+$route['api/exposes'] = 'api/exposes/index';
+$route['api/exposes/meta'] = 'api/exposes/meta';
+$route['api/exposes/stats'] = 'api/exposes/stats';
+$route['api/exposes/by_vote/(:num)/(:num)'] = 'api/exposes/by_vote/$1/$2';
+$route['api/exposes/(:num)'] = 'api/exposes/index/$1';
+
+// API (public)
+$route['api/(:any)/(:any)'] = 'legacy_api/index/$1/$2';
 // LOGIN & REGISTER
 $route['login'] = 'users/login';
 $route['register/(:any)'] = 'users/register/$1';
