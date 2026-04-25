@@ -1,5 +1,5 @@
 <?php
-  class Admin extends Auth_Controller {
+  class Admin extends Auth_Controller{
 
     public function __construct() {
       parent::__construct();
@@ -962,6 +962,126 @@
 
       $this->session->set_flashdata('success', 'Clé API révoquée avec succès');
       redirect('admin/api-keys');
+    }
+
+    public function amendements()
+    {
+      $data = $this->data;
+
+      $sort      = $this->input->get('sort')      ?: 'date';
+      $direction = $this->input->get('direction') ?: 'DESC';
+
+      $data['amendements'] = $this->DashboardMP_model->get_amendements_list($sort, $direction);
+      $data['sort']        = $sort;
+      $data['direction']   = $direction;
+      $data['title']       = 'Liste des amendements';
+
+      $data['title_meta'] = 'Amendements - Dashboard | Datan';
+      $data['breadcrumb'] = array(
+        array('name' => 'Dashboard',   'url' => base_url() . 'admin',            'active' => FALSE),
+        array('name' => 'Amendements', 'url' => base_url() . 'admin/amendements', 'active' => TRUE),
+      );
+
+      $this->load->view('dashboard/header', $data);
+      $this->load->view('dashboard-mp/amendements/index', $data);
+      $this->load->view('dashboard/footer');
+    }
+
+    public function amendements_decrypt()
+    {
+      if ($this->input->method(TRUE) !== 'POST') {
+        show_404();
+      }
+
+      $legislature = (int)   $this->input->post('legislature');
+      $voteNumero  = (string)$this->input->post('voteNumero');
+
+      if (!$legislature || !$voteNumero) {
+        $this->output->set_status_header(400)->set_content_type('application/json')
+          ->set_output(json_encode(['error' => 'legislature et voteNumero sont requis']));
+        return;
+      }
+
+      $pa_url   = rtrim($_SERVER['POLITIC_ANALYSIS_URL'] ?? '' ?: '', '/');
+      $pa_token = $_SERVER['POLITIC_ANALYSIS_TOKEN'] ?? '' ?: '';
+
+      if (!$pa_url) {
+        $this->output->set_status_header(500)->set_content_type('application/json')
+          ->set_output(json_encode(['error' => 'PoliticAnalysis URL non configurée']));
+        return;
+      }
+
+      $ch = curl_init($pa_url . '/api/decrypt-by-vote');
+      curl_setopt_array($ch, array(
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_POST           => true,
+        CURLOPT_POSTFIELDS     => json_encode(['legislature' => $legislature, 'voteNumero' => $voteNumero]),
+        CURLOPT_HTTPHEADER     => array(
+          'Content-Type: application/json',
+          'Authorization: Bearer ' . $pa_token,
+        ),
+        CURLOPT_TIMEOUT        => 120,
+      ));
+
+      $response  = curl_exec($ch);
+      $http_code = (int) curl_getinfo($ch, CURLINFO_HTTP_CODE);
+      $curl_error = curl_error($ch);
+      curl_close($ch);
+
+      if (!$http_code) {
+        $this->output->set_status_header(502)->set_content_type('application/json')
+          ->set_output(json_encode(['error' => 'PoliticAnalysis injoignable : ' . $curl_error]));
+        return;
+      }
+
+      $this->output
+        ->set_status_header($http_code >= 200 && $http_code < 300 ? 200 : $http_code)
+        ->set_content_type('application/json')
+        ->set_output($response ?: json_encode(['error' => 'Réponse vide de PoliticAnalysis']));
+    }
+
+    public function amendements_batch_summaries()
+    {
+      if ($this->input->method(TRUE) !== 'POST') {
+        show_404();
+      }
+
+      $pa_url   = rtrim($_SERVER['POLITIC_ANALYSIS_URL'] ?? '' ?: '', '/');
+      $pa_token = $_SERVER['POLITIC_ANALYSIS_TOKEN'] ?? '' ?: '';
+
+      if (!$pa_url) {
+        $this->output->set_status_header(500)->set_content_type('application/json')
+          ->set_output(json_encode(['error' => 'PoliticAnalysis URL non configurée']));
+        return;
+      }
+
+      $ch = curl_init($pa_url . '/api/batch-summaries');
+      curl_setopt_array($ch, array(
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_POST           => true,
+        CURLOPT_POSTFIELDS     => '{}',
+        CURLOPT_HTTPHEADER     => array(
+          'Content-Type: application/json',
+          'Authorization: Bearer ' . $pa_token,
+        ),
+        CURLOPT_TIMEOUT        => 600,
+      ));
+
+      $response  = curl_exec($ch);
+      $http_code = (int) curl_getinfo($ch, CURLINFO_HTTP_CODE);
+      $curl_error = curl_error($ch);
+      curl_close($ch);
+
+      if (!$http_code) {
+        $this->output->set_status_header(502)->set_content_type('application/json')
+          ->set_output(json_encode(['error' => 'PoliticAnalysis injoignable : ' . $curl_error]));
+        return;
+      }
+
+      $this->output
+        ->set_status_header($http_code >= 200 && $http_code < 300 ? 200 : $http_code)
+        ->set_content_type('application/json')
+        ->set_output($response ?: json_encode(['error' => 'Réponse vide de PoliticAnalysis']));
     }
   }
 ?>

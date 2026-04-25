@@ -326,7 +326,7 @@ $config['cache_query_string'] = FALSE;
 | https://codeigniter.com/user_guide/libraries/encryption.html
 |
 */
-$config['encryption_key'] = isset($_SERVER['ENCRYPTION_KEY']) ? $_SERVER['ENCRYPTION_KEY'] : 'datan-dev-key-change-in-production';
+$config['encryption_key'] = '';
 
 /*
 |--------------------------------------------------------------------------
@@ -385,7 +385,7 @@ $config['sess_expiration'] = 7200;
 $config['sess_save_path'] = '/tmp';
 $config['sess_match_ip'] = FALSE;
 $config['sess_time_to_update'] = 300;
-$config['sess_regenerate_destroy'] = TRUE;
+$config['sess_regenerate_destroy'] = FALSE;
 
 /*
 |--------------------------------------------------------------------------
@@ -405,8 +405,8 @@ $config['sess_regenerate_destroy'] = TRUE;
 $config['cookie_prefix']	= '';
 $config['cookie_domain']	= '';
 $config['cookie_path']		= '/';
-$config['cookie_secure']	= (ENVIRONMENT === 'production');
-$config['cookie_httponly'] 	= TRUE;
+$config['cookie_secure']	= FALSE;
+$config['cookie_httponly'] 	= FALSE;
 
 /*
 |--------------------------------------------------------------------------
@@ -455,7 +455,7 @@ $config['csrf_token_name'] = 'csrf_test_name';
 $config['csrf_cookie_name'] = 'csrf_cookie_name';
 $config['csrf_expire'] = 7200;
 $config['csrf_regenerate'] = TRUE;
-$config['csrf_exclude_uris'] = array('upload/image', 'api/.*');
+$config['csrf_exclude_uris'] = array('upload/image', 'api/.*', 'admin/amendements/decrypt', 'admin/amendements/batch-summaries');
 
 /*
 |--------------------------------------------------------------------------
