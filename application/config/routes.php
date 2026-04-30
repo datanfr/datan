@@ -212,7 +212,7 @@ $route['api/non_decrypted_votes'] = 'api/non_decrypted_votes/index';
 $route['api/non_decrypted_votes/meta'] = 'api/non_decrypted_votes/meta';
 $route['api/non_decrypted_votes/(:any)'] = 'api/non_decrypted_votes/index/$1';
 // Résumés IA des amendements (écriture depuis PoliticAnalysis)
-$route['api/amendements_ia'] = 'api/amendements_ia/index';
+$route['api/amendements_ia'] = 'api_amendements_ia/index';
 // Exposés des motifs
 $route['api/exposes'] = 'api/exposes/index';
 $route['api/exposes/meta'] = 'api/exposes/meta';
