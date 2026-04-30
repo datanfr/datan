@@ -154,15 +154,19 @@ class DashboardMP_model extends CI_Model
    * Liste les votes de type amendement de la dernière législature,
    * avec résumé IA, score de simplicité et statut de décryptage.
    *
-   * @param string $sort     Colonne de tri : 'date'|'votants'|'disparite'|'simplicite'|'decrypte'
-   * @param string $direction 'ASC'|'DESC'
+   * @param string $sort       Colonne de tri : 'date'|'votants'|'disparite'|'simplicite'|'decrypte'
+   * @param string $direction  'ASC'|'DESC'
+   * @param array  $filters    ['period' => '7'|'30'|'90'|'180'|'365'|'all',
+   *                            'date_start' => 'YYYY-MM-DD',
+   *                            'date_end'   => 'YYYY-MM-DD']
    */
-  public function get_amendements_list($sort = 'date', $direction = 'DESC')
+  public function get_amendements_list($sort = 'date', $direction = 'DESC', $filters = array())
   {
     $allowed_sorts = array(
       'date'       => 'vi.dateScrutin',
       'votants'    => 'vi.nombreVotants',
       'disparite'  => 'disparite',
+      'interet'    => 'interet',
       'simplicite' => 'aia.simplicite_ia',
       'decrypte'   => 'decrypte',
     );
@@ -173,6 +177,32 @@ class DashboardMP_model extends CI_Model
     // Dernière législature disponible
     $last_leg = $this->db->query('SELECT MAX(legislature) AS leg FROM votes_info')->row_array();
     $legislature = $last_leg['leg'] ?? 17;
+
+    // Filtres date
+    $where_date = '';
+    $params     = array($legislature);
+
+    $period     = isset($filters['period'])     ? (string)$filters['period']     : 'all';
+    $date_start = isset($filters['date_start']) ? (string)$filters['date_start'] : '';
+    $date_end   = isset($filters['date_end'])   ? (string)$filters['date_end']   : '';
+
+    $is_valid_date = function ($d) {
+      return $d && preg_match('/^\d{4}-\d{2}-\d{2}$/', $d);
+    };
+
+    if ($is_valid_date($date_start) || $is_valid_date($date_end)) {
+      if ($is_valid_date($date_start)) {
+        $where_date .= ' AND vi.dateScrutin >= ?';
+        $params[]    = $date_start;
+      }
+      if ($is_valid_date($date_end)) {
+        $where_date .= ' AND vi.dateScrutin <= ?';
+        $params[]    = $date_end;
+      }
+    } elseif (in_array($period, array('7', '30', '90', '180', '365'), true)) {
+      $where_date = ' AND vi.dateScrutin >= DATE_SUB(CURDATE(), INTERVAL ? DAY)';
+      $params[]   = (int)$period;
+    }
 
     $sql = "
       SELECT
@@ -189,6 +219,14 @@ class DashboardMP_model extends CI_Model
           THEN ROUND(ABS(vi.decomptePour - vi.decompteContre) * 100 / vi.nombreVotants, 1)
           ELSE 0
         END AS disparite,
+        CASE
+          WHEN vi.nombreVotants > 0
+          THEN ROUND(
+            LEAST(vi.nombreVotants / 250, 1)
+            * (1 - ABS(vi.decomptePour - vi.decompteContre) / vi.nombreVotants)
+            * 100, 1)
+          ELSE 0
+        END AS interet,
         aia.resume_ia,
         aia.simplicite_ia,
         CASE WHEN vd.id IS NOT NULL THEN 1 ELSE 0 END AS decrypte,
@@ -202,10 +240,11 @@ class DashboardMP_model extends CI_Model
         ON vd.voteNumero = vi.voteNumero AND vd.legislature = vi.legislature
       WHERE vi.voteType IN ('amendement', 'les amen')
         AND vi.legislature = ?
+        $where_date
       ORDER BY $order_col $direction
     ";
 
-    return $this->db->query($sql, array($legislature))->result_array();
+    return $this->db->query($sql, $params)->result_array();
   }
 
 }

@@ -39,13 +39,60 @@
       <!-- Résultat batch -->
       <div id="batch-result" class="alert d-none" role="alert"></div>
 
+      <!-- Filtres -->
+      <div class="card mb-3">
+        <div class="card-body">
+          <form method="get" action="<?= base_url() ?>admin/amendements" class="form-row align-items-end">
+            <div class="form-group col-md-3 mb-md-0">
+              <label for="period" class="font-weight-bold mb-1">Période</label>
+              <select id="period" name="period" class="form-control">
+                <option value="all" <?= $period === 'all' ? 'selected' : '' ?>>Toutes les dates</option>
+                <option value="7"   <?= $period === '7'   ? 'selected' : '' ?>>7 derniers jours</option>
+                <option value="30"  <?= $period === '30'  ? 'selected' : '' ?>>30 derniers jours</option>
+                <option value="90"  <?= $period === '90'  ? 'selected' : '' ?>>90 derniers jours</option>
+                <option value="180" <?= $period === '180' ? 'selected' : '' ?>>6 derniers mois</option>
+                <option value="365" <?= $period === '365' ? 'selected' : '' ?>>1 an</option>
+              </select>
+            </div>
+            <div class="form-group col-md-3 mb-md-0">
+              <label for="date_start" class="font-weight-bold mb-1">Du</label>
+              <input type="date" id="date_start" name="date_start" class="form-control"
+                     value="<?= htmlspecialchars($date_start) ?>">
+            </div>
+            <div class="form-group col-md-3 mb-md-0">
+              <label for="date_end" class="font-weight-bold mb-1">Au</label>
+              <input type="date" id="date_end" name="date_end" class="form-control"
+                     value="<?= htmlspecialchars($date_end) ?>">
+            </div>
+            <div class="form-group col-md-3 mb-0 d-flex">
+              <input type="hidden" name="sort"      value="<?= htmlspecialchars($sort) ?>">
+              <input type="hidden" name="direction" value="<?= htmlspecialchars($direction) ?>">
+              <button type="submit" class="btn btn-primary font-weight-bold mr-2">Filtrer</button>
+              <a href="<?= base_url() ?>admin/amendements" class="btn btn-outline-secondary font-weight-bold">Réinitialiser</a>
+            </div>
+          </form>
+          <small class="text-muted d-block mt-2">
+            Les dates personnalisées (Du / Au) ont priorité sur la période sélectionnée.
+          </small>
+        </div>
+      </div>
+
       <!-- Tri -->
       <?php
         $next_dir = ($direction === 'DESC') ? 'ASC' : 'DESC';
         $arrow    = $direction === 'DESC' ? '↓' : '↑';
-        function sort_url($col, $current_sort, $current_dir) {
+        $filter_qs = http_build_query(array(
+          'period'     => $period,
+          'date_start' => $date_start,
+          'date_end'   => $date_end,
+        ));
+        function sort_url($col, $current_sort, $current_dir, $filter_qs) {
           $dir = ($current_sort === $col && $current_dir === 'DESC') ? 'ASC' : 'DESC';
-          return base_url() . 'dashboard/amendements?sort=' . $col . '&direction=' . $dir;
+          $url = base_url() . 'admin/amendements?sort=' . $col . '&direction=' . $dir;
+          if ($filter_qs) {
+            $url .= '&' . $filter_qs;
+          }
+          return $url;
         }
       ?>
 
@@ -61,22 +108,27 @@
                   </th>
                   <th class="d-none d-md-table-cell" style="max-width:320px">Résumé IA</th>
                   <th class="text-center">
-                    <a href="<?= sort_url('votants', $sort, $direction) ?>" class="text-white text-decoration-none">
+                    <a href="<?= sort_url('votants', $sort, $direction, $filter_qs) ?>" class="text-white text-decoration-none">
                       Votants<?= $sort === 'votants' ? ' ' . $arrow : '' ?>
                     </a>
                   </th>
                   <th class="text-center">
-                    <a href="<?= sort_url('disparite', $sort, $direction) ?>" class="text-white text-decoration-none" title="Différence absolue entre Pour et Contre, en % des votants">
+                    <a href="<?= sort_url('disparite', $sort, $direction, $filter_qs) ?>" class="text-white text-decoration-none" title="Différence absolue entre Pour et Contre, en % des votants">
                       Disparité<?= $sort === 'disparite' ? ' ' . $arrow : '' ?>
                     </a>
                   </th>
                   <th class="text-center">
-                    <a href="<?= sort_url('simplicite', $sort, $direction) ?>" class="text-white text-decoration-none" title="Score de simplicité de compréhension (1=très technique, 5=très simple)">
+                    <a href="<?= sort_url('interet', $sort, $direction, $filter_qs) ?>" class="text-white text-decoration-none" title="Score d'intérêt 0–100 : combine participation (saturation 250 votants) et contestation (1 - disparité). Privilégie les votes serrés et participés.">
+                      Intérêt<?= $sort === 'interet' ? ' ' . $arrow : '' ?>
+                    </a>
+                  </th>
+                  <th class="text-center">
+                    <a href="<?= sort_url('simplicite', $sort, $direction, $filter_qs) ?>" class="text-white text-decoration-none" title="Score de simplicité de compréhension (1=très technique, 5=très simple)">
                       Simplicité<?= $sort === 'simplicite' ? ' ' . $arrow : '' ?>
                     </a>
                   </th>
                   <th class="text-center">
-                    <a href="<?= sort_url('decrypte', $sort, $direction) ?>" class="text-white text-decoration-none">
+                    <a href="<?= sort_url('decrypte', $sort, $direction, $filter_qs) ?>" class="text-white text-decoration-none">
                       Décrypté<?= $sort === 'decrypte' ? ' ' . $arrow : '' ?>
                     </a>
                   </th>
@@ -86,7 +138,7 @@
               <tbody>
                 <?php if (empty($amendements)) : ?>
                   <tr>
-                    <td colspan="7" class="text-center py-4 text-muted">Aucun amendement trouvé.</td>
+                    <td colspan="8" class="text-center py-4 text-muted">Aucun amendement trouvé.</td>
                   </tr>
                 <?php else : ?>
                   <?php foreach ($amendements as $a) : ?>
@@ -122,6 +174,18 @@
                         <?php endif; ?>
                       </td>
 
+                      <!-- Intérêt -->
+                      <td class="text-center">
+                        <?php if (isset($a['interet']) && $a['nombreVotants'] > 0) :
+                          $i = (float)$a['interet'];
+                          $cls = $i >= 60 ? 'success' : ($i >= 30 ? 'warning' : ($i >= 15 ? 'info' : 'secondary'));
+                        ?>
+                          <span class="badge badge-<?= $cls ?>" title="Participation × Contestation × 100"><?= $i ?></span>
+                        <?php else : ?>
+                          <span class="text-muted">—</span>
+                        <?php endif; ?>
+                      </td>
+
                       <!-- Simplicité -->
                       <td class="text-center">
                         <?php if ($a['simplicite_ia']) :
@@ -147,14 +211,23 @@
 
                       <!-- Action -->
                       <td class="text-right" style="white-space:nowrap">
-                        <?php if (!$a['decrypte']) : ?>
+                        <?php $scrutinUid = 'VTANR5L' . $a['legislature'] . 'V' . $a['voteNumero']; ?>
+                        <?php if (!$a['resume_ia']) : ?>
                           <button
-                            class="btn btn-sm btn-primary btn-decrypt font-weight-bold"
+                            class="btn btn-sm btn-outline-primary btn-decrypt font-weight-bold mr-1"
                             data-legislature="<?= $a['legislature'] ?>"
                             data-vote="<?= htmlspecialchars($a['voteNumero']) ?>">
-                            Décrypter
+                            Résumé IA
                           </button>
-                        <?php else : ?>
+                        <?php endif; ?>
+                        <?php if (!empty($pa_public_url)) : ?>
+                          <a class="btn btn-sm btn-primary font-weight-bold"
+                             href="<?= $pa_public_url ?>/scrutins/<?= htmlspecialchars($scrutinUid) ?>/decryptage"
+                             target="_blank">
+                            Décrypter
+                          </a>
+                        <?php endif; ?>
+                        <?php if ($a['decrypte']) : ?>
                           <a class="btn btn-sm btn-outline-secondary"
                              href="<?= base_url() ?>votes/legislature-<?= $a['legislature'] ?>/vote_<?= $a['voteNumero'] ?>"
                              target="_blank">
@@ -212,11 +285,11 @@
             var score = data.simplicite_score;
             var stars = '★'.repeat(score) + '☆'.repeat(5 - score);
             var cls = score >= 4 ? 'success' : (score >= 3 ? 'warning' : 'danger');
-            var cellSimpl = row.querySelector('td:nth-child(5)');
+            var cellSimpl = row.querySelector('td:nth-child(6)');
             if (cellSimpl) cellSimpl.innerHTML = '<span class="text-' + cls + '">' + stars + '</span>';
           }
           // Badge décrypté
-          var cellDecrypte = row.querySelector('td:nth-child(6)');
+          var cellDecrypte = row.querySelector('td:nth-child(7)');
           if (cellDecrypte) cellDecrypte.innerHTML = '<span class="badge badge-secondary">Brouillon</span>';
           // Bouton
           btn.textContent = 'Décrypté ✓';
