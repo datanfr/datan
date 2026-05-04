@@ -84,6 +84,9 @@ $route['admin/campagnes/create'] = 'admin/create_campaign';
 $route['admin/campagnes/delete/(:any)'] = 'admin/delete_campaign/$1';
 $route['admin/campagnes/edit/(:any)'] = 'admin/edit_campaign/$1';
 $route['admin/campagnes/toggle'] = 'admin/toggle_campaign_active';
+$route['admin/api-keys'] = 'admin/api_keys';
+$route['admin/api-keys/create'] = 'admin/api_keys_create';
+$route['admin/api-keys/revoke/(:num)'] = 'admin/api_keys_revoke/$1';
 
 
 // MpDashboard
