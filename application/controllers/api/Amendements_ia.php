@@ -1,14 +1,12 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 
+echo "yes";
+
 /**
  * API pour les résumés IA des amendements (amendements_ia) — écriture depuis PoliticAnalysis uniquement.
- *
- * Le controller est volontairement hors du dossier controllers/api/ : CI3 résout
- * le segment "api" vers controllers/Api.php avant le sous-dossier (cf.
- * CI_Router::_validate_request), donc on ne peut pas y placer un controller utile.
  */
-class Api_amendements_ia extends CI_Controller
+class Amendements_ia extends CI_Controller
 {
     public function __construct()
     {
