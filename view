@@ -1,0 +1,1 @@
+/c/Users/Remi/workspace/datan/application/controllers/Newsletter.php:      $this->load->view('newsletter/index', $data);

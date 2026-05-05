@@ -42,6 +42,10 @@ class Api_key_model extends CI_Model
             '/api/non_decrypted_votes' => array(
                 'GET' => 'Lister les votes non décryptés'
             ),
+            // Résumés IA des amendements (écriture depuis PoliticAnalysis)
+            '/api/amendements_ia' => array(
+                'POST' => "Créer/mettre à jour un résumé IA d'amendement"
+            ),
             // Exposés des motifs
             '/api/exposes' => array(
                 'GET' => 'Lister les exposés',

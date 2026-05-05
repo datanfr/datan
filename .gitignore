@@ -19,6 +19,9 @@ application/logs/*
 #custom config
 application/config/custom_config.php
 
+#claude code
+.claude/
+
 #root folder
 node_modules
 /test

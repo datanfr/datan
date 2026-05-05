@@ -84,7 +84,6 @@ class DashboardMP_model extends CI_Model
   }
 
   public function get_vote_explained($mpId, $legislature, $voteNumero){
-    echo $voteNumero;
     $sql = 'SELECT e.id, e.voteNumero, e.legislature, e.text AS explication, vd.title AS vote_titre,
       CASE WHEN e.state = 1 THEN "publié" ELSE "brouillon" END AS state,
       CASE
@@ -149,6 +148,103 @@ class DashboardMP_model extends CI_Model
     $this->db->where('mpId', $mpId);
     $query = $this->db->get('explications_mp');
     return $query->result_array();
+  }
+
+  /**
+   * Liste les votes de type amendement de la dernière législature,
+   * avec résumé IA, score de simplicité et statut de décryptage.
+   *
+   * @param string $sort       Colonne de tri : 'date'|'votants'|'disparite'|'simplicite'|'decrypte'
+   * @param string $direction  'ASC'|'DESC'
+   * @param array  $filters    ['period' => '7'|'30'|'90'|'180'|'365'|'all',
+   *                            'date_start' => 'YYYY-MM-DD',
+   *                            'date_end'   => 'YYYY-MM-DD']
+   */
+  public function get_amendements_list($sort = 'date', $direction = 'DESC', $filters = array())
+  {
+    $allowed_sorts = array(
+      'date'       => 'vi.dateScrutin',
+      'votants'    => 'vi.nombreVotants',
+      'disparite'  => 'disparite',
+      'interet'    => 'interet',
+      'simplicite' => 'aia.simplicite_ia',
+      'decrypte'   => 'decrypte',
+    );
+
+    $order_col = isset($allowed_sorts[$sort]) ? $allowed_sorts[$sort] : 'vi.dateScrutin';
+    $direction = strtoupper($direction) === 'ASC' ? 'ASC' : 'DESC';
+
+    // Dernière législature disponible
+    $last_leg = $this->db->query('SELECT MAX(legislature) AS leg FROM votes_info')->row_array();
+    $legislature = $last_leg['leg'] ?? 17;
+
+    // Filtres date
+    $where_date = '';
+    $params     = array($legislature);
+
+    $period     = isset($filters['period'])     ? (string)$filters['period']     : 'all';
+    $date_start = isset($filters['date_start']) ? (string)$filters['date_start'] : '';
+    $date_end   = isset($filters['date_end'])   ? (string)$filters['date_end']   : '';
+
+    $is_valid_date = function ($d) {
+      return $d && preg_match('/^\d{4}-\d{2}-\d{2}$/', $d);
+    };
+
+    if ($is_valid_date($date_start) || $is_valid_date($date_end)) {
+      if ($is_valid_date($date_start)) {
+        $where_date .= ' AND vi.dateScrutin >= ?';
+        $params[]    = $date_start;
+      }
+      if ($is_valid_date($date_end)) {
+        $where_date .= ' AND vi.dateScrutin <= ?';
+        $params[]    = $date_end;
+      }
+    } elseif (in_array($period, array('7', '30', '90', '180', '365'), true)) {
+      $where_date = ' AND vi.dateScrutin >= DATE_SUB(CURDATE(), INTERVAL ? DAY)';
+      $params[]   = (int)$period;
+    }
+
+    $sql = "
+      SELECT
+        vi.voteNumero,
+        vi.legislature,
+        vi.dateScrutin,
+        date_format(vi.dateScrutin, '%d/%m/%Y') AS dateScrutinFR,
+        vi.nombreVotants,
+        vi.decomptePour AS pour,
+        vi.decompteContre AS contre,
+        vi.decompteAbs AS abstention,
+        CASE
+          WHEN vi.nombreVotants > 0
+          THEN ROUND(ABS(vi.decomptePour - vi.decompteContre) * 100 / vi.nombreVotants, 1)
+          ELSE 0
+        END AS disparite,
+        CASE
+          WHEN vi.nombreVotants > 0
+          THEN ROUND(
+            LEAST(vi.nombreVotants / 250, 1)
+            * (1 - ABS(vi.decomptePour - vi.decompteContre) / vi.nombreVotants)
+            * 100, 1)
+          ELSE 0
+        END AS interet,
+        aia.resume_ia,
+        aia.simplicite_ia,
+        CASE WHEN vd.id IS NOT NULL THEN 1 ELSE 0 END AS decrypte,
+        vd.state AS decryptage_state,
+        vd.id AS decryptage_id,
+        COALESCE(vd.title, vi.titre, vi.seanceRef) AS titre
+      FROM votes_info vi
+      LEFT JOIN amendements_ia aia
+        ON aia.voteNumero = vi.voteNumero AND aia.legislature = vi.legislature
+      LEFT JOIN votes_datan vd
+        ON vd.voteNumero = vi.voteNumero AND vd.legislature = vi.legislature
+      WHERE vi.voteType IN ('amendement', 'les amen')
+        AND vi.legislature = ?
+        $where_date
+      ORDER BY $order_col $direction
+    ";
+
+    return $this->db->query($sql, $params)->result_array();
   }
 
 }

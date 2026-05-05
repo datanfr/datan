@@ -52,6 +52,9 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 // ADMIN
 $route['admin'] = 'admin/index';
+$route['admin/amendements'] = 'admin/amendements';
+$route['admin/amendements/decrypt'] = 'admin/amendements_decrypt';
+$route['admin/amendements/batch-summaries'] = 'admin/amendements_batch_summaries';
 $route['admin/votes'] = 'admin/votes';
 $route['admin/elections/modifications-mps'] = 'admin/election_modifications_mps';
 $route['admin/elections/(:any)'] = 'admin/election_candidates/$1';
@@ -211,6 +214,8 @@ $route['api/decrypted_votes/(:num)'] = 'api/decrypted_votes/index/$1';
 $route['api/non_decrypted_votes'] = 'api/non_decrypted_votes/index';
 $route['api/non_decrypted_votes/meta'] = 'api/non_decrypted_votes/meta';
 $route['api/non_decrypted_votes/(:any)'] = 'api/non_decrypted_votes/index/$1';
+// Résumés IA des amendements (écriture depuis PoliticAnalysis)
+$route['api/amendements_ia'] = 'api/amendements_ia/index';
 // Exposés des motifs
 $route['api/exposes'] = 'api/exposes/index';
 $route['api/exposes/meta'] = 'api/exposes/meta';

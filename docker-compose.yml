@@ -28,7 +28,7 @@ services:
         - DATABASE_BACKUP=${DATABASE_BACKUP}
     hostname: db
     ports:
-      - "3306:3306" # mysql connection port
+      - "3307:3306" # mysql connection port (3306 used by local MySQL)
     env_file:
       - .env
     environment:
