@@ -204,6 +204,12 @@ class DashboardMP_model extends CI_Model
       $params[]   = (int)$period;
     }
 
+    // Filtre "cacher les reviewed"
+    $where_reviewed = '';
+    if (!empty($filters['hide_reviewed'])) {
+      $where_reviewed = ' AND COALESCE(aia.reviewed, 0) = 0';
+    }
+
     $sql = "
       SELECT
         vi.voteNumero,
@@ -227,8 +233,10 @@ class DashboardMP_model extends CI_Model
             * 100, 1)
           ELSE 0
         END AS interet,
+        aia.titre_ia,
         aia.resume_ia,
         aia.simplicite_ia,
+        COALESCE(aia.reviewed, 0) AS reviewed,
         CASE WHEN vd.id IS NOT NULL THEN 1 ELSE 0 END AS decrypte,
         vd.state AS decryptage_state,
         vd.id AS decryptage_id,
@@ -241,10 +249,33 @@ class DashboardMP_model extends CI_Model
       WHERE vi.voteType IN ('amendement', 'les amen')
         AND vi.legislature = ?
         $where_date
+        $where_reviewed
       ORDER BY $order_col $direction
     ";
 
     return $this->db->query($sql, $params)->result_array();
+  }
+
+  /**
+   * Marque un amendement comme reviewed (ou non).
+   * Crée la ligne dans amendements_ia si elle n'existe pas encore.
+   *
+   * @return bool true si une ligne a été créée/mise à jour
+   */
+  public function set_amendement_reviewed($legislature, $voteNumero, $reviewed)
+  {
+    $legislature = (int) $legislature;
+    $voteNumero  = (string) $voteNumero;
+    $reviewed    = $reviewed ? 1 : 0;
+
+    $this->db->query(
+      "INSERT INTO amendements_ia (legislature, voteNumero, reviewed)
+       VALUES (?, ?, ?)
+       ON DUPLICATE KEY UPDATE reviewed = VALUES(reviewed), updated_at = NOW()",
+      array($legislature, $voteNumero, $reviewed)
+    );
+
+    return $this->db->affected_rows() > 0;
   }
 
 }

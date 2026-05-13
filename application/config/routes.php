@@ -55,6 +55,7 @@ $route['admin'] = 'admin/index';
 $route['admin/amendements'] = 'admin/amendements';
 $route['admin/amendements/decrypt'] = 'admin/amendements_decrypt';
 $route['admin/amendements/batch-summaries'] = 'admin/amendements_batch_summaries';
+$route['admin/amendements/review'] = 'admin/amendements_review';
 $route['admin/votes'] = 'admin/votes';
 $route['admin/elections/modifications-mps'] = 'admin/election_modifications_mps';
 $route['admin/elections/(:any)'] = 'admin/election_candidates/$1';

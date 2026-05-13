@@ -1,3 +1,9 @@
+<style>
+  #table-amendements tr.row-reviewed > td,
+  #table-amendements tr.row-reviewed:hover > td {
+    background-color: #d4edda;
+  }
+</style>
 <div class="content-wrapper">
   <div class="content-header">
     <div class="container-fluid">
@@ -70,6 +76,13 @@
               <button type="submit" class="btn btn-primary font-weight-bold mr-2">Filtrer</button>
               <a href="<?= base_url() ?>admin/amendements" class="btn btn-outline-secondary font-weight-bold">Réinitialiser</a>
             </div>
+            <div class="form-group col-12 mb-0 mt-2">
+              <div class="custom-control custom-checkbox">
+                <input type="checkbox" class="custom-control-input" id="hide_reviewed" name="hide_reviewed" value="1"
+                       <?= !empty($hide_reviewed) ? 'checked' : '' ?>>
+                <label class="custom-control-label" for="hide_reviewed">Cacher les amendements reviewed</label>
+              </div>
+            </div>
           </form>
           <small class="text-muted d-block mt-2">
             Les dates personnalisées (Du / Au) ont priorité sur la période sélectionnée.
@@ -81,11 +94,12 @@
       <?php
         $next_dir = ($direction === 'DESC') ? 'ASC' : 'DESC';
         $arrow    = $direction === 'DESC' ? '↓' : '↑';
-        $filter_qs = http_build_query(array(
-          'period'     => $period,
-          'date_start' => $date_start,
-          'date_end'   => $date_end,
-        ));
+        $filter_qs = http_build_query(array_filter(array(
+          'period'        => $period,
+          'date_start'    => $date_start,
+          'date_end'      => $date_end,
+          'hide_reviewed' => !empty($hide_reviewed) ? '1' : '',
+        )));
         function sort_url($col, $current_sort, $current_dir, $filter_qs) {
           $dir = ($current_sort === $col && $current_dir === 'DESC') ? 'ASC' : 'DESC';
           $url = base_url() . 'admin/amendements?sort=' . $col . '&direction=' . $dir;
@@ -106,6 +120,7 @@
                   <th style="min-width:280px">
                     Amendement
                   </th>
+                  <th class="d-none d-md-table-cell" style="max-width:260px">Titre IA</th>
                   <th class="d-none d-md-table-cell" style="max-width:320px">Résumé IA</th>
                   <th class="text-center">
                     <a href="<?= sort_url('votants', $sort, $direction, $filter_qs) ?>" class="text-white text-decoration-none">
@@ -132,17 +147,19 @@
                       Décrypté<?= $sort === 'decrypte' ? ' ' . $arrow : '' ?>
                     </a>
                   </th>
+                  <th class="text-center" title="Cocher pour marquer comme relu/validé">Reviewed</th>
                   <th></th>
                 </tr>
               </thead>
               <tbody>
                 <?php if (empty($amendements)) : ?>
                   <tr>
-                    <td colspan="8" class="text-center py-4 text-muted">Aucun amendement trouvé.</td>
+                    <td colspan="10" class="text-center py-4 text-muted">Aucun amendement trouvé.</td>
                   </tr>
                 <?php else : ?>
                   <?php foreach ($amendements as $a) : ?>
-                    <tr data-legislature="<?= $a['legislature'] ?>" data-vote="<?= htmlspecialchars($a['voteNumero']) ?>">
+                    <tr data-legislature="<?= $a['legislature'] ?>" data-vote="<?= htmlspecialchars($a['voteNumero']) ?>"
+                        class="<?= !empty($a['reviewed']) ? 'row-reviewed' : '' ?>">
 
                       <!-- Titre -->
                       <td>
@@ -150,6 +167,11 @@
                           <?= htmlspecialchars(mb_strimwidth($a['titre'] ?: '—', 0, 120, '…')) ?>
                         </div>
                         <small class="text-muted">Leg. <?= $a['legislature'] ?> · n°<?= $a['voteNumero'] ?> · <?= $a['dateScrutinFR'] ?></small>
+                      </td>
+
+                      <!-- Titre IA -->
+                      <td class="d-none d-md-table-cell" style="font-size:.85rem">
+                        <?= !empty($a['titre_ia']) ? htmlspecialchars($a['titre_ia']) : '<em class="text-light">—</em>' ?>
                       </td>
 
                       <!-- Résumé IA -->
@@ -207,6 +229,15 @@
                         <?php else : ?>
                           <span class="badge badge-light text-muted">Non</span>
                         <?php endif; ?>
+                      </td>
+
+                      <!-- Reviewed -->
+                      <td class="text-center">
+                        <input type="checkbox"
+                               class="chk-reviewed"
+                               data-legislature="<?= $a['legislature'] ?>"
+                               data-vote="<?= htmlspecialchars($a['voteNumero']) ?>"
+                               <?= !empty($a['reviewed']) ? 'checked' : '' ?>>
                       </td>
 
                       <!-- Action -->
@@ -342,6 +373,41 @@
       batchBtn.textContent = 'Générer tous les résumés IA';
       batchResult.className   = 'alert alert-danger';
       batchResult.textContent = 'Erreur réseau.';
+    });
+  });
+
+  // Checkbox "Reviewed"
+  document.querySelectorAll('.chk-reviewed').forEach(function (chk) {
+    chk.addEventListener('change', function () {
+      var legislature = chk.dataset.legislature;
+      var voteNumero  = chk.dataset.vote;
+      var reviewed    = chk.checked ? 1 : 0;
+      var row         = chk.closest('tr');
+
+      chk.disabled = true;
+
+      fetch(BASE + 'admin/amendements/review', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded', 'X-Requested-With': 'XMLHttpRequest' },
+        body: 'legislature=' + encodeURIComponent(legislature)
+            + '&voteNumero=' + encodeURIComponent(voteNumero)
+            + '&reviewed='   + reviewed
+      })
+      .then(function (r) { return r.json(); })
+      .then(function (data) {
+        chk.disabled = false;
+        if (data && data.success) {
+          if (row) row.classList.toggle('row-reviewed', !!reviewed);
+        } else {
+          chk.checked = !reviewed;
+          alert('Erreur lors de la mise à jour : ' + (data && data.error ? data.error : 'inconnue'));
+        }
+      })
+      .catch(function () {
+        chk.disabled = false;
+        chk.checked  = !reviewed;
+        alert('Erreur réseau.');
+      });
     });
   });
 })();

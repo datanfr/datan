@@ -63,17 +63,21 @@ class Amendements_ia extends CI_Controller
 
         $legislature  = (int) $input['legislature'];
         $voteNumero   = (string) $input['voteNumero'];
+        $titreIa      = isset($input['titre_ia']) && $input['titre_ia'] !== ''
+            ? substr((string) $input['titre_ia'], 0, 255)
+            : null;
         $resumeIa     = substr((string) $input['resume_ia'], 0, 220);
         $simpliciteIa = max(1, min(5, (int) $input['simplicite_ia']));
 
         $this->db->query(
-            "INSERT INTO amendements_ia (legislature, voteNumero, resume_ia, simplicite_ia)
-             VALUES (?, ?, ?, ?)
+            "INSERT INTO amendements_ia (legislature, voteNumero, titre_ia, resume_ia, simplicite_ia)
+             VALUES (?, ?, ?, ?, ?)
              ON DUPLICATE KEY UPDATE
+                 titre_ia      = VALUES(titre_ia),
                  resume_ia     = VALUES(resume_ia),
                  simplicite_ia = VALUES(simplicite_ia),
                  updated_at    = NOW()",
-            array($legislature, $voteNumero, $resumeIa, $simpliciteIa)
+            array($legislature, $voteNumero, $titreIa, $resumeIa, $simpliciteIa)
         );
 
         return $this->send_json(['success' => true, 'legislature' => $legislature, 'voteNumero' => $voteNumero], 200);

@@ -974,6 +974,7 @@
       $period     = $this->input->get('period');
       $date_start = $this->input->get('date_start');
       $date_end   = $this->input->get('date_end');
+      $hide_reviewed = filter_var($this->input->get('hide_reviewed'), FILTER_VALIDATE_BOOLEAN);
 
       $allowed_periods = array('all', '7', '30', '90', '180', '365');
       if (!in_array($period, $allowed_periods, true)) {
@@ -987,17 +988,19 @@
       $date_end   = $valid_date($date_end)   ? $date_end   : '';
 
       $filters = array(
-        'period'     => $period,
-        'date_start' => $date_start,
-        'date_end'   => $date_end,
+        'period'        => $period,
+        'date_start'    => $date_start,
+        'date_end'      => $date_end,
+        'hide_reviewed' => $hide_reviewed,
       );
 
-      $data['amendements'] = $this->DashboardMP_model->get_amendements_list($sort, $direction, $filters);
-      $data['sort']        = $sort;
-      $data['direction']   = $direction;
-      $data['period']      = $period;
-      $data['date_start']  = $date_start;
-      $data['date_end']    = $date_end;
+      $data['amendements']   = $this->DashboardMP_model->get_amendements_list($sort, $direction, $filters);
+      $data['sort']          = $sort;
+      $data['direction']     = $direction;
+      $data['period']        = $period;
+      $data['date_start']    = $date_start;
+      $data['date_end']      = $date_end;
+      $data['hide_reviewed'] = $hide_reviewed;
       $data['title']       = 'Liste des amendements';
       $data['pa_public_url'] = rtrim($_SERVER['POLITIC_ANALYSIS_PUBLIC_URL'] ?? '', '/');
 
@@ -1107,6 +1110,28 @@
         ->set_status_header($http_code >= 200 && $http_code < 300 ? 200 : $http_code)
         ->set_content_type('application/json')
         ->set_output($response ?: json_encode(['error' => 'Réponse vide de PoliticAnalysis']));
+    }
+
+    public function amendements_review()
+    {
+      if ($this->input->method(TRUE) !== 'POST') {
+        show_404();
+      }
+
+      $legislature = (int)   $this->input->post('legislature');
+      $voteNumero  = (string)$this->input->post('voteNumero');
+      $reviewed    = filter_var($this->input->post('reviewed'), FILTER_VALIDATE_BOOLEAN);
+
+      if (!$legislature || !$voteNumero) {
+        $this->output->set_status_header(400)->set_content_type('application/json')
+          ->set_output(json_encode(['error' => 'legislature et voteNumero sont requis']));
+        return;
+      }
+
+      $this->DashboardMP_model->set_amendement_reviewed($legislature, $voteNumero, $reviewed);
+
+      $this->output->set_status_header(200)->set_content_type('application/json')
+        ->set_output(json_encode(['success' => true, 'reviewed' => $reviewed ? 1 : 0]));
     }
   }
 ?>
