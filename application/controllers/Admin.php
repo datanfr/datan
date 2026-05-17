@@ -994,7 +994,7 @@
         'hide_reviewed' => $hide_reviewed,
       );
 
-      $data['amendements']   = $this->DashboardMP_model->get_amendements_list($sort, $direction, $filters);
+      $data['amendements']   = $this->admin_model->get_amendements_list($sort, $direction, $filters);
       $data['sort']          = $sort;
       $data['direction']     = $direction;
       $data['period']        = $period;
@@ -1128,7 +1128,7 @@
         return;
       }
 
-      $this->DashboardMP_model->set_amendement_reviewed($legislature, $voteNumero, $reviewed);
+      $this->admin_model->set_amendement_reviewed($legislature, $voteNumero, $reviewed);
 
       $this->output->set_status_header(200)->set_content_type('application/json')
         ->set_output(json_encode(['success' => true, 'reviewed' => $reviewed ? 1 : 0]));
