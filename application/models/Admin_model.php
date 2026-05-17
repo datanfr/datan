@@ -242,4 +242,26 @@ class Admin_model extends CI_Model
     );
     $this->db->insert('table_changes', $data);
   }
+
+  /**
+   * Marque un amendement comme reviewed (ou non).
+   * Crée la ligne dans amendements_ia si elle n'existe pas encore.
+   *
+   * @return bool true si une ligne a été créée/mise à jour
+   */
+  public function set_amendement_reviewed($legislature, $voteNumero, $reviewed)
+  {
+    $legislature = (int) $legislature;
+    $voteNumero  = (string) $voteNumero;
+    $reviewed    = $reviewed ? 1 : 0;
+
+    $this->db->query(
+      "INSERT INTO amendements_ia (legislature, voteNumero, reviewed)
+       VALUES (?, ?, ?)
+       ON DUPLICATE KEY UPDATE reviewed = VALUES(reviewed), updated_at = NOW()",
+      array($legislature, $voteNumero, $reviewed)
+    );
+
+    return $this->db->affected_rows() > 0;
+  }
 }
