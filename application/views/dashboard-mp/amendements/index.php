@@ -71,8 +71,6 @@
                      value="<?= htmlspecialchars($date_end) ?>">
             </div>
             <div class="form-group col-md-3 mb-0 d-flex">
-              <input type="hidden" name="sort"      value="<?= htmlspecialchars($sort) ?>">
-              <input type="hidden" name="direction" value="<?= htmlspecialchars($direction) ?>">
               <button type="submit" class="btn btn-primary font-weight-bold mr-2">Filtrer</button>
               <a href="<?= base_url() ?>admin/amendements" class="btn btn-outline-secondary font-weight-bold">Réinitialiser</a>
             </div>
@@ -91,26 +89,6 @@
         </div>
       </div>
 
-      <!-- Tri -->
-      <?php
-        $next_dir = ($direction === 'DESC') ? 'ASC' : 'DESC';
-        $arrow    = $direction === 'DESC' ? '↓' : '↑';
-        $filter_qs = http_build_query(array_filter(array(
-          'period'        => $period,
-          'date_start'    => $date_start,
-          'date_end'      => $date_end,
-          'hide_reviewed' => !empty($hide_reviewed) ? '1' : '',
-        )));
-        function sort_url($col, $current_sort, $current_dir, $filter_qs) {
-          $dir = ($current_sort === $col && $current_dir === 'DESC') ? 'ASC' : 'DESC';
-          $url = base_url() . 'admin/amendements?sort=' . $col . '&direction=' . $dir;
-          if ($filter_qs) {
-            $url .= '&' . $filter_qs;
-          }
-          return $url;
-        }
-      ?>
-
       <!-- Tableau -->
       <div class="card">
         <div class="card-body p-3">
@@ -123,31 +101,11 @@
                   </th>
                   <th class="d-none d-md-table-cell" style="max-width:260px">Titre IA</th>
                   <th class="d-none d-md-table-cell" style="max-width:320px">Résumé IA</th>
-                  <th class="text-center">
-                    <a href="<?= sort_url('votants', $sort, $direction, $filter_qs) ?>" class="text-decoration-none">
-                      Votants<?= $sort === 'votants' ? ' ' . $arrow : '' ?>
-                    </a>
-                  </th>
-                  <th class="text-center">
-                    <a href="<?= sort_url('disparite', $sort, $direction, $filter_qs) ?>" class="text-decoration-none" title="Différence absolue entre Pour et Contre, en % des votants">
-                      Disparité<?= $sort === 'disparite' ? ' ' . $arrow : '' ?>
-                    </a>
-                  </th>
-                  <th class="text-center">
-                    <a href="<?= sort_url('interet', $sort, $direction, $filter_qs) ?>" class="text-decoration-none" title="Score d'intérêt 0–100 : combine participation (saturation 250 votants) et contestation (1 - disparité). Privilégie les votes serrés et participés.">
-                      Intérêt<?= $sort === 'interet' ? ' ' . $arrow : '' ?>
-                    </a>
-                  </th>
-                  <th class="text-center">
-                    <a href="<?= sort_url('simplicite', $sort, $direction, $filter_qs) ?>" class="text-decoration-none" title="Score de simplicité de compréhension (1=très technique, 5=très simple)">
-                      Simplicité<?= $sort === 'simplicite' ? ' ' . $arrow : '' ?>
-                    </a>
-                  </th>
-                  <th class="text-center">
-                    <a href="<?= sort_url('decrypte', $sort, $direction, $filter_qs) ?>" class="text-decoration-none">
-                      Décrypté<?= $sort === 'decrypte' ? ' ' . $arrow : '' ?>
-                    </a>
-                  </th>
+                  <th class="text-center">Votants</th>
+                  <th class="text-center" title="Différence absolue entre Pour et Contre, en % des votants">Disparité</th>
+                  <th class="text-center" title="Score d'intérêt 0–100 : combine participation (saturation 250 votants) et contestation (1 - disparité). Privilégie les votes serrés et participés.">Intérêt</th>
+                  <th class="text-center" title="Score de simplicité de compréhension (1=très technique, 5=très simple)">Simplicité</th>
+                  <th class="text-center">Décrypté</th>
                   <th class="text-center" title="Cocher pour marquer comme relu/validé">Reviewed</th>
                   <th></th>
                 </tr>
