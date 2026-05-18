@@ -353,7 +353,7 @@ class Admin_model extends CI_Model
    * Marque un amendement comme reviewed (ou non).
    * Crée la ligne dans amendements_ia si elle n'existe pas encore.
    *
-   * @return bool true si une ligne a été créée/mise à jour
+   * @return bool true si la requête a réussi, false en cas d'erreur SQL
    */
   public function set_amendement_reviewed($legislature, $voteNumero, $reviewed)
   {
@@ -361,13 +361,13 @@ class Admin_model extends CI_Model
     $voteNumero  = (string) $voteNumero;
     $reviewed    = $reviewed ? 1 : 0;
 
-    $this->db->query(
+    $ok = $this->db->query(
       "INSERT INTO amendements_ia (legislature, voteNumero, reviewed)
        VALUES (?, ?, ?)
        ON DUPLICATE KEY UPDATE reviewed = VALUES(reviewed), updated_at = NOW()",
       array($legislature, $voteNumero, $reviewed)
     );
 
-    return $this->db->affected_rows() > 0;
+    return $ok !== FALSE;
   }
 }

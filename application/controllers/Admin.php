@@ -1128,7 +1128,13 @@
         return;
       }
 
-      $this->admin_model->set_amendement_reviewed($legislature, $voteNumero, $reviewed);
+      $ok = $this->admin_model->set_amendement_reviewed($legislature, $voteNumero, $reviewed);
+
+      if (!$ok) {
+        $this->output->set_status_header(500)->set_content_type('application/json')
+          ->set_output(json_encode(['error' => "Échec de l'enregistrement (vérifier que la table amendements_ia et sa clé unique uk_leg_vote existent)"]));
+        return;
+      }
 
       $this->output->set_status_header(200)->set_content_type('application/json')
         ->set_output(json_encode(['success' => true, 'reviewed' => $reviewed ? 1 : 0]));

@@ -1,8 +1,6 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 
-echo "yes";
-
 /**
  * API pour les résumés IA des amendements (amendements_ia) — écriture depuis PoliticAnalysis uniquement.
  */

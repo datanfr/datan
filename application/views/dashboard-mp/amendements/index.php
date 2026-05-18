@@ -79,6 +79,7 @@
             <div class="form-group col-12 mb-0 mt-2">
               <div class="custom-control custom-checkbox">
                 <input type="checkbox" class="custom-control-input" id="hide_reviewed" name="hide_reviewed" value="1"
+                       onchange="this.form.submit()"
                        <?= !empty($hide_reviewed) ? 'checked' : '' ?>>
                 <label class="custom-control-label" for="hide_reviewed">Cacher les amendements reviewed</label>
               </div>
