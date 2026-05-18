@@ -1068,50 +1068,6 @@
         ->set_output($response ?: json_encode(['error' => 'Réponse vide de PoliticAnalysis']));
     }
 
-    public function amendements_batch_summaries()
-    {
-      if ($this->input->method(TRUE) !== 'POST') {
-        show_404();
-      }
-
-      $pa_url   = rtrim($_SERVER['POLITIC_ANALYSIS_URL'] ?? '' ?: '', '/');
-      $pa_token = $_SERVER['POLITIC_ANALYSIS_TOKEN'] ?? '' ?: '';
-
-      if (!$pa_url) {
-        $this->output->set_status_header(500)->set_content_type('application/json')
-          ->set_output(json_encode(['error' => 'PoliticAnalysis URL non configurée']));
-        return;
-      }
-
-      $ch = curl_init($pa_url . '/api/batch-summaries');
-      curl_setopt_array($ch, array(
-        CURLOPT_RETURNTRANSFER => true,
-        CURLOPT_POST           => true,
-        CURLOPT_POSTFIELDS     => '{}',
-        CURLOPT_HTTPHEADER     => array(
-          'Content-Type: application/json',
-          'Authorization: Bearer ' . $pa_token,
-        ),
-        CURLOPT_TIMEOUT        => 600,
-      ));
-
-      $response  = curl_exec($ch);
-      $http_code = (int) curl_getinfo($ch, CURLINFO_HTTP_CODE);
-      $curl_error = curl_error($ch);
-      curl_close($ch);
-
-      if (!$http_code) {
-        $this->output->set_status_header(502)->set_content_type('application/json')
-          ->set_output(json_encode(['error' => 'PoliticAnalysis injoignable : ' . $curl_error]));
-        return;
-      }
-
-      $this->output
-        ->set_status_header($http_code >= 200 && $http_code < 300 ? 200 : $http_code)
-        ->set_content_type('application/json')
-        ->set_output($response ?: json_encode(['error' => 'Réponse vide de PoliticAnalysis']));
-    }
-
     public function amendements_review()
     {
       if ($this->input->method(TRUE) !== 'POST') {
