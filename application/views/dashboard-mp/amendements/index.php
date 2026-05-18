@@ -47,7 +47,7 @@
 
       <!-- Filtres -->
       <div class="card mb-3">
-        <div class="card-body">
+        <div class="card-body p-3">
           <form method="get" action="<?= base_url() ?>admin/amendements" class="form-row align-items-end">
             <div class="form-group col-md-3 mb-md-0">
               <label for="period" class="font-weight-bold mb-1">Période</label>
@@ -113,10 +113,10 @@
 
       <!-- Tableau -->
       <div class="card">
-        <div class="card-body p-0">
+        <div class="card-body p-3">
           <div class="table-responsive">
-            <table class="table table-hover mb-0" id="table-amendements">
-              <thead class="thead-dark">
+            <table class="table table-bordered table-striped table-hover mb-0" id="table-amendements">
+              <thead>
                 <tr>
                   <th style="min-width:280px">
                     Amendement
@@ -124,27 +124,27 @@
                   <th class="d-none d-md-table-cell" style="max-width:260px">Titre IA</th>
                   <th class="d-none d-md-table-cell" style="max-width:320px">Résumé IA</th>
                   <th class="text-center">
-                    <a href="<?= sort_url('votants', $sort, $direction, $filter_qs) ?>" class="text-white text-decoration-none">
+                    <a href="<?= sort_url('votants', $sort, $direction, $filter_qs) ?>" class="text-decoration-none">
                       Votants<?= $sort === 'votants' ? ' ' . $arrow : '' ?>
                     </a>
                   </th>
                   <th class="text-center">
-                    <a href="<?= sort_url('disparite', $sort, $direction, $filter_qs) ?>" class="text-white text-decoration-none" title="Différence absolue entre Pour et Contre, en % des votants">
+                    <a href="<?= sort_url('disparite', $sort, $direction, $filter_qs) ?>" class="text-decoration-none" title="Différence absolue entre Pour et Contre, en % des votants">
                       Disparité<?= $sort === 'disparite' ? ' ' . $arrow : '' ?>
                     </a>
                   </th>
                   <th class="text-center">
-                    <a href="<?= sort_url('interet', $sort, $direction, $filter_qs) ?>" class="text-white text-decoration-none" title="Score d'intérêt 0–100 : combine participation (saturation 250 votants) et contestation (1 - disparité). Privilégie les votes serrés et participés.">
+                    <a href="<?= sort_url('interet', $sort, $direction, $filter_qs) ?>" class="text-decoration-none" title="Score d'intérêt 0–100 : combine participation (saturation 250 votants) et contestation (1 - disparité). Privilégie les votes serrés et participés.">
                       Intérêt<?= $sort === 'interet' ? ' ' . $arrow : '' ?>
                     </a>
                   </th>
                   <th class="text-center">
-                    <a href="<?= sort_url('simplicite', $sort, $direction, $filter_qs) ?>" class="text-white text-decoration-none" title="Score de simplicité de compréhension (1=très technique, 5=très simple)">
+                    <a href="<?= sort_url('simplicite', $sort, $direction, $filter_qs) ?>" class="text-decoration-none" title="Score de simplicité de compréhension (1=très technique, 5=très simple)">
                       Simplicité<?= $sort === 'simplicite' ? ' ' . $arrow : '' ?>
                     </a>
                   </th>
                   <th class="text-center">
-                    <a href="<?= sort_url('decrypte', $sort, $direction, $filter_qs) ?>" class="text-white text-decoration-none">
+                    <a href="<?= sort_url('decrypte', $sort, $direction, $filter_qs) ?>" class="text-decoration-none">
                       Décrypté<?= $sort === 'decrypte' ? ' ' . $arrow : '' ?>
                     </a>
                   </th>
@@ -165,7 +165,7 @@
                       <!-- Titre -->
                       <td>
                         <div class="font-weight-bold" style="font-size:.9rem">
-                          <?= htmlspecialchars(mb_strimwidth($a['titre'] ?: '—', 0, 120, '…')) ?>
+                          <?= ucfirst(htmlspecialchars(mb_strimwidth($a['titre'] ?: '—', 0, 120, '…'))) ?>
                         </div>
                         <small class="text-muted">Leg. <?= $a['legislature'] ?> · n°<?= $a['voteNumero'] ?> · <?= $a['dateScrutinFR'] ?></small>
                       </td>
