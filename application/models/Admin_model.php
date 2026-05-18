@@ -330,9 +330,6 @@ class Admin_model extends CI_Model
         aia.resume_ia,
         aia.simplicite_ia,
         COALESCE(aia.reviewed, 0) AS reviewed,
-        CASE WHEN vd.id IS NOT NULL THEN 1 ELSE 0 END AS decrypte,
-        vd.state AS decryptage_state,
-        vd.id AS decryptage_id,
         COALESCE(vd.title, vi.titre, vi.seanceRef) AS titre
       FROM votes_info vi
       LEFT JOIN amendements_ia aia
@@ -341,6 +338,7 @@ class Admin_model extends CI_Model
         ON vd.voteNumero = vi.voteNumero AND vd.legislature = vi.legislature
       WHERE vi.voteType IN ('amendement', 'les amen')
         AND vi.legislature = ?
+        AND vd.id IS NULL
         $where_date
         $where_reviewed
       ORDER BY $order_col $direction
