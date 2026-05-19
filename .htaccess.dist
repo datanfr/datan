@@ -93,6 +93,7 @@
     SetEnv BASE_URL http://localhost/datan
     SetEnv ABSOLUTE_PATH your absolute path of the folder in which this file is located
     SetEnv COMPOSER_AUTOLOAD your composer autoload file
+    SetEnv POLITIC_ANALYSIS_PUBLIC_URL the politic analysis public url 
     SetEnv API_KEY_NOBG get your api key on remove.bg
     SetEnv API_KEY_MAILJET api key for newsletter
     SetEnv API_KEY_SECRETE_MAILJET secrete api key for newsletter

@@ -1,5 +1,5 @@
 <?php
-  class Admin extends Auth_Controller {
+  class Admin extends Auth_Controller{
 
     public function __construct() {
       parent::__construct();
@@ -962,6 +962,90 @@
 
       $this->session->set_flashdata('success', 'Clé API révoquée avec succès');
       redirect('admin/api-keys');
+    }
+
+    public function amendements()
+    {
+      $data = $this->data;
+
+      $sort      = $this->input->get('sort')      ?: 'date';
+      $direction = $this->input->get('direction') ?: 'DESC';
+
+      $period     = $this->input->get('period');
+      $date_start = $this->input->get('date_start');
+      $date_end   = $this->input->get('date_end');
+      $hide_reviewed = filter_var($this->input->get('hide_reviewed'), FILTER_VALIDATE_BOOLEAN);
+
+      // Param absent (arrivée sur la page sans filtre) : 30 derniers jours par défaut
+      if ($period === null) {
+        $period = '30';
+      }
+
+      $allowed_periods = array('all', '7', '30', '90', '180', '365');
+      if (!in_array($period, $allowed_periods, true)) {
+        $period = 'all';
+      }
+
+      $valid_date = function ($d) {
+        return $d && preg_match('/^\d{4}-\d{2}-\d{2}$/', $d);
+      };
+      $date_start = $valid_date($date_start) ? $date_start : '';
+      $date_end   = $valid_date($date_end)   ? $date_end   : '';
+
+      $filters = array(
+        'period'        => $period,
+        'date_start'    => $date_start,
+        'date_end'      => $date_end,
+        'hide_reviewed' => $hide_reviewed,
+      );
+
+      $data['amendements']   = $this->admin_model->get_amendements_list($sort, $direction, $filters);
+      $data['sort']          = $sort;
+      $data['direction']     = $direction;
+      $data['period']        = $period;
+      $data['date_start']    = $date_start;
+      $data['date_end']      = $date_end;
+      $data['hide_reviewed'] = $hide_reviewed;
+      $data['title']       = 'Liste des amendements';
+      $data['pa_public_url'] = rtrim($_SERVER['POLITIC_ANALYSIS_PUBLIC_URL'] ?? '', '/');
+
+      $data['title_meta'] = 'Amendements - Dashboard | Datan';
+      $data['breadcrumb'] = array(
+        array('name' => 'Dashboard',   'url' => base_url() . 'admin',            'active' => FALSE),
+        array('name' => 'Amendements', 'url' => base_url() . 'admin/amendements', 'active' => TRUE),
+      );
+
+      $this->load->view('dashboard/header', $data);
+      $this->load->view('dashboard-mp/amendements/index', $data);
+      $this->load->view('dashboard/footer');
+    }
+
+    public function amendements_review()
+    {
+      if ($this->input->method(TRUE) !== 'POST') {
+        show_404();
+      }
+
+      $legislature = (int)   $this->input->post('legislature');
+      $voteNumero  = (string)$this->input->post('voteNumero');
+      $reviewed    = filter_var($this->input->post('reviewed'), FILTER_VALIDATE_BOOLEAN);
+
+      if (!$legislature || !$voteNumero) {
+        $this->output->set_status_header(400)->set_content_type('application/json')
+          ->set_output(json_encode(['error' => 'legislature et voteNumero sont requis']));
+        return;
+      }
+
+      $ok = $this->admin_model->set_amendement_reviewed($legislature, $voteNumero, $reviewed);
+
+      if (!$ok) {
+        $this->output->set_status_header(500)->set_content_type('application/json')
+          ->set_output(json_encode(['error' => "Échec de l'enregistrement (vérifier que la table amendements_ia et sa clé unique uk_leg_vote existent)"]));
+        return;
+      }
+
+      $this->output->set_status_header(200)->set_content_type('application/json')
+        ->set_output(json_encode(['success' => true, 'reviewed' => $reviewed ? 1 : 0]));
     }
   }
 ?>

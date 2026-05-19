@@ -84,7 +84,6 @@ class DashboardMP_model extends CI_Model
   }
 
   public function get_vote_explained($mpId, $legislature, $voteNumero){
-    echo $voteNumero;
     $sql = 'SELECT e.id, e.voteNumero, e.legislature, e.text AS explication, vd.title AS vote_titre,
       CASE WHEN e.state = 1 THEN "publié" ELSE "brouillon" END AS state,
       CASE
