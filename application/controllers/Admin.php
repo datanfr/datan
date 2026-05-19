@@ -976,6 +976,11 @@
       $date_end   = $this->input->get('date_end');
       $hide_reviewed = filter_var($this->input->get('hide_reviewed'), FILTER_VALIDATE_BOOLEAN);
 
+      // Param absent (arrivée sur la page sans filtre) : 30 derniers jours par défaut
+      if ($period === null) {
+        $period = '30';
+      }
+
       $allowed_periods = array('all', '7', '30', '90', '180', '365');
       if (!in_array($period, $allowed_periods, true)) {
         $period = 'all';
