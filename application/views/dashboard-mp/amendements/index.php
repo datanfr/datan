@@ -20,12 +20,6 @@
 
       <!-- En-tête -->
       <div class="row mb-3">
-        <div class="col-12">
-          <a class="btn btn-outline-secondary font-weight-bold" href="<?= base_url() ?>dashboard">
-            <?= file_get_contents(FCPATH . "assets/imgs/icons/arrow_left.svg") ?>
-            Retour
-          </a>
-        </div>
         <div class="col-lg-8 my-4">
           <h1 class="font-weight-bold mb-1 text-dark"><?= $title ?></h1>
           <p class="text-muted mb-0">Dernière législature · <?= count($amendements) ?> amendements</p>
