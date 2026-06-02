@@ -14,5 +14,6 @@ sed -i 's/${API_KEY_MAILJET}/'"$API_KEY_MAILJET"'/g' /etc/apache2/sites-availabl
 sed -i 's/${API_KEY_SECRETE_MAILJET}/'"$API_KEY_SECRETE_MAILJET"'/g' /etc/apache2/sites-available/000-default.conf
 sed -i 's#${COMPOSER_AUTOLOAD}#'"$COMPOSER_AUTOLOAD"'#g' /etc/apache2/sites-available/000-default.conf
 sed -i 's#${POLITIC_ANALYSIS_PUBLIC_URL}#'"$POLITIC_ANALYSIS_PUBLIC_URL"'#g' /etc/apache2/sites-available/000-default.conf
+sed -i 's#${ANTHROPIC_API_KEY}#'"$ANTHROPIC_API_KEY"'#g' /etc/apache2/sites-available/000-default.conf
 
 exec "$@"

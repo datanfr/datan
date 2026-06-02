@@ -1008,7 +1008,7 @@
       $data['hide_reviewed'] = $hide_reviewed;
       $data['title']       = 'Liste des amendements';
       $data['pa_public_url'] = rtrim($_SERVER['POLITIC_ANALYSIS_PUBLIC_URL'] ?? '', '/');
-
+      
       $data['title_meta'] = 'Amendements - Dashboard | Datan';
       $data['breadcrumb'] = array(
         array('name' => 'Dashboard',   'url' => base_url() . 'admin',            'active' => FALSE),
