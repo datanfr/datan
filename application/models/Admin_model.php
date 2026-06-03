@@ -332,8 +332,10 @@ class Admin_model extends CI_Model
         COALESCE(aia.reviewed, 0) AS reviewed,
         COALESCE(vd.title, vi.titre, vi.seanceRef) AS titre
       FROM votes_info vi
+      LEFT JOIN votes_amendments va
+        ON va.legislature = vi.legislature AND va.voteNumero = vi.voteNumero
       LEFT JOIN amendements_ia aia
-        ON aia.voteNumero = vi.voteNumero AND aia.legislature = vi.legislature
+        ON aia.amendementId = va.amendmentId
       LEFT JOIN votes_datan vd
         ON vd.voteNumero = vi.voteNumero AND vd.legislature = vi.legislature
       WHERE vi.voteType IN ('amendement', 'les amen')
