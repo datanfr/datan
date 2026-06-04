@@ -111,8 +111,12 @@
           <h2>Résumé de l'amendement</h2>
           <div class="card mt-4">
             <div class="card-body">
-              <p><?= $expose['exposeSummaryPublished'] ?></p>
-              <p class="mb-0 font-italic">Ce texte est un résumé de l'exposé des motifs rédigé par l'auteur de l'amendement.</p>
+              <?php if (strpos($expose['exposeSummaryPublished'], '<p>') !== FALSE) : ?>
+                <?= $expose['exposeSummaryPublished'] ?>
+              <?php else : ?>
+                <p><?= $expose['exposeSummaryPublished'] ?></p>
+              <?php endif; ?>
+              <p class="mb-0 font-italic small">Ce texte est un résumé de l'exposé des motifs.</p>
             </div>
           </div>
         </div>
