@@ -408,7 +408,10 @@
       }
 
       // Get exposes
-      $data['expose'] = $this->exposes_model->get_expose_by_vote($legislature, $num);
+      if (!empty($data['vote']['amendment']['amendmentId'])) {
+        $data['expose'] = $this->exposes_model->get_expose_by_vote($legislature, $num);
+      }
+      
 
       // Votes - groupes
       $data['groupes'] = $this->votes_model->get_vote_groupes($data['vote']['voteNumero'], $legislature, $data['vote']['voteType']);
