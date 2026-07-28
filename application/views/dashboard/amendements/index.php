@@ -106,7 +106,7 @@
                       <!-- Titre -->
                       <td>
                         <div class="font-weight-bold" style="font-size:.9rem">
-                          <a href="<?= base_url() ?>votes/legislature-<?= $a['legislature'] ?>/vote_<?= htmlspecialchars($a['voteNumero']) ?>">
+                          <a href="<?= base_url() ?>votes/legislature-<?= $a['legislature'] ?>/vote_<?= htmlspecialchars($a['voteNumero']) ?>" target="_blank">
                             <?= ucfirst(htmlspecialchars(mb_strimwidth($a['titre'] ?: '—', 0, 120, '…'))) ?>
                           </a>
                         </div>
