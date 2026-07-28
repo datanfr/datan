@@ -51,6 +51,10 @@
         return 'LFI';
         break;
 
+      case 'LFI-NFP':
+        return 'LFI';
+        break;
+
       case 'GDR-NUPES':
         return 'GDR';
         break;
