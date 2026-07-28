@@ -968,9 +968,6 @@
     {
       $data = $this->data;
 
-      $sort      = $this->input->get('sort')      ?: 'date';
-      $direction = $this->input->get('direction') ?: 'DESC';
-
       $period     = $this->input->get('period');
       $date_start = $this->input->get('date_start');
       $date_end   = $this->input->get('date_end');
@@ -999,9 +996,7 @@
         'hide_reviewed' => $hide_reviewed,
       );
 
-      $data['amendements']   = $this->admin_model->get_amendements_list($sort, $direction, $filters);
-      $data['sort']          = $sort;
-      $data['direction']     = $direction;
+      $data['amendements']   = $this->admin_model->get_amendements_list($filters);
       $data['period']        = $period;
       $data['date_start']    = $date_start;
       $data['date_end']      = $date_end;
