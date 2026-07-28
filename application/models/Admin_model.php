@@ -337,7 +337,8 @@ class Admin_model extends CI_Model
         AND va.amendmentId IS NOT NULL
         $where_date
         $where_reviewed
-      ORDER BY $order_col $direction
+      ORDER BY (aia.titre_ia IS NOT NULL) DESC,
+        $order_col $direction
     ";
 
     return $this->db->query($sql, $params)->result_array();
