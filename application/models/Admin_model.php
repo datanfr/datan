@@ -257,7 +257,6 @@ class Admin_model extends CI_Model
   {
     $allowed_sorts = array(
       'date'       => 'vi.dateScrutin',
-      'votants'    => 'vi.nombreVotants',
       'interet'    => 'interet',
       'simplicite' => 'aia.simplicite_ia',
       'decrypte'   => 'decrypte',
