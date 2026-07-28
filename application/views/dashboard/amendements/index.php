@@ -128,18 +128,6 @@
                         <?= $a['nombreVotants'] ? number_format($a['nombreVotants'], 0, ',', '\u{202F}') : '—' ?>
                       </td>
 
-                      <!-- Disparité -->
-                      <td class="text-center">
-                        <?php if ($a['disparite'] !== null && $a['nombreVotants'] > 0) :
-                          $d = (float)$a['disparite'];
-                          $cls = $d >= 60 ? 'danger' : ($d >= 30 ? 'warning' : 'success');
-                        ?>
-                          <span class="badge badge-<?= $cls ?>"><?= $d ?>%</span>
-                        <?php else : ?>
-                          <span class="text-muted">—</span>
-                        <?php endif; ?>
-                      </td>
-
                       <!-- Intérêt -->
                       <td class="text-center">
                         <?php if (isset($a['interet']) && $a['nombreVotants'] > 0) :
