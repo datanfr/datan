@@ -138,10 +138,10 @@
                       <!-- Simplicité -->
                       <td class="text-center">
                         <?php if ($a['simplicite_ia']) :
-                          $stars = str_repeat('★', $a['simplicite_ia']) . str_repeat('☆', 5 - $a['simplicite_ia']);
-                          $cls   = $a['simplicite_ia'] >= 4 ? 'success' : ($a['simplicite_ia'] >= 3 ? 'warning' : 'danger');
+                          $s = (int)$a['simplicite_ia'];
+                          $cls = $s >= 4 ? 'success' : ($s >= 3 ? 'warning' : ($s >= 2 ? 'info' : 'danger'));
                         ?>
-                          <span class="text-<?= $cls ?>" title="<?= $a['simplicite_ia'] ?>/5"><?= $stars ?></span>
+                          <span class="badge badge-<?= $cls ?>" title="<?= $s ?>/5"><?= $s ?>/5</span>
                         <?php else : ?>
                           <span class="text-muted">—</span>
                         <?php endif; ?>
