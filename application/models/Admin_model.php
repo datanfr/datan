@@ -325,15 +325,16 @@ class Admin_model extends CI_Model
         COALESCE(aia.reviewed, 0) AS reviewed,
         COALESCE(vd.title, vi.titre, vi.seanceRef) AS titre
       FROM votes_info vi
-      LEFT JOIN votes_amendments va
-        ON va.legislature = vi.legislature AND va.voteNumero = vi.voteNumero
+      INNER JOIN votes_amendments va
+        ON va.legislature = vi.legislature
+        AND va.voteNumero = vi.voteNumero
+        AND va.amendmentId IS NOT NULL
       LEFT JOIN amendements_ia aia
         ON aia.amendementId = va.amendmentId
       LEFT JOIN votes_datan vd
         ON vd.voteNumero = vi.voteNumero AND vd.legislature = vi.legislature
       WHERE vi.legislature = ?
         AND vd.id IS NULL
-        AND va.amendmentId IS NOT NULL
         $where_date
         $where_reviewed
       ORDER BY (aia.titre_ia IS NOT NULL) DESC,
