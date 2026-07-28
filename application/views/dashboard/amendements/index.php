@@ -87,8 +87,6 @@
                   </th>
                   <th class="d-none d-md-table-cell" style="max-width:260px">Titre IA</th>
                   <th class="d-none d-md-table-cell" style="max-width:320px">Résumé IA</th>
-                  <th class="text-center">Votants</th>
-                  <th class="text-center" title="Différence absolue entre Pour et Contre, en % des votants">Disparité</th>
                   <th class="text-center" title="Score d'intérêt 0–100 : combine participation (saturation 250 votants) et contestation (1 - disparité). Privilégie les votes serrés et participés.">Intérêt</th>
                   <th class="text-center" title="Score de simplicité de compréhension (1=très technique, 5=très simple)">Simplicité</th>
                   <th class="text-center" title="Cocher pour marquer comme relu/validé">Reviewed</th>
@@ -139,7 +137,7 @@
                       <td class="text-center">
                         <?php if ($a['simplicite_ia']) :
                           $s = (int)$a['simplicite_ia'];
-                          $cls = $s >= 4 ? 'success' : ($s >= 3 ? 'warning' : ($s >= 2 ? 'info' : 'danger'));
+                          $cls = $s >= 4 ? 'success' : ($s >= 3 ? 'warning' : 'danger');
                         ?>
                           <span class="badge badge-<?= $cls ?>" title="<?= $s ?>/5"><?= $s ?>/5</span>
                         <?php else : ?>
