@@ -247,23 +247,12 @@ class Admin_model extends CI_Model
    * Liste les votes de type amendement de la dernière législature,
    * avec résumé IA, score de simplicité et statut de décryptage.
    *
-   * @param string $sort       Colonne de tri : 'date'|'interet'|'simplicite'|'decrypte'
-   * @param string $direction  'ASC'|'DESC'
    * @param array  $filters    ['period' => '7'|'30'|'90'|'180'|'365'|'all',
    *                            'date_start' => 'YYYY-MM-DD',
    *                            'date_end'   => 'YYYY-MM-DD']
    */
-  public function get_amendements_list($sort = 'date', $direction = 'DESC', $filters = array())
+  public function get_amendements_list($filters = array())
   {
-    $allowed_sorts = array(
-      'date'       => 'vi.dateScrutin',
-      'interet'    => 'interet',
-      'simplicite' => 'aia.simplicite_ia',
-      'decrypte'   => 'decrypte',
-    );
-
-    $order_col = isset($allowed_sorts[$sort]) ? $allowed_sorts[$sort] : 'vi.dateScrutin';
-    $direction = strtoupper($direction) === 'ASC' ? 'ASC' : 'DESC';
 
     // Dernière législature disponible
     $last_leg = $this->db->query('SELECT MAX(legislature) AS leg FROM votes_info')->row_array();
@@ -335,8 +324,7 @@ class Admin_model extends CI_Model
         AND vd.id IS NULL
         $where_date
         $where_reviewed
-      ORDER BY (aia.titre_ia IS NOT NULL) DESC,
-        $order_col $direction
+      ORDER BY (aia.titre_ia IS NOT NULL) DESC, interet DESC
     ";
 
     return $this->db->query($sql, $params)->result_array();

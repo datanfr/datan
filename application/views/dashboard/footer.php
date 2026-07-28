@@ -79,7 +79,7 @@
       $('#table-amendements').DataTable({
         fixedHeader: true,
         paging: true,
-        order: [[ 5, "desc" ]],
+        order: [[ 4, "desc" ]],
         language: french,
       });
     }
