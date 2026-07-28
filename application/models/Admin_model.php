@@ -247,7 +247,7 @@ class Admin_model extends CI_Model
    * Liste les votes de type amendement de la dernière législature,
    * avec résumé IA, score de simplicité et statut de décryptage.
    *
-   * @param string $sort       Colonne de tri : 'date'|'votants'|'simplicite'|'decrypte'
+   * @param string $sort       Colonne de tri : 'date'|'simplicite'|'decrypte'
    * @param string $direction  'ASC'|'DESC'
    * @param array  $filters    ['period' => '7'|'30'|'90'|'180'|'365'|'all',
    *                            'date_start' => 'YYYY-MM-DD',

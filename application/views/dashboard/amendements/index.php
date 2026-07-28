@@ -122,12 +122,7 @@
                       <td class="d-none d-md-table-cell text-muted" style="font-size:.85rem">
                         <?= $a['resume_ia'] ? htmlspecialchars($a['resume_ia']) : '<em class="text-light">—</em>' ?>
                       </td>
-
-                      <!-- Votants -->
-                      <td class="text-center">
-                        <?= $a['nombreVotants'] ? number_format($a['nombreVotants'], 0, ',', '\u{202F}') : '—' ?>
-                      </td>
-
+                      
                       <!-- Intérêt -->
                       <td class="text-center">
                         <?php if (isset($a['interet']) && $a['nombreVotants'] > 0) :
