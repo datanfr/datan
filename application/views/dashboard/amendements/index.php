@@ -106,7 +106,9 @@
                       <!-- Titre -->
                       <td>
                         <div class="font-weight-bold" style="font-size:.9rem">
-                          <?= ucfirst(htmlspecialchars(mb_strimwidth($a['titre'] ?: '—', 0, 120, '…'))) ?>
+                          <a href="<?= base_url() ?>votes/legislature-<?= $a['legislature'] ?>/vote_<?= htmlspecialchars($a['voteNumero']) ?>">
+                            <?= ucfirst(htmlspecialchars(mb_strimwidth($a['titre'] ?: '—', 0, 120, '…'))) ?>
+                          </a>
                         </div>
                         <small class="text-muted">Leg. <?= $a['legislature'] ?> · n°<?= $a['voteNumero'] ?> · <?= $a['dateScrutinFR'] ?></small>
                       </td>
