@@ -1016,7 +1016,7 @@
       );
 
       $this->load->view('dashboard/header', $data);
-      $this->load->view('dashboard-mp/amendements/index', $data);
+      $this->load->view('dashboard/amendements/index', $data);
       $this->load->view('dashboard/footer');
     }
 
