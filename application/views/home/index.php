@@ -274,7 +274,7 @@
             <div>
               <p>À l'Assemblée, certains groupes politiques sont membres du bloc gouvernemental tandis que d'autres sont des groupes d'opposition.</p>
               <p>En règle générale, les groupes du bloc gouvernemental soutiennent l'action du gouvernement et votent en faveur des textes qu'il propose. L'opposition, si elle peut parfois soutenir le gouvernement, vote plus souvent contre les projets gouvernementaux.</p>
-              <p>Le gouvernement actuel est dirigé par la Première ministre Sébastien Lecornu.</p>
+              <p>Le gouvernement actuel est dirigé par le Premier ministre Sébastien Lecornu.</p>
               <p>Le groupe <?= $support_opposition['libelle'] ?> (<?= $support_opposition['libelleAbrev'] ?>) est le groupe d'opposition votant le plus souvent en faveur du gouvernement.</p>
             </div>
           </div>
@@ -284,7 +284,7 @@
             <div class="card card-statistiques border-0">
               <div class="card-body pb-0">
                 <h3 class="text-center font-weight-bold h5">Nombre de projets gouvernementaux votés par les groupes</h3>
-                <p class="mt-3">Depuis le début de la législature, en 2022, il y a eu <b><?= $maxVotes ?> votes</b> sur des projets de loi du gouvernement. Découvrez les groupes politiques qui votent le plus souvent en faveur de ces textes.</p>
+                <p class="mt-3">Depuis le début de la législature, en 2024, il y a eu <b><?= $maxVotes ?> votes</b> sur des projets de loi du gouvernement. Découvrez les groupes politiques qui votent le plus souvent en faveur de ces textes.</p>
                 <div class="legend d-flex justify-content-center">
                   <div class="d-flex justify-content-center align-items-center mx-3">
                     <div class="legendBox" style="background-color: #5199C4"></div>

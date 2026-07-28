@@ -247,7 +247,7 @@ class Admin_model extends CI_Model
    * Liste les votes de type amendement de la dernière législature,
    * avec résumé IA, score de simplicité et statut de décryptage.
    *
-   * @param string $sort       Colonne de tri : 'date'|'votants'|'disparite'|'simplicite'|'decrypte'
+   * @param string $sort       Colonne de tri : 'date'|'interet'|'simplicite'|'decrypte'
    * @param string $direction  'ASC'|'DESC'
    * @param array  $filters    ['period' => '7'|'30'|'90'|'180'|'365'|'all',
    *                            'date_start' => 'YYYY-MM-DD',
@@ -257,8 +257,6 @@ class Admin_model extends CI_Model
   {
     $allowed_sorts = array(
       'date'       => 'vi.dateScrutin',
-      'votants'    => 'vi.nombreVotants',
-      'disparite'  => 'disparite',
       'interet'    => 'interet',
       'simplicite' => 'aia.simplicite_ia',
       'decrypte'   => 'decrypte',
@@ -315,11 +313,6 @@ class Admin_model extends CI_Model
         vi.decompteAbs AS abstention,
         CASE
           WHEN vi.nombreVotants > 0
-          THEN ROUND(ABS(vi.decomptePour - vi.decompteContre) * 100 / vi.nombreVotants, 1)
-          ELSE 0
-        END AS disparite,
-        CASE
-          WHEN vi.nombreVotants > 0
           THEN ROUND(
             LEAST(vi.nombreVotants / 250, 1)
             * (1 - ABS(vi.decomptePour - vi.decompteContre) / vi.nombreVotants)
@@ -332,18 +325,18 @@ class Admin_model extends CI_Model
         COALESCE(aia.reviewed, 0) AS reviewed,
         COALESCE(vd.title, vi.titre, vi.seanceRef) AS titre
       FROM votes_info vi
-      LEFT JOIN votes_amendments va
+      INNER JOIN votes_amendments va
         ON va.legislature = vi.legislature AND va.voteNumero = vi.voteNumero
       LEFT JOIN amendements_ia aia
         ON aia.amendementId = va.amendmentId
       LEFT JOIN votes_datan vd
         ON vd.voteNumero = vi.voteNumero AND vd.legislature = vi.legislature
-      WHERE vi.voteType IN ('amendement', 'les amen')
-        AND vi.legislature = ?
+      WHERE vi.legislature = ?
         AND vd.id IS NULL
         $where_date
         $where_reviewed
-      ORDER BY $order_col $direction
+      ORDER BY (aia.titre_ia IS NOT NULL) DESC,
+        $order_col $direction
     ";
 
     return $this->db->query($sql, $params)->result_array();

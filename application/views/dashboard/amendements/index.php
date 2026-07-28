@@ -122,24 +122,7 @@
                       <td class="d-none d-md-table-cell text-muted" style="font-size:.85rem">
                         <?= $a['resume_ia'] ? htmlspecialchars($a['resume_ia']) : '<em class="text-light">—</em>' ?>
                       </td>
-
-                      <!-- Votants -->
-                      <td class="text-center">
-                        <?= $a['nombreVotants'] ? number_format($a['nombreVotants'], 0, ',', '\u{202F}') : '—' ?>
-                      </td>
-
-                      <!-- Disparité -->
-                      <td class="text-center">
-                        <?php if ($a['disparite'] !== null && $a['nombreVotants'] > 0) :
-                          $d = (float)$a['disparite'];
-                          $cls = $d >= 60 ? 'danger' : ($d >= 30 ? 'warning' : 'success');
-                        ?>
-                          <span class="badge badge-<?= $cls ?>"><?= $d ?>%</span>
-                        <?php else : ?>
-                          <span class="text-muted">—</span>
-                        <?php endif; ?>
-                      </td>
-
+                      
                       <!-- Intérêt -->
                       <td class="text-center">
                         <?php if (isset($a['interet']) && $a['nombreVotants'] > 0) :
@@ -155,10 +138,10 @@
                       <!-- Simplicité -->
                       <td class="text-center">
                         <?php if ($a['simplicite_ia']) :
-                          $stars = str_repeat('★', $a['simplicite_ia']) . str_repeat('☆', 5 - $a['simplicite_ia']);
-                          $cls   = $a['simplicite_ia'] >= 4 ? 'success' : ($a['simplicite_ia'] >= 3 ? 'warning' : 'danger');
+                          $s = (int)$a['simplicite_ia'];
+                          $cls = $s >= 4 ? 'success' : ($s >= 3 ? 'warning' : ($s >= 2 ? 'info' : 'danger'));
                         ?>
-                          <span class="text-<?= $cls ?>" title="<?= $a['simplicite_ia'] ?>/5"><?= $stars ?></span>
+                          <span class="badge badge-<?= $cls ?>" title="<?= $s ?>/5"><?= $s ?>/5</span>
                         <?php else : ?>
                           <span class="text-muted">—</span>
                         <?php endif; ?>
