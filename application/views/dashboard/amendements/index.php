@@ -137,7 +137,7 @@
                       <td class="text-center">
                         <?php if ($a['simplicite_ia']) :
                           $s = (int)$a['simplicite_ia'];
-                          $cls = $s >= 4 ? 'success' : ($s >= 3 ? 'warning' : ($s >= 2 ? 'info' : 'danger'));
+                          $cls = $s >= 4 ? 'success' : ($s >= 3 ? 'warning' : 'danger');
                         ?>
                           <span class="badge badge-<?= $cls ?>" title="<?= $s ?>/5"><?= $s ?>/5</span>
                         <?php else : ?>
