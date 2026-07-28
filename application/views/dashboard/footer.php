@@ -80,6 +80,7 @@
         fixedHeader: true,
         paging: true,
         ordering: true,
+        order: [],
         language: french,
       });
     }
