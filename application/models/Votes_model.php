@@ -545,8 +545,7 @@
         FROM votes_scores vs
         WHERE
           (
-            (vs.voteNumero IN (629, 3213) AND vs.legislature = 16)
-            OR (vs.voteNumero IN (2107, 3260, 3300) AND vs.legislature = 17)
+            (vs.voteNumero IN (3260, 3300, 8280, 8427) AND vs.legislature = 17)
           )
           AND vs.mpId = ?;
       ';
@@ -555,11 +554,10 @@
       $votes = $query->result_array();
 
       $text = array(
-        "l16v629" => "l'inscription de l'interruption volontaire de grossesse (IVG) dans la Constitution",
-        "l16v3213" => "du projet de loi immigration en 2023",
-        "l17v2107" => "la proposition de loi créant un droit à l'aide à mourir",
         "l17v3260" => "la proposition du RN visant à dénoncer les accords franco-algériens de 1968",
-        "l17v3300" => "la taxe Zucman sur les patrimoines supérieurs à 100 millions d'euros"
+        "l17v3300" => "la taxe Zucman sur les patrimoines supérieurs à 100 millions d'euros",
+        "l17v8280" => "la proposition de loi créant un droit à l'aide à mourir",
+        "l17v8427" => "la loi d'urgence agricole, qui permet la réintroduction de deux pesticides néonicotinoïdes"
       );
 
       foreach ($votes as $key => $value) {
