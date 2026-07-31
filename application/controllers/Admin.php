@@ -1021,21 +1021,20 @@
         show_404();
       }
 
-      $legislature = (int)   $this->input->post('legislature');
-      $voteNumero  = (string)$this->input->post('voteNumero');
+      $amendmentId  = (string)$this->input->post('amendmentId');
       $reviewed    = filter_var($this->input->post('reviewed'), FILTER_VALIDATE_BOOLEAN);
 
-      if (!$legislature || !$voteNumero) {
+      if (!$amendmentId) {
         $this->output->set_status_header(400)->set_content_type('application/json')
-          ->set_output(json_encode(['error' => 'legislature et voteNumero sont requis']));
+          ->set_output(json_encode(['error' => 'amendmentId est requis']));
         return;
       }
 
-      $ok = $this->admin_model->set_amendement_reviewed($legislature, $voteNumero, $reviewed);
+      $ok = $this->admin_model->set_amendement_reviewed($amendmentId, $reviewed);
 
       if (!$ok) {
         $this->output->set_status_header(500)->set_content_type('application/json')
-          ->set_output(json_encode(['error' => "Échec de l'enregistrement (vérifier que la table amendements_ia et sa clé unique uk_leg_vote existent)"]));
+          ->set_output(json_encode(['error' => "Échec de l'enregistrement (vérifier que la table amendements_ia existe et que l'amendement existe)"]));
         return;
       }
 
