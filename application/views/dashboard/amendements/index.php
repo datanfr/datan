@@ -186,7 +186,7 @@
   // Checkbox "Reviewed"
   document.querySelectorAll('.chk-reviewed').forEach(function (chk) {
     chk.addEventListener('change', function () {
-      var amendmentId  nt = chk.dataset.amendmentId;
+      var amendmentId = chk.dataset.amendmentId;
       var reviewed    = chk.checked ? 1 : 0;
       var row         = chk.closest('tr');
 
