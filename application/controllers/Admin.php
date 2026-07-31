@@ -1021,7 +1021,7 @@
         show_404();
       }
 
-      $amendmentId  = (string)$this->input->post('amendmentId');
+      $amendmentId  = (string)$this->input->post('amendment');
       $reviewed    = filter_var($this->input->post('reviewed'), FILTER_VALIDATE_BOOLEAN);
 
       if (!$amendmentId) {

@@ -151,7 +151,7 @@
                       <td class="text-center">
                         <input type="checkbox"
                               class="chk-reviewed"
-                              data-amendmentId="<?= htmlspecialchars($a['amendmentId']) ?>"
+                              data-amendment="<?= htmlspecialchars($a['amendmentId']) ?>"
                               <?= !empty($a['reviewed']) ? 'checked' : '' ?>>
                       </td>
 
@@ -186,7 +186,7 @@
   // Checkbox "Reviewed"
   document.querySelectorAll('.chk-reviewed').forEach(function (chk) {
     chk.addEventListener('change', function () {
-      var amendmentId = chk.dataset.amendmentId;
+      var amendment   = chk.dataset.amendment;
       var reviewed    = chk.checked ? 1 : 0;
       var row         = chk.closest('tr');
 
@@ -195,7 +195,7 @@
       fetch(BASE + 'admin/amendements/review', {
         method: 'POST',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded', 'X-Requested-With': 'XMLHttpRequest' },
-        body: 'amendmentId=' + encodeURIComponent(amendmentId)
+        body: 'amendment=' + encodeURIComponent(amendment)
             + '&reviewed='   + reviewed
       })
       .then(function (r) { return r.json(); })
