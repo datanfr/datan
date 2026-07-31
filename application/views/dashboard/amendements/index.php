@@ -150,10 +150,9 @@
                       <!-- Reviewed -->
                       <td class="text-center">
                         <input type="checkbox"
-                               class="chk-reviewed"
-                               data-legislature="<?= $a['legislature'] ?>"
-                               data-vote="<?= htmlspecialchars($a['voteNumero']) ?>"
-                               <?= !empty($a['reviewed']) ? 'checked' : '' ?>>
+                              class="chk-reviewed"
+                              data-amendment="<?= htmlspecialchars($a['amendmentId']) ?>"
+                              <?= !empty($a['reviewed']) ? 'checked' : '' ?>>
                       </td>
 
                       <!-- Action -->
@@ -187,8 +186,7 @@
   // Checkbox "Reviewed"
   document.querySelectorAll('.chk-reviewed').forEach(function (chk) {
     chk.addEventListener('change', function () {
-      var legislature = chk.dataset.legislature;
-      var voteNumero  = chk.dataset.vote;
+      var amendment   = chk.dataset.amendment;
       var reviewed    = chk.checked ? 1 : 0;
       var row         = chk.closest('tr');
 
@@ -197,8 +195,7 @@
       fetch(BASE + 'admin/amendements/review', {
         method: 'POST',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded', 'X-Requested-With': 'XMLHttpRequest' },
-        body: 'legislature=' + encodeURIComponent(legislature)
-            + '&voteNumero=' + encodeURIComponent(voteNumero)
+        body: 'amendment=' + encodeURIComponent(amendment)
             + '&reviewed='   + reviewed
       })
       .then(function (r) { return r.json(); })

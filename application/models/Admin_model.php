@@ -308,6 +308,7 @@ class Admin_model extends CI_Model
             * 100, 1)
           ELSE 0
         END AS interet,
+        va.amendmentId,
         aia.titre_ia,
         aia.resume_ia,
         aia.simplicite_ia,
@@ -336,17 +337,16 @@ class Admin_model extends CI_Model
    *
    * @return bool true si la requête a réussi, false en cas d'erreur SQL
    */
-  public function set_amendement_reviewed($legislature, $voteNumero, $reviewed)
+  public function set_amendement_reviewed($amendmentId, $reviewed)
   {
-    $legislature = (int) $legislature;
-    $voteNumero  = (string) $voteNumero;
+    $amendmentId = (string) $amendmentId;
     $reviewed    = $reviewed ? 1 : 0;
 
     $ok = $this->db->query(
-      "INSERT INTO amendements_ia (legislature, voteNumero, reviewed)
-       VALUES (?, ?, ?)
-       ON DUPLICATE KEY UPDATE reviewed = VALUES(reviewed), updated_at = NOW()",
-      array($legislature, $voteNumero, $reviewed)
+      "UPDATE amendements_ia
+      SET reviewed = ?, updated_at = NOW()
+      WHERE amendementId = ?",
+      array($reviewed, $amendmentId)
     );
 
     return $ok !== FALSE;
