@@ -88,7 +88,7 @@ class Newsletter extends MY_Controller
       }
 
       $email = $this->input->post('email');
-      if (!$email || !valid_email($email)) {
+      if (!$email || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
         return $this->output
           ->set_content_type('application/json')
           ->set_output(json_encode(false));
