@@ -345,7 +345,7 @@ class Admin_model extends CI_Model
     $ok = $this->db->query(
       "UPDATE amendements_ia
       SET reviewed = ?, updated_at = NOW()
-      WHERE amendmentId = ?",
+      WHERE amendementId = ?",
       array($reviewed, $amendmentId)
     );
 
