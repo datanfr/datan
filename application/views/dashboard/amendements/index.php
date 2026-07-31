@@ -151,7 +151,7 @@
                       <td class="text-center">
                         <input type="checkbox"
                               class="chk-reviewed"
-                              data-amendmentId="<?= htmlspecialchars($a['amendementId']) ?>"
+                              data-amendmentId="<?= htmlspecialchars($a['amendmentId']) ?>"
                               <?= !empty($a['reviewed']) ? 'checked' : '' ?>>
                       </td>
 
