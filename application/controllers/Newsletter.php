@@ -77,6 +77,30 @@ class Newsletter extends MY_Controller
         }
     }
 
+    // JSON endpoint called by the signup forms (navbar modal + /newsletter page)
+    // Route: api/newsletter/create_newsletter — the JS expects a truthy JSON body on success
+    public function create(){
+      if ($this->input->method() !== 'post') {
+        return $this->output
+          ->set_content_type('application/json')
+          ->set_status_header(405)
+          ->set_output(json_encode(array('error' => true, 'message' => 'Method not allowed')));
+      }
+
+      $email = $this->input->post('email');
+      if (!$email || !valid_email($email)) {
+        return $this->output
+          ->set_content_type('application/json')
+          ->set_output(json_encode(false));
+      }
+
+      $result = $this->newsletter_model->create_newsletter($email);
+
+      return $this->output
+        ->set_content_type('application/json')
+        ->set_output(json_encode($result));
+    }
+
     public function register(){
       // Meta
       $data['url'] = $this->meta_model->get_url();
