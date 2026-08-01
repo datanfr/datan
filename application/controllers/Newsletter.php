@@ -262,7 +262,7 @@ class Newsletter extends MY_Controller
         $mjml = $header." ".$body." ".$footer;
         $html = getMjmlHtml($mjml);
         $html = getHtmlMinified($html);
-        if ($this->password_model->is_admin()) {
+        if (!is_cli() && $this->password_model->is_admin()) {
           echo $html;
         }
 
