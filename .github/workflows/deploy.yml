@@ -18,7 +18,7 @@ jobs:
     permissions:
       contents: write
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 0
           submodules: recursive
@@ -34,7 +34,15 @@ jobs:
 
       - name: Get the public IP of the GitHub runner
         id: ip
-        uses: haythem/public-ip@v1.3
+        run: |
+          IP=$(curl -4 -sf --max-time 10 https://api.ipify.org || curl -4 -sf --max-time 10 https://checkip.amazonaws.com)
+          IP=$(echo "$IP" | tr -d "[:space:]")
+          if [[ ! "$IP" =~ ^[0-9]+[.][0-9]+[.][0-9]+[.][0-9]+$ ]]; then
+            echo "Impossible de déterminer l'IP publique du runner : '$IP'"
+            exit 1
+          fi
+          echo "Runner public IP: $IP"
+          echo "ipv4=$IP" >> "$GITHUB_OUTPUT"
 
       - name: List all whitelisted IPs
         id: list-ips
