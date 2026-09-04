@@ -17,6 +17,9 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
+    env:
+      # API du plugin o2switch "SSH whitelist" de cPanel (les secrets sont masqués dans les logs)
+      CPANEL_API: https://${{ secrets.CPANEL_USERNAME }}:${{ secrets.CPANEL_PASSWORD }}@${{ secrets.CPANEL_SERVER }}:2083/frontend/o2switch/o2switch-ssh-whitelist/index.live.php
     steps:
       - uses: actions/checkout@v7
         with:
@@ -47,26 +50,46 @@ jobs:
       - name: List all whitelisted IPs
         id: list-ips
         run: |
-          JSON_OUTPUT=$(curl -sX GET "https://${{ secrets.CPANEL_USERNAME }}:${{ secrets.CPANEL_PASSWORD }}@${{ secrets.CPANEL_SERVER }}:2083/frontend/o2switch/o2switch-ssh-whitelist/index.live.php?r=list")
+          # --retry ne rejoue que les erreurs transitoires (connexion, 5xx), pas un 401/403.
+          # Le corps est écrit dans un fichier (et non sur stdout) car curl le tronque à chaque nouvelle tentative.
+          BODY_FILE=$(mktemp)
+          HTTP_CODE=$(curl -sS --max-time 30 --retry 3 --retry-delay 5 -o "$BODY_FILE" -w '%{http_code}' "$CPANEL_API?r=list")
+          RAW=$(cat "$BODY_FILE")
+
+          # On ne garde que ce qui commence à la première ligne débutant par "{" (ignore une éventuelle notice PHP)
+          JSON_OUTPUT=$(echo "$RAW" | sed -n '/^[[:space:]]*{/,$p')
+
+          if [[ "$HTTP_CODE" != "200" ]] || ! echo "$JSON_OUTPUT" | jq -e '.data.list | type == "array"' >/dev/null 2>&1; then
+            echo "::error::L'API whitelist cPanel n'a pas renvoyé la liste attendue (HTTP $HTTP_CODE). Vérifier les secrets CPANEL_USERNAME / CPANEL_PASSWORD (encodé URL) / CPANEL_SERVER et l'accès au cPanel."
+            echo "Réponse brute (40 premières lignes) :"
+            echo "$RAW" | head -n 40
+            exit 1
+          fi
+
+          if [[ "$JSON_OUTPUT" != "$RAW" ]]; then
+            echo "::warning::Du texte inattendu précède le JSON renvoyé par cPanel :"
+            echo "$RAW" | sed '/^[[:space:]]*{/,$d' | head -n 10
+          fi
 
           echo "Whitelisted IPs (JSON):"
           echo "$JSON_OUTPUT" | jq .
 
           IPS=$(echo "$JSON_OUTPUT" | jq -r '.data.list[].address' | sort -u | paste -sd "," -)
-          echo "ips=$IPS" >> $GITHUB_OUTPUT
+          echo "ips=$IPS" >> "$GITHUB_OUTPUT"
 
       #Les adresses IP à conserver dans la liste blanche du serveur sont à définir dans KEEP_IPS
       - name: Remove unneeded whitelisted IPs
+        env:
+          RUNNER_IP: ${{ steps.ip.outputs.ipv4 }}
+          WHITELISTED_IPS: ${{ steps.list-ips.outputs.ips }}
         run: |
-          KEEP_IPS="109.137.71.77 92.184.106.90 ${{ steps.ip.outputs.ipv4 }}"
+          KEEP_IPS="109.137.71.77 92.184.106.90 $RUNNER_IP"
 
-          ALL_IPS=$(curl -sX GET "https://${{ secrets.CPANEL_USERNAME }}:${{ secrets.CPANEL_PASSWORD }}@${{ secrets.CPANEL_SERVER }}:2083/frontend/o2switch/o2switch-ssh-whitelist/index.live.php?r=list" | jq -r '.data.list[].address' | sort -u)
-
-          for ip in $ALL_IPS; do
+          for ip in $(echo "$WHITELISTED_IPS" | tr ',' ' '); do
             if [[ ! " $KEEP_IPS " =~ " $ip " ]]; then
               echo "Removing IP: $ip"
-              curl -sX GET "https://${{ secrets.CPANEL_USERNAME }}:${{ secrets.CPANEL_PASSWORD }}@${{ secrets.CPANEL_SERVER }}:2083/frontend/o2switch/o2switch-ssh-whitelist/index.live.php?r=remove&address=$ip&direction=in&port=22"
-              curl -sX GET "https://${{ secrets.CPANEL_USERNAME }}:${{ secrets.CPANEL_PASSWORD }}@${{ secrets.CPANEL_SERVER }}:2083/frontend/o2switch/o2switch-ssh-whitelist/index.live.php?r=remove&address=$ip&direction=out&port=22"
+              curl -sS --max-time 30 "$CPANEL_API?r=remove&address=$ip&direction=in&port=22"; echo
+              curl -sS --max-time 30 "$CPANEL_API?r=remove&address=$ip&direction=out&port=22"; echo
             else
               echo "Keeping IP: $ip"
             fi
@@ -74,16 +97,20 @@ jobs:
 
       - name: Add runner IP to whitelist
         run: |
-          curl -sX POST \
+          curl -sS --max-time 30 -X POST \
             -d "whitelist[address]=${{ steps.ip.outputs.ipv4 }}" \
             -d "whitelist[port]=22" \
-            "https://${{ secrets.CPANEL_USERNAME }}:${{ secrets.CPANEL_PASSWORD }}@${{ secrets.CPANEL_SERVER }}:2083/frontend/o2switch/o2switch-ssh-whitelist/index.live.php?r=add"
+            "$CPANEL_API?r=add"; echo
 
       - name: Verify whitelist contains runner IP
         run: |
-          curl -sX GET \
-            "https://${{ secrets.CPANEL_USERNAME }}:${{ secrets.CPANEL_PASSWORD }}@${{ secrets.CPANEL_SERVER }}:2083/frontend/o2switch/o2switch-ssh-whitelist/index.live.php?r=list" \
-            | grep "${{ steps.ip.outputs.ipv4 }}"
+          LIST=$(curl -sS --max-time 30 "$CPANEL_API?r=list")
+          if ! echo "$LIST" | grep -q "${{ steps.ip.outputs.ipv4 }}"; then
+            echo "::error::L'IP du runner ${{ steps.ip.outputs.ipv4 }} n'apparaît pas dans la whitelist cPanel."
+            echo "$LIST" | head -n 40
+            exit 1
+          fi
+          echo "Runner IP ${{ steps.ip.outputs.ipv4 }} is whitelisted."
 
       - name: Installing the SSH Key
         run: |
