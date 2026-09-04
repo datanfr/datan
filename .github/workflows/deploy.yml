@@ -1,8 +1,11 @@
 # Les variables suivantes doivent être configurées dans les Secrets du repo GitHub :
-# CPANEL_USERNAME  : Nom d’utilisateur cPanel pour l’authentification.
-# CPANEL_PASSWORD  : Mot de passe cPanel (ou token) qui doit être encodé URL
+# CPANEL_USERNAME  : Nom d’utilisateur cPanel.
+# CPANEL_API_TOKEN : Jeton d'API cPanel (cPanel > Sécurité > Gérer les jetons d'API).
+#                    Remplace l'ancien CPANEL_PASSWORD : o2switch n'accepte plus l'authentification par mot de passe
+#                    sur l'API de liste blanche SSH (https://faq.o2switch.fr/cpanel/outils/exception-parefeu/).
 # CPANEL_SERVER    : Adresse du serveur cPanel (exemple : monserveur.o2switch.net).
-# SSH_PRIVATE_KEY : Clé privée SSH pour l’authentification.
+# SSH_PRIVATE_KEY  : Clé privée SSH pour l’authentification.
+# SUBMODULE_TOKEN  : Token GitHub permettant de récupérer le sous-module scripts.
 
 name: Deploy to Production
 
@@ -18,8 +21,11 @@ jobs:
     permissions:
       contents: write
     env:
-      # API du plugin o2switch "SSH whitelist" de cPanel (les secrets sont masqués dans les logs)
-      CPANEL_API: https://${{ secrets.CPANEL_USERNAME }}:${{ secrets.CPANEL_PASSWORD }}@${{ secrets.CPANEL_SERVER }}:2083/frontend/o2switch/o2switch-ssh-whitelist/index.live.php
+      # Utilisés par .github/scripts/ssh-whitelist.sh (les secrets sont masqués dans les logs)
+      CPANEL_SERVER: ${{ secrets.CPANEL_SERVER }}
+      CPANEL_USERNAME: ${{ secrets.CPANEL_USERNAME }}
+      CPANEL_API_TOKEN: ${{ secrets.CPANEL_API_TOKEN }}
+      WHITELIST: bash .github/scripts/ssh-whitelist.sh
     steps:
       - uses: actions/checkout@v7
         with:
@@ -49,33 +55,7 @@ jobs:
 
       - name: List all whitelisted IPs
         id: list-ips
-        run: |
-          # --retry ne rejoue que les erreurs transitoires (connexion, 5xx), pas un 401/403.
-          # Le corps est écrit dans un fichier (et non sur stdout) car curl le tronque à chaque nouvelle tentative.
-          BODY_FILE=$(mktemp)
-          HTTP_CODE=$(curl -sS --max-time 30 --retry 3 --retry-delay 5 -o "$BODY_FILE" -w '%{http_code}' "$CPANEL_API?r=list")
-          RAW=$(cat "$BODY_FILE")
-
-          # On ne garde que ce qui commence à la première ligne débutant par "{" (ignore une éventuelle notice PHP)
-          JSON_OUTPUT=$(echo "$RAW" | sed -n '/^[[:space:]]*{/,$p')
-
-          if [[ "$HTTP_CODE" != "200" ]] || ! echo "$JSON_OUTPUT" | jq -e '.data.list | type == "array"' >/dev/null 2>&1; then
-            echo "::error::L'API whitelist cPanel n'a pas renvoyé la liste attendue (HTTP $HTTP_CODE). Vérifier les secrets CPANEL_USERNAME / CPANEL_PASSWORD (encodé URL) / CPANEL_SERVER et l'accès au cPanel."
-            echo "Réponse brute (40 premières lignes) :"
-            echo "$RAW" | head -n 40
-            exit 1
-          fi
-
-          if [[ "$JSON_OUTPUT" != "$RAW" ]]; then
-            echo "::warning::Du texte inattendu précède le JSON renvoyé par cPanel :"
-            echo "$RAW" | sed '/^[[:space:]]*{/,$d' | head -n 10
-          fi
-
-          echo "Whitelisted IPs (JSON):"
-          echo "$JSON_OUTPUT" | jq .
-
-          IPS=$(echo "$JSON_OUTPUT" | jq -r '.data.list[].address' | sort -u | paste -sd "," -)
-          echo "ips=$IPS" >> "$GITHUB_OUTPUT"
+        run: $WHITELIST list
 
       #Les adresses IP à conserver dans la liste blanche du serveur sont à définir dans KEEP_IPS
       - name: Remove unneeded whitelisted IPs
@@ -86,31 +66,19 @@ jobs:
           KEEP_IPS="109.137.71.77 92.184.106.90 $RUNNER_IP"
 
           for ip in $(echo "$WHITELISTED_IPS" | tr ',' ' '); do
-            if [[ ! " $KEEP_IPS " =~ " $ip " ]]; then
-              echo "Removing IP: $ip"
-              curl -sS --max-time 30 "$CPANEL_API?r=remove&address=$ip&direction=in&port=22"; echo
-              curl -sS --max-time 30 "$CPANEL_API?r=remove&address=$ip&direction=out&port=22"; echo
-            else
+            if [[ " $KEEP_IPS " == *" $ip "* ]]; then
               echo "Keeping IP: $ip"
+            else
+              echo "Removing IP: $ip"
+              $WHITELIST remove "$ip"
             fi
           done
 
       - name: Add runner IP to whitelist
-        run: |
-          curl -sS --max-time 30 -X POST \
-            -d "whitelist[address]=${{ steps.ip.outputs.ipv4 }}" \
-            -d "whitelist[port]=22" \
-            "$CPANEL_API?r=add"; echo
+        run: $WHITELIST add "${{ steps.ip.outputs.ipv4 }}"
 
       - name: Verify whitelist contains runner IP
-        run: |
-          LIST=$(curl -sS --max-time 30 "$CPANEL_API?r=list")
-          if ! echo "$LIST" | grep -q "${{ steps.ip.outputs.ipv4 }}"; then
-            echo "::error::L'IP du runner ${{ steps.ip.outputs.ipv4 }} n'apparaît pas dans la whitelist cPanel."
-            echo "$LIST" | head -n 40
-            exit 1
-          fi
-          echo "Runner IP ${{ steps.ip.outputs.ipv4 }} is whitelisted."
+        run: $WHITELIST verify "${{ steps.ip.outputs.ipv4 }}"
 
       - name: Installing the SSH Key
         run: |
@@ -159,7 +127,7 @@ jobs:
             --exclude='assets/data/*.txt' \
             --exclude='assets/css/bootstrap*' \
             -av --backup --backup-dir=$BACKUP_DIR --delete ./ ${{ secrets.CPANEL_USERNAME }}@${{ secrets.CPANEL_SERVER }}:public_html
-      
+
       - name: Clear cache on datan.fr
         run: |
           ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa \
