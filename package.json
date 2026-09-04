@@ -32,6 +32,8 @@
     "docker-municipales": "docker exec -it datan php scripts/get_electoral_results.php",
     "docker-municipales-candidate": "docker exec -it datan php scripts/get_electoral_candidates.php",
     "docker-profession": "docker exec -it datan php scripts/profession.php",
+    "docker-amdts-submit": "docker exec -it datan php scripts/generate_amendements_ia_submit_batch.php",
+    "docker-amdts-process": "docker exec -it datan php scripts/generate_amendements_ia_process_batch.php",
     "docker-grunt": "docker exec -it datan grunt",
     "docker-grunt-watch": "docker exec -it datan grunt watch",
     "docker-test-branch": "docker exec -it datan php tests/compare_branch.php tests/urls.txt",
