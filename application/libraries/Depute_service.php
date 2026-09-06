@@ -185,6 +185,14 @@ class Depute_service
 
                 }
 
+                $data['election_result']['candidat'] = $this->normalize_candidate_name(
+                    $data['election_result']['candidat']
+                );
+                foreach ($data['election_opponents'] as &$opponent) {
+                    $opponent['candidat'] = $this->normalize_candidate_name($opponent['candidat']);
+                }
+                unset($opponent);
+
                 // Add more info URL 
                 $urlMap = [
                     17 => "https://www.archives-resultats-elections.interieur.gouv.fr/resultats/legislatives2024/",
@@ -198,6 +206,37 @@ class Depute_service
         }
 
         return $data;
+    }
+
+    private function normalize_candidate_name(string $name): string
+    {
+        $name = strtr($name, [
+            'Ã€' => 'à',
+            'Ã‚' => 'â',
+            'Ã„' => 'ä',
+            'Ã†' => 'æ',
+            'Ã‡' => 'ç',
+            'Ãˆ' => 'è',
+            'Ã‰' => 'é',
+            'ÃŠ' => 'ê',
+            'Ã‹' => 'ë',
+            'ÃŽ' => 'î',
+            'Ã”' => 'ô',
+            'Ã™' => 'ù',
+            'Ã›' => 'û',
+            'Ãœ' => 'ü',
+            'Å“' => 'œ',
+        ]);
+
+        if (!preg_match('/[ÃÂâ]/u', $name)) {
+            return $name;
+        }
+
+        $normalized = iconv('UTF-8', 'ISO-8859-1//TRANSLIT', $name);
+
+        return $normalized !== false && strpos($normalized, '?') === false
+            ? $normalized
+            : $name;
     }
 
     public function get_other_mps(
