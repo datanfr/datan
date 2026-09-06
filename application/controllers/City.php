@@ -126,7 +126,6 @@
 
       // Get city mayor
       $data['mayor'] = $this->city_model->get_mayor($data['ville']['dpt'], $insee, $data['ville']['commune']);
-      $data['mayor']['gender'] = gender($data['mayor']['gender']);
 
       // Get electionFeature       
       //$data['electionFeature'] = $this->elections_model->get_candidates_by_city($insee);

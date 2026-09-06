@@ -6,7 +6,7 @@
     <div class="container pg-departement my-5">
       <div class="row">
         <div class="col-12">
-          <h2>Découvez les députés <?= $departement['libelle_2'] ?><?= $departement['departement_nom'] ?> à l'Assemblée nationale</h2>
+          <h2>Découvrez <?= count($deputes) === 1 ? 'le député' : 'les députés' ?> <?= $departement['libelle_2'] ?><?= $departement['departement_nom'] ?> à l'Assemblée nationale</h2>
         </div>
       </div>
       <div class="row mt-5">
@@ -20,13 +20,11 @@
     <!-- OTHER CITIES FROM THE DEPARTMENT -->
     <div class="container-fluid bloc-others-container">
       <div class="container bloc-others">
-        <?php if ($departement['departement_code'] != '099' && $departement['departement_code'] != '975'): ?>
+        <?php if ($departement['departement_code'] != '099'): ?>
           <div class="row">
             <div class="col-12">
-              <?php if ($departement['departement_nom'] == "Nouvelle-Calédonie" || $departement['departement_nom'] == "Polynésie française"): ?>
-                <h2>Communes <?= $departement['libelle_2'] ?><?= $departement['departement_nom'] ?> (<?= $departement['departement_code'] ?>)</h2>
-              <?php elseif ($departement['departement_nom'] == "Wallis-et-Futuna"): ?>
-                <h2>Commune <?= $departement['libelle_2'] ?><?= $departement['departement_nom'] ?> (<?= $departement['departement_code'] ?>)</h2>
+              <?php if (in_array($departement['departement_nom'], array('Nouvelle-Calédonie', 'Polynésie française', 'Saint-Pierre-et-Miquelon', 'Saint-Barthélemy et Saint-Martin', 'Wallis-et-Futuna'), true)): ?>
+                <h2><?= count($communes) === 1 ? 'Commune' : 'Communes' ?> <?= $departement['libelle_2'] ?><?= $departement['departement_nom'] ?> (<?= $departement['departement_code'] ?>)</h2>
               <?php else: ?>
                 <h2>Communes les plus peuplées <?= $departement['libelle_2'] ?><?= $departement['departement_nom'] ?> (<?= $departement['departement_code'] ?>)</h2>
               <?php endif; ?>
