@@ -163,6 +163,11 @@
           $array = array('nameFirst' => 'Alexandre', 'nameLast' => 'Doriol', 'gender' => 'M');
         }
       }
+
+      // Apply gender transformation here in the model
+      if($array){
+        $array['gender'] = gender($array['gender']);
+      }
       
 
       return $array;
