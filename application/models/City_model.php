@@ -32,8 +32,20 @@
 
     public function get_communes_by_dpt($slug, $max_population = FALSE, $limit = FALSE, $order_by = FALSE){
 
-      if ($max_population) {
+      $slugs_without_population_filter = array(
+        'saint-pierre-et-miquelon-975',
+        'saint-barthelemy-et-saint-martin',
+        'wallis-et-futuna-986',
+        'polynesie-francaise-987',
+        'nouvelle-caledonie-988'
+      );
+      $is_population_filter_exempt = in_array($slug, $slugs_without_population_filter, true);
+
+      if ($max_population && !$is_population_filter_exempt) {
         $this->db->where('cities.population >', $max_population);
+      }
+      if ($is_population_filter_exempt) {
+        $limit = $limit ? min($limit, 20) : 20;
       }
       if ($limit) {
         $this->db->limit($limit);
