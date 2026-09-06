@@ -231,6 +231,15 @@
             </div>
           <?php endforeach; ?>
         </div>
+        <div class="row mt-3">
+          <div class="col-12 d-flex justify-content-center align-items-center">
+            <?php if($ville['population'] > url_obf_cities_election()): ?>
+              <a href="<?= base_url() ?>elections/resultats/<?= $ville['dpt_slug'] ?>/ville_<?= $ville['commune_slug'] ?>" class="mt-2 btn btn-primary">Résultats des élections à <?= $ville['commune_nom'] ?></a>
+            <?php else: ?>
+              <a url_obf="<?= url_obfuscation(base_url() . "elections/resultats/" . $ville['dpt_slug'] . "/ville_" . $ville['commune_slug']) ?>" class="mt-2 btn btn-primary url_obf">Résultats des élections à <?= $ville['commune_nom'] ?></a>
+            <?php endif; ?>
+          </div>
+        </div>
       </div>
     </div> <!-- // END ALL ELECTIONS -->
     <div class="container pg-commune mt-5">

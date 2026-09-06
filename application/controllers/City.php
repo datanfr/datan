@@ -129,7 +129,7 @@
       $data['mayor']['gender'] = gender($data['mayor']['gender']);
 
       // Get electionFeature       
-      $data['electionFeature'] = $this->elections_model->get_candidates_by_city($insee);
+      //$data['electionFeature'] = $this->elections_model->get_candidates_by_city($insee);
 
       // Get last election (2024 legislatives)
       $data['results_legislatives_last'] = $this->city_model->get_results_legislatives($insee, 2024);
