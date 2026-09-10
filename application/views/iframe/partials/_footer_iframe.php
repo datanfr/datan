@@ -55,11 +55,6 @@
       });
     </script>
 
-    <script type="text/javascript">
-      tarteaucitron.user.googletagmanagerId = 'GTM-K3QQNK2';
-      (tarteaucitron.job = tarteaucitron.job || []).push('googletagmanager');
-    </script>
-
     <?php if (isset($js_to_load)) : ?>
       <?php foreach ($js_to_load as $file) : ?>
         <script type="text/javascript" src="<?= asset_url() ?>js/<?= $file ?>.js?v=<?= get_version() ?>"></script>
@@ -69,9 +64,6 @@
     <script type="text/javascript" src="<?= asset_url() ?>js/main.min.js?v=<?= get_version() ?>"></script>
     <script type="text/javascript" src="<?= asset_url() ?>js/datan/url_obf2.min.js"></script>
 
-    <!-- Google Tag Manager (noscript) -->
-    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-K3QQNK2" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-    <!-- End Google Tag Manager (noscript) -->
     </body>
 
     </html>
