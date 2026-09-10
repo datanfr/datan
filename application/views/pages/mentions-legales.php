@@ -32,8 +32,6 @@
         <li><b>Cookies fonctionnels</b> (soumis à consentement). Ces cookies mémorisent le nombre de pages visitées au cours du mois en cours, afin d'afficher un message de soutien aux visiteurs réguliers.</li>
       </ul>
 
-      <p>Vous pouvez à tout moment modifier vos préférences de consentement en cliquant sur le lien Tarte au citron en bas de page.</p>
-
       <p>Datan utilise également Matomo, un outil de mesure d'audience open source, hébergé sur nos propres serveurs. Notre configuration est conforme aux recommandations de la CNIL, permettant une exemption de consentement. Vous pouvez néanmoins vous opposer au suivi Matomo à tout moment en cochant la case ci-dessous : </p>
 
       <iframe

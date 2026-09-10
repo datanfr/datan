@@ -12,49 +12,6 @@
     <?php endif; ?>
     <script type="text/javascript" src="<?= asset_url() ?>js/libraries/jquery/jquery.unveil.min.js"></script>
 
-    <script type="text/javascript">
-      var tarteaucitronForceLanguage = "fr";
-    </script>
-    <script src="https://cdn.jsdelivr.net/gh/AmauriC/tarteaucitron.js@20210329/tarteaucitron.min.js"></script>
-    <script type="text/javascript">
-      tarteaucitron.init({
-        "privacyUrl": "<?= base_url() ?>mentions-legales",
-        /* Privacy policy url */
-
-        "hashtag": "#tarteaucitron",
-        /* Open the panel with this hashtag */
-        "cookieName": "tarteaucitron",
-        /* Cookie name */
-
-        "orientation": "bottom",
-        /* Banner position (top - bottom - middle) */
-        "showAlertSmall": false,
-        /* Show the small banner on bottom right */
-        "cookieslist": true,
-        /* Show the cookie list */
-
-        "adblocker": false,
-        /* Show a Warning if an adblocker is detected */
-        "AcceptAllCta": true,
-        /* Show the accept all button when highPrivacy on */
-        "highPrivacy": true,
-        /* Disable auto consent */
-        "handleBrowserDNTRequest": false,
-        /* If Do Not Track == 1, disallow all */
-
-        "removeCredit": false,
-        /* Remove credit link */
-        "moreInfoLink": true,
-        /* Show more info link */
-        "useExternalCss": false,
-        /* If false, the tarteaucitron.css file will be loaded */
-
-        //"cookieDomain": ".my-multisite-domaine.fr", /* Shared cookie for multisite */
-
-        "readmoreLink": "/cookiespolicy" /* Change the default readmore link */
-      });
-    </script>
-
     <?php if (isset($js_to_load)) : ?>
       <?php foreach ($js_to_load as $file) : ?>
         <script type="text/javascript" src="<?= asset_url() ?>js/<?= $file ?>.js?v=<?= get_version() ?>"></script>

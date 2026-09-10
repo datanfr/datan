@@ -220,130 +220,14 @@
     <script src="<?= asset_url(); ?>js/libraries/jquery/jquery-ui.min.js"></script>
     <script src="<?= asset_url(); ?>js/libraries/popper/popper.min.js"></script>
     <script type="text/javascript" src="<?= asset_url() ?>js/libraries/bootstrap/bootstrap.min.js"></script>
+    
     <?php if (isset($js_to_load_before_datan)) : ?>
       <?php foreach ($js_to_load_before_datan as $file) : ?>
         <script src="<?= asset_url(); ?>js/<?= $file ?>.js?v=<?= get_version() ?>"></script>
       <?php endforeach; ?>
     <?php endif; ?>
+
     <script type="text/javascript" src="<?= asset_url() ?>js/libraries/jquery/jquery.unveil.min.js"></script>
-
-    <script type="text/javascript">
-      var tarteaucitronForceLanguage = "fr";
-    </script>
-    <script src="https://cdn.jsdelivr.net/gh/AmauriC/tarteaucitron.js@20210329/tarteaucitron.min.js"></script>
-    <script type="text/javascript">
-      tarteaucitron.init({
-        "privacyUrl": "<?= base_url() ?>mentions-legales",
-        /* Privacy policy url */
-
-        "hashtag": "#tarteaucitron",
-        /* Open the panel with this hashtag */
-        "cookieName": "tarteaucitron",
-        /* Cookie name */
-
-        "orientation": "bottom",
-        /* Banner position (top - bottom - middle) */
-        "showAlertSmall": false,
-        /* Show the small banner on bottom right */
-        "cookieslist": true,
-        /* Show the cookie list */
-
-        "adblocker": false,
-        /* Show a Warning if an adblocker is detected */
-        "AcceptAllCta": true,
-        /* Show the accept all button when highPrivacy on */
-        "highPrivacy": true,
-        /* Disable auto consent */
-        "handleBrowserDNTRequest": false,
-        /* If Do Not Track == 1, disallow all */
-
-        "removeCredit": false,
-        /* Remove credit link */
-        "moreInfoLink": true,
-        /* Show more info link */
-        "useExternalCss": false,
-        /* If false, the tarteaucitron.css file will be loaded */
-
-        //"cookieDomain": ".my-multisite-domaine.fr", /* Shared cookie for multisite */
-
-        "readmoreLink": "/cookiespolicy" /* Change the default readmore link */
-      });
-    </script>
-
-    <script type="text/javascript">
-      // Declare custom Datan tracking service
-      tarteaucitron.services.datantracking = {
-          "key": "datantracking",
-          "type": "other",
-          "name": "Suivi des pages visitées",
-          "uri": "<?= base_url() ?>mentions-legales",
-          "needConsent": true,
-          "cookies": ["datan_monthly", "datan_modal_shown"],
-          "js": function () {
-              // This runs only after user accepts
-              (function () {
-                  var THRESHOLD = 10; // Threshold before showing the modal 
-                  var ONE_WEEK_MS = 7 * 24 * 60 * 60 * 1000; // One week in milliseconds
-
-                  function getCookie(name) {
-                      var match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
-                      return match ? decodeURIComponent(match[2]) : null;
-                  }
-
-                  function setCookie(name, value, ms) {
-                      var expires = new Date(Date.now() + ms).toUTCString();
-                      document.cookie = name + '=' + encodeURIComponent(value) + '; expires=' + expires + '; path=/';
-                  }
-
-                  // Get current month as a string 
-                  var now = new Date();
-                  var currentMonth = now.getFullYear() + '-' + (now.getMonth() + 1);
-
-                  // Read the existing tracking cookie and parses it from JSON 
-                  var cookieRaw = getCookie('datan_monthly');
-                  var data = cookieRaw ? JSON.parse(decodeURIComponent(cookieRaw)) : null;
-
-                  // If no cookie exists or if we are in a new month, reset the counter to 0
-                  if (!data || data.month !== currentMonth) {
-                      data = { month: currentMonth, count: 0 };
-                  }
-
-                  data.count++; // Increments the page count by 1
-
-                  setCookie('datan_monthly', JSON.stringify(data), 1000 * 60 * 60 * 24 * 60); // Save the updated count back to the cookie, and expires in two months
-
-                  // Update footer counter
-                  var el = document.getElementById('monthly-pages-visited-count');
-                  if (el) el.textContent = data.count;
-
-                  // Modal logic
-
-                  if (data.count < THRESHOLD) return; // Stop there if the user hasn't reached the threshold : no modal.
-
-                  var lastShown = getCookie('datan_modal_shown');
-                  if (lastShown && (Date.now() - parseInt(lastShown, 10)) < ONE_WEEK_MS) return; // If it was seen less than a week : no modal
-
-                  setCookie('datan_modal_shown', Date.now(), ONE_WEEK_MS);
-
-                  $(document).ready(function () {
-                      $('#modal-page-count').text(data.count);
-                      $('#donationModal').modal('show');
-                  });
-              })();
-          },
-          "fallback": function () {
-              // User refused — do nothing
-          }
-      };
-
-      (tarteaucitron.job = tarteaucitron.job || []).push('datantracking');
-    </script>
-
-    <script>
-      $(document).ready(function () {
-        //$('#donationModal').modal('show');
-      });
-    </script>
 
     <?php if (isset($js_to_load)) : ?>
       <?php foreach ($js_to_load as $file) : ?>
@@ -353,6 +237,9 @@
 
     <script type="text/javascript" src="<?= asset_url() ?>js/main.min.js?v=<?= get_version() ?>"></script>
     <script type="text/javascript" src="<?= asset_url() ?>js/datan/url_obf2.min.js"></script>
+
+    <!-- Donation Modal Tracker (using localStorage) -->
+    <script type="text/javascript" src="<?= asset_url() ?>js/datan/donation-modal-localstorage.js?v=<?= get_version() ?>"></script>
 
     </body>
 
