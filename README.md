@@ -1,5 +1,5 @@
 # Datan
-Datan is a website anlaysing the voting behaviour of French MPs.
+Datan is a website analysing the voting behaviour of French MPs.
 Datan est un site internet analysant les votes des députés français (Assemblée nationale).
 
 # Discord
