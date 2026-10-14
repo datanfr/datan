@@ -48,3 +48,16 @@ assets/data/professions/election_4/*.pdf
 assets/data/professions/election_6/*.pdf
 assets/data/*.txt
 assets/css/bootstrap*
+
+# CodeIgniter 4
+/vendor/
+writable/cache/*
+!writable/cache/index.html
+writable/debugbar/*
+!writable/debugbar/index.html
+writable/logs/*
+!writable/logs/index.html
+writable/session/*
+!writable/session/index.html
+writable/uploads/*
+!writable/uploads/index.html
