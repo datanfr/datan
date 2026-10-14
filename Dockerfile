@@ -1,5 +1,5 @@
 # define php version
-FROM php:7.4-apache
+FROM php:8.3-apache
 
 # Install system dependencies with proper cleanup
 RUN apt-get update && apt-get install -y \
@@ -9,11 +9,11 @@ RUN apt-get update && apt-get install -y \
     libpng-dev \
     libjpeg-dev \
     zlib1g-dev \
-    software-properties-common \
+    #software-properties-common \
     ruby-dev \
     ca-certificates \
     fonts-liberation \
-    libappindicator3-1 \
+    #libappindicator3-1 \
     libasound2 \
     libatk-bridge2.0-0 \
     libatk1.0-0 \
@@ -24,7 +24,7 @@ RUN apt-get update && apt-get install -y \
     libexpat1 \
     libfontconfig1 \
     libgbm1 \
-    libgcc1 \
+    libgcc-s1 \
     libglib2.0-0 \
     libgtk-3-0 \
     libnspr4 \
@@ -94,6 +94,10 @@ RUN npm install \
 
 # Copy the rest of the application
 COPY . .
+
+RUN mkdir -p writable/cache writable/logs writable/session writable/uploads \
+    && chown -R www-data:www-data writable \
+    && chmod -R 775 writable
 
 # Complete Composer installation
 RUN composer dump-autoload --optimize
