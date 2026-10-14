@@ -26,14 +26,14 @@ class Database extends Config
      */
     public array $default = [
         'DSN'          => '',
-        'hostname'     => 'localhost',
+        'hostname'     => 'db',
         'username'     => '',
         'password'     => '',
         'database'     => '',
         'DBDriver'     => 'MySQLi',
         'DBPrefix'     => '',
         'pConnect'     => false,
-        'DBDebug'      => true,
+        'DBDebug'      => ENVIRONMENT !== 'production',
         'charset'      => 'utf8mb4',
         'DBCollat'     => 'utf8mb4_general_ci',
         'swapPre'      => '',
@@ -193,6 +193,12 @@ class Database extends Config
     public function __construct()
     {
         parent::__construct();
+
+        // Identifiants lus depuis le .env (partagé avec Docker et CI3)
+        $this->default['hostname'] = env('DATABASE_HOST', 'db');
+        $this->default['username'] = env('DATABASE_USERNAME', env('MYSQL_USER', ''));
+        $this->default['password'] = env('DATABASE_PASSWORD', env('MYSQL_PASSWORD', ''));
+        $this->default['database'] = env('DATABASE_NAME', env('MYSQL_DATABASE', ''));
 
         // Ensure that we always set the database group to 'tests' if
         // we are currently running an automated test suite, so that

@@ -6,7 +6,8 @@ services:
       dockerfile: Dockerfile
     hostname: apache
     ports:
-      - "80:80" # normal php port for trafic and functionality
+      - "80:80" # CI3
+      - "8081:8081" # CI4 (migration)
     volumes:
       - .:/var/www/html
     working_dir: /var/www/html
