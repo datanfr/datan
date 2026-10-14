@@ -1,8 +1,10 @@
 <?php
-  class Deputes_model extends CI_Model {
-    public function __construct() {
-      $this->load->database();
-    }
+
+  namespace App\Models;
+
+  use CodeIgniter\Model;
+
+  class DeputesModel extends Model {
 
     public function get_deputes_all($legislature, $active, $departement) {
       if (!is_null($departement)) {

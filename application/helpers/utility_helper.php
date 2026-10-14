@@ -316,5 +316,3 @@
   function url_obf_cities_election() {
     return 500;
   }
-
-?>

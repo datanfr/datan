@@ -1,24 +1,23 @@
 <?php
-  class Home extends Auth_Controller {
-    public function __construct() {
-      parent::__construct();
-      $this->load->model('deputes_model');
-      $this->load->model('groupes_model');
-      $this->load->model('depute_edito');
-      $this->load->model('votes_model');
-      $this->load->model('departement_model');
-      $this->load->model('city_model');
-      $this->load->model('post_model');
-      $this->load->model('elections_model');
-    }
+
+  namespace App\Controllers;
+
+  use App\Models\DeputesModel;
+  use App\Models\GroupesModel;
+
+  class Home extends BaseController {
 
     public function index() {
-      // Get user data 
+
+      $deputesModel = new DeputesModel();
+      $groupesModel = model(GroupesModel::class);
+
+      // Get user data == TO BE RESOLVED LATER
       $user_type = $this->session->userdata('type');
       $data['user'] = $user_type;
 
       //Get random data
-      $data['depute_random'] = $this->deputes_model->get_depute_random();
+      $data['depute_random'] = $deputesModel->get_depute_random();
       $data['depute_random'] = array_merge($data['depute_random'], gender($data['depute_random']['civ']));
       $data['depute_random']['couleurAssociee'] = $this->groupes_model->get_groupe_color(array($data['depute_random']['libelleAbrev'], $data['depute_random']['couleurAssociee']));
       $data['groupe_random'] = $this->groupes_model->get_groupe_random();
