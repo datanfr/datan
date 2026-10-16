@@ -48,8 +48,8 @@
 
       $data['legislature'] = $legislature;
       $data['deputes'] = $this->deputes_model->get_deputes_all($legislature, $data['active'], NULL);
-      $data['groupes'] = $this->groupes_model->get_groupes_from_mp_array($data['deputes']);
-      $data['groupes_mobile'] = $this->groupes_model->get_groupes_all($data['active'], $legislature);
+      $data['groupes'] = $groupesModel->get_groupes_from_mp_array($data['deputes']);
+      $data['groupes_mobile'] = $groupesModel->get_groupes_all($data['active'], $legislature);
       $number_gender = $this->deputes_model->get_deputes_gender($legislature);
       foreach ($number_gender as $gender) {
         if ($gender["gender"] == "male") {
@@ -64,7 +64,7 @@
 
       // Groupe_color
       foreach ($data['deputes'] as $key => $value) {
-        $data['deputes'][$key]['couleurAssociee'] = $this->groupes_model->get_groupe_color(array($value['libelleAbrev'], $value['couleurAssociee']));
+        $data['deputes'][$key]['couleurAssociee'] = $groupesModel->get_groupe_color(array($value['libelleAbrev'], $value['couleurAssociee']));
       }
 
       // Breadcrumb
@@ -126,7 +126,7 @@
 
       // Groupe_color
       foreach ($data['deputes'] as $key => $value) {
-        $data['deputes'][$key]['couleurAssociee'] = $this->groupes_model->get_groupe_color(array($value['libelleAbrev'], $value['couleurAssociee']));
+        $data['deputes'][$key]['couleurAssociee'] = $groupesModel->get_groupe_color(array($value['libelleAbrev'], $value['couleurAssociee']));
       }
 
       $data['title'] = "Les députés plus en activité";
@@ -210,7 +210,7 @@
       $data = $this->depute_service->get_general_infos($data, $mp_id, $legislature, $name_last);
 
       // ____________________GET MAJORITY GROUP___________________________
-      $data['groupMajority'] = $this->groupes_model->get_majority_group($legislature);
+      $data['groupMajority'] = $groupesModel->get_majority_group($legislature);
     
       // ____________________GET PCT FAMSOCPRO___________________________
       $data['famSocPro'] = null;// $this->jobs_model->get_stats_individual($data['depute']['famSocPro'], $legislature);
@@ -318,7 +318,7 @@
       $data = $this->depute_service->get_statistics($data, $legislature, $mp_id, $groupe_id);
 
       // ____________________GET MAJORITY GROUP___________________________
-      $data['groupMajority'] = $this->groupes_model->get_majority_group($legislature);
+      $data['groupMajority'] = $groupesModel->get_majority_group($legislature);
 
       // ________________ GET Depute page ressources (meta, css, js...)_______
       $data = $this->depute_service->get_mp_page_resources("history", $data, $depute_full_name, $nameUrl);
@@ -357,7 +357,7 @@
       $data['photo_square'] = $data['depute']['legislature'] >= 17 ? TRUE : FALSE;
 
       // Group color
-      $data['depute']['couleurAssociee'] = $this->groupes_model->get_groupe_color(array($data['depute']['libelleAbrev'], $data['depute']['couleurAssociee']));
+      $data['depute']['couleurAssociee'] = $groupesModel->get_groupe_color(array($data['depute']['libelleAbrev'], $data['depute']['couleurAssociee']));
 
       // Commission parlementaire
       $data['commission_parlementaire'] = $this->deputes_model->get_commission_parlementaire($mpId, $legislature);

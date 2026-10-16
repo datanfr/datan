@@ -12,7 +12,7 @@
       $data['title_meta'] = 'Labo : coalition';
       $data['url'] = NULL;
 
-      $data['groups'] = $this->groupes_model->get_groupes_coalition_builder();
+      $data['groups'] = $groupesModel->get_groupes_coalition_builder();
 
       $data["faq"] = [
         ["title" => "Peut-on gouverner sans majorité absolue ?", "text" => "Oui, mais c'est compliqué. Le gouvernement doit chercher des alliances ponctuelles, ralentissant son action et le rendant plus vulnérable."],

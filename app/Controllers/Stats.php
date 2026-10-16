@@ -191,11 +191,11 @@
         $data['deputes'] = $this->stats_model->get_ranking_age();
         $data['mpOldest'] = $data['deputes'][0];
         $data['mpOldest']["name"] = $data['mpOldest']["nameFirst"]." ".$data['mpOldest']["nameLast"];
-        $data['mpOldest']['couleurAssociee'] = $this->groupes_model->get_groupe_color(array($data['mpOldest']['libelleAbrev'], $data['mpOldest']['couleurAssociee']));
+        $data['mpOldest']['couleurAssociee'] = $groupesModel->get_groupe_color(array($data['mpOldest']['libelleAbrev'], $data['mpOldest']['couleurAssociee']));
         $data['mpOldestGender'] = gender($data['mpOldest']["civ"]);
         $data['mpYoungest'] = end($data['deputes']);
         $data['mpYoungest']["name"] = $data['mpYoungest']["nameFirst"]." ".$data['mpYoungest']["nameLast"];
-        $data['mpYoungest']['couleurAssociee'] = $this->groupes_model->get_groupe_color(array($data['mpYoungest']['libelleAbrev'], $data['mpYoungest']['couleurAssociee']));
+        $data['mpYoungest']['couleurAssociee'] = $groupesModel->get_groupe_color(array($data['mpYoungest']['libelleAbrev'], $data['mpYoungest']['couleurAssociee']));
         $data['mpYoungestGender'] = gender($data['mpYoungest']["civ"]);
 
 
@@ -209,15 +209,15 @@
         $data['groupsAge'] = $this->stats_model->get_groups_age();
         if ($data['groupsAge']) {
           foreach ($data['groupsAge'] as &$group) {
-            $group['couleurCard'] = $this->groupes_model->get_groupe_color_card(['uid' => $group['organeRef']]);
+            $group['couleurCard'] = $groupesModel->get_groupe_color_card(['uid' => $group['organeRef']]);
           } 
           unset($group);
           $data['groupOldest'] = array_slice($data['groupsAge'], 0, 1);
           $data['groupOldest'] = $data['groupOldest'][0];
-          $data['groupOldest']['couleurAssociee'] = $this->groupes_model->get_groupe_color(array($data['groupOldest']['libelleAbrev'], $data['groupOldest']['couleurAssociee']));
+          $data['groupOldest']['couleurAssociee'] = $groupesModel->get_groupe_color(array($data['groupOldest']['libelleAbrev'], $data['groupOldest']['couleurAssociee']));
           $data['groupYoungest'] = array_slice($data['groupsAge'], -1);
           $data['groupYoungest'] = $data['groupYoungest'][0];
-          $data['groupYoungest']['couleurAssociee'] = $this->groupes_model->get_groupe_color(array($data['groupYoungest']['libelleAbrev'], $data['groupYoungest']['couleurAssociee']));
+          $data['groupYoungest']['couleurAssociee'] = $groupesModel->get_groupe_color(array($data['groupYoungest']['libelleAbrev'], $data['groupYoungest']['couleurAssociee']));
         }
 
         // Meta
@@ -235,13 +235,13 @@
         $data['groupsWomen'] = $this->stats_model->get_groups_women();
         if ($data['groupsWomen']) {
           foreach ($data['groupsWomen'] as &$group) {
-            $group['couleurCard'] = $this->groupes_model->get_groupe_color_card(['uid' => $group['organeRef']]);
+            $group['couleurCard'] = $groupesModel->get_groupe_color_card(['uid' => $group['organeRef']]);
           } 
           unset($group);
           $data['groupsWomenFirst'] = $data['groupsWomen'][0];
-          $data['groupsWomenFirst']['couleurAssociee'] = $this->groupes_model->get_groupe_color(array($data['groupsWomenFirst']['libelleAbrev'], $data['groupsWomenFirst']['couleurAssociee']));
+          $data['groupsWomenFirst']['couleurAssociee'] = $groupesModel->get_groupe_color(array($data['groupsWomenFirst']['libelleAbrev'], $data['groupsWomenFirst']['couleurAssociee']));
           $data['groupsWomenLast'] = end($data['groupsWomen']);
-          $data['groupsWomenLast']['couleurAssociee'] = $this->groupes_model->get_groupe_color(array($data['groupsWomenLast']['libelleAbrev'], $data['groupsWomenLast']['couleurAssociee']));
+          $data['groupsWomenLast']['couleurAssociee'] = $groupesModel->get_groupe_color(array($data['groupsWomenLast']['libelleAbrev'], $data['groupsWomenLast']['couleurAssociee']));
         }
 
         // Meta
@@ -255,11 +255,11 @@
           $data['mpLoyal'] = array_slice($data['deputes'], 0, 1);
           $data['mpLoyal'] = $data['mpLoyal'][0];
           $data['mpLoyal']['name'] = $data['mpLoyal']['nameFirst']." ".$data['mpLoyal']['nameLast'];
-          $data['mpLoyal']['couleurAssociee'] = $this->groupes_model->get_groupe_color(array($data['mpLoyal']['libelleAbrev'], $data['mpLoyal']['couleurAssociee']));
+          $data['mpLoyal']['couleurAssociee'] = $groupesModel->get_groupe_color(array($data['mpLoyal']['libelleAbrev'], $data['mpLoyal']['couleurAssociee']));
           $data['mpLoyalGender'] = gender($data['mpLoyal']["civ"]);
           $data['mpRebel'] = end($data['deputes']);
           $data['mpRebel']['name'] = $data['mpRebel']['nameFirst']." ".$data['mpRebel']['nameLast'];
-          $data['mpRebel']['couleurAssociee'] = $this->groupes_model->get_groupe_color(array($data['mpRebel']['libelleAbrev'], $data['mpRebel']['couleurAssociee']));
+          $data['mpRebel']['couleurAssociee'] = $groupesModel->get_groupe_color(array($data['mpRebel']['libelleAbrev'], $data['mpRebel']['couleurAssociee']));
           $data['mpRebelGender'] = gender($data['mpRebel']["civ"]);
         }
 
@@ -271,7 +271,7 @@
         $data['groups'] = $this->stats_model->get_groups_cohesion();
         if ($data['groups']) {
           foreach ($data['groups'] as $key => $value) {
-            $data['groups'][$key]['couleurCard'] = $this->groupes_model->get_groupe_color_card(['uid' => $value['organeRef']]);
+            $data['groups'][$key]['couleurCard'] = $groupesModel->get_groupe_color_card(['uid' => $value['organeRef']]);
             if ($value['libelleAbrev'] == 'NI') {
               $keyRemoveNI = $key;
             }
@@ -279,10 +279,10 @@
           $data['groupsCards'] = $data['groups'];
           unset($data['groupsCards'][$keyRemoveNI]);
           $data['groupsFirst'] = $data['groupsCards'][0];
-          $data['groupsFirst']['couleurAssociee'] = $this->groupes_model->get_groupe_color(array($data['groupsFirst']['libelleAbrev'], $data['groupsFirst']['couleurAssociee']));
+          $data['groupsFirst']['couleurAssociee'] = $groupesModel->get_groupe_color(array($data['groupsFirst']['libelleAbrev'], $data['groupsFirst']['couleurAssociee']));
           $data['groupsLast'] = end($data['groupsCards']);
-          $data['groupsLast']['couleurAssociee'] = $this->groupes_model->get_groupe_color(array($data['groupsLast']['libelleAbrev'], $data['groupsLast']['couleurAssociee']));
-          $data['cohesionMean'] = $this->groupes_model->get_stats_avg(legislature_current());
+          $data['groupsLast']['couleurAssociee'] = $groupesModel->get_groupe_color(array($data['groupsLast']['libelleAbrev'], $data['groupsLast']['couleurAssociee']));
+          $data['cohesionMean'] = $groupesModel->get_stats_avg(legislature_current());
           $data['cohesionMean'] = $data['cohesionMean']['cohesion'];
         }
 
@@ -314,12 +314,12 @@
           $data['mpActive'] = array_slice($data['mpsFeature'], 0, 1);
           $data['mpActive'] = $data['mpActive'][0];
           $data['mpActive']['name'] = $data['mpActive']['nameFirst']." ".$data['mpActive']['nameLast'];
-          $data['mpActive']['couleurAssociee'] = $this->groupes_model->get_groupe_color(array($data['mpActive']['libelleAbrev'], $data['mpActive']['couleurAssociee']));
+          $data['mpActive']['couleurAssociee'] = $groupesModel->get_groupe_color(array($data['mpActive']['libelleAbrev'], $data['mpActive']['couleurAssociee']));
           $data['mpActiveGender'] = gender($data['mpActive']['civ']);
 
           $data['mpInactive'] = end($data['mpsFeature']);
           $data['mpInactive']['name'] = $data['mpInactive']['nameFirst']." ".$data['mpInactive']['nameLast'];
-          $data['mpInactive']['couleurAssociee'] = $this->groupes_model->get_groupe_color(array($data['mpInactive']['libelleAbrev'], $data['mpInactive']['couleurAssociee']));
+          $data['mpInactive']['couleurAssociee'] = $groupesModel->get_groupe_color(array($data['mpInactive']['libelleAbrev'], $data['mpInactive']['couleurAssociee']));
           $data['mpInactiveGender'] = gender($data['mpInactive']['civ']);
         }
 
@@ -332,7 +332,7 @@
         $data['votes_sps'] = $this->stats_model->get_groups_participation_sps();
         $data['votes_commission'] = $this->stats_model->get_groups_participation_commission();
         $data['votes_all'] = $this->stats_model->get_groups_participation();
-        $data['average'] = $this->groupes_model->get_stats_avg(legislature_current());
+        $data['average'] = $groupesModel->get_stats_avg(legislature_current());
 
         $data['n_sps'] = $this->votes_model->get_n_votes(legislature_current(), NULL, NULL, 'SPS');
         $data['votesN'] = $this->votes_model->get_n_votes(legislature_current(), NULL, NULL);
@@ -340,13 +340,13 @@
         $data['groups'] = $data['n_sps'] < $data['n_sps_treshold'] ? $data['votes_all'] : $data['votes_sps'];
         if ($data['groups']) {
           foreach ($data['groups'] as &$group) {
-            $group['couleurCard'] = $this->groupes_model->get_groupe_color_card(['uid' => $group['organeRef']]);
+            $group['couleurCard'] = $groupesModel->get_groupe_color_card(['uid' => $group['organeRef']]);
           } 
           unset($group);
           $data['groupsFirst'] = $data['groups'][0];
-          $data['groupsFirst']['couleurAssociee'] = $this->groupes_model->get_groupe_color(array($data['groupsFirst']['libelleAbrev'], $data['groupsFirst']['couleurAssociee']));
+          $data['groupsFirst']['couleurAssociee'] = $groupesModel->get_groupe_color(array($data['groupsFirst']['libelleAbrev'], $data['groupsFirst']['couleurAssociee']));
           $data['groupsLast'] = end($data['groups']);
-          $data['groupsLast']['couleurAssociee'] = $this->groupes_model->get_groupe_color(array($data['groupsLast']['libelleAbrev'], $data['groupsLast']['couleurAssociee']));
+          $data['groupsLast']['couleurAssociee'] = $groupesModel->get_groupe_color(array($data['groupsLast']['libelleAbrev'], $data['groupsLast']['couleurAssociee']));
         }
 
         // Meta
@@ -383,13 +383,13 @@
         $data['groups_rose'] = $this->jobs_model->get_groups_rose();
         if ($data['groups_rose']) {
           foreach ($data['groups_rose'] as &$group) {
-            $group['couleurCard'] = $this->groupes_model->get_groupe_color_card([
+            $group['couleurCard'] = $groupesModel->get_groupe_color_card([
                 'uid' => $group['organeRef']
             ]);
           }
           unset($group);
           $data['rose_first'] = $data['groups_rose'][0];
-          $data['rose_first']['couleurAssociee'] = $this->groupes_model->get_groupe_color(array($data['rose_first']['libelleAbrev'], $data['rose_first']['couleurAssociee']));
+          $data['rose_first']['couleurAssociee'] = $groupesModel->get_groupe_color(array($data['rose_first']['libelleAbrev'], $data['rose_first']['couleurAssociee']));
           $groups = $this->jobs_model->get_groups_representativite();
 
           /* $columns is a list of all column names */

@@ -37,7 +37,7 @@
         // Some data 
         $data['total_deputes'] = $this->deputes_model->get_n_deputes();
         $data['total_votes'] = $this->votes_model->get_n_votes_datan();
-        $data['total_groups'] = $this->groupes_model->get_number_active_groupes();
+        $data['total_groups'] = $groupesModel->get_number_active_groupes();
       } else {
         $data['title'] = ucfirst($page);
       }

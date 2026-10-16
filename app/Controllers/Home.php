@@ -20,11 +20,11 @@ class Home extends BaseController {
     //Get random data
     $data['depute_random'] = $deputesModel->get_depute_random();
     $data['depute_random'] = array_merge($data['depute_random'], gender($data['depute_random']['civ']));
-    $data['depute_random']['couleurAssociee'] = $this->groupes_model->get_groupe_color(array($data['depute_random']['libelleAbrev'], $data['depute_random']['couleurAssociee']));
-    $data['groupe_random'] = $this->groupes_model->get_groupe_random();
+    $data['depute_random']['couleurAssociee'] = $groupesModel->get_groupe_color(array($data['depute_random']['libelleAbrev'], $data['depute_random']['couleurAssociee']));
+    $data['groupe_random'] = $groupesModel->get_groupe_random();
     if (!empty($data['groupe_random'])) {
-      $data['groupe_random']['couleurAssociee'] = $this->groupes_model->get_groupe_color(array($data['groupe_random']['libelleAbrev'], $data['groupe_random']['couleurAssociee']));
-      $data['groupe_random']['couleurCard'] = $this->groupes_model->get_groupe_color_card($data['groupe_random']);
+      $data['groupe_random']['couleurAssociee'] = $groupesModel->get_groupe_color(array($data['groupe_random']['libelleAbrev'], $data['groupe_random']['couleurAssociee']));
+      $data['groupe_random']['couleurCard'] = $groupesModel->get_groupe_color_card($data['groupe_random']);
     }
     $rand = rand(0, 10);
     if ($rand < 5) {
@@ -36,14 +36,14 @@ class Home extends BaseController {
     //Get groups (cached) 
     if(!in_array($_SERVER['REMOTE_ADDR'], localhost())){
       $this->db->cache_on();
-      $data['groupes'] = $this->groupes_model->get_groupes_hemicycle();
+      $data['groupes'] = $groupesModel->get_groupes_hemicycle();
       $this->db->cache_off();
     } else {
-      $data['groupes'] = $this->groupes_model->get_groupes_hemicycle();
+      $data['groupes'] = $groupesModel->get_groupes_hemicycle();
     }
-    $data['groupesSorted'] = $this->groupes_model->get_groupes_sorted($data['groupes']);
-    $data['groupesN'] = $this->groupes_model->get_number_active_groupes();
-    $data['blocs'] = $this->groupes_model->get_blocs($data['groupes']);
+    $data['groupesSorted'] = $groupesModel->get_groupes_sorted($data['groupes']);
+    $data['groupesN'] = $groupesModel->get_number_active_groupes();
+    $data['blocs'] = $groupesModel->get_blocs($data['groupes']);
 
     // Get election results 
     //$file = file_get_contents(asset_url() . "data_elections/legislatives-2024-2.json");
@@ -54,28 +54,28 @@ class Home extends BaseController {
     $data['depute_vote_plus'] = $this->deputes_model->get_depute_vote_plus();
     if (!empty($data['depute_vote_plus'])) {
       $data['depute_vote_plus'] = array_merge($data['depute_vote_plus'], gender($data['depute_vote_plus']['civ']));
-      $data['depute_vote_plus']['couleurAssociee'] = $this->groupes_model->get_groupe_color(array($data['depute_vote_plus']['libelleAbrev'], $data['depute_vote_plus']['couleurAssociee']));
+      $data['depute_vote_plus']['couleurAssociee'] = $groupesModel->get_groupe_color(array($data['depute_vote_plus']['libelleAbrev'], $data['depute_vote_plus']['couleurAssociee']));
     }
     $data['depute_vote_moins'] = $this->deputes_model->get_depute_vote_moins();
     if (!empty($data['depute_vote_moins'])) {
       $data['depute_vote_moins'] = array_merge($data['depute_vote_moins'], gender($data['depute_vote_moins']['civ']));
-      $data['depute_vote_moins']['couleurAssociee'] = $this->groupes_model->get_groupe_color(array($data['depute_vote_moins']['libelleAbrev'], $data['depute_vote_moins']['couleurAssociee']));
+      $data['depute_vote_moins']['couleurAssociee'] = $groupesModel->get_groupe_color(array($data['depute_vote_moins']['libelleAbrev'], $data['depute_vote_moins']['couleurAssociee']));
     }
     $data['depute_loyal_plus'] = $this->deputes_model->get_depute_loyal_plus();
     if (!empty($data['depute_loyal_plus'])) {
       $data['depute_loyal_plus'] = array_merge($data['depute_loyal_plus'], gender($data['depute_loyal_plus']['civ']));
-      $data['depute_loyal_plus']['couleurAssociee'] = $this->groupes_model->get_groupe_color(array($data['depute_loyal_plus']['libelleAbrev'], $data['depute_loyal_plus']['couleurAssociee']));
+      $data['depute_loyal_plus']['couleurAssociee'] = $groupesModel->get_groupe_color(array($data['depute_loyal_plus']['libelleAbrev'], $data['depute_loyal_plus']['couleurAssociee']));
     }
     $data['depute_loyal_moins'] = $this->deputes_model->get_depute_loyal_moins();
     if (!empty($data['depute_loyal_moins'])) {
       $data['depute_loyal_moins'] = array_merge($data['depute_loyal_moins'], gender($data['depute_loyal_moins']['civ']));
-      $data['depute_loyal_moins']['couleurAssociee'] = $this->groupes_model->get_groupe_color(array($data['depute_loyal_moins']['libelleAbrev'], $data['depute_loyal_moins']['couleurAssociee']));
+      $data['depute_loyal_moins']['couleurAssociee'] = $groupesModel->get_groupe_color(array($data['depute_loyal_moins']['libelleAbrev'], $data['depute_loyal_moins']['couleurAssociee']));
     }
 
     // Get support the gvt
     $data['support'] = TRUE;
-    $data['support'] = $this->groupes_model->get_support_all(legislature_current());
-    $data['support_opposition'] = $this->groupes_model->get_support_all(legislature_current(), 'opposition');
+    $data['support'] = $groupesModel->get_support_all(legislature_current());
+    $data['support_opposition'] = $groupesModel->get_support_all(legislature_current(), 'opposition');
     $data['support_opposition'] = array_shift($data['support_opposition']);
 
     // Get explications
@@ -105,7 +105,7 @@ class Home extends BaseController {
     /* WHEN FOCUS IS ON GROUPES */ 
     $data['election_groups'] = $this->elections_model->get_n_candidates_all_groups();
     foreach ($data['election_groups'] as $key => $group) {
-      $data['election_groups'][$key]['couleurAssociee'] = $this->groupes_model->get_groupe_color(array($group['libelleAbrev'], $group['couleurAssociee']));
+      $data['election_groups'][$key]['couleurAssociee'] = $groupesModel->get_groupe_color(array($group['libelleAbrev'], $group['couleurAssociee']));
     }
 
     //Get posts (needs to be cached)

@@ -66,7 +66,7 @@ class Sitemap extends MY_Controller {
 
   /* 4. sitemap-groupes-1.xml */
   function groupes(){
-    $results = $this->groupes_model->get_groupes_all(TRUE, legislature_current());
+    $results = $groupesModel->get_groupes_all(TRUE, legislature_current());
 
     $urls = array();
     foreach ($results as $result) {
@@ -86,8 +86,8 @@ class Sitemap extends MY_Controller {
 
   /* 5. sitemap-groupes-inactifs-1.xml */
   function groupes_inactifs(){
-    $results_current = $this->groupes_model->get_groupes_all(FALSE, legislature_current());
-    $results14 = $this->groupes_model->get_groupes_all(TRUE, 14);
+    $results_current = $groupesModel->get_groupes_all(FALSE, legislature_current());
+    $results14 = $groupesModel->get_groupes_all(TRUE, 14);
     $results = array_merge($results_current, $results14);
 
     $urls = array();

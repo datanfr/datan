@@ -526,7 +526,7 @@ class DeputesModel extends Model {
     ];
 
     if($depute['libelleAbrev'] != 'NI') {
-      $links = $this->groupes_model->get_groupe_social_media($depute['libelleAbrev']);
+      $links = $groupesModel->get_groupe_social_media($depute['libelleAbrev']);
 
       $party = [
         '@type' => 'PoliticalParty',
@@ -856,7 +856,7 @@ class DeputesModel extends Model {
   }
 
   public function get_stats_majorite_all($legislature){
-    $majority_groups = $this->groupes_model->get_all_groupes_majority();
+    $majority_groups = $groupesModel->get_all_groupes_majority();
     $this->db->select('ROUND(AVG(c.score*100)) AS score');
     $this->db->where('c.legislature', $legislature);
     $this->db->where_not_in('da.groupeId', $majority_groups);

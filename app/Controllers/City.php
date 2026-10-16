@@ -42,7 +42,7 @@
         } else {
           $data['noMP'] = FALSE;
           $data['depute_commune'] = $data['deputes_commune'][0];
-          $data['depute_commune']['couleurAssociee'] = $this->groupes_model->get_groupe_color(array($data['depute_commune']['libelleAbrev'], $data['depute_commune']['couleurAssociee']));
+          $data['depute_commune']['couleurAssociee'] = $groupesModel->get_groupe_color(array($data['depute_commune']['libelleAbrev'], $data['depute_commune']['couleurAssociee']));
           $data['depute_commune']['electionCircoAbbrev'] = abbrev_n($data['depute_commune']['electionCirco'], TRUE);
           $data['depute_commune']['cardCenter'] = $data['depute_commune']['electionCirco']."<sup>".$data['depute_commune']['electionCircoAbbrev']."</sup> circonscription";
           $data['gender'] = gender($data['depute_commune']['civ']);
@@ -62,7 +62,7 @@
         $data['n_circos'] = $n_circos;
         $data['deputes_commune'] = $this->city_model->get_mps($departement, $circo, legislature_current());
         foreach ($data['deputes_commune'] as $key => $value) {
-          $data['deputes_commune'][$key]['couleurAssociee'] = $this->groupes_model->get_groupe_color(array($value['libelleAbrev'], $value['couleurAssociee']));
+          $data['deputes_commune'][$key]['couleurAssociee'] = $groupesModel->get_groupe_color(array($value['libelleAbrev'], $value['couleurAssociee']));
           $data['deputes_commune'][$key]['electionCircoAbbrev'] = abbrev_n($value['electionCirco'], TRUE);
           $data['deputes_commune'][$key]['cardCenter'] = $data['deputes_commune'][$key]['electionCirco']."<sup>".$data['deputes_commune'][$key]['electionCircoAbbrev']."</sup> circonscription";
         }
@@ -75,7 +75,7 @@
       }
       $data['deputes_dpt'] = $this->city_model->get_mps_dpt($departement, $deputes_commune, legislature_current());
       foreach ($data['deputes_dpt'] as $key => $value) {
-        $data['deputes_dpt'][$key]['couleurAssociee'] = $this->groupes_model->get_groupe_color(array($value['libelleAbrev'], $value['couleurAssociee']));
+        $data['deputes_dpt'][$key]['couleurAssociee'] = $groupesModel->get_groupe_color(array($value['libelleAbrev'], $value['couleurAssociee']));
         $data['deputes_dpt'][$key]['electionCircoAbbrev'] = abbrev_n($value['electionCirco'], TRUE);
         $data['deputes_dpt'][$key]['cardCenter'] = $data['deputes_dpt'][$key]['electionCirco']."<sup>".$data['deputes_dpt'][$key]['electionCircoAbbrev']."</sup> circonscription";
       }

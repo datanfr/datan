@@ -116,7 +116,7 @@ class Iframe extends MY_Controller
 
 
     // ____________________GET MAJORITY GROUP___________________________
-    // $data['groupMajority'] = $this->groupes_model->get_majority_group($legislature); 
+    // $data['groupMajority'] = $groupesModel->get_majority_group($legislature); 
 
     // ↳ besoin peut être pour le bloc statistiques(partial statistics/_inter_goup_loyalty) si "Proximité avec la majorité gouvernementale"
 

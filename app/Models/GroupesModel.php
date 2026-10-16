@@ -60,7 +60,7 @@ class GroupesModel extends Model {
 
     foreach ($groupes as $key => $value) {
       $return[$value['libelleAbrev']] = $value;
-      $return[$value['libelleAbrev']]['color'] = $this->groupes_model->get_groupe_color(array($value['libelleAbrev'], $value['couleurAssociee']));
+      $return[$value['libelleAbrev']]['color'] = $groupesModel->get_groupe_color(array($value['libelleAbrev'], $value['couleurAssociee']));
     }
 
     return $return;
@@ -158,7 +158,7 @@ class GroupesModel extends Model {
       }
     }
     foreach ($groupes as $key => $value) {
-      $groupes[$key]['couleurAssociee'] = $this->groupes_model->get_groupe_color(array($value['libelleAbrev'], $value['couleurAssociee']));
+      $groupes[$key]['couleurAssociee'] = $groupesModel->get_groupe_color(array($value['libelleAbrev'], $value['couleurAssociee']));
     }
     if ($empty != TRUE) {
       return array_replace(array_flip($sort), $groupes);
@@ -937,7 +937,7 @@ class GroupesModel extends Model {
       $indexed = [];
       foreach ($groupsData as $groupData) {
         $abrev = $groupData['libelleAbrev'];
-        $groupData['couleurAssociee'] = $this->groupes_model->get_groupe_color([$abrev, $groupData['couleurAssociee']]);
+        $groupData['couleurAssociee'] = $groupesModel->get_groupe_color([$abrev, $groupData['couleurAssociee']]);
         $indexed[$abrev] = $groupData;
       }
 

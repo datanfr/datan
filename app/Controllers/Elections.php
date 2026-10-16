@@ -229,7 +229,7 @@
       if
        (!empty($data['deputes_ville'])) {
         foreach ($data['deputes_ville'] as $key => $value) {
-          $data['deputes_ville'][$key]['couleurAssociee'] = $this->groupes_model->get_groupe_color(array($value['libelleAbrev'], $value['couleurAssociee']));
+          $data['deputes_ville'][$key]['couleurAssociee'] = $groupesModel->get_groupe_color(array($value['libelleAbrev'], $value['couleurAssociee']));
           $data['deputes_ville'][$key]['electionCircoAbbrev'] = abbrev_n($value['electionCirco'], TRUE);
         }
       }
