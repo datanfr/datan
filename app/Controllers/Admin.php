@@ -35,8 +35,8 @@
 
       $data['votesUnpublished'] = $this->admin_model->get_votes_datan_user($user_id, false);
       $data['votesLast'] = $this->admin_model->get_votes_datan_user($user_id, true);
-      $data['deputes_entrants'] = $this->deputes_model->get_deputes_entrants(5);
-      $data['groupes_entrants'] = $this->deputes_model->get_groupes_entrants(5);
+      $data['deputes_entrants'] = $deputesModel->get_deputes_entrants(5);
+      $data['groupes_entrants'] = $deputesModel->get_groupes_entrants(5);
       $data['newsletter_total'] = $this->newsletter_model->get_number_registered("general");
       $data['newsletter_month'] = $this->newsletter_model->get_registered_month("general");
       $data['explications'] = $this->DashboardMP_model->get_last_explanations();
@@ -152,7 +152,7 @@
       } else {
         $path = parse_url($this->input->post('depute_url'), PHP_URL_PATH);
         $nameUrl = substr(explode('/', $path)[3], 7);
-        $depute = $this->deputes_model->get_depute_by_nameUrl($nameUrl);
+        $depute = $deputesModel->get_depute_by_nameUrl($nameUrl);
         if ($depute) {
           $this->admin_model->create_candidat($user_id, $depute);
           $election = $this->elections_model->get_election_by_id($this->input->post('election'));
@@ -396,7 +396,7 @@
 
       if ($page == "deputes_entrants") {
         $data['title'] = 'Liste des députés entrants (datePriseFonction)';
-        $data['deputes'] = $this->deputes_model->get_deputes_entrants();
+        $data['deputes'] = $deputesModel->get_deputes_entrants();
 
         // Meta
         $data['title_meta'] = $data['title'] . ' - Dashboard | Datan';
@@ -407,7 +407,7 @@
         $this->load->view('dashboard/footer');
       } elseif ($page == "deputes_sortants") {
         $data['title'] = 'Liste des députés sortants (dateFin)';
-        $data['deputes'] = $this->deputes_model->get_deputes_sortants();
+        $data['deputes'] = $deputesModel->get_deputes_sortants();
 
         // Meta
         $data['title_meta'] = $data['title'] . ' - Dashboard | Datan';
@@ -418,7 +418,7 @@
         $this->load->view('dashboard/footer');
       } elseif ($page == "postes_assemblee") {
         $data['title'] = 'Nouveaux postes Assemblée (dateDebut)';
-        $data['deputes'] = $this->deputes_model->get_postes_assemblee();
+        $data['deputes'] = $deputesModel->get_postes_assemblee();
 
         // Meta
         $data['title_meta'] = $data['title'] . ' - Dashboard | Datan';
@@ -429,7 +429,7 @@
         $this->load->view('dashboard/footer');
       } elseif ($page == "groupes_entrants") {
         $data['title'] = 'Groupes entrants (dateDebut)';
-        $data['deputes'] = $this->deputes_model->get_groupes_entrants();
+        $data['deputes'] = $deputesModel->get_groupes_entrants();
 
         // Meta
         $data['title_meta'] = $data['title'] . ' - Dashboard | Datan';
@@ -440,7 +440,7 @@
         $this->load->view('dashboard/footer');
       } elseif ($page == "historique") {
         if ($id == "NULL") {
-          $data['deputes'] = $this->deputes_model->get_deputes_all(legislature_current(), NULL, NULL);
+          $data['deputes'] = $deputesModel->get_deputes_all(legislature_current(), NULL, NULL);
           $data['title'] = "Historique des groupes par député - ".legislature_current()."e législature";
 
           // Meta
@@ -451,9 +451,9 @@
           $this->load->view('dashboard/socialmedia/list', $data);
           $this->load->view('dashboard/footer');
         } else {
-          $data['depute'] = $this->deputes_model->get_infos($id);
+          $data['depute'] = $deputesModel->get_infos($id);
           $data['title'] = "Historique pour le député ".$data['depute']['nameFirst']." ".$data['depute']['nameLast'] . " (" . $data['depute']['mpId'] . ")";
-          $data['historique'] = $this->deputes_model->get_historique($id);
+          $data['historique'] = $deputesModel->get_historique($id);
           $data['deputes'] = $data['historique'];
 
           // Meta
@@ -465,7 +465,7 @@
           $this->load->view('dashboard/footer');
         }
       } elseif ($page == "x") {
-        $data['deputes'] = $this->deputes_model->get_twitter_accounts(legislature_current());
+        $data['deputes'] = $deputesModel->get_twitter_accounts(legislature_current());
         $data['title'] = "Comptes X des députés";
 
         // Meta

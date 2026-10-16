@@ -16,7 +16,7 @@
         show_404($this->functions_datan->get_404_infos());
       }
 
-      $data['deputes'] = $this->deputes_model->get_deputes_all(legislature_current(), TRUE, $slug);
+      $data['deputes'] = $deputesModel->get_deputes_all(legislature_current(), TRUE, $slug);
 
       foreach ($data['deputes'] as $key => $value) {
         $data['deputes'][$key]['couleurAssociee'] = $groupesModel->get_groupe_color(array($value['libelleAbrev'], $value['couleurAssociee']));

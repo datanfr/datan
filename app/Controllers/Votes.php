@@ -339,7 +339,7 @@
       // Get MP's explication from URL
       if ($explication) {
         $data['explication'] = $this->votes_model->get_explication($explication, $legislature, $num, 1);
-        $data['explication']['photoSquare'] = $this->deputes_model->get_photo_square($data['explication']['legislature']);
+        $data['explication']['photoSquare'] = $deputesModel->get_photo_square($data['explication']['legislature']);
         if (!$data['explication']) {
           redirect('votes/legislature-' . $legislature . '/vote_' . $num);
         }
@@ -373,7 +373,7 @@
           $data['authorMeta']['title'] = 'amendement';
           $data['amdtAuthor'] = $this->votes_model->get_amendement_author($data['vote']['amendment']['amendmentId']);
           if (in_array($data['amdtAuthor']['type'], array('Député', 'Rapporteur'))) {
-            $data['author'] = $this->deputes_model->get_depute_by_legislature($data['amdtAuthor']['acteurRef'], $legislature);
+            $data['author'] = $deputesModel->get_depute_by_legislature($data['amdtAuthor']['acteurRef'], $legislature);
             $data['author']['cardCenter'] = $data['author']['departementNom'] . ' (' . $data['author']['departementCode'] . ')';
             $data['authorMeta']['type'] = "mp";
           } elseif ($data['amdtAuthor']['type'] == 'Gouvernement') {

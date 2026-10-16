@@ -12,7 +12,7 @@
       $this->data = array(
         'type' => 'mp',
         'username' => $this->session->userdata('username'),
-        'depute' => $this->deputes_model->get_depute_by_mpId($this->session->userdata('mpId')),
+        'depute' => $deputesModel->get_depute_by_mpId($this->session->userdata('mpId')),
       );
       $this->data['depute']['gender'] = gender($this->data['depute']['civ']);
     }

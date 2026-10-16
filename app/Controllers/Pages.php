@@ -35,7 +35,7 @@
         $data['description_meta'] = "Soutenez Datan, l'outil indépendant qui rend l'Assemblée nationale accessible à tous et explique comment les députés votent. Votre don finance la transparence parlementaire et le décryptage des scrutins de l'Assemblée nationale.";
 
         // Some data 
-        $data['total_deputes'] = $this->deputes_model->get_n_deputes();
+        $data['total_deputes'] = $deputesModel->get_n_deputes();
         $data['total_votes'] = $this->votes_model->get_n_votes_datan();
         $data['total_groups'] = $groupesModel->get_number_active_groupes();
       } else {

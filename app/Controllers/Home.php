@@ -51,22 +51,22 @@ class Home extends BaseController {
 
     //Get stats - CHANGE THIS WHEN THERE WILL BE VOTES
     $data['stats'] = FALSE;
-    $data['depute_vote_plus'] = $this->deputes_model->get_depute_vote_plus();
+    $data['depute_vote_plus'] = $deputesModel->get_depute_vote_plus();
     if (!empty($data['depute_vote_plus'])) {
       $data['depute_vote_plus'] = array_merge($data['depute_vote_plus'], gender($data['depute_vote_plus']['civ']));
       $data['depute_vote_plus']['couleurAssociee'] = $groupesModel->get_groupe_color(array($data['depute_vote_plus']['libelleAbrev'], $data['depute_vote_plus']['couleurAssociee']));
     }
-    $data['depute_vote_moins'] = $this->deputes_model->get_depute_vote_moins();
+    $data['depute_vote_moins'] = $deputesModel->get_depute_vote_moins();
     if (!empty($data['depute_vote_moins'])) {
       $data['depute_vote_moins'] = array_merge($data['depute_vote_moins'], gender($data['depute_vote_moins']['civ']));
       $data['depute_vote_moins']['couleurAssociee'] = $groupesModel->get_groupe_color(array($data['depute_vote_moins']['libelleAbrev'], $data['depute_vote_moins']['couleurAssociee']));
     }
-    $data['depute_loyal_plus'] = $this->deputes_model->get_depute_loyal_plus();
+    $data['depute_loyal_plus'] = $deputesModel->get_depute_loyal_plus();
     if (!empty($data['depute_loyal_plus'])) {
       $data['depute_loyal_plus'] = array_merge($data['depute_loyal_plus'], gender($data['depute_loyal_plus']['civ']));
       $data['depute_loyal_plus']['couleurAssociee'] = $groupesModel->get_groupe_color(array($data['depute_loyal_plus']['libelleAbrev'], $data['depute_loyal_plus']['couleurAssociee']));
     }
-    $data['depute_loyal_moins'] = $this->deputes_model->get_depute_loyal_moins();
+    $data['depute_loyal_moins'] = $deputesModel->get_depute_loyal_moins();
     if (!empty($data['depute_loyal_moins'])) {
       $data['depute_loyal_moins'] = array_merge($data['depute_loyal_moins'], gender($data['depute_loyal_moins']['civ']));
       $data['depute_loyal_moins']['couleurAssociee'] = $groupesModel->get_groupe_color(array($data['depute_loyal_moins']['libelleAbrev'], $data['depute_loyal_moins']['couleurAssociee']));

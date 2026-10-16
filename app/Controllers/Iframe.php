@@ -72,8 +72,8 @@ class Iframe extends MY_Controller
       }
     }
 
-    $departement =  $this->deputes_model->get_dptslug_by_name_url($name);
-    $data['depute'] = $this->deputes_model->get_depute_individual($name, $departement);
+    $departement =  $deputesModel->get_dptslug_by_name_url($name);
+    $data['depute'] = $deputesModel->get_depute_individual($name, $departement);
 
 
 

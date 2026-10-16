@@ -23,7 +23,7 @@ class Sitemap extends MY_Controller {
 
   /* 2. datan/sitemap-deputes-1.xml */
   function deputes(){
-    $results = $this->deputes_model->get_deputes_all(legislature_current(), TRUE, NULL);
+    $results = $deputesModel->get_deputes_all(legislature_current(), TRUE, NULL);
 
     $urls = array();
     foreach ($results as $result) {
@@ -31,7 +31,7 @@ class Sitemap extends MY_Controller {
       $nameUrl = $result['nameUrl'];
       $urls[]["url"] = base_url()."deputes/".$dpt_slug."/depute_".$nameUrl;
       $urls[]["url"] = base_url()."deputes/".$dpt_slug."/depute_".$nameUrl."/votes";
-      $past14 = $this->deputes_model->check_depute_legislature($result["mpId"], 14);
+      $past14 = $deputesModel->check_depute_legislature($result["mpId"], 14);
       if ($past14) {
         $urls[]["url"] = base_url()."deputes/".$dpt_slug."/depute_".$nameUrl."/legislature-14";
       }
@@ -45,8 +45,8 @@ class Sitemap extends MY_Controller {
 
   /* 3. sitemap-deputes-inactifs-1.xml */
   function deputes_inactifs(){
-    $results = $this->deputes_model->get_deputes_all(legislature_current(), FALSE, NULL);
-    $deputes14 = $this->deputes_model->get_deputes_last(14);
+    $results = $deputesModel->get_deputes_all(legislature_current(), FALSE, NULL);
+    $deputes14 = $deputesModel->get_deputes_last(14);
 
     $urls = array();
     foreach ($results as $result) {

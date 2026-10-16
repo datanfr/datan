@@ -35,8 +35,8 @@
       if ($legislature == legislature_current() && dissolution() === false) {
         $data['active'] = TRUE;
         /* PRESIDENT TO UPDATE LATER
-        //$data['president'] = $this->deputes_model->get_president_an(); THE OPEN DATA FROM THE AN IS NOT UPDATED!
-        $data['president'] = $this->deputes_model->get_depute_by_mpId('PA721908');
+        //$data['president'] = $deputesModel->get_president_an(); THE OPEN DATA FROM THE AN IS NOT UPDATED!
+        $data['president'] = $deputesModel->get_depute_by_mpId('PA721908');
         if ($data['president']) {
           $data['president']['gender'] = gender($data['president']['civ']);
         }
@@ -47,10 +47,10 @@
       }
 
       $data['legislature'] = $legislature;
-      $data['deputes'] = $this->deputes_model->get_deputes_all($legislature, $data['active'], NULL);
+      $data['deputes'] = $deputesModel->get_deputes_all($legislature, $data['active'], NULL);
       $data['groupes'] = $groupesModel->get_groupes_from_mp_array($data['deputes']);
       $data['groupes_mobile'] = $groupesModel->get_groupes_all($data['active'], $legislature);
-      $number_gender = $this->deputes_model->get_deputes_gender($legislature);
+      $number_gender = $deputesModel->get_deputes_gender($legislature);
       foreach ($number_gender as $gender) {
         if ($gender["gender"] == "male") {
           $data["male"]["n"] = $gender["n"];
@@ -60,7 +60,7 @@
           $data["female"]["percentage"] = $gender["percentage"];
         }
       }
-      $data['number_inactive'] = $this->deputes_model->get_n_deputes_inactive($legislature);
+      $data['number_inactive'] = $deputesModel->get_n_deputes_inactive($legislature);
 
       // Groupe_color
       foreach ($data['deputes'] as $key => $value) {
@@ -120,8 +120,8 @@
     public function inactifs(){
       $data['active'] = FALSE;
       $data['legislature'] = legislature_current();
-      $data['deputes'] = $this->deputes_model->get_deputes_all(legislature_current(), $data['active'], NULL);
-      $data['groupes'] = $this->deputes_model->get_groupes_inactifs();
+      $data['deputes'] = $deputesModel->get_deputes_all(legislature_current(), $data['active'], NULL);
+      $data['groupes'] = $deputesModel->get_groupes_inactifs();
       $data['number_inactive'] = count($data['deputes']);
 
       // Groupe_color
@@ -166,7 +166,7 @@
     {
       setlocale(LC_TIME, 'french');
       // _____________________GET INFOS MP____________________
-      $data['depute'] = $this->deputes_model->get_depute_individual($nameUrl, $departement);
+      $data['depute'] = $deputesModel->get_depute_individual($nameUrl, $departement);
 
       // ____________________CHECK IF DEPUTE EXISTS__________________
       if (empty($data['depute'])) {
@@ -195,13 +195,13 @@
       $data['no_job'] = array('autre profession','autres', 'sans profession déclarée', 'sans profession');
       $groupe_id = $depute['groupeId'];
       $data['first_person'] = false;
-      $data['photo_square'] = $this->deputes_model->get_photo_square($legislature);
+      $data['photo_square'] = $deputesModel->get_photo_square($legislature);
       $data['gender'] = gender($depute['civ']);
       $data['page_history'] = FALSE; 
     
       // ____________________GET HAVP___________________________________
-      $data['depute']['hatvp'] = $this->deputes_model->get_hatvp_url($mp_id);
-      $data['hatvpJobs'] = $this->deputes_model->get_last_hatvp_job($mp_id);
+      $data['depute']['hatvp'] = $deputesModel->get_hatvp_url($mp_id);
+      $data['hatvpJobs'] = $deputesModel->get_last_hatvp_job($mp_id);
 
       // ____________________GET GROUP___________________________________
       $data = $this->group_service->get_group_infos_by_mp($data, $mp_id, $groupe_id);
@@ -217,7 +217,7 @@
 
       // ____________________GET COMISSION PARLEMENTAIRE_________________
       if ($data['active']) {
-        $data['commission_parlementaire'] = $this->deputes_model->get_commission_parlementaire($mp_id, $legislature);
+        $data['commission_parlementaire'] = $deputesModel->get_commission_parlementaire($mp_id, $legislature);
       }
     
       // ____________________GET ALL ELECTIONS___________________________
@@ -230,7 +230,7 @@
       }  
       
       // ____________________GET PROFESSION DE FOI________________________
-      $data['professions_foi'] = $this->deputes_model->get_professions($mp_id);
+      $data['professions_foi'] = $deputesModel->get_professions($mp_id);
 
       // ____________________GET PARRAINNAGES_____________________________
       $data['parrainage'] = $this->parrainages_model->get_mp_parrainage($mp_id, 2022); /* Parrainage for presidentielle 2022 */
@@ -274,9 +274,9 @@
     public function historique($nameUrl, $departement, $legislature){
       setlocale(LC_TIME, 'french');
       // _____________________GET INFOS MP____________________
-      $data['depute'] = $this->deputes_model->get_depute_individual_historique($nameUrl, $departement, $legislature);
-      $latest_dpt = $this->deputes_model->get_mp_latest_dpt($data['depute']['mpId'], $departement);
-      $data['depute_last'] = $this->deputes_model->get_depute_individual($nameUrl, $latest_dpt);
+      $data['depute'] = $deputesModel->get_depute_individual_historique($nameUrl, $departement, $legislature);
+      $latest_dpt = $deputesModel->get_mp_latest_dpt($data['depute']['mpId'], $departement);
+      $data['depute_last'] = $deputesModel->get_depute_individual($nameUrl, $latest_dpt);
 
       // ____________________CHECK IF DEPUTE EXISTS__________________
       if (empty($data['depute'])) {
@@ -303,11 +303,11 @@
       $depute_full_name = $depute['nameFirst'].' '.$depute['nameLast'];
       $data["depute"]["dateNaissanceFr"] = utf8_encode(strftime('%d %B %Y', strtotime($data['depute']['birthDate']))); // birthdate
       $data['depute']['circo_abbrev'] = abbrev_n($data['depute']['circo'], TRUE); // circo number
-      $data['mandats'] = $this->deputes_model->get_historique_mandats($mp_id);
+      $data['mandats'] = $deputesModel->get_historique_mandats($mp_id);
       $data['mandatsReversed'] = array_reverse($data['mandats']);
       $groupe_id = $depute['groupeId'];
       $data['first_person'] = false;
-      $data['photo_square'] = $this->deputes_model->get_photo_square($legislature);            
+      $data['photo_square'] = $deputesModel->get_photo_square($legislature);            
       $data['gender'] = gender($depute['civ']); 
       $data['page_history'] = TRUE;
 
@@ -335,7 +335,7 @@
     public function votes($input, $departement){
       // Query 1 = infos générales députés
       $input_depute = $input;
-      $data['depute'] = $this->deputes_model->get_depute_individual($input, $departement);
+      $data['depute'] = $deputesModel->get_depute_individual($input, $departement);
 
       if (empty($data['depute'])) {
         show_404($this->functions_datan->get_404_infos());
@@ -360,7 +360,7 @@
       $data['depute']['couleurAssociee'] = $groupesModel->get_groupe_color(array($data['depute']['libelleAbrev'], $data['depute']['couleurAssociee']));
 
       // Commission parlementaire
-      $data['commission_parlementaire'] = $this->deputes_model->get_commission_parlementaire($mpId, $legislature);
+      $data['commission_parlementaire'] = $deputesModel->get_commission_parlementaire($mpId, $legislature);
 
       // Get active fields
       $data['fields'] = $this->fields_model->get_active_fields();
@@ -376,9 +376,9 @@
       $data['mandat_edito'] = $this->depute_edito->get_nbr_lettre($data['depute']['mandatesN']);
 
       // Other MPs from the same group
-      $data['other_deputes'] = $this->deputes_model->get_other_deputes($groupe_id, $nameLast, $mpId, $data['active'], $legislature);
+      $data['other_deputes'] = $deputesModel->get_other_deputes($groupe_id, $nameLast, $mpId, $data['active'], $legislature);
       // OTHER MPs from the same departement
-      $data['other_deputes_dpt'] = $this->deputes_model->get_deputes_all($legislature, $data['active'], $departement);
+      $data['other_deputes_dpt'] = $deputesModel->get_deputes_all($legislature, $data['active'], $departement);
 
       // Meta
       $data['url'] = $this->meta_model->get_url();

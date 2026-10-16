@@ -34,7 +34,7 @@
         $this->password_model->security_captcha('demande-compte-depute');
 
         $email = $this->input->post('email');
-        $data['depute'] = $this->deputes_model->get_depute_by_email($email);
+        $data['depute'] = $deputesModel->get_depute_by_email($email);
 
         if (!$data['depute']) {
           $this->session->set_flashdata('error', "Nous ne vous trouvons pas dans notre base de données. N'hésitez pas à nous contacter : info@datan.fr.");
@@ -88,9 +88,9 @@
       if ($this->form_validation->run() === FALSE) {
 
         if ($mpId) {
-          $data['depute'] = $this->deputes_model->get_depute_by_mpId($mpId);
+          $data['depute'] = $deputesModel->get_depute_by_mpId($mpId);
           $data['depute']['name'] = $data['depute']['nameFirst'] . ' ' . $data['depute']['nameLast'];
-          $data['depute']['contacts'] = $this->deputes_model->get_depute_contacts($mpId);
+          $data['depute']['contacts'] = $deputesModel->get_depute_contacts($mpId);
           $data['title'] = 'Créez votre compte en tant que député';
           $data['mp'] = TRUE;
         } else {

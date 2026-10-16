@@ -24,7 +24,7 @@
         $data['groups_women_more'] = array_slice($data['groupsWomen'], 0, 3);
         $data['groups_women_less'] = array_slice($data['groupsWomen'], -3);
       }
-      $data['women_mean'] = $this->deputes_model->get_deputes_gender(legislature_current());
+      $data['women_mean'] = $deputesModel->get_deputes_gender(legislature_current());
       $data['mps_loyalty'] = $this->stats_model->get_mps_loyalty(legislature_current());
       if ($data['mps_loyalty']) {
         $data['mps_loyalty_more'] = array_slice($data['mps_loyalty'], 0, 3);
@@ -227,7 +227,7 @@
 
       } elseif ($url == "groupes-feminisation") {
         // Data
-        $women_mean = $this->deputes_model->get_deputes_gender(legislature_current());
+        $women_mean = $deputesModel->get_deputes_gender(legislature_current());
         $data['womenMean']['n'] = $women_mean[1]['n'];
         $data['womenMean']['pct'] = $women_mean[1]['percentage'];
         $data['womenMean']['nSociety'] = 52;

@@ -110,7 +110,7 @@
       $data['ageMean'] = round($data['ageMean']);
       $data['ageEdited'] = $this->functions_datan->more_less($data['groupe']['age'], $data['ageMean']);
       // Get women data
-      $data['womenPctTotal'] = $this->deputes_model->get_deputes_gender($data['groupe']['legislature']);
+      $data['womenPctTotal'] = $deputesModel->get_deputes_gender($data['groupe']['legislature']);
       $data['womenPctTotal'] = $data['womenPctTotal'][1]['percentage'];
       $data['womenEdited'] = $this->functions_datan->more_less($data['groupe']['womenPct'], $data['womenPctTotal']);
       return $data;
