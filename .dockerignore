@@ -1,3 +1,4 @@
 node_modules
 .git
 .claude
+scripts/data/elections/
