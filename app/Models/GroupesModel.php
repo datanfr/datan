@@ -67,14 +67,16 @@ class GroupesModel extends Model {
   }
 
   public function get_groupes_hemicycle(){
-    $this->db->select('o.*, date_format(dateDebut, "%d %M %Y") as dateDebutFR, e.effectif');
-    $this->db->select('CASE WHEN o.libelle = "Non inscrit" THEN "Députés non inscrits" ELSE o.libelle END AS libelle', false);
-    $this->db->where('o.legislature', legislature_current());
-    $this->db->where('o.coteType', 'GP');
-    $this->db->where('o.dateFin IS NULL');
-    $this->db->order_by('e.effectif DESC, o.libelle');
-    $this->db->join('groupes_effectif e', 'o.uid = e.organeRef', 'left');
-    return $this->db->get('organes o')->result_array();
+    return $this->db->table('organes o')
+      ->select('o.*, date_format(dateDebut, "%d %M %Y") as dateDebutFR, e.effectif')
+      ->select('CASE WHEN o.libelle = "Non inscrit" THEN "Députés non inscrits" ELSE o.libelle END AS libelle', false)
+      ->join('groupes_effectif e', 'o.uid = e.organeRef', 'left')
+      ->where('o.legislature', legislature_current())
+      ->where('o.coteType', 'GP')
+      ->where('o.dateFin IS NULL', null, false)
+      ->orderBy('e.effectif DESC, o.libelle')
+      ->get()
+      ->getResultArray();
   }
 
   public function get_all_groupes_majority($legislature = NULL){
@@ -158,16 +160,22 @@ class GroupesModel extends Model {
       }
     }
     foreach ($groupes as $key => $value) {
-      $groupes[$key]['couleurAssociee'] = $groupesModel->get_groupe_color(array($value['libelleAbrev'], $value['couleurAssociee']));
+      $groupes[$key]['couleurAssociee'] = $this->get_groupe_color(array($value['libelleAbrev'], $value['couleurAssociee']));
     }
     if ($empty != TRUE) {
       return array_replace(array_flip($sort), $groupes);
     }
   }
 
-  public function get_number_active_groupes(){
-    $this->db->where(array('coteType' => 'GP', 'libelleAbrev != ' => 'NI', 'dateFin' => NULL, 'legislature' => legislature_current()));
-    return $this->db->count_all_results('organes');
+  public function get_number_active_groupes(): int {
+    return $this->db->table('organes')
+      ->where([
+        'coteType'         => 'GP',
+        'libelleAbrev !='  => 'NI',
+        'dateFin'          => null,
+        'legislature'      => legislature_current(),
+      ])
+      ->countAllResults();
   }
 
   public function get_number_inactive_groupes(){
