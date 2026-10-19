@@ -32,7 +32,7 @@ ressources
 .env
 *.code-workspace
 
-#assets folder
+# Assets folder CI4
 assets/opendata
 assets/dataset_backup/general/*.sql
 assets/imgs/deputes_original/
@@ -48,6 +48,23 @@ assets/data/professions/election_4/*.pdf
 assets/data/professions/election_6/*.pdf
 assets/data/*.txt
 assets/css/bootstrap*
+
+# Assets for CI4
+/public/assets/opendata
+/public/assets/dataset_backup/general/*.sql
+/public/assets/imgs/deputes_original/
+/public/assets/imgs/deputes_ogp/
+/public/assets/imgs/deputes_webp/
+/public/assets/imgs/deputes_nobg/
+/public/assets/imgs/deputes_nobg_import/
+/public/assets/imgs/deputes_nobg_webp/
+/public/assets/imgs/posts/
+/public/assets/imgs/captcha/*.jpg
+/public/assets/data/*.json
+/public/assets/data/professions/election_4/*.pdf
+/public/assets/data/professions/election_6/*.pdf
+/public/assets/data/*.txt
+/public/assets/css/bootstrap*
 
 # CodeIgniter 4
 /vendor/

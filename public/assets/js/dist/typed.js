@@ -1,0 +1,2 @@
+var typed_strings=["un député","une ville","un groupe","un vote"],typed=new Typed(".text-slider",{strings:typed_strings,typeSpeed:50,loop:!0,backDelay:900,backSpeed:30});
+//# sourceMappingURL=../main.map
