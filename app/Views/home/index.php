@@ -111,7 +111,7 @@
           <h2 class="text-center my-4">Derniers votes décryptés par Datan</h2>
         </div>
         <div class="col-12 carousel-container bloc-carousel-votes-flickity mt-4 mb-4">
-          <?php $this->load->view('votes/partials/votes_carousel.php', array('votes' => $votes)) ?>
+          <?= view('votes/partials/votes_carousel', ['votes' => $votes]) ?>
           <div class="carousel-buttons d-flex justify-content-center">
             <button type="button" class="btn prev mr-2 carousel--prev" aria-label="précédent">
               <?= file_get_contents(FCPATH . "assets/imgs/icons/arrow_left.svg") ?>
@@ -128,7 +128,7 @@
     </div>
   </div>
   <!-- BLOC ELECTION -->
-  <?php $this->view('home/partials/election_groups.php') ?>  
+  <?= view('home/partials/election_groups.php') ?>  
   <!-- BLOC POSTS -->
   <div class="row">
     <div class="container p-md-0">
@@ -140,8 +140,14 @@
           <div class="row pt-4">
             <?php foreach ($posts as $index => $post): ?>
               <div class="col-md-4 <?= $index > 0 ? 'mt-md-0 mt-4' : '' ?>">
-                <?php $this->load->view('posts/partials/bloc-post.php', array('post' => $post, 'postTitleTag' => 'h3', 'chapo' => FALSE)) ?>
-              </div>
+                
+                <?= view('posts/partials/bloc-post', [
+                  'post' => $post,
+                  'postTitleTag' => 'h3',
+                  'chapo' => false
+                ]) ?>
+              
+            </div>
             <?php endforeach; ?>
           </div>
           <div class="row mt-4">
@@ -154,7 +160,7 @@
     </div>
   </div> <!-- // END BLOC POSTS -->
   <!-- BLOC HEMICYCLE -->
-  <?php $this->view('home/partials/composition.php'); ?>
+  <?= view('home/partials/composition.php'); ?>
   <!-- BLOC EXPLICATIONS -->
   <div class="row bloc-votes">
     <div class="container p-md-0">
