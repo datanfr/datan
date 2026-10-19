@@ -27,7 +27,7 @@
       }
 
       // Meta
-      $data['url'] = $this->meta_model->get_url();
+      $data['url'] = $metaModel->get_url();
       $data['title_meta'] = "Partis politiques | Datan";
       $data['description_meta'] = "Retrouvez tous les partis politiques représentés à l'Assemblée nationale. Quels sont les députés rattachés aux différents partis ?";
       $data['title'] = "Les partis politiques en France";
@@ -43,7 +43,7 @@
       $data['breadcrumb_json'] = $this->breadcrumb_model->breadcrumb_json($data['breadcrumb']);
       //Open Graph
       $controller = $this->router->fetch_class()."/".$this->router->fetch_method();
-      $data['ogp'] = $this->meta_model->get_ogp($controller, $data['title_meta'], $data['description_meta'], $data['url'], $data);
+      $data['ogp'] = $metaModel->get_ogp($controller, $data['title_meta'], $data['description_meta'], $data['url'], $data);
       // JS
       // Load Views
       $this->load->view('templates/header', $data);
@@ -94,7 +94,7 @@
       }
 
       // Meta
-      $data['url'] = $this->meta_model->get_url();
+      $data['url'] = $metaModel->get_url();
       if ($data['party']['libelle'] == "Non rattaché(s)") {
         $data['title_meta'] = 'Députés non rattachés à un parti politique | Datan';
         $data['description_meta'] = "Découvrez les députés de l'Assemblée nationale qui déclarent ne pas être rattachés financièrement à un parti politique.";
@@ -123,7 +123,7 @@
       $data['breadcrumb_json'] = $this->breadcrumb_model->breadcrumb_json($data['breadcrumb']);
       //Open Graph
       $controller = $this->router->fetch_class()."/".$this->router->fetch_method();
-      $data['ogp'] = $this->meta_model->get_ogp($controller, $data['title_meta'], $data['description_meta'], $data['url'], $data);
+      $data['ogp'] = $metaModel->get_ogp($controller, $data['title_meta'], $data['description_meta'], $data['url'], $data);
       // Microdata Person
       $data['schema'] = $this->parties_model->get_organization_schema($data['party'], $data['deputesActive']);
       // Preloads

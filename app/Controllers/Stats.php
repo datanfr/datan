@@ -148,13 +148,13 @@
       );
       $data['breadcrumb_json'] = $this->breadcrumb_model->breadcrumb_json($data['breadcrumb']);
       // Meta
-      $data['url'] = $this->meta_model->get_url();
+      $data['url'] = $metaModel->get_url();
       $data['title_meta'] = "Statistiques et classements - Assemblée nationale | Datan";
       $data['description_meta'] = "Classements des députés et des groupes. ";
       $data['title'] = "L'Assemblée nationale en chiffres";
       //Open Graph
       $controller = $this->router->fetch_class()."/".$this->router->fetch_method();
-      $data['ogp'] = $this->meta_model->get_ogp($controller, $data['title_meta'], $data['description_meta'], $data['url'], $data);
+      $data['ogp'] = $metaModel->get_ogp($controller, $data['title_meta'], $data['description_meta'], $data['url'], $data);
       // JS
       $data['js_to_load_up'] = array('dist/chart.min.js');
       // Views
@@ -435,9 +435,9 @@
       );
       $data['breadcrumb_json'] = $this->breadcrumb_model->breadcrumb_json($data['breadcrumb']);
       //Open Graph
-      $data['url'] = $this->meta_model->get_url();
+      $data['url'] = $metaModel->get_url();
       $controller = $this->router->fetch_class()."/".$this->router->fetch_method();
-      $data['ogp'] = $this->meta_model->get_ogp($controller, $data['title_meta'], $data['description_meta'], $data['url'], $data);
+      $data['ogp'] = $metaModel->get_ogp($controller, $data['title_meta'], $data['description_meta'], $data['url'], $data);
       $data['css_to_load']= array(
         array(
           "url" => css_url()."datatables.bootstrap4.min.css",
@@ -450,7 +450,7 @@
         'libraries/datetime/datetime-moment'
       );
       // Meta
-      $data['url'] = $this->meta_model->get_url();
+      $data['url'] = $metaModel->get_url();
       // Views
       $this->load->view('templates/header', $data);
       $this->load->view('templates/button_up');

@@ -32,12 +32,12 @@
       );
       $data['breadcrumb_json'] = $this->breadcrumb_model->breadcrumb_json($data['breadcrumb']);
       // Meta
-      $data['url'] = $this->meta_model->get_url();
+      $data['url'] = $metaModel->get_url();
       $data['title_meta'] = "Blog | Datan";
       $data['description_meta'] = "Découvrez l'actualité politique de l'Assemblée nationale, du gouvernement et des députés avec les articles de Datan.";
       //Open Graph
       $controller = $this->router->fetch_class()."/".$this->router->fetch_method();
-      $data['ogp'] = $this->meta_model->get_ogp($controller, $data['title_meta'], $data['description_meta'], $data['url'], $data);
+      $data['ogp'] = $metaModel->get_ogp($controller, $data['title_meta'], $data['description_meta'], $data['url'], $data);
       // JS
       // Preloads
       $data['preloads'] = array(
@@ -82,12 +82,12 @@
       );
       $data['breadcrumb_json'] = $this->breadcrumb_model->breadcrumb_json($data['breadcrumb']);
       // Meta
-      $data['url'] = $this->meta_model->get_url();
+      $data['url'] = $metaModel->get_url();
       $data['title_meta'] = $data['category']['name']." - Blog | Datan";
       $data['description_meta'] = $data['category']['description_meta'];
       //Open Graph
       $controller = $this->router->fetch_class()."/".$this->router->fetch_method();
-      $data['ogp'] = $this->meta_model->get_ogp($controller, $data['title_meta'], $data['description_meta'], $data['url'], $data);
+      $data['ogp'] = $metaModel->get_ogp($controller, $data['title_meta'], $data['description_meta'], $data['url'], $data);
       // JS
       // Preloads
       $data['preloads'] = array(
@@ -132,15 +132,15 @@
       );
       $data['breadcrumb_json'] = $this->breadcrumb_model->breadcrumb_json($data['breadcrumb']);
       // Meta
-      $data['url'] = $this->meta_model->get_url();
+      $data['url'] = $metaModel->get_url();
       $data['title_meta'] = $data['post']['title']." | Datan";
       $data['description_meta'] = character_limiter(strip_tags($data['post']['body']), 300, "");
       $data['title'] = $data['post']['title'];
       //Open Graph
       $controller = $this->router->fetch_class()."/".$this->router->fetch_method();
-      $data['ogp'] = $this->meta_model->get_ogp($controller, $data['title_meta'], $data['description_meta'], $data['url'], $data);
+      $data['ogp'] = $metaModel->get_ogp($controller, $data['title_meta'], $data['description_meta'], $data['url'], $data);
       // Microdata article
-      $data['schema_article'] = $this->meta_model->get_schema_article($data['post']);
+      $data['schema_article'] = $metaModel->get_schema_article($data['post']);
 
       // JS
       //$data['js_to_load']= array("datan/sort_mps");

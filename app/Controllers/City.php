@@ -155,7 +155,7 @@
       }
 
       // Meta
-      $data['url'] = $this->meta_model->get_url();
+      $data['url'] = $metaModel->get_url();
       $data['title_meta'] = "Députés par circonscription : ".$commune_nom." ".$code_postal." | Datan";
       if (!$data['noMP']) {
         $data['description_meta'] = "Découvrez le".$s." député".$s." élu".$s." dans la ville ".$de."".$commune_nom." (".$dpt_code.") et tous ".$ses." résultats de vote : taux de participation, loyauté avec ".$son." groupe, proximité avec la majorité présidentielle.";
@@ -183,7 +183,7 @@
       $data['breadcrumb_json'] = $this->breadcrumb_model->breadcrumb_json($data['breadcrumb']);
       //Open Graph
       $controller = $this->router->fetch_class()."/".$this->router->fetch_method();
-      $data['ogp'] = $this->meta_model->get_ogp($controller, $data['title_meta'], $data['description_meta'], $data['url'], $data);
+      $data['ogp'] = $metaModel->get_ogp($controller, $data['title_meta'], $data['description_meta'], $data['url'], $data);
       // CSS TO LOAD
       $data['critical_css'] = "city";
       // JS UP

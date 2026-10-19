@@ -6,7 +6,8 @@ use App\Models\DeputesModel;
 use App\Models\GroupesModel;
 use App\Models\VotesModel;
 use App\Models\ElectionsModel;
-use App\Models\PostModel; 
+use App\Models\PostModel;
+use App\Models\MetaModel;
 
 class Home extends BaseController {
 
@@ -17,6 +18,7 @@ class Home extends BaseController {
     $votesModel = new VotesModel();
     $electionsModel = new ElectionsModel();
     $postModel = new PostModel();
+    $metaModel = new MetaModel();
     $session = session();
 
     // Get user data == TO BE RESOLVED LATER
@@ -121,11 +123,11 @@ class Home extends BaseController {
     $data['composition'] = TRUE;
 
     //Meta
-    $data['url'] = $this->meta_model->get_url();
+    $data['url'] = $metaModel->get_url();
     $data['title_meta'] = "Datan | Comprendre l'Assemblée nationale";
     $data['description_meta'] = "L'Assemblée nationale enfin compréhensible ! Découvrez les résultats de vote de chaque député et groupe parlementaire.";
     //Open Graph
-    $data['ogp'] = $this->meta_model->get_ogp('home', $data['title_meta'], $data['description_meta'], $data['url'], $data);
+    $data['ogp'] = $metaModel->get_ogp('home', $data['title_meta'], $data['description_meta'], $data['url'], $data);
     // CSS
     $data['critical_css'] = "index";
     $data['css_to_load']= array(

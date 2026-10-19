@@ -45,7 +45,7 @@ class Newsletter extends MY_Controller
         );
 
         // Meta
-        $data['url'] = $this->meta_model->get_url();
+        $data['url'] = $metaModel->get_url();
         $data['title_meta'] = "Gestion des abonnements aux newsletters | Datan";
         $data['description_meta'] = "Mettez à jour vos abonnements aux différentes newsletters de Datan.";
         $data['title'] = 'Mettre à jour vos abonnements';
@@ -103,7 +103,7 @@ class Newsletter extends MY_Controller
 
     public function register(){
       // Meta
-      $data['url'] = $this->meta_model->get_url();
+      $data['url'] = $metaModel->get_url();
       $data['title_meta'] = "S'inscrire à la newsletter | Datan";
       $data['description_meta'] = "Abonnez-vous à la newsletter de Datan. Recevez tous les mois des informations concernant l'Assemblée nationale, l'activité des députés et leurs positions de vote.";
       $data['title'] = 'Abonnez-vous à la newsletter';
@@ -118,10 +118,10 @@ class Newsletter extends MY_Controller
       );
       $data['breadcrumb_json'] = $this->breadcrumb_model->breadcrumb_json($data['breadcrumb']);
       //Meta
-      $data['url'] = $this->meta_model->get_url();
+      $data['url'] = $metaModel->get_url();
       //Open Graph
       $controller = $this->router->fetch_class()."/".$this->router->fetch_method();
-      $data['ogp'] = $this->meta_model->get_ogp($controller, $data['title_meta'], $data['description_meta'], $data['url'], $data);
+      $data['ogp'] = $metaModel->get_ogp($controller, $data['title_meta'], $data['description_meta'], $data['url'], $data);
 
       // Load views
       $this->load->view('templates/header', $data);
@@ -168,7 +168,7 @@ class Newsletter extends MY_Controller
 
     public function delete($email){
       $data['email'] = $email;
-      $data['url'] = $this->meta_model->get_url();
+      $data['url'] = $metaModel->get_url();
       $data['title_meta'] = "Désinscription à la newsletter | Datan";
       $data['title'] = 'Désinscription à la newsletter';
       $response = getContactId($email);

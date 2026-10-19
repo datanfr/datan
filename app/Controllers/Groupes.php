@@ -146,7 +146,7 @@
       }
 
       // Meta and Breadcrum
-      $data['url'] = $this->meta_model->get_url();
+      $data['url'] = $metaModel->get_url();
       if ($data['legislature'] == legislature_current()) {
         // Meta
         $data['title_meta'] = "Groupes Parlementaires - Assemblée Nationale | Datan";
@@ -182,7 +182,7 @@
       $data['breadcrumb_json'] = $this->breadcrumb_model->breadcrumb_json($data['breadcrumb']);
       //Open Graph
       $controller = $this->router->fetch_class()."/".$this->router->fetch_method();
-      $data['ogp'] = $this->meta_model->get_ogp($controller, $data['title_meta'], $data['description_meta'], $data['url'], $data);
+      $data['ogp'] = $metaModel->get_ogp($controller, $data['title_meta'], $data['description_meta'], $data['url'], $data);
       // JS
       // Load Views
       $this->load->view('templates/header', $data);
@@ -208,7 +208,7 @@
       }
 
       // Meta
-      $data['url'] = $this->meta_model->get_url();
+      $data['url'] = $metaModel->get_url();
       $data['title_meta'] = "Anciens groupes politiques - Assemblée Nationale | Datan";
       $data['description_meta'] = "Retrouvez tous les anciens groupes parlementaires de la " . legislature_current() . "ème législature. Résultats de vote et analyses pour chaque groupe.";
       $data['title'] = "Les anciens groupes politiques de la " . legislature_current() . "ème législature";
@@ -227,7 +227,7 @@
       $data['breadcrumb_json'] = $this->breadcrumb_model->breadcrumb_json($data['breadcrumb']);
       //Open Graph
       $controller = $this->router->fetch_class()."/".$this->router->fetch_method();
-      $data['ogp'] = $this->meta_model->get_ogp($controller, $data['title_meta'], $data['description_meta'], $data['url'], $data);
+      $data['ogp'] = $metaModel->get_ogp($controller, $data['title_meta'], $data['description_meta'], $data['url'], $data);
       // JS
       // Load Views
       $this->load->view('templates/header', $data);
@@ -342,7 +342,7 @@
       }
 
       // Meta
-      $data['url'] = $this->meta_model->get_url();
+      $data['url'] = $metaModel->get_url();
       if ($data['groupe']['libelle'] == "Non inscrit") {
         $data['title_meta'] = 'Députés non inscrits - Asssemblée Nationale | Datan';
         $data['description_meta'] = "Découvrez les résultats de vote des députés non inscrits (NI) : taux de participation, cohésion au sein groupe, proximité avec les autres groupes parlementaires.";
@@ -384,7 +384,7 @@
       $data['breadcrumb_json'] = $this->breadcrumb_model->breadcrumb_json($data['breadcrumb']);
       //Open Graph
       $controller = $this->router->fetch_class()."/".$this->router->fetch_method();
-      $data['ogp'] = $this->meta_model->get_ogp($controller, $data['title_meta'], $data['description_meta'], $data['url'], $data);
+      $data['ogp'] = $metaModel->get_ogp($controller, $data['title_meta'], $data['description_meta'], $data['url'], $data);
       // Microdata Person
       if (!in_array($data['groupe']['uid'], $groupesModel->get_all_groupes_ni())) {
         $data['schema'] = $groupesModel->get_organization_schema($data['groupe'], $data['president'], NULL);
@@ -433,7 +433,7 @@
       $data['apparentes'] = $groupesModel->get_groupe_apparentes($data['groupe']['uid'], $data['active']);
 
       // Meta
-      $data['url'] = $this->meta_model->get_url();
+      $data['url'] = $metaModel->get_url();
       if ($data['groupe']['libelleAbrev'] == "NI") {
         $data['title_meta'] = "Députés non incrits - Assemblée Nationale | Datan";
         $data['description_meta'] = "Retrouvez tous les députés en activité non inscrits (NI) de la 15e législature.";
@@ -481,7 +481,7 @@
       $data['breadcrumb_json'] = $this->breadcrumb_model->breadcrumb_json($data['breadcrumb']);
       //Open Graph
       $controller = $this->router->fetch_class()."/".$this->router->fetch_method();
-      $data['ogp'] = $this->meta_model->get_ogp($controller, $data['title_meta'], $data['description_meta'], $data['url'], $data);
+      $data['ogp'] = $metaModel->get_ogp($controller, $data['title_meta'], $data['description_meta'], $data['url'], $data);
       // Microdata Person
       if (!in_array($data['groupe']['uid'], $groupesModel->get_all_groupes_ni())) {
         $data['schema'] = $groupesModel->get_organization_schema($data['groupe'], $data['president'], array('members' => $data['membres'], 'apparentes' => $data['apparentes']));
@@ -520,7 +520,7 @@
       $data['votes'] = $votesModel->get_votes_datan_groupe($data['groupe']['uid']);
 
       // Meta
-      $data['url'] = $this->meta_model->get_url();
+      $data['url'] = $metaModel->get_url();
       if ($data['groupe']['libelleAbrev'] == "NI") {
         $data['title_meta'] = "Députés non incrits - Votes | Datan";
         $data['description_meta'] = "Retrouvez toutes les positions des députés non inscrits (NI) quand ils votent à l'Assemblée nationale.";
@@ -548,7 +548,7 @@
       $data['breadcrumb_json'] = $this->breadcrumb_model->breadcrumb_json($data['breadcrumb']);
       //Open Graph
       $controller = $this->router->fetch_class()."/".$this->router->fetch_method();
-      $data['ogp'] = $this->meta_model->get_ogp($controller, $data['title_meta'], $data['description_meta'], $data['url'], $data);
+      $data['ogp'] = $metaModel->get_ogp($controller, $data['title_meta'], $data['description_meta'], $data['url'], $data);
       // JS
       $data['js_to_load_before_datan'] = array("libraries/isotope/isotope.pkgd.min");
       $data['js_to_load']= array("datan/sorting");
@@ -585,7 +585,7 @@
       $data['votes'] = $votesModel->get_votes_all_groupe($data['groupe']['uid'], $legislature);
 
       // Meta
-      $data['url'] = $this->meta_model->get_url();
+      $data['url'] = $metaModel->get_url();
       if ($data['groupe']['libelleAbrev'] == "NI") {
         $data['title_meta'] = "Députés non incrits - Votes | Datan";
         $data['description_meta'] = "Retrouvez tous les votes des députés non inscrits (NI) : positions politiques, cohésion interne, participation.";
@@ -616,7 +616,7 @@
       $data['breadcrumb_json'] = $this->breadcrumb_model->breadcrumb_json($data['breadcrumb']);
       //Open Graph
       $controller = $this->router->fetch_class()."/".$this->router->fetch_method();
-      $data['ogp'] = $this->meta_model->get_ogp($controller, $data['title_meta'], $data['description_meta'], $data['url'], $data);
+      $data['ogp'] = $metaModel->get_ogp($controller, $data['title_meta'], $data['description_meta'], $data['url'], $data);
       // CSS
       $data['css_to_load']= array(
         array(
@@ -775,7 +775,7 @@
       }
 
       // Meta
-      $data['url'] = $this->meta_model->get_url();
+      $data['url'] = $metaModel->get_url();
       if ($data['groupe']['libelleAbrev'] == "NI") {
         $data['title_meta'] = "Députés non incrits - Statistiques | Datan";
         $data['description_meta'] = "Retrouvez toutes les statistiques des députés non inscrits (NI) : participation aux votes, cohésion, proximité avec la majorité présidentielle.";

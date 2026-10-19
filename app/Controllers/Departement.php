@@ -31,7 +31,7 @@
       }
 
       // Meta
-      $data['url'] = $this->meta_model->get_url();
+      $data['url'] = $metaModel->get_url();
       $data['title_meta'] = "Députés par circonscription : ".$data['departement']['departement_nom']." ".$data['departement']['departement_code']." | Datan";
       $data['description_meta'] = "Découvrez la liste des députés élus dans le département ".$data['departement']['libelle_2']."".$data['departement']['departement_nom']." (".$data['departement']['departement_code']."). Tous les députés des circonscriptions ".$data['departement']['libelle_2']."".$data['departement']['departement_nom'].".";
       if ($data['departement']['departement_code'] == '099') {
@@ -54,7 +54,7 @@
       $data['breadcrumb_json'] = $this->breadcrumb_model->breadcrumb_json($data['breadcrumb']);
       //Open Graph
       $controller = $this->router->fetch_class()."/".$this->router->fetch_method();
-      $data['ogp'] = $this->meta_model->get_ogp($controller, $data['title_meta'], $data['description_meta'], $data['url'], $data);
+      $data['ogp'] = $metaModel->get_ogp($controller, $data['title_meta'], $data['description_meta'], $data['url'], $data);
       // JS
       // Preloads
       $data['preloads'] = array(
@@ -73,7 +73,7 @@
       $data['departements'] = $this->departement_model->get_all_departements();
 
       // Meta
-      $data['url'] = $this->meta_model->get_url();
+      $data['url'] = $metaModel->get_url();
       $data['title_meta'] = "Départements et territoires d'outre-mer | Datan";
       $data['description_meta'] = "Découvrez la liste des départements et territoires d'outre mer de la France.";
       $data['title'] = "Départements et territoires d'outre mer de la France";
@@ -89,7 +89,7 @@
       $data['breadcrumb_json'] = $this->breadcrumb_model->breadcrumb_json($data['breadcrumb']);
       //Open Graph
       $controller = $this->router->fetch_class()."/".$this->router->fetch_method();
-      $data['ogp'] = $this->meta_model->get_ogp($controller, $data['title_meta'], $data['description_meta'], $data['url'], $data);
+      $data['ogp'] = $metaModel->get_ogp($controller, $data['title_meta'], $data['description_meta'], $data['url'], $data);
       // JS
       // Preloads
       $data['preloads'] = array(

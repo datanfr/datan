@@ -33,7 +33,7 @@
       $data['months'] = $votesModel->get_months_archives(legislature_current());
 
       // Meta
-      $data['url'] = $this->meta_model->get_url();
+      $data['url'] = $metaModel->get_url();
       $data['title_meta'] = "Votes Assemblée Nationale - Résultat et Analyse | Datan";
       $data['title'] = "Votes de la " . legislature_current() . "<sup>e</sup> législature";
       $data['description_meta'] = "Retrouvez tous les votes de l'Assemblée nationale de la " . legislature_current() . "e législature décryptés par Datan. Détails des votes, résultats des groupes et des députés, statistiques de participation, de loyauté et de cohésion.";
@@ -49,7 +49,7 @@
       $data['breadcrumb_json'] = $this->breadcrumb_model->breadcrumb_json($data['breadcrumb']);
       //Open Graph
       $controller = $this->router->fetch_class()."/".$this->router->fetch_method();
-      $data['ogp'] = $this->meta_model->get_ogp($controller, $data['title_meta'], $data['description_meta'], $data['url'], $data);
+      $data['ogp'] = $metaModel->get_ogp($controller, $data['title_meta'], $data['description_meta'], $data['url'], $data);
       // CSS
       $data['css_to_load']= array(
         array(
@@ -76,7 +76,7 @@
       $data['number_votes'] = $votesModel->get_n_votes_datan(legislature_current());
 
       // Meta
-      $data['url'] = $this->meta_model->get_url();
+      $data['url'] = $metaModel->get_url();
       $data['title_meta'] = "Votes Décryptés Assemblée Nationale | Datan";
       $data['description_meta'] = "Découvrez les votes de l'Assemblée national décryptés par Datan. Il s'agit des votes faisant l'objet d'une attention médiatique, ou sur lesquels les députés était fortement divisés.";
       $data['title'] = "Tous les votes décryptés de l'Assemblée Nationale";
@@ -95,7 +95,7 @@
       $data['breadcrumb_json'] = $this->breadcrumb_model->breadcrumb_json($data['breadcrumb']);
       //Open Graph
       $controller = $this->router->fetch_class()."/".$this->router->fetch_method();
-      $data['ogp'] = $this->meta_model->get_ogp($controller, $data['title_meta'], $data['description_meta'], $data['url'], $data);
+      $data['ogp'] = $metaModel->get_ogp($controller, $data['title_meta'], $data['description_meta'], $data['url'], $data);
       // JS
       $data['js_to_load']= array('datan/sorting');
       $data['js_to_load_before_datan'] = array('libraries/isotope/isotope.pkgd.min');
@@ -121,7 +121,7 @@
       }
 
       // Meta
-      $data['url'] = $this->meta_model->get_url();
+      $data['url'] = $metaModel->get_url();
       $data['title_meta'] = "Votes Décryptés - ".$f_name." | Datan";
       $data['description_meta'] = "Retrouvez tous les votes de l'Assemblée nationale décrypté par Datan sur la thématique ".$f_name.". Détails des votes, résultats des groupes et des députés, statistiques de participation, de loyauté et de cohésion.";
       $data['title'] = "Les votes décryptés sur ".$f_libelle;
@@ -143,7 +143,7 @@
       $data['breadcrumb_json'] = $this->breadcrumb_model->breadcrumb_json($data['breadcrumb']);
       //Open Graph
       $controller = $this->router->fetch_class()."/".$this->router->fetch_method();
-      $data['ogp'] = $this->meta_model->get_ogp($controller, $data['title_meta'], $data['description_meta'], $data['url'], $data);
+      $data['ogp'] = $metaModel->get_ogp($controller, $data['title_meta'], $data['description_meta'], $data['url'], $data);
       // Load Views
       $this->load->view('templates/header', $data);
       $this->load->view('votes/field_decryptes', $data);
@@ -169,7 +169,7 @@
       if ($year == NULL && $month == NULL) {
         $data['description'] = "Découvrez tous les scrutins qui ont eu lieu dans l'hémicycle de l'Assemblée nationale lors de la " . $legislature . "<sup>e</sup> législature.";
         // Meta
-        $data['url'] = $this->meta_model->get_url();
+        $data['url'] = $metaModel->get_url();
         $data['title_meta'] = "Votes ".$legislature."e Législature - Assemblée Nationale | Datan";
         $data['title'] = "Votes à l'Assemblée nationale - ".$legislature."<sup>e</sup> législature";
         $data['description_meta'] = "Retrouvez tous les votes de l'Assemblée nationale de la ".$legislature."e législature. Détails des votes, résultats des groupes et des députés, statistiques de participation, de loyauté et de cohésion.";
@@ -188,7 +188,7 @@
         $data['breadcrumb_json'] = $this->breadcrumb_model->breadcrumb_json($data['breadcrumb']);
         //Open Graph
         $controller = $this->router->fetch_class()."/".$this->router->fetch_method();
-        $data['ogp'] = $this->meta_model->get_ogp($controller, $data['title_meta'], $data['description_meta'], $data['url'], $data);
+        $data['ogp'] = $metaModel->get_ogp($controller, $data['title_meta'], $data['description_meta'], $data['url'], $data);
         // Indexes
         $data['y_index'] = NULL;
         $data['m_index'] = NULL;
@@ -196,7 +196,7 @@
       } elseif ($year != NULL && $month == NULL) {
         $data['description'] = "Découvrez tous les scrutins qui ont eu lieu dans l'hémicycle de l'Assemblée nationale lors de la " . $legislature . "<sup>e</sup> législature, en " . $year . ".";
         // Meta
-        $data['url'] = $this->meta_model->get_url();
+        $data['url'] = $metaModel->get_url();
         $data['title_meta'] = "Votes ".$year." Assemblée Nationale - Résultat et Analyse | Datan";
         $data['title'] = "Votes à l'Assemblée nationale - ".$year;
         $data['description_meta'] = "Retrouvez tous les votes de l'Assemblée nationale en ".$year.". Détails des votes, résultats de vote des groupes et des députés, statistiques de loyauté et de cohésion.";
@@ -218,7 +218,7 @@
         $data['breadcrumb_json'] = $this->breadcrumb_model->breadcrumb_json($data['breadcrumb']);
         //Open Graph
         $controller = $this->router->fetch_class()."/".$this->router->fetch_method();
-        $data['ogp'] = $this->meta_model->get_ogp($controller, $data['title_meta'], $data['description_meta'], $data['url'], $data);
+        $data['ogp'] = $metaModel->get_ogp($controller, $data['title_meta'], $data['description_meta'], $data['url'], $data);
         // Indexes
         $data['y_index'] = $year;
         $data['m_index'] = NULL;
@@ -228,7 +228,7 @@
         $data['description'] = "Découvrez tous les scrutins qui ont eu lieu dans l'hémicycle de l'Assemblée nationale lors de la " . $legislature . "<sup>e</sup> législature, en " . $months[$month-1] . " " . $year . ".";
         //"Liste des votes de la ".$legislature."<sup>e</sup> législature - ".$months[$month-1]." ".$year;
         // Meta
-        $data['url'] = $this->meta_model->get_url();
+        $data['url'] = $metaModel->get_url();
         $data['title_meta'] = "Votes ".ucfirst($months[$month-1])." ".$year." Assemblée Nationale - Résultat et Analyse | Datan";
         $data['title'] = "Votes à l'Assemblée nationale - " . ucfirst($months[$month-1])." ".$year;
         $data['description_meta'] = "Retrouvez tous les votes de l'Assemblée nationale en ".$months[$month-1]." ".$year.". Détails des votes, résultats de vote des groupes et des députés, statistiques de loyauté et de cohésion.";
@@ -254,7 +254,7 @@
         $data['breadcrumb_json'] = $this->breadcrumb_model->breadcrumb_json($data['breadcrumb']);
         //Open Graph
         $controller = $this->router->fetch_class()."/".$this->router->fetch_method();
-        $data['ogp'] = $this->meta_model->get_ogp($controller, $data['title_meta'], $data['description_meta'], $data['url'], $data);
+        $data['ogp'] = $metaModel->get_ogp($controller, $data['title_meta'], $data['description_meta'], $data['url'], $data);
         // Indexes
         $data['y_index'] = $year;
         $data['m_index'] = $month;
@@ -463,7 +463,7 @@
 
       $data['votes_datan'] = $votesModel->get_last_votes_datan(7);
       // Meta
-      $data['url'] = $this->meta_model->get_url();
+      $data['url'] = $metaModel->get_url();
       $data['title_meta'] = "Vote n°".is_congress_numero($data['vote']['voteNumero'])." - ".ucfirst($data['vote']['title_meta']). " - ".$legislature."e législature | Datan";
       if ($explication) {
         $data['description_meta'] = "Découvrez l'explication de vote de " . $data['explication']['nameFirst'] . " " . $data['explication']['nameLast'] . ".";
@@ -496,7 +496,7 @@
       } else {
         $title_ogp = $data['title_meta'];
       }
-      $data['ogp'] = $this->meta_model->get_ogp($controller, $title_ogp, $data['description_meta'], $data['url'], $data);
+      $data['ogp'] = $metaModel->get_ogp($controller, $title_ogp, $data['description_meta'], $data['url'], $data);
       // Microdata Person
       if ($voteDatan) {
         $data['schema_article'] = $votesModel->get_vote_schema($data['vote'], $data['ogp']['img']);

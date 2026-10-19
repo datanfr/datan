@@ -93,7 +93,7 @@
 
       $data['breadcrumb_json'] = $this->breadcrumb_model->breadcrumb_json($data['breadcrumb']);
       // Meta
-      $data['url'] = $this->meta_model->get_url();
+      $data['url'] = $metaModel->get_url();
       if ($legislature == legislature_current()) {
         $data['title_meta'] = "Députés - Assemblée Nationale | Datan";
         $data['description_meta'] = "Retrouvez tous les députés en activité de l'Assemblée nationale de la ".legislature_current()."ème législature. Résultats de vote et analyses pour chaque député.";
@@ -105,7 +105,7 @@
       }
       //Open Graph
       $controller = $this->router->fetch_class()."/".$this->router->fetch_method();
-      $data['ogp'] = $this->meta_model->get_ogp($controller, $data['title_meta'], $data['description_meta'], $data['url'], $data);
+      $data['ogp'] = $metaModel->get_ogp($controller, $data['title_meta'], $data['description_meta'], $data['url'], $data);
       // JS
       $data['js_to_load_before_datan'] = array("libraries/isotope/isotope.pkgd.min");
       $data['js_to_load']= array("datan/sorting");
@@ -144,13 +144,13 @@
       );
       $data['breadcrumb_json'] = $this->breadcrumb_model->breadcrumb_json($data['breadcrumb']);
       // Meta
-      $data['url'] = $this->meta_model->get_url();
+      $data['url'] = $metaModel->get_url();
       $data['title_meta'] = "Députés plus en activité - Assemblée Nationale | Datan";
       $data['description_meta'] = "Retrouvez tous les députés plus en activité de l'Assemblée nationale de la 15ème législature. Résultats de vote et analyses pour chaque député.";
       $data['title'] = "Les anciens députés de la ".legislature_current()."ème legislature";
       // Open graph
       $controller = $this->router->fetch_class()."/".$this->router->fetch_method();
-      $data['ogp'] = $this->meta_model->get_ogp($controller, $data['title_meta'], $data['description_meta'], $data['url'], $data);
+      $data['ogp'] = $metaModel->get_ogp($controller, $data['title_meta'], $data['description_meta'], $data['url'], $data);
       // JS
       $data['js_to_load_before_datan'] = array("libraries/isotope/isotope.pkgd.min");
       $data['js_to_load']= array("datan/sorting");
@@ -381,7 +381,7 @@
       $data['other_deputes_dpt'] = $deputesModel->get_deputes_all($legislature, $data['active'], $departement);
 
       // Meta
-      $data['url'] = $this->meta_model->get_url();
+      $data['url'] = $metaModel->get_url();
       $depute = $data['depute']['nameFirst'].' '.$data['depute']['nameLast'];
       $data['title_meta'] = $depute." - Votes | Datan";
       $data['description_meta'] = "Découvrez toutes les positions ".$data['gender']['du']." député".$data['gender']['e']." ".$depute." quand ".$data['gender']['pronom']." vote l'Assemblée nationale.";
@@ -408,7 +408,7 @@
       $data['breadcrumb_json'] = $this->breadcrumb_model->breadcrumb_json($data['breadcrumb']);
       // Open Graph
       $controller = $this->router->fetch_class()."/".$this->router->fetch_method();
-      $data['ogp'] = $this->meta_model->get_ogp($controller, $data['title_meta'], $data['description_meta'], $data['url'], $data);
+      $data['ogp'] = $metaModel->get_ogp($controller, $data['title_meta'], $data['description_meta'], $data['url'], $data);
       // JS
       $data['js_to_load_before_datan'] = array("libraries/isotope/isotope.pkgd.min");
       $data['js_to_load']= array(

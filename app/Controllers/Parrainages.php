@@ -30,13 +30,13 @@
       );
       $data['breadcrumb_json'] = $this->breadcrumb_model->breadcrumb_json($data['breadcrumb']);
       // Meta
-      $data['url'] = $this->meta_model->get_url();
+      $data['url'] = $metaModel->get_url();
       $data['title_meta'] = "Élection présidentielle 2022 : les parrainages des députés | Datan";
       $data['description_meta'] = "Les députés peuvent accorder leur parrainage à un candidat à l'élection présidentielle. Découvrez sur Datan les parrainages accordés par les députés en 2022.";
       $data['title'] = "Élection présidentielle 2022 : découvrez les parrainages des députés";
       //Open Graph
       $controller = $this->router->fetch_class()."/".$this->router->fetch_method();
-      $data['ogp'] = $this->meta_model->get_ogp($controller, $data['title_meta'], $data['description_meta'], $data['url'], $data);
+      $data['ogp'] = $metaModel->get_ogp($controller, $data['title_meta'], $data['description_meta'], $data['url'], $data);
       // CSS
       $data['css_to_load']= array(
         array(

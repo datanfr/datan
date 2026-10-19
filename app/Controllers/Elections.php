@@ -29,13 +29,13 @@
 
       $data['breadcrumb_json'] = $this->breadcrumb_model->breadcrumb_json($data['breadcrumb']);
       // Meta
-      $data['url'] = $this->meta_model->get_url();
+      $data['url'] = $metaModel->get_url();
       $data['title_meta'] = "Les élections en France - Candidats et résultats | Datan";
       $data['description_meta'] = "Retrouvez toutes les informations sur les différentes élections en France (présidentielle, législative, régionales). Découvrez les députés candidats et les résultats.";
       $data['title'] = "Les élections en France";
       //Open Graph
       $controller = $this->router->fetch_class()."/".$this->router->fetch_method();
-      $data['ogp'] = $this->meta_model->get_ogp($controller, $data['title_meta'], $data['description_meta'], $data['url'], $data);
+      $data['ogp'] = $metaModel->get_ogp($controller, $data['title_meta'], $data['description_meta'], $data['url'], $data);
       // JS
       $data['js_to_load'] = array(
         'dist/autocomplete_search',
@@ -148,7 +148,7 @@
 
       $data['breadcrumb_json'] = $this->breadcrumb_model->breadcrumb_json($data['breadcrumb']);
       // Meta
-      $data['url'] = $this->meta_model->get_url();
+      $data['url'] = $metaModel->get_url();
       if ($data['election']['libelleAbrev'] == 'Présidentielle') {
         $data['title_meta'] = "L'" . mb_strtolower($data['election']['libelle']) . " de " . $data['election']['dateYear'] . " - Candidats et résultats | Datan";
         $data['title'] = "L'" . mb_strtolower($data['election']['libelle']) . " de " . $data['election']['dateYear'];
@@ -161,7 +161,7 @@
 
       //Open Graph
       $controller = $this->router->fetch_class()."/".$this->router->fetch_method();
-      $data['ogp'] = $this->meta_model->get_ogp($controller, $data['title_meta'], $data['description_meta'], $data['url'], $data);
+      $data['ogp'] = $metaModel->get_ogp($controller, $data['title_meta'], $data['description_meta'], $data['url'], $data);
       // CSS
       $data['css_to_load']= array(
         array(
@@ -406,13 +406,13 @@
 
       $data['breadcrumb_json'] = $this->breadcrumb_model->breadcrumb_json($data['breadcrumb']);
       // Meta
-      $data['url'] = $this->meta_model->get_url();
+      $data['url'] = $metaModel->get_url();
       $data['title_meta'] = "Les candidats et résultats aux élections municipales 2026 à " . $data['ville']['commune_nom'] . " | Datan";
       $data['description_meta'] = "Retrouvez les résultats des élections municipales à " . $data['ville']['commune_nom'] . ". Les élections se tiennent les 15 et 22 mars 2026. Découvrez les candidats, le nombre de votants, l'abstention pour cette commune.";
       $data['title'] = "Élections municipales 2026 à " . $data['ville']['commune_nom'] . "&nbsp;: candidats et résultats";
       //Open Graph
       $controller = $this->router->fetch_class()."/".$this->router->fetch_method();
-      $data['ogp'] = $this->meta_model->get_ogp($controller, $data['title_meta'], $data['description_meta'], $data['url'], $data);
+      $data['ogp'] = $metaModel->get_ogp($controller, $data['title_meta'], $data['description_meta'], $data['url'], $data);
       // Load Views
       $this->load->view('templates/header', $data);
       $this->load->view('elections/results_city', $data);
@@ -508,13 +508,13 @@
 
       $data['breadcrumb_json'] = $this->breadcrumb_model->breadcrumb_json($data['breadcrumb']);
       // Meta
-      $data['url'] = $this->meta_model->get_url();
+      $data['url'] = $metaModel->get_url();
       $data['title_meta'] = "Les candidats et résultats aux élections municipales 2026 " . $data['dpt']['libelle_1'] . "" . $data['dpt']['departement_nom'] . " (" . $data['dpt']['departement_code'] . ") | Datan";
       $data['description_meta'] = "Retrouvez les résultats des élections municipales " . $data['dpt']['libelle_1'] . "" . $data['dpt']['departement_nom'] . " (" . $data['dpt']['departement_code'] . "). Les élections se tiennent les 15 et 22 mars 2026. Découvrez les candidats, le nombre de votants, l'abstention pour les communes de ce département.";
       $data['title'] = "Élections municipales 2026 " . $data['dpt']['libelle_1'] . "" . $data['dpt']['departement_nom'];
       //Open Graph
       $controller = $this->router->fetch_class()."/".$this->router->fetch_method();
-      $data['ogp'] = $this->meta_model->get_ogp($controller, $data['title_meta'], $data['description_meta'], $data['url'], $data);
+      $data['ogp'] = $metaModel->get_ogp($controller, $data['title_meta'], $data['description_meta'], $data['url'], $data);
       // Load Views
       $this->load->view('templates/header', $data);
       $this->load->view('elections/results_dpt', $data);

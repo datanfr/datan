@@ -15,7 +15,7 @@
       }
 
       //Meta
-      $data['url'] = $this->meta_model->get_url();
+      $data['url'] = $metaModel->get_url();
       $data['title_meta'] = "Foire aux questions - Assemblée nationale | Datan";
       $data['description_meta'] = "Comment les députés sont-ils élus ? Quels sont leur rôle au parlement ? Découvrez la foire aux questions (FAQ) de Datan.";
       // Breadcrumb
@@ -29,7 +29,7 @@
       );
       $data['breadcrumb_json'] = $this->breadcrumb_model->breadcrumb_json($data['breadcrumb']);
       // Open Graph
-      $data['ogp'] = $this->meta_model->get_ogp('home', $data['title_meta'], $data['description_meta'], $data['url'], $data);
+      $data['ogp'] = $metaModel->get_ogp('home', $data['title_meta'], $data['description_meta'], $data['url'], $data);
       // FAQ schema
       $data['schema'] = $this->faq_model->get_faq_schema($data['articles']);
       // CSS

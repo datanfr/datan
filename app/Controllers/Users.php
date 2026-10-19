@@ -301,7 +301,7 @@
 
       $data['title'] = 'Gérer mon compte - ' . $data['userdata']['username'];
       $data['title_meta'] = 'Gérer mon compte | Datan';
-      $data['url'] = $this->meta_model->get_url();
+      $data['url'] = $metaModel->get_url();
       $data['seoNoFollow'] = TRUE;
 
       $this->load->view('templates/header', $data);
@@ -316,7 +316,7 @@
 
       $data['title'] = 'Modifier mes données personnelles';
       $data['title_meta'] = 'Modifier mes données personnelles | Datan';
-      $data['url'] = $this->meta_model->get_url();
+      $data['url'] = $metaModel->get_url();
       $data['seoNoFollow'] = TRUE;
 
       $this->form_validation->set_rules('email', 'Email', 'required|valid_email');
@@ -342,7 +342,7 @@
 
       $data['title'] = 'Modifier mon mot de passe';
       $data['title_meta'] = 'Modifier mon mot de passe | Datan';
-      $data['url'] = $this->meta_model->get_url();
+      $data['url'] = $metaModel->get_url();
       $data['seoNoFollow'] = TRUE;
 
       $this->form_validation->set_rules('current', 'Mot de passe actuel', 'required');
@@ -378,7 +378,7 @@
 
       $data['title'] = 'Supprimer mon compte Datan';
       $data['title_meta'] = 'Supprimer mon compte | Datan';
-      $data['url'] = $this->meta_model->get_url();
+      $data['url'] = $metaModel->get_url();
       $data['seoNoFollow'] = TRUE;
 
       $this->load->view('templates/header', $data);
