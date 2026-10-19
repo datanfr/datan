@@ -5,6 +5,7 @@ namespace App\Controllers;
 use App\Models\DeputesModel;
 use App\Models\GroupesModel;
 use App\Models\VotesModel;
+use App\Models\ElectionsModel;
 
 class Home extends BaseController {
 
@@ -13,6 +14,7 @@ class Home extends BaseController {
     $deputesModel = new DeputesModel();
     $groupesModel = new GroupesModel();
     $votesModel = new VotesModel();
+    $electionsModel = new ElectionsModel();
     $session = session();
 
     // Get user data == TO BE RESOLVED LATER
@@ -93,11 +95,11 @@ class Home extends BaseController {
     }
 
     // Get elections
-    $data['candidatsN'] = $this->elections_model->count_candidats(7, ['active' => TRUE]);
-    $data['candidatsNLeaders'] = $this->elections_model->count_candidats(7, ['position' => 'Tête de liste', 'active' => true]);
+    $data['candidatsN'] = $electionsModel->count_candidats(7, ['active' => TRUE]);
+    $data['candidatsNLeaders'] = $electionsModel->count_candidats(7, ['position' => 'Tête de liste', 'active' => true]);
     /* WHEN FOCUS IS ON CANDIDATS */
     /*
-    $data['candidats'] = $this->elections_model->get_all_candidates(7, TRUE, TRUE, 'candidat');
+    $data['candidats'] = $electionsModel->get_all_candidates(7, TRUE, TRUE, 'candidat');
     $randKey = array_rand($data['candidats']);
     $data['candidatRandom'] = $data['candidats'][$randKey];
     $data['candidatRandom']['district'] = $this->city_model->get_city_by_insee($data['candidatRandom']['district']);
@@ -105,7 +107,7 @@ class Home extends BaseController {
     $data['candidatRandom']['cardCenter'] = isset($data['candidatRandom']['district']) && $data['candidatRandom']['district'] != '' ? 'Candidat' . $data['candidatRandom']['gender']['e'] . ' ' . $data['candidatRandom']['district']['nom_a'] . ' (' . $data['candidatRandom']['district']['dep_code'] . ')' : '';
     */ 
     /* WHEN FOCUS IS ON GROUPES */ 
-    $data['election_groups'] = $this->elections_model->get_n_candidates_all_groups();
+    $data['election_groups'] = $electionsModel->get_n_candidates_all_groups();
     foreach ($data['election_groups'] as $key => $group) {
       $data['election_groups'][$key]['couleurAssociee'] = $groupesModel->get_groupe_color(array($group['libelleAbrev'], $group['couleurAssociee']));
     }

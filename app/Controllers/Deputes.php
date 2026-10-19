@@ -224,7 +224,7 @@
       $data['elections'] = $this->election_service->get_all_elections($mp_id, $data['gender']);
 
       // ____________________GET ELECTION FEATURE________________________
-      $data['electionFeature'] = $this->elections_model->get_candidate_election($mp_id, 7, TRUE, FALSE);
+      $data['electionFeature'] = $electionsModel->get_candidate_election($mp_id, 7, TRUE, FALSE);
       if ($data['electionFeature']) {
         $data['electionFeatureDistrict'] = $this->city_model->get_city_by_insee($data['electionFeature']['district']);
       }  

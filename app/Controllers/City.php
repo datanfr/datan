@@ -128,7 +128,7 @@
       $data['mayor'] = $this->city_model->get_mayor($data['ville']['dpt'], $insee, $data['ville']['commune']);
 
       // Get electionFeature       
-      //$data['electionFeature'] = $this->elections_model->get_candidates_by_city($insee);
+      //$data['electionFeature'] = $electionsModel->get_candidates_by_city($insee);
 
       // Get last election (2024 legislatives)
       $data['results_legislatives_last'] = $this->city_model->get_results_legislatives($insee, 2024);

@@ -11,7 +11,7 @@
 
     public function index(){
       // Data
-      $data['elections'] = $this->elections_model->get_election_all();
+      $data['elections'] = $electionsModel->get_election_all();
       $data['election_future'] = TRUE; // There is an election in the future
 
       $data['departements'] = $this->departement_model->get_all_departements();
@@ -49,24 +49,24 @@
     }
 
     public function individual($slug){
-      $data['election'] = $this->elections_model->get_election($slug);
+      $data['election'] = $electionsModel->get_election($slug);
 
       if (empty($data['election'])) {
         show_404($this->functions_datan->get_404_infos());
       }
 
       // State of the election
-      $data['state'] = $this->elections_model->get_election_state($data['election']['id']);
+      $data['state'] = $electionsModel->get_election_state($data['election']['id']);
 
       // Get departements and communes for link 
       $data['departements'] = $this->departement_model->get_all_departements();
       $data['communes'] = $this->city_model->get_communes(FALSE, 30);
 
       // Data
-      $data['deputes'] = $this->elections_model->get_all_candidates($data['election']['id'], TRUE, FALSE);
+      $data['deputes'] = $electionsModel->get_all_candidates($data['election']['id'], TRUE, FALSE);
       foreach ($data['deputes'] as $key => $value) {
         if ($value['candidature'] == 1 && $value['district']) {
-          $district = $this->elections_model->get_district($value['election_libelleAbrev'], $value['district']);
+          $district = $electionsModel->get_district($value['election_libelleAbrev'], $value['district']);
           $data['deputes'][$key]['cardCenter'] = isset($district['libelle']) ? 'Candidat' . gender($value['civ'])['e'] . ' à ' . $district['libelle']. ' ('.$district['id'].')' : NULL;
           $data['deputes'][$key]['districtId'] = isset($district['id']) ? $district['id'] : NULL;
         } else {
@@ -75,24 +75,24 @@
         }
       }
 
-      $data['districts'] = $this->elections_model->get_all_districts($data['election']['id']);
-      $data['electionInfos'] = $this->elections_model->get_election_infos($data['election']['libelleAbrev']);
-      $data['candidatsN'] = $this->elections_model->count_candidats($data['election']['id']);
+      $data['districts'] = $electionsModel->get_all_districts($data['election']['id']);
+      $data['electionInfos'] = $electionsModel->get_election_infos($data['election']['libelleAbrev']);
+      $data['candidatsN'] = $electionsModel->count_candidats($data['election']['id']);
       if ($data['election']['libelleAbrev'] === 'Municipales') {
-        $data['candidatsNLeaders'] = $this->elections_model->count_candidats($data['election']['id'], ['position' => 'Tête de liste']);
+        $data['candidatsNLeaders'] = $electionsModel->count_candidats($data['election']['id'], ['position' => 'Tête de liste']);
       }
-      $data['nonCandidatsN'] = $this->elections_model->count_non_candidats($data['election']['id'], FALSE, FALSE);
-      $data['candidatsN_second'] = $this->elections_model->count_candidats($data['election']['id'], ['second' => TRUE, 'end' => FALSE]);
-      $data['candidatsN_elected'] = $this->elections_model->count_candidats($data['election']['id'], ['second' => FALSE, 'end' => TRUE]);
-      $data['candidatsN_eliminated'] = $this->elections_model->count_candidats_eliminated($data['election']['id']);
+      $data['nonCandidatsN'] = $electionsModel->count_non_candidats($data['election']['id'], FALSE, FALSE);
+      $data['candidatsN_second'] = $electionsModel->count_candidats($data['election']['id'], ['second' => TRUE, 'end' => FALSE]);
+      $data['candidatsN_elected'] = $electionsModel->count_candidats($data['election']['id'], ['second' => FALSE, 'end' => TRUE]);
+      $data['candidatsN_eliminated'] = $electionsModel->count_candidats_eliminated($data['election']['id']);
       $data['candidatsN_eliminated'] = count($data['candidatsN_eliminated']);
-      $data['mapLegend'] = $this->elections_model->get_map_legend($data['election']['id']);
+      $data['mapLegend'] = $electionsModel->get_map_legend($data['election']['id']);
       $data['today'] = date("Y-m-d");
       $data['results'] = in_array($data['election']['id'], array(1, 2, 3, 4, 5, 6)) ? true : false;
       $data['municipalesResultsCitiesCount'] = 0;
 
       if ($data['election']['slug'] === 'municipales-2026') {
-        $data['municipalesResultsCitiesCount'] = $this->elections_model->count_results_cities_ministry('2026_muni_t2', TRUE);
+        $data['municipalesResultsCitiesCount'] = $electionsModel->count_results_cities_ministry('2026_muni_t2', TRUE);
       }
 
       // Election results 
@@ -109,7 +109,7 @@
 
       // badgeCenter
       foreach ($data['deputes'] as $key => $value) {
-        $state = $this->elections_model->get_state($value['secondRound'], $value['elected']);
+        $state = $electionsModel->get_state($value['secondRound'], $value['elected']);
         $data['deputes'][$key]['electionState'] = $state;
         if ($state == 'lost') {
           $data['deputes'][$key]['badgeCenter'] = 'Éliminé' . gender($value['civ'])['e'];
@@ -216,7 +216,7 @@
       $data['communes_dpt'] = $this->city_model->get_communes_by_dpt($data['ville']['dpt_slug'], url_obf_cities_election(), 30);
 
       // Get deputes candidates       
-      $data['deputes'] = $this->elections_model->get_candidates_by_city($insee);
+      $data['deputes'] = $electionsModel->get_candidates_by_city($insee);
 
       // Get current MPs
       $this->load->model('groupes_model');
@@ -250,9 +250,9 @@
 
       // Municipales 2026 - Ministry city results
       $buildMunicipalesRoundData = function ($roundKey, $roundTitle, $electionId) use ($insee) {
-        $roundResults = $this->elections_model->get_results_city_municipales_ministry($insee, $electionId);
-        $roundInfos = $this->elections_model->get_infos_city_municipales_ministry($insee, $electionId);
-        $roundInfos['pourvu'] = $this->elections_model->isMunicipalesRoundPourvuFromResults($roundResults['results'] ?? array()) ? 'T1' : 'NON';
+        $roundResults = $electionsModel->get_results_city_municipales_ministry($insee, $electionId);
+        $roundInfos = $electionsModel->get_infos_city_municipales_ministry($insee, $electionId);
+        $roundInfos['pourvu'] = $electionsModel->isMunicipalesRoundPourvuFromResults($roundResults['results'] ?? array()) ? 'T1' : 'NON';
 
         $qualifiedLeaders = array();
         foreach ($roundResults['results'] as $candidate) {
@@ -301,10 +301,10 @@
       $t1Pourvu = ($data['municipales_ministry_rounds']['t1']['infos']['pourvu'] ?? null) === 'T1';
 
       if (!$t1Pourvu) {
-        $secondRoundResults = $this->elections_model->get_results_city_municipales_ministry($insee, '2026_muni_t2');
-        $secondRoundInfos = $this->elections_model->get_infos_city_municipales_ministry($insee, '2026_muni_t2');
-        $secondRoundListes = $this->elections_model->get_municipales_listes('2026_muni_t2', $insee);
-        $secondRoundListes = $this->elections_model->get_nuances_edited($secondRoundListes);
+        $secondRoundResults = $electionsModel->get_results_city_municipales_ministry($insee, '2026_muni_t2');
+        $secondRoundInfos = $electionsModel->get_infos_city_municipales_ministry($insee, '2026_muni_t2');
+        $secondRoundListes = $electionsModel->get_municipales_listes('2026_muni_t2', $insee);
+        $secondRoundListes = $electionsModel->get_nuances_edited($secondRoundListes);
         $hasSecondRoundResults = !empty($secondRoundResults['results']);
 
         $secondRoundLeaders = array();
@@ -362,9 +362,9 @@
           'qualified_leaders_text' => '',
         );
 
-        $firstRoundListes = $this->elections_model->get_municipales_listes('2026_muni_t1', $insee);
+        $firstRoundListes = $electionsModel->get_municipales_listes('2026_muni_t1', $insee);
 
-        $data['municipales_list_situations'] = $this->elections_model->get_list_situations(
+        $data['municipales_list_situations'] = $electionsModel->get_list_situations(
           $data['municipales_ministry_rounds']['t1']['results'] ?? array(),
           $secondRoundListes,
           $firstRoundListes

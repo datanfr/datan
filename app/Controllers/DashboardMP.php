@@ -20,10 +20,10 @@
     public function index(){
       $data = $this->data;
       // Legislatives 2022
-      $data['election'] = $this->elections_model->get_election_by_id(4);
-      $data['candidate'] = $this->elections_model->get_candidate_election($data['depute']['mpId'], 4); /* Législative-2022 */
+      $data['election'] = $electionsModel->get_election_by_id(4);
+      $data['candidate'] = $electionsModel->get_candidate_election($data['depute']['mpId'], 4); /* Législative-2022 */
       if ($data['candidate']) {
-        $data['candidate']['district'] = $this->elections_model->get_district('Législatives', $data['candidate']['district']);
+        $data['candidate']['district'] = $electionsModel->get_district('Législatives', $data['candidate']['district']);
 
         $firstRound = new DateTime($data['election']['dateFirstRound']);
         $today = new DateTime('now');
@@ -48,15 +48,15 @@
 
     public function elections($slug){
       $data = $this->data;
-      $data['election'] = $this->elections_model->get_election($slug);
+      $data['election'] = $electionsModel->get_election($slug);
 
       if (empty($data['election']) || !in_array($data['election']['id'], array(4))) {
         show_404($this->functions_datan->get_404_infos());
       }
 
-      $data['candidate'] = $this->elections_model->get_candidate_election($data['depute']['mpId'], 4); /* Législative-2022 */
+      $data['candidate'] = $electionsModel->get_candidate_election($data['depute']['mpId'], 4); /* Législative-2022 */
       if ($data['candidate']) {
-        $data['candidate']['district'] = $this->elections_model->get_district($data['election']['libelleAbrev'], $data['candidate']['district']);
+        $data['candidate']['district'] = $electionsModel->get_district($data['election']['libelleAbrev'], $data['candidate']['district']);
 
         $firstRound = new DateTime($data['election']['dateFirstRound']);
         $today = new DateTime('now');
@@ -82,7 +82,7 @@
 
     public function elections_modify($slug){
       $data = $this->data;
-      $data['election'] = $this->elections_model->get_election($slug);
+      $data['election'] = $electionsModel->get_election($slug);
 
       if (empty($data['election']) || !in_array($data['election']['id'], array(4))) {
         show_404($this->functions_datan->get_404_infos());
@@ -96,13 +96,13 @@
         show_404($this->functions_datan->get_404_infos());
       }
 
-      $data['candidate'] = $this->elections_model->get_candidate_election($data['depute']['mpId'], 4); /* Législative-2022 */
+      $data['candidate'] = $electionsModel->get_candidate_election($data['depute']['mpId'], 4); /* Législative-2022 */
       if ($data['candidate']) {
-        $data['candidate']['district'] = $this->elections_model->get_district($data['election']['libelleAbrev'], $data['candidate']['district']);
+        $data['candidate']['district'] = $electionsModel->get_district($data['election']['libelleAbrev'], $data['candidate']['district']);
       }
       $data['title'] = "Modifier la candidature pour les élections " . mb_strtolower($data['election']['libelleAbrev']). " ".$data['election']['dateYear'];
 
-      $data['districts'] = $this->elections_model->get_all_districts($data['election']['id']);
+      $data['districts'] = $electionsModel->get_all_districts($data['election']['id']);
 
       //Form valiation
       $this->form_validation->set_rules('candidature', 'Candidature', 'required');

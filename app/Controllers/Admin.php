@@ -52,7 +52,7 @@
 
     public function election_candidates($slug){
       $data = $this->data;
-      $data['election'] = $this->elections_model->get_election($slug);
+      $data['election'] = $electionsModel->get_election($slug);
 
       if (empty($data['election'])) {
         show_404($this->functions_datan->get_404_infos());
@@ -60,9 +60,9 @@
 
       $data['title'] = 'Liste candidats aux élections ' . $data['election']['libelleAbrev']. ' '.$data['election']['dateYear'];
 
-      $data['candidats'] = $this->elections_model->get_all_candidates($data['election']['id']);
+      $data['candidats'] = $electionsModel->get_all_candidates($data['election']['id']);
       foreach ($data['candidats'] as $key => $value) {
-        $district = $this->elections_model->get_district($value['election_libelleAbrev'], $value['district']);
+        $district = $electionsModel->get_district($value['election_libelleAbrev'], $value['district']);
         $data['candidats'][$key]['districtLibelle'] = $district ? $district['libelle'] : null;
       }
 
@@ -77,7 +77,7 @@
 
     public function election_candidates_not_done($slug){
       $data = $this->data;
-      $data['election'] = $this->elections_model->get_election($slug);
+      $data['election'] = $electionsModel->get_election($slug);
 
       if (empty($data['election'])) {
         show_404($this->functions_datan->get_404_infos());
@@ -85,7 +85,7 @@
 
       $data['title'] = 'Liste des députés non renseignés pour les élections ' . $data['election']['libelleAbrev']. ' '.$data['election']['dateYear'];
 
-      $data['mps'] = $this->elections_model->get_mps_not_done($data['election']['id']);
+      $data['mps'] = $electionsModel->get_mps_not_done($data['election']['id']);
       foreach ($data['mps'] as $key => $value) {
         $data['mps'][$key]['url'] = base_url() . 'deputes/' . $value['dptSlug'] . '/depute_' . $value['nameUrl'];
       }
@@ -107,7 +107,7 @@
       }
       $slug = $_GET['election'];
       $data['mp'] = $_GET['mp'] ?? null;
-      $data['election'] = $this->elections_model->get_election($slug);
+      $data['election'] = $electionsModel->get_election($slug);
 
       if (empty($data['election'])) {
         show_404($this->functions_datan->get_404_infos());
@@ -127,7 +127,7 @@
       $user_id = $this->session->userdata('user_id');
       $data['title'] = 'Créer un nouveau candidat pour les ' . $data['election']['libelleAbrev'] . ' ' . $data['election']['dateYear'];
       $data['positions'] = array('', 'Tête de liste', 'Colistier');
-      $data['districts'] = $this->elections_model->get_all_districts($data['election']['id']);
+      $data['districts'] = $electionsModel->get_all_districts($data['election']['id']);
 
       //Form valiation
       $this->form_validation->set_rules('depute_url', 'député', 'required');
@@ -155,7 +155,7 @@
         $depute = $deputesModel->get_depute_by_nameUrl($nameUrl);
         if ($depute) {
           $this->admin_model->create_candidat($user_id, $depute);
-          $election = $this->elections_model->get_election_by_id($this->input->post('election'));
+          $election = $electionsModel->get_election_by_id($this->input->post('election'));
           redirect('admin/elections/' . $election['slug']);
         } else {
           $this->load->view('dashboard/header', $data);
@@ -174,7 +174,7 @@
       }
 
       $slug = $_GET['election'];
-      $data['election'] = $this->elections_model->get_election($slug);
+      $data['election'] = $electionsModel->get_election($slug);
 
       if (empty($data['election'])) {
         show_404($this->functions_datan->get_404_infos());
@@ -193,8 +193,8 @@
       // Setup view data
       $user_id = $this->session->userdata('user_id');
       $data['title'] = 'Modifier un candidat pour les ' . $data['election']['libelleAbrev'] . ' ' . $data['election']['dateYear'];
-      $data['candidat'] = $this->elections_model->get_candidate_full($candidateMpId, $data['election']['id']);
-      $district = $this->elections_model->get_district($data['election']['libelleAbrev'], $data['candidat']['district']);
+      $data['candidat'] = $electionsModel->get_candidate_full($candidateMpId, $data['election']['id']);
+      $district = $electionsModel->get_district($data['election']['libelleAbrev'], $data['candidat']['district']);
       $data['candidat']['districtId'] = $district ? $district['id'] : null;
       $data['candidat']['districtLibelle'] = $district ? $district['libelle'] : null;
 
@@ -203,7 +203,7 @@
       }
 
       $data['positions'] = array('Tête de liste', 'Colistier');
-      $data['districts'] = $this->elections_model->get_all_districts($data['election']['id']);
+      $data['districts'] = $electionsModel->get_all_districts($data['election']['id']);
       
       //Form valiation
       $this->form_validation->set_rules('mpId', 'mpId', 'required');
@@ -227,7 +227,7 @@
         $this->load->view('dashboard/footer');
       } else {
           $this->admin_model->modify_candidat();
-          $election = $this->elections_model->get_election_by_id($this->input->post('election'));
+          $election = $electionsModel->get_election_by_id($this->input->post('election'));
           redirect('admin/elections/' . $election['slug']);
       }
 
@@ -240,7 +240,7 @@
         redirect('admin');
       }
       $slug = $_GET['election'];
-      $data['election'] = $this->elections_model->get_election($slug);
+      $data['election'] = $electionsModel->get_election($slug);
       if (empty($data['election'])) {
         show_404($this->functions_datan->get_404_infos());
       }
@@ -254,7 +254,7 @@
       if ($data['usernameType'] != "admin") {
         redirect();
       } else {
-        $data['candidat'] = $this->elections_model->get_candidate_full($candidateMpId, $data['election']['id']);
+        $data['candidat'] = $electionsModel->get_candidate_full($candidateMpId, $data['election']['id']);
 
         $data['title'] = 'Supprimer un candidat pour les ' . $data['election']['libelleAbrev'] . ' ' . $data['election']['dateYear'];
         //Form valiation
@@ -268,7 +268,7 @@
           $this->load->view('dashboard/footer');
         } else {
           $this->admin_model->delete_candidat();
-          $election = $this->elections_model->get_election_by_id($this->input->post('election'));
+          $election = $electionsModel->get_election_by_id($this->input->post('election'));
           redirect('admin/elections/' . $election['slug']);
         }
       }

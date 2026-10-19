@@ -195,7 +195,7 @@
       $result['election_id'] = '2024_legi';
       $result['has_second_round'] = TRUE;
 
-      $circos = $this->elections_model->get_city_circos($result['election_id'] . '_t1', $insee);
+      $circos = $electionsModel->get_city_circos($result['election_id'] . '_t1', $insee);
       if (empty($circos)) {
         $circos = array(
           array(
@@ -213,12 +213,12 @@
           'code_circo' => $code_circo,
           'libelle_circo' => !empty($circo['libelle_circo']) ? $circo['libelle_circo'] : NULL,
           'round_1' => array(
-            'infos' => $this->elections_model->get_infos_city($result['election_id'] . '_t1', $insee, $code_circo),
-            'results' => $this->elections_model->get_results_city_legislatives($result['election_id'] . '_t1', $insee, $code_circo),
+            'infos' => $electionsModel->get_infos_city($result['election_id'] . '_t1', $insee, $code_circo),
+            'results' => $electionsModel->get_results_city_legislatives($result['election_id'] . '_t1', $insee, $code_circo),
           ),
           'round_2' => array(
-            'infos' => $this->elections_model->get_infos_city($result['election_id'] . '_t2', $insee, $code_circo),
-            'results' => $this->elections_model->get_results_city_legislatives($result['election_id'] . '_t2', $insee, $code_circo),
+            'infos' => $electionsModel->get_infos_city($result['election_id'] . '_t2', $insee, $code_circo),
+            'results' => $electionsModel->get_results_city_legislatives($result['election_id'] . '_t2', $insee, $code_circo),
           ),
         );
       }

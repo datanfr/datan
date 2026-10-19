@@ -305,7 +305,7 @@ class Sitemap extends MY_Controller {
 
     $urls = array();
 
-    $data['elections'] = $this->elections_model->get_election_all();
+    $data['elections'] = $electionsModel->get_election_all();
 
     $urls[]["url"] = base_url()."elections";
     foreach ($data['elections'] as $election) {

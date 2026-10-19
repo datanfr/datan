@@ -338,7 +338,7 @@
 
       // Get electionFeature 
       if ($data['groupe']['legislature'] == legislature_current()) {
-        $data['electionFeature'] = $this->elections_model->get_n_candidates_by_group($data['groupe']['uid']);
+        $data['electionFeature'] = $electionsModel->get_n_candidates_by_group($data['groupe']['uid']);
       }
 
       // Meta
