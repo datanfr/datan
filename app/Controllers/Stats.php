@@ -72,7 +72,7 @@
         );
       }
 
-      $data['n_sps'] = $this->votes_model->get_n_votes(legislature_current(), NULL, NULL, 'SPS') ?? 0;
+      $data['n_sps'] = $votesModel->get_n_votes(legislature_current(), NULL, NULL, 'SPS') ?? 0;
       $data['mps_participation'] = ($data['n_sps'] > $data['n_sps_treshold'])
         ? $this->stats_model->get_mps_participation_solennels(legislature_current()) 
         : $this->stats_model->get_mps_participation();
@@ -304,8 +304,8 @@
           $data['participationSolennelsMean'] = $data['participationSolennelsMean']['mean'];
           
           $data['mpsSolennels'] = $this->stats_model->get_mps_participation_solennels(legislature_current());
-          $data['n_sps'] = $this->votes_model->get_n_votes(legislature_current(), NULL, NULL, 'SPS');
-          $data['votesN'] = $this->votes_model->get_n_votes(legislature_current());
+          $data['n_sps'] = $votesModel->get_n_votes(legislature_current(), NULL, NULL, 'SPS');
+          $data['votesN'] = $votesModel->get_n_votes(legislature_current());
           $data['mpsCommission'] = $this->stats_model->get_mps_participation_commission(legislature_current());
 
           // Features MPs 
@@ -334,8 +334,8 @@
         $data['votes_all'] = $this->stats_model->get_groups_participation();
         $data['average'] = $groupesModel->get_stats_avg(legislature_current());
 
-        $data['n_sps'] = $this->votes_model->get_n_votes(legislature_current(), NULL, NULL, 'SPS');
-        $data['votesN'] = $this->votes_model->get_n_votes(legislature_current(), NULL, NULL);
+        $data['n_sps'] = $votesModel->get_n_votes(legislature_current(), NULL, NULL, 'SPS');
+        $data['votesN'] = $votesModel->get_n_votes(legislature_current(), NULL, NULL);
 
         $data['groups'] = $data['n_sps'] < $data['n_sps_treshold'] ? $data['votes_all'] : $data['votes_sps'];
         if ($data['groups']) {

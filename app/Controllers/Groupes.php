@@ -326,7 +326,7 @@
       }
 
       // Query 4 Votes
-      $data['votes_datan'] = $this->votes_model->get_votes_datan_groupe($data['groupe']['uid'], 5);
+      $data['votes_datan'] = $votesModel->get_votes_datan_groupe($data['groupe']['uid'], 5);
 
       // Query 5 - Edito
       $data['edito'] = $this->groupes_edito->edito($data['groupe']['libelleAbrev'], $data['groupe']['positionPolitique']);
@@ -517,7 +517,7 @@
       $data['fields'] = $this->fields_model->get_active_fields();
 
       // Get votes
-      $data['votes'] = $this->votes_model->get_votes_datan_groupe($data['groupe']['uid']);
+      $data['votes'] = $votesModel->get_votes_datan_groupe($data['groupe']['uid']);
 
       // Meta
       $data['url'] = $this->meta_model->get_url();
@@ -582,7 +582,7 @@
       $data = $this->get_data($data);
 
       // Query - get all votes
-      $data['votes'] = $this->votes_model->get_votes_all_groupe($data['groupe']['uid'], $legislature);
+      $data['votes'] = $votesModel->get_votes_all_groupe($data['groupe']['uid'], $legislature);
 
       // Meta
       $data['url'] = $this->meta_model->get_url();

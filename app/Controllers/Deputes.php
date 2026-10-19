@@ -248,11 +248,11 @@
       $data['depute']['dateNaissanceFr'] = utf8_encode(strftime('%d %B %Y', strtotime($data['depute']['birthDate']))); // birthdate
 
       //___________________GET VOTES_________________________________________
-      $data['votes_datan'] = $legislature >= 15 ? $this->votes_model->get_votes_datan_depute($mp_id, 5) : NULL; // Edited votes by datan
-      $data['key_votes'] = $legislature >= 15 ? $this->votes_model->get_key_votes_mp($mp_id) : NULL; // Key votes 
+      $data['votes_datan'] = $legislature >= 15 ? $votesModel->get_votes_datan_depute($mp_id, 5) : NULL; // Edited votes by datan
+      $data['key_votes'] = $legislature >= 15 ? $votesModel->get_key_votes_mp($mp_id) : NULL; // Key votes 
 
       //__________________ Get FEATURED VOTE ________________________________
-      $data['voteFeature'] = $this->votes_model->get_individual_vote_depute($mp_id, 17, 3684); // Vote suspension réforme retraite
+      $data['voteFeature'] = $votesModel->get_individual_vote_depute($mp_id, 17, 3684); // Vote suspension réforme retraite
 
       //__________________GET LAST EXPLICATION_______________________________
       $data['explication'] = $this->depute_service->get_explication_details($mp_id, $legislature, $data['gender']);
@@ -366,8 +366,8 @@
       $data['fields'] = $this->fields_model->get_active_fields();
 
       // Get votes
-      $data['votes'] = $this->votes_model->get_votes_datan_depute($mpId);
-      $data['votes_all'] = $this->votes_model->get_votes_all_depute($mpId, FALSE);
+      $data['votes'] = $votesModel->get_votes_datan_depute($mpId);
+      $data['votes_all'] = $votesModel->get_votes_all_depute($mpId, FALSE);
 
       // Query - gender
       $data['gender'] = gender($data['depute']['civ']);

@@ -221,7 +221,7 @@
     }
 
     public function coalitions($coalitions, $groupe){
-      $votesN = $this->votes_model->get_n_votes($groupe['legislature']);
+      $votesN = $votesModel->get_n_votes($groupe['legislature']);
 
       // Get the coalition array with group data
       $coalition_array = $coalitions[0]['coalition_array'];

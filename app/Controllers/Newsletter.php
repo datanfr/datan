@@ -200,11 +200,11 @@ class Newsletter extends MY_Controller
       $year = date("Y", strtotime("-1 months"));
       $month = date("m", strtotime("-1 months"));
       //$year = 2025; $month = 1; // For testing
-      $data['votesN'] = $this->votes_model->get_n_votes(legislature_current(), $year, $month);
-      $data['votesNDatan'] = $this->votes_model->get_n_votes_datan(legislature_current(), $year, $month);
+      $data['votesN'] = $votesModel->get_n_votes(legislature_current(), $year, $month);
+      $data['votesNDatan'] = $votesModel->get_n_votes_datan(legislature_current(), $year, $month);
 
       if ($data['votesNDatan'] > 0) {
-        $data['votesInfos'] = $this->votes_model->get_infos_period(legislature_current(), $year, $month);
+        $data['votesInfos'] = $votesModel->get_infos_period(legislature_current(), $year, $month);
 
         // Edited text
         $adopted = (int) $data['votesInfos']['adopted'];
@@ -227,10 +227,10 @@ class Newsletter extends MY_Controller
         // Get votes
         if ($data['votesNDatan'] <= 3 ) {
           $data['importants'] = FALSE;
-          $data['votes'] = $this->votes_model->get_votes_datan(legislature_current(), $year, $month, 3, FALSE);
+          $data['votes'] = $votesModel->get_votes_datan(legislature_current(), $year, $month, 3, FALSE);
         } else {
           $data['importants'] = TRUE;
-          $data['votes'] = $this->votes_model->get_votes_datan(legislature_current(), $year, $month, 3, TRUE);
+          $data['votes'] = $votesModel->get_votes_datan(legislature_current(), $year, $month, 3, TRUE);
         }
 
         // Description of votes
@@ -238,7 +238,7 @@ class Newsletter extends MY_Controller
           $string = substr($value['description'], 0, strpos($value['description'], "</p>")+4);
           $string = strip_tags($string);
           $data['votes'][$key]['description'] = $string;
-          $data['votes'][$key]['groupes'] = $this->votes_model->get_vote_groupes_simplified($value['voteNumero'], $value['legislature']);
+          $data['votes'][$key]['groupes'] = $votesModel->get_vote_groupes_simplified($value['voteNumero'], $value['legislature']);
         }
 
         // Get most active MP

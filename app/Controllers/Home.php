@@ -4,6 +4,7 @@ namespace App\Controllers;
 
 use App\Models\DeputesModel;
 use App\Models\GroupesModel;
+use App\Models\VotesModel;
 
 class Home extends BaseController {
 
@@ -11,6 +12,7 @@ class Home extends BaseController {
 
     $deputesModel = new DeputesModel();
     $groupesModel = new GroupesModel();
+    $votesModel = new VotesModel();
     $session = session();
 
     // Get user data == TO BE RESOLVED LATER
@@ -79,15 +81,15 @@ class Home extends BaseController {
     $data['support_opposition'] = array_shift($data['support_opposition']);
 
     // Get explications
-    $data['explications'] = $this->votes_model->get_random_explications_last();
+    $data['explications'] = $votesModel->get_random_explications_last();
 
     //Get votes (cached)
     if(!in_array($_SERVER['REMOTE_ADDR'], localhost())){
         $this->db->cache_on();
-        $data['votes'] = $this->votes_model->get_last_votes_datan(5);
+        $data['votes'] = $votesModel->get_last_votes_datan(5);
         $this->db->cache_off();
     } else {
-      $data['votes'] = $this->votes_model->get_last_votes_datan(5);
+      $data['votes'] = $votesModel->get_last_votes_datan(5);
     }
 
     // Get elections

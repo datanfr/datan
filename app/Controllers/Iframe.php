@@ -129,9 +129,9 @@ class Iframe extends MY_Controller
     //___________________GET VOTES_________________________________________
     if ($legislature >= 15) {
       // Get edited votes
-      $data['votes_datan'] = $this->votes_model->get_votes_datan_depute($mp_id, 5);
+      $data['votes_datan'] = $votesModel->get_votes_datan_depute($mp_id, 5);
       // Get key votes
-      $data['key_votes'] = $this->votes_model->get_key_votes_mp($mp_id);
+      $data['key_votes'] = $votesModel->get_key_votes_mp($mp_id);
     } else {
       $data['votes_datan'] = NULL;
       $data['key_votes'] = NULL;

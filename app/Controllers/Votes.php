@@ -13,24 +13,24 @@
     // Page = datan.fr/votes
     public function index(){
       // Get datan_votes
-      $data['votes_datan'] = $this->votes_model->get_last_votes_datan(7);
+      $data['votes_datan'] = $votesModel->get_last_votes_datan(7);
       // Get by category
       $data['fields'] = $this->fields_model->get_active_fields();
       $fields = $data['fields'];
       $x = [];
       foreach ($fields as $field) {
-        $x[$field["slug"]]["votes"] = array_slice($this->votes_model->get_votes_datan_category($field['id']), 0, 2);
+        $x[$field["slug"]]["votes"] = array_slice($votesModel->get_votes_datan_category($field['id']), 0, 2);
         $x[$field["slug"]]["name"] = $field["name"];
         $x[$field["slug"]]["slug"] = $field["slug"];
       }
       $data['by_field'] = $x;
     
       // Get all votes
-      $data['votes'] = $this->votes_model->get_all_votes(NULL, NULL, NULL, 10);
+      $data['votes'] = $votesModel->get_all_votes(NULL, NULL, NULL, 10);
       // Archives
-      $data['years'] = $this->votes_model->get_years_archives(legislature_current());
+      $data['years'] = $votesModel->get_years_archives(legislature_current());
       $data['years'] = array_column($data['years'], 'votes_year');
-      $data['months'] = $this->votes_model->get_months_archives(legislature_current());
+      $data['months'] = $votesModel->get_months_archives(legislature_current());
 
       // Meta
       $data['url'] = $this->meta_model->get_url();
@@ -69,11 +69,11 @@
     // Page = datan.fr/votes/decryptes
     public function decryptes(){
       // Get Datan votes
-      $data['votes'] = $this->votes_model->get_last_votes_datan();
+      $data['votes'] = $votesModel->get_last_votes_datan();
       // Get active policy fields
       $data['fields'] = $this->fields_model->get_active_fields();
       // Get number of votes
-      $data['number_votes'] = $this->votes_model->get_n_votes_datan(legislature_current());
+      $data['number_votes'] = $votesModel->get_n_votes_datan(legislature_current());
 
       // Meta
       $data['url'] = $this->meta_model->get_url();
@@ -115,7 +115,7 @@
       $f_name = $data['field']['name'];
       $f_libelle = $data['field']['libelle'];
       // Get votes from the field
-      $data['votes'] = $this->votes_model->get_votes_datan_category($data['field']['id']);
+      $data['votes'] = $votesModel->get_votes_datan_category($data['field']['id']);
       if (empty($data['votes'])) {
         show_404($this->functions_datan->get_404_infos());
       }
@@ -163,7 +163,7 @@
       $months = get_months();
 
       // Check if votes
-      $data['votes'] = $this->votes_model->get_all_votes($legislature, $year, $month, FALSE);
+      $data['votes'] = $votesModel->get_all_votes($legislature, $year, $month, FALSE);
 
       // ALL OR ALL/YEAR OR ALL/YEAR/MONTH ?
       if ($year == NULL && $month == NULL) {
@@ -262,10 +262,10 @@
       }
 
       /* Get year */
-      $data['years'] = $this->votes_model->get_years_archives($legislature);
+      $data['years'] = $votesModel->get_years_archives($legislature);
       $data['years'] = array_column($data['years'], 'votes_year');
       /* Get months */
-      $data['months'] = $this->votes_model->get_months_archives($legislature);
+      $data['months'] = $votesModel->get_months_archives($legislature);
 
       // CSS
       $data['css_to_load']= array(
@@ -325,7 +325,7 @@
       $data['legislature'] = $legislature;
 
       // Get vote
-      $data['vote'] = $this->votes_model->get_individual_vote($legislature, $num);
+      $data['vote'] = $votesModel->get_individual_vote($legislature, $num);
       if ($data['vote']['title']) {
         $voteDatan = TRUE;
       } else {
@@ -338,7 +338,7 @@
 
       // Get MP's explication from URL
       if ($explication) {
-        $data['explication'] = $this->votes_model->get_explication($explication, $legislature, $num, 1);
+        $data['explication'] = $votesModel->get_explication($explication, $legislature, $num, 1);
         $data['explication']['photoSquare'] = $deputesModel->get_photo_square($data['explication']['legislature']);
         if (!$data['explication']) {
           redirect('votes/legislature-' . $legislature . '/vote_' . $num);
@@ -346,7 +346,7 @@
       }
 
       // Vote edited
-      $data['vote'] = $this->votes_model->get_individual_vote_edited($data['vote']);
+      $data['vote'] = $votesModel->get_individual_vote_edited($data['vote']);
       $data['vote']['description'] = text_url_obfuscation($data['vote']['description']);
       $data['description'] = preg_replace('/\s+/', '', strip_tags($data['vote']['description'])) === "" ? FALSE : TRUE;
 
@@ -359,11 +359,11 @@
       }
 
       // Vote mp explain
-      $data['explain'] = $this->votes_model->get_explications($legislature, $data['vote']['voteNumero']);
+      $data['explain'] = $votesModel->get_explications($legislature, $data['vote']['voteNumero']);
 
       // Get amendment 
       if($legislature >= 15){
-        $data['vote']['amendment'] = $this->votes_model->get_amendement($data['vote']['legislature'], $data['vote']['voteNumero']);
+        $data['vote']['amendment'] = $votesModel->get_amendement($data['vote']['legislature'], $data['vote']['voteNumero']);
       }
 
       // Get authors
@@ -371,7 +371,7 @@
         // 1. If an amendment
         if (!empty($data['vote']['amendment']['amendmentId'])) {
           $data['authorMeta']['title'] = 'amendement';
-          $data['amdtAuthor'] = $this->votes_model->get_amendement_author($data['vote']['amendment']['amendmentId']);
+          $data['amdtAuthor'] = $votesModel->get_amendement_author($data['vote']['amendment']['amendmentId']);
           if (in_array($data['amdtAuthor']['type'], array('Député', 'Rapporteur'))) {
             $data['author'] = $deputesModel->get_depute_by_legislature($data['amdtAuthor']['acteurRef'], $legislature);
             $data['author']['cardCenter'] = $data['author']['departementNom'] . ' (' . $data['author']['departementCode'] . ')';
@@ -382,16 +382,16 @@
           }
         } elseif (in_array($data['vote']['procedureParlementaireLibelle'], array('Proposition de loi ordinaire', 'Résolution Article 34-1', 'Résolution'))) {
           $data['authorMeta']['type'] = "mps";
-          $data['author'] = $this->votes_model->get_dossier_mp_authors($data['vote']['dossierId'], $legislature);
+          $data['author'] = $votesModel->get_dossier_mp_authors($data['vote']['dossierId'], $legislature);
           if ($data['author']) {
             $data['authorMeta']['title'] = 'proposition';
           } else {
-            $data['author'] = $this->votes_model->get_dossier_mp_rapporteurs($data['vote']['dossierId'], $legislature);
+            $data['author'] = $votesModel->get_dossier_mp_rapporteurs($data['vote']['dossierId'], $legislature);
             $data['authorMeta']['title'] = 'rapporteur';
           }
         } else {
           $data['authorMeta']['type'] = 'mps';
-          $data['author'] = $this->votes_model->get_dossier_mp_rapporteurs($data['vote']['dossierId'], $legislature);
+          $data['author'] = $votesModel->get_dossier_mp_rapporteurs($data['vote']['dossierId'], $legislature);
           $data['authorMeta']['title'] = 'rapporteur';
         }
       }
@@ -414,10 +414,10 @@
       
 
       // Votes - groupes
-      $data['groupes'] = $this->votes_model->get_vote_groupes($data['vote']['voteNumero'], $legislature, $data['vote']['voteType']);
+      $data['groupes'] = $votesModel->get_vote_groupes($data['vote']['voteNumero'], $legislature, $data['vote']['voteType']);
 
       // Votes - députés
-      $data['deputes'] = $this->votes_model->get_vote_deputes($data['vote']['voteNumero'], $legislature);
+      $data['deputes'] = $votesModel->get_vote_deputes($data['vote']['voteNumero'], $legislature);
       $data['groupes'] = array_filter($data['groupes'], function($groupe) {
           return $groupe['libelleAbrev'] !== 'NI';
         });
@@ -427,7 +427,7 @@
         $previous = $num - 1;
         $previous_result = TRUE;
         while ($previous_result) {
-          $query = $this->votes_model->get_individual_vote($legislature, $previous);
+          $query = $votesModel->get_individual_vote($legislature, $previous);
           if (empty($query)) {
             $previous_result = TRUE;
             $previous = $previous - 1;
@@ -441,13 +441,13 @@
         $data['vote_previous'] = FALSE;
       }
 
-      $last_vote = $this->votes_model->get_last_vote($legislature);
+      $last_vote = $votesModel->get_last_vote($legislature);
 
       if ($num != $last_vote['voteNumero']) {
         $next = $num + 1;
         $next_result = TRUE;
         while ($next_result) {
-          $query = $this->votes_model->get_individual_vote($legislature, $next);
+          $query = $votesModel->get_individual_vote($legislature, $next);
           if (empty($query)) {
             $next_result = TRUE;
             $next = $next + 1;
@@ -461,7 +461,7 @@
         $data['vote_next'] = FALSE;
       }
 
-      $data['votes_datan'] = $this->votes_model->get_last_votes_datan(7);
+      $data['votes_datan'] = $votesModel->get_last_votes_datan(7);
       // Meta
       $data['url'] = $this->meta_model->get_url();
       $data['title_meta'] = "Vote n°".is_congress_numero($data['vote']['voteNumero'])." - ".ucfirst($data['vote']['title_meta']). " - ".$legislature."e législature | Datan";
@@ -499,7 +499,7 @@
       $data['ogp'] = $this->meta_model->get_ogp($controller, $title_ogp, $data['description_meta'], $data['url'], $data);
       // Microdata Person
       if ($voteDatan) {
-        $data['schema_article'] = $this->votes_model->get_vote_schema($data['vote'], $data['ogp']['img']);
+        $data['schema_article'] = $votesModel->get_vote_schema($data['vote'], $data['ogp']['img']);
       }
       // CSS
       $data['css_to_load']= array(

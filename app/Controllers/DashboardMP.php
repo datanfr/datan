@@ -184,7 +184,7 @@
 
     public function explications_create($legislature, $voteNumero){
       $data = $this->data;
-      $data['vote'] = $this->votes_model->get_individual_vote($legislature, $voteNumero);
+      $data['vote'] = $votesModel->get_individual_vote($legislature, $voteNumero);
 
       if (empty($data['vote'])) {
         show_404($this->functions_datan->get_404_infos());
@@ -193,7 +193,7 @@
       $data['legislature'] = $legislature;
       $data['voteNumero'] = $voteNumero;
 
-      $data['vote_depute'] = $this->votes_model->get_individual_vote_depute($data['depute']['mpId'], $data['vote']['legislature'], $data['vote']['voteNumero']);
+      $data['vote_depute'] = $votesModel->get_individual_vote_depute($data['depute']['mpId'], $data['vote']['legislature'], $data['vote']['voteNumero']);
 
       if (empty($data['vote_depute'])) {
         $this->session->set_flashdata('flash_failure', "Vous n'avez pas pris part au vote n° " . $data["vote"]["voteNumero"] . ". Merci de choisir un scrutin dans cette liste.");
@@ -201,7 +201,7 @@
       }
 
       // Check if already an explanation
-      $data['explication'] = $this->votes_model->get_explication($data['depute']['mpId'], $legislature, $voteNumero);
+      $data['explication'] = $votesModel->get_explication($data['depute']['mpId'], $legislature, $voteNumero);
       if ($data['explication']) {
         $this->session->set_flashdata('flash_failure', "Vous avez déjà rédigé une explication pour ce vote n° " . $data["vote"]["voteNumero"] . ". Vous pouvez le modifier en <a href='".base_url()."dashboard/explications/modify/l".$legislature."v".$voteNumero."'>cliquant ici</a>.");
         redirect('dashboard/explications/liste');
@@ -245,14 +245,14 @@
 
     public function explications_modify($legislature, $voteNumero){
       $data = $this->data;
-      $data['explication'] = $this->votes_model->get_explication($data['depute']['mpId'], $legislature, $voteNumero);
+      $data['explication'] = $votesModel->get_explication($data['depute']['mpId'], $legislature, $voteNumero);
 
       if (empty($data['explication'])) {
         $this->session->set_flashdata('flash_failure', "Vous n'avez pas encore rédigé une explication pour le vote n° " . $voteNumero . ". Vous pouvez en créer une en <a href='".base_url()."dashboard/explications/create/l".$legislature."v".$voteNumero."'>cliquant ici</a>.");
         redirect('dashboard/explications/liste');
       }
 
-      $data['vote'] = $this->votes_model->get_individual_vote($legislature, $voteNumero);
+      $data['vote'] = $votesModel->get_individual_vote($legislature, $voteNumero);
 
       if (empty($data['explication']) || empty($data['vote'])) {
         show_404($this->functions_datan->get_404_infos());
@@ -261,7 +261,7 @@
       $data['legislature'] = $legislature;
       $data['voteNumero'] = $voteNumero;
 
-      $data['vote_depute'] = $this->votes_model->get_individual_vote_depute($data['depute']['mpId'], $data['vote']['legislature'], $data['vote']['voteNumero']);
+      $data['vote_depute'] = $votesModel->get_individual_vote_depute($data['depute']['mpId'], $data['vote']['legislature'], $data['vote']['voteNumero']);
       $data['vote_depute']['vote'] = vote_edited($data['vote_depute']['vote']);
       $data['vote_depute']['positionGroup'] = vote_edited($data['vote_depute']['positionGroup']);
 
@@ -297,14 +297,14 @@
 
     public function explications_delete($legislature, $voteNumero){
       $data = $this->data;
-      $data['explication'] = $this->votes_model->get_explication($data['depute']['mpId'], $legislature, $voteNumero);
+      $data['explication'] = $votesModel->get_explication($data['depute']['mpId'], $legislature, $voteNumero);
 
       if (empty($data['explication'])) {
         $this->session->set_flashdata('flash_failure', "Vous n'avez pas encore rédigé une explication pour le vote n° " . $voteNumero . ". Vous pouvez en créer une en <a href='".base_url()."dashboard/explications/create/l".$legislature."v".$voteNumero."'>cliquant ici</a>.");
         redirect('dashboard/explications/liste');
       }
 
-      $data['vote'] = $this->votes_model->get_individual_vote($legislature, $voteNumero);
+      $data['vote'] = $votesModel->get_individual_vote($legislature, $voteNumero);
 
       if (empty($data['explication']) || empty($data['vote'])) {
         show_404($this->functions_datan->get_404_infos());
@@ -313,7 +313,7 @@
       $data['legislature'] = $legislature;
       $data['voteNumero'] = $voteNumero;
 
-      $data['vote_depute'] = $this->votes_model->get_individual_vote_depute($data['depute']['mpId'], $data['vote']['legislature'], $data['vote']['voteNumero']);
+      $data['vote_depute'] = $votesModel->get_individual_vote_depute($data['depute']['mpId'], $data['vote']['legislature'], $data['vote']['voteNumero']);
       $data['vote_depute']['vote'] = vote_edited($data['vote_depute']['vote']);
       $data['vote_depute']['positionGroup'] = vote_edited($data['vote_depute']['positionGroup']);
 

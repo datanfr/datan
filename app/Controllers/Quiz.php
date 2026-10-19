@@ -11,7 +11,7 @@
     public function index(){
       $user_type = $this->session->userdata('type');
       $data['user'] = $user_type;
-      $data['votes'] = $this->votes_model->get_most_famous_votes(3);
+      $data['votes'] = $votesModel->get_most_famous_votes(3);
 
       // Breadcrumb
       $data['breadcrumb'] = array(
@@ -47,7 +47,7 @@
     public function result(){
       $user_type = $this->session->userdata('type');
       $data['user'] = $user_type;
-      $votes = $this->votes_model->get_votes_result_by_depute(array_keys($this->input->post()));
+      $votes = $votesModel->get_votes_result_by_depute(array_keys($this->input->post()));
       $groupes = array();
       $deputes = array();
       foreach($votes as $vote){

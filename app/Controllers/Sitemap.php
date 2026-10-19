@@ -113,7 +113,7 @@ class Sitemap extends MY_Controller {
     $urls = array();
 
     foreach (legislature_all() as $legislature) {
-      $results = $this->votes_model->get_all_votes($legislature, NULL, NULL, NULL);
+      $results = $votesModel->get_all_votes($legislature, NULL, NULL, NULL);
 
       foreach ($results as $result) {
         $n = $result['voteNumero'];
@@ -174,8 +174,8 @@ class Sitemap extends MY_Controller {
     $fields = $this->fields_model->get_active_fields();
     $legislatures = array(14, 15, 16, 17);
     foreach ($legislatures as $legislature) {
-      $data['votes'][$legislature]['years'] = $this->votes_model->get_years_archives($legislature);
-      $data['votes'][$legislature]['months'] = $this->votes_model->get_months_archives($legislature);
+      $data['votes'][$legislature]['years'] = $votesModel->get_years_archives($legislature);
+      $data['votes'][$legislature]['months'] = $votesModel->get_months_archives($legislature);
     }
 
     // Create array with urls
