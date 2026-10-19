@@ -13,18 +13,18 @@ class GroupesModel extends Model {
         CASE WHEN o.libelle = "Non inscrit" THEN "Députés non inscrits" ELSE o.libelle END AS libelle
         FROM organes o
         LEFT JOIN groupes_effectif e ON o.uid = e.organeRef
-        WHERE o.legislature = '.$this->db->escape(legislature_current()).' AND o.coteType = "GP" AND o.dateFin IS NULL AND o.libelleAbrev != "NI"
+        WHERE o.legislature = ? AND o.coteType = "GP" AND o.dateFin IS NULL AND o.libelleAbrev != "NI"
         ORDER BY e.effectif DESC, o.libelle
-      ');
+      ', [legislature_current()]);
     }
 
     if ($legislature != legislature_current()) {
       $query = $this->db->query('SELECT *, o.legislature AS legislature, date_format(dateDebut, "%d %M %Y") as dateDebutFR,
         CASE WHEN o.libelle = "Non inscrit" THEN "Députés non inscrits" ELSE o.libelle END AS libelle
         FROM organes o
-        WHERE o.legislature = '.$this->db->escape($legislature).' AND o.coteType = "GP" AND o.libelleAbrev != "NI"
+        WHERE o.legislature = ? AND o.coteType = "GP" AND o.libelleAbrev != "NI"
         ORDER BY o.libelle
-      ');
+      ', [$legislature]);
     }
 
     if (!$active && $legislature == legislature_current()) {
@@ -32,12 +32,12 @@ class GroupesModel extends Model {
         CASE WHEN o.libelle = "Non inscrit" THEN "Députés non inscrits" ELSE o.libelle END AS libelle
         FROM organes o
         LEFT JOIN groupes_effectif e ON o.uid = e.organeRef
-        WHERE o.legislature = '.$this->db->escape(legislature_current()).' AND o.coteType = "GP" AND o.dateFin IS NOT NULL AND o.libelleAbrev != "NI"
+        WHERE o.legislature = ? AND o.coteType = "GP" AND o.dateFin IS NOT NULL AND o.libelleAbrev != "NI"
         ORDER BY e.effectif DESC, o.libelle
-      ');
+      ', [legislature_current()]);
     }
 
-    return $query->result_array();
+    return $query->getResultArray();
   }
 
   public function get_blocs($groups){
@@ -52,15 +52,18 @@ class GroupesModel extends Model {
   }
 
   public function get_groupes_coalition_builder(){
-    $this->db->select('o.libelleAbrev, o.libelle, e.effectif AS seats, o.couleurAssociee');
-    $this->db->order_by('effectif', 'desc');
-    $this->db->join('organes o', 'o.uid = e.organeRef', 'left');
-    $this->db->where('o.dateFin', NULL);
-    $groupes = $this->db->get('groupes_effectif e')->result_array();
+    $groupes = $this->db->table('groupes_effectif e')
+      ->select('o.libelleAbrev, o.libelle, e.effectif AS seats, o.couleurAssociee')
+      ->orderBy('effectif', 'desc')
+      ->join('organes o', 'o.uid = e.organeRef', 'left')
+      ->where('o.dateFin', null)
+      ->get()
+      ->getResultArray();
 
+    $return = [];
     foreach ($groupes as $key => $value) {
       $return[$value['libelleAbrev']] = $value;
-      $return[$value['libelleAbrev']]['color'] = $groupesModel->get_groupe_color(array($value['libelleAbrev'], $value['couleurAssociee']));
+      $return[$value['libelleAbrev']]['color'] = $this->get_groupe_color([$value['libelleAbrev'], $value['couleurAssociee']]);
     }
 
     return $return;
@@ -80,11 +83,13 @@ class GroupesModel extends Model {
   }
 
   public function get_all_groupes_majority($legislature = NULL){
-    $this->db->where(array('coteType' => 'GP', 'positionPolitique' => 'Majoritaire'));
+    $builder = $this->db->table('organes')
+      ->where(['coteType' => 'GP', 'positionPolitique' => 'Majoritaire']);
     if ($legislature) {
-      $this->db->where('legislature', $legislature);
+      $builder->where('legislature', $legislature);
     }
-    $results = $this->db->get('organes')->result_array();
+    $results = $builder->get()->getResultArray();
+    $return = [];
     foreach ($results as $key => $value) {
       $return[] = $value['uid'];
     }
@@ -111,18 +116,20 @@ class GroupesModel extends Model {
       ORDER BY dateFinSorted DESC
       LIMIT 1
       ';
-      $query = $this->db->query($sql, $legislature, 1);
+      $query = $this->db->query($sql, [$legislature]);
     }      
 
-    return $query->row_array();
+    return $query->getRowArray();
   }
 
   public function get_all_groupes_ni($legislature = NULL){
-    $this->db->where(array('coteType' => 'GP', 'libelleAbrev' => 'NI'));
+    $builder = $this->db->table('organes')
+      ->where(['coteType' => 'GP', 'libelleAbrev' => 'NI']);
     if ($legislature) {
-      $this->db->where('legislature', $legislature);
+      $builder->where('legislature', $legislature);
     }
-    $results = $this->db->get('organes')->result_array();
+    $results = $builder->get()->getResultArray();
+    $return = [];
     foreach ($results as $key => $value) {
       $return[] = $value['uid'];
     }
@@ -179,19 +186,22 @@ class GroupesModel extends Model {
   }
 
   public function get_number_inactive_groupes(){
-    $this->db->where(array('coteType' => 'GP', 'libelleAbrev != ' => 'NI', 'legislature' => legislature_current()));
-    $this->db->where('dateFin IS NOT NULL');
-    return $this->db->count_all_results('organes');
+    return $this->db->table('organes')
+      ->where(['coteType' => 'GP', 'libelleAbrev !=' => 'NI', 'legislature' => legislature_current()])
+      ->where('dateFin IS NOT NULL', null, false)
+      ->countAllResults();
   }
 
   public function get_number_mps_groupes(){
-    $this->db->where(array('libelleAbrev != ' => 'NI','dateFin' => NULL, 'legislature' => legislature_current()));
-    return $this->db->count_all_results('deputes_all');
+    return $this->db->table('deputes_all')
+      ->where(['libelleAbrev !=' => 'NI', 'dateFin' => null, 'legislature' => legislature_current()])
+      ->countAllResults();
   }
 
   public function get_number_mps_unattached(){
-    $this->db->where(array('libelleAbrev' => 'NI', 'dateFin' => NULL, 'legislature' => legislature_current()));
-    return $this->db->count_all_results('deputes_all');
+    return $this->db->table('deputes_all')
+      ->where(['libelleAbrev' => 'NI', 'dateFin' => null, 'legislature' => legislature_current()])
+      ->countAllResults();
   }
 
   public function get_groupe_random(){
@@ -221,11 +231,14 @@ class GroupesModel extends Model {
     ';
     $query = $this->db->query($sql, array($legislature, $groupe));
 
-    return $query->row_array();
+    return $query->getRowArray();
   }
 
   public function get_groupe_by_id($id){
-    return $this->db->get_where('organes', array('uid' => $id))->row_array();
+    return $this->db->table('organes')
+      ->where('uid', $id)
+      ->get()
+      ->getRowArray();
   }
 
   public function get_groupes_president($groupe_uid, $legislature, $active){
@@ -235,10 +248,12 @@ class GroupesModel extends Model {
         'mg.preseance' => 1,
         'mg.dateFin' => NULL
       );
-      $this->db->select('mg.*, dl.*, date_format(dateDebut, "%d %M %Y") as dateDebutFR, dl.legislature AS legislature_last');
-      $this->db->select('CONCAT(dl.departementNom, " (", dl.departementCode, ")") AS cardCenter');
-      $this->db->join('deputes_last dl', 'dl.mpId = mg.mpId', 'left');
-      $query = $this->db->get_where('mandat_groupe mg', $where, 1);
+      $query = $this->db->table('mandat_groupe mg')
+        ->select('mg.*, dl.*, date_format(dateDebut, "%d %M %Y") as dateDebutFR, dl.legislature AS legislature_last')
+        ->select('CONCAT(dl.departementNom, " (", dl.departementCode, ")") AS cardCenter')
+        ->join('deputes_last dl', 'dl.mpId = mg.mpId', 'left')
+        ->where($where)
+        ->get(1);
     } else {
       $sql = 'SELECT A.*, da.*, da.legislature AS legislature_last,
         CONCAT(da.departementNom, " (", da.departementCode, ")") AS cardCenter
@@ -256,7 +271,7 @@ class GroupesModel extends Model {
       $query = $this->db->query($sql, array($groupe_uid, $legislature));
     }
 
-    return $query->row_array();
+    return $query->getRowArray();
   }
 
   public function get_groupe_membres($groupe_uid, $dateFin){
@@ -266,13 +281,15 @@ class GroupesModel extends Model {
         'mandat_groupe.dateFin' => NULL,
         'mandat_groupe.nominPrincipale' => 1
       );
-      $this->db->select('*, libelle AS libelle, libelleAbrev AS libelleAbrev');
-      $this->db->select('CONCAT(departementNom, " (", departementCode, ")") AS cardCenter');
-      $this->db->select('deputes_last.legislature AS legislature_last');
-      $this->db->where_in('mandat_groupe.preseance', array(20, 28));
-      $this->db->join('deputes_last', 'deputes_last.mpId = mandat_groupe.mpId');
-      $this->db->order_by('nameLast ASC, nameFirst ASC');
-      $query = $this->db->get_where('mandat_groupe', $where);
+      $query = $this->db->table('mandat_groupe')
+        ->select('*, libelle AS libelle, libelleAbrev AS libelleAbrev')
+        ->select('CONCAT(departementNom, " (", departementCode, ")") AS cardCenter')
+        ->select('deputes_last.legislature AS legislature_last')
+        ->whereIn('mandat_groupe.preseance', [20, 28])
+        ->join('deputes_last', 'deputes_last.mpId = mandat_groupe.mpId')
+        ->orderBy('nameLast ASC, nameFirst ASC')
+        ->where($where)
+        ->get();
     } else {
       $sql = 'SELECT A.*, da.*, da.legislature AS legislature_last,
         CONCAT(departementNom, " (", departementCode, ")") AS cardCenter
@@ -291,7 +308,7 @@ class GroupesModel extends Model {
 
 
 
-    return $query->result_array();
+    return $query->getResultArray();
   }
 
   public function get_groupe_apparentes($groupe_uid, $active){
@@ -301,12 +318,14 @@ class GroupesModel extends Model {
         'mg.dateFin' => NULL,
         'mg.nominPrincipale' => 1
       );
-      $this->db->select('dl.*, mg.*, dl.legislature AS legislature_last');
-      $this->db->select('CONCAT(dl.departementNom, " (", dl.departementCode, ")") AS cardCenter');
-      $this->db->where_in('mg.preseance', array(24));
-      $this->db->join('deputes_last dl', 'dl.mpId = mg.mpId');
-      $this->db->order_by('dl.nameLast ASC, dl.nameFirst ASC');
-      $query = $this->db->get_where('mandat_groupe mg', $where);
+      $query = $this->db->table('mandat_groupe mg')
+        ->select('dl.*, mg.*, dl.legislature AS legislature_last')
+        ->select('CONCAT(dl.departementNom, " (", dl.departementCode, ")") AS cardCenter')
+        ->whereIn('mg.preseance', [24])
+        ->join('deputes_last dl', 'dl.mpId = mg.mpId')
+        ->orderBy('dl.nameLast ASC, dl.nameFirst ASC')
+        ->where($where)
+        ->get();
     } else {
       $sql = 'SELECT A.*, dl.*,
         CONCAT(dl.departementNom, " (", dl.departementCode, ")") AS cardCenter,
@@ -321,11 +340,11 @@ class GroupesModel extends Model {
         LEFT JOIN deputes_last dl ON dl.mpId = A.mpId
         ORDER BY dl.nameLast ASC, dl.nameFirst ASC
       ';
-      $query = $this->db->query($sql, $groupe_uid);
+      $query = $this->db->query($sql, [$groupe_uid]);
     }
 
 
-    return $query->result_array();
+    return $query->getResultArray();
   }
 
   public function get_groupe_social_media($libelleAbrev){
@@ -438,7 +457,10 @@ class GroupesModel extends Model {
   }
 
   public function get_stats($groupe_uid){
-    $results = $this->db->get_where('class_groups', array('organeRef' => $groupe_uid))->result_array();
+    $results = $this->db->table('class_groups')
+      ->where('organeRef', $groupe_uid)
+      ->get()
+      ->getResultArray();
 
     if ($results) {
       foreach ($results as $key => $value) {
@@ -467,22 +489,23 @@ class GroupesModel extends Model {
       'o.libelleAbrev !=' => 'NI',
       'c.votes >' => 0
     );
-    $this->db->select('c.*, o.libelle, o.libelleAbrev, ROUND(c.value) AS value, ge.effectif');
-    $this->db->where($where);
-    $this->db->join('organes o', 'o.uid = c.organeRef', 'left');
-    $this->db->join('groupes_effectif ge', 'ge.organeRef = c.organeRef', 'left');
-    $this->db->order_by('c.active ASC');
+    $builder = $this->db->table('class_groups c')
+      ->select('c.*, o.libelle, o.libelleAbrev, ROUND(c.value) AS value, ge.effectif')
+      ->where($where)
+      ->join('organes o', 'o.uid = c.organeRef', 'left')
+      ->join('groupes_effectif ge', 'ge.organeRef = c.organeRef', 'left')
+      ->orderBy('c.active ASC');
 
     // If $status is 'majority' or 'opposition'
     if ($status !== FALSE) {
       if ($status === 'majority'){
-        $this->db->where_in('o.libelleAbrev', $groupes_majo);
+        $builder->whereIn('o.libelleAbrev', $groupes_majo);
       } elseif ($status === 'opposition') {
-        $this->db->where_not_in('o.libelleAbrev', $groupes_majo);
+        $builder->whereNotIn('o.libelleAbrev', $groupes_majo);
       }
     }
 
-    $return = $this->db->get('class_groups c')->result_array();
+    $return = $builder->get()->getResultArray();
 
     $array = array();
 
@@ -554,11 +577,13 @@ class GroupesModel extends Model {
   }
 
   public function get_stats_history($groups){
-    $this->db->select('cg.*, o.libelle, o.libelleAbrev, o.couleurAssociee, cg.active, o.positionPolitique, o.dateDebut, o.dateFin');
-    $this->db->where_in('cg.organeRef', $groups);
-    $this->db->join('organes o', 'o.uid = cg.organeRef', 'left');
-    $this->db->order_by('cg.legislature ASC, o.dateDebut ASC');
-    $results = $this->db->get('class_groups cg')->result_array();
+    $results = $this->db->table('class_groups cg')
+      ->select('cg.*, o.libelle, o.libelleAbrev, o.couleurAssociee, cg.active, o.positionPolitique, o.dateDebut, o.dateFin')
+      ->whereIn('cg.organeRef', $groups)
+      ->join('organes o', 'o.uid = cg.organeRef', 'left')
+      ->orderBy('cg.legislature ASC, o.dateDebut ASC')
+      ->get()
+      ->getResultArray();
     foreach ($results as $key => $value) {
       $return[$value['stat']][] = $value;
     }
@@ -566,8 +591,10 @@ class GroupesModel extends Model {
   }
 
   public function get_stats_monthly($groupe_uid){
-    $this->db->where('organeRef', $groupe_uid);
-    $results = $this->db->get('class_groups_month')->result_array();
+    $results = $this->db->table('class_groups_month')
+      ->where('organeRef', $groupe_uid)
+      ->get()
+      ->getResultArray();
 
     if ($results) {
       foreach ($results as $key => $value) {
@@ -587,12 +614,14 @@ class GroupesModel extends Model {
   }
 
   public function get_orga_stats_history($groups){
-    $this->db->select('stats.type, stats.legislature, stats.stat, stats.value, o.libelleAbrev, o.uid AS organeRef, o.libelle, o.dateDebut, o.dateFin');
-    $this->db->where('stats.type', 'legislature');
-    $this->db->where_in('stats.organeRef', $groups);
-    $this->db->order_by('stats.legislature', 'ASC');
-    $this->db->join('organes o', 'o.uid = stats.organeRef');
-    $results = $this->db->get('groupes_stats_history stats')->result_array();
+    $results = $this->db->table('groupes_stats_history stats')
+      ->select('stats.type, stats.legislature, stats.stat, stats.value, o.libelleAbrev, o.uid AS organeRef, o.libelle, o.dateDebut, o.dateFin')
+      ->where('stats.type', 'legislature')
+      ->whereIn('stats.organeRef', $groups)
+      ->orderBy('stats.legislature', 'ASC')
+      ->join('organes o', 'o.uid = stats.organeRef')
+      ->get()
+      ->getResultArray();
 
     foreach ($results as $key => $value) {
       $return[$value['stat']][] = $value;
@@ -608,11 +637,13 @@ class GroupesModel extends Model {
   }
 
   public function get_stat_proximity_history($groupe_uid){
-    $this->db->select('c.organeRef, c.dateValue AS dateValue, date_format(c.dateValue, "%M %Y") as dateValue_edited, c.score, c.prox_group AS proxGroup, o.couleurAssociee, o.uid AS proxGoupId, o.libelleAbrev AS proxGoupLibelle');
-    $this->db->where('c.organeRef', $groupe_uid);
-    $this->db->where('o.libelleAbrev !=', 'NI');
-    $this->db->join('organes o', 'o.uid = c.prox_group');
-    $results = $this->db->get('class_groups_proximite_month c')->result_array();
+    $results = $this->db->table('class_groups_proximite_month c')
+      ->select('c.organeRef, c.dateValue AS dateValue, date_format(c.dateValue, "%M %Y") as dateValue_edited, c.score, c.prox_group AS proxGroup, o.couleurAssociee, o.uid AS proxGoupId, o.libelleAbrev AS proxGoupLibelle')
+      ->where('c.organeRef', $groupe_uid)
+      ->where('o.libelleAbrev !=', 'NI')
+      ->join('organes o', 'o.uid = c.prox_group')
+      ->get()
+      ->getResultArray();
 
     if ($results) {
       $months = array_column($results, 'dateValue');
@@ -654,8 +685,8 @@ class GroupesModel extends Model {
       WHERE legislature = ?
       GROUP BY stat
     ';
-    $query = $this->db->query($sql, $legislature);
-    $results = $query->result_array();
+    $query = $this->db->query($sql, [$legislature]);
+    $results = $query->getResultArray();
     $return = array();
     foreach ($results as $key => $value) {
       if ($value['stat'] == 'cohesion') {
@@ -677,7 +708,7 @@ class GroupesModel extends Model {
     ';
     $query = $this->db->query($sql, array($groupe_uid, $groupe_uid));
 
-    return $query->result_array();
+    return $query->getResultArray();
   }
 
   public function get_stats_proximite_all($groupe_uid){
@@ -690,7 +721,7 @@ class GroupesModel extends Model {
     ';
     $query = $this->db->query($sql, array($groupe_uid, $groupe_uid));
 
-    return $query->result_array();
+    return $query->getResultArray();
   }
 
   public function get_groupe_color($x){
@@ -850,16 +881,21 @@ class GroupesModel extends Model {
   }
 
   public function get_effectif_history($groups){
-    $this->db->select('o.legislature, YEAR(g.dateValue) AS dateYear, g.dateValue, MAX(g.effectif) AS value');
-    $this->db->where_in('g.organeRef', $groups);
-    $this->db->order_by('o.legislature ASC, YEAR(g.dateValue) ASC');
-    $this->db->group_by('o.legislature, YEAR(g.dateValue)');
-    $this->db->join('organes o', 'o.uid = g.organeRef', 'left');
-    $results = $this->db->get('groupes_effectif_history g')->result_array();
+    $results = $this->db->table('groupes_effectif_history g')
+      ->select('o.legislature, YEAR(g.dateValue) AS dateYear, g.dateValue, MAX(g.effectif) AS value')
+      ->whereIn('g.organeRef', $groups)
+      ->orderBy('o.legislature ASC, YEAR(g.dateValue) ASC')
+      ->groupBy('o.legislature, YEAR(g.dateValue)')
+      ->join('organes o', 'o.uid = g.organeRef', 'left')
+      ->get()
+      ->getResultArray();
 
     $leg = array_column($results, 'legislature');
     $leg = array_unique($leg);
-    $leg = $this->legislature_model->get_legislatures($leg);
+    $leg = $this->db->table('legislature')
+      ->whereIn('legislatureNumber', $leg)
+      ->get()
+      ->getResultArray();
 
     foreach ($leg as $key => $value) {
       $return['legislatures'][$key]['legislature'] = $value['legislatureNumber'];
@@ -896,16 +932,17 @@ class GroupesModel extends Model {
 
   public function get_effectif_ranking($group, $legislature){
     // Get all groups ranked by effectif
-    $this->db->select('ge.organeRef, ge.effectif, o.libelleAbrev');
-    $this->db->where('ge.legislature', $legislature);
-    $this->db->where('o.libelleAbrev !=', 'NI');
-    $this->db->order_by('ge.effectif', 'DESC');
-    $this->db->join('organes o', 'o.uid = ge.organeRef', 'left');
-    $query = $this->db->get('groupes_effectif ge');
+    $query = $this->db->table('groupes_effectif ge')
+      ->select('ge.organeRef, ge.effectif, o.libelleAbrev')
+      ->where('ge.legislature', $legislature)
+      ->where('o.libelleAbrev !=', 'NI')
+      ->orderBy('ge.effectif', 'DESC')
+      ->join('organes o', 'o.uid = ge.organeRef', 'left')
+      ->get();
 
     $ranking = 1;
-    foreach($query->result() as $row){
-      if ($row->organeRef == $group) {
+    foreach ($query->getResultArray() as $row) {
+      if ($row['organeRef'] == $group) {
         return $ranking;
       }
       $ranking++;
@@ -915,16 +952,15 @@ class GroupesModel extends Model {
   }
 
   public function get_coalitions($group, $limit = FALSE){
-    $where = array(
-      'organeRef' => $group
-    );
-    if($limit !== FALSE) {
-      $this->db->limit($limit);
+    $builder = $this->db->table('coalitions_groupes')
+      ->select('coalition_libelleAbrev_history AS coalition, coalition_type, COUNT(coalition_libelleAbrev_history) as n')
+      ->where('organeRef', $group)
+      ->groupBy('coalition_libelleAbrev_history')
+      ->orderBy('n', 'desc');
+    if ($limit !== FALSE) {
+      $builder->limit($limit);
     }
-    $this->db->select('coalition_libelleAbrev_history AS coalition, coalition_type, COUNT(coalition_libelleAbrev_history) as n');
-    $this->db->group_by('coalition_libelleAbrev_history');
-    $this->db->order_by('n', 'desc'); 
-    return $this->db->get_where('coalitions_groupes', $where)->result_array();
+    return $builder->get()->getResultArray();
   }
 
   public function format_coalitions($coalitions, $legislature){
@@ -933,19 +969,19 @@ class GroupesModel extends Model {
       $coalitionGroups = explode('|', $value['coalition']);
 
       // Step 2: Fetch ALL groups in one query (much faster!)
-      $groupsData = $this->db->select('o.uid, o.libelleAbrev, ge.effectif, o.couleurAssociee')
-        ->from('groupes_effectif ge')
+      $groupsData = $this->db->table('groupes_effectif ge')
+        ->select('o.uid, o.libelleAbrev, ge.effectif, o.couleurAssociee')
         ->join('organes o', 'o.uid = ge.organeRef', 'left')
         ->where(['ge.legislature' => $legislature])
-        ->where_in('o.libelleAbrev', $coalitionGroups)
+        ->whereIn('o.libelleAbrev', $coalitionGroups)
         ->get()
-        ->result_array();
+        ->getResultArray();
 
       // Step 3: Process and index by libelleAbrev
       $indexed = [];
       foreach ($groupsData as $groupData) {
         $abrev = $groupData['libelleAbrev'];
-        $groupData['couleurAssociee'] = $groupesModel->get_groupe_color([$abrev, $groupData['couleurAssociee']]);
+        $groupData['couleurAssociee'] = $this->get_groupe_color([$abrev, $groupData['couleurAssociee']]);
         $indexed[$abrev] = $groupData;
       }
 
