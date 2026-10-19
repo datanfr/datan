@@ -7,24 +7,18 @@ use CodeIgniter\Model;
 class ElectionsModel extends Model {
 
   public function get_election($slug){
-    $where = array(
-      'slug' => $slug
-    );
-    $this->db->select('*, date_format(dateFirstRound, "%d %M %Y") as dateFirstRoundFr, date_format(dateSecondRound, "%d %M %Y") as dateSecondRoundFr');
-
-    $query = $this->db->get_where('elect_libelle', $where, 1);
-
-    return $query->row_array();
+    return $this->db->table('elect_libelle')
+      ->select('*, date_format(dateFirstRound, "%d %M %Y") as dateFirstRoundFr, date_format(dateSecondRound, "%d %M %Y") as dateSecondRoundFr')
+      ->where('slug', $slug)
+      ->get(1)
+      ->getRowArray();
   }
 
   public function get_election_by_id($id){
-    $where = array(
-      'id' => $id
-    );
-
-    $query = $this->db->get_where('elect_libelle', $where, 1);
-
-    return $query->row_array();
+    return $this->db->table('elect_libelle')
+      ->where('id', $id)
+      ->get(1)
+      ->getRowArray();
   }
 
   public function get_election_all(){
@@ -42,9 +36,9 @@ class ElectionsModel extends Model {
     ORDER BY e.dateYear DESC
     ');
 
-    $results = $query->result_array();
+    $results = $query->getResultArray();
     foreach($results as $x => $value){
-      $results[$x]['state'] = $electionsModel->get_election_state($value['id']);
+      $results[$x]['state'] = $this->get_election_state($value['id']);
     }
 
     return $results;
@@ -133,8 +127,11 @@ class ElectionsModel extends Model {
       $where['candidature'] = 1;
     }
 
-    $this->db->join('elect_libelle', 'elect_libelle.id = elect_deputes_candidats.election', 'left');
-    $result = $this->db->get_where('elect_deputes_candidats', $where, 1)->row_array();
+    $result = $this->db->table('elect_deputes_candidats')
+      ->join('elect_libelle', 'elect_libelle.id = elect_deputes_candidats.election', 'left')
+      ->where($where)
+      ->get(1)
+      ->getRowArray();
 
     if($result){
       if ($result['elected'] == "1") {
@@ -164,9 +161,12 @@ class ElectionsModel extends Model {
       $where['candidature'] = 1;
     }
 
-    $this->db->join('elect_libelle', 'elect_libelle.id = elect_deputes_candidats.election', 'left');
-    $this->db->order_by('dateYear', 'DESC');
-    return $this->db->get_where('elect_deputes_candidats', $where)->result_array();
+    return $this->db->table('elect_deputes_candidats')
+      ->join('elect_libelle', 'elect_libelle.id = elect_deputes_candidats.election', 'left')
+      ->orderBy('dateYear', 'DESC')
+      ->where($where)
+      ->get()
+      ->getResultArray();
   }
 
   public function get_candidate_full($mpId, $election){
@@ -175,9 +175,10 @@ class ElectionsModel extends Model {
       'election' => $election
     );
 
-    $query = $this->db->get_where('candidate_full', $where, 1);
-
-    return $query->row_array();
+    return $this->db->table('candidate_full')
+      ->where($where)
+      ->get(1)
+      ->getRowArray();
   }
 
 
@@ -198,14 +199,15 @@ class ElectionsModel extends Model {
       $where['elected'] = '1';
     }
 
-    $this->db->select('*, candidate_full.depute_libelle AS libelle, candidate_full.depute_libelleAbrev AS libelleAbrev');
-    $this->db->select('DATE_FORMAT(modified_at, "%d/%m/%Y") AS modified_at');
-    $this->db->select('legislature AS legislature_last');
-    $this->db->order_by('nameLast', 'ASC');
-    $this->db->order_by('nameFirst', 'ASC');
-    $query = $this->db->get_where('candidate_full', $where);
-
-    return $query->result_array();
+    return $this->db->table('candidate_full')
+      ->select('*, candidate_full.depute_libelle AS libelle, candidate_full.depute_libelleAbrev AS libelleAbrev')
+      ->select('DATE_FORMAT(modified_at, "%d/%m/%Y") AS modified_at')
+      ->select('legislature AS legislature_last')
+      ->orderBy('nameLast', 'ASC')
+      ->orderBy('nameFirst', 'ASC')
+      ->where($where)
+      ->get()
+      ->getResultArray();
   }
 
   public function get_mps_not_done($election){
@@ -218,7 +220,7 @@ class ElectionsModel extends Model {
         WHERE c.election = ?
       )
     ';
-    return $this->db->query($sql, array(legislature_current(), $election))->result_array();
+    return $this->db->query($sql, [legislature_current(), $election])->getResultArray();
   }
 
   public function count_candidats($id, $filters = []) {
@@ -235,11 +237,12 @@ class ElectionsModel extends Model {
       'position'    => $filters['position'] ?? null,
     ];
 
+    $builder = $this->db->table('candidate_full');
     foreach (array_merge($defaults, array_filter($optional)) as $key => $value) {
-      $this->db->where($key, $value);
+      $builder->where($key, $value);
     }
 
-    return $this->db->count_all_results('candidate_full');
+    return $builder->countAllResults();
   }
 
   public function count_candidats_eliminated($id){
@@ -252,7 +255,7 @@ class ElectionsModel extends Model {
           elected = 0 OR secondRound = 0
         )
     ';
-    return $this->db->query($sql, $id)->result_array();
+    return $this->db->query($sql, [$id])->getResultArray();
   }
 
   public function count_non_candidats($id){
@@ -261,26 +264,29 @@ class ElectionsModel extends Model {
       'visible' => 1,
       'candidature'=> 0
     );
-    $this->db->where($where);
-    return $this->db->count_all_results('candidate_full');
+    return $this->db->table('candidate_full')
+      ->where($where)
+      ->countAllResults();
   }
 
   public function get_all_districts($election){
     if ($election == 1/*regionales 2021*/) {
-      $this->db->order_by('libelle', 'ASC');
-      $query = $this->db->get('regions');
-      return $query->result_array();
+      return $this->db->table('regions')
+        ->orderBy('libelle', 'ASC')
+        ->get()
+        ->getResultArray();
     } elseif (in_array($election, array(2, 4, 6))/*departementales 2021 & législatives 2022*/) {
-      $this->db->select('departement_code AS id, CONCAT(departement_code, " - ", departement_nom) AS libelle');
-      $this->db->order_by('departement_code', 'ASC');
-      $query = $this->db->get('departement');
-      return $query->result_array();
+      return $this->db->table('departement')
+        ->select('departement_code AS id, CONCAT(departement_code, " - ", departement_nom) AS libelle')
+        ->orderBy('departement_code', 'ASC')
+        ->get()
+        ->getResultArray();
     } 
   }
 
   public function get_district($type, $district){
     if ($type === 'Régionales') {
-      $result = $this->db->get_where('regions', array('id' => $district))->row_array();
+      $result = $this->db->table('regions')->where('id', $district)->get()->getRowArray();
       $array = array(
         'id' => $result['id'],
         'libelle' => $result['libelle']
@@ -289,7 +295,7 @@ class ElectionsModel extends Model {
     }
 
     if ($type === 'Législatives') {
-      $result = $this->db->get_where('departement', array('departement_code' => $district))->row_array();
+      $result = $this->db->table('departement')->where('departement_code', $district)->get()->getRowArray();
 
       if($result){
         return [
@@ -301,7 +307,25 @@ class ElectionsModel extends Model {
     }
 
     if ($type === 'Municipales') {
-      $result = $this->city_model->get_city_by_insee($district);
+      $overseasDepartments = ['975', '986', '977', '978', '987', '988'];
+      if (in_array(substr($district, 0, 3), $overseasDepartments, true)) {
+        $result = $this->db->table('circos c')
+          ->select('c.*, c.dpt AS dep_code, c.dpt_nom AS dep_nom, ci.pop2017 AS population, CONCAT("de ", c.commune_nom) AS nom_de')
+          ->join('departement d', 'c.dpt = d.departement_code')
+          ->join('cities_infos ci', 'ci.insee = c.insee', 'left')
+          ->where('c.insee', $district)
+          ->get(1)
+          ->getRowArray();
+      } else {
+        $result = $this->db->table('cities c')
+          ->select('c.*, cc.commune_slug, d.slug AS dpt_slug')
+          ->join('circos cc', 'c.code_insee = cc.insee')
+          ->join('departement d', 'c.dep_code = d.departement_code')
+          ->where('c.code_insee', $district)
+          ->groupBy('c.code_insee')
+          ->get(1)
+          ->getRowArray();
+      }
       if($result){
         return [
           'id' => $result['dep_code'],
@@ -367,69 +391,75 @@ class ElectionsModel extends Model {
 
   public function get_candidates_by_city($city){
     $election = 7; // Municipales 2026
-    $where = array(
-      'e.election' => $election,
-      'e.visible' => 1,
-      'e.district' => $city,
-    );
-    $this->db->join('deputes_last d', 'd.mpId = e.mpId', 'left');
-    return $this->db->get_where('elect_deputes_candidats e', $where)->result_array();
+    return $this->db->table('elect_deputes_candidats e')
+      ->join('deputes_last d', 'd.mpId = e.mpId', 'left')
+      ->where([
+        'e.election' => $election,
+        'e.visible' => 1,
+        'e.district' => $city,
+      ])
+      ->get()
+      ->getResultArray();
   }
 
   public function get_candidates_by_dpt($dpt){
     $election = 7; // Municipales 2026
-    $where = array(
-      'e.election' => $election,
-      'e.visible' => 1,
-      'c.dpt' => $dpt
-    );
-    $this->db->join('deputes_last d', 'd.mpId = e.mpId', 'left');
-    $this->db->join('circos c', 'c.insee = e.district', 'left');
-    $this->db->group_by('c.dpt');
-    return $this->db->get_where('elect_deputes_candidats e', $where)->result_array();
+    return $this->db->table('elect_deputes_candidats e')
+      ->join('deputes_last d', 'd.mpId = e.mpId', 'left')
+      ->join('circos c', 'c.insee = e.district', 'left')
+      ->groupBy('c.dpt')
+      ->where([
+        'e.election' => $election,
+        'e.visible' => 1,
+        'c.dpt' => $dpt,
+      ])
+      ->get()
+      ->getResultArray();
   }
 
   public function get_n_candidates_by_group($group) {
-    $where = array(
-      'e.election' => 7, // Municipales 2026
-      'e.visible' => 1,
-      'd.groupeId' => $group
-    );
-    $this->db->join('deputes_last d', 'd.mpId = e.mpId', 'left');
-    $this->db->where($where);
-    return $this->db->count_all_results('elect_deputes_candidats e');
+    return $this->db->table('elect_deputes_candidats e')
+      ->join('deputes_last d', 'd.mpId = e.mpId', 'left')
+      ->where([
+        'e.election' => 7, // Municipales 2026
+        'e.visible' => 1,
+        'd.groupeId' => $group,
+      ])
+      ->countAllResults();
   }
 
   public function get_n_candidates_all_groups() {
-    $this->db->select('c.groupeId, c.depute_libelleAbrev AS libelleAbrev, c.couleurAssociee, ge.effectif, COUNT(*) AS candidates_n, c.legislature');
-    $this->db->select('ROUND(COUNT(*) / ge.effectif * 100) AS candidates_pct', FALSE);
-    $this->db->from('candidate_full c');
-    $this->db->join('groupes_effectif ge', 'ge.organeRef = c.groupeId', 'left');
-    $this->db->where('c.election', 7); // Municipales 2026
-    $this->db->where('c.visible', 1);
-    $this->db->where('c.active', TRUE);
-    $this->db->group_by('c.groupeId');
-    $this->db->order_by('candidates_pct', 'DESC');
-    return $this->db->get()->result_array();
+    return $this->db->table('candidate_full c')
+      ->select('c.groupeId, c.depute_libelleAbrev AS libelleAbrev, c.couleurAssociee, ge.effectif, COUNT(*) AS candidates_n, c.legislature')
+      ->select('ROUND(COUNT(*) / ge.effectif * 100) AS candidates_pct', false)
+      ->join('groupes_effectif ge', 'ge.organeRef = c.groupeId', 'left')
+      ->where('c.election', 7) // Municipales 2026
+      ->where('c.visible', 1)
+      ->where('c.active', true)
+      ->groupBy('c.groupeId')
+      ->orderBy('candidates_pct', 'DESC')
+      ->get()
+      ->getResultArray();
   }
 
   public function get_municipales_listes($id_election, $city, $arrondissements = FALSE){
     
-    $this->db->where('id_election', $id_election);
+    $builder = $this->db->table('elect_municipales_listes')
+      ->where('id_election', $id_election);
 
     if ($arrondissements) {
-      $this->db->like('code_circonscription', $city, 'after'); // starts with $city
-      $this->db->where('code_circonscription !=', $city); // should not be exactly $city
-      $this->db->order_by('code_circonscription', 'ASC');
-      $this->db->order_by('numero_panneau', 'ASC');
-      $this->db->order_by('ordre', 'ASC');
+      $builder->like('code_circonscription', $city, 'after') // starts with $city
+        ->where('code_circonscription !=', $city) // should not be exactly $city
+        ->orderBy('code_circonscription', 'ASC')
+        ->orderBy('numero_panneau', 'ASC')
+        ->orderBy('ordre', 'ASC');
     } else {
-      $this->db->where('code_circonscription', $city);
-      $this->db->order_by('numero_panneau', 'ASC');
-      $this->db->order_by('ordre', 'ASC');
+      $builder->where('code_circonscription', $city)
+        ->orderBy('numero_panneau', 'ASC')
+        ->orderBy('ordre', 'ASC');
     }
 
-    $rows = $this->db->get('elect_municipales_listes')->result_array();
+    $rows = $builder->get()->getResultArray();
 
     if ($arrondissements) {
       
@@ -558,14 +588,13 @@ class ElectionsModel extends Model {
   }
 
   public function get_results_city($election, $city){
-    $where = array(
-      'r.id_election' => $election,
-      'r.code_commune' => $city
-    );
-    $this->db->select('r.*, SUM(r.voix) as voix_total');
-    $this->db->group_by('r.no_panneau');
-    $this->db->order_by('voix_total', 'desc');
-    $results = $this->db->get_where('elect_bv_results r', $where)->result_array();
+    $results = $this->db->table('elect_bv_results r')
+      ->select('r.*, SUM(r.voix) as voix_total')
+      ->groupBy('r.no_panneau')
+      ->orderBy('voix_total', 'desc')
+      ->where(['r.id_election' => $election, 'r.code_commune' => $city])
+      ->get()
+      ->getResultArray();
 
     $total = array_sum(array_column($results, 'voix_total'));
 
@@ -578,15 +607,13 @@ class ElectionsModel extends Model {
 
   public function get_results_city_municipales_ministry($city, $id_election){
 
-    $where = array(
-      'id_election' => $id_election,
-      'code_commune' => $city,
-    );
-
-    $this->db->select('id_election, code_commune, no_panneau, voix, ratio_voix_inscrits, ratio_voix_exprimes, nuance, sexe, nom, prenom, seats, qualified');
-    $this->db->order_by('voix', 'desc');
-    $this->db->order_by('no_panneau', 'asc');
-    $results = $this->db->get_where('elect_results_cities_ministry', $where)->result_array();
+    $results = $this->db->table('elect_results_cities_ministry')
+      ->select('id_election, code_commune, no_panneau, voix, ratio_voix_inscrits, ratio_voix_exprimes, nuance, sexe, nom, prenom, seats, qualified')
+      ->orderBy('voix', 'desc')
+      ->orderBy('no_panneau', 'asc')
+      ->where(['id_election' => $id_election, 'code_commune' => $city])
+      ->get()
+      ->getResultArray();
 
     if (empty($results)) {
       return array(
@@ -631,7 +658,7 @@ class ElectionsModel extends Model {
       unset($row);
     }
 
-    $results = $electionsModel->get_nuances_edited($results);
+    $results = $this->get_nuances_edited($results);
     
     return array(
       'id_election' => $id_election,
@@ -640,11 +667,12 @@ class ElectionsModel extends Model {
   }
 
   public function get_infos_city_municipales_ministry($city, $id_election){
-    $this->db->select('code_commune, inscrits, abstentions, votants, blancs, nuls, exprimes, pct_saisis, pourvu');
-    $this->db->where('id_election', $id_election);
-    $this->db->where('code_commune', $city);
-
-    $result = $this->db->get('elect_results_cities_ministry_infos')->row_array();
+    $result = $this->db->table('elect_results_cities_ministry_infos')
+      ->select('code_commune, inscrits, abstentions, votants, blancs, nuls, exprimes, pct_saisis, pourvu')
+      ->where('id_election', $id_election)
+      ->where('code_commune', $city)
+      ->get()
+      ->getRowArray();
 
     if (empty($result)) {
       return array();
@@ -689,53 +717,52 @@ class ElectionsModel extends Model {
   }
 
   public function count_results_cities_ministry($id_election, $onlyFullyCounted = FALSE){
-    $this->db->select('COUNT(DISTINCT e.code_commune) AS total', FALSE);
-    $this->db->where('e.id_election', $id_election);
-    $this->db->where('e.code_commune <>', '');
-    $this->db->where('e.code_commune IS NOT NULL', NULL, FALSE);
+    $builder = $this->db->table('elect_results_cities_ministry e')
+      ->select('COUNT(DISTINCT e.code_commune) AS total', false)
+      ->where('e.id_election', $id_election)
+      ->where('e.code_commune <>', '')
+      ->where('e.code_commune IS NOT NULL', null, false);
 
     if ($onlyFullyCounted) {
-      $this->db->join(
+      $builder->join(
         'elect_results_cities_ministry_infos i',
         'i.id_election = e.id_election AND i.code_commune = e.code_commune',
         'inner'
       );
-      $this->db->where('i.pct_saisis', 100);
+      $builder->where('i.pct_saisis', 100);
     }
 
-    $result = $this->db->get('elect_results_cities_ministry e')->row_array();
+    $result = $builder->get()->getRowArray();
 
     return isset($result['total']) ? (int) $result['total'] : 0;
   }
 
   public function get_city_circos($election, $city){
-    $where = array(
-      'id_election' => $election,
-      'code_commune' => $city
-    );
-    $this->db->distinct();
-    $this->db->select('code_circo, libelle_circo');
-    $this->db->order_by('code_circo', 'asc');
-
-    return $this->db->get_where('elect_bv_circo', $where)->result_array();
+    return $this->db->table('elect_bv_circo')
+      ->distinct()
+      ->select('code_circo, libelle_circo')
+      ->orderBy('code_circo', 'asc')
+      ->where(['id_election' => $election, 'code_commune' => $city])
+      ->get()
+      ->getResultArray();
   }
 
   public function get_results_city_legislatives($election, $city, $code_circo = NULL){
-    $where = array(
-      'r.id_election' => $election,
-      'r.code_commune' => $city
-    );
-    $this->db->select('r.*, c.code_circo, c.libelle_circo, SUM(r.voix) as voix_total');
-    $this->db->join(
+    $builder = $this->db->table('elect_bv_results r')
+      ->select('r.*, c.code_circo, c.libelle_circo, SUM(r.voix) as voix_total')
+      ->join(
       'elect_bv_circo c', 
       'c.id_election = r.id_election AND c.code_commune = r.code_commune AND c.code_bv = r.code_bv', 
       'left');
     if ($code_circo !== NULL) {
-      $this->db->where('c.code_circo', $code_circo);
+      $builder->where('c.code_circo', $code_circo);
     }
-    $this->db->group_by('r.no_panneau');
-    $this->db->order_by('voix_total', 'desc');
-    $results = $this->db->get_where('elect_bv_results r', $where)->result_array();
+    $results = $builder
+      ->groupBy('r.no_panneau')
+      ->orderBy('voix_total', 'desc')
+      ->where(['r.id_election' => $election, 'r.code_commune' => $city])
+      ->get()
+      ->getResultArray();
 
     $total = array_sum(array_column($results, 'voix_total'));
     foreach ($results as &$row) {
@@ -746,25 +773,26 @@ class ElectionsModel extends Model {
   }
 
   public function get_infos_city($election, $city, $code_circo = NULL){
-    $this->db->select('SUM(i.inscrits) as inscrits');
-    $this->db->select('SUM(i.abstentions) as abstentions');
-    $this->db->select('SUM(i.votants) as votants');
-    $this->db->select('SUM(i.blancs) as blancs');
-    $this->db->select('SUM(i.nuls) as nuls');
-    $this->db->select('SUM(i.exprimes) as exprimes');
-    $this->db->where('i.id_election', $election);
-    $this->db->where('i.code_commune', $city);
+    $builder = $this->db->table('elect_bv_infos i')
+      ->select('SUM(i.inscrits) as inscrits')
+      ->select('SUM(i.abstentions) as abstentions')
+      ->select('SUM(i.votants) as votants')
+      ->select('SUM(i.blancs) as blancs')
+      ->select('SUM(i.nuls) as nuls')
+      ->select('SUM(i.exprimes) as exprimes')
+      ->where('i.id_election', $election)
+      ->where('i.code_commune', $city);
 
     if ($code_circo !== NULL) {
-      $this->db->join(
+      $builder->join(
         'elect_bv_circo c',
         'c.id_election = i.id_election AND c.code_commune = i.code_commune AND c.code_bv = i.code_bv',
         'inner'
       );
-      $this->db->where('c.code_circo', $code_circo);
+      $builder->where('c.code_circo', $code_circo);
     }
 
-    $result = $this->db->get('elect_bv_infos i')->row_array();
+    $result = $builder->get()->getRowArray();
 
     if (!empty($result)) {
       $result['blancs_nuls'] = $result['blancs'] + $result['nuls'];
