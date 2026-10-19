@@ -6,6 +6,7 @@ use App\Models\DeputesModel;
 use App\Models\GroupesModel;
 use App\Models\VotesModel;
 use App\Models\ElectionsModel;
+use App\Models\PostModel; 
 
 class Home extends BaseController {
 
@@ -15,6 +16,7 @@ class Home extends BaseController {
     $groupesModel = new GroupesModel();
     $votesModel = new VotesModel();
     $electionsModel = new ElectionsModel();
+    $postModel = new PostModel();
     $session = session();
 
     // Get user data == TO BE RESOLVED LATER
@@ -113,7 +115,7 @@ class Home extends BaseController {
     }
 
     //Get posts (needs to be cached)
-    $data['posts'] = $this->post_model->get_last_posts(3);
+    $data['posts'] = $postModel->get_last_posts(3);
 
     // Composition
     $data['composition'] = TRUE;

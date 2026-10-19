@@ -249,7 +249,7 @@ class Sitemap extends MY_Controller {
 
   /* 11. sitemap-posts-1.xml */
   function posts(){
-    $results = $this->post_model->get_posts(NULL, NULL, NULL);
+    $results = $postModel->get_posts(NULL, NULL, NULL);
 
     $i = 1;
     foreach ($results as $result) {

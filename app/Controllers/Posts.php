@@ -12,7 +12,7 @@
     public function index(){
       $user_type = $this->session->userdata('type');
       $data['user'] = $user_type;
-      $data['posts'] = $this->post_model->get_posts(NULL, $user_type, NULL);
+      $data['posts'] = $postModel->get_posts(NULL, $user_type, NULL);
       $data['categories'] = $categories = $this->blog->get_categories();
 
       // Page elements 
@@ -55,7 +55,7 @@
     // VIEW CATEGORY PAGE
     public function category($category){
       $data['category'] = $this->blog->get_category_by_slug($category);
-      $data['posts'] = $this->post_model->get_posts_by_category($data['category']);
+      $data['posts'] = $postModel->get_posts_by_category($data['category']);
       if (empty($data['posts'])) {
         show_404($this->functions_datan->get_404_infos());
       }
@@ -107,7 +107,7 @@
     public function view($slug = NULL, $category) {
       $user_type = $this->session->userdata('type');
       $data['user'] = $user_type;
-      $data['post'] = $this->post_model->get_posts($slug, $user_type, $category);
+      $data['post'] = $postModel->get_posts($slug, $user_type, $category);
       if (empty($data['post'])) {
         show_404($this->functions_datan->get_404_infos());
       }
@@ -170,7 +170,7 @@
         $this->load->view('dashboard/footer');
       } else {
 
-        $success = $this->post_model->create_post();
+        $success = $postModel->create_post();
         if (isset($success['error'])) {
           $this->session->set_flashdata('error', $success['error']);
           redirect('posts/create');
@@ -186,13 +186,13 @@
       $this->password_model->security_only_team();
       $user_type = $this->session->userdata('type');
       $data['type'] = 'team';
-      $post = $this->post_model->get_post_by_id($id);
+      $post = $postModel->get_post_by_id($id);
       if ($user_type != 'admin') {
         redirect();
       } else {
         $this->password_model->security_only_admin();
 
-        $this->post_model->delete_post($id, $post['image_name']);
+        $postModel->delete_post($id, $post['image_name']);
 
         $this->session->set_flashdata('post_deleted', 'Votre post a été supprimé');
 
@@ -206,7 +206,7 @@
       $data['type'] = 'team';
       $data['username'] = $this->session->userdata('username');
       $user_type = $this->session->userdata('type');
-      $data['post'] = $this->post_model->get_post_edit($slug, $user_type);
+      $data['post'] = $postModel->get_post_edit($slug, $user_type);
       if (empty($data['post'])) {
         show_404($this->functions_datan->get_404_infos());
       }
@@ -230,7 +230,7 @@
       $this->password_model->security_only_team();
       $data['type'] = 'team';
       
-      $success = $this->post_model->update_post();
+      $success = $postModel->update_post();
       
       if (isset($success['error'])) {
         $this->session->set_flashdata('error', $success['error']);
