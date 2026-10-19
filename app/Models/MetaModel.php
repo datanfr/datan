@@ -7,9 +7,7 @@ use CodeIgniter\Model;
 class MetaModel extends Model {
 
   public function get_url(){
-    $protocol = ((!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off') || $_SERVER['SERVER_PORT'] == 443) ? "https://" : "http://";
-    $url = $protocol . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
-    return $url;
+    return (string) service('request')->getUri();
   }
 
   public function get_ogp($type, $title, $description, $url, $data){
