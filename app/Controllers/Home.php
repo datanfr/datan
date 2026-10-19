@@ -147,9 +147,9 @@ class Home extends BaseController {
       'dist/typed'
     );
     // Load views
-    $this->load->view('templates/header', $data);
-    $this->load->view('home/index', $data);
-    $this->load->view('templates/footer', $data);
+    return view('templates/header', $data) . 
+      view('home/index', $data) .
+      view('templates/footer', $data);
   }
 
 }
