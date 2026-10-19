@@ -6,33 +6,27 @@ use CodeIgniter\Model;
 class VotesModel extends Model{
 
   public function get_all_votes($legislature, $year, $month, $limit){
-    $where = array();
-
+    $builder = $this->db->table('votes_info vi')
+      ->select('vi.*, date_format(vi.dateScrutin, "%d %M %Y") as dateScrutinFR')
+      ->select('vd.title, vd.slug, vd.category')
+      ->select('REPLACE(vi.titre, "n?", "n°") AS titre')
+      ->select('CASE WHEN vi.voteNumero < 0 THEN CONCAT("c", abs(vi.voteNumero)) ELSE vi.voteNumero END AS voteNumero', false)
+      ->orderBy('vi.dateScrutin', 'DESC')
+      ->orderBy('vi.voteNumero', 'DESC')
+      ->join('votes_datan vd', 'vi.voteId = vd.vote_id AND vd.state = "published"', 'left');
     if ($legislature) {
-      $where['vi.legislature'] = $legislature;
+      $builder->where('vi.legislature', $legislature);
     }
-
     if ($year) {
-      $where['YEAR(vi.dateScrutin)'] = $year;
+      $builder->where('YEAR(vi.dateScrutin)', $year);
     }
-
     if ($month) {
-      $where['MONTH(vi.dateScrutin)'] = $month;
+      $builder->where('MONTH(vi.dateScrutin)', $month);
     }
-
     if ($limit) {
-      $this->db->limit($limit);
+      $builder->limit($limit);
     }
-
-    $this->db->select('vi.*, date_format(vi.dateScrutin, "%d %M %Y") as dateScrutinFR');
-    $this->db->select('vd.title, vd.slug, vd.category');
-    $this->db->select('REPLACE(vi.titre, "n?", "n°") AS titre');
-    $this->db->select('CASE WHEN vi.voteNumero < 0 THEN CONCAT("c", abs(vi.voteNumero)) ELSE vi.voteNumero END AS voteNumero', false);
-    $this->db->order_by('vi.dateScrutin', 'DESC');
-    $this->db->order_by('vi.voteNumero', 'DESC');
-    $this->db->join('votes_datan vd', 'vi.voteId = vd.vote_id AND vd.state = "published"', 'left');
-    $query = $this->db->get_where('votes_info vi', $where);
-    return $query->result_array();
+    return $builder->get()->getResultArray();
   }
 
   public function get_last_votes_datan($limit = FALSE){
@@ -46,8 +40,10 @@ class VotesModel extends Model{
     WHERE vd.state = "published"
     ORDER BY vi.legislature DESC, vi.dateScrutin DESC, vi.voteNumero DESC'
     ;
-    $sql .= $limit ? ' LIMIT '.$this->db->escape($limit) : '';
-    return $this->db->query($sql)->result_array();
+    if ($limit) {
+      $sql .= ' LIMIT ' . (int) $limit;
+    }
+    return $this->db->query($sql)->getResultArray();
   }
 
   public function get_votes_datan($legislature, $year, $month, $limit, $important){
@@ -58,67 +54,85 @@ class VotesModel extends Model{
       LEFT JOIN fields f ON vd.category = f.id
       WHERE vd.state = "published"
     ';
-    $sql .= $legislature ? ' AND vi.legislature = '.$this->db->escape($legislature) : '';
-    $sql .= $year ? ' AND YEAR(vi.dateScrutin) = '.$this->db->escape($year) : '';
-    $sql .= $month ? ' AND MONTH(vi.dateScrutin) = '.$this->db->escape($month) : '';
+    $binds = [];
+    if ($legislature) {
+      $sql .= ' AND vi.legislature = ?';
+      $binds[] = $legislature;
+    }
+    if ($year) {
+      $sql .= ' AND YEAR(vi.dateScrutin) = ?';
+      $binds[] = $year;
+    }
+    if ($month) {
+      $sql .= ' AND MONTH(vi.dateScrutin) = ?';
+      $binds[] = $month;
+    }
     if ($important == TRUE) {
       $sql .= ' ORDER BY vi.nombreVotants DESC';
     } else {
       $sql .= ' ORDER BY vi.voteNumero DESC';
     }
 
-    $sql .= $limit ? ' LIMIT ' . $limit : '';
-    return $this->db->query($sql)->result_array();
+    if ($limit) {
+      $sql .= ' LIMIT ' . (int) $limit;
+    }
+    return $this->db->query($sql, $binds)->getResultArray();
   }
 
   public function get_n_votes_datan($legislature = NULL, $year = NULL, $month = NULL){
+    $builder = $this->db->table('votes_datan vd')
+      ->join('votes_info vi', 'vd.voteNumero = vi.voteNumero AND vd.legislature = vi.legislature', 'left')
+      ->where('vd.state', 'published');
     if (!is_null($legislature)) {
-      $this->db->where('vd.legislature', $legislature);
+      $builder->where('vd.legislature', $legislature);
     }
     if (!is_null($year)) {
-      $this->db->where('YEAR(vi.dateScrutin)', $year);
+      $builder->where('YEAR(vi.dateScrutin)', $year);
     }
     if (!is_null($month)) {
-      $this->db->where('MONTH(vi.dateScrutin)', $month);
+      $builder->where('MONTH(vi.dateScrutin)', $month);
     }
-    $this->db->join('votes_info vi', 'vd.voteNumero = vi.voteNumero AND vd.legislature = vi.legislature', 'left');
-    $this->db->where(array('vd.state' => 'published'));
-    return $this->db->count_all_results('votes_datan vd');
+    return $builder->countAllResults();
   }
 
   public function get_n_votes($legislature, $year = NULL, $month = NULL, $type = NULL){
+    $builder = $this->db->table('votes_info')
+      ->where('legislature', $legislature);
     if (!is_null($year)) {
-      $this->db->where('YEAR(dateScrutin)', $year);
+      $builder->where('YEAR(dateScrutin)', $year);
     }
     if (!is_null($month)) {
-      $this->db->where('MONTH(dateScrutin)', $month);
+      $builder->where('MONTH(dateScrutin)', $month);
     }
     if (!is_null($type)) {
-      $this->db->where('codeTypeVote', $type);
+      $builder->where('codeTypeVote', $type);
     }
-    $this->db->where('legislature', $legislature);
-    return $this->db->count_all_results('votes_info');
+    return $builder->countAllResults();
   }
 
   public function get_infos_period($legislature, $year, $month){
+    $builder = $this->db->table('votes_info')
+      ->select('count(*) AS total')
+      ->select('SUM(if(sortCode = "adopté", 1, 0)) AS adopted')
+      ->select('SUM(if(sortCode = "rejeté", 1, 0)) AS rejected')
+      ->where('legislature', $legislature);
     if (!is_null($year)) {
-      $this->db->where('YEAR(dateScrutin)', $year);
+      $builder->where('YEAR(dateScrutin)', $year);
     }
     if (!is_null($month)) {
-      $this->db->where('MONTH(dateScrutin)', $month);
+      $builder->where('MONTH(dateScrutin)', $month);
     }
-    $this->db->select('count(*) AS total');
-    $this->db->select('SUM(if(sortCode = "adopté", 1, 0)) AS adopted');
-    $this->db->select('SUM(if(sortCode = "rejeté", 1, 0)) AS rejected');
-    $this->db->where('legislature', $legislature);
-    return $this->db->get('votes_info')->row_array();
+    return $builder->get()->getRowArray();
   }
 
   public function get_last_vote($legislature){
     $where = array('legislature' => $legislature);
-    $this->db->select('voteNumero');
-    $this->db->order_by('voteNumero', 'DESC');
-    return $this->db->get_where('votes_info', $where, 1)->row_array();
+    return $this->db->table('votes_info')
+      ->select('voteNumero')
+      ->orderBy('voteNumero', 'DESC')
+      ->where($where)
+      ->get(1)
+      ->getRowArray();
   }
 
   public function get_votes_datan_category($field){
@@ -131,7 +145,7 @@ class VotesModel extends Model{
       WHERE vd.state = "published" AND f.id = ?
       ORDER BY vd.id DESC
     ';
-    return $this->db->query($sql, $field)->result_array();
+    return $this->db->query($sql, [$field])->getResultArray();
   }
 
   public function get_years_archives($legislature){
@@ -140,7 +154,7 @@ class VotesModel extends Model{
       WHERE legislature = ?
       ORDER BY YEAR(dateScrutin) ASC
     ';
-    return $this->db->query($sql, $legislature)->result_array();
+    return $this->db->query($sql, [$legislature])->getResultArray();
   }
 
   public function get_months_archives($legislature){
@@ -150,11 +164,11 @@ class VotesModel extends Model{
       WHERE legislature = ?
       ORDER BY YEAR(dateScrutin) ASC, MONTH(dateScrutin) ASC
     ';
-    $query = $this->db->query($sql, $legislature);
+    $query = $this->db->query($sql, [$legislature]);
 
     $months = array('janvier', 'février', 'mars', 'avril', 'mai', 'juin', 'juillet', 'août', 'septembre', 'octobre', 'novembre', 'decembre');
 
-    $array = $query->result_array();
+    $array = $query->getResultArray();
     foreach ($array as $key => $value) {
       $array[$key]["month"] = $months[$value['months']-1];
       $array[$key]["index"] = str_pad((string) $value["months"], 2, "0", STR_PAD_LEFT);
@@ -189,7 +203,7 @@ class VotesModel extends Model{
         WHERE vi.legislature = ? AND vi.voteNumero = ?
       ) A
     ';
-    return $this->db->query($sql, array($legislature, $num))->row_array();
+    return $this->db->query($sql, [$legislature, $num])->getRowArray();
   }
 
   public function get_individual_vote_edited($x){
@@ -326,7 +340,7 @@ class VotesModel extends Model{
         WHERE vi.legislature = ? AND vi.voteNumero = ?
       ) A
     ';
-    $results = $this->db->query($sql, array($legislature, $num))->result_array();
+    $results = $this->db->query($sql, [$legislature, $num])->getResultArray();
 
     // Fix bug for Motion de censure --> positionMajoritaire only when
     if ($type == 'motion de censure') {
@@ -350,7 +364,7 @@ class VotesModel extends Model{
       WHERE vg.voteNumero = ? AND vg.legislature = ?
       ORDER BY vg.nombreMembresGroupe DESC
     ';
-    return $this->db->query($sql, array($num, $legislature))->result_array();
+    return $this->db->query($sql, [$num, $legislature])->getResultArray();
   }
 
   public function get_vote_deputes($num, $legislature){
@@ -384,7 +398,7 @@ class VotesModel extends Model{
       ) B
       ORDER BY B.nameLast ASC, B.nameFirst ASC
     ';
-    return $this->db->query($sql, array($num, $legislature))->result_array();
+    return $this->db->query($sql, [$num, $legislature])->getResultArray();
   }
 
   public function get_votes_datan_depute($depute_id, $limit = FALSE){
@@ -408,9 +422,9 @@ class VotesModel extends Model{
       ORDER BY vi.dateScrutin DESC
     ';
     if ($limit){
-      $sql .= ' LIMIT ' . $this->db->escape($limit);
+      $sql .= ' LIMIT ' . (int) $limit;
     }
-    return $this->db->query($sql, array($depute_id))->result_array();
+    return $this->db->query($sql, [$depute_id])->getResultArray();
   }
 
   public function get_individual_vote_depute($depute_id, $legislature, $num){
@@ -419,16 +433,19 @@ class VotesModel extends Model{
       'vs.legislature' => $legislature,
       'vs.voteNumero' => $num
     );
-    $this->db->select('vs.*, o.libelleAbrev');
-    $this->db->select('CASE
+    return $this->db->table('votes_scores vs')
+      ->select('vs.*, o.libelleAbrev')
+      ->select('CASE
       WHEN vs.vote = 1 THEN "pour"
       WHEN vs.vote = -1 THEN "contre"
       WHEN vs.vote = 0 THEN "abstention"
       WHEN vs.vote IS NULL THEN "absent"
-      ELSE NULL END AS voteText', FALSE);
-    $this->db->join('mandat_groupe mg', 'vs.mandatId = mg.mandatId');
-    $this->db->join('organes o', 'mg.organeRef = o.uid');
-    return $this->db->get_where('votes_scores vs', $where, 1)->row_array();
+      ELSE NULL END AS voteText', false)
+      ->join('mandat_groupe mg', 'vs.mandatId = mg.mandatId')
+      ->join('organes o', 'mg.organeRef = o.uid')
+      ->where($where)
+      ->get(1)
+      ->getRowArray();
   }
 
   public function get_individual_vote_depute_participation($depute_id, $legislature, $num){
@@ -437,15 +454,18 @@ class VotesModel extends Model{
       'vp.legislature' => $legislature,
       'vp.voteNumero' => $num
     );
-    $this->db->select('vp.mpId, vp.legislature, vp.voteNumero, vp.participation');
-    $this->db->select('CASE
+    return $this->db->table('votes_participation vp')
+      ->select('vp.mpId, vp.legislature, vp.voteNumero, vp.participation')
+      ->select('CASE
       WHEN vs.vote = 1 THEN "pour"
       WHEN vs.vote = -1 THEN "contre"
       WHEN vs.vote = 0 THEN "abstention"
       WHEN vs.vote IS NULL THEN "absent"
-      ELSE NULL END AS vote', FALSE);
-    $this->db->join('votes_scores vs', 'vs.legislature = vp.legislature AND vs.voteNumero = vp.voteNumero AND vs.mpId = vp.mpId', 'left');
-    return $this->db->get_where('votes_participation vp', $where, 1)->row_array();
+      ELSE NULL END AS vote', false)
+      ->join('votes_scores vs', 'vs.legislature = vp.legislature AND vs.voteNumero = vp.voteNumero AND vs.mpId = vp.mpId', 'left')
+      ->where($where)
+      ->get(1)
+      ->getRowArray();
   }
 
   public function get_individual_vote_moc($mpId, $legislature, $num){
@@ -453,16 +473,19 @@ class VotesModel extends Model{
       'vi.legislature' => $legislature,
       'vi.voteNumero' => $num
     );
-    $this->db->select('d.mpId, vi.legislature, vi.voteNumero');
-    $this->db->select('CASE
+    return $this->db->table('votes_info vi')
+      ->select('d.mpId, vi.legislature, vi.voteNumero')
+      ->select('CASE
       WHEN v.vote = 1 THEN "pour"
       WHEN v.vote = -1 THEN "contre"
       WHEN v.vote = 0 THEN "abstention"
       WHEN v.vote IS NULL THEN "absent" 
-      ELSE NULL END AS vote', FALSE);
-    $this->db->join('deputes_last d', 'd.legislature = vi.legislature AND d.datePriseFonction <= vi.dateScrutin AND (d.dateFin IS NULL OR d.dateFin >= vi.dateScrutin) AND d.mpId = ' . $this->db->escape($mpId));
-    $this->db->join('votes v', 'v.legislature = vi.legislature AND v.voteNumero = vi.voteNumero AND v.mpId = ' . $this->db->escape($mpId), 'left');
-    return $this->db->get_where('votes_info vi', $where, 1)->row_array();
+      ELSE NULL END AS vote', false)
+      ->join('deputes_last d', 'd.legislature = vi.legislature AND d.datePriseFonction <= vi.dateScrutin AND (d.dateFin IS NULL OR d.dateFin >= vi.dateScrutin) AND d.mpId = ' . $this->db->escape($mpId))
+      ->join('votes v', 'v.legislature = vi.legislature AND v.voteNumero = vi.voteNumero AND v.mpId = ' . $this->db->escape($mpId), 'left')
+      ->where($where)
+      ->get(1)
+      ->getRowArray();
   }
 
   public function get_votes_all_depute($depute_id, $legislature = FALSE){
@@ -486,9 +509,11 @@ class VotesModel extends Model{
       LEFT JOIN votes_info vi ON vs.voteNumero = vi.voteNumero AND vs.legislature = vi.legislature
       LEFT JOIN votes_datan vd ON vi.voteId = vd.vote_id AND vd.state = "published"
       WHERE vs.mpId = ? AND vs.vote != "nv" ';
-    $sql .= $legislature ? ' AND vp.legislature = ' . $this->db->escape($legislature) : '';
+    if ($legislature) {
+      $sql .= ' AND vs.legislature = ? ';
+    }
     $sql .= ' ) A ORDER BY A.dateScrutin DESC, A.voteNumero DESC ';
-    return $this->db->query($sql, array($depute_id))->result_array();
+    return $this->db->query($sql, $legislature ? [$depute_id, $legislature] : [$depute_id])->getResultArray();
   }
 
   public function get_votes_all_groupe($uid, $legislature){
@@ -509,7 +534,7 @@ class VotesModel extends Model{
       LEFT JOIN  votes_datan vd ON A.voteId = vd.vote_id AND A.legislature = vd.legislature AND vd.state = "published"
       ORDER BY A.dateScrutin DESC, A.voteNumero
     ';
-    return $this->db->query($sql, array($uid, $legislature))->result_array();
+    return $this->db->query($sql, [$uid, $legislature])->getResultArray();
   }
 
   public function get_votes_datan_groupe($groupe_id, $limit = FALSE){
@@ -529,9 +554,9 @@ class VotesModel extends Model{
       ORDER BY vi.dateScrutin DESC
     ';
     if ($limit){
-      $sql .= ' LIMIT ' . $this->db->escape($limit);
+      $sql .= ' LIMIT ' . (int) $limit;
     }
-    return $this->db->query($sql, $groupe_id)->result_array();
+    return $this->db->query($sql, [$groupe_id])->getResultArray();
   }
 
   public function get_key_votes_mp($mpId){
@@ -550,9 +575,9 @@ class VotesModel extends Model{
         )
         AND vs.mpId = ?;
     ';
-    $query = $this->db->query($sql, $mpId);
+    $query = $this->db->query($sql, [$mpId]);
 
-    $votes = $query->result_array();
+    $votes = $query->getResultArray();
 
     $text = array(
       "l17v3260" => "la proposition du RN visant à dénoncer les accords franco-algériens de 1968",
@@ -582,20 +607,20 @@ class VotesModel extends Model{
       ORDER BY vi.voteNumero DESC
     ';
     if ($limit) {
-      $sql .= ' LIMIT ' .$limit;
+      $sql .= ' LIMIT ' . (int) $limit;
     }
-    return $this->db->query($sql, $limit)->result_array();
+    return $this->db->query($sql)->getResultArray();
   }
 
   public function get_votes_result_by_depute($voteNumeros){
-    $sql = 'SELECT votes.voteNumero, organes.libelle, deputes_all.nameFirst, deputes_all.nameLast, votes.vote, organes.uid, deputes_all.mpId
-      FROM `votes`
-      LEFT JOIN mandat_principal ON votes.mandatId=mandat_principal.mandatId
-      LEFT JOIN deputes_all ON votes.mandatId=deputes_all.mandatId
-      LEFT JOIN organes ON deputes_all.groupeId=organes.uid
-      WHERE votes.voteNumero IN ?
-    ';
-    return $this->db->query($sql, $voteNumeros)->result_array();
+    return $this->db->table('votes')
+      ->select('votes.voteNumero, organes.libelle, deputes_all.nameFirst, deputes_all.nameLast, votes.vote, organes.uid, deputes_all.mpId')
+      ->join('mandat_principal', 'votes.mandatId = mandat_principal.mandatId', 'left')
+      ->join('deputes_all', 'votes.mandatId = deputes_all.mandatId', 'left')
+      ->join('organes', 'deputes_all.groupeId = organes.uid', 'left')
+      ->whereIn('votes.voteNumero', $voteNumeros)
+      ->get()
+      ->getResultArray();
   }
 
   public function get_vote_schema($vote, $img){
@@ -618,37 +643,41 @@ class VotesModel extends Model{
   }
 
   public function get_amendement($legislature, $voteNumero){
-    $where = array(
-      'va.legislature' => $legislature,
-      'va.voteNumero' => $voteNumero
-    );
-    $this->db->select('va.amendmentId, va.amendmentHref, a.expose');
-    $this->db->join('amendements a', 'a.id = va.amendmentId', 'left');
-    $this->db->limit(1);
-    return $this->db->get_where('votes_amendments va', $where)->row_array();
+    return $this->db->table('votes_amendments va')
+      ->select('va.amendmentId, va.amendmentHref, a.expose')
+      ->join('amendements a', 'a.id = va.amendmentId', 'left')
+      ->where(['va.legislature' => $legislature, 'va.voteNumero' => $voteNumero])
+      ->get(1)
+      ->getRowArray();
   }
 
   public function get_amendement_all_seanceRef($legislature, $dossier, $num){
-    $where = array(
-      'legislature' => $legislature,
-      'dossier' => $dossier,
-      'numOrdre' => $num
-    );
-    $this->db->select('id, legislature, num, numOrdre, texteLegislatifRef, expose');
-    return $this->db->get_where('amendements', $where)->result_array();
+    return $this->db->table('amendements')
+      ->select('id, legislature, num, numOrdre, texteLegislatifRef, expose')
+      ->where(['legislature' => $legislature, 'dossier' => $dossier, 'numOrdre' => $num])
+      ->get()
+      ->getResultArray();
   }
 
   public function get_another_dossierId($chemin){
-    $this->db->where('titreChemin', $chemin);
-    return $this->db->get('dossiers')->result_array();
+    return $this->db->table('dossiers')
+      ->where('titreChemin', $chemin)
+      ->get()
+      ->getResultArray();
   }
 
   public function get_amendement_author($id){
-    return $this->db->get_where('amendements_auteurs', array('id' => $id))->row_array();
+    return $this->db->table('amendements_auteurs')
+      ->where('id', $id)
+      ->get()
+      ->getRowArray();
   }
 
   public function get_document_legislatif($id){
-    return $this->db->get_where('documents_legislatifs', array('id' => $id), 1)->row_array();
+    return $this->db->table('documents_legislatifs')
+      ->where('id', $id)
+      ->get(1)
+      ->getRowArray();
   }
 
   public function get_dossier_mp_authors($id, $legislature){
@@ -658,12 +687,15 @@ class VotesModel extends Model{
       'da.type' => 'acteur',
       'dl.legislature' => $legislature
     );
-    $this->db->join('deputes_all dl', 'da.ref = dl.mpId');
-    $this->db->select('*, CONCAT(departementNom, " (", departementCode, ")") AS cardCenter');
-    $this->db->select('dl.legislature AS legislature_last');
-    $this->db->order_by('dl.nameLast', 'ASC');
-    $this->db->group_by('dl.mpId');
-    return $this->db->get_where('dossiers_acteurs da', $where)->result_array();
+    return $this->db->table('dossiers_acteurs da')
+      ->join('deputes_all dl', 'da.ref = dl.mpId')
+      ->select('*, CONCAT(departementNom, " (", departementCode, ")") AS cardCenter')
+      ->select('dl.legislature AS legislature_last')
+      ->orderBy('dl.nameLast', 'ASC')
+      ->groupBy('dl.mpId')
+      ->where($where)
+      ->get()
+      ->getResultArray();
   }
 
   public function get_dossier_mp_rapporteurs($id, $legislature){
@@ -672,12 +704,15 @@ class VotesModel extends Model{
       'da.value' => 'rapporteur',
       'dl.legislature' => $legislature
     );
-    $this->db->join('deputes_all dl', 'da.ref = dl.mpId');
-    $this->db->select('*, CONCAT(departementNom, " (", departementCode, ")") AS cardCenter');
-    $this->db->select('dl.legislature AS legislature_last');
-    $this->db->order_by('dl.nameLast', 'ASC');
-    $this->db->group_by('dl.mpId');
-    return $this->db->get_where('dossiers_acteurs da', $where)->result_array();
+    return $this->db->table('dossiers_acteurs da')
+      ->join('deputes_all dl', 'da.ref = dl.mpId')
+      ->select('*, CONCAT(departementNom, " (", departementCode, ")") AS cardCenter')
+      ->select('dl.legislature AS legislature_last')
+      ->orderBy('dl.nameLast', 'ASC')
+      ->groupBy('dl.mpId')
+      ->where($where)
+      ->get()
+      ->getResultArray();
   }
 
   public function get_explication($mpId, $legislature, $voteNumero, $state = NULL){
@@ -689,13 +724,15 @@ class VotesModel extends Model{
     if ($state) {
       $where['state'] = $state;
     }
-    $this->db->select('d.legislature, d.civ, d.nameFirst, d.nameLast, d.nameUrl, d.dptSlug, d.libelleAbrev, d.libelle, d.couleurAssociee, substr(d.mpId, 3) AS idImage, d.img, e.text, e.state');
-    $this->db->select('CASE WHEN v.vote = 0 THEN "abstention" WHEN v.vote = 1 THEN "pour" WHEN v.vote = -1 THEN "contre" WHEN v.vote IS NULL THEN "absent" ELSE v.vote END AS vote', FALSE);
-    $this->db->join('deputes_last d', 'e.mpId = d.mpId', 'left');
-    $this->db->join('votes_scores v', 'v.legislature = e.legislature AND v.voteNumero = e.voteNumero AND v.mpId = e.mpId', 'left');
-    $this->db->order_by('e.modified_at', 'DESC');
-
-    return $this->db->get_where('explications_mp e', $where)->row_array();
+    return $this->db->table('explications_mp e')
+      ->select('d.legislature, d.civ, d.nameFirst, d.nameLast, d.nameUrl, d.dptSlug, d.libelleAbrev, d.libelle, d.couleurAssociee, substr(d.mpId, 3) AS idImage, d.img, e.text, e.state')
+      ->select('CASE WHEN v.vote = 0 THEN "abstention" WHEN v.vote = 1 THEN "pour" WHEN v.vote = -1 THEN "contre" WHEN v.vote IS NULL THEN "absent" ELSE v.vote END AS vote', false)
+      ->join('deputes_last d', 'e.mpId = d.mpId', 'left')
+      ->join('votes_scores v', 'v.legislature = e.legislature AND v.voteNumero = e.voteNumero AND v.mpId = e.mpId', 'left')
+      ->orderBy('e.modified_at', 'DESC')
+      ->where($where)
+      ->get()
+      ->getRowArray();
   }
 
   public function get_explications($legislature, $voteNumero){
@@ -703,12 +740,15 @@ class VotesModel extends Model{
       'e.legislature' => $legislature,
       'e.voteNumero' => $voteNumero
     );
-    $this->db->select('d.civ, d.nameFirst, d.nameLast, d.nameUrl, d.legislature AS legislature_last, d.dptSlug, d.libelleAbrev, d.couleurAssociee, substr(d.mpId, 3) AS idImage, d.img, e.text, v.vote');
-    $this->db->join('deputes_last d', 'e.mpId = d.mpId', 'left');
-    $this->db->join('votes_scores v', 'v.legislature = e.legislature AND v.voteNumero = e.voteNumero AND v.mpId = e.mpId', 'left');
-    $this->db->order_by('e.modified_at', 'DESC');
-    $this->db->where('e.state', 1);
-    $results = $this->db->get_where('explications_mp e', $where)->result_array();
+    $results = $this->db->table('explications_mp e')
+      ->select('d.civ, d.nameFirst, d.nameLast, d.nameUrl, d.legislature AS legislature_last, d.dptSlug, d.libelleAbrev, d.couleurAssociee, substr(d.mpId, 3) AS idImage, d.img, e.text, v.vote')
+      ->join('deputes_last d', 'e.mpId = d.mpId', 'left')
+      ->join('votes_scores v', 'v.legislature = e.legislature AND v.voteNumero = e.voteNumero AND v.mpId = e.mpId', 'left')
+      ->orderBy('e.modified_at', 'DESC')
+      ->where('e.state', 1)
+      ->where($where)
+      ->get()
+      ->getResultArray();
     if ($results) {
       foreach ($results as $key => $value) {
         $return[$value['vote']][] = $value;
@@ -718,16 +758,18 @@ class VotesModel extends Model{
   }
 
   public function get_explications_last(){
-    $this->db->select('e.*, d.nameFirst, d.nameLast, d.legislature AS legislature_last, d.libelleAbrev, d.couleurAssociee, d.dptSlug, d.nameUrl, v.vote, vd.title');
-    $this->db->select('substr(e.mpId, 3) AS idImage,');
-    $this->db->select('CASE WHEN e.voteNumero < 0 THEN CONCAT("c", abs(e.voteNumero)) ELSE e.voteNumero END AS voteNumero', FALSE);
-    $this->db->select('CASE WHEN v.vote = 1 THEN "pour" WHEN v.vote = -1 THEN "contre" WHEN v.vote = 0 THEN "abstention" ELSE NULL END AS vote', FALSE);
-    $this->db->where('e.state', 1);
-    $this->db->order_by('e.created_at', 'DESC');
-    $this->db->join('deputes_last d', 'e.mpId = d.mpId', 'left');
-    $this->db->join('votes_datan vd', 'vd.legislature = e.legislature AND vd.voteNumero = e.voteNumero');
-    $this->db->join('votes_scores v', 'v.legislature = e.legislature AND v.voteNumero = e.voteNumero AND v.mpId = e.mpId', 'left');
-    return $this->db->get('explications_mp e', 3)->result_array();
+    return $this->db->table('explications_mp e')
+      ->select('e.*, d.nameFirst, d.nameLast, d.legislature AS legislature_last, d.libelleAbrev, d.couleurAssociee, d.dptSlug, d.nameUrl, v.vote, vd.title')
+      ->select('substr(e.mpId, 3) AS idImage,')
+      ->select('CASE WHEN e.voteNumero < 0 THEN CONCAT("c", abs(e.voteNumero)) ELSE e.voteNumero END AS voteNumero', false)
+      ->select('CASE WHEN v.vote = 1 THEN "pour" WHEN v.vote = -1 THEN "contre" WHEN v.vote = 0 THEN "abstention" ELSE NULL END AS vote', false)
+      ->where('e.state', 1)
+      ->orderBy('e.created_at', 'DESC')
+      ->join('deputes_last d', 'e.mpId = d.mpId', 'left')
+      ->join('votes_datan vd', 'vd.legislature = e.legislature AND vd.voteNumero = e.voteNumero')
+      ->join('votes_scores v', 'v.legislature = e.legislature AND v.voteNumero = e.voteNumero AND v.mpId = e.mpId', 'left')
+      ->get(3)
+      ->getResultArray();
   }
 
   public function get_random_explications_last(): array
@@ -759,6 +801,6 @@ class VotesModel extends Model{
       ORDER BY RAND()
       LIMIT 3";
       
-      return $this->db->query($sql)->result_array();
+      return $this->db->query($sql)->getResultArray();
   }
 }
