@@ -1,0 +1,631 @@
+<!-- BLOC SEARCHING FOR A MP BLOC-HEMYCICLE-HOME -->
+<div class="container-fluid bloc-hemycicle-home pg-home d-flex flex-column justify-content-around py-4 async_home"
+  data-src="<?= asset_url() ?>imgs/cover/hemicycle-from-back.jpg"
+  data-tablet="<?= asset_url() ?>imgs/cover/hemicycle-from-back-768.jpg"
+  data-mobile="<?= asset_url() ?>imgs/cover/hemicycle-from-back-375.jpg">
+  <div class="d-flex flex-column align-items-center">
+    <h1 class="text-center">L'Assemblée nationale, enfin <span>compréhensible</span></h1>
+  </div>
+  <div class="row bloc-search-deputes mt-4">
+    <div class="col-xl-6 col-lg-8 col-md-10 offset-xl-3 offset-lg-2 offset-md-1">
+      <div class="card">
+        <div class="card-header pt-4 pb-1">
+          <div class="placeholder d-flex">
+            <div class="box d-flex justify-content-end text-slider-items">
+              Je cherche
+            </div>
+            <div class="slider">
+              <span class="text-slider"></span>
+            </div>
+          </div>
+        </div>
+        <div class="card-header row pb-4">
+          <div class="col-12 px-4">
+            <div id="search-bloc" class="search-bloc">
+              <form autocomplete="off" action="recherche.php" id="searchForm" method="GET">
+                <div class="search">
+                  <div class="search_icon">
+                    <?= file_get_contents(FCPATH . "assets/imgs/icons/bi-search.svg") ?>
+                  </div>
+                  <label for="search" class="sr-only">Rechercher sur tout le site (député, vote, groupe, ville, ou autre information parlementaire)</label>
+                  <input id="search" type="text" class="randomized" placeholder="Exemple : <?= $placeholder ?>">
+                  <div class="search-results" id="search-results-bloc" style="display: none">
+                    <div id="search-results-list"></div>
+                    <a class="py-1 no-decoration text-info font-weight-bold" id="more-results-link">
+                      <?= file_get_contents(FCPATH . "assets/imgs/icons/bi-search.svg") ?>
+                      <span class="ml-1">Plus de résultats</span>
+                    </a>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="mt-4 d-flex flex-column align-items-center">
+    <a href="<?= base_url(); ?>deputes" class="no-decoration">
+      <button type="button" class="btn btn-light">Tous les députés</button>
+    </a>
+  </div>
+</div>
+<!-- END SEARCHING FOR MP -->
+<div class="container-fluid pg-home" id="container-always-fluid*">
+  <!-- BLOC CONSTATS -->
+  <div class="row bloc-constats py-4">
+    <div class="container p-md-0">
+      <div class="row py-4">
+        <div class="col-lg-6">
+          <h2 class="pb-4">Datan : Un outil de vulgarisation parlementaire</h2>
+          <p>
+            Il est difficile de <b>suivre l'activité</b> des députés et de savoir ce qu'ils votent.</b>
+            <span class="text-primary font-weight-bold">Datan</span> explique <b>les votes</b> des députés et groupes politiques.
+          </p>
+          <p class="mb-1">
+            <span class="icon"><?= file_get_contents(FCPATH . "assets/imgs/icons/check_circle_fill.svg") ?></span>
+            Scrutins de l'Assemblée en temps réel
+          </p>
+          <p class="mb-1">
+            <span class="icon"><?= file_get_contents(FCPATH . "assets/imgs/icons/check_circle_fill.svg") ?></span>
+            Profils détaillés des députés
+          </p>
+          <p class="mb-0">
+            <span class="icon"><?= file_get_contents(FCPATH . "assets/imgs/icons/check_circle_fill.svg") ?></span>
+            Statistiques sur la formation des coalitions
+          </p>
+          <div class="mt-4 d-flex flex-column flex-md-row align-items-start">
+            <a class="btn btn-primary mr-md-4 mb-3 mb-md-0" href="<?= base_url() ?>a-propos">En savoir plus</a>
+            <a class="btn btn-outline-primary" href="<?= base_url() ?>votes">Voir les derniers votes</a>
+          </div>
+        </div>
+        <div class="d-none d-lg-block col-lg-6">
+          <div class="img-container">
+            <img src="<?= asset_url() ?>imgs/cover/assemblee-nationale.jpg" alt="Assemblée nationale - photo de Mathias Reding">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- BLOC DONATIONS -->
+  <div class="row bloc-donations">
+    <div class="container py-4">
+      <div class="row">
+        <div class="col-12 col-lg-8 offset-lg-2 my-4">
+          <div class="icon d-flex justify-content-center"><?= file_get_contents(FCPATH . "assets/imgs/icons/heart-fill.svg") ?></div>
+          <h2 class="text-center mb-4 mt-2">Nous soutenir</h2>
+          <p class="text-center">Datan est un <b>outil indépendant</b>.</p>
+          <p class="text-center">🔍 Rendre accessible l'activité des députés ... Pour continuer, on a besoin de vous ! Soutenez Datan pour faire vivre la transparence démocratique et l'accès aux données parlementaires.</p>
+          <div class="d-flex justify-content-center mt-4">
+            <a class="btn btn-primary" href="<?= base_url() ?>soutenir" target="_blank" rel="noopener">Faire un don</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- VOTES CARDS -->
+  <div class="row bloc-votes">
+    <div class="container p-md-0">
+      <div class="row py-4">
+        <div class="col-12">
+          <h2 class="text-center my-4">Derniers votes décryptés par Datan</h2>
+        </div>
+        <div class="col-12 carousel-container bloc-carousel-votes-flickity mt-4 mb-4">
+          <?php $this->load->view('votes/partials/votes_carousel.php', array('votes' => $votes)) ?>
+          <div class="carousel-buttons d-flex justify-content-center">
+            <button type="button" class="btn prev mr-2 carousel--prev" aria-label="précédent">
+              <?= file_get_contents(FCPATH . "assets/imgs/icons/arrow_left.svg") ?>
+            </button>
+            <a class="btn btn-primary mx-2" href="<?= base_url() ?>votes">
+              Tous les votes
+            </a>
+            <button type="button" class="btn next ml-2 carousel--next" aria-label="suivant">
+              <?= file_get_contents(FCPATH . "assets/imgs/icons/arrow_right.svg") ?>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- BLOC ELECTION -->
+  <?php $this->view('home/partials/election_groups.php') ?>  
+  <!-- BLOC POSTS -->
+  <div class="row">
+    <div class="container p-md-0">
+      <div class="row py-5">
+        <div class="col-lg-12 bloc-posts">
+          <h3 class="surtitle text-center">Blog</h3>
+          <h2 class="text-center">Nos analyses et décryptages</h2>
+          <p class="text-center">L'actualité de Datan, de l'Assemblée nationale et des députés</p>
+          <div class="row pt-4">
+            <?php foreach ($posts as $index => $post): ?>
+              <div class="col-md-4 <?= $index > 0 ? 'mt-md-0 mt-4' : '' ?>">
+                <?php $this->load->view('posts/partials/bloc-post.php', array('post' => $post, 'postTitleTag' => 'h3', 'chapo' => FALSE)) ?>
+              </div>
+            <?php endforeach; ?>
+          </div>
+          <div class="row mt-4">
+            <div class="col-12 d-flex justify-content-center">
+              <a class="btn btn-primary" href="<?= base_url() ?>blog">Tous nos articles</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div> <!-- // END BLOC POSTS -->
+  <!-- BLOC HEMICYCLE -->
+  <?php $this->view('home/partials/composition.php'); ?>
+  <!-- BLOC EXPLICATIONS -->
+  <div class="row bloc-votes">
+    <div class="container p-md-0">
+      <div class="row py-4">
+        <div class="col-12">
+          <h2 class="text-center my-4">Dernières explications de vote</h2>
+        </div>
+        <div class="col-8 offset-2 text-center">
+          <p>Les députés peuvent sur Datan expliquer leurs positions de vote. Pourquoi ont-ils voté pour ou contre un texte ? Découvrez les dernières explications !</p>
+        </div>
+        <div class="col-12 mt-4 mb-4 d-flex flex-md-row flex-column">
+          <?php foreach ($explications as $key => $value): ?>
+            <div class="card card-explication-home mx-md-2 mx-md-0 mb-4">
+              <div class="card-header py-2">
+                <div class="d-flex flex-row align-items-center">
+                  <a href="<?= base_url() ?>deputes/<?= $value['dptSlug'] ?>/depute_<?= $value['nameUrl'] ?>">
+                    <div class="depute-img-<?= $value['legislature_last'] >= 17 ? 'square' : 'circle' ?> depute-img-circle-explication mr-3">
+                      <img class="img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-face.png" width="150" height="192" data-src="<?= base_url(); ?>assets/imgs/<?= $value['legislature_last'] >= 17 ? "deputes_original/" : "deputes_nobg/" ?>depute_<?= $value["idImage"] ?>.png" alt="Photo <?= $value['nameFirst'] . ' ' . $value['nameLast'] ?>">
+                    </div>
+                  </a>
+                  <p class="title mb-0">
+                    <a class="no-decoration underline" href="<?= base_url() ?>deputes/<?= $value['dptSlug'] ?>/depute_<?= $value['nameUrl'] ?>"><?= $value['nameFirst'] ?> <?= $value['nameLast'] ?></a> -
+                    <a class="no-decoration underline" href="<?= base_url() ?>groupes/legislature-<?= $value['legislature'] ?>/<?= mb_strtolower($value['libelleAbrev']) ?>"><span class="font-weight-bold" style="color: <?= $value['couleurAssociee'] ?>"><?= $value['libelleAbrev'] ?></span></a>
+                  </p>
+                </div>
+              </div>
+              <div class="card-body py-3">
+                <p class="mb-0 font-italic font-weight-bold"><a class="no-decoration underline" href="<?= base_url() ?>votes/legislature-<?= $value['legislature'] ?>/vote_<?= $value['voteNumero'] ?>"><?= $value['title'] ?></a></p>
+                <p class="badge badge-<?= $value['vote'] ?> mb-4"><?= mb_strtoupper($value['vote']) ?></p>
+                <p class="quoted mb-0 p-0"><?= word_limiter($value['text'], 20) ?></p>
+              </div>
+              <div class="card-footer pt-0 d-flex justify-content-center align-items-center">
+                <a class="btn btn-primary text-white" role="button" href="<?= base_url() ?>votes/legislature-<?= $value['legislature'] ?>/vote_<?= $value['voteNumero'] ?>/explication_<?= $value['mpId'] ?>">
+                  Lire plus
+                </a>
+              </div>
+            </div>
+          <?php endforeach; ?>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- BLOC STATS -->
+  <?php if ($stats): ?>
+    <div class="row bloc-statistiques">
+      <div class="container py-3">
+        <div class="row pt-5 pb-4">
+          <div class="col-12">
+            <h2 class="text-center">Ces 12 derniers mois</h2>
+          </div>
+        </div>
+        <div class="row pb-5">
+          <!-- VOTE LE PLUS -->
+          <div class="col-xl-3 col-md-6 py-4">
+            <h3>VOTE LE <span class="plus">PLUS</span></h3>
+            <div class="d-flex justify-content-center">
+              <?php $this->load->view('deputes/partials/card_home.php', array('depute' => $depute_vote_plus, 'tag' => 'span', 'footer' => 'discover', 'logo' => true, 'stat' => round($depute_vote_plus['score']) . ' %')) ?>
+            </div>
+          </div>
+          <!-- VOTE LE MOINS -->
+          <div class="col-xl-3 col-md-6 py-4">
+            <h3>VOTE LE <span class="minus">MOINS</span></h3>
+            <div class="d-flex justify-content-center">
+              <?php $this->load->view('deputes/partials/card_home.php', array('depute' => $depute_vote_moins, 'tag' => 'span', 'footer' => 'discover', 'logo' => true, 'stat' => round($depute_vote_moins['score']) . ' %')) ?>
+            </div>
+          </div>
+          <!-- PLUS LOYAL -->
+          <div class="col-xl-3 col-md-6 py-4">
+            <h3><?= mb_strtoupper($depute_loyal_plus['le']) ?> <span class="plus">PLUS</span> LOYAL<?= mb_strtoupper($depute_loyal_plus['e']) ?></h3>
+            <div class="d-flex justify-content-center">
+              <?php $this->load->view('deputes/partials/card_home.php', array('depute' => $depute_loyal_plus, 'tag' => 'span', 'footer' => 'discover', 'logo' => true, 'stat' => round($depute_loyal_plus['score']) . ' %')) ?>
+            </div>
+          </div>
+          <!-- MOINS LOYAL -->
+          <div class="col-xl-3 col-md-6 py-4">
+            <h3><?= mb_strtoupper($depute_loyal_moins['le']) ?> <span class="minus">MOINS</span> LOYAL<?= mb_strtoupper($depute_loyal_moins['e']) ?></h3>
+            <div class="d-flex justify-content-center">
+              <?php $this->load->view('deputes/partials/card_home.php', array('depute' => $depute_loyal_moins, 'tag' => 'span', 'footer' => 'discover', 'logo' => true, 'stat' => round($depute_loyal_moins['score']) . ' %')) ?>
+            </div>
+          </div>
+        </div>
+        <div class="pb-5 d-flex justify-content-center">
+          <a href="<?= base_url(); ?>statistiques" class="no-decoration">
+            <button type="button" class="btn btn-outline-primary">Découvrez nos statistiques</button>
+          </a>
+        </div>
+      </div>
+    </div> <!-- // END BLOC STATS -->
+  <?php endif; ?>
+  <!-- BLOC NEWSLETTER -->
+  <div class="row bloc-newsletter" id="pattern_background">
+    <div class="container py-5">
+      <div class="row py-3">
+        <div class="col-lg-8 offset-lg-2">
+          <h2 class="text-center">Restez informés !</h2>
+          <p class="mt-5 text-center">Retrouvez dans notre newsletter mensuelle un condensé des derniers scrutins de l'Assemblée nationale et des positions des différents groupes politiques.
+          <p class="text-center mb-0">Nous vous tiendrons également informé des dernières nouveautés du site internet Datan.</p>
+          <div class="text-center">
+            <button class="btn btn-primary mt-5" data-toggle="modal" data-target="#newsletter">
+            <?= file_get_contents(FCPATH . '/assets/imgs/icons/envelope.svg') ?>  
+            <span class="ml-2">S'inscrire à la newsletter</span></button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div> <!-- NED BLOC NEWSLETTER -->
+  <?php if ($support): ?>
+    <div class="row bloc-support">
+      <div class="container py-5">
+        <div class="row mb-5">
+          <div class="col-12">
+            <h2 class="text-white text-center"> Quels groupes soutiennent le gouvernement ?</h2>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-lg-6 col-md-5 d-flex align-items-center text-white">
+            <div>
+              <p>À l'Assemblée, certains groupes politiques sont membres du bloc gouvernemental tandis que d'autres sont des groupes d'opposition.</p>
+              <p>En règle générale, les groupes du bloc gouvernemental soutiennent l'action du gouvernement et votent en faveur des textes qu'il propose. L'opposition, si elle peut parfois soutenir le gouvernement, vote plus souvent contre les projets gouvernementaux.</p>
+              <p>Le gouvernement actuel est dirigé par le Premier ministre Sébastien Lecornu.</p>
+              <p>Le groupe <?= $support_opposition['libelle'] ?> (<?= $support_opposition['libelleAbrev'] ?>) est le groupe d'opposition votant le plus souvent en faveur du gouvernement.</p>
+            </div>
+          </div>
+          <div class="col-lg-6 col-md-7 mt-md-0 mt-4">
+            <?php $max = max(array_column($support, 'value')) ?>
+            <?php $maxVotes = max(array_column($support, 'votes')) ?>
+            <div class="card card-statistiques border-0">
+              <div class="card-body pb-0">
+                <h3 class="text-center font-weight-bold h5">Nombre de projets gouvernementaux votés par les groupes</h3>
+                <p class="mt-3">Depuis le début de la législature, en 2024, il y a eu <b><?= $maxVotes ?> votes</b> sur des projets de loi du gouvernement. Découvrez les groupes politiques qui votent le plus souvent en faveur de ces textes.</p>
+                <div class="legend d-flex justify-content-center">
+                  <div class="d-flex justify-content-center align-items-center mx-3">
+                    <div class="legendBox" style="background-color: #5199C4"></div>
+                    <span class="ml-2 font-italic">Majorité</span>
+                  </div>
+                  <div class="d-flex justify-content-center align-items-center mx-3">
+                    <div class="legendBox" style="background-color: #EA9A27"></div>
+                    <span class="ml-2 font-italic">Opposition</span>
+                  </div>
+                </div>
+                <div class="row mt-1 bar-container stats rounded-bottom py-4 mt-3">
+                  <div class="col-12">
+                    <div class="chart">
+                      <div class="bar-chart d-flex flex-row justify-content-between align-items-end">
+                        <?php foreach ($support as $key => $value): ?>
+                          <div class="bars mx-1 mx-md-2" style="height: <?= round($value['value'] / $max * 100) ?>%; background-color: <?= $value['positionPolitique'] == 'Opposition' ? '#EA9A27' : '#5199C4' ?>">
+                            <span class="score" style="font-size: 0.85rem"><?= $value['value'] ?></span>
+                          </div>
+                        <?php endforeach; ?>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-12 d-flex justify-content-between mt-2">
+                    <?php foreach ($support as $key => $value): ?>
+                      <div class="legend-element d-flex align-items-center justify-content-center">
+                        <span class="font-weight-bold text-center tooltipHelp tooltipDashed" data-toggle="tooltip" data-placement="top" title="<?= $value['libelle'] ?>"><?= remove_nupes($value['libelleAbrev']) ?></span>
+                      </div>
+                    <?php endforeach; ?>
+                  </div>
+                </div>
+              </div>
+            </div> <!-- END CARD GOVERNMENT -->
+          </div>
+        </div>
+      </div>
+    </div>
+  <?php endif; ?>
+  <!-- BLOC ILS PARLENT DE NOUS -->
+  <div class="row">
+    <div class="container py-5">
+      <div class="row pt-3">
+        <div class="col-12">
+          <h2 class="text-center">Ils parlent de nous</h2>
+        </div>
+      </div>
+      <div class="row mt-5 pb-5">
+        <div class="col-lg-8 offset-lg-2 d-flex flex-wrap justify-content-around align-items-center">
+          <a href="https://www.lemonde.fr/politique/article/2023/06/23/le-rn-premier-opposant-a-emmanuel-macron-mais-soutien-regulier-a-l-assemblee-nationale_6178892_823448.html" target="_blank" rel="noopener">
+            <img class="mx-2 my-3 img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="150" height="35" data-src="<?= asset_url() ?>imgs/media/le_monde.png" alt="Le Monde">
+          </a>
+          <a href="https://www.lejdd.fr/Politique/interventions-textes-qui-sont-les-deputes-les-plus-actifs-de-ce-debut-de-legislature-4126439" target="_blank" rel="noopener">
+            <img class="mx-2 my-3 img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="150" height="35" data-src="<?= asset_url() ?>imgs/media/jdd.png" alt="JDD">
+          </a>
+          <a href="https://www.franceinfo.fr/politique/gouvernement-de-francois-bayrou/moins-producteur-de-lois-plus-souvent-mis-en-minorite-visualisez-en-trois-graphiques-comment-depuis-la-dissolution-le-gouvernement-a-en-partie-perdu-la-main-au-parlement_7291695.html" target="_blank" rel="noopener">
+            <img class="mx-2 my-3 img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="183" height="28" data-src="<?= asset_url() ?>imgs/media/franceinfo.png" alt="France info">
+          </a>
+          <a href="https://www.bfmtv.com/politique/infographie-assemblee-nationale-qui-sont-les-groupes-parlementaires-les-plus-proches_AV-202207260568.html" target="_blank" rel="noopener">
+            <img class="mx-2 my-3 img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="80" height="50" data-src="<?= asset_url() ?>imgs/media/bfm.jpg" alt="BFM TV">
+          </a>
+          <a href="https://www.leparisien.fr/politique/lr-a-lassemblee-nationale-radiographie-dun-groupe-indiscipline-23-10-2022-7PDSHRSJ5ZHC5OTRLUGHDCPVQY.php" target="_blank" rel="noopener">
+            <img class="mx-2 my-3 img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="120" height="38" data-src="<?= asset_url() ?>imgs/media/le_parisien.png" alt="Le Parisien">
+          </a>
+          <a href="https://www.liberation.fr/politique/aurelien-pradie-un-depute-et-conseiller-regional-tres-absent-20221202_M35E54RK2FFEFCGZGR5N6FRYII/" target="_blank" rel="noopener">
+            <img class="mx-2 my-3 img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="150" height="55" data-src="<?= asset_url() ?>imgs/media/liberation.png" alt="Libération">
+          </a>
+          <span class="url_obf" url_obf="<?= url_obfuscation("https://www.lexpress.fr/politique/lr/loi-immigration-chez-lr-la-chimere-de-lunite-IZEX7VWBL5BO5NIB5OHAGJOSTU/") ?>">
+            <img class="mx-2 my-3 img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="109" height="35" data-src="<?= asset_url() ?>imgs/media/lexpress.png" alt="L'Express">
+          </span>
+          <span class="url_obf" url_obf="<?= url_obfuscation("https://www.franceculture.fr/emissions/les-enjeux-des-reseaux-sociaux/la-lutte-contre-l-abstention-passe-par-les-reseaux") ?>">
+            <img class="mx-2 my-3 img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="70" height="70" data-src="<?= asset_url() ?>imgs/media/france_culture.png" alt="France Culture">
+          </span>
+          <span class="url_obf" url_obf="<?= url_obfuscation("https://www.lesechos.fr/politique-societe/politique/le-rn-veut-engranger-sur-sa-premiere-annee-a-lassemblee-nationale-1954103") ?>">
+            <img class="mx-2 my-3 img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="119" height="28" data-src="<?= asset_url() ?>imgs/media/les_echos.png" alt="Les Echos">
+          </span>
+          <a href="https://www.ouest-france.fr/elections/legislatives/lannion-paimpol-quel-bilan-pour-le-depute-eric-bothorel-0f349264-e100-11ec-8469-165462e4a30b" target="_blank" rel="noopener">
+            <img class="mx-2 my-3 img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="120" height="38" data-src="<?= asset_url() ?>imgs/media/ouest_france.png" alt="Ouest France">
+          </a>
+          <span class="url_obf" url_obf="<?= url_obfuscation("https://www.la-croix.com/France/lhemicycle-Rassemblement-national-attend-heure-2023-06-01-1201269583") ?>">
+            <img class="mx-2 my-3 img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="150" height="30" data-src="<?= asset_url() ?>imgs/media/la_croix.png" alt="La Croix">
+          </span>
+          <a href="https://france3-regions.francetvinfo.fr/occitanie/haute-garonne/toulouse/legislatives-2022-top-5-de-l-activite-a-l-assemblee-il-a-fait-quoi-mon-depute-pendant-5-ans-2552692.html" target="_blank" rel="noopener">
+            <img class="mx-2 my-3 img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="136" height="26" data-src="<?= asset_url() ?>imgs/media/france3.png" alt="France 3">
+          </a>
+          <span class="url_obf" url_obf="<?= url_obfuscation("https://www.lopinion.fr/politique/lassemblee-nationale-face-au-reel-ce-que-revele-lexperience-professionnelle-des-deputes") ?>">
+            <img class="mx-2 my-3 img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="108" height="26" data-src="<?= asset_url() ?>imgs/media/lopinion.png" alt="L'Opinion">
+          </span>
+          <span class="url_obf" url_obf="<?= url_obfuscation("https://www.sudouest.fr/pyrenees-atlantiques/pau/assemblee-nationale-le-rn-pointe-le-manque-d-assiduite-de-david-habib-il-repond-qu-il-y-a-trop-d-amendements-futiles-12739495.php") ?>">
+            <img class="mx-2 my-3 img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="65" height="59" data-src="<?= asset_url() ?>imgs/media/sud_ouest.png" alt="Sud Ouest">
+          </span>
+          <a href="https://www.capital.fr/economie-politique/classement-les-deputes-les-plus-bosseurs-et-ceux-qui-en-font-le-moins-1438612" target="_blank" rel="noopener">
+            <img class="mx-2 my-3 img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="122" height="40" data-src="<?= asset_url() ?>imgs/media/capital.png" alt="Capital">
+          </a>
+          <span class="url_obf" url_obf="<?= url_obfuscation("https://www.lepoint.fr/politique/budget-pourquoi-lr-fait-l-assemblee-buissonniere-20-10-2022-2494617_20.php") ?>">
+            <img class="mx-2 my-3 img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="144" height="34" data-src="<?= asset_url() ?>imgs/media/le-point.png" alt="Le Point">
+          </span>
+          <a href="https://www.20minutes.fr/politique/assemblee_nationale/4042426-20230623-assemblee-nationale-rn-veut-poursuivre-lente-marche-vers-normalisation" target="_blank" rel="noopener">
+            <img class="mx-2 my-3 img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="70" height="70" data-src="<?= asset_url() ?>imgs/media/20_minutes.png" alt="20 Minutes">
+          </a>
+          <a href="https://www.francebleu.fr/infos/politique/faible-participation-aux-votes-de-l-assemblee-nationale-le-depute-mayennais-yannick-favennec-s-explique-1836888" target="_blank" rel="noopener">
+            <img class="mx-2 my-3 img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="146" height="38" data-src="<?= asset_url() ?>imgs/media/ici_mayenne.png" alt="Ici Mayenne">
+          </a>
+          <span class="url_obf" url_obf="<?= url_obfuscation("https://www.ladepeche.fr/2021/01/23/comment-votent-vos-deputes-a-lassemblee-nationale-9328626.php") ?>">
+            <img class="mx-2 my-3 img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="150" height="37" data-src="<?= asset_url() ?>imgs/media/depeche.png" alt="La Dépêche Ouest">
+          </span>
+          <a href="https://www.latribune.fr/opinions/tribunes/apres-trois-votes-de-confiance-la-majorite-presidentielle-s-erode-t-elle-a-l-assemblee-nationale-853748.html" target="_blank" rel="noopener">
+            <img class="mx-2 my-3 img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="100" height="45" data-src="<?= asset_url() ?>imgs/media/la_tribune.png" alt="La Tribune">
+          </a>
+          <span class="url_obf" url_obf="<?= url_obfuscation("https://www.contexte.com/article/pouvoirs/a-lassemblee-nationale-le-rn-prefere-la-cravate-au-cambouis_172092.html") ?>">
+            <img class="mx-2 my-3 img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="118" height="30" data-src="<?= asset_url() ?>imgs/media/contexte.png" alt="Contexte">
+          </span>
+          <a href="https://www.letelegramme.fr/finistere/morlaix/legislatives-a-morlaix-quel-est-le-bilan-de-sandrine-le-feur-08-06-2022-13061024.php" target="_blank" rel="noopener">
+            <img class="mx-2 my-3 img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="135" height="19" data-src="<?= asset_url() ?>imgs/media/telegramme.png" alt="Le Télégramme">
+          </a>
+          <a href="https://theconversation.com/reintroduction-des-pesticides-neonicotino-des-comment-nos-deputes-ont-ils-vote-et-pourquoi-155158" target="_blank" rel="noopener">
+            <img class="mx-2 my-3 img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="220" height="17" data-src="<?= asset_url() ?>imgs/media/the_conversation.png" alt="The Conversation">
+          </a>
+          <a href="https://www.marianne.net/politique/lrem/benjamin-griveaux-agnes-buzyn-cedric-villani-ces-six-espoirs-evapores-de-la-macronie-saison-1" target="_blank" rel="noopener">
+            <img class="mx-2 my-3 img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="120" height="40" data-src="<?= asset_url() ?>imgs/media/marianne.png" alt="Marianne">
+          </a>
+          <a href="https://tnova.fr/democratie/politique-institutions/eric-ciotti-dans-ses-oeuvres/" target="_blank" rel="noopener">
+            <img class="mx-2 my-3 img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="119" height="71" data-src="<?= asset_url() ?>imgs/media/terra-nova.png" alt="Terra Nova">
+          </a>
+          <a href="https://www.lagrandeconversation.com/politique/les-republicains-a-lassemblee-nationale-entre-le-marteau-et-lenclume/" target="_blank" rel="noopener">
+            <img class="mx-2 my-3 img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="105" height="48" data-src="<?= asset_url() ?>imgs/media/grande_conversation.png" alt="La Grande conversation">
+          </a>
+          <span class="url_obf" url_obf="<?= url_obfuscation("https://abonne.lunion.fr/id371931/article/2022-05-16/legislatives-le-bilan-de-la-deputee-valerie-beauvais-la-loupe") ?>">
+            <img class="mx-2 my-3 img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="119" height="33" data-src="<?= asset_url() ?>imgs/media/lunion.png" alt="L'Union">
+          </span>
+          <span class="url_obf" url_obf="<?= url_obfuscation("https://www.varmatin.com/politique/boccaletti-ou-chenevard-quel-depute-du-var-vote-vraiment-le-plus-et-le-moins-895830") ?>">
+            <img class="mx-2 my-3 img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="165" height="30" data-src="<?= asset_url() ?>imgs/media/var_matin.png" alt="Var Matin">
+          </span>
+          <span class="url_obf" url_obf="<?= url_obfuscation("https://www.lavoixdunord.fr/1267941/article/2022-12-16/cambresis-le-depute-guy-bricout-si-proche-que-ca-de-la-majorite") ?>">
+            <img class="mx-2 my-3 img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="82" height="40" data-src="<?= asset_url() ?>imgs/media/voix_nord.png" alt="La Voix du Nord">
+          </span>
+          <span class="url_obf" url_obf="<?= url_obfuscation("https://www.lalsace.fr/politique/2025/02/23/deputes-fantomes-contre-travail-de-fond") ?>">
+            <img class="mx-2 my-3 img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="162" height="30" data-src="<?= asset_url() ?>imgs/media/lalsace.png" alt="L'Alsace">
+          </span>
+          <a href="https://www.lepopulaire.fr/limoges-87000/actualites/desenclavement-emploi-gilets-jaunes-montee-du-rn-quel-bilan-pour-les-deputes-lrem-de-haute-vienne_14127678/" target="_blank" rel="noopener">
+            <img class="mx-2 my-3 img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="120" height="36" data-src="<?= asset_url() ?>imgs/media/populaire-centre.png" alt="Le Populaire du Centre">
+          </a>
+          <a href="https://www.petitbleu.fr/2022/06/06/legislatives-en-lot-et-garonne-michel-lauzzana-un-bilan-deux-satisfactions-et-deux-regrets-10341292.php" target="_blank" rel="noopener">
+            <img class="mx-2 my-3 img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="129" height="34" data-src="<?= asset_url() ?>imgs/media/petit-bleu.png" alt="Le Peitit bleu d'Agen">
+          </a>
+          <a href="https://www.lamontagne.fr/clermont-ferrand-63000/actualites/a-la-veille-des-legislatives-quel-bilan-pour-les-cinq-deputes-sortants-du-puy-de-dome_14137540/" target="_blank" rel="noopener">
+            <img class="mx-2 my-3 img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="148" height="17" data-src="<?= asset_url() ?>imgs/media/montagne.png" alt="La Montagne">
+          </a>
+          <span class="url_obf" url_obf="<?= url_obfuscation("https://www.contrepoints.org/2022/10/28/441739-motion-de-censure-un-coup-declat-tout-sauf-historique") ?>">
+            <img class="mx-2 my-3 img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="128" height="21" data-src="<?= asset_url() ?>imgs/media/contrepoints.png" alt="Contrepoints">
+          </span>
+          <a href="https://www.radioevasion.net/2022/10/24/datan-vous-permet-de-suivre-de-pres-votre-deputee-ou-depute/" target="_blank" rel="noopener">
+            <img class="mx-2 my-3 img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="70" height="70" data-src="<?= asset_url() ?>imgs/media/radio-evasion.png" alt="Radio Evasion">
+          </a>
+          <span class="url_obf" url_obf="<?= url_obfuscation("https://www.tv78.com/78-journal-info-yvelines-actu-edition-25-janvier-2021/") ?>">
+            <img class="mx-2 my-3 img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="150" height="72" data-src="<?= asset_url() ?>imgs/media/tv78.png" alt="TV 78">
+          </span>
+          <a href="https://www.laprovence.com/article/legislatives-2022/6788904/legislatives-2022-un-quiz-pour-savoir-si-vous-avez-les-memes-convictions-que-votre-depute.html" target="_blank" rel="noopener">
+            <img class="mx-2 my-3 img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="183" height="28" data-src="<?= asset_url() ?>imgs/media/la_provence.png" alt="La Provence">
+          </a>
+          <span class="url_obf" url_obf="<?= url_obfuscation("https://www.lest-eclair.fr/id498781/article/2023-06-30/un-apres-les-legislatives-les-republicains-deboussoles") ?>">
+            <img class="mx-2 my-3 img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="145" height="22" data-src="<?= asset_url() ?>imgs/media/est_eclair.png" alt="L'Est eclair">
+          </span>
+          <a href="https://www.lemondedesados.fr/elections-legislatives-a-quoi-servent-les-deputes/" target="_blank" ref="noopener">
+            <img class="mx-2 my-3 img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="85" height="40" data-src="<?= asset_url() ?>imgs/media/mda.png" alt="Le Monde des Ados">
+          </a>
+          <span class="url_obf" url_obf="<?= url_obfuscation("https://www.republicain-lorrain.fr/politique/2023/02/02/etre-depute-c-est-du-temps-plein") ?>">
+            <img class="mx-2 my-3 img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="123" height="40" data-src="<?= asset_url() ?>imgs/media/republicain_lorrain.png" alt="Républicain Lorrain">
+          </span>
+          <a href="https://les-enovateurs.com/que-fait-votre-depute-datan-decrypte-sa-participation-politique" target="_blank" rel="noopener">
+            <img class="mx-2 my-3 img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="234" height="65" data-src="<?= asset_url() ?>imgs/media/les-enovateurs.png" alt="Les Enovateurs">
+          </a>
+          <span class="url_obf" url_obf="<?= url_obfuscation("https://splann.org/") ?>">
+            <img class="mx-2 my-3 img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="118" height="57" data-src="<?= asset_url() ?>imgs/media/splann.png" alt="Splann!">
+          </span>
+          <span class="url_obf" url_obf="<?= url_obfuscation("https://ram05.fr/podcasts/journal/29-novembre-2021-7") ?>">
+            <img class="mx-2 my-3 img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="75" height="50" data-src="<?= asset_url() ?>imgs/media/ram05.png" alt="Radio Ram05">
+          </span>
+        </div>
+      </div>
+    </div>
+  </div> <!-- // END BLOC ILS PARLENT DE NOUS -->
+  <!-- FRANCE MAP -->
+  <div class="row" id="pattern_background">
+    <div class="container p-md-0">
+      <div class="row py-5">
+        <div class="col-lg-6 col-12 bloc-map mt-4 mt-lg-0 offset-lg-3">
+          <h2 class="text-center pb-5">Explorez les députés par département</h2>
+          <div class="map map_france mt-3">
+            <?= file_get_contents(FCPATH . "assets/imgs/france_map/map.svg"); ?>
+          </div>
+          <div class="map map_outre_mer">
+            <?= file_get_contents(FCPATH . "assets/imgs/france_map/outre-mer.svg"); ?>
+          </div>
+          <div class="mt-5 d-flex flex-column align-items-center">
+            <a href="<?= base_url(); ?>index_departements" class="no-decoration">
+              <button type="button" class="btn btn-primary">Voir tous les départements</button>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div> <!-- // END MAP -->
+</div>
+
+<script type="text/javascript">
+  document.addEventListener('DOMContentLoaded', function() {
+    var dataHemicycle = {
+      labels: [
+        <?php
+        foreach ($groupesSorted as $groupe) {
+          echo '"' . name_group($groupe["libelle"]) . ' (' . $groupe['libelleAbrev'] . ')",';
+        }
+        ?>
+      ],
+      datasets: [{
+        data: [
+          <?php
+          foreach ($groupesSorted as $groupe) {
+            echo $groupe["effectif"] . ",";
+          }
+          ?>
+        ],
+        backgroundColor: [
+          <?php
+          foreach ($groupesSorted as $groupe) {
+            echo '"' . $groupe["couleurAssociee"] . '",';
+          }
+          ?>
+        ],
+        hoverBackgroundColor: [
+          <?php
+          foreach ($groupesSorted as $groupe) {
+            echo '"' . $groupe["couleurAssociee"] . '",';
+          }
+          ?>
+        ]
+      }]
+    };
+
+    var ctxHemicycle = document.getElementById("chartHemicycle");
+    var optionsHemicycle = {
+      responsive: true,
+      maintainAspectRatio: false,
+      circumference: 180,
+      rotation: 270,
+      layout: {
+        padding: {
+          top: 15,
+          bottom: 15,
+          left: 15,
+          right: 15
+        }
+      },
+      plugins: {
+        datalabels: {
+          anchor: "end",
+          backgroundColor: function(context) {
+            return context.dataset.backgroundColor;
+          },
+          borderColor: "white",
+          borderRadius: 25,
+          borderWidth: 1,
+          color: "white",
+          font: {
+            size: 14
+          }
+        },
+        legend: {
+          display: false
+        },
+      }
+    }
+
+    var pieChart = new Chart(ctxHemicycle, {
+      type: 'doughnut',
+      data: dataHemicycle,
+      options: optionsHemicycle,
+    });
+
+    var dataElection = {
+      labels: [
+        <?php
+          foreach ($election_groups as $groupe) {
+            echo '"' . $groupe["libelleAbrev"] . '",';
+          }
+        ?>
+      ],
+      datasets: [{
+        label: 'Candidats (%)',
+        data: [
+          <?php
+            foreach ($election_groups as $groupe) {
+              echo $groupe["candidates_pct"] . ",";
+            }
+          ?>
+        ],
+        backgroundColor: [
+          <?php
+            foreach ($election_groups as $groupe) {
+              echo '"' . $groupe["couleurAssociee"] . '",';
+            }
+          ?>
+        ],
+        borderWidth: 1
+      }]
+    };
+
+    const ctxElection = document.getElementById('chart_election');
+
+    new Chart(ctxElection, {
+      type: 'bar',
+      data: dataElection,
+      options: {
+        scales: {
+          y: {
+            beginAtZero: true,
+            ticks: {
+              callback: function(value) {
+                return value + '%';
+              }
+            }
+          }
+        },
+        plugins: {
+          legend: {
+            display: false
+          },
+          datalabels: {
+            anchor: 'end',
+            align: 'top',
+            formatter: function(value) {
+              return value + '%';
+            },
+            color: '#000',
+            font: {
+              weight: 'bold',
+              size: 12
+            }
+          }
+        }
+      }
+    });
+
+  });
+</script>
