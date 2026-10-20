@@ -15,5 +15,12 @@ sed -i 's/${API_KEY_SECRETE_MAILJET}/'"$API_KEY_SECRETE_MAILJET"'/g' /etc/apache
 sed -i 's#${COMPOSER_AUTOLOAD}#'"$COMPOSER_AUTOLOAD"'#g' /etc/apache2/sites-available/000-default.conf
 sed -i 's#${POLITIC_ANALYSIS_PUBLIC_URL}#'"$POLITIC_ANALYSIS_PUBLIC_URL"'#g' /etc/apache2/sites-available/000-default.conf
 sed -i 's#${ANTHROPIC_API_KEY}#'"$ANTHROPIC_API_KEY"'#g' /etc/apache2/sites-available/000-default.conf
+sed -i 's#${CI4_BASE_URL}#'"$CI4_BASE_URL"'#g' /etc/apache2/sites-available/000-default.conf
+sed -i 's#${CI_ENVIRONMENT}#'"$CI_ENVIRONMENT"'#g' /etc/apache2/sites-available/000-default.conf
+
+# CI4 : writable/ doit toujours être inscriptible (dev local)
+mkdir -p /var/www/html/writable/{cache,logs,session,uploads,debugbar}
+chmod -R a+rwX /var/www/html/writable
+umask 000
 
 exec "$@"
