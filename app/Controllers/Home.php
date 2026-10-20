@@ -19,6 +19,7 @@ class Home extends BaseController {
     $electionsModel = new ElectionsModel();
     $postModel = new PostModel();
     $metaModel = new MetaModel();
+    $router = service('router');
     $session = session();
 
     // Get user data == TO BE RESOLVED LATER

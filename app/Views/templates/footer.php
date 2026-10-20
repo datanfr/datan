@@ -50,12 +50,12 @@
         </div>
       </div>
     </div>
-    <!-- GENERAL MODAL SEEN FIRST TIME SESSION -->
+    <!-- GENERAL MODAL SEEN FIRST TIME SESSION AND IS HOME PAGE -->
     <?php
-      $show_popup = isset($this->show_popup) ? $this->show_popup : false;
-      if($show_popup && current_controller_method() !== "outils/coalition"){
-        $this->load->view('partials/general-modal.php');
+      if (show_popup() && current_controller_method() !== 'outils/coalition') {
+        echo view('partials/general-modal');
       }
+      $isHomePage = current_controller() === 'home';
     ?>
     <footer>
       <div class="container-fluid footer">
@@ -68,14 +68,14 @@
               <div class="d-flex flex-row liste justify-content-center">
                 <div class="d-flex flex-column mx-1">
                   <p>
-                    <?php if ($this->router->fetch_class() == "home"): ?>
+                    <?php if ($isHomePage): ?>
                       <a href="<?= base_url(); ?>a-propos" class="no-decoration underline">À propos</a>
                     <?php else: ?>
                       <span class="url_obf no-decoration underline text-white" url_obf="<?= url_obfuscation(base_url() . "a-propos") ?>">À propos</span>
                     <?php endif; ?>
                   </p>
                   <p>
-                    <?php if ($this->router->fetch_class() == "home"): ?>
+                    <?php if ($isHomePage): ?>
                       <a href="<?= base_url(); ?>newsletter" class="no-decoration underline">Newsletter</a>
                     <?php else: ?>
                       <span class="url_obf no-decoration underline text-white" url_obf="<?= url_obfuscation(base_url() . "newsletter") ?>">Newsletter</span>
@@ -105,14 +105,14 @@
                     <a href="<?= base_url(); ?>faq" class="no-decoration underline">Foire aux questions</a>
                   </p>
                   <p>
-                    <?php if ($this->router->fetch_class() == "home"): ?>
+                    <?php if ($isHomePage): ?>
                       <a href="<?= base_url(); ?>login" class="no-decoratio underline">Connexion</a>
                     <?php else: ?>
                       <span class="url_obf no-decoration underline text-white" url_obf="<?= url_obfuscation(base_url() . "login") ?>">Connexion</span>
                     <?php endif; ?>
                   </p>
                   <p>
-                    <?php if ($this->router->fetch_class() == "home"): ?>
+                    <?php if ($isHomePage): ?>
                       <a href="<?= base_url(); ?>mentions-legales" class="no-decoratio underline">Mentions légales</a>
                     <?php else: ?>
                       <span class="url_obf no-decoration underline text-white" url_obf="<?= url_obfuscation(base_url() . "mentions-legales") ?>">Mentions légales</span>
@@ -125,7 +125,7 @@
               <div class="row">
                 <div class="col-6 col-md-12 d-flex flex-column">
                   <p class="font-weight-bold mb-1">Nous suivre</p>
-                  <?php if ($this->router->fetch_class() == "home"): ?>
+                  <?php if ($isHomePage): ?>
                     <a href="https://www.facebook.com/datanFR/" target="_blank" class="no-decoration my-1" rel="noreferrer">
                       <img class="img-lazy" src="<?= asset_url() ?>imgs/placeholder/placeholder-social-media.png" width="542" height="542" data-src="<?= asset_url() ?>imgs/logos/facebook_datan.svg" alt="Logo Facebook">
                       Facebook
@@ -187,7 +187,7 @@
         <div class="container">
           <div class="row py-3">
             <div class="col-md-6 text-center">
-              <?php if ($this->router->fetch_class() == "home"): ?>
+              <?php if ($isHomePage): ?>
                 Nos données sont disponibles sur le site <a href="https://www.data.gouv.fr/fr/organizations/datan/" target="_blank" rel="noreferrer">data.gouv.fr</a>
               <?php else: ?>
                 Nos données sont disponibles sur le site <span class="url_obf" url_obf="<?= url_obfuscation("https://www.data.gouv.fr/fr/organizations/datan/") ?>">data.gouv.fr</span>
@@ -195,7 +195,7 @@
             </div>
             <div class="col-md-6">
               Notre projet est disponible sur
-              <?php if ($this->router->fetch_class() == "home"): ?>
+              <?php if ($isHomePage): ?>
                 <a href="https://github.com/datanFR/datan" target="_blank" rel="noreferrer" class="no-decoration underline">
                   <img src="<?= asset_url() ?>imgs/logos/github-mark.svg" width="25" height="25" alt="Logo GitHub">
                   GitHub
@@ -213,7 +213,7 @@
     </footer>
 
     <!-- Donation model --> 
-    <?php $this->view('partials/donation-modal.php') ?>
+    <?= view('partials/donation-modal.php') ?>
 
     <!-- JS files -->
     <script src="<?= asset_url(); ?>js/libraries/jquery/jquery-3.5.1.min.js"></script>
