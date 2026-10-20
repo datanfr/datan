@@ -87,7 +87,6 @@ $route['admin/api-keys'] = 'admin/api_keys';
 $route['admin/api-keys/create'] = 'admin/api_keys_create';
 $route['admin/api-keys/revoke/(:num)'] = 'admin/api_keys_revoke/$1';
 
-
 // MpDashboard
 $route['dashboard'] = 'dashboardMP/index';
 $route['dashboard/elections/(:any)'] = 'dashboardMP/elections/$1';
