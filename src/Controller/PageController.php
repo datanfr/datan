@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\AgeFrance;
+use App\Http\RechauffeurCache;
 use App\Legislature;
 use Doctrine\DBAL\Connection;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -30,9 +31,9 @@ class PageController extends AbstractController
 
     /**
      * La page de soutien affiche quatre compteurs, que la synchronisation
-     * quotidienne fait bouger.
+     * quotidienne fait bouger — et purge le cache après elle.
      */
-    private const CACHE_TTL_CHIFFRES = 3600;
+    private const CACHE_TTL_CHIFFRES = RechauffeurCache::DUREE_PAGES;
 
     public function __construct(private readonly Connection $connection)
     {

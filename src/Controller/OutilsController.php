@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\CouleurGroupe;
+use App\Http\RechauffeurCache;
 use App\Legislature;
 use Doctrine\DBAL\Connection;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -16,7 +17,7 @@ use Symfony\Component\Routing\Attribute\Route;
 class OutilsController extends AbstractController
 {
     /** La composition ne bouge qu'au gré des rattachements, quelques fois par an. */
-    private const CACHE_TTL = 3600;
+    private const CACHE_TTL = RechauffeurCache::DUREE_PAGES;
 
     /**
      * Questions-réponses de bas de page, écrites en dur dans le contrôleur

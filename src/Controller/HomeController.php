@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\CouleurGroupe;
 use App\Groupe\SoutienGouvernement;
+use App\Http\RechauffeurCache;
 use App\Legislature;
 use App\Twig\DatanExtension;
 use Doctrine\DBAL\Connection;
@@ -17,7 +18,7 @@ use Symfony\Component\Routing\Attribute\Route;
  */
 class HomeController extends AbstractController
 {
-    private const CACHE_TTL = 3600;
+    private const CACHE_TTL = RechauffeurCache::DUREE_PAGES;
 
     private const NON_INSCRITS = 'NI';
 

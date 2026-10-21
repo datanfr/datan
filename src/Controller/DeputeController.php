@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Depute\ComportementDepute;
+use App\Http\RechauffeurCache;
 use App\Legislature;
 use App\Referencement\OpenGraph;
 use App\Repository\ResultatCirconscriptionRepository;
@@ -22,8 +23,8 @@ class DeputeController extends AbstractController
     /** Code des scrutins publics solennels, sur lesquels se calcule la participation. */
     private const SOLENNEL = 'SPS';
 
-    /** Les données d'un député ne bougent qu'au rythme des scrutins : cache d'une heure. */
-    private const CACHE_TTL = 3600;
+    /** Les données d'un député ne bougent qu'au rythme des scrutins, et la synchronisation purge le cache. */
+    private const CACHE_TTL = RechauffeurCache::DUREE_PAGES;
 
     /** Rang du mandat en toutes lettres (`Depute_edito::get_nbr_lettre`) ; au-delà de 5, le chiffre. */
     private const ORDINAUX = [1 => 'premier', 2 => 'deuxième', 3 => 'troisième', 4 => 'quatrième', 5 => 'cinquième'];

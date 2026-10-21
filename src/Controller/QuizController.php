@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Http\RechauffeurCache;
 use Doctrine\DBAL\Connection;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -24,9 +25,9 @@ class QuizController extends AbstractController
 {
     /**
      * Le contenu suit le rythme des décryptages publiés — quelques-uns par
-     * semaine. Une heure de cache partagé, comme les autres pages de vote.
+     * semaine —, et chaque publication purge le cache.
      */
-    private const CACHE_TTL = 3600;
+    private const CACHE_TTL = RechauffeurCache::DUREE_PAGES;
 
     public function __construct(private readonly Connection $connection)
     {

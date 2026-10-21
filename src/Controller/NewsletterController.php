@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Http\RechauffeurCache;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -31,7 +32,7 @@ use Symfony\Component\Routing\Attribute\Route;
 class NewsletterController extends AbstractController
 {
     /** Page immuable hors déploiement, comme les pages éditoriales. */
-    private const CACHE_TTL = 3600;
+    private const CACHE_TTL = RechauffeurCache::DUREE_PAGES;
 
     public function __construct(private readonly Connection $connection)
     {

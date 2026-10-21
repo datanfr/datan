@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Http\RechauffeurCache;
 use Doctrine\DBAL\Connection;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -21,7 +22,7 @@ use Symfony\Component\Routing\Attribute\Route;
 class ParrainageController extends AbstractController
 {
     /** L'élection est passée et ses parrainages ne bougent plus. */
-    private const CACHE_TTL = 3600;
+    private const CACHE_TTL = RechauffeurCache::DUREE_PAGES;
 
     /** La seule présidentielle portée : la page du legacy est figée sur 2022. */
     private const ANNEE = 2022;

@@ -64,6 +64,12 @@ jobs:
           echo "→ Cache"
           php bin/console cache:clear --env=prod --no-ansi
 
+          # cache:clear a emporté le cache HTTP avec le reste. Le réchauffage
+          # dure une quinzaine de minutes : il part en arrière-plan, détaché de
+          # la session SSH, pour ne pas faire attendre le workflow.
+          echo "→ Réchauffage du cache HTTP (arrière-plan, var/log/rechauffage.log)"
+          APP_ENV=prod nohup php bin/console app:cache:rechauffer --sans-purge --no-ansi             >> var/log/rechauffage.log 2>&1 < /dev/null &
+
           echo "✓ En ligne"
           EOF
 

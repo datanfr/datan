@@ -5,6 +5,7 @@ namespace App\Controller\Admin;
 use App\Entity\Article;
 use App\Entity\Utilisateur;
 use App\Form\ArticleType;
+use App\Http\RechauffeurCache;
 use App\Repository\ArticleRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -41,6 +42,7 @@ class BlogController extends AbstractController
     public function __construct(
         private readonly EntityManagerInterface $entityManager,
         private readonly ArticleRepository $articles,
+        private readonly RechauffeurCache $cache,
     ) {
     }
 
@@ -101,6 +103,8 @@ class BlogController extends AbstractController
             return $this->redirectToRoute('admin_blog_index');
         }
 
+        $etaitPublie = $article->getEtat() === 'published';
+
         $formulaire = $this->createForm(ArticleType::class, $article);
         $formulaire->handleRequest($request);
 
@@ -111,6 +115,10 @@ class BlogController extends AbstractController
             $article->setModifieLe(new \DateTimeImmutable());
 
             $this->entityManager->flush();
+
+            if ($etaitPublie || $article->getEtat() === 'published') {
+                $this->cache->apresPublication();
+            }
 
             $this->addFlash('succes', $article->getEtat() === 'published'
                 ? 'Article enregistré et publié.'
@@ -137,8 +145,13 @@ class BlogController extends AbstractController
             }
 
             $titre = $article->getTitre();
+            $etaitPublie = $article->getEtat() === 'published';
             $this->entityManager->remove($article);
             $this->entityManager->flush();
+
+            if ($etaitPublie) {
+                $this->cache->apresPublication();
+            }
 
             $this->addFlash('succes', sprintf('Article « %s » supprimé.', $titre));
 

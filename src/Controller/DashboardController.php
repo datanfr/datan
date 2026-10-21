@@ -9,6 +9,7 @@ use App\Entity\Explication;
 use App\Entity\Scrutin;
 use App\Entity\Utilisateur;
 use App\Form\ExplicationType;
+use App\Http\RechauffeurCache;
 use App\Repository\ExplicationRepository;
 use Doctrine\DBAL\Connection;
 use Doctrine\ORM\EntityManagerInterface;
@@ -49,6 +50,7 @@ class DashboardController extends AbstractController
         private readonly EntityManagerInterface $entityManager,
         private readonly ExplicationRepository $explications,
         private readonly Connection $connection,
+        private readonly RechauffeurCache $cache,
     ) {
     }
 
@@ -145,6 +147,10 @@ class DashboardController extends AbstractController
             $this->entityManager->persist($explication);
             $this->entityManager->flush();
 
+            if ($explication->isPubliee()) {
+                $this->cache->apresPublication();
+            }
+
             $this->addFlash('succes', $explication->isPubliee()
                 ? 'Explication publiée. Elle est visible sur la page du scrutin et sur votre page Datan.'
                 : 'Explication enregistrée en brouillon. Elle ne sera visible qu\'une fois publiée.');
@@ -175,12 +181,18 @@ class DashboardController extends AbstractController
             return $this->redirectToRoute('dashboard_explications_liste');
         }
 
+        $etaitPubliee = $explication->isPubliee();
+
         $formulaire = $this->createForm(ExplicationType::class, $explication);
         $formulaire->handleRequest($requete);
 
         if ($formulaire->isSubmitted() && $formulaire->isValid()) {
             $explication->setModifiedAt(new \DateTimeImmutable());
             $this->entityManager->flush();
+
+            if ($etaitPubliee || $explication->isPubliee()) {
+                $this->cache->apresPublication();
+            }
 
             $this->addFlash('succes', $explication->isPubliee()
                 ? 'Explication enregistrée et publiée.'
@@ -219,8 +231,13 @@ class DashboardController extends AbstractController
                 return $this->redirectToRoute('dashboard_explications');
             }
 
+            $etaitPubliee = $explication->isPubliee();
             $this->entityManager->remove($explication);
             $this->entityManager->flush();
+
+            if ($etaitPubliee) {
+                $this->cache->apresPublication();
+            }
 
             $this->addFlash('succes', sprintf('L\'explication de vote pour le scrutin n° %d a bien été supprimée.', $numero));
 

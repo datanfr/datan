@@ -10,7 +10,8 @@ absentes de ce fichier ne se planifient pas — la liste du §4 dit pourquoi.
    requête en mémoire et fait échouer tout import volumineux.
 2. **Jamais de `cache:clear` pendant une synchronisation.** Vider
    `var/cache/prod` sous une commande en cours la fait échouer sans message
-   exploitable. Après coup, on supprime `var/cache/prod/http_cache` — pas plus.
+   exploitable. Après coup, on ne vide que le cache HTTP, par
+   `app:cache:rechauffer` — pas plus.
 3. **Enchaîner, pas juxtaposer.** Les étapes qui suivent le sync dépendent de ce
    qu'il vient d'écrire : elles se chaînent en `&&` dans la même entrée, sinon
    une journée chargée les fait démarrer avant la fin du sync.
@@ -25,7 +26,7 @@ source est fraîche, et la base est à jour au réveil.
 | `app:sync:quotidien` | Moisson + 11 étapes d'import, dans l'ordre des dépendances | ~50 s à vide |
 | `app:import:commissions` | Mandats COMPER (25 000 lignes) — hors chaîne, mais lit le **même delta** | quelques s |
 | `app:calcul:statistiques-deputes` | Participation, loyauté, proximité par groupe de la fiche député | ~15 s |
-| purge `var/cache/prod/http_cache` | Les pages sont en cache une heure ; on repart propre pour que les nouveaux scrutins soient visibles tout de suite | — |
+| `app:cache:rechauffer` | Vide le cache HTTP puis y remet les ~2 500 pages les plus lues (accueil, listes, députés en exercice, groupes, partis, départements, élections, blog, scrutins décryptés ; pas les communes). Les pages restent en cache un jour : c'est cette purge qui rend les nouveaux scrutins visibles, et le réchauffage qui évite au premier visiteur d'attendre le rendu (0,3 à 1,7 s au lieu de ~30 ms) | ~15 min |
 
 `app:sync:quotidien` déroule lui-même, dans cet ordre : moisson des dépôts,
 acteurs, organes hors table dédiée, profils sociaux, photos, **détourage des
@@ -75,7 +76,7 @@ antislash n'est pas garantie d'une implémentation à l'autre.
 0 6 * * * cd /var/www/datan && sh -c 'APP_ENV=prod php bin/console app:sync:quotidien --no-ansi \
   && APP_ENV=prod php bin/console app:import:commissions --no-ansi \
   && APP_ENV=prod php bin/console app:calcul:statistiques-deputes --no-ansi \
-  && rm -rf var/cache/prod/http_cache' >> var/log/sync-quotidien.log 2>&1
+  && APP_ENV=prod php bin/console app:cache:rechauffer --no-ansi' >> var/log/sync-quotidien.log 2>&1
 ```
 
 ## 2. Hebdomadaire

@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\CouleurGroupe;
 use App\CouleurParti;
+use App\Http\RechauffeurCache;
 use App\Legislature;
 use Doctrine\DBAL\Connection;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -24,8 +25,8 @@ use Symfony\Component\Routing\Attribute\Route;
  */
 class PartiController extends AbstractController
 {
-    /** Le rattachement financier ne bouge qu'au fil des déclarations : cache d'une heure. */
-    private const CACHE_TTL = 3600;
+    /** Le rattachement financier ne bouge qu'au fil des déclarations. */
+    private const CACHE_TTL = RechauffeurCache::DUREE_PAGES;
 
     /**
      * Ces deux « partis » n'en sont pas : l'Assemblée ouvre un organe PARPOL

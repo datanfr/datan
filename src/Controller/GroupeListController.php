@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\CouleurGroupe;
 use App\Enum\PopulationGroupes;
+use App\Http\RechauffeurCache;
 use App\Legislature;
 use Doctrine\DBAL\Connection;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -16,7 +17,7 @@ use Symfony\Component\Routing\Attribute\Route;
  */
 class GroupeListController extends AbstractController
 {
-    private const CACHE_TTL = 3600;
+    private const CACHE_TTL = RechauffeurCache::DUREE_PAGES;
 
     /** Les non-inscrits ne forment pas un groupe : ils sont comptés à part, jamais listés. */
     private const NON_INSCRITS = 'NI';

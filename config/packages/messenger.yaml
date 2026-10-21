@@ -24,6 +24,8 @@ framework:
             Symfony\Component\Mailer\Messenger\SendEmailMessage: async
             Symfony\Component\Notifier\Message\ChatMessage: async
             Symfony\Component\Notifier\Message\SmsMessage: async
+            # Un réchauffage dure plusieurs minutes : jamais dans la requête du rédacteur.
+            App\Http\RechauffageDemande: async
 
             # Route your messages to the transports
             # 'App\Message\YourMessage': async

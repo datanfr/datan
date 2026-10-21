@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Http\RechauffeurCache;
 use App\Legislature;
 use Doctrine\DBAL\Connection;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -19,7 +20,7 @@ use Symfony\Component\Routing\Attribute\Route;
 class VoteListController extends AbstractController
 {
     /** Les scrutins passés ne bougent plus, seul le haut de liste s'allonge. */
-    private const CACHE_TTL = 3600;
+    private const CACHE_TTL = RechauffeurCache::DUREE_PAGES;
 
     /** Seuls les décryptages publiés sortent du back-office de la rédaction. */
     private const PUBLIE = 'published';

@@ -37,6 +37,13 @@ décryptages déjà produits sont à préserver comme des données de production
 - **Cache HTTP sur toute page publique** : `setPublic()` +
   `setSharedMaxAge()`. Le reverse proxy intégré est branché dans
   `public/index.php` hors debug. Une page en cache doit sortir en ~20 ms.
+  La durée est d'un jour (`RechauffeurCache::DUREE_PAGES`) : la fraîcheur
+  vient des **purges**, pas de l'expiration — après le sync quotidien, et après
+  toute écriture d'un contenu publié (décryptage, explication, article), qui
+  appelle `RechauffeurCache::apresPublication()`. Une nouvelle écriture
+  éditoriale visible sur le site doit l'appeler aussi, sinon elle n'apparaît
+  que le lendemain. `app:cache:rechauffer` remet ensuite en cache les ~2 500
+  pages les plus lues, communes exclues.
 - **Commentaires** : expliquer *pourquoi*, pas *quoi*. Les pièges métier de ce
   domaine sont nombreux et non devinables — ce sont eux qu'il faut consigner.
 - **Une entité `#[ApiResource]` s'expose en écriture par défaut.** Sans

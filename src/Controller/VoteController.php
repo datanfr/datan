@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\CouleurGroupe;
 use App\Entity\DossierActeur;
 use App\Groupe\ParticipationGroupe;
+use App\Http\RechauffeurCache;
 use App\Legislature;
 use App\Referencement\OpenGraph;
 use App\TitreMeta;
@@ -490,10 +491,9 @@ class VoteController extends AbstractController
             ],
         ]);
 
-        // La liste bouge à chaque nouveau décryptage publié : cache plus court
-        // que les pages de scrutin, qui elles sont figées.
+        // La liste bouge à chaque nouveau décryptage publié, qui purge le cache.
         $response->setPublic();
-        $response->setSharedMaxAge(3600);
+        $response->setSharedMaxAge(RechauffeurCache::DUREE_PAGES);
 
         return $response;
     }

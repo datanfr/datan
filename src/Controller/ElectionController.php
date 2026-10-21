@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\CouleurGroupe;
+use App\Http\RechauffeurCache;
 use App\Legislature;
 use App\Repository\CandidatureRepository;
 use App\Repository\ElectionRepository;
@@ -34,7 +35,7 @@ class ElectionController extends AbstractController
      * seule chose qui vieillisse est l'état déduit des dates, qui ne changera
      * plus avant la prochaine élection.
      */
-    private const CACHE_TTL = 3600;
+    private const CACHE_TTL = RechauffeurCache::DUREE_PAGES;
 
     /**
      * Seuil de population au-delà duquel le site écrit le lien vers la commune

@@ -310,7 +310,10 @@ Enchaînement, en SSH :
 6. `asset-map:compile` ;
 7. `cache:clear --env=prod`, en dernier — le conteneur compilé fige le nombre
    d'arguments de chaque constructeur, et du code neuf sur un cache ancien fait
-   tomber les pages en `ArgumentCountError`.
+   tomber les pages en `ArgumentCountError` ;
+8. `app:cache:rechauffer --sans-purge` **en arrière-plan** (`nohup`, journal
+   `var/log/rechauffage.log`) — `cache:clear` a emporté le cache HTTP, et la
+   quinzaine de minutes du réchauffage ne doit pas retenir le workflow.
 
 Le workflow finit par interroger l'URL publique et échoue si elle ne répond
 pas 200.
@@ -380,7 +383,7 @@ de la ligne, ne pas le copier tel quel.
 0 6 * * * cd /var/www/datan/current && sh -c 'APP_ENV=prod php bin/console app:sync:quotidien --no-ansi \
   && APP_ENV=prod php bin/console app:import:commissions --no-ansi \
   && APP_ENV=prod php bin/console app:calcul:statistiques-deputes --no-ansi \
-  && rm -rf var/cache/prod/http_cache' >> var/log/sync-quotidien.log 2>&1
+  && APP_ENV=prod php bin/console app:cache:rechauffer --no-ansi' >> var/log/sync-quotidien.log 2>&1
 
 # Hebdomadaire — le seul appel à assemblee-nationale.fr, hors chaîne à dessein.
 15 4 * * 1 cd /var/www/datan/current && APP_ENV=prod php bin/console app:scraper:scrutins --no-ansi >> var/log/scraper-scrutins.log 2>&1
@@ -580,7 +583,16 @@ GTM_ID=
 
 IA_MODELE=
 ANTHROPIC_API_KEY=
+
+# L'adresse publique telle que PHP la voit. Faute de quoi le réchauffage
+# remplit le cache sous une autre adresse que celle des visiteurs, sans erreur.
+# https://datan.remikel.fr en préproduction.
+DEFAULT_URI=https://datan.fr
 ```
+
+Pour vérifier qu'elle est juste : après un `app:cache:rechauffer`, la première
+visite d'une fiche député doit déjà porter un en-tête `Age:` (la page vient du
+cache). Sans lui, les clés ne correspondent pas — schéma ou hôte.
 
 Le port passe de **3307 à 3306** : 3307 est une particularité du poste de
 développement.
@@ -589,7 +601,8 @@ développement.
 
 Derrière nginx, Symfony ne voit que `127.0.0.1` et croit servir en `http`. Les
 URL absolues — canoniques, sitemaps, Open Graph — sortent alors en clair. À
-ajouter dans `config/packages/framework.yaml` :
+ajouter dans `config/packages/framework.yaml` — c'est aussi ce schéma que le
+cache HTTP met dans la clé de chaque page, et `DEFAULT_URI` doit le reproduire :
 
 ```yaml
 framework:

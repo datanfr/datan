@@ -6,6 +6,7 @@ use App\AgeFrance;
 use App\CouleurGroupe;
 use App\Enum\TypeClassement;
 use App\FamilleSocioPro;
+use App\Http\RechauffeurCache;
 use App\Legislature;
 use Doctrine\DBAL\Connection;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -25,7 +26,7 @@ use Symfony\Component\Routing\Attribute\Route;
  */
 class ClassementController extends AbstractController
 {
-    private const CACHE_TTL = 3600;
+    private const CACHE_TTL = RechauffeurCache::DUREE_PAGES;
 
     /** Sigle des non-inscrits, écartés des comparaisons entre groupes. */
     private const NON_INSCRITS = 'NI';

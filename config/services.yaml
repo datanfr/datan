@@ -6,6 +6,9 @@
 parameters:
     # Où sont déposés les clones des dépôts de données des Tricoteuses.
     tricoteuses.racine: '%kernel.project_dir%/var/tricoteuses'
+    # Repli si le .env du serveur ne pose pas DEFAULT_URI : .env.dist n'est lu
+    # qu'en l'absence de .env, et sans valeur le routeur ne se construit plus.
+    env(DEFAULT_URI): 'https://datan.fr'
 
 services:
     # default configuration for services in *this* file

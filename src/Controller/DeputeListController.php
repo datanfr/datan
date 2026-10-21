@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\CouleurGroupe;
 use App\Enum\PopulationDeputes;
+use App\Http\RechauffeurCache;
 use App\Legislature;
 use Doctrine\DBAL\Connection;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -21,8 +22,8 @@ use Symfony\Component\Routing\Attribute\Route;
  */
 class DeputeListController extends AbstractController
 {
-    /** La composition de l'Assemblée ne bouge qu'au fil des nominations : cache d'une heure. */
-    private const CACHE_TTL = 3600;
+    /** La composition de l'Assemblée ne bouge qu'au fil des nominations. */
+    private const CACHE_TTL = RechauffeurCache::DUREE_PAGES;
 
     /**
      * Groupe retenu pour un député sur une législature donnée.

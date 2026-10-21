@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\CouleurGroupe;
+use App\Http\RechauffeurCache;
 use App\Legislature;
 use App\Repository\ResultatElectoralRepository;
 use Doctrine\DBAL\ArrayParameterType;
@@ -22,7 +23,7 @@ use Symfony\Component\Routing\Attribute\Route;
 class CommuneController extends AbstractController
 {
     /** Le découpage ne bouge qu'aux élections. */
-    private const CACHE_TTL = 3600;
+    private const CACHE_TTL = RechauffeurCache::DUREE_PAGES;
 
     /** Nombre de communes limitrophes proposées en haut de page. */
     private const VOISINES = 4;

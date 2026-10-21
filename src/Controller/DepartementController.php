@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\CouleurGroupe;
+use App\Http\RechauffeurCache;
 use App\Legislature;
 use Doctrine\DBAL\Connection;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -17,7 +18,7 @@ use Symfony\Component\Routing\Attribute\Route;
 class DepartementController extends AbstractController
 {
     /** Le découpage ne bouge qu'aux élections. */
-    private const CACHE_TTL = 3600;
+    private const CACHE_TTL = RechauffeurCache::DUREE_PAGES;
 
     /**
      * Seuil de population du bloc « Communes les plus peuplées »

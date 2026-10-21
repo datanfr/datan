@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Http\RechauffeurCache;
 use Doctrine\DBAL\Connection;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -16,8 +17,8 @@ use Symfony\Component\Routing\Attribute\Route;
  */
 class BlogController extends AbstractController
 {
-    /** Le blog ne bouge qu'à la publication d'un article : cache d'une heure. */
-    private const CACHE_TTL = 3600;
+    /** Le blog ne bouge qu'à la publication d'un article, qui purge le cache. */
+    private const CACHE_TTL = RechauffeurCache::DUREE_PAGES;
 
     /** Longueur de l'extrait des cartes, en mots (word_limiter du legacy). */
     private const MOTS_EXTRAIT = 25;

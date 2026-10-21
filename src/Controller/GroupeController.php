@@ -15,6 +15,7 @@ use App\Groupe\ParticipationGroupe;
 use App\Groupe\ReseauxGroupe;
 use App\Groupe\SoutienGouvernement;
 use App\Groupe\StatistiquesGroupe;
+use App\Http\RechauffeurCache;
 use App\Legislature;
 use App\NatureVote;
 use App\Referencement\OpenGraph;
@@ -31,7 +32,7 @@ use Symfony\Component\Routing\Attribute\Route;
  */
 class GroupeController extends AbstractController
 {
-    private const CACHE_TTL = 3600;
+    private const CACHE_TTL = RechauffeurCache::DUREE_PAGES;
 
     /** Sigle des députés non-inscrits, exclus des comparaisons entre groupes. */
     private const NON_INSCRITS = 'NI';

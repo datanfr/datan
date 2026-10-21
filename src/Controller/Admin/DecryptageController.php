@@ -7,6 +7,7 @@ use App\Entity\Decryptage;
 use App\Entity\Utilisateur;
 use App\Enum\DecryptageState;
 use App\Form\DecryptageType;
+use App\Http\RechauffeurCache;
 use App\Ia\CollecteurDecryptage;
 use App\Ia\GenerateurBrouillon;
 use App\Repository\DecryptageRepository;
@@ -65,6 +66,7 @@ class DecryptageController extends AbstractController
         private readonly ScrutinRepository $scrutins,
         private readonly GenerateurBrouillon $generateur,
         private readonly CollecteurDecryptage $collecteur,
+        private readonly RechauffeurCache $cache,
     ) {
     }
 
@@ -228,6 +230,10 @@ class DecryptageController extends AbstractController
             return $this->redirectToRoute('admin_decryptage_index');
         }
 
+        // Lu avant que le formulaire ne l'écrase : dépublier retire aussi le
+        // décryptage du site, ce qui demande la même purge que le publier.
+        $etaitPublie = $decryptage->getState() === DecryptageState::Published;
+
         $formulaire = $this->createForm(DecryptageType::class, $decryptage);
         $formulaire->handleRequest($request);
 
@@ -237,6 +243,10 @@ class DecryptageController extends AbstractController
             $decryptage->setModifiePar($this->utilisateur());
 
             $this->entityManager->flush();
+
+            if ($etaitPublie || $decryptage->getState() === DecryptageState::Published) {
+                $this->cache->apresPublication();
+            }
 
             $this->addFlash('succes', $decryptage->getState() === DecryptageState::Published
                 ? 'Décryptage enregistré et publié.'
@@ -266,8 +276,13 @@ class DecryptageController extends AbstractController
             }
 
             $titre = $decryptage->getTitle();
+            $etaitPublie = $decryptage->getState() === DecryptageState::Published;
             $this->entityManager->remove($decryptage);
             $this->entityManager->flush();
+
+            if ($etaitPublie) {
+                $this->cache->apresPublication();
+            }
 
             $this->addFlash('succes', sprintf('Décryptage « %s » supprimé.', $titre));
 
