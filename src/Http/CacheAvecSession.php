@@ -21,9 +21,10 @@ use Symfony\Component\HttpFoundation\Response;
  * garde ses ~20 ms. Les connectés — une poignée de comptes — ont un rendu
  * complet à chaque page, comme sur l'application d'origine.
  *
- * Surtout pas de `Vary: Cookie` à la place : tarteaucitron et le compteur
- * mensuel de pages posent des cookies à tout le monde, le magasin deviendrait
- * un cache par visiteur.
+ * Surtout pas de `Vary: Cookie` à la place : Matomo pose ses cookies `_pk_*` à
+ * tout visiteur — et, jusqu'au 10 septembre 2026, Tarte au citron et le
+ * compteur mensuel de pages en posaient aussi —, le magasin deviendrait un
+ * cache par visiteur.
  */
 final class CacheAvecSession extends HttpCache
 {

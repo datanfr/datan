@@ -11,16 +11,19 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
 /**
- * Importe les votes nominatifs des DEUX scrutins de la 16e législature que la
- * fiche député met en avant dans « Ses positions importantes » (sélection
- * éditoriale figée, cf. ComportementDepute::VOTES_CLES) : l'IVG dans la
- * Constitution (n° 629) et le projet de loi immigration (n° 3213).
+ * Importe les votes nominatifs de deux scrutins de la 16e législature — l'IVG
+ * dans la Constitution (n° 629) et le projet de loi immigration (n° 3213) — que
+ * la fiche député mettait en avant dans « Ses positions importantes ».
  *
- * Écrite quand `vote` ne couvrait que la 17e législature, pour servir le seul
- * bloc des positions importantes. Depuis l'import des dépôts
- * Scrutins_XIV/XV/XVI_nettoye (`app:import:scrutins --depot=scrutins-xvi
- * --tout`), ces deux scrutins arrivent avec tous les autres : la commande est
- * redondante — et inoffensive, son upsert réécrivant les mêmes lignes.
+ * Doublement périmée. Écrite quand `vote` ne couvrait que la 17e législature,
+ * pour servir le seul bloc des positions importantes ; depuis l'import des
+ * dépôts Scrutins_XIV/XV/XVI_nettoye (`app:import:scrutins --depot=scrutins-xvi
+ * --tout`), ces deux scrutins arrivent avec tous les autres. Et depuis le
+ * 29 juillet 2026 (commits 67beea0b et a257c0ed du site), la sélection
+ * éditoriale ne retient plus aucun vote de la 16e : les quatre scrutins de
+ * {@see \App\Depute\ComportementDepute::VOTES_CLES} sont tous de la 17e.
+ * Conservée parce qu'inoffensive — son upsert réécrit des lignes identiques —,
+ * en attendant d'être supprimée.
  *
  * Fichiers à régénérer depuis le dépôt des Tricoteuses (législature close, ils
  * ne bougent plus) :

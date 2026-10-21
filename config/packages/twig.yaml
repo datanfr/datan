@@ -5,12 +5,12 @@ twig:
     paths:
         '%kernel.project_dir%/public': public
     globals:
-        # Pile de suivi de base.html.twig. Vides, les blocs correspondants ne
-        # sont pas rendus : un poste de développement ne pollue jamais les
-        # statistiques — garde-fou que l'application d'origine n'a pas eu à
-        # avoir, ne vivant qu'en production.
+        # Suivi d'audience de base.html.twig (Matomo). Vide, le bloc n'est pas
+        # rendu : un poste de développement ne pollue jamais les statistiques —
+        # garde-fou que l'application d'origine n'a pas eu à avoir, ne vivant
+        # qu'en production. GTM a quitté le site le 10 septembre 2026, avec
+        # Tarte au citron : plus de seconde variable.
         matomo_url: '%env(MATOMO_URL)%'
-        gtm_id: '%env(GTM_ID)%'
 
 when@test:
     twig:

@@ -66,9 +66,13 @@
   <div class="row">
     <div class="col-lg-3 col-md-4 pt-md-5 pt-3 bloc-infos" style="background-color: #e9e9e9; color: black!important">
       <p><b>{{ ville.nom }}</b> est une commune située {{ ville.libelle_dans }}{{ ville.dpt_nom }} ({{ ville.dpt_code }}), dans la région {{ ville.region }}.</p>
+      {# Évolution arrondie à l'entier, « % » collé au nombre : graphie adoptée
+         par le site le 6 septembre 2026 (commune.php:42, `round($evol10_edited)`
+         suivi de « % »), la même que ses cartes d'élections plus bas. Elle
+         tranche ici la question du séparateur décimal (TODO §P2). #}
       {% if ville.population_arrondie %}
         <p>{{ ville.nom }} compte <b>{{ ville.population_arrondie|number_format(0, ',', ' ') }} habitants</b>.
-          {%- if ville.evolution %} La population de la commune a <b>{{ ville.evolution.sens }}</b> de {{ ville.evolution.valeur|round(1)|replace({'.': ','}) }} % depuis 10 ans.{% endif %}</p>
+          {%- if ville.evolution %} La population de la commune a <b>{{ ville.evolution.sens }}</b> de {{ ville.evolution.valeur|round }}% depuis 10 ans.{% endif %}</p>
       {% endif %}
       {# Le nom arrive en capitales du référentiel (« FABRE ») ; le site
          l'affiche en casse mixte — ucfirst(mb_strtolower()) — et n'accorde que

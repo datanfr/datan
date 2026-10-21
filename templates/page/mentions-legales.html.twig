@@ -11,10 +11,11 @@
    rédaction. #}
 {% block meta_description %}Mentions légales du site Datan.{% endblock %}
 
-{# Seule page où l'icône de Tarte au citron reste visible : la règle
-   `body:not(.pg-mentions) #tarteaucitronIcon` de main.css la masque partout
-   ailleurs. Classe posée le 25 juillet, avec le portage du gestionnaire de
-   consentement — avant lui, elle n'avait rien à montrer. #}
+{# Classe de page servie par le site (header.php:197). Elle désignait la seule
+   page où l'icône de Tarte au citron restait visible ; le gestionnaire de
+   cookies a quitté le site le 10 septembre 2026 (commit 6ad583ac) et la règle
+   `body:not(.pg-mentions) #tarteaucitronIcon` avec lui. Gardée pour rester
+   fidèle au balisage, elle ne pilote plus rien. #}
 {% block classe_body %}pg-mentions{% endblock %}
 
 {% block body %}
@@ -61,7 +62,13 @@
         <li><b>Cookies fonctionnels</b> (soumis à consentement). Ces cookies mémorisent le nombre de pages visitées au cours du mois en cours, afin d'afficher un message de soutien aux visiteurs réguliers.</li>
       </ul>
 
-      <p>Vous pouvez à tout moment modifier vos préférences de consentement en cliquant sur le lien Tarte au citron en bas de page.</p>
+      {# Le paragraphe « Vous pouvez à tout moment modifier vos préférences de
+         consentement en cliquant sur le lien Tarte au citron » a disparu du site
+         avec le gestionnaire de cookies (10 septembre 2026, commit 6ad583ac).
+         La liste qui précède, elle, n'a pas été relue : elle annonce encore des
+         cookies Google « soumis à consentement » alors que GTM est parti le
+         même jour, et un compteur de pages passé depuis en localStorage. Texte
+         légal : reproduit tel quel, signalé dans TODO.md pour la rédaction. #}
 
       <p>Datan utilise également Matomo, un outil de mesure d'audience open source, hébergé sur nos propres serveurs. Notre configuration est conforme aux recommandations de la CNIL, permettant une exemption de consentement. Vous pouvez néanmoins vous opposer au suivi Matomo à tout moment en cochant la case ci-dessous : </p>
 

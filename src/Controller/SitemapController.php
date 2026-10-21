@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Commune\SeuilCommunes;
 use App\Http\RechauffeurCache;
 use App\Legislature;
 use Doctrine\DBAL\ArrayParameterType;
@@ -175,22 +176,46 @@ class SitemapController extends AbstractController
     #[Route('/sitemap-localites-v-1.xml', name: 'sitemap_communes', methods: ['GET'])]
     public function communes(): Response
     {
-        // `DISTINCT` et non `GROUP BY` par confort : Château-Chinon (Ville) et
-        // Château-Chinon (Campagne) partagent slug et département, et n'ont donc
-        // qu'une adresse à elles deux.
-        $communes = $this->connection->fetchAllAssociative(
-            'SELECT DISTINCT dep.slug AS departement, c.slug AS commune
-             FROM commune c
-             JOIN departement dep ON dep.id = c.departement_id
-             WHERE c.population > :seuil
-             ORDER BY dep.slug, c.slug',
-            ['seuil' => DepartementController::POPULATION_MINIMALE],
-        );
-
         return $this->plan(array_map(
-            fn (array $c) => $this->url('commune_individual', $c),
-            $communes,
+            fn (array $c) => $this->url('commune_individual', ['departement' => $c['departement'], 'commune' => $c['commune']]),
+            $this->communesLiees(DepartementController::POPULATION_MINIMALE, false, 'departement, commune'),
         ));
+    }
+
+    /**
+     * Communes qu'une page lie en clair, et donc qu'un plan peut annoncer :
+     * celles au-dessus du seuil de population de cette page — ou, pour les cinq
+     * collectivités qui n'en ont aucune, les vingt premières ({@see SeuilCommunes}),
+     * exactement celles que le bloc des communes affiche : même rang, calculé par
+     * département dans l'ordre des pages (`population DESC, nom`).
+     *
+     * `DISTINCT` et non `GROUP BY` par confort : Château-Chinon (Ville) et
+     * Château-Chinon (Campagne) partagent slug et département, et n'ont donc
+     * qu'une adresse à elles deux. Le code du département est dans le `DISTINCT`
+     * pour pouvoir trier dessus — il ne dédouble rien, un slug n'ayant qu'un code.
+     *
+     * @return list<array{departement: string, code: string, commune: string}>
+     */
+    private function communesLiees(int $seuil, bool $sansParentheses, string $ordre): array
+    {
+        return $this->connection->fetchAllAssociative(
+            'SELECT DISTINCT departement, code, commune
+             FROM (SELECT dep.slug AS departement, dep.code AS code, c.slug AS commune, c.population,
+                          dep.slug IN (:exemptes) AS exemptee,
+                          ROW_NUMBER() OVER (PARTITION BY c.departement_id ORDER BY c.population DESC, c.nom) AS rang
+                   FROM commune c
+                   JOIN departement dep ON dep.id = c.departement_id) t
+             WHERE ((exemptee = 1 AND rang <= :plafond) OR (exemptee = 0 AND population > :seuil))'
+            . ($sansParentheses ? ' AND commune NOT LIKE :parenthese' : '') . '
+             ORDER BY ' . $ordre,
+            [
+                'exemptes' => SeuilCommunes::SANS_SEUIL,
+                'plafond' => SeuilCommunes::PLAFOND,
+                'seuil' => $seuil,
+                'parenthese' => '%(%',
+            ],
+            ['exemptes' => ArrayParameterType::STRING],
+        );
     }
 
     #[Route('/sitemap-elections-1.xml', name: 'sitemap_elections', methods: ['GET'])]
@@ -226,7 +251,7 @@ class SitemapController extends AbstractController
 
     /**
      * Fiches de résultats par commune — le deuxième plus gros plan du site,
-     * 16 553 adresses (le plan des votes, 18 311, reste le plus grand).
+     * 16 600 adresses (le plan des votes, 18 311, reste le plus grand).
      *
      * Le seuil est celui des liens que le site écrit en clair sur ses pages
      * d'élections, cinq cents habitants ({@see ElectionController::POPULATION_MINIMALE}),
@@ -246,20 +271,9 @@ class SitemapController extends AbstractController
     #[Route('/sitemap-elections-v-1.xml', name: 'sitemap_elections_communes', methods: ['GET'])]
     public function electionsCommunes(): Response
     {
-        // `DISTINCT` comme pour les fiches de ville : les deux Château-Chinon
-        // partagent slug et département, et n'ont qu'une adresse à elles deux.
-        $communes = $this->connection->fetchAllAssociative(
-            'SELECT DISTINCT dep.slug AS departement, c.slug AS commune
-             FROM commune c
-             JOIN departement dep ON dep.id = c.departement_id
-             WHERE c.population > :seuil AND c.slug NOT LIKE :parenthese
-             ORDER BY dep.code, c.slug',
-            ['seuil' => ElectionController::POPULATION_MINIMALE, 'parenthese' => '%(%'],
-        );
-
         return $this->plan(array_map(
-            fn (array $c) => $this->url('elections_resultats_commune', $c),
-            $communes,
+            fn (array $c) => $this->url('elections_resultats_commune', ['departement' => $c['departement'], 'commune' => $c['commune']]),
+            $this->communesLiees(ElectionController::POPULATION_MINIMALE, true, 'code, commune'),
         ));
     }
 

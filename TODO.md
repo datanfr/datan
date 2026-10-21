@@ -250,7 +250,9 @@ Pour chacun : comprendre la règle du legacy (la réponse est dans son code, sou
   legacy affiche le point (0.86 ; 4.4 %) — systématique (statistiques, cohésion,
   évolutions de population). La virgule est le bon usage français mais s'écarte de la
   parité : trancher une fois pour tout le site et commenter. (Incohérence actuelle :
-  « 51.7 ans » garde le point des deux côtés.)
+  « 51.7 ans » garde le point des deux côtés.) Tranché sur la fiche commune par
+  le legacy lui-même le 06/09/2026 : évolution de population à l'entier, « 4% »
+  (cf. § Rattrapage legacy 2026-10-21).
 - [x] Capitalisations gardées (« Val-d'Oise », « Côtes-d'Armor », « 2A »/« 2B ») :
   corrections assumées du legacy — commentées dans `ImportCommunesCommand`.
 
@@ -313,8 +315,9 @@ Pour chacun : comprendre la règle du legacy (la réponse est dans son code, sou
 
 - [ ] Rejouer les imports de récupération contre la **vraie** base de production
   (comptes, explications, décryptages, blog) — jamais depuis le backup anonymisé.
-- [ ] Rebrancher **Matomo** (matomo.datan.fr, siteId 1) et **GTM** (GTM-K3QQNK2) —
-  absents du staging, vraisemblablement à dessein.
+- [ ] Rebrancher **Matomo** (matomo.datan.fr, siteId 1) — absent du staging à
+  dessein (`MATOMO_URL` vide). GTM n'est plus à rebrancher : le site l'a retiré
+  le 10/09/2026 avec Tarte au citron (cf. § Rattrapage legacy 2026-10-21).
 - [ ] Vérifier que canonical/og:url basculent bien sur datan.fr (générés depuis
   l'hôte : automatique, mais vérifier).
 - [ ] Vérifier les images `posts/inside/` (cf. P1) une fois le domaine basculé.
@@ -358,3 +361,43 @@ Pour chacun : comprendre la règle du legacy (la réponse est dans son code, sou
   HTML complète reste à faire.
 - [ ] Rejouer la comparaison des pages touchées après chaque correction ci-dessus
   (une URL à la fois côté datan.fr, cf. rappel 429 en tête de fichier).
+
+## Rattrapage legacy 2026-10-21 (`430e4625` → `58ac7f64`)
+
+Relevé des 35 fichiers modifiés sur `datanfr/datan` depuis la base du portage
+(4 juin → 16 octobre 2026). Les commits de fin juillet (votes clés, accueil,
+endpoint newsletter, relecture des amendements) étaient déjà portés ; le
+mojibake des noms de candidats est corrigé chez nous à l'import. Le reste :
+
+- [x] **Cookies (10/09)** : Tarte au citron et GTM retirés de `base.html.twig`,
+  compteur de pages en localStorage (`donation-modal-localstorage.js` repris
+  tel quel), `main.css` et CSS critiques recompilés copiés, variable `GTM_ID`
+  supprimée partout (Twig, `.env`, `.env.dist`, `DEPLOIEMENT.md`).
+- [x] **Communes des collectivités sans population (06/09)** :
+  `App\Commune\SeuilCommunes` — exemption du seuil et plafond de 20 pour
+  Polynésie, Nouvelle-Calédonie, Saint-Pierre-et-Miquelon, Saint-Barthélemy et
+  Saint-Martin, Wallis-et-Futuna ; appliquée aux pages département et ville,
+  aux pastilles et pieds des pages de résultats, et aux deux plans de site
+  (+45 adresses chacun, toutes vérifiées en 200). Titres « Commune(s) de … »,
+  h2 « Découvrez le député » au singulier.
+  - Assumé : le plafond n'est **pas** appliqué à l'index alphabétique des
+    pages de résultats, où le legacy le subit par effet de bord (Polynésie :
+    20 communes sur 48 chez lui, 48 chez nous).
+  - Assumé : la fiche de ville suit la règle corrigée de la page département
+    (le legacy n'a corrigé que `departement/index.php` ; sa `commune.php`
+    masque toujours Saint-Pierre-et-Miquelon).
+  - Assumé : « la députée » pour la Lozère (le legacy écrit « le député »).
+- [x] **Fiche commune (06/09)** : bouton « Résultats des élections à X » (en
+  clair au-delà de 500 habitants, masqué en deçà), évolution de population à
+  l'entier « 4% ».
+- [ ] **Mentions légales à relire par la rédaction** : le texte annonce encore
+  des « cookies de mesure d'audience (Google) » et un compteur « soumis à
+  consentement », alors que GTM et Tarte au citron sont partis le 10/09/2026 et
+  que le compteur vit en localStorage. Texte légal reproduit tel quel ; à
+  signaler plutôt qu'à réécrire de notre chef.
+- [ ] `app:import:votes-cles` n'a plus d'objet (la sélection des positions
+  importantes ne retient plus aucun vote de la 16e depuis le 29/07/2026) :
+  docblock mis à jour, commande à supprimer à l'occasion.
+- Sans objet pour nous : scripts batch IA de `package.json` (absents du dépôt),
+  workflow de déploiement cPanel, hook `urlValidator`, lien « Get files » du
+  menu admin, aller-retour Matomo du 10/09 annulé le 16/10.

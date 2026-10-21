@@ -579,7 +579,6 @@ CORS_ALLOW_ORIGIN='^https://(datan\.remikel\.fr|datan\.fr)$'
 # Suivi : à n'activer qu'en production, pas en préproduction — sinon les visites
 # d'essai polluent les statistiques réelles.
 MATOMO_URL=
-GTM_ID=
 
 IA_MODELE=
 ANTHROPIC_API_KEY=

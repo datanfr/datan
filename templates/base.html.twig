@@ -210,9 +210,10 @@
     </style>
   </head>
   {# L'attribut class est servi vide sur toute page, comme l'origine
-     (header.php:197 y verse `$mentions`) : son seul consommateur est la règle
-     `body:not(.pg-mentions) #tarteaucitronIcon` de main.css, qui masque
-     l'icône du gestionnaire de cookies partout sauf aux mentions légales. #}
+     (header.php:197 y verse `$mentions`). Il n'a plus de consommateur depuis
+     le 10 septembre 2026 : la règle `body:not(.pg-mentions) #tarteaucitronIcon`
+     de main.css est partie avec le gestionnaire de cookies (commit 6ad583ac).
+     Conservé parce que le site le sert toujours. #}
   <body class="{% block classe_body %}{% endblock %}" data-spy="scroll" data-target="#navScrollspy" data-offset="90">
     <!-- MAIN NAVBAR -->
     <nav class="navbar navbar-expand-lg navbar-light sticky-top" id="navbar-datan">
@@ -512,107 +513,20 @@
     {% block javascripts_libraries %}{% endblock %}
     <script src="{{ asset('assets/js/libraries/jquery/jquery.unveil.min.js') }}"></script>
 
-    {# Bannière de consentement (footer.php:230-345), servie sur toute page
-       comme à l'origine — même version épinglée du CDN. Elle pilote deux
-       services : GTM (si configuré) et « datantracking », le compteur mensuel
-       de pages en cookie qui ouvre la modale de dons au seuil de 10 pages.
-       Deux corrections commentées : le « readmoreLink » de l'origine pointe
-       /cookiespolicy, une adresse qui n'a jamais existé (404 depuis toujours)
-       — remplacé par les mentions légales ; et le compteur de pied de page
-       (#monthly-pages-visited-count) n'est pas reproduit, l'élément n'existant
-       dans aucune vue de l'origine (le JS le garde par un `if`). #}
-    <script type="text/javascript">
-      var tarteaucitronForceLanguage = "fr";
-    </script>
-    <script src="https://cdn.jsdelivr.net/gh/AmauriC/tarteaucitron.js@20210329/tarteaucitron.min.js"></script>
-    <script type="text/javascript">
-      tarteaucitron.init({
-        "privacyUrl": "{{ path('page_mentions_legales') }}",
-        "hashtag": "#tarteaucitron",
-        "cookieName": "tarteaucitron",
-        "orientation": "bottom",
-        "showAlertSmall": false,
-        "cookieslist": true,
-        "adblocker": false,
-        "AcceptAllCta": true,
-        "highPrivacy": true,
-        "handleBrowserDNTRequest": false,
-        "removeCredit": false,
-        "moreInfoLink": true,
-        "useExternalCss": false,
-        "readmoreLink": "{{ path('page_mentions_legales') }}"
-      });
-    </script>
-    {% if gtm_id %}
-      <script type="text/javascript">
-        tarteaucitron.user.googletagmanagerId = '{{ gtm_id }}';
-        (tarteaucitron.job = tarteaucitron.job || []).push('googletagmanager');
-      </script>
-    {% endif %}
-    <script type="text/javascript">
-      // Compteur de pages du mois, soumis à consentement : au-delà de 10 pages
-      // vues, la modale de dons s'ouvre — au plus une fois par semaine.
-      tarteaucitron.services.datantracking = {
-          "key": "datantracking",
-          "type": "other",
-          "name": "Suivi des pages visitées",
-          "uri": "{{ path('page_mentions_legales') }}",
-          "needConsent": true,
-          "cookies": ["datan_monthly", "datan_modal_shown"],
-          "js": function () {
-              (function () {
-                  var THRESHOLD = 10;
-                  var ONE_WEEK_MS = 7 * 24 * 60 * 60 * 1000;
-
-                  function getCookie(name) {
-                      var match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
-                      return match ? decodeURIComponent(match[2]) : null;
-                  }
-
-                  function setCookie(name, value, ms) {
-                      var expires = new Date(Date.now() + ms).toUTCString();
-                      document.cookie = name + '=' + encodeURIComponent(value) + '; expires=' + expires + '; path=/';
-                  }
-
-                  var now = new Date();
-                  var currentMonth = now.getFullYear() + '-' + (now.getMonth() + 1);
-
-                  var cookieRaw = getCookie('datan_monthly');
-                  var data = cookieRaw ? JSON.parse(decodeURIComponent(cookieRaw)) : null;
-
-                  if (!data || data.month !== currentMonth) {
-                      data = { month: currentMonth, count: 0 };
-                  }
-
-                  data.count++;
-
-                  setCookie('datan_monthly', JSON.stringify(data), 1000 * 60 * 60 * 24 * 60);
-
-                  if (data.count < THRESHOLD) return;
-
-                  var lastShown = getCookie('datan_modal_shown');
-                  if (lastShown && (Date.now() - parseInt(lastShown, 10)) < ONE_WEEK_MS) return;
-
-                  setCookie('datan_modal_shown', Date.now(), ONE_WEEK_MS);
-
-                  $(document).ready(function () {
-                      $('#modal-page-count').text(data.count);
-                      $('#donationModal').modal('show');
-                  });
-              })();
-          },
-          "fallback": function () {
-          }
-      };
-
-      (tarteaucitron.job = tarteaucitron.job || []).push('datantracking');
-    </script>
-
     {% block javascripts %}{% endblock %}
     <script type="text/javascript" src="{{ asset('assets/js/main.min.js') }}"></script>
     {# Décodeur des adresses masquées aux robots ({{ url_obf(...) }}) — chargé
        partout, comme sur le site : des liens masqués existent jusque dans les
        pieds de page. `robots.txt` interdit ce fichier aux moteurs. #}
     <script type="text/javascript" src="{{ asset('assets/js/datan/url_obf2.min.js') }}"></script>
+    {# Compteur de pages du mois, repris du site (footer.php:241-242 depuis le
+       10 septembre 2026, commit 6ad583ac) : il remplace le service
+       « datantracking » de Tarte au citron, parti avec GTM le même jour. Le
+       compte vit en localStorage, hors consentement — le site ne dépose plus
+       aucun cookie de son propre chef. Au-delà de 10 pages, la modale de dons
+       (partials/modale_don.html.twig) s'ouvre, au plus une fois par semaine.
+       Le compteur de pied de page (#monthly-pages-visited-count) n'existe dans
+       aucune vue, ici comme là-bas : le script le garde par un `if`. #}
+    <script type="text/javascript" src="{{ asset('assets/js/datan/donation-modal-localstorage.js') }}"></script>
   </body>
 </html>

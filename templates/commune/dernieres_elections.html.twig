@@ -52,5 +52,19 @@
         </div>
       {% endfor %}
     </div>
+    {# Bouton vers la fiche de résultats (commune.php:234-242, ajouté le
+       6 septembre 2026 à la place du bloc des municipales). Adresse en clair
+       au-delà de 500 habitants — le seuil des pages d'élections —, masquée aux
+       robots en deçà. Pas d'élision (« à Ajaccio ») : c'est le texte du site,
+       et le titre de la page visée. #}
+    <div class="row mt-3">
+      <div class="col-12 d-flex justify-content-center align-items-center">
+        {% if ville.population > seuil_elections %}
+          <a href="{{ path('elections_resultats_commune', {departement: ville.dpt_slug, commune: ville.slug}) }}" class="mt-2 btn btn-primary">Résultats des élections à {{ ville.nom }}</a>
+        {% else %}
+          <a url_obf="{{ url_obf(path('elections_resultats_commune', {departement: ville.dpt_slug, commune: ville.slug})) }}" class="mt-2 btn btn-primary url_obf">Résultats des élections à {{ ville.nom }}</a>
+        {% endif %}
+      </div>
+    </div>
   </div>
 </div>

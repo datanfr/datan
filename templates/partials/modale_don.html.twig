@@ -1,8 +1,10 @@
-{# Modale de dons (partials/donation-modal.php) : ouverte par le service
-   tarteaucitron « datantracking » de base.html.twig quand le visiteur a vu
-   10 pages dans le mois (compteur en cookie, soumis à consentement) et pas
-   revu la modale depuis une semaine. Présente dans le DOM de toutes les
-   pages, invisible tant que rien ne l'ouvre. #}
+{# Modale de dons (partials/donation-modal.php) : ouverte par
+   assets/js/datan/donation-modal-localstorage.js, repris du site, quand le
+   visiteur a vu 10 pages dans le mois et n'a pas revu la modale depuis une
+   semaine. Le compteur vit en localStorage, sans consentement — le site a
+   abandonné le cookie et Tarte au citron le 10 septembre 2026 (commit
+   6ad583ac). Présente dans le DOM de toutes les pages, invisible tant que rien
+   ne l'ouvre. #}
 <div class="modal fade" id="donationModal" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">

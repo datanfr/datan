@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Commune\SeuilCommunes;
 use App\CouleurGroupe;
 use App\Http\RechauffeurCache;
 use App\Legislature;
@@ -30,11 +31,18 @@ class DepartementController extends AbstractController
     public const POPULATION_MINIMALE = 4000;
 
     /**
-     * Collectivités sans découpage communal exploitable, pour lesquelles
-     * l'application d'origine masque le bloc des communes : Français de
-     * l'étranger et Saint-Pierre-et-Miquelon.
+     * Collectivité sans découpage communal, pour laquelle l'application
+     * d'origine masque le bloc des communes : les Français de l'étranger.
+     *
+     * Saint-Pierre-et-Miquelon en faisait partie jusqu'au 6 septembre 2026 :
+     * ses deux communes n'ayant pas de population au référentiel, le bloc
+     * aurait été vide. Le site les liste désormais hors seuil
+     * ({@see SeuilCommunes}) — sur sa page de département seulement, sa fiche
+     * de ville ayant gardé l'ancien masquage par oubli (le commit 79e5795f ne
+     * touche que `departement/index.php`). Le partiel étant commun aux deux
+     * pages, la règle corrigée vaut ici pour les deux.
      */
-    public const SANS_COMMUNES = ['099', '975'];
+    public const SANS_COMMUNES = ['099'];
 
     /**
      * `/deputes/…` sert aussi les listes par législature et les anciens députés,
@@ -129,7 +137,7 @@ class DepartementController extends AbstractController
             'deputes' => $deputes,
             'communes' => \in_array($ligne['code'], self::SANS_COMMUNES, true)
                 ? []
-                : $this->communes((int) $ligne['id']),
+                : $this->communes((int) $ligne['id'], (string) $ligne['slug']),
             'fil_ariane' => [
                 ['nom' => 'Datan', 'url' => $this->generateUrl('home')],
                 ['nom' => 'Députés', 'url' => $this->generateUrl('deputes_index')],
@@ -188,13 +196,16 @@ class DepartementController extends AbstractController
      * l'application d'origine (`ORDER BY nameLast, nameFirst`), et donc celui
      * des cartes du site.
      *
+     * `civilite` ne sert qu'au titre de la page, qui s'accorde quand le
+     * département n'a qu'un siège.
+     *
      * @return list<array<string, mixed>>
      */
     private function deputes(string $code): array
     {
         return $this->connection->fetchAllAssociative(
             'SELECT d.mp_id, d.firstname, d.lastname, d.slug, d.dpt_slug,
-                    d.departement_nom, d.departement_code, d.circonscription,
+                    d.departement_nom, d.departement_code, d.circonscription, d.civilite,
                     g.legislature, g.libelle AS groupe_libelle, g.libelle_abrev AS groupe_abrev,
                     ' . CouleurGroupe::SQL . ' AS groupe_couleur
              FROM depute d
@@ -207,18 +218,22 @@ class DepartementController extends AbstractController
 
     /**
      * Communes du département dépassant le seuil de population, de la plus
-     * peuplée à la plus petite.
+     * peuplée à la plus petite — ou, pour une collectivité sans population au
+     * référentiel, ses vingt premières communes ({@see SeuilCommunes}).
      *
      * @return list<array<string, mixed>>
      */
-    private function communes(int $departement): array
+    private function communes(int $departement, string $slug): array
     {
+        $limite = SeuilCommunes::limite($slug, null);
+
         return $this->connection->fetchAllAssociative(
             'SELECT nom, slug, population
              FROM commune
-             WHERE departement_id = :departement AND population > :seuil
-             ORDER BY population DESC, nom',
-            ['departement' => $departement, 'seuil' => self::POPULATION_MINIMALE],
+             WHERE departement_id = :departement AND ' . SeuilCommunes::condition() . '
+             ORDER BY population DESC, nom'
+            . ($limite === null ? '' : ' LIMIT ' . $limite),
+            ['departement' => $departement] + SeuilCommunes::parametres($slug, self::POPULATION_MINIMALE),
         );
     }
 }

@@ -15,13 +15,14 @@ use Symfony\Component\Routing\Attribute\Route;
  * Inscription à la newsletter (Newsletter::register de l'application
  * CodeIgniter d'origine, vue application/views/newsletter/index.php).
  *
- * L'inscription est **cassée sur le site en production depuis le 24 mars
- * 2026** : le contrôleur `Legacy_api.php`, qui servait
- * `/api/newsletter/create_newsletter`, a été supprimé en laissant sa route et
- * les deux formulaires (modale + page) qui postent dessus — chaque tentative
- * tombe en 404 et l'internaute reçoit « Vous êtes sans doute déjà inscrit ! ».
- * Les pages promettent toujours l'inscription : c'est un défaut, pas un choix,
- * et ce portage la rétablit.
+ * L'inscription a été **cassée sur le site du 24 mars au 31 juillet 2026** : le
+ * contrôleur `Legacy_api.php`, qui servait `/api/newsletter/create_newsletter`,
+ * avait été supprimé en laissant sa route et les deux formulaires (modale +
+ * page) qui postent dessus — chaque tentative tombait en 404 et l'internaute
+ * recevait « Vous êtes sans doute déjà inscrit ! ». Le site l'a rétablie le
+ * 31 juillet (commit 85c67bbf : route vers `Newsletter::create`, 405 hors POST,
+ * `false` sur une adresse invalide, puis `create_newsletter()`) — c'est le
+ * comportement que {@see self::creer()} reproduit.
  *
  * Le legacy accompagnait l'insertion d'appels Mailjet (courriel de bienvenue,
  * ajout aux listes de contacts). Ils ne sont pas portés : c'est une

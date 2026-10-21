@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Commune\SeuilCommunes;
 use App\CouleurGroupe;
 use App\Http\RechauffeurCache;
 use App\Legislature;
@@ -129,7 +130,12 @@ class CommuneController extends AbstractController
             'presidentielle_texte' => $this->recitPresidentielle((string) $ville['nom'], $presidentielle),
             'communes' => \in_array($ville['dpt_code'], DepartementController::SANS_COMMUNES, true)
                 ? []
-                : $this->communesDuDepartement((int) $ville['dpt_id']),
+                : $this->communesDuDepartement((int) $ville['dpt_id'], (string) $ville['dpt_slug']),
+            // Le bouton « Résultats des élections à … » n'écrit son adresse en
+            // clair qu'au-delà du seuil des pages d'élections (500 habitants,
+            // `url_obf_cities_election()`), huit fois plus bas que celui des
+            // fiches de ville : en deçà, le lien est masqué aux robots.
+            'seuil_elections' => ElectionController::POPULATION_MINIMALE,
             'fil_ariane' => [
                 ['nom' => 'Datan', 'url' => $this->generateUrl('home')],
                 ['nom' => 'Députés', 'url' => $this->generateUrl('deputes_index')],
@@ -456,16 +462,25 @@ class CommuneController extends AbstractController
     }
 
     /**
+     * Même liste que le pied de la page de département — seuil de population,
+     * ou vingt premières communes d'une collectivité qui n'en a pas
+     * ({@see SeuilCommunes}). Le site, lui, n'a corrigé que sa page de
+     * département et garde ici l'ancienne liste vide (oubli du commit
+     * 79e5795f, cf. {@see DepartementController::SANS_COMMUNES}).
+     *
      * @return list<array<string, mixed>>
      */
-    private function communesDuDepartement(int $departement): array
+    private function communesDuDepartement(int $departement, string $slug): array
     {
+        $limite = SeuilCommunes::limite($slug, null);
+
         return $this->connection->fetchAllAssociative(
             'SELECT nom, slug, population
              FROM commune
-             WHERE departement_id = :departement AND population > :seuil
-             ORDER BY population DESC, nom',
-            ['departement' => $departement, 'seuil' => self::POPULATION_MINIMALE],
+             WHERE departement_id = :departement AND ' . SeuilCommunes::condition() . '
+             ORDER BY population DESC, nom'
+            . ($limite === null ? '' : ' LIMIT ' . $limite),
+            ['departement' => $departement] + SeuilCommunes::parametres($slug, self::POPULATION_MINIMALE),
         );
     }
 

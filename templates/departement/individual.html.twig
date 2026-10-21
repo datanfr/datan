@@ -28,7 +28,14 @@
 <div class="container pg-departement my-5">
   <div class="row">
     <div class="col-12">
-      <h2>Découvrez les députés {{ nom_article }} à l'Assemblée nationale</h2>
+      {# Singulier quand le département n'a qu'un siège (Creuse, Lozère,
+         Saint-Pierre-et-Miquelon, Saint-Barthélemy et Saint-Martin,
+         Wallis-et-Futuna) : c'est le `count($deputes) === 1` que le site a posé
+         le 6 septembre 2026 (departement/index.php:9). Il écrit « le député »
+         sans accord ; la Lozère a une députée — accord manqué, corrigé ici
+         comme sur la fiche de ville. #}
+      {% set un_seul = deputes|length == 1 %}
+      <h2>Découvrez {{ un_seul ? (deputes[0].civilite == 'Mme' ? 'la députée' : 'le député') : 'les députés' }} {{ nom_article }} à l'Assemblée nationale</h2>
     </div>
   </div>
   <div class="row mt-5">

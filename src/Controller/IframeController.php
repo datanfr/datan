@@ -20,8 +20,10 @@ use Symfony\Component\Routing\Attribute\Route;
  * aucun `X-Frame-Options` ni `Content-Security-Policy: frame-ancestors` — l'appli
  * n'en pose aucun globalement, et ce contrôleur n'en ajoute pas. Le gabarit est
  * autonome (ni barre de navigation, ni pied de page de site), et n'embarque pas
- * le pistage (Matomo, GTM) ni la bannière de consentement (tarteaucitron) du
- * site hôte : les injecter chez un tiers serait un défaut, pas une parité.
+ * le pistage Matomo du site hôte — ni, du temps où il en avait, sa bannière de
+ * consentement et GTM, retirés du site le 10 septembre 2026 ; ni le compteur de
+ * pages de sa modale de dons, que son pied d'iframe ne charge pas non plus :
+ * les injecter chez un tiers serait un défaut, pas une parité.
  *
  * Le contenu reprend les blocs de la fiche de député tels que ce portage les
  * rend : positions importantes, carrousel des derniers votes décryptés,
