@@ -1,7 +1,11 @@
 # Mise en production
 
-Cible retenue : **VPS nu** (Debian 12 ou Ubuntu 24.04), nginx + PHP-FPM,
-préproduction sur **datan.remikel.fr** avant toute bascule de `datan.fr`.
+Cible actuelle : **symfony.datan.fr**, sur le compte o2switch (cPanel,
+LiteSpeed) qui sert déjà `datan.fr` — préproduction d'abord, puis remplaçante
+du legacy si tout va bien. Le §4 dit comment elle se déploie et ce qu'il faut
+poser une fois à la main ; les §1 et §6 décrivent aussi une cible **VPS nu**
+(nginx + PHP-FPM), conservée pour le jour où le site quitterait le mutualisé,
+et `datan.remikel.fr`, la préproduction précédente.
 La base se constitue par **restauration d'un dump**, puis les imports prennent
 le relais.
 
@@ -263,7 +267,8 @@ l'ouverture :
 
 ## 3. Git
 
-Le dépôt est `git@github.com:datanfr/datanSymfony.git`, branche `master`.
+Le dépôt est `git@github.com:datanfr/datan.git` : l'application Symfony y vit
+sur la branche `symfony`, le legacy sur `master`.
 
 - [ ] **Committer le travail en cours.** `git status` montre aujourd'hui une
       vingtaine de fichiers modifiés et cinq non suivis, dont les deux migrations
@@ -302,87 +307,207 @@ pull request, pas au milieu d'un chargement de 1 Go.
 
 C'est aussi le seul filet du dépôt : il n'y a aucun test.
 
-### `deploiement.yml` — sur push vers `master`
+### `deploiement.yml` — sur push vers `symfony`
 
-Déploiement **par `git pull` sur le serveur**, comme `PoliticAnalysis` qui vit
-sur la même machine. L'hébergement est mutualisé : ni systemd, ni droit de
-recharger PHP-FPM, donc rien à gagner à copier des répertoires de version.
+Cible : **symfony.datan.fr**, sur le **compte o2switch de datan.fr**. Le
+legacy y vit dans `~/public_html`, déployé depuis `master` par `deploy.yml` ;
+l'application Symfony vit à côté, dans `~/symfony.datan.fr`, et se déploie
+depuis la branche `symfony` (ou à la main, *Run workflow*). Le contrôle
+*Qualité* passe d'abord : rien ne part sur le serveur sans lui.
 
-Enchaînement, en SSH :
+1. **Construction sur le runner** : `composer install --no-dev`, paquets
+   JavaScript (`importmap:install`, lancé par Composer), `asset-map:compile`. Le
+   serveur ne reçoit que du tout-fait — il n'a besoin ni de Composer ni d'accès
+   à GitHub.
+2. **Liste blanche SSH** : le pare-feu o2switch n'ouvre le port 22 qu'aux
+   adresses déclarées. Le runner s'ajoute par l'API cPanel
+   (`.github/scripts/ssh-whitelist.sh`, copie conforme de celui de `master`) et
+   se retire à la fin, même en cas d'échec.
+3. **`rsync`** vers `~/symfony.datan.fr/depot/`, miroir de l'artefact : seul ce
+   qui a changé voyage.
+4. **`bin/deployer.sh`** sur le serveur, qui fait tout ce qui peut échouer
+   *avant* la bascule, dans un répertoire que personne ne sert :
+   - trouver un PHP ≥ 8.4 et vérifier `intl` et `mysqli` (cf. plus bas) ;
+   - refuser si `app:sync:quotidien` tourne ;
+   - copier `depot/` en `releases/<date>-<sha>/` (liens durs : quelques
+     secondes) et y relier ce qui survit aux versions, rangé dans `shared/` ;
+   - réécrire l'`AuthUserFile` du `.htaccess`, qui veut un chemin absolu ;
+   - comparer le `serverVersion` du `DATABASE_URL` à ce que répond la base —
+     un écart de version mineure arrête tout, cf. la panne de la collation ;
+   - `cache:warmup`, puis `doctrine:migrations:migrate` ;
+   - arrêter le worker Messenger de l'ancienne version, **basculer** le lien
+     `current` (un `mv`, atomique), garder les trois dernières versions ;
+   - relancer le réchauffage du cache HTTP en arrière-plan
+     (`shared/var/log/rechauffage.log`) : chaque version part à froid.
 
-1. refus de déployer si `app:sync:quotidien` tourne — vider `var/cache/prod` sous
-   une commande en cours la fait échouer sans message exploitable ;
-2. `git pull origin master` ;
-3. `php ~/composer.phar install --no-dev --optimize-autoloader` ;
-4. `doctrine:migrations:migrate` ;
-5. **`importmap:install`** — `assets/vendor/` est dans `.gitignore` et Stimulus
-   comme Turbo sont déclarés distants dans `importmap.php` : sans cette étape,
-   ils manquent et la compilation suivante sort un site sans JavaScript ;
-6. `asset-map:compile` ;
-7. `cache:clear --env=prod`, en dernier — le conteneur compilé fige le nombre
-   d'arguments de chaque constructeur, et du code neuf sur un cache ancien fait
-   tomber les pages en `ArgumentCountError` ;
-8. `app:cache:rechauffer --sans-purge` **en arrière-plan** (`nohup`, journal
-   `var/log/rechauffage.log`) — `cache:clear` a emporté le cache HTTP, et la
-   quinzaine de minutes du réchauffage ne doit pas retenir le workflow.
+   Un échec avant la bascule efface la version ratée ; le site continue de
+   servir la précédente.
+5. **Contrôle final** : la page d'accueil répond 200, et porte
+   `X-Robots-Tag: noindex` tant que l'hôte n'est pas `datan.fr`.
 
-Le workflow finit par interroger l'URL publique et échoue si elle ne répond
-pas 200.
+```
+~/symfony.datan.fr/
+├── depot/                  miroir de l'artefact (rsync)
+├── releases/<date>-<sha>/  versions complètes, les 3 dernières
+├── current -> releases/…   racine web : current/public
+└── shared/
+    ├── .env.local  .htpasswd  .my.cnf
+    ├── var/log/  var/tricoteuses/  var/scraper-scrutins.json  var/*.lock
+    ├── public/assets/imgs/deputes/  public/assets/imgs/deputes_detoures/
+    ├── public/assets/data/professions/
+    └── sauvegardes/
+```
 
-### Secrets et variables à créer
+Les portraits sont dans `shared/` parce que le sync quotidien les **régénère
+dans `public/`** : une version neuve qui ne les verrait pas servirait des fiches
+sans photo jusqu'au lendemain.
 
-Mêmes noms que `PoliticAnalysis` : les valeurs se recopient telles quelles, le
-serveur étant le même.
+### Cohabiter avec le legacy
+
+Le compte est celui du site en production. Trois façons de lui nuire sans le
+voir :
+
+- **Ne rien poser sous `~/public_html`.** `deploy.yml` y fait un
+  `rsync --delete` : tout ce qu'il ne connaît pas disparaît au déploiement
+  suivant du legacy.
+- **Ne jamais lancer `crontab bin/crontab.prod`.** La commande remplace la table
+  entière, tâches du legacy comprises. `bin/cron.sh` n'écrit qu'entre ses
+  marqueurs (§5).
+- **Les deux workflows se disputent la liste blanche SSH.** L'étape *Remove
+  unneeded whitelisted IPs* de `deploy.yml` retire toute adresse qu'elle ne
+  connaît pas — celle de notre runner comprise, au milieu d'un rsync. Le remède
+  est une ligne, à ajouter **dans `deploy.yml` sur `master`** :
+  ```yaml
+  concurrency:
+    group: o2switch-datan
+    cancel-in-progress: false
+  ```
+  Même groupe que `deploiement.yml` : GitHub n'exécute alors jamais les deux en
+  même temps.
+
+Et `~/.my.cnf`, s'il existe, appartient au legacy : nos identifiants de
+sauvegarde vont dans `shared/.my.cnf`.
+
+### PHP 7.4 aujourd'hui, 8.4 demain
+
+Le compte sert encore datan.fr en **PHP 7.4** ; Symfony 8.1 exige 8.4.
+
+- **En ligne de commande**, ce n'est pas bloquant : cPanel installe les
+  versions côte à côte, et `bin/serveur-commun.sh` cherche un PHP ≥ 8.4 parmi
+  les emplacements habituels (`/opt/alt/php84/usr/bin/php` sous CloudLinux,
+  `/opt/cpanel/ea-php84/root/usr/bin/php` sous EasyApache) avant le `php` du
+  `PATH`. Si la détection échoue, la variable GitHub `PHP_BIN` impose le
+  chemin. Un alt-php appelé par son chemin ne charge pas forcément les
+  extensions cochées dans le sélecteur PHP : le script le dit, extension par
+  extension.
+- **Côté web**, c'est `public/.htaccess` qui fixe la version, pour ce seul
+  dossier : `AddHandler application/x-httpd-alt-php84___lsphp .php`
+  (faq.o2switch.fr, « Version de PHP par dossier »). **Ne pas toucher au
+  sélecteur « Sélectionner une version de PHP » de cPanel** : il règle tout
+  l'hébergement, et ferait passer datan.fr en 8.4 du même coup. La forme
+  `x-httpd-php84` de la FAQ n'offre pas 8.4 ; la forme `___lsphp`, si, et c'est
+  le SAPI natif de LiteSpeed, sans perte de vitesse. Ses extensions sont celles
+  du php.ini par défaut de la version (`intl`, `mysqli`, `mbstring` compris),
+  et `php_value` comme `.user.ini` y sont ignorés.
+  **Piège** : un handler inconnu sert les `.php` en clair, sans erreur. Le
+  contrôle final du workflow refuse une page qui contient `<?php`.
+- **Le passage du compte en 8.4 concerne aussi le legacy** (CodeIgniter 3, écrit
+  pour 7.x) : à vérifier sur datan.fr le jour même. Rien à changer de notre
+  côté, sinon relancer `bin/cron.sh installer` si le chemin du PHP retenu a
+  changé.
+
+### Secrets et variables
+
+Les secrets sont **ceux de `deploy.yml`**, déjà posés sur le dépôt : même
+compte, même clé.
 
 | Nom | Type | Valeur |
 | --- | --- | --- |
-| `DEPLOY_KEY` | secret | clé privée SSH de déploiement |
-| `DEPLOY_HOST` | secret | hôte du mutualisé |
-| `DEPLOY_USER` | secret | `wqktajhw` |
-| `DEPLOY_PORT` | secret | port SSH |
-| `DEPLOY_PATH` | variable | `/home/wqktajhw/datan` (valeur par défaut du workflow) |
-| `URL_PUBLIQUE` | variable | `https://datan.remikel.fr` |
-| `HTTP_AUTH` | secret | `datan:<mot de passe>` du verrou de préproduction (§6) ; à supprimer à la bascule |
+| `CPANEL_SERVER` | secret | déjà posé (serveur o2switch) |
+| `CPANEL_USERNAME` | secret | déjà posé (compte cPanel de datan.fr) |
+| `CPANEL_API_TOKEN` | secret | déjà posé (liste blanche SSH) |
+| `SSH_PRIVATE_KEY` | secret | déjà posé |
+| `HTTP_AUTH` | secret | **à créer** : `identifiant:motdepasse` du verrou de préproduction ; à supprimer à la bascule |
+| `SYMFONY_RACINE` | variable | facultative, `symfony.datan.fr` (relatif au `$HOME`) |
+| `SYMFONY_URL` | variable | facultative, `https://symfony.datan.fr` |
+| `PHP_BIN` | variable | facultative, chemin d'un PHP ≥ 8.4 si la détection échoue |
 
 ### Amorçage, à faire une fois
 
-Le workflow suppose un dépôt déjà cloné et configuré :
+Dans cPanel :
+
+1. **Base et compte MariaDB** (*Bases de données MySQL*) — cPanel préfixe les
+   deux noms par le compte. Relever la version exacte :
+   `mariadb -e 'SELECT VERSION()'`. Si ce n'est pas une 10.6, aligner aussi
+   l'image du service de `qualite.yml`, sans quoi le contrôle des migrations
+   vérifie une autre version que celle du serveur.
+2. **Sous-domaine `symfony.datan.fr`**, racine
+   **`symfony.datan.fr/current/public`** — jamais `symfony.datan.fr/current` :
+   servir la racine du projet exposerait `.env.local`, `var/` et `vendor/`.
+   cPanel crée le dossier s'il manque ; `deployer.sh` l'écarte
+   (`current.avant-…`) au premier passage pour poser son lien. Certificat :
+   AutoSSL / Let's Encrypt.
+3. **Version de PHP** : rien à faire dans cPanel, `public/.htaccess` s'en
+   charge (cf. plus haut). Vérifier seulement que `/opt/alt/php84/usr/bin/php`
+   existe en SSH.
+
+En SSH (`ssh <compte>@<serveur>`, depuis une adresse de la liste blanche) :
 
 ```bash
-cd /home/wqktajhw
-git clone git@github.com:datanfr/datanSymfony.git datan
-cd datan
-php ~/composer.phar install --no-dev --optimize-autoloader
+mkdir -p ~/symfony.datan.fr/shared && cd ~/symfony.datan.fr/shared
+php -r 'echo bin2hex(random_bytes(32)), "\n";'     # APP_SECRET
+nano .env.local && chmod 600 .env.local             # contenu ci-dessous
+printf 'datan:%s\n' "$(openssl passwd -apr1)" > .htpasswd
+printf '[client]\nuser=<compte_base>\npassword=<mdp>\n' > .my.cnf && chmod 600 .my.cnf
 ```
-
-Puis `/home/wqktajhw/datan/.env.local`, en `chmod 600` — **avec le vrai
-`serverVersion`** :
 
 ```dotenv
 APP_SECRET=<64 caractères>
-DATABASE_URL="mysqli://wqktajhw_xxx:<mdp>@127.0.0.1:3306/wqktajhw_datan?serverVersion=10.6.27-MariaDB&charset=utf8mb4"
+DATABASE_URL="mysqli://<compte_base>:<mdp>@127.0.0.1:3306/<base>?serverVersion=<version relevée>-MariaDB&charset=utf8mb4"
+DEFAULT_URI=https://symfony.datan.fr
+CORS_ALLOW_ORIGIN='^https://(symfony\.datan\.fr|datan\.fr)$'
 MAILER_DSN=<DSN Mailjet réel>
+MATOMO_URL=
 ```
 
-> `serverVersion=10.6.27-MariaDB`, et surtout pas le `11.7.2-MariaDB` du poste.
-> Un `serverVersion` qui ment fait générer à Doctrine du DDL calibré pour une
-> version que le serveur ne comprend pas — exactement la panne de la collation.
+`MATOMO_URL` reste vide : les visites d'essai pollueraient les statistiques
+réelles. `DEFAULT_URI` doit être l'adresse exacte des visiteurs, sinon le
+réchauffage remplit le cache sous une autre clé.
 
-Enfin, le sous-domaine `datan.remikel.fr` doit pointer sur
-`/home/wqktajhw/datan/public`, et non sur `/home/wqktajhw/datan` : servir la
-racine du projet exposerait `.env`, `var/` et `vendor/`.
+Puis la base, par restauration du dump (§2.a et §2.b) — depuis le poste
+Windows, le dépôt est dans `C:\Users\Remi\workspace\datan` ; envoyer les
+fichiers dans `~/symfony.datan.fr/shared/` plutôt que `/tmp`, partagé sur un
+mutualisé. Et enfin :
 
----
+1. **Premier déploiement** : *Actions → Déploiement → Run workflow* (ou un push
+   sur `symfony`).
+2. **Clones Tricoteuses** (1,8 Go, une fois), cf. §2.d, depuis
+   `~/symfony.datan.fr/current`, avec le PHP qu'a retenu le déploiement (il
+   l'affiche en tête de journal).
+3. **Planification** : `bin/cron.sh afficher`, puis `installer` (§5).
+
+La base du legacy est **sur le même serveur** : les imports de récupération
+(§2.d) peuvent s'y alimenter directement, en lançant la requête d'export de
+chaque docblock avec le client `mariadb` du compte au lieu du `docker exec` —
+et c'est la vraie base, pas le backup anonymisé.
 
 ## 5. Cron
 
-La table à poser est **`bin/crontab.prod`** — chemins et nom de base en tête de
-fichier, à ajuster avant :
+**`bin/crontab.prod` est un gabarit**, pas une table : le compte porte aussi
+les tâches du legacy, et `crontab bin/crontab.prod` les effacerait.
+`bin/cron.sh` le rend — chemins absolus, PHP détecté, nom de base lu dans
+`.env.local` — et ne l'écrit qu'entre deux marqueurs, en gardant une copie de
+la table précédente dans `shared/` :
 
 ```bash
-crontab /home/wqktajhw/datan/bin/crontab.prod
-crontab -l                                     # relire ce qui est installé
+bash ~/symfony.datan.fr/current/bin/cron.sh afficher    # diff, sans rien écrire
+bash ~/symfony.datan.fr/current/bin/cron.sh installer   # pose ou remplace le bloc
+bash ~/symfony.datan.fr/current/bin/cron.sh retirer
+crontab -l                                              # relire ce qui est installé
 ```
+
+Relire `afficher` avant d'installer : les heures du bloc (6 h, 3 h 30, lundi
+4 h 15) ne doivent pas tomber sur celles du legacy, qui partage le même CPU.
 
 `CRON.md` porte le détail et les justifications. L'extrait ci-dessous en donne
 l'essentiel, **mis en forme pour la lecture** : cron arrête la commande à la fin
@@ -550,14 +675,18 @@ LiteSpeed sert sans passer par PHP (images, feuilles de style, documents). Le
 fichier de mots de passe n'est pas dans le dépôt :
 
 ```
-/home/wqktajhw/datan/.htpasswd     # « datan:$apr1$… », lisible par le serveur (644)
+~/symfony.datan.fr/shared/.htpasswd   # « datan:$apr1$… », lisible par le serveur (644)
 ```
+
+`AuthUserFile` veut un chemin absolu, qui dépend du compte : le dépôt porte un
+chemin factice, que `bin/deployer.sh` remplace dans chaque version. Il refuse
+de déployer si le fichier manque — LiteSpeed répondrait 500 partout.
 
 - **Hachage apr1 obligatoire** — `openssl passwd -apr1` : le serveur n'a pas
   `htpasswd`, et LiteSpeed n'est pas garanti sur bcrypt. Ajouter ou remplacer
   un compte :
   ```bash
-  printf 'nom:%s\n' "$(openssl passwd -apr1)" >> /home/wqktajhw/datan/.htpasswd
+  printf 'nom:%s\n' "$(openssl passwd -apr1)" >> ~/symfony.datan.fr/shared/.htpasswd
   ```
 - **Pas de condition sur l'hôte**, contrairement au garde-fou applicatif :
   LiteSpeed ignore `Require env`, `Require expr` et `Allow from env=` sans rien
@@ -571,8 +700,8 @@ fichier de mots de passe n'est pas dans le dépôt :
   (`identifiant:motdepasse`) ; sans lui, il tombe en 401 et le déploiement est
   signalé en échec alors qu'il a eu lieu.
 - **Ne pas utiliser l'outil « protection par mot de passe » du panneau N0C**
-  sur ce dossier : il écrit dans `public/.htaccess`, qui est suivi par Git, et
-  le `git pull` du déploiement suivant refuserait de passer.
+  sur ce dossier : il écrit dans le `public/.htaccess` de la version servie,
+  que le déploiement suivant remplace sans prévenir.
 
 Le jour de la bascule : retirer le bloc de `public/.htaccess`, le secret
 `HTTP_AUTH`, et supprimer `.htpasswd` du serveur.

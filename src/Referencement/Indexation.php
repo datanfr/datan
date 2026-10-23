@@ -31,8 +31,13 @@ final class Indexation
      * `Request::getHost()` rend l'hôte en minuscules et sans le port : écrire
      * les entrées de la même façon, sans quoi la comparaison stricte ne prend
      * jamais.
+     *
+     * `symfony.datan.fr` est la préproduction chez O2Switch, sur le compte même
+     * de datan.fr : un sous-domaine du site réel, que les moteurs rattachent au
+     * même propriétaire — le duplicata le plus coûteux de tous. Il reste dans la
+     * liste après la bascule tant que l'adresse répond.
      */
-    private const HOTES_NON_INDEXABLES = ['datan.remikel.fr'];
+    private const HOTES_NON_INDEXABLES = ['datan.remikel.fr', 'symfony.datan.fr'];
 
     public function __construct(private readonly RequestStack $requetes)
     {

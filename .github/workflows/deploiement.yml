@@ -1,91 +1,160 @@
 name: Déploiement
 
-# Déploiement par « git pull » sur le serveur, comme PoliticAnalysis qui vit sur
-# la même machine : l'hébergement est mutualisé, sans systemd ni droit de
-# recharger PHP-FPM, et une copie par rsync n'y apporterait rien.
+# Mise en ligne sur symfony.datan.fr, hébergé par le même compte o2switch que
+# datan.fr (legacy, déployé depuis master par deploy.yml). D'où trois partis
+# pris :
+#
+# - Construction sur le runner, pas sur le serveur. Dépendances, paquets
+#   JavaScript et assets compilés partent tout faits : le serveur n'a besoin ni
+#   de Composer, ni d'accès à GitHub, ni — pour cette étape — de PHP 8.4. Seuls
+#   le conteneur et les migrations s'y exécutent (bin/deployer.sh).
+# - Une version = un répertoire, servie par un lien symbolique (current). Le
+#   site ne sert jamais un mélange de code neuf et de conteneur ancien, qui le
+#   ferait tomber en ArgumentCountError (CLAUDE.md).
+# - Le pare-feu o2switch n'ouvre SSH qu'aux adresses de sa liste blanche : le
+#   runner s'y ajoute le temps du déploiement, et s'en retire ensuite.
+#
+# Secrets — les mêmes que deploy.yml, le compte étant le même :
+#   CPANEL_SERVER, CPANEL_USERNAME, CPANEL_API_TOKEN, SSH_PRIVATE_KEY
+#   HTTP_AUTH  « identifiant:motdepasse » du verrou de préproduction, pour le
+#              contrôle final ; à retirer avec le verrou
+# Variables (facultatives) :
+#   SYMFONY_RACINE  répertoire de l'application, relatif au $HOME du compte
+#                   (symfony.datan.fr par défaut). JAMAIS sous public_html :
+#                   deploy.yml y fait un rsync --delete.
+#   SYMFONY_URL     adresse publique (https://symfony.datan.fr par défaut)
+#   PHP_BIN         chemin d'un PHP ≥ 8.4 sur le serveur, si la détection de
+#                   bin/serveur-commun.sh ne le trouve pas
 on:
   push:
-    branches: [master]
+    branches: [symfony]
   workflow_dispatch:
 
-# Deux déploiements simultanés se marcheraient dessus dans le même répertoire.
+# Le même groupe doit figurer dans deploy.yml (master) : son étape « Remove
+# unneeded whitelisted IPs » retire de la liste blanche toute adresse qu'elle ne
+# connaît pas — celle de ce runner comprise, en plein rsync.
 concurrency:
-  group: deploiement
+  group: o2switch-datan
   cancel-in-progress: false
 
 jobs:
+  qualite:
+    name: Qualité
+    uses: ./.github/workflows/qualite.yml
+
   deployer:
     name: Mettre en ligne
+    needs: qualite
     runs-on: ubuntu-latest
+    env:
+      CPANEL_SERVER: ${{ secrets.CPANEL_SERVER }}
+      CPANEL_USERNAME: ${{ secrets.CPANEL_USERNAME }}
+      CPANEL_API_TOKEN: ${{ secrets.CPANEL_API_TOKEN }}
+      WHITELIST: bash .github/scripts/ssh-whitelist.sh
+      RACINE: ${{ vars.SYMFONY_RACINE || 'symfony.datan.fr' }}
+      URL_PUBLIQUE: ${{ vars.SYMFONY_URL || 'https://symfony.datan.fr' }}
 
     steps:
+      - uses: actions/checkout@v4
+
+      - name: PHP 8.4
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.4'
+          extensions: ctype, iconv, intl, mysqli, mbstring, xml, zip
+          coverage: none
+          tools: composer:v2
+
+      # Les scripts automatiques de Composer (cache:clear, assets:install,
+      # importmap:install) démarrent le noyau : il lui faut un environnement
+      # complet, mais aucune base — rien ne s'y connecte à ce stade.
+      - name: Construire
+        env:
+          APP_ENV: prod
+          APP_SECRET: construction-sans-valeur-secrete
+          DATABASE_URL: "mysqli://construction:construction@127.0.0.1:3306/construction?serverVersion=10.6.27-MariaDB&charset=utf8mb4"
+        run: |
+          composer install --no-interaction --no-progress --prefer-dist --no-dev --optimize-autoloader
+          php bin/console asset-map:compile --no-ansi
+          git rev-parse HEAD > REVISION
+          echo "ID=$(date -u +%Y%m%d-%H%M%S)-${GITHUB_SHA::8}" >> "$GITHUB_ENV"
+
+      - name: Adresse du runner
+        id: ip
+        run: |
+          IP=$(curl -4 -sf --max-time 10 https://api.ipify.org || curl -4 -sf --max-time 10 https://checkip.amazonaws.com)
+          IP=$(echo "$IP" | tr -d "[:space:]")
+          [[ "$IP" =~ ^[0-9]+[.][0-9]+[.][0-9]+[.][0-9]+$ ]] || { echo "IP publique introuvable : '$IP'"; exit 1; }
+          echo "ipv4=$IP" >> "$GITHUB_OUTPUT"
+
+      # Ajout seulement : les adresses déjà présentes appartiennent à d'autres
+      # (le poste de l'équipe, deploy.yml), et la liste plafonne à 5 entrées.
+      - name: Ouvrir SSH au runner
+        run: |
+          $WHITELIST add "${{ steps.ip.outputs.ipv4 }}"
+          $WHITELIST verify "${{ steps.ip.outputs.ipv4 }}"
+
       - name: Clé SSH
         run: |
-          mkdir -p ~/.ssh
-          echo "${{ secrets.DEPLOY_KEY }}" > ~/.ssh/deploy_key
-          chmod 600 ~/.ssh/deploy_key
+          mkdir -p ~/.ssh && chmod 700 ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_deploiement
+          chmod 600 ~/.ssh/id_deploiement
+          # Chemin absolu : rsync -e découpe la commande sans passer par un shell,
+          # un « ~ » n'y serait pas développé.
+          echo "SSH=ssh -o StrictHostKeyChecking=accept-new -o ServerAliveInterval=30 -i $HOME/.ssh/id_deploiement" >> "$GITHUB_ENV"
 
-      - name: Déployer
+      # var/ ne voyage pas : son cache porte les chemins du runner, et le reste
+      # (journaux, clones Tricoteuses) vit dans shared/ sur le serveur.
+      - name: Envoyer
         run: |
-          ssh -o StrictHostKeyChecking=no -p ${{ secrets.DEPLOY_PORT }} -i ~/.ssh/deploy_key \
-            ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }} << 'EOF'
-          set -e
-          cd ${{ vars.DEPLOY_PATH || '/home/wqktajhw/datan' }}
+          $SSH "$CPANEL_USERNAME@$CPANEL_SERVER" "mkdir -p '$RACINE/depot' '$RACINE/releases' '$RACINE/shared'"
+          rsync -az --delete --timeout=300 -e "$SSH" \
+            --exclude=/.git/ --exclude=/.github/ --exclude=/.claude/ \
+            --exclude=/tests/ --exclude=/var/ \
+            --exclude=/.env.local --exclude='/.env.*.local' \
+            ./ "$CPANEL_USERNAME@$CPANEL_SERVER:$RACINE/depot/"
 
-          # Vider var/cache/prod sous une commande en cours la fait échouer sans
-          # message exploitable (CLAUDE.md) : le sync de 6 h et le déploiement ne
-          # doivent jamais se croiser. Mieux vaut refuser que casser la moisson.
-          if ps -u "$(id -un)" -o args= 2>/dev/null | grep -q '[a]pp:sync:quotidien'; then
-            echo "!! Synchronisation quotidienne en cours. Déploiement interrompu."
-            exit 1
-          fi
+      - name: Mettre en ligne
+        run: |
+          $SSH "$CPANEL_USERNAME@$CPANEL_SERVER" \
+            "PHP_BIN='${{ vars.PHP_BIN }}' bash '$RACINE/depot/bin/deployer.sh' '$ID'"
 
-          echo "→ Code"
-          git pull origin master
+      - name: Refermer SSH
+        if: always() && steps.ip.outputs.ipv4 != ''
+        run: $WHITELIST remove "${{ steps.ip.outputs.ipv4 }}"
 
-          echo "→ Dépendances"
-          php ~/composer.phar install --no-interaction --prefer-dist --no-dev --optimize-autoloader
+      - name: Nettoyer la clé
+        if: always()
+        run: rm -f ~/.ssh/id_deploiement
 
-          echo "→ Migrations"
-          php bin/console doctrine:migrations:migrate --no-interaction --no-ansi --allow-no-migration
-
-          # assets/vendor/ est dans .gitignore : Stimulus et Turbo, déclarés
-          # distants dans importmap.php, ne sont pas dans le dépôt et doivent se
-          # télécharger ici, avant la compilation.
-          echo "→ Paquets JavaScript"
-          php bin/console importmap:install --no-ansi
-
-          echo "→ Compilation des assets"
-          php bin/console asset-map:compile --no-ansi
-
-          # En dernier : le conteneur compilé fige le nombre d'arguments de chaque
-          # constructeur. Servir du code neuf avec un cache ancien fait tomber les
-          # pages en ArgumentCountError (CLAUDE.md).
-          echo "→ Cache"
-          php bin/console cache:clear --env=prod --no-ansi
-
-          # cache:clear a emporté le cache HTTP avec le reste. Le réchauffage
-          # dure une quinzaine de minutes : il part en arrière-plan, détaché de
-          # la session SSH, pour ne pas faire attendre le workflow.
-          echo "→ Réchauffage du cache HTTP (arrière-plan, var/log/rechauffage.log)"
-          APP_ENV=prod nohup php bin/console app:cache:rechauffer --sans-purge --no-ansi             >> var/log/rechauffage.log 2>&1 < /dev/null &
-
-          echo "✓ En ligne"
-          EOF
-
-      # La préproduction est sous mot de passe (bloc « PRÉPRODUCTION » de
-      # public/.htaccess) : sans identifiants, curl reçoit 401 et le contrôle ne
-      # dit rien de l'application. Le secret porte « identifiant:motdepasse » ;
-      # il se retire avec le bloc, le jour de la bascule.
+      # Deux contrôles. Le site répond 200 — sous mot de passe tant que le verrou
+      # de préproduction est posé. Et, hors datan.fr, il interdit l'indexation :
+      # un symfony.datan.fr indexé serait un duplicata intégral du vrai site, sur
+      # le même domaine (App\Referencement\Indexation).
       - name: Vérifier que le site répond
         env:
           HTTP_AUTH: ${{ secrets.HTTP_AUTH }}
         run: |
           identifiants=()
-          if [ -n "$HTTP_AUTH" ]; then identifiants=(-u "$HTTP_AUTH"); fi
-          code=$(curl -s -o /dev/null -w '%{http_code}' --max-time 30 "${identifiants[@]}" "${{ vars.URL_PUBLIQUE }}")
-          echo "HTTP $code sur ${{ vars.URL_PUBLIQUE }}"
-          if [ "$code" = 401 ] && [ -z "$HTTP_AUTH" ]; then
-            echo "!! Le site demande un mot de passe : poser le secret HTTP_AUTH (identifiant:motdepasse)."
+          [ -n "$HTTP_AUTH" ] && identifiants=(-u "$HTTP_AUTH")
+          entetes=$(curl -s -D - -o page.html --max-time 30 "${identifiants[@]}" "$URL_PUBLIQUE/")
+          code=$(printf '%s' "$entetes" | awk 'NR==1 {print $2}')
+          echo "HTTP $code sur $URL_PUBLIQUE"
+          case "$code" in
+            200) ;;
+            401) echo "!! Le site demande un mot de passe : poser le secret HTTP_AUTH (identifiant:motdepasse)."; exit 1 ;;
+            500) echo "!! 500 : si le sous-domaine tourne encore en PHP 7.4, le contrôle de plateforme de Composer refuse de démarrer. Vérifier la ligne AddHandler … php84 de public/.htaccess."; exit 1 ;;
+            *) exit 1 ;;
+          esac
+          # Un handler PHP inconnu de LiteSpeed ne lève aucune erreur : il sert
+          # index.php en clair, avec un 200 (public/.htaccess, en-tête).
+          if grep -q '<?php' page.html; then
+            echo "!! Le serveur rend le code PHP au lieu de l'exécuter : handler de public/.htaccess non reconnu."
+            exit 1
           fi
-          test "$code" = "200"
+          hote=$(printf '%s' "$URL_PUBLIQUE" | sed -E 's|^https?://([^/:]+).*|\1|')
+          if [ "$hote" != "datan.fr" ] && [ "$hote" != "www.datan.fr" ]; then
+            printf '%s' "$entetes" | grep -qi '^x-robots-tag:.*noindex' \
+              || { echo "!! $hote est indexable : l'ajouter à Indexation::HOTES_NON_INDEXABLES."; exit 1; }
+            echo "X-Robots-Tag noindex présent."
+          fi

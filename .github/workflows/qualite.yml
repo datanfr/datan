@@ -9,6 +9,8 @@ on:
     branches: [master]
   pull_request:
   workflow_dispatch:
+  # Appelé par deploiement.yml, qui n'envoie rien sur le serveur sans lui.
+  workflow_call:
 
 jobs:
   controles:

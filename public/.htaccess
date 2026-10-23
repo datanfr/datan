@@ -8,6 +8,29 @@
 # le fichier ne change jamais et le paquet n'apporte rien d'autre.
 
 # ---------------------------------------------------------------------------
+# PHP 8.4 pour ce seul dossier. Le compte o2switch est celui de datan.fr, que
+# le sélecteur de cPanel règle pour tout l'hébergement — legacy compris, en
+# 7.4. Un .htaccess fixe la version du dossier qui le porte, et celui-ci est la
+# racine web du sous-domaine (current/public) : datan.fr n'en voit rien.
+#
+# Forme « ___lsphp » (trois tirets bas) et non « x-httpd-php84 » : c'est le SAPI
+# natif de LiteSpeed, sans la perte de vitesse de l'autre forme, et la seule qui
+# donne PHP 8.4 (faq.o2switch.fr, « Version de PHP par dossier »). Contrepartie
+# sans effet ici : php_value et .user.ini y sont ignorés.
+#
+# PIÈGE : un handler inconnu ne lève aucune erreur, le serveur rend le .php EN
+# CLAIR. C'est pourquoi le contrôle final du workflow de déploiement refuse une
+# réponse qui contient « <?php ». <IfModule LiteSpeed> : sous Apache, la ligne
+# n'aurait pas de sens, et le fichier doit y rester inoffensif.
+#
+# La ligne reste juste après le passage du compte en 8.4, et le jour où ce
+# dossier servira datan.fr.
+# ---------------------------------------------------------------------------
+<IfModule LiteSpeed>
+    AddHandler application/x-httpd-alt-php84___lsphp .php
+</IfModule>
+
+# ---------------------------------------------------------------------------
 # PRÉPRODUCTION : mot de passe sur tout le site, et non-indexation.
 #
 # À RETIRER le jour de la bascule sur datan.fr, avec le secret HTTP_AUTH du
@@ -18,11 +41,13 @@
 # sans un mot. Un verrou qui pourrait ne pas s'appliquer en silence est pire
 # qu'un verrou à retirer à la main.
 #
-# Le fichier de mots de passe vit hors de public/ et hors du dépôt, à côté de
-# .env. Hachage apr1 (« openssl passwd -apr1 »), le seul format que LiteSpeed
-# et Apache lisent tous deux ; le serveur n'a pas « htpasswd ». Ajouter un
-# compte :
-#   printf 'nom:%s\n' "$(openssl passwd -apr1)" >> /home/wqktajhw/datan/.htpasswd
+# Le fichier de mots de passe vit hors de public/ et hors du dépôt, dans le
+# shared/ du serveur. AuthUserFile veut un chemin absolu, qui dépend du compte :
+# bin/deployer.sh réécrit la ligne ci-dessous dans chaque version, et refuse de
+# déployer si le fichier manque — LiteSpeed répondrait 500 partout. Hachage apr1
+# (« openssl passwd -apr1 »), le seul format que LiteSpeed et Apache lisent
+# tous deux ; le serveur n'a pas « htpasswd ». Ajouter un compte :
+#   printf 'nom:%s\n' "$(openssl passwd -apr1)" >> ~/symfony.datan.fr/shared/.htpasswd
 #
 # /robots.txt n'est pas exempté, bien qu'un « Disallow: / » lisible sans mot de
 # passe serait plus net. L'adresse est réécrite vers index.php, et LiteSpeed
@@ -33,7 +58,7 @@
 # ---------------------------------------------------------------------------
 AuthType Basic
 AuthName "Datan - preproduction"
-AuthUserFile /home/wqktajhw/datan/.htpasswd
+AuthUserFile /remplace/par/bin/deployer.sh/.htpasswd
 Require valid-user
 
 # L'application pose déjà cet en-tête sur tout ce qu'elle rend

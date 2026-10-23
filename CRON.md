@@ -64,9 +64,11 @@ planifie.
 
 ### Serveur (crontab)
 
-La table réellement installée est **`bin/crontab.prod`** (`crontab
-bin/crontab.prod`) : elle porte aussi la sauvegarde, le consommateur Messenger
-et la rotation des journaux. L'extrait ci-dessous est mis en forme pour la
+La table réellement installée est le gabarit **`bin/crontab.prod`**, posé par
+`bin/cron.sh installer` — **jamais par `crontab bin/crontab.prod`**, qui
+remplacerait la table du compte et ses tâches legacy (`DEPLOIEMENT.md` §5). Elle
+porte aussi la sauvegarde, le consommateur Messenger et la rotation des
+journaux. L'extrait ci-dessous est mis en forme pour la
 lecture — **cron arrête la commande à la fin de la ligne**, la continuation par
 antislash n'est pas garantie d'une implémentation à l'autre.
 

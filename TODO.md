@@ -311,6 +311,25 @@ Pour chacun : comprendre la règle du legacy (la réponse est dans son code, sou
   legacy (l'entité `&nbsp;` compte 6 caractères chez lui). À ignorer sauf si l'on
   vise l'octet près.
 
+## Déploiement sur symfony.datan.fr (compte o2switch de datan.fr)
+
+Automatisation posée le 2026-10-23 (`deploiement.yml`, `bin/deployer.sh`,
+`bin/cron.sh` ; DEPLOIEMENT.md §4). Reste, à la main :
+
+- [ ] Ajouter `concurrency: { group: o2switch-datan }` à `deploy.yml` **sur
+  `master`** : sans cela, un déploiement du legacy peut retirer l'IP de notre
+  runner de la liste blanche SSH en plein rsync.
+- [ ] cPanel : base + compte MariaDB, sous-domaine `symfony.datan.fr` sur
+  `symfony.datan.fr/current/public`, certificat. PHP 8.4 : par le `.htaccess`,
+  surtout pas par le sélecteur du compte (il passerait datan.fr en 8.4).
+- [ ] Relever la version MariaDB du serveur → `serverVersion` de `.env.local`,
+  et l'image de `qualite.yml` si ce n'est pas une 10.6.
+- [ ] `shared/.env.local`, `shared/.htpasswd`, `shared/.my.cnf` ; secret GitHub
+  `HTTP_AUTH`.
+- [ ] Restaurer le dump, premier déploiement, clones Tricoteuses,
+  `bin/cron.sh afficher` puis `installer`.
+- [ ] Passage du compte en PHP 8.4 : vérifier le legacy sur datan.fr le jour même.
+
 ## Checklist de bascule (rien à coder, à dérouler le jour J)
 
 - [ ] Rejouer les imports de récupération contre la **vraie** base de production
