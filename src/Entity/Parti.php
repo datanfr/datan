@@ -12,7 +12,7 @@ use App\Repository\PartiRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Serializer\Attribute\Groups;
 
 /**
  * Parti politique (organe de type « PARPOL » dans le modèle de l'Assemblée nationale).

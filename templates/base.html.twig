@@ -232,12 +232,15 @@
           <li class="nav-item ml-md-2">
             <a class="no-decoration btn btn-info" href="{{ path('page_soutenir') }}">Nous soutenir</a>
           </li>
-          {# Le menu du connecté, comme l'origine (header.php:213-233). Pour un
-             anonyme sans cookie, app.user ne démarre pas de session (pare-feu
-             lazy) : les pages publiques restent cachables. Un porteur de
-             session contourne, lui, le cache partagé (CacheAvecSession) —
-             sans quoi il verrait la navbar anonyme déjà en magasin. #}
-          {% if app.user %}
+          {# Le menu du connecté, comme l'origine (header.php:213-233). Un
+             porteur de session contourne le cache partagé (CacheAvecSession) —
+             sans quoi il verrait la navbar anonyme déjà en magasin.
+             hasPreviousSession n'est pas redondant : en Symfony 7.4 et 8 (pas en
+             7.2), lire app.user compte comme un usage de la session, même pour un anonyme
+             sans cookie, et toute page qui l'affiche part en « private » — le
+             cache HTTP n'en garde plus aucune. Ne tester que le cookie, comme
+             CacheAvecSession, laisse les pages des anonymes publiques. #}
+          {% if app.request.hasPreviousSession and app.user %}
             <li class="nav-item dropdown ml-1 ml-md-2" id="nav-logged-in">
               <a class="dropdown-toggle no-decoration btn btn-primary" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 {# person-fill.svg inliné SANS son <title>Âge</title> : le

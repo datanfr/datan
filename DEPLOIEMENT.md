@@ -52,19 +52,30 @@ inconfortables.
 
 ### Paquets
 
+Le projet exige **PHP 8.4** (`composer.json`, dont `config.platform.php` fige
+la résolution des dépendances sur 8.4.1). Ni Debian 12 (8.2) ni Ubuntu 24.04
+(8.3) ne le livrent : il faut d'abord le dépôt d'Ondřej Surý.
+
 ```bash
+# Debian 12
+sudo apt install -y lsb-release ca-certificates curl
+sudo curl -sSLo /usr/share/keyrings/deb.sury.org-php.gpg https://packages.sury.org/php/apt.gpg
+echo "deb [signed-by=/usr/share/keyrings/deb.sury.org-php.gpg] https://packages.sury.org/php/ $(lsb_release -sc) main" \
+  | sudo tee /etc/apt/sources.list.d/php.list
+# Ubuntu 24.04 : sudo add-apt-repository ppa:ondrej/php
+
 sudo apt update && sudo apt install -y \
   nginx git curl unzip \
-  php8.3-fpm php8.3-cli php8.3-mysql php8.3-intl php8.3-mbstring \
-  php8.3-xml php8.3-curl php8.3-zip php8.3-opcache
+  php8.4-fpm php8.4-cli php8.4-mysql php8.4-intl php8.4-mbstring \
+  php8.4-xml php8.4-curl php8.4-zip php8.4-opcache
 ```
 
 Trois pièges :
 
-- **`php8.3-mysql` fournit `mysqli`** (et `pdo_mysql`) ; il n'existe pas de
-  paquet `php8.3-mysqli`. Le DSN du projet est `mysqli://` : sans cette
+- **`php8.4-mysql` fournit `mysqli`** (et `pdo_mysql`) ; il n'existe pas de
+  paquet `php8.4-mysqli`. Le DSN du projet est `mysqli://` : sans cette
   extension, la connexion échoue au premier appel.
-- **`php8.3-intl` n'est pas optionnelle**, alors que `composer.json` ne la
+- **`php8.4-intl` n'est pas optionnelle**, alors que `composer.json` ne la
   déclare pas. `DeputeController`, `ElectionController` et
   `ResultatCirconscriptionRepository` construisent des `IntlDateFormatter` en
   `fr_FR`, `GroupeController` un `Collator('fr_FR')`, et `ImportActeursCommand`
@@ -463,7 +474,7 @@ server {
     }
 
     location ~ ^/index\.php(/|$) {
-        fastcgi_pass unix:/run/php/php8.3-fpm.sock;
+        fastcgi_pass unix:/run/php/php8.4-fpm.sock;
         fastcgi_split_path_info ^(.+\.php)(/.*)$;
         include fastcgi_params;
         fastcgi_param SCRIPT_FILENAME $realpath_root$fastcgi_script_name;
