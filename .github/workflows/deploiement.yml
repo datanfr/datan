@@ -16,8 +16,6 @@ name: Déploiement
 #
 # Secrets — les mêmes que deploy.yml, le compte étant le même :
 #   CPANEL_SERVER, CPANEL_USERNAME, CPANEL_API_TOKEN, SSH_PRIVATE_KEY
-#   HTTP_AUTH  « identifiant:motdepasse » du verrou de préproduction, pour le
-#              contrôle final ; à retirer avec le verrou
 # Variables (facultatives) :
 #   SYMFONY_RACINE  répertoire de l'application, relatif au $HOME du compte
 #                   (symfony.datan.fr par défaut). JAMAIS sous public_html :
@@ -134,22 +132,17 @@ jobs:
         if: always()
         run: rm -f ~/.ssh/id_deploiement
 
-      # Deux contrôles. Le site répond 200 — sous mot de passe tant que le verrou
-      # de préproduction est posé. Et, hors datan.fr, il interdit l'indexation :
+      # Deux contrôles. Le site répond 200, avec du PHP exécuté. Et, hors
+      # datan.fr, il interdit l'indexation :
       # un symfony.datan.fr indexé serait un duplicata intégral du vrai site, sur
       # le même domaine (App\Referencement\Indexation).
       - name: Vérifier que le site répond
-        env:
-          HTTP_AUTH: ${{ secrets.HTTP_AUTH }}
         run: |
-          identifiants=()
-          [ -n "$HTTP_AUTH" ] && identifiants=(-u "$HTTP_AUTH")
-          entetes=$(curl -s -D - -o page.html --max-time 30 "${identifiants[@]}" "$URL_PUBLIQUE/")
+          entetes=$(curl -s -D - -o page.html --max-time 30 "$URL_PUBLIQUE/")
           code=$(printf '%s' "$entetes" | awk 'NR==1 {print $2}')
           echo "HTTP $code sur $URL_PUBLIQUE"
           case "$code" in
             200) ;;
-            401) echo "!! Le site demande un mot de passe : poser le secret HTTP_AUTH (identifiant:motdepasse)."; exit 1 ;;
             500) echo "!! 500 : si le sous-domaine tourne encore en PHP 7.4, le contrôle de plateforme de Composer refuse de démarrer. Vérifier la ligne AddHandler … php84 de public/.htaccess."; exit 1 ;;
             *) exit 1 ;;
           esac

@@ -333,8 +333,8 @@ Automatisation posée le 2026-10-23 (`deploiement.yml`, `bin/deployer.sh`,
   le legacy en 7.4 dans `~/public_html/.htaccess` (si le handler 7.4 a les mêmes
   extensions que le sélecteur), support o2switch, ou sous-compte (« lune »).
 - [ ] Certificat Let's Encrypt de `symfony.datan.fr` (cPanel).
-- [ ] `~/symfony.datan.fr/.env.local`, `.htpasswd`, `.my.cnf` ; secret GitHub
-  `HTTP_AUTH`.
+- [ ] `~/symfony.datan.fr/.env.local` et `.my.cnf` (pas de mot de passe de
+  préproduction : site ouvert, non indexé par l'application).
 - [ ] Restaurer le dump, premier déploiement, clones Tricoteuses,
   `bin/cron.sh afficher` puis `installer`.
 - [ ] Passage du compte en PHP 8.4 : vérifier le legacy sur datan.fr le jour même.
@@ -358,9 +358,9 @@ Automatisation posée le 2026-10-23 (`deploiement.yml`, `bin/deployer.sh`,
   `http://` et le cache réchauffé sous `https://` (`DEFAULT_URI`) ne sert à
   personne : exiger « Full (strict) » — et décider si Symfony doit lire l'IP
   des visiteurs dans `CF-Connecting-IP` (`trusted_proxies`).
-- [ ] Retirer le verrou de préproduction : bloc « PRÉPRODUCTION » de
-  `public/.htaccess`, secret `HTTP_AUTH` du workflow, `.htpasswd` du serveur
-  (DEPLOIEMENT.md §6). Sans cela, datan.fr demanderait un mot de passe.
+- [ ] Retirer le bloc « PRÉPRODUCTION » de `public/.htaccess` (DEPLOIEMENT.md
+  §6) : sans cela, les images et PDF de datan.fr porteraient `X-Robots-Tag:
+  noindex`.
 
 ## Différences assumées — ne PAS « corriger » (consignées pour mémoire)
 

@@ -37,35 +37,18 @@
 AddHandler application/x-httpd-alt-php84___lsphp .php
 
 # ---------------------------------------------------------------------------
-# PRÉPRODUCTION : mot de passe sur tout le site, et non-indexation.
+# PRÉPRODUCTION : non-indexation, sans mot de passe.
 #
-# À RETIRER le jour de la bascule sur datan.fr, avec le secret HTTP_AUTH du
-# workflow de déploiement (checklist de TODO.md). Le bloc n'est pas conditionné
-# à l'hôte servi, contrairement au garde-fou applicatif (App\Referencement\
-# Indexation) : dans un .htaccess, seuls « Require env » et « Require expr »
-# le permettraient, et LiteSpeed — le serveur de l'hébergement N0C — les ignore
-# sans un mot. Un verrou qui pourrait ne pas s'appliquer en silence est pire
-# qu'un verrou à retirer à la main.
+# symfony.datan.fr est ouvert à tous, à dessein. Ce qui le tient hors des
+# moteurs : l'application, qui reconnaît l'hôte (App\Referencement\Indexation)
+# et sert un robots.txt « Disallow: / » et l'en-tête X-Robots-Tag ; et la ligne
+# ci-dessous, pour ce que le serveur rend sans passer par PHP.
 #
-# Le fichier de mots de passe vit hors de public/ et hors du dépôt, à côté de
-# .env.local (~/symfony.datan.fr/.htpasswd). AuthUserFile veut un chemin absolu, qui dépend du compte :
-# bin/deployer.sh réécrit la ligne ci-dessous dans chaque version, et refuse de
-# déployer si le fichier manque — LiteSpeed répondrait 500 partout. Hachage apr1
-# (« openssl passwd -apr1 »), le seul format que LiteSpeed et Apache lisent
-# tous deux ; le serveur n'a pas « htpasswd ». Ajouter un compte :
-#   printf 'nom:%s\n' "$(openssl passwd -apr1)" >> ~/symfony.datan.fr/.htpasswd
-#
-# /robots.txt n'est pas exempté, bien qu'un « Disallow: / » lisible sans mot de
-# passe serait plus net. L'adresse est réécrite vers index.php, et LiteSpeed
-# applique <FilesMatch> au fichier final ; il ignore « Allow from env= » comme
-# « Require env » (vérifié sur le serveur en septembre 2026). Un robots.txt en
-# 401 vaut pour un moteur une absence de fichier : il tente les pages, qui
-# répondent 401 elles aussi — rien ne s'indexe.
+# À RETIRER le jour où ce dossier sert datan.fr (checklist de TODO.md) : elle
+# n'est pas conditionnée à l'hôte — LiteSpeed ignore « Require expr »,
+# « Require env » et « Allow from env= » (vérifié en septembre 2026) —, et
+# désindexerait les images et documents du vrai site.
 # ---------------------------------------------------------------------------
-AuthType Basic
-AuthName "Datan - preproduction"
-AuthUserFile /remplace/par/bin/deployer.sh/.htpasswd
-Require valid-user
 
 # L'application pose déjà cet en-tête sur tout ce qu'elle rend
 # (App\Referencement\EnTeteRobots). Ici il couvre ce que LiteSpeed sert sans
@@ -89,8 +72,6 @@ DirectoryIndex index.php
     # HTTPS partout (recette de faq.o2switch.fr, « Forcer le HTTPS »). Hors
     # validation Let's Encrypt, qu'une redirection fait échouer : son dossier a
     # son propre .htaccess, et la condition sur l'URI double ce garde-fou.
-    # Limite connue : le mot de passe de préproduction est demandé avant cette
-    # redirection, donc en clair sur http:// — entrer par https://.
     RewriteCond %{HTTPS} !on
     RewriteCond %{HTTP:X-Forwarded-Proto} !https
     RewriteCond %{REQUEST_URI} !^/\.well-known/acme-challenge/

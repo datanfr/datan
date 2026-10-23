@@ -8,7 +8,7 @@
 #   releases/<id>/  une version complète, figée — copie de depot/ en liens durs
 #   current ->      lien symbolique vers la version servie
 #   public ->       current/public, racine web du sous-domaine (lien fixe)
-#   .env.local  .htpasswd  .my.cnf
+#   .env.local  .my.cnf
 #                   la configuration, au-dessus de la racine web donc jamais
 #                   servie ; chaque version y pointe par un lien
 #   shared/         les données qui survivent aux versions : var/log,

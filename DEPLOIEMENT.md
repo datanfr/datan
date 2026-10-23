@@ -351,7 +351,7 @@ depuis la branche `symfony` (ou à la main, *Run workflow*). Le contrôle
 ├── releases/<date>-<sha>/  versions complètes, les 3 dernières
 ├── current -> releases/…   la version servie
 ├── public -> current/public  racine web du sous-domaine (lien fixe)
-├── .env.local  .htpasswd  .my.cnf   au-dessus de la racine web, jamais servis
+├── .env.local  .my.cnf     au-dessus de la racine web, jamais servis
 └── shared/
     ├── var/log/  var/tricoteuses/  var/scraper-scrutins.json  var/*.lock
     ├── public/assets/imgs/deputes/  public/assets/imgs/deputes_detoures/
@@ -442,7 +442,6 @@ compte, même clé.
 | `CPANEL_USERNAME` | secret | déjà posé (compte cPanel de datan.fr) |
 | `CPANEL_API_TOKEN` | secret | déjà posé (liste blanche SSH) |
 | `SSH_PRIVATE_KEY` | secret | déjà posé |
-| `HTTP_AUTH` | secret | **à créer** : `identifiant:motdepasse` du verrou de préproduction ; à supprimer à la bascule |
 | `SYMFONY_RACINE` | variable | facultative, `symfony.datan.fr` (relatif au `$HOME`) |
 | `SYMFONY_URL` | variable | facultative, `https://symfony.datan.fr` |
 | `PHP_BIN` | variable | facultative, chemin d'un PHP ≥ 8.4 si la détection échoue |
@@ -474,9 +473,8 @@ Dans cPanel :
    du serveur — celle de datan.fr, que Cloudflare masque — devient publique.
 4. **Certificat** : cPanel → Sécurité → *Let's Encrypt* → *Générer* en face de
    `symfony.datan.fr`, validation `http-01`, *Générer la simulation* puis
-   *Générer*. `public/.well-known/.htaccess` exempte la validation du mot de
-   passe de préproduction et de la redirection HTTPS, renouvellements
-   compris.
+   *Générer*. `public/.well-known/.htaccess` exempte la validation de la
+   redirection HTTPS et du renvoi vers `index.php`, renouvellements compris.
 5. **Version de PHP** : rien à faire dans cPanel, `public/.htaccess` s'en
    charge (cf. plus haut). Vérifier seulement que `/opt/alt/php84/usr/bin/php`
    existe en SSH.
@@ -491,7 +489,6 @@ En SSH (`ssh <compte>@<serveur>`, depuis une adresse de la liste blanche) :
 mkdir -p ~/symfony.datan.fr && cd ~/symfony.datan.fr
 php -r 'echo bin2hex(random_bytes(32)), "\n";'     # APP_SECRET
 nano .env.local && chmod 600 .env.local             # contenu ci-dessous
-printf 'datan:%s\n' "$(openssl passwd -apr1)" > .htpasswd
 printf '[client]\nuser=<compte_base>\npassword=<mdp>\n' > .my.cnf && chmod 600 .my.cnf
 ```
 
@@ -700,45 +697,17 @@ production est repris à l'octet près dans
 Le jour de la bascule, rien à faire côté code : `datan.fr` n'est pas dans la
 liste et redevient indexable du seul fait de son nom de domaine.
 
-### Verrou de préproduction : `.htaccess` + `.htpasswd`
+### Pas de verrou de préproduction
 
-L'hébergement effectif est le mutualisé N0C, sous **LiteSpeed**, qui lit les
-`.htaccess` : le bloc « PRÉPRODUCTION » en tête de `public/.htaccess` met tout
-le site derrière un mot de passe HTTP et pose `X-Robots-Tag` sur ce que
-LiteSpeed sert sans passer par PHP (images, feuilles de style, documents). Le
-fichier de mots de passe n'est pas dans le dépôt :
-
-```
-~/symfony.datan.fr/.htpasswd   # « datan:$apr1$… », lisible par le serveur (644)
-```
-
-`AuthUserFile` veut un chemin absolu, qui dépend du compte : le dépôt porte un
-chemin factice, que `bin/deployer.sh` remplace dans chaque version. Il refuse
-de déployer si le fichier manque — LiteSpeed répondrait 500 partout.
-
-- **Hachage apr1 obligatoire** — `openssl passwd -apr1` : le serveur n'a pas
-  `htpasswd`, et LiteSpeed n'est pas garanti sur bcrypt. Ajouter ou remplacer
-  un compte :
-  ```bash
-  printf 'nom:%s\n' "$(openssl passwd -apr1)" >> ~/symfony.datan.fr/.htpasswd
-  ```
-- **Pas de condition sur l'hôte**, contrairement au garde-fou applicatif :
-  LiteSpeed ignore `Require env`, `Require expr` et `Allow from env=` sans rien
-  dire (vérifié sur le serveur le 9 septembre 2026, dans un sous-dossier
-  d'essai). Le bloc est donc inconditionnel, et se retire à la main.
-- **`/robots.txt` n'est pas exempté**, pour la même raison : l'adresse est
-  réécrite vers `index.php`, et `<FilesMatch>` s'applique au fichier final. Un
-  robots.txt en 401 vaut absence de fichier : le moteur tente les pages, reçoit
-  401, n'indexe rien.
-- **Le contrôle final du workflow** lit le secret `HTTP_AUTH`
-  (`identifiant:motdepasse`) ; sans lui, il tombe en 401 et le déploiement est
-  signalé en échec alors qu'il a eu lieu.
-- **Ne pas utiliser l'outil « protection par mot de passe » du panneau N0C**
-  sur ce dossier : il écrit dans le `public/.htaccess` de la version servie,
-  que le déploiement suivant remplace sans prévenir.
-
-Le jour de la bascule : retirer le bloc de `public/.htaccess`, le secret
-`HTTP_AUTH`, et supprimer `.htpasswd` du serveur.
+symfony.datan.fr est **ouvert, sans mot de passe** — choix du 23 octobre 2026.
+Il reste hors des moteurs par deux moyens : l'application, qui reconnaît l'hôte
+(`Indexation::HOTES_NON_INDEXABLES` : robots.txt `Disallow: /`, en-tête
+`X-Robots-Tag`), et le bloc « PRÉPRODUCTION » de `public/.htaccess`, qui pose
+le même en-tête sur ce que le serveur rend sans passer par PHP (images, feuilles
+de style, PDF). Ce bloc n'est pas conditionné à l'hôte — LiteSpeed ignore
+`Require env`, `Require expr` et `Allow from env=` sans rien dire (vérifié le
+9 septembre 2026) — : il **se retire à la main** le jour où ce dossier sert
+datan.fr, sans quoi il désindexerait les images du vrai site.
 
 ### `.env.local` sur le serveur
 
@@ -828,8 +797,8 @@ espérant que ça se voie.
 Le reste — `TODO.md` §2 — est à dérouler à ce moment-là : variables de suivi
 réelles, transvasement des abonnés newsletter, redirections des anciennes API
 (`api/tables`, `api/votes`, `api/exposes`) qu'API Platform ne reprend pas, et
-retrait du verrou de préproduction — bloc « PRÉPRODUCTION » de
-`public/.htaccess`, secret `HTTP_AUTH`, `.htpasswd` du serveur.
+retrait du bloc « PRÉPRODUCTION » de `public/.htaccess` (en-tête
+`X-Robots-Tag` sur les fichiers statiques).
 
 Le garde-fou applicatif, lui, n'est pas à toucher : il ne connaît que
 `datan.remikel.fr`, et l'application servie sur `datan.fr` est indexable sans

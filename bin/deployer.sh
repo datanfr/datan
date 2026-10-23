@@ -66,10 +66,6 @@ echo "   → $PHP"
 etape "Préalables"
 [[ -f "$RACINE/.env.local" ]] \
   || echec "$RACINE/.env.local manquant : APP_SECRET, DATABASE_URL, DEFAULT_URI… (DEPLOIEMENT.md, « Amorçage »)."
-if grep -q '^AuthUserFile' "$DEPOT/public/.htaccess" && [[ ! -s "$RACINE/.htpasswd" ]]; then
-  # Sans le fichier, LiteSpeed répond 500 à toutes les adresses.
-  echec "Le verrou de préproduction est actif mais $RACINE/.htpasswd est absent ou vide."
-fi
 
 # Vider var/cache/prod sous une commande en cours la fait échouer sans message
 # exploitable (CLAUDE.md). Chaque version a son propre var/cache, mais la
@@ -100,11 +96,6 @@ for chemin in "${FICHIERS_PARTAGES[@]}"; do
 done
 # Symfony lit .env.local à la racine du projet, c'est-à-dire de la version.
 ln -sfn "$RACINE/.env.local" "$CIBLE/.env.local"
-
-# AuthUserFile exige un chemin absolu, que le dépôt ne peut pas connaître : il
-# dépend du compte. `sed -i` écrit un nouveau fichier et casse le lien dur, le
-# miroir depot/ n'est donc pas touché.
-sed -i "s|^AuthUserFile .*|AuthUserFile $RACINE/.htpasswd|" "$CIBLE/public/.htaccess"
 
 etape "Plateforme"
 # Le contrôle de Composer (vendor/composer/platform_check.php) s'exécute au
