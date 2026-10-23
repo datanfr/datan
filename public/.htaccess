@@ -19,16 +19,22 @@
 # sans effet ici : php_value et .user.ini y sont ignorés.
 #
 # PIÈGE : un handler inconnu ne lève aucune erreur, le serveur rend le .php EN
-# CLAIR. C'est pourquoi le contrôle final du workflow de déploiement refuse une
-# réponse qui contient « <?php ». <IfModule LiteSpeed> : sous Apache, la ligne
-# n'aurait pas de sens, et le fichier doit y rester inoffensif.
+# CLAIR — vérifié le 2026-10-23 avec `alt-php85___lsphp`, absent du serveur.
+# C'est pourquoi le contrôle final du workflow de déploiement refuse une réponse
+# qui contient « <?php ».
 #
-# La ligne reste juste après le passage du compte en 8.4, et le jour où ce
-# dossier servira datan.fr.
+# Pas d'enveloppe <IfModule LiteSpeed> : elle était prise pour fausse sur ce
+# serveur (« o2switch-PowerBoost-v3 »), et la ligne ignorée sans un mot — la
+# page sortait en 7.4. La forme `<FilesMatch> SetHandler` répond, elle, par une
+# page d'erreur.
+#
+# Ce handler lit le php.ini par défaut de /opt/alt/php84, pas les extensions
+# cochées dans le sélecteur PHP : `intl` et `dom` y manquaient le 2026-10-23.
+# Le jour où le compte entier passe en 8.4 par le sélecteur, RETIRER cette
+# ligne, sans quoi elle continue de court-circuiter les extensions qu'on y
+# coche.
 # ---------------------------------------------------------------------------
-<IfModule LiteSpeed>
-    AddHandler application/x-httpd-alt-php84___lsphp .php
-</IfModule>
+AddHandler application/x-httpd-alt-php84___lsphp .php
 
 # ---------------------------------------------------------------------------
 # PRÉPRODUCTION : mot de passe sur tout le site, et non-indexation.
@@ -41,13 +47,13 @@
 # sans un mot. Un verrou qui pourrait ne pas s'appliquer en silence est pire
 # qu'un verrou à retirer à la main.
 #
-# Le fichier de mots de passe vit hors de public/ et hors du dépôt, dans le
-# shared/ du serveur. AuthUserFile veut un chemin absolu, qui dépend du compte :
+# Le fichier de mots de passe vit hors de public/ et hors du dépôt, à côté de
+# .env.local (~/symfony.datan.fr/.htpasswd). AuthUserFile veut un chemin absolu, qui dépend du compte :
 # bin/deployer.sh réécrit la ligne ci-dessous dans chaque version, et refuse de
 # déployer si le fichier manque — LiteSpeed répondrait 500 partout. Hachage apr1
 # (« openssl passwd -apr1 »), le seul format que LiteSpeed et Apache lisent
 # tous deux ; le serveur n'a pas « htpasswd ». Ajouter un compte :
-#   printf 'nom:%s\n' "$(openssl passwd -apr1)" >> ~/symfony.datan.fr/shared/.htpasswd
+#   printf 'nom:%s\n' "$(openssl passwd -apr1)" >> ~/symfony.datan.fr/.htpasswd
 #
 # /robots.txt n'est pas exempté, bien qu'un « Disallow: / » lisible sans mot de
 # passe serait plus net. L'adresse est réécrite vers index.php, et LiteSpeed
@@ -79,6 +85,16 @@ DirectoryIndex index.php
 
 <IfModule mod_rewrite.c>
     RewriteEngine On
+
+    # HTTPS partout (recette de faq.o2switch.fr, « Forcer le HTTPS »). Hors
+    # validation Let's Encrypt, qu'une redirection fait échouer : son dossier a
+    # son propre .htaccess, et la condition sur l'URI double ce garde-fou.
+    # Limite connue : le mot de passe de préproduction est demandé avant cette
+    # redirection, donc en clair sur http:// — entrer par https://.
+    RewriteCond %{HTTPS} !on
+    RewriteCond %{HTTP:X-Forwarded-Proto} !https
+    RewriteCond %{REQUEST_URI} !^/\.well-known/acme-challenge/
+    RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
 
     # Détermine le préfixe d'URL sous lequel l'application est servie, pour que
     # les règles suivantes fonctionnent aussi dans un sous-répertoire.

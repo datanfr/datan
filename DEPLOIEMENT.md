@@ -297,10 +297,10 @@ Deux workflows sont posés dans `.github/workflows/`.
 Syntaxe PHP, gabarits Twig, YAML, conteneur de services, puis **les migrations
 rejouées sur une base vierge** suivies de `doctrine:schema:validate`.
 
-La base d'intégration est en **MariaDB 10.6, celle du serveur — pas 10.7 ni 11.7
-comme le poste de développement**. C'est tout l'intérêt du contrôle : une
-migration écrite sur 11.7 peut produire du DDL que 10.6 refuse. C'est arrivé lors
-de la première restauration — `profession_foi` avait hérité de
+La base d'intégration est en **MariaDB 11.4, celle du serveur (11.4.13) — pas
+11.7 comme le poste de développement**. C'est tout l'intérêt du contrôle : une
+migration écrite sur une version peut produire du DDL qu'une autre refuse.
+C'est arrivé lors de la première restauration, sur une préproduction en 10.6 — `profession_foi` avait hérité de
 `utf8mb4_uca1400_ai_ci`, collation apparue en MariaDB 11.4, et l'import s'est
 arrêté dessus (`#1273 Unknown collation`). Avec ce workflow, l'écart se voit à la
 pull request, pas au milieu d'un chargement de 1 Go.
@@ -349,14 +349,22 @@ depuis la branche `symfony` (ou à la main, *Run workflow*). Le contrôle
 ~/symfony.datan.fr/
 ├── depot/                  miroir de l'artefact (rsync)
 ├── releases/<date>-<sha>/  versions complètes, les 3 dernières
-├── current -> releases/…   racine web : current/public
+├── current -> releases/…   la version servie
+├── public -> current/public  racine web du sous-domaine (lien fixe)
+├── .env.local  .htpasswd  .my.cnf   au-dessus de la racine web, jamais servis
 └── shared/
-    ├── .env.local  .htpasswd  .my.cnf
     ├── var/log/  var/tricoteuses/  var/scraper-scrutins.json  var/*.lock
     ├── public/assets/imgs/deputes/  public/assets/imgs/deputes_detoures/
     ├── public/assets/data/professions/
     └── sauvegardes/
 ```
+
+Une version est effacée au bout de trois : ce qui doit durer vit donc hors de
+`releases/`, et chaque version y pointe par un lien — Symfony trouve ainsi son
+`.env.local` à la racine du projet, comme d'habitude. La configuration se range
+à la racine, au-dessus de `public/`. Les données vont dans `shared/` : elles
+ne peuvent pas vivre à la racine, où `public` est un lien vers la version
+servie et non un dossier.
 
 Les portraits sont dans `shared/` parce que le sync quotidien les **régénère
 dans `public/`** : une version neuve qui ne les verrait pas servirait des fiches
@@ -386,7 +394,7 @@ voir :
   même temps.
 
 Et `~/.my.cnf`, s'il existe, appartient au legacy : nos identifiants de
-sauvegarde vont dans `shared/.my.cnf`.
+sauvegarde vont dans `~/symfony.datan.fr/.my.cnf`.
 
 ### PHP 7.4 aujourd'hui, 8.4 demain
 
@@ -397,9 +405,16 @@ Le compte sert encore datan.fr en **PHP 7.4** ; Symfony 8.1 exige 8.4.
   les emplacements habituels (`/opt/alt/php84/usr/bin/php` sous CloudLinux,
   `/opt/cpanel/ea-php84/root/usr/bin/php` sous EasyApache) avant le `php` du
   `PATH`. Si la détection échoue, la variable GitHub `PHP_BIN` impose le
-  chemin. Un alt-php appelé par son chemin ne charge pas forcément les
-  extensions cochées dans le sélecteur PHP : le script le dit, extension par
-  extension.
+  chemin.
+  **Appelé par son chemin, `/opt/alt/php84/usr/bin/php` ne charge pas `intl`**
+  (constaté le 23 octobre 2026), alors que le module est installé et que
+  `selectorctl --list-user-extensions --version=8.4` le liste. D'où
+  **`~/symfony.datan.fr/bin/php`**, un lanceur que chaque déploiement réécrit :
+  il ajoute un `-d extension=….so` pour chaque extension requise qui manque
+  (`intl`, `mysqli`, `ctype`, `iconv`, `dom`, `simplexml`, `tokenizer` —
+  `EXTENSIONS_REQUISES` de `bin/serveur-commun.sh`). C'est lui que le cron
+  appelle, et lui qu'on utilise à la main :
+  `~/symfony.datan.fr/bin/php bin/console …`.
 - **Côté web**, c'est `public/.htaccess` qui fixe la version, pour ce seul
   dossier : `AddHandler application/x-httpd-alt-php84___lsphp .php`
   (faq.o2switch.fr, « Version de PHP par dossier »). **Ne pas toucher au
@@ -438,23 +453,42 @@ Dans cPanel :
 
 1. **Base et compte MariaDB** (*Bases de données MySQL*) — cPanel préfixe les
    deux noms par le compte. Relever la version exacte :
-   `mariadb -e 'SELECT VERSION()'`. Si ce n'est pas une 10.6, aligner aussi
-   l'image du service de `qualite.yml`, sans quoi le contrôle des migrations
-   vérifie une autre version que celle du serveur.
-2. **Sous-domaine `symfony.datan.fr`**, racine
-   **`symfony.datan.fr/current/public`** — jamais `symfony.datan.fr/current` :
-   servir la racine du projet exposerait `.env.local`, `var/` et `vendor/`.
-   cPanel crée le dossier s'il manque ; `deployer.sh` l'écarte
-   (`current.avant-…`) au premier passage pour poser son lien. Certificat :
-   AutoSSL / Let's Encrypt.
-3. **Version de PHP** : rien à faire dans cPanel, `public/.htaccess` s'en
+   `mariadb -e 'SELECT VERSION()'` — **11.4.13** au 23 octobre 2026. Si elle
+   change, aligner aussi l'image du service de `qualite.yml`, sans quoi le
+   contrôle des migrations vérifie une autre version que celle du serveur.
+   Le jeu de caractères par défaut du serveur est **latin1** : la base que crée
+   cPanel en hérite. Les migrations et le dump précisent `utf8mb4` table par
+   table, mais une table créée sans le dire (`messenger:setup-transports`, un
+   futur `CREATE TABLE` oublieux) prendrait du latin1. Une fois, dans
+   phpMyAdmin :
+   `ALTER DATABASE <base> CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;`
+2. **Sous-domaine `symfony.datan.fr`**, racine **`symfony.datan.fr/public`** —
+   jamais `symfony.datan.fr` : servir la racine exposerait `.env.local`.
+   `public` y est un lien fixe vers `current/public`, posé au premier
+   déploiement ; seul `current` change ensuite. Si cPanel a créé un vrai
+   dossier `public/`, `deployer.sh` l'écarte (`public.avant-…`).
+3. **DNS chez Cloudflare** : la zone `datan.fr` y vit, et cPanel ne l'alimente
+   pas. Enregistrement `symfony`, même cible que `datan.fr` (l'IP du serveur
+   o2switch), en **« DNS only » (nuage gris)** : le trafic va droit à
+   o2switch, le certificat se valide, et PHP voit du vrai HTTPS. Le prix : l'IP
+   du serveur — celle de datan.fr, que Cloudflare masque — devient publique.
+4. **Certificat** : cPanel → Sécurité → *Let's Encrypt* → *Générer* en face de
+   `symfony.datan.fr`, validation `http-01`, *Générer la simulation* puis
+   *Générer*. `public/.well-known/.htaccess` exempte la validation du mot de
+   passe de préproduction et de la redirection HTTPS, renouvellements
+   compris.
+5. **Version de PHP** : rien à faire dans cPanel, `public/.htaccess` s'en
    charge (cf. plus haut). Vérifier seulement que `/opt/alt/php84/usr/bin/php`
    existe en SSH.
 
 En SSH (`ssh <compte>@<serveur>`, depuis une adresse de la liste blanche) :
 
 ```bash
-mkdir -p ~/symfony.datan.fr/shared && cd ~/symfony.datan.fr/shared
+# Le dossier n'est PAS un clone Git : le déploiement le gère lui-même, et
+# refuse d'écrire dans un clone. Un clone existant s'écarte sans rien perdre
+# (y reprendre un éventuel .env.local).
+[ -d ~/symfony.datan.fr/.git ] && mv ~/symfony.datan.fr ~/symfony.datan.fr.clone
+mkdir -p ~/symfony.datan.fr && cd ~/symfony.datan.fr
 php -r 'echo bin2hex(random_bytes(32)), "\n";'     # APP_SECRET
 nano .env.local && chmod 600 .env.local             # contenu ci-dessous
 printf 'datan:%s\n' "$(openssl passwd -apr1)" > .htpasswd
@@ -482,8 +516,8 @@ mutualisé. Et enfin :
 1. **Premier déploiement** : *Actions → Déploiement → Run workflow* (ou un push
    sur `symfony`).
 2. **Clones Tricoteuses** (1,8 Go, une fois), cf. §2.d, depuis
-   `~/symfony.datan.fr/current`, avec le PHP qu'a retenu le déploiement (il
-   l'affiche en tête de journal).
+   `~/symfony.datan.fr/current`, avec `~/symfony.datan.fr/bin/php` (jamais le
+   `php` du `PATH`, qui est en 7.4).
 3. **Planification** : `bin/cron.sh afficher`, puis `installer` (§5).
 
 La base du legacy est **sur le même serveur** : les imports de récupération
@@ -675,7 +709,7 @@ LiteSpeed sert sans passer par PHP (images, feuilles de style, documents). Le
 fichier de mots de passe n'est pas dans le dépôt :
 
 ```
-~/symfony.datan.fr/shared/.htpasswd   # « datan:$apr1$… », lisible par le serveur (644)
+~/symfony.datan.fr/.htpasswd   # « datan:$apr1$… », lisible par le serveur (644)
 ```
 
 `AuthUserFile` veut un chemin absolu, qui dépend du compte : le dépôt porte un
@@ -686,7 +720,7 @@ de déployer si le fichier manque — LiteSpeed répondrait 500 partout.
   `htpasswd`, et LiteSpeed n'est pas garanti sur bcrypt. Ajouter ou remplacer
   un compte :
   ```bash
-  printf 'nom:%s\n' "$(openssl passwd -apr1)" >> ~/symfony.datan.fr/shared/.htpasswd
+  printf 'nom:%s\n' "$(openssl passwd -apr1)" >> ~/symfony.datan.fr/.htpasswd
   ```
 - **Pas de condition sur l'hôte**, contrairement au garde-fou applicatif :
   LiteSpeed ignore `Require env`, `Require expr` et `Allow from env=` sans rien

@@ -16,9 +16,10 @@
 # `PATH=`…) : cron les applique aux lignes qui suivent, legacy compris. Les
 # chemins sont écrits en dur par `cron.sh`, qui remplace :
 #   @COURANT@  la version servie (lien current/)
-#   @PARTAGE@  shared/ — verrous, sauvegardes, identifiants de sauvegarde
+#   @RACINE@   ~/symfony.datan.fr — identifiants de sauvegarde (.my.cnf)
+#   @PARTAGE@  shared/ — verrous, sauvegardes
 #   @PHP@      le PHP ≥ 8.4 détecté (cf. bin/serveur-commun.sh)
-#   @BASE@     le nom de la base, lu dans le DATABASE_URL de shared/.env.local
+#   @BASE@     le nom de la base, lu dans le DATABASE_URL de .env.local
 # Après un changement de version de PHP du compte, relancer `installer`.
 #
 # `CRON.md` porte le détail et les justifications. Trois règles y valent partout :
@@ -88,7 +89,7 @@
 # contenu tronqué, et la purge des anciennes s'exécuterait quand même. Compter
 # ~1 Go de libre le temps de la compression.
 #
-# Les identifiants vivent dans `shared/.my.cnf` en chmod 600, jamais sur la
+# Les identifiants vivent dans `~/symfony.datan.fr/.my.cnf` en chmod 600, jamais sur la
 # ligne de commande où `ps` les afficherait. Pas dans `~/.my.cnf` : sur ce
 # compte, il appartient au legacy et désigne sa base, pas la nôtre :
 #     [client]
@@ -97,7 +98,7 @@
 #
 # Sauvegardes dans shared/sauvegardes : ~120 Mo par jour compressés, trente jours
 # gardés, soit ~3,5 Go.
-30 3 * * * cd @PARTAGE@/sauvegardes && sh -c 'mariadb-dump --defaults-file=@PARTAGE@/.my.cnf --single-transaction --quick --default-character-set=utf8mb4 --ignore-table=@BASE@.messenger_messages --result-file=jour.sql @BASE@ && gzip -9 -f jour.sql && mv jour.sql.gz $(date +\%F).sql.gz && find . -name "*.sql.gz" -mtime +30 -delete' >> @COURANT@/var/log/sauvegarde.log 2>&1
+30 3 * * * cd @PARTAGE@/sauvegardes && sh -c 'mariadb-dump --defaults-file=@RACINE@/.my.cnf --single-transaction --quick --default-character-set=utf8mb4 --ignore-table=@BASE@.messenger_messages --result-file=jour.sql @BASE@ && gzip -9 -f jour.sql && mv jour.sql.gz $(date +\%F).sql.gz && find . -name "*.sql.gz" -mtime +30 -delete' >> @COURANT@/var/log/sauvegarde.log 2>&1
 
 # --- Courriels — toutes les 10 minutes -------------------------------------
 # `SendEmailMessage` est routé vers le transport `async` (`doctrine://default`) :

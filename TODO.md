@@ -320,11 +320,20 @@ Automatisation posée le 2026-10-23 (`deploiement.yml`, `bin/deployer.sh`,
   `master`** : sans cela, un déploiement du legacy peut retirer l'IP de notre
   runner de la liste blanche SSH en plein rsync.
 - [ ] cPanel : base + compte MariaDB, sous-domaine `symfony.datan.fr` sur
-  `symfony.datan.fr/current/public`, certificat. PHP 8.4 : par le `.htaccess`,
+  `symfony.datan.fr/public` (lien vers `current/public` posé par le
+  déploiement), certificat. Renommer le clone posé dans `~/symfony.datan.fr`. PHP 8.4 : par le `.htaccess`,
   surtout pas par le sélecteur du compte (il passerait datan.fr en 8.4).
-- [ ] Relever la version MariaDB du serveur → `serverVersion` de `.env.local`,
-  et l'image de `qualite.yml` si ce n'est pas une 10.6.
-- [ ] `shared/.env.local`, `shared/.htpasswd`, `shared/.my.cnf` ; secret GitHub
+- [x] Version MariaDB du serveur relevée : 11.4.13 (`qualite.yml` aligné).
+  `ALTER DATABASE … CHARACTER SET utf8mb4` : le serveur est en latin1 par défaut.
+- [x] `intl` non chargée par `/opt/alt/php84/usr/bin/php` : réglé en ligne de
+  commande par le lanceur `~/symfony.datan.fr/bin/php` (`preparer_php`).
+- [ ] **`intl` et `dom` absents côté web** (handler `alt-php84___lsphp`, testé
+  le 2026-10-23 : 8.4.27 servi, mais php.ini par défaut, sans les extensions du
+  sélecteur). Pistes : passer le compte en 8.4 par le sélecteur en épinglant
+  le legacy en 7.4 dans `~/public_html/.htaccess` (si le handler 7.4 a les mêmes
+  extensions que le sélecteur), support o2switch, ou sous-compte (« lune »).
+- [ ] Certificat Let's Encrypt de `symfony.datan.fr` (cPanel).
+- [ ] `~/symfony.datan.fr/.env.local`, `.htpasswd`, `.my.cnf` ; secret GitHub
   `HTTP_AUTH`.
 - [ ] Restaurer le dump, premier déploiement, clones Tricoteuses,
   `bin/cron.sh afficher` puis `installer`.
@@ -342,6 +351,13 @@ Automatisation posée le 2026-10-23 (`deploiement.yml`, `bin/deployer.sh`,
 - [ ] Vérifier les images `posts/inside/` (cf. P1) une fois le domaine basculé.
 - [ ] Rejouer une passe de vérification du sitemap : chaque URL annoncée → 200
   (le critère de `SitemapController` se vérifie en interrogeant réellement).
+- [ ] **datan.fr est derrière Cloudflare** (nuage orange), quand
+  symfony.datan.fr ne l'est pas : la préproduction ne dit rien de ce cas.
+  Avant de pointer datan.fr sur la nouvelle application, vérifier le mode SSL de
+  la zone — en « Flexible », PHP reçoit du `http`, les canoniques sortent en
+  `http://` et le cache réchauffé sous `https://` (`DEFAULT_URI`) ne sert à
+  personne : exiger « Full (strict) » — et décider si Symfony doit lire l'IP
+  des visiteurs dans `CF-Connecting-IP` (`trusted_proxies`).
 - [ ] Retirer le verrou de préproduction : bloc « PRÉPRODUCTION » de
   `public/.htaccess`, secret `HTTP_AUTH` du workflow, `.htpasswd` du serveur
   (DEPLOIEMENT.md §6). Sans cela, datan.fr demanderait un mot de passe.

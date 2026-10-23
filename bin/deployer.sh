@@ -47,7 +47,6 @@ DOSSIERS_PARTAGES=(
 # Le journal du scraper retient les pages vues sans résultat : le perdre à
 # chaque version ferait redemander à assemblee-nationale.fr ce qu'on sait vide.
 FICHIERS_PARTAGES=(
-  .env.local
   var/scraper-scrutins.json
 )
 
@@ -61,16 +60,15 @@ nettoyer_si_echec() {
 trap nettoyer_si_echec EXIT
 
 etape "PHP"
-PHP=$(trouver_php)
-verifier_extensions "$PHP"
-echo "   $PHP ($("$PHP" -r 'echo PHP_VERSION;'))"
+PHP=$(preparer_php)
+echo "   → $PHP"
 
 etape "Préalables"
-[[ -f "$PARTAGE/.env.local" ]] \
-  || echec "$PARTAGE/.env.local manquant : APP_SECRET, DATABASE_URL, DEFAULT_URI… (DEPLOIEMENT.md, « Amorçage »)."
-if grep -q '^AuthUserFile' "$DEPOT/public/.htaccess" && [[ ! -s "$PARTAGE/.htpasswd" ]]; then
+[[ -f "$RACINE/.env.local" ]] \
+  || echec "$RACINE/.env.local manquant : APP_SECRET, DATABASE_URL, DEFAULT_URI… (DEPLOIEMENT.md, « Amorçage »)."
+if grep -q '^AuthUserFile' "$DEPOT/public/.htaccess" && [[ ! -s "$RACINE/.htpasswd" ]]; then
   # Sans le fichier, LiteSpeed répond 500 à toutes les adresses.
-  echec "Le verrou de préproduction est actif mais $PARTAGE/.htpasswd est absent ou vide."
+  echec "Le verrou de préproduction est actif mais $RACINE/.htpasswd est absent ou vide."
 fi
 
 # Vider var/cache/prod sous une commande en cours la fait échouer sans message
@@ -100,11 +98,13 @@ for chemin in "${FICHIERS_PARTAGES[@]}"; do
   rm -f "$CIBLE/$chemin"
   ln -s "$PARTAGE/$chemin" "$CIBLE/$chemin"
 done
+# Symfony lit .env.local à la racine du projet, c'est-à-dire de la version.
+ln -sfn "$RACINE/.env.local" "$CIBLE/.env.local"
 
 # AuthUserFile exige un chemin absolu, que le dépôt ne peut pas connaître : il
 # dépend du compte. `sed -i` écrit un nouveau fichier et casse le lien dur, le
 # miroir depot/ n'est donc pas touché.
-sed -i "s|^AuthUserFile .*|AuthUserFile $PARTAGE/.htpasswd|" "$CIBLE/public/.htaccess"
+sed -i "s|^AuthUserFile .*|AuthUserFile $RACINE/.htpasswd|" "$CIBLE/public/.htaccess"
 
 etape "Plateforme"
 # Le contrôle de Composer (vendor/composer/platform_check.php) s'exécute au
@@ -128,7 +128,7 @@ try {
     $reelle = (string) Doctrine\DBAL\DriverManager::getConnection((new Doctrine\DBAL\Tools\DsnParser())->parse($url))
         ->fetchOne('SELECT VERSION()');
 } catch (Throwable $e) {
-    fwrite(STDERR, '!! Base injoignable avec le DATABASE_URL de shared/.env.local : ' . $e->getMessage() . "\n");
+    fwrite(STDERR, '!! Base injoignable avec le DATABASE_URL de ~/symfony.datan.fr/.env.local : ' . $e->getMessage() . "\n");
     exit(1);
 }
 
@@ -136,7 +136,7 @@ preg_match('/^(\d+\.\d+)\.(\d+)/', $declaree, $d);
 preg_match('/^(\d+\.\d+)\.(\d+)/', $reelle, $r);
 printf("   base : %s (serverVersion déclaré : %s)\n", $reelle, $declaree ?: 'aucun');
 if (!$d || !$r || $d[1] !== $r[1]) {
-    fwrite(STDERR, "!! serverVersion de DATABASE_URL à corriger dans shared/.env.local : la base est en $reelle.\n");
+    fwrite(STDERR, "!! serverVersion de DATABASE_URL à corriger dans ~/symfony.datan.fr/.env.local : la base est en $reelle.\n");
     exit(1);
 }
 if ($d[2] !== $r[2]) {
@@ -165,6 +165,16 @@ ln -sfn "releases/$ID" "$RACINE/current.nouveau"
 mv -Tf "$RACINE/current.nouveau" "$RACINE/current"
 bascule=1
 echo "   current → releases/$ID"
+
+# La racine web du sous-domaine est ~/symfony.datan.fr/public : un lien fixe
+# vers current/public, posé une fois. Seul `current` change à chaque version,
+# la bascule reste donc un unique `mv`. Un vrai dossier public/ (créé par
+# cPanel, ou reste d'un ancien clone) est écarté, jamais effacé.
+if [[ ! -L "$RACINE/public" ]]; then
+  [[ -e "$RACINE/public" ]] && mv "$RACINE/public" "$RACINE/public.avant-$(date +%Y%m%d-%H%M%S)"
+  ln -s current/public "$RACINE/public"
+  echo "   public → current/public"
+fi
 
 etape "Ménage"
 # Trois versions au moins : PHP garde en cache la résolution des liens

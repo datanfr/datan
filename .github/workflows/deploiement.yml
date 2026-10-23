@@ -72,7 +72,7 @@ jobs:
         env:
           APP_ENV: prod
           APP_SECRET: construction-sans-valeur-secrete
-          DATABASE_URL: "mysqli://construction:construction@127.0.0.1:3306/construction?serverVersion=10.6.27-MariaDB&charset=utf8mb4"
+          DATABASE_URL: "mysqli://construction:construction@127.0.0.1:3306/construction?serverVersion=11.4.13-MariaDB&charset=utf8mb4"
         run: |
           composer install --no-interaction --no-progress --prefer-dist --no-dev --optimize-autoloader
           php bin/console asset-map:compile --no-ansi
@@ -107,7 +107,14 @@ jobs:
       # (journaux, clones Tricoteuses) vit dans shared/ sur le serveur.
       - name: Envoyer
         run: |
-          $SSH "$CPANEL_USERNAME@$CPANEL_SERVER" "mkdir -p '$RACINE/depot' '$RACINE/releases' '$RACINE/shared'"
+          # Un clone Git à cet endroit recevrait depot/, releases/ et shared/ au
+          # milieu de son code : on s'arrête avant d'y écrire quoi que ce soit.
+          $SSH "$CPANEL_USERNAME@$CPANEL_SERVER" "
+            if [ -e '$RACINE/.git' ]; then
+              echo \"!! ~/$RACINE est un clone Git. Le renommer (mv ~/$RACINE ~/$RACINE.clone) : le déploiement gère lui-même ce dossier.\" >&2
+              exit 1
+            fi
+            mkdir -p '$RACINE/depot' '$RACINE/releases' '$RACINE/shared'"
           rsync -az --delete --timeout=300 -e "$SSH" \
             --exclude=/.git/ --exclude=/.github/ --exclude=/.claude/ \
             --exclude=/tests/ --exclude=/var/ \

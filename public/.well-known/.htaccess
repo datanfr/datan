@@ -1,0 +1,13 @@
+# Validation Let's Encrypt (http-01) : l'autorité vient lire
+# /.well-known/acme-challenge/<jeton>, que l'outil Let's Encrypt de cPanel dépose
+# dans la racine web. Le mot de passe de préproduction de public/.htaccess la
+# bloquerait : le certificat ne s'émettrait pas, puis ne se renouvellerait plus,
+# en silence, trois mois plus tard. Recette de faq.o2switch.fr
+# (« Let's Encrypt SSL gratuit »).
+#
+# `RewriteEngine off` coupe aussi, pour ce dossier, la redirection vers HTTPS et
+# le renvoi vers index.php : le jeton est un fichier, servi tel quel.
+RewriteEngine off
+Order Deny,Allow
+Allow from all
+Satisfy any

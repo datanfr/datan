@@ -50,22 +50,22 @@ table_sans_bloc() {
 
 bloc() {
   local php base
-  php=$(trouver_php)
-  verifier_extensions "$php"
+  php=$(preparer_php)
   # Par Dotenv, comme l'application : guillemets, surcharges et .env.dist
   # sont résolus de la même façon.
   base=$("$php" -r '
     require $argv[1] . "/vendor/autoload.php";
     (new Symfony\Component\Dotenv\Dotenv())->bootEnv($argv[1] . "/.env");
     echo ltrim((string) parse_url($_SERVER["DATABASE_URL"] ?? "", PHP_URL_PATH), "/");' "$RACINE/current")
-  [[ -n "$base" ]] || echec "Nom de base introuvable dans le DATABASE_URL de $PARTAGE/.env.local."
-  [[ -f "$PARTAGE/.my.cnf" ]] \
-    || printf '   (avertissement : %s/.my.cnf absent, la sauvegarde de 3 h 30 échouera)\n' "$PARTAGE" >&2
+  [[ -n "$base" ]] || echec "Nom de base introuvable dans le DATABASE_URL de $RACINE/.env.local."
+  [[ -f "$RACINE/.my.cnf" ]] \
+    || printf '   (avertissement : %s/.my.cnf absent, la sauvegarde de 3 h 30 échouera)\n' "$RACINE" >&2
 
   mkdir -p "$PARTAGE/var" "$PARTAGE/sauvegardes"
   echo "$DEBUT"
   sed -e "s|@COURANT@|$RACINE/current|g" \
       -e "s|@PARTAGE@|$PARTAGE|g" \
+      -e "s|@RACINE@|$RACINE|g" \
       -e "s|@PHP@|$php|g" \
       -e "s|@BASE@|$base|g" \
       "$ICI/crontab.prod"
