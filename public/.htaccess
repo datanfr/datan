@@ -28,11 +28,14 @@
 # page sortait en 7.4. La forme `<FilesMatch> SetHandler` répond, elle, par une
 # page d'erreur.
 #
-# Ce handler lit le php.ini par défaut de /opt/alt/php84, pas les extensions
-# cochées dans le sélecteur PHP : `intl` et `dom` y manquaient le 2026-10-23.
+# Ce handler lit les extensions là où pointe /opt/alt/php84/link/conf — par
+# défaut la configuration nue du paquet, sans intl ni dom, puisque le
+# sélecteur ne branche la sienne que sur la version sélectionnée du compte
+# (7.4). Aucune directive .htaccess n'y change rien (neuf essayées le
+# 2026-10-23) : c'est bin/serveur-commun.sh (brancher_config_selecteur) qui
+# pointe ce lien vers /etc/cl.php.d/alt-php84, au déploiement et par cron.
 # Le jour où le compte entier passe en 8.4 par le sélecteur, RETIRER cette
-# ligne, sans quoi elle continue de court-circuiter les extensions qu'on y
-# coche.
+# ligne et cette entrée cron : le sélecteur fera le travail.
 # ---------------------------------------------------------------------------
 AddHandler application/x-httpd-alt-php84___lsphp .php
 

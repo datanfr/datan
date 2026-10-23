@@ -327,11 +327,12 @@ Automatisation posée le 2026-10-23 (`deploiement.yml`, `bin/deployer.sh`,
   `ALTER DATABASE … CHARACTER SET utf8mb4` : le serveur est en latin1 par défaut.
 - [x] `intl` non chargée par `/opt/alt/php84/usr/bin/php` : réglé en ligne de
   commande par le lanceur `~/symfony.datan.fr/bin/php` (`preparer_php`).
-- [ ] **`intl` et `dom` absents côté web** (handler `alt-php84___lsphp`, testé
-  le 2026-10-23 : 8.4.27 servi, mais php.ini par défaut, sans les extensions du
-  sélecteur). Pistes : passer le compte en 8.4 par le sélecteur en épinglant
-  le legacy en 7.4 dans `~/public_html/.htaccess` (si le handler 7.4 a les mêmes
-  extensions que le sélecteur), support o2switch, ou sous-compte (« lune »).
+- [x] **`intl` et `dom` côté web** — réglé le 2026-10-23 en pointant
+  `/opt/alt/php84/link/conf` (lien du compte) vers la configuration du sélecteur
+  `/etc/cl.php.d/alt-php84` : `brancher_config_selecteur`, à chaque
+  déploiement et par cron chaque minute (DEPLOIEMENT.md §4). Écarté : épingler
+  le legacy en 7.4 par `.htaccess` — une version non sélectionnée perd 30
+  extensions, `json` et `mbstring` comprises, datan.fr tomberait.
 - [ ] Certificat Let's Encrypt de `symfony.datan.fr` (cPanel).
 - [ ] `~/symfony.datan.fr/.env.local` et `.my.cnf` (pas de mot de passe de
   préproduction : site ouvert, non indexé par l'application).

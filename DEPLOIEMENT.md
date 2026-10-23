@@ -420,12 +420,36 @@ Le compte sert encore datan.fr en **PHP 7.4** ; Symfony 8.1 exige 8.4.
   (faq.o2switch.fr, « Version de PHP par dossier »). **Ne pas toucher au
   sélecteur « Sélectionner une version de PHP » de cPanel** : il règle tout
   l'hébergement, et ferait passer datan.fr en 8.4 du même coup. La forme
-  `x-httpd-php84` de la FAQ n'offre pas 8.4 ; la forme `___lsphp`, si, et c'est
-  le SAPI natif de LiteSpeed, sans perte de vitesse. Ses extensions sont celles
-  du php.ini par défaut de la version (`intl`, `mysqli`, `mbstring` compris),
-  et `php_value` comme `.user.ini` y sont ignorés.
-  **Piège** : un handler inconnu sert les `.php` en clair, sans erreur. Le
-  contrôle final du workflow refuse une page qui contient `<?php`.
+  `x-httpd-php84` de la FAQ n'existe pas sur ce serveur ; la forme `___lsphp`,
+  si, et c'est le SAPI natif de LiteSpeed, sans perte de vitesse. Pas
+  d'enveloppe `<IfModule LiteSpeed>` : ignorée ici, la page sortait en 7.4.
+  **Piège** : un handler inconnu sert les `.php` en clair, sans erreur
+  (vérifié avec `alt-php85`). Le contrôle final du workflow refuse une page
+  qui contient `<?php`.
+- **Les extensions ne suivent pas.** Contrairement à ce que dit la FAQ, une
+  version non sélectionnée part de la configuration nue de son paquet : ni
+  `intl` ni `dom` (toute 404 tombe alors en 500, le rendu de la page d'erreur
+  plantant). CloudLinux branche la configuration du sélecteur par le lien
+  `/opt/alt/phpXX/link/conf`, pour la seule version sélectionnée. **Aucune
+  directive `.htaccess` n'y remédie** — neuf essayées le 23 octobre 2026
+  (`suPHP_ConfigPath`, `SetEnv PHPRC`, `SetEnv PHP_INI_SCAN_DIR`,
+  `lsapi_phpini`, CGI `x-httpd-php84`, `x-httpd-alt-php84`, `ea-php84`…) :
+  PHP lit sa configuration au démarrage du processus `lsphp`, avant tout
+  `.htaccess`, et `ea-php84` n'est qu'un dossier vide. Le réglage par domaine
+  de `cloudlinux-selector` est sans effet sur ce compte. Le lien, lui,
+  appartient au compte : `brancher_config_selecteur`
+  (`bin/serveur-commun.sh`) le pointe vers `/etc/cl.php.d/alt-php84`, à
+  chaque déploiement et par cron chaque minute (`bin/verifier-php.sh`), et
+  arrête le `lsphp` 8.4 parent, qui garde sinon l'ancienne configuration
+  jusqu'à sa mort — `ps` ne le montre que sous le nom `lsphp`, le tri se fait
+  sur `/proc/<pid>/exe`.
+  **Écarté** : passer le compte en 8.4 en épinglant datan.fr en 7.4 par
+  `.htaccess`. Simulation faite (`PHP_INI_SCAN_DIR=/opt/alt/php74/etc/php.d`) :
+  la 7.4 non sélectionnée perdrait 30 de ses 59 extensions, dont `json`,
+  `mbstring`, `gd`, `PDO` et OPcache — le legacy tomberait.
+  **Retour arrière** : `ln -sfn /opt/alt/php84/etc/php.d /opt/alt/php84/link/conf`.
+  Le jour où le compte passe en 8.4 : retirer l'`AddHandler` du `.htaccess` et
+  l'entrée cron, le sélecteur fera le travail.
 - **Le passage du compte en 8.4 concerne aussi le legacy** (CodeIgniter 3, écrit
   pour 7.x) : à vérifier sur datan.fr le jour même. Rien à changer de notre
   côté, sinon relancer `bin/cron.sh installer` si le chemin du PHP retenu a

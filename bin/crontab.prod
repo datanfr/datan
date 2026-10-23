@@ -72,6 +72,15 @@
 # sous une moisson en cours.
 0 6 * * * cd @COURANT@ && { echo "===== $(date) ====="; flock -n @PARTAGE@/var/sync.lock sh -c 'APP_ENV=prod @PHP@ bin/console app:sync:quotidien --no-ansi && APP_ENV=prod @PHP@ bin/console app:import:commissions --no-ansi && APP_ENV=prod @PHP@ bin/console app:calcul:statistiques-deputes --no-ansi && APP_ENV=prod @PHP@ bin/console app:cache:rechauffer --no-ansi' || echo "ECHEC (code $?) ou execution concurrente"; } >> var/log/sync-quotidien.log 2>&1
 
+# --- Configuration PHP — chaque minute -------------------------------------
+# Le compte est en 7.4 (datan.fr) et nous en 8.4 : la configuration du
+# sélecteur n'est branchée sur la 8.4 que par un lien qu'on pose nous-mêmes,
+# et que CloudLinux peut régénérer (bin/serveur-commun.sh,
+# brancher_config_selecteur). Sans lui, ni intl ni dom : toute page 404 tombe
+# en 500. Une lecture de lien par minute, une ligne de journal quand il a fallu
+# agir. À retirer le jour où le compte entier passe en 8.4.
+* * * * * bash @COURANT@/bin/verifier-php.sh >> @COURANT@/var/log/php-selecteur.log 2>&1
+
 # --- Hebdomadaire — lundi 4 h 15 -------------------------------------------
 # Seule commande qui sorte sur un site public (`assemblee-nationale.fr/dyn/`) :
 # elle rattrape les scrutins dont l'open data ne donne ni le dossier ni

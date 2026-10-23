@@ -78,6 +78,7 @@ EXTENSIONS_REQUISES=(intl mysqli ctype iconv dom simplexml tokenizer)
 preparer_php() {
   local LANCEUR="$RACINE/bin/php" php extension options=()
   php=$(trouver_php)
+  brancher_config_selecteur "$php"
   for extension in "${EXTENSIONS_REQUISES[@]}"; do
     "$php" -r "exit(extension_loaded('$extension') ? 0 : 1);" && continue
     "$php" -d "extension=$extension.so" -r "exit(extension_loaded('$extension') ? 0 : 1);" 2>/dev/null \
@@ -93,4 +94,47 @@ preparer_php() {
 
   printf '   %s (%s)%s\n' "$php" "$("$php" -r 'echo PHP_VERSION;')" "${options[*]:+ + ${options[*]}}" >&2
   printf '%s\n' "$LANCEUR"
+}
+
+# Branche la configuration du sélecteur PHP de cPanel sur la version qu'on
+# utilise, quand ce n'est pas la version sélectionnée du compte.
+#
+# Sur CloudLinux (o2switch), chaque version lit ses extensions là où pointe
+# `/opt/alt/phpXX/link/conf`. Le sélecteur ne fait pointer que la version
+# sélectionnée du compte (7.4, celle de datan.fr) vers sa configuration
+# `/etc/cl.php.d/alt-phpXX` ; les autres restent sur la configuration par
+# défaut de leur paquet, sans `intl` ni `dom` — et aucune directive .htaccess
+# ne peut y remédier (neuf formes essayées le 2026-10-23, de suPHP_ConfigPath à
+# SetEnv PHP_INI_SCAN_DIR : PHP lit sa configuration au démarrage du processus,
+# avant tout .htaccess). Le lien, lui, appartient au compte : on le pointe
+# nous-mêmes, ce qui vaut pour le web (handler du .htaccess) comme pour la
+# ligne de commande.
+#
+# CloudLinux peut régénérer ce lien (mise à jour d'alt-php, action dans le
+# sélecteur) : d'où l'appel à chaque déploiement ET par cron, chaque minute.
+# LiteSpeed garde un `lsphp` parent par version, qui lit la configuration une
+# fois pour toutes : après un changement de lien, on arrête les nôtres de cette
+# version — ceux de symfony.datan.fr seulement — et LiteSpeed en relance au
+# prochain appel. `ps` ne les montre que sous le nom « lsphp » : le tri se
+# fait sur `/proc/<pid>/exe`.
+#
+# Sans effet hors CloudLinux (le lien n'existe pas), ou si la version
+# utilisée est déjà celle du sélecteur (le lien est déjà bon).
+brancher_config_selecteur() {
+  local php="$1" version lien cible actuel pid
+  [[ "$php" =~ ^${ALT_PHP:-/opt/alt}/php([0-9]+)/ ]] || return 0
+  version=${BASH_REMATCH[1]}
+  lien=${ALT_PHP:-/opt/alt}/php$version/link/conf
+  cible=${CL_PHP_D:-/etc/cl.php.d}/alt-php$version
+  [[ -L "$lien" && -O "$lien" && -f "$cible/alt_php.ini" ]] || return 0
+  actuel=$(readlink "$lien")
+  [[ "$actuel" == "$cible" ]] && return 0
+
+  ln -sfn "$cible" "$lien" || echec "Impossible de pointer $lien vers $cible."
+  printf '%s   lien %s : %s → %s\n' "$(date '+%F %T')" "$lien" "$actuel" "$cible" >&2
+  for pid in $(pgrep -u "$(id -un)" -x lsphp 2>/dev/null); do
+    if [[ "$(readlink "/proc/$pid/exe" 2>/dev/null)" == *"/php$version/"* ]]; then
+      kill "$pid" 2>/dev/null && printf '   lsphp %s (PHP %s) arrêté, LiteSpeed le relancera\n' "$pid" "$version" >&2
+    fi
+  done
 }
