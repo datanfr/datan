@@ -1,0 +1,64 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block title %}Campagnes de dons{% endblock %}
+
+{% block body %}
+  <div class="mb-3">
+    <a class="btn btn-primary" href="{{ path('admin_campagne_creer') }}">Créer une campagne</a>
+  </div>
+
+  <div class="card">
+    <div class="card-body p-0">
+      <table class="table table-striped mb-0">
+        <caption class="sr-only">Campagnes de dons</caption>
+        <thead>
+          <tr>
+            <th scope="col">ID</th>
+            <th scope="col">Message</th>
+            <th scope="col">Début</th>
+            <th scope="col">Fin</th>
+            <th scope="col">Auteur</th>
+            <th scope="col">Position</th>
+            <th scope="col">Page</th>
+            <th scope="col" class="text-right">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for campagne in campagnes %}
+            <tr>
+              <td>{{ campagne.id }}</td>
+              {# Message éditorial : du HTML injecté tel quel dans l'encart, rendu ici comme dans le legacy. #}
+              <td>{{ campagne.texte|raw }}</td>
+              <td>{{ campagne.dateDebut ? campagne.dateDebut|date('d/m/Y') : '—' }}</td>
+              <td>{{ campagne.dateFin ? campagne.dateFin|date('d/m/Y') : '—' }}</td>
+              <td>{{ campagne.auteur ?? '—' }}</td>
+              <td>{{ positions[campagne.position] ?? '' }}</td>
+              <td>{{ campagne.page ?? '' }}</td>
+              <td class="text-right">
+                <a class="btn btn-sm btn-outline-primary" href="{{ path('admin_campagne_modifier', {id: campagne.id}) }}">Modifier</a>
+                {% if is_granted('ROLE_ADMIN') %}
+                  <a class="btn btn-sm btn-outline-danger" href="{{ path('admin_campagne_supprimer', {id: campagne.id}) }}">Supprimer</a>
+                {% endif %}
+                <form action="{{ path('admin_campagne_basculer') }}" method="post" class="d-inline-block mt-2">
+                  <input type="hidden" name="id" value="{{ campagne.id }}">
+                  {# Deux champs homonymes : le 0 caché part quand la case n'est pas
+                     cochée, le 1 de la case prend le dessus sinon. #}
+                  <input type="hidden" name="is_active" value="0">
+                  <input type="hidden" name="_token" value="{{ csrf_token('basculer_campagne') }}">
+                  <div class="custom-control custom-switch">
+                    <input type="checkbox" class="custom-control-input" id="active_{{ campagne.id }}"
+                           name="is_active" value="1" onchange="this.form.submit()"
+                           {{ campagne.active ? 'checked' : '' }}>
+                    <label class="custom-control-label" for="active_{{ campagne.id }}">Activer</label>
+                  </div>
+                </form>
+              </td>
+            </tr>
+          {% else %}
+            <tr><td colspan="8" class="text-center p-4">Aucune campagne pour l'instant.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+{% endblock %}

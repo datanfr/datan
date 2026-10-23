@@ -1,0 +1,28 @@
+{# Suppression du compte, portée de `views/users/delete-account.php`. La
+   confirmation passe par un POST porteur d'un jeton CSRF : le legacy supprimait
+   sur un simple lien (GET), qu'une image piégée suffisait à déclencher — défaut
+   corrigé au contrôleur comme ici. #}
+{% extends 'base.html.twig' %}
+
+{% block robots %}noindex, nofollow{% endblock %}
+{% block title %}Supprimer mon compte Datan{% endblock %}
+
+{% block body %}
+  <div class="container-fluid bloc-img-deputes bloc-img d-flex async_background" id="container-always-fluid"></div>
+  <div class="container pg-compte p-5" style="margin-top: -100px; top: 100px;">
+    <div class="row">
+      <div class="col-12 mb-5">
+        <h1>Supprimer mon compte Datan</h1>
+        <a href="{{ path('mon_compte') }}">Retour vers mon compte</a>
+      </div>
+      <div class="col-12">
+        <p class="font-weight-bold mb-4">Êtes-vous sûr de vouloir supprimer votre compte Datan ?</p>
+        <a href="{{ path('mon_compte') }}" class="btn btn-secondary">Non, je ne supprime pas mon compte</a>
+        <form method="post" action="{{ path('mon_compte_supprimer_confirme') }}" class="d-inline">
+          <input type="hidden" name="_token" value="{{ csrf_token('supprimer_compte') }}">
+          <button type="submit" class="btn btn-danger">Oui, je supprime mon compte</button>
+        </form>
+      </div>
+    </div>
+  </div>
+{% endblock %}

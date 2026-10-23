@@ -1,0 +1,31 @@
+{# Carte d'un député en liste, portée de application/views/deputes/partials/card_home.php.
+
+   Le chargement différé se fait par l'attribut `loading` et non par la classe
+   `img-lazy` du site d'origine : le plugin jQuery `unveil` qui la traite n'est
+   pas embarqué dans main.min.js, et les 577 portraits de /deputes resteraient
+   sur le placeholder. #}
+<div class="card card-depute mx-2">
+  {% if depute.groupe_couleur %}
+    <div class="liseret" style="background-color: {{ depute.groupe_couleur }}"></div>
+  {% endif %}
+  <div class="card-avatar-depute{{ depute.legislature_last >= 17 ? '-square' : '-circle' }} card-avatar">
+    <img src="{{ photo_depute(depute) }}" width="130" height="166" loading="lazy" alt="{{ depute.firstname }} {{ depute.lastname }}">
+  </div>
+  <div class="card-body d-flex flex-column align-items-center justify-content-center">
+    <div class="mb-3">
+      <h3 class="d-block card-title">
+        {% if depute.dpt_slug and depute.slug %}
+          <a href="{{ path('depute_individual', {dptSlug: depute.dpt_slug, slug: depute.slug}) }}" class="stretched-link no-decoration">{{ depute.firstname }} {{ depute.lastname }}</a>
+        {% else %}
+          {{ depute.firstname }} {{ depute.lastname }}
+        {% endif %}
+      </h3>
+      <span class="d-block">{{ depute.departement_nom }}{% if depute.departement_code %} ({{ depute.departement_code }}){% endif %}</span>
+    </div>
+  </div>
+  {% if depute.groupe_libelle %}
+    <div class="card-footer d-flex justify-content-center align-items-center">
+      <span>{{ depute.groupe_libelle|name_group }} ({{ depute.groupe_abrev }})</span>
+    </div>
+  {% endif %}
+</div>

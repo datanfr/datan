@@ -1,0 +1,26 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block title %}Supprimer une campagne{% endblock %}
+
+{% block body %}
+  <div class="card">
+    <div class="card-body">
+      <p>Supprimer définitivement cette campagne ?</p>
+      <table class="table table-bordered">
+        <tbody>
+          <tr><th scope="row">ID</th><td>{{ campagne.id }}</td></tr>
+          <tr><th scope="row">Message</th><td>{{ campagne.texte|raw }}</td></tr>
+          <tr><th scope="row">Début</th><td>{{ campagne.dateDebut ? campagne.dateDebut|date('d/m/Y') : '—' }}</td></tr>
+          <tr><th scope="row">Fin</th><td>{{ campagne.dateFin ? campagne.dateFin|date('d/m/Y') : '—' }}</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="card-footer d-flex justify-content-between">
+      <a class="btn btn-secondary" href="{{ path('admin_campagne_index') }}">Annuler</a>
+      <form action="{{ path('admin_campagne_supprimer', {id: campagne.id}) }}" method="post">
+        <input type="hidden" name="_token" value="{{ csrf_token('supprimer_campagne_' ~ campagne.id) }}">
+        <button type="submit" class="btn btn-danger">Supprimer</button>
+      </form>
+    </div>
+  </div>
+{% endblock %}

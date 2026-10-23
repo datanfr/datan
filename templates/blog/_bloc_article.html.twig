@@ -1,0 +1,27 @@
+{# Carte d'un article (views/posts/partials/bloc-post.php).
+
+   `balise_titre` : h3 sur les listes publiques — le legacy la fait varier pour
+   ses écrans d'administration, non portés ici. La vignette est chargée en
+   différé (img-lazy + data-src), comme partout sur le site. #}
+<div class="bloc-post">
+  <div class="image">
+    <picture>
+      <source srcset="{{ asset('assets/imgs/posts/webp/' ~ article.image_nom ~ '-360.webp') }}" type="image/webp">
+      <source srcset="{{ asset('assets/imgs/posts/' ~ article.image_nom ~ '-360.png') }}" type="image/png">
+      <img class="img-lazy" src="{{ asset('assets/imgs/placeholder/placeholder.png') }}" data-src="{{ asset('assets/imgs/posts/' ~ article.image_nom ~ '.png') }}" alt="Image post {{ article.id }}" width="480" height="240">
+    </picture>
+  </div>
+  <div class="mt-2 mb-1">
+    <span class="category mr-2">{{ article.rubrique_nom|upper }}</span>
+  </div>
+  <h3 class="title mb-0">
+    <a href="{{ path('blog_article', {rubrique: article.rubrique_slug, slug: article.slug}) }}" class="stretched-link no-decoration underline">{{ article.titre }}</a>
+  </h3>
+  <div>
+    <span class="date">{{ article.date_fr }}</span>
+  </div>
+  {# L'accueil rend la carte sans chapô (`chapo => FALSE` chez l'origine). #}
+  {% if article.extrait is defined and article.extrait %}
+    <p class="chapo">{{ article.extrait }}</p>
+  {% endif %}
+</div>

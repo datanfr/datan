@@ -1,0 +1,29 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block title %}{{ titre }}{% endblock %}
+
+{% block body %}
+  <div class="card">
+    <div class="card-body p-0">
+      <table class="table table-bordered table-striped mb-0">
+        <caption class="sr-only">{{ titre }}</caption>
+        <thead>
+          <tr>
+            {% for label in colonnes %}<th scope="col">{{ label }}</th>{% endfor %}
+          </tr>
+        </thead>
+        <tbody>
+          {% for ligne in lignes %}
+            <tr>
+              {% for cle in colonnes|keys %}
+                <td>{{ ligne[cle] ?? '' }}</td>
+              {% endfor %}
+            </tr>
+          {% else %}
+            <tr><td colspan="{{ colonnes|length }}" class="text-center p-4">Aucune ligne.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+{% endblock %}

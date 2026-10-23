@@ -1,0 +1,52 @@
+{# Encart « Municipales 2026 » en tête de fiche
+   (`deputes/partials/electionFeature.php`) : la candidature du député aux
+   municipales, phrase accordée à son sort — déclaré, qualifié, élu, éliminé,
+   ou vérifié non candidat. La couleur de la carte suit la même cascade
+   (DeputeController::electionMunicipales).
+
+   Les boutons reprennent le site : la campagne du candidat et, sous le seuil
+   de population des pages d'élections, les résultats de la commune passent par
+   `url_obf` — système en place, à ne pas modifier (cf. CLAUDE.md). #}
+{% if election_feature %}
+  {% set ef = election_feature %}
+  <div class="card card-election-feature {{ ef.couleur }} mt-5 mb-4 border-0" style="overflow: hidden">
+    <div class="card-body">
+      <h2>🗳️ Municipales 2026</h2>
+      {% set lien_commune %}{% if ef.commune %}<a class="text-white" href="{{ path('commune_individual', {departement: ef.commune.dpt_slug, commune: ef.commune.slug}) }}">{{ ef.commune.nom_de }}</a>{% endif %}{% endset %}
+      {# Comparaisons STRICTES (`is same as`) : les trois sorts sont ternaires —
+         vrai, faux, pas encore connu (null) — et `null == false` est vrai en
+         Twig. Un candidat au sort inconnu passait « éliminé ». #}
+      {% if ef.elu is same as(true) %}
+        <p class="mb-0">{{ nom_complet }} était candidat{{ feminin ? 'e' : '' }} aux élections municipales dans la commune {{ lien_commune }}. <span class="font-weight-bold">{{ feminin ? 'Elle' : 'Il' }} a été réélu{{ feminin ? 'e' : '' }}</span>.</p>
+      {% elseif ef.elu is same as(false) %}
+        <p class="mb-0">{{ nom_complet }} était candidat{{ feminin ? 'e' : '' }} aux élections municipales dans la commune {{ lien_commune }}. <span class="font-weight-bold">{{ feminin ? 'Elle' : 'Il' }} a été éliminé{{ feminin ? 'e' : '' }}</span>.</p>
+      {% elseif ef.second_tour is same as(true) %}
+        <p class="mb-0">{{ nom_complet }} était candidat{{ feminin ? 'e' : '' }} aux élections municipales dans la commune {{ lien_commune }}. <span class="font-weight-bold">{{ feminin ? 'Elle' : 'Il' }} a été qualifié{{ feminin ? 'e' : '' }}</span> pour le second tour.</p>
+      {% elseif ef.second_tour is same as(false) %}
+        <p class="mb-0">{{ nom_complet }} était candidat{{ feminin ? 'e' : '' }} aux élections municipales dans la commune {{ lien_commune }}. <span class="font-weight-bold">{{ feminin ? 'Elle' : 'Il' }} ne sera pas présent{{ feminin ? 'e' : '' }}</span> au second tour.</p>
+      {% elseif ef.candidat is same as(false) %}
+        <p class="mb-0">{{ nom_complet }} <span class="font-weight-bold"> n'est pas candidat{{ feminin ? 'e' : '' }}</span> aux élections municipales.</p>
+      {% else %}
+        <p class="mb-0">
+          {{ nom_complet }} <span class="font-weight-bold"> est candidat{{ feminin ? 'e' : '' }}</span> aux élections municipales dans la commune {{ lien_commune }}.
+          {% if ef.tete_de_liste %}
+            {{ feminin ? 'Elle' : 'Il' }} est tête de liste.
+          {% endif %}
+        </p>
+      {% endif %}
+      {% if ef.candidat and ef.lien %}
+        <span class="mt-3 url_obf btn btn-light" url_obf="{{ url_obf(ef.lien) }}">Suivre sa campagne</span>
+      {% endif %}
+      <a href="{{ path('elections_individual', {slug: 'municipales-2026'}) }}" class="mt-3 btn btn-light">En savoir plus sur ces élections</a>
+      {% if ef.commune %}
+        {% if ef.commune.lien_clair %}
+          <a href="{{ path('elections_resultats_commune', {departement: ef.commune.dpt_slug, commune: ef.commune.slug}) }}" class="mt-3 btn btn-light">Résultats des élections {{ ef.commune.nom_a }}</a>
+        {% else %}
+          {# `<a>` sans href, comme le partial d'origine : url_obf2.js pose la
+             destination au clic. #}
+          <a url_obf="{{ url_obf(path('elections_resultats_commune', {departement: ef.commune.dpt_slug, commune: ef.commune.slug})) }}" class="mt-3 btn btn-light url_obf">Résultats des élections {{ ef.commune.nom_a }}</a>
+        {% endif %}
+      {% endif %}
+    </div>
+  </div>
+{% endif %}

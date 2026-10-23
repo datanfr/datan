@@ -1,0 +1,46 @@
+{# Bloc « Ses positions importantes » (`mp_individual/_key_positions.php`).
+   Une sélection éditoriale figée de scrutins marquants (cf.
+   ComportementDepute::positionsImportantes), une carte, une ligne par vote :
+   badge POUR/CONTRE/ABSTENTION, la phrase reformulée, puis si le député a suivi
+   ou non son groupe.
+
+   L'ancienne fiche portait ici deux colonnes pour/contre listant des votes
+   décryptés quelconques — ni la bonne sélection, ni la bonne mise en forme. #}
+{% if positions_importantes %}
+  {% set e = depute.civilite == 'Mme' ? 'e' : '' %}
+  {% set pronom = depute.civilite == 'Mme' ? 'elle' : 'il' %}
+  <div class="bloc-key-votes mt-5">
+    <div class="row">
+      <div class="col-12">
+        <h2 class="mb-4 title-center">Ses positions importantes</h2>
+        <div class="card">
+          <div class="card-body key-votes">
+            {% for p in positions_importantes %}
+              <div class="row">
+                <div class="col-md-3 libelle d-flex align-items-center justify-content-md-center">
+                  <span class="sort-{{ p.position }}">{{ p.position|upper }}</span>
+                </div>
+                <div class="col-md-9 value">
+                  {{ nom_complet }}
+                  <b>
+                    {# « en faveur de » + un texte commençant par « du »/« des »
+                       doit se contracter (« en faveur du projet… ») : composé
+                       tel quel, le site a publié « a voté en faveur de du
+                       projet de loi immigration ». Défaut, pas choix — la
+                       préposition tombe devant un article déjà contracté. #}
+                    {%- if p.position == 'pour' %} a voté en faveur {{ p.texte starts with 'du ' or p.texte starts with 'des ' ? '' : 'de ' }}
+                    {%- elseif p.position == 'contre' %} a voté contre
+                    {%- else %} s'est abstenu{{ e }} sur le vote concernant
+                    {%- endif %}
+                    {{ p.texte }}</b>.
+                  {{ pronom|capitalize }} {{ p.comme_groupe ? 'a voté' : "n'a pas voté" }} comme son groupe.
+                  <a href="{{ lien_vote(p.legislature, p.numero) }}" class="font-italic">Voir le vote</a>
+                </div>
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endif %}

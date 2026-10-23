@@ -1,0 +1,76 @@
+{% extends 'base.html.twig' %}
+
+{% block preloads %}{{ include('partials/preload_couverture.html.twig') }}{% endblock %}
+
+{% set nom_groupe = groupe.libelle|name_group %}
+{% set non_inscrits = groupe.libelle_abrev == 'NI' %}
+{% set titre = non_inscrits
+  ? 'Députés non inscrits (NI)'
+  : 'Députés membres du groupe ' ~ nom_groupe ~ ' (' ~ groupe.libelle_abrev ~ ')' %}
+
+{% block title %}{{ non_inscrits ? 'Députés non inscrits' : 'Députés ' ~ nom_groupe }} - Assemblée nationale - Datan{% endblock %}
+
+{% block meta_description %}{% if non_inscrits %}Retrouvez tous les députés non inscrits (NI) de la {{ groupe.legislature }}e législature.{% else %}Retrouvez tous les députés membres du groupe parlementaire {{ nom_groupe }} ({{ groupe.libelle_abrev }}).{% endif %}{% endblock %}
+
+{% block body %}
+<div class="container-fluid bloc-img-deputes bloc-img d-flex async_background" id="container-always-fluid" style="height: 14em">
+  <div class="container d-flex flex-column justify-content-center py-2">
+    <h1>{{ titre }}</h1>
+  </div>
+</div>
+{% if groupe.couleur %}
+  <div class="liseret-groupe" style="background-color: {{ groupe.couleur }}"></div>
+{% endif %}
+
+<div class="container pg-groupe-membres my-4">
+  <div class="row">
+    <div class="col-12">
+      <a class="btn btn-outline-primary mx-2" href="{{ path('groupe_individual', {legislature: groupe.legislature, abrev: groupe.libelle_abrev|lower}) }}">
+        {{ include('groupe/partials/fleche_retour.html.twig') }}
+        Voir le profil du groupe
+      </a>
+    </div>
+  </div>
+
+  {# Les non-inscrits ne forment pas un groupe : ni président, ni apparentés. #}
+  {% if not non_inscrits and presidents %}
+    {% set chef = presidents|first %}
+    <div class="row my-5">
+      <div class="col-12 d-flex flex-column align-items-center">
+        <h2>Président{{ chef.civilite == 'Mme' ? 'e' : '' }}</h2>
+        {% include 'depute/partials/card.html.twig' with {depute: chef} only %}
+      </div>
+    </div>
+  {% endif %}
+
+  <div class="row my-5">
+    {% if not non_inscrits %}
+      <div class="col-12 d-flex justify-content-center">
+        <h2>Membres</h2>
+      </div>
+    {% endif %}
+    {% for m in membres %}
+      <div class="col-lg-4 col-md-6 d-flex justify-content-center">
+        {% include 'depute/partials/card.html.twig' with {depute: m} only %}
+      </div>
+    {% else %}
+      <div class="col-12 text-center">
+        <p class="text-muted">Aucun député rattaché à ce groupe.</p>
+      </div>
+    {% endfor %}
+  </div>
+
+  {% if apparentes %}
+    <div class="row my-5">
+      <div class="col-12 d-flex justify-content-center">
+        <h2>Membres apparentés</h2>
+      </div>
+      {% for m in apparentes %}
+        <div class="col-lg-4 col-md-6 d-flex justify-content-center">
+          {% include 'depute/partials/card.html.twig' with {depute: m} only %}
+        </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,9 @@
+{# Préchargement de l'image de couverture (l'hémicycle de face), déclinée en
+   trois largeurs — le triplet exact que le site pose sur chaque page qui porte
+   ce bandeau (`$data['preloads']`, neuf contrôleurs). L'image est appliquée en
+   fond par CSS (`bloc-img-deputes` + async_background) : sans preload, le
+   navigateur ne la découvre qu'après la feuille de style, et c'est le LCP de
+   la page qui attend. #}
+<link rel="preload" href="{{ asset('assets/imgs/cover/hemicycle-front-375.jpg') }}" as="image" media="(max-width: 575.98px)">
+<link rel="preload" href="{{ asset('assets/imgs/cover/hemicycle-front-768.jpg') }}" as="image" media="(min-width: 576px) and (max-width: 970px)">
+<link rel="preload" href="{{ asset('assets/imgs/cover/hemicycle-front.jpg') }}" as="image" media="(min-width: 970.1px)">

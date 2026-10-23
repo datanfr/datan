@@ -1,0 +1,75 @@
+{# Demande de compte député, reprise de `views/users/demande-compte-mp.php` :
+   même mise en deux colonnes que la page de connexion (classes `login_*` de
+   `main.css`), formulaire à gauche sous le logo, photo à droite. Document
+   autonome, sans la barre de navigation du site (le legacy charge
+   `header_no_navbar`).
+
+   Écarts assumés avec le legacy, tous dictés par ce qui n'est pas encore porté :
+   - pas de captcha (pile anti-spam laissée au déploiement) ; le verrou « une
+     demande par député » et le contrôle de l'adresse institutionnelle tiennent
+     lieu de garde ;
+   - le message ne promet plus « un lien d'activation valable 24 h » : ce
+     portage n'envoie pas de courriel et fait relire la demande par la
+     rédaction, qui transmet ensuite les identifiants. #}
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Demande de compte député | Datan</title>
+  <link rel="icon" type="image/png" href="{{ asset('assets/imgs/favicon/datan_favicon.ico') }}">
+  <link rel="stylesheet" href="{{ asset('assets/css/main.css') }}">
+  <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Open+Sans:400,600,800">
+</head>
+<body class="pt-0">
+<main>
+  <div class="container-fluid" id="container-always-fluid">
+    <div class="row">
+      <div class="col-lg-6 col-md-7 col-12">
+        <form method="post">
+          <div class="row mt-4">
+            <div class="col-lg-4 col-md-5 col-8 offset-2 offset-md-0">
+              <a href="{{ path('home') }}">
+                <img src="{{ asset('assets/imgs/datan/logo_baseline_color_transp.png') }}" class="img-fluid" alt="Logo Datan">
+              </a>
+            </div>
+          </div>
+          <div class="row mt-5">
+            <div class="col-lg-8 col-md-10 col-10 offset-lg-2 offset-md-1 offset-1">
+              <div class="row mt-1 d-flex flex-column justify-content-center login_form">
+                <h1 class="text-center my-4">Inscrivez-vous en tant que député</h1>
+
+                {% for message in app.flashes('erreur') %}
+                  <div class="alert alert-danger mb-4 text-center" role="alert">{{ message }}</div>
+                {% endfor %}
+                {% for message in app.flashes('succes') %}
+                  <div class="alert alert-success mb-4 text-center" role="alert">{{ message }}</div>
+                {% endfor %}
+
+                <div class="form-group">
+                  <label class="font-weight-bold">Email de l'Assemblée nationale se terminant par : @assemblee-nationale.fr</label>
+                  <input type="email" name="email" class="form-control" placeholder="Email" required autofocus>
+                </div>
+                <input type="hidden" name="_token" value="{{ csrf_token('demande_compte_depute') }}">
+                <div class="alert alert-info mb-4 text-center">
+                  Votre demande est relue par la rédaction de Datan, qui vous fait parvenir vos identifiants à cette adresse.
+                </div>
+                <button type="submit" class="btn btn-primary btn-block">Demander un compte</button>
+                <p class="mt-4">Déjà un compte Datan ? <a href="{{ path('connexion') }}">Se connecter</a></p>
+              </div>
+            </div>
+            <div class="col-lg-8 col-md-10 col-10 offset-lg-2 offset-md-1 offset-1 login_credits pt-3 mt-4">
+              <p>© Datan {{ 'now'|date('Y') }} - Tous droits réservés</p>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="col-lg-6 col-md-5 d-none d-md-block m-0 p-0 login_img">
+        <div class="img-container"></div>
+      </div>
+    </div>
+  </div>
+</main>
+</body>
+</html>

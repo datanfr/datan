@@ -1,0 +1,48 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}S'inscrire à la newsletter | Datan{% endblock %}
+
+{% block meta_description %}Abonnez-vous à la newsletter de Datan. Recevez tous les mois des informations concernant l'Assemblée nationale, l'activité des députés et leurs positions de vote.{% endblock %}
+
+{% block body %}
+<div class="container-fluid pg-newsletter" id="container-always-fluid">
+  <div class="row">
+    <div class="col-lg-6 d-none d-lg-block m-0 p-0 login_img" style="min-height: 800px">
+      <div class="img-container">
+      </div>
+    </div>
+    <div class="col-lg-6">
+      {# `main.min.js` intercepte #newsletterPage et poste en AJAX sur
+         /api/newsletter/create_newsletter ; l'action ne sert que sans
+         JavaScript, où la page se recharge simplement. #}
+      <form action="{{ path('newsletter') }}" method="post" id="newsletterPage" accept-charset="utf-8">
+        <div class="row my-5">
+          <div class="col-lg-8 col-md-10 col-10 offset-lg-2 offset-md-1 offset-1">
+            <div class="row my-lg-5 d-flex flex-column justify-content-center login_form">
+              <h1>Abonnez-vous à la newsletter</h1>
+              <div class="mt-3 mb-5">
+                <p>Vous souhaitez recevoir des informations du projet <b>Datan</b> ? Découvrir les <b>derniers votes</b> à l'Assemblée nationale ? En savoir plus sur <b>l'activité de votre député</b> ?</p>
+                <p>N'attendez plus, abonnez-vous à notre newsletter !</p>
+              </div>
+              {# Le gabarit d'origine affiche ici un flash « login_failed »,
+                 vestige d'un copier-coller de la page de connexion : rien ne
+                 l'alimente sur cette page, il n'est pas repris. #}
+              <span class="mb-2 legend">Adresse e-mail</span>
+              <div class="form-group">
+                <input type="email" name="email" class="form-control" placeholder="Exemple : benoit@assemblee-nationale.fr" required autofocus>
+              </div>
+              <div id="newsletterSuccess" class="d-none alert alert-success mt-3" role="alert">
+                Félicitations. Vous serez maintenant informés des actualités politiques de nos députés et un peu du site aussi :)
+              </div>
+              <div id="newsletterFailed" class="d-none alert alert-danger mt-3" role="alert">
+                Quelque chose s'est mal passé. Vous êtes sans doute déjà inscrit !
+              </div>
+              <button type="submit" class="btn btn-primary btn-block mt-3">S'abonner</button>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

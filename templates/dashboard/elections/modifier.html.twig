@@ -1,0 +1,64 @@
+{# Modification de la candidature, portée de `dashboard-mp/elections/modify.php`.
+   Cette page n'est atteignable que dans la fenêtre de modification (moins de deux
+   jours avant le premier tour) ; ailleurs, le contrôleur renvoie 404 avant de la
+   rendre. Elle est donc close pour les législatives 2022, seule élection ouverte
+   aujourd'hui — reproduction fidèle du `show_404()` du legacy. #}
+{% extends 'dashboard/base.html.twig' %}
+
+{% block title %}Modifier la candidature aux {{ election.libelle|lower }} de {{ election.annee }}{% endblock %}
+{% block heading %}{{ block('title') }}{% endblock %}
+
+{% block fil_ariane_suite %}
+  <li class="breadcrumb-item"><a href="{{ path('dashboard_elections', {slug: election.slug}) }}" class="no-decoration underline">Élections {{ election.libelle_abrege|lower }} {{ election.annee }}</a></li>
+  <li class="breadcrumb-item active">Modifier</li>
+{% endblock %}
+
+{% block body %}
+  <div class="card">
+    <div class="card-body">
+      <form method="post">
+        <input type="hidden" name="_token" value="{{ csrf_token('modifier_candidature_' ~ election.id) }}">
+
+        <div class="form-group">
+          <label for="district">Département de candidature</label>
+          <select class="form-control" name="district" id="district">
+            <option value=""></option>
+            {% for d in departements %}
+              <option value="{{ d.id }}" {{ candidature and candidature.district == d.id ? 'selected' }}>{{ d.libelle }}</option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <div class="d-flex flex-column p-4" style="background-color: rgba(0, 183, 148, 0.3)">
+          <p class="font-weight-bold">Candidature</p>
+          <div class="d-flex">
+            <div class="form-check flex-fill font-weight-bold">
+              <input class="form-check-input" type="radio" name="candidature" value="1" id="candidature1" {{ candidature and candidature.candidat ? 'checked' }}>
+              <label class="form-check-label" for="candidature1">Je suis candidat.e</label>
+            </div>
+            <div class="form-check flex-fill">
+              <input class="form-check-input" type="radio" name="candidature" value="0" id="candidature2" {{ candidature and candidature.candidat is same as(false) ? 'checked' }}>
+              <label class="form-check-label" for="candidature2">Je ne suis pas candidat.e</label>
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-4 p-4" style="background-color: rgba(0, 183, 148, 0.3)">
+          <div class="form-group mt-3">
+            <label for="link">Lien vers site de campagne</label>
+            <input type="text" class="form-control" autocomplete="off" name="link" id="link" value="{{ candidature ? candidature.lien }}">
+          </div>
+          <div class="row mt-4">
+            <div class="col-md-8">
+              <p class="font-weight-bold font-italic text-primary">Plus d'infos</p>
+              <p>Le lien vers le site de campagne ajoute, dans le bloc « élections » de votre page publique, un bouton vers votre site de campagne.</p>
+              <p>Ce lien peut diriger vers votre site internet, votre page Facebook ou X, ou vers un document de campagne.</p>
+            </div>
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary mt-4">Enregistrer</button>
+      </form>
+    </div>
+  </div>
+{% endblock %}

@@ -1,0 +1,26 @@
+{# Carte d'un groupe mis en avant par un classement, avec son score en badge.
+   Portée de application/views/groupes/partials/card_home.php. #}
+<div class="card card-groupe">
+  {% if groupe.couleur %}
+    <div class="liseret" style="background-color: {{ groupe.couleur }}"></div>
+  {% endif %}
+  <div class="card-avatar">
+    <picture>
+      <source srcset="{{ asset('assets/imgs/groupes/' ~ groupe.legislature ~ '/webp/' ~ groupe.libelle_abrev ~ '.webp') }}" type="image/webp">
+      <source srcset="{{ asset('assets/imgs/groupes/' ~ groupe.legislature ~ '/' ~ groupe.libelle_abrev ~ '.png') }}" type="image/png">
+      <img src="{{ asset('assets/imgs/groupes/' ~ groupe.legislature ~ '/' ~ groupe.libelle_abrev ~ '.png') }}" width="150" height="150" alt="{{ groupe.libelle|name_group }}">
+    </picture>
+  </div>
+  <div class="card-body d-flex flex-column justify-content-center align-items-center">
+    <span class="d-block card-title">
+      <a href="{{ path('groupe_individual', {legislature: groupe.legislature, abrev: groupe.libelle_abrev|lower}) }}" class="stretched-link no-decoration">{{ groupe.libelle|name_group }}</a>
+    </span>
+    <span class="d-block libelle">{{ groupe.libelle_abrev }}</span>
+    <span class="badge badge-primary badge-stats mt-3">{{ stat }}</span>
+  </div>
+  {% if groupe.effectif %}
+    <div class="card-footer d-flex justify-content-center align-items-center">
+      <span>{{ groupe.effectif }} membres</span>
+    </div>
+  {% endif %}
+</div>

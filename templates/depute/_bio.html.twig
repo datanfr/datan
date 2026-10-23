@@ -1,0 +1,156 @@
+{# Bloc biographique « Qui est-il/elle ? » (`mp_individual/_bio.php`).
+
+   Le legacy accorde tout le texte au genre du député via un `gender()` (helper
+   utility_helper.php) : ce gabarit fait pareil à partir de `civilite`. La fiche
+   portée disait « Qui est-il ? » et « Il siège… » pour tout le monde, femmes
+   comprises — un défaut corrigé ici.
+
+   La date et la ville de naissance (« née le … à … ») viennent de l'état civil
+   des acteurs des Tricoteuses (`app:import:acteurs`) ; la prise de fonction,
+   l'ancienneté et la commission de DeputeController::anciennete et ::commission. #}
+{% set e = depute.civilite == 'Mme' ? 'e' : '' %}
+{% set pronom = depute.civilite == 'Mme' ? 'elle' : 'il' %}
+{% set article = depute.civilite == 'Mme' ? 'la' : 'le' %}
+{% set mot_depute = depute.civilite == 'Mme' ? 'députée' : 'député' %}
+{% set no_job = ['autre profession', 'autres', 'sans profession déclarée', 'sans profession'] %}
+{# `page_historique` : le mode « Mandat de X pendant la Nème législature » des
+   pages /legislature-N (`$page_history` du legacy). L'intro est la même que la
+   fiche ; suivent le groupe de l'époque et le renvoi vers la fiche actuelle —
+   ancienneté, commission, parti, métier et bouton de contact sont tus. #}
+{% set page_historique = page_historique|default(false) %}
+{% set leg = legislature_page|default(mandats ? mandats[0].legislature : 17) %}
+<div class="bloc-bio mt-5">
+  {% if page_historique %}
+    <h1 class="mb-4 title-center">Mandat de {{ nom_complet }} pendant la {{ leg }}<sup>ème</sup> législature</h1>
+  {% else %}
+    <h2 class="mb-4 title-center">Qui est-{{ pronom }} ?</h2>
+  {% endif %}
+
+  {% if actif %}
+    <p>
+      <b>{{ nom_complet }}</b>{% if naissance %}, né{{ e }} le {{ naissance.date }}{% if naissance.ville %} à {{ naissance.ville }}{% endif %},{% endif %}
+      est {{ article }} {{ mot_depute }} de la {{ depute.circonscription }}<sup>{{ depute.circonscription|rang_circo }}</sup> circonscription
+      {{- ' ' ~ depute.libelle_de }}<a href="{{ path('departement_individual', {departement: depute.dpt_slug}) }}">{{ depute.departement_nom }} ({{ depute.departement_code }})</a>.
+    </p>
+
+    {% if anciennete and not page_historique %}
+      {# La deuxième phrase repart du pronom (« Il est entré… »), comme le legacy —
+         et l'apostrophe de « l’Assemblée » y est typographique, comme dans sa
+         chaîne source. #}
+      <p>
+        {{ pronom|capitalize }} est entré{{ e }} en fonction en {{ anciennete.mois }}
+        et en est à son {{ anciennete.ordinal }} mandat. Au total, {{ nom_complet }} a passé {{ anciennete.length_edited }}
+        sur les bancs de l’Assemblée nationale, soit {{ anciennete.edito }} que la moyenne des députés, qui est de {{ anciennete.moyenne }} ans.
+      </p>
+    {% endif %}
+
+    {% if page_historique %}
+    {% elseif depute.groupe_abrev == 'NI' or depute.groupe_abrev is null %}
+      <p>À l'Assemblée nationale, {{ nom_complet }} n'est pas membre d'un groupe parlementaire, et siège donc en non-inscrit{{ e }}.</p>
+    {% else %}
+      {# Le gras s'arrête à « classé à gauche » : le legacy ferme son <b> avant
+         « de l'échiquier politique ». #}
+      <p>
+        À l'Assemblée, {{ nom_complet }} siège avec le groupe
+        <a href="{{ path('groupe_individual', {legislature: leg, abrev: depute.groupe_abrev|lower}) }}">{{ depute.groupe_libelle|name_group }}</a> ({{ depute.groupe_abrev }}){% if echiquier %}, un groupe <b>classé {{ echiquier }}</b> de l'échiquier politique{% endif %}.
+      </p>
+    {% endif %}
+
+    {# Commission parlementaire. Le rôle (`code_qualite`) est masculin en base ;
+       on l'accorde pour une femme sur les fonctions du bureau (Président,
+       Vice-Président), les autres (Membre, Secrétaire) étant épicènes. #}
+    {% if commission %}
+      {% set role_accorde = (e and commission.role in ['Président', 'Vice-Président']) ? commission.role ~ 'e' : commission.role %}
+      <p>{{ nom_complet }} est {{ role_accorde|lower }} de la {{ commission.libelle }}.</p>
+    {% endif %}
+
+    {% if depute.parti_libelle %}
+      <p>
+        {{ nom_complet }} est rattaché{{ e }} financièrement au parti politique
+        <a href="{{ path('parti_individual', {abrev: depute.parti_abrev|lower}) }}">{{ depute.parti_libelle }} ({{ depute.parti_abrev }})</a>.
+        Le rattachement permet aux partis politiques de recevoir, pour chaque député, une subvention publique.
+      </p>
+    {% endif %}
+  {% else %}
+    <p>
+      <b>{{ nom_complet }}</b>{% if naissance %}, né{{ e }} le {{ naissance.date }}{% if naissance.ville %} à {{ naissance.ville }}{% endif %},{% endif %}
+      était un{{ e }} {{ mot_depute }} de l'Assemblée nationale. Pendant la {{ leg }}<sup>e</sup> législature,
+      {{ pronom }} a été élu{{ e }} dans le département {{ depute.libelle_de }}<a href="{{ path('departement_individual', {departement: depute.dpt_slug}) }}">{{ depute.departement_nom }} ({{ depute.departement_code }})</a>.
+    </p>
+
+    {# Prise de fonction du dernier mandat, sans comparaison à la moyenne : le
+       legacy la réserve aux députés en exercice. #}
+    {% if anciennete and not page_historique %}
+      <p>
+        Pour son dernier mandat, pendant la {{ leg }}<sup>e</sup> législature, {{ nom_complet }} est entré{{ e }} en fonction en {{ anciennete.mois }}.
+        {{ pronom|capitalize }} en était à son {{ anciennete.ordinal }} mandat. Au total, {{ pronom }} a passé {{ anciennete.length_edited }} sur les bancs de l’Assemblée nationale.
+      </p>
+    {% endif %}
+
+    {# La sortie de l'Assemblée et son motif (`_bio.php:45-52`). Le motif est
+       tu sur la page d'une législature passée, comme au legacy — la phrase y
+       parlerait d'un départ postérieur au mandat consulté. #}
+    {% if fin_mandat is defined and fin_mandat and not page_historique %}
+      <p>{{ pronom|capitalize }} a quitté l'Assemblée nationale le {{ fin_mandat.date }}{% if fin_mandat.motif %}{{ fin_mandat.motif starts with '.' ? '' : ' ' }}{{ fin_mandat.motif }}{% endif %}.</p>
+    {% endif %}
+
+    {# Le dernier groupe connu, résolu par `DeputeController::dernierGroupe` :
+       `depute.groupe_id` ne porte que l'appartenance courante, nulle pour un
+       ancien (cf. CLAUDE.md). L'échiquier et le parti, propres au présent,
+       restent tus — comme sur le site. #}
+    {% if depute.groupe_libelle and not page_historique %}
+      <p>Au cours de son dernier mandat, pendant la {{ leg }}<sup>e</sup> législature, {{ nom_complet }} a siégé avec le groupe {{ depute.groupe_libelle|name_group }} ({{ depute.groupe_abrev }}).</p>
+    {% endif %}
+
+    {# Le rattachement financier au passé (`_bio.php:98-101`) : le legacy sert
+       ce paragraphe aux deux états, seule la conjugaison change. Il manquait à
+       la branche « ancien », qui perdait donc les 26 fiches concernées. #}
+    {% if depute.parti_libelle and not page_historique %}
+      <p>
+        Quand {{ pronom }} était {{ mot_depute }}, {{ nom_complet }} était rattaché{{ e }} financièrement au parti politique
+        <a href="{{ path('parti_individual', {abrev: depute.parti_abrev|lower}) }}">{{ depute.parti_libelle }} ({{ depute.parti_abrev }})</a>.
+        Le rattachement permet aux partis politiques de recevoir, pour chaque député, une subvention publique.
+      </p>
+    {% endif %}
+  {% endif %}
+
+  {% if page_historique %}
+    {# Le groupe de l'époque, en texte simple comme le legacy (pas de lien), puis
+       le renvoi vers la fiche de la dernière législature. « 17ème » reste à plat :
+       la balise du legacy est cassée (`<sum>ème</sup>`) et ne rend aucun exposant. #}
+    {% if groupe_historique %}
+      <p>Pendant ce mandat, {{ nom_complet }} siégeait avec le groupe {{ groupe_historique.libelle|name_group }} ({{ groupe_historique.libelle_abrev }}).</p>
+    {% endif %}
+    <p>
+      La dernière législature au cours de laquelle {{ article }} {{ mot_depute }} a siégé est la {{ mandats ? mandats[0].legislature : 17 }}ème.
+      Pour plus d'information sur l'activité de {{ nom_complet }} au cours de cette législature,
+      <a href="{{ path('depute_individual', {dptSlug: depute.dpt_slug, slug: depute.slug}) }}">cliquez ici</a>.
+    </p>
+  {% endif %}
+
+  {# Métier déclaré. « le metier » reprend l'orthographe du legacy telle quelle
+     (datan.fr l'affiche ainsi). La phrase « Comme X % des députés, il fait
+     partie de la famille professionnelle … » de la vue legacy (_bio.php:110) ne
+     s'affiche JAMAIS sur datan.fr : Deputes.php:216 a commenté l'appel et passe
+     null, que la vue garde. Vérifié sur le site vivant (fiche Bregeon,
+     30/07/2026). L'omettre est donc la parité — ne pas la « rebrancher » au
+     motif que ProfilSocial porte la donnée. #}
+  {% if depute.profession and depute.profession|lower not in no_job and not page_historique %}
+    <p>
+      Avant de devenir {{ mot_depute }}, {{ nom_complet }} exerçait le metier <b>{{ depute.profession|lower }}</b>.
+      Pour en savoir plus sur l'origine sociale des parlementaires, <a href="{{ path('classement_index') }}">cliquez ici</a>.
+    </p>
+  {% endif %}
+
+  {# Bouton « Contacter … » du legacy (`mailto`), pour un député en exercice qui a
+     une adresse institutionnelle. Le bloc « Contactez … » du pied de fiche le
+     redouble, comme sur datan.fr. #}
+  {% if actif and not page_historique and contact.mail_an %}
+    <div class="d-flex justify-content-center mt-5">
+      <a href="mailto:{{ contact.mail_an }}" class="btn btn-primary">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16"><path d="M.05 3.555A2 2 0 0 1 2 2h12a2 2 0 0 1 1.95 1.555L8 8.414.05 3.555zM0 4.697v7.104l5.803-3.558L0 4.697zM6.761 8.83l-6.57 4.027A2 2 0 0 0 2 14h12a2 2 0 0 0 1.808-1.144l-6.57-4.027L8 9.586l-1.239-.757zm3.436-.586L16 11.801V4.697l-5.803 3.546z"/></svg>
+        <span class="ml-2">Contacter {{ nom_complet }}</span>
+      </a>
+    </div>
+  {% endif %}
+</div>

@@ -1,0 +1,24 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block title %}Supprimer un décryptage{% endblock %}
+
+{% block body %}
+  <div class="card">
+    <div class="card-body">
+      <p>
+        Vous êtes sur le point de supprimer <strong>« {{ decryptage.title }} »</strong>{% if decryptage.signature %},
+        rédigé par {{ decryptage.signature }}{% endif %}.
+      </p>
+      <p class="text-danger">
+        Un décryptage est un texte original : sa suppression est définitive et il ne pourra pas être régénéré
+        à partir des données de l'Assemblée.
+      </p>
+
+      <form method="post">
+        <input type="hidden" name="_token" value="{{ csrf_token('supprimer_decryptage_' ~ decryptage.id) }}">
+        <button type="submit" class="btn btn-danger">Supprimer définitivement</button>
+        <a class="btn btn-secondary" href="{{ path('admin_decryptage_index') }}">Annuler</a>
+      </form>
+    </div>
+  </div>
+{% endblock %}

@@ -1,0 +1,429 @@
+{% extends 'base.html.twig' %}
+
+{% set nom_groupe = groupe.libelle|name_group %}
+{% set non_inscrits = groupe.libelle_abrev == 'NI' %}
+{# Le site nomme les non-inscrits « Députés non inscrits » dans ses titres,
+   là où la base porte « Non inscrit ». Le reste des phrases les traite ensuite
+   comme un groupe ordinaire — « le groupe Députés non inscrits » —, tournure
+   maladroite mais qui est celle du site. #}
+{% set titre_groupe = non_inscrits ? 'Députés non inscrits' : nom_groupe %}
+{% set couleur = groupe.couleur ?: '#00668e' %}
+{% set lien_page = path('groupe_statistiques', {legislature: groupe.legislature, abrev: groupe.libelle_abrev|lower}) %}
+{% set legislature_edito %}{{ groupe.legislature }}<sup>ème</sup> législature ({{ bornes.debut }} - {% if bornes.fin %}{{ bornes.fin }}{% else %}<i>en cours</i>{% endif %}){% endset %}
+
+{% block title %}{{ non_inscrits ? 'Députés non incrits - Statistiques' : 'Statistiques du groupe ' ~ nom_groupe }} - Datan{% endblock %}
+
+{% block meta_description %}Retrouvez toutes les statistiques {{ non_inscrits ? 'des députés non inscrits (NI)' : 'du groupe ' ~ nom_groupe ~ ' (' ~ groupe.libelle_abrev ~ ')' }} : participation aux votes, cohésion, proximité avec la majorité présidentielle.{% endblock %}
+
+{% block javascripts_head %}
+  <script src="{{ asset('assets/js/dist/chart.min.js') }}" defer></script>
+{% endblock %}
+
+{% block body %}
+{{ include('groupe/partials/entete_sous_page.html.twig') }}
+
+<div class="container pg-groupe-stats">
+  <div class="row">
+    <div class="col-12 col-md-8 col-lg-4 offset-md-2 offset-lg-0 px-lg-4">
+      {{ include('groupe/partials/carte_profil.html.twig', {effectif: chiffres.effectif}) }}
+    </div>
+    <div class="col-md-10 col-lg-8 offset-md-1 offset-lg-0 pl-lg-5">
+      <div class="d-none d-lg-block btn-back mt-4">
+        <a class="btn btn-outline-primary mx-2" href="{{ path('groupe_individual', {legislature: groupe.legislature, abrev: groupe.libelle_abrev|lower}) }}">{{ include('groupe/partials/fleche_retour.html.twig') }}Retour profil</a>
+      </div>
+
+      <div class="title my-4">
+        <h1>Les statistiques du groupe {{ titre_groupe }}</h1>
+        <p>{{ legislature_edito }}</p>
+      </div>
+      <p>Cette page présente en détail les <b>statistiques</b> du groupe <i>{{ titre_groupe }}</i>.</p>
+      <p>Quelle est la cohésion au sein du groupe ? Ses députés participent-ils souvent aux scrutins ? Quelle est sa proximité avec les autres groupes de l'Assemblée nationale ?</p>
+      <p>Cette page présente un <b>historique</b> des statistiques du groupe <i>{{ titre_groupe }}</i>. Pour en savoir plus sur l'historique du groupe, <a href="#link-stats">cliquez ici</a>.</p>
+      <p>Ces <a href="{{ path('page_statistiques') }}">statistiques</a> sont développées par l'équipe de Datan.</p>
+
+      <div class="mt-5">
+        <p class="h4 font-weight-bold text-primary">Accès rapide aux statistiques</p>
+        <a class="btn btn-primary my-1" href="{{ lien_page }}#participation">Participation aux votes</a>
+        <a class="btn btn-primary my-1" href="{{ lien_page }}#cohesion">Cohesion interne</a>
+        <a class="btn btn-primary my-1" href="{{ lien_page }}#majorite">Proximité avec la majorité</a>
+        <a class="btn btn-primary my-1" href="{{ lien_page }}#proximite">Proximité avec chaque groupe</a>
+        <a class="btn btn-primary my-1" href="{{ lien_page }}#effectifs">Effectifs du groupe</a>
+        <a class="btn btn-primary my-1" href="{{ lien_page }}#age">Âge moyen des députés</a>
+        <a class="btn btn-primary my-1" href="{{ lien_page }}#feminisation">Taux de féminisation</a>
+      </div>
+
+      {# --- Participation --- #}
+      <div class="mt-5">
+        <h2 class="anchor mb-3" id="participation">Participation aux votes</h2>
+        {% if comportement.scrutins < 10 %}
+          {{ include('groupe/partials/pas_assez.html.twig') }}
+        {% else %}
+          <p>
+            {{ actif ? 'Depuis le début de' : 'Pendant la' }} {{ groupe.legislature }}ème législature, le taux de participation moyen du groupe <i>{{ titre_groupe }}</i> {{ actif ? 'est' : 'était' }} de <span class="font-weight-bold text-primary">{{ comportement.participation_moyenne }}%</span>.
+            Autrement dit, en moyenne, pour chaque scrutin en séance publique, {{ comportement.participation_moyenne }}% des députés du groupe ont pris part au vote.
+          </p>
+          <p>Le groupe <b>{{ actif ? 'participe' : 'participait' }} {{ edito.participation }}</b> que les autres groupes politiques. La moyenne de l'Assemblée nationale {{ actif ? 'est' : 'était' }} de {{ moyennes.participation }}%.</p>
+          {% if histogrammes.participation.barres|length > 1 %}
+            <div class="card card-stats mt-4">
+              <div class="card-body pb-0">
+                {{ include('groupe/partials/filet_carte.html.twig') }}
+                {% if actif %}
+                  <h3>La participation du groupe {{ histogrammes.participation.evolution }}</h3>
+                {% else %}
+                  <h3>Historique de la participation du groupe {{ groupe.libelle_abrev }}</h3>
+                {% endif %}
+                <p>Évolution du taux de participation du groupe {{ groupe.libelle_abrev }} sur les dernières législatures</p>
+                {{ include('groupe/partials/histogramme_vertical.html.twig', {lignes: histogrammes.participation.barres, type: 'pct', divise_par: 1, grille: true, mentions: true, infobulle: true}) }}
+              </div>
+            </div>
+          {% endif %}
+          <div class="card mt-4">
+            <div class="card-body card-stats pb-2">
+              {{ include('groupe/partials/filet_carte.html.twig') }}
+              <h3>Évolution de la participation sur la dernière législature</h3>
+              <p>{{ legislature_edito }}</p>
+              <div style="width: 100%;"><canvas id="graphParticipation"></canvas></div>
+            </div>
+          </div>
+        {% endif %}
+      </div>
+
+      {# --- Cohésion --- #}
+      <div class="mt-5">
+        <h2 class="anchor mb-3" id="cohesion">Cohésion interne au groupe</h2>
+        {% if comportement.scrutins < 10 %}
+          {{ include('groupe/partials/pas_assez.html.twig') }}
+        {% else %}
+          <p>
+            {# Virgule décimale française (« 0,95 » où le site écrit « 0.95 ») :
+               correction typographique assumée, la règle des pages de
+               classement (`number_format(n, ',', ' ')`) — cf. TODO §4. #}
+            {{ actif ? 'Depuis le début de' : 'Pendant la' }} {{ groupe.legislature }}ème législature, le taux de cohésion du groupe <i>{{ titre_groupe }}</i> {{ actif ? 'est' : 'était' }} de <span class="font-weight-bold text-primary">{{ comportement.cohesion_moyenne|number_format(2, ',', ' ') }}</span>. Plus ce score de cohésion est proche de 1, plus le groupe est uni quand il s'agit de voter en séance publique.
+          </p>
+          <p>Le groupe <i>{{ titre_groupe }}</i> {{ actif ? 'peut' : 'pouvait' }} être considéré comme <b>{{ edito.cohesion.absolute }} soudé</b> quand il s'{{ actif ? 'agit' : 'agissait' }} de voter. En effet, le groupe {{ actif ? 'est' : 'était' }} {{ edito.cohesion.relative }} soudé que la moyenne des autres groupes, qui {{ actif ? 'est' : 'était' }} de {{ moyennes.cohesion|number_format(2, ',', ' ') }}.</p>
+          {% if histogrammes.cohesion.barres|length > 1 %}
+            <div class="card card-stats mt-4">
+              <div class="card-body pb-0">
+                {{ include('groupe/partials/filet_carte.html.twig') }}
+                {% if actif %}
+                  <h3>La cohésion du groupe {{ histogrammes.cohesion.evolution }}</h3>
+                {% else %}
+                  <h3>Historique de la cohésion du groupe {{ groupe.libelle_abrev }}</h3>
+                {% endif %}
+                <p>Évolution du taux de cohésion du groupe {{ groupe.libelle_abrev }} sur les dernières législatures</p>
+                {{ include('groupe/partials/histogramme_vertical.html.twig', {lignes: histogrammes.cohesion.barres, type: 'score', divise_par: 1, grille: true, mentions: true, infobulle: true}) }}
+              </div>
+            </div>
+          {% endif %}
+          <div class="card card-stats mt-4">
+            <div class="card-body pb-2">
+              {{ include('groupe/partials/filet_carte.html.twig') }}
+              <h3>Évolution de la cohésion sur la dernière législature</h3>
+              <p>{{ legislature_edito }}</p>
+              <div style="width: 100%;"><canvas id="graphCohesion"></canvas></div>
+            </div>
+          </div>
+        {% endif %}
+      </div>
+
+      {# --- Proximité avec la majorité présidentielle --- #}
+      {% if histogrammes.majorite.barres is not empty %}
+        <div class="mt-5">
+          <h2 class="anchor mb-3" id="majorite">Proximité avec la majorité présidentielle</h2>
+          {% if majorite_stat.votes < 10 %}
+            {{ include('groupe/partials/pas_assez.html.twig') }}
+          {% else %}
+            <p>
+              {{ actif ? 'Depuis le début de' : 'Pendant la' }} {{ groupe.legislature }}ème législature, le groupe <i>{{ titre_groupe }}</i> a voté sur la même ligne que la majorité présidentielle dans <span class="font-weight-bold text-primary">{{ (majorite_stat.score * 100)|round }}%</span> des cas.
+            </p>
+            <p>Le groupe {{ actif ? 'est' : 'était' }} <b>{{ edito.majorite }} proche</b> de la majorité présidentielle que la moyenne des autres groupes politiques, qui {{ actif ? 'est' : 'était' }} de {{ moyennes.majorite }}%.</p>
+            {% if histogrammes.majorite.barres|length > 1 %}
+              <div class="card card-stats mt-4">
+                <div class="card-body pb-0">
+                  {{ include('groupe/partials/filet_carte.html.twig') }}
+                  {% if actif %}
+                    <h3>La proximité avec la majorité {{ histogrammes.majorite.evolution }}</h3>
+                  {% else %}
+                    <h3>Historique de la proximité avec la majorité</h3>
+                  {% endif %}
+                  <p>Évolution de la proximité avec la majorité du groupe {{ groupe.libelle_abrev }} sur les dernières législatures</p>
+                  {{ include('groupe/partials/histogramme_vertical.html.twig', {lignes: histogrammes.majorite.barres, type: 'pct', divise_par: 1, grille: true, mentions: true, infobulle: true}) }}
+                </div>
+              </div>
+            {% endif %}
+            <div class="card card-stats mt-4">
+              <div class="card-body pb-0">
+                {{ include('groupe/partials/filet_carte.html.twig') }}
+                <h3>Évolution de la proximité avec la majorité sur la dernière législature</h3>
+                <p>{{ legislature_edito }}</p>
+                <div style="width: 100%;"><canvas id="graphMajority"></canvas></div>
+              </div>
+            </div>
+          {% endif %}
+        </div>
+      {% endif %}
+
+      {# La section « Coalitions les plus fréquentes » qui vivait ici a été
+         retirée : le site ne la sert que sur la fiche du groupe, jamais sur sa
+         page de statistiques, et c'était le dernier écart de structure de la
+         page. La fiche, elle, la garde (`groupe/individual.html.twig`). #}
+
+      {# --- Proximité avec chaque groupe --- #}
+      <div class="mt-5">
+        <h2 class="anchor mb-3" id="proximite">Proximité avec chaque groupe politique</h2>
+        {% if plus_proche is null %}
+          {{ include('groupe/partials/pas_assez.html.twig') }}
+        {% else %}
+          <p>Le groupe <i>{{ titre_groupe }}</i> {{ actif ? 'vote' : 'votait' }}-t-il souvent avec les autres groupes politiques qui {{ actif ? 'compose' : 'composait' }} l'Assemblée nationale ? Deux groupes sont considérés proches s'ils ont les mêmes positions lorsqu'ils votent en séance publique.</p>
+          <p>
+            {{ actif ? 'Depuis le début de' : 'Pendant la' }} {{ groupe.legislature }}ème législature, le groupe <i>{{ titre_groupe }}</i> est le plus proche du groupe <i>{{ plus_proche.libelle|name_group }}</i>.
+            Ces deux groupes ont eu la même position dans <span class="font-weight-bold text-primary">{{ plus_proche.score }}%</span> des cas.
+          </p>
+          <div class="card card-stats mt-4">
+            <div class="card-body pb-3">
+              {{ include('groupe/partials/filet_carte.html.twig') }}
+              <h3>Historique de la proximité avec chaque groupe</h3>
+              <p>{{ legislature_edito }}</p>
+              <p class="small">Ce graphique donne un historique de la proximité entre le groupe <i>{{ nom_groupe }}</i> et les autres groupes de l'Assemblée. Cliquez sur les différents groupes pour faire apparaître les données de proximité.</p>
+              <div style="width: 100%;"><canvas id="proximity"></canvas></div>
+            </div>
+          </div>
+        {% endif %}
+      </div>
+
+      {# --- Effectifs --- #}
+      <div class="mt-5">
+        <h2 class="anchor mb-3" id="effectifs">Les effectifs du groupe {{ groupe.libelle_abrev }}</h2>
+        {% if classements.effectif is defined %}
+          <p>Le groupe <i>{{ titre_groupe }}</i> compte actuellement <span class="font-weight-bold text-primary">{{ chiffres.effectif }} députés</span>. Cela représente <b>{{ (chiffres.effectif / 577 * 100)|round }}%</b> des députés de l'Assemblée nationale. Pour rappel, l'Assemblée compte 577 députés.</p>
+          <div class="card card-stats mt-4">
+            <div class="card-body pb-0">
+              {{ include('groupe/partials/filet_carte.html.twig') }}
+              {% if classements.effectif.dernier %}
+                <h3>Le plus petit groupe politique de l'Assemblée nationale</h3>
+              {% else %}
+                <h3>Le {{ classements.effectif.ordinal }} plus grand groupe de l'Assemblée</h3>
+              {% endif %}
+              <p>Classement des groupes de la {{ groupe.legislature }}<sup>ème</sup> législature en fonction de leurs effectifs</p>
+              {{ include('groupe/partials/histogramme_horizontal.html.twig', {lignes: classements.effectif.lignes, type: 'score', divise_par: classements.effectif.maximum, courant: groupe.id}) }}
+            </div>
+          </div>
+        {% else %}
+          <p>Retrouvez ci-dessous l'historique du nombre de députés membres du groupe <i>{{ titre_groupe }}</i>.</p>
+        {% endif %}
+        <div class="card card-stats mt-4">
+          <div class="card-body pb-2">
+            {{ include('groupe/partials/filet_carte.html.twig') }}
+            <h3>Historique des effectifs du groupe</h3>
+            <p>Évolution des effectifs du groupe {{ groupe.libelle_abrev }} par mois</p>
+            <div style="width: 100%;"><canvas id="members"></canvas></div>
+            <p class="mt-4 small">Le graphique donne le nombre de députés membres des différents groupes liés au groupe <i>{{ nom_groupe }}</i>. Il s'agit des groupes suivants :</p>
+            <table class="table table-sm small">
+              <thead>
+                <tr>
+                  <th scope="col">Groupe</th>
+                  <th scope="col" class="text-center">Législature</th>
+                  <th scope="col" class="text-center">Date d'activité</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for incarnation in famille %}
+                  <tr>
+                    <th scope="row"><a class="no-decoration underline" href="{{ path('groupe_individual', {legislature: incarnation.legislature, abrev: incarnation.libelle_abrev|lower}) }}">{{ incarnation.libelle|name_group }} ({{ incarnation.libelle_abrev }})</a></th>
+                    <td class="text-center">{{ incarnation.legislature }}</td>
+                    <td class="text-center">{{ incarnation.date_debut|date('Y') }} - {% if incarnation.date_fin %}{{ incarnation.date_fin|date('Y') }}{% else %}<i>En cours</i>{% endif %}</td>
+                  </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      {# --- Âge moyen --- #}
+      <div class="mt-5">
+        <h2 class="anchor mb-3" id="age">L'âge moyen des députés du groupe {{ groupe.libelle_abrev }}</h2>
+        <p>L'âge moyen des députés membres du groupe <i>{{ titre_groupe }}</i> {{ actif ? 'est' : 'était' }} de <span class="font-weight-bold text-primary">{{ chiffres.age_moyen }} ans</span>.</p>
+        {# « les députés … étaient » : le site écrit « était », accord manqué. #}
+        <p>{{ actif ? 'En moyenne' : 'Pendant la ' ~ groupe.legislature ~ 'ème législature' }}, les députés du groupe <i>{{ titre_groupe }}</i> {{ actif ? 'sont' : 'étaient' }} <b>{{ edito.age }} âgés</b> que la moyenne de l'Assemblée nationale, qui {{ actif ? 'est' : 'était' }} de {{ moyennes.age }} ans.</p>
+        {% if classements.age is defined %}
+          <div class="card card-stats mt-4">
+            <div class="card-body pb-0">
+              {{ include('groupe/partials/filet_carte.html.twig') }}
+              {% if classements.age.dernier %}
+                <h3>Le groupe avec les députés les plus jeunes</h3>
+              {% else %}
+                <h3>Le {{ classements.age.ordinal }} groupe avec les députés les plus âgés</h3>
+              {% endif %}
+              {# Le site titre ici « en fonction de leurs effectifs », copié du
+                 bloc précédent : le graphique classe bien par âge. #}
+              <p>Classement des groupes de la {{ groupe.legislature }}ème législature en fonction de l'âge moyen de leurs députés</p>
+              {{ include('groupe/partials/histogramme_horizontal.html.twig', {lignes: classements.age.lignes, type: 'score', divise_par: classements.age.maximum, courant: groupe.id}) }}
+            </div>
+          </div>
+        {% endif %}
+        {% if histogrammes.age.barres|length > 1 %}
+          <div class="card card-stats mt-4">
+            <div class="card-body pb-0">
+              {{ include('groupe/partials/filet_carte.html.twig') }}
+              <h3>Historique de l'âge moyen au sein du groupe</h3>
+              <p>Évolution de l'âge moyen des députés du groupe {{ groupe.libelle_abrev }} par législature</p>
+              {{ include('groupe/partials/histogramme_vertical.html.twig', {lignes: histogrammes.age.barres, type: 'score', divise_par: histogrammes.age.maximum, grille: false, mentions: true, infobulle: true}) }}
+            </div>
+          </div>
+        {% endif %}
+      </div>
+
+      {# --- Féminisation --- #}
+      <div class="mt-5">
+        <h2 class="anchor mb-3" id="feminisation">Le taux de féminisation du groupe {{ groupe.libelle_abrev }}</h2>
+        <p>
+          {{ actif ? 'Il y a' : 'Pendant la ' ~ groupe.legislature ~ 'ème législature, il y avait' }} <span class="font-weight-bold text-primary">{{ chiffres.femmes }} députées femmes</span> au sein du groupe <i>{{ titre_groupe }}</i>.
+          Cela {{ actif ? 'représente' : 'représentait' }} {{ chiffres.feminisation }}% des effectifs du groupe.
+          C'est <b>{{ edito.feminisation }}</b> que la moyenne de l'Assemblée nationale, qui {{ actif ? 'est' : 'était' }} de {{ moyennes.feminisation }}%.
+        </p>
+        {% if classements.feminisation is defined %}
+          <div class="card card-stats mt-4">
+            <div class="card-body pb-0">
+              {{ include('groupe/partials/filet_carte.html.twig') }}
+              {% if classements.feminisation.dernier %}
+                <h3>Le groupe avec la part de députées femmes la plus faible</h3>
+              {% else %}
+                <h3>Le {{ classements.feminisation.ordinal }} groupe avec la part de députées femmes la plus forte</h3>
+              {% endif %}
+              <p>Classement des groupes de la {{ groupe.legislature }}ème législature en fonction du taux de féminisation</p>
+              {{ include('groupe/partials/histogramme_horizontal.html.twig', {lignes: classements.feminisation.lignes, type: 'pct', divise_par: classements.feminisation.maximum, courant: groupe.id}) }}
+            </div>
+          </div>
+        {% endif %}
+        {% if histogrammes.feminisation.barres|length > 1 %}
+          <div class="card card-stats mt-4">
+            <div class="card-body pb-0">
+              {{ include('groupe/partials/filet_carte.html.twig') }}
+              <h3>Historique de la part de femmes au sein du groupe</h3>
+              <p>Évolution de la part de députées femmes au sein du groupe {{ groupe.libelle_abrev }} par législature</p>
+              {{ include('groupe/partials/histogramme_vertical.html.twig', {lignes: histogrammes.feminisation.barres, type: 'pct', divise_par: 1, grille: true, mentions: true, infobulle: true}) }}
+            </div>
+          </div>
+        {% endif %}
+      </div>
+
+      {# --- Historique du groupe --- #}
+      <div class="mt-5">
+        <h2 class="anchor mb-3" id="link-stats">Historique du groupe {{ groupe.libelle_abrev }}</h2>
+        <p>Sur cette page, vous trouvez un historique des statistiques du groupe <i>{{ titre_groupe }}</i>. Pour chaque groupe politique, nous avons répertorié les anciens ou nouveaux groupes qui leur sont liés.</p>
+        <p>Sur Datan, nous récupérons les statistiques de l'Assemblée nationale depuis la 14<sup>ème</sup> législature (depuis 2012).</p>
+        {% if groupes_lies %}
+          <p>Voici les différents groupes liés au groupe <i>{{ titre_groupe }}</i> :</p>
+          <div class="row">
+            {% for lie in groupes_lies %}
+              <div class="col-md-6">
+                {{ include('groupe/partials/card.html.twig', {groupe: lie, cat: lie.legislature, actifs: false}) }}
+              </div>
+            {% endfor %}
+          </div>
+        {% else %}
+          <div class="alert alert-warning">
+            Nous n'avons pas associé d'autres groupes au groupe {{ groupe.libelle_abrev }}.
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+
+{{ include('groupe/partials/pied_membres.html.twig') }}
+{% endblock %}
+
+{% block javascripts %}
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      // Même gabarit pour les quatre courbes mensuelles du site : ligne verte,
+      // sans légende, l'axe des ordonnées forcé de 0 au plafond de la mesure
+      // (1 pour un score de cohésion, 100 pour un pourcentage).
+      function courbe(id, mois, valeurs, plafond) {
+        var noeud = document.getElementById(id);
+        if (!noeud || !valeurs.length) { return; }
+        new Chart(noeud, {
+          type: 'line',
+          data: {
+            labels: mois,
+            datasets: [{ data: valeurs, borderColor: '#00b794' }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: true,
+            aspectRatio: 2,
+            tension: 0.4,
+            layout: { padding: 10 },
+            plugins: { legend: { display: false }, datalabels: { display: false } },
+            scales: {
+              y: { afterDataLimits: function (echelle) { echelle.max = plafond; echelle.min = 0; } },
+              x: { grid: { display: false } }
+            }
+          }
+        });
+      }
+
+      {% set mois_mensuel = mensuel.mois|map(m => m|mois_abrege) %}
+      courbe('graphParticipation', {{ mois_mensuel|json_encode|raw }}, {{ mensuel.participation|json_encode|raw }}, 100);
+      courbe('graphCohesion', {{ mois_mensuel|json_encode|raw }}, {{ mensuel.cohesion|json_encode|raw }}, 1);
+      courbe('graphMajority', {{ majorite_mensuelle.mois|map(m => m|mois_abrege)|json_encode|raw }}, {{ majorite_mensuelle.valeurs|json_encode|raw }}, 100);
+
+      {% if proximite_mensuelle.series %}
+        new Chart(document.getElementById('proximity'), {
+          type: 'line',
+          data: {
+            labels: {{ proximite_mensuelle.mois|map(m => m|mois_abrege)|json_encode|raw }},
+            datasets: [
+              {% for serie in proximite_mensuelle.series %}
+                {
+                  label: {{ serie.groupe|json_encode|raw }},
+                  data: {{ serie.scores|json_encode|raw }},
+                  borderColor: {{ serie.couleur|json_encode|raw }},
+                  borderWidth: 2,
+                  fill: false,
+                  tension: 0.4,
+                  hidden: false
+                }{{ not loop.last ? ',' : '' }}
+              {% endfor %}
+            ]
+          },
+          options: {
+            responsive: true,
+            plugins: { datalabels: { display: false }, legend: { display: true } }
+          }
+        });
+      {% endif %}
+
+      {% if effectifs_lies.legislatures %}
+        // Six séries d'une barre par législature : les années d'un même mandat
+        // se rangent ainsi côte à côte sous une seule étiquette d'axe. L'année
+        // exacte n'apparaît qu'au survol, l'axe portant la seule législature.
+        new Chart(document.getElementById('members'), {
+          type: 'bar',
+          data: {
+            labels: {{ effectifs_lies.legislatures|map(l => l.libelle)|json_encode|raw }},
+            datasets: [
+              {% for serie in effectifs_lies.series %}
+                { data: {{ serie.valeurs|json_encode|raw }}, year: {{ serie.annees|json_encode|raw }} }{{ not loop.last ? ',' : '' }}
+              {% endfor %}
+            ]
+          },
+          options: {
+            backgroundColor: '#00b794',
+            plugins: {
+              legend: { display: false },
+              datalabels: { display: false },
+              tooltip: {
+                callbacks: {
+                  title: function (contexte) { return contexte[0].dataset.year[contexte[0].dataIndex]; }
+                }
+              }
+            }
+          }
+        });
+      {% endif %}
+    });
+  </script>
+{% endblock %}

@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="fr" dir="ltr" prefix="og: http://ogp.me/ns#">
+  <head>
+    <meta charset="utf-8">
+    {# Sur un hôte non indexable — la préproduction — la balise ne consulte plus
+       le bloc : aucune page ne doit être indexée, pas même celle qui demande
+       `index,follow`. Le même verdict sort en en-tête HTTP sur *toute* réponse
+       ({@see App\Referencement\EnTeteRobots}) ; cette balise-ci reste utile aux
+       moissonneurs qui ne lisent que le HTML. #}
+    {% if site_indexable() %}
+      <meta name="robots" content="{% block robots %}index,follow{% endblock %}">
+    {% else %}
+      <meta name="robots" content="noindex, nofollow, noarchive">
+    {% endif %}
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>{% block title %}Datan{% endblock %}</title>
+    <meta name="title" content="{{ block('title') }}">
+    {# Le bloc `meta_description` ne contient que le TEXTE : le gabarit fabrique
+       la balise et resservira le même texte à og:description et
+       twitter:description — l'application d'origine passait un unique
+       $description_meta aux deux endroits.
+
+       **Le texte du bloc est déjà échappé, et ne doit plus l'être.** Twig
+       échappe les variables au moment où le bloc les rend ; `block()` rend donc
+       du HTML, et le marque « safe » pour qu'on ne l'échappe pas deux fois. Ce
+       marquage ne survit ni au `|trim` (indispensable, les blocs multilignes
+       portent leur indentation) ni au passage par une variable — les deux le
+       perdent, chacun suffit. L'insertion ré-échappait donc une chaîne déjà
+       échappée et la balise sortait `d&amp;#039;Ajaccio` là où datan.fr écrit
+       `d'Ajaccio` : 3 353 fiches de ville, les pages de département et tout nom
+       à apostrophe du site. C'est le SECOND échappement qui est de trop, pas le
+       premier — d'où le `|raw`, qui rétablit le marquage sans rien désarmer.
+
+       Ce que le `|raw` suppose : que les 49 blocs `meta_description` n'écrivent
+       que du texte. Vérifié — aucun n'emploie `|raw` ni `autoescape`, et aucun
+       ne porte en dur un guillemet, une esperluette ou un chevron, que le
+       double échappement neutralisait par accident. Un bloc qui en écrirait un
+       sortirait de l'attribut `content="…"` : y mettre `{{ '…' }}`, pas le
+       caractère nu. #}
+    {% set description_page = block('meta_description') is defined ? block('meta_description')|trim : '' %}
+    {% if description_page %}
+      <meta name="description" content="{{ description_page|raw }}">
+    {% endif %}
+    <meta name="theme-color" content="#00668e">
+
+    {# Préchargements déclarés page par page, comme les `$data['preloads']` du
+       site — la plupart y mettent l'image de couverture, cf.
+       partials/preload_couverture.html.twig. #}
+    {% block preloads %}{% endblock %}
+
+    {# La forme canonique est l'adresse servie, sans sa chaîne de requête :
+       l'origine recopie REQUEST_URI entière, ?page=2 compris, ce qui fait des
+       balises canoniques qui ne canonisent rien — défaut corrigé, pas choix.
+       Une page servie sous plusieurs adresses (archives mensuelles, `07` et
+       `7`) pose sa forme de référence dans `canonical` et l'emporte. #}
+    {% set url_canonique = canonical|default(app.request ? app.request.schemeAndHttpHost ~ app.request.pathInfo : 'https://datan.fr/') %}
+    <link rel="canonical" href="{{ url_canonique }}">
+
+    {# — Open Graph et Twitter Cards (templates/header.php + Meta_model::get_ogp()
+       de l'origine). Les pages à visuel dédié — député, groupe, scrutin —
+       reçoivent `ogp` de leur contrôleur (voir App\Referencement\OpenGraph) ;
+       les autres retombent sur la carte générique au logo, comme l'origine. #}
+    {% set ogp = ogp is defined ? ogp : {} %}
+    {% set og_image = ogp.image ?? absolute_url(asset('assets/imgs/datan/logo_social_media.png')) %}
+    {# Les deux branches doivent arriver échappées une fois et une seule : celle
+       du bloc l'est déjà, celle du contrôleur ne l'est pas. On échappe donc ici
+       ce qui vient du contrôleur, et l'insertion pose `|raw` sur les deux — un
+       `{{ ogp.description ?? description_page }}` échapperait correctement la
+       première et une fois de trop la seconde. Aucun contrôleur ne renseigne
+       `description` à ce jour ({@see App\Referencement\OpenGraph}, qui ne pose
+       que titre, type et image) ; la branche est écrite pour le jour où. #}
+    {% set description_sociale = ogp.description is defined ? ogp.description|escape('html') : description_page %}
+    <meta property="og:title" content="{{ ogp.titre ?? block('title') }}" />
+    <meta property="og:description" content="{{ description_sociale|raw }}" />
+    <meta property="og:type" content="{{ ogp.type ?? 'website' }}" />
+    <meta property="og:url" content="{{ url_canonique }}" />
+    <meta property="og:image" content="{{ og_image }}" />
+    <meta property="og:image:secure_url" content="{{ og_image }}" />
+    <meta property="og:image:width" content="{{ ogp.image_largeur ?? 1200 }}">
+    <meta property="og:image:height" content="{{ ogp.image_hauteur ?? 630 }}">
+    <meta property="og:image:type" content="{{ ogp.image_type ?? 'image/png' }}" />
+    <meta property="og:site_name" content="Datan.fr" />
+    <meta property="og:locale" content="fr_FR" />
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@datanFR" />
+    <meta name="twitter:title" content="{{ ogp.titre ?? block('title') }}" />
+    <meta name="twitter:description" content="{{ description_sociale|raw }}" />
+    <meta name="twitter:image" content="{{ og_image }}" />
+    <meta name="twitter:creator" content="@awenig">
+    {% if ogp.prenom is defined %}
+      <meta property="profile:first_name" content="{{ ogp.prenom }}" />
+      <meta property="profile:last_name" content="{{ ogp.nom }}" />
+    {% endif %}
+
+    {# JSON-LD du fil d'Ariane. `@type` s'écrit ListItem : l'origine émet
+       « listItem », que schema.org ne reconnaît pas — défaut corrigé. #}
+    {% if fil_ariane is defined and fil_ariane|length > 0 %}
+      {% set maillons_ld = [] %}
+      {% for maillon in fil_ariane %}
+        {% set maillons_ld = maillons_ld|merge([{
+          '@type': 'ListItem',
+          'position': loop.index,
+          'name': maillon.nom,
+          'item': app.request.schemeAndHttpHost ~ maillon.url,
+        }]) %}
+      {% endfor %}
+      <script type="application/ld+json">
+        {{ {'@context': 'http://schema.org', '@type': 'BreadcrumbList', 'itemListElement': maillons_ld}
+           |json_encode(constant('JSON_UNESCAPED_SLASHES') b-or constant('JSON_PRETTY_PRINT') b-or constant('JSON_UNESCAPED_UNICODE'))
+           |raw }}
+      </script>
+    {% endif %}
+
+    <script type="application/ld+json">
+    {
+      "@context" : "http://schema.org",
+      "@type" : "Organization",
+      "name" : "Datan",
+      "url" : "https://datan.fr",
+      "logo": "https://datan.fr/assets/imgs/datan/logo_datan.png",
+      "sameAs" : ["https://www.facebook.com/datanFR","https://twitter.com/datanFR"],
+      "email" : "info@datan.fr"
+    }
+    </script>
+    {% block schema %}{% endblock %}
+
+    <link rel="icon" type="image/x-icon" href="{{ asset('assets/imgs/favicon/datan_favicon.ico') }}" />
+    <link rel="shortcut icon" href="#" />
+    <link rel="apple-touch-icon" href="{{ asset('assets/imgs/favicon/apple-touch-icon.png') }}" />
+
+    <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/main.css') }}">
+    {% block stylesheets %}{% endblock %}
+
+    <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin>
+    <link rel="preload" href="https://fonts.gstatic.com/s/opensans/v17/mem8YaGs126MiZpBA-UFVZ0bf8pkAg.woff2" as="font" crossorigin>
+    <link rel="preload" href="https://fonts.gstatic.com/s/opensans/v17/mem5YaGs126MiZpBA-UNirkOUuhpKKSTjw.woff2" as="font" crossorigin>
+    <link rel="preload" href="https://fonts.gstatic.com/s/opensans/v17/mem5YaGs126MiZpBA-UN8rsOUuhpKKSTjw.woff2" as="font" crossorigin>
+
+    {% block javascripts_head %}{% endblock %}
+
+    {% if matomo_url %}
+      {# Matomo auto-hébergé, hors consentement : la configuration est exemptée
+         CNIL (l'extrait « CODE CNIL » plafonne le cookie visiteur à 13 mois),
+         et l'opt-out vit dans les mentions légales. Le traceur s'appelle
+         1337.js/1337.php — le renommage anti-bloqueurs de l'origine
+         (header.php:157-189), repris tel quel. Deux vestiges de l'origine ne
+         sont PAS repris : l'onload="embedTracker()" du preload (la fonction
+         n'existe nulle part — ReferenceError silencieuse sur chaque page du
+         site vivant) et le pistage dans l'iframe embarquée chez des tiers
+         (retiré sciemment, cf. IframeController). #}
+      <link rel="preload" href="{{ matomo_url }}/1337.js" as="script" crossorigin>
+      <script type="text/javascript">
+        var _paq = window._paq = window._paq || [];
+        // CODE CNIL
+        _paq.push([function() {
+            var self = this;
+            function getOriginalVisitorCookieTimeout() {
+                var now = new Date(),
+                nowTs = Math.round(now.getTime() / 1000),
+                visitorInfo = self.getVisitorInfo();
+                var createTs = parseInt(visitorInfo[2]);
+                var cookieTimeout = 33696000; // 13 mois en secondes
+                var originalTimeout = createTs + cookieTimeout - nowTs;
+                return originalTimeout;
+            }
+            this.setVisitorCookieTimeout( getOriginalVisitorCookieTimeout() );
+        }]);
+        // FIN CODE CNIL
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+          var u="{{ matomo_url }}/";
+          _paq.push(['setTrackerUrl', u+'1337.php']);
+          _paq.push(['setSiteId', '1']);
+          var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
+          g.type='text/javascript'; g.async=true; g.src=u+'1337.js'; s.parentNode.insertBefore(g,s);
+        })();
+      </script>
+      <noscript><p><img src="{{ matomo_url }}/1337.php?idsite=1&amp;rec=1" style="border:0;" alt="" /></p></noscript>
+    {% endif %}
+
+    <style media="screen">
+      body {
+        position: relative;
+      }
+      @font-face {
+        font-family: 'Open Sans';
+        font-style: normal;
+        font-weight: 400;
+        font-display: swap;
+        src: local('Open Sans Regular'), local('OpenSans-Regular'), url(https://fonts.gstatic.com/s/opensans/v17/mem8YaGs126MiZpBA-UFVZ0bf8pkAg.woff2) format('woff2');
+        unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+      }
+      @font-face {
+        font-family: 'Open Sans';
+        font-style: normal;
+        font-weight: 600;
+        font-display: swap;
+        src: local('Open Sans SemiBold'), local('OpenSans-SemiBold'), url(https://fonts.gstatic.com/s/opensans/v17/mem5YaGs126MiZpBA-UNirkOUuhpKKSTjw.woff2) format('woff2');
+        unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+      }
+      @font-face {
+        font-family: 'Open Sans';
+        font-style: normal;
+        font-weight: 800;
+        font-display: swap;
+        src: local('Open Sans ExtraBold'), local('OpenSans-ExtraBold'), url(https://fonts.gstatic.com/s/opensans/v17/mem5YaGs126MiZpBA-UN8rsOUuhpKKSTjw.woff2) format('woff2');
+        unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+      }
+    </style>
+  </head>
+  {# L'attribut class est servi vide sur toute page, comme l'origine
+     (header.php:197 y verse `$mentions`). Il n'a plus de consommateur depuis
+     le 10 septembre 2026 : la règle `body:not(.pg-mentions) #tarteaucitronIcon`
+     de main.css est partie avec le gestionnaire de cookies (commit 6ad583ac).
+     Conservé parce que le site le sert toujours. #}
+  <body class="{% block classe_body %}{% endblock %}" data-spy="scroll" data-target="#navScrollspy" data-offset="90">
+    <!-- MAIN NAVBAR -->
+    <nav class="navbar navbar-expand-lg navbar-light sticky-top" id="navbar-datan">
+      <div class="container p-0">
+        <a class="navbar-brand p-0 m-0 no-decoration" href="/" style="text-align: center">
+          <img class="navbar-brand-img" src="{{ asset('assets/imgs/datan/logo_svg.svg') }}" width="937" height="204" alt="Logo Datan">
+        </a>
+        <ul class="navbar-nav ml-auto flex-row">
+          <li class="nav-item d-none d-md-block">
+            <a class="no-decoration btn btn-outline-info" href="{{ path('newsletter') }}">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-envelope" viewBox="0 0 16 16">
+                <path d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V4zm2-1a1 1 0 0 0-1 1v.217l7 4.2 7-4.2V4a1 1 0 0 0-1-1H2zm13 2.383-4.758 2.855L15 11.114v-5.73zm-.034 6.878L9.271 8.82 8 9.583 6.728 8.82l-5.694 3.44A1 1 0 0 0 2 13h12a1 1 0 0 0 .966-.739zM1 11.114l4.758-2.876L1 5.383v5.73z"/>
+              </svg>
+              <span class="ml-2">S'inscrire à la newsletter</span></a>
+          </li>
+          <li class="nav-item ml-md-2">
+            <a class="no-decoration btn btn-info" href="{{ path('page_soutenir') }}">Nous soutenir</a>
+          </li>
+          {# Le menu du connecté, comme l'origine (header.php:213-233). Pour un
+             anonyme sans cookie, app.user ne démarre pas de session (pare-feu
+             lazy) : les pages publiques restent cachables. Un porteur de
+             session contourne, lui, le cache partagé (CacheAvecSession) —
+             sans quoi il verrait la navbar anonyme déjà en magasin. #}
+          {% if app.user %}
+            <li class="nav-item dropdown ml-1 ml-md-2" id="nav-logged-in">
+              <a class="dropdown-toggle no-decoration btn btn-primary" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                {# person-fill.svg inliné SANS son <title>Âge</title> : le
+                   fichier sert à la fiche député, où ce titre a un sens —
+                   ici, le legacy recopiait le fichier tel quel, défaut
+                   d'accessibilité corrigé. #}
+                <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-person-fill" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                  <path fill-rule="evenodd" d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
+                </svg>
+                <span class="d-none d-lg-inline">{{ app.user.identifiant }}</span>
+              </a>
+              <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink" style="z-index: 9999 !important">
+                <a href="{{ path('mon_compte') }}" class="dropdown-item no-decoration">Mon compte</a>
+                {# ROLE_REDACTEUR couvre l'administrateur par la hiérarchie de
+                   rôles ; les familles étant exclusives (getRoles), un député
+                   tombe sur la branche suivante, un lecteur sur aucune —
+                   exactement les `type` du legacy. « Scripts » (admin seul à
+                   l'origine) n'est pas porté : ses moulinettes sont devenues
+                   nos commandes console, il n'y a plus d'écran à ouvrir. #}
+                {% if is_granted('ROLE_REDACTEUR') %}
+                  <a class="dropdown-item no-decoration" href="{{ path('admin_decryptage_index') }}">Dashboard</a>
+                {% elseif is_granted('ROLE_DEPUTE') %}
+                  <a class="dropdown-item no-decoration" href="{{ path('dashboard') }}">Dashboard</a>
+                {% endif %}
+                <a href="{{ path('deconnexion') }}" class="dropdown-item no-decoration">Déconnexion</a>
+              </div>
+            </li>
+          {% endif %}
+        </ul>
+      </div>
+    </nav>
+    <!-- MENU NAVBAR -->
+    <nav class="navbar navbar-light sticky-top" id="navbar-menu">
+      <div class="container p-0" style="overflow-x:auto; white-space:nowrap;">
+        <div class="navbar-nav mx-auto flex-row">
+          <a class="nav-item nav-link no-decoration" href="{{ path('deputes_index') }}">Députés</a>
+          <a class="nav-item nav-link no-decoration" href="{{ path('groupes_index') }}">Groupes</a>
+          <a class="nav-item nav-link no-decoration" href="{{ path('votes_index') }}">Votes</a>
+          <a class="nav-item nav-link no-decoration" href="{{ path('classement_index') }}">En chiffres</a>
+          <a class="nav-item nav-link no-decoration" href="{{ path('outils_coalition_simulateur') }}">Simulateur coalition</a>
+          <a class="nav-item nav-link no-decoration" href="{{ path('elections_index') }}">Élections</a>
+          <a class="nav-item nav-link no-decoration" href="{{ path('page_a_propos') }}">À propos</a>
+        </div>
+      </div>
+    </nav>
+    <main>
+      {% block body %}{% endblock %}
+      {# En bas de page, comme l'origine : sa vue breadcrumb se charge après le
+         contenu, juste avant le pied de page. #}
+      {% if fil_ariane is defined and fil_ariane|length > 0 %}
+        {{ include('partials/fil_ariane.html.twig') }}
+      {% endif %}
+    </main>
+    {# Modale d'inscription à la newsletter, présente dans le DOM de toutes les
+       pages comme sur le site (footer.php) — seul l'accueil porte un bouton qui
+       l'ouvre. `main.min.js` intercepte le formulaire #newsletterForm et poste
+       sur /api/newsletter/create_newsletter ; #modalSubscription et #modalFail
+       sont masqués par main.css tant qu'il n'a pas basculé l'affichage. #}
+    <div class="modal fade" id="newsletter" tabindex="-1" role="dialog" aria-labelledby="newsletterLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+          <form action="{{ path('newsletter') }}" method="post" id="newsletterForm" accept-charset="utf-8">
+            <div class="modal-header">
+              <span class="modal-title h2" id="newsletterLabel">Newsletter</span>
+              <span class="close cursor-pointer" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </span>
+            </div>
+            <div class="modal-body">
+              <p>Souhaitez-vous vous inscrire et recevoir les informations parlementaires et les nouvelles de Datan.fr <b>une fois par mois</b> ?</p>
+              <input type="email" name="email" required class="form-control" placeholder="Votre email">
+            </div>
+            <div class="modal-footer">
+              <button type="submit" class="btn btn-primary">Recevoir la newsletter</button>
+            </div>
+          </form>
+          <div id="modalSubscription">
+            <div class="modal-header">
+              <span class="modal-title h2">Félicitations</span>
+              <span class="close cursor-pointer" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </span>
+            </div>
+            <div class="modal-body">
+              <p>Vous serez maintenant informé des actualités politiques de nos députés et un peu du site aussi :)</p>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+            </div>
+          </div>
+          <div id="modalFail">
+            <div class="modal-header">
+              <span class="modal-title h2">Quelque chose s'est mal passé</span>
+              <span class="close cursor-pointer" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </span>
+            </div>
+            <div class="modal-body">
+              <p>Vous êtes sans doute déjà inscrit !</p>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    {{ include('partials/modale_don.html.twig') }}
+    {# Hors accueil, une partie des liens du pied de page est masquée aux robots
+       (footer.php:71-207) : le jus de chaque page ne se dilue pas dans les liens
+       de gabarit, et seul l'accueil les expose aux moteurs. Le tri du legacy est
+       repris tel quel — À propos, Newsletter, Connexion, Mentions légales, les
+       réseaux sociaux, data.gouv et GitHub sont masqués ; le reste demeure en
+       clair partout, et Bluesky, ajouté après coup, est resté un vrai lien dans
+       les deux branches. #}
+    {% set sur_accueil = app.current_route == 'home' %}
+    <footer>
+      <div class="container-fluid footer">
+        <div class="container p-0">
+          <div class="row row-grid py-3">
+            <div class="col-md-5 d-flex flex-column justify-content-center">
+              <img class="img-lazy img-fluid" src="{{ asset('assets/imgs/placeholder/placeholder-social-media-big.png') }}" width="4500" height="1975" data-src="{{ asset('assets/imgs/datan/logo_baseline_white_transp.png') }}" alt="Logo Datan">
+            </div>
+            <div class="col-md-4 pt-md-4">
+              <div class="d-flex flex-row liste justify-content-center">
+                <div class="d-flex flex-column mx-1">
+                  <p>
+                    {% if sur_accueil %}
+                      <a href="{{ path('page_a_propos') }}" class="no-decoration underline">À propos</a>
+                    {% else %}
+                      <span class="url_obf no-decoration underline text-white" url_obf="{{ url_obf(path('page_a_propos')) }}">À propos</span>
+                    {% endif %}
+                  </p>
+                  <p>
+                    {% if sur_accueil %}
+                      <a href="{{ path('newsletter') }}" class="no-decoration underline">Newsletter</a>
+                    {% else %}
+                      <span class="url_obf no-decoration underline text-white" url_obf="{{ url_obf(path('newsletter')) }}">Newsletter</span>
+                    {% endif %}
+                  </p>
+                  <p><a href="{{ path('page_statistiques') }}" class="no-decoration underline">Nos statistiques</a></p>
+                  <p><a href="{{ path('partis_index') }}" class="no-decoration underline">Partis politiques</a></p>
+                  <p><a href="{{ path('outils_coalition_simulateur') }}" class="no-decoration underline">Simulateur Assemblée</a></p>
+                  <p><a href="{{ path('page_soutenir') }}" class="no-decoration underline">Dons</a></p>
+                </div>
+                <div class="d-flex flex-column mx-1">
+                  <p><a href="{{ path('blog_index') }}" class="no-decoration underline">Blog</a></p>
+                  <p><a href="{{ path('parrainages_index') }}" class="no-decoration underline">Parrainages 2022</a></p>
+                  <p><a href="{{ path('faq_index') }}" class="no-decoration underline">Foire aux questions</a></p>
+                  {# Câblé le 24 juillet, à la livraison des comptes lecteurs :
+                     la route `connexion` sert désormais /login, l'adresse du
+                     legacy, et le formulaire unique connecte lecteurs,
+                     rédaction et députés. C'était le dernier lien mort du
+                     gabarit. #}
+                  <p>
+                    {% if sur_accueil %}
+                      <a href="{{ path('connexion') }}" class="no-decoration underline">Connexion</a>
+                    {% else %}
+                      <span class="url_obf no-decoration underline text-white" url_obf="{{ url_obf(path('connexion')) }}">Connexion</span>
+                    {% endif %}
+                  </p>
+                  <p>
+                    {% if sur_accueil %}
+                      <a href="{{ path('page_mentions_legales') }}" class="no-decoration underline">Mentions légales</a>
+                    {% else %}
+                      <span class="url_obf no-decoration underline text-white" url_obf="{{ url_obf(path('page_mentions_legales')) }}">Mentions légales</span>
+                    {% endif %}
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-3 social-media pt-md-3">
+              <div class="row">
+                <div class="col-6 col-md-12 d-flex flex-column">
+                  <p class="font-weight-bold mb-1">Nous suivre</p>
+                  {% if sur_accueil %}
+                    <a href="https://www.facebook.com/datanFR/" target="_blank" class="no-decoration my-1" rel="noreferrer">
+                      <img class="img-lazy" src="{{ asset('assets/imgs/placeholder/placeholder-social-media.png') }}" width="542" height="542" data-src="{{ asset('assets/imgs/logos/facebook_datan.svg') }}" alt="Logo Facebook">
+                      Facebook
+                    </a>
+                    <a href="https://x.com/datanFR" target="_blank" class="no-decoration my-1" rel="noreferrer">
+                      <img class="img-lazy" src="{{ asset('assets/imgs/placeholder/placeholder-social-media.png') }}" width="542" height="542" data-src="{{ asset('assets/imgs/logos/x_datan.svg') }}" alt="Logo X">
+                      X
+                    </a>
+                    <a href="https://www.linkedin.com/company/datanfr" target="_blank" class="no-decoration my-1" rel="noreferrer">
+                      <img class="img-lazy" src="{{ asset('assets/imgs/placeholder/placeholder-social-media.png') }}" width="542" height="542" data-src="{{ asset('assets/imgs/logos/linkedin_datan.svg') }}" alt="Logo Linkedin">
+                      Linkedin
+                    </a>
+                    <a href="https://www.instagram.com/datanfr/" target="_blank" class="no-decoration my-1" rel="noreferrer">
+                      <img class="img-lazy" src="{{ asset('assets/imgs/placeholder/placeholder-social-media.png') }}" width="542" height="542" data-src="{{ asset('assets/imgs/logos/instagram_datan.svg') }}" alt="Logo Instagram">
+                      Instagram
+                    </a>
+                  {% else %}
+                    {# Le PNG Facebook au lieu du SVG est une coquille du site,
+                       visible dans sa branche masquée — reproduite pour rester
+                       au pixel près. #}
+                    <span class="url_obf no-decoration text-white my-1" url_obf="{{ url_obf('https://www.facebook.com/datanFR/') }}">
+                      <img class="img-lazy" src="{{ asset('assets/imgs/placeholder/placeholder-social-media.png') }}" width="542" height="542" data-src="{{ asset('assets/imgs/logos/facebook_datan.png') }}" alt="Logo Facebook">
+                      Facebook
+                    </span>
+                    <span class="url_obf no-decoration text-white my-1" url_obf="{{ url_obf('https://x.com/datanFR') }}">
+                      <img class="img-lazy" src="{{ asset('assets/imgs/placeholder/placeholder-social-media.png') }}" width="542" height="542" data-src="{{ asset('assets/imgs/logos/x_datan.svg') }}" alt="Logo X">
+                      X
+                    </span>
+                    <span class="url_obf no-decoration text-white my-1" url_obf="{{ url_obf('https://www.linkedin.com/company/datanfr/') }}">
+                      <img class="img-lazy" src="{{ asset('assets/imgs/placeholder/placeholder-social-media.png') }}" width="542" height="542" data-src="{{ asset('assets/imgs/logos/linkedin_datan.svg') }}" alt="Logo Linkedin">
+                      Linkedin
+                    </span>
+                    <span class="url_obf no-decoration text-white my-1" url_obf="{{ url_obf('https://www.instagram.com/datanfr/') }}">
+                      <img class="img-lazy" src="{{ asset('assets/imgs/placeholder/placeholder-social-media.png') }}" width="542" height="542" data-src="{{ asset('assets/imgs/logos/instagram_datan.svg') }}" alt="Logo Instagram">
+                      Instagram
+                    </span>
+                  {% endif %}
+                  <a href="https://bsky.app/profile/datanfr.bsky.social" target="_blank" class="no-decoration my-1" rel="noreferrer">
+                    <img class="img-lazy" src="{{ asset('assets/imgs/placeholder/placeholder-social-media.png') }}" width="542" height="542" data-src="{{ asset('assets/imgs/logos/bluesky_datan.svg') }}" alt="Logo Bluesky">
+                    Bluesky
+                  </a>
+                </div>
+                <div class="col-6 col-md-12 d-flex flex-column mt-0">
+                  <p class="font-weight-bold mt-md-2 mb-1">Nous contacter</p>
+                  info[at]datan.fr
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-12 text-center">
+              <p>© Datan {{ 'now'|date('Y') }} - Tous droits réservés</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="container-fluid footer-data">
+        <div class="container">
+          <div class="row py-3">
+            <div class="col-md-6 text-center">
+              {% if sur_accueil %}
+                Nos données sont disponibles sur le site <a href="https://www.data.gouv.fr/fr/organizations/datan/" target="_blank" rel="noreferrer">data.gouv.fr</a>
+              {% else %}
+                Nos données sont disponibles sur le site <span class="url_obf" url_obf="{{ url_obf('https://www.data.gouv.fr/fr/organizations/datan/') }}">data.gouv.fr</span>
+              {% endif %}
+            </div>
+            <div class="col-md-6">
+              Notre projet est disponible sur
+              {% if sur_accueil %}
+                <a href="https://github.com/datanFR/datan" target="_blank" rel="noreferrer" class="no-decoration underline">
+                  <img src="{{ asset('assets/imgs/logos/github-mark.svg') }}" width="25" height="25" alt="Logo GitHub">
+                  GitHub
+                </a>
+              {% else %}
+                <span class="url_obf no-decoration" url_obf="{{ url_obf('https://github.com/datanFR/datan') }}">
+                  <img class="img-lazy" src="{{ asset('assets/imgs/placeholder/placeholder-social-media.png') }}" width="25" height="25" data-src="{{ asset('assets/imgs/logos/github-mark.svg') }}" alt="Logo GitHub">
+                  GitHub
+                </span>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    {# Même pile et même ordre que le pied de page d'origine
+       (application/views/templates/footer.php). `main.min.js` ouvre sur
+       `$(document).ready(...)` : sans jQuery avant lui, il lève une erreur dès
+       la première ligne et les popovers d'explication des statistiques, les
+       menus déroulants et les blocs repliables restent inertes sur tout le
+       site. #}
+    <script src="{{ asset('assets/js/libraries/jquery/jquery-3.5.1.min.js') }}"></script>
+    <script src="{{ asset('assets/js/libraries/jquery/jquery-ui.min.js') }}"></script>
+    <script src="{{ asset('assets/js/libraries/popper/popper.min.js') }}"></script>
+    <script src="{{ asset('assets/js/libraries/bootstrap/bootstrap.min.js') }}"></script>
+    {# Bibliothèques dont un script de page a besoin avant lui : Isotope, Chart.js… #}
+    {% block javascripts_libraries %}{% endblock %}
+    <script src="{{ asset('assets/js/libraries/jquery/jquery.unveil.min.js') }}"></script>
+
+    {% block javascripts %}{% endblock %}
+    <script type="text/javascript" src="{{ asset('assets/js/main.min.js') }}"></script>
+    {# Décodeur des adresses masquées aux robots ({{ url_obf(...) }}) — chargé
+       partout, comme sur le site : des liens masqués existent jusque dans les
+       pieds de page. `robots.txt` interdit ce fichier aux moteurs. #}
+    <script type="text/javascript" src="{{ asset('assets/js/datan/url_obf2.min.js') }}"></script>
+    {# Compteur de pages du mois, repris du site (footer.php:241-242 depuis le
+       10 septembre 2026, commit 6ad583ac) : il remplace le service
+       « datantracking » de Tarte au citron, parti avec GTM le même jour. Le
+       compte vit en localStorage, hors consentement — le site ne dépose plus
+       aucun cookie de son propre chef. Au-delà de 10 pages, la modale de dons
+       (partials/modale_don.html.twig) s'ouvre, au plus une fois par semaine.
+       Le compteur de pied de page (#monthly-pages-visited-count) n'existe dans
+       aucune vue, ici comme là-bas : le script le garde par un `if`. #}
+    <script type="text/javascript" src="{{ asset('assets/js/datan/donation-modal-localstorage.js') }}"></script>
+  </body>
+</html>

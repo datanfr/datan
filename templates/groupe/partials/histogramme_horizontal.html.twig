@@ -1,0 +1,36 @@
+{# Classement horizontal des groupes d'une législature, porté de
+   `groupes/partials/stats_horizontal.php`.
+
+   Paramètres :
+     lignes     – un groupe par barre : valeur, libelle, libelle_abrev, id
+     type       – « pct » (0,49 → « 49% ») ou « score » (122 → « 122 »)
+     divise_par – valeur qui occupe toute la largeur, en général celle de tête
+     courant    – identifiant du groupe consulté, seul à recevoir la couleur #}
+{% set abreges = {'LFI-NFP': 'LFI', 'LFI-NUPES': 'LFI', 'GDR-NUPES': 'GDR'} %}
+<div class="row bar-container stats-horizontal" style="margin-left: -20px; margin-right: -20px;">
+  <div class="col-12">
+    {% for ligne in lignes %}
+      <div class="row row-chart my-1">
+        <div class="col-3 d-flex align-items-center justify-content-center">
+          <div class="text-center">
+            <p class="font-weight-bold mb-0">
+              {# Les sigles d'alliance électorale sont raccourcis ici et dans
+                 les légendes du soutien au gouvernement (accueil, page de
+                 groupe) — mais pas dans celle du graphique de proximité juste
+                 au-dessus, qui garde « LFI-NFP ». Ce n'est pas une incohérence
+                 de portage : c'est le `remove_nupes()` du site, appliqué aux
+                 mêmes endroits que lui. #}
+              <span class="tooltipHelp tooltipDashed" data-toggle="tooltip" data-placement="top" title="{{ ligne.libelle }}">{{ abreges[ligne.libelle_abrev]|default(ligne.libelle_abrev) }}</span>
+            </p>
+          </div>
+        </div>
+        <div class="col-9 d-flex align-items-center justify-content-start">
+          <div class="bars {{ ligne.id == courant ? '' : 'white' }}{{ type == 'score' ? ' mx-1 mx-md-3' : '' }}"
+               style="width: {{ (ligne.valeur / divise_par * 100)|round }}%">
+            <span class="score">{{ type == 'pct' ? (ligne.valeur * 100)|round ~ '%' : ligne.valeur|round(2) }}</span>
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+</div>

@@ -1,0 +1,107 @@
+{% extends 'dashboard/base.html.twig' %}
+{% import 'dashboard/partials/affichage.html.twig' as afficher %}
+
+{% block title %}Liste des votes à expliquer{% endblock %}
+{% block heading %}Je crée une nouvelle explication de vote{% endblock %}
+
+{% block fil_ariane_suite %}
+  <li class="breadcrumb-item"><a href="{{ path('dashboard_explications') }}" class="no-decoration underline">Explications de vote</a></li>
+  <li class="breadcrumb-item active" aria-current="page">Liste</li>
+{% endblock %}
+
+{% block body %}
+  <a class="btn btn-outline-secondary font-weight-bold" href="{{ path('dashboard_explications') }}">
+    {{ afficher.fleche_gauche() }} Retour
+  </a>
+
+  {% if votes is empty %}
+    <div class="card mt-5">
+      <div class="card-body">
+        <p class="mb-0">
+          Vous avez expliqué tous les scrutins contextualisés par Datan auxquels vous avez pris
+          part. De nouveaux décryptages paraissent régulièrement : revenez à ce moment-là.
+        </p>
+      </div>
+    </div>
+  {% else %}
+    {% if suggestions %}
+      <div class="d-flex flex-column justify-content-center align-items-center bg-primary py-5 mt-4">
+        <h2 class="font-weight-bold text-white text-center">Suggestion de votes à expliquer</h2>
+        <div class="d-flex flex-wrap justify-content-center mt-4" style="width: 100%">
+          {% for vote in suggestions %}
+            <div class="d-flex my-3 mx-3">
+              <div class="card card-vote" style="height: auto !important">
+                <div class="thumb d-flex align-items-center {{ vote.position_depute }}">
+                  <div class="d-flex align-items-center">
+                    <span>{{ vote.position_depute|upper }}</span>
+                  </div>
+                </div>
+                <div class="card-header d-flex flex-row justify-content-between">
+                  <span class="date">{{ vote.date_scrutin|date_abregee }}</span>
+                </div>
+                <div class="card-body d-flex flex-column justify-content-center">
+                  <p class="title text-dark">{{ vote.titre_datan }}</p>
+                  {% if vote.explications_publiees %}
+                    <p class="text-dark"><i>
+                      {{ vote.explications_publiees }}
+                      {{ vote.explications_publiees > 1 ? 'explications de députés.' : 'explication de député.' }}
+                    </i></p>
+                  {% endif %}
+                </div>
+                <div class="card-footer d-flex justify-content-center">
+                  <a class="btn btn-primary d-flex align-items-center font-weight-bold stretched-link"
+                     href="{{ path('dashboard_explication_creer', {legislature: vote.legislature, numero: vote.vote_numero}) }}">
+                    {{ afficher.crayon() }}<span class="ml-3">Je crée une explication</span>
+                  </a>
+                </div>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+    {% endif %}
+
+    <div class="row mt-5">
+      <div class="col-12 mb-5">
+        <h2 class="font-weight-bold text-black h3">Je sélectionne un vote à expliquer</h2>
+        <div class="table-responsive mt-4">
+          <table class="table mt-4" style="background-color: white">
+            <thead class="thead-dark">
+              <tr>
+                <th scope="col">Législature</th>
+                <th scope="col">Scrutin</th>
+                <th scope="col" class="text-center">Vote</th>
+                <th scope="col">Dossier</th>
+                <th scope="col" class="text-center">Date</th>
+                <th scope="col"></th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for vote in votes %}
+                <tr>
+                  <td>{{ vote.legislature }}</td>
+                  <td class="font-weight-bold">{{ vote.titre_datan }}</td>
+                  <td class="text-center">{{ afficher.position(vote.position_depute) }}</td>
+                  <td>{{ vote.dossier }}</td>
+                  <td class="text-center">{{ vote.date_scrutin|date_abregee }}</td>
+                  <td class="d-flex flex-column">
+                    <a class="btn btn-secondary d-flex align-items-center justify-content-center font-weight-bold mb-1"
+                       style="width: 100%" target="_blank" rel="noreferrer"
+                       href="{{ lien_vote(vote.legislature, vote.vote_numero) }}">
+                      {{ afficher.lien_externe() }}<span class="ml-3">Scrutin</span>
+                    </a>
+                    <a class="btn btn-primary d-flex align-items-center justify-content-center font-weight-bold"
+                       style="width: 100%"
+                       href="{{ path('dashboard_explication_creer', {legislature: vote.legislature, numero: vote.vote_numero}) }}">
+                      {{ afficher.crayon() }}<span class="ml-3">Explication</span>
+                    </a>
+                  </td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  {% endif %}
+{% endblock %}

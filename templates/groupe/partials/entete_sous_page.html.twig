@@ -1,0 +1,15 @@
+{# Bandeau commun aux sous-pages d'un groupe (membres, votes, statistiques) :
+   image de fond, liseré à la couleur du groupe et retour vers le profil. #}
+<div class="container-fluid bloc-img-deputes async_background d-flex" id="container-always-fluid" style="height: 13em">
+  <div class="container banner-groupe-mobile d-flex d-lg-none flex-column justify-content-center py-2">
+    <div class="row">
+      <div class="col-md-10 offset-md-1">
+        <a class="btn btn-light mb-2" href="{{ path('groupe_individual', {legislature: groupe.legislature, abrev: groupe.libelle_abrev|lower}) }}">Retour profil</a>
+        <span class="title d-block">{{ groupe.libelle|name_group }} ({{ groupe.libelle_abrev }})</span>
+      </div>
+    </div>
+  </div>
+</div>
+{% if groupe.couleur %}
+  <div class="liseret-groupe" style="background-color: {{ groupe.couleur }}"></div>
+{% endif %}

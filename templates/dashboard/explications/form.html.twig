@@ -1,0 +1,103 @@
+{% extends 'dashboard/base.html.twig' %}
+{% import 'dashboard/partials/affichage.html.twig' as afficher %}
+
+{% set modification = explication is not null %}
+{% set longueur_maximale = constant('App\\Form\\ExplicationType::LONGUEUR_MAXIMALE') %}
+
+{% block title %}{{ modification ? 'Modifiez une explication de vote' : 'Rédigez une explication de vote' }}{% endblock %}
+{% block heading %}{{ block('title') }}{% endblock %}
+
+{% block fil_ariane_suite %}
+  <li class="breadcrumb-item"><a href="{{ path('dashboard_explications') }}" class="no-decoration underline">Explications de vote</a></li>
+  <li class="breadcrumb-item active" aria-current="page">{{ modification ? 'Modifier' : 'Rédiger' }}</li>
+{% endblock %}
+
+{% block body %}
+  <a class="btn btn-outline-secondary font-weight-bold" href="{{ path('dashboard_explications') }}">
+    {{ afficher.fleche_gauche() }} Retour
+  </a>
+
+  <div class="card mt-4 mb-0">
+    <div class="card-body py-4">
+      <h2 class="font-weight-bold text-primary h5">Scrutin n° {{ contexte.scrutin_numero }}</h2>
+      <h3 class="font-weight-bold">{{ contexte.titre_datan ?? contexte.titre_assemblee }}</h3>
+      <p class="text-secondary mb-0">{{ contexte.titre_assemblee|capitalize }}</p>
+      <a class="btn btn-secondary font-weight-bold mt-4" role="button" target="_blank" rel="noreferrer"
+         href="{{ lien_vote(legislature, numero) }}">
+        {{ afficher.lien_externe() }}<span class="ml-2">Page du scrutin</span>
+      </a>
+    </div>
+  </div>
+
+  <div class="row mt-5 pb-5">
+    <div class="col-lg-6">
+      <div class="card card-primary card-outline">
+        <div class="card-header">
+          <h2 class="font-weight-bold text-primary h4">
+            {{ modification ? "Modifiez l'explication de vote" : "Rédigez l'explication de vote" }}
+          </h2>
+        </div>
+        <div class="card-body">
+          {{ form_start(formulaire) }}
+            {% if not formulaire.vars.valid %}
+              <div class="alert alert-danger">{{ form_errors(formulaire.texte) }}</div>
+            {% endif %}
+
+            <div class="form-group">
+              {{ form_label(formulaire.texte) }}
+              {{ form_widget(formulaire.texte) }}
+              <div class="d-flex justify-content-end">
+                <span id="compteur">0/{{ longueur_maximale }}</span>
+              </div>
+            </div>
+
+            <div class="form-group">
+              {% for choix in formulaire.publiee %}
+                <div class="form-check">
+                  {{ form_widget(choix, {attr: {class: 'form-check-input'}}) }}
+                  <label class="form-check-label font-weight-bold {{ choix.vars.value == '1' ? 'text-success' : 'text-danger' }}"
+                         for="{{ choix.vars.id }}">{{ choix.vars.label }}</label>
+                </div>
+              {% endfor %}
+            </div>
+
+            <button type="submit" class="btn btn-primary">Enregistrer</button>
+          {{ form_end(formulaire) }}
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-6 mt-4 mt-lg-0">
+      {{ include('dashboard/explications/partials/contexte.html.twig') }}
+
+      {% if modification %}
+        <div class="d-flex justify-content-center my-5">
+          <a class="btn btn-outline-danger font-weight-bold"
+             href="{{ path('dashboard_explication_supprimer', {legislature: legislature, numero: numero}) }}">
+            Supprimer cette explication
+          </a>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+{% endblock %}
+
+{% block javascripts %}
+  <script>
+    // Compteur de caractères. `Array.from` découpe en points de code plutôt
+    // qu'en unités UTF-16, pour compter comme la contrainte du serveur : le
+    // legacy comptait des octets avec strlen() et annonçait un dépassement sur
+    // un texte accentué pourtant valide.
+    (function () {
+      var champ = document.getElementById({{ formulaire.texte.vars.id|json_encode|raw }});
+      var compteur = document.getElementById('compteur');
+
+      function actualiser() {
+        compteur.textContent = Array.from(champ.value).length + '/{{ longueur_maximale }}';
+      }
+
+      champ.addEventListener('input', actualiser);
+      actualiser();
+    })();
+  </script>
+{% endblock %}

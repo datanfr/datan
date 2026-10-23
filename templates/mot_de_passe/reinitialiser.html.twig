@@ -1,0 +1,67 @@
+{# Création d'un nouveau mot de passe, reprise de `views/users/password-change.php`.
+   Atteignable par le lien reçu par courriel (`/password/{token}`), valable une
+   heure. Document autonome, sans barre de navigation.
+
+   Le succès ne s'affiche pas ici : le jeton étant à usage unique, on redirige
+   vers la connexion avec un message (le legacy réaffichait ce formulaire, jeton
+   encore valable une heure — défaut corrigé au contrôleur). #}
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Créez un nouveau mot de passe | Datan</title>
+  <link rel="icon" type="image/png" href="{{ asset('assets/imgs/favicon/datan_favicon.ico') }}">
+  <link rel="stylesheet" href="{{ asset('assets/css/main.css') }}">
+  <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Open+Sans:400,600,800">
+</head>
+<body class="pt-0">
+<main>
+  <div class="container-fluid" id="container-always-fluid">
+    <div class="row">
+      <div class="col-lg-6 col-md-7 col-12">
+        <form method="post">
+          <div class="row mt-4">
+            <div class="col-lg-4 col-md-5 col-8 offset-2 offset-md-0">
+              <a href="{{ path('home') }}">
+                <img src="{{ asset('assets/imgs/datan/logo_baseline_color_transp.png') }}" class="img-fluid" alt="Logo Datan">
+              </a>
+            </div>
+          </div>
+          <div class="row mt-5">
+            <div class="col-lg-8 col-md-10 col-10 offset-lg-2 offset-md-1 offset-1">
+              <div class="row mt-5 d-flex flex-column justify-content-center login_form">
+                <h1 class="text-center mt-4 mb-5">Créez un nouveau mot de passe</h1>
+
+                {% for message in app.flashes('erreur') %}
+                  <div class="alert alert-danger mb-4 text-center" role="alert">{{ message }}</div>
+                {% endfor %}
+
+                <div class="form-group">
+                  <label class="font-weight-bold">Nouveau mot de passe</label>
+                  <input type="password" class="form-control" name="new" autocomplete="new-password" required>
+                </div>
+                <div class="form-group">
+                  <label class="font-weight-bold">Confirmez le mot de passe</label>
+                  <input type="password" class="form-control" name="new_confirmation" autocomplete="new-password" required>
+                </div>
+                <input type="hidden" name="_token" value="{{ csrf_token('mot_de_passe_reinitialiser') }}">
+                <button type="submit" class="btn btn-primary btn-block">Valider</button>
+              </div>
+            </div>
+            {# Année courante là où le site a figé « 2020 » en dur — cf. connexion. #}
+            <div class="col-lg-8 col-md-10 col-10 offset-lg-2 offset-md-1 offset-1 login_credits pt-3 mt-4">
+              <p>© Datan {{ 'now'|date('Y') }} - Tous droits réservés</p>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="col-lg-6 col-md-5 d-none d-md-block m-0 p-0 login_img">
+        <div class="img-container"></div>
+      </div>
+    </div>
+  </div>
+</main>
+</body>
+</html>

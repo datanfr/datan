@@ -1,0 +1,74 @@
+{# Carte de profil de la fiche (`deputes/partials/card_individual.php`). La fiche
+   portée avait recopié une version approximative : sans les icônes de la liste,
+   avec la circonscription et la position politique en trop, et le statut « EN
+   ACTIVITÉ » en petit badge dans la liste au lieu de la barre pleine largeur du
+   pied de carte. Repris fidèlement ici.
+
+   Les icônes sont inlinées (comme le legacy, `file_get_contents`) pour que
+   `main.css` puisse les colorer via `.bloc-bref .label svg`.
+
+   `balise_titre` reprend le paramètre `tag` de `card_individual.php` : `h1` sur
+   la fiche, `span` sur la page des votes — dont le h1 est ailleurs.
+
+   `carte_historique` (pages /legislature-N) remplace âge et commission par
+   « Dernier mandat : Ne législature » — N étant la législature CONSULTÉE, comme
+   l'affiche datan.fr — et le groupe montré est celui de l'époque
+   (`legislature_carte` pointe alors sa page). Le legacy y passe aussi `tag: h1`,
+   ce qui double le h1 du bloc bio : défaut, le titre reste ici un span. #}
+{% set balise_titre = balise_titre|default('h1') %}
+{% set carte_historique = carte_historique|default(false) %}
+{% set legislature_carte = legislature_carte|default(mandats ? mandats[0].legislature : 17) %}
+<div class="card card-profile">
+  <div class="card-body">
+    <div class="d-flex justify-content-center">
+      <div class="depute-img-circle">
+        <img src="{{ photo_depute(depute) }}" width="150" height="192" alt="{{ nom_complet }}">
+      </div>
+    </div>
+    <div class="bloc-infos">
+      <{{ balise_titre }} class="title d-block text-center">{{ nom_complet }}</{{ balise_titre }}>
+      {% if depute.groupe_libelle %}
+        <div class="link-group text-center mt-1">
+          <a href="{{ path('groupe_individual', {legislature: legislature_carte, abrev: depute.groupe_abrev|lower}) }}"
+             style="color: {{ depute.groupe_couleur }}; --color-group: {{ depute.groupe_couleur }}">
+            {{ depute.groupe_libelle|name_group }}
+          </a>
+        </div>
+      {% endif %}
+    </div>
+    <div class="bloc-bref mt-3 d-flex justify-content-center justify-content-lg-start">
+      <ul>
+        <li class="first">
+          <div class="label"><svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-geo-alt-fill" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-labelledby="geoTitle" role="img"><title id="geoTitle">Département</title><path fill-rule="evenodd" d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10zm0-7a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/></svg></div>
+          <div class="value">{{ depute.departement_nom }} ({{ depute.departement_code }})</div>
+        </li>
+        {% if actif and not carte_historique %}
+          <li>
+            <div class="label"><svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-person-fill" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-labelledby="personTitle" role="img"><title id="personTitle">Âge</title><path fill-rule="evenodd" d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/></svg></div>
+            <div class="value">{{ depute.age }} ans</div>
+          </li>
+          {% if depute.commission %}
+            <li class="mb-0">
+              <div class="label"><svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-briefcase-fill" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-labelledby="briefcaseTitle" role="img"><title id="briefcaseTitle">Commission parlementaire du député</title><path fill-rule="evenodd" d="M0 12.5A1.5 1.5 0 0 0 1.5 14h13a1.5 1.5 0 0 0 1.5-1.5V6.85L8.129 8.947a.5.5 0 0 1-.258 0L0 6.85v5.65z"/><path fill-rule="evenodd" d="M0 4.5A1.5 1.5 0 0 1 1.5 3h13A1.5 1.5 0 0 1 16 4.5v1.384l-7.614 2.03a1.5 1.5 0 0 1-.772 0L0 5.884V4.5zm5-2A1.5 1.5 0 0 1 6.5 1h3A1.5 1.5 0 0 1 11 2.5V3h-1v-.5a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5V3H5v-.5z"/></svg></div>
+              <div class="value">Commission {{ depute.commission }}</div>
+            </li>
+          {% endif %}
+        {% else %}
+          <li class="mb-0">
+            <div class="label"><svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-calendar-date-fill" fill="currentColor" xmlns="http://www.w3.org/2000/svg" role="img"><path fill-rule="evenodd" d="M4 .5a.5.5 0 0 0-1 0V1H2a2 2 0 0 0-2 2v1h16V3a2 2 0 0 0-2-2h-1V.5a.5.5 0 0 0-1 0V1H4V.5zM16 14V5H0v9a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2zm-6.664-1.21c-1.11 0-1.656-.767-1.703-1.407h.683c.043.37.387.82 1.051.82.844 0 1.301-.848 1.305-2.164h-.027c-.153.414-.637.79-1.383.79-.852 0-1.676-.61-1.676-1.77 0-1.137.871-1.809 1.797-1.809 1.172 0 1.953.734 1.953 2.668 0 1.805-.742 2.871-2 2.871zm.066-2.544c.625 0 1.184-.484 1.184-1.18 0-.832-.527-1.23-1.16-1.23-.586 0-1.168.387-1.168 1.21 0 .817.543 1.2 1.144 1.2zm-2.957-2.89v5.332H5.77v-4.61h-.012c-.29.156-.883.52-1.258.777V8.16a12.6 12.6 0 0 1 1.313-.805h.632z"/></svg></div>
+            <div class="value">Dernier mandat : {{ legislature_carte }}<sup>e</sup> législature</div>
+          </li>
+        {% endif %}
+      </ul>
+    </div>
+  </div>
+  {% if actif %}
+    <div class="mandats d-flex justify-content-center align-items-center active">
+      <span class="active">EN ACTIVITÉ</span>
+    </div>
+  {% else %}
+    <div class="mandats d-flex justify-content-center align-items-center inactive">
+      <span class="inactive">PLUS EN ACTIVITÉ</span>
+    </div>
+  {% endif %}
+</div>

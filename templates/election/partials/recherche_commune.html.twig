@@ -1,0 +1,40 @@
+{# Bandeau de recherche d'une commune (application/views/elections/partials/_search.php).
+
+   Le champ est inerte tant que `/search_api` n'est pas porté : c'est lui que
+   `dist/autocomplete_search.js` interroge, et il n'appartient pas à ce
+   chantier. Le bloc est conservé pour la parité visuelle — les quinze grandes
+   villes qu'il propose, elles, mènent bien quelque part. #}
+{% import 'election/partials/icones.html.twig' as icone %}
+<div class="container-fluid pg-elections-candidats search py-5 bg-info">
+  <div class="container py-4">
+    <div class="row">
+      <div class="col-lg-8 offset-lg-2">
+        <div class="city-search-block">
+          <h2 class="mb-1">Candidats et résultats dans votre commune</h2>
+          <p class="text-muted mb-3">Accédez aux listes candidates et aux résultats dans votre commune</p>
+          <div id="city-search-bloc" class="search-bloc">
+            <form autocomplete="off" action="" id="searchForm" method="GET">
+              <div class="search">
+                <div class="search_icon">
+                  {{ icone.recherche() }}
+                </div>
+                <input id="citySearch" type="text" placeholder="Nom de commune (ex : Paris, Lyon, Marseille)">
+                <div class="search-results" id="search-results-bloc" style="display: none">
+                  <div id="search-results-list"></div>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+        <div class="mt-5">
+          <p class="top-cities-label text-center">Grandes villes</p>
+          <div class="d-flex justify-content-center flex-wrap">
+            {% for commune in communes|slice(0, 15) %}
+              <a href="{{ path('elections_resultats_commune', {departement: commune.dpt_slug, commune: commune.slug}) }}" class="top-city-pill">{{ commune.nom }}</a>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

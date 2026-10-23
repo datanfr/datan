@@ -1,0 +1,85 @@
+security:
+    # https://symfony.com/doc/current/security.html#registering-the-user-hashing-passwords
+    password_hashers:
+        Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface: 'auto'
+
+    providers:
+        # Pas de `property:` : le chargement passe par
+        # UtilisateurRepository::loadUserByIdentifier, qui accepte l'identifiant
+        # comme l'e-mail — la double entrée de connexion de l'application d'origine.
+        redaction:
+            entity:
+                class: App\Entity\Utilisateur
+
+    role_hierarchy:
+        ROLE_ADMIN: ROLE_REDACTEUR
+
+    firewalls:
+        dev:
+            pattern: ^/(_(profiler|wdt)|css|images|js|assets)/
+            security: false
+        main:
+            lazy: true
+            provider: redaction
+            form_login:
+                login_path: connexion
+                check_path: connexion
+                enable_csrf: true
+                # Rédaction et députés n'ont pas la même page d'arrivée, et le
+                # pare-feu ne sait pas encore laquelle : une route intermédiaire
+                # aiguille selon le rôle.
+                default_target_path: apres_connexion
+            logout:
+                path: deconnexion
+                target: home
+
+    access_control:
+        # La page de connexion, servie à /login (l'adresse qu'attendent les liens
+        # du site), doit rester ouverte, sans quoi elle se redirige sur elle-même.
+        # /register, /password et l'ancien /connexion (301 vers /login) restent
+        # publics d'office : aucune règle ci-dessous ne les attrape.
+        - { path: ^/login$, roles: PUBLIC_ACCESS }
+        - { path: ^/apres-connexion$, roles: IS_AUTHENTICATED_FULLY }
+        # « Mon compte » est ouvert aux trois familles de comptes — lecteur,
+        # rédaction, député — d'où IS_AUTHENTICATED_FULLY et non un rôle : la
+        # seule exigence est d'être connecté.
+        - { path: ^/mon-compte, roles: IS_AUTHENTICATED_FULLY }
+        # Seul POST public sous /api : ce n'est pas API Platform mais l'adresse
+        # historique de l'inscription à la newsletter, que `main.min.js` (repris
+        # tel quel du site) porte en dur. L'exception se déclare avant le filet
+        # qui ferme /api en écriture, l'ordre faisant loi.
+        - { path: ^/api/newsletter/create_newsletter$, roles: PUBLIC_ACCESS, methods: [POST] }
+        # Filet de sécurité sur l'API, qui est publique en lecture et écrite par
+        # personne. API Platform expose POST, PATCH et DELETE dès qu'une entité
+        # porte #[ApiResource] sans liste d'opérations, et sans exiger la
+        # moindre authentification : un anonyme pouvait supprimer un décryptage,
+        # donnée éditoriale qu'aucun import ne régénère. Chaque entité déclare
+        # désormais `operations: [new Get(), new GetCollection()]`, et c'est là
+        # qu'est la correction — ces deux lignes rattrapent celle qui l'oublierait.
+        # Elles répondront alors 500 et non 401, l'API étant déclarée `stateless`
+        # quand le pare-feu, lui, cherche une session : c'est laid, mais cela
+        # bloque, et le cas ne se présente que sur une entité mal déclarée.
+        - { path: ^/api, roles: PUBLIC_ACCESS, methods: [GET, HEAD, OPTIONS] }
+        - { path: ^/api, roles: ROLE_ADMIN }
+        - { path: ^/admin, roles: ROLE_REDACTEUR }
+        # L'espace où un député rédige ses explications de vote. ROLE_DEPUTE
+        # n'échoit qu'aux comptes rattachés à un député : un administrateur
+        # n'entre pas ici, et n'y aurait d'ailleurs pas d'identité.
+        # Le motif s'arrête à la frontière du segment : sans cela il attrape
+        # aussi /dashboard-mp — l'ancienne adresse du legacy, qui doit rendre
+        # son 301 (RedirectionLegacyController) avant toute authentification,
+        # comme le .htaccess du site vivant le faisait.
+        - { path: ^/dashboard(/|$), roles: ROLE_DEPUTE }
+
+when@test:
+    security:
+        password_hashers:
+            # By default, password hashers are resource intensive and take time. This is
+            # important to generate secure password hashes. In tests however, secure hashes
+            # are not important, waste resources and increase test times. The following
+            # reduces the work factor to the lowest possible values.
+            Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface:
+                algorithm: auto
+                cost: 4 # Lowest possible value for bcrypt
+                time_cost: 3 # Lowest possible value for argon
+                memory_cost: 10 # Lowest possible value for argon

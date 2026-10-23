@@ -1,0 +1,176 @@
+{% extends 'base.html.twig' %}
+
+{# Port de application/views/parrainages/index.php. La casse et les accents des
+   noms de députés sont ceux de la source (« Eric », « Jean-Felix ») : c'est ce
+   qu'affiche datan.fr, qui lit la table `parrainages`. Département et groupe
+   viennent en revanche de la fiche du député (contrôleur), d'où la casse
+   canonique « Haute-Corse (2B) » — même choix que les pages d'élections. #}
+
+{% block title %}Élection présidentielle 2022 : les parrainages des députés | Datan{% endblock %}
+
+{% block meta_description %}Les députés peuvent accorder leur parrainage à un candidat à l'élection présidentielle. Découvrez sur Datan les parrainages accordés par les députés en 2022.{% endblock %}
+
+{% block stylesheets %}
+  <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/datatables.bootstrap4.min.css') }}">
+{% endblock %}
+
+{% block body %}
+<div class="container pg-parrainages">
+  <div class="row bloc-titre">
+    <div class="col-12">
+      <h1 class="text-center">Élection présidentielle 2022 : découvrez les parrainages des députés</h1>
+    </div>
+  </div>
+</div>
+<div class="container-fluid pg-parrainages infosIndividual py-5">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-7">
+        <h2>Comment fonctionne le parrainage des candidats à la présidentielle ?</h2>
+        <p>Les personnes souhaitant être candidates à l'élection présidentielle doivent réunir des parrainages de parlement ou d'élus locaux. Pour voir son élection valider par le Conseil constitutionnel, il faut réunir au moins 500 parrainages venant d'au moins 30 départements différents.</p>
+        <p>Le système de parrainage a été mis en place afin d'éviter la multiplication des candidatures.</p>
+        <p><b>Qui peut accorder son parrainage ?</b></p>
+        <p>Plus de 40 000 élus ont la possibilité d'accorder leur parrainage à un candidat à l'élection présidentielle. Il s'agit des députés, des sénateurs, des élus régionaux et départementaux, ou encore des maires.</p>
+      </div>
+      <div class="col-lg-5 d-flex align-items-center justify-content-center mt-4 mt-lg-0">
+        <div>
+          <div class="card">
+            <h3 class="card-header">Candidats sélectionnés</h3>
+            <div class="card-body">
+              <p class="font-weight-bold">Candidats ayant récolté plus de 500 signatures</p>
+              <table class="table table-sm">
+                <thead>
+                  <tr>
+                    <th scope="col"></th>
+                    <th scope="col">Candidat</th>
+                    <th scope="col">Parrainages</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for candidat in selectionnes %}
+                    <tr>
+                      <th>{{ loop.index }}</th>
+                      <td>{{ candidat.candidat }}</td>
+                      <td class="text-center">{{ candidat.n }}</td>
+                    </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+              <div class="d-flex justify-content-center">
+                {# Bouton mort chez le legacy (href="#") : reproduit tel quel, la
+                   page « Plus d'infos » n'existant pas. #}
+                <a href="#" class="btn btn-primary">Plus d'infos</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="container pg-parrainages mt-4 mb-5">
+  <div class="row">
+    <div class="col-12">
+      <h2 class="my-4"><span class="text-primary">{{ deputes|length }}</span> députés ont parrainé un candidat à la présidentielle</h2>
+      <p>Les députés font partie des élus pouvant accorder leur parrainage à un candidat pour l'élection présidentielle.</p>
+      <p>
+        Au total, <span class="font-weight-bold text-primary">{{ deputes|length }} députés</span> ont accordé leur signature à un candidat.
+        Les députés ont parrainé {{ candidats|length }} candidats.
+        Le candidat qui arrive en tête auprès des députés est <b>{{ candidats[0].candidat }}</b>, avec {{ candidats[0].parrainages }} parrainages.
+        Il est suivi de <b>{{ candidats[1].candidat }}</b> ({{ candidats[1].parrainages }} parrainages) et de <b>{{ candidats[2].candidat }}</b> ({{ candidats[2].parrainages }} parrainages).
+      </p>
+      <div class="card mt-5 py-3 px-md-4">
+        <div class="card-body">
+          <h3>Parrainages accordés par les députés</h3>
+          <div class="wrapper mt-4">
+            <canvas id="myChart"></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-12 mt-4">
+      <h2 class="my-5">Découvrez les parrainages accordés par les députés</h2>
+      <table class="table table-striped table-vote-individual" id="table-parrainages-deputes" style="width: 100%">
+        <thead>
+          <tr>
+            <th class="all">Député</th>
+            <th class="text-center">Département</th>
+            <th class="text-center">Groupe politique</th>
+            <th class="all text-center">Parrainage</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for p in deputes %}
+            <tr>
+              <td>
+                {# Lien vers la fiche seulement si le député en a une (slug +
+                   dpt_slug) : sinon nom en clair, jamais un lien qui répondrait
+                   404. Adresse masquée aux robots via `url_obf`, comme le legacy. #}
+                {% if p.dpt_slug and p.slug %}
+                  <span class="url_obf no-decoration underline" url_obf="{{ url_obf(path('depute_individual', {dptSlug: p.dpt_slug, slug: p.slug})) }}">{{ p.prenom }} {{ p.nom }}</span>
+                {% else %}
+                  {{ p.prenom }} {{ p.nom }}
+                {% endif %}
+              </td>
+              <td class="text-center">{{ p.departement_nom }} ({{ p.departement_code }})</td>
+              <td class="text-center">{{ p.groupe_libelle }}</td>
+              <td class="text-center">{{ p.candidat }}</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block javascripts %}
+  {# `datetime-moment.js` est un greffon de DataTables : chargé avant la
+     bibliothèque, il fait mourir toute l'initialisation. Même ordre que
+     datan.fr, cf. `vote/all.html.twig`. #}
+  <script src="{{ asset('assets/js/libraries/moment/moment.min.js') }}"></script>
+  <script src="{{ asset('assets/js/dist/datatable-datan.min.js') }}"></script>
+  <script src="{{ asset('assets/js/libraries/datetime/datetime-moment.js') }}"></script>
+  <script src="{{ asset('assets/js/dist/chart.min.js') }}"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      {# Chaque libellé est un tableau d'une entrée, comme le legacy : Chart.js
+         le rend alors sur sa propre ligne sans le couper. #}
+      var labels = {{ candidats|map(c => [c.candidat])|json_encode|raw }};
+      var ctx = document.getElementById('myChart');
+      new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: labels,
+          datasets: [{
+            label: 'Nombre de parrainages de députés',
+            data: {{ candidats|map(c => c.parrainages)|json_encode|raw }},
+            backgroundColor: 'rgb(0, 183, 148)'
+          }]
+        },
+        options: {
+          scales: {
+            yAxes: [{
+              ticks: { beginAtZero: true }
+            }]
+          },
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            datalabels: {
+              anchor: 'end',
+              backgroundColor: function (context) {
+                return context.dataset.backgroundColor;
+              },
+              borderColor: 'white',
+              borderRadius: 25,
+              borderWidth: 1,
+              color: 'white',
+              font: { size: 14 }
+            }
+          }
+        }
+      });
+    });
+  </script>
+{% endblock %}

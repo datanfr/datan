@@ -1,0 +1,30 @@
+{# Les deux bouts d'un classement de groupes, en vis-à-vis sur la page
+   d'accueil des statistiques. Porté de
+   application/views/classements/partials/groups_index.php.
+
+   Le contrôleur a déjà rangé les deux cartes dans l'ordre d'affichage : selon
+   le bloc, la gauche revient au premier ou au dernier du classement. #}
+<div class="ranking-graph-group mt-4 py-4 row row-grid">
+  {% for bout in [duo.gauche, duo.droite] %}
+    <div class="col-sm-6 d-flex flex-column align-items-center">
+      <div class="title text-center mb-4">{{ bout.titre }}</div>
+      <a href="{{ path('groupe_individual', {legislature: bout.groupe.legislature, abrev: bout.groupe.libelle_abrev|lower}) }}">
+        <div class="score mb-4">
+          <div class="avatar">
+            <picture>
+              <source srcset="{{ asset('assets/imgs/groupes/' ~ bout.groupe.legislature ~ '/webp/' ~ bout.groupe.libelle_abrev ~ '.webp') }}" type="image/webp">
+              <source srcset="{{ asset('assets/imgs/groupes/' ~ bout.groupe.legislature ~ '/' ~ bout.groupe.libelle_abrev ~ '.png') }}" type="image/png">
+              <img class="img" src="{{ asset('assets/imgs/groupes/' ~ bout.groupe.legislature ~ '/' ~ bout.groupe.libelle_abrev ~ '.png') }}" width="150" height="150" alt="{{ bout.groupe.libelle|name_group }}">
+            </picture>
+          </div>
+          <div class="age">
+            <span class="badge badge-primary shadow">{{ bout.stat }}</span>
+          </div>
+        </div>
+      </a>
+      <div class="description text-center">
+        <a href="{{ path('groupe_individual', {legislature: bout.groupe.legislature, abrev: bout.groupe.libelle_abrev|lower}) }}" class="no-decoration underline">{{ bout.groupe.libelle|name_group }}</a>
+      </div>
+    </div>
+  {% endfor %}
+</div>

@@ -1,0 +1,41 @@
+{# Bloc « Sa dernière explication de vote » (`mp_individual/_explanation.php`) :
+   la plus récente explication publiée par le député sur un vote décrypté —
+   titre du décryptage en lien, date du scrutin, badge de sa position, phrase
+   d'introduction accordée, puis la citation. Absent pour les députés qui n'ont
+   rien publié (comme sur datan.fr).
+
+   Le lien passe par `lien_vote()` : le legacy appelle `is_congress_numero()`
+   ici pour la même raison (numéro négatif d'un vote du Congrès). #}
+{% if derniere_explication %}
+  {% set e = depute.civilite == 'Mme' ? 'e' : '' %}
+  {% set article = depute.civilite == 'Mme' ? 'La' : 'Le' %}
+  {% set mot_depute = depute.civilite == 'Mme' ? 'députée' : 'député' %}
+  {# Formulation `Depute_edito::get_explication`, apostrophes typographiques
+     comprises (« s’est abstenu… »). Une position absente se dit « absent » et
+     n'a pas de phrase, comme le legacy (default: ""). #}
+  {% set edito = {
+    pour: 'a voté pour',
+    contre: 'a voté contre',
+    abstention: 's’est abstenu' ~ e ~ ' sur',
+  }[derniere_explication.position] ?? null %}
+  <div class="bloc-explication mt-5">
+    <h2 class="mb-4 title-center">Sa dernière explication de vote</h2>
+    <div class="card border-primary">
+      <div class="card-body">
+        <p class="title mb-1">
+          <a class="no-decoration underline" href="{{ lien_vote(derniere_explication.legislature, derniere_explication.vote_numero) }}">{{ derniere_explication.title }}</a>
+        </p>
+        <p class="date mb-4">Scrutin du {{ derniere_explication.date_fr }}</p>
+        <p class="mb-2">
+          <span class="badge badge-{{ derniere_explication.position ?? 'absent' }}">{{ (derniere_explication.position ?? 'absent')|upper }}</span>
+        </p>
+        {% if edito %}
+          <p>{{ article }} {{ mot_depute }} <span class='font-weight-bold'>{{ nom_complet }}</span> {{ edito }} ce vote. Découvrez son explication.</p>
+        {% endif %}
+        <blockquote>
+          <p class="quoted">{{ derniere_explication.texte }}</p>
+        </blockquote>
+      </div>
+    </div>
+  </div>
+{% endif %}

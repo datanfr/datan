@@ -1,0 +1,76 @@
+{% extends 'classement/_layout.html.twig' %}
+
+{% block title %}La loyauté politique des députés - Assemblée nationale | Datan{% endblock %}
+
+{% block meta_description %}Quel est le député de l'Assemblée nationale le plus proche de son groupe ? Le député le plus rebelle ? Découvrez le classement sur Datan.{% endblock %}
+
+{% block contenu %}
+  {% set loyal_femme = plus_loyal.civilite == 'Mme' %}
+  {% set rebelle_femme = plus_rebelle.civilite == 'Mme' %}
+  <div class="row mt-4">
+    <div class="col-md-10">
+      <p>Quel député de l'Assemblée nationale vote le plus souvent comme son groupe politique ? Qui est le plus rebelle ?</p>
+      <p>La proximité avec son groupe est un élément important à l'Assemblée. Dans la plupart des cas, les députés suivent la ligne du groupe quand ils votent.</p>
+      <p>Un député peut voter contre la position officielle de son groupe pour plusieurs raisons, par exemple s'il a opinion différente de celle de son groupe ou si la position de son groupe est contraire aux intérêts des électeurs de sa circonscription.</p>
+      {% if deputes %}
+        <p>
+          La plupart des parlementaires sont loyaux à leur groupe et votent rarement contre la ligne du groupe.
+          {{ loyal_femme ? 'La' : 'Le' }} député{{ loyal_femme ? 'e' : '' }} {{ loyal_femme ? 'la' : 'le' }} plus proche de son groupe est <a href="{{ path('depute_individual', {dptSlug: plus_loyal.dpt_slug, slug: plus_loyal.slug}) }}">{{ plus_loyal.firstname }} {{ plus_loyal.lastname }}</a> :
+          {{ loyal_femme ? 'elle' : 'il' }} a voté sur la même ligne que son groupe dans {{ plus_loyal.pourcentage }} % des cas.
+        </p>
+        <p>
+          Au contraire, {{ rebelle_femme ? 'la' : 'le' }} député{{ rebelle_femme ? 'e' : '' }} votant le moins fréquemment avec son groupe est <a href="{{ path('depute_individual', {dptSlug: plus_rebelle.dpt_slug, slug: plus_rebelle.slug}) }}">{{ plus_rebelle.firstname }} {{ plus_rebelle.lastname }}</a> :
+          {{ rebelle_femme ? 'elle' : 'il' }} a voté sur la même ligne que son groupe dans {{ plus_rebelle.pourcentage }} % des cas.
+        </p>
+      {% endif %}
+      {{ include('partials/campagne.html.twig', {classes: 'mt-5'}) }}
+    </div>
+  </div>
+  {% if not deputes %}
+    <div class="alert alert-danger mt-4" role="alert">
+      Ces données seront prochainement disponibles.
+    </div>
+  {% else %}
+    <div class="row row-grid mt-5">
+      <div class="col-md-6 py-3">
+        <h2 class="text-center">{{ loyal_femme ? 'La' : 'Le' }} plus proche de son groupe</h2>
+        <div class="d-flex justify-content-center">
+          {{ include('depute/partials/card_decouverte.html.twig', {depute: plus_loyal, stat: plus_loyal.pourcentage ~ ' %'}) }}
+        </div>
+      </div>
+      <div class="col-md-6 py-3">
+        <h2 class="text-center">{{ rebelle_femme ? 'La' : 'Le' }} moins proche de son groupe</h2>
+        <div class="d-flex justify-content-center">
+          {{ include('depute/partials/card_decouverte.html.twig', {depute: plus_rebelle, stat: plus_rebelle.pourcentage ~ ' %'}) }}
+        </div>
+      </div>
+    </div>
+    <div class="mt-5">
+      <h2 class="mb-5">Classement des députés en fonction de leur taux de proximité avec leur groupe</h2>
+      <table class="table table-stats" id="table-stats">
+        <caption class="sr-only">Classement des députés en fonction de leur taux de proximité avec leur groupe</caption>
+        <thead>
+          <tr>
+            <th scope="col" class="text-center all">N°</th>
+            <th scope="col" class="text-center all">Député</th>
+            <th scope="col" class="text-center all">Groupe</th>
+            {# Quatre colonnes, sans le nombre de votes : il départage les rangs
+               mais le site ne le montre pas ici, à la différence des deux
+               tableaux de participation. #}
+            <th scope="col" class="text-center all">Taux de loyauté</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for depute in deputes %}
+            <tr>
+              <td class="text-center">{{ depute.rang }}</td>
+              <td class="text-center">{{ depute.firstname }} {{ depute.lastname }}</td>
+              <td class="text-center">{{ depute.groupe_abrev }}</td>
+              <td class="text-center">{{ depute.pourcentage }} %</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  {% endif %}
+{% endblock %}

@@ -1,0 +1,66 @@
+{% extends 'base.html.twig' %}
+
+{% block preloads %}{{ include('partials/preload_couverture.html.twig') }}{% endblock %}
+
+{# Liste des articles (views/posts/index.php), partagée entre /blog et les
+   rubriques, comme chez l'origine : seule change la colonne de titre — h1
+   « Blog » sur l'index, h1 au nom de la rubrique sinon. Les libellés du menu
+   sont écrits en dur, y compris « Actualités politiques » au pluriel quand la
+   rubrique s'appelle « Actualité politique » — c'est le texte du site. #}
+
+{% block title %}{{ page == 'index' ? 'Blog | Datan' : rubrique_nom ~ ' - Blog | Datan' }}{% endblock %}
+
+{% block meta_description %}{{ description }}{% endblock %}
+
+{% block body %}
+<div class="container my-5 pg-posts">
+  <div class="row">
+    {# — Menu latéral collant — #}
+    <div class="menu col-md-4 col-lg-3">
+      <div class="sticky-top" style="top: 80px;">
+        {% if page == 'index' %}
+          <h1 class="title">Blog</h1>
+          <h2 class="my-4 subtitle">Nos analyses et décryptages sur l'Assemblée nationale et les députés</h2>
+        {% else %}
+          <div class="title">Blog</div>
+          <div class="my-4 subtitle">Nos analyses et décryptages sur l'Assemblée nationale et les députés</div>
+        {% endif %}
+        <div class="categories">
+          <ul class="list-unstyled mt-md-4 mt-3 row row-cols-2 row-cols-md-1">
+            <li class="col {{ page == 'index' ? 'active' }}">
+              <a href="{{ path('blog_index') }}" class="no-decoration underline">Derniers articles</a>
+            </li>
+            <li class="col mt-md-2 {{ page == 'datan' ? 'active' }}">
+              <a href="{{ path('blog_categorie', {rubrique: 'datan'}) }}" class="no-decoration underline">Datan</a>
+            </li>
+            <li class="col mt-md-2 mt-1 {{ page == 'actualite-politique' ? 'active' }}">
+              <a href="{{ path('blog_categorie', {rubrique: 'actualite-politique'}) }}" class="no-decoration underline">Actualités politiques</a>
+            </li>
+            <li class="col mt-md-2 mt-1 {{ page == 'rapports' ? 'active' }}">
+              <a href="{{ path('blog_categorie', {rubrique: 'rapports'}) }}" class="no-decoration underline">Rapports</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    {# — Articles — #}
+    <div class="col-md-8 col-lg-9 pl-md-5 mt-md-0 mt-4">
+      {% if page != 'index' %}
+        <div class="row">
+          <div class="col-12 mb-5">
+            <h1 class="text-center category_title">{{ rubrique_nom }}</h1>
+            <h2 class="text-center category_subtitle">{{ rubrique_sous_titre }}</h2>
+          </div>
+        </div>
+      {% endif %}
+      <div class="row">
+        {% for article in articles %}
+          <div class="col-lg-6 col-12 mb-5">
+            {{ include('blog/_bloc_article.html.twig') }}
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

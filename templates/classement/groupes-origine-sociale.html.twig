@@ -1,0 +1,99 @@
+{% extends 'classement/_layout.html.twig' %}
+
+{% block title %}La représentatité sociale des groupes - Assemblée nationale | Datan{% endblock %}
+
+{% block meta_description %}Quel groupe parlementaire ressemble le plus socialement à la population française ? Découvrez sur Datan le classement des groupes selon leur représentativité.{% endblock %}
+
+{% block contenu %}
+  <div class="row mt-4">
+    <div class="col-md-10">
+      <p>Les députés sont-ils représentatifs de la population française ?</p>
+      <p>Pas vraiment. <a class="url_obf" href="https://www.lemonde.fr/les-decodeurs/article/2017/06/26/quelles-professions-exercent-nos-deputes_5151288_4355770.html" target="_blank" rel="nofollow noopener">Le Monde</a> note que <b>les députés viennent surtout des catégories professionnelles favorisées</b>. Beaucoup étaient avocat, médecin ou professeur. Une tendance qui ne s'améliore pas : <a class="url_obf" href="https://www.publicsenat.fr/article/politique/une-assemblee-nationale-tres-csp-74986" target="_blank" rel="nofollow noopener">Public Sénat</a> indique que les classes supérieures étaient plus présentes à l'Assemblée en 2017 qu'en 2012.</p>
+      <p>La grande majorité des parlementaires étaient des cadres ou exerçaient une profession intellectuelle supérieure. Ils représentent <b>{{ famille_cadres.part|round }} % des députés</b>, alors que seulement {{ famille_cadres.population|round }} % de la population française appartient à cette catégorie.</p>
+      <p>Au contraire, l'Assemblée ne compte très peu de députés ouvriers ou employés.</p>
+      <p><b>Cela a-t-il un impact ?</b> Les citoyens ne votent pas pour une origine sociale mais pour des idées et un programme politique. Cependant, la sous-représentation de certaines catégories de la population pose question. <a class="url_obf" href="https://onlinelibrary.wiley.com/doi/abs/10.1111/ajps.12112" target="_blank" rel="nofollow noopener">Plusieurs chercheurs</a> ont montré que l'origine sociale d'un parlementaire a un impact sur ses idées et la façon dont il vote.</p>
+      {{ include('partials/campagne.html.twig', {classes: 'mt-5'}) }}
+    </div>
+  </div>
+  <div class="row row-grid">
+    <div class="col-12">
+      <h2 class="my-5">Le groupe politique le plus représentatif de la population</h2>
+      <p>Nous utilisons <a class="url_obf" href="https://rdrr.io/rforge/polrep/man/Rose.html" target="_blank" rel="nofollow noopener">l'indicateur de Rose</a> pour mesurer la représentativité sociale des groupes politiques.</p>
+      <p>Cet indicateur compare le pourcentage de députés issus des différentes catégories professionnelles avec le pourcentage de la population dans ces mêmes catégories.</p>
+      <p>Un groupe politique est parfaitement représentatif si 15% de ces députés étaient des ouvriers et qu'il y a 15% d'ouvriers dans la population, et ainsi de suite. Un groupe parfaitement représentatif aura une valeur de 1, tandis qu'un groupe non représentatif aura une valeur de 0.</p>
+      {% if groupes %}
+        {# Seule page du site à donner le nom des groupes en entier : la vue
+           d'origine écrit `libelle` sans passer par `name_group`, ici comme
+           dans le tableau plus bas (`groupes-origine-sociale.php`, lignes 19
+           et 44), et sort donc « La France insoumise - Nouveau Front
+           Populaire » quand la carte, douze lignes plus bas, abrège en
+           « - NFP » — et quand les huit autres classements abrègent partout.
+           Reproduit tel quel : le nom long n'est pas faux, et c'est ce que le
+           site affiche. #}
+        <p>Le groupe politique de l'Assemblée nationale le plus représentatif socialement de la population est <a href="{{ path('groupe_individual', {legislature: plus_representatif.legislature, abrev: plus_representatif.libelle_abrev|lower}) }}">{{ plus_representatif.libelle }} ({{ plus_representatif.libelle_abrev }})</a>, avec un score de {{ plus_representatif.score|number_format(3, ',', ' ') }}.</p>
+      {% else %}
+        <div class="alert alert-danger mt-4" role="alert">
+          Ces données seront prochainement disponibles.
+        </div>
+      {% endif %}
+    </div>
+    {% if groupes %}
+      <div class="col-12">
+        {{ include('classement/partials/carte_groupe.html.twig', {groupe: plus_representatif, stat: 'Score : ' ~ plus_representatif.score|number_format(3, ',', ' ')}) }}
+      </div>
+      <div class="col-12 mt-5">
+        <p>Découvrez ci-dessous le classement des groupes en fonction de leur représentativité sociale.</p>
+        <table class="table table-striped table-stats mt-4">
+          <caption class="sr-only">Classement des groupes en fonction de leur représentativité sociale</caption>
+          <thead class="thead-dark">
+            <tr>
+              <th scope="col" class="text-center all">Groupe politique</th>
+              <th scope="col" class="text-center min-tablet">Nombre de députés</th>
+              <th scope="col" class="text-center all">Score de représentativité</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for groupe in groupes %}
+              <tr>
+                <td class="text-center">{{ groupe.libelle }} ({{ groupe.libelle_abrev }})</td>
+                <td class="text-center">{{ groupe.effectif }}</td>
+                <td class="text-center">{{ groupe.score|number_format(3, ',', ' ') }}</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    {% endif %}
+    <div class="col-12 mt-5">
+      <h2>Part des catégories professionnelles dans chaque groupe</h2>
+      {% if not groupes %}
+        <div class="alert alert-danger mt-4" role="alert">
+          Ces données seront prochainement disponibles.
+        </div>
+      {% else %}
+        <p>Dans quel groupe politique y a-t-il le plus de députés avec un parcours d'agriculteur ? Avec le plus de parlementaires ayant effectué une profession de cadre ? D'ouvriers ? Découvrez-le dans le tableau ci-dessous !</p>
+        <table class="table table-striped table-stats mt-4">
+          <caption class="sr-only">Part des catégories professionnelles dans chaque groupe</caption>
+          <thead class="thead-dark table-sm">
+            <tr>
+              <th scope="col">Catégorie</th>
+              {% for sigle in parts|keys %}
+                <th scope="col" class="text-center"><small>{{ sigle }}</small></th>
+              {% endfor %}
+            </tr>
+          </thead>
+          <tbody>
+            {% for famille in noms_familles %}
+              <tr>
+                <td>{{ famille }}</td>
+                {% for colonnes in parts %}
+                  <td class="text-center">{{ colonnes[famille]|default(0) }}%</td>
+                {% endfor %}
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      {% endif %}
+    </div>
+  </div>
+{% endblock %}

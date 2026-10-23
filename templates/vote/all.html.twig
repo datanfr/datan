@@ -1,0 +1,173 @@
+{% extends 'base.html.twig' %}
+
+{% block preloads %}{{ include('partials/preload_couverture.html.twig') }}{% endblock %}
+
+{% set periode %}
+  {%- if mois %}{{ mois_libelle|capitalize }} {{ annee }}
+  {%- elseif annee %}{{ annee }}
+  {%- else %}{{ legislature }}<sup>e</sup> législature
+  {%- endif %}
+{% endset %}
+
+{# Les deux graphies du mois — « 2024/06 » et « 2024/6 » — servent la même page
+   en 200, ici comme sur le site. La forme canonique est la zéro-paddée : c'est
+   elle que le plan annonce et que les moteurs indexent depuis des années ;
+   sans cette balise, les deux adresses se disputeraient l'indexation (le site
+   a le même défaut, on ne le reproduit pas). #}
+{% if mois %}
+  {% set canonical = url('votes_mois', {legislature: legislature, annee: annee, mois: '%02d'|format(mois)}) %}
+{% endif %}
+
+{% block title %}
+  {%- if mois %}Votes {{ mois_libelle|capitalize }} {{ annee }} Assemblée Nationale - Résultat et Analyse | Datan
+  {%- elseif annee %}Votes {{ annee }} Assemblée Nationale - Résultat et Analyse | Datan
+  {%- else %}Votes {{ legislature }}e Législature - Assemblée Nationale | Datan
+  {%- endif %}
+{% endblock %}
+
+{# Trois formulations distinctes comme dans Votes.php (lignes 175, 202, 234) :
+   la spécificité de la période compte pour le référencement des archives, et
+   les variantes année/mois ne mentionnent ni « participation » ni la
+   législature — reprises telles quelles. #}
+{% block meta_description %}
+  {%- if mois %}Retrouvez tous les votes de l'Assemblée nationale en {{ mois_libelle }} {{ annee }}. Détails des votes, résultats de vote des groupes et des députés, statistiques de loyauté et de cohésion.
+  {%- elseif annee %}Retrouvez tous les votes de l'Assemblée nationale en {{ annee }}. Détails des votes, résultats de vote des groupes et des députés, statistiques de loyauté et de cohésion.
+  {%- else %}Retrouvez tous les votes de l'Assemblée nationale de la {{ legislature }}e législature. Détails des votes, résultats des groupes et des députés, statistiques de participation, de loyauté et de cohésion.
+  {%- endif %}
+{% endblock %}
+
+{% block stylesheets %}
+  <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/datatables.bootstrap4.min.css') }}">
+{% endblock %}
+
+{% block body %}
+<div class="container-fluid bloc-img-deputes bloc-img d-flex async_background" id="container-always-fluid" style="height: 14em">
+  <div class="container d-flex flex-column justify-content-center py-2">
+    <h1 class="text-center">Votes à l'Assemblée nationale - {{ periode }}</h1>
+  </div>
+</div>
+<div class="container pg-vote-all my-5">
+  <div class="row">
+    <div class="col-12">
+      <h2>Liste des scrutins</h2>
+      {% if scrutins is empty %}
+        <p class="text-center mt-3 mb-0">Il n'y a pas encore eu de scrutins à l'Assemblée nationale pour la {{ legislature }}<sup>ème</sup> législature.</p>
+      {% else %}
+        <p class="text-center mt-3 mb-0">
+          Découvrez tous les scrutins qui ont eu lieu dans l'hémicycle de l'Assemblée nationale lors de la {{ legislature }}<sup>e</sup> législature
+          {%- if mois %}, en {{ mois_libelle }} {{ annee }}
+          {%- elseif annee %}, en {{ annee }}
+          {%- endif -%}
+          .
+        </p>
+      {% endif %}
+      {{ include('partials/campagne.html.twig', {classes: 'mt-5'}) }}
+    </div>
+  </div>
+  <div class="row mt-5">
+    <div class="col-12">
+      <table class="table" id="table-vote-all">
+        <caption class="sr-only">Scrutins de l'Assemblée nationale — {{ periode }}</caption>
+        <thead>
+          <tr>
+            <th>N°</th>
+            <th>Date</th>
+            <th>Titre</th>
+            <th class="text-center">Résultat</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for scrutin in scrutins %}
+            {% set url = lien_vote(legislature, scrutin.numero) %}
+            <tr data-href="{{ url }}">
+              <td>
+                {# Au-delà des 30 premières lignes, seule la ligne reste cliquable :
+                   l'application d'origine évite ainsi de diluer son maillage interne. #}
+                {% if liens_limites and loop.index > 30 %}
+                  {{ scrutin.numero|congress_numero }}
+                {% else %}
+                  <a class="no-decoration" href="{{ url }}">{{ scrutin.numero|congress_numero }}</a>
+                {% endif %}
+              </td>
+              <td>{{ scrutin.date_fr }}</td>
+              <td>
+                {% if scrutin.decryptage_title %}
+                  <span class="vote-datan-bold">{{ scrutin.decryptage_title|upper }}</span><br>
+                  <span class="vote-datan-italic">{{ scrutin.titre }}</span>
+                {% else %}
+                  {{ scrutin.titre }}
+                {% endif %}
+              </td>
+              <td class="text-center sort sort-{{ scrutin.sort_code }}">{{ scrutin.sort_code|upper }}</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <hr class="mt-5">
+  <div class="row my-3 py-3">
+    <div class="col-12">
+      <h2 class="surtitre">Archives de la {{ legislature }}<sup>e</sup> législature</h2>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-12 d-flex flex-row flex-wrap">
+      {% for an, mois_liste in archives %}
+        <div class="flex-fill text-center px-1 py-2">
+          <div class="year d-flex flex-column align-items-center">
+            <div class="my-2 d-flex justify-content-center align-items-center">
+              <div class="{{ an == annee and mois is null ? 'current' : '' }} d-flex justify-content-center align-items-center">
+                <span><a href="{{ path('votes_annee', {legislature: legislature, annee: an}) }}" class="no-decoration underline-blue">{{ an }}</a></span>
+              </div>
+            </div>
+          </div>
+          <div class="months mt-4 d-flex flex-column align-items-center">
+            {% for m in mois_liste %}
+              <div class="my-2 d-flex justify-content-center align-items-center">
+                <div class="{{ m.mois == mois and an == annee ? 'current' : '' }} d-flex justify-content-center align-items-center">
+                  <a href="{{ path('votes_mois', {legislature: legislature, annee: an, mois: '%02d'|format(m.mois)}) }}" class="no-decoration underline-blue">{{ m.libelle|capitalize }}</a>
+                </div>
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+  <hr class="mt-5">
+  <div class="row my-3 py-3">
+    <div class="col-12">
+      <h2 class="surtitre">Archives d'autres législatures</h2>
+    </div>
+    <div class="col-12 mt-3">
+      {% for n in legislatures|reverse %}
+        <div class="d-flex flex-column align-items-center year text-center">
+          <div class="my-1 d-flex justify-content-center align-items-center">
+            <span><a href="{{ path('votes_legislature', {legislature: n}) }}" class="no-decoration underline-blue">{{ n }}<sup>e</sup> législature</a></span>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block javascripts %}
+  {# L'ordre compte, et il n'est pas alphabétique : `datetime-moment.js` est un
+     greffon de DataTables, il pose `$.fn.dataTable.moment`. Chargé avant la
+     bibliothèque il échoue sans rien poser, et l'initialisation de
+     `datatable-datan.min.js` meurt sur un TypeError — la page rend alors ses
+     8 434 lignes brutes, sans recherche, sans tri ni pagination. C'est l'ordre
+     que sert datan.fr. #}
+  <script src="{{ asset('assets/js/libraries/moment/moment.min.js') }}"></script>
+  <script src="{{ asset('assets/js/dist/datatable-datan.min.js') }}"></script>
+  <script src="{{ asset('assets/js/libraries/datetime/datetime-moment.js') }}"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      document.querySelectorAll('tr[data-href]').forEach((row) => {
+        row.addEventListener('click', () => { window.location.href = row.dataset.href; });
+      });
+    });
+  </script>
+{% endblock %}

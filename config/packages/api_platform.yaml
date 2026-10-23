@@ -1,0 +1,8 @@
+api_platform:
+    title: Datan API
+    description: API de données sur l'Assemblée nationale (députés, groupes, partis, scrutins, votes).
+    version: 1.0.0
+    defaults:
+        stateless: true
+        cache_headers:
+            vary: ['Content-Type', 'Authorization', 'Origin']

@@ -1,0 +1,54 @@
+{# Charpente commune aux neuf pages de classement, portée de
+   application/views/classements/templates/{header,footer}.php : le titre, le
+   contenu de la page, et la liste des autres classements en colonne de droite. #}
+{% extends 'base.html.twig' %}
+
+{% block stylesheets %}
+  <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/datatables.bootstrap4.min.css') }}">
+{% endblock %}
+
+{% block body %}
+{# Bouton « retour en haut » : le SVG est inséré dans le balisage, et non
+   référencé, pour que la feuille de style lui impose sa couleur (currentColor). #}
+<a id="btnup" class="d-flex justify-content-center align-items-center no-decoration">
+  <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-arrow-up" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+    <path fill-rule="evenodd" d="M8 3.5a.5.5 0 0 1 .5.5v9a.5.5 0 0 1-1 0V4a.5.5 0 0 1 .5-.5z"/>
+    <path fill-rule="evenodd" d="M7.646 2.646a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8 3.707 5.354 6.354a.5.5 0 1 1-.708-.708l3-3z"/>
+  </svg>
+</a>
+<div class="container pg-stats-individual py-5">
+  <div class="row">
+    <div class="col-lg-9">
+      <h3>NOS STATISTIQUE DE L'ASSEMBLÉE NATIONALE</h3>
+      <h1 class="pr-lg-5">{{ title }}</h1>
+      {% block contenu %}{% endblock %}
+    </div>
+    <div class="col-lg-3">
+      <div class="card card-right-posts sticky-top sticky-offset sticky-top-lg mt-5 mt-lg-0">
+        <div class="card-header">
+          Nos autres statistiques
+        </div>
+        <ul class="list-group list-group-flush">
+          {% for slug, libelle in pages %}
+            <li class="list-group-item {{ page == slug ? 'active' : '' }}">
+              <a href="{{ path('classement_individual', {page: slug}) }}" class="no-decoration">{{ libelle }}</a>
+            </li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block javascripts %}
+  {# L'ordre compte, et il n'est pas alphabétique : `datetime-moment.js` est un
+     greffon de DataTables, il pose `$.fn.dataTable.moment`. Chargé avant la
+     bibliothèque il échoue sans rien poser, et l'initialisation de
+     `datatable-datan.min.js` meurt ensuite sur ce même appel — emportant avec
+     elle la recherche et le tri des neuf tableaux de classement. #}
+  <script src="{{ asset('assets/js/libraries/moment/moment.min.js') }}"></script>
+  <script src="{{ asset('assets/js/dist/datatable-datan.min.js') }}"></script>
+  <script src="{{ asset('assets/js/libraries/datetime/datetime-moment.js') }}"></script>
+  {% block javascripts_page %}{% endblock %}
+{% endblock %}

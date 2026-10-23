@@ -1,0 +1,63 @@
+{# Graphique des sièges, commun aux trois pages qui en portent un.
+
+   `type` vaut `doughnut` pour les deux législatives — un demi-anneau qui figure
+   l'hémicycle, d'où la rotation d'un quart de tour et le demi-cercle — et `bar`
+   pour les européennes, où l'image de l'hémicycle n'aurait pas de sens : les
+   sièges y sont ceux du Parlement européen, dont Datan ne montre que la part
+   française.
+
+   Le greffon d'étiquettes s'efface sous cinq cents pixels de large : sur un
+   téléphone, les pastilles se chevauchent et masquent le graphique. #}
+{% set doughnut = type|default('doughnut') == 'doughnut' %}
+<div class="mt-1 mb-1">
+  <canvas width="100" height="100" id="{{ canvas }}"></canvas>
+</div>
+
+<script type="text/javascript">
+document.addEventListener('DOMContentLoaded', function () {
+  Chart.register(ChartDataLabels);
+
+  var data = {
+    labels: {{ hemicycle|column('libelle')|json_encode|raw }},
+    datasets: [{
+      data: {{ hemicycle|column('effectif')|json_encode|raw }},
+      backgroundColor: {{ hemicycle|column('couleurAssociee')|json_encode|raw }},
+      hoverBackgroundColor: {{ hemicycle|column('couleurAssociee')|json_encode|raw }}
+    }]
+  };
+
+  new Chart(document.getElementById("{{ canvas }}"), {
+    type: '{{ doughnut ? 'doughnut' : 'bar' }}',
+    plugins: [ChartDataLabels{% if doughnut %}, {
+      beforeLayout: function (chart) {
+        chart.options.plugins.datalabels.display = chart.width > 500;
+      }
+    }{% endif %}],
+    data: data,
+    options: {
+      {% if doughnut %}
+      rotation: 270,
+      circumference: 180,
+      {% else %}
+      indexAxis: 'y',
+      {% endif %}
+      responsive: true,
+      maintainAspectRatio: true,
+      aspectRatio: 2,
+      layout: {padding: 10},
+      plugins: {
+        datalabels: {
+          anchor: "end",
+          backgroundColor: function (context) { return context.dataset.backgroundColor; },
+          borderColor: "white",
+          borderRadius: 25,
+          borderWidth: 1,
+          color: "white",
+          font: {size: {{ doughnut ? 10 : 12 }}{{ doughnut ? '' : ", weight: 'bold'" }}}
+        },
+        legend: {display: false}
+      }
+    }
+  });
+});
+</script>

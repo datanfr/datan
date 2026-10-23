@@ -1,0 +1,19 @@
+# Protection CSRF adossée à la session.
+#
+# Symfony propose des jetons « sans état », qui évitent d'ouvrir une session
+# pour un visiteur anonyme — précieux quand toutes les pages publiques sont
+# mises en cache. Mais ils reposent sur un double envoi cookie/champ réalisé en
+# JavaScript par `assets/controllers/csrf_protection_controller.js`, et ce
+# script n'est chargé par aucune page : le site rend ses vues côté serveur avec
+# les assets repris de l'application d'origine, sans Stimulus ni AssetMapper.
+#
+# Activer les jetons sans état ici reviendrait donc à casser tout formulaire, à
+# commencer par la connexion. Le jour où le front passera à AssetMapper, il
+# suffira de rétablir `stateless_token_ids: [submit, authenticate, logout]`.
+#
+# Aucune page publique ne portant de formulaire, ce choix n'ouvre pas de
+# session aux visiteurs anonymes et ne coûte donc rien au cache.
+framework:
+    form:
+        csrf_protection:
+            token_id: submit

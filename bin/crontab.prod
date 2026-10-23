@@ -1,0 +1,140 @@
+# ---------------------------------------------------------------------------
+# Datan — planification de production.
+#
+#   crontab bin/crontab.prod     installe (remplace) la table courante
+#   crontab -l                   relit ce qui est réellement installé
+#
+# `CRON.md` porte le détail et les justifications ; ce fichier-ci est ce qu'on
+# pose sur le serveur. Trois règles y valent partout :
+#
+#   1. `APP_ENV=prod` est écrit en toutes lettres sur chaque ligne, et non hérité
+#      d'une affectation d'en-tête : une ligne recopiée ailleurs reste juste. En
+#      dev, le logger Doctrine garde chaque requête en mémoire et fait échouer
+#      tout import volumineux.
+#   2. Jamais de `cache:clear` pendant une synchronisation — vider
+#      `var/cache/prod` sous une commande en cours la fait échouer sans message
+#      exploitable. On ne vide que le cache HTTP (`app:cache:rechauffer`), et
+#      seulement si le sync a réussi.
+#   3. Enchaîner, pas juxtaposer : les étapes qui suivent le sync dépendent de ce
+#      qu'il vient d'écrire. Un `&&` dans la même entrée, jamais trois entrées
+#      qu'une journée chargée ferait se chevaucher.
+#
+# Deux pièges de syntaxe propres à cron, qui ne pardonnent pas :
+#
+#   - **Un `%` non échappé est traduit en saut de ligne**, et tout ce qui suit
+#     part sur l'entrée standard de la commande. Dans un `date +%F`, il s'écrit
+#     `\%` (cf. la sauvegarde).
+#   - **La commande s'arrête à la fin de la ligne.** La continuation par
+#     antislash n'est pas garantie d'une implémentation à l'autre : les entrées
+#     ci-dessous sont donc d'un seul tenant, aussi longues soient-elles. Les
+#     extraits de `CRON.md` et de `DEPLOIEMENT.md`, eux, sont mis en forme pour
+#     la lecture — ne pas les copier tels quels.
+# ---------------------------------------------------------------------------
+
+SHELL=/bin/sh
+PATH=/usr/local/bin:/usr/bin:/bin
+MAILTO=remikel.pro@gmail.com
+
+# Cron n'a pas le PATH d'une session interactive : le `php` qu'il trouverait
+# n'est pas forcément celui du déploiement. Vérifier sur le serveur, avec le
+# compte qui portera la table — `command -v php`, `php -v` — et poser ici le
+# chemin absolu.
+DATAN=/home/wqktajhw/datan
+PHP=/usr/bin/php
+SAUVEGARDES=/home/wqktajhw/backups/datan
+BASE=wqktajhw_datan
+
+# --- Quotidien — 6 h -------------------------------------------------------
+# Les Tricoteuses remoissonnent l'open data de l'Assemblée dans la nuit : à 6 h
+# la source est fraîche et la base est à jour au réveil. ~50 s à vide, quelques
+# minutes un lendemain de séance.
+#
+# `app:import:commissions` et `app:calcul:statistiques-deputes` ne sont pas dans
+# la chaîne du sync à dessein — ce sont des précalculs qu'on lance sciemment —,
+# mais ils se périment dès qu'un scrutin entre. Leur place est ici.
+#
+# `app:cache:rechauffer` ferme la marche : il vide le cache HTTP, puis y remet
+# les ~2 500 pages les plus lues (une quinzaine de minutes), pour qu'aucun
+# visiteur n'attende le premier rendu. Les pages restent en cache un jour : ce
+# sont cette purge et celles des publications qui les tiennent à jour.
+#
+# `flock -n` : deux syncs qui se croisent écrivent les mêmes tables ; on
+# abandonne au lieu d'empiler. Le nom `app:sync:quotidien` reste visible dans
+# `ps`, dont le workflow de déploiement se sert pour refuser de vider le cache
+# sous une moisson en cours.
+0 6 * * * cd $DATAN && { echo "===== $(date) ====="; flock -n var/sync.lock sh -c 'APP_ENV=prod $PHP bin/console app:sync:quotidien --no-ansi && APP_ENV=prod $PHP bin/console app:import:commissions --no-ansi && APP_ENV=prod $PHP bin/console app:calcul:statistiques-deputes --no-ansi && APP_ENV=prod $PHP bin/console app:cache:rechauffer --no-ansi' || echo "ECHEC (code $?) ou execution concurrente"; } >> var/log/sync-quotidien.log 2>&1
+
+# --- Hebdomadaire — lundi 4 h 15 -------------------------------------------
+# Seule commande qui sorte sur un site public (`assemblee-nationale.fr/dyn/`) :
+# elle rattrape les scrutins dont l'open data ne donne ni le dossier ni
+# l'amendement. Plafond de 40 pages, 1,5 s entre deux requêtes (~1 min), et les
+# visites infructueuses ne sont pas redemandées avant 30 jours. Hors chaîne
+# quotidienne à dessein.
+15 4 * * 1 cd $DATAN && APP_ENV=prod $PHP bin/console app:scraper:scrutins --no-ansi >> var/log/scraper-scrutins.log 2>&1
+
+# --- Sauvegarde — 3 h 30 ---------------------------------------------------
+# Le décryptage éditorial ne se régénère pas : cette entrée vaut dès le premier
+# jour, avant même l'ouverture.
+#
+# `--result-file` et non un tuyau vers gzip : le code de sortie d'un pipeline est
+# celui de `gzip`, si bien qu'un dump interrompu produirait une archive valide au
+# contenu tronqué, et la purge des anciennes s'exécuterait quand même. Compter
+# ~1 Go de libre le temps de la compression.
+#
+# Les identifiants vivent dans `~/.my.cnf` en chmod 600, jamais sur la ligne de
+# commande où `ps` les afficherait :
+#     [client]
+#     user=…
+#     password=…
+30 3 * * * cd $SAUVEGARDES && sh -c 'mariadb-dump --defaults-file=$HOME/.my.cnf --single-transaction --quick --default-character-set=utf8mb4 --ignore-table=$BASE.messenger_messages --result-file=jour.sql $BASE && gzip -9 -f jour.sql && mv jour.sql.gz $(date +\%F).sql.gz && find . -name "*.sql.gz" -mtime +30 -delete' >> $DATAN/var/log/sauvegarde.log 2>&1
+
+# --- Courriels — toutes les 10 minutes -------------------------------------
+# `SendEmailMessage` est routé vers le transport `async` (`doctrine://default`) :
+# **sans consommateur, aucun courriel ne part** — ni mot de passe oublié, ni
+# demande de compte député, ni inscription. Le même consommateur réchauffe le
+# cache après la publication d'un décryptage, d'une explication ou d'un article
+# (`RechauffageDemande`) : le cache HTTP est vidé tout de suite, les pages
+# principales y sont remises au passage suivant. Sur un serveur avec systemd, c'est un
+# service permanent (`DEPLOIEMENT.md` §5) ; sur l'hébergement mutualisé, cette
+# entrée en tient lieu.
+#
+# `--time-limit=580` pour 600 s d'intervalle : le processus sort juste avant que
+# le suivant n'arrive, et `flock -n` empêche qu'ils se recouvrent. `env` est
+# obligatoire — `flock` exécute directement, sans shell, et prendrait
+# `APP_ENV=prod` pour le nom de la commande.
+*/10 * * * * cd $DATAN && flock -n var/messenger.lock env APP_ENV=prod $PHP bin/console messenger:consume async --time-limit=580 --memory-limit=128M --no-ansi >> var/log/messenger.log 2>&1
+
+# --- Journaux — le 1er du mois ---------------------------------------------
+# Pas de logrotate sur un mutualisé : on tronque nous-mêmes. Les journaux du
+# sync sont la seule trace d'un import qui a dérivé, on en garde de quoi
+# remonter à plusieurs semaines.
+5 4 1 * * cd $DATAN/var/log && for f in *.log; do tail -n 5000 "$f" > "$f.tmp" && mv "$f.tmp" "$f"; done
+
+# ---------------------------------------------------------------------------
+# À décommenter le moment venu — pas avant, et pas sans lire pourquoi.
+# ---------------------------------------------------------------------------
+
+# Résumés d'amendements par IA. **Pas avant le choix d'`IA_MODELE` de
+# production** : la garde « jamais écraser un résumé existant » fait qu'un lot
+# passé au modèle d'essai bloquerait pour toujours un lot plus propre. Chaque
+# exécution appelle un modèle (local ou facturé).
+#45 6 * * * cd $DATAN && APP_ENV=prod $PHP bin/console app:ia:resumes-amendements --jours=30 --limite=50 --no-ansi >> var/log/resumes-ia.log 2>&1
+
+# Poignées Bluesky des députés : n'écrit que les correspondances franches, et
+# seulement pour ceux qui n'en ont pas. Mensuel suffit — après une vague
+# d'arrivées, on le lance à la main.
+#40 5 1 * * cd $DATAN && APP_ENV=prod $PHP bin/console app:moissonner:bluesky --ecrire --no-ansi >> var/log/bluesky.log 2>&1
+
+# Courriels définitivement en échec (3 tentatives). À relire de temps à autre :
+# une file `failed` qui grossit est un MAILER_DSN faux, pas un incident isolé.
+#0 9 * * 1 cd $DATAN && APP_ENV=prod $PHP bin/console messenger:failed:show --max=20 --no-ansi >> var/log/messenger-echecs.log 2>&1
+
+# ---------------------------------------------------------------------------
+# Ce qui n'entre JAMAIS ici : les imports de récupération
+# (`app:import:utilisateurs`, `:decryptages`, `:articles`, `:explications`,
+# `:professions-foi`, `:faq`, `:quiz`, `:parrainages`, `:reseaux-sociaux`,
+# `:communes`, `:elections`, `:resultats-electoraux`, `:circonscriptions`).
+# Ils réalignent sur la base d'origine : une fois l'application devenue la
+# source — un rédacteur qui publie, un député qui écrit —, les rejouer écrase
+# les écritures locales. `CRON.md` §4 en tient la liste et la raison.
+# ---------------------------------------------------------------------------

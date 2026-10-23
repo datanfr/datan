@@ -1,0 +1,625 @@
+{% extends 'base.html.twig' %}
+
+{% block preloads %}{{ include('partials/preload_couverture.html.twig') }}{% endblock %}
+
+{% set decrypte = scrutin.decryptage_title is not empty %}
+{% set titre_affiche = decrypte ? scrutin.decryptage_title : scrutin.titre %}
+{# Le Congrès a sa propre série de numéros : le numéro affiché est négatif, et
+   les liens de navigation doivent viser `vote_c<n>`. #}
+{% set est_congres = numero_affiche < 0 %}
+
+{# Le format du site d'origine (Votes::index, ligne 467) : le numéro d'abord —
+   c'est lui que cherche qui arrive ici —, puis le titre du dossier plutôt que
+   le libellé brut du scrutin (cf. TitreMeta), puis la législature. #}
+{% block title %}Vote n°{{ numero_affiche|congress_numero }} - {{ titre_meta|ucfirst }} - {{ scrutin.legislature }}e législature | Datan{% endblock %}
+
+{% block meta_description %}
+  {%- if explication_en_avant -%}
+    {%- for e in explications -%}
+      {%- if e.mp_id == explication_en_avant -%}Découvrez l'explication de vote de {{ e.firstname }} {{ e.lastname }}.{%- endif -%}
+    {%- endfor -%}
+  {%- else -%}
+    Découvrez le vote des députés sur le scrutin : {{ titre_meta|ucfirst }} - {{ scrutin.legislature }}e législature. Détail et analyse des résultats du vote n° {{ numero_affiche|congress_numero }}.
+  {%- endif -%}
+{% endblock %}
+
+{% block stylesheets %}
+  <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/datatables.bootstrap4.min.css') }}">
+  {# Flickity habille le carrousel des derniers décryptés du pied de page. #}
+  <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/flickity.min.css') }}">
+{% endblock %}
+
+{% block javascripts_head %}
+  <script src="{{ asset('assets/js/dist/chart.min.js') }}"></script>
+  {# Flickity avant main.min.js, qui initialise `.carousel-container`. #}
+  <script src="{{ asset('assets/js/libraries/flickity/flickity.pkgd.min.js') }}"></script>
+{% endblock %}
+
+{% block body %}
+<div class="container-fluid bloc-img-deputes bloc-img d-flex async_background" id="container-always-fluid" style="position: relative">
+  {% if decrypte %}
+    <div class="container pg-vote-individual d-none d-md-flex flex-column justify-content-end">
+      <div class="row">
+        <div class="col-md-4 offset-md-8 text-right">
+          <a class="category underline" href="{{ path('votes_decryptes') }}"># {{ scrutin.categorie_name }}</a>
+        </div>
+      </div>
+    </div>
+  {% endif %}
+</div>
+<div class="container pg-vote-individual mb-5">
+  <div class="row">
+    <div class="col-md-8 col-12 bloc-card-vote">
+      <div class="card card-vote-infos">
+        <div class="card-body">
+          <span class="num">LÉGISLATURE {{ scrutin.legislature }} - VOTE n° {{ numero_affiche|congress_numero }}</span>
+          {# ucfirst et non capitalize : capitalize écraserait les majuscules
+             internes (« la NUPES », « M. Aviragnet », « Élisabeth Borne »). #}
+          <h1 class="title{{ decrypte ? ' mt-2' : '' }}">{{ titre_affiche|ucfirst }}</h1>
+          <span class="badge sort badge-{{ scrutin.sort_code }} mt-1">{{ scrutin.sort_code|upper }}</span>
+        </div>
+        <div class="d-flex results">
+          <div class="sort-bg-pour">
+            <span class="legend">POUR</span>
+            <span class="number">{{ scrutin.nombre_pour }}</span>
+          </div>
+          <div style="background-color: #FFAD29">
+            <span class="legend">ABSTENTION</span>
+            <span class="number">{{ scrutin.nombre_abstentions }}</span>
+          </div>
+          <div style="background-color: #C5283D">
+            <span class="legend">CONTRE</span>
+            <span class="number">{{ scrutin.nombre_contre }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row mt-5">
+    <div class="col-lg-8 col-md-8 col-12">
+      <h2>Résultat du vote</h2>
+      <div class="row">
+        <div class="col-lg-8">
+          <p class="mt-4">Les députés ont <span class="font-weight-bold sort-{{ scrutin.sort_code }}">{{ scrutin.sort_code }}</span> le {{ date_scrutin_fr }} {{ scrutin.titre }}</p>
+          {% if scrutin.sort_code == 'adopté' %}
+            <p>Au total, <b>{{ scrutin.nombre_votants }} députés</b> ont pris part au vote : {{ percentages.pour }} % ont voté en faveur, {{ percentages.contre }} % ont voté contre, et {{ percentages.abstention }} % se sont abstenus.</p>
+          {% else %}
+            <p>Au total, <b>{{ scrutin.nombre_votants }} députés</b> ont pris part au vote : {{ percentages.contre }} % ont voté contre, {{ percentages.pour }} % ont voté en faveur, et {{ percentages.abstention }} % se sont abstenus.</p>
+          {% endif %}
+        </div>
+        <div class="col-lg-4">
+          <div class="d-flex justify-content-center mt-3">
+            <div style="width: 175px">
+              <canvas id="pie-chart" width="100px" height="100px"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="bloc-infos d-md-none mt-5 mt-md-0">
+        <h2>Infos</h2>
+        {{ block('infos_table') }}
+      </div>
+      {% if scrutin.amendement_resume_relu and scrutin.amendement_resume %}
+        <div class="mt-5">
+          <h2>Résumé de l'amendement</h2>
+          <div class="card mt-4">
+            <div class="card-body">
+              {% if '<p>' in scrutin.amendement_resume %}
+                {{ scrutin.amendement_resume|raw }}
+              {% else %}
+                <p>{{ scrutin.amendement_resume }}</p>
+              {% endif %}
+              <p class="mb-0 font-italic small">Ce texte est un résumé de l'exposé des motifs.</p>
+            </div>
+          </div>
+        </div>
+      {% endif %}
+      <div class="mt-5">
+        <h2>La position des groupes</h2>
+        <div class="mt-4 bloc-groupes d-flex flex-column flex-lg-row">
+          {# Non-inscrits écartés ici aussi : le legacy les filtre avant de rendre
+             la page, ils n'ont ni logo ni position de groupe. #}
+          {% for position, couleur in {'pour': '0, 183, 148', 'contre': '197, 40, 61'} %}
+            {% set groupes_position = groupes|filter(g => g.positionMajoritaire == position and g.libelle_abrev != 'NI') %}
+            {% if groupes_position|length %}
+              <div class="bloc-groupe d-flex justify-content-center">
+                <div class="card m-2" style="border: 0.5px solid rgba({{ couleur }}, 1)">
+                  <div class="thumb d-flex justify-content-end">
+                    <span style="background-color: rgba({{ couleur }}, 1);">
+                      {{ position|upper }}
+                    </span>
+                  </div>
+                  <div class="card-body d-flex align-items-center justify-content-around flex-wrap">
+                    {% for groupe in groupes_position %}
+                      <div class="card-vote-groupe my-1 mx-1" data-toggle="tooltip" data-placement="top" title="{{ groupe.libelle|name_group }} ({{ groupe.libelle_abrev }})">
+                        <picture>
+                          <source srcset="{{ asset('assets/imgs/groupes/' ~ groupe.legislature ~ '/webp/' ~ groupe.libelle_abrev ~ '.webp') }}" type="image/webp">
+                          <source srcset="{{ asset('assets/imgs/groupes/' ~ groupe.legislature ~ '/' ~ groupe.libelle_abrev ~ '.png') }}" type="image/png">
+                          <img class="img" src="{{ asset('assets/imgs/groupes/' ~ groupe.legislature ~ '/' ~ groupe.libelle_abrev ~ '.png') }}" width="150" height="150" alt="{{ groupe.libelle|name_group }}">
+                        </picture>
+                      </div>
+                    {% endfor %}
+                  </div>
+                </div>
+              </div>
+            {% endif %}
+          {% endfor %}
+        </div>
+      </div>
+      {{ include('partials/campagne.html.twig', {classes: 'mt-5'}) }}
+      {% if decrypte and scrutin.decryptage_description|striptags|trim is not empty %}
+        <div class="mt-5">
+          <h2>Mieux comprendre le vote</h2>
+          <div class="card mt-4">
+            <div class="card-body">
+              <div class="read-more-container">
+                {{ scrutin.decryptage_description|raw }}
+              </div>
+            </div>
+          </div>
+        </div>
+      {% endif %}
+    </div>
+    <div class="col-lg-4 col-md-4 col-12">
+      <div class="bloc-infos d-none d-md-block mt-5 mt-md-0">
+        <h2>Infos</h2>
+        {{ block('infos_table') }}
+      </div>
+      {# Liens externes passés par url_obf comme sur le site : ces sorties vers
+         assemblee-nationale.fr sont volontairement masquées aux robots pour
+         sculpter le crawl — un href en clair les réexposerait. L'icône de lien
+         externe est inline (file_get_contents chez l'origine) pour hériter de
+         la couleur du bouton. #}
+      {% if scrutin.dossier_chemin or scrutin.amendement_href %}
+        <div class="bloc-savoir-plus d-none d-md-block mt-5">
+          <h3 class="subtitle">En savoir plus</h3>
+          <div class="bloc-links">
+            <div class="d-flex flex-column flex-lg-row">
+              {% if scrutin.dossier_chemin %}
+                <span class="d-flex justify-content-center align-items-center url_obf btn btn-secondary link my-1 my-lg-0 mx-lg-1"
+                      url_obf="{{ url_obf('https://www.assemblee-nationale.fr/dyn/' ~ scrutin.dossier_legislature ~ '/dossiers/' ~ scrutin.dossier_chemin) }}">
+                  <div class="mr-2">{{ source('@public/assets/imgs/icons/arrow_external_right.svg') }}</div>
+                  <span class="text">Le dossier</span>
+                </span>
+              {% endif %}
+              {% if scrutin.amendement_href %}
+                <span class="d-flex justify-content-center align-items-center url_obf btn btn-secondary link my-1 my-lg-0 mx-lg-1"
+                      url_obf="{{ url_obf(scrutin.amendement_href) }}">
+                  <div class="mr-1">{{ source('@public/assets/imgs/icons/arrow_external_right.svg') }}</div>
+                  <span class="text">L'amendement</span>
+                </span>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      {% endif %}
+      <div class="bloc-social d-none d-md-block mt-5">
+        <h3 class="subtitle">Partagez ce vote</h3>
+        {# Les boutons de partage étaient absents (titre seul) : main.min.js les
+           branche sur les classes `social-share <réseau>`, comme ailleurs. #}
+        <div class="d-flex flex-row flex-wrap social-share-bloc">
+          <button type="button" name="button" class="btn social-share twitter twitter-bg d-flex">
+            <img src="{{ asset('assets/imgs/logos/x-no-round.svg') }}" alt="Partagez sur X" width="24" height="20">
+          </button>
+          <button type="button" name="button" class="btn social-share facebook fcb-bg d-flex">
+            <img src="{{ asset('assets/imgs/logos/facebook-no-round.svg') }}" alt="Partagez sur Facebook" width="20" height="10">
+            <span>Facebook</span>
+          </button>
+          <button type="button" name="button" class="btn social-share linkedin linkedin-bg d-flex">
+            <img src="{{ asset('assets/imgs/logos/linkedin-no-round.svg') }}" alt="Partagez sur Linkedin" width="20" height="20">
+            <span>Linkedin</span>
+          </button>
+          <button type="button" name="button" class="mobileShow btn social-share whatsapp whatsapp-bg d-flex">
+            <img src="{{ asset('assets/imgs/logos/whatsapp-no-round.png') }}" alt="Partagez sur Whatsapp" width="20" height="20">
+            <span>Whatsapp</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% if explications %}
+  <div class="container-fluid pg-vote-individual bloc-author py-4">
+    <div class="container">
+      <div class="row">
+        <div class="col-12">
+          <h2 class="title text-center text-lg-left">L'avis des députés</h2>
+        </div>
+      </div>
+      <div class="row mt-4">
+        {% for e in explications %}
+          {% set en_avant = explication_en_avant is defined and explication_en_avant == e.mp_id %}
+          <div class="col-md-6 mb-4" id="explication-{{ e.mp_id }}">
+            <div class="card h-100{{ en_avant ? ' border-primary shadow' : '' }}">
+              <div class="card-body">
+                <div class="d-flex align-items-center mb-2">
+                  <span class="font-weight-bold">{{ e.firstname }} {{ e.lastname }}</span>
+                  {% if e.groupe_abrev %}<span class="ml-2 small">({{ e.groupe_abrev }})</span>{% endif %}
+                  {% if e.position %}
+                    <span class="ml-auto vote sort-{{ e.position }}">{{ e.position == 'nonVotant' ? 'NON VOTANT' : e.position|upper }}</span>
+                  {% endif %}
+                </div>
+                {# Texte échappé, et non plus rendu tel quel : il est désormais
+                   saisi par le député dans son espace, et non plus figé par un
+                   import. Les 40 explications héritées de la production sont du
+                   texte brut — aucune balise, aucun saut de ligne — l'échappement
+                   ne change donc rien à l'affichage, il ferme seulement la porte
+                   à l'injection. `nl2br` échappe avant de convertir. #}
+                <div>{{ e.texte|nl2br }}</div>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+{% endif %}
+
+{# Bloc auteur (`votes/individual.php:268-328`), dans l'une de ses trois
+   variantes : l'auteur de l'amendement mis aux voix — député ou Gouvernement —,
+   les auteurs de la proposition de loi, ou les rapporteurs du texte. Les textes
+   d'explication sont ceux du contrôleur d'origine (`Votes::index`).
+
+   Un seul auteur tient à côté du titre ; à plusieurs, le site passe au
+   carrousel, titre au-dessus et cartes en dessous. #}
+{% if auteurs %}
+  {% set civilite = auteurs.deputes|length == 1 ? auteurs.deputes[0].civilite : null %}
+  {% set explication = {
+    'amendement': "Un amendement est un texte, déposé par un ou plusieurs députés, qui vise à modifier un projet ou une proposition de loi. Il y a un auteur principal, mais un amendement peut être cosigné par plusieurs députés.",
+    'rapporteur': "Le rapporteur d'un projet ou proposition de loi est en charge d'étudier en profondeur le texte et de guider ses collègues parlementaires dans son examen. Le rapporteur peut également donner son avis sur tous les amendements déposés sur le texte.",
+    'proposition': "Les propositions de loi sont des textes déposés par des députés et qui, s'ils sont adoptés par l'Assemblée nationale et le Sénat, deviendront des lois. Les propositions sont écrites par un ou plusieurs députés, et peuvent être cosignées par plusieurs parlementaires.",
+  }[auteurs.variante] %}
+
+  <div class="container-fluid pg-vote-individual bloc-author py-4">
+    <div class="container">
+      <div class="row">
+        {% if auteurs.deputes|length <= 1 %}
+          <div class="col-lg-7 d-flex flex-column justify-content-center">
+            <h2 class="title text-center text-lg-left">
+              {%- if auteurs.variante == 'rapporteur' -%}
+                {{ civilite == 'Mme' ? 'La rapporteure' : 'Le rapporteur' }}
+              {%- else -%}
+                L'auteur{{ civilite == 'Mme' ? 'e' : '' }} de {{ auteurs.variante == 'proposition' ? 'la proposition de loi' : "l'amendement" }}
+              {%- endif -%}
+            </h2>
+            <p class="text-center text-lg-left">{{ explication }}</p>
+          </div>
+          <div class="col-lg-5 d-flex align-items-center justify-content-center pb-4">
+            {% if auteurs.gouvernement is defined %}
+              <div class="card card-depute mx-2">
+                <div class="card-body d-flex flex-column align-items-center justify-content-center">
+                  <div>
+                    <h3 class="d-block card-title">Gouvernement {{ auteurs.gouvernement.nom }}</h3>
+                    <span class="d-block">Formé le {{ auteurs.gouvernement.date_debut|date_fr }}</span>
+                  </div>
+                </div>
+              </div>
+            {% else %}
+              {{ include('depute/partials/card.html.twig', {depute: auteurs.deputes[0]}) }}
+            {% endif %}
+          </div>
+        {% else %}
+          <div class="col-12 d-flex flex-column align-items-center">
+            <h2 class="title">{{ auteurs.variante == 'rapporteur' ? 'Les rapporteurs' : 'Les auteurs de la proposition de loi' }}</h2>
+            <p class="text-center">{{ explication }}</p>
+          </div>
+          {# Flickity se branche sur `.carousel-container` et exige d'y trouver
+             les deux boutons : sans eux, main.min.js lève sur un null et tous
+             les carrousels de la page restent inertes. #}
+          <div class="col-12 carousel-container">
+            <div class="carousel-cards">
+              {% for depute in auteurs.deputes %}
+                {{ include('depute/partials/card.html.twig', {depute: depute}) }}
+              {% endfor %}
+            </div>
+            <div class="carousel-buttons d-flex justify-content-center mb-2">
+              <button type="button" class="btn prev mr-2 carousel--prev" aria-label="précédent">
+                {{ source('@public/assets/imgs/icons/arrow_left.svg') }}
+              </button>
+              <button type="button" class="btn next ml-2 carousel--next" aria-label="suivant">
+                {{ source('@public/assets/imgs/icons/arrow_right.svg') }}
+              </button>
+            </div>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+{% endif %}
+
+<div class="container pg-vote-individual mb-5">
+  <div class="row">
+    <div class="col-12">
+      <h2>Les votes des députés et des groupes</h2>
+      <nav class="mt-4">
+        <div class="nav nav-tabs" id="nav-tab" role="tablist">
+          <a class="nav-item nav-link active no-decoration" id="nav-groupes-tab" data-toggle="tab" href="#nav-groupes" role="tab" aria-controls="nav-groupes" aria-selected="true">
+            <h3>Groupes</h3>
+          </a>
+          <a class="nav-item nav-link no-decoration" id="nav-deputes-tab" data-toggle="tab" href="#nav-deputes" role="tab" aria-controls="nav-deputes" aria-selected="false">
+            <h3>Députés</h3>
+          </a>
+        </div>
+      </nav>
+      <div class="tab-content" id="nav-tabContent">
+        <div class="tab-pane fade show active" id="nav-groupes" role="tabpanel" aria-labelledby="nav-groupes-tab">
+          <table class="table table-striped" id="table-vote-individual-groupes" style="width: 100%">
+            <caption class="sr-only">Les votes des groupes</caption>
+            <thead>
+              <tr>
+                <th scope="col" class="all">Groupe</th>
+                <th scope="col" class="text-center all">Vote</th>
+                <th scope="col" class="text-center min-tablet">Pour</th>
+                <th scope="col" class="text-center min-tablet">Abstention</th>
+                <th scope="col" class="text-center min-tablet">Contre</th>
+                <th scope="col" class="text-center">Participation</th>
+                <th scope="col" class="text-center min-tablet">
+                  Cohésion
+                  <a tabindex="0" role="button" data-toggle="popover" data-trigger="focus" data-html="true" title="Taux de cohésion" aria-label="Aide cohésion"
+                     data-content="Le taux de cohésion représente <b>l'unité d'un groupe politique</b> lorsqu'il vote. Il peut prendre des mesures allant de 0 à 1. Un taux proche de 1 signifie que le groupe est très uni.<br><br>Pour plus d'information, <a href='{{ path('page_statistiques') }}#cohesion' target='_blank'>cliquez ici</a>.">
+                    <svg width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM6.57 6.033H5.25C5.22 4.147 6.68 3.5 8.006 3.5c1.397 0 2.673.73 2.673 2.24 0 1.08-.635 1.594-1.244 2.057-.737.559-1.01.768-1.01 1.486v.355H7.117l-.007-.463c-.038-.927.495-1.498 1.168-1.987.59-.444.965-.736.965-1.371 0-.825-.628-1.168-1.314-1.168-.901 0-1.358.603-1.358 1.384zm1.251 6.443c-.584 0-1.009-.394-1.009-.927 0-.552.425-.94 1.01-.94.609 0 1.028.388 1.028.94 0 .533-.42.927-1.029.927z"/></svg>
+                  </a>
+                </th>
+                <th class="pl-4"></th>
+              </tr>
+            </thead>
+            <tbody>
+              {# Les non-inscrits sont écartés du tableau (`array_filter` sur
+                 libelleAbrev !== 'NI' du legacy) : ils ne forment pas un groupe,
+                 leur « position majoritaire » n'engage personne. #}
+              {% for groupe in groupes|filter(g => g.libelle_abrev != 'NI') %}
+                <tr>
+                  <td class="name">
+                    <a href="{{ path('groupe_individual', {legislature: groupe.legislature, abrev: groupe.libelle_abrev|lower}) }}" target="_blank" class="no-decoration underline">
+                      {{ groupe.libelle|name_group }} ({{ groupe.libelle_abrev }})
+                    </a>
+                  </td>
+                  <td class="text-center vote sort-{{ groupe.positionMajoritaire }}">
+                    {% if groupe.positionMajoritaire != 'nv' %}{{ groupe.positionMajoritaire|upper }}{% else %}Non votant{% endif %}
+                  </td>
+                  <td class="text-center">{{ groupe.nombrePours }}</td>
+                  <td class="text-center">{{ groupe.nombreAbstentions }}</td>
+                  <td class="text-center">{{ groupe.nombreContres }}</td>
+                  <td class="text-center">{{ groupe.percentageVotants }} %</td>
+                  {# Trois décimales, comme datan.fr (« 1.000 », « 0.972 ») :
+                     c'est un DECIMAL(4,3) rendu tel quel par le legacy. #}
+                  <td class="text-center">{{ groupe.cohesion is null ? '' : groupe.cohesion|number_format(3, '.', '') }}</td>
+                  <td></td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+        <div class="tab-pane fade pt-3" id="nav-deputes" role="tabpanel" aria-labelledby="nav-deputes-tab">
+          <table class="table table-striped table-vote-individual" id="table-vote-individual-deputes" style="width: 100%">
+            <caption class="sr-only">Les votes des députés</caption>
+            <thead>
+              <tr>
+                <th scope="col" class="all" style="vertical-align: top">Député</th>
+                <th scope="col" class="text-center min-tablet">Groupe</th>
+                <th scope="col" class="text-center all">Vote</th>
+                <th scope="col" class="text-center all">Loyauté</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for depute in deputes %}
+                <tr>
+                  <td class="name">
+                    {% if depute.dpt_slug and depute.slug %}
+                      <a href="{{ path('depute_individual', {dptSlug: depute.dpt_slug, slug: depute.slug}) }}" target="_blank" class="no-decoration underline">{{ depute.firstname }} {{ depute.lastname }}</a>
+                    {% else %}
+                      {{ depute.firstname }} {{ depute.lastname }}
+                    {% endif %}
+                  </td>
+                  <td class="text-center">{{ depute.groupe_libelle|name_group }}</td>
+                  <td class="text-center vote sort-{{ depute.position }}">{{ depute.position == 'nonVotant' ? 'NON VOTANT' : depute.position|upper }}</td>
+                  <td class="text-center sort-{{ depute.loyaute }}">{{ depute.loyaute|upper }}</td>
+                </tr>
+              {% endfor %}
+            </tbody>
+            <tfoot>
+              <tr>
+                <th>Député</th>
+                <th>Groupes</th>
+                <th>Vote</th>
+                <th>Loyauté</th>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+      </div>
+      {% if scrutin.amendement_expose %}
+        <div class="mt-5">
+          <h2>Exposé des motifs de l'amendement</h2>
+          <p class="mt-4 font-italic">L'objectif d'un amendement est de modifier ou d'ajouter une mesure d'un projet ou d'une proposition de loi. Le ou les députés qui rédigent l'amendement écrivent également un exposé des motifs.</p>
+          <div class="card">
+            <div class="card-body" id="exposeMotifs">
+              {# Le test porte sur `<p` SANS chevron fermant : 2 359 des 7 200
+                 exposés mis aux voix ouvrent par `<p style="text-align:…">`,
+                 que la garde `'<p>'` ne reconnaissait pas — tout leur HTML
+                 sortait échappé, balises et entités visibles en toutes lettres.
+                 Le repli n'existe que pour un éventuel exposé en texte nu ;
+                 aucun des exposés liés à un scrutin n'en est un aujourd'hui. #}
+              {% if '<p' in scrutin.amendement_expose %}
+                {{ scrutin.amendement_expose|raw }}
+              {% else %}
+                <p>{{ scrutin.amendement_expose }}</p>
+              {% endif %}
+            </div>
+          </div>
+          {% if scrutin.amendement_href %}
+            <p class="mt-3">Source : <span class="url_obf" url_obf="{{ url_obf(scrutin.amendement_href) }}">Amendement sur le site de l'Assemblée nationale</span></p>
+          {% endif %}
+        </div>
+      {% endif %}
+      {# Variante mobile du bloc « En savoir plus » de la colonne de droite,
+         qui est en d-none d-md-block : sur téléphone, le site répète les
+         boutons ici, sans l'icône de lien externe. #}
+      {% if scrutin.dossier_chemin or scrutin.amendement_href %}
+        <div class="bloc-savoir-plus d-md-none mt-5">
+          <h3 class="subtitle">En savoir plus</h3>
+          <div class="bloc-links">
+            <div class="d-flex flex-column flex-lg-row">
+              {% if scrutin.dossier_chemin %}
+                <span class="d-flex justify-content-center align-items-center url_obf btn btn-secondary link my-1 my-lg-0 mx-lg-1"
+                      url_obf="{{ url_obf('https://www.assemblee-nationale.fr/dyn/' ~ scrutin.dossier_legislature ~ '/dossiers/' ~ scrutin.dossier_chemin) }}">
+                  <span class="text">Le dossier</span>
+                </span>
+              {% endif %}
+              {% if scrutin.amendement_href %}
+                <span class="d-flex justify-content-center align-items-center url_obf btn btn-secondary link my-1 my-lg-0 mx-lg-1"
+                      url_obf="{{ url_obf(scrutin.amendement_href) }}">
+                  <span class="text">L'amendement</span>
+                </span>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+{# Barre « Précédent / Tous les votes / Suivant », pleine largeur sur fond bleu. #}
+<div class="container-fluid pg-vote-individual mt-5" id="container-always-fluid">
+  <div class="row votes-next d-flex flex-row align-items-center justify-content-center py-4">
+    {% if voisins.precedent %}
+      <a class="btn d-flex align-items-center mx-1 mx-md-2" role="button"
+         href="{{ path(est_congres ? 'vote_congres' : 'vote_individual', {legislature: scrutin.legislature, numero: voisins.precedent}) }}">
+        <svg width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M5.854 4.646a.5.5 0 0 1 0 .708L3.207 8l2.647 2.646a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 0 1 .708 0z"/><path fill-rule="evenodd" d="M2.5 8a.5.5 0 0 1 .5-.5h10.5a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5z"/></svg>
+        <span class="d-none d-md-block ml-2">Précédent</span>
+      </a>
+    {% endif %}
+    <a class="btn mx-1 mx-md-2 d-flex align-items-center" role="button" href="{{ path('votes_legislature', {legislature: scrutin.legislature}) }}">Tous les votes</a>
+    {% if voisins.suivant %}
+      <a class="btn d-flex align-items-center mx-1 mx-md-2" role="button"
+         href="{{ path(est_congres ? 'vote_congres' : 'vote_individual', {legislature: scrutin.legislature, numero: voisins.suivant}) }}">
+        <span class="d-none d-md-block mr-2">Suivant</span>
+        <svg width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10.146 4.646a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708-.708L12.793 8l-2.647-2.646a.5.5 0 0 1 0-.708z"/><path fill-rule="evenodd" d="M2 8a.5.5 0 0 1 .5-.5H13a.5.5 0 0 1 0 1H2.5A.5.5 0 0 1 2 8z"/></svg>
+      </a>
+    {% endif %}
+  </div>
+</div>
+
+{# Carrousel « Les derniers votes décryptés par Datan », comme en pied de la
+   page d'origine (Flickity sur .carousel-container). #}
+{% if derniers_decryptes %}
+  <div class="container pg-vote-individual">
+    <div class="row votes-decryptes mb-5">
+      <div class="col-12 py-5">
+        <h2>Les derniers votes décryptés par Datan</h2>
+      </div>
+      <div class="col-12 carousel-container bloc-carousel-votes-flickity">
+        <div class="carousel-cards">
+          {% for d in derniers_decryptes %}
+            <div class="card card-vote">
+              <div class="thumb d-flex align-items-center {{ d.sort_code }}">
+                <div class="d-flex align-items-center"><span>{{ d.sort_code|upper }}</span></div>
+              </div>
+              <div class="card-header d-flex flex-row justify-content-between">
+                <span class="date">{{ d.date_scrutin|date_abregee }}</span>
+              </div>
+              <div class="card-body d-flex flex-column justify-content-center">
+                <span class="title">
+                  <a href="{{ lien_vote(d.legislature, d.vote_numero) }}" class="stretched-link no-decoration">{{ d.title }}</a>
+                </span>
+                {% if d.lecture_name %}<span class="reading mt-2">{{ d.lecture_name }}</span>{% endif %}
+              </div>
+              {% if d.categorie_name %}
+                <div class="card-footer">
+                  <span class="field badge badge-primary py-1 px-2">{{ d.categorie_name }}</span>
+                </div>
+              {% endif %}
+            </div>
+          {% endfor %}
+        </div>
+        <div class="carousel-buttons d-flex justify-content-center">
+          <button type="button" class="btn prev mr-2 carousel--prev" aria-label="précédent">
+            <svg width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M5.854 4.646a.5.5 0 0 1 0 .708L3.207 8l2.647 2.646a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 0 1 .708 0z"/><path fill-rule="evenodd" d="M2.5 8a.5.5 0 0 1 .5-.5h10.5a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5z"/></svg>
+          </button>
+          <a class="btn btn-primary mx-2" href="{{ path('votes_decryptes') }}">Tous les votes</a>
+          <button type="button" class="btn next ml-2 carousel--next" aria-label="suivant">
+            <svg width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10.146 4.646a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708-.708L12.793 8l-2.647-2.646a.5.5 0 0 1 0-.708z"/><path fill-rule="evenodd" d="M2 8a.5.5 0 0 1 .5-.5H13a.5.5 0 0 1 0 1H2.5A.5.5 0 0 1 2 8z"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endif %}
+{% endblock %}
+
+{% block infos_table %}
+  {# Icônes en tête de ligne, comme `individual.php` (calendar / journal /
+     folder inlinés) : `main.css` les colore via `.infos .icon svg`. #}
+  <table class="infos">
+    <tbody>
+      <tr>
+        <td class="icon"><svg width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4H1z"/></svg></td>
+        <td class="label d-none d-lg-table-cell">Date</td>
+        <td class="value">{{ date_scrutin_fr }}</td>
+      </tr>
+      {% if type_edito %}
+        <tr>
+          <td class="icon"><svg width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M3 0h10a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2v-1h1v1a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H3a1 1 0 0 0-1 1v1H1V2a2 2 0 0 1 2-2z"/><path d="M1 5v-.5a.5.5 0 0 1 1 0V5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1H1zm0 3v-.5a.5.5 0 0 1 1 0V8h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1H1zm0 3v-.5a.5.5 0 0 1 1 0v.5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1H1z"/></svg></td>
+          <td class="label d-none d-lg-table-cell">Type de vote</td>
+          <td class="value">
+            {{ type_edito.libelle|ucfirst }}
+            {% if type_edito.explication %}
+              <a class="ml-1 no-decoration" tabindex="0" role="button" data-toggle="popover" data-trigger="focus" data-html="true"
+                 aria-label="Explication du type de vote" data-content="{{ type_edito.explication }}">
+                <svg width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM6.57 6.033H5.25C5.22 4.147 6.68 3.5 8.006 3.5c1.397 0 2.673.73 2.673 2.24 0 1.08-.635 1.594-1.244 2.057-.737.559-1.01.768-1.01 1.486v.355H7.117l-.007-.463c-.038-.927.495-1.498 1.168-1.987.59-.444.965-.736.965-1.371 0-.825-.628-1.168-1.314-1.168-.901 0-1.358.603-1.358 1.384zm1.251 6.443c-.584 0-1.009-.394-1.009-.927 0-.552.425-.94 1.01-.94.609 0 1.028.388 1.028.94 0 .533-.42.927-1.029.927z"/></svg>
+              </a>
+            {% endif %}
+          </td>
+        </tr>
+      {% endif %}
+      {% if scrutin.lecture_name %}
+        <tr>
+          <td class="icon"><svg width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M1 2.828c.885-.37 2.154-.769 3.388-.893 1.33-.134 2.458.063 3.112.752v9.746c-.935-.53-2.12-.603-3.213-.493-1.18.12-2.37.461-3.287.811V2.828zm7.5-.141c.654-.689 1.782-.886 3.112-.752 1.234.124 2.503.523 3.388.893v9.923c-.918-.35-2.107-.692-3.287-.81-1.094-.111-2.278-.039-3.213.492V2.687zM8 1.783C7.015.936 5.587.81 4.287.94c-1.514.153-3.042.672-3.994 1.105A.5.5 0 0 0 0 2.5v11a.5.5 0 0 0 .707.455c.882-.4 2.303-.881 3.68-1.02 1.409-.142 2.59.087 3.223.877a.5.5 0 0 0 .78 0c.633-.79 1.814-1.019 3.222-.877 1.378.139 2.8.62 3.681 1.02A.5.5 0 0 0 16 13.5v-11a.5.5 0 0 0-.293-.455c-.952-.433-2.48-.952-3.994-1.105C10.413.809 8.985.936 8 1.783z"/></svg></td>
+          <td class="label d-none d-lg-table-cell">Lecture</td>
+          <td class="value">{{ scrutin.lecture_name }}</td>
+        </tr>
+      {% endif %}
+      {% if scrutin.dossier_titre %}
+        <tr>
+          <td class="icon"><svg width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M.54 3.87.5 3a2 2 0 0 1 2-2h3.672a2 2 0 0 1 1.414.586l.828.828A2 2 0 0 0 9.828 3h3.982a2 2 0 0 1 1.992 2.181l-.637 7A2 2 0 0 1 13.174 14H2.826a2 2 0 0 1-1.991-1.819l-.637-7a1.99 1.99 0 0 1 .342-1.31zM2.19 4a1 1 0 0 0-.996 1.09l.637 7a1 1 0 0 0 .995.91h10.348a1 1 0 0 0 .995-.91l.637-7A1 1 0 0 0 13.81 4H2.19z"/></svg></td>
+          <td class="label d-none d-lg-table-cell">Dossier</td>
+          <td class="value">{{ scrutin.dossier_titre }}</td>
+        </tr>
+      {% endif %}
+    </tbody>
+  </table>
+{% endblock %}
+
+{% block javascripts %}
+  {# L'ordre compte (cf. TODO §4) : `moment.min.js` AVANT le bundle — son
+     initialisation des deux tables appelle `$.fn.dataTable.moment` — et
+     `datetime-moment.js`, greffon de DataTables, APRÈS lui. Sans ces deux
+     fichiers, l'initialisation mourait en silence : les tableaux des votes
+     perdaient tri, recherche et pagination sur toutes les pages de scrutin,
+     sans une trace côté serveur. Même trio que `depute/votes.html.twig`. #}
+  <script src="{{ asset('assets/js/libraries/moment/moment.min.js') }}"></script>
+  <script src="{{ asset('assets/js/dist/datatable-datan.min.js') }}"></script>
+  <script src="{{ asset('assets/js/libraries/datetime/datetime-moment.js') }}"></script>
+  <script>
+    new Chart(document.getElementById('pie-chart'), {
+      type: 'pie',
+      data: {
+        labels: ['Pour', 'Abstention', 'Contre'],
+        datasets: [{
+          label: 'Nombre de votes',
+          data: [{{ scrutin.nombre_pour }}, {{ scrutin.nombre_abstentions }}, {{ scrutin.nombre_contre }}],
+          {# #FFBA49 et non le #FFAD29 du bandeau : le site utilise les deux
+             jaunes, celui-ci pour le camembert (views/votes/individual.php). #}
+          backgroundColor: ['#00B794', '#FFBA49', '#C5283D']
+        }]
+      },
+      {# datalabels désactivé explicitement : le plugin est enregistré
+         globalement dans le bundle Chart.js — sans cette option, le nombre de
+         « pour » s'imprime au milieu de la part verte, ce que le site ne fait
+         pas. #}
+      options: { plugins: { legend: { display: false }, datalabels: { display: false } } }
+    });
+  </script>
+{% endblock %}

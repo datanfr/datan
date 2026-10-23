@@ -1,0 +1,201 @@
+{% extends 'base.html.twig' %}
+
+{% block preloads %}{{ include('partials/preload_couverture.html.twig') }}{% endblock %}
+
+{% set nom_complet = depute.firstname ~ ' ' ~ depute.lastname %}
+{% set femme = depute.civilite == 'Mme' %}
+{% set e = femme ? 'e' : '' %}
+{% set profil = path('depute_individual', {dptSlug: depute.dpt_slug, slug: depute.slug}) %}
+
+{% block title %}{{ nom_complet }} - Votes | Datan{% endblock %}
+
+{% block meta_description %}Découvrez toutes les positions {{ femme ? 'de la' : 'du' }} député{{ e }} {{ nom_complet }} quand {{ femme ? 'elle' : 'il' }} vote à l'Assemblée nationale.{% endblock %}
+
+{% block body %}
+{# Bandeau : sous lg, le legacy y loge une bannière avec retour, nom, groupe et
+   département (`banner-depute-mobile`) — la carte de profil est cachée. #}
+<div class="container-fluid bloc-img-deputes d-flex async_background" id="container-always-fluid" style="min-height: 13em">
+  <div class="container banner-depute-mobile d-flex d-lg-none flex-column justify-content-center py-2">
+    <div class="row">
+      <div class="col-md-10 offset-md-1">
+        <a class="btn btn-primary text-border mb-2" href="{{ profil }}">
+          <svg width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M5.854 4.646a.5.5 0 0 1 0 .708L3.207 8l2.647 2.646a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 0 1 .708 0z"/><path fill-rule="evenodd" d="M2.5 8a.5.5 0 0 1 .5-.5h10.5a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5z"/></svg>
+          Retour profil
+        </a>
+        <span class="title d-block">{{ nom_complet }}</span>
+        {% if depute.groupe_libelle %}<p class="subtitle">{{ depute.groupe_libelle|name_group }}</p>{% endif %}
+        <p>{{ depute.departement_nom }} ({{ depute.departement_code }})</p>
+      </div>
+    </div>
+  </div>
+</div>
+{% if depute.groupe_couleur %}
+  <div class="liseret-groupe" style="background-color: {{ depute.groupe_couleur }}"></div>
+{% endif %}
+
+<div class="container pg-depute-votes">
+  <div class="row">
+    <div class="col-lg-4 d-none d-lg-block">
+      {# La carte de profil complète, remontée sur le bandeau comme sur la fiche
+         (le legacy la décale de -125px) ; son titre est un span, le h1 de la
+         page étant « Les votes de … ». Les filtres, eux, sont sticky. #}
+      <div style="margin-top: -125px; top: 125px;">
+        {{ include('depute/_carte_profil.html.twig', {balise_titre: 'span'}) }}
+      </div>
+      <div class="sticky-top mt-5" style="top: 125px">
+        {% if categories %}
+          <div class="card mt-3">
+            <div class="card-body badges-filter px-4 py-3">
+              <span class="title">Filtrer par catégorie</span>
+              <div class="filters">
+                <div class="mt-2">
+                  {% for slug, nom in categories %}
+                    <button type="button" class="badge badge-field popover_focus is-selected" value=".{{ slug }}">{{ nom }}</button>
+                  {% endfor %}
+                </div>
+                <div class="mt-2">
+                  <button type="button" class="btn btn-primary all-categories" value="*">Toutes les catégories</button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="card mt-3">
+            <div class="card-body badges-filter px-4 py-3">
+              <input type="text" id="quicksearch" placeholder="Cherchez un vote...">
+            </div>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+
+    <div class="col-md-10 col-lg-8 offset-md-1 offset-lg-0 pl-lg-5 bloc-votes-datan">
+      <div class="row mt-4 d-none d-lg-block">
+        <div class="col-12 btn-back text-center text-lg-left">
+          <a class="btn btn-outline-primary mx-2" href="{{ profil }}">
+            <svg width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M5.854 4.646a.5.5 0 0 1 0 .708L3.207 8l2.647 2.646a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 0 1 .708 0z"/><path fill-rule="evenodd" d="M2.5 8a.5.5 0 0 1 .5-.5h10.5a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5z"/></svg>
+            Retour profil
+          </a>
+        </div>
+      </div>
+      <div class="row mt-4">
+        <div class="col-12">
+          <h1 class="mb-0">Les votes de {{ nom_complet }} à l'Assemblée nationale</h1>
+        </div>
+      </div>
+      {# Intro en trois paragraphes, mot pour mot (`deputes/votes.php`). #}
+      <div class="row mt-4">
+        <div class="col-12">
+          <p>
+            Les députés jouent un rôle fondamental dans le processus législatif. {{ nom_complet }}, comme ses collègues, participe à la création, la modification et l'adoption des lois. À travers ses votes, {{ femme ? 'elle' : 'il' }} prend position sur des mesures, amendements ou projets de loi.
+          </p>
+          <p>
+            L'équipe de Datan décrypte les votes les plus marquants de l'Assemblée nationale. Nous mettons en lumière les votes ayant suscité une forte attention médiatique ou provoqué des divisions au sein des groupes parlementaires. Chaque vote est expliqué et replacé dans son contexte pour vous permettre de mieux les comprendre.
+          </p>
+          <p>
+            Découvrez sur cette page les positions de <b>{{ nom_complet }}</b> sur ces votes clés.
+          </p>
+        </div>
+      </div>
+      <div class="row mt-4">
+        <div class="col-12">
+          {# Le compte n'inclut que les scrutins où nous avons son vote nominatif :
+             la 17e législature et les deux scrutins-clés de la 16e — datan.fr, qui
+             a les votes des législatures passées, affiche davantage (cf. TODO §1). #}
+          <h2>Découvrez les <span class="text-primary">{{ decryptes|length }} votes</span> décryptés de {{ nom_complet }}</h2>
+        </div>
+      </div>
+      <div class="row mt-4 sorting">
+        {% for vote in decryptes %}
+          <div class="col-md-6 sorting-item {{ vote.categorie_slug }}">
+            <div class="d-flex justify-content-center my-3">
+              {{ include('depute/_carte_vote.html.twig') }}
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</div>
+
+{# « Tous les votes » : section pleine largeur sur fond à motifs, comme le
+   legacy (`pg-depute-votes-all` + #pattern_background). #}
+<div class="container-fluid mt-5 py-5 pg-depute-votes-all" id="pattern_background">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 offset-lg-2">
+        <h2 class="text-center" style="font-size: 1.6rem">Tous les votes de {{ nom_complet }}</h2>
+        <p class="text-center">L'équipe de Datan n'analyse qu'une partie des votes de l'Assemblée nationale. Pour une vision complète, découvrez ici l'ensemble des scrutins auxquels {{ nom_complet }} a pris part dans l'hémicycle.</p>
+      </div>
+    </div>
+    <div class="row mt-4">
+      <div class="col-12">
+        <table class="table" id="table-deputes-groupes-votes-all">
+          <caption class="sr-only">Tous les votes de {{ nom_complet }}</caption>
+          {# « Leg. » sans accent et « Résultat » : les intitulés du legacy. #}
+          <thead>
+            <tr>
+              <th scope="col" class="all">Leg.</th>
+              <th scope="col" class="all">N°</th>
+              <th scope="col" class="min-tablet">Date</th>
+              <th scope="col" class="all">Titre</th>
+              <th scope="col" class="text-center all">Résultat</th>
+              <th scope="col" class="text-center all">Loyauté</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for vote in tous_les_votes %}
+              {% set url = lien_vote(vote.legislature, vote.numero) %}
+              {% set numero = vote.numero|congress_numero %}
+              <tr data-href="{{ url }}">
+                <td>{{ vote.legislature }}</td>
+                {# Seules les premières lignes portent une ancre : la page en compte
+                   des milliers. Les autres restent cliquables par la ligne. #}
+                <td>{% if loop.index <= 30 %}<a class="no-decoration" href="{{ url }}">{{ numero }}</a>{% else %}{{ numero }}{% endif %}</td>
+                <td>{{ vote.date_scrutin }}</td>
+                <td>
+                  {% if vote.decryptage_title %}
+                    <span class="vote-datan-bold">{{ vote.decryptage_title }}</span><br>
+                    <span class="vote-datan-italic">{{ vote.titre }}</span>
+                  {% else %}
+                    {{ vote.titre }}
+                  {% endif %}
+                </td>
+                <td class="sort text-center sort-{{ vote.position }}">{{ vote.position|upper }}</td>
+                {# Accord au féminin sur LOYALE seulement : le legacy accole un E
+                   aussi à REBELLE (« REBELLEE »), qui est épicène — coquille. #}
+                <td class="sort text-center sort-{{ vote.loyaute }}">{{ vote.loyaute == 'loyal' ? 'LOYAL' ~ e|upper : (vote.loyaute == 'rebelle' ? 'REBELLE' : '') }}</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+{# Pied de page « Les autres députés … », comme la fiche. #}
+{{ include('depute/_other_mps.html.twig') }}
+
+{# Modales des explications de vote citées dans les cartes. #}
+{% for vote in decryptes|filter(v => v.explication) %}
+  {{ include('depute/_modale_explication.html.twig') }}
+{% endfor %}
+{% endblock %}
+
+{% block javascripts_libraries %}
+  <script src="{{ asset('assets/js/libraries/isotope/isotope.pkgd.min.js') }}"></script>
+{% endblock %}
+
+{% block javascripts %}
+  <script src="{{ asset('assets/js/datan/sorting.js') }}"></script>
+  <script src="{{ asset('assets/js/libraries/moment/moment.min.js') }}"></script>
+  <script src="{{ asset('assets/js/dist/datatable-datan.min.js') }}"></script>
+  <script src="{{ asset('assets/js/libraries/datetime/datetime-moment.js') }}"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      document.querySelectorAll('tr[data-href]').forEach((ligne) => {
+        ligne.addEventListener('click', () => { window.location.href = ligne.dataset.href; });
+      });
+    });
+  </script>
+{% endblock %}

@@ -1,0 +1,65 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block title %}Les décryptages{% endblock %}
+
+{% block body %}
+  <div class="mb-3">
+    <a class="btn btn-primary" href="{{ path('admin_decryptage_nouveau') }}">Décrypter un vote</a>
+  </div>
+
+  <div class="card">
+    <div class="card-body p-0">
+      <table class="table table-striped mb-0">
+        <caption class="sr-only">Décryptages de votes</caption>
+        <thead>
+          <tr>
+            <th scope="col">Titre</th>
+            <th scope="col">Scrutin</th>
+            <th scope="col">Catégorie</th>
+            <th scope="col">Rédaction</th>
+            <th scope="col">État</th>
+            <th scope="col" class="text-right">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for decryptage in decryptages %}
+            <tr>
+              <td>{{ decryptage.title }}</td>
+              <td>
+                {% if decryptage.scrutin %}
+                  <a href="{{ lien_vote(decryptage.legislature, decryptage.voteNumero) }}" target="_blank" rel="noopener">
+                    n° {{ decryptage.voteNumero }} · {{ decryptage.legislature }}<sup>e</sup>
+                  </a>
+                {% else %}
+                  <span class="text-muted">scrutin introuvable</span>
+                {% endif %}
+              </td>
+              <td>{{ decryptage.categorie ? decryptage.categorie.name : '—' }}</td>
+              <td>
+                {{ decryptage.signature ?? '—' }}
+                {% if decryptage.createdAt %}<br><small class="text-muted">{{ decryptage.createdAt|date('d/m/Y') }}</small>{% endif %}
+              </td>
+              <td>
+                {% if decryptage.state.value == 'published' %}
+                  <span class="badge badge-success">Publié</span>
+                {% else %}
+                  <span class="badge badge-secondary">Brouillon</span>
+                {% endif %}
+              </td>
+              <td class="text-right">
+                {% if decryptage.state.value != 'published' or is_granted('ROLE_ADMIN') %}
+                  <a class="btn btn-sm btn-outline-primary" href="{{ path('admin_decryptage_modifier', {id: decryptage.id}) }}">Modifier</a>
+                {% endif %}
+                {% if is_granted('ROLE_ADMIN') %}
+                  <a class="btn btn-sm btn-outline-danger" href="{{ path('admin_decryptage_supprimer', {id: decryptage.id}) }}">Supprimer</a>
+                {% endif %}
+              </td>
+            </tr>
+          {% else %}
+            <tr><td colspan="6" class="text-center p-4">Aucun décryptage pour l'instant.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+{% endblock %}

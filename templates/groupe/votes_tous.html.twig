@@ -1,0 +1,85 @@
+{% extends 'base.html.twig' %}
+
+{% block preloads %}{{ include('partials/preload_couverture.html.twig') }}{% endblock %}
+
+{% set nom_groupe = groupe.libelle|name_group %}
+{% set non_inscrits = groupe.libelle_abrev == 'NI' %}
+
+{% block title %}{{ non_inscrits ? 'Députés non inscrits' : 'Groupe ' ~ nom_groupe }} - Tous les votes | Datan{% endblock %}
+
+{% block meta_description %}{% if non_inscrits %}Retrouvez tous les votes des députés non inscrits (NI) : positions politiques, cohésion interne, participation.{% else %}Retrouvez tous les votes du groupe {{ nom_groupe }} ({{ groupe.libelle_abrev }}) : ses positions politiques, sa cohésion interne, sa participation.{% endif %}{% endblock %}
+
+{% block body %}
+{{ include('groupe/partials/entete_sous_page.html.twig') }}
+
+<div class="container pg-groupe-votes mb-5">
+  <div class="row">
+    <div class="col-12 col-md-8 col-lg-4 offset-md-2 offset-lg-0 px-lg-4">
+      {{ include('groupe/partials/carte_profil.html.twig') }}
+    </div>
+    <div class="col-md-10 col-lg-8 offset-md-1 offset-lg-0 pl-lg-5">
+      <div class="d-none d-lg-block btn-back mt-4">
+        <a class="btn btn-outline-primary mx-2" href="{{ path('groupe_individual', {legislature: groupe.legislature, abrev: groupe.libelle_abrev|lower}) }}">{{ include('groupe/partials/fleche_retour.html.twig') }}Retour profil</a>
+      </div>
+      <h1 class="mb-4 mt-4">Tous les votes {{ non_inscrits ? 'des députés non inscrits' : 'du groupe ' ~ nom_groupe }}</h1>
+      <p>
+        Cette page recense les <b>{{ votes|length }} scrutins</b> auxquels {{ non_inscrits ? 'les députés non inscrits ont' : 'le groupe ' ~ groupe.libelle_abrev ~ ' a' }} pris part,
+        avec la position majoritaire retenue et le taux de cohésion mesuré à cette occasion.
+        Pour les seuls votes décryptés par la rédaction,
+        <a href="{{ path('groupe_votes', {legislature: groupe.legislature, abrev: groupe.libelle_abrev|lower}) }}">cliquez ici</a>.
+      </p>
+
+      {# L'identifiant est celui qu'attend datatable-datan.min.js, qui se branche
+         par sélecteur : c'est lui qui pagine, trie et rend le tableau utilisable
+         malgré ses milliers de lignes. #}
+      <table class="table" id="table-deputes-groupes-votes-all">
+        <caption class="sr-only">Tous les votes du groupe {{ groupe.libelle_abrev }}</caption>
+        <thead>
+          <tr>
+            <th scope="col" class="all">N°</th>
+            <th scope="col" class="min-tablet">Date</th>
+            <th scope="col" class="all">Titre</th>
+            <th scope="col" class="text-center all">Résultat</th>
+            <th scope="col" class="text-center all">Cohésion</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for vote in votes %}
+            {% set url = lien_vote(vote.legislature, vote.numero) %}
+            <tr data-href="{{ url }}">
+              {# Seules les premières lignes portent un lien : la page en compte
+                 plusieurs milliers, et l'application d'origine évite d'y semer
+                 autant d'ancres. Les autres restent cliquables par la ligne. #}
+              {% set numero = vote.numero|congress_numero %}
+              <td>{% if loop.index <= 30 %}<a class="no-decoration" href="{{ url }}">{{ numero }}</a>{% else %}{{ numero }}{% endif %}</td>
+              <td>{{ vote.date_scrutin }}</td>
+              <td>
+                {% if vote.decryptage_title %}
+                  <span class="vote-datan-bold">{{ vote.decryptage_title }}</span><br>
+                {% endif %}
+                <span class="{{ vote.decryptage_title ? 'vote-datan-italic' : '' }}">{{ vote.titre }}</span>
+              </td>
+              <td class="sort text-center sort-{{ vote.position }}">{{ vote.position == 'nv' ? 'ABSENT' : vote.position|upper }}</td>
+              <td class="sort text-center">{{ vote.cohesion ?? '—' }}</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block javascripts %}
+  <script src="{{ asset('assets/js/libraries/moment/moment.min.js') }}"></script>
+  <script src="{{ asset('assets/js/dist/datatable-datan.min.js') }}"></script>
+  <script src="{{ asset('assets/js/libraries/datetime/datetime-moment.js') }}"></script>
+  <script>
+    // Toute la ligne est cliquable, faute d'ancre au-delà des trente premières.
+    document.addEventListener('DOMContentLoaded', () => {
+      document.querySelectorAll('tr[data-href]').forEach((ligne) => {
+        ligne.addEventListener('click', () => { window.location.href = ligne.dataset.href; });
+      });
+    });
+  </script>
+{% endblock %}

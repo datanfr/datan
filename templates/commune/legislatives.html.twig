@@ -1,0 +1,74 @@
+{# « Résultat des élections législatives 2024 à X », un graphique par
+   circonscription (application/views/departement/commune.php:121).
+
+   Deux coquilles du site sont corrigées ici — « présiedent » et « signifique »
+   — ainsi que le « après que … ait décidé », qui appelle l'indicatif, et le
+   « de » écrit en dur devant le nom de la commune, qui donnait « la ville de
+   Ajaccio ». Le lien vers l'article de blog est absolu vers datan.fr, comme sur
+   le site : le blog n'est pas porté, mais l'adresse existe et répond. #}
+{% set premier = legislatives|first %}
+{% set candidat = premier.candidats|first %}
+{% set p = premier.participation %}
+<div class="container-fluid pg-commune py-5">
+  <div class="container">
+    <div class="row mt-2">
+      <div class="col-12">
+        <h2 class="text-center">Résultat des élections législatives 2024 à {{ ville.nom }}</h2>
+      </div>
+    </div>
+    <div class="row mt-3">
+      <div class="{{ pluriel ? 'col-lg-8 offset-lg-2' : 'col-lg-7' }} d-flex flex-column justify-content-center">
+        <p class="text-primary font-weight-bold">Le contexte</p>
+        <p>Les <a href="{{ path('elections_individual', {slug: 'legislatives-2024'}) }}">dernières élections législatives</a> se sont tenues en 2024. Elles ont servi à élire <a href="{{ path('deputes_index') }}">les députés</a> qui composent l'Assemblée nationale. Ces élections ont été organisées après que le président Emmanuel Macron <a href="https://datan.fr/blog/actualite-politique/le-president-emmanuel-macron-annonce-la-dissolution-de-lassemblee-nationale" target="_blank">a décidé de dissoudre l'Assemblée</a>.</p>
+        <p>Les prochaines élections législatives auront lieu en 2029, sauf si l'Assemblée est dissoute avant cette date.</p>
+        <p class="text-primary font-weight-bold">L'élection à {{ ville.nom }}</p>
+        {% if not pluriel %}
+          {% if premier.tour == 1 %}
+            <p>Dans la ville {{ ville.de }}{{ ville.nom }}, il n'y a eu qu'un seul tour. Cela signifie que {{ candidat.prenom }} {{ candidat.nom|lower|capitalize }} a obtenu plus de la moitié des votes exprimés et au moins un quart des voix des inscrits.</p>
+          {% endif %}
+          <p>{{ ville.nom }} compte {{ p.inscrits|number_format(0, ',', ' ') }} inscrits sur les listes électorales. Seuls {{ p.votants|number_format(0, ',', ' ') }} habitants ont voté, soit un <b>taux de participation de {{ 100 - (p.inscrits ? p.abstentions / p.inscrits * 100 : 0)|round }} %</b>, comparé 67% au niveau national.</p>
+          <p>{{ candidat.prenom }} {{ candidat.nom|lower|capitalize }} a récolté le plus grand nombre de voix à {{ ville.nom }} avec {{ candidat.voix|number_format(0, ',', ' ') }} votes, soit {{ candidat.part|round }}% des suffrages.</p>
+        {% else %}
+          <p>{{ ville.nom }} étant une ville de taille importante, elle compte plusieurs députés. Découvrez ci-dessous les parlementaires élus pour la ville {{ ville.de }}{{ ville.nom }}.</p>
+        {% endif %}
+      </div>
+      <div class="{{ pluriel ? 'col-lg-12 justify-content-around' : 'col-lg-5 justify-content-center' }} mt-4 d-flex flex-wrap bloc-elections">
+        {% for bloc in legislatives %}
+          <div class="card mx-1 my-4">
+            <div class="card-body pb-0">
+              <h3>Élections législatives 2024</h3>
+              <span class="round">
+                {% if bloc.circonscription %}
+                  {{ bloc.circonscription }}<sup>{{ bloc.circonscription|rang_circo }}</sup> circonscription -
+                {% endif %}
+                {{ bloc.tour == 1 ? '1<sup>er</sup>'|raw : '2<sup>nd</sup>'|raw }} tour</span>
+              <div class="chart mt-3">
+                <div class="results d-flex flex-row justify-content-center align-items-center">
+                  {% for c in bloc.candidats %}
+                    <div class="bar d-flex flex-row justify-content-center align-items-end">
+                      <div class="element d-flex align-items-center justify-content-center" style="height: {{ c.part|round }}%">
+                        <span class="score">{{ c.part|round }}%</span>
+                      </div>
+                    </div>
+                  {% endfor %}
+                </div>
+                <div class="names d-flex flex-row justify-content-center align-items-center">
+                  {% for c in bloc.candidats %}
+                    <div class="name">
+                      <p class="text-center">{{ c.prenom }} {{ c.nom|lower|capitalize }}</p>
+                    </div>
+                  {% endfor %}
+                </div>
+              </div>
+            </div>
+            <a href="https://www.resultats-elections.interieur.gouv.fr/legislatives2024/ensemble_geographique/index.html" target="_blank" rel="nofollow noreferrer noopener" class="no-decoration">
+              <div class="card-footer">
+                <p class="text-center mb-0">Plus d'infos</p>
+              </div>
+            </a>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,69 @@
+{# Carte d'identité d'un groupe, portée de application/views/groupes/partials/card_individual.php.
+
+   Elle coiffe le bandeau de l'hémicycle : la marge négative la fait remonter
+   dessus, et `sticky-top` la retient en défilant. Sans ce couple, elle
+   retomberait sous le bandeau et la page se décalerait d'autant.
+
+   `tag` vaut `h1` sur la fiche du groupe et `span` sur ses sous-pages, qui ont
+   déjà leur propre titre : deux `h1` sur une page fausseraient le plan de
+   lecture. #}
+{% set tag = tag|default('span') %}
+{% set non_inscrits = groupe.libelle_abrev == 'NI' %}
+{% set actif = groupe.date_fin is null %}
+<div class="sticky-top" style="margin-top: -150px; top: 80px;">
+  <div class="card card-profile groupe">
+    <div class="card-body">
+      <div class="img">
+        <div class="d-flex justify-content-center">
+          <picture>
+            <source srcset="{{ asset('assets/imgs/groupes/' ~ groupe.legislature ~ '/webp/' ~ groupe.libelle_abrev ~ '.webp') }}" type="image/webp">
+            <source srcset="{{ asset('assets/imgs/groupes/' ~ groupe.legislature ~ '/' ~ groupe.libelle_abrev ~ '.png') }}" type="image/png">
+            <img src="{{ asset('assets/imgs/groupes/' ~ groupe.legislature ~ '/' ~ groupe.libelle_abrev ~ '.png') }}" width="150" height="150" alt="{{ groupe.libelle|name_group }}">
+          </picture>
+        </div>
+      </div>
+      <div class="bloc-infos mt-2">
+        {# Le site titre la carte par son `$title`, où les non-inscrits deviennent
+           « Députés non inscrits » (`CASE WHEN o.libelle = "Non inscrit"` de
+           Groupes_model) ; l'`alt` de l'image, lui, garde le libellé brut. #}
+        <{{ tag }} class="title d-block text-lg-left">{{ non_inscrits ? 'Députés non inscrits' : groupe.libelle|name_group }}</{{ tag }}>
+      </div>
+      <div class="bloc-bref mt-3 d-flex justify-content-center justify-content-lg-start">
+        <ul>
+          <li class="first">
+            <div class="label">Création</div>
+            <div class="value">{{ groupe.date_debut|date_fr }}</div>
+          </li>
+          {% if groupe.date_fin %}
+            <li>
+              <div class="label">Dissolution</div>
+              <div class="value">{{ groupe.date_fin|date_fr }}</div>
+            </li>
+          {% endif %}
+          {# La présidence reste affichée sur un groupe dissous — c'est celle du
+             jour de sa disparition, pas une fonction encore exercée. #}
+          {% if not non_inscrits and president %}
+            <li>
+              <div class="label">Président{{ president.civilite == 'Mme' ? 'e' : '' }}</div>
+              <div class="value">
+                {% if president.dpt_slug and president.slug %}
+                  <a class="no-decoration underline" href="{{ path('depute_individual', {dptSlug: president.dpt_slug, slug: president.slug}) }}">{{ president.firstname }} {{ president.lastname }}</a>
+                {% else %}
+                  {{ president.firstname }} {{ president.lastname }}
+                {% endif %}
+              </div>
+            </li>
+          {% endif %}
+        </ul>
+      </div>
+      <div class="text-center mt-2">
+        <a class="btn btn-outline-primary" href="{{ path('groupe_membres', {legislature: groupe.legislature, abrev: groupe.libelle_abrev|lower}) }}">
+          Voir les {{ effectif }} membres
+        </a>
+      </div>
+    </div>
+    <div class="mandats d-flex justify-content-center align-items-center {{ actif ? 'active' : 'inactive' }}">
+      <span class="{{ actif ? 'active' : 'inactive' }}">{{ actif ? 'EN ACTIVITÉ' : 'PLUS EN ACTIVITÉ' }}</span>
+    </div>
+  </div>
+</div>

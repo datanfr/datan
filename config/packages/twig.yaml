@@ -1,0 +1,17 @@
+twig:
+    file_name_pattern: '*.twig'
+    # Espace @public : permet d'inliner un asset (carte de France en SVG) via
+    # source('@public/…'), comme les file_get_contents() du legacy.
+    paths:
+        '%kernel.project_dir%/public': public
+    globals:
+        # Suivi d'audience de base.html.twig (Matomo). Vide, le bloc n'est pas
+        # rendu : un poste de développement ne pollue jamais les statistiques —
+        # garde-fou que l'application d'origine n'a pas eu à avoir, ne vivant
+        # qu'en production. GTM a quitté le site le 10 septembre 2026, avec
+        # Tarte au citron : plus de seconde variable.
+        matomo_url: '%env(MATOMO_URL)%'
+
+when@test:
+    twig:
+        strict_variables: true

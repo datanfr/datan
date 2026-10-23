@@ -1,0 +1,188 @@
+{# La matière du décryptage : tout ce que le rédacteur doit avoir sous les yeux
+   pour écrire — le pendant interne de la page « decryptage » de
+   PoliticAnalysis, dont ce partial reprend l'ordre des sections et le code
+   couleur des orateurs. Reçoit `matiere`, le tableau de
+   CollecteurDecryptage::collecter(). #}
+<div class="atelier-matiere">
+
+  <div class="card">
+    <div class="card-header">
+      <h2 class="card-title h6 mb-0">Le scrutin</h2>
+      <div class="card-tools">
+        <span class="badge badge-{{ matiere.scrutin.sort_code == 'adopté' ? 'success' : 'danger' }}">{{ matiere.scrutin.sort_code|capitalize }}</span>
+        {% if matiere.scrutin.date_scrutin %}
+          <span class="badge badge-light">{{ matiere.scrutin.date_scrutin|date('d/m/Y') }}</span>
+        {% endif %}
+      </div>
+    </div>
+    <div class="card-body">
+      {# `objet` duplique `titre` sur les scrutins de la 17e : un seul des deux s'affiche. #}
+      <p class="font-weight-bold">{{ matiere.scrutin.titre }}</p>
+      {% if matiere.scrutin.nature_vote or matiere.scrutin.demandeur %}
+        <p class="small text-muted mb-2">
+          {% if matiere.scrutin.nature_vote %}Vote {{ matiere.scrutin.nature_vote }}.{% endif %}
+          {% if matiere.scrutin.demandeur %}Demandé par {{ matiere.scrutin.demandeur }}.{% endif %}
+        </p>
+      {% endif %}
+      {% if matiere.amendement %}
+        <p class="mb-1">
+          <span class="text-muted">Amendement</span>
+          {% if matiere.amendement.numero_ordre %}n° {{ matiere.amendement.numero_ordre }}{% endif %}
+          {% if matiere.amendement.signataires %}— {{ matiere.amendement.signataires|striptags }}{% endif %}
+        </p>
+      {% endif %}
+      {% if matiere.dossier %}
+        <p class="mb-1">
+          <span class="text-muted">Dossier :</span> {{ matiere.dossier.titre|striptags }}
+          {% if matiere.dossier.procedure_parlementaire %}({{ matiere.dossier.procedure_parlementaire }}){% endif %}
+        </p>
+      {% endif %}
+      <a class="btn btn-sm btn-outline-secondary mt-2" target="_blank" rel="noopener"
+         href="{{ lien_vote(matiere.scrutin.legislature, matiere.scrutin.numero) }}">Voir la page publique</a>
+    </div>
+  </div>
+
+  {% if matiere.amendement and matiere.amendement.expose %}
+    <div class="card">
+      <div class="card-header">
+        <h2 class="card-title h6 mb-0">Exposé des motifs</h2>
+      </div>
+      <div class="card-body expose-texte">
+        {# HTML de l'open data, servi tel quel au public depuis toujours
+           (vote/individual.html.twig) : même règle ici — brut quand il porte
+           ses paragraphes, enveloppé sinon. #}
+        {% if '<p>' in matiere.amendement.expose %}
+          {{ matiere.amendement.expose|raw }}
+        {% else %}
+          <p class="mb-0">{{ matiere.amendement.expose }}</p>
+        {% endif %}
+      </div>
+    </div>
+  {% endif %}
+
+  <div class="card">
+    <div class="card-header">
+      {# Les mêmes étiquettes que le prompt du générateur : un vote de texte
+         n'a pas de débat d'amendement, il a des explications de vote. #}
+      <h2 class="card-title h6 mb-0">{{ matiere.est_vote_texte ? 'Explications de vote et discussion' : 'Débat en séance' }}</h2>
+      {% if matiere.paroles is not empty %}
+        <div class="card-tools"><span class="badge badge-light">{{ matiere.paroles|length }} interventions</span></div>
+      {% endif %}
+    </div>
+    <div class="card-body">
+      {% if matiere.paroles is empty %}
+        <p class="text-muted mb-0">
+          {% if matiere.scrutin.seance_ref %}
+            Compte rendu de la séance pas encore publié — l'Assemblée le met en
+            ligne quelques jours après la séance.
+          {% else %}
+            Aucune séance rattachée à ce scrutin.
+          {% endif %}
+        </p>
+      {% else %}
+        {% for parole in matiere.paroles %}
+          {% if parole.orateur_nom is null %}
+            <div class="parole-didascalie">{{ parole.texte|striptags }}</div>
+          {% else %}
+            {% set role = 'parole-orateur' %}
+            {% if parole.role_debat == 'president' or 'président' in parole.orateur_nom|lower %}
+              {# Le doublon sur le nom rattrape les paroles de la présidence
+                 dont role_debat est resté vide dans le compte rendu. #}
+              {% set role = 'parole-president' %}
+            {% elseif parole.groupe_abrev is null %}
+              {# Sans rattachement de groupe au jour du scrutin : un membre du
+                 Gouvernement (mandat suspendu) — les non-inscrits, eux,
+                 portent NI. Heuristique : notre schéma n'a pas la qualité
+                 d'orateur que PoliticAnalysis lisait. #}
+              {% set role = 'parole-gouvernement' %}
+            {% endif %}
+            <div class="parole {{ role }}">
+              <div class="parole-entete">
+                <span class="orateur-nom">{{ parole.orateur_nom }}</span>
+                {% if parole.groupe_abrev %}<span class="orateur-groupe">{{ parole.groupe_abrev }}</span>{% endif %}
+              </div>
+              {# Le compte rendu écrit un pseudo-XML : italique et exposant se
+                 traduisent, tout le reste s'échappe. #}
+              <div class="parole-texte">{{ parole.texte
+                |replace({'<italique>': '<em>', '</italique>': '</em>', '<exposant>': '<sup>', '</exposant>': '</sup>'})
+                |striptags('<em><sup><br><p>')|raw }}</div>
+            </div>
+          {% endif %}
+        {% endfor %}
+      {% endif %}
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <h2 class="card-title h6 mb-0">Résultat du vote</h2>
+    </div>
+    <div class="card-body">
+      {% set pour = matiere.scrutin.nombre_pour %}
+      {% set contre = matiere.scrutin.nombre_contre %}
+      {% set abstentions = matiere.scrutin.nombre_abstentions %}
+      {% set exprimes = pour + contre + abstentions %}
+      <div class="matiere-stats">
+        <div class="matiere-stat">
+          <div class="matiere-stat-valeur matiere-stat-pour">{{ pour }}</div>
+          <div class="matiere-stat-libelle">Pour</div>
+        </div>
+        <div class="matiere-stat">
+          <div class="matiere-stat-valeur matiere-stat-contre">{{ contre }}</div>
+          <div class="matiere-stat-libelle">Contre</div>
+        </div>
+        <div class="matiere-stat">
+          <div class="matiere-stat-valeur matiere-stat-abstention">{{ abstentions }}</div>
+          <div class="matiere-stat-libelle">Abstentions</div>
+        </div>
+        <div class="matiere-stat">
+          <div class="matiere-stat-valeur">{{ matiere.scrutin.nombre_votants }}</div>
+          <div class="matiere-stat-libelle">Votants</div>
+        </div>
+      </div>
+      {% if exprimes > 0 %}
+        <div class="matiere-barre-vote">
+          <div class="matiere-barre-pour" style="width: {{ (100 * pour / exprimes)|round(1) }}%"></div>
+          <div class="matiere-barre-contre" style="width: {{ (100 * contre / exprimes)|round(1) }}%"></div>
+          <div class="matiere-barre-abstention" style="width: {{ (100 * abstentions / exprimes)|round(1) }}%"></div>
+        </div>
+        <div class="matiere-barre-legende">
+          <span><span class="pastille pastille-pour"></span>Pour {{ (100 * pour / exprimes)|number_format(1, ',') }} %</span>
+          <span class="ml-2"><span class="pastille pastille-contre"></span>Contre {{ (100 * contre / exprimes)|number_format(1, ',') }} %</span>
+          <span class="ml-2"><span class="pastille pastille-abstention"></span>Abstentions {{ (100 * abstentions / exprimes)|number_format(1, ',') }} %</span>
+        </div>
+      {% endif %}
+      {% if matiere.votes_par_groupe is not empty %}
+        <div class="table-responsive">
+          {# L'ordre vient du collecteur — participation décroissante, celui
+             que le rédacteur attend — et ne se retrie pas ici. #}
+          <table class="table table-sm mb-0">
+            <thead>
+              <tr>
+                <th>Groupe</th>
+                <th>Position</th>
+                <th class="text-right">Pour</th>
+                <th class="text-right">Contre</th>
+                <th class="text-right">Abst.</th>
+                <th class="text-right">NV</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for groupe in matiere.votes_par_groupe %}
+                <tr>
+                  <td title="{{ groupe.libelle }}">{{ groupe.libelle_abrev }}</td>
+                  <td>{{ groupe.position_majoritaire|capitalize }}</td>
+                  <td class="text-right">{{ groupe.nombre_pours }}</td>
+                  <td class="text-right">{{ groupe.nombre_contres }}</td>
+                  <td class="text-right">{{ groupe.nombre_abstentions }}</td>
+                  <td class="text-right">{{ groupe.non_votants }}</td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+
+</div>

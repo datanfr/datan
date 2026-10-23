@@ -1,0 +1,211 @@
+{# Cartes de comportement politique pour l'iframe : participation, proximité
+   avec le groupe, proximité avec les groupes politiques. Mêmes lectures
+   précalculées que la fiche (service ComportementDepute), même rendu visuel
+   (jauges `.c100`, barres `_barres_accord`), mais les intitulés basculent à la
+   PREMIÈRE PERSONNE sous `?first-person=true` — les formulations sont reprises
+   des partials `iframe/partials/*_first_person.php` de l'origine ; la troisième
+   personne, elle, reprend `statistics/*` (identiques à la fiche).
+
+   La carte « majorité gouvernementale » n'est pas portée (la 17e législature ne
+   déclare plus de majorité présidentielle, cf. CLAUDE.md). Une fiche sans votes
+   nominatifs (avant la 17e) n'arrive jamais ici : `statistiques` est alors nul
+   et le bloc entier se tait, dans l'iframe comme sur la fiche. #}
+
+{% if statistiques.participation is defined %}
+  {% set p = statistiques.participation %}
+  <div class="card card-statistiques my-4">
+    <div class="card-body">
+      <div class="row">
+        <div class="col-12 d-flex flex-row align-items-center">
+          <div class="icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 125"><g transform="translate(0,-952.36218)"><path d="m 60.929296,967.5374 c -6.96834,2.65602 -14.38691,6.2909 -22.36689,10.0391 -0.13365,0.0664 -0.25208,0.16311 -0.34375,0.28072 -2.19807,2.74236 -3.42457,6.85986 -4.3125,11.29116 -0.8577,4.2804 -1.36078,8.8343 -1.84375,12.72592 l -15.84375,19.8999 c -0.32341,0.3895 -0.27959,1.0304 0.0937,1.3724 l 17.8125,16.2193 -18.125,0 0,1.9963 59,0 0,-1.9963 -30.1875,0 23.9375,-27.2921 c 0.32161,-0.3707 0.30723,-0.9858 -0.0312,-1.3412 l -6.78125,-6.7685 c 1.36138,-1.1959 2.61929,-2.3686 3.6875,-3.5869 2.61455,-2.98212 4.17165,-6.44152 4.3125,-11.26002 l 13.53125,-6.1758 c 0.32571,-0.1724 0.53964,-0.5367 0.53125,-0.9046 l 0,-17.57331 c 9.4e-4,-0.50244 -0.4351,-0.96666 -0.9375,-0.99811 -7.5623,-0.6334 -16.01292,1.7635 -22.13311,4.07204 z m -16.83564,22.45318 8.53125,8.5151 c -2.24199,2.61152 -4.48766,4.94092 -6.03125,6.95562 -1.75241,1.9892 -2.81802,4.6504 -1.3125,6.6749 2.9313,2.6807 6.96972,0.39 9.375,-1.965 1.94863,-1.6815 4.01169,-3.4255 5.75,-4.897 l 6.21875,6.207 -24.4375,27.8848 -5.125,0 -18.6875,-17.0615 c 8.59599,-10.7992 17.18087,-21.4938 25.71875,-32.31392 z"/></g></svg>
+          </div>
+          <h3 class="ml-3 text-uppercase">Participation aux votes
+            <a tabindex="0" role="button" data-toggle="popover" data-trigger="focus" data-html="true"
+               aria-label="Aide participation" class="no-decoration popover_focus" title="Taux de participation"
+               data-content="Le taux de participation est le <b>pourcentage de votes auxquels le député ou la députée a participé</b>. Pour plus d'information, <a href='{{ url('page_statistiques') }}#participation' target='_blank'>cliquez ici</a>.">
+              <svg width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM6.57 6.033H5.25C5.22 4.147 6.68 3.5 8.006 3.5c1.397 0 2.673.73 2.673 2.24 0 1.08-.635 1.594-1.244 2.057-.737.559-1.01.768-1.01 1.486v.355H7.117l-.007-.463c-.038-.927.495-1.498 1.168-1.987.59-.444.965-.736.965-1.371 0-.825-.628-1.168-1.314-1.168-.901 0-1.358.603-1.358 1.384zm1.251 6.443c-.584 0-1.009-.394-1.009-.927 0-.552.425-.94 1.01-.94.609 0 1.028.388 1.028.94 0 .533-.42.927-1.029.927z"/></svg>
+            </a>
+          </h3>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-lg-3 offset-lg-1 mt-2">
+          <div class="d-flex justify-content-center align-items-center">
+            <div class="c100 p{{ p.score }} m-0">
+              <span>{{ p.score }} %</span>
+              <div class="slice"><div class="bar"></div><div class="fill"></div></div>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-8 infos mt-4 mt-lg-2">
+          <div class="texte ml-md-3 pl-md-3 mt-md-0 mt-3">
+            {% if premiere_personne %}
+              {% if actif %}
+                <p>Depuis ma prise de fonctions, j'ai participé à {{ p.score }}% des votes solennels à l'Assemblée nationale.</p>
+              {% else %}
+                <p>Quand j'étais en activité à l'Assemblée, j'ai participé à {{ p.score }}% des votes solennels à l'Assemblée nationale.</p>
+              {% endif %}
+              {% if p.edito_all and p.all is not null %}
+                <p>Je vote{{ actif ? '' : 'ais' }} <b>{{ p.edito_all }}</b> que la moyenne des députés, qui est {{ p.edito_all == 'autant' ? 'également ' }}de {{ p.all }}%.</p>
+              {% endif %}
+              {% if p.edito_group and p.group is not null %}
+                <p>De plus, je vote{{ actif ? '' : 'ais' }} <b>{{ p.edito_group }}</b> que la moyenne des députés de mon groupe politique, qui est {{ p.edito_group == 'autant' ? 'également ' }}de {{ p.group }}%.</p>
+              {% endif %}
+            {% else %}
+              {% if actif %}
+                <p>Depuis sa prise de fonctions, {{ nom_complet }} a participé à {{ p.score }}% des votes solennels à l'Assemblée nationale.</p>
+              {% else %}
+                <p>Quand {{ pronom }} était en activité à l'Assemblée, {{ nom_complet }} a participé à {{ p.score }}% des votes solennels à l'Assemblée nationale.</p>
+              {% endif %}
+              {% if p.edito_all and p.all is not null %}
+                <p>{{ pronom|capitalize }} {{ actif ? 'vote' : 'votait' }} <b>{{ p.edito_all }}</b> que la moyenne des députés, qui est {{ p.edito_all == 'autant' ? 'également ' }}de {{ p.all }}%.</p>
+              {% endif %}
+              {% if p.edito_group and p.group is not null %}
+                <p>De plus, {{ nom_complet }} {{ actif ? 'vote' : 'votait' }} <b>{{ p.edito_group }}</b> que la moyenne des députés de son groupe politique, qui est {{ p.edito_group == 'autant' ? 'également ' }}de {{ p.group }}%.</p>
+              {% endif %}
+            {% endif %}
+            <p>Les votes solennels sont les votes considérés comme importants pour lesquels les députés connaissent à l'avance le jour et l'heure du vote.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endif %}
+
+{% if statistiques.loyaute is defined %}
+  {% set l = statistiques.loyaute %}
+  <div class="card card-statistiques my-4">
+    <div class="card-body">
+      <div class="row">
+        <div class="col-12 d-flex flex-row align-items-center">
+          <div class="icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 1750"><path fill-rule="evenodd" clip-rule="evenodd" d="M341.4,808c-15.1,1.6-27.5,3.8-40,4c-49.2,0.4-98.4,0.3-147.6,0.1c-37-0.1-53.4-22.1-43.7-58.2c25.6-95.8,51.3-191.7,77-287.5c9.2-34.5,23.7-45.5,59.3-45.5c46.8,0,93.7,0,140.6,0c43.3,0,52.6,8,58.3,53.1c12.8-1.3,26.2-0.8,38.5-4.3c38.9-10.9,77.8-22.2,115.8-35.7c20.8-7.4,38.2-6.1,54.7,7.8c10.5,8.8,21,11.2,31.8,1c33.3-31.2,70.8-17.1,107.8-10.3c52.7,9.7,105.5,18.8,158.9,28.3c1.9-3.8,3.4-6.2,4.3-8.8c7.8-21.9,19.7-30.9,42.3-31c53.8-0.2,107.6-0.2,161.4,0c25.9,0.1,43.2,13.8,50.1,39.4c26.5,98,52.9,196.1,79.1,294.2c9.5,35.6-7.8,57.6-44.6,57.6c-50.9,0.1-101.8-0.3-152.8,0.1c-17.2,0.2-31.5-4.6-43.9-16.9c-3-2.9-10.4-4.5-14.2-2.9c-23,9.4-45.6,19.6-68.1,30.2c-4.3,2-8.6,5.9-11,10c-16.6,28.9-41.8,43.6-75.3,46.7c-16.2,41.1-47.4,61.2-91.8,61.8c-3.8,0.1-8.9,2.8-11.2,5.9c-23.3,30.6-55.5,35-90.3,30.9c-9.7-1.2-19.5-3.5-28.5-7.2c-21.4-8.8-40.4-16.9-65.6-4.7c-20.5,10-41.5-4.3-56.1-21.4c-7-8.1-12.6-16-24.9-15.2c-3.7,0.3-7.5-2.8-11.5-3.7c-22.3-4.6-24.9-33.8-48.6-37.8c-21.7-3.7-36.8-18.4-48.3-36.6c-1.7-2.7-4.7-5.1-7.7-6.3C360.5,830.3,360.4,830.4,341.4,808z"/></svg>
+          </div>
+          <h3 class="ml-3 text-uppercase">
+            {{ premiere_personne ? 'Proximité avec mon groupe' : 'Proximité avec son groupe' }}
+            <a tabindex="0" role="button" data-toggle="popover" data-trigger="focus" data-html="true"
+               aria-label="Aide loyauté" class="no-decoration popover_focus" title="Proximité avec le groupe"
+               data-content="Le taux de proximité est le <b>pourcentage de votes où le député ou la députée a voté sur la même ligne que son groupe</b>. Pour plus d'information, <a href='{{ url('page_statistiques') }}#loyalty' target='_blank'>cliquez ici</a>.">
+              <svg width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM6.57 6.033H5.25C5.22 4.147 6.68 3.5 8.006 3.5c1.397 0 2.673.73 2.673 2.24 0 1.08-.635 1.594-1.244 2.057-.737.559-1.01.768-1.01 1.486v.355H7.117l-.007-.463c-.038-.927.495-1.498 1.168-1.987.59-.444.965-.736.965-1.371 0-.825-.628-1.168-1.314-1.168-.901 0-1.358.603-1.358 1.384zm1.251 6.443c-.584 0-1.009-.394-1.009-.927 0-.552.425-.94 1.01-.94.609 0 1.028.388 1.028.94 0 .533-.42.927-1.029.927z"/></svg>
+            </a>
+          </h3>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-lg-3 offset-lg-1 mt-2">
+          <div class="d-flex justify-content-center align-items-center">
+            <div class="c100 p{{ l.score }} m-0">
+              <span>{{ l.score }} %</span>
+              <div class="slice"><div class="bar"></div><div class="fill"></div></div>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-8 infos mt-4 mt-lg-2">
+          <div class="texte ml-md-3 pl-md-3 mt-md-0 mt-3">
+            {% if premiere_personne %}
+              <p>{% if not actif %}Quand j'étais en activité, {% endif %}J'ai voté sur la même ligne que mon groupe politique dans {{ l.score }}% des cas.</p>
+              {% if l.edito_all and l.all is not null %}
+                <p>J'{{ actif ? 'ai' : 'avais' }} un taux de proximité avec mon groupe <b>{{ l.edito_all }}</b> que la moyenne des députés, qui est {{ l.edito_all == 'aussi élevé' ? 'également ' }}de {{ l.all }}%.</p>
+              {% endif %}
+              {% if l.edito_group and l.group is not null %}
+                <p>De plus, mon taux de proximité {{ actif ? 'est' : 'était' }} <b>{{ l.edito_group }}</b> que la moyenne des députés de mon groupe, qui est de {{ l.group }}%.</p>
+              {% endif %}
+            {% else %}
+              <p>{{ nom_complet }} a voté sur la même ligne que son groupe politique dans {{ l.score }}% des cas.</p>
+              {% if l.edito_all and l.all is not null %}
+                <p>{{ pronom|capitalize }} a un taux de proximité avec son groupe <b>{{ l.edito_all }}</b> que la moyenne des députés, qui est {{ l.edito_all == 'aussi élevé' ? 'également ' }}de {{ l.all }}%.</p>
+              {% endif %}
+              {% if l.edito_group and l.group is not null %}
+                <p>De plus, son taux de proximité est <b>{{ l.edito_group }}</b> que la moyenne des députés de son groupe, qui est {{ l.edito_group == 'aussi élevé' ? 'également ' }}de {{ l.group }}%.</p>
+              {% endif %}
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endif %}
+
+{% if statistiques.accord is defined %}
+  {% set a = statistiques.accord %}
+  <div class="card card-statistiques bloc-proximity my-4">
+    <div class="card-body">
+      <div class="row">
+        <div class="col-12 d-flex flex-row align-items-center">
+          <div class="icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 125"><g><circle id="depute" cx="34.9" cy="20.5" r="8.1"/><path id="depute" d="M44.7,64.8c-3.1-1.8-5.2-5.2-5.2-9.1c0-5.3,4-9.8,9.2-10.5v-0.4c0-7.6-6.2-13.7-13.7-13.7c-3.9,0-7.4,1.6-9.9,4.3c3.3,1.8,5.5,5.3,5.5,9.3c0,3.9-2.1,7.2-5.2,9.1C31.6,56,36.2,62,36.2,69.1v2.4v0.2c0-0.1,0.1-0.1,0.1-0.2C38.2,68.5,41.2,66.1,44.7,64.8z"/><circle cx="65.1" cy="20.5" r="8.1"/><path d="M74.7,53.8c-3.1-1.8-5.2-5.2-5.2-9.1c0-4,2.2-7.5,5.5-9.3c-2.5-2.6-6-4.3-9.9-4.3c-7.6,0-13.7,6.2-13.7,13.7v0.3c5.2,0.6,9.3,5.1,9.3,10.5c0,3.9-2.1,7.2-5.2,9.1c3.5,1.2,6.4,3.6,8.3,6.7v-2.4C63.8,62,68.4,56,74.7,53.8z"/><circle cx="50.1" cy="55.7" r="8.1"/><path d="M50.1,66.4c-7.6,0-13.7,6.2-13.7,13.7v4.3c3.2,2,8.3,3.1,13.7,3.1c5.4,0,10.5-1.2,13.7-3.1v-4.3C63.8,72.6,57.7,66.4,50.1,66.4z"/><circle cx="19.9" cy="44.7" r="8.1"/><path d="M19.9,55.4c-7.6,0-13.7,6.2-13.7,13.7v4.3c3.2,2,8.3,3.1,13.7,3.1c5.4,0,10.5-1.2,13.7-3.1v-4.3C33.7,61.5,27.5,55.4,19.9,55.4z"/><circle cx="80.1" cy="44.7" r="8.1"/><path d="M80.1,55.4c-7.6,0-13.7,6.2-13.7,13.7v4.3c3.2,2,8.3,3.1,13.7,3.1c5.4,0,10.5-1.2,13.7-3.1v-4.3C93.8,61.5,87.6,55.4,80.1,55.4z"/></g></svg>
+          </div>
+          <h3 class="ml-3 text-uppercase">Proximité avec les groupes politiques
+            <a tabindex="0" role="button" data-toggle="popover" data-trigger="focus" data-html="true"
+               aria-label="Aide proximité" class="no-decoration popover_focus" title="Proximité avec les groupes politiques"
+               data-content="Le <b>taux de proximité avec les groupes</b> représente le pourcentage de fois où un député vote de la même manière qu'un groupe parlementaire. Pour plus d'information, <a href='{{ url('page_statistiques') }}#proximity' target='_blank'>cliquez ici</a>.">
+              <svg width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM6.57 6.033H5.25C5.22 4.147 6.68 3.5 8.006 3.5c1.397 0 2.673.73 2.673 2.24 0 1.08-.635 1.594-1.244 2.057-.737.559-1.01.768-1.01 1.486v.355H7.117l-.007-.463c-.038-.927.495-1.498 1.168-1.987.59-.444.965-.736.965-1.371 0-.825-.628-1.168-1.314-1.168-.901 0-1.358.603-1.358 1.384zm1.251 6.443c-.584 0-1.009-.394-1.009-.927 0-.552.425-.94 1.01-.94.609 0 1.028.388 1.028.94 0 .533-.42.927-1.029.927z"/></svg>
+            </a>
+          </h3>
+        </div>
+      </div>
+
+      {# Le legacy garde le nom du député sur la première accroche même en
+         première personne (`_inter_group_loyalty_first_person.php`) ; on le suit. #}
+      {% if a.proximite %}
+        <div class="row"><div class="offset-2 col-10"><h4>{{ nom_complet }} vote <b>souvent</b> avec :</h4></div></div>
+      {% endif %}
+      {{ include('depute/_barres_accord.html.twig', {groupes: a.premiers}) }}
+      {% if a.proximite and depute.groupe_abrev != 'NI' %}
+        <div class="row mt-3"><div class="offset-2 col-10">
+          <p>
+            {%- if premiere_personne %}En plus de mon propre groupe, je vote souvent (dans {{ a.proximite.plus_proche.accord }}% des cas) avec le groupe
+              <a href="{{ url('groupe_individual', {legislature: 17, abrev: a.proximite.plus_proche.libelle_abrev|lower}) }}" target="_blank" rel="noopener">{{ a.proximite.plus_proche.libelle_abrev }}</a>
+            {%- else %}En plus de son propre groupe, {{ nom_complet }} vote souvent (dans {{ a.proximite.plus_proche.accord }}% des cas) avec le groupe
+              <a href="{{ url('groupe_individual', {legislature: 17, abrev: a.proximite.plus_proche.libelle_abrev|lower}) }}" target="_blank" rel="noopener">{{ a.proximite.plus_proche.libelle_abrev }}</a>
+            {%- endif %}{% if a.proximite.plus_proche.echiquier %}, classé {{ a.proximite.plus_proche.echiquier }} de l'échiquier politique{% endif %}.</p>
+        </div></div>
+      {% endif %}
+
+      {# Le partial first-person de l'origine répète « souvent » ici — coquille
+         manifeste (ce sont les groupes les MOINS proches). Rétabli en « rarement ». #}
+      <div class="row mt-5"><div class="col-10 offset-2"><h4>
+        {%- if premiere_personne %}Je vote <b>rarement</b> avec :
+        {%- else %}{{ pronom|capitalize }} vote <b>rarement</b> avec :{% endif %}</h4></div></div>
+      {{ include('depute/_barres_accord.html.twig', {groupes: a.derniers}) }}
+      {% if a.proximite %}
+        <div class="row mt-3"><div class="col-10 offset-2">
+          <p>
+            {%- if premiere_personne %}À l'opposé, le groupe avec lequel {{ actif ? 'je suis' : "j'étais" }} le moins proche est
+              <a href="{{ url('groupe_individual', {legislature: 17, abrev: a.proximite.moins_proche.libelle_abrev|lower}) }}" target="_blank" rel="noopener">{{ a.proximite.moins_proche.libelle|name_group }}</a>{% if a.proximite.moins_proche.echiquier %}, classé {{ a.proximite.moins_proche.echiquier }} de l'échiquier politique{% endif %}.
+              Je {{ actif ? 'ne vote' : "n'ai voté" }} avec ce groupe que dans <b>{{ a.proximite.moins_proche.accord }}%</b> des cas.
+            {%- else %}À l'opposé, le groupe avec lequel {{ nom_complet }} est le moins proche est
+              <a href="{{ url('groupe_individual', {legislature: 17, abrev: a.proximite.moins_proche.libelle_abrev|lower}) }}" target="_blank" rel="noopener">{{ a.proximite.moins_proche.libelle|name_group }}</a>{% if a.proximite.moins_proche.echiquier %}, classé {{ a.proximite.moins_proche.echiquier }} de l'échiquier politique{% endif %}.
+              {{ pronom|capitalize }} ne vote avec ce groupe que dans <b>{{ a.proximite.moins_proche.accord }}%</b> des cas.
+            {%- endif %}</p>
+        </div></div>
+      {% endif %}
+
+      <div class="row mt-4">
+        <div class="col-12">
+          <div class="text-center">
+            <a class="btn btn-primary" id="btn-ranking" data-toggle="collapse" href="#collapseProximity" role="button" aria-expanded="false" aria-controls="collapseProximity">Voir tout le classement</a>
+          </div>
+          <div class="collapse mt-3" id="collapseProximity">
+            <table class="table">
+              <caption class="sr-only">Taux de proximité de {{ nom_complet }} avec tous les groupes politiques</caption>
+              <thead><tr><th scope="col"></th><th scope="col">Groupe</th><th scope="col">Taux de proximité</th><th scope="col">Groupe dissous ?</th><th scope="col">Nbr de votes</th></tr></thead>
+              <tbody>
+                {% for g in a.tous %}
+                  <tr>
+                    <th scope="row">{{ loop.index }}</th>
+                    <td>{{ g.libelle|name_group }} ({{ g.libelle_abrev }})</td>
+                    <td>{{ g.accord }} %</td>
+                    <td>{{ g.dissous ? 'Oui' : '' }}</td>
+                    <td>{{ g.votes_n }}</td>
+                  </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endif %}

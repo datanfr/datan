@@ -1,0 +1,35 @@
+{# Pied des pages de département et de ville : les communes du département
+   dépassant le seuil de peuplement, de la plus grande à la plus petite.
+
+   Cinq collectivités d'outre-mer n'ont aucune population au référentiel
+   (App\Commune\SeuilCommunes) : jusqu'au 6 septembre 2026, le site y titrait
+   « Communes de … » au-dessus d'une liste vide. Il les liste depuis hors seuil,
+   vingt au plus, sous un titre qui ne parle plus des « plus peuplées » et
+   s'accorde au nombre — Wallis-et-Futuna n'a qu'une commune.
+
+   Le site n'a corrigé ce titre que sur sa page de département
+   (departement/index.php:26) ; sa fiche de ville (commune.php:268) garde
+   l'ancienne règle, deux noms en dur et Saint-Pierre-et-Miquelon masqué. Oubli
+   de propagation, pas choix : le partiel est commun, la règle corrigée vaut
+   pour les deux pages. #}
+{% set sans_seuil = departement.slug in constant('App\\Commune\\SeuilCommunes::SANS_SEUIL') %}
+<div class="container-fluid bloc-others-container">
+  <div class="container bloc-others">
+    <div class="row">
+      <div class="col-12">
+        <h2>
+          {%- if sans_seuil %}{{ communes|length == 1 ? 'Commune' : 'Communes' }} {{ nom_article }} ({{ departement.code }})
+          {%- else %}Communes les plus peuplées {{ nom_article }} ({{ departement.code }})
+          {%- endif %}
+        </h2>
+      </div>
+    </div>
+    <div class="row">
+      {% for commune in communes %}
+        <div class="col-6 col-md-3 py-2">
+          <a class="membre no-decoration underline" href="{{ path('commune_individual', {departement: departement.slug, commune: commune.slug}) }}">{{ commune.nom }}</a>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>

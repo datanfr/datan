@@ -1,0 +1,96 @@
+<!-- Page de connexion, reprise de `views/users/login.php` : deux colonnes, le
+     formulaire à gauche sous le logo Datan, la photo du Palais Bourbon à
+     droite. Les classes `login_*` et `#container-always-fluid` viennent de
+     `main.css`, la feuille du site public. Servie à `/login`, l'adresse que les
+     liens du site attendent, un seul formulaire connecte lecteurs, rédaction et
+     députés.
+
+     Les liens vers l'inscription, le mot de passe oublié et la demande de
+     compte député sont rétablis : ces pages existent désormais (chantier des
+     comptes lecteurs). Le succès d'une inscription ou d'une réinitialisation
+     ramène ici, d'où le bandeau vert. -->
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Se connecter | Datan</title>
+  <link rel="icon" type="image/png" href="{{ asset('assets/imgs/favicon/datan_favicon.ico') }}">
+  <link rel="stylesheet" href="{{ asset('assets/css/main.css') }}">
+  <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Open+Sans:400,600,800">
+</head>
+<body class="pt-0">
+<main>
+  <div class="container-fluid" id="container-always-fluid">
+    <div class="row">
+      <div class="col-lg-6 col-md-7 col-12">
+        <form method="post">
+          <div class="row mt-4">
+            <div class="col-lg-4 col-md-5 col-8 offset-2 offset-md-0">
+              <a href="{{ path('home') }}">
+                <img src="{{ asset('assets/imgs/datan/logo_baseline_color_transp.png') }}" class="img-fluid" alt="Logo Datan">
+              </a>
+            </div>
+          </div>
+          <div class="row mt-5">
+            <div class="col-lg-8 col-md-10 col-10 offset-lg-2 offset-md-1 offset-1">
+              {# Bascule connexion / inscription, en tête du bloc comme sur le site.
+                 L'inscription porte déjà la paire ; elle manquait ici, si bien que
+                 le va-et-vient ne se faisait que dans un sens. #}
+              <div class="row login_links">
+                <a href="{{ path('connexion') }}" class="py-3 active">SE CONNECTER</a>
+                <a href="{{ path('inscription') }}" class="py-3 inactive">S'INSCRIRE</a>
+              </div>
+              <div class="row mt-5 d-flex flex-column justify-content-center login_form">
+                <h1 class="text-center my-4">Connectez-vous à votre compte</h1>
+
+                {% for message in app.flashes('succes') %}
+                  <div class="alert alert-success mb-4 text-center" role="alert">{{ message }}</div>
+                {% endfor %}
+                {% for message in app.flashes('erreur') %}
+                  <div class="alert alert-danger mb-4 text-center" role="alert">{{ message }}</div>
+                {% endfor %}
+
+                {% if erreur %}
+                  <div class="alert alert-danger mb-4 text-center" role="alert">
+                    L'identifiant ou le mot de passe sont erronés. Veuillez réessayer.
+                  </div>
+                {% endif %}
+
+                <div class="form-group">
+                  <input type="text" name="_username" value="{{ dernier_identifiant }}" class="form-control"
+                         placeholder="Pseudo ou Email" autocomplete="username" required autofocus>
+                </div>
+                <div class="form-group">
+                  <input type="password" name="_password" class="form-control"
+                         placeholder="Mot de passe" autocomplete="current-password" required>
+                </div>
+                <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+                <button type="submit" class="btn btn-primary btn-block">Se connecter</button>
+                <a class="mt-4" href="{{ path('mot_de_passe_oubli') }}">Mot de passe oublié ?</a>
+                <p class="mt-4">Pas encore de compte sur Datan ? <a href="{{ path('inscription') }}">Inscrivez-vous</a></p>
+                {# « vous n'avez pas encore un compte Datan » sur le site : la
+                   négation appelle « de compte », pas « un compte ». Même phrase,
+                   même faute, sur l'inscription — corrigée aux deux endroits. #}
+                <p>Vous êtes député et n'avez pas encore de compte Datan ? <a href="{{ path('demande_compte_depute') }}">Demandez-le !</a></p>
+              </div>
+            </div>
+            {# Les trois écrans de compte du site affichent « © Datan 2020 », l'année
+               étant écrite en dur dans chaque vue et jamais reprise depuis. Une
+               mention de copyright figée six ans en arrière est un défaut, pas un
+               parti pris : on rend l'année courante. #}
+            <div class="col-lg-8 col-md-10 col-10 offset-lg-2 offset-md-1 offset-1 login_credits pt-3 mt-4">
+              <p>© Datan {{ 'now'|date('Y') }} - Tous droits réservés</p>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="col-lg-6 col-md-5 d-none d-md-block m-0 p-0 login_img">
+        <div class="img-container"></div>
+      </div>
+    </div>
+  </div>
+</main>
+</body>
+</html>

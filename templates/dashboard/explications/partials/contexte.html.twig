@@ -1,0 +1,100 @@
+{# Rappel du scrutin, replié à côté du champ de saisie : le député écrit en
+   ayant sous les yeux sa position, celle de son groupe et le dossier. #}
+{% import 'dashboard/partials/affichage.html.twig' as afficher %}
+
+{% set dossier_url = contexte.dossier_chemin
+  ? 'https://www.assemblee-nationale.fr/dyn/' ~ contexte.dossier_legislature ~ '/dossiers/' ~ contexte.dossier_chemin
+  : null %}
+
+<div id="accordion">
+  <div class="card">
+    <div class="card-header" id="entete-contexte">
+      <h3 class="mb-0 h5">
+        <button class="btn btn-link" data-toggle="collapse" data-target="#contexte"
+                aria-expanded="false" aria-controls="contexte">
+          Informations sur le scrutin
+        </button>
+      </h3>
+    </div>
+    <div id="contexte" class="collapse" aria-labelledby="entete-contexte" data-parent="#accordion">
+      <div class="card-body">
+        <table class="table table-striped mt-1">
+          <tbody>
+            {% if contexte.titre_datan %}
+              <tr>
+                <th scope="row">Titre du scrutin sur Datan</th>
+                <td>
+                  <a href="{{ lien_vote(legislature, numero) }}" target="_blank" rel="noreferrer">{{ contexte.titre_datan }}</a>
+                </td>
+              </tr>
+            {% endif %}
+            <tr>
+              <th scope="row">Titre Assemblée nationale</th>
+              <td>{{ contexte.titre_assemblee|capitalize }}</td>
+            </tr>
+            {# Le legacy imprimait ici deux fois la législature, le numéro du
+               scrutin compris — corrigé, le champ n'aurait sinon aucun sens. #}
+            <tr>
+              <th scope="row">Infos</th>
+              <td>Scrutin n° {{ contexte.scrutin_numero }} — Législature n° {{ contexte.legislature }}</td>
+            </tr>
+            <tr>
+              <th scope="row">Date du vote</th>
+              <td>{{ contexte.date_scrutin|date_fr }}</td>
+            </tr>
+            <tr>
+              <th scope="row">Sort</th>
+              <td class="{{ contexte.sort_code == 'adopté' ? 'colorPour' : 'colorContre' }} font-weight-bold">
+                {{ contexte.sort_code|capitalize }}
+              </td>
+            </tr>
+            <tr>
+              <th scope="row">Votre position</th>
+              <td>{{ afficher.position_texte(contexte.position_depute) }}</td>
+            </tr>
+            {% if contexte.groupe_abrev %}
+              <tr>
+                <th scope="row">Position de votre groupe ({{ contexte.groupe_abrev }})</th>
+                <td>{{ afficher.position_texte(contexte.position_groupe) }}</td>
+              </tr>
+            {% endif %}
+            {% if contexte.dossier %}
+              <tr>
+                <th scope="row">Dossier</th>
+                <td>
+                  {% if dossier_url %}
+                    <a href="{{ dossier_url }}" target="_blank" rel="noreferrer">{{ contexte.dossier }}</a>
+                  {% else %}
+                    {{ contexte.dossier }}
+                  {% endif %}
+                </td>
+              </tr>
+            {% endif %}
+            {% if contexte.categorie %}
+              <tr>
+                <th scope="row">Catégorie</th>
+                <td>{{ contexte.categorie }}</td>
+              </tr>
+            {% endif %}
+          </tbody>
+        </table>
+      </div>
+      <div class="card-footer d-flex justify-content-around flex-wrap">
+        <a class="btn btn-secondary mx-1 my-1 font-weight-bold" role="button" target="_blank" rel="noreferrer"
+           href="{{ lien_vote(legislature, numero) }}">
+          {{ afficher.lien_externe() }}<span class="ml-2">Lien Datan</span>
+        </a>
+        <a class="btn btn-secondary mx-1 my-1 font-weight-bold" role="button" target="_blank" rel="noreferrer"
+           href="https://www2.assemblee-nationale.fr/scrutins/detail/(legislature)/{{ contexte.legislature }}/(num)/{{ contexte.scrutin_numero }}">
+          {{ afficher.lien_externe() }}<span class="ml-2">Lien Assemblée</span>
+        </a>
+        {% if dossier_url %}
+          <a class="btn btn-secondary mx-1 my-1 font-weight-bold" role="button" target="_blank" rel="noreferrer"
+             href="{{ dossier_url }}">
+            {{ afficher.lien_externe() }}<span class="ml-2">Dossier</span>
+          </a>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,135 @@
+{% extends 'base.html.twig' %}
+
+{% set nom_complet = depute.firstname ~ ' ' ~ depute.lastname %}
+{# Accord en genre de la bio, comme le helper gender() du legacy : féminin dès
+   que la civilité vaut « Mme », masculin par défaut (même règle que _statistiques). #}
+{% set feminin = depute.civilite == 'Mme' %}
+
+{# Titre et description repris mot pour mot de `Depute_service::get_mp_page_resources`
+   (type « individual ») : datan.fr écrit « … - Activité Parlementaire | Datan ». #}
+{% block title %}{{ nom_complet }} - Activité Parlementaire | Datan{% endblock %}
+
+{% block meta_description %}Découvrez les résultats des votes {{ feminin ? 'de la' : 'du' }} député{{ feminin ? 'e' : '' }} {{ nom_complet }} : taux de participation, loyauté avec son groupe, proximité avec la majorité présidentielle.{% endblock %}
+
+{% block stylesheets %}
+  <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/flickity.min.css') }}">
+  {# Jauges circulaires (.c100 pNN) du comportement politique : la feuille est
+     séparée de main.css et chargée par page, comme sur datan.fr — sans elle les
+     pourcentages s'affichent en texte nu. #}
+  <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/circle.css') }}">
+{% endblock %}
+
+{# Flickity doit précéder main.min.js, qui initialise le carrousel des votes. #}
+{% block javascripts_head %}
+  <script src="{{ asset('assets/js/libraries/flickity/flickity.pkgd.min.js') }}"></script>
+{% endblock %}
+
+{% block body %}
+<div class="container-fluid bloc-img-deputes async_background" id="container-always-fluid" style="height: 13em"></div>
+{# Liseré à la couleur du groupe sous le bandeau, comme `individual.php`. #}
+{% if depute.groupe_couleur %}
+  <div class="liseret-groupe" style="background-color: {{ depute.groupe_couleur }}"></div>
+{% endif %}
+<div class="container pg-depute-individual">
+  <div class="row">
+    {# Carte de profil : colonne décalée et `sticky-top` qui remonte de 150px pour
+       chevaucher le bandeau, exactement comme le legacy. #}
+    <div class="col-12 col-md-8 col-lg-4 offset-md-2 offset-lg-0">
+      <div class="sticky-top" style="margin-top: -150px; top: 80px;">
+        {{ include('depute/_carte_profil.html.twig') }}
+      </div>
+    </div>
+
+    <div class="col-md-10 col-lg-8 offset-md-1 offset-lg-0 pl-lg-5">
+      {# Encarts de tête, dans l'ordre du site : « Municipales 2026 » puis le
+         « dernier vote important » (`electionFeature.php` / `voteFeature.php`).
+         La donnée du premier est en base depuis le 31 juillet 2026
+         (`app:import:elections`, élection `municipales-2026`). #}
+      {{ include('depute/_election_feature.html.twig') }}
+      {{ include('depute/_vote_feature.html.twig') }}
+
+      {# Ordre repris de `deputes/individual.php` : encart campagne, biographie,
+         positions importantes, carrousel des derniers votes, élection, comportement
+         politique, parrainages, historique des mandats, partage, réseaux sociaux. #}
+      {{ include('partials/campagne.html.twig', {classes: 'mt-5'}) }}
+
+      {{ include('depute/_bio.html.twig') }}
+
+      {{ include('depute/_positions.html.twig') }}
+
+      {{ include('depute/_derniere_explication.html.twig') }}
+
+      {# Carrousel « Ses derniers votes » : les cinq derniers scrutins décryptés
+         où le député s'est exprimé (`_votes.php` du legacy). Flickity est
+         initialisé par main.min.js sur `.carousel-container`. Bloc masqué quand
+         le député n'a voté sur aucun décryptage. #}
+      {% if carrousel_votes %}
+        <div class="bloc-votes mt-5">
+          <div class="d-flex justify-content-between mb-4">
+            <h2 class="title-center mb-0">Ses derniers votes</h2>
+            <div class="bloc-carousel-votes">
+              <a class="btn see-all-votes mx-2" href="{{ path('depute_votes', {dptSlug: depute.dpt_slug, slug: depute.slug}) }}"><span>VOIR TOUS</span></a>
+            </div>
+          </div>
+          <div class="carousel-container bloc-carousel-votes-flickity">
+            <div class="carousel-cards">
+              {% for vote in carrousel_votes %}
+                {{ include('depute/_carte_vote.html.twig') }}
+              {% endfor %}
+              <div class="card card-vote see-all">
+                <div class="card-body d-flex align-items-center justify-content-center">
+                  <a href="{{ path('depute_votes', {dptSlug: depute.dpt_slug, slug: depute.slug}) }}" class="stretched-link no-decoration">VOIR TOUS</a>
+                </div>
+              </div>
+            </div>
+            <div class="carousel-buttons d-flex justify-content-center mt-3">
+              <button type="button" class="btn prev mr-2 carousel--prev" aria-label="précédent">
+                <svg width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M5.854 4.646a.5.5 0 0 1 0 .708L3.207 8l2.647 2.646a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 0 1 .708 0z"/><path fill-rule="evenodd" d="M2.5 8a.5.5 0 0 1 .5-.5h10.5a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5z"/></svg>
+              </button>
+              <button type="button" class="btn next ml-2 carousel--next" aria-label="suivant">
+                <svg width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10.146 4.646a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708-.708L12.793 8l-2.647-2.646a.5.5 0 0 1 0-.708z"/><path fill-rule="evenodd" d="M2 8a.5.5 0 0 1 .5-.5H13a.5.5 0 0 1 0 1H2.5A.5.5 0 0 1 2 8z"/></svg>
+              </button>
+            </div>
+          </div>
+        </div>
+      {% endif %}
+
+      {% if election %}
+        {{ include('depute/_election.html.twig') }}
+      {% endif %}
+
+      {# « Son comportement politique » : jauges de participation et de loyauté,
+         barres de proximité par groupe. Placé après l'élection, comme le legacy.
+         Ne s'affiche que si le député a des votes nominatifs (17e législature) ;
+         une fiche d'avant se tait. #}
+      {% if statistiques %}
+        {{ include('depute/_statistiques.html.twig') }}
+      {% endif %}
+
+      {{ include('depute/_participations_electorales.html.twig') }}
+
+      {{ include('depute/_professions_foi.html.twig') }}
+
+      {{ include('depute/_parrainages.html.twig') }}
+
+      {{ include('depute/_mandats.html.twig') }}
+
+      {{ include('depute/_partage.html.twig') }}
+
+      {{ include('depute/_reseaux_sociaux.html.twig') }}
+    </div>
+  </div>
+</div>
+
+{# Bandeau pleine largeur « En direct du Palais Bourbon », entre la grille et les
+   listes de pied de fiche, comme `individual.php` (partials/follow-us.php). #}
+{{ include('partials/follow-us.html.twig') }}
+
+{{ include('depute/_other_mps.html.twig') }}
+
+{# Modales des explications de vote citées dans le carrousel — rendues hors de
+   la grille, comme le legacy les rend en pied de `individual.php`. #}
+{% for vote in carrousel_votes|filter(v => v.explication) %}
+  {{ include('depute/_modale_explication.html.twig') }}
+{% endfor %}
+{% endblock %}

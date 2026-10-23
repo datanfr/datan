@@ -1,0 +1,87 @@
+{% extends 'base.html.twig' %}
+
+{% block preloads %}{{ include('partials/preload_couverture.html.twig') }}{% endblock %}
+
+{% set nom_groupe = groupe.libelle|name_group %}
+{% set non_inscrits = groupe.libelle_abrev == 'NI' %}
+{% set profil = path('groupe_individual', {legislature: groupe.legislature, abrev: groupe.libelle_abrev|lower}) %}
+
+{% block title %}{{ non_inscrits ? 'Députés non inscrits' : 'Groupe ' ~ nom_groupe }} - Votes | Datan{% endblock %}
+
+{% block meta_description %}{% if non_inscrits %}Retrouvez toutes les positions des députés non inscrits (NI) quand ils votent à l'Assemblée nationale.{% else %}Retrouvez toutes les positions du groupe {{ nom_groupe }} ({{ groupe.libelle_abrev }}) quand il vote à l'Assemblée nationale.{% endif %}{% endblock %}
+
+{% block body %}
+{{ include('groupe/partials/entete_sous_page.html.twig') }}
+
+<div class="container pg-groupe-votes">
+  <div class="row">
+    <div class="col-12 col-md-8 col-lg-4 offset-md-2 offset-lg-0 px-lg-4">
+      {{ include('groupe/partials/carte_profil.html.twig') }}
+      <div class="mt-4 d-none d-lg-block">
+        <div class="card">
+          <div class="card-body badges-filter px-4 py-3">
+            <span class="title">Filtrer par catégorie</span>
+            {# Filtrage côté client : chaque bouton porte en valeur le sélecteur
+               CSS des cartes de sa thématique, qu'Isotope applique à la grille. #}
+            <div class="filters">
+              <div class="mt-2">
+                {% for slug, nom in categories %}
+                  <button type="button" class="badge badge-field popover_focus is-selected" value=".{{ slug }}">{{ nom }}</button>
+                {% endfor %}
+              </div>
+              <div class="mt-2">
+                <button type="button" class="btn btn-primary all-categories" value="*">Toutes les catégories</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card mt-3">
+          <div class="card-body badges-filter px-4 py-3">
+            <input type="text" id="quicksearch" placeholder="Cherchez un vote...">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-10 col-lg-8 offset-md-1 offset-lg-0 pl-lg-5 bloc-votes-datan">
+      <div class="d-none d-lg-block btn-back mt-4">
+        <a class="btn btn-outline-primary mx-2" href="{{ profil }}">{{ include('groupe/partials/fleche_retour.html.twig') }}Retour profil</a>
+      </div>
+      <h1 class="mb-4 mt-4">Les votes {{ non_inscrits ? 'des députés non inscrits' : 'du groupe ' ~ nom_groupe }}</h1>
+      <p>
+        L'équipe de Datan décrypte pour vous les votes les plus intéressants de la législature.
+        Il s'agit des votes qui ont fait l'objet d'attention médiatique, ou sur lesquels un ou plusieurs groupes parlementaires étaient fortement divisés.
+        Ces votes font l'objet d'une reformulation et d'une contextualisation, afin de les rendre plus compréhensibles.
+      </p>
+      <p>Vous trouverez sur cette page les positions de <b>{{ nom_groupe }}</b> sur ces votes.</p>
+      <p>
+        Pour avoir accès à tous les votes de {{ nom_groupe }} à l'Assemblée nationale,
+        <a href="{{ path('groupe_votes_tous', {legislature: groupe.legislature, abrev: groupe.libelle_abrev|lower}) }}">cliquez ici</a>.
+      </p>
+      <h2 class="mt-4">Découvrez les <span class="text-primary">{{ votes|length }} vote{{ votes|length > 1 ? 's' : '' }}</span> décryptés du groupe {{ groupe.libelle_abrev }}</h2>
+
+      <div class="row mt-4 sorting">
+        {% for vote in votes %}
+          <div class="col-md-6 sorting-item {{ vote.categorie_slug }}">
+            <div class="d-flex justify-content-center my-3">
+              {{ include('groupe/partials/carte_vote.html.twig') }}
+            </div>
+          </div>
+        {% else %}
+          <div class="col-12">
+            <p class="text-muted">Aucun vote décrypté pour ce groupe.</p>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block javascripts_libraries %}
+  <script src="{{ asset('assets/js/libraries/isotope/isotope.pkgd.min.js') }}"></script>
+{% endblock %}
+
+{% block javascripts %}
+  <script src="{{ asset('assets/js/datan/sorting.js') }}"></script>
+{% endblock %}

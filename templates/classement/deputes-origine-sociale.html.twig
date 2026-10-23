@@ -1,0 +1,128 @@
+{# Les liens sortants gardent la classe `url_obf`, qui porte leur mise en forme,
+   mais sont de vrais liens en `rel="nofollow"` : le masquage ROT13 du site
+   ({{ url_obf(...) }}) est réservé au maillage interne des communes, où il tient
+   des dizaines de milliers d'adresses hors du crawl — pour une poignée de liens
+   externes, `nofollow` suffit. #}
+{% extends 'classement/_layout.html.twig' %}
+
+{% block title %}L'origine sociale des députés - Assemblée nationale | Datan{% endblock %}
+
+{% block meta_description %}De quels milieux sociaux viennent les députés ? Découvrez sur Datan les métiers et les catégories socioprofessionnelles des députés de l'Assemblée nationale.{% endblock %}
+
+{% block contenu %}
+  <div class="row mt-4">
+    <div class="col-md-10">
+      <p>Les députés sont-ils représentatifs de la population française ?</p>
+      <p>Pas vraiment. <a class="url_obf" href="https://www.lemonde.fr/les-decodeurs/article/2017/06/26/quelles-professions-exercent-nos-deputes_5151288_4355770.html" target="_blank" rel="nofollow noopener">Le Monde</a> note que <b>les députés viennent surtout des catégories professionnelles favorisées</b>. Beaucoup étaient avocat, médecin ou professeur. Une tendance qui ne s'améliore pas : <a class="url_obf" href="https://www.publicsenat.fr/article/politique/une-assemblee-nationale-tres-csp-74986" target="_blank" rel="nofollow noopener">Public Sénat</a> indique que les classes supérieures étaient plus présentes à l'Assemblée en 2017 qu'en 2012.</p>
+      <p>La grande majorité des parlementaires étaient des cadres ou exerçaient une profession intellectuelle supérieure. Ils représentent <b>{{ famille_cadres.part|round }} % des députés</b>, alors que seulement {{ famille_cadres.population|round }} % de la population française appartient à cette catégorie.</p>
+      <p>Au contraire, l'Assemblée ne compte très peu de députés ouvriers ou employés.</p>
+      <p><b>Cela a-t-il un impact ?</b> Les citoyens ne votent pas pour une origine sociale mais pour des idées et un programme politique. Cependant, la sous-représentation de certaines catégories de la population pose question. <a class="url_obf" href="https://onlinelibrary.wiley.com/doi/abs/10.1111/ajps.12112" target="_blank" rel="nofollow noopener">Plusieurs chercheurs</a> ont montré que l'origine sociale d'un parlementaire a un impact sur ses idées et la façon dont il vote.</p>
+      {{ include('partials/campagne.html.twig', {classes: 'mt-5'}) }}
+    </div>
+  </div>
+  <div class="mt-5">
+    <h2 class="mb-4">Les 10 métiers les plus communs à l'Assemblée nationale</h2>
+    <div class="row">
+      <div class="col-md-10">
+        <p>Découvrez sur ce graphique les métiers les plus communs parmi les députés.</p>
+        {% if metiers|length > 1 %}
+          <p>À la première place se trouve le métier de <b>{{ metiers[0].metier|lower }}</b>. Au total, {{ metiers[0].nombre }} parlementaires exerçaient cette profession avant de devenir député. En deuxième position se trouve le métier de <b>{{ metiers[1].metier|lower }}</b> ({{ metiers[1].nombre }} députés).</p>
+        {% endif %}
+      </div>
+    </div>
+    <div class="mt-4" style="min-height: 425px">
+      <canvas id="chartJobs"></canvas>
+    </div>
+  </div>
+  <div class="mt-5">
+    <h2 class="mb-4">Les catégories professionnelles à l'Assemblée et dans la population</h2>
+    <div class="row">
+      <div class="col-md-10">
+        <p>Découvrez dans ce tableau la répartition des députés dans les différentes catégories socioprofessionnelles. Développées par <a class="url_obf" href="https://www.insee.fr/fr/metadonnees/definition/c1758" target="_blank" rel="nofollow noopener">l'insee</a> pour mieux décrire la société, ces catégories permettent de <a class="url_obf" href="https://www.lemagdeleconomie.com/dossier-78-categorie-socioprofessionnelle.html" target="_blank" rel="nofollow noopener">classer les individus</a> selon le type de métier exercé.</p>
+      </div>
+    </div>
+    <table class="table table-striped table-stats mt-4">
+      <caption class="sr-only">
+        Les catégories professionnelles à l'Assemblée et dans la population
+      </caption>
+      <thead class="thead-dark">
+        <tr>
+          <th scope="col" class="text-center all">Famille socioprofessionnelle</th>
+          <th scope="col" class="text-center min-tablet">Nombre de députés</th>
+          <th scope="col" class="text-center all">Part de députés</th>
+          <th scope="col" class="text-center all">Part dans la population</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for famille in familles %}
+          <tr>
+            <td class="text-center">{{ famille.famille }}</td>
+            <td class="text-center">{{ famille.nombre }}</td>
+            <td class="text-center">{{ famille.part|round }} %</td>
+            <td class="text-center">{{ famille.population|round }} %</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  <div class="mt-5">
+    <h2 class="mb-4">Les métiers et catégories professionnelles des députés</h2>
+    <div class="row">
+      <div class="col-md-10">
+        <p>Découvrez dans ce tableau l'ancien métier et la catégorie socioprofessionnelle de chaque parlementaire.</p>
+      </div>
+    </div>
+    <table class="table table-stats mt-5" id="table-stats-origine-sociale">
+      <caption class="sr-only">
+        Les métiers et catégories professionnelles des députés
+      </caption>
+      <thead class="thead-dark">
+        <tr>
+          <th scope="col" class="text-center all">Député</th>
+          <th scope="col" class="text-center min-tablet">Groupe</th>
+          <th scope="col" class="text-center all">Ancien métier</th>
+          <th scope="col" class="text-center all">Catégorie socioprofessionnelle</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for depute in deputes %}
+          <tr>
+            <td class="text-center">{{ depute.firstname }} {{ depute.lastname }}</td>
+            <td class="text-center">{{ depute.groupe_abrev }}</td>
+            <td class="text-center">{{ depute.metier }}</td>
+            <td class="text-center">{{ depute.fam_soc_pro }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+{% endblock %}
+
+{% block javascripts_page %}
+  <script src="{{ asset('assets/js/dist/chart.min.js') }}"></script>
+  <script>
+    new Chart(document.getElementById('chartJobs'), {
+      type: 'bar',
+      data: {
+        labels: {{ metiers|column('metier')|json_encode|raw }},
+        datasets: [{
+          label: 'Députés',
+          data: {{ metiers|column('nombre')|json_encode|raw }},
+          borderColor: 'rgba(0, 183, 148, 1)',
+          backgroundColor: 'rgba(0, 183, 148, 1)'
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        tooltips: {
+          callbacks: {
+            label: function (tooltipItem, data) {
+              return data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index] + ' députés';
+            }
+          }
+        }
+      }
+    });
+  </script>
+{% endblock %}

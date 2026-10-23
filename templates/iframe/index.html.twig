@@ -1,0 +1,4 @@
+{# Page de démonstration de l'intégration, portée de iframe/index.php : un
+   exemple d'iframe, sans habillage. Le legacy y laisse une adresse de
+   développement (« dev-datan.fr ») ; on sert une adresse réelle du site. #}
+<iframe src="{{ absolute_url(path('iframe_depute', {slug: 'nadege-abomangoli'})) }}" width="400" height="600" frameborder="0"></iframe>

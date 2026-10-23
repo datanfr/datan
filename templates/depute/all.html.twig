@@ -1,0 +1,144 @@
+{% extends 'base.html.twig' %}
+
+{% set courante = legislature == legislature_courante %}
+
+{% block title %}
+  {%- if anciens %}Députés plus en activité - Assemblée Nationale | Datan
+  {%- elseif courante %}Députés - Assemblée Nationale | Datan
+  {%- else %}Députés {{ legislature }}ème législature - Assemblée nationale | Datan
+  {%- endif %}
+{% endblock %}
+
+{% block meta_description %}
+  Retrouvez tous les députés {{ anciens ? 'plus en activité' : 'en activité' }} de l'Assemblée nationale de la {{ legislature }}ème législature. Résultats de vote et analyses pour chaque député.
+{% endblock %}
+
+{% block body %}
+<div class="container-fluid pg-depute-all mb-5" id="container-always-fluid">
+  <div class="row">
+    <div class="container">
+      <div class="row bloc-titre">
+        <div class="col-12">
+          <h1>
+            {# datan.fr écrit ici « 17ème legislature » — sans exposant et sans
+               accent (Deputes.php:150, titre composé en PHP alors que les
+               autres pages le composent en gabarit). Coquille, corrigée. #}
+            {%- if anciens %}Les anciens députés de la {{ legislature }}<sup>ème</sup> législature
+            {%- elseif courante %}Les députés de l'Assemblée nationale
+            {%- else %}Les députés de la {{ legislature }}<sup>ème</sup> législature
+            {%- endif %}
+          </h1>
+        </div>
+      </div>
+      <div class="row row-grid mt-5">
+        <div class="col-md-7">
+          {% if courante %}
+            <p>L'Assemblée nationale compte <b>577 députés</b>. Ils sont élus tous les 5 ans lors des élections législatives. Les dernières ont eu lieu en 2024.</p>
+            <p>Du fait de la <a href="https://datan.fr/blog/actualite-politique/le-president-emmanuel-macron-annonce-la-dissolution-de-lassemblee-nationale" target="_blank">dissolution de l'Assemblée nationale</a>, décidée le 9 juin 2024 par le président Emmanuel Macron, les dernières élections législatives se sont déroulées les 30 juin et 7 juillet 2024.</p>
+            {% if anciens %}
+              <p>Depuis leur élection, {{ deputes|length }} députés ont quitté l'Assemblée pour cause de nomination au Gouvernement, de démission, ou de décès. Découvrez sur cette page les députés plus en activité</p>
+              <p>Pour découvrir les 577 députés actuellement en activité, <a href="{{ path('deputes_index') }}">cliquez ici.</a></p>
+            {% else %}
+              <p>L'Assemblée nationale compte actuellement {{ genres.hommes }} députés hommes ({{ genres.hommes_pct }}%) et {{ genres.femmes }} femmes ({{ genres.femmes_pct }}%).</p>
+              {% if nombre_inactifs == 0 %}
+                <p>Depuis le début de la {{ legislature_courante }}<sup>ème</sup> législature, <b>aucun député n'a quitté l'Assemblée</b>.</p>
+              {% else %}
+                <p>Depuis le début de la {{ legislature_courante }}<sup>ème</sup> législature, <b>{{ nombre_inactifs }} député{{ nombre_inactifs > 1 ? 's ont' : ' a' }} quitté l'Assemblée</b> pour cause de nomination au Gouvernement, de démission ou de décès. Pour découvrir ces députés qui ne sont plus en activité, <a href="{{ path('deputes_inactifs') }}">cliquez ici</a>.</p>
+              {% endif %}
+            {% endif %}
+          {% else %}
+            <p>Cette page présente tous les députés qui ont servi lors de la {{ legislature }}<sup>ème</sup> législature.</p>
+            <p>Pendant la {{ legislature }}<sup>ème</sup> législature, il y avait à l'Assemblée nationale {{ genres.hommes }} députés hommes ({{ genres.hommes_pct }}%) et {{ genres.femmes }} femmes ({{ genres.femmes_pct }}%).</p>
+            <p>Pour découvrir les députés de la législature actuelle, <a href="{{ path('deputes_index') }}">cliquez ici</a>.</p>
+          {% endif %}
+        </div>
+        <div class="col-md-3 offset-md-1">
+          <h2 class="history">{{ courante ? 'Historique' : 'Toutes les législatures' }}</h2>
+          <p>La législature actuelle est la {{ legislature_courante }}<sup>ème</sup> législature. Elle a débuté en 2024, à la suite des <a href="{{ path('elections_individual', {slug: 'legislatives-2024'}) }}">élections législatives</a>, et se terminera en 2029.</p>
+          <p>Découvrez les députés {{ courante ? 'des législatures précédentes' : 'de toutes les législatures' }}.</p>
+          <div class="d-flex justify-content-center flex-wrap">
+            {# Le legacy n'écarte QUE la législature courante, et seulement quand
+               on la consulte (all.php:60-65 : le bouton 17 est conditionnel, les
+               boutons 16/15/14 sont en dur). La page d'une législature passée
+               porte donc un bouton vers elle-même. Inutile, mais c'est ce
+               qu'affiche datan.fr, et le retirer décale tout le bloc suivant. #}
+            {% for n in legislatures %}
+              {% if not (n == legislature_courante and legislature == legislature_courante) %}
+                <a href="{{ n == legislature_courante ? path('deputes_index') : path('deputes_legislature', {legislature: n}) }}" class="btn btn-secondary my-2 mx-2">{{ n }}<sup>ème</sup> législature</a>
+              {% endif %}
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+      <div class="row mt-5">
+        <div class="col-12">
+          {% if anciens %}
+            <h2>Les <span class="text-primary">{{ deputes|length }} anciens députés</span> de la {{ legislature }}<sup>ème</sup> législature</h2>
+          {% else %}
+            <h2>Les <span class="text-primary">{{ deputes|length }} députés</span> de la {{ legislature }}<sup>ème</sup> législature</h2>
+          {% endif %}
+        </div>
+      </div>
+      <div class="row mt-2">
+        <div class="pb-4 col-lg-3 search-element">
+          <div class="sticky-top sticky-offset sticky-top-lg">
+            <!-- Groupes -->
+            {% if actifs %}
+              <div class="d-flex flex-column d-lg-none">
+                <div class="mt-3 badges-groupes">
+                  {% for groupe in groupes|filter(groupe => groupe.abrev != 'NI') %}
+                    {# Le badge mobile mène à la liste des membres, pas à la fiche (all.php:90). #}
+                    <a class="badge badge-primary no-decoration" href="{{ path('groupe_membres', {legislature: legislature, abrev: groupe.abrev|lower}) }}">
+                      <span>{{ groupe.effectif }}</span> {{ groupe.libelle|name_group }}
+                    </a>
+                  {% endfor %}
+                </div>
+              </div>
+            {% endif %}
+            <!-- Search -->
+            <div class="mt-3 mt-lg-0">
+              <label for="quicksearch" class="sr-only">Recherche un député</label>
+              <input type="text" id="quicksearch" placeholder="Recherchez un député..." />
+            </div>
+            <!-- Filters -->
+            {% if groupes %}
+              <fieldset class="filters mt-md-2 d-none d-lg-block" id="filter">
+                <input class="radio-btn" name="radio-collection" id="radio-1" type="radio" checked="" value="*">
+                <label for="radio-1" class="radio-label d-flex align-items-center">
+                  <span class="d-flex align-items-center"><b>Tous les députés</b></span>
+                </label>
+                {% for groupe in groupes %}
+                  <input class="radio-btn" name="radio-collection" id="radio-{{ loop.index + 1 }}" type="radio" value=".{{ groupe.abrev|lower }}">
+                  <label class="radio-label d-flex align-items-center" for="radio-{{ loop.index + 1 }}">
+                    <span class="d-flex align-items-center">{{ groupe.abrev }}</span>
+                  </label>
+                {% endfor %}
+              </fieldset>
+            {% endif %}
+            <!-- Députés inactifs bouton -->
+            <div class="d-none d-lg-flex justify-content-center mt-md-2">
+              <a class="btn btn-outline-primary d-none d-md-block" href="{{ path('deputes_inactifs') }}">Liste des <b>anciens députés</b></a>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-9 col-md-12">
+          <div class="row mt-2 sorting">
+            {% for depute in deputes %}
+              <div class="col-md-6 col-xl-4 sorting-item {{ depute.groupe_abrev|lower }}">
+                <div class="d-flex justify-content-center">
+                  {{ include('depute/partials/card.html.twig') }}
+                </div>
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block javascripts %}
+  <script src="{{ asset('assets/js/libraries/isotope/isotope.pkgd.min.js') }}"></script>
+  <script src="{{ asset('assets/js/datan/sorting.js') }}"></script>
+{% endblock %}

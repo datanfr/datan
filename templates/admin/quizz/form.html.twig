@@ -1,0 +1,65 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block title %}{{ question ? 'Modifier une question' : 'Créer une question' }}{% endblock %}
+
+{% block body %}
+  {{ form_start(formulaire) }}
+    {% if not formulaire.vars.valid %}
+      <div class="alert alert-danger">
+        {{ form_errors(formulaire) }}
+        <p class="mb-0">Le formulaire comporte des erreurs, corrigez les champs signalés.</p>
+      </div>
+    {% endif %}
+
+    <div class="row">
+      <div class="col-lg-8">
+        <div class="card">
+          <div class="card-body">
+            {{ form_row(formulaire.titre) }}
+            {{ form_row(formulaire.explication) }}
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header"><h2 class="h6 mb-0 text-success">Arguments pour</h2></div>
+          <div class="card-body">
+            {{ form_row(formulaire.pour1) }}
+            {{ form_row(formulaire.pour2) }}
+            {{ form_row(formulaire.pour3) }}
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header"><h2 class="h6 mb-0 text-danger">Arguments contre</h2></div>
+          <div class="card-body">
+            {{ form_row(formulaire.contre1) }}
+            {{ form_row(formulaire.contre2) }}
+            {{ form_row(formulaire.contre3) }}
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-4">
+        <div class="card">
+          <div class="card-body">
+            <div class="form-row">
+              <div class="col-md-6">{{ form_row(formulaire.legislature) }}</div>
+              <div class="col-md-6">{{ form_row(formulaire.scrutinNumero) }}</div>
+            </div>
+            {{ form_row(formulaire.numeroQuiz) }}
+            {{ form_row(formulaire.categorie) }}
+            {{ form_row(formulaire.inverse) }}
+            {% if formulaire.etat is defined %}
+              {{ form_row(formulaire.etat) }}
+            {% else %}
+              <p class="text-muted mb-0">La question sera enregistrée en brouillon ; vous pourrez la publier ensuite.</p>
+            {% endif %}
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-block">Enregistrer</button>
+        <a class="btn btn-link btn-block" href="{{ path('admin_quizz_index') }}">Revenir à la liste</a>
+      </div>
+    </div>
+  {{ form_end(formulaire) }}
+{% endblock %}

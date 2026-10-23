@@ -1,0 +1,121 @@
+{# Bloc « Son élection », porté de views/deputes/partials/mp_individual/_election.php.
+   La règle de substitution (partielle → élection générale), le regroupement
+   « Autres candidats » au premier tour et le calcul de participation vivent dans
+   ResultatCirconscriptionRepository : ce gabarit ne fait qu'afficher.
+
+   Partial PARTAGÉ avec la brique embarquée (`iframe/depute.html.twig`), comme à
+   l'origine : le legacy charge ce même `_election.php` dans les deux contextes et
+   n'y ajoute que deux conditions — `$first_person`, qui bascule tous les intitulés
+   à la première personne, et `$iframe_title_visibility`, qui escamote le titre sous
+   `?secondary-title=hide`. Les deux variables sont donc lues ici avec un repli :
+   la fiche publique ne les définit pas et retombe sur le rendu de toujours.
+
+   Le repli s'écrit `is defined`, surtout pas `|default()` : le filtre de Twig
+   remplace aussi les valeurs VIDES, si bien qu'un `false` explicitement passé par
+   l'iframe repasserait à `true` et le titre resterait affiché sous
+   `?secondary-title=hide`. #}
+{% set e = depute.civilite == 'Mme' ? 'e' : '' %}
+{% set article = depute.civilite == 'Mme' ? 'la' : 'le' %}
+{% set premiere_personne = premiere_personne is defined ? premiere_personne : false %}
+<div class="mt-5 bloc-election">
+  {% if sous_titres_visibles is not defined or sous_titres_visibles %}
+    <h2 class="mb-4 title-center">{{ premiere_personne ? 'Mon' : 'Son' }} élection</h2>
+  {% endif %}
+  <div class="card mt-4">
+    <div class="card-body">
+      {# Sous-titre du legacy (`text_active` / `text_inactive`) : la circonscription
+         du député, avant le résultat de son élection. À la première personne, la
+         ligne devient une phrase — elle perd sa classe `subtitle` et gagne son
+         point final, comme à l'origine ; à la troisième elle reste un intitulé.
+
+         `libelle_de` porte son espace final quand il en faut un (« des Hauts-de-Seine »,
+         « du Nord ») : il se concatène directement au nom, sans rien rogner. #}
+      {% if actif %}
+        <p class="{{ premiere_personne ? '' : 'subtitle' }}">
+          {{- premiere_personne ? 'Je suis député' ~ e : 'Député' ~ e }} de la {{ depute.circonscription }}<sup>{{ depute.circonscription|rang_circo }}</sup> circonscription {{ depute.libelle_de }}{{ depute.departement_nom }} ({{ depute.departement_code }}){{ premiere_personne ? '.' }}</p>
+      {% else %}
+        <p>
+          {{- premiere_personne ? "J'étais" : depute.firstname ~ ' ' ~ depute.lastname ~ ' était' }} {{ article }} député{{ e }} de la {{ depute.circonscription }}<sup>{{ depute.circonscription|rang_circo }}</sup> circonscription {{ depute.libelle_de }}<a href="{{ path('departement_individual', {departement: depute.dpt_slug}) }}">{{ depute.departement_nom }} ({{ depute.departement_code }})</a>.</p>
+      {% endif %}
+      <p>
+        {{ premiere_personne ? "J'ai" : depute.firstname ~ ' ' ~ depute.lastname ~ ' a' }} été élu{{ e }} député{{ e }} lors du {{ election.tour_libelle }} tour
+        {%- if election.partielle %} d'une élection législative partielle
+        {%- else %} des élections législatives de {{ election.annee }}
+        {%- endif %}
+        avec <b>{{ election.elu.voix|number_format(0, ',', ' ') }}</b> voix, soit {{ election.elu.part|round }}% des suffrages exprimés.
+      </p>
+
+      {% if election.participation %}
+        {# Le legacy écrit « supérieux » (coquille) ; on rétablit « supérieur ». #}
+        {% set comparaison = election.participation.taux > election.participation.nationale
+             ? 'supérieur'
+             : (election.participation.taux < election.participation.nationale ? 'inférieur' : 'égal') %}
+        <p>
+          La participation au {{ election.tour_libelle }} tour a atteint {{ election.participation.taux }}% dans cette
+          circonscription, un taux {{ comparaison }} à la moyenne nationale ({{ election.participation.nationale }}%).
+        </p>
+      {% endif %}
+
+      {% if election.partielle %}
+        <p>{{ premiere_personne ? "J'ai" : depute.firstname ~ ' ' ~ depute.lastname ~ ' a' }} été élu{{ e }} lors d'une élection partielle qui s'est tenue en {{ election.date_partielle }}.</p>
+      {% endif %}
+
+      <div class="mt-4">
+        <p class="subtitle">
+          Résultats du {{ election.tour_libelle }} tour -
+          {%- if election.partielle %} Élection législative partielle {{ election.annee }}
+          {%- else %} Élections législatives {{ election.annee }}{% endif %}
+        </p>
+
+        {# Encadré de l'élu : fond vert Datan translucide, badge « Élu·e ». Le
+           pourcentage est aligné à droite : datan.fr le colle au badge parce que
+           la balise fermante du legacy est cassée (`</^p>` au lieu de `</h3>`,
+           _election.php:82), ce qui ruine son flex — défaut, pas choix.
+           En revanche « 53.2 % » à décimale POINTÉE est bien son affichage de
+           toujours (round() PHP imprimé tel quel) : |round(1) le reproduit,
+           trailing zéro ôté compris (23.0 → « 23 »). #}
+        <div class="border border-primary rounded px-3 py-4 mt-4" style="background-color: rgba(0, 183, 148, 0.15);">
+          <div class="d-flex justify-content-between">
+            <h3 class="mt-0 font-weight-bold candidate">{{ election.elu.candidat }}<span class="badge badge-primary ml-2">Élu{{ e }}</span></h3>
+            <strong>{{ election.elu.part|round(1) }} %</strong>
+          </div>
+          <div class="d-flex align-items-center mb-1">
+            <small class="text-muted">{{ election.elu.voix|number_format(0, ',', ' ') }} voix</small>
+          </div>
+          <div class="progress" style="height: 10px;">
+            <div class="progress-bar bg-primary candidate" role="progressbar" style="width: {{ election.elu.part|round }}%;"
+                 aria-valuenow="{{ election.elu.part|round }}" aria-valuemin="0" aria-valuemax="100"
+                 aria-label="Pourcentage de voix remportées par {{ election.elu.candidat }}"></div>
+          </div>
+        </div>
+
+        {# Concurrents du même tour, du plus au moins voté. #}
+        {% for adversaire in election.adversaires %}
+          <div class="mt-4 px-3">
+            <div class="d-flex justify-content-between">
+              <h3 class="mt-0 font-weight-bold candidate">{{ adversaire.candidat }}</h3>
+              <strong>{{ adversaire.part|round(1) }} %</strong>
+            </div>
+            <div class="d-flex align-items-center mb-1">
+              <small class="text-muted">{{ adversaire.voix|number_format(0, ',', ' ') }} voix</small>
+            </div>
+            <div class="progress" style="height: 10px;">
+              <div class="progress-bar bg-primary" role="progressbar" style="width: {{ adversaire.part|round }}%;"
+                   aria-valuenow="{{ adversaire.part|round }}" aria-valuemin="0" aria-valuemax="100"
+                   aria-label="Pourcentage de voix remportées par {{ adversaire.candidat }}"></div>
+            </div>
+          </div>
+        {% endfor %}
+
+        {% if election.lien %}
+          {# Le legacy masque cette URL derrière un déchiffrement JS anti-scraping ;
+             elle pointe une archive publique et générique du ministère — on sert un
+             lien simple plutôt que de réimplanter ce mécanisme. #}
+          <div class="mt-4">
+            <a class="no-decoration underline" href="{{ election.lien }}" target="_blank" rel="noopener">🔎 Consultez les résultats complets</a>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>

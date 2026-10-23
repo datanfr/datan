@@ -1,0 +1,9 @@
+framework:
+    router:
+        # URL générées hors requête (commandes, consommateur Messenger) ; cf. .env.dist.
+        default_uri: '%env(DEFAULT_URI)%'
+
+when@prod:
+    framework:
+        router:
+            strict_requirements: null

@@ -1,0 +1,24 @@
+{# Le robots.txt de datan.fr, repris à l'identique de public/robots.txt (retiré
+   au profit de RobotsController, seul moyen d'en servir un autre en
+   préproduction). Les lignes de commentaire vides — « # CSS, JS, Images », «
+   # Directories » — sont celles du site : conservées, sans quoi la moindre
+   comparaison de fichiers signalerait une divergence qui n'en est pas une.
+
+   Le tiret qui ferme ce commentaire mange le saut de ligne suivant : sans lui,
+   le fichier servi commence par une ligne vide. -#}
+#
+# robots.txt
+#
+User-agent: *
+# CSS, JS, Images
+# Directories
+# Paths
+Disallow: /admin
+Disallow: /admin/*
+Disallow: /connexion
+Disallow: /deconnexion
+Disallow: /assets/js/datan/url_obf2.js
+Disallow: /assets/js/datan/url_obf2.min.js
+
+#Sitemap
+Sitemap: https://datan.fr/sitemap.xml

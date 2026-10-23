@@ -1,0 +1,55 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block title %}Demandes de compte député{% endblock %}
+
+{# Pas de `sidebar_menu` ici : cet écran en redéclarait un à deux entrées, du
+   temps où `admin/base.html.twig` lui était fermé et n'annonçait pas encore les
+   demandes de compte. La coque porte désormais le menu complet, l'entrée de
+   cette page comprise — l'ancien bloc amputait la barre latérale des huit autres
+   sections dès qu'on ouvrait les demandes. #}
+
+{% block body %}
+  <p class="mt-2">
+    Les députés qui ont demandé un accès depuis <a href="{{ path('demande_compte_depute') }}" target="_blank" rel="noopener">/demande-compte-depute</a>.
+    Approuver une demande émet un <strong>lien d'activation</strong> à transmettre à l'adresse de l'Assemblée nationale : le député y crée
+    lui-même son compte et choisit son mot de passe. Le lien s'affiche ici après approbation (et part par courriel au déploiement).
+  </p>
+
+  <div class="card">
+    <div class="card-body p-0">
+      <table class="table table-striped mb-0">
+        <caption class="sr-only">Demandes de compte en attente</caption>
+        <thead>
+          <tr>
+            <th scope="col">Député</th>
+            <th scope="col">Adresse saisie</th>
+            <th scope="col">Demandée le</th>
+            <th scope="col" class="text-right">Traitement</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for demande in demandes %}
+            <tr>
+              <td class="font-weight-bold">{{ demande.depute.firstname }} {{ demande.depute.lastname }}</td>
+              <td>{{ demande.email }}</td>
+              <td>{{ demande.demandeeLe|date('d/m/Y à H:i') }}</td>
+              <td class="text-right">
+                <form method="post" action="{{ path('admin_demande_compte_approuver', {id: demande.id}) }}" class="d-inline">
+                  <input type="hidden" name="_token" value="{{ csrf_token('traiter_demande_' ~ demande.id) }}">
+                  <button type="submit" class="btn btn-sm btn-primary">Approuver et émettre le lien</button>
+                </form>
+                <form method="post" action="{{ path('admin_demande_compte_refuser', {id: demande.id}) }}" class="d-inline"
+                      onsubmit="return confirm('Refuser cette demande ?');">
+                  <input type="hidden" name="_token" value="{{ csrf_token('traiter_demande_' ~ demande.id) }}">
+                  <button type="submit" class="btn btn-sm btn-outline-danger">Refuser</button>
+                </form>
+              </td>
+            </tr>
+          {% else %}
+            <tr><td colspan="4" class="text-center p-4">Aucune demande en attente.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+{% endblock %}

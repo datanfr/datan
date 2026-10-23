@@ -1,0 +1,77 @@
+{% extends 'base.html.twig' %}
+
+{# « L'élection présidentielle de 2022 », « Les élections législatives de 2022 » :
+   le libellé porte déjà son nombre, seul l'article change. #}
+{% set nom = election.libelle|lower ~ ' de ' ~ election.annee %}
+{% set titre = (election.libelle_abrege == 'Présidentielle' ? "L'" : 'Les ') ~ nom %}
+
+{% block title %}{{ titre }} - Candidats et résultats | Datan{% endblock %}
+
+{% block meta_description %}Retrouvez toutes les informations sur {{ election.libelle_abrege == 'Présidentielle' ? "l'" : 'les ' }}{{ nom }} en France. Découvrez les députés candidats et les résultats.{% endblock %}
+
+{% block stylesheets %}
+  {% if election.libelle_abrege in ['Régionales', 'Départementales'] %}
+    <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/jquery-jvectormap-2.0.5.css') }}">
+  {% endif %}
+{% endblock %}
+
+{% block javascripts_libraries %}
+  {# Isotope porte la grille filtrable des candidats, Chart.js le graphique des
+     sièges : tous deux doivent être là avant le script de page. #}
+  <script src="{{ asset('assets/js/libraries/isotope/isotope.pkgd.min.js') }}"></script>
+  {% if hemicycle %}
+    <script src="{{ asset('assets/js/libraries/chart.js/chart.min.js') }}"></script>
+    <script src="{{ asset('assets/js/libraries/chart.js/chartjs-plugin-datalabels@2.1.js') }}"></script>
+  {% endif %}
+{% endblock %}
+
+{% block javascripts %}
+  {% if candidats %}
+    <script src="{{ asset('assets/js/datan/sorting_select.js') }}"></script>
+  {% endif %}
+  {% if election.libelle_abrege in ['Régionales', 'Départementales'] %}
+    <script src="{{ asset('assets/js/libraries/jvectormap/jquery-jvectormap-2.0.5.min.js') }}"></script>
+    <script src="{{ asset('assets/js/libraries/jvectormap/jquery-jvectormap-' ~ (election.libelle_abrege == 'Régionales' ? 'fr_regions_2016-merc' : 'fr-merc') ~ '.js') }}"></script>
+    <script src="{{ asset('assets/js/libraries/jvectormap/maps_jvectormap-datan.js') }}"></script>
+  {% endif %}
+{% endblock %}
+
+{% block body %}
+<div class="container pg-elections-candidats">
+  <div class="row bloc-titre mt-5">
+    <div class="col-lg-10">
+      <h1>{{ titre }}</h1>
+      <div class="mt-4">
+        <p>
+          {# Le site écrit « aux élection présidentielle 2022 » : l'article y est
+             figé au pluriel alors que le libellé est au singulier. Accordé ici. #}
+          Découvrez les résultats et candidats {{ election.libelle_abrege == 'Présidentielle' ? "à l'" : 'aux ' }}{{ election.libelle|lower }} {{ election.annee }}. Ces élections se déroulent en {{ election.date_tour2 ? 'deux tours' : 'un tour' }}.
+          {% if election.date_tour2 %}
+            Le premier tour s'est tenu le {{ election.date_tour1_fr }}, tandis que le second tour s'est déroulé le {{ election.date_tour2_fr }}.
+          {% else %}
+            L'élection s'est tenue le {{ election.date_tour1_fr }}.
+          {% endif %}
+          Découvrez les résultats des élections commune par commune sur Datan.
+        </p>
+        <div class="mt-5 infosGeneral">
+          <h2 class="title ml-md-5 ml-3">Mieux comprendre</h2>
+          <div class="px-4">
+            {{ include('election/partials/comprendre.html.twig') }}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="container pg-elections-candidats mt-4 mb-5">
+  <div class="row">
+    <div class="col-10">
+      {{ include('election/resultats/' ~ election.slug ~ '.html.twig', ignore_missing = true) }}
+    </div>
+  </div>
+  {% if election.candidats %}
+    {{ include('election/listes/' ~ election.slug ~ '.html.twig', ignore_missing = true) }}
+  {% endif %}
+</div>
+{{ include('election/partials/liens_departements_communes.html.twig') }}
+{% endblock %}

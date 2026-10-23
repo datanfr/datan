@@ -1,0 +1,139 @@
+{# Inscription, reprise de `views/users/register.php` : mêmes deux colonnes que la
+   connexion (classes `login_*` de `main.css`), formulaire à gauche sous le logo,
+   photo à droite. Document autonome, sans barre de navigation (le legacy charge
+   `header_no_navbar`).
+
+   Un seul gabarit pour les deux entrées de `Users::register`, comme le legacy :
+   sans `depute`, l'inscription libre d'un lecteur ; avec `depute` (et `token`),
+   la fin du flux député — le nom et l'adresse de l'Assemblée sont alors imposés
+   et seuls le pseudo et le mot de passe restent à saisir.
+
+   Écart assumé : pas de captcha (pile anti-spam laissée au déploiement). #}
+{% set est_depute = depute is not null %}
+{% set valeurs = valeurs|default({}) %}
+{% set erreurs = erreurs|default([]) %}
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>{{ est_depute ? 'Créez votre compte de député' : 'Créez votre compte Datan' }} | Datan</title>
+  <link rel="icon" type="image/png" href="{{ asset('assets/imgs/favicon/datan_favicon.ico') }}">
+  <link rel="stylesheet" href="{{ asset('assets/css/main.css') }}">
+  <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Open+Sans:400,600,800">
+</head>
+<body class="pt-0">
+<main>
+  <div class="container-fluid" id="container-always-fluid">
+    <div class="row">
+      <div class="col-lg-6 col-md-7 col-12">
+        <form method="post">
+          <div class="row mt-4">
+            <div class="col-lg-4 col-md-5 col-8 offset-2 offset-md-0">
+              <a href="{{ path('home') }}">
+                <img src="{{ asset('assets/imgs/datan/logo_baseline_color_transp.png') }}" class="img-fluid" alt="Logo Datan">
+              </a>
+            </div>
+          </div>
+          <div class="row mt-5">
+            <div class="col-lg-8 col-md-10 col-10 offset-lg-2 offset-md-1 offset-1">
+              {% if not est_depute %}
+                <div class="row login_links">
+                  <a href="{{ path('connexion') }}" class="py-3 inactive">SE CONNECTER</a>
+                  <a href="{{ path('inscription') }}" class="py-3 active">S'INSCRIRE</a>
+                </div>
+              {% endif %}
+
+              {% set succes = app.flashes('succes') %}
+              {% if succes is not empty %}
+                {% for message in succes %}
+                  <div class="alert alert-success mt-5 text-center" role="alert">
+                    {{ message }} <a href="{{ path('connexion') }}">Connectez-vous ici.</a>
+                  </div>
+                {% endfor %}
+              {% else %}
+                <div class="row mt-5 d-flex justify-content-center login_form">
+                  <h3 class="text-center my-4">{{ est_depute ? 'Créez votre compte de député' : 'Créez votre compte Datan' }}</h3>
+
+                  {% if est_depute %}
+                    <div class="alert alert-info">
+                      Bonjour {{ depute.firstname }} {{ depute.lastname }}. Choisissez votre pseudo et votre mot de passe pour activer votre compte.
+                    </div>
+                  {% else %}
+                    {# « veuillez d'aborder demander » sur le site : coquille. #}
+                    <div class="alert alert-danger">
+                      Attention, <b>si vous êtes député</b>, veuillez d'abord demander un lien d'activation en <a href="{{ path('demande_compte_depute') }}">cliquant ici.</a>
+                    </div>
+                  {% endif %}
+
+                  {% for message in app.flashes('erreur') %}
+                    <div class="alert alert-danger text-center" role="alert">{{ message }}</div>
+                  {% endfor %}
+                  {% if erreurs is not empty %}
+                    <div class="alert alert-danger">
+                      <ul class="mb-0 text-left">
+                        {% for erreur in erreurs %}<li>{{ erreur }}</li>{% endfor %}
+                      </ul>
+                    </div>
+                  {% endif %}
+
+                  <div class="form-group">
+                    <label class="font-weight-bold">Nom</label>
+                    <input type="text" class="form-control" name="name" placeholder="Jean Dupont"
+                           value="{{ valeurs.name|default('') }}" {{ est_depute ? 'readonly' }}>
+                  </div>
+                  {% if not est_depute %}
+                    {# Le site propose « 7500 » : un code postal français en compte
+                       cinq, l'exemple est tronqué. #}
+                    <div class="form-group">
+                      <label class="font-weight-bold">Code postal</label>
+                      <input type="text" class="form-control" name="zipcode" placeholder="75001"
+                             value="{{ valeurs.zipcode|default('') }}">
+                    </div>
+                  {% endif %}
+                  <div class="form-group">
+                    <label class="font-weight-bold">Adresse email</label>
+                    <input type="email" class="form-control" name="email" placeholder="jean.dupont@gmail.com"
+                           value="{{ valeurs.email|default('') }}" {{ est_depute ? 'readonly' }}>
+                  </div>
+                  {# « (maximum 10 characters) » sur le site : la seule mention en
+                     anglais de tout le parcours de compte. #}
+                  <div class="form-group">
+                    <label class="font-weight-bold">Pseudo <span class="font-italic font-weight-normal">(dix caractères maximum)</span></label>
+                    <input type="text" class="form-control" name="username" placeholder="jeandupont"
+                           value="{{ valeurs.username|default('') }}">
+                  </div>
+                  <div class="form-group">
+                    <label class="font-weight-bold">Mot de passe</label>
+                    <input type="password" class="form-control" name="password" autocomplete="new-password">
+                  </div>
+                  <div class="form-group">
+                    <label class="font-weight-bold">Confirmez le mot de passe</label>
+                    <input type="password" class="form-control" name="password2" autocomplete="new-password">
+                  </div>
+                  <input type="hidden" name="_token" value="{{ csrf_token('inscription') }}">
+                  <button type="submit" class="btn btn-primary btn-block">Confirmez</button>
+                  <p class="mt-4">Déjà un compte sur Datan ? <a href="{{ path('connexion') }}">Connectez-vous</a></p>
+                  {% if not est_depute %}
+                    {# Accord de la négation, comme sur la connexion. #}
+                    <p>Vous êtes député et n'avez pas encore de compte Datan ? <a href="{{ path('demande_compte_depute') }}">Demandez-le !</a></p>
+                  {% endif %}
+                </div>
+              {% endif %}
+            </div>
+            {# Année courante là où le site a figé « 2020 » en dur — cf. connexion. #}
+            <div class="col-lg-8 col-md-10 col-10 offset-lg-2 offset-md-1 offset-1 login_credits pt-3 mt-4">
+              <p>© Datan {{ 'now'|date('Y') }} - Tous droits réservés</p>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="col-lg-6 col-md-5 d-none d-md-block m-0 p-0 login_img">
+        <div class="img-container"></div>
+      </div>
+    </div>
+  </div>
+</main>
+</body>
+</html>

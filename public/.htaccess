@@ -1,0 +1,85 @@
+# Réécriture d'URL pour Apache et LiteSpeed (l'hébergement de production tourne
+# sous LiteSpeed, qui lit les .htaccess). Sans ce fichier, seuls les fichiers
+# réellement présents sur le disque sont servis : /robots.txt répond, mais
+# /vote/17/491 et toutes les autres routes tombent sur le 404 du serveur web
+# sans jamais atteindre Symfony.
+#
+# Contenu de symfony/apache-pack, que nous n'installons pas comme dépendance :
+# le fichier ne change jamais et le paquet n'apporte rien d'autre.
+
+# ---------------------------------------------------------------------------
+# PRÉPRODUCTION : mot de passe sur tout le site, et non-indexation.
+#
+# À RETIRER le jour de la bascule sur datan.fr, avec le secret HTTP_AUTH du
+# workflow de déploiement (checklist de TODO.md). Le bloc n'est pas conditionné
+# à l'hôte servi, contrairement au garde-fou applicatif (App\Referencement\
+# Indexation) : dans un .htaccess, seuls « Require env » et « Require expr »
+# le permettraient, et LiteSpeed — le serveur de l'hébergement N0C — les ignore
+# sans un mot. Un verrou qui pourrait ne pas s'appliquer en silence est pire
+# qu'un verrou à retirer à la main.
+#
+# Le fichier de mots de passe vit hors de public/ et hors du dépôt, à côté de
+# .env. Hachage apr1 (« openssl passwd -apr1 »), le seul format que LiteSpeed
+# et Apache lisent tous deux ; le serveur n'a pas « htpasswd ». Ajouter un
+# compte :
+#   printf 'nom:%s\n' "$(openssl passwd -apr1)" >> /home/wqktajhw/datan/.htpasswd
+#
+# /robots.txt n'est pas exempté, bien qu'un « Disallow: / » lisible sans mot de
+# passe serait plus net. L'adresse est réécrite vers index.php, et LiteSpeed
+# applique <FilesMatch> au fichier final ; il ignore « Allow from env= » comme
+# « Require env » (vérifié sur le serveur en septembre 2026). Un robots.txt en
+# 401 vaut pour un moteur une absence de fichier : il tente les pages, qui
+# répondent 401 elles aussi — rien ne s'indexe.
+# ---------------------------------------------------------------------------
+AuthType Basic
+AuthName "Datan - preproduction"
+AuthUserFile /home/wqktajhw/datan/.htpasswd
+Require valid-user
+
+# L'application pose déjà cet en-tête sur tout ce qu'elle rend
+# (App\Referencement\EnTeteRobots). Ici il couvre ce que LiteSpeed sert sans
+# passer par PHP : les fichiers de public/ — images, feuilles de style,
+# documents PDF.
+<IfModule mod_headers.c>
+    Header set X-Robots-Tag "noindex, nofollow, noarchive"
+</IfModule>
+
+DirectoryIndex index.php
+
+# MultiViews ferait deviner au serveur l'extension d'un fichier absent et
+# court-circuiterait la règle de réécriture finale.
+<IfModule mod_negotiation.c>
+    Options -MultiViews
+</IfModule>
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # Détermine le préfixe d'URL sous lequel l'application est servie, pour que
+    # les règles suivantes fonctionnent aussi dans un sous-répertoire.
+    RewriteCond %{REQUEST_URI}::$0 ^(/.+)/(.*)::\2$
+    RewriteRule .* - [E=BASE:%1]
+
+    # Certains serveurs n'exposent pas l'en-tête Authorization à PHP : sans
+    # cette règle, l'authentification par jeton se perd en route.
+    RewriteCond %{HTTP:Authorization} .+
+    RewriteRule ^ - [E=HTTP_AUTHORIZATION:%0]
+
+    # Une même page ne doit pas répondre à deux adresses : /index.php/truc
+    # redirige en 301 vers /truc. Le référencement de datan.fr en dépend.
+    RewriteCond %{ENV:REDIRECT_STATUS} =""
+    RewriteRule ^index\.php(?:/(.*)|$) %{ENV:BASE}/$1 [R=301,L]
+
+    # Un fichier qui existe (assets, robots.txt, images) est servi tel quel.
+    RewriteCond %{REQUEST_FILENAME} -f
+    RewriteRule ^ - [L]
+
+    # Tout le reste passe par le contrôleur frontal.
+    RewriteRule ^ %{ENV:BASE}/index.php [L]
+</IfModule>
+
+<IfModule !mod_rewrite.c>
+    <IfModule mod_alias.c>
+        RedirectMatch 307 ^/$ /index.php/
+    </IfModule>
+</IfModule>

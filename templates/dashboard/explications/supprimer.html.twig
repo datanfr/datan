@@ -1,0 +1,52 @@
+{% extends 'dashboard/base.html.twig' %}
+{% import 'dashboard/partials/affichage.html.twig' as afficher %}
+
+{% block title %}Supprimer une explication de vote{% endblock %}
+{% block heading %}{{ block('title') }}{% endblock %}
+
+{% block fil_ariane_suite %}
+  <li class="breadcrumb-item"><a href="{{ path('dashboard_explications') }}" class="no-decoration underline">Explications de vote</a></li>
+  <li class="breadcrumb-item active" aria-current="page">Supprimer</li>
+{% endblock %}
+
+{% block body %}
+  <a class="btn btn-outline-secondary font-weight-bold" href="{{ path('dashboard_explications') }}">
+    {{ afficher.fleche_gauche() }} Retour
+  </a>
+
+  <div class="card mt-4 mb-0">
+    <div class="card-body py-4">
+      <h2 class="font-weight-bold text-primary h5">Scrutin n° {{ contexte.scrutin_numero }}</h2>
+      <h3 class="font-weight-bold">{{ contexte.titre_datan ?? contexte.titre_assemblee }}</h3>
+      <p class="text-secondary mb-0">{{ contexte.titre_assemblee|capitalize }}</p>
+    </div>
+  </div>
+
+  <div class="row mt-5 pb-5">
+    <div class="col-lg-6">
+      <div class="card card-primary card-outline">
+        <div class="card-header">
+          <h2 class="font-weight-bold text-primary h4">Explication de vote à supprimer</h2>
+        </div>
+        <div class="card-body">
+          <h3 class="font-weight-bold text-secondary h5">Explication</h3>
+          <p class="mb-0">{{ explication.texte }}</p>
+        </div>
+        <div class="card-footer d-flex justify-content-between align-items-center">
+          {# Le legacy renvoyait ici vers `admin/votes`, une adresse de la
+             rédaction à laquelle un député n'a pas accès : annuler le menait
+             à un refus. Le bouton revient donc à ses explications. #}
+          <a class="btn btn-default" href="{{ path('dashboard_explications') }}">Annuler</a>
+          <form method="post" action="{{ path('dashboard_explication_supprimer', {legislature: legislature, numero: numero}) }}">
+            <input type="hidden" name="_token" value="{{ csrf_token('supprimer_explication_' ~ explication.id) }}">
+            <button type="submit" class="btn btn-danger">Supprimer</button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-6 mt-4 mt-lg-0">
+      {{ include('dashboard/explications/partials/contexte.html.twig') }}
+    </div>
+  </div>
+{% endblock %}

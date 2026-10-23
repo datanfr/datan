@@ -1,0 +1,91 @@
+name: Déploiement
+
+# Déploiement par « git pull » sur le serveur, comme PoliticAnalysis qui vit sur
+# la même machine : l'hébergement est mutualisé, sans systemd ni droit de
+# recharger PHP-FPM, et une copie par rsync n'y apporterait rien.
+on:
+  push:
+    branches: [master]
+  workflow_dispatch:
+
+# Deux déploiements simultanés se marcheraient dessus dans le même répertoire.
+concurrency:
+  group: deploiement
+  cancel-in-progress: false
+
+jobs:
+  deployer:
+    name: Mettre en ligne
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Clé SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.DEPLOY_KEY }}" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+
+      - name: Déployer
+        run: |
+          ssh -o StrictHostKeyChecking=no -p ${{ secrets.DEPLOY_PORT }} -i ~/.ssh/deploy_key \
+            ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }} << 'EOF'
+          set -e
+          cd ${{ vars.DEPLOY_PATH || '/home/wqktajhw/datan' }}
+
+          # Vider var/cache/prod sous une commande en cours la fait échouer sans
+          # message exploitable (CLAUDE.md) : le sync de 6 h et le déploiement ne
+          # doivent jamais se croiser. Mieux vaut refuser que casser la moisson.
+          if ps -u "$(id -un)" -o args= 2>/dev/null | grep -q '[a]pp:sync:quotidien'; then
+            echo "!! Synchronisation quotidienne en cours. Déploiement interrompu."
+            exit 1
+          fi
+
+          echo "→ Code"
+          git pull origin master
+
+          echo "→ Dépendances"
+          php ~/composer.phar install --no-interaction --prefer-dist --no-dev --optimize-autoloader
+
+          echo "→ Migrations"
+          php bin/console doctrine:migrations:migrate --no-interaction --no-ansi --allow-no-migration
+
+          # assets/vendor/ est dans .gitignore : Stimulus et Turbo, déclarés
+          # distants dans importmap.php, ne sont pas dans le dépôt et doivent se
+          # télécharger ici, avant la compilation.
+          echo "→ Paquets JavaScript"
+          php bin/console importmap:install --no-ansi
+
+          echo "→ Compilation des assets"
+          php bin/console asset-map:compile --no-ansi
+
+          # En dernier : le conteneur compilé fige le nombre d'arguments de chaque
+          # constructeur. Servir du code neuf avec un cache ancien fait tomber les
+          # pages en ArgumentCountError (CLAUDE.md).
+          echo "→ Cache"
+          php bin/console cache:clear --env=prod --no-ansi
+
+          # cache:clear a emporté le cache HTTP avec le reste. Le réchauffage
+          # dure une quinzaine de minutes : il part en arrière-plan, détaché de
+          # la session SSH, pour ne pas faire attendre le workflow.
+          echo "→ Réchauffage du cache HTTP (arrière-plan, var/log/rechauffage.log)"
+          APP_ENV=prod nohup php bin/console app:cache:rechauffer --sans-purge --no-ansi             >> var/log/rechauffage.log 2>&1 < /dev/null &
+
+          echo "✓ En ligne"
+          EOF
+
+      # La préproduction est sous mot de passe (bloc « PRÉPRODUCTION » de
+      # public/.htaccess) : sans identifiants, curl reçoit 401 et le contrôle ne
+      # dit rien de l'application. Le secret porte « identifiant:motdepasse » ;
+      # il se retire avec le bloc, le jour de la bascule.
+      - name: Vérifier que le site répond
+        env:
+          HTTP_AUTH: ${{ secrets.HTTP_AUTH }}
+        run: |
+          identifiants=()
+          if [ -n "$HTTP_AUTH" ]; then identifiants=(-u "$HTTP_AUTH"); fi
+          code=$(curl -s -o /dev/null -w '%{http_code}' --max-time 30 "${identifiants[@]}" "${{ vars.URL_PUBLIQUE }}")
+          echo "HTTP $code sur ${{ vars.URL_PUBLIQUE }}"
+          if [ "$code" = 401 ] && [ -z "$HTTP_AUTH" ]; then
+            echo "!! Le site demande un mot de passe : poser le secret HTTP_AUTH (identifiant:motdepasse)."
+          fi
+          test "$code" = "200"

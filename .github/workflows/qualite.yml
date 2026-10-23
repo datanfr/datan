@@ -1,0 +1,84 @@
+name: Qualité
+
+# Le dépôt n'a pas de tests : ces contrôles sont donc le seul filet avant la
+# production. Ils sont choisis pour attraper ce qui casse réellement ici — un
+# gabarit Twig invalide, un service mal câblé, et surtout une migration qui ne
+# décrit plus les entités.
+on:
+  push:
+    branches: [master]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  controles:
+    name: Lint et schéma
+    runs-on: ubuntu-latest
+
+    services:
+      # 10.6 comme la production, et NON 11.7 comme le poste de développement.
+      # C'est tout l'intérêt du contrôle : une migration écrite sur 11.7 peut
+      # produire du DDL que 10.6 refuse. C'est arrivé — `profession_foi` héritait
+      # de `utf8mb4_uca1400_ai_ci`, collation apparue en 11.4, et la restauration
+      # s'est arrêtée dessus (« #1273 Unknown collation »).
+      mariadb:
+        image: mariadb:10.6
+        env:
+          MARIADB_ROOT_PASSWORD: datan
+          MARIADB_DATABASE: datan_symfony
+          MARIADB_USER: datan
+          MARIADB_PASSWORD: datan
+        ports:
+          - 3307:3306
+        options: >-
+          --health-cmd="healthcheck.sh --connect --innodb_initialized"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=10
+
+    env:
+      APP_ENV: prod
+      APP_SECRET: contrôle-de-qualité-sans-valeur-secrète
+      DATABASE_URL: "mysqli://datan:datan@127.0.0.1:3307/datan_symfony?serverVersion=10.6.27-MariaDB&charset=utf8mb4"
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: PHP 8.3
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          # mysqli et non pdo_mysql : le DSN du projet est « mysqli:// ».
+          extensions: ctype, iconv, intl, mysqli, mbstring, xml, zip
+          coverage: none
+          tools: composer:v2
+
+      - name: Cache des dépendances
+        uses: actions/cache@v4
+        with:
+          path: vendor
+          key: composer-${{ hashFiles('composer.lock') }}
+          restore-keys: composer-
+
+      - run: composer install --no-interaction --no-progress --prefer-dist
+
+      - name: Syntaxe PHP
+        run: find src config public tests -name '*.php' -print0 | xargs -0 -n1 -P4 php -l
+
+      - name: Gabarits Twig
+        run: php bin/console lint:twig templates --no-ansi
+
+      - name: Fichiers YAML
+        run: php bin/console lint:yaml config --parse-tags --no-ansi
+
+      - name: Conteneur de services
+        run: php bin/console lint:container --no-ansi
+
+      # Le contrôle qui compte : rejouer les 45 migrations sur une base vierge,
+      # puis vérifier qu'elles décrivent bien les entités. Sans lui, un champ
+      # ajouté sans migration ne se voit qu'au déploiement, quand la page tombe.
+      - name: Migrations sur base vierge
+        run: php bin/console doctrine:migrations:migrate --no-interaction --no-ansi --allow-no-migration
+
+      - name: Schéma conforme aux entités
+        run: php bin/console doctrine:schema:validate --no-ansi

@@ -1,0 +1,56 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block title %}Parrainages des députés en 2022{% endblock %}
+
+{% block body %}
+  <div class="card">
+    <div class="card-body p-0">
+      <table class="table table-striped mb-0">
+        <caption class="sr-only">Parrainages des députés en 2022</caption>
+        <thead>
+          <tr>
+            <th scope="col">ID</th>
+            <th scope="col">Nom</th>
+            <th scope="col">Mandat</th>
+            <th scope="col">Circonscription</th>
+            <th scope="col">Département</th>
+            <th scope="col">Candidat parrainé</th>
+            <th scope="col">mpId</th>
+            <th scope="col">Page Datan</th>
+            <th scope="col" class="text-right">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for p in parrainages %}
+            <tr>
+              <td>{{ p.id }}</td>
+              <td>{{ p.prenom }} {{ p.nom }}</td>
+              <td>{{ p.mandat }}</td>
+              <td>{{ p.circonscription }}</td>
+              <td>{{ p.departement }}</td>
+              <td>{{ p.candidat }}</td>
+              {# Cellule rouge quand le rattachement au député manque : c'est le repère du legacy. #}
+              <td class="{{ p.mpId ? '' : 'bg-danger' }}">{{ p.mpId }}</td>
+              <td>
+                {# Lien vers la fiche seulement si elle existe et si le slug de
+                   département est une adresse valide (les slugs corses en
+                   majuscules ne le sont pas). Sinon on ne fabrique pas un lien
+                   qui répondrait 404. #}
+                {% if p.dptSlug and p.slug and p.dptSlug matches '/^[a-z0-9\\-]+$/' %}
+                  <a href="{{ path('depute_individual', {dptSlug: p.dptSlug, slug: p.slug}) }}" target="_blank" rel="noopener">Page datan</a>
+                {% else %}
+                  <span class="text-muted">—</span>
+                {% endif %}
+              </td>
+              <td class="text-right">
+                <a class="btn btn-sm btn-outline-primary" href="{{ path('admin_parrainage_modifier', {id: p.id}) }}">Modifier</a>
+              </td>
+            </tr>
+          {% else %}
+            <tr><td colspan="9" class="text-center p-4">Aucun parrainage.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+{% endblock %}

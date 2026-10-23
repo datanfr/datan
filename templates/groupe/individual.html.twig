@@ -1,0 +1,555 @@
+{% extends 'base.html.twig' %}
+
+{% block preloads %}{{ include('partials/preload_couverture.html.twig') }}{% endblock %}
+
+{% import 'groupe/partials/_icones.html.twig' as ico %}
+
+{% set nom_groupe = groupe.libelle|name_group %}
+{% set actif = groupe.date_fin is null %}
+{% set non_inscrits = groupe.libelle_abrev == 'NI' %}
+{% set profil_membres = path('groupe_membres', {legislature: groupe.legislature, abrev: groupe.libelle_abrev|lower}) %}
+{% set lien_statistiques = path('groupe_statistiques', {legislature: groupe.legislature, abrev: groupe.libelle_abrev|lower}) %}
+
+{% block title %}{{ non_inscrits ? 'Députés non inscrits' : nom_groupe ~ ' (' ~ groupe.libelle_abrev ~ ')' }} - Assemblée Nationale | Datan{% endblock %}
+
+{% block meta_description %}Découvrez les résultats de vote du groupe {{ nom_groupe }} ({{ groupe.libelle_abrev }}) : taux de participation, cohésion au sein groupe, proximité avec les autres groupes parlementaires.{% endblock %}
+
+{% block stylesheets %}
+  <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/flickity.min.css') }}">
+  {# Jauges circulaires (.c100 pNN) du comportement politique : feuille séparée
+     de main.css et chargée par page, comme sur datan.fr — sans elle les
+     pourcentages s'affichent en texte nu. #}
+  <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/circle.css') }}">
+{% endblock %}
+
+{# Flickity doit précéder main.min.js, qui initialise le carrousel des votes. #}
+{% block javascripts_head %}
+  <script src="{{ asset('assets/js/libraries/flickity/flickity.pkgd.min.js') }}"></script>
+{% endblock %}
+
+{% block body %}
+<div class="container-fluid bloc-img-deputes async_background" id="container-always-fluid" style="height: 13em"></div>
+{% if groupe.couleur %}
+  <div class="liseret-groupe" style="background-color: {{ groupe.couleur }}"></div>
+{% endif %}
+<div class="container pg-groupe-individual">
+  <div class="row">
+    <div class="col-12 col-md-8 col-lg-4 offset-md-2 offset-lg-0">
+      {{ include('groupe/partials/carte_profil.html.twig', {tag: 'h1', effectif: chiffres.effectif}) }}
+    </div>
+
+    <div class="col-md-12 col-lg-8 offset-lg-0 pl-lg-5">
+      {{ include('partials/campagne.html.twig', {classes: 'mt-5'}) }}
+
+      <div class="bloc-bio mt-5">
+        {# Encart « Municipales 2026 » (`groupes/partials/electionFeature.php`),
+           servi dans le bloc-bio, avant son titre, comme sur le site. Nul —
+           donc absent — hors législature courante ou tant que la donnée
+           d'`app:import:elections` n'est pas là ; zéro, en revanche, s'affiche :
+           « Aucun député du groupe … n'est candidat » est une information. #}
+        {% if election_municipales is not null %}
+          <div class="card card-election-feature information-success mb-5 border-0" style="overflow: hidden">
+            <div class="card-body">
+              <h2 class="text-white">🗳️ Municipales 2026</h2>
+              {% if election_municipales == 0 %}
+                <p class="mb-0">Aucun député du groupe {{ groupe.libelle_abrev }} n'est candidat aux élections municipales de 2026.</p>
+              {% else %}
+                <p class="mb-0">Il y a {{ election_municipales }} député{{ election_municipales > 1 ? 's' : '' }} membre{{ election_municipales > 1 ? 's' : '' }} du groupe {{ groupe.libelle_abrev }} candidat{{ election_municipales > 1 ? 's' : '' }} aux élections municipales de 2026.</p>
+              {% endif %}
+              <a href="{{ path('elections_individual', {slug: 'municipales-2026'}) }}" class="mt-3 btn btn-light">En savoir plus sur ces élections</a>
+            </div>
+          </div>
+        {% endif %}
+        <h2 class="mb-4 title-center">Le groupe {{ groupe.libelle_abrev }} en quelques mots</h2>
+        {% if non_inscrits %}
+          <p>Les députés non inscrits (NI) ne sont pas membres d'un groupe politique.</p>
+          <p>Ces députés peuvent cependant être membres d'un parti politique. Le parti politique est un groupement constitué hors de l'Assemblée nationale, alors que le <a href="http://www2.assemblee-nationale.fr/15/les-groupes-politiques/" target="_blank">groupe politique</a> est un organe officiel de l'Assemblée qui comporte au minimum 15 députés. Certains groupes, comme <a href="{{ path('groupe_individual', {legislature: 15, abrev: 'udi_i'}) }}" target="_blank">UDI_I</a>, regroupent ainsi des députés venant de partis différents.</p>
+          <p>Les députés non inscrits ne sont pas représentés à la <a href="http://www2.assemblee-nationale.fr/15/la-conference-des-presidents" target="_blank">conférence des présidents</a> ni au <a href="http://www2.assemblee-nationale.fr/15/le-bureau-de-l-assemblee-nationale" target="_blank">bureau de l'Assemblée nationale</a>.</p>
+          <p>Cependant, ils disposent de certains droits, comme l'attribution de temps de parole pour la discussion des textes (<i>art. 49</i> du <a href="http://www.assemblee-nationale.fr/connaissance/reglement.pdf" target="_blank">règlement de l'Assemblée nationale</a>).</p>
+        {% else %}
+          <p>
+            Le groupe <b>{{ nom_groupe }}</b> ({{ groupe.libelle_abrev }}) {{ actif ? 'est' : 'était' }} un groupe classé {{ echiquier }} de l'échiquier politique.
+            Il a été créé en {{ mois_creation }}{{ edito.creation|raw }}.
+            {% if not actif %}
+              Le groupe a été dissout le {{ groupe.date_fin|date_fr }}.
+            {% endif %}
+          </p>
+          {% if president %}
+            <p>
+              {{ president.civilite == 'Mme' ? 'Sa' : 'Son' }} président{{ president.civilite == 'Mme' ? 'e' : '' }} {{ actif ? 'est' : 'était' }}
+              <a href="{{ path('depute_individual', {dptSlug: president.dpt_slug, slug: president.slug}) }}">{{ president.firstname }} {{ president.lastname }}</a>,
+              à ce poste depuis le {{ president.date_debut|date_fr }}.
+            </p>
+          {% endif %}
+          {% if edito.opposition %}
+            <p>
+              Le groupe s'est déclaré comme faisant partie de <b>{{ edito.opposition }}</b>.
+              {% if groupe.position_politique != 'Majoritaire' %}
+                S'il n'est pas majoritaire, un groupe peut soit appartenir à l'opposition, soit être allié à la majorité présidentielle. Dans les deux cas, l'Assemblée nationale leur octroie <a href="http://www.assemblee-nationale.fr/connaissance/reglement/reforme-reglement-2009-4-11.pdf" target="_blank">des droits particuliers</a>, notamment au niveau de la prise de parole en séance publique.
+              {% endif %}
+            </p>
+          {% endif %}
+        {% endif %}
+      </div>
+
+      {% if derniers_votes %}
+        <div class="bloc-votes carousel-container mt-5">
+          <div class="d-flex justify-content-between mb-4">
+            <h2 class="title-center mb-0">Derniers votes</h2>
+            <div class="bloc-carousel-votes">
+              <a class="btn see-all-votes mx-2" href="{{ path('groupe_votes', {legislature: groupe.legislature, abrev: groupe.libelle_abrev|lower}) }}"><span>VOIR TOUS</span></a>
+            </div>
+          </div>
+          <div class="bloc-carousel-votes-flickity">
+            <div class="carousel-cards">
+              {% for vote in derniers_votes %}
+                {{ include('groupe/partials/carte_vote.html.twig') }}
+              {% endfor %}
+              <div class="card card-vote see-all">
+                <div class="card-body d-flex align-items-center justify-content-center">
+                  <a href="{{ path('groupe_votes', {legislature: groupe.legislature, abrev: groupe.libelle_abrev|lower}) }}" class="stretched-link no-decoration">VOIR TOUS</a>
+                </div>
+              </div>
+            </div>
+            <div class="carousel-buttons d-flex justify-content-center mt-3">
+              <button type="button" class="btn prev mr-2 carousel--prev" aria-label="précédent">
+                <svg width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M5.854 4.646a.5.5 0 0 1 0 .708L3.207 8l2.647 2.646a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 0 1 .708 0z"/><path fill-rule="evenodd" d="M2.5 8a.5.5 0 0 1 .5-.5h10.5a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5z"/></svg>
+              </button>
+              <button type="button" class="btn next ml-2 carousel--next" aria-label="suivant">
+                <svg width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10.146 4.646a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708-.708L12.793 8l-2.647-2.646a.5.5 0 0 1 0-.708z"/><path fill-rule="evenodd" d="M2 8a.5.5 0 0 1 .5-.5H13a.5.5 0 0 1 0 1H2.5A.5.5 0 0 1 2 8z"/></svg>
+              </button>
+            </div>
+          </div>
+        </div>
+      {% endif %}
+
+      <div class="bloc-chiffres mt-5">
+        <h2 class="mb-3 title-center">En chiffres</h2>
+        <div class="row">
+          <div class="col-sm-6">
+            <div class="card">
+              <div class="card-body">
+                <h3>Nombre de députés</h3>
+                <div class="stat"><span>{{ chiffres.effectif }}</span></div>
+                <div class="explanation">
+                  {% set part = (chiffres.effectif / sieges * 100)|round %}
+                  {# Les non-inscrits ne forment pas un groupe : ils sont hors du
+                     classement par effectif, et n'ont donc pas de rang. Le site
+                     de référence concatène alors le rang vide à son exposant et
+                     publie « est le e plus gros groupe » ; on retombe ici sur sa
+                     propre phrase sans classement, qui n'affirme rien de faux. #}
+                  {% if not actif or rang.rang is null %}
+                    <p>Avec {{ chiffres.effectif }} députés, le groupe {{ groupe.libelle_abrev }} représent{{ actif ? 'e' : 'ait' }} {{ part }}% du nombre total de députés à l'Assemblée nationale, qui est de {{ sieges }}.</p>
+                  {% else %}
+                    <p>Avec {{ chiffres.effectif }} députés, le groupe {{ groupe.libelle_abrev }} est le {% if rang.rang != 1 %}{{ rang.rang }}<sup>e</sup> {% endif %}plus gros groupe politique de l'Assemblée nationale (sur {{ rang.total }}). Il représente {{ part }}% du nombre total de députés ({{ sieges }}).</p>
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-6 mt-4 mt-sm-0">
+            <div class="card">
+              <div class="card-body">
+                <h3>Âge moyen des députés</h3>
+                <div class="stat"><span>{{ chiffres.age_moyen ?? '—' }} ans</span></div>
+                <div class="explanation">
+                  {% if groupe.legislature == legislature_courante %}
+                    <p>Les députés {{ actif ? '' : 'qui étaient ' }}membres du groupe {{ groupe.libelle_abrev }} ont en moyenne {{ chiffres.age_moyen }} ans. C'est {{ comparatifs.age }} que la moyenne de l'Assemblée nationale, qui est de {{ moyennes.age }} ans.</p>
+                  {% else %}
+                    <p>Les députés qui étaient membres du groupe {{ groupe.libelle_abrev }} avaient en moyenne {{ chiffres.age_moyen }} ans lors de la fin de la {{ groupe.legislature }}<sup>ème</sup> législature. C'est {{ comparatifs.age }} que la moyenne de l'Assemblée nationale, qui était de {{ moyennes.age }} ans.</p>
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row mt-4">
+          <div class="col-sm-6">
+            <div class="card">
+              <div class="card-body">
+                <h3>Taux de féminisation</h3>
+                <div class="stat"><span>{{ chiffres.feminisation ?? '—' }}%</span></div>
+                <div class="explanation">
+                  {% if groupe.legislature == legislature_courante %}
+                    <p>Le groupe {{ groupe.libelle_abrev }} {{ actif ? 'compte' : 'comptait' }} {{ chiffres.femmes }} députées femmes dans ses rangs, soit {{ chiffres.feminisation }}% de ses effectifs. C'est {{ comparatifs.feminisation }} que la moyenne de l'Assemblée nationale, qui est de {{ moyennes.feminisation }}%.</p>
+                  {% else %}
+                    <p>Le groupe {{ groupe.libelle_abrev }} comptait {{ chiffres.femmes }} députées femmes, soit {{ chiffres.feminisation }}% de ses effectifs. C'est {{ comparatifs.feminisation }} que la moyenne de l'Assemblée nationale lors de la {{ groupe.legislature }}<sup>ème</sup> législature, qui était de {{ moyennes.feminisation }}%.</p>
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+          </div>
+          {% if actif and origine_sociale %}
+            <div class="col-sm-6 mt-4 mt-sm-0">
+              <div class="card">
+                {# `randomized` : la famille socio-professionnelle présentée est tirée au
+                   sort à chaque calcul de la page, comme sur le site de référence. #}
+                <div class="card-body randomized">
+                  <h3>Origine sociale des députés</h3>
+                  <div class="stat"><span>{{ origine_sociale.pct }}%</span></div>
+                  <div class="explanation">
+                    <p>
+                      {{ origine_sociale.n > 0 ? origine_sociale.n : 'Aucun' }} député{{ origine_sociale.n > 1 ? 's' : '' }} du groupe {{ groupe.libelle_abrev }} (soit {{ origine_sociale.pct }}%) appartien{{ origine_sociale.n > 1 ? 'nent' : 't' }} à la catégorie <b><u>{{ origine_sociale.famille|lower }}</u></b>.
+                      C'est {{ comparatifs.origine_sociale }} que dans la population française ({{ origine_sociale.population|round }}%).
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          {% endif %}
+        </div>
+      </div>
+
+      <div class="bloc-statistiques mt-5">
+        <h2 class="mb-3 title-center">Comportement politique</h2>
+
+        {% if soutien.votes > 0 %}
+          <div class="card card-statistiques my-4 border-0">
+            <div class="card-body pb-0">
+              <div class="row">
+                <div class="col-12 d-flex flex-row align-items-center">
+                  <div class="icon">{{ ico.voting() }}</div>
+                  <h3 class="ml-3">SOUTIEN ENVERS LE GOUVERNEMENT
+                    {{ include('groupe/partials/aide.html.twig', {titre: 'Taux de soutien au gouvernement', libelle: 'la soutien au gouvernement', contenu: "Ce taux représente le pourcentage de textes portés par le gouvernement qui est voté par ce groupe politique."}) }}
+                  </h3>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-12">
+                  {% if groupe.position_politique in ['Minoritaire', 'Majoritaire'] %}
+                    <p>Le groupe {{ nom_groupe }} {{ actif ? 'est' : 'était' }} membre de la <b>majorité présidentielle</b>. Le groupe {{ actif ? 'soutient' : 'soutenait' }} donc l'action du gouvernement et {{ actif ? 'vote' : 'votait' }} fréquemment en faveur des textes qu'il présente.</p>
+                  {% elseif groupe.position_politique == 'Opposition' %}
+                    <p>Le groupe {{ nom_groupe }} est un <b>groupe d'opposition</b>. Si l'opposition vote parfois en faveur des textes du gouvernement, son soutien n'est pas systématique.</p>
+                  {% endif %}
+                  <p>Sur les {{ soutien.votes }} votes sur des projets de loi présentés par le gouvernement, le groupe {{ groupe.libelle_abrev }} a voté <b>en faveur de {{ soutien.soutiens }} texte{{ soutien.soutiens > 1 ? 's' : '' }}</b>. Il a donc soutenu le gouvernement dans {{ soutien.pourcentage }}% des cas.</p>
+                </div>
+              </div>
+              {% if soutien_groupes|length > 1 %}
+                {% set max_soutiens = soutien_groupes|first.soutiens %}
+                <div class="row mt-1 bar-container stats rounded-bottom py-4">
+                  <div class="col-12">
+                    <p class="text-center font-weight-bold mt-2 pb-3 h4 mx-5 px-1 px-md-5">Les groupes soutenant le plus le gouvernement</p>
+                    <div class="chart">
+                      <div class="bar-chart d-flex flex-row justify-content-between align-items-end">
+                        {% for g in soutien_groupes %}
+                          <div class="bars mx-1 mx-md-2 {{ g.uid == groupe.uid ? 'bg-danger' : '' }}"
+                               style="height: {{ max_soutiens > 0 ? (g.soutiens / max_soutiens * 100)|round : 0 }}%">
+                            <span class="score">{{ g.soutiens }}</span>
+                          </div>
+                        {% endfor %}
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-12 d-flex justify-content-between mt-2">
+                    {# Les sigles d'alliance électorale sont raccourcis dans cette
+                       légende, comme sur l'accueil et dans les classements de la
+                       page statistiques : c'est le `remove_nupes()` du site. #}
+                    {% set abreges = {'LFI-NFP': 'LFI', 'LFI-NUPES': 'LFI', 'GDR-NUPES': 'GDR'} %}
+                    {% for g in soutien_groupes %}
+                      <div class="legend-element d-flex align-items-center justify-content-center">
+                        <span class="font-weight-bold text-center tooltipHelp tooltipDashed" data-toggle="tooltip" data-placement="top" title="{{ g.libelle|name_group }}">{{ abreges[g.libelle_abrev]|default(g.libelle_abrev) }}</span>
+                      </div>
+                    {% endfor %}
+                  </div>
+                </div>
+              {% endif %}
+            </div>
+          </div>
+        {% endif %}
+
+        <div class="card card-statistiques my-4">
+          <div class="card-body">
+            <div class="row">
+              <div class="col-12 d-flex flex-row align-items-center">
+                <div class="icon">{{ ico.voting() }}</div>
+                <h3 class="ml-3">PARTICIPATION AUX VOTES
+                  {{ include('groupe/partials/aide.html.twig', {titre: 'Taux de participation', libelle: 'la participation aux votes', contenu: "Ce taux de participation représente, en moyenne, <b>le pourcentage de députés du groupe participant aux votes</b>.<br><br>Attention, le taux de participation ne mesure pas toute l'activité d'un député ou d'un groupe. Contrairement au <a href='https://www.europarl.europa.eu/about-parliament/fr/organisation-and-rules/how-plenary-works' title='lien'>Parlement européen</a>, les votes à l'Assemblée nationale se déroulent à n'importe quel moment de la semaine. D'autres réunions ont souvent lieu en même temps, expliquant le faible taux de participation des députés et des groupes.<br><br>Pour plus d'information, <a href='" ~ path('page_statistiques') ~ "#participation' target='_blank'>cliquez ici</a>."}) }}
+                </h3>
+              </div>
+            </div>
+            {% if comportement.participation_moyenne is null %}
+              <div class="row"><div class="col-12 mt-2">
+                <p>Cette statistique sera disponible dès qu'un nombre suffisant de votes sera atteint pour le groupe {{ nom_groupe }}.</p>
+              </div></div>
+            {% else %}
+              <div class="row">
+                <div class="col-lg-3 offset-lg-1 mt-2">
+                  <div class="d-flex justify-content-center align-items-center">
+                    <div class="c100 p{{ comportement.participation_moyenne }} m-0">
+                      <span>{{ comportement.participation_moyenne }}%</span>
+                      <div class="slice"><div class="bar"></div><div class="fill"></div></div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-lg-8 infos mt-4 mt-lg-2">
+                  <div class="texte ml-md-3 pl-md-3 mt-md-0 mt-3">
+                    <p>En moyenne, {{ comportement.participation_moyenne }}% {{ non_inscrits ? 'des députés non inscrits' : 'des députés du groupe ' ~ groupe.libelle_abrev }} {{ actif ? 'prennent' : 'prenaient' }} part aux scrutins publics de l'Assemblée nationale.</p>
+                    <p>
+                      {% if non_inscrits %}Les députés non inscrits <b>participent {% else %}Le groupe <b>{{ actif ? 'participe' : 'participait' }} {% endif %}{{ comparatifs.participation }}</b>
+                      que la moyenne {{ actif ? 'des autres groupes' : "de tous les groupes de l'Assemblée" }}, qui est {{ comparatifs.participation == 'autant' ? 'aussi ' : '' }}de {{ moyennes.participation }}%.
+                    </p>
+                    <p>Ce score de participation prend en compte tous les scrutins publics. Ce score est faible du fait de l'organisation du travail à l'Assemblée nationale. Pour découvrir d'autres scores de participation, <a href="{{ path('classement_individual', {page: 'groupes-participation'}) }}">cliquez ici</a>.</p>
+                    <div class="d-flex justify-content-center mt-3">
+                      <a href="{{ lien_statistiques }}#participation" class="btn btn-outline-primary text-center">Voir l'historique</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            {% endif %}
+          </div>
+        </div>
+
+        <div class="card card-statistiques my-4">
+          <div class="card-body">
+            <div class="row">
+              <div class="col-12 d-flex flex-row align-items-center">
+                <div class="icon">{{ ico.loyalty() }}</div>
+                <h3 class="ml-3">COHESION AU SEIN DU GROUPE
+                  {{ include('groupe/partials/aide.html.twig', {titre: 'Taux de cohésion', libelle: 'la cohésion', contenu: "Le taux de cohésion représente <b>l'unité d'un groupe politique</b> lorsqu'il vote. Il peut prendre des mesures allant de 0 à 1. Un taux proche de 1 signifie que le groupe est très uni.<br><br>Attention, dans beaucoup de parlements, y compris l'Assemblée nationale, les députés suivent dans la plupart des cas la ligne officielle du groupe, expliquant des taux de cohésion très élevés. Le mesure proposée ici est intéressante quand elle est comparée avec les mesures de cohésion des autres groupes.<br><br>Pour plus d'information, <a href='" ~ path('page_statistiques') ~ "#cohesion' target='_blank'>cliquez ici</a>."}) }}
+                </h3>
+              </div>
+            </div>
+            {% if comportement.cohesion_moyenne is null %}
+              <div class="row"><div class="col-12 mt-2">
+                <p>Cette statistique sera disponible dès qu'un nombre suffisant de votes sera atteint pour le groupe {{ nom_groupe }}.</p>
+              </div></div>
+            {% else %}
+              {# Virgule décimale française (« 0,95 » où le site écrit « 0.95 ») :
+                 correction typographique assumée, même règle que les pages de
+                 classement et la page statistiques — cf. TODO §4. #}
+              {% set coh = comportement.cohesion_moyenne|number_format(2, ',', ' ') %}
+              <div class="row">
+                <div class="col-lg-3 offset-lg-1 mt-2">
+                  <div class="d-flex justify-content-center align-items-center">
+                    <div class="c100 p{{ (comportement.cohesion_moyenne * 100)|round }} m-0">
+                      <span>{{ coh }}</span>
+                      <div class="slice"><div class="bar"></div><div class="fill"></div></div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-lg-8 infos mt-4 mt-lg-2">
+                  <div class="texte ml-md-3 pl-md-3 mt-md-0 mt-3">
+                    <p>Avec un taux de cohésion de {{ coh }},{{ non_inscrits ? ' les députés non inscrits peuvent être considérés' : ' le groupe ' ~ groupe.libelle_abrev ~ ' peut être considéré' }} comme <b>{{ cohesion_edito.absolute }} soudé{{ non_inscrits ? 's' : '' }}</b> quand il {{ actif ? "s'agit" : "s'agissait" }} de voter.</p>
+                    <p>Le groupe {{ actif ? 'est' : 'était' }} en effet <b>{{ cohesion_edito.relative }} uni</b> que la moyenne de tous les groupes, qui est de {{ moyennes.cohesion|number_format(2, ',', ' ') }}.</p>
+                    <div class="d-flex justify-content-center mt-3">
+                      <a href="{{ lien_statistiques }}#cohesion" class="btn btn-outline-primary text-center">Voir l'historique</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            {% endif %}
+          </div>
+        </div>
+
+        {# La carte « proximité avec la majorité présidentielle » n'a de sens que
+           s'il existe un groupe majoritaire. Depuis la dissolution de 2024,
+           l'Assemblée n'en déclare plus aucun : le site de référence affiche
+           alors sa mention d'indisponibilité, pas un groupe choisi au jugé. #}
+        {% if groupe.libelle_abrev not in ['LAREM', 'RE'] %}
+          <div class="card card-statistiques my-4">
+            <div class="card-body">
+              <div class="row">
+                <div class="col-12 d-flex flex-row align-items-center">
+                  <div class="icon">{{ ico.group() }}</div>
+                  <h3 class="ml-3">PROXIMITÉ AVEC LA MAJORITE PRESIDENTIELLE
+                    {{ include('groupe/partials/aide.html.twig', {titre: 'Taux de proximité avec la majorité', libelle: 'la proximité avec la majorité présidentielle', contenu: "Le taux de proximité avec la majorité présidentielle représente le pourcentage de votes où le groupe <b>a voté en accord avec le groupe de la majorité</b>.<br><br>Pour plus d'information, <a href='" ~ path('page_statistiques') ~ "#proximity' target='_blank'>cliquez ici</a>."}) }}
+                  </h3>
+                </div>
+              </div>
+              {% if majorite is null %}
+                <div class="row"><div class="col-12 mt-2">
+                  <p>Cette statistique sera disponible dès qu'un nombre suffisant de votes sera atteint pour le groupe {{ nom_groupe }}.</p>
+                </div></div>
+              {% else %}
+                <div class="row">
+                  <div class="col-lg-3 offset-lg-1 mt-2">
+                    <div class="d-flex justify-content-center align-items-center">
+                      <div class="c100 p{{ majorite.score }} m-0">
+                        <span>{{ majorite.score }}%</span>
+                        <div class="slice"><div class="bar"></div><div class="fill"></div></div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-lg-8 infos mt-4 mt-lg-2">
+                    <div class="texte ml-md-3 pl-md-3 mt-md-0 mt-3">
+                      <p>
+                        {{ non_inscrits ? 'Les députés non inscrits ont' : 'Le groupe ' ~ groupe.libelle_abrev ~ ' a' }}
+                        voté en accord avec le groupe de la majorité présidentielle (<a href="{{ path('groupe_individual', {legislature: majorite.legislature, abrev: majorite.libelle_abrev|lower}) }}">{{ majorite.libelle }}</a>) dans {{ majorite.score }}% des cas.
+                      </p>
+                      <div class="d-flex justify-content-center mt-3">
+                        <a href="{{ lien_statistiques }}#majorite" class="btn btn-outline-primary text-center">Voir l'historique</a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              {% endif %}
+            </div>
+          </div>
+        {% endif %}
+
+        <div class="card card-statistiques bloc-proximity my-4">
+          <div class="card-body">
+            <div class="row">
+              <div class="col-2"><div class="icon">{{ ico.group() }}</div></div>
+              <div class="col-10">
+                <h3>PROXIMITÉ AVEC LES GROUPES POLITIQUES
+                  {{ include('groupe/partials/aide.html.twig', {titre: 'Taux de proximité avec les groupes', libelle: 'la proximité avec les groupes politiques', contenu: "Le <b>taux de proximité entre deux groupes</b> représente le pourcentage de fois où les deux groupes ont voté la même chose. Chaque groupe se voit attribuer une <i>position majoritaire</i>, en fonction du vote de ses membres. Cette position peut soit être 'pour', 'contre', ou 'absention'. Pour chaque vote, nous déterminons si les deux groupes ont la même position majoritaire. Le taux de proximité est le pourcentage de fois où les deux groupes ont cette même position majoritaire.<br><br>Par exemple, si le taux est de 75%, cela signifie que les deux groupes ont voté la même chose dans 75% des cas.<br><br>Pour plus d'information, <a href='" ~ path('page_statistiques') ~ "#proximity' target='_blank'>cliquez ici</a>."}) }}
+                </h3>
+              </div>
+            </div>
+            {% if proximites is empty %}
+              <div class="row"><div class="col-10 offset-2">
+                <p>Cette statistique sera disponible dès qu'un nombre suffisant de votes sera atteint pour le groupe {{ nom_groupe }}.</p>
+              </div></div>
+            {% else %}
+              {{ include('groupe/partials/barres_proximite.html.twig', {titre: 'souvent', lignes: proximites|slice(0, 3)}) }}
+              <div class="row">
+                <div class="col-12">
+                  <p>
+                    Le groupe avec lequel le groupe {{ groupe.libelle_abrev }} {{ actif ? 'est' : 'était' }} le plus proche est
+                    <a href="{{ path('groupe_individual', {legislature: proximites[0].legislature, abrev: proximites[0].libelle_abrev|lower}) }}" target="_blank">{{ proximites[0].libelle|name_group }}</a>,
+                    {{ proximites[0].maj_pres }}{{ proximites[0].echiquier ? ' classé ' ~ proximites[0].echiquier ~ " de l'échiquier politique" : '' }}.
+                    {% if proximites|length > 1 %}
+                      {{ actif ? 'Il est' : 'Il était' }} également proche du groupe
+                      <a href="{{ path('groupe_individual', {legislature: proximites[1].legislature, abrev: proximites[1].libelle_abrev|lower}) }}" target="_blank">{{ proximites[1].libelle|name_group }}</a>,
+                      {{ proximites[1].maj_pres }}{{ proximites[1].echiquier ? ' classé ' ~ proximites[1].echiquier : '' }}.
+                    {% endif %}
+                  </p>
+                </div>
+              </div>
+              {{ include('groupe/partials/barres_proximite.html.twig', {titre: 'rarement', lignes: proximites|slice(-3)}) }}
+              {% set dernier = proximites|last %}
+              {% set avant_dernier = proximites|length > 1 ? proximites[proximites|length - 2] : null %}
+              <div class="row">
+                <div class="col-12">
+                  <p>
+                    À l'opposé, le groupe avec lequel le groupe {{ groupe.libelle_abrev }} {{ actif ? 'est' : 'était' }} le moins proche est
+                    <a href="{{ path('groupe_individual', {legislature: dernier.legislature, abrev: dernier.libelle_abrev|lower}) }}" target="_blank">{{ dernier.libelle|name_group }}</a>,
+                    {{ dernier.maj_pres }}{{ dernier.echiquier ? ' classé ' ~ dernier.echiquier ~ " de l'échiquier politique" : '' }}.
+                    {% if avant_dernier %}
+                      Il vote également très peu avec
+                      <a href="{{ path('groupe_individual', {legislature: avant_dernier.legislature, abrev: avant_dernier.libelle_abrev|lower}) }}" target="_blank">{{ avant_dernier.libelle|name_group }}</a>,
+                      {{ avant_dernier.maj_pres }}{{ avant_dernier.echiquier ? ' classé ' ~ avant_dernier.echiquier : '' }}.
+                    {% endif %}
+                  </p>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-12 d-flex justify-content-center">
+                  <a href="{{ lien_statistiques }}#proximite" class="btn btn-primary">Voir tout le classement</a>
+                </div>
+              </div>
+            {% endif %}
+          </div>
+        </div>
+
+        {% if coalitions %}
+          <div class="card card-statistiques my-4">
+            <div class="card-body">
+              <div class="row">
+                <div class="col-2"><div class="icon">{{ ico.group() }}</div></div>
+                <div class="col-10">
+                  <h3>LES COALITIONS LES PLUS FREQUENTES
+                    {# Même explication que la proximité entre groupes : le site
+                       réutilise le popover du taux de proximité sous le titre
+                       « Coalitions les plus fréquentes » (individual.php:592). #}
+                    {{ include('groupe/partials/aide.html.twig', {titre: 'Coalitions les plus fréquentes', libelle: 'la proximité avec les groupes politiques', contenu: "Le <b>taux de proximité entre deux groupes</b> représente le pourcentage de fois où les deux groupes ont voté la même chose. Chaque groupe se voit attribuer une <i>position majoritaire</i>, en fonction du vote de ses membres. Cette position peut soit être 'pour', 'contre', ou 'absention'. Pour chaque vote, nous déterminons si les deux groupes ont la même position majoritaire. Le taux de proximité est le pourcentage de fois où les deux groupes ont cette même position majoritaire.<br><br>Par exemple, si le taux est de 75%, cela signifie que les deux groupes ont voté la même chose dans 75% des cas.<br><br>Pour plus d'information, <a href='" ~ path('page_statistiques') ~ "#proximity' target='_blank'>cliquez ici</a>."}) }}
+                  </h3>
+                  <p>Dans une Assemblée nationale où aucun groupe n'a la majorité absolue, les coalitions sont essentielles pour faire adopter des textes. Avec quels groupes le {{ groupe.libelle_abrev }} s'associe-t-il lors des votes ?</p>
+                  <p>
+                    La coalition avec laquelle le groupe {{ groupe.libelle_abrev }} a le plus fréquemment voté ({{ coalitions[0].votes }} scrutins sur {{ comportement.scrutins }}) est une coalition composée
+                    {%- if coalition_blocs %} de groupes
+                      {%- for bloc in coalition_blocs %}
+                        {{- loop.first ? ' ' : (loop.last ? ' et ' : ', ') }}
+                        {{- bloc.preposition }}<b>{{ bloc.nom }}</b> ({{ bloc.sigles|join(', ') }})
+                      {%- endfor -%}
+                    {%- else %} de {{ coalitions[0].sigles|length }} groupes ({{ coalitions[0].sigles|join(', ') }})
+                    {%- endif -%}.
+                  </p>
+                  <table class="table">
+                    <thead>
+                      <tr><th scope="col">Coalition</th><th scope="col" class="text-right">Type</th></tr>
+                    </thead>
+                    <tbody>
+                      {% for coalition in coalitions|slice(0, 5) %}
+                        <tr>
+                          <td>
+                            {% for sigle in coalition.sigles %}
+                              <span class="badge badge-groupe" style="background-color: {{ coalitions_couleurs[sigle] ?? '#6c757d' }}; color: #fff">{{ sigle }}</span>
+                            {% endfor %}
+                          </td>
+                          <td class="text-right">{{ coalition.votes }} votes</td>
+                        </tr>
+                      {% endfor %}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        {% endif %}
+      </div>
+
+      <div class="mt-5">
+        <h2 class="mb-3 title-center">Historique du groupe {{ groupe.libelle_abrev }}</h2>
+        <p>Sur cette page, vous trouvez des informations pour le groupe <i>{{ nom_groupe }}</i>. Pour chaque groupe, nous avons répertorié les anciens et nouraux groupes qui leur sont liés depuis la 14<sup>ème</sup> législature (2012).</p>
+        {% if historique %}
+          <p>Voici les différents groupes liés au groupe <i>{{ nom_groupe }}</i> :</p>
+          <div class="row">
+            {% for h in historique %}
+              <div class="col-md-6">
+                {{ include('groupe/partials/card.html.twig', {groupe: h, actifs: false, cat: h.legislature}) }}
+              </div>
+            {% endfor %}
+          </div>
+        {% else %}
+          <div class="alert alert-warning">
+            Nous n'avons pas associé d'autres groupes au groupe {{ groupe.libelle_abrev }}.
+          </div>
+        {% endif %}
+      </div>
+
+      {{ include('groupe/partials/partage.html.twig') }}
+
+      {# Bloc « En savoir plus » (fin de `groupes/individual.php`) : site,
+         Facebook et X du groupe, d'après la table de la rédaction
+         (`ReseauxGroupe`, transcrite de `Groupes_model::get_groupe_social_media`).
+         Les adresses passent toutes par `url_obf` — système en place, à ne pas
+         modifier (cf. CLAUDE.md) : ces liens sortants restent hors du graphe que
+         voient les moteurs. Les logos sont inlinés et `main.css` les colore via
+         `.btn-… svg path`, comme sur la fiche d'un député. Le lien Wikipédia de
+         la table n'est pas rendu : le site ne l'affiche pas non plus. #}
+      {% if liens.site is defined or liens.facebook is defined or liens.x is defined %}
+        <div class="bloc-links p-lg-0 p-md-2 mt-5">
+          <h2 class="title-center">En savoir plus</h2>
+          <div class="row mt-4">
+            {% if liens.site is defined %}
+              <div class="col-12 col-sm-6 mt-2 d-flex justify-content-center">
+                <span class="url_obf btn btn-website" url_obf="{{ url_obf(liens.site) }}">
+                    Site internet
+                </span>
+              </div>
+            {% endif %}
+            {% if liens.facebook is defined %}
+              <div class="col-12 col-sm-6 mt-2 d-flex justify-content-center">
+                <span class="url_obf btn btn-fcb" url_obf="{{ url_obf('https://www.facebook.com/' ~ liens.facebook) }}">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="1298" height="2500" viewBox="88.428 12.828 107.543 207.085"><path d="M158.232 219.912v-94.461h31.707l4.747-36.813h-36.454V65.134c0-10.658 2.96-17.922 18.245-17.922l19.494-.009V14.278c-3.373-.447-14.944-1.449-28.406-1.449-28.106 0-47.348 17.155-47.348 48.661v27.149H88.428v36.813h31.788v94.461l38.016-.001z"/></svg>
+                    <span class="ml-3">Facebook</span>
+                </span>
+              </div>
+            {% endif %}
+            {% if liens.x is defined %}
+              <div class="col-12 col-sm-6 mt-2 d-flex justify-content-center">
+                <span class="url_obf btn btn-twitter" url_obf="{{ url_obf('https://x.com/' ~ liens.x) }}">
+                    <svg width="1200" height="1227" viewBox="0 0 1200 1227" xmlns="http://www.w3.org/2000/svg"><path d="M714.163 519.284 1160.89 0h-105.86L667.137 450.887 357.328 0H0l468.492 681.821L0 1226.37h105.86l409.626-476.152 327.181 476.152H1200L714.137 519.284h.026Z"/></svg>
+                </span>
+              </div>
+            {% endif %}
+          </div>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{{ include('groupe/partials/pied_membres.html.twig') }}
+{% endblock %}

@@ -1,0 +1,52 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block title %}Questions du questionnaire{% endblock %}
+
+{% block body %}
+  <div class="mb-3">
+    <a class="btn btn-primary" href="{{ path('admin_quizz_creer') }}">Créer une question</a>
+  </div>
+
+  <div class="card">
+    <div class="card-body p-0">
+      <table class="table table-striped mb-0">
+        <caption class="sr-only">Questions du questionnaire</caption>
+        <thead>
+          <tr>
+            <th scope="col">Titre</th>
+            <th scope="col">Catégorie</th>
+            <th scope="col">Scrutin</th>
+            <th scope="col">État</th>
+            <th scope="col" class="text-right">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for question in questions %}
+            <tr>
+              <td>{{ question.titre }}</td>
+              <td>{{ question.categorieNom ?? '—' }}</td>
+              <td>n° {{ question.scrutinNumero }} · {{ question.legislature }}<sup>e</sup></td>
+              <td>
+                {% if question.etat == 'published' %}
+                  <span class="badge badge-success">Publié</span>
+                {% else %}
+                  <span class="badge badge-secondary">Brouillon</span>
+                {% endif %}
+              </td>
+              <td class="text-right">
+                {% if question.etat != 'published' or is_granted('ROLE_ADMIN') %}
+                  <a class="btn btn-sm btn-outline-primary" href="{{ path('admin_quizz_modifier', {id: question.id}) }}">Modifier</a>
+                {% endif %}
+                {% if is_granted('ROLE_ADMIN') %}
+                  <a class="btn btn-sm btn-outline-danger" href="{{ path('admin_quizz_supprimer', {id: question.id}) }}">Supprimer</a>
+                {% endif %}
+              </td>
+            </tr>
+          {% else %}
+            <tr><td colspan="5" class="text-center p-4">Aucune question pour l'instant.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+{% endblock %}

@@ -1,0 +1,87 @@
+{% extends 'base.html.twig' %}
+
+{# Page « historique » d'un mandat passé (`deputes/individual.php` en mode
+   `page_history`) : même coque que la fiche — carte de profil sticky, bio en
+   mode historique, élection du mandat, comportement politique de la
+   législature consultée, historique des mandats, partage, réseaux sociaux,
+   contact.
+
+   Le bloc « Son comportement politique » est servi depuis l'import des votes
+   nominatifs des législatures 14 à 16 (4 août 2026) : participation, loyauté,
+   proximité avec la majorité gouvernementale et proximités par groupe de
+   l'époque, les quatre cartes du legacy. #}
+
+{% set nom_complet = depute.firstname ~ ' ' ~ depute.lastname %}
+{% set femme = depute.civilite == 'Mme' %}
+{% set e = femme ? 'e' : '' %}
+
+{# La carte porte le groupe de l'époque, pas celui d'aujourd'hui. #}
+{% set depute_carte = depute|merge({
+  groupe_libelle: groupe ? groupe.libelle : null,
+  groupe_abrev: groupe ? groupe.libelle_abrev : null,
+  groupe_couleur: groupe ? groupe.couleur : null,
+}) %}
+
+{# Titre et description du legacy (`get_mp_page_resources`, type « history »). #}
+{% block title %}{{ nom_complet }} - Historique {{ legislature }}ème législature | Datan{% endblock %}
+
+{% block meta_description %}Découvrez l'historique {{ femme ? 'de la' : 'du' }} député{{ e }} {{ nom_complet }} pour la {{ legislature }}ème législature : taux de participation, loyauté avec son groupe, proximité avec la majorité présidentielle.{% endblock %}
+
+{% block stylesheets %}
+  {# Jauges circulaires (.c100 pNN) du comportement politique : sans cette
+     feuille, chargée par page comme sur datan.fr, les pourcentages s'affichent
+     en texte nu. #}
+  <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/circle.css') }}">
+{% endblock %}
+
+{% block body %}
+<div class="container-fluid bloc-img-deputes async_background" id="container-always-fluid" style="height: 13em"></div>
+{% if groupe and groupe.couleur %}
+  <div class="liseret-groupe" style="background-color: {{ groupe.couleur }}"></div>
+{% endif %}
+<div class="container pg-depute-individual">
+  <div class="row">
+    <div class="col-12 col-md-8 col-lg-4 offset-md-2 offset-lg-0">
+      <div class="sticky-top" style="margin-top: -150px; top: 80px;">
+        {{ include('depute/_carte_profil.html.twig', {
+          depute: depute_carte,
+          balise_titre: 'span',
+          carte_historique: true,
+          legislature_carte: legislature,
+        }) }}
+      </div>
+    </div>
+
+    <div class="col-md-10 col-lg-8 offset-md-1 offset-lg-0 pl-lg-5">
+      {{ include('depute/_bio.html.twig', {
+        page_historique: true,
+        legislature_page: legislature,
+        groupe_historique: groupe,
+      }) }}
+
+      {% if election %}
+        {# L'élection du mandat consulté, avec la circonscription de l'époque. #}
+        {{ include('depute/_election.html.twig', {
+          depute: depute|merge({
+            circonscription: mandat.circonscription ?? depute.circonscription,
+            departement_nom: mandat.departement_nom ?? depute.departement_nom,
+            departement_code: mandat.departement_code ?? depute.departement_code,
+          }),
+        }) }}
+      {% endif %}
+
+      {% if statistiques %}
+        {# `legislature_stats` bascule le bloc en mode historique : titre
+           suffixé, phrases au passé, liens de groupes vers cette législature. #}
+        {{ include('depute/_statistiques.html.twig', {legislature_stats: legislature}) }}
+      {% endif %}
+
+      {{ include('depute/_mandats.html.twig') }}
+
+      {{ include('depute/_partage.html.twig') }}
+
+      {{ include('depute/_reseaux_sociaux.html.twig') }}
+    </div>
+  </div>
+</div>
+{% endblock %}

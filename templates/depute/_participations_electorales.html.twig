@@ -1,0 +1,47 @@
+{# Bloc « Ses participations électorales » (`mp_individual/_elections_participation.php`) :
+   les élections auxquelles le député s'est présenté pendant son mandat, une ligne
+   par candidature — année, élection, circonscription, résultat. Les municipales
+   2026 y figurent depuis leur import (31 juillet 2026), sort vide tant que le
+   scrutin n'est pas dépouillé — cellule vide, comme sur le site. #}
+{% if participations %}
+  {% set e = depute.civilite == 'Mme' ? 'e' : '' %}
+  {% set pronom = depute.civilite == 'Mme' ? 'elle' : 'il' %}
+  <div class="bloc-elections-history mt-5">
+    <h2 class="mb-4 title-center">Ses participations électorales</h2>
+    <p>
+      {{ nom_complet }} a été candidat{{ e }} {{ participations|length > 1 ? 'à plusieurs élections' : 'à une élection' }} alors qu'{{ pronom }} était député{{ e }}.
+    </p>
+    <table class="table">
+      <caption class="sr-only">Les participations électorales de {{ nom_complet }}</caption>
+      <thead class="sr-only">
+        <tr>
+          <th scope="col">Année</th>
+          <th scope="col">Élection</th>
+          <th scope="col">Circonscription</th>
+          <th scope="col">Résultat</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for p in participations %}
+          <tr>
+            <td class="font-weight-bold">{{ p.annee }}</td>
+            <td>{{ p.libelle }}</td>
+            <td>{{ p.district }}</td>
+            {# `sort-adopté` / `sort-rejeté` : les couleurs vert/rouge des sorts de
+               scrutin, réutilisées par le legacy pour Élu·e / Éliminé·e. Le nul
+               se teste D'ABORD : un sort pas encore connu — les municipales
+               avant dépouillement — n'est pas un échec, et `null == 0` est vrai
+               en Twig. #}
+            {% if p.elu is null %}
+              <td></td>
+            {% elseif p.elu == 1 %}
+              <td class="font-weight-bold sort-adopté">Élu{{ e }}</td>
+            {% else %}
+              <td class="font-weight-bold sort-rejeté">Éliminé{{ e }}</td>
+            {% endif %}
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+{% endif %}

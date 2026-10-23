@@ -1,0 +1,155 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block title %}Relecture des amendements{% endblock %}
+
+{% block stylesheets %}
+  <style>
+    /* Un amendement relu ressort sur fond vert, comme dans l'application d'origine. */
+    tr.ligne-relue { background-color: #d4edda; }
+    td.cellule-resume { max-width: 32rem; }
+    td.cellule-resume .resume { max-height: 6.5rem; overflow: auto; display: block; }
+  </style>
+{% endblock %}
+
+{% block body %}
+  <form method="get" class="card card-body mb-3">
+    <div class="form-row align-items-end">
+      <div class="form-group col-md-2 mb-2">
+        <label for="legislature">Législature</label>
+        <select id="legislature" name="legislature" class="form-control">
+          {% for leg in legislatures %}
+            <option value="{{ leg }}" {{ leg == legislature ? 'selected' }}>{{ leg }}<sup>e</sup></option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="form-group col-md-2 mb-2">
+        <label for="period">Période</label>
+        <select id="period" name="period" class="form-control">
+          {% for p in periodes %}
+            <option value="{{ p }}" {{ p == periode ? 'selected' }}>{{ p == 'all' ? 'Toutes' : p ~ ' jours' }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="form-group col-md-2 mb-2">
+        <label for="date_start">Du</label>
+        <input type="date" id="date_start" name="date_start" value="{{ date_debut }}" class="form-control">
+      </div>
+      <div class="form-group col-md-2 mb-2">
+        <label for="date_end">Au</label>
+        <input type="date" id="date_end" name="date_end" value="{{ date_fin }}" class="form-control">
+      </div>
+      <div class="form-group col-md-2 mb-2">
+        <button type="submit" class="btn btn-primary btn-block">Filtrer</button>
+      </div>
+      <div class="form-group col-md-2 mb-2">
+        <a class="btn btn-link btn-block" href="{{ path('admin_amendement_index') }}">Réinitialiser</a>
+      </div>
+    </div>
+    <div class="custom-control custom-checkbox">
+      {# La période et les dates sont soumises par le bouton ; le masque des relus
+         se soumet au clic, comme le `onchange` de l'application d'origine. #}
+      <input type="checkbox" class="custom-control-input" id="hide_reviewed" name="hide_reviewed" value="1"
+             {{ masquer_relus ? 'checked' }} onchange="this.form.submit()">
+      <label class="custom-control-label" for="hide_reviewed">Masquer les amendements relus</label>
+    </div>
+  </form>
+
+  <div class="card">
+    <div class="card-body p-0">
+      <table class="table table-striped table-sm mb-0" id="table-amendements">
+        <caption class="sr-only">Amendements en attente de relecture</caption>
+        <thead>
+          <tr>
+            <th scope="col">Amendement</th>
+            <th scope="col">Titre IA</th>
+            <th scope="col">Résumé IA</th>
+            <th scope="col" class="text-right">Intérêt</th>
+            <th scope="col" class="text-center">Simplicité</th>
+            <th scope="col" class="text-center">Relu</th>
+            <th scope="col" class="text-right">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for ligne in lignes %}
+            <tr class="{{ ligne.relu ? 'ligne-relue' }}">
+              <td>
+                <div><a href="{{ lien_vote(ligne.legislature, ligne.numero) }}" target="_blank" rel="noopener">{{ ligne.titre|length > 120 ? (ligne.titre|slice(0, 120) ~ '…') : ligne.titre }}</a></div>
+                <small class="text-muted">Leg. {{ ligne.legislature }} · n° {{ ligne.numero }} · {{ ligne.date_scrutin|date('d/m/Y') }}</small>
+              </td>
+              <td>{{ ligne.titre_ia ?: '—' }}</td>
+              <td class="cellule-resume"><span class="resume">{{ ligne.resume_ia ?: '—' }}</span></td>
+              <td class="text-right">{{ ligne.interet is not null ? ligne.interet ~ ' %' : '—' }}</td>
+              {# Note de simplicité, comme dans l'application d'origine : badge « n/5 »
+                 coloré aux mêmes seuils (4-5 vert, 3 orange, 1-2 rouge). Son
+                 infobulle y répétait « n/5 » ; elle rappelle ici l'échelle, que
+                 le chiffre seul ne dit pas. Vide tant que la génération IA n'a
+                 pas tourné sur l'amendement. #}
+              {% if ligne.simplicite_ia %}
+                <td class="text-center">
+                  <span class="badge badge-{{ ligne.simplicite_ia >= 4 ? 'success' : (ligne.simplicite_ia >= 3 ? 'warning' : 'danger') }}"
+                        title="1 = très technique, 5 = très accessible">{{ ligne.simplicite_ia }}/5</span>
+                </td>
+              {% else %}
+                <td class="text-center text-muted" title="Résumé pas encore généré, ou repris de la production sans sa note">—</td>
+              {% endif %}
+              <td class="text-center">
+                {# La liste ne retient que les votes rattachés à leur amendement :
+                   la case a toujours un identifiant à porter. #}
+                <input type="checkbox" class="case-relu" data-amendement="{{ ligne.amendement_id }}" {{ ligne.relu ? 'checked' }}>
+              </td>
+              <td class="text-right">
+                {# « Décrypter » : le service PoliticAnalysis étant internalisé, le
+                   bouton ouvre l'écran des décryptages pré-rempli sur le scrutin
+                   (le pré-remplissage par ?legislature=&numero= est posé par
+                   l'écran des décryptages). #}
+                <a class="btn btn-sm btn-primary font-weight-bold"
+                   href="{{ path('admin_decryptage_nouveau', {legislature: ligne.legislature, numero: ligne.numero}) }}">Décrypter</a>
+              </td>
+            </tr>
+          {% else %}
+            <tr><td colspan="7" class="text-center p-4">
+              Aucun amendement à relire sur cette période. Élargissez la période ou les dates.
+            </td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+{% endblock %}
+
+{% block javascripts %}
+  <script>
+    // Bascule « relu » sans recharger la page : POST + jeton CSRF vers l'endpoint,
+    // reprise de l'ancien état de la case si le serveur refuse (parité avec l'AJAX
+    // de l'application d'origine).
+    (function () {
+      var jeton = {{ csrf_token('amendement_relu')|json_encode|raw }};
+      var url = {{ path('admin_amendement_relu')|json_encode|raw }};
+
+      document.querySelectorAll('.case-relu').forEach(function (case_) {
+        case_.addEventListener('change', function () {
+          var ligne = case_.closest('tr');
+          var voulu = case_.checked;
+
+          fetch(url, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              _token: jeton,
+              amendement_id: case_.dataset.amendement,
+              reviewed: voulu ? 1 : 0
+            })
+          })
+            .then(function (r) { return r.ok ? r.json() : Promise.reject(r); })
+            .then(function (data) {
+              ligne.classList.toggle('ligne-relue', data.reviewed === 1);
+            })
+            .catch(function () {
+              case_.checked = !voulu; // le serveur a refusé : on rend la case à son état
+              alert('La relecture n’a pas pu être enregistrée. Rechargez la page.');
+            });
+        });
+      });
+    })();
+  </script>
+{% endblock %}

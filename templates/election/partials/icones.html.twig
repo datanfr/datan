@@ -1,0 +1,28 @@
+{# Les deux icônes que le site incruste dans le corps de ces pages.
+
+   L'application d'origine les lit sur le disque à chaque affichage
+   (`file_get_contents(FCPATH . "assets/imgs/icons/…")`) : elles sont dans le
+   flux du document, pas dans une balise `img`, parce que leur couleur suit
+   celle du texte (`fill="currentColor"`). Les recopier ici évite autant
+   d'accès disque qu'il y a de communes dans une liste — jusqu'à neuf cents
+   pour un gros département. Elles sont les mêmes que
+   `public/assets/imgs/icons/bi-search.svg` et `bi-chevron-right.svg`. #}
+{% macro recherche() %}
+  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+    <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
+  </svg>
+{% endmacro %}
+
+{% macro chevron() %}
+  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-right" viewBox="0 0 16 16">
+    <path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708"/>
+  </svg>
+{% endmacro %}
+
+{# Le chevron des blocs repliables pointe vers le bas et pivote à l'ouverture :
+   c'est `main.min.js` qui lui pose la classe, pas nous. #}
+{% macro chevron_bas() %}
+  <svg class="chevron-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+    <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+  </svg>
+{% endmacro %}

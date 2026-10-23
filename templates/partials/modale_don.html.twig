@@ -1,0 +1,25 @@
+{# Modale de dons (partials/donation-modal.php) : ouverte par
+   assets/js/datan/donation-modal-localstorage.js, repris du site, quand le
+   visiteur a vu 10 pages dans le mois et n'a pas revu la modale depuis une
+   semaine. Le compteur vit en localStorage, sans consentement — le site a
+   abandonné le cookie et Tarte au citron le 10 septembre 2026 (commit
+   6ad583ac). Présente dans le DOM de toutes les pages, invisible tant que rien
+   ne l'ouvre. #}
+<div class="modal fade" id="donationModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header border-0">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body text-center px-4 pb-4">
+        <h5 class="font-weight-bold mb-3">Vous revenez souvent sur Datan 👋</h5>
+        <p>Vous avez visité <strong id="modal-page-count"></strong> pages sur Datan ce mois-ci. Merci de votre fidélité !</p>
+        <p>Datan est un outil gratuit. Si le site vous est utile, pensez à nous soutenir.</p>
+        <a href="{{ path('page_soutenir') }}" class="btn btn-info text-white w-100 mb-2">Soutenir Datan</a>
+        <button type="button" class="btn btn-link text-muted" data-dismiss="modal">Peut-être plus tard</button>
+      </div>
+    </div>
+  </div>
+</div>

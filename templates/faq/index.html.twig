@@ -1,0 +1,89 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Foire aux questions - Assemblée nationale | Datan{% endblock %}
+
+{% block meta_description %}Comment les députés sont-ils élus ? Quels sont leur rôle au parlement ? Découvrez la foire aux questions (FAQ) de Datan.{% endblock %}
+
+{% block schema %}
+  {# FAQPage (Faq_model::get_faq_schema) : chaque question publiée, la réponse
+     en HTML tel quel — schema.org l'admet dans Answer.text, et c'est ce que
+     l'origine émet. #}
+  {% set questions_ld = [] %}
+  {% for categorie in categories %}
+    {% for question in categorie.questions %}
+      {% set questions_ld = questions_ld|merge([{
+        '@type': 'Question',
+        'name': question.question,
+        'acceptedAnswer': {'@type': 'Answer', 'text': question.reponse},
+      }]) %}
+    {% endfor %}
+  {% endfor %}
+  <script type="application/ld+json">
+    {{ {'@context': 'http://schema.org', '@type': 'FAQPage', 'mainEntity': questions_ld}
+       |json_encode(constant('JSON_UNESCAPED_SLASHES') b-or constant('JSON_PRETTY_PRINT') b-or constant('JSON_UNESCAPED_UNICODE'))
+       |raw }}
+  </script>
+{% endblock %}
+
+{% block body %}
+<div class="container-fluid pg-faq faq-header py-5">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-6 col-md-8 offset-lg-3 offset-md-2">
+        <h1 class="text-center">Une question sur Datan ?<br>Sur l'Assemblée nationale ?</h1>
+        <div class="form-group mt-4">
+          <div class="input-group">
+            {# La recherche est un filtrage client sur #searchfaq, déjà câblé dans main.js. #}
+            <input class="form-control form-control-lg filled-input" id="searchfaq" placeholder="Cherchez par mots clés" type="text">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="container pg-faq my-5">
+  <div class="row">
+    <div class="col-md-4">
+      <div class="card card-categories">
+        <h3 class="card-header">Catégories</h3>
+        <ul class="list-group">
+          {% for categorie in categories %}
+            <a href="#{{ categorie.slug }}" class="no-decoration">
+              <li class="list-group-item d-flex align-items-center rounded-0 border">
+                {{ categorie.nom }} <span class="badge badge-primary badge-pill ml-3">{{ categorie.questions|length }}</span>
+              </li>
+            </a>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+    <div class="col-md-8">
+      {% for categorie in categories %}
+        {% set c = loop.index %}
+        <div class="anchor" id="{{ categorie.slug }}">
+          <h2 class="mb-0">{{ categorie.nom }}</h2>
+          <div class="accordion my-4" id="accordion_{{ c }}">
+            {% for question in categorie.questions %}
+              <div class="card card-question">
+                <div class="card-header d-flex justify-content-between">
+                  <a role="button" data-toggle="collapse" href="#collapse_{{ c }}_{{ loop.index }}" aria-expanded="true" class="no-decoration">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-circle" viewBox="0 0 16 16">
+                      <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                      <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
+                    </svg>
+                    <span class="ml-3">{{ question.question }}</span>
+                  </a>
+                </div>
+                <div id="collapse_{{ c }}_{{ loop.index }}" class="collapse" data-parent="#accordion_{{ c }}" role="tabpanel">
+                  {# La réponse est du HTML éditorial, déséchappé à l'import : |raw. #}
+                  <div class="card-body">{{ question.reponse|raw }}</div>
+                </div>
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+{% endblock %}

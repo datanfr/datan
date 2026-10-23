@@ -1,0 +1,85 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Commission {{ commission.libelle_abrege }} - Assemblée Nationale | Datan{% endblock %}
+
+{% block meta_description %}Découvrez le bureau et les {{ membres|length }} députés de la commission {{ commission.libelle_abrege }} de l'Assemblée nationale.{% endblock %}
+
+{% block body %}
+<div class="container-fluid bloc-img-deputes bloc-img d-flex async_background" id="container-always-fluid">
+  <div class="container d-flex flex-column justify-content-center py-2 pg-parties-individual">
+    <div class="row">
+      <div class="col-12 title-text">
+        <h1 class="mb-0">Commission {{ commission.libelle_abrege }}</h1>
+        <span class="subtitle">
+          Commission permanente - {{ membres|length }} député{{ membres|length > 1 ? 's' }}
+        </span>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="container pb-4 pg-parties-individual">
+  <div class="row mt-5">
+    <div class="col-lg-10">
+      <p><b>{{ commission.libelle }}.</b></p>
+      <p>
+        Les commissions permanentes examinent les textes de loi avant leur passage dans l'hémicycle : elles les amendent, auditionnent, et désignent un rapporteur chargé de défendre le texte en séance. C'est là que se fait l'essentiel du travail législatif.
+      </p>
+      <p>
+        Un député ne siège que dans une commission. Les remplacements ponctuels étant fréquents, la commission retenue ici est celle où il a passé le plus de temps depuis le début de la {{ legislature }}<sup>ème</sup> législature.
+      </p>
+      <p>
+        Pour découvrir les groupes parlementaires à l'Assemblée nationale, <a href="{{ path('groupes_index') }}">cliquez ici</a>.
+      </p>
+    </div>
+  </div>
+  {% if bureau %}
+    <div class="row">
+      <div class="col-12">
+        <h2 class="my-5">Le bureau de la commission</h2>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12 d-flex flex-wrap justify-content-around">
+        {% for depute in bureau %}
+          <div class="d-flex flex-column align-items-center">
+            {{ include('depute/partials/card.html.twig') }}
+            {# `badge-stats` ne porte ses couleurs que sous `.card-depute`
+               (`main.css` le cible ainsi) : posé sous la carte, il sortait sans
+               fond et le texte se perdait en clair sur clair. `badge-primary`
+               pose les deux, comme la carte de groupe des classements. #}
+            <span class="badge badge-primary badge-stats my-2">{{ depute.libelle_qualite ?: depute.code_qualite }}</span>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  {% endif %}
+  <div class="row">
+    <div class="col-12">
+      <h2 class="my-5">Les {{ membres|length }} députés de la commission {{ commission.libelle_abrege }}</h2>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-12 d-flex flex-wrap justify-content-around">
+      {% for depute in membres %}
+        {{ include('depute/partials/card.html.twig') }}
+      {% endfor %}
+    </div>
+  </div>
+</div>
+<div class="container-fluid bloc-others-container mt-5">
+  <div class="container bloc-others">
+    <div class="row">
+      <div class="col-12">
+        <h2>Les autres commissions permanentes</h2>
+        <div class="row mt-3">
+          {% for autre in commissions|filter(c => c.slug != commission.slug) %}
+            <div class="col-6 col-md-4 py-2">
+              <a class="membre no-decoration underline" href="{{ path('commission_individual', {slug: autre.slug}) }}">{{ autre.libelle_abrege }}</a>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

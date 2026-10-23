@@ -1,0 +1,323 @@
+{% extends 'base.html.twig' %}
+{% import 'election/partials/icones.html.twig' as icone %}
+
+{% set titre = 'Résultats des élections à ' ~ ville.nom %}
+{# Identifiant que le site donne au bloc repliable ; il sert d'ancre aux
+   attributs `data-*` que lit le script de bascule entre tours. #}
+{% set scrutin = annee ~ '_legi' %}
+
+{% block title %}{{ titre }} | Datan{% endblock %}
+
+{% block meta_description %}Retrouvez les résultats des élections à {{ ville.nom }} ({{ ville.dpt_code }}) : candidats, nombre de votants et abstention pour cette commune.{% endblock %}
+
+{% block body %}
+{# Trois blocs du site manquent ici, et par choix : la candidature des députés
+   aux municipales, le dépouillement des municipales 2026 commune par commune,
+   et l'encart qui annonce le scrutin. Tous trois lisent l'élection `id = 7` de
+   l'application d'origine, absente de son propre catalogue et hors de ce
+   portage. Ce qui reste — les résultats des élections précédentes — est ce que
+   la page a de durable. #}
+<div class="container pg-resultats-ville">
+  <div class="row mt-5">
+    <div class="col-lg-10">
+      <h1>{{ titre }}</h1>
+      {# « Circonscription par circonscription » et non « bureau de vote après
+         bureau de vote » : c'est le grain dont nous disposons. Les résultats au
+         bureau de vote vivent dans des tables que l'application d'origine a
+         créées sans jamais les remplir. #}
+      <p class="mt-4">Découvrez les résultats des élections à {{ ville.nom }} ({{ ville.dpt_code }}), circonscription par circonscription, et les députés qui représentent la commune à l'Assemblée nationale.</p>
+    </div>
+  </div>
+  <div class="row mt-5">
+    <div class="col-lg-8">
+      {{ include('partials/campagne.html.twig', {classes: 'mt-5'}) }}
+      <div class="mt-5 h2">Résultats des élections précédentes à {{ ville.nom }}</div>
+      {# Le site ne construit qu'un bloc ici, « Législatives 2024 », alors que
+         sa table en porte quatre : c'est sa dernière élection qu'il montre, pas
+         une archive. Il le lit toutefois dans `elect_bv_*`, au grain bureau de
+         vote, que personne n'a jamais alimentée — la page est donc vide en
+         production. Nous le servons de `resultat_legislative`, au grain commune
+         × circonscription : même scrutin, même découpage à l'affichage, une
+         source qui existe. #}
+      {% if legislatives %}
+        <div class="mt-4" id="previousElectionsAccordion">
+          <div class="liste-election mb-3">
+            <div class="d-flex header align-items-center px-4 py-3"
+              data-toggle="collapse"
+              data-target="#collapse{{ scrutin }}"
+              aria-controls="collapse{{ scrutin }}">
+              <div class="flex-grow-1">
+                <div class="title">Législatives {{ annee }}</div>
+              </div>
+              {{ icone.chevron_bas() }}
+            </div>
+            <div id="collapse{{ scrutin }}" class="collapse" data-parent="#previousElectionsAccordion">
+              <div class="liste-candidates p-4 previous-election-body">
+                {# Une commune assez peuplée est partagée entre plusieurs
+                   circonscriptions, et chacune a élu son député : additionner
+                   leurs bureaux donnerait un résultat qui n'a été soumis à
+                   personne. D'où un onglet par circonscription. #}
+                {% if legislatives|length > 1 %}
+                  <div class="previous-election-circo-switch mb-3" data-election-id="{{ scrutin }}">
+                    {% for circo in legislatives %}
+                      <button
+                        type="button"
+                        class="previous-election-circo-btn {{ loop.first ? 'active' }}"
+                        data-election-id="{{ scrutin }}"
+                        data-circo-id="{{ circo.circonscription }}"
+                        aria-pressed="{{ loop.first ? 'true' : 'false' }}">
+                        {{ circo.circonscription }}<sup>{{ circo.circonscription|rang_circo }}</sup> circonscription
+                      </button>
+                    {% endfor %}
+                  </div>
+                {% endif %}
+
+                {% for circo in legislatives %}
+                  <div
+                    class="previous-election-circo-content"
+                    data-election-id="{{ scrutin }}"
+                    data-circo-id="{{ circo.circonscription }}"
+                    {{ not loop.first ? 'style="display:none"'|raw }}>
+                    <div class="previous-election-round-switch mb-4" data-election-id="{{ scrutin }}" data-circo-id="{{ circo.circonscription }}">
+                      {% for tour in [1, 2] %}
+                        <button
+                          type="button"
+                          class="previous-election-round-btn {{ tour == 1 ? 'active' }}"
+                          data-election-id="{{ scrutin }}"
+                          data-circo-id="{{ circo.circonscription }}"
+                          data-round="{{ tour }}"
+                          aria-pressed="{{ tour == 1 ? 'true' : 'false' }}">
+                          {{ tour == 1 ? 'Premier tour' : 'Second tour' }}
+                        </button>
+                      {% endfor %}
+                    </div>
+
+                    {% for tour in [1, 2] %}
+                      {% set bloc = circo.tours[tour]|default(null) %}
+                      <div
+                        class="previous-election-round-content"
+                        data-election-id="{{ scrutin }}"
+                        data-circo-id="{{ circo.circonscription }}"
+                        data-round="{{ tour }}"
+                        {{ tour != 1 ? 'style="display:none"'|raw }}>
+                        {% if bloc is null %}
+                          {# Aucune ligne au second tour : le siège a été
+                             emporté dès le premier. #}
+                          <div class="alert alert-info mb-0">
+                            Il n'y a pas de second tour car l'élection a été remportée dès le premier tour.
+                          </div>
+                        {% else %}
+                          {% set p = bloc.participation %}
+                          <div class="election-stats d-flex mb-3 pb-3">
+                            <div class="election-stat">
+                              <span class="election-stat-label">Votants</span>
+                              <span class="election-stat-value">{{ p.votants|number_format(0, ',', ' ') }}</span>
+                            </div>
+                            <div class="election-stat-divider mx-3"></div>
+                            <div class="election-stat">
+                              <span class="election-stat-label">Abstention</span>
+                              <span class="election-stat-value">{{ (p.inscrits ? p.abstentions / p.inscrits * 100 : 0)|number_format(2, ',', ' ') }}%</span>
+                            </div>
+                            <div class="election-stat-divider mx-3"></div>
+                            <div class="election-stat">
+                              <span class="election-stat-label">Blancs et nuls</span>
+                              <span class="election-stat-value">{{ (p.blancs + p.nuls)|number_format(0, ',', ' ') }}</span>
+                            </div>
+                          </div>
+                          {% for candidat in bloc.candidats %}
+                            <div class="candidate-row d-flex flex-wrap align-items-start py-2">
+                              <div class="col-8 order-1 col-lg-4 order-lg-1 px-0 mb-1 mb-lg-0" style="min-width: 0;">
+                                {# Nom rendu tel quel, donc en capitales
+                                   (« Marc CHAVENT ») : c'est ce que fait la
+                                   page résultats du site (results_city.php,
+                                   nom brut) — contrairement à la fiche
+                                   commune, qui remet la casse mixte. #}
+                                <div class="font-weight-bold">{{ candidat.prenom }} {{ candidat.nom }}</div>
+                                {% if candidat.nuance %}
+                                  <small class="text-muted">{{ candidat.nuance }}</small>
+                                {% endif %}
+                              </div>
+                              <div class="col-4 order-2 col-lg-3 order-lg-3 px-0 ml-auto text-right mb-1 mb-md-0">
+                                <div class="font-weight-bold">{{ candidat.part|number_format(2, ',', ' ') }}%</div>
+                                <small class="text-muted">
+                                  {{ candidat.voix|number_format(0, ',', ' ') }} vote{{ candidat.voix > 1 ? 's' }}
+                                </small>
+                              </div>
+                              <div class="col-12 order-3 col-lg-5 px-0 order-lg-2 ml-lg-0 px-lg-5 align-self-lg-center">
+                                <div class="progress" style="height: 8px; background-color: #e9ecef">
+                                  <div
+                                    class="progress-bar bg-primary"
+                                    role="progressbar"
+                                    style="width: {{ min(100, max(0, candidat.part))|number_format(2, '.', '') }}%;"
+                                    aria-valuenow="{{ min(100, max(0, candidat.part))|number_format(2, '.', '') }}"
+                                    aria-valuemin="0"
+                                    aria-valuemax="100"></div>
+                                </div>
+                              </div>
+                            </div>
+                          {% endfor %}
+                        {% endif %}
+                      </div>
+                    {% endfor %}
+                  </div>
+                {% endfor %}
+              </div>
+            </div>
+          </div>
+        </div>
+      {% else %}
+        <div class="alert alert-info mt-4">
+          <p class="mb-0">Aucun résultat d'élection précédente disponible pour cette commune.</p>
+        </div>
+      {% endif %}
+    </div>
+    <div class="col-lg-4">
+      <div class="row mt-5 mt-lg-0">
+        <div class="col-lg-12 col-md-6">
+          <div class="card card-info border">
+            <div class="card-body py-3">
+              <div class="title">{{ ville.nom }}</div>
+              <div>
+                <span class="badge badge-primary">{{ ville.dpt_nom }} - {{ ville.dpt_code }}</span>
+              </div>
+              {% if ville.population %}
+                <div class="label text-uppercase mt-4">👥 Population</div>
+                <div class="value">{{ ville.population|number_format(0, ',', ' ') }}</div>
+              {% endif %}
+              {% if ville.maire_nom %}
+                <div class="label text-uppercase mt-3">🏛️ Maire</div>
+                <div class="value">{{ ville.maire_prenom }} {{ ville.maire_nom|lower|ucfirst }}</div>
+              {% endif %}
+              {# Sous le seuil des fiches de ville de `/deputes`, l'adresse est
+                 masquée aux robots, comme partout où le site mène à une petite
+                 commune (results_city.php:605). #}
+              {% if ville.population > seuil_page_commune %}
+                <a href="{{ path('commune_individual', {departement: ville.dpt_slug, commune: ville.slug}) }}" class="city-item d-flex justify-content-between align-items-center mt-4 no-decoration border-primary text-primary font-weight-bold">
+                  <span>Voir la page commune</span>
+                  {{ icone.chevron() }}
+                </a>
+              {% else %}
+                <a url_obf="{{ url_obf(path('commune_individual', {departement: ville.dpt_slug, commune: ville.slug})) }}" class="city-item d-flex justify-content-between align-items-center mt-4 no-decoration border-primary text-primary font-weight-bold url_obf">
+                  <span>Voir la page commune</span>
+                  {{ icone.chevron() }}
+                </a>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-12 col-md-6">
+          {% if voisines %}
+            <div class="card card-nearby border mt-lg-4 mt-md-0 mt-4">
+              <div class="card-body py-3">
+                <div class="title">Communes voisines</div>
+                <div class="d-flex flex-column mt-3">
+                  {# Toujours masquées, quelle que soit leur taille : lier les
+                     voisines en clair tisserait un maillage commune à commune
+                     que le site refuse aux robots (results_city.php:626). #}
+                  {% for voisine in voisines %}
+                    <a role="button" url_obf="{{ url_obf(path('elections_resultats_commune', {departement: voisine.dpt_slug, commune: voisine.slug})) }}" class="city-item d-flex justify-content-between align-items-center mb-3 url_obf">
+                      {{ voisine.nom }}
+                      {{ icone.chevron() }}
+                    </a>
+                  {% endfor %}
+                </div>
+              </div>
+            </div>
+          {% endif %}
+          {% if deputes %}
+            <div class="card card-nearby mt-5 border">
+              <div class="card-body py-3">
+                <div class="title">{{ deputes|length > 1 ? 'Députés' : 'Député' }} à {{ ville.nom }}</div>
+                <div class="d-flex flex-column mt-3">
+                  {% for depute in deputes %}
+                    <a href="{{ path('depute_individual', {dptSlug: depute.dpt_slug, slug: depute.slug}) }}" class="city-item d-flex justify-content-between align-items-center mb-3 no-decoration">
+                      <span>
+                        {{ depute.firstname }} {{ depute.lastname }} -
+                        <span style="color: {{ depute.groupe_couleur }};">{{ depute.groupe_abrev }}</span>
+                      </span>
+                      {{ icone.chevron() }}
+                    </a>
+                  {% endfor %}
+                </div>
+              </div>
+            </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{# Entre les résultats et les communes du département, comme sur le site
+   (results_city.php:658). #}
+{{ include('partials/follow-us.html.twig') }}
+{% if communes %}
+  <div class="container-fluid bloc-others-container">
+    <div class="container bloc-others">
+      <div class="row">
+        <div class="col-12">
+          <h2>
+            {%- if ville.dpt_nom in ['Nouvelle-Calédonie', 'Polynésie française'] %}Communes {{ ville.libelle_de }}{{ ville.dpt_nom }} ({{ ville.dpt_code }})
+            {%- elseif ville.dpt_nom == 'Wallis-et-Futuna' %}Commune {{ ville.libelle_de }}{{ ville.dpt_nom }} ({{ ville.dpt_code }})
+            {%- else %}Communes les plus peuplées {{ ville.libelle_de }}{{ ville.dpt_nom }} ({{ ville.dpt_code }})
+            {%- endif %}
+          </h2>
+        </div>
+      </div>
+      <div class="row">
+        {% for commune in communes %}
+          <div class="col-6 col-md-3 py-2">
+            <a class="membre no-decoration underline" href="{{ path('elections_resultats_commune', {departement: ville.dpt_slug, commune: commune.slug}) }}">{{ commune.nom }}</a>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+{% endif %}
+{% endblock %}
+
+{% block javascripts %}
+<script>
+  {# Bascule entre circonscriptions et entre tours : recopiée de la page
+     d'origine, dont les attributs `data-*` sont ceux du balisage ci-dessus. #}
+  document.addEventListener('DOMContentLoaded', function () {
+    document.querySelectorAll('.previous-election-circo-btn').forEach(function (bouton) {
+      bouton.addEventListener('click', function () {
+        var scrutin = this.getAttribute('data-election-id');
+        var circo = this.getAttribute('data-circo-id');
+
+        document.querySelectorAll('.previous-election-circo-btn[data-election-id="' + scrutin + '"]').forEach(function (b) {
+          var actif = b.getAttribute('data-circo-id') === circo;
+          b.classList.toggle('active', actif);
+          b.setAttribute('aria-pressed', actif ? 'true' : 'false');
+        });
+
+        document.querySelectorAll('.previous-election-circo-content[data-election-id="' + scrutin + '"]').forEach(function (bloc) {
+          bloc.style.display = bloc.getAttribute('data-circo-id') === circo ? '' : 'none';
+        });
+      });
+    });
+
+    document.querySelectorAll('.previous-election-round-btn').forEach(function (bouton) {
+      bouton.addEventListener('click', function () {
+        var scrutin = this.getAttribute('data-election-id');
+        var circo = this.getAttribute('data-circo-id');
+        var tour = this.getAttribute('data-round');
+
+        if (!tour) {
+          return;
+        }
+
+        document.querySelectorAll('.previous-election-round-btn[data-election-id="' + scrutin + '"][data-circo-id="' + circo + '"]').forEach(function (b) {
+          var actif = b.getAttribute('data-round') === tour;
+          b.classList.toggle('active', actif);
+          b.setAttribute('aria-pressed', actif ? 'true' : 'false');
+        });
+
+        document.querySelectorAll('.previous-election-round-content[data-election-id="' + scrutin + '"][data-circo-id="' + circo + '"]').forEach(function (bloc) {
+          bloc.style.display = bloc.getAttribute('data-round') === tour ? '' : 'none';
+        });
+      });
+    });
+  });
+</script>
+{% endblock %}

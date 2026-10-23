@@ -1,0 +1,189 @@
+{% extends 'base.html.twig' %}
+
+{% block preloads %}{{ include('partials/preload_couverture.html.twig') }}{% endblock %}
+
+{# `libelle_de` et `libelle_dans` portent leur espace final quand il en faut un :
+   ils se concatènent au nom du département sans rien ajouter. #}
+{% set nom_article = ville.libelle_de ~ ville.dpt_nom %}
+
+{% set pluriel = circonscriptions|length > 1 %}
+{% set sans_depute = deputes is empty %}
+{# Le féminin ne se pose que pour une ville d'une seule circonscription : au-delà
+   il y a plusieurs députés, et le pluriel l'emporte. #}
+{% set e = (not pluriel and not sans_depute and deputes[0].civilite == 'Mme') ? 'e' : '' %}
+{% set collectif = pluriel or sans_depute %}
+
+{% set depute_mot = collectif ? 'Députés' : 'Député' ~ e %}
+{% set elu_mot = collectif ? 'élus' : 'élu' ~ e %}
+{% set titre = depute_mot ~ ' ' ~ elu_mot ~ ' dans la ville ' ~ ville.de ~ ville.nom %}
+
+{% block title %}Députés par circonscription : {{ ville.nom }}{% if ville.code_postal %} {{ ville.code_postal }}{% endif %} | Datan{% endblock %}
+
+{% block meta_description %}
+  {# L'article suit le genre du député : l'application d'origine calcule bien
+     « la » mais ne s'en sert pas, et écrit « Découvrez le députée élue ». #}
+  Découvrez {{ collectif ? 'les' : (e ? 'la' : 'le') }} {{ depute_mot|lower }} {{ elu_mot }} dans la ville {{ ville.de }}{{ ville.nom }} ({{ ville.dpt_code }}) et tous {{ collectif ? 'leurs' : 'ses' }} résultats de vote : taux de participation, loyauté avec {{ collectif ? 'leur' : 'son' }} groupe, proximité avec la majorité présidentielle.
+{% endblock %}
+
+{% block body %}
+<div class="container-fluid bloc-img-deputes bloc-img d-flex async_background" id="container-always-fluid" style="height: 13em">
+  <div class="container d-flex flex-column justify-content-center py-2 pg-commune">
+    <div class="row title">
+      <div class="col-12">
+        <p class="city mb-0 text-center">{{ ville.nom }}</p>
+        <p class="department text-center mb-0">
+          {{- ville.dpt_nom }} ({{ ville.dpt_code }}) -
+          {% if pluriel %}
+            Circonscriptions :
+            {%- for circonscription in circonscriptions %}
+              {{ circonscription }}<sup>{{ circonscription|rang_circo }}</sup>{% if not loop.last %} /{% endif %}
+            {%- endfor %}
+          {%- else %}
+            {{ circonscriptions|first }}<sup>{{ circonscriptions|first|rang_circo }}</sup> circonscription
+          {%- endif %}
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+{% if voisines %}
+  <div class="container-fluid pg-commune bloc-adjacentes py-2 d-flex flex-column flex-md-row justify-content-center align-items-center">
+    <span class="my-0 mx-3 text-white">Communes voisines :</span>
+    <div class="d-flex justify-content-around flex-wrap mt-1 mt-md-0">
+      {% for voisine in voisines %}
+        {# Au-delà de deux, les boutons ne tiennent pas sur un écran de téléphone. #}
+        <div class="{{ loop.index > 2 ? 'd-none d-md-flex' : 'd-flex' }} justify-content-center">
+          {# Adresse masquée aux robots quelle que soit la taille de la voisine,
+             comme sur le site (commune.php:30) : pas de maillage commune à
+             commune dans le graphe de liens. #}
+          <a role="button" class="url_obf btn btn-outline-light btn-sm mx-1 my-1" url_obf="{{ url_obf(path('commune_individual', {departement: voisine.dpt_slug, commune: voisine.slug})) }}">{{ voisine.nom }}</a>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+{% endif %}
+<div class="container pg-commune">
+  <div class="row">
+    <div class="col-lg-3 col-md-4 pt-md-5 pt-3 bloc-infos" style="background-color: #e9e9e9; color: black!important">
+      <p><b>{{ ville.nom }}</b> est une commune située {{ ville.libelle_dans }}{{ ville.dpt_nom }} ({{ ville.dpt_code }}), dans la région {{ ville.region }}.</p>
+      {# Évolution arrondie à l'entier, « % » collé au nombre : graphie adoptée
+         par le site le 6 septembre 2026 (commune.php:42, `round($evol10_edited)`
+         suivi de « % »), la même que ses cartes d'élections plus bas. Elle
+         tranche ici la question du séparateur décimal (TODO §P2). #}
+      {% if ville.population_arrondie %}
+        <p>{{ ville.nom }} compte <b>{{ ville.population_arrondie|number_format(0, ',', ' ') }} habitants</b>.
+          {%- if ville.evolution %} La population de la commune a <b>{{ ville.evolution.sens }}</b> de {{ ville.evolution.valeur|round }}% depuis 10 ans.{% endif %}</p>
+      {% endif %}
+      {# Le nom arrive en capitales du référentiel (« FABRE ») ; le site
+         l'affiche en casse mixte — ucfirst(mb_strtolower()) — et n'accorde que
+         l'article. Un nom composé donne donc « Doriol-kasmadjian » : c'est ce
+         que le site écrit, on ne le corrige pas ici. #}
+      {% if ville.maire_nom %}
+        {# `ville.de` et non « de » en dur : le site écrit « Le maire de
+           Ajaccio », faute d'élision qu'on corrige ici comme dans les autres
+           blocs de la page — sans quoi elle se contredirait d'un paragraphe à
+           l'autre. #}
+        <p>{{ ville.maire_civilite == 'F' ? 'La' : 'Le' }} maire {{ ville.de }}{{ ville.nom }} est <b>{{ ville.maire_prenom }} {{ ville.maire_nom|lower|ucfirst }}</b>.</p>
+      {% endif %}
+      {# Le site écrit ici « de » en dur (commune.php:47) et donne « Les
+         circonscriptions de Ajaccio », alors qu'il élide correctement dans le
+         titre de la même page. C'est une faute d'élision, pas une tournure :
+         `ville.de` la corrige — ici comme partout ailleurs sur la fiche, faute
+         de quoi la page se contredirait d'un bloc à l'autre. #}
+      <h2 class="mt-4">{{ pluriel ? 'Les circonscriptions' : 'La circonscription' }} {{ ville.de }}{{ ville.nom }}</h2>
+      {% if pluriel %}
+        <p>{{ ville.nom }} est une grande ville qui comprend plusieurs circonscriptions électorales.</p>
+        <ul>
+          {% for circonscription in circonscriptions %}
+            <li>{{ circonscription }}<sup>{{ circonscription|rang_circo }}</sup> circonscription {{ nom_article }}</li>
+          {% endfor %}
+        </ul>
+      {% else %}
+        <p>{{ ville.nom }} fait partie de la {{ circonscriptions|first }}<sup>{{ circonscriptions|first|rang_circo }}</sup> circonscription électorale {{ nom_article }} ({{ ville.dpt_code }}).</p>
+      {% endif %}
+      {% if not pluriel and not sans_depute %}
+        <p>{{ e ? 'La députée élue' : 'Le député élu' }} dans cette circonscription est {{ deputes[0].firstname }} {{ deputes[0].lastname }}.</p>
+      {% endif %}
+      {{ include('partials/campagne.html.twig', {classes: 'mt-5 mx-4'}) }}
+    </div>
+    <div class="col-lg-9 col-md-8 pt-5 pb-5">
+      <h1 class="text-center">{{ titre }}</h1>
+      {% if sans_depute %}
+        <div class="text-center alert alert-danger">
+          Il n'y a actuellement aucun député représentant à l'Assemblée nationale les citoyens habitant dans cette ville.
+        </div>
+      {% else %}
+        <div class="d-flex flex-wrap justify-content-{{ pluriel ? 'around' : 'center' }}">
+          {% for depute in deputes %}
+            {% embed 'depute/partials/card_decouverte.html.twig' with {tag: 'h2'} %}
+              {% block centre %}{{ depute.circonscription }}<sup>{{ depute.circonscription|rang_circo }}</sup> circonscription{% endblock %}
+            {% endembed %}
+          {% endfor %}
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{# Vingt-deux députés n'ont déclaré qu'une adresse personnelle ou municipale, que
+   l'import écarte : eux n'ont pas de mel institutionnel, et le bloc n'a alors
+   rien à proposer. Le site l'affiche quand même, avec un lien `mailto:` vide —
+   voir Libourne, dont la députée est dans ce cas. #}
+{% set joignables = deputes|filter(d => d.mail_an) %}
+{% if joignables is not empty %}
+  <div class="container-fluid py-5 pg-commune bloc-contact">
+    <div class="row">
+      <div class="col-lg-8 offset-lg-2">
+        {% if not pluriel %}
+          {% set seul = joignables|first %}
+          {# « votre député » ne s'accorde pas, ici et sur le site : c'est la
+             fonction qui est nommée, pas la personne. #}
+          <h2 class="text-center text-white mb-4">Je contacte mon député</h2>
+          <p class="text-center text-white mb-0">
+            Pour contacter votre député <b>{{ seul.firstname }} {{ seul.lastname }}</b>, nous vous conseillons de lui envoyer un email à son adresse :
+            <a class="text-white" href="mailto:{{ seul.mail_an|lower }}">{{ seul.mail_an|lower }}</a>
+          </p>
+        {% else %}
+          <h2 class="text-center text-white font-weight-bold mb-4">Je contacte un député</h2>
+          <p class="text-center text-white">
+            {{ ville.nom }} est une grande ville et plusieurs députés y sont élus. Nous vous conseillons de contacter un des députés {{ ville.de }}{{ ville.nom }} par email :
+          </p>
+          {% for depute in joignables %}
+            <p class="text-center text-white mb-1">
+              {{ depute.firstname }} {{ depute.lastname }} :
+              <a class="text-white text-center" href="mailto:{{ depute.mail_an|lower }}">{{ depute.mail_an|lower }}</a>
+            </p>
+          {% endfor %}
+        {% endif %}
+      </div>
+    </div>
+  </div>
+{% endif %}
+{% if legislatives %}
+  {{ include('commune/legislatives.html.twig') }}
+{% endif %}
+{{ include('commune/dernieres_elections.html.twig') }}
+{% if autres_deputes %}
+  <div class="container pg-commune mt-5">
+    <div class="row mt-4">
+      <div class="col-12">
+        <h2 class="text-center">Autres députés élus {{ ville.libelle_dans }}{{ ville.dpt_nom }} ({{ ville.dpt_code }})</h2>
+      </div>
+      <div class="col-12 py-4 d-flex flex-wrap justify-content-around">
+        {% for depute in autres_deputes %}
+          {% embed 'depute/partials/card_decouverte.html.twig' with {tag: 'h3'} %}
+            {% block centre %}{{ depute.circonscription }}<sup>{{ depute.circonscription|rang_circo }}</sup> circonscription{% endblock %}
+          {% endembed %}
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+{% endif %}
+{# Le bandeau social se place entre les autres députés et les communes du
+   département, et non en pied de page : c'est sa place sur le site
+   (commune.php:252), hors du `if` qui masque les autres députés — il s'affiche
+   donc même quand le département n'en compte pas d'autre. #}
+{{ include('partials/follow-us.html.twig') }}
+{% if communes %}
+  {{ include('departement/partials/communes.html.twig', {departement: {nom: ville.dpt_nom, code: ville.dpt_code, slug: ville.dpt_slug}}) }}
+{% endif %}
+{% endblock %}

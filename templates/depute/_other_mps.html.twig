@@ -1,0 +1,55 @@
+{# Pied de fiche « Les autres députés … » (`mp_individual/_other_mps.php`), en
+   pleine largeur hors de la grille. Deux volets : les députés apparentés (groupe,
+   législature ou « plus en activité » selon la fiche) et ceux du département.
+   `autres_deputes` vient de DeputeController::autresDeputes. On ne lie que des
+   fiches existantes (`dpt_slug` non nul garanti côté contrôleur). #}
+<div class="container-fluid pg-depute-individual bloc-others-container">
+  <div class="container bloc-others">
+    {% if autres_deputes.autres %}
+      <div class="row mb-5">
+        <div class="col-12">
+          {% if autres_deputes.contexte == 'legislature' %}
+            <h2>Les autres députés de la {{ autres_deputes.legislature }}<sup>e</sup> législature</h2>
+          {% elseif autres_deputes.contexte == 'groupe' %}
+            <h2>Les autres députés {{ depute.groupe_libelle|name_group }} ({{ depute.groupe_abrev }})</h2>
+          {% else %}
+            <h2>Les autres députés plus en activité</h2>
+          {% endif %}
+          <div class="row mt-3">
+            {% for mp in autres_deputes.autres %}
+              <div class="col-6 col-md-3 py-2">
+                <a class="membre no-decoration underline" href="{{ path('depute_individual', {dptSlug: mp.dpt_slug, slug: mp.slug}) }}"> {{ mp.firstname }} {{ mp.lastname }}</a>
+              </div>
+            {% endfor %}
+          </div>
+          <div class="mt-3">
+            {% if autres_deputes.contexte == 'legislature' %}
+              <a href="{{ path('deputes_legislature', {legislature: autres_deputes.legislature}) }}">Tous les députés de la législature {{ autres_deputes.legislature }}</a>
+            {% elseif autres_deputes.contexte == 'groupe' %}
+              <a href="{{ path('groupe_membres', {legislature: autres_deputes.legislature, abrev: depute.groupe_abrev|lower}) }}">Voir tous les députés membres du groupe {{ depute.groupe_libelle|name_group }} ({{ depute.groupe_abrev }})</a>
+            {% else %}
+              <a href="{{ path('deputes_inactifs') }}">Tous les députés plus en activité</a>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    {% endif %}
+    <div class="row">
+      <div class="col-12">
+        {# `libelle_de` porte son espace final quand il en faut un (« du », « de la »,
+           « des », « de l' ») — ne pas le rogner (cf. CLAUDE.md). #}
+        <h2>Les députés en activité du département {{ depute.libelle_de }}{{ depute.departement_nom }} ({{ depute.departement_code }})</h2>
+        <div class="row mt-3">
+          {% for mp in autres_deputes.departement %}
+            <div class="col-6 col-md-3 py-2">
+              <a class="membre no-decoration underline" href="{{ path('depute_individual', {dptSlug: mp.dpt_slug, slug: mp.slug}) }}"> {{ mp.firstname }} {{ mp.lastname }}</a>
+            </div>
+          {% endfor %}
+        </div>
+        <div class="mt-3">
+          <a href="{{ path('departement_individual', {departement: depute.dpt_slug}) }}">Voir tous les députés élus dans le département {{ depute.libelle_de }}{{ depute.departement_nom }}</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

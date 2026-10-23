@@ -1,0 +1,645 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Datan | Comprendre l'Assemblée nationale{% endblock %}
+
+{% block meta_description %}L'Assemblée nationale enfin compréhensible ! Découvrez les résultats de vote de chaque député et groupe parlementaire.{% endblock %}
+
+{% block stylesheets %}
+  <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/flickity.min.css') }}">
+{% endblock %}
+
+{# Flickity doit être présent avant main.min.js, qui initialise les carrousels. #}
+{% block javascripts_head %}
+  <script src="{{ asset('assets/js/libraries/flickity/flickity.pkgd.min.js') }}"></script>
+{% endblock %}
+
+{% block javascripts %}
+  <script src="{{ asset('assets/js/dist/autocomplete_search.js') }}"></script>
+  {# Clics et infobulles de la carte des départements (data-slug des SVG). #}
+  <script src="{{ asset('assets/js/dist/map_france.js') }}"></script>
+  {# La bibliothèque Typed avant dist/typed.js, qui l'instancie sur .text-slider. #}
+  <script src="{{ asset('assets/js/libraries/typed/typed.umd.js') }}"></script>
+  <script src="{{ asset('assets/js/dist/typed.js') }}"></script>
+  {# L'hémicycle : donut Chart.js à bulles d'effectif, comme le script en pied
+     de home/index.php — datalabels s'enregistre explicitement (v2). #}
+  <script src="{{ asset('assets/js/libraries/chart.js/chart.min.js') }}"></script>
+  <script src="{{ asset('assets/js/libraries/chart.js/chartjs-plugin-datalabels@2.1.js') }}"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      Chart.register(ChartDataLabels);
+
+      var dataHemicycle = {
+        labels: [
+          {% for groupe in groupes_hemicycle %}{{ ((groupe.libelle|name_group) ~ ' (' ~ groupe.libelle_abrev ~ ')')|json_encode|raw }},{% endfor %}
+        ],
+        datasets: [{
+          data: [{% for groupe in groupes_hemicycle %}{{ groupe.effectif }},{% endfor %}],
+          backgroundColor: [{% for groupe in groupes_hemicycle %}{{ (groupe.couleur ?: '#8D949A')|json_encode|raw }},{% endfor %}],
+          hoverBackgroundColor: [{% for groupe in groupes_hemicycle %}{{ (groupe.couleur ?: '#8D949A')|json_encode|raw }},{% endfor %}]
+        }]
+      };
+
+      var optionsHemicycle = {
+        responsive: true,
+        maintainAspectRatio: false,
+        circumference: 180,
+        rotation: 270,
+        layout: {
+          padding: { top: 15, bottom: 15, left: 15, right: 15 }
+        },
+        plugins: {
+          datalabels: {
+            anchor: 'end',
+            backgroundColor: function (context) {
+              return context.dataset.backgroundColor;
+            },
+            borderColor: 'white',
+            borderRadius: 25,
+            borderWidth: 1,
+            color: 'white',
+            font: { size: 14 }
+          },
+          legend: { display: false }
+        }
+      };
+
+      new Chart(document.getElementById('chartHemicycle'), {
+        type: 'doughnut',
+        data: dataHemicycle,
+        options: optionsHemicycle
+      });
+
+      {% if election_municipales %}
+      var dataElection = {
+        labels: [{% for g in election_municipales.groupes %}{{ g.libelle_abrev|json_encode|raw }},{% endfor %}],
+        datasets: [{
+          label: 'Candidats (%)',
+          data: [{% for g in election_municipales.groupes %}{{ g.pct }},{% endfor %}],
+          backgroundColor: [{% for g in election_municipales.groupes %}{{ (g.couleur ?: '#8D949A')|json_encode|raw }},{% endfor %}],
+          borderWidth: 1
+        }]
+      };
+
+      new Chart(document.getElementById('chart_election'), {
+        type: 'bar',
+        data: dataElection,
+        options: {
+          scales: {
+            y: {
+              beginAtZero: true,
+              ticks: {
+                callback: function (value) {
+                  return value + '%';
+                }
+              }
+            }
+          },
+          plugins: {
+            legend: { display: false },
+            datalabels: {
+              anchor: 'end',
+              align: 'top',
+              formatter: function (value) {
+                return value + '%';
+              },
+              color: '#000',
+              font: { weight: 'bold', size: 12 }
+            }
+          }
+        }
+      });
+      {% endif %}
+    });
+  </script>
+{% endblock %}
+
+{% block body %}
+<!-- BLOC HÉMICYCLE -->
+<div class="container-fluid bloc-hemycicle-home pg-home d-flex flex-column justify-content-around py-4 async_home"
+  data-src="{{ asset('assets/imgs/cover/hemicycle-from-back.jpg') }}"
+  data-tablet="{{ asset('assets/imgs/cover/hemicycle-from-back-768.jpg') }}"
+  data-mobile="{{ asset('assets/imgs/cover/hemicycle-from-back-375.jpg') }}">
+  <div class="d-flex flex-column align-items-center">
+    <h1 class="text-center">L'Assemblée nationale, enfin <span>compréhensible</span></h1>
+  </div>
+  {# Carte de recherche, laissée de côté au portage initial faute d'endpoint —
+     /search_api existe depuis le 24 juillet. Le mot qui défile (.text-slider)
+     est animé par dist/typed.js, l'autocomplétion par dist/autocomplete_search.js. #}
+  <div class="row bloc-search-deputes mt-4">
+    <div class="col-xl-6 col-lg-8 col-md-10 offset-xl-3 offset-lg-2 offset-md-1">
+      <div class="card">
+        <div class="card-header pt-4 pb-1">
+          <div class="placeholder d-flex">
+            <div class="box d-flex justify-content-end text-slider-items">
+              Je cherche
+            </div>
+            <div class="slider">
+              <span class="text-slider"></span>
+            </div>
+          </div>
+        </div>
+        <div class="card-header row pb-4">
+          <div class="col-12 px-4">
+            <div id="search-bloc" class="search-bloc">
+              {# Le site vise « recherche.php », une adresse morte : le JS
+                 intercepte toujours l'envoi (Entrée comprise) et l'action ne
+                 sert jamais — neutralisée en auto-référence plutôt qu'un 404. #}
+              <form autocomplete="off" action="" id="searchForm" method="GET">
+                <div class="search">
+                  <div class="search_icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+                      <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
+                    </svg>
+                  </div>
+                  <label for="search" class="sr-only">Rechercher sur tout le site (député, vote, groupe, ville, ou autre information parlementaire)</label>
+                  <input id="search" type="text" class="randomized" placeholder="Exemple : {{ placeholder }}">
+                  <div class="search-results" id="search-results-bloc" style="display: none">
+                    <div id="search-results-list"></div>
+                    <a class="py-1 no-decoration text-info font-weight-bold" id="more-results-link">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+                        <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
+                      </svg>
+                      <span class="ml-1">Plus de résultats</span>
+                    </a>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="mt-4 d-flex flex-column align-items-center">
+    <a href="{{ path('deputes_index') }}" class="no-decoration">
+      <button type="button" class="btn btn-light">Tous les députés</button>
+    </a>
+  </div>
+</div>
+
+<div class="container-fluid pg-home">
+  <!-- BLOC CONSTATS -->
+  <div class="row bloc-constats py-4">
+    <div class="container p-md-0">
+      <div class="row py-4">
+        <div class="col-lg-6">
+          <h2 class="pb-4">Datan : Un outil de vulgarisation parlementaire</h2>
+          <p>
+            Il est difficile de <b>suivre l'activité</b> des députés et de savoir ce qu'ils votent.
+            <span class="text-primary font-weight-bold">Datan</span> explique <b>les votes</b> des députés et groupes politiques.
+          </p>
+          {% for constat in ['Scrutins de l\'Assemblée en temps réel', 'Profils détaillés des députés', 'Statistiques sur la formation des coalitions'] %}
+            <p class="mb-1">
+              <span class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check-circle-fill" viewBox="0 0 16 16"><path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0m-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/></svg></span>
+              {{ constat }}
+            </p>
+          {% endfor %}
+          <div class="mt-4 d-flex flex-column flex-md-row align-items-start">
+            <a class="btn btn-primary mr-md-4 mb-3 mb-md-0" href="{{ path('page_a_propos') }}">En savoir plus</a>
+            <a class="btn btn-outline-primary" href="{{ path('votes_index') }}">Voir les derniers votes</a>
+          </div>
+        </div>
+        <div class="d-none d-lg-block col-lg-6">
+          <div class="img-container">
+            <img class="img-fluid" src="{{ asset('assets/imgs/cover/assemblee-nationale.jpg') }}" alt="Assemblée nationale - photo de Mathias Reding">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- NOUS SOUTENIR (bloc-donations du legacy) -->
+  <div class="row bloc-donations">
+    <div class="container py-4">
+      <div class="row">
+        <div class="col-12 col-lg-8 offset-lg-2 my-4">
+          <div class="icon d-flex justify-content-center">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-heart-fill" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314"/></svg>
+          </div>
+          <h2 class="text-center mb-4 mt-2">Nous soutenir</h2>
+          <p class="text-center">Datan est un <b>outil indépendant</b>.</p>
+          <p class="text-center">🔍 Rendre accessible l'activité des députés ... Pour continuer, on a besoin de vous ! Soutenez Datan pour faire vivre la transparence démocratique et l'accès aux données parlementaires.</p>
+          <div class="d-flex justify-content-center mt-4">
+            <a class="btn btn-primary" href="{{ path('page_soutenir') }}" target="_blank" rel="noopener">Faire un don</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- VOTES DÉCRYPTÉS -->
+  <div class="row bloc-votes">
+    <div class="container p-md-0">
+      <div class="row py-4">
+        <div class="col-12">
+          <h2 class="text-center my-4">Derniers votes décryptés par Datan</h2>
+        </div>
+        <div class="col-12 carousel-container bloc-carousel-votes-flickity mt-4 mb-4">
+          <div class="carousel-cards">
+            {% for decryptage in decryptages %}
+              <div class="card card-vote">
+                <div class="thumb d-flex align-items-center {{ decryptage.sort_code }}">
+                  <div class="d-flex align-items-center">
+                    <span>{{ decryptage.sort_code|upper }}</span>
+                  </div>
+                </div>
+                <div class="card-header d-flex flex-row justify-content-between">
+                  <span class="date">{{ decryptage.date_abregee }}</span>
+                </div>
+                <div class="card-body d-flex flex-column justify-content-center">
+                  <span class="title">
+                    <a href="{{ lien_vote(decryptage.legislature, decryptage.vote_numero) }}" class="stretched-link no-decoration">{{ decryptage.title }}</a>
+                  </span>
+                  {% if decryptage.lecture_name %}
+                    <span class="reading mt-2">{{ decryptage.lecture_name }}</span>
+                  {% endif %}
+                </div>
+                {% if decryptage.categorie_name %}
+                  <div class="card-footer">
+                    <span class="field badge badge-primary py-1 px-2">{{ decryptage.categorie_name }}</span>
+                  </div>
+                {% endif %}
+              </div>
+            {% endfor %}
+            <div class="card card-vote see-all">
+              <div class="card-body d-flex align-items-center justify-content-center">
+                <a href="{{ path('votes_decryptes') }}" class="stretched-link no-decoration">VOIR TOUS</a>
+              </div>
+            </div>
+          </div>
+          <div class="carousel-buttons d-flex justify-content-center">
+            <button type="button" class="btn prev mr-2 carousel--prev" aria-label="précédent">
+              <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-arrow-left" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M5.854 4.646a.5.5 0 0 1 0 .708L3.207 8l2.647 2.646a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 0 1 .708 0z"/><path fill-rule="evenodd" d="M2.5 8a.5.5 0 0 1 .5-.5h10.5a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5z"/></svg>
+            </button>
+            <a class="btn btn-primary mx-2" href="{{ path('votes_index') }}">
+              Tous les votes
+            </a>
+            <button type="button" class="btn next ml-2 carousel--next" aria-label="suivant">
+              <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-arrow-right" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10.146 4.646a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708-.708L12.793 8l-2.647-2.646a.5.5 0 0 1 0-.708z"/><path fill-rule="evenodd" d="M2 8a.5.5 0 0 1 .5-.5H13a.5.5 0 0 1 0 1H2.5A.5.5 0 0 1 2 8z"/></svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ÉLECTIONS MUNICIPALES 2026 (bloc-election du legacy) -->
+  {% if election_municipales %}
+    <div class="row bloc-election" id="pattern_background">
+      <div class="container p-md-0">
+        <div class="row py-4">
+          <div class="col-12">
+            <h2 class="text-center my-4">Élections municipales 2026</h2>
+            <h3 class="mt-3">Découvrez les députés candidats aux municipales</h3>
+          </div>
+        </div>
+        <div class="row pt-2 pb-5">
+          <div class="col-md-5 d-flex flex-column justify-content-center">
+            {# Le futur est celui du legacy, conservé tel quel bien que le
+               scrutin soit passé : la phrase est la sienne, mot pour mot. #}
+            <p>Les élections municipales se dérouleront les dimanches <b>15 et 22 mars 2026</b>.</p>
+            <p>Notre équipe a répertorié {{ election_municipales.candidats }} député{{ election_municipales.candidats > 1 ? 's' }} candidat{{ election_municipales.candidats > 1 ? 's' }} aux élections municipales de 2026, dont {{ election_municipales.tetes }} sont têtes de liste.</p>
+            {% set premier = election_municipales.groupes|first %}
+            <p>Le groupe politique <a href="{{ path('groupe_individual', {legislature: premier.legislature, abrev: premier.libelle_abrev|lower}) }}">{{ premier.libelle_abrev }}</a> compte la plus forte proportion de députés candidats aux municipales 2026 : <b>{{ premier.candidats }} de ses {{ premier.effectif }} membres se présentent</b>, soit {{ premier.pct }}%.</p>
+          </div>
+          <div class="col-md-7 mt-5 mt-md-0">
+            <div class="card card-election-groups">
+              <div class="card-header font-weight-bold text-center">
+                Pourcentage de députés candidats aux municipales 2026 par groupe politique
+              </div>
+              <div class="card-body">
+                <canvas id="chart_election"></canvas>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row pb-5">
+          <div class="col-12 d-flex justify-content-center">
+            <a href="{{ path('elections_individual', {slug: 'municipales-2026'}) }}" class="no-decoration">
+              <button type="button" class="btn btn-primary">Découvrez les députés candidats</button>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  {% endif %}
+
+  <!-- BLOG (bloc-posts du legacy) -->
+  {% if posts %}
+    <div class="row">
+      <div class="container p-md-0">
+        <div class="row py-5">
+          <div class="col-lg-12 bloc-posts">
+            <h3 class="surtitle text-center">Blog</h3>
+            <h2 class="text-center">Nos analyses et décryptages</h2>
+            <p class="text-center">L'actualité de Datan, de l'Assemblée nationale et des députés</p>
+            <div class="row pt-4">
+              {% for article in posts %}
+                <div class="col-md-4 {{ not loop.first ? 'mt-md-0 mt-4' }}">
+                  {{ include('blog/_bloc_article.html.twig') }}
+                </div>
+              {% endfor %}
+            </div>
+            <div class="row mt-4">
+              <div class="col-12 d-flex justify-content-center">
+                <a class="btn btn-primary" href="{{ path('blog_index') }}">Tous nos articles</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  {% endif %}
+
+  <!-- COMPOSITION DE L'ASSEMBLÉE -->
+  <div class="row bloc-pie" id="pattern_background">
+    <div class="container py-3">
+      <div class="row pt-5">
+        <div class="col-12">
+          <h2 class="text-center">Composition de l'Assemblée nationale</h2>
+        </div>
+      </div>
+      <div class="row pt-3">
+        <div class="col-12">
+          <p class="text-center mb-0">Découvrez les {{ nombre_groupes }} groupes politiques de l'Assemblée nationale</p>
+        </div>
+      </div>
+      <div class="row mt-5 mb-5">
+        <div class="col-lg-5 col-md-6">
+          <p>
+            À l'Assemblée, les députés se regroupent par affinité politique (socialiste, droite, libéral, etc.). Les groupes ont un rôle clé dans l'organisation du travail parlementaire.
+            Actuellement, il y a {{ nombre_groupes }} groupes, le plus grand étant le
+            <a href="{{ path('groupe_individual', {legislature: groupes[0].legislature, abrev: groupes[0].libelle_abrev|lower}) }}">{{ groupes[0].libelle|name_group }} ({{ groupes[0].libelle_abrev }})</a>,
+            avec {{ groupes[0].effectif }} sièges.
+          </p>
+          <p>L'Assemblée peut être divisée en 4 grands blocs ! 👇</p>
+          <ul class="list-unstyled ml-lg-3">
+            <li>🔴 <b>La gauche</b> (NFP) : {{ blocs.gauche }} députés</li>
+            <li>🟡 <b>Le bloc central</b> (Renaissance et alliés) : {{ blocs.centre }} députés</li>
+            <li>🔵 <b>La droite</b> (LR) : {{ blocs.droite }} députés</li>
+            <li>🟤 <b>L'extrême droite</b> (RN et alliés) : {{ blocs.extreme_droite }} députés</li>
+          </ul>
+          <div class="card coalition d-none d-lg-block mt-4">
+            <div class="card-body">
+              <h2 class="card-title">Composez votre coalition</h2>
+              <p>Depuis les <a class="text-white" href="{{ path('elections_individual', {slug: 'legislatives-2024'}) }}">élections de 2024</a>, aucun groupe n'a la majorité. Ils doivent s'allier pour faire passer des lois. Testez notre simulateur de coalition !</p>
+              <a href="{{ path('outils_coalition_simulateur') }}" class="btn btn-light">Formez votre coalition</a>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-7 col-md-6 d-flex flex-column justify-content-center mt-3 mt-md-0">
+          {# Donut Chart.js à demi-cercle avec bulles d'effectif (plugin
+             datalabels), comme datan.fr — le tracé SVG serveur du premier
+             portage n'avait ni les bulles ni le rendu exact. #}
+          <div class="hemicycle">
+            <canvas id="chartHemicycle"></canvas>
+            <div class="n-hemicycle text-center">
+              <span>{{ effectif_total }} députés</span>
+            </div>
+          </div>
+        </div>
+        <div class="col-12 d-lg-none mt-3">
+          <div class="card coalition">
+            <div class="card-body">
+              <h2 class="card-title">Composez votre coalition</h2>
+              <p>Depuis les <a class="text-white" href="{{ path('elections_individual', {slug: 'legislatives-2024'}) }}">élections de 2024</a>, aucun groupe n'a la majorité. Ils doivent s'allier pour faire passer des lois. Testez notre simulateur de coalition !</p>
+              {# « Former » sans « z » : c'est le libellé du legacy sur mobile. #}
+              <a href="{{ path('outils_coalition_simulateur') }}" class="btn btn-light">Former votre coalition</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- EXPLICATIONS DE VOTE -->
+  {% if explications %}
+    <div class="row bloc-votes">
+      <div class="container p-md-0">
+        <div class="row py-4">
+          <div class="col-12">
+            <h2 class="text-center my-4">Dernières explications de vote</h2>
+          </div>
+          <div class="col-md-8 offset-md-2 text-center">
+            <p>Les députés peuvent sur Datan expliquer leurs positions de vote. Pourquoi ont-ils voté pour ou contre un texte ? Découvrez les dernières explications !</p>
+          </div>
+          <div class="col-12 mt-4 mb-4 d-flex flex-md-row flex-column">
+            {% for explication in explications %}
+              <div class="card card-explication-home mx-md-2 mb-4">
+                <div class="card-header py-2">
+                  <div class="d-flex flex-row align-items-center">
+                    {% if explication.dpt_slug and explication.slug %}
+                      <a href="{{ path('depute_individual', {dptSlug: explication.dpt_slug, slug: explication.slug}) }}">
+                        <div class="depute-img-square depute-img-circle-explication mr-3">
+                          <img src="{{ photo_depute(explication.mp_id) }}" width="150" height="192" loading="lazy" alt="Photo {{ explication.firstname }} {{ explication.lastname }}">
+                        </div>
+                      </a>
+                    {% endif %}
+                    <p class="title mb-0">
+                      {% if explication.dpt_slug and explication.slug %}
+                        <a class="no-decoration underline" href="{{ path('depute_individual', {dptSlug: explication.dpt_slug, slug: explication.slug}) }}">{{ explication.firstname }} {{ explication.lastname }}</a>
+                      {% else %}
+                        {{ explication.firstname }} {{ explication.lastname }}
+                      {% endif %}
+                      {% if explication.groupe_abrev %}
+                        -
+                        <a class="no-decoration underline" href="{{ path('groupe_individual', {legislature: explication.groupe_legislature, abrev: explication.groupe_abrev|lower}) }}"><span class="font-weight-bold" style="color: {{ explication.groupe_couleur }}">{{ explication.groupe_abrev }}</span></a>
+                      {% endif %}
+                    </p>
+                  </div>
+                </div>
+                <div class="card-body py-3">
+                  <p class="mb-0 font-italic font-weight-bold">
+                    <a class="no-decoration underline" href="{{ lien_vote(explication.legislature, explication.vote_numero) }}">{{ explication.decryptage_title }}</a>
+                  </p>
+                  {% if explication.position %}
+                    <p class="badge badge-{{ explication.position }} mb-4">{{ explication.position|upper }}</p>
+                  {% endif %}
+                  {# Extrait à vingt mots, comme le word_limiter() du legacy. #}
+                  {% set mots = explication.texte|striptags|split(' ') %}
+                  <p class="quoted mb-0 p-0">{{ mots|slice(0, 20)|join(' ') }}{{ mots|length > 20 ? ' …' }}</p>
+                </div>
+                <div class="card-footer pt-0 d-flex justify-content-center align-items-center">
+                  {# L'adresse du legacy : la page du vote, l'explication dépliée
+                     (`vote_N/explication_PAxxx`). #}
+                  <a class="btn btn-primary text-white" role="button" href="{{ lien_vote(explication.legislature, explication.vote_numero) }}/explication_{{ explication.mp_id }}">Lire plus</a>
+                </div>
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    </div>
+  {% endif %}
+
+  <!-- NEWSLETTER -->
+  <div class="row bloc-newsletter" id="pattern_background">
+    <div class="container py-5">
+      <div class="row py-3">
+        <div class="col-lg-8 offset-lg-2">
+          <h2 class="text-center">Restez informés !</h2>
+          <p class="mt-5 text-center">Retrouvez dans notre newsletter mensuelle un condensé des derniers scrutins de l'Assemblée nationale et des positions des différents groupes politiques.</p>
+          <p class="text-center mb-0">Nous vous tiendrons également informé des dernières nouveautés du site internet Datan.</p>
+          {# Bouton laissé de côté au portage initial, la modale n'existant pas
+             encore ; rétabli avec elle. #}
+          <div class="text-center">
+            <button class="btn btn-primary mt-5" data-toggle="modal" data-target="#newsletter">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-envelope" viewBox="0 0 16 16">
+                <path d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V4zm2-1a1 1 0 0 0-1 1v.217l7 4.2 7-4.2V4a1 1 0 0 0-1-1H2zm13 2.383-4.758 2.855L15 11.114v-5.73zm-.034 6.878L9.271 8.82 8 9.583 6.728 8.82l-5.694 3.44A1 1 0 0 0 2 13h12a1 1 0 0 0 .966-.739zM1 11.114l4.758-2.876L1 5.383v5.73z"/>
+              </svg>
+              <span class="ml-2">S'inscrire à la newsletter</span></button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- QUELS GROUPES SOUTIENNENT LE GOUVERNEMENT ? (bloc-support du legacy) -->
+  {% if soutien_groupes %}
+    {% set soutien_max = soutien_groupes|map(g => g.soutiens)|reduce((a, b) => max(a, b), 0) %}
+    {% set soutien_votes = soutien_groupes|map(g => g.votes)|reduce((a, b) => max(a, b), 0) %}
+    <div class="row bloc-support">
+      <div class="container py-5">
+        <div class="row mb-5">
+          <div class="col-12">
+            <h2 class="text-white text-center"> Quels groupes soutiennent le gouvernement ?</h2>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-lg-6 col-md-5 d-flex align-items-center text-white">
+            <div>
+              <p>À l'Assemblée, certains groupes politiques sont membres du bloc gouvernemental tandis que d'autres sont des groupes d'opposition.</p>
+              <p>En règle générale, les groupes du bloc gouvernemental soutiennent l'action du gouvernement et votent en faveur des textes qu'il propose. L'opposition, si elle peut parfois soutenir le gouvernement, vote plus souvent contre les projets gouvernementaux.</p>
+              <p>Le gouvernement actuel est dirigé par le Premier ministre Sébastien Lecornu.</p>
+              {% if soutien_opposition %}
+                <p>Le groupe {{ soutien_opposition.libelle|name_group }} ({{ soutien_opposition.libelle_abrev }}) est le groupe d'opposition votant le plus souvent en faveur du gouvernement.</p>
+              {% endif %}
+            </div>
+          </div>
+          <div class="col-lg-6 col-md-7 mt-md-0 mt-4">
+            <div class="card card-statistiques border-0">
+              <div class="card-body pb-0">
+                <h3 class="text-center font-weight-bold h5">Nombre de projets gouvernementaux votés par les groupes</h3>
+                <p class="mt-3">Depuis le début de la législature, en 2024, il y a eu <b>{{ soutien_votes }} votes</b> sur des projets de loi du gouvernement. Découvrez les groupes politiques qui votent le plus souvent en faveur de ces textes.</p>
+                <div class="legend d-flex justify-content-center">
+                  <div class="d-flex justify-content-center align-items-center mx-3">
+                    <div class="legendBox" style="background-color: #5199C4"></div>
+                    <span class="ml-2 font-italic">Majorité</span>
+                  </div>
+                  <div class="d-flex justify-content-center align-items-center mx-3">
+                    <div class="legendBox" style="background-color: #EA9A27"></div>
+                    <span class="ml-2 font-italic">Opposition</span>
+                  </div>
+                </div>
+                <div class="row mt-1 bar-container stats rounded-bottom py-4 mt-3">
+                  <div class="col-12">
+                    <div class="chart">
+                      <div class="bar-chart d-flex flex-row justify-content-between align-items-end">
+                        {% for g in soutien_groupes %}
+                          <div class="bars mx-1 mx-md-2" style="height: {{ soutien_max > 0 ? (g.soutiens / soutien_max * 100)|round : 0 }}%; background-color: {{ g.libelle_abrev in majorite ? '#5199C4' : '#EA9A27' }}">
+                            <span class="score" style="font-size: 0.85rem">{{ g.soutiens }}</span>
+                          </div>
+                        {% endfor %}
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-12 d-flex justify-content-between mt-2">
+                    {% for g in soutien_groupes %}
+                      <div class="legend-element d-flex align-items-center justify-content-center">
+                        <span class="font-weight-bold text-center tooltipHelp tooltipDashed" data-toggle="tooltip" data-placement="top" title="{{ g.libelle|name_group }}">{{ g.libelle_abrev == 'LFI-NFP' ? 'LFI' : g.libelle_abrev }}</span>
+                      </div>
+                    {% endfor %}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  {% endif %}
+
+  {# Mur de presse statique du legacy (« Ils parlent de nous »). Les liens que
+     l'origine masque passent par url_obf, les autres restent des ancres ; les
+     logos se chargent en différé (loading=lazy — le plugin unveil de la classe
+     img-lazy n'est pas dans main.min.js). #}
+  <div class="row">
+    <div class="container py-5">
+      <div class="row pt-3">
+        <div class="col-12">
+          <h2 class="text-center">Ils parlent de nous</h2>
+        </div>
+      </div>
+      <div class="row mt-5 pb-5">
+        <div class="col-lg-8 offset-lg-2 d-flex flex-wrap justify-content-around align-items-center">
+          <a href="https://www.lemonde.fr/politique/article/2023/06/23/le-rn-premier-opposant-a-emmanuel-macron-mais-soutien-regulier-a-l-assemblee-nationale_6178892_823448.html" target="_blank" rel="noopener"><img class="mx-2 my-3" loading="lazy" src="{{ asset('assets/imgs/media/le_monde.png') }}" width="150" height="35" alt="Le Monde"></a>
+          <a href="https://www.lejdd.fr/Politique/interventions-textes-qui-sont-les-deputes-les-plus-actifs-de-ce-debut-de-legislature-4126439" target="_blank" rel="noopener"><img class="mx-2 my-3" loading="lazy" src="{{ asset('assets/imgs/media/jdd.png') }}" width="150" height="35" alt="JDD"></a>
+          <a href="https://www.franceinfo.fr/politique/gouvernement-de-francois-bayrou/moins-producteur-de-lois-plus-souvent-mis-en-minorite-visualisez-en-trois-graphiques-comment-depuis-la-dissolution-le-gouvernement-a-en-partie-perdu-la-main-au-parlement_7291695.html" target="_blank" rel="noopener"><img class="mx-2 my-3" loading="lazy" src="{{ asset('assets/imgs/media/franceinfo.png') }}" width="183" height="28" alt="France info"></a>
+          <a href="https://www.bfmtv.com/politique/infographie-assemblee-nationale-qui-sont-les-groupes-parlementaires-les-plus-proches_AV-202207260568.html" target="_blank" rel="noopener"><img class="mx-2 my-3" loading="lazy" src="{{ asset('assets/imgs/media/bfm.jpg') }}" width="80" height="50" alt="BFM TV"></a>
+          <a href="https://www.leparisien.fr/politique/lr-a-lassemblee-nationale-radiographie-dun-groupe-indiscipline-23-10-2022-7PDSHRSJ5ZHC5OTRLUGHDCPVQY.php" target="_blank" rel="noopener"><img class="mx-2 my-3" loading="lazy" src="{{ asset('assets/imgs/media/le_parisien.png') }}" width="120" height="38" alt="Le Parisien"></a>
+          <a href="https://www.liberation.fr/politique/aurelien-pradie-un-depute-et-conseiller-regional-tres-absent-20221202_M35E54RK2FFEFCGZGR5N6FRYII/" target="_blank" rel="noopener"><img class="mx-2 my-3" loading="lazy" src="{{ asset('assets/imgs/media/liberation.png') }}" width="150" height="55" alt="Libération"></a>
+          <span class="url_obf" url_obf="{{ url_obf('https://www.lexpress.fr/politique/lr/loi-immigration-chez-lr-la-chimere-de-lunite-IZEX7VWBL5BO5NIB5OHAGJOSTU/') }}"><img class="mx-2 my-3" loading="lazy" src="{{ asset('assets/imgs/media/lexpress.png') }}" width="109" height="35" alt="L'Express"></span>
+          <span class="url_obf" url_obf="{{ url_obf('https://www.franceculture.fr/emissions/les-enjeux-des-reseaux-sociaux/la-lutte-contre-l-abstention-passe-par-les-reseaux') }}"><img class="mx-2 my-3" loading="lazy" src="{{ asset('assets/imgs/media/france_culture.png') }}" width="70" height="70" alt="France Culture"></span>
+          <span class="url_obf" url_obf="{{ url_obf('https://www.lesechos.fr/politique-societe/politique/le-rn-veut-engranger-sur-sa-premiere-annee-a-lassemblee-nationale-1954103') }}"><img class="mx-2 my-3" loading="lazy" src="{{ asset('assets/imgs/media/les_echos.png') }}" width="119" height="28" alt="Les Echos"></span>
+          <a href="https://www.ouest-france.fr/elections/legislatives/lannion-paimpol-quel-bilan-pour-le-depute-eric-bothorel-0f349264-e100-11ec-8469-165462e4a30b" target="_blank" rel="noopener"><img class="mx-2 my-3" loading="lazy" src="{{ asset('assets/imgs/media/ouest_france.png') }}" width="120" height="38" alt="Ouest France"></a>
+          <span class="url_obf" url_obf="{{ url_obf('https://www.la-croix.com/France/lhemicycle-Rassemblement-national-attend-heure-2023-06-01-1201269583') }}"><img class="mx-2 my-3" loading="lazy" src="{{ asset('assets/imgs/media/la_croix.png') }}" width="150" height="30" alt="La Croix"></span>
+          <a href="https://france3-regions.francetvinfo.fr/occitanie/haute-garonne/toulouse/legislatives-2022-top-5-de-l-activite-a-l-assemblee-il-a-fait-quoi-mon-depute-pendant-5-ans-2552692.html" target="_blank" rel="noopener"><img class="mx-2 my-3" loading="lazy" src="{{ asset('assets/imgs/media/france3.png') }}" width="136" height="26" alt="France 3"></a>
+          <span class="url_obf" url_obf="{{ url_obf('https://www.lopinion.fr/politique/lassemblee-nationale-face-au-reel-ce-que-revele-lexperience-professionnelle-des-deputes') }}"><img class="mx-2 my-3" loading="lazy" src="{{ asset('assets/imgs/media/lopinion.png') }}" width="108" height="26" alt="L'Opinion"></span>
+          <span class="url_obf" url_obf="{{ url_obf('https://www.sudouest.fr/pyrenees-atlantiques/pau/assemblee-nationale-le-rn-pointe-le-manque-d-assiduite-de-david-habib-il-repond-qu-il-y-a-trop-d-amendements-futiles-12739495.php') }}"><img class="mx-2 my-3" loading="lazy" src="{{ asset('assets/imgs/media/sud_ouest.png') }}" width="65" height="59" alt="Sud Ouest"></span>
+          <a href="https://www.capital.fr/economie-politique/classement-les-deputes-les-plus-bosseurs-et-ceux-qui-en-font-le-moins-1438612" target="_blank" rel="noopener"><img class="mx-2 my-3" loading="lazy" src="{{ asset('assets/imgs/media/capital.png') }}" width="122" height="40" alt="Capital"></a>
+          <span class="url_obf" url_obf="{{ url_obf('https://www.lepoint.fr/politique/budget-pourquoi-lr-fait-l-assemblee-buissonniere-20-10-2022-2494617_20.php') }}"><img class="mx-2 my-3" loading="lazy" src="{{ asset('assets/imgs/media/le-point.png') }}" width="144" height="34" alt="Le Point"></span>
+          <a href="https://www.20minutes.fr/politique/assemblee_nationale/4042426-20230623-assemblee-nationale-rn-veut-poursuivre-lente-marche-vers-normalisation" target="_blank" rel="noopener"><img class="mx-2 my-3" loading="lazy" src="{{ asset('assets/imgs/media/20_minutes.png') }}" width="70" height="70" alt="20 Minutes"></a>
+          <a href="https://www.francebleu.fr/infos/politique/faible-participation-aux-votes-de-l-assemblee-nationale-le-depute-mayennais-yannick-favennec-s-explique-1836888" target="_blank" rel="noopener"><img class="mx-2 my-3" loading="lazy" src="{{ asset('assets/imgs/media/ici_mayenne.png') }}" width="146" height="38" alt="Ici Mayenne"></a>
+          <span class="url_obf" url_obf="{{ url_obf('https://www.ladepeche.fr/2021/01/23/comment-votent-vos-deputes-a-lassemblee-nationale-9328626.php') }}"><img class="mx-2 my-3" loading="lazy" src="{{ asset('assets/imgs/media/depeche.png') }}" width="150" height="37" alt="La Dépêche Ouest"></span>
+          <a href="https://www.latribune.fr/opinions/tribunes/apres-trois-votes-de-confiance-la-majorite-presidentielle-s-erode-t-elle-a-l-assemblee-nationale-853748.html" target="_blank" rel="noopener"><img class="mx-2 my-3" loading="lazy" src="{{ asset('assets/imgs/media/la_tribune.png') }}" width="100" height="45" alt="La Tribune"></a>
+          <span class="url_obf" url_obf="{{ url_obf('https://www.contexte.com/article/pouvoirs/a-lassemblee-nationale-le-rn-prefere-la-cravate-au-cambouis_172092.html') }}"><img class="mx-2 my-3" loading="lazy" src="{{ asset('assets/imgs/media/contexte.png') }}" width="118" height="30" alt="Contexte"></span>
+          <a href="https://www.letelegramme.fr/finistere/morlaix/legislatives-a-morlaix-quel-est-le-bilan-de-sandrine-le-feur-08-06-2022-13061024.php" target="_blank" rel="noopener"><img class="mx-2 my-3" loading="lazy" src="{{ asset('assets/imgs/media/telegramme.png') }}" width="135" height="19" alt="Le Télégramme"></a>
+          <a href="https://theconversation.com/reintroduction-des-pesticides-neonicotino-des-comment-nos-deputes-ont-ils-vote-et-pourquoi-155158" target="_blank" rel="noopener"><img class="mx-2 my-3" loading="lazy" src="{{ asset('assets/imgs/media/the_conversation.png') }}" width="220" height="17" alt="The Conversation"></a>
+          <a href="https://www.marianne.net/politique/lrem/benjamin-griveaux-agnes-buzyn-cedric-villani-ces-six-espoirs-evapores-de-la-macronie-saison-1" target="_blank" rel="noopener"><img class="mx-2 my-3" loading="lazy" src="{{ asset('assets/imgs/media/marianne.png') }}" width="120" height="40" alt="Marianne"></a>
+          <a href="https://tnova.fr/democratie/politique-institutions/eric-ciotti-dans-ses-oeuvres/" target="_blank" rel="noopener"><img class="mx-2 my-3" loading="lazy" src="{{ asset('assets/imgs/media/terra-nova.png') }}" width="119" height="71" alt="Terra Nova"></a>
+          <a href="https://www.lagrandeconversation.com/politique/les-republicains-a-lassemblee-nationale-entre-le-marteau-et-lenclume/" target="_blank" rel="noopener"><img class="mx-2 my-3" loading="lazy" src="{{ asset('assets/imgs/media/grande_conversation.png') }}" width="105" height="48" alt="La Grande conversation"></a>
+          <span class="url_obf" url_obf="{{ url_obf('https://abonne.lunion.fr/id371931/article/2022-05-16/legislatives-le-bilan-de-la-deputee-valerie-beauvais-la-loupe') }}"><img class="mx-2 my-3" loading="lazy" src="{{ asset('assets/imgs/media/lunion.png') }}" width="119" height="33" alt="L'Union"></span>
+          <span class="url_obf" url_obf="{{ url_obf('https://www.varmatin.com/politique/boccaletti-ou-chenevard-quel-depute-du-var-vote-vraiment-le-plus-et-le-moins-895830') }}"><img class="mx-2 my-3" loading="lazy" src="{{ asset('assets/imgs/media/var_matin.png') }}" width="165" height="30" alt="Var Matin"></span>
+          <span class="url_obf" url_obf="{{ url_obf('https://www.lavoixdunord.fr/1267941/article/2022-12-16/cambresis-le-depute-guy-bricout-si-proche-que-ca-de-la-majorite') }}"><img class="mx-2 my-3" loading="lazy" src="{{ asset('assets/imgs/media/voix_nord.png') }}" width="82" height="40" alt="La Voix du Nord"></span>
+          <span class="url_obf" url_obf="{{ url_obf('https://www.lalsace.fr/politique/2025/02/23/deputes-fantomes-contre-travail-de-fond') }}"><img class="mx-2 my-3" loading="lazy" src="{{ asset('assets/imgs/media/lalsace.png') }}" width="162" height="30" alt="L'Alsace"></span>
+          <a href="https://www.lepopulaire.fr/limoges-87000/actualites/desenclavement-emploi-gilets-jaunes-montee-du-rn-quel-bilan-pour-les-deputes-lrem-de-haute-vienne_14127678/" target="_blank" rel="noopener"><img class="mx-2 my-3" loading="lazy" src="{{ asset('assets/imgs/media/populaire-centre.png') }}" width="120" height="36" alt="Le Populaire du Centre"></a>
+          <a href="https://www.petitbleu.fr/2022/06/06/legislatives-en-lot-et-garonne-michel-lauzzana-un-bilan-deux-satisfactions-et-deux-regrets-10341292.php" target="_blank" rel="noopener"><img class="mx-2 my-3" loading="lazy" src="{{ asset('assets/imgs/media/petit-bleu.png') }}" width="129" height="34" alt="Le Peitit bleu d'Agen"></a>
+          <a href="https://www.lamontagne.fr/clermont-ferrand-63000/actualites/a-la-veille-des-legislatives-quel-bilan-pour-les-cinq-deputes-sortants-du-puy-de-dome_14137540/" target="_blank" rel="noopener"><img class="mx-2 my-3" loading="lazy" src="{{ asset('assets/imgs/media/montagne.png') }}" width="148" height="17" alt="La Montagne"></a>
+          <span class="url_obf" url_obf="{{ url_obf('https://www.contrepoints.org/2022/10/28/441739-motion-de-censure-un-coup-declat-tout-sauf-historique') }}"><img class="mx-2 my-3" loading="lazy" src="{{ asset('assets/imgs/media/contrepoints.png') }}" width="128" height="21" alt="Contrepoints"></span>
+          <a href="https://www.radioevasion.net/2022/10/24/datan-vous-permet-de-suivre-de-pres-votre-deputee-ou-depute/" target="_blank" rel="noopener"><img class="mx-2 my-3" loading="lazy" src="{{ asset('assets/imgs/media/radio-evasion.png') }}" width="70" height="70" alt="Radio Evasion"></a>
+          <span class="url_obf" url_obf="{{ url_obf('https://www.tv78.com/78-journal-info-yvelines-actu-edition-25-janvier-2021/') }}"><img class="mx-2 my-3" loading="lazy" src="{{ asset('assets/imgs/media/tv78.png') }}" width="150" height="72" alt="TV 78"></span>
+          <a href="https://www.laprovence.com/article/legislatives-2022/6788904/legislatives-2022-un-quiz-pour-savoir-si-vous-avez-les-memes-convictions-que-votre-depute.html" target="_blank" rel="noopener"><img class="mx-2 my-3" loading="lazy" src="{{ asset('assets/imgs/media/la_provence.png') }}" width="183" height="28" alt="La Provence"></a>
+          <span class="url_obf" url_obf="{{ url_obf('https://www.lest-eclair.fr/id498781/article/2023-06-30/un-apres-les-legislatives-les-republicains-deboussoles') }}"><img class="mx-2 my-3" loading="lazy" src="{{ asset('assets/imgs/media/est_eclair.png') }}" width="145" height="22" alt="L'Est eclair"></span>
+          <a href="https://www.lemondedesados.fr/elections-legislatives-a-quoi-servent-les-deputes/" target="_blank" rel="noopener"><img class="mx-2 my-3" loading="lazy" src="{{ asset('assets/imgs/media/mda.png') }}" width="85" height="40" alt="Le Monde des Ados"></a>
+          <span class="url_obf" url_obf="{{ url_obf('https://www.republicain-lorrain.fr/politique/2023/02/02/etre-depute-c-est-du-temps-plein') }}"><img class="mx-2 my-3" loading="lazy" src="{{ asset('assets/imgs/media/republicain_lorrain.png') }}" width="123" height="40" alt="Républicain Lorrain"></span>
+          <a href="https://les-enovateurs.com/que-fait-votre-depute-datan-decrypte-sa-participation-politique" target="_blank" rel="noopener"><img class="mx-2 my-3" loading="lazy" src="{{ asset('assets/imgs/media/les-enovateurs.png') }}" width="234" height="65" alt="Les Enovateurs"></a>
+          <span class="url_obf" url_obf="{{ url_obf('https://splann.org/') }}"><img class="mx-2 my-3" loading="lazy" src="{{ asset('assets/imgs/media/splann.png') }}" width="118" height="57" alt="Splann!"></span>
+          <span class="url_obf" url_obf="{{ url_obf('https://ram05.fr/podcasts/journal/29-novembre-2021-7') }}"><img class="mx-2 my-3" loading="lazy" src="{{ asset('assets/imgs/media/ram05.png') }}" width="75" height="50" alt="Radio Ram05"></span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- EXPLOREZ LES DÉPUTÉS PAR DÉPARTEMENT (carte de France) -->
+  <div class="row" id="pattern_background">
+    <div class="container p-md-0">
+      <div class="row py-5">
+        <div class="col-lg-6 col-12 bloc-map mt-4 mt-lg-0 offset-lg-3">
+          <h2 class="text-center pb-5">Explorez les députés par département</h2>
+          <div class="map map_france mt-3">
+            {{ source('@public/assets/imgs/france_map/map.svg') }}
+          </div>
+          <div class="map map_outre_mer">
+            {{ source('@public/assets/imgs/france_map/outre-mer.svg') }}
+          </div>
+          <div class="mt-5 d-flex flex-column align-items-center">
+            <a href="{{ path('departements_index') }}" class="no-decoration">
+              <button type="button" class="btn btn-primary">Voir tous les départements</button>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
