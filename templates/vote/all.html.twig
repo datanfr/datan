@@ -13,9 +13,11 @@
    en 200, ici comme sur le site. La forme canonique est la zéro-paddée : c'est
    elle que le plan annonce et que les moteurs indexent depuis des années ;
    sans cette balise, les deux adresses se disputeraient l'indexation (le site
-   a le même défaut, on ne le reproduit pas). #}
+   a le même défaut, on ne le reproduit pas).
+   Le « - » n'est pas décoratif : hors bloc, Twig 3.30 émet l'indentation du
+   {% set %} avant le <!DOCTYPE> (Twig 3.20 la jetait). #}
 {% if mois %}
-  {% set canonical = url('votes_mois', {legislature: legislature, annee: annee, mois: '%02d'|format(mois)}) %}
+  {%- set canonical = url('votes_mois', {legislature: legislature, annee: annee, mois: '%02d'|format(mois)}) %}
 {% endif %}
 
 {% block title %}

@@ -166,7 +166,7 @@ class CollecteurDecryptage
                AND ordre_absolu_seance <= ?
              ORDER BY ordre_absolu_seance',
             [$compteRenduId, $sectionOrdres, ((int) $ancre['ordre_absolu_seance']) + 2],
-            [\PDO::PARAM_INT, \Doctrine\DBAL\ArrayParameterType::INTEGER, \PDO::PARAM_INT],
+            [\Doctrine\DBAL\ParameterType::INTEGER, \Doctrine\DBAL\ArrayParameterType::INTEGER, \Doctrine\DBAL\ParameterType::INTEGER],
         );
 
         return $this->avecGroupes($paroles, (string) $scrutin['date_scrutin']);
@@ -229,7 +229,7 @@ class CollecteurDecryptage
                    AND fg.date_debut <= ?
                    AND (fg.date_fin IS NULL OR fg.date_fin >= ?)',
                 [$deputeIds, $dateScrutin, $dateScrutin],
-                [\Doctrine\DBAL\ArrayParameterType::INTEGER, \PDO::PARAM_STR, \PDO::PARAM_STR],
+                [\Doctrine\DBAL\ArrayParameterType::INTEGER, \Doctrine\DBAL\ParameterType::STRING, \Doctrine\DBAL\ParameterType::STRING],
             );
             $groupes = array_column($lignes, 'libelle_abrev', 'depute_id');
         }

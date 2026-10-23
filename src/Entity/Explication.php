@@ -10,7 +10,7 @@ use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
 use App\Repository\ExplicationRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Serializer\Attribute\Groups;
 
 /**
  * Explication de vote rédigée par un député sur un scrutin donné

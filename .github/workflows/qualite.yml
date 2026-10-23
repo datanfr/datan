@@ -44,10 +44,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: PHP 8.3
+      - name: PHP 8.4
         uses: shivammathur/setup-php@v2
         with:
-          php-version: '8.3'
+          php-version: '8.4'
           # mysqli et non pdo_mysql : le DSN du projet est « mysqli:// ».
           extensions: ctype, iconv, intl, mysqli, mbstring, xml, zip
           coverage: none

@@ -11,7 +11,7 @@ use App\Entity\Trait\TimestampableTrait;
 use App\Enum\VotePosition;
 use App\Repository\VoteRepository;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Serializer\Attribute\Groups;
 
 /**
  * Position individuelle d'un député lors d'un scrutin (décompte nominatif).
