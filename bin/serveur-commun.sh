@@ -126,7 +126,11 @@ brancher_config_selecteur() {
   version=${BASH_REMATCH[1]}
   lien=${ALT_PHP:-/opt/alt}/php$version/link/conf
   cible=${CL_PHP_D:-/etc/cl.php.d}/alt-php$version
-  [[ -L "$lien" && -O "$lien" && -f "$cible/alt_php.ini" ]] || return 0
+  # Le dossier du lien, et non le lien : `-O` et `-w` suivent un lien
+  # symbolique et jugent sa cible. Remis par CloudLinux, le lien vise
+  # /opt/alt/php84/etc/php.d, à root — un `-O "$lien"` renonçait alors en
+  # silence, précisément quand il fallait réparer (constaté le 2026-10-25).
+  [[ -L "$lien" && -w "$(dirname "$lien")" && -f "$cible/alt_php.ini" ]] || return 0
   actuel=$(readlink "$lien")
   [[ "$actuel" == "$cible" ]] && return 0
 
