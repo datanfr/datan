@@ -75,7 +75,13 @@ bloc() {
 case "${1:-}" in
   afficher)
     nouvelle=$(table_sans_bloc; bloc)
-    diff -u <(table_actuelle) <(printf '%s\n' "$nouvelle") && echo "Aucun changement." || true
+    # Des fichiers, et non `diff <(…) <(…)` : la substitution de processus
+    # passe par /dev/fd, absent de la cage CloudLinux d'o2switch.
+    avant=$(mktemp); apres=$(mktemp)
+    table_actuelle > "$avant"
+    printf '%s\n' "$nouvelle" > "$apres"
+    diff -u "$avant" "$apres" && echo "Aucun changement." || true
+    rm -f "$avant" "$apres"
     ;;
   installer)
     # Rendue en entier avant d'écrire : `crontab -` installe ce qu'il a reçu,
