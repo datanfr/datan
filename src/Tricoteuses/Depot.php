@@ -12,7 +12,7 @@ namespace App\Tricoteuses;
  * donne le transfert incrémental et, surtout, la liste exacte des fichiers
  * modifiés depuis la dernière moisson.
  *
- * @see https://git.en-root.org/tricoteuses/data
+ * @see https://git.tricoteuses.fr/assemblee (git.en-root.org avant l'été 2026, abandonné)
  */
 final class Depot
 {

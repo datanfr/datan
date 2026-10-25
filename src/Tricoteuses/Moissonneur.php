@@ -60,6 +60,20 @@ class Moissonneur
     {
         $avant = $this->tete($chemin);
 
+        // `fetch origin` lit l'adresse enregistrée au clonage, pas celle du
+        // Catalogue : sans ce réalignement, un dépôt déménagé continue d'être
+        // tiré depuis l'ancienne forge, qui répond toujours — figée, sans une
+        // erreur (git.en-root.org, abandonnée à l'été 2026). On passe alors
+        // d'un historique à un autre : pas de delta à calculer à travers ce
+        // changement, import complet comme après un premier clonage.
+        if (trim($this->git(['remote', 'get-url', 'origin'], $chemin)) !== $depot->url) {
+            $this->git(['remote', 'set-url', 'origin', $depot->url], $chemin);
+            $this->git(['fetch', '--quiet', '--depth', (string) self::PROFONDEUR, 'origin', self::BRANCHE], $chemin);
+            $this->git(['reset', '--quiet', '--hard', 'FETCH_HEAD'], $chemin);
+
+            return new Moisson($depot, $chemin, null, $avant, $this->tete($chemin));
+        }
+
         $this->git(['fetch', '--quiet', '--depth', (string) self::PROFONDEUR, 'origin', self::BRANCHE], $chemin);
         $this->git(['reset', '--quiet', '--hard', 'FETCH_HEAD'], $chemin);
 

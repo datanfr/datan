@@ -108,7 +108,10 @@ décryptages déjà produits sont à préserver comme des données de production
 
 Les Tricoteuses n'ont pas d'API HTTP : elles publient des **dépôts Git de
 fichiers JSON** remoissonnés chaque nuit depuis l'open data de l'Assemblée,
-sous <https://git.en-root.org/tricoteuses/data>. Git est l'interface : il donne
+sous <https://git.tricoteuses.fr/assemblee> — **et non plus `git.en-root.org`**,
+abandonné à l'été 2026 sans avertissement dans les dépôts de données : il
+répond toujours, figé au 22 juillet, et un sync qui le lit réussit chaque soir
+sans rien apporter (`Catalogue`). Git est l'interface : il donne
 le transfert incrémental et la liste exacte des fichiers modifiés.
 
 ```
