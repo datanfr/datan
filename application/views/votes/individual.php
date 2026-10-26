@@ -67,6 +67,7 @@
           </div>
         </div>
       </div>
+      <?php $this->load->view('votes/partials/hemicycle.php', array('hemicycle' => $hemicycle, 'vote_type' => $vote['voteType'], 'legislature' => $legislature)) ?>
       <?php if ($congres): ?>
         <div class="row mt-5">
           <div class="col-12">

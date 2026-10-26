@@ -369,8 +369,8 @@
           	WHEN A.scoreLoyaute = 0 THEN "rebelle"
           ELSE NULL
           END AS loyaute_libelle,
-          da.nameFirst, da.nameLast, da.nameUrl, da.dptSlug,
-          o.libelle, o.libelleAbrev
+          da.nameFirst, da.nameLast, da.nameUrl, da.dptSlug, da.departementNom, da.departementCode, da.circo,
+          o.libelle, o.libelleAbrev, o.couleurAssociee
           FROM
           (
           	SELECT v.mpId, v.vote, v.mandatId, v.scoreLoyaute, v.legislature
@@ -384,6 +384,48 @@
         ORDER BY B.nameLast ASC, B.nameFirst ASC
       ';
       return $this->db->query($sql, array($num, $legislature))->result_array();
+    }
+
+    // MPs in office at the vote date, members of a group, who are not in votes_scores
+    public function get_vote_absents($num, $legislature){
+      $sql = 'SELECT mg.mpId, mg.mandatId, da.legislature, "absent" AS vote_libelle,
+        da.nameFirst, da.nameLast, da.nameUrl, da.dptSlug, da.departementNom, da.departementCode, da.circo,
+        o.libelle, o.libelleAbrev, o.couleurAssociee
+        FROM votes_info vi
+        JOIN mandat_groupe mg ON mg.legislature = vi.legislature AND mg.typeOrgane = "GP"
+          AND mg.dateDebut <= vi.dateScrutin AND (mg.dateFin IS NULL OR mg.dateFin >= vi.dateScrutin)
+        JOIN mandat_principal mp ON mp.mpId = mg.mpId AND mp.legislature = vi.legislature AND mp.typeOrgane = "ASSEMBLEE"
+          AND COALESCE(mp.datePriseFonction, mp.dateDebut) <= vi.dateScrutin AND (mp.dateFin IS NULL OR mp.dateFin >= vi.dateScrutin)
+        JOIN organes o ON o.uid = mg.organeRef AND o.coteType = "GP"
+        JOIN deputes_all da ON da.mpId = mg.mpId AND da.legislature = vi.legislature
+        WHERE vi.legislature = ? AND vi.voteNumero = ?
+          AND mg.mpId NOT IN (SELECT vs.mpId FROM votes_scores vs WHERE vs.legislature = ? AND vs.voteNumero = ?)
+        ORDER BY da.nameLast ASC, da.nameFirst ASC, mg.nominPrincipale DESC, mg.dateDebut DESC
+      ';
+      $results = $this->db->query($sql, array($legislature, $num, $legislature, $num))->result_array();
+
+      // Several group mandates on the same date (group change, non-principal mandate): keep one per MP
+      $absents = array();
+      foreach ($results as $result) {
+        if (!isset($absents[$result['mpId']])) {
+          $absents[$result['mpId']] = $result;
+        }
+      }
+      return array_values($absents);
+    }
+
+    // MP mandates of the legislature with their seat in the hemicycle, constituency and last group
+    public function get_mandats_sieges($legislature){
+      $sql = 'SELECT mp.mpId, mp.placeHemicyle AS siege, mp.electionDepartementNumero AS departement, mp.electionCirco AS circo,
+        DATE(COALESCE(mp.datePriseFonction, mp.dateDebut)) AS dateDebut, DATE(mp.dateFin) AS dateFin,
+        (SELECT o.libelleAbrev FROM mandat_groupe mg JOIN organes o ON o.uid = mg.organeRef
+          WHERE mg.mpId = mp.mpId AND mg.legislature = mp.legislature AND mg.typeOrgane = "GP"
+          ORDER BY mg.dateDebut DESC LIMIT 1) AS groupe
+        FROM mandat_principal mp
+        WHERE mp.legislature = ? AND mp.typeOrgane = "ASSEMBLEE"
+        ORDER BY dateDebut ASC
+      ';
+      return $this->db->query($sql, array($legislature))->result_array();
     }
 
     public function get_votes_datan_depute($depute_id, $limit = FALSE){
