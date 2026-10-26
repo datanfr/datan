@@ -100,8 +100,9 @@
 
       {# « Son comportement politique » : jauges de participation et de loyauté,
          barres de proximité par groupe. Placé après l'élection, comme le legacy.
-         Ne s'affiche que si le député a des votes nominatifs (17e législature) ;
-         une fiche d'avant se tait. #}
+         Il porte sur la dernière législature du député, en mode historique
+         (`legislature_stats`) pour un ancien député ; sans votes nominatifs
+         (avant la 14e), la fiche se tait. #}
       {% if statistiques %}
         {{ include('depute/_statistiques.html.twig') }}
       {% endif %}

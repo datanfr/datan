@@ -6,6 +6,7 @@ use App\Commune\SeuilCommunes;
 use App\CouleurGroupe;
 use App\Http\RechauffeurCache;
 use App\Legislature;
+use App\Region;
 use App\Repository\CandidatureRepository;
 use App\Repository\ElectionRepository;
 use App\Repository\ResultatElectoralRepository;
@@ -72,36 +73,6 @@ class ElectionController extends AbstractController
      * antérieurs sont affichés ailleurs, sur la fiche de ville de `/deputes`.
      */
     private const ANNEE_RESULTATS = 2024;
-
-    /**
-     * Les dix-huit régions, du référentiel INSEE en vigueur depuis 2016.
-     *
-     * L'application d'origine tient une table `regions` que nous n'importons pas
-     * : elle ne sert qu'ici, pour nommer la circonscription d'un candidat aux
-     * régionales de 2021, et le découpage n'a pas bougé depuis. Les deux
-     * collectivités à statut particulier (Corse) et les cinq d'outre-mer y
-     * figurent, l'élection s'y étant tenue.
-     */
-    private const REGIONS = [
-        '1' => 'Guadeloupe',
-        '2' => 'Martinique',
-        '3' => 'Guyane',
-        '4' => 'La Réunion',
-        '6' => 'Mayotte',
-        '11' => 'Île-de-France',
-        '24' => 'Centre-Val de Loire',
-        '27' => 'Bourgogne-Franche-Comté',
-        '28' => 'Normandie',
-        '32' => 'Hauts-de-France',
-        '44' => 'Grand Est',
-        '52' => 'Pays de la Loire',
-        '53' => 'Bretagne',
-        '75' => 'Nouvelle-Aquitaine',
-        '76' => 'Occitanie',
-        '84' => 'Auvergne-Rhône-Alpes',
-        '93' => "Provence-Alpes-Côte d'Azur",
-        '94' => 'Corse',
-    ];
 
     /**
      * Issue d'une candidature, traduite dans les noms de classes du site.
@@ -463,7 +434,7 @@ class ElectionController extends AbstractController
     private function libellesDeDistrict(string $type): array
     {
         return match ($type) {
-            'Régionales' => self::REGIONS,
+            Region::ELECTION => Region::NOMS,
             // Indexé en minuscules : `candidature.district` écrit la Corse
             // « 2a »/« 2b », mais `departement.code` l'écrit « 2A »/« 2B ». La
             // collation de MariaDB masquerait la différence dans une jointure ;
@@ -485,8 +456,8 @@ class ElectionController extends AbstractController
      */
     private function districts(string $type): array
     {
-        if ($type === 'Régionales') {
-            $regions = self::REGIONS;
+        if ($type === Region::ELECTION) {
+            $regions = Region::NOMS;
             asort($regions);
 
             // PHP retient les clés numériques comme des entiers, d'où le cast :

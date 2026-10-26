@@ -311,6 +311,42 @@ Pour chacun : comprendre la règle du legacy (la réponse est dans son code, sou
   legacy (l'entité `&nbsp;` compte 6 caractères chez lui). À ignorer sauf si l'on
   vise l'octet près.
 
+## Corrections issues de la veille comparative (2026-10-26)
+
+Relevées par la veille datan.fr ↔ symfony.datan.fr, corrigées et vérifiées
+contre datan.fr sur la base locale :
+
+- [x] **Groupe et loyauté au jour du scrutin** (`App\Depute\GroupeAuScrutin`) :
+  fiche vote et page « tous les votes » confrontaient chaque vote au groupe
+  ACTUEL — colonnes vides sur les 14e-16e, et rebelle à tort qui a changé de
+  groupe (C. Le Nabour, EPR → HOR, vote 8411). Vérifié : Salmon 2 201 loyaux
+  hors 17e, Le Nabour 3 743 + 2 235 en 17e, identiques au legacy.
+- [x] **Vote du Congrès (IVG, `vote_c1`)** : l'import écartait le dossier `CG/`.
+  Lu désormais, blocs du Sénat écartés en entier : 557 députés, le compte du
+  legacy (557 + 345 sénateurs = 902). Les trois formulations Congrès de la fiche
+  (« députés et sénateurs… ») rétablies.
+  - [ ] **Au déploiement** : `app:import:scrutins --depot=scrutins-xvi --tout`
+    (le dépôt est `quotidien: false`), puis
+    `app:calcul:statistiques-deputes --legislature=16` et
+    `app:cache:rechauffer`. Sans cela la prod garde un `vote_c1` vide.
+- [x] **Fiche d'un ancien député** : le bloc « Son comportement politique »
+  suit sa dernière législature (Pietrasanta : « (14e législature) », 95 % /
+  100 %, identique au legacy) au lieu de disparaître.
+- [x] **Mandat régional** des participations électorales : nom de la région
+  (`App\Region`) au lieu du code INSEE (« 32 » → « Hauts-de-France »).
+- [ ] **Fiche député en 500 en dev** (préexistant) : `strict_variables` suit
+  `kernel.debug`, et `_statistiques.html.twig:165` lit `statistiques.majorite`,
+  absent en 17e. Invisible en prod (variable nulle), mais toute fiche député
+  de la 17e plante en dev — `is defined` à poser.
+
+Différences assumées nées de ces corrections (à ne pas « corriger ») :
+- Loyauté **non jugée** quand le groupe n'a pas de position majoritaire (`nv` :
+  égalité, ou personne n'a voté). Le legacy rend « rebelle », ou « loyal » sur
+  ses données 15e importées autrement (Ménard, NI, vote_813).
+- Membres du Gouvernement sur une motion de censure : « NON-VOTANT » sans
+  loyauté, là où le legacy écrit « REBELLE » sans position (vote_1, 16e).
+- « REBELLEE » (accord fautif du legacy) → « REBELLE ».
+
 ## Déploiement sur symfony.datan.fr (compte o2switch de datan.fr)
 
 Automatisation posée le 2026-10-23 (`deploiement.yml`, `bin/deployer.sh`,

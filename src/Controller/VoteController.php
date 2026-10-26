@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\CouleurGroupe;
+use App\Depute\GroupeAuScrutin;
 use App\Entity\DossierActeur;
 use App\Groupe\ParticipationGroupe;
 use App\Http\RechauffeurCache;
@@ -36,6 +37,9 @@ class VoteController extends AbstractController
 
     /** Préfixe d'uid d'un vote du Congrès : « VTCGR5L16V1 ». */
     private const PREFIXE_CONGRES = 'VTCGR';
+
+    /** Positions qu'un groupe peut tenir majoritairement, et donc faire suivre. */
+    private const POSITIONS_EXPRIMEES = ['pour', 'contre', 'abstention'];
 
     /**
      * Le bloc auteur ne s'affiche qu'à partir de la 15e législature (`Votes::index`
@@ -592,13 +596,17 @@ class VoteController extends AbstractController
      */
     private function deputyVotes(int $scrutinId, array $majorityByGroupe): array
     {
+        // Le groupe est celui du jour du scrutin, pas le groupe actuel : voir
+        // GroupeAuScrutin. Sa position majoritaire est dans $majorityByGroupe,
+        // qui couvre tous les groupes ventilés sur ce scrutin.
         $rows = $this->connection->fetchAllAssociative(
-            'SELECT d.firstname, d.lastname, d.slug, d.dpt_slug, d.groupe_id,
+            'SELECT d.firstname, d.lastname, d.slug, d.dpt_slug, g.id AS groupe_id,
                     g.libelle AS groupe_libelle, g.libelle_abrev AS groupe_abrev,
                     v.position, v.cause_position
              FROM vote v
              JOIN depute d ON d.id = v.depute_id
-             LEFT JOIN groupe g ON g.id = d.groupe_id
+             JOIN scrutin s ON s.id = v.scrutin_id
+             LEFT JOIN groupe g ON g.id = ' . GroupeAuScrutin::sousRequete('v.depute_id', 's.date_scrutin') . '
              WHERE v.scrutin_id = :scrutin AND v.vote_type = :type
              ORDER BY d.lastname, d.firstname',
             ['scrutin' => $scrutinId, 'type' => self::OFFICIAL],
@@ -606,8 +614,12 @@ class VoteController extends AbstractController
 
         foreach ($rows as &$row) {
             $majority = $majorityByGroupe[$row['groupe_id']] ?? null;
+            // Un groupe sans position majoritaire (`nv` : personne n'a voté, ou
+            // égalité — un pour, un contre chez les non-inscrits) ne donne rien à
+            // suivre : on ne juge pas la loyauté envers lui, plutôt que de faire
+            // passer pour rebelle quiconque a voté.
             $row['loyaute'] = match (true) {
-                $majority === null, $row['position'] === null, $row['position'] === 'nonVotant' => null,
+                !\in_array($majority, self::POSITIONS_EXPRIMEES, true), $row['position'] === null, $row['position'] === 'nonVotant' => null,
                 $row['position'] === $majority => 'loyal',
                 default => 'rebelle',
             };

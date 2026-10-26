@@ -3,8 +3,10 @@
 namespace App\Controller;
 
 use App\Depute\ComportementDepute;
+use App\Depute\GroupeAuScrutin;
 use App\Http\RechauffeurCache;
 use App\Legislature;
+use App\Region;
 use App\Referencement\OpenGraph;
 use App\Repository\ResultatCirconscriptionRepository;
 use Doctrine\DBAL\Connection;
@@ -144,6 +146,14 @@ class DeputeController extends AbstractController
         // le plus récent — sa législature en fixe l'année, son département et sa
         // circonscription la clé. Le nom lève l'ambiguïté quand la circonscription
         // a connu une élection partielle.
+        // La fiche décrit la DERNIÈRE législature du député, comme le legacy
+        // (`deputes_last.legislature`, statistics/_index.php) : un ancien député
+        // de la 14e garde son comportement politique de la 14e, titre suffixé et
+        // phrases au passé. Figée sur la législature courante, la fiche de tout
+        // député sorti avant 2024 perdait le bloc entier. La page
+        // /legislature-N renvoie d'ailleurs ici pour cette législature-là.
+        $legislatureFiche = $mandats !== [] ? (int) $mandats[0]['legislature'] : Legislature::COURANTE;
+
         $election = $mandats !== []
             ? $this->resultatsCirconscription->pourDepute(
                 $mandats[0]['departement_code'],
@@ -162,10 +172,13 @@ class DeputeController extends AbstractController
             'echiquier' => $depute['groupe_abrev'] !== null ? (ComportementDepute::ECHIQUIER[$depute['groupe_abrev']] ?? null) : null,
             // Le bloc « Son comportement politique » : participation, loyauté et
             // proximité par groupe, lues sur les tables précalculées (les moyennes
-            // comparatives interdisent tout calcul à la requête). Nul pour une
-            // fiche sans votes nominatifs — une législature d'avant la 17e. Lecture
-            // partagée avec l'iframe via le service ComportementDepute.
-            'statistiques' => $this->comportement->statistiques($deputeId, $groupeId, Legislature::COURANTE),
+            // comparatives interdisent tout calcul à la requête), pour la dernière
+            // législature du député. Nul sans votes nominatifs (avant la 14e).
+            // Lecture partagée avec l'iframe via le service ComportementDepute.
+            'statistiques' => $this->comportement->statistiques($deputeId, $groupeId, $legislatureFiche),
+            // Hors législature courante, le bloc passe en mode historique, comme
+            // sur /legislature-N : voir depute/_statistiques.html.twig.
+            'legislature_stats' => $legislatureFiche !== Legislature::COURANTE ? $legislatureFiche : null,
             // Le carrousel « Ses derniers votes » de la fiche montre les cinq
             // derniers scrutins DÉCRYPTÉS où le député s'est exprimé (avec sa
             // position et son éventuelle explication), comme datan.fr — et non
@@ -263,7 +276,7 @@ class DeputeController extends AbstractController
             'mandats' => $mandats,
             'decryptes' => $decryptes,
             'categories' => $categories,
-            'tous_les_votes' => $this->tousLesVotes($deputeId, $depute['groupe_id'] !== null ? (int) $depute['groupe_id'] : null),
+            'tous_les_votes' => $this->tousLesVotes($deputeId),
             // Même carte de profil que la fiche (card_individual, titre en span)
             // et mêmes listes de pied de page — `deputes/votes.php` les rend aussi.
             'autres_deputes' => $this->autresDeputes($depute, $mandats, $actif),
@@ -544,14 +557,16 @@ class DeputeController extends AbstractController
      * Le libellé de circonscription suit `get_district`, qui branche sur la
      * sorte d'élection — la colonne est polymorphe (cf. {@see \App\Entity\Candidature}) :
      * le nom du département pour des législatives, celui de la commune pour des
-     * municipales ; à défaut, le district brut.
+     * municipales, celui de la région pour des régionales ; à défaut, le district
+     * brut. Les régionales passaient jusqu'ici par ce repli et affichaient le
+     * code INSEE de la région (« 32 » pour les Hauts-de-France).
      *
      * @return list<array<string, mixed>>
      */
     private function participationsElectorales(int $deputeId): array
     {
-        return $this->connection->fetchAllAssociative(
-            "SELECT e.annee, e.libelle, c.elu,
+        $participations = $this->connection->fetchAllAssociative(
+            "SELECT e.annee, e.libelle, e.libelle_abrege, c.elu,
                     COALESCE(dep.nom, co.nom, c.district) AS district
              FROM candidature c
              JOIN election e ON e.id = c.election_id
@@ -561,6 +576,14 @@ class DeputeController extends AbstractController
              ORDER BY e.annee DESC",
             ['depute' => $deputeId],
         );
+
+        foreach ($participations as &$participation) {
+            if ($participation['libelle_abrege'] === Region::ELECTION) {
+                $participation['district'] = Region::NOMS[$participation['district']] ?? $participation['district'];
+            }
+        }
+
+        return $participations;
     }
 
     /**
@@ -885,14 +908,15 @@ class DeputeController extends AbstractController
      * envers son groupe.
      *
      * Loyauté et position sont confrontées à la position majoritaire du groupe
-     * **au moment du scrutin** (`vote_groupe`), pas à celle de son groupe
-     * actuel : un député qui change de groupe ne devient pas rétroactivement
-     * rebelle. Mise en forme faite par la base — la table compte des milliers
-     * de lignes, et chaque filtre Twig s'y paierait autant de fois.
+     * auquel il appartenait **le jour du scrutin** ({@see GroupeAuScrutin}), pas
+     * à celle de son groupe actuel : un député qui change de groupe ne devient
+     * pas rétroactivement rebelle, et ses législatures passées gardent leur
+     * colonne de loyauté. Mise en forme faite par la base — la table compte des
+     * milliers de lignes, et chaque filtre Twig s'y paierait autant de fois.
      *
      * @return list<array<string, mixed>>
      */
-    private function tousLesVotes(int $deputeId, ?int $groupeId): array
+    private function tousLesVotes(int $deputeId): array
     {
         return $this->connection->fetchAllAssociative(
             "SELECT s.legislature,
@@ -902,18 +926,22 @@ class DeputeController extends AbstractController
                     v.position,
                     UPPER(dcr.title) AS decryptage_title,
                     CASE
-                        WHEN vg.position_majoritaire IS NULL THEN NULL
+                        -- Sans position majoritaire (`nv` : égalité, ou personne
+                        -- n'a voté), le groupe ne donne rien à suivre.
+                        WHEN vg.position_majoritaire IS NULL
+                          OR vg.position_majoritaire NOT IN ('pour', 'contre', 'abstention') THEN NULL
                         WHEN v.position = vg.position_majoritaire THEN 'loyal'
                         ELSE 'rebelle'
                     END AS loyaute
              FROM vote v
              JOIN scrutin s ON s.id = v.scrutin_id
-             LEFT JOIN vote_groupe vg ON vg.scrutin_id = s.id AND vg.groupe_id = :groupe
+             LEFT JOIN " . GroupeAuScrutin::periodes(':depute') . ' fg ON ' . GroupeAuScrutin::conditionPeriode('fg', 's.date_scrutin') . "
+             LEFT JOIN vote_groupe vg ON vg.scrutin_id = s.id AND vg.groupe_id = fg.groupe_id
              LEFT JOIN decryptage dcr ON dcr.scrutin_id = s.id AND dcr.state = :published
              WHERE v.depute_id = :depute AND v.vote_type = :type
                AND v.position IN ('pour', 'contre', 'abstention')
              ORDER BY s.date_scrutin DESC, s.numero DESC",
-            ['depute' => $deputeId, 'groupe' => $groupeId, 'type' => self::OFFICIAL, 'published' => 'published'],
+            ['depute' => $deputeId, 'type' => self::OFFICIAL, 'published' => 'published'],
         );
     }
 

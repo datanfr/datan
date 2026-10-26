@@ -80,6 +80,9 @@ class ImportScrutinsCommand extends ImportTricoteusesCommand
         'par_delegation', 'scrutin_date', 'created_at', 'updated_at',
     ];
 
+    /** Préfixe d'uid d'un vote du Congrès : « VTCGR5L16V1 ». */
+    private const PREFIXE_CONGRES = 'VTCGR';
+
     /** Votes nominatifs écartés faute de député connu (acteurRef absent de `depute`). */
     private int $votesEcartes = 0;
 
@@ -115,12 +118,19 @@ class ImportScrutinsCommand extends ImportTricoteusesCommand
         $refsDossier = [];
         $lot = [];
         // Les dépôts n'ont pas tous la même charpente : Scrutins XVI et XVII
-        // séparent l'Assemblée (`AN/`) du Congrès (`CG/`), que l'on écarte —
-        // ses votes vivent sous `vote_c<n>` et son numéro entre en collision
-        // avec celui d'un scrutin ordinaire. Scrutins XIV et XV rangent tout à
-        // la racine (`R5/`), sans aucun fichier du Congrès : on y lit tout.
-        $sousDossier = is_dir($chemin . '/AN') ? 'AN' : '';
-        foreach ($this->fichiers($chemin, $sousDossier, $tout) as $fichier) {
+        // séparent l'Assemblée (`AN/`) du Congrès (`CG/`) ; Scrutins XIV et XV
+        // rangent tout à la racine (`R5/`), sans aucun fichier du Congrès. Le
+        // Congrès se lit comme le reste : son numéro recommence à 1 et croise
+        // celui d'un scrutin ordinaire, mais son uid (`VTCGR…`) le distingue,
+        // et c'est lui que les pages lisent pour le servir sous `vote_c<n>`.
+        // L'écarter laissait le vote de l'IVG sans un seul vote de député.
+        $sousDossiers = is_dir($chemin . '/AN') ? ['AN', 'CG'] : [''];
+        $fichiers = (function () use ($chemin, $sousDossiers, $tout): iterable {
+            foreach ($sousDossiers as $sousDossier) {
+                yield from $this->fichiers($chemin, $sousDossier, $tout);
+            }
+        })();
+        foreach ($fichiers as $fichier) {
             $scrutin = $this->lisJson($fichier);
             if ($scrutin === null || !isset($scrutin['uid'])) {
                 continue;
@@ -163,6 +173,8 @@ class ImportScrutinsCommand extends ImportTricoteusesCommand
         $ventilationsEcartees = 0;
         $votes = 0;
         $this->votesEcartes = 0;
+        $blocsSenat = 0;
+        $votesSenateurs = 0;
         $lotVentilation = [];
         $lotVote = [];
 
@@ -178,6 +190,7 @@ class ImportScrutinsCommand extends ImportTricoteusesCommand
             }
 
             $date = $this->date($scrutin['dateScrutin'] ?? null);
+            $congres = str_starts_with($uid, self::PREFIXE_CONGRES);
             // Un groupe ne peut tenir qu'une ligne par scrutin (clé unique
             // scrutin_id + groupe_id). Sans cette garde, deux blocs ramenés au
             // même groupe — par la réattribution SOC ci-dessous ou par une
@@ -185,8 +198,28 @@ class ImportScrutinsCommand extends ImportTricoteusesCommand
             $groupesVus = [];
             $orphelins = [];
 
+            // Au Congrès, mises au point comprises, seuls comptent les votants
+            // des blocs de l'Assemblée — voir plus bas.
+            $acteursAssemblee = [];
+
             foreach ($scrutin['ventilationVotes']['groupes'] ?? [] as $groupe) {
                 $decompteNominatif = $groupe['vote']['decompteNominatif'] ?? [];
+
+                // Au Congrès, les groupes du Sénat ont leur bloc à côté de ceux
+                // de l'Assemblée : le site ne suit que les députés, on écarte le
+                // bloc entier, votes compris. Le tri se fait par le bloc et non
+                // par la table `depute` : d'anciens députés devenus sénateurs
+                // (Carlotti, Cazebonne…) y ont leur fiche, et seraient passés
+                // pour des députés — sans groupe, à la 558e ligne et au-delà. Un
+                // tel bloc n'est pas dans `groupe`, et rien ne doit tenter de l'y
+                // retrouver : ni déduction par ses votants, ni élimination.
+                if ($congres && !isset($groupes[$groupe['organeRef'] ?? ''])) {
+                    ++$blocsSenat;
+                    foreach (array_keys(self::POSITIONS) as $cle) {
+                        $votesSenateurs += \count($decompteNominatif[$cle] ?? []);
+                    }
+                    continue;
+                }
 
                 // Les votes nominatifs se lisent avant toute résolution de
                 // groupe : une ligne `vote` est (député, scrutin, position) et
@@ -198,6 +231,11 @@ class ImportScrutinsCommand extends ImportTricoteusesCommand
                     foreach ($this->votesNominatifs($decompteNominatif, $deputes, $scrutinId, $date, self::VOTE_OFFICIEL, $maintenant) as $ligne) {
                         $lotVote[] = $ligne;
                         ++$votes;
+                    }
+                    foreach (array_keys(self::POSITIONS) as $cle) {
+                        foreach ($decompteNominatif[$cle] ?? [] as $votant) {
+                            $acteursAssemblee[$votant['acteurRef'] ?? ''] = true;
+                        }
                     }
                 }
 
@@ -269,7 +307,7 @@ class ImportScrutinsCommand extends ImportTricoteusesCommand
             // scrutin ; le site les affiche à côté du vote officiel, qu'elles
             // ne remplacent pas — d'où leur propre vote_type.
             if (!$sansVotes) {
-                foreach ($this->votesNominatifs($scrutin['miseAuPoint'] ?? [], $deputes, $scrutinId, $date, self::MISE_AU_POINT, $maintenant) as $ligne) {
+                foreach ($this->votesNominatifs($scrutin['miseAuPoint'] ?? [], $congres ? array_intersect_key($deputes, $acteursAssemblee) : $deputes, $scrutinId, $date, self::MISE_AU_POINT, $maintenant) as $ligne) {
                     $lotVote[] = $ligne;
                     ++$votes;
                 }
@@ -300,6 +338,16 @@ class ImportScrutinsCommand extends ImportTricoteusesCommand
                 $ventilationsSansIndice,
                 $ventilationsSansIndice > 1 ? 's' : '',
                 $ventilationsSansIndice > 1 ? 's' : '',
+            ));
+        }
+
+        if ($blocsSenat > 0 || $votesSenateurs > 0) {
+            $io->text(sprintf(
+                'Congrès : %d bloc%s de groupes du Sénat et %d vote%s de sénateurs laissés de côté — le site ne suit que l\'Assemblée.',
+                $blocsSenat,
+                $blocsSenat > 1 ? 's' : '',
+                $votesSenateurs,
+                $votesSenateurs > 1 ? 's' : '',
             ));
         }
 

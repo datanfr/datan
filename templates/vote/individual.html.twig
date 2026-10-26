@@ -80,11 +80,13 @@
       <h2>Résultat du vote</h2>
       <div class="row">
         <div class="col-lg-8">
-          <p class="mt-4">Les députés ont <span class="font-weight-bold sort-{{ scrutin.sort_code }}">{{ scrutin.sort_code }}</span> le {{ date_scrutin_fr }} {{ scrutin.titre }}</p>
+          {# Au Congrès, les totaux comptent aussi les sénateurs : 902 votants
+             pour l'IVG, dont 557 députés seulement (votes/individual.php:47-51). #}
+          <p class="mt-4">Les députés{{ est_congres ? ' et sénateurs réunis en Congrès' }} ont <span class="font-weight-bold sort-{{ scrutin.sort_code }}">{{ scrutin.sort_code }}</span> le {{ date_scrutin_fr }} {{ scrutin.titre }}</p>
           {% if scrutin.sort_code == 'adopté' %}
-            <p>Au total, <b>{{ scrutin.nombre_votants }} députés</b> ont pris part au vote : {{ percentages.pour }} % ont voté en faveur, {{ percentages.contre }} % ont voté contre, et {{ percentages.abstention }} % se sont abstenus.</p>
+            <p>Au total, <b>{{ scrutin.nombre_votants }} députés{{ est_congres ? ' et sénateurs' }}</b> ont pris part au vote : {{ percentages.pour }} % ont voté en faveur, {{ percentages.contre }} % ont voté contre, et {{ percentages.abstention }} % se sont abstenus.</p>
           {% else %}
-            <p>Au total, <b>{{ scrutin.nombre_votants }} députés</b> ont pris part au vote : {{ percentages.contre }} % ont voté contre, {{ percentages.pour }} % ont voté en faveur, et {{ percentages.abstention }} % se sont abstenus.</p>
+            <p>Au total, <b>{{ scrutin.nombre_votants }} députés{{ est_congres ? ' et sénateurs' }}</b> ont pris part au vote : {{ percentages.contre }} % ont voté contre, {{ percentages.pour }} % ont voté en faveur, et {{ percentages.abstention }} % se sont abstenus.</p>
           {% endif %}
         </div>
         <div class="col-lg-4">
@@ -95,6 +97,16 @@
           </div>
         </div>
       </div>
+      {% if est_congres %}
+        <div class="row mt-5">
+          <div class="col-12">
+            <div class="alert alert-primary" role="alert">
+              <p>Il s'agit d'un vote du <b>Congrès pour une révision de la Constitution</b>.</p>
+              <p><span class="font-weight-bold text-primary">Datan</span> étant un site spécialisé sur l'Assemblée nationale, nous récoltons uniquement les données de vote des députés. Si les résultats ci-dessus correspondent à tous les parlementaires (députés et sénateurs), seuls les votes des groupes de l'Assemblée nationale et des députés sont affichés ci-dessous.</p>
+            </div>
+          </div>
+        </div>
+      {% endif %}
       <div class="bloc-infos d-md-none mt-5 mt-md-0">
         <h2>Infos</h2>
         {{ block('infos_table') }}
@@ -413,7 +425,8 @@
                     {% endif %}
                   </td>
                   <td class="text-center">{{ depute.groupe_libelle|name_group }}</td>
-                  <td class="text-center vote sort-{{ depute.position }}">{{ depute.position == 'nonVotant' ? 'NON VOTANT' : depute.position|upper }}</td>
+                  {# « NON-VOTANT », trait d'union compris : le `vote_libelle` du legacy. #}
+                  <td class="text-center vote sort-{{ depute.position }}">{{ depute.position == 'nonVotant' ? 'NON-VOTANT' : depute.position|upper }}</td>
                   <td class="text-center sort-{{ depute.loyaute }}">{{ depute.loyaute|upper }}</td>
                 </tr>
               {% endfor %}
