@@ -125,6 +125,12 @@
 # `APP_ENV=prod` pour le nom de la commande.
 */10 * * * * cd @COURANT@ && flock -n @PARTAGE@/var/messenger.lock env APP_ENV=prod @PHP@ bin/console messenger:consume async --time-limit=580 --memory-limit=128M --no-ansi >> var/log/messenger.log 2>&1
 
+# --- Newsletter : désinscriptions Mailjet — 5 h 30 -------------------------
+# Qui se désinscrit par le lien d'une campagne Mailjet ne l'est que chez
+# Mailjet ; on le reporte en base. Un appel d'API par abonné (~1 100), quelques
+# minutes. Sans clés Mailjet (préproduction), la commande le dit et sort en 0.
+30 5 * * * cd @COURANT@ && APP_ENV=prod @PHP@ bin/console app:newsletter:desinscriptions --no-ansi >> var/log/newsletter.log 2>&1
+
 # --- Journaux — le 1er du mois ---------------------------------------------
 # Pas de logrotate sur un mutualisé : on tronque nous-mêmes. Les journaux du
 # sync sont la seule trace d'un import qui a dérivé, on en garde de quoi
@@ -146,13 +152,21 @@
 # d'arrivées, on le lance à la main.
 #40 5 1 * * cd @COURANT@ && APP_ENV=prod @PHP@ bin/console app:moissonner:bluesky --ecrire --no-ansi >> var/log/bluesky.log 2>&1
 
+# Lettre mensuelle des votes, sur le mois écoulé. **Le jour de la bascule, et
+# pas avant** : tant que l'entrée du legacy (`newsletter votes send`) tourne, la
+# décommenter ferait recevoir la lettre deux fois à chaque abonné. Retirer
+# celle-là, décommenter celle-ci, reprendre l'heure du legacy (`crontab -l`).
+# Un envoi ne se rejoue pas : en cas d'échec, lire le journal avant toute
+# relance. `env` : cf. le consommateur Messenger, flock n'a pas de shell.
+#0 10 1 * * cd @COURANT@ && flock -n @PARTAGE@/var/newsletter.lock env APP_ENV=prod @PHP@ bin/console app:newsletter:votes envoyer --no-ansi >> var/log/newsletter.log 2>&1
+
 # Courriels définitivement en échec (3 tentatives). À relire de temps à autre :
 # une file `failed` qui grossit est un MAILER_DSN faux, pas un incident isolé.
 #0 9 * * 1 cd @COURANT@ && APP_ENV=prod @PHP@ bin/console messenger:failed:show --max=20 --no-ansi >> var/log/messenger-echecs.log 2>&1
 
 # ---------------------------------------------------------------------------
 # Ce qui n'entre JAMAIS ici : les imports de récupération
-# (`app:import:utilisateurs`, `:decryptages`, `:articles`, `:explications`,
+# (`app:import:utilisateurs`, `:newsletter`, `:decryptages`, `:articles`, `:explications`,
 # `:professions-foi`, `:faq`, `:quiz`, `:parrainages`, `:reseaux-sociaux`,
 # `:communes`, `:elections`, `:resultats-electoraux`, `:circonscriptions`).
 # Ils réalignent sur la base d'origine : une fois l'application devenue la

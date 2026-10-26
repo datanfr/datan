@@ -523,10 +523,13 @@ DEFAULT_URI=https://symfony.datan.fr
 CORS_ALLOW_ORIGIN='^https://(symfony\.datan\.fr|datan\.fr)$'
 MAILER_DSN=<DSN Mailjet réel>
 MATOMO_URL=
+MAILJET_API_KEY=
+MAILJET_API_SECRET=
 ```
 
 `MATOMO_URL` reste vide : les visites d'essai pollueraient les statistiques
-réelles. `DEFAULT_URI` doit être l'adresse exacte des visiteurs, sinon le
+réelles. `MAILJET_API_*` aussi : posées sur une copie de la base, elles
+abonneraient les adresses d'essai aux vraies listes de la newsletter. `DEFAULT_URI` doit être l'adresse exacte des visiteurs, sinon le
 réchauffage remplit le cache sous une autre clé.
 
 Puis la base, par restauration du dump (§2.a et §2.b) — depuis le poste
@@ -742,6 +745,13 @@ APP_SECRET=<les 64 caractères générés au §0>
 DATABASE_URL="mysqli://datan:<mdp>@127.0.0.1:3306/datan_symfony?serverVersion=11.7.2-MariaDB&charset=utf8mb4"
 MAILER_DSN=<DSN Mailjet réel>
 CORS_ALLOW_ORIGIN='^https://(datan\.remikel\.fr|datan\.fr)$'
+
+# Newsletter : listes Mailjet, bienvenue, lettre mensuelle (App\Newsletter).
+# Production seulement, comme MATOMO_URL.
+MAILJET_API_KEY=<clé API Mailjet>
+MAILJET_API_SECRET=<secret API Mailjet>
+MJML_APP_ID=<identifiant mjml.io>
+MJML_SECRET_KEY=<clé secrète mjml.io>
 
 # Suivi : à n'activer qu'en production, pas en préproduction — sinon les visites
 # d'essai polluent les statistiques réelles.

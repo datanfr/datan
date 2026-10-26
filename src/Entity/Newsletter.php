@@ -12,7 +12,7 @@ use Doctrine\ORM\Mapping as ORM;
  * Deux listes coexistent, héritées de Mailjet : la « générale » (nouvelles du
  * projet, une fois par mois) et « votes » (les derniers scrutins). Le legacy
  * abonne toute nouvelle adresse aux deux ; la désinscription fine se fait sur
- * la page d'édition, non portée à ce jour.
+ * la page d'édition (`NewsletterController::modifier()`).
  *
  * `depute` et `departement` sont des vestiges du legacy, jamais écrits par le
  * formulaire ; ils sont conservés pour que la récupération des abonnés réels,

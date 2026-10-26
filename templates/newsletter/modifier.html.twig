@@ -1,0 +1,48 @@
+{# Reprise de `views/newsletter/edit.php`.
+
+   `noindex` : le legacy indexait ces pages faute de poser `seoNoFollow`, alors
+   que leur adresse contient celle d'un abonné. Défaut corrigé. #}
+{% extends 'base.html.twig' %}
+
+{% block robots %}noindex, nofollow{% endblock %}
+
+{% block title %}Gestion des abonnements aux newsletters | Datan{% endblock %}
+
+{% block meta_description %}Mettez à jour vos abonnements aux différentes newsletters de Datan.{% endblock %}
+
+{% block body %}
+<div class="container-fluid pg-depute-all" id="container-always-fluid">
+  <div class="row">
+    <div class="container">
+      <div class="row row-grid bloc-titre">
+        <div class="col-lg-6 mb-4 mb-lg-0">
+          <h1>Mettre à jour vos abonnements</h1>
+        </div>
+      </div>
+      <div class="row mb-4">
+        <div class="col-12">
+          <h2 class="mb-3">Abonnement(s) de {{ abonne.email }}</h2>
+          {% if session_expiree %}
+            {# Le legacy rendait ici la page d'erreur brute de CodeIgniter
+               (« The action you have requested is not allowed »). #}
+            <div class="alert alert-danger" role="alert">Votre session a expiré, merci de renvoyer le formulaire.</div>
+          {% endif %}
+          <form method="post" accept-charset="utf-8">
+            <input type="hidden" name="_token" value="{{ csrf_token('newsletter_modifier') }}">
+            {% for liste in listes %}
+              <div class="form-check">
+                <input type="checkbox" class="form-check-input" name="{{ liste.champ }}" id="{{ liste.champ }}"{% if abonne[liste.colonne] %} checked{% endif %}>
+                <label for="{{ liste.champ }}">{{ liste.libelle }}</label>
+              </div>
+            {% endfor %}
+            <button type="submit" name="submit" class="btn btn-primary my-3">Mettre à jour</button>
+          </form>
+          {# « désabonnez » : coquille du legacy pour « désabonner », corrigée. #}
+          <h2 class="mt-5">Se désabonner de toutes les newsletters</h2>
+          <p>Si vous souhaitez vous désabonner de toutes les newsletters, <a href="{{ path('newsletter_desinscrire', {email: abonne.email}) }}">cliquez ici</a>.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

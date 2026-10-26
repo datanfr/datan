@@ -81,6 +81,12 @@ antislash n'est pas garantie d'une implémentation à l'autre.
   && APP_ENV=prod php bin/console app:cache:rechauffer --no-ansi' >> var/log/sync-quotidien.log 2>&1
 ```
 
+### Newsletter — 5 h 30
+
+`app:newsletter:desinscriptions` reporte en base les désinscriptions faites par
+le lien d'une campagne Mailjet (un appel d'API par abonné, ~1 100). Sans clés
+Mailjet, elle le dit et sort en 0 : l'entrée peut vivre en préproduction.
+
 ## 2. Hebdomadaire
 
 | Commande | Rythme | Pourquoi pas plus souvent |
@@ -116,8 +122,9 @@ n'a sa place dans une tâche planifiée.
   plus, une commune non plus.
 - `app:import:utilisateurs`, `app:import:explications`, `app:import:articles`,
   `app:import:faq`, `app:import:quiz`, `app:import:parrainages`,
-  `app:import:reseaux-sociaux`, `app:import:decryptages` — contenu éditorial et
-  comptes, données de production non regénérables.
+  `app:import:reseaux-sociaux`, `app:import:decryptages`, `app:import:newsletter`
+  — contenu éditorial, comptes et abonnés, données de production non
+  regénérables.
 - `app:import:deputes`, `app:import:mandats`, `app:import:fonctions-groupe`,
   `app:import:votes`, `app:import:vote-groupes`, `app:import:annexes` — amorçage
   historique (base de référence *canutes* et exports TSV du legacy). La chaîne
@@ -130,8 +137,12 @@ n'a sa place dans une tâche planifiée.
 - **Publication data.gouv** (`opendata()` de `daily.php` dans le legacy) : les
   jeux CSV que notre pied de page pointe. Rythme du legacy : quotidien, hors
   `app:sync:quotidien`. Rien de porté à ce jour.
-- **Newsletter mensuelle** (`newsletter/votes` en CLI dans le legacy, composition
-  MJML + Mailjet). Rien de porté à ce jour.
+- **Lettre mensuelle des votes** : `app:newsletter:votes envoyer`, le 1er du
+  mois (entrée commentée dans `bin/crontab.prod`). À décommenter **le jour de la
+  bascule**, en retirant l'entrée `newsletter votes send` du legacy : les deux
+  ensemble enverraient la lettre deux fois. Avant cela, `apercu` et `test`
+  (à info@datan.fr) se lancent à la main. Demande `MAILJET_API_*` et
+  `MJML_*` dans `.env.local`.
 - **Consommateur Messenger.** `SendEmailMessage` est routé vers le transport
   `async` (`doctrine://default`) : sans worker, **aucun courriel ne part** —
   mot de passe oublié, demande de compte député, inscription. Ce n'est pas un

@@ -347,6 +347,21 @@ Automatisation posée le 2026-10-23 (`deploiement.yml`, `bin/deployer.sh`,
 - [ ] Rebrancher **Matomo** (matomo.datan.fr, siteId 1) — absent du staging à
   dessein (`MATOMO_URL` vide). GTM n'est plus à rebrancher : le site l'a retiré
   le 10/09/2026 avec Tarte au citron (cf. § Rattrapage legacy 2026-10-21).
+- [ ] **Newsletter**, dans cet ordre :
+  1. exporter les abonnés (requête dans le docblock d'`ImportNewsletterCommand`)
+     puis `app:import:newsletter` — **le plus tard possible**, le legacy
+     continuant d'inscrire jusqu'à la bascule ;
+  2. poser `MAILJET_API_KEY`/`SECRET` et `MJML_APP_ID`/`SECRET_KEY` dans le
+     `.env.local` de production (clés du `.htaccess` du legacy) ;
+  3. `app:newsletter:votes test` → vérifier la lettre reçue à info@datan.fr ;
+  4. retirer du crontab l'entrée `newsletter votes send` du legacy (et
+     `newsletter update`), décommenter `app:newsletter:votes` dans
+     `bin/crontab.prod` à la même heure, `bin/cron.sh installer` ;
+  5. inscrire une adresse d'essai, vérifier bienvenue + listes chez Mailjet,
+     puis `/newsletter/edit/<adresse>` et `/newsletter/delete/<adresse>`.
+- [ ] Décider si l'**iframe** des députés doit porter Matomo : le legacy l'y
+  charge (`_header_iframe.php`), notre `IframeController` l'en a retiré —
+  sans lui, les affichages chez les sites tiers ne sont plus comptés.
 - [ ] Vérifier que canonical/og:url basculent bien sur datan.fr (générés depuis
   l'hôte : automatique, mais vérifier).
 - [ ] Vérifier les images `posts/inside/` (cf. P1) une fois le domaine basculé.

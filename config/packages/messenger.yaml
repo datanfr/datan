@@ -26,6 +26,8 @@ framework:
             Symfony\Component\Notifier\Message\SmsMessage: async
             # Un réchauffage dure plusieurs minutes : jamais dans la requête du rédacteur.
             App\Http\RechauffageDemande: async
+            # Appels à Mailjet après une inscription ou un changement d'abonnement.
+            App\Newsletter\SynchroMailjet: async
 
             # Route your messages to the transports
             # 'App\Message\YourMessage': async
