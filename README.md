@@ -89,6 +89,34 @@ Ou en continue avec ```npm run docker-grunt-watch # (ou npm run dgw)```
 ## PHPMyAdmin
 Vous pouvez y accéder ici : http://localhost:8080/ ou http://dev-datan.fr:8080/
 
+## Conseils pour le développement local
+
+### Données disponibles
+- La sauvegarde SQL téléchargée par `DockerfileSQL` (`DATABASE_BACKUP`) contient les tables de référence (élections, communes, amendements...), mais pas les députés, groupes et votes, ni certaines tables comme `cities`.
+- Ces données sont générées à partir de l'open data de l'Assemblée nationale par les scripts du sous-module `scripts/` (`npm run docker-download` puis `npm run docker-daily`). Ce sous-module est un dépôt privé : sans accès (`git submodule update --init`), le dossier `scripts/` reste vide et les pages députés, groupes et votes n'ont pas de contenu.
+- Avec une base partielle, certaines pages affichent des notices PHP en environnement de développement (`CI_ENV=development`).
+
+### Base de données
+La base est stockée dans un volume Docker anonyme : `docker compose build` ne la réinitialise pas. Pour réimporter la sauvegarde :
+```
+docker compose rm -sfv db
+docker compose up -d --build db
+```
+L'import prend quelques minutes (suivre avec `docker logs -f datan-db`).
+
+### Cache
+Les pages publiques sont mises en cache 3 jours, côté serveur et côté navigateur (`Cache-Control`). Après une modification :
+```
+docker exec datan php index.php cache clear_cli
+```
+puis rechargez la page sans le cache du navigateur (Ctrl+F5).
+
+### Assets
+Le dossier du projet est monté dans le conteneur et masque les `node_modules` installés dans l'image : installez les dépendances une première fois avant `npm run docker-grunt`.
+```
+docker exec datan npm install
+```
+
 ***
 
 # Installation from scratch
