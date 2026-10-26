@@ -1,6 +1,10 @@
 # define php version
 FROM php:7.4-apache
 
+# Debian bullseye (base de php:7.4) n'est plus servi par deb.debian.org : utiliser archive.debian.org
+RUN printf "deb http://archive.debian.org/debian bullseye main\ndeb http://archive.debian.org/debian-security bullseye-security main\ndeb http://archive.debian.org/debian bullseye-updates main\n" > /etc/apt/sources.list \
+    && rm -f /etc/apt/sources.list.d/*
+
 # Install system dependencies with proper cleanup
 RUN apt-get update && apt-get install -y \
     git \
