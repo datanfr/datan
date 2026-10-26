@@ -8,6 +8,7 @@
       $this->load->model('deputes_model');
       $this->load->model('organes_model');
       $this->load->model('exposes_model');
+      $this->load->library('vote_service');
     }
 
     // Page = datan.fr/votes
@@ -418,6 +419,12 @@
 
       // Votes - députés
       $data['deputes'] = $this->votes_model->get_vote_deputes($data['vote']['voteNumero'], $legislature);
+
+      // Votes - hémicycle
+      $absents = $this->votes_model->get_vote_absents($data['vote']['voteNumero'], $legislature);
+      $mandats = $this->votes_model->get_mandats_sieges($legislature);
+      $data['hemicycle'] = $this->vote_service->get_hemicycle($data['deputes'], $absents, $mandats, substr($data['vote']['dateScrutin'], 0, 10));
+
       $data['groupes'] = array_filter($data['groupes'], function($groupe) {
           return $groupe['libelleAbrev'] !== 'NI';
         });

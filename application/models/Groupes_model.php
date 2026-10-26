@@ -139,6 +139,17 @@
       return $groupes;
     }
 
+    // Ordre des groupes de gauche à droite dans l'hémicycle (législatures 14 à 17)
+    public function get_groupes_order_hemicycle(){
+      return array(
+        "GDR", "GDR-NUPES", "FI", "LFI-NUPES", "LFI-NFP",
+        "SRC", "SER", "NG", "SOC", "SOC-A", "ECOLO", "ECOS", "EDS", "RRDP",
+        "LT", "LAREM", "RE", "EPR", "MODEM", "DEM", "AGIR-E", "HOR",
+        "UDI-AGIR", "UDI-A-I", "UDI-I", "UDI_I", "UDI", "LC", "LIOT",
+        "LR", "LES-REP", "UMP", "R-UMP", "DR", "AD", "UDR", "UDDPLR", "RN", "NI"
+      );
+    }
+
     public function get_groupes_sorted($groupes){
       $groupesLibelle = array_column($groupes, 'libelleAbrev');
       function cmp(array $a) {
