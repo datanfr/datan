@@ -325,10 +325,13 @@ contre datan.fr sur la base locale :
   Lu désormais, blocs du Sénat écartés en entier : 557 députés, le compte du
   legacy (557 + 345 sénateurs = 902). Les trois formulations Congrès de la fiche
   (« députés et sénateurs… ») rétablies.
-  - [ ] **Au déploiement** : `app:import:scrutins --depot=scrutins-xvi --tout`
-    (le dépôt est `quotidien: false`), puis
-    `app:calcul:statistiques-deputes --legislature=16` et
-    `app:cache:rechauffer`. Sans cela la prod garde un `vote_c1` vide.
+  - [x] **Au déploiement** — *fait le 2026-10-26 sur symfony.datan.fr* : clone
+    partiel du seul `CG/` de Scrutins_XVI (`git sparse-checkout set CG`),
+    `app:import:scrutins --depot=<ce clone> --tout` (557 votes, 345 sénateurs
+    écartés), `app:calcul:statistiques-deputes --legislature=16`,
+    `app:cache:rechauffer`. Le reste de la 16e, déjà en base, n'avait pas à
+    être réimporté. Vérifié en ligne : vote_c1 identique au legacy ligne à
+    ligne (557, 505 loyaux).
 - [x] **Fiche d'un ancien député** : le bloc « Son comportement politique »
   suit sa dernière législature (Pietrasanta : « (14e législature) », 95 % /
   100 %, identique au legacy) au lieu de disparaître.
