@@ -2,7 +2,6 @@
 
 namespace App\Groupe;
 
-use App\FamilleGroupe;
 use App\Legislature;
 use Doctrine\DBAL\ArrayParameterType;
 use Doctrine\DBAL\Connection;

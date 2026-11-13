@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace App\Scrutin;
 
 /**
  * Corrections manuelles des titres de scrutins, reprises telles quelles de

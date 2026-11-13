@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace App\Territoire;
 
 /**
  * Les dix-huit régions, du référentiel INSEE en vigueur depuis 2016.

@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace App\Scrutin;
 
 /**
  * Segment central du `<title>` d'une fiche de scrutin.

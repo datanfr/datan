@@ -2,12 +2,12 @@
 
 namespace App\Controller;
 
-use App\AgeFrance;
-use App\CouleurGroupe;
 use App\Enum\TypeClassement;
-use App\FamilleSocioPro;
+use App\Groupe\CouleurGroupe;
 use App\Http\RechauffeurCache;
 use App\Legislature;
+use App\Statistiques\AgeFrance;
+use App\Statistiques\FamilleSocioPro;
 use Doctrine\DBAL\Connection;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;

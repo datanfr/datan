@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace App\Parti;
 
 /**
  * Couleurs des partis politiques, portées de Parties_model::get_party_color().

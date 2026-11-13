@@ -3,9 +3,9 @@
 namespace App\Command;
 
 use App\Enum\TypeClassement;
-use App\FamilleSocioPro;
 use App\Groupe\ParticipationGroupe;
 use App\Legislature;
+use App\Statistiques\FamilleSocioPro;
 use Doctrine\DBAL\Connection;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;

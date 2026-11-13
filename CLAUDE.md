@@ -204,7 +204,7 @@ donnée à porter.
   majoritaire sur un scrutin, « pour » ou « contre » — l'abstention n'en forme
   pas une, et les non-inscrits en sont exclus : ils ne constituent pas un
   groupe. Le partage en blocs politiques qui commente ces coalitions
-  (`App\BlocPolitique`) est une lecture éditoriale, valable pour la seule 17e
+  (`App\Groupe\BlocPolitique`) est une lecture éditoriale, valable pour la seule 17e
   législature, et LIOT n'y appartient à aucun bloc.
 - **La 17e législature n'a aucun groupe « Majoritaire ».** Depuis la dissolution
   de 2024, l'Assemblée ne déclare plus de `positionPolitique` sur ses groupes :

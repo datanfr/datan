@@ -2,9 +2,9 @@
 
 namespace App\Controller;
 
-use App\AgeFrance;
 use App\Http\RechauffeurCache;
 use App\Legislature;
+use App\Statistiques\AgeFrance;
 use Doctrine\DBAL\Connection;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;

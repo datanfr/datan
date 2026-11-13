@@ -314,15 +314,11 @@ class ScraperScrutinsCommand extends Command
             ];
         }
 
-        // Le lien tel quel suffit le plus souvent : la table le porte déjà pour
-        // les 11 197 amendements que le scraping d'origine avait relevés.
-        $id = $this->connection->fetchOne('SELECT id FROM amendement WHERE href = ?', [$retenu]);
-        if ($id !== false && $id !== null) {
-            return ['id' => (int) $id, 'bilan' => 'amendements', 'message' => null];
-        }
-
-        // Sinon, la page de l'amendement porte son identifiant Assemblée dans le
-        // lien vers sa version XML.
+        // L'adresse relevée ne désigne pas un amendement à elle seule : la table
+        // n'en porte plus l'équivalent (cf. LienAmendement), et du temps où elle
+        // le portait, « texte + numéro d'ordre » confondait l'amendement de
+        // séance avec ses homonymes de commission. Seul l'identifiant tranche,
+        // et la page de l'amendement le porte dans le lien vers sa version XML.
         try {
             $page = $this->page($retenu, $delai);
         } catch (HttpExceptionInterface|\RuntimeException) {

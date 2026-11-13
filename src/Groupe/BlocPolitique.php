@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace App\Groupe;
 
 /**
  * Rattachement d'un groupe parlementaire à un bloc politique.

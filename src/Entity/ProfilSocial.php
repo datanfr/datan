@@ -44,7 +44,7 @@ class ProfilSocial
 
     /**
      * Famille socio-professionnelle, la maille large : l'un des huit libellés
-     * de {@see \App\FamilleSocioPro}, ou `null` si la profession déclarée ne
+     * de {@see \App\Statistiques\FamilleSocioPro}, ou `null` si la profession déclarée ne
      * permet pas de classer le député.
      */
     #[ORM\Column(length: 100, nullable: true)]

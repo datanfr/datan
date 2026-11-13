@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Commune;
+namespace App\Territoire;
 
 /**
  * Collectivités dont les listes de communes échappent au seuil de population.

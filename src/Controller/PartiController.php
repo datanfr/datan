@@ -2,10 +2,10 @@
 
 namespace App\Controller;
 
-use App\CouleurGroupe;
-use App\CouleurParti;
+use App\Groupe\CouleurGroupe;
 use App\Http\RechauffeurCache;
 use App\Legislature;
+use App\Parti\CouleurParti;
 use Doctrine\DBAL\Connection;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;

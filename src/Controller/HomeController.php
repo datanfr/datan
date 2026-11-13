@@ -2,7 +2,7 @@
 
 namespace App\Controller;
 
-use App\CouleurGroupe;
+use App\Groupe\CouleurGroupe;
 use App\Groupe\SoutienGouvernement;
 use App\Http\RechauffeurCache;
 use App\Legislature;

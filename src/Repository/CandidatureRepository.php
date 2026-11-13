@@ -2,8 +2,8 @@
 
 namespace App\Repository;
 
-use App\CouleurGroupe;
 use App\Entity\Candidature;
+use App\Groupe\CouleurGroupe;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 

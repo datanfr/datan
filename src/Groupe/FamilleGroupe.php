@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace App\Groupe;
 
 /**
  * Filiation des groupes parlementaires, portée à l'identique de

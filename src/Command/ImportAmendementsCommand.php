@@ -2,6 +2,7 @@
 
 namespace App\Command;
 
+use App\Scrutin\LienAmendement;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -47,11 +48,9 @@ class ImportAmendementsCommand extends ImportTricoteusesCommand
      * jamais les effacer. Ils ne sont écrits qu'à la création, avec leur valeur
      * neutre.
      *
-     * `href` en est absent pour une autre raison : les 11 197 liens déjà en base
-     * ont été relevés sur le site de l'Assemblée, qui suffixe certains numéros
-     * de texte (« 0324A ») d'une manière que le dépôt ne permet pas de
-     * reconstituer. Le lien déduit ici sert aux amendements nouveaux ; il ne
-     * remplace pas un lien déjà constaté.
+     * `href`, à l'inverse, est réécrit à chaque moisson : il se déduit du seul
+     * identifiant ({@see LienAmendement}) et vaut donc mieux que tout lien
+     * relevé ou fabriqué auparavant.
      */
     private const COLONNES = [
         'amendement_id', 'legislature', 'href', 'expose', 'resume_relu',
@@ -101,7 +100,7 @@ class ImportAmendementsCommand extends ImportTricoteusesCommand
             $lot[] = [
                 $amendement['uid'],
                 $this->entier($amendement['legislature'] ?? null),
-                $this->lien($amendement),
+                LienAmendement::depuisIdentifiant($this->entier($amendement['legislature'] ?? null), $amendement['uid']),
                 $expose,
                 0,
                 $this->texte($amendement['seanceDiscussionRef'] ?? null),
@@ -150,37 +149,12 @@ class ImportAmendementsCommand extends ImportTricoteusesCommand
     }
 
     /**
-     * Lien vers l'amendement sur le site de l'Assemblée, construit comme le fait
-     * l'application d'origine (`scripts/daily.php:3298`) : numéro du texte
-     * législatif, puis numéro d'ordre de dépôt.
-     *
-     * @param array<string, mixed> $amendement
-     */
-    private function lien(array $amendement): ?string
-    {
-        $numeroOrdre = $amendement['identification']['numeroOrdreDepot'] ?? null;
-
-        if ($numeroOrdre === null
-            || !preg_match('/\d+$/', (string) ($amendement['texteLegislatifRef'] ?? ''), $texte)) {
-            return null;
-        }
-
-        return sprintf(
-            'https://www.assemblee-nationale.fr/dyn/%d/amendements/%s/AN/%s',
-            $this->entier($amendement['legislature'] ?? null),
-            $texte[0],
-            $numeroOrdre,
-        );
-    }
-
-    /**
      * Numéro d'ordre de dépôt, sans son rembourrage de zéros.
      *
      * La normalisation se fait ici, à l'écriture, et non au moment d'apparier :
      * le dépôt écrit « 000024 » là où l'objet d'un scrutin annonce « n° 24 », et
      * une jointure ne peut pas rapprocher deux valeurs qu'il faudrait d'abord
-     * transformer. Le lien vers le site, lui, garde la forme rembourrée : c'est
-     * celle que l'Assemblée attend dans ses URL.
+     * transformer.
      */
     private function numero(mixed $valeur): ?string
     {
@@ -194,9 +168,10 @@ class ImportAmendementsCommand extends ImportTricoteusesCommand
     }
 
     /**
-     * Aucune colonne n'est réécrite sans condition : `href` et les colonnes
-     * rédactionnelles gardent ce qu'une autre source leur a donné, et un exposé
-     * absent d'une moisson n'efface pas celui déjà connu.
+     * Aucune colonne n'est réécrite sans condition : les colonnes
+     * rédactionnelles gardent ce que la rédaction leur a donné, et un exposé
+     * absent d'une moisson n'efface pas celui déjà connu. `href` suit ce régime
+     * par prudence seulement — il est toujours renseigné, donc toujours réécrit.
      *
      * Les quatre clés d'appariement suivent le même régime, pour une raison qui
      * leur est propre : `seanceDiscussionRef` et `cycleDeVie.dateSort` ne sont
@@ -209,7 +184,7 @@ class ImportAmendementsCommand extends ImportTricoteusesCommand
     private function enregistre(array $lot): void
     {
         $this->upsert('amendement', self::COLONNES, $lot, [], [
-            'legislature', 'expose', 'seance_ref', 'numero_ordre', 'date_sort', 'signataires',
+            'legislature', 'href', 'expose', 'seance_ref', 'numero_ordre', 'date_sort', 'signataires',
         ]);
     }
 

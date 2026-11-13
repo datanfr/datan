@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace App\Groupe;
 
 /**
  * Couleurs de groupe corrigées à l'affichage, portées de

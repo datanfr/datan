@@ -2,6 +2,7 @@
 
 namespace App\Command;
 
+use App\Scrutin\LienAmendement;
 use Doctrine\DBAL\Connection;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
@@ -189,7 +190,11 @@ class ImportAnnexesCommand extends Command
             $batch[] = [
                 $amendementId,
                 is_numeric($legislature) ? (int) $legislature : null,
-                $href !== '' ? $href : null,
+                // L'adresse exportée est celle que l'application d'origine a
+                // fabriquée, fausse sur les textes à suffixe : on la déduit de
+                // l'identifiant, et l'export ne sert que là où il n'en donne pas.
+                LienAmendement::depuisIdentifiant(is_numeric($legislature) ? (int) $legislature : null, $amendementId)
+                    ?? ($href !== '' ? $href : null),
                 $expose !== '' ? $expose : null,
                 $resume !== '' ? $resume : null,
                 $titreIa !== '' ? $titreIa : null,

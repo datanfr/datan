@@ -2,11 +2,11 @@
 
 namespace App\Controller;
 
-use App\Commune\SeuilCommunes;
-use App\CouleurGroupe;
+use App\Groupe\CouleurGroupe;
 use App\Http\RechauffeurCache;
 use App\Legislature;
 use App\Repository\ResultatElectoralRepository;
+use App\Territoire\SeuilCommunes;
 use Doctrine\DBAL\ArrayParameterType;
 use Doctrine\DBAL\Connection;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;

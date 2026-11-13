@@ -3,8 +3,7 @@
 namespace App\Groupe;
 
 use App\Entity\Dossier;
-use App\FamilleGroupe;
-use App\NatureVote;
+use App\Scrutin\NatureVote;
 use Doctrine\DBAL\ArrayParameterType;
 use Doctrine\DBAL\Connection;
 

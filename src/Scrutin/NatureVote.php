@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace App\Scrutin;
 
 /**
  * Nature de l'objet soumis au scrutin, déduite de son libellé.

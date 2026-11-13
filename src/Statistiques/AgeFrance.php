@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace App\Statistiques;
 
 /**
  * Âge moyen de la population française, repris des helpers `mean_age_france()`

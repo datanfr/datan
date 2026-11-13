@@ -2,8 +2,8 @@
 
 namespace App\Command;
 
-use App\CorrectionTitreScrutin;
-use App\NatureVote;
+use App\Scrutin\CorrectionTitreScrutin;
+use App\Scrutin\NatureVote;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;

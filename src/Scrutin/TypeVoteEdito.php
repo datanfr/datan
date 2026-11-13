@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace App\Scrutin;
 
 /**
  * Libellé éditorial du « Type de vote » affiché dans l'encart Infos d'une page

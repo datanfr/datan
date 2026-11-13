@@ -2,8 +2,8 @@
 
 namespace App\Controller;
 
-use App\CouleurGroupe;
 use App\Entity\FonctionCommission;
+use App\Groupe\CouleurGroupe;
 use App\Http\RechauffeurCache;
 use App\Legislature;
 use Doctrine\DBAL\Connection;

@@ -98,7 +98,7 @@ class Scrutin
 
     /**
      * Nature de l'objet soumis au vote (« final », « amendement », « article »…),
-     * déduite du libellé du scrutin par {@see \App\NatureVote}. Elle est stockée
+     * déduite du libellé du scrutin par {@see \App\Scrutin\NatureVote}. Elle est stockée
      * plutôt que recalculée à la volée pour que les statistiques puissent la
      * filtrer par index.
      */

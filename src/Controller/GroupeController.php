@@ -2,14 +2,13 @@
 
 namespace App\Controller;
 
-use App\BlocPolitique;
-use App\CouleurGroupe;
-use App\Entity\Dossier;
 use App\Depute\ComportementDepute;
+use App\Entity\Dossier;
 use App\Entity\FonctionGroupe;
-use App\FamilleGroupe;
-use App\FamilleSocioPro;
+use App\Groupe\BlocPolitique;
+use App\Groupe\CouleurGroupe;
 use App\Groupe\EditoGroupe;
+use App\Groupe\FamilleGroupe;
 use App\Groupe\MoyennesAssemblee;
 use App\Groupe\ParticipationGroupe;
 use App\Groupe\ReseauxGroupe;
@@ -17,8 +16,9 @@ use App\Groupe\SoutienGouvernement;
 use App\Groupe\StatistiquesGroupe;
 use App\Http\RechauffeurCache;
 use App\Legislature;
-use App\NatureVote;
 use App\Referencement\OpenGraph;
+use App\Scrutin\NatureVote;
+use App\Statistiques\FamilleSocioPro;
 use App\Twig\DatanExtension;
 use Doctrine\DBAL\ArrayParameterType;
 use Doctrine\DBAL\Connection;

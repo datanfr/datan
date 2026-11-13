@@ -2,7 +2,7 @@
 
 namespace App\Command;
 
-use App\FamilleSocioPro;
+use App\Statistiques\FamilleSocioPro;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;

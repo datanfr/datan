@@ -40,7 +40,7 @@ HTML avant de conclure.
 ## P1 — Fiches vote : title et casse du h1 (18 311 pages, SEO)
 
 - [x] **Reprendre le gabarit `<title>` du legacy.** — *Fait le 2026-08-08.*
-  Nouvelle classe `App\TitreMeta` : portage du CASE SQL de
+  Nouvelle classe `App\Scrutin\TitreMeta` : portage du CASE SQL de
   `Votes_model::get_individual_vote()` (Vote final / Motion de renvoi /
   Amendement n°X / Article n°X + titre du dossier), avec extraction des numéros
   d'amendement et d'article depuis le libellé comme `daily.php:1788-1810` (les
@@ -336,7 +336,7 @@ contre datan.fr sur la base locale :
   suit sa dernière législature (Pietrasanta : « (14e législature) », 95 % /
   100 %, identique au legacy) au lieu de disparaître.
 - [x] **Mandat régional** des participations électorales : nom de la région
-  (`App\Region`) au lieu du code INSEE (« 32 » → « Hauts-de-France »).
+  (`App\Territoire\Region`) au lieu du code INSEE (« 32 » → « Hauts-de-France »).
 - [ ] **Fiche député en 500 en dev** (préexistant) : `strict_variables` suit
   `kernel.debug`, et `_statistiques.html.twig:165` lit `statistiques.majorite`,
   absent en 17e. Invisible en prod (variable nulle), mais toute fiche député
@@ -464,7 +464,7 @@ mojibake des noms de candidats est corrigé chez nous à l'import. Le reste :
   tel quel), `main.css` et CSS critiques recompilés copiés, variable `GTM_ID`
   supprimée partout (Twig, `.env`, `.env.dist`, `DEPLOIEMENT.md`).
 - [x] **Communes des collectivités sans population (06/09)** :
-  `App\Commune\SeuilCommunes` — exemption du seuil et plafond de 20 pour
+  `App\Territoire\SeuilCommunes` — exemption du seuil et plafond de 20 pour
   Polynésie, Nouvelle-Calédonie, Saint-Pierre-et-Miquelon, Saint-Barthélemy et
   Saint-Martin, Wallis-et-Futuna ; appliquée aux pages département et ville,
   aux pastilles et pieds des pages de résultats, et aux deux plans de site

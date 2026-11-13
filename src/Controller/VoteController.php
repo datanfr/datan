@@ -2,15 +2,15 @@
 
 namespace App\Controller;
 
-use App\CouleurGroupe;
 use App\Depute\GroupeAuScrutin;
 use App\Entity\DossierActeur;
+use App\Groupe\CouleurGroupe;
 use App\Groupe\ParticipationGroupe;
 use App\Http\RechauffeurCache;
 use App\Legislature;
 use App\Referencement\OpenGraph;
-use App\TitreMeta;
-use App\TypeVoteEdito;
+use App\Scrutin\TitreMeta;
+use App\Scrutin\TypeVoteEdito;
 use Doctrine\DBAL\Connection;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;

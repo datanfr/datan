@@ -2,8 +2,8 @@
 
 namespace App\Controller;
 
-use App\CouleurGroupe;
 use App\Enum\PopulationDeputes;
+use App\Groupe\CouleurGroupe;
 use App\Http\RechauffeurCache;
 use App\Legislature;
 use Doctrine\DBAL\Connection;

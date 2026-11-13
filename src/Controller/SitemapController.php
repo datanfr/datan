@@ -2,9 +2,9 @@
 
 namespace App\Controller;
 
-use App\Commune\SeuilCommunes;
 use App\Http\RechauffeurCache;
 use App\Legislature;
+use App\Territoire\SeuilCommunes;
 use Doctrine\DBAL\ArrayParameterType;
 use Doctrine\DBAL\Connection;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;

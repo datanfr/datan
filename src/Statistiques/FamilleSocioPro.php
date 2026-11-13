@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace App\Statistiques;
 
 /**
  * Familles socio-professionnelles de l'INSEE et leur poids dans la population
