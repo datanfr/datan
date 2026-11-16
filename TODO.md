@@ -54,6 +54,42 @@ is too low ») ; la nôtre attend le même crédit. Rien n'est planifié d'ici l
 
 ## 3. Bascule de datan.fr (jour J)
 
+- [ ] **La bascule elle-même** : datan.fr est un domaine supplémentaire du
+  compte, de racine `~/public_html` ; symfony.datan.fr un sous-domaine, de
+  racine `~/symfony.datan.fr/public`. Basculer, c'est donner cette seconde
+  racine à datan.fr (cPanel, « Domaines ») — et revenir en arrière, la lui
+  reprendre. À confirmer que cPanel le permet pour ce domaine ; sinon, support
+  o2switch. Dans la foulée : `DEFAULT_URI=https://datan.fr` dans le
+  `.env.local` du serveur (sans quoi le réchauffage remplit un cache que
+  personne ne lit), `app:cache:rechauffer --tout`, et la variable GitHub
+  `SYMFONY_URL=https://datan.fr` (contrôle de fin de déploiement).
+- [ ] **Fichiers publics que le legacy sert et nous non** — 200 sur datan.fr,
+  404 sur symfony.datan.fr, vérifié le 16/11/2026 :
+  - les jeux de photos `assets/imgs/deputes_original` (224 Mo, encore alimenté
+    le 13/11), `deputes_webp`, `deputes_nobg`, `deputes_nobg_webp` : adresses
+    indexées, et `PhotoExtension` les préfère à notre détourage dès qu'ils
+    sont là. À copier dans `shared/public/assets/imgs/` et à déclarer dans
+    `DOSSIERS_PARTAGES` (`bin/deployer.sh`) ; comparer ensuite quelques fiches
+    à datan.fr, le portrait affiché change ;
+  - `assets/opendata/*.csv` (députés et groupes, actifs et historique) :
+    récrits chaque jour par `daily.php`. Aucune commande ne les produit chez
+    nous : à écrire, ou gel assumé d'une dernière copie ;
+  - `assets/dataset_backup/` : la sauvegarde publique, récrite les 1er et 15 par
+    `exportSql.php`. À reprendre, figer ou abandonner — à décider.
+- [ ] **API à clés du legacy** : `api/votes`, `api/tables`, `api/exposes`,
+  `api/decrypted_votes`, `api/non_decrypted_votes`, `api/amendements_ia`
+  répondront 404. Chercher qui les appelle dans les journaux d'accès avant de
+  couper (les clés elles-mêmes ne sont pas reprises, cf. `DIFFERENCES.md`).
+- [ ] **Crontab** : commenter les treize lignes du legacy — `daily.php`,
+  `download.sh`, les deux `wget` d'amendements, `exportSql*.php`, les deux
+  scripts de résumés IA, `newsletter/update` et les quatre `newsletter votes` —
+  et retirer `MAILTO`/`SHELL` en tête s'ils ne servent plus. Les commenter, pas
+  les effacer : c'est le retour arrière.
+- [ ] **Désactiver `deploy.yml` sur `master`** : un push y ferait encore un
+  `rsync --delete` vers `~/public_html`.
+- [ ] Vérifier que `www.datan.fr` redirige toujours vers `datan.fr` : la règle
+  n'est pas dans le `.htaccess` du legacy, elle est sans doute chez Cloudflare,
+  mais `public/.htaccess` n'en a pas.
 - [ ] Refaire la récupération **le plus tard possible** (la newsletter continue
   de s'inscrire au legacy) : `bin/recuperation/exporter-legacy.sh`, puis
   `app:recuperation:legacy --dossier=… --verifier` et la même sans
@@ -67,8 +103,12 @@ is too low ») ; la nôtre attend le même crédit. Rien n'est planifié d'ici l
   `bin/cron.sh installer` ; inscrire une adresse d'essai, vérifier bienvenue et
   listes chez Mailjet, puis `/newsletter/edit/<adresse>` et
   `/newsletter/delete/<adresse>`.
-- [ ] Rebrancher **Matomo** (matomo.datan.fr, siteId 1), absent de la
-  préproduction à dessein (`MATOMO_URL` vide). Décider si l'**iframe** des
+- [ ] **Matomo** (matomo.datan.fr, siteId 1) devait rester absent de la
+  préproduction (`MATOMO_URL` vide) ; or la variable est posée dans le
+  `.env.local` du serveur et les pages de symfony.datan.fr chargent le suivi
+  (constaté le 16/11/2026). Rien à rebrancher le jour J, donc — mais d'ici là
+  les visites d'essai entrent dans les statistiques réelles : la vider, ou
+  l'assumer. Décider si l'**iframe** des
   députés doit le porter : le legacy l'y charge, `IframeController` l'en a
   retiré — sans lui, les affichages chez les sites tiers ne sont plus comptés.
 - [ ] **Cloudflare** : datan.fr est derrière (nuage orange), la préproduction
@@ -89,7 +129,11 @@ is too low ») ; la nôtre attend le même crédit. Rien n'est planifié d'ici l
 - [ ] Retirer le bloc « PRÉPRODUCTION » de `public/.htaccess`
   (`DEPLOIEMENT.md` §6) : sans cela, images et PDF de datan.fr porteraient
   `X-Robots-Tag: noindex`.
-- [ ] Passage du compte o2switch en PHP 8.4 : vérifier le legacy le jour même.
+- [ ] **PHP du compte : ne pas y toucher pour la bascule.** Le `.htaccess` de
+  `public/` fixe la 8.4 pour notre dossier, quel que soit le domaine servi. Le
+  compte porte aussi matomo.datan.fr, quiz, quizz, game, ruby et dev : passer
+  le sélecteur en 8.4 les entraîne tous. À ne faire qu'après les avoir essayés,
+  et alors retirer l'`AddHandler` et la ligne cron `verifier-php.sh`.
 - [ ] Vérifier que canonical et `og:url` basculent sur datan.fr (générés depuis
   l'hôte), et que les images `posts/inside/` des articles — référencées en
   absolu vers `https://datan.fr` dans 16 articles — se chargent bien des
