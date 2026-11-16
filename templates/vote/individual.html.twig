@@ -513,6 +513,31 @@
           </div>
         </div>
       {% endif %}
+      {# Variante mobile de « Partagez ce vote » (individual.php:457). Celle de
+         la colonne de droite est en d-none d-md-block : sans celle-ci, oubliée
+         au portage, un téléphone n'avait aucun bouton de partage. Le site
+         n'écrit pas ce bloc comme le premier — images PNG pour Linkedin et
+         Whatsapp, pas de d-flex sur ce dernier — et c'est repris tel quel. #}
+      <div class="bloc-social d-md-none mt-4">
+        <h3 class="subtitle">Partagez ce vote</h3>
+        <div class="d-flex flex-row flex-wrap social-share-bloc">
+          <button type="button" name="button" class="btn social-share twitter twitter-bg d-flex">
+            <img src="{{ asset('assets/imgs/logos/x-no-round.svg') }}" alt="Partagez sur X">
+          </button>
+          <button type="button" name="button" class="btn social-share facebook fcb-bg d-flex">
+            <img src="{{ asset('assets/imgs/logos/facebook-no-round.svg') }}" alt="Partagez sur Facebook">
+            <span>Facebook</span>
+          </button>
+          <button type="button" name="button" class="btn social-share linkedin linkedin-bg d-flex">
+            <img src="{{ asset('assets/imgs/logos/linkedin-no-round.png') }}" alt="Partagez sur Linkedin">
+            <span>Linkedin</span>
+          </button>
+          <button type="button" name="button" class="mobileShow btn social-share whatsapp whatsapp-bg">
+            <img src="{{ asset('assets/imgs/logos/whatsapp-no-round.png') }}" alt="Partagez sur Whatsapp">
+            <span>Whatsapp</span>
+          </button>
+        </div>
+      </div>
     </div>
   </div>
 </div>
