@@ -2,6 +2,7 @@
 
 namespace App\Command;
 
+use App\Depute\GroupeAuScrutin;
 use App\Enum\TypeClassement;
 use App\Groupe\ParticipationGroupe;
 use App\Legislature;
@@ -614,10 +615,14 @@ class CalculClassementsCommand extends Command
              JOIN scrutin s ON s.id = v.scrutin_id
              JOIN depute d ON d.id = v.depute_id
              JOIN vote_groupe vg ON vg.scrutin_id = v.scrutin_id AND vg.groupe_id = d.groupe_id
-             JOIN (SELECT depute_id, groupe_id, MAX(date_debut) AS depuis
-                   FROM fonction_groupe
-                   WHERE date_fin IS NULL
-                   GROUP BY depute_id, groupe_id) f
+             JOIN (SELECT fg.depute_id, fg.groupe_id, MAX(fg.date_debut) AS depuis
+                   FROM fonction_groupe fg
+                   -- Appartenance seule : sans ce filtre, la date retenue pour un
+                   -- président de groupe était celle de sa présidence, et sa loyauté
+                   -- ne comptait plus que depuis ce jour (Sébastien Chenu : 100 %
+                   -- sur 14 votes au lieu de 95,2 % sur 1 041, premier du classement).
+                   WHERE fg.date_fin IS NULL AND ' . GroupeAuScrutin::APPARTENANCE . '
+                   GROUP BY fg.depute_id, fg.groupe_id) f
                ON f.depute_id = v.depute_id AND f.groupe_id = d.groupe_id
              WHERE v.vote_type = :type AND s.legislature = :legislature
                AND v.position IN ' . self::EXPRIMES . '

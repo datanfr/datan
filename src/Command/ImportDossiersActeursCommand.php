@@ -36,8 +36,10 @@ use Symfony\Component\Console\Style\SymfonyStyle;
  *
  * Hors `app:sync:quotidien`, comme `app:import:auteurs-amendements` : à lancer
  * sciemment après un import de dossiers. Toujours en passe complète, jamais sur
- * le delta de la moisson — lancée à la main et rarement, elle raterait les
- * fichiers des moissons intermédiaires, chaque moisson écrasant `.datan-modifies`.
+ * le delta de la moisson — celui-ci ne liste que ce que `app:sync:quotidien`
+ * n'a pas encore importé et s'acquitte dès que la chaîne réussit : lancée à la
+ * main et rarement, la commande n'y trouverait rien de ce qui a changé depuis
+ * son dernier passage.
  *
  * L'écriture est un upsert : les lignes ne font que s'ajouter. C'est le bon
  * régime ici — les actes d'un dossier sont un historique, l'open data en ajoute

@@ -13,9 +13,11 @@ use Symfony\Component\Console\Input\InputOption;
  *
  * Deux régimes de fonctionnement : l'import complet, qui parcourt tout le
  * dépôt, et l'import incrémental, qui ne traite que les fichiers signalés par
- * {@see TricoteusesSyncCommand} comme ayant changé depuis la moisson
- * précédente. Le second est le régime quotidien — quelques dizaines de fichiers
- * au lieu de plusieurs milliers.
+ * {@see TricoteusesSyncCommand} comme ayant changé depuis le dernier
+ * acquittement, c'est-à-dire depuis la dernière chaîne `app:sync:quotidien`
+ * entièrement réussie — et non depuis la moisson précédente : un import qui
+ * échoue retrouve son delta entier le lendemain. Le second est le régime
+ * quotidien — quelques dizaines de fichiers au lieu de plusieurs milliers.
  */
 abstract class ImportTricoteusesCommand extends Command
 {
