@@ -231,5 +231,12 @@ correction, **commenter le choix** dans le code, et le consigner dans
   aucun quota n'est visible, mais c'est à surveiller les premières semaines
   (`du -sh`), comme la fréquence réelle des purges dans `sync-quotidien.log`
   (« pages figées conservées » / « pages figées comprises »).
+- [ ] **Déploiement suspendu au quota de l'API GitHub** : `asset-map:compile`
+  télécharge le binaire `tdewolff/minify` à chaque construction
+  (`sensiolabs/minify-bundle`), sans jeton. Le 16/11/2026 à 8 h 50 UTC, l'API a
+  répondu 403 et la construction d'`a02c342b` est tombée sur « The release
+  "v2.24.25" does not exist » — rien n'a été mis en ligne, sans rapport avec le
+  code. Relancer suffit ; pour ne plus en dépendre, garder le binaire dans le
+  cache du workflow ou donner un jeton à l'installeur.
 - [ ] Faire confirmer par o2switch l'origine des SIGHUP vers 6 h : corrélés à la
   remise de configuration PHP (`php-selecteur.log`), non prouvés.
