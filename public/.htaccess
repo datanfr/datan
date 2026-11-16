@@ -57,6 +57,15 @@ DirectoryIndex index.php
 <IfModule mod_rewrite.c>
     RewriteEngine On
 
+    # `www.` renvoie au domaine nu, en un saut et directement en HTTPS. La
+    # règle vivait dans le .htaccess du site d'origine et a disparu avec lui le
+    # jour de la bascule : www.datan.fr servait tout le site en double, chaque
+    # page s'y déclarant canonique sous son propre nom. La condition sur l'hôte
+    # vient en dernier — `%1` désigne la capture de la dernière condition lue.
+    RewriteCond %{REQUEST_URI} !^/\.well-known/acme-challenge/
+    RewriteCond %{HTTP_HOST} ^www\.(.+)$ [NC]
+    RewriteRule ^ https://%1%{REQUEST_URI} [L,R=301]
+
     # HTTPS partout (recette de faq.o2switch.fr, « Forcer le HTTPS »). Hors
     # validation Let's Encrypt, qu'une redirection fait échouer : son dossier a
     # son propre .htaccess, et la condition sur l'URI double ce garde-fou.

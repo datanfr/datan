@@ -1,8 +1,10 @@
 name: Déploiement
 
-# Mise en ligne sur symfony.datan.fr, hébergé par le même compte o2switch que
-# datan.fr (legacy, déployé depuis master par deploy.yml). D'où trois partis
-# pris :
+# Mise en ligne de datan.fr, sur le compte o2switch qui portait le site
+# d'origine jusqu'à la bascule du 16 novembre 2026. L'application vit dans
+# ~/symfony.datan.fr, dont le dossier public/ est la racine web de datan.fr —
+# et, toujours, celle de symfony.datan.fr, qui sert au contrôle de fin de
+# déploiement parce qu'il n'est pas derrière Cloudflare. Trois partis pris :
 #
 # - Construction sur le runner, pas sur le serveur. Dépendances, paquets
 #   JavaScript et assets compilés partent tout faits : le serveur n'a besoin ni
@@ -14,23 +16,22 @@ name: Déploiement
 # - Le pare-feu o2switch n'ouvre SSH qu'aux adresses de sa liste blanche : le
 #   runner s'y ajoute le temps du déploiement, et s'en retire ensuite.
 #
-# Secrets — les mêmes que deploy.yml, le compte étant le même :
+# Secrets :
 #   CPANEL_SERVER, CPANEL_USERNAME, CPANEL_API_TOKEN, SSH_PRIVATE_KEY
 # Variables (facultatives) :
 #   SYMFONY_RACINE  répertoire de l'application, relatif au $HOME du compte
-#                   (symfony.datan.fr par défaut). JAMAIS sous public_html :
-#                   deploy.yml y fait un rsync --delete.
+#                   (symfony.datan.fr par défaut). Pas sous public_html,
+#                   où dort encore le site d'origine.
 #   SYMFONY_URL     adresse publique (https://symfony.datan.fr par défaut)
 #   PHP_BIN         chemin d'un PHP ≥ 8.4 sur le serveur, si la détection de
 #                   bin/serveur-commun.sh ne le trouve pas
 on:
   push:
-    branches: [symfony]
+    branches: [master]
   workflow_dispatch:
 
-# Le même groupe doit figurer dans deploy.yml (master) : son étape « Remove
-# unneeded whitelisted IPs » retire de la liste blanche toute adresse qu'elle ne
-# connaît pas — celle de ce runner comprise, en plein rsync.
+# Un déploiement à la fois : deux runners qui se croisent se retireraient l'un
+# l'autre de la liste blanche SSH, en plein rsync.
 concurrency:
   group: o2switch-datan
   cancel-in-progress: false

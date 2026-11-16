@@ -1,14 +1,17 @@
 # Datan
 
 Site de décryptage des votes de l'Assemblée nationale française. Ce dépôt **est**
-Datan : ce n'est pas une migration en cours vers autre chose. `../datan`
-(CodeIgniter 3) est l'application actuellement en production et sert de
-**référence fonctionnelle** — quand une question se pose sur un comportement, la
-réponse est dans son code, pas dans une intuition.
+Datan, et sert <https://datan.fr/> depuis la bascule du 16 novembre 2026. Il a
+pris la suite d'une application CodeIgniter 3, qui reste la **référence
+fonctionnelle** — quand une question se pose sur un comportement, la réponse
+est dans son code, pas dans une intuition. Ce code est l'étiquette Git
+`legacy-codeigniter` (`git show legacy-codeigniter:application/…`), et dort
+encore sur le serveur sous `~/public_html`, avec sa base.
 
-Le site public de référence est <https://datan.fr/>. Toute page portée doit lui
-être **visuellement identique** et **aussi rapide**. Ce sont les deux exigences
-non négociables.
+Toute page portée devait être **visuellement identique** au site d'origine et
+**aussi rapide** : ce sont les deux exigences sous lesquelles ce code a été
+écrit, et elles valent pour ce qui reste à porter. Le site d'origine n'étant
+plus en ligne, la comparaison se fait désormais à son code, pas à une page.
 
 Identique ne veut pas dire miroir : **parité sur ce qui est un choix, correction
 sur ce qui est un défaut.** Un tri, une formulation, un seuil se reproduisent tels

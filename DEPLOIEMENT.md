@@ -282,8 +282,9 @@ l'ouverture :
 
 ## 3. Git
 
-Le dépôt est `git@github.com:datanfr/datan.git` : l'application Symfony y vit
-sur la branche `symfony`, le legacy sur `master`.
+Le dépôt est `git@github.com:datanfr/datan.git`. Depuis la bascule du
+16 novembre 2026, l'application Symfony y vit sur `master` ; le site d'origine
+est l'étiquette `legacy-codeigniter`.
 
 - [ ] **Committer le travail en cours.** `git status` montre aujourd'hui une
       vingtaine de fichiers modifiés et cinq non suivis, dont les deux migrations
@@ -322,13 +323,13 @@ pull request, pas au milieu d'un chargement de 1 Go.
 
 C'est aussi le seul filet du dépôt : il n'y a aucun test.
 
-### `deploiement.yml` — sur push vers `symfony`
+### `deploiement.yml` — sur push vers `master`
 
-Cible : **symfony.datan.fr**, sur le **compte o2switch de datan.fr**. Le
-legacy y vit dans `~/public_html`, déployé depuis `master` par `deploy.yml` ;
-l'application Symfony vit à côté, dans `~/symfony.datan.fr`, et se déploie
-depuis la branche `symfony` (ou à la main, *Run workflow*). Le contrôle
-*Qualité* passe d'abord : rien ne part sur le serveur sans lui.
+Cible : **datan.fr**, dont la racine web est `~/symfony.datan.fr/public` depuis
+la bascule du 16 novembre 2026 (symfony.datan.fr pointe au même endroit). Le
+site d'origine dort dans `~/public_html`, plus rien ne le déploie. Le
+déploiement part d'un push sur `master` (ou à la main, *Run workflow*). Le
+contrôle *Qualité* passe d'abord : rien ne part sur le serveur sans lui.
 
 1. **Construction sur le runner** : `composer install --no-dev`, paquets
    JavaScript (`importmap:install`, lancé par Composer), `sass:build` puis
@@ -554,7 +555,7 @@ fichiers dans `~/symfony.datan.fr/shared/` plutôt que `/tmp`, partagé sur un
 mutualisé. Et enfin :
 
 1. **Premier déploiement** : *Actions → Déploiement → Run workflow* (ou un push
-   sur `symfony`).
+   sur `master`).
 2. **Clones Tricoteuses** (1,8 Go, une fois), cf. §2.d, depuis
    `~/symfony.datan.fr/current`, avec `~/symfony.datan.fr/bin/php` (jamais le
    `php` du `PATH`, qui est en 7.4).
@@ -850,16 +851,33 @@ espérant que ça se voie.
 - [ ] Comparer une dizaine de pages à datan.fr par capture d'écran rendue, pas
       par diff de texte.
 
-### Le jour de la bascule
+### La bascule du 16 novembre 2026
 
-Le reste — `TODO.md` §3 — est à dérouler à ce moment-là : variables de suivi
-réelles, transvasement des abonnés newsletter, redirections des anciennes API
-(`api/tables`, `api/votes`, `api/exposes`) qu'API Platform ne reprend pas, et
-retrait du bloc « PRÉPRODUCTION » de `public/.htaccess` (en-tête
-`X-Robots-Tag` sur les fichiers statiques).
+Faite. datan.fr sert cette application : sa racine web, dans cPanel, est
+`symfony.datan.fr/public` au lieu de `public_html`. Ce qui a été fait ce
+jour-là, dans l'ordre, et qui dit comment revenir en arrière :
 
-Le garde-fou applicatif, lui, n'est pas à toucher : il ne connaît que
-`datan.remikel.fr`, et l'application servie sur `datan.fr` est indexable sans
-aucun changement (cf. « Ne pas indexer la préproduction »). Si le domaine de
-préproduction change ou qu'un second apparaît, c'est
-`Indexation::HOTES_NON_INDEXABLES` qu'on complète.
+1. les treize lignes cron du site d'origine commentées (préfixe
+   `#BASCULE-20261116#`) ; table d'avant dans
+   `shared/crontab.avant-bascule-*` ;
+2. sauvegarde de notre base (`shared/sauvegardes/avant-bascule-*.sql.gz`),
+   dernière récupération (`app:recuperation:legacy`), puis `--clore` ;
+3. clés du site d'origine reportées dans `.env.local` (Mailjet, MJML,
+   Anthropic, data.gouv.fr, `MAILER_DSN` par le relais SMTP de Mailjet),
+   `DEFAULT_URI=https://datan.fr` ; copie d'avant dans
+   `shared/env.local.avant-*` ;
+4. `bin/cron.sh installer`, `app:cache:rechauffer --tout` ;
+5. changement de racine dans cPanel.
+
+**Retour arrière** : rendre `public_html` à datan.fr dans cPanel et réinstaller
+la table cron d'avant. Ce qui a été écrit depuis sur le nouveau site —
+décryptages, inscriptions, comptes — n'existe pas dans l'ancien.
+
+Une règle du `.htaccess` d'origine avait été oubliée et s'est vue dans l'heure :
+la redirection de `www.` vers le domaine nu. **Avant de changer une racine web,
+relire le `.htaccess` qu'on quitte** — c'est du comportement de site qui ne vit
+dans aucun dépôt d'application.
+
+Le garde-fou d'indexation n'a pas eu à bouger : il ne bride que
+`datan.remikel.fr` et `symfony.datan.fr` (`Indexation::HOTES_NON_INDEXABLES`),
+et l'application servie sous `datan.fr` est indexable par son seul nom.

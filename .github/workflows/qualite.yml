@@ -4,9 +4,9 @@ name: Qualité
 # production. Ils sont choisis pour attraper ce qui casse réellement ici — un
 # gabarit Twig invalide, un service mal câblé, et surtout une migration qui ne
 # décrit plus les entités.
+# Pas de déclencheur sur push vers master : deploiement.yml l'y appelle déjà,
+# et le contrôle tournerait deux fois.
 on:
-  push:
-    branches: [master]
   pull_request:
   workflow_dispatch:
   # Appelé par deploiement.yml, qui n'envoie rien sur le serveur sans lui.
