@@ -191,21 +191,42 @@ class Mailjet
     }
 
     /**
+     * Une liste par appel, comme le faisait le site d'origine. Mailjet rejette
+     * la requête entière dès qu'une seule des listes lui est inconnue : à la
+     * bascule du 16/11/2026, la liste « votes » (47010) n'existait plus dans le
+     * compte, et plus aucun nouvel abonné n'entrait dans la liste générale non
+     * plus. Une liste inconnue se signale donc au journal et se saute — le
+     * site d'origine l'ignorait en silence, depuis on ne sait quand.
+     *
      * @param list<int> $listes
      * @param list<int> $codesAdmis
      */
     private function gererListes(string $email, array $listes, string $action, array $codesAdmis = []): void
     {
-        if ($listes === []) {
-            return;
-        }
+        foreach ($listes as $liste) {
+            $reponse = $this->appeler(
+                'POST',
+                '/v3/REST/contact/' . rawurlencode($email) . '/managecontactslists',
+                ['ContactsLists' => [['Action' => $action, 'ListID' => $liste]]],
+                array_merge($codesAdmis, [400]),
+                true,
+            );
 
-        $this->appeler(
-            'POST',
-            '/v3/REST/contact/' . rawurlencode($email) . '/managecontactslists',
-            ['ContactsLists' => array_map(static fn (int $liste) => ['Action' => $action, 'ListID' => $liste], $listes)],
-            $codesAdmis,
-        );
+            // Succès, ou code que l'appelant admet (404 : contact inconnu).
+            if (($reponse['StatusCode'] ?? 200) !== 400) {
+                continue;
+            }
+
+            $detail = json_encode($reponse, \JSON_UNESCAPED_UNICODE) ?: '';
+
+            if (str_contains($detail, 'is invalid or deleted')) {
+                $this->logger->warning('Mailjet ne connaît pas la liste {liste} : contact non {action}.', ['liste' => $liste, 'action' => $action]);
+
+                continue;
+            }
+
+            throw new \RuntimeException(sprintf('Mailjet a refusé la liste %d (%s) : %s', $liste, $action, mb_substr($detail, 0, 500)));
+        }
     }
 
     /**

@@ -813,6 +813,31 @@ framework:
 
 ### OPcache
 
+**Sur o2switch, il est actif depuis le 16 novembre 2026**, pour la seule
+version 8.4 du compte — l'équivalent en ligne de commande de la case « opcache »
+du sélecteur de versions de cPanel :
+
+```bash
+selectorctl --enable-user-extensions=opcache --version=8.4   # --disable-… pour revenir en arrière
+```
+
+puis arrêt des `lsphp` 8.4 du compte, que LiteSpeed relance avec la nouvelle
+configuration. La commande a retiré de la liste `mysqli` et `pdo_mysql`,
+« en conflit » avec `nd_mysqli` et `nd_pdo_mysql` qui fournissent les mêmes
+fonctions : sans effet. Réglages de l'hébergeur, qu'on ne choisit pas : 512 Mo,
+`validate_timestamps=1`, `revalidate_freq=60`, `realpath_cache_ttl=120` — après
+un déploiement, l'ancienne version peut donc encore répondre deux à trois
+minutes, d'où les versions gardées par `deployer.sh`.
+
+Mesuré **depuis le serveur** ce jour-là, OPcache actif : fichier statique 5 ms,
+page en cache 16 ms, page 404 rendue en entier 48 ms, API 114 ms. Les mêmes
+mesures prises d'un poste éloigné ajoutaient 300 ms d'aller-retour réseau à
+chacune, ce qui avait fait attribuer à PHP un coût fixe qu'il n'avait pas :
+**un temps de réponse se mesure sur le serveur, ou se compare à un fichier
+statique demandé au même moment.**
+
+Sur un serveur dédié, la configuration à poser soi-même :
+
 ```ini
 ; /etc/php/8.3/fpm/conf.d/99-datan.ini
 opcache.enable=1
