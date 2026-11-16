@@ -1,7 +1,7 @@
 # Datan
 
 Décryptage des votes de l'Assemblée nationale — <https://datan.fr>.
-Symfony 8.1, PHP 8.4, MySQL 8 en local (MariaDB 11.4 en production).
+Symfony 8.1, PHP 8.4, MariaDB 11.4.13 — en local comme en production.
 
 Conventions et pièges métier : [CLAUDE.md](CLAUDE.md). Mise en production :
 [DEPLOIEMENT.md](DEPLOIEMENT.md). Planification : [CRON.md](CRON.md).
@@ -14,20 +14,42 @@ Conventions et pièges métier : [CLAUDE.md](CLAUDE.md). Mise en production :
   facultative : sans elle, les fiches de députés tombent.
 - **Composer 2** et **Git** — Git sert aussi à l'exécution, pour moissonner les
   données.
-- **MySQL 8.0** (ou MariaDB ≥ 11.4).
-- **~5 Go de disque** : 1,7 Go de base, 1,8 Go de clones de données.
+- **MariaDB 11.4.13**, la version de la production : le script du §1
+  l'installe dans le dossier personnel, sans sudo. Aucun autre moteur n'est
+  pris en charge — MySQL 8 a déjà laissé partir en production du SQL que
+  MariaDB n'avait jamais exécuté.
+- **~6 Go de disque** : 1,7 Go de base, 1,8 Go de clones de données, 1,2 Go
+  de binaires MariaDB.
 
 ## 1. Code et base
 
 ```bash
 git clone -b symfony git@github.com:datanfr/datan.git && cd datan
-
-sudo mysql <<'SQL'
-CREATE DATABASE datan_symfony CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-CREATE USER 'datan'@'localhost' IDENTIFIED BY 'datan';
-GRANT ALL PRIVILEGES ON datan_symfony.* TO 'datan'@'localhost';
-SQL
+bin/mariadb-locale.sh installer
 ```
+
+Le script télécharge l'archive officielle (somme de contrôle épinglée), la pose
+sous `~/.local/opt/`, initialise les données sous `~/.local/share/mariadb-datan/`
+et crée la base `datan_symfony` (`utf8mb4_unicode_ci`) avec le compte
+`datan` / `datan`. Le serveur écoute sur `127.0.0.1:3307` seulement, pour ne
+gêner aucun autre moteur du poste. Il tourne en unité systemd utilisateur
+(`mariadb-datan.service`) et repart donc avec le poste ; sans systemd
+utilisateur, relancer `bin/mariadb-locale.sh demarrer` après chaque démarrage.
+Rien n'est réglé qui change le résultat d'une requête : mode SQL et collations
+sont les défauts de MariaDB 11.4, ceux de la production — strict, et sans
+`ONLY_FULL_GROUP_BY`.
+
+```bash
+bin/mariadb-locale.sh etat         # version, port, mode SQL, collation de la base
+bin/mariadb-locale.sh console      # client mariadb, compte datan, base datan_symfony
+bin/mariadb-locale.sh admin        # tous les droits, par la socket
+bin/mariadb-locale.sh dump …       # mariadb-dump, compte datan
+bin/mariadb-locale.sh arreter      # ou demarrer, redemarrer
+```
+
+Qui a déjà une MariaDB ≥ 11.4 système peut s'en servir : y créer la base
+(`CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci`) et le compte, et adapter
+port et `serverVersion` au §2.
 
 ## 2. Configuration
 
@@ -38,14 +60,15 @@ production, base fictive — et toute page répond 500.
 ```dotenv
 APP_ENV=dev
 APP_SECRET=          # php -r 'echo bin2hex(random_bytes(32));'
-DATABASE_URL="mysqli://datan:datan@127.0.0.1:3306/datan_symfony?serverVersion=8.0.46&charset=utf8mb4"
+DATABASE_URL="mysqli://datan:datan@127.0.0.1:3307/datan_symfony?serverVersion=11.4.13-MariaDB&charset=utf8mb4"
 DEFAULT_URI=http://127.0.0.1:8000
 ```
 
-`serverVersion` doit dire la version réelle du serveur (`mysql --version`),
-sinon Doctrine produit des diffs de schéma fantômes. Les autres variables
-(courriel, Mailjet, IA, Matomo) sont décrites dans `.env.dist` ; vides, elles
-désactivent leur fonctionnalité.
+`serverVersion` doit dire la version réelle du serveur, suffixe `-MariaDB`
+compris (`bin/mariadb-locale.sh etat`), sinon Doctrine produit des diffs de
+schéma fantômes. `mysqli` est le nom du pilote PHP, pas du moteur. Les autres
+variables (courriel, Mailjet, IA, Matomo) sont décrites dans `.env.dist` ;
+vides, elles désactivent leur fonctionnalité.
 
 ```bash
 composer install
@@ -60,15 +83,14 @@ Deux voies, au choix.
 Demander un dump récent à l'équipe (fabriqué selon DEPLOIEMENT.md §2.a), puis :
 
 ```bash
-zcat datan_2*.sql.gz | sed 's/utf8mb4_uca1400_ai_ci/utf8mb4_unicode_ci/g' \
-  | mysql -u datan -pdatan datan_symfony
+zcat datan_2*.sql.gz | bin/mariadb-locale.sh console
 php bin/console doctrine:migrations:migrate -n   # migrations postérieures au dump
 php bin/console messenger:setup-transports       # le dump exclut messenger_messages
 APP_ENV=prod php bin/console app:sync:quotidien  # votes récents + portraits des députés
 ```
 
-Le dump vient de MariaDB : le `sed` traduit la seule collation que MySQL ne
-connaît pas. Le premier `app:sync:quotidien` clone 1,8 Go de dépôts et
+Le dump vient du même moteur et se recharge tel quel, structure comprise
+(~1 min pour 1 Go). Le premier `app:sync:quotidien` clone 1,8 Go de dépôts et
 réimporte tout ; les suivants ne lisent que le delta (~50 s). Les portraits
 (`public/assets/imgs/deputes/`) ne sont pas versionnés : c'est lui qui les
 produit.
@@ -225,5 +247,9 @@ déclarées en tête de `bin/css-critique.mjs`.
 - **Un 404 sur une route neuve** : vérifier `.env.local`. En `APP_ENV=prod`, le
   site passe par le cache HTTP et le conteneur compilé ; une page de dev porte
   l'en-tête `X-Debug-Token`, une page de prod l'en-tête `Age`.
-- **Les migrations visent MariaDB**, le moteur de production. Une migration
-  générée contre MySQL se relit avant d'être commitée.
+- **Une migration se joue ici avant de partir** : la base locale est la version
+  de la production, c'est tout le contrôle. Un `CREATE TABLE` écrit à la main
+  précise sa collation — `CHARACTER SET utf8mb4` seul donne
+  `utf8mb4_general_ci` sous MariaDB 11.4, et non celle de la base. Écrire
+  `DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci`, comme Doctrine le
+  génère : `doctrine:schema:update` ne voit pas l'écart.

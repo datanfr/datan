@@ -144,15 +144,15 @@ sans rien apporter (`Catalogue`). Git est l'interface : il donne
 le transfert incrémental et la liste exacte des fichiers modifiés.
 
 ```
-php bin/console app:sync:quotidien          # moisson + imports (~50 s à vide, 9 étapes)
+php bin/console app:sync:quotidien          # moisson + imports (~50 s à vide)
 php bin/console app:sync:quotidien --tout   # reconstruction complète
 php bin/console app:tricoteuses:sync --liste
 ```
 
 Dépôts déclarés dans `App\Tricoteuses\Catalogue`, clonés dans
 `var/tricoteuses/`. Le moissonneur y dépose un fichier `.datan-modifies` que
-les imports consomment pour ne traiter que le delta. Planification Windows :
-`bin\planifier-sync.ps1`.
+les imports consomment pour ne traiter que le delta, calculé depuis le dernier
+acquittement (cf. « Imports »). Planification Windows : `bin\planifier-sync.ps1`.
 
 **Tout ne vient pas des Tricoteuses.** Restent à la charge de Datan : le lien
 scrutin → dossier et scrutin → amendement (l'Assemblée ne le publie que depuis
@@ -402,12 +402,33 @@ elle qu'on importera, pas la base.
 
 ## Environnement
 
-Base **MariaDB 11.7.2** sur `127.0.0.1:3307` (`datan` / `datan` /
-`datan_symfony`). Le `serverVersion` du DSN doit dire `11.7.2-MariaDB`, sinon
-Doctrine génère des diffs de schéma fantômes. La base de l'application en
-production vit dans le conteneur Docker `datan-db` :
-`docker exec datan-db mariadb -h 127.0.0.1 -u datan -pdatan datan` (forcer
-`-h`, et utiliser le client `mariadb`).
+Base **MariaDB 11.4.13**, la version de la production, sur `127.0.0.1:3307`
+(`datan` / `datan` / `datan_symfony`, `utf8mb4_unicode_ci`). Elle s'installe
+sans sudo par `bin/mariadb-locale.sh installer`, tourne en unité systemd
+utilisateur (`mariadb-datan.service`) et se pilote par le même script : `etat`,
+`console`, `admin`, `dump`, `demarrer`. Ni `mariadb` ni `docker` ne sont dans le
+`PATH` : passer par le script ou par `php bin/console dbal:run-sql`. Le
+`serverVersion` du DSN doit dire `11.4.13-MariaDB`, sinon Doctrine génère des
+diffs de schéma fantômes.
+
+**Aucun autre moteur en local.** Un MySQL 8 a servi quelques semaines : il a
+laissé partir vers la production du SQL que MariaDB n'avait jamais exécuté, il
+tournait en mode non strict, et sa collation par défaut n'existe pas chez
+MariaDB. La chaîne de qualité rejoue de toute façon les migrations sur une
+MariaDB 11.4 vierge avant chaque déploiement.
+
+**Une table créée sans `COLLATE` ne prend pas la collation de la base.** Avec le
+seul `DEFAULT CHARACTER SET utf8mb4`, MariaDB 11.4 lui donne
+`utf8mb4_general_ci` ; `doctrine:schema:validate` ne voit pas l'écart, et la
+première comparaison de texte avec une colonne `unicode_ci` lève « Illegal mix
+of collations ». Dans une migration, toujours
+`DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci`.
+
+**La base locale n'est pas forcément complète.** Au 2026-11-16 elle ne porte
+que la 17e législature, sans décryptages, comptes ni résultats électoraux par
+commune : compter les lignes avant de conclure d'une page vide à un défaut de
+code. La base de l'application d'origine, elle, n'est joignable que sur le
+serveur (cf. « Seconde source »).
 
 **Vérifier `.env.local` avant de conclure quoi que ce soit d'un 404.** Ce fichier
 va et vient ; quand il pose `APP_ENV=prod`, une route neuve répond 404 tant que

@@ -23,7 +23,7 @@ use Psr\Log\NullLogger;
  * peuplée, désignée par `DATAN_BASE_ESSAI` (même forme que DATABASE_URL) ;
  * sans elle, le test est ignoré :
  *
- *   DATAN_BASE_ESSAI="mysqli://datan:datan@127.0.0.1:3307/datan_symfony?serverVersion=11.7.2-MariaDB&charset=utf8mb4" vendor/bin/phpunit
+ *   DATAN_BASE_ESSAI="mysqli://datan:datan@127.0.0.1:3307/datan_symfony?serverVersion=11.4.13-MariaDB&charset=utf8mb4" vendor/bin/phpunit
  */
 final class LotsResumesBaseTest extends TestCase
 {

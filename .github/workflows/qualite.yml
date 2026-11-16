@@ -18,8 +18,8 @@ jobs:
     runs-on: ubuntu-latest
 
     services:
-      # 11.4 comme la production (o2switch, compte de datan.fr : 11.4.13), et
-      # NON 11.7 comme le poste de développement. C'est tout l'intérêt du
+      # 11.4 comme la production (o2switch, compte de datan.fr : 11.4.13) et
+      # comme le poste de développement. Base VIERGE : c'est tout l'intérêt du
       # contrôle : une migration écrite sur une version peut produire du DDL
       # qu'une autre refuse. C'est arrivé avec la préproduction précédente, en
       # 10.6 — `profession_foi` héritait de `utf8mb4_uca1400_ai_ci`, collation

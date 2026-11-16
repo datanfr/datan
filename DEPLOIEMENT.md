@@ -91,14 +91,14 @@ Trois pièges :
   `Moissonneur.php` lance le binaire pour moissonner les Tricoteuses, qui ne
   publient pas d'API HTTP.
 
-### MariaDB 11.7
+### MariaDB 11.4
 
-Debian 12 livre MariaDB 10.11. Le DSN annonce `serverVersion=11.7.2-MariaDB` et
+Debian 12 livre MariaDB 10.11. Le DSN annonce `serverVersion=11.4.13-MariaDB` et
 il ne faut pas le mentir : une version déclarée fausse fait générer à Doctrine
 des diffs de schéma fantômes. Passer par le dépôt officiel :
 
 ```bash
-curl -LsS https://r.mariadb.com/downloads/mariadb_repo_setup | sudo bash -s -- --mariadb-server-version=11.7
+curl -LsS https://r.mariadb.com/downloads/mariadb_repo_setup | sudo bash -s -- --mariadb-server-version=11.4
 sudo apt update && sudo apt install -y mariadb-server mariadb-client
 sudo mariadb-secure-installation
 ```
@@ -133,35 +133,25 @@ les 1,8 Go de clones Tricoteuses.
 table `doctrine_migration_versions` parte cohérente avec le schéma — sinon le
 serveur rejouera des migrations déjà présentes et échouera.
 
-Le client MariaDB n'est **pas** dans le `PATH` du poste — c'est celui de MySQL
-8.0 qui y est, et son `mysqldump` produit un fichier que MariaDB relit mal.
-Chemin complet obligatoire.
+Le client MariaDB n'est **pas** dans le `PATH` du poste : passer par
+`bin/mariadb-locale.sh dump`, qui appelle le `mariadb-dump` de l'instance
+locale avec le compte `datan`.
 
-```powershell
-$mdb  = 'C:\Program Files\MariaDB 11.7\bin\mariadb-dump.exe'
-$gzip = 'C:\Program Files\Git\usr\bin\gzip.exe'
-$date = Get-Date -Format 'yyyyMMdd'
-$dst  = "$env:USERPROFILE\Downloads"
-
-& $mdb -h 127.0.0.1 -P 3307 -u datan -pdatan `
-  --single-transaction --quick --default-character-set=utf8mb4 `
-  --ignore-table=datan_symfony.messenger_messages `
-  --result-file="$dst\datan_$date.sql" datan_symfony
-if ($LASTEXITCODE -ne 0) { throw "dump principal en échec ($LASTEXITCODE)" }
-
-& $mdb -h 127.0.0.1 -P 3307 -u datan -pdatan `
-  --default-character-set=utf8mb4 --no-data `
-  --result-file="$dst\datan_${date}_messenger.sql" datan_symfony messenger_messages
-if ($LASTEXITCODE -ne 0) { throw "dump messenger en échec ($LASTEXITCODE)" }
-
-& $gzip -9 -f "$dst\datan_$date.sql" "$dst\datan_${date}_messenger.sql"
+```bash
+date=$(date +%Y%m%d)
+bin/mariadb-locale.sh dump --single-transaction --quick --default-character-set=utf8mb4 \
+  --ignore-table=datan_symfony.messenger_messages \
+  --result-file="$HOME/datan_$date.sql" datan_symfony
+bin/mariadb-locale.sh dump --default-character-set=utf8mb4 --no-data \
+  --result-file="$HOME/datan_${date}_messenger.sql" datan_symfony messenger_messages
+gzip -9 -f "$HOME/datan_$date.sql" "$HOME/datan_${date}_messenger.sql"
 ```
 
 Quatre choix à ne pas défaire :
 
-- **`--result-file=` et non `>`.** La redirection PowerShell fait transiter le
-  dump par sa couche d'encodage de texte ; `mariadb-dump` écrit ici lui-même, en
-  octets bruts.
+- **`--result-file=` et non `>`.** `mariadb-dump` écrit lui-même, en octets
+  bruts : aucune couche d'encodage du shell ne s'interpose, et un dump
+  interrompu ne laisse pas un fichier tronqué qui a l'air complet.
 - **`--ignore-table` sur `messenger_messages`** : la file d'attente des courriels
   ne se transporte pas. Sa **structure** part dans le second fichier — le DSN
   porte `auto_setup=0`, donc Symfony ne la créera pas seul et le worker
@@ -322,8 +312,8 @@ Deux workflows sont posés dans `.github/workflows/`.
 Syntaxe PHP, gabarits Twig, YAML, conteneur de services, puis **les migrations
 rejouées sur une base vierge** suivies de `doctrine:schema:validate`.
 
-La base d'intégration est en **MariaDB 11.4, celle du serveur (11.4.13) — pas
-11.7 comme le poste de développement**. C'est tout l'intérêt du contrôle : une
+La base d'intégration est en **MariaDB 11.4, celle du serveur (11.4.13) et du
+poste de développement**, et elle est vierge. C'est tout l'intérêt du contrôle : une
 migration écrite sur une version peut produire du DDL qu'une autre refuse.
 C'est arrivé lors de la première restauration, sur une préproduction en 10.6 — `profession_foi` avait hérité de
 `utf8mb4_uca1400_ai_ci`, collation apparue en MariaDB 11.4, et l'import s'est
@@ -772,7 +762,7 @@ Dans `/var/www/datan/shared/.env.local`, en `chmod 600` :
 
 ```dotenv
 APP_SECRET=<les 64 caractères générés au §0>
-DATABASE_URL="mysqli://datan:<mdp>@127.0.0.1:3306/datan_symfony?serverVersion=11.7.2-MariaDB&charset=utf8mb4"
+DATABASE_URL="mysqli://datan:<mdp>@127.0.0.1:3306/datan_symfony?serverVersion=11.4.13-MariaDB&charset=utf8mb4"
 MAILER_DSN=<DSN Mailjet réel>
 CORS_ALLOW_ORIGIN='^https://(datan\.remikel\.fr|datan\.fr)$'
 
