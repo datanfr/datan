@@ -39,27 +39,12 @@
 # ---------------------------------------------------------------------------
 AddHandler application/x-httpd-alt-php84___lsphp .php
 
-# ---------------------------------------------------------------------------
-# PRÉPRODUCTION : non-indexation, sans mot de passe.
-#
-# symfony.datan.fr est ouvert à tous, à dessein. Ce qui le tient hors des
-# moteurs : l'application, qui reconnaît l'hôte (App\Referencement\Indexation)
-# et sert un robots.txt « Disallow: / » et l'en-tête X-Robots-Tag ; et la ligne
-# ci-dessous, pour ce que le serveur rend sans passer par PHP.
-#
-# À RETIRER le jour où ce dossier sert datan.fr (checklist de TODO.md) : elle
-# n'est pas conditionnée à l'hôte — LiteSpeed ignore « Require expr »,
-# « Require env » et « Allow from env= » (vérifié en septembre 2026) —, et
-# désindexerait les images et documents du vrai site.
-# ---------------------------------------------------------------------------
-
-# L'application pose déjà cet en-tête sur tout ce qu'elle rend
-# (App\Referencement\EnTeteRobots). Ici il couvre ce que LiteSpeed sert sans
-# passer par PHP : les fichiers de public/ — images, feuilles de style,
-# documents PDF.
-<IfModule mod_headers.c>
-    Header set X-Robots-Tag "noindex, nofollow, noarchive"
-</IfModule>
+# Ce dossier sert datan.fr depuis le 16 novembre 2026. Le bloc qui posait
+# `X-Robots-Tag: noindex` sur les images, feuilles de style et PDF est retiré :
+# il n'était pas conditionné à l'hôte et aurait désindexé ceux du vrai site.
+# symfony.datan.fr, qui pointe toujours ici, reste hors des moteurs pour ses
+# pages par l'application (App\Referencement\Indexation) ; ses fichiers
+# statiques, eux, ne le sont plus.
 
 DirectoryIndex index.php
 

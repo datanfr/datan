@@ -71,9 +71,9 @@
 # périme dès qu'un scrutin entre.
 #
 # `app:opendata:publier` récrit les quatre CSV d'assets/opendata/ sur les
-# classements du jour, sans les téléverser : tant que le legacy publie sur
-# data.gouv, deux publieurs se remplaceraient. Le jour de la bascule, lui
-# ajouter `--televerser` (et DATA_GOUV_API_KEY dans .env.local).
+# classements du jour et, depuis la bascule du 16/11/2026, les téléverse sur
+# data.gouv.fr à la place du legacy. Le téléversement n'a lieu que si
+# DATA_GOUV_API_KEY est posée dans .env.local : la retirer suffit à le couper.
 #
 # Les quatre commandes s'enchaînent par `;` et non par `&&` : **une
 # synchronisation qui a écrit doit purger**, qu'elle ait réussi ou non. Avec
@@ -88,7 +88,7 @@
 # confondre avec un échec. Le nom `app:sync:quotidien` reste visible dans `ps`,
 # dont le workflow de déploiement se sert pour refuser de vider le cache sous
 # une moisson en cours.
-20 6 * * * cd @COURANT@ && trap '' HUP && { echo "===== $(date) ====="; flock -n -E 75 @PARTAGE@/var/sync.lock sh -c 'APP_ENV=prod @PHP@ bin/console app:sync:quotidien --no-ansi; s=$?; APP_ENV=prod @PHP@ bin/console app:calcul:statistiques-deputes --no-ansi; c=$?; APP_ENV=prod @PHP@ bin/console app:opendata:publier --no-ansi; o=$?; APP_ENV=prod @PHP@ bin/console app:cache:rechauffer --no-ansi; r=$?; echo "BILAN sync=$s statistiques=$c opendata=$o rechauffage=$r"; [ $s -eq 0 ] && [ $c -eq 0 ] && [ $o -eq 0 ] && [ $r -eq 0 ]'; e=$?; if [ $e -eq 75 ]; then echo "SAUTE : verrou pris, une synchronisation tourne encore"; elif [ $e -ne 0 ]; then echo "ECHEC (code $e)"; fi; echo "===== fin $(date) ====="; } >> var/log/sync-quotidien.log 2>&1
+20 6 * * * cd @COURANT@ && trap '' HUP && { echo "===== $(date) ====="; flock -n -E 75 @PARTAGE@/var/sync.lock sh -c 'APP_ENV=prod @PHP@ bin/console app:sync:quotidien --no-ansi; s=$?; APP_ENV=prod @PHP@ bin/console app:calcul:statistiques-deputes --no-ansi; c=$?; APP_ENV=prod @PHP@ bin/console app:opendata:publier --televerser --no-ansi; o=$?; APP_ENV=prod @PHP@ bin/console app:cache:rechauffer --no-ansi; r=$?; echo "BILAN sync=$s statistiques=$c opendata=$o rechauffage=$r"; [ $s -eq 0 ] && [ $c -eq 0 ] && [ $o -eq 0 ] && [ $r -eq 0 ]'; e=$?; if [ $e -eq 75 ]; then echo "SAUTE : verrou pris, une synchronisation tourne encore"; elif [ $e -ne 0 ]; then echo "ECHEC (code $e)"; fi; echo "===== fin $(date) ====="; } >> var/log/sync-quotidien.log 2>&1
 
 # --- Configuration PHP — chaque minute -------------------------------------
 # Le compte est en 7.4 (datan.fr) et nous en 8.4 : la configuration du
@@ -181,13 +181,14 @@
 # d'arrivées, on le lance à la main.
 #40 5 1 * * cd @COURANT@ && APP_ENV=prod @PHP@ bin/console app:moissonner:bluesky --ecrire --no-ansi >> var/log/bluesky.log 2>&1
 
-# Lettre mensuelle des votes, sur le mois écoulé. **Le jour de la bascule, et
-# pas avant** : tant que l'entrée du legacy (`newsletter votes send`) tourne, la
-# décommenter ferait recevoir la lettre deux fois à chaque abonné. Retirer
-# celle-là, décommenter celle-ci, reprendre l'heure du legacy (`crontab -l`).
+# Lettre mensuelle des votes, sur le mois écoulé, aux heures du legacy dont
+# elle a pris la suite le 16/11/2026 : un essai à 8 h 40, envoyé à
+# info@datan.fr seulement, puis l'envoi à tous les abonnés à 12 h 40 — quatre
+# heures pour relire et, au besoin, retirer la seconde ligne avant midi.
 # Un envoi ne se rejoue pas : en cas d'échec, lire le journal avant toute
 # relance. `env` : cf. le consommateur Messenger, flock n'a pas de shell.
-#0 10 1 * * cd @COURANT@ && flock -n @PARTAGE@/var/newsletter.lock env APP_ENV=prod @PHP@ bin/console app:newsletter:votes envoyer --no-ansi >> var/log/newsletter.log 2>&1
+40 8 1 * * cd @COURANT@ && flock -n @PARTAGE@/var/newsletter.lock env APP_ENV=prod @PHP@ bin/console app:newsletter:votes test --no-ansi >> var/log/newsletter.log 2>&1
+40 12 1 * * cd @COURANT@ && flock -n @PARTAGE@/var/newsletter.lock env APP_ENV=prod @PHP@ bin/console app:newsletter:votes envoyer --no-ansi >> var/log/newsletter.log 2>&1
 
 # Courriels définitivement en échec (3 tentatives). À relire de temps à autre :
 # une file `failed` qui grossit est un MAILER_DSN faux, pas un incident isolé.

@@ -76,8 +76,22 @@ jobs:
           # CSS puis assets : sass:build compile assets/styles/main.scss
           # (dart-sass, téléchargé ici), asset-map:compile publie le tout dans
           # public/build/ sous des noms condensés, minifié au passage
-          # (tdewolff/minify, téléchargé ici aussi). Cf. README.
+          # (tdewolff/minify). Cf. README.
           php bin/console sass:build --no-ansi
+          # Le bundle demande ce binaire à l'API GitHub, sans jeton : depuis un
+          # runner partagé le quota est souvent épuisé, l'API répond 403 et la
+          # construction tombait sur « The release "v2.24.25" does not exist »
+          # — deux déploiements sur cinq le 16/11/2026. On le pose donc
+          # nous-mêmes par son adresse de téléchargement, qui n'est pas soumise
+          # à ce quota : présent et exécutable dans var/minify/, le bundle ne
+          # va plus rien chercher. La version est lue là où le bundle la lit.
+          VERSION_MINIFY=$(grep -oE "version: '[^']+'" config/packages/sensiolabs_minify.yaml | cut -d"'" -f2)
+          mkdir -p var/minify
+          curl -fsSL --retry 3 --retry-delay 5 \
+            "https://github.com/tdewolff/minify/releases/download/${VERSION_MINIFY}/minify_linux_amd64.tar.gz" \
+            | tar -xz -C var/minify minify
+          chmod +x var/minify/minify
+          var/minify/minify --version
           php bin/console asset-map:compile --no-ansi
           # Chaque nom de public/build/ change avec son contenu : le navigateur
           # peut le garder un an sans jamais le revalider. Un .htaccess local,
