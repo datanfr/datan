@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Depute\ComportementDepute;
 use App\Depute\GroupeAuScrutin;
+use App\Entity\FonctionGroupe;
 use App\Http\RechauffeurCache;
 use App\Legislature;
 use App\Referencement\OpenGraph;
@@ -170,6 +171,9 @@ class DeputeController extends AbstractController
             // pour la phrase « … un groupe classé à gauche de l'échiquier politique »
             // du bloc biographique. Même table éditoriale que la carte de proximité.
             'echiquier' => $depute['groupe_abrev'] !== null ? (ComportementDepute::ECHIQUIER[$depute['groupe_abrev']] ?? null) : null,
+            // « … n'est pas membre mais apparenté au groupe » et « … en est le
+            // président » : les deux phrases de `_bio.php` qui suivent le groupe.
+            'qualite_groupe' => $actif && $groupeId !== null ? $this->qualiteGroupe($deputeId, $groupeId) : null,
             // Le bloc « Son comportement politique » : participation, loyauté et
             // proximité par groupe, lues sur les tables précalculées (les moyennes
             // comparatives interdisent tout calcul à la requête), pour la dernière
@@ -422,9 +426,10 @@ class DeputeController extends AbstractController
      * Le dernier groupe connu d'un député qui n'a plus de rattachement ouvert,
      * dans la forme des colonnes `groupe_*` de la requête de fiche.
      *
-     * Le rattachement le plus récent et PRINCIPAL : onze députés de la 17e en
-     * portent deux ouverts à la fois, et sans `nomin_principale` le tri
-     * choisirait au hasard entre les deux (cf. CLAUDE.md).
+     * Le rattachement d'appartenance le plus récent, présidence écartée
+     * ({@see GroupeAuScrutin::APPARTENANCE}) : un président de groupe porte
+     * deux rattachements ouverts, de membre et de président, et le legacy ne
+     * lit que le premier (`preseance >= 20`, daily.php:1060).
      *
      * @return array<string, mixed>
      */
@@ -435,13 +440,44 @@ class DeputeController extends AbstractController
                     g.couleur AS groupe_couleur, g.position_politique
              FROM fonction_groupe fg
              JOIN groupe g ON g.id = fg.groupe_id
-             WHERE fg.depute_id = :depute AND fg.nomin_principale = 1
+             WHERE fg.depute_id = :depute AND ' . GroupeAuScrutin::APPARTENANCE . '
              ORDER BY fg.date_fin IS NULL DESC, fg.date_fin DESC, fg.date_debut DESC
              LIMIT 1',
             ['depute' => $deputeId],
         );
 
         return $groupe === false ? [] : $groupe;
+    }
+
+    /**
+     * Ce que le député est dans son groupe courant, pour le bloc biographique :
+     * apparenté plutôt que membre, et président ou non.
+     *
+     * - **Apparenté** : son rattachement d'appartenance ouvert le plus récent
+     *   est un apparentement — le `preseanceGroupe == 24` de `deputes_last`.
+     * - **Président** : une présidence OUVERTE dans ce groupe. Le legacy
+     *   (`depute_group_president()`) cherche une présidence sans regarder sa
+     *   date de fin, et continue donc d'écrire que Marine Le Pen « en est la
+     *   présidente » depuis que Sébastien Chenu lui a succédé le 28/10/2026 :
+     *   défaut corrigé, pas reproduit.
+     *
+     * @return array{apparente: bool, president: bool}
+     */
+    private function qualiteGroupe(int $deputeId, int $groupeId): array
+    {
+        $qualites = $this->connection->fetchFirstColumn(
+            'SELECT fg.code_qualite FROM fonction_groupe fg
+             WHERE fg.depute_id = :depute AND fg.groupe_id = :groupe AND fg.date_fin IS NULL
+             ORDER BY fg.date_debut DESC, fg.id DESC',
+            ['depute' => $deputeId, 'groupe' => $groupeId],
+        );
+
+        $appartenance = array_values(array_intersect($qualites, GroupeAuScrutin::QUALITES_APPARTENANCE));
+
+        return [
+            'apparente' => ($appartenance[0] ?? null) === FonctionGroupe::QUALITE_APPARENTE,
+            'president' => \in_array(FonctionGroupe::QUALITE_PRESIDENT, $qualites, true),
+        ];
     }
 
     /**
@@ -457,7 +493,7 @@ class DeputeController extends AbstractController
             'SELECT g.id, g.libelle, g.libelle_abrev, g.couleur, g.legislature
              FROM fonction_groupe fg
              JOIN groupe g ON g.id = fg.groupe_id
-             WHERE fg.depute_id = :depute AND g.legislature = :legislature AND fg.nomin_principale = 1
+             WHERE fg.depute_id = :depute AND g.legislature = :legislature AND ' . GroupeAuScrutin::APPARTENANCE . '
              ORDER BY fg.date_fin IS NULL DESC, fg.date_fin DESC, fg.date_debut DESC
              LIMIT 1',
             ['depute' => $deputeId, 'legislature' => $legislature],
@@ -808,7 +844,7 @@ class DeputeController extends AbstractController
                                   ORDER BY COALESCE(fg.date_fin, '9999-12-31') DESC, fg.date_debut DESC), ',', 1) AS groupe_recent
                        FROM fonction_groupe fg
                        JOIN groupe g ON g.id = fg.groupe_id AND g.legislature = :leg
-                       WHERE fg.nomin_principale = 1
+                       WHERE " . GroupeAuScrutin::APPARTENANCE . "
                        GROUP BY fg.depute_id) r ON r.depute_id = d.id AND r.groupe_recent = :gid
                  WHERE d.id <> :id AND d.dpt_slug IS NOT NULL
                  $tri",
@@ -1062,7 +1098,18 @@ class DeputeController extends AbstractController
     }
 
     /**
-     * Historique des mandats parlementaires, du plus récent au plus ancien.
+     * Historique des mandats parlementaires, du plus récent au plus ancien :
+     * **une ligne par législature**, comme le `deputes_all` du legacy
+     * (`get_historique_mandats`).
+     *
+     * Un député peut porter deux mandats dans une législature : nommé au
+     * Gouvernement, il perd le sien, et en reçoit un second à son retour, de
+     * même date de début (Borne, Panosyan-Bouvet… 29 en 17e). La fiche n'en
+     * garde que le plus récent — encore ouvert d'abord, puis fin la plus
+     * tardive, puis prise de fonction la plus tardive (`daily.php:1036`) : c'est
+     * lui qui dit si le député siège (`$mandats[0]['date_fin']`), et deux lignes
+     * pour une législature feraient écrire « élue à plusieurs reprises » et
+     * lister deux fois la 17e. L'ancienneté, elle, somme tous les mandats.
      *
      * @return list<array<string, mixed>>
      */
@@ -1071,9 +1118,16 @@ class DeputeController extends AbstractController
         return $this->connection->fetchAllAssociative(
             'SELECT legislature, date_debut, date_fin, departement_nom, departement_code,
                     circonscription, cause_mandat
-             FROM mandat
-             WHERE depute_id = :depute
-             ORDER BY legislature DESC, date_debut DESC',
+             FROM (SELECT m.*,
+                          ROW_NUMBER() OVER (
+                              PARTITION BY m.legislature
+                              ORDER BY m.date_fin IS NULL DESC, m.date_fin DESC,
+                                       COALESCE(m.date_prise_fonction, m.date_debut) DESC, m.id DESC
+                          ) AS rang
+                   FROM mandat m
+                   WHERE m.depute_id = :depute) parlegislature
+             WHERE rang = 1
+             ORDER BY legislature DESC',
             ['depute' => $deputeId],
         );
     }
@@ -1088,6 +1142,10 @@ class DeputeController extends AbstractController
      * Nul si le député n'a pas de ligne de vote sur ce scrutin (ancien, absent) :
      * l'encart disparaît alors, comme le legacy.
      *
+     * Le vote officiel seulement, celui de `votes_scores` : Clémentine Autain a
+     * voté pour, puis fait une mise au point « abstention » ; sans filtre,
+     * `fetchOne` prenait l'une ou l'autre ligne au gré du moteur.
+     *
      * @return array{legislature: int, numero: int, position: string}|null
      */
     private function voteFeature(int $deputeId): ?array
@@ -1095,8 +1153,8 @@ class DeputeController extends AbstractController
         $position = $this->connection->fetchOne(
             'SELECT v.position FROM vote v
              JOIN scrutin s ON s.id = v.scrutin_id
-             WHERE v.depute_id = :depute AND s.legislature = 17 AND s.numero = 3684',
-            ['depute' => $deputeId],
+             WHERE v.depute_id = :depute AND v.vote_type = :type AND s.legislature = 17 AND s.numero = 3684',
+            ['depute' => $deputeId, 'type' => self::OFFICIAL],
         );
 
         return $position === false
@@ -1143,21 +1201,31 @@ class DeputeController extends AbstractController
      *
      * L'ancienneté est la somme des durées de mandat (mandat ouvert → aujourd'hui)
      * comptée depuis la prise de fonction (à défaut la date de début) ; la moyenne
-     * est celle de tous les députés, calculée pareil. Le mois affiché est la prise
-     * de fonction du mandat le plus récent.
+     * est celle de tous les députés, calculée pareil (`historyMpsAverage`). Le
+     * mois affiché est la prise de fonction du mandat le plus récent.
+     *
+     * Un député revenu du Gouvernement porte deux mandats dans la même
+     * législature (cf. {@see mandats()}). Les deux comptent dans la durée — le
+     * temps passé au Gouvernement, entre eux, n'y entre pas — mais pas dans le
+     * rang du mandat : le legacy compte des législatures
+     * (`count(distinct legislature)` de `historyPerMpsAverage`), et Élisabeth
+     * Borne n'en est pas à son troisième mandat parce qu'elle a été Première
+     * ministre. L'entrée en fonction est celle du mandat le plus récent, donc
+     * la reprise : « novembre 2025 » pour elle.
      *
      * @return array{ordinal: string, length_edited: string, moyenne: int, edito: string, debut: \DateTimeImmutable}|null
      */
     private function anciennete(int $deputeId): ?array
     {
         $mandatsN = (int) $this->connection->fetchOne(
-            'SELECT COUNT(*) FROM mandat WHERE depute_id = :depute',
+            'SELECT COUNT(DISTINCT legislature) FROM mandat WHERE depute_id = :depute',
             ['depute' => $deputeId],
         );
 
         $debut = $this->connection->fetchOne(
             'SELECT COALESCE(date_prise_fonction, date_debut) FROM mandat
-             WHERE depute_id = :depute ORDER BY legislature DESC, date_debut DESC LIMIT 1',
+             WHERE depute_id = :depute
+             ORDER BY legislature DESC, COALESCE(date_prise_fonction, date_debut) DESC LIMIT 1',
             ['depute' => $deputeId],
         );
 

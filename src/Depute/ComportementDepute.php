@@ -92,6 +92,13 @@ class ComportementDepute
      * d'origine écarte aussi les non-votants (`vs.vote != 'nv'`), une absence
      * n'étant pas une position.
      *
+     * **Seul le vote officiel compte** (`decompteNominatif`). Une mise au point
+     * — « j'aurais voulu voter pour » — n'est pas un vote : le legacy lit
+     * `votes_scores`, qui n'en contient pas. Sans ce filtre, 299 lignes de trop
+     * sur 241 fiches en production (Clémentine Autain : 85 votes au lieu de 82),
+     * dont 129 doublons — le même décryptage deux fois, une fois par ligne de
+     * vote, parfois avec deux positions contraires.
+     *
      * Le carrousel de la fiche (`_votes.php`, `get_votes_datan_depute($mp, 5)`)
      * n'en veut que les cinq plus récents ; la page « tous ses votes » les veut
      * tous. Même requête, un `LIMIT` optionnel les sépare.
@@ -108,14 +115,14 @@ class ComportementDepute
                     e.texte AS explication
              FROM decryptage dcr
              JOIN scrutin s ON s.id = dcr.scrutin_id
-             JOIN vote v ON v.scrutin_id = s.id AND v.depute_id = :depute
+             JOIN vote v ON v.scrutin_id = s.id AND v.depute_id = :depute AND v.vote_type = :type
              LEFT JOIN categorie c ON c.id = dcr.categorie_id
              LEFT JOIN lecture l ON l.id = dcr.lecture_id
              LEFT JOIN explication e ON e.scrutin_id = s.id AND e.depute_id = :depute AND e.publiee = 1
              WHERE dcr.state = :published AND v.position IN (\'pour\', \'contre\', \'abstention\')
              ORDER BY s.date_scrutin DESC'
              . ($limite !== null ? ' LIMIT ' . $limite : ''),
-            ['depute' => $deputeId, 'published' => 'published'],
+            ['depute' => $deputeId, 'type' => self::OFFICIAL, 'published' => 'published'],
         );
     }
 
@@ -148,9 +155,10 @@ class ComportementDepute
      *
      * La loyauté (« a voté comme son groupe ») se lit sur la position majoritaire
      * du groupe **au moment du scrutin**, résolu par `fonction_groupe` à la date
-     * du vote — comme le `mandat_groupe` du legacy (daily.php:1966). Prendre le
-     * groupe d'aujourd'hui casserait les changeurs de groupe — et toute future
-     * sélection qui repiocherait dans une législature passée.
+     * du vote ({@see GroupeAuScrutin}) — comme le `mandat_groupe` du legacy
+     * (daily.php:2147). Prendre le groupe d'aujourd'hui casserait les changeurs
+     * de groupe — et toute future sélection qui repiocherait dans une
+     * législature passée.
      *
      * L'ordre éditorial de {@see self::VOTES_CLES} est conservé ; un scrutin sans
      * vote nominatif pour ce député est simplement omis.
@@ -178,10 +186,8 @@ class ComportementDepute
                     vg.position_majoritaire AS position_groupe
              FROM vote v
              JOIN scrutin s ON s.id = v.scrutin_id
-             LEFT JOIN fonction_groupe fg ON fg.depute_id = v.depute_id AND fg.nomin_principale = 1
-               AND fg.date_debut <= s.date_scrutin
-               AND (fg.date_fin IS NULL OR fg.date_fin >= s.date_scrutin)
-             LEFT JOIN vote_groupe vg ON vg.scrutin_id = s.id AND vg.groupe_id = fg.groupe_id
+             LEFT JOIN vote_groupe vg ON vg.scrutin_id = s.id
+               AND vg.groupe_id = ' . GroupeAuScrutin::sousRequete('v.depute_id', 's.date_scrutin') . '
              WHERE v.depute_id = :depute AND v.vote_type = :type
                AND s.legislature = 17 AND s.numero IN (3260, 3300, 8280, 8427)',
             ['depute' => $deputeId, 'type' => self::OFFICIAL],
@@ -357,17 +363,23 @@ class ComportementDepute
 
     /**
      * Loyauté du député envers chaque groupe auquel il a appartenu pendant la
-     * législature : ses votes exprimés pendant chaque rattachement principal
-     * (`fonction_groupe`), confrontés à la position majoritaire de CE groupe.
-     * Reproduit `deputes_loyaute` agrégée par `mandatId` (daily.php:2501-2513).
+     * législature : ses votes exprimés pendant chaque rattachement
+     * d'appartenance (`fonction_groupe`), confrontés à la position majoritaire
+     * de CE groupe. Reproduit `deputes_loyaute` agrégée par `mandatId`, lequel
+     * vient d'un `mandat_groupe` restreint aux qualités d'appartenance
+     * (daily.php:2147) : une présidence n'y fait pas une ligne de plus, et
+     * `nomin_principale` ne vaut rien ici ({@see GroupeAuScrutin}).
      * Volume : les votes d'un seul député — la fiche est en cache une heure.
      *
-     * @return list<array{libelle: string, libelle_abrev: string, score: int}>
+     * L'id du groupe sert au lien : deux groupes peuvent porter le même sigle
+     * (cf. {@see \App\Groupe\AdresseGroupe}).
+     *
+     * @return list<array{id: int, libelle: string, libelle_abrev: string, score: int}>
      */
     private function loyauteParRattachement(int $deputeId, int $legislature): array
     {
         return $this->connection->fetchAllAssociative(
-            "SELECT g.libelle, g.libelle_abrev,
+            "SELECT g.id, g.libelle, g.libelle_abrev,
                     ROUND(AVG(v.position = vg.position_majoritaire) * 100) AS score
              FROM fonction_groupe fg
              JOIN groupe g ON g.id = fg.groupe_id AND g.legislature = :legislature
@@ -377,8 +389,8 @@ class ComportementDepute
                AND s.date_scrutin >= fg.date_debut
                AND (fg.date_fin IS NULL OR s.date_scrutin <= fg.date_fin)
              JOIN vote_groupe vg ON vg.scrutin_id = v.scrutin_id AND vg.groupe_id = fg.groupe_id
-             WHERE fg.depute_id = :depute AND fg.nomin_principale = 1
-             GROUP BY fg.id, g.libelle, g.libelle_abrev
+             WHERE fg.depute_id = :depute AND " . GroupeAuScrutin::APPARTENANCE . "
+             GROUP BY fg.id, g.id, g.libelle, g.libelle_abrev
              ORDER BY MIN(fg.date_debut)",
             ['depute' => $deputeId, 'legislature' => $legislature, 'type' => self::OFFICIAL],
         );

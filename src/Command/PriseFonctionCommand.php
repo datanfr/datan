@@ -12,11 +12,12 @@ use Symfony\Component\Console\Style\SymfonyStyle;
  * Renseigne `mandat.date_prise_fonction` (la `mandature.datePriseFonction` de
  * l'Assemblée) depuis le dépôt d'acteurs des Tricoteuses.
  *
- * La date figure dans les mêmes fichiers que {@see ImportActeursCommand} lit
- * pour peupler `mandat` — mais celui-là n'en retient que `dateDebut` (la date
- * d'élection). Plutôt que d'y toucher (il est modifié en parallèle), on relit
- * les fichiers à part pour n'y prendre que la prise de fonction. À terme, replier
- * l'extraction dans `ImportActeursCommand::importeMandats` fera une passe de moins.
+ * Depuis la clé par uid (migration Version20261116140000),
+ * `ImportActeursCommand::importeMandats` reprend lui-même la prise de fonction :
+ * cette commande ne sert plus qu'à la reposer sans réimporter les acteurs. Elle
+ * vise le mandat par son uid : la date de début ne suffit pas, un député revenu
+ * du Gouvernement porte deux mandats de même début dans la législature, et
+ * c'est justement leur prise de fonction qui les distingue.
  *
  * `date_prise_fonction` n'entre PAS dans l'upsert de mandats du sync (il ne
  * réécrit que `array_slice(COLONNES_MANDAT, 3)`), donc la valeur posée ici
@@ -51,11 +52,6 @@ class PriseFonctionCommand extends ImportTricoteusesCommand
         // mp_id (uid PA…) → depute_id : la clé de correspondance acteur ↔ fiche.
         $idDeputes = $this->connection->fetchAllKeyValue('SELECT mp_id, id FROM depute');
 
-        // On regroupe d'abord par clé unique du mandat (depute_id, legislature,
-        // date_debut) : quelques acteurs listent deux mandats ASSEMBLEE sur la
-        // même législature et la même date de début (suppléance devenue titulaire).
-        // Sans ce dédoublonnage, chaque passe réécrit la ligne deux fois — état
-        // final stable mais compteur trompeur, et seconde exécution jamais nulle.
         $aPoser = [];
         foreach ($this->fichiers($chemin, 'acteurs', $tout) as $fichier) {
             $acteur = $this->lisJson($fichier);
@@ -74,13 +70,11 @@ class PriseFonctionCommand extends ImportTricoteusesCommand
                 }
 
                 $prise = $this->date($mandat['mandature']['datePriseFonction'] ?? null);
-                $legislature = $this->entier($mandat['legislature'] ?? null);
-                $debut = $this->date($mandat['dateDebut'] ?? null);
-                if ($prise === null || $legislature === null || $debut === null) {
+                if ($prise === null || empty($mandat['uid'])) {
                     continue;
                 }
 
-                $aPoser[$deputeId . '|' . $legislature . '|' . $debut] = [$prise, $deputeId, $legislature, $debut];
+                $aPoser[(string) $mandat['uid']] = $prise;
             }
         }
 
@@ -88,14 +82,13 @@ class PriseFonctionCommand extends ImportTricoteusesCommand
         $this->connection->beginTransaction();
 
         try {
-            foreach ($aPoser as [$prise, $deputeId, $legislature, $debut]) {
-                // Clé unique (depute_id, legislature, date_debut) : l'UPDATE ne
-                // touche qu'une ligne. Les lignes affectées ne comptent que les
-                // changements réels — 0 à la seconde exécution (idempotence).
+            foreach ($aPoser as $uid => $prise) {
+                // Clé unique `uid` : l'UPDATE ne touche qu'une ligne. Les lignes
+                // affectées ne comptent que les changements réels — 0 à la
+                // seconde exécution (idempotence).
                 $renseignes += (int) $this->connection->executeStatement(
-                    'UPDATE mandat SET date_prise_fonction = ?
-                     WHERE depute_id = ? AND legislature = ? AND date_debut = ?',
-                    [$prise, $deputeId, $legislature, $debut],
+                    'UPDATE mandat SET date_prise_fonction = ? WHERE uid = ?',
+                    [$prise, (string) $uid],
                 );
             }
 

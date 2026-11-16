@@ -111,15 +111,28 @@
         <h2>Infos</h2>
         {{ block('infos_table') }}
       </div>
-      {% if scrutin.amendement_resume_relu and scrutin.amendement_resume %}
+      {# Résumé puis justification, chacun son paragraphe, l'un sans l'autre s'il
+         manque (Exposes_model::get_expose_by_vote du legacy). Sans condition de
+         relecture : datan.fr publie le résumé IA dès qu'il existe, « relu » ne
+         règle que la file de /admin/amendements. « NA » est le marqueur
+         d'absence des anciens résumés de la rédaction. Écart voulu : la
+         justification, texte du modèle, est échappée — le legacy l'insère
+         brute ; le résumé garde sa branche HTML pour ces anciens résumés. #}
+      {% set resume = (scrutin.amendement_resume ?? '')|trim %}
+      {% set resume = resume == 'NA' ? '' : resume %}
+      {% set justification = (scrutin.amendement_justification ?? '')|trim %}
+      {% if resume or justification %}
         <div class="mt-5">
           <h2>Résumé de l'amendement</h2>
           <div class="card mt-4">
             <div class="card-body">
-              {% if '<p>' in scrutin.amendement_resume %}
-                {{ scrutin.amendement_resume|raw }}
-              {% else %}
-                <p>{{ scrutin.amendement_resume }}</p>
+              {% if resume and '<p>' in resume %}
+                {{ resume|raw }}
+              {% elseif resume %}
+                <p>{{ resume }}</p>
+              {% endif %}
+              {% if justification %}
+                <p>{{ justification }}</p>
               {% endif %}
               <p class="mb-0 font-italic small">Ce texte est un résumé de l'exposé des motifs.</p>
             </div>
@@ -383,7 +396,7 @@
               {% for groupe in groupes|filter(g => g.libelle_abrev != 'NI') %}
                 <tr>
                   <td class="name">
-                    <a href="{{ path('groupe_individual', {legislature: groupe.legislature, abrev: groupe.libelle_abrev|lower}) }}" target="_blank" class="no-decoration underline">
+                    <a href="{{ path('groupe_individual', {legislature: groupe.legislature, abrev: groupe.libelle_abrev|adresse_groupe(groupe.groupe_id ?? null)}) }}" target="_blank" class="no-decoration underline">
                       {{ groupe.libelle|name_group }} ({{ groupe.libelle_abrev }})
                     </a>
                   </td>
@@ -425,8 +438,11 @@
                     {% endif %}
                   </td>
                   <td class="text-center">{{ depute.groupe_libelle|name_group }}</td>
-                  {# « NON-VOTANT », trait d'union compris : le `vote_libelle` du legacy. #}
-                  <td class="text-center vote sort-{{ depute.position }}">{{ depute.position == 'nonVotant' ? 'NON-VOTANT' : depute.position|upper }}</td>
+                  {# « NON-VOTANT », trait d'union compris : le `vote_libelle` du legacy.
+                     Sa classe aussi, `sort-non-votant` (`Votes_model.php:364`) et non
+                     le `nonVotant` de la base : aucune feuille ne la style, mais la
+                     page doit rester comparable ligne à ligne à datan.fr. #}
+                  <td class="text-center vote sort-{{ depute.position == 'nonVotant' ? 'non-votant' : depute.position }}">{{ depute.position == 'nonVotant' ? 'NON-VOTANT' : depute.position|upper }}</td>
                   <td class="text-center sort-{{ depute.loyaute }}">{{ depute.loyaute|upper }}</td>
                 </tr>
               {% endfor %}
@@ -546,6 +562,12 @@
               {% endif %}
             </div>
           {% endfor %}
+          {# Dernière carte du carrousel, comme `votes_carousel.php`. #}
+          <div class="card card-vote see-all">
+            <div class="card-body d-flex align-items-center justify-content-center">
+              <a href="{{ path('votes_decryptes') }}" class="stretched-link no-decoration">VOIR TOUS</a>
+            </div>
+          </div>
         </div>
         <div class="carousel-buttons d-flex justify-content-center">
           <button type="button" class="btn prev mr-2 carousel--prev" aria-label="précédent">

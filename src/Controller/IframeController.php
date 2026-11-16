@@ -191,6 +191,12 @@ class IframeController extends AbstractController
     }
 
     /**
+     * Mandats du député, le plus récent en tête — seul `$mandats[0]` sert. Un
+     * député revenu du Gouvernement porte deux mandats de même date de début
+     * dans la législature : sans départage, le premier, clos, pouvait passer
+     * devant la reprise encore ouverte et faire passer le député pour sorti.
+     * Même ordre que DeputeController::mandats() (`daily.php:1036`).
+     *
      * @return list<array<string, mixed>>
      */
     private function mandats(int $deputeId): array
@@ -200,7 +206,8 @@ class IframeController extends AbstractController
                     circonscription, cause_mandat
              FROM mandat
              WHERE depute_id = :depute
-             ORDER BY legislature DESC, date_debut DESC',
+             ORDER BY legislature DESC, date_fin IS NULL DESC, date_fin DESC,
+                      COALESCE(date_prise_fonction, date_debut) DESC, id DESC',
             ['depute' => $deputeId],
         );
     }

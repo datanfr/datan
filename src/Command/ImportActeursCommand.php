@@ -3,6 +3,7 @@
 namespace App\Command;
 
 use App\Entity\FonctionGroupe;
+use Doctrine\DBAL\ArrayParameterType;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -65,7 +66,21 @@ class ImportActeursCommand extends ImportTricoteusesCommand
         'commission', 'mail_an', 'date_fin', 'cause_fin', 'created_at', 'updated_at',
     ];
 
+    /**
+     * L'uid du mandat fait la clé (index unique `uniq_mandat_uid`) : un député
+     * revenu du Gouvernement porte deux mandats de même date de début dans la
+     * même législature, que l'ancienne clé (député, législature, début)
+     * fusionnait. `date_prise_fonction` se reprend ici, et non plus seulement
+     * dans `app:import:prises-fonction` : c'est elle qui distingue ces mandats.
+     */
     private const COLONNES_MANDAT = [
+        'uid', 'depute_id', 'legislature', 'date_debut', 'date_fin',
+        'departement_nom', 'departement_code', 'circonscription', 'cause_mandat',
+        'date_prise_fonction',
+    ];
+
+    /** Colonnes réécrites à chaque passage ; la prise de fonction, elle, ne s'efface jamais. */
+    private const MANDAT_MIS_A_JOUR = [
         'depute_id', 'legislature', 'date_debut', 'date_fin',
         'departement_nom', 'departement_code', 'circonscription', 'cause_mandat',
     ];
@@ -107,6 +122,15 @@ class ImportActeursCommand extends ImportTricoteusesCommand
      * @var array<string, string>
      */
     private array $libellesCommissions = [];
+
+    /** Rattachements de groupe purgés parce que l'Assemblée les a requalifiés (cf. purgeRequalifies()). */
+    private int $rattachementsRequalifies = 0;
+
+    /** Lignes de `mandat` sans uid reprises par leur mandat de la source (cf. adopteMandatsSansUid()). */
+    private int $mandatsAdoptes = 0;
+
+    /** Mandats de député écartés faute d'uid dans la source. */
+    private int $mandatsSansUid = 0;
 
     protected function depotParDefaut(): string
     {
@@ -168,6 +192,21 @@ class ImportActeursCommand extends ImportTricoteusesCommand
             $compteurs['mandats'],
             $compteurs['fonctions'],
         ));
+        if ($this->mandatsSansUid > 0) {
+            $io->warning(sprintf('%d mandat(s) de député sans uid dans la source, écartés : pas de clé pour les écrire.', $this->mandatsSansUid));
+        }
+        if ($this->mandatsAdoptes > 0) {
+            $io->text(sprintf(
+                '%d mandat(s) existant(s) rattaché(s) à leur uid de l\'Assemblée (lignes antérieures à la clé par uid).',
+                $this->mandatsAdoptes,
+            ));
+        }
+        if ($this->rattachementsRequalifies > 0) {
+            $io->text(sprintf(
+                '%d rattachement(s) de groupe purgé(s) : requalifiés par l\'Assemblée (membre ↔ apparenté…), l\'ancienne qualité ne vaut plus.',
+                $this->rattachementsRequalifies,
+            ));
+        }
 
         $io->success(sprintf(
             '%d députés et %d groupes en base.',
@@ -376,6 +415,7 @@ class ImportActeursCommand extends ImportTricoteusesCommand
     {
         $lot = [];
         $total = 0;
+        $ignores = 0;
 
         foreach ($fiches as $acteurUid => $fichier) {
             $deputeId = $idDeputes[$acteurUid] ?? null;
@@ -388,8 +428,17 @@ class ImportActeursCommand extends ImportTricoteusesCommand
                     continue;
                 }
 
+                // Sans uid, plus de clé : la ligne s'ajouterait à chaque
+                // passage. Aucun cas dans la source à ce jour ; écarté et
+                // compté dans le bilan, plutôt que de doubler la table.
+                if (empty($mandat['uid'])) {
+                    ++$ignores;
+                    continue;
+                }
+
                 $lieu = $mandat['election']['lieu'] ?? [];
                 $lot[] = [
+                    (string) $mandat['uid'],
                     $deputeId,
                     $this->entier($mandat['legislature'] ?? null),
                     $this->date($mandat['dateDebut'] ?? null),
@@ -398,19 +447,81 @@ class ImportActeursCommand extends ImportTricoteusesCommand
                     $lieu['numDepartement'] ?? null,
                     $this->entier($lieu['numCirco'] ?? null),
                     $mandat['election']['causeMandat'] ?? null,
+                    $this->date($mandat['mandature']['datePriseFonction'] ?? null),
                 ];
                 ++$total;
 
                 if (\count($lot) >= self::TAILLE_LOT) {
-                    $this->upsert('mandat', self::COLONNES_MANDAT, $lot, \array_slice(self::COLONNES_MANDAT, 3));
+                    $this->ecritMandats($lot);
                     $lot = [];
                 }
             }
         }
 
-        $this->upsert('mandat', self::COLONNES_MANDAT, $lot, \array_slice(self::COLONNES_MANDAT, 3));
+        $this->ecritMandats($lot);
+        $this->mandatsSansUid += $ignores;
 
         return $total;
+    }
+
+    /**
+     * @param list<list<mixed>> $lot lignes dans l'ordre de {@see self::COLONNES_MANDAT}
+     */
+    private function ecritMandats(array $lot): void
+    {
+        if ($lot === []) {
+            return;
+        }
+
+        $this->adopteMandatsSansUid($lot);
+        $this->upsert('mandat', self::COLONNES_MANDAT, $lot, self::MANDAT_MIS_A_JOUR, ['date_prise_fonction']);
+    }
+
+    /**
+     * Passage à la clé par uid (migration Version20261116140000) : les lignes
+     * écrites avant elle n'ont pas d'uid, et un upsert par uid les doublerait.
+     * Avant d'écrire, chaque mandat de la source qui n'a pas encore de ligne à
+     * son uid reprend donc la ligne sans uid de même (député, législature, date
+     * de début), s'il en reste une. Le premier mandat d'un couple autrefois
+     * fusionné reprend la ligne existante, le second s'insère : ni perte, ni
+     * doublon. Une fois la base passée, plus aucune ligne n'est sans uid et
+     * cette étape ne fait plus rien.
+     *
+     * @param list<list<mixed>> $lot
+     */
+    private function adopteMandatsSansUid(array $lot): void
+    {
+        $sansUid = [];
+        foreach ($this->connection->fetchAllAssociative(
+            'SELECT id, depute_id, legislature, date_debut FROM mandat WHERE uid IS NULL AND depute_id IN (?) ORDER BY id',
+            [array_values(array_unique(array_column($lot, 1)))],
+            [ArrayParameterType::INTEGER],
+        ) as $ligne) {
+            $sansUid[$ligne['depute_id'] . '|' . $ligne['legislature'] . '|' . ($ligne['date_debut'] ?? '')][] = (int) $ligne['id'];
+        }
+
+        if ($sansUid === []) {
+            return;
+        }
+
+        $connus = array_flip($this->connection->fetchFirstColumn(
+            'SELECT uid FROM mandat WHERE uid IN (?)',
+            [array_column($lot, 0)],
+            [ArrayParameterType::STRING],
+        ));
+
+        foreach ($lot as [$uid, $deputeId, $legislature, $debut]) {
+            $cle = $deputeId . '|' . $legislature . '|' . ($debut ?? '');
+            if (isset($connus[$uid]) || empty($sansUid[$cle])) {
+                continue;
+            }
+
+            $this->connection->executeStatement(
+                'UPDATE mandat SET uid = ? WHERE id = ?',
+                [$uid, array_shift($sansUid[$cle])],
+            );
+            ++$this->mandatsAdoptes;
+        }
     }
 
     /**
@@ -422,6 +533,7 @@ class ImportActeursCommand extends ImportTricoteusesCommand
     {
         $lot = [];
         $total = 0;
+        $sources = [];
 
         foreach ($fiches as $acteurUid => $fichier) {
             $deputeId = $idDeputes[$acteurUid] ?? null;
@@ -439,10 +551,13 @@ class ImportActeursCommand extends ImportTricoteusesCommand
                     continue;
                 }
 
+                $qualite = $mandat['infosQualite']['codeQualite'] ?? FonctionGroupe::QUALITE_MEMBRE;
+                $sources[$deputeId][$groupeId . '|' . ($this->date($mandat['dateDebut'] ?? null) ?? '')][$qualite] = true;
+
                 $lot[] = [
                     $deputeId,
                     $groupeId,
-                    $mandat['infosQualite']['codeQualite'] ?? FonctionGroupe::QUALITE_MEMBRE,
+                    $qualite,
                     $mandat['infosQualite']['libQualite'] ?? null,
                     // Absent des moissons anciennes : au doute, un rattachement
                     // est principal, c'est le cas de l'immense majorité.
@@ -460,12 +575,74 @@ class ImportActeursCommand extends ImportTricoteusesCommand
         }
 
         $this->upsert('fonction_groupe', self::COLONNES_FONCTION, $lot, ['libelle_qualite', 'nomin_principale', 'date_fin']);
+        $this->rattachementsRequalifies += $this->purgeRequalifies($sources);
 
         return $total;
     }
 
     /**
-     * Le mandat le plus récent d'un type donné, d'après sa date de début.
+     * Retire les rattachements que l'Assemblée a requalifiés.
+     *
+     * Quand elle change la qualité d'un mandat de groupe — membre devenu
+     * apparenté, par exemple —, elle garde le mandat (même uid, même date de
+     * début) et n'en publie plus que la nouvelle qualité. Or notre clé d'upsert
+     * contient la qualité (`depute_id, groupe_id, code_qualite, date_debut`) :
+     * la nouvelle ligne s'ajoute, l'ancienne survit, toujours ouverte. Emmanuel
+     * Riotte figurait ainsi à la fois membre et apparenté d'Horizons, deux
+     * rattachements ouverts de rang principal, et la composition du groupe le
+     * rangeait au hasard d'un côté ou de l'autre.
+     *
+     * Ce qu'on sait faux se purge (cf. CLAUDE.md) : une ligne dont le groupe et
+     * la date de début désignent un mandat que la source décrit encore, mais
+     * sous une autre qualité. Rien d'autre — un mandat absent d'une moisson ne
+     * dit pas qu'il est faux. La présidence et le mandat de membre d'un
+     * président partagent souvent groupe et date : la source publie les deux,
+     * aucun ne part.
+     *
+     * @param array<int, array<string, array<string, true>>> $sources député → « groupe|début » → qualités publiées
+     */
+    private function purgeRequalifies(array $sources): int
+    {
+        $purges = 0;
+
+        foreach (array_chunk(array_keys($sources), 1000) as $deputes) {
+            $lignes = $this->connection->fetchAllAssociative(
+                'SELECT id, depute_id, groupe_id, code_qualite, date_debut FROM fonction_groupe WHERE depute_id IN (?)',
+                [$deputes],
+                [ArrayParameterType::INTEGER],
+            );
+
+            $aPurger = [];
+            foreach ($lignes as $ligne) {
+                $publiees = $sources[(int) $ligne['depute_id']][$ligne['groupe_id'] . '|' . ($ligne['date_debut'] ?? '')] ?? null;
+                if ($publiees !== null && !isset($publiees[$ligne['code_qualite']])) {
+                    $aPurger[] = (int) $ligne['id'];
+                }
+            }
+
+            if ($aPurger !== []) {
+                $purges += $this->connection->executeStatement(
+                    'DELETE FROM fonction_groupe WHERE id IN (?)',
+                    [$aPurger],
+                    [ArrayParameterType::INTEGER],
+                );
+            }
+        }
+
+        return $purges;
+    }
+
+    /**
+     * Le mandat le plus récent d'un type donné, d'après sa date de début, puis
+     * sa prise de fonction.
+     *
+     * Le second critère n'est pas un raffinement : un député revenu du
+     * Gouvernement porte deux mandats de député de MÊME date de début, que seule
+     * la prise de fonction départage. Sans lui, le premier lu l'emportait —
+     * souvent le mandat clos par la nomination —, et la fiche d'Astrid
+     * Panosyan-Bouvet, sortie le 04/08/2026 par « prolongation de mission
+     * temporaire », annonçait un départ « pour cause de nomination au
+     * Gouvernement », la cause de fin de son PREMIER mandat.
      *
      * @param list<array<string, mixed>> $mandats
      *
@@ -482,7 +659,7 @@ class ImportActeursCommand extends ImportTricoteusesCommand
             if ($ouvertUniquement && ($mandat['dateFin'] ?? null) !== null) {
                 continue;
             }
-            if ($retenu === null || ($mandat['dateDebut'] ?? '') > ($retenu['dateDebut'] ?? '')) {
+            if ($retenu === null || $this->ordreMandat($mandat) > $this->ordreMandat($retenu)) {
                 $retenu = $mandat;
             }
         }
@@ -491,15 +668,16 @@ class ImportActeursCommand extends ImportTricoteusesCommand
     }
 
     /**
-     * Commission permanente du député.
+     * Clé de tri chronologique d'un mandat : début, puis prise de fonction
+     * (dates ISO, comparables comme chaînes).
      *
-     * Ce n'est pas le dernier mandat COMPER ouvert : les députés sont
-     * fréquemment nommés quelques jours en remplacement dans une autre
-     * commission. On retient celle où ils ont cumulé le plus de jours sur
-     * leur dernière législature.
-     *
-     * @param list<array<string, mixed>> $mandats
+     * @param array<string, mixed> $mandat
      */
+    private function ordreMandat(array $mandat): string
+    {
+        return ($mandat['dateDebut'] ?? '') . '|' . ($mandat['mandature']['datePriseFonction'] ?? '');
+    }
+
     /**
      * Adresse électronique institutionnelle du député.
      *
@@ -525,6 +703,37 @@ class ImportActeursCommand extends ImportTricoteusesCommand
         return null;
     }
 
+    /**
+     * Commission permanente du député, telle que l'affichent la carte de profil
+     * et le bloc biographique : **celle où il siège aujourd'hui**, c'est-à-dire
+     * son mandat COMPER encore ouvert — la règle de datan.fr
+     * (`Deputes_model::get_commission_parlementaire`).
+     *
+     * La règle précédente (la commission où il a cumulé le plus de jours sur sa
+     * dernière législature) visait à ignorer les remplacements de quelques
+     * jours, mais elle retardait d'autant tout vrai changement de commission :
+     * Yaël Braun-Pivet, en Finances depuis novembre 2025, restait affichée en
+     * Développement durable (432 jours contre 331). Au 16/11/2026, 67 des 574
+     * députés en exercice y recevaient une autre commission que sur datan.fr,
+     * dont 38 installés depuis plus d'un mois dans la nouvelle, certains depuis
+     * plus d'un an ; 17 seulement relevaient d'un remplacement d'une semaine. La
+     * phrase « … est membre de la Commission … » du bloc biographique, qui
+     * cherche un mandat ouvert dans CETTE commission, disparaissait en prime.
+     * Un remplacement de quelques jours s'affiche donc, comme sur datan.fr :
+     * c'est la commission où le député siège ce jour-là.
+     *
+     * Entre deux mandats ouverts (membre et secrétaire de la même commission),
+     * la plus petite préséance l'emporte, comme au legacy. Mais le legacy prend
+     * ce minimum sur TOUS les mandats de la législature, clos compris : un
+     * ancien vice-président redevenu simple membre n'y trouve plus aucune
+     * commission (30 députés en exercice sans la ligne). Ici, le minimum se
+     * prend sur les seuls mandats ouverts.
+     *
+     * Sans mandat ouvert — un ancien député —, on retombe sur la commission la
+     * plus fréquentée de sa dernière législature.
+     *
+     * @param list<array<string, mixed>> $mandats
+     */
     private function commission(array $mandats): ?string
     {
         $legislature = 0;
@@ -538,6 +747,7 @@ class ImportActeursCommand extends ImportTricoteusesCommand
             return null;
         }
 
+        $ouvert = null;
         $jours = [];
         foreach ($mandats as $mandat) {
             if (($mandat['typeOrgane'] ?? null) !== self::MANDAT_COMMISSION
@@ -545,16 +755,25 @@ class ImportActeursCommand extends ImportTricoteusesCommand
                 continue;
             }
 
-            $libelle = $mandat['infosQualite']['libQualite'] ?? null;
             $organe = $mandat['organesRefs'][0] ?? null;
             if ($organe === null) {
                 continue;
             }
 
+            if (empty($mandat['dateFin'])) {
+                $cle = [(int) ($mandat['preseance'] ?? 99), -(strtotime($mandat['dateDebut'] ?? '') ?: 0)];
+                if ($ouvert === null || $cle < $ouvert['cle']) {
+                    $ouvert = ['cle' => $cle, 'organe' => $organe];
+                }
+            }
+
             $debut = strtotime($mandat['dateDebut'] ?? '') ?: time();
             $fin = strtotime($mandat['dateFin'] ?? '') ?: time();
             $jours[$organe] = ($jours[$organe] ?? 0) + max(1, (int) (($fin - $debut) / 86400));
-            unset($libelle);
+        }
+
+        if ($ouvert !== null) {
+            return $this->libellesCommissions[$ouvert['organe']] ?? null;
         }
 
         if ($jours === []) {

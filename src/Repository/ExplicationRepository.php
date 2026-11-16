@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Depute\GroupeAuScrutin;
 use App\Entity\Explication;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\DBAL\ArrayParameterType;
@@ -185,7 +186,11 @@ class ExplicationRepository extends ServiceEntityRepository
      * `depute.groupe_id` ne conviendrait pas : il ne porte que l'appartenance
      * courante, si bien qu'un député ayant changé de groupe — ou parti depuis —
      * se verrait attribuer la position d'un groupe qui n'était pas le sien ce
-     * jour-là. Le rattachement se lit donc sur les bornes de `fonction_groupe`.
+     * jour-là. Le rattachement se lit donc sur les bornes de `fonction_groupe`,
+     * restreint à l'appartenance : `nomin_principale` laissait sans groupe un
+     * président de groupe pour tout scrutin antérieur à sa présidence
+     * ({@see GroupeAuScrutin}). Le jour d'un changement de groupe, le
+     * rattachement le plus récent l'emporte.
      *
      * @return array{groupe_abrev: string|null, position_groupe: string|null}
      */
@@ -197,9 +202,10 @@ class ExplicationRepository extends ServiceEntityRepository
              JOIN groupe g ON g.id = fg.groupe_id
              JOIN vote_groupe vg ON vg.scrutin_id = :scrutin AND vg.groupe_id = g.id
              WHERE fg.depute_id = :depute
-               AND fg.nomin_principale = 1
+               AND ' . GroupeAuScrutin::APPARTENANCE . '
                AND fg.date_debut <= :date
                AND (fg.date_fin IS NULL OR fg.date_fin >= :date)
+             ORDER BY fg.date_debut DESC, fg.id DESC
              LIMIT 1',
             ['scrutin' => $scrutinId, 'depute' => $deputeId, 'date' => substr($dateScrutin, 0, 10)],
         );

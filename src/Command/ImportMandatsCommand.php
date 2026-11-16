@@ -213,21 +213,37 @@ class ImportMandatsCommand extends Command
     }
 
     /**
+     * L'export TSV ne porte pas l'uid du mandat, qui fait désormais la clé de
+     * `mandat` (migration Version20261116140000) : plus d'`ON DUPLICATE KEY`
+     * possible sur (député, législature, date de début). Une ligne de l'export
+     * ne fait donc que **compléter** : elle met à jour la ligne qu'elle a
+     * elle-même écrite (sans uid) ou, s'il n'y a encore aucune ligne pour ce
+     * mandat, l'insère. Elle ne touche jamais une ligne venue des Tricoteuses
+     * (avec uid), plus fraîche et seule à distinguer deux mandats de même début.
+     *
      * @param list<list<mixed>> $batch
      */
     private function flushMandats(array $batch): void
     {
-        $placeholders = implode(', ', array_fill(0, \count($batch), '(?, ?, ?, ?, ?, ?, ?, ?)'));
+        foreach ($batch as [$deputeId, $legislature, $debut, $fin, $departement, $numDept, $circo, $cause]) {
+            $misAJour = $this->connection->executeStatement(
+                'UPDATE mandat
+                 SET date_fin = ?, departement_nom = ?, departement_code = ?, circonscription = ?, cause_mandat = ?
+                 WHERE depute_id = ? AND legislature = ? AND date_debut <=> ? AND uid IS NULL',
+                [$fin, $departement, $numDept, $circo, $cause, $deputeId, $legislature, $debut],
+            );
 
-        $this->connection->executeStatement(
-            'INSERT INTO mandat (depute_id, legislature, date_debut, date_fin, departement_nom, departement_code, circonscription, cause_mandat)
-             VALUES ' . $placeholders . '
-             ON DUPLICATE KEY UPDATE
-                date_fin = VALUES(date_fin), departement_nom = VALUES(departement_nom),
-                departement_code = VALUES(departement_code), circonscription = VALUES(circonscription),
-                cause_mandat = VALUES(cause_mandat)',
-            array_merge(...$batch)
-        );
+            if ($misAJour > 0) {
+                continue;
+            }
+
+            $this->connection->executeStatement(
+                'INSERT INTO mandat (depute_id, legislature, date_debut, date_fin, departement_nom, departement_code, circonscription, cause_mandat)
+                 SELECT ?, ?, ?, ?, ?, ?, ?, ? FROM DUAL
+                 WHERE NOT EXISTS (SELECT 1 FROM mandat WHERE depute_id = ? AND legislature = ? AND date_debut <=> ?)',
+                [$deputeId, $legislature, $debut, $fin, $departement, $numDept, $circo, $cause, $deputeId, $legislature, $debut],
+            );
+        }
     }
 
     /** Les exports CSV de psql entourent de guillemets les valeurs vides ou contenant un séparateur. */

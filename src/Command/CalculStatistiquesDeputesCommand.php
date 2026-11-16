@@ -2,6 +2,7 @@
 
 namespace App\Command;
 
+use App\Depute\GroupeAuScrutin;
 use App\Legislature;
 use Doctrine\DBAL\ArrayParameterType;
 use Doctrine\DBAL\Connection;
@@ -59,8 +60,16 @@ class CalculStatistiquesDeputesCommand extends Command
     /**
      * Le rattachement à un groupe qui fait foi pour un député : le plus récent —
      * encore ouvert d'abord, puis la date de fin la plus tardive
-     * (`daily.php:914`) —, et principal, car onze députés de la 17e en portent
-     * deux ouverts à la fois.
+     * (`daily.php:914`) —, et d'appartenance : un président de groupe porte un
+     * mandat de membre et un de président, et le legacy ne lit que le premier
+     * (`deputes_all.groupeMandat`, `preseance >= 20`, daily.php:1060).
+     *
+     * Ce n'est pas `nomin_principale` qui les départage : l'Assemblée met à 0 le
+     * mandat de membre d'un président pendant toute sa présidence, et
+     * rétroactivement ({@see GroupeAuScrutin}). Filtrer dessus retenait la
+     * présidence, et la loyauté se bornait à ses dates : Sébastien Chenu,
+     * président du RN depuis le 28/10/2026, sortait à 100 % sur 14 votes au lieu
+     * des 95,2 % sur 1 041 de datan.fr (`class_loyaute`).
      *
      * Passer par cette table plutôt que par `depute.groupe_id` n'est pas un
      * raffinement : `groupe_id` ne porte que l'appartenance **courante**, et un
@@ -79,7 +88,7 @@ class CalculStatistiquesDeputesCommand extends Command
                                                              fg.groupe_id ASC) AS n
                                          FROM fonction_groupe fg
                                          JOIN groupe g ON g.id = fg.groupe_id AND g.legislature = :leg
-                                         WHERE fg.nomin_principale = 1) classes
+                                         WHERE " . GroupeAuScrutin::APPARTENANCE . ") classes
                                    WHERE n = 1)";
 
     private const LOT = 500;

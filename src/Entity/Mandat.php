@@ -21,7 +21,12 @@ use Symfony\Component\Serializer\Attribute\Groups;
  */
 #[ORM\Entity(repositoryClass: MandatRepository::class)]
 #[ORM\Table(name: 'mandat')]
-#[ORM\UniqueConstraint(name: 'uniq_depute_legislature_debut', columns: ['depute_id', 'legislature', 'date_debut'])]
+// L'uid du mandat à l'Assemblée fait la clé, pas (député, législature, date de
+// début) : un député revenu du Gouvernement reçoit un second mandat de même date
+// de début, que l'ancienne clé fusionnait avec le premier (cf. la migration
+// Version20261116140000). Un député peut donc porter deux mandats par législature.
+#[ORM\UniqueConstraint(name: 'uniq_mandat_uid', columns: ['uid'])]
+#[ORM\Index(name: 'idx_mandat_depute_legislature_debut', columns: ['depute_id', 'legislature', 'date_debut'])]
 #[ApiResource(
     // API publique en lecture seule. Sans cette liste, API Platform expose
     // aussi POST, PATCH et DELETE, sans exiger la moindre authentification :
@@ -43,6 +48,14 @@ class Mandat
     #[ORM\JoinColumn(nullable: false)]
     #[Groups(['mandat:read', 'mandat:write'])]
     private ?Depute $depute = null;
+
+    /**
+     * Uid du mandat à l'Assemblée (`PM…`). Nul pour les seules lignes amorcées
+     * depuis les exports TSV (`app:import:mandats`) que la source ne connaît pas.
+     */
+    #[ORM\Column(length: 30, nullable: true)]
+    #[Groups(['mandat:read'])]
+    private ?string $uid = null;
 
     #[ORM\Column(type: Types::SMALLINT)]
     #[Groups(['mandat:read', 'mandat:write', 'depute:read'])]
@@ -98,6 +111,11 @@ class Mandat
         $this->depute = $depute;
 
         return $this;
+    }
+
+    public function getUid(): ?string
+    {
+        return $this->uid;
     }
 
     public function getLegislature(): ?int

@@ -76,13 +76,14 @@ class VoteController extends AbstractController
      * groupe sur les 116 cartes de rapporteurs du projet de loi de finances,
      * quand le site continue d'afficher EPR — le legacy lit `deputes_all`, la
      * composition de la législature. On passe donc par `fonction_groupe`, avec
-     * le rattachement principal le plus récent (cf. CLAUDE.md).
+     * le rattachement d'appartenance le plus récent — présidence écartée, cf.
+     * {@see GroupeAuScrutin::APPARTENANCE}.
      */
     private const GROUPE_A_LA_LEGISLATURE = 'LEFT JOIN groupe g ON g.id = (
                     SELECT fg.groupe_id
                     FROM fonction_groupe fg
                     JOIN groupe gl ON gl.id = fg.groupe_id
-                    WHERE fg.depute_id = d.id AND gl.legislature = :legislature AND fg.nomin_principale = 1
+                    WHERE fg.depute_id = d.id AND gl.legislature = :legislature AND ' . GroupeAuScrutin::APPARTENANCE . '
                     ORDER BY fg.date_fin IS NULL DESC, fg.date_fin DESC, fg.date_debut DESC
                     LIMIT 1
                  )';
@@ -159,7 +160,7 @@ class VoteController extends AbstractController
                     dos.legislature AS dossier_legislature,
                     dos.procedure_parlementaire AS dossier_procedure,
                     a.href AS amendement_href, a.expose AS amendement_expose,
-                    a.resume_ia AS amendement_resume, a.resume_relu AS amendement_resume_relu,
+                    a.resume_ia AS amendement_resume, a.justification_ia AS amendement_justification,
                     a.auteur_type AS amendement_auteur_type, a.auteur_ref AS amendement_auteur_ref
              FROM scrutin s
              LEFT JOIN decryptage d ON d.scrutin_id = s.id AND d.state = :published
@@ -430,7 +431,10 @@ class VoteController extends AbstractController
     }
 
     /**
-     * Les cinq derniers votes décryptés, pour le carrousel de pied de page.
+     * Les sept derniers votes décryptés, pour le carrousel de pied de page —
+     * `get_last_votes_datan(7)` (Votes.php:464), que suit une huitième carte
+     * « Voir tous » ajoutée par le gabarit. Le port en montrait cinq, sans
+     * cette dernière carte. Tri du legacy : législature d'abord.
      *
      * @return list<array<string, mixed>>
      */
@@ -445,8 +449,8 @@ class VoteController extends AbstractController
              LEFT JOIN categorie c ON c.id = d.categorie_id
              LEFT JOIN lecture l ON l.id = d.lecture_id
              WHERE d.state = :published
-             ORDER BY s.date_scrutin DESC, d.vote_numero DESC
-             LIMIT 5',
+             ORDER BY s.legislature DESC, s.date_scrutin DESC, d.vote_numero DESC
+             LIMIT 7',
             ['published' => 'published'],
         );
     }

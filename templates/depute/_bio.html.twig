@@ -52,7 +52,14 @@
          « de l'échiquier politique ». #}
       <p>
         À l'Assemblée, {{ nom_complet }} siège avec le groupe
-        <a href="{{ path('groupe_individual', {legislature: leg, abrev: depute.groupe_abrev|lower}) }}">{{ depute.groupe_libelle|name_group }}</a> ({{ depute.groupe_abrev }}){% if echiquier %}, un groupe <b>classé {{ echiquier }}</b> de l'échiquier politique{% endif %}.
+        <a href="{{ path('groupe_individual', {legislature: leg, abrev: depute.groupe_abrev|adresse_groupe(depute.groupe_id ?? null)}) }}">{{ depute.groupe_libelle|name_group }}</a> ({{ depute.groupe_abrev }}){% if echiquier %}, un groupe <b>classé {{ echiquier }}</b> de l'échiquier politique{% endif %}.
+        {% if qualite_groupe|default(null) and qualite_groupe.apparente %}
+          {{ nom_complet }} n'est pas membre mais <b>apparenté{{ e }}</b> au groupe {{ depute.groupe_abrev }} :
+          {{ pronom }} est donc associé{{ e }} au groupe tout en gardant une marge de liberté.
+        {% endif %}
+        {% if qualite_groupe|default(null) and qualite_groupe.president %}
+          {{ nom_complet }} en est {{ article }} <b>président{{ e }}</b>.
+        {% endif %}
       </p>
     {% endif %}
 
@@ -136,16 +143,18 @@
      30/07/2026). L'omettre est donc la parité — ne pas la « rebrancher » au
      motif que ProfilSocial porte la donnée. #}
   {% if depute.profession and depute.profession|lower not in no_job and not page_historique %}
+    {# « métier » : le legacy écrit « metier », coquille corrigée. #}
     <p>
-      Avant de devenir {{ mot_depute }}, {{ nom_complet }} exerçait le metier <b>{{ depute.profession|lower }}</b>.
+      Avant de devenir {{ mot_depute }}, {{ nom_complet }} exerçait le métier <b>{{ depute.profession|lower }}</b>.
       Pour en savoir plus sur l'origine sociale des parlementaires, <a href="{{ path('classement_index') }}">cliquez ici</a>.
     </p>
   {% endif %}
 
   {# Bouton « Contacter … » du legacy (`mailto`), pour un député en exercice qui a
      une adresse institutionnelle. Le bloc « Contactez … » du pied de fiche le
-     redouble, comme sur datan.fr. #}
-  {% if actif and not page_historique and contact.mail_an %}
+     redouble, comme sur datan.fr. `contact` est nul pour un député absent de
+     `contact_depute` : `|default` évite l'erreur de `strict_variables` en dev. #}
+  {% if actif and not page_historique and contact.mail_an|default(null) %}
     <div class="d-flex justify-content-center mt-5">
       <a href="mailto:{{ contact.mail_an }}" class="btn btn-primary">
         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16"><path d="M.05 3.555A2 2 0 0 1 2 2h12a2 2 0 0 1 1.95 1.555L8 8.414.05 3.555zM0 4.697v7.104l5.803-3.558L0 4.697zM6.761 8.83l-6.57 4.027A2 2 0 0 0 2 14h12a2 2 0 0 0 1.808-1.144l-6.57-4.027L8 9.586l-1.239-.757zm3.436-.586L16 11.801V4.697l-5.803 3.546z"/></svg>

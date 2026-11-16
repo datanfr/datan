@@ -12,7 +12,12 @@
    Les jauges circulaires (`.c100 pNN`, feuille `circle.css`), les barres et les
    info-bulles (`data-toggle="popover"`, initialisées par main.js) viennent de
    `main.css`, reprise du site. Les icônes sont inlinées : la feuille colore
-   `.card-statistiques .icon path` en vert. #}
+   `.card-statistiques .icon path` en vert.
+
+   Chaque carte se teste par `|default(null)` : ComportementDepute::statistiques()
+   omet la clé d'une carte qui ne s'affiche pas, et `strict_variables` (actif en
+   dev) fait d'une clé absente une erreur — toutes les fiches de la 17e, qui
+   n'ont jamais de carte de majorité, levaient une 500 en dev. #}
 {% set pronom = depute.civilite == 'Mme' ? 'elle' : 'il' %}
 {# `legislature_stats` : posé par la seule page /legislature-N — le bloc passe
    alors en mode historique, comme `statistics/_index.php` quand la législature
@@ -24,7 +29,7 @@
 <div class="bloc-statistiques mt-5">
   <h2 class="mb-3 title-center">Son comportement politique{% if legislature_stats %} ({{ legislature_stats }}<sup>e</sup> législature){% endif %}</h2>
 
-  {% if statistiques.participation %}
+  {% if statistiques.participation|default(null) %}
     {% set p = statistiques.participation %}
     <div class="card card-statistiques my-4">
       <div class="card-body">
@@ -83,7 +88,7 @@
     </div>
   {% endif %}
 
-  {% if statistiques.loyaute %}
+  {% if statistiques.loyaute|default(null) %}
     {% set l = statistiques.loyaute %}
     <div class="card card-statistiques my-4">
       <div class="card-body">
@@ -147,7 +152,7 @@
                     <tbody>
                       {% for h in l.historique %}
                         <tr>
-                          <td><a href="{{ path('groupe_individual', {legislature: leg_groupes, abrev: h.libelle_abrev|lower}) }}" class="no-decoration underline">{{ h.libelle|name_group }}</a></td>
+                          <td><a href="{{ path('groupe_individual', {legislature: leg_groupes, abrev: h.libelle_abrev|adresse_groupe(h.id ?? null)}) }}" class="no-decoration underline">{{ h.libelle|name_group }}</a></td>
                           <td class="text-center">{{ h.score }}%</td>
                         </tr>
                       {% endfor %}
@@ -162,7 +167,7 @@
     </div>
   {% endif %}
 
-  {% if statistiques.majorite %}
+  {% if statistiques.majorite|default(null) %}
     {% set m = statistiques.majorite %}
     <div class="card card-statistiques my-4">
       <div class="card-body">
@@ -208,7 +213,7 @@
                  législature consultée. #}
               <p>{{ nom_complet }} a voté comme la majorité gouvernementale dans {{ m.score }}% des cas.
                 Les votes de {{ nom_complet }} sont comparés à ceux du groupe politique le plus gros de la majorité
-                (<a href="{{ path('groupe_individual', {legislature: leg_groupes, abrev: m.groupe.libelle_abrev|lower}) }}">{{ m.groupe.libelle|name_group }}</a>).</p>
+                (<a href="{{ path('groupe_individual', {legislature: leg_groupes, abrev: m.groupe.libelle_abrev|adresse_groupe(m.groupe.id ?? null)}) }}">{{ m.groupe.libelle|name_group }}</a>).</p>
               {% if m.edito_all and m.all is not null %}
                 <p>{{ pronom|capitalize }} {{ actif ? 'est' : 'était' }} <b>{{ m.edito_all }}</b> de la majorité gouvernementale que la moyenne des députés non membres de la majorité ({{ m.all }}%).</p>
               {% endif %}
@@ -222,7 +227,7 @@
     </div>
   {% endif %}
 
-  {% if statistiques.accord %}
+  {% if statistiques.accord|default(null) %}
     {% set a = statistiques.accord %}
     <div class="card card-statistiques bloc-proximity my-4">
       <div class="card-body">
@@ -251,7 +256,7 @@
         {% if a.proximite and depute.groupe_abrev != 'NI' %}
           <div class="row mt-3"><div class="offset-2 col-10">
             <p>En plus de son propre groupe, {{ nom_complet }} vote souvent (dans {{ a.proximite.plus_proche.accord }}% des cas) avec le groupe
-              <a href="{{ path('groupe_individual', {legislature: leg_groupes, abrev: a.proximite.plus_proche.libelle_abrev|lower}) }}">{{ a.proximite.plus_proche.libelle_abrev }}</a>{% if a.proximite.plus_proche.echiquier %}, classé {{ a.proximite.plus_proche.echiquier }} de l'échiquier politique{% endif %}.</p>
+              <a href="{{ path('groupe_individual', {legislature: leg_groupes, abrev: a.proximite.plus_proche.libelle_abrev|adresse_groupe(a.proximite.plus_proche.id ?? null)}) }}">{{ a.proximite.plus_proche.libelle_abrev }}</a>{% if a.proximite.plus_proche.echiquier %}, classé {{ a.proximite.plus_proche.echiquier }} de l'échiquier politique{% endif %}.</p>
           </div></div>
         {% endif %}
 
@@ -267,7 +272,7 @@
         {% if a.proximite %}
           <div class="row mt-3"><div class="col-10 offset-2">
             <p>À l'opposé, le groupe avec lequel {{ nom_complet }} est le moins proche est
-              <a href="{{ path('groupe_individual', {legislature: leg_groupes, abrev: a.proximite.moins_proche.libelle_abrev|lower}) }}">{{ a.proximite.moins_proche.libelle|name_group }}</a>{% if a.proximite.moins_proche.echiquier %}, classé {{ a.proximite.moins_proche.echiquier }} de l'échiquier politique{% endif %}.
+              <a href="{{ path('groupe_individual', {legislature: leg_groupes, abrev: a.proximite.moins_proche.libelle_abrev|adresse_groupe(a.proximite.moins_proche.id ?? null)}) }}">{{ a.proximite.moins_proche.libelle|name_group }}</a>{% if a.proximite.moins_proche.echiquier %}, classé {{ a.proximite.moins_proche.echiquier }} de l'échiquier politique{% endif %}.
               {{ pronom|capitalize }} ne vote avec ce groupe que dans <b>{{ a.proximite.moins_proche.accord }}%</b> des cas.</p>
           </div></div>
         {% endif %}

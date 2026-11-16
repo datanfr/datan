@@ -2,6 +2,7 @@
 
 namespace App\Ia;
 
+use App\Depute\GroupeAuScrutin;
 use Doctrine\DBAL\Connection;
 
 /**
@@ -206,9 +207,11 @@ class CollecteurDecryptage
     /**
      * Ajoute à chaque parole le groupe de l'orateur au jour du scrutin, via
      * fonction_groupe — jamais depute.groupe_id, qui ne porte que
-     * l'appartenance courante. Seul le rattachement principal compte
-     * (nomin_principale) : onze députés de la 17e portent deux rattachements
-     * ouverts.
+     * l'appartenance courante. Seuls comptent les rattachements d'appartenance
+     * ({@see GroupeAuScrutin::APPARTENANCE}), pas `nomin_principale`, qui laisse
+     * un président de groupe sans groupe avant sa présidence. Lignes lues de la
+     * plus ancienne à la plus récente : `array_column` garde la dernière, donc
+     * le nouveau groupe le jour d'un changement.
      *
      * @param list<array<string, mixed>> $paroles
      *
@@ -225,10 +228,11 @@ class CollecteurDecryptage
                  FROM fonction_groupe fg
                  JOIN groupe g ON g.id = fg.groupe_id
                  WHERE fg.depute_id IN (?)
-                   AND fg.nomin_principale = 1
+                   AND ' . GroupeAuScrutin::APPARTENANCE . '
                    AND fg.date_debut <= ?
-                   AND (fg.date_fin IS NULL OR fg.date_fin >= ?)',
-                [$deputeIds, $dateScrutin, $dateScrutin],
+                   AND (fg.date_fin IS NULL OR fg.date_fin >= ?)
+                 ORDER BY fg.date_debut, fg.id',
+                [$deputeIds, substr($dateScrutin, 0, 10), substr($dateScrutin, 0, 10)],
                 [\Doctrine\DBAL\ArrayParameterType::INTEGER, \Doctrine\DBAL\ParameterType::STRING, \Doctrine\DBAL\ParameterType::STRING],
             );
             $groupes = array_column($lignes, 'libelle_abrev', 'depute_id');
