@@ -503,6 +503,13 @@ verse pas l'environnement : le préfixe est ignoré sans un mot et `.env.local`
 gagne. Le signe : l'en-tête `Age:` (HttpCache) au lieu de `X-Debug-Token`.
 Remède : `php -d variables_order=EGPCS -S …`.
 
+**Un temps de réponse se mesure depuis le serveur.** Depuis un poste, le délai
+jusqu'au premier octet contient un aller-retour réseau — 300 ms le 16/11/2026,
+quand une page en cache en coûtait 16 au serveur — et l'on avait conclu d'une
+page « à 330 ms » que PHP démarrait trop lentement. Mesurer en SSH
+(`curl --resolve datan.fr:443:<IP>` sur le serveur lui-même), ou retrancher le
+temps d'un fichier statique demandé au même instant.
+
 **Un banc d'essai à plusieurs `php -S` fabrique de faux 500.** Ces serveurs sont
 mono-processus : pour interroger beaucoup d'adresses, on en lance plusieurs, et
 ils partagent alors le même magasin `var/cache/prod/http_cache`, dont les verrous

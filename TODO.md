@@ -60,6 +60,14 @@ bascule du 16 novembre 2026 », retour arrière compris). Reste :
   la fusion n'est pas faite plus rien ne se déploie. Fermer ensuite les trois
   pull requests du site d'origine (#1285, #1287, #1288), sans objet, et
   décider du sort de la branche `symfony`.
+- [ ] **Liste Mailjet « votes » (47010) : elle n'existe plus dans le compte**
+  (deux listes seulement le 16/11/2026 : `liste_generale` 25834, 1 137
+  abonnés, et `liste_test` 26427). Depuis le correctif du 16/11, un abonné
+  entre dans la liste générale et la liste inconnue se signale au journal. À
+  décider : la recréer chez Mailjet et corriger `Mailjet::LISTE_VOTES`, ou
+  retirer la constante — la lettre mensuelle, elle, part des abonnés de notre
+  base et n'en dépend pas. Après déploiement du correctif :
+  `messenger:failed:retry` pour l'inscription restée en échec.
 - [ ] **Vérifier la réception** des deux courriels d'essai à info@datan.fr
   (message « Bascule datan.fr », lettre « [TEST] Octobre 2026 ») : les envois
   sont partis sans erreur, la réception n'a pas été constatée. Puis éprouver à
@@ -237,11 +245,10 @@ correction, **commenter le choix** dans le code, et le consigner dans
 
 ## 6. Hébergement
 
-- [ ] **OPcache absent** de la configuration PHP 8.4 du sélecteur o2switch :
-  ~250 ms de coût fixe par requête (`DEPLOIEMENT.md`, « OPcache »). Mesuré le
-  16/11/2026 : une page servie **depuis le cache** sort en 325 à 353 ms, pour
-  20 ms visés. C'est le premier levier de vitesse du site — le cache HTTP
-  n'économise que le rendu, pas le démarrage de PHP.
+- [ ] **Premier déploiement sous OPcache** (activé le 16/11/2026, cf.
+  `DEPLOIEMENT.md`, « OPcache ») : vérifier que la nouvelle version est bien
+  servie dans les trois minutes — l'hébergeur ne revalide un fichier que toutes
+  les 60 s, et PHP garde 120 s la résolution du lien `current`.
 - [ ] **Poids du magasin des pages figées** (`var/cache/prod/http_cache_fige`) :
   il ne se vide plus chaque matin. Une page de commune pèse ~95 Ko ; si les
   70 000 pages de communes et de résultats sont toutes visitées entre deux
