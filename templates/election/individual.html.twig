@@ -53,6 +53,15 @@
           {% endif %}
           Découvrez les résultats des élections commune par commune sur Datan.
         </p>
+        {# Communes dont le second tour est dépouillé (`count_results_cities_ministry`
+           du site, bureaux saisis à 100 %). La branche « à partir de 20h » du
+           site, pour un compte nul, ne sert qu'un soir d'élection : elle n'est
+           pas reprise, l'encart disparaît alors. #}
+        {% if municipales_second_tour > 0 %}
+          <div class="alert alert-primary mt-4" role="alert">
+            Second tour : résultats disponibles sur Datan pour <b>{{ municipales_second_tour|number_format(0, ',', ' ') }} communes</b>.
+          </div>
+        {% endif %}
         <div class="mt-5 infosGeneral">
           <h2 class="title ml-md-5 ml-3">Mieux comprendre</h2>
           <div class="px-4">

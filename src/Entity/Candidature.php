@@ -82,6 +82,14 @@ class Candidature
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $source = null;
 
+    /**
+     * Rang de la candidature dans la table d'origine, ordre physique compris :
+     * c'est l'ordre où le site énumère les députés candidats d'une commune
+     * ({@see \App\Command\ImportElectionsCommand}).
+     */
+    #[ORM\Column(nullable: true)]
+    private ?int $ordreSaisie = null;
+
     public function getId(): ?int
     {
         return $this->id;

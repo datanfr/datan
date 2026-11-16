@@ -18,24 +18,19 @@ use Symfony\Component\Console\Style\SymfonyStyle;
  * listes du ministère puis vérifié. C'est une donnée éditoriale au même titre
  * qu'un décryptage — elle ne se régénère pas.
  *
- * ```
- * docker exec datan-db mariadb -h 127.0.0.1 -u datan -pdatan datan \
- *   --default-character-set=utf8mb4 -B -e "
- *   SELECT id, slug, libelle, libelleAbrev, dateYear, dateFirstRound,
- *          NULLIF(dateSecondRound,'0000-00-00') AS dateSecondRound,
- *          candidates, resultsUrl
- *   FROM elect_libelle ORDER BY id;" > var/legacy/elections.tsv
+ * Requêtes d'export : `bin/recuperation/legacy/elections.sql` (son `NULLIF`
+ * sur `dateSecondRound` n'est pas un ornement : les européennes sont à tour
+ * unique et la base y écrit `0000-00-00`, que Doctrine refuse de relire) et
+ * `candidatures.sql`.
  *
- * docker exec datan-db mariadb -h 127.0.0.1 -u datan -pdatan datan \
- *   --default-character-set=utf8mb4 -B -e "
- *   SELECT mpId, election, candidature, district, position, nuance,
- *          visible, secondRound, elected, link, source
- *   FROM elect_deputes_candidats ORDER BY election, mpId;" > var/legacy/candidatures.tsv
- * ```
- *
- * Le `NULLIF` sur `dateSecondRound` n'est pas un ornement : les européennes de
- * 2024 sont à tour unique et la base y écrit `0000-00-00`, que MariaDB accepte
- * et que Doctrine refuse de relire en date.
+ * **Pas d'`ORDER BY` sur les candidatures, et c'est voulu.** Le site énumère
+ * les députés candidats d'une commune (« Les députés Franck Allisio, Sébastien
+ * Delogu… ») dans l'ordre physique de cette table MyISAM, qu'aucune colonne ne
+ * restitue — `modified_at` a été réécrit en masse le 2 mars 2026, et `mpId`
+ * donne un autre ordre dans 16 des 27 communes à plusieurs candidats. Un
+ * `SELECT` sans tri rend cet ordre physique ; l'import en garde le rang
+ * (`candidature.ordre_saisie`). Vérifié sur Marseille et Paris : même ordre
+ * que datan.fr, nom pour nom.
  *
  * Les municipales 2026 (id 7) ont longtemps manqué au catalogue de la
  * production elle-même ; elle l'a comblé depuis, et leurs candidatures
@@ -59,7 +54,7 @@ class ImportElectionsCommand extends ImportLegacyCommand
 
     private const COLONNES_CANDIDATURE = [
         'depute_id', 'election_id', 'candidat', 'district', 'position',
-        'nuance', 'visible', 'second_tour', 'elu', 'lien', 'source',
+        'nuance', 'visible', 'second_tour', 'elu', 'lien', 'source', 'ordre_saisie',
     ];
 
     protected function configure(): void
@@ -74,14 +69,13 @@ class ImportElectionsCommand extends ImportLegacyCommand
         $io = new SymfonyStyle($input, $output);
         $io->title('Import des élections');
 
-        $elections = $this->importeElections((string) $input->getOption('elections'));
-        $io->text(sprintf('%d élections au catalogue.', $elections));
+        $fichierElections = (string) $input->getOption('elections');
+        $fichierCandidatures = (string) $input->getOption('candidatures');
 
-        [$candidatures, $inconnus] = $this->importeCandidatures((string) $input->getOption('candidatures'));
+        $this->consigner($io, 'Élections', $fichierElections, $this->importeElections($fichierElections));
 
-        if ($inconnus > 0) {
-            $io->text(sprintf('%d candidatures écartées : le député n\'est pas en base.', $inconnus));
-        }
+        [$candidatures, $inconnus] = $this->importeCandidatures($fichierCandidatures);
+        $this->consigner($io, 'Candidatures', $fichierCandidatures, $candidatures, ['député ou élection absent de la base' => $inconnus]);
 
         $bilan = $this->connection->fetchAllAssociative(
             'SELECT e.slug, e.annee,
@@ -147,11 +141,17 @@ class ImportElectionsCommand extends ImportLegacyCommand
         // `visible` et `candidat` sont réécrits sans condition, à la différence
         // du reste : ce sont les deux drapeaux par lesquels la rédaction retire
         // une candidature de l'affichage, et un retrait doit se propager.
-        $misAJour = ['candidat', 'visible', 'second_tour', 'elu'];
+        $misAJour = ['candidat', 'visible', 'second_tour', 'elu', 'ordre_saisie'];
         $misAJourSiRenseigne = ['district', 'position', 'nuance', 'lien', 'source'];
+
+        // Rang de la ligne dans l'export, qui suit l'ordre physique de la
+        // table d'origine (voir le docblock) : c'est l'ordre dans lequel le
+        // site énumère les députés candidats d'une commune.
+        $rang = 0;
 
         foreach ($this->lignes($fichier) as $ligne) {
             [$mpId, $election, $candidat, $district, $position, $nuance, $visible, $second, $elu, $lien, $source] = array_pad($ligne, 11, null);
+            ++$rang;
 
             $deputeId = $idDeputes[$mpId] ?? null;
             $electionId = $idElections[$this->entier($election)] ?? null;
@@ -173,6 +173,7 @@ class ImportElectionsCommand extends ImportLegacyCommand
                 $this->drapeau($elu),
                 $this->texte($lien),
                 $this->texte($source),
+                $rang,
             ];
             ++$ecrites;
 

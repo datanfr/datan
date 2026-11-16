@@ -4,23 +4,37 @@
 {# `libelle_dans` porte son espace final quand il en faut un : il se concatène
    au nom du département sans rien ajouter. #}
 {% set nom_article = departement.libelle_dans ~ departement.nom %}
-{% set titre = 'Résultats des élections ' ~ nom_article %}
+{# Habillage municipal du site (`Elections::results_dpt()`) dès qu'une commune
+   du département a des résultats aux municipales 2026 ; les collectivités sans
+   municipales publiées gardent un intitulé neutre. #}
+{% set titre = municipales ? 'Élections municipales 2026 ' ~ nom_article : 'Résultats des élections ' ~ nom_article %}
 
-{% block title %}{{ titre }} ({{ departement.code }}) | Datan{% endblock %}
+{% block title %}{{ municipales ? 'Les candidats et résultats aux élections municipales 2026 ' ~ nom_article : titre }} ({{ departement.code }}) | Datan{% endblock %}
 
-{% block meta_description %}Retrouvez les résultats des élections {{ nom_article }} ({{ departement.code }}) commune par commune : candidats, nombre de votants et abstention pour chaque commune du département.{% endblock %}
+{% block meta_description %}
+  {%- if municipales -%}
+    Retrouvez les résultats des élections municipales {{ nom_article }} ({{ departement.code }}). Les élections se tiennent les 15 et 22 mars 2026. Découvrez les candidats, le nombre de votants, l'abstention pour les communes de ce département.
+  {%- else -%}
+    Retrouvez les résultats des élections {{ nom_article }} ({{ departement.code }}) commune par commune : candidats, nombre de votants et abstention pour chaque commune du département.
+  {%- endif -%}
+{% endblock %}
 
 {% block body %}
-{# Le site titre cette page « Élections municipales 2026 dans l'Ain » et
-   l'ouvre sur un encart annonçant le scrutin des 15 et 22 mars 2026. Les
-   municipales sont hors de ce portage : la page reprend ici l'intitulé de son
-   adresse — les résultats, commune par commune — et l'encart disparaît avec le
-   scrutin qu'il annonçait. #}
 <div class="container pg-resultats-dpt">
   <div class="row mt-5">
     <div class="col-lg-10">
       <h1>{{ titre }}</h1>
-      <p class="mt-4">Découvrez les résultats des élections commune par commune {{ nom_article }} ({{ departement.region }}).</p>
+      {% if municipales %}
+        {# Le site écrit encore au futur — « se tiendra », « Les résultats
+           seront diffusés le lendemain » —, texte de campagne resté en place
+           après le scrutin. Mis au passé ici, l'encart gardant sa place. #}
+        <p class="mt-4">Découvrez tous les candidats et les résultats des élections municipales 2026 {{ nom_article }} ({{ departement.region }}). Le premier tour des élections municipales s'est tenu le 15 mars 2026 et le second tour le 22 mars 2026.</p>
+        <div class="alert alert-primary mt-4">
+          Le premier tour des élections municipales s'est tenu le dimanche 15 mars 2026. Les résultats sont disponibles sur Datan, commune par commune.
+        </div>
+      {% else %}
+        <p class="mt-4">Découvrez les résultats des élections commune par commune {{ nom_article }} ({{ departement.region }}).</p>
+      {% endif %}
       <h2 class="mt-5">Les résultats des élections commune par commune</h2>
       <div class="d-flex justify-content-start flex-wrap mt-4">
         {% for commune in phares %}

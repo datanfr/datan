@@ -86,6 +86,14 @@ class Commune
     private ?string $maireCivilite = null;
 
     /**
+     * Le nom précédé de « de », élidé ou contracté : « de Marseille »,
+     * « d'Hirson », « du Havre ». Donnée et non règle — le jeu data.gouv d'où
+     * elle vient distingue h muet et h aspiré ({@see \App\Command\ImportNomsCommunesCommand}).
+     */
+    #[ORM\Column(length: 120, nullable: true)]
+    private ?string $nomDe = null;
+
+    /**
      * Communes limitrophes, servant la barre de navigation en haut de la fiche.
      * La relation est déclarée dans un seul sens mais la table porte les deux
      * couples : l'application d'origine les stocke ainsi et la lecture se fait

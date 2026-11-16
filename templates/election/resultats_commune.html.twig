@@ -1,35 +1,58 @@
 {% extends 'base.html.twig' %}
 {% import 'election/partials/icones.html.twig' as icone %}
 
-{% set titre = 'Résultats des élections à ' ~ ville.nom %}
+{# Page cadrée sur les municipales 2026 dès que le ministère a publié des
+   résultats pour la commune (`Elections::results_city()`) ; sinon —
+   collectivité sans conseil municipal, commune sans liste, commune fusionnée
+   que le référentiel garde — page neutre tournée vers les élections
+   précédentes. Le site, lui, cadre toutes ses pages sur les municipales et
+   montre aux communes sans résultat un « Les bureaux de votes ferment entre
+   18h et 20h » de soir d'élection : ce texte-là n'est pas repris. #}
+{% if municipales %}
+  {% set titre = 'Élections municipales 2026 à ' ~ ville.nom ~ ' : candidats et résultats' %}
+{% else %}
+  {% set titre = 'Résultats des élections à ' ~ ville.nom %}
+{% endif %}
 {# Identifiant que le site donne au bloc repliable ; il sert d'ancre aux
    attributs `data-*` que lit le script de bascule entre tours. #}
 {% set scrutin = annee ~ '_legi' %}
 
-{% block title %}{{ titre }} | Datan{% endblock %}
+{% block title %}{{ municipales ? 'Les candidats et résultats aux élections municipales 2026 à ' ~ ville.nom : titre }} | Datan{% endblock %}
 
-{% block meta_description %}Retrouvez les résultats des élections à {{ ville.nom }} ({{ ville.dpt_code }}) : candidats, nombre de votants et abstention pour cette commune.{% endblock %}
+{% block meta_description %}
+  {%- if municipales -%}
+    Retrouvez les résultats des élections municipales à {{ ville.nom }}. Les élections se tiennent les 15 et 22 mars 2026. Découvrez les candidats, le nombre de votants, l'abstention pour cette commune.
+  {%- else -%}
+    Retrouvez les résultats des élections à {{ ville.nom }} ({{ ville.dpt_code }}) : candidats, nombre de votants et abstention pour cette commune.
+  {%- endif -%}
+{% endblock %}
 
 {% block body %}
-{# Trois blocs du site manquent ici, et par choix : la candidature des députés
-   aux municipales, le dépouillement des municipales 2026 commune par commune,
-   et l'encart qui annonce le scrutin. Tous trois lisent l'élection `id = 7` de
-   l'application d'origine, absente de son propre catalogue et hors de ce
-   portage. Ce qui reste — les résultats des élections précédentes — est ce que
-   la page a de durable. #}
 <div class="container pg-resultats-ville">
   <div class="row mt-5">
     <div class="col-lg-10">
+      {# Le « : » du titre est précédé d'une espace insécable, comme le
+         `&nbsp;:` du site. #}
       <h1>{{ titre }}</h1>
-      {# « Circonscription par circonscription » et non « bureau de vote après
-         bureau de vote » : c'est le grain dont nous disposons. Les résultats au
-         bureau de vote vivent dans des tables que l'application d'origine a
-         créées sans jamais les remplir. #}
-      <p class="mt-4">Découvrez les résultats des élections à {{ ville.nom }} ({{ ville.dpt_code }}), circonscription par circonscription, et les députés qui représentent la commune à l'Assemblée nationale.</p>
+      {% if municipales %}
+        {# Le site écrit encore « se tiendra » au futur, texte de campagne
+           resté en place après le scrutin : mis au passé ici. #}
+        <p class="mt-4">Découvrez tous les candidats et les résultats des élections municipales 2026 pour {{ ville.nom }} ({{ ville.dpt_code }}). Le premier tour des élections municipales s'est tenu le 15 mars 2026 et le second tour le 22 mars 2026.</p>
+        <div class="mt-4 mb-0">
+          {{ include('election/partials/_candidature_deputes.html.twig', {candidats: candidats_municipales, nom_de: nom_de}) }}
+        </div>
+      {% else %}
+        {# « Circonscription par circonscription » et non « bureau de vote après
+           bureau de vote » : c'est le grain dont nous disposons. #}
+        <p class="mt-4">Découvrez les résultats des élections à {{ ville.nom }} ({{ ville.dpt_code }}), circonscription par circonscription, et les députés qui représentent la commune à l'Assemblée nationale.</p>
+      {% endif %}
     </div>
   </div>
   <div class="row mt-5">
     <div class="col-lg-8">
+      {% if municipales %}
+        {{ include('election/partials/_municipales.html.twig', {m: municipales, ville: ville, nom_a: nom_a}) }}
+      {% endif %}
       {{ include('partials/campagne.html.twig', {classes: 'mt-5'}) }}
       <div class="mt-5 h2">Résultats des élections précédentes à {{ ville.nom }}</div>
       {# Le site ne construit qu'un bloc ici, « Législatives 2024 », alors que
@@ -314,6 +337,29 @@
         });
 
         document.querySelectorAll('.previous-election-round-content[data-election-id="' + scrutin + '"][data-circo-id="' + circo + '"]').forEach(function (bloc) {
+          bloc.style.display = bloc.getAttribute('data-round') === tour ? '' : 'none';
+        });
+      });
+    });
+
+    {# Onglets premier / second tour des municipales. Les boutons portent
+       aussi la classe des onglets ci-dessus, pour le style : le gestionnaire
+       précédent les voit passer sans rien trouver à basculer. #}
+    document.querySelectorAll('.municipales-round-btn').forEach(function (bouton) {
+      bouton.addEventListener('click', function () {
+        var tour = this.getAttribute('data-round');
+
+        if (!tour) {
+          return;
+        }
+
+        document.querySelectorAll('.municipales-round-btn').forEach(function (b) {
+          var actif = b.getAttribute('data-round') === tour;
+          b.classList.toggle('active', actif);
+          b.setAttribute('aria-pressed', actif ? 'true' : 'false');
+        });
+
+        document.querySelectorAll('.municipales-round-content').forEach(function (bloc) {
           bloc.style.display = bloc.getAttribute('data-round') === tour ? '' : 'none';
         });
       });

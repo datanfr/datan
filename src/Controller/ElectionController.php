@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Election\ResultatsMunicipales;
 use App\Groupe\CouleurGroupe;
 use App\Http\RechauffeurCache;
 use App\Legislature;
@@ -21,14 +22,12 @@ use Symfony\Component\Routing\Attribute\Route;
  * et par commune (contrôleur Elections de l'application CodeIgniter d'origine,
  * vues application/views/elections/).
  *
- * **Les municipales de 2026 sont hors de ce portage.** L'application d'origine
- * les traite sous une élection `id = 7` absente de son propre catalogue
- * `elect_libelle`, alimentée par des tables de dépouillement que nous
- * n'importons pas : c'est son chantier en cours, pas une donnée à reprendre.
- * Trois blocs du site en dépendent entièrement et n'ont donc pas d'équivalent
- * ici — l'annonce du prochain scrutin sur `/elections`, et sur la fiche de ville
- * la candidature des députés puis le dépouillement commune par commune. Les
- * endroits concernés le disent.
+ * **Les municipales de 2026** habillent les pages de résultats d'une commune
+ * et d'un département dès que le ministère a publié des chiffres pour elles
+ * (`app:import:municipales`, {@see ResultatsMunicipales}). Une commune sans
+ * résultat — collectivité sans conseil municipal, commune sans liste — garde
+ * la page tournée vers les élections précédentes. L'annonce du prochain
+ * scrutin sur `/elections` reste, elle, hors portage.
  */
 class ElectionController extends AbstractController
 {
@@ -121,6 +120,7 @@ class ElectionController extends AbstractController
         private readonly ElectionRepository $elections,
         private readonly CandidatureRepository $candidatures,
         private readonly ResultatElectoralRepository $resultats,
+        private readonly ResultatsMunicipales $municipales,
     ) {
     }
 
@@ -212,6 +212,16 @@ class ElectionController extends AbstractController
 
         return $this->cache($this->render('election/resultats_departement.html.twig', [
             'departement' => $ligne,
+            // Habillage municipal (titre, accroche) dès qu'une commune du
+            // département a des résultats ; les collectivités sans municipales
+            // publiées — 099, Wallis-et-Futuna, Polynésie… — gardent leur
+            // titre neutre.
+            'municipales' => (bool) $this->connection->fetchOne(
+                'SELECT 1 FROM municipale_participation mp
+                 JOIN commune c ON c.code_insee = mp.code_commune
+                 WHERE c.departement_id = ? LIMIT 1',
+                [$ligne['id']],
+            ),
             'phares' => $phares,
             'lettres' => $this->parLettre($communes),
             'seuil' => self::POPULATION_MINIMALE,
@@ -273,14 +283,19 @@ class ElectionController extends AbstractController
             'url' => $this->generateUrl('elections_resultats_commune', ['departement' => $departement, 'commune' => $commune]),
         ];
 
+        $municipales = $this->municipales->pourCommune((string) $ville['code_insee']);
+
         return $this->cache($this->render('election/resultats_commune.html.twig', [
             'ville' => $ville,
-            // Divergence assumée : à cette adresse, le legacy lit les tables
-            // `elect_bv_*` (grain bureau de vote), vides même en production — sa
-            // page est donc creuse, cadrée sur des municipales 2026 hors de notre
-            // périmètre. Nous servons à la place les résultats législatifs par
-            // circonscription tirés de `resultat_legislative` : des chiffres
-            // réels et utiles, que datan.fr n'affiche pas ici.
+            'municipales' => $municipales,
+            'candidats_municipales' => $municipales === null ? [] : $this->municipales->deputesCandidats((string) $ville['code_insee']),
+            'nom_de' => $this->nomDe($ville),
+            'nom_a' => self::nomA((string) $ville['nom']),
+            // « Résultats des élections précédentes » : les législatives de
+            // 2024, par circonscription, que le site sert sous les municipales
+            // (vérifié sur Marseille le 2026-11-16 : mêmes onglets 1301…1307).
+            // Le legacy les lit au grain bureau de vote ; nous les tirons de
+            // `resultat_legislative`, au grain commune × circonscription.
             'legislatives' => $this->circonscriptionsDeLElection(
                 $this->resultats->legislativesParCommune((string) $ville['code_insee'])[self::ANNEE_RESULTATS] ?? [],
             ),
@@ -320,6 +335,13 @@ class ElectionController extends AbstractController
             'districts' => $this->districts((string) $election['libelle_abrege']),
             'groupes' => $this->groupesDesCandidats($candidats),
             'hemicycle' => $this->hemicycle($slug),
+            'municipales_second_tour' => $slug === 'municipales-2026'
+                ? (int) $this->connection->fetchOne(
+                    'SELECT COUNT(DISTINCT r.code_commune) FROM municipale_resultat r
+                     JOIN municipale_participation p ON p.tour = r.tour AND p.code_commune = r.code_commune
+                     WHERE r.tour = 2 AND p.pct_saisis = 100',
+                )
+                : 0,
             'departements' => $this->departements(),
             'communes' => $this->communesVedettes(),
             // Fil d'Ariane de `Elections::individual()` : le troisième maillon
@@ -584,7 +606,7 @@ class ElectionController extends AbstractController
     {
         $ligne = $this->connection->fetchAssociative(
             'SELECT c.id, c.code_insee, c.nom, c.slug, c.population,
-                    c.maire_prenom, c.maire_nom, c.maire_civilite,
+                    c.maire_prenom, c.maire_nom, c.maire_civilite, c.nom_de,
                     d.id AS dpt_id, d.code AS dpt_code, d.nom AS dpt_nom, d.slug AS dpt_slug,
                     d.libelle_de, d.libelle_dans
              FROM commune c
@@ -596,6 +618,59 @@ class ElectionController extends AbstractController
         );
 
         return $ligne === false ? null : $ligne;
+    }
+
+    /**
+     * « de Marseille », « d'Hirson », « du Havre » : la colonne `nom_de`
+     * (`app:import:noms-communes`), qui sait les h aspirés.
+     *
+     * Deux exceptions, reprises de `City_model::get_city_by_insee()` : les
+     * collectivités d'outre-mer (975, 977, 978, 986, 987, 988) écrivent
+     * toujours « de » suivi du nom ; et une commune absente du jeu data.gouv —
+     * commune fusionnée, que le référentiel garde — retombe sur la règle
+     * simple de l'article.
+     *
+     * @param array<string, mixed> $ville
+     */
+    private function nomDe(array $ville): string
+    {
+        $nom = (string) $ville['nom'];
+
+        if (\in_array(substr((string) $ville['code_insee'], 0, 3), ['975', '977', '978', '986', '987', '988'], true)) {
+            return 'de ' . $nom;
+        }
+
+        if ($ville['nom_de'] !== null && $ville['nom_de'] !== '') {
+            return (string) $ville['nom_de'];
+        }
+
+        return match (true) {
+            str_starts_with($nom, 'Le ') => 'du ' . substr($nom, 3),
+            str_starts_with($nom, 'Les ') => 'des ' . substr($nom, 4),
+            str_starts_with($nom, 'La ') => 'de la ' . substr($nom, 3),
+            str_starts_with($nom, "L'") => "de l'" . substr($nom, 2),
+            \in_array(mb_substr($nom, 0, 1), ['A', 'E', 'I', 'O', 'U', 'Y', 'É', 'È', 'Î', 'Ô'], true) => "d'" . $nom,
+            default => 'de ' . $nom,
+        };
+    }
+
+    /**
+     * « à Marseille », « au Havre », « aux Abymes », « à La Rochelle ».
+     *
+     * Le site lit `cities.nom_a`, qui **perd l'article** des communes en « La »
+     * ou « L' » — « Résultats du premier tour à Rochelle », « à
+     * Abergement-Clémenciat » — et n'existe pas outre-mer, où la phrase
+     * s'arrête net (« Résultats du premier tour  »). Deux défauts de la donnée,
+     * corrigés ici par la règle : seuls « Le » et « Les » se contractent, tout
+     * autre nom se garde entier — comme sur la fiche député.
+     */
+    public static function nomA(string $nom): string
+    {
+        return match (true) {
+            str_starts_with($nom, 'Le ') => 'au ' . substr($nom, 3),
+            str_starts_with($nom, 'Les ') => 'aux ' . substr($nom, 4),
+            default => 'à ' . $nom,
+        };
     }
 
     /**
