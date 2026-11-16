@@ -8,6 +8,8 @@ use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
 use App\Repository\AmendementRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Attribute\Groups;
@@ -60,7 +62,7 @@ class Amendement
     #[Groups(['amendement:read', 'amendement:write', 'scrutin:read'])]
     private ?string $expose = null;
 
-    /** Résumé de l'exposé des motifs, affiché quand il a été relu. */
+    /** Résumé de l'exposé des motifs, affiché sur la page du vote. */
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     #[Groups(['amendement:read', 'amendement:write', 'scrutin:read'])]
     private ?string $resumeIa = null;
@@ -78,10 +80,47 @@ class Amendement
     #[Groups(['amendement:read', 'amendement:write'])]
     private ?int $simpliciteIa = null;
 
-    /** Le résumé n'est affiché que s'il a été relu (amendements_ia.reviewed). */
+    /**
+     * L'argument des auteurs, reformulé en deux phrases au plus
+     * (`amendements_ia.justification_ia`). Affiché sous le résumé, comme sur
+     * datan.fr ; null quand l'exposé n'en avance aucun.
+     */
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    #[Groups(['amendement:read', 'scrutin:read'])]
+    private ?string $justificationIa = null;
+
+    /**
+     * Thème principal, pris dans la liste fermée de dix-huit libellés de la
+     * rédaction ({@see \App\Ia\Amendement\PromptResumeAmendement::CATEGORIES}).
+     * Un libellé et non une clé vers `categorie` : celle-ci range les
+     * décryptages, avec une autre liste.
+     */
+    #[ORM\Column(length: 60, nullable: true)]
+    #[Groups(['amendement:read'])]
+    private ?string $categorieIa = null;
+
+    /**
+     * Drapeau de la file de relecture de /admin/amendements
+     * (`amendements_ia.reviewed`) : un vote relu peut être décrypté. Il ne
+     * conditionne pas l'affichage public — datan.fr publie le résumé dès qu'il
+     * existe.
+     */
     #[ORM\Column]
     #[Groups(['amendement:read', 'amendement:write', 'scrutin:read'])]
     private bool $resumeRelu = false;
+
+    /**
+     * Mots-clés canoniques de l'amendement (jamais un alias, cf. {@see Tag}).
+     * Écrits en DBAL par le traitement des lots et l'import de récupération ;
+     * la relation ne sert qu'au schéma.
+     *
+     * @var Collection<int, Tag>
+     */
+    #[ORM\ManyToMany(targetEntity: Tag::class)]
+    #[ORM\JoinTable(name: 'amendement_tag')]
+    #[ORM\JoinColumn(name: 'amendement_id', onDelete: 'CASCADE')]
+    #[ORM\InverseJoinColumn(name: 'tag_id', onDelete: 'CASCADE')]
+    private Collection $tags;
 
     /**
      * Séance où l'amendement a été discuté (`seanceDiscussionRef`).
@@ -144,6 +183,11 @@ class Amendement
     #[ORM\Column(length: 30, nullable: true)]
     #[Groups(['amendement:read'])]
     private ?string $auteurRef = null;
+
+    public function __construct()
+    {
+        $this->tags = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -232,6 +276,24 @@ class Amendement
         $this->simpliciteIa = $simpliciteIa;
 
         return $this;
+    }
+
+    public function getJustificationIa(): ?string
+    {
+        return $this->justificationIa;
+    }
+
+    public function getCategorieIa(): ?string
+    {
+        return $this->categorieIa;
+    }
+
+    /**
+     * @return Collection<int, Tag>
+     */
+    public function getTags(): Collection
+    {
+        return $this->tags;
     }
 
     public function isResumeRelu(): bool

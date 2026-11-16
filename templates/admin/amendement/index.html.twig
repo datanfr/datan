@@ -63,6 +63,7 @@
             <th scope="col">Amendement</th>
             <th scope="col">Titre IA</th>
             <th scope="col">Résumé IA</th>
+            <th scope="col">Catégorie et mots-clés</th>
             <th scope="col" class="text-right">Intérêt</th>
             <th scope="col" class="text-center">Simplicité</th>
             <th scope="col" class="text-center">Relu</th>
@@ -77,7 +78,20 @@
                 <small class="text-muted">Leg. {{ ligne.legislature }} · n° {{ ligne.numero }} · {{ ligne.date_scrutin|date('d/m/Y') }}</small>
               </td>
               <td>{{ ligne.titre_ia ?: '—' }}</td>
-              <td class="cellule-resume"><span class="resume">{{ ligne.resume_ia ?: '—' }}</span></td>
+              <td class="cellule-resume">
+                <span class="resume">
+                  {{ ligne.resume_ia ?: '—' }}
+                  {# La justification suit le résumé sur la page du vote : elle se
+                     relit avec lui. #}
+                  {% if ligne.justification_ia %}<br><span class="text-muted">{{ ligne.justification_ia }}</span>{% endif %}
+                </span>
+              </td>
+              <td>
+                {{ ligne.categorie_ia ?: '—' }}
+                {% if ligne.tags %}
+                  <div>{% for tag in ligne.tags|split(', ') %}<span class="badge badge-light border mr-1">{{ tag }}</span>{% endfor %}</div>
+                {% endif %}
+              </td>
               <td class="text-right">{{ ligne.interet is not null ? ligne.interet ~ ' %' : '—' }}</td>
               {# Note de simplicité, comme dans l'application d'origine : badge « n/5 »
                  coloré aux mêmes seuils (4-5 vert, 3 orange, 1-2 rouge). Son
@@ -90,7 +104,7 @@
                         title="1 = très technique, 5 = très accessible">{{ ligne.simplicite_ia }}/5</span>
                 </td>
               {% else %}
-                <td class="text-center text-muted" title="Résumé pas encore généré, ou repris de la production sans sa note">—</td>
+                <td class="text-center text-muted" title="Résumé pas encore généré, ou ancien résumé de la rédaction, sans note">—</td>
               {% endif %}
               <td class="text-center">
                 {# La liste ne retient que les votes rattachés à leur amendement :
@@ -107,7 +121,7 @@
               </td>
             </tr>
           {% else %}
-            <tr><td colspan="7" class="text-center p-4">
+            <tr><td colspan="8" class="text-center p-4">
               Aucun amendement à relire sur cette période. Élargissez la période ou les dates.
             </td></tr>
           {% endfor %}

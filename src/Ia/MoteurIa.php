@@ -12,9 +12,12 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 /**
  * Le moteur commun des générations par IA : un prompt entre, un JSON conforme
- * au schéma demandé sort. Les usages ({@see GenerateurBrouillon},
- * {@see GenerateurResumeAmendement}) écrivent le prompt et lisent le JSON,
- * sans connaître le fournisseur.
+ * au schéma demandé sort. Son usage ({@see GenerateurBrouillon}) écrit le
+ * prompt et lit le JSON, sans connaître le fournisseur.
+ *
+ * Les résumés d'amendements n'y passent pas : ils vont par lots à l'API
+ * d'Anthropic, que n'offre aucun Ollama, avec leur propre réglage de modèle
+ * ({@see FabriqueClientAnthropic}, `IA_MODELE_RESUMES`).
  *
  * Deux fournisseurs, choisis par le nom du modèle (`IA_MODELE`) : « claude-* »
  * passe par l'API Anthropic (SDK officiel), tout autre nom par un Ollama local

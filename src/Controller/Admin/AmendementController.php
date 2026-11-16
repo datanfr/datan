@@ -30,10 +30,13 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
  * (`amendements_ia.reviewed`, basculé par un endpoint AJAX) devient donc
  * `amendement.resume_relu`.
  *
- * La note de simplicité vient du même appel que le résumé
- * ({@see \App\Command\GenererResumesAmendementsCommand}) : un entier de 1 (très
- * technique) à 5 (très accessible). Elle reste vide (« — ») sur les résumés
- * repris de la production, dont l'export TSV ne la porte pas.
+ * Le titre, le résumé, la justification, la note de simplicité (1 très
+ * technique, 5 très accessible), la catégorie et les mots-clés viennent du même
+ * appel ({@see \App\Ia\Amendement\PromptResumeAmendement}, par lots :
+ * `app:ia:resumes-amendements:soumettre` puis `:traiter`), ou de l'import de
+ * récupération `app:import:resumes-amendements`. L'écran les montre tous : c'est
+ * le seul endroit où la rédaction voit la catégorie et les mots-clés, que le
+ * site public n'affiche pas plus que datan.fr.
  *
  * Accès : rédacteur **et** administrateur, comme le `security_only_team()` qui
  * garde tout le contrôleur `Admin` du legacy — aucune restriction plus fine sur
@@ -86,6 +89,13 @@ class AmendementController extends AbstractController
                     a.titre_ia,
                     a.resume_ia,
                     a.simplicite_ia,
+                    a.justification_ia,
+                    a.categorie_ia,
+                    -- Les mots-clés en une chaîne : sous-requête plutôt que jointure,
+                    -- pour ne pas multiplier les lignes du scrutin.
+                    (SELECT GROUP_CONCAT(t.libelle ORDER BY t.libelle SEPARATOR ', ')
+                     FROM amendement_tag at JOIN tag t ON t.id = at.tag_id
+                     WHERE at.amendement_id = a.id) AS tags,
                     COALESCE(a.resume_relu, 0) AS relu,
                     -- « Intérêt » du scrutin : d'autant plus fort qu'il a mobilisé et
                     -- qu'il fut serré (même formule que le legacy) ; NULLIF garde
