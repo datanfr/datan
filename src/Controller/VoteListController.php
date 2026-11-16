@@ -169,7 +169,10 @@ class VoteListController extends AbstractController
         ]);
 
         $response->setPublic();
-        $response->setSharedMaxAge(self::CACHE_TTL);
+        // Les scrutins d'une législature close ne s'allongent plus : page
+        // figée. Seul le titre d'un décryptage peut encore y changer, et la
+        // rédaction vide alors le magasin elle-même.
+        $response->setSharedMaxAge(Legislature::estClose($legislature) ? RechauffeurCache::DUREE_FIGEE : self::CACHE_TTL);
 
         return $response;
     }

@@ -35,6 +35,24 @@ class GroupeController extends AbstractController
 {
     private const CACHE_TTL = RechauffeurCache::DUREE_PAGES;
 
+    /**
+     * La page d'un groupe d'une législature close est figée : composition,
+     * votes et proximités ne bougent plus, et ce qui peut encore changer — un
+     * rattachement requalifié par l'Assemblée, la couleur d'un groupe héritier —
+     * est dans le périmètre d'{@see \App\Http\EmpreinteFigee}.
+     *
+     * Sauf `/statistiques`, qui reste vivante même pour un groupe dissous
+     * depuis dix ans : elle le compare à son héritier de la législature en
+     * cours, dont la cohésion change chaque nuit, et son histogramme des
+     * effectifs gagne une barre à chaque nouvel an.
+     *
+     * @param array<string, mixed> $groupe
+     */
+    private function duree(array $groupe): int
+    {
+        return Legislature::estClose((int) $groupe['legislature']) ? RechauffeurCache::DUREE_FIGEE : self::CACHE_TTL;
+    }
+
     /** Sigle des députés non-inscrits, exclus des comparaisons entre groupes. */
     private const NON_INSCRITS = 'NI';
 
@@ -251,7 +269,7 @@ class GroupeController extends AbstractController
         ]);
 
         $response->setPublic();
-        $response->setSharedMaxAge(self::CACHE_TTL);
+        $response->setSharedMaxAge($this->duree($groupe));
 
         return $response;
     }
@@ -283,7 +301,7 @@ class GroupeController extends AbstractController
         ]);
 
         $response->setPublic();
-        $response->setSharedMaxAge(self::CACHE_TTL);
+        $response->setSharedMaxAge($this->duree($groupe));
 
         return $response;
     }
@@ -350,7 +368,7 @@ class GroupeController extends AbstractController
         ]);
 
         $response->setPublic();
-        $response->setSharedMaxAge(self::CACHE_TTL);
+        $response->setSharedMaxAge($this->duree($groupe));
 
         return $response;
     }
@@ -401,7 +419,7 @@ class GroupeController extends AbstractController
         ]);
 
         $response->setPublic();
-        $response->setSharedMaxAge(self::CACHE_TTL);
+        $response->setSharedMaxAge($this->duree($groupe));
 
         return $response;
     }

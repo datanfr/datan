@@ -23,8 +23,13 @@ use Symfony\Component\Routing\Attribute\Route;
  */
 class CommuneController extends AbstractController
 {
-    /** Le découpage ne bouge qu'aux élections. */
-    private const CACHE_TTL = RechauffeurCache::DUREE_PAGES;
+    /**
+     * Page figée : le découpage ne bouge qu'aux élections, et les députés
+     * qu'elle présente — ceux de la commune, ceux du département, leur groupe,
+     * leur adresse — sont dans le périmètre d'{@see \App\Http\EmpreinteFigee},
+     * qui vide le magasin quand l'un d'eux change.
+     */
+    private const CACHE_TTL = RechauffeurCache::DUREE_FIGEE;
 
     /** Nombre de communes limitrophes proposées en haut de page. */
     private const VOISINES = 4;

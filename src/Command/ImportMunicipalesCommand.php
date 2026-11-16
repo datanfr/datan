@@ -208,7 +208,7 @@ class ImportMunicipalesCommand extends Command
         // Les pages de résultats sont en cache un jour : sans purge, l'import
         // n'apparaîtrait que le lendemain. Le réchauffage reste à
         // `app:cache:rechauffer`, qu'un import ponctuel n'a pas à attendre.
-        $this->cacheHttp->purger();
+        $this->cacheHttp->purger(tout: true);
         $io->text('Cache HTTP purgé ; lancer app:cache:rechauffer pour le remplir.');
 
         return Command::SUCCESS;

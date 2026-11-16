@@ -21,8 +21,13 @@ use Symfony\Component\Routing\Attribute\Route;
  */
 class ParrainageController extends AbstractController
 {
-    /** L'élection est passée et ses parrainages ne bougent plus. */
-    private const CACHE_TTL = RechauffeurCache::DUREE_PAGES;
+    /**
+     * Page figée. Les parrainages de 2022 ne bougent plus ; la colonne
+     * « Groupe politique », elle, suit le groupe actuel du parrain, que couvre
+     * {@see \App\Http\EmpreinteFigee}. Et un parrainage rattaché à la main
+     * dans `/admin/parrainages` vide le magasin de lui-même.
+     */
+    private const CACHE_TTL = RechauffeurCache::DUREE_FIGEE;
 
     /** La seule présidentielle portée : la page du legacy est figée sur 2022. */
     private const ANNEE = 2022;

@@ -5,6 +5,7 @@ namespace App\Controller\Admin;
 use App\Entity\Parrainage;
 use App\Entity\Utilisateur;
 use App\Form\ParrainageMpType;
+use App\Http\RechauffeurCache;
 use Doctrine\DBAL\Connection;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -37,6 +38,7 @@ class ParrainageController extends AbstractController
     public function __construct(
         private readonly Connection $connection,
         private readonly EntityManagerInterface $entityManager,
+        private readonly RechauffeurCache $cache,
     ) {
     }
 
@@ -70,6 +72,10 @@ class ParrainageController extends AbstractController
 
         if ($formulaire->isSubmitted() && $formulaire->isValid()) {
             $this->entityManager->flush();
+
+            // Le rattachement change une ligne de `/parrainages-2022`, page
+            // figée, et le bloc « parrainage » de la fiche du député.
+            $this->cache->apresPublication(tout: true);
 
             $this->addFlash('succes', 'Parrainage mis à jour.');
 

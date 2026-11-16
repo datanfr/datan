@@ -32,11 +32,14 @@ use Symfony\Component\Routing\Attribute\Route;
 class ElectionController extends AbstractController
 {
     /**
-     * Un scrutin passé ne bouge plus, et les six du catalogue le sont tous. La
-     * seule chose qui vieillisse est l'état déduit des dates, qui ne changera
-     * plus avant la prochaine élection.
+     * Pages figées : tout ce qu'elles lisent est dans le périmètre
+     * d'{@see \App\Http\EmpreinteFigee}. Les résultats ne bougent plus, mais
+     * la page n'est pas immuable pour autant — la carte d'un candidat dit son
+     * groupe d'aujourd'hui et « Ancien député » s'il a quitté son siège, la
+     * page d'une commune nomme son député actuel. C'est l'empreinte qui
+     * vide le magasin quand l'un d'eux change.
      */
-    private const CACHE_TTL = RechauffeurCache::DUREE_PAGES;
+    private const CACHE_TTL = RechauffeurCache::DUREE_FIGEE;
 
     /**
      * Seuil de population au-delà duquel le site écrit le lien vers la commune

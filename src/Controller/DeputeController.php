@@ -29,6 +29,28 @@ class DeputeController extends AbstractController
     /** Les données d'un député ne bougent qu'au rythme des scrutins, et la synchronisation purge le cache. */
     private const CACHE_TTL = RechauffeurCache::DUREE_PAGES;
 
+    /**
+     * Les pages d'un ancien député dont la dernière législature est close sont
+     * figées : ses votes, ses statistiques et ses mandats ne bougent plus. Ce
+     * qu'elles montrent d'actuel — les députés en exercice de son département,
+     * son portrait — est dans le périmètre d'{@see \App\Http\EmpreinteFigee},
+     * et un décryptage ou une explication publiés sur une législature close
+     * vident le magasin d'eux-mêmes.
+     *
+     * Un ancien député sorti pendant la législature en cours reste vivant :
+     * ses statistiques se comparent à des moyennes recalculées chaque nuit.
+     *
+     * @param list<array<string, mixed>> $mandats du plus récent au plus ancien
+     */
+    private function duree(array $mandats): int
+    {
+        $ancien = $mandats !== [] && $mandats[0]['date_fin'] !== null;
+
+        return $ancien && Legislature::estClose((int) $mandats[0]['legislature'])
+            ? RechauffeurCache::DUREE_FIGEE
+            : self::CACHE_TTL;
+    }
+
     /** Rang du mandat en toutes lettres (`Depute_edito::get_nbr_lettre`) ; au-delà de 5, le chiffre. */
     private const ORDINAUX = [1 => 'premier', 2 => 'deuxième', 3 => 'troisième', 4 => 'quatrième', 5 => 'cinquième'];
 
@@ -239,7 +261,7 @@ class DeputeController extends AbstractController
         ]);
 
         $response->setPublic();
-        $response->setSharedMaxAge(self::CACHE_TTL);
+        $response->setSharedMaxAge($this->duree($mandats));
 
         return $response;
     }
@@ -290,7 +312,7 @@ class DeputeController extends AbstractController
         ]);
 
         $response->setPublic();
-        $response->setSharedMaxAge(self::CACHE_TTL);
+        $response->setSharedMaxAge($this->duree($mandats));
 
         return $response;
     }
@@ -313,6 +335,19 @@ class DeputeController extends AbstractController
         }
 
         $depute = $this->depute($slug);
+
+        // Même adresse canonique que la fiche et la page des votes : sans
+        // cette redirection, la page répondait 200 sous n'importe quel
+        // département — autant de doublons pour un moteur, et autant
+        // d'entrées qu'un cache qui ne se vide presque plus garderait.
+        if ($depute['dpt_slug'] !== null && $depute['dpt_slug'] !== $dptSlug) {
+            return $this->redirectToRoute('depute_legislature', [
+                'dptSlug' => $depute['dpt_slug'],
+                'slug' => $depute['slug'],
+                'legislature' => $legislature,
+            ], Response::HTTP_MOVED_PERMANENTLY);
+        }
+
         $deputeId = (int) $depute['id'];
         $mandats = $this->mandats($deputeId);
 
@@ -382,7 +417,11 @@ class DeputeController extends AbstractController
         ]);
 
         $response->setPublic();
-        $response->setSharedMaxAge(self::CACHE_TTL);
+        // Figée pour un ancien député : la page ne montre que cette
+        // législature, forcément close. Pour un député en exercice elle
+        // reste vivante — la durée totale de ses mandats s'y compte
+        // jusqu'à aujourd'hui.
+        $response->setSharedMaxAge($actif ? self::CACHE_TTL : RechauffeurCache::DUREE_FIGEE);
 
         return $response;
     }

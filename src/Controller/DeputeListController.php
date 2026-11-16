@@ -119,7 +119,9 @@ class DeputeListController extends AbstractController
         ]);
 
         $response->setPublic();
-        $response->setSharedMaxAge(self::CACHE_TTL);
+        // Les députés d'une législature close : page figée, ses sources —
+        // mandats, rattachements, portraits — sont dans EmpreinteFigee.
+        $response->setSharedMaxAge(Legislature::estClose($legislature) ? RechauffeurCache::DUREE_FIGEE : self::CACHE_TTL);
 
         return $response;
     }

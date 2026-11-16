@@ -22,17 +22,26 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  *
  * **Le contrat d'invalidation.** Les données ne changent qu'à deux moments :
  * la synchronisation quotidienne, et la publication d'un contenu éditorial
- * (décryptage, explication de vote, article). Chacun purge tout le magasin puis
- * le réchauffe. Entre les deux rien ne bouge, d'où une durée de cache d'un jour
- * ({@see self::DUREE_PAGES}) : elle ne sert que de filet si une purge manque.
- * Purger l'ensemble plutôt que les seules adresses touchées est voulu — un
- * décryptage paraît sur la page du vote, mais aussi sur l'accueil, la fiche de
- * chaque député, celle de chaque groupe, les listes… Énumérer ces pages serait
- * un second contrat à tenir, qu'on finirait par oublier.
+ * (décryptage, explication de vote, article). Chacun purge le magasin des
+ * pages vivantes puis le réchauffe. Entre les deux rien ne bouge, d'où une
+ * durée de cache d'un jour ({@see self::DUREE_PAGES}) : elle ne sert que de
+ * filet si une purge manque. Purger l'ensemble plutôt que les seules adresses
+ * touchées est voulu — un décryptage paraît sur la page du vote, mais aussi
+ * sur l'accueil, la fiche de chaque député, celle de chaque groupe, les
+ * listes… Énumérer ces pages serait un second contrat à tenir, qu'on finirait
+ * par oublier.
+ *
+ * **Les pages figées n'entrent pas dans ce cycle.** Elles ne décrivent que du
+ * passé, n'expirent pas ({@see self::DUREE_FIGEE}) et vivent dans un second
+ * magasin ({@see MagasinDouble}) que la purge ordinaire laisse en place. Il
+ * n'est vidé que lorsque ses sources bougent : `purger(tout: true)`,
+ * qu'appellent les imports lancés à la main et les écritures de la rédaction
+ * qui touchent au passé, et la synchronisation quand {@see EmpreinteFigee}
+ * constate un changement.
  *
  * **Les requêtes passent dans le processus, sans HTTP** : par le même
- * {@see CacheAvecSession} que `public/index.php`, qui écrit dans le même
- * magasin `var/cache/prod/http_cache`. Pas de serveur web occupé, pas de
+ * {@see CacheAvecSession} que `public/index.php`, qui écrit dans les mêmes
+ * magasins sous `var/cache/prod`. Pas de serveur web occupé, pas de
  * réseau, pas de mot de passe de préproduction à fournir.
  */
 final class RechauffeurCache
@@ -42,6 +51,16 @@ final class RechauffeurCache
      * fraîcheur est assurée par les purges, pas par l'expiration.
      */
     public const DUREE_PAGES = 86400;
+
+    /**
+     * Durée de vie d'une page figée : un an, la façon dont HTTP dit « sans
+     * expiration ». Poser cette durée sur une réponse, c'est la ranger dans le
+     * magasin figé ({@see MagasinDouble::estFigee()}) — donc affirmer que tout
+     * ce qu'elle montre est dans le périmètre d'{@see EmpreinteFigee}, que
+     * rien n'y dépend du jour du rendu, et que toute écriture de la rédaction
+     * qui la touche passe par `apresPublication(tout: true)`.
+     */
+    public const DUREE_FIGEE = 31536000;
 
     /**
      * Plans du site dont les pages sont réchauffées. Le sitemap annonce déjà
@@ -68,6 +87,7 @@ final class RechauffeurCache
         private readonly UrlGeneratorInterface $routeur,
         private readonly MessageBusInterface $bus,
         private readonly DatanExtension $datan,
+        private readonly EmpreinteFigee $empreinte,
         #[Autowire('%env(DEFAULT_URI)%')]
         private readonly string $adressePublique,
     ) {
@@ -77,8 +97,11 @@ final class RechauffeurCache
      * À appeler après l'écriture d'un contenu publié : la page change
      * aussitôt, le réchauffage suit en tâche de fond (consommateur Messenger),
      * le temps qu'il faut sans faire attendre le rédacteur.
+     *
+     * @param bool $tout vrai quand l'écriture touche aussi une page figée — un
+     *   décryptage ou une explication sur un scrutin d'une législature close
      */
-    public function apresPublication(): void
+    public function apresPublication(bool $tout = false): void
     {
         // En debug, `public/index.php` ne passe pas par le cache HTTP : rien à
         // purger, et personne pour consommer la demande.
@@ -86,20 +109,79 @@ final class RechauffeurCache
             return;
         }
 
-        $this->purger();
+        $this->purger($tout);
         $this->bus->dispatch(new RechauffageDemande(microtime(true)));
     }
 
     /**
-     * Vide le magasin d'un coup en le renommant, ce qui est atomique et
-     * instantané quel que soit le nombre de pages. Supprimer les fichiers un à
-     * un ferait attendre la requête qui purge, et laisserait les visiteurs lire
-     * un magasin à moitié vidé. Le répertoire écarté est effacé au
-     * réchauffage suivant.
+     * Vide le magasin des pages vivantes — et celui des pages figées quand le
+     * passé vient d'être réécrit (`tout`).
+     *
+     * D'un coup, en renommant le dossier, ce qui est atomique et instantané
+     * quel que soit le nombre de pages. Supprimer les fichiers un à un ferait
+     * attendre la requête qui purge, et laisserait les visiteurs lire un
+     * magasin à moitié vidé. Le répertoire écarté est effacé au réchauffage
+     * suivant.
      */
-    public function purger(): void
+    public function purger(bool $tout = false): void
     {
-        $magasin = $this->magasin();
+        $this->ecarter(MagasinDouble::VIVANT);
+
+        if ($tout) {
+            $this->ecarter(MagasinDouble::FIGE);
+            // Le prochain réchauffage notera de quel état des sources le
+            // magasin repart ; d'ici là, la synchronisation le viderait encore.
+            $this->empreinte->oublier($this->fichierEmpreinte());
+        }
+    }
+
+    /**
+     * Purge de fin de synchronisation : les pages vivantes toujours, les
+     * figées seulement si leurs sources ont bougé depuis la dernière fois
+     * qu'on a regardé — un député qui change de groupe, l'Assemblée qui
+     * réécrit le passé, un import lancé à la main qui a oublié de le dire.
+     *
+     * @return bool vrai si le magasin figé a été vidé lui aussi
+     */
+    public function purgerApresSynchronisation(): bool
+    {
+        $this->ecarter(MagasinDouble::VIVANT);
+
+        if (!$this->empreinte->aChange($this->fichierEmpreinte())) {
+            return false;
+        }
+
+        $this->ecarter(MagasinDouble::FIGE);
+
+        return true;
+    }
+
+    /**
+     * Retire du cache quelques adresses seulement, dans les deux magasins.
+     *
+     * L'exception au contrat « on purge tout » : elle vaut pour une écriture
+     * dont on sait exactement où elle paraît, et qui se répète — relire cent
+     * résumés d'amendements à la suite viderait cent fois le cache du site.
+     * Les pages retirées se refont à leur prochaine visite.
+     *
+     * @param list<string> $chemins chemins absolus depuis la racine du site
+     */
+    public function purgerAdresses(array $chemins): void
+    {
+        if ($this->kernel->isDebug()) {
+            return;
+        }
+
+        $magasin = MagasinDouble::sous($this->kernel->getCacheDir());
+
+        foreach ($chemins as $chemin) {
+            $magasin->purge($this->absolue($chemin));
+        }
+    }
+
+    private function ecarter(string $nom): void
+    {
+        $magasin = $this->kernel->getCacheDir() . '/' . $nom;
 
         if (!is_dir($magasin)) {
             return;
@@ -126,7 +208,13 @@ final class RechauffeurCache
 
         try {
             touch($this->kernel->getProjectDir() . '/var/rechauffage.debut');
-            (new Filesystem())->remove(glob($this->magasin() . '.purge-*') ?: []);
+            (new Filesystem())->remove(glob($this->kernel->getCacheDir() . '/http_cache*.purge-*') ?: []);
+
+            // Après un déploiement ou une purge complète, le magasin figé est
+            // vide : on note de quel état de ses sources il repart. Sans
+            // cela, la synchronisation suivante le viderait faute de point de
+            // comparaison.
+            $this->empreinte->consignerSiAbsente($this->fichierEmpreinte());
 
             // allow_reload : la requête `no-cache` force le rendu et remplace
             // l'entrée existante. Sans lui, réchauffer un magasin non purgé
@@ -221,8 +309,11 @@ final class RechauffeurCache
         return rtrim($this->adressePublique, '/') . $chemin;
     }
 
-    private function magasin(): string
+    /**
+     * À côté des magasins, donc propre à la version déployée comme eux.
+     */
+    private function fichierEmpreinte(): string
     {
-        return $this->kernel->getCacheDir() . '/http_cache';
+        return $this->kernel->getCacheDir() . '/' . MagasinDouble::FIGE . '.empreinte';
     }
 }

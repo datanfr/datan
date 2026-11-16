@@ -30,7 +30,8 @@ use Symfony\Component\Console\Style\SymfonyStyle;
  *   suivante la reprend avec la sienne ({@see Moissonneur::acquitte()}).
  * - **Une synchronisation qui a commencé d'écrire purge le cache HTTP**, qu'elle
  *   réussisse ou non : les pages restent en cache un jour, et un import à
- *   moitié fait reste un import visible à moitié sinon.
+ *   moitié fait reste un import visible à moitié sinon. Les pages figées, elles,
+ *   ne sont vidées que si les données closes ont bougé (`EmpreinteFigee`).
  * - **Elle tient sur un hébergement mutualisé hostile** : ni le Hangup, ni le
  *   `wait_timeout` de 260 s d'o2switch ne doivent plus l'arrêter en route.
  *
@@ -207,8 +208,20 @@ class SyncQuotidienCommand extends Command
             return Command::FAILURE;
         } finally {
             if ($aEcrit) {
-                $this->rechauffeur->purger();
-                $io->text(sprintf('Cache HTTP vidé (%s) — le réchauffage suit dans la crontab.', $this->heure('H:i:s')));
+                // Les pages figées ne sont vidées que si le passé a bougé :
+                // toujours après une reconstruction complète, sinon quand
+                // l'empreinte des données closes n'est plus celle de la veille.
+                if ($tout) {
+                    $this->rechauffeur->purger(tout: true);
+                    $figees = true;
+                } else {
+                    $figees = $this->rechauffeur->purgerApresSynchronisation();
+                }
+                $io->text(sprintf(
+                    'Cache HTTP vidé (%s), %s — le réchauffage suit dans la crontab.',
+                    $this->heure('H:i:s'),
+                    $figees ? 'pages figées comprises : les données closes ont changé' : 'pages figées conservées',
+                ));
             }
             $this->moissonneur->deverrouille();
         }

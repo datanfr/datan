@@ -8,6 +8,7 @@ use App\Entity\Utilisateur;
 use App\Enum\DecryptageState;
 use App\Form\DecryptageType;
 use App\Http\RechauffeurCache;
+use App\Legislature;
 use App\Ia\CollecteurDecryptage;
 use App\Ia\GenerateurBrouillon;
 use App\Repository\DecryptageRepository;
@@ -245,7 +246,9 @@ class DecryptageController extends AbstractController
             $this->entityManager->flush();
 
             if ($etaitPublie || $decryptage->getState() === DecryptageState::Published) {
-                $this->cache->apresPublication();
+                // Le décryptage d'une législature close paraît sur des pages
+                // figées — listes de scrutins, groupes, anciens députés.
+                $this->cache->apresPublication(tout: Legislature::estClose((int) $decryptage->getLegislature()));
             }
 
             $this->addFlash('succes', $decryptage->getState() === DecryptageState::Published
@@ -277,11 +280,12 @@ class DecryptageController extends AbstractController
 
             $titre = $decryptage->getTitle();
             $etaitPublie = $decryptage->getState() === DecryptageState::Published;
+            $close = Legislature::estClose((int) $decryptage->getLegislature());
             $this->entityManager->remove($decryptage);
             $this->entityManager->flush();
 
             if ($etaitPublie) {
-                $this->cache->apresPublication();
+                $this->cache->apresPublication(tout: $close);
             }
 
             $this->addFlash('succes', sprintf('Décryptage « %s » supprimé.', $titre));

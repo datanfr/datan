@@ -179,6 +179,20 @@ ls -1 "$RACINE/releases" | sort | head -n "-$CONSERVER" | while read -r ancienne
   fi
 done
 
+# Une version gardée ne sert plus de pages : son cache HTTP n'a plus de
+# lecteur. Il pesait 1,5 Go par version au 16/11/2026, et bien davantage depuis
+# que le magasin des pages figées ne se vide presque plus. On l'efface, sauf
+# pour les deux plus récentes : la nouvelle, et la précédente, qui reçoit
+# encore des requêtes pendant deux minutes (cf. ci-dessus).
+ls -1 "$RACINE/releases" | sort | head -n -2 | while read -r ancienne; do
+  for magasin in http_cache http_cache_fige; do
+    if [[ -d "$RACINE/releases/$ancienne/var/cache/prod/$magasin" ]]; then
+      rm -rf "${RACINE:?}/releases/${ancienne:?}/var/cache/prod/$magasin"
+      echo "   - cache HTTP de $ancienne ($magasin)"
+    fi
+  done
+done
+
 etape "Réchauffage du cache HTTP (arrière-plan, var/log/rechauffage.log)"
 # Le magasin du cache HTTP vit sous var/cache : la nouvelle version part à
 # froid. Le réchauffage dure une quinzaine de minutes et ne doit pas retenir le

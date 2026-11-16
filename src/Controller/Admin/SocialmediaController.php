@@ -6,6 +6,7 @@ use App\Entity\ContactDepute;
 use App\Entity\Depute;
 use App\Entity\Utilisateur;
 use App\Form\ContactDeputeType;
+use App\Http\RechauffeurCache;
 use App\Legislature;
 use App\Repository\ContactDeputeRepository;
 use Doctrine\DBAL\Connection;
@@ -45,6 +46,7 @@ class SocialmediaController extends AbstractController
         private readonly Connection $connection,
         private readonly EntityManagerInterface $em,
         private readonly ContactDeputeRepository $contacts,
+        private readonly RechauffeurCache $cache,
     ) {
     }
 
@@ -75,6 +77,8 @@ class SocialmediaController extends AbstractController
             $contact->setMisAJourLe(new \DateTimeImmutable());
             $this->em->persist($contact);
             $this->em->flush();
+
+            $this->cache->purgerAdresses($this->pagesDuDepute($depute));
 
             $this->addFlash('succes', 'Réseaux sociaux enregistrés.');
 
@@ -311,5 +315,35 @@ class SocialmediaController extends AbstractController
             'titre' => $titre,
             'message' => $message,
         ]);
+    }
+
+    /**
+     * Les pages publiques qui affichent les réseaux sociaux d'un député : sa
+     * fiche, ses votes, et une page par législature passée. Purge ciblée et
+     * non générale — on renseigne ces fiches par dizaines à l'arrivée d'une
+     * législature, et celles d'un ancien député sont dans le magasin figé.
+     *
+     * @return list<string>
+     */
+    private function pagesDuDepute(Depute $depute): array
+    {
+        if ($depute->getDptSlug() === null) {
+            return [];
+        }
+
+        $adresse = ['dptSlug' => $depute->getDptSlug(), 'slug' => $depute->getSlug()];
+        $pages = [
+            $this->generateUrl('depute_individual', $adresse),
+            $this->generateUrl('depute_votes', $adresse),
+        ];
+
+        foreach ($this->connection->fetchFirstColumn(
+            'SELECT DISTINCT legislature FROM mandat WHERE depute_id = :depute AND legislature >= :premiere',
+            ['depute' => $depute->getId(), 'premiere' => Legislature::PREMIERE],
+        ) as $legislature) {
+            $pages[] = $this->generateUrl('depute_legislature', $adresse + ['legislature' => (int) $legislature]);
+        }
+
+        return $pages;
     }
 }

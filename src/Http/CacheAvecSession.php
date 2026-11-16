@@ -5,6 +5,7 @@ namespace App\Http;
 use Symfony\Bundle\FrameworkBundle\HttpCache\HttpCache;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\HttpCache\StoreInterface;
 
 /**
  * Le reverse proxy intégré, à un détail près : un porteur de cookie de session
@@ -25,9 +26,22 @@ use Symfony\Component\HttpFoundation\Response;
  * tout visiteur — et, jusqu'au 10 septembre 2026, Tarte au citron et le
  * compteur mensuel de pages en posaient aussi —, le magasin deviendrait un
  * cache par visiteur.
+ *
+ * Second écart avec le reverse proxy d'origine : le magasin est double, pages
+ * vivantes d'un côté, pages figées de l'autre ({@see MagasinDouble}).
  */
 final class CacheAvecSession extends HttpCache
 {
+    /**
+     * Sous le cache de la version, et non sous un dossier partagé entre
+     * versions : une page en magasin cite les fichiers `/build/…` de la
+     * version qui l'a rendue.
+     */
+    protected function createStore(): StoreInterface
+    {
+        return MagasinDouble::sous($this->kernel->getCacheDir());
+    }
+
     protected function lookup(Request $request, bool $catch = false): Response
     {
         // session_name() : la configuration `session: true` est aux défauts,

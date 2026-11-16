@@ -17,6 +17,10 @@ use Symfony\Component\HttpKernel\KernelInterface;
  * blog et scrutins décryptés. Le détail du périmètre et du contrat
  * d'invalidation est dans {@see RechauffeurCache}.
  *
+ * Les pages figées — législatures closes, élections passées — ne sont pas
+ * vidées : elles ne le sont qu'avec `--tout`, à passer après une écriture
+ * faite à la main qui réécrit le passé sans vider elle-même le cache.
+ *
  * Dernier maillon de la chaîne quotidienne (`bin/crontab.prod`), et relancé
  * en tâche de fond après chaque déploiement. ~2 500 pages, une quinzaine de
  * minutes : c'est autant de rendus que les visiteurs n'auront pas à attendre.
@@ -41,6 +45,8 @@ class RechaufferCacheCommand extends Command
     {
         $this->addOption('sans-purge', null, InputOption::VALUE_NONE,
             'Rafraîchir les pages principales sans vider le reste du magasin.');
+        $this->addOption('tout', null, InputOption::VALUE_NONE,
+            'Vider aussi les pages figées (législatures closes, élections passées) : après une écriture à la main qui réécrit le passé.');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -56,8 +62,9 @@ class RechaufferCacheCommand extends Command
         $debut = microtime(true);
 
         if (!$input->getOption('sans-purge')) {
-            $this->rechauffeur->purger();
-            $io->writeln('Cache HTTP vidé.');
+            $tout = (bool) $input->getOption('tout');
+            $this->rechauffeur->purger($tout);
+            $io->writeln($tout ? 'Cache HTTP vidé, pages figées comprises.' : 'Cache HTTP vidé (les pages figées restent en place).');
         }
 
         $bilan = $this->rechauffeur->rechauffer(function (string $url) use ($io): void {

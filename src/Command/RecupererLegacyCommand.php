@@ -282,7 +282,7 @@ class RecupererLegacyCommand extends Command
         // La récupération est faite et journalisée : un échec de la purge ne
         // doit pas la faire passer pour ratée. On le dit, et on donne la main.
         try {
-            $this->rechauffeur->apresPublication();
+            $this->rechauffeur->apresPublication(tout: true);
         } catch (\Throwable $e) {
             $io->warning(sprintf('Purge du cache HTTP impossible (%s) : lancer app:cache:rechauffer.', $e->getMessage()));
         }

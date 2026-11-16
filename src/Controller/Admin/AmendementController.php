@@ -3,7 +3,9 @@
 namespace App\Controller\Admin;
 
 use App\Entity\Utilisateur;
+use App\Http\RechauffeurCache;
 use App\Repository\AmendementRepository;
+use App\Twig\DatanExtension;
 use Doctrine\DBAL\Connection;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -54,6 +56,8 @@ class AmendementController extends AbstractController
         private readonly Connection $connection,
         private readonly EntityManagerInterface $entityManager,
         private readonly AmendementRepository $amendements,
+        private readonly RechauffeurCache $cache,
+        private readonly DatanExtension $datan,
     ) {
     }
 
@@ -181,6 +185,17 @@ class AmendementController extends AbstractController
 
         $amendement->setResumeRelu($relu);
         $this->entityManager->flush();
+
+        // Le résumé relu paraît — ou disparaît — sur la page du scrutin qui a
+        // mis l'amendement aux voix : sans purge, seulement le lendemain. Une
+        // purge ciblée, parce qu'on relit ces résumés par dizaines à la suite.
+        $this->cache->purgerAdresses(array_map(
+            fn (array $scrutin): string => $this->datan->lienVote((int) $scrutin['legislature'], (int) $scrutin['numero']),
+            $this->connection->fetchAllAssociative(
+                'SELECT legislature, numero FROM scrutin WHERE amendement_id = :amendement',
+                ['amendement' => $id],
+            ),
+        ));
 
         return new JsonResponse(['success' => true, 'reviewed' => $relu ? 1 : 0]);
     }

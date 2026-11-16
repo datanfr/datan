@@ -10,6 +10,7 @@ use App\Entity\Scrutin;
 use App\Entity\Utilisateur;
 use App\Form\ExplicationType;
 use App\Http\RechauffeurCache;
+use App\Legislature;
 use App\Repository\ExplicationRepository;
 use Doctrine\DBAL\Connection;
 use Doctrine\ORM\EntityManagerInterface;
@@ -148,7 +149,9 @@ class DashboardController extends AbstractController
             $this->entityManager->flush();
 
             if ($explication->isPubliee()) {
-                $this->cache->apresPublication();
+                // Sur un scrutin d'une législature close, l'explication paraît
+                // aussi sur la fiche figée d'un ancien député.
+                $this->cache->apresPublication(tout: Legislature::estClose($legislature));
             }
 
             $this->addFlash('succes', $explication->isPubliee()
@@ -191,7 +194,7 @@ class DashboardController extends AbstractController
             $this->entityManager->flush();
 
             if ($etaitPubliee || $explication->isPubliee()) {
-                $this->cache->apresPublication();
+                $this->cache->apresPublication(tout: Legislature::estClose($legislature));
             }
 
             $this->addFlash('succes', $explication->isPubliee()
@@ -236,7 +239,7 @@ class DashboardController extends AbstractController
             $this->entityManager->flush();
 
             if ($etaitPubliee) {
-                $this->cache->apresPublication();
+                $this->cache->apresPublication(tout: Legislature::estClose($legislature));
             }
 
             $this->addFlash('succes', sprintf('L\'explication de vote pour le scrutin n° %d a bien été supprimée.', $numero));
@@ -313,6 +316,10 @@ class DashboardController extends AbstractController
 
             $this->entityManager->persist($candidature);
             $this->entityManager->flush();
+
+            // La candidature paraît sur la page de l'élection et sur la fiche
+            // du député, toutes deux en cache — et la première est figée.
+            $this->cache->apresPublication(tout: true);
 
             $this->addFlash('succes', 'Votre candidature a bien été mise à jour.');
 

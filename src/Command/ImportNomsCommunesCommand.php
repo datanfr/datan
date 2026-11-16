@@ -128,7 +128,7 @@ class ImportNomsCommunesCommand extends Command
 
         // Les phrases des pages de résultats changent : purge, comme après
         // toute écriture visible ({@see RechauffeurCache}).
-        $this->cacheHttp->purger();
+        $this->cacheHttp->purger(tout: true);
 
         return Command::SUCCESS;
     }

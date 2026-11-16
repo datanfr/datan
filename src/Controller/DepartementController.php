@@ -18,8 +18,13 @@ use Symfony\Component\Routing\Attribute\Route;
  */
 class DepartementController extends AbstractController
 {
-    /** Le découpage ne bouge qu'aux élections. */
-    private const CACHE_TTL = RechauffeurCache::DUREE_PAGES;
+    /**
+     * Pages figées : le découpage ne bouge qu'aux élections, et les députés
+     * en exercice du département sont dans le périmètre
+     * d'{@see \App\Http\EmpreinteFigee}, qui vide le magasin quand l'un
+     * d'eux arrive, part ou change de groupe.
+     */
+    private const CACHE_TTL = RechauffeurCache::DUREE_FIGEE;
 
     /**
      * Seuil de population du bloc « Communes les plus peuplées »

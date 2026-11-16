@@ -32,6 +32,17 @@ final class Legislature
     ];
 
     /**
+     * Une législature achevée : ses scrutins, ses groupes et ses mandats ne
+     * bougent plus, ce qui range ses pages dans le magasin figé du cache HTTP
+     * ({@see \App\Http\MagasinDouble}). Une législature à venir n'est pas
+     * close — `/groupes/legislature-18` répond déjà, par une liste vide.
+     */
+    public static function estClose(int $legislature): bool
+    {
+        return $legislature < self::COURANTE;
+    }
+
+    /**
      * Législatures proposées dans les blocs « Historique », de la plus récente
      * à la plus ancienne.
      *
