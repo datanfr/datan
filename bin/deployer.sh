@@ -37,12 +37,28 @@ export APP_ENV=prod APP_DEBUG=0
 # DetourerPhotosCommand), et une version neuve qui ne les verrait pas servirait
 # des fiches sans photo jusqu'au lendemain. Les professions de foi sont des PDF
 # déposés à la main, jamais dans Git.
+#
+# Les quatre jeux `deputes_original`, `deputes_webp`, `deputes_nobg` et
+# `deputes_nobg_webp` viennent du legacy (`daily.php`, remove.bg) : recopiés de
+# ~/public_html le 16/11/2026, à recopier une dernière fois à la bascule, puis
+# plus personne ne les alimente — un nouveau député prend notre détourage
+# (PhotoExtension). Leurs adresses sont indexées : ils se servent même là où
+# nos gabarits ne les lisent pas (les deux jeux `_webp`).
+#
+# `opendata` reçoit les CSV d'`app:opendata:publier`, dont l'adresse est
+# publique depuis 2021 : une version neuve ne doit pas les faire disparaître
+# jusqu'au prochain passage de la commande.
 DOSSIERS_PARTAGES=(
   var/log
   var/tricoteuses
   public/assets/imgs/deputes
   public/assets/imgs/deputes_detoures
+  public/assets/imgs/deputes_original
+  public/assets/imgs/deputes_webp
+  public/assets/imgs/deputes_nobg
+  public/assets/imgs/deputes_nobg_webp
   public/assets/data/professions
+  public/assets/opendata
 )
 # Le journal du scraper retient les pages vues sans résultat : le perdre à
 # chaque version ferait redemander à assemblee-nationale.fr ce qu'on sait vide.

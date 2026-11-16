@@ -37,6 +37,8 @@ parameters:
     env(ANTHROPIC_API_KEY): ''
     # Modèle des résumés d'amendements par lots (App\Ia\FabriqueClientAnthropic).
     env(IA_MODELE_RESUMES): 'claude-haiku-5-5'
+    # Vide = app:opendata:publier écrit ses CSV sans pouvoir les téléverser.
+    env(DATA_GOUV_API_KEY): ''
 
 services:
     # default configuration for services in *this* file

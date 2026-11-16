@@ -70,7 +70,12 @@
 # `app:calcul:statistiques-deputes` reste ici — c'est un précalcul, qui se
 # périme dès qu'un scrutin entre.
 #
-# Les trois commandes s'enchaînent par `;` et non par `&&` : **une
+# `app:opendata:publier` récrit les quatre CSV d'assets/opendata/ sur les
+# classements du jour, sans les téléverser : tant que le legacy publie sur
+# data.gouv, deux publieurs se remplaceraient. Le jour de la bascule, lui
+# ajouter `--televerser` (et DATA_GOUV_API_KEY dans .env.local).
+#
+# Les quatre commandes s'enchaînent par `;` et non par `&&` : **une
 # synchronisation qui a écrit doit purger**, qu'elle ait réussi ou non. Avec
 # `&&`, un sync tombé après l'import des scrutins (30/10, 10/11, 13/11, 14/11)
 # laissait en cache pour un jour des pages qui ne les montraient pas.
@@ -83,7 +88,7 @@
 # confondre avec un échec. Le nom `app:sync:quotidien` reste visible dans `ps`,
 # dont le workflow de déploiement se sert pour refuser de vider le cache sous
 # une moisson en cours.
-20 6 * * * cd @COURANT@ && trap '' HUP && { echo "===== $(date) ====="; flock -n -E 75 @PARTAGE@/var/sync.lock sh -c 'APP_ENV=prod @PHP@ bin/console app:sync:quotidien --no-ansi; s=$?; APP_ENV=prod @PHP@ bin/console app:calcul:statistiques-deputes --no-ansi; c=$?; APP_ENV=prod @PHP@ bin/console app:cache:rechauffer --no-ansi; r=$?; echo "BILAN sync=$s statistiques=$c rechauffage=$r"; [ $s -eq 0 ] && [ $c -eq 0 ] && [ $r -eq 0 ]'; e=$?; if [ $e -eq 75 ]; then echo "SAUTE : verrou pris, une synchronisation tourne encore"; elif [ $e -ne 0 ]; then echo "ECHEC (code $e)"; fi; echo "===== fin $(date) ====="; } >> var/log/sync-quotidien.log 2>&1
+20 6 * * * cd @COURANT@ && trap '' HUP && { echo "===== $(date) ====="; flock -n -E 75 @PARTAGE@/var/sync.lock sh -c 'APP_ENV=prod @PHP@ bin/console app:sync:quotidien --no-ansi; s=$?; APP_ENV=prod @PHP@ bin/console app:calcul:statistiques-deputes --no-ansi; c=$?; APP_ENV=prod @PHP@ bin/console app:opendata:publier --no-ansi; o=$?; APP_ENV=prod @PHP@ bin/console app:cache:rechauffer --no-ansi; r=$?; echo "BILAN sync=$s statistiques=$c opendata=$o rechauffage=$r"; [ $s -eq 0 ] && [ $c -eq 0 ] && [ $o -eq 0 ] && [ $r -eq 0 ]'; e=$?; if [ $e -eq 75 ]; then echo "SAUTE : verrou pris, une synchronisation tourne encore"; elif [ $e -ne 0 ]; then echo "ECHEC (code $e)"; fi; echo "===== fin $(date) ====="; } >> var/log/sync-quotidien.log 2>&1
 
 # --- Configuration PHP — chaque minute -------------------------------------
 # Le compte est en 7.4 (datan.fr) et nous en 8.4 : la configuration du

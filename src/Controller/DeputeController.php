@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Depute\Anciennete;
 use App\Depute\ComportementDepute;
 use App\Depute\GroupeAuScrutin;
 use App\Entity\FonctionGroupe;
@@ -1275,7 +1276,7 @@ class DeputeController extends AbstractController
         // Jours d'ancienneté du député et jours moyens de tous les députés, en une
         // requête : COALESCE(prise de fonction, début) borne chaque mandat, un
         // mandat encore ouvert court jusqu'à aujourd'hui.
-        $duree = 'DATEDIFF(COALESCE(date_fin, CURDATE()), COALESCE(date_prise_fonction, date_debut))';
+        $duree = Anciennete::JOURS_SQL;
         $ligne = $this->connection->fetchAssociative(
             "SELECT
                 (SELECT SUM($duree) FROM mandat WHERE depute_id = :depute) AS jours,
@@ -1295,25 +1296,9 @@ class DeputeController extends AbstractController
         return [
             'ordinal' => self::ORDINAUX[$mandatsN] ?? (string) $mandatsN,
             'mois' => $mois,
-            'length_edited' => $this->ancienneteEnLettres((int) $ligne['jours']),
+            'length_edited' => Anciennete::enLettres((int) $ligne['jours']),
             'moyenne' => $moyenne,
             'edito' => $annees < $moyenne ? 'moins' : ($annees > $moyenne ? 'plus' : 'autant'),
         ];
-    }
-
-    /**
-     * Ancienneté en toutes lettres, comme le legacy (`daily.php:3994`) : en années
-     * dès un an, sinon en mois, sinon en jours.
-     */
-    private function ancienneteEnLettres(int $jours): string
-    {
-        $annees = (int) round($jours / 365);
-        if ($annees >= 1) {
-            return $annees . ($annees > 1 ? ' ans' : ' an');
-        }
-
-        $mois = (int) round($jours / 30);
-
-        return $mois !== 0 ? $mois . ' mois' : $jours . ' jours';
     }
 }

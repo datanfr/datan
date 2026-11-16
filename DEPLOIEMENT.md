@@ -589,13 +589,15 @@ de la ligne, ne pas le copier tel quel.
 
 ```cron
 # Quotidien — 6 h 20 (pas 6 h : fenêtre de maintenance CloudLinux, SIGHUP).
-# Sourde au SIGHUP ; statistiques et réchauffage (donc purge) même si le sync a
+# Sourde au SIGHUP ; statistiques, CSV ouverts et réchauffage (donc purge) même si le sync a
 # échoué — il n'acquitte alors pas son delta, que la prochaine exécution reprend.
 20 6 * * * cd /var/www/datan/current && trap '' HUP && { flock -n -E 75 var/sync.lock sh -c \
   'APP_ENV=prod php bin/console app:sync:quotidien --no-ansi; s=$?; \
    APP_ENV=prod php bin/console app:calcul:statistiques-deputes --no-ansi; c=$?; \
+   APP_ENV=prod php bin/console app:opendata:publier --no-ansi; o=$?; \
    APP_ENV=prod php bin/console app:cache:rechauffer --no-ansi; r=$?; \
-   echo "BILAN sync=$s statistiques=$c rechauffage=$r"; [ $s -eq 0 ] && [ $c -eq 0 ] && [ $r -eq 0 ]'; } >> var/log/sync-quotidien.log 2>&1
+   echo "BILAN sync=$s statistiques=$c opendata=$o rechauffage=$r"; \
+   [ $s -eq 0 ] && [ $c -eq 0 ] && [ $o -eq 0 ] && [ $r -eq 0 ]'; } >> var/log/sync-quotidien.log 2>&1
 
 # Hebdomadaire — le seul appel à assemblee-nationale.fr, hors chaîne à dessein.
 15 4 * * 1 cd /var/www/datan/current && APP_ENV=prod php bin/console app:scraper:scrutins --no-ansi >> var/log/scraper-scrutins.log 2>&1

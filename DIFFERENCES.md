@@ -27,6 +27,31 @@ dans `TODO.md`.
 - **Ordre des logos de « La position des groupes »** : par effectif
   décroissant ; la requête du legacy n'a aucun `ORDER BY`.
 
+## Jeux de données ouverts (`app:opendata:publier`)
+
+Colonnes, ordre et précision repris du legacy, coquille `socreCohesion`
+comprise : ce sont des noms que des réutilisations lisent. Les écarts :
+
+- **Scores de la 17e** pris dans nos classements, ceux des pages
+  /statistiques : la participation « spécialité » diffère donc pour la plupart
+  des députés — le legacy la calcule en incrémental et ne revient jamais sur un
+  scrutin rattaché tardivement à son dossier (Alain David : 3 votes comptés,
+  9 chez nous ; cf. `TODO.md`, « Votes par spécialisation »). L'indice de
+  Rose suit de même notre « représentativité sociale », encore à instruire, et
+  reste vide pour les non-inscrits, que nos classements de composition
+  écartent.
+- **Majorité de la 17e** vide au lieu de `0.000` pour tous : sans groupe
+  « Majoritaire », il n'y a rien à mesurer.
+- **Législatures closes, députés partis, groupes dissous** : valeurs du legacy
+  figées le 16/11/2026 (`ressources/opendata/`), faute de classement chez nous.
+  Un député qui quitte l'hémicycle après cette date perd donc ses scores de 17e
+  dans le jeu, plutôt que d'en recevoir d'approchés.
+- **Corrections** : nom du département pris au référentiel (« Val-d'Oise »,
+  « Côte-d'Or », « Corse-du-Sud » ; le legacy écrit « Val-d'oise »), code corse
+  en capitales (`2A`, pas `2a`), espaces finales ôtées (`job`, `villeNaissance`,
+  `nom`), ancienneté recalculée sur nos mandats (trois anciens députés passaient
+  de 1 à 6 ans chez le legacy).
+
 ## Groupes
 
 - **`/groupes/legislature-17/udr` sert le groupe en activité** ; l'ancien UDR

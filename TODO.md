@@ -65,15 +65,22 @@ is too low ») ; la nôtre attend le même crédit. Rien n'est planifié d'ici l
   `SYMFONY_URL=https://datan.fr` (contrôle de fin de déploiement).
 - [ ] **Fichiers publics que le legacy sert et nous non** — 200 sur datan.fr,
   404 sur symfony.datan.fr, vérifié le 16/11/2026 :
-  - les jeux de photos `assets/imgs/deputes_original` (224 Mo, encore alimenté
-    le 13/11), `deputes_webp`, `deputes_nobg`, `deputes_nobg_webp` : adresses
-    indexées, et `PhotoExtension` les préfère à notre détourage dès qu'ils
-    sont là. À copier dans `shared/public/assets/imgs/` et à déclarer dans
-    `DOSSIERS_PARTAGES` (`bin/deployer.sh`) ; comparer ensuite quelques fiches
-    à datan.fr, le portrait affiché change ;
-  - `assets/opendata/*.csv` (députés et groupes, actifs et historique) :
-    récrits chaque jour par `daily.php`. Aucune commande ne les produit chez
-    nous : à écrire, ou gel assumé d'une dernière copie ;
+  - les jeux de photos `deputes_original`, `deputes_webp`, `deputes_nobg`,
+    `deputes_nobg_webp` : copiés dans `shared/public/assets/imgs/` le 16/11 et
+    déclarés dans `DOSSIERS_PARTAGES`. `daily.php` y ajoute encore les
+    portraits des nouveaux députés : **les recopier une dernière fois après
+    avoir coupé le crontab du legacy** —
+    `for d in deputes_original deputes_webp deputes_nobg deputes_nobg_webp; do rsync -a ~/public_html/assets/imgs/$d/ ~/symfony.datan.fr/shared/public/assets/imgs/$d/; done` ;
+    au premier déploiement qui suit leur arrivée, comparer quelques fiches à
+    datan.fr, `PhotoExtension` les préférant à notre détourage ;
+  - `assets/opendata/*.csv` : `app:opendata:publier`, dans la chaîne
+    quotidienne. Reste, **le jour de la bascule**, à poser `DATA_GOUV_API_KEY`
+    (la `API_GOUV` du `~/.bashrc` du legacy) dans le `.env.local` et à ajouter
+    `--televerser` à son entrée de `bin/crontab.prod`. L'export de la
+    récupération produit aussi `opendata_deputes_gel.tsv` et
+    `opendata_groupes_gel.tsv` : les recopier dans `ressources/opendata/`
+    (préfixe `gel-legacy-`), pour que les députés partis d'ici là gardent leurs
+    scores de 17e ;
   - `assets/dataset_backup/` : la sauvegarde publique, récrite les 1er et 15 par
     `exportSql.php`. À reprendre, figer ou abandonner — à décider.
 - [ ] **API à clés du legacy** : `api/votes`, `api/tables`, `api/exposes`,

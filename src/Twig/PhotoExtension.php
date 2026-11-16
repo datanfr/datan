@@ -31,8 +31,8 @@ use Twig\TwigFunction;
  *   par {@see ImportPhotosCommand} depuis le dépôt des Tricoteuses.
  *
  * Les deux premiers jeux sont produits à la main, pèsent une centaine de
- * mégaoctets, ne se régénèrent pas et ne vivent que sur le serveur du site :
- * ils se recopient au déploiement (`TODO.md`). Les deux derniers sont, eux,
+ * mégaoctets, ne se régénèrent pas et ne vivent que sur le serveur, dans
+ * `shared/` (`DOSSIERS_PARTAGES` de `bin/deployer.sh`). Les deux derniers sont, eux,
  * reconstructibles ici — d'où leur rang de repli.
  *
  * L'existence du fichier fait foi : rien en base ne dit qui a une photo, et

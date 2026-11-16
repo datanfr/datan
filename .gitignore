@@ -35,9 +35,16 @@
 # du commit.
 /public/assets/imgs/deputes/
 # Même raison pour leur détourage, produit par `app:photos:detourer` à partir
-# des précédentes. À ne pas confondre avec `deputes_nobg/`, découpé à la main
-# sur le serveur du site : celui-là, s'il arrive un jour ici, est à committer.
+# des précédentes.
 /public/assets/imgs/deputes_detoures/
+# Les quatre jeux du legacy (détourés à la main, remove.bg) : 280 Mo qui ne
+# vivent que dans shared/ sur le serveur (bin/deployer.sh), comme les CSV
+# récrits chaque jour par app:opendata:publier.
+/public/assets/imgs/deputes_original/
+/public/assets/imgs/deputes_webp/
+/public/assets/imgs/deputes_nobg/
+/public/assets/imgs/deputes_nobg_webp/
+/public/assets/opendata/
 
 /assets/vendor/
 ###< symfony/asset-mapper ###

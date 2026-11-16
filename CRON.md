@@ -28,6 +28,7 @@ synchronisations sur vingt ont reçu un SIGHUP entre le 27/10 et le 15/11.
 | --- | --- | --- |
 | `app:sync:quotidien` | Moisson + 13 étapes d'import, dans l'ordre des dépendances ; acquitte le delta si toutes réussissent, purge le cache HTTP dès qu'une étape a écrit — les pages figées seulement si leurs données ont changé | ~5 min en production |
 | `app:calcul:statistiques-deputes` | Participation, loyauté, proximité par groupe de la fiche député | ~15 s |
+| `app:opendata:publier` | Récrit les quatre CSV publics d'`assets/opendata/` (députés et groupes, en activité et historique) sur les classements du jour. Le téléversement sur data.gouv (`--televerser`) n'est ajouté qu'à la bascule | < 1 s |
 | `app:cache:rechauffer` | Vide le cache HTTP puis y remet les ~2 500 pages les plus lues (accueil, listes, députés en exercice, groupes, partis, départements, élections, blog, scrutins décryptés ; pas les communes). Les pages vivantes restent en cache un jour : c'est cette purge qui rend les nouveaux scrutins visibles, et le réchauffage qui évite au premier visiteur d'attendre le rendu (0,3 à 1,7 s au lieu de ~30 ms). Les pages figées (élections, communes, législatures closes) ne sont pas vidées, sauf avec `--tout` | ~6 min |
 
 `app:sync:quotidien` déroule lui-même, dans cet ordre : moisson des dépôts,
@@ -84,14 +85,16 @@ lecture — **cron arrête la commande à la fin de la ligne**, la continuation 
 antislash n'est pas garantie d'une implémentation à l'autre.
 
 ```cron
-# Mise à jour quotidienne — 6 h 20. Une seule entrée, sourde au SIGHUP ; les trois
+# Mise à jour quotidienne — 6 h 20. Une seule entrée, sourde au SIGHUP ; les quatre
 # commandes s'enchaînent dans l'ordre et le réchauffage (donc la purge) a lieu
 # même si le sync a échoué. Un verrou pris se journalise « SAUTE », pas « ECHEC ».
 20 6 * * * cd /var/www/datan && trap '' HUP && { echo "===== $(date) ====="; \
   flock -n -E 75 var/sync.lock sh -c 'APP_ENV=prod php bin/console app:sync:quotidien --no-ansi; s=$?; \
   APP_ENV=prod php bin/console app:calcul:statistiques-deputes --no-ansi; c=$?; \
+  APP_ENV=prod php bin/console app:opendata:publier --no-ansi; o=$?; \
   APP_ENV=prod php bin/console app:cache:rechauffer --no-ansi; r=$?; \
-  echo "BILAN sync=$s statistiques=$c rechauffage=$r"; [ $s -eq 0 ] && [ $c -eq 0 ] && [ $r -eq 0 ]'; \
+  echo "BILAN sync=$s statistiques=$c opendata=$o rechauffage=$r"; \
+  [ $s -eq 0 ] && [ $c -eq 0 ] && [ $o -eq 0 ] && [ $r -eq 0 ]'; \
   e=$?; if [ $e -eq 75 ]; then echo "SAUTE : verrou pris"; elif [ $e -ne 0 ]; then echo "ECHEC (code $e)"; fi; \
   echo "===== fin $(date) ====="; } >> var/log/sync-quotidien.log 2>&1
 ```
@@ -175,9 +178,12 @@ n'a sa place dans une tâche planifiée.
 
 ## 5. Pas encore branché — à planifier au déploiement
 
-- **Publication data.gouv** (`opendata()` de `daily.php` dans le legacy) : les
-  jeux CSV que notre pied de page pointe. Rythme du legacy : quotidien, hors
-  `app:sync:quotidien`. Rien de porté à ce jour.
+- **Téléversement sur data.gouv** (`opendata()` de `daily.php`) :
+  `app:opendata:publier` écrit déjà les CSV chaque jour (§1) ; il ne leur
+  manque que `--televerser`, à ajouter **le jour de la bascule** avec
+  `DATA_GOUV_API_KEY` (la `API_GOUV` du `~/.bashrc` du legacy) dans le
+  `.env.local` de production. Pas avant : le legacy téléverse les mêmes
+  ressources chaque nuit.
 - **Lettre mensuelle des votes** : `app:newsletter:votes envoyer`, le 1er du
   mois (entrée commentée dans `bin/crontab.prod`). À décommenter **le jour de la
   bascule**, en retirant l'entrée `newsletter votes send` du legacy : les deux
