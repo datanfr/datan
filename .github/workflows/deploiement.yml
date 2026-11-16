@@ -2,9 +2,8 @@ name: Déploiement
 
 # Mise en ligne de datan.fr, sur le compte o2switch qui portait le site
 # d'origine jusqu'à la bascule du 16 novembre 2026. L'application vit dans
-# ~/symfony.datan.fr, dont le dossier public/ est la racine web de datan.fr —
-# et, toujours, celle de symfony.datan.fr, qui sert au contrôle de fin de
-# déploiement parce qu'il n'est pas derrière Cloudflare. Trois partis pris :
+# ~/symfony.datan.fr, dont le dossier public/ est la racine web de datan.fr. Le
+# sous-domaine symfony.datan.fr, lui, n'existe plus. Trois partis pris :
 #
 # - Construction sur le runner, pas sur le serveur. Dépendances, paquets
 #   JavaScript et assets compilés partent tout faits : le serveur n'a besoin ni
@@ -22,7 +21,7 @@ name: Déploiement
 #   SYMFONY_RACINE  répertoire de l'application, relatif au $HOME du compte
 #                   (symfony.datan.fr par défaut). Pas sous public_html,
 #                   où dort encore le site d'origine.
-#   SYMFONY_URL     adresse publique (https://symfony.datan.fr par défaut)
+#   SYMFONY_URL     adresse publique (https://datan.fr par défaut)
 #   PHP_BIN         chemin d'un PHP ≥ 8.4 sur le serveur, si la détection de
 #                   bin/serveur-commun.sh ne le trouve pas
 on:
@@ -51,7 +50,7 @@ jobs:
       CPANEL_API_TOKEN: ${{ secrets.CPANEL_API_TOKEN }}
       WHITELIST: bash .github/scripts/ssh-whitelist.sh
       RACINE: ${{ vars.SYMFONY_RACINE || 'symfony.datan.fr' }}
-      URL_PUBLIQUE: ${{ vars.SYMFONY_URL || 'https://symfony.datan.fr' }}
+      URL_PUBLIQUE: ${{ vars.SYMFONY_URL || 'https://datan.fr' }}
 
     steps:
       - uses: actions/checkout@v4
@@ -167,7 +166,13 @@ jobs:
       # le même domaine (App\Referencement\Indexation).
       - name: Vérifier que le site répond
         run: |
-          entetes=$(curl -s -D - -o page.html --max-time 30 "$URL_PUBLIQUE/")
+          # Le serveur est interrogé directement, sous le nom public : datan.fr
+          # est derrière Cloudflare, qui peut opposer un défi à un runner et
+          # ferait échouer le contrôle sans que le site y soit pour rien. On
+          # vérifie au passage le certificat que présente l'origine.
+          hote=$(printf '%s' "$URL_PUBLIQUE" | sed -E 's|^https?://([^/:]+).*|\1|')
+          entetes=$(curl -s -D - -o page.html --max-time 30 --connect-to "$hote:443:$CPANEL_SERVER:443" "$URL_PUBLIQUE/") \
+            || { echo "!! $URL_PUBLIQUE injoignable sur $CPANEL_SERVER (code curl $?) : 60 = certificat refusé, 6 ou 7 = hôte introuvable ou fermé."; exit 1; }
           code=$(printf '%s' "$entetes" | awk 'NR==1 {print $2}')
           echo "HTTP $code sur $URL_PUBLIQUE"
           case "$code" in
@@ -181,7 +186,6 @@ jobs:
             echo "!! Le serveur rend le code PHP au lieu de l'exécuter : handler de public/.htaccess non reconnu."
             exit 1
           fi
-          hote=$(printf '%s' "$URL_PUBLIQUE" | sed -E 's|^https?://([^/:]+).*|\1|')
           if [ "$hote" != "datan.fr" ] && [ "$hote" != "www.datan.fr" ]; then
             printf '%s' "$entetes" | grep -qi '^x-robots-tag:.*noindex' \
               || { echo "!! $hote est indexable : l'ajouter à Indexation::HOTES_NON_INDEXABLES."; exit 1; }

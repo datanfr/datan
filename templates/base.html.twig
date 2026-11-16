@@ -162,8 +162,16 @@
          sont PAS repris : l'onload="embedTracker()" du preload (la fonction
          n'existe nulle part — ReferenceError silencieuse sur chaque page du
          site vivant) et le pistage dans l'iframe embarquée chez des tiers
-         (retiré sciemment, cf. IframeController). #}
-      <link rel="preload" href="{{ matomo_url }}/1337.js" as="script" crossorigin>
+         (retiré sciemment, cf. IframeController).
+
+         Le preload ne porte PAS `crossorigin`, que l'origine écrivait : le
+         script est ensuite chargé sans cet attribut, et Matomo n'envoie pas
+         d'en-tête CORS. Avec lui, le navigateur refusait le préchargement
+         (« blocked by CORS policy » en console, à chaque page) et
+         téléchargeait le traceur une seconde fois. L'origine y échappait par
+         une autre faute — `type="script"` au lieu de `as="script"`, qui
+         rendait son preload inopérant. #}
+      <link rel="preload" href="{{ matomo_url }}/1337.js" as="script">
       <script type="text/javascript">
         var _paq = window._paq = window._paq || [];
         // CODE CNIL
