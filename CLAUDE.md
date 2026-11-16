@@ -16,7 +16,9 @@ quels, même s'ils surprennent. Une coquille, un accord manqué, un lien vide, u
 ancre sans son décalage se corrigent — et le commentaire dit pourquoi, sinon le
 prochain lecteur croira à une erreur de portage.
 
-`TODO.md` tient l'état du reste à faire, défauts ouverts compris.
+`TODO.md` tient l'état du reste à faire, défauts ouverts compris — et rien
+d'autre. `DIFFERENCES.md` liste les écarts voulus avec le site d'origine : les
+lire avant de « corriger » une différence, et y consigner toute nouvelle.
 
 ## Ce qui fait la valeur du site
 
@@ -390,7 +392,10 @@ elle qu'on importera, pas la base.
 - **Résumés d'amendements par IA** : un seul prompt, celui de la rédaction
   (`App\Ia\Amendement\PromptResumeAmendement`), envoyé par lots à l'API
   d'Anthropic (`IA_MODELE_RESUMES`, distinct d'`IA_MODELE`). Rien n'écrase un
-  résumé existant. Un mot-clé se rattache toujours par son slug normalisé
+  résumé existant, et **rien de généré ne s'affiche au public avant d'avoir
+  été relu** (`resume_relu`, posé dans `/admin/amendements`) — le site
+  d'origine publie sans relecture, nous non. Un mot-clé se rattache toujours
+  par son slug normalisé
   (`NormaliseurTag`) ; un alias pointe un tag canonique, et `amendement_tag` ne
   porte que des canoniques. La table d'origine `amendements_ia` n'a pas de clé
   unique : on en garde une ligne par amendement, la plus récente qui a un résumé.

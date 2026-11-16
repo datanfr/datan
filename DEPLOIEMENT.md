@@ -9,7 +9,7 @@ et `datan.remikel.fr`, la préproduction précédente.
 La base se constitue par **restauration d'un dump**, puis les imports prennent
 le relais.
 
-`CRON.md` tient la planification, `TODO.md` §2 la liste de ce qui reste à faire
+`CRON.md` tient la planification, `TODO.md` la liste de ce qui reste à faire
 le jour J. Ce fichier-ci dit comment monter la machine et y poser le code.
 
 ---
@@ -234,7 +234,7 @@ leurs imports plus tard.
 
 ### d. Imports de récupération, contre la vraie base
 
-C'est le point le plus délicat, et il est déjà listé en `TODO.md` §2. Le backup
+C'est le point le plus délicat, et il est déjà listé en `TODO.md` §1. Le backup
 public `datan.fr/assets/dataset_backup` est **réduit et anonymisé** : un seul
 compte, `users_mp` vide. La base de développement en porte donc les traces. À
 rejouer contre la base de production réelle, **avant l'ouverture** :
@@ -271,7 +271,7 @@ Trois choses encadrent ces commandes :
   demande la clé Anthropic) et `app:cache:rechauffer`.
 
 La séquence complète de la première mise en production, synchronisation et
-calculs compris, est dans `TODO.md`, « Corrections du 2026-11-16 ».
+calculs compris, est dans `TODO.md` §1.
 
 > **Un import de récupération écrase les écritures locales.** Une fois
 > l'application devenue la source — un rédacteur qui publie, un député qui écrit
@@ -860,7 +860,7 @@ espérant que ça se voie.
 
 ### Le jour de la bascule
 
-Le reste — `TODO.md` §2 — est à dérouler à ce moment-là : variables de suivi
+Le reste — `TODO.md` §3 — est à dérouler à ce moment-là : variables de suivi
 réelles, transvasement des abonnés newsletter, redirections des anciennes API
 (`api/tables`, `api/votes`, `api/exposes`) qu'API Platform ne reprend pas, et
 retrait du bloc « PRÉPRODUCTION » de `public/.htaccess` (en-tête
