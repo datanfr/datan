@@ -109,6 +109,27 @@ décryptages déjà produits sont à préserver comme des données de production
 - **Compter les lignes écartées, et dire pourquoi.** Un import qui lit trois
   millions de lignes et en écrit moins doit rendre l'écart à l'unité : sans ce
   bilan, une règle fausse ressemble en tout point à une source incomplète.
+- **Un delta n'est consommé qu'une fois acquitté.** `.datan-acquitte` désigne,
+  dans chaque clone, le dernier commit importé par une chaîne
+  `app:sync:quotidien` entièrement réussie ; le delta se calcule depuis lui, pas
+  depuis la moisson précédente. Auparavant chaque moisson réécrivait
+  `.datan-modifies` : le 29/10/2026 l'import a été tué après la moisson, celle
+  du 30 a remplacé le delta, et les scrutins 9156 à 9200 ont disparu sans une
+  erreur. Toute commande qui lit le delta doit donc être une étape de la chaîne.
+  `app:import:scrutins` se contrôle en plus lui-même : un scrutin du dépôt absent
+  de la base est rattrapé, ou fait échouer la commande.
+- **Jamais `SET unique_checks = 0` avant un upsert.** InnoDB ne vérifie alors
+  plus l'index unique, et l'`ON DUPLICATE KEY UPDATE` insère des doublons au
+  lieu de mettre à jour (91 doublons pour 186 votes relus, à l'essai).
+- **L'open data réécrit le passé.** Sept scrutins de la 15e législature ont
+  perdu leur bloc MODEM à la source (234 votes, que seule la base de production
+  d'origine détient encore). `app:import:scrutins` signale « Source incomplète »
+  quand les blocs de groupe totalisent moins de voix que la synthèse.
+- **L'hébergement coupe ce qui dure.** Sur o2switch, `wait_timeout` vaut 260 s :
+  une étape qui lit des milliers de fichiers sans requête perd sa connexion
+  (« MySQL server has gone away »). Et vers 6 h, la remise en place de la
+  configuration PHP par CloudLinux coïncide avec des SIGHUP : rien ne se
+  planifie entre 6 h et 6 h 10, et la chaîne ignore ce signal.
 
 ## Source des données : les Tricoteuses
 
@@ -140,19 +161,45 @@ réseaux sociaux des députés.
 ## Seconde source : la base de production
 
 Ce que l'open data ne publie pas vit dans la base de l'application d'origine,
-qui n'est pas joignable depuis ici — le port 3307 sert la base de
-développement. On passe donc par des exports TSV, et **chaque commande porte
-dans son docblock la requête `docker exec` qui régénère les siens** : sans
-cela, l'import n'est plus rejouable dès que le fichier est perdu. Socle commun :
-`ImportLegacyCommand` (lecture en flux, upsert par lots, `COALESCE`).
+qui n'est pas joignable depuis un poste de développement. On passe donc par des
+exports TSV, et **chaque export a sa requête dans `bin/recuperation/legacy/<nom>.sql`**,
+qui produit `<nom>.tsv` — source unique, les docblocks y renvoient : sans cela,
+l'import n'est plus rejouable dès que le fichier est perdu. Socle commun :
+`ImportLegacyCommand` (lecture en flux, upsert par lots, `COALESCE`, bilan
+consigné).
+
+Trois outils, à lancer sur le serveur :
+
+```
+bin/recuperation/exporter-legacy.sh                # tous les TSV, depuis la base d'origine
+php bin/console app:recuperation:legacy --dossier=… # rejoue toute la récupération, dans l'ordre
+bin/recuperation/exporter-hors-sync.sh             # ce que le sync ne remplit pas, depuis NOTRE base
+```
+
+`app:recuperation:legacy` vérifie ses préalables (`--verifier`), rend un bilan
+par fichier qui doit tomber juste, et se ferme par `--clore` le jour de la
+bascule : après quoi elle refuse de tourner, sans option pour passer outre.
+`exporter-hors-sync.sh` tient sa liste dans `hors-sync.conf` ; l'objectif qu'il
+doit tenir : base vide + migrations + `app:sync:quotidien --tout` + cet export
+= base équivalente à la production. Sur le serveur, les identifiants de la base
+d'origine viennent des variables `DATABASE_*` de `~/.bashrc`, pas de `~/.my.cnf`.
+
+Les commandes une à une :
 
 ```
 php bin/console app:import:communes             # départements, communes, voisinages
 php bin/console app:import:elections            # catalogue des scrutins, candidatures
 php bin/console app:import:resultats-electoraux # 3,1 M de résultats par commune (105 s)
-php bin/console app:import:utilisateurs         # comptes de connexion (mot de passe repris)
+php bin/console app:import:utilisateurs         # comptes de connexion, tous types (mot de passe repris)
+php bin/console app:import:decryptages          # décryptages, catégories, lectures, auteurs
 php bin/console app:import:explications         # explications de vote des députés
 php bin/console app:import:articles             # blog (rubriques + articles)
+php bin/console app:import:campagnes            # campagnes de dons
+php bin/console app:import:amendements-clos     # exposés et auteurs des amendements des 15e-16e
+php bin/console app:import:exposes              # résumés d'exposé des motifs de la 16e
+php bin/console app:import:resumes-amendements  # résumés IA et mots-clés déjà produits
+php bin/console app:import:municipales          # municipales 2026 (fichiers du ministère, ~3 min)
+php bin/console app:import:noms-communes        # « d'Hirson », « du Havre » (CSV data.gouv)
 ```
 
 Aucune n'est dans `app:sync:quotidien` et aucune n'a à y entrer : un scrutin
@@ -164,6 +211,14 @@ passé ne change plus, une commune non plus. On les lance sciemment.
   telles quelles. **Le mot de passe d'un compte se reprend sans le réinitialiser**
   — le legacy hache en `password_hash(PASSWORD_DEFAULT)`, du bcrypt que le
   vérifieur `auto` de Symfony relit et ré-encode tout seul.
+- **Tous les comptes se reprennent, lecteurs compris.** Un compte sans type, de
+  type inconnu, ou « mp » sans député chez nous devient `ROLE_LECTEUR` : il se
+  connecte et gère son compte, sans accès à la rédaction ni à l'espace député.
+  `utilisateur.id_origine` garde l'identifiant d'origine ; c'est par lui que
+  les décryptages retrouvent leur auteur et la newsletter son abonné.
+- **Les amendements des législatures closes ne sont dans aucun dépôt.** Exposé
+  des motifs et auteur des 5 705 amendements votés en 15e et 16e ne viennent
+  que de la base d'origine (`app:import:amendements-clos`).
 - **Un import de récupération réaligne sur la production.** Il est fait pour le
   chargement initial ; une fois l'application devenue la source (un rédacteur qui
   publie, un député qui écrit), le rejouer écraserait les écritures locales. À ne
@@ -178,11 +233,20 @@ passé ne change plus, une commune non plus. On les lance sciemment.
   de l'IVG en L16). La table `decryptage` porte le même `-1` et le bon
   `scrutin_id` : passer par elle.
 
+Les **municipales 2026** sont portées depuis le 2026-11-16, et ne viennent pas
+de la base de production : `app:import:municipales` lit directement les
+fichiers du ministère de l'Intérieur (`MUN2026/`), comme le font les scripts
+d'origine, et `app:import:noms-communes` le CSV de data.gouv. Aucune des deux
+n'entre dans le sync : les résultats sont définitifs depuis mai 2026.
+
 Ce qui est **délibérément laissé de côté** : les tables `elect_bv_*` (grain
-bureau de vote, créées en mars 2026 et jamais écrites — la page ville du legacy
-y lit du vide) et les municipales 2026, que le legacy traite sous une élection
-`id = 7` absente de son propre catalogue. C'est son chantier en cours, pas une
-donnée à porter.
+bureau de vote). Vides au portage, elles portent aujourd'hui 9 millions de
+lignes pour 17 scrutins de 2017 à 2024, mais le site d'origine ne les lit que
+pour le bloc « Législatives 2024 » de la page d'une commune, que nous servons
+à l'identique depuis `resultat_legislative` (vérifié sur Faux et sur Toulouse,
+découpée en cinq circonscriptions). Leur source est publique (data.gouv.fr,
+« Données des élections agrégées ») : si un jour une page en a besoin, c'est
+elle qu'on importera, pas la base.
 
 ## Pièges métier à ne pas réinventer
 
@@ -194,10 +258,19 @@ donnée à porter.
   depuis `vote` + `groupe_id` donne des totaux faux.
 - **Rattachement d'un député à un groupe** : le plus récent — encore ouvert
   d'abord, puis date de fin la plus tardive (`daily.php:914`). Pas le plus long.
-- **`fonction_groupe.nomin_principale` n'est pas décoratif.** Onze députés de la
-  17e législature portent deux rattachements ouverts ; sans ce filtre ils
-  comptent dans deux groupes. Les mandats de groupe ouverts sont 588, dont 577
-  principaux — le nombre exact de sièges.
+- **`fonction_groupe.nomin_principale` ne dit pas à quel groupe on appartient.**
+  L'Assemblée met ce drapeau à 0 sur le mandat de simple membre d'un député tant
+  qu'il préside son groupe — sur toute la durée du mandat, rétroactivement — et
+  le remet à 1 quand la présidence finit. Les « onze doubles rattachements
+  ouverts » de la 17e sont les onze présidents : un mandat de membre et un de
+  président, dans le même groupe. Filtrer sur ce drapeau à une date donnée fait
+  donc disparaître un président de tous ses votes antérieurs à sa présidence
+  (Sébastien Chenu : 1 814 votes sans groupe, et une loyauté de 100 % sur 14
+  votes). Pour l'appartenance à une date — groupe au jour d'un scrutin,
+  loyauté, effectifs —, filtrer les qualités membre, apparenté et non-inscrit
+  (`GroupeAuScrutin::APPARTENANCE`), comme `daily.php:2147`, et compter les
+  députés en `DISTINCT`. Une fonction se superpose à l'appartenance, elle ne la
+  remplace pas.
 - **Composition d'un groupe dissous** : celle du jour de sa disparition
   (`date_fin` du groupe, `BETWEEN` sur les bornes du rattachement). Les
   apparentés (`code_qualite = 'Membre apparenté'`) comptent dans l'effectif
@@ -216,10 +289,14 @@ donnée à porter.
   de 2024, l'Assemblée ne déclare plus de `positionPolitique` sur ses groupes :
   tout bloc qui compare à la majorité présidentielle doit disparaître au lieu de
   se rabattre sur un groupe choisi au jugé.
-- **Commission d'un député** : celle où il a cumulé le plus de jours sur sa
-  dernière législature, et affichée par le `libelleAbrege` de l'organe
-  (« Lois »). Prendre le mandat COMPER ouvert donne les remplacements de
-  quelques jours.
+- **Commission d'un député** : celle de son mandat COMPER encore ouvert — à
+  préséance minimale s'il en a plusieurs, le minimum pris sur les seuls mandats
+  ouverts —, affichée par le `libelleAbrege` de l'organe (« Lois »). C'est la
+  règle du site d'origine. La commission la plus fréquentée de la législature,
+  retenue un temps pour ignorer les remplacements de quelques jours, retardait
+  d'autant tout vrai changement : 67 députés sur 574 s'écartaient du site, dont
+  38 installés depuis plus d'un mois dans leur nouvelle commission. Elle ne
+  sert plus qu'à un ancien député, qui n'a pas de mandat ouvert.
 - **Participation d'un député** : votes exprimés sur les scrutins solennels
   (`code_type_vote = 'SPS'`) rapportés à *tous* les solennels tenus pendant sa
   période d'activité. Ne compter que les scrutins où il a une ligne `vote`
@@ -288,6 +365,35 @@ donnée à porter.
   correspondance, et tous ses mandats sont rejetés sans la moindre erreur
   (3 362 sur 25 118 la première fois). Traiter les organes en activité d'abord,
   pour qu'ils gardent l'adresse simple, et suffixer le doublon.
+- **Un sigle de groupe n'est pas unique dans une législature.** En novembre
+  2026, l'Assemblée a rendu le sigle « UDR » au successeur de l'UDR dissous :
+  la 17e a deux groupes de ce sigle. Retrouver un groupe par son uid ; l'adresse
+  simple va au groupe en activité, l'homonyme prend `sigle-uid`
+  (`/groupes/legislature-17/udr-po847173`, cf. `App\Groupe\AdresseGroupe`) ; un
+  sigle abandonné redirige en 301 (`GroupeController::SIGLES_ABANDONNES`). Tout
+  lien qui peut désigner un groupe disparu passe par `|adresse_groupe(id)`.
+- **Un député peut porter deux mandats dans une même législature.** Un ministre
+  qui revient siéger reçoit un second mandat avec la **même** `dateDebut` ; seule
+  la prise de fonction les distingue (141 cas, dont 29 en 17e). La clé de
+  `mandat` est l'uid de l'Assemblée — l'ancienne clé (député, législature,
+  début) écrasait le premier. Une page qui ne veut qu'un mandat par législature
+  prend le plus récent, et l'on compte des législatures distinctes, pas des
+  mandats ; une jointure sur `mandat` pèse ces députés double, préférer `EXISTS`.
+- **Le code de commune du ministère de l'Intérieur est `CodCirElec`** : le code
+  INSEE, Corse en capitales (`2A004`). Paris, Lyon et Marseille n'ont aux
+  municipales qu'un scrutin à l'échelle de la ville, sous le code de la commune.
+  Quatre communes de Nouvelle-Calédonie n'ont pas de numéro de panneau : se
+  rabattre sur `NumListe`, sans quoi leurs listes s'écrasent l'une l'autre.
+- **L'ordre des députés candidats d'une commune est l'ordre physique de la table
+  d'origine** (`elect_deputes_candidats`, MyISAM) : son export se fait sans
+  `ORDER BY`, et `candidature.ordre_saisie` en garde le rang.
+- **Résumés d'amendements par IA** : un seul prompt, celui de la rédaction
+  (`App\Ia\Amendement\PromptResumeAmendement`), envoyé par lots à l'API
+  d'Anthropic (`IA_MODELE_RESUMES`, distinct d'`IA_MODELE`). Rien n'écrase un
+  résumé existant. Un mot-clé se rattache toujours par son slug normalisé
+  (`NormaliseurTag`) ; un alias pointe un tag canonique, et `amendement_tag` ne
+  porte que des canoniques. La table d'origine `amendements_ia` n'a pas de clé
+  unique : on en garde une ligne par amendement, la plus récente qui a un résumé.
 
 ## Environnement
 

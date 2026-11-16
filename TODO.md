@@ -192,9 +192,8 @@ Pour chacun : comprendre la règle du legacy (la réponse est dans son code, sou
   (`ucfirst(mb_strtolower())`), qui est aussi ce que fait le legacy à cet
   endroit-là — les deux pages du site ne suivent pas la même règle, nous non
   plus désormais.
-- [ ] **Habillage municipales 2026 des pages résultats** (title/h1/meta « Élections
-  municipales 2026 dans l'Ain ») : différence assumée tant que les municipales ne
-  sont pas portées — à réévaluer si le périmètre change. Rien à faire pour l'instant.
+- [x] **Habillage municipales 2026 des pages résultats** — *fait le 2026-11-16* :
+  les municipales sont portées (cf. « Corrections du 2026-11-16 »).
 
 ## P2 — Sitemaps — *fait le 2026-08-08*
 
@@ -337,10 +336,9 @@ contre datan.fr sur la base locale :
   100 %, identique au legacy) au lieu de disparaître.
 - [x] **Mandat régional** des participations électorales : nom de la région
   (`App\Territoire\Region`) au lieu du code INSEE (« 32 » → « Hauts-de-France »).
-- [ ] **Fiche député en 500 en dev** (préexistant) : `strict_variables` suit
-  `kernel.debug`, et `_statistiques.html.twig:165` lit `statistiques.majorite`,
-  absent en 17e. Invisible en prod (variable nulle), mais toute fiche député
-  de la 17e plante en dev — `is defined` à poser.
+- [x] **Fiche député en 500 en dev** — *fait le 2026-11-16* : `|default(null)`
+  sur les quatre cartes de `_statistiques.html.twig`, et sur `contact.mail_an`
+  quand le député n'a pas de contact (`_bio.html.twig`).
 
 Différences assumées nées de ces corrections (à ne pas « corriger ») :
 - Loyauté **non jugée** quand le groupe n'a pas de position majoritaire (`nv` :
@@ -349,6 +347,250 @@ Différences assumées nées de ces corrections (à ne pas « corriger ») :
 - Membres du Gouvernement sur une motion de censure : « NON-VOTANT » sans
   loyauté, là où le legacy écrit « REBELLE » sans position (vote_1, 16e).
 - « REBELLEE » (accord fautif du legacy) → « REBELLE ».
+
+## Corrections du 2026-11-16 (suite de la veille comparative)
+
+Instruites par écart, contre le code du legacy et les deux bases de production
+(lecture seule). Règle suivie : un écart dû à un meilleur calcul du port se
+garde et se documente, un vrai défaut se corrige.
+
+### Synchronisation
+- [x] **Trou des scrutins 9156-9200** : chaque moisson réécrivait
+  `.datan-modifies` ; le 29/10 l'import a été tué après la moisson, celle du 30
+  a remplacé le delta. Le delta se calcule désormais depuis `.datan-acquitte`
+  (dernière chaîne entièrement réussie) et `app:import:scrutins` compare le
+  dépôt à la base après chaque passe. Reproduit avant/après sur un dépôt jouet.
+- [x] **Chaîne fragile** (11 échecs sur 20 exécutions du 27/10 au 15/11 :
+  « MySQL server has gone away », Hangup) : `wait_timeout` relevé en session,
+  seconde tentative sur connexion perdue, SIGHUP ignoré, purge du cache HTTP
+  même après un échec, verrou, cron à 6 h 20 avec ligne `BILAN`.
+- [x] **Doublons de votes au rejeu** : `ImportVotesCommand` posait
+  `unique_checks = 0`, qui désactive l'index unique sous InnoDB.
+- [x] **Auteur de l'amendement** : `app:import:auteurs-amendements` et
+  `app:import:commissions` entrent dans la chaîne (24 795 amendements de la 17e
+  sans auteur en production, 1 297 scrutins sans la carte).
+- [x] **`nomin_principale` dans l'import des scrutins** (`groupeDeduit`,
+  `groupesParElimination`) : remplacé par l'appartenance, effectifs comptés en
+  `DISTINCT`.
+- [ ] **vote_2751 et six autres scrutins de la 15e** (2418, 2744, 2752, 2761,
+  2762, 2766) : la source a perdu le bloc MODEM. 234 votes et 7 ventilations à
+  reprendre de la base du legacy (requêtes dans les docblocks d'
+  `ImportVotesCommand` et d'`ImportVoteGroupesCommand`) — cf. mise en production.
+- [ ] Six scrutins de la 15e (1027-1029, 2814, 2816, 3778) incomplets à la
+  source **et** au legacy : rien à reprendre, ventilation partielle assumée.
+- [ ] 15 amendements (`AMANR5L17PO59048B3210P2D1…`) perdus par un écrasement de
+  delta antérieur : la synchronisation complète de la mise en production les
+  ramène. Ajouter pour les amendements le contrôle dépôt/base des scrutins.
+- [ ] Faire confirmer par o2switch l'origine des SIGHUP vers 6 h (corrélés à la
+  remise de configuration PHP dans `php-selecteur.log`, non prouvés).
+- [ ] `doctrine.yaml` : poser `wait_timeout` à l'ouverture de connexion, pour
+  les commandes lancées hors de la chaîne.
+
+### Fiches député et vote
+- [x] **Présidents de groupe sans groupe ni loyauté** : `GroupeAuScrutin` filtre
+  les qualités d'appartenance et non plus `nomin_principale` (cf. CLAUDE.md).
+  vote_8280 : 561 lignes identiques à datan.fr ; vote_504 : 146. 2 939 votes de
+  la 17e retrouvent leur groupe.
+- [x] **Loyauté des présidents** (`CalculStatistiquesDeputesCommand`,
+  `CalculClassementsCommand::loyauteDeputes`) : Chenu 95 % sur 1 041 votes au
+  lieu de 100 % sur 14, comme `class_loyaute` ; Naegelen, Peu, Marcangeli de
+  même. Aucun autre député ne bouge.
+- [x] **Votes décryptés** : les mises au point comptaient comme des votes
+  (Autain 85 au lieu de 82 ; 299 lignes en trop sur 241 fiches).
+- [x] **Carrousel des votes décryptés** d'une fiche vote : 7 votes et la carte
+  « VOIR TOUS », comme `get_last_votes_datan(7)`.
+- [x] **« … en est le président »** et la phrase des apparentés, portées sur la
+  fiche député (11 présidents, 44 apparentés).
+- [x] **Commission** : mandat COMPER ouvert (cf. CLAUDE.md) — Braun-Pivet en
+  Finances. Accord avec datan.fr sur 544 députés sur 574, contre 477.
+- [x] **Rattachement requalifié** (Riotte, membre puis apparenté d'Horizons) :
+  l'ancienne ligne restait ouverte ; `ImportActeursCommand::purgeRequalifies()`.
+- [x] **Clé des mandats** : `mandat.uid` remplace (député, législature, début),
+  qui écrasait le premier mandat d'un ministre revenu siéger. 3 839 → 3 961
+  mandats, ancienneté moyenne 6,52 ans (affichée 7, comme le legacy).
+- [ ] L'encart du scrutin 3684 s'affiche au legacy même quand le député n'a pas
+  voté (sans phrase) ; le port le masque. Non instruit.
+- [ ] `nomin_principale` subsiste là où il donne encore le bon résultat
+  (dernier rattachement ouvert : `DeputeListController`, `ElectionController`,
+  `OutilsController`, `CalculClassementsCommand:508`, comptages en `DISTINCT`
+  de `GroupeController` et `MoyennesAssemblee`). Juste aujourd'hui, mais fondé
+  sur le même contresens : à basculer sur `GroupeAuScrutin::APPARTENANCE`.
+- [ ] `CalculClassementsCommand` (repli sur `mandat`, députés sans
+  `fonction_groupe`) ne garde que le premier mandat. Sans effet en 17e.
+- [ ] `DeputeController::communeAvecDe` donne « de Hirson » ; `commune.nom_de`
+  (rempli par `app:import:noms-communes`) donnerait « d'Hirson », comme le legacy.
+
+### Groupes, statistiques, accueil
+- [x] **Proximités** : groupes dissous, non-inscrits et groupes à 20 votes
+  communs ou moins écartés, comme `get_stats_proximite` ; tableau complet
+  dépliable « Voir tout le classement » ajouté.
+- [x] **Renommage UDDPLR → UDR** par l'Assemblée (16/11) : `/udr` sert le groupe
+  actif, l'ancien UDR vit sous `/udr-po847173`, `/uddplr` redirige en 301. Les
+  265 adresses des plans de site répondent 200, les 62 autres groupes n'ont pas
+  bougé.
+- [x] **Pied « président / membres / apparentés »** sur la page des votes
+  décryptés d'un groupe.
+- [x] **Participation des groupes** : motions de censure exclues et moyenne
+  arrondie à trois décimales avant le pourcentage, comme `class_groups` — sur
+  la fiche, la moyenne de l'Assemblée et l'histogramme. Les 12 groupes
+  concordent avec `/statistiques/groupes-participation` de datan.fr. Les
+  non-votants n'y jouaient aucun rôle.
+- [x] **Projets de loi du Gouvernement** (34 / 36) : le legacy exclut en dur
+  `DLR5L16N49868` (simplification de la vie économique) ; repris dans
+  `SoutienGouvernement::DOSSIERS_EXCLUS`.
+- [x] **Âge moyen** : `EXISTS` au lieu d'une jointure sur `mandat`, qui pesait
+  double les députés à deux mandats.
+- [ ] Participation « par spécialisation » : 35 % en production contre 32 % au
+  legacy (déjà relevé plus haut).
+- [ ] Ordre des fenêtres modales du pied de page (`base.html.twig`), cosmétique.
+
+### Résumés d'amendements par IA
+- [x] **Chaîne par lots portée** (`app:ia:resumes-amendements:soumettre` /
+  `:traiter`), six champs, prompt de la rédaction, Haiku 5.5, sorties
+  structurées, consignes en cache. Tables `tag`, `amendement_tag`, `lot_ia`,
+  `lot_ia_element`. 34 tests, aucun appel réel.
+- [x] **Mots-clés** : normalisation sans IA, puis une requête groupée par
+  traitement pour les seuls inconnus, sur un vocabulaire restreint ; chaque
+  décision devient un alias.
+- [x] **Reprise** des 6 509 résumés et 13 258 mots-clés du legacy
+  (`app:import:resumes-amendements`).
+- [ ] **Recharger le crédit Anthropic** : la chaîne du legacy échoue chaque
+  heure depuis le 13/09 (« credit balance is too low »).
+- [ ] Première mise en service avec une vraie clé : `--essai=5`, puis un lot de
+  20, puis lire `lot_ia.jetons_cache_lus` avant de planifier (`CRON.md` §3).
+- [ ] Après la reprise : `app:ia:tags:nettoyer` (simulation à relire, puis
+  `--appliquer`). 4 124 libellés pour 6 509 amendements, 58 % employés une fois.
+- [ ] **À trancher** : le résumé IA s'affiche sur la fiche vote dès qu'il
+  existe, comme sur datan.fr (21 résumés relus sur 6 509) ; le port exigeait
+  jusque-là `resume_relu`. Revenir en arrière tient en une condition du gabarit.
+- [ ] **À trancher** : soumission toutes les 6 h par lots de 100 (le legacy :
+  toutes les heures par 20) — le rapprochement des mots-clés pèse 10 % du lot
+  au lieu de 30 à 40 %, mais un résumé peut attendre 7 h.
+- [ ] Plus tard : rapprochement des mots-clés entre catégories ; relever
+  l'exposé envoyé (300 caractères) avec la rédaction.
+
+### Municipales 2026
+- [x] **Portées** : `app:import:municipales` (fichiers du ministère),
+  `app:import:noms-communes`, blocs de la page commune, habillage de la page
+  département, encart du second tour. 54 119 listes, 36 362 lignes de
+  participation ; le legacy en porte 54 105 et 36 362 — les 14 listes d'écart
+  sont celles de quatre communes de Nouvelle-Calédonie sans numéro de panneau,
+  qui s'y écrasent. 26 pages sur 31 identiques à datan.fr.
+- [ ] Régénérer `var/legacy/candidatures.tsv` **sans `ORDER BY`** puis
+  `app:import:elections` : sans cela `candidature.ordre_saisie` reste nul et
+  les députés candidats sortent dans l'ordre des `mpId`.
+- [ ] **À trancher** : textes de campagne mis au passé (« s'est tenu ») là où
+  le legacy écrit encore « se tiendra ».
+- [ ] Farino (98806) : publication du ministère incomplète, second tour affiché
+  « en attente ».
+- [ ] **Candidats municipales fiche DEM** (21 / 18, plus haut) : hypothèse non
+  vérifiée — `GroupeController::candidatsMunicipales` ne compte que les députés
+  en exercice, le legacy tous les candidats rattachés au groupe.
+- [x] **Tables `elect_bv_*`** : remplies au legacy depuis le portage (9 M de
+  lignes), mais lues pour le seul bloc « Législatives 2024 » d'une commune, que
+  le port sert à l'identique depuis `resultat_legislative`. Pas une perte.
+
+### Récupération de la base du legacy
+Inventaire des 104 tables fait sur la vraie base (lecture seule). Outillage :
+`bin/recuperation/exporter-legacy.sh`, `app:recuperation:legacy`,
+`bin/recuperation/exporter-hors-sync.sh` (cf. CLAUDE.md et `DEPLOIEMENT.md`).
+- [x] **Comptes** : les 72 comptes se reprennent, lecteurs compris
+  (`ROLE_LECTEUR`), mot de passe inchangé. Le port n'en a que 4, d'essai.
+- [x] **Auteurs des décryptages** rattachés par `utilisateur.id_origine`
+  (255 sur 256 ; le dernier vient d'un compte supprimé).
+- [x] **Amendements des 15e et 16e** (`app:import:amendements-clos`) : exposé
+  des motifs et auteur de 5 705 amendements, absents de tout dépôt — sur
+  `/votes/legislature-16/vote_119`, datan.fr affiche l'exposé, l'auteur et le
+  résumé, le port aucun des trois.
+- [x] **Résumés d'exposé de la 16e** (`app:import:exposes`) : 599 publiés, dont
+  586 rattachables.
+- [x] **Campagnes de dons** (`app:import:campagnes`), 2 lignes.
+- [ ] **À rejouer sur le serveur** (cf. « Mise en production ») : newsletter
+  (1 145 abonnés, 2 au port), professions de foi (2 197, plus 1,9 Go de PDF à
+  copier), article `municipales-2026` et auteurs des 18 articles.
+- [ ] Tester une restauration de l'export hors sync sur une base MariaDB
+  jetable (vérifiée seulement sur MySQL 8).
+- [ ] **À trancher** : 2 clés d'API en écriture (PoliticAnalysis), la trace de
+  `table_history`, les valeurs tiktok/instagram (affichées nulle part), le sort
+  des trois comptes d'essai du port, les brouillons de résumés de la 16e
+  (importés « à relire »).
+- [ ] `ImportAnnexesCommand`, rendue obsolète par `amendements-clos` : à supprimer.
+- [ ] Non portés mais régénérables depuis l'open data, donc pas des pertes :
+  `questions` (onglet de l'iframe), `reunions_*` (aucune page).
+
+### Mise en production de ces corrections
+Sur le serveur, dans `~/symfony.datan.fr/current`, `php` = `~/symfony.datan.fr/bin/php`,
+toujours `APP_ENV=prod`, **jamais pendant une synchronisation** (cron à 6 h,
+6 h 20 ensuite). Les étapes 3 à 12 écrivent dans la base de production.
+
+- [ ] **0. Avant** : recharger le crédit Anthropic ; trancher les « À trancher »
+  ci-dessus ; sauvegarde de la base du jour vérifiée (`shared/sauvegardes`).
+- [ ] **1. Déployer** (push sur `symfony`). Quatre migrations partent avec le
+  code, et doivent partir avec lui : `…100000` (comptes, journal de
+  récupération), `…110000` (tags, lots IA), `…120000` (municipales), `…140000`
+  (clé des mandats — l'ancien import, sans elle, insérerait des doublons).
+  *Contrôle* : `doctrine:migrations:status` à jour, accueil en 200.
+- [ ] **2. Cron** : `bash bin/cron.sh afficher`, puis `installer`.
+  *Contrôle* : `crontab -l | grep "20 6"`.
+- [ ] **3. Synchronisation complète** : `php bin/console app:sync:quotidien --tout --no-ansi`
+  (12 à 25 min). Ramène les scrutins 9156-9200, les 223 amendements manquants
+  et les auteurs ; adopte les 3 839 mandats par leur uid et insère les 122
+  manquants ; recalcule les commissions ; purge le rattachement en trop de
+  Riotte ; acquitte les dépôts.
+  *Contrôles* : six dépôts « acquitté » ; « Contrôle : tous les scrutins du
+  dépôt sont en base » ; « 3839 mandat(s) existant(s) rattaché(s) » ;
+  `SELECT COUNT(*) FROM scrutin WHERE legislature=17 AND uid LIKE 'VTANR%'` ≥
+  9895 ; `SELECT COUNT(*) FROM mandat` = 3961.
+- [ ] **4.** `app:import:prises-fonction --tout` — doit poser 0 date.
+- [ ] **5. Comptes d'essai** : supprimer `redaction`, `editeur`, `guibert`
+  (l'un partage son adresse avec un compte du legacy).
+- [ ] **6. Export du legacy** : `bin/recuperation/exporter-legacy.sh` →
+  `~/recuperation-legacy/<date>/` (34 fichiers, `MANIFESTE.tsv`).
+- [ ] **7. Récupération** : `app:recuperation:legacy --dossier=… --verifier`,
+  puis sans `--verifier`. Reprend comptes, décryptages et auteurs, newsletter,
+  blog, professions de foi, amendements des 15e-16e, résumés IA et mots-clés,
+  et en dernier les votes MODEM de la 15e (`--file`, jamais `--truncate`).
+  *Contrôles* : chaque bilan tombe juste ; 72 comptes ; 1 145 abonnés ;
+  vote_2751 de la 15e : 569 votes, 0 doublon sur (`depute_id`, `scrutin_id`,
+  `vote_type`).
+- [ ] **8. Municipales** : `php -d memory_limit=512M bin/console app:import:municipales`
+  (~3 min), puis `app:import:noms-communes`.
+  *Contrôle* : 54 119 listes, 36 362 lignes de participation.
+- [ ] **9. Calculs** : `app:calcul:statistiques-deputes --legislature=15`, puis
+  `--legislature=17`, puis `app:calcul:classements` (~3 min).
+  *Contrôle* : loyauté de Chenu à 95 % sur 1 041 votes.
+- [ ] **10.** Copier `~/public_html/assets/data/professions/` (1,9 Go) dans le
+  `public/` partagé de l'application.
+- [ ] **11.** `app:cache:rechauffer` (~6 min).
+- [ ] **12. Contrôles en ligne** : `vote_9178` (17e) en 200 ; `vote_2751` (15e)
+  avec sa ligne MODEM et 568 votants ; Chenu « Rassemblement National · POUR ·
+  REBELLE » sur `vote_8280` ; bloc municipales sur
+  `/elections/resultats/bouches-du-rhone-13/ville_marseille` ; exposé, auteur
+  et résumé sur `/votes/legislature-16/vote_119` ; connexion d'un compte repris.
+- [ ] **13. Résumés IA** (quand le crédit est là) : `ANTHROPIC_API_KEY` dans
+  `shared/.env.local`, `soumettre --simulation`, `--essai=5`, un lot de 20,
+  lecture de `lot_ia`, `app:ia:tags:nettoyer`, puis bascule des crons
+  (`CRON.md` §3).
+- [ ] **Jour de la bascule** : refaire 6 et 7 le plus tard possible (la
+  newsletter continue de s'inscrire au legacy), puis
+  `app:recuperation:legacy --clore` et suppression de `~/recuperation-legacy/`.
+
+### Différences assumées nées de ces corrections (à ne pas « corriger »)
+- Présidence de groupe exigée **en cours** : datan.fr écrit encore que Marine
+  Le Pen « en est la présidente ».
+- Commission affichée pour les 30 députés que le legacy laisse sans (il prend
+  sa préséance minimale sur les mandats clos).
+- 17e législature : « un groupe classé à droite » là où les deux sites
+  écrivaient de chaque groupe qu'il « regroupe les députés non affiliés à un
+  groupe parlementaire » (branche par défaut, faute de `positionPolitique`).
+- `/groupes/legislature-17/udr` sert le groupe actif (le legacy y sert l'ancien
+  groupe dissous) ; badge UDR conservé dans les coalitions, que le legacy a perdu.
+- Municipales : « à La Rochelle » (legacy : « à Rochelle »), « 1 siège »
+  (« 1 sièges »), les cinq listes de Belep (une seule au legacy), Merry-la-Vallée
+  pourvue au premier tour ; Paris suit les chiffres corrigés par le ministère
+  (865 370 votants au second tour, 865 366 au legacy).
+- « dissous » au lieu de « dissout », « du bloc central », « métier ».
+- Justification IA échappée (le legacy l'injecte brute).
 
 ## Déploiement sur symfony.datan.fr (compte o2switch de datan.fr)
 
@@ -381,8 +623,10 @@ Automatisation posée le 2026-10-23 (`deploiement.yml`, `bin/deployer.sh`,
 
 ## Checklist de bascule (rien à coder, à dérouler le jour J)
 
-- [ ] Rejouer les imports de récupération contre la **vraie** base de production
-  (comptes, explications, décryptages, blog) — jamais depuis le backup anonymisé.
+- [ ] Rejouer la récupération contre la **vraie** base de production, par
+  `exporter-legacy.sh` puis `app:recuperation:legacy` (cf. « Corrections du
+  2026-11-16 », mise en production) — jamais depuis le backup anonymisé. La
+  refaire le jour J le plus tard possible, puis `--clore`.
 - [ ] Rebrancher **Matomo** (matomo.datan.fr, siteId 1) — absent du staging à
   dessein (`MATOMO_URL` vide). GTM n'est plus à rebrancher : le site l'a retiré
   le 10/09/2026 avec Tarte au citron (cf. § Rattrapage legacy 2026-10-21).
@@ -435,8 +679,9 @@ Automatisation posée le 2026-10-23 (`deploiement.yml`, `bin/deployer.sh`,
   `/legislature-N`, listes historiques de groupes, sitemap inactifs étendu L14-16.
 - Recherche : votes triés par récence + filtre `state='published'` (documenté dans
   `SearchController`, faute d'index FULLTEXT équivalent au MATCH legacy).
-- Municipales 2026 et tables `elect_bv_*` : chantier en cours du legacy,
-  délibérément hors périmètre (cf. CLAUDE.md).
+- Tables `elect_bv_*` : toujours hors périmètre (cf. CLAUDE.md) — le legacy
+  les a remplies mais ne les lit que pour un bloc que le port sert autrement.
+  Les municipales 2026, elles, sont portées.
 - Emails en clair et absence d'obfuscation Cloudflare : infrastructure, pas
   l'application.
 
