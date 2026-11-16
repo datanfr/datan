@@ -182,6 +182,10 @@
             <div class="card-body">
               <div class="read-more-container">
                 {{ scrutin.decryptage_description|raw }}
+                {# Sans ce bouton, le conteneur reste tronqué à 200 px
+                   (.read-more-container) sans moyen de lire la suite ;
+                   main.js le déplie au clic. #}
+                <p class="read-more-button"><a href="#" class="btn btn-primary">En savoir plus</a></p>
               </div>
             </div>
           </div>
