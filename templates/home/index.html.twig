@@ -6,7 +6,30 @@
 
 {% block css_critique %}index{% endblock %}
 
+{# L'hémicycle du premier écran, que main.js ne pose en fond qu'une fois tous
+   les scripts passés : sans preload, le navigateur ne le demande qu'à ce
+   moment-là, et c'est le LCP de la page qui attend (192 ms mesurés). Les
+   deux largeurs sont celles que choisit main.js (`async_home`) ; sous 576 px
+   il ne charge rien, la feuille n'y pose que le dégradé. L'adresse doit être
+   EXACTEMENT celle des attributs data-* plus bas, sinon l'image se télécharge
+   deux fois. L'origine ne précharge rien ici. #}
+{% block preloads %}
+  <link rel="preload" as="image" fetchpriority="high" href="{{ asset('assets/imgs/cover/hemicycle-from-back-768.webp') }}" media="(min-width: 576px) and (max-width: 970px)">
+  <link rel="preload" as="image" fetchpriority="high" href="{{ asset('assets/imgs/cover/hemicycle-from-back.webp') }}" media="(min-width: 970.1px)">
+{% endblock %}
+
 {% block stylesheets %}
+  {# La feuille en ligne de l'accueil d'origine (`$data['inline_css']`,
+     Home.php:131), seule page à en poser une. Elle n'a rien de décoratif : le
+     CSS critique garde le `::after` de `.stretched-link` (position: absolute,
+     inset: 0) pour les cartes de vote du premier écran, mais pas le
+     `position: relative` de `.bloc-post`, plus bas dans la page. Sans elle,
+     les liens des trois articles de blog s'ancrent sur <body> : trois calques
+     invisibles de la taille de la page — tout clic y part vers un article —,
+     qui regagnent leur carte quand main.css arrive. Rien ne bouge à l'œil,
+     mais le navigateur compte un décalage de mise en page de 1,0, le
+     maximum : 25 points de note Lighthouse, et un Core Web Vital au rouge. #}
+  <style>.bloc-post { position: relative; } .stretched-link::after { content: ""; position: absolute; inset: 0; z-index: 1; } .stretched-link { display: block; }</style>
   {# Asynchrone, comme sur datan.fr (`css_to_load`, async TRUE) : les
      carrousels sont sous la ligne de flottaison, le CSS critique suffit au
      premier écran. #}
@@ -14,15 +37,15 @@
   <noscript><link rel="stylesheet" type="text/css" href="{{ asset('assets/css/flickity.min.css') }}"></noscript>
 {% endblock %}
 
-{# Flickity doit être présent avant main.js, qui initialise les carrousels. #}
-{% block javascripts_head %}
-  <script src="{{ asset('assets/js/libraries/flickity/flickity.pkgd.min.js') }}"></script>
-{% endblock %}
-
 {% block javascripts %}
   <script src="{{ asset('scripts/autocomplete_search.js') }}"></script>
   {# Clics et infobulles de la carte des départements (data-slug des SVG). #}
   <script src="{{ asset('scripts/map_france.js') }}"></script>
+  {# Flickity en pied de page, comme l'origine (`js_to_load`), et non dans le
+     <head> où il retardait le premier rendu : il lui suffit de précéder
+     main.js, qui initialise les carrousels et que base.html.twig charge
+     après ce bloc. #}
+  <script src="{{ asset('assets/js/libraries/flickity/flickity.pkgd.min.js') }}"></script>
   {# La bibliothèque Typed avant dist/typed.js, qui l'instancie sur .text-slider. #}
   <script src="{{ asset('assets/js/libraries/typed/typed.umd.js') }}"></script>
   <script src="{{ asset('scripts/typed.js') }}"></script>
@@ -121,10 +144,15 @@
 
 {% block body %}
 <!-- BLOC HÉMICYCLE -->
+{# Les WebP directement, et non les JPEG que main.js troquait d'un
+   `.replace(/\.jpg$/, '.webp')` comme l'origine : nos adresses finissent par
+   `?v=…`, le remplacement ne trouvait plus rien, et l'accueil servait le JPEG
+   de 296 Ko au lieu du WebP de 209 Ko. Passer par asset() donne en outre au
+   WebP sa propre version, et au preload du <head> la même adresse. #}
 <div class="container-fluid bloc-hemycicle-home pg-home d-flex flex-column justify-content-around py-4 async_home"
-  data-src="{{ asset('assets/imgs/cover/hemicycle-from-back.jpg') }}"
-  data-tablet="{{ asset('assets/imgs/cover/hemicycle-from-back-768.jpg') }}"
-  data-mobile="{{ asset('assets/imgs/cover/hemicycle-from-back-375.jpg') }}">
+  data-src="{{ asset('assets/imgs/cover/hemicycle-from-back.webp') }}"
+  data-tablet="{{ asset('assets/imgs/cover/hemicycle-from-back-768.webp') }}"
+  data-mobile="{{ asset('assets/imgs/cover/hemicycle-from-back-375.webp') }}">
   <div class="d-flex flex-column align-items-center">
     <h1 class="text-center">L'Assemblée nationale, enfin <span>compréhensible</span></h1>
   </div>

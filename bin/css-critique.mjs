@@ -68,13 +68,14 @@ function extraire({ largeur, hauteur }) {
     return r.top < hauteur && r.bottom >= 0 && r.left < largeur && r.right >= 0;
   };
 
+  // Pseudo-classes et pseudo-éléments retirés : `:hover`, `::before` ou
+  // `:not(.show)` ne disent rien de la position de l'élément.
+  const nu = (selecteur) => selecteur.replace(/::?[\w-]+(\([^)]*\))?/g, '').trim() || '*';
+
   const selecteurUtile = (selecteur) => {
-    // Pseudo-classes et pseudo-éléments retirés : `:hover`, `::before` ou
-    // `:not(.show)` ne disent rien de la position de l'élément.
-    const nu = selecteur.replace(/::?[\w-]+(\([^)]*\))?/g, '').trim() || '*';
     let elements;
     try {
-      elements = document.querySelectorAll(nu);
+      elements = document.querySelectorAll(nu(selecteur));
     } catch {
       return true; // sélecteur que le retrait a rendu invalide (`.a>`) : gardé
     }
@@ -84,6 +85,14 @@ function extraire({ largeur, hauteur }) {
       }
     }
     return false;
+  };
+
+  const presentDansLaPage = (selecteur) => {
+    try {
+      return document.querySelector(nu(selecteur)) !== null;
+    } catch {
+      return false;
+    }
   };
 
   // Les déclarations se relisent propriété détaillée par propriété détaillée,
@@ -106,9 +115,31 @@ function extraire({ largeur, hauteur }) {
     const gardees = [];
     for (const regle of regles) {
       if (regle instanceof CSSStyleRule) {
-        const utiles = regle.selectorText.split(',').map((s) => s.trim()).filter(selecteurUtile);
+        const selecteurs = regle.selectorText.split(',').map((s) => s.trim());
+        const utiles = selecteurs.filter(selecteurUtile);
         if (utiles.length) {
           gardees.push(`${utiles.join(',')}{${declarations(regle.style)}}`);
+        }
+
+        // Un repère de positionnement se garde où qu'il soit dans la page.
+        // Une règle retenue pour un élément du premier écran s'applique à
+        // TOUS ceux qu'elle désigne, plus bas compris : sans conséquence, sauf
+        // pour un élément en `position: absolute` dont l'ancêtre a perdu son
+        // `position: relative` — il s'ancre alors sur <body> et remonte couvrir
+        // le premier écran. C'est arrivé sur l'accueil : le `::after` de
+        // `.stretched-link` (inset: 0), gardé pour les cartes de vote, valait
+        // aussi pour les trois articles de blog, dont le `.bloc-post
+        // {position: relative}` était écarté. Trois calques invisibles de la
+        // taille de la page, qui regagnaient leur carte à l'arrivée de
+        // main.css : rien ne bougeait à l'œil, et Lighthouse comptait un
+        // décalage de mise en page de 1,0 — le maximum, 25 points de note.
+        const position = regle.style.getPropertyValue('position');
+        if (['relative', 'absolute', 'fixed', 'sticky'].includes(position)) {
+          const reperes = selecteurs.filter((s) => !utiles.includes(s) && presentDansLaPage(s));
+          if (reperes.length) {
+            const important = regle.style.getPropertyPriority('position') ? ' !important' : '';
+            gardees.push(`${reperes.join(',')}{position:${position}${important}}`);
+          }
         }
       } else if (regle instanceof CSSFontFaceRule || regle instanceof CSSKeyframesRule) {
         gardees.push(regle.cssText);
@@ -141,7 +172,7 @@ try {
     // retirées, et main.css, telle que le serveur la compile, mise à leur place.
     //
     // CSS_URL permet de prendre main.css ailleurs que sur le site mesuré : le
-    // HTML d'un site aux données complètes (la préproduction), avec la feuille
+    // HTML d'un site aux données complètes (la production), avec la feuille
     // compilée sur le poste.
     const lienMain = html.match(/href="([^"]*\/styles\/main-[^"]+\.css)"/);
     if (!process.env.CSS_URL && !lienMain) {

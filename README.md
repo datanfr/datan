@@ -232,13 +232,13 @@ servie. C'est la seule étape qui demande Node (≥ 22) :
 
 ```bash
 npm ci && npx playwright install chromium     # une fois
-BASE_URL=https://symfony.datan.fr npm run critique
+BASE_URL=https://datan.fr npm run critique
 ```
 
 `BASE_URL` doit pointer sur un site **aux données complètes** et qui sert **la
 même version des gabarits**. Une base locale incomplète raccourcit les pages,
 et l'extrait omet alors des blocs que la production affiche au premier écran.
-Pour mesurer le HTML de la préproduction avec un `main.css` compilé sur votre
+Pour mesurer le HTML de la production avec un `main.css` compilé sur votre
 poste, ajouter `CSS_URL=http://127.0.0.1:8000/build/styles/main-….css`.
 
 **À relancer** quand le haut de l'une de ces trois pages change de mise en page,
@@ -247,6 +247,17 @@ committer `assets/styles/critical/`. Un extrait périmé ne casse rien, puisque
 `main.css` arrive juste après et a le dernier mot, mais la page « saute » au
 moment où la feuille complète s'applique. Pages, adresses et dimensions sont
 déclarées en tête de `bin/css-critique.mjs`.
+
+**Un extrait s'applique à toute la page, pas au seul premier écran.** Une règle
+gardée pour un élément du haut vaut aussi pour ceux qu'elle désigne plus bas,
+dont les autres règles, elles, sont restées dans `main.css`. C'est sans effet,
+sauf pour un élément en `position: absolute` dont l'ancêtre a perdu son
+`position: relative` : il s'ancre sur `<body>` et recouvre le premier écran
+jusqu'à l'arrivée de la feuille complète. Rien ne se voit, mais le navigateur
+compte un décalage de mise en page maximal (CLS de 1,0 sur l'accueil le
+16/11/2026, par le `::after` de `.stretched-link`). Le script garde donc tout
+`position` qui sert de repère, où qu'il soit dans la page ; l'accueil porte en
+plus la feuille en ligne du site d'origine (`home/index.html.twig`).
 
 ### Ce que faisait Grunt (legacy)
 
