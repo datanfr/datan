@@ -1,0 +1,34 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block title %}Modifier un parrainage{% endblock %}
+
+{% block body %}
+  <div class="row">
+    <div class="col-lg-8">
+      <div class="card">
+        <div class="card-body">
+          <h2 class="h5">Parrainage à corriger</h2>
+          <p class="mb-1"><strong>Prénom et nom :</strong> {{ parrainage.prenom }} {{ parrainage.nom }}</p>
+          <p class="mb-1"><strong>Mandat :</strong> {{ parrainage.mandat }}</p>
+          <p class="mb-1"><strong>Circonscription :</strong> {{ parrainage.circonscription }}</p>
+          <p class="mb-1"><strong>Département :</strong> {{ parrainage.departement }}</p>
+          <p class="mb-1"><strong>Candidat parrainé :</strong> {{ parrainage.candidat }}</p>
+          <p class="mb-0"><strong>Année de l'élection :</strong> {{ parrainage.annee }}</p>
+          <hr>
+
+          {{ form_start(formulaire) }}
+            {% if not formulaire.vars.valid %}
+              <div class="alert alert-danger">
+                {{ form_errors(formulaire) }}
+                <p class="mb-0">Le formulaire comporte des erreurs, corrigez les champs signalés.</p>
+              </div>
+            {% endif %}
+            {{ form_row(formulaire.mpId) }}
+            <button type="submit" class="btn btn-primary">Enregistrer</button>
+            <a class="btn btn-link" href="{{ path('admin_parrainage_index') }}">Revenir à la liste</a>
+          {{ form_end(formulaire) }}
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}

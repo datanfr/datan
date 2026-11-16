@@ -1,0 +1,14 @@
+{# Liste de renvois vers des fiches de parti, sous un intertitre. Les deux pages
+   de la rubrique en empilent plusieurs en pied de page. #}
+<div class="row">
+  <div class="col-12">
+    <h2>{{ titre }}</h2>
+    <div class="row mt-3">
+      {% for parti in partis %}
+        <div class="col-6 col-md-4 py-2">
+          <a class="membre no-decoration underline" href="{{ path('parti_individual', {abrev: parti.libelle_abrev|lower}) }}">{{ parti.libelle }} ({{ parti.libelle_abrev }})</a>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>

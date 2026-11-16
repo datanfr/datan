@@ -1,0 +1,21 @@
+# see https://symfony.com/doc/current/reference/configuration/framework.html
+framework:
+    secret: '%env(APP_SECRET)%'
+
+    # Note that the session will be started ONLY if you read or write from it.
+    session: true
+
+    # Les fichiers de public/assets/ sortent avec l'empreinte de leur contenu
+    # (`?v=…`) : c'est ce qui permet à public/assets/.htaccess de les déclarer
+    # immuables. AssetMapper (/build/) a déjà la sienne dans le nom du fichier.
+    assets:
+        version_strategy: App\Asset\VersionParContenu
+
+    #esi: true
+    #fragments: true
+
+when@test:
+    framework:
+        test: true
+        session:
+            storage_factory_id: session.storage.factory.mock_file

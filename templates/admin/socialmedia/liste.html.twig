@@ -1,0 +1,17 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block title %}{{ titre }}{% endblock %}
+
+{% block body %}
+  <div class="card">
+    <div class="card-body">
+      {% for depute in deputes %}
+        <p class="mb-1">
+          <a href="{{ path('admin_socialmedia_historique', {mpId: depute.mpId}) }}">{{ depute.prenom }} {{ depute.nom }}</a>
+        </p>
+      {% else %}
+        <p class="mb-0 text-muted">Aucun député.</p>
+      {% endfor %}
+    </div>
+  </div>
+{% endblock %}

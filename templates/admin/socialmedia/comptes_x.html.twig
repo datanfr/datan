@@ -1,0 +1,59 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block title %}{{ titre }}{% endblock %}
+
+{% block body %}
+  <div class="card">
+    <div class="card-body p-0">
+      <table class="table table-bordered table-striped table-sm mb-0">
+        <caption class="sr-only">Réseaux sociaux des députés de la législature en cours</caption>
+        <thead>
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">Député</th>
+            <th scope="col">X</th>
+            <th scope="col">Bluesky</th>
+            <th scope="col">Facebook</th>
+            <th scope="col">Site</th>
+            <th scope="col" class="text-right">Éditer</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for ligne in lignes %}
+            <tr>
+              <td>{{ loop.index }}</td>
+              <td>{{ ligne.prenom }} {{ ligne.nom }}</td>
+              {# Le pseudo garde son arobase en base ; le lien la retire, comme la
+                 fiche publique du legacy (`ltrim($twitter, '@')`). #}
+              <td>
+                {% if ligne.twitter %}
+                  <a href="https://x.com/{{ ligne.twitter|trim('@') }}" target="_blank" rel="noopener">{{ ligne.twitter }}</a>
+                {% else %}—{% endif %}
+              </td>
+              <td>
+                {% if ligne.bluesky %}
+                  <a href="https://bsky.app/profile/{{ ligne.bluesky }}" target="_blank" rel="noopener">{{ ligne.bluesky }}</a>
+                {% else %}—{% endif %}
+              </td>
+              <td>
+                {% if ligne.facebook %}
+                  <a href="https://www.facebook.com/{{ ligne.facebook }}" target="_blank" rel="noopener">{{ ligne.facebook }}</a>
+                {% else %}—{% endif %}
+              </td>
+              <td>
+                {% if ligne.siteWeb %}
+                  <a href="https://{{ ligne.siteWeb }}" target="_blank" rel="noopener">{{ ligne.siteWeb }}</a>
+                {% else %}—{% endif %}
+              </td>
+              <td class="text-right">
+                <a class="btn btn-sm btn-outline-primary" href="{{ path('admin_socialmedia_editer', {mpId: ligne.mpId}) }}">Éditer</a>
+              </td>
+            </tr>
+          {% else %}
+            <tr><td colspan="7" class="text-center p-4">Aucun député.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+{% endblock %}

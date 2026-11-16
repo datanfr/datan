@@ -1,0 +1,56 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block title %}{{ article ? 'Modifier un article' : 'Créer un article' }}{% endblock %}
+
+{% block body %}
+  {{ form_start(formulaire) }}
+    {% if not formulaire.vars.valid %}
+      <div class="alert alert-danger">
+        {{ form_errors(formulaire) }}
+        <p class="mb-0">Le formulaire comporte des erreurs, corrigez les champs signalés.</p>
+      </div>
+    {% endif %}
+
+    <div class="row">
+      <div class="col-lg-8">
+        <div class="card">
+          <div class="card-body">
+            {{ form_row(formulaire.titre) }}
+            {{ form_row(formulaire.corps) }}
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-4">
+        <div class="card">
+          <div class="card-body">
+            {{ form_row(formulaire.categorie) }}
+            {{ form_row(formulaire.imageNom) }}
+            {% if formulaire.etat is defined %}
+              {{ form_row(formulaire.etat) }}
+            {% else %}
+              <p class="text-muted mb-0">L'article sera enregistré en brouillon ; vous pourrez le publier ensuite.</p>
+            {% endif %}
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-block">Enregistrer</button>
+        <a class="btn btn-link btn-block" href="{{ path('admin_blog_index') }}">Revenir à la liste</a>
+      </div>
+    </div>
+  {{ form_end(formulaire) }}
+{% endblock %}
+
+{% block javascripts %}
+  {# Corps en HTML éditorial : même éditeur que les décryptages et la FAQ, monté
+     sur les champs de classe .js-ckeditor. #}
+  <script type="importmap">
+    {
+      "imports": {
+        "ckeditor5": "{{ asset('assets/js/libraries/ckeditor/ckeditor5.js') }}",
+        "ckeditor5/": "{{ asset('assets/js/libraries/ckeditor/') }}"
+      }
+    }
+  </script>
+  <script type="module" src="{{ asset('assets/js/dashboard/init-ckeditor.js') }}"></script>
+{% endblock %}

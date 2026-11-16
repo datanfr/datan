@@ -1,0 +1,54 @@
+{% extends 'base.html.twig' %}
+
+{% block preloads %}{{ include('partials/preload_couverture.html.twig') }}{% endblock %}
+
+{# `libelle_de` porte son espace final quand il en faut un : « des » suivi d'un
+   espace, « de l' » sans. Il se concatène donc au nom sans rien ajouter. #}
+{% set nom_article = departement.libelle_de ~ departement.nom %}
+{# Le cas 099 n'ajoute pas le code entre parenthèses : « (099) » ne désigne pas
+   un département, et le site l'écarte déjà (Departement.php:37).
+   Il s'en tient en revanche au seul `libelle_2` et **omet le nom**, si bien que
+   datan.fr titre « Députés de la circonscription des » — une phrase coupée en
+   plein milieu, que son propre sous-titre dément deux lignes plus bas. C'est un
+   défaut, pas une tournure : le nom est rétabli ici. #}
+{% set titre = departement.code == '099'
+  ? 'Députés ' ~ nom_article
+  : 'Députés ' ~ nom_article ~ ' (' ~ departement.code ~ ')' %}
+
+{% block title %}Députés par circonscription : {{ departement.nom }} {{ departement.code }} | Datan{% endblock %}
+
+{% block meta_description %}Découvrez la liste des députés élus dans le département {{ nom_article }} ({{ departement.code }}). Tous les députés des circonscriptions {{ nom_article }}.{% endblock %}
+
+{% block body %}
+<div class="container-fluid bloc-img-deputes bloc-img d-flex async_background" id="container-always-fluid" style="height: 13em">
+  <div class="container d-flex flex-column justify-content-center py-2">
+    <h1>{{ titre }}</h1>
+  </div>
+</div>
+<div class="container pg-departement my-5">
+  <div class="row">
+    <div class="col-12">
+      {# Singulier quand le département n'a qu'un siège (Creuse, Lozère,
+         Saint-Pierre-et-Miquelon, Saint-Barthélemy et Saint-Martin,
+         Wallis-et-Futuna) : c'est le `count($deputes) === 1` que le site a posé
+         le 6 septembre 2026 (departement/index.php:9). Il écrit « le député »
+         sans accord ; la Lozère a une députée — accord manqué, corrigé ici
+         comme sur la fiche de ville. #}
+      {% set un_seul = deputes|length == 1 %}
+      <h2>Découvrez {{ un_seul ? (deputes[0].civilite == 'Mme' ? 'la députée' : 'le député') : 'les députés' }} {{ nom_article }} à l'Assemblée nationale</h2>
+    </div>
+  </div>
+  <div class="row mt-5">
+    <div class="col-12 d-flex flex-wrap justify-content-around">
+      {% for depute in deputes %}
+        {% embed 'depute/partials/card_decouverte.html.twig' with {tag: 'h3'} %}
+          {% block centre %}{{ depute.circonscription }}<sup>{{ depute.circonscription|rang_circo }}</sup> circonscription{% endblock %}
+        {% endembed %}
+      {% endfor %}
+    </div>
+  </div>
+</div>
+{% if communes %}
+  {{ include('departement/partials/communes.html.twig') }}
+{% endif %}
+{% endblock %}

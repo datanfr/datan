@@ -1,0 +1,56 @@
+{% extends 'base.html.twig' %}
+
+{% block preloads %}{{ include('partials/preload_couverture.html.twig') }}{% endblock %}
+
+{# L'application d'origine sert « Blog | Datan » comme titre de cette page
+   (Quiz.php:28) : un copier-coller resté du contrôleur du blog, sans rapport
+   avec le questionnaire. Coquille corrigée — le titre dit la page. #}
+{% block title %}Quel député choisir ? | Datan{% endblock %}
+
+{% block meta_description %}Répondez à ce test pour savoir de quel député ou quel parti vous êtes le plus proche ?{% endblock %}
+
+{% block body %}
+<div class="container-fluid bloc-img-deputes bloc-img d-flex async_background" id="container-always-fluid" style="height: 14em">
+  <div class="container d-flex flex-column justify-content-center py-2">
+    <div class="row">
+      <div class="col-12">
+        <h1>{{ 'Quel député choisir ?'|upper }}</h1>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="container my-3 pg-posts">
+  <div class="row row-grid">
+    <div class="col-md-9">
+      {# Le formulaire poste vers /questionnaire/resultat comme le legacy. Pas de
+         jeton CSRF : l'action ne modifie rien (le calcul de score n'a jamais été
+         terminé, cf. QuizController::resultat). Le nom de champ « weigth » est
+         la coquille d'origine, laissée telle quelle — c'est une clé de POST
+         invisible qu'un futur calcul relirait sous ce nom. #}
+      <form action="{{ path('quiz_resultat') }}" method="post">
+        {% for vote in votes %}
+          <h2>{{ vote.titre }}</h2>
+          <h3>Auriez-vous été pour ou contre ?</h3>
+          <div class="custom-control custom-radio custom-control-inline">
+            <input type="radio" id="prochoice[{{ vote.numero }}]" value="1" name="{{ vote.numero }}[choice]" class="custom-control-input">
+            <label class="custom-control-label" for="prochoice[{{ vote.numero }}]">Pour</label>
+          </div>
+          <div class="custom-control custom-radio custom-control-inline">
+            <input type="radio" id="conchoice[{{ vote.numero }}]" value="-1" name="{{ vote.numero }}[choice]" class="custom-control-input">
+            <label class="custom-control-label" for="conchoice[{{ vote.numero }}]">Contre</label>
+          </div>
+          <div class="custom-control custom-radio custom-control-inline">
+            <input type="radio" id="nochoice[{{ vote.numero }}]" value="0" name="{{ vote.numero }}[choice]" class="custom-control-input">
+            <label class="custom-control-label" for="nochoice[{{ vote.numero }}]">Ne se prononce pas</label>
+          </div>
+          <div class="form-group">
+            <label for="weight{{ vote.numero }}"><h3>Etait-il important de s'exprimer sur ce vote ?</h3></label>
+            <input type="number" max="5" min="0" name="{{ vote.numero }}[weigth]" class="form-control" id="weight{{ vote.numero }}">
+          </div>
+        {% endfor %}
+        <button type="submit" class="btn btn-primary">Calculer</button>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

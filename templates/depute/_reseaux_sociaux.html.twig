@@ -1,0 +1,66 @@
+{# Blocs « Suivez l'action de … » et « Contactez … » de la fiche
+   (`_social_media.php` + `_contact.php`). Les liens sociaux sont masqués aux
+   moteurs par `url_obf()` (système intouchable, cf. CLAUDE.md / robots.txt) ;
+   l'adresse e-mail reste un `mailto:` en clair, comme le legacy. Les logos sont
+   inlinés en SVG : la feuille `main.css` colore `.btn-… svg path` en blanc.
+
+   `contact` porte site_web / mail_an / twitter / facebook / bluesky (table
+   `contact_depute`, alimentée par le chantier réseaux sociaux). Chaque réseau
+   ne s'affiche que s'il est renseigné ; le profil officiel de l'Assemblée est
+   toujours là (construit sur `mp_id`, l'uid `PA…`). #}
+{% if contact %}
+  <div class="bloc-links p-lg-0 p-md-2 mt-5">
+    <h2 class="title-center">Suivez l'action de {{ nom_complet }}</h2>
+    <div class="row mt-4">
+      <div class="col-12 col-sm-4 mt-2 d-flex justify-content-center align-items-center">
+        <span class="url_obf btn btn-an" url_obf="{{ url_obf('http://www2.assemblee-nationale.fr/deputes/fiche/OMC_' ~ depute.mp_id) }}">Profil officiel</span>
+      </div>
+      {% if contact.site_web %}
+        <div class="col-12 col-sm-4 mt-2 d-flex justify-content-center align-items-center">
+          <span class="url_obf btn btn-website" url_obf="{{ url_obf('https://' ~ contact.site_web) }}">Site internet</span>
+        </div>
+      {% endif %}
+      {% if contact.facebook %}
+        <div class="col-12 col-sm-4 mt-2 d-flex justify-content-center align-items-center">
+          <span class="url_obf btn btn-fcb" url_obf="{{ url_obf('https://www.facebook.com/' ~ contact.facebook) }}">
+            <svg xmlns="http://www.w3.org/2000/svg" width="1298" height="2500" viewBox="88.428 12.828 107.543 207.085"><path d="M158.232 219.912v-94.461h31.707l4.747-36.813h-36.454V65.134c0-10.658 2.96-17.922 18.245-17.922l19.494-.009V14.278c-3.373-.447-14.944-1.449-28.406-1.449-28.106 0-47.348 17.155-47.348 48.661v27.149H88.428v36.813h31.788v94.461l38.016-.001z"/></svg>
+            <span class="ml-3">Facebook</span>
+          </span>
+        </div>
+      {% endif %}
+      {% if contact.bluesky %}
+        <div class="col-12 col-sm-4 mt-2 d-flex justify-content-center align-items-center">
+          <span class="url_obf btn btn-bluesky" url_obf="{{ url_obf('https://bsky.app/profile/' ~ contact.bluesky) }}">
+            <svg width="600" height="530" viewBox="0 0 600 530" xmlns="http://www.w3.org/2000/svg"><path d="m135.72 44.03c66.496 49.921 138.02 151.14 164.28 205.46 26.262-54.316 97.782-155.54 164.28-205.46 47.98-36.021 125.72-63.892 125.72 24.795 0 17.712-10.155 148.79-16.111 170.07-20.703 73.984-96.144 92.854-163.25 81.433 117.3 19.964 147.14 86.092 82.697 152.22-122.39 125.59-175.91-31.511-189.63-71.766-2.514-7.3797-3.6904-10.832-3.7077-7.8964-0.0174-2.9357-1.1937 0.51669-3.7077 7.8964-13.714 40.255-67.233 197.36-189.63 71.766-64.444-66.128-34.605-132.26 82.697-152.22-67.108 11.421-142.55-7.4491-163.25-81.433-5.9562-21.282-16.111-152.36-16.111-170.07 0-88.687 77.742-60.816 125.72-24.795z"/></svg>
+            <span class="ml-3">Bluesky</span>
+          </span>
+        </div>
+      {% endif %}
+      {% if contact.twitter %}
+        <div class="col-12 col-sm-4 mt-2 d-flex justify-content-center align-items-center">
+          <span class="url_obf btn btn-twitter" url_obf="{{ url_obf('https://x.com/' ~ contact.twitter|trim('@')) }}">
+            <svg width="1200" height="1227" viewBox="0 0 1200 1227" xmlns="http://www.w3.org/2000/svg"><path d="M714.163 519.284 1160.89 0h-105.86L667.137 450.887 357.328 0H0l468.492 681.821L0 1226.37h105.86l409.626-476.152 327.181 476.152H1200L714.137 519.284h.026Z"/></svg>
+          </span>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+
+  {# Contact : uniquement pour un député en exercice qui a une adresse
+     institutionnelle, comme le legacy (`mailAn !== NULL && active`). #}
+  {% if actif and contact.mail_an %}
+    <div class="bloc-links p-lg-0 p-md-2 mt-5">
+      <h2 class="title-center">Contactez {{ nom_complet }}</h2>
+      {# Aligné à gauche comme `_contact.php` — centré, l'adresse se replie sur
+         deux lignes dans une colonne étroite, ce que datan.fr ne fait pas. #}
+      <div class="row mt-4">
+        <div class="col-12">
+          <span class="mr-4">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16"><path d="M.05 3.555A2 2 0 0 1 2 2h12a2 2 0 0 1 1.95 1.555L8 8.414.05 3.555zM0 4.697v7.104l5.803-3.558L0 4.697zM6.761 8.83l-6.57 4.027A2 2 0 0 0 2 14h12a2 2 0 0 0 1.808-1.144l-6.57-4.027L8 9.586l-1.239-.757zm3.436-.586L16 11.801V4.697l-5.803 3.546z"/></svg>
+          </span>
+          <a href="mailto:{{ contact.mail_an }}" class="no-decoration underline text-dark">{{ contact.mail_an }}</a>
+        </div>
+      </div>
+    </div>
+  {% endif %}
+{% endif %}

@@ -1,0 +1,26 @@
+{# Encart « Candidature de députés » de la page de résultats d'une commune
+   (`departement/partials/electionFeature.php`, appelé avec `link` à FALSE :
+   le bouton vers les résultats, qui mènerait à la page même, n'est pas rendu).
+
+   « Les députés … sont candidats » reste au masculin quelle que soit la liste :
+   c'est la formulation du site. Avec un seul nom, la phrase s'accorde.
+   Variables : `candidats` (ResultatsMunicipales::deputesCandidats), `nom_de`. #}
+<div class="card card-election-feature information-success border-0" style="overflow: hidden">
+    <div class="card-body">
+        <h2 class="text-white mb-3">Candidature de députés</h2>
+        {% if candidats is empty %}
+            <p class="mb-0">Il n'y a aucun député candidat aux élections municipales de 2026 dans la ville {{ nom_de }}.</p>
+        {% elseif candidats|length == 1 %}
+            {% set c = candidats|first %}
+            {% set f = c.civilite == 'Mme' %}
+            <p class="mb-0">{{ f ? 'La' : 'Le' }} {{ f ? 'députée' : 'député' }} <a class="text-white" href="{{ path('depute_individual', {dptSlug: c.dpt_slug, slug: c.slug}) }}">{{ c.firstname }} {{ c.lastname }}</a> est candidat{{ f ? 'e' }} aux élections municipales de 2026 dans la ville {{ nom_de }}.</p>
+        {% else %}
+            <p class="mb-0">Les députés
+            {% for c in candidats -%}
+                <a class="text-white" href="{{ path('depute_individual', {dptSlug: c.dpt_slug, slug: c.slug}) }}">{{ c.firstname }} {{ c.lastname }}</a>
+                {{- loop.revindex == 2 ? ' et ' : (not loop.last ? ', ') -}}
+            {% endfor %} sont candidats aux élections municipales de 2026 dans la ville {{ nom_de }}.</p>
+        {% endif %}
+        <p>Les élections municipales se tiennent les 15 et 22 mars 2026. Découvrez sur Datan les résultats commune par commune.</p>
+    </div>
+</div>

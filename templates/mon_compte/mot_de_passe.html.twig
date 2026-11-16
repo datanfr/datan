@@ -1,0 +1,43 @@
+{# Modification du mot de passe, portée de `views/users/modify-password.php`.
+   Ouverte aux trois familles de comptes : c'est par là qu'un député change le
+   mot de passe provisoire qu'on lui a transmis. #}
+{% extends 'base.html.twig' %}
+
+{% block robots %}noindex, nofollow{% endblock %}
+{% block title %}Modifier mon mot de passe{% endblock %}
+
+{% block body %}
+  <div class="container-fluid bloc-img-deputes bloc-img d-flex async_background" id="container-always-fluid"></div>
+  <div class="container pg-compte p-5" style="margin-top: -100px; top: 100px;">
+    <div class="row">
+      <div class="col-12 mb-5">
+        <h1>Modifier mon mot de passe</h1>
+        <a href="{{ path('mon_compte') }}">Retour vers mon compte</a>
+      </div>
+      <div class="col-12">
+        {% for message in app.flashes('erreur') %}
+          <div class="alert alert-danger mb-4 text-center" role="alert">{{ message }}</div>
+        {% endfor %}
+        <form method="post">
+          <input type="hidden" name="_token" value="{{ csrf_token('mon_compte_mot_de_passe') }}">
+          <div class="login_form">
+            <div class="form-group">
+              <label class="font-weight-bold">Mot de passe actuel</label>
+              <input type="password" class="form-control" name="current" autocomplete="current-password" required>
+            </div>
+            <div class="form-group">
+              <label class="font-weight-bold">Nouveau mot de passe</label>
+              <input type="password" class="form-control" name="new" autocomplete="new-password" required>
+            </div>
+            <div class="form-group">
+              <label class="font-weight-bold">Confirmez le mot de passe</label>
+              <input type="password" class="form-control" name="new_confirmation" autocomplete="new-password" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Sauvegardez</button>
+            <a href="{{ path('mon_compte') }}" class="btn btn-secondary">Annuler</a>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+{% endblock %}

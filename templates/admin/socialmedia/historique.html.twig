@@ -1,0 +1,37 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block title %}Historique de {{ depute.firstname }} {{ depute.lastname }} ({{ depute.mpId }}){% endblock %}
+
+{% block body %}
+  <div class="mb-3">
+    <a class="btn btn-link" href="{{ path('admin_socialmedia', {page: 'historique'}) }}">Revenir à la liste</a>
+  </div>
+
+  <div class="card">
+    <div class="card-body p-0">
+      <table class="table table-bordered table-striped mb-0">
+        <caption class="sr-only">Historique des groupes</caption>
+        <thead>
+          <tr>
+            <th scope="col">Groupe</th>
+            <th scope="col">Qualité</th>
+            <th scope="col">Début</th>
+            <th scope="col">Fin</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for ligne in historique %}
+            <tr>
+              <td>{{ ligne.groupe }}</td>
+              <td>{{ ligne.codeQualite }}</td>
+              <td>{{ ligne.dateDebut }}</td>
+              <td>{{ ligne.dateFin ?? '—' }}</td>
+            </tr>
+          {% else %}
+            <tr><td colspan="4" class="text-center p-4">Aucun rattachement de groupe depuis la 15<sup>e</sup> législature.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+{% endblock %}

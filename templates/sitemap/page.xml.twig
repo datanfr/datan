@@ -1,0 +1,8 @@
+{#- L'attribut `nbUrl` que porte chaque `<urlset>` du site n'est pas repris : il
+    n'appartient pas au protocole, et sa présence fait échouer la validation du
+    document contre le schéma de sitemaps.org. Le compte se lit de toute façon
+    dans l'outil pour webmestres. -#}
+{{- '<?xml version="1.0" encoding="UTF-8"?>' }}
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+{% for url in urls %}<url><loc>{{ url }}</loc></url>
+{% endfor %}</urlset>

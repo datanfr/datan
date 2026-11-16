@@ -1,0 +1,70 @@
+{# « Les dernières élections à X » : six cartes, de la plus récente à la plus
+   ancienne (application/views/departement/commune.php:188).
+
+   Les barres se lisent en pourcentage des suffrages exprimés. Aux européennes,
+   c'est tout ce que la source publie — elle ne donne aucun nombre de voix — et
+   seules les trois premières listes sont montrées. Une commune sans résultat
+   garde sa carte, vide : c'est ce que fait le site, et l'absence est une
+   information — la source ne couvre pas les communes fusionnées depuis. #}
+<div class="container-fluid pg-commune py-5" id="pattern_background">
+  <div class="container">
+    <div class="row mt-2">
+      <div class="col-12">
+        <h2 class="text-center">Les dernières élections à {{ ville.nom }}</h2>
+      </div>
+      {% if presidentielle_texte %}
+        <div class="col-lg-7 mt-4">
+          <p class="text-primary font-weight-bold">Élection présidentielle 2022</p>
+          <p>{{ presidentielle_texte|raw }}</p>
+        </div>
+      {% endif %}
+    </div>
+    <div class="d-flex justify-content-around flex-wrap mt-4 bloc-elections">
+      {% for election in elections %}
+        <div class="card mx-1 my-4">
+          <div class="card-body pb-0">
+            <h3>{{ election.titre }}</h3>
+            <span class="round">{{ election.sous_titre|raw }}</span>
+            <div class="chart mt-3">
+              <div class="results d-flex flex-row justify-content-center align-items-center">
+                {% for resultat in election.resultats %}
+                  <div class="bar d-flex flex-row justify-content-center align-items-end">
+                    <div class="element d-flex align-items-center justify-content-center" style="height: {{ resultat.valeur|round }}%">
+                      <span class="score" style="color: #fff">{{ resultat.valeur|round }}%</span>
+                    </div>
+                  </div>
+                {% endfor %}
+              </div>
+              <div class="names d-flex flex-row justify-content-center align-items-center">
+                {% for resultat in election.resultats %}
+                  <div class="name">
+                    <p class="text-center">{{ resultat.label }}</p>
+                  </div>
+                {% endfor %}
+              </div>
+            </div>
+          </div>
+          <a href="{{ election.lien }}" target="_blank" rel="nofollow noreferrer noopener" class="no-decoration">
+            <div class="card-footer">
+              <p class="text-center mb-0">Plus d'infos</p>
+            </div>
+          </a>
+        </div>
+      {% endfor %}
+    </div>
+    {# Bouton vers la fiche de résultats (commune.php:234-242, ajouté le
+       6 septembre 2026 à la place du bloc des municipales). Adresse en clair
+       au-delà de 500 habitants — le seuil des pages d'élections —, masquée aux
+       robots en deçà. Pas d'élision (« à Ajaccio ») : c'est le texte du site,
+       et le titre de la page visée. #}
+    <div class="row mt-3">
+      <div class="col-12 d-flex justify-content-center align-items-center">
+        {% if ville.population > seuil_elections %}
+          <a href="{{ path('elections_resultats_commune', {departement: ville.dpt_slug, commune: ville.slug}) }}" class="mt-2 btn btn-primary">Résultats des élections à {{ ville.nom }}</a>
+        {% else %}
+          <a url_obf="{{ url_obf(path('elections_resultats_commune', {departement: ville.dpt_slug, commune: ville.slug})) }}" class="mt-2 btn btn-primary url_obf">Résultats des élections à {{ ville.nom }}</a>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>

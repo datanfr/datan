@@ -1,0 +1,22 @@
+{# Grille filtrable des députés candidats.
+
+   Les noms de classes portés par chaque case ne sont pas décoratifs : ce sont
+   les sélecteurs que `sorting_select.js` passe à Isotope. Trois familles se
+   superposent — la candidature (`candidate` / `not-candidate`), l'issue
+   (`elected`, `lost`, `second`), la circonscription et le groupe. Les renommer
+   en français romprait le filtre.
+
+   La circonscription est mise en minuscules, comme la valeur des options du
+   menu : le site ne minuscule que le côté classe et ses deux entrées corses
+   (`2A`, `2B`) ne filtrent donc jamais rien. Les deux côtés sont accordés ici. #}
+<div class="col-lg-9 col-md-12">
+  <div class="row mt-2 sorting">
+    {% for candidat in candidats %}
+      <div class="col-md-6 col-xl-4 sorting-item {{ candidat.candidat ? 'candidate' : 'not-candidate' }} {{ candidat.district_id|lower }} {{ candidat.etat }}{% if candidat.groupe_abrev %} gp-{{ candidat.groupe_abrev|lower }}{% endif %}">
+        <div class="d-flex justify-content-center">
+          {{ include('election/partials/carte_candidat.html.twig') }}
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+</div>

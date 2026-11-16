@@ -1,0 +1,93 @@
+{# Espace personnel d'un député. Même coque à barre latérale que la rédaction ;
+   seuls le panneau utilisateur (photo + nom) et le menu changent, comme le
+   `$type == 'mp'` de `views/dashboard/header.php`.
+
+   Le député est lu sur `app.user.depute` plutôt que sur une variable passée à
+   chaque rendu : la barre latérale est identique sur toutes les pages, y
+   compris celles qui ne chargent pas la fiche.
+
+   Divergence de vocabulaire assumée, et la seule : l'origine dit « dashboard »
+   partout (lien de barre, titre « Bienvenue sur votre dashboard »), nous disons
+   « tableau de bord ». Espace privé, ni indexé ni cité par un lien du site
+   public — la règle de parité d'adresse et d'affichage ne s'y applique pas, et
+   « Français partout » de `CLAUDE.md` tranche. À ne pas « ré-aligner » sur le
+   site par méprise. #}
+{% extends 'admin/base.html.twig' %}
+
+{% set depute = app.user.depute %}
+
+{% block title %}Tableau de bord{% endblock %}
+
+{% block top_links %}
+  {# Lien vers la page publique du député. On l'omet quand le `dpt_slug` n'est
+     pas une adresse valide (majuscules des députés corses, cf. TODO §1) :
+     générer l'URL lèverait sinon une 500 sur la route `[a-z0-9\-]+`. #}
+  {% if depute.dptSlug and depute.slug and depute.dptSlug matches '/^[a-z0-9\\-]+$/' %}
+    <li class="nav-item d-none d-sm-inline-block">
+      <a href="{{ path('depute_individual', {dptSlug: depute.dptSlug, slug: depute.slug}) }}"
+         class="nav-link" target="_blank" rel="noreferrer">Ma page publique</a>
+    </li>
+  {% endif %}
+{% endblock %}
+
+{% block sidebar_user %}
+  <a href="{{ path('dashboard') }}">
+    <div class="info d-flex flex-column justify-content-center">
+      <div class="d-flex justify-content-center">
+        <div class="depute-img-circle d-flex justify-content-center">
+          <img src="{{ photo_depute(depute) }}" width="120" height="154"
+               alt="{{ depute.firstname }} {{ depute.lastname }}">
+        </div>
+      </div>
+      <span class="d-block text-center mt-2 text-white font-weight-bold">{{ depute.firstname }} {{ depute.lastname }}</span>
+    </div>
+  </a>
+{% endblock %}
+
+{% block sidebar_menu %}
+  <li class="nav-item">
+    <a href="{{ path('dashboard') }}" class="nav-link">
+      <i class="nav-icon fas fa-tachometer-alt"></i>
+      <p>Tableau de bord</p>
+    </a>
+  </li>
+  <li class="nav-item">
+    <a href="{{ path('dashboard_explications') }}" class="nav-link">
+      <i class="nav-icon far fa-comment-dots"></i>
+      <p>Mes explications de vote</p>
+    </a>
+  </li>
+  <li class="nav-item">
+    <a href="{{ path('dashboard_explications_liste') }}" class="nav-link">
+      <i class="nav-icon far fa-edit"></i>
+      <p>Nouvelle explication</p>
+    </a>
+  </li>
+  {# Fiche de candidature. Le legacy n'y menait par aucun lien — page atteignable
+     à l'URL seule ; on la rend accessible depuis la barre latérale. L'espace
+     n'ouvre de fiche que pour les législatives 2022 (DashboardController::ELECTIONS_FICHE),
+     d'où le slug fixe. #}
+  <li class="nav-item">
+    <a href="{{ path('dashboard_elections', {slug: 'legislatives-2022'}) }}" class="nav-link">
+      <i class="nav-icon fas fa-vote-yea"></i>
+      <p>Ma candidature</p>
+    </a>
+  </li>
+  {# Accès à « mon compte » — c'est par là qu'un député change le mot de passe
+     provisoire qu'on lui a transmis (page ouverte aux trois familles de comptes,
+     cf. MonCompteController). Le legacy n'y menait pas depuis le tableau de bord ;
+     on l'ajoute, la page existant désormais. #}
+  <li class="nav-item">
+    <a href="{{ path('mon_compte') }}" class="nav-link">
+      <i class="nav-icon far fa-user"></i>
+      <p>Mon compte</p>
+    </a>
+  </li>
+{% endblock %}
+
+{% block fil_ariane %}
+  <ol class="breadcrumb float-sm-right bg-transparent p-0">
+    <li class="breadcrumb-item"><a href="{{ path('dashboard') }}" class="no-decoration underline">Tableau de bord</a></li>
+    {% block fil_ariane_suite %}{% endblock %}
+  </ol>
+{% endblock %}

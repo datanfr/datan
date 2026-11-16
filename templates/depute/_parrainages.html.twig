@@ -1,0 +1,33 @@
+{# Bloc « Ses parrainages présidentiels » (`mp_individual/_parrainages.php`) :
+   le parrainage donné par le député à un candidat à la présidentielle pendant
+   son mandat. Ne s'affiche que pour les 530 députés qui en ont donné un.
+
+   Trois coquilles du legacy corrigées (le commentaire dit pourquoi, cf. CLAUDE.md) :
+   - l'année : la source (`parrainage.annee`) et les candidats sont ceux de la
+     présidentielle de 2022 ; le legacy affiche « 2024 » en dur, une élection qui
+     n'existe pas. On rend l'année de la donnée.
+   - « à l'élection présidentiel » → « présidentielle » (accord).
+   - « Parrainagé accordé » → « Parrainage accordé » (« Parrainagé » n'est pas un mot).
+   Le legacy imbrique en outre la table dans un `<p>` (HTML invalide) ; on referme
+   l'intro avant la table. #}
+{% if parrainage %}
+  <div class="mt-5 bloc-elections-history">
+    <h2 class="mb-4 title-center">Ses parrainages présidentiels</h2>
+    <p>{{ nom_complet }} a déjà parrainé un candidat à l'élection présidentielle pendant son mandat de député{{ depute.civilite == 'Mme' ? 'e' : '' }}.</p>
+    <table class="table">
+      <caption class="sr-only">Les parrainages de {{ nom_complet }}</caption>
+      <thead class="sr-only">
+        <tr>
+          <th scope="col">Élection</th>
+          <th scope="col">Candidat</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="font-weight-bold">Élection présidentielle {{ parrainage.annee }}</td>
+          <td>Parrainage accordé à <b>{{ parrainage.candidat }}</b></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+{% endif %}

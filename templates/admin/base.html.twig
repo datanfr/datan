@@ -1,0 +1,251 @@
+<!-- Coque des espaces connectés — rédaction et députés. Reprend la mise en page
+     à barre latérale sombre du tableau de bord de l'application d'origine
+     (`views/dashboard/header.php`, AdminLTE `sidebar-mini`), dont les assets
+     sont déjà dans public/assets/. Comme le legacy, une seule coque sert les
+     deux publics : seuls le panneau utilisateur et le menu de la barre latérale
+     changent avec le rôle, via les blocs `sidebar_user` et `sidebar_menu` que
+     les gabarits redéfinissent (voir templates/dashboard/base.html.twig). -->
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>{% block title %}Rédaction{% endblock %} | Datan</title>
+  <link rel="icon" type="image/png" href="{{ asset('assets/imgs/favicon/datan_favicon.ico') }}">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.0/css/all.css">
+  <link rel="stylesheet" href="{{ asset('assets/css/dashboard/adminlte.css') }}">
+  <link rel="stylesheet" href="{{ asset('assets/css/dashboard/style.css') }}">
+  <link rel="stylesheet" href="{{ asset('assets/css/dashboard/ckeditor5.css') }}">
+  {% block stylesheets %}{% endblock %}
+</head>
+<body class="hold-transition sidebar-mini">
+<div class="wrapper">
+  <nav class="main-header navbar navbar-expand navbar-white navbar-light">
+    <ul class="navbar-nav">
+      <li class="nav-item">
+        <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
+      </li>
+      <li class="nav-item d-none d-sm-inline-block">
+        <a href="{{ path('home') }}" class="nav-link font-weight-bold text-primary">Datan</a>
+      </li>
+      {% block top_links %}{% endblock %}
+    </ul>
+    <ul class="navbar-nav ml-auto">
+      {% if app.user %}
+        <li class="nav-item"><span class="nav-link">{{ app.user.nom }}{% if is_granted('ROLE_ADMIN') %} · administrateur{% endif %}</span></li>
+        <li class="nav-item"><a class="nav-link text-danger" href="{{ path('deconnexion') }}">Déconnexion</a></li>
+      {% endif %}
+    </ul>
+  </nav>
+
+  <aside class="main-sidebar sidebar-dark-primary elevation-4">
+    <div class="sidebar">
+      <div class="user-panel mt-3 pb-3 mb-3 d-flex justify-content-center">
+        {% block sidebar_user %}
+          {% if app.user %}
+            <div class="info">
+              <a href="{{ path('admin_decryptage_index') }}" class="d-block text-white font-weight-bold">{{ app.user.nom }}</a>
+            </div>
+          {% endif %}
+        {% endblock %}
+      </div>
+
+      <nav class="mt-2">
+        <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+          {% block sidebar_menu %}
+            {# Menu de la rédaction. Le tableau de bord des députés le redéfinit
+               entièrement (templates/dashboard/base.html.twig), comme le
+               `$type == 'mp'` de `dashboard/header.php` du legacy. Rédacteur et
+               administrateur voient les mêmes sections : dans l'application
+               d'origine, seul le bloc « Clés API » était réservé à
+               l'administrateur (`is_admin()`), et il n'est pas porté. La
+               distinction de rôle joue à l'intérieur des sections (publier,
+               reprendre un contenu publié, supprimer), pas sur le menu — à une
+               exception près, les demandes de compte député : l'écran n'existe
+               pas dans le legacy (la validation y passait par un lien envoyé à
+               l'adresse institutionnelle) et l'approbation crée un compte,
+               geste réservé à l'administrateur. #}
+            <li class="nav-item">
+              <a href="{{ path('admin_decryptage_index') }}" class="nav-link">
+                <i class="nav-icon far fa-file-alt"></i>
+                <p>Décryptages</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="{{ path('admin_amendement_index') }}" class="nav-link">
+                <i class="nav-icon far fa-edit"></i>
+                <p>Amendements</p>
+              </a>
+            </li>
+            <li class="nav-item has-treeview">
+              <a href="#" class="nav-link">
+                <i class="nav-icon far fa-newspaper"></i>
+                <p>Blog<i class="fas fa-angle-left right"></i></p>
+              </a>
+              <ul class="nav nav-treeview">
+                <li class="nav-item">
+                  <a href="{{ path('admin_blog_index') }}" class="nav-link">
+                    <i class="far fa-circle nav-icon"></i><p>Tous les articles</p>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="{{ path('admin_blog_creer') }}" class="nav-link">
+                    <i class="far fa-circle nav-icon"></i><p>Créer un article</p>
+                  </a>
+                </li>
+              </ul>
+            </li>
+            <li class="nav-item has-treeview">
+              <a href="#" class="nav-link">
+                <i class="nav-icon far fa-chart-bar"></i>
+                <p>Tableaux analyse<i class="fas fa-angle-left right"></i></p>
+              </a>
+              <ul class="nav nav-treeview">
+                <li class="nav-item">
+                  <a href="{{ path('admin_socialmedia', {page: 'deputes_entrants'}) }}" class="nav-link">
+                    <i class="far fa-circle nav-icon"></i><p>Députés entrants</p>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="{{ path('admin_socialmedia', {page: 'deputes_sortants'}) }}" class="nav-link">
+                    <i class="far fa-circle nav-icon"></i><p>Députés sortants</p>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="{{ path('admin_socialmedia', {page: 'postes_assemblee'}) }}" class="nav-link">
+                    <i class="far fa-circle nav-icon"></i><p>Postes Assemblée</p>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="{{ path('admin_socialmedia', {page: 'groupes_entrants'}) }}" class="nav-link">
+                    <i class="far fa-circle nav-icon"></i><p>Nouveaux membres de groupe</p>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="{{ path('admin_socialmedia', {page: 'historique'}) }}" class="nav-link">
+                    <i class="far fa-circle nav-icon"></i><p>Historique députés</p>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="{{ path('admin_socialmedia', {page: 'x'}) }}" class="nav-link">
+                    <i class="far fa-circle nav-icon"></i><p>Comptes X (réseaux sociaux)</p>
+                  </a>
+                </li>
+              </ul>
+            </li>
+            <li class="nav-item has-treeview">
+              <a href="#" class="nav-link">
+                <i class="nav-icon far fa-question-circle"></i>
+                <p>FAQ<i class="fas fa-angle-left right"></i></p>
+              </a>
+              <ul class="nav nav-treeview">
+                <li class="nav-item">
+                  <a href="{{ path('admin_faq_index') }}" class="nav-link">
+                    <i class="far fa-circle nav-icon"></i><p>Tous les articles</p>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="{{ path('admin_faq_creer') }}" class="nav-link">
+                    <i class="far fa-circle nav-icon"></i><p>Créer un article</p>
+                  </a>
+                </li>
+              </ul>
+            </li>
+            <li class="nav-item has-treeview">
+              <a href="#" class="nav-link">
+                <i class="nav-icon far fa-check-square"></i>
+                <p>Quizz<i class="fas fa-angle-left right"></i></p>
+              </a>
+              <ul class="nav nav-treeview">
+                <li class="nav-item">
+                  <a href="{{ path('admin_quizz_index') }}" class="nav-link">
+                    <i class="far fa-circle nav-icon"></i><p>Toutes les questions</p>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="{{ path('admin_quizz_creer') }}" class="nav-link">
+                    <i class="far fa-circle nav-icon"></i><p>Créer une question</p>
+                  </a>
+                </li>
+              </ul>
+            </li>
+            <li class="nav-item">
+              <a href="{{ path('admin_parrainage_index') }}" class="nav-link">
+                <i class="nav-icon far fa-handshake"></i>
+                <p>Parrainages 2022</p>
+              </a>
+            </li>
+            <li class="nav-item has-treeview">
+              <a href="#" class="nav-link">
+                <i class="nav-icon far fa-heart"></i>
+                <p>Campagnes de dons<i class="fas fa-angle-left right"></i></p>
+              </a>
+              <ul class="nav nav-treeview">
+                <li class="nav-item">
+                  <a href="{{ path('admin_campagne_index') }}" class="nav-link">
+                    <i class="far fa-circle nav-icon"></i><p>Toutes les campagnes</p>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="{{ path('admin_campagne_creer') }}" class="nav-link">
+                    <i class="far fa-circle nav-icon"></i><p>Créer une campagne</p>
+                  </a>
+                </li>
+              </ul>
+            </li>
+            {% if is_granted('ROLE_ADMIN') %}
+              <li class="nav-item">
+                <a href="{{ path('admin_demande_compte_index') }}" class="nav-link">
+                  <i class="nav-icon far fa-id-card"></i>
+                  <p>Demandes de compte</p>
+                </a>
+              </li>
+            {% endif %}
+            {# /mon-compte est ouvert à tout connecté (livraison des comptes
+               lecteurs, 24 juillet) : c'est ici que la rédaction change son
+               mot de passe. Les députés ont leur propre entrée dans la barre
+               du tableau de bord, qui redéfinit ce bloc. #}
+            <li class="nav-item">
+              <a href="{{ path('mon_compte') }}" class="nav-link">
+                <i class="nav-icon far fa-user"></i>
+                <p>Mon compte</p>
+              </a>
+            </li>
+          {% endblock %}
+        </ul>
+      </nav>
+    </div>
+  </aside>
+
+  <div class="content-wrapper">
+    <div class="content-header">
+      <div class="container-fluid">
+        {% block fil_ariane %}{% endblock %}
+        <h1 class="m-0">{% block heading %}{{ block('title') }}{% endblock %}</h1>
+      </div>
+    </div>
+    <div class="content">
+      <div class="container-fluid">
+        {% for type, messages in app.flashes(['succes', 'erreur']) %}
+          {% for message in messages %}
+            <div class="alert alert-{{ type == 'succes' ? 'success' : 'danger' }}">{{ message }}</div>
+          {% endfor %}
+        {% endfor %}
+        {% block body %}{% endblock %}
+      </div>
+    </div>
+  </div>
+
+  <footer class="main-footer">
+    <div class="float-right d-none d-sm-inline">Espace Datan</div>
+    <strong>Datan</strong> — décryptage des votes de l'Assemblée nationale.
+  </footer>
+</div>
+
+<script src="{{ asset('assets/js/dashboard/jquery.min.js') }}"></script>
+<script src="{{ asset('assets/js/dashboard/bootstrap.bundle.min.js') }}"></script>
+<script src="{{ asset('assets/js/dashboard/adminlte.js') }}"></script>
+{% block javascripts %}{% endblock %}
+</body>
+</html>

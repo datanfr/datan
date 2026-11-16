@@ -1,0 +1,120 @@
+/* Atelier de décryptage (rédaction). Le code visuel vient de l'interface
+   « decryptage » de PoliticAnalysis (public/css/debat.css) — mêmes couleurs de
+   rôle, mêmes compteurs, même violet pour l'action IA. Tout est préfixé
+   .atelier-decryptage pour ne rien disputer à AdminLTE : .card, .badge et
+   .table restent les siens. */
+
+/* La matière défile dans son propre volet et reste en regard du formulaire.
+   C'est elle qui est collante, pas le formulaire : CKEditor dans un conteneur
+   à overflow perd sa barre d'outils collante et voit ses panneaux découpés. */
+@media (min-width: 992px) {
+  .atelier-decryptage .atelier-matiere {
+    position: sticky;
+    top: 1rem;
+    max-height: calc(100vh - 2rem);
+    overflow-y: auto;
+  }
+}
+
+/* — Les paroles du débat, typées par rôle — */
+.atelier-decryptage .parole {
+  margin-bottom: .75rem;
+  padding-left: .75rem;
+  border-left: 3px solid #dee2e6;
+  line-height: 1.65;
+}
+.atelier-decryptage .parole-entete { margin-bottom: .15rem; }
+.atelier-decryptage .orateur-nom { font-weight: 700; }
+.atelier-decryptage .orateur-groupe {
+  display: inline-block;
+  margin-left: .4rem;
+  padding: 0 .35rem;
+  font-size: .75rem;
+  color: #495057;
+  background: #e9ecef;
+  border-radius: .25rem;
+  vertical-align: middle;
+}
+.atelier-decryptage .parole-president { border-left-color: #0a3d91; }
+.atelier-decryptage .parole-president .orateur-nom { color: #0a3d91; }
+.atelier-decryptage .parole-orateur { border-left-color: #28a745; }
+.atelier-decryptage .parole-orateur .orateur-nom { color: #1e7e34; }
+.atelier-decryptage .parole-gouvernement { border-left-color: #dc3545; }
+.atelier-decryptage .parole-gouvernement .orateur-nom { color: #b02a37; }
+.atelier-decryptage .parole-didascalie {
+  margin: .5rem 0 .75rem .75rem;
+  font-style: italic;
+  color: #888;
+}
+.atelier-decryptage .parole-texte p { margin-bottom: .35rem; }
+
+.atelier-decryptage .expose-texte { font-size: .92rem; line-height: 1.7; }
+
+/* — Le résultat du vote — */
+.atelier-decryptage .matiere-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .75rem;
+  margin-bottom: 1rem;
+}
+.atelier-decryptage .matiere-stat {
+  flex: 1 1 0;
+  min-width: 90px;
+  padding: .6rem .25rem;
+  text-align: center;
+  background: #f8f9fa;
+  border-radius: .35rem;
+}
+.atelier-decryptage .matiere-stat-valeur { font-size: 1.7rem; font-weight: 700; line-height: 1.1; }
+.atelier-decryptage .matiere-stat-pour { color: #28a745; }
+.atelier-decryptage .matiere-stat-contre { color: #dc3545; }
+.atelier-decryptage .matiere-stat-abstention { color: #fd7e14; }
+.atelier-decryptage .matiere-stat-libelle { font-size: .8rem; color: #6c757d; }
+
+.atelier-decryptage .matiere-barre-vote {
+  display: flex;
+  height: 24px;
+  border-radius: 12px;
+  overflow: hidden;
+  margin-bottom: .4rem;
+}
+.atelier-decryptage .matiere-barre-pour { background: #28a745; }
+.atelier-decryptage .matiere-barre-contre { background: #dc3545; }
+.atelier-decryptage .matiere-barre-abstention { background: #fd7e14; }
+.atelier-decryptage .matiere-barre-legende { margin-bottom: 1rem; font-size: .8rem; color: #495057; }
+.atelier-decryptage .matiere-barre-legende .pastille {
+  display: inline-block;
+  width: .65rem;
+  height: .65rem;
+  margin-right: .25rem;
+  border-radius: 50%;
+}
+.atelier-decryptage .pastille-pour { background: #28a745; }
+.atelier-decryptage .pastille-contre { background: #dc3545; }
+.atelier-decryptage .pastille-abstention { background: #fd7e14; }
+
+/* — L'action IA : le violet de PoliticAnalysis, distinct du bleu d'enregistrement — */
+.atelier-decryptage .btn-ia {
+  color: #fff;
+  background-color: #7c3aed;
+  border-color: #7c3aed;
+}
+.atelier-decryptage .btn-ia:hover:not(:disabled) {
+  color: #fff;
+  background-color: #6d28d9;
+  border-color: #6d28d9;
+}
+.atelier-decryptage .btn-ia:disabled { opacity: .55; }
+
+/* — Le rapport de validation des citations — */
+.atelier-decryptage .citation-alerte {
+  margin-top: .5rem;
+  padding: .6rem .75rem;
+  border-radius: .35rem;
+}
+.atelier-decryptage .citation-alerte-ok { background: #d4edda; color: #155724; }
+.atelier-decryptage .citation-alerte-attention { background: #fff3cd; color: #856404; }
+.atelier-decryptage .citation-alerte ul { margin: .35rem 0 0; padding-left: 1.1rem; }
+
+/* Confort d'écriture dans la colonne de droite. */
+.atelier-decryptage .ck-editor__editable { min-height: 320px; }

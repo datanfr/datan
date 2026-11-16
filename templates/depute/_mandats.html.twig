@@ -1,0 +1,56 @@
+{# Bloc « Historique des mandats » (`mp_individual/_mandate_history.php`).
+   La fiche portée montrait ici un tableau Législature/Circonscription/Début/Fin/
+   Motif : datan.fr n'affiche pas ce tableau mais un court texte et des boutons
+   vers les autres législatures du député. #}
+{% if mandats %}
+  {% set e = depute.civilite == 'Mme' ? 'e' : '' %}
+  {% set pronom = depute.civilite == 'Mme' ? 'elle' : 'il' %}
+  {% set mot_depute = depute.civilite == 'Mme' ? 'députée' : 'député' %}
+  {# La législature « de la page », pas la plus récente du député : le legacy
+     lit ici `$depute['legislature']`, que son contrôleur repose sur celle
+     consultée en mode historique. Sur /legislature-16 d'un réélu, la phrase dit
+     donc « la 16ème » et les boutons offrent les AUTRES législatures (17e, 15e).
+     Se caler sur `mandats[0]` faisait annoncer la 17e et proposait un bouton
+     vers la page où l'on se trouve déjà. La variable `legislature` n'est posée
+     que par la page historique ; la fiche retombe sur le dernier mandat, ce qui
+     est la même valeur. #}
+  {% set latest = legislature|default(mandats[0].legislature) %}
+  {# « Au total, il a été député pendant 9 ans » : la même durée cumulée que la
+     bio (anciennete.length_edited), le legacy affichant `lengthEdited` aux deux
+     endroits. #}
+  {% set duree = anciennete ? ' Au total, ' ~ pronom ~ ' a été ' ~ mot_depute ~ ' à l\'Assemblée nationale pendant ' ~ anciennete.length_edited ~ '.' : '' %}
+  <div class="bloc-mandats mt-5">
+    <h2 class="mb-4 title-center">Historique des mandats</h2>
+    {% if mandats|length > 1 %}
+      <p>{{ nom_complet }} a été élu{{ e }} à plusieurs reprises.{{ duree }}</p>
+    {% else %}
+      <p>{{ nom_complet }} n'a été élu{{ e }} {{ mot_depute }} qu'une fois.{{ duree }}</p>
+    {% endif %}
+    <p>
+      {{ nom_complet }} a été député pendant les législatures suivantes :
+      {% for m in mandats|reverse %}
+        {%- if m.legislature %}<i>{{ m.legislature }}ème législature</i>{{ loop.last ? '.' : ', ' }}{% endif %}
+      {%- endfor %}
+    </p>
+    {% if mandats|length > 1 %}
+      <p>
+        Cette page publie les statistiques de {{ nom_complet }} pour sa législature la plus récente ({{ latest }}<sup>ème</sup> législature).
+        Nous publions sur Datan l'historique de tous les mandats depuis la 14<sup>ème</sup> législature.
+      </p>
+      <div class="row">
+        {% for m in mandats %}
+          {% if m.legislature >= 14 and m.legislature != latest %}
+            <div class="col-12 col-sm-6 mt-2 d-flex justify-content-center">
+              <a class="btn d-flex align-items-center justify-content-center"
+                 href="{{ m.legislature == 17
+                    ? path('depute_individual', {dptSlug: depute.dpt_slug, slug: depute.slug})
+                    : path('depute_legislature', {dptSlug: depute.dpt_slug, slug: depute.slug, legislature: m.legislature}) }}">
+                {{ m.legislature }}ème législature
+              </a>
+            </div>
+          {% endif %}
+        {% endfor %}
+      </div>
+    {% endif %}
+  </div>
+{% endif %}

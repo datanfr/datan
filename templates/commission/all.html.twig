@@ -1,0 +1,51 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Commissions permanentes - Assemblée Nationale | Datan{% endblock %}
+
+{% block meta_description %}Les huit commissions permanentes de l'Assemblée nationale : leur bureau, leur président et les députés qui y siègent.{% endblock %}
+
+{% block body %}
+<div class="container-fluid pg-groupe-all mb-5" id="container-always-fluid">
+  <div class="row">
+    <div class="container">
+      <div class="row bloc-titre">
+        <div class="col-12">
+          <h1>Les commissions permanentes de l'Assemblée nationale</h1>
+        </div>
+      </div>
+      <div class="row row-grid mt-5">
+        <div class="col-md-7">
+          <p>Les <b>commissions permanentes</b> sont les huit formations de travail entre lesquelles se répartissent les députés. C'est là qu'un texte est examiné et amendé avant d'arriver dans l'hémicycle.</p>
+          <p><b>Chaque député siège dans une commission et une seule</b>, choisie en fonction de ses domaines de compétence. Il peut en changer en cours de législature, et remplacer ponctuellement un collègue dans une autre.</p>
+          <p>Chaque commission élit son bureau : un président, des vice-présidents et des secrétaires. La commission des finances fait exception — sa présidence revient par tradition à un député de l'opposition.</p>
+          <p>Attention, les commissions permanentes ne sont ni des <a href="{{ path('groupes_index') }}">groupes politiques</a>, ni des <a href="{{ path('partis_index') }}">partis</a> : elles réunissent des députés de toutes tendances.</p>
+        </div>
+      </div>
+      <div class="row mt-5">
+        <div class="col-12">
+          <h2>Les <span class="text-primary">{{ commissions|length }} commissions</span> permanentes</h2>
+        </div>
+      </div>
+      <div class="row mt-4">
+        {% for commission in commissions %}
+          <div class="col-lg-4 col-md-6 py-3">
+            <div class="card card-groupe">
+              <div class="card-body d-flex flex-column justify-content-center align-items-center">
+                <h3 class="d-block card-title">
+                  <a href="{{ path('commission_individual', {slug: commission.slug}) }}" class="stretched-link no-decoration">{{ commission.libelle_abrege }}</a>
+                </h3>
+                {% if commission.president %}
+                  <span class="d-block">Présidée par {{ commission.president.firstname }} {{ commission.president.lastname }}</span>
+                {% endif %}
+              </div>
+              <div class="card-footer d-flex justify-content-center align-items-center">
+                <span>{{ commission.effectif }} député{{ commission.effectif > 1 ? 's' }}</span>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

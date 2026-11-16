@@ -1,0 +1,160 @@
+{% extends 'dashboard/base.html.twig' %}
+{% import 'dashboard/partials/affichage.html.twig' as afficher %}
+
+{% block title %}Explications de vote{% endblock %}
+{% block heading %}Mes explications de vote{% endblock %}
+
+{% block fil_ariane_suite %}
+  <li class="breadcrumb-item active" aria-current="page">Explications de vote</li>
+{% endblock %}
+
+{% block body %}
+  <a class="btn btn-outline-secondary font-weight-bold" href="{{ path('dashboard') }}">
+    {{ afficher.fleche_gauche() }} Retour
+  </a>
+
+  <div class="row mt-4">
+    <div class="col-md-6">
+      <div class="card mb-0 h-100">
+        <div class="card-body py-4">
+          <h2 class="font-weight-bold text-primary h5">Infos</h2>
+          <p>
+            Vous pouvez rédiger une explication de vote pour indiquer à vos électeurs les
+            <b>raisons de votre position</b>. Ces explications seront visibles sur votre profil
+            Datan ainsi que sur les pages des scrutins.
+          </p>
+          <p class="mb-0">
+            Cette fonctionnalité n'est disponible que pour les <b>votes contextualisés par
+            Datan</b>. Les votes contextualisés sont les scrutins que l'équipe de Datan
+            vulgarise et contextualise et qui sont mis en avant sur le site.
+          </p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6 mt-4 mt-md-0">
+      <a class="btn btn-primary font-weight-bold d-flex justify-content-center align-items-center"
+         style="font-size: 1.5rem; height: 100%; width: 100%"
+         href="{{ path('dashboard_explications_liste') }}">
+        Je crée une nouvelle explication de vote
+      </a>
+    </div>
+  </div>
+
+  <div class="row mt-5">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-header">
+          <h2 class="font-weight-bold text-danger h4">Mes explications en brouillon</h2>
+        </div>
+        <div class="card-body">
+          {% if brouillons %}
+            {{ _self.tableau(brouillons, false) }}
+          {% else %}
+            <p class="mb-0">Vous n'avez pas d'explications de vote en brouillon.</p>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+
+    <div class="col-12 mt-4 mb-4">
+      <div class="card">
+        <div class="card-header">
+          <h2 class="font-weight-bold text-success h4">Mes explications publiées</h2>
+        </div>
+        <div class="card-body">
+          {% if publiees %}
+            {{ _self.tableau(publiees, true) }}
+          {% else %}
+            <p class="mb-0">Vous n'avez pas encore publié d'explications de vote.</p>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {# Les fenêtres de partage vivent hors des tables : une modale imbriquée dans
+     un <td> se positionne relativement à la cellule et sort de l'écran. #}
+  {% for explication in publiees %}
+    <div class="modal fade" id="partage-{{ explication.id }}" tabindex="-1" role="dialog"
+         aria-labelledby="partage-titre-{{ explication.id }}" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h3 class="modal-title font-weight-bold h4" id="partage-titre-{{ explication.id }}">Lien de partage pour réseaux sociaux</h3>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Fermer">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            {% set adresse = url('vote_explication', {legislature: explication.legislature, numero: explication.vote_numero, mp_id: depute.mpId}) %}
+            <p><b>Vote : {{ explication.titre_datan }}</b></p>
+            <p>Partagez sur les réseaux sociaux votre explication de vote avec ce lien.</p>
+            <p class="font-italic">{{ adresse }}</p>
+            <div class="d-flex">
+              <a class="btn btn-primary d-flex align-items-center justify-content-center font-weight-bold"
+                 href="{{ adresse }}" target="_blank" rel="noreferrer">
+                {{ afficher.lien_externe() }}<span class="ml-3">Lien de partage</span>
+              </a>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  {% endfor %}
+{% endblock %}
+
+{% macro tableau(explications, publiees) %}
+  {% import 'dashboard/partials/affichage.html.twig' as afficher %}
+  <div class="table-responsive">
+    <table class="table">
+      <thead class="thead-dark">
+        <tr>
+          <th scope="col">Leg.</th>
+          <th scope="col">Scrutin</th>
+          <th scope="col" class="text-center">Position</th>
+          <th scope="col" class="text-center d-none d-lg-table-cell">Explication</th>
+          <th scope="col"></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for explication in explications %}
+          <tr>
+            <td>{{ explication.legislature }}</td>
+            <td class="font-weight-bold">{{ explication.titre_datan }}</td>
+            <td class="text-center">{{ afficher.position(explication.position_depute) }}</td>
+            <td class="d-none d-lg-table-cell">{{ afficher.resume(explication.texte) }}</td>
+            <td class="d-flex flex-column">
+              {# `lien_vote` plutôt que la route directe : un vote du Congrès porte
+                 un numéro négatif et sa propre adresse. Le legacy ne s'en souvient
+                 que dans son tableau des explications publiées — le tableau des
+                 brouillons, lui, fabrique une adresse que la route refuse. #}
+              <a class="btn btn-secondary d-flex align-items-center justify-content-center font-weight-bold mb-1"
+                 style="width: 100%" target="_blank" rel="noreferrer"
+                 href="{{ lien_vote(explication.legislature, explication.vote_numero) }}">
+                {{ afficher.lien_externe() }}<span class="ml-3">Scrutin</span>
+              </a>
+              <a class="btn btn-primary d-flex align-items-center justify-content-center font-weight-bold mb-1"
+                 style="width: 100%"
+                 href="{{ path('dashboard_explication_modifier', {legislature: explication.legislature, numero: explication.vote_numero}) }}">
+                {{ afficher.crayon() }}<span class="ml-3">Modifier</span>
+              </a>
+              {% if publiees %}
+                {# Le bouton garde l'habillage Twitter du legacy : le reste du
+                   site n'a pas encore basculé sur X, et un écart isolé ici se
+                   verrait plus qu'il ne corrigerait. #}
+                <button type="button" class="btn twitter-bg d-flex align-items-center justify-content-center font-weight-bold text-white mb-1"
+                        style="width: 100%" data-toggle="modal" data-target="#partage-{{ explication.id }}">
+                  <img src="{{ asset('assets/imgs/logos/twitter-no-round.png') }}" alt="" width="20" height="20">
+                  <span class="ml-2">Lien partage</span>
+                </button>
+              {% endif %}
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+{% endmacro %}

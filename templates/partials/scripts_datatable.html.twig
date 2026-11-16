@@ -1,0 +1,9 @@
+{# DataTables et sa configuration Datan. Le legacy les concaténait en un seul
+   fichier par Grunt (dist/datatable-datan.min.js) ; les trois bibliothèques
+   restent des fichiers tiers servis tels quels, et notre propre code
+   (assets/scripts/data-table-datan.js) passe par AssetMapper, qui le minifie et
+   en condense le nom. L'ordre est celui de la concaténation d'origine. #}
+<script src="{{ asset('assets/js/libraries/datatable/jquery.dataTables.min.js') }}"></script>
+<script src="{{ asset('assets/js/libraries/datatable/dataTables.bootstrap4.min.js') }}"></script>
+<script src="{{ asset('assets/js/libraries/datatable/dataTables.responsive.min.js') }}"></script>
+<script src="{{ asset('scripts/data-table-datan.js') }}"></script>

@@ -1,0 +1,31 @@
+{# Un histogramme de proximité (haut ou bas de classement) de la carte
+   « Proximité avec les groupes politiques ». La hauteur de chaque barre EST le
+   taux, en %. Structure et classes reprises de `statistics/_inter_group_loyalty.php`
+   (feuille `main.css`). #}
+<div class="row mt-1 bar-container stats pr-2">
+  <div class="offset-2 col-10">
+    <div class="chart">
+      {# `id="ticks"` et non une classe : la feuille `main.css` cible `.chart-grid
+         #ticks`. Comme la carte affiche deux histogrammes, l'id se répète — trait
+         du legacy qu'on ne corrige pas ici, la correction imposant de toucher la
+         feuille partagée. #}
+      <div class="chart-grid">
+        <div id="ticks">
+          <div class="tick" style="height: 50%;"><p>100 %</p></div>
+          <div class="tick" style="height: 50%;"><p>50 %</p></div>
+          <div class="tick" style="height: 0;"><p>0 %</p></div>
+        </div>
+      </div>
+      <div class="bar-chart d-flex flex-row justify-content-between align-items-end">
+        {% for g in groupes %}
+          <div class="bars mx-1 mx-md-3" style="height: {{ g.accord }}%"><span class="score">{{ g.accord }}%</span></div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+  <div class="offset-2 col-10 d-flex justify-content-between mt-2">
+    {% for g in groupes %}
+      <div class="legend-element d-flex align-items-center justify-content-center"><span>{{ g.libelle_abrev }}</span></div>
+    {% endfor %}
+  </div>
+</div>

@@ -1,0 +1,104 @@
+# Réécriture d'URL pour Apache et LiteSpeed (l'hébergement de production tourne
+# sous LiteSpeed, qui lit les .htaccess). Sans ce fichier, seuls les fichiers
+# réellement présents sur le disque sont servis : /robots.txt répond, mais
+# /vote/17/491 et toutes les autres routes tombent sur le 404 du serveur web
+# sans jamais atteindre Symfony.
+#
+# Contenu de symfony/apache-pack, que nous n'installons pas comme dépendance :
+# le fichier ne change jamais et le paquet n'apporte rien d'autre.
+
+# ---------------------------------------------------------------------------
+# PHP 8.4 pour ce seul dossier. Le compte o2switch est celui de datan.fr, que
+# le sélecteur de cPanel règle pour tout l'hébergement — legacy compris, en
+# 7.4. Un .htaccess fixe la version du dossier qui le porte, et celui-ci est la
+# racine web du sous-domaine (current/public) : datan.fr n'en voit rien.
+#
+# Forme « ___lsphp » (trois tirets bas) et non « x-httpd-php84 » : c'est le SAPI
+# natif de LiteSpeed, sans la perte de vitesse de l'autre forme, et la seule qui
+# donne PHP 8.4 (faq.o2switch.fr, « Version de PHP par dossier »). Contrepartie
+# sans effet ici : php_value et .user.ini y sont ignorés.
+#
+# PIÈGE : un handler inconnu ne lève aucune erreur, le serveur rend le .php EN
+# CLAIR — vérifié le 2026-10-23 avec `alt-php85___lsphp`, absent du serveur.
+# C'est pourquoi le contrôle final du workflow de déploiement refuse une réponse
+# qui contient « <?php ».
+#
+# Pas d'enveloppe <IfModule LiteSpeed> : elle était prise pour fausse sur ce
+# serveur (« o2switch-PowerBoost-v3 »), et la ligne ignorée sans un mot — la
+# page sortait en 7.4. La forme `<FilesMatch> SetHandler` répond, elle, par une
+# page d'erreur.
+#
+# Ce handler lit les extensions là où pointe /opt/alt/php84/link/conf — par
+# défaut la configuration nue du paquet, sans intl ni dom, puisque le
+# sélecteur ne branche la sienne que sur la version sélectionnée du compte
+# (7.4). Aucune directive .htaccess n'y change rien (neuf essayées le
+# 2026-10-23) : c'est bin/serveur-commun.sh (brancher_config_selecteur) qui
+# pointe ce lien vers /etc/cl.php.d/alt-php84, au déploiement et par cron.
+# Le jour où le compte entier passe en 8.4 par le sélecteur, RETIRER cette
+# ligne et cette entrée cron : le sélecteur fera le travail.
+# ---------------------------------------------------------------------------
+AddHandler application/x-httpd-alt-php84___lsphp .php
+
+# Ce dossier sert datan.fr depuis le 16 novembre 2026. Le bloc qui posait
+# `X-Robots-Tag: noindex` sur les images, feuilles de style et PDF est retiré :
+# il n'était pas conditionné à l'hôte et aurait désindexé ceux du vrai site.
+# symfony.datan.fr, qui pointe toujours ici, reste hors des moteurs pour ses
+# pages par l'application (App\Referencement\Indexation) ; ses fichiers
+# statiques, eux, ne le sont plus.
+
+DirectoryIndex index.php
+
+# MultiViews ferait deviner au serveur l'extension d'un fichier absent et
+# court-circuiterait la règle de réécriture finale.
+<IfModule mod_negotiation.c>
+    Options -MultiViews
+</IfModule>
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # `www.` renvoie au domaine nu, en un saut et directement en HTTPS. La
+    # règle vivait dans le .htaccess du site d'origine et a disparu avec lui le
+    # jour de la bascule : www.datan.fr servait tout le site en double, chaque
+    # page s'y déclarant canonique sous son propre nom. La condition sur l'hôte
+    # vient en dernier — `%1` désigne la capture de la dernière condition lue.
+    RewriteCond %{REQUEST_URI} !^/\.well-known/acme-challenge/
+    RewriteCond %{HTTP_HOST} ^www\.(.+)$ [NC]
+    RewriteRule ^ https://%1%{REQUEST_URI} [L,R=301]
+
+    # HTTPS partout (recette de faq.o2switch.fr, « Forcer le HTTPS »). Hors
+    # validation Let's Encrypt, qu'une redirection fait échouer : son dossier a
+    # son propre .htaccess, et la condition sur l'URI double ce garde-fou.
+    RewriteCond %{HTTPS} !on
+    RewriteCond %{HTTP:X-Forwarded-Proto} !https
+    RewriteCond %{REQUEST_URI} !^/\.well-known/acme-challenge/
+    RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+    # Détermine le préfixe d'URL sous lequel l'application est servie, pour que
+    # les règles suivantes fonctionnent aussi dans un sous-répertoire.
+    RewriteCond %{REQUEST_URI}::$0 ^(/.+)/(.*)::\2$
+    RewriteRule .* - [E=BASE:%1]
+
+    # Certains serveurs n'exposent pas l'en-tête Authorization à PHP : sans
+    # cette règle, l'authentification par jeton se perd en route.
+    RewriteCond %{HTTP:Authorization} .+
+    RewriteRule ^ - [E=HTTP_AUTHORIZATION:%0]
+
+    # Une même page ne doit pas répondre à deux adresses : /index.php/truc
+    # redirige en 301 vers /truc. Le référencement de datan.fr en dépend.
+    RewriteCond %{ENV:REDIRECT_STATUS} =""
+    RewriteRule ^index\.php(?:/(.*)|$) %{ENV:BASE}/$1 [R=301,L]
+
+    # Un fichier qui existe (assets, robots.txt, images) est servi tel quel.
+    RewriteCond %{REQUEST_FILENAME} -f
+    RewriteRule ^ - [L]
+
+    # Tout le reste passe par le contrôleur frontal.
+    RewriteRule ^ %{ENV:BASE}/index.php [L]
+</IfModule>
+
+<IfModule !mod_rewrite.c>
+    <IfModule mod_alias.c>
+        RedirectMatch 307 ^/$ /index.php/
+    </IfModule>
+</IfModule>

@@ -1,0 +1,29 @@
+{# Bloc « Mieux comprendre » : le mode de scrutin, en clair
+   (Elections_model::get_election_infos()).
+
+   Le texte dépend du type de scrutin et non de l'année : il est le même pour
+   toutes les législatives, passées et à venir. C'est pourquoi il vit dans un
+   gabarit et non en base — il ne se met pas à jour, il se réécrit. #}
+{% if election.libelle_abrege == 'Régionales' %}
+  <p>Les élections régionales ont lieu <b>tous les six ans</b>, en même temps que les départementales. Elles permettent d'élire les <b>conseillers régionaux</b> qui composent le conseil régional.</p>
+  <p>Les compétences des régions incluent le développement économique, les transports, la construction des lycées et la formation professionnelle.</p>
+  <p>Les électeurs votent pour une <b>liste politique</b>. L'élection se déroule en <b>deux tours</b> : si aucune liste n'obtient plus de 50% au premier tour, un second tour est organisé entre les listes ayant recueilli au moins <b>10%</b> des suffrages.</p>
+  <p>La liste arrivée en tête reçoit <b>25% des sièges</b>, le reste étant réparti à la proportionnelle entre toutes les listes ayant obtenu au moins <b>5%</b>.</p>
+{% elseif election.libelle_abrege == 'Départementales' %}
+  <p>Les élections départementales ont lieu <b>tous les six ans</b>, en même temps que les régionales. Elles permettent d'élire les <b>conseillers départementaux</b> qui composent le conseil départemental.</p>
+  <p>Les conseils départementaux ont des compétences variées : action sociale (aide à l'enfance, handicap, maisons de retraite), éducation (construction et entretien des collèges), voirie départementale et action culturelle.</p>
+  <p>Les candidats se présentent en <b>binôme mixte</b> (un homme, une femme). L'élection se déroule en <b>deux tours</b> : un binôme est élu au premier tour s'il obtient la majorité absolue, sinon un second tour est organisé entre les binômes ayant recueilli au moins <b>12,5% des inscrits</b>. Le binôme arrivé en tête l'emporte.</p>
+{% elseif election.libelle_abrege == 'Législatives' %}
+  <p>Les élections législatives ont lieu <b>tous les cinq ans</b>, quelques semaines après la présidentielle. Elles permettent d'élire les <b>577 députés</b> de l'Assemblée nationale.</p>
+  <p>L'élection se déroule en <b>deux tours</b> : un candidat est élu au premier tour s'il obtient la majorité absolue, sinon un second tour est organisé entre les candidats ayant recueilli au moins <b>12,5% des inscrits</b>. Le candidat arrivé en tête est élu.</p>
+  {# Le lien de la foire aux questions est absolu vers datan.fr, comme sur le
+     site : elle n'est pas portée, mais l'adresse existe et répond. #}
+  <p>Les députés votent la loi, contrôlent le gouvernement et représentent leur circonscription. <a href="https://datan.fr/faq" target="_blank">En savoir plus</a>.</p>
+{% elseif election.libelle_abrege == 'Présidentielle' %}
+  <p>L'élection présidentielle a lieu <b>tous les cinq ans</b>, quelques semaines avant les législatives. Elle permet d'élire le président de la République.</p>
+  <p>Pour être candidat, il faut obtenir le parrainage de <b>500 élus</b>. L'élection se déroule en <b>deux tours</b> : un candidat est élu au premier tour s'il obtient la majorité absolue, sinon un second tour est organisé entre les deux candidats arrivés en tête.</p>
+  <p>Le président veille au respect de la Constitution, nomme le Premier ministre, préside le Conseil des ministres et promulgue les lois. <a href="https://www.vie-publique.fr/infographie/23816-infographie-quel-est-le-role-du-president-de-la-republique" target="_blank" rel="nofollow noreferrer noopener">En savoir plus</a></p>
+{% elseif election.libelle_abrege == 'Européennes' %}
+  <p>Les élections européennes ont lieu <b>tous les cinq ans</b> et permettent d'élire les députés européens, chargés d'élire la Commission européenne et de voter les lois européennes (règlements et directives).</p>
+  <p>En France, l'élection se fait au <b>scrutin proportionnel de liste</b>. Les listes obtenant au moins <b>5%</b> des suffrages se voient attribuer des sièges proportionnellement à leur score.</p>
+{% endif %}

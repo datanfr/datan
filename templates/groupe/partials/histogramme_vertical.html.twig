@@ -1,0 +1,61 @@
+{# Histogramme vertical des statistiques d'un groupe à travers ses incarnations
+   successives, porté de `groupes/partials/stats_vertical.php`.
+
+   Paramètres :
+     lignes     – une barre par incarnation : valeur, libelle, libelle_abrev,
+                  legislature, date_debut, date_fin, courant
+     type       – « pct » (0,23 → « 23% ») ou « score » (0,93 → « 0.93 »)
+     divise_par – dénominateur de la hauteur ; 1 quand l'échelle est déjà 0-1
+     grille     – trace les repères 0 / 50 / 100 à gauche
+     mentions   – ajoute « Leg. 15 (17-22) » sous chaque sigle
+     infobulle  – donne le nom complet du groupe au survol
+
+   Les hauteurs sont en pourcentage du conteneur, pas en pixels : c'est le CSS
+   de `.bar-container.stats` qui fixe les 150 px de haut. #}
+{% set infobulle = infobulle|default(false) %}
+{% set mentions = mentions|default(false) %}
+{% set grille = grille|default(false) %}
+{% set colonnes = grille ? 'col-10 offset-2' : 'col-12' %}
+<div class="row bar-container stats pr-2" style="margin-left: -20px; margin-right: -20px;">
+  <div class="{{ colonnes }}">
+    <div class="chart">
+      {% if grille %}
+        <div class="chart-grid">
+          <div id="ticks">
+            {% if type == 'pct' %}
+              <div class="tick" style="height: 50%;"><p>100 %</p></div>
+              <div class="tick" style="height: 50%;"><p>50 %</p></div>
+              <div class="tick" style="height: 0;"><p>0 %</p></div>
+            {% else %}
+              <div class="tick" style="height: 50%;"><p>1</p></div>
+              <div class="tick" style="height: 50%;"><p>0.5</p></div>
+              <div class="tick" style="height: 0;"><p>0</p></div>
+            {% endif %}
+          </div>
+        </div>
+      {% endif %}
+      <div class="bar-chart d-flex flex-row justify-content-between align-items-end">
+        {% for ligne in lignes %}
+          <div class="bars {{ infobulle ? 'tooltipHelp' : '' }} {{ ligne.courant ? '' : 'white' }} mx-1 mx-md-3"
+               {% if infobulle %}data-toggle="tooltip" data-placement="top" title="{{ ligne.libelle }}"{% endif %}
+               style="height: {{ (ligne.valeur / divise_par * 100)|round }}%">
+            <span class="score">{{ type == 'pct' ? (ligne.valeur * 100)|round ~ '%' : ligne.valeur|round(2) }}</span>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+  <div class="{{ colonnes }} d-flex justify-content-between mt-2">
+    {% for ligne in lignes %}
+      <div class="legend-element text-center">
+        <p class="font-weight-bold">
+          <span {% if infobulle %}class="tooltipHelp tooltipDashed" data-toggle="tooltip" data-placement="bottom" title="{{ ligne.libelle }}"{% endif %}>{{ ligne.libelle_abrev }}</span>
+        </p>
+        {% if mentions %}
+          <p class="font-italic small mb-0">Leg. {{ ligne.legislature }}</p>
+          <p class="font-italic small">({{ ligne.date_debut|date('y') }}-{{ ligne.date_fin ? ligne.date_fin|date('y') : 'en cours' }})</p>
+        {% endif %}
+      </div>
+    {% endfor %}
+  </div>
+</div>

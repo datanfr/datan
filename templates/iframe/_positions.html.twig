@@ -1,0 +1,72 @@
+{# Bloc « Ses positions importantes » rendu en contexte embarqué.
+
+   L'origine ne dédouble pas ce bloc : `Iframe.php` charge pour la catégorie
+   `positions-importantes` le MÊME partial que la fiche
+   (`deputes/partials/mp_individual/_key_positions.php`) — même carte, même ligne
+   par vote, mêmes phrases. Deux conditions internes suffisent là-bas à couvrir
+   l'embarqué : `$first_person`, qui bascule les phrases à la première personne,
+   et `$iframe_title_visibility`, qui escamote le titre sous
+   `?secondary-title=hide`.
+
+   Nous devons en revanche dupliquer : `depute/_positions.html.twig` appartient à
+   la fiche et ne connaît ni la première personne ni les titres masquables. La
+   copie est volontairement au plus près — même arbre de balises, mêmes classes,
+   même ponctuation. **Toute retouche de mise en forme sur le partial de la fiche
+   est donc à répercuter ici**, sans quoi les deux surfaces divergent.
+
+   Ce que ce gabarit remplace : l'iframe portait encore ici deux colonnes
+   pour/contre alimentées par des votes décryptés quelconques
+   (`ComportementDepute::positionsCles`) — ni la sélection éditoriale figée que
+   le site affiche, ni sa mise en forme. La fiche avait déjà été réalignée ; ce
+   bloc restait en arrière (TODO « Iframe : bloc positions importantes à
+   réaligner »).
+
+   Le badge se contente désormais de `p.position` : le non-votant est ramené à
+   « abstention » par `ComportementDepute::positionsImportantes()`, comme le fait
+   l'origine. Ce gabarit portait la bascule en attendant que la source soit
+   corrigée ; les deux surfaces la tiennent de nouveau du même endroit.
+
+   Les liens « Voir le vote » restent sans `target` : c'est ce que fait l'origine,
+   et c'est déjà le cas des autres liens de cette iframe (cartes du carrousel,
+   « VOIR TOUS »), tous rendus par des partials partagés avec la fiche. En poser
+   un ici, et là seulement, ferait diverger deux liens voisins de la même page. #}
+{% if positions_importantes %}
+  <div class="bloc-key-votes mt-5">
+    <div class="row">
+      <div class="col-12">
+        {% if sous_titres_visibles %}
+          <h2 class="mb-4 title-center">{{ possessif_pluriel }} positions importantes</h2>
+        {% endif %}
+        <div class="card">
+          <div class="card-body key-votes">
+            {% for p in positions_importantes %}
+              <div class="row">
+                <div class="col-md-3 libelle d-flex align-items-center justify-content-md-center">
+                  <span class="sort-{{ p.position }}">{{ p.position|upper }}</span>
+                </div>
+                <div class="col-md-9 value">
+                  {# À la première personne, le nom disparaît : la phrase commence
+                     au verbe (« J'ai voté … »), comme le `!$first_person ? $title : ''`
+                     de l'origine. #}
+                  {{ premiere_personne ? '' : nom_complet }}
+                  <b>
+                    {%- if p.position == 'pour' %} {{ premiere_personne ? "J'ai voté en faveur de" : 'a voté en faveur de' }}
+                    {%- elseif p.position == 'contre' %} {{ premiere_personne ? "J'ai voté contre" : 'a voté contre' }}
+                    {%- else %} {{ premiere_personne ? "Je me suis abstenu#{accord} sur le vote concernant" : "s'est abstenu#{accord} sur le vote concernant" }}
+                    {%- endif %}
+                    {{ p.texte }}</b>.
+                  {% if premiere_personne %}
+                    {{- ' ' }}{{ p.comme_groupe ? "J'ai voté" : "Je n'ai pas voté" }} comme mon groupe.
+                  {%- else %}
+                    {{- ' ' }}{{ pronom|capitalize }} {{ p.comme_groupe ? 'a voté' : "n'a pas voté" }} comme son groupe.
+                  {%- endif %}
+                  <a href="{{ lien_vote(p.legislature, p.numero) }}" class="font-italic">Voir le vote</a>
+                </div>
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endif %}

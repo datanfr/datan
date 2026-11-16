@@ -1,0 +1,21 @@
+{% set n = compteurs.candidats %}
+{% set s = n > 1 ? 's' : '' %}
+<div class="row mt-5 mb-3">
+  <div class="col-12">
+    <h2>Découvrez les députés candidats à l'élection présidentielle de 2022</h2>
+  </div>
+  <div class="col-12 mt-3">
+    <p>Au total, nous avons répertorié {{ n }} député{{ s }} ou ancien{{ s }} député{{ s }} candidat{{ s }} à l'élection présidentielle de 2022.</p>
+  </div>
+</div>
+{# Six candidats : ni recherche, ni filtre, ni grille Isotope — les cartes sont
+   simplement réparties sur la largeur. #}
+<div class="row">
+  <div class="col-12 d-flex flex-wrap justify-content-around">
+    {% for candidat in candidats %}
+      <div class="d-flex justify-content-center">
+        {{ include('election/partials/carte_candidat.html.twig') }}
+      </div>
+    {% endfor %}
+  </div>
+</div>

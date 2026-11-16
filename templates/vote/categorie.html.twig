@@ -1,0 +1,51 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Votes Décryptés - {{ categorie.name }} | Datan{% endblock %}
+
+{% block meta_description %}Retrouvez tous les votes de l'Assemblée nationale décrypté par Datan sur la thématique {{ categorie.name }}. Détails des votes, résultats des groupes et des députés, statistiques de participation, de loyauté et de cohésion.{% endblock %}
+
+{% block body %}
+<div class="container-fluid pg-vote-decryptes" id="container-always-fluid">
+  <div class="row pb-5">
+    <div class="container">
+      <div class="row bloc-titre">
+        <div class="col-md-7 my-5">
+          <h1 class="text-center text-md-left">
+            Les votes décryptés sur {{ categorie.libelle }}
+          </h1>
+        </div>
+        <div class="col-md-10 mb-lg-5 mb-4">
+          <p>
+            L'équipe de Datan décrypte pour vous les votes les plus intéressants de la législature.
+            Il s'agit des votes qui ont fait l'objet d'attention médiatique, ou sur lesquels un ou plusieurs groupes parlementaires étaient fortement divisés.
+            Cette page présente les votes sur <b>{{ categorie.libelle }}</b>.
+          </p>
+          {# datan.fr ajoute ici « Pour en savoir plus, cliquez ici » sur un
+             `href="#"` (field_decryptes.php) : le lien ne mène nulle part depuis
+             toujours. Lien vide, donc phrase retirée plutôt que reproduite. #}
+          <p>
+            Tous ces votes décryptés font l'objet d'une reformulation et d'une contextualisation, afin de les rendre plus accessibles et plus compréhensibles.
+          </p>
+          <p>
+            Si vous voulez avoir accès à <b>tous</b> les votes de l'Assemblée nationale, qu'ils soient décryptés par nos soins ou non, <a href="{{ path('votes_legislature', {legislature: legislature}) }}">cliquez ici</a>.
+          </p>
+        </div>
+        <div class="col-12 mb-lg-5 mb-4 d-lg-none">
+          <a class="no-decoration btn btn-primary" href="{{ path('votes_decryptes') }}">Tous les votes décryptés</a>
+        </div>
+      </div>
+      <div class="row bloc-sort">
+        <div class="col-12">
+          <div class="row mt-2 votes-sort">
+            {% for vote in decryptages %}
+              <div class="col-lg-4 col-md-6 votes-sort-item {{ categorie.slug }}">
+                {{ include('vote/partials/carte.html.twig') }}
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

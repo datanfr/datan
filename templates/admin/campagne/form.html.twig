@@ -1,0 +1,54 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block title %}{{ campagne ? 'Modifier une campagne' : 'Créer une campagne' }}{% endblock %}
+
+{% block body %}
+  {{ form_start(formulaire) }}
+    {% if not formulaire.vars.valid %}
+      <div class="alert alert-danger">
+        {{ form_errors(formulaire) }}
+        <p class="mb-0">Le formulaire comporte des erreurs, corrigez les champs signalés.</p>
+      </div>
+    {% endif %}
+
+    <div class="row">
+      <div class="col-lg-8">
+        <div class="card">
+          <div class="card-body">
+            {{ form_row(formulaire.texte) }}
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-4">
+        <div class="card">
+          <div class="card-body">
+            <div class="form-row">
+              <div class="col-md-6">{{ form_row(formulaire.dateDebut) }}</div>
+              <div class="col-md-6">{{ form_row(formulaire.dateFin) }}</div>
+            </div>
+            {{ form_row(formulaire.position) }}
+            {{ form_row(formulaire.page) }}
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-block">Enregistrer</button>
+        <a class="btn btn-link btn-block" href="{{ path('admin_campagne_index') }}">Revenir à la liste</a>
+      </div>
+    </div>
+  {{ form_end(formulaire) }}
+{% endblock %}
+
+{% block javascripts %}
+  {# Même éditeur que les décryptages : CKEditor 5, monté sur les champs de
+     classe .js-ckeditor. #}
+  <script type="importmap">
+    {
+      "imports": {
+        "ckeditor5": "{{ asset('assets/js/libraries/ckeditor/ckeditor5.js') }}",
+        "ckeditor5/": "{{ asset('assets/js/libraries/ckeditor/') }}"
+      }
+    }
+  </script>
+  <script type="module" src="{{ asset('assets/js/dashboard/init-ckeditor.js') }}"></script>
+{% endblock %}

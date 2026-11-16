@@ -1,0 +1,91 @@
+{% extends 'base.html.twig' %}
+
+{# Page d'un article (views/posts/view.php). Le bandeau d'administration du
+   legacy (badges Brouillon/En ligne, boutons Edit/Delete) n'est pas porté :
+   l'écriture passera par l'espace de rédaction. Le corps est du HTML écrit par
+   la rédaction, rendu tel quel — donnée de production, pas saisie publique. #}
+
+{% block title %}{{ article.titre }} | Datan{% endblock %}
+
+{% block meta_description %}{{ description }}{% endblock %}
+
+{% block schema %}
+  {# NewsArticle (Meta_model::get_schema_article) : le seul schema.org du site
+     avec Organization et le fil d'Ariane. #}
+  <script type="application/ld+json">
+    {{ {
+      '@context': 'http://schema.org',
+      '@type': 'NewsArticle',
+      'headline': article.titre,
+      'image': absolute_url(asset(url_image)),
+    }
+      |merge(article.cree_le ? {'datePublished': article.cree_le} : {})
+      |merge(article.modifie_le ? {'dateModified': article.modifie_le} : {})
+      |json_encode(constant('JSON_UNESCAPED_SLASHES') b-or constant('JSON_PRETTY_PRINT') b-or constant('JSON_UNESCAPED_UNICODE'))
+      |raw }}
+  </script>
+{% endblock %}
+
+{% block body %}
+<div class="container pg-post-view my-5">
+  <div class="row"> {# — Titre — #}
+    <div class="col-lg-2">
+      <a href="{{ path('blog_index') }}" class="btn btn-outline-dark font-weight-normal px-2">
+        <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-arrow-left" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+          <path fill-rule="evenodd" d="M5.854 4.646a.5.5 0 0 1 0 .708L3.207 8l2.647 2.646a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 0 1 .708 0z"/>
+          <path fill-rule="evenodd" d="M2.5 8a.5.5 0 0 1 .5-.5h10.5a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5z"/>
+        </svg>
+        Tous les articles
+      </a>
+    </div>
+    <div class="col-lg-10">
+      <div class="mt-lg-0 mt-4">
+        <span>Publié le {{ date_publication }}</span> -
+        <span><a class="no-decoration underline" href="{{ path('blog_categorie', {rubrique: article.rubrique_slug}) }}">{{ article.rubrique_nom }}</a></span>
+      </div>
+      <h1 class="mt-2 mb-0">{{ article.titre }}</h1>
+    </div>
+  </div>
+  <div class="row body mt-5"> {# — Corps de l'article — #}
+    <div class="col-lg-8 offset-lg-2">
+      <div class="img">
+        <picture>
+          <source
+            srcset="
+            {{ asset('assets/imgs/posts/webp/' ~ image ~ '-360.webp') }} 360w,
+            {{ asset('assets/imgs/posts/webp/' ~ image ~ '-420.webp') }} 420w,
+            {{ asset('assets/imgs/posts/webp/' ~ image ~ '-730.webp') }} 730w,
+            {{ asset('assets/imgs/posts/webp/' ~ image ~ '-1240.webp') }} 1240w"
+            sizes="
+              (min-width: 1400px) 50vw,
+              (min-width: 1200px) 60vw,
+              (min-width: 992px) 60vw,
+              (min-width: 768px) 90vw,
+              (min-width: 576px) 90vw,
+              90vw"
+            type="image/webp"
+          >
+          <source
+            srcset="
+            {{ asset('assets/imgs/posts/' ~ image ~ '-360.png') }} 360w,
+            {{ asset('assets/imgs/posts/' ~ image ~ '-420.png') }} 420w,
+            {{ asset('assets/imgs/posts/' ~ image ~ '-730.png') }} 730w,
+            {{ asset('assets/imgs/posts/' ~ image ~ '-1240.png') }} 1240w"
+            sizes="(min-width: 1400px) 50vw,
+              (min-width: 1200px) 60vw,
+              (min-width: 992px) 60vw,
+              (min-width: 768px) 90vw,
+              (min-width: 576px) 90vw,
+              90vw"
+            type="image/png"
+          >
+          <img src="{{ asset('assets/imgs/posts/' ~ image ~ '-730.png') }}" alt="Image post" width="730" height="365" />
+        </picture>
+      </div>
+      <div class="text mt-5">
+        {{ article.corps|raw }}
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

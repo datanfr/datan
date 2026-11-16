@@ -1,0 +1,40 @@
+{# Pied des pages d'élections : les grandes communes puis tous les départements
+   (application/views/elections/links_dpt_cities.php).
+
+   Paris n'a pas de page de département — il est à lui seul sa commune, et
+   `elections_resultats_departement` y rend un 404. Le site pointe donc vers sa
+   fiche de ville, mais en masquant l'adresse aux robots : elle est déjà écrite
+   en clair dans la liste des grandes communes juste au-dessus, et le site ne
+   double jamais un lien en clair. #}
+<div class="container-fluid bloc-others-container">
+  <div class="container bloc-others">
+    <div class="row mt-5">
+      <div class="col-12">
+        <h2>Candidats et résultats dans les communes françaises</h2>
+      </div>
+    </div>
+    <div class="row">
+      {% for commune in communes %}
+        <div class="col-6 col-md-4 py-2">
+          <a class="membre no-decoration underline" href="{{ path('elections_resultats_commune', {departement: commune.dpt_slug, commune: commune.slug}) }}">{{ commune.nom }}</a>
+        </div>
+      {% endfor %}
+    </div>
+    <div class="row mt-5">
+      <div class="col-12">
+        <h2>Candidats et résultats département par département</h2>
+      </div>
+    </div>
+    <div class="row">
+      {% for departement in departements %}
+        <div class="col-6 col-md-4 py-2">
+          {% if departement.slug == 'paris-75' %}
+            <a class="membre no-decoration underline url_obf" url_obf="{{ url_obf(path('elections_resultats_commune', {departement: 'paris-75', commune: 'paris'})) }}">{{ departement.nom }} ({{ departement.code }})</a>
+          {% else %}
+            <a class="membre no-decoration underline" href="{{ path('elections_resultats_departement', {departement: departement.slug}) }}">{{ departement.nom }} ({{ departement.code }})</a>
+          {% endif %}
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>

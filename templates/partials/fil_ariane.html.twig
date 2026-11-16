@@ -1,0 +1,28 @@
+{# Fil d'Ariane commun (templates/breadcrumb.php de l'application d'origine).
+
+   Il se rend en BAS de page : le contrôleur d'origine charge sa vue après le
+   contenu, juste avant le pied de page — ce n'est pas un oubli de maquette.
+
+   `fil_ariane` est une liste de maillons {nom, url, actif?}. Sans indication,
+   le dernier maillon est la page courante et se rend sans lien ; `actif: false`
+   force le lien même en dernière position — l'article de blog de l'origine
+   lie ainsi ses quatre maillons, lui-même compris. #}
+<div class="container-fluid container-breadcrumb" id="container-always-fluid">
+  <div class="container">
+    <div class="row">
+      <div class="col-12">
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb my-1">
+            {% for maillon in fil_ariane %}
+              {% if maillon.actif ?? loop.last %}
+                <li class="breadcrumb-item active" aria-current="page">{{ maillon.nom }}</li>
+              {% else %}
+                <li class="breadcrumb-item"><a href="{{ maillon.url }}" class="no-decoration underline">{{ maillon.nom }}</a></li>
+              {% endif %}
+            {% endfor %}
+          </ol>
+        </nav>
+      </div>
+    </div>
+  </div>
+</div>

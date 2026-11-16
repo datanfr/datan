@@ -1,0 +1,47 @@
+{# Bloc « Ses professions de foi » (`mp_individual/_manifesto.php`) : les documents
+   de campagne du député, un bouton par tour, servis depuis les mêmes chemins
+   d'assets que datan.fr (`assets/data/professions/election_<id>/<fichier>`).
+
+   La table `profession_foi` est VIDE dans le backup public (réduit) : ce bloc ne
+   se verra en local qu'après rejeu de `app:import:professions-foi` contre la
+   vraie base au déploiement (cf. TODO §2) — comme les comptes. #}
+{% if professions_foi %}
+  <div class="mt-5">
+    <h2 class="mb-4 title-center">Ses professions de foi</h2>
+    <p>Une <span class="font-weight-bold text-primary">profession de foi</span> est un document rédigé par un candidat à une élection. Dans ce document, le candidat se présente et expose ses idées et son programme qu'il ou elle souhaite défendre et mettre en place en cas d'élection. Avec une profession de foi, les candidats tentent de se démarquer des autres candidats, aussi bien sur le fond que la forme.</p>
+    <p>En France, les professions de foi sont envoyées par courrier au domicile des personnes inscrites sur les listes électorales.</p>
+    <table class="table table-bordered mt-4">
+      <caption class="sr-only">Les professions de foi de {{ nom_complet }}</caption>
+      <thead class="thead-dark">
+        <tr>
+          <th scope="col">Élection</th>
+          <th scope="col"><span class="sr-only">1er tour</span></th>
+          <th scope="col"><span class="sr-only">2nd tour</span></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for p in professions_foi %}
+          <tr class="bg-white">
+            <th scope="row" class="font-weight-bold align-middle">{{ p.election }}</th>
+            <td class="text-center align-middle">
+              {% if p.tour1 %}
+                <a class="btn btn-outline-primary" href="{{ asset(p.tour1) }}" target="_blank">
+                  <svg width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M8.636 3.5a.5.5 0 0 0-.5-.5H1.5A1.5 1.5 0 0 0 0 4.5v10A1.5 1.5 0 0 0 1.5 16h10a1.5 1.5 0 0 0 1.5-1.5V7.864a.5.5 0 0 0-1 0V14.5a.5.5 0 0 1-.5.5h-10a.5.5 0 0 1-.5-.5v-10a.5.5 0 0 1 .5-.5h6.636a.5.5 0 0 0 .5-.5z"/><path fill-rule="evenodd" d="M16 .5a.5.5 0 0 0-.5-.5h-5a.5.5 0 0 0 0 1h3.793L6.146 9.146a.5.5 0 1 0 .708.708L15 1.707V5.5a.5.5 0 0 0 1 0v-5z"/></svg>
+                  Profession 1er tour
+                </a>
+              {% endif %}
+            </td>
+            <td class="text-center align-middle">
+              {% if p.tour2 %}
+                <a class="btn btn-outline-primary" href="{{ asset(p.tour2) }}" target="_blank">
+                  <svg width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M8.636 3.5a.5.5 0 0 0-.5-.5H1.5A1.5 1.5 0 0 0 0 4.5v10A1.5 1.5 0 0 0 1.5 16h10a1.5 1.5 0 0 0 1.5-1.5V7.864a.5.5 0 0 0-1 0V14.5a.5.5 0 0 1-.5.5h-10a.5.5 0 0 1-.5-.5v-10a.5.5 0 0 1 .5-.5h6.636a.5.5 0 0 0 .5-.5z"/><path fill-rule="evenodd" d="M16 .5a.5.5 0 0 0-.5-.5h-5a.5.5 0 0 0 0 1h3.793L6.146 9.146a.5.5 0 1 0 .708.708L15 1.707V5.5a.5.5 0 0 0 1 0v-5z"/></svg>
+                  Profession 2nd tour
+                </a>
+              {% endif %}
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+{% endif %}

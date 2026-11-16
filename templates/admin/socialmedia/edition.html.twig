@@ -1,0 +1,42 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block title %}Réseaux sociaux de {{ depute.firstname }} {{ depute.lastname }}{% endblock %}
+
+{% block body %}
+  <div class="mb-3">
+    <a class="btn btn-link" href="{{ path('admin_socialmedia', {page: 'x'}) }}">Revenir aux comptes X</a>
+  </div>
+
+  <div class="row">
+    <div class="col-lg-7">
+      <div class="card">
+        <div class="card-header"><strong>{{ depute.firstname }} {{ depute.lastname }}</strong> ({{ depute.mpId }})</div>
+        <div class="card-body">
+          {{ form_start(formulaire) }}
+            {{ form_row(formulaire.siteWeb) }}
+            {{ form_row(formulaire.twitter) }}
+            {{ form_row(formulaire.facebook) }}
+            {{ form_row(formulaire.bluesky) }}
+            <button type="submit" class="btn btn-primary">Enregistrer</button>
+          {{ form_end(formulaire) }}
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-5">
+      <div class="card">
+        {# Courriels repris de l'open data par la récupération, affichés pour
+           mémoire mais non éditables ici : ce ne sont pas des comptes que la
+           rédaction cure (cf. ContactDeputeType). #}
+        <div class="card-header">Courriels (open data, lecture seule)</div>
+        <div class="card-body">
+          <p class="mb-1"><span class="text-muted">Assemblée :</span> {{ contact.mailAn ?? '—' }}</p>
+          <p class="mb-1"><span class="text-muted">Personnel :</span> {{ contact.mailPerso ?? '—' }}</p>
+          {% if contact.misAJourLe %}
+            <p class="mb-0 mt-3 text-muted"><small>Fiche mise à jour le {{ contact.misAJourLe|date('d/m/Y') }}.</small></p>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}

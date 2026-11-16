@@ -1,0 +1,22 @@
+{# Encart « dernier vote important » en tête de fiche (`deputes/partials/voteFeature.php`).
+   Scrutin phare figé par le legacy (17e législature, n° 3684 — la suspension de la
+   réforme des retraites) : seule la position du député est dynamique, le reste du
+   texte est éditorial et codé en dur. La classe de position (`pour`/`contre`/
+   `abstention`) colore la carte via `main.css`. #}
+{% if vote_feature %}
+  {% set e = depute.civilite == 'Mme' ? 'e' : '' %}
+  <div class="card card-vote-feature mt-5 py-2 {{ vote_feature.position }}">
+    <div class="card-body py-4">
+      <h2 class="mb-4">🗳️ Suspension de la réforme des retraites</h2>
+      {% if vote_feature.position == 'pour' %}
+        <p>{{ nom_complet }} <span>a voté pour</span> la suspension de la réforme des retraites jusqu'au 1er janvier 2028.</p>
+      {% elseif vote_feature.position == 'contre' %}
+        <p>{{ nom_complet }} <span>a voté contre</span> la suspension de la réforme des retraites jusqu'au 1er janvier 2028.</p>
+      {% else %}
+        <p>{{ nom_complet }} <span>s'est abstenu{{ e }}</span> sur le vote sur la suspension de la réforme des retraites.</p>
+      {% endif %}
+      <p>La suspension de la réforme des retraites a été adoptée par l'Assemblée nationale le 12 novembre 2025. Au total, 255 députés ont voté en faveur et 146 ont voté contre.</p>
+      <a class="mt-2 btn btn-light" href="{{ lien_vote(vote_feature.legislature, vote_feature.numero) }}">Découvrir le détail du vote</a>
+    </div>
+  </div>
+{% endif %}

@@ -1,0 +1,49 @@
+{# Carte de député dans sa variante « discover » de
+   application/views/deputes/partials/card_home.php : le nom n'est pas
+   cliquable, un bouton mène à la fiche, et le logo du groupe remplace le
+   libellé en pied de carte.
+
+   Le texte sous le nom change d'une page à l'autre — département ici,
+   circonscription sur une page de département : d'où le bloc `centre`, que les
+   appelants redéfinissent avec {% embed %}. Le badge `stat` est facultatif.
+
+   `tag` porte le niveau de titre : le nom est un intertitre là où la carte est
+   le sujet de la page (`h2` sur une fiche de ville), un sous-titre dans une
+   liste (`h3`), et un simple `span` sur les classements, où le sujet est le
+   palmarès et non le député. #}
+{% set tag = tag|default('span') %}
+<div class="card card-depute mx-2">
+  {% if depute.groupe_couleur %}
+    <div class="liseret" style="background-color: {{ depute.groupe_couleur }}"></div>
+  {% endif %}
+  <div class="card-avatar-depute{{ depute.legislature >= 17 ? '-square' : '-circle' }} card-avatar">
+    <img src="{{ photo_depute(depute) }}" width="130" height="166" loading="lazy" alt="{{ depute.firstname }} {{ depute.lastname }}">
+  </div>
+  <div class="card-body d-flex flex-column align-items-center justify-content-center">
+    <div class="mb-3">
+      <{{ tag }} class="d-block card-title">{{ depute.firstname }} {{ depute.lastname }}</{{ tag }}>
+      {% if stat is defined %}
+        <span class="badge badge-stats mb-3">{{ stat }}</span>
+      {% endif %}
+      <span class="d-block">
+        {%- block centre -%}
+          {{ depute.departement_nom }}{% if depute.departement_code %} ({{ depute.departement_code }}){% endif %}
+        {%- endblock -%}
+      </span>
+    </div>
+    {% if depute.groupe_abrev %}
+      <div class="img-group-cat">
+        <picture>
+          <source srcset="{{ asset('assets/imgs/groupes/' ~ depute.legislature ~ '/webp/' ~ depute.groupe_abrev ~ '.webp') }}" type="image/webp">
+          <source srcset="{{ asset('assets/imgs/groupes/' ~ depute.legislature ~ '/' ~ depute.groupe_abrev ~ '.png') }}" type="image/png">
+          <img src="{{ asset('assets/imgs/groupes/' ~ depute.legislature ~ '/' ~ depute.groupe_abrev ~ '.png') }}" width="85" height="85" alt="{{ depute.groupe_libelle|name_group }}">
+        </picture>
+      </div>
+    {% endif %}
+  </div>
+  {% if depute.dpt_slug and depute.slug %}
+    <div class="mb-3">
+      <a class="btn btn-cat btn-primary stretched-link" href="{{ path('depute_individual', {dptSlug: depute.dpt_slug, slug: depute.slug}) }}" role="button">Découvrez son activité</a>
+    </div>
+  {% endif %}
+</div>

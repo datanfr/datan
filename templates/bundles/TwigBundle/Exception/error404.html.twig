@@ -1,0 +1,71 @@
+{# Page 404, à l'identique de celle que sert datan.fr (views/errors/html/error_404.php).
+
+   Elle est autonome — pas d'en-tête ni de pied de page — et c'est voulu : le
+   404_override « errors/page_missing » qu'évoquent les commentaires du legacy
+   est resté commenté dans routes.php ; l'override actif passe par show_404(),
+   qui rend cette page-ci. Vérifié sur le site vivant le 23 juillet 2026.
+
+   Symfony ne la sert qu'hors debug : en dev, la page d'exception garde la main. #}
+<!doctype html>
+<html lang="fr">
+<meta charset="utf-8">
+<META NAME="ROBOTS" CONTENT="NOINDEX, NOFOLLOW">
+<link rel="icon" type="image/png" href="{{ asset('assets/imgs/favicon/datan_favicon.ico') }}" />
+<head>
+  <title>404 Page non trouvée</title>
+  <style>
+    body {
+      width: 99%;
+      height: 100%;
+      background-color: mediumturquoise;
+      color: white;
+      font-family: sans-serif;
+    }
+
+    div {
+      position: absolute;
+      width: 400px;
+      height: 300px;
+      z-index: 15;
+      top: 45%;
+      left: 50%;
+      margin: -100px 0 0 -200px;
+      text-align: center;
+    }
+
+    h1,
+    h2 {
+      text-align: center;
+    }
+
+    h1 {
+      font-size: 60px;
+      margin-bottom: 10px;
+      border-bottom: 1px solid white;
+      padding-bottom: 10px;
+    }
+
+    h2 {
+      margin-bottom: 40px;
+    }
+
+    a {
+      margin-top: 10px;
+      text-decoration: none;
+      padding: 10px 25px;
+      background-color: ghostwhite;
+      color: black;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+
+<body>
+  <div>
+    <h1>404</h1>
+    <h2>Page non trouvée</h2>
+    <a href="{{ path('home') }}">Page d'accueil</a>
+  </div>
+</body>
+
+</html>

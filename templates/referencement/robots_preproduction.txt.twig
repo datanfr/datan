@@ -1,0 +1,23 @@
+{# Préproduction : tout est fermé, et rien n'est annoncé.
+
+   Pas de directive `Sitemap:` ici — un plan de site est une invitation à
+   parcourir, l'exact contraire de ce que dit la ligne au-dessus.
+
+   Pas de groupe par moissonneur non plus (GPTBot, ClaudeBot, CCBot,
+   Google-Extended…) : un robot qui lit ce fichier applique le groupe le plus
+   spécifique qui le concerne, et `*` le concerne dès lors qu'aucun autre ne le
+   nomme. Les énumérer n'ajouterait rien et vieillirait mal. Ce qui les vise
+   nommément est dans /llms.txt.
+
+   Le tiret qui ferme ce commentaire mange le saut de ligne suivant : sans lui,
+   le fichier servi commence par une ligne vide. -#}
+#
+# robots.txt — PRÉPRODUCTION
+#
+# Ce domaine sert une copie de travail de https://datan.fr/ : mêmes adresses,
+# même contenu, aucune valeur propre. L'indexer reviendrait à faire concurrence
+# au site public avec un duplicata. Le site à lire, citer et indexer est
+# https://datan.fr/
+#
+User-agent: *
+Disallow: /

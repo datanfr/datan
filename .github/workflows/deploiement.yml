@@ -1,0 +1,189 @@
+name: Déploiement
+
+# Mise en ligne de datan.fr, sur le compte o2switch qui portait le site
+# d'origine jusqu'à la bascule du 16 novembre 2026. L'application vit dans
+# ~/symfony.datan.fr, dont le dossier public/ est la racine web de datan.fr —
+# et, toujours, celle de symfony.datan.fr, qui sert au contrôle de fin de
+# déploiement parce qu'il n'est pas derrière Cloudflare. Trois partis pris :
+#
+# - Construction sur le runner, pas sur le serveur. Dépendances, paquets
+#   JavaScript et assets compilés partent tout faits : le serveur n'a besoin ni
+#   de Composer, ni d'accès à GitHub, ni — pour cette étape — de PHP 8.4. Seuls
+#   le conteneur et les migrations s'y exécutent (bin/deployer.sh).
+# - Une version = un répertoire, servie par un lien symbolique (current). Le
+#   site ne sert jamais un mélange de code neuf et de conteneur ancien, qui le
+#   ferait tomber en ArgumentCountError (CLAUDE.md).
+# - Le pare-feu o2switch n'ouvre SSH qu'aux adresses de sa liste blanche : le
+#   runner s'y ajoute le temps du déploiement, et s'en retire ensuite.
+#
+# Secrets :
+#   CPANEL_SERVER, CPANEL_USERNAME, CPANEL_API_TOKEN, SSH_PRIVATE_KEY
+# Variables (facultatives) :
+#   SYMFONY_RACINE  répertoire de l'application, relatif au $HOME du compte
+#                   (symfony.datan.fr par défaut). Pas sous public_html,
+#                   où dort encore le site d'origine.
+#   SYMFONY_URL     adresse publique (https://symfony.datan.fr par défaut)
+#   PHP_BIN         chemin d'un PHP ≥ 8.4 sur le serveur, si la détection de
+#                   bin/serveur-commun.sh ne le trouve pas
+on:
+  push:
+    branches: [master]
+  workflow_dispatch:
+
+# Un déploiement à la fois : deux runners qui se croisent se retireraient l'un
+# l'autre de la liste blanche SSH, en plein rsync.
+concurrency:
+  group: o2switch-datan
+  cancel-in-progress: false
+
+jobs:
+  qualite:
+    name: Qualité
+    uses: ./.github/workflows/qualite.yml
+
+  deployer:
+    name: Mettre en ligne
+    needs: qualite
+    runs-on: ubuntu-latest
+    env:
+      CPANEL_SERVER: ${{ secrets.CPANEL_SERVER }}
+      CPANEL_USERNAME: ${{ secrets.CPANEL_USERNAME }}
+      CPANEL_API_TOKEN: ${{ secrets.CPANEL_API_TOKEN }}
+      WHITELIST: bash .github/scripts/ssh-whitelist.sh
+      RACINE: ${{ vars.SYMFONY_RACINE || 'symfony.datan.fr' }}
+      URL_PUBLIQUE: ${{ vars.SYMFONY_URL || 'https://symfony.datan.fr' }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: PHP 8.4
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.4'
+          extensions: ctype, iconv, intl, mysqli, mbstring, xml, zip
+          coverage: none
+          tools: composer:v2
+
+      # Les scripts automatiques de Composer (cache:clear, assets:install,
+      # importmap:install) démarrent le noyau : il lui faut un environnement
+      # complet, mais aucune base — rien ne s'y connecte à ce stade.
+      - name: Construire
+        env:
+          APP_ENV: prod
+          APP_SECRET: construction-sans-valeur-secrete
+          DATABASE_URL: "mysqli://construction:construction@127.0.0.1:3306/construction?serverVersion=11.4.13-MariaDB&charset=utf8mb4"
+        run: |
+          composer install --no-interaction --no-progress --prefer-dist --no-dev --optimize-autoloader
+          # CSS puis assets : sass:build compile assets/styles/main.scss
+          # (dart-sass, téléchargé ici), asset-map:compile publie le tout dans
+          # public/build/ sous des noms condensés, minifié au passage
+          # (tdewolff/minify). Cf. README.
+          php bin/console sass:build --no-ansi
+          # Le bundle demande ce binaire à l'API GitHub, sans jeton : depuis un
+          # runner partagé le quota est souvent épuisé, l'API répond 403 et la
+          # construction tombait sur « The release "v2.24.25" does not exist »
+          # — deux déploiements sur cinq le 16/11/2026. On le pose donc
+          # nous-mêmes par son adresse de téléchargement, qui n'est pas soumise
+          # à ce quota : présent et exécutable dans var/minify/, le bundle ne
+          # va plus rien chercher. La version est lue là où le bundle la lit.
+          VERSION_MINIFY=$(grep -oE "version: '[^']+'" config/packages/sensiolabs_minify.yaml | cut -d"'" -f2)
+          mkdir -p var/minify
+          curl -fsSL --retry 3 --retry-delay 5 \
+            "https://github.com/tdewolff/minify/releases/download/${VERSION_MINIFY}/minify_linux_amd64.tar.gz" \
+            | tar -xz -C var/minify minify
+          chmod +x var/minify/minify
+          var/minify/minify --version
+          php bin/console asset-map:compile --no-ansi
+          # Chaque nom de public/build/ change avec son contenu : le navigateur
+          # peut le garder un an sans jamais le revalider. Un .htaccess local,
+          # que LiteSpeed lit comme Apache, plutôt qu'une condition sur le
+          # chemin dans public/.htaccess — LiteSpeed en ignore une partie.
+          cat > public/build/.htaccess <<'HTACCESS'
+          <IfModule mod_headers.c>
+              Header set Cache-Control "public, max-age=31536000, immutable"
+          </IfModule>
+          HTACCESS
+          git rev-parse HEAD > REVISION
+          echo "ID=$(date -u +%Y%m%d-%H%M%S)-${GITHUB_SHA::8}" >> "$GITHUB_ENV"
+
+      - name: Adresse du runner
+        id: ip
+        run: |
+          IP=$(curl -4 -sf --max-time 10 https://api.ipify.org || curl -4 -sf --max-time 10 https://checkip.amazonaws.com)
+          IP=$(echo "$IP" | tr -d "[:space:]")
+          [[ "$IP" =~ ^[0-9]+[.][0-9]+[.][0-9]+[.][0-9]+$ ]] || { echo "IP publique introuvable : '$IP'"; exit 1; }
+          echo "ipv4=$IP" >> "$GITHUB_OUTPUT"
+
+      # Ajout seulement : les adresses déjà présentes appartiennent à d'autres
+      # (le poste de l'équipe, deploy.yml), et la liste plafonne à 5 entrées.
+      - name: Ouvrir SSH au runner
+        run: |
+          $WHITELIST add "${{ steps.ip.outputs.ipv4 }}"
+          $WHITELIST verify "${{ steps.ip.outputs.ipv4 }}"
+
+      - name: Clé SSH
+        run: |
+          mkdir -p ~/.ssh && chmod 700 ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_deploiement
+          chmod 600 ~/.ssh/id_deploiement
+          # Chemin absolu : rsync -e découpe la commande sans passer par un shell,
+          # un « ~ » n'y serait pas développé.
+          echo "SSH=ssh -o StrictHostKeyChecking=accept-new -o ServerAliveInterval=30 -i $HOME/.ssh/id_deploiement" >> "$GITHUB_ENV"
+
+      # var/ ne voyage pas : son cache porte les chemins du runner, et le reste
+      # (journaux, clones Tricoteuses) vit dans shared/ sur le serveur.
+      - name: Envoyer
+        run: |
+          # Un clone Git à cet endroit recevrait depot/, releases/ et shared/ au
+          # milieu de son code : on s'arrête avant d'y écrire quoi que ce soit.
+          $SSH "$CPANEL_USERNAME@$CPANEL_SERVER" "
+            if [ -e '$RACINE/.git' ]; then
+              echo \"!! ~/$RACINE est un clone Git. Le renommer (mv ~/$RACINE ~/$RACINE.clone) : le déploiement gère lui-même ce dossier.\" >&2
+              exit 1
+            fi
+            mkdir -p '$RACINE/depot' '$RACINE/releases' '$RACINE/shared'"
+          rsync -az --delete --timeout=300 -e "$SSH" \
+            --exclude=/.git/ --exclude=/.github/ --exclude=/.claude/ \
+            --exclude=/tests/ --exclude=/var/ \
+            --exclude=/.env.local --exclude='/.env.*.local' \
+            ./ "$CPANEL_USERNAME@$CPANEL_SERVER:$RACINE/depot/"
+
+      - name: Mettre en ligne
+        run: |
+          $SSH "$CPANEL_USERNAME@$CPANEL_SERVER" \
+            "PHP_BIN='${{ vars.PHP_BIN }}' bash '$RACINE/depot/bin/deployer.sh' '$ID'"
+
+      - name: Refermer SSH
+        if: always() && steps.ip.outputs.ipv4 != ''
+        run: $WHITELIST remove "${{ steps.ip.outputs.ipv4 }}"
+
+      - name: Nettoyer la clé
+        if: always()
+        run: rm -f ~/.ssh/id_deploiement
+
+      # Deux contrôles. Le site répond 200, avec du PHP exécuté. Et, hors
+      # datan.fr, il interdit l'indexation :
+      # un symfony.datan.fr indexé serait un duplicata intégral du vrai site, sur
+      # le même domaine (App\Referencement\Indexation).
+      - name: Vérifier que le site répond
+        run: |
+          entetes=$(curl -s -D - -o page.html --max-time 30 "$URL_PUBLIQUE/")
+          code=$(printf '%s' "$entetes" | awk 'NR==1 {print $2}')
+          echo "HTTP $code sur $URL_PUBLIQUE"
+          case "$code" in
+            200) ;;
+            500) echo "!! 500 : si le sous-domaine tourne encore en PHP 7.4, le contrôle de plateforme de Composer refuse de démarrer. Vérifier la ligne AddHandler … php84 de public/.htaccess."; exit 1 ;;
+            *) exit 1 ;;
+          esac
+          # Un handler PHP inconnu de LiteSpeed ne lève aucune erreur : il sert
+          # index.php en clair, avec un 200 (public/.htaccess, en-tête).
+          if grep -q '<?php' page.html; then
+            echo "!! Le serveur rend le code PHP au lieu de l'exécuter : handler de public/.htaccess non reconnu."
+            exit 1
+          fi
+          hote=$(printf '%s' "$URL_PUBLIQUE" | sed -E 's|^https?://([^/:]+).*|\1|')
+          if [ "$hote" != "datan.fr" ] && [ "$hote" != "www.datan.fr" ]; then
+            printf '%s' "$entetes" | grep -qi '^x-robots-tag:.*noindex' \
+              || { echo "!! $hote est indexable : l'ajouter à Indexation::HOTES_NON_INDEXABLES."; exit 1; }
+            echo "X-Robots-Tag noindex présent."
+          fi

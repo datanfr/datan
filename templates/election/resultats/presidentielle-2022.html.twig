@@ -1,0 +1,40 @@
+{# « présientielle » dans le titre du site, et « ont été validées » pour douze
+   candidats : les deux coquilles sont corrigées. Le lien vers la page des
+   parrainages 2022 est retiré, cette page n'étant pas portée ; les deux fiches
+   de député, elles, le sont — sous nos slugs, qui ne sont pas ceux du site
+   (`marine-le-pen` et non `marine-lepen`). #}
+<h2 class="my-4">Résultats de l'élection présidentielle de 2022</h2>
+<p>L'élection présidentielle de 2022 s'est déroulée les dimanches 10 et 24 avril.</p>
+<p>Au total, <b>douze candidats</b> ont été validés par le Conseil constitutionnel. Au total, 530 députés ont décidé de parrainer un candidat.</p>
+<p>Au premier tour, <b>Emmanuel Macron</b> (En Marche) est arrivé en tête avec 28 % des suffrages, suivi de <b><a href="{{ path('depute_individual', {dptSlug: 'pas-de-calais-62', slug: 'marine-le-pen'}) }}" target="_blank">Marine Le Pen</a></b> (Rassemblement national), avec 23 % des suffrages.</p>
+<p>Ils ont été suivis de <a href="{{ path('depute_individual', {dptSlug: 'bouches-du-rhone-13', slug: 'jean-luc-melenchon'}) }}" target="_blank">Jean-Luc Mélenchon</a> (La France insoumise) et d'Éric Zemmour (Reconquête). Les deux candidats arrivés en tête sont sélectionnés pour le second tour.</p>
+<p>Au second tour, <b>Emmanuel Macron</b> a été élu président avec 59 % des suffrages exprimés.</p>
+{# Les deux barres sont écrites en dur, comme sur le site : ce sont les
+   résultats nationaux du second tour, que notre base ne porte pas — elle ne
+   tient la présidentielle qu'à la commune. Le site colle le pourcentage au
+   signe dans ces barres (« 59% », « 41% ») là où il l'espace dans le
+   paragraphe au-dessus ; on rétablit l'espace des deux côtés. #}
+<div class="resultsPresidentielle d-flex flex-column mt-4">
+  {% for candidat in [
+    {'nom': 'Emmanuel Macron', 'fichier': 'macron', 'hauteur': 143, 'part': 59},
+    {'nom': 'Marine Le Pen', 'fichier': 'le-pen', 'hauteur': 137, 'part': 41},
+  ] %}
+    <div class="d-flex align-items-center{{ not loop.first ? ' mt-3' }}">
+      <picture>
+        <source srcset="{{ asset('assets/imgs/photos/' ~ candidat.fichier ~ '.webp') }}" type="image/webp">
+        <source srcset="{{ asset('assets/imgs/photos/' ~ candidat.fichier ~ '.jpg') }}" type="image/jpg">
+        <img src="{{ asset('assets/imgs/photos/' ~ candidat.fichier ~ '.jpg') }}" width="100" height="{{ candidat.hauteur }}" alt="Photo {{ candidat.nom }}">
+      </picture>
+      <div class="d-flex flex-column ml-3 w-100">
+        <p>{{ candidat.nom }}</p>
+        <div class="chart-election" style="width: 100%; height: 40px;">
+          <div class="majority d-flex align-items-center" style="flex-basis: {{ candidat.part }}%">
+            <span>{{ candidat.part }} %</span>
+          </div>
+          <div class="line"></div>
+          <div class="minority" style="flex-basis: {{ 100 - candidat.part }}%"></div>
+        </div>
+      </div>
+    </div>
+  {% endfor %}
+</div>

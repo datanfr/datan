@@ -1,8 +1,0 @@
-RewriteEngine On
-
-# Check si l’URL se termine par .pdf
-RewriteRule ^(.+\.pdf)$ - [E=pdfcanonical:$1]
-
-<FilesMatch "\.pdf$">
-  Header set Link "<https://programme-candidats.interieur.gouv.fr/elections-legislatives-2024/data-pdf-propagandes/%{pdfcanonical}e>; rel=\"canonical\""
-</FilesMatch>

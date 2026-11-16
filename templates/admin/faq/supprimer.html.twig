@@ -1,0 +1,18 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block title %}Supprimer un article{% endblock %}
+
+{% block body %}
+  <div class="card">
+    <div class="card-body">
+      <p>Supprimer définitivement l'article « <strong>{{ article.question }}</strong> » ?</p>
+    </div>
+    <div class="card-footer d-flex justify-content-between">
+      <a class="btn btn-secondary" href="{{ path('admin_faq_index') }}">Annuler</a>
+      <form action="{{ path('admin_faq_supprimer', {id: article.id}) }}" method="post">
+        <input type="hidden" name="_token" value="{{ csrf_token('supprimer_faq_' ~ article.id) }}">
+        <button type="submit" class="btn btn-danger">Supprimer</button>
+      </form>
+    </div>
+  </div>
+{% endblock %}

@@ -1,0 +1,32 @@
+{# Deux coquilles du site sont corrigées : « la liste qui est arrivé » (accord
+   manqué avec « liste ») devient « arrivée », et « à la tête du conseil
+   département » (mot tronqué) devient « conseil départemental ». #}
+<h2 class="my-4">Résultats des élections de 2021</h2>
+<p>Après les élections, les conseillers départementaux élisent le président du conseil départemental. Le président est souvent issu de la liste qui est arrivée en tête lors des élections.</p>
+<p>Le président élu, qui se retrouve à la tête du conseil départemental, est chargé de l'administration et a la charge des dépenses et des recettes.</p>
+<p>Découvrez sur cette carte la couleur politique des différents départements après les élections de 2021.</p>
+<div class="map-container my-5">
+  <div class="jvmap-smart" id="map-departements"></div>
+</div>
+{# Même légende écrite en dur que pour les régionales, accordée aux couleurs de
+   `maps_jvectormap-datan.js`. #}
+<div class="row my-4">
+  {% for parti in [
+    {'nom': 'Les Républicains (LR)', 'couleur': '#0066CC'},
+    {'nom': 'Union des démocrates et indépendants (UDI)', 'couleur': '#00FFFF'},
+    {'nom': 'Divers droite', 'couleur': '#ADC1FD'},
+    {'nom': 'La République en marche (LREM)', 'couleur': '#FFEB00'},
+    {'nom': 'Mouvement démocrate (MoDEM)', 'couleur': '#FF9900'},
+    {'nom': 'Divers', 'couleur': '#CCCCCC'},
+    {'nom': 'Divers gauche', 'couleur': '#FFC0C0'},
+    {'nom': 'Parti radical de gauche (PRG)', 'couleur': '#FFD1DC'},
+    {'nom': 'Parti socialiste (PS)', 'couleur': '#FF8080'},
+  ] %}
+    <div class="map-container-ledend col-6">
+      <div class="d-flex my-2">
+        <div class="color" style="background-color: {{ parti.couleur }}"></div>
+        <span class="ml-4">{{ parti.nom }}</span>
+      </div>
+    </div>
+  {% endfor %}
+</div>

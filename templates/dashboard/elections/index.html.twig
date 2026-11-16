@@ -1,0 +1,64 @@
+{# Fiche de candidature du député, portée de `dashboard-mp/elections/index.php`.
+   Le bouton de modification n'apparaît que dans la fenêtre où la candidature est
+   encore modifiable (moins de deux jours avant le premier tour) : close depuis
+   des années pour les législatives 2022, la fiche se visite sans lui. #}
+{% extends 'dashboard/base.html.twig' %}
+
+{% set accord = depute.civilite == 'Mme' ? 'e' : '' %}
+
+{% block title %}Candidature aux {{ election.libelle|lower }} de {{ election.annee }}{% endblock %}
+{% block heading %}{{ block('title') }}{% endblock %}
+
+{% block fil_ariane_suite %}
+  <li class="breadcrumb-item active">Élections {{ election.libelle_abrege|lower }} {{ election.annee }}</li>
+{% endblock %}
+
+{% block body %}
+  <div class="row">
+    <div class="col-lg-6">
+      <div class="card mt-4 card-danger card-outline">
+        <div class="card-header">
+          <h2 class="m-0 font-weight-bold h5">Candidature aux {{ election.libelle|lower }} de {{ election.annee }}</h2>
+        </div>
+        <div class="card-body">
+          <p>Pour les {{ election.libelle|lower }} de {{ election.annee }}, le statut de votre candidature est</p>
+          {% if candidature %}
+            <table class="table table-bordered">
+              <tbody>
+                <tr>
+                  <td colspan="2" class="text-center font-weight-bold">
+                    {{ candidature.candidat ? 'Candidat' ~ accord : 'Non candidat' ~ accord }}
+                  </td>
+                </tr>
+                <tr>
+                  <th scope="row">Département de candidature</th>
+                  <td>{{ candidature.district_libelle ?: 'Non renseigné' }}</td>
+                </tr>
+                <tr>
+                  <th scope="row">Lien vers site de campagne</th>
+                  <td>
+                    {% if candidature.lien %}
+                      <a href="{{ candidature.lien }}" target="_blank" rel="noopener">{{ candidature.lien }}</a>
+                    {% else %}
+                      Non renseigné
+                    {% endif %}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          {% else %}
+            <p class="font-weight-bold">Non renseigné</p>
+          {% endif %}
+          {# Coquille du legacy corrigée : « précédant » (participe), et non
+             « précédent », le vendredi étant celui qui précède le tour. #}
+          <p class="font-italic mt-3">Attention, vous pouvez modifier le statut de votre candidature uniquement jusqu'au vendredi précédant le premier tour des élections.</p>
+        </div>
+        {% if modifiable %}
+          <div class="card-footer d-flex justify-content-around">
+            <a href="{{ path('dashboard_elections_modifier', {slug: election.slug}) }}" class="btn btn-primary">Modifier le statut de ma candidature</a>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+{% endblock %}

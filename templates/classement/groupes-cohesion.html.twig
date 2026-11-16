@@ -1,0 +1,70 @@
+{% extends 'classement/_layout.html.twig' %}
+
+{% block title %}La cohésion des groupes parlementaires - Assemblée nationale | Datan{% endblock %}
+
+{% block meta_description %}Quel est le groupe politique le plus soudé à l'Assemblée nationale ? Celui qui vote le moins souvent ensemble ? Découvrez le classement sur Datan.{% endblock %}
+
+{% block contenu %}
+  <div class="row mt-4">
+    <div class="col-md-10">
+      <p>Quel est le groupe politique le plus uni quand il s'agit de voter ? Quel est le groupe le plus divisé ? Découvrez sur cette page le classement des groupes en fonction de leur taux de cohésion.</p>
+      <p>Dans beaucoup de parlements, y compris à l'Assemblée nationale, les députés suivent dans la plupart des cas la ligne officielle du groupe, expliquant des taux de cohésion très élevés. Un groupe parlementaire peut également mettre en place explicitement ou implicitement des sanctions aux députés votant souvent contre la ligne officielle du groupe.</p>
+      <p>Les groupes parlementaires ayant un taux de cohésion proche de 1 affichent une forte unité quand il s'agit de voter. Au contraire, les groupes politiques avec un taux de cohésion proche de 0 sont souvent divisés lors des scrutins à l'Assemblée nationale. Pour plus d'information sur la manière dont est calculé le taux de cohésion, <a href="{{ path('page_statistiques') }}#cohesion" target="_blank">cliquez ici</a>.</p>
+      {% if groupes %}
+        <p>
+          Le groupe parlementaire qui affiche la plus grande cohésion est <a href="{{ path('groupe_individual', {legislature: plus_uni.legislature, abrev: plus_uni.libelle_abrev|lower}) }}">{{ plus_uni.libelle|name_group }}</a> ({{ plus_uni.libelle_abrev }}), avec un taux de cohésion de <b>{{ plus_uni.score|number_format(2, ',', ' ') }}</b>.
+          À l'opposé, le groupe parlementaire avec le plus faible taux de cohésion est <a href="{{ path('groupe_individual', {legislature: plus_divise.legislature, abrev: plus_divise.libelle_abrev|lower}) }}">{{ plus_divise.libelle|name_group }}</a> ({{ plus_divise.libelle_abrev }}).</p>
+        {# Trois décimales, comme le `ROUND(AVG(value), 3)` de `get_stats_avg()`.
+           La page en emploie deux ailleurs — les cartes et le paragraphe
+           au-dessus arrondissent à 0,98 — mais pas ici.
+
+           La valeur, elle, diffère de celle du site (0,925 contre 0,927) :
+           `get_stats_avg()` moyenne `class_groups` sans reprendre le
+           `active = 1` du tableau, et annonce donc une moyenne que ses propres
+           douze lignes ne donnent pas. La nôtre est celle des lignes affichées. #}
+        <p>Le taux de cohésion moyen de tous les groupes parlementaires de la législature actuelle est de {{ cohesion_moyenne|number_format(3, ',', ' ') }}.</p>
+      {% endif %}
+      {{ include('partials/campagne.html.twig', {classes: 'mt-5'}) }}
+    </div>
+  </div>
+  {% if not groupes %}
+    <div class="alert alert-danger mt-4" role="alert">
+      Ces données seront prochainement disponibles.
+    </div>
+  {% else %}
+    <div class="row row-grid mt-5">
+      <div class="col-md-6 py-3">
+        <h2 class="text-center">Le plus uni</h2>
+        {{ include('classement/partials/carte_groupe.html.twig', {groupe: plus_uni, stat: 'Cohésion : ' ~ plus_uni.score|number_format(2, ',', ' ')}) }}
+      </div>
+      <div class="col-md-6 py-3">
+        <h2 class="text-center">Le plus divisé</h2>
+        {{ include('classement/partials/carte_groupe.html.twig', {groupe: plus_divise, stat: 'Cohésion : ' ~ plus_divise.score|number_format(2, ',', ' ')}) }}
+      </div>
+    </div>
+    <div class="mt-5">
+      <h2 class="mb-5">Classement des groupes en fonction de leur taux de cohésion</h2>
+      <table class="table table-stats">
+        <caption class="sr-only">Classement des groupes en fonction de leur taux de cohésion</caption>
+        <thead>
+          <tr>
+            <th scope="col" class="text-center">N°</th>
+            <th scope="col" class="text-center">Groupe</th>
+            <th scope="col" class="text-center">Taux de cohésion</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for groupe in groupes %}
+            <tr>
+              <td class="text-center">{{ groupe.rang }}</td>
+              <td class="text-center">
+                <a href="{{ path('groupe_individual', {legislature: groupe.legislature, abrev: groupe.libelle_abrev|lower}) }}" class="no-decoration underline">{{ groupe.libelle|name_group }} ({{ groupe.libelle_abrev }})</a>
+              </td>
+              <td class="text-center">{{ groupe.score|number_format(3, ',', ' ') }}</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  {% endif %}
+{% endblock %}

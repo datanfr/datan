@@ -1,0 +1,20 @@
+{# Carte d'un parti dans la grille de /partis-politiques, portée de
+   application/views/parties/index.php. Les partis sans logo versionné
+   s'affichent sans vignette, comme sur le site d'origine. #}
+<div class="card card-groupe">
+  <div class="liseret" style="background-color: {{ parti.couleur }}"></div>
+  {% if parti.logo %}
+    <div class="card-avatar group">
+      <img src="{{ asset('assets/imgs/partis/' ~ parti.libelle_abrev|lower ~ '.png') }}" width="150" height="150" alt="{{ parti.libelle }}">
+    </div>
+  {% endif %}
+  <div class="card-body d-flex flex-column justify-content-center align-items-center">
+    <h2 class="d-block card-title">
+      <a href="{{ path('parti_individual', {abrev: parti.libelle_abrev|lower}) }}" class="stretched-link no-decoration">{{ parti.libelle }}</a>
+    </h2>
+    <span class="d-block">{{ parti.libelle_abrev }}</span>
+  </div>
+  <div class="card-footer d-flex justify-content-center align-items-center">
+    <span>{{ parti.effectif }} député{{ parti.effectif > 1 ? 's rattachés' : ' rattaché' }}</span>
+  </div>
+</div>

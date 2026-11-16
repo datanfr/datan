@@ -1,0 +1,65 @@
+{% extends 'classement/_layout.html.twig' %}
+
+{% block title %}L'âge des députés - Assemblée nationale | Datan{% endblock %}
+
+{% block meta_description %}Qui est le député le plus âgé ? Le plus jeune ? Découvrez sur Datan le classement des députés de l'Assemblée nationale selon leur âge.{% endblock %}
+
+{% block contenu %}
+  {% set aine_femme = plus_age.civilite == 'Mme' %}
+  {% set cadet_femme = plus_jeune.civilite == 'Mme' %}
+  <div class="row mt-4">
+    <div class="col-md-10">
+      <p>Quel est le député le plus âgé ? Qui est le moins jeune ?</p>
+      <p>Si vous attachez de l'importance à la représentativité « sociale » du parlement, l'âge est un facteur à prendre en compte. Par exemple, certains estiment que les jeunes seront moins bien représentés si aucun député n'est issu de cette classe d'âge.</p>
+      <p>Les chercheurs montrent que les députés, partout dans le monde, sont en moyenne plus âgés que la population. En France, <b>la moyenne d'âge des députés est de {{ age_moyen }} ans</b>. C'est {{ ecart }} la <a href="{{ path('page_statistiques') }}#ageMoyen">moyenne d'âge des Français éligibles</a> (plus de 18 ans), qui est de {{ age_moyen_france }} ans.</p>
+      {% if plus_age %}
+        <p>{{ aine_femme ? 'La' : 'Le' }} député{{ aine_femme ? 'e' : '' }} en activité {{ aine_femme ? 'la' : 'le' }} plus âgé{{ aine_femme ? 'e' : '' }} est <a href="{{ path('depute_individual', {dptSlug: plus_age.dpt_slug, slug: plus_age.slug}) }}">{{ plus_age.firstname }} {{ plus_age.lastname }}</a> ({{ plus_age.score_arrondi }} ans), membre du groupe {{ plus_age.groupe_libelle|name_group }}.</p>
+        <p>
+          <a href="{{ path('depute_individual', {dptSlug: plus_jeune.dpt_slug, slug: plus_jeune.slug}) }}">{{ plus_jeune.firstname }} {{ plus_jeune.lastname }}</a> ({{ plus_jeune.score_arrondi }} ans) est {{ cadet_femme ? 'la' : 'le' }} député{{ cadet_femme ? 'e' : '' }} {{ cadet_femme ? 'la' : 'le' }} plus jeune.
+          {{ cadet_femme ? 'Elle' : 'Il' }} est membre du groupe {{ plus_jeune.groupe_libelle|name_group }}.
+        </p>
+      {% endif %}
+      {{ include('partials/campagne.html.twig', {classes: 'mt-5'}) }}
+    </div>
+  </div>
+  {% if plus_age %}
+    <div class="row row-grid mt-5">
+      <div class="col-md-6 py-3">
+        <h2 class="text-center">{{ aine_femme ? 'La' : 'Le' }} député{{ aine_femme ? 'e' : '' }} {{ aine_femme ? 'la' : 'le' }} plus âgé{{ aine_femme ? 'e' : '' }}</h2>
+        <div class="d-flex justify-content-center">
+          {{ include('depute/partials/card_decouverte.html.twig', {depute: plus_age, stat: plus_age.score_arrondi ~ ' ans'}) }}
+        </div>
+      </div>
+      <div class="col-md-6 py-3">
+        <h2 class="text-center">{{ cadet_femme ? 'La' : 'Le' }} député{{ cadet_femme ? 'e' : '' }} {{ cadet_femme ? 'la' : 'le' }} plus jeune</h2>
+        <div class="d-flex justify-content-center">
+          {{ include('depute/partials/card_decouverte.html.twig', {depute: plus_jeune, stat: plus_jeune.score_arrondi ~ ' ans'}) }}
+        </div>
+      </div>
+    </div>
+  {% endif %}
+  <div class="mt-5">
+    <h2 class="mb-5">Classement des députés selon leur âge</h2>
+    <table class="table table-stats" id="table-stats">
+      <caption class="sr-only">Classement des députés selon leur âge</caption>
+      <thead>
+        <tr>
+          <th scope="col" class="text-center all">N°</th>
+          <th scope="col" class="text-center all">Député</th>
+          <th scope="col" class="text-center min-tablet">Groupe</th>
+          <th scope="col" class="text-center all">Âge</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for depute in deputes %}
+          <tr>
+            <td class="text-center">{{ depute.rang }}</td>
+            <td class="text-center">{{ depute.firstname }} {{ depute.lastname }}</td>
+            <td class="text-center">{{ depute.groupe_abrev }}</td>
+            <td class="text-center">{{ depute.score_arrondi }} ans</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+{% endblock %}

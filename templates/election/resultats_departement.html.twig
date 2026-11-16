@@ -1,0 +1,83 @@
+{% extends 'base.html.twig' %}
+{% import 'election/partials/icones.html.twig' as icone %}
+
+{# `libelle_dans` porte son espace final quand il en faut un : il se concatène
+   au nom du département sans rien ajouter. #}
+{% set nom_article = departement.libelle_dans ~ departement.nom %}
+{# Habillage municipal du site (`Elections::results_dpt()`) dès qu'une commune
+   du département a des résultats aux municipales 2026 ; les collectivités sans
+   municipales publiées gardent un intitulé neutre. #}
+{% set titre = municipales ? 'Élections municipales 2026 ' ~ nom_article : 'Résultats des élections ' ~ nom_article %}
+
+{% block title %}{{ municipales ? 'Les candidats et résultats aux élections municipales 2026 ' ~ nom_article : titre }} ({{ departement.code }}) | Datan{% endblock %}
+
+{% block meta_description %}
+  {%- if municipales -%}
+    Retrouvez les résultats des élections municipales {{ nom_article }} ({{ departement.code }}). Les élections se tiennent les 15 et 22 mars 2026. Découvrez les candidats, le nombre de votants, l'abstention pour les communes de ce département.
+  {%- else -%}
+    Retrouvez les résultats des élections {{ nom_article }} ({{ departement.code }}) commune par commune : candidats, nombre de votants et abstention pour chaque commune du département.
+  {%- endif -%}
+{% endblock %}
+
+{% block body %}
+<div class="container pg-resultats-dpt">
+  <div class="row mt-5">
+    <div class="col-lg-10">
+      <h1>{{ titre }}</h1>
+      {% if municipales %}
+        {# Le site écrit encore au futur — « se tiendra », « Les résultats
+           seront diffusés le lendemain » —, texte de campagne resté en place
+           après le scrutin. Mis au passé ici, l'encart gardant sa place. #}
+        <p class="mt-4">Découvrez tous les candidats et les résultats des élections municipales 2026 {{ nom_article }} ({{ departement.region }}). Le premier tour des élections municipales s'est tenu le 15 mars 2026 et le second tour le 22 mars 2026.</p>
+        <div class="alert alert-primary mt-4">
+          Le premier tour des élections municipales s'est tenu le dimanche 15 mars 2026. Les résultats sont disponibles sur Datan, commune par commune.
+        </div>
+      {% else %}
+        <p class="mt-4">Découvrez les résultats des élections commune par commune {{ nom_article }} ({{ departement.region }}).</p>
+      {% endif %}
+      <h2 class="mt-5">Les résultats des élections commune par commune</h2>
+      <div class="d-flex justify-content-start flex-wrap mt-4">
+        {% for commune in phares %}
+          <a href="{{ path('elections_resultats_commune', {departement: departement.slug, commune: commune.slug}) }}" class="top-city-pill">{{ commune.nom }}</a>
+        {% endfor %}
+      </div>
+      <div class="letter-index mt-4">
+        {% for lettre in lettres|keys %}
+          <a href="#letter-{{ lettre }}" class="letter-anchor">{{ lettre }}</a>
+        {% endfor %}
+      </div>
+      {# Seules les communes au-dessus du seuil ont un lien en clair — et pas
+         celles des pastilles, déjà écrites en clair plus haut : le site ne
+         double jamais un lien en clair. Les autres restent cliquables mais
+         sortent du graphe que voient les robots (results_dpt.php:28). #}
+      {% set slugs_phares = phares|column('slug') %}
+      <div class="communes-list mt-4">
+        {% for lettre, communes in lettres %}
+          <div class="letter-block anchor" id="letter-{{ lettre }}">
+            <div class="letter-heading">{{ lettre }}</div>
+            <div class="row">
+              {% for commune in communes %}
+                <div class="col-lg-4 col-6">
+                  {% if commune.population > seuil and commune.slug not in slugs_phares %}
+                    <a role="button" href="{{ path('elections_resultats_commune', {departement: departement.slug, commune: commune.slug}) }}" class="city-item d-flex justify-content-between align-items-center mb-3">
+                      {{ commune.nom }}
+                      {{ icone.chevron() }}
+                    </a>
+                  {% else %}
+                    <a role="button" url_obf="{{ url_obf(path('elections_resultats_commune', {departement: departement.slug, commune: commune.slug})) }}" class="city-item d-flex justify-content-between align-items-center mb-3 url_obf">
+                      {{ commune.nom }}
+                      {{ icone.chevron() }}
+                    </a>
+                  {% endif %}
+                </div>
+              {% endfor %}
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</div>
+{# Dernier bloc de la page, comme sur le site (results_dpt.php:48). #}
+{{ include('partials/follow-us.html.twig') }}
+{% endblock %}

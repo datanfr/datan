@@ -1,0 +1,205 @@
+# ---------------------------------------------------------------------------
+# Datan — planification de production. GABARIT, pas une table à installer telle
+# quelle :
+#
+#   bash ~/symfony.datan.fr/current/bin/cron.sh afficher    diff, sans rien écrire
+#   bash ~/symfony.datan.fr/current/bin/cron.sh installer   pose ou remplace le bloc
+#   bash ~/symfony.datan.fr/current/bin/cron.sh retirer     enlève le bloc
+#
+# **Jamais `crontab bin/crontab.prod`** : la commande remplace la table entière,
+# et le compte qui la porte est celui de datan.fr — les tâches du legacy
+# disparaîtraient avec. `cron.sh` n'écrit qu'entre ses deux marqueurs
+# `# >>> datan-symfony` / `# <<< datan-symfony` et garde une copie de la table
+# précédente dans shared/.
+#
+# Pour la même raison, ce bloc ne pose **aucune variable** (`PHP=`, `MAILTO=`,
+# `PATH=`…) : cron les applique aux lignes qui suivent, legacy compris. Les
+# chemins sont écrits en dur par `cron.sh`, qui remplace :
+#   @COURANT@  la version servie (lien current/)
+#   @RACINE@   ~/symfony.datan.fr — identifiants de sauvegarde (.my.cnf)
+#   @PARTAGE@  shared/ — verrous, sauvegardes
+#   @PHP@      le PHP ≥ 8.4 détecté (cf. bin/serveur-commun.sh)
+#   @BASE@     le nom de la base, lu dans le DATABASE_URL de .env.local
+# Après un changement de version de PHP du compte, relancer `installer`.
+#
+# `CRON.md` porte le détail et les justifications. Trois règles y valent partout :
+#
+#   1. `APP_ENV=prod` est écrit en toutes lettres sur chaque ligne, et non hérité
+#      d'une affectation d'en-tête : une ligne recopiée ailleurs reste juste. En
+#      dev, le logger Doctrine garde chaque requête en mémoire et fait échouer
+#      tout import volumineux.
+#   2. Jamais de `cache:clear` pendant une synchronisation — vider
+#      `var/cache/prod` sous une commande en cours la fait échouer sans message
+#      exploitable. On ne vide que le cache HTTP (`app:cache:rechauffer`), et
+#      seulement si le sync a réussi.
+#   3. Enchaîner, pas juxtaposer : les étapes qui suivent le sync dépendent de ce
+#      qu'il vient d'écrire. Un `&&` dans la même entrée, jamais trois entrées
+#      qu'une journée chargée ferait se chevaucher.
+#
+# Deux pièges de syntaxe propres à cron, qui ne pardonnent pas :
+#
+#   - **Un `%` non échappé est traduit en saut de ligne**, et tout ce qui suit
+#     part sur l'entrée standard de la commande. Dans un `date +%F`, il s'écrit
+#     `\%` (cf. la sauvegarde).
+#   - **La commande s'arrête à la fin de la ligne.** La continuation par
+#     antislash n'est pas garantie d'une implémentation à l'autre : les entrées
+#     ci-dessous sont donc d'un seul tenant, aussi longues soient-elles. Les
+#     extraits de `CRON.md` et de `DEPLOIEMENT.md`, eux, sont mis en forme pour
+#     la lecture — ne pas les copier tels quels.
+#
+# Les verrous `flock` vivent dans shared/ et non sous var/ : chaque version a
+# son propre var/, et un verrou pris dans l'ancienne n'arrêterait pas une
+# seconde exécution lancée depuis la nouvelle.
+# ---------------------------------------------------------------------------
+
+# --- Quotidien — 6 h 20 ----------------------------------------------------
+# Les Tricoteuses remoissonnent l'open data de l'Assemblée dans la nuit (leur
+# dernière moisson nocturne tombe vers 1 h) : à 6 h 20 la source est fraîche et
+# la base est à jour au réveil. ~5 min en production, davantage un lendemain de
+# séance.
+#
+# **Pas à 6 h pile.** Du 27/10 au 15/11, cinq exécutions sur vingt ont été tuées
+# par un SIGHUP dans les minutes qui suivent 6 h, la fenêtre où CloudLinux
+# regénère la configuration du sélecteur PHP (php-selecteur.log : 06:03 à
+# 06:08) ; le 12/11, le réchauffage y a perdu l'extension dom. `trap '' HUP`
+# rend la chaîne sourde à ce signal, qu'une tâche sans terminal n'a aucune
+# raison de recevoir ; l'heure décalée l'écarte de la fenêtre.
+#
+# `app:import:commissions` est désormais une étape d'`app:sync:quotidien` : elle
+# lit le delta de la moisson, qui n'est acquitté qu'à la fin de la chaîne.
+# `app:calcul:statistiques-deputes` reste ici — c'est un précalcul, qui se
+# périme dès qu'un scrutin entre.
+#
+# `app:opendata:publier` récrit les quatre CSV d'assets/opendata/ sur les
+# classements du jour et, depuis la bascule du 16/11/2026, les téléverse sur
+# data.gouv.fr à la place du legacy. Le téléversement n'a lieu que si
+# DATA_GOUV_API_KEY est posée dans .env.local : la retirer suffit à le couper.
+#
+# Les quatre commandes s'enchaînent par `;` et non par `&&` : **une
+# synchronisation qui a écrit doit purger**, qu'elle ait réussi ou non. Avec
+# `&&`, un sync tombé après l'import des scrutins (30/10, 10/11, 13/11, 14/11)
+# laissait en cache pour un jour des pages qui ne les montraient pas.
+# `app:sync:quotidien` purge déjà lui-même dès qu'une étape a écrit ;
+# `app:cache:rechauffer` remet ensuite les ~2 500 pages les plus lues en cache.
+# La ligne BILAN dit le code de sortie de chacune.
+#
+# `flock -n -E 75` : deux syncs qui se croisent écrivent les mêmes tables ; on
+# abandonne au lieu d'empiler, et le journal le dit (« SAUTE ») au lieu de le
+# confondre avec un échec. Le nom `app:sync:quotidien` reste visible dans `ps`,
+# dont le workflow de déploiement se sert pour refuser de vider le cache sous
+# une moisson en cours.
+20 6 * * * cd @COURANT@ && trap '' HUP && { echo "===== $(date) ====="; flock -n -E 75 @PARTAGE@/var/sync.lock sh -c 'APP_ENV=prod @PHP@ bin/console app:sync:quotidien --no-ansi; s=$?; APP_ENV=prod @PHP@ bin/console app:calcul:statistiques-deputes --no-ansi; c=$?; APP_ENV=prod @PHP@ bin/console app:opendata:publier --televerser --no-ansi; o=$?; APP_ENV=prod @PHP@ bin/console app:cache:rechauffer --no-ansi; r=$?; echo "BILAN sync=$s statistiques=$c opendata=$o rechauffage=$r"; [ $s -eq 0 ] && [ $c -eq 0 ] && [ $o -eq 0 ] && [ $r -eq 0 ]'; e=$?; if [ $e -eq 75 ]; then echo "SAUTE : verrou pris, une synchronisation tourne encore"; elif [ $e -ne 0 ]; then echo "ECHEC (code $e)"; fi; echo "===== fin $(date) ====="; } >> var/log/sync-quotidien.log 2>&1
+
+# --- Configuration PHP — chaque minute -------------------------------------
+# Le compte est en 7.4 (datan.fr) et nous en 8.4 : la configuration du
+# sélecteur n'est branchée sur la 8.4 que par un lien qu'on pose nous-mêmes,
+# et que CloudLinux peut régénérer (bin/serveur-commun.sh,
+# brancher_config_selecteur). Sans lui, ni intl ni dom : toute page 404 tombe
+# en 500. Une lecture de lien par minute, une ligne de journal quand il a fallu
+# agir. À retirer le jour où le compte entier passe en 8.4.
+* * * * * bash @COURANT@/bin/verifier-php.sh >> @COURANT@/var/log/php-selecteur.log 2>&1
+
+# --- Hebdomadaire — lundi 4 h 15 -------------------------------------------
+# Seule commande qui sorte sur un site public (`assemblee-nationale.fr/dyn/`) :
+# elle rattrape les scrutins dont l'open data ne donne ni le dossier ni
+# l'amendement. Plafond de 40 pages, 1,5 s entre deux requêtes (~1 min), et les
+# visites infructueuses ne sont pas redemandées avant 30 jours. Hors chaîne
+# quotidienne à dessein.
+15 4 * * 1 cd @COURANT@ && APP_ENV=prod @PHP@ bin/console app:scraper:scrutins --no-ansi >> var/log/scraper-scrutins.log 2>&1
+
+# --- Sauvegarde — 3 h 30 ---------------------------------------------------
+# Le décryptage éditorial ne se régénère pas : cette entrée vaut dès le premier
+# jour, avant même l'ouverture.
+#
+# `--result-file` et non un tuyau vers gzip : le code de sortie d'un pipeline est
+# celui de `gzip`, si bien qu'un dump interrompu produirait une archive valide au
+# contenu tronqué, et la purge des anciennes s'exécuterait quand même. Compter
+# ~1 Go de libre le temps de la compression.
+#
+# Les identifiants vivent dans `~/symfony.datan.fr/.my.cnf` en chmod 600, jamais sur la
+# ligne de commande où `ps` les afficherait. Pas dans `~/.my.cnf` : sur ce
+# compte, il appartient au legacy et désigne sa base, pas la nôtre :
+#     [client]
+#     user=…
+#     password=…
+#
+# Sauvegardes dans shared/sauvegardes : ~120 Mo par jour compressés, trente jours
+# gardés, soit ~3,5 Go.
+30 3 * * * cd @PARTAGE@/sauvegardes && sh -c 'mariadb-dump --defaults-file=@RACINE@/.my.cnf --single-transaction --quick --default-character-set=utf8mb4 --ignore-table=@BASE@.messenger_messages --result-file=jour.sql @BASE@ && gzip -9 -f jour.sql && mv jour.sql.gz $(date +\%F).sql.gz && find . -name "*.sql.gz" -mtime +30 -delete' >> @COURANT@/var/log/sauvegarde.log 2>&1
+
+# --- Courriels — toutes les 10 minutes -------------------------------------
+# `SendEmailMessage` est routé vers le transport `async` (`doctrine://default`) :
+# **sans consommateur, aucun courriel ne part** — ni mot de passe oublié, ni
+# demande de compte député, ni inscription. Le même consommateur réchauffe le
+# cache après la publication d'un décryptage, d'une explication ou d'un article
+# (`RechauffageDemande`) : le cache HTTP est vidé tout de suite, les pages
+# principales y sont remises au passage suivant. Sur un serveur avec systemd, c'est un
+# service permanent (`DEPLOIEMENT.md` §5) ; sur l'hébergement mutualisé, cette
+# entrée en tient lieu.
+#
+# `--time-limit=580` pour 600 s d'intervalle : le processus sort juste avant que
+# le suivant n'arrive, et `flock -n` empêche qu'ils se recouvrent. `env` est
+# obligatoire — `flock` exécute directement, sans shell, et prendrait
+# `APP_ENV=prod` pour le nom de la commande.
+*/10 * * * * cd @COURANT@ && flock -n @PARTAGE@/var/messenger.lock env APP_ENV=prod @PHP@ bin/console messenger:consume async --time-limit=580 --memory-limit=128M --no-ansi >> var/log/messenger.log 2>&1
+
+# --- Newsletter : désinscriptions Mailjet — 5 h 30 -------------------------
+# Qui se désinscrit par le lien d'une campagne Mailjet ne l'est que chez
+# Mailjet ; on le reporte en base. Un appel d'API par abonné (~1 100), quelques
+# minutes. Sans clés Mailjet (préproduction), la commande le dit et sort en 0.
+30 5 * * * cd @COURANT@ && APP_ENV=prod @PHP@ bin/console app:newsletter:desinscriptions --no-ansi >> var/log/newsletter.log 2>&1
+
+# --- Journaux — le 1er du mois ---------------------------------------------
+# Pas de logrotate sur un mutualisé : on tronque nous-mêmes. Les journaux du
+# sync sont la seule trace d'un import qui a dérivé, on en garde de quoi
+# remonter à plusieurs semaines.
+5 4 1 * * cd @COURANT@/var/log && for f in *.log; do tail -n 5000 "$f" > "$f.tmp" && mv "$f.tmp" "$f"; done
+
+# ---------------------------------------------------------------------------
+# À décommenter le moment venu — pas avant, et pas sans lire pourquoi.
+# ---------------------------------------------------------------------------
+
+# Résumés d'amendements par lots (API de lots d'Anthropic, Haiku 5.5). **Le
+# jour de la bascule, et pas avant** : tant que les deux crons du legacy
+# (`generate_amendements_ia_submit_batch.php` à :00,
+# `…_process_batch.php` à :15) tournent, les deux chaînes paieraient les mêmes
+# amendements. Ordre : couper la soumission du legacy, laisser son traitement
+# vider ses lots en attente, exporter puis `app:import:resumes-amendements`,
+# et seulement alors décommenter ces deux lignes (`CRON.md` §3).
+#
+# Soumission toutes les six heures, 100 amendements : la capacité du legacy
+# (20 par heure), en quatre fois moins de lots — donc quatre fois moins de
+# requêtes de rapprochement des mots-clés, et un cache de consignes mieux
+# partagé dans chaque lot. Traitement chaque heure : sans lot terminé, il ne
+# fait qu'interroger l'état des lots, gratuitement. `flock` : deux traitements
+# simultanés intégreraient le même lot. Demande ANTHROPIC_API_KEY.
+#0 */6 * * * cd @COURANT@ && APP_ENV=prod @PHP@ bin/console app:ia:resumes-amendements:soumettre --taille=100 --no-ansi >> var/log/resumes-ia.log 2>&1
+#30 * * * * cd @COURANT@ && flock -n @PARTAGE@/var/resumes-ia.lock env APP_ENV=prod @PHP@ bin/console app:ia:resumes-amendements:traiter --no-ansi >> var/log/resumes-ia.log 2>&1
+
+# Poignées Bluesky des députés : n'écrit que les correspondances franches, et
+# seulement pour ceux qui n'en ont pas. Mensuel suffit — après une vague
+# d'arrivées, on le lance à la main.
+#40 5 1 * * cd @COURANT@ && APP_ENV=prod @PHP@ bin/console app:moissonner:bluesky --ecrire --no-ansi >> var/log/bluesky.log 2>&1
+
+# Lettre mensuelle des votes, sur le mois écoulé, aux heures du legacy dont
+# elle a pris la suite le 16/11/2026 : un essai à 8 h 40, envoyé à
+# info@datan.fr seulement, puis l'envoi à tous les abonnés à 12 h 40 — quatre
+# heures pour relire et, au besoin, retirer la seconde ligne avant midi.
+# Un envoi ne se rejoue pas : en cas d'échec, lire le journal avant toute
+# relance. `env` : cf. le consommateur Messenger, flock n'a pas de shell.
+40 8 1 * * cd @COURANT@ && flock -n @PARTAGE@/var/newsletter.lock env APP_ENV=prod @PHP@ bin/console app:newsletter:votes test --no-ansi >> var/log/newsletter.log 2>&1
+40 12 1 * * cd @COURANT@ && flock -n @PARTAGE@/var/newsletter.lock env APP_ENV=prod @PHP@ bin/console app:newsletter:votes envoyer --no-ansi >> var/log/newsletter.log 2>&1
+
+# Courriels définitivement en échec (3 tentatives). À relire de temps à autre :
+# une file `failed` qui grossit est un MAILER_DSN faux, pas un incident isolé.
+#0 9 * * 1 cd @COURANT@ && APP_ENV=prod @PHP@ bin/console messenger:failed:show --max=20 --no-ansi >> var/log/messenger-echecs.log 2>&1
+
+# ---------------------------------------------------------------------------
+# Ce qui n'entre JAMAIS ici : les imports de récupération
+# (`app:import:utilisateurs`, `:newsletter`, `:decryptages`, `:articles`, `:explications`, `:resumes-amendements`,
+# `:professions-foi`, `:faq`, `:quiz`, `:parrainages`, `:reseaux-sociaux`,
+# `:communes`, `:elections`, `:resultats-electoraux`, `:circonscriptions`).
+# Ils réalignent sur la base d'origine : une fois l'application devenue la
+# source — un rédacteur qui publie, un député qui écrit —, les rejouer écrase
+# les écritures locales. `CRON.md` §4 en tient la liste et la raison.
+# ---------------------------------------------------------------------------

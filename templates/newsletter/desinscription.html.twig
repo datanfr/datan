@@ -1,0 +1,26 @@
+{# Reprise de `views/newsletter/delete.php`. #}
+{% extends 'base.html.twig' %}
+
+{% block robots %}noindex, nofollow{% endblock %}
+
+{% block title %}Désinscription à la newsletter | Datan{% endblock %}
+
+{% block body %}
+<div class="container-fluid pg-depute-all" id="container-always-fluid">
+  <div class="row">
+    <div class="container">
+      <div class="row row-grid bloc-titre">
+        <div class="col-lg-6 mb-4 mb-lg-0">
+          <h1>Désinscription à la newsletter</h1>
+        </div>
+      </div>
+      <div class="row mb-4">
+        <div class="col">
+          <h2>Abonnement de {{ email }}</h2>
+          <p>Vous ne recevrez plus nos newsletters, c'est dommage mais n'hésitez pas à revenir pour connaitre l'activité de vos députés !</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

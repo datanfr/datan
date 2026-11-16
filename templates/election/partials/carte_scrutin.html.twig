@@ -1,0 +1,31 @@
+{# Carte d'un scrutin dans le catalogue (application/views/elections/partials/card.php).
+
+   Le pied ne dit pas la même chose selon l'avancement : le nombre d'élus une
+   fois le scrutin achevé, les qualifiés entre les deux tours, les candidats
+   avant. Un scrutin dont la rédaction ne suit pas les candidatures
+   (`election.candidats` à 0, les départementales de 2021) garde un pied vide
+   plutôt que d'annoncer zéro député. #}
+<div class="card card-election my-3">
+  <div class="card-body d-flex flex-column justify-content-center align-items-center">
+    <h2 class="d-block card-title">
+      <a href="{{ path('elections_individual', {slug: election.slug}) }}" class="stretched-link no-decoration">{{ election.libelle_abrege }}<br>{{ election.annee }}</a>
+    </h2>
+    <span class="mt-3">1<sup>er</sup> tour : {{ election.date_tour1_court }}</span>
+    {% if election.date_tour2 %}
+      <span>2<sup>nd</sup> tour : {{ election.date_tour2_court }}</span>
+    {% endif %}
+  </div>
+  {% if election.candidats %}
+    <div class="card-footer d-flex justify-content-center align-items-center">
+      {% if election.etat == 2 %}
+        <span class="font-weight-bold">{{ election.elus_n }} député{{ election.elus_n > 1 ? 's' }} élu{{ election.elus_n > 1 ? 's' }}</span>
+      {% elseif election.etat == 1 %}
+        <span class="font-weight-bold">{{ election.second_tour_n }} député{{ election.second_tour_n > 1 ? 's' }} au second tour</span>
+      {% else %}
+        <span class="font-weight-bold">{{ election.candidats_n }} député{{ election.candidats_n > 1 ? 's' }} candidats</span>
+      {% endif %}
+    </div>
+  {% else %}
+    <div class="card-footer bg-transparent"></div>
+  {% endif %}
+</div>

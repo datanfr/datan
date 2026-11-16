@@ -1,0 +1,50 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block title %}Foire aux questions{% endblock %}
+
+{% block body %}
+  <div class="mb-3">
+    <a class="btn btn-primary" href="{{ path('admin_faq_creer') }}">Créer un article</a>
+  </div>
+
+  <div class="card">
+    <div class="card-body p-0">
+      <table class="table table-striped mb-0">
+        <caption class="sr-only">Articles de la foire aux questions</caption>
+        <thead>
+          <tr>
+            <th scope="col">Question</th>
+            <th scope="col">Catégorie</th>
+            <th scope="col">État</th>
+            <th scope="col" class="text-right">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for article in articles %}
+            <tr>
+              <td>{{ article.question }}</td>
+              <td>{{ article.categorie ? article.categorie.nom : '—' }}</td>
+              <td>
+                {% if article.etat == 'published' %}
+                  <span class="badge badge-success">Publié</span>
+                {% else %}
+                  <span class="badge badge-secondary">Brouillon</span>
+                {% endif %}
+              </td>
+              <td class="text-right">
+                {% if article.etat != 'published' or is_granted('ROLE_ADMIN') %}
+                  <a class="btn btn-sm btn-outline-primary" href="{{ path('admin_faq_modifier', {id: article.id}) }}">Modifier</a>
+                {% endif %}
+                {% if is_granted('ROLE_ADMIN') %}
+                  <a class="btn btn-sm btn-outline-danger" href="{{ path('admin_faq_supprimer', {id: article.id}) }}">Supprimer</a>
+                {% endif %}
+              </td>
+            </tr>
+          {% else %}
+            <tr><td colspan="4" class="text-center p-4">Aucun article pour l'instant.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+{% endblock %}

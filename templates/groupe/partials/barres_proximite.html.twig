@@ -1,0 +1,38 @@
+{# Graphique en barres des trois groupes dont celui-ci est le plus — ou le moins —
+   proche (`individual.php`, blocs « vote souvent / rarement avec »).
+
+   Les hauteurs sont des pourcentages posés en style, et la grille de repères
+   (0 / 50 / 100 %) est une pile de `.tick` à 50 % de hauteur chacun : c'est
+   `main.css` qui la dessine, la reproduire autrement décalerait les barres. #}
+<div class="row">
+  <div class="col-10 offset-2">
+    <h4>Le groupe {{ actif ? 'vote' : 'votait' }} <b>{{ titre }}</b> avec</h4>
+  </div>
+</div>
+<div class="row mt-1 bar-container stats pr-2">
+  <div class="col-10 offset-2">
+    <div class="chart">
+      <div class="chart-grid">
+        <div id="ticks">
+          <div class="tick" style="height: 50%;"><p>100 %</p></div>
+          <div class="tick" style="height: 50%;"><p>50 %</p></div>
+          <div class="tick" style="height: 0;"><p>0 %</p></div>
+        </div>
+      </div>
+      <div class="bar-chart d-flex flex-row justify-content-between align-items-end">
+        {% for ligne in lignes %}
+          <div class="bars mx-1 mx-md-3" style="height: {{ ligne.score }}%">
+            <span class="score">{{ ligne.score }}%</span>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+  <div class="col-10 offset-2 d-flex justify-content-between mt-2">
+    {% for ligne in lignes %}
+      <div class="legend-element d-flex align-items-center justify-content-center">
+        <span class="font-weight-bold">{{ ligne.libelle_abrev }}</span>
+      </div>
+    {% endfor %}
+  </div>
+</div>

@@ -1,0 +1,26 @@
+{% extends 'base.html.twig' %}
+
+{% block preloads %}{{ include('partials/preload_couverture.html.twig') }}{% endblock %}
+
+{% block title %}Départements et territoires d'outre-mer | Datan{% endblock %}
+
+{% block meta_description %}Découvrez la liste des départements et territoires d'outre mer de la France.{% endblock %}
+
+{% block body %}
+<div class="container-fluid bloc-img-deputes bloc-img d-flex async_background" id="container-always-fluid" style="height: 13em">
+  <div class="container d-flex flex-column justify-content-center py-2">
+    <h1>Départements et territoires d'outre mer de la France</h1>
+  </div>
+</div>
+<div class="container pg-departement-liste my-4">
+  <div class="row mt-2 mb-3">
+    <div class="col-12 d-flex flex-column align-items-center">
+      {% for departement in departements %}
+        <div class="my-2">
+          <a href="{{ path('departement_individual', {departement: departement.slug}) }}" class="no-decoration underline-blue">{{ departement.code }} - {{ departement.nom }}</a>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+{% endblock %}

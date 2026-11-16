@@ -1,0 +1,22 @@
+# Minification du CSS et du JS d'AssetMapper au moment d'`asset-map:compile`
+# (binaire tdewolff/minify, téléchargé dans var/minify/). Elle remplace le
+# couple babel + uglify du Gruntfile du legacy ; la transpilation en ES5 n'a
+# plus de raison d'être.
+sensiolabs_minify:
+    asset_mapper:
+        # Les paquets de l'importmap (assets/vendor/) sont déjà minifiés.
+        ignore_vendor: true
+    minify:
+        local_binary: false
+        # Toujours, et pas seulement en debug (défaut du bundle) : la
+        # compilation de production se fait sur le runner de déploiement, en
+        # APP_ENV=prod, et c'est là qu'il faut le binaire.
+        download_binary: true
+        version: 'v2.24.25'
+
+# En développement, le code servi reste lisible — et les lignes des erreurs
+# de la console pointent dans la source.
+when@dev:
+    sensiolabs_minify:
+        asset_mapper:
+            enabled: false
