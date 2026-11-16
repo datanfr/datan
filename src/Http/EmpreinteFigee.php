@@ -120,6 +120,8 @@ final class EmpreinteFigee
     private const PORTRAITS = [
         'assets/imgs/deputes_original',
         'assets/imgs/deputes_nobg',
+        'assets/imgs/deputes_webp',
+        'assets/imgs/deputes_nobg_webp',
         DetourerPhotosCommand::DOSSIER_PUBLIC,
         ImportPhotosCommand::DOSSIER_PUBLIC,
     ];

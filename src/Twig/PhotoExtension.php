@@ -54,6 +54,20 @@ class PhotoExtension extends AbstractExtension
     private const DETOURES = 'assets/imgs/deputes_nobg';
 
     /**
+     * Les jumeaux WebP des deux jeux ci-dessus : la même image, dix à vingt
+     * fois moins lourde (`depute_<id>_webp.webp`, ~10 Ko contre ~130 Ko pour le
+     * PNG). Le site d'origine les proposait en premier dans une balise
+     * `<picture>`, le PNG ne servant qu'aux navigateurs sans WebP — il n'en
+     * reste plus. Ne rendre que le PNG, comme on l'a fait quelques heures
+     * après avoir recopié ces jeux, alourdissait chaque portrait d'autant :
+     * 77 Mo pour la liste des 577 députés.
+     */
+    private const JUMEAUX_WEBP = [
+        self::CARRES => 'assets/imgs/deputes_webp',
+        self::DETOURES => 'assets/imgs/deputes_nobg_webp',
+    ];
+
+    /**
      * Portraits détourés **par nous**, faute d'avoir les deux jeux ci-dessus.
      *
      * Ils viennent de {@see DetourerPhotosCommand} et ne passent qu'après le
@@ -135,9 +149,17 @@ class PhotoExtension extends AbstractExtension
         $candidats[] = [ImportPhotosCommand::DOSSIER_PUBLIC, '', '.jpg'];
 
         foreach ($candidats as [$dossier, $prefixe, $extension]) {
-            if (isset($this->index($dossier, $extension)[$prefixe . $identifiant])) {
-                return $dossier . '/' . $prefixe . $identifiant . $extension;
+            if (!isset($this->index($dossier, $extension)[$prefixe . $identifiant])) {
+                continue;
             }
+
+            $jumeau = self::JUMEAUX_WEBP[$dossier] ?? null;
+
+            if ($jumeau !== null && isset($this->index($jumeau, '_webp.webp')[$prefixe . $identifiant])) {
+                return $jumeau . '/' . $prefixe . $identifiant . '_webp.webp';
+            }
+
+            return $dossier . '/' . $prefixe . $identifiant . $extension;
         }
 
         return null;

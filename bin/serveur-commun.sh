@@ -136,9 +136,31 @@ brancher_config_selecteur() {
 
   ln -sfn "$cible" "$lien" || echec "Impossible de pointer $lien vers $cible."
   printf '%s   lien %s : %s → %s\n' "$(date '+%F %T')" "$lien" "$actuel" "$cible" >&2
+  relancer_lsphp "$php"
+}
+
+# Arrête les `lsphp` du compte pour la version du PHP donné (son vrai chemin,
+# pas le lanceur) : LiteSpeed en relance au prochain appel, configuration relue
+# et OPcache vide. `ps` ne les montre que sous le nom « lsphp » : le tri se
+# fait sur `/proc/<pid>/exe`.
+#
+# À appeler après toute bascule de version. OPcache range `index.php` sous le
+# chemin par lequel LiteSpeed le demande — …/public/index.php, à travers le
+# lien `current` — et ne revalide ensuite que le fichier qu'il avait résolu la
+# première fois : celui de l'ancienne version, toujours sur le disque. Sans
+# cette relance, le site continue d'exécuter l'ancien code sans limite de
+# durée, dans le cache HTTP de l'ancienne version, que ni le réchauffage ni la
+# synchronisation ne touchent plus. Constaté le 16/11/2026, le jour où OPcache
+# a été activé : deux déploiements réussis, aucun des deux servi.
+relancer_lsphp() {
+  local php="$1" version pid
+  [[ "$php" =~ ^${ALT_PHP:-/opt/alt}/php([0-9]+)/ ]] || return 0
+  version=${BASH_REMATCH[1]}
   for pid in $(pgrep -u "$(id -un)" -x lsphp 2>/dev/null); do
     if [[ "$(readlink "/proc/$pid/exe" 2>/dev/null)" == *"/php$version/"* ]]; then
       kill "$pid" 2>/dev/null && printf '   lsphp %s (PHP %s) arrêté, LiteSpeed le relancera\n' "$pid" "$version" >&2
     fi
   done
+  # Un processus déjà parti entre-temps ne doit pas faire échouer l'appelant.
+  return 0
 }
