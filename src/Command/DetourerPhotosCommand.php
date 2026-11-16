@@ -216,17 +216,14 @@ class DetourerPhotosCommand extends Command
 
             if ($part < self::PART_MINIMALE || $part > self::PART_MAXIMALE) {
                 $ecartes[$identifiant] = $part;
-                imagedestroy($image);
                 continue;
             }
 
             if (!$simulation && !imagewebp($image, $cible, self::QUALITE_WEBP)) {
                 $io->warning(sprintf('Écriture impossible : %s', $cible));
-                imagedestroy($image);
                 continue;
             }
 
-            imagedestroy($image);
             ++$ecrits;
         }
 
@@ -320,8 +317,6 @@ class DetourerPhotosCommand extends Command
             $transparence = 127 - (int) round($a * 127 / 255);
             imagesetpixel($image, $i % $largeur, intdiv($i, $largeur), ($transparence << 24) | ($r << 16) | ($v << 8) | $b);
         }
-
-        imagedestroy($source);
 
         return [$image, $transparents / ($largeur * $hauteur)];
     }
