@@ -2,6 +2,7 @@
 
 namespace App\Command;
 
+use App\Depute\GroupeAuScrutin;
 use App\Scrutin\CorrectionTitreScrutin;
 use App\Scrutin\NatureVote;
 use Symfony\Component\Console\Attribute\AsCommand;
@@ -107,16 +108,6 @@ class ImportScrutinsCommand extends ImportTricoteusesCommand
         $io->title('Import des scrutins');
         $io->text($this->incremental($chemin, $tout) ? 'Régime incrémental : seuls les scrutins modifiés.' : 'Import complet du dépôt.');
 
-        $maintenant = (new \DateTimeImmutable())->format('Y-m-d H:i:s');
-        $dossiers = $this->connection->fetchAllKeyValue('SELECT dossier_id, id FROM dossier');
-        $groupes = $this->connection->fetchAllKeyValue('SELECT uid, id FROM groupe');
-        $deputes = $this->connection->fetchAllKeyValue('SELECT mp_id, id FROM depute');
-
-        // Premier passage : les scrutins, dont on a besoin des identifiants
-        // pour rattacher ventilations et votes.
-        $uids = [];
-        $refsDossier = [];
-        $lot = [];
         // Les dépôts n'ont pas tous la même charpente : Scrutins XVI et XVII
         // séparent l'Assemblée (`AN/`) du Congrès (`CG/`) ; Scrutins XIV et XV
         // rangent tout à la racine (`R5/`), sans aucun fichier du Congrès. Le
@@ -130,6 +121,77 @@ class ImportScrutinsCommand extends ImportTricoteusesCommand
                 yield from $this->fichiers($chemin, $sousDossier, $tout);
             }
         })();
+
+        $lus = $this->importe($fichiers, $sansVotes, $io);
+        if ($lus === 0) {
+            $io->text('Aucun scrutin modifié.');
+        }
+
+        // Le contrôle ne fait pas confiance au delta, ni à rien de ce qui
+        // précède : il compare le dépôt entier à la base. C'est le filet qui
+        // aurait vu dès le 29/10 les 45 scrutins (9156 à 9200) qu'une moisson
+        // avait signalés et qu'aucun import n'a jamais lus.
+        $manquants = $this->scrutinsAbsents($chemin, $sousDossiers);
+        if ($manquants !== []) {
+            $io->warning(sprintf(
+                '%d scrutin%s du dépôt absent%s de la base ou sans ventilation (%s) — rattrapage.',
+                \count($manquants),
+                \count($manquants) > 1 ? 's' : '',
+                \count($manquants) > 1 ? 's' : '',
+                $this->apercu(array_keys($manquants)),
+            ));
+            $this->importe(array_values($manquants), $sansVotes, $io);
+
+            $restants = $this->scrutinsAbsents($chemin, $sousDossiers);
+            if ($restants !== []) {
+                $io->error(sprintf(
+                    'Contrôle en échec : %d scrutin%s du dépôt toujours absent%s de la base après rattrapage (%s).',
+                    \count($restants),
+                    \count($restants) > 1 ? 's' : '',
+                    \count($restants) > 1 ? 's' : '',
+                    $this->apercu(array_keys($restants)),
+                ));
+
+                return Command::FAILURE;
+            }
+
+            $io->text(sprintf(
+                'Rattrapage réussi : %d scrutin%s réintégré%s.',
+                \count($manquants),
+                \count($manquants) > 1 ? 's' : '',
+                \count($manquants) > 1 ? 's' : '',
+            ));
+        } else {
+            $io->text('Contrôle : tous les scrutins du dépôt sont en base, avec leur ventilation.');
+        }
+
+        $rattaches = $this->rattacheDecryptages();
+        $io->text(sprintf('Décryptages rattachés à leur scrutin : %d.', $rattaches));
+
+        $io->success(sprintf('%d scrutins en base.', (int) $this->connection->fetchOne('SELECT COUNT(*) FROM scrutin')));
+
+        return Command::SUCCESS;
+    }
+
+    /**
+     * Importe un lot de fichiers de scrutin : synthèse, ventilations et votes.
+     *
+     * @param iterable<string> $fichiers chemins absolus
+     *
+     * @return int nombre de scrutins lus
+     */
+    private function importe(iterable $fichiers, bool $sansVotes, SymfonyStyle $io): int
+    {
+        $maintenant = (new \DateTimeImmutable())->format('Y-m-d H:i:s');
+        $dossiers = $this->connection->fetchAllKeyValue('SELECT dossier_id, id FROM dossier');
+        $groupes = $this->connection->fetchAllKeyValue('SELECT uid, id FROM groupe');
+        $deputes = $this->connection->fetchAllKeyValue('SELECT mp_id, id FROM depute');
+
+        // Premier passage : les scrutins, dont on a besoin des identifiants
+        // pour rattacher ventilations et votes.
+        $uids = [];
+        $refsDossier = [];
+        $lot = [];
         foreach ($fichiers as $fichier) {
             $scrutin = $this->lisJson($fichier);
             if ($scrutin === null || !isset($scrutin['uid'])) {
@@ -153,9 +215,7 @@ class ImportScrutinsCommand extends ImportTricoteusesCommand
         $this->upsert('scrutin', self::COLONNES_SCRUTIN, $lot, self::COLONNES_MAJ_SCRUTIN);
 
         if ($uids === []) {
-            $io->success('Aucun scrutin à importer.');
-
-            return Command::SUCCESS;
+            return 0;
         }
 
         $io->text(sprintf('%d scrutin%s lu%s.', \count($uids), \count($uids) > 1 ? 's' : '', \count($uids) > 1 ? 's' : ''));
@@ -177,6 +237,8 @@ class ImportScrutinsCommand extends ImportTricoteusesCommand
         $votesSenateurs = 0;
         $lotVentilation = [];
         $lotVote = [];
+        /** @var array<string, int> $incomplets uid → voix exprimées absentes des blocs */
+        $incomplets = [];
 
         foreach ($uids as $uid => $fichier) {
             $scrutin = $this->lisJson($fichier);
@@ -187,6 +249,11 @@ class ImportScrutinsCommand extends ImportTricoteusesCommand
             $scrutinId = $identifiants[$uid] ?? null;
             if ($scrutinId === null) {
                 continue;
+            }
+
+            $manque = $this->voixHorsBlocs($scrutin);
+            if ($manque > 0) {
+                $incomplets[$uid] = $manque;
             }
 
             $date = $this->date($scrutin['dateScrutin'] ?? null);
@@ -364,12 +431,94 @@ class ImportScrutinsCommand extends ImportTricoteusesCommand
             ));
         }
 
-        $rattaches = $this->rattacheDecryptages();
-        $io->text(sprintf('Décryptages rattachés à leur scrutin : %d.', $rattaches));
+        // Ce que la source elle-même a perdu. Dans l'open data actuel de
+        // l'Assemblée (brut comme nettoyé par les Tricoteuses), treize
+        // scrutins de la 15e ont des blocs de groupe qui ne totalisent pas la
+        // synthèse — 347 voix en tout. Sept ont perdu le bloc MODEM
+        // (PO730970) : 2751 annonce 568 votants et n'en ventile que 522. Le
+        // legacy, qui les a moissonnés à l'époque, a ces sept-là entiers ; les
+        // six autres lui manquent aussi. Aucun import ne peut
+        // rendre ce qui n'est pas dans le fichier : on le dit, à l'unité, pour
+        // que l'écart ne passe ni pour un défaut d'import ni pour rien.
+        if ($incomplets !== []) {
+            $io->warning(sprintf(
+                'Source incomplète : %d scrutin%s dont les blocs de groupe totalisent moins de voix que la synthèse (%d voix sans groupe ni député) : %s. À reprendre de la base du legacy (app:import:votes, app:import:vote-groupes).',
+                \count($incomplets),
+                \count($incomplets) > 1 ? 's' : '',
+                array_sum($incomplets),
+                $this->apercu(array_map(
+                    static fn (string $uid, int $voix) => sprintf('%s −%d', $uid, $voix),
+                    array_keys($incomplets),
+                    $incomplets,
+                )),
+            ));
+        }
 
-        $io->success(sprintf('%d scrutins en base.', (int) $this->connection->fetchOne('SELECT COUNT(*) FROM scrutin')));
+        return \count($uids);
+    }
 
-        return Command::SUCCESS;
+    /**
+     * Les scrutins du dépôt absents de la base, ou présents sans aucune
+     * ventilation — tous les fichiers des quatre législatures en portent une,
+     * et un import tué entre la synthèse et les ventilations laisse
+     * exactement cette trace.
+     *
+     * Le nom du fichier est l'uid du scrutin (vérifié sur les 19 772 fichiers
+     * des quatre dépôts) : le contrôle ne lit aucun JSON, il liste.
+     *
+     * @param list<string> $sousDossiers
+     *
+     * @return array<string, string> uid → chemin du fichier
+     */
+    private function scrutinsAbsents(string $chemin, array $sousDossiers): array
+    {
+        $depot = [];
+        foreach ($sousDossiers as $sousDossier) {
+            foreach ($this->fichiers($chemin, $sousDossier, tout: true) as $fichier) {
+                $depot[basename($fichier, '.json')] = $fichier;
+            }
+        }
+
+        if ($depot === []) {
+            return [];
+        }
+
+        $complets = array_flip($this->connection->fetchFirstColumn(
+            'SELECT s.uid FROM scrutin s WHERE EXISTS (SELECT 1 FROM vote_groupe vg WHERE vg.scrutin_id = s.id)',
+        ));
+
+        return array_diff_key($depot, $complets);
+    }
+
+    /**
+     * Voix exprimées (pour, contre, abstentions) que la synthèse annonce et
+     * qu'aucun bloc de groupe ne porte. Tous les blocs comptent, ceux du Sénat
+     * au Congrès compris : la synthèse les compte aussi.
+     *
+     * @param array<string, mixed> $scrutin
+     */
+    private function voixHorsBlocs(array $scrutin): int
+    {
+        $synthese = $scrutin['syntheseVote']['decompte'] ?? [];
+        $annoncees = (int) ($synthese['pour'] ?? 0) + (int) ($synthese['contre'] ?? 0) + (int) ($synthese['abstentions'] ?? 0);
+
+        $ventilees = 0;
+        foreach ($scrutin['ventilationVotes']['groupes'] ?? [] as $groupe) {
+            $voix = $groupe['vote']['decompteVoix'] ?? [];
+            $ventilees += (int) ($voix['pour'] ?? 0) + (int) ($voix['contre'] ?? 0) + (int) ($voix['abstentions'] ?? 0);
+        }
+
+        return max(0, $annoncees - $ventilees);
+    }
+
+    /**
+     * @param list<string> $elements
+     */
+    private function apercu(array $elements, int $limite = 12): string
+    {
+        $vus = \array_slice($elements, 0, $limite);
+
+        return implode(', ', $vus) . (\count($elements) > $limite ? sprintf(' … (+%d)', \count($elements) - $limite) : '');
     }
 
     /**
@@ -496,15 +645,18 @@ class ImportScrutinsCommand extends ImportTricoteusesCommand
             return null;
         }
 
-        // `nomin_principale` est indispensable : onze députés de la 17e portent
-        // deux rattachements ouverts, et sans ce filtre le bloc paraît partagé
-        // entre deux groupes — donc non unanime, donc écarté.
+        // Seuls les rattachements d'appartenance comptent ({@see GroupeAuScrutin}) :
+        // un président de groupe porte aussi un mandat de fonction, dans le même
+        // groupe, et c'est son mandat de membre qui dit depuis quand il y siège.
+        // `nomin_principale`, employé ici auparavant, vaut 0 sur ce mandat de
+        // membre pendant toute la présidence — rétroactivement : le président
+        // disparaissait des votants de tout scrutin antérieur à sa présidence.
         $groupes = $this->connection->fetchFirstColumn(
             'SELECT DISTINCT fg.groupe_id
                FROM fonction_groupe fg
                JOIN depute d ON d.id = fg.depute_id
               WHERE d.mp_id IN (?)
-                AND fg.nomin_principale = 1
+                AND ' . GroupeAuScrutin::APPARTENANCE . '
                 AND (fg.date_debut IS NULL OR fg.date_debut <= ?)
                 AND (fg.date_fin IS NULL OR fg.date_fin >= ?)',
             [array_keys($acteurs), $date, $date],
@@ -550,9 +702,13 @@ class ImportScrutinsCommand extends ImportTricoteusesCommand
         }
 
         $actifs = $this->connection->fetchAllKeyValue(
-            'SELECT fg.groupe_id, COUNT(*) AS effectif
+            // Effectif par appartenance, député compté une fois : avec
+            // `nomin_principale = 1`, un président manquait à son groupe avant sa
+            // présidence et comptait double après (mandat de membre repassé à 1,
+            // présidence close restée à 1) — effectifs faux d'une unité.
+            'SELECT fg.groupe_id, COUNT(DISTINCT fg.depute_id) AS effectif
                FROM fonction_groupe fg
-              WHERE fg.nomin_principale = 1
+              WHERE ' . GroupeAuScrutin::APPARTENANCE . '
                 AND (fg.date_debut IS NULL OR fg.date_debut <= ?)
                 AND (fg.date_fin IS NULL OR fg.date_fin >= ?)
               GROUP BY fg.groupe_id',

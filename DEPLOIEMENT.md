@@ -239,14 +239,39 @@ public `datan.fr/assets/dataset_backup` est **réduit et anonymisé** : un seul
 compte, `users_mp` vide. La base de développement en porte donc les traces. À
 rejouer contre la base de production réelle, **avant l'ouverture** :
 
+Tout se rejoue en deux commandes : l'export de la base du legacy (requêtes dans
+`bin/recuperation/legacy/*.sql`, identifiants pris dans l'environnement que
+pose `~/.bashrc`), puis la récupération, dans l'ordre des dépendances et avec un
+bilan chiffré par fichier.
+
 ```bash
-APP_ENV=prod php bin/console app:import:utilisateurs   # comptes + mots de passe repris tels quels
-APP_ENV=prod php bin/console app:import:decryptages    # la vraie base en a plus que les 250 du backup
-APP_ENV=prod php bin/console app:import:articles
-APP_ENV=prod php bin/console app:import:professions-foi  # avec la copie de assets/data/professions/
+cd ~/symfony.datan.fr/current
+bin/recuperation/exporter-legacy.sh                    # → ~/recuperation-legacy/<date>/, 700/600
+APP_ENV=prod ~/symfony.datan.fr/bin/php bin/console app:recuperation:legacy --dossier=$HOME/recuperation-legacy/<date> --verifier
+APP_ENV=prod ~/symfony.datan.fr/bin/php bin/console app:recuperation:legacy --dossier=$HOME/recuperation-legacy/<date>
 ```
 
-Puis purger les comptes d'essai `redaction`, `editeur`, `guibert`.
+Avant : purger les comptes d'essai `redaction`, `editeur`, `guibert` — l'un
+partage son adresse avec un compte du legacy, et la connexion par adresse
+refuse une adresse ambiguë. À côté : copier `~/public_html/assets/data/professions/`
+(1,9 Go de PDF). Après la bascule, et une fois pour toutes :
+`app:recuperation:legacy --clore`, qui interdit tout rejeu.
+
+Trois choses encadrent ces commandes :
+
+- **Avant**, les scrutins des 15e et 16e législatures doivent être en base
+  (dépôts figés, `app:import:scrutins --depot=scrutins-xv --tout` puis
+  `scrutins-xvi`) : les amendements clos, les résumés d'exposé et les votes
+  MODEM s'y rattachent. La commande le vérifie et refuse sinon.
+- **Après**, les municipales, qui ne viennent pas du legacy mais du ministère et
+  exigent les communes posées par la récupération :
+  `app:import:municipales` (~3 min, 813 Mo de fichiers gardés dans
+  `var/municipales/`, supprimables ensuite) puis `app:import:noms-communes`.
+- **Puis** `app:ia:tags:nettoyer` (simulation à relire, puis `--appliquer` ;
+  demande la clé Anthropic) et `app:cache:rechauffer`.
+
+La séquence complète de la première mise en production, synchronisation et
+calculs compris, est dans `TODO.md`, « Corrections du 2026-11-16 ».
 
 > **Un import de récupération écrase les écritures locales.** Une fois
 > l'application devenue la source — un rédacteur qui publie, un député qui écrit
@@ -565,7 +590,7 @@ bash ~/symfony.datan.fr/current/bin/cron.sh retirer
 crontab -l                                              # relire ce qui est installé
 ```
 
-Relire `afficher` avant d'installer : les heures du bloc (6 h, 3 h 30, lundi
+Relire `afficher` avant d'installer : les heures du bloc (6 h 20, 3 h 30, lundi
 4 h 15) ne doivent pas tomber sur celles du legacy, qui partage le même CPU.
 
 `CRON.md` porte le détail et les justifications. L'extrait ci-dessous en donne
@@ -573,12 +598,14 @@ l'essentiel, **mis en forme pour la lecture** : cron arrête la commande à la f
 de la ligne, ne pas le copier tel quel.
 
 ```cron
-# Quotidien — 6 h. Une seule entrée : l'ordre est garanti par &&, et la purge du
-# cache n'a lieu que si tout ce qui précède a réussi.
-0 6 * * * cd /var/www/datan/current && sh -c 'APP_ENV=prod php bin/console app:sync:quotidien --no-ansi \
-  && APP_ENV=prod php bin/console app:import:commissions --no-ansi \
-  && APP_ENV=prod php bin/console app:calcul:statistiques-deputes --no-ansi \
-  && APP_ENV=prod php bin/console app:cache:rechauffer --no-ansi' >> var/log/sync-quotidien.log 2>&1
+# Quotidien — 6 h 20 (pas 6 h : fenêtre de maintenance CloudLinux, SIGHUP).
+# Sourde au SIGHUP ; statistiques et réchauffage (donc purge) même si le sync a
+# échoué — il n'acquitte alors pas son delta, que la prochaine exécution reprend.
+20 6 * * * cd /var/www/datan/current && trap '' HUP && { flock -n -E 75 var/sync.lock sh -c \
+  'APP_ENV=prod php bin/console app:sync:quotidien --no-ansi; s=$?; \
+   APP_ENV=prod php bin/console app:calcul:statistiques-deputes --no-ansi; c=$?; \
+   APP_ENV=prod php bin/console app:cache:rechauffer --no-ansi; r=$?; \
+   echo "BILAN sync=$s statistiques=$c rechauffage=$r"; [ $s -eq 0 ] && [ $c -eq 0 ] && [ $r -eq 0 ]'; } >> var/log/sync-quotidien.log 2>&1
 
 # Hebdomadaire — le seul appel à assemblee-nationale.fr, hors chaîne à dessein.
 15 4 * * 1 cd /var/www/datan/current && APP_ENV=prod php bin/console app:scraper:scrutins --no-ansi >> var/log/scraper-scrutins.log 2>&1
@@ -762,6 +789,8 @@ MATOMO_URL=
 
 IA_MODELE=
 ANTHROPIC_API_KEY=
+# Résumés d'amendements par lots (CRON.md §3) : défaut claude-haiku-5-5 si absent.
+IA_MODELE_RESUMES=claude-haiku-5-5
 
 # L'adresse publique telle que PHP la voit. Faute de quoi le réchauffage
 # remplit le cache sous une autre adresse que celle des visiteurs, sans erreur.

@@ -37,13 +37,21 @@ use Symfony\Component\Console\Style\SymfonyStyle;
  * formation (« Gouvernement Lecornu ii — Formé le 11 octobre 2025 »), et la
  * table `organe` ne les portait pas.
  *
- * Toujours en passe complète, jamais sur le delta de la moisson : lancée à la
- * main et rarement, elle raterait les fichiers des moissons intermédiaires —
- * chaque moisson écrase `.datan-modifies`. Elle n'écrit que des lignes
- * d'amendement déjà en base : celles que le dépôt connaît mais pas la table
- * sont comptées et rendues, à reprendre après `app:import:amendements`. Hors
- * `app:sync:quotidien`, comme tout ce chantier : à lancer sciemment après un
- * import d'amendements.
+ * Étape de `app:sync:quotidien`, juste après `app:import:amendements`. Elle en
+ * était absente jusqu'au 16/11 : lancée une fois à la main, elle laissait sans
+ * carte d'auteur tout amendement arrivé depuis — 24 795 en production, soit
+ * 1 297 scrutins de la 17e.
+ *
+ * Son périmètre est le delta de la moisson **plus** tout amendement du dépôt
+ * dont la table n'a pas encore d'auteur. Le second terme la rend convergente :
+ * un amendement qu'une exécution a manqué (ligne pas encore créée, chaîne
+ * interrompue) est repris à la suivante, et son premier passage rattrape seul
+ * l'arriéré, sans `--tout`. Le repérer ne coûte qu'une liste de répertoires :
+ * le nom de chaque fichier est l'uid de l'amendement.
+ *
+ * Elle n'écrit que des lignes d'amendement déjà en base : celles que le dépôt
+ * connaît mais pas la table sont comptées et rendues, à reprendre après
+ * `app:import:amendements`.
  */
 #[AsCommand(
     name: 'app:import:auteurs-amendements',
@@ -53,6 +61,10 @@ class ImportAuteursAmendementsCommand extends ImportTricoteusesCommand
 {
     /** Types d'auteur portés par un acteur ; tout autre type est gouvernemental. */
     private const TYPES_ACTEUR = ['Député', 'Rapporteur'];
+
+    private int $compteDelta = 0;
+
+    private int $compteSansAuteur = 0;
 
     public function __construct(
         Connection $connection,
@@ -70,6 +82,7 @@ class ImportAuteursAmendementsCommand extends ImportTricoteusesCommand
     {
         $io = new SymfonyStyle($input, $output);
         $chemin = $this->chemin($input);
+        $tout = (bool) $input->getOption('tout');
 
         $io->title('Auteurs des amendements');
 
@@ -88,7 +101,19 @@ class ImportAuteursAmendementsCommand extends ImportTricoteusesCommand
         $absents = 0;
         $lot = [];
 
-        foreach ($this->fichiers($chemin, '', tout: true) as $fichier) {
+        if ($tout || !$this->incremental($chemin, false)) {
+            $io->text('Passe complète du dépôt.');
+            $fichiers = $this->fichiers($chemin, '', tout: true);
+        } else {
+            $fichiers = $this->aTraiter($chemin);
+            $io->text(sprintf(
+                'Périmètre : %d fichiers du delta, %d amendements du dépôt encore sans auteur en base.',
+                $this->compteDelta,
+                $this->compteSansAuteur,
+            ));
+        }
+
+        foreach ($fichiers as $fichier) {
             $amendement = $this->lisJson($fichier);
             if ($amendement === null || !isset($amendement['uid'])) {
                 continue;
@@ -134,6 +159,42 @@ class ImportAuteursAmendementsCommand extends ImportTricoteusesCommand
         ));
 
         return Command::SUCCESS;
+    }
+
+    /**
+     * Le delta de la moisson, augmenté des amendements du dépôt que la table
+     * porte encore sans auteur. Établi avant tout traitement : on écrit dans
+     * la table qu'on interroge.
+     *
+     * @return list<string> chemins absolus, sans doublon
+     */
+    private function aTraiter(string $chemin): array
+    {
+        $fichiers = [];
+        foreach ($this->fichiers($chemin, '', tout: false) as $fichier) {
+            $fichiers[$fichier] = true;
+        }
+        $this->compteDelta = \count($fichiers);
+
+        $sansAuteur = array_flip($this->connection->fetchFirstColumn(
+            'SELECT amendement_id FROM amendement WHERE auteur_type IS NULL',
+        ));
+
+        // Un répertoire par texte, un fichier par amendement nommé de son uid.
+        $this->compteSansAuteur = 0;
+        foreach (scandir($chemin) ?: [] as $texte) {
+            if ($texte[0] === '.' || !is_dir($chemin . '/' . $texte)) {
+                continue;
+            }
+            foreach (scandir($chemin . '/' . $texte) ?: [] as $nom) {
+                if (str_ends_with($nom, '.json') && isset($sansAuteur[substr($nom, 0, -5)])) {
+                    $fichiers[$chemin . '/' . $texte . '/' . $nom] = true;
+                    ++$this->compteSansAuteur;
+                }
+            }
+        }
+
+        return array_keys($fichiers);
     }
 
     /**

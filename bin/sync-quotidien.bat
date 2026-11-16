@@ -22,13 +22,16 @@ echo ===== %DATE% %TIME% ===== >> "%JOURNAL%"
 php "%PROJET%\bin\console" app:sync:quotidien --no-ansi >> "%JOURNAL%" 2>&1
 set CODE=%ERRORLEVEL%
 
+REM Purge dans tous les cas : un sync qui echoue apres avoir importe des
+REM scrutins doit les montrer quand meme (app:sync:quotidien purge deja le
+REM cache HTTP des qu'une etape a ecrit ; ceci vide aussi cache.app). Le delta
+REM non acquitte sera repris par la prochaine execution.
+php "%PROJET%\bin\console" cache:pool:clear cache.app --no-ansi >> "%JOURNAL%" 2>&1
+rmdir /s /q "%PROJET%\var\cache\prod\http_cache" 2>nul
+
 if %CODE% NEQ 0 (
   echo ECHEC ^(code %CODE%^) >> "%JOURNAL%"
 ) else (
-  REM Les pages sont mises en cache une heure ; on repart d'un cache propre
-  REM pour que les nouveaux scrutins soient visibles immediatement.
-  php "%PROJET%\bin\console" cache:pool:clear cache.app --no-ansi >> "%JOURNAL%" 2>&1
-  rmdir /s /q "%PROJET%\var\cache\prod\http_cache" 2>nul
   echo Termine >> "%JOURNAL%"
 )
 

@@ -22,6 +22,11 @@ use Symfony\Component\Console\Style\SymfonyStyle;
  *   voteId <TAB> organeRef <TAB> nombreMembresGroupe <TAB> positionMajoritaire
  *   <TAB> nombrePours <TAB> nombreContres <TAB> nombreAbstentions
  *   <TAB> nonVotants <TAB> nonVotantsVolontaires
+ *
+ * Reprise des ventilations MODEM que l'open data a perdues sur sept scrutins de
+ * la 15e (cf. {@see ImportVotesCommand}) : requête d'export
+ * `bin/recuperation/legacy/votes_groupes_l15_modem.sql` (7 lignes, sans
+ * en-tête), rejouée par `app:recuperation:legacy`.
  */
 #[AsCommand(
     name: 'app:import:vote-groupes',

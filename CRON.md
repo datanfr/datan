@@ -13,42 +13,54 @@ absentes de ce fichier ne se planifient pas — la liste du §4 dit pourquoi.
    exploitable. Après coup, on ne vide que le cache HTTP, par
    `app:cache:rechauffer` — pas plus.
 3. **Enchaîner, pas juxtaposer.** Les étapes qui suivent le sync dépendent de ce
-   qu'il vient d'écrire : elles se chaînent en `&&` dans la même entrée, sinon
-   une journée chargée les fait démarrer avant la fin du sync.
+   qu'il vient d'écrire : elles se suivent dans la même entrée, sinon une
+   journée chargée les fait démarrer avant la fin du sync. Par `;` et non par
+   `&&` : une synchronisation qui a écrit doit purger, même en échec.
 
-## 1. Quotidien — 6 h
+## 1. Quotidien — 6 h 20
 
-Les Tricoteuses remoissonnent l'open data de l'Assemblée dans la nuit : à 6 h la
-source est fraîche, et la base est à jour au réveil.
+Les Tricoteuses remoissonnent l'open data de l'Assemblée dans la nuit : à 6 h 20
+la source est fraîche, et la base est à jour au réveil. Pas à 6 h pile : c'est
+la fenêtre où CloudLinux regénère la configuration PHP du compte, et où cinq
+synchronisations sur vingt ont reçu un SIGHUP entre le 27/10 et le 15/11.
 
 | Commande | Rôle | Durée |
 | --- | --- | --- |
-| `app:sync:quotidien` | Moisson + 11 étapes d'import, dans l'ordre des dépendances | ~50 s à vide |
-| `app:import:commissions` | Mandats COMPER (25 000 lignes) — hors chaîne, mais lit le **même delta** | quelques s |
+| `app:sync:quotidien` | Moisson + 13 étapes d'import, dans l'ordre des dépendances ; acquitte le delta si toutes réussissent, purge le cache HTTP dès qu'une étape a écrit | ~5 min en production |
 | `app:calcul:statistiques-deputes` | Participation, loyauté, proximité par groupe de la fiche député | ~15 s |
-| `app:cache:rechauffer` | Vide le cache HTTP puis y remet les ~2 500 pages les plus lues (accueil, listes, députés en exercice, groupes, partis, départements, élections, blog, scrutins décryptés ; pas les communes). Les pages restent en cache un jour : c'est cette purge qui rend les nouveaux scrutins visibles, et le réchauffage qui évite au premier visiteur d'attendre le rendu (0,3 à 1,7 s au lieu de ~30 ms) | ~15 min |
+| `app:cache:rechauffer` | Vide le cache HTTP puis y remet les ~2 500 pages les plus lues (accueil, listes, députés en exercice, groupes, partis, départements, élections, blog, scrutins décryptés ; pas les communes). Les pages restent en cache un jour : c'est cette purge qui rend les nouveaux scrutins visibles, et le réchauffage qui évite au premier visiteur d'attendre le rendu (0,3 à 1,7 s au lieu de ~30 ms) | ~6 min |
 
 `app:sync:quotidien` déroule lui-même, dans cet ordre : moisson des dépôts,
-acteurs, organes hors table dédiée, profils sociaux, photos, **détourage des
-photos**, dossiers, amendements, scrutins, comptes rendus, rattachement
-scrutin → amendement, classements. Rien à planifier séparément là-dedans.
+acteurs, organes hors table dédiée, commissions, profils sociaux, photos,
+**détourage des photos**, dossiers, amendements, auteurs des amendements,
+scrutins (avec contrôle du dépôt entier contre la base), comptes rendus,
+rattachement scrutin → amendement, classements. Rien à planifier séparément
+là-dedans.
+
+**Le delta n'est consommé qu'une fois importé.** Chaque dépôt porte
+`.datan-acquitte`, le commit que la dernière chaîne entièrement réussie a
+importé ; la moisson écrit dans `.datan-modifies` tout ce qui a changé depuis.
+Une chaîne interrompue n'acquitte rien, et la suivante reprend son delta avec
+le sien (« N fichiers à importer, en attente depuis <commit> » dans le tableau
+de la moisson). C'est pourquoi toute commande qui lit le delta doit être une
+étape de la chaîne : `app:import:commissions`, longtemps lancée après, y est
+entrée.
 
 Le détourage suit la publication des photos parce qu'il en dépend : il ne
 retraite que ce que l'étape précédente vient d'écrire, et coûte le temps d'un
 `filemtime()` par portrait déjà fait. Un premier passage sur les 647 portraits
 prend 12 s.
 
-Les deux commandes qui la suivent **ne sont pas dans la chaîne à dessein** —
-ce sont des précalculs qu'on lance sciemment — mais elles se périment dès qu'un
-scrutin entre : un nouveau vote décale participation, loyauté et proximité,
-et un changement de commission ne se voit pas sans le second import. Leur place
-est donc juste après le sync, dans la même entrée.
+`app:calcul:statistiques-deputes` **n'est pas dans la chaîne à dessein** —
+c'est un précalcul qu'on lance sciemment — mais il se périme dès qu'un scrutin
+entre : un nouveau vote décale participation, loyauté et proximité. Sa place est
+donc juste après le sync, dans la même entrée.
 
 ### Windows (poste de travail)
 
 Déjà outillé : `bin\sync-quotidien.bat` (pose `APP_ENV=prod`, journalise dans
-`var\log\sync-quotidien.log`, purge le cache si et seulement si le sync a
-réussi), enregistré par
+`var\log\sync-quotidien.log`, purge le cache que le sync ait réussi ou non),
+enregistré par
 
 ```powershell
 pwsh -File bin\planifier-sync.ps1                # tous les jours à 06:00
@@ -59,8 +71,7 @@ Start-ScheduledTask -TaskName datan-sync-quotidien   # exécution immédiate, po
 
 La tâche rattrape les exécutions manquées (machine éteinte) et se coupe au bout
 de 2 h. **`bin\sync-quotidien.bat` ne lance encore que `app:sync:quotidien`** :
-les deux lignes du tableau ci-dessus sont à y ajouter le jour où on les
-planifie.
+les statistiques et le réchauffage sont à y ajouter le jour où on les planifie.
 
 ### Serveur (crontab)
 
@@ -73,12 +84,16 @@ lecture — **cron arrête la commande à la fin de la ligne**, la continuation 
 antislash n'est pas garantie d'une implémentation à l'autre.
 
 ```cron
-# Mise à jour quotidienne — 6 h. Une seule entrée : l'ordre est garanti par &&,
-# et la purge du cache n'a lieu que si tout ce qui précède a réussi.
-0 6 * * * cd /var/www/datan && sh -c 'APP_ENV=prod php bin/console app:sync:quotidien --no-ansi \
-  && APP_ENV=prod php bin/console app:import:commissions --no-ansi \
-  && APP_ENV=prod php bin/console app:calcul:statistiques-deputes --no-ansi \
-  && APP_ENV=prod php bin/console app:cache:rechauffer --no-ansi' >> var/log/sync-quotidien.log 2>&1
+# Mise à jour quotidienne — 6 h 20. Une seule entrée, sourde au SIGHUP ; les trois
+# commandes s'enchaînent dans l'ordre et le réchauffage (donc la purge) a lieu
+# même si le sync a échoué. Un verrou pris se journalise « SAUTE », pas « ECHEC ».
+20 6 * * * cd /var/www/datan && trap '' HUP && { echo "===== $(date) ====="; \
+  flock -n -E 75 var/sync.lock sh -c 'APP_ENV=prod php bin/console app:sync:quotidien --no-ansi; s=$?; \
+  APP_ENV=prod php bin/console app:calcul:statistiques-deputes --no-ansi; c=$?; \
+  APP_ENV=prod php bin/console app:cache:rechauffer --no-ansi; r=$?; \
+  echo "BILAN sync=$s statistiques=$c rechauffage=$r"; [ $s -eq 0 ] && [ $c -eq 0 ] && [ $r -eq 0 ]'; \
+  e=$?; if [ $e -eq 75 ]; then echo "SAUTE : verrou pris"; elif [ $e -ne 0 ]; then echo "ECHEC (code $e)"; fi; \
+  echo "===== fin $(date) ====="; } >> var/log/sync-quotidien.log 2>&1
 ```
 
 ### Newsletter — 5 h 30
@@ -105,7 +120,32 @@ c'est le seul appel à `assemblee-nationale.fr`, il mérite d'être lancé sciem
 
 | Commande | Rythme conseillé | Condition |
 | --- | --- | --- |
-| `app:ia:resumes-amendements` | quotidien, après le sync | **Pas avant le choix d'`IA_MODELE` de production.** La garde « jamais écraser un résumé existant » fait qu'un lot passé au modèle d'essai local bloquerait pour toujours un lot plus propre. Options : `--jours=30 --limite=50` par défaut. Chaque exécution appelle un modèle (local ou facturé). |
+| `app:ia:resumes-amendements:soumettre --taille=100` | toutes les 6 h | **Le jour de la bascule, pas avant** (ci-dessous). Soumet à l'API de lots d'Anthropic les amendements mis aux voix sans résumé ; `--simulation` montre la requête sans clé ni envoi. Demande `ANTHROPIC_API_KEY` ; modèle `IA_MODELE_RESUMES` (`claude-haiku-5-5`). |
+| `app:ia:resumes-amendements:traiter` | toutes les heures, sous `flock` | Même condition. Intègre les lots terminés (24 h au plus), rapproche les mots-clés inconnus en une requête, purge le cache HTTP si un résumé est écrit. Sans lot terminé, aucun appel facturé. |
+| `app:ia:tags:nettoyer` | jamais planifié | Une fois après `app:import:resumes-amendements`, puis quand le vocabulaire a dérivé. Simulation par défaut, `--appliquer` pour écrire, `--sans-appel` pour voir le découpage sans clé. ~2,5 centimes pour tout le vocabulaire repris. |
+
+**Bascule des résumés d'amendements.** Le legacy fait tourner sur le même
+compte deux crons horaires, `generate_amendements_ia_submit_batch.php` (:00) et
+`generate_amendements_ia_process_batch.php` (:15). Les deux chaînes ne doivent
+jamais soumettre en même temps — chacune paierait les amendements que l'autre
+n'a pas encore écrits dans **sa** base :
+
+1. commenter les **deux** lignes du legacy. Relevé le 15/11/2026 : sa chaîne est
+   à l'arrêt depuis le 13/09 — chaque soumission échoue sur « credit balance is
+   too low », le dernier lot date du 13/09 et le traitement rend « 0 amendement
+   mis à jour » toutes les heures. Si elle a été relancée entre-temps (crédit
+   rechargé), couper d'abord la soumission et laisser le traitement vider les
+   lots en vol avant de couper la seconde ligne ;
+2. ne pas attendre que `anthropic_batch_items` n'ait plus de `pending` : 161
+   éléments y sont bloqués dans un lot qui ne se traitera plus. Sans résumé en
+   base, ces amendements seront simplement soumis par le port ;
+3. exporter `amendements_ia` et `amendements_tags` (requêtes dans le docblock
+   d'`ImportResumesAmendementsCommand`), lancer `app:import:resumes-amendements`
+   puis `app:ia:tags:nettoyer` (simulation, puis `--appliquer`) ;
+4. décommenter les deux lignes de `bin/crontab.prod`, `bin/cron.sh installer`.
+
+L'import ne réécrit rien d'existant : si l'étape 3 doit être rejouée, elle peut
+l'être.
 | `app:moissonner:bluesky --ecrire` | mensuel, ou après une vague d'arrivées | Interroge l'API publique de Bluesky. Ne touche que les députés **sans** poignée et n'écrit que les correspondances franches ; les autres candidats sont listés pour relecture. Sans `--ecrire`, elle ne fait que proposer. |
 | `app:sync:quotidien --tout` | jamais planifié | Reconstruction complète (tous les dépôts, pas le delta). À la main, après un changement de schéma ou un import douteux. |
 
@@ -121,6 +161,7 @@ n'a sa place dans une tâche planifiée.
   `app:import:circonscriptions` — référentiels figés : un scrutin passé ne change
   plus, une commune non plus.
 - `app:import:utilisateurs`, `app:import:explications`, `app:import:articles`,
+  `app:import:resumes-amendements`,
   `app:import:faq`, `app:import:quiz`, `app:import:parrainages`,
   `app:import:reseaux-sociaux`, `app:import:decryptages`, `app:import:newsletter`
   — contenu éditorial, comptes et abonnés, données de production non
@@ -157,11 +198,19 @@ n'a sa place dans une tâche planifiée.
 
 ## Surveiller
 
-- Journal : `var/log/sync-quotidien.log` — une ligne `===== date =====` par
-  exécution, `ECHEC (code N)` en cas de sortie non nulle. Le sync s'arrête à la
-  première étape en échec et n'exécute pas la suite (donc pas de purge de cache,
-  donc les pages servies restent celles de la veille : cohérentes, pas
-  incomplètes).
+- Journal : `var/log/sync-quotidien.log` — `===== date =====` et
+  `===== fin date =====` encadrent chaque exécution, chaque étape porte son heure
+  de début (heure de Paris), `BILAN sync=… statistiques=… rechauffage=…` donne
+  les trois codes, `ECHEC (code N)` une sortie non nulle, `SAUTE` un verrou
+  pris. Le sync s'arrête à la première étape en échec, n'acquitte rien — la
+  prochaine exécution reprend le delta — et purge quand même le cache HTTP si
+  une étape a écrit.
+- À chercher après un incident : `Hangup` (signal reçu), `MySQL server has gone
+  away` (connexion perdue ; l'étape est retentée une fois), `en attente depuis`
+  dans le tableau de la moisson (une chaîne précédente a échoué, son delta est
+  repris), `Contrôle en échec` (un scrutin du dépôt manque à la base après
+  rattrapage : la commande sort en 1), `Source incomplète` (l'open data ventile
+  moins de voix qu'il n'en annonce — à reprendre du legacy).
 - Un import qui écarte des lignes en rend le compte à l'unité. Un écart qui
   grandit d'un jour à l'autre est le signe d'une règle devenue fausse, pas d'une
   source incomplète.

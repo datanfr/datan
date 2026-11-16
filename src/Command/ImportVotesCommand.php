@@ -22,6 +22,17 @@ use Symfony\Component\Console\Style\SymfonyStyle;
  *
  * Format attendu (TSV, sans en-tête) :
  *   mpId <TAB> voteId <TAB> position <TAB> voteType <TAB> causePosition <TAB> parDelegation
+ *
+ * **Sert encore à combler ce que l'open data a perdu.** L'Assemblée republie
+ * aujourd'hui sept scrutins de la 15e sans le bloc du groupe MODEM (PO730970) —
+ * 2418, 2744, 2751, 2752, 2761, 2762, 2766 : 234 votes que le legacy, moissonné
+ * à l'époque, a gardés (cf. l'avertissement « Source incomplète »
+ * d'`app:import:scrutins`). Requête d'export : `bin/recuperation/legacy/votes_l15_modem.sql`
+ * (3 019 lignes, sans en-tête), jouée par `bin/recuperation/exporter-legacy.sh`
+ * et rejouée par `app:recuperation:legacy`, qui n'appelle cette commande
+ * qu'avec `--file`.
+ *
+ * Jamais `--truncate` pour une reprise ciblée : il vide la table entière.
  */
 #[AsCommand(
     name: 'app:import:votes',
@@ -96,7 +107,14 @@ class ImportVotesCommand extends Command
         $start = microtime(true);
 
         // Chargement de masse : les contrôles sont rétablis juste après.
-        $this->connection->executeStatement('SET unique_checks = 0');
+        //
+        // Surtout PAS `unique_checks = 0` : InnoDB cesse alors de vérifier
+        // l'index unique (depute_id, scrutin_id, vote_type), si bien que
+        // l'`ON DUPLICATE KEY UPDATE` ne se déclenche plus et que la ligne est
+        // insérée une seconde fois. Essayé le 16/11 sur un scrutin déjà en
+        // base : 186 lignes relues, 91 doublons créés. Sans conséquence sur
+        // une table vide (le premier chargement), mais toute reprise ciblée
+        // — celle des votes MODEM de la 15e en est une — doublerait des votes.
         $this->connection->executeStatement('SET foreign_key_checks = 0');
         $this->connection->beginTransaction();
 

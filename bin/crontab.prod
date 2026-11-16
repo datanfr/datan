@@ -52,25 +52,38 @@
 # seconde exécution lancée depuis la nouvelle.
 # ---------------------------------------------------------------------------
 
-# --- Quotidien — 6 h -------------------------------------------------------
-# Les Tricoteuses remoissonnent l'open data de l'Assemblée dans la nuit : à 6 h
-# la source est fraîche et la base est à jour au réveil. ~50 s à vide, quelques
-# minutes un lendemain de séance.
+# --- Quotidien — 6 h 20 ----------------------------------------------------
+# Les Tricoteuses remoissonnent l'open data de l'Assemblée dans la nuit (leur
+# dernière moisson nocturne tombe vers 1 h) : à 6 h 20 la source est fraîche et
+# la base est à jour au réveil. ~5 min en production, davantage un lendemain de
+# séance.
 #
-# `app:import:commissions` et `app:calcul:statistiques-deputes` ne sont pas dans
-# la chaîne du sync à dessein — ce sont des précalculs qu'on lance sciemment —,
-# mais ils se périment dès qu'un scrutin entre. Leur place est ici.
+# **Pas à 6 h pile.** Du 27/10 au 15/11, cinq exécutions sur vingt ont été tuées
+# par un SIGHUP dans les minutes qui suivent 6 h, la fenêtre où CloudLinux
+# regénère la configuration du sélecteur PHP (php-selecteur.log : 06:03 à
+# 06:08) ; le 12/11, le réchauffage y a perdu l'extension dom. `trap '' HUP`
+# rend la chaîne sourde à ce signal, qu'une tâche sans terminal n'a aucune
+# raison de recevoir ; l'heure décalée l'écarte de la fenêtre.
 #
-# `app:cache:rechauffer` ferme la marche : il vide le cache HTTP, puis y remet
-# les ~2 500 pages les plus lues (une quinzaine de minutes), pour qu'aucun
-# visiteur n'attende le premier rendu. Les pages restent en cache un jour : ce
-# sont cette purge et celles des publications qui les tiennent à jour.
+# `app:import:commissions` est désormais une étape d'`app:sync:quotidien` : elle
+# lit le delta de la moisson, qui n'est acquitté qu'à la fin de la chaîne.
+# `app:calcul:statistiques-deputes` reste ici — c'est un précalcul, qui se
+# périme dès qu'un scrutin entre.
 #
-# `flock -n` : deux syncs qui se croisent écrivent les mêmes tables ; on
-# abandonne au lieu d'empiler. Le nom `app:sync:quotidien` reste visible dans
-# `ps`, dont le workflow de déploiement se sert pour refuser de vider le cache
-# sous une moisson en cours.
-0 6 * * * cd @COURANT@ && { echo "===== $(date) ====="; flock -n @PARTAGE@/var/sync.lock sh -c 'APP_ENV=prod @PHP@ bin/console app:sync:quotidien --no-ansi && APP_ENV=prod @PHP@ bin/console app:import:commissions --no-ansi && APP_ENV=prod @PHP@ bin/console app:calcul:statistiques-deputes --no-ansi && APP_ENV=prod @PHP@ bin/console app:cache:rechauffer --no-ansi' || echo "ECHEC (code $?) ou execution concurrente"; } >> var/log/sync-quotidien.log 2>&1
+# Les trois commandes s'enchaînent par `;` et non par `&&` : **une
+# synchronisation qui a écrit doit purger**, qu'elle ait réussi ou non. Avec
+# `&&`, un sync tombé après l'import des scrutins (30/10, 10/11, 13/11, 14/11)
+# laissait en cache pour un jour des pages qui ne les montraient pas.
+# `app:sync:quotidien` purge déjà lui-même dès qu'une étape a écrit ;
+# `app:cache:rechauffer` remet ensuite les ~2 500 pages les plus lues en cache.
+# La ligne BILAN dit le code de sortie de chacune.
+#
+# `flock -n -E 75` : deux syncs qui se croisent écrivent les mêmes tables ; on
+# abandonne au lieu d'empiler, et le journal le dit (« SAUTE ») au lieu de le
+# confondre avec un échec. Le nom `app:sync:quotidien` reste visible dans `ps`,
+# dont le workflow de déploiement se sert pour refuser de vider le cache sous
+# une moisson en cours.
+20 6 * * * cd @COURANT@ && trap '' HUP && { echo "===== $(date) ====="; flock -n -E 75 @PARTAGE@/var/sync.lock sh -c 'APP_ENV=prod @PHP@ bin/console app:sync:quotidien --no-ansi; s=$?; APP_ENV=prod @PHP@ bin/console app:calcul:statistiques-deputes --no-ansi; c=$?; APP_ENV=prod @PHP@ bin/console app:cache:rechauffer --no-ansi; r=$?; echo "BILAN sync=$s statistiques=$c rechauffage=$r"; [ $s -eq 0 ] && [ $c -eq 0 ] && [ $r -eq 0 ]'; e=$?; if [ $e -eq 75 ]; then echo "SAUTE : verrou pris, une synchronisation tourne encore"; elif [ $e -ne 0 ]; then echo "ECHEC (code $e)"; fi; echo "===== fin $(date) ====="; } >> var/log/sync-quotidien.log 2>&1
 
 # --- Configuration PHP — chaque minute -------------------------------------
 # Le compte est en 7.4 (datan.fr) et nous en 8.4 : la configuration du
@@ -141,11 +154,22 @@
 # À décommenter le moment venu — pas avant, et pas sans lire pourquoi.
 # ---------------------------------------------------------------------------
 
-# Résumés d'amendements par IA. **Pas avant le choix d'`IA_MODELE` de
-# production** : la garde « jamais écraser un résumé existant » fait qu'un lot
-# passé au modèle d'essai bloquerait pour toujours un lot plus propre. Chaque
-# exécution appelle un modèle (local ou facturé).
-#45 6 * * * cd @COURANT@ && APP_ENV=prod @PHP@ bin/console app:ia:resumes-amendements --jours=30 --limite=50 --no-ansi >> var/log/resumes-ia.log 2>&1
+# Résumés d'amendements par lots (API de lots d'Anthropic, Haiku 5.5). **Le
+# jour de la bascule, et pas avant** : tant que les deux crons du legacy
+# (`generate_amendements_ia_submit_batch.php` à :00,
+# `…_process_batch.php` à :15) tournent, les deux chaînes paieraient les mêmes
+# amendements. Ordre : couper la soumission du legacy, laisser son traitement
+# vider ses lots en attente, exporter puis `app:import:resumes-amendements`,
+# et seulement alors décommenter ces deux lignes (`CRON.md` §3).
+#
+# Soumission toutes les six heures, 100 amendements : la capacité du legacy
+# (20 par heure), en quatre fois moins de lots — donc quatre fois moins de
+# requêtes de rapprochement des mots-clés, et un cache de consignes mieux
+# partagé dans chaque lot. Traitement chaque heure : sans lot terminé, il ne
+# fait qu'interroger l'état des lots, gratuitement. `flock` : deux traitements
+# simultanés intégreraient le même lot. Demande ANTHROPIC_API_KEY.
+#0 */6 * * * cd @COURANT@ && APP_ENV=prod @PHP@ bin/console app:ia:resumes-amendements:soumettre --taille=100 --no-ansi >> var/log/resumes-ia.log 2>&1
+#30 * * * * cd @COURANT@ && flock -n @PARTAGE@/var/resumes-ia.lock env APP_ENV=prod @PHP@ bin/console app:ia:resumes-amendements:traiter --no-ansi >> var/log/resumes-ia.log 2>&1
 
 # Poignées Bluesky des députés : n'écrit que les correspondances franches, et
 # seulement pour ceux qui n'en ont pas. Mensuel suffit — après une vague
@@ -166,7 +190,7 @@
 
 # ---------------------------------------------------------------------------
 # Ce qui n'entre JAMAIS ici : les imports de récupération
-# (`app:import:utilisateurs`, `:newsletter`, `:decryptages`, `:articles`, `:explications`,
+# (`app:import:utilisateurs`, `:newsletter`, `:decryptages`, `:articles`, `:explications`, `:resumes-amendements`,
 # `:professions-foi`, `:faq`, `:quiz`, `:parrainages`, `:reseaux-sociaux`,
 # `:communes`, `:elections`, `:resultats-electoraux`, `:circonscriptions`).
 # Ils réalignent sur la base d'origine : une fois l'application devenue la
