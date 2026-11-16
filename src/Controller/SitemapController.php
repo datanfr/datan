@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Groupe\AdresseGroupe;
 use App\Http\RechauffeurCache;
 use App\Legislature;
 use App\Territoire\SeuilCommunes;
@@ -466,9 +467,12 @@ class SitemapController extends AbstractController
     private function adressesGroupes(bool $actifs): array
     {
         // Le sigle seul ne désigne pas un groupe : « LR » existe à la 15e, à la
-        // 16e et à la 17e législature. C'est le couple qui fait l'adresse.
+        // 16e et à la 17e législature. C'est le couple qui fait l'adresse — et
+        // pas même toujours : deux groupes de la 17e portent « UDR », et
+        // l'ancien, dissous, a pour adresse `udr-po847173` (cf. AdresseGroupe).
+        // Annoncer `udr` pour lui promettrait la page de son successeur.
         $groupes = $this->connection->fetchAllAssociative(
-            'SELECT g.legislature, LOWER(g.libelle_abrev) AS abrev
+            'SELECT g.legislature, ' . AdresseGroupe::SQL . ' AS abrev
              FROM groupe g
              WHERE g.legislature BETWEEN :premiere AND :courante
                AND ' . ($actifs ? '' : 'NOT ') . '(g.date_fin IS NULL AND g.legislature = :courante)

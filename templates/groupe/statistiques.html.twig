@@ -8,7 +8,7 @@
    maladroite mais qui est celle du site. #}
 {% set titre_groupe = non_inscrits ? 'Députés non inscrits' : nom_groupe %}
 {% set couleur = groupe.couleur ?: '#00668e' %}
-{% set lien_page = path('groupe_statistiques', {legislature: groupe.legislature, abrev: groupe.libelle_abrev|lower}) %}
+{% set lien_page = path('groupe_statistiques', {legislature: groupe.legislature, abrev: groupe.libelle_abrev|adresse_groupe(groupe.id ?? null)}) %}
 {% set legislature_edito %}{{ groupe.legislature }}<sup>ème</sup> législature ({{ bornes.debut }} - {% if bornes.fin %}{{ bornes.fin }}{% else %}<i>en cours</i>{% endif %}){% endset %}
 
 {% block title %}{{ non_inscrits ? 'Députés non incrits - Statistiques' : 'Statistiques du groupe ' ~ nom_groupe }} - Datan{% endblock %}
@@ -29,7 +29,7 @@
     </div>
     <div class="col-md-10 col-lg-8 offset-md-1 offset-lg-0 pl-lg-5">
       <div class="d-none d-lg-block btn-back mt-4">
-        <a class="btn btn-outline-primary mx-2" href="{{ path('groupe_individual', {legislature: groupe.legislature, abrev: groupe.libelle_abrev|lower}) }}">{{ include('groupe/partials/fleche_retour.html.twig') }}Retour profil</a>
+        <a class="btn btn-outline-primary mx-2" href="{{ path('groupe_individual', {legislature: groupe.legislature, abrev: groupe.libelle_abrev|adresse_groupe(groupe.id ?? null)}) }}">{{ include('groupe/partials/fleche_retour.html.twig') }}Retour profil</a>
       </div>
 
       <div class="title my-4">
@@ -229,7 +229,7 @@
               <tbody>
                 {% for incarnation in famille %}
                   <tr>
-                    <th scope="row"><a class="no-decoration underline" href="{{ path('groupe_individual', {legislature: incarnation.legislature, abrev: incarnation.libelle_abrev|lower}) }}">{{ incarnation.libelle|name_group }} ({{ incarnation.libelle_abrev }})</a></th>
+                    <th scope="row"><a class="no-decoration underline" href="{{ path('groupe_individual', {legislature: incarnation.legislature, abrev: incarnation.libelle_abrev|adresse_groupe(incarnation.id ?? null)}) }}">{{ incarnation.libelle|name_group }} ({{ incarnation.libelle_abrev }})</a></th>
                     <td class="text-center">{{ incarnation.legislature }}</td>
                     <td class="text-center">{{ incarnation.date_debut|date('Y') }} - {% if incarnation.date_fin %}{{ incarnation.date_fin|date('Y') }}{% else %}<i>En cours</i>{% endif %}</td>
                   </tr>

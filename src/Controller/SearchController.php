@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Groupe\AdresseGroupe;
 use App\Legislature;
 use Doctrine\DBAL\Connection;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -200,7 +201,7 @@ class SearchController extends AbstractController
                     CONCAT(g.libelle, ' (', g.libelle_abrev, ')') AS title,
                     CONCAT(g.libelle, ' (', g.libelle_abrev, ')') AS title_search,
                     CONCAT('Législature ', g.legislature) AS description,
-                    CONCAT('groupes/legislature-', g.legislature, '/', LOWER(g.libelle_abrev)) AS url
+                    CONCAT('groupes/legislature-', g.legislature, '/', " . AdresseGroupe::SQL . ") AS url
              FROM groupe g
              WHERE g.legislature >= " . $premiere . " AND (g.libelle LIKE ? OR g.libelle_abrev LIKE ?)
              ORDER BY g.date_debut DESC" . $limite,

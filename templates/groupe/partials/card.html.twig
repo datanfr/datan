@@ -14,8 +14,8 @@
     <h3 class="d-block card-title">
       {# Quelques sigles anciens (UDI_I) sortent du format accepté par la route
          de la page de groupe : leur fiche n'est pas atteignable, on n'y renvoie pas. #}
-      {% if groupe.libelle_abrev|lower matches '/^[a-z0-9\\-&]+$/' %}
-        <a href="{{ path('groupe_individual', {legislature: groupe.legislature, abrev: groupe.libelle_abrev|lower}) }}" class="stretched-link no-decoration">{{ groupe.libelle|name_group }}</a>
+      {% if groupe.libelle_abrev|adresse_groupe(groupe.id ?? null) matches '/^[a-z0-9\\-&]+$/' %}
+        <a href="{{ path('groupe_individual', {legislature: groupe.legislature, abrev: groupe.libelle_abrev|adresse_groupe(groupe.id ?? null)}) }}" class="stretched-link no-decoration">{{ groupe.libelle|name_group }}</a>
       {% else %}
         {{ groupe.libelle|name_group }}
       {% endif %}
@@ -30,7 +30,7 @@
   </div>
   {% if cat is defined and cat %}
     <div class="mb-3">
-      <a class="btn btn-cat btn-primary stretched-link" href="{{ path('groupe_individual', {legislature: groupe.legislature, abrev: groupe.libelle_abrev|lower}) }}" role="button">Découvrez son activité</a>
+      <a class="btn btn-cat btn-primary stretched-link" href="{{ path('groupe_individual', {legislature: groupe.legislature, abrev: groupe.libelle_abrev|adresse_groupe(groupe.id ?? null)}) }}" role="button">Découvrez son activité</a>
     </div>
   {% elseif actifs %}
     <div class="card-footer d-flex justify-content-center align-items-center">

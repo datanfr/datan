@@ -30,6 +30,23 @@ class SoutienGouvernement
     /** Groupes du bloc gouvernemental, liste éditoriale reprise de `groupes_majo()`. */
     public const MAJORITE = ['EPR', 'DEM', 'HOR', 'DR'];
 
+    /**
+     * Projets de loi écartés du décompte, par décision de la rédaction.
+     *
+     * `DLR5L16N49868`, le projet de loi de simplification de la vie
+     * économique : les députés macronistes ont voté contre le texte de leur
+     * propre gouvernement (Le Monde, 16 juin 2025), et le compter ferait lire
+     * une défiance là où il n'y en a pas. Le site l'écarte en dur
+     * (`vd.dossierId != "DLR5L16N49868"`, `classGroups()` de daily.php), ce qui
+     * retire ses deux scrutins finaux de la 17e (n° 2458 et 6184). Sans cette
+     * exclusion, l'accueil annonçait 36 votes sur des projets de loi du
+     * Gouvernement quand datan.fr en annonce 34 — l'écart n'avait rien à voir
+     * avec le lien scrutin → dossier, que les deux sites établissent ici à
+     * l'identique (36 scrutins finaux sur un projet de loi de part et
+     * d'autre).
+     */
+    public const DOSSIERS_EXCLUS = ['DLR5L16N49868'];
+
     public function __construct(private readonly Connection $connection)
     {
     }
@@ -58,6 +75,7 @@ class SoutienGouvernement
              JOIN dossier d ON d.id = s.dossier_id
              WHERE g.legislature = :legislature AND g.libelle_abrev <> :ni
                AND s.nature_vote = :finale AND d.procedure_code IN (:procedures)
+               AND d.dossier_id NOT IN (:exclus)
              GROUP BY g.id, g.uid, g.libelle, g.libelle_abrev, g.couleur, g.date_fin',
             [
                 'legislature' => $legislature,
@@ -65,8 +83,9 @@ class SoutienGouvernement
                 'pour' => self::POSITION_POUR,
                 'finale' => NatureVote::FINALE,
                 'procedures' => Dossier::PROCEDURES_GOUVERNEMENT,
+                'exclus' => self::DOSSIERS_EXCLUS,
             ],
-            ['procedures' => ArrayParameterType::INTEGER],
+            ['procedures' => ArrayParameterType::INTEGER, 'exclus' => ArrayParameterType::STRING],
         );
 
         foreach ($lignes as $i => $ligne) {

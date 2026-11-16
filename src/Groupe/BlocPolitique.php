@@ -34,8 +34,9 @@ final class BlocPolitique
     /**
      * Répartit des sigles par bloc, en ne gardant que les blocs représentés.
      *
-     * Chaque bloc est rendu avec sa préposition élidée — « de gauche », mais
-     * « d'extrême droite » — pour que la phrase se lise sans retouche.
+     * Chaque bloc est rendu avec sa préposition — « de gauche », « du bloc
+     * central », « d'extrême droite » — pour que la phrase se lise sans
+     * retouche.
      *
      * @param list<string> $sigles
      *
@@ -60,9 +61,19 @@ final class BlocPolitique
         return $repartition;
     }
 
-    /** « de gauche », mais « d'extrême droite » : la préposition suit l'initiale. */
+    /**
+     * « de gauche », mais « d'extrême droite » : la préposition suit l'initiale.
+     *
+     * Le bloc central fait exception : c'est un nom et non un adjectif, et le
+     * site écrit « du bloc central » (`$categories` de
+     * `Groupes_edito::coalitions()`) — « de bloc central » ne se dit pas.
+     */
     private static function preposition(string $bloc): string
     {
+        if ($bloc === 'bloc central') {
+            return 'du ';
+        }
+
         $voyelle = \in_array(mb_substr($bloc, 0, 1), ['a', 'e', 'é', 'ê', 'i', 'o', 'u', 'y'], true);
 
         return $voyelle ? "d'" : 'de ';

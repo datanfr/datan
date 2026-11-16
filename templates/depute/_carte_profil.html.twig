@@ -29,7 +29,7 @@
       <{{ balise_titre }} class="title d-block text-center">{{ nom_complet }}</{{ balise_titre }}>
       {% if depute.groupe_libelle %}
         <div class="link-group text-center mt-1">
-          <a href="{{ path('groupe_individual', {legislature: legislature_carte, abrev: depute.groupe_abrev|lower}) }}"
+          <a href="{{ path('groupe_individual', {legislature: legislature_carte, abrev: depute.groupe_abrev|adresse_groupe(depute.groupe_id ?? null)}) }}"
              style="color: {{ depute.groupe_couleur }}; --color-group: {{ depute.groupe_couleur }}">
             {{ depute.groupe_libelle|name_group }}
           </a>

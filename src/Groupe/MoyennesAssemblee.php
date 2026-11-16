@@ -56,8 +56,10 @@ final class MoyennesAssemblee
         $moyenne = $this->connection->fetchOne(
             'SELECT AVG(TIMESTAMPDIFF(YEAR, d.date_naissance, ' . ($date === null ? 'CURRENT_DATE' : ':date') . '))
              FROM depute d
-             JOIN mandat m ON m.depute_id = d.id AND m.legislature = :legislature
-             WHERE d.date_naissance IS NOT NULL',
+             -- EXISTS et non JOIN : un député revenu du Gouvernement porte deux
+             -- mandats dans la législature, et une jointure le pèserait double.
+             WHERE d.date_naissance IS NOT NULL
+               AND EXISTS (SELECT 1 FROM mandat m WHERE m.depute_id = d.id AND m.legislature = :legislature)',
             ['legislature' => $legislature] + ($date === null ? [] : ['date' => $date]),
         );
 
@@ -101,13 +103,18 @@ final class MoyennesAssemblee
      */
     public function comportementMoyen(int $legislature): array
     {
+        // La participation suit le `get_stats_avg()` du site : la moyenne des
+        // participations de groupe telles qu'il les stocke (hors motions de
+        // censure, à trois décimales), arrondie à son tour à trois décimales
+        // avant de passer en points. Cf. ParticipationGroupe::SQL_MOYENNE.
         $row = $this->connection->fetchAssociative(
-            'SELECT AVG(g.cohesion) AS cohesion, AVG(g.participation) AS participation
+            'SELECT AVG(g.cohesion) AS cohesion, ROUND(AVG(g.participation), 3) AS participation
              FROM (
                  SELECT AVG(' . self::COHESION_SQL . ') AS cohesion,
-                        AVG(' . ParticipationGroupe::SQL . ') * 100 AS participation
+                        ROUND(AVG(' . ParticipationGroupe::SQL_MOYENNE . '), 3) AS participation
                  FROM vote_groupe vg
                  JOIN groupe gr ON gr.id = vg.groupe_id
+                 JOIN scrutin s ON s.id = vg.scrutin_id
                  WHERE gr.legislature = :legislature
                  GROUP BY gr.id
              ) g',
@@ -116,7 +123,7 @@ final class MoyennesAssemblee
 
         return [
             'cohesion' => isset($row['cohesion']) ? round((float) $row['cohesion'], 2) : null,
-            'participation' => isset($row['participation']) ? (int) round((float) $row['participation']) : null,
+            'participation' => ParticipationGroupe::moyenneEnPoints($row['participation'] ?? null),
         ];
     }
 

@@ -4,7 +4,7 @@
 
 {% set nom_groupe = groupe.libelle|name_group %}
 {% set non_inscrits = groupe.libelle_abrev == 'NI' %}
-{% set profil = path('groupe_individual', {legislature: groupe.legislature, abrev: groupe.libelle_abrev|lower}) %}
+{% set profil = path('groupe_individual', {legislature: groupe.legislature, abrev: groupe.libelle_abrev|adresse_groupe(groupe.id ?? null)}) %}
 
 {% block title %}{{ non_inscrits ? 'Députés non inscrits' : 'Groupe ' ~ nom_groupe }} - Votes | Datan{% endblock %}
 
@@ -56,7 +56,7 @@
       <p>Vous trouverez sur cette page les positions de <b>{{ nom_groupe }}</b> sur ces votes.</p>
       <p>
         Pour avoir accès à tous les votes de {{ nom_groupe }} à l'Assemblée nationale,
-        <a href="{{ path('groupe_votes_tous', {legislature: groupe.legislature, abrev: groupe.libelle_abrev|lower}) }}">cliquez ici</a>.
+        <a href="{{ path('groupe_votes_tous', {legislature: groupe.legislature, abrev: groupe.libelle_abrev|adresse_groupe(groupe.id ?? null)}) }}">cliquez ici</a>.
       </p>
       <h2 class="mt-4">Découvrez les <span class="text-primary">{{ votes|length }} vote{{ votes|length > 1 ? 's' : '' }}</span> décryptés du groupe {{ groupe.libelle_abrev }}</h2>
 
@@ -76,6 +76,10 @@
     </div>
   </div>
 </div>
+{# Le pied « présidence / membres / apparentés / groupes » que le site déroule
+   aussi sous les votes décryptés (`votes_datan.php`) — mais pas sous « Tous
+   les votes » (`votes.php`), qui n'en a pas. #}
+{{ include('groupe/partials/pied_membres.html.twig') }}
 {% endblock %}
 
 {% block javascripts_libraries %}

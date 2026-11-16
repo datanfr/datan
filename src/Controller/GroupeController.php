@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Depute\ComportementDepute;
 use App\Entity\Dossier;
 use App\Entity\FonctionGroupe;
+use App\Groupe\AdresseGroupe;
 use App\Groupe\BlocPolitique;
 use App\Groupe\CouleurGroupe;
 use App\Groupe\EditoGroupe;
@@ -47,17 +48,38 @@ class GroupeController extends AbstractController
     private const POSITION_MAJORITAIRE = 'Majoritaire';
 
     /**
-     * Sigles ramenés à leur successeur dans l'affichage des coalitions.
+     * Groupes ramenés à leur successeur dans l'affichage des coalitions, par
+     * uid : prédécesseur → successeur.
      *
-     * Le site ne recolle qu'UNE filiation — UDR → UDDPLR
-     * (`clean_libelleAbrev()`, daily.php:4580) — et regroupe ses coalitions
+     * Le site ne recolle qu'UNE filiation — l'UDR dissous en septembre 2025
+     * et l'Union des droites pour la République qui lui succède
+     * (`clean_libelleAbrev()`, daily.php:4764) — et regroupe ses coalitions
      * sur le libellé ainsi corrigé. Ne pas généraliser aux autres familles :
      * SOC et SOC-A restent distincts en 16e, et les coalitions socialistes se
      * scindent au 19/10/2023, badge SOC sur les lignes d'avant — c'est ce
      * qu'affiche datan.fr. Une version dérivée de {@see FamilleGroupe} les
      * fusionnait et rebaptisait SOC-A des coalitions que le site étiquette SOC.
+     *
+     * Le recollage se fait par uid et non par sigle, comme le site
+     * (`'UDR' => 'UDDPLR'`) : en novembre 2026, l'Assemblée a rebaptisé le
+     * successeur « UDR ». Le sigle « UDDPLR » n'existe plus dans aucune ligne
+     * `groupe`, et une coalition qui le porterait ne trouverait plus ni
+     * couleur ni effectif — le site, qui cherche ses badges par sigle, les a
+     * perdus purement et simplement (« RN EPR DR DEM HOR LIOT » sur la fiche
+     * RN, sans le groupe ciottiste). Le badge prend ici le sigle du jour du
+     * successeur, quel qu'il soit.
      */
-    private const SIGLES_CANONIQUES = ['UDR' => 'UDDPLR'];
+    private const SUCCESSEURS = ['PO847173' => 'PO872880'];
+
+    /**
+     * Sigles que l'Assemblée a cessé d'employer pour un groupe toujours
+     * existant, par législature : adresse publiée → uid du groupe.
+     *
+     * « UDDPLR » a désigné l'Union des droites pour la République de
+     * septembre 2025 à novembre 2026, et `/groupes/legislature-17/uddplr` est
+     * indexée depuis ; l'Assemblée l'abrège désormais « UDR ». Cf. groupe().
+     */
+    private const SIGLES_ABANDONNES = [17 => ['uddplr' => 'PO872880']];
 
     /**
      * Rangs en toutes lettres des titres de classement (« Le sixième groupe
@@ -77,6 +99,7 @@ class GroupeController extends AbstractController
         private readonly SoutienGouvernement $soutienGouvernement,
         private readonly MoyennesAssemblee $moyennes,
         private readonly StatistiquesGroupe $statistiques,
+        private readonly AdresseGroupe $adresses,
     ) {
     }
 
@@ -93,7 +116,10 @@ class GroupeController extends AbstractController
     #[Route('/groupes/legislature-{legislature}/{abrev}', name: 'groupe_individual', requirements: ['legislature' => '\d+', 'abrev' => '[a-z0-9._\-\&]+'], methods: ['GET'])]
     public function individual(int $legislature, string $abrev): Response
     {
-        $groupe = $this->groupe($legislature, $abrev);
+        $groupe = $this->groupe($legislature, $abrev, 'groupe_individual');
+        if ($groupe instanceof Response) {
+            return $groupe;
+        }
         $groupeId = (int) $groupe['id'];
 
         $presidences = $this->presidences($groupeId);
@@ -111,27 +137,43 @@ class GroupeController extends AbstractController
         $legislature = (int) $groupe['legislature'];
         $sigle = (string) $groupe['libelle_abrev'];
 
-        // Les proximités servent deux lectures : le classement complet nourrit
-        // les graphiques « vote souvent / rarement avec », et la ligne du
-        // groupe majoritaire — quand il en existe un — la carte qui lui est
-        // consacrée. Les non-inscrits en sont écartés : ils ne forment pas un
-        // groupe et ne s'allient pas.
+        // Les proximités servent trois lectures : les graphiques « vote
+        // souvent / rarement avec » et la phrase qui les commente, le tableau
+        // complet déplié sous « Voir tout le classement », et la ligne du
+        // groupe majoritaire — quand il en existe un — pour la carte qui lui
+        // est consacrée. Les graphiques ne retiennent que les groupes auxquels
+        // celui-ci peut encore se comparer (cf. retenirProximites()), et
+        // jamais les non-inscrits, qui ne forment pas un groupe et ne
+        // s'allient pas. Le tableau, lui, montre tout, dissous et non-inscrits
+        // compris, avec une colonne qui dit lesquels ont disparu — c'est
+        // `accord_groupes_all` du site.
+        $proximitesToutes = $this->proximites($groupeId);
         $proximites = array_map(
             // La phrase qui commente le classement situe chaque voisin deux
             // fois : par son rapport au gouvernement et par son côté de
             // l'échiquier. Les deux sont des lectures de la rédaction, pas des
             // données de l'open data.
+            //
+            // La branche par défaut du site (`Groupes_edito::proximite()`)
+            // était écrite pour les non-inscrits, seuls sans position
+            // politique jusqu'en 2024. Depuis que la 17e législature n'en
+            // déclare plus aucune, elle s'applique à tous les groupes, et le
+            // site écrit « Droite Républicaine, qui regroupe les députés non
+            // affiliés à un groupe parlementaire » : c'est faux. Un groupe
+            // sans position déclarée n'est ici qu'« un groupe ».
             static fn (array $ligne) => $ligne + [
                 'maj_pres' => match ($ligne['position_politique']) {
                     'Opposition' => "un groupe d'opposition",
                     self::POSITION_MAJORITAIRE => 'le groupe de la majorité présidentielle, qui est',
                     'Minoritaire' => 'un groupe allié à la majorité présidentielle et',
-                    default => 'qui regroupe les députés non affiliés à un groupe parlementaire',
+                    default => $ligne['libelle_abrev'] === self::NON_INSCRITS
+                        ? 'qui regroupe les députés non affiliés à un groupe parlementaire'
+                        : 'un groupe',
                 },
                 'echiquier' => ComportementDepute::ECHIQUIER[$ligne['libelle_abrev']] ?? null,
             ],
             array_values(array_filter(
-                $this->proximites($groupeId),
+                $this->retenirProximites($proximitesToutes, $legislature),
                 static fn (array $ligne) => $ligne['libelle_abrev'] !== self::NON_INSCRITS,
             )),
         );
@@ -147,7 +189,7 @@ class GroupeController extends AbstractController
         // La carte « proximité avec la majorité » ne s'affiche que s'il existe
         // un groupe majoritaire déclaré : la 17e législature n'en a plus aucun.
         $majorite = null;
-        foreach ($proximites as $ligne) {
+        foreach ($proximitesToutes as $ligne) {
             if ($ligne['position_politique'] === self::POSITION_MAJORITAIRE) {
                 $majorite = $ligne;
                 break;
@@ -179,7 +221,7 @@ class GroupeController extends AbstractController
             'soutien' => $soutien,
             'soutien_groupes' => $comparatif,
             'edito' => [
-                'creation' => EditoGroupe::creation($sigle),
+                'creation' => EditoGroupe::creation($sigle, (string) $groupe['uid']),
                 'opposition' => EditoGroupe::opposition($groupe['position_politique']),
             ],
             'echiquier' => ComportementDepute::ECHIQUIER[$sigle] ?? null,
@@ -195,6 +237,7 @@ class GroupeController extends AbstractController
             'sieges' => MoyennesAssemblee::SIEGES,
             'origine_sociale' => $origineSociale,
             'proximites' => $proximites,
+            'proximites_toutes' => $proximitesToutes,
             'coalitions' => $coalitions,
             // La lecture en blocs politiques n'est établie que pour la 17e
             // législature : ailleurs, la coalition s'énonce par ses sigles.
@@ -223,7 +266,10 @@ class GroupeController extends AbstractController
     #[Route('/groupes/legislature-{legislature}/{abrev}/membres', name: 'groupe_membres', requirements: ['legislature' => '\d+', 'abrev' => '[a-z0-9._\-\&]+'], methods: ['GET'])]
     public function membres(int $legislature, string $abrev): Response
     {
-        $groupe = $this->groupe($legislature, $abrev);
+        $groupe = $this->groupe($legislature, $abrev, 'groupe_membres');
+        if ($groupe instanceof Response) {
+            return $groupe;
+        }
         $composition = $this->composition($groupe);
 
         // La présidence vient de `composition()` et non de `presidences()` : la
@@ -248,7 +294,10 @@ class GroupeController extends AbstractController
     #[Route('/groupes/legislature-{legislature}/{abrev}/votes', name: 'groupe_votes', requirements: ['legislature' => '\d+', 'abrev' => '[a-z0-9._\-\&]+'], methods: ['GET'])]
     public function votes(int $legislature, string $abrev): Response
     {
-        $groupe = $this->groupe($legislature, $abrev);
+        $groupe = $this->groupe($legislature, $abrev, 'groupe_votes');
+        if ($groupe instanceof Response) {
+            return $groupe;
+        }
 
         $votes = $this->connection->fetchAllAssociative(
             'SELECT d.title, d.legislature, d.vote_numero,
@@ -281,12 +330,20 @@ class GroupeController extends AbstractController
         // place alphabétique.
         (new \Collator('fr_FR'))->asort($categories);
 
+        // Une seule lecture de la composition sert l'effectif de la carte
+        // d'identité et le pied de page de liens.
+        $composition = $this->composition($groupe);
+
         $response = $this->render('groupe/votes.html.twig', [
             'groupe' => $groupe,
             'votes' => $votes,
             'categories' => $categories,
-            'effectif' => $this->effectif($groupe),
+            'effectif' => \count(array_merge(...array_values($composition))),
             'president' => $this->presidences((int) $groupe['id'])[0] ?? null,
+            'membres' => $composition['membres'],
+            'apparentes' => $composition['apparentes'],
+            'groupes_legislature' => $this->groupesDeLaLegislature($legislature),
+            'legislature_courante' => Legislature::COURANTE,
             'fil_ariane' => [...$this->filAriane($groupe, avecLegislature: false),
                 ['nom' => 'Votes', 'url' => $this->generateUrl('groupe_votes', $this->parametresRoute($groupe))],
             ],
@@ -305,7 +362,10 @@ class GroupeController extends AbstractController
     #[Route('/groupes/legislature-{legislature}/{abrev}/votes/all', name: 'groupe_votes_tous', requirements: ['legislature' => '\d+', 'abrev' => '[a-z0-9._\-\&]+'], methods: ['GET'])]
     public function tousLesVotes(int $legislature, string $abrev): Response
     {
-        $groupe = $this->groupe($legislature, $abrev);
+        $groupe = $this->groupe($legislature, $abrev, 'groupe_votes_tous');
+        if ($groupe instanceof Response) {
+            return $groupe;
+        }
 
         // Le numéro est rendu négatif pour un vote du Congrès, convention que
         // partagent `decryptage.vote_numero` et la fonction Twig `lien_vote` :
@@ -356,7 +416,10 @@ class GroupeController extends AbstractController
     #[Route('/groupes/legislature-{legislature}/{abrev}/statistiques', name: 'groupe_statistiques', requirements: ['legislature' => '\d+', 'abrev' => '[a-z0-9._\-\&]+'], methods: ['GET'])]
     public function statistiques(int $legislature, string $abrev): Response
     {
-        $groupe = $this->groupe($legislature, $abrev);
+        $groupe = $this->groupe($legislature, $abrev, 'groupe_statistiques');
+        if ($groupe instanceof Response) {
+            return $groupe;
+        }
         $groupeId = (int) $groupe['id'];
 
         $proximites = $this->proximites($groupeId);
@@ -397,16 +460,10 @@ class GroupeController extends AbstractController
         $famille = $this->statistiques->famille($groupe['uid']);
         $majoriteParIncarnation = $this->statistiques->proximiteMajorite($famille);
 
-        // Le groupe le plus proche se cherche parmi ceux auxquels il peut
-        // encore se comparer : sur la législature en cours, le site écarte les
-        // groupes dissous, les non-inscrits et ceux qui n'ont pas vingt
-        // scrutins communs — un groupe éphémère à trois votes prendrait sinon
-        // la première place. Sur une législature achevée, tout compte.
-        $retenus = $actif && $legislature === Legislature::COURANTE
-            ? array_values(array_filter($proximites, static fn (array $p) => !$p['dissous']
-                && $p['libelle_abrev'] !== self::NON_INSCRITS
-                && (int) $p['votes'] > 20))
-            : $proximites;
+        // Le groupe le plus proche et le plus éloigné : mêmes groupes retenus
+        // que sur la fiche, non-inscrits compris hors législature courante —
+        // la fiche les retire en plus, cette page non (`individual_stats()`).
+        $retenus = $this->retenirProximites($proximites, $legislature);
 
         $response = $this->render('groupe/statistiques.html.twig', [
             'groupe' => $groupe,
@@ -684,11 +741,38 @@ class GroupeController extends AbstractController
      */
     private function couleursParSigle(int $legislature): array
     {
+        // Deux groupes peuvent partager un sigle (les deux « UDR » de la
+        // 17e) : les groupes en activité viennent en dernier pour que leur
+        // couleur l'emporte sur celle de l'homonyme dissous.
         return $this->connection->fetchAllKeyValue(
             'SELECT g.libelle_abrev, ' . CouleurGroupe::SQL . '
-             FROM groupe g WHERE g.legislature = :legislature',
+             FROM groupe g WHERE g.legislature = :legislature
+             ORDER BY g.date_fin IS NULL, g.date_debut',
             ['legislature' => $legislature],
         );
+    }
+
+    /**
+     * Sigle sous lequel chaque groupe de la législature figure dans les
+     * coalitions, par uid : le sien, ou celui de son successeur
+     * (cf. SUCCESSEURS).
+     *
+     * @return array<string, string>
+     */
+    private function siglesDeCoalition(int $legislature): array
+    {
+        $sigles = $this->connection->fetchAllKeyValue(
+            'SELECT uid, libelle_abrev FROM groupe WHERE legislature = :legislature',
+            ['legislature' => $legislature],
+        );
+
+        foreach (self::SUCCESSEURS as $predecesseur => $successeur) {
+            if (isset($sigles[$predecesseur], $sigles[$successeur])) {
+                $sigles[$predecesseur] = $sigles[$successeur];
+            }
+        }
+
+        return array_map('strval', $sigles);
     }
 
     /**
@@ -709,7 +793,7 @@ class GroupeController extends AbstractController
             "SELECT camps.coalition, COUNT(*) AS votes
              FROM (
                  SELECT vg.scrutin_id,
-                        GROUP_CONCAT(g.libelle_abrev ORDER BY g.libelle_abrev SEPARATOR '|') AS coalition,
+                        GROUP_CONCAT(g.uid ORDER BY g.uid SEPARATOR '|') AS coalition,
                         SUM(vg.groupe_id = :groupe) AS nous
                  FROM vote_groupe vg
                  JOIN groupe g ON g.id = vg.groupe_id
@@ -725,17 +809,18 @@ class GroupeController extends AbstractController
             ['groupe' => $groupeId, 'legislature' => $legislature, 'non_inscrits' => self::NON_INSCRITS],
         );
 
-        // Un groupe rebaptisé en cours de législature — UDR devenu UDDPLR —
-        // produirait deux signatures pour une seule et même coalition, et la
-        // scinderait en deux lignes moitié moins fréquentes. Recollage sur le
-        // sigle du successeur, borné à la seule filiation que le site recolle
-        // (cf. SIGLES_CANONIQUES) ; UDR et UDDPLR ne coexistent sur aucun
-        // scrutin, la substitution ne peut donc pas faire apparaître deux fois
-        // le même sigle dans une coalition.
+        // Un groupe qui en remplace un autre en cours de législature — l'UDR
+        // dissous et son successeur — produirait deux signatures pour une
+        // seule et même coalition, et la scinderait en deux lignes moitié
+        // moins fréquentes. Recollage sur le sigle du successeur, borné à la
+        // seule filiation que le site recolle (cf. SUCCESSEURS) ; les deux ne
+        // coexistent sur aucun scrutin, la substitution ne peut donc pas faire
+        // apparaître deux fois le même sigle dans une coalition.
+        $siglesParUid = $this->siglesDeCoalition($legislature);
         $coalitions = [];
         foreach ($lignes as $ligne) {
             $sigles = array_map(
-                static fn (string $sigle) => self::SIGLES_CANONIQUES[$sigle] ?? $sigle,
+                static fn (string $uid) => $siglesParUid[$uid] ?? $uid,
                 explode('|', (string) $ligne['coalition']),
             );
             sort($sigles);
@@ -751,7 +836,7 @@ class GroupeController extends AbstractController
         // l'affichage, le site range les badges d'une coalition par effectif
         // décroissant (`format_coalitions()`, uasort sur `groupes_effectif`) —
         // RN, EPR, DR, DEM… et non DEM, DR, EPR.
-        $effectifs = $this->effectifsParSigle($legislature);
+        $effectifs = $this->effectifsParSigle($legislature, $siglesParUid);
         foreach ($coalitions as &$coalition) {
             usort(
                 $coalition['sigles'],
@@ -771,14 +856,18 @@ class GroupeController extends AbstractController
      * `depute.groupe_id` renverrait zéro pour tout groupe dissous et pour
      * toute législature passée.
      *
+     * @param array<string, string> $siglesParUid cf. siglesDeCoalition()
+     *
      * @return array<string, int>
      */
-    private function effectifsParSigle(int $legislature): array
+    private function effectifsParSigle(int $legislature, array $siglesParUid): array
     {
         $effectifs = [];
 
+        // Indexé par uid et non par sigle : deux groupes homonymes (les deux
+        // « UDR ») s'écraseraient l'un l'autre dans un tableau par sigle.
         foreach ($this->connection->fetchAllKeyValue(
-            'SELECT g.libelle_abrev, COUNT(DISTINCT fg.depute_id) AS effectif
+            'SELECT g.uid, COUNT(DISTINCT fg.depute_id) AS effectif
              FROM groupe g
              LEFT JOIN fonction_groupe fg ON fg.groupe_id = g.id AND fg.nomin_principale = 1
                  AND fg.date_debut <= COALESCE(g.date_fin, CURDATE())
@@ -786,8 +875,8 @@ class GroupeController extends AbstractController
              WHERE g.legislature = :legislature
              GROUP BY g.id',
             ['legislature' => $legislature],
-        ) as $sigle => $effectif) {
-            $sigle = self::SIGLES_CANONIQUES[$sigle] ?? (string) $sigle;
+        ) as $uid => $effectif) {
+            $sigle = $siglesParUid[$uid] ?? (string) $uid;
             $effectifs[$sigle] = max($effectifs[$sigle] ?? 0, (int) $effectif);
         }
 
@@ -826,8 +915,43 @@ class GroupeController extends AbstractController
     }
 
     /**
-     * @return array<string, mixed>
+     * Les groupes auxquels on compare celui-ci pour désigner son plus proche
+     * et son plus éloigné voisin.
+     *
+     * Sur la législature en cours, le site écarte les groupes dissous, les
+     * non-inscrits et ceux qui n'ont pas vingt scrutins communs
+     * (`Groupes_model::get_stats_proximite()`, `o.dateFin IS NULL AND votesN >
+     * 20`) : un groupe disparu ne peut plus s'allier à personne, et un groupe
+     * éphémère à trois votes prendrait sinon la première place. Sans ce
+     * filtre, l'ancien groupe UDR, dissous en septembre 2025 après un an de
+     * votes alignés sur ceux du RN, passait pour le plus proche du RN (81 %)
+     * devant son successeur (68 %), et pour le moins proche d'ECOS, GDR,
+     * LFI-NFP et SOC. Sur une législature achevée, tous les groupes ont
+     * disparu : tout compte.
+     *
+     * Le filtre vaut pour la législature de la page et non pour l'état du
+     * groupe consulté : la fiche d'un groupe dissous de la 17e se compare,
+     * elle aussi, aux seuls groupes en activité — c'est la condition du site
+     * (`legislature == legislature_current()`), sans égard à `active`.
+     *
+     * @param list<array<string, mixed>> $proximites
+     *
+     * @return list<array<string, mixed>>
      */
+    private function retenirProximites(array $proximites, int $legislature): array
+    {
+        if ($legislature !== Legislature::COURANTE) {
+            return $proximites;
+        }
+
+        return array_values(array_filter(
+            $proximites,
+            static fn (array $p) => !$p['dissous']
+                && $p['libelle_abrev'] !== self::NON_INSCRITS
+                && (int) $p['votes'] > 20,
+        ));
+    }
+
     /**
      * Paramètres de route communs aux cinq pages du groupe.
      *
@@ -839,7 +963,7 @@ class GroupeController extends AbstractController
     {
         return [
             'legislature' => (int) $groupe['legislature'],
-            'abrev' => mb_strtolower((string) $groupe['libelle_abrev']),
+            'abrev' => $this->adresses->segment((string) $groupe['libelle_abrev'], (int) $groupe['id']),
         ];
     }
 
@@ -871,22 +995,88 @@ class GroupeController extends AbstractController
         return $fil;
     }
 
-    private function groupe(int $legislature, string $abrev): array
+    /**
+     * Le groupe d'une adresse, ou la redirection vers son adresse canonique.
+     *
+     * Trois formes d'adresse se résolvent ici (cf. AdresseGroupe) :
+     *
+     *  - le sigle seul (`udr`) : le groupe qui détient l'adresse simple — en
+     *    activité d'abord, puis le plus récent. Depuis novembre 2026, deux
+     *    groupes de la 17e portent le sigle « UDR » ; le site prend la première
+     *    ligne venue (`LIMIT 1` sans tri) et sert l'ancien groupe dissous,
+     *    alors que ses fiches font pointer « Union des droites pour la
+     *    République » vers cette adresse. Un accident de stockage ne se
+     *    reproduit pas : `udr` sert le groupe en activité ;
+     *  - le sigle suffixé de l'uid (`udr-po847173`) : l'homonyme qui n'a pas
+     *    l'adresse simple. Pour le groupe qui la détient, cette forme redirige
+     *    vers elle ;
+     *  - un sigle abandonné par l'Assemblée (`uddplr`), cf. SIGLES_ABANDONNES.
+     *
+     * @return array<string, mixed>|Response
+     */
+    private function groupe(int $legislature, string $abrev, string $route): array|Response
     {
+        $colonnes = 'g.id, g.uid, g.libelle, g.libelle_abrev, g.libelle_abrege, g.couleur, g.position_politique,
+                    g.legislature, g.date_debut, g.date_fin';
+
         $groupe = $this->connection->fetchAssociative(
-            'SELECT id, uid, libelle, libelle_abrev, libelle_abrege, couleur, position_politique,
-                    legislature, date_debut, date_fin
-             FROM groupe
-             WHERE legislature = :legislature AND LOWER(libelle_abrev) = :abrev
+            'SELECT ' . $colonnes . '
+             FROM groupe g
+             WHERE g.legislature = :legislature AND LOWER(g.libelle_abrev) = :abrev
+             ORDER BY ' . AdresseGroupe::ORDRE_DETENTEUR . '
              LIMIT 1',
             ['legislature' => $legislature, 'abrev' => mb_strtolower($abrev)],
         );
 
-        if ($groupe === false) {
+        if ($groupe !== false) {
+            return $groupe;
+        }
+
+        // Adresse suffixée : le groupe se retrouve par son uid. Elle se sert
+        // si c'est son adresse canonique, sinon elle y redirige — elle ne
+        // meurt donc jamais, même si son groupe reprend un jour l'adresse
+        // simple ou change de sigle.
+        $suffixe = $this->adresses->parSuffixe($legislature, $abrev);
+        if ($suffixe !== null) {
+            if ($suffixe['adresse'] !== mb_strtolower($abrev)) {
+                return $this->redirectToRoute(
+                    $route,
+                    ['legislature' => $legislature, 'abrev' => $suffixe['adresse']],
+                    Response::HTTP_MOVED_PERMANENTLY,
+                );
+            }
+
+            return $this->connection->fetchAssociative(
+                'SELECT ' . $colonnes . ' FROM groupe g WHERE g.id = :id',
+                ['id' => $suffixe['id']],
+            );
+        }
+
+        // Un sigle abandonné par l'Assemblée garde son adresse : il a été
+        // indexé sous cette forme, et l'adresse d'un groupe est un contrat. On
+        // le retrouve par son identifiant, qui ne change pas, et on redirige
+        // vers son adresse du jour. La redirection ne joue que faute de groupe
+        // à ce sigle : si l'import le rétablit, la page se sert sans détour.
+        $uid = self::SIGLES_ABANDONNES[$legislature][mb_strtolower($abrev)] ?? null;
+        $cible = $uid === null ? false : $this->connection->fetchAssociative(
+            'SELECT id, libelle_abrev FROM groupe WHERE uid = :uid AND legislature = :legislature',
+            ['uid' => $uid, 'legislature' => $legislature],
+        );
+
+        if ($cible === false) {
             throw $this->createNotFoundException('Groupe introuvable.');
         }
 
-        return $groupe;
+        $adresse = $this->adresses->segment((string) $cible['libelle_abrev'], (int) $cible['id']);
+        if ($adresse === mb_strtolower($abrev)) {
+            throw $this->createNotFoundException('Groupe introuvable.');
+        }
+
+        return $this->redirectToRoute(
+            $route,
+            ['legislature' => $legislature, 'abrev' => $adresse],
+            Response::HTTP_MOVED_PERMANENTLY,
+        );
     }
 
     /**
@@ -958,7 +1148,7 @@ class GroupeController extends AbstractController
         // alphabétique — l'effectif d'un groupe dissous n'ayant plus de sens.
         // Ce sont les deux branches de `Groupes_model::get_groupes_all()`.
         return $this->connection->fetchAllAssociative(
-            'SELECT g.legislature, g.libelle, g.libelle_abrev,
+            'SELECT g.id, g.legislature, g.libelle, g.libelle_abrev,
                     COUNT(DISTINCT fg.depute_id) AS effectif
              FROM groupe g
              LEFT JOIN fonction_groupe fg ON fg.groupe_id = g.id
@@ -1015,11 +1205,16 @@ class GroupeController extends AbstractController
      */
     private function comportement(int $groupeId): array
     {
+        // Participation hors motions de censure, et arrondie comme le site :
+        // c'est la valeur de son `class_groups`, que lisent à la fois sa fiche
+        // de groupe et son classement (cf. ParticipationGroupe::SQL_MOYENNE).
+        // La cohésion, elle, garde tous les scrutins, comme chez lui.
         $row = $this->connection->fetchAssociative(
             'SELECT COUNT(*) AS scrutins,
                     ROUND(AVG(' . self::COHESION_SQL . '), 3) AS cohesion_moyenne,
-                    ROUND(AVG(' . ParticipationGroupe::SQL . ') * 100) AS participation_moyenne
+                    AVG(' . ParticipationGroupe::SQL_MOYENNE . ') AS participation_moyenne
              FROM vote_groupe vg
+             JOIN scrutin s ON s.id = vg.scrutin_id
              WHERE vg.groupe_id = :groupe',
             ['groupe' => $groupeId],
         ) ?: [];
@@ -1027,7 +1222,7 @@ class GroupeController extends AbstractController
         return [
             'scrutins' => (int) ($row['scrutins'] ?? 0),
             'cohesion_moyenne' => $row['cohesion_moyenne'] !== null ? (float) $row['cohesion_moyenne'] : null,
-            'participation_moyenne' => $row['participation_moyenne'] !== null ? (int) $row['participation_moyenne'] : null,
+            'participation_moyenne' => ParticipationGroupe::moyenneEnPoints($row['participation_moyenne'] ?? null),
         ];
     }
 
@@ -1128,14 +1323,17 @@ class GroupeController extends AbstractController
              FROM scrutin s
              JOIN dossier d ON d.id = s.dossier_id
              JOIN vote_groupe vg ON vg.scrutin_id = s.id AND vg.groupe_id = :groupe
-             WHERE s.nature_vote = :finale AND d.procedure_code IN (:procedures)',
+             WHERE s.nature_vote = :finale AND d.procedure_code IN (:procedures)
+               AND d.dossier_id NOT IN (:exclus)',
             [
                 'groupe' => $groupeId,
                 'pour' => self::POSITION_POUR,
                 'finale' => NatureVote::FINALE,
                 'procedures' => Dossier::PROCEDURES_GOUVERNEMENT,
+                // Même exclusion éditoriale que le comparatif de l'accueil.
+                'exclus' => SoutienGouvernement::DOSSIERS_EXCLUS,
             ],
-            ['procedures' => ArrayParameterType::INTEGER],
+            ['procedures' => ArrayParameterType::INTEGER, 'exclus' => ArrayParameterType::STRING],
         ) ?: [];
 
         $votes = (int) ($row['votes'] ?? 0);
@@ -1188,7 +1386,7 @@ class GroupeController extends AbstractController
                     TIMESTAMPDIFF(YEAR, d.date_naissance, ' . $age . ') AS age,
                     d.departement_nom, d.departement_code, d.circonscription,
                     appartenance.code_qualite,
-                    g.libelle AS groupe_libelle, g.libelle_abrev AS groupe_abrev,
+                    g.id AS groupe_id, g.libelle AS groupe_libelle, g.libelle_abrev AS groupe_abrev,
                     ' . CouleurGroupe::SQL . ' AS groupe_couleur,
                     dl.legislature_last
              FROM (

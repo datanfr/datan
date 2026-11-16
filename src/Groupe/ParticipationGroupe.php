@@ -45,6 +45,39 @@ final class ParticipationGroupe
            / NULLIF(vg.nombre_membres_groupe - vg.non_votants, 0)';
 
     /**
+     * La même part, réservée aux scrutins qui entrent dans la participation
+     * **moyenne** d'un groupe, `s` étant l'alias attendu sur `scrutin` : à
+     * placer dans un `AVG()`, qui ignore le `NULL` des autres.
+     *
+     * Les motions de censure en sortent, comme du `class_groups` du site
+     * (`codeTypeVote != "MOC"`, daily.php `classGroups()`) et de notre propre
+     * classement `/statistiques/groupes-participation`
+     * ({@see \App\Command\CalculClassementsCommand}) : sur une motion de
+     * censure, seuls votent ceux qui la soutiennent — il n'y a ni « contre »
+     * ni abstention à exprimer —, et le scrutin ferait passer pour absent tout
+     * groupe qui ne veut pas renverser le Gouvernement.
+     *
+     * La moyenne se lit ensuite arrondie à trois décimales, puis en points
+     * ({@see moyenneEnPoints()}).
+     */
+    public const SQL_MOYENNE = "CASE WHEN s.code_type_vote IS NULL OR s.code_type_vote <> 'MOC' THEN " . self::SQL . ' END';
+
+    /**
+     * Une participation moyenne, rendue en points comme le site la rend.
+     *
+     * Le site stocke la moyenne à trois décimales (`class_groups.value`,
+     * `decimal(6,3)`), puis l'affiche par un `round($value * 100)` PHP : un
+     * double arrondi qui fait de 0,27466 un « 0.275 » puis un « 28 % », là où
+     * l'arrondi direct donnerait 27. C'est aussi ce que stocke et affiche
+     * notre classement des groupes. Le reprendre ici garde la fiche du groupe
+     * d'accord avec ce classement — et avec datan.fr — au point près.
+     */
+    public static function moyenneEnPoints(float|string|null $moyenne): ?int
+    {
+        return $moyenne === null ? null : (int) round(round((float) $moyenne, 3) * 100);
+    }
+
+    /**
      * Le même calcul en PHP, pour la ventilation rendue ligne à ligne.
      *
      * Un groupe dont tous les membres seraient non-votants n'aurait pas de

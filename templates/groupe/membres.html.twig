@@ -25,7 +25,7 @@
 <div class="container pg-groupe-membres my-4">
   <div class="row">
     <div class="col-12">
-      <a class="btn btn-outline-primary mx-2" href="{{ path('groupe_individual', {legislature: groupe.legislature, abrev: groupe.libelle_abrev|lower}) }}">
+      <a class="btn btn-outline-primary mx-2" href="{{ path('groupe_individual', {legislature: groupe.legislature, abrev: groupe.libelle_abrev|adresse_groupe(groupe.id ?? null)}) }}">
         {{ include('groupe/partials/fleche_retour.html.twig') }}
         Voir le profil du groupe
       </a>

@@ -6,7 +6,7 @@
    est un maillage de liens, pas l'annuaire du groupe. Le lien qui suit mène à
    la page des membres, qui les porte tous. #}
 {% set non_inscrits = groupe.libelle_abrev == 'NI' %}
-{% set lien_membres = path('groupe_membres', {legislature: groupe.legislature, abrev: groupe.libelle_abrev|lower}) %}
+{% set lien_membres = path('groupe_membres', {legislature: groupe.legislature, abrev: groupe.libelle_abrev|adresse_groupe(groupe.id ?? null)}) %}
 <div class="container-fluid bloc-others-container mt-5">
   <div class="container bloc-others">
     {% if not non_inscrits and president %}
@@ -63,7 +63,7 @@
         <div class="row mt-3">
           {% for g in groupes_legislature %}
             <div class="col-6 col-md-4 py-2">
-              <a class="membre no-decoration underline" href="{{ path('groupe_individual', {legislature: g.legislature, abrev: g.libelle_abrev|lower}) }}">{{ g.libelle }} ({{ g.libelle_abrev }})</a>
+              <a class="membre no-decoration underline" href="{{ path('groupe_individual', {legislature: g.legislature, abrev: g.libelle_abrev|adresse_groupe(g.id ?? null)}) }}">{{ g.libelle }} ({{ g.libelle_abrev }})</a>
             </div>
           {% endfor %}
         </div>

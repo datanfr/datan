@@ -57,7 +57,7 @@
         </ul>
       </div>
       <div class="text-center mt-2">
-        <a class="btn btn-outline-primary" href="{{ path('groupe_membres', {legislature: groupe.legislature, abrev: groupe.libelle_abrev|lower}) }}">
+        <a class="btn btn-outline-primary" href="{{ path('groupe_membres', {legislature: groupe.legislature, abrev: groupe.libelle_abrev|adresse_groupe(groupe.id ?? null)}) }}">
           Voir les {{ effectif }} membres
         </a>
       </div>

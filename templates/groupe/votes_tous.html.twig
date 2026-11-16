@@ -19,14 +19,14 @@
     </div>
     <div class="col-md-10 col-lg-8 offset-md-1 offset-lg-0 pl-lg-5">
       <div class="d-none d-lg-block btn-back mt-4">
-        <a class="btn btn-outline-primary mx-2" href="{{ path('groupe_individual', {legislature: groupe.legislature, abrev: groupe.libelle_abrev|lower}) }}">{{ include('groupe/partials/fleche_retour.html.twig') }}Retour profil</a>
+        <a class="btn btn-outline-primary mx-2" href="{{ path('groupe_individual', {legislature: groupe.legislature, abrev: groupe.libelle_abrev|adresse_groupe(groupe.id ?? null)}) }}">{{ include('groupe/partials/fleche_retour.html.twig') }}Retour profil</a>
       </div>
       <h1 class="mb-4 mt-4">Tous les votes {{ non_inscrits ? 'des députés non inscrits' : 'du groupe ' ~ nom_groupe }}</h1>
       <p>
         Cette page recense les <b>{{ votes|length }} scrutins</b> auxquels {{ non_inscrits ? 'les députés non inscrits ont' : 'le groupe ' ~ groupe.libelle_abrev ~ ' a' }} pris part,
         avec la position majoritaire retenue et le taux de cohésion mesuré à cette occasion.
         Pour les seuls votes décryptés par la rédaction,
-        <a href="{{ path('groupe_votes', {legislature: groupe.legislature, abrev: groupe.libelle_abrev|lower}) }}">cliquez ici</a>.
+        <a href="{{ path('groupe_votes', {legislature: groupe.legislature, abrev: groupe.libelle_abrev|adresse_groupe(groupe.id ?? null)}) }}">cliquez ici</a>.
       </p>
 
       {# L'identifiant est celui qu'attend data-table-datan.js, qui se branche

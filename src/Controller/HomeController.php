@@ -42,9 +42,17 @@ class HomeController extends AbstractController
     /**
      * Ordre des groupes dans l'hémicycle, de la gauche à la droite de
      * l'hémicycle (Groupes_model::get_groupes_sorted()).
+     *
+     * « UDR » double « UDDPLR » à la même place : en novembre 2026,
+     * l'Assemblée a rendu à l'Union des droites pour la République
+     * l'abréviation « UDR » de son prédécesseur dissous. La liste du site ne
+     * connaît que « UDDPLR » ; elle rangeait sinon le groupe après les
+     * non-inscrits, à l'extrême bord du donut. (Le site, lui, rend `NULL` dès
+     * qu'un sigle de sa liste manque, et son donut se vide à la prochaine
+     * expiration du cache de l'accueil.)
      */
     private const ORDRE_HEMICYCLE = [
-        'GDR', 'LFI-NFP', 'SOC', 'ECOS', 'EPR', 'DEM', 'HOR', 'LIOT', 'DR', 'UDDPLR', 'RN', 'NI',
+        'GDR', 'LFI-NFP', 'SOC', 'ECOS', 'EPR', 'DEM', 'HOR', 'LIOT', 'DR', 'UDDPLR', 'UDR', 'RN', 'NI',
     ];
 
     /** Un député en exercice : un mandat encore ouvert, `%s` étant l'alias de `depute`. */

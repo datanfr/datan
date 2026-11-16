@@ -35,7 +35,7 @@
             <p>Cette page présente les groupes de la {{ legislature }}<sup>ème</sup> législature qui ne sont plus en activités. Ce sont des groupes qui ont été dissous depuis leur création.</p>
             <p>Pour découvrir les {{ nombre_actifs }} groupes politiques en activité à l'Assemblée nationale, <a href="{{ path('groupes_index') }}">cliquez ici</a>.</p>
           {% elseif actifs and groupes %}
-            <p>Le groupe le plus important est <a href="{{ path('groupe_individual', {legislature: groupes[0].legislature, abrev: groupes[0].libelle_abrev|lower}) }}">{{ groupes[0].libelle|name_group }}</a>. Il compte {{ groupes[0].effectif }} députés membres.</p>
+            <p>Le groupe le plus important est <a href="{{ path('groupe_individual', {legislature: groupes[0].legislature, abrev: groupes[0].libelle_abrev|adresse_groupe(groupes[0].id ?? null)}) }}">{{ groupes[0].libelle|name_group }}</a>. Il compte {{ groupes[0].effectif }} députés membres.</p>
             <p>Cette page présente les {{ groupes|length }} groupes parlementaires en activité dans l'Assemblée nationale. Pour découvrir les groupes qui ne sont plus en activité, <a href="{{ path('groupes_inactifs') }}">cliquez ici</a>.</p>
             {% if nombre_en_groupe == 0 %}
               <p>Tous les députés sont "non-inscrits".</p>

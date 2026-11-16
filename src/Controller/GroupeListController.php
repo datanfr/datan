@@ -124,7 +124,7 @@ class GroupeListController extends AbstractController
         $tri = $population === PopulationGroupes::Tous ? 'g.libelle' : 'effectif DESC, g.libelle';
 
         return $this->connection->fetchAllAssociative(
-            'SELECT g.libelle, g.libelle_abrev, g.legislature,
+            'SELECT g.id, g.libelle, g.libelle_abrev, g.legislature,
                     g.date_debut, g.date_fin, COUNT(d.id) AS effectif,
                     ' . CouleurGroupe::SQL . ' AS couleur
              FROM groupe g

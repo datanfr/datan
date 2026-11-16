@@ -103,9 +103,10 @@ final class StatistiquesGroupe
                     g.position_politique,
                     COUNT(vg.id) AS scrutins,
                     ROUND(AVG(' . self::COHESION_SQL . '), 3) AS cohesion,
-                    ROUND(AVG(' . self::PARTICIPATION_SQL . '), 3) AS participation
+                    ROUND(AVG(' . ParticipationGroupe::SQL_MOYENNE . '), 3) AS participation
              FROM groupe g
              LEFT JOIN vote_groupe vg ON vg.groupe_id = g.id
+             LEFT JOIN scrutin s ON s.id = vg.scrutin_id
              WHERE g.uid IN (:famille) AND g.legislature >= :premiere
              GROUP BY g.id
              ORDER BY g.legislature, g.date_debut',

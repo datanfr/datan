@@ -7,8 +7,8 @@
 {% set nom_groupe = groupe.libelle|name_group %}
 {% set actif = groupe.date_fin is null %}
 {% set non_inscrits = groupe.libelle_abrev == 'NI' %}
-{% set profil_membres = path('groupe_membres', {legislature: groupe.legislature, abrev: groupe.libelle_abrev|lower}) %}
-{% set lien_statistiques = path('groupe_statistiques', {legislature: groupe.legislature, abrev: groupe.libelle_abrev|lower}) %}
+{% set profil_membres = path('groupe_membres', {legislature: groupe.legislature, abrev: groupe.libelle_abrev|adresse_groupe(groupe.id ?? null)}) %}
+{% set lien_statistiques = path('groupe_statistiques', {legislature: groupe.legislature, abrev: groupe.libelle_abrev|adresse_groupe(groupe.id ?? null)}) %}
 
 {% block title %}{{ non_inscrits ? 'Députés non inscrits' : nom_groupe ~ ' (' ~ groupe.libelle_abrev ~ ')' }} - Assemblée Nationale | Datan{% endblock %}
 
@@ -77,7 +77,8 @@
             Le groupe <b>{{ nom_groupe }}</b> ({{ groupe.libelle_abrev }}) {{ actif ? 'est' : 'était' }} un groupe classé {{ echiquier }} de l'échiquier politique.
             Il a été créé en {{ mois_creation }}{{ edito.creation|raw }}.
             {% if not actif %}
-              Le groupe a été dissout le {{ groupe.date_fin|date_fr }}.
+              {# « dissous » : le site écrit « dissout », participe fautif. #}
+              Le groupe a été dissous le {{ groupe.date_fin|date_fr }}.
             {% endif %}
           </p>
           {% if president %}
@@ -103,7 +104,7 @@
           <div class="d-flex justify-content-between mb-4">
             <h2 class="title-center mb-0">Derniers votes</h2>
             <div class="bloc-carousel-votes">
-              <a class="btn see-all-votes mx-2" href="{{ path('groupe_votes', {legislature: groupe.legislature, abrev: groupe.libelle_abrev|lower}) }}"><span>VOIR TOUS</span></a>
+              <a class="btn see-all-votes mx-2" href="{{ path('groupe_votes', {legislature: groupe.legislature, abrev: groupe.libelle_abrev|adresse_groupe(groupe.id ?? null)}) }}"><span>VOIR TOUS</span></a>
             </div>
           </div>
           <div class="bloc-carousel-votes-flickity">
@@ -113,7 +114,7 @@
               {% endfor %}
               <div class="card card-vote see-all">
                 <div class="card-body d-flex align-items-center justify-content-center">
-                  <a href="{{ path('groupe_votes', {legislature: groupe.legislature, abrev: groupe.libelle_abrev|lower}) }}" class="stretched-link no-decoration">VOIR TOUS</a>
+                  <a href="{{ path('groupe_votes', {legislature: groupe.legislature, abrev: groupe.libelle_abrev|adresse_groupe(groupe.id ?? null)}) }}" class="stretched-link no-decoration">VOIR TOUS</a>
                 </div>
               </div>
             </div>
@@ -380,7 +381,7 @@
                     <div class="texte ml-md-3 pl-md-3 mt-md-0 mt-3">
                       <p>
                         {{ non_inscrits ? 'Les députés non inscrits ont' : 'Le groupe ' ~ groupe.libelle_abrev ~ ' a' }}
-                        voté en accord avec le groupe de la majorité présidentielle (<a href="{{ path('groupe_individual', {legislature: majorite.legislature, abrev: majorite.libelle_abrev|lower}) }}">{{ majorite.libelle }}</a>) dans {{ majorite.score }}% des cas.
+                        voté en accord avec le groupe de la majorité présidentielle (<a href="{{ path('groupe_individual', {legislature: majorite.legislature, abrev: majorite.libelle_abrev|adresse_groupe(majorite.id ?? null)}) }}">{{ majorite.libelle }}</a>) dans {{ majorite.score }}% des cas.
                       </p>
                       <div class="d-flex justify-content-center mt-3">
                         <a href="{{ lien_statistiques }}#majorite" class="btn btn-outline-primary text-center">Voir l'historique</a>
@@ -413,11 +414,11 @@
                 <div class="col-12">
                   <p>
                     Le groupe avec lequel le groupe {{ groupe.libelle_abrev }} {{ actif ? 'est' : 'était' }} le plus proche est
-                    <a href="{{ path('groupe_individual', {legislature: proximites[0].legislature, abrev: proximites[0].libelle_abrev|lower}) }}" target="_blank">{{ proximites[0].libelle|name_group }}</a>,
+                    <a href="{{ path('groupe_individual', {legislature: proximites[0].legislature, abrev: proximites[0].libelle_abrev|adresse_groupe(proximites[0].id ?? null)}) }}" target="_blank">{{ proximites[0].libelle|name_group }}</a>,
                     {{ proximites[0].maj_pres }}{{ proximites[0].echiquier ? ' classé ' ~ proximites[0].echiquier ~ " de l'échiquier politique" : '' }}.
                     {% if proximites|length > 1 %}
                       {{ actif ? 'Il est' : 'Il était' }} également proche du groupe
-                      <a href="{{ path('groupe_individual', {legislature: proximites[1].legislature, abrev: proximites[1].libelle_abrev|lower}) }}" target="_blank">{{ proximites[1].libelle|name_group }}</a>,
+                      <a href="{{ path('groupe_individual', {legislature: proximites[1].legislature, abrev: proximites[1].libelle_abrev|adresse_groupe(proximites[1].id ?? null)}) }}" target="_blank">{{ proximites[1].libelle|name_group }}</a>,
                       {{ proximites[1].maj_pres }}{{ proximites[1].echiquier ? ' classé ' ~ proximites[1].echiquier : '' }}.
                     {% endif %}
                   </p>
@@ -430,19 +431,51 @@
                 <div class="col-12">
                   <p>
                     À l'opposé, le groupe avec lequel le groupe {{ groupe.libelle_abrev }} {{ actif ? 'est' : 'était' }} le moins proche est
-                    <a href="{{ path('groupe_individual', {legislature: dernier.legislature, abrev: dernier.libelle_abrev|lower}) }}" target="_blank">{{ dernier.libelle|name_group }}</a>,
+                    <a href="{{ path('groupe_individual', {legislature: dernier.legislature, abrev: dernier.libelle_abrev|adresse_groupe(dernier.id ?? null)}) }}" target="_blank">{{ dernier.libelle|name_group }}</a>,
                     {{ dernier.maj_pres }}{{ dernier.echiquier ? ' classé ' ~ dernier.echiquier ~ " de l'échiquier politique" : '' }}.
                     {% if avant_dernier %}
                       Il vote également très peu avec
-                      <a href="{{ path('groupe_individual', {legislature: avant_dernier.legislature, abrev: avant_dernier.libelle_abrev|lower}) }}" target="_blank">{{ avant_dernier.libelle|name_group }}</a>,
+                      <a href="{{ path('groupe_individual', {legislature: avant_dernier.legislature, abrev: avant_dernier.libelle_abrev|adresse_groupe(avant_dernier.id ?? null)}) }}" target="_blank">{{ avant_dernier.libelle|name_group }}</a>,
                       {{ avant_dernier.maj_pres }}{{ avant_dernier.echiquier ? ' classé ' ~ avant_dernier.echiquier : '' }}.
                     {% endif %}
                   </p>
                 </div>
               </div>
-              <div class="row">
-                <div class="col-12 d-flex justify-content-center">
-                  <a href="{{ lien_statistiques }}#proximite" class="btn btn-primary">Voir tout le classement</a>
+              {# Le classement complet se déplie sur place, comme sur le site
+                 (`accord_groupes_all`) : tous les groupes de la législature,
+                 dissous et non-inscrits compris, que les graphiques ci-dessus
+                 écartent. « Groupe dissous ? » corrige le « dissout » du site. #}
+              <div class="row mt-4">
+                <div class="col-12">
+                  <div class="text-center">
+                    <a class="btn btn-primary" id="btn-ranking" data-toggle="collapse" href="#collapseProximity" role="button" aria-expanded="false" aria-controls="collapseProximity">
+                      Voir tout le classement
+                    </a>
+                  </div>
+                  <div class="collapse mt-3" id="collapseProximity">
+                    <table class="table">
+                      <thead>
+                        <tr>
+                          <th scope="col"></th>
+                          <th scope="col">Groupe</th>
+                          <th scope="col">Taux de proximité</th>
+                          <th scope="col">Groupe dissous ?</th>
+                          <th scope="col">Nbr de votes</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {% for ligne in proximites_toutes %}
+                          <tr>
+                            <th scope="row">{{ loop.index }}</th>
+                            <td>{{ ligne.libelle|name_group }} ({{ ligne.libelle_abrev }})</td>
+                            <td>{{ ligne.score }}%</td>
+                            <td>{{ ligne.dissous ? 'Oui' : '' }}</td>
+                            <td>{{ ligne.votes }}</td>
+                          </tr>
+                        {% endfor %}
+                      </tbody>
+                    </table>
+                  </div>
                 </div>
               </div>
             {% endif %}

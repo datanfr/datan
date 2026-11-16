@@ -32,7 +32,22 @@ final class EditoGroupe
         'AGIR-E' => " par des députés membres du parti politique AGIR. Ils étaient avant alliés aux députés UDI dans le groupe <a href='/groupes/legislature-15/udi-a-i'>UDI-A-I</a>",
         'UDI_I' => " suite à la dissolution du groupe <a href='/groupes/legislature-15/udi-a-i'>UDI-A-I</a>. Ce nouveau groupe UDI ne comporte plus que les députés membres de UDI, les députés AGIR ayant créé leur propre groupe, <a href='/groupes/agir-e'>Agir Ensemble</a>",
         'DEM' => " suite à la dissolution du groupe <a href='/groupes/modem'>MODEM</a>. Ce nouveau groupe centriste a accueilli de nouveaux députés anciennement membres du groupe La République en Marche, comme Sabine Thillaye ou Christophe Jerretie.",
-        'UDDPLR' => ". Ce nouveau groupe est la continuité directe de <a href='/groupes/legislature-17/udr'>UDR</a>. Il ne s'agit que d'un changement d'intitulé, avec l'ajout de l'expression « pour la République » au nom du groupe.",
+    ];
+
+    /**
+     * Compléments rattachés à un groupe précis plutôt qu'à son sigle, quand le
+     * sigle ne suffit plus à le désigner.
+     *
+     * L'Union des droites pour la République (PO872880) était « UDDPLR » ; en
+     * novembre 2026 l'Assemblée lui a rendu le sigle « UDR » de son
+     * prédécesseur dissous. Rangé sous « UDDPLR », le texte ne s'affichait
+     * plus nulle part — le site l'a perdu ainsi —, et rangé sous « UDR » il
+     * aurait aussi coiffé l'ancien groupe. Le lien mène à l'adresse propre de
+     * l'ancien groupe ({@see AdresseGroupe}) : `/udr` est désormais celle du
+     * successeur, et le texte y aurait renvoyé à lui-même.
+     */
+    private const CREATION_PAR_UID = [
+        'PO872880' => ". Ce nouveau groupe est la continuité directe de <a href='/groupes/legislature-17/udr-po847173'>UDR</a>. Il ne s'agit que d'un changement d'intitulé, avec l'ajout de l'expression « pour la République » au nom du groupe.",
     ];
 
     private const DES_LA_LEGISLATURE = ', soit dès la mise en place de la nouvelle législature';
@@ -43,9 +58,9 @@ final class EditoGroupe
      * Il porte du HTML — des liens de presse écrits par la rédaction — et
      * s'insère donc sans échappement dans le gabarit.
      */
-    public static function creation(string $sigle): ?string
+    public static function creation(string $sigle, ?string $uid = null): ?string
     {
-        return self::CREATION[$sigle] ?? null;
+        return self::CREATION_PAR_UID[$uid] ?? self::CREATION[$sigle] ?? null;
     }
 
     /**
