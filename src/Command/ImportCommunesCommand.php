@@ -19,78 +19,16 @@ use Symfony\Component\Console\Style\SymfonyStyle;
  * production les tient dans `departement`, `circos` (découpage) et `cities`
  * (référentiel INSEE), et c'est de là qu'elles viennent.
  *
- * Elle n'est pas joignable depuis l'application — le port 3307 de l'hôte est
- * pris par la base de développement, la production ne vit que dans le conteneur
- * `datan-db`. On passe donc par deux fichiers, régénérés ainsi :
+ * Requêtes d'export : `bin/recuperation/legacy/departements.sql`,
+ * `communes.sql`, `communes_adjacentes.sql` et `maires.sql`. Celle des communes
+ * porte en commentaire ses deux réparations — les communes « Faux » rendues
+ * « 0 » par un tableur, les slugs d'Étoile et de Nonières nettoyés par la
+ * production — et pourquoi elles ne se généralisent pas.
  *
- * ```
- * docker exec datan-db mariadb -h 127.0.0.1 -u datan -pdatan datan \
- *   --default-character-set=utf8mb4 -B -e "
- *   SELECT departement_code, departement_nom, slug, libelle_1, libelle_2, region
- *   FROM departement ORDER BY departement_code;" > var/legacy/departements.tsv
- *
- * docker exec datan-db mariadb -h 127.0.0.1 -u datan -pdatan datan \
- *   --default-character-set=utf8mb4 -B -e "
- *   SELECT c.insee, c.dpt,
- *          COALESCE(NULLIF(c.commune_nom, '0'), ci.nom_standard) AS commune_nom,
- *          CASE c.insee
- *            WHEN '39217' THEN 'etoile'
- *            WHEN '07165' THEN 'nonieres'
- *            ELSE COALESCE(NULLIF(c.commune_slug, '0'), LOWER(ci.nom_sans_accent))
- *          END AS commune_slug,
- *          MAX(ci.population) AS population,
- *          GROUP_CONCAT(DISTINCT c.circo ORDER BY CAST(c.circo AS UNSIGNED)) AS circos,
- *          MAX(i.postal) AS code_postal,
- *          MAX(cin.pop2012) AS population_2012
- *   FROM circos c
- *   LEFT JOIN cities ci ON ci.code_insee = c.insee
- *   LEFT JOIN insee i ON i.insee = c.insee
- *   LEFT JOIN cities_infos cin ON cin.insee = c.insee
- *   GROUP BY c.insee, c.dpt, commune_nom, commune_slug
- *   ORDER BY c.dpt, commune_nom;" > var/legacy/communes.tsv
- *
- * Les `NULLIF(…, '0')` ne sont pas décoratifs : dans la copie dont nous
- * disposons, les deux communes nommées « Faux » (08165 dans les Ardennes,
- * 24177 en Dordogne) portent `commune_nom = '0'` et `commune_slug = '0'` —
- * « Faux » est le libellé français du booléen FALSE, un aller-retour par un
- * tableur les a convertis. La production réelle, elle, sert bien
- * `/elections/resultats/dordogne-24/ville_faux` : la corruption n'existe que
- * dans le dump. Sans cette garde, la commune sortait sous l'adresse
- * `ville_0` (annoncée telle quelle par le sitemap) et l'URL du legacy
- * rendait 404. `cities.nom_standard` est sain pour ces deux lignes, et
- * `LOWER(nom_sans_accent)` redonne exactement le slug que la production
- * sert (« faux »).
- *
- * Le `CASE` sur Étoile (L') et Nonières (Les) compense un autre décalage du
- * dump : la production a nettoyé ces deux slugs **après** la prise de notre
- * copie — datan.fr sert et annonce `ville_etoile` et `ville_nonieres`, quand
- * le dump garde `etoile-(l)` et `nonieres-(les)`. L'adresse du site est le
- * contrat : c'est sa page département qui fait foi (vérifié le 2026-08-08 sur
- * les cinq départements concernés). Ne pas généraliser aux 22 autres communes
- * à slug parenthésé : Assions (Les), Ollières-sur-Eyrieux (Les) et
- * Bonvillers (Mont) sont liées AVEC leurs parenthèses par datan.fr (qui les
- * refuse ensuite en 400 — défaut du legacy, pas un contrat), et les autres ne
- * sont liées nulle part.
- *
- * docker exec datan-db mariadb -h 127.0.0.1 -u datan -pdatan datan \
- *   --default-character-set=utf8mb4 -B -e "
- *   SELECT DISTINCT a.insee, a.adjacente
- *   FROM cities_adjacentes a JOIN circos c ON c.insee = a.adjacente
- *   ORDER BY a.insee, a.adjacente;" > var/legacy/communes_adjacentes.tsv
- *
- * docker exec datan-db mariadb -h 127.0.0.1 -u datan -pdatan datan \
- *   --default-character-set=utf8mb4 -B -e "
- *   SELECT insee, nameFirst, nameLast, gender
- *   FROM cities_mayors ORDER BY insee;" > var/legacy/maires.tsv
- * ```
- *
- * Le maire (`cities_mayors`) a longtemps manqué : la table est **vide dans la
+ * Le maire (`cities_mayors`) a longtemps manqué : la table était **vide dans la
  * copie de travail**, ce qui avait fait conclure à une donnée non récupérable
  * et laisser de côté le paragraphe « Le maire de X est Y. » des fiches de
- * ville. Elle est en réalité complète (34 874 communes) dans le jeu public
- * `datan.fr/assets/dataset_backup/general/latest.sql`, d'où viennent les
- * chiffres ci-dessus. La requête reste écrite contre `datan` : au déploiement,
- * c'est la vraie base qu'on interroge, pas le jeu public.
+ * ville. Elle est complète en production (34 826 lignes au 16 novembre 2026).
  */
 #[AsCommand(
     name: 'app:import:communes',
@@ -120,8 +58,8 @@ class ImportCommunesCommand extends ImportLegacyCommand
         $io = new SymfonyStyle($input, $output);
         $io->title('Import de la géographie électorale');
 
-        $departements = $this->importeDepartements((string) $input->getOption('departements'));
-        $io->text(sprintf('%d départements.', $departements));
+        $fichierDepartements = (string) $input->getOption('departements');
+        $this->consigner($io, 'Départements', $fichierDepartements, $this->importeDepartements($fichierDepartements));
 
         $this->importeCommunes($io, (string) $input->getOption('communes'));
         $this->importeAdjacentes($io, (string) $input->getOption('adjacentes'));
@@ -234,15 +172,15 @@ class ImportCommunesCommand extends ImportLegacyCommand
 
         [$rattachements, $sansCommune] = $this->importeCirconscriptions($circosParInsee);
 
-        $io->text(sprintf('%d communes, %d rattachements à une circonscription.', $communes, $rattachements));
-
-        if ($sansDepartement > 0) {
-            $io->text(sprintf('  %d communes écartées : département absent de l\'export.', $sansDepartement));
-        }
+        $this->consigner($io, 'Communes', $fichier, $communes, [
+            'département absent de l\'export' => $sansDepartement,
+            'nom ou slug sans lettre' => $nomsCorrompus,
+        ]);
+        $io->text(sprintf('%d rattachement(s) à une circonscription.', $rattachements));
 
         if ($nomsCorrompus > 0) {
             $io->warning(sprintf(
-                '%d communes écartées : nom ou slug sans aucune lettre (« Faux » converti en « 0 » par un tableur ?). Régénérer l\'export avec la requête du docblock, qui répare depuis cities.nom_standard.',
+                '%d communes écartées : nom ou slug sans aucune lettre (« Faux » converti en « 0 » par un tableur ?). Régénérer l\'export avec bin/recuperation/legacy/communes.sql, qui répare depuis cities.nom_standard.',
                 $nomsCorrompus,
             ));
         }
@@ -332,11 +270,7 @@ class ImportCommunesCommand extends ImportLegacyCommand
 
         $this->upsert('commune_adjacente', self::COLONNES_ADJACENTE, $lot, []);
 
-        $io->text(sprintf('%d couples de communes limitrophes.', $couples));
-
-        if ($inconnues > 0) {
-            $io->text(sprintf('  %d couples écartés : commune absente du découpage électoral.', $inconnues));
-        }
+        $this->consigner($io, 'Communes limitrophes', $fichier, $couples, ['commune absente du découpage électoral' => $inconnues]);
     }
 
     /**
@@ -363,6 +297,7 @@ class ImportCommunesCommand extends ImportLegacyCommand
 
         $maires = 0;
         $inconnues = 0;
+        $sansNom = 0;
         $lot = [];
 
         foreach ($this->lignes($fichier) as $ligne) {
@@ -377,6 +312,8 @@ class ImportCommunesCommand extends ImportLegacyCommand
             }
 
             if ($nom === null || $nom === '') {
+                ++$sansNom;
+
                 continue;
             }
 
@@ -391,11 +328,10 @@ class ImportCommunesCommand extends ImportLegacyCommand
 
         $this->ecrisMaires($lot);
 
-        $io->text(sprintf('%d maires.', $maires));
-
-        if ($inconnues > 0) {
-            $io->text(sprintf('  %d maires écartés : commune absente du découpage électoral.', $inconnues));
-        }
+        $this->consigner($io, 'Maires', $fichier, $maires, [
+            'commune absente du découpage électoral' => $inconnues,
+            'sans nom' => $sansNom,
+        ]);
     }
 
     /**

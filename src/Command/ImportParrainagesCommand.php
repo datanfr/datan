@@ -25,12 +25,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
  * le bloc « candidats ayant récolté plus de 500 signatures » de la page se
  * calcule sur l'ensemble des élus (maires, sénateurs, conseillers…).
  *
- * ```
- * docker exec datan-db mariadb -h 127.0.0.1 -u datan -pdatan datan -B -e \
- *   "SELECT id, civ, nameLast, nameFirst, mandat, circo, dpt, candidat, \
- *           datePublication, year, mpId, dateMaj \
- *    FROM parrainages ORDER BY id" > var/legacy/parrainages.tsv
- * ```
+ * Requête d'export : `bin/recuperation/legacy/parrainages.sql`.
  *
  * Import de récupération : pour le chargement initial, jamais dans
  * `app:sync:quotidien`.
@@ -105,11 +100,7 @@ class ImportParrainagesCommand extends ImportLegacyCommand
             $ecrites += \count($lot);
         }
 
-        $io->success(sprintf('%d parrainage(s) écrit(s) sur %d lu(s).', $ecrites, $lues));
-
-        if ($rebuts > 0) {
-            $io->text(sprintf('%d ligne(s) écartée(s) — parrain ou candidat manquant.', $rebuts));
-        }
+        $this->consigner($io, 'Parrainages', (string) $input->getOption('fichier'), $ecrites, ['parrain ou candidat manquant' => $rebuts], $lues);
 
         $deputes = (int) $this->connection->fetchOne(
             "SELECT COUNT(*) FROM parrainage WHERE annee = 2022 AND mandat IN ('député', 'députée')",

@@ -17,18 +17,11 @@ use Symfony\Component\Console\Style\SymfonyStyle;
  * même si le compte n'est pas repris.
  *
  * Le corps est du HTML : `mariadb -B` en échappe les sauts de ligne (`\n`), les
- * tabulations (`\t`) et les antislashs (`\\`), que l'import défait — sans quoi
- * l'article s'afficherait avec des `\n` littéraux.
+ * tabulations (`\t`) et les antislashs (`\\`), que {@see lignes()} défait —
+ * sans quoi l'article s'afficherait avec des `\n` littéraux.
  *
- * Régénérer les exports :
- *
- *   docker exec datan-db mariadb -h 127.0.0.1 -u datan -pdatan datan -B -e \
- *     "SELECT id, name, slug FROM categories" > var/legacy/article_categories.tsv
- *
- *   docker exec datan-db mariadb -h 127.0.0.1 -u datan -pdatan datan -B -e \
- *     "SELECT p.category_id, p.title, p.slug, p.body, p.state, p.image_name, \
- *             p.created_at, p.modified_at, u.name AS auteur \
- *      FROM posts p LEFT JOIN users u ON u.id = p.user_id" > var/legacy/articles.tsv
+ * Requêtes d'export : `bin/recuperation/legacy/article_categories.sql` et
+ * `articles.sql`.
  */
 #[AsCommand(
     name: 'app:import:articles',
@@ -50,12 +43,17 @@ class ImportArticlesCommand extends ImportLegacyCommand
         // Rubriques d'abord : les articles s'y rattachent.
         $slugParIdLegacy = [];
         $rubriques = [];
+        $fichierRubriques = (string) $input->getOption('categories');
+        $fichierArticles = (string) $input->getOption('articles');
+        $rubriquesIncompletes = 0;
 
-        foreach ($this->lignes((string) $input->getOption('categories')) as [$idLegacy, $nom, $slug]) {
+        foreach ($this->lignes($fichierRubriques) as [$idLegacy, $nom, $slug]) {
             $slug = $this->texte($slug);
             $nom = $this->texte($nom);
 
             if ($slug === null || $nom === null) {
+                ++$rubriquesIncompletes;
+
                 continue;
             }
 
@@ -70,15 +68,17 @@ class ImportArticlesCommand extends ImportLegacyCommand
 
         $articles = [];
         $sansRubrique = 0;
+        $articlesIncomplets = 0;
 
-        foreach ($this->lignes((string) $input->getOption('articles')) as $ligne) {
+        foreach ($this->lignes($fichierArticles) as $ligne) {
             [$idCategorie, $titre, $slug, $corps, $etat, $image, $creeLe, $modifieLe, $auteur] = array_pad($ligne, 9, null);
 
             $slug = $this->texte($slug);
             $titre = $this->texte($titre);
-            $corps = $this->desechappe($corps);
 
             if ($slug === null || $titre === null || $corps === null) {
+                ++$articlesIncomplets;
+
                 continue;
             }
 
@@ -109,22 +109,14 @@ class ImportArticlesCommand extends ImportLegacyCommand
             ['categorie_id', 'titre', 'corps', 'auteur', 'etat', 'image_nom', 'modifie_le'],
         );
 
-        $io->success(sprintf('%d rubrique(s) et %d article(s) récupéré(s).', \count($rubriques), \count($articles)));
+        $this->consigner($io, 'Rubriques du blog', $fichierRubriques, \count($rubriques), ['sans nom ni slug' => $rubriquesIncompletes]);
+        $this->consigner($io, 'Articles', $fichierArticles, \count($articles), ['sans titre, slug ou corps' => $articlesIncomplets]);
 
         if ($sansRubrique > 0) {
             $io->text(sprintf('%d article(s) sans rubrique connue (rattachement laissé vide).', $sansRubrique));
         }
 
         return Command::SUCCESS;
-    }
-
-    private function desechappe(?string $valeur): ?string
-    {
-        if ($valeur === null) {
-            return null;
-        }
-
-        return strtr($valeur, ['\\t' => "\t", '\\n' => "\n", '\\\\' => '\\']);
     }
 
     private function dateHeure(?string $valeur): ?string

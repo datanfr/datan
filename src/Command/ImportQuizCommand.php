@@ -23,15 +23,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
  * L'auteur (`created_by`/`modified_by`) n'est pas repris : aucune page ne
  * l'affiche, et il ne se résout pas dans le backup réduit.
  *
- * ```
- * docker exec datan-db mariadb -h 127.0.0.1 -u datan -pdatan datan -B -e \
- *   "SELECT q.id, q.quizz, q.voteNumero, q.legislature, q.title, q.explication, \
- *           q.for1, q.for2, q.for3, q.against1, q.against2, q.against3, \
- *           f.slug AS category_slug, f.name AS category_name, q.swap, q.state, \
- *           q.created_at, q.modified_at \
- *    FROM quizz q LEFT JOIN fields f ON f.id = q.category \
- *    ORDER BY q.id" > var/legacy/quiz.tsv
- * ```
+ * Requête d'export : `bin/recuperation/legacy/quiz.sql`.
  *
  * Import de récupération : pour le chargement initial, jamais dans
  * `app:sync:quotidien`, et à ne pas rejouer une fois la rédaction devenue la
@@ -97,11 +89,7 @@ class ImportQuizCommand extends ImportLegacyCommand
 
         $this->upsert('question_quiz', self::COLONNES, $questions, \array_slice(self::COLONNES, 1));
 
-        $io->success(sprintf('%d question(s) récupérée(s) sur %d lues.', \count($questions), $lues));
-
-        if ($rebuts > 0) {
-            $io->text(sprintf('%d ligne(s) écartée(s) — brouillon de test (quizz = 0).', $rebuts));
-        }
+        $this->consigner($io, 'Questionnaire', (string) $input->getOption('questions'), \count($questions), ['brouillon de test (quizz = 0) ou sans titre' => $rebuts], $lues);
 
         $publiees = (int) $this->connection->fetchOne("SELECT COUNT(*) FROM question_quiz WHERE etat = 'published'");
         $io->text(sprintf('%d question(s) publiée(s), le reste en brouillon.', $publiees));

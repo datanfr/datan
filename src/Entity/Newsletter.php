@@ -44,7 +44,12 @@ class Newsletter
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $departement = null;
 
-    /** Identifiant du compte lié dans la table des utilisateurs du legacy, sans contrainte. */
+    /**
+     * Compte lié (`utilisateur.id`), sans contrainte. Le legacy y gardait son
+     * `users.id` : `app:import:newsletter` le traduit par `utilisateur.id_origine`.
+     * Aucune page ne s'en sert, au legacy comme ici (colonne vide en
+     * production en novembre 2026).
+     */
     #[ORM\Column(nullable: true)]
     private ?int $utilisateurId = null;
 

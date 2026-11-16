@@ -18,24 +18,8 @@ use Symfony\Component\Console\Style\SymfonyStyle;
  * qui travaille au grain de la commune : la fiche du député, elle, raisonne par
  * circonscription. Rien de cela n'est dans les dépôts des Tricoteuses.
  *
- * ```
- * docker exec datan-db mariadb -h 127.0.0.1 -u datan -pdatan datan \
- *   --default-character-set=utf8mb4 -B -e "
- *   SELECT dpt, circo, tour, inscrits, abstentions, votants, blancs, nuls, exprimes, year
- *   FROM elect_legislatives_infos" > var/legacy/circonscriptions_participation.tsv
- *
- * docker exec datan-db mariadb -h 127.0.0.1 -u datan -pdatan datan \
- *   --default-character-set=utf8mb4 -B -e "
- *   SELECT year, dpt, circo, tour, nuance, candidat, nameLast, nameFirst, sexe,
- *          voix, pct_inscrits, pct_exprimes, elected
- *   FROM elect_legislatives_results" > var/legacy/circonscriptions_resultats.tsv
- *
- * docker exec datan-db mariadb -h 127.0.0.1 -u datan -pdatan datan \
- *   --default-character-set=utf8mb4 -B -e "
- *   SELECT year, dpt, circo, tour, date, nuance, nameLast, nameFirst, sexe,
- *          voix, pct_exprimes, elected
- *   FROM elect_legislatives_partielles" > var/legacy/circonscriptions_partielles.tsv
- * ```
+ * Requêtes d'export : `bin/recuperation/legacy/circonscriptions_participation.sql`,
+ * `circonscriptions_resultats.sql` et `circonscriptions_partielles.sql`.
  *
  * Deux pièges de la source, réparés à l'import :
  *
@@ -87,13 +71,24 @@ class ImportCirconscriptionsCommand extends ImportLegacyCommand
         $io = new SymfonyStyle($input, $output);
         $io->title('Import des résultats législatifs par circonscription');
 
-        $io->text(sprintf('Participation : %d lignes.', $this->importeParticipation((string) $input->getOption('participation'))));
-        $io->text(sprintf('Résultats généraux : %d candidats.', $this->importeResultats((string) $input->getOption('resultats'))));
-        $io->text(sprintf('Partielles : %d candidats.', $this->importePartielles((string) $input->getOption('partielles'))));
+        $this->ecartees = [];
 
-        foreach ($this->ecartees as $motif => $nombre) {
-            $io->text(sprintf('%d ligne(s) écartée(s) — %s.', $nombre, $motif));
-        }
+        // Les trois imports alimentent le même relevé d'écarts : on en prend la
+        // différence avant/après pour le bilan de chaque fichier.
+        $importer = function (string $etape, string $option, callable $import) use ($input, $io): void {
+            $fichier = (string) $input->getOption($option);
+            $avant = $this->ecartees;
+            $ecrits = $import($fichier);
+            $ecarts = [];
+            foreach ($this->ecartees as $motif => $nombre) {
+                $ecarts[$motif] = $nombre - ($avant[$motif] ?? 0);
+            }
+            $this->consigner($io, $etape, $fichier, $ecrits, $ecarts);
+        };
+
+        $importer('Participation par circonscription', 'participation', $this->importeParticipation(...));
+        $importer('Résultats par circonscription', 'resultats', $this->importeResultats(...));
+        $importer('Législatives partielles', 'partielles', $this->importePartielles(...));
 
         $io->success(sprintf(
             '%d participations, %d résultats et %d partielles en base.',

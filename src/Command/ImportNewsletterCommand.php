@@ -17,11 +17,11 @@ use Symfony\Component\Console\Style\SymfonyStyle;
  * après la bascule. Les abonnés sont déjà dans les listes Mailjet — le legacy
  * les y a inscrits —, rien n'est donc reporté chez Mailjet ici.
  *
- * ```
- * docker exec datan-db mariadb -h 127.0.0.1 -u datan -pdatan datan -B -e \
- *   "SELECT email, general, votes, depute, departement, id_user, created_at, updated_at \
- *    FROM newsletter ORDER BY id" > var/legacy/newsletter.tsv
- * ```
+ * Requête d'export : `bin/recuperation/legacy/newsletter.sql`.
+ *
+ * `id_user` est un `users.id` du legacy : il se traduit en compte local par
+ * `utilisateur.id_origine`, d'où l'ordre de `app:recuperation:legacy` (comptes
+ * d'abord). Un `id_user` sans compte local est laissé vide et compté.
  *
  * `general` et `votes` sont NOT NULL au legacy, mais sa reprise des
  * désinscriptions Mailjet y écrit NULL (`update_list($email, NULL, …)`), que
@@ -51,15 +51,22 @@ class ImportNewsletterCommand extends ImportLegacyCommand
     {
         $io = new SymfonyStyle($input, $output);
 
-        $lus = 0;
+        $fichier = (string) $input->getOption('fichier');
+        $compteParOrigine = $this->connection->fetchAllKeyValue('SELECT id_origine, id FROM utilisateur WHERE id_origine IS NOT NULL');
+
         $sansAdresse = 0;
         $invalides = 0;
+        $comptesInconnus = 0;
         $lot = [];
         $ecrits = 0;
 
-        foreach ($this->lignes((string) $input->getOption('fichier')) as $ligne) {
-            ++$lus;
+        foreach ($this->lignes($fichier) as $ligne) {
             [$email, $generale, $votes, $depute, $departement, $utilisateur, $creeLe, $modifieLe] = array_pad($ligne, 8, null);
+
+            $utilisateur = $this->entier($utilisateur);
+            if ($utilisateur !== null && !isset($compteParOrigine[$utilisateur])) {
+                ++$comptesInconnus;
+            }
 
             $email = $this->texte($email);
             if ($email === null) {
@@ -78,7 +85,7 @@ class ImportNewsletterCommand extends ImportLegacyCommand
                 (int) ($votes === '1'),
                 $this->texte($depute),
                 $this->texte($departement),
-                $this->entier($utilisateur),
+                $utilisateur === null ? null : ($compteParOrigine[$utilisateur] ?? null),
                 $this->texte($creeLe) ?? date('Y-m-d H:i:s'),
                 $this->texte($modifieLe),
             ];
@@ -91,11 +98,10 @@ class ImportNewsletterCommand extends ImportLegacyCommand
 
         $ecrits += $this->ecrire($lot);
 
-        $io->success(sprintf('%d abonné(s) lus, %d écrit(s).', $lus, $ecrits));
+        $this->consigner($io, 'Abonnés', $fichier, $ecrits, ['sans adresse' => $sansAdresse]);
 
-        // Bilan à l'unité : lus = écrits + sans adresse.
-        if ($sansAdresse > 0) {
-            $io->text(sprintf('%d ligne(s) sans adresse écartée(s).', $sansAdresse));
+        if ($comptesInconnus > 0) {
+            $io->text(sprintf('%d abonné(s) liés à un compte absent d\'ici : lien laissé vide.', $comptesInconnus));
         }
         if ($invalides > 0) {
             $io->text(sprintf('%d adresse(s) mal formée(s) reprise(s) telles quelles.', $invalides));

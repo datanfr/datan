@@ -29,6 +29,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 #[ORM\Entity(repositoryClass: UtilisateurRepository::class)]
 #[ORM\Table(name: 'utilisateur')]
 #[ORM\UniqueConstraint(name: 'uniq_identifiant', columns: ['identifiant'])]
+#[ORM\UniqueConstraint(name: 'uniq_utilisateur_id_origine', columns: ['id_origine'])]
 class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
 {
     public const ROLE_REDACTEUR = 'ROLE_REDACTEUR';
@@ -86,6 +87,18 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column(type: 'datetime_immutable')]
     private \DateTimeImmutable $creeLe;
+
+    /**
+     * `users.id` du compte dans la base du legacy, nul pour un compte né ici.
+     *
+     * Le legacy désigne ses auteurs par cet identifiant numérique
+     * (`votes_datan.created_by`, `newsletter.id_user`…) : sans lui, un
+     * décryptage récupéré ne retrouve pas son rédacteur. Il sert aussi à
+     * reconnaître un compte dont l'identifiant de connexion a changé entre deux
+     * récupérations (`app:import:utilisateurs`).
+     */
+    #[ORM\Column(nullable: true)]
+    private ?int $idOrigine = null;
 
     public function __construct()
     {
@@ -235,6 +248,11 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     public function getCreeLe(): \DateTimeImmutable
     {
         return $this->creeLe;
+    }
+
+    public function getIdOrigine(): ?int
+    {
+        return $this->idOrigine;
     }
 
     public function eraseCredentials(): void

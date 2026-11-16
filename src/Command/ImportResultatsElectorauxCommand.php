@@ -16,31 +16,9 @@ use Symfony\Component\Console\Style\SymfonyStyle;
  * Rien de tout cela n'est dans les dépôts des Tricoteuses : l'open data de
  * l'Assemblée publie qui siège, pas comment on a voté pour l'y envoyer.
  *
- * ```
- * docker exec datan-db mariadb -h 127.0.0.1 -u datan -pdatan datan \
- *   --default-character-set=utf8mb4 -B -e "
- *   SELECT year, tour, dpt, commune, circo, insee, candidate,
- *          inscrits, abs, votants, blancs, nuls, exprimes,
- *          nom, prenom, sexe, nuance, voix
- *   FROM elect_legislatives_cities
- *   ORDER BY insee, year, tour, CAST(candidate AS UNSIGNED);" > var/legacy/resultats_legislatives.tsv
- *
- * docker exec datan-db mariadb -h 127.0.0.1 -u datan -pdatan datan \
- *   --default-character-set=utf8mb4 -B -e "
- *   SELECT election, dpt, commune, candidate, voix, share, votants, abs_pct
- *   FROM elect_pres_2 ORDER BY dpt, commune;" > var/legacy/resultats_presidentielle.tsv
- *
- * docker exec datan-db mariadb -h 127.0.0.1 -u datan -pdatan datan \
- *   --default-character-set=utf8mb4 -B -e "
- *   SELECT id_liste, year, name, tete, parti
- *   FROM elect_europe_listes
- *   ORDER BY year, CAST(id_liste AS UNSIGNED);" > var/legacy/listes_europeennes.tsv
- *
- * docker exec datan-db mariadb -h 127.0.0.1 -u datan -pdatan datan \
- *   --default-character-set=utf8mb4 -B -e "
- *   SELECT year, dpt, commune, party, value
- *   FROM elect_europe_results ORDER BY dpt, commune, year;" > var/legacy/resultats_europeennes.tsv
- * ```
+ * Requêtes d'export : `bin/recuperation/legacy/resultats_legislatives.sql`,
+ * `resultats_presidentielle.sql`, `listes_europeennes.sql` et
+ * `resultats_europeennes.sql`.
  *
  * Ce sont des données figées : un scrutin passé ne change plus. La commande
  * n'est donc pas dans `app:sync:quotidien` et ne doit pas y entrer — on la lance
@@ -141,17 +119,30 @@ class ImportResultatsElectorauxCommand extends ImportLegacyCommand
 
         $io->text(sprintf('%d communes au référentiel.', \count($this->communes)));
 
+        // Chaque import alimente le même relevé d'écarts : on en prend la
+        // différence avant/après pour le bilan de chaque fichier.
+        $importer = function (string $etape, string $option, callable $import) use ($input, $io): void {
+            $fichier = (string) $input->getOption($option);
+            $avant = $this->ecartees;
+            $ecrits = $import($fichier);
+            $ecarts = [];
+            foreach ($this->ecartees as $motif => $nombre) {
+                $ecarts[$motif] = $nombre - ($avant[$motif] ?? 0);
+            }
+            $this->consigner($io, $etape, $fichier, $ecrits, $ecarts);
+        };
+
         if ($scrutin === null || $scrutin === 'legislatives') {
-            $io->text(sprintf('Législatives : %d résultats.', $this->importeLegislatives((string) $input->getOption('legislatives'))));
+            $importer('Résultats des législatives', 'legislatives', $this->importeLegislatives(...));
         }
 
         if ($scrutin === null || $scrutin === 'presidentielle') {
-            $io->text(sprintf('Présidentielle : %d résultats.', $this->importePresidentielle((string) $input->getOption('presidentielle'))));
+            $importer('Résultats de la présidentielle', 'presidentielle', $this->importePresidentielle(...));
         }
 
         if ($scrutin === null || $scrutin === 'europeennes') {
-            $io->text(sprintf('Listes européennes : %d.', $this->importeListes((string) $input->getOption('listes'))));
-            $io->text(sprintf('Européennes : %d résultats.', $this->importeEuropeennes((string) $input->getOption('europeennes'))));
+            $importer('Listes européennes', 'listes', $this->importeListes(...));
+            $importer('Résultats des européennes', 'europeennes', $this->importeEuropeennes(...));
         }
 
         $this->rapporteEcarts($io);

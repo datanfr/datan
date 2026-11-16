@@ -24,16 +24,9 @@ use Symfony\Component\Console\Style\SymfonyStyle;
  * rejouer réaligne à nouveau. Il n'a donc rien à faire dans
  * `app:sync:quotidien` ; on le lance sciemment.
  *
- * La production n'est pas joignable depuis l'application — le port 3307 de
- * l'hôte est pris par la base de développement, la production ne vit que dans
- * le conteneur `datan-db`. On passe donc par un fichier, régénéré ainsi :
- *
- * ```
- * docker exec datan-db mariadb -h 127.0.0.1 -u datan -pdatan datan \
- *   --default-character-set=utf8mb4 -B -e "
- *   SELECT mpId, website, mailAn, mailPerso, twitter, facebook, bluesky, dateMaj
- *   FROM deputes_contacts ORDER BY mpId;" > var/legacy/deputes_contacts.tsv
- * ```
+ * Requête d'export : `bin/recuperation/legacy/deputes_contacts.sql`. Une
+ * soixantaine de lignes y désignent des acteurs sans fiche de député ici
+ * (56 au 16 novembre 2026) : elles sont écartées et comptées.
  *
  * Les valeurs sont reprises **telles quelles** — le pseudo X garde son arobase
  * (« @dupont »), le site son absence de protocole (« dupont.fr ») : c'est à
@@ -101,9 +94,7 @@ class ImportReseauxSociauxCommand extends ImportLegacyCommand
 
         $this->upsert('contact_depute', self::COLONNES, $lot, [], $misAJourSiRenseigne);
 
-        if ($inconnus > 0) {
-            $io->text(sprintf('%d contacts ignorés : mpId sans fiche de député chez nous.', $inconnus));
-        }
+        $this->consigner($io, 'Contacts des députés', (string) $input->getOption('contacts'), $lus - $inconnus, ['acteur sans fiche de député' => $inconnus], $lus);
 
         $enBase = $this->connection->fetchAssociative(
             'SELECT COUNT(*) AS fiches, COUNT(site_web) AS sites, COUNT(mail_an) AS mails_an,

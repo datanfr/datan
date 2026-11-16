@@ -12,11 +12,9 @@ use Symfony\Component\Console\Style\SymfonyStyle;
  * Importe les professions de foi des députés (bloc « Ses professions de foi »
  * de la fiche) depuis un export TSV de la base de production.
  *
- * Export à régénérer ainsi :
- *
- *   docker exec datan-db mariadb -h 127.0.0.1 -u datan -pdatan datan -B -e "
- *     SELECT id, mpId, electionId, file, tour
- *     FROM profession_foi ORDER BY id;" > var/legacy/professions_foi.tsv
+ * Requête d'export : `bin/recuperation/legacy/professions_foi.sql` (2 197
+ * lignes en production en novembre 2026, 1,9 Go de PDF sous
+ * `~/public_html/assets/data/professions/`).
  *
  * **Le backup public livre `profession_foi` VIDE** (jeu réduit, comme
  * `users_mp`) : en local cet import écrit zéro ligne et le bloc de la fiche
@@ -72,12 +70,10 @@ class ImportProfessionsFoiCommand extends ImportLegacyCommand
             $this->upsert('profession_foi', self::COLONNES, $lot, ['fichier']);
         }
 
-        if ($ecartees > 0) {
-            $io->text(sprintf('%d lignes écartées : champ obligatoire absent.', $ecartees));
-        }
+        $this->consigner($io, 'Professions de foi', $fichier, $lues - $ecartees, ['champ obligatoire absent' => $ecartees], $lues);
 
         $total = (int) $this->connection->fetchOne('SELECT COUNT(*) FROM profession_foi');
-        $io->success(sprintf('%d lignes lues, %d professions de foi en base.', $lues, $total));
+        $io->text(sprintf('%d profession(s) de foi en base.', $total));
 
         if ($total === 0) {
             $io->warning('Table vide : le backup public ne livre pas les professions de foi — rejouer contre la vraie base au déploiement (cf. docblock).');

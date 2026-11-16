@@ -25,11 +25,8 @@ use Symfony\Component\Console\Style\SymfonyStyle;
  * par elle. C'est cohérent avec la règle du site — on n'explique qu'un vote
  * décrypté.
  *
- * Régénérer l'export :
- *
- *   docker exec datan-db mariadb -h 127.0.0.1 -u datan -pdatan datan -B -e \
- *     "SELECT mpId, legislature, voteNumero, text, state, created_at, modified_at \
- *      FROM explications_mp" > var/legacy/explications.tsv
+ * Requête d'export : `bin/recuperation/legacy/explications.sql`. À jouer après
+ * `app:import:decryptages`, dont elle lit les rattachements.
  */
 #[AsCommand(
     name: 'app:import:explications',
@@ -66,7 +63,6 @@ class ImportExplicationsCommand extends ImportLegacyCommand
         foreach ($this->lignes($fichier) as $ligne) {
             [$mpId, $legislature, $numero, $texte, $etat, $creeLe, $modifieLe] = array_pad($ligne, 7, null);
 
-            $texte = $this->desechappe($texte);
             $deputeId = ($mp = $this->texte($mpId)) === null ? null : ($deputeParMpId[$mp] ?? null);
             $cle = $legislature . '|' . $numero;
             $scrutinId = $scrutinParDecryptage[$cle] ?? $scrutinParNumero[$cle] ?? null;
@@ -107,33 +103,13 @@ class ImportExplicationsCommand extends ImportLegacyCommand
             );
         }
 
-        $io->success(sprintf('%d explication(s) récupérée(s).', \count($lignes)));
-
-        if (array_sum($ecartes) > 0) {
-            $io->text(sprintf(
-                'Écartées : %d texte vide, %d député absent, %d scrutin absent.',
-                $ecartes['vide'],
-                $ecartes['depute_absent'],
-                $ecartes['scrutin_absent'],
-            ));
-        }
+        $this->consigner($io, 'Explications de vote', $fichier, \count($lignes), [
+            'texte vide' => $ecartes['vide'],
+            'député absent' => $ecartes['depute_absent'],
+            'scrutin absent' => $ecartes['scrutin_absent'],
+        ]);
 
         return Command::SUCCESS;
-    }
-
-    /**
-     * Défait l'échappement de `mariadb -B` : les tabulations, sauts de ligne et
-     * antislashs d'un champ y sont rendus `\t`, `\n`, `\\`. Les explications
-     * n'en contiennent pas aujourd'hui, mais la garde évite qu'un futur texte à
-     * la ligne ne soit stocké avec un `\n` littéral.
-     */
-    private function desechappe(?string $valeur): ?string
-    {
-        if ($valeur === null) {
-            return null;
-        }
-
-        return strtr($valeur, ['\\t' => "\t", '\\n' => "\n", '\\\\' => '\\']);
     }
 
     private function dateHeure(?string $valeur): ?string

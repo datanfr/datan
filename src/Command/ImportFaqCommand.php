@@ -29,14 +29,8 @@ use Symfony\Component\Console\Style\SymfonyStyle;
  * L'auteur (`created_by`/`modified_by`) n'est pas repris : la page ne l'affiche
  * pas, et il ne se résout pas dans le backup réduit (un seul compte).
  *
- * ```
- * docker exec datan-db mariadb -h 127.0.0.1 -u datan -pdatan datan -B -e \
- *   "SELECT id, name, slug FROM faq_categories ORDER BY id" > var/legacy/faq_categories.tsv
- *
- * docker exec datan-db mariadb -h 127.0.0.1 -u datan -pdatan datan -B -e \
- *   "SELECT id, title, slug, text, category, state, created_at, modified_at \
- *    FROM faq_posts ORDER BY id" > var/legacy/faq_posts.tsv
- * ```
+ * Requêtes d'export : `bin/recuperation/legacy/faq_categories.sql` et
+ * `faq_posts.sql`.
  *
  * Import de récupération : pour le chargement initial, jamais dans
  * `app:sync:quotidien`, et à ne pas rejouer une fois que la rédaction écrit dans
@@ -64,12 +58,18 @@ class ImportFaqCommand extends ImportLegacyCommand
         // le legacy trie par id).
         $slugParIdLegacy = [];
         $categories = [];
+        $fichierCategories = (string) $input->getOption('categories');
+        $fichierQuestions = (string) $input->getOption('questions');
+        $categoriesIncompletes = 0;
+        $questionsIncompletes = 0;
 
-        foreach ($this->lignes((string) $input->getOption('categories')) as [$idLegacy, $nom, $slug]) {
+        foreach ($this->lignes($fichierCategories) as [$idLegacy, $nom, $slug]) {
             $slug = $this->texte($slug);
             $nom = $this->texte($nom);
 
             if ($slug === null || $nom === null) {
+                ++$categoriesIncompletes;
+
                 continue;
             }
 
@@ -85,15 +85,16 @@ class ImportFaqCommand extends ImportLegacyCommand
         $questions = [];
         $sansCategorie = 0;
 
-        foreach ($this->lignes((string) $input->getOption('questions')) as $ligne) {
+        foreach ($this->lignes($fichierQuestions) as $ligne) {
             [$idLegacy, $titre, $slug, $reponse, $categorie, $etat, $creeLe, $modifieLe]
                 = array_pad($ligne, 8, null);
 
             $slug = $this->texte($slug);
             $titre = $this->texte($titre);
-            $reponse = $this->desechappe($reponse);
 
             if ($slug === null || $titre === null || $reponse === null) {
+                ++$questionsIncompletes;
+
                 continue;
             }
 
@@ -123,7 +124,8 @@ class ImportFaqCommand extends ImportLegacyCommand
             ['categorie_id', 'question', 'reponse', 'etat', 'ordre', 'modifie_le'],
         );
 
-        $io->success(sprintf('%d catégorie(s) et %d question(s) récupérée(s).', \count($categories), \count($questions)));
+        $this->consigner($io, 'Catégories de la FAQ', $fichierCategories, \count($categories), ['sans nom ni slug' => $categoriesIncompletes]);
+        $this->consigner($io, 'Questions de la FAQ', $fichierQuestions, \count($questions), ['sans titre, slug ou réponse' => $questionsIncompletes]);
 
         $publiees = (int) $this->connection->fetchOne("SELECT COUNT(*) FROM faq_post WHERE etat = 'published'");
         $io->text(sprintf('%d question(s) publiée(s), le reste en brouillon.', $publiees));
@@ -133,16 +135,6 @@ class ImportFaqCommand extends ImportLegacyCommand
         }
 
         return Command::SUCCESS;
-    }
-
-    /** Défait l'échappement de `mariadb -B` sur le HTML (\t \n \\). */
-    private function desechappe(?string $valeur): ?string
-    {
-        if ($valeur === null) {
-            return null;
-        }
-
-        return strtr($valeur, ['\\t' => "\t", '\\n' => "\n", '\\\\' => '\\']);
     }
 
     /** `mariadb` écrit les dates nulles « 0000-00-00 » ; on les rend en null. */
