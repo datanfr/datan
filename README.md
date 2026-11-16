@@ -142,8 +142,9 @@ php bin/console app:utilisateur:creer moi "Mon Nom" --admin
 Tout ce qui est dans `assets/` passe par **AssetMapper** : servi sous `/build/`,
 avec un condensat du contenu dans le nom (`main-lkKi-Il.css`). Le navigateur
 peut donc le garder un an, et une modification change l'adresse. Ce qui est
-dans `public/assets/` est servi tel quel, sous la même adresse depuis toujours :
-on n'y écrit pas de code, seulement des fichiers tiers ou binaires.
+dans `public/assets/` garde le chemin qu'il a depuis toujours, et `asset()` lui
+ajoute le condensat de son contenu en paramètre (`logo.png?v=3f9a1c07b2`) : on
+n'y écrit pas de code, seulement des fichiers tiers ou binaires.
 
 - **Bootstrap 4.6.2** vient de Composer (`twbs/bootstrap`) et non de npm.
   `main.scss` l'importe avec `@import "bootstrap"`, et ses variables se
@@ -151,7 +152,9 @@ on n'y écrit pas de code, seulement des fichiers tiers ou binaires.
   les classes du site.
 - **Dans le SCSS, les `url()` vers les images s'écrivent en absolu**
   (`/assets/imgs/…`). La feuille est servie depuis `/build/styles/`, si bien
-  qu'un chemin relatif ne retombe plus sur `public/assets/`.
+  qu'un chemin relatif ne retombe plus sur `public/assets/`. Ces adresses-là
+  n'ont pas de version : une image citée dans une feuille de style ne change
+  pas de contenu sans changer de nom (cf. « Cache »).
 - **Les scripts sont des scripts classiques**, pas des modules ES : ils
   s'appuient sur le jQuery global chargé par `base.html.twig`. Pas d'`import`,
   donc. AssetMapper analyse les `import` et refuserait un paquet absent de
@@ -236,6 +239,27 @@ déclarées en tête de `bin/css-critique.mjs`.
 | `rollup` (Chart.js) | paquet figé `public/assets/js/dist/chart.min.js` |
 | `critical` | `npm run critique` |
 | `?v=<version>` dans les adresses | condensat dans le nom du fichier |
+
+## Cache
+
+Trois étages, tous inactifs en `APP_ENV=dev` sauf le premier :
+
+- **Les fichiers statiques sont gardés un an** par le navigateur et le CDN,
+  sans jamais être revalidés. C'est sans risque parce que leur adresse change
+  avec leur contenu : condensat dans le nom sous `/build/`, paramètre `?v=…`
+  sous `/assets/` (`App\Asset\VersionParContenu`, `public/assets/.htaccess`).
+- **Les pages sont rendues une fois, puis servies depuis un cache HTTP sur
+  disque** (`App\Http\CacheAvecSession`). Les pages *vivantes* — accueil,
+  députés en exercice, scrutins — sont vidées après chaque synchronisation et
+  chaque publication de la rédaction, puis les 2 500 plus lues sont remises en
+  cache (`app:cache:rechauffer`). Les pages *figées* — élections, communes,
+  législatures closes, anciens députés — n'expirent pas et ne sont vidées que
+  lorsque les données qu'elles affichent ont changé
+  (`App\Http\EmpreinteFigee`) ; `app:cache:rechauffer --tout` les vide à la
+  main. Un déploiement repart de deux magasins vides.
+- **Le navigateur ne garde jamais une page sans la vérifier**, car on ne peut
+  pas la purger chez le visiteur : il la revalide par son `ETag` et reçoit un
+  `304` sans corps tant qu'elle n'a pas changé.
 
 ## Pièges
 

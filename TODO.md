@@ -76,6 +76,16 @@ is too low ») ; la nôtre attend le même crédit. Rien n'est planifié d'ici l
   les canoniques sortent en `http://` et le cache réchauffé sous `https://` ne
   sert à personne : exiger « Full (strict) » — et décider si Symfony lit l'IP
   des visiteurs dans `CF-Connecting-IP` (`trusted_proxies`).
+- [ ] **Cloudflare et le cache.** Les fichiers de `/assets/` et `/build/`
+  s'annoncent immuables un an : Cloudflare les gardera en bordure sans rien
+  régler. Le HTML, lui, n'y est pas mis en cache aujourd'hui
+  (`cf-cache-status: DYNAMIC` sur datan.fr) et chaque page continue d'arriver
+  jusqu'à nous. Si l'on décide de le mettre en cache en bordure, trois choses
+  avant d'activer la règle : la faire contourner par le cookie de session
+  (`PHPSESSID`), brancher la purge de Cloudflare par API dans
+  `RechauffeurCache::purger()` — sans quoi une publication n'apparaît plus —,
+  et vérifier que son « Browser Cache TTL » respecte l'origine, qui ne donne
+  aucune durée au navigateur pour une page.
 - [ ] Retirer le bloc « PRÉPRODUCTION » de `public/.htaccess`
   (`DEPLOIEMENT.md` §6) : sans cela, images et PDF de datan.fr porteraient
   `X-Robots-Tag: noindex`.
@@ -188,6 +198,14 @@ correction, **commenter le choix** dans le code, et le consigner dans
   `GroupeController` et `MoyennesAssemblee`). Juste aujourd'hui, fondé sur le
   contresens que décrit `CLAUDE.md` : à basculer sur
   `GroupeAuScrutin::APPARTENANCE`.
+- [ ] **Lien de groupe faux sur `/deputes/…/legislature-N`** : la carte de
+  profil garde le `groupe_id` *courant* pour bâtir le lien
+  (`depute/_carte_profil.html.twig:32`) alors que `legislature.html.twig` ne
+  remplace que libellé, sigle et couleur. Pour un membre actuel de l'UDR,
+  l'adresse du groupe d'époque est fausse. Relevé le 16/11/2026, non corrigé.
+- [ ] **Sigle de groupe d'une explication de vote** : `VoteController` affiche
+  le groupe *actuel* de l'auteur (`d.groupe_id`), vide s'il ne siège plus, et
+  non son groupe au jour du scrutin. À comparer au site d'origine.
 - [ ] `CalculClassementsCommand`, repli sur `mandat` pour un député sans
   `fonction_groupe` : ne garde que le premier mandat. Sans effet en 17e.
 - [ ] **Contrôle dépôt ↔ base pour les amendements**, sur le modèle de celui des
@@ -202,6 +220,16 @@ correction, **commenter le choix** dans le code, et le consigner dans
 ## 6. Hébergement
 
 - [ ] **OPcache absent** de la configuration PHP 8.4 du sélecteur o2switch :
-  ~250 ms de coût fixe par page hors cache (`DEPLOIEMENT.md`, « OPcache »).
+  ~250 ms de coût fixe par requête (`DEPLOIEMENT.md`, « OPcache »). Mesuré le
+  16/11/2026 : une page servie **depuis le cache** sort en 325 à 353 ms, pour
+  20 ms visés. C'est le premier levier de vitesse du site — le cache HTTP
+  n'économise que le rendu, pas le démarrage de PHP.
+- [ ] **Poids du magasin des pages figées** (`var/cache/prod/http_cache_fige`) :
+  il ne se vide plus chaque matin. Une page de commune pèse ~95 Ko ; si les
+  70 000 pages de communes et de résultats sont toutes visitées entre deux
+  purges, il atteint ~7 Go. La partition avait 402 Go libres le 16/11/2026 et
+  aucun quota n'est visible, mais c'est à surveiller les premières semaines
+  (`du -sh`), comme la fréquence réelle des purges dans `sync-quotidien.log`
+  (« pages figées conservées » / « pages figées comprises »).
 - [ ] Faire confirmer par o2switch l'origine des SIGHUP vers 6 h : corrélés à la
   remise de configuration PHP (`php-selecteur.log`), non prouvés.

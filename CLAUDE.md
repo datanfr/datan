@@ -39,13 +39,49 @@ décryptages déjà produits sont à préserver comme des données de production
 - **Cache HTTP sur toute page publique** : `setPublic()` +
   `setSharedMaxAge()`. Le reverse proxy intégré est branché dans
   `public/index.php` hors debug. Une page en cache doit sortir en ~20 ms.
-  La durée est d'un jour (`RechauffeurCache::DUREE_PAGES`) : la fraîcheur
-  vient des **purges**, pas de l'expiration — après le sync quotidien, et après
-  toute écriture d'un contenu publié (décryptage, explication, article), qui
-  appelle `RechauffeurCache::apresPublication()`. Une nouvelle écriture
-  éditoriale visible sur le site doit l'appeler aussi, sinon elle n'apparaît
-  que le lendemain. `app:cache:rechauffer` remet ensuite en cache les ~2 500
-  pages les plus lues, communes exclues.
+  Deux sortes de pages, deux magasins (`App\Http\MagasinDouble`) :
+  - **vivante**, un jour (`RechauffeurCache::DUREE_PAGES`) : la fraîcheur vient
+    des **purges**, pas de l'expiration — après le sync quotidien, et après
+    toute écriture d'un contenu publié (décryptage, explication, article), qui
+    appelle `RechauffeurCache::apresPublication()`. Une nouvelle écriture
+    éditoriale visible sur le site doit l'appeler aussi, sinon elle n'apparaît
+    que le lendemain ;
+  - **figée**, sans expiration (`DUREE_FIGEE`) : élections, communes,
+    départements, parrainages, listes et groupes des législatures closes,
+    anciens députés. Son magasin survit aux purges ordinaires ; il n'est vidé
+    que lorsque `App\Http\EmpreinteFigee` — l'empreinte de tout ce que ces
+    pages lisent — a changé à la fin d'un sync, ou par `purger(tout: true)`.
+
+  `app:cache:rechauffer` remet ensuite en cache les ~2 500 pages les plus
+  lues ; `--tout` vide aussi les figées, à passer après une écriture à la main
+  qui réécrit le passé sans purger elle-même. Un déploiement repart de deux
+  magasins vides.
+- **Ne poser `DUREE_FIGEE` que si tout ce que la page affiche est dans le
+  périmètre d'`EmpreinteFigee`** : ni scrutin, statistique ou classement de la
+  législature en cours, ni rien qui dépende du jour du rendu (`CURDATE()`,
+  `date()`), et toute écriture de la rédaction qui la touche passe
+  `apresPublication(tout: true)`. Une page figée à tort reste fausse sans une
+  erreur jusqu'au déploiement suivant. Et **ce qui a l'air figé ne l'est pas
+  toujours** : la page d'un scrutin de 2013 porte le carrousel des derniers
+  décryptages, la page d'une élection de 2022 affiche le groupe d'aujourd'hui
+  du candidat, les statistiques d'un groupe dissous se comparent à son
+  héritier de la législature en cours. Lire le contrôleur *et* ses gabarits
+  avant de figer ; une table nouvelle lue par une page figée entre dans
+  l'empreinte. Celle-ci écarte l'âge et la commission d'un député, qui bougent
+  presque chaque jour : une page qui les affiche ne se fige pas.
+- **Une écriture répétée purge ses seules adresses.** Relire cent résumés
+  d'amendements ou renseigner cent fiches de réseaux sociaux viderait cent fois
+  le site : ces deux écrans appellent `RechauffeurCache::purgerAdresses()`.
+  C'est l'exception — partout ailleurs on purge tout, parce qu'énumérer les
+  pages où paraît un décryptage est un contrat qu'on finit par oublier.
+- **Une page n'annonce aucune durée au navigateur** : sa copie ne se purge
+  pas, et la navbar change à la connexion. Elle porte un `ETag`
+  (`App\Http\EmpreintePage`) et se revalide en 304.
+- **Un fichier de `public/assets/` est immuable un an**, parce qu'`asset()`
+  ajoute à son adresse le condensat de son contenu (`?v=…`,
+  `App\Asset\VersionParContenu`). Toujours passer par `asset()` ; un fichier
+  cité en dur — l'`url()` d'une feuille de style — n'a pas de version et ne
+  change donc pas de contenu sans changer de nom.
 - **CSS et JS du site s'écrivent dans `assets/`** (`styles/main.scss`,
   `scripts/`), servis par AssetMapper sous `/build/` ; `public/assets/` ne
   porte que du tiers ou du binaire, sous des adresses figées. Compilation,

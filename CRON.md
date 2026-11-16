@@ -26,9 +26,9 @@ synchronisations sur vingt ont reçu un SIGHUP entre le 27/10 et le 15/11.
 
 | Commande | Rôle | Durée |
 | --- | --- | --- |
-| `app:sync:quotidien` | Moisson + 13 étapes d'import, dans l'ordre des dépendances ; acquitte le delta si toutes réussissent, purge le cache HTTP dès qu'une étape a écrit | ~5 min en production |
+| `app:sync:quotidien` | Moisson + 13 étapes d'import, dans l'ordre des dépendances ; acquitte le delta si toutes réussissent, purge le cache HTTP dès qu'une étape a écrit — les pages figées seulement si leurs données ont changé | ~5 min en production |
 | `app:calcul:statistiques-deputes` | Participation, loyauté, proximité par groupe de la fiche député | ~15 s |
-| `app:cache:rechauffer` | Vide le cache HTTP puis y remet les ~2 500 pages les plus lues (accueil, listes, députés en exercice, groupes, partis, départements, élections, blog, scrutins décryptés ; pas les communes). Les pages restent en cache un jour : c'est cette purge qui rend les nouveaux scrutins visibles, et le réchauffage qui évite au premier visiteur d'attendre le rendu (0,3 à 1,7 s au lieu de ~30 ms) | ~6 min |
+| `app:cache:rechauffer` | Vide le cache HTTP puis y remet les ~2 500 pages les plus lues (accueil, listes, députés en exercice, groupes, partis, départements, élections, blog, scrutins décryptés ; pas les communes). Les pages vivantes restent en cache un jour : c'est cette purge qui rend les nouveaux scrutins visibles, et le réchauffage qui évite au premier visiteur d'attendre le rendu (0,3 à 1,7 s au lieu de ~30 ms). Les pages figées (élections, communes, législatures closes) ne sont pas vidées, sauf avec `--tout` | ~6 min |
 
 `app:sync:quotidien` déroule lui-même, dans cet ordre : moisson des dépôts,
 acteurs, organes hors table dédiée, commissions, profils sociaux, photos,
