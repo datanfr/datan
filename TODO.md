@@ -55,8 +55,6 @@ le 16/11/2026 ; rien n'est planifié, donc rien n'est appelé.
 datan.fr sert cette application depuis le 16/11/2026 (`DEPLOIEMENT.md`, « La
 bascule du 16 novembre 2026 », retour arrière compris). Reste :
 
-- [ ] **Supprimer la branche `symfony`**, fusionnée dans `master` et sans
-  objet depuis : les déploiements partent de `master`, par pull request.
 - [ ] **Régénérer les extraits de CSS critique**
   (`BASE_URL=https://datan.fr npm run critique`) : `bin/css-critique.mjs` garde
   depuis le 16/11 les repères de positionnement de toute la page (README,
@@ -191,6 +189,17 @@ correction, **commenter le choix** dans le code, et le consigner dans
 
 ### Fiches député, vote et groupe
 
+- [ ] **Motion de censure : trois paragraphes de la fiche vote non portés**
+  (`votes/individual.php:53-60` et `126-130`) — ce qu'est une motion, les voix
+  obtenues rapportées aux 577 sièges, et la règle « un groupe dont la majorité
+  ne participe pas est compté contre ». Avant de les reprendre, vérifier que
+  « La position des groupes » applique bien cette règle
+  (`get_vote_groupes(…, voteType)` côté legacy) : le texte décrit un calcul.
+- [ ] **Explications de vote sur la fiche vote** : le legacy affiche « La
+  parole aux députés » (`votes/partials/explain.php` : colonnes POUR, CONTRE,
+  ABSTENUS, « Aucun député … ne s'est encore exprimé », modale d'une
+  explication), nous un bloc « L'avis des députés » qui n'existe pas dans son
+  code. Porter le bloc d'origine, ou consigner le nôtre dans `DIFFERENCES.md`.
 - [ ] **Encart du scrutin 3684** : affiché au legacy même quand le député n'a
   pas voté (sans phrase), masqué chez nous. Non instruit.
 - [ ] **Texte de présentation de la fiche DEM** : paragraphe enrichi absent du
@@ -202,6 +211,17 @@ correction, **commenter le choix** dans le code, et le consigner dans
 
 ### Gabarits et typographie
 
+- [ ] **Relire les libellés du legacy absents de nos gabarits.** La veille
+  d'octobre avait classé d'office en « état initial » tous les écarts de texte
+  présents à son premier jour (294 pages), sans les lire : le bouton « En
+  savoir plus » des décryptages et le partage mobile de la fiche vote y
+  dormaient, corrigés le 17/11. Le site d'origine n'étant plus en ligne, la
+  relecture se fait code contre code : extraire les textes en dur des vues
+  (`git show legacy-codeigniter:application/views/…`) et des gabarits, comparer
+  les nombres d'occurrences. Un premier passage donne 250 libellés plus
+  fréquents côté legacy, dans une soixantaine de vues — beaucoup de faux
+  positifs (reformulations, vues mortes), à trier vue par vue en commençant
+  par `groupes/individual.php`, `elections/index.php` et `home/`.
 - [ ] **Séparateur décimal** : virgule chez nous (0,86 ; 4,4 %), point au legacy
   — systématique. La virgule est le bon usage : trancher une fois pour tout le
   site et consigner (incohérence actuelle : « 51.7 ans » garde le point des
