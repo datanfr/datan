@@ -11,59 +11,23 @@ défaut, et la réponse est dans le code du legacy.
 
 ---
 
-## 1. Mise en production des corrections du 2026-11-16
+## 1. Suites de la mise en production du 2026-11-16
 
-Sur le serveur, dans `~/symfony.datan.fr/current`, `php` = `~/symfony.datan.fr/bin/php`,
-toujours `APP_ENV=prod`, **jamais pendant une synchronisation** (cron à 6 h,
-6 h 20 une fois l'étape 2 faite). Les étapes 3 à 11 écrivent dans la base.
+Déployé et rejoué sur symfony.datan.fr le 16/11/2026 : synchronisation
+complète, récupération du legacy, municipales, recalculs, professions de foi.
+Reste :
 
-- [ ] **0. Avant** : IP du poste dans la liste blanche SSH d'o2switch (elle en
-  sort régulièrement) ; sauvegarde du jour vérifiée (`shared/sauvegardes`).
-- [ ] **1. Déployer** (push sur `symfony`). Quatre migrations partent avec le
-  code, et doivent partir avec lui : `…100000` (comptes, journal de
-  récupération), `…110000` (mots-clés, lots IA), `…120000` (municipales),
-  `…140000` (clé des mandats — l'ancien import, sans elle, insérerait des
-  doublons). *Contrôle* : `doctrine:migrations:status` à jour, accueil en 200.
-- [ ] **2. Cron** : `bash bin/cron.sh afficher`, puis `installer`.
-  *Contrôle* : `crontab -l | grep "20 6"`.
-- [ ] **3. Synchronisation complète** : `php bin/console app:sync:quotidien --tout --no-ansi`
-  (12 à 25 min). Ramène les scrutins 9156-9200, les 223 amendements manquants
-  et les auteurs ; rattache les 3 839 mandats à leur uid et insère les 122
-  manquants ; recalcule les commissions ; purge le rattachement en trop de
-  Riotte ; acquitte les dépôts.
-  *Contrôles* : six dépôts « acquitté » ; « Contrôle : tous les scrutins du
-  dépôt sont en base » ; « 3839 mandat(s) existant(s) rattaché(s) » ;
-  `SELECT COUNT(*) FROM scrutin WHERE legislature=17 AND uid LIKE 'VTANR%'` ≥
-  9895 ; `SELECT COUNT(*) FROM mandat` = 3961.
-- [ ] **4.** `app:import:prises-fonction --tout` — doit poser 0 date.
-- [ ] **5. Comptes d'essai** : supprimer `redaction`, `editeur`, `guibert`
-  (l'un partage son adresse avec un compte du legacy).
-- [ ] **6. Export du legacy** : `bin/recuperation/exporter-legacy.sh` →
-  `~/recuperation-legacy/<date>/` (34 fichiers, `MANIFESTE.tsv`).
-- [ ] **7. Récupération** : `app:recuperation:legacy --dossier=… --verifier`,
-  puis sans `--verifier`. Reprend comptes, décryptages et auteurs, newsletter,
-  blog, professions de foi, amendements des 15e-16e, résumés IA et mots-clés,
-  et en dernier les votes MODEM de la 15e (`--file`, jamais `--truncate`).
-  *Contrôles* : chaque bilan tombe juste ; 72 comptes ; 1 145 abonnés ;
-  vote_2751 de la 15e : 569 votes, 0 doublon sur (`depute_id`, `scrutin_id`,
-  `vote_type`).
-- [ ] **8. Municipales** : `php -d memory_limit=512M bin/console app:import:municipales`
-  (~3 min, 813 Mo gardés dans `var/municipales/`, supprimables ensuite), puis
-  `app:import:noms-communes`.
-  *Contrôle* : 54 119 listes, 36 362 lignes de participation.
-- [ ] **9. Calculs** : `app:calcul:statistiques-deputes --legislature=15`, puis
-  `--legislature=17`, puis `app:calcul:classements` (~3 min).
-  *Contrôle* : loyauté de Chenu à 95 % sur 1 041 votes.
-- [ ] **10.** Copier `~/public_html/assets/data/professions/` (1,9 Go de PDF)
-  dans le `public/` partagé de l'application.
-- [ ] **11.** `app:cache:rechauffer` (~6 min).
-- [ ] **12. Contrôles en ligne** : `vote_9178` (17e) en 200 ; `vote_2751` (15e)
-  avec sa ligne MODEM et 568 votants ; Chenu « Rassemblement National · POUR ·
-  REBELLE » sur `vote_8280` ; bloc municipales sur
-  `/elections/resultats/bouches-du-rhone-13/ville_marseille` ; exposé et auteur
-  sur `/votes/legislature-16/vote_119` ; connexion d'un compte repris.
-- [ ] **13.** Rejouer la veille comparative (`../datan-veille`, une passe
-  complète) : c'est elle qui avait relevé ces écarts.
+- [ ] **Comptes d'essai** `redaction` (admin), `editeur`, `guibert` : à
+  supprimer avant la bascule, ou à garder sciemment. Aucun n'est référencé
+  (ni décryptage, ni newsletter) et aucun n'existe au legacy.
+- [ ] **Rejouer la veille comparative** (`../datan-veille`, une passe
+  complète) : c'est elle qui avait relevé les écarts corrigés.
+- [ ] Vérifier la synchronisation du lendemain dans
+  `shared/var/log/sync-quotidien.log` : première exécution planifiée à 6 h 20,
+  avec la ligne `BILAN` et l'acquittement des dépôts.
+- [ ] Sur le serveur, à supprimer quand elles n'ont plus d'intérêt : la
+  sauvegarde `shared/sauvegardes/avant-corrections-20261116-0822.sql.gz` et
+  les journaux `shared/var/log/reparation-20261116-etape*.log`.
 
 ## 2. Résumés d'amendements par IA
 
@@ -90,9 +54,11 @@ is too low ») ; la nôtre attend le même crédit. Rien n'est planifié d'ici l
 
 ## 3. Bascule de datan.fr (jour J)
 
-- [ ] Refaire les étapes 6 et 7 de la mise en production **le plus tard
-  possible** (la newsletter continue de s'inscrire au legacy), puis
-  `app:recuperation:legacy --clore` et suppression de `~/recuperation-legacy/`.
+- [ ] Refaire la récupération **le plus tard possible** (la newsletter continue
+  de s'inscrire au legacy) : `bin/recuperation/exporter-legacy.sh`, puis
+  `app:recuperation:legacy --dossier=… --verifier` et la même sans
+  `--verifier` (6 min le 16/11) ; puis `app:recuperation:legacy --clore` et
+  suppression de `~/recuperation-legacy/`. Sans synchronisation en cours.
 - [ ] **Newsletter** : `MAILJET_API_KEY`/`SECRET` et `MJML_APP_ID`/`SECRET_KEY`
   dans le `.env.local` de production (clés du `.htaccess` du legacy) ;
   `app:newsletter:votes test` → lettre reçue à info@datan.fr ; retirer du

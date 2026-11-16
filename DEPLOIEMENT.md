@@ -224,7 +224,7 @@ leurs imports plus tard.
 
 ### d. Imports de récupération, contre la vraie base
 
-C'est le point le plus délicat, et il est déjà listé en `TODO.md` §1. Le backup
+C'est le point le plus délicat, et il est déjà listé en `TODO.md` §3. Le backup
 public `datan.fr/assets/dataset_backup` est **réduit et anonymisé** : un seul
 compte, `users_mp` vide. La base de développement en porte donc les traces. À
 rejouer contre la base de production réelle, **avant l'ouverture** :
@@ -261,7 +261,7 @@ Trois choses encadrent ces commandes :
   demande la clé Anthropic) et `app:cache:rechauffer`.
 
 La séquence complète de la première mise en production, synchronisation et
-calculs compris, est dans `TODO.md` §1.
+calculs compris, a été déroulée le 16/11/2026 ; ce qu'il en reste est dans `TODO.md` §1.
 
 > **Un import de récupération écrase les écritures locales.** Une fois
 > l'application devenue la source — un rédacteur qui publie, un député qui écrit
