@@ -1,0 +1,12 @@
+{
+  "private": true,
+  "description": "Outillage de développement seulement : la régénération du CSS critique (cf. README). Le site n'a besoin de Node ni pour se construire ni pour tourner.",
+  "type": "module",
+  "scripts": {
+    "critique": "node bin/css-critique.mjs"
+  },
+  "devDependencies": {
+    "lightningcss": "1.33.0",
+    "playwright": "1.64.1"
+  }
+}

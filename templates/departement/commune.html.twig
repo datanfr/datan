@@ -2,6 +2,8 @@
 
 {% block preloads %}{{ include('partials/preload_couverture.html.twig') }}{% endblock %}
 
+{% block css_critique %}city{% endblock %}
+
 {# `libelle_de` et `libelle_dans` portent leur espace final quand il en faut un :
    ils se concatènent au nom du département sans rien ajouter. #}
 {% set nom_article = ville.libelle_de ~ ville.dpt_nom %}

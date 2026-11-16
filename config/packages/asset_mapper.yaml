@@ -1,9 +1,21 @@
 framework:
     asset_mapper:
-        # The paths to make available to the asset mapper.
+        # Le CSS et le JS écrits pour le site : assets/styles/ (SCSS, compilé
+        # par sass:build) et assets/scripts/. Les bibliothèques tierces, les
+        # images et les polices restent dans public/assets/, servies telles
+        # quelles — cf. README, « CSS et JavaScript ».
         paths:
             - assets/
+        # Sous /build/ et non /assets/ : public/assets/ appartient aux fichiers
+        # statiques hérités du site (adresses indexées, contrat d'URL), et
+        # AssetMapper y mêlait sa sortie compilée. Un manifest.json oublié là
+        # par un `asset-map:compile` local faisait en outre servir au mode dev
+        # des fichiers périmés.
+        public_prefix: /build/
         missing_import_mode: strict
+        excluded_patterns:
+            # Partiels Sass : inclus par main.scss, jamais servis seuls.
+            - '*/assets/styles/**/_*.scss'
 
 when@prod:
     framework:

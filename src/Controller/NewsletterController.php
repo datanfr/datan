@@ -61,7 +61,7 @@ class NewsletterController extends AbstractController
     /**
      * La route accepte le POST : sans JavaScript, les deux formulaires postent
      * ici (`form_open('newsletter')`), et le legacy se contente de re-rendre
-     * la page. Avec JavaScript, `main.min.js` intercepte l'envoi.
+     * la page. Avec JavaScript, `main.js` intercepte l'envoi.
      */
     #[Route('/newsletter', name: 'newsletter', methods: ['GET', 'POST'])]
     public function inscription(): Response
@@ -81,7 +81,7 @@ class NewsletterController extends AbstractController
 
     /**
      * Point d'entrée AJAX des deux formulaires, à l'adresse historique — c'est
-     * `main.min.js`, repris tel quel du site, qui la porte en dur. La réponse
+     * `main.js`, repris tel quel du site, qui la porte en dur. La réponse
      * est un simple booléen JSON : `false` déclenche le message d'échec côté
      * client, `true` le message de félicitations.
      *

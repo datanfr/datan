@@ -15,9 +15,9 @@
   <title>{{ depute.firstname }} {{ depute.lastname }} - Activité Parlementaire | Datan</title>
   <meta name="description" content="Découvrez les résultats des votes de {{ accord == 'e' ? 'la' : 'le' }} {{ depute_mot }} {{ depute.firstname }} {{ depute.lastname }} : taux de participation, loyauté avec son groupe.">
   <meta name="theme-color" content="#00668e">
-  <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/main.css') }}">
+  <link rel="stylesheet" type="text/css" href="{{ asset('styles/main.scss') }}">
   {# Flickity habille le carrousel des derniers votes ; sa feuille doit précéder
-     main.min.js, qui l'initialise sur `.carousel-container`. #}
+     main.js, qui l'initialise sur `.carousel-container`. #}
   <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/flickity.min.css') }}">
   {# Jauges circulaires (.c100 pNN) : feuille séparée de main.css, sans elle les
      pourcentages sortent en texte nu — même chargement que la fiche publique. #}
@@ -78,7 +78,7 @@
         {% if bloc == 'derniers-votes' and carrousel_votes %}
           {# Carrousel des scrutins DÉCRYPTÉS où le député s'est exprimé, mêmes
              cartes que la fiche (`depute/_carte_vote.html.twig`, lecture partagée
-             via ComportementDepute). Flickity l'initialise via main.min.js. #}
+             via ComportementDepute). Flickity l'initialise via main.js. #}
           <div class="bloc-votes mt-5">
             {# En-tête du carrousel : titre à gauche, bouton « VOIR TOUS » à droite,
                comme la fiche et comme `_votes.php`. Titre masqué, le bouton reste
@@ -150,11 +150,11 @@
 
   {# Même socle interactif que le reste du site (repli des cartes, infobulles,
      carrousel) — sans le pistage ni la bannière de consentement. Flickity
-     précède main.min.js, qui initialise le carrousel des votes. #}
+     précède main.js, qui initialise le carrousel des votes. #}
   <script src="{{ asset('assets/js/libraries/jquery/jquery-3.5.1.min.js') }}"></script>
   <script src="{{ asset('assets/js/libraries/popper/popper.min.js') }}"></script>
   <script src="{{ asset('assets/js/libraries/bootstrap/bootstrap.min.js') }}"></script>
   <script src="{{ asset('assets/js/libraries/flickity/flickity.pkgd.min.js') }}"></script>
-  <script src="{{ asset('assets/js/main.min.js') }}"></script>
+  <script src="{{ asset('scripts/main.js') }}"></script>
 </body>
 </html>

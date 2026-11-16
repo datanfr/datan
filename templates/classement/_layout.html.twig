@@ -45,10 +45,10 @@
   {# L'ordre compte, et il n'est pas alphabétique : `datetime-moment.js` est un
      greffon de DataTables, il pose `$.fn.dataTable.moment`. Chargé avant la
      bibliothèque il échoue sans rien poser, et l'initialisation de
-     `datatable-datan.min.js` meurt ensuite sur ce même appel — emportant avec
+     `data-table-datan.js` meurt ensuite sur ce même appel — emportant avec
      elle la recherche et le tri des neuf tableaux de classement. #}
   <script src="{{ asset('assets/js/libraries/moment/moment.min.js') }}"></script>
-  <script src="{{ asset('assets/js/dist/datatable-datan.min.js') }}"></script>
+  {{ include('partials/scripts_datatable.html.twig') }}
   <script src="{{ asset('assets/js/libraries/datetime/datetime-moment.js') }}"></script>
   {% block javascripts_page %}{% endblock %}
 {% endblock %}

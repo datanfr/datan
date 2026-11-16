@@ -21,29 +21,18 @@
 ###< symfony/phpunit-bridge ###
 
 ###> symfony/asset-mapper ###
-# `/public/assets/` tout court était trop large. AssetMapper y écrit bien sa
-# sortie compilée — qui ne se commite pas —, mais ce même dossier porte aussi
-# les 42 Mo d'assets statiques hérités du site : images, feuilles de style,
-# scripts, polices. Ceux-là DOIVENT partir en production, et le déploiement se
-# faisant par `git pull`, rien d'autre ne les y acheminerait. Leur absence fait
+# Sortie d'`asset-map:compile` : AssetMapper publie sous /build/ (public_prefix
+# de config/packages/asset_mapper.yaml), et non sous /assets/ comme par défaut.
+# public/assets/ porte en effet les 42 Mo d'assets statiques hérités du site —
+# images, polices, documents, bibliothèques tierces — qui, eux, DOIVENT partir
+# en production : le déploiement les prend dans le dépôt, et leur absence fait
 # tomber la page d'accueil en 500 (`source('@public/assets/imgs/france_map/
-# map.svg')` introuvable) et laisse toutes les autres sans style.
-#
-# Les deux ensembles sont disjoints : AssetMapper produit `app-<hash>.js`,
-# `styles/`, `controllers/`, `vendor/`, `@symfony/`, `manifest.json` et
-# `importmap.json` ; le legacy occupe les sept dossiers ré-autorisés ci-dessous.
-/public/assets/*
-!/public/assets/css/
-!/public/assets/data_elections/
-!/public/assets/documents/
-!/public/assets/imgs/
-!/public/assets/js/
-!/public/assets/webfont_open_supp/
-!/public/assets/webfonts_supp/
-# Exception dans l'exception : les photos de députés sont **regénérées** par
-# `app:import:photos` (cf. ImportPhotosCommand::DOSSIER_PUBLIC), donc par le sync
-# quotidien. Les committer alourdirait le dépôt de 5,4 Mo pour rien, et les
-# figerait au jour du commit.
+# map.svg')` introuvable). Deux dossiers, deux natures : rien ne se croise.
+/public/build/
+# Les photos de députés sont **regénérées** par `app:import:photos` (cf.
+# ImportPhotosCommand::DOSSIER_PUBLIC), donc par le sync quotidien. Les
+# committer alourdirait le dépôt de 5,4 Mo pour rien, et les figerait au jour
+# du commit.
 /public/assets/imgs/deputes/
 # Même raison pour leur détourage, produit par `app:photos:detourer` à partir
 # des précédentes. À ne pas confondre avec `deputes_nobg/`, découpé à la main
@@ -58,3 +47,7 @@
 # public/.htaccess) : posé à la main sur le serveur, jamais dans le dépôt.
 /.htpasswd
 ###< préproduction ###
+
+###> outillage Node (CSS critique) ###
+/node_modules/
+###< outillage Node (CSS critique) ###

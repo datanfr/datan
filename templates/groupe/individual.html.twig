@@ -14,15 +14,21 @@
 
 {% block meta_description %}Découvrez les résultats de vote du groupe {{ nom_groupe }} ({{ groupe.libelle_abrev }}) : taux de participation, cohésion au sein groupe, proximité avec les autres groupes parlementaires.{% endblock %}
 
+{% block css_critique %}groupe_individual{% endblock %}
+
 {% block stylesheets %}
-  <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/flickity.min.css') }}">
+  {# Asynchrone, comme sur datan.fr (`css_to_load`, async TRUE) : les
+     carrousels sont sous la ligne de flottaison, le CSS critique suffit au
+     premier écran. #}
+  <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/flickity.min.css') }}" media="print" onload="this.media='all'; this.onload=null;">
+  <noscript><link rel="stylesheet" type="text/css" href="{{ asset('assets/css/flickity.min.css') }}"></noscript>
   {# Jauges circulaires (.c100 pNN) du comportement politique : feuille séparée
      de main.css et chargée par page, comme sur datan.fr — sans elle les
      pourcentages s'affichent en texte nu. #}
   <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/circle.css') }}">
 {% endblock %}
 
-{# Flickity doit précéder main.min.js, qui initialise le carrousel des votes. #}
+{# Flickity doit précéder main.js, qui initialise le carrousel des votes. #}
 {% block javascripts_head %}
   <script src="{{ asset('assets/js/libraries/flickity/flickity.pkgd.min.js') }}"></script>
 {% endblock %}

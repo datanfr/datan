@@ -316,7 +316,8 @@ depuis la branche `symfony` (ou à la main, *Run workflow*). Le contrôle
 *Qualité* passe d'abord : rien ne part sur le serveur sans lui.
 
 1. **Construction sur le runner** : `composer install --no-dev`, paquets
-   JavaScript (`importmap:install`, lancé par Composer), `asset-map:compile`. Le
+   JavaScript (`importmap:install`, lancé par Composer), `sass:build` puis
+   `asset-map:compile` (cf. README, « CSS et JavaScript »). Le
    serveur ne reçoit que du tout-fait — il n'a besoin ni de Composer ni d'accès
    à GitHub.
 2. **Liste blanche SSH** : le pare-feu o2switch n'ouvre le port 22 qu'aux
@@ -667,9 +668,11 @@ server {
 
     location ~ \.php$ { return 404; }
 
-    # Les assets d'AssetMapper portent un condensat dans leur nom : ils sont
-    # immuables et peuvent se mettre en cache sans réserve.
-    location /assets/ {
+    # Les fichiers d'AssetMapper (/build/) portent un condensat dans leur nom :
+    # ils sont immuables et peuvent se mettre en cache sans réserve. Pas
+    # /assets/ : ses fichiers gardent leur nom d'une version à l'autre, et un
+    # navigateur garderait un an la version périmée.
+    location /build/ {
         expires 1y;
         add_header Cache-Control "public, immutable";
     }

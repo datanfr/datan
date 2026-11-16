@@ -187,9 +187,9 @@
 {% endblock %}
 
 {% block javascripts %}
-  <script src="{{ asset('assets/js/datan/sorting.js') }}"></script>
+  <script src="{{ asset('scripts/sorting.js') }}"></script>
   <script src="{{ asset('assets/js/libraries/moment/moment.min.js') }}"></script>
-  <script src="{{ asset('assets/js/dist/datatable-datan.min.js') }}"></script>
+  {{ include('partials/scripts_datatable.html.twig') }}
   <script src="{{ asset('assets/js/libraries/datetime/datetime-moment.js') }}"></script>
   <script>
     document.addEventListener('DOMContentLoaded', () => {

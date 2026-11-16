@@ -19,7 +19,7 @@
   <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/circle.css') }}">
 {% endblock %}
 
-{# Flickity doit précéder main.min.js, qui initialise le carrousel des votes. #}
+{# Flickity doit précéder main.js, qui initialise le carrousel des votes. #}
 {% block javascripts_head %}
   <script src="{{ asset('assets/js/libraries/flickity/flickity.pkgd.min.js') }}"></script>
 {% endblock %}
@@ -61,7 +61,7 @@
 
       {# Carrousel « Ses derniers votes » : les cinq derniers scrutins décryptés
          où le député s'est exprimé (`_votes.php` du legacy). Flickity est
-         initialisé par main.min.js sur `.carousel-container`. Bloc masqué quand
+         initialisé par main.js sur `.carousel-container`. Bloc masqué quand
          le député n'a voté sur aucun décryptage. #}
       {% if carrousel_votes %}
         <div class="bloc-votes mt-5">

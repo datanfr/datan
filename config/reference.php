@@ -1819,6 +1819,42 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *     },
  *     ...<string, mixed>
  * }
+ * @psalm-type SymfonycastsSassConfig = array{
+ *     root_sass?: list<scalar|Param|null>,
+ *     binary?: scalar|Param|null, // The Sass binary to use // Default: null
+ *     search_for_binary?: scalar|Param|null, // Whether to search for the Sass binary in the system PATH // Default: true
+ *     sass_options?: array{
+ *         style?: "compressed"|"expanded"|Param, // The style of the generated CSS: compressed or expanded. // Default: "expanded"
+ *         charset?: bool|Param, // Whether to include the charset declaration in the generated Sass.
+ *         error_css?: bool|Param, // Emit a CSS file when an error occurs.
+ *         source_map?: bool|Param, // Whether to generate source maps. // Default: true
+ *         embed_sources?: bool|Param, // Embed source file contents in source maps.
+ *         embed_source_map?: bool|Param, // Embed source map contents in CSS. // Default: "%kernel.debug%"
+ *         load_path?: list<scalar|Param|null>,
+ *         quiet?: bool|Param, // Don't print warnings.
+ *         quiet_deps?: bool|Param, // Don't print compiler warnings from dependencies.
+ *         stop_on_error?: bool|Param, // Don't compile more files once an error is encountered.
+ *         trace?: bool|Param, // Print full Dart stack traces for exceptions.
+ *     },
+ *     embed_sourcemap?: bool|Param|null, // Deprecated: Option "embed_sourcemap" at "symfonycasts_sass.embed_sourcemap" is deprecated. Use "sass_options.embed_source_map" instead". // Default: null
+ * }
+ * @psalm-type SensiolabsMinifyConfig = array{
+ *     asset_mapper?: bool|array{ // AssetMapper compiler settings
+ *         enabled?: bool|Param, // Default: true
+ *         types?: array{ // Asset types to minify
+ *             css?: bool|Param, // Default: true
+ *             js?: bool|Param, // Default: true
+ *         },
+ *         ignore_paths?: list<scalar|Param|null>,
+ *         ignore_vendor?: bool|Param, // Exclude vendor assets from minification // Default: true
+ *     },
+ *     minify?: array{ // Minify settings
+ *         local_binary?: scalar|Param|null, // Path to the local binary (use "auto" for automatic detection) // Default: false
+ *         download_binary?: bool|Param, // Download the binary from GitHub (defaults to "true" in debug mode) // Default: "%kernel.debug%"
+ *         download_directory?: scalar|Param|null, // Directory to store the downloaded binary // Default: "%kernel.project_dir%/var/minify"
+ *         version?: scalar|Param|null, // Minify version to download (null for latest) // Default: null
+ *     },
+ * }
  * @psalm-type ConfigType = array{
  *     imports?: ImportsConfig,
  *     parameters?: ParametersConfig,
@@ -1834,6 +1870,8 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *     monolog?: MonologConfig,
  *     nelmio_cors?: NelmioCorsConfig,
  *     api_platform?: ApiPlatformConfig,
+ *     symfonycasts_sass?: SymfonycastsSassConfig,
+ *     sensiolabs_minify?: SensiolabsMinifyConfig,
  *     "when@dev"?: array{
  *         imports?: ImportsConfig,
  *         parameters?: ParametersConfig,
@@ -1852,6 +1890,8 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         maker?: MakerConfig,
  *         nelmio_cors?: NelmioCorsConfig,
  *         api_platform?: ApiPlatformConfig,
+ *         symfonycasts_sass?: SymfonycastsSassConfig,
+ *         sensiolabs_minify?: SensiolabsMinifyConfig,
  *     },
  *     "when@prod"?: array{
  *         imports?: ImportsConfig,
@@ -1868,6 +1908,8 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         monolog?: MonologConfig,
  *         nelmio_cors?: NelmioCorsConfig,
  *         api_platform?: ApiPlatformConfig,
+ *         symfonycasts_sass?: SymfonycastsSassConfig,
+ *         sensiolabs_minify?: SensiolabsMinifyConfig,
  *     },
  *     "when@test"?: array{
  *         imports?: ImportsConfig,
@@ -1885,6 +1927,8 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         monolog?: MonologConfig,
  *         nelmio_cors?: NelmioCorsConfig,
  *         api_platform?: ApiPlatformConfig,
+ *         symfonycasts_sass?: SymfonycastsSassConfig,
+ *         sensiolabs_minify?: SensiolabsMinifyConfig,
  *     },
  *     ...<string, ExtensionType|array{ // extra keys must follow the when@%env% pattern or match an extension alias
  *         imports?: ImportsConfig,

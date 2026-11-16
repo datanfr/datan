@@ -4,22 +4,28 @@
 
 {% block meta_description %}L'Assemblée nationale enfin compréhensible ! Découvrez les résultats de vote de chaque député et groupe parlementaire.{% endblock %}
 
+{% block css_critique %}index{% endblock %}
+
 {% block stylesheets %}
-  <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/flickity.min.css') }}">
+  {# Asynchrone, comme sur datan.fr (`css_to_load`, async TRUE) : les
+     carrousels sont sous la ligne de flottaison, le CSS critique suffit au
+     premier écran. #}
+  <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/flickity.min.css') }}" media="print" onload="this.media='all'; this.onload=null;">
+  <noscript><link rel="stylesheet" type="text/css" href="{{ asset('assets/css/flickity.min.css') }}"></noscript>
 {% endblock %}
 
-{# Flickity doit être présent avant main.min.js, qui initialise les carrousels. #}
+{# Flickity doit être présent avant main.js, qui initialise les carrousels. #}
 {% block javascripts_head %}
   <script src="{{ asset('assets/js/libraries/flickity/flickity.pkgd.min.js') }}"></script>
 {% endblock %}
 
 {% block javascripts %}
-  <script src="{{ asset('assets/js/dist/autocomplete_search.js') }}"></script>
+  <script src="{{ asset('scripts/autocomplete_search.js') }}"></script>
   {# Clics et infobulles de la carte des départements (data-slug des SVG). #}
-  <script src="{{ asset('assets/js/dist/map_france.js') }}"></script>
+  <script src="{{ asset('scripts/map_france.js') }}"></script>
   {# La bibliothèque Typed avant dist/typed.js, qui l'instancie sur .text-slider. #}
   <script src="{{ asset('assets/js/libraries/typed/typed.umd.js') }}"></script>
-  <script src="{{ asset('assets/js/dist/typed.js') }}"></script>
+  <script src="{{ asset('scripts/typed.js') }}"></script>
   {# L'hémicycle : donut Chart.js à bulles d'effectif, comme le script en pied
      de home/index.php — datalabels s'enregistre explicitement (v2). #}
   <script src="{{ asset('assets/js/libraries/chart.js/chart.min.js') }}"></script>
@@ -562,7 +568,7 @@
   {# Mur de presse statique du legacy (« Ils parlent de nous »). Les liens que
      l'origine masque passent par url_obf, les autres restent des ancres ; les
      logos se chargent en différé (loading=lazy — le plugin unveil de la classe
-     img-lazy n'est pas dans main.min.js). #}
+     img-lazy n'est pas dans main.js). #}
   <div class="row">
     <div class="container py-5">
       <div class="row pt-3">

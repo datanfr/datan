@@ -73,7 +73,21 @@ jobs:
           DATABASE_URL: "mysqli://construction:construction@127.0.0.1:3306/construction?serverVersion=11.4.13-MariaDB&charset=utf8mb4"
         run: |
           composer install --no-interaction --no-progress --prefer-dist --no-dev --optimize-autoloader
+          # CSS puis assets : sass:build compile assets/styles/main.scss
+          # (dart-sass, téléchargé ici), asset-map:compile publie le tout dans
+          # public/build/ sous des noms condensés, minifié au passage
+          # (tdewolff/minify, téléchargé ici aussi). Cf. README.
+          php bin/console sass:build --no-ansi
           php bin/console asset-map:compile --no-ansi
+          # Chaque nom de public/build/ change avec son contenu : le navigateur
+          # peut le garder un an sans jamais le revalider. Un .htaccess local,
+          # que LiteSpeed lit comme Apache, plutôt qu'une condition sur le
+          # chemin dans public/.htaccess — LiteSpeed en ignore une partie.
+          cat > public/build/.htaccess <<'HTACCESS'
+          <IfModule mod_headers.c>
+              Header set Cache-Control "public, max-age=31536000, immutable"
+          </IfModule>
+          HTACCESS
           git rev-parse HEAD > REVISION
           echo "ID=$(date -u +%Y%m%d-%H%M%S)-${GITHUB_SHA::8}" >> "$GITHUB_ENV"
 

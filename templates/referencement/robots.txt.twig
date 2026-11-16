@@ -4,6 +4,12 @@
    # Directories » — sont celles du site : conservées, sans quoi la moindre
    comparaison de fichiers signalerait une divergence qui n'en est pas une.
 
+   Seul écart : le script qui décode les liens masqués (url_obf2) n'est plus
+   sous /assets/js/datan/ mais servi par AssetMapper, sous un nom condensé qui
+   change à chaque modification — /build/scripts/url_obf2-<condensat>.js.
+   Une règle robots.txt est un préfixe : une seule ligne couvre toutes ses
+   versions, là où datan.fr en écrit deux (source et .min).
+
    Le tiret qui ferme ce commentaire mange le saut de ligne suivant : sans lui,
    le fichier servi commence par une ligne vide. -#}
 #
@@ -17,8 +23,7 @@ Disallow: /admin
 Disallow: /admin/*
 Disallow: /connexion
 Disallow: /deconnexion
-Disallow: /assets/js/datan/url_obf2.js
-Disallow: /assets/js/datan/url_obf2.min.js
+Disallow: /build/scripts/url_obf2
 
 #Sitemap
 Sitemap: https://datan.fr/sitemap.xml

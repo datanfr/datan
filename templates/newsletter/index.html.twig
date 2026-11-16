@@ -12,7 +12,7 @@
       </div>
     </div>
     <div class="col-lg-6">
-      {# `main.min.js` intercepte #newsletterPage et poste en AJAX sur
+      {# `main.js` intercepte #newsletterPage et poste en AJAX sur
          /api/newsletter/create_newsletter ; l'action ne sert que sans
          JavaScript, où la page se recharge simplement. #}
       <form action="{{ path('newsletter') }}" method="post" id="newsletterPage" accept-charset="utf-8">

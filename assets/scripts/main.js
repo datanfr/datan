@@ -1,5 +1,3 @@
-"use strict";
-
 /*
 ################
                FUNCTION IF LOCALHOST
@@ -27,12 +25,14 @@ $(document).ready(function () {
     trigger: 'focus',
     html: true
   });
+
   $(".img-lazy").unveil(200, function () {
     this.onload = function () {
-      $(this).removeClass("placeholder");
-    };
+      $(this).removeClass("placeholder")
+    }
   });
 });
+
 $(function () {
   // prevents jumping
   $("a.pop-me-over").on("click", function (e) {
@@ -41,9 +41,10 @@ $(function () {
   });
   $(".pop-me-over").popover();
 });
+
 $(function () {
-  $('[data-toggle="tooltip"]').tooltip();
-});
+  $('[data-toggle="tooltip"]').tooltip()
+})
 
 /*
 ################
@@ -62,6 +63,7 @@ $(window).scroll(function () {
     filterBanner.addClass('d-none').removeClass('d-flex');
   }
 });
+
 btn.on('click', function (e) {
   e.preventDefault();
   var distance = $(window).scrollTop();
@@ -95,18 +97,20 @@ $(document).ready(function () {
 // init Flickity
 // external js: flickity.pkgd.js
 var carouselContainers = document.querySelectorAll('.carousel-container');
-for (var i = 0; i < carouselContainers.length; i++) {
+
+for ( var i=0; i < carouselContainers.length; i++ ) {
   var container = carouselContainers[i];
-  initCarouselContainer(container);
+  initCarouselContainer( container );
 }
-function initCarouselContainer(container) {
+
+function initCarouselContainer( container ) {
   var carousel = container.querySelector('.carousel-cards');
-  var flkty = new Flickity(carousel, {
+  var flkty = new Flickity( carousel, {
     prevNextButtons: false,
     pageDots: false,
     freeScroll: true,
     contain: true
-  });
+  } );
   var previousButton = container.querySelector('.carousel--prev');
   previousButton.addEventListener('click', function () {
     flkty.previous();
@@ -115,6 +119,7 @@ function initCarouselContainer(container) {
   nextButton.addEventListener('click', function () {
     flkty.next();
   });
+
 }
 
 /*
@@ -124,9 +129,7 @@ function initCarouselContainer(container) {
 */
 
 var cw = $('.no-img').width();
-$('.no-img').css({
-  'height': cw + 'px'
-});
+$('.no-img').css({ 'height': cw + 'px' });
 
 /*
 ################
@@ -134,20 +137,27 @@ $('.no-img').css({
 ################
 */
 
-(function () {
+(() => {
   'use strict';
-
   // Page is loaded
 
   // Check for WebP support 
-  var supportsWebP = function () {
-    var elem = document.createElement('canvas');
-    return !!(elem.getContext && elem.getContext('2d')) && elem.toDataURL('image/webp').indexOf('data:image/webp') === 0;
-  }();
-  var objects = document.getElementsByClassName('async_home');
-  Array.from(objects).map(function (item) {
+  const supportsWebP = (() => {
+    const elem = document.createElement('canvas');
+    return !!(elem.getContext && elem.getContext('2d')) &&
+           elem.toDataURL('image/webp').indexOf('data:image/webp') === 0;
+  })();
+
+  const objects = document.getElementsByClassName('async_home');
+
+  Array.from(objects).map((item) => {
     // Start loading image
-    var imageUrl;
+    // `imageURL`, et non `imageUrl` comme l'écrit le legacy : sa déclaration ne
+    // servait pas, et la fonction, en 'use strict', levait une ReferenceError à
+    // la première affectation. Le build Grunt (babel + uglify) perdait le
+    // 'use strict' et masquait la coquille ; servi tel quel, le script cassait
+    // le chargement de l'hémicycle de l'accueil sur grand écran.
+    let imageURL;
     if (window.matchMedia("(max-width: 575.98px)").matches) {
       /*img.src = item.dataset.mobile;
       img.onload = () => {
@@ -164,18 +174,27 @@ $('.no-img').css({
       imageURL = item.dataset.src;
     }
 
+    // Sur mobile, rien à charger : la feuille n'y pose que le dégradé. Le legacy
+    // tombait ici sur une ReferenceError, au même effet visible.
+    if (!imageURL) {
+      return;
+    }
+
     // Use .webp if supported
     if (supportsWebP) {
       imageURL = imageURL.replace(/\.(jpg|jpeg|png)$/i, '.webp');
     }
-    var img = new Image();
+
+    const img = new Image();
     img.src = imageURL;
-    img.onload = function () {
+
+    img.onload = () => {
       item.classList.remove('async_home');
+
       if (item.nodeName === 'IMG') {
         item.src = imageURL;
       } else {
-        item.style.backgroundImage = "linear-gradient(130deg, rgba(0, 183, 148, 0.7) 0.65%, rgba(36, 107, 150, 0.7) 112%), url(".concat(imageURL, ")");
+        item.style.backgroundImage = `linear-gradient(130deg, rgba(0, 183, 148, 0.7) 0.65%, rgba(36, 107, 150, 0.7) 112%), url(${imageURL})`;
       }
     };
   });
@@ -188,15 +207,18 @@ $('.no-img').css({
 */
 
 $(function () {
+
   var $el, $ps, $up, totalHeight;
+
   $(".read-more-container .btn").click(function () {
+
     // IE 7 doesn't even get this far. I didn't feel like dicking with it.
 
-    var totalHeight = 0;
-    var margin = 0;
+    let totalHeight = 0;
+    let margin = 0;
     $el = $(this);
-    var $p = $el.parent();
-    var buttonHeight = parseInt($p.css("padding"), 10) * 2 + $p.height();
+    let $p = $el.parent();
+    let buttonHeight = parseInt($p.css("padding"), 10) * 2 + $p.height();
     $up = $p.parent();
     $ps = $up.children();
 
@@ -206,21 +228,27 @@ $(function () {
       margin = parseInt($(this).css("margin-bottom"), 10) + parseInt($(this).css("margin-top"), 10);
       totalHeight = totalHeight + margin;
     });
+
     totalHeight = totalHeight - buttonHeight;
-    $up.css({
-      // Set height to prevent instant jumpdown when max height is removed
-      "height": $up.height(),
-      "max-height": 9999
-    }).animate({
-      "height": totalHeight
-    });
+
+    $up
+      .css({
+        // Set height to prevent instant jumpdown when max height is removed
+        "height": $up.height(),
+        "max-height": 9999
+      })
+      .animate({
+        "height": totalHeight
+      });
 
     // fade out read-more
     $p.fadeOut();
 
     // prevent jump-down
     return false;
+
   });
+
 });
 
 /*
@@ -229,14 +257,14 @@ NEWSLETTER (MODAL)
 ##########
 */
 // Neweletter in header
-$('#newsletterForm').on('submit', function (e) {
+$('#newsletterForm').on('submit', (e) => {
   e.preventDefault();
   $.ajax({
     url: get_base_url() + "/api/newsletter/create_newsletter",
     type: "POST",
     data: $('#newsletterForm').serialize(),
     dataType: 'json',
-    success: function success(ac) {
+    success: function (ac) {
       if (!ac) {
         $('#newsletterForm').hide();
         $('#modalFail').show();
@@ -245,43 +273,43 @@ $('#newsletterForm').on('submit', function (e) {
         $('#modalSubscription').show();
       }
     },
-    error: function error(err) {
-      console.log('err', err);
+    error: function (err) {
+      console.log('err', err)
       $('#newsletterForm').hide();
       $('#modalFail').show();
     }
   });
   return true;
-});
+})
 // Newsletter on datan.fr/newsletter page
-$('#newsletterPage').on('submit', function (e) {
+$('#newsletterPage').on('submit', (e) => {
   e.preventDefault();
   $.ajax({
     url: get_base_url() + "/api/newsletter/create_newsletter",
     type: "POST",
     data: $('#newsletterPage').serialize(),
     dataType: 'json',
-    success: function success(ac) {
+    success: function (ac) {
       if (!ac) {
         $('#newsletterFailed').removeClass("d-none");
       } else {
         $('#newsletterSuccess').removeClass("d-none");
       }
     },
-    error: function error(err) {
-      console.log('err', err);
+    error: function (err) {
+      console.log('err', err)
       $('#newsletterFailed').removeClass("d-none");
     }
   });
   return true;
-});
+})
 
 /*
 ##########
 VOTE DATAN MODAL EXPLAIN OPEN BY DEFAULT
 ##########
 */
-$(window).on('load', function () {
+$(window).on('load', function() {
   $('#modalExplain').modal('show');
 });
 
@@ -298,10 +326,12 @@ $('#searchfaq').on('keyup', function (e) {
   array.reverse();
   match += array.join(".*") + ")";
   var regex = new RegExp(match, 'i');
+
   $(".card-question").filter(function () {
     return regex.test($(this).text());
   }).show();
-});
+
+})
 
 /*
 ##########
@@ -313,38 +343,41 @@ function socialWindow(url) {
   var left = (screen.width - 570) / 2;
   var top = (screen.height - 570) / 2;
   var params = "menubar=no,toolbar=no,status=no,width=570,height=570,top=" + top + ",left=" + left;
-  window.open(url, "NewWindow", params);
+  window.open(url,"NewWindow",params);
 }
 var pageUrl = encodeURIComponent(document.URL);
 var tweet = encodeURIComponent(jQuery("meta[property='og:description']").attr("content"));
 var whatsappMessage = "Je viens de découvrir un nouveau vote de l'Assemblée nationale sur Datan ! Découvre le aussi : " + document.URL;
-jQuery(".social-share.facebook").on("click", function () {
-  var url = "https://www.facebook.com/sharer.php?u=" + pageUrl;
-  socialWindow(url);
+
+jQuery(".social-share.facebook").on("click", function() {
+    var url = "https://www.facebook.com/sharer.php?u=" + pageUrl;
+    socialWindow(url);
 });
-jQuery(".social-share.twitter").on("click", function () {
-  var url = "https://twitter.com/intent/tweet?url=" + pageUrl + "&text=" + tweet;
-  socialWindow(url);
+
+jQuery(".social-share.twitter").on("click", function() {
+    var url = "https://twitter.com/intent/tweet?url=" + pageUrl + "&text=" + tweet;
+    socialWindow(url);
 });
-jQuery(".social-share.linkedin").on("click", function () {
-  var url = "https://www.linkedin.com/sharing/share-offsite/?url=" + pageUrl;
-  socialWindow(url);
-});
-jQuery(".social-share.whatsapp").on("click", function () {
-  var url = "whatsapp://send?text=" + whatsappMessage;
-  socialWindow(url);
-});
+
+jQuery(".social-share.linkedin").on("click", function() {
+    var url = "https://www.linkedin.com/sharing/share-offsite/?url=" + pageUrl;
+    socialWindow(url);
+})
+
+jQuery(".social-share.whatsapp").on("click", function() {
+    var url = "whatsapp://send?text=" + whatsappMessage;
+    socialWindow(url);
+})
 
 /*
 ##########
 Shrink navbar
 ##########
 */
-$(window).scroll(function () {
+$(window).scroll(function() {
   if ($(document).scrollTop() > 50) {
     $('#navbar-menu').addClass('navbar-shrink');
   } else {
     $('#navbar-menu').removeClass('navbar-shrink');
   }
 });
-//# sourceMappingURL=main-es5.js.map

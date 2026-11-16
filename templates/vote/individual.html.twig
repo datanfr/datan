@@ -31,7 +31,7 @@
 
 {% block javascripts_head %}
   <script src="{{ asset('assets/js/dist/chart.min.js') }}"></script>
-  {# Flickity avant main.min.js, qui initialise `.carousel-container`. #}
+  {# Flickity avant main.js, qui initialise `.carousel-container`. #}
   <script src="{{ asset('assets/js/libraries/flickity/flickity.pkgd.min.js') }}"></script>
 {% endblock %}
 
@@ -207,7 +207,7 @@
       {% endif %}
       <div class="bloc-social d-none d-md-block mt-5">
         <h3 class="subtitle">Partagez ce vote</h3>
-        {# Les boutons de partage étaient absents (titre seul) : main.min.js les
+        {# Les boutons de partage étaient absents (titre seul) : main.js les
            branche sur les classes `social-share <réseau>`, comme ailleurs. #}
         <div class="d-flex flex-row flex-wrap social-share-bloc">
           <button type="button" name="button" class="btn social-share twitter twitter-bg d-flex">
@@ -317,7 +317,7 @@
             <p class="text-center">{{ explication }}</p>
           </div>
           {# Flickity se branche sur `.carousel-container` et exige d'y trouver
-             les deux boutons : sans eux, main.min.js lève sur un null et tous
+             les deux boutons : sans eux, main.js lève sur un null et tous
              les carrousels de la page restent inertes. #}
           <div class="col-12 carousel-container">
             <div class="carousel-cards">
@@ -613,7 +613,7 @@
      perdaient tri, recherche et pagination sur toutes les pages de scrutin,
      sans une trace côté serveur. Même trio que `depute/votes.html.twig`. #}
   <script src="{{ asset('assets/js/libraries/moment/moment.min.js') }}"></script>
-  <script src="{{ asset('assets/js/dist/datatable-datan.min.js') }}"></script>
+  {{ include('partials/scripts_datatable.html.twig') }}
   <script src="{{ asset('assets/js/libraries/datetime/datetime-moment.js') }}"></script>
   <script>
     new Chart(document.getElementById('pie-chart'), {

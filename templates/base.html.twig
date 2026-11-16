@@ -128,7 +128,22 @@
     <link rel="shortcut icon" href="#" />
     <link rel="apple-touch-icon" href="{{ asset('assets/imgs/favicon/apple-touch-icon.png') }}" />
 
-    <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/main.css') }}">
+    {# CSS critique (header.php du legacy, `$critical_css`) : une page qui
+       nomme le sien dans `css_critique` reçoit d'abord ce seul extrait — ce
+       qu'affiche le premier écran, sur mobile ou sur grand écran —, et
+       main.css (216 Ko) arrive sans bloquer le rendu, par la bascule
+       media="print" → "all". Trois pages le font sur datan.fr : l'accueil, la
+       ville et le groupe. Les extraits se régénèrent par `npm run critique`
+       (cf. README). #}
+    {% set css_critique = block('css_critique') is defined ? block('css_critique')|trim : '' %}
+    {% if css_critique %}
+      <link rel="stylesheet" media="screen and (max-width: 480px)" href="{{ asset('styles/critical/' ~ css_critique ~ '-mobile.css') }}" />
+      <link rel="stylesheet" media="screen and (min-width: 481px)" href="{{ asset('styles/critical/' ~ css_critique ~ '.css') }}" />
+      <link rel="stylesheet" href="{{ asset('styles/main.scss') }}" media="print" onload="this.media='all'; this.onload=null;">
+      <noscript><link rel="stylesheet" type="text/css" href="{{ asset('styles/main.scss') }}"></noscript>
+    {% else %}
+      <link rel="stylesheet" type="text/css" href="{{ asset('styles/main.scss') }}">
+    {% endif %}
     {% block stylesheets %}{% endblock %}
 
     <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin>
@@ -296,7 +311,7 @@
     </main>
     {# Modale d'inscription à la newsletter, présente dans le DOM de toutes les
        pages comme sur le site (footer.php) — seul l'accueil porte un bouton qui
-       l'ouvre. `main.min.js` intercepte le formulaire #newsletterForm et poste
+       l'ouvre. `main.js` intercepte le formulaire #newsletterForm et poste
        sur /api/newsletter/create_newsletter ; #modalSubscription et #modalFail
        sont masqués par main.css tant qu'il n'a pas basculé l'affichage. #}
     <div class="modal fade" id="newsletter" tabindex="-1" role="dialog" aria-labelledby="newsletterLabel" aria-hidden="true">
@@ -503,7 +518,7 @@
     </footer>
 
     {# Même pile et même ordre que le pied de page d'origine
-       (application/views/templates/footer.php). `main.min.js` ouvre sur
+       (application/views/templates/footer.php). `main.js` ouvre sur
        `$(document).ready(...)` : sans jQuery avant lui, il lève une erreur dès
        la première ligne et les popovers d'explication des statistiques, les
        menus déroulants et les blocs repliables restent inertes sur tout le
@@ -517,11 +532,11 @@
     <script src="{{ asset('assets/js/libraries/jquery/jquery.unveil.min.js') }}"></script>
 
     {% block javascripts %}{% endblock %}
-    <script type="text/javascript" src="{{ asset('assets/js/main.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('scripts/main.js') }}"></script>
     {# Décodeur des adresses masquées aux robots ({{ url_obf(...) }}) — chargé
        partout, comme sur le site : des liens masqués existent jusque dans les
        pieds de page. `robots.txt` interdit ce fichier aux moteurs. #}
-    <script type="text/javascript" src="{{ asset('assets/js/datan/url_obf2.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('scripts/url_obf2.js') }}"></script>
     {# Compteur de pages du mois, repris du site (footer.php:241-242 depuis le
        10 septembre 2026, commit 6ad583ac) : il remplace le service
        « datantracking » de Tarte au citron, parti avec GTM le même jour. Le
@@ -530,6 +545,6 @@
        (partials/modale_don.html.twig) s'ouvre, au plus une fois par semaine.
        Le compteur de pied de page (#monthly-pages-visited-count) n'existe dans
        aucune vue, ici comme là-bas : le script le garde par un `if`. #}
-    <script type="text/javascript" src="{{ asset('assets/js/datan/donation-modal-localstorage.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('scripts/donation-modal-localstorage.js') }}"></script>
   </body>
 </html>

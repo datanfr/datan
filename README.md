@@ -95,6 +95,7 @@ l'open data : seul le dump les apporte.
 ## 4. Lancer
 
 ```bash
+php bin/console sass:build --watch  # compile la feuille de style (cf. plus bas)
 symfony server:start                # ou : php -S 127.0.0.1:8000 -t public
 ```
 
@@ -103,6 +104,116 @@ Site sur <http://127.0.0.1:8000>. Pour accéder à la rédaction (`/login`) :
 ```bash
 php bin/console app:utilisateur:creer moi "Mon Nom" --admin
 ```
+
+## CSS et JavaScript
+
+### Où écrire
+
+| Quoi | Où | Appel dans un gabarit |
+|---|---|---|
+| Styles du site | `assets/styles/main.scss` | `asset('styles/main.scss')` (déjà dans `base.html.twig`) |
+| Styles de la rédaction | `assets/styles/admin/*.css` | `asset('styles/admin/….css')` |
+| Scripts du site | `assets/scripts/*.js` | `asset('scripts/….js')` |
+| CSS critique (généré) | `assets/styles/critical/` | bloc `css_critique` (cf. plus bas) |
+| Bibliothèques tierces, images, polices, documents | `public/assets/` | `asset('assets/…')` |
+
+Tout ce qui est dans `assets/` passe par **AssetMapper** : servi sous `/build/`,
+avec un condensat du contenu dans le nom (`main-lkKi-Il.css`). Le navigateur
+peut donc le garder un an, et une modification change l'adresse. Ce qui est
+dans `public/assets/` est servi tel quel, sous la même adresse depuis toujours :
+on n'y écrit pas de code, seulement des fichiers tiers ou binaires.
+
+- **Bootstrap 4.6.2** vient de Composer (`twbs/bootstrap`) et non de npm.
+  `main.scss` l'importe avec `@import "bootstrap"`, et ses variables se
+  surchargent en tête du fichier. La version est figée : la 5 casserait toutes
+  les classes du site.
+- **Dans le SCSS, les `url()` vers les images s'écrivent en absolu**
+  (`/assets/imgs/…`). La feuille est servie depuis `/build/styles/`, si bien
+  qu'un chemin relatif ne retombe plus sur `public/assets/`.
+- **Les scripts sont des scripts classiques**, pas des modules ES : ils
+  s'appuient sur le jQuery global chargé par `base.html.twig`. Pas d'`import`,
+  donc. AssetMapper analyse les `import` et refuserait un paquet absent de
+  `importmap.php`.
+- **Exception : les scripts de la rédaction** (`public/assets/js/dashboard/`).
+  `init-ckeditor.js` est un module qui importe `ckeditor5` par l'importmap écrit
+  à la main dans les formulaires d'administration. Il reste où il est.
+- `public/assets/js/dist/chart.min.js` est un paquet figé (Chart.js 4.4.1 et le
+  greffon datalabels 2.2.0), construit autrefois par le rollup du legacy à
+  partir de `public/assets/js/custom/import_chartjs.js`. On ne le retouche pas,
+  on le remplace.
+
+### Compiler
+
+En **développement**, seul le SCSS se compile ; les scripts sont servis
+directement depuis `assets/scripts/`, lisibles et non minifiés :
+
+```bash
+php bin/console sass:build --watch   # recompile main.scss à chaque enregistrement
+```
+
+Sans cette compilation, toute page répond 500 avec un message explicite
+(« `var/sass/main-….output.css` doesn't exist, run `php bin/console sass:build` »).
+dart-sass est téléchargé dans `var/dart-sass/` au premier lancement ; ni Node ni
+npm ne sont nécessaires.
+
+En **production**, le workflow de déploiement exécute :
+
+```bash
+php bin/console sass:build           # assets/styles/main.scss → var/sass/
+php bin/console asset-map:compile    # tout assets/ → public/build/, minifié
+```
+
+La minification (CSS et JS) est faite au moment d'`asset-map:compile` par
+`sensiolabs/minify-bundle`, qui télécharge son binaire dans `var/minify/`. Elle
+est coupée en dev.
+
+**Ne pas lancer `asset-map:compile` en local**, ou bien supprimer `public/build/`
+juste après. Tant que `public/build/manifest.json` existe, le mode dev sert ces
+fichiers figés au lieu de vos sources, sans le signaler.
+
+### CSS critique
+
+Sur trois pages, l'accueil, la ville et le groupe (comme sur datan.fr), le
+`<head>` ne charge d'abord qu'un extrait de `main.css` : ce qu'il faut pour
+afficher le premier écran. La feuille complète arrive ensuite sans bloquer le
+rendu. Une page s'y inscrit par un bloc :
+
+```twig
+{% block css_critique %}city{% endblock %}   {# → assets/styles/critical/city.css et city-mobile.css #}
+```
+
+Les extraits se mesurent dans un vrai navigateur, sur une page réellement
+servie. C'est la seule étape qui demande Node (≥ 22) :
+
+```bash
+npm ci && npx playwright install chromium     # une fois
+BASE_URL=https://symfony.datan.fr npm run critique
+```
+
+`BASE_URL` doit pointer sur un site **aux données complètes** et qui sert **la
+même version des gabarits**. Une base locale incomplète raccourcit les pages,
+et l'extrait omet alors des blocs que la production affiche au premier écran.
+Pour mesurer le HTML de la préproduction avec un `main.css` compilé sur votre
+poste, ajouter `CSS_URL=http://127.0.0.1:8000/build/styles/main-….css`.
+
+**À relancer** quand le haut de l'une de ces trois pages change de mise en page,
+ou qu'une modification de `main.scss` touche à ce qui s'y affiche. Puis
+committer `assets/styles/critical/`. Un extrait périmé ne casse rien, puisque
+`main.css` arrive juste après et a le dernier mot, mais la page « saute » au
+moment où la feuille complète s'applique. Pages, adresses et dimensions sont
+déclarées en tête de `bin/css-critique.mjs`.
+
+### Ce que faisait Grunt (legacy)
+
+| Gruntfile | Aujourd'hui |
+|---|---|
+| `sass` (`main.scss`, `bootstrap.scss`) | `sass:build` (`main.scss` seul) |
+| `purifycss` + `concat` | supprimés : `main.scss` importait déjà Bootstrap en entier, le Bootstrap purifié mis devant n'était qu'un doublon (98 Ko sur 315) |
+| `babel` (ES5) | supprimé : tous les navigateurs lisent l'ES2015 |
+| `uglify` | `minify-bundle`, pendant `asset-map:compile` |
+| `rollup` (Chart.js) | paquet figé `public/assets/js/dist/chart.min.js` |
+| `critical` | `npm run critique` |
+| `?v=<version>` dans les adresses | condensat dans le nom du fichier |
 
 ## Pièges
 

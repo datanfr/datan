@@ -1,0 +1,18 @@
+# Compilation de assets/styles/main.scss par dart-sass (binaire téléchargé dans
+# var/dart-sass/ à la première exécution, version figée par le bundle).
+#   php bin/console sass:build            # une fois
+#   php bin/console sass:build --watch    # en développement
+# Le CSS produit est ensuite servi — et condensé dans son nom — par AssetMapper.
+symfonycasts_sass:
+    root_sass:
+        - '%kernel.project_dir%/assets/styles/main.scss'
+    sass_options:
+        # Comme le legacy (grunt-contrib-sass, style: compressed).
+        style: compressed
+        load_path:
+            - '%kernel.project_dir%/vendor/twbs/bootstrap/scss'
+        # Bootstrap 4 a été écrit pour une syntaxe que dart-sass déprécie
+        # (divisions par « / », fonctions globales) : ses avertissements
+        # noieraient ceux de notre propre feuille.
+        quiet_deps: true
+        source_map: '%kernel.debug%'
