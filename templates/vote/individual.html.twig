@@ -112,15 +112,18 @@
         {{ block('infos_table') }}
       </div>
       {# Résumé puis justification, chacun son paragraphe, l'un sans l'autre s'il
-         manque (Exposes_model::get_expose_by_vote du legacy). Sans condition de
-         relecture : datan.fr publie le résumé IA dès qu'il existe, « relu » ne
-         règle que la file de /admin/amendements. « NA » est le marqueur
-         d'absence des anciens résumés de la rédaction. Écart voulu : la
-         justification, texte du modèle, est échappée — le legacy l'insère
-         brute ; le résumé garde sa branche HTML pour ces anciens résumés. #}
-      {% set resume = (scrutin.amendement_resume ?? '')|trim %}
+         manque (Exposes_model::get_expose_by_vote du legacy). **Seulement une
+         fois relu** (`resume_relu`) : ce texte vient d'un modèle, et rien de
+         généré ne se publie sans qu'un rédacteur l'ait validé dans
+         /admin/amendements — écart voulu avec datan.fr, qui l'affiche dès
+         qu'il existe. « NA » est le marqueur d'absence des anciens résumés de
+         la rédaction. Autre écart voulu : la justification est échappée, le
+         legacy l'insère brute ; le résumé garde sa branche HTML pour ces
+         anciens résumés. #}
+      {% set relu = scrutin.amendement_resume_relu ?? false %}
+      {% set resume = relu ? (scrutin.amendement_resume ?? '')|trim : '' %}
       {% set resume = resume == 'NA' ? '' : resume %}
-      {% set justification = (scrutin.amendement_justification ?? '')|trim %}
+      {% set justification = relu ? (scrutin.amendement_justification ?? '')|trim : '' %}
       {% if resume or justification %}
         <div class="mt-5">
           <h2>Résumé de l'amendement</h2>

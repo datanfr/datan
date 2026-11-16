@@ -161,6 +161,7 @@ class VoteController extends AbstractController
                     dos.procedure_parlementaire AS dossier_procedure,
                     a.href AS amendement_href, a.expose AS amendement_expose,
                     a.resume_ia AS amendement_resume, a.justification_ia AS amendement_justification,
+                    a.resume_relu AS amendement_resume_relu,
                     a.auteur_type AS amendement_auteur_type, a.auteur_ref AS amendement_auteur_ref
              FROM scrutin s
              LEFT JOIN decryptage d ON d.scrutin_id = s.id AND d.state = :published
