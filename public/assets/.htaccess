@@ -12,4 +12,14 @@
 # ou sur la requête qu'on écrirait dans public/.htaccess.
 <IfModule mod_headers.c>
     Header set Cache-Control "public, max-age=31536000, immutable"
+
+    # L'exception : les jeux open data (assets/opendata/*.csv), récrits chaque
+    # matin à adresse fixe par app:opendata:publier — une adresse publiée sur
+    # data.gouv.fr depuis 2021, qu'on ne peut pas versionner. Immuables, le
+    # navigateur et surtout Cloudflare (qui met le .csv en cache d'office)
+    # serviraient un an le fichier du premier jour. Deux heures, la durée que
+    # leur donnait le site d'origine.
+    <FilesMatch "\.csv$">
+        Header set Cache-Control "public, max-age=7200"
+    </FilesMatch>
 </IfModule>
