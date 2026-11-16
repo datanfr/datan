@@ -124,8 +124,13 @@
     </script>
     {% block schema %}{% endblock %}
 
+    {# L'origine ajoute ici `<link rel="shortcut icon" href="#">`, censé éviter
+       un 404 sur /favicon.ico (header.php:72). Non repris : `#` désigne la
+       page elle-même, que le navigateur redemande alors en entier pour y
+       chercher une icône, avant de se rabattre sur la vraie — une seconde
+       requête de page à chaque première visite (relevée par Lighthouse,
+       53 Ko et 310 ms sur l'accueil). #}
     <link rel="icon" type="image/x-icon" href="{{ asset('assets/imgs/favicon/datan_favicon.ico') }}" />
-    <link rel="shortcut icon" href="#" />
     <link rel="apple-touch-icon" href="{{ asset('assets/imgs/favicon/apple-touch-icon.png') }}" />
 
     {# CSS critique (header.php du legacy, `$critical_css`) : une page qui

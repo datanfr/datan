@@ -141,12 +141,11 @@ $('.no-img').css({ 'height': cw + 'px' });
   'use strict';
   // Page is loaded
 
-  // Check for WebP support 
-  const supportsWebP = (() => {
-    const elem = document.createElement('canvas');
-    return !!(elem.getContext && elem.getContext('2d')) &&
-           elem.toDataURL('image/webp').indexOf('data:image/webp') === 0;
-  })();
+  // Le legacy testait ici la prise en charge du WebP, puis troquait
+  // l'extension du JPEG reçu. Les attributs data-* portent désormais le WebP
+  // lui-même (cf. home/index.html.twig) : le remplacement ne trouvait plus son
+  // `.jpg` en fin d'adresse depuis que celle-ci finit par `?v=…`, et le
+  // preload du <head> doit annoncer la même adresse que celle demandée ici.
 
   const objects = document.getElementsByClassName('async_home');
 
@@ -178,11 +177,6 @@ $('.no-img').css({ 'height': cw + 'px' });
     // tombait ici sur une ReferenceError, au même effet visible.
     if (!imageURL) {
       return;
-    }
-
-    // Use .webp if supported
-    if (supportsWebP) {
-      imageURL = imageURL.replace(/\.(jpg|jpeg|png)$/i, '.webp');
     }
 
     const img = new Image();

@@ -55,11 +55,14 @@ le 16/11/2026 ; rien n'est planifié, donc rien n'est appelé.
 datan.fr sert cette application depuis le 16/11/2026 (`DEPLOIEMENT.md`, « La
 bascule du 16 novembre 2026 », retour arrière compris). Reste :
 
-- [ ] **Fusionner `symfony` dans `master`** (pull request, option « Create a
-  merge commit ») : les déploiements partent désormais de `master`, et tant que
-  la fusion n'est pas faite plus rien ne se déploie. Fermer ensuite les trois
-  pull requests du site d'origine (#1285, #1287, #1288), sans objet, et
-  décider du sort de la branche `symfony`.
+- [ ] **Supprimer la branche `symfony`**, fusionnée dans `master` et sans
+  objet depuis : les déploiements partent de `master`, par pull request.
+- [ ] **Régénérer les extraits de CSS critique**
+  (`BASE_URL=https://datan.fr npm run critique`) : `bin/css-critique.mjs` garde
+  depuis le 16/11 les repères de positionnement de toute la page (README,
+  « CSS critique »), mais n'a pas tourné depuis ce changement — relire le diff
+  des six fichiers avant de les committer. Sans urgence : l'accueil, seule
+  page touchée, est couverte par sa feuille en ligne.
 - [ ] **Liste Mailjet « votes » (47010) : elle n'existe plus dans le compte**
   (deux listes seulement le 16/11/2026 : `liste_generale` 25834, 1 137
   abonnés, et `liste_test` 26427). Depuis le correctif du 16/11, un abonné

@@ -108,6 +108,11 @@ comprise : ce sont des noms que des réutilisations lisent. Les écarts :
 - **Liens morts remplacés** : `/cookiespolicy` → `/mentions-legales`,
   `recherche.php` → géré en JS, rubrique « rapports » du blog en dur → vraie
   rubrique, « cliquez ici » à `href="#"` supprimé.
+- **`<link rel="shortcut icon" href="#">` non repris** : `#` étant la page
+  elle-même, le navigateur la redemandait en entier pour y chercher une icône.
+- **Hémicycle de l'accueil** : WebP posé directement et préchargé ; le legacy
+  ne précharge rien et troque l'extension du JPEG en JavaScript. Un navigateur
+  sans WebP (Safari < 14) garde le dégradé et l'image basse définition.
 - **Canonical des pages mois** : une seule forme, zéro-paddée ; le legacy a un
   double self-canonical.
 - **Recherche** : votes triés par récence et filtrés sur `state = 'published'`,
