@@ -83,11 +83,13 @@ bascule du 16 novembre 2026 », retour arrière compris). Reste :
   `sync-quotidien.log`, et ouvrir les quatre jeux sur data.gouv.fr. Les CSV
   produits le 16/11 avaient les colonnes et le nombre de lignes de ceux du
   site d'origine ; les valeurs n'ont pas été comparées une à une.
-- [ ] **Cloudflare retire l'`ETag`** des pages : la revalidation en 304 marche
-  sur symfony.datan.fr, pas sur datan.fr (constaté le 16/11). Il le retire
-  quand une de ses fonctions réécrit le HTML (obfuscation des adresses de
-  courriel, Rocket Loader, minification…) : à couper dans le tableau de bord
-  si l'on veut le 304. Vérifier aussi le mode SSL « Full (strict) » — le
+- [ ] **Cloudflare retire l'`ETag`** des pages : le serveur l'envoie (vérifié
+  en l'interrogeant directement), datan.fr ne le rend pas, et la revalidation
+  en 304 n'a donc pas lieu (constaté le 16/11). D'après sa documentation, il
+  retire un ETag faible dès qu'un de ces réglages est actif : Email Address
+  Obfuscation, Automatic HTTPS Rewrites, Replace insecure JavaScript
+  libraries. À couper dans le tableau de bord si l'on veut le 304 — le premier
+  masque aux robots les adresses de courriel des députés. Vérifier aussi le mode SSL « Full (strict) » — le
   serveur reçoit bien du HTTPS, mais le réglage n'a pas été lu — et décider si
   Symfony doit lire l'IP des visiteurs dans `CF-Connecting-IP`
   (`trusted_proxies`).
@@ -98,10 +100,11 @@ bascule du 16 novembre 2026 », retour arrière compris). Reste :
   `RechauffeurCache::purger()` — sans quoi une publication n'apparaît plus —,
   et vérifier que son « Browser Cache TTL » respecte l'origine, qui ne donne
   aucune durée au navigateur pour une page.
-- [ ] **symfony.datan.fr** pointe toujours sur le même dossier. Ses pages
-  restent hors des moteurs (`Indexation`), ses fichiers statiques non. Le
-  garder comme adresse de contrôle des déploiements, ou le rediriger vers
-  datan.fr.
+- [ ] **Plus de préproduction** : le sous-domaine symfony.datan.fr a disparu de
+  cPanel à la bascule (il répond par le certificat par défaut du serveur).
+  Tout déploiement va droit en production. À décider : en recréer un — sur un
+  autre dossier et une copie de la base —, ou s'en passer. `Indexation` garde
+  le nom dans ses hôtes non indexables, sans effet.
 - [ ] **Matomo dans l'iframe** des députés : le site d'origine l'y chargeait,
   `IframeController` l'en a retiré — sans lui, les affichages chez les sites
   tiers ne sont plus comptés. À décider.

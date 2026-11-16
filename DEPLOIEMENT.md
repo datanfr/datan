@@ -1,8 +1,10 @@
 # Mise en production
 
-Cible actuelle : **symfony.datan.fr**, sur le compte o2switch (cPanel,
-LiteSpeed) qui sert déjà `datan.fr` — préproduction d'abord, puis remplaçante
-du legacy si tout va bien. Le §4 dit comment elle se déploie et ce qu'il faut
+Cible : **datan.fr**, sur son compte o2switch (cPanel, LiteSpeed), depuis la
+bascule du 16 novembre 2026. L'application y a d'abord tourné en préproduction
+sous symfony.datan.fr, sous-domaine supprimé depuis : le dossier
+`~/symfony.datan.fr` en garde le nom, et plusieurs passages ci-dessous
+racontent cette période. Le §4 dit comment elle se déploie et ce qu'il faut
 poser une fois à la main ; les §1 et §6 décrivent aussi une cible **VPS nu**
 (nginx + PHP-FPM), conservée pour le jour où le site quitterait le mutualisé,
 et `datan.remikel.fr`, la préproduction précédente.
@@ -326,7 +328,8 @@ C'est aussi le seul filet du dépôt : il n'y a aucun test.
 ### `deploiement.yml` — sur push vers `master`
 
 Cible : **datan.fr**, dont la racine web est `~/symfony.datan.fr/public` depuis
-la bascule du 16 novembre 2026 (symfony.datan.fr pointe au même endroit). Le
+la bascule du 16 novembre 2026 (le sous-domaine symfony.datan.fr, qui servait
+de préproduction, a été supprimé ce jour-là — seul le dossier en garde le nom). Le
 site d'origine dort dans `~/public_html`, plus rien ne le déploie. Le
 déploiement part d'un push sur `master` (ou à la main, *Run workflow*). Le
 contrôle *Qualité* passe d'abord : rien ne part sur le serveur sans lui.
@@ -484,7 +487,7 @@ compte, même clé.
 | `CPANEL_API_TOKEN` | secret | déjà posé (liste blanche SSH) |
 | `SSH_PRIVATE_KEY` | secret | déjà posé |
 | `SYMFONY_RACINE` | variable | facultative, `symfony.datan.fr` (relatif au `$HOME`) |
-| `SYMFONY_URL` | variable | facultative, `https://symfony.datan.fr` |
+| `SYMFONY_URL` | variable | facultative, `https://datan.fr` |
 | `PHP_BIN` | variable | facultative, chemin d'un PHP ≥ 8.4 si la détection échoue |
 
 ### Amorçage, à faire une fois

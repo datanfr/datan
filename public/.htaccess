@@ -42,9 +42,8 @@ AddHandler application/x-httpd-alt-php84___lsphp .php
 # Ce dossier sert datan.fr depuis le 16 novembre 2026. Le bloc qui posait
 # `X-Robots-Tag: noindex` sur les images, feuilles de style et PDF est retiré :
 # il n'était pas conditionné à l'hôte et aurait désindexé ceux du vrai site.
-# symfony.datan.fr, qui pointe toujours ici, reste hors des moteurs pour ses
-# pages par l'application (App\Referencement\Indexation) ; ses fichiers
-# statiques, eux, ne le sont plus.
+# Le sous-domaine symfony.datan.fr, qu'il protégeait, a été supprimé le même
+# jour.
 
 DirectoryIndex index.php
 
