@@ -466,6 +466,16 @@ commune : compter les lignes avant de conclure d'une page vide à un défaut de
 code. La base de l'application d'origine, elle, n'est joignable que sur le
 serveur (cf. « Seconde source »).
 
+**Une variable d'environnement se déclare à deux endroits** : sa valeur de
+repli dans `config/services.yaml` (`env(NOM): …`), son mode d'emploi dans
+`.env.dist`. Symfony ne lit `.env.dist` qu'en l'absence de `.env` : sur un
+poste où un `.env` traînait, `CORS_ALLOW_ORIGIN` et `MATOMO_URL`, définies là
+seulement, faisaient tomber toutes les pages en 500. Et `.env.dev`, suivi par
+Git, passe *après* `.env.local` et l'emporte sur lui : n'y mettre aucune valeur
+propre à un service réel — l'adresse de Matomo y a figuré un jour, et chaque
+poste de développement chargeait le suivi d'audience de la production. Un
+réglage pour le seul développement va dans `.env.dev.local`.
+
 **Vérifier `.env.local` avant de conclure quoi que ce soit d'un 404.** Ce fichier
 va et vient ; quand il pose `APP_ENV=prod`, une route neuve répond 404 tant que
 `var/cache/prod` n'a pas été reconstruit, et le conteneur compilé fait foi contre

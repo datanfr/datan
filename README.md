@@ -66,9 +66,29 @@ DEFAULT_URI=http://127.0.0.1:8000
 
 `serverVersion` doit dire la version réelle du serveur, suffixe `-MariaDB`
 compris (`bin/mariadb-locale.sh etat`), sinon Doctrine produit des diffs de
-schéma fantômes. `mysqli` est le nom du pilote PHP, pas du moteur. Les autres
-variables (courriel, Mailjet, IA, Matomo) sont décrites dans `.env.dist` ;
-vides, elles désactivent leur fonctionnalité.
+schéma fantômes. `mysqli` est le nom du pilote PHP, pas du moteur.
+
+Ces quatre lignes suffisent. Toutes les autres variables ont une valeur par
+défaut (`config/services.yaml`) et leur mode d'emploi dans `.env.dist` ; on ne
+les pose dans `.env.local` que pour activer ce qu'elles règlent :
+
+| Variable | Par défaut | Ce qu'elle règle |
+|---|---|---|
+| `MATOMO_URL` | vide | Suivi d'audience. Vide, aucun script n'est rendu : à ne remplir qu'en production. |
+| `CORS_ALLOW_ORIGIN` | `localhost` et `127.0.0.1` | Les sites autorisés à appeler `/api` depuis un navigateur. |
+| `MAILER_DSN` | `null://null` | L'envoi des courriels. Par défaut, rien ne part. |
+| `MESSENGER_TRANSPORT_DSN` | `doctrine://default?auto_setup=0` | La file des tâches de fond (courriels, réchauffage du cache). |
+| `MAILJET_API_KEY`, `MAILJET_API_SECRET`, `MJML_APP_ID`, `MJML_SECRET_KEY` | vides | La newsletter. Vides, les inscriptions restent en base et rien n'est envoyé. |
+| `IA_MODELE`, `OLLAMA_URL`, `ANTHROPIC_API_KEY` | vide, `http://localhost:11434`, vide | Le brouillon de décryptage par IA. `IA_MODELE` vide le désactive. |
+| `IA_MODELE_RESUMES` | `claude-haiku-5-5` | Le modèle des résumés d'amendements ; demande `ANTHROPIC_API_KEY`. |
+
+Deux pièges du chargement de ces fichiers :
+
+- **Pas de fichier `.env`.** Il n'est pas dans le dépôt. S'il en reste un d'une
+  ancienne installation, Symfony le lit *à la place* de `.env.dist` : le
+  supprimer.
+- **`.env.dev` passe après `.env.local`** et l'emporte sur lui. Une valeur à
+  régler pour le seul développement se pose dans `.env.dev.local`.
 
 ```bash
 composer install

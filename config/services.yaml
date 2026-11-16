@@ -6,12 +6,36 @@
 parameters:
     # Où sont déposés les clones des dépôts de données des Tricoteuses.
     tricoteuses.racine: '%kernel.project_dir%/var/tricoteuses'
-    # Repli si le .env du serveur ne pose pas DEFAULT_URI : .env.dist n'est lu
-    # qu'en l'absence de .env, et sans valeur le routeur ne se construit plus.
+    # Valeur par défaut de CHAQUE variable d'environnement, hors APP_SECRET et
+    # DATABASE_URL qui n'en ont pas. Elles doublent celles de .env.dist, et
+    # c'est voulu : Symfony ne lit .env.dist qu'en l'absence de .env. Sur un
+    # poste ou un serveur où un .env traîne, tout ce qui n'était défini que
+    # là-bas devenait introuvable — CORS_ALLOW_ORIGIN et MATOMO_URL faisaient
+    # tomber toutes les pages en 500, les autres leur fonctionnalité le jour où
+    # l'on s'en servait. Une variable nouvelle se déclare donc aux deux
+    # endroits : ici sa valeur de repli, dans .env.dist son mode d'emploi.
+    #
+    # Sans valeur, le routeur ne se construit plus.
     env(DEFAULT_URI): 'https://datan.fr'
+    # Vide = aucun script de suivi rendu. Jamais d'adresse ici ni dans un
+    # .env.<environnement> suivi par Git : un poste de développement enverrait
+    # ses pages vues dans les statistiques réelles.
+    env(MATOMO_URL): ''
+    env(CORS_ALLOW_ORIGIN): '^https?://(localhost|127\.0\.0\.1)(:[0-9]+)?$'
+    # auto_setup=0 : la table messenger_messages vient d'une migration.
+    env(MESSENGER_TRANSPORT_DSN): 'doctrine://default?auto_setup=0'
+    # null:// n'envoie rien.
+    env(MAILER_DSN): 'null://null'
+    # Vides = newsletter sans effet hors de la base, lettre rendue en MJML seul.
+    env(MAILJET_API_KEY): ''
+    env(MAILJET_API_SECRET): ''
+    env(MJML_APP_ID): ''
+    env(MJML_SECRET_KEY): ''
+    # Vide = brouillon de décryptage par IA désactivé.
+    env(IA_MODELE): ''
+    env(OLLAMA_URL): 'http://localhost:11434'
+    env(ANTHROPIC_API_KEY): ''
     # Modèle des résumés d'amendements par lots (App\Ia\FabriqueClientAnthropic).
-    # Défaut posé ici pour qu'un .env de serveur qui l'ignore ne casse pas le
-    # conteneur ; ANTHROPIC_API_KEY reste, elle, à fournir.
     env(IA_MODELE_RESUMES): 'claude-haiku-5-5'
 
 services:
