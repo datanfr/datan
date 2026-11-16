@@ -5,6 +5,12 @@ framework:
     # Note that the session will be started ONLY if you read or write from it.
     session: true
 
+    # Les fichiers de public/assets/ sortent avec l'empreinte de leur contenu
+    # (`?v=…`) : c'est ce qui permet à public/assets/.htaccess de les déclarer
+    # immuables. AssetMapper (/build/) a déjà la sienne dans le nom du fichier.
+    assets:
+        version_strategy: App\Asset\VersionParContenu
+
     #esi: true
     #fragments: true
 

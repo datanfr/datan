@@ -1,0 +1,15 @@
+# Tout ce dossier est immuable pour un an : navigateur et CDN gardent le
+# fichier sans jamais le revalider.
+#
+# C'est permis parce que chaque adresse rendue par l'application porte
+# l'empreinte du contenu (`?v=…`, App\Asset\VersionParContenu) : un fichier qui
+# change change d'adresse. Corollaire — un fichier référencé SANS version, depuis
+# une feuille de style (`url('/assets/imgs/cover/…')`) ou depuis un autre site,
+# ne change pas de contenu sans changer de nom.
+#
+# Un .htaccess local et sans condition, comme celui que le déploiement pose
+# dans public/build/ : LiteSpeed ignore une partie des conditions sur le chemin
+# ou sur la requête qu'on écrirait dans public/.htaccess.
+<IfModule mod_headers.c>
+    Header set Cache-Control "public, max-age=31536000, immutable"
+</IfModule>
