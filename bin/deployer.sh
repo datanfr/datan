@@ -172,6 +172,8 @@ ln -sfn "releases/$ID" "$RACINE/current.nouveau"
 mv -Tf "$RACINE/current.nouveau" "$RACINE/current"
 bascule=1
 echo "   current → releases/$ID"
+# Sans quoi OPcache continue de servir l'ancienne version (cf. relancer_lsphp).
+relancer_lsphp "$(trouver_php)"
 
 # La racine web du sous-domaine est ~/symfony.datan.fr/public : un lien fixe
 # vers current/public, posé une fois. Seul `current` change à chaque version,
