@@ -383,6 +383,15 @@
                         {{ non_inscrits ? 'Les députés non inscrits ont' : 'Le groupe ' ~ groupe.libelle_abrev ~ ' a' }}
                         voté en accord avec le groupe de la majorité présidentielle (<a href="{{ path('groupe_individual', {legislature: majorite.legislature, abrev: majorite.libelle_abrev|adresse_groupe(majorite.id ?? null)}) }}">{{ majorite.libelle }}</a>) dans {{ majorite.score }}% des cas.
                       </p>
+                      {# Seconde phrase de la carte d'origine, oubliée au portage.
+                         « Les députés NI votent » : c'est le sigle que le site
+                         écrit ici, et non « non inscrits » comme plus haut. #}
+                      {% if moyennes.majorite is not null %}
+                        <p>
+                          {{ non_inscrits ? 'Les députés ' ~ groupe.libelle_abrev ~ ' votent' : 'Le groupe ' ~ groupe.libelle_abrev ~ (actif ? ' vote' : ' votait') }}
+                          <b>{{ comparatifs.majorite }} souvent</b> avec la majorité présidentielle que la moyenne des autres groupes, qui est de {{ moyennes.majorite }}%.
+                        </p>
+                      {% endif %}
                       <div class="d-flex justify-content-center mt-3">
                         <a href="{{ lien_statistiques }}#majorite" class="btn btn-outline-primary text-center">Voir l'historique</a>
                       </div>

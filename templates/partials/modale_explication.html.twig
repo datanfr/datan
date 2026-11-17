@@ -1,0 +1,38 @@
+{# Fenêtre d'une explication de vote (`votes/modals/explain.php`), commune à la
+   fiche du vote — où main.js l'ouvre d'office sous l'identifiant modalExplain
+   quand l'adresse désigne un député — et aux pages d'un député, où une carte
+   de vote l'ouvre.
+
+   Paramètres : id, titre, vote_titre, texte, mp_id, carree (portrait carré des
+   députés de la 17e, rond et détouré avant).
+
+   Deux écarts avec la vue d'origine. Le texte est échappé puis passé à nl2br,
+   et non rendu tel quel : il est saisi par le député dans son espace, sur une
+   page publique. Et le titre porte l'identifiant que vise aria-labelledby,
+   quand celui du site (« exampleModalCenterTitle ») ne désigne rien. #}
+<div class="modal modalExplication fade" id="{{ id }}" tabindex="-1" role="dialog" aria-labelledby="{{ id }}-titre" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div class="d-flex flex-row align-items-center">
+          <div class="{{ carree ? 'depute-img-square' : 'depute-img-circle' }} depute-img-circle-explication mr-3">
+            <img src="{{ photo_depute(mp_id) }}" width="150" height="192" alt="Photo du député">
+          </div>
+          <p class="modal-title" id="{{ id }}-titre">{{ titre }}</p>
+        </div>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p class="mb-2 font-italic font-weight-bold">{{ vote_titre }}</p>
+        <p class="quoted">
+          {{ texte|nl2br }}
+        </p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+      </div>
+    </div>
+  </div>
+</div>

@@ -32,6 +32,9 @@
 {% if depute.groupe_couleur %}
   <div class="liseret-groupe" style="background-color: {{ depute.groupe_couleur }}"></div>
 {% endif %}
+{% if categories %}
+  {{ include('partials/filtre_categories_mobile.html.twig') }}
+{% endif %}
 
 <div class="container pg-depute-votes">
   <div class="row">

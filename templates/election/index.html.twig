@@ -35,10 +35,13 @@
   </div>
 </div>
 {# Le site annonce ici les municipales de 2026, dans un bloc entièrement écrit
-   en dur — texte, dates et bouton vers `/elections/municipales-2026`. Ce
-   scrutin est hors de ce portage : son catalogue n'en porte pas la trace, et le
-   bloc mènerait à une adresse que nous ne servons pas. Il n'a pas d'équivalent
-   ici, et n'en aura pas tant que l'élection ne sera pas dans `election`. #}
+   en dur (`elections/index.php:28-40`) : « Les prochaines élections en France
+   sont les élections municipales. Elles auront lieu les dimanche 15 et 22 mars
+   2026 », et un bouton « Suivre les municipales 2026 ». Le scrutin est passé
+   et la page `/elections/municipales-2026` est désormais servie, mais le bloc
+   n'est pas repris : son titre et son texte sont faux depuis mars, et les
+   remettre au passé revient à écrire un autre bloc. À trancher par la
+   rédaction — cf. TODO.md. #}
 {{ include('election/partials/recherche_commune.html.twig') }}
 <div class="container pg-elections-index my-5">
   <div class="row">

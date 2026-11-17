@@ -178,6 +178,11 @@
                                 </div>
                               </div>
                             </div>
+                          {% else %}
+                            {# Tour connu du ministère mais sans une ligne de résultat :
+                               le site l'écrit (`results_city.php:570`), nous laissions
+                               le bloc vide. #}
+                            <p class="text-muted mb-0">Aucun résultat disponible pour ce tour.</p>
                           {% endfor %}
                         {% endif %}
                       </div>

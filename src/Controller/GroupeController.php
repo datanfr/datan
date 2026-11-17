@@ -213,6 +213,10 @@ class GroupeController extends AbstractController
                 break;
             }
         }
+        // Le repère de la seconde phrase de la carte (« vote plus souvent avec
+        // la majorité présidentielle que la moyenne des autres groupes »,
+        // `groupes/individual.php:372`), que le portage avait oubliée.
+        $moyenneMajorite = $majorite !== null ? $this->statistiques->proximiteMajoriteMoyenne($legislature) : null;
 
         $response = $this->render('groupe/individual.html.twig', [
             'groupe' => $groupe,
@@ -226,6 +230,11 @@ class GroupeController extends AbstractController
                 'age' => EditoGroupe::comparatif($chiffres['age_moyen'], $moyennes['age']),
                 'feminisation' => EditoGroupe::comparatif($chiffres['feminisation'], $moyennes['feminisation']),
                 'participation' => EditoGroupe::comparatif($comportement['participation_moyenne'], $moyennes['participation']),
+                'majorite' => EditoGroupe::comparatif(
+                    $majorite !== null ? (float) $majorite['score'] : null,
+                    $moyenneMajorite,
+                    egalite: 'aussi',
+                ),
                 'origine_sociale' => $origineSociale === null
                     ? 'autant'
                     : EditoGroupe::comparatif((float) $origineSociale['pct'], round($origineSociale['population'])),
@@ -250,7 +259,7 @@ class GroupeController extends AbstractController
             'election_municipales' => $legislature === Legislature::COURANTE
                 ? $this->candidatsMunicipales($groupeId)
                 : null,
-            'moyennes' => $moyennes,
+            'moyennes' => $moyennes + ['majorite' => $moyenneMajorite],
             'rang' => $this->moyennes->rangParEffectif($groupeId, $legislature),
             'sieges' => MoyennesAssemblee::SIEGES,
             'origine_sociale' => $origineSociale,

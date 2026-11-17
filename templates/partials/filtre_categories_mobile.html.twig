@@ -1,0 +1,41 @@
+{# Filtre par catégorie sur téléphone et tablette (`deputes/votes.php:19`,
+   `groupes/votes_datan.php:17`). Sous lg, la colonne de gauche et son filtre
+   sont cachés : le site met à la place un bandeau, que main.js fait paraître
+   passé 400 px de défilement (d-none → d-flex), et qui ouvre les mêmes boutons
+   dans une fenêtre. Le portage n'avait repris que la colonne — sur mobile, on
+   ne pouvait plus filtrer. Les boutons se branchent sur sorting.js par leurs
+   classes, comme ceux de la colonne.
+
+   `id="filterModalTitle"` : la fenêtre du site s'y réfère par aria-labelledby
+   sans qu'aucun élément ne le porte ; il est posé ici sur le titre. #}
+<div class="d-none d-lg-none justify-content-between align-items-center sticky-top p-3" data-toggle="modal" data-target="#filterModal" id="filterBanner" style="top: 50px">
+  <span class="text-white font-weight-bold">Filtrer par catégorie</span>
+  {{ source('@public/assets/imgs/icons/funnel-fill.svg') }}
+</div>
+<div class="modal fade" id="filterModal" tabindex="-1" role="dialog" aria-labelledby="filterModalTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content badges-filter">
+      <div class="modal-header">
+        <span class="title" id="filterModalTitle">Filtrer par catégorie</span>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="filters">
+          <div class="mt-2">
+            {% for slug, nom in categories %}
+              <button type="button" class="badge badge-field popover_focus is-selected" value=".{{ slug }}">{{ nom }}</button>
+            {% endfor %}
+          </div>
+          <div class="mt-2">
+            <button type="button" class="btn btn-primary all-categories" value="*">Toutes les catégories</button>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-dismiss="modal">Fermer</button>
+      </div>
+    </div>
+  </div>
+</div>
