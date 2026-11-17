@@ -394,7 +394,8 @@ class DeputeController extends AbstractController
             // consultée : servi depuis l'import des votes nominatifs 14-16
             // (4 août 2026) sur les lignes `statistique_depute` de cette
             // législature, moyennes de groupe comprises — le groupe est celui
-            // de l'époque. Nul (bloc absent) si le député n'y a pas de ligne.
+            // de l'époque. Sans ligne pour le député, le bloc reste, chaque carte
+            // sur son message d'attente (cf. ComportementDepute::statistiques).
             'statistiques' => $this->comportement->statistiques(
                 $deputeId,
                 $groupe !== null ? (int) $groupe['id'] : null,

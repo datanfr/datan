@@ -9,6 +9,16 @@
    lettres dans sa vue. Elle disparaît de même pour un député membre de la
    majorité, qui se comparerait à son propre groupe.
 
+   Une carte sans statistique reste affichée, avec son message d'attente,
+   comme les quatre vues d'origine (`$no_participation`, `$no_loyaute`,
+   `$no_majorite`, `$no_votes`) : le portage masquait la carte entière, si bien
+   qu'un député arrivé depuis peu n'avait aucun bloc là où le site explique
+   pourquoi le chiffre manque.
+
+   Les textes d'aide (bulles « ? ») sont ceux des quatre vues d'origine, en
+   entier : le portage n'en avait gardé que la première phrase, sans les mises
+   en garde ni l'exemple. Seule retouche, « absention » y est corrigé.
+
    Les jauges circulaires (`.c100 pNN`, feuille `circle.css`), les barres et les
    info-bulles (`data-toggle="popover"`, initialisées par main.js) viennent de
    `main.css`, reprise du site. Les icônes sont inlinées : la feuille colore
@@ -29,8 +39,7 @@
 <div class="bloc-statistiques mt-5">
   <h2 class="mb-3 title-center">Son comportement politique{% if legislature_stats %} ({{ legislature_stats }}<sup>e</sup> législature){% endif %}</h2>
 
-  {% if statistiques.participation|default(null) %}
-    {% set p = statistiques.participation %}
+  {% set p = statistiques.participation|default(null) %}
     <div class="card card-statistiques my-4">
       <div class="card-body">
         <div class="row">
@@ -42,13 +51,21 @@
               Participation aux votes
               <a tabindex="0" role="button" data-toggle="popover" data-trigger="focus" data-html="true"
                  aria-label="Aide participation" class="no-decoration popover_focus" title="Taux de participation"
-                 data-content="Le taux de participation est le <b>pourcentage de votes auxquels le député ou la députée a participé</b>. Pour plus d'information, <a href='{{ path('page_statistiques') }}#participation'>cliquez ici</a>.">
+                 data-content="Le taux de participation est le <b>pourcentage de votes auxquels le député ou la députée a participé</b>.<br><br>Attention, le taux de participation ne mesure pas toute l'activité d'un député ou d'un groupe. Contrairement au <a href='https://www.europarl.europa.eu/about-parliament/fr/organisation-and-rules/how-plenary-works' title='lien'>Parlement européen</a>, les votes à l'Assemblée nationale se déroulent à n'importe quel moment de la semaine. D'autres réunions ont souvent lieu en même temps, expliquant le faible taux de participation des députés et des groupes.<br><br>Pour plus d'information, <a href='{{ path('page_statistiques') }}#participation' target='_blank'>cliquez ici</a>.">
                 <svg width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM6.57 6.033H5.25C5.22 4.147 6.68 3.5 8.006 3.5c1.397 0 2.673.73 2.673 2.24 0 1.08-.635 1.594-1.244 2.057-.737.559-1.01.768-1.01 1.486v.355H7.117l-.007-.463c-.038-.927.495-1.498 1.168-1.987.59-.444.965-.736.965-1.371 0-.825-.628-1.168-1.314-1.168-.901 0-1.358.603-1.358 1.384zm1.251 6.443c-.584 0-1.009-.394-1.009-.927 0-.552.425-.94 1.01-.94.609 0 1.028.388 1.028.94 0 .533-.42.927-1.029.927z"/></svg>
               </a>
             </h3>
           </div>
         </div>
         <div class="row">
+          {% if p is null %}
+          <div class="col-12 mt-2">
+            <p>Il n'y a pas encore eu suffisamment de votes solennels à l'Assemblée nationale pour afficher cette statistique.
+              Pour consulter la participation des députés à l'ensemble des scrutins,
+              <a href="{{ path('classement_individual', {page: 'deputes-participation'}) }}">cliquez ici</a>.
+            </p>
+          </div>
+          {% else %}
           <div class="col-lg-3 offset-lg-1 mt-2">
             <div class="d-flex justify-content-center align-items-center">
               <div class="c100 p{{ p.score }} m-0">
@@ -83,13 +100,12 @@
               <p>Les votes solennels sont les votes considérés comme importants pour lesquels les députés connaissent à l'avance le jour et l'heure du vote.</p>
             </div>
           </div>
+          {% endif %}
         </div>
       </div>
     </div>
-  {% endif %}
 
-  {% if statistiques.loyaute|default(null) %}
-    {% set l = statistiques.loyaute %}
+  {% set l = statistiques.loyaute|default(null) %}
     <div class="card card-statistiques my-4">
       <div class="card-body">
         <div class="row">
@@ -101,13 +117,18 @@
               Proximité avec son groupe
               <a tabindex="0" role="button" data-toggle="popover" data-trigger="focus" data-html="true"
                  aria-label="Aide loyauté" class="no-decoration popover_focus" title="Proximité avec le groupe"
-                 data-content="Le taux de proximité est le <b>pourcentage de votes où le député ou la députée a voté sur la même ligne que son groupe</b>. Pour plus d'information, <a href='{{ path('page_statistiques') }}#loyalty'>cliquez ici</a>.">
+                 data-content="Le taux de proximité est le <b>pourcentage de votes où le député ou la députée a voté sur la même ligne que son groupe</b>.<br><br>Attention, dans beaucoup de parlements, y compris l'Assemblée nationale, les députés suivent dans la plupart des cas la ligne officielle du groupe, expliquant des taux de cohésion très élevés. La mesure proposée ici est intéressante quand elle est comparée avec les taux de loyauté des autres parlementaires.<br><br>Pour plus d'information, <a href='{{ path('page_statistiques') }}#loyalty' target='_blank'>cliquez ici</a>.">
                 <svg width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM6.57 6.033H5.25C5.22 4.147 6.68 3.5 8.006 3.5c1.397 0 2.673.73 2.673 2.24 0 1.08-.635 1.594-1.244 2.057-.737.559-1.01.768-1.01 1.486v.355H7.117l-.007-.463c-.038-.927.495-1.498 1.168-1.987.59-.444.965-.736.965-1.371 0-.825-.628-1.168-1.314-1.168-.901 0-1.358.603-1.358 1.384zm1.251 6.443c-.584 0-1.009-.394-1.009-.927 0-.552.425-.94 1.01-.94.609 0 1.028.388 1.028.94 0 .533-.42.927-1.029.927z"/></svg>
               </a>
             </h3>
           </div>
         </div>
         <div class="row">
+          {% if l is null %}
+          <div class="col-12 mt-2">
+            <p>Cette statistique sera disponible dès qu'un nombre suffisant de votes sera atteint pour {{ nom_complet }}.</p>
+          </div>
+          {% else %}
           <div class="col-lg-3 offset-lg-1 mt-2">
             <div class="d-flex justify-content-center align-items-center">
               <div class="c100 p{{ l.score }} m-0">
@@ -162,12 +183,12 @@
               {% endif %}
             </div>
           </div>
+          {% endif %}
         </div>
       </div>
     </div>
-  {% endif %}
 
-  {% if statistiques.majorite|default(null) %}
+  {% if statistiques.majorite is defined %}
     {% set m = statistiques.majorite %}
     <div class="card card-statistiques my-4">
       <div class="card-body">
@@ -190,13 +211,18 @@
                  portage. #}
               <a tabindex="0" role="button" data-toggle="popover" data-trigger="focus" data-html="true"
                  aria-label="Aide majorité" class="no-decoration popover_focus" title="Proximité avec la majorité gouvernementale"
-                 data-content="Le <b>taux de proximité avec la majorité gouvernementale</b> représente le pourcentage de fois où un député vote la même chose que le groupe présidentiel (La République en Marche).<br><br>Pour plus d'information, <a href='{{ path('page_statistiques') }}#proximity'>cliquez ici</a>.">
+                 data-content="Le <b>taux de proximité avec la majorité gouvernementale</b> représente le pourcentage de fois où un député vote la même chose que le groupe présidentiel (La République en Marche).<br><br>Pour plus d'information, <a href='{{ path('page_statistiques') }}#proximity' target='_blank'>cliquez ici</a>.">
                 <svg width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM6.57 6.033H5.25C5.22 4.147 6.68 3.5 8.006 3.5c1.397 0 2.673.73 2.673 2.24 0 1.08-.635 1.594-1.244 2.057-.737.559-1.01.768-1.01 1.486v.355H7.117l-.007-.463c-.038-.927.495-1.498 1.168-1.987.59-.444.965-.736.965-1.371 0-.825-.628-1.168-1.314-1.168-.901 0-1.358.603-1.358 1.384zm1.251 6.443c-.584 0-1.009-.394-1.009-.927 0-.552.425-.94 1.01-.94.609 0 1.028.388 1.028.94 0 .533-.42.927-1.029.927z"/></svg>
               </a>
             </h3>
           </div>
         </div>
         <div class="row">
+          {% if m.indisponible|default(false) %}
+          <div class="col-12 mt-2">
+            <p>Cette statistique sera disponible dès qu'un nombre suffisant de votes sera atteint pour {{ nom_complet }}.</p>
+          </div>
+          {% else %}
           <div class="col-lg-3 offset-lg-1 mt-2">
             <div class="d-flex justify-content-center align-items-center">
               <div class="c100 p{{ m.score }} m-0">
@@ -222,13 +248,13 @@
               {% endif %}
             </div>
           </div>
+          {% endif %}
         </div>
       </div>
     </div>
   {% endif %}
 
-  {% if statistiques.accord|default(null) %}
-    {% set a = statistiques.accord %}
+  {% set a = statistiques.accord|default(null) %}
     <div class="card card-statistiques bloc-proximity my-4">
       <div class="card-body">
         <div class="row">
@@ -240,12 +266,15 @@
               Proximité avec les groupes politiques
               <a tabindex="0" role="button" data-toggle="popover" data-trigger="focus" data-html="true"
                  aria-label="Aide proximité" class="no-decoration popover_focus" title="Proximité avec les groupes politiques"
-                 data-content="Le <b>taux de proximité avec les groupes</b> représente le pourcentage de fois où un député vote de la même manière qu'un groupe parlementaire. Pour plus d'information, <a href='{{ path('page_statistiques') }}#proximity'>cliquez ici</a>.">
+                 data-content="Le <b>taux de proximité avec les groupes</b> représente le pourcentage de fois où un député vote de la même manière qu'un groupe parlementaire. Chaque groupe se voit attribuer pour chaque vote une <i>position majoritaire</i>, en fonction du vote de ses membres. Cette position peut soit être 'pour', 'contre', ou 'abstention'. Pour chaque vote, nous vérifions si le député a voté en accord avec la position majoritaire d'un groupe. Le taux de proximité correspond au pourcentage de votes où le député a voté conformément à ce groupe.<br><br>Par exemple, si le taux est de 75%, cela signifie que {{ nom_complet }} a voté avec ce groupe dans 75% des cas.<br><br>Pour plus d'information, <a href='{{ path('page_statistiques') }}#proximity' target='_blank'>cliquez ici</a>.">
                 <svg width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM6.57 6.033H5.25C5.22 4.147 6.68 3.5 8.006 3.5c1.397 0 2.673.73 2.673 2.24 0 1.08-.635 1.594-1.244 2.057-.737.559-1.01.768-1.01 1.486v.355H7.117l-.007-.463c-.038-.927.495-1.498 1.168-1.987.59-.444.965-.736.965-1.371 0-.825-.628-1.168-1.314-1.168-.901 0-1.358.603-1.358 1.384zm1.251 6.443c-.584 0-1.009-.394-1.009-.927 0-.552.425-.94 1.01-.94.609 0 1.028.388 1.028.94 0 .533-.42.927-1.029.927z"/></svg>
               </a>
             </h3>
           </div>
         </div>
+        {% if a is null %}
+          <p>Cette statistique sera disponible dès qu'un nombre suffisant de votes sera atteint pour {{ nom_complet }}.</p>
+        {% else %}
 
         {# Le titre du graphique s'affiche aussi en mode historique — le site
            écrit alors « votait » (`_inter_group_loyalty.php:38`). #}
@@ -301,7 +330,7 @@
             </div>
           </div>
         </div>
+        {% endif %}
       </div>
     </div>
-  {% endif %}
 </div>

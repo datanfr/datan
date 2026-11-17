@@ -113,6 +113,15 @@ comprise : ce sont des noms que des réutilisations lisent. Les écarts :
 - **Hémicycle de l'accueil** : WebP posé directement et préchargé ; le legacy
   ne précharge rien et troque l'extension du JPEG en JavaScript. Un navigateur
   sans WebP (Safari < 14) garde le dégradé et l'image basse définition.
+- **Phrase sur la Covid-19 de `/statistiques`** (« à cause de la crise de la
+  Covid-19, les députés ayant rejoint le parlement récemment ont des scores de
+  participation plus faibles ») non reprise : écrite pour la 15e législature,
+  elle est fausse depuis.
+- **Explications de vote** : texte échappé (avec ses sauts de ligne) sur la
+  fiche du vote et dans la fenêtre d'une explication, là où le legacy rend la
+  saisie du député telle quelle.
+- **« Tous les votes » d'un groupe, non-inscrits** : « des députés non
+  inscrits » là où le legacy écrit « du groupe Députés non inscrits ».
 - **Canonical des pages mois** : une seule forme, zéro-paddée ; le legacy a un
   double self-canonical.
 - **Recherche** : votes triés par récence et filtrés sur `state = 'published'`,

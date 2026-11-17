@@ -175,7 +175,8 @@ correction, **commenter le choix** dans le code, et le consigner dans
 ### Élections
 
 - [ ] **« Les prochaines élections en France »** : section absente. Le texte du
-  legacy est périmé ; la reconstruire avec un contenu juste.
+  legacy est périmé ; la reconstruire avec un contenu juste. La page
+  `/elections/municipales-2026` que son bouton liait est désormais servie.
 - [ ] **Second tour d'Ambérieu-en-Bugey (législatives 2024)** : « pas de second
   tour » au legacy, résultats complets chez nous (Chavent 51,27 % / Pisani
   48,73 %). Chavent n'avait que 36,47 % au premier tour : nous avons sans doute
@@ -189,17 +190,6 @@ correction, **commenter le choix** dans le code, et le consigner dans
 
 ### Fiches député, vote et groupe
 
-- [ ] **Motion de censure : trois paragraphes de la fiche vote non portés**
-  (`votes/individual.php:53-60` et `126-130`) — ce qu'est une motion, les voix
-  obtenues rapportées aux 577 sièges, et la règle « un groupe dont la majorité
-  ne participe pas est compté contre ». Avant de les reprendre, vérifier que
-  « La position des groupes » applique bien cette règle
-  (`get_vote_groupes(…, voteType)` côté legacy) : le texte décrit un calcul.
-- [ ] **Explications de vote sur la fiche vote** : le legacy affiche « La
-  parole aux députés » (`votes/partials/explain.php` : colonnes POUR, CONTRE,
-  ABSTENUS, « Aucun député … ne s'est encore exprimé », modale d'une
-  explication), nous un bloc « L'avis des députés » qui n'existe pas dans son
-  code. Porter le bloc d'origine, ou consigner le nôtre dans `DIFFERENCES.md`.
 - [ ] **Encart du scrutin 3684** : affiché au legacy même quand le député n'a
   pas voté (sans phrase), masqué chez nous. Non instruit.
 - [ ] **Texte de présentation de la fiche DEM** : paragraphe enrichi absent du
@@ -211,17 +201,21 @@ correction, **commenter le choix** dans le code, et le consigner dans
 
 ### Gabarits et typographie
 
-- [ ] **Relire les libellés du legacy absents de nos gabarits.** La veille
-  d'octobre avait classé d'office en « état initial » tous les écarts de texte
-  présents à son premier jour (294 pages), sans les lire : le bouton « En
-  savoir plus » des décryptages et le partage mobile de la fiche vote y
-  dormaient, corrigés le 17/11. Le site d'origine n'étant plus en ligne, la
-  relecture se fait code contre code : extraire les textes en dur des vues
-  (`git show legacy-codeigniter:application/views/…`) et des gabarits, comparer
-  les nombres d'occurrences. Un premier passage donne 250 libellés plus
-  fréquents côté legacy, dans une soixantaine de vues — beaucoup de faux
-  positifs (reformulations, vues mortes), à trier vue par vue en commençant
-  par `groupes/individual.php`, `elections/index.php` et `home/`.
+- [ ] **Comparer page par page les textes du legacy et les nôtres.** Le tri du
+  17/11 a comparé les textes en dur des vues publiques à ceux de TOUS nos
+  gabarits : un texte absent d'une page mais présent sur une autre lui
+  échappe (c'est ainsi que les bulles d'aide tronquées de la fiche député et
+  la seconde phrase de la carte « majorité » d'un groupe n'ont été vues que par
+  hasard). Reste à apparier chaque vue du legacy à son gabarit, inclusions
+  comprises, et à comparer paire par paire. N'ont pas été triés du tout :
+  l'espace de rédaction (`dashboard/`), l'espace député (`dashboard-mp/`),
+  l'iframe (`iframe/`) et les courriels.
+- [ ] **Page `/legislature-N` d'un député en mode strict** : `commission`,
+  `parti_libelle`… ne lui sont pas transmis, et `depute/_bio.html.twig` les lit.
+  Sans effet en production, erreur 500 en développement — la page ne s'y
+  éprouve donc pas.
+- [ ] **Liens des classements** (`deputes-age` et voisins) : le legacy les
+  ouvre dans un nouvel onglet (`target="_blank"`), pas nous. Non instruit.
 - [ ] **Séparateur décimal** : virgule chez nous (0,86 ; 4,4 %), point au legacy
   — systématique. La virgule est le bon usage : trancher une fois pour tout le
   site et consigner (incohérence actuelle : « 51.7 ans » garde le point des
@@ -244,6 +238,10 @@ correction, **commenter le choix** dans le code, et le consigner dans
 
 ## 5. Code à reprendre
 
+- [ ] **Aucun frein aux essais de connexion.** Le legacy bloque cinq minutes
+  après plusieurs échecs (`users/blocked.php`, compteur en session — donc
+  contournable). Chez nous rien : poser `login_throttling` sur le pare-feu
+  (`composer require symfony/rate-limiter`), qui compte par compte et par IP.
 - [ ] **`nomin_principale` subsiste** là où il donne encore le bon résultat
   (dernier rattachement ouvert : `DeputeListController`, `ElectionController`,
   `OutilsController`, `CalculClassementsCommand` ; comptages en `DISTINCT` de

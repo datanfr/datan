@@ -9,6 +9,7 @@ use App\Groupe\ParticipationGroupe;
 use App\Http\RechauffeurCache;
 use App\Legislature;
 use App\Referencement\OpenGraph;
+use App\Scrutin\MotionDeCensure;
 use App\Scrutin\TitreMeta;
 use App\Scrutin\TypeVoteEdito;
 use Doctrine\DBAL\Connection;
@@ -193,6 +194,12 @@ class VoteController extends AbstractController
         $majorityByGroupe = [];
         foreach ($groupes as $groupe) {
             $majorityByGroupe[$groupe['groupe_id']] = $groupe['positionMajoritaire'];
+        }
+
+        // Après le relevé ci-dessus, et pas avant : la loyauté de chaque député
+        // se juge sur la position publiée, comme chez l'origine (`votes_scores`).
+        if (($scrutin['nature_vote'] ?? null) === 'motion de censure') {
+            $groupes = MotionDeCensure::positions($groupes);
         }
 
         $numeroAffiche = ($prefixe === self::PREFIXE_CONGRES ? -1 : 1) * $numero;
@@ -668,15 +675,18 @@ class VoteController extends AbstractController
 
     /**
      * Explications de vote publiées par les députés sur ce scrutin,
-     * avec la position qu'ils ont effectivement exprimée.
+     * avec la position qu'ils ont effectivement exprimée — c'est elle qui les
+     * range dans les colonnes de « La parole aux députés ». La dernière
+     * législature du député dit si son portrait est carré (17e) ou rond.
      *
      * @return list<array<string, mixed>>
      */
     private function explications(int $scrutinId): array
     {
         return $this->connection->fetchAllAssociative(
-            'SELECT e.texte, d.firstname, d.lastname, d.slug, d.mp_id,
+            'SELECT e.texte, d.firstname, d.lastname, d.slug, d.dpt_slug, d.mp_id,
                     g.libelle_abrev AS groupe_abrev, g.couleur AS groupe_couleur,
+                    (SELECT MAX(m.legislature) FROM mandat m WHERE m.depute_id = d.id) AS legislature_last,
                     v.position
              FROM explication e
              JOIN depute d ON d.id = e.depute_id

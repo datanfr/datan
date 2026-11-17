@@ -70,7 +70,7 @@
         }) }}
       {% endif %}
 
-      {% if statistiques %}
+      {% if statistiques is not null %}
         {# `legislature_stats` bascule le bloc en mode historique : titre
            suffixé, phrases au passé, liens de groupes vers cette législature. #}
         {{ include('depute/_statistiques.html.twig', {legislature_stats: legislature}) }}

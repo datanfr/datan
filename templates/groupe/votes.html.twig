@@ -12,6 +12,9 @@
 
 {% block body %}
 {{ include('groupe/partials/entete_sous_page.html.twig') }}
+{% if categories %}
+  {{ include('partials/filtre_categories_mobile.html.twig') }}
+{% endif %}
 
 <div class="container pg-groupe-votes">
   <div class="row">

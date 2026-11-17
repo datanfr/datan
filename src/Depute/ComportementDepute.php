@@ -224,12 +224,17 @@ class ComportementDepute
      * Statistiques de comportement de la fiche, lues sur les tables précalculées
      * par {@see \App\Command\CalculStatistiquesDeputesCommand}. Reproduit
      * `Depute_service::get_statistics()` : les cartes de participation, de loyauté
-     * et de proximité avec la majorité ne s'affichent qu'au-delà de dix votes
-     * (`votesN >= 10`), et comparent le score du député à la moyenne de tous les
-     * députés et de son groupe. Rendu null si le député n'a pas de ligne pour la
-     * législature demandée — les quatre législatures publiées (14 à 17) en portent, chacune
-     * calculée par `app:calcul:statistiques-deputes --legislature=N` après
-     * l'import de ses votes nominatifs.
+     * et de proximité avec la majorité ne portent un chiffre qu'au-delà de dix
+     * votes (`votesN >= 10`), et comparent le score du député à la moyenne de
+     * tous les députés et de son groupe.
+     *
+     * Une clé absente ne veut pas dire « pas de carte » : sur les législatures
+     * publiées (14 à 17, `legislature_all()` chez l'origine), la fiche affiche
+     * toujours le bloc, et chaque carte sans chiffre son message d'attente —
+     * y compris pour un député qui n'a encore aucune ligne
+     * `statistique_depute`. Le tableau rendu est donc vide plutôt que nul dans
+     * ce cas ; il n'est nul qu'avant la 14e, où il n'y a pas de votes
+     * nominatifs et où la fiche se tait.
      *
      * @return array<string, mixed>|null
      */
@@ -242,8 +247,16 @@ class ComportementDepute
             ['depute' => $deputeId, 'legislature' => $legislature],
         );
 
-        if ($stat === false) {
+        if (!\in_array($legislature, Legislature::publiees(), true)) {
             return null;
+        }
+
+        if ($stat === false) {
+            $stat = [
+                'participation_score' => null, 'participation_votes' => 0,
+                'loyaute_score' => null, 'loyaute_votes' => 0,
+                'majorite_score' => null, 'majorite_votes' => 0,
+            ];
         }
 
         $resultat = [];
@@ -287,7 +300,7 @@ class ComportementDepute
             $resultat['accord'] = $accord;
         }
 
-        return $resultat !== [] ? $resultat : null;
+        return $resultat;
     }
 
     /**
@@ -303,7 +316,9 @@ class ComportementDepute
      *   groupe choisi au jugé ;
      * - le député n'appartient pas lui-même à la majorité : se comparer à son
      *   propre groupe ne dit rien, et la loyauté le dit déjà mieux ;
-     * - il a au moins dix votes comparables, seuil commun aux trois cartes.
+     * - il a au moins dix votes comparables, seuil commun aux trois cartes —
+     *   en deçà, la carte reste mais attend ses votes (`$no_majorite`) : le
+     *   tableau rendu ne porte alors que `indisponible`.
      *
      * La moyenne de référence — « la moyenne des députés **non membres de la
      * majorité** » — écarte les groupes majoritaires, alors que celle du groupe
@@ -320,10 +335,6 @@ class ComportementDepute
      */
     private function proximiteMajorite(array $stat, ?int $groupeId, int $legislature): ?array
     {
-        if ($stat['majorite_score'] === null || (int) $stat['majorite_votes'] < 10) {
-            return null;
-        }
-
         $majoritaires = $this->connection->fetchAllAssociative(
             'SELECT id, libelle, libelle_abrev FROM groupe
              WHERE legislature = :legislature AND position_politique = :majoritaire
@@ -346,6 +357,10 @@ class ComportementDepute
 
         if (\in_array($groupeId, $idsMajoritaires, true)) {
             return null;
+        }
+
+        if ($stat['majorite_score'] === null || (int) $stat['majorite_votes'] < 10) {
+            return ['indisponible' => true];
         }
 
         $score = (int) $stat['majorite_score'];

@@ -364,6 +364,11 @@
           <div class="card-body pb-0">
             <h3>La participation au sein des groupes</h3>
             <p>Quels sont les groups politiques ayant les députés participant le plus aux votes à l'Assemblée nationale ?</p>
+            {# Le site ajoute ici, en dur : « Attention, à cause de la crise de
+               la Covid-19, les députés ayant rejoint le parlement récemment
+               ont des scores de participation plus faibles que la moyenne. »
+               La phrase date de la 15e législature et n'a plus d'objet : elle
+               n'est pas reprise (DIFFERENCES.md). #}
             {{ include('classement/partials/duo_groupes.html.twig', {duo: groupes_participation}) }}
           </div>
           {{ bloc.lien_classement('groupes-participation') }}

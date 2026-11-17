@@ -103,7 +103,7 @@
          Il porte sur la dernière législature du député, en mode historique
          (`legislature_stats`) pour un ancien député ; sans votes nominatifs
          (avant la 14e), la fiche se tait. #}
-      {% if statistiques %}
+      {% if statistiques is not null %}
         {{ include('depute/_statistiques.html.twig') }}
       {% endif %}
 

@@ -1,0 +1,28 @@
+{# Une explication dans sa colonne (`votes/partials/explain_text.php`) : le
+   texte est replié sur trois lignes, et le lien vide « + Lire plus » — son
+   libellé vient de la feuille de style — le déplie.
+
+   Le texte est échappé puis passé à nl2br, et non rendu tel quel comme chez
+   l'origine : il est saisi par le député dans son espace. L'`alt` nomme le
+   député ; le site y verse le titre de la page, par accident. #}
+{% set repli = 'collapse' ~ e.mp_id|slice(2) %}
+{% set fiche = e.dpt_slug and e.slug ? path('depute_individual', {dptSlug: e.dpt_slug, slug: e.slug}) : null %}
+<div class="d-flex align-items-start my-4">
+  <div class="depute-img depute-img-{{ e.legislature_last >= 17 ? 'square' : 'circle' }}">
+    {% if fiche %}<a href="{{ fiche }}">{% endif %}
+      <img src="{{ photo_depute(e.mp_id) }}" width="150" height="192" loading="lazy" alt="{{ e.firstname }} {{ e.lastname }}">
+    {% if fiche %}</a>{% endif %}
+  </div>
+  <div class="ml-3">
+    <p class="mb-0 collapse" id="{{ repli }}">
+      {% if fiche %}
+        <a class="font-weight-bold no-decoration underline" href="{{ fiche }}">{{ e.firstname }} {{ e.lastname }}</a>
+      {% else %}
+        <span class="font-weight-bold">{{ e.firstname }} {{ e.lastname }}</span>
+      {% endif %}
+      {% if e.groupe_abrev %}- <span style="color: {{ e.groupe_couleur }}">{{ e.groupe_abrev }}</span>{% endif %}
+      - {{ e.texte|nl2br }}
+    </p>
+    <a class="read collapsed" data-toggle="collapse" href="#{{ repli }}" aria-expanded="false" aria-controls="{{ repli }}"></a>
+  </div>
+</div>

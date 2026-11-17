@@ -88,6 +88,19 @@
           {% else %}
             <p>Au total, <b>{{ scrutin.nombre_votants }} députés{{ est_congres ? ' et sénateurs' }}</b> ont pris part au vote : {{ percentages.contre }} % ont voté contre, {{ percentages.pour }} % ont voté en faveur, et {{ percentages.abstention }} % se sont abstenus.</p>
           {% endif %}
+          {# Les deux paragraphes que le site ajoute pour une motion de censure
+             (votes/individual.php:53-60), oubliés au portage. Le 577 est en dur
+             chez lui aussi : c'est le nombre de sièges, pas celui des députés
+             en fonction, et c'est bien sur lui que se compte la majorité
+             absolue. #}
+          {% if scrutin.nature_vote == 'motion de censure' %}
+            <p>
+              Ce scrutin porte sur une <b>motion de censure</b>, un vote crucial qui peut entraîner la chute du gouvernement. Pour être adoptée, elle doit recueillir la majorité absolue des voix à l'Assemblée nationale, soit au moins 289 votes sur 577 députés.
+            </p>
+            <p>
+              Cette motion de censure a obtenu {{ scrutin.nombre_pour }} voix en faveur, représentant {{ (scrutin.nombre_pour / 577 * 100)|round }}% des députés. La majorité absolue est fixée à 50%.
+            </p>
+          {% endif %}
         </div>
         <div class="col-lg-4">
           <div class="d-flex justify-content-center mt-3">
@@ -144,6 +157,13 @@
       {% endif %}
       <div class="mt-5">
         <h2>La position des groupes</h2>
+        {# Sur une motion de censure, la position affichée n'est pas celle de
+           l'open data : cf. App\Scrutin\MotionDeCensure. #}
+        {% if scrutin.nature_vote == 'motion de censure' %}
+          <p class="mt-3">
+            Seuls les députés en faveur d'une motion de censure prennent part au scrutin et votent "pour". Les députés qui ne votent pas se positionnent donc comme étant contre la censure. Ainsi, sur <b>Datan</b>, un groupe politique dont la majorité des membres ne participe pas au scrutin est considéré comme ayant voté "contre" la motion de censure.
+          </p>
+        {% endif %}
         <div class="mt-4 bloc-groupes d-flex flex-column flex-lg-row">
           {# Non-inscrits écartés ici aussi : le legacy les filtre avant de rendre
              la page, ils n'ont ni logo ni position de groupe. #}
@@ -251,41 +271,64 @@
   </div>
 </div>
 
+{# « La parole aux députés » (`votes/partials/explain.php`) : les explications
+   publiées, rangées par position — pour, contre, et abstenus s'il y en a, ce
+   qui resserre alors les colonnes. Le portage affichait à la place un bloc
+   « L'avis des députés », en cartes, que le site n'a jamais eu.
+
+   Comme chez lui, l'explication d'un député qui n'a pas pris part au scrutin
+   n'a pas de colonne : elle ouvre le bloc, sans y paraître. #}
 {% if explications %}
-  <div class="container-fluid pg-vote-individual bloc-author py-4">
-    <div class="container">
-      <div class="row">
-        <div class="col-12">
-          <h2 class="title text-center text-lg-left">L'avis des députés</h2>
+  {% set abstenus = explications|filter(e => e.position == 'abstention') %}
+  {% set largeur = abstenus|length ? 4 : 6 %}
+  <div class="container-fluid py-5" id="pattern_background">
+    <div class="container pg-vote-individual">
+      <div class="row explain">
+        <div class="col-12 mb-4">
+          <h2 class="text-center">La parole aux députés</h2>
+          <p class="mt-5 text-center">Sur <b>Datan</b>, les députés peuvent donner leur explication de vote. Pourquoi ont-ils voté pour ou contre ce texte ? Découvrez ci-dessous les explications des députés.</p>
         </div>
-      </div>
-      <div class="row mt-4">
-        {% for e in explications %}
-          {% set en_avant = explication_en_avant is defined and explication_en_avant == e.mp_id %}
-          <div class="col-md-6 mb-4" id="explication-{{ e.mp_id }}">
-            <div class="card h-100{{ en_avant ? ' border-primary shadow' : '' }}">
-              <div class="card-body">
-                <div class="d-flex align-items-center mb-2">
-                  <span class="font-weight-bold">{{ e.firstname }} {{ e.lastname }}</span>
-                  {% if e.groupe_abrev %}<span class="ml-2 small">({{ e.groupe_abrev }})</span>{% endif %}
-                  {% if e.position %}
-                    <span class="ml-auto vote sort-{{ e.position }}">{{ e.position == 'nonVotant' ? 'NON VOTANT' : e.position|upper }}</span>
-                  {% endif %}
-                </div>
-                {# Texte échappé, et non plus rendu tel quel : il est désormais
-                   saisi par le député dans son espace, et non plus figé par un
-                   import. Les 40 explications héritées de la production sont du
-                   texte brut — aucune balise, aucun saut de ligne — l'échappement
-                   ne change donc rien à l'affichage, il ferme seulement la porte
-                   à l'injection. `nl2br` échappe avant de convertir. #}
-                <div>{{ e.texte|nl2br }}</div>
+        {% for position, colonne in {pour: {titre: 'LES DÉPUTÉS POUR', sort: 'adopté'}, contre: {titre: 'LES DÉPUTÉS CONTRE', sort: 'rejeté'}} %}
+          <div class="col-lg-{{ largeur }}{{ loop.first ? '' : ' mt-5 mt-lg-0' }}">
+            <p class="text-center font-weight-bold sort-{{ colonne.sort }} h5">{{ colonne.titre }}</p>
+            <div class="card mt-4 py-0">
+              <div class="card-body py-2">
+                {% for e in explications|filter(e => e.position == position) %}
+                  {{ include('vote/_explication.html.twig') }}
+                {% else %}
+                  <p class="my-3"><i>Aucun député <b>{{ position }}</b> ne s'est encore exprimé.</i></p>
+                {% endfor %}
               </div>
             </div>
           </div>
         {% endfor %}
+        {% if abstenus|length %}
+          <div class="col-lg-{{ largeur }} mt-5 mt-lg-0">
+            <p class="text-center font-weight-bold sort-abstention h5">LES DÉPUTÉS ABSTENUS</p>
+            <div class="card mt-4 py-0">
+              <div class="card-body py-2">
+                {% for e in abstenus %}
+                  {{ include('vote/_explication.html.twig') }}
+                {% endfor %}
+              </div>
+            </div>
+          </div>
+        {% endif %}
       </div>
     </div>
   </div>
+  {# Adresse `…/explication_PA…` : l'explication de ce député s'ouvre dans une
+     fenêtre au chargement (main.js, `#modalExplain`), comme sur le site. #}
+  {% for e in explications|filter(e => e.mp_id == explication_en_avant) %}
+    {{ include('partials/modale_explication.html.twig', {
+      id: 'modalExplain',
+      titre: "L'avis de " ~ e.firstname ~ ' ' ~ e.lastname,
+      vote_titre: scrutin.decryptage_title,
+      texte: e.texte,
+      mp_id: e.mp_id,
+      carree: e.legislature_last >= 17,
+    }) }}
+  {% endfor %}
 {% endif %}
 
 {# Bloc auteur (`votes/individual.php:268-328`), dans l'une de ses trois

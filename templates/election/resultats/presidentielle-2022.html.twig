@@ -1,11 +1,11 @@
 {# « présientielle » dans le titre du site, et « ont été validées » pour douze
-   candidats : les deux coquilles sont corrigées. Le lien vers la page des
-   parrainages 2022 est retiré, cette page n'étant pas portée ; les deux fiches
-   de député, elles, le sont — sous nos slugs, qui ne sont pas ceux du site
-   (`marine-le-pen` et non `marine-lepen`). #}
+   candidats : les deux coquilles sont corrigées. Les deux fiches de député sont
+   liées sous nos slugs, qui ne sont pas ceux du site (`marine-le-pen` et non
+   `marine-lepen`). Le lien vers les parrainages 2022, retiré tant que la page
+   n'était pas portée, est revenu avec elle. #}
 <h2 class="my-4">Résultats de l'élection présidentielle de 2022</h2>
 <p>L'élection présidentielle de 2022 s'est déroulée les dimanches 10 et 24 avril.</p>
-<p>Au total, <b>douze candidats</b> ont été validés par le Conseil constitutionnel. Au total, 530 députés ont décidé de parrainer un candidat.</p>
+<p>Au total, <b>douze candidats</b> ont été validés par le Conseil constitutionnel. Au total, 530 députés <a href="{{ path('parrainages_index') }}" target="_blank">ont décidé de parrainer un candidat</a>.</p>
 <p>Au premier tour, <b>Emmanuel Macron</b> (En Marche) est arrivé en tête avec 28 % des suffrages, suivi de <b><a href="{{ path('depute_individual', {dptSlug: 'pas-de-calais-62', slug: 'marine-le-pen'}) }}" target="_blank">Marine Le Pen</a></b> (Rassemblement national), avec 23 % des suffrages.</p>
 <p>Ils ont été suivis de <a href="{{ path('depute_individual', {dptSlug: 'bouches-du-rhone-13', slug: 'jean-luc-melenchon'}) }}" target="_blank">Jean-Luc Mélenchon</a> (La France insoumise) et d'Éric Zemmour (Reconquête). Les deux candidats arrivés en tête sont sélectionnés pour le second tour.</p>
 <p>Au second tour, <b>Emmanuel Macron</b> a été élu président avec 59 % des suffrages exprimés.</p>
